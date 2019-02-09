@@ -940,12 +940,12 @@ public class LCD1in3 {
 			}
 
 			Raster data = image.getData();
-			int[] pixel = new int[4]; // RGBA
+			int[] pixel = new int[4];       // RGBA
 			for (int row=0; row<image.getHeight(); row++) {
 				for (int col=0; col<image.getWidth(); col++) {
 					data.getPixel(col, row, pixel);
 					int rgb = (((pixel[0] >> 3) << 11) | ((pixel[1] >> 2) << 5) | (pixel[2] >> 3));
-//					System.out.println(String.format("x:%d y:%d, pix: %d %d %d %d => %06x", col, row, pixel[0], pixel[1], pixel[2], pixel[3], rgb));
+//				System.out.println(String.format("x:%d y:%d, pix: %d %d %d %d => %06x", col, row, pixel[0], pixel[1], pixel[2], pixel[3], rgb));
 					if (col + topLeftX < guiImage.imageWidth &&
 							row + topLeftY < guiImage.imageHeight &&
 							col + topLeftX >= 0 && row + topLeftY >= 0) {

@@ -226,7 +226,7 @@ public class LCD1in3Sample {
 		StaticUtil.userInput("Hit Return to display Image...");
 
 		String image = "img/pic.240x240.bmp";
-		lcd.GUIDisplayImage(image);
+		lcd.GUIDisplayImage(image , 100, 75);
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
@@ -234,7 +234,7 @@ public class LCD1in3Sample {
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to display Image, again...");
 		lcd.LCDClear(LCD1in3.BLACK);
-		lcd.GUIDisplayImage(image, 100, 75);
+		lcd.GUIDisplayImage(image);
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
