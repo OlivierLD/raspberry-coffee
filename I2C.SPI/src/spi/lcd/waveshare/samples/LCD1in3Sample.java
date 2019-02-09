@@ -263,7 +263,7 @@ public class LCD1in3Sample {
 				int centerY = 120;
 				int extRadius = 115;
 				int intRadius = 105;
-				int digitRadius = 80;
+				int digitRadius = 70;
 				int knobRadius = 10;
 				// Watch Border and background
 				lcd.GUIDrawCircle(centerX, centerY, extRadius, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
@@ -308,34 +308,34 @@ public class LCD1in3Sample {
 
 				// Hands
 				int angle = 0;
-				int len = 90;
+				int handLength = 80; // hours
 				lcd.GUIDrawLine(
 						centerX,
 						centerY,
-						(int) (centerX + Math.round(len * Math.sin(Math.toRadians(angle)))),
-						(int) (centerY - Math.round(len * Math.cos(Math.toRadians(angle)))),
+						(int) (centerX + Math.round(handLength * Math.sin(Math.toRadians(angle)))),
+						(int) (centerY - Math.round(handLength * Math.cos(Math.toRadians(angle)))),
 						LCD1in3.RED,
 						LCD1in3.LineStyle.LINE_STYLE_SOLID,
 						LCD1in3.DotPixel.DOT_PIXEL_3X3);
 
 				angle = 120;
-				len = 70;
+				handLength = 50; // Hours
 				lcd.GUIDrawLine(
 						centerX,
 						centerY,
-						(int) (centerX + Math.round(len * Math.sin(Math.toRadians(angle)))),
-						(int) (centerY - Math.round(len * Math.cos(Math.toRadians(angle)))),
+						(int) (centerX + Math.round(handLength * Math.sin(Math.toRadians(angle)))),
+						(int) (centerY - Math.round(handLength * Math.cos(Math.toRadians(angle)))),
 						LCD1in3.BLUE,
 						LCD1in3.LineStyle.LINE_STYLE_SOLID,
 						LCD1in3.DotPixel.DOT_PIXEL_5X5);
 
 				angle = 6 * sec;
-				len = 100;
+				handLength = 95; // Seconds
 				lcd.GUIDrawLine(
 						centerX,
 						centerY,
-						(int) (centerX + Math.round(len * Math.sin(Math.toRadians(angle)))),
-						(int) (centerY - Math.round(len * Math.cos(Math.toRadians(angle)))),
+						(int) (centerX + Math.round(handLength * Math.sin(Math.toRadians(angle)))),
+						(int) (centerY - Math.round(handLength * Math.cos(Math.toRadians(angle)))),
 						LCD1in3.GREEN,
 						LCD1in3.LineStyle.LINE_STYLE_SOLID,
 						LCD1in3.DotPixel.DOT_PIXEL_1X1);
