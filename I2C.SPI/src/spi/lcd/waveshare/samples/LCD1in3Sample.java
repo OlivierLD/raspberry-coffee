@@ -129,13 +129,15 @@ public class LCD1in3Sample {
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to move on...");
 
-		System.out.println("Use the buttons. Press K1 + K2 to exit the loop");
+		System.out.println("Use the buttons. Press K1 + K3 to exit the loop");
 		while (true) {
 			drawKeyListenInit(lcd);
-			if (k1 && k2) {
+			if (k1 && k3) {
 				break;
 			}
 		}
+
+		System.out.println("Out of the loop");
 
 		if (!lcd.isSimulating()) {
 			lcd.LCDClear(LCD1in3.BLACK);
