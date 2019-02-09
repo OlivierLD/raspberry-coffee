@@ -225,6 +225,9 @@ public class LCD1in3Sample {
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to display Image...");
 
+		lcd.LCDClear(LCD1in3.BLACK);
+		lcd.GUIClear(LCD1in3.BLACK);
+
 		String image = "img/pic.240x240.bmp";
 		lcd.GUIDisplayImage(image , 100, 75);
 		if (!lcd.isSimulating()) {
@@ -233,7 +236,9 @@ public class LCD1in3Sample {
 
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to display Image, again...");
+
 		lcd.LCDClear(LCD1in3.BLACK);
+		lcd.GUIClear(LCD1in3.BLACK);
 		lcd.GUIDisplayImage(image);
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
@@ -243,6 +248,22 @@ public class LCD1in3Sample {
 		StaticUtil.userInput("Hit Return to move on...");
 
 		keyListenerScreen(lcd);
+
+		System.out.println("Drawing watch...");
+		// Draw watch
+		lcd.LCDClear(LCD1in3.BLACK);
+		lcd.GUIClear(LCD1in3.BLACK);
+		// Watch
+		lcd.GUIDrawCircle(120, 120, 110, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+		lcd.GUIDrawCircle(120, 120, 100, LCD1in3.CYAN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+		
+
+		if (!lcd.isSimulating()) {
+			lcd.LCDDisplay();
+		}
+
+		// Wait for CR
+		StaticUtil.userInput("Hit Return to move on...");
 
 		if (!lcd.isSimulating()) {
 			lcd.LCDClear(LCD1in3.BLACK);
