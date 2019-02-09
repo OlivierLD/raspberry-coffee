@@ -223,6 +223,7 @@ public class LCD1in3Sample {
 
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to display Image...");
+
 		String image = "img/pic.240x240.bmp";
 		lcd.GUIDisplayImage(image);
 		if (!lcd.isSimulating()) {
