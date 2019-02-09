@@ -258,24 +258,37 @@ public class LCD1in3Sample {
 		lcd.GUIDrawCircle(120, 120, 100, LCD1in3.BLACK, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
 		int angle = 0;
+		int len = 90;
 		lcd.GUIDrawLine(
 				120,
 				120,
-				(int)(120 + Math.round(100 * Math.sin(Math.toRadians(angle)))),
-				(int)(120 - Math.round(100 * Math.cos(Math.toRadians(angle)))),
+				(int)(120 + Math.round(len * Math.sin(Math.toRadians(angle)))),
+				(int)(120 - Math.round(len * Math.cos(Math.toRadians(angle)))),
 				LCD1in3.RED,
 				LCD1in3.LineStyle.LINE_STYLE_SOLID,
 				LCD1in3.DotPixel.DOT_PIXEL_3X3);
 
 		angle = 120;
+		len = 70;
 		lcd.GUIDrawLine(
 				120,
 				120,
-				(int)(120 + Math.round(100 * Math.sin(Math.toRadians(angle)))),
-				(int)(120 - Math.round(100 * Math.cos(Math.toRadians(angle)))),
+				(int)(120 + Math.round(len * Math.sin(Math.toRadians(angle)))),
+				(int)(120 - Math.round(len * Math.cos(Math.toRadians(angle)))),
 				LCD1in3.BLUE,
 				LCD1in3.LineStyle.LINE_STYLE_SOLID,
-				LCD1in3.DotPixel.DOT_PIXEL_3X3);
+				LCD1in3.DotPixel.DOT_PIXEL_5X5);
+
+		angle = 200;
+		len = 100;
+		lcd.GUIDrawLine(
+				120,
+				120,
+				(int)(120 + Math.round(len * Math.sin(Math.toRadians(angle)))),
+				(int)(120 - Math.round(len * Math.cos(Math.toRadians(angle)))),
+				LCD1in3.GREEN,
+				LCD1in3.LineStyle.LINE_STYLE_SOLID,
+				LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
 		// Knob
 		lcd.GUIDrawCircle(120, 120, 10, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
