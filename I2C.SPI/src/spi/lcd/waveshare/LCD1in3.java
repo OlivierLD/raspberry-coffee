@@ -631,18 +631,18 @@ public class LCD1in3 {
 //			System.out.println("-- Vertical line! --");
 //		}
 
-		if (xFrom > xTo) { // Swap
-			int temp;
-			temp = xFrom;
-			xFrom = xTo;
-			xTo = temp;
-		}
-		if (yFrom > yTo) { // Swap
-			int temp;
-			temp = yFrom;
-			yFrom = yTo;
-			yTo = temp;
-		}
+//		if (xFrom > xTo) { // Swap
+//			int temp;
+//			temp = xFrom;
+//			xFrom = xTo;
+//			xTo = temp;
+//		}
+//		if (yFrom > yTo) { // Swap
+//			int temp;
+//			temp = yFrom;
+//			yFrom = yTo;
+//			yTo = temp;
+//		}
 
 		int xPoint = xFrom;
 		int yPoint = yFrom;
