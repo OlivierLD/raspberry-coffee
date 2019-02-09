@@ -626,9 +626,9 @@ public class LCD1in3 {
 			return;
 		}
 
-		if (VERBOSE && xFrom == xTo) {
-			System.out.println("-- Vertical line! --");
-		}
+//		if (VERBOSE && xFrom == xTo) {
+//			System.out.println("-- Vertical line! --");
+//		}
 
 		if (xFrom > xTo) { // Swap
 			int temp;
@@ -657,10 +657,9 @@ public class LCD1in3 {
 		byte dottedLen = 0;
 		while (true) {
 			dottedLen++;
-			if (VERBOSE && xFrom == xTo) {
-				System.out.println(String.format("(2) Vertical line (x:%d y:%d) to (x:%d y:%d) current (x:%d y:%d), (dottedLen %d)", xFrom, yFrom, xTo, yTo, xPoint, yPoint, dottedLen));
-			}
-
+//			if (VERBOSE && xFrom == xTo) {
+//				System.out.println(String.format("(2) Vertical line (x:%d y:%d) to (x:%d y:%d) current (x:%d y:%d), (dottedLen %d)", xFrom, yFrom, xTo, yTo, xPoint, yPoint, dottedLen));
+//			}
 			// Painted dotted line, 2 point is really virtual
 			if (lineStyle == LineStyle.LINE_STYLE_DOTTED && dottedLen % 3 == 0) {
 				GUIDrawPoint(xPoint, yPoint, IMAGE_BACKGROUND, dotPixel, DOT_STYLE_DFT);
@@ -670,9 +669,9 @@ public class LCD1in3 {
 			}
 			if (2 * esp >= dy) {
 				if (xPoint == xTo) {
-					if (VERBOSE) {
-						System.out.println(String.format("(2) DrawLine, vertical, breaking. esp=%d, dy=%d", esp, dy));
-					}
+//					if (VERBOSE) {
+//						System.out.println(String.format("(2) DrawLine, vertical, breaking. esp=%d, dy=%d", esp, dy));
+//					}
 					break;
 				}
 				esp += dy;
@@ -680,18 +679,18 @@ public class LCD1in3 {
 			}
 			if (2 * esp <= dx) {
 				if (yPoint == yTo) {
-					if (VERBOSE) {
-						System.out.println(String.format("DrawLine, horizontal, breaking. esp=%d, dx=%d", esp, dx));
-					}
+//					if (VERBOSE) {
+//						System.out.println(String.format("DrawLine, horizontal, breaking. esp=%d, dx=%d", esp, dx));
+//					}
 					break;
 				}
 				esp += dx;
 				yPoint += yDir;
 			}
 		}
-		if (VERBOSE && xFrom == xTo) {
-			System.out.println("-- Vertical line (end) --");
-		}
+//		if (VERBOSE && xFrom == xTo) {
+//			System.out.println("-- Vertical line (end) --");
+//		}
 	}
 
 	public void LCDDisplay() {
@@ -942,7 +941,8 @@ public class LCD1in3 {
 					image.getData().getPixel(col, row, pixel);
 					int rgb = (((pixel[0] >> 3) << 11) | ((pixel[1] >> 2) << 5) | (pixel[2] >> 3));
 //					System.out.println(String.format("x:%d y:%d, pix: %d %d %d %d => %06x", col, row, pixel[0], pixel[1], pixel[2], pixel[3], rgb));
-					GUISetPixel(col, image.getHeight() - row - 1, rgb);
+//					GUISetPixel(col, image.getHeight() - row - 1, rgb);
+					GUISetPixel(col, row, rgb);
 				}
 				if (VERBOSE) {
 					System.out.println(String.format("Row %d, completed", row));
