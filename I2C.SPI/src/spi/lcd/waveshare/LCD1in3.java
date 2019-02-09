@@ -952,9 +952,9 @@ public class LCD1in3 {
 						GUISetPixel(col + topLeftX, row + topLeftY, rgb);
 					}
 				}
-				if (VERBOSE) {
-					System.out.println(String.format("Row %d, completed", row));
-				}
+//				if (VERBOSE) {
+//					System.out.println(String.format("Row %d, completed", row));
+//				}
 			}
 			if (VERBOSE) {
 				System.out.println("Done with image");
@@ -1002,14 +1002,6 @@ public class LCD1in3 {
 		if (deassertSs && chipSelectPin != null) {
 			chipSelectPin.high();
 		}
-	}
-
-	// TODO Remove or replace
-	private void command(int c) throws Exception {
-		dcPin.low();
-//    try { spiDevice.write((byte)c); }
-//    catch (IOException ioe) { ioe.printStackTrace(); }
-		this.write(new int[]{c});
 	}
 
 	public void shutdown() {
