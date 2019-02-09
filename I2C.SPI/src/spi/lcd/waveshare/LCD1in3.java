@@ -89,28 +89,28 @@ public class LCD1in3 {
 	private int clockHertz = 8_000_000; // 8 MHz TODO Check this??
 
 	public final static int LCD_HEIGHT = 240;
-	public final static int LCD_WIDTH = 240;
+	public final static int LCD_WIDTH  = 240;
 
 	public final static int HORIZONTAL = 0;
-	public final static int VERTICAL = 1;
+	public final static int VERTICAL   = 1;
 
-	private int lcdWidth = 0;
-	private int lcdHeight = 0;
+	private int lcdWidth  = LCD_WIDTH;
+	private int lcdHeight = LCD_HEIGHT;
 
-	public final static int WHITE = 0xffff;
-	public final static int BLACK = 0x0000;
-	public final static int BLUE = 0x001f;
-	public final static int BRED = 0xf81f;
-	public final static int GRED = 0xffe0;
-	public final static int GBLUE = 0x07ff;
-	public final static int RED = 0xf800;
+	public final static int WHITE   = 0xffff;
+	public final static int BLACK   = 0x0000;
+	public final static int BLUE    = 0x001f;
+	public final static int BRED    = 0xf81f;
+	public final static int GRED    = 0xffe0;
+	public final static int GBLUE   = 0x07ff;
+	public final static int RED     = 0xf800;
 	public final static int MAGENTA = 0xf81f;
-	public final static int GREEN = 0x07e0;
-	public final static int CYAN = 0x7fff;
-	public final static int YELLOW = 0xffe0;
-	public final static int BROWN = 0xbc40;
-	public final static int BRRED = 0xfc07;
-	public final static int GRAY = 0x8430;
+	public final static int GREEN   = 0x07e0;
+	public final static int CYAN    = 0x7fff;
+	public final static int YELLOW  = 0xffe0;
+	public final static int BROWN   = 0xbc40;
+	public final static int BRRED   = 0xfc07;
+	public final static int GRAY    = 0x8430;
 
 	public int IMAGE_BACKGROUND = WHITE;
 
@@ -118,8 +118,8 @@ public class LCD1in3 {
 	public int FONT_BACKGROUND = WHITE;
 
 
-	public final static int IMAGE_ROTATE_0 = 0;
-	public final static int IMAGE_ROTATE_90 = 1;
+	public final static int IMAGE_ROTATE_0   = 0;
+	public final static int IMAGE_ROTATE_90  = 1;
 	public final static int IMAGE_ROTATE_180 = 2;
 	public final static int IMAGE_ROTATE_270 = 3;
 
@@ -922,46 +922,88 @@ public class LCD1in3 {
 		}
 	}
 
+	public enum ImgJustification {
+		CENTERED,
+		TOP_LEFT,
+		TOP_RIGHT,
+		BOTTOM_LEFT,
+		BOTTOM_RIGHT
+	}
+
 	public void GUIDisplayImage(String imgPath) {
 		GUIDisplayImage(imgPath, 0, 0);
 	}
+
+	public void GUIDisplayImage(String imgPath, ImgJustification justification) {
+		try {
+			File imgFile = new File(imgPath);
+			BufferedImage image = ImageIO.read(imgFile);
+			int x = 0, y = 0;
+			if (justification == ImgJustification.CENTERED) {
+				x = (lcdWidth / 2) - (image.getWidth() / 2);
+				y = (lcdHeight / 2) - (image.getHeight() / 2);
+			} else if (justification == ImgJustification.TOP_LEFT) {
+				x = 0;
+				y = 0;
+			} else if (justification == ImgJustification.TOP_RIGHT) {
+				x = lcdWidth - image.getWidth();
+				y = 0;
+			} else if (justification == ImgJustification.BOTTOM_LEFT) {
+				x = 0;
+				y = lcdHeight - image.getHeight();
+			} else if (justification == ImgJustification.BOTTOM_RIGHT) {
+				x = lcdWidth - image.getWidth();
+				y = lcdHeight - image.getHeight();
+			}
+
+			GUIDisplayImage(image, x, y);
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+
 	public void GUIDisplayImage(String imgPath, int topLeftX, int topLeftY) {
 		try {
 			File imgFile = new File(imgPath);
 			BufferedImage image = ImageIO.read(imgFile);
-			if (VERBOSE) {
-				System.out.println(String.format("Image was read, w: %d, h: %d (Offset %d %d)", image.getWidth(), image.getHeight(), topLeftX, topLeftY));
-			}
-			if ((image.getWidth() + topLeftX) > guiImage.imageWidth || (image.getHeight() + topLeftY) > guiImage.imageHeight) {
-				if (VERBOSE) {
-					System.out.println("GUIDrawString Input exceeds the normal display range");
-				}
-//				return;
-			}
-
-			Raster data = image.getData();
-			int[] pixel = new int[4];       // RGBA
-			for (int row=0; row<image.getHeight(); row++) {
-				for (int col=0; col<image.getWidth(); col++) {
-					data.getPixel(col, row, pixel);
-					int rgb = (((pixel[0] >> 3) << 11) | ((pixel[1] >> 2) << 5) | (pixel[2] >> 3));
-//				System.out.println(String.format("x:%d y:%d, pix: %d %d %d %d => %06x", col, row, pixel[0], pixel[1], pixel[2], pixel[3], rgb));
-					if (col + topLeftX < guiImage.imageWidth &&
-							row + topLeftY < guiImage.imageHeight &&
-							col + topLeftX >= 0 && row + topLeftY >= 0) {
-						GUISetPixel(col + topLeftX, row + topLeftY, rgb);
-					}
-				}
-//				if (VERBOSE) {
-//					System.out.println(String.format("Row %d, completed", row));
-//				}
-			}
-			if (VERBOSE) {
-				System.out.println("Done with image");
-			}
+			GUIDisplayImage(image, topLeftX, topLeftY);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
+	}
+
+	private void GUIDisplayImage(BufferedImage image, int topLeftX, int topLeftY) {
+		if ((image.getWidth() + topLeftX) > guiImage.imageWidth || (image.getHeight() + topLeftY) > guiImage.imageHeight) {
+			if (VERBOSE) {
+				System.out.println("GUIDrawString Input exceeds the normal display range");
+			}
+//		return;
+		}
+
+		Raster data = image.getData();
+		int[] pixel = new int[4];       // RGBA
+		for (int row = 0; row < image.getHeight(); row++) {
+			for (int col = 0; col < image.getWidth(); col++) {
+				data.getPixel(col, row, pixel);
+				int rgb = rgb(pixel[0], pixel[1], pixel[2]);
+//			System.out.println(String.format("x:%d y:%d, pix: %d %d %d %d => %04x", col, row, pixel[0], pixel[1], pixel[2], pixel[3], rgb));
+				if (col + topLeftX < guiImage.imageWidth &&
+						row + topLeftY < guiImage.imageHeight &&
+						col + topLeftX >= 0 && row + topLeftY >= 0) { // Within the screen
+					GUISetPixel(col + topLeftX, row + topLeftY, rgb);
+				}
+			}
+//		if (VERBOSE) {
+//			System.out.println(String.format("Row %d, completed", row));
+//		}
+		}
+		if (VERBOSE) {
+			System.out.println("Done with image");
+		}
+	}
+
+	public static int rgb(int r, int g, int b) {
+		return (((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3));
 	}
 
 	private final int MASK = 0x80; // MSBFIRST, 0x80 = 0&10000000

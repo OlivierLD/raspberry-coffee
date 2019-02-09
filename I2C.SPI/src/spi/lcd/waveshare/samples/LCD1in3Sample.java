@@ -248,6 +248,16 @@ public class LCD1in3Sample {
 		}
 
 		// Wait for CR
+		StaticUtil.userInput("Hit Return to display another Image...");
+
+		lcd.LCDClear(LCD1in3.BLACK);
+		lcd.GUIClear(LCD1in3.BLACK);
+		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.CENTERED);
+		if (!lcd.isSimulating()) {
+			lcd.LCDDisplay();
+		}
+
+		// Wait for CR
 		StaticUtil.userInput("Hit Return to move on...");
 
 		keyListenerScreen(lcd);
@@ -302,7 +312,7 @@ public class LCD1in3Sample {
 					int strX = digitCenterX - (strlen / 2);
 					int strY = digitCenterY - (font.getHeight() / 2);
 
-					lcd.GUIDrawString(strX, strY, digits[i], font, LCD1in3.BLACK, LCD1in3.GREEN);
+					lcd.GUIDrawString(strX, strY, digits[i], font, LCD1in3.BLACK, LCD1in3.WHITE);
 				}
 
 
@@ -392,8 +402,8 @@ public class LCD1in3Sample {
 			int strX = 120 - (strlen / 2);
 			int strY = 120 - (f24.getHeight() / 2);
 
-			lcd.GUIDrawCircle(120, 120, (int)((strlen * 1.5) / 2), LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
-			lcd.GUIDrawString(strX, strY, bye, f24, LCD1in3.WHITE, LCD1in3.GREEN);
+			lcd.GUIDrawCircle(120, 120, (int)((strlen * 1.5) / 2), LCD1in3.GRAY, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+			lcd.GUIDrawString(strX, strY, bye, f24, LCD1in3.GRAY, LCD1in3.BLACK);
 			lcd.LCDDisplay();
 			TimeUtil.delay(1_000);
 
