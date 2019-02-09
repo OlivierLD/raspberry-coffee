@@ -930,7 +930,7 @@ public class LCD1in3 {
 			File imgFile = new File(imgPath);
 			BufferedImage image = ImageIO.read(imgFile);
 			if (VERBOSE) {
-				System.out.println(String.format("Image was read, w: %d, h: %d", image.getWidth(), image.getHeight()));
+				System.out.println(String.format("Image was read, w: %d, h: %d (Offset %d %d)", image.getWidth(), image.getHeight(), topLeftX, topLeftY));
 			}
 			if ((image.getWidth() + topLeftX) > guiImage.imageWidth || (image.getHeight() + topLeftY) > guiImage.imageHeight) {
 				if (VERBOSE) {
