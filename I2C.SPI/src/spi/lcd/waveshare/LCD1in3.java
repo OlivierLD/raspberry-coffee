@@ -936,7 +936,7 @@ public class LCD1in3 {
 				if (VERBOSE) {
 					System.out.println("GUIDrawString Input exceeds the normal display range");
 				}
-				return;
+//				return;
 			}
 
 			Raster data = image.getData();
