@@ -349,7 +349,7 @@ public class LCD1in3Sample {
 			lcd.GUIClear(LCD1in3.BLACK);
 			lcd.LCDDisplay();
 
-			TimeUtil.delay(1_000);
+//		TimeUtil.delay(1_000);
 			lcd.shutdown();
 		}
 		System.out.println("End of Sample");
