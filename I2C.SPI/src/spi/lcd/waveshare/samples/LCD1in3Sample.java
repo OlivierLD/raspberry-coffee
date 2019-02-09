@@ -308,7 +308,7 @@ public class LCD1in3Sample {
 
 				// Hands
 				int angle = 0;
-				int handLength = 80; // hours
+				int handLength = 85; // hours
 				lcd.GUIDrawLine(
 						centerX,
 						centerY,
@@ -336,7 +336,7 @@ public class LCD1in3Sample {
 						centerY,
 						(int) (centerX + Math.round(handLength * Math.sin(Math.toRadians(angle)))),
 						(int) (centerY - Math.round(handLength * Math.cos(Math.toRadians(angle)))),
-						LCD1in3.GREEN,
+						LCD1in3.CYAN,
 						LCD1in3.LineStyle.LINE_STYLE_SOLID,
 						LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
