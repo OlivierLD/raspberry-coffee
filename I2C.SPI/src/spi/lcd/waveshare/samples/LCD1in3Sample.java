@@ -274,32 +274,34 @@ public class LCD1in3Sample {
 //	lcd.LCDClear(LCD1in3.BLACK);
 //	lcd.GUIClear(LCD1in3.BLACK);
 		lcd.setBackgroundGradient(0x7f, 0x7f, 0x7f, 0x00, 0x00, 0x00);
-
-
 		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.TOP_LEFT);
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
 //	lcd.LCDClear(LCD1in3.BLACK);
-		lcd.GUIClear(LCD1in3.BLACK);
+//	lcd.GUIClear(LCD1in3.BLACK);
+		lcd.setBackgroundGradient(0x7f, 0x7f, 0x7f, 0x00, 0x00, 0x00);
 		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.TOP_RIGHT);
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
 //	lcd.LCDClear(LCD1in3.BLACK);
-		lcd.GUIClear(LCD1in3.BLACK);
+//	lcd.GUIClear(LCD1in3.BLACK);
+		lcd.setBackgroundGradient(0x7f, 0x7f, 0x7f, 0x00, 0x00, 0x00);
 		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.BOTTOM_LEFT);
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
 //	lcd.LCDClear(LCD1in3.BLACK);
-		lcd.GUIClear(LCD1in3.BLACK);
+//	lcd.GUIClear(LCD1in3.BLACK);
+		lcd.setBackgroundGradient(0x7f, 0x7f, 0x7f, 0x00, 0x00, 0x00);
 		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.BOTTOM_RIGHT);
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
 //	lcd.LCDClear(LCD1in3.BLACK);
-		lcd.GUIClear(LCD1in3.BLACK);
+//	lcd.GUIClear(LCD1in3.BLACK);
+		lcd.setBackgroundGradient(0x7f, 0x7f, 0x7f, 0x00, 0x00, 0x00);
 		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.CENTERED);
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
@@ -323,7 +325,8 @@ public class LCD1in3Sample {
 			System.out.println("Drawing watch...");
 			// Draw watch
 			lcd.LCDClear(LCD1in3.BLACK);
-			lcd.GUIClear(LCD1in3.BLACK);
+//		lcd.GUIClear(LCD1in3.BLACK);
+			lcd.setBackgroundGradient(0x7f, 0x7f, 0x7f, 0x00, 0x00, 0x00);
 
 			for (int sec = 0; sec <= 60; sec++) {
 				int centerX = 120;

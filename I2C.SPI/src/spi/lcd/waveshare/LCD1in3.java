@@ -1010,6 +1010,7 @@ public class LCD1in3 {
 	/*
 	 * Top-left to bottom-right
 	 * Color picker at https://helloacm.com/tools/rgb-color-picker/
+	 * Can replace the GUIClear
 	 */
 	public void setBackgroundGradient(int topLeftR, int topLeftG, int topLeftB,
 	                                  int bottomRightR, int bottomRightG, int bottomRightB) {
