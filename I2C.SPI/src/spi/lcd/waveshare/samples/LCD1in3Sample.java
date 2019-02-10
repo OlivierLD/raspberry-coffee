@@ -384,6 +384,7 @@ public class LCD1in3Sample {
 				}
 
 				Date now = new Date();
+
 				int hours = Integer.parseInt(SDF_HH.format(now)) % 12;
 				int minutes = Integer.parseInt(SDF_MM.format(now));
 				int seconds = Integer.parseInt(SDF_SS.format(now));
@@ -391,6 +392,8 @@ public class LCD1in3Sample {
 				int secInDegrees = (seconds * 6);
 				float minInDegrees = ((minutes * 6) + (seconds / 10));
 				float hoursInDegrees = ((hours) * 30) + (((minutes * 6) + (seconds / 10)) / 12);
+
+				System.out.println(String.format("Date: %s, h:%d, m:%d, s:%s, hDeg:%f, mDeg:%f, sDeg:%d ", now.toString(), hours, minutes, seconds, hoursInDegrees, minInDegrees, secInDegrees));
 
 				// Hands
 				float angle = hoursInDegrees;
