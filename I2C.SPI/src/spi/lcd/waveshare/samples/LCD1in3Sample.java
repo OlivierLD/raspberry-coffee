@@ -258,8 +258,41 @@ public class LCD1in3Sample {
 		}
 
 		// Wait for CR
-		StaticUtil.userInput("Hit Return to move on...");
+		StaticUtil.userInput("Hit Return to move images around...");
 
+		lcd.LCDClear(LCD1in3.BLACK);
+		lcd.GUIClear(LCD1in3.BLACK);
+		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.TOP_LEFT);
+		if (!lcd.isSimulating()) {
+			lcd.LCDDisplay();
+		}
+		lcd.LCDClear(LCD1in3.BLACK);
+		lcd.GUIClear(LCD1in3.BLACK);
+		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.TOP_RIGHT);
+		if (!lcd.isSimulating()) {
+			lcd.LCDDisplay();
+		}
+		lcd.LCDClear(LCD1in3.BLACK);
+		lcd.GUIClear(LCD1in3.BLACK);
+		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.BOTTOM_LEFT);
+		if (!lcd.isSimulating()) {
+			lcd.LCDDisplay();
+		}
+		lcd.LCDClear(LCD1in3.BLACK);
+		lcd.GUIClear(LCD1in3.BLACK);
+		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.BOTTOM_RIGHT);
+		if (!lcd.isSimulating()) {
+			lcd.LCDDisplay();
+		}
+		lcd.LCDClear(LCD1in3.BLACK);
+		lcd.GUIClear(LCD1in3.BLACK);
+		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.CENTERED);
+		if (!lcd.isSimulating()) {
+			lcd.LCDDisplay();
+		}
+
+		// Wait for CR
+		StaticUtil.userInput("Hit Return to move on...");
 		keyListenerScreen(lcd);
 
 		if ("true".equals(System.getProperty("with.watch", "true"))) {
