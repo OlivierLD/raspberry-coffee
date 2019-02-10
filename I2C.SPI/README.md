@@ -78,6 +78,14 @@ SPI 84x48 Monochrome LCD. https://www.adafruit.com/product/338
 #### Waveshare 240x240, 1.3inch IPS LCD display HAT for Raspberry Pi
 240x240 _Color_ screen, with 3 buttons and a joystick, https://www.waveshare.com/product/modules/oleds-lcds/raspberry-pi-lcd/1.3inch-lcd-hat.htm
 
+|    |    |
+|:--:|:--:|
+| ![Grahical display](./img/01.ws.jpg) | ![BMP Image](./img/02.ws.jpg) |
+| ![Gif image](./img/03.ws.jpg) | ![Keys and Joystick](./img/04.ws.jpg) |
+| ![Grahpical data](./img/05.ws.jpg) | ![Analog watch](./img/06.ws.jpg) |
+
+Through the Java `ImageIO` package, all image formats are supported.
+
 ## Miscellaneous
 I<sup>2</sup>C communication between Raspberry Pi and Arduino.
 Package `i2c.comm`.
