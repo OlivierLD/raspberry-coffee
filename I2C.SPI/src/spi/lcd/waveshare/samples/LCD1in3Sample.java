@@ -428,6 +428,16 @@ public class LCD1in3Sample {
 		lcd.GUIDrawString(8, y, sdf1.format(date), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
 		y += 20;
 		lcd.GUIDrawString(8, y, sdf3.format(date), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+		y += 20;
+		lcd.GUIDrawString(8, y, "COG: ---", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+		y += 20;
+		lcd.GUIDrawString(8, y, "SOG: ---", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+		y += 20;
+		lcd.GUIDrawString(8, y, "HDG: ---", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+		y += 20;
+		lcd.GUIDrawString(8, y, "Sun Z: ---", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+		y += 20;
+		lcd.GUIDrawString(8, y, "Sun elev: ---", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
 		// y += 20;
 
 		if (!lcd.isSimulating()) {
