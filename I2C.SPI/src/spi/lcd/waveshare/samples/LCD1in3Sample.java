@@ -344,8 +344,8 @@ public class LCD1in3Sample {
 				int digitRadius = 70;
 				int knobRadius = 10;
 				// Watch Border and background
-				lcd.GUIDrawCircle(centerX, centerY, extRadius, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
-				lcd.GUIDrawCircle(centerX, centerY, intRadius, LCD1in3.BLACK, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+				lcd.GUIDrawCircle(centerX, centerY, extRadius, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_8X8);
+//			lcd.GUIDrawCircle(centerX, centerY, intRadius, LCD1in3.BLACK, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
 				// Ticks
 				for (int angle=0; angle<360; angle+=6) {
