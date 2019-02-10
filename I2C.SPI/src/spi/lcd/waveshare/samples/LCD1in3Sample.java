@@ -454,7 +454,7 @@ public class LCD1in3Sample {
 			int strX = 120 - (strlen / 2);
 			int strY = 120 - (f24.getHeight() / 2);
 
-			int bg = LCD1in3.rgb(128, 128, 128);
+			int bg = LCD1in3.rgb(200, 200, 200);
 			lcd.GUIDrawCircle(120, 120, (int)((strlen * 1.5) / 2), bg, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 			lcd.GUIDrawString(strX, strY, bye, f24, bg, LCD1in3.BLACK);
 			lcd.LCDDisplay();
