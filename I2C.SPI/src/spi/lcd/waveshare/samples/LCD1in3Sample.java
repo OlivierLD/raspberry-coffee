@@ -334,7 +334,7 @@ public class LCD1in3Sample {
 			// Draw watch
 			lcd.LCDClear(LCD1in3.BLACK);
 //		lcd.GUIClear(LCD1in3.BLACK);
-			lcd.setBackgroundGradient(0x7f, 0x7f, 0x7f, 0x00, 0x00, 0x00);
+			lcd.setBackgroundGradient(0xff, 0x7f, 0x7f, 0x00, 0x00, 0x00);
 
 			for (int sec = 0; sec <= 60; sec++) {
 				int centerX = 120;
@@ -344,12 +344,8 @@ public class LCD1in3Sample {
 				int digitRadius = 70;
 				int knobRadius = 10;
 				// Watch Border and background
-				// Option 1
-//				lcd.GUIDrawCircle(centerX, centerY, extRadius, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
-//				lcd.GUIDrawCircle(centerX, centerY, intRadius, LCD1in3.BLACK, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
-
-				// Option 2
-				lcd.GUIDrawCircle(centerX, centerY, extRadius, LCD1in3.GREEN, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_8X8);
+				lcd.GUIDrawCircle(centerX, centerY, extRadius, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+				lcd.GUIDrawCircle(centerX, centerY, intRadius, LCD1in3.BLACK, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
 				// Ticks
 				for (int angle=0; angle<360; angle+=6) {
