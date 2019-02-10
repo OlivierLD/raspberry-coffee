@@ -240,7 +240,7 @@ public class LCD1in3Sample {
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to display Image, again...");
 
-		lcd.LCDClear(LCD1in3.BLACK);
+//	lcd.LCDClear(LCD1in3.BLACK);
 		lcd.GUIClear(LCD1in3.BLACK);
 		lcd.GUIDisplayImage(image);
 		if (!lcd.isSimulating()) {
@@ -250,7 +250,7 @@ public class LCD1in3Sample {
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to display another Image...");
 
-		lcd.LCDClear(LCD1in3.BLACK);
+//	lcd.LCDClear(LCD1in3.BLACK);
 		lcd.GUIClear(LCD1in3.BLACK);
 		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.CENTERED);
 		if (!lcd.isSimulating()) {
@@ -260,7 +260,7 @@ public class LCD1in3Sample {
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to move images around...");
 
-		lcd.LCDClear(LCD1in3.BLACK);
+//	lcd.LCDClear(LCD1in3.BLACK);
 		lcd.GUIClear(LCD1in3.BLACK);
 		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.TOP_LEFT);
 		if (!lcd.isSimulating()) {
@@ -287,6 +287,16 @@ public class LCD1in3Sample {
 //	lcd.LCDClear(LCD1in3.BLACK);
 		lcd.GUIClear(LCD1in3.BLACK);
 		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.CENTERED);
+		if (!lcd.isSimulating()) {
+			lcd.LCDDisplay();
+		}
+
+		// Wait for CR
+		StaticUtil.userInput("Hit Return to display a sand dollar...");
+
+//	lcd.LCDClear(LCD1in3.BLACK);
+		lcd.GUIClear(LCD1in3.BLACK);
+		lcd.GUIDisplayImage("img/SandDollar.01.gif", LCD1in3.ImgJustification.CENTERED);
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
