@@ -393,11 +393,11 @@ public class LCD1in3Sample {
 				float minInDegrees = ((minutes * 6) + (seconds / 10));
 				float hoursInDegrees = ((hours) * 30) + (((minutes * 6) + (seconds / 10)) / 12);
 
-				System.out.println(String.format("Date: %s, h:%d, m:%d, s:%s, hDeg:%f, mDeg:%f, sDeg:%d ", now.toString(), hours, minutes, seconds, hoursInDegrees, minInDegrees, secInDegrees));
+//			System.out.println(String.format("Date: %s, h:%d, m:%d, s:%s, hDeg:%f, mDeg:%f, sDeg:%d ", now.toString(), hours, minutes, seconds, hoursInDegrees, minInDegrees, secInDegrees));
 
 				// Hands
-				float angle = hoursInDegrees;
-				int handLength = 85; // hours
+				float angle = minInDegrees;
+				int handLength = 85; // Minutes
 				lcd.GUIDrawLine(
 						centerX,
 						centerY,
@@ -407,7 +407,7 @@ public class LCD1in3Sample {
 						LCD1in3.LineStyle.LINE_STYLE_SOLID,
 						LCD1in3.DotPixel.DOT_PIXEL_3X3);
 
-				angle = minInDegrees;
+				angle = hoursInDegrees;
 				handLength = 50; // Hours
 				lcd.GUIDrawLine(
 						centerX,
