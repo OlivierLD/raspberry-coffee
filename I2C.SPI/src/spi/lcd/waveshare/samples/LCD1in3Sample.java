@@ -228,33 +228,14 @@ public class LCD1in3Sample {
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to display a gradient...");
 
-
 		// Color picker at https://helloacm.com/tools/rgb-color-picker/
 		int fromR = 0xff; int fromG = 0xff; int fromB = 0xff; // White
 		int toR = 0x00; int toG = 0x00; int toB = 0x00; // Black
-		float deltaR = toR - fromR;
-		float deltaG = toG - fromG;
-		float deltaB = toB - fromB;
-
-		// Diagonal radient, from top-left to bottom-right
-		for (int row = 0; row < LCD1in3.LCD_HEIGHT; row++) {
-			int colFromR = fromR + (Math.round((deltaR / 2f) * ((float) row / (float) LCD1in3.LCD_WIDTH)));
-			int colFromG = fromG + (Math.round((deltaG / 2f) * ((float) row / (float) LCD1in3.LCD_WIDTH)));
-			int colFromB = fromB + (Math.round((deltaB / 2f) * ((float) row / (float) LCD1in3.LCD_WIDTH)));
-			for (int col = 0; col < LCD1in3.LCD_WIDTH; col++) {
-				int r = colFromR + (Math.round((deltaR / 2f) * ((float) col / (float) LCD1in3.LCD_HEIGHT)));
-				int g = colFromG + (Math.round((deltaG / 2f) * ((float) col / (float) LCD1in3.LCD_HEIGHT)));
-				int b = colFromB + (Math.round((deltaB / 2f) * ((float) col / (float) LCD1in3.LCD_HEIGHT)));
-//				System.out.println(String.format("At (%d, %d), color 0x%02x%02x%02x", col, row, (r & 0xff), (g & 0xff), (b & 0xff)));
-				lcd.GUISetPixel(col, row, LCD1in3.rgb(r, g, b));
-			}
-		}
+		lcd.setBackgroundGradient(fromR, fromG, fromB, toR, toG, toB);
 
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
-
-
 
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to display Image...");
@@ -291,7 +272,10 @@ public class LCD1in3Sample {
 		StaticUtil.userInput("Hit Return to move images around...");
 
 //	lcd.LCDClear(LCD1in3.BLACK);
-		lcd.GUIClear(LCD1in3.BLACK);
+//	lcd.GUIClear(LCD1in3.BLACK);
+		lcd.setBackgroundGradient(0x7f, 0x7f, 0x7f, 0x00, 0x00, 0x00);
+
+
 		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.TOP_LEFT);
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();

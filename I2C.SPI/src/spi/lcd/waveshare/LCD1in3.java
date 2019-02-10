@@ -1007,6 +1007,31 @@ public class LCD1in3 {
 		}
 	}
 
+	/*
+	 * Top-left to bottom-right
+	 * Color picker at https://helloacm.com/tools/rgb-color-picker/
+	 */
+	public void setBackgroundGradient(int topLeftR, int topLeftG, int topLeftB,
+	                                  int bottomRightR, int bottomRightG, int bottomRightB) {
+		float deltaR = bottomRightR - topLeftR;
+		float deltaG = bottomRightG - topLeftG;
+		float deltaB = bottomRightB - topLeftB;
+
+		// Diagonal gradient, from top-left to bottom-right
+		for (int row = 0; row < LCD1in3.LCD_HEIGHT; row++) {
+			int colFromR = topLeftR + (Math.round((deltaR / 2f) * ((float) row / (float) LCD1in3.LCD_WIDTH)));
+			int colFromG = topLeftG + (Math.round((deltaG / 2f) * ((float) row / (float) LCD1in3.LCD_WIDTH)));
+			int colFromB = topLeftB + (Math.round((deltaB / 2f) * ((float) row / (float) LCD1in3.LCD_WIDTH)));
+			for (int col = 0; col < LCD1in3.LCD_WIDTH; col++) {
+				int r = colFromR + (Math.round((deltaR / 2f) * ((float) col / (float) LCD1in3.LCD_HEIGHT)));
+				int g = colFromG + (Math.round((deltaG / 2f) * ((float) col / (float) LCD1in3.LCD_HEIGHT)));
+				int b = colFromB + (Math.round((deltaB / 2f) * ((float) col / (float) LCD1in3.LCD_HEIGHT)));
+//				System.out.println(String.format("At (%d, %d), color 0x%02x%02x%02x", col, row, (r & 0xff), (g & 0xff), (b & 0xff)));
+				GUISetPixel(col, row, LCD1in3.rgb(r, g, b));
+			}
+		}
+	}
+
 	public static int rgb(int r, int g, int b) {
 		return (((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3));
 	}
