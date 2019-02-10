@@ -17,6 +17,14 @@ import static spi.lcd.waveshare.LCD1in3.DrawFill;
 
 public class LCD1in3Sample {
 
+	private final static SimpleDateFormat SDF_1 = new SimpleDateFormat("E dd MMM yyyy");
+	private final static SimpleDateFormat SDF_2 = new SimpleDateFormat("HH:mm:ss Z");
+	private final static SimpleDateFormat SDF_3 = new SimpleDateFormat("HH:mm:ss z");
+
+	private final static SimpleDateFormat SDF_HH = new SimpleDateFormat("HH");
+	private final static SimpleDateFormat SDF_MM = new SimpleDateFormat("mm");
+	private final static SimpleDateFormat SDF_SS = new SimpleDateFormat("ss");
+
 	private static boolean k1 = false, k2 = false, k3 = false, jUp = false, jDown = false, jRight = false, jLeft = false, jPressed = false;
 	private static Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> k1 = event.getState().isLow();
 	private static Consumer<GpioPinDigitalStateChangeEvent> key2Consumer = (event) -> k2 = event.getState().isLow();
@@ -375,8 +383,17 @@ public class LCD1in3Sample {
 					lcd.GUIDrawString(strX, strY, digits[i], font, LCD1in3.BLACK, LCD1in3.WHITE);
 				}
 
+				Date now = new Date();
+				int hours = Integer.parseInt(SDF_HH.format(now)) % 12;
+				int minutes = Integer.parseInt(SDF_MM.format(now));
+				int seconds = Integer.parseInt(SDF_SS.format(now));
+
+				int secInDegrees = (seconds * 6);
+				float minInDegrees = ((minutes * 6) + (seconds / 10));
+				float hoursInDegrees = ((hours) * 30) + (((minutes * 6) + (seconds / 10)) / 12);
+
 				// Hands
-				int angle = 0;
+				float angle = hoursInDegrees;
 				int handLength = 85; // hours
 				lcd.GUIDrawLine(
 						centerX,
@@ -387,7 +404,7 @@ public class LCD1in3Sample {
 						LCD1in3.LineStyle.LINE_STYLE_SOLID,
 						LCD1in3.DotPixel.DOT_PIXEL_3X3);
 
-				angle = 120;
+				angle = minInDegrees;
 				handLength = 50; // Hours
 				lcd.GUIDrawLine(
 						centerX,
@@ -398,7 +415,7 @@ public class LCD1in3Sample {
 						LCD1in3.LineStyle.LINE_STYLE_SOLID,
 						LCD1in3.DotPixel.DOT_PIXEL_5X5);
 
-				angle = 6 * sec;
+				angle = secInDegrees;
 				handLength = 95; // Seconds
 				lcd.GUIDrawLine(
 						centerX,
@@ -438,12 +455,9 @@ public class LCD1in3Sample {
 		y += 20;
 
 		Date date = new Date();
-		SimpleDateFormat sdf1 = new SimpleDateFormat("E dd MMM yyyy");
-		SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss Z");
-		SimpleDateFormat sdf3 = new SimpleDateFormat("HH:mm:ss z");
-		lcd.GUIDrawString(8, y, sdf1.format(date), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+		lcd.GUIDrawString(8, y, SDF_1.format(date), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
 		y += 20;
-		lcd.GUIDrawString(8, y, sdf3.format(date), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+		lcd.GUIDrawString(8, y, SDF_3.format(date), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
 		y += 20;
 		lcd.GUIDrawString(8, y, "COG: ---", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
 		y += 20;
