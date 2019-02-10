@@ -797,7 +797,7 @@ public class LCD1in3 {
 		}
 	}
 
-	public void GUIDrawChar(int xPoint, int yPoint, char asciiChar, Font font, int colorBackground, int colorForeground) {
+	public void GUIDrawChar(int xPoint, int yPoint, char asciiChar, Font font, int backgroundColor, int foregroundColor) {
 		if (xPoint > guiImage.imageWidth || yPoint > guiImage.imageHeight) {
 			if (VERBOSE) {
 				System.out.println("GUIDrawChar Input exceeds the normal display range");
@@ -806,24 +806,29 @@ public class LCD1in3 {
 		}
 
 		int charOffset = (asciiChar - ' ') * font.getHeight() * (font.getWidth() / 8 + (font.getWidth() % 8 != 0 ? 1 : 0));
-		char ptr = (char) font.getCharacters()[charOffset];
+		char ptr = 0;
+		try {
+			ptr = (char) font.getCharacters()[charOffset];
+		} catch (IndexOutOfBoundsException ioobe) { // Char not in the table.
+			ptr = 0; // defaulted to ' '.
+		}
 
-		for (int Page = 0; Page < font.getHeight(); Page++) {
-			for (int Column = 0; Column < font.getWidth(); Column++) {
+		for (int page = 0; page < font.getHeight(); page++) {
+			for (int column = 0; column < font.getWidth(); column++) {
 				// To determine whether the font background color and screen background color is consistent
-				if (FONT_BACKGROUND == colorBackground) { // this process is to speed up the scan
-					if ((ptr & (0x80 >> (Column % 8))) != 0) {
-						GUIDrawPoint(xPoint + Column, yPoint + Page, colorForeground, DOT_PIXEL_DFT, DOT_STYLE_DFT);
+				if (FONT_BACKGROUND == backgroundColor) { // this process is to speed up the scan
+					if ((ptr & (0x80 >> (column % 8))) != 0) {
+						GUIDrawPoint(xPoint + column, yPoint + page, foregroundColor, DOT_PIXEL_DFT, DOT_STYLE_DFT);
 					}
 				} else {
-					if ((ptr & (0x80 >> (Column % 8))) != 0) {
-						GUIDrawPoint(xPoint + Column, yPoint + Page, colorForeground, DOT_PIXEL_DFT, DOT_STYLE_DFT);
+					if ((ptr & (0x80 >> (column % 8))) != 0) {
+						GUIDrawPoint(xPoint + column, yPoint + page, foregroundColor, DOT_PIXEL_DFT, DOT_STYLE_DFT);
 					} else {
-						GUIDrawPoint(xPoint + Column, yPoint + Page, colorBackground, DOT_PIXEL_DFT, DOT_STYLE_DFT);
+						GUIDrawPoint(xPoint + column, yPoint + page, backgroundColor, DOT_PIXEL_DFT, DOT_STYLE_DFT);
 					}
 				}
 				// One pixel is 8 bits
-				if (Column % 8 == 7) {
+				if (column % 8 == 7) {
 					charOffset += 1;
 					ptr = (char) font.getCharacters()[charOffset];
 				}
@@ -835,7 +840,7 @@ public class LCD1in3 {
 		} // Write all
 	}
 
-	public void GUIDrawString(int xFrom, int yFrom, String str, Font font, int colorBackground, int colorForeground) {
+	public void GUIDrawString(int xFrom, int yFrom, String str, Font font, int backgroundColor, int foregroundColor) {
 		int xPoint = xFrom;
 		int yPoint = yFrom;
 
@@ -858,7 +863,7 @@ public class LCD1in3 {
 				xPoint = xFrom;
 				yPoint = yFrom;
 			}
-			GUIDrawChar(xPoint, yPoint, str.charAt(i), font, colorBackground, colorForeground);
+			GUIDrawChar(xPoint, yPoint, str.charAt(i), font, backgroundColor, foregroundColor);
 
 			// The next word of the abscissa increases the font of the broadband
 			xPoint += font.getWidth();

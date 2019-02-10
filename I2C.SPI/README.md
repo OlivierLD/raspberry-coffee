@@ -53,6 +53,8 @@ I<sup>2</sup>C Time of Flight Distance
 #### ADS1x15
 ADS1015 and ADS1115. I<sup>2</sup>C ADCs.
 
+Document: [ADC Benchmark](https://github.com/OlivierLD/raspberry-coffee/blob/master/ADC-benchmark/README.md).
+
 ## Servos & Motors
 
 #### PCA9685
@@ -68,10 +70,13 @@ I<sup>2</sup>C, DC and Stepper Motors
 ## Screens
 
 #### SSD1306 (SPI and I<sup>2</sup>C)
-128x32 OLED screen, https://www.adafruit.com/product/3527, https://www.adafruit.com/product/931, and https://www.adafruit.com/product/661.
+128x32 and 128x64 OLED monochrome screens, https://www.adafruit.com/product/3527, https://www.adafruit.com/product/931, and https://www.adafruit.com/product/661.
 
 #### Nokia5110
 SPI 84x48 Monochrome LCD. https://www.adafruit.com/product/338
+
+#### Waveshare 240x240, 1.3inch IPS LCD display HAT for Raspberry Pi
+240x240 _Color_ screen, with 3 buttons and a joystick, https://www.waveshare.com/product/modules/oleds-lcds/raspberry-pi-lcd/1.3inch-lcd-hat.htm
 
 ## Miscellaneous
 I<sup>2</sup>C communication between Raspberry Pi and Arduino.

@@ -226,8 +226,38 @@ public class LCD1in3Sample {
 		}
 
 		// Wait for CR
-		StaticUtil.userInput("Hit Return to display Image...");
+		StaticUtil.userInput("Hit Return to display a gradient...");
+		lcd.LCDClear(LCD1in3.BLACK);
+		lcd.GUIClear(LCD1in3.BLACK);
 
+		// Color picker at https://helloacm.com/tools/rgb-color-picker/
+		int fromR = 0xff; int fromG = 0xff; int fromB = 0xff; // White
+		int toR = 0x00; int toG = 0x00; int toB = 0x00; // Black
+		float deltaR = toR - fromR;
+		float deltaG = toG - fromG;
+		float deltaB = toB - fromB;
+
+		// Diagonal radient, from top-left to bottom-right
+		for (int row = 0; row < LCD1in3.LCD_HEIGHT; row++) {
+			int colFromR = fromR + Math.round((deltaR / 2f) * ((float) LCD1in3.LCD_WIDTH / (float) row));
+			int colFromG = fromG + Math.round((deltaG / 2f) * ((float) LCD1in3.LCD_WIDTH / (float) row));
+			int colFromB = fromB + Math.round((deltaB / 2f) * ((float) LCD1in3.LCD_WIDTH / (float) row));
+			for (int col = 0; col < LCD1in3.LCD_WIDTH; col++) {
+				int r = colFromR + Math.round((deltaR / 2f) * ((float) LCD1in3.LCD_HEIGHT / (float) col));
+				int g = colFromG + Math.round((deltaG / 2f) * ((float) LCD1in3.LCD_HEIGHT / (float) col));
+				int b = colFromB + Math.round((deltaB / 2f) * ((float) LCD1in3.LCD_HEIGHT / (float) col));
+				lcd.GUISetPixel(col, row, LCD1in3.rgb(r, g, b));
+			}
+		}
+
+		if (!lcd.isSimulating()) {
+			lcd.LCDDisplay();
+		}
+
+
+
+		// Wait for CR
+		StaticUtil.userInput("Hit Return to display Image...");
 		lcd.LCDClear(LCD1in3.BLACK);
 		lcd.GUIClear(LCD1in3.BLACK);
 
@@ -343,7 +373,7 @@ public class LCD1in3Sample {
 
 				// Numbers
 				String[] digits = {
-					"12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"
+					"12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11" // Try Roman digits!
 				};
 				Font font = Font20.getInstance();
 
