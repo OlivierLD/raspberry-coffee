@@ -325,8 +325,8 @@ public class LCD1in3Sample {
 				// Ticks
 				for (int angle=0; angle<360; angle+=6) {
 					int len = (angle % 30 == 0 ? 20 : 10);
-					int xExt = (int) (centerX + Math.round((intRadius - 1) * Math.sin(Math.toRadians(angle))));
-					int yExt = (int) (centerY - Math.round((intRadius - 1) * Math.cos(Math.toRadians(angle))));
+					int xExt = (int) (centerX + Math.round((intRadius - 2) * Math.sin(Math.toRadians(angle))));
+					int yExt = (int) (centerY - Math.round((intRadius - 2) * Math.cos(Math.toRadians(angle))));
 
 					int xInt = (int) (centerX + Math.round((intRadius - len) * Math.sin(Math.toRadians(angle))));
 					int yInt = (int) (centerY - Math.round((intRadius - len) * Math.cos(Math.toRadians(angle))));
