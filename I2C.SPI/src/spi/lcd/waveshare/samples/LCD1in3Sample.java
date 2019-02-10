@@ -338,7 +338,7 @@ public class LCD1in3Sample {
 							yInt,
 							LCD1in3.GREEN,
 							LCD1in3.LineStyle.LINE_STYLE_SOLID,
-							LCD1in3.DotPixel.DOT_PIXEL_1X1);
+							(angle % 30 == 0 ? LCD1in3.DotPixel.DOT_PIXEL_2X2 : LCD1in3.DotPixel.DOT_PIXEL_1X1));
 				}
 
 				// Numbers
@@ -357,7 +357,6 @@ public class LCD1in3Sample {
 
 					lcd.GUIDrawString(strX, strY, digits[i], font, LCD1in3.BLACK, LCD1in3.WHITE);
 				}
-
 
 				// Hands
 				int angle = 0;
@@ -455,8 +454,9 @@ public class LCD1in3Sample {
 			int strX = 120 - (strlen / 2);
 			int strY = 120 - (f24.getHeight() / 2);
 
-			lcd.GUIDrawCircle(120, 120, (int)((strlen * 1.5) / 2), LCD1in3.GRAY, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
-			lcd.GUIDrawString(strX, strY, bye, f24, LCD1in3.GRAY, LCD1in3.BLACK);
+			int bg = LCD1in3.rgb(128, 128, 128);
+			lcd.GUIDrawCircle(120, 120, (int)((strlen * 1.5) / 2), bg, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+			lcd.GUIDrawString(strX, strY, bye, f24, bg, LCD1in3.BLACK);
 			lcd.LCDDisplay();
 			TimeUtil.delay(1_000);
 
