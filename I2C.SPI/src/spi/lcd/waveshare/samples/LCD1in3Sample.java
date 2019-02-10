@@ -266,25 +266,25 @@ public class LCD1in3Sample {
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
-		lcd.LCDClear(LCD1in3.BLACK);
+//	lcd.LCDClear(LCD1in3.BLACK);
 		lcd.GUIClear(LCD1in3.BLACK);
 		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.TOP_RIGHT);
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
-		lcd.LCDClear(LCD1in3.BLACK);
+//	lcd.LCDClear(LCD1in3.BLACK);
 		lcd.GUIClear(LCD1in3.BLACK);
 		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.BOTTOM_LEFT);
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
-		lcd.LCDClear(LCD1in3.BLACK);
+//	lcd.LCDClear(LCD1in3.BLACK);
 		lcd.GUIClear(LCD1in3.BLACK);
 		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.BOTTOM_RIGHT);
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
-		lcd.LCDClear(LCD1in3.BLACK);
+//	lcd.LCDClear(LCD1in3.BLACK);
 		lcd.GUIClear(LCD1in3.BLACK);
 		lcd.GUIDisplayImage("img/avatar.jpeg", LCD1in3.ImgJustification.CENTERED);
 		if (!lcd.isSimulating()) {
