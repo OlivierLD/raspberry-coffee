@@ -70,21 +70,25 @@ I<sup>2</sup>C, DC and Stepper Motors
 ## Screens
 
 #### SSD1306 (SPI and I<sup>2</sup>C)
-128x32 and 128x64 OLED monochrome screens, https://www.adafruit.com/product/3527, https://www.adafruit.com/product/931, and https://www.adafruit.com/product/661.
+128x32 and 128x64 OLED monochrome screens, https://www.adafruit.com/product/3527, https://www.adafruit.com/product/931, and https://www.adafruit.com/product/661,
+https://www.adafruit.com/product/326, https://www.adafruit.com/product/938.
 
 #### Nokia5110
 SPI 84x48 Monochrome LCD. https://www.adafruit.com/product/338
 
 #### Waveshare 240x240, 1.3inch IPS LCD display HAT for Raspberry Pi
-240x240 _Color_ screen, with 3 buttons and a joystick, https://www.waveshare.com/product/modules/oleds-lcds/raspberry-pi-lcd/1.3inch-lcd-hat.htm
+240x240 _**Color**_ screen, with 3 buttons and a 5-option joystick, https://www.waveshare.com/product/modules/oleds-lcds/raspberry-pi-lcd/1.3inch-lcd-hat.htm,
+same size as the Raspberry Pi Zero.
 
 |    |    |
 |:--:|:--:|
-| ![Grahical display](./img/01.ws.jpg) | ![BMP Image](./img/02.ws.jpg) |
-| ![Gif image](./img/03.ws.jpg) | ![Keys and Joystick](./img/04.ws.jpg) |
-| ![Grahpical data](./img/05.ws.jpg) | ![Analog watch](./img/06.ws.jpg) |
+| ![Grahical display](./img/01.ws.jpg) <br/> Graphical Display | ![BMP Image](./img/02.ws.jpg) <br/> BMP Image |
+| ![Gif image](./img/03.ws.jpg) <br/> Gif image | ![Keys and Joystick](./img/04.ws.jpg) <br/> Keys and Joystick listeners |
+| ![Character data](./img/05.ws.jpg) <br/> Character data | ![Analog watch](./img/06.ws.jpg) <br/> Analog watch |
 
 Through the Java `ImageIO` package, all image formats are supported.
+
+See the code [here](https://github.com/OlivierLD/raspberry-coffee/tree/master/I2C.SPI/src/spi/lcd/waveshare).
 
 ## Miscellaneous
 I<sup>2</sup>C communication between Raspberry Pi and Arduino.
