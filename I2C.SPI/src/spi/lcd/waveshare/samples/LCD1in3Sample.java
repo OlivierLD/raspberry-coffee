@@ -204,7 +204,11 @@ public class LCD1in3Sample {
 			int height = Math.round((float)LCD1in3.LCD_HEIGHT / (float)this.nb);
 			lcd.GUIDrawRectangle(topX, topY, topX + width, topY + height, color, LCD1in3.DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 			//
-			lcd.LCDDisplayWindows(topX, topY, topX + width, topY + height);
+			try {
+				lcd.LCDDisplayWindows(topX, topY, topX + width, topY + height);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 
