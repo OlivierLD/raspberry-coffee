@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.function.Consumer;
 
 import static spi.lcd.waveshare.LCD1in3.DrawFill;
+import static spi.lcd.waveshare.LCD1in3.rgb;
 
 public class LCD1in3Sample {
 
@@ -169,6 +170,42 @@ public class LCD1in3Sample {
 			}
 		}
 		System.out.println("Out of the loop");
+	}
+
+	public static class PatchWork {
+
+		private LCD1in3 lcd;
+		private int nb = 0;
+
+		public PatchWork(LCD1in3 lcd, int nb) {
+			this.lcd = lcd;
+			this.nb = nb;
+			this.init();
+		}
+
+		private void init() {
+			lcd.GUIClear(LCD1in3.WHITE);
+
+			if (!lcd.isSimulating()) {
+				lcd.LCDDisplay();
+			}
+		}
+
+		public void setSquare(int x, int y, int color) {
+			if (x < 0 || x > (this.nb - 1)) {
+				return;
+			}
+			if (y < 0 || y > (this.nb - 1)) {
+				return;
+			}
+			int topX = Math.round((float)x * (float)LCD1in3.LCD_WIDTH / (float)this.nb);
+			int topY = Math.round((float)y * (float)LCD1in3.LCD_HEIGHT / (float)this.nb);
+			int width = Math.round((float)LCD1in3.LCD_WIDTH / (float)this.nb);
+			int height = Math.round((float)LCD1in3.LCD_HEIGHT / (float)this.nb);
+			lcd.GUIDrawRectangle(topX, topY, topX + width, topY + height, color, LCD1in3.DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+			//
+			lcd.LCDDisplayWindows(topX, topY, topX + width, topY + height);
+		}
 	}
 
 	public static void main(String... args) {
@@ -328,6 +365,20 @@ public class LCD1in3Sample {
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to move on...");
 		keyListenerScreen(lcd);
+
+
+		// Wait for CR
+		StaticUtil.userInput("Hit Return to move on...");
+		final int NB = 10;
+		PatchWork patchWork = new PatchWork(lcd, NB); // 10x10
+		for (int i=0; i<1_000; i++) {
+			int x = (int)Math.floor(Math.random() * NB);
+			int y = (int)Math.floor(Math.random() * NB);
+			int r = (int)Math.floor(Math.random() * 256);
+			int g = (int)Math.floor(Math.random() * 256);
+			int b = (int)Math.floor(Math.random() * 256);
+			patchWork.setSquare(x, y, rgb(r, g, b));
+		}
 
 		if ("true".equals(System.getProperty("with.watch", "true"))) {
 			System.out.println("Drawing watch...");
