@@ -373,7 +373,8 @@ public class LCD1in3Sample {
 		keyListenerScreen(lcd);
 
 		// Wait for CR
-		StaticUtil.userInput("Hit Return to move on...");
+//	StaticUtil.userInput("Hit Return to move on...");
+		
 		final int NB = 10;
 		PatchWork patchWork = new PatchWork(lcd, NB); // 10x10
 		for (int i=0; i<1_000; i++) {
