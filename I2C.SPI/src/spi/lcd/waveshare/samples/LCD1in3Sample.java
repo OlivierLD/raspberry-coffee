@@ -206,7 +206,7 @@ public class LCD1in3Sample {
 			//
 			try {
 //			lcd.LCDDisplayWindows(topX, topY, topX + width - 1, topY + height - 1);
-				lcd.LCDDisplayWindows(topX + 1, topY + 1, topX + width, topY + height);
+				lcd.LCDDisplayWindows(topX + 1, topY + 1, topX + width -1, topY + height - 1);
 			} catch (Exception ex) {
 				System.err.println(String.format("Cell X %d, Cell Y %d, topX:%d, topY:%d, h:%d, w:%d", x, y, topX, topY, height, width));
 				ex.printStackTrace();
