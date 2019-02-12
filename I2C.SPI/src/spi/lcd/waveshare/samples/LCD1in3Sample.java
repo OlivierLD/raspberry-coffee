@@ -198,15 +198,16 @@ public class LCD1in3Sample {
 			if (y < 0 || y > (this.nb - 1)) {
 				return;
 			}
-			int topX = Math.round((float)x * (float)LCD1in3.LCD_WIDTH / (float)this.nb);
-			int topY = Math.round((float)y * (float)LCD1in3.LCD_HEIGHT / (float)this.nb);
 			int width = Math.round((float)LCD1in3.LCD_WIDTH / (float)this.nb);
 			int height = Math.round((float)LCD1in3.LCD_HEIGHT / (float)this.nb);
+			int topX = x * width;
+			int topY = y * height;
 			lcd.GUIDrawRectangle(topX, topY, topX + width, topY + height, color, LCD1in3.DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 			//
 			try {
 				lcd.LCDDisplayWindows(topX, topY, topX + width, topY + height);
 			} catch (Exception ex) {
+				System.err.println(String.format("Cell X %d, Cell Y %d, topX:%d, topY:%d, h:%d, w:%d", x, y, topX, topY, height, width));
 				ex.printStackTrace();
 			}
 		}
