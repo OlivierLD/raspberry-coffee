@@ -541,8 +541,8 @@ public class LCD1in3Sample {
 		for (int i=0; i<5; i++) {
 			TimeUtil.delay(1_000);
 			Date now = new Date();
-			lcd.GUIDrawString(8, date1, SDF_1.format(now), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
-			lcd.GUIDrawString(8, date2, SDF_3.format(now), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+			lcd.GUIDrawString(8, date1, SDF_1.format(now), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.RED);
+			lcd.GUIDrawString(8, date2, SDF_3.format(now), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.RED);
 
 			lcd.LCDDisplayWindows(8, date1, 235, date1 + (2 * 20));
 		}
