@@ -508,31 +508,32 @@ public class LCD1in3Sample {
 		lcd.GUIDrawRectangle(2, 2, 238, 238, LCD1in3.YELLOW, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 		lcd.GUIDrawRectangle(4, 4, 236, 236, LCD1in3.YELLOW, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
+		final int fontSize = 20;
+		Font font = LCD1in3.findFontBySize(fontSize);
 		int y = 8; // Top of the line
-		lcd.GUIDrawString(8, y, "N  37 44.93'", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
-		y += 20;
-		lcd.GUIDrawString(8, y, "W 122 30.42'", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
-		y += 20;
+		lcd.GUIDrawString(8, y, "N  37 44.93'", font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		y += fontSize;
+		lcd.GUIDrawString(8, y, "W 122 30.42'", font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		y += fontSize;
 
-		int date1 = 0, date2 = 0;
-
+		int date1 = 0, date2 = 0; // For refresh
 		Date date = new Date();
-		lcd.GUIDrawString(8, y, SDF_1.format(date), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+		lcd.GUIDrawString(8, y, SDF_1.format(date), font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		date1 = y;
-		y += 20;
-		lcd.GUIDrawString(8, y, SDF_3.format(date), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+		y += fontSize;
+		lcd.GUIDrawString(8, y, SDF_3.format(date), font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		date2 = y;
-		y += 20;
-		lcd.GUIDrawString(8, y, "COG: ---", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
-		y += 20;
-		lcd.GUIDrawString(8, y, "SOG: ---", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
-		y += 20;
-		lcd.GUIDrawString(8, y, "HDG: ---", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
-		y += 20;
-		lcd.GUIDrawString(8, y, "Sun Z: ---", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
-		y += 20;
-		lcd.GUIDrawString(8, y, "Sun elev: ---", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
-		// y += 20;
+		y += fontSize;
+		lcd.GUIDrawString(8, y, "COG: ---", font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		y += fontSize;
+		lcd.GUIDrawString(8, y, "SOG: ---", font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		y += fontSize;
+		lcd.GUIDrawString(8, y, "HDG: ---", font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		y += fontSize;
+		lcd.GUIDrawString(8, y, "Sun Z: ---", font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		y += fontSize;
+		lcd.GUIDrawString(8, y, "Sun elev: ---", font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		// y += fontSize;
 
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();

@@ -11,6 +11,11 @@ import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import com.pi4j.wiringpi.Spi;
 import spi.lcd.waveshare.fonts.Font;
+import spi.lcd.waveshare.fonts.Font12;
+import spi.lcd.waveshare.fonts.Font16;
+import spi.lcd.waveshare.fonts.Font20;
+import spi.lcd.waveshare.fonts.Font24;
+import spi.lcd.waveshare.fonts.Font8;
 import utils.PinUtil;
 import utils.TimeUtil;
 
@@ -1040,6 +1045,31 @@ public class LCD1in3 {
 
 	public static int rgb(int r, int g, int b) {
 		return (((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3));
+	}
+
+	public static Font findFontBySize(int size) {
+		Font font = null;
+		switch (size) {
+			case 8:
+				font = Font8.getInstance();
+				break;
+			case 12:
+				font = Font12.getInstance();
+				break;
+			case 16:
+				font = Font16.getInstance();
+				break;
+			case 20:
+				font = Font20.getInstance();
+				break;
+			case 24:
+				font = Font24.getInstance();
+				break;
+			default:
+				font = Font16.getInstance(); // if not found...
+				break;
+		}
+		return font;
 	}
 
 	private final int MASK = 0x80; // MSBFIRST, 0x80 = 0&10000000
