@@ -907,7 +907,12 @@ public class LCD1in3 {
 		for (int j = y0 - 1; j < y1 + 1; j++) {
 			for (int i = x0 - 1; i < x1 + 1; i++) {
 				addr = i + j * LCD_WIDTH + offset;
-				LCDSendData16Bit(imageBuff[addr]);
+				try {
+					LCDSendData16Bit(imageBuff[addr]);
+				} catch (ArrayIndexOutOfBoundsException aioob) {
+					System.err.println(String.format("x0:%d, y0:%d, x1:%d, y1:%d, addr:%d", xFrom, yFrom, xTo, yTo, addr));
+					aioob.printStackTrace();
+				}
 			}
 		}
 	}
