@@ -205,7 +205,7 @@ public class LCD1in3Sample {
 			lcd.GUIDrawRectangle(topX, topY, topX + width, topY + height, color, LCD1in3.DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 			//
 			try {
-				lcd.LCDDisplayWindows(topX, topY, topX + width, topY + height);
+				lcd.LCDDisplayWindows(topX, topY, topX + width - 1, topY + height - 1);
 			} catch (Exception ex) {
 				System.err.println(String.format("Cell X %d, Cell Y %d, topX:%d, topY:%d, h:%d, w:%d", x, y, topX, topY, height, width));
 				ex.printStackTrace();
@@ -370,7 +370,6 @@ public class LCD1in3Sample {
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to move on...");
 		keyListenerScreen(lcd);
-
 
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to move on...");

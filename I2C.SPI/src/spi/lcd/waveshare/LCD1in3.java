@@ -872,40 +872,40 @@ public class LCD1in3 {
 
 	public void LCDDisplayWindows(int xFrom, int yFrom, int xTo, int yTo) {
 		//Convert coordinates
-		int X0 = 0, Y0 = 0, X1 = 0, Y1 = 0;
+		int x0 = 0, y0 = 0, x1 = 0, y1 = 0;
 		switch (guiImage.imageRotate) {
 			case IMAGE_ROTATE_0:
-				X0 = xFrom;
-				Y0 = yFrom;
-				X1 = xTo;
-				Y1 = yTo;
+				x0 = xFrom;
+				y0 = yFrom;
+				x1 = xTo;
+				y1 = yTo;
 				break;
 			case IMAGE_ROTATE_90:
-				X0 = yFrom;
-				Y0 = guiImage.imageWidth - xTo;
-				X1 = yTo;
-				Y1 = guiImage.imageWidth - xFrom;
+				x0 = yFrom;
+				y0 = guiImage.imageWidth - xTo;
+				x1 = yTo;
+				y1 = guiImage.imageWidth - xFrom;
 				break;
 			case IMAGE_ROTATE_180:
-				X0 = guiImage.imageWidth - xTo;
-				Y0 = guiImage.imageHeight - yTo;
-				X1 = guiImage.imageWidth - xFrom;
-				Y1 = guiImage.imageHeight - yFrom;
+				x0 = guiImage.imageWidth - xTo;
+				y0 = guiImage.imageHeight - yTo;
+				x1 = guiImage.imageWidth - xFrom;
+				y1 = guiImage.imageHeight - yFrom;
 				break;
 			case IMAGE_ROTATE_270:
-				X0 = guiImage.imageWidth - xTo;
-				Y0 = xFrom;
-				X1 = guiImage.imageHeight - yFrom;
-				Y1 = guiImage.imageHeight - yTo;
+				x0 = guiImage.imageWidth - xTo;
+				y0 = xFrom;
+				x1 = guiImage.imageHeight - yFrom;
+				y1 = guiImage.imageHeight - yTo;
 				break;
 		}
 		// display
 		int addr = 0;
 		int offset = guiImage.imageOffset;
 
-		LCDSetWindows(X0 - 1, Y0 - 1, X1 + 1, Y1 + 1);
-		for (int j = Y0- 1; j < Y1 + 1; j++) {
-			for (int i = X0- 1; i < X1 + 1; i++) {
+		LCDSetWindows(x0 - 1, y0 - 1, x1 + 1, y1 + 1);
+		for (int j = y0 - 1; j < y1 + 1; j++) {
+			for (int i = x0 - 1; i < x1 + 1; i++) {
 				addr = i + j * LCD_WIDTH + offset;
 				LCDSendData16Bit(imageBuff[addr]);
 			}
