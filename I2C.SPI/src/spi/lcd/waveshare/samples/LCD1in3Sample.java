@@ -374,7 +374,7 @@ public class LCD1in3Sample {
 
 		// Wait for CR
 //	StaticUtil.userInput("Hit Return to move on...");
-		
+
 		final int NB = 10;
 		PatchWork patchWork = new PatchWork(lcd, NB); // 10x10
 		for (int i=0; i<1_000; i++) {
@@ -514,10 +514,14 @@ public class LCD1in3Sample {
 		lcd.GUIDrawString(8, y, "W 122 30.42'", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
 		y += 20;
 
+		int date1 = 0, date2 = 0;
+
 		Date date = new Date();
 		lcd.GUIDrawString(8, y, SDF_1.format(date), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+		date1 = y;
 		y += 20;
 		lcd.GUIDrawString(8, y, SDF_3.format(date), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+		date2 = y;
 		y += 20;
 		lcd.GUIDrawString(8, y, "COG: ---", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
 		y += 20;
@@ -532,6 +536,15 @@ public class LCD1in3Sample {
 
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
+		}
+
+		for (int i=0; i<5; i++) {
+			TimeUtil.delay(1_000);
+			Date now = new Date();
+			lcd.GUIDrawString(8, date1, SDF_1.format(now), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+			lcd.GUIDrawString(8, date2, SDF_3.format(now), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+
+			lcd.LCDDisplayWindows(8, date1, 235, date1 + (2 * 20));
 		}
 
 		StaticUtil.userInput("Hit Return to finish.");
