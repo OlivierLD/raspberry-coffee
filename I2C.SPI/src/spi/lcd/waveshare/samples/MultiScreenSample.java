@@ -12,6 +12,10 @@ import java.util.function.Consumer;
 
 import static spi.lcd.waveshare.LCD1in3.DrawFill;
 
+/**
+ * TODO To address: Refresh full screen on index change?
+ *
+ */
 public class MultiScreenSample {
 
 	private final static SimpleDateFormat SDF_1 = new SimpleDateFormat("E dd MMM yyyy");
@@ -80,7 +84,7 @@ public class MultiScreenSample {
 
 		String title = "Screen #1";
 		int len = font.strlen(title);
-		int lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2);
+		int lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2); // Centered
 		titlePos = y;
 		lcd.GUIDrawString(lineStart, y, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		y += fontSize;
@@ -108,7 +112,7 @@ public class MultiScreenSample {
 		Thread dataFetcher = new Thread(() -> {
 			while (true) {
 				TimeUtil.delay(1_000);
-				System.out.println("\t\tPing!");
+				System.out.println("\t\t... external data (like REST) Ping!");
 			}
 		}, "dataFetcher");
 		dataFetcher.start();
@@ -117,7 +121,7 @@ public class MultiScreenSample {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("Ctlr+C !");
 			keepLooping = false;
-			TimeUtil.delay(3_000);// Wait for the screen to shut off
+			TimeUtil.delay(5_000);// Wait for the screen to shut off
 		}));
 
 		// Display Data loop
@@ -131,7 +135,7 @@ public class MultiScreenSample {
 				case 0:
 					title = "Screen #1";
 					len = font.strlen(title);
-					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2);
+					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2); // Centered
 					lcd.GUIDrawString(lineStart, titlePos, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 
 					Date now = new Date();
@@ -145,7 +149,7 @@ public class MultiScreenSample {
 				case 1:
 					title = "Screen #2";
 					len = font.strlen(title);
-					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2);
+					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2); // Centered
 					lcd.GUIDrawString(lineStart, titlePos, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 
 					lcd.GUIDrawString(8, date1, "---", font, LCD1in3.BLACK, LCD1in3.RED);

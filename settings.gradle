@@ -58,6 +58,9 @@ include "Project.Trunk:ADCs.Servos.Joysticks"
 include "Project.Trunk:PlantWateringSystem"
 include "Project.Trunk:Misc.and.Various.Stuff"
 include "Project.Trunk:PolarSmoother"
+include "Project.Trunk:REST.clients"
 include "Project.Trunk:Deviation.Tool"
 // Scratch pad
 include "oliv.scratch.pad:some.tests"
+include 'REST.clients'
+

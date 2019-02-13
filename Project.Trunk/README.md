@@ -26,6 +26,7 @@ and a script to run the example should be available as well.
 - Boating and Sailing
   - [Polar Smoother](./PolarSmoother)
   - [Deviation Tool](Deviation.Tool)
+  - [REST Clients](./REST.clients), featuring a TCP watch. 👍
 - ... and more.
 
 #### TODO

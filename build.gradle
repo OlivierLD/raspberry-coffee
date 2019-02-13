@@ -47,6 +47,7 @@ dependencies {
   compile project(':Project.Trunk:Motors')
   compile project(':Project.Trunk:Weather.Station.Implementation')
   compile project(':Project.Trunk:RasPiRadar')
+  compile project(':Project.Trunk:REST.clients')
   compile project(':Project.Trunk:PolarSmoother')
   compile project(':Project.Trunk:Deviation.Tool')
   compile project(':TensorFlow')

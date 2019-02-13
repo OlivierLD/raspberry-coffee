@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
  * <p>
  * <em>
  * Warning: This is a <b>very lightweight</b> HTTP server. It is certainly not supposed to scale!!
+ * It's NOT J2EE compliant, it is NOT JAX-RS based. But it will handle your requests.
  * </em>
  * </p>
  * </p>

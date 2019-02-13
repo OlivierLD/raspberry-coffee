@@ -2,7 +2,7 @@ package olivscala
 
 /*
    1. Compile (from the scala directory)
-   $ scala olivscala.ShortestRoute.scala
+   $ scalac olivscala.ShortestRoute.scala
 
    2. Run (from the same place)
    $ scala olivscala.ShortestRoute
