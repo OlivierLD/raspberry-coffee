@@ -103,16 +103,16 @@ public class MultiScreenSample {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("Ctlr+C !");
 			keepLooping = false;
-
+			TimeUtil.delay(1_000);// Wait for the screen to shut off
 		}));
 
 		// Refresh sample
 		while (keepLooping) {
-			TimeUtil.delay(1_000);
+			TimeUtil.delay(100);
 			Date now = new Date();
 			lcd.GUIDrawString(8, date1, SDF_1.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
 			lcd.GUIDrawString(8, date2, SDF_3.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
-			lcd.GUIDrawString(8, indexPos, String.format("Index: %d", currentIndex), font, LCD1in3.BLACK, LCD1in3.YELLOW);
+			lcd.GUIDrawString(8, indexPos, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.YELLOW);
 
 			lcd.LCDDisplayWindows(8, date1, 235, date1 + (3 * fontSize));
 		}
