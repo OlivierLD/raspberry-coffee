@@ -3,10 +3,7 @@ package spi.lcd.waveshare.samples;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import spi.lcd.waveshare.LCD1in3;
 import spi.lcd.waveshare.fonts.Font;
-import spi.lcd.waveshare.fonts.Font16;
-import spi.lcd.waveshare.fonts.Font20;
 import spi.lcd.waveshare.fonts.Font24;
-import utils.StaticUtil;
 import utils.TimeUtil;
 
 import java.text.SimpleDateFormat;
@@ -14,7 +11,6 @@ import java.util.Date;
 import java.util.function.Consumer;
 
 import static spi.lcd.waveshare.LCD1in3.DrawFill;
-import static spi.lcd.waveshare.LCD1in3.rgb;
 
 public class MultiScreenSample {
 
@@ -79,6 +75,12 @@ public class MultiScreenSample {
 		final int fontSize = 24;
 		Font font = LCD1in3.findFontBySize(fontSize);
 		int y = 8; // Top of the line
+
+		String title = "Screen #1";
+		int len = font.strlen(title);
+		int lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2);
+		lcd.GUIDrawString(lineStart, y, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		y += fontSize;
 		lcd.GUIDrawString(8, y, "N  37 44.93'", font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		y += fontSize;
 		lcd.GUIDrawString(8, y, "W 122 30.42'", font, LCD1in3.BLACK, LCD1in3.YELLOW);
