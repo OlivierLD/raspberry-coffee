@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 import static spi.lcd.waveshare.LCD1in3.DrawFill;
 
-public class MultiScreenSample {
+public class InteractiveScreenSample {
 
 	private final static SimpleDateFormat SDF_1 = new SimpleDateFormat("E dd MMM yyyy");
 	private final static SimpleDateFormat SDF_2 = new SimpleDateFormat("HH:mm:ss Z");
@@ -76,12 +76,9 @@ public class MultiScreenSample {
 		Font font = LCD1in3.findFontBySize(fontSize);
 		int y = 8; // Top of the line
 
-		int titlePos = 0, date1 = 0, date2 = 0, indexPos = 0; // For refresh
-
 		String title = "Screen #1";
 		int len = font.strlen(title);
 		int lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2);
-		titlePos = y;
 		lcd.GUIDrawString(lineStart, y, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		y += fontSize;
 		lcd.GUIDrawString(8, y, "N  37 44.93'", font, LCD1in3.BLACK, LCD1in3.YELLOW);
@@ -89,6 +86,7 @@ public class MultiScreenSample {
 		lcd.GUIDrawString(8, y, "W 122 30.42'", font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		y += fontSize;
 
+		int date1 = 0, date2 = 0, indexPos = 0; // For refresh
 		Date date = new Date();
 		lcd.GUIDrawString(8, y, SDF_1.format(date), font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		date1 = y;
@@ -104,16 +102,6 @@ public class MultiScreenSample {
 			lcd.LCDDisplay();
 		}
 
-		// Start external data thread
-		Thread dataFetcher = new Thread(() -> {
-			while (true) {
-				TimeUtil.delay(1_000);
-				System.out.println("\t\tPing!");
-			}
-		}, "dataFetcher");
-		dataFetcher.start();
-
-
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("Ctlr+C !");
 			keepLooping = false;
@@ -124,40 +112,12 @@ public class MultiScreenSample {
 		while (keepLooping) {
 			TimeUtil.delay(10);
 
-			// Display data based on currentIndex
+			Date now = new Date();
+			lcd.GUIDrawString(8, date1, SDF_1.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
+			lcd.GUIDrawString(8, date2, SDF_3.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
+			lcd.GUIDrawString(8, indexPos, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
-			switch (currentIndex % 2) {
-
-				case 0:
-					title = "Screen #1";
-					len = font.strlen(title);
-					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2);
-					lcd.GUIDrawString(lineStart, titlePos, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
-
-					Date now = new Date();
-					lcd.GUIDrawString(8, date1, SDF_1.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
-					lcd.GUIDrawString(8, date2, SDF_3.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
-					lcd.GUIDrawString(8, indexPos, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
-
-					lcd.LCDDisplayWindows(8, titlePos, 235, titlePos + (4 * fontSize));
-					break;
-
-				case 1:
-					title = "Screen #2";
-					len = font.strlen(title);
-					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2);
-					lcd.GUIDrawString(lineStart, titlePos, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
-
-					lcd.GUIDrawString(8, date1, "---", font, LCD1in3.BLACK, LCD1in3.RED);
-					lcd.GUIDrawString(8, date2, "---", font, LCD1in3.BLACK, LCD1in3.RED);
-					lcd.GUIDrawString(8, indexPos, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
-
-					lcd.LCDDisplayWindows(8, titlePos, 235, titlePos + (4 * fontSize));
-					break;
-
-				default:
-					break;
-			}
+			lcd.LCDDisplayWindows(8, date1, 235, date1 + (3 * fontSize));
 		}
 		System.out.println("End of loop");
 
