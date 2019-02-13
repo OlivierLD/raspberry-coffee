@@ -100,15 +100,27 @@ public class MultiScreenSample {
 			lcd.LCDDisplay();
 		}
 
+		// Start external data thread
+		Thread dataFetcher = new Thread(() -> {
+			while (true) {
+				TimeUtil.delay(1_000);
+				System.out.println("\t\tPing!");
+			}
+		}, "dataFetcher");
+		dataFetcher.start();
+
+
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("Ctlr+C !");
 			keepLooping = false;
 			TimeUtil.delay(3_000);// Wait for the screen to shut off
 		}));
 
-		// Refresh sample
+		// Display Data loop
 		while (keepLooping) {
 			TimeUtil.delay(10);
+			// TODO Display data based on currentIndex
+
 			Date now = new Date();
 			lcd.GUIDrawString(8, date1, SDF_1.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
 			lcd.GUIDrawString(8, date2, SDF_3.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
