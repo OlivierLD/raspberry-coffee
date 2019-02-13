@@ -153,6 +153,7 @@ public class TCPWatch {
 			while (true) {
 				TimeUtil.delay(1_000);
 //				System.out.println("\t\t... external data (like REST) Ping!");
+				System.out.println(">> Fetching...");
 				String response = handleRequest(BASE_URL);
 				// TODO Dispatch the data
 				System.out.println(">> Data:" + response);
