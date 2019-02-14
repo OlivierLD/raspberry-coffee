@@ -13,6 +13,9 @@ then
 fi
 # Change directory below as needed.
 cd raspberry-coffee/NMEA.multiplexer
+#
+echo -e "Working from $PWD"
+#
 a=
 if [ "$YES" == "1" ]
 then

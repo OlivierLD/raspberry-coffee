@@ -1,5 +1,6 @@
 package nmea.tcp;
 
+import calc.GeomUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -12,6 +13,8 @@ import spi.lcd.waveshare.fonts.Font;
 import spi.lcd.waveshare.fonts.Font24;
 import utils.TimeUtil;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +32,7 @@ import static spi.lcd.waveshare.LCD1in3.DrawFill;
 public class TCPWatch {
 
 	private static String BASE_URL = System.getProperty("base.url", "http://192.168.127.1:8080");
+	private static boolean VERBOSE = "true".equals(System.getProperty("verbose", "false"));
 
 	private final static SimpleDateFormat SDF_1 = new SimpleDateFormat("E dd MMM yyyy");
 	private final static SimpleDateFormat SDF_2 = new SimpleDateFormat("HH:mm:ss Z");
@@ -38,11 +42,17 @@ public class TCPWatch {
 	private final static SimpleDateFormat SDF_MM = new SimpleDateFormat("mm");
 	private final static SimpleDateFormat SDF_SS = new SimpleDateFormat("ss");
 
+	private final static NumberFormat SOG_FMT = new DecimalFormat("#0.00");
+	private final static NumberFormat COG_FMT = new DecimalFormat("000");
+
 	private static int currentIndex = 0; // Screen index, incremented/decremented with the buttons K1 (up) & K3 (down)
 
 	private static boolean k1 = false, k2 = false, k3 = false, jUp = false, jDown = false, jRight = false, jLeft = false, jPressed = false;
 	private static Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> {
 		k1 = event.getState().isLow();
+		if (VERBOSE) {
+			System.out.println(String.format("K1 was %s", k1 ? "pushed" : "released"));
+		}
 		if (k1) { // K1 is pushed down
 			currentIndex++;
 		}
@@ -50,6 +60,9 @@ public class TCPWatch {
 	private static Consumer<GpioPinDigitalStateChangeEvent> key2Consumer = (event) -> k2 = event.getState().isLow();
 	private static Consumer<GpioPinDigitalStateChangeEvent> key3Consumer = (event) -> {
 		k3 = event.getState().isLow();
+		if (VERBOSE) {
+			System.out.println(String.format("K3 was %s", k3 ? "pushed" : "released"));
+		}
 		if (k3) { // K3 is pushed down
 			currentIndex--;
 		}
@@ -63,7 +76,12 @@ public class TCPWatch {
 
 	private static boolean keepLooping = true;
 
-	public static String handleRequest(String baseUrl) {
+	/**
+	 * This is the REST request
+	 * @param baseUrl
+	 * @return
+	 */
+	public static JsonObject handleRequest(String baseUrl) {
 
 		String url =  baseUrl + "/mux/cache";
 
@@ -85,11 +103,14 @@ public class TCPWatch {
 		Gson gson = new Gson();
 		JsonElement element = gson.fromJson (data, JsonElement.class);
 		JsonObject jsonObj = element.getAsJsonObject();
-
-		gson = new GsonBuilder().setPrettyPrinting().create();
-		String prettyJson = gson.toJson(jsonObj);
-		return prettyJson;
+		return jsonObj;
 	}
+
+	// The data to display
+	private static double latitude = 0;
+	private static double longitude = 0;
+	private static double sog = 0;
+	private static double cog = 0;
 
 	public static void main(String... args) {
 
@@ -128,9 +149,11 @@ public class TCPWatch {
 		titlePos = y;
 		lcd.GUIDrawString(lineStart, y, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		y += fontSize;
-		lcd.GUIDrawString(8, y, "N  37 44.93'", font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		String latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
+		String lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
+		lcd.GUIDrawString(8, y, latStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		y += fontSize;
-		lcd.GUIDrawString(8, y, "W 122 30.42'", font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		lcd.GUIDrawString(8, y, lngStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		y += fontSize;
 
 		Date date = new Date();
@@ -152,11 +175,43 @@ public class TCPWatch {
 		Thread dataFetcher = new Thread(() -> {
 			while (true) {
 				TimeUtil.delay(1_000);
-//				System.out.println("\t\t... external data (like REST) Ping!");
+//			System.out.println("\t\t... external data (like REST) Ping!");
 				System.out.println(">> Fetching...");
-				String response = handleRequest(BASE_URL);
+				JsonObject response = handleRequest(BASE_URL);
+
+				/*
+				 * We are interested in
+				 * "Position": {
+					    "lat": 38.063721666666666,
+					    "lng": -122.94171999999998
+					  },
+					  "SOG": {
+					    "speed": 1.9
+					  },
+					  "GPS Date \u0026 Time": {
+					    "date": "Nov 24, 2018 11:23:08 AM",
+					    "epoch": 1543087388000,
+					    "fmtDate": {
+					      "epoch": 1543087388000,
+					      "year": 2018,
+					      "month": 11,
+					      "day": 24,
+					      "hour": 19,
+					      "min": 23,
+					      "sec": 8
+					    }
+					  },
+					  "COG": {
+					    "angle": 212.7
+					  }
+				 */
+
+
+				Gson gson = new GsonBuilder().setPrettyPrinting().create();
+				String prettyJson = gson.toJson(response);
+
 				// TODO Dispatch the data
-				System.out.println(">> Data:" + response);
+				System.out.println(">> Data:" + prettyJson);
 			}
 		}, "dataFetcher");
 		dataFetcher.start();
@@ -177,10 +232,21 @@ public class TCPWatch {
 			switch (currentIndex % 2) {
 
 				case 0:
+					if (VERBOSE) {
+						System.out.println("Displaying Screen #1");
+					}
 					title = "Screen #1";
 					len = font.strlen(title);
 					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2); // Centered
 					lcd.GUIDrawString(lineStart, titlePos, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
+					// TODO Update position
+//					String latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
+//					String lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
+//					lcd.GUIDrawString(8, y, latStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
+//					y += fontSize;
+//					lcd.GUIDrawString(8, y, lngStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
+//					y += fontSize;
+
 
 					Date now = new Date();
 					lcd.GUIDrawString(8, date1, SDF_1.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
@@ -191,19 +257,25 @@ public class TCPWatch {
 					break;
 
 				case 1:
+					if (VERBOSE) {
+						System.out.println("Displaying Screen #2");
+					}
 					title = "Screen #2";
 					len = font.strlen(title);
 					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2); // Centered
 					lcd.GUIDrawString(lineStart, titlePos, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 
-					lcd.GUIDrawString(8, date1, "---", font, LCD1in3.BLACK, LCD1in3.RED);
-					lcd.GUIDrawString(8, date2, "---", font, LCD1in3.BLACK, LCD1in3.RED);
+					lcd.GUIDrawString(8, date1, String.format("SOG: %s kts", SOG_FMT.format(sog)), font, LCD1in3.BLACK, LCD1in3.RED);
+					lcd.GUIDrawString(8, date2, String.format("COG: %s", COG_FMT.format(cog)), font, LCD1in3.BLACK, LCD1in3.RED);
 					lcd.GUIDrawString(8, indexPos, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
 					lcd.LCDDisplayWindows(8, titlePos, 235, titlePos + (4 * fontSize));
 					break;
 
 				default:
+					if (VERBOSE) {
+						System.out.println("Displaying no Screen...");
+					}
 					break;
 			}
 		}
