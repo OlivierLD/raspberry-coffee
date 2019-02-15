@@ -141,7 +141,7 @@ public class TCPWatch {
 		Font font = LCD1in3.findFontBySize(fontSize);
 		int y = 8; // Top of the line
 
-		int titlePos = 0, date1 = 0, date2 = 0, indexPos = 0; // For refresh
+		int titlePos = 0, line1 = 0, line2 = 0, line3 = 0, line4 = 0, line5 = 0; // For refresh
 
 		String title = "Screen #1";
 		int len = font.strlen(title);
@@ -152,19 +152,20 @@ public class TCPWatch {
 		String latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
 		String lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
 		lcd.GUIDrawString(8, y, latStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		line1 = y;
 		y += fontSize;
 		lcd.GUIDrawString(8, y, lngStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		line2 = y;
 		y += fontSize;
-
 		Date date = new Date();
 		lcd.GUIDrawString(8, y, SDF_1.format(date), font, LCD1in3.BLACK, LCD1in3.YELLOW);
-		date1 = y;
+		line3 = y;
 		y += fontSize;
 		lcd.GUIDrawString(8, y, SDF_3.format(date), font, LCD1in3.BLACK, LCD1in3.YELLOW);
-		date2 = y;
+		line4 = y;
 		y += fontSize;
 		lcd.GUIDrawString(8, y, String.format("Index: %d", currentIndex), font, LCD1in3.BLACK, LCD1in3.YELLOW);
-		indexPos = y;
+		line5 = y;
 		// y += fontSize;
 
 		if (!lcd.isSimulating()) {
@@ -218,9 +219,9 @@ public class TCPWatch {
 
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("Ctlr+C !");
+			System.out.println("Ctrl+C !");
 			keepLooping = false;
-			TimeUtil.delay(5_000);// Wait for the screen to shut off
+			TimeUtil.delay(10_000);// Wait for the screen to shut off
 		}));
 
 		// Display Data loop
@@ -239,19 +240,15 @@ public class TCPWatch {
 					len = font.strlen(title);
 					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2); // Centered
 					lcd.GUIDrawString(lineStart, titlePos, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
-					// TODO Update position
-//					String latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
-//					String lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
-//					lcd.GUIDrawString(8, y, latStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
-//					y += fontSize;
-//					lcd.GUIDrawString(8, y, lngStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
-//					y += fontSize;
-
-
+					// Update position
+					latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
+					lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
+					lcd.GUIDrawString(8, line1, latStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
+					lcd.GUIDrawString(8, line2, lngStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 					Date now = new Date();
-					lcd.GUIDrawString(8, date1, SDF_1.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
-					lcd.GUIDrawString(8, date2, SDF_3.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
-					lcd.GUIDrawString(8, indexPos, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
+					lcd.GUIDrawString(8, line3, SDF_1.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
+					lcd.GUIDrawString(8, line4, SDF_3.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
+					lcd.GUIDrawString(8, line5, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
 					lcd.LCDDisplayWindows(8, titlePos, 235, titlePos + (4 * fontSize));
 					break;
@@ -265,9 +262,9 @@ public class TCPWatch {
 					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2); // Centered
 					lcd.GUIDrawString(lineStart, titlePos, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 
-					lcd.GUIDrawString(8, date1, String.format("SOG: %s kts", SOG_FMT.format(sog)), font, LCD1in3.BLACK, LCD1in3.RED);
-					lcd.GUIDrawString(8, date2, String.format("COG: %s", COG_FMT.format(cog)), font, LCD1in3.BLACK, LCD1in3.RED);
-					lcd.GUIDrawString(8, indexPos, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
+					lcd.GUIDrawString(8, line3, String.format("SOG: %s kts", SOG_FMT.format(sog)), font, LCD1in3.BLACK, LCD1in3.RED);
+					lcd.GUIDrawString(8, line4, String.format("COG: %s", COG_FMT.format(cog)), font, LCD1in3.BLACK, LCD1in3.RED);
+					lcd.GUIDrawString(8, line5, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
 					lcd.LCDDisplayWindows(8, titlePos, 235, titlePos + (4 * fontSize));
 					break;
