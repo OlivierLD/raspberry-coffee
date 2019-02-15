@@ -6,6 +6,7 @@ import utils.DumpUtil;
 import utils.StringUtils;
 
 import java.io.*;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -742,6 +743,11 @@ public class HTTPServer {
 						}
 					} // while (isRunning())
 					ss.close();
+				} catch (BindException be) {
+					HTTPContext.getInstance().getLogger().severe(String.format(">>> BindException: Port %d, %s >>>", port, be.toString()));
+					HTTPContext.getInstance().getLogger().log(Level.SEVERE, be.getMessage(), be);
+					HTTPContext.getInstance().getLogger().severe(String.format("<<< BindException: Port %d <<<", port));
+					System.exit(1);
 				} catch (Exception e) {
 					HTTPContext.getInstance().getLogger().severe(String.format(">>> Port %d, %s >>>", port, e.toString()));
 					HTTPContext.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);

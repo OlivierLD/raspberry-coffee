@@ -24,9 +24,8 @@ import java.util.function.Consumer;
 import static spi.lcd.waveshare.LCD1in3.DrawFill;
 
 /**
- * TODO To address: Refresh full screen on index change?
+ * TCP/REST Display Client for an NMEA Logger/REST Server
  *
- * TCP/REST Client for an NMEA Logger/REST Server
  *
  */
 public class TCPWatch {
@@ -111,6 +110,7 @@ public class TCPWatch {
 	private static double longitude = 0;
 	private static double sog = 0;
 	private static double cog = 0;
+	// TODO More data, more pages
 
 	public static void main(String... args) {
 
