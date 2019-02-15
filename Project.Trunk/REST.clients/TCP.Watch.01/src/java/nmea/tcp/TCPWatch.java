@@ -211,7 +211,28 @@ public class TCPWatch {
 				Gson gson = new GsonBuilder().setPrettyPrinting().create();
 				String prettyJson = gson.toJson(response);
 
-				// TODO Dispatch the data
+				// Dispatch the data
+				try {
+					latitude = response.get("Position").getAsJsonObject().get("lat").getAsDouble();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				try {
+					longitude = response.get("Position").getAsJsonObject().get("lng").getAsDouble();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				try {
+					sog = response.get("SOG").getAsJsonObject().get("speed").getAsDouble();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				try {
+					cog = response.get("COG").getAsJsonObject().get("angle").getAsDouble();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+
 				System.out.println(">> Data:" + prettyJson);
 			}
 		}, "dataFetcher");
