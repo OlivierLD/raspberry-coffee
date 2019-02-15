@@ -233,7 +233,7 @@ public class TCPWatch {
 					ex.printStackTrace();
 				}
 
-				System.out.println(">> Data:" + prettyJson);
+//			System.out.println(">> Data:" + prettyJson);
 			}
 		}, "dataFetcher");
 		dataFetcher.start();
