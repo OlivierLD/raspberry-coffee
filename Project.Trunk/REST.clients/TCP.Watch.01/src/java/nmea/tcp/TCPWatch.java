@@ -285,7 +285,11 @@ public class TCPWatch {
 					len = font.strlen(title);
 					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2); // Centered
 					lcd.GUIDrawString(lineStart, titlePos, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
-					// TODO 2 lines here
+					// Update position
+					latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
+					lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
+					lcd.GUIDrawString(8, line1, latStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
+					lcd.GUIDrawString(8, line2, lngStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 					lcd.GUIDrawString(8, line3, String.format("SOG: %s kts", SOG_FMT.format(sog)), font, LCD1in3.BLACK, LCD1in3.RED);
 					lcd.GUIDrawString(8, line4, String.format("COG: %s    ", COG_FMT.format(cog)), font, LCD1in3.BLACK, LCD1in3.RED);
 					lcd.GUIDrawString(8, line5, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
