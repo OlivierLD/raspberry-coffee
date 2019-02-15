@@ -250,7 +250,7 @@ public class TCPWatch {
 			TimeUtil.delay(10);
 
 			// Display data based on currentIndex
-			int screenIndex = currentIndex % 2;
+			int screenIndex = Math.abs(currentIndex % 2);
 			if (VERBOSE) {
 				System.out.println(String.format("Current Index now %d (%d)", screenIndex, currentIndex));
 			}
@@ -287,7 +287,7 @@ public class TCPWatch {
 					lcd.GUIDrawString(lineStart, titlePos, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 					// TODO 2 lines here
 					lcd.GUIDrawString(8, line3, String.format("SOG: %s kts", SOG_FMT.format(sog)), font, LCD1in3.BLACK, LCD1in3.RED);
-					lcd.GUIDrawString(8, line4, String.format("COG: %s", COG_FMT.format(cog)), font, LCD1in3.BLACK, LCD1in3.RED);
+					lcd.GUIDrawString(8, line4, String.format("COG: %s    ", COG_FMT.format(cog)), font, LCD1in3.BLACK, LCD1in3.RED);
 					lcd.GUIDrawString(8, line5, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
 					lcd.LCDDisplayWindows(8, titlePos, 235, titlePos + (6 * fontSize));
