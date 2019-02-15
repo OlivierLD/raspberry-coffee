@@ -274,7 +274,7 @@ public class TCPWatch {
 					lcd.GUIDrawString(8, line4, SDF_3.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
 					lcd.GUIDrawString(8, line5, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
-					lcd.LCDDisplayWindows(8, titlePos, 235, titlePos + (4 * fontSize));
+					lcd.LCDDisplayWindows(8, titlePos, 235, titlePos + (6 * fontSize));
 					break;
 
 				case 1:
@@ -285,12 +285,12 @@ public class TCPWatch {
 					len = font.strlen(title);
 					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2); // Centered
 					lcd.GUIDrawString(lineStart, titlePos, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
-
+					// TODO 2 lines here
 					lcd.GUIDrawString(8, line3, String.format("SOG: %s kts", SOG_FMT.format(sog)), font, LCD1in3.BLACK, LCD1in3.RED);
 					lcd.GUIDrawString(8, line4, String.format("COG: %s", COG_FMT.format(cog)), font, LCD1in3.BLACK, LCD1in3.RED);
 					lcd.GUIDrawString(8, line5, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
-					lcd.LCDDisplayWindows(8, titlePos, 235, titlePos + (4 * fontSize));
+					lcd.LCDDisplayWindows(8, titlePos, 235, titlePos + (6 * fontSize));
 					break;
 
 				default:
