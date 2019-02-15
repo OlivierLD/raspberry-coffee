@@ -151,10 +151,10 @@ public class TCPWatch {
 		y += fontSize;
 		String latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
 		String lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
-		lcd.GUIDrawString(8, y, latStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		lcd.GUIDrawString(8, y, String.format("L: %11s", latStr), font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		line1 = y;
 		y += fontSize;
-		lcd.GUIDrawString(8, y, lngStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		lcd.GUIDrawString(8, y, String.format("G: %11s", lngStr), font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		line2 = y;
 		y += fontSize;
 		Date date = new Date();
@@ -177,9 +177,10 @@ public class TCPWatch {
 			while (true) {
 				TimeUtil.delay(1_000);
 //			System.out.println("\t\t... external data (like REST) Ping!");
-				System.out.println(">> Fetching...");
+				if (VERBOSE) {
+					System.out.println(">> Fetching...");
+				}
 				JsonObject response = handleRequest(BASE_URL);
-
 				/*
 				 * We are interested in
 				 * "Position": {
@@ -267,8 +268,8 @@ public class TCPWatch {
 					// Update position
 					latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
 					lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
-					lcd.GUIDrawString(8, line1, latStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
-					lcd.GUIDrawString(8, line2, lngStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
+					lcd.GUIDrawString(8, line1, String.format("L: %11s", latStr), font, LCD1in3.BLACK, LCD1in3.YELLOW);
+					lcd.GUIDrawString(8, line2, String.format("G: %11s", lngStr), font, LCD1in3.BLACK, LCD1in3.YELLOW);
 					Date now = new Date();
 					lcd.GUIDrawString(8, line3, SDF_1.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
 					lcd.GUIDrawString(8, line4, SDF_3.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
@@ -288,8 +289,8 @@ public class TCPWatch {
 					// Update position
 					latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
 					lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
-					lcd.GUIDrawString(8, line1, latStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
-					lcd.GUIDrawString(8, line2, lngStr, font, LCD1in3.BLACK, LCD1in3.YELLOW);
+					lcd.GUIDrawString(8, line1, String.format("L: %11s", latStr), font, LCD1in3.BLACK, LCD1in3.YELLOW);
+					lcd.GUIDrawString(8, line2, String.format("G: %11s", lngStr), font, LCD1in3.BLACK, LCD1in3.YELLOW);
 					lcd.GUIDrawString(8, line3, String.format("SOG: %s kts", SOG_FMT.format(sog)), font, LCD1in3.BLACK, LCD1in3.RED);
 					lcd.GUIDrawString(8, line4, String.format("COG: %s    ", COG_FMT.format(cog)), font, LCD1in3.BLACK, LCD1in3.RED);
 					lcd.GUIDrawString(8, line5, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
