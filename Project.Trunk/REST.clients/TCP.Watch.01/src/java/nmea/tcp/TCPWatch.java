@@ -250,8 +250,11 @@ public class TCPWatch {
 			TimeUtil.delay(10);
 
 			// Display data based on currentIndex
-
-			switch (currentIndex % 2) {
+			int screenIndex = currentIndex % 2;
+			if (VERBOSE) {
+				System.out.println(String.format("Current Index now %d (%d)", screenIndex, currentIndex));
+			}
+			switch (screenIndex) {
 
 				case 0:
 					if (VERBOSE) {
