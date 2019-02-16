@@ -1,5 +1,6 @@
 package i2c.sensor;
 
+import calc.GeomUtil;
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
@@ -440,7 +441,7 @@ public class LSM303 {
 				double magXcomp = magXfiltered;
 				double magYcomp = magYfiltered;
 
-				System.out.println(String.format("RAW mag data (1): X:%f Y:%f", magXcomp, magYcomp));
+				System.out.println(String.format("RAW mag data (1): X:%f Y:%f => %f", magXcomp, magYcomp, GeomUtil.getDir((float)magXcomp, (float)magYcomp)));
 
 				if (pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
 					magXcomp = (magXfiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZfiltered * Math.sin(Math.toRadians(pitchDegrees)));
