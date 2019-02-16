@@ -445,14 +445,14 @@ public class LSM303 {
 					System.out.println(String.format("RAW mag data (1): X:%f Y:%f => %f", magXcomp, magYcomp, GeomUtil.getDir((float)magXcomp, (float)magYcomp)));
 				}
 
-				double beforeAdjust = GeomUtil.getDir((float)magXcomp, (float)magYcomp); // For dev
+				double beforeAdjust = GeomUtil.getDir((float)magYcomp, (float)magXcomp); // For dev
 
 				if (pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
 					magXcomp = (magXfiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZfiltered * Math.sin(Math.toRadians(pitchDegrees)));
 					magYcomp = (magYfiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZfiltered * Math.sin(Math.toRadians(rollDegrees)));
 				}
 
-				double afterAdjust = GeomUtil.getDir((float)magXcomp, (float)magYcomp); // For dev
+				double afterAdjust = GeomUtil.getDir((float)magYcomp, (float)magXcomp); // For dev
 
 				heading = Math.toDegrees(Math.atan2(magYcomp, magXcomp));
 				while (heading < 0) {
