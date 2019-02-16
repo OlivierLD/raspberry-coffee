@@ -439,10 +439,16 @@ public class LSM303 {
 
 				double magXcomp = magXfiltered;
 				double magYcomp = magYfiltered;
+
+				System.out.println(String.format("RAW mag data (1): X:%f Y:%f", magXcomp, magYcomp));
+				
 				if (pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
 					magXcomp = (magXfiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZfiltered * Math.sin(Math.toRadians(pitchDegrees)));
 					magYcomp = (magYfiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZfiltered * Math.sin(Math.toRadians(rollDegrees)));
 				}
+				System.out.println(String.format("RAW mag data (2): X:%f Y:%f", magXcomp, magYcomp));
+
+
 				heading = Math.toDegrees(Math.atan2(magYcomp, magXcomp));
 				while (heading < 0) {
 					heading += 360f;

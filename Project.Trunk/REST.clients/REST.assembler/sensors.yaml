@@ -1,0 +1,136 @@
+swagger: '2.0'
+info:
+  title: RPi Environment Sensors Reader
+  description: Sensor reader for the Raspberry Pi
+  version: "0.0.2"
+host: localhost:8765
+schemes:
+  - http
+basePath: /v1
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /sensors/bme280:
+    get:
+      description: |
+        Read data from a BME280.
+      operationId: readBme280
+      tags:
+        - Sensors
+      responses:
+        200:
+          description: "Read successful"
+          schema:
+            $ref: "#/definitions/bme280Data"
+        404:
+          description: Sensor not available
+
+  /sensors/solHumidity:
+    get:
+      description: |
+        Read data from a Soil Humidity sensor.
+      operationId: readSoliHumidity
+      tags:
+        - Sensors
+      responses:
+        200:
+          description: "Read successful"
+          schema:
+            type: number
+            minimum: 0.0
+            maximum: 100.0
+            format: float
+
+        404:
+          description: Sensor not available
+
+  /sensors/pump:
+    put:
+      description: |
+        Start or stop the watering pump
+      operationId: drivePump
+      parameters:
+        - name: onOff
+          type: boolean
+          in: header
+      tags:
+        - Pump
+      responses:
+        200:
+          description: Start or stop the pump
+          schema:
+            type: boolean
+        404:
+          description: Device not found
+    get:
+      description: Get teh current tstatus if the watering pump
+      operationId: getPumpStatus
+      tags:
+        - Pump
+      responses:
+        200:
+          description: Got status OK
+          schema:
+            type: boolean
+        404:
+          description: Device not found
+
+
+  /sensors/weather:
+    get:
+      description: |
+        Read Wind data from the Wind Rack
+      operationId: readWind
+      tags:
+        - Sensors
+      responses:
+        200:
+          description: "Read successful"
+          schema:
+            $ref: "#/definitions/weatherStationData"
+        404:
+          description: Sensor not available
+
+definitions:
+
+  bme280Data:
+    type: object
+    description: Data returned by the BME280. `Pressure`, `Temperature`, `Humidity`, and `Altitude`.
+    properties:
+      temperature:
+        type: number
+        description: temperature in Celcius
+      pressure:
+        type: number
+        description: atmospheric pressure in hPa
+      humidity:
+        type: number
+        description: relative humidity in %
+      altitude:
+        type: number
+        description: altitude above sea level in meters
+
+  weatherStationData:
+    type: object
+    description: Data returned by the Weather Station. `Pressure`, `Temperature`, `Humidity`, `Wind Speed`, `Wind Direction` and `Rain`.
+    properties:
+      temperature:
+        type: number
+        description: temperature in Celcius
+      pressure:
+        type: number
+        description: atmospheric pressure in hPa
+      humidity:
+        type: number
+        description: relative humidity in %
+      windspeed:
+        type: number
+        description: wind speed in knots
+      winddir:
+        type: integer
+        description: true wind direction in degrees
+      rain:
+        type: integer
+        description: precipitation, in mm/h
