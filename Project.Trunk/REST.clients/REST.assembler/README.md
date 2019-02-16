@@ -92,7 +92,7 @@ The generated code only contains a simple "Greeting" service. You can run it rig
 The code is generated using `JAX-RS` annotations.
 
 ```
- $ cd helidon-sensor
+ $ cd helidon-sensors
 ```
 then (add proxy parameters if required)
 ```
