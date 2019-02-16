@@ -11,7 +11,7 @@ humidity drops below a given threshold.
 
 REST clients can be programs, or Web pages.
 
-## Create the REST services
+## Create the Java REST services
 We start from the code that allows you to read data emitted by various sensors,
 many such examples are available in this repository.
 
@@ -89,6 +89,7 @@ Notice above:
 - the `package`, where the Java skeletons will be generated
 
 The generated code only contains a simple "Greeting" service. You can run it right now.
+The code is generated using `JAX-RS` annotations.
 
 ```
  $ cd helidon-sensor
@@ -131,16 +132,85 @@ Your micro-service is running in `jetty`, on port `8080`. This port is defined i
 the generated file `helidon-sensors/src/main/resources/META-INF/microprofile-config.properties` along
 with other properties used at runtime.
 
+You can see what the service is providing from any REST client:
+```
+ $ curl http://192.168.42.8:8080/greet
+   {"message":"Hello World!"}
+```
+It works 👍.
 
 To move beyond, see the [Helidon documentation](https://helidon.io/docs/latest/#/getting-started/02_base-example#Prerequisites).
 
-
-
 We will now replace this code with ours.
+
+> Note: if you'd rather use `gradle` than `maven`, to generate the require `build.gradle`, 
+> from the directory where the generated `pom.xml` lives, just type
+```
+ $ ../../../../gradlew init
+```
+
+###### Install required dependencies
+We will use in our micro service resources from other modules in this project.
+
+We thus need to `install` them in the local Maven repo.
+
+From the directory `I2C.SPI`:
+```
+ I2C.SPI $ ../gradlew install
+ $ cd ../RMI.samples
+ $ ../gradlew install
+ $ cd ../common-utils
+ $ ../gradlew install
+ $ 
+```
+
+We need to add those dependencies to the `pom.xml`.
+
+First add one repository
+```xml
+ <repositories>
+
+   <repository>
+     <id>sonatype-repo</id>
+     <url>https://oss.sonatype.org/content/groups/public/</url>
+   </repository>
+
+</repositories>
+```
+Then at the end of the `<dependencies>` section:
+```xml
+ <dependency>
+   <groupId>oliv.raspi.coffee</groupId>
+   <artifactId>I2C.SPI</artifactId>
+   <version>1.0</version>
+ </dependency>
+```
+
+If you want to use `gradle`, in the `build.gradle`, change the following:
+```groovy
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+```
+and add in the `repositories`:
+```groovy
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url "https://oss.sonatype.org/content/groups/public" }
+}
+```
+and in `dependencies`:
+```groovy
+dependencies {
+    compile 'oliv.raspi.coffee:I2C.SPI:1.0'
+```
+
+Now we're ready to dive in the code.
 
 
 ##### fnProject
-Still in development, but quite promising.
+Still in development, but quite promising. WIP. 🚧
 
 ### Using a light custom HTTP Server
 Less snappy than `Swagger`, but eventually lighter, in term of footprint.
