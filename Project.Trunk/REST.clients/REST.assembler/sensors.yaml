@@ -1,7 +1,9 @@
 swagger: '2.0'
 info:
   title: RPi Environment Sensors Reader
-  description: Sensor reader for the Raspberry Pi
+  description: |
+    Sensor reader for the Raspberry Pi.
+    Can turn a pump on or off
   version: "0.0.2"
 host: localhost:8765
 schemes:
@@ -21,17 +23,17 @@ paths:
         - Sensors
       responses:
         200:
-          description: "Read successful"
+          description: Read successful
           schema:
             $ref: "#/definitions/bme280Data"
         404:
           description: Sensor not available
 
-  /sensors/solHumidity:
+  /sensors/soilHumidity:
     get:
       description: |
         Read data from a Soil Humidity sensor.
-      operationId: readSoliHumidity
+      operationId: readSoilHumidity
       tags:
         - Sensors
       responses:
@@ -53,8 +55,9 @@ paths:
       operationId: drivePump
       parameters:
         - name: onOff
-          type: boolean
-          in: header
+          schema:
+            $ref: "#/definitions/pump-status"
+          in: body
       tags:
         - Pump
       responses:
@@ -65,7 +68,7 @@ paths:
         404:
           description: Device not found
     get:
-      description: Get teh current tstatus if the watering pump
+      description: Get the current status if the watering pump
       operationId: getPumpStatus
       tags:
         - Pump
@@ -73,7 +76,7 @@ paths:
         200:
           description: Got status OK
           schema:
-            type: boolean
+            $ref: "#/definitions/pump-status"
         404:
           description: Device not found
 
@@ -87,7 +90,7 @@ paths:
         - Sensors
       responses:
         200:
-          description: "Read successful"
+          description: Read successful
           schema:
             $ref: "#/definitions/weatherStationData"
         404:
@@ -112,6 +115,14 @@ definitions:
         type: number
         description: altitude above sea level in meters
 
+  pump-status:
+    type: object
+    description: Pump status, on or off
+    properties:
+      status:
+        type: boolean
+        description: On if true, Off if false
+
   weatherStationData:
     type: object
     description: Data returned by the Weather Station. `Pressure`, `Temperature`, `Humidity`, `Wind Speed`, `Wind Direction` and `Rain`.
@@ -131,6 +142,9 @@ definitions:
       winddir:
         type: integer
         description: true wind direction in degrees
+      windgust:
+        type: number
+        description: max gust speed during last period in knots
       rain:
-        type: integer
+        type: number
         description: precipitation, in mm/h

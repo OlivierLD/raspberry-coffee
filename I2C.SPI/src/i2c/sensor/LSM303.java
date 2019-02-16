@@ -535,6 +535,7 @@ public class LSM303 {
 	}
 
 	private static void dumpBytes(byte[] ba, int len) {
+		// TODO Use a StringBuffer
 		String str = String.format("%d bytes: ", len);
 		for (int i = 0; i < len; i++) {
 			str += (StringUtils.lpad(Integer.toHexString(ba[i] & 0xFF).toUpperCase(), 2, "0") + " ");
@@ -557,19 +558,21 @@ public class LSM303 {
 
 		try {
 			LSM303 sensor = new LSM303(EnabledFeature.BOTH, false);
-			sensor.setWait(250); // 1/4 sec
+			sensor.setWait(250); // 1/4 sec between reads
 
 			// Calibration values
 			if (!"true".equals(System.getProperty("lsm303.log.for.calibration"))) {
-				// WARNING: Those value might not fit your device!!! They fit one of mines...
+				// WARNING: Those value might not fit your device!!! They ~fit one of mines...
+
+				// MAG offsets
 				sensor.setCalibrationValue(LSM303.MAG_X_OFFSET, 12);
 				sensor.setCalibrationValue(LSM303.MAG_Y_OFFSET, -18.5);
 				sensor.setCalibrationValue(LSM303.MAG_Z_OFFSET, -5);
 
+				// ACC offsets
+				sensor.setCalibrationValue(LSM303.ACC_X_OFFSET, 0.05);
 				sensor.setCalibrationValue(LSM303.ACC_Y_COEFF, 1.05);
 				sensor.setCalibrationValue(LSM303.ACC_Z_COEFF, 1.05);
-
-				sensor.setCalibrationValue(LSM303.ACC_X_OFFSET, 0.05);
 
 				System.out.println("Calibration parameters:" + sensor.getCalibrationMap());
 			}
