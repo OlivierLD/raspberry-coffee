@@ -441,13 +441,17 @@ public class LSM303 {
 				double magXcomp = magXfiltered;
 				double magYcomp = magYfiltered;
 
-				System.out.println(String.format("RAW mag data (1): X:%f Y:%f => %f", magXcomp, magYcomp, GeomUtil.getDir((float)magXcomp, (float)magYcomp)));
+				if (verbose) {
+					System.out.println(String.format("RAW mag data (1): X:%f Y:%f => %f", magXcomp, magYcomp, GeomUtil.getDir((float)magXcomp, (float)magYcomp)));
+				}
 
 				if (pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
 					magXcomp = (magXfiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZfiltered * Math.sin(Math.toRadians(pitchDegrees)));
 					magYcomp = (magYfiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZfiltered * Math.sin(Math.toRadians(rollDegrees)));
 				}
-				System.out.println(String.format("RAW mag data (2): X:%f Y:%f", magXcomp, magYcomp));
+				if (verbose) {
+					System.out.println(String.format("RAW mag data (2): X:%f Y:%f => %f", magXcomp, magYcomp, GeomUtil.getDir((float)magXcomp, (float)magYcomp)));
+				}
 
 
 				heading = Math.toDegrees(Math.atan2(magYcomp, magXcomp));
@@ -560,8 +564,8 @@ public class LSM303 {
 				sensor.setCalibrationValue(LSM303.MAG_Y_OFFSET, -18.5);
 				sensor.setCalibrationValue(LSM303.MAG_Z_OFFSET, -5);
 
-				sensor.setCalibrationValue(LSM303.MAG_Y_COEFF, 1.05);
-				sensor.setCalibrationValue(LSM303.MAG_Z_COEFF, 1.05);
+				sensor.setCalibrationValue(LSM303.ACC_Y_COEFF, 1.05);
+				sensor.setCalibrationValue(LSM303.ACC_Z_COEFF, 1.05);
 
 				sensor.setCalibrationValue(LSM303.ACC_X_OFFSET, 0.05);
 
