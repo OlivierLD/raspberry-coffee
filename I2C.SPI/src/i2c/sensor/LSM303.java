@@ -556,7 +556,7 @@ public class LSM303 {
 //	System.setProperty("lsm303.log.for.calibration", "true");
 
 		try {
-			LSM303 sensor = new LSM303(EnabledFeature.MAGNETOMETER, false);
+			LSM303 sensor = new LSM303(EnabledFeature.BOTH, false);
 			sensor.setWait(250); // 1/4 sec
 
 			// Calibration values
