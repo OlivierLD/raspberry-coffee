@@ -441,10 +441,6 @@ public class LSM303 {
 				double magXcomp = magXfiltered;
 				double magYcomp = magYfiltered;
 
-				if (verbose) {
-					System.out.println(String.format("RAW mag data (1): X:%f Y:%f => %f", magXcomp, magYcomp, GeomUtil.getDir((float)magXcomp, (float)magYcomp)));
-				}
-
 				double beforeAdjust = GeomUtil.getDir((float)magYcomp, (float)magXcomp); // For dev
 
 				if (pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
@@ -560,7 +556,7 @@ public class LSM303 {
 //	System.setProperty("lsm303.log.for.calibration", "true");
 
 		try {
-			LSM303 sensor = new LSM303(false);
+			LSM303 sensor = new LSM303(EnabledFeature.MAGNETOMETER, false);
 			sensor.setWait(250); // 1/4 sec
 
 			// Calibration values
