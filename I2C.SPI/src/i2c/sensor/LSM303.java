@@ -441,7 +441,7 @@ public class LSM303 {
 				double magYcomp = magYfiltered;
 
 				System.out.println(String.format("RAW mag data (1): X:%f Y:%f", magXcomp, magYcomp));
-				
+
 				if (pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
 					magXcomp = (magXfiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZfiltered * Math.sin(Math.toRadians(pitchDegrees)));
 					magYcomp = (magYfiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZfiltered * Math.sin(Math.toRadians(rollDegrees)));
@@ -454,6 +454,10 @@ public class LSM303 {
 					heading += 360f;
 				}
 				setHeading(heading);
+			} else {
+				if (verbose) {
+					System.out.println("magnetometer is null");
+				}
 			}
 			if (verboseMag) {
 				System.out.println(String.format("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f", magneticX, magneticY, magneticZ, magneticX & 0xFFFF, magneticY & 0xFFFF, magneticZ & 0xFFFF, heading));

@@ -29,6 +29,7 @@ Also see in the code (`i2c.sensor.LSM303.java`) how to apply those calibration p
   sensor.setCalibrationValue(LSM303.MAG_X_OFFSET, 9);
   sensor.setCalibrationValue(LSM303.MAG_Y_OFFSET, -16);
 ```
+![Wiring](./img/lsm303.png)
 
 #### MPC9808
 I<sup>2</sup>C Temperature
