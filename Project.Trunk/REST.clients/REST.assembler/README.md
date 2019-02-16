@@ -96,7 +96,7 @@ The code is generated using `JAX-RS` annotations.
 ```
 then (add proxy parameters if required)
 ```
- $ mvn package 
+ $ mvn package [ -Dmaven.test.skip=true ]
 ```
 Eventually you have
 ```
@@ -208,6 +208,16 @@ dependencies {
 
 Now we're ready to dive in the code.
 
+- Change the name of `GreetingApplication.java` to `SensorApplication.java`
+- Change the name of `GreetingProvider.java` to `SensorProvider.java`
+- Change the name of `GreetResource.java` to `SensorResource.java`
+
+For information
+- `SensorApplication` will be the entry point of the micro-service
+- `SensorResource` will define the REST interface
+- `SensorProvider` will be the implementation, actually dealing with sensors and pump.
+
+
 
 ##### fnProject
 Still in development, but quite promising. WIP. 🚧
@@ -216,11 +226,32 @@ Still in development, but quite promising. WIP. 🚧
 Less snappy than `Swagger`, but eventually lighter, in term of footprint.
 For small boards (like the Raspberry Pi Zero), this would be my preferred option.
 
+WIP. 🚧
+
 ## Run the server
 
+If you've been using Helidon and Maven, package and run your micro-service:
+```
+ $ mvn package [ -Dmaven.test.skip=true ]
+ $ java -jar target/helidon-sensors.jar
+```
 
 ## Build a flow using Node-RED
 
+Start node-red
+```
+ $ node-red
+```
+Open the GUI in your browser http://localhost:1880/
 
-## Try it!
+Compose your flow. It will contain HTTP Requests to the services defined above.
+
+ . . . 
+
+Here is the final flow
+
+![Node Red](./img/node-red.png)
+
+This will read the humidity probe, and start the pump as long as the humidity is below 60%.
+
 
