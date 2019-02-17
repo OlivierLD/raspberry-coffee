@@ -177,8 +177,8 @@ public class MainMCP3008Sample33 {
 							" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), 2, "0") +
 							", 0&" + lpad(Integer.toString(adc, 2), 8, "0") + ")");
 				}
-				System.out.println(String.format("Volume: %03d%% (%04d) => %.03f V",
-						volume,
+				System.out.println(String.format("Volume: %s%% (%04d) => %.03f V",
+						StringUtils.lpad(String.format("%d", volume), 3, " "),
 						adc,
 						(3.3 * (adc / 1023.0))));  // Volts
 				lastRead = adc;
