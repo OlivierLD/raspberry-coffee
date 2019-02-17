@@ -16,67 +16,127 @@ We will use:
   - resources available in this repository (https://github.com/OlivierLD/raspberry-coffee/)   
 
 Let's says you have:
-- A Soil Humidity sensor, planted in a pot, at your home
-- A peristaltic pump, that can be started and stopped at will
+- A photo resistor, to measure the ambient light
+- A relay driving a power outlet, to turn a desk lamp on or off.
 
-Those two devices are connected to a Raspberry Pi that can read data from the sensor, and drive the pump.
+> The photo resistor is an analog device (not digital). We will need an Analog to Digital Converter (ADC) to read it.
+> We will use an `MCP3008`.
+ 
+Those two devices are connected to a Raspberry Pi that can read data from the sensor, and drive the lamp.
 
 Now, we want to expose those features to a network and build some logic around them, in order to start the pump when the soil
 humidity drops below a given threshold.
 
 REST clients can be programs, or Web pages.
 
+## Wiring
+![Relay](./img/Relay_bb.png)
+
+![Light Sensor](./img/LightSensorWiring_bb.png)
+
+
 ## Create the Java REST services
 We start from the code that allows you to read data emitted by various sensors,
 many such examples are available in this repository.
 
-> For examples:
->
-> Look in the `I2C.SPI` module.
-
-### Using Swagger (aka Open API)
-[`Swagger`](https://swagger.io/) has been designed to facilitate the development of REST Services.
-You can start from the service definition (in `json` or `yaml` format, `yaml` being the easiest to deal with), and then
-you can generate the skeleton of your implementation (in the language of your choice), for the client, for the server, _as well as the documentation_ of your services,
-based on the `json` or `yaml` definition you started from.
-This documentation part is a very cool feature.
-
-Interestingly, even if you do not intend to implement your application in NodeJS, you may very well
-run the NodeJS generator, just to have the documentation web pages up and running.
-
-For example:
-> Note: We provide here a simple `sensors.yaml`, as an example. This is the file the `gradle` task below will start from.
-
-- From the directory this page you're reading lives in, run
+With the devices wired as above, to see the output of the light sensor, run the script `lightsensor.cal.sh`: 
 ```
- $ ../../../gradlew swaggerNode
-```
-Among others, this will generate in its `node` directory a `package.json`.
-Assuming you've installed NodeJS in your environment, do a 
-```
- $ cd generated/node
- $ npm install
-```
-followed by a 
-```
- $ node index.js
-```
-Then from a browser on the same machine, just reach http://localhost:8765/docs. 
+$ ./lightsensor.cal.sh --clk:18 --miso:23 --mosi:24 --cs:25 --channel:2
+Read an ADC (MPC3008) for 3.3 Volt estimation
+Usage is ./lightsensor.cal.sh --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
+ For miso, mosi, clk & cs, use BCM pin numbers
+Usage is java sensors.MainMCP3008Sample33 --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
+Values above are default values (GPIO/BCM numbers).
 
-![Swagger Doc](./img/swagger.01.png)
-
-Without doing more, you can even try out the services you've defined.
-
-> Note: If you want to implement the rest of the project in `NodeJS`, this is certainly possible.
-> For more details, see the [`Node Pi`](https://github.com/OlivierLD/node.pi) project.
-
-The services can be invoke from any REST client. `curl`, `PostMan`, a browser (for the `GET` requests`), your own code...
-
-> Note: The UI above gives you the syntax of the `curl` requests, for example:
+Reading MCP3008 on channel 2
+ Wiring of the MCP3008-SPI (without power supply):
+ +---------++-----------------------------------------------+
+ | MCP3008 || Raspberry Pi                                  |
+ +---------++------+------------+------+---------+----------+
+ |         || Pin# | Name       | Role | GPIO    | wiringPI |
+ |         ||      |            |      | /BCM    | /PI4J    |
+ +---------++------+------------+------+---------+----------+
+ | CLK (13)|| #12  | PCM_CLK/PWM0 | CLK  | GPIO_18 | 01       |
+ | Din (11)|| #18  | GPIO_5     | MOSI | GPIO_24 | 05       |
+ | Dout(12)|| #16  | GPIO_4     | MISO | GPIO_23 | 04       |
+ | CS  (10)|| #22  | GPIO_6     | CS   | GPIO_25 | 06       |
+ +---------++------+------------+-----+----------+----------+
+Raspberry Pi is the Master, MCP3008 is the Slave:
+- Dout on the MCP3008 goes to MISO on the RPi
+- Din on the MCP3008 goes to MOSI on the RPi
+Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.
+       +--------+ 
+  CH0 -+  1  16 +- Vdd 
+  CH1 -+  2  15 +- Vref 
+* CH2 -+  3  14 +- aGnd 
+  CH3 -+  4  13 +- CLK 
+  CH4 -+  5  12 +- Dout 
+  CH5 -+  6  11 +- Din 
+  CH6 -+  7  10 +- CS 
+  CH7 -+  8   9 +- dGnd 
+       +--------+ 
+       +-----+-----+--------------+-----++-----+--------------+-----+-----+
+       | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |
+       +-----+-----+--------------+-----++-----+--------------+-----+-----+
+       |     |     | 3v3          | #01 || #02 |          5v0 |     |     |       
+       |  02 |  08 | SDA1         | #03 || #04 |          5v0 |     |     |       
+       |  03 |  09 | SCL1         | #05 || #06 |          GND |     |     |       
+       |  04 |  07 | GPCLK0       | #07 || #08 |    UART0_TXD | 15  | 14  |       
+       |     |     | GND          | #09 || #10 |    UART0_RXD | 16  | 15  |       
+       |  17 |  00 | GPIO_0       | #11 || #12 | PCM_CLK/PWM0 | 01  | 18  | CLK   
+       |  27 |  02 | GPIO_2       | #13 || #14 |          GND |     |     |       
+       |  22 |  03 | GPIO_3       | #15 || #16 |       GPIO_4 | 04  | 23  | Dout  
+       |     |     | 3v3          | #17 || #18 |       GPIO_5 | 05  | 24  | Din   
+       |  10 |  12 | SPI0_MOSI    | #19 || #20 |          GND |     |     |       
+       |  09 |  13 | SPI0_MISO    | #21 || #22 |       GPIO_6 | 06  | 25  | CS    
+       |  11 |  14 | SPI0_CLK     | #23 || #24 |   SPI0_CS0_N | 10  | 08  |       
+       |     |     | GND          | #25 || #26 |   SPI0_CS1_N | 11  | 07  |       
+       |     |  30 | SDA0         | #27 || #28 |         SCL0 | 31  |     |       
+       |  05 |  21 | GPCLK1       | #29 || #30 |          GND |     |     |       
+       |  06 |  22 | GPCLK2       | #31 || #32 |         PWM0 | 26  | 12  |       
+       |  13 |  23 | PWM1         | #33 || #34 |          GND |     |     |       
+       |  19 |  24 | PCM_FS/PWM1  | #35 || #36 |      GPIO_27 | 27  | 16  |       
+       |  26 |  25 | GPIO_25      | #37 || #38 |      PCM_DIN | 28  | 20  |       
+       |     |     | GND          | #39 || #40 |     PCM_DOUT | 29  | 21  |       
+       +-----+-----+--------------+-----++-----+--------------+-----+-----+
+       | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |
+       +-----+-----+--------------+-----++-----+--------------+-----+-----+
+Volume:  80% (0819) => 2.642 V
+Volume:  79% (0813) => 2.623 V
+Volume:  80% (0820) => 2.645 V
+Volume:  76% (0783) => 2.526 V
+Volume:  75% (0768) => 2.477 V
+Volume:  69% (0714) => 2.303 V
+Volume:  68% (0703) => 2.268 V
+Volume:  67% (0689) => 2.223 V
+Volume:  68% (0700) => 2.258 V
+Volume:  67% (0691) => 2.229 V
+Volume:  62% (0644) => 2.077 V
+Volume:  53% (0548) => 1.768 V
+Volume:  63% (0649) => 2.094 V
+Volume:  59% (0610) => 1.968 V
+Volume:  48% (0501) => 1.616 V
+Volume:  47% (0491) => 1.584 V
+Volume:  48% (0499) => 1.610 V
+. . . 
 ```
- $ curl -X GET --header 'Accept: application/json' 'http://localhost:8765/v1/sensors/pump'
+Similarly, you can test the relay driver:
 ```
-
+$ ./relay.test.sh 
+Test the relay, manually
+Relay #1 mapped to pin 11 (GPIO_0) 
+Type Q at the prompt to quit
+Q to quit, + to turn ON, - to turn OFF > +
+Setting Relay#1 on
+Q to quit, + to turn ON, - to turn OFF > -
+Setting Relay#1 off
+Q to quit, + to turn ON, - to turn OFF > +
+Setting Relay#1 on
+Q to quit, + to turn ON, - to turn OFF > -
+Setting Relay#1 off
+Q to quit, + to turn ON, - to turn OFF > q
+Done.
+```
 #### Micro Service?
 Serverless... Actually means that the server can be anywhere, everywhere, etc.
 
@@ -169,11 +229,9 @@ We will use in our micro service resources from other modules in this project.
 
 We thus need to `install` them in the local Maven repo.
 
-From the directory `I2C.SPI`:
+From the directory `ADC`:
 ```
- I2C.SPI $ ../gradlew install
- $ cd ../RMI.samples
- $ ../gradlew install
+ ADC $ ../gradlew install
  $ cd ../common-utils
  $ ../gradlew install
  $ 
@@ -283,4 +341,46 @@ Here is the final flow
 
 This will read the humidity probe, and start the pump as long as the humidity is below 60%.
 
+### Using Swagger (aka Open API)
+[`Swagger`](https://swagger.io/) has been designed to facilitate the development of REST Services.
+You can start from the service definition (in `json` or `yaml` format, `yaml` being the easiest to deal with), and then
+you can generate the skeleton of your implementation (in the language of your choice), for the client, for the server, _as well as the documentation_ of your services,
+based on the `json` or `yaml` definition you started from.
+This documentation part is a very cool feature.
+
+Interestingly, even if you do not intend to implement your application in NodeJS, you may very well
+run the NodeJS generator, just to have the documentation web pages up and running.
+
+For example:
+> Note: We provide here a simple `sensors.yaml`, as an example. This is the file the `gradle` task below will start from.
+
+- From the directory this page you're reading lives in, run
+```
+ $ ../../../gradlew swaggerNode
+```
+Among others, this will generate in its `node` directory a `package.json`.
+Assuming you've installed NodeJS in your environment, do a 
+```
+ $ cd generated/node
+ $ npm install
+```
+followed by a 
+```
+ $ node index.js
+```
+Then from a browser on the same machine, just reach http://localhost:8765/docs. 
+
+![Swagger Doc](./img/swagger.01.png)
+
+Without doing more, you can even try out the services you've defined.
+
+> Note: If you want to implement the rest of the project in `NodeJS`, this is certainly possible.
+> For more details, see the [`Node Pi`](https://github.com/OlivierLD/node.pi) project.
+
+The services can be invoke from any REST client. `curl`, `PostMan`, a browser (for the `GET` requests`), your own code...
+
+> Note: The UI above gives you the syntax of the `curl` requests, for example:
+```
+ $ curl -X GET --header 'Accept: application/json' 'http://localhost:8765/v1/sensors/pump'
+```
 
