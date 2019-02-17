@@ -234,11 +234,11 @@
         </dependency>
 
         <!-- Added -->
-        <dependency>
+        <!--dependency>
             <groupId>com.pi4j</groupId>
             <artifactId>pi4j-core</artifactId>
             <version>1.2-SNAPSHOT</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>oliv.raspi.coffee</groupId>
             <artifactId>ADC</artifactId>

@@ -32,6 +32,8 @@ REST clients can be programs, or Web pages.
 ## Wiring
 ![Relay](./img/Relay_bb.png)
 
+> Note: I use 3v3 for a one-relay board, and 5V for a two-relay board.
+
 ![Light Sensor](./img/LightSensorWiring_bb.png)
 
 
@@ -259,39 +261,8 @@ Then at the end of the `<dependencies>` section:
  </dependency>
 ```
 
-If you want to use `gradle`, in the `build.gradle`, change the following:
-```groovy
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-```
-and add in the `repositories`:
-```groovy
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven { url "http://repo.maven.apache.org/maven2" }
-    maven { url "https://oss.sonatype.org/content/groups/public" }
-}
-```
-and in `dependencies`:
-```groovy
-dependencies {
-    compile 'oliv.raspi.coffee:I2C.SPI:1.0'
-    ...
-}    
-```
-If you like to use `Shadow Jar`, also add
-```groovy
-plugins {
-    id 'java'
-    id 'maven'
-    id 'com.github.johnrengelman.shadow' version '4.0.2'
-}
-
-shadowJar {
-    zip64 true
-}
-``` 
+> Note: I had to rename the PI4J jar file pulled in the `target/libs` directory from `pi4j-core-1.2-SNAPSHOT.jar` to `pi4j-core-1.2-20180423.162750-37.jar`.
+> This is the name it has in the `MANIFEST.MF`.
 
 Now we're ready to dive in the code.
 
@@ -304,12 +275,12 @@ For information
 - `SensorResource` will define the REST interface
 - `SensorProvider` will be the implementation, actually dealing with sensors and pump.
 
-
+The source files, as they should eventually be running are provided in this project.
 
 ##### fnProject
 Still in development, but quite promising. WIP. 🚧
 
-### Using a light custom HTTP Server
+### Using a light custom (micro) HTTP Server
 Less snappy than `Swagger`, but eventually lighter, in term of footprint.
 For small boards (like the Raspberry Pi Zero), this would be my preferred option.
 
@@ -320,12 +291,21 @@ WIP. 🚧
 If you've been using Helidon and Maven, package and run your micro-service:
 ```
  $ mvn package [ -Dmaven.test.skip=true ]
- $ java -jar target/helidon-sensors.jar
+ $ [sudo] java -jar target/helidon-sensors.jar
 ```
+
+### Reaching the services
+The services deployed above should now be reachable:
+```
+curl http://192.168.42.8:8080/v1/sensors/ambient-light
+{"light":84.45748}
+```
+Good!
+
 
 ## Build a flow using Node-RED
 
-Start node-red
+Start node-red, on any achine you want, as long as you can see from it the machine(s) the services are running on.
 ```
  $ node-red
 ```
@@ -339,7 +319,25 @@ Here is the final flow
 
 ![Node Red](./img/node-red.png)
 
-This will read the humidity probe, and start the pump as long as the humidity is below 60%.
+This will read the ambient light probe, and turn the lamp on as long as the light is below 60%.
+
+The heart is the `evaluate light` function, very simple:
+```javascript
+let output = {};
+output.payload = {};
+if (msg.payload !== undefined) {
+    if (msg.payload.light < 60) {
+      output.payload.status = true;    
+    } else {
+      output.payload.status = false;    
+    }
+}
+
+output.headers = {};
+output.headers['Content-Type'] = 'application/json';
+
+return output;
+```
 
 ### Using Swagger (aka Open API)
 [`Swagger`](https://swagger.io/) has been designed to facilitate the development of REST Services.
