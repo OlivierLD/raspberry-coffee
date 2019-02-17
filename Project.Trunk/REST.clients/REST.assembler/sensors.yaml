@@ -3,7 +3,7 @@ info:
   title: RPi Environment Sensors Reader
   description: |
     Sensor reader for the Raspberry Pi.
-    Can turn a pump on or off
+    Can turn a lamp on or off
   version: "0.0.2"
 host: localhost:8765
 schemes:
@@ -14,143 +14,64 @@ produces:
 consumes:
   - application/json
 paths:
-  /sensors/bme280:
-    get:
-      description: |
-        Read data from a BME280.
-      operationId: readBme280
-      tags:
-        - Sensors
-      responses:
-        200:
-          description: Read successful
-          schema:
-            $ref: "#/definitions/bme280Data"
-        404:
-          description: Sensor not available
-
-  /sensors/soil-humidity:
+  /sensors/ambient-light:
     get:
       description: |
         Read data from a Soil Humidity sensor.
-      operationId: readSoilHumidity
+      operationId: readAmbientLight
       tags:
         - Sensors
       responses:
         200:
           description: "Read successful"
           schema:
-            $ref: "#/definitions/soil-humidity"
-        404:
-          description: Sensor not available
+            $ref: "#/definitions/ambient-light"
 
-  /sensors/pump:
+  /sensors/relay:
     put:
       description: |
-        Start or stop the watering pump
-      operationId: drivePump
+        Turn the relay on or off
+      operationId: setRelayStatus
       parameters:
         - name: onOff
           schema:
-            $ref: "#/definitions/pump-status"
+            $ref: "#/definitions/relay-status"
           in: body
       tags:
-        - Pump
+        - Relay
       responses:
         200:
           description: Start or stop the pump
           schema:
-            $ref: "#/definitions/pump-status"
-        404:
-          description: Device not found
+            $ref: "#/definitions/relay-status"
     get:
-      description: Get the current status if the watering pump
-      operationId: getPumpStatus
+      description: Get the current relay status
+      operationId: getRelayStatus
       tags:
-        - Pump
+        - Relay
       responses:
         200:
           description: Got status OK
           schema:
-            $ref: "#/definitions/pump-status"
-        404:
-          description: Device not found
-
-
-  /sensors/weather:
-    get:
-      description: |
-        Read Wind data from the Wind Rack
-      operationId: readWind
-      tags:
-        - Sensors
-      responses:
-        200:
-          description: Read successful
-          schema:
-            $ref: "#/definitions/weatherStationData"
-        404:
-          description: Sensor not available
+            $ref: "#/definitions/relay-status"
 
 definitions:
 
-  bme280Data:
+  relay-status:
     type: object
-    description: Data returned by the BME280. `Pressure`, `Temperature`, `Humidity`, and `Altitude`.
-    properties:
-      temperature:
-        type: number
-        description: temperature in Celcius
-      pressure:
-        type: number
-        description: atmospheric pressure in hPa
-      humidity:
-        type: number
-        description: relative humidity in %
-      altitude:
-        type: number
-        description: altitude above sea level in meters
-
-  pump-status:
-    type: object
-    description: Pump status, on or off
+    description: Relay status, on or off
     properties:
       status:
         type: boolean
         description: On if true, Off if false
 
-  soil-humidity:
+  ambient-light:
     type: object
-    description: Humidity in %
+    description: Ambient light in %
     properties:
-      humidity:
+      light:
         type: number
         minimum: 0.0
         maximum: 100.0
         format: float
 
-  weatherStationData:
-    type: object
-    description: Data returned by the Weather Station. `Pressure`, `Temperature`, `Humidity`, `Wind Speed`, `Wind Direction` and `Rain`.
-    properties:
-      temperature:
-        type: number
-        description: temperature in Celcius
-      pressure:
-        type: number
-        description: atmospheric pressure in hPa
-      humidity:
-        type: number
-        description: relative humidity in %
-      windspeed:
-        type: number
-        description: wind speed in knots
-      winddir:
-        type: integer
-        description: true wind direction in degrees
-      windgust:
-        type: number
-        description: max gust speed during last period in knots
-      rain:
-        type: number
-        description: precipitation, in mm/h

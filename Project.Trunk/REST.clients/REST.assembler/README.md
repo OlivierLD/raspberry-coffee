@@ -147,6 +147,11 @@ Quite mature. Its `micro-profile` feature is appealing.
 
 You need `Maven` to be available on your system (it's there by default on the Raspberry Pi).
 
+
+> Note: Below is the description of the steps to take to do it in full for yourself.
+> The code to run is already in this project. You can actually jump to the section [`Run the server`](#run-the-server) if you do not 
+> need to know how the code is elaborated.
+
 Using `Maven`, let's create the require infrastructure.
 
 You need network access to complete this step. If you are behind a firewall, you need to provide the 
@@ -275,7 +280,10 @@ For information
 - `SensorResource` will define the REST interface
 - `SensorProvider` will be the implementation, actually dealing with sensors and pump.
 
-The source files, as they should eventually be running are provided in this project.
+The source files, as they should eventually be running are provided in this project,
+in the `helidon-sensors` folder.
+
+> Also notice the `helidon-sensors/src/main/resources/META-INF/microprofile-config.properties` config file.
 
 ##### fnProject
 Still in development, but quite promising. WIP. 🚧
@@ -379,6 +387,6 @@ The services can be invoke from any REST client. `curl`, `PostMan`, a browser (f
 
 > Note: The UI above gives you the syntax of the `curl` requests, for example:
 ```
- $ curl -X GET --header 'Accept: application/json' 'http://localhost:8765/v1/sensors/pump'
+ $ curl -X GET --header 'Accept: application/json' 'http://localhost:8765/v1/sensors/relay'
 ```
 
