@@ -30,12 +30,17 @@ humidity drops below a given threshold.
 REST clients can be programs, or Web pages.
 
 ## Wiring
-![Relay](./img/Relay_bb.png)
+
+|----|----|
+|:--:|:--:|
+
+| ![Relay](./img/Relay_bb.png)
 
 > Note: I use 3v3 for a one-relay board, and 5V for a two-relay board.
 
+|
 ![Light Sensor](./img/LightSensorWiring_bb.png)
-
+|
 
 ## Create the Java REST services
 We start from the code that allows you to read data emitted by various sensors,
@@ -58,7 +63,7 @@ Reading MCP3008 on channel 2
  |         || Pin# | Name       | Role | GPIO    | wiringPI |
  |         ||      |            |      | /BCM    | /PI4J    |
  +---------++------+------------+------+---------+----------+
- | CLK (13)|| #12  | PCM_CLK/PWM0 | CLK  | GPIO_18 | 01       |
+ | CLK (13)|| #12  | PCM_CLK    | CLK  | GPIO_18 | 01       |
  | Din (11)|| #18  | GPIO_5     | MOSI | GPIO_24 | 05       |
  | Dout(12)|| #16  | GPIO_4     | MISO | GPIO_23 | 04       |
  | CS  (10)|| #22  | GPIO_6     | CS   | GPIO_25 | 06       |
@@ -347,6 +352,13 @@ output.headers['Content-Type'] = 'application/json';
 return output;
 ```
 
+#### See it live
+[YouTube](https://youtu.be/He-wyCch1mc) has it (~15s).
+
+This is the `Node-RED` flow running live.
+
+You can see the light going on when the light sensor is covered (simulating dark).
+
 ### Using Swagger (aka Open API)
 [`Swagger`](https://swagger.io/) has been designed to facilitate the development of REST Services.
 You can start from the service definition (in `json` or `yaml` format, `yaml` being the easiest to deal with), and then
@@ -383,7 +395,7 @@ Without doing more, you can even try out the services you've defined.
 > Note: If you want to implement the rest of the project in `NodeJS`, this is certainly possible.
 > For more details, see the [`Node Pi`](https://github.com/OlivierLD/node.pi) project.
 
-The services can be invoke from any REST client. `curl`, `PostMan`, a browser (for the `GET` requests`), your own code...
+The services can be invoke from any REST client. `curl`, `PostMan`, a browser (for the `GET` requests), your own code...
 
 > Note: The UI above gives you the syntax of the `curl` requests, for example:
 ```
