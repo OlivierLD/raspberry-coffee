@@ -36,6 +36,7 @@ REST clients can be programs, or Web pages.
 | ![Relay](./img/Relay_bb.png) | ![Light Sensor](./img/LightSensorWiring_bb.png) |
 | Note: I use 3v3 for a one-relay board, and 5V for a two-relay board. | Notice the 10K &Omega; resistor |
   
+The 2 devices can be wired on the same Raspberry Pi, or on different ones, as you like.  
 
 ## Create the Java REST services
 We start from the code that allows you to read data emitted by various sensors,
