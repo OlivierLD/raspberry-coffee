@@ -1,19 +1,4 @@
 # From scratch to a sensor flow
-## Sensors, IoT, Micro-services...
-
-We will use:
-- in term of hardware
-  - a light sensor (photo-resistor)
-  - a relay
-  - one or several Raspberry Pi computers
-- in term of programming language
-  - Java
-- in term of tools and frameworks
-  - Maven
-  - Helidon
-  - Possibly Swagger  
-- in term of software
-  - resources available in this repository (https://github.com/OlivierLD/raspberry-coffee/)   
 
 Let's says you have:
 - A Soil Humidity sensor, planted in a pot, at your home
