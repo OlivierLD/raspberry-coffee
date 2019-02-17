@@ -31,16 +31,11 @@ REST clients can be programs, or Web pages.
 
 ## Wiring
 
-|----|----|
-|:--:|:--:|
-
-| ![Relay](./img/Relay_bb.png)
-
-> Note: I use 3v3 for a one-relay board, and 5V for a two-relay board.
-
-|
-![Light Sensor](./img/LightSensorWiring_bb.png)
-|
+| Relay wiring | MCP3008 & light sensor wiring |
+|:------------:|:-----------------------------:|
+| ![Relay](./img/Relay_bb.png) | ![Light Sensor](./img/LightSensorWiring_bb.png) |
+| Note: I use 3v3 for a one-relay board, and 5V for a two-relay board. | Notice the 10K &Omega; resistor |
+  
 
 ## Create the Java REST services
 We start from the code that allows you to read data emitted by various sensors,
