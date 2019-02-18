@@ -143,6 +143,8 @@ Done.
 #### Micro Service?
 Serverless... Actually means that the server can be anywhere, everywhere, etc.
 
+FaaS, Function as a Service.
+
 ##### Helidon
 Quite mature. Its `micro-profile` feature is appealing.
 
@@ -297,11 +299,19 @@ Still in development, but quite promising. WIP. 🚧
 Less snappy than `Swagger`, but eventually lighter, in term of footprint.
 For small boards (like the Raspberry Pi Zero), this would be my preferred option.
 
-WIP. 🚧
-
 Memory minimal footprint ~40Mb
 
-## Run the server
+The code is located in this project, see the `httpserver` package.
+
+Build it with
+```
+ $  ../../../gradlew shadowJar
+```
+
+Use the `start.server.sh` script to run it. Modify the script if needed, to the
+the pins and the ADC channel.
+
+## Run the Helidon micro-server
 
 If you've been using Helidon and Maven, package and run your micro-service:
 ```
@@ -311,10 +321,19 @@ If you've been using Helidon and Maven, package and run your micro-service:
 
 ### Reaching the services
 The services deployed above should now be reachable:
+
+- Helidon
 ```
-curl http://192.168.42.8:8080/v1/sensors/ambient-light
+curl GET http://192.168.42.8:8080/v1/sensors/ambient-light
 {"light":84.45748}
 ```
+
+- Custom micro-server
+```
+curl GET http://192.168.42.8:9999/light/ambient
+{ "percent": 77.517105 }
+```
+
 Good!
 
 
