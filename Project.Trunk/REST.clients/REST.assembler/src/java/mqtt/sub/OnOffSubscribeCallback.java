@@ -21,6 +21,7 @@ public class OnOffSubscribeCallback implements MqttCallback {
 	@Override
 	public void messageArrived(String topic, MqttMessage message) {
 		System.out.println("Message arrived. Topic: " + topic + " Message: " + message.toString());
+		this.relayManager.set(1, "ON".equals(message.toString()) ? "on" : "off");
 	}
 
 	@Override
