@@ -47,7 +47,12 @@ public class HttpRequestServer {
 	public HTTPServer startHttpServer(int port, HttpRequestManager requestManager) {
 		HTTPServer newHttpServer = null;
 		try {
-			newHttpServer = new HTTPServer(port, requestManager);
+			newHttpServer = new HTTPServer(port, requestManager) {
+				@Override
+				public void onExit() {
+					requestManager.onExit();
+				}
+			};
 			newHttpServer.startServer();
 //		newHttpServer.stopRunning();
 		} catch (Exception e) {

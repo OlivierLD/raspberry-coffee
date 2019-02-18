@@ -79,6 +79,14 @@ public class HttpRequestManager implements RESTRequestManager {
 		restImplementation.setADCChannel(this.adcChannel);
 	}
 
+	public void onExit() { // Cleanup
+		if ("true".equals(System.getProperty("server.verbose", "false"))) {
+			System.out.println("Cleaning up - HttpRequestManager");
+		}
+		this.relayManager.shutdown();
+		this.adcChannel.close();
+	}
+
 	private Map<Integer, Pin> buildRelayMap(String strMap) {
 		Map<Integer, Pin> map = new HashMap<>();
 		String[] array = strMap.split(",");

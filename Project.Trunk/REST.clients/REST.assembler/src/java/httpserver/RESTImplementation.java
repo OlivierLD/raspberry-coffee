@@ -23,7 +23,7 @@ import java.util.Optional;
  */
 public class RESTImplementation {
 
-	private static boolean verbose = "true".equals(System.getProperty("relay.verbose", "false"));
+	private static boolean verbose = "true".equals(System.getProperty("server.verbose", "false"));
 	private final static String SERVER_PREFIX = "/server";
 	private final static String RELAY_PREFIX =  "/relay";
 	private final static String LIGHT_PREFIX =  "/light";

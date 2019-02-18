@@ -753,8 +753,9 @@ public class HTTPServer {
 					HTTPContext.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);
 					HTTPContext.getInstance().getLogger().severe(String.format("<<< Port %d <<<", port));
 				} finally {
-					if (verbose)
+					if (verbose) {
 						HTTPContext.getInstance().getLogger().info("HTTP Server is done.");
+					}
 					if (waiter != null) {
 						synchronized (waiter) {
 							waiter.notify();
