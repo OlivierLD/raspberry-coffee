@@ -7,11 +7,11 @@ We will use:
   - a relay, like [this one](https://www.amazon.com/WINGONEER-KY-019-Channel-Module-arduino/dp/B06XHJ2PBJ/ref=sr_1_5?keywords=relay&qid=1550521549&s=gateway&sr=8-5). 5 for ~$9.00.
   - one or several Raspberry Pi computers. Any model would fit, from Raspberry Pi Zero, A, B, all versions.
 - in term of programming language
-  - Java
+  - [Java](https://www.oracle.com/technetwork/java/index.html)
 - in term of tools and frameworks
-  - Maven
-  - Helidon
-  - Possibly Swagger  
+  - [Maven](https://maven.apache.org/)
+  - [Helidon](http://helidon.io)
+  - Possibly [Swagger](https://swagger.io/)  
 - in term of software
   - resources available in this repository (https://github.com/OlivierLD/raspberry-coffee/)   
 
@@ -19,7 +19,7 @@ Let's says you have:
 - A photo resistor, to measure the ambient light
 - A relay driving a power outlet, to turn a desk lamp on or off.
 
-> The photo resistor is an analog device (not digital). We will need an Analog to Digital Converter (ADC) to read it.
+> The photo resistor is an analog device (not digital). We will need an Analog to Digital Converter (ADC) to read it fro the Raspberry Pi (that does not have analog pin, as an Arduino would).
 > We will use an [`MCP3008`](https://www.adafruit.com/product/856) ($3.75).
  
 Those two devices are connected to a Raspberry Pi that can read data from the sensor, and drive the lamp.
@@ -333,7 +333,7 @@ The services deployed above should now be reachable, from any REST client:
 - Helidon
 ```
 curl GET http://192.168.42.8:8080/v1/sensors/ambient-light
-{"light":84.45748}
+{ "light":84.45748 }
 ```
 
 - Custom micro-server
@@ -352,7 +352,8 @@ They can be free.
 Such servers can be reached with various protocols, among them REST, and MQTT.
 
 You need to have an account key, and have defined - for this demo - a feed named `onoff`.
-To try
+
+Try this
 - `./aio.publish.sh`
 - `./aio.subscribe.sh`
 
@@ -365,10 +366,12 @@ Also, with the RESTServer started (`./start.server.sh`), try http://raspberry-pi
 - The Raspberry Pi is connected to sensors and relays
 - A micro-server is running on it
     - Can serve HTML pages
-- Any machine connected on the same Local Are Network (LAN) can see the Raspberry Pi and use REST or HTTP to communicate with it
+- Any machine connected on the same Local Area Network (LAN) can see the Raspberry Pi and use REST or HTTP to communicate with it
 - Adafruit-IO is an IoT server on the Internet
     - The Raspberry Pi can use REST or MQTT to reach Adafruit-IO
     - Same for any machine anywhere on the Internet
+    - Means that it is possible to change the value of a feed, and to be notified of changes.
+        - If the Raspberry Pi subscribes to this kind of notification, anyone who changes the status of the `onoff` feed would be able to turn the light connected to the relay on or off.
 - _Note that a web page served by the Raspberry Pi can reach the Adafruit-IO web site using REST._ This is called Cross Origin Resource Sharing (CORS).      
 
 ## Build a flow using Node-RED
