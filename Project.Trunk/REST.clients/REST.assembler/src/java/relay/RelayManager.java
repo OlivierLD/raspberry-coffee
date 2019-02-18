@@ -29,6 +29,9 @@ public class RelayManager {
 	}
 
 	public RelayManager(Map<Integer, Pin> relayMap) {
+		if ("true".equals(System.getProperty("relay.verbose", "false"))) {
+			System.out.println("Creating RelayManager");
+		}
 		this.relayMap = relayMap;
 		try {
 			gpio = GpioFactory.getInstance();
