@@ -59,8 +59,8 @@ public class HttpRequestManager implements RESTRequestManager {
 			throw ex;
 		}
 		try {
-			miso = Integer.parseInt(mosiStr);
-			mosi = Integer.parseInt(misoStr);
+			miso = Integer.parseInt(misoStr);
+			mosi = Integer.parseInt(mosiStr);
 			clk = Integer.parseInt(clkStr);
 			cs = Integer.parseInt(csStr);
 			channel = Integer.parseInt(adcChannelStr);
