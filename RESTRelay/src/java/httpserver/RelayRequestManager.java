@@ -1,7 +1,6 @@
-package httprelay;
+package httpserver;
 
 import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.RaspiPin;
 import http.HTTPServer;
 import http.RESTRequestManager;
 import relay.RelayManager;

@@ -1,5 +1,5 @@
 # From scratch to a sensor flow
-## Sensors, IoT, Micro-services...
+## Sensors, IoT, FaaS, Micro-services...
 
 We will use:
 - in term of hardware

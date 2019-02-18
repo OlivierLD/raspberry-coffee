@@ -1,4 +1,4 @@
-package httprelay;
+package httpserver;
 
 import http.HTTPServer;
 
@@ -6,13 +6,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Server Main Class
  */
-public class RelayServer {
+public class HttpRequestServer {
 
 	private HTTPServer httpServer = null;
 	private int httpPort = 9999;
 
-	public RelayServer() {
+	public HttpRequestServer() {
 
 		String port = System.getProperty("http.port");
 		if (port != null) {
@@ -25,7 +26,7 @@ public class RelayServer {
 
 		System.out.println(String.format(">>> Running on port %d", httpPort));
 		try {
-			this.httpServer = startHttpServer(httpPort, new RelayRequestManager(this));
+			this.httpServer = startHttpServer(httpPort, new HttpRequestManager(this));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.exit(1);
@@ -40,10 +41,10 @@ public class RelayServer {
 	}
 
 	public static void main(String... args) {
-		new RelayServer();
+		new HttpRequestServer();
 	}
 
-	public HTTPServer startHttpServer(int port, RelayRequestManager requestManager) {
+	public HTTPServer startHttpServer(int port, HttpRequestManager requestManager) {
 		HTTPServer newHttpServer = null;
 		try {
 			newHttpServer = new HTTPServer(port, requestManager);

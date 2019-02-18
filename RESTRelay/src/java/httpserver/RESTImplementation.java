@@ -1,4 +1,4 @@
-package httprelay;
+package httpserver;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
