@@ -320,7 +320,7 @@ If you've been using Helidon and Maven, package and run your micro-service:
 ```
 
 ### Reaching the services
-The services deployed above should now be reachable:
+The services deployed above should now be reachable, from any REST client:
 
 - Helidon
 ```
@@ -336,7 +336,19 @@ curl GET http://192.168.42.8:9999/light/ambient
 
 Good!
 
+## Internet of Things (IoT)
 
+There are some IoT servers around, like [Adafruit-IO](https://io.adafruit.com/olivierld/dashboards/sample-one).
+They can be free.
+
+Such servers can be reached with various protocols, among them REST, and MQTT.
+
+You need to have an account key, and have defined - for this demo - a feed named `onoff`.
+To try
+- `./aio.publish.sh`
+- `./aio.subscribe.sh`
+
+Also, with the RESTServer started (`./start.server.sh`), try http://raspberry-pi:9999/web/index.html?key=[your-aio-key].
 ## Build a flow using Node-RED
 
 Start node-red, on any achine you want, as long as you can see from it the machine(s) the services are running on.
