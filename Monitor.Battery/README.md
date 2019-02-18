@@ -68,7 +68,7 @@ All you need to add to the diagram above is a network connection.
 
  Then use for example
 ```bash
- ./email.battery -verbose -send:google -sendto:me@home.net,you@yourplace.biz -loop:6h
+ ./email.battery.sh -verbose -send:google -sendto:me@home.net,you@yourplace.biz -loop:6h
 ```
 You will receive an email, in this case every 6 hours, containing the expected battery tension.
 
@@ -103,7 +103,7 @@ The FONA requires a SIM Card.
 ###### At work
 From a terminal, start `./battery.fona`
 ```bash
-$ ./battery.fona
+$ ./battery.fona.sh
 Creating BatteryMonitor...
 Serial Communication.
  ... connect using port /dev/ttyUSB1:9600
@@ -297,11 +297,11 @@ You will need two things to go further:
 ##### Using MQTT
 Then you can run the Publisher part, providing your `username` and `key`:
 ```bash
- ./aio.publish olivierld 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
+ ./aio.publish.sh olivierld 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
 ```
 Everytime you hit `[Return]`, you should see the switch toggling in the web page. Hit `Q` to terminate the program.
 ```bash
- ./aio.publish olivierld 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
+ ./aio.publish.sh olivierld 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
  Usage:
  ./aio.publish [AIO Username] [AIO Key]
  like ./aio.publish olivierld abc8736hgfd78638620ngs
@@ -322,7 +322,7 @@ Everytime you hit `[Return]`, you should see the switch toggling in the web page
 You can also write your own Subscriber, reacting to any modification of the feed, just
 like the Web UI did:
 ```bash
- ./aio.subscribe olivierld 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
+ ./aio.subscribe.sh olivierld 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
  Subscriber is now listening to olivierld/feeds/onoff
  Message arrived. Topic: olivierld/feeds/onoff Message: ON
  Message arrived. Topic: olivierld/feeds/onoff Message: OFF
@@ -336,7 +336,7 @@ like the Web UI did:
 ##### Using REST
 You can set the switch value using REST:
 ```bash
- ./aio.post 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
+ ./aio.post.sh 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
  Usage:
  ./aio.post [AIO Key]
  like ./aio.post abc8736hgfd78638620ngs
@@ -364,13 +364,13 @@ For all the samples below, you do *not* need a FONA. Just a connection to the In
 
 ###### MQTT
 ```bash
- ./aio.battery.publish olivierld 54x2x6yy78cazz3f2e3aa45bb2accaedd8056
+ ./aio.battery.publish.sh olivierld 54x2x6yy78cazz3f2e3aa45bb2accaedd8056
 ```
 
 You would see the widget above reacting as the tension is read from the Raspberry Pi.
 ###### REST
 ```bash
- ./aio.battery.post 54x2x6yy78cazz3f2e3aa45bb2accaedd8056
+ ./aio.battery.post.sh 54x2x6yy78cazz3f2e3aa45bb2accaedd8056
 ```
 The widget reacts every time you hit return.
 

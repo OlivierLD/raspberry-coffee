@@ -17,7 +17,7 @@ public class PostSwitch {
 
 	public void setSwitch(String key, String switchPos) throws Exception {
 		String url = "https://io.adafruit.com/api/feeds/" + ONOFF_FEED + "/data";
-		Map<String, String> headers = new HashMap<String, String>(1);
+		Map<String, String> headers = new HashMap<>(1);
 		headers.put("X-AIO-Key", key);
 		JSONObject value = new JSONObject();
 		value.put("value", switchPos);

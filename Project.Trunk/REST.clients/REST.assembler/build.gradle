@@ -37,6 +37,8 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile 'io.swagger:swagger-codegen-cli:2.2.0'
     compile 'org.ajoberstar:gradle-git:1.1.0'
+    //
+    compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
     compile project(':ADC')
 }
 
