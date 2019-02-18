@@ -77,7 +77,7 @@ function getPromise(
 function getRelayStatus() {
 	let headers = [
 		{ name: 'Accept', value: 'application/json' },
-		{ name: 'X-AIO-Key', value: '54c2767878ca793f2e3cae1c45d62aa7ae9f8056' }
+		{ name: 'X-AIO-Key', value: window.aio_key }
 	];
 	return getPromise('https://io.adafruit.com/api/feeds/onoff/data', DEFAULT_TIMEOUT, 'GET', headers,200);
 }
@@ -107,7 +107,7 @@ function setRelayStatus(payload) {
 	let headers = [
 		{ name: 'Accept', value: 'application/json' },
 		{ name: 'Content-Type', value: 'application/json' },
-		{ name: 'X-AIO-Key', value: '54c2767878ca793f2e3cae1c45d62aa7ae9f8056' }
+		{ name: 'X-AIO-Key', value: window.aio_key }
 	];
 	let obj = payload; // JSON.stringify(payload);
 	return getPromise(url, DEFAULT_TIMEOUT, 'POST', headers, 201, obj);
