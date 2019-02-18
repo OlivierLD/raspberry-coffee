@@ -6,6 +6,7 @@ if [ $# -eq 2 ]
 then
 	CP=./build/libs/REST.assembler-1.0-all.jar
   JAVA_OPTS="-Daio.user.name=$1 -Daio.key=$2"
+  JAVA_OPTS="$JAVA_OPTS -Drelay.verbose=true"
   # If firewall, use REST
   java $JAVA_OPTS -cp $CP mqtt.sub.AIOSubscriber
 else
