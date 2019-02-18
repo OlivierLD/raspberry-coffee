@@ -30,10 +30,10 @@ import java.util.concurrent.atomic.AtomicReference;
 @ApplicationScoped
 public class SensorProvider {
 	private final AtomicReference<String> relayMap = new AtomicReference<>();
-	private final AtomicReference<Integer> clk = new AtomicReference<>(18);
-	private final AtomicReference<Integer> miso = new AtomicReference<>(23);
-	private final AtomicReference<Integer> mosi = new AtomicReference<>(24);
-	private final AtomicReference<Integer> cs = new AtomicReference<>(25);
+	private final AtomicReference<Integer> clk = new AtomicReference<>(11);
+	private final AtomicReference<Integer> miso = new AtomicReference<>(9);
+	private final AtomicReference<Integer> mosi = new AtomicReference<>(10);
+	private final AtomicReference<Integer> cs = new AtomicReference<>(8);
 	private final AtomicReference<Integer> channel = new AtomicReference<>(0);
 
 	private RelayManager relayManager;

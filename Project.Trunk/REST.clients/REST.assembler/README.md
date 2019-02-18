@@ -239,7 +239,9 @@ We thus need to `install` them in the local Maven repo.
 
 From the directory `ADC`:
 ```
- ADC $ ../gradlew install
+ $ pwd
+ /home/pi/raspberry-coffee/ADC 
+ $ ../gradlew install
  $ cd ../common-utils
  $ ../gradlew install
  $ 
@@ -286,6 +288,8 @@ in the `helidon-sensors` folder.
 
 > Also notice the `helidon-sensors/src/main/resources/META-INF/microprofile-config.properties` config file.
 
+<!-- Memory minimal footprint ~xxMb -->
+
 ##### fnProject
 Still in development, but quite promising. WIP. 🚧
 
@@ -294,6 +298,8 @@ Less snappy than `Swagger`, but eventually lighter, in term of footprint.
 For small boards (like the Raspberry Pi Zero), this would be my preferred option.
 
 WIP. 🚧
+
+Memory minimal footprint ~40Mb
 
 ## Run the server
 
