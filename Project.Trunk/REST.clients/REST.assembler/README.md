@@ -3,9 +3,9 @@
 
 We will use:
 - in term of hardware
-  - a light sensor (photo-resistor)
-  - a relay
-  - one or several Raspberry Pi computers
+  - a light sensor (photo-resistor), like [this one](https://www.adafruit.com/product/161), ~ $0.95
+  - a relay, like [this one](https://www.amazon.com/WINGONEER-KY-019-Channel-Module-arduino/dp/B06XHJ2PBJ/ref=sr_1_5?keywords=relay&qid=1550521549&s=gateway&sr=8-5). 5 for ~$9.00.
+  - one or several Raspberry Pi computers. Any model would fit, from Raspberry Pi Zero, A, B, all versions.
 - in term of programming language
   - Java
 - in term of tools and frameworks
@@ -20,7 +20,7 @@ Let's says you have:
 - A relay driving a power outlet, to turn a desk lamp on or off.
 
 > The photo resistor is an analog device (not digital). We will need an Analog to Digital Converter (ADC) to read it.
-> We will use an `MCP3008`.
+> We will use an [`MCP3008`](https://www.adafruit.com/product/856) ($3.75).
  
 Those two devices are connected to a Raspberry Pi that can read data from the sensor, and drive the lamp.
 
@@ -293,7 +293,10 @@ in the `helidon-sensors` folder.
 <!-- Memory minimal footprint ~xxMb -->
 
 ##### fnProject
-Still in development, but quite promising. WIP. 🚧
+Still in development, but quite promising.
+Docker native. 
+
+WIP. 🚧
 
 ### Using a light custom (micro) HTTP Server
 Less snappy than `Swagger`, but eventually lighter, in term of footprint.
@@ -317,6 +320,11 @@ If you've been using Helidon and Maven, package and run your micro-service:
 ```
  $ mvn package [ -Dmaven.test.skip=true ]
  $ [sudo] java -jar target/helidon-sensors.jar
+```
+Helidon also has some Docker capabilities:
+```
+$ docker build -t helidon-sensors target
+$ docker run --rm -p 8080:8080 helidon-sensors:latest
 ```
 
 ### Reaching the services
@@ -349,9 +357,23 @@ To try
 - `./aio.subscribe.sh`
 
 Also, with the RESTServer started (`./start.server.sh`), try http://raspberry-pi:9999/web/index.html?key=[your-aio-key].
+
+
+## The full picture
+![Full picture](./img/whole.picture.png)
+
+- The Raspberry Pi is connected to sensors and relays
+- A micro-server is running on it
+    - Can serve HTML pages
+- Any machine connected on the same Local Are Network (LAN) can see the Raspberry Pi and use REST or HTTP to communicate with it
+- Adafruit-IO is an IoT server on the Internet
+    - The Raspberry Pi can use REST or MQTT to reach Adafruit-IO
+    - Same for any machine anywhere on the Internet
+- _Note that a web page served by the Raspberry Pi can reach the Adafruit-IO web site using REST._ This is called Cross Origin Resource Sharing (CORS).      
+
 ## Build a flow using Node-RED
 
-Start node-red, on any achine you want, as long as you can see from it the machine(s) the services are running on.
+Start node-red, on any machine you want, as long as you can see from it the machine(s) the services are running on.
 ```
  $ node-red
 ```
@@ -435,3 +457,27 @@ The services can be invoke from any REST client. `curl`, `PostMan`, a browser (f
  $ curl -X GET --header 'Accept: application/json' 'http://localhost:8765/v1/sensors/relay'
 ```
 
+---
+
+#### Glossary
+
+- API: **A**pplication **P**rogramming **I**nterface
+- GPIO: **G**eneral **P**urpose **I**nput **O**utput
+- HTML: **H**yper **T**ext **M**arkup **L**anguage
+- HTTP: **H**yper **T**ext **T**ransfer **P**rotocol
+- IoT: **I**nternet **o**f **T**hings
+- LAN: **L**ocal **A**rea **N**etwork
+- LoRa: **Lo**ng **Ra**nge
+- MQTT: **M**essage **Q**ueuing **T**elemetry **T**ransport
+- REST: **RE**presentational **S**tate **T**ransfer
+- SMS: **S**hort **M**essage **S**ervice
+- TCP: **T**ransmission **C**ontrol **P**rotocol
+- TCP/IP: **T**ransmission **C**ontrol **P**rotocol / **I**nternet **P**rotocol
+- UDP: **U**ser **D**atagram **P**rotocol
+- SOA: **S**ervice **O**riented **A**rchitecture
+- SaaS: **S**oftware **a**s **a** **S**ervice
+- PaaS: **P**latform **a**s **a** **S**ervice
+- DBaaS: **D**ata **B**ase **a**s **a** **S**ervice
+- FaaS: **F**unction **a**s **a** **S**ervice
+
+---

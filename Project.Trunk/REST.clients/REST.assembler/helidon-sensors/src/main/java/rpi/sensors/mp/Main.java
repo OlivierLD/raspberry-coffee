@@ -63,4 +63,8 @@ public final class Main {
         LogManager.getLogManager().readConfiguration(
                 Main.class.getResourceAsStream("/logging.properties"));
     }
+
+    public static void stopServer() throws Exception {
+        System.out.println("Stopping the server");
+    }
 }
