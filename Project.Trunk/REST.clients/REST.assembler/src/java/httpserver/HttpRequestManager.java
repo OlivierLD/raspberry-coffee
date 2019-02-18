@@ -50,7 +50,7 @@ public class HttpRequestManager implements RESTRequestManager {
 		Map<Integer, Pin> relayMap = null;
 		try {
 			relayMap = buildRelayMap(mapStr);
-			if ("true".equals(System.getProperty("relay.verbose", "false"))) {
+			if ("true".equals(System.getProperty("server.verbose", "false"))) {
 				relayMap.entrySet().forEach(entry -> {
 					System.out.println(String.format("Relay #%d mapped to pin %d (%s) ", entry.getKey(), PinUtil.findByPin(entry.getValue()).pinNumber(), PinUtil.findByPin(entry.getValue()).pinName() ));
 				});
@@ -65,7 +65,10 @@ public class HttpRequestManager implements RESTRequestManager {
 			cs = Integer.parseInt(csStr);
 			channel = Integer.parseInt(adcChannelStr);
 		} catch (NumberFormatException nfe) {
-
+			nfe.printStackTrace();
+		}
+		if ("true".equals(System.getProperty("server.verbose", "false"))) {
+			System.out.println(String.format("MISO:%d MOSI:%d CLK:%d CS:%d, Channel:%d", miso, mosi, clk, cs, channel));
 		}
 		this.relayManager = new RelayManager(relayMap);
 		this.adcChannel = new ADCChannel(miso, mosi, clk, cs, channel);

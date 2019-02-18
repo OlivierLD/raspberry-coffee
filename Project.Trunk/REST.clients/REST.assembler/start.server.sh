@@ -8,7 +8,7 @@ JAVA_OPTS="$JAVA_OPTS -Dmosi.pin=24"
 JAVA_OPTS="$JAVA_OPTS -Dclk.pin=18"
 JAVA_OPTS="$JAVA_OPTS -Dcs.pin=25"
 JAVA_OPTS="$JAVA_OPTS -Dadc.channel=2"
-JAVA_OPTS="$JAVA_OPTS -Drelay.verbose=false"
+JAVA_OPTS="$JAVA_OPTS -Dserver.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=false"
 CP=./build/libs/REST.assembler-1.0-all.jar
 #
