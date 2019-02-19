@@ -372,9 +372,18 @@ Also, with the RESTServer started (`./start.server.sh`), try http://raspberry-pi
     - Same for any machine anywhere on the Internet
     - Means that it is possible to change the value of a feed, and to be notified of changes.
         - If the Raspberry Pi subscribes to this kind of notification, anyone who changes the status of the `onoff` feed would be able to turn the light connected to the relay on or off.
-- _Note that a web page served by the Raspberry Pi can reach the Adafruit-IO web site using REST._ This is called Cross Origin Resource Sharing (CORS).      
+- _Note that a web page served by the Raspberry Pi can reach the Adafruit-IO web site using REST._ This is called Cross Origin Resource Sharing (CORS).
+
+<!-- 
+  TODO provide a QR code to the Adafruit-IO dashboard
+  https://io.adafruit.com/olivierld/dashboards/sample-one 
+-->      
 
 ## Build a flow using Node-RED
+
+Node-RED will allow you to compose a work-flow, using services.
+This will bring some logic to the data they return.
+This is also called "service orchestration".
 
 Start node-red, on any machine you want, as long as you can see from it the machine(s) the services are running on.
 ```
