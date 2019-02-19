@@ -266,7 +266,7 @@ Then at the end of the `<dependencies>` section:
 ```xml
  <dependency>
    <groupId>oliv.raspi.coffee</groupId>
-   <artifactId>I2C.SPI</artifactId>
+   <artifactId>ADC</artifactId>
    <version>1.0</version>
  </dependency>
 ```
