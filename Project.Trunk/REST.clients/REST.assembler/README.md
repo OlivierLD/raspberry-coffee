@@ -14,6 +14,10 @@ All Open Source, Soft & Hard
   - one or several Raspberry Pi computers. Any model would fit, Raspberry Pi Zero, A, B, all versions.
 - in term of programming language
   - [Java](https://www.oracle.com/technetwork/java/index.html)
+- in term of communication protocols
+    - HTTP
+    - REST
+    - MQTT  
 - in term of tools and frameworks
   - [Maven](https://maven.apache.org/) - a build tool for Java.
   - [Helidon](http://helidon.io) - Micro-service oriented.
@@ -30,15 +34,14 @@ Let's says you have:
 - A photo resistor, to measure the ambient light
 - A relay driving a power outlet, to turn a desk lamp on or off.
 
-> The photo resistor is an analog device (not digital). We will need an Analog to Digital Converter (ADC) to read it fro the Raspberry Pi (that does not have analog pin, as an Arduino would).
+> The photo resistor is an analog device (not digital). We will need an Analog to Digital Converter (ADC) to read it from the Raspberry Pi (that does not have analog pins, as an Arduino would).
 > We will use an [`MCP3008`](https://www.adafruit.com/product/856) ($3.75).
  
-Those two devices are connected to a Raspberry Pi that can read data from the sensor, and drive the lamp.
+Those two devices are connected to a Raspberry Pi that can read data from the sensor, and drive the lamp through the relay.
 
-Now, we want to expose those features to a network and build some logic around them, in order to start the pump when the soil
-humidity drops below a given threshold.
+Now, we want to expose those features to a network and build some logic around them, in order to turn the light on or off when needed.
 
-REST clients can be programs, or Web pages.
+REST clients can be programs, or web pages.
 
 ## Wiring
 
