@@ -18,7 +18,8 @@ All Open Source, Soft & Hard
   - [Maven](https://maven.apache.org/) - a build tool for Java.
   - [Helidon](http://helidon.io) - Micro-service oriented.
   - [fnProject](https://fnproject.io/) - FaaS oriented.
-  - Possibly [Swagger](https://swagger.io/) - the de-facto standard in term of REST API documentation (and more). 
+  - Possibly [Swagger](https://swagger.io/) - the de-facto standard in term of REST API documentation (and more).
+  - [Node-RED](https://nodered.org/) - A very cool service orchestration (and more) tool based on NodeJS. 
 - in term of software
   - resources available in this repository (https://github.com/OlivierLD/raspberry-coffee/)
     - to use an Analog to Digital Converter
@@ -285,7 +286,7 @@ Then at the end of the `<dependencies>` section:
 > Note: I had to rename the PI4J jar file pulled in the `target/libs` directory from `pi4j-core-1.2-SNAPSHOT.jar` to `pi4j-core-1.2-20180423.162750-37.jar`.
 > This is the name it has in the `MANIFEST.MF`.
 
-Now we're ready to dive in the code.
+Now we're ready to dive into the code.
 
 - Change the name of `GreetingApplication.java` to `SensorApplication.java`
 - Change the name of `GreetingProvider.java` to `SensorProvider.java`
@@ -416,6 +417,8 @@ We have 2 services:
 > off if it is clear enough.
 
 #### Building the flow
+If Node-RED is not available on your machine, see on the [Node-RED web-site](https://nodered.org/) how to get it up and running.
+
 Start node-red, on any machine you want, as long as you can see from it the machine(s) the services are running on.
 ```
  $ node-red
