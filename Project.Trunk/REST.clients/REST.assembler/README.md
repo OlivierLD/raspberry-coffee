@@ -1,19 +1,29 @@
 # From scratch to a sensor flow
 ## Sensors, IoT, FaaS, Micro-services...
+All Open Source, Soft & Hard
 
-We will use:
+| Software | Hardware |
+|:--------:|:--------:|
+| <img src="./img/osi_symbol.png" height="120" width="120"> | <img src="./img/osh.jpg" height="120" width="120"> |
+
+### We will use
 - in term of hardware
   - a light sensor (photo-resistor), like [this one](https://www.adafruit.com/product/161), ~ $0.95
   - a relay, like [this one](https://www.amazon.com/WINGONEER-KY-019-Channel-Module-arduino/dp/B06XHJ2PBJ/ref=sr_1_5?keywords=relay&qid=1550521549&s=gateway&sr=8-5). 5 for ~$9.00.
-  - one or several Raspberry Pi computers. Any model would fit, from Raspberry Pi Zero, A, B, all versions.
+  - Breadboards, a 10K&Omega; resistor, wires, jumpers...,  the usual maker's stuff.
+  - one or several Raspberry Pi computers. Any model would fit, Raspberry Pi Zero, A, B, all versions.
 - in term of programming language
   - [Java](https://www.oracle.com/technetwork/java/index.html)
 - in term of tools and frameworks
-  - [Maven](https://maven.apache.org/)
-  - [Helidon](http://helidon.io)
-  - Possibly [Swagger](https://swagger.io/)  
+  - [Maven](https://maven.apache.org/) - a build tool for Java.
+  - [Helidon](http://helidon.io) - Micro-service oriented.
+  - [fnProject](https://fnproject.io/) - FaaS oriented.
+  - Possibly [Swagger](https://swagger.io/) - the de-facto standard in term of REST API documentation (and more).` 
 - in term of software
-  - resources available in this repository (https://github.com/OlivierLD/raspberry-coffee/)   
+  - resources available in this repository (https://github.com/OlivierLD/raspberry-coffee/)
+    - to use an Analog to Digital Converter
+    - to interact with a relay
+    - to get to the code of a tiny-micro-HTTP/REST-server  
 
 Let's says you have:
 - A photo resistor, to measure the ambient light
@@ -36,7 +46,8 @@ REST clients can be programs, or Web pages.
 | ![Relay](./img/Relay_bb.png) | ![Light Sensor](./img/LightSensorWiring_bb.png) |
 | Note: I use 3v3 for a one-relay board, and 5V for a two-relay board. | Notice the 10K &Omega; resistor |
   
-The 2 devices can be wired on the same Raspberry Pi, or on different ones, as you like.  
+The 2 devices can be wired on the same Raspberry Pi, or on different ones, as you like.
+All they need to collaborate is to see each other on the network.  
 
 ## Create the Java REST services
 We start from the code that allows you to read data emitted by various sensors,
@@ -293,10 +304,32 @@ in the `helidon-sensors` folder.
 <!-- Memory minimal footprint ~xxMb -->
 
 ##### fnProject
-Still in development, but quite promising.
-Docker native. 
+- Still in development, but quite promising.
+- Definitely `FaaS` oriented.
+- `Docker` native.
+- Also relies on `Maven`. 
 
 WIP. 🚧
+
+The [fnProject](http://fnproject.io) will tell you how to install it on your machine(s).
+
+Once `fn` is installed, run the following to create your finction skeleton:
+```
+ $ fn init --runtime java --trigger http fn-sensorservice
+ Creating function at: /fn-sensorservice
+ Function boilerplate generated.
+ func.yaml created.
+```
+Let's look into the folder `fn-sensorservice`, we have:
+- a `func.yaml`, this is for `Swagger` (see below in this document)
+- a `pom.xml`, this is for Maven.
+- an `src` directory
+
+<!--
+ Good get-started article: https://hackernoon.com/playing-with-the-fn-project-8c6939cfe5cc
+-->
+
+
 
 ### Using a light custom (micro) HTTP Server
 Less snappy than `Swagger`, but eventually lighter, in term of footprint.
@@ -375,7 +408,7 @@ Also, with the RESTServer started (`./start.server.sh`), try http://raspberry-pi
 - _Note that a web page served by the Raspberry Pi can reach the Adafruit-IO web site using REST._ This is called Cross Origin Resource Sharing (CORS).
 
 <!-- 
-  TODO provide a QR code to the Adafruit-IO dashboard
+  There is in web/index.html a QR code to the Adafruit-IO dashboard
   https://io.adafruit.com/olivierld/dashboards/sample-one 
 -->      
 
@@ -420,7 +453,7 @@ return output;
 ```
 
 #### See it live
-[YouTube](https://youtu.be/He-wyCch1mc) has it (~15s).
+[YouTube](https://youtu.be/He-wyCch1mc) has it (~15 seconds).
 
 This is the `Node-RED` flow running live.
 

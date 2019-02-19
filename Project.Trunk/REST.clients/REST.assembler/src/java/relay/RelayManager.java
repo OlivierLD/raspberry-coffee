@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Relay interaction
+ */
 public class RelayManager {
 
 	private boolean simulating = false;

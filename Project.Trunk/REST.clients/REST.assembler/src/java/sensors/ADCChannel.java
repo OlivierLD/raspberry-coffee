@@ -4,6 +4,9 @@ import analogdigitalconverter.mcp3008.MCP3008Reader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
 
+/**
+ * ADC (MCP3008) reading
+ */
 public class ADCChannel {
 
 	private int adcChannel =
