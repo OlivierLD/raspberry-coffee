@@ -18,7 +18,7 @@ All Open Source, Soft & Hard
   - [Maven](https://maven.apache.org/) - a build tool for Java.
   - [Helidon](http://helidon.io) - Micro-service oriented.
   - [fnProject](https://fnproject.io/) - FaaS oriented.
-  - Possibly [Swagger](https://swagger.io/) - the de-facto standard in term of REST API documentation (and more).` 
+  - Possibly [Swagger](https://swagger.io/) - the de-facto standard in term of REST API documentation (and more). 
 - in term of software
   - resources available in this repository (https://github.com/OlivierLD/raspberry-coffee/)
     - to use an Analog to Digital Converter
@@ -312,24 +312,10 @@ in the `helidon-sensors` folder.
 WIP. 🚧
 
 The [fnProject](http://fnproject.io) will tell you how to install it on your machine(s).
+See http://fnproject.io/tutorials/install/.
 
-Once `fn` is installed, run the following to create your finction skeleton:
-```
- $ fn init --runtime java --trigger http fn-sensorservice
- Creating function at: /fn-sensorservice
- Function boilerplate generated.
- func.yaml created.
-```
-Let's look into the folder `fn-sensorservice`, we have:
-- a `func.yaml`, this is for `Swagger` (see below in this document)
-- a `pom.xml`, this is for Maven.
-- an `src` directory
-
-<!--
- Good get-started article: https://hackernoon.com/playing-with-the-fn-project-8c6939cfe5cc
--->
-
-
+Then see [this tutorial](http://fnproject.io/tutorials/JavaFDKIntroduction/#YourFirstFunction).
+See the concept of `app`, to group functions under the same umbrella.
 
 ### Using a light custom (micro) HTTP Server
 Less snappy than `Swagger`, but eventually lighter, in term of footprint.
@@ -354,6 +340,7 @@ If you've been using Helidon and Maven, package and run your micro-service:
  $ mvn package [ -Dmaven.test.skip=true ]
  $ [sudo] java -jar target/helidon-sensors.jar
 ```
+
 Helidon also has some Docker capabilities:
 ```
 $ docker build -t helidon-sensors target
