@@ -499,6 +499,7 @@ The services can be invoke from any REST client. `curl`, `PostMan`, a browser (f
 - HTTP: **H**yper **T**ext **T**ransfer **P**rotocol
 - IoT: **I**nternet **o**f **T**hings
 - LAN: **L**ocal **A**rea **N**etwork
+- WAN: **W**ide **A**rea **N**etwork
 - LoRa: **Lo**ng **Ra**nge
 - MQTT: **M**essage **Q**ueuing **T**elemetry **T**ransport
 - REST: **RE**presentational **S**tate **T**ransfer
