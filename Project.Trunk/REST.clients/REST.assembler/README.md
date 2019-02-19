@@ -237,7 +237,7 @@ It works 👍.
 
 To move beyond, see the [Helidon documentation](https://helidon.io/docs/latest/#/getting-started/02_base-example#Prerequisites).
 
-We will now replace this code with ours.
+Now the infrastructure is in place, we will replace this code with ours.
 
 > Note: if you'd rather use `gradle` than `maven`, to generate the require `build.gradle`, 
 > from the directory where the generated `pom.xml` lives, just type
@@ -303,6 +303,20 @@ in the `helidon-sensors` folder.
 
 <!-- Memory minimal footprint ~xxMb -->
 
+###### Run the Helidon micro-server
+
+If you've been using Helidon and Maven, package and run your micro-service:
+```
+ $ mvn package [ -Dmaven.test.skip=true ]
+ $ [sudo] java -jar target/helidon-sensors.jar
+```
+
+Helidon also has some Docker capabilities:
+```
+$ docker build -t helidon-sensors target
+$ docker run --rm -p 8080:8080 helidon-sensors:latest
+```
+
 ##### fnProject
 - Still in development, but quite promising.
 - Definitely `FaaS` oriented.
@@ -333,21 +347,7 @@ Build it with
 Use the `start.server.sh` script to run it. Modify the script if needed, to the
 the pins and the ADC channel.
 
-## Run the Helidon micro-server
-
-If you've been using Helidon and Maven, package and run your micro-service:
-```
- $ mvn package [ -Dmaven.test.skip=true ]
- $ [sudo] java -jar target/helidon-sensors.jar
-```
-
-Helidon also has some Docker capabilities:
-```
-$ docker build -t helidon-sensors target
-$ docker run --rm -p 8080:8080 helidon-sensors:latest
-```
-
-### Reaching the services
+### Reaching the deployed services
 The services deployed above should now be reachable, from any REST client:
 
 - Helidon
@@ -361,6 +361,8 @@ curl GET http://192.168.42.8:8080/v1/sensors/ambient-light
 curl GET http://192.168.42.8:9999/light/ambient
 { "percent": 77.517105 }
 ```
+
+Similarly, you can set or get the relay status.
 
 Good!
 
@@ -405,6 +407,15 @@ Node-RED will allow you to compose a work-flow, using services.
 This will bring some logic to the data they return.
 This is also called "service orchestration".
 
+#### Use-case
+We have 2 services:
+- One to read the ambient light
+- One to set or get the relay status
+
+> We want the flow to read the ambient light on regular base, and to turn the light on if it is too dark, and 
+> off if it is clear enough.
+
+#### Building the flow
 Start node-red, on any machine you want, as long as you can see from it the machine(s) the services are running on.
 ```
  $ node-red
