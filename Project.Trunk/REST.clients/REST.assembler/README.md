@@ -298,7 +298,7 @@ Now we're ready to dive into the code.
 For information
 - `SensorApplication` will be the entry point of the micro-service
 - `SensorResource` will define the REST interface
-- `SensorProvider` will be the implementation, actually dealing with sensors and pump.
+- `SensorProvider` will be the implementation, actually dealing with sensors and relay.
 
 The source files, as they should eventually be running are provided in this project,
 in the `helidon-sensors` folder.
@@ -348,7 +348,7 @@ Build it with
  $  ../../../gradlew shadowJar
 ```
 
-Use the `start.server.sh` script to run it. Modify the script if needed, to the
+Use the `start.server.sh` script to run it. Modify the script if needed, to set
 the pins and the ADC channel.
 
 ### Reaching the deployed services
@@ -461,7 +461,10 @@ return output;
 
 This is the `Node-RED` flow running live.
 
-You can see the light going on when the light sensor is covered (simulating dark).
+You can see the light going on when the light sensor is covered (simulating darkness).
+
+> We have been using here nodes pre-defined by Node-RED, to invoke REST services, write the function, etc.
+> There are _many_ such pre-defined nodes. You can even ping an email inbox; you can turn the light on of off by sending an email.
 
 ### Using Swagger (aka Open API)
 [`Swagger`](https://swagger.io/) has been designed to facilitate the development of REST Services.
