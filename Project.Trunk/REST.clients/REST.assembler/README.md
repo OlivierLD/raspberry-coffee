@@ -237,7 +237,7 @@ It works 👍.
 
 To move beyond, see the [Helidon documentation](https://helidon.io/docs/latest/#/getting-started/02_base-example#Prerequisites).
 
-Now the infrastructure is in place, we will replace this code with ours.
+Now the infrastructure is in place, we will replace this "Hello World" code with ours.
 
 > Note: if you'd rather use `gradle` than `maven`, to generate the require `build.gradle`, 
 > from the directory where the generated `pom.xml` lives, just type
