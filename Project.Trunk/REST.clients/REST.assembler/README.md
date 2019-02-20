@@ -464,7 +464,7 @@ This is the `Node-RED` flow running live.
 You can see the light going on when the light sensor is covered (simulating darkness).
 
 > We have been using here nodes pre-defined by Node-RED, to invoke REST services, write the function, etc.
-> There are _many_ such pre-defined nodes. You can even ping an email inbox; you can turn the light on of off by sending an email.
+> There are _many_ such pre-defined nodes. You can even ping an email inbox; you can turn the light on or off by sending an email.
 
 ### Using Swagger (aka Open API)
 [`Swagger`](https://swagger.io/) has been designed to facilitate the development of REST Services.
@@ -514,23 +514,23 @@ The services can be invoke from any REST client. `curl`, `PostMan`, a browser (f
 #### Glossary
 
 - API: **A**pplication **P**rogramming **I**nterface
+- DBaaS: **D**ata **B**ase **a**s **a** **S**ervice
+- FaaS: **F**unction **a**s **a** **S**ervice
 - GPIO: **G**eneral **P**urpose **I**nput **O**utput
 - HTML: **H**yper **T**ext **M**arkup **L**anguage
 - HTTP: **H**yper **T**ext **T**ransfer **P**rotocol
 - IoT: **I**nternet **o**f **T**hings
 - LAN: **L**ocal **A**rea **N**etwork
-- WAN: **W**ide **A**rea **N**etwork
 - LoRa: **Lo**ng **Ra**nge
 - MQTT: **M**essage **Q**ueuing **T**elemetry **T**ransport
+- PaaS: **P**latform **a**s **a** **S**ervice
 - REST: **RE**presentational **S**tate **T**ransfer
+- SaaS: **S**oftware **a**s **a** **S**ervice
 - SMS: **S**hort **M**essage **S**ervice
+- SOA: **S**ervice **O**riented **A**rchitecture
 - TCP: **T**ransmission **C**ontrol **P**rotocol
 - TCP/IP: **T**ransmission **C**ontrol **P**rotocol / **I**nternet **P**rotocol
 - UDP: **U**ser **D**atagram **P**rotocol
-- SOA: **S**ervice **O**riented **A**rchitecture
-- SaaS: **S**oftware **a**s **a** **S**ervice
-- PaaS: **P**latform **a**s **a** **S**ervice
-- DBaaS: **D**ata **B**ase **a**s **a** **S**ervice
-- FaaS: **F**unction **a**s **a** **S**ervice
+- WAN: **W**ide **A**rea **N**etwork
 
 ---

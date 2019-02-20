@@ -3,13 +3,14 @@
 - Show and run the code that interacts with the above
 
 #### HTTP, Servers, Clusters, 
-- Monotliths
+- Monoliths
 - Client-server
 - J(2)EE servers
 - Clusters
 - . . . 
 - SOA
 - Micro-services
+- FaaS
 - IoT and friends...
 
 #### Micro-services
