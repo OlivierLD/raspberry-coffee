@@ -90,6 +90,7 @@ public class MinimalTrack {
 
 			pointArray = new Point[]{A, B, C, D};
 		} else {
+			System.out.println(String.format("Running from %s", System.getProperty("user.dir")));
 			pointArray = generatePoints(propertyFile);
 		}
 
@@ -115,11 +116,13 @@ public class MinimalTrack {
 			for (int i=0; i<toEvaluate.size(); i++) {
 				int closestPointIndex = -1;
 				double smallestDist = Double.MAX_VALUE;
-				for (int prog=i; prog<toEvaluate.size(); prog++) {
-					double dist = from.dist(toEvaluate.get(i));
-					if (dist < smallestDist && !path.contains(toEvaluate.get(i))) {
-						closestPointIndex = i;
-						smallestDist = dist;
+				for (int prog=0; prog<toEvaluate.size(); prog++) {
+					if (!from.equals(toEvaluate.get(prog))) {
+						double dist = from.dist(toEvaluate.get(prog));
+						if (dist < smallestDist && !path.contains(toEvaluate.get(prog))) {
+							closestPointIndex = prog;
+							smallestDist = dist;
+						}
 					}
 				}
 				if (closestPointIndex != -1) {

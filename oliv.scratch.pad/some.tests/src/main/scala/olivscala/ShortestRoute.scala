@@ -112,12 +112,14 @@ object ShortestRoute {
       while (i < toEvaluate.size) {
         var closestPointIndex = -1
         var smallestDist = Double.MaxValue
-        var prog = i
+        var prog = 0
         while (prog < toEvaluate.size) {
-          val dist = from.dist(toEvaluate(i))
-          if (dist < smallestDist && !path.contains(toEvaluate(i))) {
-            closestPointIndex = i
-            smallestDist = dist
+          if (!from.equals(toEvaluate(prog))) {
+            val dist = from.dist(toEvaluate(prog))
+            if (dist < smallestDist && !path.contains(toEvaluate(prog))) {
+              closestPointIndex = prog
+              smallestDist = dist
+            }
           }
           prog += 1
         }
