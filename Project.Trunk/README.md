@@ -28,7 +28,7 @@ and a script to run the example should be available as well.
 - Boating and Sailing
   - [Polar Smoother](./PolarSmoother)
   - [Deviation Tool](Deviation.Tool)
-  - [REST Clients](./REST.clients) featuring 
+- [REST Clients](./REST.clients) featuring 
     - a TCP watch. 👍
     - Micro-services (REST, HTTP, MQTT, the full gang!)
 - ... and more.
