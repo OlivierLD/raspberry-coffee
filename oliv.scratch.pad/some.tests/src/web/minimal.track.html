@@ -71,6 +71,7 @@
 	}
 
 	function resolve() {
+		context.save();
 		let nbCombinations = 0;
 		pointArray.forEach(startFrom => {
 			let path = [];
@@ -135,7 +136,7 @@
 		console.log(">> Tested %d permutations.", nbCombinations);
 
 		let prevPt = null;
-		context.lineWidth = 1;
+		context.lineWidth = 3;
 		context.strokeStyle = 'blue';
 		context.beginPath();
 		bestRoute.points.forEach(pt => {
@@ -147,6 +148,7 @@
 		});
 		context.stroke();
 		context.closePath();
+		context.restore();
 	}
 
 	function repaint() {
@@ -154,7 +156,19 @@
 		context.fillStyle = 'white';
 		context.fillRect(0, 0, canvas.width, canvas.height);
 
-		// Points
+		// Path?
+		if (withShortestPath) {
+			resolve();
+
+			if (verbose) {
+				// Dump points
+				pointArray.forEach(pt => {
+					console.log("%s x:%d y:%d", pt.name, pt.x, pt.y);
+				});
+			}
+		}
+
+		// Points, over the path (if any)
 		pointArray.forEach(pt => {
 			context.beginPath();
 			context.arc(pt.x, pt.y, 10, 0, 2 * Math.PI, false); // A circle.
@@ -169,18 +183,6 @@
 			len = context.measureText(str).width;
 			context.fillText(str, pt.x - (len / 2), pt.y + 6);
 		});
-
-		// Path?
-		if (withShortestPath) {
-			resolve();
-
-			if (verbose) {
-				// Dump points
-				pointArray.forEach(pt => {
-					console.log("%s x:%d y:%d", pt.name, pt.x, pt.y);
-				});
-			}
-		}
 	}
 
 	function resetPoints() {
