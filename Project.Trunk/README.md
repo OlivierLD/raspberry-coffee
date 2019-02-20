@@ -1,5 +1,7 @@
 ## Project Trunk
-#### a.k.a. "la caisse &agrave; glingues" 🔧.
+#### a.k.a. "la caisse &agrave; glingues". <!-- 🔧. -->
+
+![ToolBox](./toolbox-icon-30.png)
 ---
 This folder contains projects involving the components available in other modules of this project.
 > Note: Replaces the content of what was `RasPISamples`.
@@ -26,7 +28,9 @@ and a script to run the example should be available as well.
 - Boating and Sailing
   - [Polar Smoother](./PolarSmoother)
   - [Deviation Tool](Deviation.Tool)
-  - [REST Clients](./REST.clients), featuring a TCP watch. 👍
+  - [REST Clients](./REST.clients) featuring 
+    - a TCP watch. 👍
+    - Micro-services (REST, HTTP, MQTT, the full gang!)
 - ... and more.
 
 #### TODO

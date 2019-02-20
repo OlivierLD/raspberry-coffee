@@ -24,7 +24,7 @@ All Open Source, Soft & Hard
   - [fnProject](https://fnproject.io/) - FaaS oriented.
   - Possibly [Swagger](https://swagger.io/) - the de-facto standard in term of REST API documentation (and more).
   - [Node-RED](https://nodered.org/) - A very cool service orchestration (and more) tool based on NodeJS. 
-- in term of software
+- in term of reusable code
   - resources available in this repository (https://github.com/OlivierLD/raspberry-coffee/)
     - to use an Analog to Digital Converter
     - to interact with a relay

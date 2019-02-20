@@ -38,7 +38,7 @@ public class RelayManager {
 		}
 
 		relayMap.entrySet().forEach(entry -> {
-			// For a relay it seems that HIGH means NC (Normally Closed)...
+			// For a relay it seems that HIGH means NC (Normally Closed)... HIGH <=> Button released. LOW <=> Button pushed.
 			if (gpio != null) {
 				relays.add(gpio.provisionDigitalOutputPin(entry.getValue(), String.valueOf(entry.getKey()), PinState.HIGH));
 			}

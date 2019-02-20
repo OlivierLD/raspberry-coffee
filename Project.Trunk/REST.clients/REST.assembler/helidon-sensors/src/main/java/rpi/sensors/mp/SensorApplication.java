@@ -16,9 +16,12 @@
 
 package rpi.sensors.mp;
 
+import java.util.Map;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.BeforeDestroyed;
+import javax.enterprise.event.Observes;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
@@ -35,4 +38,27 @@ public class SensorApplication extends Application {
     public Set<Class<?>> getClasses() {
         return CollectionsHelper.setOf(SensorResource.class);
     }
+
+
+    public void onShutdown(@Observes @BeforeDestroyed(ApplicationScoped.class) Object event) {
+        System.out.println(String.format("\nStopping the server, obj is a %s", event.getClass().getName()));
+        Set<Class<?>> classes = this.getClasses();
+        System.out.println(String.format("Classes: %d", classes.size()));
+        classes.forEach(cls -> {
+            System.out.println("=> " + cls.getName());
+        });
+
+        Set<Object> singletons = this.getSingletons();
+        System.out.println(String.format("Singletons: %d", singletons.size()));
+        singletons.forEach(obj -> {
+            System.out.println(String.format("Singleton: %s", obj.getClass().getName()));
+        });
+
+        Map<String, Object> properties = this.getProperties();
+        System.out.println(String.format("Properties: %d", properties.size()));
+        properties.keySet().forEach(key -> {
+            System.out.println(String.format("%d = %d", key, properties.get(key)));
+        });
+    }
+
 }

@@ -41,7 +41,7 @@ public final class Main {
 
         Server server = startServer();
 
-        System.out.println("http://localhost:" + server.port() + "/greet");
+        System.out.println(String.format("Helidon micro-server ready on port %d", server.port()));
     }
 
     /**
@@ -62,9 +62,5 @@ public final class Main {
         // load logging configuration
         LogManager.getLogManager().readConfiguration(
                 Main.class.getResourceAsStream("/logging.properties"));
-    }
-
-    public static void stopServer() throws Exception {
-        System.out.println("Stopping the server");
     }
 }

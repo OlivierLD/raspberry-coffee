@@ -51,8 +51,12 @@ public class SensorResource {
         this.sensorProvider = sensorProvider;
     }
 
+    public SensorProvider getSensorProvider() {
+        return this.sensorProvider;
+    }
+
     /**
-     * Return the pump status
+     * Return the relay status
      *
      * @return {@link SensorProvider.RelayStatus}
      */
@@ -66,7 +70,7 @@ public class SensorResource {
     }
 
     /**
-     * Set the pump on or off
+     * Set the relay on or off
      *
      * @param relayStatus
      * @return {@link SensorProvider.RelayStatus}
@@ -82,7 +86,7 @@ public class SensorResource {
     }
 
     /**
-     * Return the pump status
+     * Return the light status
      *
      * @return {@link SensorProvider.RelayStatus}
      */
