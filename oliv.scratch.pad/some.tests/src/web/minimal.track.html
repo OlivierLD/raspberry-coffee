@@ -18,7 +18,7 @@
 	<ul>
 		<li>Click on the canvas to add points</li>
 		<li>Click the [Resolve] button to find the shortest path</li>
-		<li>Hit [Reset] between resolutions</li>
+		<li>Hit [Reset] or [Keep Adding] between resolutions</li>
 	</ul>
 </div>
 <div style="margin: auto; text-align: center;">
@@ -26,6 +26,7 @@
 	<br/>
 	<button onclick="resetPoints();">Reset</button>
 	<button onclick="findShortestTrack();">Resolve</button>
+	<button onclick="keepAddingPoints();">Keep Adding</button>
 </div>
 </body>
 <script type="text/javascript">
@@ -49,8 +50,12 @@
 //	console.log("Click on x %d, y %d", x, y);
 
 		let idx = pointArray.length;
-		pointArray.push({ x: x, y: y, name: pointName[idx] });
-		repaint();
+		if (idx > (pointName.length - 1)) {
+			alert("You've reached some limit here ;)");
+		} else {
+			pointArray.push({x: x, y: y, name: pointName[idx]});
+			repaint();
+		}
 	}, false);
 
 	function distance(p1, p2) {
@@ -152,17 +157,17 @@
 		// Points
 		pointArray.forEach(pt => {
 			context.beginPath();
-			context.arc(pt.x, pt.y, 7, 0, 2 * Math.PI, false);
+			context.arc(pt.x, pt.y, 10, 0, 2 * Math.PI, false); // A circle.
 			context.closePath();
 			context.fillStyle = 'red';
 			context.fill();
 			context.strokeStyle = 'blue';
 			context.stroke();
 			context.font = "bold 18px Arial"; // Like "bold 15px Arial"
-			context.fillStyle = 'black';
+			context.fillStyle = 'cyan';
 			str = pt.name;
 			len = context.measureText(str).width;
-			context.fillText(str, pt.x + 10, pt.y - 10);
+			context.fillText(str, pt.x - (len / 2), pt.y + 6);
 		});
 
 		// Path?
@@ -180,6 +185,12 @@
 
 	function resetPoints() {
 		pointArray = [];
+		routes = [];
+		withShortestPath = false;
+		repaint();
+	}
+
+	function keepAddingPoints() {
 		routes = [];
 		withShortestPath = false;
 		repaint();
