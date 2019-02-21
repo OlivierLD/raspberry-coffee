@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Minimal Track, V2</title>
+	<style type="text/css">
+		body {
+			font-family: "Helvetica Neue", "Lato", Verdana, Helvetica, Geneva, sans-serif;
+		}
+		h2 {
+			color: silver;
+		}
+		.simulate-button {
+			border: 1px solid silver;
+			border-radius: 3px;
+			padding: 1px;
+		}
+	</style>
+</head>
+<body style="background-color: white;">
+<h2>Minimal route between 4 points</h2>
+<div>
+	<ul>
+		<li>Click on the canvas to add points. <i>For now: Point 1 top left, point 2 top right, point 3 bottom right, point 4 bottom left.</i></li>
+		<li>Hit <span class="simulate-button">Reset</span> to cancel the current plot</li>
+	</ul>
+</div>
+<div style="margin: auto; text-align: center;">
+	<canvas id="point-canvas" width="600" height="400" style="border: 4px solid silver; border-radius: 10px;"></canvas>
+	<br/>
+	<button onclick="resetPoints();">Reset</button>
+</div>
+</body>
+<script type="text/javascript">
+
+	const verbose = true;
+
+	let canvas = document.getElementById('point-canvas'),
+			context = canvas.getContext('2d')
+
+	let pointArray = [];
+	let withShortestPath = false;
+
+	canvas.addEventListener('click', function(evt) {
+		var x = evt.pageX - canvas.offsetLeft;
+		var y = evt.pageY - canvas.offsetTop;
+
+//	console.log("Click on x %d, y %d", x, y);
+
+		let idx = pointArray.length;
+		if (idx == 4) {
+			alert("You've reached some limit here ;)");
+		} else {
+			pointArray.push({x: x, y: y, name: (idx + 1).toString() });
+			if (pointArray.length == 4) {
+				withShortestPath = true;
+			}
+			repaint();
+		}
+	}, false);
+
+	function distance(p1, p2) {
+		return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+	}
+
+	function distanceToTopLeft(pt) {
+		return distance(topLeft, pt);
+	}
+
+	function distanceToTopRight(pt) {
+		return distance(topRight, pt);
+	}
+
+	function distanceToBottomRight(pt) {
+		return distance(bottomRight, pt);
+	}
+
+	function distanceToBottomLeft(pt) {
+		return distance(bottomLeft, pt);
+	}
+
+	function findBestCouple(startX1, startY1, startX2, startY2, endX1, endY1, endX2, endY2, step, pathLen) {
+		let bestX1 = 0;
+		let bestY1 = 0;
+		let bestX2 = 0;
+		let bestY2 = 0;
+
+		let smallestPath = pathLen;
+		let x1 = startX1;
+		while (x1 <= endX1) {
+			let y1 = startY1;
+			while (y1 <= endY1) {
+				let x2 = startX2;
+				while (x2 <= endX2) {
+					let y2 = startY2;
+					while (y2 <= endY2) {
+						let path = distanceToTopLeft({x: x1, y: y1}) +
+								distanceToTopRight({x: x2, y: y2}) +
+								distance({x: x1, y: y1}, {x: x2, y: y2}) +
+								distanceToBottomLeft({x: x1, y: y1}) +
+								distanceToBottomRight({x: x2, y: y2});
+						if (path < smallestPath) {
+							smallestPath = path;
+							bestX1 = x1;
+							bestY1 = y1;
+							bestX2 = x2;
+							bestY2 = y2;
+						}
+						y2 += step;
+					}
+					x2 += step;
+				}
+				y1 += step;
+			}
+			x1 += step;
+		}
+		return {path: smallestPath, bestX1: bestX1, bestY1: bestY1, bestX2: bestX2, bestY2: bestY2};
+	}
+
+	function repaint() {
+		// Clear
+		context.fillStyle = 'white';
+		context.fillRect(0, 0, canvas.width, canvas.height);
+
+		// Path?
+		if (withShortestPath) {
+			resolve();
+
+			if (verbose) {
+				// Dump points
+				pointArray.forEach(pt => {
+					console.log("%s x:%d y:%d", pt.name, pt.x, pt.y);
+				});
+			}
+		}
+
+		// Points, over the path (if any)
+		pointArray.forEach(pt => {
+			context.beginPath();
+			context.arc(pt.x, pt.y, 10, 0, 2 * Math.PI, false); // A circle.
+			context.closePath();
+			context.fillStyle = 'red';
+			context.fill();
+			context.strokeStyle = 'blue';
+			context.stroke();
+			context.font = "bold 18px Arial"; // Like "bold 15px Arial"
+			context.fillStyle = 'cyan';
+			str = pt.name;
+			len = context.measureText(str).width;
+			context.fillText(str, pt.x - (len / 2), pt.y + 6);
+		});
+	}
+
+	function resetPoints() {
+		pointArray = [];
+		withShortestPath = false;
+		repaint();
+	}
+
+	let topLeft = {};
+	let topRight = {};
+	let bottomLeft = {};
+	let bottomRight = {};
+
+	function resolve() {
+		// Find the top-left-bottom-right points
+		let minX = Number.MAX_VALUE,
+				minY = Number.MAX_VALUE,
+				maxX = -Number.MAX_VALUE,
+				maxY = -Number.MAX_VALUE;
+		pointArray.forEach(pt => {
+			minX = Math.min(minX, pt.x);
+			maxX = Math.max(maxX, pt.x);
+			minY = Math.min(minY, pt.y);
+			maxY = Math.max(maxY, pt.y);
+		});
+		// For now:
+		topLeft = { x: pointArray[0].x, y: pointArray[0].y }
+		topRight = { x: pointArray[1].x, y: pointArray[1].y }
+		bottomRight = { x: pointArray[2].x, y: pointArray[2].y }
+		bottomLeft = { x: pointArray[3].x, y: pointArray[3].y }
+
+		let maxDim = Math.max(maxX - minX, maxY - minY);
+
+		let passOne = findBestCouple(minX, minY, minX, minY, maxX, maxY, maxX, maxY, 0.05 * maxDim, Number.MAX_VALUE);
+		console.log("PassOne:", passOne);
+
+		// Re-iterate if needed here
+
+		let passTwo = findBestCouple(
+				passOne.bestX1 - (0.05 * maxDim),
+				passOne.bestY1 - (0.05 * maxDim),
+				passOne.bestX2 - (0.05 * maxDim),
+				passOne.bestY2 - (0.05 * maxDim),
+				passOne.bestX1 + (0.05 * maxDim),
+				passOne.bestY1 + (0.05 * maxDim),
+				passOne.bestX2 + (0.05 * maxDim),
+				passOne.bestY2 + (0.05 * maxDim),
+				0.005 * maxDim,
+				passOne.path);
+
+		let finalResult = passTwo;
+		// Draw
+		context.save();
+		context.lineWidth = 3;
+		context.strokeStyle = 'blue';
+		context.beginPath();
+
+		context.moveTo(topLeft.x, topLeft.y);
+		context.lineTo(finalResult.bestX1, finalResult.bestY1);
+
+		context.moveTo(bottomLeft.x, bottomLeft.y);
+		context.lineTo(finalResult.bestX1, finalResult.bestY1);
+
+		context.moveTo(topRight.x, topRight.y);
+		context.lineTo(finalResult.bestX2, finalResult.bestY2);
+
+		context.moveTo(bottomRight.x, bottomRight.y);
+		context.lineTo(finalResult.bestX2, finalResult.bestY2);
+
+		context.moveTo(finalResult.bestX1, finalResult.bestY1);
+		context.lineTo(finalResult.bestX2, finalResult.bestY2);
+
+		context.stroke();
+		context.closePath();
+		context.restore();
+	}
+
+</script>
+</html>

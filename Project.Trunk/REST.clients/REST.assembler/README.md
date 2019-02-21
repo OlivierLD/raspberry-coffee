@@ -179,7 +179,7 @@ to the command below (replace `www-proxy.me.home` with the appropriate value).
 $ mvn archetype:generate -DinteractiveMode=false \
       -DarchetypeGroupId=io.helidon.archetypes \
       -DarchetypeArtifactId=helidon-quickstart-mp \
-      -DarchetypeVersion=0.11.0 \
+      -DarchetypeVersion=1.0.0 \
       -DgroupId=io.helidon.examples \
       -DartifactId=helidon-sensors \
       -Dpackage=rpi.sensors.mp
