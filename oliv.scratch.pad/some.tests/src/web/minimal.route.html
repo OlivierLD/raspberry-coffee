@@ -235,6 +235,59 @@
 		context.stroke();
 		context.closePath();
 		context.restore();
+
+		//
+		// A test, counter-clockwise starting top-left:
+		if (false) {
+			topLeft = {x: pointArray[0].x, y: pointArray[0].y}
+			bottomLeft = {x: pointArray[1].x, y: pointArray[1].y}
+			bottomRight = {x: pointArray[2].x, y: pointArray[2].y}
+			topRight = {x: pointArray[3].x, y: pointArray[3].y}
+
+			let passOneBis = findBestCouple(minX, minY, minX, minY, maxX, maxY, maxX, maxY, 0.05 * maxDim, Number.MAX_VALUE);
+			console.log("PassOneBis:", passOneBis);
+
+			// Re-iterate if needed here
+
+			let passTwoBis = findBestCouple(
+					passOneBis.bestP1.x - (0.05 * maxDim),
+					passOneBis.bestP1.y - (0.05 * maxDim),
+					passOneBis.bestP2.x - (0.05 * maxDim),
+					passOneBis.bestP2.y - (0.05 * maxDim),
+					passOneBis.bestP1.x + (0.05 * maxDim),
+					passOneBis.bestP1.y + (0.05 * maxDim),
+					passOneBis.bestP2.x + (0.05 * maxDim),
+					passOneBis.bestP2.y + (0.05 * maxDim),
+					0.005 * maxDim,
+					passOneBis.path);
+			console.log("PassTwoBis:", passOneBis);
+
+			let finalResultBis = passTwoBis;
+			// Draw
+			context.save();
+			context.lineWidth = 3;
+			context.strokeStyle = 'orange';
+			context.beginPath();
+
+			context.moveTo(topLeft.x, topLeft.y);
+			context.lineTo(finalResultBis.bestP1.x, finalResultBis.bestP1.y);
+
+			context.moveTo(bottomLeft.x, bottomLeft.y);
+			context.lineTo(finalResultBis.bestP1.x, finalResultBis.bestP1.y);
+
+			context.moveTo(topRight.x, topRight.y);
+			context.lineTo(finalResultBis.bestP2.x, finalResultBis.bestP2.y);
+
+			context.moveTo(bottomRight.x, bottomRight.y);
+			context.lineTo(finalResultBis.bestP2.x, finalResultBis.bestP2.y);
+
+			context.moveTo(finalResultBis.bestP1.x, finalResultBis.bestP1.y);
+			context.lineTo(finalResultBis.bestP2.x, finalResultBis.bestP2.y);
+
+			context.stroke();
+			context.closePath();
+			context.restore();
+		}
 	}
 
 </script>
