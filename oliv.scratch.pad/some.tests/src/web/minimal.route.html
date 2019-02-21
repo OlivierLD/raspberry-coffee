@@ -114,7 +114,17 @@
 			}
 			x1 += step;
 		}
-		return {path: smallestPath, bestX1: bestX1, bestY1: bestY1, bestX2: bestX2, bestY2: bestY2};
+		return {
+			path: smallestPath,
+			bestP1: {
+				x: bestX1,
+				y: bestY1
+			},
+			bestP2: {
+				x: bestX2,
+				y: bestY2
+			}
+		};
 	}
 
 	function repaint() {
@@ -174,7 +184,7 @@
 			minY = Math.min(minY, pt.y);
 			maxY = Math.max(maxY, pt.y);
 		});
-		// For now:
+		// For now, clockwise starting top-left:
 		topLeft = { x: pointArray[0].x, y: pointArray[0].y }
 		topRight = { x: pointArray[1].x, y: pointArray[1].y }
 		bottomRight = { x: pointArray[2].x, y: pointArray[2].y }
@@ -188,14 +198,14 @@
 		// Re-iterate if needed here
 
 		let passTwo = findBestCouple(
-				passOne.bestX1 - (0.05 * maxDim),
-				passOne.bestY1 - (0.05 * maxDim),
-				passOne.bestX2 - (0.05 * maxDim),
-				passOne.bestY2 - (0.05 * maxDim),
-				passOne.bestX1 + (0.05 * maxDim),
-				passOne.bestY1 + (0.05 * maxDim),
-				passOne.bestX2 + (0.05 * maxDim),
-				passOne.bestY2 + (0.05 * maxDim),
+				passOne.bestP1.x - (0.05 * maxDim),
+				passOne.bestP1.y - (0.05 * maxDim),
+				passOne.bestP2.x - (0.05 * maxDim),
+				passOne.bestP2.y - (0.05 * maxDim),
+				passOne.bestP1.x + (0.05 * maxDim),
+				passOne.bestP1.y + (0.05 * maxDim),
+				passOne.bestP2.x + (0.05 * maxDim),
+				passOne.bestP2.y + (0.05 * maxDim),
 				0.005 * maxDim,
 				passOne.path);
 		console.log("PassTwo:", passTwo);
@@ -208,19 +218,19 @@
 		context.beginPath();
 
 		context.moveTo(topLeft.x, topLeft.y);
-		context.lineTo(finalResult.bestX1, finalResult.bestY1);
+		context.lineTo(finalResult.bestP1.x, finalResult.bestP1.y);
 
 		context.moveTo(bottomLeft.x, bottomLeft.y);
-		context.lineTo(finalResult.bestX1, finalResult.bestY1);
+		context.lineTo(finalResult.bestP1.x, finalResult.bestP1.y);
 
 		context.moveTo(topRight.x, topRight.y);
-		context.lineTo(finalResult.bestX2, finalResult.bestY2);
+		context.lineTo(finalResult.bestP2.x, finalResult.bestP2.y);
 
 		context.moveTo(bottomRight.x, bottomRight.y);
-		context.lineTo(finalResult.bestX2, finalResult.bestY2);
+		context.lineTo(finalResult.bestP2.x, finalResult.bestP2.y);
 
-		context.moveTo(finalResult.bestX1, finalResult.bestY1);
-		context.lineTo(finalResult.bestX2, finalResult.bestY2);
+		context.moveTo(finalResult.bestP1.x, finalResult.bestP1.y);
+		context.lineTo(finalResult.bestP2.x, finalResult.bestP2.y);
 
 		context.stroke();
 		context.closePath();
