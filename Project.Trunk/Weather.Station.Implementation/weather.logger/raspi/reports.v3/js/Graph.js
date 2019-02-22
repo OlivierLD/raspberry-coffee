@@ -2,6 +2,7 @@
   * Nice color picker at https://www.w3schools.com/colors/colors_names.asp
  */
 
+// TODO Migrate to ES6
 function Graph(cName,       // Canvas Name
                cWidth,      // Canvas width
                cHeight,     // Canvas height

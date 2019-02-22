@@ -567,6 +567,12 @@ function go() {
     document.getElementById("query").disabled = false;
   });
 }
+
+function expandCollapse() {
+  let textZone = document.getElementById('json-div');
+  let currentStatus = textZone.style.display;
+  textZone.style.display = (currentStatus === 'none' ? 'block' : 'none');
+}
     </script>
     <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
     <link rel="stylesheet" href="css/web-components.css" type="text/css"/>
@@ -592,7 +598,7 @@ function go() {
           <h1 style="margin: 0px;">Weather Report</h1>
           <small>Select your period and click the "Query" button.</small>
         </td>
-        <td valign="top" colspan="2">
+        <td valign="top" colspan="7">
           <table width="100%" border="0">
             <tr>
               <td> <!-- Data Type, Period, go -->
@@ -607,22 +613,22 @@ function go() {
                   <option value="MONTH">Last Month</option>
                   <option value="ALL">All</option>
                 </select>
-                 &nbsp;&nbsp;
-                 <button id="query" onclick="go();">Query</button>
+                &nbsp;&nbsp;
+                <button id="query" onclick="go();">Query</button>
+                or
+                <button id="paste" onclick="expandCollapse();">Paste</button> your JSON data
+                <div id="json-div" style="display: none;">
+                  <textarea id="spot" style="margin: 2px; height: 50px; width: 98%;" onchange="javascript:onDataChange();" placeholder="Paste your JSON data here and tab out."></textarea>
+                </div>
               </td>
             </tr>
           </table>
         </td>
-        <td colspan="5" valign="top" align="right" rowspan="1">
-          <textarea id="spot" style="margin: 2px; height: 50px; width: 98%;" onchange="javascript:onDataChange();"></textarea>
-          <br/>
-          <small>Or paste your JSON data &#8679; in the box above ...</small>
-        </td>
       </tr>
       <tr>
         <td rowspan="8" valign="top"><div id="map" style="width: 400px; height: 530px; border: 1px solid gray; border-radius: 25px;" title="Click on the Graph to see the wind on the map."></div></td>
-      </tr>
-      <tr>
+      <!--/tr>
+      <tr-->
         <td align="left" colspan="7">
           Time zone:
           <select id="tz" style="direction: ltr; font-family: 'Source Code Pro', 'courier new';">
