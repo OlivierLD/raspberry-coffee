@@ -22,7 +22,7 @@ function Graph(cName,       // Canvas Name
 
   this.dType = dataType;
 
-  var canvas = document.getElementById(cName);
+  let canvas = document.getElementById(cName);
   canvas.width = cWidth;
   canvas.height = cHeight;
 
@@ -206,7 +206,7 @@ function Graph(cName,       // Canvas Name
 				break;
 	    case "RAIN":
 		    miny = 0;
-		    maxy = Math.max(2.5, Math.ceil(this.maxY(data))); // at least 2mm
+		    maxy = Math.max(2.5,  Math.ceil(maxy)); // Math.ceil(this.maxY(data))); // at least 2.5mm
 		    break;
         default:
           break;
@@ -502,14 +502,14 @@ function Graph(cName,       // Canvas Name
 };
 
 function Tuple(_x, _y) {
-  var x = _x;
-  var y = _y;
+  let x = _x;
+  let y = _y;
 
   this.getX = function() { return x; };
   this.getY = function() { return y; };
-};
+}
 
-var sortTupleX = function(t1, t2) {
+function sortTupleX(t1, t2) {
   if (t1.getX() < t2.getX()) {
     return -1;
   }
@@ -517,4 +517,4 @@ var sortTupleX = function(t1, t2) {
     return 1;
   }
   return 0;
-};
+}

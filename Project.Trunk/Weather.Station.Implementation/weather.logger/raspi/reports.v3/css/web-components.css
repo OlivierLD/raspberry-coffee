@@ -15,7 +15,7 @@
 
 .pluviometer-night {
 	--with-shadow: false;
-	--scale-color: pink;
+	--scale-color: red;
 	--bg-color: transparent;
 	--major-tick-color: LightGrey;
 	--minor-tick-color: DarkGrey;

@@ -19,10 +19,10 @@
       }
     </script>
     <script type="text/javascript" src="js/date.proto.js"></script>
-    <script type="text/javascript" src="js/AnalogDisplay.js"></script>
-    <script type="text/javascript" src="js/Thermometer.js"></script>
-    <script type="text/javascript" src="js/DirectionDisplay.js"></script>
-    <script type="text/javascript" src="js/Pluviometer.js"></script>
+    <script type="module" src="js/AnalogDisplay.js"></script>
+    <script type="module" src="js/Thermometer.js"></script>
+    <script type="module" src="js/DirectionDisplay.js"></script>
+    <script type="module" src="js/Pluviometer.js"></script>
     <script type="text/javascript" src="js/Graph.js"></script>
     <script type="text/javascript" src="weather.report.js"></script>
 
@@ -586,12 +586,14 @@ function expandCollapse() {
 
       .displayCanvas {
         border: 1px solid #9C9898;
-        opacity:0.9;
+        border-radius: 10px;
+        opacity: 0.9;
+        /*box-shadow: 5px 10px #888888;*/
       }
 
     </style>
   </head>
-  <body onunload="GUnload();" style="background-color: rgba(128, 128, 128, 0.3);">
+  <body onunload="GUnload();" style="background-color: rgba(128, 128, 128, 0.5);">
     <table border="0" style="padding:5px; border-radius:5px; overflow-y: scroll;">
       <tr>
         <td valign="top" colspan="1">
