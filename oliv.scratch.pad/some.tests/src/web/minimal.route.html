@@ -9,11 +9,25 @@
 		}
 		h2 {
 			color: silver;
+			font-style: italic;
 		}
 		.simulate-button {
 			border: 1px solid silver;
 			border-radius: 3px;
 			padding: 1px;
+		}
+		.spot {
+			font-size: 16px;
+			font-family: "Source Code Pro", "Courier New", Helvetica, Geneva;
+			text-align: center;
+			vertical-align: baseline;
+			font-weight: bold;
+			font-style: normal;
+			border: 1px solid black;
+			border-radius: 50%;
+			padding: 2px;
+			width: 16px;
+			height: 16px;
 		}
 	</style>
 </head>
@@ -21,14 +35,26 @@
 <h2>Minimal route between 4 points</h2>
 <div>
 	<ul>
-		<li>Click on the canvas to add points. <i>For now: Point 1 top left, point 2 top right, point 3 bottom right, point 4 bottom left.</i></li>
+		<li>Click on the canvas to add points. <i><u>For now</u>: Point <span class="spot">1</span> top left, point <span class="spot">2</span> top right, point <span class="spot">3</span> bottom right, point <span class="spot">4</span> bottom left.</i></li>
+		<li>Red points are draggable</li>
 		<li>Hit <span class="simulate-button">Reset</span> to cancel the current plot</li>
 	</ul>
 </div>
-<div style="margin: auto; text-align: center;">
-	<canvas id="point-canvas" width="600" height="400" style="border: 4px solid silver; border-radius: 10px;"></canvas>
-	<br/>
-	<button onclick="resetPoints();">Reset</button>
+<div id="main-container" style="display: grid; grid-template-areas: 'canvas top' 'canvas bottom'; grid-template-columns: 620px auto; grid-gap: 10px; padding: 0 10px 10px 10px; text-align: left;">
+
+	<div style="margin: auto; text-align: center; grid-area: canvas;">
+		<canvas id="point-canvas" width="600" height="400" style="border: 4px solid silver; border-radius: 10px;"></canvas>
+		<br/>
+		<button onclick="resetPoints();">Reset</button>
+	</div>
+
+	<div style="grid-area: top;">
+		<span id="mouse-coord"></span>
+	</div>
+	<div style="grid-area: bottom;">
+		<span id="result-div"></span>
+	</div>
+
 </div>
 </body>
 <script type="text/javascript">
@@ -39,7 +65,7 @@
 			context = canvas.getContext('2d');
 
 	let pointArray = [];
-	let withShortestPath = false;
+	let withShortestPath = false; // aka resolution
 
 	function relativeMouseCoords(event, element) {
 		let bcr = element.getBoundingClientRect();
@@ -78,7 +104,7 @@
 		canvas.style.cursor = (onPoint === -1 ? 'default' : (dragging ? 'grabbing' : 'grab'));
 	}, false);
 
-	canvas.addEventListener('mouseup', function(evt) {
+	canvas.addEventListener('mouseup', function(evt) { // Also used as 'mouseclick'
 		if (verbose) {
 			console.log('Mouse Up');
 		}
@@ -91,10 +117,11 @@
 			if (verbose) {
 				console.log('Point #' + onPoint + ' moved');
 			}
+			dragging = false;
+			onPoint = -1;
 			repaint();
 		} else {
 			// console.log("Click on x %d, y %d", x, y);
-
 			let idx = pointArray.length;
 			if (idx === 4) {
 				alert("You've reached some limit here ;)");
@@ -117,34 +144,15 @@
 		if (verbose) {
 			console.log('Mouse Moved:', x, y);
 		}
+		document.getElementById('mouse-coord').innerHTML = ('<i>Mouse</i><br/>X:' + x + "<br/>Y:" + y);
 		if (!dragging) {
 			onPoint = detectProximity(x, y);
+		} else {
+			repaint();
+			drawPoint(x, y, pointArray[onPoint].name, 'rgba(250, 0, 0, 0.25)');
 		}
 		canvas.style.cursor = (onPoint === -1 ? 'default' : (dragging ? 'grabbing' : 'grab'));
 
-	}, false);
-
-	canvas.addEventListener('clack', function(evt) { // click possibly conflicts with mouseup
-		let coords = relativeMouseCoords(evt, canvas);
-		x = coords.x;
-		y = coords.y;
-
-		if (!dragging) {
-			if (verbose) {
-				console.log("Click on x %d, y %d", x, y);
-			}
-
-			let idx = pointArray.length;
-			if (idx === 4) {
-				alert("You've reached some limit here ;)");
-			} else {
-				pointArray.push({x: x, y: y, name: (idx + 1).toString()});
-				if (pointArray.length === 4) {
-					withShortestPath = true;
-				}
-				repaint();
-			}
-		}
 	}, false);
 
 	function distance(p1, p2) {
@@ -165,6 +173,21 @@
 
 	function distanceToBottomLeft(pt) {
 		return distance(bottomLeft, pt);
+	}
+
+	function drawPoint(x, y, name, color) {
+		context.beginPath();
+		context.arc(x, y, 10, 0, 2 * Math.PI, false); // A circle.
+		context.closePath();
+		context.fillStyle = color;
+		context.fill();
+		context.strokeStyle = 'blue';
+		context.stroke();
+		context.font = "bold 14px Arial"; // Like "bold 15px Arial"
+		context.fillStyle = 'cyan';
+		let str = name;
+		let len = context.measureText(str).width;
+		context.fillText(str, x - (len / 2), y + 6);
 	}
 
 	function findBestCouple(startX1, startY1, startX2, startY2, endX1, endY1, endX2, endY2, step, pathLen) {
@@ -221,7 +244,7 @@
 		context.fillRect(0, 0, canvas.width, canvas.height);
 
 		// Path?
-		if (withShortestPath) {
+		if (withShortestPath && !dragging) {
 			resolve();
 
 			if (verbose) {
@@ -231,21 +254,11 @@
 				});
 			}
 		}
-
 		// Points, over the path (if any)
-		pointArray.forEach(pt => {
-			context.beginPath();
-			context.arc(pt.x, pt.y, 10, 0, 2 * Math.PI, false); // A circle.
-			context.closePath();
-			context.fillStyle = 'red';
-			context.fill();
-			context.strokeStyle = 'blue';
-			context.stroke();
-			context.font = "bold 18px Arial"; // Like "bold 15px Arial"
-			context.fillStyle = 'cyan';
-			let str = pt.name;
-			let len = context.measureText(str).width;
-			context.fillText(str, pt.x - (len / 2), pt.y + 6);
+		pointArray.forEach((pt, idx) => {
+			if (idx !== onPoint) {
+				drawPoint(pt.x, pt.y, pt.name, 'red');
+			}
 		});
 	}
 
@@ -253,6 +266,7 @@
 		pointArray = [];
 		withShortestPath = false;
 		repaint();
+		document.getElementById('result-div').innerHTML = '';
 	}
 
 	let topLeft = {};
@@ -299,6 +313,12 @@
 		console.log("PassTwo:", passTwo);
 
 		let finalResult = passTwo;
+		// Display
+		let resultContent = '<i>Best Route length</i>: ' + finalResult.path.toFixed(4) + '<br/>' +
+												'P1(' + finalResult.bestP1.x.toFixed(4) + ', ' + finalResult.bestP1.y.toFixed(4) + ')' + '<br/>' +
+												'P2(' + finalResult.bestP2.x.toFixed(4) + ', ' + finalResult.bestP2.y.toFixed(4) + ')';
+		document.getElementById('result-div').innerHTML = resultContent;
+
 		// Draw
 		context.save();
 		context.lineWidth = 3;
@@ -323,6 +343,9 @@
 		context.stroke();
 		context.closePath();
 		context.restore();
+
+		drawPoint(finalResult.bestP1.x, finalResult.bestP1.y, 'P1', 'green');
+		drawPoint(finalResult.bestP2.x, finalResult.bestP2.y, 'P2', 'green');
 
 		//
 		// A test, counter-clockwise starting top-left:
