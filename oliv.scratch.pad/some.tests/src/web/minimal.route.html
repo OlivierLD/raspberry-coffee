@@ -33,7 +33,7 @@
 </body>
 <script type="text/javascript">
 
-	const verbose = true;
+	const verbose = false;
 
 	let canvas = document.getElementById('point-canvas'),
 			context = canvas.getContext('2d');
@@ -41,21 +41,109 @@
 	let pointArray = [];
 	let withShortestPath = false;
 
-	canvas.addEventListener('click', function(evt) {
-		let x = evt.pageX - canvas.offsetLeft;
-		let y = evt.pageY - canvas.offsetTop;
+	function relativeMouseCoords(event, element) {
+		let bcr = element.getBoundingClientRect();
 
-//	console.log("Click on x %d, y %d", x, y);
+		let canvasX = event.clientX;
+		let canvasY = event.clientY;
 
-		let idx = pointArray.length;
-		if (idx === 4) {
-			alert("You've reached some limit here ;)");
-		} else {
-			pointArray.push({x: x, y: y, name: (idx + 1).toString() });
-			if (pointArray.length === 4) {
-				withShortestPath = true;
+		canvasX -= bcr.left;
+		canvasY -= bcr.top;
+
+		return {
+			x: canvasX,
+			y: canvasY
+		};
+	}
+
+	function detectProximity(x, y) {
+		let idx = -1;
+		for (let i=0; i<pointArray.length; i++) {
+			if (Math.abs(x - pointArray[i].x) < 6 && Math.abs(y - pointArray[i].y) < 6) {
+				idx = i;
+				break;
+			}
+		}
+		return idx;
+	}
+
+	let dragging = false;
+	let onPoint = -1;
+	// Events list at https://developer.mozilla.org/en-US/docs/Web/Events
+	canvas.addEventListener('mousedown', function(evt) {
+		if (verbose) {
+			console.log('Mouse Down');
+		}
+		dragging = (onPoint !== -1);
+		canvas.style.cursor = (onPoint === -1 ? 'default' : (dragging ? 'grabbing' : 'grab'));
+	}, false);
+
+	canvas.addEventListener('mouseup', function(evt) {
+		if (verbose) {
+			console.log('Mouse Up');
+		}
+		if (dragging && onPoint !== -1) {
+			let coords = relativeMouseCoords(evt, canvas);
+			x = coords.x;
+			y = coords.y;
+			pointArray[onPoint].x = x;
+			pointArray[onPoint].y = y;
+			if (verbose) {
+				console.log('Point #' + onPoint + ' moved');
 			}
 			repaint();
+		} else {
+			// console.log("Click on x %d, y %d", x, y);
+
+			let idx = pointArray.length;
+			if (idx === 4) {
+				alert("You've reached some limit here ;)");
+			} else {
+				pointArray.push({x: x, y: y, name: (idx + 1).toString()});
+				if (pointArray.length === 4) {
+					withShortestPath = true;
+				}
+				repaint();
+			}
+		}
+		dragging = false;
+		canvas.style.cursor = (onPoint === -1 ? 'default' : (dragging ? 'grabbing' : 'grab'));
+	}, false);
+
+	canvas.addEventListener('mousemove', function(evt) {
+		let coords = relativeMouseCoords(evt, canvas);
+		x = coords.x;
+		y = coords.y;
+		if (verbose) {
+			console.log('Mouse Moved:', x, y);
+		}
+		if (!dragging) {
+			onPoint = detectProximity(x, y);
+		}
+		canvas.style.cursor = (onPoint === -1 ? 'default' : (dragging ? 'grabbing' : 'grab'));
+
+	}, false);
+
+	canvas.addEventListener('clack', function(evt) { // click possibly conflicts with mouseup
+		let coords = relativeMouseCoords(evt, canvas);
+		x = coords.x;
+		y = coords.y;
+
+		if (!dragging) {
+			if (verbose) {
+				console.log("Click on x %d, y %d", x, y);
+			}
+
+			let idx = pointArray.length;
+			if (idx === 4) {
+				alert("You've reached some limit here ;)");
+			} else {
+				pointArray.push({x: x, y: y, name: (idx + 1).toString()});
+				if (pointArray.length === 4) {
+					withShortestPath = true;
+				}
+				repaint();
+			}
 		}
 	}, false);
 
