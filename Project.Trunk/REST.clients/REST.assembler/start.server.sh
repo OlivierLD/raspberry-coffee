@@ -12,6 +12,8 @@ JAVA_OPTS="$JAVA_OPTS -Dserver.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=false"
 CP=./build/libs/REST.assembler-1.0-all.jar
 #
+# For remote debugging:
+JAVA_OPTS="$JAVA_OPTIONS -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000"
 #
 sudo java -cp $CP $JAVA_OPTS httpserver.HttpRequestServer
 #

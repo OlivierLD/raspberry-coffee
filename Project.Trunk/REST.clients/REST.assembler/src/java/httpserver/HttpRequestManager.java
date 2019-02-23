@@ -114,7 +114,7 @@ public class HttpRequestManager implements RESTRequestManager {
 	 * Manage the REST requests.
 	 *
 	 * @param request incoming request
-	 * @return as defined in the {@link RESTImplementation}
+	 * @return response as defined in the {@link RESTImplementation}
 	 * @throws UnsupportedOperationException
 	 */
 	@Override
