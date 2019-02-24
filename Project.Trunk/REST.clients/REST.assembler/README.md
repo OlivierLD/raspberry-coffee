@@ -351,6 +351,29 @@ Build it with
 Use the `start.server.sh` script to run it. Modify the script if needed, to set
 the pins and the ADC channel.
 
+##### Remote debugging
+That's one of the many goodies that come with Java, Java Platform Debugging Architecture (aka JPDA),
+along with Java Debug Wire Protocol (JDWP).
+
+See in `start.server.sh` how to activate it. Notice the `address` below.     
+```bash
+JAVA_OPTS="$JAVA_OPTS -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000"
+#
+echo -e "Running with JAVA_OPT=$JAVA_OPTS"
+sudo java -cp $CP $JAVA_OPTS httpserver.HttpRequestServer
+```
+I run the server on the Raspberry Pi, and I set breakpoint(s) in an IDE on a more beefy laptop, to see what it is actually doing.
+
+![IDE Remote config](./img/remote.debug.png)
+
+Notice the server IP address, as well as the port, matching the `address` in the server's runtime properties.
+
+- Start the server with the right parameters
+- Start the same program in you IDE
+- The execution stops when a breakpoint is hit, and you can see (and change) variables values.
+
+![IDE Remote config](./img/remote.debug.2.png)
+
 ### Reaching the deployed services
 The services deployed above should now be reachable, from any REST client:
 
@@ -519,7 +542,10 @@ The services can be invoke from any REST client. `curl`, `PostMan`, a browser (f
 - GPIO: **G**eneral **P**urpose **I**nput **O**utput
 - HTML: **H**yper **T**ext **M**arkup **L**anguage
 - HTTP: **H**yper **T**ext **T**ransfer **P**rotocol
+- IDE: **I**ntegrated **D**evelopment **E**nvironment
 - IoT: **I**nternet **o**f **T**hings
+- JDWP: **J**ava **D**ebug **W**ire **P**rotocol
+- JPDA: **J**ava **P**latform **D**ebugging **A**rchitecture
 - LAN: **L**ocal **A**rea **N**etwork
 - LoRa: **Lo**ng **Ra**nge
 - MQTT: **M**essage **Q**ueuing **T**elemetry **T**ransport
