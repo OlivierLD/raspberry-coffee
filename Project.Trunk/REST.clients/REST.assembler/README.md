@@ -364,7 +364,7 @@ sudo java -cp $CP $JAVA_OPTS httpserver.HttpRequestServer
 ```
 I run the server on the Raspberry Pi, and I set breakpoint(s) in an IDE on a more beefy laptop, to see what it is actually doing.
 
-![IDE Remote config](./img/remote.debug.png)
+<img src="./img/remote.debug.png" title="IDE Remote config">
 
 Notice the server IP address (`192.168.42.8`), as well as the port (`4000`), matching the `address` in the server's runtime properties.
 
