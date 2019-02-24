@@ -366,7 +366,7 @@ I run the server on the Raspberry Pi, and I set breakpoint(s) in an IDE on a mor
 
 ![IDE Remote config](./img/remote.debug.png)
 
-Notice the server IP address, as well as the port, matching the `address` in the server's runtime properties.
+Notice the server IP address (`192.168.42.8`), as well as the port (`4000`), matching the `address` in the server's runtime properties.
 
 - Start the server with the right parameters
 - Start the same program in you IDE
