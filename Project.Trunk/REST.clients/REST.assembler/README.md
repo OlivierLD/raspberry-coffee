@@ -369,10 +369,11 @@ I run the server on the Raspberry Pi, and I set breakpoint(s) in an IDE on a mor
 Notice the server IP address (`192.168.42.8`), as well as the port (`4000`), matching the `address` in the server's runtime properties.
 
 - Start the server with the right parameters
-- Start the same program in you IDE
-- The execution stops when a breakpoint is hit, and you can see (and change) variables values.
+- Start the same program in your IDE
 
-![IDE Remote config](./img/remote.debug.2.png)
+![IDE Remote Config](./img/remote.debug.2.png)
+
+- The execution stops when a breakpoint is hit, and you can see (and change) variables values.
 
 ### Reaching the deployed services
 The services deployed above should now be reachable, from any REST client:
