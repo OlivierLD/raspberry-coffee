@@ -575,7 +575,7 @@ class SunPath extends HTMLElement {
 				let strRiseZ = Utilities.decToSex(this._sunRise.z);
 				context.fillText("Sun Rise", 10, this._height - 60);
 				context.fillText("Time:" + strRiseTime, 10, this._height - 40);
-				context.fillText("Azimuth  :" + strRiseZ, 10, this._height - 20);
+				context.fillText("Azimuth:" + strRiseZ, 10, this._height - 20);
 			}
 			if (this._sunSet !== undefined) {
 				let strSetTime = new Date(this._sunSet.time).format('H:i:s Z');
