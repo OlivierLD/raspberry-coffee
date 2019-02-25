@@ -107,11 +107,22 @@ function loadSunData() {
 //  console.log("Done:", value);
 		try {
 			let json = JSON.parse(value);
+
+			// console.log('Sun Data for SunPath', json);
+			let riseTime = json.riseTime; // epoch
+			let riseZ = json.riseZ; // degrees
+			let setTime = json.setTime; // epoch
+			let setZ = json.setZ; // degrees
+
 			// Specific
 			let sunPathElement = document.getElementById('sun-path-01');
 			if (sunPathElement !== null && sunPathElement !== undefined) {
 				sunPathElement.sunData = json;
 				sunPathElement.userPos = { latitude: json.lat, longitude: json.lng };
+
+				sunPathElement.sunRise = { time: riseTime, z: riseZ };
+				sunPathElement.sunSet = { time: setTime, z: setZ };
+
 				sunPathElement.repaint();
 			}
 		} catch (err) {

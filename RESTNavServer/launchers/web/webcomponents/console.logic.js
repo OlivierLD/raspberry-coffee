@@ -612,7 +612,7 @@ window.onload = () => {
 
 	let sunPath = document.getElementById('sun-path-01');
 	if (sunPath !== null && sunPath !== undefined) {
-		let tiltSlider = document.getElementById('sun-path-tilt-slide');
+		let tiltSlider = document.getElementById('sun-path-tilt-slide'); // to use the arrows keys to move the sliders...
 		let zSlider = document.getElementById('sun-path-z-slide');
 
 		sunPath.addEventListener(

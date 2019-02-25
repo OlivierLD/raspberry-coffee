@@ -63,6 +63,8 @@ class SunPath extends HTMLElement {
 		this.sunZ = undefined;
 
 		this.userPosition = undefined;
+		this._sunRise = undefined;
+		this._sunSet = undefined;
 
 		this.side =   0; // Left and right
 		this.addToZ = 180;  // 180 when pointing South (Sun in the South at noon). Combined with left right rotation
@@ -181,6 +183,14 @@ class SunPath extends HTMLElement {
 
 	set userPos(position) { // { latitude: xxx, longitude: xxx }
 		this.userPosition = position;
+	}
+
+	set sunRise(sr) { // { time: epoch, z: degrees }
+		this._sunRise = sr;
+	}
+
+	set sunSet(ss) { // { time: epoch, z: degrees }
+		this._sunSet = ss;
 	}
 
 	set shadowRoot(val) {
@@ -548,7 +558,7 @@ class SunPath extends HTMLElement {
 			let strAlt = Utilities.decToSex(this.sunHe);
 			let strZ = Utilities.decToSex(this.sunZ);
 			context.fillText("Elevation:" + strAlt, 10, 20);
-			context.fillText("Azimuth  :" + strZ, 10, 40);
+			context.fillText("Azimuth:" + strZ, 10, 40);
 			if (this.userPosition !== undefined) {
 				let strLat = Utilities.decToSex(this.userPosition.latitude, 'NS');
 				let strLng = Utilities.decToSex(this.userPosition.longitude, 'EW');
@@ -559,9 +569,35 @@ class SunPath extends HTMLElement {
 				len = metrics.width;
 				context.fillText(strLng, this._width - 10 - len, 40);
 			}
+			context.fillStyle = this.sunPathColorConfig.cardPointColor;
+			if (this._sunRise !== undefined) {
+				let strRiseTime = new Date(this._sunRise.time).format('H:i:s Z');
+				let strRiseZ = Utilities.decToSex(this._sunRise.z);
+				context.fillText("Sun Rise", 10, this._height - 60);
+				context.fillText("Time:" + strRiseTime, 10, this._height - 40);
+				context.fillText("Azimuth  :" + strRiseZ, 10, this._height - 20);
+			}
+			if (this._sunSet !== undefined) {
+				let strSetTime = new Date(this._sunSet.time).format('H:i:s Z');
+				let strSetZ = Utilities.decToSex(this._sunSet.z);
+				let displayData = "Sun Set";
+				let metrics = context.measureText(displayData);
+				context.fillText(displayData, this._width - metrics.width - 10, this._height - 60);
+				displayData = "Time:" + strSetTime;
+				metrics = context.measureText(displayData);
+				context.fillText(displayData, this._width - metrics.width - 10, this._height - 40);
+				displayData = "Azimuth:" + strSetZ;
+				metrics = context.measureText(displayData);
+				context.fillText(displayData, this._width - metrics.width - 10, this._height - 20);
+			}
 			context.restore();
 		}
 	}
+
+	decToSex(val, ns_ew) {
+		return Utilities.decToSex(val, ns_ew);
+	}
+
 }
 
 // Associate the tag and the class
