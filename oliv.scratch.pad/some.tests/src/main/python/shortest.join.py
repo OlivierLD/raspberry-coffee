@@ -1,5 +1,5 @@
 import math
-
+import time
 
 #
 # find the smallest route to join 4 points
@@ -62,7 +62,7 @@ def find_best_couple(start_x1, start_y1, start_x2, start_y2, end_x1, end_y1, end
 	return (smallest_path, bestX1, bestY1, bestX2, bestY2)
 
 
-STEP_01 = 0.05
+STEP_01 = 0.1
 min_path_len = float("inf")
 start_x1 = 0
 start_y1 = 0
@@ -72,8 +72,12 @@ end_x1 = SQUARE_SIDE_LEN
 end_y1 = SQUARE_SIDE_LEN
 end_x2 = SQUARE_SIDE_LEN
 end_y2 = SQUARE_SIDE_LEN
+
+before = time.clock()
 (smallest_path, bestX1, bestY1, bestX2, bestY2) = find_best_couple(start_x1, start_y1, start_x2, start_y2, end_x1, end_y1, end_x2, end_y2, STEP_01, min_path_len)
-print("Pass 1 > Final result: smallest path %f, P1(%f, %f), P2(%f, %f)" % (smallest_path, bestX1, bestY1, bestX2, bestY2))
+after = time.clock()
+print("Pass 1 (precision 0.1) >\nFinal result: smallest path %f, P1(%.2f, %.2f), P2(%.2f, %.2f)" % (smallest_path, bestX1, bestY1, bestX2, bestY2))
+print("Completed in %.3f ms\n" % (1000 * (after - before)))
 
 STEP_02 = 0.01
 min_path_len = smallest_path
@@ -85,8 +89,12 @@ end_x1 = bestX1 + STEP_01
 end_y1 = bestY1 + STEP_01
 end_x2 = bestX2 + STEP_01
 end_y2 = bestY2 + STEP_01
+
+before = time.clock()
 (smallest_path, bestX1, bestY1, bestX2, bestY2) = find_best_couple(start_x1, start_y1, start_x2, start_y2, end_x1, end_y1, end_x2, end_y2, STEP_02, min_path_len)
-print("Pass 2 > Final result: smallest path %f, P1(%f, %f), P2(%f, %f)" % (smallest_path, bestX1, bestY1, bestX2, bestY2))
+after = time.clock()
+print("Pass 2 (precision 0.01) >\nFinal result: smallest path %f, P1(%.3f, %.3f), P2(%.3f, %.3f)" % (smallest_path, bestX1, bestY1, bestX2, bestY2))
+print("Completed in %.3f ms\n" % (1000 * (after - before)))
 
 STEP_03 = 0.001
 min_path_len = smallest_path
@@ -98,5 +106,9 @@ end_x1 = bestX1 + STEP_02
 end_y1 = bestY1 + STEP_02
 end_x2 = bestX2 + STEP_02
 end_y2 = bestY2 + STEP_02
+
+before = time.clock()
 (smallest_path, bestX1, bestY1, bestX2, bestY2) = find_best_couple(start_x1, start_y1, start_x2, start_y2, end_x1, end_y1, end_x2, end_y2, STEP_03, min_path_len)
-print("Pass 3 > Final result: smallest path %f, P1(%f, %f), P2(%f, %f)" % (smallest_path, bestX1, bestY1, bestX2, bestY2))
+after = time.clock()
+print("Pass 3 (precision 0.001) >\nFinal result: smallest path %f, P1(%.4f, %.4f), P2(%.4f, %.4f)" % (smallest_path, bestX1, bestY1, bestX2, bestY2))
+print("Completed in %.3f ms\n" % (1000 * (after - before)))
