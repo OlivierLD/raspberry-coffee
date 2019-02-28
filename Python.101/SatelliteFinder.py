@@ -1,5 +1,6 @@
 #
 # Find Azimuth & Elevation of a geostationary satellite
+# Returns the best one (highest elevation) for you position
 #
 
 import math

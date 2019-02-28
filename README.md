@@ -283,7 +283,6 @@ Typically, this operation will be run like this:
 ```
 The expected archive will be produced in the local `build/libs` directory.
 
-
 > _Important_ : If `JAVA_HOME` is not set at the system level, you can set it in `set.gradle.env` and execute it before running `gradlew`:
 ```
  Prompt> . ./set.gradle.env
@@ -294,6 +293,11 @@ The expected archive will be produced in the local `build/libs` directory.
 // ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password")
 // compileJava.dependsOn(tellMeProxy)
 </pre>
+
+Or you can also set it at runtime:
+```
+ Prompt> ../gradlew clean shadowJar -Dhttp.proxyHost=www-proxy.domain.com -Dhttp.proxyPost=80 -Dhttps.proxyHost=www-proxy.domain.com -Dhttps.proxyPost=80
+```
 
 ---
 ### Developing _on_ the Raspberry Pi, or Developing _for_ the Raspberry Pi ?

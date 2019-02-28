@@ -1,4 +1,7 @@
 # From scratch to a sensor flow
+Synopsis: We want to expose the values read by some sensors to a network (LAN, WAN, the Internet...), and be able
+to interact with (drive) some devices like switches (flip them on or off), manually, or automatically.
+
 ## Sensors, IoT, FaaS, Micro-services...
 All Open Source, Soft & Hard
 
@@ -155,10 +158,23 @@ Setting Relay#1 off
 Q to quit, + to turn ON, - to turn OFF > q
 Done.
 ```
-#### Micro Service?
-Serverless... Actually means that the server can be anywhere, everywhere, etc.
+Good. Now, we know that the devices are working, and we can interact with them.
 
-FaaS, Function as a Service.
+We now need to expose their capabilities to a wider audience than only the guy(s) connected to the Raspberry Pi.
+
+#### Micro Service?
+
+We will explore several options.
+
+We need some kind of server to run on the Raspberry Pi, so the outer world can reach it to get to the data and possibly interact with them.
+
+- [Helidon](#helidon) is an implementation of such a micro-server, implementing a Micro-Profile.
+- [fnProject](#fnproject), FaaS server implementation, Docker based
+- a [Custom micro-server](#using-a-light-custom-micro-http-server), part of this project
+
+<!-- Serverless... Actually means that the server can be anywhere, everywhere, etc.
+
+FaaS, Function as a Service. -->
 
 ##### Helidon
 Quite mature. Its `micro-profile` feature is appealing.
@@ -335,7 +351,7 @@ See http://fnproject.io/tutorials/install/.
 Then see [this tutorial](http://fnproject.io/tutorials/JavaFDKIntroduction/#YourFirstFunction).
 See the concept of `app`, to group functions under the same umbrella.
 
-### Using a light custom (micro) HTTP Server
+##### Using a light custom (micro) HTTP Server
 Less snappy than `Swagger`, but eventually lighter, in term of footprint.
 For small boards (like the Raspberry Pi Zero), this would be my preferred option.
 
