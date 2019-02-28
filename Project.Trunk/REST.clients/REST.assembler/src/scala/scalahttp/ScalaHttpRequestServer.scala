@@ -1,23 +1,26 @@
 package scalahttp
 
 import http.HTTPServer
-import httpserver.HttpRequestManager
 
 object ScalaHttpRequestServer {
 
   class ScalaServer {
     var httpServer: HTTPServer = null
-    var httpPort = 9999
+    var httpPort = 9998
 
-    def ScalaServer() {
+    private def doIt: Unit = {
+      println("Initializing...")
       val port = System.getProperty("http.port")
       if (port != null) {
         httpPort = port.toInt
       }
-      httpServer = startHttpServer(httpPort, new ScalaHttpRequestManager().asInstanceOf[HttpRequestManager])
+      println(s"Starting server on port $httpPort")
+      httpServer = startHttpServer(httpPort, new ScalaHttpRequestManager(this))
     }
 
-    def startHttpServer(port: Int, requestManager: HttpRequestManager): HTTPServer = {
+    doIt
+
+    def startHttpServer(port: Int, requestManager: ScalaHttpRequestManager): HTTPServer = {
       var newHttpServer: HTTPServer = null
       try {
         newHttpServer = new HTTPServer(port, requestManager) {
@@ -32,13 +35,11 @@ object ScalaHttpRequestServer {
       }
       newHttpServer
     }
-
-    //  def getAllOperationList: java.util.List[HTTPServer.Operation] = this.httpServer.getRequestManagers.stream.flatMap((requestManager: RESTRequestManager) => requestManager.getRESTOperationList.stream).collect(Collectors.toList)
   }
 
   def main(args: Array[String]): Unit = {
+    println("Starting the Scala server")
     System.setProperty("http.verbose", "true")
-    val httpServer = new ScalaServer
+    val scalaHttpServer = new ScalaServer
   }
-
 }

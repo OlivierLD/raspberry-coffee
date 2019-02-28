@@ -9,6 +9,8 @@ import utils.PinUtil;
  */
 public class ADCChannel {
 
+	private boolean simulating = false;
+
 	private int adcChannel =
 			MCP3008Reader.MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
 
@@ -35,12 +37,23 @@ public class ADCChannel {
 		Pin clkPin = PinUtil.getPinByGPIONumber(clk);
 		Pin csPin = PinUtil.getPinByGPIONumber(cs);
 
-		MCP3008Reader.initMCP3008(misoPin, mosiPin, clkPin, csPin);
+		try {
+			MCP3008Reader.initMCP3008(misoPin, mosiPin, clkPin, csPin);
+		} catch (Throwable t) {
+			simulating = true;
+			System.out.println("Simulating ADCChannel");
+		}
+
 		this.adcChannel = channel;
 	}
 
 	public int readChannel() {
-		int adc = MCP3008Reader.readMCP3008(this.adcChannel);
+		int adc = 0;
+		if (!simulating) {
+			adc = MCP3008Reader.readMCP3008(this.adcChannel);
+		} else {
+			adc = (int)Math.round(Math.random() * 1024);
+		}
 		return adc; // [0..1023]
 	}
 
@@ -51,6 +64,8 @@ public class ADCChannel {
 	}
 
 	public void close() {
-		MCP3008Reader.shutdownMCP3008();
+		if (!simulating) {
+			MCP3008Reader.shutdownMCP3008();
+		}
 	}
 }

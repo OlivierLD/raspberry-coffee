@@ -36,7 +36,6 @@ shadowJar {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-
 sourceSets {
     main {
         java {
@@ -122,3 +121,10 @@ task swaggerScala(type: JavaExec, description: "Generate GO server code for the 
             "-i", "sensors.yaml",
             "-o", "./generated/scala"
 }
+
+task startScalaServer(type: JavaExec, dependsOn: classes, description: 'Start the Scala server') {
+    main = 'scalahttp.ScalaHttpRequestServer'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
