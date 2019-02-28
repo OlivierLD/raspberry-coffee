@@ -278,7 +278,8 @@ This plugin is aggregating the required classes _and all their dependencies_ int
 Typically, this operation will be run like this:
 ```
  Prompt> cd RESTNavServer
- Prompt> ../gradlew shadowJar
+ Prompt> ../gradlew build --info
+ Prompt> ../gradlew clean shadowJar
 ```
 The expected archive will be produced in the local `build/libs` directory.
 
