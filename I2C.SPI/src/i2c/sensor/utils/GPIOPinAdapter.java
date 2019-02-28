@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class GPIOPinAdapter implements GpioPinDigitalOutput {
 	protected final GpioController gpio = GpioFactory.getInstance();
@@ -47,8 +48,18 @@ public class GPIOPinAdapter implements GpioPinDigitalOutput {
 	}
 
 	@Override
+	public Future<?> blink(long l, TimeUnit timeUnit) {
+		return null;
+	}
+
+	@Override
 	public Future<?> blink(long delay, PinState blinkState) {
 		return pin.blink(delay, blinkState);
+	}
+
+	@Override
+	public Future<?> blink(long l, PinState pinState, TimeUnit timeUnit) {
+		return null;
 	}
 
 	@Override
@@ -57,8 +68,18 @@ public class GPIOPinAdapter implements GpioPinDigitalOutput {
 	}
 
 	@Override
+	public Future<?> blink(long l, long l1, TimeUnit timeUnit) {
+		return null;
+	}
+
+	@Override
 	public Future<?> blink(long delay, long duration, PinState blinkState) {
 		return pin.blink(delay, duration, blinkState);
+	}
+
+	@Override
+	public Future<?> blink(long l, long l1, PinState pinState, TimeUnit timeUnit) {
+		return null;
 	}
 
 	@Override
@@ -67,7 +88,17 @@ public class GPIOPinAdapter implements GpioPinDigitalOutput {
 	}
 
 	@Override
+	public Future<?> pulse(long l, TimeUnit timeUnit) {
+		return null;
+	}
+
+	@Override
 	public Future<?> pulse(long duration, Callable<Void> callback) {
+		return null;
+	}
+
+	@Override
+	public Future<?> pulse(long l, Callable<Void> callable, TimeUnit timeUnit) {
 		return null;
 	}
 
@@ -77,7 +108,17 @@ public class GPIOPinAdapter implements GpioPinDigitalOutput {
 	}
 
 	@Override
+	public Future<?> pulse(long l, boolean b, TimeUnit timeUnit) {
+		return null;
+	}
+
+	@Override
 	public Future<?> pulse(long duration, boolean blocking, Callable<Void> callback) {
+		return null;
+	}
+
+	@Override
+	public Future<?> pulse(long l, boolean b, Callable<Void> callable, TimeUnit timeUnit) {
 		return null;
 	}
 
@@ -87,7 +128,17 @@ public class GPIOPinAdapter implements GpioPinDigitalOutput {
 	}
 
 	@Override
+	public Future<?> pulse(long l, PinState pinState, TimeUnit timeUnit) {
+		return null;
+	}
+
+	@Override
 	public Future<?> pulse(long duration, PinState pulseState, Callable<Void> callback) {
+		return null;
+	}
+
+	@Override
+	public Future<?> pulse(long l, PinState pinState, Callable<Void> callable, TimeUnit timeUnit) {
 		return null;
 	}
 
@@ -97,7 +148,17 @@ public class GPIOPinAdapter implements GpioPinDigitalOutput {
 	}
 
 	@Override
+	public Future<?> pulse(long l, PinState pinState, boolean b, TimeUnit timeUnit) {
+		return null;
+	}
+
+	@Override
 	public Future<?> pulse(long duration, PinState pulseState, boolean blocking, Callable<Void> callback) {
+		return null;
+	}
+
+	@Override
+	public Future<?> pulse(long l, PinState pinState, boolean b, Callable<Void> callable, TimeUnit timeUnit) {
 		return null;
 	}
 
@@ -311,72 +372,4 @@ public class GPIOPinAdapter implements GpioPinDigitalOutput {
 	public void setShutdownOptions(Boolean unexport, PinState state, PinPullResistance resistance, PinMode mode) {
 		pin.setShutdownOptions(unexport, state, resistance, mode);
 	}
-	/* For the last release of PI4J (2015)
-  @Override
-  public Future<?> pulse(long duration, PinState pulseState, boolean blocking, Callable<Void> callback)
-  {
-    return pin.pulse(duration, pulseState, blocking, callback);
-  }
-
-  @Override
-  public Future<?> pulse(long duration, Callable<Void> callback)
-  {
-    return pin.pulse(duration, callback);
-  }
-
-  @Override
-  public Future<?> pulse(long duration, boolean blocking, Callable<Void> callback)
-  {
-    return pin.pulse(duration, blocking, callback);
-  }
-
-  @Override
-  public Future<?> pulse(long duration, PinState pulseState, Callable<Void> callback)
-  {
-    return pin.pulse(duration, pulseState, callback);
-  }
-
-  @Override
-  public Collection<GpioPinListener> getListeners()
-  {
-    // TODO Implement this method
-    return Collections.emptySet();
-  }
-
-  @Override
-  public void addListener(GpioPinListener... listener)
-  {
-    pin.addListener(listener);
-  }
-
-  @Override
-  public void addListener(List<? extends GpioPinListener> listeners)
-  {
-    pin.addListener(listeners);
-  }
-
-  @Override
-  public boolean hasListener(GpioPinListener... listener)
-  {
-    return pin.hasListener(listener);
-  }
-
-  @Override
-  public void removeListener(GpioPinListener... listener)
-  {
-    pin.removeListener(listener);
-  }
-
-  @Override
-  public void removeListener(List<? extends GpioPinListener> listeners)
-  {
-    pin.removeListener(listeners);
-  }
-
-  @Override
-  public void removeAllListeners()
-  {
-    pin.removeAllListeners();
-  }
-   */
 }

@@ -109,6 +109,22 @@ $ which wget
         - Then the command to use to reach Jupyter would show up in the console.
     - _Note:_ Training a Neural Network is a very demanding operation, that requires computing resources not granted on a Raspberry Pi. Installing Keras on a Raspberry Pi might not be relevant. OpenCV, though, would be an option to consider. Google it ;).
 
+##### Connect to the Raspberry Pi from your laptop, using USB
+It's easy, and convenient. See [here](https://www.thepolyglotdeveloper.com/2016/06/connect-raspberry-pi-zero-usb-cable-ssh/).
+
+To connect to a Raspberry Pi Zero, all you need is a USB cable [A-to-microB](https://www.adafruit.com/product/592).
+
+Some other devices can be nice to have:
+- [USB to TTL Serial Cable - Debug / Console Cable for Raspberry Pi](https://www.adafruit.com/product/954)
+- [Zero Stem for Pi Zero 1.3 and Pi Zero W 1.1](https://www.adafruit.com/product/3945)
+- [Adafruit PiUART - USB Console and Power Add-on for Raspberry Pi](https://www.adafruit.com/product/3589)
+
+Once the Raspberry Pi is reachable through a Serial port, you can `ssh` to it, using `ssh pi@<machine-name>.local`, like
+```
+ $ ssh pi@raspberrypi.local
+```
+
+
 ###### Raspberry Pi as an Access Point _and_ Internet access.
 Your Raspberry Pi can be turned into an Access Point, this means that it generates its own network, so you can connect to it from other devices (other Raspberry Pis, laptops, tablets, smart-phones, ESP8266, etc).
 It can be appropriate when there is no network in the area you are in, for example when sailing in the middle of the ocean, kayaking in a remote place, hiking in the boonies, etc.

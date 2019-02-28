@@ -1,8 +1,6 @@
 package scalahttp
 
-import java.util.stream.Collectors
-
-import http.{HTTPServer, RESTRequestManager}
+import http.HTTPServer
 import httpserver.HttpRequestManager
 
 object ScalaHttpRequestServer {
@@ -20,7 +18,7 @@ object ScalaHttpRequestServer {
     }
 
     def startHttpServer(port: Int, requestManager: HttpRequestManager): HTTPServer = {
-      var newHttpServer:HTTPServer = null
+      var newHttpServer: HTTPServer = null
       try {
         newHttpServer = new HTTPServer(port, requestManager) {
           override def onExit(): Unit = {
@@ -28,7 +26,6 @@ object ScalaHttpRequestServer {
           }
         }
         newHttpServer.startServer()
-        //		newHttpServer.stopRunning();
       } catch {
         case e: Exception =>
           e.printStackTrace()
@@ -36,8 +33,7 @@ object ScalaHttpRequestServer {
       newHttpServer
     }
 
-//  def getAllOperationList: java.util.List[HTTPServer.Operation] = this.httpServer.getRequestManagers.stream.flatMap((requestManager: RESTRequestManager) => requestManager.getRESTOperationList.stream).collect(Collectors.toList)
-
+    //  def getAllOperationList: java.util.List[HTTPServer.Operation] = this.httpServer.getRequestManagers.stream.flatMap((requestManager: RESTRequestManager) => requestManager.getRESTOperationList.stream).collect(Collectors.toList)
   }
 
   def main(args: Array[String]): Unit = {
