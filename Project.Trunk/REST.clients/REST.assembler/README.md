@@ -1,6 +1,11 @@
 # From scratch to a sensor flow
-Synopsis: We want to expose the values read by some sensors to a network (LAN, WAN, the Internet...), and be able
+_Synopsis_: We want to expose the values read by some sensors to a network (LAN, WAN, the Internet...), and be able
 to interact with (drive) some devices like switches (flip them on or off), manually, or automatically.
+
+This involves three major steps:
+- Read/write on hardware (read sensor, drive relay)
+- Expose hardware features (various protocols: REST, MQTT, etc) to a network
+- Consume (from an app)!
 
 ## Sensors, IoT, FaaS, Micro-services...
 All Open Source, Soft & Hard
@@ -171,6 +176,7 @@ We need some kind of server to run on the Raspberry Pi, so the outer world can r
 - [Helidon](#helidon) is an implementation of such a micro-server, implementing a Micro-Profile.
 - [fnProject](#fnproject), FaaS server implementation, Docker based
 - a [Custom micro-server](#using-a-light-custom-micro-http-server), part of this project
+- TODO: NodeJS
 
 <!-- Serverless... Actually means that the server can be anywhere, everywhere, etc.
 
