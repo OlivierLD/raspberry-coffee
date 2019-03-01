@@ -126,7 +126,6 @@ class ScalaRESTImplementation {
           val relayStatus = gson.fromJson(stringReader, classOf[RelayStatus])
           val relayNum = pathParameters.get(0).toInt
           // Set Relay status here
-          //	System.out.println(String.format("Setting relay #%d %s", relayNum, (relayStatus.status ? "ON" : "OFF")));
           if (this.physicalRelayManager != null) {
             this.physicalRelayManager.set(relayNum, if (relayStatus.status) "on" else "off")
           }

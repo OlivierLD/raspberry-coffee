@@ -586,7 +586,7 @@ function expandCollapse() {
 
       .displayCanvas {
         border: 1px solid #9C9898;
-        border-radius: 10px;
+        /*border-radius: 10px;*/
         opacity: 0.9;
         /*box-shadow: 5px 10px #888888;*/
       }
@@ -684,8 +684,8 @@ function expandCollapse() {
           &nbsp;<input type="checkbox" id="tooltip"     onchange="javascript:onDataChange();" checked="true">Tooltip
           &nbsp;<input type="checkbox" id="utc-display" onchange="javascript:onDataChange();">UTC
           <br>
-          <div id="graph-container" style="width: 950px; height: 200px; overflow-y: auto;">
-          <canvas id="graphCanvas" width="950" height="200" class="displayCanvas"/> <!-- style="width: 98%;"/ -->
+          <div id="graph-container" style="width: 950px; height: 210px; overflow-y: auto;">
+            <canvas id="graphCanvas" width="950" height="200" class="displayCanvas"/> <!-- style="width: 98%;"/ -->
 					</div>
         </td>
       </tr>

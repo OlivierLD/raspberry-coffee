@@ -46,7 +46,7 @@ public class MCP3008Reader {
 
 	private static GpioController gpio;
 
-	private static GpioPinDigitalInput misoInput = null;         // In
+	private static GpioPinDigitalInput  misoInput = null;        // In
 	private static GpioPinDigitalOutput mosiOutput = null;       // Out
 	private static GpioPinDigitalOutput clockOutput = null;      // Out
 	private static GpioPinDigitalOutput chipSelectOutput = null; // Out

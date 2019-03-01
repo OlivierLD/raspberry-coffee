@@ -25,8 +25,8 @@ public class ADCChannel {
 	public ADCChannel(int miso, int mosi, int clk, int cs) {
 		Pin misoPin = PinUtil.getPinByGPIONumber(miso);
 		Pin mosiPin = PinUtil.getPinByGPIONumber(mosi);
-		Pin clkPin = PinUtil.getPinByGPIONumber(clk);
-		Pin csPin = PinUtil.getPinByGPIONumber(cs);
+		Pin clkPin  = PinUtil.getPinByGPIONumber(clk);
+		Pin csPin   = PinUtil.getPinByGPIONumber(cs);
 
 		MCP3008Reader.initMCP3008(misoPin, mosiPin, clkPin, csPin);
 	}
@@ -34,8 +34,8 @@ public class ADCChannel {
 	public ADCChannel(int miso, int mosi, int clk, int cs, int channel) {
 		Pin misoPin = PinUtil.getPinByGPIONumber(miso);
 		Pin mosiPin = PinUtil.getPinByGPIONumber(mosi);
-		Pin clkPin = PinUtil.getPinByGPIONumber(clk);
-		Pin csPin = PinUtil.getPinByGPIONumber(cs);
+		Pin clkPin  = PinUtil.getPinByGPIONumber(clk);
+		Pin csPin   = PinUtil.getPinByGPIONumber(cs);
 
 		try {
 			MCP3008Reader.initMCP3008(misoPin, mosiPin, clkPin, csPin);
