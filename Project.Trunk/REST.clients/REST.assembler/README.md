@@ -165,7 +165,7 @@ Done.
 ```
 Good. Now, we know that the devices are working, and we can interact with them.
 
-We now need to expose their capabilities to a wider audience than only the guy(s) connected to the Raspberry Pi.
+We now need to expose their capabilities to an audience wider than only the guy(s) connected to the Raspberry Pi.
 
 #### Micro Service?
 
