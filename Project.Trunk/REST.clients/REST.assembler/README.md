@@ -373,6 +373,9 @@ Build it with
 Use the `start.server.sh` script to run it. Modify the script if needed, to set
 the pins and the ADC channel.
 
+> _Note_: For the fun, there is a Scala implementation (in this project) of a similar server.
+> A Kotlin version might follow as well.
+ 
 ##### Remote debugging
 That's one of the many goodies that come with Java, Java Platform Debugging Architecture (aka JPDA),
 along with Java Debug Wire Protocol (JDWP).
@@ -456,6 +459,12 @@ Also, with the RESTServer started (`./start.server.sh`), try http://raspberry-pi
 Node-RED will allow you to compose a work-flow, using services.
 This will bring some logic to the data they return.
 This is also called "service orchestration".
+
+> _Note:_ What NodeRED is doing can obviously be done through a programming language, sure. But NodeRED
+> is bringing a lot of flexibility to the story. Programmers will focus on interacting with the devices, and exposing 
+> their features through REST and other protocols as services; orchestrating those services is another task - taken care of by NodeRED -
+> that does not require any modification in the services. There is a clear demarcation between services and processes,
+> this will most probably increase the quality of the final products. 
 
 #### Use-case
 We have 2 services:
