@@ -408,6 +408,7 @@ class SunPath extends HTMLElement {
 
 		context.lineWidth = 3;
 
+		// Actual sector
 		context.beginPath();
 		context.moveTo(center.x, center.y); // Start from center
 		let panelPoint = this.rotateBothWays(this.rotation, minZ, this.side, this._tilt * this.invertX, (this.addToZ + (this.invertX * this._zOffset)));
@@ -436,6 +437,32 @@ class SunPath extends HTMLElement {
 		context.fillStyle = this.sunPathColorConfig.baseColor;
 		context.fill();
 
+		// Lines to the actual Z for rise and set
+		if (this._sunData !== undefined) {
+			context.save()
+			context.strokeStyle = this.sunPathColorConfig.gridColor;
+			context.lineWidth = 1;
+			context.setLineDash([5, 3]); // [2, 2]);
+
+			panelPoint = this.rotateBothWays(this.rotation, this._sunData.riseZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+			// From center to sunrise
+			context.beginPath();
+			context.moveTo(center.x, center.y);
+			context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+			context.stroke();
+			context.closePath();
+
+			panelPoint = this.rotateBothWays(this.rotation, this._sunData.setZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+			// From center to sunset
+			context.beginPath();
+			context.moveTo(center.x, center.y);
+			context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+			context.stroke();
+			context.closePath();
+			context.restore();
+		}
+
+		// Cardinal points
 		context.save();
 		let fontSize = 20;
 		context.font = "bold " + Math.round(fontSize) + "px " + this.sunPathColorConfig.font;
@@ -505,12 +532,16 @@ class SunPath extends HTMLElement {
 		if (this._sunPath !== undefined) {
 			context.lineWidth = 3;
 			context.strokeStyle = this.sunPathColorConfig.sunColor;
-			panelPoint = this.rotateBothWays(this._sunPath[0].alt + this.rotation, this._sunPath[0].z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+			// panelPoint = this.rotateBothWays(this._sunPath[0].alt + this.rotation, this._sunPath[0].z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+			panelPoint = this.rotateBothWays(0 + this.rotation, this._sunData.riseZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
 			context.beginPath();
-			for (let i = 1; i < this._sunPath.length; i++) {
+			context.moveTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+			for (let i = 0; i < this._sunPath.length; i++) {
 				panelPoint = this.rotateBothWays(this._sunPath[i].alt + this.rotation, this._sunPath[i].z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
 				context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
 			}
+			panelPoint = this.rotateBothWays(0 + this.rotation, this._sunData.setZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+			context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
 			context.stroke();
 			context.closePath();
 			context.lineWidth = 1;
