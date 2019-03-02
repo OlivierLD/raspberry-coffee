@@ -49,6 +49,7 @@ cp to.mux.sh $distdir
 cp ssd1306i2cDisplay.sh $distdir
 cp killmux.sh $distdir
 cp rc.local $distdir
+cp start-mux.sh $distdir
 #
 # 4 - Archiving
 #

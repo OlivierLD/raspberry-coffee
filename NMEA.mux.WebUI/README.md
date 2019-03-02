@@ -14,6 +14,8 @@ This is what you would to tweak to fit your requirements.
 The file `rc.local` is to give you some inspiration, so you can modify the one in `/etc/rc.local`
 on the destination machine to start the Multiplexer at boot time.
 
+The script `to.prod.sh` is not carved in stone. It is also here for inspiration.
+
 ## Warning!
 This project directory is a play ground, again, it is here for **you** to _compose_ your own server.
 

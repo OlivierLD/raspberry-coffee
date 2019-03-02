@@ -210,15 +210,22 @@
 		}
 
 		.left-item {
-			grid-area: left;
+			/*grid-area: left;*/
 			align-self: center;
 			justify-self: end;
 		}
 
 		.right-item {
-			grid-area: right;
+			/*grid-area: right;*/
 			align-self: center;
 			justify-self: start;
+			font-size: calc(var(--ref-size) * 1.25);
+		}
+
+		.center-item {
+			/*grid-area: right;*/
+			align-self: center;
+			justify-self: center;
 			font-size: calc(var(--ref-size) * 1.25);
 		}
 
@@ -252,7 +259,7 @@
 	<div data-role="content" class="screen-container">
 
 		<div class="two-item-line" style="grid-area: line1;">
-			<label for="flip-1" class="left-item">Logging is </label>
+			<label for="flip-1" class="left-item">Logging </label>
 			<label id="flip-1" class="rocker rocker-tiny right-item">
 				<input type="checkbox" onchange="logEnabled(this);" id="rocker-switch" checked>
 				<span class="switch-left">On</span>
@@ -261,9 +268,10 @@
 
 		</div>
 
-		<div class="two-item-line" style="grid-area: line2;">
-			<label for="speed-unit" class="left-item">Units:</label>
-			<select class="right-item" name="speed-unit" id="speed-unit" onchange="speedUnit(this);" style="font-size: 30px;">
+		<div class="two-item-line" style="grid-area: line2; margin-bottom: 10px;">
+			<label for="speed-unit" class="center-item">Units</label>
+			<br/>
+			<select class="center-item" name="speed-unit" id="speed-unit" onchange="speedUnit(this);" style="font-size: 30px;">
 				<option value=""></option>
 				<option value="kmh">km/h, km and meters</option>
 				<option value="mph">mph, statute miles and feet</option>
@@ -295,7 +303,7 @@
 			<button id="b-log-mgmt" title="Log Management">Log</button>
 		</div>
 		<div style="grid-area: kill;">
-			<button id="b-terminate" title="Stop the server">Kill</button>
+			<button id="b-terminate" title="Stop the server">Kill</button> <!-- TODO Remove jQuery references!! -->
 		</div>
 
 		<div class="two-item-line" style="grid-area: line6;">
