@@ -12,7 +12,7 @@ It pulls the `NMEA.multiplexer`, `RESTNavServer` (or whatever you want) and the 
 This is what you would to tweak to fit your requirements.
 
 The file `rc.local` is to give you some inspiration, so you can modify the one in `/etc/rc.local`
-on the destination machine.
+on the destination machine to start the Multiplexer at boot time.
 
 ## Warning!
 This project directory is a play ground, again, it is here for **you** to _compose_ your own server.
