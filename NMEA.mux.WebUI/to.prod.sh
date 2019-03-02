@@ -10,6 +10,8 @@ echo -e "| This is an example showing how to generate a 'production' version, wi
 echo -e "| just what is needed to run the NMEA Multiplexer - in several configurations - and its web clients. |"
 echo -e "+----------------------------------------------------------------------------------------------------+"
 echo -e "| Now starting a fresh build...                                                                      |"
+echo -e "| Make sure the java version is compatible with your target                                          |"
+java -version
 echo -e "+----------------------------------------------------------------------------------------------------+"
 #
 # 1 - Build
@@ -58,7 +60,8 @@ echo -e "+----------------------------------------------------------------------
 echo -e " >> Archive $distdir.tar.gz ready for deployment."
 echo -e "+--------------------------------------------------------------------------------------------------+"
 echo -e "| Send it to another machine, and un-archive it.                                                   |"
-echo -e "| Use 'tar -xz[v]f $distdir.tar.gz' to un-archive.                                                 |"
+echo -e "| To transfer, use  command like   \$ scp $distdir.tar.gz pi@192.168.42.8:~/                       "
+echo -e "| Use 'tar -xz[v]f $distdir.tar.gz' to un-archive.                                                 "
 echo -e "| External dependencies like librxtx-java may be needed if you intend to use a serial port,        |"
 echo -e "| in which case you may need to run a 'sudo apt-get install librxtx-java' .                        |"
 echo -e "| The script to launch will be 'mux.sh'                                                            |"
