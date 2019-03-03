@@ -179,6 +179,10 @@ function getDeltaAlt() {
 	return getPromise('/mux/delta-alt', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 }
 
+function terminate() {
+	return getPromise('/mux/terminate', DEFAULT_TIMEOUT, 'POST', 200, null, false);
+}
+
 /**
  *
  * @param when UTC, Duration format: like "Y-m-dTH:i:s" -> 2018-09-10T10:09:00

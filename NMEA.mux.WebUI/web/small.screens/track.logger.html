@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!--
- ! Like the runner.html, no jQuery
+ ! Like the runner.html, but no jQuery.
+ ! Lighter
  +-->
 <html>
 <head>
@@ -303,7 +304,7 @@
 			<button id="b-log-mgmt" title="Log Management">Log</button>
 		</div>
 		<div style="grid-area: kill;">
-			<button id="b-terminate" title="Stop the server">Kill</button> <!-- TODO Remove jQuery references!! -->
+			<button id="b-terminate" title="Stop the server">Kill</button>
 		</div>
 
 		<div class="two-item-line" style="grid-area: line6;">
@@ -342,15 +343,41 @@
 		speedAndCourse();
 	}
 
+	function setMess(txt) {
+		let messHolder = document.getElementById('message');
+		if (messHolder !== undefined && messHolder !== null) {
+			messHolder.text = txt;
+		} else {
+			console.log(txt);
+		}
+	}
 	function appendMess(txt) {
-		var content = $('#message').text();
+		var content = document.getElementById('message').text;
 		content += ((content.length > 0 ? '\n' : '') + txt);
-		$('#message').text(content);
-	};
+		document.getElementById('message').text = content;
+	}
 
 	function terminateOK() {
-		terminate();
-		$("#b-terminate").prop('disabled', true);
+		try {
+			window.clearInterval(window.interval);
+		} catch (oops) {
+			// Absorb
+		}
+		let prom = terminate();
+		prom.then((value) => {
+			// Ok
+			console.log("Terminated OK");
+			setMess("Server terminated OK");
+		}, (error) => {
+			// Ko
+			console.log('Failed to stop', error);
+			setMess("Server failed to stop");
+		});
+		try {
+			document.getElementById("b-terminate").disabled = true;
+		} catch (oops) {
+			//
+		}
 		// Say bye-bye...
 		document.body.innerHTML =
 				'<h1 style="color: blue; font-family: Verdana, Helvetica, Geneva;">&nbsp;Bye-bye...</h1>' +
@@ -358,7 +385,7 @@
 				'<p style="color: gray; font-family: Verdana, Helvetica, Geneva;">&nbsp;Restart the server from a terminal to continue.</p>' +
 				'<hr/>' +
 				'<i style="font-family: Verdana, Helvetica, Geneva;">&nbsp;&copy; OlivSoft, 2018</i>';
-	};
+	}
 
 	function setSwitch(value) {
 		console.log("Status", value);
@@ -406,7 +433,7 @@
 			document.location = "logMgmt.html";
 		};
 
-		setInterval(getTravelData, 1000); // Distance and delta-alt
+		window.interval = setInterval(getTravelData, 1000); // Distance and delta-alt
 	};
 </script>
 </body>

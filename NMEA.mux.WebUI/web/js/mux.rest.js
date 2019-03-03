@@ -1,10 +1,6 @@
 "use strict";
 // TODO Use ES6 and its Promises
 
-$(document).ready(function() {
-    // Nothing.
-});
-
 var errManager = {
   display: alert
 };
@@ -66,14 +62,14 @@ var getDeferred = function(
 
 var DEFAULT_TIMEOUT = 10000;
 
-var protocolTestFunc = function() {
-    var url = document.location.origin.replace('http', 'mux') + '/this-is-a-test';
-    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, null, false);
-};
+function protocolTestFunc() {
+    let url = document.location.origin.replace('http', 'mux') + '/this-is-a-test';
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, null, false);
+}
 
-var terminate = function() {
-    return getDeferred('/mux/terminate', DEFAULT_TIMEOUT, 'POST', 200, null, false);
-};
+function terminate() {
+    return getPromise('/mux/terminate', DEFAULT_TIMEOUT, 'POST', 200, null, false);
+}
 
 var enableLogging = function(b) {
     return getDeferred('/mux/mux-process/' + (b === true ? 'on' : 'off'), DEFAULT_TIMEOUT, 'PUT', 200, null, false);
@@ -182,12 +178,11 @@ var pushData = function(flow) {
     }
 };
 
-var protocolTest = function() {
+function protocolTest() {
     var postData = protocolTestFunc();
-    postData.done(function(value) {
+    postData.then(function(value) {
         console.log(value);
-    });
-    postData.fail(function(error, errmess) {
+    }, function(error, errmess) {
         var message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -198,7 +193,7 @@ var protocolTest = function() {
         }
         errManager.display("Failed to get protocol test status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
-};
+}
 
 var forwarderStatus = function() {
   // No REST traffic for this one.

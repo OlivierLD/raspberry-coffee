@@ -17,6 +17,9 @@ let events = {
 		});
 	},
 
+	// TODO unsubscribe...
+
+
 	publish: function (topic, value) {
 		this.listener.forEach((lsnr, idx) => {
 			if (lsnr.topic === topic) {
