@@ -6,7 +6,7 @@ run the script `to.prod.sh` to package everything for distribution.
 
 The "_pick and choose_" part could be scripted as well.
 
-This project is not supposed to contain any source file. 
+This project is not supposed to contain any source file except web resources.
 
 It pulls the `NMEA.multiplexer`, `RESTNavServer` (or whatever you want) and the `NMEA.mux.extensions` projects.
 This is what you would to tweak to fit your requirements.

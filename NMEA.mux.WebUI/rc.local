@@ -18,6 +18,8 @@ if [ "$_IP" ]; then
   printf ">> IP address is %s\n" "$_IP"
 fi
 #
+printf "-- From /etc/rc.local --\n"
+printf "Now starting NMEA Multiplexer\n"
 cd ~pi/NMEADist
 ./start-mux.sh
 cd -

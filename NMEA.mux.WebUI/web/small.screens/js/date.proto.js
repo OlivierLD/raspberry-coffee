@@ -6,7 +6,7 @@
 
 // Provide month names
 Date.prototype.getMonthName = function () {
-    const month_names = [
+    const MONT_NAMES = [
         'January',
         'February',
         'March',
@@ -21,12 +21,12 @@ Date.prototype.getMonthName = function () {
         'December'
     ];
 
-    return month_names[this.getMonth()];
+    return MONT_NAMES[this.getMonth()];
 };
 
 // Provide month abbreviation
 Date.prototype.getMonthAbbr = function () {
-    const month_abbrs = [
+    const MONTH_ABBR = [
         'Jan',
         'Feb',
         'Mar',
@@ -41,12 +41,12 @@ Date.prototype.getMonthAbbr = function () {
         'Dec'
     ];
 
-    return month_abbrs[this.getMonth()];
+    return MONTH_ABBR[this.getMonth()];
 };
 
 // Provide full day of week name
 Date.prototype.getDayFull = function () {
-    const days_full = [
+    const DAYS_FULL = [
         'Sunday',
         'Monday',
         'Tuesday',
@@ -55,12 +55,12 @@ Date.prototype.getDayFull = function () {
         'Friday',
         'Saturday'
     ];
-    return days_full[this.getDay()];
+    return DAYS_FULL[this.getDay()];
 };
 
 // Provide full day of week name
 Date.prototype.getDayAbbr = function () {
-    const days_abbr = [
+    const DAYS_ABBR = [
         'Sun',
         'Mon',
         'Tue',
@@ -69,7 +69,7 @@ Date.prototype.getDayAbbr = function () {
         'Fri',
         'Sat'
     ];
-    return days_abbr[this.getDay()];
+    return DAYS_ABBR[this.getDay()];
 };
 
 // Provide the day of year 1-365
@@ -116,7 +116,7 @@ Date.prototype.isLeapYear = function () {
 
 // Provide Number of Days in a given month
 Date.prototype.getMonthDayCount = function () {
-    const month_day_counts = [
+    const MONTH_DAY_COUNT = [
         31,
         this.isLeapYear() ? 29 : 28,
         31,
@@ -131,7 +131,7 @@ Date.prototype.getMonthDayCount = function () {
         31
     ];
 
-    return month_day_counts[this.getMonth()];
+    return MONTH_DAY_COUNT[this.getMonth()];
 };
 
 // format provided date into this.format format
@@ -157,7 +157,7 @@ Date.prototype.format = function (dateFormat) {
     }
 
     // get all date properties ( based on PHP date object functionality )
-    const date_props = {
+    const DATE_PROPS = {
         d: date < 10 ? '0' + date : date,
         D: this.getDayAbbr(),
         j: this.getDate(),
@@ -188,14 +188,14 @@ Date.prototype.format = function (dateFormat) {
     };
 
     // loop through format array of characters and add matching data else add the format character (:,/, etc.)
-    let date_string = "";
+    let dateString = "";
     for (let i = 0; i < dateFormat.length; i++) {
         let f = dateFormat[i];
         if (f.match(/[a-zA-Z|_]/g)) {
-            date_string += date_props[f] ? date_props[f] : f; //'';
+            dateString += DATE_PROPS[f] ? DATE_PROPS[f] : f; //'';
         } else {
-            date_string += f;
+            dateString += f;
         }
     }
-    return date_string;
+    return dateString;
 };

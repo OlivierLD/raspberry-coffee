@@ -15,7 +15,7 @@ if [ "$_OLED" ]; then
   printf "+---------------+\n"
   printf "| OLED Detected |\n"
   printf "+---------------+\n"
-  cd ~pi/NMEADist
+# cd ~pi/NMEADist
   MESS=""
   if [ "$_IP" ]; then
     MESS="$_IP|"
@@ -42,7 +42,7 @@ then
   # See the script for option details
   ./to.mux.sh -n
 else
-  prointf "No to.mux.sh found\n"
+  printf "No to.mux.sh found\n"
 fi
-cd -
+# cd -
 #

@@ -17,8 +17,7 @@ let events = {
 		});
 	},
 
-	// TODO unsubscribe...
-
+	// TODO unsubscribe?..
 
 	publish: function (topic, value) {
 		this.listener.forEach((lsnr, idx) => {

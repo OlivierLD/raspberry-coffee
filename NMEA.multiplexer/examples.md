@@ -409,7 +409,7 @@ Do the test: the Sun crosses the meridian at _exactly_ 12:00:00 noon Solar (SLR)
   - with external GPS (outside the box)
   - User Interface:
     - a [touchpad](https://www.adafruit.com/product/1332)?
-    - A Pebble App?
+    - A Smart Watch App?
 
 <!--
 ### TODO...
