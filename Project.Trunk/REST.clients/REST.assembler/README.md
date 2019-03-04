@@ -176,7 +176,7 @@ We need some kind of server to run on the Raspberry Pi, so the outer world can r
 - [Helidon](#helidon) is an implementation of such a micro-server, implementing a Micro-Profile.
 - [fnProject](#fnproject), FaaS server implementation, Docker based
 - a [Custom micro-server](#using-a-light-custom-micro-http-server), part of this project
-- TODO: NodeJS
+- NodeJS. This is another project, but this should work just fine. Look into [this repo](https://github.com/OlivierLD/node.pi).
 
 <!-- Serverless... Actually means that the server can be anywhere, everywhere, etc.
 
