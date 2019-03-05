@@ -23,6 +23,9 @@
     <script type="module" src="js/Thermometer.js"></script>
     <script type="module" src="js/DirectionDisplay.js"></script>
     <script type="module" src="js/Pluviometer.js"></script>
+    <script type="module" src="js/SplitFlapDisplay.js"></script>
+    <script type="module" src="js/CalendarDisplay.js"></script>
+
     <script type="text/javascript" src="js/Graph.js"></script>
     <script type="text/javascript" src="weather.report.js"></script>
 
@@ -168,6 +171,7 @@ let windArrow;
 let displayScale = 0.75;
 
 var displayTWD, displayTWS, displayPRMSL, displayRain, displayTemp, displayDew, graph, map;
+var calendar, digitalClock, displayHum;
 let withTWD = true;
 let dataType = "";
 
@@ -179,6 +183,10 @@ window.onload = function() {
   displayTemp  = document.getElementById('thermometer-01');
 	displayDew   = document.getElementById('thermometer-02');
   displayRain  = document.getElementById('pluviometer-01');
+  displayHum = document.getElementById('humidity-01');
+
+  calendar = document.getElementById('calendar-01');
+  digitalClock = document.getElementById('split-flap-display-01');
 
   loadMap();
   setDefaultTimeZone();
@@ -210,7 +218,7 @@ function setDefaultTimeZone() {
   document.getElementById("tz").value = tzOffset;
 }
 
-function updateOnClick(idx, tws, gust, twd, prmsl, temp, dew, rain) {
+function updateOnClick(idx, tws, gust, twd, prmsl, temp, dew, rain, hum) {
   let txtDate = JSONParser.nmeaData[idx].getNMEADate();
   // console.log("Date is : " + reformatDate(txtDate));
   let utc = document.getElementById("tz");
@@ -224,6 +232,12 @@ function updateOnClick(idx, tws, gust, twd, prmsl, temp, dew, rain) {
   displayTemp.value = temp;
 	displayDew.value = dew;
   displayRain.value = rain;
+  displayHum.value = hum;
+
+  // Date and time
+  console.log(">>> Date", txtDate);
+  calendar.value = txtDate.format('d-m-Y-l');
+  digitalClock.value = txtDate.format('H:i') + " UTC";
 
   graph.drawGraph("graphCanvas", graphdata, graphdata2, idx, dataType);
 
@@ -351,7 +365,8 @@ function mouseMoveOnGraphCallback(idx) {
                   data.getNMEAPrmsl(),
                   data.getNMEATemp(),
 		              data.getNMEADew(),
-                  data.getNMEARain());
+                  data.getNMEARain(),
+                  data.getNMEAHum());
   }
 }
 
@@ -478,7 +493,8 @@ function displayData() {
                   data.getNMEAPrmsl(),
                   data.getNMEATemp(),
 		              data.getNMEADew(),
-                  data.getNMEARain());
+                  data.getNMEARain(),
+                  data.getNMEAHum());
   }
 }
 
@@ -628,7 +644,7 @@ function expandCollapse() {
         </td>
       </tr>
       <tr>
-        <td rowspan="8" valign="top"><div id="map" style="width: 400px; height: 530px; border: 1px solid gray; border-radius: 25px;" title="Click on the Graph to see the wind on the map."></div></td>
+        <td rowspan="8" valign="top"><div id="map" style="width: 400px; height: 650px; border: 1px solid silver; border-radius: 25px;" title="Click on the Graph to see the wind on the map."></div></td>
       <!--/tr>
       <tr-->
         <td align="left" colspan="7">
@@ -809,7 +825,37 @@ function expandCollapse() {
         </td>
       </tr>
       <tr>
-        <td colspan="6"></td>
+        <td align="center" valign="top">
+          <calendar-display id="calendar-01"
+                            class="calendar-01"
+                            title="Day-Month-Year"
+                            width="133"
+                            height="160"
+                            value="28-08-2018-tuesday"></calendar-display>
+        </td>
+        <td colspan="2" align="center" valign="top">
+          <split-flap-display id="split-flap-display-01"
+                              nb-char="9"
+                              font-size="30"
+                              value="00:00 UTC"></split-flap-display>
+        </td>
+        <td align="center" valign="top">
+          <analog-display class="analogdisplay-flat-gray"
+                          title="Humidity"
+                          id="humidity-01"
+                          min-value="0"
+                          max-value="100"
+                          value="0"
+                          major-ticks="10"
+                          minor-ticks="1"
+                          with-border="true"
+                          rotate-digits="false"
+                          overlap="40"
+                          label="Hum %"
+                          width="160"
+                          height="160"></analog-display>
+        </td>
+        <td colspan="2"></td>
 				<td align="center" valign="top">
 					<small>Rain on this period</small>
 					<br/>
