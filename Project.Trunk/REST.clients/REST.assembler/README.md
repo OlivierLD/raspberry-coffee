@@ -512,7 +512,7 @@ return output;
 ```
 
 #### See it live
-[YouTube](https://youtu.be/He-wyCch1mc) has it (~15 seconds).
+[YouTube](https://youtu.be/xr5hNT5UzBc) has it (~15 seconds).
 
 This is the `Node-RED` flow running live.
 
