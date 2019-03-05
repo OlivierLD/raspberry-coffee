@@ -1,6 +1,12 @@
 /*
  * @author Olivier Le Diouris
  * Uses ES6 Promises for Ajax.
+ *
+ * Note: To add Basic Autorization, add header like
+					headers.push({
+						name: 'Authorization',
+						value: 'Basic ' + btoa('username:password')
+					});
  */
 
 const DEBUG = false;
@@ -19,6 +25,7 @@ function getPromise(
 		url,                          // full api path
 		timeout,                      // After that, fail.
 		verb,                         // GET, PUT, DELETE, POST, etc
+		headers,                      // Headers
 		happyCode,                    // if met, resolve, otherwise fail.
 		data = null,                  // payload, when needed (PUT, POST...)
 		show = true) {                // Show the traffic [true]|false
@@ -41,7 +48,12 @@ function getPromise(
 		}
 
 		xhr.open(verb, url, true);
-		xhr.setRequestHeader("Content-type", "application/json");
+		// xhr.setRequestHeader("Content-type", "application/json");
+		if (headers !== undefined && headers !== null) {
+			headers.forEach(header => {
+				xhr.setRequestHeader(header.name, header.value);
+			});
+		}
 		try {
 			if (data === undefined || data === null) {
 				xhr.send();
@@ -71,7 +83,7 @@ function getPromise(
 }
 
 function getNMEAData() {
-	return getPromise('/mux/cache', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+	return getPromise('/mux/cache', DEFAULT_TIMEOUT, 'GET', [{ name: 'Accept', value: 'application/json' }], 200, null, false);
 }
 
 function fetch() {
@@ -111,7 +123,7 @@ function getSkyGP(when, position, wandering, stars) {
 	if (stars !== undefined && stars === true) { // to minimize the size of the payload
 		url += ("&stars=true");
 	}
-	return getPromise(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+	return getPromise(url, DEFAULT_TIMEOUT, 'GET', [{ name: 'Accept', value: 'application/json' }], 200, null, false);
 }
 
 /**
@@ -139,13 +151,13 @@ function getAstroData(when, position, wandering, stars, callback) {
 function setUTC(epoch) {
 	let url = "/mux/utc";
 	let obj = { epoch: epoch };
-	return getPromise(url, DEFAULT_TIMEOUT, 'PUT', 200, obj, false);
+	return getPromise(url, DEFAULT_TIMEOUT, 'PUT', [{ name: 'Content-Type', value: 'application/json' }], 200, obj, false);
 }
 
 function setPosition(lat, lng) {
 	let url = "/mux/position";
 	let obj = { lat: lat, lng: lng };
-	return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, obj, false);
+	return getPromise(url, DEFAULT_TIMEOUT, 'POST', [{ name: 'Content-Type', value: 'application/json' }], 200, obj, false);
 }
 
 function setUTCTime(epoch, callback) {

@@ -1,4 +1,4 @@
-package nmea.tcp;
+package nmea.tcp.waveshare;
 
 import calc.GeomUtil;
 import com.google.gson.Gson;
@@ -26,7 +26,8 @@ import static spi.lcd.waveshare.LCD1in3.DrawFill;
 /**
  * TCP/REST Display Client for an NMEA Logger/REST Server
  *
- *
+ * For the small waveshare color display (1.3")
+ * available at https://www.waveshare.com/product/modules/oleds-lcds/raspberry-pi-lcd/1.3inch-lcd-hat.htm
  */
 public class TCPWatch {
 
