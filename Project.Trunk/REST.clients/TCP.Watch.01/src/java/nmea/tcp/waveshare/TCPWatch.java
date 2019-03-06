@@ -111,7 +111,7 @@ public class TCPWatch {
 	private static double longitude = 0;
 	private static double sog = 0;
 	private static double cog = 0;
-	// TODO More data, more pages
+	// TODO More data, more pages (like a track)
 
 	public static void main(String... args) {
 
@@ -175,7 +175,7 @@ public class TCPWatch {
 
 		// Start external data thread
 		Thread dataFetcher = new Thread(() -> {
-			while (true) {
+			while (keepLooping) {
 				TimeUtil.delay(1_000);
 //			System.out.println("\t\t... external data (like REST) Ping!");
 				if (VERBOSE) {
@@ -242,9 +242,9 @@ public class TCPWatch {
 
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("Ctrl+C !");
+			System.out.println("\nCtrl+C !");
 			keepLooping = false;
-			TimeUtil.delay(10_000);// Wait for the screen to shut off
+			TimeUtil.delay(15_000);// Wait for the screen to shut off
 		}));
 
 		// Display Data loop
