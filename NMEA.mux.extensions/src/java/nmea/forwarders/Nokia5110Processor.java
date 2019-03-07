@@ -20,7 +20,7 @@ import nmea.parser.Temperature;
 import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
 import spi.lcd.nokia.Nokia5110;
-import nmea.forwarders.substitute.SwingLedPanel;
+import lcd.substitute.SwingLedPanel;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

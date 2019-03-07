@@ -1,8 +1,7 @@
-package nmea.forwarders.substitute;
+package lcd.substitute;
 
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +47,7 @@ public class SwingLedPanel
 		}
 	}
 
-	ScreenDefinition config;
+	private ScreenDefinition config;
 	// Default SSD1306
 	private int nbLines = 32;
 	private int nbCols = 128;
@@ -100,17 +99,17 @@ public class SwingLedPanel
 		gridCheckBox = new JCheckBox("With Grid");
 		gridCheckBox.setSelected(false);
 		bottomPanel.add(gridCheckBox, null);
-		gridCheckBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				ledPanel.setWithGrid(gridCheckBox.isSelected());
-				ledPanel.repaint();
-			}
+		gridCheckBox.addActionListener(actionEvent -> {
+			ledPanel.setWithGrid(gridCheckBox.isSelected());
+			ledPanel.repaint();
 		});
 		add(bottomPanel, java.awt.BorderLayout.SOUTH);
 		pack();
 	}
 
+	public void setLedColor(Color color) {
+		ledPanel.setLedColor(color);
+	}
 	/**
 	 * Simulator. Takes the screenbuffer expected by the real device and displays it on
 	 * a led array (2 dims).

@@ -24,7 +24,7 @@ import nmea.parser.Temperature;
 import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
 import calc.GeomUtil;
-import nmea.forwarders.substitute.SwingLedPanel;
+import lcd.substitute.SwingLedPanel;
 
 /**
  * This is an example of a <b>transformer</b>.
