@@ -175,9 +175,9 @@ public class TCPWatch {
 			gpio = GpioFactory.getInstance();
 
 			// TODO User-parameters for those 2 pins
-			key1Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, "K-1", PinPullResistance.PULL_UP);
+			key1Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, "K-1", PinPullResistance.PULL_DOWN);
 			key1Pin.setShutdownOptions(true);
-			key2Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_28, "K-2", PinPullResistance.PULL_UP);
+			key2Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_28, "K-2", PinPullResistance.PULL_DOWN);
 			key2Pin.setShutdownOptions(true);
 
 			if (VERBOSE) {
@@ -209,7 +209,7 @@ public class TCPWatch {
 				}
 			});
 		} catch (Throwable error) {
-
+			error.printStackTrace();
 		}
 
 		// Start external data thread

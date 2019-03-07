@@ -49,12 +49,9 @@ public class ReflexGameMaster {
 		// provision gpio pin #01 as an output pin and turn it off
 		led = gpio.provisionDigitalOutputPin(ledPin, "TheLED", PinState.LOW);
 		button = gpio.provisionDigitalInputPin(buttonPin, PinPullResistance.PULL_DOWN);
-		button.addListener(new GpioPinListenerDigital() {
-			@Override
-			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-				if (event.getState().isHigh()) {
-					pbo.onButtonPressed();
-				}
+		button.addListener((GpioPinListenerDigital) event -> {
+			if (event.getState().isHigh()) {
+				pbo.onButtonPressed();
 			}
 		});
 	}
