@@ -140,7 +140,7 @@ public class TCPWatch {
 		y += 8;
 		sb.text(SDF_3.format(date), 2, y);
 		y += 8;
-		sb.text(String.format("Index: %d", currentIndex), 2, y);
+		sb.text(String.format("Index: %d  ", currentIndex), 2, y);
 	}
 
 	private static void displayPageTwo(ScreenBuffer sb) {
@@ -160,7 +160,7 @@ public class TCPWatch {
 		sb.text(String.format("COG: %s          ", COG_FMT.format(cog)), 2, y);
 		y += 8;
 
-		sb.text(String.format("Index: %d", currentIndex), 2, y);
+		sb.text(String.format("Index: %d  ", currentIndex), 2, y);
 	}
 
 	public static void main(String... args) throws Exception {
