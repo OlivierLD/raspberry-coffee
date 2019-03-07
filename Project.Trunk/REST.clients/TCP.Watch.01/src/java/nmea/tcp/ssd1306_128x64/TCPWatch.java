@@ -272,7 +272,8 @@ public class TCPWatch {
 		SSD1306 oled = null;
 		try {
 			oled = new SSD1306(WIDTH, HEIGHT); // Default pins (look in the SSD1306 code)
-			// Override the default pins        Clock             MOSI              CS                RST               DC
+			// If needed, override the default pins
+			//                          Clock             MOSI              CS                RST               DC
 //    oled = new SSD1306(RaspiPin.GPIO_12, RaspiPin.GPIO_13, RaspiPin.GPIO_14, RaspiPin.GPIO_15, RaspiPin.GPIO_16);
 			oled.begin();
 			oled.clear();
