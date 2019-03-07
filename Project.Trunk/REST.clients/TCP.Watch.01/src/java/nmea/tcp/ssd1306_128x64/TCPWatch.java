@@ -167,27 +167,45 @@ public class TCPWatch {
 
 		boolean mirror = "true".equals(System.getProperty("mirror.screen", "false")); // Screen is to be seen in a mirror.
 
-		if ("true".equals(System.getProperty("verbose", "false"))) {
+		if (VERBOSE) {
 			System.out.println("Starting...");
 		}
 
 		try {
 			gpio = GpioFactory.getInstance();
 
-			// TODO Parameters for those 2 pins
+			// TODO User-parameters for those 2 pins
 			key1Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, "K-1", PinPullResistance.PULL_UP);
 			key1Pin.setShutdownOptions(true);
 			key2Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_28, "K-2", PinPullResistance.PULL_UP);
 			key2Pin.setShutdownOptions(true);
 
+			if (VERBOSE) {
+				System.out.println("Initializing button listeners");
+			}
+
 			key1Pin.addListener((GpioPinListenerDigital) event -> {
 				if (key1Consumer != null) {
+					if (VERBOSE) {
+						System.out.println("Consuming K-1");
+					}
 					key1Consumer.accept(event);
+				} else {
+					if (VERBOSE) {
+						System.out.println("No consumer for K-1");
+					}
 				}
 			});
 			key2Pin.addListener((GpioPinListenerDigital) event -> {
 				if (key2Consumer != null) {
+					if (VERBOSE) {
+						System.out.println("Consuming K-2");
+					}
 					key2Consumer.accept(event);
+				} else {
+					if (VERBOSE) {
+						System.out.println("No consumer for K-2");
+					}
 				}
 			});
 		} catch (Throwable error) {
@@ -387,6 +405,7 @@ public class TCPWatch {
 			System.exit(0);
 		} else {
 			oled.clear();
+			sb.clear();
 			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 			oled.shutdown();
