@@ -19,6 +19,7 @@ import lcd.oled.SSD1306;
 import lcd.substitute.SwingLedPanel;
 import lcd.utils.img.ImgInterface;
 import lcd.utils.img.Java32x32;
+import utils.PinUtil;
 import utils.StaticUtil;
 import utils.TimeUtil;
 
@@ -285,7 +286,22 @@ public class TCPWatch {
 		}
 		if (VERBOSE) {
 			System.out.println("Object created, default pins...");
-//    System.out.println("Object created, Clock GPIO_12, MOSI GPIO_13, CS GPIO_14, RST GPIO_15, DC GPIO_16");
+			/* Defaults:
+	private static Pin spiClk = RaspiPin.GPIO_14; // Pin #23, SCLK, GPIO_11
+	private static Pin spiMosi = RaspiPin.GPIO_12; // Pin #19, SPI0_MOSI
+	private static Pin spiCs = RaspiPin.GPIO_10; // Pin #24, SPI0_CE0_N
+	private static Pin spiRst = RaspiPin.GPIO_05; // Pin #18, GPIO_24
+	private static Pin spiDc = RaspiPin.GPIO_04; // Pin #16, GPIO_23
+			 */
+			String[] map = new String[5];
+			map[0] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(14)).pinNumber()) + ":CLK";
+			map[1] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(12)).pinNumber()) + ":MOSI";
+			map[2] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(10)).pinNumber()) + ":CS";
+			map[3] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(05)).pinNumber()) + ":RST";
+			map[4] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(04)).pinNumber()) + ":DC";
+
+			PinUtil.print(map);
+//    System.out.println("Object created, Clock GPIO_14, MOSI GPIO_12, CS GPIO_10, RST GPIO_05, DC GPIO_04");
 		}
 
 		ScreenBuffer sb = new ScreenBuffer(WIDTH, HEIGHT);
