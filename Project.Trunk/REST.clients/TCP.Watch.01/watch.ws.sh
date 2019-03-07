@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# WaveShare version
+#
 CP=./build/libs/TCP.Watch.01-1.0-all.jar
 #
 # This is the address and port of the logger

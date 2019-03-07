@@ -1,15 +1,37 @@
 package nmea.tcp.ssd1306_128x64;
 
+import calc.GeomUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.PinPullResistance;
+import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
+import http.HTTPServer;
+import http.client.HTTPClient;
 import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
 import lcd.substitute.SwingLedPanel;
 import lcd.utils.img.ImgInterface;
 import lcd.utils.img.Java32x32;
 import utils.StaticUtil;
+import utils.TimeUtil;
 
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Uses SPI interface
@@ -18,17 +40,234 @@ public class TCPWatch {
 
 	private static SwingLedPanel substitute;
 
+	private static final int WIDTH = 128;
+	private static final int HEIGHT = 64;
+
+	// The data to display
+	private static double latitude = 0;
+	private static double longitude = 0;
+	private static double sog = 0;
+	private static double cog = 0;
+	// TODO More data, more pages (like a track)
+
+	private static boolean VERBOSE = "true".equals(System.getProperty("verbose", "false"));
+	private static String BASE_URL = System.getProperty("base.url", "http://192.168.127.1:8080");
+
+	private final static SimpleDateFormat SDF_1 = new SimpleDateFormat("E dd MMM yyyy");
+	private final static SimpleDateFormat SDF_2 = new SimpleDateFormat("HH:mm:ss Z");
+	private final static SimpleDateFormat SDF_3 = new SimpleDateFormat("HH:mm:ss z");
+
+	private final static SimpleDateFormat SDF_HH = new SimpleDateFormat("HH");
+	private final static SimpleDateFormat SDF_MM = new SimpleDateFormat("mm");
+	private final static SimpleDateFormat SDF_SS = new SimpleDateFormat("ss");
+
+	private final static NumberFormat SOG_FMT = new DecimalFormat("#0.00");
+	private final static NumberFormat COG_FMT = new DecimalFormat("000");
+
+	private static int currentIndex = 0; // Screen index, incremented/decremented with the buttons K1 (up) & K3 (down)
+
+	private static GpioController gpio;
+	private static GpioPinDigitalInput key1Pin = null;
+	private static GpioPinDigitalInput key2Pin = null;
+
+	private static boolean k1 = false, k2 = false;
+	private static Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> {
+		k1 = event.getState().isLow(); // low: down
+		if (VERBOSE) {
+			System.out.println(String.format("K1 was %s", k1 ? "pushed" : "released"));
+		}
+		if (k1) { // K1 is pushed down
+			currentIndex++;
+		}
+	};
+	private static Consumer<GpioPinDigitalStateChangeEvent> key2Consumer = (event) -> {
+		k2 = event.getState().isLow(); // low: down
+		if (VERBOSE) {
+			System.out.println(String.format("K2 was %s", k2 ? "pushed" : "released"));
+		}
+		if (k2) { // K2 is pushed down
+			currentIndex--;
+		}
+	};
+
+	/** This is the REST request
+	 * @param baseUrl
+	 * @return
+	 */
+	public static JsonObject handleRequest(String baseUrl) {
+
+		String url =  baseUrl + "/mux/cache";
+
+		Map<String, String> headers = new HashMap<>(1);
+		headers.put("Accept", "application/json"); //, text/javascript, */*; q=0.01");
+
+		HTTPServer.Request request = new HTTPServer.Request("GET", url, "HTTP/1.1");
+		request.setHeaders(headers);
+
+		HTTPServer.Response response = null;
+		try {
+			response = HTTPClient.doRequest(request);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		String data = (response != null ? new String(response.getPayload()) : null);
+
+		Gson gson = new Gson();
+		JsonElement element = gson.fromJson (data, JsonElement.class);
+		JsonObject jsonObj = element.getAsJsonObject();
+		return jsonObj;
+	}
+
+
+	private static boolean keepLooping = true;
+
+	private static void displayPageOne(ScreenBuffer sb) {
+		String title = "Screen #1";
+		int y = 8;
+		int len = sb.strlen(title);
+		sb.text(title, (WIDTH / 2) - (len / 2), y);
+		String latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
+		String lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
+		y += 8;
+		sb.text(String.format("L:%11s   ", latStr), 2, y);
+		y += 8;
+		sb.text(String.format("G:%11s   ", lngStr), 2, y);
+		y += 8;
+		Date date = new Date();
+		sb.text(SDF_1.format(date), 2, y);
+		y += 8;
+		sb.text(SDF_3.format(date), 2, y);
+		y += 8;
+		sb.text(String.format("Index: %d", currentIndex), 2, y);
+	}
+
+	private static void displayPageTwo(ScreenBuffer sb) {
+		String title = "Screen #2";
+		int y = 8;
+		int len = sb.strlen(title);
+		sb.text(title, (WIDTH / 2) - (len / 2), y);
+		String latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
+		String lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
+		y += 8;
+		sb.text(String.format("L:%11s   ", latStr), 2, y);
+		y += 8;
+		sb.text(String.format("G:%11s   ", lngStr), 2, y);
+		y += 8;
+		sb.text(String.format("SOG: %s kts      ", SOG_FMT.format(sog)), 2, y);
+		y += 8;
+		sb.text(String.format("COG: %s          ", COG_FMT.format(cog)), 2, y);
+		y += 8;
+
+		sb.text(String.format("Index: %d", currentIndex), 2, y);
+	}
+
 	public static void main(String... args) throws Exception {
-		int WIDTH = 128;
-		int HEIGHT = 64;
 
-		boolean onUserReturn = "true".equals(System.getProperty("return.to.move.on"));
 		boolean mirror = "true".equals(System.getProperty("mirror.screen", "false")); // Screen is to be seen in a mirror.
-
 
 		if ("true".equals(System.getProperty("verbose", "false"))) {
 			System.out.println("Starting...");
 		}
+
+		try {
+			gpio = GpioFactory.getInstance();
+
+			// TODO Parameters for those 2 pins
+			key1Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, "K-1", PinPullResistance.PULL_UP);
+			key1Pin.setShutdownOptions(true);
+			key2Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_28, "K-2", PinPullResistance.PULL_UP);
+			key2Pin.setShutdownOptions(true);
+
+			key1Pin.addListener((GpioPinListenerDigital) event -> {
+				if (key1Consumer != null) {
+					key1Consumer.accept(event);
+				}
+			});
+			key2Pin.addListener((GpioPinListenerDigital) event -> {
+				if (key2Consumer != null) {
+					key2Consumer.accept(event);
+				}
+			});
+		} catch (Throwable error) {
+
+		}
+
+		// Start external data thread
+		Thread dataFetcher = new Thread(() -> {
+			while (keepLooping) {
+				TimeUtil.delay(1_000);
+//			System.out.println("\t\t... external data (like REST) Ping!");
+				if (VERBOSE) {
+					System.out.println(">> Fetching...");
+				}
+				JsonObject response = handleRequest(BASE_URL);
+				/*
+				 * We are interested in
+				 * "Position": {
+					    "lat": 38.063721666666666,
+					    "lng": -122.94171999999998
+					  },
+					  "SOG": {
+					    "speed": 1.9
+					  },
+					  "GPS Date \u0026 Time": {
+					    "date": "Nov 24, 2018 11:23:08 AM",
+					    "epoch": 1543087388000,
+					    "fmtDate": {
+					      "epoch": 1543087388000,
+					      "year": 2018,
+					      "month": 11,
+					      "day": 24,
+					      "hour": 19,
+					      "min": 23,
+					      "sec": 8
+					    }
+					  },
+					  "COG": {
+					    "angle": 212.7
+					  }
+				 */
+
+
+				// Dispatch the data
+				try {
+					latitude = response.get("Position").getAsJsonObject().get("lat").getAsDouble();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				try {
+					longitude = response.get("Position").getAsJsonObject().get("lng").getAsDouble();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				try {
+					sog = response.get("SOG").getAsJsonObject().get("speed").getAsDouble();
+				} catch (NullPointerException npe) {
+					// No SOG
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				try {
+					cog = response.get("COG").getAsJsonObject().get("angle").getAsDouble();
+				} catch (NullPointerException npe) {
+					// No COG
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+//				Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//				String prettyJson = gson.toJson(response);
+//				System.out.println(">> Data:" + prettyJson);
+			}
+		}, "dataFetcher");
+		dataFetcher.start();
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println("\nCtrl+C !");
+			keepLooping = false;
+			TimeUtil.delay(5_000);// Wait for the screen to shut off
+		}));
+
 		SSD1306 oled = null;
 		try {
 			oled = new SSD1306(WIDTH, HEIGHT); // Default pins (look in the SSD1306 code)
@@ -44,7 +283,7 @@ public class TCPWatch {
 			substitute.setLedColor(Color.WHITE);
 			substitute.setVisible(true);
 		}
-		if ("true".equals(System.getProperty("verbose", "false"))) {
+		if (VERBOSE) {
 			System.out.println("Object created, default pins...");
 //    System.out.println("Object created, Clock GPIO_12, MOSI GPIO_13, CS GPIO_14, RST GPIO_15, DC GPIO_16");
 		}
@@ -55,383 +294,55 @@ public class TCPWatch {
 			System.out.println("Screenbuffer ready...");
 		}
 
-		if (true) {
-			sb.text("1 - ScreenBuffer", 2, 8);
-			sb.text("2 - 128 x 64 for OLED", 2, 16);
-			sb.text("3 - ScreenBuffer, 64 lines", 2, 24);
-			sb.text("4 - 128 x 64 for OLED!", 2, 32);
-			sb.text("5 - ScreenBuffer", 2, 40);
-			sb.text("6 - 128 x 64 for OLED!", 2, 48);
-			sb.text("7 - 128 x 64 for OLED!", 2, 56);
-			sb.text("8 - This is the end", 2, 64);
+		displayPageOne(sb); // Init Screen
 
-			if (oled != null) {
-				oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-				oled.display();
-			} else {
-				substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-				substitute.display();
-			}
+		if (oled != null) {
+			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.display();
+		} else {
+			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			substitute.display();
+		}
 
-			if (onUserReturn) {
-				sb.dumpScreen();
-				StaticUtil.userInput("Hit Return");
-			} else {
-				try {
-					Thread.sleep(1_000);
-				} catch (Exception ex) {
+		if (oled == null) { // Simulate button clicks every 5 seconds
+			Thread buttonSimulator = new Thread(() -> {
+				while (keepLooping) {
+					TimeUtil.delay(5_000);
+					currentIndex += 1;
 				}
-			}
-			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+			});
+			buttonSimulator.start();
 		}
 
-		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("Let's go...");
-		}
-		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
-		ImgInterface img = new Java32x32();
-		sb.image(img, 0, 0, ScreenBuffer.Mode.BLACK_ON_WHITE);
-		sb.text("I speak Java!", 36, 20, ScreenBuffer.Mode.BLACK_ON_WHITE);
+		while (keepLooping) {
+			TimeUtil.delay(200);
 
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
+			// Display data based on currentIndex
+			int screenIndex = Math.abs(currentIndex % 2);
+			if (VERBOSE) {
+				System.out.println(String.format("Current Index now %d (%d)", screenIndex, currentIndex));
+			}
+			switch (screenIndex) {
 
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(2_000);
-			} catch (Exception ex) {
-			}
-		}
-		// Blinking
-		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("Blinking...");
-		}
-		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
-		sb.image(img, 0, 0, ScreenBuffer.Mode.WHITE_ON_BLACK);
-		sb.text("I speak Java!", 36, 20, ScreenBuffer.Mode.WHITE_ON_BLACK);
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(500);
-			} catch (Exception ex) {
-			}
-		}
-		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
-		sb.image(img, 0, 0, ScreenBuffer.Mode.BLACK_ON_WHITE);
-		sb.text("I speak Java!", 36, 20, ScreenBuffer.Mode.BLACK_ON_WHITE);
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(500);
-			} catch (Exception ex) {
-			}
-		}
+				case 0:
+					if (VERBOSE) {
+						System.out.println("Displaying Screen #1");
+					}
+					displayPageOne(sb);
+					break;
 
-		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
-		sb.image(img, 0, 0, ScreenBuffer.Mode.WHITE_ON_BLACK);
-		sb.text("I speak Java!", 36, 20, ScreenBuffer.Mode.WHITE_ON_BLACK);
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(500);
-			} catch (Exception ex) {
-			}
-		}
+				case 1:
+					if (VERBOSE) {
+						System.out.println("Displaying Screen #2");
+					}
+					displayPageTwo(sb);
+					break;
 
-		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
-		sb.image(img, 0, 0, ScreenBuffer.Mode.BLACK_ON_WHITE);
-		sb.text("I speak Java!", 36, 20, ScreenBuffer.Mode.BLACK_ON_WHITE);
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(500);
-			} catch (Exception ex) {
-			}
-		}
-
-		// End blinking
-		sb.clear();
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-		// Marquee
-		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("Marquee shifting left...");
-		}
-		for (int i = 0; i < 128; i++) {
-			if (oled != null) {
-				oled.clear();
-			}
-			sb.image(img, 0 - i, 0);
-			sb.text("I speak Java!.......", 36 - i, 20);
-
-			if (oled != null) {
-				oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-				oled.display();
-			} else {
-				substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-				substitute.display();
-			}
-//    try { Thread.sleep(250); } catch (Exception ex) {}
-		}
-
-		// Circles
-		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("Geometric shapes...");
-		}
-		sb.clear();
-
-		sb.circle(64, 32, 15);
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(500);
-			} catch (Exception ex) {
-			}
-		}
-
-		sb.circle(74, 32, 10);
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(500);
-			} catch (Exception ex) {
-			}
-		}
-
-		sb.circle(80, 32, 5);
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(500);
-			} catch (Exception ex) {
-			}
-		}
-
-		// Nested Rectangles
-		sb.clear();
-		for (int i = 0; i < 16; i++) {
-			sb.rectangle(1 + (i * 2), 1 + (i * 2), 127 - (i * 2), 63 - (i * 2));
-			if (oled != null) {
-				oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-				oled.display();
-			} else {
-				substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-				substitute.display();
-			}
-	//  try { Thread.sleep(100); } catch (Exception ex) {}
-		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-
-		// Shape
-		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("More shapes...");
-		}
-		sb.clear();
-		// Star
-		int[] x = new int[]{64, 73, 50, 78, 55};
-		int[] y = new int[]{1, 30, 12, 12, 30};
-		Polygon p = new Polygon(x, y, 5);
-		sb.shape(p, true);
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-
-		// Centered text
-		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("More text...");
-		}
-		sb.clear();
-		String txt = "Centered";
-		int len = sb.strlen(txt);
-		sb.text(txt, 64 - (len / 2), 16);
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-		// sb.clear();
-		txt = "A much longer string.";
-		len = sb.strlen(txt);
-		sb.text(txt, 64 - (len / 2), 26);
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-
-		// Vertical marquee
-		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("Vertical marquee...");
-		}
-		String[] txtA = new String[]{
-						"Centered",
-						"This is line one",
-						"More text goes here",
-						"Some crap follows",
-						"We're reaching the end.",
-				    "Long ago, in a galaxy far,",
-				    "far away... Starwars effect",
-						"  * The End *  "
-		};
-		len = 0;
-		sb.clear();
-		for (int t = 0; t < 80; t++) {
-//    sb.clear();
-			for (int i = 0; i < txtA.length; i++) {
-				len = sb.strlen(txtA[i]);
-				sb.text(txtA[i], 64 - (len / 2), (10 * (i + 1)) - t);
-				if (oled != null) {
-					oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-					oled.display();
-				} else {
-					substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-					substitute.display();
-				}
-			}
-//    try { Thread.sleep(100); } catch (Exception ex) {}
-		}
-
-		// Text Snake...
-		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("Text snake...");
-		}
-		String snake = "This text is displayed like a snake, waving across the screen...";
-		char[] ca = snake.toCharArray();
-		int strlen = sb.strlen(snake);
-		// int i = 0;
-		for (int i = 0; i < strlen + 2; i++) {
-			sb.clear();
-			for (int c = 0; c < ca.length; c++) {
-				int strOffset = 0;
-				if (c > 0) {
-					String tmp = new String(ca, 0, c);
-		//    System.out.println(tmp);
-					strOffset = sb.strlen(tmp) + 2;
-				}
-				double virtualAngle = Math.PI * (((c - i) % 64) / 64d);
-				int xpos = strOffset - i,
-						ypos = 58 + (int) (32 * Math.sin(virtualAngle));
-//      System.out.println("Displaying " + ca[c] + " at " + x + ", " + y + ", i=" + i + ", strOffset=" + strOffset);
-				sb.text(new String(new char[]{ca[c]}), xpos, ypos);
+				default:
+					if (VERBOSE) {
+						System.out.println("Displaying no Screen...");
+					}
+					break;
 			}
 			if (oled != null) {
 				oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
@@ -440,170 +351,21 @@ public class TCPWatch {
 				substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 				substitute.display();
 			}
-//    try { Thread.sleep(75); } catch (Exception ex) {}
 		}
-
-		// A curve
-		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("Curve...");
-		}
-		sb.clear();
-		// Axis
-		sb.line(0, 32, 128, 32);
-		sb.line(2, 0, 2, 64);
-
-		Point prev = null;
-		for (int _x = 0; _x < 130; _x++) {
-			double amplitude = 12 * Math.exp((double) (130 - _x) / (13d * 7.5d));
-			//  System.out.println("X:" + x + ", ampl: " + (amplitude));
-			int _y = 32 - (int) (amplitude * Math.cos(Math.toRadians(360 * _x / 32d)));
-			sb.plot(_x + 2, _y);
-			if (prev != null) {
-				sb.line(prev.x, prev.y, _x + 2, _y);
-			}
-			prev = new Point(_x + 2, _y);
-		}
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-		// A curve (progressing)
-		sb.clear();
-		// Axis
-		sb.line(0, 32, 128, 32);
-		sb.line(2, 0, 2, 64);
-
-		prev = null;
-		for (int _x = 0; _x < 130; _x++) {
-			double amplitude = 12 * Math.exp((double) (130 - _x) / (13d * 7.5d));
-			//  System.out.println("X:" + x + ", ampl: " + (amplitude));
-			int _y = 32 - (int) (amplitude * Math.cos(Math.toRadians(360 * _x / 32d)));
-			sb.plot(_x + 2, _y);
-			if (prev != null) {
-				sb.line(prev.x, prev.y, _x + 2, _y);
-			}
-			prev = new Point(_x + 2, _y);
-			if (oled != null) {
-				oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-				oled.display();
-			} else {
-				substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-				substitute.display();
-			}
-//    try { Thread.sleep(75); } catch (Exception ex) {}
-		}
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-		// Bouncing
-		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("Bouncing...");
-		}
-		for (int _x = 0; _x < 130; _x++) {
-			sb.clear();
-			double amplitude = 12 * Math.exp((double) (130 - _x) / (13d * 7.5d));
-			//  System.out.println("X:" + x + ", ampl: " + (amplitude));
-			int _y = 64 - (int) (amplitude * Math.abs(Math.cos(Math.toRadians(180 * _x / 10d))));
-			sb.plot(_x, _y);
-			sb.plot(_x + 1, _y);
-			sb.plot(_x + 1, _y + 1);
-			sb.plot(_x, _y + 1);
-
-			if (oled != null) {
-				oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-				oled.display();
-			} else {
-				substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-				substitute.display();
-			}
-//    try { Thread.sleep(75); } catch (Exception ex) {}
-		}
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
-		}
-
-		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("Closing...");
-		}
-		sb.clear();
-		if (oled != null) {
-			oled.clear();
-		}
-		sb.text("Bye-bye!", 36, 20);
-
-		if (oled != null) {
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-		}
-
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
-		}
-		sb.clear();
-
-		if (oled != null) {
-			oled.clear(); // Blank screen
-			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-			oled.shutdown();
-		} else {
-			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			substitute.display();
-			substitute.setVisible(false);
-		}
+		System.out.println("End of loop");
 
 		if ("true".equals(System.getProperty("verbose", "false"))) {
 			System.out.println("Done.");
 		}
+
 		if (oled == null) {
 			System.exit(0);
+		} else {
+			oled.shutdown();
+		}
+
+		if (gpio != null) {
+			gpio.shutdown();
 		}
 	}
 }

@@ -2,7 +2,7 @@
  * @author Olivier Le Diouris
  * Uses ES6 Promises for Ajax.
  *
- * Note: To add Basic Autorization, add header like
+ * Note: To add Basic Authorization, add header like
 					headers.push({
 						name: 'Authorization',
 						value: 'Basic ' + btoa('username:password')
