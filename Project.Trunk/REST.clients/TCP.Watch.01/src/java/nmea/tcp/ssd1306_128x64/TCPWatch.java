@@ -293,13 +293,21 @@ public class TCPWatch {
 	private static Pin spiCs = RaspiPin.GPIO_10; // Pin #24, SPI0_CE0_N
 	private static Pin spiRst = RaspiPin.GPIO_05; // Pin #18, GPIO_24
 	private static Pin spiDc = RaspiPin.GPIO_04; // Pin #16, GPIO_23
+
+			key1Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, "K-1", PinPullResistance.PULL_UP);
+			key1Pin.setShutdownOptions(true);
+			key2Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_28, "K-2", PinPullResistance.PULL_UP);
+
 			 */
-			String[] map = new String[5];
+			String[] map = new String[7];
 			map[0] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(14)).pinNumber()) + ":CLK";
 			map[1] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(12)).pinNumber()) + ":MOSI";
 			map[2] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(10)).pinNumber()) + ":CS";
 			map[3] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(05)).pinNumber()) + ":RST";
 			map[4] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(04)).pinNumber()) + ":DC";
+
+			map[5] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(29)).pinNumber()) + ":K-1";
+			map[6] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(28)).pinNumber()) + ":K-2";
 
 			PinUtil.print(map);
 //    System.out.println("Object created, Clock GPIO_14, MOSI GPIO_12, CS GPIO_10, RST GPIO_05, DC GPIO_04");
@@ -378,6 +386,9 @@ public class TCPWatch {
 		if (oled == null) {
 			System.exit(0);
 		} else {
+			oled.clear();
+			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.display();
 			oled.shutdown();
 		}
 
