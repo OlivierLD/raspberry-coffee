@@ -380,12 +380,13 @@ Breadboard wiring:
 
 
 Wiring with:
-- Adafruit Bonnet
-- Power Booster
-- Small switch
-- LiPo battery (I actually use a 500mAh)
+- [Adafruit Bonnet](https://www.adafruit.com/product/3203)
+- [Power Booster](https://www.adafruit.com/product/1903)
+- [Small slide switch](https://www.adafruit.com/product/805)
+- [2 push buttons](https://www.adafruit.com/product/3101)
+- [LiPo battery](https://www.adafruit.com/product/1578) (I actually use a 500mAh)
 
-> Note: the wires are show here on top of the bonnet for clarity. They are actually running _under_ it.
+> Note: the wires are shown here on top of the bonnet for clarity. They are actually running _under_ it.
 > And the screen is obviously soldered on top of it.
 
 ![Wiring](./img/ssd1306.128x64.bonnet_bb.01.png)
@@ -402,6 +403,9 @@ The real prototype (with its 500mAh LiPo battery):
 | Screen 1 | Screen 2 | Screen 3 | Screen 4 | Screen 5 |
 |:--------:|:--------:|:--------:|:--------:|:--------:|
 | ![Screen 1](./img/screen.01.png) | ![Screen 2](./img/screen.02.png) | ![Screen 3](./img/screen.03.png) | ![Screen 4](./img/screen.04.png) | ![Screen 5](./img/screen.05.png) |
+
+The screens shown here are just examples. Its very easy to come up with your own ones.
+I'll write more soon, possibilities are endless.
 
 #### Video
 
