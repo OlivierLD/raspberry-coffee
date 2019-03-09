@@ -351,12 +351,16 @@ public class ScreenBuffer {
 	 * @return
 	 */
 	public int strlen(String s) {
+		return strlen(s, 1);
+	}
+
+	public int strlen(String s, int fontFactor) {
 		int len = 0;
 		for (int i = 0; i < s.length(); i++) { // For each character of the string to display
 			String c = new String(new char[]{s.charAt(i)});
 			if (CharacterMatrixes.characters.containsKey(c)) {
 				String[] matrix = CharacterMatrixes.characters.get(c);
-				len += matrix[0].length();
+				len += (matrix[0].length() * fontFactor);
 			}
 		}
 		return len;

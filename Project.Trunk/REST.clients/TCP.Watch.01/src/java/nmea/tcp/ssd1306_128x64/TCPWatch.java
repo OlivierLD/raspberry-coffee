@@ -142,7 +142,9 @@ public class TCPWatch {
 	private static List<Consumer<ScreenBuffer>> pageManagers = Arrays.asList(
 			TCPWatch::displayPage01,
 			TCPWatch::displayPage02,
-			TCPWatch::displayPage03
+			TCPWatch::displayPage03,
+			TCPWatch::displayPage04,
+			TCPWatch::displayPage05
 	);
 
 	/** This is the REST request
@@ -185,7 +187,7 @@ public class TCPWatch {
 		sb.text(title, (WIDTH / 2) - (len / 2), y);
 		String latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
 		String lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
-		y += 8;
+		y += 12;
 		sb.text(String.format("L:%11s", latStr), 2, y);
 		y += 8;
 		sb.text(String.format("G:%11s", lngStr), 2, y);
@@ -194,8 +196,12 @@ public class TCPWatch {
 		sb.text(SDF_1.format(date), 2, y);
 		y += 8;
 		sb.text(SDF_3.format(date), 2, y);
-		y += 8;
-		sb.text(String.format("Index: %d", currentIndex), 2, y);
+//		y += 8;
+
+		y = HEIGHT - 1;
+		String index = String.format("Index: %d", currentIndex);
+		len = sb.strlen(index);
+		sb.text(index, (WIDTH / 2) - (len / 2), y);
 	}
 
 	private static void displayPage02(ScreenBuffer sb) {
@@ -206,7 +212,7 @@ public class TCPWatch {
 		sb.text(title, (WIDTH / 2) - (len / 2), y);
 		String latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
 		String lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
-		y += 8;
+		y += 12;
 		sb.text(String.format("L:%11s", latStr), 2, y);
 		y += 8;
 		sb.text(String.format("G:%11s", lngStr), 2, y);
@@ -214,9 +220,12 @@ public class TCPWatch {
 		sb.text(String.format("SOG: %s kts", SOG_FMT.format(sog)), 2, y);
 		y += 8;
 		sb.text(String.format("COG: %s", COG_FMT.format(cog)), 2, y);
-		y += 8;
+//		y += 8;
 
-		sb.text(String.format("Index: %d", currentIndex), 2, y);
+		y = HEIGHT - 1;
+		String index = String.format("Index: %d", currentIndex);
+		len = sb.strlen(index);
+		sb.text(index, (WIDTH / 2) - (len / 2), y);
 	}
 
 	private static void displayPage03(ScreenBuffer sb) {
@@ -226,7 +235,7 @@ public class TCPWatch {
 		int y = 8;
 		int len = sb.strlen(title);
 //		sb.text(title, (WIDTH / 2) - (len / 2), y);
-		y += 8;
+		y += 12;
 		if (gpsDate != null) {
 			int centerX = HEIGHT / 2;
 			int centerY = HEIGHT / 2;
@@ -280,9 +289,75 @@ public class TCPWatch {
 //		sb.text(String.format("Index: %d", currentIndex), 2, y);
 	}
 
+	private static void displayPage04(ScreenBuffer sb) {
+		sb.clear();
+		String title = "Screen #4";
+		int y = 8;
+		int len = sb.strlen(title);
+		sb.text(title, (WIDTH / 2) - (len / 2), y);
+		y += 12;
+		String line = "SOG";
+		len = sb.strlen(line);
+		sb.text(line, (WIDTH / 2) - (len / 2), y);
+		y += 16;
+		int ff = 2;
+		line = String.format("%s kts", SOG_FMT.format(sog));
+		len = sb.strlen(line, ff);
+		sb.text(line, (WIDTH / 2) - (len / 2), y, ff);
+//		y += 16;
+
+		y = HEIGHT - 1;
+		String index = String.format("Index: %d", currentIndex);
+		len = sb.strlen(index);
+		sb.text(index, (WIDTH / 2) - (len / 2), y);
+	}
+
+	private static void displayPage05(ScreenBuffer sb) {
+		sb.clear();
+		String title = "Screen #5";
+		int y = 8;
+		int len = sb.strlen(title);
+		sb.text(title, (WIDTH / 2) - (len / 2), y);
+		y += 12;
+
+		String line = "COG";
+		len = sb.strlen(line);
+		sb.text(line, (WIDTH / 2) - (len / 2), y);
+		y += 16;
+		int ff = 2;
+		line = String.format("%s", COG_FMT.format(cog));
+		len = sb.strlen(line, ff);
+		sb.text(line, (WIDTH / 2) - (len / 2), y, ff);
+//		y += 16;
+
+		y = HEIGHT - 1;
+		String index = String.format("Index: %d", currentIndex);
+		len = sb.strlen(index);
+		sb.text(index, (WIDTH / 2) - (len / 2), y);
+	}
+
 	public static void main(String... args) throws Exception {
 
 		boolean mirror = "true".equals(System.getProperty("mirror.screen", "false")); // Screen is to be seen in a mirror.
+
+		// Use WiringPi numbers.
+		int defaultCLK  = 14;
+		int defaultMOSI = 12;
+		int defaultCS   = 10;
+		int defaultRST  = 5;
+		int defaultDC   = 4;
+
+		int defaultK1   = 29;
+		int defaultK2   = 28;
+
+		int clkPin = Integer.parseInt(System.getProperty("CLK", String.valueOf(defaultCLK)));
+		int mosiPin = Integer.parseInt(System.getProperty("MOSI", String.valueOf(defaultMOSI)));
+		int csPin = Integer.parseInt(System.getProperty("CS", String.valueOf(defaultCS)));
+		int rstPin = Integer.parseInt(System.getProperty("RST", String.valueOf(defaultRST)));
+		int dcPin = Integer.parseInt(System.getProperty("DC", String.valueOf(defaultDC)));
+
+		int k1Pin = Integer.parseInt(System.getProperty("K1", String.valueOf(defaultK1)));
+		int k2Pin = Integer.parseInt(System.getProperty("K2", String.valueOf(defaultK2)));
 
 		if (VERBOSE) {
 			System.out.println("Starting...");
@@ -291,10 +366,10 @@ public class TCPWatch {
 		try {
 			gpio = GpioFactory.getInstance();
 
-			// TODO User-parameters for those 2 pins?
-			key1Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, "K-1", PinPullResistance.PULL_DOWN);
+			// User-parameters for those 2 pins, in case you want to invert them
+			key1Pin = gpio.provisionDigitalInputPin(PinUtil.getPinByWiringPiNumber(k1Pin), "K-1", PinPullResistance.PULL_DOWN);
 			key1Pin.setShutdownOptions(true);
-			key2Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_28, "K-2", PinPullResistance.PULL_DOWN);
+			key2Pin = gpio.provisionDigitalInputPin(PinUtil.getPinByWiringPiNumber(k2Pin), "K-2", PinPullResistance.PULL_DOWN);
 			key2Pin.setShutdownOptions(true);
 
 			if (VERBOSE) {
@@ -426,10 +501,17 @@ public class TCPWatch {
 
 		SSD1306 oled = null;
 		try {
-			oled = new SSD1306(WIDTH, HEIGHT); // Default pins (look in the SSD1306 code)
+//		oled = new SSD1306(WIDTH, HEIGHT); // Default pins (look in the SSD1306 code)
 			// If needed, override the default pins
 			//                          Clock             MOSI              CS                RST               DC
-//    oled = new SSD1306(RaspiPin.GPIO_12, RaspiPin.GPIO_13, RaspiPin.GPIO_14, RaspiPin.GPIO_15, RaspiPin.GPIO_16);
+//    oled = new SSD1306(RaspiPin.GPIO_12, RaspiPin.GPIO_13, RaspiPin.GPIO_14, RaspiPin.GPIO_15, RaspiPin.GPIO_16, WIDTH, HEIGHT);
+			oled = new SSD1306(
+					PinUtil.getPinByWiringPiNumber(clkPin),
+					PinUtil.getPinByWiringPiNumber(mosiPin),
+					PinUtil.getPinByWiringPiNumber(csPin),
+					PinUtil.getPinByWiringPiNumber(rstPin),
+					PinUtil.getPinByWiringPiNumber(dcPin),
+					WIDTH, HEIGHT);
 			oled.begin();
 			oled.clear();
 //    oled.display();
@@ -440,8 +522,19 @@ public class TCPWatch {
 			substitute.setLedColor(Color.WHITE);
 			substitute.setVisible(true);
 		}
+
 		if (VERBOSE) {
-			System.out.println("Object created, default pins...");
+			System.out.println(String.format("Default pins:\n" +
+					"CLK:  %02d\n" +
+					"MOSI: %02d\n" +
+					"CS:   %02d\n" +
+					"RST:  %02d\n" +
+					"DC:   %02d\n" +
+					"K-1:  %02d\n" +
+					"K-2:  %02d", defaultCLK, defaultMOSI, defaultCS, defaultRST, defaultDC, defaultK1, defaultK2));
+			System.out.println("Object created");
+
+
 			/* Defaults:
 	private static Pin spiClk = RaspiPin.GPIO_14; // Pin #23, SCLK, GPIO_11
 	private static Pin spiMosi = RaspiPin.GPIO_12; // Pin #19, SPI0_MOSI
@@ -455,17 +548,16 @@ public class TCPWatch {
 
 			 */
 			String[] map = new String[7];
-			map[0] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(14)).pinNumber()) + ":CLK";
-			map[1] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(12)).pinNumber()) + ":MOSI";
-			map[2] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(10)).pinNumber()) + ":CS";
-			map[3] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(05)).pinNumber()) + ":RST";
-			map[4] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(04)).pinNumber()) + ":DC";
+			map[0] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(clkPin)).pinNumber()) + ":CLK";
+			map[1] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(mosiPin)).pinNumber()) + ":MOSI";
+			map[2] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(csPin)).pinNumber()) + ":CS";
+			map[3] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(rstPin)).pinNumber()) + ":RST";
+			map[4] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(dcPin)).pinNumber()) + ":DC";
 
-			map[5] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(29)).pinNumber()) + ":K-1";
-			map[6] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(28)).pinNumber()) + ":K-2";
+			map[5] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(k1Pin)).pinNumber()) + ":K-1";
+			map[6] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(k2Pin)).pinNumber()) + ":K-2";
 
 			PinUtil.print(map);
-//    System.out.println("Object created, Clock GPIO_14, MOSI GPIO_12, CS GPIO_10, RST GPIO_05, DC GPIO_04");
 		}
 
 		ScreenBuffer sb = new ScreenBuffer(WIDTH, HEIGHT);
