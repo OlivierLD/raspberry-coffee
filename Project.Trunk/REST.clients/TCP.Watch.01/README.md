@@ -374,6 +374,8 @@ or this:
 ```
 
 ### Raspberry Pi Zero W and SSD1306
+For now (March 2019), this is my favorite configuration, the most versatile.
+
 Breadboard wiring:
 
 ![Wiring](./img/ssd1306.128x64_bb.png)
@@ -410,5 +412,79 @@ I'll write more soon, possibilities are endless.
 #### Video
 
 YouTube has it: https://youtu.be/6Dz-3qKJtjk
+
+#### Connect it to the Server's network
+The Nav Server (like the one at [RESTNavServer](https://github.com/OlivierLD/raspberry-coffee/tree/master/RESTNavServer)) can emit its own network.
+This TCP Watch we talk about here can connect to this network, to consume the data it produces, through REST apis.
+
+As the network name and server IP address can change, this is something the adjust on the client side (the TCP Watch).
+
+To do so, I use the Serial USB interface to connect to the Raspberry Pi.
+> Note: You have to explicitly enable this interface on the Raspberry Pi, using `raspi-config` or the graphical tools available on the graphical desktop.
+
+Once this interface is enabled, you use a USB cable from a laptop to the RAspberry Pi (to its USB port, _not_ the power one), and ssh to it:
+```
+ $ ssh pi@raspberry-tcp.local
+``` 
+where `raspberry-tcp` is the `hostname` of the Raspberry.
+
+First you need to connect to the Server's network.
+To see what network you are currently on, use `iwconfig`
+```
+$ iwconfig
+lo        no wireless extensions.
+
+wlan0     IEEE 802.11  ESSID:"Sonic-00e0_EXT"  
+          Mode:Managed  Frequency:2.412 GHz  Access Point: 28:80:88:E2:C6:4A   
+          Bit Rate=24 Mb/s   Tx-Power=31 dBm   
+          Retry short limit:7   RTS thr:off   Fragment thr:off
+          Power Management:on
+          Link Quality=51/70  Signal level=-59 dBm  
+          Rx invalid nwid:0  Rx invalid crypt:0  Rx invalid frag:0
+          Tx excessive retries:435  Invalid misc:0   Missed beacon:0
+
+$
+```
+As seen above, the current network (in this case) is `Sonic-00e0_EXT`.
+We need to change that.
+
+On recent versions of Raspian, look into `wpa_supplicant.conf`:
+```
+$ cat /etc/wpa_supplicant/wpa_supplicant.conf
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+
+network={
+	ssid="Sonic-00e0_EXT"
+	psk="xxxxxxxx"
+	key_mgmt=WPA-PSK
+}
+```
+Edit this file (I use `vi`), and change the network's `ssid` and `psk` to match the server config, and save your changes.
+
+To activate your modifications, just run
+```
+ $ sudo wpa_cli -i wlan0 reconfigure
+``` 
+where `wlan0` is your wireless port, as seen above in `iwconfig`.
+
+Now you should be connected to the server's network, another run of `iwconfig` would tell you.
+
+Then, to connect to the server itself, you need its IP address (run an `ifconfig` on it), and modify the file named `watch.ssd.sh`.
+You need to change the line that says
+```
+BASE_URL="-Dbase.url=http://192.168.42.10:9999"
+```
+Change the IP to what it should be (like `192.168.127.1`), and you're good to go.
+That the script, and you're done!
+```
+ $ ./watch.ssd.sh
+```
+
+Next, we'll see how to automatically start the watch when the Raspberry Pi boots.
+This happens in the file named `/etc/rc.local`.
+
+(WIP)
 
 ---
