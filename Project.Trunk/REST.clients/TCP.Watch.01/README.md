@@ -417,12 +417,12 @@ YouTube has it: https://youtu.be/6Dz-3qKJtjk
 The Nav Server (like the one at [RESTNavServer](https://github.com/OlivierLD/raspberry-coffee/tree/master/RESTNavServer)) can emit its own network.
 This TCP Watch we talk about here can connect to this network, to consume the data it produces, through REST apis.
 
-As the network name and server IP address can change, this is something the adjust on the client side (the TCP Watch).
+As the network name and server IP address can change, this is something to adjust on the client side (the TCP Watch).
 
 To do so, I use the Serial USB interface to connect to the Raspberry Pi.
 > Note: You have to explicitly enable this interface on the Raspberry Pi, using `raspi-config` or the graphical tools available on the graphical desktop.
 
-Once this interface is enabled, you use a USB cable from a laptop to the RAspberry Pi (to its USB port, _not_ the power one), and ssh to it:
+Once this interface is enabled, you use a USB cable from a laptop to the Raspberry Pi (to its USB port, _not_ the power one), and `ssh` to it:
 ```
  $ ssh pi@raspberry-tcp.local
 ``` 
@@ -477,7 +477,7 @@ You need to change the line that says
 BASE_URL="-Dbase.url=http://192.168.42.10:9999"
 ```
 Change the IP to what it should be (like `192.168.127.1`), and you're good to go.
-That the script, and you're done!
+Run the script, and you're done!
 ```
  $ ./watch.ssd.sh
 ```
