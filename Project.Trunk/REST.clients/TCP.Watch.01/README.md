@@ -372,4 +372,39 @@ or this:
     "Steer": "R"
 }
 ```
+
+### Raspberry Pi Zero W and SSD1306
+Breadboard wiring:
+
+![Wiring](./img/ssd1306.128x64_bb.png)
+
+
+Wiring with:
+- Adafruit Bonnet
+- Power Booster
+- Small switch
+- LiPo battery (I actually use a 500mAh)
+
+> Note: the wires are show here on top of the bonnet for clarity. They are actually running _under_ it.
+> And the screen is obviously soldered on top of it.
+
+![Wiring](./img/ssd1306.128x64.bonnet_bb.01.png)
+
+![Wiring](./img/ssd1306.128x64.bonnet_bb.02.png)
+
+The real prototype (with its 500mAh LiPo battery):
+
+![Front](./img/front.jpg)
+
+![Back](./img/back.jpg)
+
+#### Screenshots
+| Screen 1 | Screen 2 | Screen 3 | Screen 4 | Screen 5 |
+|:--------:|:--------:|:--------:|:--------:|:--------:|
+| ![Screen 1](./img/screen.01.png) | ![Screen 2](./img/screen.02.png) | ![Screen 3](./img/screen.03.png) | ![Screen 4](./img/screen.04.png) | ![Screen 5](./img/screen.05.png) |
+
+#### Video
+
+YouTube has it: https://youtu.be/6Dz-3qKJtjk
+
 ---

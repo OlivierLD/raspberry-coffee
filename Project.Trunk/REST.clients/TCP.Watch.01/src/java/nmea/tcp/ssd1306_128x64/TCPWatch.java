@@ -592,7 +592,7 @@ public class TCPWatch {
 			// Display data based on currentIndex
 			int screenIndex = Math.abs(currentIndex % pageManagers.size());
 			if (VERBOSE) {
-				System.out.println(String.format("Current Screen Index now %d (%d)", screenIndex, currentIndex));
+				System.out.println(String.format("Current Screen Index now %d (%d) on a total of %d", screenIndex, currentIndex, pageManagers.size()));
 			}
 
 			pageManagers.get(screenIndex).accept(sb);
