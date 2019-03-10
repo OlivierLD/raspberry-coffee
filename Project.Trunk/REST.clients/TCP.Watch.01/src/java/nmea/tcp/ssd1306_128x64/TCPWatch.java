@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * Uses SPI interface
+ * Uses SPI interface for the OLED Screen
  */
 public class TCPWatch {
 
@@ -103,6 +103,7 @@ public class TCPWatch {
 	private static boolean connected = false;
 
 	private static boolean VERBOSE = "true".equals(System.getProperty("verbose", "false"));
+	private static boolean SCREEN_00_VERBOSE = "true".equals(System.getProperty("verbose.00", "false"));
 	private static String BASE_URL = System.getProperty("base.url", "http://192.168.127.1:8080");
 
 	private final static SimpleDateFormat SDF_1 = new SimpleDateFormat("E dd MMM yyyy");
@@ -200,7 +201,7 @@ public class TCPWatch {
 		y += 8;
 		sb.text(serverURL.substring("http://".length()), 2, y);
 		y += 8;
-		sb.text(String.format("Connected: %s", connected ? "yes" : "no"), 2, y);
+		sb.text(String.format("Connected: %s", connected ? "YES" : "NO"), 2, y);
 		y += 8;
 		try {
 			String command = "iwconfig | grep wlan0 | awk '{ print $4 }'";
@@ -213,6 +214,9 @@ public class TCPWatch {
 				if (line != null) {
 					sb.text(line, 2, y);
 					y += 8;
+					if (SCREEN_00_VERBOSE) {
+						System.out.println(line);
+					}
 				}
 			}
 			reader.close();
@@ -228,6 +232,9 @@ public class TCPWatch {
 			for (String addr : addresses) {
 				sb.text(addr, 2, y);
 				y += 8;
+				if (SCREEN_00_VERBOSE) {
+					System.out.println(addr);
+				}
 			}
 		} catch (Exception ex) {
 			if (VERBOSE) {
