@@ -374,7 +374,7 @@ or this:
 ```
 
 ### Raspberry Pi Zero W and SSD1306 (128x64)
-Several configuration have been tested (several boards, several screens), also see [here](https://github.com/OlivierLD/small-boards/tree/master/ESP8266.Huzzah/TCPWatch).
+Several configurations have been tested (several boards, several screens), also see [here](https://github.com/OlivierLD/small-boards/tree/master/ESP8266.Huzzah/TCPWatch).
 For now (March 2019), considering the price, the flexibility, and the potential,  this is my favorite configuration, the most versatile.
 
 
