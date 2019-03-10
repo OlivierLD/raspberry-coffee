@@ -226,7 +226,7 @@ interface wlan0
 static ip_address=192.168.127.1/24
 # static ip6_address=fd51:42f8:caae:d92e::ff/64
 static routers=192.168.127.1
-static domain_name_servers=192.168.127.1 8.8.8.8 fd51:42f8:caae:d92e::1
+static domain_name_servers=192.168.127.1
 
 ```
 
