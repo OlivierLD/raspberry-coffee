@@ -219,6 +219,17 @@ subnet 192.168.127.0 netmask 255.255.255.0 {
 ```
 The lines to pay attention to are the ones with a `127` in it...
 
+> Note: you might also want to modify the file `/etc/dhcpcd.conf`, add the following lines:
+```
+
+interface wlan0
+static ip_address=192.168.127.1/24
+# static ip6_address=fd51:42f8:caae:d92e::ff/64
+static routers=192.168.127.1
+static domain_name_servers=192.168.127.1 8.8.8.8 fd51:42f8:caae:d92e::1
+
+```
+
 Now, when the `wlan1` is plugged in, this Raspberry Pi is a WiFi hotspot, *_and_* has Internet access.
 
 This means that when you are on a Raspberry Pi with **two** WiFi adapters (the Raspberry Pi 3 with an extra dongle, where you do you developments from for example), you

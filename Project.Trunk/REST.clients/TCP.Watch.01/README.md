@@ -516,8 +516,9 @@ cd ~pi/raspberry-coffee/Project.Trunk/REST.clients/TCP.Watch.01
 nohup ./watch.ssd.sh &
 cd -
 ``` 
->Note: the `nohup` command will generate a log file named `nihup.out`. Make sure you clean it from time to time, before it becomes too big...
+>Note: the `nohup` command will generate a log file named `nohup.out`. Make sure you clean it from time to time, before it becomes too big...
 
-That's it, next time you boot the Raspberry Pi, the TCP Watch will start.
+That's it, next time you boot the Raspberry Pi, the TCP Watch will start and display 
+the data broadcasted by the server identified by its `BASE_URL`.
 
 ---

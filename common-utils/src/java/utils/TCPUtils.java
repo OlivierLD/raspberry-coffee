@@ -1,5 +1,7 @@
 package utils;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -48,6 +50,25 @@ public class TCPUtils {
 			throw new RuntimeException(e);
 		}
 		return addressList;
+	}
+
+	public static List<String> getNetworkName() throws Exception {
+		List<String> networkList = new ArrayList<>();
+		String command = "iwconfig"; // "iwconfig | grep wlan0 | awk '{ print $4 }'";
+		Process p = Runtime.getRuntime().exec(command);
+		p.waitFor();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		String line = "";
+		while (line != null) {
+			line = reader.readLine();
+			if (line != null) {
+				if (line.indexOf("ESSID:") > -1) {
+					networkList.add(line.substring(line.indexOf("ESSID:")));
+				}
+			}
+		}
+		reader.close();
+		return networkList;
 	}
 
 	public static void main(String... args) {
