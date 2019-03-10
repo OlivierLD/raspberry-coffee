@@ -209,7 +209,7 @@ public class TCPWatch {
 		sb.text(title, (WIDTH / 2) - (len / 2), y);
 		String serverURL = BASE_URL;
 		y += 10;
-		sb.text("Server URL:", 2, y);
+		sb.text("Server Base URL:", 2, y);
 		y += 8;
 		sb.text(serverURL.substring("http://".length()), 2, y);
 		y += 8;
