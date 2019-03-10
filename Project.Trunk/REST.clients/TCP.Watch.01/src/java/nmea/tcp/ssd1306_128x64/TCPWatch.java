@@ -204,7 +204,7 @@ public class TCPWatch {
 
 	private static void displayPage00(ScreenBuffer sb) {
 		sb.clear();
-		String title = "Status Screen";
+		String title = "- Status Screen -";
 		int y = 8;
 		int len = sb.strlen(title);
 		sb.text(title, (WIDTH / 2) - (len / 2), y);
@@ -444,11 +444,11 @@ public class TCPWatch {
 		int defaultK1   = 29;
 		int defaultK2   = 28;
 
-		int clkPin = Integer.parseInt(System.getProperty("CLK", String.valueOf(defaultCLK)));
+		int clkPin  = Integer.parseInt(System.getProperty("CLK", String.valueOf(defaultCLK)));
 		int mosiPin = Integer.parseInt(System.getProperty("MOSI", String.valueOf(defaultMOSI)));
-		int csPin = Integer.parseInt(System.getProperty("CS", String.valueOf(defaultCS)));
-		int rstPin = Integer.parseInt(System.getProperty("RST", String.valueOf(defaultRST)));
-		int dcPin = Integer.parseInt(System.getProperty("DC", String.valueOf(defaultDC)));
+		int csPin   = Integer.parseInt(System.getProperty("CS", String.valueOf(defaultCS)));
+		int rstPin  = Integer.parseInt(System.getProperty("RST", String.valueOf(defaultRST)));
+		int dcPin   = Integer.parseInt(System.getProperty("DC", String.valueOf(defaultDC)));
 
 		int k1Pin = Integer.parseInt(System.getProperty("K1", String.valueOf(defaultK1)));
 		int k2Pin = Integer.parseInt(System.getProperty("K2", String.valueOf(defaultK2)));
