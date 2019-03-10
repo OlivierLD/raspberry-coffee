@@ -218,7 +218,7 @@ public class TCPWatch {
 		sb.text("Network...", 2, y); // Potentially overriden
 		y += 8;
 		try {
-			String command = "iwconfig | grep wlan0 | awk '{ print $4 }'";
+			String command = "iwconfig"; // "iwconfig | grep wlan0 | awk '{ print $4 }'";
 			Process p = Runtime.getRuntime().exec(command);
 			p.waitFor();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -230,10 +230,12 @@ public class TCPWatch {
 			while (line != null) {
 				line = reader.readLine();
 				if (line != null) {
-					sb.text(line, 2, y);
-					y += 8;
-					if (SCREEN_00_VERBOSE) {
-						System.out.println(line);
+					if (line.indexOf("ESSID:") > -1) {
+						sb.text(line.substring(line.indexOf("ESSID:")), 2, y);
+						y += 8;
+						if (SCREEN_00_VERBOSE) {
+							System.out.println(line);
+						}
 					}
 				}
 			}
