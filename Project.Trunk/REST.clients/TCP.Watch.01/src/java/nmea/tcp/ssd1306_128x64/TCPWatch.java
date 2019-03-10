@@ -32,6 +32,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.function.Consumer;
 
 /**
@@ -77,7 +78,7 @@ public class TCPWatch {
 		}
 
 		GPSDate date(Date date) {
-			Calendar calendar = new GregorianCalendar();
+			Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("etc/UTC"));
 			calendar.setTime(date);
 
 			this.year = calendar.get(Calendar.YEAR);
