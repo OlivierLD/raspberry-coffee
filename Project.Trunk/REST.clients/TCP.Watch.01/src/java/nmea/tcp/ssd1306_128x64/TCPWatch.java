@@ -109,7 +109,7 @@ public class TCPWatch {
 	private static boolean VERBOSE = "true".equals(System.getProperty("verbose", "false"));
 	private static boolean SCREEN_00_VERBOSE = "true".equals(System.getProperty("verbose.00", "false"));
 	private static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
-	private static String BASE_URL = System.getProperty("base.url", "http://192.168.127.1:8080");
+	private static String BASE_URL = System.getProperty("base.url", "http://192.168.127.1:9999");
 
 	private final static SimpleDateFormat SDF_1 = new SimpleDateFormat("E dd MMM yyyy");
 	private final static SimpleDateFormat SDF_2 = new SimpleDateFormat("HH:mm:ss Z");
