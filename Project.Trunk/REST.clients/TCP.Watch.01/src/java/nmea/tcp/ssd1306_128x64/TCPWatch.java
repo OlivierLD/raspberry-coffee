@@ -17,9 +17,12 @@ import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
 import lcd.substitute.SwingLedPanel;
 import utils.PinUtil;
+import utils.TCPUtils;
 import utils.TimeUtil;
 
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -97,7 +100,7 @@ public class TCPWatch {
 	private static double sog = 0;
 	private static double cog = 0;
 	private static GPSDate gpsDate = null;
-	// TODO More data, more pages (like a track)
+	private static boolean connected = false;
 
 	private static boolean VERBOSE = "true".equals(System.getProperty("verbose", "false"));
 	private static String BASE_URL = System.getProperty("base.url", "http://192.168.127.1:8080");
@@ -139,7 +142,9 @@ public class TCPWatch {
 		}
 	};
 
+	// Add your pages to the list below
 	private static List<Consumer<ScreenBuffer>> pageManagers = Arrays.asList(
+			TCPWatch::displayPage00,
 			TCPWatch::displayPage01,
 			TCPWatch::displayPage02,
 			TCPWatch::displayPage03,
@@ -164,12 +169,16 @@ public class TCPWatch {
 		HTTPServer.Response response = null;
 		try {
 			response = HTTPClient.doRequest(request);
+			connected = true;
 		} catch (Exception ex) {
+			connected = false;
 			ex.printStackTrace();
 		}
 
 		String data = (response != null ? new String(response.getPayload()) : null);
-
+		if (VERBOSE) {
+			System.out.println(String.format("HTTP Response:\n%s", data));
+		}
 		Gson gson = new Gson();
 		JsonElement element = gson.fromJson (data, JsonElement.class);
 		JsonObject jsonObj = element.getAsJsonObject();
@@ -178,6 +187,59 @@ public class TCPWatch {
 
 
 	private static boolean keepLooping = true;
+
+	private static void displayPage00(ScreenBuffer sb) {
+		sb.clear();
+		String title = "Welcome Screen";
+		int y = 8;
+		int len = sb.strlen(title);
+		sb.text(title, (WIDTH / 2) - (len / 2), y);
+		String serverURL = BASE_URL;
+		y += 10;
+		sb.text("Server URL:", 2, y);
+		y += 8;
+		sb.text(serverURL.substring("http://".length()), 2, y);
+		y += 8;
+		sb.text(String.format("Connected: %s", connected ? "yes" : "no"), 2, y);
+		y += 8;
+		try {
+			String command = "iwconfig | grep wlan0 | awk '{ print $4 }'";
+			Process p = Runtime.getRuntime().exec(command);
+			p.waitFor();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			String line = "";
+			while (line != null) {
+				line = reader.readLine();
+				if (line != null) {
+					sb.text(line, 2, y);
+					y += 8;
+				}
+			}
+			reader.close();
+		} catch (Exception ex) {
+			if (VERBOSE) {
+				ex.printStackTrace();
+			}
+		}
+		try {
+			sb.text("IP Address (wlan0)", 2, y);
+			y += 8;
+			List<String> addresses = TCPUtils.getIPAddresses("wlan0");
+			for (String addr : addresses) {
+				sb.text(addr, 2, y);
+				y += 8;
+			}
+		} catch (Exception ex) {
+			if (VERBOSE) {
+				ex.printStackTrace();
+			}
+		}
+
+		y = HEIGHT - 1;
+		String index = String.format("Index: %d", currentIndex);
+		len = sb.strlen(index);
+		sb.text(index, (WIDTH / 2) - (len / 2), y);
+	}
 
 	private static void displayPage01(ScreenBuffer sb) {
 		sb.clear();

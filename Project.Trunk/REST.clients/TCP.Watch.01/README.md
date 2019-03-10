@@ -461,13 +461,34 @@ network={
 	key_mgmt=WPA-PSK
 }
 ```
-Edit this file (I use `vi`), and change the network's `ssid` and `psk` to match the server config, and save your changes.
+Edit this file (I use `vi`), and change (or add) the network's `ssid` and `psk` to match the server config, and save your changes.
 
+```
+$ cat /etc/wpa_supplicant/wpa_supplicant.conf
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+
+network={
+	ssid="Sonic-00e0_EXT"
+	psk="xxxxxxxx"
+	key_mgmt=WPA-PSK
+}
+
+network={
+	ssid="RPi-Logger"
+	psk="raspberrypi"
+	key_mgmt=WPA-PSK
+}
+
+```
 To activate your modifications, just run
 ```
  $ sudo wpa_cli -i wlan0 reconfigure
 ``` 
 where `wlan0` is your wireless port, as seen above in `iwconfig`.
+> _Note:_ Next time you boot, the new network will be used. You need to run the command above _only_ if
+> you want the new network to be taken in account _before_ you reboot. 
 
 Now you should be connected to the server's network, another run of `iwconfig` would tell you.
 
@@ -476,7 +497,7 @@ You need to change the line that says
 ```
 BASE_URL="-Dbase.url=http://192.168.42.10:9999"
 ```
-Change the IP to what it should be (like `192.168.127.1`), and you're good to go.
+Change the IP and port to what it should be (like `192.168.127.1:8080`), and you're good to go.
 Run the script, and you're done!
 ```
  $ ./watch.ssd.sh
@@ -485,6 +506,17 @@ Run the script, and you're done!
 Next, we'll see how to automatically start the watch when the Raspberry Pi boots.
 This happens in the file named `/etc/rc.local`.
 
-(WIP)
+We will start the script named `watch.ssd.sh` at boot. We need to know what directory it lives in.
+Let's say it is under the `pi` home directory, under `raspberry-coffee/Project.Trunk/REST.clients/TCP.Watch.01`.
+
+Edit (sudo) the file `/etc/rc.local`, and add the following _before_ the `exit 0` command at the end:
+
+```
+cd ~pi/raspberry-coffee/Project.Trunk/REST.clients/TCP.Watch.01
+nohup ./watch.ssd.sh &
+cd -
+``` 
+
+That's it, next time you boot the Raspberry Pi, the TCP Watch will start.
 
 ---
