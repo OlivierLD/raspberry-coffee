@@ -188,8 +188,12 @@ public class TCPWatch {
 		if (data != null) {
 			Gson gson = new Gson();
 			JsonElement element = gson.fromJson(data, JsonElement.class);
-			JsonObject jsonObj = element.getAsJsonObject();
-			return jsonObj;
+			if (element != null) {
+				JsonObject jsonObj = element.getAsJsonObject();
+				return jsonObj;
+			} else {
+				return null;
+			}
 		} else {
 			return null;
 		}
