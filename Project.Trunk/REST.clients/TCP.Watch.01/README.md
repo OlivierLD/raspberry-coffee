@@ -373,13 +373,14 @@ or this:
 }
 ```
 
-### Raspberry Pi Zero W and SSD1306
-For now (March 2019), this is my favorite configuration, the most versatile.
+### Raspberry Pi Zero W and SSD1306 (128x64)
+Several configuration have been tested (several boards, several screens), also see [here](https://github.com/OlivierLD/small-boards/tree/master/ESP8266.Huzzah/TCPWatch).
+For now (March 2019), considering the price, the flexibility, and the potential,  this is my favorite configuration, the most versatile.
+
 
 Breadboard wiring:
 
 ![Wiring](./img/ssd1306.128x64_bb.png)
-
 
 Wiring with:
 - [Adafruit Bonnet](https://www.adafruit.com/product/3203)
@@ -410,7 +411,6 @@ The screens shown here are just examples. Its very easy to come up with your own
 I'll write more soon, possibilities are endless.
 
 #### Video
-
 YouTube has it: https://youtu.be/6Dz-3qKJtjk
 
 #### Connect it to the Server's network
@@ -497,7 +497,7 @@ You need to change the line that says
 ```
 BASE_URL="-Dbase.url=http://192.168.42.10:9999"
 ```
-Change the IP and port to what it should be (like `192.168.127.1:8080`), and you're good to go.
+Change the IP and port to what it should be (like `192.168.127.1:9999`), and you're good to go.
 Run the script, and you're done!
 ```
  $ ./watch.ssd.sh

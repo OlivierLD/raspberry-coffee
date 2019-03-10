@@ -2,6 +2,7 @@ package lcd.substitute;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,17 +62,21 @@ public class SwingLedPanel
 	}
 
 	public SwingLedPanel(ScreenDefinition config) {
-		this.config = config;
-		this.nbLines = this.config.height();
-		this.nbCols = this.config.width();
-		this.bufferSize = (this.nbCols * this.nbLines) / 8;
-		this.buffer = new int[this.bufferSize];
+		try {
+			this.config = config;
+			this.nbLines = this.config.height();
+			this.nbCols = this.config.width();
+			this.bufferSize = (this.nbCols * this.nbLines) / 8;
+			this.buffer = new int[this.bufferSize];
 
-		initComponents();
-		int panelWidth = Math.round(1_000f * (this.nbCols / 128f));
-		int panelHeight = Math.round(300f * (this.nbLines / 32f));
+			initComponents();
+			int panelWidth = Math.round(1_000f * (this.nbCols / 128f));
+			int panelHeight = Math.round(300f * (this.nbLines / 32f));
 
-		this.setSize(new Dimension(panelWidth, panelHeight));
+			this.setSize(new Dimension(panelWidth, panelHeight));
+		} catch (HeadlessException he) {
+			System.err.println(">> No Graphical Environment available <<");
+		}
 	}
 
 	/**
