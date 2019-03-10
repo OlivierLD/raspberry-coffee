@@ -8,7 +8,6 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.PinPullResistance;
-import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import http.HTTPServer;
@@ -90,6 +89,11 @@ public class TCPWatch {
 
 			return this;
 		}
+
+		@Override
+		public String toString() {
+			return String.format("%04d-%02d-%02d %02d:%02d:%02d", this.year, this.month, this.day, this.hours, this.minutes, this.seconds);
+		}
 	}
 
 	private static String[] MONTH = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
@@ -104,6 +108,7 @@ public class TCPWatch {
 
 	private static boolean VERBOSE = "true".equals(System.getProperty("verbose", "false"));
 	private static boolean SCREEN_00_VERBOSE = "true".equals(System.getProperty("verbose.00", "false"));
+	private static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
 	private static String BASE_URL = System.getProperty("base.url", "http://192.168.127.1:8080");
 
 	private final static SimpleDateFormat SDF_1 = new SimpleDateFormat("E dd MMM yyyy");
@@ -180,18 +185,21 @@ public class TCPWatch {
 		if (VERBOSE) {
 			System.out.println(String.format("HTTP Response:\n%s", data));
 		}
-		Gson gson = new Gson();
-		JsonElement element = gson.fromJson (data, JsonElement.class);
-		JsonObject jsonObj = element.getAsJsonObject();
-		return jsonObj;
+		if (data != null) {
+			Gson gson = new Gson();
+			JsonElement element = gson.fromJson(data, JsonElement.class);
+			JsonObject jsonObj = element.getAsJsonObject();
+			return jsonObj;
+		} else {
+			return null;
+		}
 	}
-
 
 	private static boolean keepLooping = true;
 
 	private static void displayPage00(ScreenBuffer sb) {
 		sb.clear();
-		String title = "Welcome Screen";
+		String title = "Status Screen";
 		int y = 8;
 		int len = sb.strlen(title);
 		sb.text(title, (WIDTH / 2) - (len / 2), y);
@@ -203,12 +211,15 @@ public class TCPWatch {
 		y += 8;
 		sb.text(String.format("Connected: %s", connected ? "YES" : "NO"), 2, y);
 		y += 8;
+		sb.text("Network...", 2, y); // Potentially overriden
+		y += 8;
 		try {
 			String command = "iwconfig | grep wlan0 | awk '{ print $4 }'";
 			Process p = Runtime.getRuntime().exec(command);
 			p.waitFor();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line = "";
+			y -= 8;
 			while (line != null) {
 				line = reader.readLine();
 				if (line != null) {
@@ -221,7 +232,7 @@ public class TCPWatch {
 			}
 			reader.close();
 		} catch (Exception ex) {
-			if (VERBOSE) {
+			if (SCREEN_00_VERBOSE) {
 				ex.printStackTrace();
 			}
 		}
@@ -238,15 +249,15 @@ public class TCPWatch {
 				}
 			}
 		} catch (Exception ex) {
-			if (VERBOSE) {
+			if (SCREEN_00_VERBOSE) {
 				ex.printStackTrace();
 			}
 		}
 
-		y = HEIGHT - 1;
-		String index = String.format("Index: %d", currentIndex);
-		len = sb.strlen(index);
-		sb.text(index, (WIDTH / 2) - (len / 2), y);
+//		y = HEIGHT - 1;
+//		String index = String.format("Index: %d", currentIndex);
+//		len = sb.strlen(index);
+//		sb.text(index, (WIDTH / 2) - (len / 2), y);
 	}
 
 	private static void displayPage01(ScreenBuffer sb) {
@@ -510,55 +521,63 @@ public class TCPWatch {
 					  }
 				 */
 
-
-				// Dispatch the data
-				try {
-					latitude = response.get("Position").getAsJsonObject().get("lat").getAsDouble();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-				try {
-					longitude = response.get("Position").getAsJsonObject().get("lng").getAsDouble();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-				try {
-					JsonElement gpsJson = response.get("GPS Date & Time");
-					if (gpsJson != null) {
-						gpsDate = new GPSDate()
-								.year(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("year").getAsInt())
-								.month(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("month").getAsInt())
-								.day(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("day").getAsInt())
-								.hours(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("hour").getAsInt())
-								.minutes(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("min").getAsInt())
-								.seconds(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("sec").getAsInt());
-					} else {
-						Date substituteDate = new Date();
-						gpsDate = new GPSDate()
-								.date(substituteDate);
+				if (response != null) {
+					// Dispatch the data
+					try {
+						latitude = response.get("Position").getAsJsonObject().get("lat").getAsDouble();
+					} catch (Exception ex) {
+						ex.printStackTrace();
 					}
-				} catch (NullPointerException npe) {
-					// No GPS Date
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-				try {
-					sog = response.get("SOG").getAsJsonObject().get("speed").getAsDouble();
-				} catch (NullPointerException npe) {
-					// No SOG
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-				try {
-					cog = response.get("COG").getAsJsonObject().get("angle").getAsDouble();
-				} catch (NullPointerException npe) {
-					// No COG
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
+					try {
+						longitude = response.get("Position").getAsJsonObject().get("lng").getAsDouble();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					try {
+						JsonElement gpsJson = response.get("GPS Date & Time");
+						if (gpsJson != null) {
+							gpsDate = new GPSDate()
+									.year(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("year").getAsInt())
+									.month(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("month").getAsInt())
+									.day(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("day").getAsInt())
+									.hours(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("hour").getAsInt())
+									.minutes(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("min").getAsInt())
+									.seconds(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("sec").getAsInt());
+						} else {
+							Date substituteDate = new Date();
+							gpsDate = new GPSDate()
+									.date(substituteDate);
+							if (DEBUG) {
+								System.out.println(String.format("Generated substitute date %s", gpsDate.toString()));
+							}
+						}
+					} catch (NullPointerException npe) {
+						// No GPS Date
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					try {
+						sog = response.get("SOG").getAsJsonObject().get("speed").getAsDouble();
+					} catch (NullPointerException npe) {
+						// No SOG
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					try {
+						cog = response.get("COG").getAsJsonObject().get("angle").getAsDouble();
+					} catch (NullPointerException npe) {
+						// No COG
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 //				Gson gson = new GsonBuilder().setPrettyPrinting().create();
 //				String prettyJson = gson.toJson(response);
 //				System.out.println(">> Data:" + prettyJson);
+				} else {
+					if (DEBUG) {
+						System.out.println("...No response");
+					}
+				}
 			}
 		}, "dataFetcher");
 		dataFetcher.start();
