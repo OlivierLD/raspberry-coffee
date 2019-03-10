@@ -223,6 +223,9 @@ public class TCPWatch {
 			p.waitFor();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line = "";
+			if (SCREEN_00_VERBOSE) {
+				System.out.println(String.format("Reading %s output", command));
+			}
 			y -= 8;
 			while (line != null) {
 				line = reader.readLine();
@@ -233,6 +236,9 @@ public class TCPWatch {
 						System.out.println(line);
 					}
 				}
+			}
+			if (SCREEN_00_VERBOSE) {
+				System.out.println(String.format("Done with %s", command));
 			}
 			reader.close();
 		} catch (Exception ex) {
