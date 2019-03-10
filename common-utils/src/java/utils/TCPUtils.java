@@ -6,14 +6,25 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class TCPUtils {
 
 	public static List<String> getIPAddresses() {
-		return getIPAddresses(null);
+		return getIPAddresses(null, false);
 	}
 
 	public static List<String> getIPAddresses(String interfaceName) {
+		return getIPAddresses(interfaceName, false);
+	}
+
+	public static List<String> getIPAddresses(boolean onlyIPv4) {
+		return getIPAddresses(null, onlyIPv4);
+	}
+
+	private final static Pattern IPV4_PATTERN = Pattern.compile("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$");
+
+	public static List<String> getIPAddresses(String interfaceName, boolean onlyIPv4) {
 		List<String> addressList = new ArrayList<>();
 		try {
 			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
@@ -27,7 +38,9 @@ public class TCPUtils {
 				while (addresses.hasMoreElements()) {
 					InetAddress addr = addresses.nextElement();
 					if (interfaceName == null || iface.getDisplayName().equals(interfaceName)) {
-						addressList.add(String.format("%s %s", iface.getDisplayName(), addr.getHostAddress()));
+						if (!onlyIPv4 || (onlyIPv4 && IPV4_PATTERN.matcher(addr.getHostAddress()).matches())) {
+							addressList.add(String.format("%s %s", iface.getDisplayName(), addr.getHostAddress()));
+						}
 					}
 				}
 			}
@@ -44,6 +57,10 @@ public class TCPUtils {
 		// Filtered
 		System.out.println("\nFiltered:");
 		addresses = getIPAddresses("en0");
+		addresses.stream().forEach(System.out::println);
+		// IPv4 only
+		System.out.println("\nFiltered:");
+		addresses = getIPAddresses(true);
 		addresses.stream().forEach(System.out::println);
 	}
 }

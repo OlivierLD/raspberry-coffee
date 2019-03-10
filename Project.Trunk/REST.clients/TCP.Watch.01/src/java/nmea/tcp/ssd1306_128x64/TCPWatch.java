@@ -226,9 +226,10 @@ public class TCPWatch {
 			}
 		}
 		try {
-			sb.text("IP Address (wlan0)", 2, y);
+			sb.text("IP Address:", 2, y);
 			y += 8;
-			List<String> addresses = TCPUtils.getIPAddresses("wlan0");
+//		List<String> addresses = TCPUtils.getIPAddresses("wlan0", true);
+			List<String> addresses = TCPUtils.getIPAddresses(true);
 			for (String addr : addresses) {
 				sb.text(addr, 2, y);
 				y += 8;
