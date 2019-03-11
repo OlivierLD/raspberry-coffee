@@ -216,7 +216,7 @@ public class TCPWatch {
 		y += 8;
 		sb.text(String.format("Connected: %s", connected ? "YES" : "NO"), 2, y);
 		y += 8;
-		sb.text("Network...", 2, y); // Potentially overriden
+		sb.text("Network...", 2, y); // Potentially overridden
 		y += 8;
 		try {
 			String command = "iwconfig"; // "iwconfig | grep wlan0 | awk '{ print $4 }'";
@@ -231,8 +231,9 @@ public class TCPWatch {
 			while (line != null) {
 				line = reader.readLine();
 				if (line != null) {
-					if (line.indexOf("ESSID:") > -1) {
-						sb.text(line.substring(line.indexOf("ESSID:")), 2, y);
+					final String essid = "ESSID:";
+					if (line.indexOf(essid) > -1) {
+						sb.text(line.substring(line.indexOf(essid) + essid.length()), 2, y);
 						y += 8;
 						if (SCREEN_00_VERBOSE) {
 							System.out.println(line);
@@ -250,17 +251,19 @@ public class TCPWatch {
 			}
 		}
 		try {
-			sb.text("IP Address:", 2, y);
-			y += 8;
+//			sb.text("IP Address:", 2, y);
+			String line = "IP ";
+//			y += 8;
 //		List<String> addresses = TCPUtils.getIPAddresses("wlan0", true);
 			List<String> addresses = TCPUtils.getIPAddresses(true);
 			for (String addr : addresses) {
-				sb.text(addr, 2, y);
-				y += 8;
+				line += (addr.substring(addr.indexOf(" ")) + " ");
 				if (SCREEN_00_VERBOSE) {
 					System.out.println(addr);
 				}
 			}
+			sb.text(line, 2, y);
+			y += 8;
 		} catch (Exception ex) {
 			if (SCREEN_00_VERBOSE) {
 				ex.printStackTrace();
@@ -668,7 +671,7 @@ public class TCPWatch {
 			System.out.println("Screenbuffer ready...");
 		}
 
-		displayPage01(sb); // Init Screen
+		displayPage00(sb); // Init Screen
 
 		if (oled != null) {
 			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());

@@ -296,7 +296,7 @@ The expected archive will be produced in the local `build/libs` directory.
 
 > _Important_ : If `JAVA_HOME` is not set at the system level, you can set it in `set.gradle.env` and execute it before running `gradlew`:
 ```
- Prompt> . ./set.gradle.env
+ Prompt> ../set.gradle.env
 ```
 
 > _Note:_ If you are behind a firewall, you need a proxy. Mention it in all the files named <code>gradle.propetries</code>, and in <b>all</b> the <code>build.gradle</code> scripts, uncomment the following two lines:

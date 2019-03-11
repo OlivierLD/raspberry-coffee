@@ -11,11 +11,12 @@ _PAPIRUS=$(i2cdetect -y 1 | grep 48) || true
 # echo "OLED: $_OLED"
 # echo "PAPIRUS: $_PAPIRUS"
 #
-MY_IP=`hostname -I | awk '{ print $1 }'`
+MY_IP=$(hostname -I | awk '{ print $1 }')
 if [ "$MY_IP" == "" ]
 then
   MY_IP="192.168.127.1" # Change as needed
 fi
+#
 NETWORK_NAME=$(iwconfig | grep wlan0 | awk '{ print $4 }')
 NETWORK_NAME=${NETWORK_NAME:6}
 if [ "$NETWORK_NAME" == "" ]
