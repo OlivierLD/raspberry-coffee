@@ -10,7 +10,7 @@ It can serve some Web pages, and host some REST services.
 The Web pages can be shown in a browser, and this is _not_ the topic of this project.
 
 What we have here is a Java REST client that reaches the REST service `GET /mux/cache` to get to the data,
-and display them on a small screen (240x240).
+and display them on a small screen (240x240 or smaller).
 The user has buttons to interact with the program, to scroll from screen to screen.
 
 ### Implementation 
@@ -375,8 +375,7 @@ or this:
 
 ### Raspberry Pi Zero W and SSD1306 (128x64)
 Several configurations have been tested (several boards, several screens), also see [here](https://github.com/OlivierLD/small-boards/tree/master/ESP8266.Huzzah/TCPWatch).
-For now (March 2019), considering the price, the flexibility, and the potential,  this is my favorite configuration, the most versatile.
-
+For now (March 2019), considering the price, the flexibility, speed, and the potential, this is my favorite configuration, the most versatile.
 
 Breadboard wiring:
 
