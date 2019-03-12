@@ -375,18 +375,25 @@ or this:
 
 ### Raspberry Pi Zero W and SSD1306 (128x64)
 Several configurations have been tested (several boards, several screens), also see [here](https://github.com/OlivierLD/small-boards/tree/master/ESP8266.Huzzah/TCPWatch).
-For now (March 2019), considering the price, the flexibility, speed, and the potential, this is my favorite configuration, the most versatile.
+For now (March 2019), considering 
+- the price
+- the flexibility
+- the performances
+- the potential for evolutions
+
+this is my favorite configuration, the most versatile.
 
 Breadboard wiring:
 
 ![Wiring](./img/ssd1306.128x64_bb.png)
 
-Wiring with:
-- [Adafruit Bonnet](https://www.adafruit.com/product/3203)
-- [Power Booster](https://www.adafruit.com/product/1903)
-- [Small slide switch](https://www.adafruit.com/product/805)
-- [2 push buttons](https://www.adafruit.com/product/3101)
-- [LiPo battery](https://www.adafruit.com/product/1578) (I actually use a 500mAh)
+Wiring with (prices  March-2019):
+- [Raspberry Pi Zero W](https://www.adafruit.com/product/3400) ($10) with [Header](https://www.adafruit.com/product/2822) ($0.95)
+- [Adafruit Bonnet](https://www.adafruit.com/product/3203) ($4.50)
+- [Power Booster](https://www.adafruit.com/product/1903) ($9.95)
+- [Small slide switch](https://www.adafruit.com/product/805) ($0.95)
+- [2 push buttons](https://www.adafruit.com/product/367) (20 for $2.50)
+- [LiPo battery](https://www.adafruit.com/product/1578) (I actually use a 500mAh, $7.95)
 
 > Note: the wires are shown here on top of the bonnet for clarity. They are actually running _under_ it.
 > And the screen is obviously soldered on top of it.
@@ -413,6 +420,8 @@ I'll write more soon, possibilities are endless.
 YouTube has it: https://youtu.be/6Dz-3qKJtjk
 
 #### Connect it to the Server's network
+> Note: The way to configure the _server_ so it emits its own network (like a WiFi hotspot) is described [here](https://github.com/OlivierLD/raspberry-coffee#raspberry-pi-as-an-access-point-and-internet-access).
+
 The Nav Server (like the one at [RESTNavServer](https://github.com/OlivierLD/raspberry-coffee/tree/master/RESTNavServer)) can emit its own network.
 This TCP Watch we talk about here can connect to this network, to consume the data it produces, through REST apis.
 

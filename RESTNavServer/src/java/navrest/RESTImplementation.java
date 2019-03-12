@@ -50,7 +50,7 @@ public class RESTImplementation {
 	private List<Operation> operations = Arrays.asList(
 			new Operation(
 					"GET",
-					"/oplist",
+					"/oplist", // Yes, no prefix here.
 					this::getOperationList,
 					"List of all available operations, on all request managers."),
 			/*
@@ -232,7 +232,7 @@ public class RESTImplementation {
 		boolean v4Only = qs != null && "true".equals(qs.get("v4Only"));
 		String iFace = qs != null ? qs.get("iface") : null;
 		try {
-			List<String> ipAddresses = TCPUtils.getIPAddresses(iFace, v4Only);
+			List<String[]> ipAddresses = TCPUtils.getIPAddresses(iFace, v4Only);
 			String content = new Gson().toJson(ipAddresses);
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());

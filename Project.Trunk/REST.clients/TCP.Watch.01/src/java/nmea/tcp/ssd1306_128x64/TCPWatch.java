@@ -255,9 +255,9 @@ public class TCPWatch {
 			String line = "IP ";
 //			y += 8;
 //		List<String> addresses = TCPUtils.getIPAddresses("wlan0", true);
-			List<String> addresses = TCPUtils.getIPAddresses(true);
-			for (String addr : addresses) {
-				line += (addr.substring(addr.indexOf(" ")) + " ");
+			List<String[]> addresses = TCPUtils.getIPAddresses(true);
+			for (String[] addr : addresses) {
+				line += (addr[1] + " ");
 				if (SCREEN_00_VERBOSE) {
 					System.out.println(addr);
 				}
