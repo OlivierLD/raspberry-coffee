@@ -86,8 +86,8 @@ public class RESTImplementation {
 					"Get the list of the networks the server is on."),
 			new Operation(
 					"GET",
-					SERVER_PREFIX + "/addresses",
-					this::getIps,
+					SERVER_PREFIX + "/addresses", // Optional QS Prm: v4Only=true|[false], iface=wlan0
+					this::getIps,                       // Returns couples like ("iface", "address")
 					"Get the list of IP addresses of the server, with the interface names. QS prms: v4Only [false]|true, iface=XXX (optional)")
 	);
 
