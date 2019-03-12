@@ -6,6 +6,7 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
+import utils.TCPUtils;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -25,6 +26,7 @@ public class RESTImplementation {
 
 	private NavRequestManager navRequestManager;
 
+	private final static String SERVER_PREFIX = "/server";
 	private final static String WW_PREFIX = "/ww";
 	private final static String NAV_PREFIX = "/nav";
 	private final static String FEATHER_PREFIX = "/feather";
@@ -76,7 +78,17 @@ public class RESTImplementation {
 					"GET",
 					FEATHER_PREFIX + "/lifespan",
 					this::getFeatherLifespan,
-					"Get the last value set by the above.")
+					"Get the last value set by the above."),
+			new Operation(
+					"GET",
+					SERVER_PREFIX + "/networks",
+					this::getNetworks,
+					"Get the list of the networks the server is on."),
+			new Operation(
+					"GET",
+					SERVER_PREFIX + "/addresses",
+					this::getIps,
+					"Get the list of IP addresses of the server, with the interface names. QS prms: v4Only [false]|true, iface=XXX (optional)")
 	);
 
 	protected List<Operation> getOperations() {
@@ -194,6 +206,47 @@ public class RESTImplementation {
 		return response;
 	}
 
+
+	private Response getNetworks(@Nonnull Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			List<String> networkName = TCPUtils.getNetworkName();
+			String content = new Gson().toJson(networkName);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SERVER-0001")
+							.errorMessage(ex.toString())
+							.errorStack(HTTPServer.dumpException(ex)));
+			return response;
+		}
+		return response;
+	}
+
+	private Response getIps(@Nonnull Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		Map<String, String> qs = request.getQueryStringParameters();
+		boolean v4Only = qs != null && "true".equals(qs.get("v4Only"));
+		String iFace = qs != null ? qs.get("iface") : null;
+		try {
+			List<String> ipAddresses = TCPUtils.getIPAddresses(iFace, v4Only);
+			String content = new Gson().toJson(ipAddresses);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SERVER-0002")
+							.errorMessage(ex.toString())
+							.errorStack(HTTPServer.dumpException(ex)));
+			return response;
+		}
+		return response;
+	}
 
 	/**
 	 * Can be used as a temporary placeholder when creating a new operation.
