@@ -33,7 +33,7 @@ Typically, you will need to have the minimal git tools and the right compilers. 
 downloading the right dependencies at build time (`gradle` is definitely good at that).
 
 ##### Minimal setup
-- Install Raspian (not NOOBS) as explained at https://www.raspberrypi.org/learning/software-guide/quickstart/, and burn your SD card
+- Install Raspbian (not NOOBS) as explained at https://www.raspberrypi.org/learning/software-guide/quickstart/, and burn your SD card
     - Depending on the OS you burn the SD card from, the procedure varies. Well documented in the link above.
 - Boot on the Raspberry with the new SD card, USB keyboard and HDMI screen attached to it (if this is an old RPi, use a USB WiFi dongle too)
     - It should boot to the Graphical Desktop.
@@ -56,7 +56,7 @@ $ sudo apt-get install vim
 ```
 alias ll="ls -lisah"
 ```
-- recent Raspian releases come with a development environment that includes
+- recent Raspbian releases come with a development environment that includes
     - JRE & JDK
     - git
     - python
@@ -123,13 +123,17 @@ Once the Raspberry Pi is reachable through a Serial port, you can `ssh` to it, u
 ```
  $ ssh pi@raspberrypi.local
 ```
-
-
-###### Raspberry Pi as an Access Point _and_ Internet access.
+##### Raspberry Pi as an Access Point _and_ Internet access.
 Your Raspberry Pi can be turned into an Access Point, this means that it generates its own network, so you can connect to it from other devices (other Raspberry Pis, laptops, tablets, smart-phones, ESP8266, etc).
 It can be appropriate when there is no network in the area you are in, for example when sailing in the middle of the ocean, kayaking in a remote place, hiking in the boonies, etc.
 
 Setting up the Raspberry Pi to be an access point is well documented on the [Adafruit website](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software).
+[This one](http://hawksites.newpaltz.edu/myerse/2018/06/19/dhcp-daemon-on-raspberry-pi/) is also useful.
+
+As we said above, to enable `hostapd` to have your Raspberry Pi acting as a WiFi hotspot, you can follow
+<a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">those good instructions</a> from the Adafruit website.
+
+> _**Warning**_: Since Raspbian's Stretch release, **a lot** of things have changed for the network config. See [here](http://www.raspberryconnect.com/network/item/333-raspberry-pi-hotspot-access-point-dhcpcd-method). 
 
 The thing is that when the Raspberry Pi becomes a WiFi hotspot, you cannot use it to access the Internet, cannot use `apt-get install`, cannot use
 `git pull origin master`, etc, that can rapidly become quite frustrating.
@@ -139,37 +143,6 @@ Now, for development purpose, you may very well need to have an Access Point **_
 For that, you need 2 WiFi adapters (yes, you could also use an Ethernet connection, which is a no brainer, we talk about WiFi here).
 Recent Raspberry Pis are WiFi-enabled, you just need a WiFi dongle, that would fit on a USB port.
 On older Raspberry Pis (not WiFi-enabled), you need 2 USB dongles.
-
-As we said above, to enable `hostapd` to have your Raspberry Pi acting as a WiFi hotspot, you can follow
-<a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">those good instructions</a> from the Adafruit website.
-
->  Note: during the steps above, I had to change the file `/etc/default/isc-dhcp-server`, at the end, for the `isc-dhcp-server` service to start:
-```properties
-# INTERFACESv4="wlan0"
-# INTERFACESv6="wlan0"
-INTERFACES="wlan0"
-```
-
-> Note: On recent Raspberry Pi models (including the Zero W), you can comment the line of `/etc/hostapd/hostapd.conf` that mentions a driver:
-```properties
-interface=wlan0
-# driver=rtl871xdrv
-ssid=Pi-Net2
-country_code=US
-hw_mode=g
-channel=6
-macaddr_acl=0
-auth_algs=1
-ignore_broadcast_ssid=0
-wpa=2
-wpa_passphrase=<network-password-here>
-wpa_key_mgmt=WPA-PSK
-wpa_pairwise=CCMP
-wpa_group_rekey=86400
-ieee80211n=1
-wme_enabled=1
-```
-> The name (`ssid`) and password (`wpa_passphrase`) of the network created by the Access Point is in the same file, `/etc/hostapd/hostapd.conf`, as well as the association between the network and the interface (`wlan0` here).
 
 The Raspberry Pi 3 and the Zero W already have one embedded WiFi port, I just added another one, the small USB WiFi dongle I used to use
 on the other Raspberry Pis.

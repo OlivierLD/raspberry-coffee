@@ -52,6 +52,15 @@ public class TCPUtils {
 		return addressList;
 	}
 
+	/**
+	 * Works on Linux
+	 *
+	 * On Mac, try $ networksetup -listallhardwareports
+	 *          or $ networksetup -getairportnetwork en0
+	 *
+	 * @return
+	 * @throws Exception
+	 */
 	public static List<String> getNetworkName() throws Exception {
 		List<String> networkList = new ArrayList<>();
 		String command = "iwconfig"; // "iwconfig | grep wlan0 | awk '{ print $4 }'";

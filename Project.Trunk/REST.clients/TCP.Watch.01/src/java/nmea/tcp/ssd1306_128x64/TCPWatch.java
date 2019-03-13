@@ -216,7 +216,7 @@ public class TCPWatch {
 		y += 8;
 		sb.text(String.format("Connected: %s", connected ? "YES" : "NO"), 2, y);
 		y += 8;
-		sb.text("Network...", 2, y); // Potentially overridden
+		sb.text("Network...", 2, y); // Potentially overridden below
 		y += 8;
 		try {
 			String command = "iwconfig"; // "iwconfig | grep wlan0 | awk '{ print $4 }'";

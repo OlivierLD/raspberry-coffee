@@ -11,6 +11,19 @@ _PAPIRUS=$(i2cdetect -y 1 | grep 48) || true
 # echo "OLED: $_OLED"
 # echo "PAPIRUS: $_PAPIRUS"
 #
+if [ "$1" == "-w" ] # To wait for everything to start?
+then
+	echo -e ""
+	echo -e "+-------------------------------+"
+	echo -e "| Giving Multiplexer some slack |"
+	echo -e "+-------------------------------+"
+	sleep 10
+	echo -e ""
+	echo -e "+--------------------------+"
+	echo -e "| Now starting Multiplexer |"
+	echo -e "+--------------------------+"
+fi
+#
 MY_IP=$(hostname -I | awk '{ print $1 }')
 if [ "$MY_IP" == "" ]
 then
