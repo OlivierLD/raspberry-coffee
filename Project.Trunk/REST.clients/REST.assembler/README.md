@@ -173,7 +173,7 @@ We will explore several options.
 
 We need some kind of server to run on the Raspberry Pi, so the outer world can reach it to get to the data and possibly interact with them.
 
-- [Helidon](#helidon) is an implementation of such a micro-server, implementing a Micro-Profile.
+- [Helidon](#helidon) is an implementation of such a micro-server, implementing SE and MP (Micro-Profile) flavors.
 - [fnProject](#fnproject), FaaS server implementation, Docker based
 - a [Custom micro-server](#using-a-light-custom-micro-http-server), part of this project
 - NodeJS. This is another project, but this should work just fine. Look into [this repo](https://github.com/OlivierLD/node.pi).
@@ -183,7 +183,7 @@ We need some kind of server to run on the Raspberry Pi, so the outer world can r
 FaaS, Function as a Service. -->
 
 ##### Helidon-MP
-Quite mature. MP stands for `micro-profile`.
+MP stands for `micro-profile`. Relies on JAX-RS among other things.
 
 You need `Maven` to be available on your system (it's there by default on the Raspberry Pi).
 
@@ -264,11 +264,13 @@ To move beyond, see the [Helidon documentation](https://helidon.io/docs/latest/#
 
 Now the infrastructure is in place, we will replace this "Hello World" code with ours.
 
+<!-- TODO Document the gradle path
 > Note: if you'd rather use `gradle` than `maven`, to generate the require `build.gradle`, 
 > from the directory where the generated `pom.xml` lives, just type
 ```
  $ ../../../../gradlew init
 ```
+-->
 
 ##### Helidon-SE
 Like above, use Maven to create the skeletons:
@@ -282,6 +284,8 @@ Like above, use Maven to create the skeletons:
        -Dpackage=rpi.sensors.se
 ```
 > Note: `resources/application.yaml` contains parameters, like the http port.
+
+> Just like for MP, the SE code is already in this project
 
 ###### Install required dependencies
 We will use in our micro service resources from other modules in this project.
@@ -325,6 +329,7 @@ Then at the end of the `<dependencies>` section:
 
 Now we're ready to dive into the code.
 
+#### For Helidon-MP 
 - Change the name of `GreetingApplication.java` to `SensorApplication.java`
 - Change the name of `GreetingProvider.java` to `SensorProvider.java`
 - Change the name of `GreetResource.java` to `SensorResource.java`
@@ -335,15 +340,20 @@ For information
 - `SensorProvider` will be the implementation, actually dealing with sensors and relay.
 
 The source files, as they should eventually be running are provided in this project,
-in the `helidon-sensors` folder.
+in the `helidon-mp-sensors` folder.
 
-> Also notice the `helidon-sensors/src/main/resources/META-INF/microprofile-config.properties` config file.
+> Also notice the `helidon-mp-sensors/src/main/resources/META-INF/microprofile-config.properties` config file.
+
+#### For Helidon-SE
+The code is even simpler, it is located in the `helidon-se-sensors` folder.
+
+> Also notice the `helidon-se-sensors/src/main/resources/application.yaml` config file.
 
 <!-- Memory minimal footprint ~xxMb -->
 
 ###### Run the Helidon micro-server
 
-If you've been using Helidon and Maven, package and run your micro-service:
+Now you package and run your micro-service:
 ```
  $ mvn package [ -Dmaven.test.skip=true ]
  $ [sudo] java -jar target/helidon-mp-sensors.jar
@@ -353,7 +363,7 @@ or
  $ mvn package [ -Dmaven.test.skip=true ]
  $ [sudo] java -jar target/helidon-se-sensors.jar
 ```
-depending on the flacour you choosed (se or mp)*[]: 
+depending on the flavor you chosed (se or mp). 
 
 Helidon also has some Docker capabilities:
 ```
