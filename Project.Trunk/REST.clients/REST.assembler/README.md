@@ -182,11 +182,10 @@ We need some kind of server to run on the Raspberry Pi, so the outer world can r
 
 FaaS, Function as a Service. -->
 
-##### Helidon
-Quite mature. Its `micro-profile` feature is appealing.
+##### Helidon-MP
+Quite mature. MP stands for `micro-profile`.
 
 You need `Maven` to be available on your system (it's there by default on the Raspberry Pi).
-
 
 > Note: Below is the description of the steps to take to do it in full for yourself.
 > The code to run is already in this project. You can actually jump to the section [`Run the server`](#run-the-server) if you do not 
@@ -203,7 +202,7 @@ $ mvn archetype:generate -DinteractiveMode=false \
       -DarchetypeArtifactId=helidon-quickstart-mp \
       -DarchetypeVersion=1.0.0 \
       -DgroupId=io.helidon.examples \
-      -DartifactId=helidon-sensors \
+      -DartifactId=helidon-mp-sensors \
       -Dpackage=rpi.sensors.mp
 ```
 Notice above:
@@ -214,15 +213,15 @@ The generated code only contains a simple "Greeting" service. You can run it rig
 The code is generated using `JAX-RS` annotations.
 
 ```
- $ cd helidon-sensors
+ $ cd helidon-mp-sensors
 ```
 then (add proxy parameters if required)
 ```
- $ mvn package [ -Dmaven.test.skip=true ]
+ $ mvn package [ -U ] [ -Dmaven.test.skip=true ]
 ```
 Eventually you have
 ```
-[INFO] Building jar: target/helidon-sensors.jar
+[INFO] Building jar: target/helidon-mp-sensors.jar
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
@@ -233,7 +232,7 @@ $
 ```
 At this point, it's ready to run:
 ```
- $ java -jar target/helidon-sensors.jar
+ $ java -jar target/helidon-mp-sensors.jar
  2019.02.16 08:06:02 INFO org.jboss.weld.Version !thread!: WELD-000900: 3.0.3 (Final)
  2019.02.16 08:06:02 INFO org.jboss.weld.Bootstrap !thread!: WELD-ENV-000020: Using jandex for bean discovery
  2019.02.16 08:06:03 INFO org.jboss.weld.Bootstrap !thread!: WELD-000101: Transactional services not available. Injection of @Inject UserTransaction not available. Transactional observers will be invoked synchronously.
@@ -270,6 +269,19 @@ Now the infrastructure is in place, we will replace this "Hello World" code with
 ```
  $ ../../../../gradlew init
 ```
+
+##### Helidon-SE
+Like above, use Maven to create the skeletons:
+```
+ $ mvn archetype:generate -DinteractiveMode=false \
+       -DarchetypeGroupId=io.helidon.archetypes \
+       -DarchetypeArtifactId=helidon-quickstart-se \
+       -DarchetypeVersion=1.0.0 \
+       -DgroupId=io.helidon.examples \
+       -DartifactId=helidon-se-sensors \
+       -Dpackage=rpi.sensors.se
+```
+> Note: `resources/application.yaml` contains parameters, like the http port.
 
 ###### Install required dependencies
 We will use in our micro service resources from other modules in this project.
@@ -334,8 +346,14 @@ in the `helidon-sensors` folder.
 If you've been using Helidon and Maven, package and run your micro-service:
 ```
  $ mvn package [ -Dmaven.test.skip=true ]
- $ [sudo] java -jar target/helidon-sensors.jar
+ $ [sudo] java -jar target/helidon-mp-sensors.jar
 ```
+or
+```
+ $ mvn package [ -Dmaven.test.skip=true ]
+ $ [sudo] java -jar target/helidon-se-sensors.jar
+```
+depending on the flacour you choosed (se or mp)*[]: 
 
 Helidon also has some Docker capabilities:
 ```
