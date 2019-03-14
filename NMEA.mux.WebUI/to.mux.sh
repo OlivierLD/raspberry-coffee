@@ -49,7 +49,8 @@ else
 fi
 nohup ./mux.sh nmea.mux.gps.log.properties &
 echo On its way!
-echo "Reach http://192.168.127.1:9999/web/index.html"
-echo "  or  http://192.168.127.1:9999/web/small-screens/small.console.02.html"
+MY_IP=$(hostname -I | awk '{ print $1 }')
+echo "Reach http://${MY_IP}:9999/web/index.html"
+echo "  or  http://${MY_IP}:9999/web/small-screens/small.console.02.html"
 date=`date`
 echo "System date is $date"
