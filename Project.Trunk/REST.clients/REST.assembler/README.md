@@ -377,6 +377,9 @@ See the concept of `app`, to group functions under the same umbrella.
 
 ##### Using a light custom (micro) HTTP Server
 Less snappy than `Swagger`, but eventually lighter, in term of footprint.
+
+This one also acts as a Web Pages server (HTML, JavaScript, etc).
+
 For small boards (like the Raspberry Pi Zero), this would be my preferred option.
 
 Memory minimal footprint ~40Mb
