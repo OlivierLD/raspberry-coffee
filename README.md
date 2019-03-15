@@ -135,6 +135,8 @@ As we said above, to enable `hostapd` to have your Raspberry Pi acting as a WiFi
 
 > _**Warning**_: Since Raspbian's Stretch release, **a lot** of things have changed for the network config. See [here](http://www.raspberryconnect.com/network/item/333-raspberry-pi-hotspot-access-point-dhcpcd-method). 
 
+**>>> Skip to the next section if you run Stretch or later** (as I am). Consider the Ethernet option ;)
+
 The thing is that when the Raspberry Pi becomes a WiFi hotspot, you cannot use it to access the Internet, cannot use `apt-get install`, cannot use
 `git pull origin master`, etc, that can rapidly become quite frustrating.
 

@@ -120,11 +120,14 @@ public class PinUtil {
 	}
 
 
+	public static void print(String... maps) {
+		print(false, maps);
+	}
 	/**
 	 *
 	 * @param maps string array like "xx:text" where xx is the physical number, and text the label to display (5 letters max)
 	 */
-	public static void print(String... maps) {
+	public static void print(boolean prefixBCMWithGPIO, String... maps) {
 
 		Map<Integer, String> pinMap = null;
 		if (maps.length > 0) {
@@ -141,26 +144,35 @@ public class PinUtil {
 		}
 
 		GPIOPin[] values = GPIOPin.values();
-//	String hr =     "       |  04 | 07  | GPCLK0       | #07 || #08 |    UART0_TXD | 14  | 15  |";
-		String hr =     "       +-----+-----+--------------+-----++-----+--------------+-----+-----+";
-		String header = "       | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |";
+		String hr;
+		String header;
+		String fmt = " %5s |  %s |  %s | %-12s | #%02d || #%02d | %12s | %s  | %s  | %-5s ";
+		if (!prefixBCMWithGPIO) {
+//	String hr =       "       |  04 | 07  | GPCLK0       | #07 || #08 |    UART0_TXD | 14  | 15  |";
+			hr =            "       +-----+-----+--------------+-----++-----+--------------+-----+-----+";
+			header =        "       | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |";
+		} else {
+//	String hr =       "       |  GPIO04 | 07  | GPCLK0       | #07 || #08 |    UART0_TXD | 14  | GPIO15  |";
+			hr =            "       +---------+-----+--------------+-----++-----+--------------+-----+---------+";
+			header =        "       |     BCM | wPi | Name         |  Physical  |         Name | wPi | BCM     |";
+		}
 		System.out.println(hr);
 		System.out.println(header);
 		System.out.println(hr);
 		for (int row=0; row<(values.length / 2); row++) {
-			String line = String.format(" %5s |  %s |  %s | %-12s | #%02d || #%02d | %12s | %s  | %s  | %-5s ",
+			String line = String.format(fmt,
+					// Left column
 					(pinMap != null && pinMap.get(values[row * 2].pinNumber()) != null) ? String.valueOf(pinMap.get(values[row * 2].pinNumber())) : " ",
-					values[row * 2].gpio() == -1 ? "  " : String.format("%02d", values[row * 2].gpio()),         // BCM
+					values[row * 2].gpio() == -1 ? (prefixBCMWithGPIO ? "      " : "  ") : String.format("%s%02d", prefixBCMWithGPIO ? "GPIO" : "", values[row * 2].gpio()), // BCM
 					values[row * 2].wiringPi() == -1 ? "  " : String.format("%02d", values[row * 2].wiringPi()), // wPI
 					values[row * 2].pinName(),
 					values[row * 2].pinNumber(),
-
+					// Right column
 					values[1 + (row * 2)].pinNumber(),
 					values[1 + (row * 2)].pinName(),
 					values[1 + (row * 2)].wiringPi() == -1 ? "  " : String.format("%02d", values[1 + (row * 2)].wiringPi()), // wPI
-					values[1 + (row * 2)].gpio() == -1 ? "  " : String.format("%02d", values[1 + (row * 2)].gpio()),         // BCM
+					values[1 + (row * 2)].gpio() == -1 ? (prefixBCMWithGPIO ? "      " : "  ") : String.format("%s%02d", prefixBCMWithGPIO ? "GPIO" : "", values[1 + (row * 2)].gpio()), // BCM
 					(pinMap != null && pinMap.get(values[1 + (row * 2)].pinNumber()) != null) ? String.valueOf(pinMap.get(values[1 + (row * 2)].pinNumber())) : " ");
-
 			System.out.println(line);
 		}
 		System.out.println(hr);
@@ -177,5 +189,8 @@ public class PinUtil {
 
 		System.out.println("\nAs for an MCP3008:");
 		print("23:CLK", "21:Dout", "19:Din", "24:CS");
+
+		System.out.println("\nAs for an MCP3008, with GPIO prefix:");
+		print(true, "23:CLK", "21:Dout", "19:Din", "24:CS");
 	}
 }

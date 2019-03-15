@@ -36,7 +36,7 @@ import java.util.TimeZone;
 import java.util.function.Consumer;
 
 /**
- * Uses SPI interface for the OLED Screen
+ * Uses SPI interface for the 128x64 OLED Screen
  */
 public class TCPWatch {
 
@@ -629,7 +629,7 @@ public class TCPWatch {
 		}
 
 		if (VERBOSE) {
-			System.out.println(String.format("Default pins:\n" +
+			System.out.println(String.format("Default (WiringPi) pins:\n" +
 					"CLK:  %02d\n" +
 					"MOSI: %02d\n" +
 					"CS:   %02d\n" +
@@ -641,11 +641,11 @@ public class TCPWatch {
 
 
 			/* Defaults:
-	private static Pin spiClk = RaspiPin.GPIO_14; // Pin #23, SCLK, GPIO_11
+	private static Pin spiClk  = RaspiPin.GPIO_14; // Pin #23, SCLK, GPIO_11
 	private static Pin spiMosi = RaspiPin.GPIO_12; // Pin #19, SPI0_MOSI
-	private static Pin spiCs = RaspiPin.GPIO_10; // Pin #24, SPI0_CE0_N
-	private static Pin spiRst = RaspiPin.GPIO_05; // Pin #18, GPIO_24
-	private static Pin spiDc = RaspiPin.GPIO_04; // Pin #16, GPIO_23
+	private static Pin spiCs   = RaspiPin.GPIO_10; // Pin #24, SPI0_CE0_N
+	private static Pin spiRst  = RaspiPin.GPIO_05; // Pin #18, GPIO_24
+	private static Pin spiDc   = RaspiPin.GPIO_04; // Pin #16, GPIO_23
 
 			key1Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, "K-1", PinPullResistance.PULL_UP);
 			key1Pin.setShutdownOptions(true);
@@ -662,7 +662,7 @@ public class TCPWatch {
 			map[5] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(k1Pin)).pinNumber()) + ":K-1";
 			map[6] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(k2Pin)).pinNumber()) + ":K-2";
 
-			PinUtil.print(map);
+			PinUtil.print(true, map);
 		}
 
 		ScreenBuffer sb = new ScreenBuffer(WIDTH, HEIGHT);

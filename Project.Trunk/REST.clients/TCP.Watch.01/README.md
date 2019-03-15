@@ -484,7 +484,7 @@ network={
 }
 
 network={
-	ssid="RPi-Logger"
+	ssid="RPi-Gateway"
 	psk="raspberrypi"
 	key_mgmt=WPA-PSK
 }

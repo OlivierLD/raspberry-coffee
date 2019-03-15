@@ -45,7 +45,7 @@ public class RelayService implements Service {
     private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
 
     RelayService(Config config) {
-        this.relayManager = new RelayManager(config.get("relay.map").asString().orElse("1:11"));
+        this.relayManager = new RelayManager(config.get("relay.map").asString().orElse("1:11")); // TODO get the device ID from the map...
     }
 
     /**
