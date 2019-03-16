@@ -47,7 +47,7 @@ public class OLEDSSD1306_128x64_Sample {
 			sb.text("2 - 128 x 64 for OLED", 2, 16);
 			sb.text("3 - ScreenBuffer, 64 lines", 2, 24);
 			sb.text("4 - 128 x 64 for OLED!", 2, 32);
-			sb.text("5 - ScreenBuffer", 2, 40);
+			sb.text("5 - ScreenBuffer Deg: \272", 2, 40);
 			sb.text("6 - 128 x 64 for OLED!", 2, 48);
 			sb.text("7 - 128 x 64 for OLED!", 2, 56);
 			sb.text("8 - This is the end", 2, 64);

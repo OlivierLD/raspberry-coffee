@@ -290,18 +290,18 @@ public class TCPWatch {
 		int y = 8;
 		int len = sb.strlen(title);
 		sb.text(title, (WIDTH / 2) - (len / 2), y);
-		String latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
-		String lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
+		String latStr = GeomUtil.decToSex(latitude, -1, GeomUtil.NS);
+		String lngStr = GeomUtil.decToSex(longitude, -1, GeomUtil.EW);
 		y += 12;
 		sb.text(String.format("L:%11s", latStr), 2, y);
-		y += 8;
+		y += 10;
 		sb.text(String.format("G:%11s", lngStr), 2, y);
-		y += 8;
+		y += 10;
 		Date date = new Date();
 		sb.text(SDF_1.format(date), 2, y);
-		y += 8;
+		y += 10;
 		sb.text(SDF_3.format(date), 2, y);
-//		y += 8;
+//		y += 10;
 
 		y = HEIGHT - 1;
 		String index = String.format("Index: %d", currentIndex);
@@ -315,17 +315,17 @@ public class TCPWatch {
 		int y = 8;
 		int len = sb.strlen(title);
 		sb.text(title, (WIDTH / 2) - (len / 2), y);
-		String latStr = GeomUtil.decToSex(latitude, GeomUtil.NO_DEG, GeomUtil.NS);
-		String lngStr = GeomUtil.decToSex(longitude, GeomUtil.NO_DEG, GeomUtil.EW);
+		String latStr = GeomUtil.decToSex(latitude, -1, GeomUtil.NS);
+		String lngStr = GeomUtil.decToSex(longitude, -1, GeomUtil.EW);
 		y += 12;
 		sb.text(String.format("L:%11s", latStr), 2, y);
-		y += 8;
+		y += 10;
 		sb.text(String.format("G:%11s", lngStr), 2, y);
-		y += 8;
+		y += 10;
 		sb.text(String.format("SOG: %s kts", SOG_FMT.format(sog)), 2, y);
-		y += 8;
-		sb.text(String.format("COG: %s", COG_FMT.format(cog)), 2, y);
-//		y += 8;
+		y += 10;
+		sb.text(String.format("COG: %s\272", COG_FMT.format(cog)), 2, y);
+//		y += 10;
 
 		y = HEIGHT - 1;
 		String index = String.format("Index: %d", currentIndex);
@@ -435,7 +435,7 @@ public class TCPWatch {
 		sb.text(line, (WIDTH / 2) - (len / 2), y);
 		y += 16;
 		int ff = 2;
-		line = String.format("%s", COG_FMT.format(cog));
+		line = String.format("%s\272", COG_FMT.format(cog));
 		len = sb.strlen(line, ff);
 		sb.text(line, (WIDTH / 2) - (len / 2), y, ff);
 //		y += 16;

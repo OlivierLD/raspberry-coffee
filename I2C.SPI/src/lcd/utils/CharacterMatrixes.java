@@ -10,7 +10,8 @@ public class CharacterMatrixes {
 	public final static Map<String, String[]> characters = new HashMap<>();
 
 	static {
-		characters.put(" ", new String[]{"   ",
+		characters.put(" ", new String[]{
+				"   ",
 				"   ",
 				"   ",
 				"   ",
@@ -21,7 +22,8 @@ public class CharacterMatrixes {
 				"   ",
 				"   "});
 
-		characters.put(".", new String[]{"    ",
+		characters.put(".", new String[]{
+				"    ",
 				"    ",
 				"    ",
 				"    ",
@@ -32,7 +34,8 @@ public class CharacterMatrixes {
 				"    ",
 				"    "});
 
-		characters.put("'", new String[]{"     ",
+		characters.put("'", new String[]{
+				"     ",
 				"  XX ",
 				"  X  ",
 				" X   ",
@@ -43,7 +46,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("\"", new String[]{"     ",
+		characters.put("\"", new String[]{
+				"     ",
 				"     ",
 				" X X ",
 				" X X ",
@@ -54,7 +58,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("!", new String[]{"     ",
+		characters.put("!", new String[]{
+				"     ",
 				"     ",
 				" XX  ",
 				" XX  ",
@@ -65,7 +70,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("?", new String[]{"       ",
+		characters.put("?", new String[]{
+				"       ",
 				"       ",
 				"  XXX  ",
 				" X  XX ",
@@ -76,7 +82,8 @@ public class CharacterMatrixes {
 				"       ",
 				"       "});
 
-		characters.put("\u00b0", new String[]{"     ",
+		characters.put("\u00b0", new String[]{
+				"     ",
 				" XXX ",
 				" X X ",
 				" XXX ",
@@ -87,7 +94,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("-", new String[]{"      ",
+		characters.put("-", new String[]{
+				"      ",
 				"      ",
 				"      ",
 				"      ",
@@ -97,7 +105,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("+", new String[]{"        ",
+		characters.put("+", new String[]{
+				"        ",
 				"        ",
 				"        ",
 				"    X   ",
@@ -108,7 +117,8 @@ public class CharacterMatrixes {
 				"        ",
 				"        "});
 
-		characters.put("=", new String[]{"      ",
+		characters.put("=", new String[]{
+				"      ",
 				"      ",
 				"      ",
 				"      ",
@@ -119,7 +129,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put(":", new String[]{"    ",
+		characters.put(":", new String[]{
+				"    ",
 				"    ",
 				"    ",
 				"    ",
@@ -130,7 +141,8 @@ public class CharacterMatrixes {
 				"    ",
 				"    "});
 
-		characters.put("@", new String[]{"       ",
+		characters.put("@", new String[]{
+				"       ",
 				"       ",
 				"  XXX  ",
 				" XX  X ",
@@ -141,7 +153,8 @@ public class CharacterMatrixes {
 				"  XXX  ",
 				"       "});
 
-		characters.put("#", new String[]{"      ",
+		characters.put("#", new String[]{
+				"      ",
 				"      ",
 				" X X  ",
 				" X X  ",
@@ -152,7 +165,8 @@ public class CharacterMatrixes {
 				" X X  ",
 				"      "});
 
-		characters.put("$", new String[]{"  X   ",
+		characters.put("$", new String[]{
+				"  X   ",
 				" XXXX ",
 				"XX  X ",
 				"XXXX  ",
@@ -163,7 +177,8 @@ public class CharacterMatrixes {
 				"  X   ",
 				"      "});
 
-		characters.put("%", new String[]{"      ",
+		characters.put("%", new String[]{
+				"      ",
 				"XXX   ",
 				"X X X ",
 				"XXXX  ",
@@ -185,7 +200,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("&", new String[]{"       ",
+		characters.put("&", new String[]{
+				"       ",
 				"       ",
 				"  XXX  ",
 				" XX    ",
@@ -196,7 +212,8 @@ public class CharacterMatrixes {
 				"       ",
 				"       "});
 
-		characters.put("*", new String[]{"     ",
+		characters.put("*", new String[]{
+				"     ",
 				"  X  ",
 				"XXXX ",
 				" XX  ",
@@ -207,7 +224,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("(", new String[]{"     ",
+		characters.put("(", new String[]{
+				"     ",
 				"   X ",
 				"  X  ",
 				" XX  ",
@@ -218,7 +236,8 @@ public class CharacterMatrixes {
 				"   X ",
 				"     "});
 
-		characters.put(")", new String[]{"      ",
+		characters.put(")", new String[]{
+				"      ",
 				"  X   ",
 				"   X  ",
 				"   XX ",
@@ -229,7 +248,8 @@ public class CharacterMatrixes {
 				"  X   ",
 				"      "});
 
-		characters.put("_", new String[]{"       ",
+		characters.put("_", new String[]{
+				"       ",
 				"       ",
 				"       ",
 				"       ",
@@ -240,7 +260,8 @@ public class CharacterMatrixes {
 				"       ",
 				"XXXXXX "});
 
-		characters.put("<", new String[]{"      ",
+		characters.put("<", new String[]{
+				"      ",
 				"      ",
 				"   XX ",
 				"  XX  ",
@@ -251,7 +272,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put(">", new String[]{"      ",
+		characters.put(">", new String[]{
+				"      ",
 				"      ",
 				" XX   ",
 				"  XX  ",
@@ -262,7 +284,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("{", new String[]{"      ",
+		characters.put("{", new String[]{
+				"      ",
 				"   XX ",
 				"  XX  ",
 				"  XX  ",
@@ -273,7 +296,8 @@ public class CharacterMatrixes {
 				"   XX ",
 				"      "});
 
-		characters.put("}", new String[]{"      ",
+		characters.put("}", new String[]{
+				"      ",
 				" XX   ",
 				"  XX  ",
 				"  XX  ",
@@ -284,7 +308,8 @@ public class CharacterMatrixes {
 				" XX   ",
 				"      "});
 
-		characters.put("|", new String[]{"     ",
+		characters.put("|", new String[]{
+				"     ",
 				"     ",
 				"  X  ",
 				"  X  ",
@@ -295,7 +320,8 @@ public class CharacterMatrixes {
 				"  X  ",
 				"     "});
 
-		characters.put("[", new String[]{"      ",
+		characters.put("[", new String[]{
+				"      ",
 				"  XXX ",
 				"  XX  ",
 				"  XX  ",
@@ -306,7 +332,8 @@ public class CharacterMatrixes {
 				"  XXX ",
 				"      "});
 
-		characters.put("]", new String[]{"     ",
+		characters.put("]", new String[]{
+				"     ",
 				" XXX ",
 				"  XX ",
 				"  XX ",
@@ -317,7 +344,8 @@ public class CharacterMatrixes {
 				" XXX ",
 				"     "});
 
-		characters.put("\\", new String[]{"      ",
+		characters.put("\\", new String[]{
+				"      ",
 				" X    ",
 				" X    ",
 				"  X   ",
@@ -328,7 +356,8 @@ public class CharacterMatrixes {
 				"    X ",
 				"      "});
 
-		characters.put("/", new String[]{"      ",
+		characters.put("/", new String[]{
+				"      ",
 				"    X ",
 				"    X ",
 				"   X  ",
@@ -339,7 +368,8 @@ public class CharacterMatrixes {
 				" X    ",
 				"      "});
 
-		characters.put(",", new String[]{"    ",
+		characters.put(",", new String[]{
+				"    ",
 				"    ",
 				"    ",
 				"    ",
@@ -350,7 +380,8 @@ public class CharacterMatrixes {
 				" X  ",
 				"X   "});
 
-		characters.put(";", new String[]{"    ",
+		characters.put(";", new String[]{
+				"    ",
 				"    ",
 				"    ",
 				"    ",
@@ -362,7 +393,20 @@ public class CharacterMatrixes {
 				"X   "});
 
 /// TODO Add up to 10 lines for all below
-		characters.put("0", new String[]{"      ",
+		characters.put("\272", new String[]{ // Degree sign
+				"    ",
+				"XXX ",
+				"X X ",
+				"XXX ",
+				"    ",
+				"    ",
+				"    ",
+				"    ",
+				"    ",
+				"    "});
+
+		characters.put("0", new String[]{
+				"      ",
 				" XXX  ",
 				"XX XX ",
 				"XX XX ",
@@ -373,7 +417,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("1", new String[]{"      ",
+		characters.put("1", new String[]{
+				"      ",
 				"  XX  ",
 				"XXXX  ",
 				"  XX  ",
@@ -384,7 +429,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("2", new String[]{"      ",
+		characters.put("2", new String[]{
+				"      ",
 				" XXX  ",
 				"XX XX ",
 				"   XX ",
@@ -395,7 +441,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("3", new String[]{"      ",
+		characters.put("3", new String[]{
+				"      ",
 				" XXX  ",
 				"XX XX ",
 				"   XX ",
@@ -406,7 +453,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("4", new String[]{"      ",
+		characters.put("4", new String[]{
+				"      ",
 				"   XX ",
 				"  XXX ",
 				" X XX ",
@@ -417,7 +465,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("5", new String[]{"      ",
+		characters.put("5", new String[]{
+				"      ",
 				"XXXXX ",
 				"XX    ",
 				"XXXX  ",
@@ -426,7 +475,8 @@ public class CharacterMatrixes {
 				"X  XX ",
 				"XXXX  "});
 
-		characters.put("6", new String[]{"      ",
+		characters.put("6", new String[]{
+				"      ",
 				" XXX  ",
 				"XX XX ",
 				"XX    ",
@@ -437,7 +487,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("7", new String[]{"      ",
+		characters.put("7", new String[]{
+				"      ",
 				"XXXXX ",
 				"XX XX ",
 				"   XX ",
@@ -446,7 +497,8 @@ public class CharacterMatrixes {
 				" XX   ",
 				"XX    "});
 
-		characters.put("8", new String[]{"      ",
+		characters.put("8", new String[]{
+				"      ",
 				" XXX  ",
 				"XX XX ",
 				"XX XX ",
@@ -457,7 +509,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("9", new String[]{"      ",
+		characters.put("9", new String[]{
+				"      ",
 				" XXX  ",
 				"XX XX ",
 				"XX XX ",
@@ -468,7 +521,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("a", new String[]{"      ",
+		characters.put("a", new String[]{
+				"      ",
 				"      ",
 				"      ",
 				" XXX  ",
@@ -479,7 +533,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("b", new String[]{"       ",
+		characters.put("b", new String[]{
+				"       ",
 				"XXX    ",
 				" XX    ",
 				" XXXX  ",
@@ -490,7 +545,8 @@ public class CharacterMatrixes {
 				"       ",
 				"       "});
 
-		characters.put("c", new String[]{"      ",
+		characters.put("c", new String[]{
+				"      ",
 				"      ",
 				"      ",
 				" XXX  ",
@@ -501,7 +557,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("d", new String[]{"      ",
+		characters.put("d", new String[]{
+				"      ",
 				"  XXX ",
 				"   XX ",
 				" XXXX ",
@@ -512,7 +569,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("e", new String[]{"      ",
+		characters.put("e", new String[]{
+				"      ",
 				"      ",
 				"      ",
 				" XXX  ",
@@ -523,7 +581,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("f", new String[]{"     ",
+		characters.put("f", new String[]{
+				"     ",
 				"  XXX",
 				" XX  ",
 				"XXXXX",
@@ -534,7 +593,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("g", new String[]{"     ",
+		characters.put("g", new String[]{
+				"     ",
 				"     ",
 				"     ",
 				" XX X",
@@ -545,7 +605,8 @@ public class CharacterMatrixes {
 				"   XX",
 				"XXXX "});
 
-		characters.put("h", new String[]{"       ",
+		characters.put("h", new String[]{
+				"       ",
 				"XXX    ",
 				" XX    ",
 				" XXXX  ",
@@ -556,7 +617,8 @@ public class CharacterMatrixes {
 				"       ",
 				"       "});
 
-		characters.put("i", new String[]{"      ",
+		characters.put("i", new String[]{
+				"      ",
 				"  XX  ",
 				"      ",
 				"XXXX  ",
@@ -567,7 +629,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("j", new String[]{"     ",
+		characters.put("j", new String[]{
+				"     ",
 				"  XX ",
 				"     ",
 				"XXXX ",
@@ -578,7 +641,8 @@ public class CharacterMatrixes {
 				"  XX ",
 				"XXX  "});
 
-		characters.put("k", new String[]{"      ",
+		characters.put("k", new String[]{
+				"      ",
 				"XXX   ",
 				" XX   ",
 				" XX XX",
@@ -589,7 +653,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("l", new String[]{"     ",
+		characters.put("l", new String[]{
+				"     ",
 				"XXXX ",
 				"  XX ",
 				"  XX ",
@@ -600,7 +665,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("m", new String[]{"      ",
+		characters.put("m", new String[]{
+				"      ",
 				"      ",
 				"      ",
 				"XXXXX ",
@@ -611,7 +677,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("n", new String[]{"       ",
+		characters.put("n", new String[]{
+				"       ",
 				"       ",
 				"       ",
 				"XX XX  ",
@@ -622,7 +689,8 @@ public class CharacterMatrixes {
 				"       ",
 				"       "});
 
-		characters.put("o", new String[]{"     ",
+		characters.put("o", new String[]{
+				"     ",
 				"     ",
 				"     ",
 				" XXX ",
@@ -633,7 +701,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("p", new String[]{"       ",
+		characters.put("p", new String[]{
+				"       ",
 				"       ",
 				"       ",
 				"XXXXX  ",
@@ -644,7 +713,8 @@ public class CharacterMatrixes {
 				" XX    ",
 				"XXXX   "});
 
-		characters.put("q", new String[]{"      ",
+		characters.put("q", new String[]{
+				"      ",
 				"      ",
 				"      ",
 				" XX X ",
@@ -655,7 +725,8 @@ public class CharacterMatrixes {
 				"   XX ",
 				"  XXXX"});
 
-		characters.put("r", new String[]{"      ",
+		characters.put("r", new String[]{
+				"      ",
 				"      ",
 				"      ",
 				"XX XXX",
@@ -666,7 +737,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("s", new String[]{"      ",
+		characters.put("s", new String[]{
+				"      ",
 				"      ",
 				"      ",
 				" XXXX ",
@@ -677,7 +749,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("t", new String[]{"     ",
+		characters.put("t", new String[]{
+				"     ",
 				" XX  ",
 				" XX  ",
 				"XXXXX",
@@ -688,7 +761,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("u", new String[]{"      ",
+		characters.put("u", new String[]{
+				"      ",
 				"      ",
 				"      ",
 				"XXX XX",
@@ -699,7 +773,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("v", new String[]{"       ",
+		characters.put("v", new String[]{
+				"       ",
 				"       ",
 				"       ",
 				"XXX XXX",
@@ -710,7 +785,8 @@ public class CharacterMatrixes {
 				"       ",
 				"       "});
 
-		characters.put("w", new String[]{"      ",
+		characters.put("w", new String[]{
+				"      ",
 				"      ",
 				"      ",
 				"X X XX",
@@ -721,7 +797,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("x", new String[]{"      ",
+		characters.put("x", new String[]{
+				"      ",
 				"      ",
 				"      ",
 				"XXX XX",
@@ -732,7 +809,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("y", new String[]{"       ",
+		characters.put("y", new String[]{
+				"       ",
 				"       ",
 				"       ",
 				"XXX XXX",
@@ -743,7 +821,8 @@ public class CharacterMatrixes {
 				"  XX   ",
 				"XXX    "});
 
-		characters.put("z", new String[]{"     ",
+		characters.put("z", new String[]{
+				"     ",
 				"     ",
 				"     ",
 				"XXXXX",
@@ -754,7 +833,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("A", new String[]{"      ",
+		characters.put("A", new String[]{
+				"      ",
 				"      ",
 				" XXXX ",
 				"  XXX ",
@@ -765,7 +845,8 @@ public class CharacterMatrixes {
 				"       ",
 				"       "});
 
-		characters.put("B", new String[]{"       ",
+		characters.put("B", new String[]{
+				"       ",
 				"       ",
 				"XXXXX  ",
 				" XX XX ",
@@ -776,7 +857,8 @@ public class CharacterMatrixes {
 				"       ",
 				"       "});
 
-		characters.put("C", new String[]{"     ",
+		characters.put("C", new String[]{
+				"     ",
 				"     ",
 				" XXXX",
 				"XX XX",
@@ -787,7 +869,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("D", new String[]{"      ",
+		characters.put("D", new String[]{
+				"      ",
 				"      ",
 				"XXXXX ",
 				" XX XX",
@@ -798,7 +881,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("E", new String[]{"      ",
+		characters.put("E", new String[]{
+				"      ",
 				"      ",
 				"XXXXXX",
 				" XX   ",
@@ -809,7 +893,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("F", new String[]{"      ",
+		characters.put("F", new String[]{
+				"      ",
 				"      ",
 				"XXXXXX",
 				" XX   ",
@@ -820,7 +905,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("G", new String[]{"     ",
+		characters.put("G", new String[]{
+				"     ",
 				"     ",
 				" XXX ",
 				"XX XX",
@@ -831,7 +917,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("H", new String[]{"      ",
+		characters.put("H", new String[]{
+				"      ",
 				"      ",
 				"XXX XX",
 				" XX XX",
@@ -842,7 +929,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("I", new String[]{"      ",
+		characters.put("I", new String[]{
+				"      ",
 				"      ",
 				"XXXXX ",
 				"  XX  ",
@@ -853,7 +941,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("J", new String[]{"     ",
+		characters.put("J", new String[]{
+				"     ",
 				"     ",
 				" XXXX",
 				"  XX ",
@@ -864,7 +953,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("K", new String[]{"      ",
+		characters.put("K", new String[]{
+				"      ",
 				"      ",
 				"XXX XX",
 				" XX X ",
@@ -875,7 +965,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("L", new String[]{"      ",
+		characters.put("L", new String[]{
+				"      ",
 				"      ",
 				"XXXX  ",
 				" XX   ",
@@ -886,7 +977,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("M", new String[]{"       ",
+		characters.put("M", new String[]{
+				"       ",
 				"       ",
 				"XX   XX",
 				" XX XX ",
@@ -897,7 +989,8 @@ public class CharacterMatrixes {
 				"       ",
 				"       "});
 
-		characters.put("N", new String[]{"      ",
+		characters.put("N", new String[]{
+				"      ",
 				"      ",
 				"XX XXX",
 				"XXX X ",
@@ -908,7 +1001,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("O", new String[]{"      ",
+		characters.put("O", new String[]{
+				"      ",
 				"      ",
 				" XXX  ",
 				"XX XX ",
@@ -919,7 +1013,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("P", new String[]{"       ",
+		characters.put("P", new String[]{
+				"       ",
 				"       ",
 				"XXXXX  ",
 				" XX XX ",
@@ -930,7 +1025,8 @@ public class CharacterMatrixes {
 				"       ",
 				"       "});
 
-		characters.put("Q", new String[]{"     ",
+		characters.put("Q", new String[]{
+				"     ",
 				"     ",
 				" XXX ",
 				"XX XX",
@@ -941,7 +1037,8 @@ public class CharacterMatrixes {
 				"   XX",
 				"     "});
 
-		characters.put("R", new String[]{"       ",
+		characters.put("R", new String[]{
+				"       ",
 				"       ",
 				"XXXXX  ",
 				" XX XX ",
@@ -952,7 +1049,8 @@ public class CharacterMatrixes {
 				"       ",
 				"       "});
 
-		characters.put("S", new String[]{"     ",
+		characters.put("S", new String[]{
+				"     ",
 				"     ",
 				" XXXX",
 				"XX  X",
@@ -963,7 +1061,8 @@ public class CharacterMatrixes {
 				"     ",
 				"     "});
 
-		characters.put("T", new String[]{"      ",
+		characters.put("T", new String[]{
+				"      ",
 				"      ",
 				"XXXXXX",
 				"X XX X",
@@ -974,7 +1073,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("U", new String[]{"       ",
+		characters.put("U", new String[]{
+				"       ",
 				"       ",
 				"XXX XXX",
 				" XX XX ",
@@ -985,7 +1085,8 @@ public class CharacterMatrixes {
 				"       ",
 				"       "});
 
-		characters.put("V", new String[]{"       ",
+		characters.put("V", new String[]{
+				"       ",
 				"       ",
 				"XXX XXX",
 				" XX XX ",
@@ -996,7 +1097,8 @@ public class CharacterMatrixes {
 				"       ",
 				"       "});
 
-		characters.put("W", new String[]{"       ",
+		characters.put("W", new String[]{
+				"       ",
 				"       ",
 				"XX X XX",
 				" X X X ",
@@ -1007,7 +1109,8 @@ public class CharacterMatrixes {
 				"       ",
 				"       "});
 
-		characters.put("X", new String[]{"      ",
+		characters.put("X", new String[]{
+				"      ",
 				"      ",
 				"XX  XX",
 				" XXXX ",
@@ -1018,7 +1121,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("Y", new String[]{"      ",
+		characters.put("Y", new String[]{
+				"      ",
 				"      ",
 				"XX  XX",
 				"XX  XX",
@@ -1029,7 +1133,8 @@ public class CharacterMatrixes {
 				"      ",
 				"      "});
 
-		characters.put("Z", new String[]{"     ",
+		characters.put("Z", new String[]{
+				"     ",
 				"     ",
 				"XXXXX",
 				"XX XX",
