@@ -128,6 +128,12 @@ public class PinUtil {
 	 * @param maps string array like "xx:text" where xx is the physical number, and text the label to display (5 letters max)
 	 */
 	public static void print(boolean prefixBCMWithGPIO, String... maps) {
+		System.out.println(getBuffer(prefixBCMWithGPIO, maps).toString());
+	}
+
+	public static StringBuffer getBuffer(boolean prefixBCMWithGPIO, String... maps) {
+
+		StringBuffer sb = new StringBuffer();
 
 		Map<Integer, String> pinMap = null;
 		if (maps.length > 0) {
@@ -156,9 +162,9 @@ public class PinUtil {
 			hr =            "       +---------+-----+--------------+-----++-----+--------------+-----+---------+";
 			header =        "       |     BCM | wPi | Name         |  Physical  |         Name | wPi | BCM     |";
 		}
-		System.out.println(hr);
-		System.out.println(header);
-		System.out.println(hr);
+		sb.append(hr + "\n");
+		sb.append(header + "\n");
+		sb.append(hr + "\n");
 		for (int row=0; row<(values.length / 2); row++) {
 			String line = String.format(fmt,
 					// Left column
@@ -173,11 +179,13 @@ public class PinUtil {
 					values[1 + (row * 2)].wiringPi() == -1 ? "  " : String.format("%02d", values[1 + (row * 2)].wiringPi()), // wPI
 					values[1 + (row * 2)].gpio() == -1 ? (prefixBCMWithGPIO ? "      " : "  ") : String.format("%s%02d", prefixBCMWithGPIO ? "GPIO" : "", values[1 + (row * 2)].gpio()), // BCM
 					(pinMap != null && pinMap.get(values[1 + (row * 2)].pinNumber()) != null) ? String.valueOf(pinMap.get(values[1 + (row * 2)].pinNumber())) : " ");
-			System.out.println(line);
+			sb.append(line + "\n");
 		}
-		System.out.println(hr);
-		System.out.println(header);
-		System.out.println(hr);
+		sb.append(hr + "\n");
+		sb.append(header + "\n");
+		sb.append(hr + "\n");
+
+		return sb;
 	}
 
 	public static void main(String... args) {

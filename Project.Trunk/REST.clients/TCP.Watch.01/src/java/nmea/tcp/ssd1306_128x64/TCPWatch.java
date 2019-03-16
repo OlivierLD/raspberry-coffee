@@ -38,11 +38,18 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Uses SPI interface for the 128x64 OLED Screen
  */
 public class TCPWatch {
+
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	static {
+		LOGGER.setLevel(Level.INFO);
+	}
 
 	private static SwingLedPanel substitute;
 
@@ -108,12 +115,11 @@ public class TCPWatch {
 	private static double longitude = 0;
 	private static double sog = 0;
 	private static double cog = 0;
-	private static final int POS_BUFFER_MAX_LEN = 500;
+	private static final int POS_BUFFER_MAX_LEN = 100; // 500;
 	private static List<GeoPoint> posBuffer = new ArrayList<>();
 	private static GPSDate gpsDate = null;
 	private static boolean connected = false;
 
-	private static boolean VERBOSE = "true".equals(System.getProperty("verbose", "false"));
 	private static boolean SCREEN_00_VERBOSE = "true".equals(System.getProperty("verbose.00", "false"));
 	private static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
 	private static String BASE_URL = System.getProperty("base.url", "http://192.168.127.1:9999");
@@ -138,18 +144,14 @@ public class TCPWatch {
 	private static boolean k1 = false, k2 = false;
 	private static Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> {
 		k1 = event.getState().isLow(); // low: down
-		if (VERBOSE) {
-			System.out.println(String.format("K1 was %s", k1 ? "pushed" : "released"));
-		}
+		LOGGER.log(Level.INFO, String.format("K1 was %s", k1 ? "pushed" : "released"));
 		if (k1) { // K1 is pushed down
 			currentIndex++;
 		}
 	};
 	private static Consumer<GpioPinDigitalStateChangeEvent> key2Consumer = (event) -> {
 		k2 = event.getState().isLow(); // low: down
-		if (VERBOSE) {
-			System.out.println(String.format("K2 was %s", k2 ? "pushed" : "released"));
-		}
+		LOGGER.log(Level.INFO, String.format("K2 was %s", k2 ? "pushed" : "released"));
 		if (k2) { // K2 is pushed down
 			currentIndex--;
 		}
@@ -190,9 +192,7 @@ public class TCPWatch {
 		}
 
 		String data = (response != null ? new String(response.getPayload()) : null);
-		if (VERBOSE) {
-			System.out.println(String.format("HTTP Response:\n%s", data));
-		}
+		LOGGER.log(Level.FINE, String.format("HTTP Response:\n%s", data));
 		if (data != null) {
 			Gson gson = new Gson();
 			JsonElement element = gson.fromJson(data, JsonElement.class);
@@ -465,27 +465,31 @@ public class TCPWatch {
 						minLng + ((maxLng - minLng) / 2));
 
 				AtomicReference<Double> sizeFactor = new AtomicReference(1d);
-				posBuffer.stream().forEach(gp -> {
-					double x = (WIDTH / 2) + (((gp.getG() - mapCenter.getG()) * (WIDTH / delta)) * sizeFactor.get());
-					double y = (HEIGHT / 2) - (((gp.getL() - mapCenter.getL()) * (HEIGHT / delta)) * sizeFactor.get());
+				synchronized (posBuffer) {
+					posBuffer.stream().forEach(gp -> {
+						double x = (WIDTH / 2) + (((gp.getG() - mapCenter.getG()) * (WIDTH / delta)) * sizeFactor.get());
+						double y = (HEIGHT / 2) - (((gp.getL() - mapCenter.getL()) * (HEIGHT / delta)) * sizeFactor.get());
 
-					double dx = Math.abs((WIDTH / 2) - x);
-					double dy = Math.abs((HEIGHT / 2) - y);
-					double distToCenter = Math.sqrt((dx * dx) + (dy * dy));
-					sizeFactor.set(Math.min(sizeFactor.get(), (WIDTH / 2) / distToCenter));
-				});
+						double dx = Math.abs((WIDTH / 2) - x);
+						double dy = Math.abs((HEIGHT / 2) - y);
+						double distToCenter = Math.sqrt((dx * dx) + (dy * dy));
+						sizeFactor.set(Math.min(sizeFactor.get(), (WIDTH / 2) / distToCenter));
+					});
+				}
 				sizeFactor.set(sizeFactor.get() * 0.9); // Not too close to the borders.
 				AtomicReference<Integer> prevX = new AtomicReference();
 				AtomicReference<Integer> prevY = new AtomicReference();
-				posBuffer.stream().forEach(gp -> {
-					Integer canvasX = (int)Math.round((WIDTH / 2) + (((gp.getG() - mapCenter.getG()) * (WIDTH / delta)) * sizeFactor.get()));
-					Integer canvasY = (int)Math.round((HEIGHT / 2) - (((gp.getL() - mapCenter.getL()) * (HEIGHT / delta)) * sizeFactor.get()));
-					if (prevX.get() != null && prevY.get() != null) {
-						sb.line(prevX.get(), prevY.get(), canvasX, canvasY);
-					}
-					prevX.set(canvasX);
-					prevY.set(canvasY);
-				});
+				synchronized (posBuffer) {
+					posBuffer.stream().forEach(gp -> {
+						Integer canvasX = (int) Math.round((WIDTH / 2) + (((gp.getG() - mapCenter.getG()) * (WIDTH / delta)) * sizeFactor.get()));
+						Integer canvasY = (int) Math.round((HEIGHT / 2) - (((gp.getL() - mapCenter.getL()) * (HEIGHT / delta)) * sizeFactor.get()));
+						if (prevX.get() != null && prevY.get() != null) {
+							sb.line(prevX.get(), prevY.get(), canvasX, canvasY);
+						}
+						prevX.set(canvasX);
+						prevY.set(canvasY);
+					});
+				}
 				// Dot on the last position
 				if (prevX.get() != null && prevY.get() != null) {
 					sb.circle(prevX.get(), prevY.get(), 2);
@@ -522,9 +526,7 @@ public class TCPWatch {
 		int k1Pin = Integer.parseInt(System.getProperty("K1", String.valueOf(defaultK1)));
 		int k2Pin = Integer.parseInt(System.getProperty("K2", String.valueOf(defaultK2)));
 
-		if (VERBOSE) {
-			System.out.println("Starting...");
-		}
+		LOGGER.log(Level.FINE, "Starting...");
 
 		try {
 			gpio = GpioFactory.getInstance();
@@ -535,32 +537,22 @@ public class TCPWatch {
 			key2Pin = gpio.provisionDigitalInputPin(PinUtil.getPinByWiringPiNumber(k2Pin), "K-2", PinPullResistance.PULL_DOWN);
 			key2Pin.setShutdownOptions(true);
 
-			if (VERBOSE) {
-				System.out.println("Initializing button listeners");
-			}
+			LOGGER.log(Level.FINE, "Initializing button listeners");
 
 			key1Pin.addListener((GpioPinListenerDigital) event -> {
 				if (key1Consumer != null) {
-					if (VERBOSE) {
-						System.out.println("Consuming K-1");
-					}
+					LOGGER.log(Level.FINE, "Consuming K-1");
 					key1Consumer.accept(event);
 				} else {
-					if (VERBOSE) {
-						System.out.println("No consumer for K-1");
-					}
+					LOGGER.log(Level.FINE, "No consumer for K-1");
 				}
 			});
 			key2Pin.addListener((GpioPinListenerDigital) event -> {
 				if (key2Consumer != null) {
-					if (VERBOSE) {
-						System.out.println("Consuming K-2");
-					}
+					LOGGER.log(Level.FINE, "Consuming K-2");
 					key2Consumer.accept(event);
 				} else {
-					if (VERBOSE) {
-						System.out.println("No consumer for K-2");
-					}
+					LOGGER.log(Level.FINE, "No consumer for K-2");
 				}
 			});
 		} catch (Throwable error) {
@@ -572,9 +564,7 @@ public class TCPWatch {
 			while (keepLooping) {
 				TimeUtil.delay(1_000);
 //			System.out.println("\t\t... external data (like REST) Ping!");
-				if (VERBOSE) {
-					System.out.println(">> Fetching...");
-				}
+				LOGGER.log(Level.FINE, String.format(">> Fetching..."));
 				JsonObject response = handleRequest(BASE_URL);
 				/*
 				 * We are interested in
@@ -625,9 +615,11 @@ public class TCPWatch {
 						}
 						if (posOk && latitude != 0 && longitude != 0) {
 							// Add to buffer
-							posBuffer.add(new GeoPoint(latitude, longitude));
-							while (posBuffer.size() > POS_BUFFER_MAX_LEN) {
-								posBuffer.remove(0);
+							synchronized (posBuffer) {
+								posBuffer.add(new GeoPoint(latitude, longitude));
+								while (posBuffer.size() > POS_BUFFER_MAX_LEN) {
+									posBuffer.remove(0);
+								}
 							}
 							if (DEBUG) {
 								System.out.println(String.format("%d entry(ies) in the position buffer", posBuffer.size()));
@@ -713,8 +705,7 @@ public class TCPWatch {
 			substitute.setVisible(true);
 		}
 
-		if (VERBOSE) {
-			System.out.println(String.format("Default (WiringPi) pins:\n" +
+		LOGGER.log(Level.INFO, String.format("Default (WiringPi) pins:\n" +
 					"CLK:  %02d\n" +
 					"MOSI: %02d\n" +
 					"CS:   %02d\n" +
@@ -722,7 +713,7 @@ public class TCPWatch {
 					"DC:   %02d\n" +
 					"K-1:  %02d\n" +
 					"K-2:  %02d", defaultCLK, defaultMOSI, defaultCS, defaultRST, defaultDC, defaultK1, defaultK2));
-			System.out.println("Object created");
+		LOGGER.log(Level.INFO, "Object created");
 
 
 			/* Defaults:
@@ -732,29 +723,26 @@ public class TCPWatch {
 	private static Pin spiRst  = RaspiPin.GPIO_05; // Pin #18, GPIO_24
 	private static Pin spiDc   = RaspiPin.GPIO_04; // Pin #16, GPIO_23
 
-			key1Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, "K-1", PinPullResistance.PULL_UP);
-			key1Pin.setShutdownOptions(true);
-			key2Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_28, "K-2", PinPullResistance.PULL_UP);
+		key1Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, "K-1", PinPullResistance.PULL_UP);
+		key1Pin.setShutdownOptions(true);
+		key2Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_28, "K-2", PinPullResistance.PULL_UP);
 
-			 */
-			String[] map = new String[7];
-			map[0] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(clkPin)).pinNumber()) + ":CLK";
-			map[1] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(mosiPin)).pinNumber()) + ":MOSI";
-			map[2] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(csPin)).pinNumber()) + ":CS";
-			map[3] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(rstPin)).pinNumber()) + ":RST";
-			map[4] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(dcPin)).pinNumber()) + ":DC";
+		 */
+		String[] map = new String[7];
+		map[0] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(clkPin)).pinNumber()) + ":CLK";
+		map[1] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(mosiPin)).pinNumber()) + ":MOSI";
+		map[2] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(csPin)).pinNumber()) + ":CS";
+		map[3] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(rstPin)).pinNumber()) + ":RST";
+		map[4] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(dcPin)).pinNumber()) + ":DC";
 
-			map[5] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(k1Pin)).pinNumber()) + ":K-1";
-			map[6] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(k2Pin)).pinNumber()) + ":K-2";
+		map[5] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(k1Pin)).pinNumber()) + ":K-1";
+		map[6] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(k2Pin)).pinNumber()) + ":K-2";
 
-			PinUtil.print(true, map);
-		}
+		LOGGER.log(Level.INFO, PinUtil.getBuffer(true, map).toString());
 
 		ScreenBuffer sb = new ScreenBuffer(WIDTH, HEIGHT);
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
-		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("Screenbuffer ready...");
-		}
+		LOGGER.log(Level.INFO, "Screenbuffer ready...");
 
 		displayPage00(sb); // Init Screen
 
@@ -786,9 +774,7 @@ public class TCPWatch {
 			}
 			int screenIndex = Math.abs(idx % pageManagers.size());
 
-			if (VERBOSE) {
-				System.out.println(String.format("Current Screen Index now %d (%d) on a total of %d", screenIndex, currentIndex, pageManagers.size()));
-			}
+			LOGGER.log(Level.INFO, String.format("Current Screen Index now %d (%d) on a total of %d", screenIndex, currentIndex, pageManagers.size()));
 
 			pageManagers.get(screenIndex).accept(sb);
 
@@ -800,11 +786,8 @@ public class TCPWatch {
 				substitute.display();
 			}
 		}
-		System.out.println("End of loop");
-
-		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("Done.");
-		}
+		LOGGER.log(Level.INFO, "End of loop");
+		LOGGER.log(Level.INFO, "Done.");
 
 		if (oled == null) {
 			System.exit(0);
