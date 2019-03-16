@@ -115,7 +115,7 @@ public class TCPWatch {
 	private static double longitude = 0;
 	private static double sog = 0;
 	private static double cog = 0;
-	private static final int POS_BUFFER_MAX_LEN = 100; // 500;
+	private static final int POS_BUFFER_MAX_LEN = 500; // Tune it at will
 	private static List<GeoPoint> posBuffer = new ArrayList<>();
 	private static GPSDate gpsDate = null;
 	private static boolean connected = false;
