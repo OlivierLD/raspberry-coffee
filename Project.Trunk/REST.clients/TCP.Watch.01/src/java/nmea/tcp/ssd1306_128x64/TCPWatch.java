@@ -470,8 +470,8 @@ public class TCPWatch {
 					sizeFactor.set(Math.min(sizeFactor.get(), (WIDTH / 2) / distToCenter));
 				});
 				sizeFactor.set(sizeFactor.get() * 0.9); // Not too close to the borders.
-				AtomicReference<Integer> prevX = null;
-				AtomicReference<Integer> prevY = null;
+				AtomicReference<Integer> prevX = new AtomicReference();
+				AtomicReference<Integer> prevY = new AtomicReference();
 				posBuffer.stream().forEach(gp -> {
 					Integer canvasX = (int)Math.round((WIDTH / 2) + (((gp.getG() - mapCenter.getG()) * (WIDTH / delta)) * sizeFactor.get()));
 					Integer canvasY = (int)Math.round((HEIGHT / 2) - (((gp.getL() - mapCenter.getL()) * (HEIGHT / delta)) * sizeFactor.get()));
