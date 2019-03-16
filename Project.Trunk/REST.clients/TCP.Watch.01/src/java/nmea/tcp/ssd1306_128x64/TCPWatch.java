@@ -1,5 +1,6 @@
 package nmea.tcp.ssd1306_128x64;
 
+import calc.GeoPoint;
 import calc.GeomUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -25,13 +26,16 @@ import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TimeZone;
 import java.util.function.Consumer;
 
@@ -104,6 +108,8 @@ public class TCPWatch {
 	private static double longitude = 0;
 	private static double sog = 0;
 	private static double cog = 0;
+	private static final int POS_BUFFER_MAX_LEN = 500;
+	private static List<GeoPoint> posBuffer = new ArrayList<>();
 	private static GPSDate gpsDate = null;
 	private static boolean connected = false;
 
@@ -156,14 +162,15 @@ public class TCPWatch {
 			TCPWatch::displayPage02,
 			TCPWatch::displayPage03,
 			TCPWatch::displayPage04,
-			TCPWatch::displayPage05
+			TCPWatch::displayPage05,
+			TCPWatch::displayPage06
 	);
 
 	/** This is the REST request
 	 * @param baseUrl like "http://localhost:8080"
 	 * @return
 	 */
-	public static JsonObject handleRequest(String baseUrl) {
+	private static JsonObject handleRequest(String baseUrl) {
 
 		String url =  baseUrl + "/mux/cache";
 
@@ -433,6 +440,60 @@ public class TCPWatch {
 		sb.text(index, (WIDTH / 2) - (len / 2), y);
 	}
 
+	private static void displayPage06(ScreenBuffer sb) { // A Map ;). Approximate, square projection... (for now)
+		sb.clear();
+		sb.rectangle(0, 0, WIDTH - 1, HEIGHT - 1);
+		if (posBuffer.size() > 1) {
+
+			double minLat = posBuffer.stream().min(Comparator.comparing(GeoPoint::getL)).get().getL();
+			double maxLat = posBuffer.stream().max(Comparator.comparing(GeoPoint::getL)).get().getL();
+			double minLng = posBuffer.stream().min(Comparator.comparing(GeoPoint::getG)).get().getG();
+			double maxLng = posBuffer.stream().max(Comparator.comparing(GeoPoint::getG)).get().getG();
+
+			double deltaLat = Math.abs(maxLat - minLat);
+			double deltaLng = Math.abs(maxLng - minLng);
+
+			double delta = Math.max(deltaLat, deltaLng);
+			if (delta != 0) {
+				GeoPoint mapCenter = new GeoPoint(
+						minLat + ((maxLat - minLat) / 2),
+						minLng + ((maxLng - minLng) / 2));
+
+				double sizeFactor = 1;
+				double x, y;
+				for (GeoPoint gp : posBuffer) {
+					x = (WIDTH / 2) + (((gp.getG() - mapCenter.getG()) * (WIDTH / delta)) * sizeFactor);
+					y = (HEIGHT / 2) - (((gp.getL() - mapCenter.getL()) * (HEIGHT / delta)) * sizeFactor);
+
+					double dx = Math.abs((WIDTH / 2) - x);
+					double dy = Math.abs((HEIGHT / 2) - y);
+					double distToCenter = Math.sqrt((dx * dx) + (dy * dy));
+					sizeFactor = Math.min(sizeFactor, (WIDTH / 2) / distToCenter);
+				}
+				sizeFactor *= 0.95; // Not too close to the borders.
+				Integer prevX = null, prevY = null;
+				for (GeoPoint gp : posBuffer) {
+					Integer canvasX = (int)Math.round((WIDTH / 2) + (((gp.getG() - mapCenter.getG()) * (WIDTH / delta)) * sizeFactor));
+					Integer canvasY = (int)Math.round((HEIGHT / 2) - (((gp.getL() - mapCenter.getL()) * (HEIGHT / delta)) * sizeFactor));
+					if (prevX != null && prevY != null) {
+						sb.line(prevX, prevY, canvasX, canvasY);
+					}
+					prevX = canvasX;
+					prevY = canvasY;
+				}
+				// Dot on the last position
+				if (prevX != null && prevY != null) {
+					sb.circle(prevX, prevY, 3);
+				}
+			}
+		} else {
+			String text = "Not enough data...";
+			int y = 20;
+			int len = sb.strlen(text);
+			sb.text(text, (WIDTH / 2) - (len / 2), y);
+		}
+	}
+
 	public static void main(String... args) throws Exception {
 
 		boolean mirror = "true".equals(System.getProperty("mirror.screen", "false")); // Screen is to be seen in a mirror.
@@ -539,15 +600,28 @@ public class TCPWatch {
 
 				if (response != null) {
 					// Dispatch the data
-					try {
-						latitude = response.get("Position").getAsJsonObject().get("lat").getAsDouble();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-					try {
-						longitude = response.get("Position").getAsJsonObject().get("lng").getAsDouble();
-					} catch (Exception ex) {
-						ex.printStackTrace();
+					JsonElement position = response.get("Position");
+					if (position != null) {
+						boolean posOk = true;
+						try {
+							latitude = response.get("Position").getAsJsonObject().get("lat").getAsDouble();
+						} catch (Exception ex) {
+							ex.printStackTrace();
+							posOk = false;
+						}
+						try {
+							longitude = response.get("Position").getAsJsonObject().get("lng").getAsDouble();
+						} catch (Exception ex) {
+							ex.printStackTrace();
+							posOk = false;
+						}
+						if (posOk) {
+							// Add to buffer
+							posBuffer.add(new GeoPoint(latitude, longitude));
+							while (posBuffer.size() > POS_BUFFER_MAX_LEN) {
+								posBuffer.remove(0);
+							}
+						}
 					}
 					try {
 						JsonElement gpsJson = response.get("GPS Date & Time");
@@ -681,7 +755,7 @@ public class TCPWatch {
 			substitute.display();
 		}
 
-		if (oled == null) { // Simulate button clicks every 5 seconds
+		if (oled == null) { // Simulate button clicks every X seconds
 			Thread buttonSimulator = new Thread(() -> {
 				while (keepLooping) {
 					TimeUtil.delay(10_000);
