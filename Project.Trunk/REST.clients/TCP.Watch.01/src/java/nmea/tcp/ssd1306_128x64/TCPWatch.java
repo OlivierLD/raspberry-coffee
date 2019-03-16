@@ -629,7 +629,7 @@ public class TCPWatch {
 							while (posBuffer.size() > POS_BUFFER_MAX_LEN) {
 								posBuffer.remove(0);
 							}
-							if (VERBOSE) {
+							if (DEBUG) {
 								System.out.println(String.format("%d entry(ies) in the position buffer", posBuffer.size()));
 							}
 						}
