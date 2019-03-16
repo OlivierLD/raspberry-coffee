@@ -446,16 +446,20 @@ public class TCPWatch {
 		sb.text(index, (WIDTH / 2) - (len / 2), y);
 	}
 
-	private static void displayPage06(ScreenBuffer sb) { // A Map ;). Approximate, square projection... (for now)
+	// A Map ;). Approximate, square projection... (for now)
+	private static void displayPage06(ScreenBuffer sb) {
 		sb.clear();
 		sb.rectangle(0, 0, WIDTH - 1, HEIGHT - 1);
 		if (posBuffer.size() > 1) {
 
-			double minLat = posBuffer.stream().min(Comparator.comparing(GeoPoint::getL)).get().getL();
-			double maxLat = posBuffer.stream().max(Comparator.comparing(GeoPoint::getL)).get().getL();
-			double minLng = posBuffer.stream().min(Comparator.comparing(GeoPoint::getG)).get().getG();
-			double maxLng = posBuffer.stream().max(Comparator.comparing(GeoPoint::getG)).get().getG();
+			double minLat = 0d, maxLat = 0d, minLng = 0d, maxLng = 0d;
 
+			synchronized (posBuffer) {
+				minLat = posBuffer.stream().min(Comparator.comparing(GeoPoint::getL)).get().getL();
+				maxLat = posBuffer.stream().max(Comparator.comparing(GeoPoint::getL)).get().getL();
+				minLng = posBuffer.stream().min(Comparator.comparing(GeoPoint::getG)).get().getG();
+				maxLng = posBuffer.stream().max(Comparator.comparing(GeoPoint::getG)).get().getG();
+			}
 			double deltaLat = Math.abs(maxLat - minLat);
 			double deltaLng = Math.abs(maxLng - minLng);
 
