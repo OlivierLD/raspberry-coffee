@@ -342,9 +342,9 @@ public class TCPWatch {
 //		sb.text(title, (WIDTH / 2) - (len / 2), y);
 		y += 12;
 		if (gpsDate != null) {
-			int centerX = HEIGHT / 2;
-			int centerY = HEIGHT / 2;
-			int radius = HEIGHT / 2;
+			int centerX = (HEIGHT / 2) - 1;
+			int centerY = (HEIGHT / 2) - 1;
+			int radius  = (HEIGHT / 2) - 1;
 			sb.circle(centerX, centerY, radius);
 			for (int h=0; h<12; h+=1) { // Hours Ticks
 				int extX = centerX + (int)Math.round(radius * Math.sin(Math.toRadians(h * 30)));
@@ -391,10 +391,10 @@ public class TCPWatch {
 			sb.text(line, (3 * WIDTH / 4) - (len / 2), y);
 			y += 8;
 		} else {
-			String text = "No Date";
+			String text = "No Date available";
 			y += 8;
 			len = sb.strlen(text);
-			sb.text(title, (WIDTH / 2) - (len / 2), y);
+			sb.text(text, (WIDTH / 2) - (len / 2), y);
 		}
 //		sb.text(String.format("Index: %d", currentIndex), 2, y);
 	}
