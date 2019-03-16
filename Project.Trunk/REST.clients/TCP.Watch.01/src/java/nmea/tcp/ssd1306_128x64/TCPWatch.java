@@ -389,6 +389,11 @@ public class TCPWatch {
 			len = sb.strlen(line);
 			sb.text(line, (3 * WIDTH / 4) - (len / 2), y);
 			y += 8;
+		} else {
+			String text = "No Date";
+			y += 8;
+			len = sb.strlen(text);
+			sb.text(title, (WIDTH / 2) - (len / 2), y);
 		}
 //		sb.text(String.format("Index: %d", currentIndex), 2, y);
 	}
@@ -599,6 +604,9 @@ public class TCPWatch {
 				 */
 
 				if (response != null) {
+					if (DEBUG) {
+						System.out.println("HTTP Response received.");
+					}
 					// Dispatch the data
 					JsonElement position = response.get("Position");
 					if (position != null) {
@@ -620,6 +628,9 @@ public class TCPWatch {
 							posBuffer.add(new GeoPoint(latitude, longitude));
 							while (posBuffer.size() > POS_BUFFER_MAX_LEN) {
 								posBuffer.remove(0);
+							}
+							if (VERBOSE) {
+								System.out.println(String.format("%d entry(ies) in the position buffer", posBuffer.size()));
 							}
 						}
 					}
@@ -665,7 +676,7 @@ public class TCPWatch {
 //				System.out.println(">> Data:" + prettyJson);
 				} else {
 					if (DEBUG) {
-						System.out.println("...No response");
+						System.out.println("...No response from HTTP Request.");
 					}
 				}
 			}
