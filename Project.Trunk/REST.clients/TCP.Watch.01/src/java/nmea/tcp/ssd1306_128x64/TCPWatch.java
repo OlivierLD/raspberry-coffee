@@ -615,7 +615,7 @@ public class TCPWatch {
 							ex.printStackTrace();
 							posOk = false;
 						}
-						if (posOk) {
+						if (posOk && latitude != 0 && longitude != 0) {
 							// Add to buffer
 							posBuffer.add(new GeoPoint(latitude, longitude));
 							while (posBuffer.size() > POS_BUFFER_MAX_LEN) {
