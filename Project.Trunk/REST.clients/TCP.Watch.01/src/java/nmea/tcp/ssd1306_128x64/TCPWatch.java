@@ -677,7 +677,7 @@ public class TCPWatch {
 		dataFetcher.start();
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("\nCtrl+C !");
+			LOGGER.log(Level.INFO, "\nCtrl+C !");
 			keepLooping = false;
 			TimeUtil.delay(5_000);// Wait for the screen to shut off
 		}));
