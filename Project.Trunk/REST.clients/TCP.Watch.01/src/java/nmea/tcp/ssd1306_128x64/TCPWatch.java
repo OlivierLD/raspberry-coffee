@@ -35,8 +35,8 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TimeZone;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /**
@@ -459,31 +459,31 @@ public class TCPWatch {
 						minLat + ((maxLat - minLat) / 2),
 						minLng + ((maxLng - minLng) / 2));
 
-				double sizeFactor = 1;
-				double x, y;
-				for (GeoPoint gp : posBuffer) {
-					x = (WIDTH / 2) + (((gp.getG() - mapCenter.getG()) * (WIDTH / delta)) * sizeFactor);
-					y = (HEIGHT / 2) - (((gp.getL() - mapCenter.getL()) * (HEIGHT / delta)) * sizeFactor);
+				AtomicReference<Double> sizeFactor = new AtomicReference(1d);
+				posBuffer.stream().forEach(gp -> {
+					double x = (WIDTH / 2) + (((gp.getG() - mapCenter.getG()) * (WIDTH / delta)) * sizeFactor.get());
+					double y = (HEIGHT / 2) - (((gp.getL() - mapCenter.getL()) * (HEIGHT / delta)) * sizeFactor.get());
 
 					double dx = Math.abs((WIDTH / 2) - x);
 					double dy = Math.abs((HEIGHT / 2) - y);
 					double distToCenter = Math.sqrt((dx * dx) + (dy * dy));
-					sizeFactor = Math.min(sizeFactor, (WIDTH / 2) / distToCenter);
-				}
-				sizeFactor *= 0.95; // Not too close to the borders.
-				Integer prevX = null, prevY = null;
-				for (GeoPoint gp : posBuffer) {
-					Integer canvasX = (int)Math.round((WIDTH / 2) + (((gp.getG() - mapCenter.getG()) * (WIDTH / delta)) * sizeFactor));
-					Integer canvasY = (int)Math.round((HEIGHT / 2) - (((gp.getL() - mapCenter.getL()) * (HEIGHT / delta)) * sizeFactor));
-					if (prevX != null && prevY != null) {
-						sb.line(prevX, prevY, canvasX, canvasY);
+					sizeFactor.set(Math.min(sizeFactor.get(), (WIDTH / 2) / distToCenter));
+				});
+				sizeFactor.set(sizeFactor.get() * 0.9); // Not too close to the borders.
+				AtomicReference<Integer> prevX = null;
+				AtomicReference<Integer> prevY = null;
+				posBuffer.stream().forEach(gp -> {
+					Integer canvasX = (int)Math.round((WIDTH / 2) + (((gp.getG() - mapCenter.getG()) * (WIDTH / delta)) * sizeFactor.get()));
+					Integer canvasY = (int)Math.round((HEIGHT / 2) - (((gp.getL() - mapCenter.getL()) * (HEIGHT / delta)) * sizeFactor.get()));
+					if (prevX.get() != null && prevY.get() != null) {
+						sb.line(prevX.get(), prevY.get(), canvasX, canvasY);
 					}
-					prevX = canvasX;
-					prevY = canvasY;
-				}
+					prevX.set(canvasX);
+					prevY.set(canvasY);
+				});
 				// Dot on the last position
-				if (prevX != null && prevY != null) {
-					sb.circle(prevX, prevY, 3);
+				if (prevX.get() != null && prevY.get() != null) {
+					sb.circle(prevX.get(), prevY.get(), 2);
 				}
 			}
 		} else {
