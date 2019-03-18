@@ -507,7 +507,7 @@ You need to change the line that says
 ```
 BASE_URL="-Dbase.url=http://192.168.42.10:9999"
 ```
-Change the IP and port to what it should be (like `192.168.127.1:9999`), and you're good to go.
+Change the IP and port to what it should be (like `192.168.50.10:9999`), and you're good to go.
 Run the script, and you're done!
 ```
  $ ./watch.ssd.sh
