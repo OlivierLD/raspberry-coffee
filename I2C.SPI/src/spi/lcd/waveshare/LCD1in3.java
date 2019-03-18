@@ -33,8 +33,6 @@ import java.util.function.Consumer;
  * Color LCD Screen 240x240
  * 3 Buttons
  * Joystick
- *
- * TODO Display image
  */
 public class LCD1in3 {
 

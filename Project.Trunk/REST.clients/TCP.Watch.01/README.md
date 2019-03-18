@@ -381,7 +381,9 @@ For now (March 2019), considering
 - the performances
 - the potential for evolutions
 
-this is my favorite configuration, the most versatile.
+this is my favorite configuration, the most versatile, and faster than the configuration involving the [WaveShare 1.3"](https://www.waveshare.com/product/modules/oleds-lcds/raspberry-pi-lcd/1.3inch-lcd-hat.htm) display (240x240).
+> Note: this [WaveShare 1.3" display](https://www.waveshare.com/product/modules/oleds-lcds/raspberry-pi-lcd/1.3inch-lcd-hat.htm) if a very nice and affordable device,
+> in colors, 240x240 pixels, with a joystick and 3 push buttons. But - in the tests I did - it turns out to be slower than lower resolution black and white displays.
 
 Breadboard wiring:
 
@@ -414,7 +416,7 @@ The real prototype (with its 500mAh LiPo battery):
 | ![Screen 1](./img/screen.01.png) | ![Screen 2](./img/screen.02.png) | ![Screen 3](./img/screen.03.png) | ![Screen 4](./img/screen.04.png) | ![Screen 5](./img/screen.05.png) |
 
 The screens shown here are just examples. Its very easy to come up with your own ones.
-I'll write more soon, possibilities are endless.
+I keep writing them, possibilities are endless and this document might not be 100% up-to-date.
 
 #### Video
 YouTube has it: https://youtu.be/6Dz-3qKJtjk

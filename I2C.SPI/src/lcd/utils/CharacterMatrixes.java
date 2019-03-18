@@ -6,6 +6,9 @@ import java.util.Map;
 public class CharacterMatrixes {
 	// All characters MUST be 10 pixels high,
 	// for one character, all lines have the same length (variable from one character to another)
+
+	// TODO See the fonts in spi.lcd.waveshare.fonts
+
 	public final static int FONT_SIZE = 10;
 	public final static Map<String, String[]> characters = new HashMap<>();
 
@@ -392,7 +395,7 @@ public class CharacterMatrixes {
 				" X  ",
 				"X   "});
 
-/// TODO Add up to 10 lines for all below
+
 		characters.put("\272", new String[]{ // Degree sign
 				"    ",
 				"XXX ",

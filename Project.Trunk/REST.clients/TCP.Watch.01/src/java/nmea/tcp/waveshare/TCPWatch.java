@@ -31,7 +31,7 @@ import static spi.lcd.waveshare.LCD1in3.DrawFill;
  */
 public class TCPWatch {
 
-	private static String BASE_URL = System.getProperty("base.url", "http://192.168.127.1:8080");
+	private static String BASE_URL = System.getProperty("base.url", "http://192.168.50.10:9999");
 	private static boolean VERBOSE = "true".equals(System.getProperty("verbose", "false"));
 
 	private final static SimpleDateFormat SDF_1 = new SimpleDateFormat("E dd MMM yyyy");
