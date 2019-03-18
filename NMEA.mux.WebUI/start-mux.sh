@@ -67,7 +67,7 @@ then
   printf "| Starting Multiplexer |\n"
   printf "+----------------------+\n"
   # See the script for option details
-  ./to.mux.sh -n
+  ./to.mux.sh -n --no-date
 else
   printf "No to.mux.sh found\n"
 fi

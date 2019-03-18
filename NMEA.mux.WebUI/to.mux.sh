@@ -47,7 +47,52 @@ else
     sudo mv nohup.out ${now}_nohup.out
   fi
 fi
-nohup ./mux.sh nmea.mux.gps.log.properties &
+#
+# Script parameters
+#
+NO_DATE=false
+RMC_TIME_OK=true
+SUN_FLOWER=false
+PROP_FILE="nmea.mux.gps.log.properties"
+JAVA_OPTIONS=
+#
+for ARG in "$@"
+do
+	echo -e "Managing prm $ARG"
+  if [ "$ARG" == "-p" ] || [ "$ARG" == "--proxy" ]
+  then
+    USE_PROXY=true
+  elif [ "$ARG" == "--no-date" ]
+  then
+    NO_DATE=true
+  elif [ "$ARG" == "--no-rmc-time" ]
+  then
+    RMC_TIME_OK=false
+  elif [[ $ARG == -m:* ]] || [[ $ARG == --mux:* ]] # !! No quotes !!
+  then
+    PROP_FILE=${ARG#*:}
+    echo -e "Detected properties file $PROP_FILE"
+  fi
+done
+#
+if [ "$NO_DATE" == "true" ]
+then
+	# To use when re-playing GPS data. Those dates will not go in the cache.
+	JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GGA.date.time=true"
+	JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GLL.date.time=true"
+fi
+#
+if [ "$RMC_TIME_OK" == "false" ]
+then
+	# To use when re-playing GPS data. Those dates will not go in the cache.
+	JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.time.ok=false"
+fi
+#
+echo -e "JAVA_OPTIONS in to.mux.sh: $JAVA_OPTIONS"
+# The script below uses $JAVA_OPTIONS (hence the .)
+# nohup ./mux.sh $PROP_FILE &
+. ./mux.sh $PROP_FILE &
+#
 echo On its way!
 MY_IP=$(hostname -I | awk '{ print $1 }')
 echo "Reach http://${MY_IP}:9999/web/index.html"

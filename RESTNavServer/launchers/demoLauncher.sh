@@ -150,7 +150,7 @@ do
 	  "10")
 	    PROP_FILE=nmea.mux.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
-	    ./runNavServer.sh --mux:$PROP_FILE &
+	    ./runNavServer.sh --mux:$PROP_FILE --no-date &
 	    if [ "$LAUNCH_BROWSER" == "Y" ]
 	    then
 		    echo -e ">>> Waiting for the server to start..."

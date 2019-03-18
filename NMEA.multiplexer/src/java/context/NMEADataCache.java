@@ -319,10 +319,11 @@ public class NMEADataCache
 								}
 								if ((rmc.getRmcDate() != null || rmc.getRmcTime() != null) && rmc.getGp() != null) {
 									long solarTime = -1L;
-									if (rmc.getRmcDate() != null)
+									if (rmc.getRmcDate() != null) {
 										solarTime = rmc.getRmcDate().getTime() + longitudeToTime(rmc.getGp().lng);
-									else
+									} else {
 										solarTime = rmc.getRmcTime().getTime() + longitudeToTime(rmc.getGp().lng);
+									}
 									Date solarDate = new Date(solarTime);
 									this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
 								}

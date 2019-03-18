@@ -28,6 +28,10 @@ public class SolarDate implements Serializable {
 
 		String[] sol = FmtDate.SDF_ARRAY.format(date).split(";");
 		this.fmtDate = new FmtDate()
+				.epoch(date.getTime())
+				.year(Integer.parseInt(sol[0]))
+				.month(Integer.parseInt(sol[1]))
+				.day(Integer.parseInt(sol[2]))
 				.hour(Integer.parseInt(sol[3]))
 				.min(Integer.parseInt(sol[4]))
 				.sec(Integer.parseInt(sol[5]));

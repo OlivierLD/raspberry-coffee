@@ -13,7 +13,10 @@ fi
 #
 echo Using properties file $MUX_PROP_FILE
 #
-JAVA_OPTIONS=
+JAVA_OPTIONS="$JAVA_OPTIONS" # From parent script, possibly
+#
+echo -e "In $0, inherited JAVA_OPTIONS: $JAVA_OPTIONS"
+#
 if [ "$OS" == "Darwin" ]
 then
   JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"       # for Mac
@@ -92,5 +95,7 @@ LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 # sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
 # java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
 # sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navrest.NavServer
-java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navrest.NavServer
+COMMAND="java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navrest.NavServer"
+echo -e "Running $COMMAND"
+$COMMAND
 #
