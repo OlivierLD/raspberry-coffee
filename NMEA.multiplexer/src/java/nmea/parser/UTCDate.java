@@ -23,16 +23,16 @@ public class UTCDate implements Serializable {
 	public UTCDate(Date date) {
 		this.date = date;
 		this.epoch = date.getTime();
-		String[] sol = FmtDate.SDF_ARRAY.format(date).split(";");
+		String[] utc = FmtDate.SDF_ARRAY.format(date).split(";");
 
 		this.fmtDate = new FmtDate()
 				.epoch(date.getTime())
-				.year(Integer.parseInt(sol[0]))
-				.month(Integer.parseInt(sol[1]))
-				.day(Integer.parseInt(sol[2]))
-				.hour(Integer.parseInt(sol[3]))
-				.min(Integer.parseInt(sol[4]))
-				.sec(Integer.parseInt(sol[5]));
+				.year(Integer.parseInt(utc[0]))
+				.month(Integer.parseInt(utc[1]))
+				.day(Integer.parseInt(utc[2]))
+				.hour(Integer.parseInt(utc[3]))
+				.min(Integer.parseInt(utc[4]))
+				.sec(Integer.parseInt(utc[5]));
 	}
 
 	public Date getValue() {

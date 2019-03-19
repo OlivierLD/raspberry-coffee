@@ -174,132 +174,132 @@ or this:
     "HDG Offset": 0,
     "To Waypoint": "RANGI   ",
     "CDR": {
-        "angle": 357.39371834661836
+        "angle": 147.11690737852473
     },
     "Daily": {
-        "distance": 12.3
+        "distance": 12.2
     },
     "Max Leeway": 10,
-    "VMG on Wind": -4.666904755831213,
+    "VMG on Wind": -4.808326112068523,
     "HDG c.": {
-        "angle": 210
+        "angle": 227
     },
     "CMG": {
-        "angle": 219.01692220976113
+        "angle": 236.01692220976113
     },
     "BSP": {
-        "speed": 7.1
+        "speed": 6.5
     },
     "TWA": {
-        "angle": -130.1671406162612
+        "angle": -150.44725459008612
     },
     "TWD": {
-        "angle": 88
+        "angle": 85
     },
     "Current calculated with damping": {
         "30000": {
             "bufferLength": 30000,
             "speed": {
-                "speed": 0.6124102456146006
+                "speed": 0.523633346634322
             },
             "direction": {
-                "angle": 167.45821668777543
+                "angle": 108.27614489795486
             },
-            "nbPoints": 13,
-            "oldest": "Sun, 2010 Nov 21 22:08:20 UTC",
-            "latest": "Sun, 2010 Nov 21 22:08:50 UTC",
-            "len": 30000
+            "nbPoints": 11,
+            "oldest": "Sun, 2010 Nov 21 22:07:14 UTC",
+            "latest": "Sun, 2010 Nov 21 22:07:54 UTC",
+            "len": 28000
         },
         "60000": {
             "bufferLength": 60000,
             "speed": {
-                "speed": 0.3454258586586602
+                "speed": 0.6305106866031588
             },
             "direction": {
-                "angle": 179.68230779630707
+                "angle": 61.193757854150945
             },
-            "nbPoints": 20,
-            "oldest": "Sun, 2010 Nov 21 22:07:54 UTC",
-            "latest": "Sun, 2010 Nov 21 22:07:12 UTC",
-            "len": 56000
+            "nbPoints": 14,
+            "oldest": "Sun, 2010 Nov 21 22:07:14 UTC",
+            "latest": "Sun, 2010 Nov 21 22:07:54 UTC",
+            "len": 40000
         },
         "600000": {
             "bufferLength": 600000,
             "speed": {
-                "speed": 0.30181447417337753
+                "speed": 0.6305106866031588
             },
             "direction": {
-                "angle": 132.62965070665007
+                "angle": 61.193757854150945
             },
-            "nbPoints": 36,
-            "oldest": "Sun, 2010 Nov 21 22:07:12 UTC",
-            "latest": "Sun, 2010 Nov 21 22:08:50 UTC",
-            "len": 98000
+            "nbPoints": 14,
+            "oldest": "Sun, 2010 Nov 21 22:07:54 UTC",
+            "latest": "Sun, 2010 Nov 21 22:07:54 UTC",
+            "len": 40000
         }
     },
     "Position": {
-        "lat": -9.1098,
-        "lng": -140.21075000000002
+        "lat": -9.108566666666666,
+        "lng": -140.2094833333333
     },
     "Log": {
         "distance": 3013
     },
     "Solar Time": {
-        "date": "Jan 1, 1970, 4:48:01 AM",
+        "date": "Nov 21, 2010, 4:47:05 AM",
         "fmtDate": {
-            "epoch": 0,
-            "year": 0,
-            "month": 0,
-            "day": 0,
+            "epoch": 1290343625729,
+            "year": 2010,
+            "month": 11,
+            "day": 21,
             "hour": 12,
-            "min": 48,
-            "sec": 1
+            "min": 47,
+            "sec": 5
         }
     },
     "BSP Factor": 1,
     "Set and Drift": {
-        "speed": 0.32,
-        "angle": 121
+        "speed": 0.63,
+        "angle": 61
     },
     "From Waypoint": "",
     "TWS": {
-        "speed": 22.1
+        "speed": 17.8
     },
     "GPS Time": {
-        "date": "Jan 1, 1970, 2:08:52 PM",
+        "date": "Nov 21, 2010, 2:07:56 PM",
         "fmtDate": {
-            "epoch": 0,
-            "year": 0,
-            "month": 0,
-            "day": 0,
+            "epoch": 1290377276000,
+            "year": 2010,
+            "month": 11,
+            "day": 21,
             "hour": 22,
-            "min": 8,
-            "sec": 52
+            "min": 7,
+            "sec": 56
         }
     },
     "Distance to WP": {
-        "distance": 561.6
+        "distance": 561.7
     },
     "AWS Factor": 1,
     "Water Temperature": {
         "temperature": 26.5
     },
-    "Small Distance": 0.1897343505190188,
-    "NMEA": "$CCVDR,121.0,T,111.0,M,0.32,N*0B\r\n",
+    "Small Distance": 0.07957878215928044,
+    "NMEA": "$CCVDR,61.0,T,51.0,M,0.63,N*0F\r\n",
     "NMEA_AS_IS": {
-        "VLW": "$IIVLW,03013,N,012.3,N*52\r",
-        "VHW": "$IIVHW,,,210,M,07.1,N,,*61\r",
-        "VDR": "$CCVDR,121.0,T,111.0,M,0.32,N*0B\r\n",
-        "GLL": "$IIGLL,0906.588,S,14012.645,W,220852,A,A*5B\r",
-        "RMB": "$IIRMB,A,3.00,R,,RANGI   ,,,,,561.60,230,06.5,V,A*01\r",
-        "RMC": "$IIRMC,220850,A,0906.586,S,14012.643,W,06.6,223,211110,10,E,A*0D\r",
-        "DPT": "$IIDPT,001.6,+0.7,*47\r",
-        "HDG": "$IIHDG,210,,,10,E*10\r",
-        "MWV": "$CCMWV,230.0,T,022.1,N,A*3B\r\n",
-        "VWR": "$IIVWR,117,L,17.1,N,,,,*7F\r",
+        "VLW": "$IIVLW,03013,N,012.2,N*53\r",
+        "VHW": "$IIVHW,,,225,M,06.5,N,,*62\r",
+        "VDR": "$CCVDR,61.0,T,51.0,M,0.63,N*0F\r\n",
+        "GLL": "$IIGLL,0906.514,S,14012.569,W,220756,A,A*58\r",
+        "RMB": "$IIRMB,A,3.00,R,,RANGI   ,,,,,561.70,230,06.7,V,A*02\r",
+        "RMC": "$IIRMC,220756,A,0906.513,S,14012.568,W,06.8,220,211110,10,E,A*0F\r",
+        "DPT": "$IIDPT,000.9,+0.7,*49\r",
+        "HDG": "$IIHDG,227,,,10,E*14\r",
+        "MWV": "$CCMWV,210.0,T,017.8,N,A*36\r\n",
+        "VWR": "$IIVWR,130,L,13.9,N,,,,*76\r",
         "MTW": "$IIMTW,+26.5,C*39\r",
-        "VWT": "$CCVWT,130.2,L,22.1,N,11.4,M,40.9,K*69\r\n",
-        "MWD": "$CCMWD,088.0,T,078.0,M,22.1,N,11.4,M*4E\r\n"
+        "VWT": "$CCVWT,150.4,L,17.8,N,9.1,M,32.9,K*5F\r\n",
+        "MWD": "$CCMWD,085.0,T,075.0,M,17.8,N,9.1,M*7D\r\n"
     },
     "D": {
         "angle": 10
@@ -308,10 +308,10 @@ or this:
         "distance": 3
     },
     "AWA": {
-        "angle": -115
+        "angle": -130
     },
     "Depth": {
-        "depthInMeters": 2.299999952316284
+        "depthInMeters": 1.5999999046325684
     },
     "Bearing to WP": {
         "angle": 230
@@ -320,20 +320,20 @@ or this:
         "angle": 9.01692220976113
     },
     "Speed to WP": {
-        "speed": 6.5
+        "speed": 6.7
     },
     "COG": {
-        "angle": 223
+        "angle": 220
     },
     "AWS": {
-        "speed": 18.1
+        "speed": 13.9
     },
     "HDG true": {
-        "angle": 219.01692220976113
+        "angle": 236.01692220976113
     },
     "AWA Offset": 0,
     "CSP": {
-        "speed": 0.690195932562707
+        "speed": 1.8766103331230608
     },
     "d": {
         "angle": -0.9830777902388692
@@ -343,32 +343,32 @@ or this:
     },
     "Deviation file name": "dp_2011_04_15.csv",
     "HDG mag.": {
-        "angle": 209.01692220976113
+        "angle": 226.01692220976113
     },
     "SOG": {
-        "speed": 6.6
+        "speed": 6.8
     },
     "Leeway": {
         "angle": 0
     },
     "GPS Date & Time": {
-        "date": "Nov 21, 2010, 2:08:50 PM",
-        "epoch": 1290377330000,
+        "date": "Nov 21, 2010, 2:07:56 PM",
+        "epoch": 1290377276000,
         "fmtDate": {
-            "epoch": 1290377330000,
+            "epoch": 1290377276000,
             "year": 2010,
             "month": 11,
             "day": 21,
             "hour": 22,
-            "min": 8,
-            "sec": 50
+            "min": 7,
+            "sec": 56
         }
     },
     "WayPoint pos": {
         "lat": 0,
         "lng": 0
     },
-    "VMG to Waypoint": 6.550804600832724,
+    "VMG to Waypoint": 6.696692720483014,
     "Steer": "R"
 }
 ```
@@ -458,7 +458,7 @@ $
 As seen above, the current network (in this case) is `Sonic-00e0_EXT`.
 We need to change that.
 
-On recent versions of Raspian, look into `wpa_supplicant.conf`:
+On recent versions of Rasbpian, look into `wpa_supplicant.conf`:
 ```
 $ cat /etc/wpa_supplicant/wpa_supplicant.conf
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
