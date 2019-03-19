@@ -352,6 +352,18 @@ public class NMEADataCache
 									if ("true".equals(System.getProperty("calculate.solar.with.eot")) && rmc.getGp() != null) {
 										Date solarDateFromEOT = getSolarDateFromEOT(rmc.getRmcDate() != null ? rmc.getRmcDate() : rmc.getRmcTime(), rmc.getGp().lat, rmc.getGp().lng);
 										this.put(GPS_SOLAR_TIME, new SolarDate(solarDateFromEOT));
+										// Debug
+										if (false) { // For comparison
+											System.out.println(String.format("Solar Date with EoT: %s", SolarDate.FMT.format(solarDateFromEOT)));
+											if (rmc.getRmcDate() != null) {
+												solarTime = rmc.getRmcDate().getTime() + longitudeToTime(rmc.getGp().lng);
+											} else {
+												solarTime = rmc.getRmcTime().getTime() + longitudeToTime(rmc.getGp().lng);
+											}
+											Date solarDate = new Date(solarTime);
+											System.out.println(String.format("Solar Date from G  : %s", SolarDate.FMT.format(solarDate)));
+											System.out.println("-----------------------------------------");
+										}
 									} else {
 										if (rmc.getRmcDate() != null) {
 											solarTime = rmc.getRmcDate().getTime() + longitudeToTime(rmc.getGp().lng);

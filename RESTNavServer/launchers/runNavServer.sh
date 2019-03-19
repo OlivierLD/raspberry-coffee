@@ -113,7 +113,10 @@ JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-12
 # Polar file (coeffs)
 #
 JAVA_OPTS="$JAVA_OPTS -Dpolar.file.location=./sample.data/polars/CheoyLee42.polar-coeff"
+JAVA_OPTS="$JAVA_OPTS -Dcalculate.solar.with.eot=true"
+
 #
+echo -e ">>> Warning: Bumping Max Memory to 1Gb"
 JAVA_OPTS="$JAVA_OPTS -Xms64M -Xmx1G"
 #
 echo -e "Using properties:$JAVA_OPTS"
