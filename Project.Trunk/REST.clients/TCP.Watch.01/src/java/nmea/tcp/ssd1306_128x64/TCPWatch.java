@@ -119,6 +119,7 @@ public class TCPWatch {
 	private static final int POS_BUFFER_MAX_LEN = 500; // Tune it at will
 	private static List<GeoPoint> posBuffer = new ArrayList<>();
 	private static GPSDate gpsDate = null;
+	private static GPSDate solarDate = null;
 	private static boolean connected = false;
 
 	private static boolean SCREEN_00_VERBOSE = "true".equals(System.getProperty("verbose.00", "false"));
@@ -165,6 +166,7 @@ public class TCPWatch {
 			TCPWatch::displayPage01,
 			TCPWatch::displayPage02,
 			TCPWatch::displayPage03,
+			TCPWatch::displayPage03_2,
 			TCPWatch::displayPage04,
 			TCPWatch::displayPage05,
 			TCPWatch::displayPage06
@@ -334,65 +336,88 @@ public class TCPWatch {
 		sb.text(index, (WIDTH / 2) - (len / 2), y);
 	}
 
+	private static void drawWatch(ScreenBuffer sb, int y, GPSDate date, String label) {
+		int centerX = (HEIGHT / 2) - 1;
+		int centerY = (HEIGHT / 2) - 1;
+		int radius  = (HEIGHT / 2) - 1;
+		sb.circle(centerX, centerY, radius);
+		for (int h=0; h<12; h+=1) { // Hours Ticks
+			int extX = centerX + (int)Math.round(radius * Math.sin(Math.toRadians(h * 30)));
+			int extY = centerY - (int)Math.round(radius * Math.cos(Math.toRadians(h * 30)));
+			int intX = centerX + (int)Math.round(radius * 0.8 * Math.sin(Math.toRadians(h * 30)));
+			int intY = centerY - (int)Math.round(radius * 0.8 * Math.cos(Math.toRadians(h * 30)));
+			sb.line(intX, intY, extX, extY);
+		}
+		int secInDegrees = (date.seconds * 6);
+		float minInDegrees = ((date.minutes * 6) + (date.seconds / 10));
+		float hoursInDegrees = ((date.hours) * 30) + (((date.minutes * 6) + (date.seconds / 10)) / 12);
+
+		// Hours
+		int hoursX = centerX + (int)Math.round(radius * 0.5 * Math.sin(Math.toRadians(hoursInDegrees)));
+		int hoursY = centerY - (int)Math.round(radius * 0.5 * Math.cos(Math.toRadians(hoursInDegrees)));
+		sb.line(centerX, centerY, hoursX, hoursY);
+		// Minutes
+		int minutesX = centerX + (int)Math.round(radius * 0.8 * Math.sin(Math.toRadians(minInDegrees)));
+		int minutesY = centerY - (int)Math.round(radius * 0.8 * Math.cos(Math.toRadians(minInDegrees)));
+		sb.line(centerX, centerY, minutesX, minutesY);
+		// Seconds
+		int secondsX = centerX + (int)Math.round(radius * 0.9 * Math.sin(Math.toRadians(secInDegrees)));
+		int secondsY = centerY - (int)Math.round(radius * 0.9 * Math.cos(Math.toRadians(secInDegrees)));
+		sb.line(centerX, centerY, secondsX, secondsY);
+
+		String line = String.format("%02d", date.day);
+		int len = sb.strlen(line);
+		sb.text(line, (3 * WIDTH / 4) - (len / 2), y);
+		y += 8;
+		line = MONTH[date.month - 1];
+		len = sb.strlen(line);
+		sb.text(line, (3 * WIDTH / 4) - (len / 2), y);
+		y += 8;
+		line = String.format("%04d", date.year);
+		len = sb.strlen(line);
+		sb.text(line, (3 * WIDTH / 4) - (len / 2), y);
+		y += 12;
+		line = String.format("%02d:%02d:%02d", date.hours, date.minutes, date.seconds);
+		len = sb.strlen(line);
+		sb.text(line, (3 * WIDTH / 4) - (len / 2), y);
+		y += 8;
+		line = label;
+		len = sb.strlen(line);
+		sb.text(line, (3 * WIDTH / 4) - (len / 2), y);
+		y += 8;
+	}
+
 	private static void displayPage03(ScreenBuffer sb) {
 		// A Watch for GPS Time
 		sb.clear();
-		String title = "Screen #3";
+		String title = ""; // Screen #3";
 		int y = 8;
 		int len = sb.strlen(title);
 //		sb.text(title, (WIDTH / 2) - (len / 2), y);
 		y += 12;
 		if (gpsDate != null) {
-			int centerX = (HEIGHT / 2) - 1;
-			int centerY = (HEIGHT / 2) - 1;
-			int radius  = (HEIGHT / 2) - 1;
-			sb.circle(centerX, centerY, radius);
-			for (int h=0; h<12; h+=1) { // Hours Ticks
-				int extX = centerX + (int)Math.round(radius * Math.sin(Math.toRadians(h * 30)));
-				int extY = centerY - (int)Math.round(radius * Math.cos(Math.toRadians(h * 30)));
-				int intX = centerX + (int)Math.round(radius * 0.8 * Math.sin(Math.toRadians(h * 30)));
-				int intY = centerY - (int)Math.round(radius * 0.8 * Math.cos(Math.toRadians(h * 30)));
-				sb.line(intX, intY, extX, extY);
-			}
-			int secInDegrees = (gpsDate.seconds * 6);
-			float minInDegrees = ((gpsDate.minutes * 6) + (gpsDate.seconds / 10));
-			float hoursInDegrees = ((gpsDate.hours) * 30) + (((gpsDate.minutes * 6) + (gpsDate.seconds / 10)) / 12);
-
-			// Hours
-			int hoursX = centerX + (int)Math.round(radius * 0.5 * Math.sin(Math.toRadians(hoursInDegrees)));
-			int hoursY = centerY - (int)Math.round(radius * 0.5 * Math.cos(Math.toRadians(hoursInDegrees)));
-			sb.line(centerX, centerY, hoursX, hoursY);
-			// Minutes
-			int minutesX = centerX + (int)Math.round(radius * 0.8 * Math.sin(Math.toRadians(minInDegrees)));
-			int minutesY = centerY - (int)Math.round(radius * 0.8 * Math.cos(Math.toRadians(minInDegrees)));
-			sb.line(centerX, centerY, minutesX, minutesY);
-			// Seconds
-			int secondsX = centerX + (int)Math.round(radius * 0.9 * Math.sin(Math.toRadians(secInDegrees)));
-			int secondsY = centerY - (int)Math.round(radius * 0.9 * Math.cos(Math.toRadians(secInDegrees)));
-			sb.line(centerX, centerY, secondsX, secondsY);
-
-			String line = String.format("%02d", gpsDate.day);
-			len = sb.strlen(line);
-			sb.text(line, (3 * WIDTH / 4) - (len / 2), y);
-			y += 8;
-			line = MONTH[gpsDate.month - 1];
-			len = sb.strlen(line);
-			sb.text(line, (3 * WIDTH / 4) - (len / 2), y);
-			y += 8;
-			line = String.format("%04d", gpsDate.year);
-			len = sb.strlen(line);
-			sb.text(line, (3 * WIDTH / 4) - (len / 2), y);
-			y += 12;
-			line = String.format("%02d:%02d:%02d", gpsDate.hours, gpsDate.minutes, gpsDate.seconds);
-			len = sb.strlen(line);
-			sb.text(line, (3 * WIDTH / 4) - (len / 2), y);
-			y += 8;
-			line = "UTC";
-			len = sb.strlen(line);
-			sb.text(line, (3 * WIDTH / 4) - (len / 2), y);
-			y += 8;
+			drawWatch(sb, y, gpsDate, "UTC");
 		} else {
 			String text = "No Date available";
+			y += 8;
+			len = sb.strlen(text);
+			sb.text(text, (WIDTH / 2) - (len / 2), y);
+		}
+//		sb.text(String.format("Index: %d", currentIndex), 2, y);
+	}
+
+	private static void displayPage03_2(ScreenBuffer sb) {
+		// A Watch for Solar Time
+		sb.clear();
+		String title = ""; // Screen #3";
+		int y = 8;
+		int len = sb.strlen(title);
+//		sb.text(title, (WIDTH / 2) - (len / 2), y);
+		y += 12;
+		if (solarDate != null) {
+			drawWatch(sb, y, solarDate, "Solar");
+		} else {
+			String text = "No Solar Date available";
 			y += 8;
 			len = sb.strlen(text);
 			sb.text(text, (WIDTH / 2) - (len / 2), y);
@@ -648,6 +673,29 @@ public class TCPWatch {
 									.date(substituteDate);
 							if (DEBUG) {
 								System.out.println(String.format("Generated substitute date %s", gpsDate.toString()));
+							}
+						}
+					} catch (NullPointerException npe) {
+						// No GPS Date
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					try {
+						JsonElement gpsJson = response.get("Solar Time");
+						if (gpsJson != null) {
+							solarDate = new GPSDate()
+									.year(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("year").getAsInt())
+									.month(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("month").getAsInt())
+									.day(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("day").getAsInt())
+									.hours(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("hour").getAsInt())
+									.minutes(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("min").getAsInt())
+									.seconds(gpsJson.getAsJsonObject().get("fmtDate").getAsJsonObject().get("sec").getAsInt());
+						} else {
+							Date substituteDate = new Date();
+							solarDate = new GPSDate()
+									.date(substituteDate);
+							if (DEBUG) {
+								System.out.println(String.format("Generated substitute Solar date %s", solarDate.toString()));
 							}
 						}
 					} catch (NullPointerException npe) {
