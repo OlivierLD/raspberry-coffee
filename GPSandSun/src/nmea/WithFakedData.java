@@ -1,7 +1,7 @@
 package nmea;
 
-import calculation.AstroComputer;
-import calculation.SightReductionUtil;
+import calc.calculation.AstroComputer;
+import calc.calculation.SightReductionUtil;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

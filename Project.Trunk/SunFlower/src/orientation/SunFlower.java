@@ -2,8 +2,8 @@ package orientation;
 
 import analogdigitalconverter.mcp3008.MCP3008Reader;
 import calc.GeomUtil;
-import calculation.AstroComputer;
-import calculation.SightReductionUtil;
+import calc.calculation.AstroComputer;
+import calc.calculation.SightReductionUtil;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.i2c.I2CFactory;
 import http.HTTPServer;

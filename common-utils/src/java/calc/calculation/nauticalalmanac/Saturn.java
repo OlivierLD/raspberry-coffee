@@ -1,4 +1,4 @@
-package nauticalalmanac;
+package calc.calculation.nauticalalmanac;
 
 public class Saturn {
 	//Heliocentric longitude of Saturn

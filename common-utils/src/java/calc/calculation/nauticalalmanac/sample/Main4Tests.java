@@ -1,8 +1,8 @@
-package nauticalalmanac.sample;
+package calc.calculation.nauticalalmanac.sample;
 
-import nauticalalmanac.Anomalies;
-import nauticalalmanac.Context;
-import nauticalalmanac.Core;
+import calc.calculation.nauticalalmanac.Anomalies;
+import calc.calculation.nauticalalmanac.Context;
+import calc.calculation.nauticalalmanac.Core;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

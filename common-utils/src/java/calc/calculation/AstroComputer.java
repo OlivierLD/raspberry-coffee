@@ -1,6 +1,6 @@
-package calculation;
+package calc.calculation;
 
-import nauticalalmanac.*;
+import calc.calculation.nauticalalmanac.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

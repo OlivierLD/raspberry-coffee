@@ -1,6 +1,6 @@
 package scratch;
 
-import calculation.AstroComputer;
+import calc.calculation.AstroComputer;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;

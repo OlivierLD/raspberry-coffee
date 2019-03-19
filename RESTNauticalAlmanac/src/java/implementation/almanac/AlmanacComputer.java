@@ -6,15 +6,15 @@ import java.io.PrintStream;
 import java.util.Calendar;
 import java.util.Date;
 
-import nauticalalmanac.Anomalies;
-import nauticalalmanac.Context;
-import nauticalalmanac.Core;
-import nauticalalmanac.Jupiter;
-import nauticalalmanac.Mars;
-import nauticalalmanac.Moon;
-import nauticalalmanac.Saturn;
-import nauticalalmanac.Star;
-import nauticalalmanac.Venus;
+import calc.calculation.nauticalalmanac.Anomalies;
+import calc.calculation.nauticalalmanac.Context;
+import calc.calculation.nauticalalmanac.Core;
+import calc.calculation.nauticalalmanac.Jupiter;
+import calc.calculation.nauticalalmanac.Mars;
+import calc.calculation.nauticalalmanac.Moon;
+import calc.calculation.nauticalalmanac.Saturn;
+import calc.calculation.nauticalalmanac.Star;
+import calc.calculation.nauticalalmanac.Venus;
 
 import calc.GeomUtil;
 

@@ -162,14 +162,14 @@ public class TCPWatch {
 
 	// Add your pages to the list below
 	private static List<Consumer<ScreenBuffer>> pageManagers = Arrays.asList(
-			TCPWatch::displayPage00,
-			TCPWatch::displayPage01,
-			TCPWatch::displayPage02,
-			TCPWatch::displayPage03,
-			TCPWatch::displayPage03_2,
-			TCPWatch::displayPage04,
-			TCPWatch::displayPage05,
-			TCPWatch::displayPage06
+			TCPWatch::displayPage_Welcome,
+			TCPWatch::displayPage_PositionSystemDate,
+			TCPWatch::displayPage_PositionSogCog,
+			TCPWatch::displayPage_UtcDate,
+			TCPWatch::displayPage_SolarDate,
+			TCPWatch::displayPage_SogBig,
+			TCPWatch::displayPage_CogBig,
+			TCPWatch::displayPage_Track
 	);
 
 	/** This is the REST request
@@ -213,7 +213,7 @@ public class TCPWatch {
 
 	private static boolean keepLooping = true;
 
-	private static void displayPage00(ScreenBuffer sb) {
+	private static void displayPage_Welcome(ScreenBuffer sb) {
 		sb.clear();
 		String title = "- Status Screen -";
 		int y = 8;
@@ -287,7 +287,7 @@ public class TCPWatch {
 //		sb.text(index, (WIDTH / 2) - (len / 2), y);
 	}
 
-	private static void displayPage01(ScreenBuffer sb) {
+	private static void displayPage_PositionSystemDate(ScreenBuffer sb) {
 		sb.clear();
 		String title = "Screen #1";
 		int y = 8;
@@ -312,7 +312,7 @@ public class TCPWatch {
 		sb.text(index, (WIDTH / 2) - (len / 2), y);
 	}
 
-	private static void displayPage02(ScreenBuffer sb) {
+	private static void displayPage_PositionSogCog(ScreenBuffer sb) {
 		sb.clear();
 		String title = "Screen #2";
 		int y = 8;
@@ -387,7 +387,7 @@ public class TCPWatch {
 		y += 8;
 	}
 
-	private static void displayPage03(ScreenBuffer sb) {
+	private static void displayPage_UtcDate(ScreenBuffer sb) {
 		// A Watch for GPS Time
 		sb.clear();
 		String title = ""; // Screen #3";
@@ -406,7 +406,7 @@ public class TCPWatch {
 //		sb.text(String.format("Index: %d", currentIndex), 2, y);
 	}
 
-	private static void displayPage03_2(ScreenBuffer sb) {
+	private static void displayPage_SolarDate(ScreenBuffer sb) {
 		// A Watch for Solar Time
 		sb.clear();
 		String title = ""; // Screen #3";
@@ -425,7 +425,7 @@ public class TCPWatch {
 //		sb.text(String.format("Index: %d", currentIndex), 2, y);
 	}
 
-	private static void displayPage04(ScreenBuffer sb) {
+	private static void displayPage_SogBig(ScreenBuffer sb) {
 		sb.clear();
 		String title = "Screen #4";
 		int y = 8;
@@ -448,7 +448,7 @@ public class TCPWatch {
 		sb.text(index, (WIDTH / 2) - (len / 2), y);
 	}
 
-	private static void displayPage05(ScreenBuffer sb) {
+	private static void displayPage_CogBig(ScreenBuffer sb) {
 		sb.clear();
 		String title = "Screen #5";
 		int y = 8;
@@ -473,7 +473,7 @@ public class TCPWatch {
 	}
 
 	// A Map ;). Approximate, square projection... (for now)
-	private static void displayPage06(ScreenBuffer sb) {
+	private static void displayPage_Track(ScreenBuffer sb) {
 		sb.clear();
 		sb.rectangle(0, 0, WIDTH - 1, HEIGHT - 1);
 		if (posBuffer.size() > 1) {
@@ -797,7 +797,7 @@ public class TCPWatch {
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 		LOGGER.log(Level.INFO, "Screenbuffer ready...");
 
-		displayPage00(sb); // Init Screen
+		displayPage_Welcome(sb); // Init Screen
 
 		if (oled != null) {
 			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());

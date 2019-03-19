@@ -1,6 +1,11 @@
 package context;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
+
+import calc.calculation.AstroComputer;
+import calc.calculation.SightReductionUtil;
 
 import nmea.ais.AISParser;
 import nmea.mux.context.Context;
@@ -238,6 +243,31 @@ public class NMEADataCache
 		return smallDist;
 	}
 
+	private Date getSolarDateFromEOT(Date utc, double latitude, double longitude) {
+		Calendar current = GregorianCalendar.getInstance();
+		current.setTime(utc);
+		AstroComputer.setDateTime(current.get(Calendar.YEAR),
+				current.get(Calendar.MONTH) + 1,
+				current.get(Calendar.DAY_OF_MONTH),
+				current.get(Calendar.HOUR_OF_DAY),
+				current.get(Calendar.MINUTE),
+				current.get(Calendar.SECOND));
+		AstroComputer.calculate();
+		SightReductionUtil sru = new SightReductionUtil(AstroComputer.getSunGHA(),
+				AstroComputer.getSunDecl(),
+				latitude,
+				longitude);
+		sru.calculate();
+		double he = sru.getHe().doubleValue();
+		double z = sru.getZ().doubleValue();  // TODO Push those 2 in the cache
+		// Get Equation of time, used to calculate solar time.
+		double eot = AstroComputer.getSunMeridianPassageTime(latitude, longitude); // in decimal hours
+
+		long ms = utc.getTime();
+		Date solar = new Date(ms + Math.round((12 - eot) * 3_600_000));
+		return solar;
+	}
+
 	public void parseAndFeed(String nmeaSentence) {
 		if (StringParsers.validCheckSum(nmeaSentence)) {
 
@@ -319,13 +349,18 @@ public class NMEADataCache
 								}
 								if ((rmc.getRmcDate() != null || rmc.getRmcTime() != null) && rmc.getGp() != null) {
 									long solarTime = -1L;
-									if (rmc.getRmcDate() != null) {
-										solarTime = rmc.getRmcDate().getTime() + longitudeToTime(rmc.getGp().lng);
+									if ("true".equals(System.getProperty("calculate.solar.with.eot")) && rmc.getGp() != null) {
+										Date solarDateFromEOT = getSolarDateFromEOT(rmc.getRmcDate() != null ? rmc.getRmcDate() : rmc.getRmcTime(), rmc.getGp().lat, rmc.getGp().lng);
+										this.put(GPS_SOLAR_TIME, new SolarDate(solarDateFromEOT));
 									} else {
-										solarTime = rmc.getRmcTime().getTime() + longitudeToTime(rmc.getGp().lng);
+										if (rmc.getRmcDate() != null) {
+											solarTime = rmc.getRmcDate().getTime() + longitudeToTime(rmc.getGp().lng);
+										} else {
+											solarTime = rmc.getRmcTime().getTime() + longitudeToTime(rmc.getGp().lng);
+										}
+										Date solarDate = new Date(solarTime);
+										this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
 									}
-									Date solarDate = new Date(solarTime);
-									this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
 								}
 							} else {
 								if (System.getProperty("nmea.cache.verbose", "false").equals("true")) {
@@ -343,9 +378,14 @@ public class NMEADataCache
 
 							GeoPos pos = (GeoPos) this.get(POSITION);
 							if (pos != null) {
-								long solarTime = utc.getValue().getTime() + longitudeToTime(pos.lng);
-								Date solarDate = new Date(solarTime);
-								this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
+								if ("true".equals(System.getProperty("calculate.solar.with.eot"))) {
+									Date solarDateFromEOT = getSolarDateFromEOT(utc.getValue(), pos.lat, pos.lng);
+									this.put(GPS_SOLAR_TIME, new SolarDate(solarDateFromEOT));
+								} else {
+									long solarTime = utc.getValue().getTime() + longitudeToTime(pos.lng);
+									Date solarDate = new Date(solarTime);
+									this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
+								}
 							}
 						}
 						break;
@@ -425,9 +465,14 @@ public class NMEADataCache
 								Date date = (Date) obj[StringParsers.DATE_in_GLL];
 								if (date != null) {
 									this.put(GPS_TIME, new UTCTime(date));
-									long solarTime = date.getTime() + longitudeToTime(pos.lng);
-									Date solarDate = new Date(solarTime);
-									this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
+									if ("true".equals(System.getProperty("calculate.solar.with.eot")) && pos != null) {
+										Date solarDateFromEOT = getSolarDateFromEOT(date, pos.lat, pos.lng);
+										this.put(GPS_SOLAR_TIME, new SolarDate(solarDateFromEOT));
+									} else {
+										long solarTime = date.getTime() + longitudeToTime(pos.lng);
+										Date solarDate = new Date(solarTime);
+										this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
+									}
 								}
 							}
 						}

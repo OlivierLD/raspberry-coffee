@@ -1,4 +1,4 @@
-package nauticalalmanac;
+package calc.calculation.nauticalalmanac;
 
 public class Venus {
 	//Heliocentric longitude of Venus

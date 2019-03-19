@@ -1,4 +1,4 @@
-package nauticalalmanac;
+package calc.calculation.nauticalalmanac;
 
 public class Moon {
 	public static void compute() {

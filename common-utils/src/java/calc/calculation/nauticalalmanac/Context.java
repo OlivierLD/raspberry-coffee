@@ -1,4 +1,4 @@
-package nauticalalmanac;
+package calc.calculation.nauticalalmanac;
 
 public class Context {
 	public final static double EPS0_2000 = 23.439291111; // Reference

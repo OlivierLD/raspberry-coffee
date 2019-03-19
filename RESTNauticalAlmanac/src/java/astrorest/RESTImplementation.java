@@ -1,8 +1,8 @@
 package astrorest;
 
 import calc.GeoPoint;
-import calculation.AstroComputer;
-import calculation.SightReductionUtil;
+import calc.calculation.AstroComputer;
+import calc.calculation.SightReductionUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import http.HTTPServer;
@@ -12,9 +12,9 @@ import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 import implementation.almanac.AlmanacComputer;
 import implementation.perpetualalmanac.Publisher;
-import nauticalalmanac.Context;
-import nauticalalmanac.Core;
-import nauticalalmanac.Star;
+import calc.calculation.nauticalalmanac.Context;
+import calc.calculation.nauticalalmanac.Core;
+import calc.calculation.nauticalalmanac.Star;
 import utils.TimeUtil;
 
 import java.io.BufferedReader;

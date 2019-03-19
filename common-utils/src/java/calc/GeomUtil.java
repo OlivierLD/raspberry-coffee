@@ -333,6 +333,7 @@ public final class GeomUtil {
 	}
 
 	/**
+	 * Note: Approximate. Should also consider equation of time at this date and location.
 	 * @param g   Longitude
 	 * @param hms UT HMS
 	 * @return

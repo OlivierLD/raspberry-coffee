@@ -1,6 +1,6 @@
 package tideengine.publisher;
 
-import calculation.AstroComputer;
+import calc.calculation.AstroComputer;
 import tideengine.BackEndTideComputer;
 import tideengine.Coefficient;
 import tideengine.TideStation;

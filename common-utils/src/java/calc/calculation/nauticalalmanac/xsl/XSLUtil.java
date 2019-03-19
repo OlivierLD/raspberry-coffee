@@ -1,4 +1,4 @@
-package nauticalalmanac.xsl;
+package calc.calculation.nauticalalmanac.xsl;
 
 import calc.GeomUtil;
 
