@@ -886,7 +886,7 @@
 						</tr>
 					</table>
 				</div>
-				<table>
+				<table border="0">
 					<tr>
 						<td>
 							<!--
@@ -903,6 +903,26 @@
 						</td>
 						<td align="left">
 							<input type="range" id="sun-path-tilt-slide" style="-webkit-appearance: slider-vertical; width: 8px; height: 520px; margin-left: 0;" min="-90" max="90" value="-10" onchange="setNewTilt(this, 'sun-path-01');">
+						</td>
+						<td rowspan="2" valign="top" align="center">
+							<span style="color: white;">Solar Time</span>
+							<br/>
+							<split-flap-display id="split-flap-solar-display-00"
+																	class="split-flap-night"
+																	nb-char="8"
+																	font-size="20"
+																	justified="LEFT"
+																	title="Solar Time"
+																	value="00:00:00"></split-flap-display>
+
+							<div class="black-frame centered">
+								<calendar-display id="calendar-03"
+																	class="calendar-02"
+																	title="Solar Date"
+																	width="140"
+																	height="168"
+																	value="01-01-1970"></calendar-display>
+							</div>
 						</td>
 					</tr>
 					<tr>

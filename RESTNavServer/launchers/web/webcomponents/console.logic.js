@@ -426,6 +426,10 @@ function astroCallback(data) {
 	let date = solarDate.format("d-m-Y-l");
 	setData('calendar-02', date);
 
+	// Solar Data for the Solar path
+	setData('split-flap-solar-display-00', time);
+	setData('calendar-03', date);
+
 	let utcDate = new Date(data.epoch);
 
 	let sysDateFmt = utcDate.format('D d-M-Y H:i:s Z');
@@ -457,6 +461,12 @@ function astroCallback(data) {
 			(data.tPass.min < 10 ? '0' : '') + data.tPass.min + ':' +
 			(data.tPass.sec < 10 ? '0' : '') + data.tPass.sec + ' ' +
 			data.tPass.tz;
+
+	// tPass has only hh:mi:ss
+	let tPass = new Date();
+	tPass.setUTCHours(data.tPass.hour, data.tPass.min, data.tPass.sec);
+	document.getElementById('sun-path-01').sunTransit = { time: tPass.getTime() };
+	// console.log("Transit:", tPass);
 
 	worldMap.setAstronomicalData(data);
 	worldMap.repaint();

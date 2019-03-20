@@ -144,7 +144,6 @@ public class NMEADataCache
 
 	private transient long started = 0L;
 
-	private transient NMEADataCache instance = this;
 	private transient double maxAlt = -Double.MAX_VALUE;
 	private transient double minAlt =  Double.MAX_VALUE;
 	private transient GeoPos previousPosition = null;
@@ -377,7 +376,6 @@ public class NMEADataCache
 							} else {
 								if (System.getProperty("nmea.cache.verbose", "false").equals("true")) {
 									System.out.println(String.format("RMC not valid yet [%s]", nmeaSentence));
-
 								}
 							}
 						}
@@ -403,8 +401,9 @@ public class NMEADataCache
 						break;
 					case "VHW": // Water Speed and Heading
 						double[] vhw = StringParsers.parseVHW(nmeaSentence);
-						if (vhw == null)
+						if (vhw == null) {
 							return;
+						}
 						double bsp = vhw[StringParsers.BSP_in_VHW];
 						double hdm = vhw[StringParsers.HDM_in_VHW];
 						if (bsp != -Double.MAX_VALUE) {
@@ -435,8 +434,9 @@ public class NMEADataCache
 						if (wind != null && wind instanceof ApparentWind) { // TODO: TrueWind not used for now
 							this.put(AWS, new Speed(wind.speed));
 							int awa = wind.angle;
-							if (awa > 180)
+							if (awa > 180) {
 								awa -= 360;
+							}
 							this.put(AWA, new Angle180(awa));
 						}
 						break;
@@ -449,8 +449,9 @@ public class NMEADataCache
 						if (aWind != null) {
 							this.put(AWS, new Speed(aWind.speed));
 							int awa = aWind.angle;
-							if (awa > 180)
+							if (awa > 180) {
 								awa -= 360;
+							}
 							this.put(AWA, new Angle180(awa));
 						}
 						break;
@@ -505,10 +506,11 @@ public class NMEADataCache
 							this.put(HDG_COMPASS, new Angle360(heading));
 						} else {
 							double dec = 0d;
-							if (dev != -Double.MAX_VALUE)
+							if (dev != -Double.MAX_VALUE) {
 								dec = dev;
-							else
+							} else {
 								dec = var;
+							}
 							this.put(DECLINATION, new Angle180EW(dec));
 							this.put(HDG_COMPASS, new Angle360(heading /* - dec */));
 						}
@@ -577,8 +579,9 @@ public class NMEADataCache
 								} else if (type.equals(StringGenerator.XDRTypes.GENERIC)) { // Consider it as prate.
 									this.put(PRATE, new Float(val));
 								} else {
-									if ("true".equals(System.getProperty("verbose", "false")))
+									if ("true".equals(System.getProperty("verbose", "false"))) {
 										System.out.println("Un-managed XDR Type:" + type.toString());
+									}
 								}
 							}
 						}
@@ -642,26 +645,29 @@ public class NMEADataCache
 				List<?> ald = dampingMap.get(key);
 				double sum = 0d;
 				double sumCos = 0d,
-								sumSin = 0d;
+							 sumSin = 0d;
 
 				for (Object v : ald) {
-					if (cl == null)
+					if (cl == null) {
 						cl = v.getClass();
-					if (v instanceof Double)
+					}
+					if (v instanceof Double) {
 						sum += ((Double) v).doubleValue();
-					else if (v instanceof NMEADoubleValueHolder) {
+					} else if (v instanceof NMEADoubleValueHolder) {
 						// Debug
-						if (false && key.equals(TWD))
+						if (false && key.equals(TWD)) {
 							System.out.print(((NMEADoubleValueHolder) v).getDoubleValue() + ";");
-
+						}
 						if (v instanceof Angle) { // Angle360 || v instanceof Angle180 || v instanceof Angle180EW || v instanceof Angle180LR)
 							double val = ((NMEADoubleValueHolder) v).getDoubleValue();
 							sumCos += (Math.cos(Math.toRadians(val)));
 							sumSin += (Math.sin(Math.toRadians(val)));
-						} else
+						} else {
 							sum += ((NMEADoubleValueHolder) v).getDoubleValue();
-					} else
+						}
+					} else {
 						System.out.println("What'zat:" + v.getClass().getName());
+					}
 				}
 				try {
 					if (ald.size() != 0) { // Average here
@@ -676,14 +682,16 @@ public class NMEADataCache
 							ret = Class.forName(cl.getName()).newInstance();
 							if (ret instanceof Angle) { // Angle360 || ret instanceof Angle180 || ret instanceof Angle180EW || ret instanceof Angle180LR)
 								double a = Math.toDegrees(Math.acos(sumCos));
-								if (sumSin < 0)
+								if (sumSin < 0) {
 									a = 360d - a;
+								}
 								sum = a;
 							}
 							((NMEADoubleValueHolder) ret).setDoubleValue(sum);
 						}
-					} else
+					} else {
 						ret = super.get(key);
+					}
 				} catch (Exception ex) {
 					Context.getInstance().getLogger().log(Level.INFO, String.format("For key", key), ex);
 				}
@@ -711,8 +719,9 @@ public class NMEADataCache
 
 	public void resetDampingBuffers() {
 		Set<String> keys = dampingMap.keySet();
-		for (String k : keys)
+		for (String k : keys) {
 			dampingMap.get(k).clear();
+		}
 	}
 
 	public static class CurrentDefinition implements Serializable {
