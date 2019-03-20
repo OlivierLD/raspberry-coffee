@@ -326,7 +326,7 @@ public class NMEADataCache
 						this.minAlt = Math.min(this.minAlt, ggaAlt);
 						this.maxAlt = Math.max(this.maxAlt, ggaAlt);
 						this.put(DELTA_ALTITUDE, (this.maxAlt - this.minAlt));
-//				System.out.println(String.format("Alt: Min %.02f, Max %.02f, Diff %.02f", this.minAlt, this.maxAlt, (this.maxAlt - this.minAlt)));
+//						System.out.println(String.format("Alt: Min %.02f, Max %.02f, Diff %.02f", this.minAlt, this.maxAlt, (this.maxAlt - this.minAlt)));
 						break;
 					case "RMC":
 						RMC rmc = StringParsers.parseRMC(nmeaSentence);
