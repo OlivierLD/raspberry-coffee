@@ -226,38 +226,39 @@ Define your transformer in the `properties` file:
 forward.07.type=wsp
 forward.07.wsuri=ws://localhost:1234/
 ```
-Make sure you have configured the Pebble application [as required](https://github.com/OlivierLD/pebble/tree/master/NMEA) (WebSocket URI), and you are good to go.
+Make sure you have configured the Pebble application [as required](https://github.com/OlivierLD/SmartWatches/blob/master/pebble/NMEA/) (WebSocket URI), and you are good to go.
 
 <table>
   <tr>
     <td>
       Application list
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.01.png" alt="Start here">
+      <img src="https://github.com/OlivierLD/SmartWatches/blob/master/pebble/NMEA/screenshot.01.png" alt="Start here">
     </td>
     <td>
       Press select to start
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.02.png" alt="Choose the channel">
+      <img src="https://github.com/OlivierLD/SmartWatches/blob/master/pebble/NMEA/screenshot.02.png" alt="Choose the channel">
     </td>
     <td>
       Scroll...
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.03.png" alt="Channel list">
+      <img src="https://github.com/OlivierLD/SmartWatches/blob/master/pebble/NMEA/screenshot.03.png" alt="Channel list">
     </td>
     <td>
       Choose...
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.04.png" alt="Hit select">
+      <img src="https://github.com/OlivierLD/SmartWatches/blob/master/pebble/NMEA/screenshot.04.png" alt="Hit select">
     </td>
     <td>
       Displayed!
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.05.png" alt="Display">
+      <img src="https://github.com/OlivierLD/SmartWatches/blob/master/pebble/NMEA/screenshot.05.png" alt="Display">
     </td>
   </tr>
 </table>
 
+> Note: Pebble has been acquired by FitBit... There are other smart watch interfaces (like Samsung Frontier) available in the [SmartWatches](https://github.com/OlivierLD/SmartWatches) repo.
 
 #### WebSockets
 WebSocket protocol is supported, in input, and in output.
@@ -312,7 +313,7 @@ with.http.server=yes
 http.port=9999
 ```
 > This HTTP Server is designed and written to run on small computers (like the Raspberry Pi Zero).
-> It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one.
+> It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one. Think of it as a **_Micro server_**.
 
 ### Supported REST end-points
 
