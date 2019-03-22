@@ -15,7 +15,7 @@ const sunPathDefaultColorConfig = {
 	bgColor: 'black', // Used if withGradient = false
 	withGradient: true,
 	displayBackgroundGradient: {
-		from: 'LightGrey',
+		from: 'blue',
 		to: 'black'
 	},
 	font: 'Arial',
@@ -366,8 +366,9 @@ class SunPath extends HTMLElement {
 		let radius = (this.canvas.width / 2) * .8;
 
 		if (this.sunPathColorConfig.withGradient) {
-			let grd = context.createLinearGradient(0, 5, 0, radius);
+			let grd = context.createLinearGradient(0, 5, 0, 2 * radius);
 			grd.addColorStop(0, this.sunPathColorConfig.displayBackgroundGradient.from); // 0  Beginning
+			grd.addColorStop(0.5, 'orange'); // middle
 			grd.addColorStop(1, this.sunPathColorConfig.displayBackgroundGradient.to);   // 1  End
 			context.fillStyle = grd;
 		} else {

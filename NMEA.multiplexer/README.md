@@ -702,7 +702,7 @@ Just run
  $ ./to.prod.sh
 ```
 It will:
-- Start a gradle build
+- Start a fresh gradle build
 - Put all the required resources into a new directory (provided at runtime)
 - Archive the directory into a `tar.gz` file
 - Drop the directory.
