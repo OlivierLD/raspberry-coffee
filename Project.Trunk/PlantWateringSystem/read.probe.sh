@@ -99,7 +99,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dvalve.test=true"
 #
 # Use for example --verbose:STDOUT --miso-pin:23 --mosi-pin:24 --clk-pin:18 --cs-pin:25 --adc-channel-pin::0 --relay-pin:17
 # Depends on your wiring
-PIN_MAPPING="--miso-pin:23 --mosi-pin:24 --clk-pin:18 --cs-pin:25 --adc-channel-pin::0 --relay-pin:17"
+PIN_MAPPING="--miso-pin:23 --mosi-pin:24 --clk-pin:18 --cs-pin:25 --adc-channel-pin:0 --relay-pin:17"
 COMMAND="java $JAVA_OPTIONS -cp $CP main.MCP3008 $USER_PRM $PIN_MAPPING"
 echo -e "Running $COMMAND"
 sudo $COMMAND
