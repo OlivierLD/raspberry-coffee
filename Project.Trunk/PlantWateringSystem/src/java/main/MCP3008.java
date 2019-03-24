@@ -126,7 +126,7 @@ public class MCP3008 {
 //	private static Supplier<Double> humiditySimulator = MCP3008::simulateHum;
 
 	private static double temperature = 20d;
-	private static double humidity = 80d;
+	private static double humidity = 50d;
 	private static String message = "";
 
 	private static double minSimTemp = temperature, maxSimTemp = temperature;
@@ -394,6 +394,7 @@ public class MCP3008 {
 						humidityThreshold = DEFAULT_HUMIDITY_THRESHOLD;
 						System.err.println(String.format(">> Humidity Threshold must be in [0..100]. Reseting to %d ", DEFAULT_HUMIDITY_THRESHOLD));
 					}
+					humidity = humidityThreshold; // Initialize low pass filter
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
