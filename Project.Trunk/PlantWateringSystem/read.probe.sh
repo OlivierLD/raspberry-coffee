@@ -98,5 +98,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dvalve.test=true"
 # java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
 #
 # Use for example --verbose:STDOUT --miso-pin:23 --mosi-pin:24 --clk-pin:18 --cs-pin:25 --adc-channel-pin::0 --relay-pin:11
-sudo java $JAVA_OPTIONS -cp $CP main.MCP3008 $USER_PRM
+COMMAND=java $JAVA_OPTIONS -cp $CP main.MCP3008 $USER_PRM
+echo -e "Running $COMMAND"
+sudo $COMMAND
 #
