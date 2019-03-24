@@ -6,7 +6,7 @@ import loggers.DataLoggerInterface;
 import loggers.LogData;
 import org.fusesource.jansi.AnsiConsole;
 import relay.RelayDriver;
-import sensors.sth10.STH10Driver;
+import sensors.sparkfunsoilhumiditysensor.MCP3008Wrapper;
 import utils.PinUtil;
 import utils.StaticUtil;
 import utils.WeatherUtil;
@@ -112,7 +112,7 @@ public class MCP3008 {
 	}
 	private static VERBOSE verbose = VERBOSE.NONE;
 
-	private static STH10Driver probe = null;
+	private static MCP3008Wrapper probe = null;
 	private static RelayDriver relay = null;
 
 	// Simulators, to run on non-Raspberry Pis - for development and tests.
@@ -303,9 +303,12 @@ public class MCP3008 {
 
 	public static void main(String... args) {
 
-		// Defaults
-		int dataPin = 18,
-				clockPin = 23,
+		// Defaults --miso:23 --mosi:24 --clk:18 --cs:25 --channel:0
+		int misoPin = 23,
+				mosiPin = 24,
+				clkPin = 18,
+				csPin = 25,
+				adcChannel = 0,
 				relayPin = 17;
 
 		// Override values with runtime arguments
@@ -331,23 +334,44 @@ public class MCP3008 {
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
-//			} else if (arg.startsWith(ARGUMENTS.SIMULATE_SENSOR_VALUES.prefix())) {
-//				String val = arg.substring(ARGUMENTS.SIMULATE_SENSOR_VALUES.prefix().length());
-//				enforceSensorSimulation = "true".equals(val);
-//			} else if (arg.startsWith(ARGUMENTS.DATA_PIN.prefix())) {
-//				String val = arg.substring(ARGUMENTS.DATA_PIN.prefix().length());
-//				try {
-//					dataPin = Integer.parseInt(val);
-//				} catch (NumberFormatException nfe) {
-//					nfe.printStackTrace();
-//				}
-//			} else if (arg.startsWith(ARGUMENTS.CLOCK_PIN.prefix())) {
-//				String val = arg.substring(ARGUMENTS.CLOCK_PIN.prefix().length());
-//				try {
-//					clockPin = Integer.parseInt(val);
-//				} catch (NumberFormatException nfe) {
-//					nfe.printStackTrace();
-//				}
+			} else if (arg.startsWith(ARGUMENTS.SIMULATE_SENSOR_VALUES.prefix())) {
+				String val = arg.substring(ARGUMENTS.SIMULATE_SENSOR_VALUES.prefix().length());
+				enforceSensorSimulation = "true".equals(val);
+			} else if (arg.startsWith(ARGUMENTS.MISO_PIN.prefix())) {
+				String val = arg.substring(ARGUMENTS.MISO_PIN.prefix().length());
+				try {
+					misoPin = Integer.parseInt(val);
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+				}
+			} else if (arg.startsWith(ARGUMENTS.MOSI_PIN.prefix())) {
+				String val = arg.substring(ARGUMENTS.MOSI_PIN.prefix().length());
+				try {
+					mosiPin = Integer.parseInt(val);
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+				}
+			} else if (arg.startsWith(ARGUMENTS.CLK_PIN.prefix())) {
+				String val = arg.substring(ARGUMENTS.CLK_PIN.prefix().length());
+				try {
+					clkPin = Integer.parseInt(val);
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+				}
+			} else if (arg.startsWith(ARGUMENTS.CS_PIN.prefix())) {
+				String val = arg.substring(ARGUMENTS.CS_PIN.prefix().length());
+				try {
+					csPin = Integer.parseInt(val);
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+				}
+			} else if (arg.startsWith(ARGUMENTS.CHANNEL_PIN.prefix())) {
+				String val = arg.substring(ARGUMENTS.CHANNEL_PIN.prefix().length());
+				try {
+					adcChannel = Integer.parseInt(val);
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+				}
 			} else if (arg.startsWith(ARGUMENTS.RELAY_PIN.prefix())) {
 				String val = arg.substring(ARGUMENTS.RELAY_PIN.prefix().length());
 				try {
@@ -434,28 +458,30 @@ public class MCP3008 {
 		if (verbose == VERBOSE.STDOUT) {
 			System.out.println("Wiring:");
 			// Compose mapping for PinUtil, physical numbers.
-			String[] map = new String[3];
-			map[0] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(dataPin)).pinNumber()) + ":" + "DATA";
-			map[1] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(clockPin)).pinNumber()) + ":" + "CLOCK";
-			map[2] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(relayPin)).pinNumber()) + ":" + "RELAY";
+			String[] map = new String[5];
+			map[0] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).pinNumber()) + ":" + "MISO";
+			map[1] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).pinNumber()) + ":" + "MOSI";
+			map[2] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).pinNumber()) + ":" + "CLK";
+			map[3] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).pinNumber()) + ":" + "CS";
+			map[4] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(relayPin)).pinNumber()) + ":" + "RELAY";
 			PinUtil.print(map);
 		}
 
 		try {
-			probe = new STH10Driver(PinUtil.getPinByGPIONumber(dataPin), PinUtil.getPinByGPIONumber(clockPin));
+			probe = MCP3008Wrapper.init(misoPin, mosiPin, clkPin, csPin, adcChannel);
 			if (probe.isSimulating() || enforceSensorSimulation) {
 				// Provide simulator here
-				System.out.println(String.format(">> Will simulate STH10%s", (enforceSensorSimulation ? " (enforced)" : "")));
+				System.out.println(String.format(">> Will simulate MCP3008%s", (enforceSensorSimulation ? " (enforced)" : "")));
 				if ("true".equals(System.getProperty("random.simulator"))) {
-					temperatureSimulator = MCP3008::simulateTemp;
+//					temperatureSimulator = MCP3008::simulateTemp;
 					humiditySimulator = MCP3008::simulateHum;
 				} else { // User input
-					temperatureSimulator = MCP3008::simulateUserTemp;
+//					temperatureSimulator = MCP3008::simulateUserTemp;
 					humiditySimulator = MCP3008::simulateUserHum;
 				}
-				probe.setSimulators(temperatureSimulator, humiditySimulator);
+				probe.setSimulators(humiditySimulator);
 			}
-	  } catch (UnsatisfiedLinkError ule) { // That one is trapped in the constructor of STH10Driver.
+	  } catch (UnsatisfiedLinkError ule) { // That one is trapped in the constructor of MCP3008Wrapper.
 			System.out.println("You're not on a Raspberry Pi, or your wiring is wrong.");
 			System.out.println("Exiting.");
 			System.exit(1);
@@ -485,7 +511,7 @@ public class MCP3008 {
 
 			loggers.forEach(DataLoggerInterface::close);
 
-			probe.shutdownGPIO();
+			probe.shutdown();
 			relay.shutdownGPIO();
 			try { Thread.sleep(1_500L); } catch (InterruptedException ie) {
 				Thread.currentThread().interrupt();
@@ -532,20 +558,20 @@ public class MCP3008 {
 		while (go) {
 
 			if (!enforceSensorSimulation) {
+//				try {
+//					temperature = probe.readTemperature();
+//				} catch (Exception ex) {
+//					System.err.println(String.format("At %s :", new Date().toString()));
+//					ex.printStackTrace();
+//					probe.softReset();
+//					System.err.println("Device was reset");
+//				}
 				try {
-					temperature = probe.readTemperature();
+					humidity = probe.readHumidity(); // temperature);
 				} catch (Exception ex) {
 					System.err.println(String.format("At %s :", new Date().toString()));
 					ex.printStackTrace();
-					probe.softReset();
-					System.err.println("Device was reset");
-				}
-				try {
-					humidity = probe.readHumidity(temperature);
-				} catch (Exception ex) {
-					System.err.println(String.format("At %s :", new Date().toString()));
-					ex.printStackTrace();
-					probe.softReset();
+//					probe.softReset();
 					System.err.println("Device was reset");
 				}
 			}
@@ -759,7 +785,7 @@ public class MCP3008 {
 			System.out.println(String.format("Simulated humidity between %.02f and %.02f", minSimHum, maxSimHum));
 		}
 
-		probe.shutdownGPIO();
+		probe.shutdown();
 		relay.shutdownGPIO();
 
 		System.out.println("Bye-bye!");
