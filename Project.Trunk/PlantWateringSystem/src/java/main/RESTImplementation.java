@@ -94,7 +94,7 @@ public class RESTImplementation {
 			new Operation(
 					"POST",
 					PWS_PREFIX + "/sth10-data",
-					this::setSTH10Data,
+					this::setProbeData,
 					"Set device Data. Temperature, humidity, for simulation"),
 			new Operation(
 					"PUT",
@@ -153,7 +153,7 @@ public class RESTImplementation {
 	 * @param request
 	 * @return
 	 */
-	private Response setSTH10Data(Request request) {
+	private Response setProbeData(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
 		if (request.getContent() != null && request.getContent().length > 0) {
@@ -163,8 +163,8 @@ public class RESTImplementation {
 				StringReader stringReader = new StringReader(payload);
 				try {
 					ProbeData data = gson.fromJson(stringReader, ProbeData.class);
-					STH10.setHumidity(data.humidity);
-					STH10.setTemperature(data.temperature);
+					probe.setHumidity(data.humidity);
+					probe.setTemperature(data.temperature);
 				} catch (Exception ex1) {
 					ex1.printStackTrace();
 					response = HTTPServer.buildErrorResponse(response,
@@ -196,7 +196,7 @@ public class RESTImplementation {
 
 	private Response getRelayState(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		PinState relayState = STH10.getRelayState();
+		PinState relayState = probe.getRelayState();
 		String content = new Gson().toJson(relayState);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
@@ -206,7 +206,7 @@ public class RESTImplementation {
 
 	private Response getPWSParameters(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		STH10.PWSParameters pwsParameters = STH10.getPWSParameters();
+		PWSParameters pwsParameters = probe.getPWSParameters();
 		String content = new Gson().toJson(pwsParameters);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
@@ -216,7 +216,7 @@ public class RESTImplementation {
 
 	private Response getPWSStatus(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		String pwsStatus = STH10.getStatus();
+		String pwsStatus = probe.getStatus();
 		String content = new Gson().toJson(pwsStatus);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
@@ -240,8 +240,8 @@ public class RESTImplementation {
 				Gson gson = new GsonBuilder().create();
 				StringReader stringReader = new StringReader(payload);
 				try {
-					STH10.PWSParameters data = gson.fromJson(stringReader, STH10.PWSParameters.class);
-					STH10.setPWSParameters(data);
+					PWSParameters data = gson.fromJson(stringReader, PWSParameters.class);
+					probe.setPWSParameters(data);
 				} catch (Exception ex1) {
 					ex1.printStackTrace();
 					response = HTTPServer.buildErrorResponse(response,
@@ -273,7 +273,7 @@ public class RESTImplementation {
 
 	private Response getLastWateringTime(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		Long lastWateringTime = STH10.getLastWateringTime();
+		Long lastWateringTime = probe.getLastWateringTime();
 		String content = new Gson().toJson(lastWateringTime);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
@@ -296,7 +296,7 @@ public class RESTImplementation {
 				try {
 					String data = gson.fromJson(stringReader, String.class);
 					PinState state = PinState.valueOf(data);
-					STH10.setRelayState(state);
+					probe.setRelayState(state);
 				} catch (Exception ex1) {
 					ex1.printStackTrace();
 					response = HTTPServer.buildErrorResponse(response,

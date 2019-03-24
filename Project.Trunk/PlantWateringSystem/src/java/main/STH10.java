@@ -138,10 +138,12 @@ public class STH10 implements Probe {
 	private static long lastLog = -1;
 
 	// Sensor data Getters and Setters, for (optional) REST
-	static void setTemperature(double temp) {
+	@Override
+	public void setTemperature(double temp) {
 		temperature = temp;
 	}
-	static void setHumidity(double hum) {
+	@Override
+	public void setHumidity(double hum) {
 		humidity = hum;
 	}
 
@@ -153,7 +155,10 @@ public class STH10 implements Probe {
 	public double getHumidity() {
 		return humidity;
 	}
-	static PinState getRelayState() {
+
+
+	@Override
+	public PinState getRelayState() {
 		PinState state = null;
 		if (relay != null) {
 			state = relay.getState();
@@ -161,7 +166,8 @@ public class STH10 implements Probe {
 		return state;
 	}
 
-	static void setRelayState(PinState state) {
+	@Override
+	public void setRelayState(PinState state) {
 		if (relay != null) {
 			Thread relayFlip = null;
 			if (state.isHigh()) {
@@ -180,47 +186,22 @@ public class STH10 implements Probe {
 			relayFlip.start();
 		}
 	}
-	static Long getLastWateringTime() {
+
+	@Override
+	public Long getLastWateringTime() {
 		return lastWatering;
 	}
 
-	public static class PWSParameters {
-		private int humidityThreshold = -1;
-		private long wateringTime = -1;
-		private long resumeWatchAfter = -1;
-
-		public PWSParameters() {}
-		public PWSParameters humidityThreshold(int ht) {
-			this.humidityThreshold = ht;
-			return this;
-		}
-		public PWSParameters wateringTime(long wt) {
-			this.wateringTime = wt;
-			return this;
-		}
-		public PWSParameters resumeWatchAfter(long rwa) {
-			this.resumeWatchAfter = rwa;
-			return this;
-		}
-		public int humidityThreshold() {
-			return this.humidityThreshold;
-		}
-		public long wateringTime() {
-			return this.wateringTime;
-		}
-		public long resumeWatchAfter() {
-			return this.resumeWatchAfter;
-		}
-	}
-
-	static PWSParameters getPWSParameters() {
+	@Override
+	public PWSParameters getPWSParameters() {
 		return new PWSParameters()
 				.humidityThreshold(humidityThreshold)
 				.wateringTime(wateringDuration)
 				.resumeWatchAfter(resumeSensorWatchAfter);
 	}
 
-	static void setPWSParameters(PWSParameters pwsParameters) {
+	@Override
+	public void setPWSParameters(PWSParameters pwsParameters) {
 		if (pwsParameters.humidityThreshold() != -1) {
 			humidityThreshold = pwsParameters.humidityThreshold();
 		}
@@ -232,7 +213,8 @@ public class STH10 implements Probe {
 		}
 	}
 
-	static String getStatus() {
+	@Override
+	public String getStatus() {
 		return message;
 	}
 
