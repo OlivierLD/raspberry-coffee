@@ -191,6 +191,11 @@ public class MCP3008 {
 		return lastWatering;
 	}
 
+	final static double ALPHA = 0.015;
+	static double lowPassFilter(double alpha, double value, double acc) {
+		return (value * alpha) + (acc * (1 - alpha));
+	}
+
 	public static class PWSParameters {
 		private int humidityThreshold = -1;
 		private long wateringTime = -1;
@@ -616,7 +621,9 @@ public class MCP3008 {
 //					System.err.println("Device was reset");
 //				}
 				try {
-					humidity = probe.readHumidity(); // temperature);
+					double hum = probe.readHumidity(); // temperature);
+					// Low Pass Filter
+					humidity = lowPassFilter(ALPHA, hum, humidity);
 				} catch (Exception ex) {
 					System.err.println(String.format("At %s :", new Date().toString()));
 					ex.printStackTrace();
