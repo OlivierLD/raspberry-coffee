@@ -29,7 +29,8 @@ if [ "$1" == "remote-debug" ]
 then
   REMOTE_DEBUG=true
 fi
-JAVA_OPTIONS="-Dsth.debug=$DEBUG" # TODO Adapt this ti the MCP3008
+JAVA_OPTIONS="-Dsth.debug=$DEBUG"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dmcp3008.debug=$DEBUG"
 #
 if [ "$REMOTE_DEBUG" == "true" ]
 then
