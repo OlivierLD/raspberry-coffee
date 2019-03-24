@@ -9,6 +9,7 @@ import relay.RelayDriver;
 import sensors.sparkfunsoilhumiditysensor.MCP3008Wrapper;
 import utils.PinUtil;
 import utils.StaticUtil;
+import utils.StringUtils;
 import utils.WeatherUtil;
 
 import java.lang.reflect.Constructor;
@@ -118,11 +119,11 @@ public class MCP3008 {
 
 	// Simulators, to run on non-Raspberry Pis - for development and tests.
 	// User manual entry (also suitable for REST)
-	private static Supplier<Double> temperatureSimulator = MCP3008::simulateUserTemp;
+	private static Supplier<Double> temperatureSimulator = MCP3008::simulateUserTemp; // Not used with MCP3008
 	private static Supplier<Double> humiditySimulator = MCP3008::simulateUserHum;
 	// Random values
-//	private static Supplier<Double> temperatureSimulator = STH10::simulateTemp;
-//	private static Supplier<Double> humiditySimulator = STH10::simulateHum;
+//	private static Supplier<Double> temperatureSimulator = MCP3008::simulateTemp;
+//	private static Supplier<Double> humiditySimulator = MCP3008::simulateHum;
 
 	private static double temperature = 20d;
 	private static double humidity = 80d;
@@ -464,8 +465,55 @@ public class MCP3008 {
 			map[1] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).pinNumber()) + ":" + "MOSI";
 			map[2] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).pinNumber()) + ":" + "CLK";
 			map[3] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).pinNumber()) + ":" + "CS";
+
 			map[4] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(relayPin)).pinNumber()) + ":" + "RELAY";
 			PinUtil.print(map);
+
+
+			System.out.println(String.format("Reading MCP3008 on channel %d", adcChannel));
+			System.out.println(
+					" Wiring of the MCP3008-SPI (without power supply):\n" +
+							" +---------++-----------------------------------------------+\n" +
+							" | MCP3008 || Raspberry Pi                                  |\n" +
+							" +---------++------+------------+------+---------+----------+\n" +
+							" |         || Pin# | Name       | Role | GPIO    | wiringPI |\n" +
+							" |         ||      |            |      | /BCM    | /PI4J    |\n" +
+							" +---------++------+------------+------+---------+----------+");
+			System.out.println(String.format(" | CLK (13)|| #%02d  | %s | CLK  | GPIO_%02d | %02d       |",
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).pinNumber(),
+					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).pinName(), 10, " "),
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).gpio(),
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).wiringPi()));
+			System.out.println(String.format(" | Din (11)|| #%02d  | %s | MOSI | GPIO_%02d | %02d       |",
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).pinNumber(),
+					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).pinName(), 10, " "),
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).gpio(),
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).wiringPi()));
+			System.out.println(String.format(" | Dout(12)|| #%02d  | %s | MISO | GPIO_%02d | %02d       |",
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).pinNumber(),
+					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).pinName(), 10, " "),
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).gpio(),
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).wiringPi()));
+			System.out.println(String.format(" | CS  (10)|| #%02d  | %s | CS   | GPIO_%02d | %02d       |",
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).pinNumber(),
+					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).pinName(), 10, " "),
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).gpio(),
+					PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).wiringPi()));
+			System.out.println(" +---------++------+------------+-----+----------+----------+");
+			System.out.println("Raspberry Pi is the Master, MCP3008 is the Slave:");
+			System.out.println("- Dout on the MCP3008 goes to MISO on the RPi");
+			System.out.println("- Din on the MCP3008 goes to MOSI on the RPi");
+			System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
+			System.out.println("       +--------+ ");
+			System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ",  (adcChannel == 0 ? "*" : " ")));
+			System.out.println(String.format("%s CH1 -+  2  15 +- Vref ", (adcChannel == 1 ? "*" : " ")));
+			System.out.println(String.format("%s CH2 -+  3  14 +- aGnd ", (adcChannel == 2 ? "*" : " ")));
+			System.out.println(String.format("%s CH3 -+  4  13 +- CLK ",  (adcChannel == 3 ? "*" : " ")));
+			System.out.println(String.format("%s CH4 -+  5  12 +- Dout ", (adcChannel == 4 ? "*" : " ")));
+			System.out.println(String.format("%s CH5 -+  6  11 +- Din ",  (adcChannel == 5 ? "*" : " ")));
+			System.out.println(String.format("%s CH6 -+  7  10 +- CS ",   (adcChannel == 6 ? "*" : " ")));
+			System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (adcChannel == 7 ? "*" : " ")));
+			System.out.println("       +--------+ ");
 		}
 
 		try {
