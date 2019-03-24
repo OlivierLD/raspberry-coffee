@@ -320,7 +320,7 @@ public class MCP3008 {
 				System.out.println("+---------------------------------------");
 				System.out.println("| Program arguments are:");
 				System.out.println("+---------------------------------------");
-				Arrays.stream(ARGUMENTS.values()).forEach(argument -> System.out.println("| " +argument.prefix() + "\t" + argument.help()));
+				Arrays.stream(ARGUMENTS.values()).forEach(argument -> System.out.println("| " + argument.prefix() + "\t" + argument.help()));
 				System.out.println("+---------------------------------------");
 				System.exit(0);
 			} else if (arg.startsWith(ARGUMENTS.VERBOSE.prefix())) {
@@ -473,33 +473,33 @@ public class MCP3008 {
 			System.out.println(String.format("Reading MCP3008 on channel %d", adcChannel));
 			System.out.println(
 					" Wiring of the MCP3008-SPI (without power supply):\n" +
-							" +---------++-----------------------------------------------+\n" +
-							" | MCP3008 || Raspberry Pi                                  |\n" +
-							" +---------++------+------------+------+---------+----------+\n" +
-							" |         || Pin# | Name       | Role | GPIO    | wiringPI |\n" +
-							" |         ||      |            |      | /BCM    | /PI4J    |\n" +
-							" +---------++------+------------+------+---------+----------+");
+							" +---------++-------------------------------------------------+\n" +
+							" | MCP3008 || Raspberry Pi                                    |\n" +
+							" +---------++------+--------------+------+---------+----------+\n" +
+							" |         || Pin# | Name         | Role | GPIO    | wiringPI |\n" +
+							" |         ||      |              |      | /BCM    | /PI4J    |\n" +
+							" +---------++------+--------------+------+---------+----------+");
 			System.out.println(String.format(" | CLK (13)|| #%02d  | %s | CLK  | GPIO_%02d | %02d       |",
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).pinNumber(),
-					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).pinName(), 10, " "),
+					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).pinName(), 12, " "),
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).gpio(),
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(clkPin)).wiringPi()));
 			System.out.println(String.format(" | Din (11)|| #%02d  | %s | MOSI | GPIO_%02d | %02d       |",
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).pinNumber(),
-					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).pinName(), 10, " "),
+					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).pinName(), 12, " "),
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).gpio(),
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(mosiPin)).wiringPi()));
 			System.out.println(String.format(" | Dout(12)|| #%02d  | %s | MISO | GPIO_%02d | %02d       |",
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).pinNumber(),
-					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).pinName(), 10, " "),
+					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).pinName(), 12, " "),
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).gpio(),
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(misoPin)).wiringPi()));
 			System.out.println(String.format(" | CS  (10)|| #%02d  | %s | CS   | GPIO_%02d | %02d       |",
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).pinNumber(),
-					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).pinName(), 10, " "),
+					StringUtils.rpad(PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).pinName(), 12, " "),
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).gpio(),
 					PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).wiringPi()));
-			System.out.println(" +---------++------+------------+-----+----------+----------+");
+			System.out.println(" +---------++------+--------------+-----+----------+----------+");
 			System.out.println("Raspberry Pi is the Master, MCP3008 is the Slave:");
 			System.out.println("- Dout on the MCP3008 goes to MISO on the RPi");
 			System.out.println("- Din on the MCP3008 goes to MOSI on the RPi");
@@ -571,7 +571,7 @@ public class MCP3008 {
 			// Manual input, stdin.
 			Thread manualThread = new Thread(() -> { // There is also a REST input
 				while (go) {
-					String userInput = StaticUtil.userInput(" T:XX, H:XX > ");
+					String userInput = StaticUtil.userInput(" T:XX, or H:XX > ");
 					parseUserInput(userInput);
 				}
 			}, "manual-input");
