@@ -92,5 +92,5 @@ fi
 JAVA_OPTIONS="$JAVA_OPTIONS -Dvalve.test=true"
 #
 # java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
-java $JAVA_OPTIONS -cp $CP main.MCP3008 $USER_PRM
+sudo java $JAVA_OPTIONS -cp $CP main.MCP3008 $USER_PRM
 #

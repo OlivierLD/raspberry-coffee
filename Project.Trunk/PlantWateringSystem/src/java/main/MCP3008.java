@@ -11,6 +11,7 @@ import utils.PinUtil;
 import utils.StaticUtil;
 import utils.WeatherUtil;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -418,7 +419,7 @@ public class MCP3008 {
 				for (String oneLogger : logConsumers) {
 					try {
 						Class logClass = Class.forName(oneLogger);
-						Object consumer = logClass.getConstructor(logClass).newInstance(); // Ah!
+						Object consumer = ((Constructor)logClass.getConstructor()).newInstance();
 						loggers.add(DataLoggerInterface.class.cast(consumer));
 					} catch (Exception ex) {
 						ex.printStackTrace();
