@@ -312,6 +312,104 @@ I'm trying the [SparkFun Soil Moisture Sensor](https://www.sparkfun.com/products
 
 It does not return the temperature, but it's way less expensive than the `STH10`.
 
+To run the test with the wiring above, run
+```
+ $ ./sparkfun.cal.sh --miso:23 --mosi:24 --clk:18 --cs:25 --channel:0
+ Read an ADC (MPC3008) for 3.3 Volt estimation
+ Usage is ./sparkfun.cal.sh --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
+  For miso, mosi, clk & cs, use BCM pin numbers
+ Usage is java sensors.sparkfunsoilhumiditysensor.MainMCP3008Sample33 --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
+ Values above are default values (GPIO/BCM numbers).
+ 
+ Reading MCP3008 on channel 0
+  Wiring of the MCP3008-SPI (without power supply):
+  +---------++-------------------------------------------------+
+  | MCP3008 || Raspberry Pi                                    |
+  +---------++------+--------------+------+---------+----------+
+  |         || Pin# | Name         | Role | GPIO    | wiringPI |
+  |         ||      |              |      | /BCM    | /PI4J    |
+  +---------++------+--------------+------+---------+----------+
+  | CLK (13)|| #12  | PCM_CLK/PWM0 | CLK  | GPIO_18 | 01       |
+  | Din (11)|| #18  | GPIO_5       | MOSI | GPIO_24 | 05       |
+  | Dout(12)|| #16  | GPIO_4       | MISO | GPIO_23 | 04       |
+  | CS  (10)|| #22  | GPIO_6       | CS   | GPIO_25 | 06       |
+  +---------++------+--------------+-----+----------+----------+
+ Raspberry Pi is the Master, MCP3008 is the Slave:
+ - Dout on the MCP3008 goes to MISO on the RPi
+ - Din on the MCP3008 goes to MOSI on the RPi
+ Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.
+        +--------+ 
+ * CH0 -+  1  16 +- Vdd 
+   CH1 -+  2  15 +- Vref 
+   CH2 -+  3  14 +- aGnd 
+   CH3 -+  4  13 +- CLK 
+   CH4 -+  5  12 +- Dout 
+   CH5 -+  6  11 +- Din 
+   CH6 -+  7  10 +- CS 
+   CH7 -+  8   9 +- dGnd 
+        +--------+ 
+        +-----+-----+--------------+-----++-----+--------------+-----+-----+
+        | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |
+        +-----+-----+--------------+-----++-----+--------------+-----+-----+
+        |     |     | 3v3          | #01 || #02 |          5v0 |     |     |       
+        |  02 |  08 | SDA1         | #03 || #04 |          5v0 |     |     |       
+        |  03 |  09 | SCL1         | #05 || #06 |          GND |     |     |       
+        |  04 |  07 | GPCLK0       | #07 || #08 |    UART0_TXD | 15  | 14  |       
+        |     |     | GND          | #09 || #10 |    UART0_RXD | 16  | 15  |       
+        |  17 |  00 | GPIO_0       | #11 || #12 | PCM_CLK/PWM0 | 01  | 18  | CLK   
+        |  27 |  02 | GPIO_2       | #13 || #14 |          GND |     |     |       
+        |  22 |  03 | GPIO_3       | #15 || #16 |       GPIO_4 | 04  | 23  | Dout  
+        |     |     | 3v3          | #17 || #18 |       GPIO_5 | 05  | 24  | Din   
+        |  10 |  12 | SPI0_MOSI    | #19 || #20 |          GND |     |     |       
+        |  09 |  13 | SPI0_MISO    | #21 || #22 |       GPIO_6 | 06  | 25  | CS    
+        |  11 |  14 | SPI0_CLK     | #23 || #24 |   SPI0_CS0_N | 10  | 08  |       
+        |     |     | GND          | #25 || #26 |   SPI0_CS1_N | 11  | 07  |       
+        |     |  30 | SDA0         | #27 || #28 |         SCL0 | 31  |     |       
+        |  05 |  21 | GPCLK1       | #29 || #30 |          GND |     |     |       
+        |  06 |  22 | GPCLK2       | #31 || #32 |         PWM0 | 26  | 12  |       
+        |  13 |  23 | PWM1         | #33 || #34 |          GND |     |     |       
+        |  19 |  24 | PCM_FS/PWM1  | #35 || #36 |      GPIO_27 | 27  | 16  |       
+        |  26 |  25 | GPIO_25      | #37 || #38 |      PCM_DIN | 28  | 20  |       
+        |     |     | GND          | #39 || #40 |     PCM_DOUT | 29  | 21  |       
+        +-----+-----+--------------+-----++-----+--------------+-----+-----+
+        | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |
+        +-----+-----+--------------+-----++-----+--------------+-----+-----+
+ 
+ Volume: 071% (0736) => 2.374 V
+ Volume: 069% (0710) => 2.290 V
+ Volume: 008% (0086) => 0.277 V
+ Volume: 087% (0896) => 2.890 V
+ Volume: 051% (0529) => 1.706 V
+ Volume: 032% (0334) => 1.077 V
+ Volume: 026% (0273) => 0.881 V
+ Volume: 043% (0443) => 1.429 V
+ Volume: 066% (0678) => 2.187 V
+ Volume: 033% (0340) => 1.097 V
+ Volume: 087% (0896) => 2.890 V
+ Volume: 054% (0559) => 1.803 V
+ Volume: 041% (0422) => 1.361 V
+ Volume: 032% (0332) => 1.071 V
+ Volume: 067% (0690) => 2.226 V
+ Volume: 016% (0173) => 0.558 V
+ Volume: 048% (0496) => 1.600 V
+ Volume: 061% (0627) => 2.023 V
+ Volume: 026% (0275) => 0.887 V
+ Volume: 072% (0741) => 2.390 V
+ Volume: 058% (0596) => 1.923 V
+ Volume: 037% (0386) => 1.245 V
+ Volume: 017% (0177) => 0.571 V
+ Volume: 048% (0499) => 1.610 V
+ Volume: 065% (0668) => 2.155 V
+ Volume: 034% (0351) => 1.132 V
+ ^C
+ Shutting down.
+ Bye, freeing resources.
+ Done.
+
+ 
+ 
+```
+
 #### The valve
 Can be replaced by a [peristaltic pump](https://www.adafruit.com/product/1150), that will not require a tank to be _above_ the valve.
 Might be easier to use.

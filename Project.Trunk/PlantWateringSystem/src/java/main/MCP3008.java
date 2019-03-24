@@ -23,8 +23,12 @@ import static utils.TimeUtil.msToHMS;
 
 /**
  * Example / Working prototype...
+ *
+ * MCP3008, ADC for  SparkFun Soil Moisture Sensor. No temperature sensor.
+ *
+ * WIP !!!
  */
-public class STH10 {
+public class MCP3008 {
 
 	private static boolean go = true; // Keep looping.
 
@@ -58,22 +62,26 @@ public class STH10 {
 		VERBOSE("--verbose:",
 				"String. Verbose, default is --verbose:NONE, values can be 'NONE', 'STDOUT' or 'ANSI'."),
 
-		// STH10pins
-		DATA_PIN("--data-pin:", // default is BCM 18 => GPIO_01
-				"Integer. BCM (aka GPIO) pin number of the DATA pin of the sensor. Default is --data-pin:18."),
-		CLOCK_PIN("--clock-pin:", // default is BCM 23 => GPIO_04
-				"Integer. BCM (aka GPIO) pin number of the CLOCK pin of the sensor. Default is --clock-pin:23."),
+		// MCP3008: MISO, MOSI, CLK, CS, Channel
+		MISO_PIN("--miso-pin:",
+				"Integer. BCM (aka GPIO) pin number of the MISO pin of the MCP3008. Default is --miso-pin:13."),
+		MOSI_PIN("--mosi-pin:",
+				"Integer. BCM (aka GPIO) pin number of the MOSI pin of the MCP3008. Default is --mosi-pin:12."),
+		CLK_PIN("--clk-pin:",
+				"Integer. BCM (aka GPIO) pin number of the CLK pin of the MCP3008. Default is --clk-pin:14."),
+		CS_PIN("--cs-pin:",
+				"Integer. BCM (aka GPIO) pin number of the CS pin of the MCP3008. Default is --cs-pin:10."),
+		CHANNEL_PIN("--adc-channel-pin:",
+				"Integer. BCM (aka GPIO) pin number of the Channel (0-7) pin of the MCP3008. Default is --adc-channel-pin:0."),
 
-		// Relay Pin, for the pump or valve
+		// Pump or valve relay
 		RELAY_PIN("--relay-pin:",  // default is BCM 17 => GPIO_00
 				"Integer. BCM (aka GPIO) pin number of the SIGNAL pin of the RELAY. Default is --relay-pin:17."),
 
-		// REST Interface
 		WITH_REST_SERVER("--with-rest-server:",
 				"Boolean. Default 'false', starts a REST server is set to 'true'"),
 		HTTP_PORT("--http-port:",
 				String.format("Integer. The HTTP port of the REST Server. Default is %d.", restServerPort)),
-
 		SIMULATE_SENSOR_VALUES("--simulate-sensor-values:",
 				"Boolean. Enforce sensor values simulation, even if running on a Raspberry Pi. Default is 'false'. Note: Relay is left alone."),
 		LOGGERS("--loggers:",
@@ -109,8 +117,8 @@ public class STH10 {
 
 	// Simulators, to run on non-Raspberry Pis - for development and tests.
 	// User manual entry (also suitable for REST)
-	private static Supplier<Double> temperatureSimulator = STH10::simulateUserTemp;
-	private static Supplier<Double> humiditySimulator = STH10::simulateUserHum;
+	private static Supplier<Double> temperatureSimulator = MCP3008::simulateUserTemp;
+	private static Supplier<Double> humiditySimulator = MCP3008::simulateUserHum;
 	// Random values
 //	private static Supplier<Double> temperatureSimulator = STH10::simulateTemp;
 //	private static Supplier<Double> humiditySimulator = STH10::simulateHum;
@@ -323,23 +331,23 @@ public class STH10 {
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
-			} else if (arg.startsWith(ARGUMENTS.SIMULATE_SENSOR_VALUES.prefix())) {
-				String val = arg.substring(ARGUMENTS.SIMULATE_SENSOR_VALUES.prefix().length());
-				enforceSensorSimulation = "true".equals(val);
-			} else if (arg.startsWith(ARGUMENTS.DATA_PIN.prefix())) {
-				String val = arg.substring(ARGUMENTS.DATA_PIN.prefix().length());
-				try {
-					dataPin = Integer.parseInt(val);
-				} catch (NumberFormatException nfe) {
-					nfe.printStackTrace();
-				}
-			} else if (arg.startsWith(ARGUMENTS.CLOCK_PIN.prefix())) {
-				String val = arg.substring(ARGUMENTS.CLOCK_PIN.prefix().length());
-				try {
-					clockPin = Integer.parseInt(val);
-				} catch (NumberFormatException nfe) {
-					nfe.printStackTrace();
-				}
+//			} else if (arg.startsWith(ARGUMENTS.SIMULATE_SENSOR_VALUES.prefix())) {
+//				String val = arg.substring(ARGUMENTS.SIMULATE_SENSOR_VALUES.prefix().length());
+//				enforceSensorSimulation = "true".equals(val);
+//			} else if (arg.startsWith(ARGUMENTS.DATA_PIN.prefix())) {
+//				String val = arg.substring(ARGUMENTS.DATA_PIN.prefix().length());
+//				try {
+//					dataPin = Integer.parseInt(val);
+//				} catch (NumberFormatException nfe) {
+//					nfe.printStackTrace();
+//				}
+//			} else if (arg.startsWith(ARGUMENTS.CLOCK_PIN.prefix())) {
+//				String val = arg.substring(ARGUMENTS.CLOCK_PIN.prefix().length());
+//				try {
+//					clockPin = Integer.parseInt(val);
+//				} catch (NumberFormatException nfe) {
+//					nfe.printStackTrace();
+//				}
 			} else if (arg.startsWith(ARGUMENTS.RELAY_PIN.prefix())) {
 				String val = arg.substring(ARGUMENTS.RELAY_PIN.prefix().length());
 				try {
@@ -386,7 +394,7 @@ public class STH10 {
 				for (String oneLogger : logConsumers) {
 					try {
 						Class logClass = Class.forName(oneLogger);
-						Object consumer = logClass.getConstructor().newInstance();
+						Object consumer = logClass.getConstructor(logClass).newInstance(); // Ah!
 						loggers.add(DataLoggerInterface.class.cast(consumer));
 					} catch (Exception ex) {
 						ex.printStackTrace();
@@ -439,11 +447,11 @@ public class STH10 {
 				// Provide simulator here
 				System.out.println(String.format(">> Will simulate STH10%s", (enforceSensorSimulation ? " (enforced)" : "")));
 				if ("true".equals(System.getProperty("random.simulator"))) {
-					temperatureSimulator = STH10::simulateTemp;
-					humiditySimulator = STH10::simulateHum;
+					temperatureSimulator = MCP3008::simulateTemp;
+					humiditySimulator = MCP3008::simulateHum;
 				} else { // User input
-					temperatureSimulator = STH10::simulateUserTemp;
-					humiditySimulator = STH10::simulateUserHum;
+					temperatureSimulator = MCP3008::simulateUserTemp;
+					humiditySimulator = MCP3008::simulateUserHum;
 				}
 				probe.setSimulators(temperatureSimulator, humiditySimulator);
 			}

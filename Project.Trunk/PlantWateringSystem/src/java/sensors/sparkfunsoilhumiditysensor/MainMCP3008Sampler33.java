@@ -10,7 +10,7 @@ import static utils.StringUtils.lpad;
 /**
  * To measure a voltage, between 0 and 3.3V
  */
-public class MainMCP3008Sample33 {
+public class MainMCP3008Sampler33 {
 
 	private final static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
 	private static boolean go = true;
@@ -33,7 +33,7 @@ public class MainMCP3008Sample33 {
 		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
 		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d %s%d",
-				MainMCP3008Sample33.class.getName(),
+				MainMCP3008Sampler33.class.getName(),
 				MISO_PRM_PREFIX,  PinUtil.findByPin(miso).gpio(),
 				MOSI_PRM_PREFIX,  PinUtil.findByPin(mosi).gpio(),
 				CLK_PRM_PREFIX,   PinUtil.findByPin(clk).gpio(),
