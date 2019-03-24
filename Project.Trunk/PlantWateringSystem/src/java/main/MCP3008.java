@@ -681,7 +681,7 @@ public class MCP3008 {
 					}
 				});
 				waterRelayOn.start();
-				message = String.format("Watering (hum: %.02f / %.02f)...", humidity, humidityThreshold);
+				message = String.format("Watering (hum: %.02f / %d)...", humidity, humidityThreshold);
 				if (verbose == VERBOSE.STDOUT) {
 					System.out.println(message);
 				} else if (verbose == VERBOSE.ANSI) {
