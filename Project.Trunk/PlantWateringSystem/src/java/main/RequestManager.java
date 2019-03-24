@@ -10,8 +10,8 @@ public class RequestManager implements RESTRequestManager {
 	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
 	private RESTImplementation restImplementation;
 
-	public RequestManager() {
-		this.restImplementation = new RESTImplementation();
+	public RequestManager(Probe probe) {
+		this.restImplementation = new RESTImplementation(probe);
 	}
 
 	/**

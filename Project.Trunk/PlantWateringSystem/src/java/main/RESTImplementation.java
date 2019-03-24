@@ -31,20 +31,22 @@ public class RESTImplementation {
 
 	private final static String PWS_PREFIX = "/pws";
 
-	public RESTImplementation() {
+	private Probe probe;
+	public RESTImplementation(Probe probe) {
 		// Check duplicates in operation list. Barfs if duplicate is found.
 		RESTProcessorUtil.checkDuplicateOperations(operations);
+		this.probe = probe;
 	}
 
-	public static class STH10Data {
+	public static class ProbeData {
 		double temperature;
 		double humidity;
 
-		public STH10Data temperature(double t) {
+		public ProbeData temperature(double t) {
 			this.temperature = t;
 			return this;
 		}
-		public STH10Data humidity(double h) {
+		public ProbeData humidity(double h) {
 			this.humidity = h;
 			return this;
 		}
@@ -67,7 +69,7 @@ public class RESTImplementation {
 			new Operation(
 					"GET",
 					PWS_PREFIX + "/sth10-data",
-					this::getSTH10Data,
+					this::getProbeData,
 					"Get device Data. Temperature, humidity"),
 			new Operation(
 					"GET",
@@ -130,12 +132,12 @@ public class RESTImplementation {
 		}
 	}
 
-	private Response getSTH10Data(Request request) {
+	private Response getProbeData(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
-		STH10Data data = new STH10Data()
-				.temperature(STH10.getTemperature())
-				.humidity(STH10.getHumidity());
+		ProbeData data = new ProbeData()
+				.temperature(this.probe.getTemperature())
+				.humidity(this.probe.getHumidity());
   	String content = new Gson().toJson(data);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
@@ -160,7 +162,7 @@ public class RESTImplementation {
 				Gson gson = new GsonBuilder().create();
 				StringReader stringReader = new StringReader(payload);
 				try {
-					STH10Data data = gson.fromJson(stringReader, STH10Data.class);
+					ProbeData data = gson.fromJson(stringReader, ProbeData.class);
 					STH10.setHumidity(data.humidity);
 					STH10.setTemperature(data.temperature);
 				} catch (Exception ex1) {

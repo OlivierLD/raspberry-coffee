@@ -30,7 +30,7 @@ import static utils.TimeUtil.msToHMS;
  *
  * WIP !!!
  */
-public class MCP3008 {
+public class MCP3008 implements Probe {
 
 	private static boolean go = true; // Keep looping.
 
@@ -154,12 +154,16 @@ public class MCP3008 {
 	static void setHumidity(double hum) {
 		humidity = hum;
 	}
-	static double getTemperature() {
+
+	@Override
+	public double getTemperature() {
 		return temperature;
 	}
-	static double getHumidity() {
+	@Override
+	public  double getHumidity() {
 		return humidity;
 	}
+
 	static PinState getRelayState() {
 		PinState state = null;
 		if (relay != null) {
@@ -394,7 +398,7 @@ public class MCP3008 {
 						humidityThreshold = DEFAULT_HUMIDITY_THRESHOLD;
 						System.err.println(String.format(">> Humidity Threshold must be in [0..100]. Reseting to %d ", DEFAULT_HUMIDITY_THRESHOLD));
 					}
-					humidity = humidityThreshold; // Initialize low pass filter
+					humidity = humidityThreshold * 1.2; // Initialize low pass filter
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
@@ -522,6 +526,8 @@ public class MCP3008 {
 			System.out.println("       +--------+ ");
 		}
 
+
+		MCP3008 instance = new MCP3008();
 		try {
 			probe = MCP3008Wrapper.init(misoPin, mosiPin, clkPin, csPin, adcChannel);
 			if (probe.isSimulating() || enforceSensorSimulation) {
@@ -586,7 +592,7 @@ public class MCP3008 {
 
 		if (withRESTServer) {
 			// HTTP Server + REST Request Manager
-			httpServer = new RequestManager().startHttpServer(restServerPort);
+			httpServer = new RequestManager(instance).startHttpServer(restServerPort);
 		}
 
 		// Open/Close valve, for test

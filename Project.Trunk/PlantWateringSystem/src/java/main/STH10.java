@@ -24,7 +24,7 @@ import static utils.TimeUtil.msToHMS;
 /**
  * Example / Working prototype...
  */
-public class STH10 {
+public class STH10 implements Probe {
 
 	private static boolean go = true; // Keep looping.
 
@@ -144,10 +144,13 @@ public class STH10 {
 	static void setHumidity(double hum) {
 		humidity = hum;
 	}
-	static double getTemperature() {
+
+	@Override
+	public double getTemperature() {
 		return temperature;
 	}
-	static double getHumidity() {
+	@Override
+	public double getHumidity() {
 		return humidity;
 	}
 	static PinState getRelayState() {
@@ -433,6 +436,7 @@ public class STH10 {
 			PinUtil.print(map);
 		}
 
+		STH10 instance = new STH10();
 		try {
 			probe = new STH10Driver(PinUtil.getPinByGPIONumber(dataPin), PinUtil.getPinByGPIONumber(clockPin));
 			if (probe.isSimulating() || enforceSensorSimulation) {
@@ -497,7 +501,7 @@ public class STH10 {
 
 		if (withRESTServer) {
 			// HTTP Server + REST Request Manager
-			httpServer = new RequestManager().startHttpServer(restServerPort);
+			httpServer = new RequestManager(instance).startHttpServer(restServerPort);
 		}
 
 		// Open/Close valve, for test
