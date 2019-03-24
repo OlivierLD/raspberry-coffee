@@ -43,7 +43,8 @@ fi
 #
 if [ "$VERBOSE" == "true" ]
 then
-  java $JAVA_OPTIONS -cp $CP main.STH10 --help
+  # java $JAVA_OPTIONS -cp $CP main.STH10 --help
+  java $JAVA_OPTIONS -cp $CP main.MCP3008 --help
   #
   echo -n "Hit return... "
   read a
@@ -65,7 +66,9 @@ LOGGERS="$LOGGERS,loggers.text.FileLogger"
 USER_PRM="$USER_PRM --loggers:$LOGGERS"
 #
 now=`date +%Y-%m-%d.%H:%M:%S`
-JAVA_OPTIONS="$JAVA_OPTIONS -Dlogger.file.name=${now}_log.log"
+LOG_FILE_NAME=${now}_log.log
+echo -e "Logging data in ${LOG_FILE_NAME}"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dlogger.file.name=${LOG_FILE_NAME}"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Daio.key=54c2767878ca793f2e3cae1c45d62aa7ae9f8056"
 JAVA_OPTIONS="$JAVA_OPTIONS -Daio.verbose=false"
@@ -79,7 +82,8 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dgpio.verbose=true -Dansi.boxes=true"
 #
 if [ "$DEBUG" == "true" ]
 then
-	 echo "COMMAND is: java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM"
+	 # echo "COMMAND is: java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM"
+	 echo "COMMAND is: java $JAVA_OPTIONS -cp $CP main.MCP3008 $USER_PRM"
 	 echo -n "Hit return... "
 	 read a
 fi
@@ -92,5 +96,7 @@ fi
 JAVA_OPTIONS="$JAVA_OPTIONS -Dvalve.test=true"
 #
 # java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
+#
+# Use for example --miso-pin:23 --mosi-pin:24 --clk-pin:18 --cs-pin:25 --adc-channel-pin::0 --relay-pin:11
 sudo java $JAVA_OPTIONS -cp $CP main.MCP3008 $USER_PRM
 #
