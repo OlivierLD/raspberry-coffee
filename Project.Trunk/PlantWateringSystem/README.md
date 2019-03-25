@@ -422,8 +422,10 @@ Pictures and diagrams to come.
 
 | Assembling | In the Box |
 |:----------:|:----------:|
-| ![Assembling](./docimg/mcp3008.version.jpg) | ![In the Box](./docimg/mcp3008.in.the.box.jpg) | 
+| ![Assembling](./docimg/mcp3008.version.jpg) | ![In the Box](./docimg/mcp3008.in.the.box.jpg) |
+ 
 | Pump & Tank | Soil Sensor |
+|:-----------:|:-----------:|
 | ![Pump & Tank](./docimg/pump.and.tank.jpg) | ![Soil Sensor](./docimg/soil.sensor.jpg) | 
 
 ##### Working prototype
