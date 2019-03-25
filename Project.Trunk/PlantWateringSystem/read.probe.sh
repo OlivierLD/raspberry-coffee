@@ -58,10 +58,17 @@ then
 else
   USER_PRM="--verbose:NONE"
 fi
+#
+# Start watering below 50%, for 10 seconds. Resume watching after 120 seconds.
+#
 USER_PRM="$USER_PRM --water-below:50 --water-during:10 --resume-after:120"
+#
+# REST and Web Server
+#
 USER_PRM="$USER_PRM --with-rest-server:true --http-port:8088"
 #
 # No space in the logger list!
+# Warning: the FileLogger writes on the disk, clean it from time to time...
 LOGGERS="loggers.iot.AdafruitIOClient"
 LOGGERS="$LOGGERS,loggers.text.FileLogger"
 USER_PRM="$USER_PRM --loggers:$LOGGERS"
@@ -80,11 +87,19 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Daio.verbose=false"
 # USER_PRM="$USER_PRM --water-below:50 --water-during:10 --resume-after:120"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dgpio.verbose=true -Dansi.boxes=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dvalve.test=true"
 #
+#
+# java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
+#
+# Use for example --verbose:STDOUT --miso-pin:23 --mosi-pin:24 --clk-pin:18 --cs-pin:25 --adc-channel-pin::0 --relay-pin:17
+# Depends on your wiring
+PIN_MAPPING="--miso-pin:23 --mosi-pin:24 --clk-pin:18 --cs-pin:25 --adc-channel-pin:0 --relay-pin:17"
+# COMMAND="java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM"
+COMMAND="java $JAVA_OPTIONS -cp $CP main.MCP3008 $USER_PRM $PIN_MAPPING"
 if [ "$DEBUG" == "true" ]
 then
-	 # echo "COMMAND is: java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM"
-	 echo "COMMAND is: java $JAVA_OPTIONS -cp $CP main.MCP3008 $USER_PRM"
+	 echo "COMMAND is: $COMMAND"
 	 echo -n "Hit return... "
 	 read a
 fi
@@ -94,14 +109,6 @@ then
   sleep 10
 fi
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -Dvalve.test=true"
-#
-# java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
-#
-# Use for example --verbose:STDOUT --miso-pin:23 --mosi-pin:24 --clk-pin:18 --cs-pin:25 --adc-channel-pin::0 --relay-pin:17
-# Depends on your wiring
-PIN_MAPPING="--miso-pin:23 --mosi-pin:24 --clk-pin:18 --cs-pin:25 --adc-channel-pin:0 --relay-pin:17"
-COMMAND="java $JAVA_OPTIONS -cp $CP main.MCP3008 $USER_PRM $PIN_MAPPING"
 echo -e "Running $COMMAND"
 sudo $COMMAND
 #
