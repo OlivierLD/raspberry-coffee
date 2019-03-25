@@ -420,7 +420,11 @@ With the MCP3008 and the _SparkFun Soil Moisture Sensor_ and a peristaltic pump,
 
 Pictures and diagrams to come.
 
-![Assembling](./docimg/mcp3008.version.jpg)
+| Assembling | In the Box |
+|:----------:|:----------:|
+| ![Assembling](./docimg/mcp3008.version.jpg) | ![In the Box](./docimg/mcp3008.in.the.box.jpg) | 
+| Pump & Tank | Soil Sensor |
+| ![Pump & Tank](./docimg/pump.and.tank.jpg) | ![Soil Sensor](./docimg/soil.sensor.jpg) | 
 
 ##### Working prototype
 - Calibration of the MCP3008 & Soil Moisture Sensor
