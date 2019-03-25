@@ -414,6 +414,26 @@ To run the test with the wiring above, run
 Can be replaced by a [peristaltic pump](https://www.adafruit.com/product/1150), that will not require a tank to be _above_ the valve.
 Might be easier to use.
 
-More to come soon.
+#### March 24, 2019
+With the MCP3008 and the _SparkFun Soil Moisture Sensor_ and a peristaltic pump, it works!
+
+Pictures and diagrams to come.
+
+![Assembling](./docimg/mcp3008.version.jpg)
+
+##### Working prototype
+- Calibration of the MCP3008 & Soil Moisture Sensor
+
+Pictures, step-by-step...
+
+###### To keep an eye on
+- The size of the log file(s). Purge it from time to time if it is on.
+
+##### Next...
+With an Adafruit Bonnet, soon.
+
+#### Ideas to move on...
+- A Web UI without external libraries
+- A gauge in the tank?
 
 ---
