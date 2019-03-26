@@ -431,7 +431,7 @@ Pictures and diagrams to come.
 ##### Working prototype
 - Calibration of the MCP3008 & Soil Moisture Sensor
 
-#`##### To keep an eye on
+###### To keep an eye on
 - The size of the log file(s). Purge it from time to time if it is on.
 
 ##### Next...
