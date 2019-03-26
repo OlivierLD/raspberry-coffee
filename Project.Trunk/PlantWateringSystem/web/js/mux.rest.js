@@ -188,6 +188,16 @@ var setStatus = function (state) {
 	userChange = true;
 };
 
+var showHideTemp = function(state) {
+	console.log('ShowHideTemp', state);
+	if ("NO" === state) {
+		document.getElementById('with-temp').style.display = 'none';
+	} else {
+		//with-temp
+		document.getElementById('with-temp').style.display = 'block';
+	}
+};
+
 // For simulation
 var setData = function (data) {
 	var postData = setSensorData(data);

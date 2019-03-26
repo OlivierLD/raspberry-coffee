@@ -44,28 +44,43 @@
 
 	    <h2><span id="working" title="Traffic">&#11044;</span>&nbsp;Plant Watering System</h2>
 
-	    <label for="flip-1">Watering valve:</label>
-			<select name="flip-1" id="flip-1" data-role="slider" onchange="setStatus(this.value);">
-				<option value="HIGH">Off</option>
-				<option value="LOW">On</option>
-			</select>
+			<table style="width: 100%;">
+				<tr>
+					<td>
+						<label for="flip-1">Watering valve:</label>
+						<select name="flip-1" id="flip-1" data-role="slider" onchange="setStatus(this.value);">
+							<option value="HIGH">Off</option>
+							<option value="LOW">On</option>
+						</select>
+					</td>
+					<td>
+						<label for="flip-2">With Temperature:</label>
+						<select name="flip-2" id="flip-2" data-role="slider" onchange="showHideTemp(this.value);">
+							<option value="YES">Yes</option>
+							<option value="NO" selected="true">No</option>
+						</select>
+					</td>
+				</tr>
+			</table>
 
-			<div class="ui-grid-a">
-				<div class="ui-block-a">
-					<div class="ui-bar ui-bar-e" style="height:40px">Temperature</span></div>
+			<div id="with-temp" style="display: none;">
+				<div class="ui-grid-a">
+					<div class="ui-block-a">
+						<div class="ui-bar ui-bar-e" style="height:40px">Temperature</span></div>
+					</div>
+					<div class="ui-block-b">
+						<div class="ui-bar ui-bar-e" style="height:40px">Humidity</span></div>
+					</div>
 				</div>
-				<div class="ui-block-b">
-					<div class="ui-bar ui-bar-e" style="height:40px">Humidity</span></div>
-				</div>
-			</div>
 
-			<div class="ui-grid-a">
-					<div class="ui-block-a" style="text-align: center;">
-							<span id="temp" style="font-weight: bold; font-size: 30px;"></span><span style="font-weight: bold; font-size: 30px;">&deg;C</span>
-					</div>
-					<div class="ui-block-b" style="text-align: center;">
-							<span id="hum" style="font-weight: bold; font-size: 30px;"></span><span style="font-weight: bold; font-size: 30px;">%</span>
-					</div>
+				<div class="ui-grid-a">
+						<div class="ui-block-a" style="text-align: center;">
+								<span id="temp" style="font-weight: bold; font-size: 30px;"></span><span style="font-weight: bold; font-size: 30px;">&deg;C</span>
+						</div>
+						<div class="ui-block-b" style="text-align: center;">
+								<span id="hum" style="font-weight: bold; font-size: 30px;"></span><span style="font-weight: bold; font-size: 30px;">%</span>
+						</div>
+				</div>
 			</div>
 
 			<div style="height: 30px;">
