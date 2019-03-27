@@ -1,9 +1,11 @@
 package sensors.sparkfunsoilhumiditysensor;
 
 import analogdigitalconverter.mcp3008.MCP3008Reader;
+import main.MCP3008;
 import utils.PinUtil;
 
 import java.util.function.Supplier;
+import java.util.logging.Level;
 
 import static utils.StringUtils.lpad;
 
@@ -28,11 +30,15 @@ public class MCP3008Wrapper {
 		instance.channel = channel;
 		instance.debug = debug;
 		try {
-			MCP3008Reader.initMCP3008(PinUtil.getPinByGPIONumber(misoPin), PinUtil.getPinByGPIONumber(mosiPin), PinUtil.getPinByGPIONumber(clkPin), PinUtil.getPinByGPIONumber(csPin));
-
+			MCP3008Reader.initMCP3008(
+					PinUtil.getPinByGPIONumber(misoPin),
+					PinUtil.getPinByGPIONumber(mosiPin),
+					PinUtil.getPinByGPIONumber(clkPin),
+					PinUtil.getPinByGPIONumber(csPin));
 		} catch (UnsatisfiedLinkError ule) {
 			// Not on a Pi?
 			instance.simulating = true;
+			MCP3008.getLogger().log(Level.ALL, "Not on a Pi?", ule);
 		}
 		return instance;
 	}

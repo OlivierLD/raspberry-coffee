@@ -95,8 +95,10 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dvalve.test=true"
 # Use for example --verbose:STDOUT --miso-pin:23 --mosi-pin:24 --clk-pin:18 --cs-pin:25 --adc-channel-pin::0 --relay-pin:17
 # Depends on your wiring
 PIN_MAPPING="--miso-pin:23 --mosi-pin:24 --clk-pin:18 --cs-pin:25 --adc-channel-pin:0 --relay-pin:17"
+LOGGING_FLAG=
+LOGGING_FLAG="-Djava.util.logging.config.file=./logging.properties"
 # COMMAND="java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM"
-COMMAND="java $JAVA_OPTIONS -cp $CP main.MCP3008 $USER_PRM $PIN_MAPPING"
+COMMAND="java $JAVA_OPTIONS -cp $CP $LOGGING_FLAG main.MCP3008 $USER_PRM $PIN_MAPPING"
 if [ "$DEBUG" == "true" ]
 then
 	 echo "COMMAND is: $COMMAND"

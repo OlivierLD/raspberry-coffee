@@ -9,6 +9,7 @@ import static utils.StringUtils.lpad;
 
 /**
  * To measure a voltage, between 0 and 3.3V
+ * Vanilla test
  */
 public class MainMCP3008Sampler33 {
 

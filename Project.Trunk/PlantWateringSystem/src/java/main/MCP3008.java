@@ -19,18 +19,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static utils.TimeUtil.fmtDHMS;
 import static utils.TimeUtil.msToHMS;
 
 /**
  * Example / Working prototype...
- *
  * MCP3008, ADC for  SparkFun Soil Moisture Sensor. No temperature sensor.
- *
- * WIP !!!
  */
 public class MCP3008 implements Probe {
+
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	static {
+		LOGGER.setLevel(Level.INFO);
+	}
 
 	private static boolean go = true; // Keep looping.
 
@@ -146,6 +150,10 @@ public class MCP3008 implements Probe {
 	// Loggers
 	private static List<DataLoggerInterface> loggers = new ArrayList<>(); //Arrays.asList(new AdafruitIOClient()); // Example
 	private static long lastLog = -1;
+
+	public static Logger getLogger() {
+		return LOGGER;
+	}
 
 	// Sensor data Getters and Setters, for (optional) REST
 	@Override
@@ -457,8 +465,7 @@ public class MCP3008 implements Probe {
 			map[3] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(csPin)).pinNumber()) + ":" + "CS";
 
 			map[4] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(relayPin)).pinNumber()) + ":" + "RELAY";
-			PinUtil.print(map);
-
+			PinUtil.print(true, map);
 
 			System.out.println(String.format("Reading MCP3008 on channel %d", adcChannel));
 			System.out.println(
@@ -631,7 +638,8 @@ public class MCP3008 implements Probe {
 						} catch (Exception ex) {
 							System.err.println(String.format("At %s :", new Date().toString()));
 							System.err.println(ex.toString());
-							//	ex.printStackTrace(); // TODO An option to get the full stacktrace?
+							//	ex.printStackTrace();
+							LOGGER.log(Level.ALL, "Air Temp logging", ex);
 						}
 						try {
 							logger.accept(new LogData()
@@ -640,7 +648,8 @@ public class MCP3008 implements Probe {
 						} catch (Exception ex) {
 							System.err.println(String.format("At %s :", new Date().toString()));
 							System.err.println(ex.toString());
-							//	ex.printStackTrace(); // TODO An option to get the full stacktrace?
+							//	ex.printStackTrace();
+							LOGGER.log(Level.ALL, "Hunidity logging", ex);
 						}
 					});
 					loggerThread.start();
