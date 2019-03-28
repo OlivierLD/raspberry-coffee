@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# WARNING: Works for both STH10 and MCP3008. Comment/uncomment the required lines below
+#
 CP=build/libs/PlantWateringSystem-1.0-all.jar
 #
 echo "Usage is $0 [debug|remote-debug|verbose|wait]"
@@ -69,6 +72,7 @@ USER_PRM="$USER_PRM --with-rest-server:true --http-port:8088"
 #
 # No space in the logger list!
 # Warning: the FileLogger writes on the disk, clean it from time to time...
+#
 LOGGERS="loggers.iot.AdafruitIOClient"
 LOGGERS="$LOGGERS,loggers.text.FileLogger"
 USER_PRM="$USER_PRM --loggers:$LOGGERS"
@@ -94,6 +98,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dvalve.test=true"
 #
 # Use for example --verbose:STDOUT --miso-pin:23 --mosi-pin:24 --clk-pin:18 --cs-pin:25 --adc-channel-pin::0 --relay-pin:17
 # Depends on your wiring
+#
 PIN_MAPPING="--miso-pin:23 --mosi-pin:24 --clk-pin:18 --cs-pin:25 --adc-channel-pin:0 --relay-pin:17"
 LOGGING_FLAG=
 LOGGING_FLAG="-Djava.util.logging.config.file=./logging.properties"
