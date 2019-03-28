@@ -4,62 +4,92 @@
     <meta charset="UTF-8">
     <title>Cleanup</title>
     <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
-    <script type="text/javascript" src="jquery-2.1.3.js"></script>
     <script type="text/javascript">
-var boom = function() {
-    var year  = document.getElementById("year").value;
-    var month = document.getElementById("month").value;
-    var day   = document.getElementById("day").value;
-    var hour  = document.getElementById("hour").value;
-    var min   = document.getElementById("min").value;
-    var sec   = document.getElementById("sec").value;
+function boom() {
+    let year  = document.getElementById("year").value;
+    let month = document.getElementById("month").value;
+    let day   = document.getElementById("day").value;
+    let hour  = document.getElementById("hour").value;
+    let min   = document.getElementById("min").value;
+    let sec   = document.getElementById("sec").value;
 
-    var pswd = document.getElementById("pswd").value;
+    let pswd = document.getElementById("pswd").value;
 
 //  alert("Deleting before " + day + "-" + month + "-" + year + " " + hour + ":" + min + ":" + sec);
 //  See cleanup.wd.php for details.
-    var url = "cleanup.wd.php?PSWD=" + pswd +
+    let url = "cleanup.wd.php?PSWD=" + pswd +
         "&YEAR=" + year +
         "&MONTH=" + month +
         "&DAY=" + day +
         "&HOUR=" + hour +
         "&MIN=" + min +
         "&SEC=" + sec;
-    var deleteData = goDelete(url);
-    deleteData.done(function(value) {
-        // Ok
-        alert("After execution:\n" + value);
-    });
-    // Errors etc
-    deleteData.fail(function(error) {
-        alert('Data request failed (timeout?), try again later.\n' + (error !== undefined ? error : ''));
-    });
+    let deleteData = getPromise(url, 60000, 'GET', 200);
+    deleteData.then(
+        function(value) {
+            // Ok
+            alert("After execution:\n" + value);
+        },
+            function(error) {
+            alert('Data request failed (timeout?), try again later.\n' + (error !== undefined ? error : ''));
+        });
 };
 
+function getPromise(
+    url,                          // full api path
+    timeout,                      // After that, fail.
+    verb,                         // GET, PUT, DELETE, POST, etc
+    happyCode,                    // if met, resolve, otherwise fail.
+    data = null,                  // payload, when needed (PUT, POST...)
+    show = false) {               // Show the traffic [true]|false
 
-var goDelete = function(url) {
-    var deferred = $.Deferred(),  // a jQuery deferred
-        xhr = new XMLHttpRequest(),
-        TIMEOUT = 60000;
+    if (show === true) {
+        document.body.style.cursor = 'wait';
+    }
 
-    xhr.open('GET', url, true);
-    xhr.send();
+    if (DEBUG) {
+        console.log(">>> Promise", verb, url);
+    }
 
-    var requestTimer = setTimeout(function() {
-        xhr.abort();
-        deferred.reject();
-    }, TIMEOUT);
+    let promise = new Promise(function (resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        let TIMEOUT = timeout;
 
-    xhr.onload = function() {
-        clearTimeout(requestTimer);
-        if (xhr.status === 200) {
-            deferred.resolve(xhr.response);
-        } else {
-            deferred.reject();
+        let req = verb + " " + url;
+        if (data !== undefined && data !== null) {
+            req += ("\n" + JSON.stringify(data, null, 2));
         }
-    };
-    return deferred.promise();
-};
+
+        xhr.open(verb, url, true);
+        xhr.setRequestHeader("Content-type", "application/json");
+        try {
+            if (data === undefined || data === null) {
+                xhr.send();
+            } else {
+                xhr.send(JSON.stringify(data));
+            }
+        } catch (err) {
+            console.log("Send Error ", err);
+        }
+
+        let requestTimer = setTimeout(function () {
+            xhr.abort();
+            let mess = {code: 408, message: 'Timeout'};
+            reject(mess);
+        }, TIMEOUT);
+
+        xhr.onload = function () {
+            clearTimeout(requestTimer);
+            if (xhr.status === happyCode) {
+                resolve(xhr.response);
+            } else {
+                reject({code: xhr.status, message: xhr.response});
+            }
+        };
+    });
+    return promise;
+}
+
     </script>
 </head>
 <body>
