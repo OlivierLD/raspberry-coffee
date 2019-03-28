@@ -47,10 +47,6 @@ function getPromise(
         document.body.style.cursor = 'wait';
     }
 
-    if (DEBUG) {
-        console.log(">>> Promise", verb, url);
-    }
-
     let promise = new Promise(function (resolve, reject) {
         let xhr = new XMLHttpRequest();
         let TIMEOUT = timeout;
