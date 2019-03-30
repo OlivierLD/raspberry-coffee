@@ -24,7 +24,7 @@ function boom() {
         "&HOUR=" + hour +
         "&MIN=" + min +
         "&SEC=" + sec;
-    let deleteData = getPromise(url, 60000, 'GET', 200);
+    let deleteData = getPromise(url, 60000, 'GET', 200); // It's a GET, yahoo seems not to support other verbs...
     deleteData.then(
         function(value) {
             // Ok

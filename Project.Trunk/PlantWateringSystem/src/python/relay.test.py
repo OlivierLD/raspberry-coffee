@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 import time
 
-channel = 17
+channel = 17 # BCM Number
 
 #
 # To test the relay
@@ -9,7 +9,7 @@ channel = 17
 
 # GPIO setup
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(channel, GPIO.OUT) # Assign the pin here
+GPIO.setup(channel, GPIO.OUT) # Assign the pin here, use BCM number
 
 
 def relay_on(pin):

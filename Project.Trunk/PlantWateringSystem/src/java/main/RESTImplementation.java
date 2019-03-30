@@ -68,7 +68,7 @@ public class RESTImplementation {
 					"List of all available operations."),
 			new Operation(
 					"GET",
-					PWS_PREFIX + "/sth10-data",
+					PWS_PREFIX + "/sensor-data",
 					this::getProbeData,
 					"Get device Data. Temperature, humidity"),
 			new Operation(
@@ -93,7 +93,7 @@ public class RESTImplementation {
 					"Get program's parameters."),
 			new Operation(
 					"POST",
-					PWS_PREFIX + "/sth10-data",
+					PWS_PREFIX + "/sensor-data",
 					this::setProbeData,
 					"Set device Data. Temperature, humidity, for simulation"),
 			new Operation(

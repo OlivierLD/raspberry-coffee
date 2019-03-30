@@ -63,7 +63,7 @@ var getRelayStatus = function () {
 };
 
 var getSensorData = function () {
-	return getDeferred('/pws/sth10-data', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+	return getDeferred('/pws/sensor-data', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 var getLastWateringTime = function () {
@@ -75,14 +75,14 @@ var setRelayStatus = function (status) {
 };
 
 var setSensorData = function (data) {
-	return getDeferred('/pws/sth10-data', DEFAULT_TIMEOUT, 'POST', 200, data);
+	return getDeferred('/pws/sensor-data', DEFAULT_TIMEOUT, 'POST', 200, data);
 };
 
 var getPWSStatus = function () {
 	return getDeferred('/pws/pws-status', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
-var userChange = true;
+var userChange = true; // Allow/forbid user to set the relay status
 
 var relayStatus = function () {
 	var getData = getRelayStatus();
