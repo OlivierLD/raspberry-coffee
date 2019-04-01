@@ -641,14 +641,14 @@ class SunPath extends HTMLElement {
 				metrics = context.measureText(displayData);
 				context.fillText(displayData, (this._width / 2) - (metrics.width / 2), this._height - 40);
 				if (this._now !== undefined) {
-					let toTransit = (this._sunTransit.time - this._now.time) / 1000;
+					let toTransit = Math.abs(this._sunTransit.time - this._now.time) / 1000;
 					let inHours = Math.floor(toTransit / 3600);
 					let inMins = Math.floor((toTransit - (inHours * 3600)) / 60);
 					let inSecs = Math.floor(toTransit - ((inHours * 3600) + (inMins * 60)));
-					let str = (toTransit > 0 ? 'In ' : 'Was ') + Utilities.lpad(inHours.toString(), 2, '0') + ':' +
+					let str = ((this._sunTransit.time - this._now.time) > 0 ? 'In ' : 'Was ') + Utilities.lpad(inHours.toString(), 2, '0') + ':' +
 							Utilities.lpad(inMins.toString(), 2, '0') + ':' +
 							Utilities.lpad(inSecs.toString(), 2, '0') +
-							(toTransit > 0 ? '' : ' ago.');
+							((this._sunTransit.time - this._now.time) > 0 ? '' : ' ago.');
 					// console.log('To Transit:', toTransit, ' =>', str);
 					displayData = str;
 					metrics = context.measureText(displayData);
