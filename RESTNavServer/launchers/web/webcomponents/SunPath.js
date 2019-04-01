@@ -66,6 +66,7 @@ class SunPath extends HTMLElement {
 		this._sunRise = undefined;
 		this._sunSet = undefined;
 		this._sunTransit = undefined;
+		this._now = undefined; // epoch
 
 		this.side =   0; // Left and right
 		this.addToZ = 180;  // 180 when pointing South (Sun in the South at noon). Combined with left right rotation
@@ -196,6 +197,10 @@ class SunPath extends HTMLElement {
 
 	set sunTransit(st) { // { time: epoch }
 		this._sunTransit = st;
+	}
+
+	set now(st) { // { time: epoch }
+    this._now = st;
 	}
 
 	set shadowRoot(val) {
@@ -635,6 +640,20 @@ class SunPath extends HTMLElement {
 				displayData = strSetTime;
 				metrics = context.measureText(displayData);
 				context.fillText(displayData, (this._width / 2) - (metrics.width / 2), this._height - 40);
+				if (this._now !== undefined) {
+					let toTransit = (this._sunTransit.time - this._now.time) / 1000;
+					let inHours = Math.floor(toTransit / 3600);
+					let inMins = Math.floor((toTransit - (inHours * 3600)) / 60);
+					let inSecs = Math.floor(toTransit - ((inHours * 3600) + (inMins * 60)));
+					let str = (toTransit > 0 ? 'In ' : 'Was ') + Utilities.lpad(inHours.toString(), 2, '0') + ':' +
+							Utilities.lpad(inMins.toString(), 2, '0') + ':' +
+							Utilities.lpad(inSecs.toString(), 2, '0') +
+							(toTransit > 0 ? '' : ' ago.');
+					// console.log('To Transit:', toTransit, ' =>', str);
+					displayData = str;
+					metrics = context.measureText(displayData);
+					context.fillText(displayData, (this._width / 2) - (metrics.width / 2), this._height - 20);
+				}
 			}
 			context.restore();
 		}

@@ -467,6 +467,8 @@ function astroCallback(data) {
 	tPass.setUTCHours(data.tPass.hour, data.tPass.min, data.tPass.sec);
 	document.getElementById('sun-path-01').sunTransit = { time: tPass.getTime() };
 	// console.log("Transit:", tPass);
+	let now = new Date();
+	document.getElementById('sun-path-01').now = { time: now.getTime() };
 
 	worldMap.setAstronomicalData(data);
 	worldMap.repaint();

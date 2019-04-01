@@ -144,7 +144,7 @@ public class LongTimeCurrentCalculator {
 										utcDate.getValue() != null &&
 										((timeBuffer.get(timeBuffer.size() - 1).getValue().getTime() - utcDate.getValue().getTime()) > 1_000)) {
 									// Buffer Reset
-						//    System.out.println("== Reseting data buffers: last date in buffer=[" + SDF2.format(timeBuffer.get(timeBuffer.size() - 1).getValue()) + "] > current Date=[" + SDF2.format(utcDate.getValue()) + "]");
+						//    System.out.println("== Resetting data buffers: last date in buffer=[" + SDF2.format(timeBuffer.get(timeBuffer.size() - 1).getValue()) + "] > current Date=[" + SDF2.format(utcDate.getValue()) + "]");
 									resetDataBuffers();
 								}
 
@@ -220,8 +220,8 @@ public class LongTimeCurrentCalculator {
 										GreatCirclePoint geoTo = new GreatCirclePoint(
 												Math.toRadians(groundData[groundData.length - 1].getL()),
 												Math.toRadians(groundData[groundData.length - 1].getG()));
-										// Between the 2 above: the current
 
+										// Between the 2 above: the current
 										double dist = GreatCircle.calculateRhumLineDistance(geoFrom, geoTo); // Dist between DR & GPS
 										double currentDir = Math.toDegrees(GreatCircle.calculateRhumLineRoute(geoFrom, geoTo));
 										double hourRatio = (double) (timeBuffer.get(timeBuffer.size() - 1).getValue().getTime() - timeBuffer.get(0).getValue().getTime()) / (double) ONE_HOUR_MS;
@@ -255,7 +255,6 @@ public class LongTimeCurrentCalculator {
 																		timeBuffer.get(0).toString(),
 																		timeBuffer.get(timeBuffer.size() - 1).toString(),
 																		timeBuffer.get(timeBuffer.size() - 1).getValue().getTime() - timeBuffer.get(0).getValue().getTime()));
-
 										if (verbose) {
 											Map<Long, NMEADataCache.CurrentDefinition> map = (Map<Long, NMEADataCache.CurrentDefinition>) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.CALCULATED_CURRENT);
 											System.out.println("Calculated Current Map:" + map.size() + " entry(ies)");
