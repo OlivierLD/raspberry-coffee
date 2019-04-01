@@ -1,3 +1,4 @@
+// TODO Move to ES6
 $(document).ready(function () {
 	// Nothing.
 });

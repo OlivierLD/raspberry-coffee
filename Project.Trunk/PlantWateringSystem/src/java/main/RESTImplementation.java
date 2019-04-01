@@ -75,7 +75,7 @@ public class RESTImplementation {
 					"GET",
 					PWS_PREFIX + "/relay-state",
 					this::getRelayState,
-					"Get relay state - ON of OFF."),
+					"Get relay state - ON or OFF."),
 			new Operation(
 					"GET",
 					PWS_PREFIX + "/last-watering-time",
@@ -100,7 +100,7 @@ public class RESTImplementation {
 					"PUT",
 					PWS_PREFIX + "/relay-state",
 					this::setRelayState,
-					"Flip the relay - ON of OFF."),
+					"Flip the relay - ON or OFF."),
 			new Operation(
 					"PUT",
 					PWS_PREFIX + "/pws-parameters",
