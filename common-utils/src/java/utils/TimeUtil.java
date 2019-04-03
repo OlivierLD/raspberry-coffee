@@ -9,13 +9,54 @@ import java.util.TimeZone;
 
 public class TimeUtil {
 
-	public static String decHoursToDMS(double decimalHours) {
-		String s = "";
+	public static class DMS {
+		int hours;
+		int minutes;
+		double seconds;
+
+		public int getHours() {
+			return hours;
+		}
+
+		public int getMinutes() {
+			return minutes;
+		}
+
+		public double getSeconds() {
+			return seconds;
+		}
+
+		public DMS hours(int hours) {
+			this.hours = hours;
+			return this;
+		}
+		public DMS minutes(int minutes) {
+			this.minutes = minutes;
+			return this;
+		}
+		public DMS seconds(double seconds) {
+			this.seconds = seconds;
+			return this;
+		}
+	}
+
+	public static DMS decimalToDMS(double decimalHours) {
 		int hours = (int)Math.floor(decimalHours);
 		double min = (decimalHours - hours) * 60D;
 		double sec = (min - Math.floor(min)) * 60D;
-		s = String.format("%02d:%02d:%02d", hours, (int)Math.floor(min), (int)Math.round(sec));
-		return s;
+		return new DMS()
+				.hours(hours)
+				.minutes((int)Math.floor(min))
+				.seconds(sec);
+	}
+
+	public static String decHoursToDMS(double decimalHours) {
+		return decHoursToDMS(decimalHours, "%02d:%02d:%02f");
+	}
+
+	public static String decHoursToDMS(double decimalHours, String format) {
+		DMS dms = decimalToDMS(decimalHours);
+		return String.format(format, dms.hours, dms.minutes, dms.seconds);
 	}
 
 	public static Date getGMT() {

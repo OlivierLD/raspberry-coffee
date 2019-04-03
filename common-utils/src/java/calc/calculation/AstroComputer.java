@@ -1,6 +1,7 @@
 package calc.calculation;
 
 import calc.calculation.nauticalalmanac.*;
+import utils.TimeUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -130,6 +131,22 @@ public class AstroComputer {
 		return t - deltaG;
 	}
 
+	/**
+	 *
+	 * @param latitude
+	 * @param longitude
+	 * @return as an epoch (today based)
+	 */
+	public static long getSunTransitTime(double latitude, double longitude) {
+		Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+		double inHours = getSunMeridianPassageTime(latitude, longitude);
+		TimeUtil.DMS dms = TimeUtil.decimalToDMS(inHours);
+		cal.set(Calendar.HOUR_OF_DAY, dms.getHours());
+		cal.set(Calendar.MINUTE, dms.getMinutes());
+		cal.set(Calendar.SECOND, (int)Math.floor(dms.getSeconds()));
+
+		return cal.getTimeInMillis();
+	}
 	public static synchronized double[] sunRiseAndSet_wikipedia(double latitude, double longitude) {
 		double cost = Math.tan(Math.toRadians(latitude)) * Math.tan(Math.toRadians(Context.DECsun));
 		double t = Math.acos(cost);
@@ -152,24 +169,29 @@ public class AstroComputer {
 	public static synchronized double[] moonRiseAndSet(double latitude, double longitude) {
 		//  out.println("Moon HP:" + (Context.HPmoon / 60) + "'");
 		//  out.println("Moon SD:" + (Context.SDmoon / 60) + "'");
-		double h0 = (Context.HPmoon / 3600d) - (Context.SDmoon / 3600d) - (34d / 60d);
+		double h0 = (Context.HPmoon / 3_600d) - (Context.SDmoon / 3_600d) - (34d / 60d);
 		//  out.println("Moon H0:" + h0);
 		double cost = Math.sin(Math.toRadians(h0)) - (Math.tan(Math.toRadians(latitude)) * Math.tan(Math.toRadians(Context.DECmoon)));
 		double t = Math.acos(cost);
 		double lon = longitude;
-		while (lon < -180D)
+		while (lon < -180D) {
 			lon += 360D;
+		}
 		//  out.println("Moon Eot:" + Context.moonEoT + " (" + (Context.moonEoT / 60D) + ")" + ", t:" + Math.toDegrees(t));
 		double utRise = 12D - (Context.moonEoT / 60D) - (lon / 15D) - (Math.toDegrees(t) / 15D);
-		while (utRise < 0)
+		while (utRise < 0) {
 			utRise += 24;
-		while (utRise > 24)
+		}
+		while (utRise > 24) {
 			utRise -= 24;
+		}
 		double utSet = 12D - (Context.moonEoT / 60D) - (lon / 15D) + (Math.toDegrees(t) / 15D);
-		while (utSet < 0)
+		while (utSet < 0) {
 			utSet += 24;
-		while (utSet > 24)
+		}
+		while (utSet > 24) {
 			utSet -= 24;
+		}
 
 		return new double[]{utRise, utSet};
 	}
@@ -457,5 +479,21 @@ public class AstroComputer {
 		System.out.println("On " + cal.getTime() + ", TimeOffset for " + timeZone + ":" + getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone), cal.getTime()));
 		d = TimeZone.getTimeZone(timeZone).getOffset(cal.getTime().getTime()) / (3_600d * 1_000d);
 //  System.out.println("TimeOffset for " + timeZone + ":" +  d);
+
+		Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+		AstroComputer.calculate(
+				date.get(Calendar.YEAR),
+				date.get(Calendar.MONTH) + 1,
+				date.get(Calendar.DAY_OF_MONTH),
+				date.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
+				date.get(Calendar.MINUTE),
+				date.get(Calendar.SECOND));
+
+		double sunMeridianPassageTime = getSunMeridianPassageTime(37.7489, -122.5070);
+		System.out.println(String.format("Sun EoT: %f", sunMeridianPassageTime));
+
+		long sunTransit = getSunTransitTime(37.7489, -122.5070);
+		Date tt = new Date(sunTransit);
+		System.out.println("Transit Time:" + tt.toString());
 	}
 }

@@ -234,7 +234,7 @@
 		});
 
 		function loadSunPath() {
-			let getData = requestSunPath({});
+			let getData = requestSunPath({}); // Empty obj, means use default
 			getData.then((value) => { // Resolve
 //  		console.log("Done:", value);
 				try {

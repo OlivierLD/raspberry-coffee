@@ -561,15 +561,22 @@ public class RESTImplementation {
 					data = data.from(new Pos()
 							.latitude(lat)
 							.longitude(lng));
-					double tPass = AstroComputer.getSunMeridianPassageTime(lat, lng);
+					double tPass = AstroComputer.getSunMeridianPassageTime(lat, lng); // In decimal hours
+//					long tt = AstroComputer.getSunTransitTime(lat, lng);
+					TimeUtil.DMS dms = TimeUtil.decimalToDMS(tPass);
 
-					int hTPass = (int)Math.floor(tPass);
-					int mTPass = (int)Math.floor((tPass - hTPass) * 60);
-					int sTPaas = (int)Math.round((((tPass - hTPass) * 60) - mTPass) * 60);
+//					int hTPass = (int)Math.floor(tPass);
+//					int mTPass = (int)Math.floor((tPass - hTPass) * 60);
+//					int sTPass = (int)Math.round((((tPass - hTPass) * 60) - mTPass) * 60);
+
+					int hTPass = dms.getHours();
+					int mTPass = dms.getMinutes();
+					int sTPass = (int)Math.floor(dms.getSeconds());
+
 					data = data.tPass(new FmtDate()
 															.hour(hTPass)
 															.min(mTPass)
-															.sec(sTPaas)
+															.sec(sTPass)
 															.tz("UTC"));
 
 					Date solar = getSolarDate(at, tPass);
@@ -1789,11 +1796,12 @@ public class RESTImplementation {
 		String body;
 		double decl;
 		double gha;
-		double altitude;
+		double altitude; // aka elevation
 		double z;
 		double eot;
 		long riseTime; // epoch
 		long setTime;  // epoch
+		long sunTransitTime; // epoch
 		double riseZ;
 		double setZ;
 
@@ -1804,8 +1812,8 @@ public class RESTImplementation {
 			this.body = body;
 		}
 
-		public BodyDataForPos altitude(double alititude) {
-			this.altitude = alititude;
+		public BodyDataForPos altitude(double altitude) {
+			this.altitude = altitude;
 			return this;
 		}
 		public BodyDataForPos decl(double decl) {
@@ -1840,6 +1848,10 @@ public class RESTImplementation {
 			this.setZ = setZ;
 			return this;
 		}
+		public BodyDataForPos setTransit(long transit) {
+			this.sunTransitTime = transit;
+			return this;
+		}
 	}
 
 	private BodyDataForPos getSunData(double lat, double lng) {
@@ -1866,6 +1878,7 @@ public class RESTImplementation {
 		double sunGHA = AstroComputer.getSunGHA();
 
 		double[] sunRiseAndSet = AstroComputer.sunRiseAndSet(lat, lng);
+		long sunTransitTime = AstroComputer.getSunTransitTime(lat, lng);
 		Calendar dayOne = Calendar.getInstance(current.getTimeZone()); // TimeZone.getTimeZone("Etc/UTC"));
 		// 00:00:00
 		dayOne.set(current.get(Calendar.YEAR), current.get(Calendar.MONTH), current.get(Calendar.DATE), 0, 0, 0);
@@ -1876,19 +1889,20 @@ public class RESTImplementation {
 		rise.setTimeZone(TimeZone.getTimeZone("Etc/UTC")); // current.getTimeZone());
 		set.setTimeZone(TimeZone.getTimeZone("Etc/UTC")); // current.getTimeZone());
 
-		String riseToDMS = TimeUtil.decHoursToDMS(sunRiseAndSet[AstroComputer.UTC_RISE_IDX]);
+
+		TimeUtil.DMS dmsRise = TimeUtil.decimalToDMS(sunRiseAndSet[AstroComputer.UTC_RISE_IDX]);
 		try {
-			rise.add(Calendar.HOUR_OF_DAY, Integer.parseInt(riseToDMS.split(":")[0]));
-			rise.add(Calendar.MINUTE, Integer.parseInt(riseToDMS.split(":")[1]));
-			rise.add(Calendar.SECOND, Integer.parseInt(riseToDMS.split(":")[2]));
+			rise.add(Calendar.HOUR_OF_DAY, dmsRise.getHours());
+			rise.add(Calendar.MINUTE, dmsRise.getMinutes());
+			rise.add(Calendar.SECOND, (int)Math.floor(dmsRise.getSeconds()));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		String setToDMS = TimeUtil.decHoursToDMS(sunRiseAndSet[AstroComputer.UTC_SET_IDX]);
+		TimeUtil.DMS dmsSet = TimeUtil.decimalToDMS(sunRiseAndSet[AstroComputer.UTC_SET_IDX]);
 		try {
-			set.add(Calendar.HOUR_OF_DAY, Integer.parseInt(setToDMS.split(":")[0]));
-			set.add(Calendar.MINUTE, Integer.parseInt(setToDMS.split(":")[1]));
-			set.add(Calendar.SECOND, Integer.parseInt(setToDMS.split(":")[2]));
+			set.add(Calendar.HOUR_OF_DAY, dmsSet.getHours());
+			set.add(Calendar.MINUTE, dmsSet.getMinutes());
+			set.add(Calendar.SECOND, (int)Math.floor(dmsSet.getSeconds()));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -1911,6 +1925,7 @@ public class RESTImplementation {
 				.eot(eot)
 				.riseTime(rise.getTimeInMillis())
 				.setTime(set.getTimeInMillis())
+				.setTransit(sunTransitTime)
 				.riseZ(sunRiseAndSet[AstroComputer.RISE_Z_IDX])
 				.setZ(sunRiseAndSet[AstroComputer.SET_Z_IDX]);
 	}
@@ -1934,7 +1949,7 @@ public class RESTImplementation {
 	private List<BodyAt> getSunDataForAllDay(double lat, double lng, Integer step, Calendar today) {
 		BodyDataForPos bodyData = getSunDataForDate(lat, lng, today);
 
-		long from = bodyData.riseTime;
+		long from = bodyData.riseTime; // TODO: from (transit-time - 12) to (transit-time + 12) ?
 		long to = bodyData.setTime;
 
 		long _STEP_MINUTES = 1_000 * 60 * (step == null ? 10 : step); // In ms. Default 10 minutes.

@@ -41,6 +41,8 @@ RUN apt-get install -y python3-pip python3-dev
 RUN pip3 install tensorflow-gpu
 RUN pip3 install tensorflow
 #
+RUN pip3 install pandas numpy scipy scikit-learn
+#
 RUN apt-get install -y cmake unzip pkg-config libopenblas-dev liblapack-dev
 RUN apt-get install -y python-numpy python-scipy python-matplotlib python-yaml
 RUN python3 -mpip install matplotlib
@@ -100,6 +102,8 @@ RUN python3 setup.py install
 #
 # Jupyter notebooks from "Deep Learning with Python"
 RUN git clone https://github.com/fchollet/deep-learning-with-python-notebooks.git
+# repo from "Deep Learning Crash Course"
+RUN git clone https://github.com/DJCordhose/deep-learning-crash-course-notebooks
 #
 RUN mkdir ./examples/oliv
 # From local file system to image
