@@ -605,6 +605,11 @@ class SunPath extends HTMLElement {
 			context.closePath();
 			// Draw the Sun
 			context.fillStyle = this.sunPathColorConfig.sunColor;
+			if (this.sunHe > -5 && this.sunHe < 5) {
+				context.fillStyle = 'red';
+			} else if (this.sunHe < -5) {
+				context.fillStyle = 'rgba(255,255,0,0.3)';
+			}
 			context.beginPath();
 			context.arc(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius), 10, 2 * Math.PI, false);
 			context.fill();
