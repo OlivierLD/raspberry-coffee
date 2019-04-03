@@ -480,7 +480,7 @@ public class AstroComputer {
 		d = TimeZone.getTimeZone(timeZone).getOffset(cal.getTime().getTime()) / (3_600d * 1_000d);
 //  System.out.println("TimeOffset for " + timeZone + ":" +  d);
 
-		Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+		Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // Now
 		AstroComputer.calculate(
 				date.get(Calendar.YEAR),
 				date.get(Calendar.MONTH) + 1,

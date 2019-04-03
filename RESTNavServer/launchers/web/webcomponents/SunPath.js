@@ -542,20 +542,45 @@ class SunPath extends HTMLElement {
 		// Sun Path
 		if (this._sunPath !== undefined) {
 			context.lineWidth = 3;
+			// Positive elevations
 			context.strokeStyle = this.sunPathColorConfig.sunColor;
 			// panelPoint = this.rotateBothWays(this._sunPath[0].alt + this.rotation, this._sunPath[0].z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
 			panelPoint = this.rotateBothWays(0 + this.rotation, this._sunData.riseZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
 			context.beginPath();
 			context.moveTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
 			for (let i = 0; i < this._sunPath.length; i++) {
-				panelPoint = this.rotateBothWays(this._sunPath[i].alt + this.rotation, this._sunPath[i].z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
-				context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+				if (this._sunPath[i].alt >= 0) {
+					panelPoint = this.rotateBothWays(this._sunPath[i].alt + this.rotation, this._sunPath[i].z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+					context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+				}
 			}
 			panelPoint = this.rotateBothWays(0 + this.rotation, this._sunData.setZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
 			context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
 			context.stroke();
 			context.closePath();
 			context.lineWidth = 1;
+
+			// Negative elevations
+			context.save();
+			context.setLineDash([2, 2]);
+			context.beginPath();
+			let started = false;
+			for (let i = 0; i < this._sunPath.length; i++) {
+				if (this._sunPath[i].alt < 0) {
+					panelPoint = this.rotateBothWays(this._sunPath[i].alt + this.rotation, this._sunPath[i].z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+					if (!started) {
+						context.moveTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+						started = true;
+					} else {
+						context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+					}
+				} else {
+					started = false;
+				}
+			}
+			context.stroke();
+			context.closePath();
+			context.restore();
 		}
 		// Current Sun Pos.
 		if (this.sunHe !== undefined && this.sunZ !== undefined) {

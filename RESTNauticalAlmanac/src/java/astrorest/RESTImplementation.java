@@ -1949,8 +1949,13 @@ public class RESTImplementation {
 	private List<BodyAt> getSunDataForAllDay(double lat, double lng, Integer step, Calendar today) {
 		BodyDataForPos bodyData = getSunDataForDate(lat, lng, today);
 
-		long from = bodyData.riseTime; // TODO: from (transit-time - 12) to (transit-time + 12) ?
+		long from = bodyData.riseTime; // if sunTransitTime exists: from (transit-time - 12) to (transit-time + 12) ?
 		long to = bodyData.setTime;
+
+		if (bodyData.sunTransitTime != 0L) { // Parameter for the full path, or just positive elevations?
+			from = bodyData.sunTransitTime - (12 * 3_600_000);
+			to = bodyData.sunTransitTime + (12 * 3_600_000);
+		}
 
 		long _STEP_MINUTES = 1_000 * 60 * (step == null ? 10 : step); // In ms. Default 10 minutes.
 
