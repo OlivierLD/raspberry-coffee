@@ -1877,57 +1877,72 @@ public class RESTImplementation {
 		double sunDecl = AstroComputer.getSunDecl();
 		double sunGHA = AstroComputer.getSunGHA();
 
-		double[] sunRiseAndSet = AstroComputer.sunRiseAndSet(lat, lng);
 		long sunTransitTime = AstroComputer.getSunTransitTime(lat, lng);
-		Calendar dayOne = Calendar.getInstance(current.getTimeZone()); // TimeZone.getTimeZone("Etc/UTC"));
-		// 00:00:00
-		dayOne.set(current.get(Calendar.YEAR), current.get(Calendar.MONTH), current.get(Calendar.DATE), 0, 0, 0);
-		dayOne.set(Calendar.MILLISECOND, 0);
-		Calendar rise = (Calendar)dayOne.clone();
-		Calendar set = (Calendar)dayOne.clone();
 
-		rise.setTimeZone(TimeZone.getTimeZone("Etc/UTC")); // current.getTimeZone());
-		set.setTimeZone(TimeZone.getTimeZone("Etc/UTC")); // current.getTimeZone());
+//		double[] sunRiseAndSet = AstroComputer.sunRiseAndSet(lat, lng);
+//		Calendar dayOne = Calendar.getInstance(current.getTimeZone()); // TimeZone.getTimeZone("Etc/UTC"));
+//		// 00:00:00
+//		dayOne.set(current.get(Calendar.YEAR), current.get(Calendar.MONTH), current.get(Calendar.DATE), 0, 0, 0);
+//		dayOne.set(Calendar.MILLISECOND, 0);
+//		Calendar rise = (Calendar)dayOne.clone();
+//		Calendar set = (Calendar)dayOne.clone();
+//
+//		rise.setTimeZone(TimeZone.getTimeZone("Etc/UTC")); // current.getTimeZone());
+//		set.setTimeZone(TimeZone.getTimeZone("Etc/UTC")); // current.getTimeZone());
+//
+//		TimeUtil.DMS dmsRise = TimeUtil.decimalToDMS(sunRiseAndSet[AstroComputer.UTC_RISE_IDX]);
+//		try {
+//			rise.add(Calendar.HOUR_OF_DAY, dmsRise.getHours());
+//			rise.add(Calendar.MINUTE, dmsRise.getMinutes());
+//			rise.add(Calendar.SECOND, (int)Math.floor(dmsRise.getSeconds()));
+//		} catch (Exception ex) {
+//			ex.printStackTrace();
+//		}
+//		TimeUtil.DMS dmsSet = TimeUtil.decimalToDMS(sunRiseAndSet[AstroComputer.UTC_SET_IDX]);
+//		try {
+//			set.add(Calendar.HOUR_OF_DAY, dmsSet.getHours());
+//			set.add(Calendar.MINUTE, dmsSet.getMinutes());
+//			set.add(Calendar.SECOND, (int)Math.floor(dmsSet.getSeconds()));
+//		} catch (Exception ex) {
+//			ex.printStackTrace();
+//		}
+//		if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+//			System.out.println("Day origin:" + dayOne.getTime() + " (" + NumberFormat.getInstance().format(dayOne.getTimeInMillis()) + ")");
+//			System.out.println(
+//					"Rise:" + rise.getTime() + " (" + NumberFormat.getInstance().format(sunRiseAndSet[AstroComputer.UTC_RISE_IDX]) +
+//							"), Set:" + set.getTime() + " (" + NumberFormat.getInstance().format(sunRiseAndSet[AstroComputer.UTC_SET_IDX]) + ")");
+//
+//			System.out.println("Rise Time Zone:" + rise.getTimeZone());
+//		}
+
+		AstroComputer.EpochAndZ[] epochAndZs = AstroComputer.sunRiseAndSetEpoch(lat, lng);
 
 
-		TimeUtil.DMS dmsRise = TimeUtil.decimalToDMS(sunRiseAndSet[AstroComputer.UTC_RISE_IDX]);
-		try {
-			rise.add(Calendar.HOUR_OF_DAY, dmsRise.getHours());
-			rise.add(Calendar.MINUTE, dmsRise.getMinutes());
-			rise.add(Calendar.SECOND, (int)Math.floor(dmsRise.getSeconds()));
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		TimeUtil.DMS dmsSet = TimeUtil.decimalToDMS(sunRiseAndSet[AstroComputer.UTC_SET_IDX]);
-		try {
-			set.add(Calendar.HOUR_OF_DAY, dmsSet.getHours());
-			set.add(Calendar.MINUTE, dmsSet.getMinutes());
-			set.add(Calendar.SECOND, (int)Math.floor(dmsSet.getSeconds()));
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-			System.out.println("Day origin:" + dayOne.getTime() + " (" + NumberFormat.getInstance().format(dayOne.getTimeInMillis()) + ")");
-			System.out.println(
-					"Rise:" + rise.getTime() + " (" + NumberFormat.getInstance().format(sunRiseAndSet[AstroComputer.UTC_RISE_IDX]) +
-							"), Set:" + set.getTime() + " (" + NumberFormat.getInstance().format(sunRiseAndSet[AstroComputer.UTC_SET_IDX]) + ")");
-
-			System.out.println("Rise Time Zone:" + rise.getTimeZone());
-		}
 		// Get Equation of time, used to calculate solar time.
 		double eot = AstroComputer.getSunMeridianPassageTime(lat, lng); // in decimal hours
 
+//		return new BodyDataForPos(current.getTimeInMillis(), lat, lng, "Sun")
+//				.decl(sunDecl)
+//				.gha(sunGHA)
+//				.altitude(he)
+//				.z(z)
+//				.eot(eot)
+//				.riseTime(rise.getTimeInMillis())
+//				.setTime(set.getTimeInMillis())
+//				.setTransit(sunTransitTime)
+//				.riseZ(sunRiseAndSet[AstroComputer.RISE_Z_IDX])
+//				.setZ(sunRiseAndSet[AstroComputer.SET_Z_IDX]);
 		return new BodyDataForPos(current.getTimeInMillis(), lat, lng, "Sun")
 				.decl(sunDecl)
 				.gha(sunGHA)
 				.altitude(he)
 				.z(z)
 				.eot(eot)
-				.riseTime(rise.getTimeInMillis())
-				.setTime(set.getTimeInMillis())
+				.riseTime(epochAndZs[0].getEpoch())
+				.setTime(epochAndZs[1].getEpoch())
 				.setTransit(sunTransitTime)
-				.riseZ(sunRiseAndSet[AstroComputer.RISE_Z_IDX])
-				.setZ(sunRiseAndSet[AstroComputer.SET_Z_IDX]);
+				.riseZ(epochAndZs[0].getZ())
+				.setZ(epochAndZs[1].getZ());
 	}
 
 	private static class BodyAt {

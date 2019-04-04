@@ -1,6 +1,13 @@
 package calc.calculation;
 
-import calc.calculation.nauticalalmanac.*;
+import calc.calculation.nauticalalmanac.Anomalies;
+import calc.calculation.nauticalalmanac.Context;
+import calc.calculation.nauticalalmanac.Core;
+import calc.calculation.nauticalalmanac.Jupiter;
+import calc.calculation.nauticalalmanac.Mars;
+import calc.calculation.nauticalalmanac.Moon;
+import calc.calculation.nauticalalmanac.Saturn;
+import calc.calculation.nauticalalmanac.Venus;
 import utils.TimeUtil;
 
 import java.text.SimpleDateFormat;
@@ -9,6 +16,15 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+/**
+ * Static utilities
+ *
+ * Provide deltaT as a System variable: -DdeltaT=68.9677
+ * See:
+ * http://aa.usno.navy.mil/data/docs/celnavtable.php,
+ * http://maia.usno.navy.mil/
+ * http://maia.usno.navy.mil/ser7/deltat.data
+ */
 public class AstroComputer {
 	private static int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
 	private static double deltaT = 66.4749d; // 2011. Overridden by deltaT system variable.
@@ -53,6 +69,15 @@ public class AstroComputer {
 		return phase;
 	}
 
+	/**
+	 *
+	 * @param y Year, on 4 digits, like 2019
+	 * @param m Month, [1..12] <- Unlike Java's Calendar, which is zero-based
+	 * @param d Day of month [1..28, 29, 30, 31]
+	 * @param h Hour of the day [0..23]
+	 * @param mi Minutes [0..59]
+	 * @param s Seconds [0..59]
+	 */
 	public static synchronized void calculate(int y, int m, int d, int h, int mi, int s) {
 		setDateTime(y, m, d, h, mi, s);
 		calculate();
@@ -84,12 +109,16 @@ public class AstroComputer {
 	public final static int SET_Z_IDX = 3;
 
 	/**
-	 * The calculate() method must have been invoked before.
+	 * Note: The calculate() method must have been invoked before.
+	 *
+	 * TODO: Fine tune (by checking the elevation) after this calculation, which is not 100% accurate...
 	 *
 	 * @param latitude
 	 * @return the time of rise and set of the body (Sun in that case).
 	 * @see http://aa.usno.navy.mil/data/docs/RS_OneYear.php
 	 * @see http://www.jgiesen.de/SunMoonHorizon/
+	 *
+	 * @deprecated Use #sunRiseAndSetEpoch
 	 */
 	public static synchronized double[] sunRiseAndSet(double latitude, double longitude) {
 		//  out.println("Sun HP:" + Context.HPsun);
@@ -118,6 +147,130 @@ public class AstroComputer {
 		Z = Math.toDegrees(Z);
 
 		return new double[]{utRise, utSet, Z, 360d - Z};
+	}
+
+	public static class EpochAndZ {
+		private long epoch;
+		private double z;
+
+		public long getEpoch() {
+			return epoch;
+		}
+
+		public double getZ() {
+			return z;
+		}
+
+		public EpochAndZ epoch(long epoch) {
+			this.epoch = epoch;
+			return this;
+		}
+
+		public EpochAndZ z(double z) {
+			this.z = z;
+			return this;
+		}
+	}
+
+	private static double[] testSun(Calendar current, double lat, double lng) {
+		AstroComputer.setDateTime(current.get(Calendar.YEAR),
+				current.get(Calendar.MONTH) + 1,
+				current.get(Calendar.DATE),
+				current.get(Calendar.HOUR_OF_DAY),
+				current.get(Calendar.MINUTE),
+				current.get(Calendar.SECOND));
+		AstroComputer.calculate();
+		SightReductionUtil sru = new SightReductionUtil(
+				AstroComputer.getSunGHA(),
+				AstroComputer.getSunDecl(),
+				lat,
+				lng);
+		sru.calculate();
+		double he = sru.getHe().doubleValue();
+		double z  = sru.getZ().doubleValue();
+		return new double[] { he, z };
+	}
+
+	public static synchronized EpochAndZ[] sunRiseAndSetEpoch(double latitude, double longitude) {
+
+		double h0 = (Context.HPsun / 3600d) - (Context.SDsun / 3600d); // - (34d / 60d);
+		double cost = Math.sin(Math.toRadians(h0)) - (Math.tan(Math.toRadians(latitude)) * Math.tan(Math.toRadians(Context.DECsun)));
+		double t = Math.acos(cost);
+		double lon = longitude;
+
+		double utRise = 12D - (Context.EoT / 60D) - (lon / 15D) - (Math.toDegrees(t) / 15D);
+		double utSet = 12D - (Context.EoT / 60D) - (lon / 15D) + (Math.toDegrees(t) / 15D);
+
+		double Z = Math.acos((Math.sin(Math.toRadians(Context.DECsun)) + (0.0145 * Math.sin(Math.toRadians(latitude)))) /
+				(0.9999 * Math.cos(Math.toRadians(latitude))));
+		Z = Math.toDegrees(Z);
+
+		double zRise = Z;
+		double zSet = (360D - Z);
+
+//		return new double[]{utRise, utSet, Z, 360d - Z};
+
+		Calendar rise = GregorianCalendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+		Calendar set  = (Calendar)rise.clone();
+
+		TimeUtil.DMS dms = TimeUtil.decimalToDMS(utRise);
+		rise.set(Calendar.HOUR_OF_DAY, dms.getHours());
+		rise.set(Calendar.MINUTE, dms.getMinutes());
+		rise.set(Calendar.SECOND, (int)Math.floor(dms.getSeconds()));
+		// Fine tuning
+		double[] riseTest = testSun(rise, latitude, longitude);
+		if ("true".equals(System.getProperty("astro.verbose"))) {
+			System.out.println(String.format(">>>> 1st estimation: H rise (%s): %02f", new Date(rise.getTimeInMillis()).toString(), riseTest[0]));
+		}
+		if (riseTest[0] != 0) { // Elevation not 0, then adjust
+			while (riseTest[0] > 0) {
+				rise.add(Calendar.SECOND, -10);
+				riseTest = testSun(rise, latitude, longitude);
+			}
+			// Starting tuning
+			while (riseTest[0] < 0) {
+				rise.add(Calendar.SECOND, 1);
+				riseTest = testSun(rise, latitude, longitude);
+			}
+			zRise = riseTest[1];
+			if ("true".equals(System.getProperty("astro.verbose"))) {
+				System.out.println(String.format(">> Tuned: Rising at %s, h:%f, z=%02f\272", new Date(rise.getTimeInMillis()).toString(), riseTest[0], riseTest[1]));
+			}
+		}
+		long epochRise = rise.getTimeInMillis();
+
+		dms = TimeUtil.decimalToDMS(utSet);
+		set.set(Calendar.HOUR_OF_DAY, dms.getHours());
+		set.set(Calendar.MINUTE, dms.getMinutes());
+		set.set(Calendar.SECOND, (int)Math.floor(dms.getSeconds()));
+		// Fine tuning
+		riseTest = testSun(set, latitude, longitude);
+		if ("true".equals(System.getProperty("astro.verbose"))) {
+			System.out.println(String.format(">>>> 1st estimation: H set (%s): %02f", new Date(set.getTimeInMillis()).toString(), riseTest[0]));
+		}
+		if (riseTest[0] != 0) { // Elevation not 0, then adjust
+			while (riseTest[0] < 0) {
+				set.add(Calendar.SECOND, -10);
+				riseTest = testSun(set, latitude, longitude);
+			}
+			// Starting tuning
+			while (riseTest[0] > 0) {
+				set.add(Calendar.SECOND, 1);
+				riseTest = testSun(set, latitude, longitude);
+			}
+			zSet = riseTest[1];
+			if ("true".equals(System.getProperty("astro.verbose"))) {
+				System.out.println(String.format(">> Tuned: Setting at %s, h:%f, z=%02f\272", new Date(set.getTimeInMillis()).toString(), riseTest[0], riseTest[1]));
+			}
+		}
+		long epochSet = set.getTimeInMillis();
+
+		EpochAndZ[] result = {
+				new EpochAndZ().epoch(epochRise).z(zRise),
+				new EpochAndZ().epoch(epochSet).z(zSet)
+		};
+
+		return result;
 	}
 
 	/**
@@ -464,9 +617,9 @@ public class AstroComputer {
 		System.out.println("Moon phase:" + getMoonPhase(2011, 8, 22, 12, 00, 00));
 		System.out.println("TimeOffset:" + getTimeOffsetInHours("-09:30"));
 		String[] tz = new String[]{"Pacific/Marquesas", "America/Los_Angeles", "GMT", "Europe/Paris", "Europe/Moscow", "Australia/Sydney", "Australia/Adelaide"};
-		for (int i = 0; i < tz.length; i++)
+		for (int i = 0; i < tz.length; i++) {
 			System.out.println("TimeOffset for " + tz[i] + ":" + getTimeZoneOffsetInHours(TimeZone.getTimeZone(tz[i])));
-
+		}
 		System.out.println("TZ:" + TimeZone.getTimeZone(tz[0]).getDisplayName() + ", " + (TimeZone.getTimeZone(tz[0]).getOffset(new Date().getTime()) / (3_600d * 1_000)));
 
 		String timeZone = "America/Los_Angeles";
@@ -485,7 +638,7 @@ public class AstroComputer {
 				date.get(Calendar.YEAR),
 				date.get(Calendar.MONTH) + 1,
 				date.get(Calendar.DAY_OF_MONTH),
-				date.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
+				date.get(Calendar.HOUR_OF_DAY), // and not just HOUR !!!!
 				date.get(Calendar.MINUTE),
 				date.get(Calendar.SECOND));
 
@@ -495,5 +648,13 @@ public class AstroComputer {
 		long sunTransit = getSunTransitTime(37.7489, -122.5070);
 		Date tt = new Date(sunTransit);
 		System.out.println("Transit Time:" + tt.toString());
+
+		double[] riseAndSet = sunRiseAndSet(37.7489, -122.5070);
+		System.out.println(String.format("Time Rise: %f, Time Set: %f, ZRise: %f, ZSet: %f", riseAndSet[0], riseAndSet[1], riseAndSet[2], riseAndSet[3]));
+
+		EpochAndZ[] epochAndZs = sunRiseAndSetEpoch(37.7489, -122.5070);
+
+		System.out.println("\nWith epochs");
+		System.out.println(String.format("Rise Date: %s (Z:%.02f\272)\nSet Date: %s (Z:%.02f\272)", new Date(epochAndZs[0].getEpoch()).toString(), epochAndZs[0].getZ(), new Date(epochAndZs[1].getEpoch()).toString(), epochAndZs[1].getZ()));
 	}
 }

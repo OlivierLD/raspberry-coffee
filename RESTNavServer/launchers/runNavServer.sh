@@ -56,7 +56,8 @@ JAVA_OPTS=
 # - http://maia.usno.navy.mil/ser7/deltat.data
 # - http://maia.usno.navy.mil/
 # Delta T predictions: http://maia.usno.navy.mil/ser7/deltat.preds
-JAVA_OPTS="$JAVA_OPTS -DdeltaT=68.9677" # 01-Jan-2018
+# JAVA_OPTS="$JAVA_OPTS -DdeltaT=68.9677" # 01-Jan-2018
+JAVA_OPTS="$JAVA_OPTS -DdeltaT=69.2201" # 01-Jan-2019
 JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=$HTTP_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dtide.verbose=$TIDE_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=$ASTRO_VERBOSE"
