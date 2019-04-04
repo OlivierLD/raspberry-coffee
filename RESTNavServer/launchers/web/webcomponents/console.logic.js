@@ -438,6 +438,15 @@ function astroCallback(data) {
 	document.getElementById("split-flap-display-01")
 			.value = sysDateFmt;
 
+	// System date in sun path tab
+	let systemTime = utcDate.format('H:i:s');
+	setData('split-flap-system-display-00', systemTime);
+	let timeOffset = utcDate.format('Z');
+	setData('split-flap-system-display-01', timeOffset);
+	//
+	let systemDate = solarDate.format("d-m-Y-l");
+	setData('calendar-04', systemDate);
+
 	// utc-date
 	document.getElementById("utc-date").innerHTML = 'UTC: ' +
 			utcDate.getUTCFullYear() + ' ' +
