@@ -486,6 +486,7 @@ public class TCPWatch {
 				minLng = posBuffer.stream().min(Comparator.comparing(GeoPoint::getG)).get().getG();
 				maxLng = posBuffer.stream().max(Comparator.comparing(GeoPoint::getG)).get().getG();
 			}
+
 			double deltaLat = Math.abs(maxLat - minLat);
 			double deltaLng = Math.abs(maxLng - minLng);
 
