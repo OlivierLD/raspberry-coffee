@@ -70,4 +70,10 @@ if (process.argv[2] === 'unfiltered') {
     console.log(x + "," + val + "," + gustArray[x]);
     x += 1;
   });
+} else if (process.argv[2] === 'csv') {
+  // "time": "2019-02-07 14:14:15", "wdir": 120, "gust":8.16, "ws":0.00, "rain":0.000, "press":1023.0800000, "atemp":10.600, "hum":61.215, "dew":3.463
+  console.log("time,wdir,gust,ws,rain,press,atemp,hum,dew");
+  data.data.forEach(dp => {
+    console.log(dp.time + ',' + dp.wdir + ',' + dp.gust + ',' + dp.ws  + ',' + dp.rain + ',' + dp.press + ',' + dp.atemp + ',' + dp.hum + ',' + dp.dew);
+  });
 }
