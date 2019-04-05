@@ -123,7 +123,7 @@ public class AstroComputer {
 	public static synchronized double[] sunRiseAndSet(double latitude, double longitude) {
 		//  out.println("Sun HP:" + Context.HPsun);
 		//  out.println("Sun SD:" + Context.SDsun);
-		double h0 = (Context.HPsun / 3600d) - (Context.SDsun / 3600d); // - (34d / 60d);
+		double h0 = (Context.HPsun / 3_600d) - (Context.SDsun / 3_600d); // - (34d / 60d);
 //  System.out.println(">>> DEBUG >>> H0:" + h0 + ", Sin Sun H0:" + Math.sin(Math.toRadians(h0)));
 		double cost = Math.sin(Math.toRadians(h0)) - (Math.tan(Math.toRadians(latitude)) * Math.tan(Math.toRadians(Context.DECsun)));
 		double t = Math.acos(cost);
@@ -193,7 +193,7 @@ public class AstroComputer {
 
 	public static synchronized EpochAndZ[] sunRiseAndSetEpoch(double latitude, double longitude) {
 
-		double h0 = (Context.HPsun / 3600d) - (Context.SDsun / 3600d); // - (34d / 60d);
+		double h0 = (Context.HPsun / 3_600d) - (Context.SDsun / 3_600d); // - (34d / 60d);
 		double cost = Math.sin(Math.toRadians(h0)) - (Math.tan(Math.toRadians(latitude)) * Math.tan(Math.toRadians(Context.DECsun)));
 		double t = Math.acos(cost);
 		double lon = longitude;
@@ -368,15 +368,16 @@ public class AstroComputer {
 			SimpleDateFormat sdf = new SimpleDateFormat("Z");
 			sdf.setTimeZone(tz);
 			String s = sdf.format(new Date());
-			if (s.startsWith("+"))
+			if (s.startsWith("+")) {
 				s = s.substring(1);
+			}
 			int i = Integer.parseInt(s);
 			d = (int) (i / 100);
 			int m = (int) (i % 100);
 			d += (m / 60d);
-		} else
-			d = (tz.getOffset(when.getTime()) / (3600d * 1000d));
-
+		} else {
+			d = (tz.getOffset(when.getTime()) / (3_600_000d));
+		}
 		return d;
 	}
 
@@ -386,10 +387,12 @@ public class AstroComputer {
 		String[] hm = timeOffset.split(":");
 		int h = Integer.parseInt(hm[0]);
 		int m = Integer.parseInt(hm[1]);
-		if (h > 0)
+		if (h > 0) {
 			d = h + (m / 60d);
-		if (h < 0)
+		}
+		if (h < 0) {
 			d = h - (m / 60d);
+		}
 		return d;
 	}
 
@@ -427,10 +430,12 @@ public class AstroComputer {
 		values[MOON_Z_IDX] = sru.getZ();
 
 		double ahl = Context.GHAAtrue + lng;
-		while (ahl < 0.0)
+		while (ahl < 0.0) {
 			ahl += 360.0;
-		while (ahl > 360.0)
+		}
+		while (ahl > 360.0) {
 			ahl -= 360.0;
+		}
 		values[LHA_ARIES_IDX] = ahl;
 
 		return values;
@@ -606,10 +611,12 @@ public class AstroComputer {
 
 	public static synchronized double ghaToLongitude(double gha) {
 		double longitude = 0;
-		if (gha < 180)
+		if (gha < 180) {
 			longitude = -gha;
-		if (gha >= 180)
+		}
+		if (gha >= 180) {
 			longitude = 360 - gha;
+		}
 		return longitude;
 	}
 
@@ -620,17 +627,17 @@ public class AstroComputer {
 		for (int i = 0; i < tz.length; i++) {
 			System.out.println("TimeOffset for " + tz[i] + ":" + getTimeZoneOffsetInHours(TimeZone.getTimeZone(tz[i])));
 		}
-		System.out.println("TZ:" + TimeZone.getTimeZone(tz[0]).getDisplayName() + ", " + (TimeZone.getTimeZone(tz[0]).getOffset(new Date().getTime()) / (3_600d * 1_000)));
+		System.out.println("TZ:" + TimeZone.getTimeZone(tz[0]).getDisplayName() + ", " + (TimeZone.getTimeZone(tz[0]).getOffset(new Date().getTime()) / (3_600_000d)));
 
 		String timeZone = "America/Los_Angeles";
 		Calendar cal = GregorianCalendar.getInstance();
 		System.out.println("On " + cal.getTime() + ", TimeOffset for " + timeZone + ":" + getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone), cal.getTime()));
-		double d = TimeZone.getTimeZone(timeZone).getOffset(cal.getTime().getTime()) / (3_600d * 1_000d);
+		double d = TimeZone.getTimeZone(timeZone).getOffset(cal.getTime().getTime()) / (3_600_000d);
 //  System.out.println("TimeOffset for " + timeZone + ":" +  d);
 		cal.set(Calendar.MONTH, Calendar.DECEMBER);
 		cal.getTime();
 		System.out.println("On " + cal.getTime() + ", TimeOffset for " + timeZone + ":" + getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone), cal.getTime()));
-		d = TimeZone.getTimeZone(timeZone).getOffset(cal.getTime().getTime()) / (3_600d * 1_000d);
+		d = TimeZone.getTimeZone(timeZone).getOffset(cal.getTime().getTime()) / (3_600_000d);
 //  System.out.println("TimeOffset for " + timeZone + ":" +  d);
 
 		Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // Now
@@ -642,19 +649,27 @@ public class AstroComputer {
 				date.get(Calendar.MINUTE),
 				date.get(Calendar.SECOND));
 
-		double sunMeridianPassageTime = getSunMeridianPassageTime(37.7489, -122.5070);
+		// SF Home
+		double lat = 37.7489;
+		double lng = -122.5070;
+
+		double sunMeridianPassageTime = getSunMeridianPassageTime(lat, lng);
 		System.out.println(String.format("Sun EoT: %f", sunMeridianPassageTime));
 
-		long sunTransit = getSunTransitTime(37.7489, -122.5070);
+		long sunTransit = getSunTransitTime(lat, lng);
 		Date tt = new Date(sunTransit);
 		System.out.println("Transit Time:" + tt.toString());
 
-		double[] riseAndSet = sunRiseAndSet(37.7489, -122.5070);
+		double[] riseAndSet = sunRiseAndSet(lat, lng);
 		System.out.println(String.format("Time Rise: %f, Time Set: %f, ZRise: %f, ZSet: %f", riseAndSet[0], riseAndSet[1], riseAndSet[2], riseAndSet[3]));
 
-		EpochAndZ[] epochAndZs = sunRiseAndSetEpoch(37.7489, -122.5070);
+		EpochAndZ[] epochAndZs = sunRiseAndSetEpoch(lat, lng);
 
 		System.out.println("\nWith epochs");
-		System.out.println(String.format("Rise Date: %s (Z:%.02f\272)\nSet Date: %s (Z:%.02f\272)", new Date(epochAndZs[0].getEpoch()).toString(), epochAndZs[0].getZ(), new Date(epochAndZs[1].getEpoch()).toString(), epochAndZs[1].getZ()));
+		System.out.println(String.format("Rise Date: %s (Z:%.02f\272)\nSet Date: %s (Z:%.02f\272)",
+				new Date(epochAndZs[0].getEpoch()).toString(),
+				epochAndZs[0].getZ(),
+				new Date(epochAndZs[1].getEpoch()).toString(),
+				epochAndZs[1].getZ()));
 	}
 }

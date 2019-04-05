@@ -53,7 +53,7 @@ public class SightReductionUtil {
 
 	/**
 	 * Constructor.
-	 * Call it and then use getHe() and getZ() to retreive result.<br>
+	 * Call it and then use getHe() and getZ() to retrieve result.<br>
 	 * Call after this one setAHG(), setD(), setL() and setG()
 	 */
 	public SightReductionUtil() {
@@ -270,11 +270,11 @@ public class SightReductionUtil {
 	                                      double sd,
 	                                      boolean verbose) {
 		/**
-		 * With an artificail horizon.
+		 * With an artificial horizon.
 		 * No semi-diameter correction.
 		 * No horizon dip correction
 		 *
-		 * intrument altitude is to be divided by 2
+		 * instrument altitude is to be divided by 2
 		 */
 		return observedAltitude(appAltitude / 2.0, 0.0, hp, sd, NO_LIMB, true, verbose);
 	}
@@ -356,10 +356,14 @@ public class SightReductionUtil {
 		// Semi diameter
 		if (limb == LOWER_LIMB) {
 			correction += (sd); // Lower Limb;
-			if (verbose) System.out.println("  Semi-Diameter:" + df.format(sd * 60d) + "'");
+			if (verbose) {
+				System.out.println("  Semi-Diameter:" + df.format(sd * 60d) + "'");
+			}
 		} else if (limb == UPPER_LIMB) {
 			correction -= (sd); // Upper Limb;
-			if (verbose) System.out.println("  Semi-Diameter:" + df.format(-sd * 60d) + "'");
+			if (verbose) {
+				System.out.println("  Semi-Diameter:" + df.format(-sd * 60d) + "'");
+			}
 		}
 
 		observedAltitude = appAltitude + correction;
@@ -408,11 +412,7 @@ public class SightReductionUtil {
 	public static double getMoonSD(double hp,
 	                               double appAlt) {
 		double calcSd = 0.0;
-		calcSd = (0.2725 * (hp / 60.0)) /
-				(1 -
-						(Math.sin(Math.toRadians(hp / 60.0)) *
-								Math.sin(Math.toRadians(appAlt)))
-				);
+		calcSd = (0.2725 * (hp / 60.0)) / (1 - (Math.sin(Math.toRadians(hp / 60.0)) * Math.sin(Math.toRadians(appAlt))));
 		return calcSd;
 	}
 

@@ -5,14 +5,19 @@ import tideengine.BackEndTideComputer;
 import tideengine.Coefficient;
 import tideengine.TideStation;
 import tideengine.TideUtilities;
+import tideengine.TideUtilities.SpecialPrm;
+import tideengine.TideUtilities.TimedValue;
 
 import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import tideengine.TideUtilities.TimedValue;
-import tideengine.TideUtilities.SpecialPrm;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Tide Publisher
@@ -52,14 +57,15 @@ public class TideForOneMonth {
 		int year = -1;
 		int month = -1;
 
-		if (args.length != 4)
+		if (args.length != 4) {
 			throw new RuntimeException("Wrong number of arguments: -year 2011 -month 2, for Feb 2011.");
-		else {
+		} else {
 			for (int i = 0; i < args.length; i++) {
-				if (args[i].equals("-year"))
+				if (args[i].equals("-year")) {
 					yearStr = args[i + 1];
-				else if (args[i].equals("-month"))
+				} else if (args[i].equals("-month")) {
 					monthStr = args[i + 1];
+				}
 			}
 			try {
 				year = Integer.parseInt(yearStr);
@@ -121,9 +127,9 @@ public class TideForOneMonth {
 			String mess = now.getTime().toString();
 			System.out.println(" -- " + mess);
 			// If year changes, recompute TideStation
-			if (now.get(Calendar.YEAR) != prevYear)
+			if (now.get(Calendar.YEAR) != prevYear) {
 				ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
-
+			}
 			List<TimedValue> timeAL = tideForOneDay(now, timeZone, ts, constSpeed, unitToUse);
 			Calendar utcCal = (Calendar) now.clone();
 			utcCal.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
@@ -199,15 +205,20 @@ public class TideForOneMonth {
 			moonSet.set(Calendar.HOUR_OF_DAY, (int) r);
 
 			int phaseInDay = (int) Math.round(moonPhase / (360d / 28d)) + 1;
-			if (phaseInDay > 28) phaseInDay = 28;
-			if (phaseInDay < 1) phaseInDay = 1;
-			if (timeZone != null)
+			if (phaseInDay > 28) {
+				phaseInDay = 28;
+			}
+			if (phaseInDay < 1) {
+				phaseInDay = 1;
+			}
+			if (timeZone != null) {
 				TF.setTimeZone(TimeZone.getTimeZone(timeZone));
-
+			}
 			if (flavor == TEXT_FLAVOR) {
 				out.println("- " + SDF.format(now.getTime()) + " - Moon Age:" + DF2.format(phaseInDay));
-				for (TimedValue tv : timeAL)
+				for (TimedValue tv : timeAL) {
 					out.println(tv.getType() + ": " + TF.format(tv.getCalendar().getTime()) + " : " + TideUtilities.DF22.format(tv.getValue()) + " " + unitToUse);
+				}
 			} else if (flavor == XML_FLAVOR) {
 				String specialBG = "specBG='n' ";
 				if (sPrm != null) {
@@ -224,8 +235,9 @@ public class TideForOneMonth {
 								int day = tv.getCalendar().get(Calendar.DAY_OF_WEEK);
 								int[] dd = sPrm.getWeekdays();
 								System.out.println("See if " + day + " is in [");
-								for (int d : dd)
+								for (int d : dd) {
 									System.out.print(d + " ");
+								}
 								System.out.println();
 								go = ((day == Calendar.MONDAY && dd[MONDAY] == 1) ||
 										(day == Calendar.TUESDAY && dd[TUESDAY] == 1) ||
@@ -255,17 +267,19 @@ public class TideForOneMonth {
 						"' moon-rise='" + TF.format(moonRise.getTime()) +
 						"' moon-set='" + TF.format(moonSet.getTime()) + "'>");
 				for (TimedValue tv : timeAL) {
-					if ("Slack".equals(tv.getType()))
+					if ("Slack".equals(tv.getType())) {
 						out.println("  <plot type='" + tv.getType() + "' date='" + TF.format(tv.getCalendar().getTime()) + "'/>");
-					else
+					} else {
 						out.println("  <plot type='" + tv.getType() + "' date='" + TF.format(tv.getCalendar().getTime()) + "' height='" + TideUtilities.DF22.format(tv.getValue()) + "' unit='" + unitToUse + "'/>");
+					}
 				}
 				out.println("</date>");
 			}
 
 			now.add(Calendar.DAY_OF_MONTH, 1);
-			if (now.get(Calendar.MONTH) == nextMonth)
+			if (now.get(Calendar.MONTH) == nextMonth) {
 				loop = false;
+			}
 		}
 		System.out.println("Ok!");
 	}
@@ -307,17 +321,19 @@ public class TideForOneMonth {
 						now.get(Calendar.MONTH),
 						now.get(Calendar.DAY_OF_MONTH),
 						h, m);
-				if (timeZone != null)
+				if (timeZone != null) {
 					cal.setTimeZone(TimeZone.getTimeZone(timeZone));
+				}
 				double wh = TideUtilities.getWaterHeight(ts, constSpeed, cal);
-				if (Double.isNaN(previousWH))
+				if (Double.isNaN(previousWH)) {
 					previousWH = wh;
-				else {
+				} else {
 					if (trend == 0) {
-						if (previousWH > wh)
+						if (previousWH > wh) {
 							trend = -1;
-						else if (previousWH < wh)
+						} else if (previousWH < wh) {
 							trend = 1;
+						}
 					} else {
 						if (ts.isCurrentStation()) {
 							if ((previousWH > 0 && wh <= 0) || (previousWH < 0 && wh >= 0)) {
@@ -351,8 +367,7 @@ public class TideForOneMonth {
 								prev.add(Calendar.MINUTE, -1);
 								if (AstroComputer.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone), cal.getTime()) ==
 										AstroComputer.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone), prev.getTime())) {
-									if (previousWH < wh) // Now going up
-									{
+									if (previousWH < wh) { // Now going up
 										if (Double.isNaN(low1)) {
 											low1 = previousWH;
 											cal.add(Calendar.MINUTE, -1);
@@ -373,23 +388,25 @@ public class TideForOneMonth {
 				}
 			}
 		}
-		timeAL = new ArrayList<TimedValue>(4);
-		if (low1Cal != null)
+		timeAL = new ArrayList<>(4);
+		if (low1Cal != null) {
 			timeAL.add(new TimedValue(ts.isTideStation() ? "LW" : "ME", low1Cal, low1));
-		if (low2Cal != null)
-			timeAL.add(new TimedValue(ts.isTideStation() ? "LW" : "ME", low2Cal, low2));
-		if (high1Cal != null)
-			timeAL.add(new TimedValue(ts.isTideStation() ? "HW" : "MF", high1Cal, high1));
-		if (high2Cal != null)
-			timeAL.add(new TimedValue(ts.isTideStation() ? "HW" : "MF", high2Cal, high2));
-
-		if (ts.isCurrentStation() && slackList != null && slackList.size() > 0) {
-			for (TimedValue tv : slackList)
-				timeAL.add(tv);
 		}
-
+		if (low2Cal != null) {
+			timeAL.add(new TimedValue(ts.isTideStation() ? "LW" : "ME", low2Cal, low2));
+		}
+		if (high1Cal != null) {
+			timeAL.add(new TimedValue(ts.isTideStation() ? "HW" : "MF", high1Cal, high1));
+		}
+		if (high2Cal != null) {
+			timeAL.add(new TimedValue(ts.isTideStation() ? "HW" : "MF", high2Cal, high2));
+		}
+		if (ts.isCurrentStation() && slackList != null && slackList.size() > 0) {
+			for (TimedValue tv : slackList) {
+				timeAL.add(tv);
+			}
+		}
 		Collections.sort(timeAL);
 		return timeAL;
 	}
-
 }

@@ -5,7 +5,11 @@ import oracle.xml.parser.v2.XMLElement;
 import org.w3c.dom.Text;
 
 import javax.annotation.Nonnull;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.net.URL;
 
 /**
@@ -66,16 +70,16 @@ public class HarmonicsToXML {
 			// Step one: constituents
 			while (line != null) {
 				line = br.readLine();
-				if (line != null && line.indexOf("# Number of constituents") > -1) // Aha!
-				{
+				if (line != null && line.indexOf("# Number of constituents") > -1) { // Aha!
 					line = br.readLine();
-	        /* int nbElements = */
+					/* int nbElements = */
 					Integer.parseInt(line);  // Not used for now... we just keep looping
 					boolean skipComments = true;
 					while (skipComments) {
 						line = br.readLine();
-						if (line == null || !line.startsWith("#"))
+						if (line == null || !line.startsWith("#")) {
 							skipComments = false;
+						}
 					}
 					boolean loopOnCoeff = true;
 					int coeffIndex = 1;
@@ -150,7 +154,7 @@ public class HarmonicsToXML {
 									try {
 										String s = coeff[i].trim();
 										if (s.length() > 0) {
-                      /* double d = */
+											/* double d = */
 											Double.parseDouble(s);
 											XMLElement equ = (XMLElement) doc.createElement("equilibrium");
 											equ.setAttribute("year", Integer.toString(y++));
@@ -199,7 +203,7 @@ public class HarmonicsToXML {
 									try {
 										String s = coeff[i].trim();
 										if (s.length() > 0) {
-                      /* double d = */
+											/* double d = */
 											Double.parseDouble(s);
 											XMLElement fact = (XMLElement) doc.createElement("factor");
 											fact.setAttribute("year", Integer.toString(y++));
@@ -241,7 +245,7 @@ public class HarmonicsToXML {
 					if (line.indexOf(LONGITUDE) > -1) {
 						nbStations++;
 						double lng = Double.parseDouble(line.substring(line.indexOf(LONGITUDE) + LONGITUDE.length()));
-	//        System.out.println("Longitude:" + lng);
+						//        System.out.println("Longitude:" + lng);
 						// Now, latitude
 						line = br.readLine();
 						if (line.indexOf(LATITUDE) > -1) { // As expected
@@ -251,7 +255,7 @@ public class HarmonicsToXML {
 							XMLElement position = (XMLElement) stationDoc.createElement("position");
 
 							double lat = Double.parseDouble(line.substring(line.indexOf(LATITUDE) + LATITUDE.length()));
-	//          System.out.println("Latitude:" + lat);
+							//          System.out.println("Latitude:" + lat);
 							position.setAttribute("latitude", Double.toString(lat));
 							position.setAttribute("longitude", Double.toString(lng));
 							// Station name
@@ -261,7 +265,7 @@ public class HarmonicsToXML {
 							XMLElement names = (XMLElement) stationDoc.createElement("name-collection");
 
 							for (int i = stationElement.length - 1; i >= 0; i--) {
-	//            System.out.println("-> " + stationElement[i].trim());
+								//            System.out.println("-> " + stationElement[i].trim());
 								XMLElement namePart = (XMLElement) stationDoc.createElement("name-part");
 								namePart.setAttribute("rnk", Integer.toString(stationElement.length - i));
 								namePart.setAttribute("name", stationElement[i].trim());
@@ -270,14 +274,14 @@ public class HarmonicsToXML {
 							// Station Zone and time offset
 							line = br.readLine();
 							String[] zoneElement = line.split(" ");
-	//          System.out.println("Time offset: " + zoneElement[0]);
-	//          System.out.println("Zone :" + zoneElement[1].substring(1)); // To skip the ":" at the beginning
+							//          System.out.println("Time offset: " + zoneElement[0]);
+							//          System.out.println("Zone :" + zoneElement[1].substring(1)); // To skip the ":" at the beginning
 							XMLElement tz = (XMLElement) stationDoc.createElement("time-zone");
 							tz.setAttribute("offset", zoneElement[0]);
 							tz.setAttribute("name", zoneElement[1].substring(1));
 							// Base Height
 							line = br.readLine();
-	//          System.out.println("Base Height: " + line);
+							//          System.out.println("Base Height: " + line);
 							XMLElement baseHeight = (XMLElement) stationDoc.createElement("base-height");
 							String[] bh = line.split(" ");
 							String val = bh[0];
@@ -324,8 +328,7 @@ public class HarmonicsToXML {
 						} else {
 							System.out.println("Warning! No " + LATITUDE + " found after " + LONGITUDE);
 						}
-					}
-					// else keep looping
+					} // else keep looping
 				}
 			}
 			br.close();
@@ -338,5 +341,4 @@ public class HarmonicsToXML {
 			System.out.println("Done, " + nbStations + " Station(s)");
 		}
 	}
-
 }
