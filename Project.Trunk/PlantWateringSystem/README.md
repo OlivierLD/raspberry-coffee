@@ -441,6 +441,8 @@ With an Adafruit Bonnet, soon.
 
 ![Flowchart](./docimg/PWS.flowchart.svg)
 
+<small>For the diagram above, I used [draw.io](https://www.draw.io/), cool tool.</small>
+
 #### Ideas to move on...
 - A Web UI without external libraries
 - A gauge in the tank?
