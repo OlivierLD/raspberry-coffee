@@ -44,7 +44,7 @@ public class GenericMinMax {
 
 		double minX = pointList
 				.stream()
-				.min(Comparator.comparing(Point::getX)) // Compare on that method's output.
+				.min(Comparator.comparing(Point::getX)) // Compare on that method's output. Could be anything.
 				.get()
 				.getX();
 

@@ -437,6 +437,10 @@ Pictures and diagrams to come.
 ##### Next...
 With an Adafruit Bonnet, soon.
 
+### Flowchart
+
+![Flowchart](./docimg/PWS.flowchart.svg)
+
 #### Ideas to move on...
 - A Web UI without external libraries
 - A gauge in the tank?

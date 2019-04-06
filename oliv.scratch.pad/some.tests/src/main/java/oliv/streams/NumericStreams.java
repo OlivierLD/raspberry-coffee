@@ -16,9 +16,9 @@ public class NumericStreams {
 		gusts.add(13D);
 		gusts.add(14D);
 		gusts.add(100D);
-		List<Double> doubleList = DoubleStream.iterate(0, n -> n + 0.1)
-				.limit(gusts.size())
-				.boxed()
+		List<Double> doubleList = DoubleStream.iterate(0, n -> n + 0.1) // <- Aha!
+				.limit(gusts.size())                                              // Cardinality
+				.boxed()                                                          // Double <-> double
 				.collect(Collectors.toList());
 		doubleList.stream()
 				.forEach(d -> System.out.println(String.format("%.03f", d)));

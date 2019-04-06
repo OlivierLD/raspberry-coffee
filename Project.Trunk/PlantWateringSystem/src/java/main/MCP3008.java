@@ -310,6 +310,7 @@ public class MCP3008 implements Probe {
 				adcChannel = 0,
 				relayPin = 17;
 
+		// Parameter management.
 		// Override values with runtime arguments
 		for (String arg : args) {
 			if (arg.startsWith(ARGUMENTS.HELP.prefix())) {
@@ -513,7 +514,7 @@ public class MCP3008 implements Probe {
 			System.out.println("       +--------+ ");
 		}
 
-
+		// Initialization. ADC and Pump Relay.
 		MCP3008 instance = new MCP3008();
 		try {
 			probe = MCP3008Wrapper.init(misoPin, mosiPin, clkPin, csPin, adcChannel);
@@ -550,6 +551,7 @@ public class MCP3008 implements Probe {
 			System.exit(1);
 		}
 
+		// Shutdown hook
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			go = false;
 			if (relay.getState() == PinState.LOW) {
@@ -566,6 +568,7 @@ public class MCP3008 implements Probe {
 			}
 		}));
 
+		// If simulating
 		if ((probe.isSimulating() || enforceSensorSimulation) && !"true".equals(System.getProperty("random.simulator"))) {
 			// Manual input, stdin.
 			Thread manualThread = new Thread(() -> { // There is also a REST input
@@ -577,12 +580,12 @@ public class MCP3008 implements Probe {
 			manualThread.start();
 		}
 
+		// HTTP Server + REST Request Manager
 		if (withRESTServer) {
-			// HTTP Server + REST Request Manager
 			httpServer = new RequestManager(instance).startHttpServer(restServerPort);
 		}
 
-		// Open/Close valve, for test
+		// Open/Close valve, for test, once at startup.
 		if ("true".equals(System.getProperty("valve.test"))) {
 			System.out.println("Testing the valve");
 			synchronized (relay) {
@@ -597,7 +600,8 @@ public class MCP3008 implements Probe {
 		}
 
 		/*
-		 * This is the main loop
+		 * There we go.
+		 * This is the main loop.
 		 */
 		if (verbose == VERBOSE.STDOUT) { // Can be used for logging
 			System.out.println("-- LOGGING STARTS HERE --");
