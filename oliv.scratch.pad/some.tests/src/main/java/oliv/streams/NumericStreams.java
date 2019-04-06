@@ -1,7 +1,6 @@
 package oliv.streams;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
@@ -17,11 +16,19 @@ public class NumericStreams {
 		gusts.add(13D);
 		gusts.add(14D);
 		gusts.add(100D);
-		List<Double> doubleList = DoubleStream.iterate(0, n -> n + 0.1).limit(gusts.size()).boxed().collect(Collectors.toList());
-		doubleList.stream().forEach(d -> System.out.println(String.valueOf(d)));
-		//.toArray(new Double[gusts.size()]);
-
-		doubleList.toArray();
-
+		List<Double> doubleList = DoubleStream.iterate(0, n -> n + 0.1)
+				.limit(gusts.size())
+				.boxed()
+				.collect(Collectors.toList());
+		doubleList.stream()
+				.forEach(d -> System.out.println(String.format("%.03f", d)));
+		double[] xData = doubleList.stream()
+				.mapToDouble(Double::doubleValue)
+				.toArray();
+		System.out.println("Final double[]:");
+		for (int i=0; i<xData.length; i++) {
+			System.out.print(String.format("%03f ", xData[i]));
+		}
+		System.out.println();
 	}
 }
