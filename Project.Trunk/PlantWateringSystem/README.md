@@ -435,7 +435,16 @@ Pictures and diagrams to come.
 - The size of the log file(s). Purge it from time to time if it is on.
 
 ##### Next...
-With an Adafruit Bonnet, soon.
+With an Adafruit Bonnet.
+
+![Wiring](./SparkFun.Bonnet_bb.png)
+
+> _Note_: wires are shown on top of the Bonnet, they are actually _under_ it.
+
+| Bonnet top | Bonnet bottom |
+|:----------:|:-------------:|
+| ![top](./docimg/bonnet.top.jpg) | ![bottom](./docimg/bonnet.bottom.jpg) | 
+
 
 ### Flowchart
 
