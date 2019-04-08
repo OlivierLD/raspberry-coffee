@@ -416,9 +416,7 @@ Can be replaced by a [peristaltic pump](https://www.adafruit.com/product/1150), 
 Might be easier to use.
 
 #### March 24, 2019
-With the MCP3008 and the _SparkFun Soil Moisture Sensor_ and a peristaltic pump, it works!
-
-Pictures and diagrams to come.
+With the MCP3008 and the _SparkFun Soil Moisture Sensor_ and a peristaltic pump (12v), it works!
 
 | Assembling | In the Box |
 |:----------:|:----------:|
@@ -445,6 +443,8 @@ With an Adafruit Bonnet.
 |:----------:|:-------------:|
 | ![top](./docimg/bonnet.top.jpg) | ![bottom](./docimg/bonnet.bottom.jpg) | 
 
+> _Warning_: powering the pump _and_ the Raspberry Pi from the same source seems not to be a good idea. The Raspberry Pi stops when the pump starts,
+> the pump draws everything when it starts. I'm looking into capacitors or breakout boards to fix that. More soon.
 
 ### Flowchart
 
