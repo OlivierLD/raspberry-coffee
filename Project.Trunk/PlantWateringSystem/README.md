@@ -444,7 +444,7 @@ With an Adafruit Bonnet.
 | ![top](./docimg/bonnet.top.jpg) | ![bottom](./docimg/bonnet.bottom.jpg) | 
 
 > _Warning_: powering the pump _and_ the Raspberry Pi from the same source seems not to be a good idea. The Raspberry Pi stops when the pump starts,
-> the pump draws everything when it starts. I'm looking into capacitors or breakout boards to fix that. More soon.
+> the pump draws everything. I'm looking into capacitors or breakout boards to fix that. More soon.
 
 ### Flowchart
 
