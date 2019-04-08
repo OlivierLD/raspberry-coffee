@@ -67,7 +67,7 @@ JAVA_OPTS="$JAVA_OPTS -Dgrib.verbose=$GRIB_VERBOSE"
 if [ "$USE_PROXY" == "true" ]
 then
   echo -e "Using proxy (hard-coded)"
-  JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80"
+  JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
 fi
 #
 # refers to nmea.mux.properties, unless -Dmux.properties is set

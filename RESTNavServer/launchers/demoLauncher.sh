@@ -45,6 +45,8 @@ do
 	echo -e "|  ... TODO: more.                                                                        |"
 	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc. Data replay. |"
 	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
+	echo -e "| 11. Same as 10, with proxy.                                                             |"
+	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  S. Show NavServer process(es) ⚙️                                                        |"
 	echo -e "| SP. Show proxy process(es) ⚙️                                                            |"
@@ -151,6 +153,18 @@ do
 	    PROP_FILE=nmea.mux.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:$PROP_FILE --no-date &
+	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    then
+		    echo -e ">>> Waiting for the server to start..."
+		    sleep 5 # Wait for the server to be operational
+		    openBrowser "http://localhost:9999/web/index.html"
+	    fi
+	    GO=false
+	    ;;
+	  "11")
+	    PROP_FILE=nmea.mux.properties
+	    echo -e "Launching Nav Server with $PROP_FILE"
+	    ./runNavServer.sh --proxy --mux:$PROP_FILE --no-date &
 	    if [ "$LAUNCH_BROWSER" == "Y" ]
 	    then
 		    echo -e ">>> Waiting for the server to start..."
