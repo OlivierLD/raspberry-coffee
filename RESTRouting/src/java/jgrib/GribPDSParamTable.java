@@ -276,10 +276,19 @@ public class GribPDSParamTable
   {
     ClassLoader cl = GribPDSParamTable.class.getClassLoader();
 
+    boolean force = true; // Hack
+
     URL baseUrl = cl.getResource(TABLE_DIRECTORY);
     if (baseUrl == null)
     {
+      System.out.println(String.format("BaseURL for %s is null", TABLE_DIRECTORY));
       return;
+    } else {
+      // Hack
+      System.out.println(">>> Forcing return <<<");
+      if (force) {
+        return;
+      }
     }
     // System.out.println("JGRIB: Building gribtab url = " + baseUrl.toExternalForm());
     System.out.println("JGRIB: Building gribtab url = " + baseUrl.toExternalForm());

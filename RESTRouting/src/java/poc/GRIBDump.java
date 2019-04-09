@@ -25,7 +25,7 @@ import java.util.TreeSet;
 
 public class GRIBDump {
 
-	private final static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("grib.verbose", "false"));
 
 	private Map<GribDate, Map<GribType, Float[][]>> gribDataMap = null;
 	private List<String> feedback = null;

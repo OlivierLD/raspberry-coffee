@@ -137,6 +137,9 @@ public class RESTImplementation {
 					URL gribURL = null;
 					GRIBDump dump = new GRIBDump();
 					if (gribRequest.request.startsWith("file:")) { // Reusing grib file
+						if (verbose) {
+							System.out.println(String.format("Reusing %s", gribRequest.request));
+						}
 						gribURL = new URI(gribRequest.request).toURL();
 					} else {
 						try {
@@ -147,10 +150,12 @@ public class RESTImplementation {
 							File location = new File(dir);
 							if (!location.exists()) {
 								boolean ok = location.mkdirs();
-								System.out.println(String.format("Created directory(ies) %s:", dir) + ok);
+								System.out.println(String.format("Created directory(ies) %s: %s", dir, (ok ? "OK" : "failed")));
+							} else {
+								System.out.println(String.format("Directory(ies) %s already created.", dir));
 							}
 							String gribFileName = "grib.grb";
-							System.out.println(String.format(" >> Will pull %s into %s", gribFileName, dir));
+							System.out.println(String.format(" >> Will pull new GRIB %s into %s", gribFileName, dir));
 							GRIBUtils.getGRIB(GRIBUtils.generateGRIBRequest(gribRequest.request), dir, gribFileName, true);
 							gribURL = new File(dir, gribFileName).toURI().toURL();
 						} catch (Exception ex) {
@@ -164,6 +169,9 @@ public class RESTImplementation {
 						}
 					}
 
+					if (verbose) {
+						System.out.println(String.format("GRIB Data %s, opening stream.", gribURL.toString()));
+					}
 					GribFile gf = new GribFile(gribURL.openStream());
 					List<GRIBDump.DatedGRIB> expandedGBRIB = dump.getExpandedGBRIB(gf);
 					String content = new Gson().toJson(expandedGBRIB);

@@ -73,7 +73,9 @@ public class GRIBUtils {
 		}
 		try {
 			long before = System.currentTimeMillis();
-			if (verbose) System.out.println("...reading (2) " + urlStr);
+			if (verbose) {
+				System.out.println("...reading (2) " + urlStr);
+			}
 			String fName = fileName;
 			if (fName == null) {
 				fName = outputdir + File.separator + "GRIB" + SDF.format(new Date()) + ".grb";

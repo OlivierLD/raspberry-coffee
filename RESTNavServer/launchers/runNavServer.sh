@@ -48,7 +48,7 @@ HTTP_VERBOSE=false
 TIDE_VERBOSE=false
 ASTRO_VERBOSE=false
 IMAGE_VERBOSE=false
-GRIB_VERBOSE=false
+GRIB_VERBOSE=true
 #
 CP=../build/libs/RESTNavServer-1.0-all.jar
 JAVA_OPTS=
@@ -119,6 +119,9 @@ JAVA_OPTS="$JAVA_OPTS -Dcalculate.solar.with.eot=true"
 #
 echo -e ">>> Warning: Bumping Max Memory to 1Gb"
 JAVA_OPTS="$JAVA_OPTS -Xms64M -Xmx1G"
+#
+# For remote debugging:
+# JAVA_OPTS="$JAVA_OPTS -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000"
 #
 echo -e "Using properties:$JAVA_OPTS"
 #

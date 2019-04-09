@@ -33,7 +33,9 @@ public class ImageHTTPClient {
 		Image image = null;
 		Gif gifImage = null;
 		try {
-			if (verbose) System.out.println("...reading (1) " + urlStr);
+			if (verbose) {
+				System.out.println("...reading (1) " + urlStr);
+			}
 			String fName = fileName;
 			if (fName == null) {
 				fName = sdf.format(new Date()) + ".jpg"; // Default name.
