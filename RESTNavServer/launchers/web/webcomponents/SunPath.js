@@ -686,6 +686,19 @@ class SunPath extends HTMLElement {
 					context.fillText(displayData, (this._width / 2) - (metrics.width / 2), this._height - 20);
 				}
 			}
+			if (this._sunRise !== undefined && this._sunSet !== undefined) {
+				let dayLight = this._sunSet.time - this._sunRise.time;
+				dayLight /= 1000; // in seconds
+				let dayLightHours = Math.floor(dayLight / 3600);
+				let dayLightMins = Math.floor((dayLight - (dayLightHours * 3600)) / 60);
+				let dayLightSecs = Math.floor(dayLight - ((dayLightHours * 3600) + (dayLightMins * 60)));
+				let str = "Daylight " + Utilities.lpad(dayLightHours, 2, '0') + ':' +
+						Utilities.lpad(dayLightMins, 2, '0') + ':' +
+						Utilities.lpad(dayLightSecs, 2, '0');
+				metrics = context.measureText(str);
+				context.fillText(str, (this._width / 2) - (metrics.width / 2), this._height - 2);
+			}
+
 			context.restore();
 		}
 	}
