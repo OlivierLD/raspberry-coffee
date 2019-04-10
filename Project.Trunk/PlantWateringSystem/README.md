@@ -439,12 +439,13 @@ With an Adafruit Bonnet.
 
 > _Note_: wires are shown on top of the Bonnet, they are actually _under_ it.
 
+> _Warning_: powering the pump _and_ the Raspberry Pi from the same source can be challenging. The voltage
+> drops when the pump starts, and the Raspberry Pi can very well shutdown. This
+> is why there is a capacitor in the circuit, acting as a buffer, to avoid a too steep voltage drop when the pump starts.
+
 | Bonnet top | Bonnet bottom |
 |:----------:|:-------------:|
 | ![top](./docimg/bonnet.top.jpg) | ![bottom](./docimg/bonnet.bottom.jpg) | 
-
-> _Warning_: powering the pump _and_ the Raspberry Pi from the same source seems not to be a good idea. The Raspberry Pi stops when the pump starts,
-> the pump draws everything. I'm looking into capacitors or breakout boards to fix that. More soon.
 
 ### Flowchart
 
