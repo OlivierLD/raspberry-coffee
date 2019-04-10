@@ -153,7 +153,7 @@ class SunPath extends HTMLElement {
 		for (let idx=0; idx<json.length; idx++) {
 			if (json[idx].alt < lastAlt) { // Culmination reached
 				let zAtNoon = lastZ;
-	//		console.log("Z at noon:", zAtNoon);
+				//		console.log("Z at noon:", zAtNoon);
 				if (zAtNoon > 90 && zAtNoon < 270) {
 					this.invertX = 1;   // +1 when pointing south
 					if (sunPathVerbose) {
@@ -200,7 +200,7 @@ class SunPath extends HTMLElement {
 	}
 
 	set now(st) { // { time: epoch }
-    this._now = st;
+		this._now = st;
 	}
 
 	set shadowRoot(val) {

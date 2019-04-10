@@ -276,7 +276,8 @@ public class GribPDSParamTable
   {
     ClassLoader cl = GribPDSParamTable.class.getClassLoader();
 
-    boolean force = true; // Hack
+	  // Hack. Set to true to force exit.
+    boolean force = "true".equals(System.getProperty("jgrib.force.exit", "false"));
 
     URL baseUrl = cl.getResource(TABLE_DIRECTORY);
     if (baseUrl == null)
@@ -285,8 +286,8 @@ public class GribPDSParamTable
       return;
     } else {
       // Hack
-      System.out.println(">>> Forcing return <<<");
       if (force) {
+        System.out.println(">>> Forcing return <<<");
         return;
       }
     }
