@@ -2,14 +2,14 @@
 Emergence of AI and Deep Learning contributed to the popularity of the Jupyter Notebooks.
 
 Notebooks contain **_executable_** code (<u>yes</u>, you can execute the code of a Notebook in real time), possibly (extensively) commented and illustrated.
-They can be re-played or just read or seen as they were run last time.
+They can be re-played or just read or seen as they were after their last execution.
 
-As `markdown` language is supported, they can contain whatever `md` files support, images, url, graphics, tables, etc.
+As `markdown` language is supported, they can contain whatever `md` syntax supports, images, url, graphics, tables, etc.
 As such, graphical data representation can be used. And in the Deep Learning space, they are, indeed.
 
 Notebooks are ideal for tutorials, hence (a part of) their success.
 
-Notebooks are not only for Python (as they were at the very beginning), they also supports many other languages!
+Notebooks are not only for Python (as they were at the very beginning), they also supports _**many**_ other languages!
 The main requirement being to have a REPL (**R**ead **E**valuate **P**rint **L**oop).
 
 Java 9 comes with a REPL (called `JShell`).

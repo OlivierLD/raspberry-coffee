@@ -36,6 +36,8 @@ public class GRIBBulk {
 	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_S_z");
 	public static final SimpleDateFormat FORMATTED = new SimpleDateFormat("yyyy MMM dd HH:mm:ss.S z");
 
+	private final static boolean verbose = "true".equals(System.getProperty("grib.verbose", "false"));
+
 	private Map<GribDate, Map<GribType, Float[][]>> gribDataMap = null;
 	private List<String> feedback = null;
 
@@ -94,7 +96,9 @@ public class GRIBBulk {
 							try {
 								val = gr.getValue(col, row);
 								if (val > grbds.getMaxValue() || val < grbds.getMinValue()) {
-									System.out.println("type:" + type + " val:" + val + " is out of [" + grbds.getMinValue() + ", " + grbds.getMaxValue() + "]");
+									if (verbose) {
+										System.out.println("type:" + type + " val:" + val + " is out of [" + grbds.getMinValue() + ", " + grbds.getMaxValue() + "]");
+									}
 									val = grbds.getMinValue(); // TODO Make sure that's right...
 								}
 								data[row][col] = val;

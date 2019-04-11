@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class Sample03 {
 
-	private final static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("grib.verbose", "false"));
 
 	/**
 	 * From request to JSON.
@@ -27,7 +27,7 @@ public class Sample03 {
 
 		try {
 			String gribFileName = "grib.grb";
-			GRIBUtils.getGRIB(GRIBUtils.generateGRIBRequest(request), ".", gribFileName, true);
+			GRIBUtils.getGRIB(GRIBUtils.generateGRIBRequest(request), ".", gribFileName, verbose);
 
 			GRIBDump dump = new GRIBDump();
 			URL gribURL = new File(gribFileName).toURI().toURL();

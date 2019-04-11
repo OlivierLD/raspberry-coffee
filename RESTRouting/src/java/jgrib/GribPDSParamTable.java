@@ -291,8 +291,9 @@ public class GribPDSParamTable
         return;
       }
     }
-    // System.out.println("JGRIB: Building gribtab url = " + baseUrl.toExternalForm());
-    System.out.println("JGRIB: Building gribtab url = " + baseUrl.toExternalForm());
+    if ("true".equals(System.getProperty("grib.verbose", "false"))) {
+      System.out.println("JGRIB: Building gribtab url = " + baseUrl.toExternalForm());
+    }
     readTableEntries(baseUrl.toExternalForm(), aTables);
   }
 
@@ -882,8 +883,9 @@ public class GribPDSParamTable
   {
 
     // Open file
-    System.out.println("JGRIB: readTableEntries: aBaseUrl =" + aBaseUrl);
-    // System.out.println("JGRIB: readTableEntries: aBaseUrl =" + aBaseUrl);
+    if ("true".equals(System.getProperty("grib.verbose", "false"))) {
+      System.out.println("JGRIB: readTableEntries: aBaseUrl =" + aBaseUrl);
+    }
     InputStream is = new URL(aBaseUrl + "/" + TABLE_LIST).openStream(); // TABLE_LIST is tablelookup.lst
     InputStreamReader isr = new InputStreamReader(is);
     BufferedReader br = new BufferedReader(isr);

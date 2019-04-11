@@ -94,7 +94,7 @@ public class GRIBUtils {
 					waiting += 1L;
 				}
 
-				final int BUFFER_SIZE = 65536;
+				final int BUFFER_SIZE = 65_536;
 				byte aByte[] = new byte[BUFFER_SIZE];
 				int nBytes;
 				while ((nBytes = dis.read(aByte, 0, BUFFER_SIZE)) != -1) {
@@ -102,7 +102,9 @@ public class GRIBUtils {
 					content = StaticUtil.appendByteArrays(content, aByte, nBytes);
 				}
 //			System.out.println("Read " + content.length + " bytes.");
-				System.out.println("Read " + NumberFormat.getInstance().format(content.length) + " bytes of GRIB data.");
+				if (verbose) {
+					System.out.println("Read " + NumberFormat.getInstance().format(content.length) + " bytes of GRIB data.");
+				}
 				dis.close();
 				ByteArrayInputStream bais = new ByteArrayInputStream(content);
 				dis = bais; // switch
@@ -116,7 +118,9 @@ public class GRIBUtils {
 				fos.close();
 				long diff = System.currentTimeMillis() - before;
 				retFile = f.getAbsolutePath();
-				if (verbose) System.out.println("New GRIB available " + retFile + " [" + Long.toString(diff) + " ms]");
+				if (verbose) {
+					System.out.println("New GRIB available " + retFile + " [" + Long.toString(diff) + " ms]");
+				}
 			} else
 				throw new RuntimeException("Cannot write in " + outputdir);
 		} catch (Exception e) {
