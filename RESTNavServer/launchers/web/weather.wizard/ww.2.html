@@ -104,6 +104,9 @@
 				var lat = oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB));
 				if (lat > obj.lat) {
 					yCell = (hGRIB - 1);
+					// Invert the row (yCell)
+					// yCell = (oneDateGRIB.gribDate.height - yCell); // TODO Sure?
+					// console.log(">>> yCell");
 					break;
 				}
 			}
@@ -125,13 +128,13 @@
 //					xCell,
 //					oneDateGRIB.gribDate.height,
 //					oneDateGRIB.gribDate.width);
-			str += ("\nGRIB cell row " + yCell + ", col " + xCell);
+			str += ("\nGRIB cell row <b>" + yCell + "</b>, col <b>" + xCell + "</b>");
 			var foundWind = false;
 			for (var idx=0; idx<oneDateGRIB.typedData.length; idx++) {
 				var skip = false;
 				var value = oneDateGRIB.typedData[idx].data[yCell][xCell];
 				var unit  = oneDateGRIB.typedData[idx].gribType.unit;
-				var type = oneDateGRIB.typedData[idx].gribType.type;
+				var type  = oneDateGRIB.typedData[idx].gribType.type;
 
 				var displayValue, displayUnit, displayType;
 				switch (type) {
@@ -158,10 +161,10 @@
 								displayUnit = '';
 								displayType = "WIND";
 								var u = value;
-								var v = vgrd[yCell][xCell]
+								var v = vgrd[yCell][xCell];
 								var tws = getSpeed(u, v);
 								var dir = getDir(u, v);
-								displayValue = tws.toFixed(1) + " kts, " + dir.toFixed(0) + "&deg; (u:" + u.toFixed(1) + ", v:" + v.toFixed(1) + ")";
+								displayValue = tws.toFixed(1) + " kts, " + dir.toFixed(0) + "&deg; (u:" + u.toFixed(1) + ", v:" + v.toFixed(1) + "), cell <b>" + yCell + "</b>, <b>" + xCell + "</b>.";
 								foundWind = true;
 							}
 						} else {
@@ -210,9 +213,7 @@
 					str += ("\n" + displayType + ": " + displayValue + " " + displayUnit);
 				}
 			}
-
 		}
-
 	  mouseDataElmt.html("<pre>" + str + "</pre>");
 	};
 
@@ -316,7 +317,7 @@
 		console.log("Reloading", key, compositeData);
 		var composite = findCompositeByKey(key);
 		// Fill out with actual file locations
-		if (composite.faxData != undefined) {
+		if (composite.faxData !== undefined) {
 			for (var i=0; i<composite.faxData.length; i++) {
 				for (var f=0; f<compositeData.length; f++) {
 					if (compositeData[f].type === 'FAX' &&

@@ -124,8 +124,7 @@ var getCompositeFaxes = function(options, compositeData, callback) {
 				message = errmess;
 			}
 		}
-		errManager("Failed to get composite data data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
-				? message : ' - '));
+		errManager("Failed to get composite data data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };
 
@@ -160,8 +159,7 @@ var getExistingComposites = function(callback, filter) {
 				message = errmess;
 			}
 		}
-		errManager("Failed to get composite data data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
-				? message : ' - '));
+		errManager("Failed to get composite data data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };
 
@@ -209,7 +207,6 @@ var getBestRoute = function(payload, callback) {
 				message = errmess;
 			}
 		}
-		errManager("Failed to get best route..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
-				? message : ' - '));
+		errManager("Failed to get best route..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };

@@ -378,7 +378,7 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 				// data
 				var dir = getDir(data.x[hGRIB][wGRIB], data.y[hGRIB][wGRIB]);
 				var speed = gribValue;
-//		  console.log("%f / %f, dir %s, speed %f kn", lat, lng, dir.toFixed(0), speed);
+		    // console.log("%f / %f (cell %d, %d), dir %s, speed %f kn (u: %f, v: %f)", lat, lng, hGRIB, wGRIB, dir.toFixed(0), speed, data.x[hGRIB][wGRIB], data.y[hGRIB][wGRIB]);
 
 				var canvasPt = worldMap.getCanvasLocation(canvas, lat, lng);
 				drawWindArrow(context, canvasPt, dir, speed);
@@ -387,7 +387,7 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 			}
 
 			// DEBUG, print cell coordinates IN the cell.
-			if (false) {
+			if (true) {
 				var label = hGRIB + "-" + wGRIB;
 				context.fillStyle = 'black';
 				context.font = "8px Arial";

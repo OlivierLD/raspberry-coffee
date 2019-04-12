@@ -48,7 +48,7 @@ HTTP_VERBOSE=false
 TIDE_VERBOSE=false
 ASTRO_VERBOSE=false
 IMAGE_VERBOSE=false
-GRIB_VERBOSE=true
+GRIB_VERBOSE=false
 #
 CP=../build/libs/RESTNavServer-1.0-all.jar
 JAVA_OPTS=
