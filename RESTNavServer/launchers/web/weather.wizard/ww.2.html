@@ -99,14 +99,15 @@
 			}
 			// The current frame is oneDateGRIB
 			// Find the GRIB Cell
-			var xCell = oneDateGRIB.gribDate.width - 1, yCell = oneDateGRIB.gribDate.height - 1;
+			var xCell = oneDateGRIB.gribDate.width - 1,
+					yCell = oneDateGRIB.gribDate.height - 1;
+
+			// console.log("  > xCell %d", xCell);
+
 			for (var hGRIB = 0; hGRIB < oneDateGRIB.gribDate.height; hGRIB++) {
 				var lat = oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB));
 				if (lat > obj.lat) {
 					yCell = (hGRIB - 1);
-					// Invert the row (yCell)
-					// yCell = (oneDateGRIB.gribDate.height - yCell); // TODO Sure?
-					// console.log(">>> yCell");
 					break;
 				}
 			}
@@ -121,24 +122,27 @@
 					break;
 				}
 			}
-//			console.log("%s / %s is in cell Row:%d, Col:%d (Total is %d rows, %d cols)",
-//					decToSex(obj.lat, "NS"),
-//					decToSex(obj.lng, "EW"),
-//					yCell,
-//					xCell,
-//					oneDateGRIB.gribDate.height,
-//					oneDateGRIB.gribDate.width);
+			// console.log("  >> %s / %s is in cell Row:%d, Col:%d (Total is %d rows, %d cols)",
+			// 		decToSex(obj.lat, "NS"),
+			// 		decToSex(obj.lng, "EW"),
+			// 		yCell,
+			// 		xCell,
+			// 		oneDateGRIB.gribDate.height,
+			// 		oneDateGRIB.gribDate.width);
+
 			str += ("\nGRIB cell row <b>" + yCell + "</b>, col <b>" + xCell + "</b>");
 			var foundWind = false;
 			for (var idx=0; idx<oneDateGRIB.typedData.length; idx++) {
 				var skip = false;
 				if (oneDateGRIB.typedData[idx].data[yCell] === undefined) {
-					console.debug("oneDateGRIB.typedData[idx].data, yCell:%d, undefined.", yCell);
+					console.debug(">>>> oneDateGRIB.typedData[idx].data, yCell:%d, undefined.", yCell);
 					break;
 				}
 				var value = oneDateGRIB.typedData[idx].data[yCell][xCell];
 				var unit  = oneDateGRIB.typedData[idx].gribType.unit;
 				var type  = oneDateGRIB.typedData[idx].gribType.type;
+
+				// console.log("  >>> Type: %s, xCell: %d", type, xCell);
 
 				var displayValue, displayUnit, displayType;
 				switch (type) {
@@ -199,8 +203,8 @@
 						displayType = 'WAVES';
 						if (oneDateGRIB.typedData[idx].data[0].length !== oneDateGRIB.gribDate.width) {
 							// Re-adjust. Not very elegant... TODO See when/why this happens
-							xCell *= Math.floor(oneDateGRIB.typedData[idx].data[0].length / oneDateGRIB.gribDate.width);
-							value = oneDateGRIB.typedData[idx].data[yCell][xCell];
+							let _xCell = xCell * Math.floor(oneDateGRIB.typedData[idx].data[0].length / oneDateGRIB.gribDate.width);
+							value = oneDateGRIB.typedData[idx].data[yCell][_xCell];
 						}
 						try {
 							displayValue = value.toFixed(2);

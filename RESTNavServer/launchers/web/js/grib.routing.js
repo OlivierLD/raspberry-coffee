@@ -1,11 +1,10 @@
 "use strict";
 
 /*
- For debugging, see line that says
- if (false) {
-   ...
+ For debugging,
+ set DEBUG to true.
  */
-
+var DEBUG = false;
 var DEFAULT_TIMEOUT = 60000;
 
 // var errManager = console.log;
@@ -394,7 +393,7 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 			}
 
 			// DEBUG, print cell coordinates IN the cell.
-			if (false) {
+			if (DEBUG) {
 				var label = "h:" + hGRIB;
 				context.fillStyle = 'black';
 				context.font = "8px Courier";
