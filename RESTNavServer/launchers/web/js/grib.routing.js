@@ -1,5 +1,11 @@
 "use strict";
 
+/*
+ For debugging, see line that says
+ if (false) {
+   ...
+ */
+
 var DEFAULT_TIMEOUT = 60000;
 
 // var errManager = console.log;
@@ -104,8 +110,9 @@ var getSpeed = function(x, y) {
  */
 var getDir = function(x, y) {
 	var dir = 0.0;
-	if (y !== 0)
+	if (y !== 0) {
 		dir = toDegrees(Math.atan(x / y));
+	}
 	if (x <= 0 || y <= 0) {
 		if (x > 0 && y < 0) {
 			dir += 180;
@@ -387,11 +394,13 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 			}
 
 			// DEBUG, print cell coordinates IN the cell.
-			if (true) {
-				var label = hGRIB + "-" + wGRIB;
+			if (false) {
+				var label = "h:" + hGRIB;
 				context.fillStyle = 'black';
-				context.font = "8px Arial";
+				context.font = "8px Courier";
 				context.fillText(label, topLeft.x + 1, topLeft.y + 9);
+				var label = "w:" + wGRIB;
+				context.fillText(label, topLeft.x + 1, topLeft.y + 18);
 			}
 		}
 	}

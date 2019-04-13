@@ -132,6 +132,10 @@
 			var foundWind = false;
 			for (var idx=0; idx<oneDateGRIB.typedData.length; idx++) {
 				var skip = false;
+				if (oneDateGRIB.typedData[idx].data[yCell] === undefined) {
+					console.debug("oneDateGRIB.typedData[idx].data, yCell:%d, undefined.", yCell);
+					break;
+				}
 				var value = oneDateGRIB.typedData[idx].data[yCell][xCell];
 				var unit  = oneDateGRIB.typedData[idx].gribType.unit;
 				var type  = oneDateGRIB.typedData[idx].gribType.type;
@@ -164,7 +168,8 @@
 								var v = vgrd[yCell][xCell];
 								var tws = getSpeed(u, v);
 								var dir = getDir(u, v);
-								displayValue = tws.toFixed(1) + " kts, " + dir.toFixed(0) + "&deg; (u:" + u.toFixed(1) + ", v:" + v.toFixed(1) + "), cell <b>" + yCell + "</b>, <b>" + xCell + "</b>.";
+								displayValue = tws.toFixed(1) + " kts, " + dir.toFixed(0) + "&deg; (u:" + u.toFixed(1) + ", v:" + v.toFixed(1) + "), Cell <b>" + yCell + "</b>, <b>" + xCell + "</b>.";
+								// console.log('w:%d, h:%d', yCell, xCell);
 								foundWind = true;
 							}
 						} else {
