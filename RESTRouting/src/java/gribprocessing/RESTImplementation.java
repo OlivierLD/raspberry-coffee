@@ -134,7 +134,7 @@ public class RESTImplementation {
 				StringReader stringReader = new StringReader(payload);
 				try {
 					GRIBRequest gribRequest = gson.fromJson(stringReader, GRIBRequest.class);
-					URL gribURL = null;
+					URL gribURL;
 					GRIBDump dump = new GRIBDump();
 					if (gribRequest.request.startsWith("file:")) { // Reusing grib file
 						if (verbose) {
@@ -222,8 +222,77 @@ public class RESTImplementation {
 		int limitTWA;
 		double speedCoeff;
 		double proximity;
-		boolean avoidLand;
-		boolean verbose;
+		boolean avoidLand = false;
+		boolean verbose = false;
+
+		public RoutingRequest fromL(double fromL) {
+			this.fromL = fromL;
+			return this;
+		}
+		public RoutingRequest fromG(double fromG) {
+			this.fromG = fromG;
+			return this;
+		}
+		public RoutingRequest toL(double toL) {
+			this.toL = toL;
+			return this;
+		}
+		public RoutingRequest toG(double toG) {
+			this.toG = toG;
+			return this;
+		}
+		public RoutingRequest startTime(String startTime) {
+			this.startTime = startTime;
+			return this;
+		}
+		public RoutingRequest gribName(String gribName) {
+			this.gribName = gribName;
+			return this;
+		}
+		public RoutingRequest polarFile(String polarFile) {
+			this.polarFile = polarFile;
+			return this;
+		}
+		public RoutingRequest outputType(String outputType) {
+			this.outputType = outputType;
+			return this;
+		}
+		public RoutingRequest timeInterval(double timeInterval) {
+			this.timeInterval = timeInterval;
+			return this;
+		}
+		public RoutingRequest routingForkWidth(int routingForkWidth) {
+			this.routingForkWidth = routingForkWidth;
+			return this;
+		}
+		public RoutingRequest routingStep(int routingStep) {
+			this.routingStep = routingStep;
+			return this;
+		}
+		public RoutingRequest limitTWS(int limitTWS) {
+			this.limitTWS = limitTWS;
+			return this;
+		}
+		public RoutingRequest limitTWA(int limitTWA) {
+			this.limitTWA = limitTWA;
+			return this;
+		}
+		public RoutingRequest speedCoeff(double speedCoeff) {
+			this.speedCoeff = speedCoeff;
+			return this;
+		}
+		public RoutingRequest proximity(double proximity) {
+			this.proximity = proximity;
+			return this;
+		}
+		public RoutingRequest avoidLand(boolean avoidLand) {
+			this.avoidLand = avoidLand;
+			return this;
+		}
+		public RoutingRequest verbose(boolean verbose) {
+			this.verbose = verbose;
+			return this;
+		}
 	}
 
 	/**
@@ -233,26 +302,23 @@ public class RESTImplementation {
 	 */
 	private Response getRoutingRequest(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		RoutingRequest rr = new RoutingRequest();
-		rr.fromL = 37.122;
-		rr.fromG = -122.5;
-		rr.toL = -9.75;
-		rr.toG = -139.10;
-		rr.startTime = "2017-10-16T07:00:00";
-		rr.gribName = "./GRIB_2017_10_16_07_31_47_PDT.grb";
-
-		rr.polarFile = "./samples/CheoyLee42.polar-coeff";
-		rr.outputType = "JSON";
-		rr.speedCoeff = 0.75;
-		rr.proximity = 25.0;
-
-		rr.timeInterval = 24;
-		rr.routingForkWidth = 140;
-		rr.routingStep = 10;
-		rr.limitTWS = -1;
-		rr.limitTWA = -1;
-
-		rr.verbose = false;
+		RoutingRequest rr = new RoutingRequest()
+				.fromL(37.122)
+				.fromG(-122.5)
+				.toL(-9.75)
+				.toG(-139.10)
+				.startTime("2017-10-16T07:00:00")
+				.gribName("./GRIB_2017_10_16_07_31_47_PDT.grb")
+				.polarFile("./samples/CheoyLee42.polar-coeff")
+				.outputType("JSON")
+				.speedCoeff(0.75)
+				.proximity(25.0)
+				.timeInterval(24)
+				.routingForkWidth(140)
+				.routingStep(10)
+				.limitTWS(-1)
+				.limitTWA(-1)
+				.verbose(false);
 
 		String content = new Gson().toJson(rr);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());

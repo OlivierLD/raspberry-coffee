@@ -16,14 +16,12 @@ import java.text.NumberFormat;
 public class HMC5883L {
 	private final static int HMC5883L_ADDRESS = 0x1E;
 
-	public final static int HMC5883L_REGISTER_MR_REG_M  = 0x02;
-	public final static int HMC5883L_REGISTER_OUT_X_H_M = 0x03;
+	private final static int HMC5883L_REGISTER_MR_REG_M  = 0x02;
+	private final static int HMC5883L_REGISTER_OUT_X_H_M = 0x03;
 
 	private final static float SCALE = 0.92F;
 
-	private I2CBus bus;
 	private I2CDevice magnetometer;
-	private byte[] magData;
 
 	private final static NumberFormat Z_FMT = new DecimalFormat("000");
 	private static boolean verbose    = "true".equals(System.getProperty("hmc5883l.verbose", "false"));
@@ -40,7 +38,7 @@ public class HMC5883L {
 		}
 //		try {
 		// Get i2c bus
-		bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPi version
+		I2CBus bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPi version
 		if (verbose) {
 			System.out.println("Connected to bus. OK.");
 		}
@@ -62,7 +60,7 @@ public class HMC5883L {
 	}
 
 	// Create a separate thread to read the sensors
-	public void startReading() {
+	private void startReading() {
 		Runnable task = () -> {
 			try {
 				readingSensors();
@@ -104,14 +102,14 @@ public class HMC5883L {
 
 	private boolean keepReading = true;
 
-	public void setKeepReading(boolean keepReading) {
-		this.keepReading = keepReading;
+	private void stopReading() {
+		this.keepReading = false;
 	}
 
 	private void readingSensors()
 			throws IOException {
 		while (keepReading) {
-			magData = new byte[6];
+			byte[] magData = new byte[6];
 
 			double magX = 0, magY = 0, magZ = 0;
 
@@ -123,22 +121,22 @@ public class HMC5883L {
 				if (r != 6) {
 					System.out.println("Error reading mag data, < 6 bytes");
 				} else if (verboseMag) {
-					dumpBytes(magData, 6);
+					dumpBytes(magData);
 				}
 				// Mag raw data. !!! Warning !!! Order here is X, Z, Y
 				magX = mag16(magData, 0) * SCALE;
 				magZ = mag16(magData, 2) * SCALE; // Yes, Z
 				magY = mag16(magData, 4) * SCALE; // Then Y
 
-				heading = (float) Math.toDegrees(Math.atan2((double) magY, (double) magX));
+				heading = (float) Math.toDegrees(Math.atan2(magY, magX));
 				while (heading < 0) {
 					heading += 360f;
 				}
 				setHeading(heading);
 
-				pitch = Math.toDegrees(Math.atan2((double) magY, (double) magZ)); // See how it's done in LSM303...
+				pitch = Math.toDegrees(Math.atan2(magY, magZ)); // See how it's done in LSM303...
 				setPitch(pitch);
-				roll = Math.toDegrees(Math.atan2((double) magX, (double) magZ));
+				roll = Math.toDegrees(Math.atan2(magX, magZ));
 				setRoll(roll);
 			}
 //		if (verboseMag) {
@@ -146,7 +144,7 @@ public class HMC5883L {
 //		}
 
 			if (verboseRaw) {
-				System.out.println(String.format("RawMag (XYZ) (%d, %d, %d)", magX, magY, magZ));
+				System.out.println(String.format("RawMag (XYZ) (%f, %f, %f)", magX, magY, magZ));
 			}
 
 			if (verbose) {
@@ -167,23 +165,25 @@ public class HMC5883L {
 
 	private static int mag16(byte[] list, int idx) {
 		int n = ((list[idx] & 0xFF) << 8) | (list[idx + 1] & 0xFF); // High, low bytes
-		return (n < 32768 ? n : n - 65536);                         // 2's complement signed
+		return (n < 0x8000 ? n : n - 0x10000);                      // 2's complement signed
 	}
 
-	private static void dumpBytes(byte[] ba, int len) {
-		String str = String.format("%d bytes: ", len);
+	private static void dumpBytes(byte[] ba) {
+		StringBuilder sb = new StringBuilder();
+		int len = 6;
+		sb.append(String.format("%d bytes: ", len));
 		for (int i = 0; i < len; i++) {
-			str += (StringUtils.lpad(Integer.toHexString(ba[i] & 0xFF).toUpperCase(), 2, "0") + " ");
+			sb.append(String.format("%s ", StringUtils.lpad(Integer.toHexString(ba[i] & 0xFF).toUpperCase(), 2, "0")));
 		}
-		System.out.println(str);
+		System.out.println(sb.toString());
 	}
 
 	/**
 	 * This is for tests.
 	 * Keep reading until Ctrl+C is received.
 	 *
-	 * @param args
-	 * @throws I2CFactory.UnsupportedBusNumberException
+	 * @param args Unused
+	 * @throws I2CFactory.UnsupportedBusNumberException as you can imagine
 	 */
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException, IOException {
 		verbose = "true".equals(System.getProperty("hmc5883l.verbose", "false"));
@@ -193,7 +193,7 @@ public class HMC5883L {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("\nBye.");
 			synchronized (sensor) {
-				sensor.setKeepReading(false);
+				sensor.stopReading();
 				try {
 					Thread.sleep(sensor.wait);
 				} catch (InterruptedException ie) {

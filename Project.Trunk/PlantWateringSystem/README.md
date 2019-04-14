@@ -315,7 +315,7 @@ It does not return the temperature, but it's way less expensive than the `STH10`
 To run the test with the wiring above, run
 ```
  $ ./sparkfun.cal.sh --miso:23 --mosi:24 --clk:18 --cs:25 --channel:0
- Read an ADC (MPC3008) for 3.3 Volt estimation
+ Read an ADC (MCP3008) for 3.3 Volt estimation
  Usage is ./sparkfun.cal.sh --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
   For miso, mosi, clk & cs, use BCM pin numbers
  Usage is java sensors.sparkfunsoilhumiditysensor.MainMCP3008Sample33 --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0

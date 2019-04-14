@@ -26,7 +26,7 @@ import java.util.Map;
  * Also, another funny one:
  * <ul>
  * <li>The data read from the accelerometer are read in the order X, Y, Z</li>
- * <li>The data read from the magnetometer are read in the order X, <b style='color: red;'>Z</b>, Y, funny isn't it?</li>
+ * <li>The data read from the magnetometer are read in the order X, <b style='color: red;'>Z</b>, Y, ,<u>funny</u> isn't it?</li>
  * </ul>
  * And they both have different endianness.
  * <br>
@@ -54,24 +54,24 @@ public class LSM303 {
   70: -- -- -- -- -- -- -- --
    */
 	// Those 2 next addresses are returned by "sudo i2cdetect -y 1", see above.
-	public final static int LSM303_ADDRESS_ACCEL = (0x32 >> 1); // 0011001x, 0x19
-	public final static int LSM303_ADDRESS_MAG = (0x3C >> 1); // 0011110x, 0x1E <- that is an HMC5883L !
+	private final static int LSM303_ADDRESS_ACCEL = (0x32 >> 1); // 0011001x, 0x19
+	private final static int LSM303_ADDRESS_MAG = (0x3C >> 1); // 0011110x, 0x1E <- that is an HMC5883L !
 	// Default    Type
-	public final static int LSM303_REGISTER_ACCEL_CTRL_REG1_A = 0x20; // 00000111   rw
-	public final static int LSM303_REGISTER_ACCEL_CTRL_REG4_A = 0x23; // 00000000   rw
-	public final static int LSM303_REGISTER_ACCEL_OUT_X_L_A = 0x28;
-	public final static int LSM303_REGISTER_MAG_CRB_REG_M = 0x01;
-	public final static int LSM303_REGISTER_MAG_MR_REG_M = 0x02;
-	public final static int LSM303_REGISTER_MAG_OUT_X_H_M = 0x03;
+	private final static int LSM303_REGISTER_ACCEL_CTRL_REG1_A = 0x20; // 00000111   rw
+	private final static int LSM303_REGISTER_ACCEL_CTRL_REG4_A = 0x23; // 00000000   rw
+	private final static int LSM303_REGISTER_ACCEL_OUT_X_L_A = 0x28;
+	private final static int LSM303_REGISTER_MAG_CRB_REG_M = 0x01;
+	private final static int LSM303_REGISTER_MAG_MR_REG_M = 0x02;
+	private final static int LSM303_REGISTER_MAG_OUT_X_H_M = 0x03;
 
 	// Gain settings for setMagGain()
-	public final static int LSM303_MAGGAIN_1_3 = 0x20; // +/- 1.3
-	public final static int LSM303_MAGGAIN_1_9 = 0x40; // +/- 1.9
-	public final static int LSM303_MAGGAIN_2_5 = 0x60; // +/- 2.5
-	public final static int LSM303_MAGGAIN_4_0 = 0x80; // +/- 4.0
-	public final static int LSM303_MAGGAIN_4_7 = 0xA0; // +/- 4.7
-	public final static int LSM303_MAGGAIN_5_6 = 0xC0; // +/- 5.6
-	public final static int LSM303_MAGGAIN_8_1 = 0xE0; // +/- 8.1
+	private final static int LSM303_MAGGAIN_1_3 = 0x20; // +/- 1.3
+	private final static int LSM303_MAGGAIN_1_9 = 0x40; // +/- 1.9
+	private final static int LSM303_MAGGAIN_2_5 = 0x60; // +/- 2.5
+	private final static int LSM303_MAGGAIN_4_0 = 0x80; // +/- 4.0
+	private final static int LSM303_MAGGAIN_4_7 = 0xA0; // +/- 4.7
+	private final static int LSM303_MAGGAIN_5_6 = 0xC0; // +/- 5.6
+	private final static int LSM303_MAGGAIN_8_1 = 0xE0; // +/- 8.1
 
 	private final static float _lsm303Accel_MG_LSB = 0.001F; // 1, 2, 4 or 12 mg per lsb
 	private static float _lsm303Mag_Gauss_LSB_XY = 1_100.0F; // Varies with gain
@@ -107,21 +107,21 @@ public class LSM303 {
 	private LSM303Listener dataListener = null;
 
 	// Keys for the calibration map
-	public final static String MAG_X_OFFSET = "MagXOffset";
-	public final static String MAG_Y_OFFSET = "MagYOffset";
-	public final static String MAG_Z_OFFSET = "MagZOffset";
+	private final static String MAG_X_OFFSET = "MagXOffset";
+	private final static String MAG_Y_OFFSET = "MagYOffset";
+	private final static String MAG_Z_OFFSET = "MagZOffset";
 
-	public final static String MAG_X_COEFF = "MagXCoeff";
-	public final static String MAG_Y_COEFF = "MagYCoeff";
-	public final static String MAG_Z_COEFF = "MagZCoeff";
+	private final static String MAG_X_COEFF = "MagXCoeff";
+	private final static String MAG_Y_COEFF = "MagYCoeff";
+	private final static String MAG_Z_COEFF = "MagZCoeff";
 
-	public final static String ACC_X_OFFSET = "AccXOffset";
-	public final static String ACC_Y_OFFSET = "AccYOffset";
-	public final static String ACC_Z_OFFSET = "AccZOffset";
+	private final static String ACC_X_OFFSET = "AccXOffset";
+	private final static String ACC_Y_OFFSET = "AccYOffset";
+	private final static String ACC_Z_OFFSET = "AccZOffset";
 
-	public final static String ACC_X_COEFF = "AccXCoeff";
-	public final static String ACC_Y_COEFF = "AccYCoeff";
-	public final static String ACC_Z_COEFF = "AccZCoeff";
+	private final static String ACC_X_COEFF = "AccXCoeff";
+	private final static String ACC_Y_COEFF = "AccYCoeff";
+	private final static String ACC_Z_COEFF = "AccZCoeff";
 
 	private final static Map<String, Double> DEFAULT_MAP = new HashMap<>();
 
@@ -148,12 +148,12 @@ public class LSM303 {
 		BOTH
 	}
 
-	public void setCalibrationValue(String key, double val) {
+	private void setCalibrationValue(String key, double val) {
 		// WARNING!! The values depend heavily on USE_NORM value.
 		calibrationMap.put(key, val);
 	}
 
-	public Map<String, Double> getCalibrationMap() {
+	private Map<String, Double> getCalibrationMap() {
 		return calibrationMap;
 	}
 
@@ -381,7 +381,7 @@ public class LSM303 {
 					roll  = atan (y / sqrt(x^2 + z^2));
 				 */
 				pitchDegrees = Math.toDegrees(Math.atan(accXfiltered / Math.sqrt((accYfiltered * accYfiltered) + (accZfiltered * accZfiltered))));
-				rollDegrees = Math.toDegrees(Math.atan(accYfiltered / Math.sqrt((accXfiltered * accXfiltered) + (accZfiltered * accZfiltered))));
+				rollDegrees  = Math.toDegrees(Math.atan(accYfiltered / Math.sqrt((accXfiltered * accXfiltered) + (accZfiltered * accZfiltered))));
 
 				setPitch(pitchDegrees);
 				setRoll(rollDegrees);
@@ -400,7 +400,7 @@ public class LSM303 {
 				if (r != 6) {
 					System.out.println("Error reading mag data, < 6 bytes");
 				} else if (verboseMag) {
-					dumpBytes(magData, 6);
+					dumpBytes(magData);
 				}
 				// Mag raw data. !!! Warning !!! Order here is X, Z, Y
 				magneticX = mag16(magData, 0); // X
@@ -534,21 +534,21 @@ public class LSM303 {
 		return (n < 32_768 ? n : n - 65_536);                         // 2's complement signed
 	}
 
-	private static void dumpBytes(byte[] ba, int len) {
-		// TODO Use a StringBuffer
-		String str = String.format("%d bytes: ", len);
+	private static void dumpBytes(byte[] ba) {
+		StringBuilder sb = new StringBuilder();
+		int len = 6;
+		sb.append(String.format("%d bytes: ", len));
 		for (int i = 0; i < len; i++) {
-			str += (StringUtils.lpad(Integer.toHexString(ba[i] & 0xFF).toUpperCase(), 2, "0") + " ");
+			sb.append(String.format("%s ", StringUtils.lpad(Integer.toHexString(ba[i] & 0xFF).toUpperCase(), 2, "0")));
 		}
-		System.out.println(str);
+		System.out.println(sb.toString());
 	}
 
 	/**
 	 * This is for tests.
 	 * Keep reading until Ctrl+C is received.
 	 *
-	 * @param args
-	 * @throws I2CFactory.UnsupportedBusNumberException
+	 * @param args Duh
 	 */
 	public static void main(String... args) {
 //	verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
