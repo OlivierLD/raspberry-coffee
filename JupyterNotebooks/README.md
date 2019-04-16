@@ -28,9 +28,9 @@ Install Jupyter on the Raspberry Pi is easy:
 ```
 
 To add the required Java features, see 
-- https://blog.frankel.ch/teaching-java-jupyter-notebooks/
-- https://github.com/SpencerPark/IJava
-- https://hub.mybinder.org/user/spencerpark-ijava-binder-ey9zwplq/notebooks/3rdPartyDependency.ipynb
+- <https://blog.frankel.ch/teaching-java-jupyter-notebooks/>
+- <https://github.com/SpencerPark/IJava>
+- <https://hub.mybinder.org/user/spencerpark-ijava-binder-ey9zwplq/notebooks/3rdPartyDependency.ipynb>
 
 
 ### Raspberry-Coffee Notebooks

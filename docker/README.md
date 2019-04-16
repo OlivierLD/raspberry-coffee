@@ -2,7 +2,7 @@
 
 ![Container Ship](./Container_ship.jpg)
 
-Get Docker on your system : https://store.docker.com/search?type=edition&offering=community
+First, [get Docker](https://store.docker.com/search?type=edition&offering=community) on your system.
 
 #### Pre-defined Docker images
 This project also provides a script that will build pre-defined Docker images (different OS's, with various features).
@@ -65,7 +65,7 @@ OpenJDK 64-Bit Server VM (build 25.171-b11, mixed mode)
 root@1d4ff153852b:/workdir/raspberry-pi4j-samples/RESTNavServer#
 ```
 
-From the host (where the `docker` command was fired), reach for example http://localhost:8080/oplist
+From the host (where the `docker` command was fired), reach for example <http://localhost:8080/oplist>
 ```
 [{
 "verb": "GET",
@@ -100,7 +100,7 @@ From the host (where the `docker` command was fired), reach for example http://l
 ```
 Yeah!
 
-You can also reach http://localhost:8080/web/index.html from a browser.
+You can also reach [http://localhost:8080/web/index.html](http://localhost:8080/web/index.html) from a browser.
 
 From another shell:
 ```bash
@@ -209,7 +209,7 @@ Once the step above is completed, plug in your GPS, and run
  $ docker run -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d oliv-nodepi:latest
 ```
 Then from a machine seeing the Raspberry Pi on its network (it can be the Raspberry Pi itself),
-reach http://raspi:9876/data/demos/gps.demo.wc.html in a browser.
+reach [http://raspi:9876/data/demos/gps.demo.wc.html](http://raspi:9876/data/demos/gps.demo.wc.html) in a browser.
 
 ![Running](DockerAtWork.png)
 

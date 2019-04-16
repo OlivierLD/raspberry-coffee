@@ -692,9 +692,10 @@ class SunPath extends HTMLElement {
 				let dayLightHours = Math.floor(dayLight / 3600);
 				let dayLightMins = Math.floor((dayLight - (dayLightHours * 3600)) / 60);
 				let dayLightSecs = Math.floor(dayLight - ((dayLightHours * 3600) + (dayLightMins * 60)));
-				let str = "Daylight " + Utilities.lpad(dayLightHours, 2, '0') + ':' +
-						Utilities.lpad(dayLightMins, 2, '0') + ':' +
-						Utilities.lpad(dayLightSecs, 2, '0');
+				let str = "Daylight " +
+						Utilities.lpad(dayLightHours.toString(), 2, '0') + ':' +
+						Utilities.lpad(dayLightMins.toString(), 2, '0') + ':' +
+						Utilities.lpad(dayLightSecs.toString(), 2, '0');
 				metrics = context.measureText(str);
 				context.fillText(str, (this._width / 2) - (metrics.width / 2), this._height - 2);
 			}
