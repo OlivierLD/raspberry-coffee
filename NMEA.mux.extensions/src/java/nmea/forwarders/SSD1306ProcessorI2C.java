@@ -47,6 +47,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 
 	private final static SimpleDateFormat SDF_DATE = new SimpleDateFormat("E dd MMM yyyy");
 	private final static SimpleDateFormat SDF_TIME = new SimpleDateFormat("HH:mm:ss Z");
+	private final static SimpleDateFormat SDF_TIME_NO_Z = new SimpleDateFormat("HH:mm:ss");
 
 	private static class CacheBean {
 		private long gpstime;
@@ -125,6 +126,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 	private final static int CUR_OPTION = 14;
 	private final static int PRS_OPTION = 15;
 	private final static int GPS_OPTION = 16;
+	private final static int SOL_OPTION = 17;
 
 	private static List<Integer> optionList = new ArrayList<>();
 //	{
@@ -145,6 +147,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 //					CUR_OPTION, // Current. Speed and Direction
 //					PRS_OPTION, // Atmospheric Pressure (PRMSL).
 //          GPS_OPTION  // GPS Date & Time
+//          SOL_OPTION  // SOLAR Date & Time
 //	};
 
 	private int currentOption = 0;
@@ -439,6 +442,9 @@ public class SSD1306ProcessorI2C implements Forwarder {
 							case GPS_OPTION:
 								displayDateTime(bean.gpsdatetime);
 								break;
+							case SOL_OPTION:
+								displaySolarDateTime(bean.gpssolardate);
+								break;
 							case PRS_OPTION:
 								displayPRMSL(bean.prmsl);
 								break;
@@ -540,9 +546,9 @@ public class SSD1306ProcessorI2C implements Forwarder {
 		}
 	}
 
-	private void displayDateTime(long gpsdatetime) {
+	private void displayDateTime(long gpsDateTime) {
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
-		cal.setTimeInMillis(gpsdatetime);
+		cal.setTimeInMillis(gpsDateTime);
 		Date gps = cal.getTime();
 		try {
 
@@ -551,6 +557,27 @@ public class SSD1306ProcessorI2C implements Forwarder {
 			sb.text("GPS Date and Time", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(SDF_DATE.format(gps), 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(SDF_TIME.format(gps), 2, 29, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			// Display
+			display();
+
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	// TODO Make sure the cache is fed using EoT...
+	private void displaySolarDateTime(long solarTime) {
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+		cal.setTimeInMillis(solarTime);
+		Date solar = cal.getTime();
+		try {
+
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			sb.text("SOLAR Date and Time", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(SDF_DATE.format(solar), 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(SDF_TIME_NO_Z.format(solar), 2, 29, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
 			display();
@@ -658,8 +685,11 @@ public class SSD1306ProcessorI2C implements Forwarder {
 					case "POS": // Position
 						optionList.add(POS_OPTION);
 						break;
-					case "GPS": // GPS Date & Time
+					case "GPS": // GPS Date & Timex
 						optionList.add(GPS_OPTION);
+						break;
+					case "SOL": // Solar Date & Timex
+						optionList.add(SOL_OPTION);
 						break;
 					case "BSP":
 						optionList.add(BSP_OPTION);

@@ -16,6 +16,9 @@ on the destination machine to start the Multiplexer at boot time.
 
 The script `to.prod.sh` is not carved in stone. It is also here for inspiration.
 
+> Note: The build process might be a bit too heavy for a Raspberry Pi Zero...
+> I usually built on a bigger board, and the `scp` the result to a Raspberry Pi Zero if I need one.
+
 ## Warning!
 This project directory is a play ground, again, it is here for **you** to _compose_ your own server.
 
