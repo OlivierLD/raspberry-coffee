@@ -32,9 +32,13 @@ fi
 #
 NETWORK_NAME=$(iwconfig | grep wlan0 | awk '{ print $4 }')
 NETWORK_NAME=${NETWORK_NAME:6}
+if [ "$NETWORK_NAME" == "aster" ] # From Mode:Master
+then
+	NETWORK_NAME="RPi-Gateway" # Change as needed
+fi
 if [ "$NETWORK_NAME" == "" ]
 then
-  NETWORK_NAME="RPi-Logger" # Change as needed
+  NETWORK_NAME="RPi-Gateway" # Change as needed
 fi
 #
 if [ "$_OLED" ]; then
