@@ -1395,7 +1395,18 @@ public class StringParsers {
 						local.set(Calendar.DATE, d);
 						local.set(Calendar.MONTH, mo);
 						local.set(Calendar.YEAR, y);
-
+						// In case the GPS date is wrong (it happens):
+						String gpsOffset = System.getProperty("rmc.date.offset");
+						// Offset in days to add to the RMC Date.
+						// One of mines has an offset of 7168 (0x1C00) days.
+						if (gpsOffset != null) {
+							try {
+								int offset = Integer.parseInt(gpsOffset);
+								local.add(Calendar.DATE, offset); // Add in Days
+							} catch (NumberFormatException nfe) {
+								nfe.printStackTrace();
+							}
+						}
 						Date rmcDate = local.getTime();
 						rmc = rmc.setRmcDate(rmcDate);
 					}
