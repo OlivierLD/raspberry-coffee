@@ -117,7 +117,8 @@ JAVA_OPTS="$JAVA_OPTS -Dpolar.file.location=./sample.data/polars/CheoyLee42.pola
 JAVA_OPTS="$JAVA_OPTS -Dcalculate.solar.with.eot=true"
 #
 # For the small USB GPS
-# JAVA_OPTS="$JAVA_OPTS -Drmc.date.offset=7168"
+JAVA_OPTS="$JAVA_OPTS -Drmc.date.offset=7168"
+JAVA_OPTS="$JAVA_OPTS -Drmc.date.offset.verbose=true"
 #
 echo -e ">>> Warning: Bumping Max Memory to 1Gb"
 JAVA_OPTS="$JAVA_OPTS -Xms64M -Xmx1G"

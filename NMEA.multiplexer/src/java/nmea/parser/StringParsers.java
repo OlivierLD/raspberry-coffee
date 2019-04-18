@@ -1402,7 +1402,13 @@ public class StringParsers {
 						if (gpsOffset != null) {
 							try {
 								int offset = Integer.parseInt(gpsOffset);
+								if ("true".equals(System.getProperty("rmc.date.offset.verbose"))) {
+									System.out.println(String.format(">>> Adding %d days to %s", offset, local.getTime().toString()));
+								}
 								local.add(Calendar.DATE, offset); // Add in Days
+								if ("true".equals(System.getProperty("rmc.date.offset.verbose"))) {
+									System.out.println(String.format(">>>   that becomes %s", local.getTime().toString()));
+								}
 							} catch (NumberFormatException nfe) {
 								nfe.printStackTrace();
 							}
