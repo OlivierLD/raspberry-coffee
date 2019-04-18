@@ -1337,7 +1337,7 @@ public class StringParsers {
      *         |      | |        | |         | |     |     |      |     |
      *         |      | |        | |         | |     |     |      |     Variation sign
      *         |      | |        | |         | |     |     |      Variation value
-     *         |      | |        | |         | |     |     Date DDMMYY
+     *         |      | |        | |         | |     |     Date DDMMYY (see rmc.date.offset property)
      *         |      | |        | |         | |     COG
      *         |      | |        | |         | SOG
      *         |      | |        | |         Longitude Sign
@@ -1397,7 +1397,7 @@ public class StringParsers {
 						local.set(Calendar.YEAR, y);
 						// In case the GPS date is wrong (it happens):
 						String gpsOffset = System.getProperty("rmc.date.offset");
-						// Offset in days to add to the RMC Date.
+						// Offset in DAYS to add to the RMC Date.
 						// One of mines has an offset of 7168 (0x1C00) days.
 						if (gpsOffset != null) {
 							try {
@@ -2427,6 +2427,10 @@ public class StringParsers {
 		System.out.println("RMC Chain is " + (valid ? "" : "not ") + "valid");
 		rmc = StringParsers.parseRMC(str);
 		System.out.println("Parsed");
+
+		System.setProperty("rmc.date.offset", "7168");
+		str = "$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A";
+		System.out.println(parseRMCtoString(str));
 
 		System.out.println("\nDone!");
 	}
