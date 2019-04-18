@@ -25,6 +25,12 @@ else
   SUDO="sudo "
 fi
 #
+# Sentence filter?
+if [ "$1" != "" ]
+then
+  JAVA_OPTS="$JAVA_OPTS -Dfilters=$1"
+fi
+#
 COMMAND="${SUDO}java $JAVA_OPTS -cp $CP sample.GPSReader"
 echo -e "Executing $COMMAND"
 echo -e "Enter [Return]"

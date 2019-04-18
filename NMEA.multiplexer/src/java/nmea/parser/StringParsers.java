@@ -2410,6 +2410,13 @@ public class StringParsers {
 			System.out.println(String.format("AutoParse returned a %s", auto.getParsedData().getClass().getName()));
 			System.out.println(auto.toString());
 		}
-		System.out.println("Done!");
+
+		str = "$GPRMC,12,58,325,06,24,46,227,27,25,22,310,,17,13,064,*78";
+		valid = validCheckSum(str);
+		System.out.println("RMC Chain is " + (valid ? "" : "not ") + "valid");
+		rmc = StringParsers.parseRMC(str);
+		System.out.println("Parsed");
+
+		System.out.println("\nDone!");
 	}
 }

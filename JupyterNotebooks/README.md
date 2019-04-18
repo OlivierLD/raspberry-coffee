@@ -10,9 +10,9 @@ As such, graphical data representation can be used. And in the Deep Learning spa
 Notebooks are ideal for tutorials, hence (a part of) their success.
 
 Notebooks are not only for Python (as they were at the very beginning), they also supports _**many**_ other languages!
-The main requirement being to have a REPL (**R**ead **E**valuate **P**rint **L**oop).
+The main requirement being to have a `REPL` (**R**ead **E**valuate **P**rint **L**oop).
 
-Java 9 comes with a REPL (called `JShell`).
+Java 9 comes with a `REPL` (called `JShell`).
 
 To install Java 9 on the Raspberry Pi, see [here](https://www.raspberrypi.org/forums/viewtopic.php?t=200232). 
 > Note: Some restrictions may apply, the Raspberry Pi Zero might not like it.
@@ -37,7 +37,7 @@ To add the required Java features, see
 
 Will provide examples as notebooks, for the features presented in this project.
 
-From this directory, just run
+From this directory (_here_, when this file you're reading is), just run
 ```
  $ jupyter notebook
 ```

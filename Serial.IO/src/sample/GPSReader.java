@@ -6,6 +6,8 @@ import serial.io.SerialIOCallbacks;
 import utils.DumpUtil;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,6 +17,11 @@ import java.util.Set;
  */
 public class GPSReader implements SerialIOCallbacks {
 	private boolean verbose = "true".equals(System.getProperty("verbose", "false"));
+
+	private List<String> filters = null;
+	private void setSentenceFilter(List<String> filters) {
+		this.filters = filters;
+	}
 
 	@Override
 	public void connected(boolean b) {
@@ -64,12 +71,20 @@ public class GPSReader implements SerialIOCallbacks {
 				ex.printStackTrace();
 			}
 		} else {
-			System.out.print(new String(mess));
+			String sentence = new String(mess);
+			String id = sentence.substring(3, 6);
+			if (filters == null || filters.contains(id)) {
+				System.out.print(sentence); // Regular output
+			}
 		}
 	}
 
 	public static void main(String... args) {
 		final GPSReader gpsReader = new GPSReader();
+		String filters = System.getProperty("filters");
+		if (filters != null) {
+			gpsReader.setSentenceFilter(Arrays.asList(filters.split(",")));
+		}
 		final SerialCommunicator sc = new SerialCommunicator(gpsReader);
 		sc.setVerbose(false);
 
