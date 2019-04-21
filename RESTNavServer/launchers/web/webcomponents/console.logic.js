@@ -1,5 +1,5 @@
 
-const TABS = ['one', 'two', 'three', 'four'];
+const TABS = ['one', 'two', 'three', 'four', 'five'];
 
 function openTab(evt, tabNum) {
 	let tablinks = document.getElementsByClassName("tablinks");
@@ -121,6 +121,28 @@ function setData(id, value) {
 	let elem = document.getElementById(id);
 	elem.value = value;                            // value corresponds to the 'set value(val) { ...', invokes the setter in the HTMLElement class
 	elem.repaint();
+}
+let storedHistory = [];
+
+function setRawNMEA(sentence) {
+	storedHistory.push(sentence);
+	while (storedHistory.length > 50) {
+		storedHistory.shift();
+	}
+
+	var content = '<pre>';
+	storedHistory.forEach(str => {
+		content += (str + '\n');
+	});
+	content += '</pre>';
+
+	let nmea = document.getElementById('nmea-content');
+	nmea.innerHTML = content;
+	nmea.scrollTop = nmea.scrollHeight; // See last line
+
+	// $("#raw-data").html(content);
+	// $("#raw-data").scrollTop($("#raw-data")[0].scrollHeight);
+
 }
 
 function setBorder(cb, id) {

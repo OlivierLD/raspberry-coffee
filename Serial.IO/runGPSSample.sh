@@ -14,7 +14,9 @@ BAUD_RATE=4800
 JAVA_OPTS="-Dserial.port=$SERIAL_PORT -Dbaud.rate=$BAUD_RATE"
 #
 SUDO=
-DARWIN=`uname -a | grep Darwin`
+# DARWIN=`uname -a | grep Darwin`
+DARWIN=$(uname -a | grep Darwin)
+#
 if [ "$DARWIN" != "" ]
 then
 	echo Running on Mac
@@ -32,7 +34,7 @@ then
 fi
 #
 COMMAND="${SUDO}java $JAVA_OPTS -cp $CP sample.GPSReader"
-echo -e "Executing $COMMAND"
+echo -e "Executing $COMMAND ..."
 echo -e "Enter [Return]"
 read a
 $COMMAND

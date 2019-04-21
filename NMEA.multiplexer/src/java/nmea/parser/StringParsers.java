@@ -1418,7 +1418,7 @@ public class StringParsers {
 					}
 					Date rmcTime = local.getTime();
 					rmc = rmc.setRmcTime(rmcTime);
-//        System.out.println("GPS date:" + rmcDate.toString());
+//        System.out.println("GPS date:" + rmcTime.toString());
 				}
 				if (data[3].length() > 0 && data[5].length() > 0) {
 					String deg = data[3].substring(0, 2);

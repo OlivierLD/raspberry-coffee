@@ -21,7 +21,7 @@ fi
 echo "-- From /etc/rc.local --"
 echo "Now starting NMEA Multiplexer"
 cd ~pi/NMEADist
+# The -w give the mux some slack (it waits)
 ./start-mux.sh -w &
 cd -
 exit 0
-

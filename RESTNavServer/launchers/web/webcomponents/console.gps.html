@@ -205,11 +205,18 @@
 		events.subscribe('pos', (val) => {
 			gpsPosition = val;
 			document.getElementById('world-map-01').setUserPosition({ latitude: val.lat, longitude: val.lng });
+			lastKnownPos = { // TODO Something nicer (it's in ajax.manager)...
+				latitude: val.lat,
+				longitude: val.lng
+			};
 			document.getElementById('world-map-01').positionLabel = "GPS";
 			document.getElementById('world-map-01').repaint();
 		});
 		events.subscribe('sog', (val) => {
 			setData('bsp-01', val);
+		});
+		events.subscribe('nmea', (val) => {
+			setRawNMEA(val.data);
 		});
 		events.subscribe('gps-time', (val) => {
 			// console.log(">> GPS-Time: ", val);
@@ -235,7 +242,12 @@
 		});
 
 		function loadSunPath() {
-			let getData = requestSunPath({}); // Empty obj, means use default
+			// Payload: { position: { latitude: 37.76661945, longitude: -122.5166988 }, step: 10 }
+			let payload = {};
+			if (lastKnownPos != null) {
+				payload = { position: lastKnownPos, step: 10 };
+			}
+			let getData = requestSunPath(payload); // Empty obj, means use default
 			getData.then((value) => { // Resolve
 //  		console.log("Done:", value);
 				try {
@@ -590,6 +602,7 @@
 		<button class="tablinks" onclick="openTab(event, 1)">Raw Data</button>
 		<button class="tablinks" onclick="openTab(event, 2)">Visible Sky</button>
 		<button class="tablinks" onclick="openTab(event, 3)">Sun Path</button>
+		<button class="tablinks" onclick="openTab(event, 4)">Raw NMEA</button>
 	</div>
 
 	<!-- The NMEA widgets. The 50px columns are here for the perspective, they are pads on the left and right -->
@@ -1001,5 +1014,18 @@
 		</div>
 	</div> <!-- End of Tab 4 -->
 
+	<div id="five" style="display: none;">
+		<div id="raw-gps-data" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
+			<div style="display: grid; grid-column-start: 2; grid-template-columns: auto; justify-items: start; align-items: start; padding: 10px;">
+				<div id="nmea-content" style="font-family: Courier; font-weight: bold; text-align: left; overflow-y: auto; min-height: 300px; height: 300px; width: 100%; border: 1px solid silver; border-radius: 5px; padding: 10px; background-color: black; color: green;">
+					<!--
+						RAW GPS DATA
+					+-->
+					None
+
+				</div>
+			</div>
+		</div>
+	</div> <!-- End of Tab 5 -->
 </body>
 </html>

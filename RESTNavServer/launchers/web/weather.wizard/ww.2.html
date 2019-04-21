@@ -853,6 +853,37 @@
 		redraw();
   };
 
+  let displayCompositeInfo = function() {
+	  console.log('Displaying');
+		let infoDiv = document.getElementById('composite-info');
+		let compositeId = document.getElementById('composites').value;
+		let content = "<h1>Not found</h1>";
+		for (let i=0; i<compositeCatalog.length; i++) {
+			if (compositeCatalog[i].key === compositeId) {
+				content = "<h3>" + compositeCatalog[i].name + "</h3>";
+				content += "<ul>";
+				if (compositeCatalog[i].gribRequest !== undefined) {
+					content += ("<li>" + compositeCatalog[i].gribRequest + "</li>");
+				}
+				if (compositeCatalog[i].faxData !== undefined) {
+					compositeCatalog[i].faxData.forEach(fax => {
+						content += ("<li>" + fax.name + "</li>");
+					});
+				}
+				content += "</ul>";
+				break;
+			}
+		}
+
+		infoDiv.innerHTML = content;
+	};
+
+  let hideCompositeInfo = function() {
+  	console.log('Hiding');
+	  let infoDiv = document.getElementById('composite-info');
+	  infoDiv.innerHTML = "";
+  };
+
   var makeGRIBRequest = function(gribRequest, where) {
 	  var rawRequest = gribRequest;
 	  if (rawRequest === undefined) {
@@ -961,8 +992,9 @@
 	        <input type="checkbox" onchange="changeTropics(this);" /> With Tropics
 					<input id="grib-checkbox" type="checkbox" onchange="changeGRIB(this);" disabled /> With GRIB Data
 					<hr/>
-					<select id="composites" onchange="updateGRIBRequest(this);"></select>
+					<select id="composites" onchange="updateGRIBRequest(this);" onmouseover="displayCompositeInfo();" onmouseleave="hideCompositeInfo();"></select> <!-- TODO Composite Info on mouse over -->
 					<button id="load-composites" onclick="loadComposite();">Load documents</button>
+
 					<input type="checkbox" onchange="continuousLoad(this);"/>Every 6 hours
 					<hr/>
 					<input type="radio" name="grib-origin" value="web" checked onchange="flipGRIB(this);">From the Web
@@ -1005,6 +1037,8 @@
 
 					<!-- TODO Displays for the values -->
 					<div id="mouse-data" class="table-style"></div>
+
+					<div id="composite-info"></div>
 
 				</td>
       </tr>

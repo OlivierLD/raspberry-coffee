@@ -8,7 +8,7 @@ const DEBUG = false;
 function initAjax() {
 	let interval = setInterval(() => {
 		fetch();
-		loadSunData();
+		loadSunData(lastKnownPos);
 	}, 1000);
 }
 
@@ -101,8 +101,8 @@ function requestSunData(pos) {
 	return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
 }
 
-function loadSunData() {
-	let getData = requestSunData(null); // null will use the default position
+function loadSunData(pos) {
+	let getData = requestSunData(pos); // null (for pos) will use the default position
 	getData.then((value) => { // Resolve
 //  console.log("Done:", value);
 		try {
@@ -208,7 +208,13 @@ function setUTCTime(epoch, callback) {
 	});
 }
 
+let lastKnownPos = null;
+
 function setUserPos(lat, lng, callback) {
+	lastKnownPos = {
+		latitude: lat,
+		longitude: lng
+	};
 	let setData = setPosition(lat, lng);
 	setData.then((value) => { // resolve
 		if (value !== undefined && value !== null && value.length > 0) {
@@ -427,6 +433,12 @@ function onMessage(json) {
 			});
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "VMG");
+		}
+
+		try {
+			events.publish('nmea', { 'data': json['NMEA']});
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "NMEA");
 		}
 
 		if (errMess !== undefined) {

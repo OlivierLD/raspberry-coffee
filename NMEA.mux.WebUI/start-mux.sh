@@ -27,12 +27,12 @@ fi
 MY_IP=$(hostname -I | awk '{ print $1 }')
 if [ "$MY_IP" == "" ]
 then
-  MY_IP="192.168.127.1" # Change as needed
+  MY_IP="192.168.50.10" # Change as needed
 fi
 #
 NETWORK_NAME=$(iwconfig | grep wlan0 | awk '{ print $4 }')
 NETWORK_NAME=${NETWORK_NAME:6}
-if [ "$NETWORK_NAME" == "aster" ] # From Mode:Master
+if [ "$NETWORK_NAME" == "aster" ] # From Mode:Master TODO Get it from the config file...
 then
 	NETWORK_NAME="RPi-Gateway" # Change as needed
 fi

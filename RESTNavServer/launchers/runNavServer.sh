@@ -109,7 +109,8 @@ then
 	JAVA_OPTS="$JAVA_OPTS -Drmc.time.ok=false"
 fi
 # Default position
-JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-122.5070" # SF.
+# JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-122.5070" # SF.
+JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=48.48518833333333 -Ddefault.mux.longitude=-123.07788833333333" # False Bay, San Juan Islands
 #
 # Polar file (coeffs)
 #
@@ -117,8 +118,11 @@ JAVA_OPTS="$JAVA_OPTS -Dpolar.file.location=./sample.data/polars/CheoyLee42.pola
 JAVA_OPTS="$JAVA_OPTS -Dcalculate.solar.with.eot=true"
 #
 # For the small USB GPS
+echo -e "+------------------------+"
+echo -e " Warning: GPS Offset 7168"
+echo -e "+------------------------+"
 JAVA_OPTS="$JAVA_OPTS -Drmc.date.offset=7168"
-JAVA_OPTS="$JAVA_OPTS -Drmc.date.offset.verbose=true"
+# JAVA_OPTS="$JAVA_OPTS -Drmc.date.offset.verbose=true"
 #
 echo -e ">>> Warning: Bumping Max Memory to 1Gb"
 JAVA_OPTS="$JAVA_OPTS -Xms64M -Xmx1G"
