@@ -26,7 +26,8 @@ public class DataFileWriter implements Forwarder {
 	private String split;
 	private long timeSplitThreshold = 0L;
 
-	private final static long HOUR_MS = 3_600 * 1_000;
+	private final static long MIN_MS = 60 * 1_000;
+	private final static long HOUR_MS = 60 * MIN_MS;
 	private final static long DAY_MS = 24 * HOUR_MS;
 	private final static long WEEK_MS = 7 * DAY_MS;
 
@@ -54,6 +55,10 @@ public class DataFileWriter implements Forwarder {
 		this.timeBased = timeBased;
 		this.radix = radix;
 		this.dir = dir;
+		if (this.timeBased) { // Then add a subdirectory, based on the time the logging was started. Each new log series is in its own folder.
+			String subDirName = SDF.format(new Date());
+			this.dir += (File.separator + subDirName);
+		}
 		if (split != null) {
 			Optional<Split> foundSplit = Arrays.stream(Split.values()).filter(val -> val.toString().equals(split)).findFirst();
 			if (foundSplit.isPresent()) {

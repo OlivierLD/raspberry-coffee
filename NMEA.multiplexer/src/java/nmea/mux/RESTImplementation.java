@@ -2130,7 +2130,7 @@ public class RESTImplementation {
 	private transient static final List<String> REMOVE_WHEN_TINY = Arrays.asList(new String[] {
 			NMEADataCache.LAST_NMEA_SENTENCE,
 			NMEADataCache.GPS_TIME,
-			NMEADataCache.GPS_SOLAR_TIME,
+//			NMEADataCache.GPS_SOLAR_TIME,
 			NMEADataCache.DECLINATION,
 			NMEADataCache.LOG,
 			NMEADataCache.DAILY_LOG,
@@ -2251,8 +2251,36 @@ public class RESTImplementation {
 				secs = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("sec").getAsInt();
 			} catch (Exception absorb) {}
 
-			content = String.format("BSP=%.2f\nLAT=%f\nLNG=%f\nSOG=%.2f\nCOG=%d\nDATE=%s\nYEAR=%d\nMONTH=%d\nDAY=%d\nHOUR=%d\nMIN=%d\nSEC=%d\n",
-					bsp, latitude, longitude, sog, cog, date, year, month, day, hours, mins, secs);
+			int solHours = 0, solMins = 0, solSecs = 0;
+			/*
+			    "Solar Time": {
+            "date": "Apr 21, 2019, 12:51:43 AM",
+		        "fmtDate": {
+		            "epoch": 1555833103170,
+		            "year": 2019,
+		            "month": 4,
+		            "day": 21,
+		            "hour": 7,
+		            "min": 51,
+		            "sec": 43
+		        }
+		    }, ...
+			 */
+			try {
+				solHours = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_SOLAR_TIME).get("fmtDate")).get("hour").getAsInt();
+				solMins = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_SOLAR_TIME).get("fmtDate")).get("min").getAsInt();
+				solSecs = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_SOLAR_TIME).get("fmtDate")).get("sec").getAsInt();
+
+			} catch (Exception absorb) {}
+
+			boolean rmcStatus = false;
+			try {
+				rmcStatus = ((JsonObject)jsonElement).get(NMEADataCache.RMC_STATUS).getAsBoolean();
+			} catch (Exception absorb) {}
+
+			content = String.format(
+					"BSP=%.2f\nLAT=%f\nLNG=%f\nSOG=%.2f\nCOG=%d\nDATE=%s\nYEAR=%d\nMONTH=%d\nDAY=%d\nHOUR=%d\nMIN=%d\nSEC=%d\nS_HOUR=%d\nS_MIN=%d\nS_SEC=%d\nRMC_OK=%s",
+					bsp, latitude, longitude, sog, cog, date, year, month, day, hours, mins, secs, solHours, solMins, solSecs, (rmcStatus ? "OK" : "KO"));
 		} else {
 			content = jsonElement != null ? jsonElement.toString() : "";
 		}

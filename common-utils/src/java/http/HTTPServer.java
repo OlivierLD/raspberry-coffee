@@ -3,18 +3,34 @@ package http;
 import com.google.gson.Gson;
 import http.client.HTTPClient;
 import utils.DumpUtil;
+import utils.StaticUtil;
 import utils.StringUtils;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Can be used for the REST interface of an HTTP Server.
@@ -362,6 +378,7 @@ public class HTTPServer {
 
 	private boolean keepRunning = true;
 	private List<String> staticDocumentsLocation = null;
+	private List<String> staticZippedDocumentsLocation = null;
 	private static final String DEFAULT_RESOURCE = "index.html";
 
 	// This is an array, so several apps can subscribe to the same HTTPServer.
@@ -483,6 +500,7 @@ public class HTTPServer {
 			throw new RuntimeException("Properties parameter should not be null");
 		}
 		this.staticDocumentsLocation = Arrays.asList(properties.getProperty("static.docs", "/web/").split(","));
+		this.staticZippedDocumentsLocation = Arrays.asList(properties.getProperty("static.zip.docs", "/zip/").split(","));
 
 		addRequestManager(requestManager);
 		// Infinite loop, waiting for requests
@@ -628,7 +646,42 @@ public class HTTPServer {
 								RESTProcessorUtil.generateResponseHeaders(response, "text/html", content.length());
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
-							} else if (pathIsStatic(path)) { // Then this is static content. See "static.docs" property.
+							} else if (pathIsZipStatic(path)) { // Then this is static content. See "static.zip.docs" property. Defaulted to "/zip/"
+								// What zip file should we look into? assume web.zip for now
+								// url will be like /zip/web/index.html
+
+								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+								String fName = path;
+								if (fName.indexOf("?") > -1) {
+									fName = fName.substring(0, fName.indexOf("?"));
+								}
+								String zipPath = zipPath(fName);
+								if (zipPath != null) {
+									fName = fName.substring(zipPath.length());
+
+									if (verbose) {
+										System.out.println(String.format("%s => reading %s in %s", zipPath, fName, "web.zip"));
+									}
+
+									InputStream is = getZipInputStream("web.zip", fName);
+									if (is != null) {
+										ByteArrayOutputStream baos = new ByteArrayOutputStream();
+										StaticUtil.copy(is, baos);
+										baos.close();
+										byte[] content = baos.toByteArray();
+										RESTProcessorUtil.generateResponseHeaders(response, getContentType(path), content.length);
+										response.setPayload(content);
+
+									} else {
+										response = new Response(request.getProtocol(), Response.NOT_FOUND);
+										response.setPayload(String.format("File [%s] not found in %s.", fName, "web.zip").getBytes());
+									}
+								} else {
+									response = new Response(request.getProtocol(), Response.NOT_FOUND);
+									response.setPayload(String.format("ZipPath not found for %s .", fName).getBytes());
+								}
+								sendResponse(response, out);
+							} else if (pathIsStatic(path)) { // Then this is static content. See "static.docs" property. Defaulted to "/web/"
 								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 								String fName = path;
 								if (fName.indexOf("?") > -1) {
@@ -788,6 +841,27 @@ public class HTTPServer {
 		}
 	}
 
+	private static InputStream getZipInputStream(String zipName, String entryName) throws Exception {
+		ZipInputStream zip = new ZipInputStream(new FileInputStream(zipName));
+		InputStream is = null;
+		boolean go = true;
+		while (go) {
+			ZipEntry ze = zip.getNextEntry();
+			if (ze == null) {
+				go = false;
+			} else {
+				if (ze.getName().equals(entryName)) {
+					is = zip;
+					go = false;
+				}
+			}
+		}
+		if (is == null) {
+			throw new RuntimeException("Entry " + entryName + " not found in " + zipName);
+		}
+		return is;
+	}
+
 	public void startServer() {
 		httpListenerThread.start();
 	}
@@ -806,6 +880,23 @@ public class HTTPServer {
 				.filter(elmt -> path.startsWith(elmt))
 				.findFirst()
 				.isPresent();
+	}
+
+	private boolean pathIsZipStatic(String path) {
+		return this.staticZippedDocumentsLocation
+				.stream()
+				.filter(elmt -> path.startsWith(elmt))
+				.findFirst()
+				.isPresent();
+	}
+
+	private String zipPath(String fullPath) {
+		for (String path : this.staticZippedDocumentsLocation) {
+			if (fullPath.startsWith(path)) {
+				return path;
+			}
+		}
+		return null;
 	}
 
 	/**

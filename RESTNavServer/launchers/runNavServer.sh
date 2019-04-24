@@ -110,7 +110,9 @@ then
 fi
 # Default position
 # JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-122.5070" # SF.
-JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=48.48518833333333 -Ddefault.mux.longitude=-123.07788833333333" # False Bay, San Juan Islands
+# JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=48.48518833333333 -Ddefault.mux.longitude=-123.07788833333333" # False Bay, San Juan Island
+JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=48.60448 -Ddefault.mux.longitude=-122.819285" # Olga, Orcas Island
+
 #
 # Polar file (coeffs)
 #

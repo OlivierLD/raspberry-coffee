@@ -117,6 +117,7 @@ public class TCPWatch {
 	private static double longitude = 0;
 	private static double sog = 0;
 	private static double cog = 0;
+	private static boolean rmcStatus = false;
 	private static final int POS_BUFFER_MAX_LEN = 500; // Tune it at will
 	private static List<GeoPoint> posBuffer = new ArrayList<>();
 	private static GPSDate gpsDate = null;
@@ -281,6 +282,18 @@ public class TCPWatch {
 				ex.printStackTrace();
 			}
 		}
+		// rmcStatus (Void or Active)
+		try {
+			sb.text(String.format("GPS-RMC: %s", rmcStatus ? "yes" : "no"), 2, y);
+			if (SCREEN_00_VERBOSE) {
+				System.out.println("RMCStatus:" + rmcStatus);
+			}
+		} catch (Exception ex) {
+			if (SCREEN_00_VERBOSE) {
+				ex.printStackTrace();
+			}
+		}
+
 
 //		y = HEIGHT - 1;
 //		String index = String.format("Index: %d", currentIndex);
@@ -550,14 +563,18 @@ public class TCPWatch {
 		int defaultK1   = 29;
 		int defaultK2   = 28;
 
+		// The oled screen
 		int clkPin  = Integer.parseInt(System.getProperty("CLK", String.valueOf(defaultCLK)));
 		int mosiPin = Integer.parseInt(System.getProperty("MOSI", String.valueOf(defaultMOSI)));
 		int csPin   = Integer.parseInt(System.getProperty("CS", String.valueOf(defaultCS)));
 		int rstPin  = Integer.parseInt(System.getProperty("RST", String.valueOf(defaultRST)));
 		int dcPin   = Integer.parseInt(System.getProperty("DC", String.valueOf(defaultDC)));
 
+		// The 2 buttons
 		int k1Pin = Integer.parseInt(System.getProperty("K1", String.valueOf(defaultK1)));
 		int k2Pin = Integer.parseInt(System.getProperty("K2", String.valueOf(defaultK2)));
+
+
 
 		LOGGER.log(Level.FINE, "Starting...");
 
@@ -624,6 +641,8 @@ public class TCPWatch {
 					  "COG": {
 					    "angle": 212.7
 					  }
+					  // Also 'Solar Date'
+					  // Also 'RMCStatus'
 				 */
 
 				if (response != null) {
@@ -716,6 +735,13 @@ public class TCPWatch {
 						cog = response.get("COG").getAsJsonObject().get("angle").getAsDouble();
 					} catch (NullPointerException npe) {
 						// No COG
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					try {
+						rmcStatus = response.get("RMCStatus").getAsBoolean();
+					} catch (NullPointerException npe) {
+						// No RMC status
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}

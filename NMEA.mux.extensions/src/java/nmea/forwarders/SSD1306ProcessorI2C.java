@@ -64,6 +64,8 @@ public class SSD1306ProcessorI2C implements Forwarder {
 		private double lng;
 		private String pos;
 
+		private boolean rmcOk;
+
 		private long gpssolardate;
 
 		private double log;
@@ -389,8 +391,16 @@ public class SSD1306ProcessorI2C implements Forwarder {
 						if (hum != null) {
 							bean.hum = (Double)hum;
 						}
+						// rmcOk
+						Object rmcStatus = cache.get(NMEADataCache.RMC_STATUS);
+						if (rmcStatus != null) {
+							bean.rmcOk = (Boolean)rmcStatus;
+						} else {
+							bean.rmcOk = false;
+						}
 					}
 					// Transformer's specific job.
+					// Do see how optionList is populated from the properties.
 					if (!optionList.isEmpty()) {
 						int toDisplay = optionList.get(currentOption);
 						switch (toDisplay) {
@@ -437,7 +447,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 								displayCurrent(bean.cdr, bean.csp);
 								break;
 							case POS_OPTION:
-								displayPos(bean.lat, bean.lng);
+								displayPos(bean.lat, bean.lng, bean.rmcOk);
 								break;
 							case GPS_OPTION:
 								displayDateTime(bean.gpsdatetime);
@@ -528,16 +538,20 @@ public class SSD1306ProcessorI2C implements Forwarder {
 		displayValue(label, "\u00b0C", value);
 	}
 
-	private void displayPos(double lat, double lng) {
+	private void displayPos(double lat, double lng, boolean rmcStatus) {
 		String latitude = GeomUtil.decToSex(lat, GeomUtil.NO_DEG, GeomUtil.NS, GeomUtil.TRAILING_SIGN).replaceFirst(" ", "\u00b0");
 		String longitude = GeomUtil.decToSex(lng, GeomUtil.NO_DEG, GeomUtil.EW, GeomUtil.TRAILING_SIGN).replaceFirst(" ", "\u00b0");
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
-			sb.text("POSITION", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(latitude, 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(longitude, 2, 29, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-
+			if (rmcStatus) {
+				sb.text("POSITION", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				sb.text(latitude, 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				sb.text(longitude, 2, 29, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			} else {
+				sb.text("POSITION:", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				sb.text("RMC not ready yet", 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			}
 			// Display
 			display();
 

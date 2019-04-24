@@ -59,6 +59,7 @@ public class NMEADataCache
 	public static final String GPS_DATE_TIME = "GPS Date & Time";
 	public static final String GPS_TIME = "GPS Time";
 	public static final String GPS_SOLAR_TIME = "Solar Time";
+	public static final String RMC_STATUS = "RMCStatus";
 	public static final String COG = "COG";
 	public static final String DECLINATION = "D";
 	public static final String BSP = "BSP";
@@ -331,6 +332,7 @@ public class NMEADataCache
 						RMC rmc = StringParsers.parseRMC(nmeaSentence);
 						if (rmc != null) {
 							if (rmc.isValid()) {
+								this.put(RMC_STATUS, true);
 								this.put(POSITION, rmc.getGp());
 								if (this.previousPosition != null) {
 									double smallDist = feedSmallDistance(rmc.getGp());
@@ -374,6 +376,7 @@ public class NMEADataCache
 									}
 								}
 							} else {
+								this.put(RMC_STATUS, false);
 								if (System.getProperty("nmea.cache.verbose", "false").equals("true")) {
 									System.out.println(String.format("RMC not valid yet [%s]", nmeaSentence));
 								}

@@ -135,6 +135,61 @@ const compositeCatalog = [
 		gribRequest: 'GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN'
 	},
 	{
+		key: "PAC-0003",
+		name: "All Pacific, current analysis (WIP, 2)",
+		map: {
+			projection: mapProjections.mercator,
+			north: 66.5,
+			south: -48.5,
+			east: -102,
+			west: 127.5
+		},
+		canvas: {
+			w: 1000,
+			h: 1200
+		},
+		faxData: [
+			{
+				faxUrl: "https://ocean.weather.gov/P_sfc_full_ocean_color.png",
+				name: "North Pac surface analysis",
+				transp: faxColors.white,
+				effect: faxEffects.blur,
+				zoom: 0.37096066812224876,
+				location: {
+					x: 62,
+					y: 27
+				}
+			},
+			{
+				faxUrl: "https://ocean.weather.gov/shtml/P_00hr500.gif",
+				name: "North Pac 500mb analysis",
+				transp: faxColors.white,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.blue
+				},
+				effect: faxEffects.blur,
+				zoom: 0.7589960618086322,
+				location: {
+					x: 64,
+					y: 47
+				}
+			},
+			{
+				faxUrl: "https://www.prh.noaa.gov/hnl/graphics/stream.gif",
+				name: "Central Pac Streamlines",
+				transp: faxColors.white,
+				effect: faxEffects.blur,
+				zoom: 1.0040821009550305,
+				location: {
+					x: 14,
+					y: 482
+				}
+			}
+		],
+		gribRequest: 'GFS:65N,45S,130E,110W|1,1|0,6..72|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN'
+	},
+	{
 		key: "ATL-0001",
 		name: "North Atlantic, current analysis",
 		map: {
