@@ -26,14 +26,12 @@ public class DataFileWriter implements Forwarder {
 	private String split;
 	private long timeSplitThreshold = 0L;
 
-	private final static long MIN_MS = 60 * 1_000;
+	private final static long MIN_MS  = 60 * 1_000;
 	private final static long HOUR_MS = 60 * MIN_MS;
-	private final static long DAY_MS = 24 * HOUR_MS;
-	private final static long WEEK_MS = 7 * DAY_MS;
+	private final static long DAY_MS  = 24 * HOUR_MS;
+	private final static long WEEK_MS =  7 * DAY_MS;
 
-	private Properties props = null;
-
-	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss"); // Use UTC time!!
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss"); // Use UTC time!!
 	static {
 		SDF.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
 	}
@@ -215,6 +213,5 @@ public class DataFileWriter implements Forwarder {
 
 	@Override
 	public void setProperties(Properties props) {
-		this.props = props;
 	}
 }
