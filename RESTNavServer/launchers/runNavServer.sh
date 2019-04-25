@@ -117,6 +117,7 @@ JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=48.60448 -Ddefault.mux.longitude=-1
 # Polar file (coeffs)
 #
 JAVA_OPTS="$JAVA_OPTS -Dpolar.file.location=./sample.data/polars/CheoyLee42.polar-coeff"
+# Solar time from Equation of Time, not ony longitude
 JAVA_OPTS="$JAVA_OPTS -Dcalculate.solar.with.eot=true"
 #
 # For the small USB GPS

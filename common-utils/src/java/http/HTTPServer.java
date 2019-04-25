@@ -63,6 +63,15 @@ import java.util.zip.ZipInputStream;
  * Logging can be done. See <code>-Djava.util.logging.config.file=[path]/logging.properties</code>
  * <br>
  * See <a href="https://docs.oracle.com/cd/E23549_01/doc.1111/e14568/handler.htm">https://docs.oracle.com/cd/E23549_01/doc.1111/e14568/handler.htm</a>
+ *
+ * System properties to look at:
+ * - http.verbose
+ * - http.verbose.dump
+ * - http.port
+ * - static.docs
+ * - static.zip.docs
+ * - web.archive
+ *
  * </p>
  */
 public class HTTPServer {
@@ -79,7 +88,7 @@ public class HTTPServer {
 	  Nice article: https://www.html5rocks.com/en/tutorials/cors/
 
 		cres.getHeaders().add("Access-Control-Allow-Origin", "*");
-		cres.getHeaders().add("Access-Control-Allow-Headers", "*");
+		cres.getHeaders().add("Access-Control-Allow-Headers", "*"); // <== !!
 		cres.getHeaders().add("Access-Control-Expose-Headers", "Access-Token"); // Header(s) to expose, CSV
 		cres.getHeaders().add("Access-Control-Allow-Credentials", "true");
 		cres.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
@@ -646,9 +655,9 @@ public class HTTPServer {
 								RESTProcessorUtil.generateResponseHeaders(response, "text/html", content.length());
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
-							} else if (pathIsZipStatic(path)) { // Then this is static content. See "static.zip.docs" property. Defaulted to "/zip/"
-								// What zip file should we look into? assume web.zip for now
-								// url will be like /zip/web/index.html
+							} else if (pathIsZipStatic(path)) { // Static content, in an archive. See "static.zip.docs" property. Defaulted to "/zip/"
+								// What zip file should we look into? Assume web.zip, unless -Dweb.archive is set.
+								// url will be like /zip/index.html, where ./index.html is the path in the archive.
 
 								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 								String fName = path;
@@ -659,11 +668,12 @@ public class HTTPServer {
 								if (zipPath != null) {
 									fName = fName.substring(zipPath.length());
 
+									String webArchive = System.getProperty("web.archive", "web.zip");
 									if (verbose) {
-										System.out.println(String.format("%s => reading %s in %s", zipPath, fName, "web.zip"));
+										System.out.println(String.format("%s => reading %s in %s", zipPath, fName, webArchive));
 									}
 
-									InputStream is = getZipInputStream("web.zip", fName);
+									InputStream is = getZipInputStream(webArchive, fName);
 									if (is != null) {
 										ByteArrayOutputStream baos = new ByteArrayOutputStream();
 										StaticUtil.copy(is, baos);
@@ -681,7 +691,7 @@ public class HTTPServer {
 									response.setPayload(String.format("ZipPath not found for %s .", fName).getBytes());
 								}
 								sendResponse(response, out);
-							} else if (pathIsStatic(path)) { // Then this is static content. See "static.docs" property. Defaulted to "/web/"
+							} else if (pathIsStatic(path)) { // Static content, on the file system. See "static.docs" property. Defaulted to "/web/"
 								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 								String fName = path;
 								if (fName.indexOf("?") > -1) {

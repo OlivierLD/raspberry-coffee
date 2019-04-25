@@ -48,6 +48,11 @@ public class SSD1306ProcessorI2C implements Forwarder {
 	private final static SimpleDateFormat SDF_DATE = new SimpleDateFormat("E dd MMM yyyy");
 	private final static SimpleDateFormat SDF_TIME = new SimpleDateFormat("HH:mm:ss Z");
 	private final static SimpleDateFormat SDF_TIME_NO_Z = new SimpleDateFormat("HH:mm:ss");
+	static {
+		SDF_DATE.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+		SDF_TIME.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+		SDF_TIME_NO_Z.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+	}
 
 	private static class CacheBean {
 		private long gpstime;
@@ -108,7 +113,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 	private ScreenBuffer sb;
 	private SwingLedPanel substitute;
 
-	private boolean mirror = "true".equals(System.getProperty("mirror.screen", "false")); // Screen is to be seen in a mirror.
+	private boolean mirror = "true".equals(System.getProperty("mirror.screen", "false")); // Screen is to be seen in a mirror. (left-right mirror, not up-down, for now)
 	private boolean verbose = "true".equals(System.getProperty("screen.verbose", "false"));
 
 	private final static int TWD_OPTION =  0;
@@ -129,6 +134,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 	private final static int PRS_OPTION = 15;
 	private final static int GPS_OPTION = 16;
 	private final static int SOL_OPTION = 17;
+	// etc...
 
 	private static List<Integer> optionList = new ArrayList<>();
 //	{
@@ -162,7 +168,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 
 	SpeedUnit speedUnit = SpeedUnit.KNOTS;
 
-	// Use it to scroll across data
+	// Use it to scroll across data, can be extended or overridden. TODO Provide examples.
 	public void onButtonPressed() {
 		currentOption++;
 		if (currentOption >= optionList.size()) {
@@ -580,7 +586,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 		}
 	}
 
-	// TODO Make sure the cache is fed using EoT...
+	// Make sure the cache is fed using EoT, see System property calculate.solar.with.eot
 	private void displaySolarDateTime(long solarTime) {
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
 		cal.setTimeInMillis(solarTime);
