@@ -12,7 +12,7 @@ then
   exit 1
 fi
 if [ -f "$full_file" ]; then
-  echo -e "Warning: $full_file exist"
+  echo -e "Warning: $full_file already exist"
   echo "Choose another file name"
   exit 1
 fi

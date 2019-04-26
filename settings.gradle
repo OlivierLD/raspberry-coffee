@@ -25,7 +25,7 @@ include 'GPS.read'
 include "RMI.sample"
 include "NMEA.multiplexer"
 include "NMEA.mux.extensions"
-include "NMEA.mux.WebUI"
+// include "NMEA.mux.WebUI"
 include "Monitor.Battery"
 include "JavaSoundDemo"
 include "ukulele"
@@ -44,6 +44,9 @@ include "WebComponents"
 include "HanoiTower"
 include "TensorFlow"
 include "Bluetooth"
+// NMEA.mux.WebUI sub-projects
+include(':NMEA.mux.WebUI:full.server')
+include(':NMEA.mux.WebUI:minimal.mux')
 // Project.Trunk sub-projects
 include "Project.Trunk:RasPiRadar"
 include "Project.Trunk:PurePWM"
