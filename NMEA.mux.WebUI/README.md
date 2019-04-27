@@ -59,7 +59,7 @@ Assuming that you've found (or defined for yourself) the configuration of your d
     - `cd NMEADist`
     - `./start-mux.sh`
 
-That's it, your server is up and running! (you might have modified the `properties` file, like `nmea.mux.gps.log.properties`, though. See the [technical manual](../../NMEA.multiplexer/manual.md) for details)
+That's it, your server is up and running! (you might have modified the `properties` file, like `nmea.mux.gps.log.properties`, though. See the [technical manual](../NMEA.multiplexer/manual.md) for details)
 
 Now, from any browser on any machine connected on the server (Raspberry Pi)'s network,
 you can reach <http://destination.pi:[port]/zip/index.html>.
