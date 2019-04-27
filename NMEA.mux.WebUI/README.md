@@ -7,21 +7,21 @@ We want to have a Nav Server:
 
 The [`NMEA.multiplexer`](../NMEA.multiplexer/README.md) is able to read, compute, and broadcast data.
 
-To work even if no WiFi is available, the best is probably to have the Raspberry Pi emit its own.
-This is totally feasible, follow the instructions provided [here](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software). 
+To work even if no WiFi network is available, the best is probably to have the Raspberry Pi emit its own.
+This is totally feasible, follow the instructions provided [here](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software).
 
 Now, depending on the configuration you want, several different components, from several different modules in this project
 will be required or not.
 
-We will show here how to compose the server based on your own needs.
+We will show here how to compose a custom server, based on your own needs.
 
 The HTTP/REST server we use here is the one you find in the `common-utils` module.
 To minimize the footprint of the final application, all the static pages required by the web interface will
 be served from a single archive, as this feature is available from the HTTP Server we use here.
 
 > Note:
-> The operations on the Serial port require `libRxTx`, and this dependency cannot be taken care of by Gradle.
-> To be able to use it outside gradle, run (on Linux/Debian/Raspberry Pi):
+> The operations on a Serial Port would require `libRxTx`, and this dependency cannot be taken care of by Gradle.
+> To be able to use it outside gradle, run (on Linux/Debian/Raspberry Pi), you need to install this package:
 ```bash
  sudo apt-get install librxtx-java
 ```
@@ -35,9 +35,9 @@ We will:
 - Transfer it to the final destination machine, where the archive will be expanded (aka un-archived)
 - Possibly modify some files
     - the `/etc/rc.local` for the server to start when the machine boots
-    - the `properties` file that contains all the server's runtime parameters and definitions 
+    - the `properties` file that contains all the server's runtime parameters and definitions
 
-Several of those steps can be scripted or automated, as we will show.
+Several of those steps can be scripted or automated, as you would see in the examples provided here.
 This basically all you need to get up and running.
 
 We provide here several sub-directories, from which you will be able to run some provided scripts
@@ -48,7 +48,7 @@ They all come with at least 3 files:
 - `build.gradle`, the Gradle script used for the build process, probably the most important here
 - `to.prod.sh`, eventually triggered by `builder.sh`, which will take care of building your application and archiving the produced artifacts.
 
-Assuming that you've found (or built) the configuration of your dreams, **_all_** you will need to do is:
+Assuming that you've found (or defined for yourself) the configuration of your dreams, **_all_** you will need to do is:
 - From the Raspberry Pi used for the build, where you've clone the `git` repository: `cd full.server` (where `full.server` is your dream directory)
 - `./builder.sh`
     - During this step, you will have provided - from the command line - the name of the archive to produce, let's call it `NMEADist` as an example.
@@ -57,9 +57,9 @@ Assuming that you've found (or built) the configuration of your dreams, **_all_*
     - `ssh pi@destination.pi`
     - `tar -xzvf NMEADist.tar.gz`
     - `cd NMEADist`
-    - `start-mux.sh`
-        
-That's it, your server is un and running! (you might have modified the `properties` file, like `nmea.mux.gps.log.properties`, though)
+    - `./start-mux.sh`
+
+That's it, your server is up and running! (you might have modified the `properties` file, like `nmea.mux.gps.log.properties`, though)
 
 Now, from any browser on any machine connected on the server (Raspberry Pi)'s network,
 you can reach <http://destination.pi:[port]/zip/index.html>.
@@ -96,7 +96,7 @@ on the destination machine to start the Multiplexer at boot time.
 The script `to.prod.sh` (available in each directory) is not carved in stone. It is also here for inspiration.
 
 > Note: To make sure the runtime components will be 100% compatible with your Raspberry Pi target, I use to run this build _on a Raspberry Pi_ (not on a Windows or Mac laptop, carefull with Linux, probably OK with a Raspberry Pi Desktop).
-> The (only) problem that can potentially show up is a Java version mismatch. 
+> The (only) problem that can potentially show up is a Java version mismatch.
 > The build process might be a bit too heavy for a Raspberry Pi Zero...
 > I usually build on a bigger board (A, or B), and then `scp` the result to a Raspberry Pi Zero if that is the one I want to run my server on,
 > as shown above with the `scp` command.
@@ -104,7 +104,7 @@ The script `to.prod.sh` (available in each directory) is not carved in stone. It
 ## Warning!
 This project directory is a play ground, again, it is here for **you** to _compose_ your own server.
 
-**You**. 
+**You**.
 
 Means not **me**. 🤓
 
