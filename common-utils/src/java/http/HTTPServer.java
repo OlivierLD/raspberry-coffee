@@ -9,6 +9,7 @@ import utils.StringUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -851,7 +852,8 @@ public class HTTPServer {
 		}
 	}
 
-	private static InputStream getZipInputStream(String zipName, String entryName) throws Exception {
+	private static InputStream getZipInputStream(String zipName, String entryName) throws Exception
+	{
 		ZipInputStream zip = new ZipInputStream(new FileInputStream(zipName));
 		InputStream is = null;
 		boolean go = true;
@@ -866,9 +868,9 @@ public class HTTPServer {
 				}
 			}
 		}
-		if (is == null) {
-			throw new RuntimeException("Entry " + entryName + " not found in " + zipName);
-		}
+//		if (is == null) {
+//			throw new FileNotFoundException("Entry " + entryName + " not found in " + zipName);
+//		}
 		return is;
 	}
 

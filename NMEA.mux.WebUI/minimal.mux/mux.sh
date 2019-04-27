@@ -13,10 +13,7 @@ fi
 #
 echo Using properties file $MUX_PROP_FILE
 #
-JAVA_OPTIONS="$JAVA_OPTIONS" # From parent script, possibly
-#
-echo -e "In $0, inherited JAVA_OPTIONS: $JAVA_OPTIONS"
-#
+JAVA_OPTIONS=
 if [ "$OS" == "Darwin" ]
 then
   JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"       # for Mac
@@ -41,7 +38,7 @@ then
   echo -e "| You will need to start the forwarders yourself,"
   echo -e "| invoke PUT http://$MACHINE_NAME:$PORT/mux/mux-process/on to start"
   echo -e "| invoke PUT http://$MACHINE_NAME:$PORT/mux/mux-process/off to stop"
-  echo -e "| Or use http://$MACHINE_NAME:$PORT/zip/runner.html from a "
+  echo -e "| Or use http://$MACHINE_NAME:$PORT/web/runner.html from a "
   echo -e "| browser (laptop, cell, tablet...)"
   echo -e "+---------------------------------------------------------------"
 fi
@@ -60,18 +57,11 @@ fi
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dscreen.verbose=true" # Unit changes for SSD1306 (I2C)
 #
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dwith.sun.flower=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Ddefault.sf.latitude=37.7489 -Ddefault.sf.longitude=-122.5070" # SF.
-#
 JAVA_OPTIONS="$JAVA_OPTIONS -Dprocess.on.start=$PROCESS_ON_START"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dno.ais=false" # Accept AIS Strings
 JAVA_OPTIONS="$JAVA_OPTIONS -Dcalculate.solar.with.eot=true"
-#
-JAVA_OPTS="$JAVA_OPTS -DdeltaT=69.2201" # 01-Jan-2019
-# For the small USB GPS
-JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.date.offset=7168"
 #
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
@@ -98,9 +88,5 @@ LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
 # use sudo on Raspberry Pi
 # sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
-# java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
-# sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navrest.NavServer
-COMMAND="java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navrest.NavServer"
-echo -e "Running $COMMAND"
-$COMMAND
+java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
 #

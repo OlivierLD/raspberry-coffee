@@ -1,23 +1,105 @@
+# Building and Customizing your own Nav Server
+We want to have a Nav Server
+- Able to read from different sources (NMEA Serial port, TCP, whatever)
+- Able to compute data
+- Able to send or broadcast data on several channels
+- Able to run even if no WiFi network is available
+
+The [`NMEA.multiplexer`](../NMEA.multiplexer/README.md) is able to read, compute, and broadcast data.
+
+To work even if no WiFi is available, the best is probably to have the Raspberry Pi emit its own.
+This is totally feasible, follow the instructions provided [here](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software). 
+
+Now, depending on the configuration you want, several different components, from several different modules in this project
+will be required or not.
+
+We will show here how to compose the server based on your own needs.
+
+The HTTP/REST server we use here is the one you find in the `common-utils` module.
+To minimize the footprint of the final application, all the static pages required by the web interface will
+be served from a single archive, as this feature is available from the HTTP Server we use here.
+
+> Note:
+> The operations on the Serial port require `libRxTx`, and this dependency cannot be taken care of by Gradle.
+> To be able to use it outside gradle, run (on Linux/Debian/Raspberry Pi):
+```bash
+ sudo apt-get install librxtx-java
+```
+
 ## Close to production
-This project is the one to run to have the features you are interested in also available from a Web UI.
+It will not require the `git` repository to be cloned on the machine the server runs on.
+
+We will:
+- Clone the repository on one machine, used to build the required components
+- Archive all the needed artifacts in a single archive (a `tar.gz` here), which can then be distributed
+- Transfer it to the final destination machine, where the archive will be expanded (aka un-archived)
+- Possibly modify some files
+    - the `/etc/rc.local` for the server to start when the machine boots
+    - the `properties` file that contains all the server's runtime parameters and definitions 
+
+Several of those steps can be scripted or automated, as we will show.
+This basically all you need to get up and running.
+
+We provide here several sub-directories, from which you will be able to run some provided scripts
+building several flavors of Nav Servers.
+
+They all come with at least 3 files:
+- `builder.sh`, _the one you run_, that will trigger all the required others
+- `build.gradle`, the Gradle script used for the build process, probably the most important here
+- `to.prod.sh`, eventually triggered by `builder.sh`, which will take care of building your application and archiving the produced artifacts.
+
+Assuming that you've found (or built) the configuration of your dreams, **_all_** you will need to do is:
+- From the Raspberry Pi used for the build, where you've clone the `git` repository: `cd full.server` (where `full.server` is your dream directory)
+- `./builder.sh`
+    - During this step, you will have provided - from the command line - the name of the archive to produce, let's call it `NMEADist` as an example.
+- Now transfer the generated archive to the destination Raspberry Pi:
+    - `scp NMEADist.tar.gz pi@destination.pi:~`
+    - `ssh pi@destination.pi`
+    - `tar -xzvf NMEADist.tar.gz`
+    - `cd NMEADist`
+    - `start-mux.sh`
+        
+That's it, your server is un and running! (you might have modified the `properties` file, like `nmea.mux.gps.log.properties`, though)
+
+Now, from any browser on any machine connected on the server (Raspberry Pi)'s network,
+you can reach <http://destination.pi:[port]/zip/index.html>.
+
+In the URL above, `destination.pi` is the name (or IP address) of the machine the server runs on, and `[port]` is the one defined in the mux's properties file,
+like in
+```properties
+with.http.server=yes
+http.port=9999
+```
+This properties file is yours to tweak as needed.
+
+To summarize, you went through the following steps:
+- build
+- archive
+- transfer
+- un-archive        
+- run
+
 
 Pick and choose your features in other modules, grab the web ages you need, modify the `index.html`, etc, and
 run the script `to.prod.sh` to package everything for distribution.
 
-The "_pick and choose_" part could be scripted as well.
+The "_pick and choose_" part could be scripted as well, as seen in the provided examples.
 
-This project is not supposed to contain any source file except web resources.
+This project is not supposed to contain any source file except web resources (archived).
 
-It pulls the `NMEA.multiplexer`, `RESTNavServer` (or whatever you want) and the `NMEA.mux.extensions` projects.
+It pulls the `NMEA.multiplexer`, `RESTNavServer`, and the `NMEA.mux.extensions` projects (or whatever you want or need).
 This is what you would to tweak to fit your requirements.
 
 When available, the file `rc.local` is to give you some inspiration, so you can modify the one in `/etc/rc.local`
 on the destination machine to start the Multiplexer at boot time.
 
-The script `to.prod.sh` is not carved in stone. It is also here for inspiration.
+The script `to.prod.sh` (available in each directory) is not carved in stone. It is also here for inspiration.
 
-> Note: The build process might be a bit too heavy for a Raspberry Pi Zero...
-> I usually built on a bigger board (A, or B), and the `scp` the result to a Raspberry Pi Zero if I need one.
+> Note: To make sure the runtime components will be 100% compatible with your Raspberry Pi target, I use to run this build _on a Raspberry Pi_ (not on a Windows or Mac laptop, carefull with Linux, probably OK with a Raspberry Pi Desktop).
+> The (only) problem that can potentially show up is a Java version mismatch. 
+> The build process might be a bit too heavy for a Raspberry Pi Zero...
+> I usually built on a bigger board (A, or B), and the `scp` the result to a Raspberry Pi Zero if that is the one I want to run my server on,
+> as shown above with the `scp` command.
 
 ## Warning!
 This project directory is a play ground, again, it is here for **you** to _compose_ your own server.
@@ -32,6 +114,8 @@ Means not **me**. 🤓
  $ cd full.server
  $ ./builder.sh
 ```
+
+<!-- TODO Screenshots and diagrams -->
 
 - Minimal Multiplexer
 ```

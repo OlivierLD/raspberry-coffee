@@ -26,6 +26,7 @@ read distdir
 if [ -d "$distdir" ]
 then
 	echo -e "Folder $distdir exists. Please drop it or choose another name"
+	echo -e "Exiting now."
 	exit 1
 fi
 echo -e "Creating folder $distdir"
@@ -45,11 +46,7 @@ cp web.zip $distdir
 cp *.properties $distdir
 # If needed, more resources would go here (like dev curves, etc)
 cp mux.sh $distdir
-cp to.mux.sh $distdir
-cp ssd1306i2cDisplay.sh $distdir
 cp killmux.sh $distdir
-cp rc.local $distdir
-cp start-mux.sh $distdir
 #
 # 4 - Archiving
 #

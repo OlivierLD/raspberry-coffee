@@ -2,3 +2,4 @@
 - QR Codes
 - VMG ? Ok.
 - Use Web-Components for the Web UIs.
+- Get rid of the JQuery dependencies, use ES6 Promises

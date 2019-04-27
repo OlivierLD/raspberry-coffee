@@ -2,7 +2,12 @@
 #
 # Build a full nav server with all the features
 #
-zip -r ./web.zip ../../RESTNavServer/launchers/web/* -x ../../RESTNavServer/launchers/web/2019/**\*
+cp -R ../../RESTNavServer/launchers/web .
+cd web
+zip -r ../web.zip * -x 2019/**\*
+cd ..
+rm -rf web
 #
 ./to.prod.sh
+rm web.zip
 #
