@@ -1,5 +1,5 @@
 # Building and Customizing your own Nav Server
-We want to have a Nav Server
+We want to have a Nav Server:
 - Able to read from different sources (NMEA Serial port, TCP, whatever)
 - Able to compute data
 - Able to send or broadcast data on several channels
@@ -88,7 +88,7 @@ The "_pick and choose_" part could be scripted as well, as seen in the provided 
 This project is not supposed to contain any source file except web resources (archived).
 
 It pulls the `NMEA.multiplexer`, `RESTNavServer`, and the `NMEA.mux.extensions` projects (or whatever you want or need).
-This is what you would to tweak to fit your requirements.
+This is what you would tweak to fit your requirements.
 
 When available, the file `rc.local` is to give you some inspiration, so you can modify the one in `/etc/rc.local`
 on the destination machine to start the Multiplexer at boot time.
@@ -98,7 +98,7 @@ The script `to.prod.sh` (available in each directory) is not carved in stone. It
 > Note: To make sure the runtime components will be 100% compatible with your Raspberry Pi target, I use to run this build _on a Raspberry Pi_ (not on a Windows or Mac laptop, carefull with Linux, probably OK with a Raspberry Pi Desktop).
 > The (only) problem that can potentially show up is a Java version mismatch. 
 > The build process might be a bit too heavy for a Raspberry Pi Zero...
-> I usually built on a bigger board (A, or B), and the `scp` the result to a Raspberry Pi Zero if that is the one I want to run my server on,
+> I usually build on a bigger board (A, or B), and then `scp` the result to a Raspberry Pi Zero if that is the one I want to run my server on,
 > as shown above with the `scp` command.
 
 ## Warning!
