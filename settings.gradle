@@ -47,6 +47,7 @@ include "Bluetooth"
 // NMEA.mux.WebUI sub-projects
 include(':NMEA.mux.WebUI:full.server')
 include(':NMEA.mux.WebUI:minimal.mux')
+include(':NMEA.mux.WebUI:full.server.extended')
 // Project.Trunk sub-projects
 include "Project.Trunk:RasPiRadar"
 include "Project.Trunk:PurePWM"

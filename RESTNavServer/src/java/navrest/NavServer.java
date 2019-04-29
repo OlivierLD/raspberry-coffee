@@ -4,6 +4,7 @@ import astrorest.AstroRequestManager;
 import gribprocessing.GRIBRequestManager;
 import http.HTTPServer;
 import imageprocessing.ImgRequestManager;
+import nmea.api.Multiplexer;
 import nmea.mux.GenericNMEAMultiplexer;
 import orientation.SunFlower;
 import orientation.SunFlowerRequestManager;
@@ -25,6 +26,8 @@ public class NavServer {
 	private HTTPServer httpServer = null;
 	private int httpPort = 9999;
 
+	private Multiplexer multiplexer;
+
 	public NavServer() {
 
 		String port = System.getProperty("http.port");
@@ -44,7 +47,8 @@ public class NavServer {
 		this.httpServer.addRequestManager(new TideRequestManager());
 		// Add Nav features: Dead Reckoning, logging, re-broadcasting, from the NMEA Multiplexer
 		Properties definitions = GenericNMEAMultiplexer.getDefinitions();
-		this.httpServer.addRequestManager(new GenericNMEAMultiplexer(definitions)); // refers to nmea.mux.properties, unless -Dmux.properties is set
+		multiplexer = new GenericNMEAMultiplexer(definitions);
+		this.httpServer.addRequestManager((GenericNMEAMultiplexer)multiplexer); // refers to nmea.mux.properties, unless -Dmux.properties is set
 		// Add image processing service...
 		this.httpServer.addRequestManager(new ImgRequestManager());
 		// Add GRIB features
@@ -53,6 +57,10 @@ public class NavServer {
 		if (!"false".equals(System.getProperty("with.sun.flower", "true"))) {
 			this.httpServer.addRequestManager(new SunFlowerRequestManager());
 		}
+	}
+
+	public Multiplexer getMultiplexer() {
+		return this.multiplexer;
 	}
 
 	protected List<HTTPServer.Operation> getAllOperationList() {

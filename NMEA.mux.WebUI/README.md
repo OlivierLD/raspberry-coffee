@@ -109,7 +109,7 @@ This project directory is a play ground, again, it is here for **you** to _compo
 Means not **me**. 🤓
 
 ## Examples
-- Full Nav Server (all features)
+- Full Nav Server (all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...)
 ```
  $ cd full.server
  $ ./builder.sh
