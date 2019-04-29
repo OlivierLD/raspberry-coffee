@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 #
-# WIP
 # Warning: Run the process on the target machine. That will avoid unwanted version mismatch (java class version...)
 #
 echo -e "+----------------------------------------------------------------------------------------------------+"
@@ -16,7 +15,9 @@ echo -e "+----------------------------------------------------------------------
 #
 # 1 - Build
 #
-../../gradlew shadowJar
+PROXY_SETTINGS=
+PROXY_SETTINGS="-Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttps.proxyPort=80"
+../../gradlew shadowJar $PROXY_SETTINGS
 #
 # 2 - Create new dir
 #

@@ -13,6 +13,9 @@ import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import navrest.NavServer;
+import nmea.forwarders.SSD1306ProcessorI2C;
+import utils.PinUtil;
+import utils.TimeUtil;
 
 public class ServerWithButtons extends NavServer {
 
@@ -32,8 +35,19 @@ public class ServerWithButtons extends NavServer {
 		try {
 			gpio = GpioFactory.getInstance();
 			// Provision buttons here
-			buttonOnePin = RaspiPin.GPIO_01; // TODO From System property
-			buttonTwoPin = RaspiPin.GPIO_02; // TODO From System property
+			buttonOnePin = RaspiPin.GPIO_01;
+			buttonTwoPin = RaspiPin.GPIO_02;
+
+			try {
+				// Identified by the PHYSICAL pin numbers
+				String buttonOnePinStr = System.getProperty("buttonOne", "12"); // GPIO_01
+				String buttonTwoPinStr = System.getProperty("buttonTwo", "13"); // GPIO_02
+
+				buttonOnePin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr));
+				buttonTwoPin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonTwoPinStr));
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
 
 			buttonOne = gpio.provisionDigitalInputPin(buttonOnePin, PinPullResistance.PULL_DOWN);
 			buttonOne.addListener((GpioPinListenerDigital) event -> {
@@ -55,12 +69,28 @@ public class ServerWithButtons extends NavServer {
 		} catch (Throwable error) {
 			error.printStackTrace();
 		}
+
+		// Was the SSD1306 loaded?
+		SSD1306ProcessorI2C oled = SSD1306ProcessorI2C.getInstance();
+		if (oled == null) {
+			System.out.println("SSD1306 was NOT loaded");
+		} else {
+			System.out.println("SSD1306 was loaded!");
+			TimeUtil.delay(20_000L);
+			SSD1306ProcessorI2C.setExternallyOwned(true); // Taking ownership on the screen
+			TimeUtil.delay(1_000L);
+			oled.displayLines(new String[] { "Taking ownership", "on the screen"});
+			TimeUtil.delay(1_000L);
+			oled.displayLines(new String[] { "Releasing the screen"});
+			TimeUtil.delay(500L);
+			SSD1306ProcessorI2C.setExternallyOwned(false); // Releasing ownership on the screen
+		}
 	}
 
 	private void buttonOnePressed() {
 		System.out.println("Button One pressed");
 		boolean onOff = true;
-		this.getMultiplexer().setEnableProcess(onOff);
+		this.getMultiplexer().setEnableProcess(onOff); // ... for example
 	}
 	private void buttonOneReleased() {
 		System.out.println("Button One released");
@@ -68,6 +98,7 @@ public class ServerWithButtons extends NavServer {
 	}
 	private void buttonTwoPressed() {
 		System.out.println("Button Two pressed");
+		this.getMultiplexer().stopAll(); // Another example...
 	}
 	private void buttonTwoReleased() {
 		System.out.println("Button Two released");

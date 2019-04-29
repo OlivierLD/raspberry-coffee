@@ -24,11 +24,15 @@ import lcd.substitute.SwingLedPanel;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 /**
  * This is an example of a <b>transformer</b>.
@@ -45,6 +49,15 @@ import java.util.Properties;
  */
 public class Nokia5110Processor implements Forwarder {
 	private boolean keepWorking = true;
+
+	private final static SimpleDateFormat SDF_DATE = new SimpleDateFormat("E dd MMM yyyy");
+	private final static SimpleDateFormat SDF_TIME = new SimpleDateFormat("HH:mm:ss Z");
+	private final static SimpleDateFormat SDF_TIME_NO_Z = new SimpleDateFormat("HH:mm:ss");
+	static {
+		SDF_DATE.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+		SDF_TIME.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+		SDF_TIME_NO_Z.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+	}
 
 	private static class CacheBean {
 		private long gpstime;
@@ -122,6 +135,8 @@ public class Nokia5110Processor implements Forwarder {
 	private final static int HUM_OPTION = 13;
 	private final static int CUR_OPTION = 14;
 	private final static int PRS_OPTION = 15;
+	private final static int GPS_OPTION = 16;
+	private final static int SOL_OPTION = 17;
 
 	private static List<Integer> optionList = new ArrayList<>();
 //	{
@@ -141,6 +156,8 @@ public class Nokia5110Processor implements Forwarder {
 //					HUM_OPTION, // Relative Humidity
 //					CUR_OPTION, // Current. Speed and Direction
 //					PRS_OPTION  // Atmospheric Pressure (PRMSL).
+//          GPS_OPTION  // GPS Date & Time
+//          SOL_OPTION  // SOLAR Date & Time
 //	};
 
 	private int currentOption = 0;
@@ -435,6 +452,12 @@ public class Nokia5110Processor implements Forwarder {
 							case PRS_OPTION:
 								displayPRMSL(bean.prmsl);
 								break;
+							case GPS_OPTION:
+								displayDateTime(bean.gpsdatetime);
+								break;
+							case SOL_OPTION:
+								displaySolarDateTime(bean.gpssolardate);
+								break;
 							default:
 								break;
 						}
@@ -563,6 +586,47 @@ public class Nokia5110Processor implements Forwarder {
 
 			sb.text("PRMSL in mb", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			sb.text(_X1.format(value), 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			// Display
+			display();
+
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	private void displayDateTime(long gpsDateTime) {
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+		cal.setTimeInMillis(gpsDateTime);
+		Date gps = cal.getTime();
+		try {
+
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			sb.text("GPS Date and Time", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(SDF_DATE.format(gps), 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(SDF_TIME.format(gps), 2, 29, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			// Display
+			display();
+
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	// Make sure the cache is fed using EoT, see System property calculate.solar.with.eot
+	private void displaySolarDateTime(long solarTime) {
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+		cal.setTimeInMillis(solarTime);
+		Date solar = cal.getTime();
+		try {
+
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			sb.text("SOLAR Date and Time", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(SDF_DATE.format(solar), 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(SDF_TIME_NO_Z.format(solar), 2, 29, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
 			display();

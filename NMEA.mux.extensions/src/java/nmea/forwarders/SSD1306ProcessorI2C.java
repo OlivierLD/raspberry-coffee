@@ -109,6 +109,10 @@ public class SSD1306ProcessorI2C implements Forwarder {
 	private int WIDTH = 128;
 	private int HEIGHT = 32;
 
+
+	private static SSD1306ProcessorI2C instance = null;
+	private static boolean externallyOwned = false;
+
 	private SSD1306 oled;
 	private ScreenBuffer sb;
 	private SwingLedPanel substitute;
@@ -176,10 +180,20 @@ public class SSD1306ProcessorI2C implements Forwarder {
 		}
 	}
 
+
+	public static SSD1306ProcessorI2C getInstance() {
+		return instance;
+	}
+
+	public static void setExternallyOwned(boolean b) {
+		externallyOwned = b;
+	}
 	/*
 	 * @throws Exception
 	 */
 	public SSD1306ProcessorI2C() throws Exception {
+
+		instance = this;
 
 		int nbTry = 0;
 		boolean ok = false;
@@ -407,7 +421,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 					}
 					// Transformer's specific job.
 					// Do see how optionList is populated from the properties.
-					if (!optionList.isEmpty()) {
+					if (!optionList.isEmpty() && !externallyOwned) {
 						int toDisplay = optionList.get(currentOption);
 						switch (toDisplay) {
 							case TWD_OPTION:
@@ -638,6 +652,25 @@ public class SSD1306ProcessorI2C implements Forwarder {
 			throw new RuntimeException(ex);
 		}
 	}
+
+	public void displayLines(String... lines) {
+		try {
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			int y = 9;
+			for (int i=0; i<lines.length; i++) {
+				sb.text(lines[i], 2, y, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				y += 10;
+			}
+			// Display
+			display();
+
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+
 
 	@Override
 	public void write(byte[] message) {
