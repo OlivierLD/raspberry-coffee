@@ -77,13 +77,15 @@ public class ServerWithButtons extends NavServer {
 		} else {
 			System.out.println("SSD1306 was loaded!");
 			TimeUtil.delay(20_000L);
-			SSD1306ProcessorI2C.setExternallyOwned(true); // Taking ownership on the screen
+			System.out.println("Taking ownership on the screen");
+			oled.setExternallyOwned(true); // Taking ownership on the screen
 			TimeUtil.delay(1_000L);
 			oled.displayLines(new String[] { "Taking ownership", "on the screen"});
 			TimeUtil.delay(1_000L);
 			oled.displayLines(new String[] { "Releasing the screen"});
 			TimeUtil.delay(500L);
-			SSD1306ProcessorI2C.setExternallyOwned(false); // Releasing ownership on the screen
+			System.out.println("Releasing ownership on the screen");
+			oled.setExternallyOwned(false); // Releasing ownership on the screen
 		}
 	}
 

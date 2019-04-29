@@ -111,7 +111,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 
 
 	private static SSD1306ProcessorI2C instance = null;
-	private static boolean externallyOwned = false;
+	private boolean externallyOwned = false;
 
 	private SSD1306 oled;
 	private ScreenBuffer sb;
@@ -185,7 +185,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 		return instance;
 	}
 
-	public static void setExternallyOwned(boolean b) {
+	public void setExternallyOwned(boolean b) {
 		externallyOwned = b;
 	}
 	/*
