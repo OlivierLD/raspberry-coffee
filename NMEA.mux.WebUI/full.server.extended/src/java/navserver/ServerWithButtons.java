@@ -76,6 +76,7 @@ public class ServerWithButtons extends NavServer {
 			System.out.println("SSD1306 was NOT loaded");
 		} else {
 			System.out.println("SSD1306 was loaded!");
+			// Now let's write in the screen...
 			TimeUtil.delay(20_000L);
 			System.out.println("Taking ownership on the screen");
 			oled.setExternallyOwned(true); // Taking ownership on the screen

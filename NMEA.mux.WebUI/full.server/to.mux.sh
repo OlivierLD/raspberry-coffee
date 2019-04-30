@@ -95,7 +95,7 @@ echo -e "JAVA_OPTIONS in to.mux.sh: $JAVA_OPTIONS"
 #
 echo On its way!
 MY_IP=$(hostname -I | awk '{ print $1 }')
-echo "Reach http://${MY_IP}:9999/web/index.html"
-echo "  or  http://${MY_IP}:9999/web/small-screens/small.console.02.html"
+echo "Reach http://${MY_IP}:9999/zip/index.html"
+echo "  or  http://${MY_IP}:9999/zip/small-screens/small.console.02.html"
 date=`date`
 echo "System date is $date"

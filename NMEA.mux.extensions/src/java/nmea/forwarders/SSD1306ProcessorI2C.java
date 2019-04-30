@@ -172,7 +172,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 
 	SpeedUnit speedUnit = SpeedUnit.KNOTS;
 
-	// Use it to scroll across data, can be extended or overridden. TODO Provide examples.
+	// Use it to scroll across data, can be extended or overridden. TODO Provide examples...
 	public void onButtonPressed() {
 		currentOption++;
 		if (currentOption >= optionList.size()) {
@@ -185,12 +185,10 @@ public class SSD1306ProcessorI2C implements Forwarder {
 		return instance;
 	}
 
-	public void setExternallyOwned(boolean b) {
+	public void setExternallyOwned(boolean b) { // TODO Do it for other screen forwarders
 		externallyOwned = b;
 	}
-	/*
-	 * @throws Exception
-	 */
+
 	public SSD1306ProcessorI2C() throws Exception {
 
 		instance = this;

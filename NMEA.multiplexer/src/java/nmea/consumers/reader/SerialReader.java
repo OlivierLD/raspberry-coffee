@@ -167,8 +167,9 @@ public class SerialReader
 							try {
 								if (theInput != null) {
 									newData = theInput.read();
-									if (newData == -1)
+									if (newData == -1) {
 										break;
+									}
 									inputBuffer.append((char) newData);
 								}
 							} catch (IOException ex) {
@@ -179,10 +180,11 @@ public class SerialReader
 						String s = new String(inputBuffer);
 						// Display the startReader string
 						boolean justDump = false;
-						if (justDump)
+						if (justDump) {
 							System.out.println(":: [" + s + "] ::");
-						else
+						} else {
 							super.fireDataRead(new NMEAEvent(this, s));
+						}
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
@@ -200,7 +202,7 @@ public class SerialReader
 		if (type == CommPortOwnershipListener.PORT_OWNERSHIP_REQUESTED) {
 			System.out.println("PORT_OWNERSHIP_REQUESTED");
 		} else
-			System.out.println("ownership changed:" + type);
+			System.out.println("ownership changed: type=" + type);
 	}
 
 	public static void main(String... args) {

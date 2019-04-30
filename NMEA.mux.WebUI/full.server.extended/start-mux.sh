@@ -32,9 +32,10 @@ fi
 #
 NETWORK_NAME=$(iwconfig | grep wlan0 | awk '{ print $4 }')
 NETWORK_NAME=${NETWORK_NAME:6}
-if [ "$NETWORK_NAME" == "aster" ] # From Mode:Master TODO Get the network name from the config file... ssid in /etc/hostapd/hostapd.conf ?
+if [ "$NETWORK_NAME" == "aster" ] # From Mode:Master Get the network name from the config file... ssid in /etc/hostapd/hostapd.conf
 then
-	NETWORK_NAME="RPi-Gateway" # Change as needed
+	NETWORK_NAME=$(cat /etc/hostapd/hostapd.conf | grep -e ^ssid)
+	NETWORK_NAME=${NETWORK_NAME:5}
 fi
 if [ "$NETWORK_NAME" == "" ]
 then
