@@ -20,4 +20,4 @@ This is built just like the other examples in this module, just run
  
  ---
  
- More to come. Diagrams, screenshits, pictures.
+ More to come. Diagrams, screenshots, pictures.
