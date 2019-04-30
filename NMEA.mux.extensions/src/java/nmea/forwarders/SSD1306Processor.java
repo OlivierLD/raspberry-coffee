@@ -137,7 +137,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 					DBT_OPTION, // Depth Below Transducer
 					HUM_OPTION, // Relative Humidity
 					CUR_OPTION, // Current. Speed and Direction
-					PRS_OPTION  // Atmospheric Pressure (PRMSL).
+					PRS_OPTION  // Atmospheric Pressure (PRMSL). // TODO Add other options, like in the I2C version
 	};
 
 	private int currentOption = TWD_OPTION;

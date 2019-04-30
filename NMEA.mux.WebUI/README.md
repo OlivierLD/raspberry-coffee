@@ -115,7 +115,7 @@ Means not **me**. 🤓
  $ ./builder.sh
 ```
 
-<!-- TODO Screenshots and diagrams -->
+<!-- TODO Screenshots, diagrams, pictures -->
 
 - Minimal Multiplexer
 ```
@@ -123,6 +123,14 @@ Means not **me**. 🤓
  $ ./builder.sh
 ```
 
+- Full Nav Server, extended (all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...)
+```
+ $ cd full.server.extended
+ $ ./builder.sh
+```
+
 ... More to come
+
+<!-- TODO: Docker images -->
 
 ---

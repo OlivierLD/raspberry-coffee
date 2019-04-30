@@ -62,7 +62,7 @@ npm:5.6.0
 openjdk version "1.8.0_171"
 OpenJDK Runtime Environment (build 1.8.0_171-8u171-b11-1~deb9u1-b11)
 OpenJDK 64-Bit Server VM (build 25.171-b11, mixed mode)
-root@1d4ff153852b:/workdir/raspberry-pi4j-samples/RESTNavServer#
+root@1d4ff153852b:/workdir/raspberry-coffee/RESTNavServer#
 ```
 
 From the host (where the `docker` command was fired), reach for example <http://localhost:8080/oplist>

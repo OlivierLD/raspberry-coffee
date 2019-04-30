@@ -131,7 +131,7 @@ do
       ;;
     "5")
       OK=true
-      DOCKER_FILE=Dockerfile.node-debian
+      DOCKER_FILE=node-debian.Dockerfile
       IMAGE_NAME=oliv-nodedebian
 			# RUN_CMD="docker run -p 9876:9876 --privileged -v /dev/tty.usbserial:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
 			RUN_CMD="docker run -p 9876:9876 -d $IMAGE_NAME:latest"

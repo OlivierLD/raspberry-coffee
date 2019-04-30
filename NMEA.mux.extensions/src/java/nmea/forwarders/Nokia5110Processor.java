@@ -702,6 +702,12 @@ public class Nokia5110Processor implements Forwarder {
 					case "POS": // Position
 						optionList.add(POS_OPTION);
 						break;
+					case "GPS": // Position
+						optionList.add(GPS_OPTION);
+						break;
+					case "SOL": // Position
+						optionList.add(SOL_OPTION);
+						break;
 					case "BSP":
 						optionList.add(BSP_OPTION);
 						speedUnit = SpeedUnit.KNOTS;

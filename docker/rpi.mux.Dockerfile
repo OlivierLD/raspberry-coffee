@@ -30,13 +30,13 @@ RUN echo "java -version" >> $HOME/.bashrc
 
 RUN mkdir /workdir
 WORKDIR /workdir
-RUN git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
-WORKDIR /workdir/raspberry-pi4j-samples
+RUN git clone https://github.com/OlivierLD/raspberry-coffee.git
+WORKDIR /workdir/raspberry-coffee
 # Running gradle with 'tasks' will install gradle and required plugins if not there yet.
 RUN ./gradlew tasks
 # RUN ./gradlew tasks -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80
 #
-WORKDIR /workdir/raspberry-pi4j-samples/NMEA.multiplexer
+WORKDIR /workdir/raspberry-coffee/NMEA.multiplexer
 #
 RUN ../gradlew shadowJar
 # RUN ../gradlew shadowJar -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80
@@ -45,7 +45,7 @@ RUN ../gradlew shadowJar
 # ENV https_proxy ""
 
 EXPOSE 9999
-# We are located in /workdir/raspberry-pi4j-samples/NMEA.multiplexer
+# We are located in /workdir/raspberry-coffee/NMEA.multiplexer
 #
 # With I2C SSD1306
 # CMD ["./mux.sh", "nmea.mux.gps.log.properties"]

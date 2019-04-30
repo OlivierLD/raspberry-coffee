@@ -23,12 +23,15 @@ RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
 RUN apt-get install -y nodejs
 RUN apt-get install -y procps net-tools wget
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y mate-desktop-environment-core tightvncserver
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y mate-desktop-environment-core tightvncserver vim
 RUN mkdir ~/.vnc
 RUN echo "mate" | vncpasswd -f >> ~/.vnc/passwd
 RUN chmod 600 ~/.vnc/passwd
 
 RUN apt-get install -y chromium
+RUN apt-get install -y inkscape
+
+RUN apt-get install -y libgtk2.0-dev
 
 EXPOSE 5901
 
@@ -47,9 +50,20 @@ USER root
 WORKDIR /home/root
 RUN mkdir workdir
 WORKDIR workdir
-RUN git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
+
+# From local file system to image
+COPY ./gtk ./gtk
+#    |     |
+#    |     In the Docker image
+#    On the host (this machine)
+#
+RUN git clone https://github.com/OlivierLD/raspberry-coffee.git
 RUN git clone https://github.com/OlivierLD/WebComponents.git
-WORKDIR WebComponents
+
+WORKDIR gtk
+RUN gcc `pkg-config --cflags --libs gtk+-2.0` gtktest.c -o gtktest
+
+WORKDIR ../WebComponents
 
 EXPOSE 8080
 CMD ["npm", "start"]

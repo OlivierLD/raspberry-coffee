@@ -22,8 +22,8 @@ RUN echo "java -version" >> $HOME/.bashrc
 
 RUN mkdir /workdir
 WORKDIR /workdir
-RUN git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
-WORKDIR /workdir/raspberry-pi4j-samples/WebComponents
+RUN git clone https://github.com/OlivierLD/raspberry-coffee.git
+WORKDIR /workdir/raspberry-coffee/WebComponents
 
 EXPOSE 8080
 CMD ["npm", "start"]

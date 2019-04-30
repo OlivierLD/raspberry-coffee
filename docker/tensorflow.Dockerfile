@@ -51,6 +51,8 @@ RUN apt-get install -y libhdf5-serial-dev python-h5py
 RUN apt-get install -y graphviz
 RUN pip install pydot-ng
 #
+RUN apt-get install -y inkscape
+#
 RUN pip3 install jupyter
 #
 RUN apt-get install -y python-opencv

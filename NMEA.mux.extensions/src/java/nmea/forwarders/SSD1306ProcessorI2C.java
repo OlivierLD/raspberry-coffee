@@ -736,10 +736,10 @@ public class SSD1306ProcessorI2C implements Forwarder {
 					case "POS": // Position
 						optionList.add(POS_OPTION);
 						break;
-					case "GPS": // GPS Date & Timex
+					case "GPS": // GPS Date & Time
 						optionList.add(GPS_OPTION);
 						break;
-					case "SOL": // Solar Date & Timex
+					case "SOL": // Solar Date & Time
 						optionList.add(SOL_OPTION);
 						break;
 					case "BSP":
