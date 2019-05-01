@@ -80,6 +80,23 @@ var getForwarderStatus = function() {
     return getDeferred('/mux/mux-process', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
+var getLogFiles = function() {
+	return getDeferred('/mux/log-files', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
+// Should be useless..., invoke it directly (no promise required) to download.
+var getLogFile = function(fileName) {
+	return getDeferred('/mux/log-files/' + fileName, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
+var deleteLogFile = function(logFile) {
+	return getDeferred('/mux/log-files/' + logFile, DEFAULT_TIMEOUT, 'DELETE', 200, null, false);
+};
+
+var getSystemTime = function() {
+	return getDeferred('/mux/system-time?fmt=date', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
 var getVolume = function() {
     return getDeferred('/mux/nmea-volume', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
@@ -145,7 +162,7 @@ var updateMuxVerbose = function(value) {
 };
 
 var resetDataCache = function() {
-    return getDeferred('/cache', DEFAULT_TIMEOUT, 'DELETE', 204);
+    return getDeferred('/mux/cache', DEFAULT_TIMEOUT, 'DELETE', 204);
 };
 
 var deleteForwarder = function(forwarder) {
@@ -161,7 +178,7 @@ var deleteChannel = function(channel) {
 };
 
 var setSpeedUnit = function(speedUnit) {
-    return getDeferred('/events/change-speed-unit', DEFAULT_TIMEOUT, 'POST', 200, { "speed-unit": speedUnit }, false);
+    return getDeferred('/mux/events/change-speed-unit', DEFAULT_TIMEOUT, 'POST', 200, { "speed-unit": speedUnit }, false);
 };
 
 var pushData = function(flow) {
@@ -393,7 +410,7 @@ var channelList = function() {
           var type = json[i].type;
           switch (type) {
               case 'file':
-                html += ("<tr><td valign='top'><b>file</b></td><td valign='top'>Name: " + json[i].file + "<br>Between reads: " + json[i].pause + " ms" + "</td><td valign='top'>" + buildList(json[i].deviceFilters) + "</td><td valign='top'>" + buildList(json[i].sentenceFilters) + "</td><td align='center' valign='top'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td valign='top'><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                html += ("<tr><td valign='top'><b>file</b></td><td valign='top'>Name: " + json[i].file + "<br>Between reads: " + json[i].pause + " ms" + "<br>Loop: " + json[i].loop + "</td><td valign='top'>" + buildList(json[i].deviceFilters) + "</td><td valign='top'>" + buildList(json[i].sentenceFilters) + "</td><td align='center' valign='top'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td valign='top'><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                 break;
               case 'serial':
                   html += ("<tr><td><b>serial</b></td><td>" + json[i].port + ":" + json[i].br + "</td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
@@ -566,7 +583,8 @@ var buildTable = function (channels, forwarders, computers) {
     var html = "<table width='100%'>" +
         "<tr><th width='45%'>Pulled in from</th><th width='10%'></th><th width='45%'>Pushed out to</th></tr>" +
         "<tr><td valign='middle' align='center' rowspan='2' title='Channels'>" + channels + "</td>" +
-        "<td valign='middle' align='center' rowspan='2'><b><i>MUX</i></b></td>" +
+//      "<td valign='middle' align='center' rowspan='2'><b><i>MUX</i></b></td>" +
+		    "<td valign='middle' align='center' rowspan='2'><img src='images/antenna.png' width='32' height='32' alt='MUX' title='MUX'></td>" +
         "<td valign='middle' align='center' title='Forwarders'>" + forwarders + "</td></tr>" +
         "<tr><td valign='middle' align='center' title='Computers'>" + computers + "</td></tr>" +
         "</table>";
@@ -1120,4 +1138,28 @@ var showDivs = function(channels, forwarders, computers) {
     } else {
       $("#add-computer").hide(1000);
     }
+};
+
+var decToSex = function (val, ns_ew, withDeg) {
+	var absVal = Math.abs(val);
+	var intValue = Math.floor(absVal);
+	var dec = absVal - intValue;
+	var i = intValue;
+	dec *= 60;
+//    var s = i + "°" + dec.toFixed(2) + "'";
+//    var s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+	var s = "";
+	if (val < 0) {
+		s += (ns_ew === 'NS' ? 'S' : 'W');
+	} else {
+		s += (ns_ew === 'NS' ? 'N' : 'E');
+	}
+	s += " ";
+	var sep = " ";
+	if (withDeg === true) {
+		sep = "°";
+	}
+//    s += i + "\"" + dec.toFixed(2) + "'";
+	s += i + sep + dec.toFixed(2) + "'";
+	return s;
 };

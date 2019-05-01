@@ -7,10 +7,10 @@ FROM debian
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 
 # Following lines may be commented.
-ENV http_proxy http://www-proxy-hqdc.us.oracle.com:80
-ENV https_proxy http://www-proxy-hqdc.us.oracle.com:80
-## ENV ftp_proxy $http_proxy
-ENV no_proxy "localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
+#ENV http_proxy http://www-proxy-hqdc.us.oracle.com:80
+#ENV https_proxy http://www-proxy-hqdc.us.oracle.com:80
+### ENV ftp_proxy $http_proxy
+#ENV no_proxy "localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
 
 # From the host to the image
 # COPY bashrc $HOME/.bashrc
@@ -44,7 +44,9 @@ RUN echo "java -version" >> $HOME/.bashrc
 RUN echo "vncserver -version" >> $HOME/.bashrc
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 
-RUN echo "echo 'To start VNCserver, type: vncserver :1 -geometry 1280x800 (or 1440x900, 1680x1050, etc) -depth 24'" >> $HOME/.bashrc
+RUN echo "echo 'To start VNCserver, type: vncserver :1 -geometry 1280x800 -depth 24'" >> $HOME/.bashrc
+RUN echo "echo '                       or vncserver :1 -geometry 1440x900 -depth 24'" >> $HOME/.bashrc
+RUN echo "echo '                       or vncserver :1 -geometry 1680x1050 -depth 24, etc...'" >> $HOME/.bashrc
 
 USER root
 WORKDIR /home/root
@@ -60,10 +62,10 @@ COPY ./gtk ./gtk
 RUN git clone https://github.com/OlivierLD/raspberry-coffee.git
 RUN git clone https://github.com/OlivierLD/WebComponents.git
 
-WORKDIR gtk
-RUN gcc `pkg-config --cflags --libs gtk+-2.0` gtktest.c -o gtktest
+#WORKDIR gtk
+#RUN gcc `pkg-config --cflags --libs gtk+-2.0` gtktest.c -o gtktest
 
-WORKDIR ../WebComponents
+WORKDIR WebComponents
 
 EXPOSE 8080
 CMD ["npm", "start"]

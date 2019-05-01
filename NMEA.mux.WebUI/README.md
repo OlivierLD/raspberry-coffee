@@ -4,6 +4,7 @@ We want to have a Nav Server:
 - Able to compute data
 - Able to send or broadcast data on several channels
 - Able to run even if no WiFi network is available
+- Able to provide a Web Graphical User Interface
 
 The [`NMEA.multiplexer`](../NMEA.multiplexer/README.md) is able to read, compute, and broadcast data.
 
@@ -17,7 +18,7 @@ We will show here how to compose a custom server, based on your own needs.
 
 The HTTP/REST server we use here is the one you find in the `common-utils` module.
 To minimize the footprint of the final application, all the static pages required by the web interface will
-be served from a single archive, as this feature is available from the HTTP Server we use here.
+be served from a _**single archive**_, as this feature is available from the HTTP Server we use here.
 
 > Note:
 > The operations on a Serial Port would require `libRxTx`, and this dependency cannot be taken care of by Gradle.
@@ -132,5 +133,12 @@ Means not **me**. 🤓
 ... More to come
 
 <!-- TODO: Docker images -->
+- With SSD1306 32x128
+- With SSD1306 64x128
+- With Nokia5110
+- With Head-Up-Display (5")
+- With USB GPS
+- With UART GPS
+- Push Buttons and Switches
 
 ---

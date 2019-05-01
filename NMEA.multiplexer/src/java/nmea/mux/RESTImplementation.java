@@ -1599,6 +1599,7 @@ public class RESTImplementation {
 				} else { // Then update
 					DataFileClient dataFileClient = (DataFileClient) opClient.get();
 					dataFileClient.setVerbose(fileJson.getVerbose());
+					dataFileClient.setLoop(fileJson.getLoop());
 					String content = new Gson().toJson(dataFileClient.getBean());
 					RESTProcessorUtil.generateResponseHeaders(response, content.length());
 					response.setPayload(content.getBytes());

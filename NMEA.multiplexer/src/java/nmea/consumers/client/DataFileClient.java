@@ -6,9 +6,11 @@ import nmea.api.NMEAEvent;
 import nmea.consumers.reader.DataFileReader;
 
 /**
- * Read a file containing logged data
+ * Read a file containing logged data for replay
  */
 public class DataFileClient extends NMEAClient {
+	private boolean loop = true;
+
 	public DataFileClient() {
 		this(null, null, null);
 	}
@@ -24,6 +26,13 @@ public class DataFileClient extends NMEAClient {
 	public DataFileClient(String[] s, String[] sa, Multiplexer mux) {
 		super(s, sa, mux);
 		this.verbose = "true".equals(System.getProperty("file.data.verbose", "false"));
+	}
+
+	public boolean getLoop() {
+		return this.loop;
+	}
+	public void setLoop(boolean loop) {
+		this.loop = loop;
 	}
 
 	@Override
@@ -46,6 +55,7 @@ public class DataFileClient extends NMEAClient {
 		private String[] deviceFilters;
 		private String[] sentenceFilters;
 		private boolean verbose;
+		private boolean loop = true;
 
 		public DataFileBean(DataFileClient instance) {
 			cls = instance.getClass().getName();
@@ -54,6 +64,7 @@ public class DataFileClient extends NMEAClient {
 			verbose = instance.isVerbose();
 			deviceFilters = instance.getDevicePrefix();
 			sentenceFilters = instance.getSentenceArray();
+			loop = instance.getLoop();
 		}
 
 		@Override
@@ -67,6 +78,7 @@ public class DataFileClient extends NMEAClient {
 		public long getPause() {
 			return pause;
 		}
+		public boolean getLoop() { return loop; }
 
 		@Override
 		public boolean getVerbose() {
@@ -87,14 +99,19 @@ public class DataFileClient extends NMEAClient {
 
 	public static void main(String... args) {
 		System.out.println("DataFileClient invoked with " + args.length + " Parameter(s).");
-		for (String s : args)
+		for (String s : args) {
 			System.out.println("DataFileClient prm:" + s);
+		}
+
+		System.setProperty("file.data.verbose", "true");
 
 		String dataFile = "./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea";
-		if (args.length > 0)
+		if (args.length > 0) {
 			dataFile = args[0];
+		}
 
 		nmeaClient = new DataFileClient(null, new String[] { "RMC", "GLL" }, null);
+		nmeaClient.setVerbose("true".equals(System.getProperty("file.data.verbose", "false")));
 
 		Runtime.getRuntime().addShutdownHook(new Thread("DataFileClient shutdown hook") {
 			public void run() {
@@ -104,7 +121,9 @@ public class DataFileClient extends NMEAClient {
 		});
 
 		nmeaClient.initClient();
-		nmeaClient.setReader(new DataFileReader(nmeaClient.getListeners(), dataFile));
+		nmeaClient.setReader(new DataFileReader(nmeaClient.getListeners(), dataFile, 10L)); // 10 overrides the default (500)
+		nmeaClient.getReader().setVerbose("true".equals(System.getProperty("file.data.verbose", "false")));
+		((DataFileReader)nmeaClient.getReader()).setLoop(false);
 		nmeaClient.startWorking();
 	}
 }

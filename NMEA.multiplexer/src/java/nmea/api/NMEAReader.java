@@ -17,18 +17,18 @@ import java.util.List;
  * @version 1.0
  */
 public abstract class NMEAReader extends Thread {
-	private List<NMEAListener> NMEAListeners = null; // new ArrayList(2);
+	private List<NMEAListener> NMEAListeners = null; // new ArrayList<>(2);
 
 	protected boolean goRead = true;
 	private NMEAReader instance = this;
+	protected boolean verbose = false;
 
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
-		if (verbose && NMEAListeners != null)
+		if (verbose && NMEAListeners != null) {
 			System.out.println(this.getClass().getName() + ": There are " + this.NMEAListeners.size() + " listener(s)");
+		}
 	}
-
-	protected boolean verbose = false;
 
 	public NMEAReader() {
 		this(null, false);

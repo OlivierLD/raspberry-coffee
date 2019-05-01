@@ -190,10 +190,13 @@ public class MuxInitializer {
 								}
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								boolean loop = "true".equals(muxProps.getProperty(String.format("mux.%s.loop", MUX_IDX_FMT.format(muxIdx)), "true"));
+
 								NMEAClient fileClient = new DataFileClient(
 												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 												mux);
+								((DataFileClient)fileClient).setLoop(loop);
 								fileClient.initClient();
 								fileClient.setReader(new DataFileReader(fileClient.getListeners(), filename, betweenRec));
 								fileClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
