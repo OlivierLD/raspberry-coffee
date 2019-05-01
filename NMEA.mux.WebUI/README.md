@@ -130,9 +130,34 @@ Means not **me**. 🤓
  $ ./builder.sh
 ```
 
+- With a 5" or 7" TFT display, setup for Head-Up-Display
+    - Use `switch2tftscreen` (at the root of the project)
+    - Reboot
+    - SSH to the RPi
+        - Start the Multiplexer or NavServer of your choice
+        - `sudo startx` (should start the Raspian desktop of the TFT)
+
+You can boot directly to the Graphical Desktop (`sudo raspi-config`), and automatically start a browser on a given URL as
+soon as the Desktop is up and running.
+
+To do that, you need to start in Graphical mode, have Chromium installed, and boot to the Graphical Desktop.
+To start Chromium when the Desktop starts, and load one or several URLs (in different tabs), edit the file named
+`~/.config/lxsession/LXDE-pi/autostart`, and add, at the end, the following lines:
+```
+@chromium-browser --incognito --kiosk http://localhost:9999/web/headup.html \
+                                      [url.2] \
+                                      [url.3] \
+                                      [url.4]
+```
+It will start Chromium in `kiosk` (full screen) mode, and load the URLs mentioned above.
+
+
+---
+
 ... More to come
 
-<!-- TODO: Docker images -->
+<!-- TODO: Docker images ? -->
+
 - With SSD1306 32x128
 - With SSD1306 64x128
 - With Nokia5110

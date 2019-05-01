@@ -73,8 +73,8 @@ public class DataFileReader extends NMEAReader {
 							}
 							this.fis = new FileInputStream(this.dataFileName); // reopen
 						} else {
-							if (verbose) {
-								System.out.println("End of stream. Not looping.");
+							if (true || verbose) {
+								System.out.println(">> End of stream. Not looping. <<");
 							}
 							break;
 						}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Head-Up Display</title>
+</head>
+<style>
+	body {
+		color: yellow;
+		background-color: black;
+		font-family: "Helvetica Neue", "Lato", Verdana, Helvetica, Geneva, sans-serif;
+	}
+
+	.mirror-upside-down {
+		display: block;
+		-webkit-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(50em) rotateX(-40deg);
+		-moz-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(50em) rotateX(-40deg);
+		-o-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(50em) rotateX(-40deg);
+		transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(50em) rotateX(-40deg);
+	}
+
+	.big {
+		font-size: 96px;
+	}
+</style>
+<body>
+<div id="the-div" class="mirror-upside-down big" style="padding: 0px; text-align: center;">
+	<hr/>
+	<table style="margin: auto; border: 1px solid silver;">
+		<tr>
+			<td colspan="2">GPS Data</td>
+		</tr>
+		<tr>
+			<td valign="top">
+				<span>Your position:</span>
+				<br/>
+				<span>N 37° 44.93'</span>
+				<br/>
+				<span>W 122° 30.42'</span>
+			</td>
+			<td valign="top">
+				<span>Your speed:</span>
+				<br/>
+				<span>12.34 kts</span>
+			</td>
+		</tr>
+	</table>
+	<hr/>
+</div>
+</body>
+</html>
