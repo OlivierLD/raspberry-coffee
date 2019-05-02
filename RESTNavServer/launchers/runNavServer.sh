@@ -51,7 +51,25 @@ IMAGE_VERBOSE=false
 GRIB_VERBOSE=false
 #
 CP=../build/libs/RESTNavServer-1.0-all.jar
+OS=`uname -a | awk '{ print $1 }'`
+if [ "$OS" == "Darwin" ]
+then
+  CP=$CP:./libs/RXTXcomm.jar          # for Mac
+fi
+if [ "$OS" == "Linux" ]
+then
+  CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
+fi
+#
 JAVA_OPTS=
+if [ "$OS" == "Darwin" ]
+then
+  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"       # for Mac
+fi
+if [ "$OS" == "Linux" ]
+then
+  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
+fi
 # For the value of Delta T, see:
 # - http://maia.usno.navy.mil/ser7/deltat.data
 # - http://maia.usno.navy.mil/

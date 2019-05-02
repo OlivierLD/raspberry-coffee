@@ -145,7 +145,7 @@ To do that, you need to have Chromium installed, and boot to the Graphical Deskt
 To start Chromium when the Desktop starts, and load one or several URLs (in different tabs), edit the file named
 `~/.config/lxsession/LXDE-pi/autostart`, and add, at the end, the following lines:
 ```
-@chromium-browser --incognito --kiosk http://localhost:9999/web/headup.html \
+@chromium-browser --incognito --kiosk http://localhost:9999/web/nmea/headup.html \
                                       [url.2] \
                                       [url.3] \
                                       [url.4]
