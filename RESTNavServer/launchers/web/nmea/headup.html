@@ -1,8 +1,14 @@
 <!DOCTYPE html>
+<!--
+   100% Self contained:
+   no external libraries,
+   no script imports.
+ +-->
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<title>Head-Up Display</title>
+	<link rel="icon" type="image/ico" href="../icons/hammerhead.02.ico">
 </head>
 <style>
 	body {
@@ -32,20 +38,215 @@
 		</tr>
 		<tr>
 			<td valign="top">
-				<span>Your position:</span>
+				<span>Your position:</span> <!-- TODO : Real Data -->
 				<br/>
-				<span>N 37° 44.93'</span>
+				<span id="latitude">N 37° 44.93'</span>
 				<br/>
-				<span>W 122° 30.42'</span>
+				<span id="longitude">W 122° 30.42'</span>
 			</td>
 			<td valign="top">
 				<span>Your speed:</span>
 				<br/>
-				<span>12.34 kts</span>
+				<span id="speed">12.34 kts</span>
 			</td>
 		</tr>
 	</table>
 	<hr/>
 </div>
 </body>
+<script type="text/javascript">
+	/**
+	 Subscribe like this:
+	 events.subscribe('topic', (val) => {
+   doSomethingSmart(val);
+ });
+
+	 Publish like that:
+	 events.publish('topic', val);
+
+	 Don't use arrow functions in the members below (ok when subscribing though, see the comment above).
+	 */
+	let events = {
+		listener: [],
+
+		subscribe: function (topic, action) {
+			this.listener.push({
+				'topic': topic,
+				'actionListener': action
+			});
+		},
+
+		publish: function (topic, value) {
+			for (let i = 0; i < this.listener.length; i++) {
+				if (this.listener[i].topic === topic) {
+					this.listener[i].actionListener(value);
+				}
+			}
+		}
+	};
+
+	events.subscribe('pos', function(val) {
+		let latField = document.getElementById("latitude");
+		let lngField = document.getElementById("longitude");
+		latField.innerText = decToSex(val.lat, "NS");
+		lngField.innerText = decToSex(val.lng, "EW");
+	});
+
+	events.subscribe('bsp', function(val) {
+		let speedField = document.getElementById("speed");
+		speedField.innerText = val.toFixed(2) + " kts";
+	});
+
+	function decToSex(val, ns_ew) {
+		let absVal = Math.abs(val);
+		let intValue = Math.floor(absVal);
+		let dec = absVal - intValue;
+		dec *= 60;
+		let s = "";
+		if (val < 0) {
+			s += (ns_ew === 'NS' ? 'S' : 'W');
+		} else {
+			s += (ns_ew === 'NS' ? 'N' : 'E');
+		}
+		s += " ";
+		s += intValue + "°" + dec.toFixed(2) + "'";
+//  s = intValue + String.fromCharCode(176) + dec.toFixed(2) + "'";
+		return s;
+	}
+
+	const DEFAULT_TIMEOUT = 60000; // 1 minute
+	function getPromise(
+			url, // full api path
+			timeout, // After that, fail.
+			verb, // GET, PUT, DELETE, POST, etc
+			headers, // Request headers
+			happyCode, // if met, resolve, otherwise fail.
+			data = null) { // payload, when needed (PUT, POST...)
+
+		let promise = new Promise(function(resolve, reject) {
+			let xhr = new XMLHttpRequest();
+
+			// let req = verb + ' ' + url;
+			// if (data !== undefined && data !== null) {
+			// 	req += ("\n" + JSON.stringify(data)); // , null, 2));
+			// }
+
+			xhr.open(verb, url, true);
+			if (headers !== undefined) {
+				headers.forEach(header => {
+					xhr.setRequestHeader(header.name, header.value);
+				});
+			}
+			try {
+				if (data === undefined || data === null) {
+					xhr.send();
+				} else {
+					xhr.send(JSON.stringify(data));
+				}
+			} catch (err) {
+				console.log('Send Error ', err);
+			}
+
+			var requestTimer;
+			if (timeout !== undefined) {
+				requestTimer = setTimeout(function() {
+					xhr.abort();
+					let mess = {
+						code: 408,
+						message: 'Timeout',
+						url: url,
+						verb: verb
+					};
+					reject({
+						err: mess,
+						accessToken: xhr.getResponseHeader('Access-Token')
+					});
+				}, timeout);
+			}
+
+			xhr.onload = function() {
+				if (requestTimer !== undefined) {
+					clearTimeout(requestTimer);
+				}
+				if ((Array.isArray(happyCode) && happyCode.includes(xhr.status)) || xhr.status === happyCode) {
+					resolve({
+						response: xhr.response,
+						accessToken: xhr.getResponseHeader('Access-Token')
+					});
+				} else {
+					reject({
+						code: xhr.status,
+						message: xhr.response,
+						accessToken: xhr.getResponseHeader('Access-Token')
+					});
+				}
+			};
+		});
+		return promise;
+	}
+
+	let displayErr = console.error;
+
+	function onMessage(json) {
+		try {
+			var errMess = "";
+
+			try {
+				let latitude = json.Position.lat;
+//          console.log("latitude:" + latitude)
+				let longitude = json.Position.lng;
+//          console.log("Pt:" + latitude + ", " + longitude);
+				events.publish('pos', {
+					'lat': latitude,
+					'lng': longitude
+				});
+			} catch (err) {
+				errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "position");
+			}
+			// Displays
+			try {
+				let bsp = 0;
+				if (json.BSP !== undefined) {
+					bsp = json.BSP.speed;
+				}
+				events.publish('bsp', bsp);
+			} catch (err) {
+				errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "boat speed");
+			}
+
+			if (errMess.length > 0) {
+				displayErr(errMess);
+			}
+		} catch (error) {
+			displayErr(error);
+		}
+	}
+
+	function fetch() {
+		let headers = [ {name: 'Accept', value: 'application/json'}];
+		let getData = getPromise("/mux/cache", DEFAULT_TIMEOUT, "GET", headers, [200, 201]);
+		getData.then((value) => {
+//      console.log("Done:", value);
+			let json = JSON.parse(value.response);
+			onMessage(json);
+		}, (error, errmess) => {
+			let message;
+			if (errmess !== undefined) {
+				let mess = JSON.parse(errmess);
+				if (mess.message !== undefined) {
+					message = mess.message;
+				}
+			}
+			alert("Failed to get nmea data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		});
+	}
+
+	(() => {
+		console.log("Let's go!");
+		let interval = setInterval(function () {
+			fetch();
+		}, 1000);
+	})();
+
+</script>
 </html>
