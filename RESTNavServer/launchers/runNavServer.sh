@@ -64,11 +64,11 @@ fi
 JAVA_OPTS=
 if [ "$OS" == "Darwin" ]
 then
-  $JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"       # for Mac
+  JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"       # for Mac
 fi
 if [ "$OS" == "Linux" ]
 then
-  $JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
+  JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
 fi
 # For the value of Delta T, see:
 # - http://maia.usno.navy.mil/ser7/deltat.data
