@@ -4,7 +4,7 @@
 #
 CP=./build/libs/Serial.IO-1.0-all.jar
 CP=$CP:/usr/share/java/RXTXcomm.jar
-echo Make sure the GPS is connected it through its USB cable.
+echo Make sure the GPS is connected it through its USB socket.
 #
 # SERIAL_PORT=/dev/ttyUSB0 # RPi
 # SERIAL_PORT=/dev/tty.Bluetooth-Incoming-Port # Mac
@@ -27,7 +27,7 @@ else
   SUDO="sudo "
 fi
 #
-# Sentence filter?
+# Sentence filter? like RMC,GLL,GSA
 if [ "$1" != "" ]
 then
   JAVA_OPTS="$JAVA_OPTS -Dfilters=$1"

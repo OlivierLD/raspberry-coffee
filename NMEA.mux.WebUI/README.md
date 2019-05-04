@@ -152,9 +152,9 @@ To start Chromium when the Desktop starts, and load one or several URLs (in diff
 ```
 It will start Chromium in `kiosk` (aka full screen) mode, and load the URLs mentioned above.
 
-## With a small USB GPS like `U-blox 7`
-
-See [this post](http://kilodelta.com/2017/configuring-uBlox7-GPS-on-Raspbian-Jessie/).
+#### With a small USB GPS like `U-blox 7`
+The [`U-blox 7`](https://www.amazon.com/HiLetgo-G-Mouse-GLONASS-Receiver-Windows/dp/B01MTU9KTF/ref=pd_lpo_vtph_107_lp_img_3?_encoding=UTF8&psc=1&refRID=BNCKEAMR8044EX51JYM5) is a small and cheap GPS you can plug with a USB socket.
+And it works.
 
 ```
 $ lsusb
@@ -263,7 +263,78 @@ $ dmesg | grep -i gps
 
 Seems to mount on `/dev/ttyACM0`
 
+> _Note_:
+> In case you have problem reading `/dev/ttyACM0`, create a symbolic link
+> ```bash
+> $ sudo ln -s /dev/ttyACM0 /dev/ttyS80
+> ```
+> Then try reading or writing on /dev/ttyS80
+>
+> To unlink:
+> ```bash
+> $ sudo unlink /dev/ttyS80
+> ```
+
+To check the device, run the script `runGPSSample.sh` in the `Serial.IO` module, after modifying the parameters (USB port)
+```
+$ ./runGPSSample.sh
+Make sure the GPS is connected it through its USB cable.
+Assuming Linux/Raspberry Pi
+Executing sudo java -Dserial.port=/dev/ttyS80 -Dbaud.rate=4800 -Djava.library.path=/usr/lib/jni -cp ./build/libs/Serial.IO-1.0-all.jar:/usr/share/java/RXTXcomm.jar sample.GPSReader ...
+Enter [Return]
+
+Stable Library
+=========================================
+Native lib Version = RXTX-2.2pre2
+Java lib Version   = RXTX-2.1-7
+WARNING:  RXTX Version mismatch
+	Jar version = RXTX-2.1-7
+	native lib Version = RXTX-2.2pre2
+RXTX Warning:  Removing stale lock file. /var/lock/LCK..ttyS80
+== Serial Port List ==
+-> /dev/ttyS80
+======================
+Opening port /dev/ttyS80:4800
+GPS connected: true
+IO Streams initialized
+$GPTXT,01,01,02,u-blox ag - www.u-blox.com*50
+$GPTXT,01,01,02,HW  UBX-G70xx   00070000 FF7FFFFFo*69
+$GPTXT,01,01,02,ROM CORE 1.00 (59842) Jun 27 2012 17:43:52*59
+$GPTXT,01,01,02,PROTVER 14.00*1E
+$GPTXT,01,01,02,ANTSUPERV=AC SD PDoS SR*20
+$GPTXT,01,01,02,ANTSTATUS=OK*3B
+$GPTXT,01,01,02,LLC FFFFFFFF-FFFFFFFF-FFFFFFFF-FFFFFFFF-FFFFFFFD*2C
+$GPRMC,162753.00,V,,,,,,,040519,,,N*70
+$GPVTG,,,,,,,,,N*30
+$GPGGA,162753.00,,,,,0,00,99.99,,,,,,*62
+$GPGSA,A,1,,,,,,,,,,,,,99.99,99.99,99.99*30
+$GPGSV,1,1,01,27,,,20*7F
+$GPGLL,,,,,162753.00,V,N*4E
+$GPRMC,162754.00,V,,,,,,,040519,,,N*77
+$GPVTG,,,,,,,,,N*30
+$GPGGA,162754.00,,,,,0,00,99.99,,,,,,*65
+$GPGSA,A,1,,,,,,,,,,,,,99.99,99.99,99.99*30
+$GPGSV,1,1,01,27,,,20*7F
+$GPGLL,,,,,162754.00,V,N*49
+$GPRMC,162755.00,V,,,,,,,040519,,,N*76
+$GPVTG,,,,,,,,,N*30
+... 
+```
+
+Start `./demoLauncher.sh` or its equivalent, choose option `4`.
+
+From a browser, reach <http://localhost:9999/web/nmea/headup.html>.
+The `mirror` and `star-wars` effect is all done in CSS.
+
 ![Head Up!](./docimg/head-up.png)
+
+| Setting | Direct | Reflected |
+|:-------:|:------:|:---------:|
+| ![Setting](./docimg/headup.01.crop.png)| ![Setting](./docimg/headup.02.jpg)| ![Setting](./docimg/headup.03.jpg)|
+
+
+You can see the data displayed on the windshield and still look through it.
+
 ---
 
 ... More to come
