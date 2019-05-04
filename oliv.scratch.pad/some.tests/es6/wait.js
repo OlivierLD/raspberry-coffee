@@ -17,3 +17,54 @@ console.log("End of the story");
 	}, 1000);
 	console.log("End of the story");
 })(5);
+
+// Another one, ES6
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function demo() {
+	console.log('Taking a break...');
+	await sleep(2000);
+	console.log('Two seconds later');
+}
+
+demo();
+
+// Wait for a condition to be fulfilled
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+let bool = false;
+
+setTimeout(function() {
+	console.log(">> Setting bool to true");
+	bool = true;
+}, 10000);
+
+async function waitForBool(ms) {
+	console.log('Taking a break...');
+	while (bool === false) {
+		console.log("... Waiting a bit");
+		await sleep(ms);
+	}
+	console.log('Bool now true');
+}
+
+async function demo() {
+	await waitForBool(1000);
+	console.log('Done waiting');
+	return 'Done!';
+}
+
+async function showMe() {
+	let val = await demo();
+	// Display below appears only once the condition is fulfilled
+	console.log('----------------------');
+	console.log('Finally got this:', val);
+	console.log('----------------------');
+}
+
+showMe();
+

@@ -152,6 +152,117 @@ To start Chromium when the Desktop starts, and load one or several URLs (in diff
 ```
 It will start Chromium in `kiosk` (aka full screen) mode, and load the URLs mentioned above.
 
+## With a small USB GPS like `U-blox 7`
+
+See [this post](http://kilodelta.com/2017/configuring-uBlox7-GPS-on-Raspbian-Jessie/).
+
+```
+$ lsusb
+...
+Bus 001 Device 006: ID 1546:01a7 U-Blox AG 
+...
+```
+
+```
+$ sudo lsusb -v
+...
+Bus 001 Device 006: ID 1546:01a7 U-Blox AG 
+Device Descriptor:
+  bLength                18
+  bDescriptorType         1
+  bcdUSB               1.10
+  bDeviceClass            2 Communications
+  bDeviceSubClass         0 
+  bDeviceProtocol         0 
+  bMaxPacketSize0        64
+  idVendor           0x1546 U-Blox AG
+  idProduct          0x01a7 
+  bcdDevice            1.00
+  iManufacturer           1 u-blox AG - www.u-blox.com
+  iProduct                2 u-blox 7 - GPS/GNSS Receiver
+  iSerial                 0 
+  bNumConfigurations      1
+  Configuration Descriptor:
+    bLength                 9
+    bDescriptorType         2
+    wTotalLength           62
+    bNumInterfaces          2
+    bConfigurationValue     1
+    iConfiguration          0 
+    bmAttributes         0xc0
+      Self Powered
+    MaxPower              100mA
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        0
+      bAlternateSetting       0
+      bNumEndpoints           1
+      bInterfaceClass         2 Communications
+      bInterfaceSubClass      2 Abstract (modem)
+      bInterfaceProtocol      1 AT-commands (v.25ter)
+      iInterface              0 
+      CDC Header:
+        bcdCDC               1.10
+      CDC ACM:
+        bmCapabilities       0x02
+          line coding and serial state
+      CDC Call Management:
+        bmCapabilities       0x03
+          call management
+          use DataInterface
+        bDataInterface          1
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x83  EP 3 IN
+        bmAttributes            3
+          Transfer Type            Interrupt
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval             255
+    Interface Descriptor:
+      bLength                 9
+      bDescriptorType         4
+      bInterfaceNumber        1
+      bAlternateSetting       0
+      bNumEndpoints           2
+      bInterfaceClass        10 CDC Data
+      bInterfaceSubClass      0 Unused
+      bInterfaceProtocol    255 Vendor specific
+      iInterface              0 
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x01  EP 1 OUT
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               0
+      Endpoint Descriptor:
+        bLength                 7
+        bDescriptorType         5
+        bEndpointAddress     0x82  EP 2 IN
+        bmAttributes            2
+          Transfer Type            Bulk
+          Synch Type               None
+          Usage Type               Data
+        wMaxPacketSize     0x0040  1x 64 bytes
+        bInterval               0
+Device Status:     0x0001
+  Self Powered
+ 
+``` 
+```
+$ dmesg | grep -i gps
+[  646.871190] usb 1-1.3: Product: u-blox 7 - GPS/GNSS Receiver
+```
+
+Seems to mount on `/dev/ttyACM0`
+
 ![Head Up!](./docimg/head-up.png)
 ---
 
