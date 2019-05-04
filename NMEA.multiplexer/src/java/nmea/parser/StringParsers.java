@@ -2,6 +2,7 @@ package nmea.parser;
 
 import java.text.NumberFormat;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -30,6 +31,11 @@ public class StringParsers {
    *
    * Good source: http://www.catb.org/gpsd/NMEA.html
    */
+
+  public final static SimpleDateFormat SDF_UTC = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
+  static {
+  	SDF_UTC.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+  }
 
 	private static Map<Integer, SVData> gsvMap = null;
 
@@ -987,7 +993,10 @@ public class StringParsers {
 		if (s.length() < 6) {
 			return (Object[]) null;
 		}
-    /* Structure is
+		if (!validCheckSum(s)) {
+			return (Object[]) null;
+		}
+		/* Structure is
      *  $aaGLL,llll.ll,a,gggg.gg,a,hhmmss.ss,A*hh
      *         |       | |       | |         |
      *         |       | |       | |         A:data valid (Active), V: void
@@ -1000,7 +1009,7 @@ public class StringParsers {
 		GeoPos ll = null;
 		Date date = null;
 		try {
-			if (s.indexOf("A*") == -1) { // Data invalid
+			if (s.indexOf("A*") == -1) { // Not Active, Data invalid (void)
 				return (Object[]) null;
 			} else {
 				int i = s.indexOf(",");
@@ -1041,8 +1050,8 @@ public class StringParsers {
 					int h = (int) (utc / 10_000);
 					int mn = (int) ((utc - (10_000 * h)) / 100);
 					float sec = (float) (utc % 100f);
-					Calendar local = new GregorianCalendar();
-					local.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+					Calendar local = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // new GregorianCalendar();
+//					local.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
 					local.set(Calendar.YEAR, 1970);
 					local.set(Calendar.MONDAY, Calendar.JANUARY);
 					local.set(Calendar.DAY_OF_MONTH, 1);
@@ -1365,8 +1374,8 @@ public class StringParsers {
 
 //        System.out.println("Data[1]:" + data[1] + ", h:" + h + ", m:" + m + ", s:" + sec);
 
-					Calendar local = new GregorianCalendar();
-					local.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+					Calendar local = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // new GregorianCalendar();
+//					local.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
 					local.set(Calendar.HOUR_OF_DAY, h);
 					local.set(Calendar.MINUTE, m);
 					local.set(Calendar.SECOND, (int) Math.round(sec));
@@ -1418,7 +1427,9 @@ public class StringParsers {
 					}
 					Date rmcTime = local.getTime();
 					rmc = rmc.setRmcTime(rmcTime);
-//        System.out.println("GPS date:" + rmcTime.toString());
+					if ("true".equals(System.getProperty("RMC.verbose"))) {
+            System.out.println(String.format("RMC: From [%s], GPS date: %s, GPS Time: %s", str, SDF_UTC.format(rmc.getRmcDate()), SDF_UTC.format(rmcTime)));
+					}
 				}
 				if (data[3].length() > 0 && data[5].length() > 0) {
 					String deg = data[3].substring(0, 2);
@@ -1562,8 +1573,8 @@ public class StringParsers {
      */
 		String[] data = str.substring(0, str.indexOf("*")).split(",");
 
-		Calendar local = new GregorianCalendar();
-		local.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+		Calendar local = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // new GregorianCalendar();
+//		local.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
 		local.set(Calendar.HOUR_OF_DAY, Integer.parseInt(data[1].substring(0, 2)));
 		local.set(Calendar.MINUTE, Integer.parseInt(data[1].substring(2, 4)));
 		local.set(Calendar.SECOND, (int) Math.round(Float.parseFloat(data[1].substring(4))));
@@ -2435,8 +2446,12 @@ public class StringParsers {
 		System.out.println("Parsed");
 
 		System.setProperty("rmc.date.offset", "7168");
-		str = "$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A";
+		str = "$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A"; // The GPS with a date offset...
 		System.out.println(parseRMCtoString(str));
+
+		System.clearProperty("rmc.date.offset");
+		str = "$GPRMC,012047.00,A,3744.93470,N,12230.42777,W,0.035,,030519,,,D*61\n"; // Small GSP-USB-Key
+		System.out.println(String.format("From [%s], %s", str.trim(), parseRMCtoString(str)));
 
 		System.out.println("\nDone!");
 	}

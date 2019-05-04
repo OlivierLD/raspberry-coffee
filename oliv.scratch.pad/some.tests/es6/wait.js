@@ -4,6 +4,8 @@ for (var i = 1; i < 10; i++) {
 		console.log("Bam!");
 	}, 1000);
 }
+console.log("End of the story");
+
 
 // Ok
 (function theLoop (i) {
@@ -13,4 +15,5 @@ for (var i = 1; i < 10; i++) {
 			theLoop(i);       // Call the loop again, and pass it the current value of i
 		}
 	}, 1000);
+	console.log("End of the story");
 })(5);

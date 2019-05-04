@@ -348,6 +348,9 @@ public class NMEADataCache
 								if (rmc.getRmcTime() != null) {
 									this.put(GPS_TIME, new UTCTime(rmc.getRmcTime()));
 								}
+								if ("true".equals(System.getProperty("rmc.verbose"))) {
+									System.out.println(String.format("RMC: From [%s], GPS date: %s, GPS Time: %s", nmeaSentence.trim(), StringParsers.SDF_UTC.format(rmc.getRmcDate()), StringParsers.SDF_UTC.format(rmc.getRmcTime())));
+								}
 								if ((rmc.getRmcDate() != null || rmc.getRmcTime() != null) && rmc.getGp() != null) {
 									long solarTime = -1L;
 									if ("true".equals(System.getProperty("calculate.solar.with.eot")) && rmc.getGp() != null) {
@@ -387,8 +390,12 @@ public class NMEADataCache
 						UTCDate utc = StringParsers.parseZDA(nmeaSentence);
 						if (utc != null) {
 							this.put(GPS_DATE_TIME, utc);
-							this.put(GPS_TIME, new UTCTime(utc.getValue()));
+							UTCTime utcTime = new UTCTime(utc.getValue());
+							this.put(GPS_TIME, utcTime);
 
+							if ("true".equals(System.getProperty("zda.verbose"))) {
+								System.out.println(String.format("ZDA: From [%s], GPS date: %s, GPS Time: %s", nmeaSentence, StringParsers.SDF_UTC.format(utc.getValue()), StringParsers.SDF_UTC.format(utcTime.getValue())));
+							}
 							GeoPos pos = (GeoPos) this.get(POSITION);
 							if (pos != null) {
 								if ("true".equals(System.getProperty("calculate.solar.with.eot"))) {

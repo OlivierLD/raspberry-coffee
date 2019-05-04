@@ -117,6 +117,7 @@ fi
 if [ "$NO_DATE" == "true" ]
 then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
+	# Uses only date from RMC sentences
 	JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GGA.date.time=true"
 	JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GLL.date.time=true"
 fi
@@ -137,12 +138,19 @@ JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-12
 JAVA_OPTS="$JAVA_OPTS -Dpolar.file.location=./sample.data/polars/CheoyLee42.polar-coeff"
 # Solar time from Equation of Time, not ony longitude
 JAVA_OPTS="$JAVA_OPTS -Dcalculate.solar.with.eot=true"
+# For debug
+JAVA_OPTS="$JAVA_OPTS -Drmc.verbose=false"
+JAVA_OPTS="$JAVA_OPTS -Dzda.verbose=false"
 #
 # For the small USB GPS
-echo -e "+------------------------+"
-echo -e " Warning: GPS Offset 7168"
-echo -e "+------------------------+"
-JAVA_OPTS="$JAVA_OPTS -Drmc.date.offset=7168"
+GPS_OFFSET=false
+if [ "$GPS_OFFSET" == "true" ]
+then
+	echo -e "+------------------------+"
+	echo -e " Warning: GPS Offset 7168"
+	echo -e "+------------------------+"
+	JAVA_OPTS="$JAVA_OPTS -Drmc.date.offset=7168"
+fi
 # JAVA_OPTS="$JAVA_OPTS -Drmc.date.offset.verbose=true"
 #
 echo -e ">>> Warning: Bumping Max Memory to 1Gb"
