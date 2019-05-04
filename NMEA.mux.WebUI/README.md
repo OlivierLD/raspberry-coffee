@@ -268,7 +268,7 @@ Seems to mount on `/dev/ttyACM0`
 > ```bash
 > $ sudo ln -s /dev/ttyACM0 /dev/ttyS80
 > ```
-> Then try reading or writing on /dev/ttyS80
+> Then try reading or writing on `/dev/ttyS80`
 >
 > To unlink:
 > ```bash
@@ -333,7 +333,7 @@ The `mirror` and `star-wars` effect is all done in CSS.
 | ![Setting](./docimg/headup.01.crop.png)| ![Setting](./docimg/headup.02.jpg)| ![Setting](./docimg/headup.03.jpg)|
 
 
-You can see the data displayed on the windshield and still look through it.
+You can see the data displayed on the windshield and still look through it (on the picture above, it's actually a mirror, opaque...).
 
 ---
 
