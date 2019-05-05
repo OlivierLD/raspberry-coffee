@@ -216,49 +216,7 @@ function Graph(cName,       // Canvas Name
 	}, 0);
 
 	canvas.addEventListener('mousemove', function (evt) {
-		if (withTooltip === true) {
-			var x = evt.pageX - canvas.offsetLeft;
-			var y = evt.pageY - canvas.offsetTop;
-
-			var coords = relativeMouseCoords(evt, canvas);
-			x = coords.x;
-			y = coords.y;
-//    console.log("Mouse: x=" + x + ", y=" + y);
-
-			var idx = xScale !== 0 ? Math.round(x / xScale) : 0;
-			if (idx < graphData.length) {
-				var str = [];
-				try {
-					str.push("Pos:" + idx);
-					str.push(graphData[idx].getY() + " " + unit);
-					//      console.log("Bubble:" + str);
-				} catch (err) {
-					console.log(JSON.stringify(err));
-				}
-
-				//    context.fillStyle = '#000';
-				//    context.fillRect(0, 0, w, h);
-				instance.drawGraph(cName, graphData, lastClicked);
-				var tooltipW = 80, nblines = str.length;
-				context.fillStyle = graphColorConfig.tooltipColor;
-//      context.fillStyle = 'yellow';
-				var fontSize = 10;
-				var x_offset = 10, y_offset = 10;
-
-				if (x > (canvas.getContext('2d').canvas.clientWidth / 2)) {
-					x_offset = -(tooltipW + 10);
-				}
-				if (y > (canvas.getContext('2d').canvas.clientHeight / 2)) {
-					y_offset = -(10 + 6 + (nblines * fontSize));
-				}
-				context.fillRect(x + x_offset, y + y_offset, tooltipW, 6 + (nblines * fontSize)); // Background
-				context.fillStyle = graphColorConfig.tooltipTextColor;
-				context.font = /*'bold ' +*/ fontSize + 'px verdana';
-				for (var i = 0; i < str.length; i++) {
-					context.fillText(str[i], x + x_offset + 5, y + y_offset + (3 + (fontSize * (i + 1)))); //, 60);
-				}
-			}
-		}
+		//
 	}, 0);
 
 	var relativeMouseCoords = function (event, element) { // TODO See in worldmap.js how this is done
@@ -290,7 +248,7 @@ function Graph(cName,       // Canvas Name
 	this.minY = function (data) {
 		var min = Number.MAX_VALUE;
 		for (var i = 0; i < data.length; i++) {
-			min = Math.min(min, data[i].getY());
+			min = Math.min(min, data[i]);
 		}
 		return min;
 	};
@@ -306,7 +264,7 @@ function Graph(cName,       // Canvas Name
 	this.maxY = function (data) {
 		var max = Number.MIN_VALUE;
 		for (var i = 0; i < data.length; i++) {
-			max = Math.max(max, data[i].getY());
+			max = Math.max(max, data[i]);
 		}
 		return max;
 	};
@@ -430,10 +388,10 @@ function Graph(cName,       // Canvas Name
 			context.strokeStyle = graphColorConfig.rawDataLineColor;
 
 			var previousPoint = data[0];
-			context.moveTo((0 - minx) * xScale, height - (data[0].getY() - miny) * yScale);
+			context.moveTo((0 - minx) * xScale, height - (data[0] - miny) * yScale);
 			for (var i = 1; i < data.length; i++) {
-				//  context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - miny) * yScale);
-				context.lineTo((i - minx) * xScale, height - (data[i].getY() - miny) * yScale);
+				//  context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint - miny) * yScale);
+				context.lineTo((i - minx) * xScale, height - (data[i] - miny) * yScale);
 				//  context.stroke();
 				previousPoint = data[i];
 			}
@@ -446,35 +404,6 @@ function Graph(cName,       // Canvas Name
 			if (graphColorConfig.fillRawData === true) {
 				context.fillStyle = graphColorConfig.rawDataFillColor;
 				context.fill();
-			}
-		}
-
-		if (withSmoothing) {
-			data = smoothData;
-			if (data !== undefined && data.length > 0) {
-
-				context.beginPath();
-				context.lineWidth = 3;
-				context.strokeStyle = graphColorConfig.smoothDataLineColor;
-				previousPoint = data[0];
-				context.moveTo((0 - minx) * xScale, height - (data[0].getY() - miny) * yScale);
-				for (var i = 1; i < data.length; i++) {
-//              context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - miny) * yScale);
-					context.lineTo((i - minx) * xScale, height - (data[i].getY() - miny) * yScale);
-//              context.stroke();
-					previousPoint = data[i];
-				}
-				if (graphColorConfig.fillSmoothData === true) {
-					// Close the shape, bottom
-					context.lineTo(width, height);
-					context.lineTo(0, height);
-					context.closePath();
-				}
-				context.stroke();
-				if (graphColorConfig.fillSmoothData === true) {
-					context.fillStyle = graphColorConfig.smoothDataFillColor;
-					context.fill();
-				}
 			}
 		}
 
@@ -511,26 +440,4 @@ function Graph(cName,       // Canvas Name
 		instance.init(graphData);
 		instance.drawGraph(cName, graphData);
 	})(); // Invoked automatically when new is invoked.
-};
-
-function Tuple(_x, _y) {
-	var x = _x;
-	var y = _y;
-
-	this.getX = function () {
-		return x;
-	};
-	this.getY = function () {
-		return y;
-	};
-};
-
-function sortTupleX(t1, t2) {
-	if (t1.getX() < t2.getX()) {
-		return -1;
-	}
-	if (t1.getX() > t2.getX()) {
-		return 1;
-	}
-	return 0;
 };
