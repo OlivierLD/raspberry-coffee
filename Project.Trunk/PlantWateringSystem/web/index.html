@@ -127,6 +127,8 @@
 	  <div style="color: white; background-color: black;">
 			<span id="device-status" style="padding-left: 10px;">Status</span>
 		</div>
+		<!-- TODO A curve (history) here -->
+
     <div style="display: block; padding-top: 3px;"> <!-- turn display to block or inline for debugging -->
         <textarea id="message" style="width: 98%; height: 150px; margin: auto; border: 1px solid silver;"></textarea>
     </div>
@@ -138,6 +140,7 @@
 		relayStatus();
 		wateringTime();
 		deviceStatus();
+		humDataBuffer(); // History, for a curve TBD
 	}
 
 	$().ready(function () {

@@ -67,6 +67,10 @@ var getSensorData = function () {
 	return getDeferred('/pws/sensor-data', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
+var getHumBufferData = function () {
+	return getDeferred('/pws/last-data', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
 var getLastWateringTime = function () {
 	return getDeferred('/pws/last-watering-time', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
@@ -145,6 +149,33 @@ var sensorData = function () {
 		errManager.display("Failed to get the Sensor data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };
+
+
+var humDataBuffer = function () {
+	var getData = getHumBufferData();
+	getData.done(function (value) {
+		var json = JSON.parse(value);
+		//$("#temp").text(json.temperature.toFixed(2));
+		//$("#hum").text(json.humidity.toFixed(2));
+
+		//document.getElementById("hum-01").value = json.humidity.toFixed(2);
+		//document.getElementById("hum-01").repaint();
+		// TODO Draw a curve
+
+	});
+	getData.fail(function (error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager.display("Failed to get the Humidity history data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	});
+};
+
 
 var deviceStatus = function() {
 	var getStatus = getPWSStatus();
