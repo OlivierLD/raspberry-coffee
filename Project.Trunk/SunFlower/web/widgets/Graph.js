@@ -165,7 +165,7 @@ function Graph(cName,       // Canvas Name
 		}
 	}
 
-	if (events) {
+	if (events !== undefined) {
 		events.subscribe('color-scheme-changed', function (val) {
 //    console.log('Color scheme changed:', val);
 			reloadColorConfig();
