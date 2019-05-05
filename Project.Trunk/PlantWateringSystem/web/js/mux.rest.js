@@ -160,8 +160,9 @@ var humDataBuffer = function () {
 
 		//document.getElementById("hum-01").value = json.humidity.toFixed(2);
 		//document.getElementById("hum-01").repaint();
-		// TODO Draw a curve
-
+		// Draw a curve
+		flowData = json;
+		flowGraph.drawGraph("flowCanvas", flowData, undefined);
 	});
 	getData.fail(function (error, errmess) {
 		var message;
