@@ -130,7 +130,7 @@
 		</div>
 		<!-- A curve (history) here -->
 		<div>
-			<canvas id="flowCanvas" height="180" width="100%" title="Humidity History"></canvas>
+			<canvas id="flowCanvas" height="180" width="500" title="Humidity History"></canvas>
 		</div>
 
     <div style="display: block; padding-top: 3px;"> <!-- turn display to block or inline for debugging -->
@@ -151,7 +151,7 @@
 	}
 
 	$().ready(function () {
-		flowGraph = new Graph("flowCanvas", flowData, undefined, "%",  { min: 50, max: 90 });
+		flowGraph = new Graph("flowCanvas", flowData, undefined, "%"); //,  { min: 60, max: 80 });
 
 		setInterval(getAllData, 1000);
 	});
