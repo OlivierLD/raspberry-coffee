@@ -16,7 +16,6 @@ public class ChordFinder {
 		for (Chord c : ChordList.getChords()) {
 			if ((c.getFinger()[0] == chord[0]) && (c.getFinger()[1] == chord[1]) && (c.getFinger()[2] == chord[2]) && (c.getFinger()[3] == chord[3])) {
 
-
 				System.out.println(c.toString());
 				found = true;
 				break;

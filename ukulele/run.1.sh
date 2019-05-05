@@ -9,5 +9,6 @@ then
   fi
 fi
 OPT=-Dlang=$LANG
-java -cp $CP $OPT section.one.KeyChordFinder
+echo -e "Big Chord Finder"
+java -cp $CP $OPT chordfinder.UkuleleChordFinder
 

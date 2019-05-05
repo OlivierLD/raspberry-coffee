@@ -344,8 +344,6 @@ You can see the data displayed on the windshield and still look through it (on t
 - With SSD1306 32x128
 - With SSD1306 64x128
 - With Nokia5110
-- With Head-Up-Display (5" or 7")
-- With USB GPS
 - With UART GPS
 - Push Buttons and Switches
 
