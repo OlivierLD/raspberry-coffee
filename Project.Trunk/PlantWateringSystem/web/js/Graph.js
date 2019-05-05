@@ -128,7 +128,7 @@ var getColorConfig = function () {
 var defaultGraphColorConfig = {
 	tooltipColor: "rgba(250, 250, 210, .7)",
 	tooltipTextColor: "black",
-	withBGGradient: true,
+	withBGGradient: false,
 	bgGradientFrom: 'rgba(0,0,0,0)',
 	bgGradientTo: 'cyan',
 	bgColorNoGradient: "LightGray",
@@ -384,7 +384,7 @@ function Graph(cName,       // Canvas Name
 
 		if (withRawData && data.length > 0) {
 			context.beginPath();
-			context.lineWidth = 1;
+			context.lineWidth = 3;
 			context.strokeStyle = graphColorConfig.rawDataLineColor;
 
 			var previousPoint = data[0];
