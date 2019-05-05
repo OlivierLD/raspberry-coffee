@@ -368,36 +368,10 @@ function Graph(cName,       // Canvas Name
 		var gridXStep = Math.round(data.length / 10);
 		var gridYStep = (maxy - miny) < 5 ? 1 : Math.round((maxy - miny) / 5);
 
-		// Sort the tuples (on X, time)
-//   data.sort(sortTupleX);
-
-		var smoothData = data;
-		var _smoothData = [];
-		var smoothWidth = 20;
-		if (smoothData.length >= smoothWidth) {
-			for (var i = 0; i < smoothData.length; i++) {
-				var yAccu = 0;
-				for (var acc = i - (smoothWidth / 2); acc < i + (smoothWidth / 2); acc++) {
-					var y;
-					if (acc < 0) {
-						y = smoothData[0].getY();
-					} else if (acc > (smoothData.length - 1)) {
-						y = smoothData[smoothData.length - 1].getY();
-					} else {
-						y = smoothData[acc].getY();
-					}
-					yAccu += y;
-				}
-				yAccu = yAccu / smoothWidth;
-				_smoothData.push(new Tuple(i, yAccu));
-//          console.log("I:" + smoothData[i].getX() + " y from " + smoothData[i].getY() + " becomes " + yAccu);
-			}
-		}
 		// Clear
 		context.fillStyle = "white";
 		context.fillRect(0, 0, width, height);
 
-		smoothData = _smoothData;
 		if (graphColorConfig.withBGGradient === false) {
 			context.fillStyle = graphColorConfig.bgColorNoGradient;
 			context.fillRect(0, 0, width, height);
