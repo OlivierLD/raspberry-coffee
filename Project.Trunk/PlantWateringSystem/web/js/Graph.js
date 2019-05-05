@@ -165,12 +165,12 @@ function Graph(cName,       // Canvas Name
 		}
 	}
 
-	if (events) {
-		events.subscribe('color-scheme-changed', function (val) {
-//    console.log('Color scheme changed:', val);
-			reloadColorConfig();
-		});
-	}
+// 	if (events) {
+// 		events.subscribe('color-scheme-changed', function (val) {
+// //    console.log('Color scheme changed:', val);
+// 			reloadColorConfig();
+// 		});
+// 	}
 
 	graphColorConfig = getColorConfig();
 
