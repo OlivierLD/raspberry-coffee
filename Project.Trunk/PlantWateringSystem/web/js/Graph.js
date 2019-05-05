@@ -131,7 +131,7 @@ var defaultGraphColorConfig = {
 	withBGGradient: false,
 	bgGradientFrom: 'rgba(0,0,0,0)',
 	bgGradientTo: 'cyan',
-	bgColorNoGradient: "LightGray",
+	bgColorNoGradient: "white",
 	horizontalGridColor: "gray",
 	horizontalGridTextColor: "black",
 	verticalGridColor: "gray",
