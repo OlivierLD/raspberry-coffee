@@ -133,6 +133,9 @@ public class MCP3008 implements Probe {
 	private static double humidity = 50d;
 	private static String message = "";
 
+	private final static int DATA_BUFFER_MAX_SIZE = 1_000;
+	private static List<Double> dataBuffer = new ArrayList<>();
+
 	private static double minSimTemp = temperature, maxSimTemp = temperature;
 	private static double minSimHum = humidity, maxSimHum = humidity;
 
@@ -238,6 +241,11 @@ public class MCP3008 implements Probe {
 	@Override
 	public String getStatus() {
 		return message;
+	}
+
+	@Override
+	public	List<Double> getRecentData() {
+		return dataBuffer;
 	}
 
 	private static double randomDiff() {
@@ -622,6 +630,11 @@ public class MCP3008 implements Probe {
 					double hum = probe.readHumidity(); // temperature);
 					// Low Pass Filter
 					humidity = lowPassFilter(ALPHA, hum, humidity);
+					// Store in the data buffer
+					dataBuffer.add(humidity);
+					while (dataBuffer.size() > DATA_BUFFER_MAX_SIZE) {
+						dataBuffer.remove(0);
+					}
 				} catch (Exception ex) {
 					System.err.println(String.format("At %s :", new Date().toString()));
 					ex.printStackTrace();

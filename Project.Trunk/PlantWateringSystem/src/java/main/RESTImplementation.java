@@ -105,7 +105,12 @@ public class RESTImplementation {
 					"PUT",
 					PWS_PREFIX + "/pws-parameters",
 					this::setPWSParameters,
-					"Set the Program's parameters"));
+					"Set the Program's parameters"),
+			new Operation(
+					"GET",
+					PWS_PREFIX + "/last-data",
+					this::getProbeLastData,
+					"Get probe's last data (array)."));
 
 	protected List<Operation> getOperations() {
 		return  this.operations;
@@ -218,6 +223,16 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		String pwsStatus = probe.getStatus();
 		String content = new Gson().toJson(pwsStatus);
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private Response getProbeLastData(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		List<Double> lastData = probe.getRecentData();
+		String content = new Gson().toJson(lastData);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 

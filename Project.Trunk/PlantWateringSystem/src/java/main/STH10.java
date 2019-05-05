@@ -218,6 +218,11 @@ public class STH10 implements Probe {
 		return message;
 	}
 
+	@Override
+	public	List<Double> getRecentData() {
+		return null;
+	}
+
 	private static double randomDiff() {
 		int sign = (int)System.currentTimeMillis() % 2;
 		return Math.random() * (sign == 0 ? 1 : -1);
