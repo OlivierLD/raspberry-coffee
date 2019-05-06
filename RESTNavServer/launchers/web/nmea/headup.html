@@ -20,7 +20,7 @@
 	}
 
 	body {
-		color: yellow;
+		color: snow; /*yellow;*/
 		background-color: black;
 		font-family: "Helvetica Neue", "Lato", Verdana, Helvetica, Geneva, sans-serif;
 	}
@@ -36,12 +36,18 @@
 	.big {
 		font-size: 96px;
 	}
+
+	.data-table {
+		margin: auto;
+		border: 3px solid silver;
+		border-radius: 10px;
+	}
 </style>
 <body>
 <div id="the-div" class="mirror-upside-down big" style="padding: 0px; text-align: center;">
 
 	<div id="one" style="display: block;">
-		<table style="margin: auto; border: 1px solid silver;">
+		<table class="data-table">
 			<tr>
 				<td colspan="1">Position</td>
 			</tr>
@@ -56,7 +62,7 @@
 	</div>
 
 	<div id="two" style="display: none;">
-		<table style="margin: auto; border: 1px solid silver;">
+		<table class="data-table">
 			<tr>
 				<td colspan="1">Speed</td>
 			</tr>
@@ -68,7 +74,7 @@
 	</div>
 
 	<div id="three" style="display: none;">
-		<table style="margin: auto; border: 1px solid silver;">
+		<table class="data-table">
 			<tr>
 				<td colspan="1">Heading</td>
 			</tr>
@@ -128,7 +134,7 @@
 	function cleanError() {
 		let zone = document.getElementById('mess-zone');
 		if (zone !== null) {
-			zone.innetHTML = '';
+			zone.innerHTML = '';
 		}
 	}
 
