@@ -17,6 +17,7 @@ import java.util.Optional;
 public class TidePublisher {
 
 	// Script names in a System variable. they must be in the xsl folder.
+	public final static String AGENDA_TABLE = System.getProperty("publishagenda.script", "publishagenda.sh");
 	public final static String TIDE_TABLE = System.getProperty("publishtide.script", "publishtide.sh");
 	public final static String MOON_CALENDAR = System.getProperty("publishlunarcalendar.script", "publishlunarcalendar.sh");
 
@@ -153,7 +154,19 @@ public class TidePublisher {
 		try {
 			BackEndTideComputer.connect();
 			BackEndTideComputer.setVerbose("true".equals(System.getProperty("tide.verbose", "false")));
-			String f = publish(URLEncoder.encode("Ocean Beach, California", "UTF-8").replace("+", "%20"), Calendar.SEPTEMBER, 2017, 1, Calendar.MONTH);
+//			String f = publish(
+//					URLEncoder.encode("Ocean Beach, California", "UTF-8").replace("+", "%20"),
+//					Calendar.SEPTEMBER,
+//					2017,
+//					1,
+//					Calendar.MONTH);
+			String f = publish(
+					URLEncoder.encode("Ocean Beach, California", "UTF-8").replace("+", "%20"),
+					Calendar.JANUARY,
+					2019,
+					1,
+					Calendar.YEAR,
+					"publishagenda.sh");
 			System.out.println(String.format("%s generated", f));
 			System.out.println("Done!");
 		} catch (Exception ex) {

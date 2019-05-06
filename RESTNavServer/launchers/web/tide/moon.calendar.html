@@ -52,6 +52,7 @@
 				$('#station-list').append(option);
 			});
 			$("#publish").prop('disabled', stationList.length === 0);
+			$("#publish-agenda").prop('disabled', stationList.length === 0);
 		};
 
 		var dataManager = function(value) { // Callback when tide data are ready

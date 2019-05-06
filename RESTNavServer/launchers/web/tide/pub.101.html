@@ -52,6 +52,7 @@
 				$('#station-list').append(option);
 			});
 			$("#publish").prop('disabled', stationList.length === 0);
+			$("#publish-agenda").prop('disabled', stationList.length === 0);
 		};
 
 		var dataManager = function(value) { // Callback when tide data are ready
@@ -119,6 +120,9 @@
 
 	<button id="publish" disabled
 	        onclick="getStarted(); publishTable($('#station-list').val(), { startYear: parseInt($('#year').val()), startMonth: parseInt($('#month').val()), nb: parseInt($('#nb').val()), quantity: $('#quantity').val() }, dataManager);">Publish</button>
+
+	<button id="publish-agenda" disabled
+					onclick="getStarted(); publishAgenda($('#station-list').val(), { startYear: parseInt($('#year').val()), startMonth: parseInt($('#month').val()), nb: parseInt($('#nb').val()), quantity: $('#quantity').val() }, dataManager);">Agenda</button>
 	<hr/>
     Your document is <span id="doc-url">...</span>
   <hr/>

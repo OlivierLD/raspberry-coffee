@@ -113,7 +113,7 @@ the SAX parser scans it until the expected data are found.
 ```
 - Then start then server
 ```bash
- $ ./runTideServ
+ $ ./runTideServ.sh
 
  _/\\\\\\\\\___/\\\\\\\\___/\\\\\\\\__/\\\\\\\\\\
  _\/\\\////\\\_\/\\\////___\/\\\////__\////\\\///_

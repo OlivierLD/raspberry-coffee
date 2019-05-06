@@ -11,3 +11,5 @@ JAVA_OPTS="$JAVA_OPTS -Dtide.verbose=true"
 # JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
 java -cp $CP $JAVA_OPTS tiderest.TideServer
 
+
+

@@ -95,7 +95,7 @@ public class RESTImplementation {
 					"POST",
 					TIDE_PREFIX + "/publish/{station-name}",
 					this::publishTideTable,
-					"Generates tide table document (pdf)"),
+					"Generates tide table (or agenda, if query parameter 'agenda' is set to 'y') document (pdf)"),
 			new Operation(
 					"POST",
 					TIDE_PREFIX + "/publish/{station-name}/moon-cal",
@@ -627,7 +627,14 @@ public class RESTImplementation {
 	 * @return
 	 */
 	private Response publishTideTable(@Nonnull Request request) {
-		return publishTideDocument(request, TidePublisher.TIDE_TABLE);
+		Map<String, String> queryParams = request.getQueryStringParameters();
+		boolean agenda = false;
+		if (queryParams != null) {
+			if (queryParams.containsKey("agenda") && "y".equals(queryParams.get("agenda"))) {
+				agenda = true;
+			}
+		}
+		return publishTideDocument(request, (agenda ? TidePublisher.AGENDA_TABLE : TidePublisher.TIDE_TABLE));
 	}
 
 	private Response publishTideDocument(@Nonnull Request request, String script) {
