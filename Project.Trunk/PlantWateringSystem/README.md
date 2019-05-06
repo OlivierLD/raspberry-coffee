@@ -253,7 +253,7 @@ For now, try this (from your phone, tablet, whatever): `http://Rasp.pi.add.ress:
 
 <img src="./docimg/android.jpg" width="450" height="800" alt="Web Interface">
 
-The red dot at the top of the page is an activity witness. It blinks red to green and vice-versa whene data are read.
+The red dot at the top of the page is an activity witness. It blinks red to green and vice-versa when data are read.
 
 ### The real device
 First setting:
