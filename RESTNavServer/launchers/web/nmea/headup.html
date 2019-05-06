@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <!--
-   100% Self contained:
-   no external libraries,
-   no script imports.
+   100% Self contained, on purpose (this is an exercise):
+   - no external libraries.
+   - no external stylesheet.
+   - no script imports.
+   - no image (except the icon)
  +-->
 <html lang="en">
 <head>
@@ -26,9 +28,9 @@
 	.mirror-upside-down {
 		display: block;
 		-webkit-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
-		-moz-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
-		-o-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
-		transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+		-moz-transform:    matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+		-o-transform:      matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+		transform:         matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
 	}
 
 	.big {
@@ -45,9 +47,9 @@
 			</tr>
 			<tr>
 				<td valign="top">
-					<span id="latitude">N 37° 44.93'</span>
+					<span id="latitude"> - </span>
 					<br/>
-					<span id="longitude">W 122° 30.42'</span>
+					<span id="longitude"> - </span>
 				</td>
 			</tr>
 		</table>
@@ -59,7 +61,7 @@
 				<td colspan="1">Speed</td>
 			</tr>
 				<td valign="top">
-					<span id="speed">12.34 kts</span>
+					<span id="speed"> - </span>
 				</td>
 			</tr>
 		</table>
@@ -71,7 +73,7 @@
 				<td colspan="1">Heading</td>
 			</tr>
 			<td valign="top">
-				<span id="heading">000°</span>
+				<span id="heading"> - </span>
 			</td>
 			</tr>
 		</table>
@@ -134,8 +136,16 @@
 
 	events.subscribe('cog', function(val) {
 		let speedField = document.getElementById("heading");
-		speedField.innerText = val.toFixed(0) + "°";
+		speedField.innerText = lpad(val.toFixed(0), 3, '0') + "°";
 	});
+
+	function lpad(str, len, pad) {
+		let padded = str;
+		while (padded.length < len) {
+			padded = (pad !== undefined ? pad : ' ') + padded;
+		}
+		return padded;
+	}
 
 	function decToSex(val, ns_ew) {
 		let absVal = Math.abs(val);
@@ -149,7 +159,7 @@
 			s += (ns_ew === 'NS' ? 'N' : 'E');
 		}
 		s += " ";
-		s += intValue + "°" + dec.toFixed(2) + "'";
+		s += intValue + "°" + lpad(dec.toFixed(2), 5, '0') + "'";
 //  s = intValue + String.fromCharCode(176) + dec.toFixed(2) + "'";
 		return s;
 	}
@@ -232,14 +242,16 @@
 			var errMess = "";
 
 			try {
-				let latitude = json.Position.lat;
+				if (json.Position !== undefined) {
+					let latitude = json.Position.lat;
 //          console.log("latitude:" + latitude)
-				let longitude = json.Position.lng;
+					let longitude = json.Position.lng;
 //          console.log("Pt:" + latitude + ", " + longitude);
-				events.publish('pos', {
-					'lat': latitude,
-					'lng': longitude
-				});
+					events.publish('pos', {
+						'lat': latitude,
+						'lng': longitude
+					});
+				}
 			} catch (err) {
 				errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "position");
 			}
