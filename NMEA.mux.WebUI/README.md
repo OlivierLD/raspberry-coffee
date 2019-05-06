@@ -323,6 +323,12 @@ $GPVTG,,,,,,,,,N*30
 
 Start `./demoLauncher.sh` or its equivalent, choose option `4`.
 
+#### To automate all this, for the web page to be displayed when the server (Raspberry Pi) boots:
+- Using `raspi-config`, boot to the Graphical Desktop
+- in `/etc/rc.local`, start the Navigation Server with the appropriate properties file
+- Make sure the file `~/.config/lxsession/LXDE-pi/autostart` is modified to open `Chromium` on the right page.
+
+
 From a browser, reach <http://localhost:9999/web/nmea/headup.html>.
 The `mirror` and `star-wars` effect is all done in CSS.
 
