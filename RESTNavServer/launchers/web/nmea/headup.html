@@ -78,6 +78,7 @@
 	</div>
 
 </div>
+<div id="mess-zone"></div>
 </body>
 <script type="text/javascript">
 	/**
@@ -109,6 +110,15 @@
 			}
 		}
 	};
+
+	function messManager(mess) {
+		let zone = document.getElementById('mess-zone');
+		if (zone !== null) {
+			zone.innerHTML = '<pre>' + new Date().toString() + '<br/>' + mess + '</pre>';
+		} else {
+			console.log(mess);
+		}
+	}
 
 	events.subscribe('pos', function(val) {
 		let latField = document.getElementById("latitude");
@@ -286,7 +296,7 @@
 					message += mess.message;
 				}
 			}
-			alert("Failed to get nmea data..." + (error !== undefined ? (typeof(error) === 'object' ? JSON.stringify(error, null, 2) : error.toString()) : ' - ') + ', ' + (message.length > 0 ? message : ' - '));
+			messManager("Failed to get nmea data..." + (error !== undefined ? (typeof(error) === 'object' ? JSON.stringify(error, null, 2) : error.toString()) : ' - ') + ', ' + (message.length > 0 ? message : ' - '));
 		});
 	}
 
