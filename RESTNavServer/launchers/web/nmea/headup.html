@@ -80,7 +80,10 @@
 	</div>
 
 </div>
-<div id="mess-zone"></div>
+<div style="margin: 10px; padding: 10px; border: 1px solid silver; border-radius: 10px;">
+	<button onclick="cleanError();" style="border-radius: 3px;">Clear Error Messages</button>
+	<div id="mess-zone"></div>
+</div>
 </body>
 <script type="text/javascript">
 	/**
@@ -119,6 +122,13 @@
 			zone.innerHTML = '<pre>' + new Date().toString() + '<br/>' + mess + '</pre>';
 		} else {
 			console.log(mess);
+		}
+	}
+
+	function cleanError() {
+		let zone = document.getElementById('mess-zone');
+		if (zone !== null) {
+			zone.innetHTML = '';
 		}
 	}
 
