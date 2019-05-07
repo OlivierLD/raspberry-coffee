@@ -32,7 +32,7 @@ do
   echo -e "|  6. GPS-mux, to run on a Raspberry Pi (logger)                       |"
   echo -e "|  7. Golang, basics                                                   |"
   echo -e "|  8. Raspberry Pi Desktop, MATE, with java, node, web comps, VNC,     |"
-  echo -e "|                                                            inkscape  |"
+  echo -e "|                                               inkscape, gtk samples  |"
   echo -e "|  9. Debian, Java, Scala, Spark                                       |"
   echo -e "| 10. Ubuntu MATE, TensorFlow, Keras, Python3, Jupyter, PyCharm, VNC   |"
   echo -e "+----------------------------------------------------------------------+"
