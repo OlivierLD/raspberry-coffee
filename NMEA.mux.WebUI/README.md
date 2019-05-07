@@ -171,6 +171,7 @@ Bus 001 Device 006: ID 1546:01a7 U-Blox AG
 ...
 ```
 
+<!--
 ```
 $ sudo lsusb -v
 ...
@@ -264,6 +265,7 @@ Device Status:     0x0001
   Self Powered
  
 ``` 
+-->
 ```
 $ dmesg | grep -i gps
 [  646.871190] usb 1-1.3: Product: u-blox 7 - GPS/GNSS Receiver
@@ -332,7 +334,7 @@ $GPVTG,,,,,,,,,N*30
 Start `./demoLauncher.sh` or its equivalent, choose option `4`.
 
 #### To automate all this, for the web page to be displayed when the server (Raspberry Pi) boots:
-- Using `raspi-config`, boot to the Graphical Desktop
+- Using `raspi-config`, choose to boot to the Graphical Desktop
 - in `/etc/rc.local`, start the Navigation Server with the appropriate properties file
 - Make sure the file `~/.config/lxsession/LXDE-pi/autostart` is modified to open `Chromium` on the right page.
 - Make sure you've disabled the screen sleep as described above
