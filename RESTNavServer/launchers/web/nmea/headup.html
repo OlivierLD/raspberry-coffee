@@ -5,6 +5,8 @@
    - no external stylesheet.
    - no script imports.
    - no image (except the icon)
+
+   This is just an example, many data can be added here.
  +-->
 <html lang="en">
 <head>
@@ -17,6 +19,7 @@
 	:root {
 		--perspective: 50em;
 		--rotateX: -50deg;
+		--scale-y-factor: 1.5;
 	}
 
 	body {
@@ -30,7 +33,8 @@
 		-webkit-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
 		-moz-transform:    matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
 		-o-transform:      matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
-		transform:         matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+		transform:         matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX)) scaleY(var(--scale-y-factor));
+		transform-origin: center;
 	}
 
 	.big {

@@ -152,6 +152,14 @@ To start Chromium when the Desktop starts, and load one or several URLs (in diff
 ```
 It will start Chromium in `kiosk` (aka full screen) mode, and load the URLs mentioned above.
 
+##### Also important here
+A Graphical Desktop will by default go to sleep if not sollicited for a while, and we do not want that.
+To fix it: 
+- Edit `/etc/lightdm/lightdm.conf`
+- Have a/the line that starts with `xserver-command=` to look like `xserver-command=X -s 0 -dpms`
+
+This will take effect after reboot. 
+
 #### With a small USB GPS like `U-blox 7`
 The [`U-blox 7`](https://www.amazon.com/HiLetgo-G-Mouse-GLONASS-Receiver-Windows/dp/B01MTU9KTF/ref=pd_lpo_vtph_107_lp_img_3?_encoding=UTF8&psc=1&refRID=BNCKEAMR8044EX51JYM5) is a small and cheap GPS you can plug with a USB socket.
 And it works.
@@ -327,6 +335,9 @@ Start `./demoLauncher.sh` or its equivalent, choose option `4`.
 - Using `raspi-config`, boot to the Graphical Desktop
 - in `/etc/rc.local`, start the Navigation Server with the appropriate properties file
 - Make sure the file `~/.config/lxsession/LXDE-pi/autostart` is modified to open `Chromium` on the right page.
+- Make sure you've disabled the screen sleep as described above
+
+> Note: This config does not need any network, it runs in standalone, but nothing is preventing any network operation. You can can add one (hotspot or not) if needed. 
 
 
 From a browser, reach <http://localhost:9999/web/nmea/headup.html>.
