@@ -569,6 +569,16 @@ function setRotateX(range) {
 	document.getElementById('sun-path-1').style.setProperty("--rotateX", v + "deg");
 }
 
+function setScaleY(scale) {
+	var v = scale.value;
+	document.body.style.setProperty("--scaleY", v);
+	// document.getElementById('nmea-widgets-1').style.setProperty("--scaleY", v);
+	// document.getElementById('nmea-widgets-2').style.setProperty("--scaleY", v);
+	// document.getElementById('sky-maps-1').style.setProperty("--scaleY", v);
+	// document.getElementById('sun-path-1').style.setProperty("--scaleY", v);
+}
+
+
 let aws = 0;
 let awa = 0;
 let tws = 0;

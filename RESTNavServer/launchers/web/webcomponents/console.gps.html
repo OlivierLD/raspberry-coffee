@@ -300,6 +300,7 @@
 			--padding: 50px;
 			--perspective: 100em;
 			--rotateX: -15deg;
+			--scaleY: 1.0;
 		}
 
 		html {
@@ -342,7 +343,7 @@
 			-webkit-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
 			-moz-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
 			-o-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
-			transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+			transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX)) scaleY(var(--scaleY));
 		}
 
 		.tab {
@@ -430,15 +431,20 @@
 		<!--button onclick="toggleHeadsUp();" style="border-radius: 5px;">Head Up</button-->
 		<table width="100%">
 			<tr>
-				<td width="50%">
+				<td width="33%">
 					<h5 style="color: cyan;">Perspective</h5>
 					<input type="range" value="100" min="0" max="100" style="width: 90%;" oninput="setPerspective(this); perspective01.value = this.value;" />
 					<output name="perspective" id="perspective01" style="color: cyan;">100</output>
 				</td>
-				<td width="50%">
+				<td width="33%">
 					<h5 style="color: cyan;">Rotate X</h5>
 					<input type="range" value="-15" min="-100" max="100" style="width: 90%;" oninput="setRotateX(this); perspective02.value = this.value;" />
 					<output name="perspective" id="perspective02" style="color: cyan;">-15</output>
+				</td>
+				<td width="33%">
+					<h5 style="color: cyan;">Scale Y</h5>
+					<input type="range" value="1" min="0" max="5" step="0.01" style="width: 90%;" oninput="setScaleY(this); scaleY02.value = this.value;" />
+					<output name="scaleY" id="scaleY02" style="color: cyan;">1</output>
 				</td>
 			</tr>
 		</table>
