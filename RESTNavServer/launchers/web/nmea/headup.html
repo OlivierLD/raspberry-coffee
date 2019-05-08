@@ -264,7 +264,7 @@
 			var errMess = "";
 
 			try {
-				if (json.Position !== undefined) {
+				if (json.Position !== undefined && json.RMCStatus === true) {
 					let latitude = json.Position.lat;
 //          console.log("latitude:" + latitude)
 					let longitude = json.Position.lng;
@@ -280,20 +280,20 @@
 
 			try {
 				let sog = 0;
-				if (json.SOG !== undefined) {
+				if (json.SOG !== undefined && json.RMCStatus === true) {
 					sog = json.SOG.speed;
+					events.publish('sog', sog);
 				}
-				events.publish('sog', sog);
 			} catch (err) {
 				errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "boat speed");
 			}
 
 			try {
 				let cog = 0;
-				if (json.COG !== undefined) {
+				if (json.COG !== undefined && json.RMCStatus === true) {
 					cog = json.COG.angle;
+					events.publish('cog', cog);
 				}
-				events.publish('cog', cog);
 			} catch (err) {
 				errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "boat speed");
 			}

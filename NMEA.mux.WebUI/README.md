@@ -337,6 +337,15 @@ Start `./demoLauncher.sh` or its equivalent, choose option `4`.
 #### To automate all this, for the web page to be displayed when the server (Raspberry Pi) boots:
 - Using `raspi-config`, choose to boot to the Graphical Desktop
 - in `/etc/rc.local`, start the Navigation Server with the appropriate properties file
+```bash
+echo "-- From /etc/rc.local --"
+echo "Now starting NMEA Multiplexer"
+cd ~pi/raspberry-coffee/RESTNavServer/launchers
+# Wait...
+sleep 20
+nohup ./runNavServer.sh --mux:nmea.mux.gps.properties --no-date &
+cd -
+```
 - Make sure the file `~/.config/lxsession/LXDE-pi/autostart` is modified to open `Chromium` on the right page.
 - Make sure you've disabled the screen sleep as described above
 

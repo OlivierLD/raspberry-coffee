@@ -37,3 +37,6 @@ System up.
 
 [Ctrl] P Q
 ```
+```
+$ docker ps [-a]
+```
