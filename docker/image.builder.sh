@@ -195,7 +195,10 @@ do
       MESSAGE="${MESSAGE}Log in using: docker run -it --rm -p 5901:5901 -p 8080:8080 -e USER=root $IMAGE_NAME:latest /bin/bash\n"
       MESSAGE="${MESSAGE}- then run 'vncserver :1 -geometry 1280x800 (or 1440x900, 1680x1050, etc) -depth 24'\n"
       MESSAGE="${MESSAGE}- then use a vncviewer on localhost:1, password is 'mate'\n"
-      MESSAGE="${MESSAGE}- then 'node server.js', and reach http://localhost:8080/oliv-components/index.html ...\n"
+      MESSAGE="${MESSAGE}- then 'node server.js' or 'npm start', and reach http://localhost:8080/oliv-components/index.html ...\n"
+      MESSAGE="${MESSAGE} \n"
+      MESSAGE="${MESSAGE}- Or docker run --detach --name webcomponents --rm -p 5901:5901 -p 8080:8080 -e USER=root oliv-pi-vnc:latest \n"
+      MESSAGE="${MESSAGE}- and reach http://localhost:8080/oliv-components/index.html ...\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "9")

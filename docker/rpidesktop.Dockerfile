@@ -68,5 +68,5 @@ RUN git clone https://github.com/OlivierLD/WebComponents.git
 WORKDIR WebComponents
 
 EXPOSE 8080
-# ENTRYPOINT ["npm", "start"]
+ENTRYPOINT ["npm", "start"]
 # CMD ["vncserver", "-fg"]
