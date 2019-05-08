@@ -349,9 +349,9 @@ The `mirror` and `star-wars` effect is all done in CSS.
 
 | Setting | Direct Position | Direct Heading | Direct Speed |
 |:-------:|:------:|:---------:|:---------:|
-| ![Setting](./docimg/headup.01.crop.png)| ![Setting](./docimg/position.jpg)| ![Setting](./docimg/heading.jpg)| ![Setting](./docimg/speed.jpg)|
+| ![Setting](./docimg/headup.01.crop.png)| ![Position](./docimg/position.jpg)| ![Heading](./docimg/heading.jpg)| ![Speed](./docimg/speed.jpg)|
 | Reflected Position | Reflected Heading | Reflected Speed | In the car |
-| ![Setting](./docimg/real.position.jpg)| ![Setting](./docimg/real.heading.jpg)| ![Setting](./docimg/real.speed.jpg)| ![Setting](./docimg/in.the.car.jpg)|
+| ![REal Position](./docimg/real.position.jpg)| ![Real Heading](./docimg/real.heading.jpg)| ![Speed](./docimg/real.speed.jpg)| ![In the car](./docimg/in.the.car.jpg)|
 
 You can see the data displayed on the windshield and still look through it.
 
