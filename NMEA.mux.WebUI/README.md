@@ -110,7 +110,7 @@ This project directory is a play ground, again, it is here for **you** to _compo
 Means not **me**. 🤓
 
 ## Examples
-- Full Nav Server (all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...)
+### Full Nav Server (all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...)
 ```
  $ cd full.server
  $ ./builder.sh
@@ -118,24 +118,25 @@ Means not **me**. 🤓
 
 <!-- TODO Screenshots, diagrams, pictures -->
 
-- Minimal Multiplexer
+### Minimal Multiplexer
 ```
  $ cd minimal.mux
  $ ./builder.sh
 ```
 
-- Full Nav Server, extended (all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...)
+### Full Nav Server, extended (all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...)
+The idea here is to show how to _extend_ the classes provided in the project.
 ```
  $ cd full.server.extended
  $ ./builder.sh
 ```
 
-- With a 5" or 7" TFT display, setup for Head-Up-Display (WIP)
-    - Use `switch2tftscreen` (at the root of the project)
-    - Reboot
-    - SSH to the RPi
+### With a 5" or 7" TFT display, setup for **Head-Up-Display**
+- Use `switch2tftscreen` (at the root of the project)
+- Reboot
+<!-- - SSH to the RPi
         - Start the Multiplexer or NavServer of your choice (you can use the `./demoLauncher.sh` in `launchers` under `RESTNavServer`).
-        - `sudo startx` (should start the Raspbian desktop on the TFT)
+        - `sudo startx` (should start the Raspbian desktop on the TFT) -->
 
 You can boot directly to the Graphical Desktop (`sudo raspi-config`), and automatically start a browser on a given URL as
 soon as the Desktop is up and running.
@@ -347,11 +348,15 @@ The `mirror` and `star-wars` effect is all done in CSS.
 
 ![Head Up!](./docimg/head-up.png)
 
-| Setting | Direct Position | Direct Heading | Direct Speed |
-|:-------:|:------:|:---------:|:---------:|
-| ![Setting](./docimg/headup.01.crop.png)| ![Position](./docimg/position.jpg)| ![Heading](./docimg/heading.jpg)| ![Speed](./docimg/speed.jpg)|
-| Reflected Position | Reflected Heading | Reflected Speed | In the car |
-| ![REal Position](./docimg/real.position.jpg)| ![Real Heading](./docimg/real.heading.jpg)| ![Speed](./docimg/real.speed.jpg)| ![In the car](./docimg/in.the.car.jpg)|
+|               Setting                   |           Direct Position         | 
+|:---------------------------------------:|:---------------------------------:|
+| ![Setting](./docimg/headup.01.crop.png) | ![Position](./docimg/position.jpg)|
+| Direct Heading | Direct Speed |
+| ![Heading](./docimg/heading.jpg)| ![Speed](./docimg/speed.jpg)|
+| Reflected Position | Reflected Heading | 
+| ![Real Position](./docimg/real.position.jpg)| ![Real Heading](./docimg/real.heading.jpg)|
+| Reflected Speed | In the car | 
+| ![Speed](./docimg/real.speed.jpg)| ![In the car](./docimg/in.the.car.jpg)|
 
 You can see the data displayed on the windshield and still look through it.
 
@@ -364,7 +369,7 @@ Distortion of the reflected screen can be controlled in the CSS Stylesheet, by a
 	}
 ```
 
-> In the car, with a `OBD` (On Board Diagnostic) interface (usually using Bluetooth), we could disolay all kind of data.
+> In the car, with an `OBD` (On Board Diagnostic) interface (usually using Bluetooth), we could disolay all kind of data.
 > This will be another project.
 
 ---
