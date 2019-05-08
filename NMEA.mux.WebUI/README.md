@@ -347,12 +347,14 @@ The `mirror` and `star-wars` effect is all done in CSS.
 
 ![Head Up!](./docimg/head-up.png)
 
-| Setting | Direct | Reflected |
-|:-------:|:------:|:---------:|
-| ![Setting](./docimg/headup.01.crop.png)| ![Setting](./docimg/headup.02.jpg)| ![Setting](./docimg/headup.03.jpg)|
+| Setting | Direct Position | Direct Heading | Direct Speed |
+|:-------:|:------:|:---------:|:---------:|
+| ![Setting](./docimg/headup.01.crop.png)| ![Setting](./docimg/position.jpg)| ![Setting](./docimg/heading.jpg)| ![Setting](./docimg/speed.jpg)|
+| Setting | Direct Position | Direct Heading | Direct Speed |
+| ![Setting](./docimg/real.position.jpg)| ![Setting](./docimg/real.heading.jpg)| ![Setting](./docimg/real.speed.jpg)| |
 
 
-You can see the data displayed on the windshield and still look through it (on the picture above, it's actually a mirror, opaque...).
+You can see the data displayed on the windshield and still look through it.
 
 ---
 
