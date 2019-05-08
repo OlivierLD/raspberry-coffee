@@ -350,11 +350,22 @@ The `mirror` and `star-wars` effect is all done in CSS.
 | Setting | Direct Position | Direct Heading | Direct Speed |
 |:-------:|:------:|:---------:|:---------:|
 | ![Setting](./docimg/headup.01.crop.png)| ![Setting](./docimg/position.jpg)| ![Setting](./docimg/heading.jpg)| ![Setting](./docimg/speed.jpg)|
-| Setting | Direct Position | Direct Heading | Direct Speed |
-| ![Setting](./docimg/real.position.jpg)| ![Setting](./docimg/real.heading.jpg)| ![Setting](./docimg/real.speed.jpg)| |
-
+| Reflected Position | Reflected Heading | Reflected Speed | In the car |
+| ![Setting](./docimg/real.position.jpg)| ![Setting](./docimg/real.heading.jpg)| ![Setting](./docimg/real.speed.jpg)| ![Setting](./docimg/in.the.car.jpg)|
 
 You can see the data displayed on the windshield and still look through it.
+
+Distortion of the reflected screen can be controlled in the CSS Stylesheet, by adjusting the variables `perspective`, `rotateX` and `scale-y-factor`.
+```css
+	:root {
+		--perspective: 50em;
+		--rotateX: -50deg;
+		--scale-y-factor: 1.5;
+	}
+```
+
+> In the car, with a `OBD` (On Board Diagnostic) interface (usually using Bluetooth), we could disolay all kind of data.
+> This will be another project.
 
 ---
 
