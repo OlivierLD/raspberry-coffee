@@ -348,6 +348,8 @@ The `mirror` and `star-wars` effect is all done in CSS.
 
 ![Head Up!](./docimg/head-up.png)
 
+_Click the pictures to see them bigger._
+
 |               Setting                   |           Direct Position         | 
 |:---------------------------------------:|:---------------------------------:|
 | ![Setting](./docimg/headup.01.crop.png) | ![Position](./docimg/position.jpg)|
@@ -369,7 +371,7 @@ Distortion of the reflected screen can be controlled in the CSS Stylesheet, by a
 	}
 ```
 
-> In the car, with an `OBD` (On Board Diagnostic) interface (usually using Bluetooth), we could disolay all kind of data.
+> In the car, with an `OBD` (On Board Diagnostic) interface (usually using Bluetooth), we could display all kind of data.
 > This will be another project.
 
 ---
