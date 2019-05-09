@@ -39,6 +39,7 @@ dependencies {
   compile project(':NMEA.mux.WebUI:full.server')
   compile project(':NMEA.mux.WebUI:minimal.mux')
   compile project(':NMEA.mux.WebUI:full.server.extended')
+  compile project(':NMEA.mux.WebUI:head.up')
   compile project(':RESTCam')
   compile project(':RESTNavServer')
   compile project(':RESTTideEngine')
