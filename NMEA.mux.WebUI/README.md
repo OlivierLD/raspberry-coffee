@@ -367,7 +367,8 @@ _Click the pictures to see them bigger._
 | Reflected Position | Reflected Heading | 
 | ![Real Position](./docimg/real.position.jpg)| ![Real Heading](./docimg/real.heading.jpg)|
 | Reflected Speed | In the car | 
-| ![Speed](./docimg/real.speed.jpg)| ![In the car](./docimg/in.the.car.jpg)|
+| ![Speed](./docimg/real.speed.jpg)| ![In the car](./docimg/in.the.car.position.jpg)|
+| ![Speed](./docimg/in.the.car.heading.jpg)| ![In the car](./docimg/in.the.car.speed.jpg)|
 
 You can see the data displayed on the windshield and still look through it.
 
