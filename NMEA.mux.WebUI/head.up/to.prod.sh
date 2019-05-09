@@ -49,7 +49,7 @@ cp to.mux.sh $distdir
 cp killmux.sh $distdir
 cp rc.local $distdir
 cp start-mux.sh $distdir
-cp zero-deviation.sh $distdir
+cp zero-deviation.csv $distdir
 #
 # Instructions
 cp instructions.txt $distdir

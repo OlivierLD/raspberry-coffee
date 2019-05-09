@@ -88,6 +88,7 @@ then
 	JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.time.ok=false"
 fi
 #
+JAVA_OPTIONS="$JAVA_OPTIONS -Dwith.sun.flower=false"
 echo -e "JAVA_OPTIONS in to.mux.sh: $JAVA_OPTIONS"
 # The script below uses $JAVA_OPTIONS (hence the .)
 # nohup ./mux.sh $PROP_FILE &
