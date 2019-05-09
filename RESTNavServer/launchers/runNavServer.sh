@@ -161,7 +161,21 @@ JAVA_OPTS="$JAVA_OPTS -Xms64M -Xmx1G"
 #
 echo -e "Using properties:$JAVA_OPTS"
 #
-COMMAND="java -cp $CP $JAVA_OPTS navrest.NavServer"
+SUDO=
+# DARWIN=`uname -a | grep Darwin`
+DARWIN=$(uname -a | grep Darwin)
+#
+if [ "$DARWIN" != "" ]
+then
+	echo Running on Mac
+  JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"  # for Mac
+else
+	echo Assuming Linux/Raspberry Pi
+  JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
+  SUDO="sudo "
+fi
+#
+COMMAND="${SUDO}java -cp $CP $JAVA_OPTS navrest.NavServer"
 echo -e "Running $COMMAND"
 $COMMAND
 #
