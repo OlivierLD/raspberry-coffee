@@ -87,7 +87,7 @@ then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
 	JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.time.ok=false"
 fi
-#
+# No servo driver:
 JAVA_OPTIONS="$JAVA_OPTIONS -Dwith.sun.flower=false"
 echo -e "JAVA_OPTIONS in to.mux.sh: $JAVA_OPTIONS"
 # The script below uses $JAVA_OPTIONS (hence the .)
