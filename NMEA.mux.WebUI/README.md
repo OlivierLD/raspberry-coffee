@@ -132,6 +132,12 @@ The idea here is to show how to _extend_ the classes provided in the project.
 ```
 
 ### With a 5" or 7" TFT display, setup for **Head-Up-Display**
+```
+ $ cd head.up
+ $ ./builder.sh
+```
+Or in details:
+
 - Use `switch2tftscreen` (at the root of the project)
 - Reboot
 <!-- - SSH to the RPi
