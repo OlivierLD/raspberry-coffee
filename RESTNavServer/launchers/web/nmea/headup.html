@@ -52,45 +52,58 @@
 <body>
 <div id="the-div" class="mirror-upside-down big" style="padding: 0px; text-align: center;">
 
-	<div id="one" style="display: block;">
-		<table class="data-table">
-			<tr>
-				<td colspan="1">Position</td>
-			</tr>
-			<tr>
-				<td valign="top">
-					<span id="latitude"> - </span>
-					<br/>
-					<span id="longitude"> - </span>
-				</td>
-			</tr>
-		</table>
-	</div>
-
-	<div id="two" style="display: none;">
-		<table class="data-table">
-			<tr>
-				<td colspan="1">Speed</td>
-			</tr>
-				<td valign="top">
-					<span id="speed"> - </span>
-				</td>
-			</tr>
-		</table>
-	</div>
-
-	<div id="three" style="display: none;">
-		<table class="data-table">
-			<tr>
-				<td colspan="1">Heading</td>
-			</tr>
-			<td valign="top">
-				<span id="heading"> - </span>
+	<table border="0" style="margin: auto;">
+		<tr>
+			<td style=" vertical-align: top; width: 50px;">
+				<div style="text-align: left;">
+					<span id="working" title="Traffic" style="color: white; font-size: 50px;">&#11044;</span>
+				</div>
 			</td>
-			</tr>
-		</table>
-	</div>
+			<td>
+				<div id="one" style="display: block;">
+					<table class="data-table">
+						<tr>
+							<td colspan="1">Position</td>
+						</tr>
+						<tr>
+							<td valign="top">
+								<span id="latitude"> - </span>
+								<br/>
+								<span id="longitude"> - </span>
+							</td>
+						</tr>
+					</table>
+				</div>
 
+				<div id="two" style="display: none;">
+					<table class="data-table">
+						<tr>
+							<td colspan="1">Speed</td>
+						</tr>
+						<td valign="top">
+							<span id="speed"> - </span>
+						</td>
+						</tr>
+					</table>
+				</div>
+
+				<div id="three" style="display: none;">
+					<table class="data-table">
+						<tr>
+							<td colspan="1">Heading</td>
+						</tr>
+						<td valign="top">
+							<span id="heading"> - </span>
+						</td>
+						</tr>
+					</table>
+				</div>
+			</td>
+			<td style="width: 50px;">
+
+			</td>
+		</tr>
+	</table>
 </div>
 <div style="margin: 10px; padding: 10px; border: 1px solid silver; border-radius: 10px;">
 	<button onclick="cleanError();" style="border-radius: 3px;">Clear Error Messages</button>
@@ -159,6 +172,11 @@
 	events.subscribe('cog', function(val) {
 		let speedField = document.getElementById("heading");
 		speedField.innerText = lpad(val.toFixed(0), 3, '0') + "°";
+	});
+
+	events.subscribe('valid', function(val) {
+		let traffic = document.getElementById("working");
+		traffic.style.color = (val === null ? 'white' : (val === true ? 'green' : 'red'));
 	});
 
 	function lpad(str, len, pad) {
@@ -264,7 +282,17 @@
 			var errMess = "";
 
 			try {
-				if (json.Position !== undefined && json.RMCStatus === true) {
+				let valid = null;
+				if (json.RMCStatus !== undefined) {
+					valid = json.RMCStatus;
+				}
+				events.publish('valid', valid);
+			} catch (err) {
+				errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Status");
+			}
+
+			try {
+				if (json.Position !== undefined && (json.RMCStatus === true || json.RMCStatus === undefined)) {
 					let latitude = json.Position.lat;
 //          console.log("latitude:" + latitude)
 					let longitude = json.Position.lng;
@@ -285,7 +313,7 @@
 					events.publish('sog', sog);
 				}
 			} catch (err) {
-				errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "boat speed");
+				errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "SOG");
 			}
 
 			try {
@@ -295,7 +323,7 @@
 					events.publish('cog', cog);
 				}
 			} catch (err) {
-				errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "boat speed");
+				errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "COG");
 			}
 
 			if (errMess.length > 0) {
