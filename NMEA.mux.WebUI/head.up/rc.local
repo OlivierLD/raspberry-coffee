@@ -28,6 +28,8 @@ then
 	  sudo ln -s /dev/ttyACM0 /dev/ttyS80
 	fi
 fi
+# Or do it anyway...
+sudo ln -s /dev/ttyACM0 /dev/ttyS80
 #
 cd ~pi/NMEADist
 # The -w give the mux some slack (it waits)

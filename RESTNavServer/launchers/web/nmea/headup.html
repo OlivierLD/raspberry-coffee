@@ -68,7 +68,10 @@
 						<tr>
 							<td valign="top">
 								<span id="latitude"> - </span>
-								<br/>
+							</td>
+						</tr>
+						<tr>
+							<td>
 								<span id="longitude"> - </span>
 							</td>
 						</tr>
@@ -80,9 +83,10 @@
 						<tr>
 							<td colspan="1">Speed</td>
 						</tr>
-						<td valign="top">
-							<span id="speed"> - </span>
-						</td>
+						<tr>
+							<td valign="top">
+								<span id="speed"> - </span>
+							</td>
 						</tr>
 					</table>
 				</div>
@@ -92,15 +96,34 @@
 						<tr>
 							<td colspan="1">Heading</td>
 						</tr>
-						<td valign="top">
-							<span id="heading"> - </span>
-						</td>
+						<tr>
+							<td valign="top">
+								<span id="heading"> - </span>
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<div id="four" style="display: none;">
+					<table class="data-table">
+						<tr>
+							<td colspan="1">Solar</td>
+						</tr>
+						<tr>
+							<td valign="top">
+								<span id="solar-date"> - </span>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top">
+								<span id="solar-time"> - </span>
+							</td>
 						</tr>
 					</table>
 				</div>
 			</td>
 			<td style="width: 50px;">
-
+				<!-- Empty -->
 			</td>
 		</tr>
 	</table>
@@ -172,6 +195,14 @@
 	events.subscribe('cog', function(val) {
 		let speedField = document.getElementById("heading");
 		speedField.innerText = lpad(val.toFixed(0), 3, '0') + "°";
+	});
+
+	const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+	events.subscribe('solar', function(val) {
+		let date = document.getElementById("solar-date");
+		let time = document.getElementById("solar-time");
+		date.innerText = val.day + '-' + MONTHS[val.month - 1] + '-' + val.year;
+		time.innerText = lpad(val.hour.toString(), 2, '0') + ':' + lpad(val.min.toString(), 2, '0') + ':' + lpad(val.sec.toString(), 2, '0');
 	});
 
 	events.subscribe('valid', function(val) {
@@ -326,6 +357,16 @@
 				errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "COG");
 			}
 
+			try {
+				let solar = {};
+				if (json['Solar Time'] !== undefined) {
+					solar = json['Solar Time'].fmtDate;
+					events.publish('solar', solar);
+				}
+			} catch (err) {
+				errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Solar Time");
+			}
+
 			if (errMess.length > 0) {
 				displayErr(errMess);
 			}
@@ -363,7 +404,7 @@
 		});
 	}
 
-	let tabs = [ 'one', 'two', 'three' ];
+	let tabs = [ 'one', 'two', 'three', 'four' ];
 	let dataIndex = -1;
 	function scroll(ms) {
 		dataIndex += 1;
