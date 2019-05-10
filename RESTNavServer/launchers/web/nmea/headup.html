@@ -155,12 +155,18 @@
 			});
 		},
 
+		unsubscribe: function (topic) {
+			this.listener = this.listener.filter(function(elmt) {
+				return elmt.topic !== topic;
+			});
+		},
+
 		publish: function (topic, value) {
-			for (let i = 0; i < this.listener.length; i++) {
-				if (this.listener[i].topic === topic) {
-					this.listener[i].actionListener(value);
+			this.listener.forEach(lsnr => {
+				if (lsnr.topic === topic) {
+					lsnr.actionListener(value);
 				}
-			}
+			});
 		}
 	};
 
