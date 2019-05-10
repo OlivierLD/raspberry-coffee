@@ -20,6 +20,15 @@ fi
 #
 echo "-- From /etc/rc.local --"
 echo "Now starting NMEA Multiplexer"
+#
+if [ -f "/dev/ttyACM0" ] # ttyACM0 workaround
+then
+	if [ ! -f "/dev/ttyS80" ]
+	then
+	  sudo ln -s /dev/ttyACM0 /dev/ttyS80
+	fi
+fi
+#
 cd ~pi/NMEADist
 # The -w give the mux some slack (it waits)
 ./start-mux.sh -w &

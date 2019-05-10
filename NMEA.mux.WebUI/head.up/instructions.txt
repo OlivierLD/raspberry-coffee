@@ -1,6 +1,6 @@
-+---------------------+
-| TODO the first time |
-+---------------------+
++----------------------------+
+| To do once, the first time |
++----------------------------+
 
 - Use "switch2tftscreen" to copy the small screen config where it belongs
 - Using "raspi-config", choose to boot to the Graphical Desktop

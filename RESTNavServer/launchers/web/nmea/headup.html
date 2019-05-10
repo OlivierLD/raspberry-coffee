@@ -359,6 +359,7 @@
 				}
 			}
 			messManager("Failed to get nmea data..." + (error !== undefined ? (typeof(error) === 'object' ? JSON.stringify(error, null, 2) : error.toString()) : ' - ') + ', ' + (message.length > 0 ? message : ' - '));
+			events.publish('valid', null);
 		});
 	}
 
