@@ -122,13 +122,18 @@ The examples list contains
     - Uses the Graphical Desktop to display a Web Interface in a browser. More demanding than the others, requires a more powerful config (Raspberry Pi 3B+). 
 
 ### Full Nav Server 
-All features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
+All features: NMEA multiplexer, Web Interface, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
+
+![Full Server](./docimg/full.server.png)
+
 ```
  $ cd full.server
  $ ./builder.sh
 ```
 
-<!-- TODO Screenshots, diagrams, pictures -->
+![Small SSD1306 Oled Screen](./docimg/oled.02.jpg)
+
+![Small SSD1306 Oled Screen](./docimg/Nokia5110.jpg)
 
 ### Minimal Multiplexer
 ```
