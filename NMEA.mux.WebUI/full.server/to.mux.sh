@@ -22,12 +22,25 @@ elif [ "$YES" == "0" ]
 then
   a=n
 else
-  echo -en "Remove data.nmea ? y|n > "
-  read a
+  if [ -f ./data.nmea ] || [ -d logged/* ]
+  then
+    echo -en "Remove previous logged data ? y|n > "
+    read a
+  else
+    a=n
+  fi
 fi
+#
+# Following lines are specially relevant if there is a forwarder defined like this:
+#
+# forward.01.type=file
+# forward.01.filename=./data.nmea
+# forward.01.append=true
+#
 if [ "$a" = "y" ]
 then
-  echo -e "Removing previous log file"
+  echo -e "Removing previous log file(s)"
+  sudo rm -rf logged/*
   sudo rm data.nmea
   sudo rm nohup.out
 else

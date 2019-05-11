@@ -199,7 +199,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 			// Make sure the cache has been initialized.
 			if (ApplicationContext.getInstance().getDataCache() == null) {
 				if (nbTry < 10) {
-					try { Thread.sleep(1000L); } catch (Exception ex) {}
+					try { Thread.sleep(1_000L); } catch (Exception ex) {}
 					nbTry++;
 				} else {
 					throw new RuntimeException("Init the Cache first. See the properties file used at startup."); // Oops
@@ -214,7 +214,8 @@ public class SSD1306ProcessorI2C implements Forwarder {
 
 		Context.getInstance().addTopicListener(new Context.TopicListener(REST_CLIENT_EVENT_NAME) {
 			/**
-			 * Speed Unit can be changed with a REST call: POST /mux/events/change-speed-unit with a payload like
+			 * Speed Unit can be changed (from a client, on the server) with a REST call:
+			 * POST /mux/events/change-speed-unit with a payload like
 			 * { "speed-unit": "kmh" }
 			 * @param topic <code>change-speed-unit</code> for this to work, or a regex matching it.
 			 * @param payload one of { "speed-unit": "kmh" }, { "speed-unit": "mph" }, { "speed-unit": "ms" }, or { "speed-unit": "kts" }
@@ -528,6 +529,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 			throw new RuntimeException(ex);
 		}
 	}
+
 
 	private void displaySpeed(String label, double value) {
 		String unit = " kts";
