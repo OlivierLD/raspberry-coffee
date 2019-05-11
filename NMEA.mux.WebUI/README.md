@@ -110,6 +110,11 @@ This project directory is a play ground, again, it is here for **you** to _compo
 Means not **me**. 🤓
 
 ## Examples
+> Note: The Raspberry Pi (pretty much all models) can host the navigation server, along with its REST/HTTP companion,
+> without problem.
+> One possibly challenging thing though, would be to run the Web GUI on the Graphical Desktop.
+> This turns out to be quite demanding, and this requires a more beefy Raspberry Pi.
+> As usual, and as everywhere, a GUI is something very demanding.
 
 The examples list contains
 - [Full Navigation Server](#full-nav-server)
@@ -133,7 +138,7 @@ All features: NMEA multiplexer, Web Interface, Celestial Computer, Tides, Almana
 
 ![Small SSD1306 Oled Screen](./docimg/oled.02.jpg)
 
-![Small SSD1306 Oled Screen](./docimg/Nokia5110.jpg)
+![Small Nokia cellphone Screen](./docimg/Nokia5110.jpg)
 
 ### Minimal Multiplexer
 ```
