@@ -390,6 +390,8 @@ Distortion of the reflected screen can be controlled in the CSS Stylesheet, by a
 > In the car, with an `OBD` (On Board Diagnostic) interface (usually using Bluetooth), we could display all kind of data.
 > This will be another project.
 
+> Note: Try on a Raspberry Pi 3B+, the client part (running in the browser) is a bit demanding...
+
 ---
 
 ... More to come
