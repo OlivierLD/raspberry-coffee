@@ -9,13 +9,8 @@ then
 	echo -e "| Giving Multiplexer some slack |"
 	echo -e "+-------------------------------+"
 	sleep 20
-	echo -e ""
-	echo -e "+--------------------------+"
-	echo -e "| Now starting Multiplexer |"
-	echo -e "+--------------------------+"
 fi
 #
-# cd ~pi/NMEADist
 if [ -f "to.mux.sh" ]
 then
   printf "+----------------------+\n"
@@ -24,7 +19,7 @@ then
   # See the script for option details
   ./to.mux.sh -n --no-date
 else
+  printf ">> WARNING:\n"
   printf "No to.mux.sh found\n"
 fi
-# cd -
 #

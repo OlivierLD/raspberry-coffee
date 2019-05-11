@@ -54,8 +54,8 @@
 
 	<table border="0" style="margin: auto;">
 		<tr>
-			<td style=" vertical-align: top; width: 50px;">
-				<div style="text-align: left;">
+			<td style="vertical-align: top; width: 50px;">
+				<div style="text-align: left; margin-top: -50px;">
 					<span id="working" title="Traffic" style="color: white; font-size: 50px;">&#11044;</span>
 				</div>
 			</td>
@@ -211,9 +211,11 @@
 		time.innerText = lpad(val.hour.toString(), 2, '0') + ':' + lpad(val.min.toString(), 2, '0') + ':' + lpad(val.sec.toString(), 2, '0');
 	});
 
+	let tick = true;
 	events.subscribe('valid', function(val) {
 		let traffic = document.getElementById("working");
-		traffic.style.color = (val === null ? 'white' : (val === true ? 'green' : 'red'));
+		traffic.style.color = (val === null ? (tick ? 'white' : 'silver') : (val === true ? (tick ? 'green' : 'darkgreen') : (tick ? 'red' : 'orange')));
+		tick = ! tick;
 	});
 
 	function lpad(str, len, pad) {
@@ -322,6 +324,8 @@
 				let valid = null;
 				if (json.RMCStatus !== undefined) {
 					valid = json.RMCStatus;
+				} else {
+					valid = false;
 				}
 				events.publish('valid', valid);
 			} catch (err) {

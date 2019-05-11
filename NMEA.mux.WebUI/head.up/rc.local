@@ -35,4 +35,7 @@ cd ~pi/NMEADist
 # The -w give the mux some slack (it waits)
 ./start-mux.sh -w &
 cd -
+echo "-- From /etc/rc.local --"
+echo "Mux has been started"
+echo "------------------------"
 exit 0
