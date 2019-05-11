@@ -4,9 +4,9 @@ We want to have a Nav Server:
 - Able to compute data
 - Able to send or broadcast data on several channels
 - Able to run even if no WiFi network is available
-- Able to provide a Web Graphical User Interface
+- Able to provide a Web Graphical User Interface, accessing server side REST Services
 
-The [`NMEA.multiplexer`](../NMEA.multiplexer/README.md) is able to read, compute, and broadcast data.
+The [`NMEA.multiplexer`](../NMEA.multiplexer/README.md) is able to read, compute, and broadcast data, also accessible from a REST client.
 
 To work even if no WiFi network is available, the best is probably to have the Raspberry Pi emit its own.
 This is totally feasible, follow the instructions provided [here](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software).
@@ -110,7 +110,19 @@ This project directory is a play ground, again, it is here for **you** to _compo
 Means not **me**. 🤓
 
 ## Examples
-### Full Nav Server (all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...)
+
+The examples list contains
+- [Full Navigation Server](#full-nav-server)
+    - Read Serial port (NMEA, GPS), log, display on small screen, TCP rebroadcast, Web Interface, Celestial Computer, Tide Computer, etc
+- [Minimal Navigation server](#minimal-multiplexer)
+    - Read a GPS (or NMEA Station), and log data into a file. Suitable for running, kayaking, and such small configurations.
+- [Extended Navigation Server](#full-nav-server-extended)
+    - Based on the `Full Navigation Server` above, shows how to add 2 push-buttons to the configuration, for the user to interact with the software. 
+- [Embarked Head Up display](#head-up-display)
+    - Uses the Graphical Desktop to display a Web Interface in a browser. More demanding than the others, requires a more powerful config (Raspberry Pi 3B+). 
+
+### Full Nav Server 
+All features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
 ```
  $ cd full.server
  $ ./builder.sh
@@ -124,14 +136,17 @@ Means not **me**. 🤓
  $ ./builder.sh
 ```
 
-### Full Nav Server, extended (all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...)
-The idea here is to show how to _extend_ the classes provided in the project.
+### Full Nav Server, extended 
+all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
+
+The idea here is to show how to _extend_ the classes provided in the project to implement your own extra features.
 ```
  $ cd full.server.extended
  $ ./builder.sh
 ```
 
-### With a 5" or 7" TFT display, setup for **Head-Up-Display**
+### Head-Up-Display
+With a 5" or 7" TFT screen
 ```
  $ cd head.up
  $ ./builder.sh
