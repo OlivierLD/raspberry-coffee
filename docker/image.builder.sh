@@ -84,13 +84,13 @@ do
       OK=true
       DOCKER_FILE=webcomponents.Dockerfile
       IMAGE_NAME=oliv-webcomp
-			RUN_CMD="docker run -p 9999:9999 -d --name web-comps $IMAGE_NAME:latest"
+			RUN_CMD="docker run -p 8080:9999 -d --name web-comps $IMAGE_NAME:latest"
 			#                      |    |
 			#                      |    tcp port used in the image
 			#                      tcp port as seen from outside (this machine)
 			#
       MESSAGE="---------------------------------------------------\n"
-      MESSAGE="${MESSAGE}Reach http://localhost:9999/index.html from your browser.\n"
+      MESSAGE="${MESSAGE}Reach http://localhost:8080/index.html from your browser.\n"
       MESSAGE="${MESSAGE}You can also log in a new container using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
       MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it web-comps /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
