@@ -35,6 +35,7 @@ do
   echo -e "|                                               inkscape, gtk samples  |"
   echo -e "|  9. Debian, Java, Scala, Spark                                       |"
   echo -e "| 10. Ubuntu MATE, TensorFlow, Keras, Python3, Jupyter, PyCharm, VNC   |"
+  echo -e "| 11. Debian, git, java, maven, node, npm, yarn, VNC...                |"
   echo -e "+----------------------------------------------------------------------+"
   echo -e "| Q. Oops, nothing, thanks, let me out.                                |"
   echo -e "+----------------------------------------------------------------------+"
@@ -238,6 +239,16 @@ do
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
 			MESSAGE="${MESSAGE}To start Jupyter Notebook, type: jupyter notebook --allow-root --ip 0.0.0.0 --no-browser\n"
 			MESSAGE="${MESSAGE}  - Default port 8888 is exposed, you can use from the host http://localhost:8888/?token=6c95d878c045212bxxxxxx\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
+      ;;
+    "11")
+      OK=true
+      DOCKER_FILE=devenv.Dockerfile
+      IMAGE_NAME=oliv-devenv
+      RUN_CMD="docker run -d --name dev-env $IMAGE_NAME:latest"
+      #
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Log in using: docker run -it -e USER=root $IMAGE_NAME:latest /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     *)
