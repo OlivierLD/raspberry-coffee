@@ -40,10 +40,10 @@ RUN mkdir ~/.vnc
 RUN echo "mate" | vncpasswd -f >> ~/.vnc/passwd
 RUN chmod 600 ~/.vnc/passwd
 
-RUN apt-get install -y chromium
+# RUN apt-get install -y chromium
 # RUN apt-get install -y inkscape
 
-RUN apt-get install -y libgtk2.0-dev
+# RUN apt-get install -y libgtk2.0-dev
 
 EXPOSE 5901
 
@@ -61,6 +61,7 @@ RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 RUN echo "echo 'To start VNCserver, type: vncserver :1 -geometry 1280x800 -depth 24'" >> $HOME/.bashrc
 RUN echo "echo '                       or vncserver :1 -geometry 1440x900 -depth 24'" >> $HOME/.bashrc
 RUN echo "echo '                       or vncserver :1 -geometry 1680x1050 -depth 24, etc...'" >> $HOME/.bashrc
+RUN echo "echo ' - Note: VNC password is mate'" >> $HOME/.bashrc
 
 USER root
 WORKDIR /home/root
