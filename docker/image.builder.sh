@@ -50,14 +50,16 @@ do
       OK=true
       DOCKER_FILE=navserver.Dockerfile
       IMAGE_NAME=oliv-nav
-			RUN_CMD="docker run -p 8080:9999 -d $IMAGE_NAME:latest"
+			RUN_CMD="docker run -p 8080:9999 -d --name nav-server $IMAGE_NAME:latest"
 			#                      |    |
 			#                      |    tcp port used in the image
 			#                      tcp port as seen from outside (this machine)
 			#
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://localhost:8080/web/index.html from your browser.\n"
-      MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}You can also log in (new container) using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it nav-server /bin/bash\n"
+      MESSAGE="${MESSAGE}Also, to see how it is doing, try: docker top nav-server\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "1p")
@@ -82,28 +84,30 @@ do
       OK=true
       DOCKER_FILE=webcomponents.Dockerfile
       IMAGE_NAME=oliv-webcomp
-			RUN_CMD="docker run -p 9999:9999 -d $IMAGE_NAME:latest"
+			RUN_CMD="docker run -p 9999:9999 -d --name web-comps $IMAGE_NAME:latest"
 			#                      |    |
 			#                      |    tcp port used in the image
 			#                      tcp port as seen from outside (this machine)
 			#
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://localhost:9999/index.html from your browser.\n"
-      MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}You can also log in a new container using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it web-comps /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "3")
       OK=true
       DOCKER_FILE=rpi.Dockerfile
       IMAGE_NAME=oliv-rpi
-			RUN_CMD="docker run -p 8081:8080 -d $IMAGE_NAME:latest"
+			RUN_CMD="docker run -p 8081:8080 -d --name rpi $IMAGE_NAME:latest"
 			#                      |    |
 			#                      |    tcp port used in the image
 			#                      tcp port as seen from outside (this machine)
 			#
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://localhost:8081/oliv-components/index.html from your browser.\n"
-      MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}You can also log in a new container using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it rpi /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "4")
@@ -111,7 +115,7 @@ do
       DOCKER_FILE=node-pi.Dockerfile
       IMAGE_NAME=oliv-nodepi
 			# RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
-			RUN_CMD="docker run -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
+			RUN_CMD="docker run -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d --name node-pi $IMAGE_NAME:latest"
 			#                      |    |            |             |             |
 			#                      |    |            |             |             Device IN the docker image
 			#                      |    |            |             Device name in the host (RPi) machine
@@ -127,7 +131,8 @@ do
 			fi
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://$IP_ADDR:9876/data/demos/gps.demo.html in your browser.\n"
-      MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}You can also log in a new container using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it node-pi /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "5")
@@ -135,7 +140,7 @@ do
       DOCKER_FILE=node-debian.Dockerfile
       IMAGE_NAME=oliv-nodedebian
 			# RUN_CMD="docker run -p 9876:9876 --privileged -v /dev/tty.usbserial:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
-			RUN_CMD="docker run -p 9876:9876 -d $IMAGE_NAME:latest"
+			RUN_CMD="docker run -p 9876:9876 -d --name node-debian $IMAGE_NAME:latest"
 			#                      |    |
 			#                      |    tcp port used in the image
 			#                      tcp port as seen from outside (this machine)
@@ -147,7 +152,8 @@ do
 			fi
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://$IP_ADDR:9876/data/demos/gps.demo.html in your browser.\n"
-      MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}You can also log in a new container using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it node-debian /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "6")
@@ -155,7 +161,7 @@ do
       DOCKER_FILE=rpi.mux.Dockerfile
       IMAGE_NAME=oliv-nmea-mux
 			# RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
-			RUN_CMD="docker run -p 9999:9999 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
+			RUN_CMD="docker run -p 9999:9999 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d --name nmea-mux $IMAGE_NAME:latest"
 			#                      |    |            |             |             |
 			#                      |    |            |             |             Device IN the docker image
 			#                      |    |            |             Device name in the host (RPi) machine
@@ -172,27 +178,30 @@ do
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://$IP_ADDR:9999/web/index.html in your browser.\n"
       MESSAGE="${MESSAGE}REST operations available: http://localhost:9999/mux/oplist.\n"
-      MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}You can also log in a new instance using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it nmea-mux /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "7")
       OK=true
       DOCKER_FILE=golang.Dockerfile
       IMAGE_NAME=oliv-go
-      RUN_CMD="docker run -d $IMAGE_NAME:latest"
+      RUN_CMD="docker run -d --name golang $IMAGE_NAME:latest"
       #
       MESSAGE="---------------------------------------------------\n"
-      MESSAGE="${MESSAGE}Log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}Log in a new container using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it golang /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "8")
       OK=true
       DOCKER_FILE=rpidesktop.Dockerfile
       IMAGE_NAME=oliv-pi-vnc
-      RUN_CMD="docker run -d $IMAGE_NAME:latest"
+      RUN_CMD="docker run -d --name rpi-desktop $IMAGE_NAME:latest"
       #
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Log in using: docker run -it --rm -p 5901:5901 -p 8080:8080 -e USER=root $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}    or using: docker exec -it rpi-desktop /bin/bash\n"
       MESSAGE="${MESSAGE}- then run 'vncserver :1 -geometry 1280x800 (or 1440x900, 1680x1050, etc) -depth 24'\n"
       MESSAGE="${MESSAGE}- then use a vncviewer on localhost:1, password is 'mate'\n"
       MESSAGE="${MESSAGE}- then 'node server.js' or 'npm start', and reach http://localhost:8080/oliv-components/index.html ...\n"
@@ -205,7 +214,7 @@ do
       OK=true
       DOCKER_FILE=spark-debian.Dockerfile
       IMAGE_NAME=oliv-spark
-      RUN_CMD="docker run -d $IMAGE_NAME:latest"
+      RUN_CMD="docker run -d --name spark-raspian $IMAGE_NAME:latest"
       #
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Log in using: docker run -it --rm -e USER=root $IMAGE_NAME:latest /bin/bash\n"
@@ -215,11 +224,12 @@ do
       OK=true
       DOCKER_FILE=tensorflow.Dockerfile
       IMAGE_NAME=oliv-tf-vnc
-      RUN_CMD="docker run -d $IMAGE_NAME:latest"
+      RUN_CMD="docker run -d --name tensorflow $IMAGE_NAME:latest"
       #
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}You can log in using: docker run --interactive --tty --rm --publish 5901:5901 --publish 8888:8888 [--env USER=root] [--volume tensorflow:/root/workdir/shared] $IMAGE_NAME:latest /bin/bash \n"
       MESSAGE="${MESSAGE}                   or docker run -it --rm -p 5901:5901 -p 8888:8888 -e USER=root -v tensorflow:/root/workdir/shared $IMAGE_NAME:latest /bin/bash \n"
+      MESSAGE="${MESSAGE}                   or docker exec -it tensorflow /bin/bash \n"
       MESSAGE="${MESSAGE}- then run 'vncserver :1 -geometry 1280x800 (or 1440x900, 1680x1050, etc) -depth 24'\n"
       MESSAGE="${MESSAGE}- then use a vncviewer on localhost:1, password is 'mate'\n"
       MESSAGE="${MESSAGE}- then (for example) python3 examples/mnist_cnn.py ...\n"
