@@ -172,7 +172,11 @@ then
 else
 	echo Assuming Linux/Raspberry Pi
   JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
-  SUDO="sudo "
+  # No sudo require if running as root
+  if [ "$(whoami)" != "root" ]
+  then
+    SUDO="sudo "
+  fi
 fi
 #
 COMMAND="${SUDO}java -cp $CP $JAVA_OPTS navrest.NavServer"

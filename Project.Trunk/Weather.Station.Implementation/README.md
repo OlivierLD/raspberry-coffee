@@ -160,6 +160,12 @@ To start Chromium when the Desktop starts, and load one or several URLs (in diff
 ```
 It will start Chromium in `kiosk` (full screen) mode, and load the URLs mentioned above.
 
+To disable the screen saver:
+- Edit `/etc/lightdm/lightdm.conf`
+- Have a/the line that starts with `xserver-command=` to look like `xserver-command=X -s 0 -dpms`
+
+This will take effect after reboot. 
+
 ##### And more
 - Added a camera
     - Snapshots posted on Adafruit-IO

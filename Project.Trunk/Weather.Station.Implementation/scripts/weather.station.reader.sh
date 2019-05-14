@@ -7,6 +7,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dweather.station.verbose=false"       # Home Weathe
 JAVA_OPTIONS="$JAVA_OPTIONS -Dsdl.weather.station.verbose=false"   # SDL Board
 JAVA_OPTIONS="$JAVA_OPTIONS -Dsdl.weather.station.wind.verbose=false"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dsdl.weather.station.rain.verbose=false"
+#
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wspeed.coeff=1"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wdir.offset=30"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Ddebounce.time.millisec=30"
