@@ -35,13 +35,17 @@ RUN apt-get install -y maven
 
 RUN apt-get install -y procps net-tools wget
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y mate-desktop-environment-core tightvncserver vim
+#RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y mate-desktop-environment-core tightvncserver vim
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y tightvncserver vim
 RUN mkdir ~/.vnc
 RUN echo "mate" | vncpasswd -f >> ~/.vnc/passwd
 RUN chmod 600 ~/.vnc/passwd
 
 # RUN apt-get install -y chromium
 # RUN apt-get install -y inkscape
+
+RUN npm install -g grunt-cli
+RUN npm install -g grunt-hub
 
 # RUN apt-get install -y libgtk2.0-dev
 
@@ -81,7 +85,7 @@ COPY ./gtk ./gtk
 #WORKDIR gtk
 #RUN gcc `pkg-config --cflags --libs gtk+-2.0` gtktest.c -o gtktest
 
-# WORKDIR WebComponents
+WORKDIR workdir/dev
 
 #ENV http_proxy ""
 #ENV https_proxy ""

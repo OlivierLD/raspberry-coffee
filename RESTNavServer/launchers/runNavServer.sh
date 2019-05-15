@@ -172,7 +172,7 @@ then
 else
 	echo Assuming Linux/Raspberry Pi
   JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
-  # No sudo require if running as root
+  # No sudo require if running as root, in Docker for example.
   if [ "$(whoami)" != "root" ]
   then
     SUDO="sudo "
