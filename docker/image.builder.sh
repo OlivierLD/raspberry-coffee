@@ -259,11 +259,11 @@ do
       DOCKER_FILE=navserver.prod.Dockerfile
       IMAGE_NAME=prod-nmea-mux
 			# RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
-			RUN_CMD="docker run -p 9876:9999 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d --name prod-nmea $IMAGE_NAME:latest"
-			#                      |    |            |             |             |
-			#                      |    |            |             |             Device IN the docker image
-			#                      |    |            |             Device name in the host (RPi) machine
-			#                      |    |            sudo access to the Serial Port
+			RUN_CMD="docker run -p 9876:9999 --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d --name prod-nmea $IMAGE_NAME:latest"
+			#                      |    |      |             |             |
+			#                      |    |      |             |             Device IN the docker image
+			#                      |    |      |             Device name in the host (RPi) machine
+			#                      |    |      sudo access to the Serial Port
 			#                      |    tcp port IN the docker image
 			#                      tcp port as seen from outside (this machine)
 			#
