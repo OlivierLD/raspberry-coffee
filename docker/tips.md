@@ -57,3 +57,7 @@ node:v9.11.2
 ...
 
 ```
+
+```
+$ docker top dev-env
+```

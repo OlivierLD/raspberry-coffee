@@ -85,7 +85,7 @@ COPY ./gtk ./gtk
 #WORKDIR gtk
 #RUN gcc `pkg-config --cflags --libs gtk+-2.0` gtktest.c -o gtktest
 
-WORKDIR workdir/dev
+# WORKDIR workdir/dev
 
 #ENV http_proxy ""
 #ENV https_proxy ""

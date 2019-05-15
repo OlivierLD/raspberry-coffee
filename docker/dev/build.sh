@@ -23,6 +23,7 @@ then
   rm -rf ic-components
   git clone https://orahub.oraclecorp.com/fmw-bpm-composer/ic-components.git
   cd ic-components
+  git checkout features/user-management-v2
   ls -lisah
   #
   # HTTP_PROXY=http://www-proxy.us.oracle.com:80

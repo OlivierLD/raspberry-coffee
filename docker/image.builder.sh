@@ -249,6 +249,8 @@ do
       #
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Log in using: docker run -it -e USER=root $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}          or: docker start dev-env\n"
+      MESSAGE="${MESSAGE}              docker exec -it dev-env /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     *)
