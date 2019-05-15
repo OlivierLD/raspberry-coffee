@@ -1,10 +1,10 @@
-ARG http_proxy=""
-ARG https_proxy=""
-ARG no_proxy=""
-#
-#ARG http_proxy="http://www-proxy.us.oracle.com:80"
-#ARG https_proxy="http://www-proxy.us.oracle.com:80"
+#ARG http_proxy=""
+#ARG https_proxy=""
 #ARG no_proxy=""
+#
+ARG http_proxy="http://www-proxy.us.oracle.com:80"
+ARG https_proxy="http://www-proxy.us.oracle.com:80"
+ARG no_proxy=""
 #
 FROM debian as buildStep
 #
@@ -27,7 +27,7 @@ RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 RUN \
   apt-get update && \
   apt-get upgrade -y && \
-  DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y curl git build-essential default-jdk sysvbanner vim && \
+  DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y curl git build-essential default-jdk sysvbanner vim zip && \
   rm -rf /var/lib/apt/lists/*
 
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
@@ -52,7 +52,11 @@ RUN ./builder.sh
 RUN echo "Build is done!"
 
 # 2nd stage, build the runtime image
+# TODO See rpi.Dockerfile, resin/raspberrypi3-debian:latest ?
 FROM openjdk:8-jre-slim
+
+# TODO Install librxtx-java ?
+
 WORKDIR /navserver
 COPY --from=buildStep /workdir/raspberry-coffee/NMEA.mux.WebUI/full.server/NMEADist.tar.gz ./
 

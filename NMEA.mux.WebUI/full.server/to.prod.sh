@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 #
 # WIP
 # Warning: Run the process on the target machine. That will avoid unwanted version mismatch (java class version...)
@@ -21,9 +21,10 @@ echo -e "+----------------------------------------------------------------------
 # 2 - Create new dir
 #
 distdir=
-if [ "$1" != ""]
+if [ "$1" != "" ]
 then
 	distdir=$1
+	echo -e "Will create distribution in $distdir"
 else
   echo -en "Which (non existent) folder should we create the distribution in ? > "
   # Directory name, that will become the archive name.

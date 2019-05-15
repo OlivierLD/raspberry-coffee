@@ -36,6 +36,7 @@ do
   echo -e "|  9. Debian, Java, Scala, Spark                                       |"
   echo -e "| 10. Ubuntu MATE, TensorFlow, Keras, Python3, Jupyter, PyCharm, VNC   |"
   echo -e "| 11. Debian, git, java, maven, node, npm, yarn, VNC...                |"
+  echo -e "| 12. nav-server, prod (small) to run on a Raspberry Pi                |"
   echo -e "+----------------------------------------------------------------------+"
   echo -e "| Q. Oops, nothing, thanks, let me out.                                |"
   echo -e "+----------------------------------------------------------------------+"
@@ -251,6 +252,32 @@ do
       MESSAGE="${MESSAGE}Log in using: docker run -it -e USER=root $IMAGE_NAME:latest /bin/bash\n"
       MESSAGE="${MESSAGE}          or: docker start dev-env\n"
       MESSAGE="${MESSAGE}              docker exec -it dev-env /bin/bash\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
+      ;;
+    "12")
+      OK=true
+      DOCKER_FILE=navserver.prod.Dockerfile
+      IMAGE_NAME=prod-nmea-mux
+			# RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
+			RUN_CMD="docker run -p 9876:9999 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d --name prod-nmea $IMAGE_NAME:latest"
+			#                      |    |            |             |             |
+			#                      |    |            |             |             Device IN the docker image
+			#                      |    |            |             Device name in the host (RPi) machine
+			#                      |    |            sudo access to the Serial Port
+			#                      |    tcp port IN the docker image
+			#                      tcp port as seen from outside (this machine)
+			#
+      # MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
+			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
+			if [ "$IP_ADDR" = "" ]
+			then
+			  IP_ADDR="localhost"
+			fi
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Reach http://$IP_ADDR:9876/zip/index.html in your browser.\n"
+      MESSAGE="${MESSAGE}REST operations available: http://localhost:9876/mux/oplist.\n"
+      MESSAGE="${MESSAGE}You can also log in a new instance using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it nmea-mux /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     *)
