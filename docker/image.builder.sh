@@ -245,7 +245,7 @@ do
       OK=true
       DOCKER_FILE=devenv.Dockerfile
       IMAGE_NAME=oliv-devenv
-      RUN_CMD="docker run -d --name dev-env $IMAGE_NAME:latest"
+      RUN_CMD="docker run -d --name dev-env $IMAGE_NAME:latest /bin/bash"
       #
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Log in using: docker run -it -e USER=root $IMAGE_NAME:latest /bin/bash\n"

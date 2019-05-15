@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo "Usage is"
 echo -e "  . $0 [false]|true"
-echo "- true means 'skip the first part (ic-components cloning and yarning)"
+echo "- true means 'skip the first part' (ic-components cloning and yarning)"
 echo "Make sure you've set the proxies if running inside a firewall"
 #
 if [ "$(uname)" == "Darwin" ]; then
@@ -23,6 +23,7 @@ then
   rm -rf ic-components
   git clone https://orahub.oraclecorp.com/fmw-bpm-composer/ic-components.git
   cd ic-components
+  echo "IMPORTANT: Checking out branch features/user-management-v2"
   git checkout features/user-management-v2
   ls -lisah
   #
@@ -40,10 +41,10 @@ echo "Dropping previous directory..."
 rm -rf integration-suite
 git clone https://orahub.oraclecorp.com/fmw-bpm-composer/integration-suite.git
 cd integration-suite
+echo "IMPORTANT: Checking out branch features/user-management-v2"
 git checkout features/user-management-v2
 #
 BPMHOME=$(dirname $_home)
-
 # ENVIRONMENT VARS:
 export BPMHOME
 export ORAHUB_PROJECT_ID=5912

@@ -20,9 +20,15 @@ echo -e "+----------------------------------------------------------------------
 #
 # 2 - Create new dir
 #
-echo -en "Which (non existent) folder should we create the distribution in ? > "
-# Directory name, that will become the archive name.
-read distdir
+distdir=
+if [ "$1" != ""]
+then
+	distdir=$1
+else
+  echo -en "Which (non existent) folder should we create the distribution in ? > "
+  # Directory name, that will become the archive name.
+  read distdir
+fi
 if [ -d "$distdir" ]
 then
 	echo -e "Folder $distdir exists. Please drop it or choose another name"

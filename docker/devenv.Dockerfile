@@ -9,8 +9,7 @@ ARG no_proxy=""
 FROM debian
 #
 # To run on a laptop.
-# Demoes the WebComponents.
-# With VNC
+# Basic development environment
 #
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 

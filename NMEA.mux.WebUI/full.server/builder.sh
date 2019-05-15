@@ -8,6 +8,6 @@ zip -r ../web.zip * -x 2019/**\*
 cd ..
 rm -rf web
 #
-./to.prod.sh
+./to.prod.sh NMEADist
 rm web.zip
 #
