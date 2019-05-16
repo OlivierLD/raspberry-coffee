@@ -27,17 +27,11 @@ RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 RUN \
   apt-get update && \
   apt-get upgrade -y && \
-  DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y curl git build-essential default-jdk sysvbanner vim zip && \
+  DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y curl git build-essential default-jdk zip && \
   rm -rf /var/lib/apt/lists/*
 
 #RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
 #RUN apt-get install -y nodejs
-
-RUN echo "banner Nav Server" >> $HOME/.bashrc
-RUN echo "git --version" >> $HOME/.bashrc
-#RUN echo "echo -n 'node:' && node -v" >> $HOME/.bashrc
-#RUN echo "echo -n 'npm:' && npm -v" >> $HOME/.bashrc
-RUN echo "java -version" >> $HOME/.bashrc
 
 RUN mkdir /workdir
 WORKDIR /workdir
@@ -52,8 +46,8 @@ RUN find . -name '*.gz'
 RUN echo "Build is done!"
 
 # 2nd stage, build the runtime image
-# TODO See rpi.Dockerfile, resin/raspberrypi3-debian:latest ?
-FROM openjdk:8-jre-slim
+# FROM openjdk:8-jre-slim
+FROM resin/raspberrypi3-debian:latest
 
 # Uncomment if running behind a firewall (also set the proxies at the Docker level to the values below)
 ENV http_proxy ${http_proxy}
@@ -61,9 +55,11 @@ ENV https_proxy ${https_proxy}
 # ENV ftp_proxy $http_proxy
 ENV no_proxy ${no_proxy}
 
-
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
+RUN echo "banner Nav Server" >> $HOME/.bashrc
+RUN echo "java -version" >> $HOME/.bashrc
 
+RUN apt-get install -y oracle-java8-jre
 RUN \
   apt-get update && \
   apt-get upgrade -y && \

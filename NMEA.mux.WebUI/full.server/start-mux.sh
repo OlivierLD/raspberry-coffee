@@ -70,6 +70,12 @@ then
   printf "+----------------------+\n"
   printf "| Starting Multiplexer |\n"
   printf "+----------------------+\n"
+  if [ "$1" != "" ]
+  then
+    echo -e ">> Script param: $1 <<"
+  else
+    echo ">> No Script prm <<"
+  fi
   # See the script for option details, $1 can be --no-background
   ./to.mux.sh -n --no-date $1
 else
