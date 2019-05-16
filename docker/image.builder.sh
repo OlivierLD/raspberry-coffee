@@ -35,7 +35,7 @@ do
   echo -e "|                                               inkscape, gtk samples  |"
   echo -e "|  9. Debian, Java, Scala, Spark                                       |"
   echo -e "| 10. Ubuntu MATE, TensorFlow, Keras, Python3, Jupyter, PyCharm, VNC   |"
-  echo -e "| 11. Debian, git, java, maven, node, npm, yarn, VNC...                |"
+  echo -e "| 11. Debian dev env, git, java, maven, node, npm, yarn, VNC...        |"
   echo -e "| 12. nav-server, prod (small) to run on a Raspberry Pi                |"
   echo -e "+----------------------------------------------------------------------+"
   echo -e "| Q. Oops, nothing, thanks, let me out.                                |"
@@ -86,13 +86,13 @@ do
       OK=true
       DOCKER_FILE=webcomponents.Dockerfile
       IMAGE_NAME=oliv-webcomp
-			RUN_CMD="docker run -p 8080:9999 -d --name web-comps $IMAGE_NAME:latest"
+			RUN_CMD="docker run -p 9876:8080 -d --name web-comps $IMAGE_NAME:latest"
 			#                      |    |
 			#                      |    tcp port used in the image
 			#                      tcp port as seen from outside (this machine)
 			#
       MESSAGE="---------------------------------------------------\n"
-      MESSAGE="${MESSAGE}Reach http://localhost:8080/index.html from your browser.\n"
+      MESSAGE="${MESSAGE}Reach http://localhost:9876/oliv-components/index.html from your browser.\n"
       MESSAGE="${MESSAGE}You can also log in a new container using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
       MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it web-comps /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
@@ -307,16 +307,17 @@ then
   docker build -f $DOCKER_FILE -t $IMAGE_NAME $EXTRA_PRM .
   #
   # Now run
-  echo -e "Now running $RUN_CMD..."
-  CONTAINER_ID=`$RUN_CMD`
-  echo -e "Running container ID $CONTAINER_ID"
+  echo -e "To create a container, run $RUN_CMD..."
+  # CONTAINER_ID=`$RUN_CMD`
+  # echo -e "Running container ID $CONTAINER_ID"
 fi
 printf "%b" "$MESSAGE"
 # Prompt for export
 if [ "$DOCKER_FILE" != "" ]
 then
-  echo -en "== Do you want to export this container $CONTAINER_ID ? [n]|y > "
-  read a
+  # echo -en "== Do you want to export this container $CONTAINER_ID ? [n]|y > "
+  # read a
+  a=N
   if [ "$a" == "Y" ]  || [ "$a" == "y" ]
   then
     echo -e "Last generated one is $IMAGE_NAME:latest, its ID is $CONTAINER_ID"

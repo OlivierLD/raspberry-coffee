@@ -10,7 +10,7 @@ FROM debian AS builder
 #
 # To run on a laptop - not necessaritly on an RPi (hence the default-jdk below)
 # Demos the NavServer (Tide, Almanac, Weather faxes, etc)
-# Clones the repo and recompiles everything.
+# Clones the repo and recompiles everything, and archivesn it for production (step 2)
 # proxy settings are passed as ARGs
 #
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
@@ -46,8 +46,8 @@ RUN find . -name '*.gz'
 RUN echo "Build is done!"
 
 # 2nd stage, build the runtime image
-# FROM openjdk:8-jre-slim
-FROM resin/raspberrypi3-debian:latest
+FROM openjdk:8-jre-slim
+# FROM resin/raspberrypi3-debian:latest
 
 # Uncomment if running behind a firewall (also set the proxies at the Docker level to the values below)
 ENV http_proxy ${http_proxy}
@@ -59,13 +59,11 @@ RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 RUN echo "banner Nav Server" >> $HOME/.bashrc
 RUN echo "java -version" >> $HOME/.bashrc
 
-RUN apt-get install -y oracle-java8-jre
-RUN \
-  apt-get update && \
-  apt-get upgrade -y && \
-  DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y sysvbanner vim && \
-  rm -rf /var/lib/apt/lists/*
-
+# RUN apt-get install -y default-jdk
+RUN apt-get update
+# RUN apt-get install -y oracle-java8-jdk
+# RUN java -version
+RUN apt-get install --fix-missing -y sysvbanner vim
 # TODO Install librxtx-java ?
 
 WORKDIR /navserver
@@ -79,3 +77,8 @@ RUN tar -xzf NMEADist.tar.gz
 WORKDIR /navserver/NMEADist
 EXPOSE 9999
 CMD [ "./start-mux.sh", "--no-background" ]
+
+# To push to docker
+# docker tag de1ddc31533e olivierlediouris/navserver:latest
+# docker login --username olivierlediouris --password xxxxxx
+# docker push olivierlediouris/navserver:latest

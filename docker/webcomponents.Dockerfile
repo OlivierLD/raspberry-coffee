@@ -38,8 +38,10 @@ RUN echo "java -version" >> $HOME/.bashrc
 RUN mkdir /workdir
 WORKDIR /workdir
 RUN git clone https://github.com/OlivierLD/WebComponents.git
-WORKDIR /workdir/WebComponents
+WORKDIR /workdir/WebComponents/oliv-components/images
+RUN ./changext.sh
 
+WORKDIR /workdir/WebComponents
 #ENV http_proxy ""
 #ENV https_proxy ""
 #ENV no_proxy ""
