@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 #
 # to be invoked from /etc/rc.local
 #
@@ -70,8 +70,8 @@ then
   printf "+----------------------+\n"
   printf "| Starting Multiplexer |\n"
   printf "+----------------------+\n"
-  # See the script for option details
-  ./to.mux.sh -n --no-date
+  # See the script for option details, $1 can be --no-background
+  ./to.mux.sh -n --no-date $1
 else
   printf "No to.mux.sh found\n"
 fi

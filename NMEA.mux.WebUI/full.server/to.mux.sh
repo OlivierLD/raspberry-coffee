@@ -66,6 +66,7 @@ fi
 NO_DATE=false
 RMC_TIME_OK=true
 SUN_FLOWER=false
+START_IN_BACKGROUND=true
 PROP_FILE="nmea.mux.gps.log.properties"
 JAVA_OPTIONS=
 #
@@ -81,6 +82,9 @@ do
   elif [ "$ARG" == "--no-rmc-time" ]
   then
     RMC_TIME_OK=false
+  elif [ "$ARG" == "--no-background" ]
+  then
+    START_IN_BACKGROUND=false
   elif [[ $ARG == -m:* ]] || [[ $ARG == --mux:* ]] # !! No quotes !!
   then
     PROP_FILE=${ARG#*:}
@@ -102,9 +106,6 @@ then
 fi
 #
 echo -e "JAVA_OPTIONS in to.mux.sh: $JAVA_OPTIONS"
-# The script below uses $JAVA_OPTIONS (hence the .)
-nohup ./mux.sh $PROP_FILE &
-# . ./mux.sh $PROP_FILE &
 #
 echo On its way!
 MY_IP=$(hostname -I | awk '{ print $1 }')
@@ -112,3 +113,12 @@ echo "Reach http://${MY_IP}:9999/zip/index.html"
 echo "  or  http://${MY_IP}:9999/zip/small-screens/small.console.02.html"
 date=`date`
 echo "System date is $date"
+#
+if [ "$START_IN_BACKGROUND" == "true" ]
+then
+  # The script below uses $JAVA_OPTIONS
+  nohup ./mux.sh $PROP_FILE &
+  # ./mux.sh $PROP_FILE &
+else
+  ./mux.sh $PROP_FILE
+fi

@@ -1,10 +1,10 @@
-#ARG http_proxy=""
-#ARG https_proxy=""
-#ARG no_proxy=""
-#
-ARG http_proxy="http://www-proxy.us.oracle.com:80"
-ARG https_proxy="http://www-proxy.us.oracle.com:80"
+ARG http_proxy=""
+ARG https_proxy=""
 ARG no_proxy=""
+#
+#ARG http_proxy="http://www-proxy.us.oracle.com:80"
+#ARG https_proxy="http://www-proxy.us.oracle.com:80"
+#ARG no_proxy=""
 #
 FROM debian AS builder
 #
@@ -82,4 +82,4 @@ RUN tar -xzf NMEADist.tar.gz
 #ENV no_proxy ""
 WORKDIR /navserver/NMEADist
 EXPOSE 9999
-CMD ["./start-mux.sh"]
+CMD [ "./start-mux.sh", "--no-background" ]
