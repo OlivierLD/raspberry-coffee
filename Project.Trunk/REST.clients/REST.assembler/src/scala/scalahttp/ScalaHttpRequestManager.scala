@@ -22,11 +22,11 @@ class ScalaHttpRequestManager extends RESTRequestManager {
     this.httpRequestServer = parent
 
     val mapStr = System.getProperty("relay.map", "1:11,2:12")
-    //                                                         | |  | |
-    //                                                         | |  | Physical pin #12 (GPIO_1)
-    //                                                         | |  Relay num for this app
-    //                                                         | Physical pin #11 (GPIO_0)
-    //                                                         Relay num for this app
+    //                                                        | |  | |
+    //                                                        | |  | Physical pin #12 (GPIO_1)
+    //                                                        | |  Relay num for this app
+    //                                                        | Physical pin #11 (GPIO_0)
+    //                                                        Relay num for this app
     var miso = 0
     var mosi = 10
     var clk = 11

@@ -53,6 +53,7 @@ dependencies {
   compile project(':Project.Trunk:RasPiRadar')
   compile project(':Project.Trunk:REST.clients:TCP.Watch.01')
   compile project(':Project.Trunk:REST.clients:REST.assembler')
+  compile project(':Project.Trunk:REST.clients:REST.assembler:springboot-sensors')
   compile project(':Project.Trunk:PolarSmoother')
   compile project(':Project.Trunk:Deviation.Tool')
   compile project(':TensorFlow')
