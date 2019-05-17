@@ -4,6 +4,13 @@
 
 First, [get Docker](https://store.docker.com/search?type=edition&offering=community) on your system.
 
+#### To get started...
+Try this:
+```
+ $ docker run hello-world
+ $ docker run docker/whalesay cowsay Hello there!
+```
+
 #### Pre-defined Docker images
 This project also provides a script that will build pre-defined Docker images (different OS's, with various features).
 Look into the script, the images are defined by the files `*.Dockerfile`.

@@ -82,3 +82,6 @@ CMD [ "./start-mux.sh", "--no-background" ]
 # docker tag de1ddc31533e olivierlediouris/navserver:latest
 # docker login --username olivierlediouris --password xxxxxx
 # docker push olivierlediouris/navserver:latest
+# The local image can be removed, and it can now be run like
+# docker run olivierlediouris/navserver
+
