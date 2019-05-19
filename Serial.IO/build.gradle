@@ -14,18 +14,18 @@ repositories {
     maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src'
-    }
-  }  
-  test {
-    java {
-      srcDir 'tests'
-    }
-  }  
-}
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests'
+//    }
+//  }
+//}
 
 dependencies {
 //  compile 'com.pi4j:pi4j-core:1.1'

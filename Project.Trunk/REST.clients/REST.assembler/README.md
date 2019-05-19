@@ -175,7 +175,7 @@ We will explore several options.
 We need some kind of server to run on the Raspberry Pi, so the outer world can reach it to get to the data and possibly interact with them.
 
 - [Helidon](#helidon) is an implementation of such a micro-server, implementing SE (Micro-Framework) and MP (Micro-Profile) flavors.
-- [SpringBoot](#springboot), Sprong's implementation of Micro Services.
+- [SpringBoot](#springboot), Spring's implementation of Micro Services.
 - [fnProject](#fnproject), FaaS server implementation, Docker based
 - a [Custom micro-server](#using-a-light-custom-micro-http-server), part of this project
 - NodeJS. This is another project, but this should work just fine. Look into [this repo](https://github.com/OlivierLD/node.pi).
@@ -183,6 +183,9 @@ We need some kind of server to run on the Raspberry Pi, so the outer world can r
 <!-- Serverless... Actually means that the server can be anywhere, everywhere, etc.
 
 FaaS, Function as a Service. -->
+
+#### Helidon
+2 flavors, MP and SE
 
 ##### Helidon-MP
 MP stands for `micro-profile`. Relies on JAX-RS among other things.

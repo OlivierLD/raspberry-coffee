@@ -5,18 +5,18 @@ apply plugin: 'maven'
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src'
-        }
-    }
-    test {
-        java {
-            srcDir 'tests'
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        java {
+//            srcDir 'src'
+//        }
+//    }
+//    test {
+//        java {
+//            srcDir 'tests'
+//        }
+//    }
+//}
 
 repositories {
     mavenCentral()

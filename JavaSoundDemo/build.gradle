@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'idea'
     id 'maven'
     id 'com.github.johnrengelman.shadow' version '4.0.2'
 }
@@ -12,18 +13,18 @@ repositories {
     mavenLocal()
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/java']
-        }
-    }
-    test {
-        java {
-            srcDir 'tests/java'
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        java {
+//            srcDirs = ['src/main/java']
+//        }
+//    }
+//    test {
+//        java {
+//            srcDir 'tests/java'
+//        }
+//    }
+//}
 
 dependencies {
 }

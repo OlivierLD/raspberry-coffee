@@ -10,18 +10,18 @@ repositories {
     maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src'
-    }
-  }
-  test {
-    java {
-      srcDir 'tests'
-    }
-  }
-}
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests'
+//    }
+//  }
+//}
 
 compileJava.options.compilerArgs += ["-Xlint:unchecked"]
 

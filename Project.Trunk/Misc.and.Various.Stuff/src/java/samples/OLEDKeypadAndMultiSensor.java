@@ -61,7 +61,7 @@ public class OLEDKeypadAndMultiSensor {
 	private static int relayThreshold = 50;
 
 	// This one overrides the default pins for the OLED
-	public OLEDKeypadAndMultiSensor() throws I2CFactory.UnsupportedBusNumberException, IOException {
+	public OLEDKeypadAndMultiSensor() throws Exception {
 		// Relay
 		try {
 			rm = new OneRelayManager();
@@ -131,6 +131,8 @@ public class OLEDKeypadAndMultiSensor {
 					}
 				} catch (IOException ioe) {
 					ioe.printStackTrace();
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
 			}
 			System.out.println("ptThread completed");
@@ -181,7 +183,11 @@ public class OLEDKeypadAndMultiSensor {
 				String[] sa = content.split(",");
 				String strVal = sa[1];
 //        System.out.println("Val:" + strVal);
-				displayLR(strVal + "   "); // On the oled
+				try {
+					displayLR(strVal + "   "); // On the oled
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 
 				int volume = relayThreshold; // Default
 				try {
@@ -233,7 +239,7 @@ public class OLEDKeypadAndMultiSensor {
 		}
 	}
 
-	public synchronized void display(String txt) {
+	public synchronized void display(String txt) throws Exception {
 		synchronized (sb) {
 			sb.text(txt, 2, 10);
 			oled.setBuffer(sb.getScreenBuffer());
@@ -241,7 +247,7 @@ public class OLEDKeypadAndMultiSensor {
 		}
 	}
 
-	public synchronized void displayHdg(double hdg) {
+	public synchronized void displayHdg(double hdg) throws Exception {
 //  System.out.println("HDG:" + Math.toDegrees(hdg) + " deg");
 		synchronized (sb) {
 			String txt = "HDG:" + HDG_FMT.format(Math.toDegrees(hdg));
@@ -251,7 +257,7 @@ public class OLEDKeypadAndMultiSensor {
 		}
 	}
 
-	public synchronized void displayLR(String s) {
+	public synchronized void displayLR(String s) throws Exception {
 		//  System.out.println("HDG:" + Math.toDegrees(hdg) + " deg");
 		synchronized (sb) {
 			String txt = "LR:" + s;
@@ -261,7 +267,7 @@ public class OLEDKeypadAndMultiSensor {
 		}
 	}
 
-	public synchronized void displayPT(double press, double temp) {
+	public synchronized void displayPT(double press, double temp) throws Exception {
 //  System.out.println("P:" + press + ", T:" + temp);
 		synchronized (sb) {
 			String txt = "Baro:" + PR_FMT.format(press * 10) + " hPa, T:" + TEMP_FMT.format(temp) + " C";
@@ -276,7 +282,7 @@ public class OLEDKeypadAndMultiSensor {
 	/*
 	 * Reads user input from the keypad
 	 */
-	public void userInput() {
+	public void userInput() throws Exception {
 		StringBuffer charBuff = new StringBuffer();
 		boolean go = true;
 		while (go) {
@@ -326,7 +332,7 @@ public class OLEDKeypadAndMultiSensor {
 		System.exit(0);
 	}
 
-	public void reset() {
+	public void reset() throws Exception {
 		synchronized (sb) {
 			synchronized (oled) {
 				sb.clear();
@@ -339,7 +345,7 @@ public class OLEDKeypadAndMultiSensor {
 		}
 	}
 
-	public void clear() {
+	public void clear() throws Exception {
 		synchronized (sb) {
 			sb.clear();
 			oled.clear();
@@ -348,7 +354,7 @@ public class OLEDKeypadAndMultiSensor {
 		}
 	}
 
-	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException, IOException {
+	public static void main(String... args) throws Exception {
 		if (args.length > 0) {
 			try {
 				relayThreshold = Integer.parseInt(args[0]);

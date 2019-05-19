@@ -14,7 +14,7 @@ public class OLEDScreenAndKeypad {
 	private ScreenBuffer sb;
 
 	// This one overrides the default pins for the OLED
-	public OLEDScreenAndKeypad() {
+	public OLEDScreenAndKeypad() throws Exception {
 		kbc = new KeyboardController();
 		// Override the default pins     Clock             MOSI (data)       CS                RST               DC
 		oled = new SSD1306(RaspiPin.GPIO_12, RaspiPin.GPIO_13, RaspiPin.GPIO_14, RaspiPin.GPIO_15, RaspiPin.GPIO_16);
@@ -26,13 +26,13 @@ public class OLEDScreenAndKeypad {
 		reset();
 	}
 
-	public void display(String txt) {
+	public void display(String txt) throws Exception {
 		sb.text(txt, 2, 17);
 		oled.setBuffer(sb.getScreenBuffer());
 		oled.display();
 	}
 
-	public void userInput() {
+	public void userInput() throws Exception {
 		StringBuffer charBuff = new StringBuffer();
 		boolean go = true;
 		while (go) {
@@ -64,7 +64,7 @@ public class OLEDScreenAndKeypad {
 		oled.shutdown();
 	}
 
-	public void reset() {
+	public void reset() throws Exception {
 		sb.clear();
 		oled.clear();
 		sb.text("* = Reset, # = Exit.", 2, 8);
@@ -72,14 +72,14 @@ public class OLEDScreenAndKeypad {
 		oled.display();
 	}
 
-	public void clear() {
+	public void clear()throws Exception  {
 		sb.clear();
 		oled.clear();
 		oled.setBuffer(sb.getScreenBuffer());
 		oled.display();
 	}
 
-	public static void main(String... args) {
+	public static void main(String... args) throws Exception {
 		System.out.println("Hit * to reset");
 		System.out.println("Hit # to exit");
 		OLEDScreenAndKeypad ui = new OLEDScreenAndKeypad();

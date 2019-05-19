@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'idea'
     id 'maven'
     id 'com.github.johnrengelman.shadow' version '4.0.2'
 }
@@ -15,6 +16,7 @@ repositories {
 }
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 //sourceSets {
 //    main {
@@ -32,7 +34,7 @@ sourceCompatibility = 1.8
 dependencies {
     compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
     compile 'com.google.code.gson:gson:2.8.5'
-    compile 'javax.mail:mail:1.4.4' // Important! Earlier versions might not work (2015...)
+    compile project(':common-utils')
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
