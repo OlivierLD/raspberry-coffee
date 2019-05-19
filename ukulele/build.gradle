@@ -1,7 +1,8 @@
 plugins {
     id 'java'
+    id 'idea'
     id 'maven'
-    id 'com.github.johnrengelman.shadow' version '4.0.2'
+    id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
 group = 'oliv.raspi.coffee'
@@ -14,21 +15,21 @@ repositories {
     mavenLocal()
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/java']
-        }
-        resources {
-            srcDir 'src/resources'
-        }
-    }
-    test {
-        java {
-            srcDirs = ['tests/java']
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        java {
+//            srcDirs = ['src/java']
+//        }
+//        resources {
+//            srcDir 'src/resources'
+//        }
+//    }
+//    test {
+//        java {
+//            srcDirs = ['tests/java']
+//        }
+//    }
+//}
 
 dependencies {
     // https://mvnrepository.com/artifact/jfugue/jfugue

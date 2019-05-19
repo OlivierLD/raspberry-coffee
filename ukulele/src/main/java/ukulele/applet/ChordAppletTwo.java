@@ -61,7 +61,7 @@ public class ChordAppletTwo
 	}
 
 	private void jButton1_actionPerformed(ActionEvent e) {
-		UkuleleChordFinder.main(null);
+		UkuleleChordFinder.main((String[])null);
 	}
 
 	public static void main(String... args) {

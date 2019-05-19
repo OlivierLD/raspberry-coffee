@@ -4,6 +4,7 @@ version '0.0.1-SNAPSHOT'
 apply plugin: 'groovy'
 apply plugin: 'java'
 apply plugin: 'scala'
+//apply plugin: "nebula.clojure"
 
 sourceCompatibility = 1.8
 

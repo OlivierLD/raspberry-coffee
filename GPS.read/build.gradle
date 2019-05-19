@@ -1,6 +1,10 @@
-apply plugin: 'java'
+plugins {
+    id 'java'
+    id 'idea'
+    id 'maven'
+}
+
 compileJava.options.encoding = 'ISO-8859-1'
-apply plugin: 'maven'
 
 group = 'oliv.raspi.coffee'
 version = '1.0'

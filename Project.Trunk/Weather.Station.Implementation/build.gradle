@@ -13,6 +13,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'scala'
+apply plugin: 'idea'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 
@@ -23,21 +24,21 @@ shadowJar {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src/java'
-    }
-    scala {
-      srcDir 'src/scala'
-    }
-  }
-  test {
-    java {
-      srcDir 'tests/java'
-    }
-  }
-}
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src/java'
+//    }
+//    scala {
+//      srcDir 'src/scala'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests/java'
+//    }
+//  }
+//}
 
 repositories {
   mavenCentral()

@@ -1,8 +1,9 @@
 plugins {
   id 'java'
   id 'maven'
+  id 'idea'
   id 'com.moowork.node' version '0.10'
-  id 'com.github.johnrengelman.shadow' version '4.0.2'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
 shadowJar {

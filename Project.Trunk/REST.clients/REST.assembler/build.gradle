@@ -17,6 +17,7 @@ apply plugin: 'kotlin'
 apply plugin: 'java'
 apply plugin: 'scala'
 apply plugin: 'groovy'
+apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -26,7 +27,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 //    id 'kotlin'
 //    id 'groovy'
 //    id 'maven'
-//    id 'com.github.johnrengelman.shadow' version '4.0.2'
+//    id 'com.github.johnrengelman.shadow' // version '4.0.2'
 //}
 
 shadowJar {
@@ -36,23 +37,23 @@ shadowJar {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src/java'
-        }
-        scala {
-            srcDir 'src/scala'
-        }
-        kotlin {
-            srcDir 'src/kotlin'
-        }    }
-    test {
-        java {
-            srcDir 'tests/java'
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        java {
+//            srcDir 'src/java'
+//        }
+//        scala {
+//            srcDir 'src/scala'
+//        }
+//        kotlin {
+//            srcDir 'src/kotlin'
+//        }    }
+//    test {
+//        java {
+//            srcDir 'tests/java'
+//        }
+//    }
+//}
 
 repositories {
     mavenCentral()

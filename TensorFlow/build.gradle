@@ -1,7 +1,8 @@
 plugins {
   id 'java'
+  id 'idea'
   id 'maven'
-  id 'com.github.johnrengelman.shadow' version '4.0.2'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
 group = 'oliv.raspi.coffee'
@@ -13,18 +14,18 @@ repositories {
   maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src/main/java'
-    }
-  }
-  test {
-    java {
-      srcDir 'tests'
-    }
-  }
-}
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src/main/java'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests'
+//    }
+//  }
+//}
 
 dependencies {
 //  compile 'com.pi4j:pi4j-core:1.1'

@@ -2,24 +2,25 @@ plugins {
   id 'java'
 //id 'scala'
   id 'maven'
-  id 'com.github.johnrengelman.shadow' version '4.0.2'
+  id 'idea'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src'
-    }
-  }
-  test {
-    java {
-      srcDir 'tests'
-    }
-  }
-}
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests'
+//    }
+//  }
+//}
 
 repositories {
   mavenCentral()

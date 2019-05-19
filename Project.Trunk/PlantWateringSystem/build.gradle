@@ -14,6 +14,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'scala'
 apply plugin: 'groovy'
+apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -25,24 +26,24 @@ compileJava {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src/java'
-        }
-        scala {
-            srcDir 'src/scala'
-        }
-        groovy {
-            srcDirs = ['src/groovy']
-        }
-    }
-    test {
-        java {
-            srcDir 'src/tests'
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        java {
+//            srcDir 'src/java'
+//        }
+//        scala {
+//            srcDir 'src/scala'
+//        }
+//        groovy {
+//            srcDirs = ['src/groovy']
+//        }
+//    }
+//    test {
+//        java {
+//            srcDir 'src/tests'
+//        }
+//    }
+//}
 
 repositories {
     mavenCentral()

@@ -17,6 +17,7 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'scala'
 apply plugin: "nebula.clojure"
+apply plugin: "idea"
 
 group = 'oliv.raspi.coffee'
 version = '1.0'
@@ -41,25 +42,25 @@ dependencies {
     compile project(':SevenSegDisplay')
 }
 
-sourceSets {
-    main {
-        groovy {
-            srcDirs = ['src/groovy']
-        }
-        java {
-            srcDirs = ['src/java']
-        }
-        scala {
-            srcDirs = ['src/scala']
-        }
-        kotlin {
-            srcDirs = ['src/kotlin']
-        }
-        clojure {
-            srcDirs = ['src/clojure']
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        groovy {
+//            srcDirs = ['src/groovy']
+//        }
+//        java {
+//            srcDirs = ['src/java']
+//        }
+//        scala {
+//            srcDirs = ['src/scala']
+//        }
+//        kotlin {
+//            srcDirs = ['src/kotlin']
+//        }
+//        clojure {
+//            srcDirs = ['src/clojure']
+//        }
+//    }
+//}
 
 compileClojure {
     dependsOn 'compileJava'

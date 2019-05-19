@@ -1,8 +1,9 @@
 plugins {
     id 'java'
     id 'scala'
+    id 'idea'
     id 'maven'
-    id 'com.github.johnrengelman.shadow' version '4.0.2'
+    id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
 group = 'oliv.raspi.coffee'

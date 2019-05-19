@@ -1,5 +1,8 @@
-apply plugin: 'java'
-apply plugin: 'maven'
+plugins {
+  id 'java'
+  id 'idea'
+  id 'maven'
+}
 
 group = 'oliv.raspi.coffee'
 version = '1.0'
