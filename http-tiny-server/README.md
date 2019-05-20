@@ -6,8 +6,10 @@ Can be used
 - as an HTTP Proxy
 
 Designed to be as tiny and small as possible, to run on small boards (like the Raspberry Pi Zero).
-Not even multi-threaded.
-> May 2019: The core classes are just above 2M big.
+
+_Not even multi-threaded_.
+
+> May 2019: The core classes are just above _**2M**_ big.
 
 Logging available.
 Some special requests are reserved, like `/exit`, `/test`, feel free to comment them.
