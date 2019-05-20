@@ -28,9 +28,10 @@ All Open Source, Soft & Hard
     - MQTT  
 - in term of tools and frameworks
   - [Maven](https://maven.apache.org/) - a build tool for Java.
-  - [Helidon](http://helidon.io) - Micro-service oriented.
-  - [SpringBoot](https://spring.io/) - Micro-service oriented.
-  - [fnProject](https://fnproject.io/) - FaaS oriented.
+  - Third-party micro-servers, we have 3 possibilities (only one is needed, if you choose this route):
+    - [Helidon](http://helidon.io) - Micro-service oriented.
+    - [SpringBoot](https://spring.io/) - Micro-service oriented.
+    - [fnProject](https://fnproject.io/) - FaaS oriented.
   - Possibly [Swagger](https://swagger.io/) - the de-facto standard in term of REST API documentation (and more).
   - [Node-RED](https://nodered.org/) - A very cool service orchestration (and more) tool based on NodeJS. 
 - in term of reusable code
@@ -377,7 +378,25 @@ $ docker run --rm -p 8080:8080 helidon-sensors:latest
 ```
 
 ##### SpringBoot
-To be documented
+```
+$ cd springboot-sensors
+$ ./gradlew clean build
+$ java -Dserver.verbose=true -jar build/libs/sensors-spring-boot-0.1.0.jar --help
+```
+
+Then
+```
+GET http://localhost:8080/light/ambient
+```
+
+```
+GET http://localhost:8080/relay/status/1
+```
+
+```
+POST http://localhost:8080/relay/status/1
+{ "status": true }
+```
 
 ##### fnProject
 - Still in development, but quite promising.

@@ -45,10 +45,11 @@ Spring-Boot-Lib: BOOT-INF/lib/
 ```
 
 ## To use the services
+<!--
 ```
 GET http://localhost:8080/actuator/health
 ```
-
+-->
 ```
 GET http://localhost:8080/light/ambient
 ```
