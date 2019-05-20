@@ -10,6 +10,7 @@ import java.text.NumberFormat;
 /**
  * REST Interface to MySQL
  * It is actually not dealing with MySQL, but with REST.
+ * See the RESTG_URL variable below in then code.
  *
  * JSON payload looks like:
  * <p>
@@ -24,6 +25,11 @@ import java.text.NumberFormat;
  *   "dew": 34.56 }
  * <p>
  * The DB will take care of a timestamp.
+ *
+ * System variables:
+ * mysql.logger.verbose default false
+ * ws.rest.url default http://donpedro.lediouris.net/php/raspi/insert.wd.php
+ * ws.between.logs default 5000
  */
 public class MySQLLoggerImpl implements LoggerInterface {
 	private long lastLogged = 0L; // Time of the last logging

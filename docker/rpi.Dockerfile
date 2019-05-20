@@ -1,4 +1,5 @@
 FROM resin/raspberrypi3-debian:latest
+# FROM hypriot/rpi-java
 #
 # WebComponents running on the Raspberry Pi.
 # Uses NodeJS

@@ -2,6 +2,18 @@
 #
 CP=../build/libs/Weather.Station.Implementation-1.0-all.jar
 #
+SUDO=
+# DARWIN=`uname -a | grep Darwin`
+DARWIN=$(uname -a | grep Darwin)
+#
+if [ "$DARWIN" != "" ]
+then
+	echo Running on Mac
+else
+	echo Assuming Linux/Raspberry Pi
+  SUDO="sudo "
+fi
+#
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dweather.station.verbose=false"       # Home Weather Station
 JAVA_OPTIONS="$JAVA_OPTIONS -Dsdl.weather.station.verbose=false"   # SDL Board
@@ -24,7 +36,10 @@ DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.MySQLLoggerImpl"
 JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=$DATA_LOGGERS"
 # Options for MySQL logger:
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.between.logs=600000"  # 600_000ms = 10 minutes
-JAVA_OPTIONS="$JAVA_OPTIONS -Dmysql.logger.verbose=false"
+#
+MYSQL_VERBOSE=true
+# MYSQL_VERBOSE=false
+JAVA_OPTIONS="$JAVA_OPTIONS -Dmysql.logger.verbose=$MYSQL_VERBOSE"
 # Option for TCP logger
 JAVA_OPTIONS="$JAVA_OPTIONS -Dtcp.verbose=false"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dstation.lat=37.7489 -Dstation.lng=-122.5070"
@@ -37,5 +52,6 @@ echo -e "Make sure the server is started (node/weather.server.js) if needed."
 ADDR=`ifconfig wlan0 2> /dev/null  | awk '/inet addr:/ {print $2}' | sed 's/addr://'`
 echo -e "then from your browser, reach http://$ADDR:9876/data/weather.station/analog.all.html"
 #
-sudo java $JAVA_OPTIONS -cp $CP weatherstation.ws.HomeWeatherStation
+COMMAND="${SUDO}java $JAVA_OPTIONS -cp $CP weatherstation.ws.HomeWeatherStation"
 # java $JAVA_OPTIONS -cp $CP weatherstation.ws.HomeWeatherStation
+$COMMAND
