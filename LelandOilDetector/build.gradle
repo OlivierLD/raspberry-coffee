@@ -2,7 +2,7 @@ plugins {
   id 'java'
   id 'maven'
   id 'idea'
-  id 'com.moowork.node' version '0.10'
+//  id 'com.moowork.node' version '0.10'
   id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
@@ -46,18 +46,18 @@ dependencies {
   compile project(':HC-SR04')
 }
 
-task runNodeServer(type: NodeTask) {
-  script = file('./node/server.js')
-//args = ['&']
-  execOverrides {
-    it.ignoreExitValue = true
-//  it.workingDir = './node'
-  }
-}
-
-task run(type: JavaExec, dependsOn: [ build, runNodeServer ], description: "Run it.") {
-  main = 'adc.levelreader.main.LelandPrototype'
-//classpath project.configurations.default
-  classpath sourceSets.main.runtimeClasspath
-//classpath sourceSets.main.output.classesDir
-}
+//task runNodeServer(type: NodeTask) {
+//  script = file('./node/server.js')
+////args = ['&']
+//  execOverrides {
+//    it.ignoreExitValue = true
+////  it.workingDir = './node'
+//  }
+//}
+//
+//task run(type: JavaExec, dependsOn: [ build, runNodeServer ], description: "Run it.") {
+//  main = 'adc.levelreader.main.LelandPrototype'
+////classpath project.configurations.default
+//  classpath sourceSets.main.runtimeClasspath
+////classpath sourceSets.main.output.classesDir
+//}
