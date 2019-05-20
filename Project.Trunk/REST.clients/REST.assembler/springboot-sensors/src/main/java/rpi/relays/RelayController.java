@@ -13,6 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/relay")
 public class RelayController {
 
+	private RelayManager physicalRelayManager;
+
+	public RelayController() {
+		super();
+		System.out.println("-----------------------------------");
+		System.out.println(String.format(">>> Instantiating the %s", this.getClass().getName()));
+		System.out.println("-----------------------------------");
+		// Create the relay interface here
+		this.physicalRelayManager = new RelayManager(System.getProperty("relay.map", "1:11"));
+	}
+
 	@RequestMapping("/")
 	public String index() {
 		return "Greetings from Spring Boot Relay Manager!";
@@ -20,8 +31,9 @@ public class RelayController {
 
 	@RequestMapping(value = "/status/{relay-id}", method = RequestMethod.GET)
 	public boolean getRelayStatus(@PathVariable("relay-id") int relayId) {
-		// TODO Implement
-		return (System.currentTimeMillis() % 2 == 0);
+
+		return this.physicalRelayManager.get(relayId);
+
 	}
 
 	// Needs to be a JavaBean to be returned as JSON
@@ -45,8 +57,9 @@ public class RelayController {
 //	@ResponseBody
 	public RelayStatus setRelayStatus(@PathVariable("relay-id") int relayId,  @RequestBody RelayStatus relayStatus) {
 
-		// TODO Implement
-		System.out.println(String.format("Setting relay status of %d to %s", relayId, relayStatus.isStatus() ? "true" : "false"));
+		if (this.physicalRelayManager != null) {
+			this.physicalRelayManager.set(relayId, (relayStatus.status ? "on" : "off")); // TODO an enum ?
+		}
 
 		return relayStatus;
 	}

@@ -33,7 +33,8 @@ targetCompatibility = 1.8
 
 dependencies {
     compile 'oliv.raspi.coffee:I2C.SPI:1.0'
-    
+    compile 'oliv.raspi.coffee:ADC:1.0'
+
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-actuator")
     testCompile("junit:junit")

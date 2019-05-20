@@ -64,7 +64,8 @@ fi
 #
 # Start watering below 50%, for 10 seconds. Resume watching after 120 seconds.
 #
-USER_PRM="$USER_PRM --water-below:50 --water-during:10 --resume-after:120"
+HUMIDITY_THRESHOLD=75
+USER_PRM="$USER_PRM --water-below:${HUMIDITY_THRESHOLD} --water-during:10 --resume-after:120"
 #
 # REST and Web Server
 #

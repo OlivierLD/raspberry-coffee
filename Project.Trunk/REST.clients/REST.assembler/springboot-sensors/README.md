@@ -1,11 +1,14 @@
 WIP 
 
-To compile:
+## To compile
 ```
 $ ./gradlew build
 ```
 
 This project depends on other projects.
+
+> Note:
+
 If you see errors like this:
 ```
 ./gradlew build
@@ -27,7 +30,34 @@ $ ../gradlew install
 ```
 Same for all the dependency errors you would see.
 
-To run:
+## To run the SpringBoot server
 ```
 $ java -jar build/libs/sensors-spring-boot-0.1.0.jar
+```
+The `META-INF/MANIFEST.MF` looks like this:
+```manifest.mf
+Manifest-Version: 1.0
+Main-Class: org.springframework.boot.loader.JarLauncher
+Start-Class: rpi.Application
+Spring-Boot-Version: unknown
+Spring-Boot-Classes: BOOT-INF/classes/
+Spring-Boot-Lib: BOOT-INF/lib/
+```
+
+## To use the services
+```
+GET http://localhost:8080/actuator/health
+```
+
+```
+GET http://localhost:8080/light/ambient
+```
+
+```
+GET http://localhost:8080/relay/status/1
+```
+
+```
+POST http://localhost:8080/relay/status/1
+{ "status": true }
 ```

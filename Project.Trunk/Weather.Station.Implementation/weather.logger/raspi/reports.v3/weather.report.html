@@ -542,6 +542,7 @@ function clearMarkers() {
 let period, type, graphData;
 
 function getData(type, period) {
+  // Like http://donpedro.lediouris.net/php/weather/reports.v3/json.data.php?type=ALL&period=WEEK
   let promise = getPromise('json.data.php?type=' + type + '&period=' + period, DEFAULT_TIMEOUT, 'GET', 200);
   return promise;
 }

@@ -52,6 +52,7 @@ public class MatrixTests {
 //		System.out.println("A = " + result[0]);
 //		System.out.println("B = " + result[1]);
 //		System.out.println("C = " + result[2]);
+		assertEquals("3 Coeffs", result.length, 3);
 		assertEquals("Coeff A", 6.48822194633027, result[0]);
 		assertEquals("Coeff B", -0.13781660635627724, result[1]);
 		assertEquals("Coeff C", 11.280925180476313, result[2]);
