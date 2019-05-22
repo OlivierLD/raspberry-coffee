@@ -1,5 +1,8 @@
 # Useful commands
 
+Read this [Good paper](https://medium.com/the-code-review/top-10-docker-commands-you-cant-live-without-54fb6377f481)
+
+
 ```
 $ docker run dockerinaction/hello_world
 ```

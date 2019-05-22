@@ -7,7 +7,7 @@ Can be used
 
 Designed to be as tiny and small as possible, to run on small boards (like the Raspberry Pi Zero).
 
-_Not even multi-threaded_.
+No security (SSL) available. _Not even multi-threaded_.
 
 > May 2019: The core classes are just above _**2M**_ big.
 

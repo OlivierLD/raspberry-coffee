@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -48,6 +46,20 @@ public class RelayController {
 			this.status = status;
 		}
 	}
+  private enum RelayState {
+	  ON("on"),
+	  OFF("off");
+
+	  private final String label;
+
+	  RelayState(String label) {
+		  this.label = label;
+	  }
+
+	  public String label() {
+		  return this.label;
+	  }
+  }
 
 	@RequestMapping(
 			value = "/status/{relay-id}",
@@ -58,7 +70,7 @@ public class RelayController {
 	public RelayStatus setRelayStatus(@PathVariable("relay-id") int relayId,  @RequestBody RelayStatus relayStatus) {
 
 		if (this.physicalRelayManager != null) {
-			this.physicalRelayManager.set(relayId, (relayStatus.status ? "on" : "off")); // TODO an enum ?
+			this.physicalRelayManager.set(relayId, (relayStatus.status ? RelayState.ON.label() : RelayState.OFF.label()));
 		}
 
 		return relayStatus;
