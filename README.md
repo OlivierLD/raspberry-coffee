@@ -12,6 +12,10 @@ More consistent samples can be found in the RasPISamples module (being moved to 
 Do take a look, it also comes with a readme file.
 
 ---
+
+Raspberry Pi's [Mechanical drawings](https://www.raspberrypi.org/documentation/hardware/raspberrypi/mechanical/README.md)
+
+---
 - [Main highlights](./Papers/README.md)
 ---
 
