@@ -10,6 +10,10 @@
 
 	<style>
 
+		:root {
+			--slider-scale: 1;
+		}
+
 		html {
 			height: 100%;
 			box-sizing: border-box;
@@ -180,8 +184,8 @@
 		.switch {
 			position: relative;
 			display: inline-block;
-			width: 60px;
-			height: 34px;
+			width: calc(var(--slider-scale) * 60px);
+			height: calc(var(--slider-scale) * 34px);
 		}
 
 		.switch input {
@@ -205,10 +209,10 @@
 		.slider:before {
 			position: absolute;
 			content: "";
-			height: 26px;
-			width: 26px;
-			left: 4px;
-			bottom: 4px;
+			height: calc(var(--slider-scale) * 26px);
+			width: calc(var(--slider-scale) * 26px);
+			left: calc(var(--slider-scale) * 4px);
+			bottom: calc(var(--slider-scale) * 4px);
 			background-color: white;
 			-webkit-transition: .4s;
 			transition: .4s;
@@ -223,14 +227,14 @@
 		}
 
 		input:checked + .slider:before {
-			-webkit-transform: translateX(26px);
-			-ms-transform: translateX(26px);
-			transform: translateX(26px);
+			-webkit-transform: translateX(calc(var(--slider-scale) * 26px));
+			-ms-transform: translateX(calc(var(--slider-scale) * 26px));
+			transform: translateX(calc(var(--slider-scale) * 26px));
 		}
 
 		/* Rounded sliders */
 		.slider.round {
-			border-radius: 34px;
+			border-radius: calc(var(--slider-scale) * 34px);
 		}
 
 		.slider.round:before {
@@ -240,13 +244,13 @@
 		/* Switch grid */
 		.switch-container {
 			display: grid;
-			grid-template-columns: 26px 70px 26px;
+			grid-template-columns: 26px calc(var(--slider-scale) * 64px) 26px;
 		}
 		.switch-element {
 			place-self: center;
 		}
 
-		/* Backgrounds and styles */
+		/* Backgrounds and styles, for this demo */
 		.light {
 			background: radial-gradient(at top, white -8%, lightgrey 55%);
 			color: black;
@@ -263,6 +267,11 @@
 
 <h1 style="padding: 10px;">Theme Picker demo</h1>
 
+<div style="padding: 5px;">
+		Slider's scale:
+		<input style="width: 600px" type="range" min="0.1" max="10" step="0.1" value="1" oninput="changeScale(this.value); padding01.value = (this.value);">
+		<output name="padding" id="padding01">1</output>
+</div>
 <!-- Rocker -->
 <div>
 	<label class="rocker rocker-small">
@@ -295,6 +304,11 @@
 
 </body>
 <script type="text/javascript">
+	function changeScale(value) {
+		console.log('Scale value is now', value);
+		document.documentElement.style.setProperty('--slider-scale', value);
+	}
+
 	function onThemeChange(flip) {
 		console.log(flip.checked);
 
