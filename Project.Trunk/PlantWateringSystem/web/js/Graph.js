@@ -328,8 +328,8 @@ function Graph(cName,       // Canvas Name
 			_idxX = idx * xScale;
 		}
 		var _minY = miny;
-		if (threshold !== undefined && thershold.humidityThreshold !== undefined) {
-			_minY = Math.min(miny, thershold.humidityThreshold);
+		if (threshold !== undefined && threshold.humidityThreshold !== undefined) {
+			_minY = Math.min(miny, threshold.humidityThreshold);
 		}
 
 		document.getElementById(displayCanvasName).title = data.length + " elements, [" + _minY + ", " + maxy + "]";
