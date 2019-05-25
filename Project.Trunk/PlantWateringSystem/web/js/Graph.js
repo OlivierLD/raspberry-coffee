@@ -395,7 +395,7 @@ function Graph(cName,       // Canvas Name
 
 		if (threshold !== undefined) {
 			if (threshold.humidityThreshold !== undefined) {
-				humThreshold = thershold.humidityThreshold;
+				humThreshold = threshold.humidityThreshold;
 				context.beginPath();
 				context.lineWidth = 3;
 				context.strokeStyle = 'blue';
