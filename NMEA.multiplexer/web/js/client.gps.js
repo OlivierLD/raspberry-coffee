@@ -1,5 +1,17 @@
 "use strict";
 
+if (Math.toDegrees === undefined) {
+    Math.toDegrees = (rad) => {
+        return rad * (180 / Math.PI);
+    }
+}
+
+if (Math.toRadians === undefined) {
+    Math.toRadians = (deg) => {
+        return deg * (Math.PI / 180);
+    }
+}
+
 var onMessage = function (json) {
     $("#raw-json").text(JSON.stringify(json, null, 2));
 
@@ -59,10 +71,10 @@ var generateSatelliteData = function(sd) {
 };
 
 var deadReckoning = function(from, dist, route) {
-  var deltaL = toRadians(dist / 60) * Math.cos(toRadians(route));
-  var l2 = from.lat + toDegrees(deltaL);
-  var deltaG = toRadians(dist / (60 * Math.cos(toRadians(from.lat + l2) / 2))) * Math.sin(toRadians(route)); // 2009-mar-10
-  var g2 = from.lng + toDegrees(deltaG);
+  var deltaL = Math.toRadians(dist / 60) * Math.cos(Math.toRadians(route));
+  var l2 = from.lat + Math.toDegrees(deltaL);
+  var deltaG = Math.toRadians(dist / (60 * Math.cos(Math.toRadians(from.lat + l2) / 2))) * Math.sin(Math.toRadians(route)); // 2009-mar-10
+  var g2 = from.lng + Math.toDegrees(deltaG);
   while (g2 > 180) {
     g2 = 360 - g2;
   }

@@ -1,6 +1,7 @@
 /*
  * @author Olivier Le Diouris
  * Uses jQuery Deferreds
+ * TODO Replace with ES6 Promises
  */
 var initAjax = function () {
 	var interval = setInterval(function () {
