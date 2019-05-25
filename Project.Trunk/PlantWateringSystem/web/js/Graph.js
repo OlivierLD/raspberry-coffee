@@ -330,6 +330,7 @@ function Graph(cName,       // Canvas Name
 		var _minY = miny;
 		if (threshold !== undefined && threshold.humidityThreshold !== undefined) {
 			_minY = Math.min(miny, threshold.humidityThreshold);
+			yScale = canvas.getContext('2d').canvas.clientHeight / (maxy - _minY);
 		}
 
 		document.getElementById(displayCanvasName).title = data.length + " elements, [" + _minY + ", " + maxy + "]";
