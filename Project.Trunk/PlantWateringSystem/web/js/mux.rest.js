@@ -115,9 +115,10 @@ var relayStatus = function () {
 	});
 };
 
-var pwsPrms = {};
+var pwsPrms;
+
 var getPWSPrms = function () {
-	if (pwsPrms === {}) {
+	if (pwsPrms === undefined) {
 		deviceParameters();
 	}
 	return pwsPrms;
