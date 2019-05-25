@@ -402,6 +402,7 @@ function Graph(cName,       // Canvas Name
 				context.strokeStyle = 'blue';
 				context.moveTo(0, height - (humThreshold - _minY) * yScale);
 				context.lineTo(width, height - (humThreshold - _minY) * yScale);
+				context.stroke();
 				context.closePath();
 			}
 		}
