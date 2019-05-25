@@ -329,7 +329,7 @@ function Graph(cName,       // Canvas Name
 		}
 		var _minY = miny;
 		if (threshold !== undefined && threshold.humidityThreshold !== undefined) {
-			_minY = Math.min(miny, threshold.humidityThreshold);
+			_minY = Math.min(miny, threshold.humidityThreshold - 2);
 			yScale = canvas.getContext('2d').canvas.clientHeight / (maxy - _minY);
 		}
 
