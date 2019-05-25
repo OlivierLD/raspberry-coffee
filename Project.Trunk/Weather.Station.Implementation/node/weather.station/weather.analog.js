@@ -237,7 +237,7 @@ var setValues = function (doc) {
 			if (animate) {
 				displayRain.animate(rain);
 			} else {
-				displayTWS.setValue(tws);
+				displayRain.setValue(rain);
 			}
 			document.getElementById('rain-ok').checked = true;
 		} catch (err) {
