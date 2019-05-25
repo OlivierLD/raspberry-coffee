@@ -125,9 +125,9 @@ const compositeCatalog = [
 				name: "Central Pac Streamlines",
 				transp: faxColors.white,
 				effect: faxEffects.blur,
-				zoom: 1.0040821009550305,
+				zoom: 1.0091025114598056,
 				location: {
-					x: 14,
+					x: -30,
 					y: 482
 				}
 			}
@@ -180,9 +180,9 @@ const compositeCatalog = [
 				name: "Central Pac Streamlines",
 				transp: faxColors.white,
 				effect: faxEffects.blur,
-				zoom: 1.0040821009550305,
+				zoom: 1.0091025114598056,
 				location: {
-					x: 14,
+					x: -30,
 					y: 482
 				}
 			}
