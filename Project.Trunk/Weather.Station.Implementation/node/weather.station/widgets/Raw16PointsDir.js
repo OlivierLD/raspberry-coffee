@@ -87,9 +87,9 @@ function Raw16PointsDir(cName, dSize) {
 		var schemeColor = getStyleRuleValue('color', '.display-scheme');
 //  console.log(">>> DEBUG >>> color:" + schemeColor);
 		if (schemeColor === 'black')
-			raw16pointsColorConfig = directionColorConfigBlack;
+			raw16pointsColorConfig = raw16pointsColorConfigBlack;
 		else if (schemeColor === 'white')
-			raw16pointsColorConfig = directionColorConfigWhite;
+			raw16pointsColorConfig = raw16pointsColorConfigWhite;
 
 		var canvas = document.getElementById(displayCanvasName);
 		var context = canvas.getContext('2d');
