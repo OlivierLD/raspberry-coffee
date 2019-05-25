@@ -4,6 +4,8 @@
 var displayTWD, displayTWS, displayGUST, thermometer,
 		displayBaro, displayHum, displayRain, dewTemp;
 
+var animate = false;
+
 var init = function () {
 	displayTWD = new Direction('twdCanvas', 100, 45, 5, true);
 	displayTWS = new AnalogDisplay('twsCanvas', 100, 65, 10, 1, true, 40);
@@ -155,8 +157,11 @@ var setValues = function (doc) {
 
 		try {
 			var tws = parseFloat(json.speed.toFixed(2));
-			displayTWS.animate(tws);
-//    displayTWS.setValue(tws);
+			if (animate) {
+				displayTWS.animate(tws);
+			} else {
+				displayTWS.setValue(tws);
+			}
 			document.getElementById('windspeed-ok').checked = true;
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? "\n" : "") + "Problem with TWS...");
@@ -166,8 +171,11 @@ var setValues = function (doc) {
 		}
 		try {
 			var gust = parseFloat(json.gust.toFixed(2));
-			displayGUST.animate(gust);
-//    displayGUST.setValue(gust);
+			if (animate) {
+				displayGUST.animate(gust);
+			} else {
+		    displayGUST.setValue(gust);
+			}
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? "\n" : "") + "Problem with TWS gust...");
 //    displayGUST.animate(0.0);
@@ -187,8 +195,11 @@ var setValues = function (doc) {
 		try {
 			var baro = parseFloat(json.press / 100);
 			if (!isNaN(baro) && baro != 0) {
-				displayBaro.animate(baro);
-//      displayBaro.setValue(baro);
+				if (animate) {
+					displayBaro.animate(baro);
+				} else {
+					displayBaro.setValue(baro);
+				}
 			} else {
 				displayBaro.setValue(980.0);
 			}
@@ -204,8 +215,11 @@ var setValues = function (doc) {
 				var hum = parseFloat(json.hum);
 				document.getElementById('humCanvas').style.display = 'inline';
 				if (hum > 0) {
-					displayHum.animate(hum);
-					//      displayHum.setValue(hum);
+					if (animate) {
+						displayHum.animate(hum);
+					} else {
+						displayHum.setValue(hum);
+					}
 					document.getElementById('hum-ok').checked = true;
 				}
 			} else {
@@ -220,8 +234,11 @@ var setValues = function (doc) {
 		}
 		try {
 			var rain = parseFloat(json.rain.toFixed(2));
-			displayRain.animate(rain);
-//    displayTWS.setValue(tws);
+			if (animate) {
+				displayRain.animate(rain);
+			} else {
+				displayTWS.setValue(tws);
+			}
 			document.getElementById('rain-ok').checked = true;
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? "\n" : "") + "Problem with Rain...");

@@ -1,7 +1,6 @@
 /*
  * @author Olivier Le Diouris
  * Uses jQuery Deferreds
- * TODO Replace with ES6 Promises
  */
 var initAjax = function () {
 	var interval = setInterval(function () {
@@ -50,7 +49,7 @@ var fetch = function () {
 				message = mess.message;
 			}
 		}
-		alert("Failed to get nmea data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		alert("Failed to get NMEA data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };
 

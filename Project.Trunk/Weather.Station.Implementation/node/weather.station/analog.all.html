@@ -91,6 +91,11 @@
       var cb = document.getElementById('with-border');
       cb.checked = (border === 'Y');
     }
+
+    var anim = getQSPrm('animate');
+    if (anim !== undefined) {
+      animate = (anim === 'true');
+    }
     // events subscription
 
     if (false) {

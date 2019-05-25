@@ -185,7 +185,7 @@ To start Chromium when the Desktop starts, and load one or several URLs (in diff
 It will start Chromium in `kiosk` (aka full screen) mode, and load the URLs mentioned above.
 
 ##### Also important here
-A Graphical Desktop will by default go to sleep if not sollicited for a while, and we do not want that.
+A Graphical Desktop will by default go to sleep if not solicited for a while, and we do not want that.
 To fix it: 
 - Edit `/etc/lightdm/lightdm.conf`
 - Have a/the line that starts with `xserver-command=` to look like `xserver-command=X -s 0 -dpms`

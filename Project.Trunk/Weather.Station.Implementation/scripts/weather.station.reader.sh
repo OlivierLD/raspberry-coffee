@@ -37,8 +37,8 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=$DATA_LOGGERS"
 # Options for MySQL logger:
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.between.logs=600000"  # 600_000ms = 10 minutes
 #
-MYSQL_VERBOSE=true
-# MYSQL_VERBOSE=false
+# MYSQL_VERBOSE=true
+MYSQL_VERBOSE=false
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmysql.logger.verbose=$MYSQL_VERBOSE"
 # Option for TCP logger
 JAVA_OPTIONS="$JAVA_OPTIONS -Dtcp.verbose=false"
