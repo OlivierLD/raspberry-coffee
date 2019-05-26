@@ -131,7 +131,20 @@ var averageDir = function (va) {
 //return sum / len;
 };
 
+var MONTH = [
+		"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
+
 var setValues = function (doc) {
+	var date = new Date();
+	var lastUpdateDate = document.getElementById('update-date');
+	var lastUpdateTime = document.getElementById('update-time');
+	if (lastUpdateDate !== undefined && lastUpdateDate !== undefined) {
+		var fmtDate = date.getDate() + "-" + MONTH[date.getMonth()] + "-" + date.getFullYear();
+		lastUpdateDate.innerHTML = "<i>" + fmtDate + "</i>";
+		var fmtTime = lpad(date.getHours(), 2, '0') + ":" + lpad(date.getMinutes(), 2, '0') + ":" + lpad(date.getSeconds(), 2, '0');
+		lastUpdateTime.innerHTML = "<i>" + fmtTime + "</i>";
+	}
 	try {
 		var errMess = "";
 		var json = doc;
