@@ -45,11 +45,9 @@ var init = function () {
 		var lastUpdateDate = document.getElementById('update-date');
 		var lastUpdateTime = document.getElementById('update-time');
 		if (lastUpdateDate !== undefined && lastUpdateDate !== undefined) {
-			var fmtDate = date.getDate() + "-" + MONTHS[date.getMonth()] + "-" + date.getFullYear();
+			var fmtDate = date.format("d-M-Y");
 			lastUpdateDate.innerHTML = "<i>" + fmtDate + "</i>";
-			var fmtTime = lpad(date.getHours().toString(), '0', 2) + ":" +
-					lpad(date.getMinutes().toString(), '0', 2) + ":" +
-					lpad(date.getSeconds().toString(), '0', 2);
+			var fmtTime = date.format("H:i:s Z")
 			lastUpdateTime.innerHTML = "<i>" + fmtTime + "</i>";
 		}
 
