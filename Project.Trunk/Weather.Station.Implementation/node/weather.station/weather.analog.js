@@ -142,7 +142,9 @@ var setValues = function (doc) {
 	if (lastUpdateDate !== undefined && lastUpdateDate !== undefined) {
 		var fmtDate = date.getDate() + "-" + MONTH[date.getMonth()] + "-" + date.getFullYear();
 		lastUpdateDate.innerHTML = "<i>" + fmtDate + "</i>";
-		var fmtTime = lpad(date.getHours(), '0', 2) + ":" + lpad(date.getMinutes(), '0', 2) + ":" + lpad(date.getSeconds(), '0', 2);
+		var fmtTime = lpad(date.getHours().toString(), '0', 2) + ":" +
+				lpad(date.getMinutes().toString(), '0', 2) + ":" +
+				lpad(date.getSeconds().toString(), '0', 2);
 		lastUpdateTime.innerHTML = "<i>" + fmtTime + "</i>";
 	}
 	try {
