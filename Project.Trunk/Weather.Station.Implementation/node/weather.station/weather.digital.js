@@ -4,6 +4,10 @@ var nbMessReceived = 0;
 
 var displayRawDir;
 
+var MONTHS = [
+	"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
+
 var init = function () {
 
 	displayRawDir = new Raw16PointsDir('rawDirCanvas', 100);
@@ -37,6 +41,18 @@ var init = function () {
 		nbMessReceived++;
 	};
 	ws.onmessage = function (message) { // message/event
+		var date = new Date();
+		var lastUpdateDate = document.getElementById('update-date');
+		var lastUpdateTime = document.getElementById('update-time');
+		if (lastUpdateDate !== undefined && lastUpdateDate !== undefined) {
+			var fmtDate = date.getDate() + "-" + MONTHS[date.getMonth()] + "-" + date.getFullYear();
+			lastUpdateDate.innerHTML = "<i>" + fmtDate + "</i>";
+			var fmtTime = lpad(date.getHours().toString(), '0', 2) + ":" +
+					lpad(date.getMinutes().toString(), '0', 2) + ":" +
+					lpad(date.getSeconds().toString(), '0', 2);
+			lastUpdateTime.innerHTML = "<i>" + fmtTime + "</i>";
+		}
+
 		var json = {};
 		if (typeof(message.data) === 'string') {
 			try {

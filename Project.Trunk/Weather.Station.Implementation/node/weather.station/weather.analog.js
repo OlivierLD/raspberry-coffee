@@ -131,7 +131,7 @@ var averageDir = function (va) {
 //return sum / len;
 };
 
-var MONTH = [
+var MONTHS = [
 		"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
@@ -140,7 +140,7 @@ var setValues = function (doc) {
 	var lastUpdateDate = document.getElementById('update-date');
 	var lastUpdateTime = document.getElementById('update-time');
 	if (lastUpdateDate !== undefined && lastUpdateDate !== undefined) {
-		var fmtDate = date.getDate() + "-" + MONTH[date.getMonth()] + "-" + date.getFullYear();
+		var fmtDate = date.getDate() + "-" + MONTHS[date.getMonth()] + "-" + date.getFullYear();
 		lastUpdateDate.innerHTML = "<i>" + fmtDate + "</i>";
 		var fmtTime = lpad(date.getHours().toString(), '0', 2) + ":" +
 				lpad(date.getMinutes().toString(), '0', 2) + ":" +
