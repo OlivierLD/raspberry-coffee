@@ -21,17 +21,17 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dsdl.weather.station.wind.verbose=false"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dsdl.weather.station.rain.verbose=false"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wspeed.coeff=1"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wdir.offset=30"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wdir.offset=-20"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Ddebounce.time.millisec=30"
 #
 # data.logger is the list of classes dealing with the data read from the Weather Station
 #
 DATA_LOGGERS=
 # DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.DummyLogger"
-DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.NMEAOverTCPLogger"
-DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.HTTPLogger"
+DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.NMEAOverTCPLogger"  # Override with -Dtcp.port, default is 7001
+# DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.HTTPLogger"         # To take snapshots. See snap.loop.sh script
 DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.WebSocketLogger"
-DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.MySQLLoggerImpl"
+DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.MySQLLoggerImpl"    # Uses -Ddata.logger, see below
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=$DATA_LOGGERS"
 # Options for MySQL logger:

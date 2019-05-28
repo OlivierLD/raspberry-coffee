@@ -45,8 +45,8 @@ public class SDLWeather80422 {
 	}
 
 	private final static double WIND_FACTOR = 2.400;
-	private static double wsCoeff = 1.0; // -Dws.wspeed.coeff=1.0
-	private static int wdOffset = 0;     // -Dws.wdir.offset=0
+	private static double wsCoeff = 1.0; // -Dws.wspeed.coeff=1.0 - Will be MULTIPLIED by the speed read from the device.
+	private static int wdOffset = 0;     // -Dws.wdir.offset=0    - Will be ADDED to the direction read from the device.
 
 	private int currentWindCount = 0;
 	private int currentRainCount = 0;
@@ -113,6 +113,7 @@ public class SDLWeather80422 {
 			nfe.printStackTrace();
 		}
 		try {
+			// Will be ADDED to the direction
 			wdOffset = Integer.parseInt(System.getProperty("ws.wdir.offset", String.valueOf(wdOffset)));
 		} catch (NumberFormatException nfe) {
 			nfe.printStackTrace();

@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
+ * Takes a snapshot through a REST service
+ *
  * Uses:
  * -Dhttp.port, default 8080
  * -Dweather.station.verbose, default false
