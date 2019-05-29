@@ -632,8 +632,8 @@
 															 class="green"
 															 title="Heading"
 															 value="0"
-															 width="200"
-															 height="200"
+															 width="250"
+															 height="250"
 															 major-ticks="45"
 															 minor-ticks="5"
 															 label="HDG"></compass-display>
@@ -670,8 +670,8 @@
 																 with-rose="true"
 																 with-border="true"
 																 label="COG"
-																 width="200"
-																 height="200"></direction-display>
+																 width="250"
+																 height="250"></direction-display>
 						</div>
 						<div class="black-frame centered mid">
 							<!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-01');" checked -->
@@ -698,7 +698,7 @@
 						<div class="black-frame centered">
 							<!-- Note: No initial value="0" attribute, it would be considered as the miniVal. -->
 							<analog-display class="analogdisplay-day"
-															title="Speed Over Ground in knots"
+															title="Speed Over Ground in knots and m/s"
 															id="bsp-01"
 															min-value="0"
 															max-value="15"
@@ -708,8 +708,12 @@
 															with-min-max="true"
 															overlap="40"
 															label="SOG"
-															width="200"
-															height="200"></analog-display>
+															max-value-2="7.71667"
+															major-ticks-2="1"
+															minor-ticks-2="0.1"
+															rotate-digits="false"
+															width="250"
+															height="250"></analog-display>
 						</div>
 						<div class="black-frame centered mid">
 							<!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked -->
@@ -738,8 +742,8 @@
 							<satellite-plotter class="sat-plot-02"
 																 title="Satellites in view"
 																 id="sp-01"
-																 width="200"
-																 height="200"
+																 width="250"
+																 height="250"
 																 sat-in-view='{}'></satellite-plotter>
 						</div>
 						<div class="black-frame centered mid">
