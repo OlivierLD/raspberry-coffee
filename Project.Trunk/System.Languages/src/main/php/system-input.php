@@ -5,7 +5,7 @@
 	<link rel="shortcut icon" type="image/png" href="php.png">
 </head>
 <body style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva">
-<h4>Input System and Constants</h4>
+<h4>Input System Coefficients and Constants</h4>
 <?php
 $dim = $_POST["dim"];
 echo "Dim={$dim}";
@@ -25,7 +25,7 @@ echo "Dim={$dim}";
         <?php
 
         for ($col = 0; $col < $dim; $col++) {
-            echo "<th>", $varNames[$col], "</th>";
+            echo "<th>For ", $varNames[$col], "</th><th></th>";
         }
         echo "<th>&nbsp;</th>";
         echo "<th>const</td>";
@@ -33,13 +33,14 @@ echo "Dim={$dim}";
         for ($row = 0; $row < $dim; $row++) {
             echo "<tr>";
             for ($col = 0; $col < $dim; $col++) {
-                echo "<td><input type='number' step='0.000001' name='row-".$row."-col-".$col."' placeholder='", ($row.
-                                                                                                                 "x".
-                                                                                                                 $col), "' style=\"width: 80px; text-align: right;\"/></td>";
+                echo "<td><input type='number' step='0.000001' name='row-".$row."-col-".$col."' placeholder='Coeff [", ($row.
+                                                                                                                 ", ".
+                                                                                                                 $col), "]' style=\"width: 80px; text-align: right;\"/></td>";
+                echo "<td>.", $varNames[$col], ".x<sup><small>", ($dim - $col - 1), "</small></sup>", ($col < ($dim -1) ? " + " : "") , "</td>";
             }
-            echo "<td>&nbsp;:&nbsp;</td>";
+            echo "<td>&nbsp;=&nbsp;</td>";
             echo "<td><input type='number' step='0.000001' name='coeff-".$row.
-                 "' placeholder='", $row, "' style=\"width: 80px; text-align: right;\"/></td>";
+                 "' placeholder='Const [", $row, "]' style=\"width: 80px; text-align: right;\"/></td>";
             echo "</tr>";
         }
         ?>
