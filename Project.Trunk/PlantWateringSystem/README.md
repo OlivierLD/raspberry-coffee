@@ -433,7 +433,9 @@ With the MCP3008 and the _SparkFun Soil Moisture Sensor_ and a peristaltic pump 
 - The size of the log file(s). Purge it from time to time if it is on.
 
 ##### Next...
-With an Adafruit Bonnet.
+With an Adafruit Bonnet, and a 5v pump (same power supply as the RPi).
+
+> 5v pump: <https://www.allelectronics.com/item/pmp-20/mini-water-pump/1.html>
 
 ![Wiring](./SparkFun.Bonnet_bb.png)
 
