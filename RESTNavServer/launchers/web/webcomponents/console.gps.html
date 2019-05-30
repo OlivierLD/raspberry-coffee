@@ -217,6 +217,7 @@
 		});
 		events.subscribe('sog', (val) => {
 			setData('bsp-01', val);
+			document.getElementById('bsp-01').value2 = val * 0.514444;
 		});
 		events.subscribe('nmea', (val) => {
 			setRawNMEA(val.data);
@@ -702,6 +703,8 @@
 															id="bsp-01"
 															min-value="0"
 															max-value="15"
+															value="0.0"
+															value-2="0.0"
 															major-ticks="1"
 															minor-ticks="0.1"
 															with-border="true"
