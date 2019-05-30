@@ -796,36 +796,38 @@ class AnalogDisplay extends HTMLElement {
 		}
 		// Unit
 		if (this.unit !== undefined) {
-			let fontSize = 10;
+			let fontSize = 12;
 			text = this.unit;
 			len = 0;
 			context.font = "bold " + Math.round(scale * fontSize) + "px " + this.analogDisplayColorConfig.font; // "bold 40px Arial"
 			metrics = context.measureText(text);
 			len = metrics.width;
 
+			let lineOffset = 5;
 			context.beginPath();
 			context.fillStyle = this.analogDisplayColorConfig.valueColor;
-			context.fillText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0));
+			context.fillText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (lineOffset * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0));
 			context.lineWidth = 1;
 			context.strokeStyle = this.analogDisplayColorConfig.valueOutlineColor;
-			context.strokeText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0)); // Outlined
+			context.strokeText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (lineOffset * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0)); // Outlined
 			context.closePath();
 		}
 		// Unit 2
 		if (this.unit2 !== undefined) {
-			let fontSize = 6;
+			let fontSize = 8;
 			text = this.unit2;
 			len = 0;
 			context.font = "bold " + Math.round(scale * fontSize) + "px " + this.analogDisplayColorConfig.font; // "bold 40px Arial"
 			metrics = context.measureText(text);
 			len = metrics.width;
 
+			let lineOffset = 11;
 			context.beginPath();
 			context.fillStyle = this.analogDisplayColorConfig.valueColor;
-			context.fillText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0));
+			context.fillText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (lineOffset * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0));
 			context.lineWidth = 1;
 			context.strokeStyle = this.analogDisplayColorConfig.valueOutlineColor;
-			context.strokeText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0)); // Outlined
+			context.strokeText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (lineOffset * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0)); // Outlined
 			context.closePath();
 		}
 
