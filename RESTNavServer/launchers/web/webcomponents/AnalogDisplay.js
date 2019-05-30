@@ -93,7 +93,10 @@ class AnalogDisplay extends HTMLElement {
 			"max-value-2",      // Float. For an inner scale, Max value.
 			"digital-data-len", // Integer, optional, to display instead of label, like log value along with BSP. Number of characters to display
 			"digital-data-val", // Float, optional. Must be present if the above exists.
-			"value"             // Float. Value to display
+			"value",            // Float. Value to display
+			"value-2",          // Float. Value to display, for scale 2
+			"unit",             // String. Unit
+			"unit-2"            // String. Unit 2
 		];
 	}
 
@@ -110,6 +113,7 @@ class AnalogDisplay extends HTMLElement {
 
 		// Default values
 		this._value            =   0;
+		this._value_2          = undefined;
 		this._width            = 150;
 		this._height           = 150;
 		this._major_ticks      =  10;
@@ -129,6 +133,9 @@ class AnalogDisplay extends HTMLElement {
 		this._minor_ticks_2    = undefined;
 		this._min_value_2      = 0;
 		this._max_value_2      = undefined;
+
+		this._unit             = undefined;
+		this._unit_2           = undefined;
 
 		this.miniVal =  10000000;
 		this.maxiVal = -10000000;
@@ -166,6 +173,15 @@ class AnalogDisplay extends HTMLElement {
 				this._value = parseFloat(newVal);
 				this.miniVal = Math.min(Math.max(this._min_value, this._value), this.miniVal);
 				this.maxiVal = Math.max(Math.min(this._max_value, this._value), this.maxiVal);
+				break;
+			case "value-2":
+				this._value_2 = parseFloat(newVal);
+				break;
+			case "unit":
+				this._unit = newVal;
+				break;
+			case "unit-2":
+				this._unit_2 = newVal;
 				break;
 			case "width":
 				this._width = parseInt(newVal);
@@ -241,6 +257,13 @@ class AnalogDisplay extends HTMLElement {
 		}
 //	this.repaint();
 	}
+	set value2(option) {
+		this.setAttribute("value-2", option);
+		if (analogVerbose) {
+			console.log(">> Value2 option:", option);
+		}
+//	this.repaint();
+	}
 	set width(val) {
 		this.setAttribute("width", val);
 	}
@@ -289,6 +312,12 @@ class AnalogDisplay extends HTMLElement {
 	set label(val) {
 		this.setAttribute("label", val);
 	}
+	set unit(val) {
+		this.setAttribute("unit", val);
+	}
+	set unit2(val) {
+		this.setAttribute("unit-2", val);
+	}
 	set digitalDataLen(val) {
 		this.setAttribute("digital-data-len", val);
 	}
@@ -301,6 +330,9 @@ class AnalogDisplay extends HTMLElement {
 
 	get value() {
 		return this._value;
+	}
+	get value2() {
+		return this._value_2;
 	}
 	get width() {
 		return this._width;
@@ -350,6 +382,12 @@ class AnalogDisplay extends HTMLElement {
 	get label() {
 		return this._label;
 	}
+	get unit() {
+		return this._unit;
+	}
+	get unit2() {
+		return this._unit_2;
+	}
 	get digitalDataLen() {
 		return this._digital_data_len;
 	}
@@ -362,7 +400,7 @@ class AnalogDisplay extends HTMLElement {
 
 	// Component methods
 	repaint() {
-		this.drawDisplay(this._value);
+		this.drawDisplay(this._value, this._value_2);
 	}
 
 	getColorConfig(classNames) {
@@ -467,7 +505,7 @@ class AnalogDisplay extends HTMLElement {
 		return colorConfig;
 	}
 
-	drawDisplay(analogValue) {
+	drawDisplay(analogValue, analogValue2) {
 
 		let currentStyle = this.className;
 		if (this._previousClassName !== currentStyle || true) {
@@ -720,6 +758,25 @@ class AnalogDisplay extends HTMLElement {
 		context.strokeText(text, (this.canvas.width / 2) - (len / 2), ((radius * yValueOffsetCoeff) + 10)); // Outlined
 		context.closePath();
 
+		if (analogValue2 !== undefined) {
+			let text = analogValue2.toFixed(this.analogDisplayColorConfig.valueNbDecimal);
+//  text = displayValue.toFixed(nbDecimal); // analogDisplayColorConfig.valueNbDecimal);
+			let len = 0;
+			let fontCoeff = 20;
+			context.font = "bold " + Math.round(scale * fontCoeff * this.analogDisplayColorConfig.valueFontSizeFactor) + "px " + this.analogDisplayColorConfig.font; // "bold 40px Arial"
+			let metrics = context.measureText(text);
+			len = metrics.width;
+
+			let yValueOffsetCoeff = 1.25;
+			context.beginPath();
+			context.fillStyle = this.analogDisplayColorConfig.valueColor;
+			context.fillText(text, (this.canvas.width / 2) - (len / 2), ((radius * yValueOffsetCoeff) + 10));
+			context.lineWidth = 1;
+			context.strokeStyle = this.analogDisplayColorConfig.valueOutlineColor;
+			context.strokeText(text, (this.canvas.width / 2) - (len / 2), ((radius * yValueOffsetCoeff) + 10)); // Outlined
+			context.closePath();
+		}
+
 		// Label ?
 		if (this.label !== undefined) {
 			let fontSize = 20;
@@ -731,6 +788,40 @@ class AnalogDisplay extends HTMLElement {
 
 			context.beginPath();
 			context.fillStyle = this.analogDisplayColorConfig.labelFillColor;
+			context.fillText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0));
+			context.lineWidth = 1;
+			context.strokeStyle = this.analogDisplayColorConfig.valueOutlineColor;
+			context.strokeText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0)); // Outlined
+			context.closePath();
+		}
+		// Unit
+		if (this.unit !== undefined) {
+			let fontSize = 10;
+			text = this.unit;
+			len = 0;
+			context.font = "bold " + Math.round(scale * fontSize) + "px " + this.analogDisplayColorConfig.font; // "bold 40px Arial"
+			metrics = context.measureText(text);
+			len = metrics.width;
+
+			context.beginPath();
+			context.fillStyle = this.analogDisplayColorConfig.valueColor;
+			context.fillText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0));
+			context.lineWidth = 1;
+			context.strokeStyle = this.analogDisplayColorConfig.valueOutlineColor;
+			context.strokeText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0)); // Outlined
+			context.closePath();
+		}
+		// Unit 2
+		if (this.unit2 !== undefined) {
+			let fontSize = 6;
+			text = this.unit2;
+			len = 0;
+			context.font = "bold " + Math.round(scale * fontSize) + "px " + this.analogDisplayColorConfig.font; // "bold 40px Arial"
+			metrics = context.measureText(text);
+			len = metrics.width;
+
+			context.beginPath();
+			context.fillStyle = this.analogDisplayColorConfig.valueColor;
 			context.fillText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0));
 			context.lineWidth = 1;
 			context.strokeStyle = this.analogDisplayColorConfig.valueOutlineColor;
