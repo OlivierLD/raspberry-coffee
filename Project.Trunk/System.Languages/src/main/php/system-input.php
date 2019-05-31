@@ -36,7 +36,7 @@ echo "Dim={$dim}";
                 echo "<td><input type='number' step='0.000001' name='row-".$row."-col-".$col."' placeholder='Coeff [", ($row.
                                                                                                                  ", ".
                                                                                                                  $col), "]' style=\"width: 80px; text-align: right;\"/></td>";
-                echo "<td>.", $varNames[$col], ".x<sup><small>", ($dim - $col - 1), "</small></sup>", ($col < ($dim -1) ? " + " : "") , "</td>";
+                echo "<td>.", $varNames[$col], ($col < ($dim -1) ? " + " : "") , "</td>";
             }
             echo "<td>&nbsp;=&nbsp;</td>";
             echo "<td><input type='number' step='0.000001' name='coeff-".$row.
