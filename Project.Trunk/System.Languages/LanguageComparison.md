@@ -139,6 +139,8 @@ We will use the following programming languages:
     - The system above can be resolved very quickly in just a couple of lines:
 
     ![Mathematica](./img/Mathematica.png)
+    
+    <iframe width='800' height='400' src='https://www.wolframcloud.com/obj/olivier3/Published/system.nb?_view=EMBED' frameborder='0'></iframe>
 
 #### Output
 All versions of the program pretty much return the same output, like
