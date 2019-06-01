@@ -439,11 +439,13 @@ With an Adafruit Bonnet, and a 5v pump (same power supply as the RPi).
 
 ![Wiring](./SparkFun.Bonnet_bb.png)
 
-> _Note_: wires are shown on top of the Bonnet, they are actually _under_ it.
+> _Note_: Notice the PowerBoost (500) and the LiPo battery.
+> The power supply is powering the booster, that in turn powers the Raspberry Pi, through the its battery.
+> The reason for that is that it is difficult (if even possible) to power the Raspberry Pi and the Pump from the same 5v source. When the pump starts, this generates a voltage drop that makes the Raspberry Pi reboot...
+> In this configuration, the booster and its LiPo battery are acting as a buffer on the power supply line.
+> I was not able to work around this problem with capacitors (which does not mean it is not possible)...
 
-> _Warning_: powering the pump _and_ the Raspberry Pi from the same source can be challenging. The voltage
-> drops when the pump starts, and the Raspberry Pi can very well shutdown. This
-> is why there is a capacitor in the circuit, acting as a buffer, to avoid a too steep voltage drop when the pump starts.
+> _Note_: wires are shown on top of the Bonnet, they are actually _under_ it.
 
 | Bonnet top | Bonnet bottom |
 |:----------:|:-------------:|
