@@ -84,4 +84,5 @@ Example
 
  ![Neuron](./img/neuron.example.png)
 
+See a [Java Notebook](./Neural%20Networks.ipynb) for an example.
 
