@@ -70,3 +70,18 @@ And specifically the `TensorFlow playground`.
 
 ### TensorFlow Playground
 TensorFlow playground at <https://playground.tensorflow.org>
+
+How a Neuron works.
+
+- It has a _single_ numerical output (usually called `y`).
+- It can have several inputs (also called dimensions), usually named `x`<small><sub>`n`</sub></small>.
+- It also has a constant, called the bias (noted `b`)
+- Its formula is
+
+ ![Neuron](./img/neuron.formula.png)
+ 
+Example 
+
+ ![Neuron](./img/neuron.example.png)
+
+
