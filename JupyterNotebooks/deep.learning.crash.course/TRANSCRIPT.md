@@ -86,6 +86,8 @@ Example
 
 See a [Java Notebook](./Neural%20Networks.ipynb) for an example.
 
+#### Neurons at work
+
 ![TensorFlow Playground](./img/tf.playground.png)
 
 In the screenshot above:
@@ -103,6 +105,9 @@ In the screenshot above:
  --> 
 When you hit the \[Start\] button, we iterate over all those parameters.
 The tuning step of those parameters **_is_** what Machine Learning is all about.
+
+##### What we want
+We want to obtain the parameters (weights, bias) that will generate the right background for the points of our training dataset.
 
 We know what data we start from (training data), we are trying to minimize the number 
 of misclassified points (and orange dot on a blue background and vice-versa). 
