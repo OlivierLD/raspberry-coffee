@@ -86,3 +86,26 @@ Example
 
 See a [Java Notebook](./Neural%20Networks.ipynb) for an example.
 
+![TensorFlow Playground](./img/tf.playground.png)
+
+In the screenshot above:
+- We have 2 input dimensions, x<small><sub>1</sub></small> (abscissa) and x<small><sub>2</sub></small> (ordinate).
+- The weight of each dimension is represented by the thickness of the line between the dimension and the neuron(s)
+- The bias of the neuron is represented by the (very) small little gray square at the bottom left of the neuron(s).
+- The output will be a single number, ranging from -1 to +1.
+- The background of the graphic on the right will reflect the prediction, it will be orange if y < 0, and blue if y > 0.
+- You can change the weights associated with every boxes (dimensions and neuron(s)), as well as the bias of each neuron.
+ 
+<!--
+ Use ReLU Activation
+ Change dimension weights to 1
+ Change neuron's bias to 0
+ --> 
+When you hit the \[Start\] button, we iterate over all those parameters.
+The tuning step of those parameters **_is_** what Machine Learning is all about.
+
+We know what data we start from (training data), we are trying to minimize the number 
+of misclassified points (and orange dot on a blue background and vice-versa). 
+
+In this example, the classification can be operated by a single neuron.
+
