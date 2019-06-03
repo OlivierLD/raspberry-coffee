@@ -24,7 +24,7 @@ We actually have 3 dimensions:
 - Age
 - Risk group, encoded with the color.
 
-A programmer would write rules like this (in Python):
+A programmer would write _rules_ like this (in Python):
 ```python
 if age < 25:
   if speed > 140:
@@ -32,7 +32,7 @@ if age < 25:
   else:
     return yellow # Car is slow enough for medium risk
     
-if age > 75
+if age > 75:
   return red # Get off the road, old man!
   
 if miles_per_year > 30:
@@ -49,3 +49,18 @@ If we plot this on the diagram (red-yellow-green), we have
 ![Plot](./img/rules.plot.png)
 
 ### Deep - supervised - machine learning
+
+The `Model` will replace the `rules` we had before.
+
+It will be able to make predictions like this:
+
+![Model](./img/Model.png)
+
+We will use Neural Networks to elaborate the model.
+
+And specifically the `TensorFlow playground`.
+
+<!-- 2. BASIC CONCEPTS OF DEEP SUPERVISED MACHINE LEARNING -->
+
+### TensorFlow Playground
+TensorFlow playground at <https://playground.tensorflow.org>
