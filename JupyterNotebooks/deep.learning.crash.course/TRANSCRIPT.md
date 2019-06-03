@@ -12,6 +12,10 @@ First, some links:
 ### How it is different from Programming
 ![Where](./img/01fig02.jpg)
 
+Classical programming applies rules on data to get answers.
+
+The goal of machine learning is to produce the rules, by finding the path between the original data and the answers/facts/conclusions produced subsequently.
+
 ### We start from real data (from a database)
 ![Real data](./img/real.data.png)
 
@@ -20,10 +24,11 @@ First, some links:
 - green: low risk
 
 We actually have 3 dimensions:
-- Max Speed
-- Age
+- Max Speed of the car
+- Age of the driver
 - Risk group, encoded with the color.
 
+Let's introduce another dimension, the number of thousands of miles driven per year.
 A programmer would write _rules_ like this (in Python):
 ```python
 if age < 25:
@@ -45,12 +50,13 @@ return green # otherwise, low risk
       
 ```
 
-If we plot this on the diagram (red-yellow-green), we have
+If we plot this on the diagram (red-yellow-green), we have:
+
 ![Plot](./img/rules.plot.png)
 
 ### Deep - supervised - machine learning
 
-The `Model` will replace the `rules` we had before.
+The `model` will replace the `rules` we had before.
 
 It will be able to make predictions like this:
 

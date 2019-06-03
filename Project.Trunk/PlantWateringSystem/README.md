@@ -64,7 +64,7 @@ With an Adafruit Bonnet, and a 5v pump (same power supply as the RPi).
 Most features are available through REST Services.
 Any REST client (`PostMan`, `curl`, etc) can reach them.
 
-To get he list of endpoints:
+To get the list of endpoints:
 ```
  $ curl http://[raspberrypi.address]:8088/pws/oplist
 ```
