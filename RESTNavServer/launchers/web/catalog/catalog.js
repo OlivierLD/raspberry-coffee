@@ -1,5 +1,6 @@
 // Composite Catalog (Weather Wizard)
-const faxColors = {
+// A nice NOAA Chart list at https://www.nws.noaa.gov/om/marine/hfhi_mobile.htm
+const faxColors = { // TODO rgba colors
 	black: "BLACK",
 	white: "WHITE",
 	red: "RED",
@@ -16,7 +17,7 @@ const faxEffects = {
 
 const mapProjections = {
 	globe: "GLOBE",
-	mercator: "MERCATOR"
+	mercator: "MERCATOR" // TODO LAMBERT and others
 };
 
 const compositeCatalog = [
@@ -80,6 +81,22 @@ const compositeCatalog = [
 				location: {
 					x: 66,
 					y: 48
+				}
+			},
+			{
+				faxUrl: "https://tgftp.nws.noaa.gov/fax/PWFA11.gif",
+				name: "Central Pac Streamlines",
+				transp: faxColors.white,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.red
+				},
+				effect: faxEffects.blur,
+				rotation: 90,
+				zoom: 0.41601580228005985,
+				location: {
+					x: 22,
+					y: 402
 				}
 			}
 		],
