@@ -162,6 +162,7 @@ var ajustedLongitude = function(leftBoundary, eastIncrease) {
 };
 
 const ARROW_LENGTH = 20;
+const WIND_ARROW_TRANSPARENCY = 0.3;
 
 var drawWindArrow = function(context, at, twd, tws) {
 
@@ -170,7 +171,7 @@ var drawWindArrow = function(context, at, twd, tws) {
 	var roundTWS = Math.round(tws);
 	var dTWD = Math.toRadians(twd);
 
-	context.strokeStyle = 'rgba(0, 0, 255, 0.75)';
+	context.strokeStyle = 'rgba(0, 0, 255, ' + WIND_ARROW_TRANSPARENCY.toString() + ')';
 
 	var x = at.x;
 	var y = at.y;

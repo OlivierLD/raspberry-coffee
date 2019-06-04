@@ -79,13 +79,18 @@ public class PullTxManager {
 	}
 
 	public enum ImageColor {
-
+		// See https://www.w3schools.com/colors/colors_names.asp
 		WHITE("white", Color.white),
 		BLACK("black", Color.black),
 		RED("red", Color.red),
 		BLUE("blue", Color.blue),
 		GREEN("green", Color.green),
-		PINK("white", Color.pink);
+		ORANGE("orange", Color.orange),
+		MAGENTA("magenta", Color.magenta),
+		PINK("pink", Color.pink),
+		NAVY("navy", new Color(00, 00, 0x8B)),
+		VIOLET("violet", new Color(	0x8A, 0x2B, 0xE2)),
+		CYAN("cyan", Color.cyan);
 
 		private final Color color;
 		private final String colorName;

@@ -1,12 +1,17 @@
 // Composite Catalog (Weather Wizard)
 // A nice NOAA Chart list at https://www.nws.noaa.gov/om/marine/hfhi_mobile.htm
-const faxColors = { // TODO rgba colors
+const faxColors = { // Must match ImageColor, in PullTxManager
 	black: "BLACK",
 	white: "WHITE",
 	red: "RED",
 	green: "GREEN",
 	pink: "PINK",
-	blue: "BLUE"
+	orange: "ORANGE",
+	magenta: "MAGENTA",
+	blue: "BLUE",
+	navy: "NAVY",
+	cyan: "CYAN",
+	violet: "VIOLET"
 };
 
 const faxEffects = {
@@ -89,7 +94,7 @@ const compositeCatalog = [
 				transp: faxColors.white,
 				tx: {
 					from: faxColors.black,
-					to: faxColors.red
+					to: faxColors.violet
 				},
 				effect: faxEffects.blur,
 				rotation: 90,
@@ -100,7 +105,7 @@ const compositeCatalog = [
 				}
 			}
 		],
-		gribRequest: 'GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN'
+		gribRequest: 'GFS:65N,45S,130E,110W|1,1|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN'
 	},
 	{
 		key: "PAC-0001",

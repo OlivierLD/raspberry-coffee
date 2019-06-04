@@ -241,7 +241,7 @@ public class ImageUtil {
 			return null;
 		}
 
-		if (image instanceof BufferedImage && (Math.sin(rotation) == 0 && Math.cos(rotation) == 1)) {
+		if (image instanceof BufferedImage && (Math.sin(rotation) == 0 && Math.cos(rotation) == 1)) { // No change needed
 			return (BufferedImage) image;
 		}
 
@@ -424,8 +424,9 @@ public class ImageUtil {
 		g.dispose();
 		for (int i = 0; i < dimg.getHeight(); i++) {
 			for (int j = 0; j < dimg.getWidth(); j++) {
-				if (turnThis != null && dimg.getRGB(j, i) == turnThis.getRGB())
+				if (turnThis != null && dimg.getRGB(j, i) == turnThis.getRGB()) {
 					dimg.setRGB(j, i, intoThat.getRGB()); // Switch Color
+				}
 				if ((dimg.getRGB(j, i) & 0x00FFFFFF) == (colorToTransparent.getRGB() & 0x00FFFFFF)) {
 //        System.out.println("Making " + Integer.toHexString(dimg.getRGB(j, i) & 0x00ffffff) + " transparent.");
 					dimg.setRGB(j, i, 0x008F1C1C); // 00 8f 1c 1c, Make transparent
