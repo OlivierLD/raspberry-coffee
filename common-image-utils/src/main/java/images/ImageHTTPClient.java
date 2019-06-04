@@ -60,22 +60,25 @@ public class ImageHTTPClient {
 			} catch (final Exception e) {
 				throw e;
 			}
-			File f = new File(fName);
+			if (image != null) {
+				File f = new File(fName);
 
-			if (fName.endsWith(".jpg")) {
-				ImageIO.write((RenderedImage) image, "jpg", f);
-			} else if (fName.endsWith(".gif")) {
-				gifImage.write(new GIFOutputStream(new FileOutputStream(f)));
-			} else if (fName.endsWith(".png")) {
-				ImageIO.write((RenderedImage) image, "png", f);
+				if (fName.endsWith(".jpg")) {
+					ImageIO.write((RenderedImage) image, "jpg", f);
+				} else if (fName.endsWith(".gif")) {
+					gifImage.write(new GIFOutputStream(new FileOutputStream(f)));
+				} else if (fName.endsWith(".png")) {
+					ImageIO.write((RenderedImage) image, "png", f);
+				} else {
+					System.out.println("Extension not supported (" + fName + ")");
+				}
+				retFile = f.getAbsolutePath();
+				if (verbose) {
+					System.out.println("New Fax available " + retFile);
+				}
 			} else {
-				System.out.println("Extension not supported (" + fName + ")");
+				System.out.println(String.format("Image not found %s", urlStr));
 			}
-			retFile = f.getAbsolutePath();
-			if (verbose) {
-				System.out.println("New Fax available " + retFile);
-			}
-
 		} catch (Exception e) {
 			throw e;
 		}

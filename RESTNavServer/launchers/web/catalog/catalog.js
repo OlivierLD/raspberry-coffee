@@ -36,14 +36,35 @@ const compositeCatalog = [
 		},
 		faxData: [
 			{
-				faxUrl: "https://ocean.weather.gov/P_sfc_full_ocean_color.png",
-				name: "North Pac surface analysis",
+				faxUrl: "https://tgftp.nws.noaa.gov/fax/PYBA90.gif",
+				name: "North Pac surface analysis, East",
 				transp: faxColors.white,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.red
+				},
 				effect: faxEffects.blur,
-				zoom: 0.37096066812224876,
+				rotation: 90,
+				zoom: 0.3415446227340363,
 				location: {
-					x: 62,
-					y: 27
+					x: 471,
+					y: 33
+				}
+			},
+			{
+				faxUrl: "https://tgftp.nws.noaa.gov/fax/PYBA91.gif",
+				name: "North Pac surface analysis, West",
+				transp: faxColors.white,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.red
+				},
+				effect: faxEffects.blur,
+				rotation: 90,
+				zoom: 0.3442206645644906,
+				location: {
+					x: 58,
+					y: 30
 				}
 			},
 			{

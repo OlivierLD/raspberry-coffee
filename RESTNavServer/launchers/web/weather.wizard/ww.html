@@ -28,7 +28,7 @@
 		<script type="text/javascript" src="../js/ww.js"></script>
 
     <script type="text/javascript">
-    
+
   var flavor = 'Ajax'; // Default, WebSocket not implemented here (we run on a small http server).
 
   var currentFax = 1;
@@ -344,6 +344,9 @@
 				if (fax.tx !== undefined) {
 					oneFax.from = fax.tx.from;
 					oneFax.to = fax.tx.to;
+				}
+				if (fax.rotation !== undefined) {
+					oneFax.rotation = fax.rotation;
 				}
 				requestData.push(oneFax);
 
@@ -737,4 +740,3 @@
     <address><span id="console-type"></span></address>
   </body>
 </html>
-  

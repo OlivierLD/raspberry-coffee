@@ -639,6 +639,9 @@
 					oneFax.from = fax.tx.from;
 					oneFax.to = fax.tx.to;
 				}
+				if (fax.rotation !== undefined) {
+					oneFax.rotation = fax.rotation;
+				}
 				requestData.push(oneFax);
 
 			/*

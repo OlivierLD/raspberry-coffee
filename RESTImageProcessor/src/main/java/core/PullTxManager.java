@@ -24,6 +24,28 @@ public class PullTxManager {
 			Color intoThat,
 			String imgType,
 			int tx)
+			throws Exception {
+		return downloadAndTransform(urlIn,
+				locationOut,
+				finalLocation,
+				toMakeTransparent,
+				changeThis,
+				intoThat,
+				imgType,
+				tx,
+				0d);
+	}
+
+	public static String downloadAndTransform(
+			String urlIn, // @NotNull
+			String locationOut,
+			String finalLocation,
+			Color toMakeTransparent,
+			Color changeThis,
+			Color intoThat,
+			String imgType,
+			int tx,
+			double rotation)
 		throws Exception {
 
 		if (!urlIn.startsWith("file:")) {
@@ -42,14 +64,16 @@ public class PullTxManager {
 			}
 
 			Image fax = ImageHTTPClient.getFax(urlIn, locationOut);
-			BufferedImage bimg = ImageUtil.toBufferedImage(fax);
+			BufferedImage bimg = ImageUtil.toBufferedImage(fax, rotation);
 
-			if (changeThis == null && intoThat == null) {
-				bimg = ImageUtil.makeColorTransparent(bimg, toMakeTransparent, tx);
-			} else {
-				bimg = ImageUtil.switchColorAndMakeColorTransparent(bimg, changeThis, intoThat, toMakeTransparent, tx);
+			if (bimg != null) {
+				if (changeThis == null && intoThat == null) {
+					bimg = ImageUtil.makeColorTransparent(bimg, toMakeTransparent, tx);
+				} else {
+					bimg = ImageUtil.switchColorAndMakeColorTransparent(bimg, changeThis, intoThat, toMakeTransparent, tx);
+				}
+				ImageUtil.writeImageToFile(bimg, imgType, finalLocation);
 			}
-			ImageUtil.writeImageToFile(bimg, imgType, finalLocation);
 		}
 		return finalLocation;
 	}
@@ -109,6 +133,7 @@ public class PullTxManager {
 		ImageColor to;
 		String imgType;
 		TxType tx;
+		float rotation = 0;
 
 		public TxRequest url(String url) {
 			this.url = url;
@@ -142,6 +167,24 @@ public class PullTxManager {
 			this.tx = tx;
 			return this;
 		}
+		public TxRequest rotation(float rot) {
+			this.rotation = rot;
+			return this;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("URL:%s Storage:%s Returned:%s Transparent:%s From:%s To:%s Type:%s Tx:%s Rot:%f",
+					url,
+					storage,
+					returned,
+					transparent != null ? transparent.colorName() : "",
+					from != null ? from.colorName() : "",
+					to != null ? to.colorName() : "",
+					imgType,
+					tx.txName(),
+					rotation);
+		}
 
 		public String getUrl() {
 			return url;
@@ -167,6 +210,8 @@ public class PullTxManager {
 			return to;
 		}
 
+		public float getRotation() { return rotation; }
+
 		public TxType getTx() {
 			return tx;
 		}
@@ -187,10 +232,12 @@ public class PullTxManager {
 		final String FAX_NAME_1 = "http://www.opc.ncep.noaa.gov/P_sfc_full_ocean.gif";  // Surface, current
 		final String FAX_NAME_2 = "http://www.opc.ncep.noaa.gov/shtml/P_06hr500bw.gif"; // 500mb, current
 		final String FAX_NAME_3 = "http://www.prh.noaa.gov/hnl/graphics/stream.gif";    // Streamlines
+		final String FAX_NAME_4 = "https://tgftp.nws.noaa.gov/fax/PYBA90.gif";
 
 		final String IMG_NAME_1 = "NOAA_sfc_1.png";
 		final String IMG_NAME_2 = "NOAA_500_2.png";
 		final String IMG_NAME_3 = "NOAA_Stream_2.png";
+		final String IMG_NAME_4 = "NPac.png";
 
 		String loc1 = downloadAndTransform(
 				FAX_NAME_1,
@@ -221,6 +268,17 @@ public class PullTxManager {
 				null,
 				"png",
 				ImageUtil.BLUR);
+
+		String loc4 = downloadAndTransform(
+				FAX_NAME_4,
+				"web" + File.separator + IMG_NAME_4,
+				"web" + File.separator + "_" + IMG_NAME_4,
+				Color.white,
+				Color.black,
+				Color.red,
+				"png",
+				ImageUtil.BLUR,
+				Math.toRadians(90));
 
 
 		// Transform template

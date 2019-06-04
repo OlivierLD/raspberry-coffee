@@ -230,8 +230,18 @@ public class ImageUtil {
 		return toBufferedImage(image, 0D);
 	}
 
+	/**
+	 *
+	 * @param image
+	 * @param rotation in Radians
+	 * @return
+	 */
 	public static BufferedImage toBufferedImage(Image image, double rotation) {
-		if (image instanceof BufferedImage) {
+		if (image == null) {
+			return null;
+		}
+
+		if (image instanceof BufferedImage && (Math.sin(rotation) == 0 && Math.cos(rotation) == 1)) {
 			return (BufferedImage) image;
 		}
 

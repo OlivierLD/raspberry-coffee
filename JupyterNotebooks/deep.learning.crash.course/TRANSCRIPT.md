@@ -9,7 +9,7 @@ First, some links:
 ### Deep Learning and AI
 ![Where](./img/01fig01.jpg)
 
-### How it is different from Programming
+### How it is different from (Classical) Programming
 ![Where](./img/01fig02.jpg)
 
 Classical programming applies rules on data to get answers.
@@ -114,3 +114,4 @@ of misclassified points (and orange dot on a blue background and vice-versa).
 
 In this example, the classification can be operated by a single neuron.
 
+#### Activation functions

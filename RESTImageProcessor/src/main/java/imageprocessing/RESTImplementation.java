@@ -133,14 +133,13 @@ public class RESTImplementation {
 				final List<Object> resultList = new ArrayList<>();
 				try {
 					txRequests = gson.fromJson(stringReader, List.class);
-					txRequests
-							.forEach(json -> {
+					txRequests.forEach(json -> {
 								try {
 									JsonObject jObj = gson.toJsonTree(json).getAsJsonObject();
 									PullTxManager.TxRequest txRequest = gson.fromJson(jObj.toString(), PullTxManager.TxRequest.class);
 									// Do the job here
 									if (verbose) {
-										System.out.println(String.format("Downloading %s...", txRequest.getUrl()));
+										System.out.println(String.format("Downloading %s...", txRequest.toString()));
 									}
 									if (txRequest.getUrl().startsWith("file:")) { // Comes from an existing composite
 										txRequest = txRequest.returned(txRequest.getUrl());
@@ -153,7 +152,8 @@ public class RESTImplementation {
 											txRequest.getFrom() == null ? null : txRequest.getFrom().color(),
 											txRequest.getTo() == null ? null : txRequest.getTo().color(),
 											txRequest.getImgType(),
-											txRequest.getTx().type());
+											txRequest.getTx().type(),
+											Math.toRadians(txRequest.getRotation()));
 									if (verbose) {
 										System.out.println(String.format("Done with %s... final document is %s", txRequest.getUrl(), txRequest.getReturned()));
 									}
