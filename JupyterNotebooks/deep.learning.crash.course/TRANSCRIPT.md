@@ -117,6 +117,8 @@ In this example, the classification can be operated by a single neuron.
 #### Activation functions
 The Activation Function sits between the calculated output, and the actual output of the neuron (`y`).
 It compresses the calculated output between 2 other values (like 0 and 1, -1 and +1, etc).
+Notice that the output `y` becomes the `x` of the Activation Function.
+
 Among them, we have:
 - Step functions (0 or 1),
 - Sigmoids (\[0, 1\])
