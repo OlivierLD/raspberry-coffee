@@ -103,7 +103,7 @@ In the screenshot above:
  Change dimension weights to 1
  Change neuron's bias to 0
  --> 
-When you hit the \[Start\] button, we iterate over all those parameters.
+When you hit the \[Start\] <!-- &#10162; --> button, we iterate over all those parameters.
 The tuning step of those parameters **_is_** what Machine Learning is all about.
 
 ##### What we want
@@ -115,3 +115,17 @@ of misclassified points (and orange dot on a blue background and vice-versa).
 In this example, the classification can be operated by a single neuron.
 
 #### Activation functions
+The Activation Function sits between the calculated output, and the actual output of the neuron (`y`).
+It compresses the calculated output between 2 other values (like 0 and 1, -1 and +1, etc).
+Among them, we have:
+- Step functions (0 or 1),
+- Sigmoids (\[0, 1\])
+- Hyperbolic Tangents (\[-1, +1\])
+- Rectified Linear Unit (aka ReLU), (\[0, n\])
+
+For example, if we use a Sigmoid for the value used above (`17`), we would probably return a value around `0.91`...
+
+| Sigmoid  | Hyperbolic Tangent | ReLU     |
+|:--------:|:------------------:|:--------:|
+| ![Sigmoid](./img/Sigmoid.png) | ![H Tan](./img/HTan.jpg) | ![Sigmoid](./img/ReLU.png) |
+
