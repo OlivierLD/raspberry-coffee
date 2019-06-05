@@ -206,6 +206,8 @@ This strategy is called _Gradient Descent_.
 The `epoch` represents the number of steps it went through so far. For each step, the algorithm is evaluating the error for all the point of the training dataset.
 You can see the loss curve(s) as the process goes on, and the decision boundaries are updated in real time as well.
 
+See this [complex one](http://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=spiral&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=40&networkShape=4,2&seed=0.31018&showTestData=true&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false&problem_hide=true&regularization_hide=true&batchSize_hide=true&regularizationRate_hide=true).
+
 #### Finding the sweet spot
 
 Over fitting vs Under fitting
