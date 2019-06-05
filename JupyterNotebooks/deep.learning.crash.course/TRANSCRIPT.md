@@ -193,4 +193,22 @@ the curve(s) represent the value of the loss as the training goes. If the loss d
 
 This is the goal of the training algorithm, it changes the bias to minimize the loss.
 
+To store the best bias, we check the slope of the curve. If it goes down, it is good.
+The next point - on the loss curve - to evaluate will be one step away, this step value is the `learning rate` that
+figures in the TensorFlow diagram.
+
+A big `learning rate` will accelerate the learning process, but might very well miss local minima if it is too big.
+
+![Learning rate](./img/sample.04.png)
+
+This strategy is called _Gradient Descent_.
+
+The `epoch` represents the number of steps it went through so far. For each step, the algorithm is evaluating the error for all the point of the training dataset.
+You can see the loss curve(s) as the process goes on, and the decision boundaries are updated in real time as well.
+
+#### Finding the sweet spot
+
+Over fitting vs Under fitting
+
+
 
