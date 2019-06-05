@@ -9,6 +9,12 @@ First, some links:
 ### Deep Learning and AI
 ![Where](./img/01fig01.jpg)
 
+And even AI (Artificial Intelligence) itself is prt of the even bigger picture called Data Science.
+
+![Data Science](./img/DataScience.png)
+
+(KDD: Knowledge Discovery in Databases)
+
 ### How it is different from (Classical) Programming
 ![Where](./img/01fig02.jpg)
 
@@ -131,4 +137,60 @@ For example, if we use a Sigmoid for the value used above (`17`), we would proba
 |:--------:|:------------------:|:--------:|
 | ![Sigmoid](./img/Sigmoid.png) | ![H Tan](./img/HTan.jpg) | ![Sigmoid](./img/ReLU.png) |
 
-See this [Jupyter Java Notebook](./NeuralNetworks.ipynb)
+See this [Jupyter Java Notebook](./NeuralNetworks.ipynb) for more details.
+
+#### Neuron Networks
+One neuron is usually not enough. But a combination of them can approximate almost _any_ function.
+
+Samples are not typically separable by a single line..., like this one for example:
+
+![Sample 2](./img/sample.02.png)
+
+As each neuron will generate one line (boundary, separation, whatever you call it), we will add more 
+neuron to the picture to see how it goes.
+
+We add a neuron in the first _hidden layer_, and we combine these two neurons into a so-called _fully connected layer_.
+
+There is _no_ communication between those neurons, and they get the same input from the dimensions (age and speed here).
+_**But**_ the inputs can have different weight (thickness of the line).
+
+> Note: we have here _one_ hidden layer, made out of _two_neurons.
+> In a typical setting, you might have 2 or 3 hidden layers, maybe 500 to 5000 neurons per hidden layer.
+> In which case it makes it prohibitive to tune all those parameters by hand.
+
+Kick this off by clicking the \[Start\] button again. You see the parameters of the neurons changing,
+and the combined output on the right. As you would see, this network might not be able
+to separate those two groups we have in our training dataset.
+
+![Sample 3](./img/sample.03.png)
+
+#### How does a network _learn_?
+The first thing is to know how well the network works.
+In the picture above, it does _not_ work great.
+Again, the prediction is reflected by the color of the background, and some points are on the wrong background.
+
+To know how well the network is working, we will consider - for each point - the difference between 
+the prediction (reflected by the background color), and the reality (reflected by the point color).
+We combine the value of the error for _all_ the data point in our training dataset, which we do using the 
+mean squared error (MSE).
+
+![MSE](./img/MSE.png)
+
+- In the formula above, Y<small><sub>i</sub></small> is the prediction, and Ÿ<small><sub>i</sub></small> is the value from the training dataset.
+- We compute the difference, and we square it to get rid of its sign, so positive and negative values do not erase each other
+- We sum all the differences for all the data set
+- We divide by the cardinality of the dataset (normalization)
+
+To understand better, we restrict the picture to only one neuron again, to deal with only one parameter (of the neuron),
+that would be the bias.
+
+Then we can plot the value of this bias (abscissa) to the loss (ordinate).
+
+![Loss vs Bias](./img/loss.vs.bias.png)
+
+This loss is displayed on the diagrams of the TensorFlow playground, on the top left part (Test loss),
+the curve(s) represent the value of the loss as the training goes. If the loss drops, this is good.
+
+This is the goal of the training algorithm, it changes the bias to minimize the loss.
+
+
