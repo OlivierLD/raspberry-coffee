@@ -110,7 +110,7 @@ The tuning step of those parameters **_is_** what Machine Learning is all about.
 We want to obtain the parameters (weights, bias) that will generate the right background for the points of our training dataset.
 
 We know what data we start from (training data), we are trying to minimize the number 
-of misclassified points (and orange dot on a blue background and vice-versa). 
+of misclassified points (an orange dot on a blue background and vice-versa). 
 
 In this example, the classification can be operated by a single neuron.
 
@@ -131,3 +131,4 @@ For example, if we use a Sigmoid for the value used above (`17`), we would proba
 |:--------:|:------------------:|:--------:|
 | ![Sigmoid](./img/Sigmoid.png) | ![H Tan](./img/HTan.jpg) | ![Sigmoid](./img/ReLU.png) |
 
+See this [Jupyter Java Notebook](./NeuralNetworks.ipynb)
