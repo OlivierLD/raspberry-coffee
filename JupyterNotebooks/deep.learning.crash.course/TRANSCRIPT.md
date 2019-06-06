@@ -55,6 +55,8 @@ if miles_per_year > 20:
 return green # otherwise, low risk  
       
 ```
+See in this [Java Notebook](./NeuralNetworks.ipynb#01), there is a Java implementation of such a rule.
+
 
 If we plot this on the diagram (red-yellow-green), we have:
 
@@ -77,7 +79,7 @@ And specifically the `TensorFlow playground`.
 ### TensorFlow Playground
 TensorFlow playground at <https://playground.tensorflow.org>
 
-How a Neuron works.
+How a Neuron (aka Node) works.
 
 - It has a _single_ numerical output (usually called `y`).
 - It can have several inputs (also called dimensions), usually named `x`<small><sub>`n`</sub></small>.
@@ -90,7 +92,9 @@ Example
 
  ![Neuron](./img/neuron.example.png)
 
-See a [Java Notebook](./NeuralNetworks.ipynb) for an example.
+See a [Java Notebook](./NeuralNetworks.ipynb#02) for an example.
+
+In a classification problem, a single neuron can draw a single line as a decision boundary. 
 
 #### Neurons at work
 
@@ -210,7 +214,11 @@ See this [complex one](http://playground.tensorflow.org/#activation=tanh&batchSi
 
 #### Finding the sweet spot
 
-Over fitting vs Under fitting
+Over fitting vs Under fitting.
 
+The training of a Neural Network relies on know data.
+
+Usually, 80% of those known data are used to train the network (training dataset), a the
+remaining 20% are used to test if the prediction of the network is correct (test dataset).
 
 
