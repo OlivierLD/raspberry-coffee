@@ -55,7 +55,7 @@ if miles_per_year > 20:
 return green # otherwise, low risk  
       
 ```
-See in this [Java Notebook](./NeuralNetworks.ipynb#01), there is a Java implementation of such a rule.
+See in this [Java Notebook](./NeuralNetworks.ipynb#A-"Classical"-way-to-program-a-rule), there is a Java implementation of such a rule.
 
 
 If we plot this on the diagram (red-yellow-green), we have:
@@ -92,7 +92,7 @@ Example
 
  ![Neuron](./img/neuron.example.png)
 
-See a [Java Notebook](./NeuralNetworks.ipynb#02) for an example.
+See a [Java Notebook](./NeuralNetworks.ipynb#Neurons!) for an example.
 
 In a classification problem, a single neuron can draw a single line as a decision boundary. 
 
@@ -207,7 +207,7 @@ A big `learning rate` will accelerate the learning process, but might very well 
 
 This strategy is called _Gradient Descent_.
 
-The `epoch` represents the number of steps it went through so far. For each step, the algorithm is evaluating the error for all the point of the training dataset.
+The `epoch` represents the number of steps it went through so far. For each step, the algorithm is evaluating the error for all the points of the training dataset.
 You can see the loss curve(s) as the process goes on, and the decision boundaries are updated in real time as well.
 
 See this [complex one](http://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=spiral&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=40&networkShape=4,2&seed=0.31018&showTestData=true&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false&problem_hide=true&regularization_hide=true&batchSize_hide=true&regularizationRate_hide=true).
@@ -221,4 +221,13 @@ The training of a Neural Network relies on know data.
 Usually, 80% of those known data are used to train the network (training dataset), a the
 remaining 20% are used to test if the prediction of the network is correct (test dataset).
 
+## Training a TensorFlow model
+From existing customer data, we will use `Keras` API to train a neural network.
 
+The code will be provided in `Colab` Notebooks.
+All the required code can be found at <https://github.com/DJCordhose/deep-learning-crash-course-notebooks/blob/master/README.md>.
+`Colab` requires a Google account, and works better in a Chrome browser.
+
+> Note: Shift + Enter executes the current cell, and brings you to the next one.
+
+ 
