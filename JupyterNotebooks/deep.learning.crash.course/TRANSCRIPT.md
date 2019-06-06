@@ -1,5 +1,5 @@
 # Deep Learning Crash Course
-A transcript of the Manning Video `Deep Learning Crash Course` by Oliver Zeigermann.
+A transcript adapted from the Manning Video `Deep Learning Crash Course` by <a href="http://lmgtfy.com/?q=Oliver+Zeigermann" target="google">Oliver Zeigermann</a>.
 
 First, some links:
 - [Google Colab](https://colab.research.google.com/notebooks/welcome.ipynb)
@@ -9,7 +9,7 @@ First, some links:
 ### Deep Learning and AI
 ![Where](./img/01fig01.jpg)
 
-And even AI (Artificial Intelligence) itself is prt of the even bigger picture called Data Science.
+And even AI (Artificial Intelligence) itself is part of the even bigger picture called Data Science.
 
 ![Data Science](./img/DataScience.png)
 
@@ -230,4 +230,62 @@ All the required code can be found at <https://github.com/DJCordhose/deep-learni
 
 > Note: Shift + Enter executes the current cell, and brings you to the next one.
 
- 
+First Notebook is [here](https://colab.research.google.com/github/djcordhose/deep-learning-crash-course-notebooks/blob/master/U3-M3-data.ipynb).
+
+This first Notebook imports data from a CSV file, with `curl`:
+```
+ curl -O https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-course-notebooks/master/data/insurance-customers-1500.csv
+```
+If you are behind a proxy, use 
+```
+ curl -x http://www-proxy.us.oracle.com:80 -O https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-course-notebooks/master/data/insurance-customers-1500.csv
+```
+See what the data look like doing (after the `curl` command above)
+```
+ $ head ./insurance-customers-1500.csv 
+speed;age;miles;group
+98.0;44.0;25.0;1
+118.0;54.0;24.0;1
+111.0;26.0;34.0;0
+97.0;25.0;10.0;2
+114.0;38.0;22.0;1
+130.0;55.0;34.0;0
+118.0;40.0;51.0;0
+143.0;42.0;34.0;1
+120.0;41.0;42.0;2
+$
+```
+To know how many lines it contains, use the `word count` command:
+```
+ $ wc -l insurance-customers-1500.csv 
+    1501 insurance-customers-1500.csv
+```
+It has 1501 lines, the first one being the headers (`speed;age;miles;group`), that makes 1500 lines of actual data.
+
+In the `group` column, `0` is `red`, `1` is `green`, `2` is `yellow`.
+
+The content of this file - all the data it contains - is called a _data frame_.
+
+For the first exercise, get the content of the URL at <https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-course-notebooks/master/exercise/plot.py> (you can use your browser) and paste it in a new cell of you `Colab` notebook.
+Then press Shift + Enter to execute it.
+
+```
+$ curl -O https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-course-notebooks/master/exercise/plot.py
+$ cat plot.py 
+```
+
+### Data Encoding
+Second Lab: <https://colab.research.google.com/github/djcordhose/deep-learning-crash-course-notebooks/blob/master/U3-M5-nn-intro.ipynb>
+
+Using SoftMax (as activation)
+
+![Softmax](./img/softmax.png)
+
+You train your machine with your data to make it learn the relationship between some input data and a certain label.
+_**This is called supervised learning.**_
+
+
+We create a `sequential` model, using the Keras API
+```python
+ model = keras.Sequential()
+```
