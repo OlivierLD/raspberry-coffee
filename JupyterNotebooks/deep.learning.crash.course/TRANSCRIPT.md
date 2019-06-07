@@ -151,7 +151,7 @@ one neuron (in an _hidden_ layer).
 This means that all the points of our training dataset have three values:
 - A value for X<small><sub>1</sub></small>  
 - A value for X<small><sub>2</sub></small>
-- A color (or something translated to a color chosen in a set of two colors)
+- A color (or something translated into a color chosen in a set of two colors)
 
 <img src="./img/training.data.02.png" width="252" height="224">
 
