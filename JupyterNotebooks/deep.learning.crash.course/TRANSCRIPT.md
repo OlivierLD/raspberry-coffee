@@ -92,7 +92,6 @@ return green # otherwise, low risk
 ```
 See in this [Java Notebook](./NeuralNetworks.ipynb#A-"Classical"-way-to-program-a-rule), there is a Java implementation of such a rule.
 
-
 If we plot this on the diagram (red-yellow-green), we have:
 
 ![Plot](./img/rules.plot.png)
@@ -114,7 +113,7 @@ And specifically the `TensorFlow playground`.
 ### TensorFlow Playground
 TensorFlow playground at <https://playground.tensorflow.org>
 
-How a Neuron (aka Node) works.
+#### How a Neuron (aka Node) works
 
 - It has a _single_ numerical output (usually called `y`).
 - It can have several inputs (also called dimensions), usually named `x`<small><sub>`n`</sub></small>, associated with a weight `w`<small><sub>`n`</sub></small>.
