@@ -210,7 +210,7 @@ We add a neuron in the first _hidden layer_, and we combine these two neurons in
 There is _no_ communication between those neurons, and they get the same input from the dimensions (age and speed here).
 _**But**_ the inputs can have different weight (thickness of the line).
 
-> Note: we have here _one_ hidden layer, made out of _two_neurons.
+> Note: we have here _one_ hidden layer, made out of _two_ neurons.
 > In a typical setting, you might have 2 or 3 hidden layers, maybe 500 to 5000 neurons per hidden layer.
 > In which case it makes it prohibitive to tune all those parameters by hand.
 
