@@ -5,6 +5,7 @@ First, some links:
 - [Google Colab](https://colab.research.google.com/notebooks/welcome.ipynb)
 - [TensorFlow](https://www.tensorflow.org/)
 - [TensorFlow.js](https://www.tensorflow.org/js) 
+- Deep Learning Crash Course [GitHub repo](https://github.com/DJCordhose/deep-learning-crash-course-notebooks/blob/master/README.md)
 
 ### Deep Learning and AI
 ![Where](./img/01fig01.jpg)
@@ -222,6 +223,11 @@ Usually, 80% of those known data are used to train the network (training dataset
 remaining 20% are used to test if the prediction of the network is correct (test dataset).
 
 In many cases, 20% of the training dataset (80%) is used for constant check validation.
+
+Like in the `Keras` example `addition_rnn.py`:
+```
+Train on 45000 samples, validate on 5000 samples
+```
 
 ## Training a TensorFlow model
 From existing customer data, we will use `Keras` API to train a neural network.
