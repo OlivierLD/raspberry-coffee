@@ -7,6 +7,13 @@ First, some links:
 - [TensorFlow.js](https://www.tensorflow.org/js) 
 - Deep Learning Crash Course [GitHub repo](https://github.com/DJCordhose/deep-learning-crash-course-notebooks/blob/master/README.md)
 
+- [PCA](http://setosa.io/ev/principal-component-analysis/)
+- [TSNE](https://distill.pub/2016/misread-tsne/)
+- [Numerical Optimization](https://www.benfrederickson.com/numerical-optimization/)
+- [Image Kernels](http://setosa.io/ev/image-kernels/)
+- [Teachable Machine](https://teachablemachine.withgoogle.com/)
+- [Quick, draw](https://quickdraw.withgoogle.com/)
+
 The last link above points to a github repo that includes a lot of Jupyter Notebooks.
 Those are great tools, specially for courses and tutorials.
 They can contain comments (in Markdown language), code (mostly in Python, but almost all languages having a REPL can use those Notebooks, among them Java, Scala, Clojure...),
