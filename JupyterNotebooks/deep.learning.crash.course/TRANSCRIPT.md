@@ -32,18 +32,26 @@ Classical programming applies rules on data to get answers.
 The goal of machine learning is to produce the rules, by finding the path between the original data and the answers/facts/conclusions produced subsequently.
 
 ### We start from real data (from a database)
-![Real data](./img/real.data.png)
+We will use an example to illustrate the path, let's say we run an insurance company,
+and we want to determine the risk associated with a customer, based on
+- his age
+- the max speed of his car
+- the number of miles he drives per year
 
+We will represent the risk level with a color
 - red: high risk
 - yellow: medium risk
 - green: low risk
 
-We actually have 3 dimensions:
-- Max Speed of the car
-- Age of the driver
-- Risk group, encoded with the color.
+![Real data](./img/real.data.png)
 
-Let's introduce another dimension, the number of thousands of miles driven per year.
+So, in the figure above, we actually have 3 dimensions:
+- Age of the driver
+- Max Speed of the car
+- Risk group, encoded with the color.
+> Note:The `miles per year` dimension is dropped in this case.
+
+If we restore the `number of thousands of miles driven per year` dimension,
 A programmer would write _rules_ like this (in Python):
 ```python
 if age < 25:
@@ -91,7 +99,7 @@ TensorFlow playground at <https://playground.tensorflow.org>
 How a Neuron (aka Node) works.
 
 - It has a _single_ numerical output (usually called `y`).
-- It can have several inputs (also called dimensions), usually named `x`<small><sub>`n`</sub></small>.
+- It can have several inputs (also called dimensions), usually named `x`<small><sub>`n`</sub></small>, associated with a weight `w`<small><sub>`n`</sub></small>.
 - It also has a constant, called the bias (noted `b`)
 - Its formula is
 
@@ -115,7 +123,7 @@ In the screenshot above:
 - The bias of the neuron is represented by the (very) small little gray square at the bottom left of the neuron(s).
 - The output will be a single number, ranging from -1 to +1.
 - The background of the graphic on the right will reflect the prediction, it will be orange if y < 0, and blue if y > 0.
-- You can change the weights associated with every boxes (dimensions and neuron(s)), as well as the bias of each neuron.
+- You can change the weights associated with each box (dimensions and neuron(s)), as well as the bias of each neuron.
  
 With _one_ neuron, you can draw _one_ boundary.
 The neuron will allow you to change the slope (weight), and the offset (bias).
@@ -133,15 +141,15 @@ This means that all the points of our training dataset have three values:
 For example, in the figure above, we have P1\[-2.1, 0.2, 'orange'\], P2\[3.2, 4.6, 'blue'\]
 
 We are looking for the best parameters of the neuron (weight and bias) that will generate a line (or boundary)
-separating the two groups.      
+correctly separating the two groups.      
  
 <!--
  Use ReLU Activation
  Change dimension weights to 1
  Change neuron's bias to 0
  --> 
-When you hit the \[Start\] <!-- &#10162; --> button, we iterate over all those parameters.
-The tuning step of those parameters **_is_** what Machine Learning is all about.
+When you hit the \[Start\] <!-- &#10162; --> button, we iterate over the values of those weights and bias parameters.
+The tuning step of those values **_is_** what Machine Learning is all about.
 
 ##### What we want
 We want to obtain the parameters (weights, bias) that will generate the right background for the points of our training dataset.
