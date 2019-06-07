@@ -7,6 +7,14 @@ First, some links:
 - [TensorFlow.js](https://www.tensorflow.org/js) 
 - Deep Learning Crash Course [GitHub repo](https://github.com/DJCordhose/deep-learning-crash-course-notebooks/blob/master/README.md)
 
+The last link above points to a github repo that includes a lot of Jupyter Notebooks.
+Those are great tools, specially for courses and tutorials.
+They can contain comments (in Markdown language), code (mostly in Python, but almost all languages having a REPL can use those Notebooks, among them Java, Scala, Clojure...),
+graphics, this is quite impressive.
+
+We will also provide here several Python scripts, that can reproduce the features illustrated in the Notebooks, but
+without comments and graphics.
+
 ### Deep Learning and AI
 ![Where](./img/01fig01.jpg)
 
@@ -108,6 +116,9 @@ In the screenshot above:
 - The output will be a single number, ranging from -1 to +1.
 - The background of the graphic on the right will reflect the prediction, it will be orange if y < 0, and blue if y > 0.
 - You can change the weights associated with every boxes (dimensions and neuron(s)), as well as the bias of each neuron.
+ 
+With _one_ neuron, you can draw _one_ boundary.
+The neuron will allow you to change the slope (weight), and the offset (bias). 
  
 <!--
  Use ReLU Activation
@@ -296,4 +307,18 @@ _**This is called supervised learning.**_
 We create a `sequential` model, using the Keras API
 ```python
  model = keras.Sequential()
+```
+
+See the Jupyter Notebooks.
+
+Then, to go to production, we use TensorFlow.js.
+We will convert our model (the `h5` file) with `tensorflowjs_converter`.
+Install it as explained [here](https://www.tensorflow.org/js/tutorials/conversion/import_keras).
+
+```
+$ [sudo] pip install tensorflowjs
+```
+Then convert the model:
+```
+$ tensorflowjs_converter --input_format keras ./insurance.h5 ./tfjs
 ```

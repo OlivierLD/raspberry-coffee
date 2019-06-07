@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+
+	<title>ML Risk Check</title>
+</head>
+
+<body>
+<main role="main">
+	<div class="jumbotron">
+		<div class="container">
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<h1 class="display-3">ML Car Insurance Risk Check</h1>
+			<p>You can check the risk group for a prospective customer simply by providing three inputs</p>
+			<div>
+				<div class="form-group">
+					<label for="speed">Max Speed in MPH</label>
+					<input type="number" min="80" max="200" class="form-control" value="100" id="speed"
+								 placeholder="Speed in MPH">
+				</div>
+				<div class="form-group">
+					<label for="age">Age</label>
+					<input type="number" min="16" max="100" class="form-control" value="47" id="age" placeholder="Age">
+				</div>
+				<div class="form-group">
+					<label for="miles">Miles per Year (in thousand)</label>
+					<input type="number" class="form-control" id="miles" placeholder="Miles per Year" value="10">
+				</div>
+				<button id='calc-btn' class="btn btn-primary btn-lg">Calculate Risk Group</button>
+			</div>
+			<br>
+			<div>
+				<button type="button" class="risk btn btn-success" style="display: none">Low Risk</button>
+				<button type="button" class="risk btn btn-danger" style="display: none">High Risk</button>
+				<button type="button" class="risk btn btn-warning" style="display: none">Medium Risk</button>
+			</div>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+		</div>
+	</div>
+</main>
+<script src="tf.min.js"></script>
+<script>
+	console.log(tf.version);
+</script>
+<script>
+	const resultField = document.querySelector('#result');
+
+	const inSpeed = document.querySelector('#speed');
+	const inAge = document.querySelector('#age');
+	const inMiles = document.querySelector('#miles');
+
+	function clearButtons() {
+		const buttons = document.querySelectorAll('button.risk');
+		buttons.forEach(btn => btn.style.display = 'none');
+	}
+
+	const calcBtn = document.querySelector('#calc-btn');
+	calcBtn.addEventListener('click', async () => {
+		const speed = parseFloat(inSpeed.value);
+		const age = parseFloat(inAge.value);
+		const miles = parseFloat(inMiles.value);
+
+		const result = await calculate(speed, age, miles);
+		const [red, green, yellow] = result;
+		console.log(result);
+
+		clearButtons();
+		if (red > green && red > yellow) {
+			document.querySelector('button.btn-danger').style.display = 'inline';
+		}
+		if (yellow > green && yellow > red) {
+			document.querySelector('button.btn-warning').style.display = 'inline';
+		}
+		if (green > red && green > yellow) {
+			document.querySelector('button.btn-success').style.display = 'inline';
+		}
+	});
+
+	// init
+	let model = null;
+	(async () => {
+		model = await tf.loadLayersModel('ml_insurance/model.json');
+	})();
+
+
+	async function calculate(speed, age, miles) {
+		const prediction = model.predict(tf.tensor([[speed, age, miles]]));
+		const value = await prediction.data();
+		return value;
+	}
+
+</script>
+
+</body>
+
+</html>

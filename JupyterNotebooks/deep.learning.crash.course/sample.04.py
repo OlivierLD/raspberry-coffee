@@ -1,10 +1,14 @@
 import warnings
+import pandas as pd
+import tensorflow as tf
+from tensorflow import keras
+from sklearn.model_selection import train_test_split
+from tensorflow.keras.layers import Dense, Dropout, BatchNormalization, Activation
+
 warnings.filterwarnings('ignore')
 
-import pandas as pd
 print("Panda version", pd.__version__)
 
-import tensorflow as tf
 tf.logging.set_verbosity(tf.logging.ERROR)
 print("TensorFlow version", tf.__version__)
 
@@ -12,29 +16,25 @@ sess = tf.Session()
 devices = sess.list_devices()
 print("----- D E V I C E S -----")
 for d in devices:
-	print(d.name)
+    print(d.name)
 print("-------------------------")
 
 # a small sanity check, does tf seem to work ok?
 hello = tf.constant('Hello TF!')
 print(sess.run(hello))
 
-from tensorflow import keras
 print("Keras version", keras.__version__)
 
 df = pd.read_csv('./insurance-customers-1500.csv', sep=';')
-y=df['group']
+y = df['group']
 df.drop('group', axis='columns', inplace=True)
 X = df.as_matrix()
 
-from sklearn.model_selection import train_test_split
-
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=42, stratify=y)
-print ("Training (X and y) shapes, Test (X and y) shapes")
+print("Training (X and y) shapes, Test (X and y) shapes")
 print(X_train.shape, y_train.shape, X_test.shape, y_test.shape)
 
 print("Building the model")
-from tensorflow.keras.layers import Dense, Dropout, BatchNormalization, Activation
 
 num_categories = 3
 dropout = 0.6
@@ -58,7 +58,7 @@ model.compile(loss='sparse_categorical_crossentropy',
 model.summary()
 
 print("Starting the training")
-BATCH_SIZE=1000
+BATCH_SIZE = 1000
 EPOCHS = 2000
 
 history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_split=0.2, verbose=0)
@@ -75,5 +75,3 @@ test_loss, test_accuracy
 print("Saving the model")
 model.save('insurance.h5')
 print("Done")
-
-
