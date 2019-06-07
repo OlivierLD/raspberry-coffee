@@ -118,7 +118,22 @@ In the screenshot above:
 - You can change the weights associated with every boxes (dimensions and neuron(s)), as well as the bias of each neuron.
  
 With _one_ neuron, you can draw _one_ boundary.
-The neuron will allow you to change the slope (weight), and the offset (bias). 
+The neuron will allow you to change the slope (weight), and the offset (bias).
+
+In the figure above, we have two dimensions X<small><sub>1</sub></small> and X<small><sub>2</sub></small>, and we have 
+one neuron (in an _hidden_ layer).
+
+This means that all the points of our training dataset have three values:
+- A value for X<small><sub>1</sub></small>  
+- A value for X<small><sub>2</sub></small>
+- A color (or something translated to a color chosen in a set of two colors)
+
+<img src="./img/training.data.02.png" width="252" height="224">
+
+For example, in the figure above, we have P1\[-2.1, 0.2, 'orange'\], P2\[3.2, 4.6, 'blue'\]
+
+We are looking for the best parameters of the neuron (weight and bias) that will generate a line (or boundary)
+separating the two groups.      
  
 <!--
  Use ReLU Activation
