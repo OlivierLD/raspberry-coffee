@@ -67,7 +67,7 @@ So, in the figure above, we actually have 3 dimensions:
 - Age of the driver
 - Max Speed of the car
 - Risk group, encoded with the color.
-> Note:The `miles per year` dimension is dropped in this case.
+> Note: The `miles per year` dimension is dropped in this case.
 
 If we restore the `number of thousands of miles driven per year` dimension,
 A programmer would write _rules_ like this (in Python):
