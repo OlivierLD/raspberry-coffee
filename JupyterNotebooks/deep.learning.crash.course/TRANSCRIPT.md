@@ -155,12 +155,12 @@ This means that all the points of our training dataset have three values:
 
 <img src="./img/training.data.02.png" width="252" height="224">
 
-For example, in the figure above, we have P1\[-2.1, 0.2, 'orange'\], P2\[3.2, 4.6, 'blue'\]
+For example, in the figure above, we have `P1(-2.1, 0.2, 'orange')`, `P2(3.2, 4.6, 'blue')`
 
 We are looking for the best parameters of the neuron (weight and bias) that will generate a line (or boundary)
 correctly separating the two groups.      
  
-<!--
+<!--.`
  Use ReLU Activation
  Change dimension weights to 1
  Change neuron's bias to 0
