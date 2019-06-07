@@ -5,6 +5,7 @@ const faxColors = { // Must match ImageColor, in PullTxManager
 	white: "WHITE",
 	red: "RED",
 	green: "GREEN",
+	darkgreen: "DARKGREEN",
 	pink: "PINK",
 	orange: "ORANGE",
 	magenta: "MAGENTA",
@@ -33,7 +34,7 @@ const compositeCatalog = [
 			projection: mapProjections.mercator,
 			north: 66.5,
 			south: -48.5,
-			east: -102,
+			east: -92,
 			west: 127.5
 		},
 		canvas: {
@@ -51,10 +52,10 @@ const compositeCatalog = [
 				},
 				effect: faxEffects.blur,
 				rotation: 90,
-				zoom: 0.3415446227340363,
+				zoom: 0.3432523458477064,
 				location: {
 					x: 471,
-					y: 33
+					y: 31
 				}
 			},
 			{
@@ -103,7 +104,23 @@ const compositeCatalog = [
 					x: 22,
 					y: 402
 				}
+			},
+			{
+				faxUrl: "https://tgftp.nws.noaa.gov/fax/PJBA99.gif",
+				name: "North Pac Sea State analysis",
+				transp: faxColors.white,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.darkgreen
+				},
+				effect: faxEffects.blur,
+				zoom: 0.5251131339813421,
+				location: {
+					x: 66,
+					y: 48
+				}
 			}
+			//
 		],
 		gribRequest: 'GFS:65N,45S,130E,110W|1,1|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN'
 	},

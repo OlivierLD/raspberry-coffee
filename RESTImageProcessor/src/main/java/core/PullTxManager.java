@@ -85,6 +85,7 @@ public class PullTxManager {
 		RED("red", Color.red),
 		BLUE("blue", Color.blue),
 		GREEN("green", Color.green),
+		DARKGREEN("darkgreen", new Color(0x00, 0x64, 0x00)),
 		ORANGE("orange", Color.orange),
 		MAGENTA("magenta", Color.magenta),
 		PINK("pink", Color.pink),

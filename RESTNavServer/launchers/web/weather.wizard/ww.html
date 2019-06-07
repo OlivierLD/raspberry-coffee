@@ -176,7 +176,7 @@
 						displayType = 'WAVES';
 						if (oneDateGRIB.typedData[idx].data[0].length !== oneDateGRIB.gribDate.width) {
 							// Re-adjust. Not very elegant...
-							xCell *= Math.floor(oneDateGRIB.typedData[idx].data[0].length / oneDateGRIB.gribDate.width);
+							xCell = Math.floor(xCell * oneDateGRIB.typedData[idx].data[0].length / oneDateGRIB.gribDate.width);
 							value = oneDateGRIB.typedData[idx].data[yCell][xCell];
 						}
 						try {

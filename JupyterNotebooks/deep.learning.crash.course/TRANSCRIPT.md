@@ -221,6 +221,8 @@ The training of a Neural Network relies on know data.
 Usually, 80% of those known data are used to train the network (training dataset), a the
 remaining 20% are used to test if the prediction of the network is correct (test dataset).
 
+In many cases, 20% of the training dataset (80%) is used for constant check validation.
+
 ## Training a TensorFlow model
 From existing customer data, we will use `Keras` API to train a neural network.
 
@@ -232,7 +234,7 @@ All the required code can be found at <https://github.com/DJCordhose/deep-learni
 
 First Notebook is [here](https://colab.research.google.com/github/djcordhose/deep-learning-crash-course-notebooks/blob/master/U3-M3-data.ipynb).
 
-This first Notebook imports data from a CSV file, with `curl`:
+This first Notebook imports data from a CSV file, using `curl`:
 ```
  curl -O https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-course-notebooks/master/data/insurance-customers-1500.csv
 ```
