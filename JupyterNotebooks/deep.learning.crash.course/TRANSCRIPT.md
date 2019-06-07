@@ -166,7 +166,7 @@ correctly separating the two groups.
  Change neuron's bias to 0
  --> 
 When you hit the \[Start\] <!-- &#10162; --> button, we iterate over the values of those weights and bias parameters.
-The tuning step of those values **_is_** what Machine Learning is all about.
+The tuning of those values **_is_** what Machine Learning is all about.
 
 ##### What we want
 We want to obtain the parameters (weights, bias) that will generate the right background for the points of our training dataset.
