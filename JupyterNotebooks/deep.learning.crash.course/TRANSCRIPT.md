@@ -69,8 +69,8 @@ So, in the figure above, we actually have 3 dimensions:
 - Risk group, encoded with the color.
 > Note: The `miles per year` dimension is dropped in this case.
 
-If we restore the `number of thousands of miles driven per year` dimension,
-A programmer would write _rules_ like this (in Python):
+If we restore the `number of thousands of miles driven per year` dimension, 
+a programmer would write _rules_ like this (in Python):
 ```python
 if age < 25:
   if speed > 140:
