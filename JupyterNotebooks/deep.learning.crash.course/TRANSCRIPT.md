@@ -125,7 +125,7 @@ In the screenshot above:
 - The background of the graphic on the right will reflect the prediction, it will be orange if y < 0, and blue if y > 0.
 - You can change the weights associated with each box (dimensions and neuron(s)), as well as the bias of each neuron.
  
-With _one_ neuron, you can draw _one_ boundary.
+With _one_ neuron, you can draw _one_ straight boundary.
 The neuron will allow you to change the slope (weight), and the offset (bias).
 
 In the figure above, we have two dimensions X<small><sub>1</sub></small> and X<small><sub>2</sub></small>, and we have 
