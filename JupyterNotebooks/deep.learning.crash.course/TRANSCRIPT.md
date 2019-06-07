@@ -99,7 +99,7 @@ How a Neuron (aka Node) works.
  
 Example 
 
- ![Neuron](./img/neuron.example.png)
+ <img src="./img/neuron.example.png" alt="Neuron" width="404" height="253"/>
 
 See a [Java Notebook](./NeuralNetworks.ipynb#Neurons!) for an example.
 
