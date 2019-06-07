@@ -14,6 +14,8 @@ First, some links:
 - [Teachable Machine](https://teachablemachine.withgoogle.com/)
 - [Quick, draw](https://quickdraw.withgoogle.com/)
 
+- [Deep Learning in Java](https://deeplearning4j.org/docs/latest/keras-import-overview)
+
 The last link above points to a github repo that includes a lot of Jupyter Notebooks.
 Those are great tools, specially for courses and tutorials.
 They can contain comments (in Markdown language), code (mostly in Python, but almost all languages having a REPL can use those Notebooks, among them Java, Scala, Clojure...),
@@ -38,7 +40,16 @@ Classical programming applies rules on data to get answers.
 
 The goal of machine learning is to produce the rules, by finding the path between the original data and the answers/facts/conclusions produced subsequently.
 
-### We start from real data (from a database)
+### The path from design to production
+- You start from real data - from which you will extract 
+    - Training dataset
+    - Test dataset
+    - Validation dataset
+- With those datasets, you will **_train_** your model
+    - This **is** _where the machine is learning_.
+- Once the model is _trained_, you will use it to make decision on real data (real world, and real time)
+
+### So, we start from real data (from a database)
 We will use an example to illustrate the path, let's say we run an insurance company,
 and we want to determine the risk associated with a customer, based on
 - his age
@@ -344,6 +355,8 @@ See the Jupyter Notebooks.
 Then, to go to production, we use TensorFlow.js.
 We will convert our model (the `h5` file) with `tensorflowjs_converter`.
 Install it as explained [here](https://www.tensorflow.org/js/tutorials/conversion/import_keras).
+
+> Note: `h5` is actually short for `hdf5`, Hierarchical Data Format.
 
 ```
 $ [sudo] pip install tensorflowjs
