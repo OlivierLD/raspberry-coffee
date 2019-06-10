@@ -431,11 +431,15 @@ Using SoftMax (as activation)
 You train your machine with your data to make it learn the relationship between some input data and a certain label.
 _**This is called supervised learning.**_
 
+Here we do not use the TensorFlow playground anymore, we do it _for real_ on a dedicated machine. 
 
 We create a `sequential` model, using the Keras API
 ```python
  model = keras.Sequential()
 ```
+And we start from there.
+
+See the [final Python script](./sample.04.py).
 
 See the Jupyter Notebooks.
 
