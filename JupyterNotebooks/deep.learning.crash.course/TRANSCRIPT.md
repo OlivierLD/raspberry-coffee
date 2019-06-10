@@ -433,13 +433,17 @@ _**This is called supervised learning.**_
 
 Here we do not use the TensorFlow playground anymore, we do it _for real_ on a dedicated machine. 
 
-We create a `sequential` model, using the Keras API
+We create a `sequential` model, using the Keras API. Keras is written in Python.
+
 ```python
  model = keras.Sequential()
 ```
 And we start from there.
 
-See the [final Python script](./sample.04.py).
+See the [final Python script](./sample.04.py). This can be run for real on your machine, after you've downloaded the data in `insurance-customers-1500.csv`.
+```
+$ python sample.04.py
+```
 
 See the Jupyter Notebooks.
 
