@@ -200,6 +200,10 @@ The tuning of those values **_is_** what Machine Learning is all about.
 ##### What we want
 We want to obtain the parameters (weights, bias) that will generate the right background for the points of our training dataset.
 
+> Important precision: 
+> We are **not**  looking for the _equation_ of the boundary !!
+> We are looking for some way to determine for _each point_ of the plan (2D in this case) what category it belongs to. 
+
 We know what data we start from (training data), we are trying to minimize the number 
 of misclassified points (an orange dot on a blue background and vice-versa). 
 
@@ -207,7 +211,9 @@ In this example, the classification can be operated by a single neuron.
 
 #### Activation functions
 The Activation Function sits between the calculated output, and the actual output of the neuron (`y`).
-It compresses the calculated output between 2 other values (like 0 and 1, -1 and +1, etc).
+It compresses the calculated output between 2 other values (like 0 and 1, -1 and +1, etc). This is
+a way to normalize the output data _of a layer_, so the next one knows what to deal with.
+For example, in  the TensorFlow playground, the orange values will be the one ranging from -1 to 0, and the blue ones from 0 to 1. 
 Notice that the output `y` becomes the `x` of the Activation Function.
 
 Among them, we have:
