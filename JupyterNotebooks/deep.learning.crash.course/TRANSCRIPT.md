@@ -7,20 +7,19 @@ First, some links:
 - [TensorFlow.js](https://www.tensorflow.org/js) 
 - Deep Learning Crash Course [GitHub repo](https://github.com/DJCordhose/deep-learning-crash-course-notebooks/blob/master/README.md)
 
+The last link above points to a github repo that includes a lot of Jupyter Notebooks.
+Those are great tools, specially for courses and tutorials.
+They can contain comments (in Markdown language), code (mostly in Python, but almost all languages having a REPL can use those Notebooks, among them Java, Scala, Clojure...),
+graphics, this is quite impressive.
+
 - [PCA](http://setosa.io/ev/principal-component-analysis/)
 - [TSNE](https://distill.pub/2016/misread-tsne/)
 - [Numerical Optimization](https://www.benfrederickson.com/numerical-optimization/)
 - [Image Kernels](http://setosa.io/ev/image-kernels/)
 - [Teachable Machine](https://teachablemachine.withgoogle.com/)
 - [Quick, draw](https://quickdraw.withgoogle.com/)
-
 - [Deep Learning in Java](https://deeplearning4j.org/docs/latest/keras-import-overview)
-
-The last link above points to a github repo that includes a lot of Jupyter Notebooks.
-Those are great tools, specially for courses and tutorials.
-They can contain comments (in Markdown language), code (mostly in Python, but almost all languages having a REPL can use those Notebooks, among them Java, Scala, Clojure...),
-graphics, this is quite impressive.
-
+x
 We will also provide here several Python scripts, that can reproduce the features illustrated in the Notebooks, but
 without comments and graphics.
 
