@@ -411,7 +411,17 @@ $ curl -O https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-cours
 $ cat plot.py 
 ```
 
-### Data Encoding
+### Data Encoding (WIP)
+
+TODO, for the model training:
+- Colab notebooks
+- Python scripts
+
+TODO, for the implementation and deployment of the model:
+- In Python
+- In Java
+- In JavaScript (Web Interface)
+
 Second Lab: <https://colab.research.google.com/github/djcordhose/deep-learning-crash-course-notebooks/blob/master/U3-M5-nn-intro.ipynb>
 
 Using SoftMax (as activation)
