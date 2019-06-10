@@ -219,6 +219,9 @@ _**But**_ the inputs can have different weight (thickness of the line).
 > In a typical setting, you might have 2 or 3 hidden layers, maybe 500 to 5000 neurons per hidden layer.
 > In which case it makes it prohibitive to tune all those parameters by hand.
 
+> The number of layers is called the depth of the network.
+> This is where the _Deep_ in _Deep Learning_ comes from.
+
 Kick this off by clicking the \[Start\] button again. You see the parameters of the neurons changing,
 and the combined output on the right. As you would see, this network might not be able
 to separate those two groups we have in our training dataset.
