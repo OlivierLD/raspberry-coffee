@@ -310,6 +310,8 @@ Blue point `(3, 4)` will result in
 
 Also see spreadsheet neuron.ods, play around with it.
 
+There is [this Java Jupyter Notebook](./data.one.neuron.ipynb) illustrating this too.
+
 ###### Lab 2
 Use the top-right data (4 groups, in 4 squares)
 - 2 inputs (X1, X2)
@@ -354,9 +356,12 @@ Train on 45000 samples, validate on 5000 samples
 ```
 
 ## Training a TensorFlow model
+Back to the Car Insurance Company example.
+
 From existing customer data, we will use `Keras` API to train a neural network.
 
 The code will be provided in `Colab` Notebooks.
+
 All the required code can be found at <https://github.com/DJCordhose/deep-learning-crash-course-notebooks/blob/master/README.md>.
 `Colab` requires a Google account, and works better in a Chrome browser.
 
