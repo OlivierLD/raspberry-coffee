@@ -134,35 +134,6 @@ In a classification problem, a single neuron can draw a single line as a decisio
 
 ![TensorFlow Playground](./img/tf.playground.png)
 
-<!-- 
- For the figure above,
- use:
-  - ONE neuron in ONE hidden layer
-  - Learning rate 0.03
-  - Activation Tanh 
-  
-  This should be resolved quickly
-  Try to modify the different weights, and the bias of the neuron.
-  
-  Let's say we have 
-  X1 in [-6, +6]
-  X2 in [-6, +6]
-  W1 = -0.69
-  W2 = -0.67
-  b = 0.030
-  
-  W final = -2
-  
-  Orange point (-4, -3) will result in:
-  (-4 * -0.69) + (-3 * -0.67) + 0.030 => 4.8 * -2 => 9.6 => tanh(9.6) = 0.999999990825637
-  Blue point (3, 4) will result in
-  (3 * -0.69) + (4 * -0.67) + 0.030 => -4.72 * -2 => -9.44 => tanh(-9.44) = -0.999999987365729
-  
-  -1: orange
-  +1: blue
-  
-  See spreadsheet neuron.ods
- +-->
 In the screenshot above:
 - We have 2 input dimensions, x<small><sub>1</sub></small> (abscissa) and x<small><sub>2</sub></small> (ordinate).
 - The weight of each dimension is represented by the thickness of the line between the dimension and the neuron(s)
@@ -189,7 +160,7 @@ For example, in the figure above, we have `P1(-2.1, 0.2, 'orange')`, `P2(3.2, 4.
 We are looking for the best parameters of the neuron (weight and bias) that will generate a line (or boundary)
 correctly separating the two groups.      
  
-<!--.`
+<!--
  Use ReLU Activation
  Change dimension weights to 1
  Change neuron's bias to 0
@@ -236,34 +207,6 @@ One neuron is usually not enough. But a combination of them can approximate almo
 Samples are not typically separable by a single line..., like this one for example:
 
 ![Sample 2](./img/sample.02.png)
-
-<!--
- Learning Rate 0.03, Activation Tanh
- Try with ONE neuron in ONE layer, see why it is not possible to solve this.
- Add one neuron (that makes 2)
- Try it.
- Change Activation to Sigmoid, try again
- Add One neuron, try again (still with Sigmoid), go up to 1000 epoch at least
- Try with Tanh
- Try with ReLU <- This one is the best!
- 
- Flip the 'Discretize output' box.
- +-->
- 
- <!--
-  Try the 'circular' data (top left)
-  with 4 neurons, learning rate 0.03, Act ReLU, Tanh, or Sigmoid,
-  compare the output curves, see the different parameters
- -->
- 
- <!--
-  For the spiral Data (bottom right)
-  Use the 7 dimensions, 2 hidden layers, 5 and 6 neurons
-  Act Tanh, ReLU, should be OK around 500 epochs
-  Do look at the curves when using a Sigmoid
-  
-  Play around, and see how it moves ;)
- -->
 
 As each neuron will generate one line (boundary, separation, whatever you call it), we will add more 
 neuron to the picture to see how it goes.
@@ -318,6 +261,8 @@ figures in the TensorFlow diagram.
 
 A big `learning rate` will accelerate the learning process, but might very well miss local minima if it is too big.
 
+Do look at [this](https://www.benfrederickson.com/numerical-optimization/), it is a good one.
+
 ![Learning rate](./img/sample.04.png)
 
 This strategy is called _Gradient Descent_.
@@ -327,6 +272,69 @@ You can see the loss curve(s) as the process goes on, and the decision boundarie
 
 See this [complex one](http://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=spiral&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=40&networkShape=4,2&seed=0.31018&showTestData=true&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false&problem_hide=true&regularization_hide=true&batchSize_hide=true&regularizationRate_hide=true).
 
+##### Try for yourself
+Now we have a better understanding of the problem, you should see how to address it in the TensorFlow playground.
+This will give you a better idea of the problems to tackle when training your own models.
+
+<!-- 
+ For the figure above,
+ use:
+  - ONE neuron in ONE hidden layer
+  - Learning rate 0.03
+  - Activation Tanh 
+  
+  This should be resolved quickly
+  Try to modify the different weights, and the bias of the neuron.
+  
+  Let's say we have 
+  X1 in [-6, +6]
+  X2 in [-6, +6]
+  W1 = -0.69
+  W2 = -0.67
+  b = 0.030
+  
+  W final = -2
+  
+  Orange point (-4, -3) will result in:
+  (-4 * -0.69) + (-3 * -0.67) + 0.030 => 4.8 * -2 => 9.6 => tanh(9.6) = 0.999999990825637
+  Blue point (3, 4) will result in
+  (3 * -0.69) + (4 * -0.67) + 0.030 => -4.72 * -2 => -9.44 => tanh(-9.44) = -0.999999987365729
+  
+  -1: orange
+  +1: blue
+  
+  See spreadsheet neuron.ods
+ +-->
+
+<!--
+ 2 inputs (X1, X2)
+ Learning Rate 0.03, Activation Tanh
+ Try with ONE neuron in ONE layer, see why it is not possible to solve this.
+ Add one neuron (that makes 2)
+ Try it.
+ Change Activation to Sigmoid, try again
+ Add One neuron, try again (still with Sigmoid), go up to 1000 epoch at least
+ Try with Tanh
+ Try with ReLU <- This one is the best!
+ 
+ Flip the 'Discretize output' box.
+ +-->
+ 
+ <!--
+  Try the 'circular' data (top left)
+  with 4 neurons, learning rate 0.03, Act ReLU, Tanh, or Sigmoid,
+  compare the output curves, see the different parameters
+ -->
+ 
+ <!--
+  For the spiral Data (bottom right)
+  Use the 7 dimensions, 2 hidden layers, 5 and 6 neurons
+  Act Tanh, ReLU, should be OK around 500 epochs
+  Do look at the curves when using a Sigmoid
+  
+  Play around, and see how it moves ;)
+ -->
+ 
 #### Finding the sweet spot
 
 Over fitting vs Under fitting.
