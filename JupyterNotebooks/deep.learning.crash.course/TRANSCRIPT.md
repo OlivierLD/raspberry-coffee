@@ -19,7 +19,7 @@ graphics, this is quite impressive.
 - [Teachable Machine](https://teachablemachine.withgoogle.com/)
 - [Quick, draw](https://quickdraw.withgoogle.com/)
 - [Deep Learning in Java](https://deeplearning4j.org/docs/latest/keras-import-overview)
-x
+
 We will also provide here several Python scripts, that can reproduce the features illustrated in the Notebooks, but
 without comments and graphics.
 
