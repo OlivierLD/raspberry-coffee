@@ -160,13 +160,13 @@ For example, in the figure above, we have `P1(-2.1, 0.2, 'orange')`, `P2(3.2, 4.
 We are looking for the best parameters of the neuron (weight and bias) that will generate a line (or boundary)
 correctly separating the two groups.      
  
-<!--
- Use ReLU Activation
- Change dimension weights to 1
- Change neuron's bias to 0
- --> 
 When you hit the \[Start\] <!-- &#10162; --> button, we iterate over the values of those weights and bias parameters.
 The tuning of those values **_is_** what Machine Learning is all about.
+
+###### Lab
+- Use `ReLU` Activation function
+- Manually change dimension weights to 1
+- Manually change neuron's bias to 0
 
 ##### What we want
 We want to obtain the parameters (weights, bias) that will generate the right background for the points of our training dataset.
@@ -261,7 +261,7 @@ figures in the TensorFlow diagram.
 
 A big `learning rate` will accelerate the learning process, but might very well miss local minima if it is too big.
 
-Do look at [this](https://www.benfrederickson.com/numerical-optimization/), it is a good one.
+Do look at [this interactive document](https://www.benfrederickson.com/numerical-optimization/), it is a good one.
 
 ![Learning rate](./img/sample.04.png)
 
@@ -276,64 +276,64 @@ See this [complex one](http://playground.tensorflow.org/#activation=tanh&batchSi
 Now we have a better understanding of the problem, you should see how to address it in the TensorFlow playground.
 This will give you a better idea of the problems to tackle when training your own models.
 
-<!-- 
- For the figure above,
- use:
-  - ONE neuron in ONE hidden layer
-  - Learning rate 0.03
-  - Activation Tanh 
-  
-  This should be resolved quickly
-  Try to modify the different weights, and the bias of the neuron.
-  
-  Let's say we have 
-  X1 in [-6, +6]
-  X2 in [-6, +6]
-  W1 = -0.69
-  W2 = -0.67
-  b = 0.030
-  
-  W final = -2
-  
-  Orange point (-4, -3) will result in:
-  (-4 * -0.69) + (-3 * -0.67) + 0.030 => 4.8 * -2 => 9.6 => tanh(9.6) = 0.999999990825637
-  Blue point (3, 4) will result in
-  (3 * -0.69) + (4 * -0.67) + 0.030 => -4.72 * -2 => -9.44 => tanh(-9.44) = -0.999999987365729
-  
-  -1: orange
-  +1: blue
-  
-  See spreadsheet neuron.ods
- +-->
+###### Lab 1
+In TensorFlow playground, use the bottom left data type (2 groups)
+- _ONE_ neuron in _ONE_ hidden layer
+- Learning rate 0.03
+- Activation Tanh 
 
-<!--
- 2 inputs (X1, X2)
- Learning Rate 0.03, Activation Tanh
- Try with ONE neuron in ONE layer, see why it is not possible to solve this.
- Add one neuron (that makes 2)
- Try it.
- Change Activation to Sigmoid, try again
- Add One neuron, try again (still with Sigmoid), go up to 1000 epoch at least
- Try with Tanh
- Try with ReLU <- This one is the best!
+This should be resolved quickly.
+
+Try to modify the different weights, and the bias of the neuron.
+
+Let's say we have 
+- X<small><sub>1</sub></small> in \[-6, +6\]
+- X<small><sub>2</sub></small> in \[-6, +6\]
+- W<small><sub>1</sub></small> = -0.69
+- W<small><sub>2</sub></small> = -0.67
+- b = 0.030
+- W<small><sub>final</sub></small> = -2
+
+Orange point `(-4, -3)` will result in:
+```
+(-4 * -0.69) + (-3 * -0.67) + 0.030 => 4.8 * -2 => 9.6 => tanh(9.6) = 0.999999990825637
+```
+Blue point `(3, 4)` will result in
+```
+(3 * -0.69) + (4 * -0.67) + 0.030 => -4.72 * -2 => -9.44 => tanh(-9.44) = -0.999999987365729
+```
+
+- -1: orange
+- +1: blue
+
+Also see spreadsheet neuron.ods, play around with it.
+
+###### Lab 2
+Use the top-right data (4 groups, in 4 squares)
+- 2 inputs (X1, X2)
+- Learning Rate 0.03, Activation Tanh
+- Try with _ONE_ neuron in _ONE_ layer, see why it is not possible to solve this.
+- Add one neuron (that makes 2)
+- Try it.
+- Change Activation to Sigmoid, try again
+- Add One neuron, try again (still with Sigmoid), go up to 1000 epoch at least
+- Try with Tanh
+- Try with ReLU <- This one is the best!
  
- Flip the 'Discretize output' box.
- +-->
+Flip the 'Discretize output' box.
  
- <!--
-  Try the 'circular' data (top left)
-  with 4 neurons, learning rate 0.03, Act ReLU, Tanh, or Sigmoid,
-  compare the output curves, see the different parameters
- -->
- 
- <!--
-  For the spiral Data (bottom right)
-  Use the 7 dimensions, 2 hidden layers, 5 and 6 neurons
-  Act Tanh, ReLU, should be OK around 500 epochs
-  Do look at the curves when using a Sigmoid
+###### Lab 3
+Use the 'circular' data (top left)
+- with 4 neurons, learning rate 0.03, Act ReLU, Tanh, or Sigmoid,
+- compare the output curves, see the different parameters
+
+###### Lab 4
+Use the spiral Data (bottom right)
+- Use the _**7**_ input dimensions, 2 hidden layers, 5 and 6 neurons
+- Act Func Tanh, ReLU, should be OK around 500 epochs
+- Do look at the curves when using a Sigmoid
   
-  Play around, and see how it moves ;)
- -->
+Play around, and see how it moves ;)
  
 #### Finding the sweet spot
 
