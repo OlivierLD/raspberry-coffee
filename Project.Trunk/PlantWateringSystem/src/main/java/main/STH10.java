@@ -375,7 +375,7 @@ public class STH10 implements Probe {
 				String[] logConsumers = val.split(",");
 				for (String oneLogger : logConsumers) {
 					try {
-						Class logClass = Class.forName(oneLogger);
+						Class<?> logClass = Class.forName(oneLogger);
 						Object consumer = logClass.getConstructor().newInstance();
 						loggers.add(DataLoggerInterface.class.cast(consumer));
 					} catch (Exception ex) {

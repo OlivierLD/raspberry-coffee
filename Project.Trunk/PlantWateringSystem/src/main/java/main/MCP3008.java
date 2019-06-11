@@ -396,7 +396,7 @@ public class MCP3008 implements Probe {
 					humidityThreshold = Integer.parseInt(val);
 					if (humidityThreshold < 0 || humidityThreshold > 100) {
 						humidityThreshold = DEFAULT_HUMIDITY_THRESHOLD;
-						System.err.println(String.format(">> Humidity Threshold must be in [0..100]. Reseting to %d ", DEFAULT_HUMIDITY_THRESHOLD));
+						System.err.println(String.format(">> Humidity Threshold must be in [0..100]. Resetting to %d ", DEFAULT_HUMIDITY_THRESHOLD));
 					}
 					humidity = humidityThreshold * 1.2; // Initialize low pass filter
 				} catch (NumberFormatException nfe) {
@@ -429,8 +429,8 @@ public class MCP3008 implements Probe {
 				String[] logConsumers = val.split(",");
 				for (String oneLogger : logConsumers) {
 					try {
-						Class logClass = Class.forName(oneLogger);
-						Object consumer = ((Constructor)logClass.getConstructor()).newInstance();
+						Class<?> logClass = Class.forName(oneLogger);
+						Object consumer = logClass.getConstructor().newInstance();
 						loggers.add(DataLoggerInterface.class.cast(consumer));
 					} catch (Exception ex) {
 						ex.printStackTrace();
@@ -643,10 +643,9 @@ public class MCP3008 implements Probe {
 							System.out.println(String.format("Value before watering was %f, now %f", humBeforeWatering, hum));
 							System.out.println("Tank must be empty, do something!!");
 							if (emailSender != null) {
-								emailSender.send(new String[] {
-										"corine@lediouris.net",
-										"olivier@lediouris.net"
-								}, "Plant Watering System", "The water tank must be empty, do something!");
+								emailSender.send(emailSender.getEmailDest().split(","),
+										emailSender.getEventSubject(),
+										"The water tank must be empty, do something!");
 							}
 						}
 						justStoppedWatering.set(false);

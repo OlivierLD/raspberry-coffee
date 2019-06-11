@@ -56,8 +56,8 @@ public class EmailSender {
 			FileInputStream fis = new FileInputStream(propFile);
 			props.load(fis);
 		} catch (Exception e) {
-			System.out.println("email.properies file problem...");
-			throw new RuntimeException("File not found:email.properies");
+			System.out.println("email.properties file problem...");
+			throw new RuntimeException("File not found:email.properties");
 		}
 		EmailSender.sendEmailsTo = props.getProperty("pi.send.emails.to");
 		EmailSender.eventSubject = props.getProperty("pi.event.subject");
