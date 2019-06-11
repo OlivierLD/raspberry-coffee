@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import tensorflow as tf
 
+# Hand writing samples
 mnist = tf.keras.datasets.mnist
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -20,3 +21,7 @@ model.fit(x_train, y_train, epochs=5)
 model.evaluate(x_test, y_test)
 #
 model.save('training.h5')
+#
+# WIP. TODO Add a predict
+# See https://medium.com/tensorflow/hello-deep-learning-fashion-mnist-with-keras-50fcff8cd74a
+#

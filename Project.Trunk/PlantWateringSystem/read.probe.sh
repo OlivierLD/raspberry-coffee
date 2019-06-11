@@ -94,6 +94,10 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Daio.verbose=false"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dgpio.verbose=true -Dansi.boxes=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dvalve.test=true"
 #
+# Will send email if water tank runs empty
+# Refers to (and requires) email.properties
+JAVA_OPTIONS="$JAVA_OPTIONS -Demail.provider=yahoo"
+#
 #
 # java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
 #

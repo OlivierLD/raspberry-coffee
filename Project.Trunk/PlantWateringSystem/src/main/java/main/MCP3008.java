@@ -524,8 +524,9 @@ public class MCP3008 implements Probe {
 			System.out.println("       +--------+ ");
 		}
 
-		if (true) {
-			emailSender = new EmailSender("yahoo"); // TODO A variable?
+		String emailProvider = System.getProperty("email.provider");
+		if (emailProvider != null) {
+			emailSender = new EmailSender(emailProvider); // Like -Demail.provider=yahoo
 		}
 		// Initialization. ADC and Pump Relay.
 		MCP3008 instance = new MCP3008();

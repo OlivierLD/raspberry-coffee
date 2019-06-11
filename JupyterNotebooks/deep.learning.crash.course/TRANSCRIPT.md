@@ -356,7 +356,9 @@ Train on 45000 samples, validate on 5000 samples
 ```
 
 ## Training a TensorFlow model
-Back to the Car Insurance Company example.
+Back to the Car Insurance Company example. Let's now see some code...
+
+See the [TensorFlow tutorials](https://www.tensorflow.org/tutorials/).
 
 From existing customer data, we will use `Keras` API to train a neural network.
 
@@ -460,3 +462,7 @@ Then convert the model:
 ```
 $ tensorflowjs_converter --input_format keras ./insurance.h5 ./tfjs
 ```
+
+<!-- TODO
+ Closer to the real world, hand-writing recognition
+-->

@@ -31,6 +31,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Sample use of the TensorFlow Java API to label images using a pre-trained model.
@@ -52,7 +53,10 @@ public class LabelImage {
 		s.println("<image file> is the path to a JPEG image file");
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
+		System.out.println(String.format("%d Arguments:\n%s",
+				args.length,
+				Arrays.asList(args).stream().map(arg -> "- " + arg).collect(Collectors.joining("\n"))));
 		if (args.length != 2) {
 			printUsage(System.err);
 			System.exit(1);

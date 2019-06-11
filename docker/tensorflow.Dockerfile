@@ -41,6 +41,8 @@ RUN apt-get install -y python3-pip python3-dev
 RUN pip3 install tensorflow-gpu
 RUN pip3 install tensorflow
 #
+RUN pip3 install tensorflowjs
+#
 RUN pip3 install pandas numpy scipy scikit-learn
 #
 RUN apt-get install -y cmake unzip pkg-config libopenblas-dev liblapack-dev
