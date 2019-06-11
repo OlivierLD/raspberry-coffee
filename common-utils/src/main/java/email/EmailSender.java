@@ -35,7 +35,7 @@ public class EmailSender {
 	private static String sendEmailsTo;
 	private static String eventSubject;
 
-	private static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
+	private static boolean verbose = "true".equals(System.getProperty("email.verbose", "false"));
 
 	public EmailSender(String provider) throws RuntimeException {
 		EmailSender.protocol = "";

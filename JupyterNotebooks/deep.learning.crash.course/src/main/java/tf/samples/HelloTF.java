@@ -1,3 +1,5 @@
+package tf.samples;
+
 import org.tensorflow.Graph;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;

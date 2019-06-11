@@ -49,6 +49,25 @@ public class InteractiveScreenSample {
 
 	public static void main(String... args) {
 
+		int rotation = LCD1in3.IMAGE_ROTATE_0;
+		String strRotation = System.getProperty("rotation", "0");
+		switch (strRotation) {
+			case "0":
+				rotation = LCD1in3.IMAGE_ROTATE_0;
+				break;
+			case "90":
+				rotation = LCD1in3.IMAGE_ROTATE_90;
+				break;
+			case "180":
+				rotation = LCD1in3.IMAGE_ROTATE_180;
+				break;
+			case "270":
+				rotation = LCD1in3.IMAGE_ROTATE_270;
+				break;
+			default:
+				System.out.println(String.format("Un-managed value for ROTATION: [%s]", strRotation));
+		}
+
 		LCD1in3 lcd = new LCD1in3(LCD1in3.HORIZONTAL, LCD1in3.BLACK);
 		// Key listeners
 		lcd.setKey1Consumer(key1Consumer);
@@ -60,7 +79,7 @@ public class InteractiveScreenSample {
 		lcd.setJRightConsumer(jRightConsumer);
 		lcd.setJPressedConsumer(jPressedConsumer);
 
-		lcd.GUINewImage(LCD1in3.IMAGE_RGB, LCD1in3.LCD_WIDTH, LCD1in3.LCD_HEIGHT, LCD1in3.IMAGE_ROTATE_0, LCD1in3.IMAGE_COLOR_POSITIVE);
+		lcd.GUINewImage(LCD1in3.IMAGE_RGB, LCD1in3.LCD_WIDTH, LCD1in3.LCD_HEIGHT, rotation, LCD1in3.IMAGE_COLOR_POSITIVE);
 
 		// Display data, character mode
 		if (!lcd.isSimulating()) {

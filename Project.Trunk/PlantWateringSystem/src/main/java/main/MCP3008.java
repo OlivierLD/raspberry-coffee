@@ -1,6 +1,7 @@
 package main;
 
 import com.pi4j.io.gpio.PinState;
+import email.EmailSender;
 import http.HTTPServer;
 import loggers.DataLoggerInterface;
 import loggers.LogData;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -56,6 +58,7 @@ public class MCP3008 implements Probe {
 	private static long loggingPace = DEFAULT_LOGGING_PACE;
 
 	private static Long lastWatering = null;
+	private static EmailSender emailSender = null;
 
 	// Program arguments
 	private enum ARGUMENTS {
@@ -522,6 +525,9 @@ public class MCP3008 implements Probe {
 			System.out.println("       +--------+ ");
 		}
 
+		if (true) {
+			emailSender = new EmailSender("yahoo"); // TODO A variable?
+		}
 		// Initialization. ADC and Pump Relay.
 		MCP3008 instance = new MCP3008();
 		try {
@@ -615,6 +621,9 @@ public class MCP3008 implements Probe {
 			System.out.println("-- LOGGING STARTS HERE --");
 			System.out.println("Epoch(ms);Date;Temp(C);Hum(%);Dew-pt Temp(C)");
 		}
+
+		double humBeforeWatering = -1D;
+		final AtomicBoolean justStoppedWatering = new AtomicBoolean(false);
 		while (go) {
 
 			if (!enforceSensorSimulation) {
@@ -628,6 +637,21 @@ public class MCP3008 implements Probe {
 //				}
 				try {
 					double hum = probe.readHumidity(); // temperature);
+
+					if (watchTheProbe) {
+						if (justStoppedWatering.get() && !(hum > humBeforeWatering)) { // Tank must be empty, send email
+							System.out.println(String.format("Value before watering was %f, now %f", humBeforeWatering, hum));
+							System.out.println("Tank must be empty, do something!!");
+							if (emailSender != null) {
+								emailSender.send(new String[] {
+										"corine@lediouris.net",
+										"olivier@lediouris.net"
+								}, "Plant Watering System", "The water tank must be empty, do something!");
+							}
+						}
+						justStoppedWatering.set(false);
+					}
+
 					// Low Pass Filter
 					humidity = lowPassFilter(ALPHA, hum, humidity);
 					// Store in the data buffer
@@ -666,7 +690,7 @@ public class MCP3008 implements Probe {
 							System.err.println(String.format("At %s :", new Date().toString()));
 							System.err.println(ex.toString());
 							//	ex.printStackTrace();
-							LOGGER.log(Level.ALL, "Hunidity logging", ex);
+							LOGGER.log(Level.ALL, "Humidity logging", ex);
 						}
 					});
 					loggerThread.start();
@@ -694,6 +718,9 @@ public class MCP3008 implements Probe {
 			 * the watchTheProbe variable is used to nap after watering.
 			 */
 			if (watchTheProbe && humidity < humidityThreshold) { // Ah! Need some water
+
+				// Store the current humidity value, to make sure it changed (increased) after watering. Send email otherwise, to refill the tank.
+				humBeforeWatering = humidity;
 				// Open the valve
 				Thread waterRelayOn = new Thread(() -> {
 					synchronized (relay) {
@@ -733,6 +760,7 @@ public class MCP3008 implements Probe {
 							} else if (verbose == VERBOSE.ANSI) {
 								displayANSIConsole();
 							}
+							justStoppedWatering.set(true);
 							mainThread.notify(); // Release the wait on main thread.
 						}
 					}, "watering-thread");

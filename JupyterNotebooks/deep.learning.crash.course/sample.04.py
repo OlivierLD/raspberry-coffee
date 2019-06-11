@@ -55,12 +55,16 @@ model.add(Dense(num_categories, name='softmax', activation='softmax'))
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
+# model.compile(loss='categorical_crossentropy',
+#               optimizer='sgd',
+#               metrics=['accuracy'])
 model.summary()
 
 print("Starting the training")
 BATCH_SIZE = 1000
 EPOCHS = 2000
 
+# Actual training, fit method.
 history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_split=0.2, verbose=0)
 print("Training completed")
 

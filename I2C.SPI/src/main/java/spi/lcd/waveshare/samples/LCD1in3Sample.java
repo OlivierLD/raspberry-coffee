@@ -216,6 +216,25 @@ public class LCD1in3Sample {
 
 	public static void main(String... args) {
 
+		int rotation = LCD1in3.IMAGE_ROTATE_0;
+		String strRotation = System.getProperty("rotation", "0");
+		switch (strRotation) {
+			case "0":
+				rotation = LCD1in3.IMAGE_ROTATE_0;
+				break;
+			case "90":
+				rotation = LCD1in3.IMAGE_ROTATE_90;
+				break;
+			case "180":
+				rotation = LCD1in3.IMAGE_ROTATE_180;
+				break;
+			case "270":
+				rotation = LCD1in3.IMAGE_ROTATE_270;
+				break;
+			default:
+				System.out.println(String.format("Un-managed value for ROTATION: [%s]", strRotation));
+		}
+
 		LCD1in3 lcd = new LCD1in3(LCD1in3.HORIZONTAL, LCD1in3.BLUE);
 		// Key listeners
 		lcd.setKey1Consumer(key1Consumer);
@@ -227,7 +246,7 @@ public class LCD1in3Sample {
 		lcd.setJRightConsumer(jRightConsumer);
 		lcd.setJPressedConsumer(jPressedConsumer);
 
-		lcd.GUINewImage(LCD1in3.IMAGE_RGB, LCD1in3.LCD_WIDTH, LCD1in3.LCD_HEIGHT, LCD1in3.IMAGE_ROTATE_0, LCD1in3.IMAGE_COLOR_POSITIVE);
+		lcd.GUINewImage(LCD1in3.IMAGE_RGB, LCD1in3.LCD_WIDTH, LCD1in3.LCD_HEIGHT, rotation, LCD1in3.IMAGE_COLOR_POSITIVE);
 		lcd.GUIClear(LCD1in3.WHITE);
 
 //	lcd.setKey1Consumer((event) -> System.out.println(String.format(">> FROM CUSTOM CONSUMER, Key 1 from main: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString())));
