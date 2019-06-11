@@ -13,7 +13,6 @@ import utils.StaticUtil;
 import utils.StringUtils;
 import utils.WeatherUtil;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -61,7 +60,7 @@ public class MCP3008 implements Probe {
 	private static EmailSender emailSender = null;
 
 	// Program arguments
-	private enum ARGUMENTS {
+	private enum ProgramArguments {
 		HUMIDITY_THRESHOLD("--water-below:", // %
 				String.format("Integer. Humidity threshold in %%, default is --water-below:%d, start watering below this value.", DEFAULT_HUMIDITY_THRESHOLD)),
 		WATERING_DURATION("--water-during:", // seconds
@@ -101,7 +100,7 @@ public class MCP3008 implements Probe {
 
 		private String prefix, help;
 
-		ARGUMENTS(String prefix, String help) {
+		ProgramArguments(String prefix, String help) {
 			this.prefix = prefix;
 			this.help = help;
 		}
@@ -324,74 +323,74 @@ public class MCP3008 implements Probe {
 		// Parameter management.
 		// Override values with runtime arguments
 		for (String arg : args) {
-			if (arg.startsWith(ARGUMENTS.HELP.prefix())) {
+			if (arg.startsWith(ProgramArguments.HELP.prefix())) {
 				// No value, display help
 				System.out.println("+---------------------------------------");
 				System.out.println("| Program arguments are:");
 				System.out.println("+---------------------------------------");
-				Arrays.stream(ARGUMENTS.values()).forEach(argument -> System.out.println("| " + argument.prefix() + "\t" + argument.help()));
+				Arrays.stream(ProgramArguments.values()).forEach(argument -> System.out.println("| " + argument.prefix() + "\t" + argument.help()));
 				System.out.println("+---------------------------------------");
 				System.exit(0);
-			} else if (arg.startsWith(ARGUMENTS.VERBOSE.prefix())) {
-				String val = arg.substring(ARGUMENTS.VERBOSE.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.VERBOSE.prefix())) {
+				String val = arg.substring(ProgramArguments.VERBOSE.prefix().length());
 				verbose = VERBOSE.valueOf(val);
-			} else if (arg.startsWith(ARGUMENTS.WITH_REST_SERVER.prefix())) {
-				String val = arg.substring(ARGUMENTS.WITH_REST_SERVER.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.WITH_REST_SERVER.prefix())) {
+				String val = arg.substring(ProgramArguments.WITH_REST_SERVER.prefix().length());
 				withRESTServer = "true".equals(val);
-			} else if (arg.startsWith(ARGUMENTS.HTTP_PORT.prefix())) {
-				String val = arg.substring(ARGUMENTS.HTTP_PORT.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.HTTP_PORT.prefix())) {
+				String val = arg.substring(ProgramArguments.HTTP_PORT.prefix().length());
 				try {
 					restServerPort = Integer.parseInt(val);
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
-			} else if (arg.startsWith(ARGUMENTS.SIMULATE_SENSOR_VALUES.prefix())) {
-				String val = arg.substring(ARGUMENTS.SIMULATE_SENSOR_VALUES.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.SIMULATE_SENSOR_VALUES.prefix())) {
+				String val = arg.substring(ProgramArguments.SIMULATE_SENSOR_VALUES.prefix().length());
 				enforceSensorSimulation = "true".equals(val);
-			} else if (arg.startsWith(ARGUMENTS.MISO_PIN.prefix())) {
-				String val = arg.substring(ARGUMENTS.MISO_PIN.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.MISO_PIN.prefix())) {
+				String val = arg.substring(ProgramArguments.MISO_PIN.prefix().length());
 				try {
 					misoPin = Integer.parseInt(val);
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
-			} else if (arg.startsWith(ARGUMENTS.MOSI_PIN.prefix())) {
-				String val = arg.substring(ARGUMENTS.MOSI_PIN.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.MOSI_PIN.prefix())) {
+				String val = arg.substring(ProgramArguments.MOSI_PIN.prefix().length());
 				try {
 					mosiPin = Integer.parseInt(val);
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
-			} else if (arg.startsWith(ARGUMENTS.CLK_PIN.prefix())) {
-				String val = arg.substring(ARGUMENTS.CLK_PIN.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.CLK_PIN.prefix())) {
+				String val = arg.substring(ProgramArguments.CLK_PIN.prefix().length());
 				try {
 					clkPin = Integer.parseInt(val);
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
-			} else if (arg.startsWith(ARGUMENTS.CS_PIN.prefix())) {
-				String val = arg.substring(ARGUMENTS.CS_PIN.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.CS_PIN.prefix())) {
+				String val = arg.substring(ProgramArguments.CS_PIN.prefix().length());
 				try {
 					csPin = Integer.parseInt(val);
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
-			} else if (arg.startsWith(ARGUMENTS.CHANNEL_PIN.prefix())) {
-				String val = arg.substring(ARGUMENTS.CHANNEL_PIN.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.CHANNEL_PIN.prefix())) {
+				String val = arg.substring(ProgramArguments.CHANNEL_PIN.prefix().length());
 				try {
 					adcChannel = Integer.parseInt(val);
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
-			} else if (arg.startsWith(ARGUMENTS.RELAY_PIN.prefix())) {
-				String val = arg.substring(ARGUMENTS.RELAY_PIN.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.RELAY_PIN.prefix())) {
+				String val = arg.substring(ProgramArguments.RELAY_PIN.prefix().length());
 				try {
 					relayPin = Integer.parseInt(val);
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
-			} else if (arg.startsWith(ARGUMENTS.HUMIDITY_THRESHOLD.prefix())) {
-				String val = arg.substring(ARGUMENTS.HUMIDITY_THRESHOLD.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.HUMIDITY_THRESHOLD.prefix())) {
+				String val = arg.substring(ProgramArguments.HUMIDITY_THRESHOLD.prefix().length());
 				try {
 					humidityThreshold = Integer.parseInt(val);
 					if (humidityThreshold < 0 || humidityThreshold > 100) {
@@ -402,8 +401,8 @@ public class MCP3008 implements Probe {
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
-			} else if (arg.startsWith(ARGUMENTS.WATERING_DURATION.prefix())) {
-				String val = arg.substring(ARGUMENTS.WATERING_DURATION.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.WATERING_DURATION.prefix())) {
+				String val = arg.substring(ProgramArguments.WATERING_DURATION.prefix().length());
 				try {
 					wateringDuration = Long.parseLong(val);
 					if (wateringDuration < 0) {
@@ -413,8 +412,8 @@ public class MCP3008 implements Probe {
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
-			} else if (arg.startsWith(ARGUMENTS.RESUME_AFTER.prefix())) {
-				String val = arg.substring(ARGUMENTS.RESUME_AFTER.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.RESUME_AFTER.prefix())) {
+				String val = arg.substring(ProgramArguments.RESUME_AFTER.prefix().length());
 				try {
 					resumeSensorWatchAfter = Long.parseLong(val);
 					if (resumeSensorWatchAfter < 0) {
@@ -424,8 +423,8 @@ public class MCP3008 implements Probe {
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
-			} else if (arg.startsWith(ARGUMENTS.LOGGERS.prefix())) {
-				String val = arg.substring(ARGUMENTS.LOGGERS.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.LOGGERS.prefix())) {
+				String val = arg.substring(ProgramArguments.LOGGERS.prefix().length());
 				String[] logConsumers = val.split(",");
 				for (String oneLogger : logConsumers) {
 					try {
@@ -436,8 +435,8 @@ public class MCP3008 implements Probe {
 						ex.printStackTrace();
 					}
 				}
-			} else if (arg.startsWith(ARGUMENTS.LOGGING_PACE.prefix())) {
-				String val = arg.substring(ARGUMENTS.LOGGING_PACE.prefix().length());
+			} else if (arg.startsWith(ProgramArguments.LOGGING_PACE.prefix())) {
+				String val = arg.substring(ProgramArguments.LOGGING_PACE.prefix().length());
 				try {
 					loggingPace = Long.parseLong(val);
 					if (loggingPace < 0) {
