@@ -311,8 +311,8 @@ This should be resolved quickly.
 Try to modify the different weights, and the bias of the neuron.
 
 Let's say we have 
-- X<small><sub>1</sub></small> in \[-6, +6\]
-- X<small><sub>2</sub></small> in \[-6, +6\]
+- X<small><sub>1</sub></small> &isin; \[-6, +6\]
+- X<small><sub>2</sub></small> &isin; \[-6, +6\]
 - W<small><sub>1</sub></small> = -0.69
 - W<small><sub>2</sub></small> = -0.67
 - b = 0.030
@@ -320,11 +320,11 @@ Let's say we have
 
 Orange point `(-4, -3)` will result in:
 ```
-(-4 * -0.69) + (-3 * -0.67) + 0.030 => 4.8 * -2 => 9.6 => tanh(9.6) = 0.999999990825637
+(-4 * -0.69) + (-3 * -0.67) + 0.030 => 4.8 * -2 => -9.6 => tanh(-9.6) = -0.999999990825637
 ```
 Blue point `(3, 4)` will result in
 ```
-(3 * -0.69) + (4 * -0.67) + 0.030 => -4.72 * -2 => -9.44 => tanh(-9.44) = -0.999999987365729
+(3 * -0.69) + (4 * -0.67) + 0.030 => -4.72 * -2 => 9.44 => tanh(9.44) = 0.999999987365729
 ```
 
 - -1: orange
