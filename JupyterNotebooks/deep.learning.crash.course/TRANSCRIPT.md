@@ -538,6 +538,9 @@ We will use `TensorFlow` and `Keras`, fro `Python`.
 ##### 2 Layers, 512 and 10 neurons
 Let's take a look at a more realistic example, hand-written digits recognition.
 
+> The elaboration of the neural network structure (number of layers, number of neurons per layer, activation functions to use,
+> dropout amount, etc) requires some... intuition. We will not cover this in this document.
+
 `Keras` comes with several datasets, one of them being `mnist`.
 
 <img src="./img/mnist.samples.png" width="445" height="654" alt="mnist">
