@@ -447,7 +447,7 @@ Using SoftMax (as activation function on the last layer)
 
 ![Softmax](./img/softmax.png)
 
-> _**Softmax**_ activation function is well adapted for output taken from a discrete list pf values.
+> _**Softmax**_ activation function is well adapted for output taken from a discrete list of values.
 >
 > We have 3 possibilities for our output, `red`, `green`, and `yellow`.
 > The neurons are returning _**numerical**_ values, we need to match those values with the colors.
@@ -455,7 +455,7 @@ Using SoftMax (as activation function on the last layer)
 > (In the example above, `0.3 + 0.6 + 0.1 = 1.0`).
 > The biggest value is the one to use to find the finally expected item in the list of possible options:
 > In the example, in `[0.3, 0.6, 0.1]`, the biggest value (`0.6`) is the _second_ one, we pick the _second_ value of
-> `[ red, green, yellow]`, and the item we end up with is `green`. 
+> `[ red, green, yellow ]`, and the item we end up with is `green`. 
 
 You train your machine with your data to make it learn the relationship between some input data and a certain label (`label` = `y`).
 _**This is called supervised learning.**_
