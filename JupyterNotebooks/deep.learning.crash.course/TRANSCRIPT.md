@@ -419,6 +419,8 @@ TODO, for the model training:
 - Colab notebooks
 - Python scripts
 
+TODO Explain how to install the required Python components
+
 TODO, for the implementation and deployment of the model:
 - In Python
 - In Java
@@ -463,6 +465,17 @@ Then convert the model:
 $ tensorflowjs_converter --input_format keras ./insurance.h5 ./tfjs
 ```
 
+### Close to real: hand-written digits
+
+##### 2 Layers, 512 and 10 neurons
 <!-- TODO
  Closer to the real world, hand-writing recognition
+ Explain how data are prepared
 -->
+```
+$ python sample.05.py
+```
+
+```
+$ python sample.06.py
+```

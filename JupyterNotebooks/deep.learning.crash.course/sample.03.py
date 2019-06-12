@@ -79,11 +79,11 @@ print("Training completed!")
 
 print("Training quality")
 train_loss, train_accuracy = model.evaluate(X_train_2_dim, y_train, batch_size=BATCH_SIZE)
-train_accuracy
+print(train_accuracy)
 
 print("Testing quality")
 test_loss, test_accuracy = model.evaluate(X_test_2_dim, y_test, batch_size=BATCH_SIZE)
-test_accuracy
+print(test_accuracy)
 
 print("Saving the model")
 model.save('insurance.h5')
