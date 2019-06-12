@@ -4,6 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 import sys
+import warnings
+
+warnings.filterwarnings('ignore')
 
 print("{} script arguments.".format(len(sys.argv)))
 
@@ -12,6 +15,7 @@ print("\tpython {} [L]".format(sys.argv[0]))
 print("\tL is to Load the already trained model.")
 print("\tNo parameter will train (and save) the model.\n")
 
+# Evaluate user's parameters
 loadOnly = False
 if len(sys.argv) > 1 and sys.argv[1] == 'L':
 	loadOnly = True
@@ -27,7 +31,7 @@ sess = tf.Session()
 devices = sess.list_devices()
 print("----- D E V I C E S -----")
 for d in devices:
-    print(d.name)
+	print(d.name)
 print("-------------------------")
 
 # Hand writing samples (digit)
@@ -75,6 +79,7 @@ if not loadOnly:
 	model.save('training.h5')
 else:
 	model = tf.keras.models.load_model('training.h5')
+	print("Model is now loaded")
 #
 # See https://medium.com/tensorflow/hello-deep-learning-fashion-mnist-with-keras-50fcff8cd74a
 #
