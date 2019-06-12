@@ -60,9 +60,9 @@ and we want to determine the risk associated with a customer, based on
 - the number of miles he drives per year
 
 We will represent the risk level with a color
-- red: high risk
-- yellow: medium risk
-- green: low risk
+- <span style="color: red;">**red**</span>: high risk
+- <span style="color: orange;">**yellow**</span>: medium risk
+- <span style="color: green;">**green**</span>: low risk
 
 ![Real data](./img/real.data.png)
 
