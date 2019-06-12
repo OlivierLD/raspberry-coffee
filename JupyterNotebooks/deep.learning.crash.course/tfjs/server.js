@@ -162,11 +162,15 @@ var handler = function(req, res) {
 							contentType = "image/png";
 						} else if (resource.endsWith(".ico")) {
 							contentType = "image/x-icon";
+						} else if (resource.endsWith(".json")) {
+							contentType = "application/json";
 						} else if (resource.endsWith(".svg")) {
 							contentType = "image/svg+xml";
 						} else if (resource.endsWith(".woff")) {
 							contentType = "application/x-font-woff";
 						} else if (resource.endsWith(".ttf")) {
+							contentType = "application/octet-stream";
+						} else if (resource.startsWith("group")) { // The files of the model
 							contentType = "application/octet-stream";
 						} else {
 							console.log("+-------------------------------------------")
@@ -184,6 +188,7 @@ var handler = function(req, res) {
 								resource.endsWith(".svg") ||
 								resource.endsWith(".woff") ||
 								resource.endsWith(".ttf") ||
+								resource.startsWith("group") ||
 								resource.endsWith(".png")) {
 							//  res.writeHead(200, {'Content-Type': 'image/gif' });
 							res.end(data, 'binary');
