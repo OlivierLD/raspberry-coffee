@@ -551,7 +551,7 @@ test dataset.
 
 This can be run locally (after installing the required Python packages):
 ```
-$ python sample.05.py [L]
+$ python sample.05.py [ L | --help ]
 ```
 
 Another example, try:

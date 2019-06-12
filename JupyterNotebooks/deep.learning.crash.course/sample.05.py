@@ -12,13 +12,16 @@ print("Keras version", tf.keras.__version__)
 
 print("{} script arguments.".format(len(sys.argv)))
 
-print("\nUsage is ")
-print("\tpython {} [L]".format(sys.argv[0]))
-print("\tL is to Load the already trained model.")
-print("\tNo parameter will train (and save) the model.\n")
-
 # Evaluate user's parameters
 loadOnly = False
+if len(sys.argv) > 1 and sys.argv[1] == '--help':
+  print("\nUsage is ")
+  print("\tpython {} [--help | L]".format(sys.argv[0]))
+  print("\tL is to Load the already trained model.")
+  print("\tNo parameter will train (and save) the model.")
+  print("\t--help will display this content.\n")
+  sys.exit()
+
 if len(sys.argv) > 1 and sys.argv[1] == 'L':
 	loadOnly = True
 	print("Will load the model, not train it.")
