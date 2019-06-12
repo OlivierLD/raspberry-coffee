@@ -493,7 +493,7 @@ Then convert the model:
 ```
 $ tensorflowjs_converter --input_format keras ./insurance.h5 ./tfjs
 ```
-> Note: that last one has glitches on MacOS... Works fine ina Debian Docker image though.
+> Note: that last one has glitches on MacOS... Works fine in a Debian Docker image though.
 
 You can load the `load_model.html` in you browser, the output will be in the `console`.
 Preferably, use Chrome or Firefox. This file uses pure JavaScript (ES6).
