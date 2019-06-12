@@ -343,12 +343,12 @@ Play around, and see how it moves ;)
 
 Over fitting vs Under fitting.
 
-The training of a Neural Network relies on know data.
+The training of a Neural Network relies on _known data_.
 
-Usually, 80% of those known data are used to train the network (training dataset), a the
+Usually, 80% of those known data are used to train the network (training dataset), and the
 remaining 20% are used to test if the prediction of the network is correct (test dataset).
 
-In many cases, 20% of the training dataset (80%) is used for constant check validation.
+In many cases, 20% of the training dataset (20% of 80%) is used for constant check validation.
 
 Like in the `Keras` example `addition_rnn.py`:
 ```
@@ -360,7 +360,7 @@ Back to the Car Insurance Company example. Let's now see some code...
 
 See the [TensorFlow tutorials](https://www.tensorflow.org/tutorials/).
 
-From existing customer data, we will use `Keras` API to train a neural network.
+With existing customer data, we will use `Keras` API to train a neural network.
 
 The code will be provided in `Colab` Notebooks.
 
@@ -371,7 +371,7 @@ All the required code can be found at <https://github.com/DJCordhose/deep-learni
 
 First Notebook is [here](https://colab.research.google.com/github/djcordhose/deep-learning-crash-course-notebooks/blob/master/U3-M3-data.ipynb).
 
-This first Notebook imports data from a CSV file, using `curl`:
+This first Notebook imports data from a CSV (Comma-Separated-Values) file, using `curl`:
 ```
  curl -O https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-course-notebooks/master/data/insurance-customers-1500.csv
 ```
@@ -401,6 +401,7 @@ To know how many lines it contains, use the `word count` command:
 ```
 It has 1501 lines, the first one being the headers (`speed;age;miles;group`), that makes 1500 lines of actual data.
 
+**Very important for the rest of the exercise:**
 In the `group` column, `0` is `red`, `1` is `green`, `2` is `yellow`.
 
 The content of this file - all the data it contains - is called a _data frame_.
@@ -415,7 +416,7 @@ $ cat plot.py
 
 ### Data Encoding
 
-TODO, for the model training:
+For the model training, we will use two approaches:
 - Colab notebooks
 - Python scripts
 
@@ -427,8 +428,10 @@ Run `which python` in a console to know if it is available:
 $ which python
 ~/anaconda3/bin/python
 ``` 
+If the command returns nothing on the second line, Google will tell you how to install Python on your machine.
+
 Then we need to install the required Python packages (to do once):
-```buildoutcfg
+```
 $ pip install tensorflow
 $ pip install keras
 $ pip install numpy
@@ -437,11 +440,6 @@ $ pip install pandas
 $ pip install seaborn
 $ pip install sklearn 
 ```
-
-TODO, for the implementation and deployment of the model:
-- In Python
-- In Java
-- In JavaScript (Web Interface)
 
 Second Lab: <https://colab.research.google.com/github/djcordhose/deep-learning-crash-course-notebooks/blob/master/U3-M5-nn-intro.ipynb>
 
@@ -492,16 +490,24 @@ Then convert the model:
 $ tensorflowjs_converter --input_format keras ./insurance.h5 ./tfjs
 ```
 
-TODO Next to come, some explanations on the JavaScript code.
+You can load the `load_model.html` in you browser, the output will be in the `console`.
+Preferably, use Chrome or Firefox. This file uses pure JavaScript (ES6).
+See the code in it for brute-force code review.
+
+`index.html` does the same, but more interactively, it is an HTML page, with a better UI.
+
+TODO
+- Java version
 
 ### Closer to the real world: hand-written digits recognition
+We will use `TensorFlow` and `Keras`, fro `Python`.
 
 ##### 2 Layers, 512 and 10 neurons
 Let's take a look at a more realistic example, hand-written digits recognition.
 
 `Keras` comes with several datasets, one of them being `mnist`.
 
-![mnist](./img/mnist.samples.png)
+<img src="./img/mnist.samples.png" width="445" height="654" alt="mnist">
 
 It is a series of images representing hand-written digits, along with their actual values.
 We will use this to train a neural network, and use the trained network to recognize hand-written digits from the
