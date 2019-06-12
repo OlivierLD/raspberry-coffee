@@ -493,6 +493,7 @@ Then convert the model:
 ```
 $ tensorflowjs_converter --input_format keras ./insurance.h5 ./tfjs
 ```
+> Note: that last one has glitches on MacOS... Works fine ina Debian Docker image though.
 
 You can load the `load_model.html` in you browser, the output will be in the `console`.
 Preferably, use Chrome or Firefox. This file uses pure JavaScript (ES6).
@@ -500,7 +501,7 @@ See the code in it for brute-force code review.
 
 `index.html` does the same, but more interactively, it is an HTML page, with a better UI.
 
-TODO
+##### TODO
 - Java version
 
 ### Closer to the real world: hand-written digits recognition

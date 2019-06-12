@@ -7,6 +7,8 @@ import sys
 import warnings
 
 warnings.filterwarnings('ignore')
+print("TensorFlow version", tf.__version__)
+print("Keras version", tf.keras.__version__)
 
 print("{} script arguments.".format(len(sys.argv)))
 
@@ -27,7 +29,7 @@ if not loadOnly:
 	print("The network as 2 layers, 512, and then 10 neurons, fully connected.")
 	print("Let's go!")
 
-sess = tf.Session()
+sess = tf.compat.v1.Session() # tf.Session()
 devices = sess.list_devices()
 print("----- D E V I C E S -----")
 for d in devices:

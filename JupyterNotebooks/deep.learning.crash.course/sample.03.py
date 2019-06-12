@@ -13,7 +13,7 @@ tf.logging.set_verbosity(tf.logging.ERROR)
 print("TensorFlow version", tf.__version__)
 
 # let's see what compute devices we have available, hopefully a GPU
-sess = tf.Session()
+sess = tf.compat.v1.Session() # tf.Session()
 devices = sess.list_devices()
 print("----- D E V I C E S -----")
 for d in devices:
