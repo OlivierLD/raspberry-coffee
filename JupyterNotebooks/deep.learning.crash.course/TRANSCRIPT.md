@@ -533,7 +533,7 @@ See the code in it for brute-force code review.
 - Java version
 
 ### Closer to the real world: hand-written digits recognition
-We will use `TensorFlow` and `Keras`, fro `Python`.
+We will use `TensorFlow` and `Keras`, from `Python`.
 
 ##### 2 Layers, 512 and 10 neurons
 Let's take a look at a more realistic example, hand-written digits recognition.
