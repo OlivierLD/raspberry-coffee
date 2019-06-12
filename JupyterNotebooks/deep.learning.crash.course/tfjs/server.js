@@ -170,7 +170,7 @@ var handler = function(req, res) {
 							contentType = "application/x-font-woff";
 						} else if (resource.endsWith(".ttf")) {
 							contentType = "application/octet-stream";
-						} else if (resource.startsWith("group")) { // The files of the model
+						} else if (resource.startsWith("ml_insurance/group")) { // The files of the model
 							contentType = "application/octet-stream";
 						} else {
 							console.log("+-------------------------------------------")
@@ -188,7 +188,7 @@ var handler = function(req, res) {
 								resource.endsWith(".svg") ||
 								resource.endsWith(".woff") ||
 								resource.endsWith(".ttf") ||
-								resource.startsWith("group") ||
+								resource.startsWith("ml_insurance/group") ||
 								resource.endsWith(".png")) {
 							//  res.writeHead(200, {'Content-Type': 'image/gif' });
 							res.end(data, 'binary');
