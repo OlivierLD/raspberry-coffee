@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # From https://www.tensorflow.org/tutorials/keras/basic_classification
 
 from __future__ import absolute_import, division, print_function
@@ -16,8 +17,7 @@ fashion_mnist = keras.datasets.fashion_mnist
 
 (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
 
-class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
-               'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
 print("TrainImages shape", train_images.shape)
 
@@ -59,17 +59,14 @@ model = keras.Sequential([
 ])
 
 print("Compiling model")
-model.compile(optimizer='adam',
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
-
-model.summary()
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 print("-------------------------------")
 print("Training model")
 print("-------------------------------")
 model.fit(train_images, train_labels, epochs=5)
 print("Training completed")
+model.summary()
 
 test_loss, test_acc = model.evaluate(test_images, test_labels)
 
@@ -88,6 +85,7 @@ print("Best match, category", np.argmax(predictions[0]))
 
 print("TestLabel[0]", test_labels[0])
 
+
 def plot_image(i, predictions_array, true_label, img):
 	predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]
 	plt.grid(False)
@@ -103,9 +101,10 @@ def plot_image(i, predictions_array, true_label, img):
 		color = 'red'
 
 	plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],
-	                                     100 * np.max(predictions_array),
-	                                     class_names[true_label]),
-	           color=color)
+										 100 * np.max(predictions_array),
+										 class_names[true_label]),
+			   color=color)
+
 
 def plot_value_array(i, predictions_array, true_label):
 	predictions_array, true_label = predictions_array[i], true_label[i]

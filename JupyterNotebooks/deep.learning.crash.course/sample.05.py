@@ -44,16 +44,20 @@ mnist = tf.keras.datasets.mnist
 # |       Train labels
 # Train images
 #
+print("Train images shape:", x_train.shape, ", ", len(y_train), "labels")
+print("Test images shape:", x_test.shape, ", ", len(y_test), "labels")
+
 x_train, x_test = x_train / 255.0, x_test / 255.0
 print("Import completed, displaying a random set of data, close it to move on.")
 
 if not loadOnly:
 	start_idx = random.randint(0, len(x_train)) - 1
 
-	fig = plt.figure(figsize=(10, 10))
-	fig.canvas.set_window_title("25 examples of the training dataset")
-	for i in range(25):
-		plt.subplot(5, 5, i + 1)
+	# fig = plt.figure(figsize=(10, 10))
+	fig = plt.figure(figsize=(5, 6))
+	fig.canvas.set_window_title("Examples and labels of the training dataset")
+	for i in range(49):
+		plt.subplot(7, 7, i + 1)
 		plt.xticks([])
 		plt.yticks([])
 		plt.grid(False)
@@ -71,9 +75,9 @@ if not loadOnly:
 				  loss='sparse_categorical_crossentropy',
 				  metrics=['accuracy'])
 
-	# model.summary()
-
 	model.fit(x_train, y_train, epochs=5)
+	model.summary()
+	print("Model evaluate:")
 	model.evaluate(x_test, y_test)
 	#
 	model.save('training.h5')

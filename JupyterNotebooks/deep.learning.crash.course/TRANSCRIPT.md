@@ -413,13 +413,30 @@ $ curl -O https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-cours
 $ cat plot.py 
 ```
 
-### Data Encoding (WIP)
+### Data Encoding
 
 TODO, for the model training:
 - Colab notebooks
 - Python scripts
 
-TODO Explain how to install the required Python components
+In the section below, we will actually be running Python scripts directly on your machine.
+You obviously need Python (or Python3) to be available.
+
+Run `which python` in a console to know if it is available:
+```
+$ which python
+~/anaconda3/bin/python
+``` 
+Then we need to install the required Python packages (to do once):
+```buildoutcfg
+$ pip install tensorflow
+$ pip install keras
+$ pip install numpy
+$ pip install matplotlib
+$ pip install pandas
+$ pip install seaborn
+$ pip install sklearn 
+```
 
 TODO, for the implementation and deployment of the model:
 - In Python
@@ -428,11 +445,21 @@ TODO, for the implementation and deployment of the model:
 
 Second Lab: <https://colab.research.google.com/github/djcordhose/deep-learning-crash-course-notebooks/blob/master/U3-M5-nn-intro.ipynb>
 
-Using SoftMax (as activation)
+Using SoftMax (as activation function on the last layer)
 
 ![Softmax](./img/softmax.png)
 
-You train your machine with your data to make it learn the relationship between some input data and a certain label.
+> _**Softmax**_ activation function is well adapted for output taken from a discrete list pf values.
+>
+> We have 3 possibilities for our output, `red`, `green`, and `yellow`.
+> The neurons are returning _**numerical**_ values, we need to match those values with the colors.
+> `Softmax` is encoding those values, so the sum of all of them is `1`.
+> (In the example above, `0.3 + 0.6 + 0.1 = 1.0`).
+> The biggest value is the one to use to find the finally expected item in the list of possible options:
+> In the example, in `[0.3, 0.6, 0.1]`, the biggest value (`0.6`) is the _second_ one, we pick the _second_ value of
+> `[ red, green, yellow]`, and the item we end up with is `green`. 
+
+You train your machine with your data to make it learn the relationship between some input data and a certain label (`label` = `y`).
 _**This is called supervised learning.**_
 
 Here we do not use the TensorFlow playground anymore, we do it _for real_ on a dedicated machine. 
@@ -444,12 +471,12 @@ We create a `sequential` model, using the Keras API. Keras is written in Python.
 ```
 And we start from there.
 
-See the [final Python script](./sample.04.py). This can be run for real on your machine, after you've downloaded the data in `insurance-customers-1500.csv`.
+See the [final Python script](./sample.04.py). This can be run for real on your machine, after you've downloaded the data in `insurance-customers-1500.csv`, with `curl`.
 ```
 $ python sample.04.py
 ```
 
-See the Jupyter Notebooks.
+Also look at the Jupyter Notebooks.
 
 Then, to go to production, we use TensorFlow.js.
 We will convert our model (the `h5` file) with `tensorflowjs_converter`.
@@ -465,17 +492,29 @@ Then convert the model:
 $ tensorflowjs_converter --input_format keras ./insurance.h5 ./tfjs
 ```
 
-### Close to real: hand-written digits
+TODO Next to come, some explanations on the JavaScript code.
+
+### Closer to the real world: hand-written digits recognition
 
 ##### 2 Layers, 512 and 10 neurons
-<!-- TODO
- Closer to the real world, hand-writing recognition
- Explain how data are prepared
--->
+Let's take a look at a more realistic example, hand-written digits recognition.
+
+`Keras` comes with several datasets, one of them being `mnist`.
+
+![mnist](./img/mnist.samples.png)
+
+It is a series of images representing hand-written digits, along with their actual values.
+We will use this to train a neural network, and use the trained network to recognize hand-written digits from the
+test dataset. 
+
+This can be run locally (after installing the required Python packages):
 ```
-$ python sample.05.py
+$ python sample.05.py [L]
 ```
 
+Another example, try:
 ```
 $ python sample.06.py
 ```
+
+---
