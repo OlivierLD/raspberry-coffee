@@ -144,7 +144,7 @@ In the case of a one neuron layer, the expression
 <pre>
  y = &Sigma; (x<sub><small>i</small></sub> . w<sub><small>i</small></sub>) + b  
 </pre>
-become
+becomes
 <pre>
  y = (a . x) + b
 </pre>
