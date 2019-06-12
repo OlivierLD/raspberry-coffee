@@ -20,7 +20,7 @@ if len(sys.argv) > 1 and sys.argv[1] == 'L':
 if not loadOnly:
 	print("We are going to train a network to recognize hand-written digits.")
 	print("And then we'll see if it is working...")
-	print("The network as 2 layers, 512, and than 10 neurons, fully connected.")
+	print("The network as 2 layers, 512, and then 10 neurons, fully connected.")
 	print("Let's go!")
 
 sess = tf.Session()
