@@ -23,6 +23,9 @@ graphics, this is quite impressive and convenient.
 We will also provide here several Python scripts, that can reproduce the features illustrated in the Notebooks, but
 without comments and graphics.
 
+- _All_ the softwares mentioned in this document are free and Open Source.
+- _All_ the code for you to replay _all_ the examples in this documents are available in the project hosting this document, or on the web (in which cases links will be provided).
+
 ### Deep Learning and AI
 ![Where](./img/01fig01.jpg)
 
@@ -522,5 +525,8 @@ Another example, try:
 ```
 $ python sample.06.py
 ```
+
+### Conclusion
+Go ahead! Just do it!
 
 ---
