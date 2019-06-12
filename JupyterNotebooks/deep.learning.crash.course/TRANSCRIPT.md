@@ -41,6 +41,7 @@ And even AI (Artificial Intelligence) itself is part of the even bigger picture 
 Classical programming applies rules on data to get answers.
 
 The goal of machine learning is to produce the rules, by finding the path between the original data and the answers/facts/conclusions produced subsequently.
+In other words, it relies on the way in behaved in the past to predict the way it will behave in the future.
 
 ### The path from design to production
 - You start from real historical data, that will contain the parameters or dimensions used as input for your future system, as well as the data containing the decisions (output) you want to teach your model to make. From those data, you will extract 
