@@ -75,22 +75,27 @@ So, in the figure above, we actually have 3 dimensions:
 If we restore the `number of thousands of miles driven per year` dimension, 
 a programmer would write _rules_ like this (in Python):
 ```python
-if age < 25:
-  if speed > 140:
-    return red # Crazy young guy, car too fast
-  else:
-    return yellow # Car is slow enough for medium risk
+red = 0
+green = 1
+yellow = 2
+
+def evaluate_risk(age, speed, miles_per_year):
+  if age < 25:
+    if speed > 140:
+      return red # Crazy young guy, car too fast
+    else:
+      return yellow # Car is slow enough for medium risk
     
-if age > 75:
-  return red # Get off the road, old man!
+  if age > 75:
+    return red # Get off the road, old man!
   
-if miles_per_year > 30:
-  return red # You drive too much
+  if miles_per_year > 30:
+    return red # You drive too much
     
-if miles_per_year > 20:
-  return yellow 
+  if miles_per_year > 20:
+    return yellow 
   
-return green # otherwise, low risk  
+  return green # otherwise, low risk  
       
 ```
 See in this [Java Notebook](./NeuralNetworks.ipynb#A-"Classical"-way-to-program-a-rule), there is a Java implementation of such a rule.
@@ -132,6 +137,18 @@ Example
 See a [Java Notebook](./NeuralNetworks.ipynb#Neurons!) for an example.
 
 In a classification problem, a single neuron can draw a single line as a decision boundary. 
+
+> Note:
+
+In the case of a one neuron layer, the expression 
+<pre>
+ y = &Sigma; (x<sub><small>i</small></sub> . w<sub><small>i</small></sub>) + b  
+</pre>
+become
+<pre>
+ y = (a . x) + b
+</pre>
+This looks like the equation of a straight line, with its directing coefficient and offset.
 
 #### Neurons at work
 
@@ -195,6 +212,7 @@ Among them, we have:
 - Sigmoids (\[0, 1\])
 - Hyperbolic Tangents (\[-1, +1\])
 - Rectified Linear Unit (aka ReLU), (\[0, n\])
+- SoftMax (used later in this document)
 
 For example, if we use a Sigmoid for the value used above (`17`), we would probably return a value around `0.91`...
 
@@ -358,6 +376,16 @@ Like in the `Keras` example `addition_rnn.py`:
 ```
 Train on 45000 samples, validate on 5000 samples
 ```
+
+#### The TensorFlow playground does a lot of things for you
+Behind the scene, the TensorFlow playground does many things for you.
+It does not only iterate through the possible values of all the parameters, it is also finding their best combination,
+where the loss is the smallest, and this in an optimized fashion.
+
+The curves displayed at the top-right corner of the playground page reflect those
+values. 
+This will explain several of the statements we will need to use when taking
+a programmatic approach to the problem (Python, or Colab Notebooks).
 
 ## Training a TensorFlow model
 Back to the Car Insurance Company example. Let's now see some code...
