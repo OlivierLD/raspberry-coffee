@@ -77,11 +77,12 @@ if not loadOnly:
 	# SoftMax layer will dispatch the value so the highest is the one to choose,
 	# and its value the percentage of reliability
 	model = tf.keras.models.Sequential([
-		tf.keras.layers.Flatten(),
+		tf.keras.layers.Flatten(),                                                 # https://www.tensorflow.org/api_docs/python/tf/keras/layers/Flatten
 		tf.keras.layers.Dense(512, name='FirstDense-512', activation=tf.nn.relu),
-		tf.keras.layers.Dropout(0.2),
+		tf.keras.layers.Dropout(0.2),                                              # https://www.tensorflow.org/api_docs/python/tf/keras/layers/Dropout
 		tf.keras.layers.Dense(10, name='SecondDense-10', activation=tf.nn.softmax)
 	])
+
 	model.compile(optimizer='adam',
 				  loss='sparse_categorical_crossentropy',
 				  metrics=['accuracy'])
@@ -92,13 +93,24 @@ if not loadOnly:
 	print("----------------------------------")
 	model.fit(x_train, y_train, epochs=epochs, verbose=1)
 	model.summary()
+	print("------ Number of parameters: Explanation -------")
+	print("  401,920 = 512 x 785 ")
+	print("              |   785 = (28 x 28) + 1")
+	print("              |                |    | ")
+	print("              |                |    bias ")
+	print("              |                input shape ")
+	print("              # neurons 1st layer ")
+	print(" +  5,130 = (512 x 10) + 10")
+	print("               |    |     | ")
+	print("               |    |     bias ")
+	print("               |    final # of neurons ")
+	print("               # neurons previous layer ")
+	print("-----------")
+	print("= 407,050 Trainable params ")
+	print("------------------------------------------------")
+	#
 	print("Model evaluate:")
 	model.evaluate(x_test, y_test)
-
-	print("---- Number of parameters: Explanation ----")
-	print("401,920 = 512 x 785 = 512 x ((28 x 28) + 1)")
-	print("5,130 = (512 x 10) + 10")
-	print("-------------------------------------------")
 	#
 	model.save('training.h5')
 	print("Model was saved")
