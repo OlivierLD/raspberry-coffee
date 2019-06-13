@@ -571,7 +571,7 @@ Let's take a look at a more realistic example, hand-written digits recognition.
 
 <img src="./img/mnist.samples.png" width="445" height="654" alt="mnist">
 
-It is a series of images representing hand-written digits, along with their actual values.
+It is a serie of images representing handwritten figures, along with their actual values.
 We will use this to train a neural network, and use the trained network to recognize hand-written digits from the
 test dataset. 
 
