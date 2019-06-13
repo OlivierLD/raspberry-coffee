@@ -303,6 +303,8 @@ Then we can plot the value of this bias (abscissa) to the loss (ordinate).
 This loss is displayed on the diagrams of the TensorFlow playground, on the top left part (Test loss),
 the curve(s) represent the value of the loss as the training goes. If the loss drops, this is good.
 
+Try [this](https://www.benfrederickson.com/numerical-optimization/) interactive page.
+
 This is the goal of the training algorithm, it changes the bias to minimize the loss.
 
 To store the best bias, we check the slope of the curve. If it goes down, it is good.

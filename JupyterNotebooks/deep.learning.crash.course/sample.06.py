@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # From https://www.tensorflow.org/tutorials/keras/basic_classification
-
+#
+# Fashion mnist, images classification
+#
 from __future__ import absolute_import, division, print_function
 
 # TensorFlow and tf.keras

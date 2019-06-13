@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+#
+# Basics. Read data, show content
+#
 import warnings
 import pandas as pd
 import numpy as np

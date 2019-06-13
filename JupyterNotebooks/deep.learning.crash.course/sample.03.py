@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+#
+# Insurance Company model training, over-fitting?
+# Saves the model at the end
+#
 import warnings
 import pandas as pd
 import tensorflow as tf
@@ -49,24 +54,24 @@ print("Assembling the network")
 dropout = 0.6
 model = keras.Sequential()
 
-model.add(Dense(500, name='hidden1', input_dim=2))
+model.add(Dense(500, name='HiddenLayer1', input_dim=2))
 # model.add(BatchNormalization())
 model.add(Activation('relu'))
 # model.add(Dropout(dropout))
 
-model.add(Dense(500, name='hidden2'))
+model.add(Dense(500, name='HiddenLayer2'))
 # model.add(BatchNormalization())
 model.add(Activation('relu'))
 # model.add(Dropout(dropout))
 
-model.add(Dense(num_categories, name='softmax', activation='softmax'))
+model.add(Dense(num_categories, name='SoftmaxLayer', activation='softmax'))
 
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
 model.summary()
 
-# reducing batch size might increase overfitting,
+# reducing batch size might increase over-fitting,
 # but might be necessary to reduce memory requirements
 BATCH_SIZE = 1000
 
@@ -77,13 +82,11 @@ print("Starting the training...")
 history = model.fit(X_train_2_dim, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_split=0.2, verbose=0)
 print("Training completed!")
 
-print("Training quality")
 train_loss, train_accuracy = model.evaluate(X_train_2_dim, y_train, batch_size=BATCH_SIZE)
-print(train_accuracy)
+print("Training Accuracy {}%".format(100 * train_accuracy))
 
-print("Testing quality")
 test_loss, test_accuracy = model.evaluate(X_test_2_dim, y_test, batch_size=BATCH_SIZE)
-print(test_accuracy)
+print("Testing Accuracy {}%".format(100 * test_accuracy))
 
 print("Saving the model")
 model.save('insurance.h5')

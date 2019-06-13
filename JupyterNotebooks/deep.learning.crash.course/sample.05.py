@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+#
+# Handwritten figures recognition => classification
+#
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
@@ -70,6 +73,9 @@ if not loadOnly:
 		plt.xlabel(y_train[start_idx + i])
 	plt.show()
 
+	# Last layer has 10 neurons, because we have 10 categories (0-9 digits)
+	# SoftMax layer will dispatch the value so the highest is the one to choose,
+	# and its value the percentage of reliability
 	model = tf.keras.models.Sequential([
 		tf.keras.layers.Flatten(),
 		tf.keras.layers.Dense(512, name='FirstDense-512', activation=tf.nn.relu),
@@ -77,13 +83,14 @@ if not loadOnly:
 		tf.keras.layers.Dense(10, name='SecondDense-10', activation=tf.nn.softmax)
 	])
 	model.compile(optimizer='adam',
-				  loss='sparse_categorical_crossentropy',
+				  loss='sparse_categorical_crossentropy',`
 				  metrics=['accuracy'])
 
+	epochs = 5
 	print("----------------------------------")
-	print("Starting the training, on 5 epochs")
+	print("Starting the training, on {} epochs".format(epochs))
 	print("----------------------------------")
-	model.fit(x_train, y_train, epochs=5)
+	model.fit(x_train, y_train, epochs=epochs, verbose=1)
 	model.summary()
 	print("Model evaluate:")
 	model.evaluate(x_test, y_test)
@@ -94,6 +101,7 @@ if not loadOnly:
 	print("-------------------------------------------")
 	#
 	model.save('training.h5')
+	print("Model was saved")
 else:
 	model = tf.keras.models.load_model('training.h5')
 	print("Model is now loaded")
