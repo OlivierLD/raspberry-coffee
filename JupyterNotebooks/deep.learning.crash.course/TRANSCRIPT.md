@@ -43,6 +43,21 @@ Classical programming applies rules on data to get answers.
 The goal of machine learning is to produce the rules, by finding the path between the original data and the answers/facts/conclusions produced subsequently.
 In other words, it relies on the way in behaved in the past to predict the way it will behave in the future.
 
+#### Is that Deep Learning?
+
+###### Weather Routing?
+No. It is not even Artificial Intelligence. There is no training process involved, it is all
+about (classical) computing. It may require resources and heavy calculations, but no learning process.
+ 
+###### Deep Blue defeating Garry Kasparov? 
+Maybe Artificial Intelligence, but not Deep Learning, as the machine did not go through a learning process.
+The computer was able to identify _already played games_, and was mimicking was was done before.
+Kasparov may very well have been defeated by one of his _own_ previous games...
+
+###### Google's AlphaGo beating Go champion?
+Yes! The game won by the computer had _never_ been played before. And the machine relied
+on a model elaborated by a training process.
+
 ### The path from design to production
 - You start from real historical data, that will contain the parameters or dimensions used as input for your future system, as well as the data containing the decisions (output) you want to teach your model to make. From those data, you will extract 
     - Training dataset
