@@ -51,7 +51,8 @@ about (classical) computing. It may require resources and heavy calculations, bu
  
 ###### Deep Blue defeating Garry Kasparov? 
 Maybe Artificial Intelligence, but not Deep Learning, as the machine did not go through a learning process.
-The computer was able to identify _already played games_, and was mimicking was was done before.
+IBM actually called this GOFAI (Good Old-Fashioned Artificial Intelligence)...
+The computer was able to identify _already played games_ (very fast), and was mimicking was was done before.
 Kasparov may very well have been defeated by one of his _own_ previous games...
 
 ###### Google's AlphaGo beating Go champion?
