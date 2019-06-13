@@ -27,9 +27,9 @@ if len(sys.argv) > 1 and sys.argv[1] == 'L':
 	print("Will load the model, not train it.")
 
 if not loadOnly:
-	print("We are going to train a network to recognize hand-written digits.")
+	print("We are going to train a network to recognize handwritten figures.")
 	print("And then we'll see if it is working...")
-	print("The network as 2 layers, 512, and then 10 neurons, fully connected.")
+	print("The network has 2 layers, 512, and then 10 neurons, fully connected.")
 	print("Let's go!")
 
 sess = tf.compat.v1.Session() # tf.Session()
@@ -72,18 +72,26 @@ if not loadOnly:
 
 	model = tf.keras.models.Sequential([
 		tf.keras.layers.Flatten(),
-		tf.keras.layers.Dense(512, activation=tf.nn.relu),
+		tf.keras.layers.Dense(512, name='FirstDense-512', activation=tf.nn.relu),
 		tf.keras.layers.Dropout(0.2),
-		tf.keras.layers.Dense(10, activation=tf.nn.softmax)
+		tf.keras.layers.Dense(10, name='SecondDense-10', activation=tf.nn.softmax)
 	])
 	model.compile(optimizer='adam',
 				  loss='sparse_categorical_crossentropy',
 				  metrics=['accuracy'])
 
+	print("----------------------------------")
+	print("Starting the training, on 5 epochs")
+	print("----------------------------------")
 	model.fit(x_train, y_train, epochs=5)
 	model.summary()
 	print("Model evaluate:")
 	model.evaluate(x_test, y_test)
+
+	print("---- Number of parameters: Explanation ----")
+	print("401,920 = 512 x 785 = 512 x ((28 x 28) + 1)")
+	print("5,130 = (512 x 10) + 10")
+	print("-------------------------------------------")
 	#
 	model.save('training.h5')
 else:
