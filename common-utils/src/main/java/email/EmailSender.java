@@ -1,6 +1,6 @@
 package email;
 
-import com.sun.mail.smtp.SMTPTransport;
+//import com.sun.mail.smtp.SMTPTransport;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -31,6 +31,7 @@ public class EmailSender {
 	private static String incoming;
 	private static String replyto;
 	private static boolean smtpauth;
+	private static boolean useSSL;
 
 	private static String sendEmailsTo;
 	private static String eventSubject;
@@ -47,6 +48,7 @@ public class EmailSender {
 		EmailSender.incoming = "";
 		EmailSender.replyto = "";
 		EmailSender.smtpauth = false;
+		EmailSender.useSSL = true;
 		EmailSender.sendEmailsTo = "";
 		EmailSender.eventSubject = "";
 
@@ -71,6 +73,7 @@ public class EmailSender {
 		EmailSender.incoming = props.getProperty("pi." + (provider != null ? (provider + ".") : "") + "incoming.server", "");
 		EmailSender.replyto = props.getProperty("pi." + (provider != null ? (provider + ".") : "") + "mail.replyto", "");
 		EmailSender.smtpauth = "true".equals(props.getProperty("pi." + (provider != null ? (provider + ".") : "") + "mail.smtpauth", "false"));
+		EmailSender.useSSL = "true".equals(props.getProperty("pi." + (provider != null ? (provider + ".") : "") + "mail.use.ssl", "true"));
 
 		if (verbose) {
 			System.out.println("-------------------------------------");
@@ -140,7 +143,7 @@ public class EmailSender {
 					throws MessagingException, AddressException {
 		Properties props = setProps();
 
-//  Session session = Session.getDefaultInstance(props, auth);
+//    Session session = Session.getDefaultInstance(props);
 		Session session = Session.getInstance(props,
 						new javax.mail.Authenticator() {
 							protected PasswordAuthentication getPasswordAuthentication() {
@@ -149,12 +152,12 @@ public class EmailSender {
 						});
 		session.setDebug(verbose);
 		Transport tr = session.getTransport("smtp");
-		if (!(tr instanceof SMTPTransport))
-			System.out.println("This is NOT an SMTPTransport:[" + tr.getClass().getName() + "]");
-
+//		if (!(tr instanceof SMTPTransport)) {
+//			System.out.println("This is NOT an SMTPTransport:[" + tr.getClass().getName() + "]");
+//		}
 		Message msg = new MimeMessage(session);
-//	msg.setFrom(new InternetAddress(EmailSender.replyto));
-		msg.setFrom(new InternetAddress("not-me@neverthere.com")); // Did not find the way to hide the from address...
+  	msg.setFrom(new InternetAddress(EmailSender.username));
+//	msg.setFrom(new InternetAddress("not-me@neverthere.com")); // Did not find the way to hide the from address...
 		msg.setReplyTo(new Address[] { new InternetAddress(EmailSender.replyto) });
 		if (dest == null || dest.length == 0) {
 			throw new RuntimeException("Need at least one recipient.");
@@ -201,10 +204,14 @@ public class EmailSender {
 		props.put("mail.smtp.host", EmailSender.outgoing);
 		props.put("mail.smtp.port", Integer.toString(EmailSender.outgoingPort));
 
-		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.user", EmailSender.username);
+		props.put("mail.smtp.password", EmailSender.password);
+
+  	props.put("mail.smtp.auth", EmailSender.smtpauth);
+
 		props.put("mail.smtp.starttls.enable", "true"); //  See http://www.oracle.com/technetwork/java/faq-135477.html#yahoomail
 //  props.put("mail.smtp.starttls.required", "true");
-		props.put("mail.smtp.ssl.enable", "true");
+		props.put("mail.smtp.ssl.enable", EmailSender.useSSL ? "true" : "false");
 		return props;
 	}
 }

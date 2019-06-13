@@ -645,7 +645,8 @@ public class MCP3008 implements Probe {
 							if (emailSender != null) {
 								emailSender.send(emailSender.getEmailDest().split(","),
 										emailSender.getEventSubject(),
-										"The water tank must be empty, do something!");
+										"<h1>The water tank must be empty, do something!</h1>",
+										"text/html");
 							}
 						}
 						justStoppedWatering.set(false);
