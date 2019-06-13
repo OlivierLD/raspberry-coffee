@@ -120,6 +120,16 @@ If we plot this on the diagram (red-yellow-green), we have:
 
 ![Plot](./img/rules.plot.png)
 
+> The problem we want to address here is a _**classification**_ problem. We will put the points in different (3) categories.
+> Other problems may be addressed by Deep Learning, like _**objects detection**_, _**objects recognition**_, and many more.
+
+> Example: self driving cars will have to:
+> - detect objects on the road
+> - recognize them (cars, bikes, pedestrians, traffic lights, curbs, etc)
+> - classify them, to then make the right decision (brake, turn right, slow down, etc) 
+
+![Objects detection](./img/object-detection.jpg)
+
 ### Deep - supervised - machine learning
 
 The `model` will replace the `rules` we had before.
