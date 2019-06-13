@@ -83,7 +83,7 @@ if not loadOnly:
 		tf.keras.layers.Dense(10, name='SecondDense-10', activation=tf.nn.softmax)
 	])
 	model.compile(optimizer='adam',
-				  loss='sparse_categorical_crossentropy',`
+				  loss='sparse_categorical_crossentropy',
 				  metrics=['accuracy'])
 
 	epochs = 5
