@@ -40,8 +40,8 @@ And even AI (Artificial Intelligence) itself is part of the even bigger picture 
 
 Classical programming applies rules on data to get answers.
 
-The goal of machine learning is to produce the rules, by finding the path between the original data and the answers/facts/conclusions produced subsequently.
-In other words, it relies on the way in behaved in the past to predict the way it will behave in the future.
+> The goal of machine learning is to produce the rules, by finding the path between the original data and the answers/facts/conclusions produced subsequently.
+> In other words, it relies on the way in behaved in the past, to predict the way it will behave in the future.
 
 #### Is that Deep Learning?
 
