@@ -9,8 +9,17 @@ import random
 import sys
 import warnings
 
+import tf_utils
+
 warnings.filterwarnings('ignore')
-print("TensorFlow version", tf.__version__)
+
+tf_version = tf.__version__
+print("TensorFlow", tf_version)
+tf_splitted = tf_version.split('.')
+# print(tf_splitted, len(tf_splitted))
+tf_major = int(tf_splitted[0])
+tf_minor = int(tf_splitted[1])
+tf_patch = int(tf_splitted[2])
 print("Keras version", tf.keras.__version__)
 
 print("{} script arguments.".format(len(sys.argv)))
@@ -35,7 +44,7 @@ if not loadOnly:
 	print("The network has 2 layers, 512, and then 10 neurons, fully connected.")
 	print("Let's go!")
 
-sess = tf.compat.v1.Session() # tf.Session()
+sess = tf_utils.get_TF_session()
 devices = sess.list_devices()
 print("----- D E V I C E S -----")
 for d in devices:

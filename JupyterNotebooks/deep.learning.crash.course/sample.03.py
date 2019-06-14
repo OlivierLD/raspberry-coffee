@@ -10,6 +10,8 @@ from tensorflow import keras
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.layers import Dense, Dropout, BatchNormalization, Activation
 
+import tf_utils
+
 warnings.filterwarnings('ignore')
 
 print("Panda version", pd.__version__)
@@ -18,7 +20,7 @@ tf.logging.set_verbosity(tf.logging.ERROR)
 print("TensorFlow version", tf.__version__)
 
 # let's see what compute devices we have available, hopefully a GPU
-sess = tf.compat.v1.Session() # tf.Session()
+sess = tf_utils.get_TF_session()
 devices = sess.list_devices()
 print("----- D E V I C E S -----")
 for d in devices:

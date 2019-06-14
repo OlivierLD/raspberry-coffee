@@ -6,6 +6,7 @@ import warnings
 import pandas as pd
 import numpy as np
 import seaborn as sns
+import tensorflow as tf
 
 warnings.filterwarnings('ignore')
 
@@ -18,6 +19,9 @@ print("Panda", pd.__version__)
 print("Numpy", np.__version__)
 
 print("Seaborn", sns.__version__)
+
+tf_version = tf.__version__
+print("TensorFlow", tf_version)
 
 # !curl -O https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-course-notebooks/master/data/insurance-customers-1500.csv
 
