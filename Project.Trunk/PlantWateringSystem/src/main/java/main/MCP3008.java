@@ -567,6 +567,7 @@ public class MCP3008 implements Probe {
 
 		// Shutdown hook
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println();
 			System.out.println("+--------------------------+");
 			System.out.println("| Bringing the house down! |");
 			System.out.println("+--------------------------+");
@@ -583,7 +584,7 @@ public class MCP3008 implements Probe {
 
 			loggers.forEach(DataLoggerInterface::close);
 
-			relay.shutdownGPIO();
+			// relay.shutdownGPIO();
 			probe.shutdown();
 			try { Thread.sleep(1_500L); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
 
