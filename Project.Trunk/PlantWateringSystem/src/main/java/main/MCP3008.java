@@ -567,6 +567,10 @@ public class MCP3008 implements Probe {
 
 		// Shutdown hook
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println("+--------------------------+");
+			System.out.println("| Bringing the house down! |");
+			System.out.println("+--------------------------+");
+
 			go = false;
 			watchTheProbe = false;
 			if (relay.getState() == PinState.LOW) {
@@ -581,9 +585,9 @@ public class MCP3008 implements Probe {
 
 			relay.shutdownGPIO();
 			probe.shutdown();
-			try { Thread.sleep(1_500L); } catch (InterruptedException ie) {
-				Thread.currentThread().interrupt();
-			}
+			try { Thread.sleep(1_500L); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
+
+			System.out.println("Bye (at last)!");
 		}));
 
 		// If simulating
