@@ -1,6 +1,8 @@
 # Deep Learning Crash Course
 A transcript adapted from the Manning Video `Deep Learning Crash Course` by <a href="http://lmgtfy.com/?q=Oliver+Zeigermann" target="google">Oliver Zeigermann</a>.
 
+A lecture by [Emmet "Doc" Brown](https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwivz666m-riAhXY3J4KHWuuDisQjRx6BAgBEAU&url=%2Furl%3Fsa%3Di%26source%3Dimages%26cd%3D%26ved%3D%26url%3Dhttps%253A%252F%252Fbacktothefuture.fandom.com%252Fwiki%252FGreat_Scott%26psig%3DAOvVaw22pDeG021kyl_liLkNMEnf%26ust%3D1560644320531602&psig=AOvVaw22pDeG021kyl_liLkNMEnf&ust=1560644320531602)
+
 First, some links:
 - [Google Colab](https://colab.research.google.com/notebooks/welcome.ipynb)
 - [TensorFlow](https://www.tensorflow.org/)
@@ -26,7 +28,7 @@ without comments and graphics.
 - _All_ the softwares mentioned in this document are free and Open Source.
 - _All_ the code for you to replay _all_ the examples in this documents are available in the project hosting this document, or on the web (in which cases links will be provided).
 
-### Deep Learning and AI
+### Deep Learning and AI, where it fits
 ![Where](./img/01fig01.jpg)
 
 And even AI (Artificial Intelligence) itself is part of the even bigger picture called Data Science.
@@ -556,6 +558,13 @@ Preferably, use Chrome or Firefox. This file uses pure JavaScript (ES6).
 See the code in it for brute-force code review.
 
 `index.html` does the same, but more interactively, it is an HTML page, with a better UI.
+
+> To run the Web pages (requires `NodeJS` to be available):
+```
+ $ cd tfjs
+ $ node server.js
+```
+Then open <http://localhost:8080/index.html> in your browser.
 
 ##### TODO
 - Java version
