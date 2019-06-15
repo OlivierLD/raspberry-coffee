@@ -491,6 +491,7 @@ $ which python
 ~/anaconda3/bin/python
 ``` 
 If the command returns nothing on the second line, Google will tell you how to install Python on your machine.
+Or check [this](https://realpython.com/installing-python/). Unless you have reasons not to do so, install `python3`.
 
 Then we need to install the required Python packages (to do once):
 ```
@@ -502,6 +503,7 @@ $ pip install pandas
 $ pip install seaborn
 $ pip install sklearn 
 ```
+- pip documentation is [here](https://pip.pypa.io/en/stable/).
 
 Second Lab: <https://colab.research.google.com/github/djcordhose/deep-learning-crash-course-notebooks/blob/master/U3-M5-nn-intro.ipynb>
 

@@ -10,7 +10,7 @@ tf_patch = int(tf_split[2])
 
 def get_TF_session():
 	sess = None
-	if tf_major >= 2 or (tf_major == 1 and tf_minor > 8):
+	if tf_major >= 2 or (tf_major == 1 and tf_minor > 10):
 		sess = tf.compat.v1.Session()
 	else:
 		sess = tf.Session()
