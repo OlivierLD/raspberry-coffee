@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
  * <p>
  * This list is defined in the <code>List&lt;Operation&gt;</code> named <code>operations</code>.
  * <br>
- * Those operation mostly retrieve the state of the SunFlower class, and device.
+ * Those operations deal with the pump relay, and the probe data.
  * <br>
- * The SunFlower will use the {@link #processRequest(Request)} method of this class to
+ * Will use the {@link #processRequest(Request)} method of this class to
  * have the required requests processed.
  * </p>
  */
@@ -140,13 +140,14 @@ public class RESTImplementation {
 	private Response getProbeData(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
-		ProbeData data = new ProbeData()
-				.temperature(this.probe.getTemperature())
-				.humidity(this.probe.getHumidity());
-  	String content = new Gson().toJson(data);
-		RESTProcessorUtil.generateResponseHeaders(response, content.length());
-		response.setPayload(content.getBytes());
-
+		synchronized (probe) {
+			ProbeData data = new ProbeData()
+					.temperature(this.probe.getTemperature())
+					.humidity(this.probe.getHumidity());
+			String content = new Gson().toJson(data);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		}
 		return response;
 	}
 
@@ -168,8 +169,10 @@ public class RESTImplementation {
 				StringReader stringReader = new StringReader(payload);
 				try {
 					ProbeData data = gson.fromJson(stringReader, ProbeData.class);
-					probe.setHumidity(data.humidity);
-					probe.setTemperature(data.temperature);
+					synchronized (probe) {
+						probe.setHumidity(data.humidity);
+						probe.setTemperature(data.temperature);
+					}
 				} catch (Exception ex1) {
 					ex1.printStackTrace();
 					response = HTTPServer.buildErrorResponse(response,
@@ -201,41 +204,45 @@ public class RESTImplementation {
 
 	private Response getRelayState(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		PinState relayState = probe.getRelayState();
-		String content = new Gson().toJson(relayState);
-		RESTProcessorUtil.generateResponseHeaders(response, content.length());
-		response.setPayload(content.getBytes());
-
+		synchronized (probe) {
+			PinState relayState = probe.getRelayState();
+			String content = new Gson().toJson(relayState);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		}
 		return response;
 	}
 
 	private Response getPWSParameters(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		PWSParameters pwsParameters = probe.getPWSParameters();
-		String content = new Gson().toJson(pwsParameters);
-		RESTProcessorUtil.generateResponseHeaders(response, content.length());
-		response.setPayload(content.getBytes());
-
+		synchronized (probe) {
+			PWSParameters pwsParameters = probe.getPWSParameters();
+			String content = new Gson().toJson(pwsParameters);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		}
 		return response;
 	}
 
 	private Response getPWSStatus(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		String pwsStatus = probe.getStatus();
-		String content = new Gson().toJson(pwsStatus);
-		RESTProcessorUtil.generateResponseHeaders(response, content.length());
-		response.setPayload(content.getBytes());
-
+		synchronized (probe) {
+			String pwsStatus = probe.getStatus();
+			String content = new Gson().toJson(pwsStatus);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		}
 		return response;
 	}
 
 	private Response getProbeLastData(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		List<Double> lastData = probe.getRecentData();
-		String content = new Gson().toJson(lastData);
-		RESTProcessorUtil.generateResponseHeaders(response, content.length());
-		response.setPayload(content.getBytes());
-
+		synchronized (probe) {
+			List<Double> lastData = probe.getRecentData();
+			String content = new Gson().toJson(lastData);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		}
 		return response;
 	}
 
@@ -256,7 +263,9 @@ public class RESTImplementation {
 				StringReader stringReader = new StringReader(payload);
 				try {
 					PWSParameters data = gson.fromJson(stringReader, PWSParameters.class);
-					probe.setPWSParameters(data);
+					synchronized (probe) {
+						probe.setPWSParameters(data);
+					}
 				} catch (Exception ex1) {
 					ex1.printStackTrace();
 					response = HTTPServer.buildErrorResponse(response,
@@ -288,11 +297,12 @@ public class RESTImplementation {
 
 	private Response getLastWateringTime(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		Long lastWateringTime = probe.getLastWateringTime();
-		String content = new Gson().toJson(lastWateringTime);
-		RESTProcessorUtil.generateResponseHeaders(response, content.length());
-		response.setPayload(content.getBytes());
-
+		synchronized (probe) {
+			Long lastWateringTime = probe.getLastWateringTime();
+			String content = new Gson().toJson(lastWateringTime);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		}
 		return response;
 	}
 
@@ -311,7 +321,9 @@ public class RESTImplementation {
 				try {
 					String data = gson.fromJson(stringReader, String.class);
 					PinState state = PinState.valueOf(data);
-					probe.setRelayState(state);
+					synchronized (probe) {
+						probe.setRelayState(state);
+					}
 				} catch (Exception ex1) {
 					ex1.printStackTrace();
 					response = HTTPServer.buildErrorResponse(response,
