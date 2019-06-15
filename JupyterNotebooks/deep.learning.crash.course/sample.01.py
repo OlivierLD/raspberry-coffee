@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # Basic sanity check.
-# Valids imports
+# Validates imports
 # Read data, show content
 #
 import warnings
