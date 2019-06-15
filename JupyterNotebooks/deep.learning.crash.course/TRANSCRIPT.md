@@ -384,7 +384,7 @@ Use the 'circular' data (top left)
 - compare the output curves, see the different parameters
 
 ###### Lab 4
-Use the spiral Data (bottom right)
+Use the spiral data (bottom right)
 - Use the _**7**_ input dimensions, 2 hidden layers, 5 and 6 neurons
 - Act Func Tanh, ReLU, should be OK around 500 epochs
 - Do look at the curves when using a Sigmoid

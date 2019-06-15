@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 #
 # Handwritten figures recognition => classification
+# Mathplotlib doc at https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.html
 #
 import tensorflow as tf
 import numpy as np
@@ -15,11 +16,6 @@ warnings.filterwarnings('ignore')
 
 tf_version = tf.__version__
 print("TensorFlow", tf_version)
-tf_splitted = tf_version.split('.')
-# print(tf_splitted, len(tf_splitted))
-tf_major = int(tf_splitted[0])
-tf_minor = int(tf_splitted[1])
-tf_patch = int(tf_splitted[2])
 print("Keras version", tf.keras.__version__)
 
 print("{} script arguments.".format(len(sys.argv)))
@@ -69,17 +65,19 @@ print("Import completed, displaying a random set of data, close it to move on.")
 
 if not loadOnly:
     start_idx = random.randint(0, len(x_train)) - 1
+    print("Starting sample display at index {}".format(start_idx))
 
     # fig = plt.figure(figsize=(10, 10))
     fig = plt.figure(figsize=(5, 6))
     fig.canvas.set_window_title("Examples and labels of the training dataset")
     for i in range(49):
-        plt.subplot(7, 7, i + 1)
+        subplot = plt.subplot(7, 7, i + 1)
         plt.xticks([])
         plt.yticks([])
         plt.grid(False)
         plt.imshow(x_train[start_idx + i], cmap=plt.cm.binary)
         plt.xlabel(y_train[start_idx + i])
+        # subplot.set_title(i + start_idx)
     plt.show()
 
     # Last layer has 10 neurons, because we have 10 categories (0-9 digits)
