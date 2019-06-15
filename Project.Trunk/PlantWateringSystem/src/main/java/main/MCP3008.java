@@ -584,8 +584,8 @@ public class MCP3008 implements Probe {
 
 			loggers.forEach(DataLoggerInterface::close);
 
-			// relay.shutdownGPIO();
-			// probe.shutdown();
+			 relay.shutdownGPIO();
+			 probe.shutdown();
 			try { Thread.sleep(1_500L); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
 
 			System.out.println("Bye (at last)!");
