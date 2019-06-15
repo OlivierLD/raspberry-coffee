@@ -24,7 +24,7 @@ print("Seaborn", sns.__version__)
 tf_version = tf.__version__
 print("TensorFlow", tf_version)
 
-found_data = False;
+found_data = False
 if os.path.isfile('./insurance-customers-1500.csv'):
     found_data = True
 
