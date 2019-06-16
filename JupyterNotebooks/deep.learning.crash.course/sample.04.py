@@ -9,6 +9,9 @@ import tensorflow as tf
 from tensorflow import keras
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.layers import Dense, Dropout, BatchNormalization, Activation
+import os.path
+import subprocess as sp
+import sys
 import tf_utils
 
 warnings.filterwarnings('ignore')
@@ -30,6 +33,21 @@ hello = tf.constant('Hello TF!')
 print(sess.run(hello))
 
 print("Keras version", keras.__version__)
+
+found_data = False
+if os.path.isfile('./insurance-customers-1500.csv'):
+    found_data = True
+
+if not found_data:
+    print("Data file insurance-customers-1500.csv is not here")
+    userInput = input("Do you want to download it now ? Y/n > ")
+    if userInput == '' or userInput == 'y' or userInput == 'Y':
+        print("Downloading...")
+        sp.run(["curl", "-O",
+                "https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-course-notebooks/master/data/insurance-customers-1500.csv"])
+    else:
+        print("Ok, exiting.")
+        sys.exit()
 
 # Read the data frame, split inputs (X) and labels (y)
 df = pd.read_csv('./insurance-customers-1500.csv', sep=';')

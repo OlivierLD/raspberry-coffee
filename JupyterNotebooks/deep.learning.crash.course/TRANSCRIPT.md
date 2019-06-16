@@ -28,6 +28,43 @@ without comments and graphics.
 - _All_ the softwares mentioned in this document are free and Open Source.
 - _All_ the code for you to replay _all_ the examples in this documents are available in the project hosting this document, or on the web (in which cases links will be provided).
 
+### Material
+See how to install Jupyter and Jupyter for Java in [this document](../../README.md).
+
+Then run
+```
+ $ jupyter notebook
+```
+We have in this project Jupyter Notebooks, and Python scripts:
+<table>
+<tr>
+<th>Jupyter Notebooks</th>
+<th>Python scripts</th>
+</tr>
+<tr>
+<td valign="top">
+
+- **01.data.ipynb**, _in Python_, showing graphically the data we are going to use
+- **02.intro.ipynb**, _in Python_, show how to build a network using the data above
+- **03.training.ipynb**, _in Python_, training the network above, with the data seen in the first step, with many graphics
+- **04.regularization.ipynb**, _in Python_, all the way, to finally saving the model, with many graphics.
+- **05.final.model.ipynb**, _in Python_, recapitulation of all the above
+- **NeuralNetworks.ipynb**, _in Java_, various small demos showing Neurons, Activation Functions, rules implementation...
+- **data.one.neuron.ipynb**, _in Java_, showing how _one_ neuron would operate on a dataset.
+
+</td>
+<td valign="top">
+
+- **sample.01.py**, basic sanity checks, on the data
+- **sample.03.py**, building and training a network (insurance data), with TansorFlow and Keras
+- **sample.04.py**, like the one above, but more accurate
+- **sample.05.py**, with TensorFlow and Keras, hand-written figures recognition, from scratch.
+- **sample.06.py**, with TensorFlow and Keras, pictures recognition.
+
+</td>
+</tr>
+</table>
+
 ### Deep Learning and AI, where it fits
 ![Where](./img/01fig01.jpg)
 
@@ -393,7 +430,7 @@ Play around, and see how it moves ;)
  
 #### Finding the sweet spot
 
-Over fitting vs Under fitting.
+Over-fitting vs Under-fitting.
 
 The training of a Neural Network relies on _known data_.
 
@@ -538,7 +575,7 @@ See the [final Python script](./sample.04.py). This can be run for real on your 
 $ python sample.04.py
 ```
 
-Also look at the Jupyter Notebooks.
+Also look at the Jupyter Notebooks in this directory.
 
 Then, to go to production, we use TensorFlow.js.
 We will convert our model (the `h5` file) with `tensorflowjs_converter`.
