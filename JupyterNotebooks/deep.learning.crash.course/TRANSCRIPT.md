@@ -56,7 +56,7 @@ We have in this project Jupyter Notebooks, and Python scripts:
 <td valign="top">
 
 - **sample.01.py**, basic sanity checks, on the data
-- **sample.03.py**, building and training a network (insurance data), with TansorFlow and Keras
+- **sample.03.py**, building and training a network (insurance data), with TensorFlow and Keras
 - **sample.04.py**, like the one above, but more accurate
 - **sample.05.py**, with TensorFlow and Keras, hand-written figures recognition, from scratch.
 - **sample.06.py**, with TensorFlow and Keras, pictures recognition.
