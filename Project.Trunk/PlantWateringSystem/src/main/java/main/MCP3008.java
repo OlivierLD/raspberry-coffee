@@ -33,6 +33,7 @@ import static utils.TimeUtil.msToHMS;
 public class MCP3008 implements Probe {
 
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
 	static {
 		LOGGER.setLevel(Level.INFO);
 	}
@@ -108,6 +109,7 @@ public class MCP3008 implements Probe {
 		public String prefix() {
 			return this.prefix;
 		}
+
 		public String help() {
 			return this.help;
 		}
@@ -118,6 +120,7 @@ public class MCP3008 implements Probe {
 		STDOUT,
 		ANSI
 	}
+
 	private static VERBOSE verbose = VERBOSE.NONE;
 
 	private static MCP3008Wrapper probe = null;
@@ -165,6 +168,7 @@ public class MCP3008 implements Probe {
 	public void setTemperature(double temp) {
 		temperature = temp;
 	}
+
 	@Override
 	public void setHumidity(double hum) {
 		humidity = hum;
@@ -174,8 +178,9 @@ public class MCP3008 implements Probe {
 	public double getTemperature() {
 		return temperature;
 	}
+
 	@Override
-	public  double getHumidity() {
+	public double getHumidity() {
 		return humidity;
 	}
 
@@ -215,6 +220,7 @@ public class MCP3008 implements Probe {
 	}
 
 	final static double ALPHA = 0.015;
+
 	static double lowPassFilter(double alpha, double value, double acc) {
 		return (value * alpha) + (acc * (1 - alpha));
 	}
@@ -246,12 +252,12 @@ public class MCP3008 implements Probe {
 	}
 
 	@Override
-	public	List<Double> getRecentData() {
+	public List<Double> getRecentData() {
 		return dataBuffer;
 	}
 
 	private static double randomDiff() {
-		int sign = (int)System.currentTimeMillis() % 2;
+		int sign = (int) System.currentTimeMillis() % 2;
 		return Math.random() * (sign == 0 ? 1 : -1);
 	}
 
@@ -282,10 +288,12 @@ public class MCP3008 implements Probe {
 				lastWatering,
 				(relay != null && relay.isSimulating() ? simulatedPinState : actualPinState));
 	}
+
 	// Interactive simulators, for dev and tests.
 	private static Double simulateUserTemp() {
 		return temperature;
 	}
+
 	private static Double simulateUserHum() {
 		return humidity;
 	}
@@ -513,13 +521,13 @@ public class MCP3008 implements Probe {
 			System.out.println("- Din on the MCP3008 goes to MOSI on the RPi");
 			System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
 			System.out.println("       +--------+ ");
-			System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ",  (adcChannel == 0 ? "*" : " ")));
+			System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ", (adcChannel == 0 ? "*" : " ")));
 			System.out.println(String.format("%s CH1 -+  2  15 +- Vref ", (adcChannel == 1 ? "*" : " ")));
 			System.out.println(String.format("%s CH2 -+  3  14 +- aGnd ", (adcChannel == 2 ? "*" : " ")));
-			System.out.println(String.format("%s CH3 -+  4  13 +- CLK ",  (adcChannel == 3 ? "*" : " ")));
+			System.out.println(String.format("%s CH3 -+  4  13 +- CLK ", (adcChannel == 3 ? "*" : " ")));
 			System.out.println(String.format("%s CH4 -+  5  12 +- Dout ", (adcChannel == 4 ? "*" : " ")));
-			System.out.println(String.format("%s CH5 -+  6  11 +- Din ",  (adcChannel == 5 ? "*" : " ")));
-			System.out.println(String.format("%s CH6 -+  7  10 +- CS ",   (adcChannel == 6 ? "*" : " ")));
+			System.out.println(String.format("%s CH5 -+  6  11 +- Din ", (adcChannel == 5 ? "*" : " ")));
+			System.out.println(String.format("%s CH6 -+  7  10 +- CS ", (adcChannel == 6 ? "*" : " ")));
 			System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (adcChannel == 7 ? "*" : " ")));
 			System.out.println("       +--------+ ");
 		}
@@ -544,7 +552,7 @@ public class MCP3008 implements Probe {
 				}
 				probe.setSimulators(humiditySimulator);
 			}
-	  } catch (UnsatisfiedLinkError ule) { // That one is trapped in the constructor of MCP3008Wrapper.
+		} catch (UnsatisfiedLinkError ule) { // That one is trapped in the constructor of MCP3008Wrapper.
 			System.out.println("You're not on a Raspberry Pi, or your wiring is wrong.");
 			System.out.println("Exiting.");
 			System.exit(1);
@@ -576,18 +584,28 @@ public class MCP3008 implements Probe {
 			watchTheProbe = false;
 			if (relay.getState() == PinState.LOW) {
 				System.out.println("Relay is on, pump is pumping, turning it off.");
-				relay.off();
 			} else {
 				System.out.println("Pump is off, all is good.");
 			}
 			System.out.println("\nExiting (Main Hook)");
 
+			try {
+				Thread.sleep(1_500L);
+			} catch (InterruptedException ie) {
+				Thread.currentThread().interrupt();
+			}
+
+			relay.off(); // Any way!
+
 			loggers.forEach(DataLoggerInterface::close);
 
-			 relay.shutdownGPIO();
-			 probe.shutdown();
-			try { Thread.sleep(1_500L); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); }
-
+			relay.shutdownGPIO();
+			probe.shutdown();
+			try {
+				Thread.sleep(1_500L);
+			} catch (InterruptedException ie) {
+				Thread.currentThread().interrupt();
+			}
 			System.out.println("Bye (at last)!");
 		}));
 
@@ -748,7 +766,7 @@ public class MCP3008 implements Probe {
 					final Thread mainThread = Thread.currentThread();
 					final long _waterDuration = wateringDuration;
 					Thread wateringThread = new Thread(() -> {
-						for (int i=0; i<_waterDuration; i++) {
+						for (int i = 0; i < _waterDuration; i++) {
 							try {
 								Thread.sleep(1_000L);
 							} catch (InterruptedException ie) {
@@ -843,13 +861,13 @@ public class MCP3008 implements Probe {
 								displayANSIConsole();
 							}
 							watchTheProbe = true; // Resume!
-			//			mainThread.notify(); // Release the wait on main thread.
+							//			mainThread.notify(); // Release the wait on main thread.
 						}
 					}, "wait-for-resume-thread");
 					wateringThread.start();
 
 					synchronized (mainThread) {
-			//		mainThread.wait(); // Wait for resume (above)
+						//		mainThread.wait(); // Wait for resume (above)
 						message = "";
 						if (verbose == VERBOSE.STDOUT) {
 							System.out.println(message);
