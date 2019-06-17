@@ -650,6 +650,7 @@ public class MCP3008 implements Probe {
 		}
 
 		double humBeforeWatering = -1D;
+		long lastHumidityCheckTime = 0L;
 		final AtomicBoolean justStoppedWatering = new AtomicBoolean(false);
 		while (go) {
 
@@ -667,12 +668,24 @@ public class MCP3008 implements Probe {
 
 					if (watchTheProbe) {
 						if (justStoppedWatering.get() && !(hum > humBeforeWatering)) { // Tank must be empty, send email
-							System.out.println(String.format("Value before watering was %f, now %f", humBeforeWatering, hum));
+							Date lastCheck = new Date(lastHumidityCheckTime);
+							Date stoppedWateringAt = new Date(lastWatering);
+							Date now = new Date();
+
+							String messContent = String.format("Watering started at %s (was %.02f%%), stopped at %s, humidity now (%s) is %.02f%%.",
+									lastCheck.toString(),
+									humBeforeWatering,
+									stoppedWateringAt.toString(),
+									now.toString(),
+									hum);
+
 							System.out.println("Tank must be empty, do something!!");
+							System.out.println(messContent);
+
 							if (emailSender != null) {
 								emailSender.send(emailSender.getEmailDest().split(","),
 										emailSender.getEventSubject(),
-										"<h1>The water tank must be empty, do something!</h1>",
+										"<h1>The water tank must be empty, do something!</h1>" + messContent,
 										"text/html");
 							}
 						}
@@ -748,6 +761,7 @@ public class MCP3008 implements Probe {
 
 				// Store the current humidity value, to make sure it changed (increased) after watering. Send email otherwise, to refill the tank.
 				humBeforeWatering = humidity;
+				lastHumidityCheckTime = System.currentTimeMillis();
 				// Open the valve
 				Thread waterRelayOn = new Thread(() -> {
 					synchronized (relay) {
