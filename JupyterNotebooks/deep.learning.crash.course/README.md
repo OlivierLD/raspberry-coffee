@@ -606,6 +606,9 @@ See the code in it for brute-force code review.
 ```
 Then open <http://localhost:8080/index.html> in your browser.
 
+##### Preparing the data
+![Preparing the Data](./img/prepare.data.jpg)
+
 ##### TODO
 - Java version
 

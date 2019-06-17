@@ -667,7 +667,7 @@ public class MCP3008 implements Probe {
 					double hum = probe.readHumidity(); // temperature);
 
 					if (watchTheProbe) {
-						if (justStoppedWatering.get() && !(hum > humBeforeWatering)) { // Tank must be empty, send email
+						if (justStoppedWatering.get() && !(hum > humBeforeWatering)) { // Humidity did not increase after watering, tank must be empty, send email
 							Date lastCheck = new Date(lastHumidityCheckTime);
 							Date stoppedWateringAt = new Date(lastWatering);
 							Date now = new Date();
