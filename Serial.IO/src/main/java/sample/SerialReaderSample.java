@@ -43,7 +43,13 @@ public class SerialReaderSample implements SerialIOCallbacks {
 		while (keepMonitoring) {
 			try {
 				synchronized (this) {
+					long before = System.currentTimeMillis();
 					this.wait(1_000L);
+					if (System.currentTimeMillis() - before < 1_000) {
+						// Was notified!
+						interrupted = true;
+						keepMonitoring = false;
+					}
 				}
 			} catch (InterruptedException ie) {
 				System.err.println("Ooops");
@@ -156,7 +162,8 @@ public class SerialReaderSample implements SerialIOCallbacks {
 			keepMonitoring = false;
 			try {
 				synchronized (serialReader.monitor) {
-					serialReader.monitor.interrupt();
+					serialReader.monitor.notify();
+//					serialReader.monitor.interrupt();
 				}
 				synchronized (thread) {
 					thread.notify();

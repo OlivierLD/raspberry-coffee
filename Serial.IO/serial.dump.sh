@@ -8,8 +8,8 @@ echo Make sure the device is connected through its USB socket.
 #
 # SERIAL_PORT=/dev/ttyUSB0 # RPi
 # SERIAL_PORT=/dev/tty.Bluetooth-Incoming-Port # Mac
-SERIAL_PORT=/dev/tty.usbserial # Mac
-# SERIAL_PORT=/dev/tty.usbmodeme2df64a32
+# SERIAL_PORT=/dev/tty.usbserial # Mac
+SERIAL_PORT=/dev/tty.usbmodeme2df64a32
 BAUD_RATE=115200
 VERBOSE=true  # Verbose => DualDump
 #
