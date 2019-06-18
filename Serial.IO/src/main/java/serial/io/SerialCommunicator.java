@@ -48,6 +48,9 @@ public class SerialCommunicator
 		this.input = in;
 		this.output = out;
 		this.emulateCommunicator = true;
+		if ("true".equals(System.getProperty("serial.verbose", "false"))) {
+			System.out.println("...Emulating Communicator");
+		}
 	}
 
 	public static String readablePortType(int type) {
@@ -154,7 +157,7 @@ public class SerialCommunicator
 					serialPort.removeEventListener();
 					serialPort.close();
 				} else {
-					System.out.println(">> On Mac OS, *not* removing the serial listeners, *not* closing serial ports.");
+					System.out.println(">> On Mac OS, *not* removing the serial listeners, *not* closing serial ports.\n");
 				}
 				if (input != null) {
 					input.close();

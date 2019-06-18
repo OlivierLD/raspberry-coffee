@@ -22,6 +22,10 @@ public class SerialReaderSample implements SerialIOCallbacks {
 		this.filters = filters;
 	}
 
+	public SerialReaderSample() {
+		monitor.start();
+	}
+
 	@Override
 	public void connected(boolean b) {
 		System.out.println("Serial Port connected: " + b);
@@ -31,20 +35,59 @@ public class SerialReaderSample implements SerialIOCallbacks {
 	private int bufferIdx = 0;
 	private byte[] serialBuffer = new byte[256];
 
+	private long lastReceiveTime = System.currentTimeMillis();
+
+	private static boolean keepMonitoring = true;
+	private Thread monitor = new Thread(() -> {
+		boolean interrupted = false;
+		while (keepMonitoring) {
+			try {
+				synchronized (this) {
+					this.wait(1_000L);
+				}
+			} catch (InterruptedException ie) {
+				System.err.println("Ooops");
+				interrupted = true;
+				keepMonitoring = false;
+			}
+			if (!interrupted) {
+				long now = System.currentTimeMillis();
+				if (now - lastReceiveTime > 1_000) {
+					if (bufferIdx > 0) {
+						completeAndSend();
+//					} else {
+//						if (verbose) {
+//							System.out.println("Nothing to flush");
+//						}
+					}
+					lastReceiveTime = now;
+				}
+			}
+		}
+		System.out.println("Exiting monitor");
+	});
+
+	private void completeAndSend() {
+		byte[] mess = new byte[bufferIdx];
+		for (int i = 0; i < bufferIdx; i++) {
+			mess[i] = serialBuffer[i];
+		}
+		serialOutput(mess); // spit it out
+		// Reset
+		lenToRead = 0;
+		bufferIdx = 0;
+	}
+
 	@Override
 	public void onSerialData(byte b) {
 //  System.out.println("\t\tReceived character [0x" + Integer.toHexString(b) + "]");
-		serialBuffer[bufferIdx++] = (byte) (b & 0xFF);
-		if (b == 0xA) { // \n
-			// Message completed
-			byte[] mess = new byte[bufferIdx];
-			for (int i = 0; i < bufferIdx; i++) {
-				mess[i] = serialBuffer[i];
+		synchronized (serialBuffer) {
+			serialBuffer[bufferIdx++] = (byte) (b & 0xFF); // Adding to the buffer
+			if (b == 0xA) { // \n
+				// Message completed
+				completeAndSend();
 			}
-			serialOutput(mess);
-			// Reset
-			lenToRead = 0;
-			bufferIdx = 0;
+			lastReceiveTime = System.currentTimeMillis();
 		}
 	}
 
@@ -79,12 +122,12 @@ public class SerialReaderSample implements SerialIOCallbacks {
 	}
 
 	public static void main(String... args) {
-		final SerialReaderSample gpsReader = new SerialReaderSample();
+		final SerialReaderSample serialReader = new SerialReaderSample();
 		String filters = System.getProperty("filters");
 		if (filters != null) {
-			gpsReader.setSentenceFilter(Arrays.asList(filters.split(",")));
+			serialReader.setSentenceFilter(Arrays.asList(filters.split(",")));
 		}
-		final SerialCommunicator sc = new SerialCommunicator(gpsReader);
+		final SerialCommunicator sc = new SerialCommunicator(serialReader);
 		sc.setVerbose(false);
 
 		Map<String, CommPortIdentifier> pm = sc.getPortList();
@@ -110,11 +153,15 @@ public class SerialReaderSample implements SerialIOCallbacks {
 		final Thread thread = Thread.currentThread();
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			keepMonitoring = false;
 			try {
+				synchronized (serialReader.monitor) {
+					serialReader.monitor.interrupt();
+				}
 				synchronized (thread) {
 					thread.notify();
-					Thread.sleep(1_000L);
 				}
+				// Thread.sleep(1_000L);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -128,7 +175,7 @@ public class SerialReaderSample implements SerialIOCallbacks {
 			synchronized (thread) {
 				try {
 					thread.wait();
-					System.out.println("\nNotified.");
+					System.out.println("\nNotified (Main).");
 				} catch (InterruptedException ie) {
 					ie.printStackTrace();
 				}
@@ -138,6 +185,7 @@ public class SerialReaderSample implements SerialIOCallbacks {
 		}
 
 		try {
+			System.out.println("Disconnecting.");
 			sc.disconnect();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();

@@ -4,7 +4,7 @@
 #
 CP=./build/libs/Serial.IO-1.0-all.jar
 CP=$CP:/usr/share/java/RXTXcomm.jar
-echo Make sure the GPS is connected it through its USB socket.
+echo Make sure the GPS is connected through its USB socket.
 #
 # SERIAL_PORT=/dev/ttyUSB0 # RPi
 # SERIAL_PORT=/dev/tty.Bluetooth-Incoming-Port # Mac
