@@ -92,7 +92,7 @@ public class SerialReaderSample implements SerialIOCallbacks {
 //  System.out.println("\t\tReceived character [0x" + Integer.toHexString(b) + "]");
 		synchronized (serialBuffer) {
 			serialBuffer[bufferIdx++] = (byte) (b & 0xFF); // Adding to the buffer
-			if (b == 0xA) { // \n
+			if (b == 0xA) { // \n, end of GPS String
 				// Message completed
 				completeAndSend();
 			}
