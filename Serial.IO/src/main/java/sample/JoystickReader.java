@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Not Serial, ByteArrayOutputStream
+ * Not Serial, ByteArrayInputStream
  */
 public class JoystickReader {
 	private final static String JOYSTICK_INPUT = "/dev/input/js0";
