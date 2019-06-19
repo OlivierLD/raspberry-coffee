@@ -419,7 +419,7 @@ This one also acts as a Web Pages server (HTML, JavaScript, etc).
 
 For small boards (like the Raspberry Pi Zero), this would be my preferred option.
 
-Memory minimal footprint ~40Mb
+Memory minimal footprint ~40Mb, all included (not only the HTTP Server part).
 
 The code is located in this project, see the `httpserver` package.
 

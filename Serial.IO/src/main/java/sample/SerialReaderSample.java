@@ -45,7 +45,7 @@ public class SerialReaderSample implements SerialIOCallbacks {
 				synchronized (this) {
 					long before = System.currentTimeMillis();
 					this.wait(1_000L);
-					if (System.currentTimeMillis() - before < 1_000) {
+					if (System.currentTimeMillis() - before < 1_000L) {
 						// Was notified!
 						System.out.println("\nMonitor Notified");
 						interrupted = true;
@@ -61,7 +61,7 @@ public class SerialReaderSample implements SerialIOCallbacks {
 			}
 			if (!interrupted) {
 				long now = System.currentTimeMillis();
-				if (now - lastReceiveTime > 1_000) {
+				if (now - lastReceiveTime > 1_000L) {
 					if (bufferIdx > 0) {
 						completeAndSend();
 //					} else {

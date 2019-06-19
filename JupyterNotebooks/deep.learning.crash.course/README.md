@@ -647,3 +647,4 @@ Go ahead! Just do it!
 Bonus: AI example
 - <https://www.theverge.com/tldr/2018/4/17/17247334/ai-fake-news-video-barack-obama-jordan-peele-buzzfeed>
 - <https://www.youtube.com/watch?v=cQ54GDm1eL0>
+- <https://www.youtube.com/watch?v=wXxrmussq4E>
