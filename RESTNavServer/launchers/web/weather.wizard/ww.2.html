@@ -492,14 +492,28 @@
 		getExistingComposites(cb, filter);
 	};
 
-	var testRouting = function() {
+  var DURATION_FMT = "Y-m-dTH:i:s";
+
+  var testRouting = function() {
+
+		console.log('GRIB Data:', gribFileLocation); // Use this one?
+
+		if (gribFileLocation === undefined) {
+			alert("No GRIB File location, aborting");
+			return;
+		}
+		var toL = (document.getElementById('routing-pos-lat-sign-01').value === 'S' ? -1 : 1) * (parseInt(document.getElementById('routing-pos-lat-deg-01').value) +
+				(parseFloat(parseInt(document.getElementById('routing-pos-lat-min-01').value) / 60 )));
+		var toG = (document.getElementById('routing-pos-lng-sign-01').value === 'W' ? -1 : 1) * (parseInt(document.getElementById('routing-pos-lng-deg-01').value) +
+				(parseFloat(parseInt(document.getElementById('routing-pos-lng-min-01').value) / 60 )));
+		var now = new Date().format(DURATION_FMT); // TODO UTC (this is local/system)
 		var sampleRequest = {
 			"fromL": 37.122,
 			"fromG": -122.5,
-			"toL": -9.75,
-			"toG": -139.1,
-			"startTime": "2019-06-18T07:00:00",
-			"gribName": "./web/2019/06/18/PAC-0001-NEW_062220/grib.grb",
+			"toL": toL,
+			"toG": toG,
+			"startTime": now,
+			"gribName": gribFileLocation + "/grib.grb",
 			"polarFile": "./sample.data/polars/CheoyLee42.polar-coeff",
 			"outputType": "JSON",
 			"timeInterval": 24,
@@ -576,6 +590,16 @@
 
   	var compositeData = (existingData === undefined ? findCompositeByKey(key) : existingData);
 
+  	gribFileLocation = undefined;
+  	if (existingData !== undefined && existingData.gribRequest !== undefined) {
+			gribFileLocation = existingData.gribRequest;
+			if (gribFileLocation.endsWith("grib.grb")) {
+				gribFileLocation = gribFileLocation.substring(0, gribFileLocation.length - "grib.grb".length);
+			}
+			if (gribFileLocation.startsWith("file:")) {
+				gribFileLocation = gribFileLocation.substring("file:".length);
+			}
+		}
   	console.log("Loading", compositeData);
 	  worldMap.setCanvasWidth(compositeData.canvas.w);
 	  worldMap.setCanvasHeight(compositeData.canvas.h);
@@ -719,7 +743,7 @@
 		}
 
 		if (compositeData.gribRequest !== undefined) {
-			makeGRIBRequest(compositeData.gribRequest, 'web/' + year + '/' + month + '/' + day + '/' + time); // grib file Location
+			makeGRIBRequest(compositeData.gribRequest, existingData === undefined ? 'web/' + year + '/' + month + '/' + day + '/' + time : undefined); // grib file Location
 		}
 	};
 
@@ -897,8 +921,8 @@
 	  if (where !== undefined) {
 	  	console.log('... into', where);
 		  jsonRequest.directory = where;
+		  gribFileLocation = where; // Used for routing. Directory of grib.grb
 		}
-
 	  worldMap.setAfterDrawing(renderGRIBData); // That is the callback
 
 	  requestGRIB(jsonRequest, plotGrib);
@@ -1062,6 +1086,52 @@
 		</table>
 	<!-- For tests, only -->
 		<button onclick="testRouting();" title="Early test, no UI" style="color: red;">Routing Test</button>
+		Going to: Latitude:
+		<select id="routing-pos-lat-sign-01">
+			<option value="N" selected>N</option>
+			<option value="S">S</option>
+		</select>
+		<input type="number"
+					 id="routing-pos-lat-deg-01"
+					 placeholder="Deg"
+					 title="Lat degrees to set"
+					 style="width: 40px; text-align: center;"
+					 min="0"
+					 max="90"
+					 step="1"
+					 value="0"/>
+		<input type="number"
+					 id="routing-pos-lat-min-01"
+					 placeholder="Minutes"
+					 title="Lat minutes to set"
+					 style="width: 60px; text-align: center;"
+					 min="0"
+					 max="59.99"
+					 step="0.01"
+					 value="00.00"/>
+		&nbsp;&nbsp;Longitude:
+		<select id="routing-pos-lng-sign-01">
+			<option value="E" selected>E</option>
+			<option value="W">W</option>
+		</select>
+		<input type="number"
+					 id="routing-pos-lng-deg-01"
+					 placeholder="Deg"
+					 title="Lng degrees to set"
+					 style="width: 40px; text-align: center;"
+					 min="0"
+					 max="180"
+					 step="1"
+					 value="0"/>
+		<input type="number"
+					 id="routing-pos-lng-min-01"
+					 placeholder="Minutes"
+					 title="Lng minutes to set"
+					 style="width: 60px; text-align: center;"
+					 min="0"
+					 max="59.99"
+					 step="0.01"
+					 value="00.00"/>
 	<!-- End of Test -->
   </body>
 </html>

@@ -164,6 +164,7 @@ var getExistingComposites = function(callback, filter) {
 };
 
 var gribData;
+var gribFileLocation;
 
 // Callback for GRIBs
 var renderGRIBData = function(canvas, context) {
