@@ -7,7 +7,8 @@ It uses the [PI4J library](http://pi4j.com).
 $ curl -s get.pi4j.com | sudo bash
 ```
 ---
-### Get started, from scratch, now (WIP)!
+
+### Get started, from scratch, now!
 ```
 bash -c "$(curl -L https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/master/install.sh)"
 ```
