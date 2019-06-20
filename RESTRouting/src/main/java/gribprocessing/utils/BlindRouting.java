@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class BlindRouting {
-	private boolean verbose = false;
+	private boolean verbose = "true".equals(System.getProperty("rouring.verbose", "false"));
 
 	/*
 	 * Mandatory prms:
@@ -141,7 +141,7 @@ public class BlindRouting {
 				System.out.println(String.format("%s default -1", LIMIT_TWS));
 				System.out.println(String.format("%s default -1", LIMIT_TWA));
 				System.out.println(String.format("%s default 1.0", SPEED_COEFF));
-				System.out.println(String.format("%s default 1.0", AVOID_LAND));
+				System.out.println(String.format("%s default false", AVOID_LAND));
 				System.out.println("-----------------------");
 				System.out.println("Example: java " + br.getClass().getName() +
 						FROM_L + " 37.122 " + FROM_G + " -122.5 " + TO_L + " -9.75 " + TO_G + " -139.10 " + START_TIME + " \"2012-03-10T12:00:00\" " + GRIB_FILE + " \"." +

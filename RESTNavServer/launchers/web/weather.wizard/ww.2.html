@@ -492,6 +492,13 @@
 		getExistingComposites(cb, filter);
 	};
 
+	var displaySummary = function(bestRoute) {
+		bestRoute.waypoints.forEach(wp => {
+			console.log("At", wp.datetime, "Position", wp.position.latitude, wp.position.longitude);
+			console.log("  TWS", wp.tws, "TWD", wp.twd, "BSP", wp.bsp, "HDG", wp.hdg);
+		});
+	};
+
   var DURATION_FMT = "Y-m-dTH:i:s";
 
   var testRouting = function() {
@@ -527,12 +534,13 @@
 			"verbose": false
 		};
 		var callback = function(bestRoute) {
-			console.log(bestRoute);
+			// console.log(bestRoute);
 			bestRouteToPlot = JSON.parse(bestRoute); // in grib.routing.js
+			displaySummary(bestRouteToPlot);
 			plotBestRoute(canvas, context);
 		};
 		getBestRoute(sampleRequest, callback);
-	}
+	};
 
 	var compositeInterval;
   var timerInterval;

@@ -186,6 +186,11 @@ var routingPromise = function(payload) {
 };
 
 var getBestRoute = function(payload, callback) {
+
+	console.log("From", payload.fromL, payload.fromG, "To", payload.toL, payload.toG,
+			"Starting", payload.startTime, "GRIB", payload.gribName,
+			"Polars", payload.polarFile);
+
 	var getData = routingPromise(payload);
 	getData.done(function(value) {
 		if (callback === undefined) {
