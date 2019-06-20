@@ -34,11 +34,12 @@ public class JoystickReaderV2 {
 					while (byteStream.size() > MAX_DISPLAY_LEN) {
 						byteStream.remove(0);
 					}
-					if (byteStream.size() == 8) {
+					if (byteStream.size() != 0 && byteStream.size() % 8 == 0) {
 						String dump = byteStream.stream()
 								.map(b -> String.format("%02X", (b & 0xFF)))
 								.collect(Collectors.joining(" "));
 						System.out.println(dump);
+						byteStream.clear();
 					}
 				}
 			}
