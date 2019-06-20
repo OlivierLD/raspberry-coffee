@@ -607,6 +607,7 @@
 			if (gribFileLocation.startsWith("file:")) {
 				gribFileLocation = gribFileLocation.substring("file:".length);
 			}
+			document.getElementById('current-grib-location').innerText = ('GRIB in ' + gribFileLocation);
 		}
   	console.log("Loading", compositeData);
 	  worldMap.setCanvasWidth(compositeData.canvas.w);
@@ -930,7 +931,8 @@
 	  	console.log('... into', where);
 		  jsonRequest.directory = where;
 		  gribFileLocation = where; // Used for routing. Directory of grib.grb
-		}
+		  document.getElementById('current-grib-location').innerText = ('GRIB in ' + gribFileLocation);
+	  }
 	  worldMap.setAfterDrawing(renderGRIBData); // That is the callback
 
 	  requestGRIB(jsonRequest, plotGrib);
@@ -1085,15 +1087,7 @@
     </table>
 		</div>
 
-		<table width="100%" cellpadding="0" cellspacing="0" border="0" style="position: fixed; bottom: 0;">
-			<tr>
-				<td align="left" valign="top" height="40">
-					<address><span id="console-type"></span></address>
-				</td>
-			</tr>
-		</table>
 	<!-- For tests, only -->
-		<button onclick="testRouting();" title="Early test, no UI" style="color: red;">Routing Test</button>
 		Going to: Latitude:
 		<select id="routing-pos-lat-sign-01">
 			<option value="N" selected>N</option>
@@ -1140,6 +1134,17 @@
 					 max="59.99"
 					 step="0.01"
 					 value="00.00"/>
-	<!-- End of Test -->
+		<button onclick="testRouting();" title="Early test, no UI" style="color: red;">Routing Test</button>
+    <div style="min-height: 16px;">
+			<span id="current-grib-location"></span>
+		</div>
+		<!-- End of Test -->
+		<table width="100%" cellpadding="0" cellspacing="0" border="0"> <!--  style="position: fixed; bottom: 0;" -->
+			<tr>
+				<td align="left" valign="top" height="40">
+					<address><span id="console-type"></span></address>
+				</td>
+			</tr>
+		</table>
   </body>
 </html>
