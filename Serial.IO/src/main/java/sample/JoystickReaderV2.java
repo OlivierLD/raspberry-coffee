@@ -38,7 +38,22 @@ public class JoystickReaderV2 {
 						String dump = byteStream.stream()
 								.map(b -> String.format("%02X", (b & 0xFF)))
 								.collect(Collectors.joining(" "));
-						System.out.println(dump);
+
+						String pos = "None";
+						if (byteStream.get(5) == (byte)0x80) {
+							if (byteStream.get(7) == 0x00) {
+								pos = "Down";
+							} else if (byteStream.get(7) == 0x01) {
+								pos = "Left";
+							}
+						} else if (byteStream.get(5) == (byte)0x7F) {
+							if (byteStream.get(7) == 0x00) {
+								pos = "Up";
+							} else if (byteStream.get(7) == 0x01) {
+								pos = "Right";
+							}
+						}
+						System.out.println(String.format("%s %s", dump, pos));
 						byteStream.clear();
 					}
 				}
