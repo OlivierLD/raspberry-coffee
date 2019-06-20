@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class BlindRouting {
-	private boolean verbose = "true".equals(System.getProperty("rouring.verbose", "false"));
+	private static boolean verbose = "true".equals(System.getProperty("rouring.verbose", "false"));
 
 	/*
 	 * Mandatory prms:
@@ -72,7 +72,7 @@ public class BlindRouting {
 		int limitTWA = -1;
 		double speedCoeff = 1.0;
 		boolean avoidLand = false;
-		boolean verb = false;
+		boolean verb = verbose;
 
 		for (int i = 0; i < args.length; i++) {
 			if (FROM_G.equals(args[i])) {
