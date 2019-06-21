@@ -57,6 +57,7 @@
 
 	  worldMap.clear();
 	  worldMap.setMouseMoveCallback(mouseMoveCallback);
+	  worldMap.setMouseClickCallback(mouseClickCallback);
 	  worldMap.setPositionLabel("SF");
 	  setTimeout(function () {
 		  worldMap.drawWorldMap();
@@ -78,6 +79,21 @@
 				}
 			}
 	  }
+  };
+
+  var mouseClickCallback = function(obj) {
+  	console.log("Mouse clicked on the map", obj);
+		let lat = obj.lat;
+		let lng = obj.lng;
+		document.getElementById('routing-pos-lat-sign-01').value = (lat < 0 ? "S" : "N");
+	  document.getElementById('routing-pos-lng-sign-01').value = (lng < 0 ? "W" : "E");
+	  lat = Math.abs(lat);
+	  lng = Math.abs(lng);
+	  document.getElementById('routing-pos-lat-deg-01').value = Math.floor(lat).toFixed(0);
+	  document.getElementById('routing-pos-lng-deg-01').value = Math.floor(lng).toFixed(0);
+
+	  document.getElementById('routing-pos-lat-min-01').value = ((lat - Math.floor(lat)) * 60).toFixed(2);
+	  document.getElementById('routing-pos-lng-min-01').value = ((lng - Math.floor(lng)) * 60).toFixed(2);
   };
 
   var mouseMoveCallback = function(obj) {
@@ -513,17 +529,18 @@
 				(parseFloat(parseInt(document.getElementById('routing-pos-lat-min-01').value) / 60 )));
 		var toG = (document.getElementById('routing-pos-lng-sign-01').value === 'W' ? -1 : 1) * (parseInt(document.getElementById('routing-pos-lng-deg-01').value) +
 				(parseFloat(parseInt(document.getElementById('routing-pos-lng-min-01').value) / 60 )));
-		var now = new Date().format(DURATION_FMT); // TODO UTC (this is local/system)
+		var now = new Date();
+	  var utc = new Date(now.getTime() + (now.getTimezoneOffset() * 60 * 1000)).format(DURATION_FMT);
 		var sampleRequest = {
-			"fromL": 37.122,
-			"fromG": -122.5,
+			"fromL": position.lat,
+			"fromG": position.lng,
 			"toL": toL,
 			"toG": toG,
-			"startTime": now,
+			"startTime": utc,
 			"gribName": gribFileLocation + "/grib.grb",
 			"polarFile": "./sample.data/polars/CheoyLee42.polar-coeff",
 			"outputType": "JSON",
-			"timeInterval": 24,
+			"timeInterval": 24,    // Watch the OutOfMemoryError...
 			"routingForkWidth": 140,
 			"routingStep": 10,
 			"limitTWS": -1,
@@ -715,6 +732,7 @@
 				row.appendChild(col2);
 				var div2 = document.createElement('div');
 				div2.id = 'name-' + (idx + 1);
+				div2.style.whiteSpace = "nowrap";
 				div2.appendChild(document.createTextNode(fax.name));
 				col2.appendChild(div2);
 
@@ -1011,19 +1029,23 @@
 				border: 1px solid #CCC;
 				margin-top: 10px;
 			}
+
+			button {
+				border-radius: 5px;
+			}
 		</style>
   </head>
   <body style="background-color: rgba(255, 255, 255, 0.2); background-image: none;">
     <h2>Weather Wizard in HTML5 - Operations <span id="time-to-next"></span></h2>
 		<div>
-    <table border="0">
+    <table border="0" width="100%">
       <tr>
         <td valign="top" rowspan="2">
           <div id="map-container" class="map-style">
             <canvas id="mapCanvas" width="1400" height="900"></canvas>
           </div>
         </td>
-        <td valign="top">
+        <td valign="top" style="max-width: 300px; overflow-x: scroll;">
 					<input type="checkbox" onchange="changeChart(this);" checked/> With Chart&nbsp;
           <input type="checkbox" onchange="changeGrid(this);" checked/> With Grid&nbsp;
 	        <input type="checkbox" onchange="changeTropics(this);" /> With Tropics
@@ -1035,7 +1057,7 @@
 					<input type="checkbox" onchange="continuousLoad(this);"/>Every 6 hours
 					<hr/>
 					<input type="radio" name="grib-origin" value="web" checked onchange="flipGRIB(this);">From the Web
-					<input type="radio" name="grib-origin" value="json" onchange="flipGRIB(this);">From Storage
+					<input type="radio" name="grib-origin" value="json" onchange="flipGRIB(this);">From Server Storage
 					<hr/>
 					<div id="grib-web">
 					</div>
@@ -1134,7 +1156,7 @@
 					 max="59.99"
 					 step="0.01"
 					 value="00.00"/>
-		<button onclick="testRouting();" title="Early test, no UI" style="color: red;">Routing Test</button>
+		<button onclick="testRouting();" title="Early test, no UI" style="color: red;">Routing <b>Test</b></button>
     <div style="min-height: 16px;">
 			<span id="current-grib-location"></span>
 		</div>

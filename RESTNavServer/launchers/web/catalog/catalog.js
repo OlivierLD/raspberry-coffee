@@ -28,8 +28,89 @@ const mapProjections = {
 
 const compositeCatalog = [
 	{
+		key: "PAC-0001-NORTH-FINE",
+		name: "North Pacific, current analysis (fine)",
+		map: {
+			projection: mapProjections.mercator,
+			north: 66.5,
+			south: 10,
+			east: -92,
+			west: 127.5
+		},
+		canvas: {
+			w: 1200,
+			h: 800
+		},
+		faxData: [
+			{
+				faxUrl: "https://tgftp.nws.noaa.gov/fax/PYBA90.gif",
+				name: "North Pac surface analysis, East",
+				transp: faxColors.white,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.red
+				},
+				effect: faxEffects.blur,
+				rotation: 90,
+				zoom: 0.4172253717050488,
+				location: {
+					x: 573,
+					y: 36
+				}
+			},
+			{
+				faxUrl: "https://tgftp.nws.noaa.gov/fax/PYBA91.gif",
+				name: "North Pac surface analysis, West",
+				transp: faxColors.white,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.red
+				},
+				effect: faxEffects.blur,
+				rotation: 90,
+				zoom: 0.4163207653306388,
+				location: {
+					x: 74,
+					y: 36
+				}
+			},
+			{
+				faxUrl: "https://tgftp.nws.noaa.gov/fax/PPBA10.gif",
+				name: "North Pac 500mb analysis",
+				transp: faxColors.white,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.blue
+				},
+				effect: faxEffects.blur,
+				zoom: 0.6382782963114088,
+				location: {
+					x: 78,
+					y: 57
+				}
+			},
+			{
+				faxUrl: "https://tgftp.nws.noaa.gov/fax/PJBA99.gif",
+				name: "North Pac Sea State analysis",
+				transp: faxColors.white,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.darkgreen
+				},
+				effect: faxEffects.blur,
+				zoom: 0.6382782963114088,
+				location: {
+					x: 79,
+					y: 60
+				}
+			}
+			//
+		],
+		gribRequest: 'GFS:65N,10N,130E,110W|1,1|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN'
+	},
+	{
 		key: "PAC-0001-NEW",
-		name: "All Pacific, current analysis (new)",
+		name: "All Pacific, current analysis (fine)",
 		map: {
 			projection: mapProjections.mercator,
 			north: 66.5,
