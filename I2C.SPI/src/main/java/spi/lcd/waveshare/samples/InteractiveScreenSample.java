@@ -39,10 +39,20 @@ public class InteractiveScreenSample {
 		}
 	};
 
-	private static Consumer<GpioPinDigitalStateChangeEvent> jUpConsumer = (event) -> jUp = event.getState().isLow();
-	private static Consumer<GpioPinDigitalStateChangeEvent> jDownConsumer = (event) -> jDown = event.getState().isLow();
-	private static Consumer<GpioPinDigitalStateChangeEvent> jLeftConsumer = (event) -> jLeft = event.getState().isLow();
-	private static Consumer<GpioPinDigitalStateChangeEvent> jRightConsumer = (event) -> jRight = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> jUpConsumer = (event) -> {
+		jUp = event.getState().isLow();
+		if (jUp) {
+			currentIndex++;
+		}
+	};
+	private static Consumer<GpioPinDigitalStateChangeEvent> jDownConsumer = (event) -> {
+		jDown = event.getState().isLow();
+		if (jDown) {
+			currentIndex--;
+		}
+	};
+	private static Consumer<GpioPinDigitalStateChangeEvent> jLeftConsumer    = (event) -> jLeft = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> jRightConsumer   = (event) -> jRight = event.getState().isLow();
 	private static Consumer<GpioPinDigitalStateChangeEvent> jPressedConsumer = (event) -> jPressed = event.getState().isLow();
 
 	private static boolean keepLooping = true;
@@ -134,7 +144,7 @@ public class InteractiveScreenSample {
 			Date now = new Date();
 			lcd.GUIDrawString(8, date1, SDF_1.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
 			lcd.GUIDrawString(8, date2, SDF_3.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
-			lcd.GUIDrawString(8, indexPos, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
+			lcd.GUIDrawString(8, indexPos, String.format("Index: %d", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
 			lcd.LCDDisplayWindows(8, date1, 235, date1 + (3 * fontSize));
 		}
