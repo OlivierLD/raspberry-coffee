@@ -97,7 +97,7 @@ public class MultiScreenSample {
 		lcd.GUIDrawRectangle(2, 2, 238, 238, LCD1in3.YELLOW, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 		lcd.GUIDrawRectangle(4, 4, 236, 236, LCD1in3.YELLOW, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
-		final int fontSize = 24;
+		final int fontSize = 20;
 		Font font = LCD1in3.findFontBySize(fontSize);
 		int y = 8; // Top of the line
 
@@ -185,8 +185,8 @@ public class MultiScreenSample {
 					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2); // Centered
 					lcd.GUIDrawString(lineStart, titlePos, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 
-					lcd.GUIDrawString(8, date1, "-------------", font, LCD1in3.BLACK, LCD1in3.CYAN);
-					lcd.GUIDrawString(8, date2, "-------------", font, LCD1in3.BLACK, LCD1in3.CYAN);
+					lcd.GUIDrawString(8, date1, "-----------  ", font, LCD1in3.BLACK, LCD1in3.CYAN);
+					lcd.GUIDrawString(8, date2, "-----------  ", font, LCD1in3.BLACK, LCD1in3.CYAN);
 					lcd.GUIDrawString(8, indexPos, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
 					lcd.LCDDisplayWindows(8, titlePos, 235, titlePos + (6 * fontSize));
