@@ -123,7 +123,7 @@ public class InteractiveScreenSample {
 		lcd.GUIDrawString(8, y, SDF_3.format(date), font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		date2 = y;
 		y += fontSize;
-		lcd.GUIDrawString(8, y, String.format("Index: %d ", currentIndex), font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		lcd.GUIDrawString(8, y, String.format("Index : %d ", currentIndex), font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		indexPos = y;
 		// y += fontSize;
 
@@ -144,7 +144,7 @@ public class InteractiveScreenSample {
 			Date now = new Date();
 			lcd.GUIDrawString(8, date1, SDF_1.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
 			lcd.GUIDrawString(8, date2, SDF_3.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
-			lcd.GUIDrawString(8, indexPos, String.format("Index: %d ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
+			lcd.GUIDrawString(8, indexPos, String.format("Index : %d ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
 			int rnd = (int)(Math.round(Math.random() * 32_768));
 			y = indexPos + (fontSize * 1);
