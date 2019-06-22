@@ -109,13 +109,13 @@ public class JoystickReaderV2 {
 				down.set(false);
 				right.set(false);
 				left.set(false);
-			} else if ((b.byteValue() & JOYSTICK_LEFT) == 1) {
+			} else if ((b.byteValue() & JOYSTICK_LEFT) == JOYSTICK_LEFT) {
 				left.set(true);
-			} else if ((b.byteValue() & JOYSTICK_RIGHT) == 1) {
+			} else if ((b.byteValue() & JOYSTICK_RIGHT) == JOYSTICK_RIGHT) {
 				right.set(true);
-			} else if ((b.byteValue() & JOYSTICK_UP) == 1) {
+			} else if ((b.byteValue() & JOYSTICK_UP) == JOYSTICK_UP) {
 				up.set(true);
-			} else if ((b.byteValue() & JOYSTICK_DOWN) == 1) {
+			} else if ((b.byteValue() & JOYSTICK_DOWN) == JOYSTICK_DOWN) {
 				down.set(true);
 			}
 			// Synthesis
