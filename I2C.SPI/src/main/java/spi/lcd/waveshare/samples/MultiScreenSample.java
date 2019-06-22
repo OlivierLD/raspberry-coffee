@@ -32,16 +32,16 @@ public class MultiScreenSample {
 	private static Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> {
 		k1 = event.getState().isLow();
 		if (k1) { // K1 is pushed down
-			System.out.println("K1 pressed");
 			currentIndex++;
+			System.out.println(String.format("K1 pressed, index is now %d", currentIndex));
 		}
 	};
 	private static Consumer<GpioPinDigitalStateChangeEvent> key2Consumer = (event) -> k2 = event.getState().isLow();
 	private static Consumer<GpioPinDigitalStateChangeEvent> key3Consumer = (event) -> {
 		k3 = event.getState().isLow();
 		if (k3) { // K3 is pushed down
-			System.out.println("K3 pressed");
 			currentIndex--;
+			System.out.println(String.format("K3 pressed, index is now %d", currentIndex));
 		}
 	};
 
@@ -161,6 +161,8 @@ public class MultiScreenSample {
 
 			// Display data based on currentIndex
 
+			System.out.println(String.format(">> Switch: idx %d, mod %d", currentIndex, (currentIndex % 2)));
+			
 			switch (currentIndex % 2) {
 
 				case 0:
