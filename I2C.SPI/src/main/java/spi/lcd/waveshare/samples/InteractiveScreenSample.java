@@ -105,7 +105,7 @@ public class InteractiveScreenSample {
 		Font font = LCD1in3.findFontBySize(fontSize);
 		int y = 8; // Top of the line
 
-		String title = "Use keys 1 or 3 or joystick up & down";
+		String title = "- Sample -";
 		int len = font.strlen(title);
 		int lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2);
 		lcd.GUIDrawString(lineStart, y, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
