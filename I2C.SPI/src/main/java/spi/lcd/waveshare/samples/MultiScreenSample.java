@@ -138,7 +138,7 @@ public class MultiScreenSample {
 
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("Ctlr+C !");
+			System.out.println("Ctrl+C !");
 			keepLooping = false;
 			TimeUtil.delay(5_000);// Wait for the screen to shut off
 		}));

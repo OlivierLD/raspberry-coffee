@@ -132,7 +132,7 @@ public class InteractiveScreenSample {
 		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("Ctlr+C !");
+			System.out.println("Ctrl+C !");
 			keepLooping = false;
 			TimeUtil.delay(10_000);// Wait for the screen to shut off
 		}));
@@ -167,7 +167,7 @@ public class InteractiveScreenSample {
 			lcd.GUIDrawCircle(120, 120, (int)((strlen * 1.5) / 2), bg, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 			lcd.GUIDrawString(strX, strY, bye, f24, bg, LCD1in3.BLACK);
 			lcd.LCDDisplay();
-			TimeUtil.delay(1_000);
+//		TimeUtil.delay(1_000);
 
 			lcd.LCDClear(LCD1in3.BLACK);
 			lcd.GUIClear(LCD1in3.BLACK);
