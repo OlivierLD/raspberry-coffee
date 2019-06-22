@@ -18,7 +18,7 @@ import static spi.lcd.waveshare.LCD1in3.DrawFill;
  */
 public class MultiScreenSample {
 
-	private final static SimpleDateFormat SDF_1 = new SimpleDateFormat("E dd MMM yyyy");
+	private final static SimpleDateFormat SDF_1 = new SimpleDateFormat("dd MMM yyyy"); // "E dd MMM yyyy"
 	private final static SimpleDateFormat SDF_2 = new SimpleDateFormat("HH:mm:ss Z");
 	private final static SimpleDateFormat SDF_3 = new SimpleDateFormat("HH:mm:ss z");
 
@@ -133,7 +133,7 @@ public class MultiScreenSample {
 		Thread dataFetcher = new Thread(() -> {
 			while (true) {
 				TimeUtil.delay(1_000);
-				System.out.println("\t\t... external data (like REST) Ping!");
+				System.out.println("\t\t... external data (like REST) Ping!"); // Simulation
 			}
 		}, "dataFetcher");
 		dataFetcher.start();
@@ -162,7 +162,7 @@ public class MultiScreenSample {
 			// Display data based on currentIndex
 
 			System.out.println(String.format(">> Switch: idx %d, mod %d", currentIndex, (currentIndex % 2)));
-			
+
 			switch (currentIndex % 2) {
 
 				case 0:
@@ -185,8 +185,8 @@ public class MultiScreenSample {
 					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2); // Centered
 					lcd.GUIDrawString(lineStart, titlePos, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 
-					lcd.GUIDrawString(8, date1, "---", font, LCD1in3.BLACK, LCD1in3.CYAN);
-					lcd.GUIDrawString(8, date2, "---", font, LCD1in3.BLACK, LCD1in3.CYAN);
+					lcd.GUIDrawString(8, date1, "---          ", font, LCD1in3.BLACK, LCD1in3.CYAN);
+					lcd.GUIDrawString(8, date2, "---          ", font, LCD1in3.BLACK, LCD1in3.CYAN);
 					lcd.GUIDrawString(8, indexPos, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
 					lcd.LCDDisplayWindows(8, titlePos, 235, titlePos + (4 * fontSize));
