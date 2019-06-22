@@ -6,6 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -13,12 +16,30 @@ import java.util.stream.Collectors;
  * Not Serial, ByteArrayInputStream
  */
 public class JoystickReaderV2 {
-	private final static String JOYSTICK_INPUT = "/dev/input/js0";
+
+	private final static String JOYSTICK_INPUT_0 = "/dev/input/js0";
+	private final static String JOYSTICK_INPUT_1 = "/dev/input/js1";
+
 	private final static int BUFFER_SIZE = 16_384; // Should be big enough ;)
 	private final static int MAX_DISPLAY_LEN = 32;
 
-	public static void main(String... args) {
-		try (DataInputStream joystick = new DataInputStream(new FileInputStream(JOYSTICK_INPUT))) { // Auto-close
+	public final static byte JOYSTICK_NONE  = 0x0;
+	public final static byte JOYSTICK_LEFT  = 0x1;
+	public final static byte JOYSTICK_RIGHT = 0x1 << 1;
+	public final static byte JOYSTICK_UP    = 0x1 << 2;
+	public final static byte JOYSTICK_DOWN  = 0x1 << 3;
+
+	private Consumer<Byte> statusCallback;
+	private String joystickInput;
+
+	public JoystickReaderV2(String joystickInput) {
+		this(joystickInput, null);
+	}
+	public JoystickReaderV2(String joystickInput, Consumer<Byte> statusCallback) {
+		this.joystickInput = joystickInput;
+		this.statusCallback = statusCallback;
+
+		try (DataInputStream joystick = new DataInputStream(new FileInputStream(this.joystickInput))) { // Auto-close
 			byte[] data = new byte[BUFFER_SIZE];
 			List<Byte> byteStream = new ArrayList<>();
 			int nb;
@@ -39,21 +60,29 @@ public class JoystickReaderV2 {
 								.map(b -> String.format("%02X", (b & 0xFF)))
 								.collect(Collectors.joining(" "));
 
-						String pos = "None";
+						byte status = JOYSTICK_NONE;
 						if (byteStream.get(5) == (byte)0x80) {
 							if (byteStream.get(7) == 0x00) {
-								pos = "Down";
+								// pos = "Down";
+								status = JOYSTICK_DOWN;
 							} else if (byteStream.get(7) == 0x01) {
-								pos = "Left";
+								// pos = "Left";
+								status = JOYSTICK_LEFT;
 							}
 						} else if (byteStream.get(5) == (byte)0x7F) {
 							if (byteStream.get(7) == 0x00) {
-								pos = "Up";
+								// pos = "Up";
+								status = JOYSTICK_UP;
 							} else if (byteStream.get(7) == 0x01) {
-								pos = "Right";
+								// pos = "Right";
+								status = JOYSTICK_RIGHT;
 							}
 						}
-						System.out.println(String.format("%s %s", dump, pos));
+						if (this.statusCallback != null) {
+							this.statusCallback.accept(status);
+						} else {
+							System.out.println(String.format("%s %s", dump, Integer.toBinaryString(status & 0xFF)));
+						}
 						byteStream.clear();
 					}
 				}
@@ -66,5 +95,49 @@ public class JoystickReaderV2 {
 			System.err.println("Argh!");
 			ioe.printStackTrace();
 		}
+	}
+
+	public static void main(String... args) {
+		final AtomicBoolean
+				up = new AtomicBoolean(false),
+				down = new AtomicBoolean(false),
+				right = new AtomicBoolean(false),
+				left = new AtomicBoolean(false);
+		Consumer<Byte> callback = (b) -> {
+			if (b == 0x0) {
+				up.set(false);
+				down.set(false);
+				right.set(false);
+				left.set(false);
+			} else if ((b.byteValue() & JOYSTICK_LEFT) == 1) {
+				left.set(true);
+			} else if ((b.byteValue() & JOYSTICK_RIGHT) == 1) {
+				right.set(true);
+			} else if ((b.byteValue() & JOYSTICK_UP) == 1) {
+				up.set(true);
+			} else if ((b.byteValue() & JOYSTICK_DOWN) == 1) {
+				down.set(true);
+			}
+			// Synthesis
+			String status = "";
+			if (up.get()) {
+				status += "Up ";
+			}
+			if (down.get()) {
+				status += "Down ";
+			}
+			if (left.get()) {
+				status += "Left ";
+			}
+			if (right.get()) {
+				status += "Right ";
+			}
+			if (status.length() == 0) {
+				status = "Center";
+			}
+			System.out.println(String.format("Joystick status: %s", status));
+		};
+
+		/* JoystickReaderV2 joystickReader = */ new JoystickReaderV2(JOYSTICK_INPUT_0, callback);
 	}
 }

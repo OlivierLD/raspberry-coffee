@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 /**
  * Warning: This is not serial port related!
  * Not Serial, ByteArrayInputStream
+ *
+ * RAW Reader, for discovery
  */
 public class JoystickReader {
 	private final static String JOYSTICK_INPUT = "/dev/input/js0";
