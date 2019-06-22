@@ -139,7 +139,7 @@ public class InteractiveScreenSample {
 
 		// Display Data loop
 		while (keepLooping) {
-			TimeUtil.delay(10);
+			TimeUtil.delay(10); // in ms
 
 			Date now = new Date();
 			lcd.GUIDrawString(8, date1, SDF_1.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
@@ -147,12 +147,10 @@ public class InteractiveScreenSample {
 			lcd.GUIDrawString(8, indexPos, String.format("Index: %d ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
 			int rnd = (int)(Math.round(Math.random() * 32_768));
-			y = indexPos + fontSize + 2;
-			lcd.GUIDrawString(8, y, "Random: ", font, LCD1in3.BLACK, LCD1in3.CYAN);
-			y += fontSize;
-			lcd.GUIDrawString(8, y, String.format("%05d ", rnd), font, LCD1in3.BLACK, LCD1in3.CYAN);
+			y = indexPos + (fontSize * 2);
+			lcd.GUIDrawString(8, y, String.format("Random:%05d ", rnd), font, LCD1in3.BLACK, LCD1in3.CYAN);
 
-			lcd.LCDDisplayWindows(8, date1, 235, date1 + 2 + (5 * fontSize));
+			lcd.LCDDisplayWindows(8, date1, 235, date1 + (2 * fontSize));
 		}
 		System.out.println("End of loop");
 

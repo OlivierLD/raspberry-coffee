@@ -126,11 +126,11 @@ public class TimeUtil {
 	}
 
 	/**
-	 * @param howMuch in ms.
+	 * @param howManyMs in ms.
 	 */
-	public static void delay(long howMuch) {
+	public static void delay(long howManyMs) {
 		try {
-			Thread.sleep(howMuch);
+			Thread.sleep(howManyMs);
 		} catch (InterruptedException ie) {
 			Thread.currentThread().interrupt();
 		}
