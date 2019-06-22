@@ -78,7 +78,7 @@ https://www.adafruit.com/product/326, https://www.adafruit.com/product/938.
 SPI 84x48 Monochrome LCD. https://www.adafruit.com/product/338
 
 #### Waveshare 240x240, 1.3inch IPS LCD display HAT for Raspberry Pi
-240x240 _**Color**_ screen, with 3 buttons and a 5-option joystick, https://www.waveshare.com/product/modules/oleds-lcds/raspberry-pi-lcd/1.3inch-lcd-hat.htm,
+Very cool 240x240 _**Color**_ screen, with 3 buttons and a 5-option joystick, https://www.waveshare.com/product/modules/oleds-lcds/raspberry-pi-lcd/1.3inch-lcd-hat.htm,
 same size as the Raspberry Pi Zero.
 
 |    |    |
