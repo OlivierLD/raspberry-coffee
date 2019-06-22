@@ -32,6 +32,7 @@ public class MultiScreenSample {
 	private static Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> {
 		k1 = event.getState().isLow();
 		if (k1) { // K1 is pushed down
+			System.out.println("K1 pressed");
 			currentIndex++;
 		}
 	};
@@ -39,6 +40,7 @@ public class MultiScreenSample {
 	private static Consumer<GpioPinDigitalStateChangeEvent> key3Consumer = (event) -> {
 		k3 = event.getState().isLow();
 		if (k3) { // K3 is pushed down
+			System.out.println("K3 pressed");
 			currentIndex--;
 		}
 	};
@@ -181,8 +183,8 @@ public class MultiScreenSample {
 					lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2); // Centered
 					lcd.GUIDrawString(lineStart, titlePos, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
 
-					lcd.GUIDrawString(8, date1, "---", font, LCD1in3.BLACK, LCD1in3.RED);
-					lcd.GUIDrawString(8, date2, "---", font, LCD1in3.BLACK, LCD1in3.RED);
+					lcd.GUIDrawString(8, date1, "---", font, LCD1in3.BLACK, LCD1in3.CYAN);
+					lcd.GUIDrawString(8, date2, "---", font, LCD1in3.BLACK, LCD1in3.CYAN);
 					lcd.GUIDrawString(8, indexPos, String.format("Index: %d  ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
 					lcd.LCDDisplayWindows(8, titlePos, 235, titlePos + (4 * fontSize));
