@@ -189,7 +189,7 @@ public class InteractiveScreenSample {
 		System.out.println("End of Sample");
 		System.out.println("Bye.");
 		synchronized (closingThread) {
-			closingThread.notify();
+			closingThread.notify(); // Un-block the closingThread
 		}
 	}
 }
