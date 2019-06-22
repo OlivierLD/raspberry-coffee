@@ -134,7 +134,7 @@ public class InteractiveScreenSample {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("Ctlr+C !");
 			keepLooping = false;
-			TimeUtil.delay(8_000);// Wait for the screen to shut off
+			TimeUtil.delay(10_000);// Wait for the screen to shut off
 		}));
 
 		// Display Data loop
