@@ -23,6 +23,7 @@ public class InteractiveScreenSample {
 	private final static SimpleDateFormat SDF_SS = new SimpleDateFormat("ss");
 
 	private static int currentIndex = 0; // Screen index, incremented/decremented with the buttons K1 (up) & K3 (down)
+	private static int defaultFontSize = 16;
 
 	private static boolean k1 = false, k2 = false, k3 = false, jUp = false, jDown = false, jRight = false, jLeft = false, jPressed = false;
 	private static Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> {
@@ -101,7 +102,17 @@ public class InteractiveScreenSample {
 		lcd.GUIDrawRectangle(2, 2, 238, 238, LCD1in3.YELLOW, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 		lcd.GUIDrawRectangle(4, 4, 236, 236, LCD1in3.YELLOW, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
-		final int fontSize = 16;
+		int fontSize = defaultFontSize;
+		try {
+			fontSize = Integer.parseInt(System.getProperty("font.size", String.valueOf(defaultFontSize)));
+			if (fontSize != 8 && fontSize != 12 && fontSize !=  16 && fontSize != 20 && fontSize != 24) {
+				System.err.println(String.format("Font size must be in (8, 12, 16, 20, 24). Using %d", defaultFontSize));
+				fontSize = defaultFontSize;
+			}
+		} catch (NumberFormatException nfe) {
+			nfe.printStackTrace();
+			System.err.println("Using default font size");
+		}
 		Font font = LCD1in3.findFontBySize(fontSize);
 		int y = 8; // Top of the line
 
