@@ -105,7 +105,7 @@ public class InteractiveScreenSample {
 		Font font = LCD1in3.findFontBySize(fontSize);
 		int y = 8; // Top of the line
 
-		String title = "Screen #1";
+		String title = "Use keys 1 or 3 or joystick up & down";
 		int len = font.strlen(title);
 		int lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2);
 		lcd.GUIDrawString(lineStart, y, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
@@ -123,7 +123,7 @@ public class InteractiveScreenSample {
 		lcd.GUIDrawString(8, y, SDF_3.format(date), font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		date2 = y;
 		y += fontSize;
-		lcd.GUIDrawString(8, y, String.format("Index: %d", currentIndex), font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		lcd.GUIDrawString(8, y, String.format("Index: %d ", currentIndex), font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		indexPos = y;
 		// y += fontSize;
 
@@ -144,9 +144,15 @@ public class InteractiveScreenSample {
 			Date now = new Date();
 			lcd.GUIDrawString(8, date1, SDF_1.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
 			lcd.GUIDrawString(8, date2, SDF_3.format(now), font, LCD1in3.BLACK, LCD1in3.RED);
-			lcd.GUIDrawString(8, indexPos, String.format("Index: %d", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
+			lcd.GUIDrawString(8, indexPos, String.format("Index: %d ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
-			lcd.LCDDisplayWindows(8, date1, 235, date1 + (3 * fontSize));
+			int rnd = (int)(Math.round(Math.random() * 32_768));
+			y = indexPos + fontSize + 2;
+			lcd.GUIDrawString(8, y, "Random: ", font, LCD1in3.BLACK, LCD1in3.CYAN);
+			y += fontSize;
+			lcd.GUIDrawString(8, y, String.format("%05d ", rnd), font, LCD1in3.BLACK, LCD1in3.CYAN);
+
+			lcd.LCDDisplayWindows(8, date1, 235, date1 + 2 + (5 * fontSize));
 		}
 		System.out.println("End of loop");
 
