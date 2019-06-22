@@ -101,11 +101,11 @@ public class InteractiveScreenSample {
 		lcd.GUIDrawRectangle(2, 2, 238, 238, LCD1in3.YELLOW, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 		lcd.GUIDrawRectangle(4, 4, 236, 236, LCD1in3.YELLOW, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
-		final int fontSize = 12;
+		final int fontSize = 16;
 		Font font = LCD1in3.findFontBySize(fontSize);
 		int y = 8; // Top of the line
 
-		String title = "- Sample -";
+		String title = String.format("- Font %d -", fontSize);
 		int len = font.strlen(title);
 		int lineStart = (LCD1in3.LCD_WIDTH / 2) - (len / 2);
 		lcd.GUIDrawString(lineStart, y, title, font, LCD1in3.BLACK, LCD1in3.YELLOW);
