@@ -144,7 +144,7 @@ public class InteractiveScreenSample {
 					}
 				}
 			}
-		}
+		};
 		Runtime.getRuntime().addShutdownHook(closingThread);
 
 		// Display Data loop
