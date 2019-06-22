@@ -147,10 +147,10 @@ public class InteractiveScreenSample {
 			lcd.GUIDrawString(8, indexPos, String.format("Index: %d ", currentIndex), font, LCD1in3.BLACK, LCD1in3.GREEN);
 
 			int rnd = (int)(Math.round(Math.random() * 32_768));
-			y = indexPos + (fontSize * 2);
+			y = indexPos + (fontSize * 1);
 			lcd.GUIDrawString(8, y, String.format("Random:%05d ", rnd), font, LCD1in3.BLACK, LCD1in3.CYAN);
 
-			lcd.LCDDisplayWindows(8, date1, 235, date1 + (5 * fontSize)); // The zone to refresh
+			lcd.LCDDisplayWindows(8, date1, 235, date1 + (4 * fontSize)); // The zone to refresh
 		}
 		System.out.println("End of loop");
 
