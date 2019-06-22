@@ -20,6 +20,8 @@ public class JoystickReaderV2 {
 	private final static String JOYSTICK_INPUT_0 = "/dev/input/js0";
 	private final static String JOYSTICK_INPUT_1 = "/dev/input/js1";
 
+	private static boolean DEBUG = "true".equals(System.getProperty("joystick.debug", "false"));
+
 	private final static int BUFFER_SIZE = 16_384; // Should be big enough ;)
 	private final static int MAX_DISPLAY_LEN = 32;
 
@@ -80,8 +82,9 @@ public class JoystickReaderV2 {
 						}
 						if (this.statusCallback != null) {
 							this.statusCallback.accept(status);
-						} else {
-							System.out.println(String.format("%s %s", dump, Integer.toBinaryString(status & 0xFF)));
+						}
+						if (this.statusCallback == null || DEBUG) {
+							System.out.println(String.format("\t%s %s", dump, Integer.toBinaryString(status & 0xFF)));
 						}
 						byteStream.clear();
 					}
