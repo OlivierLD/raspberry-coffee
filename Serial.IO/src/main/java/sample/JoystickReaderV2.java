@@ -84,7 +84,7 @@ public class JoystickReaderV2 {
 							this.statusCallback.accept(status);
 						}
 						if (this.statusCallback == null || DEBUG) {
-							System.out.println(String.format("\t%s 0b%s", dump, String.format("%4s", Integer.toBinaryString(status & 0xFF).replace(' ', '0'))));
+							System.out.println(String.format("\t%s => 0b%s", dump, String.format("%4s", Integer.toBinaryString(status & 0xFF)).replace(' ', '0')));
 						}
 						byteStream.clear();
 					}
