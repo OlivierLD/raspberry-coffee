@@ -131,11 +131,21 @@ public class InteractiveScreenSample {
 			lcd.LCDDisplay();
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("Ctrl+C !");
-			keepLooping = false;
-			TimeUtil.delay(10_000);// Wait for the screen to shut off
-		}));
+		Thread closingThread = new Thread() {
+			public void run() {
+				System.out.println("Ctrl+C !");
+				keepLooping = false;
+				// TimeUtil.delay(10_000);// Wait for the screen to shut off
+				synchronized (this) {
+					try {
+						this.wait();
+					} catch(InterruptedException ie) {
+						ie.printStackTrace();
+					}
+				}
+			}
+		}
+		Runtime.getRuntime().addShutdownHook(closingThread);
 
 		// Display Data loop
 		while (keepLooping) {
@@ -178,5 +188,8 @@ public class InteractiveScreenSample {
 		}
 		System.out.println("End of Sample");
 		System.out.println("Bye.");
+		synchronized (closingThread) {
+			closingThread.notify();
+		}
 	}
 }
