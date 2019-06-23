@@ -75,6 +75,7 @@ USER_PRM="$USER_PRM --with-rest-server:true --http-port:8088"
 # Warning: the FileLogger writes on the disk, clean it from time to time...
 #
 LOGGERS="loggers.iot.AdafruitIOClient"
+IOT_FEED_NAME="humidity"
 LOGGERS="$LOGGERS,loggers.text.FileLogger"
 USER_PRM="$USER_PRM --loggers:$LOGGERS"
 #
@@ -85,6 +86,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dlogger.file.name=${LOG_FILE_NAME}"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Daio.key=54c2767878ca793f2e3cae1c45d62aa7ae9f8056"
 JAVA_OPTIONS="$JAVA_OPTIONS -Daio.verbose=false"
+JAVA_OPTIONS="$JAVA_OPTIONS -Diot.hum.feed=$IOT_FEED_NAME"
 #
 # USER_PRM="$USER_PRM --simulate-sensor-values:true" # Values can be entered from a REST service, POST /pws/sth10-data
 #

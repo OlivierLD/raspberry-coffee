@@ -239,9 +239,11 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		synchronized (probe) {
 			List<Double> lastData = probe.getRecentData();
-			String content = new Gson().toJson(lastData);
-			RESTProcessorUtil.generateResponseHeaders(response, content.length());
-			response.setPayload(content.getBytes());
+			synchronized (lastData) {
+				String content = new Gson().toJson(lastData);
+				RESTProcessorUtil.generateResponseHeaders(response, content.length());
+				response.setPayload(content.getBytes());
+			}
 		}
 		return response;
 	}

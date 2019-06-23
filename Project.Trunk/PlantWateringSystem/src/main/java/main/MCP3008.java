@@ -253,7 +253,9 @@ public class MCP3008 implements Probe {
 
 	@Override
 	public List<Double> getRecentData() {
-		return dataBuffer;
+		synchronized (dataBuffer) {
+			return dataBuffer;
+		}
 	}
 
 	private static double randomDiff() {
@@ -649,6 +651,9 @@ public class MCP3008 implements Probe {
 			System.out.println("Epoch(ms);Date;Temp(C);Hum(%);Dew-pt Temp(C)");
 		}
 
+		String iotHumFeedName = System.getProperty("iot.hum.feed", "humidity");
+		final LogData.FEEDS humFeed = LogData.getFeedByName(iotHumFeedName, LogData.FEEDS.HUM);
+
 		double humBeforeWatering = -1D;
 		long lastHumidityCheckTime = 0L;
 		final AtomicBoolean justStoppedWatering = new AtomicBoolean(false);
@@ -695,9 +700,11 @@ public class MCP3008 implements Probe {
 					// Low Pass Filter
 					humidity = lowPassFilter(ALPHA, hum, humidity);
 					// Store in the data buffer
-					dataBuffer.add(humidity);
-					while (dataBuffer.size() > DATA_BUFFER_MAX_SIZE) {
-						dataBuffer.remove(0);
+					synchronized (dataBuffer) {
+						dataBuffer.add(humidity);
+						while (dataBuffer.size() > DATA_BUFFER_MAX_SIZE) {
+							dataBuffer.remove(0);
+						}
 					}
 				} catch (Exception ex) {
 					System.err.println(String.format("At %s :", new Date().toString()));
@@ -724,7 +731,7 @@ public class MCP3008 implements Probe {
 						}
 						try {
 							logger.accept(new LogData()
-									.feed(LogData.FEEDS.HUM)
+									.feed(humFeed)
 									.value(humidity));
 						} catch (Exception ex) {
 							System.err.println(String.format("At %s :", new Date().toString()));

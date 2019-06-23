@@ -3,10 +3,12 @@ package loggers;
 public class LogData {
 	private static String AIR_TEMP = "air-temperature";
 	private static String HUMIDITY = "humidity";
+	private static String SOIL_HUMIDITY = "soil-humidity";
 
 	public enum FEEDS {
 		AIR(AIR_TEMP),
-		HUM(HUMIDITY);
+		HUM(HUMIDITY),
+		SOIL(SOIL_HUMIDITY);
 
 		private String value;
 
@@ -40,5 +42,14 @@ public class LogData {
 
 	public double value() {
 		return this.value;
+	}
+
+	public static FEEDS getFeedByName(String feedName, FEEDS defaultFeed) {
+		for (FEEDS feed : FEEDS.values()) {
+			if (feed.value().equals(feedName)) {
+				return feed;
+			}
+		}
+		return defaultFeed;
 	}
 }
