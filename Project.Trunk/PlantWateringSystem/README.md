@@ -48,8 +48,11 @@ With an Adafruit Bonnet, and a 5v pump (same power supply as the RPi).
 
 > _Note_: Notice the PowerBoost (500 or 1000) and the LiPo battery.
 > The power supply is powering the Raspberry Pi and the booster, that in turn powers the pump, through its LiPo battery when the relay in on.
-> The reason for that is that it is difficult (if even possible) to power the Raspberry Pi and the Pump from the same 5v source withou caution. 
+> The reason for that is that it is difficult (if even possible) to power the Raspberry Pi and the Pump from the same 5v source without caution. 
 > When the pump starts, this generates a voltage drop that makes the Raspberry Pi reboot...
+> Along the same lines, when the pump is primed, the power demand on start is higher than when the pump is not primed. In some (previous) configurations,
+> the system was working OK when the pump was not primed (like the first tests), but was failing (rebooting) when the pump was already primed, 
+> like during a subsequent watering.
 > In this configuration, the booster and its LiPo battery are acting as a buffer on the power supply line, and dissociate the pump and the Raspberry Pi.
 > I was not able to work around this problem with capacitors (this does not mean it is not possible)...
 
