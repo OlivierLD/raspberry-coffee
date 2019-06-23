@@ -75,8 +75,8 @@ With an Adafruit Bonnet, and a 5v pump (same power supply as the RPi).
 | ![proto](./docimg/card.box.jpg) | ![assembling](./docimg/assembling.jpg) |
 | 3D printed enclosure | Closed | 
 | ![one](./docimg/in.the.box.00.jpg) | ![two](./docimg/in.the.box.01.jpg) |
-| Good to go | | 
-| ![three](./docimg/in.the.box.02.jpg) | | 
+| Good to go | At work | 
+| ![three](./docimg/in.the.box.02.jpg) | ![at work](./docimg/at.work.jpg) | 
 
 #### June 2019: bonus
 If after watering, the humidity does not go up, that may mean that the tank is empty.
