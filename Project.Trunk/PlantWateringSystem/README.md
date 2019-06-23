@@ -1,9 +1,19 @@
 # WIP: Plant Watering System
 ## A real world project, hardware, software, 3D Printing
 
-TODO: BOM, stl files.
+#### BOM
+- Raspberry Pi Zero
+- Adafruit Bonnet
+- Sparkfun Soil Moisture Sensor
+- MCP3008 and its socket
+- Relay
+- Power Booster 1000c
+- Water Pump (2 versions, 12v, or 5v)
+- Water hoses, clamps, wires, etc.
 
-TODO Add a switch
+Early 3D files for the enclosure are in the [`3D`](./3D) directory.
+
+<!--TODO Add a switch?-->
 
 For the elaboration of the project, see [HISTORY.md](./HISTORY.md).
 
