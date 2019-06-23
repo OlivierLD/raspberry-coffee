@@ -13,6 +13,8 @@ import utils.StaticUtil;
 import utils.StringUtils;
 import utils.WeatherUtil;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -677,7 +679,22 @@ public class MCP3008 implements Probe {
 							Date stoppedWateringAt = new Date(lastWatering);
 							Date now = new Date();
 
-							String messContent = String.format("Watering started at %s (was %.02f%%), stopped at %s, humidity now (%s) is %.02f%%.",
+							String here = "This machine";
+							try {
+								InetAddress me = InetAddress.getLocalHost();
+								here = me.getHostName();
+							} catch (UnknownHostException ex) {
+								ex.printStackTrace();
+							}
+
+							String messContent = String.format("<i>From %s</i>" +
+											"" +
+											"<ul>" +
+											"<li>Watering started at %s (was %.02f%%)</li>" +
+											"<li>stopped at %s</li>" +
+											"<li>humidity now (%s) is %.02f%%</li>" +
+											"</ul>",
+									here,
 									lastCheck.toString(),
 									humBeforeWatering,
 									stoppedWateringAt.toString(),
