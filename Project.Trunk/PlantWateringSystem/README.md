@@ -1,5 +1,9 @@
 # WIP: Plant Watering System
-## A real world project, hardware _and_ software
+## A real world project, hardware, software, 3D Printing
+
+TODO: BOM, stl files.
+
+TODO Add a switch
 
 For the elaboration of the project, see [HISTORY.md](./HISTORY.md).
 
@@ -52,7 +56,19 @@ With an Adafruit Bonnet, and a 5v pump (same power supply as the RPi).
 
 | Bonnet top | Bonnet bottom |
 |:----------:|:-------------:|
-| ![top](./docimg/bonnet.top.jpg) | ![bottom](./docimg/bonnet.bottom.jpg) | 
+| ![top](./docimg/bonnet.top.jpg) | ![bottom](./docimg/bonnet.bottom.jpg) |
+| Card box prototype | Assembling |
+| ![proto](./docimg/card.box.jpg) | ![assembling](./docimg/assembling.jpg) |
+| 3D printed enclosure | Closed | 
+| ![one](./docimg/in.the.box.00.jpg) | ![two](./docimg/in.the.box.01.jpg) |
+| Good to go | | 
+| ![three](./docimg/in.the.box.02.jpg) | | 
+
+#### June 2019: bonus
+If after watering, the humidity does not go up, that may mean that the tank is empty.
+In that case, you have the possibility to send an email to a list of recipients, telling them to do something about it. 
+
+
 
 ### Flowchart
 
