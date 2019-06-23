@@ -112,8 +112,10 @@ or
 ```
 etc...
 
+#### Web UI
+![Web UI](./docimg/webindex.png)
+
 #### Ideas to move on...
 - A Web UI without external libraries (JQuery is great, but not required with ES6).
-- A gauge in the tank?
 
 ---
