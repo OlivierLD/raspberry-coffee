@@ -23,7 +23,7 @@ With the MCP3008 and the _SparkFun Soil Moisture Sensor_ and a peristaltic pump 
 
 ##### Working prototype
 - Calibration is required for the MCP3008 & Soil Moisture Sensor. The value returned by the MCP3008 is a value between
-0 and 1023, not necessarily reflecting the actual humudity.
+0 and 1023, not necessarily reflecting the actual humidity.
 
 ###### To keep an eye on
 - The size of the log file(s). Purge it from time to time if it is on.
@@ -46,11 +46,12 @@ With an Adafruit Bonnet, and a 5v pump (same power supply as the RPi).
 
 ![Wiring](./SparkFun.Bonnet_bb.png)
 
-> _Note_: Notice the PowerBoost (500) and the LiPo battery.
-> The power supply is powering the booster, that in turn powers the Raspberry Pi, through the its battery.
-> The reason for that is that it is difficult (if even possible) to power the Raspberry Pi and the Pump from the same 5v source. When the pump starts, this generates a voltage drop that makes the Raspberry Pi reboot...
-> In this configuration, the booster and its LiPo battery are acting as a buffer on the power supply line.
-> I was not able to work around this problem with capacitors (which does not mean it is not possible)...
+> _Note_: Notice the PowerBoost (500 or 1000) and the LiPo battery.
+> The power supply is powering the Raspberry Pi and the booster, that in turn powers the pump, through its LiPo battery when the relay in on.
+> The reason for that is that it is difficult (if even possible) to power the Raspberry Pi and the Pump from the same 5v source withou caution. 
+> When the pump starts, this generates a voltage drop that makes the Raspberry Pi reboot...
+> In this configuration, the booster and its LiPo battery are acting as a buffer on the power supply line, and dissociate the pump and the Raspberry Pi.
+> I was not able to work around this problem with capacitors (this does not mean it is not possible)...
 
 > _Note_: wires are shown on top of the Bonnet, they are actually _under_ it.
 
@@ -67,8 +68,6 @@ With an Adafruit Bonnet, and a 5v pump (same power supply as the RPi).
 #### June 2019: bonus
 If after watering, the humidity does not go up, that may mean that the tank is empty.
 In that case, you have the possibility to send an email to a list of recipients, telling them to do something about it. 
-
-
 
 ### Flowchart
 
