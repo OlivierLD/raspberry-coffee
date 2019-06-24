@@ -116,7 +116,7 @@ etc...
 
 #### Remark about the Soil Humidity Sensor
 As you would see, the Soil Humidity Sensor is not strictly measuring the soil humidity.
-With the way it is hooked on the MCP3008, it is actually measuring the soil's conductivity.
+With the way it is hooked on the `MCP3008`, it is actually measuring the soil's conductivity.
 
 You will need to calibrate it - by doing some tests - to establish the required relationship
 between the data read by the sensor and the actual humidity of the soil of you plant(s), to come
