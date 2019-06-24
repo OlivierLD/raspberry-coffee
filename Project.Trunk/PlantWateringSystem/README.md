@@ -5,7 +5,7 @@ We want to interface a Moisture/Humidity sensor with
 some kind or pump or valve to irrigate the plants in need.
 
 #### BOM
-- [Raspberry Pi Zero](https://www.adafruit.com/product/3400) with a (header)[https://www.adafruit.com/product/2822]
+- [Raspberry Pi Zero](https://www.adafruit.com/product/3400) with a [header](https://www.adafruit.com/product/2822)
 - [Adafruit Perma Proto Bonnet](https://www.adafruit.com/product/3203)
 - [Sparkfun Soil Moisture Sensor](https://www.sparkfun.com/products/13322)
 - [MCP3008](https://www.adafruit.com/product/856) and its [socket](https://www.adafruit.com/product/2203)
