@@ -10,13 +10,14 @@ some kind or pump or valve to irrigate the plants in need.
 - [Sparkfun Soil Moisture Sensor](https://www.sparkfun.com/products/13322)
 - [MCP3008](https://www.adafruit.com/product/856) and its [socket](https://www.adafruit.com/product/2203)
 - [Relay](https://www.amazon.com/WINGONEER-KY-019-Channel-Module-arduino/dp/B06XHJ2PBJ/ref=sr_1_8?keywords=relay+board&qid=1561387608&s=gateway&sr=8-8)
-- [Power Booster 1000c](https://www.adafruit.com/product/2465), [LiPo battery](https://www.adafruit.com/product/1781)
+- If you take the full 5V approach
+    - [Power Booster 1000c](https://www.adafruit.com/product/2465), [LiPo battery](https://www.adafruit.com/product/1781)
 - Water Pump (2 versions, [12v](https://www.adafruit.com/product/1150), or [5v](https://www.allelectronics.com/item/pmp-20/mini-water-pump/1.html))
 - [5V DC Adapter](https://www.adafruit.com/product/276)
     - If you take the 12V pump, a [12V DC Adapter](https://www.adafruit.com/product/798)
 - Water hoses, clamps, wires, etc.
 
-Early 3D files for the enclosure are in the [`3D`](./3D) directory.
+Early `stl` files for the 3D-printed enclosure are in the [`3D`](./3D) directory.
 
 <!--TODO Add a switch on the LiPo battery?-->
 
@@ -39,6 +40,9 @@ With the MCP3008 and the _SparkFun Soil Moisture Sensor_ and a peristaltic pump 
 
 ###### To keep an eye on
 - The size of the log file(s). Purge it from time to time if it is on.
+
+#### Wiring
+![2 power supplies](./SparkFunSoilMoisture_bb.png)
 
 ##### Next
 The above works, but it requires 2 power supplies
