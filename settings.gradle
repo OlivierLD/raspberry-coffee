@@ -45,6 +45,7 @@ include "WebComponents"
 include "HanoiTower"
 include "TensorFlow"
 include "Bluetooth"
+include "Joystick"
 // NMEA.mux.WebUI sub-projects
 include(':NMEA.mux.WebUI:full.server')
 include(':NMEA.mux.WebUI:minimal.mux')

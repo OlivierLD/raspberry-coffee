@@ -65,6 +65,7 @@ dependencies {
   compile project(':Project.Trunk:Deviation.Tool')
   compile project(':TensorFlow')
   compile project(':Bluetooth')
+  compile project(':Joystick')
   compile project(':JupyterNotebooks:deep.learning.crash.course')
 }
 
