@@ -1,4 +1,4 @@
-# WIP: Plant Watering System
+# Plant Watering System
 ## A real world project, hardware, software, 3D Printing
 
 We want to interface a Moisture/Humidity sensor with
@@ -15,7 +15,7 @@ some kind or pump or valve to irrigate the plants in need.
 - Water Pump (2 versions, [12v](https://www.adafruit.com/product/1150), or [5v](https://www.allelectronics.com/item/pmp-20/mini-water-pump/1.html))
 - [5V DC Adapter](https://www.adafruit.com/product/276)
     - If you take the 12V pump, a [12V DC Adapter](https://www.adafruit.com/product/798)
-- Water hoses, clamps, wires, etc.
+- Water hoses, clamps, wires, cable glands, etc.
 
 Early `stl` files for the 3D-printed enclosure are in the [`3D`](./3D) directory.
 
