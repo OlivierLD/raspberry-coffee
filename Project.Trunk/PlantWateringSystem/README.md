@@ -132,7 +132,7 @@ value given to the `--resume-after` parameter.
 #### Web UI
 ![Web UI](./docimg/webindex.png)
 
-#### Ideas to move on...
+#### Ideas to move on... 👣
 - A Web UI without external libraries (JQuery is great, but not required with ES6).
 
 ---
