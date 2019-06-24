@@ -114,6 +114,17 @@ or
 ```
 etc...
 
+#### Remark about the Soil Humidity Sensor
+As you would see, the Soil Humidity Sensor is not strictly measuring the soil humidity.
+With the way it is hooked on the MCP3008, it is actually measuring the soil's conductivity.
+
+You will need to calibrate it - by doing some tests - to establish the required relationship
+between the data read by the sensor and the actual humidity of the soil of you plant(s), to come
+up with the right threshold for the plant watering.
+
+The position of the watering hose, relative to the humidity sensor will also impact the
+value given to the `--resume-after` parameter. 
+
 #### Web UI
 ![Web UI](./docimg/webindex.png)
 
