@@ -1,4 +1,4 @@
-# Plant Watering System
+# Plant Watering System 🌿
 ## A real world project, hardware, software, 3D Printing
 
 We want to interface a Moisture/Humidity sensor with
