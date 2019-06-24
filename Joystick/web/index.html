@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="Pragma" content="no-cache, must-revalidate">
+	<title>Joystick and WebSockets</title>
+	<link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
+	<script type="text/javascript" src="js/ws.js"></script>
+	<style type="text/css">
+		.dot {
+			border-radius: 50%;
+			background: gray;
+			width: 40px;
+			height: 40px;
+		}
+		.selected-dot {
+			background: red;
+		}
+	</style>
+</head>
+<body>
+	<h1>Joystick WebSocket interface</h1>
+	<table>
+		<tr>
+			<td></td>
+			<td><div id="top" class="dot"></div></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td><div id="left" class="dot"></div></td>
+			<td><div id="center" class="dot selected-dot"></div></td>
+			<td><div id="right" class="dot"></div></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><div id="bottom" class="dot"></div></td>
+			<td></td>
+		</tr>
+	</table>
+</body>
+</html>

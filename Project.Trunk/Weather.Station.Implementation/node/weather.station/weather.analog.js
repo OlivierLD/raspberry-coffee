@@ -132,7 +132,7 @@ var averageDir = function (va) {
 };
 
 var MONTHS = [
-		"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
 var setValues = function (doc) {
@@ -189,7 +189,7 @@ var setValues = function (doc) {
 			if (animate) {
 				displayGUST.animate(gust);
 			} else {
-		    displayGUST.setValue(gust);
+				displayGUST.setValue(gust);
 			}
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? "\n" : "") + "Problem with TWS gust...");
