@@ -1,4 +1,4 @@
-## Using a Joystick
+## WIP: Using a Joystick
 
 ### Install the NodeJS server part
 From the directory where `package.json` is:
