@@ -21,6 +21,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dsdl.weather.station.wind.verbose=false"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dsdl.weather.station.rain.verbose=false"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wspeed.coeff=1"
+# -Dws.wdir.offset=0    - In degrees. Will be ADDED to the direction read from the device.
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wdir.offset=-20"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Ddebounce.time.millisec=30"
 #

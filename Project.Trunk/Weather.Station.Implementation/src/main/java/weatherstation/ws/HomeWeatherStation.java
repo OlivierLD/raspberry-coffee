@@ -47,6 +47,9 @@ import java.util.stream.Collectors;
  * Use -Ddata.logger=<LoggerClassName(s)> for logging
  *
  * LoggerClassName must implement the LoggerInterface
+ *
+ * -Dweather.station.verbose
+ * -Dshow.rain
  */
 public class HomeWeatherStation {
 
@@ -94,7 +97,7 @@ public class HomeWeatherStation {
 		int BUFFER_SIZE = 3_600; // Because we loop every second
 		List<Float> prateList = new ArrayList<>(BUFFER_SIZE);
 
-		while (go) {
+		while (go) { // Main loop
 			if ("true".equals(System.getProperty("weather.station.verbose", "false"))) {
 				System.out.println("-> While go...");
 			}
