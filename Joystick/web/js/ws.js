@@ -31,18 +31,39 @@ function initWS() {
 			//  console.log('onmessage:' + JSON.stringify(message.data));
 			let data = JSON.parse(message.data);
 			console.log("Received", data);
+			if (data.up === false && data.down === false && data.left === false && data.right === false) {
+				document.getElementById('center').classList.add('selected-dot')
+				document.getElementById('top').classList.remove('selected-dot')
+				document.getElementById('bottom').classList.remove('selected-dot')
+				document.getElementById('left').classList.remove('selected-dot')
+				document.getElementById('right').classList.remove('selected-dot')
+			} else {
+				document.getElementById('center').classList.remove('selected-dot')
+				if (data.up === true) {
+					document.getElementById('top').classList.add('selected-dot')
+				} else {
+					document.getElementById('top').classList.remove('selected-dot')
+				}
+				if (data.down === true) {
+					document.getElementById('bottom').classList.add('selected-dot')
+				} else {
+					document.getElementById('bottom').classList.remove('selected-dot')
+				}
+				if (data.right === true) {
+					document.getElementById('right').classList.add('selected-dot')
+				} else {
+					document.getElementById('right').classList.remove('selected-dot')
+				}
+				if (data.left === true) {
+					document.getElementById('left').classList.add('selected-dot')
+				} else {
+					document.getElementById('left').classList.remove('selected-dot')
+				}
+			}
 		};
 	} catch (err) {
 		console.log(">>> Connection:" + err);
 	}
-}
-
-
-function lpad(str, pad, len) {
-	while (str.length < len) {
-		str = pad + str;
-	}
-	return str;
 }
 
 (() => {
