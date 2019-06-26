@@ -1,6 +1,9 @@
 #
 # Reading a Joystick, 101.
 #
+import signal
+import sys
+
 JOYSTICK_INPUT_0 = "/dev/input/js0"
 JOYSTICK_INPUT_1 = "/dev/input/js1"
 SIMULATOR        = "sample.data.dat"
@@ -15,6 +18,14 @@ ba = []
 try:
     # joystick_input = open(JOYSTICK_INPUT_0, "rb")  # rb: read, binary
     joystick_input = open(SIMULATOR, "rb")  # rb: read, binary
+
+    def interrupt(signal, frame):
+        joystick_input.close()
+        print("\nCtrl+C >> Bye!")
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, interrupt)
+
     while True:
         # print("        Tonk!")
 
@@ -46,4 +57,4 @@ try:
 except (FileNotFoundError, EOFError):
     print("Done reading")
 
-print("Bye.")
+print("Bye...")
