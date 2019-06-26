@@ -4,7 +4,7 @@ import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 
 /**
- * Generate samp,le data file, like the joystick output.
+ * Generate sample binary data file, like the joystick output.
  * Useful when not on a Pi, or when there is no joystick.
  */
 public class Utilities {
