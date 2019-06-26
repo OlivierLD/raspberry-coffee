@@ -149,6 +149,6 @@ public class JoystickReaderV2 {
 			System.out.println(String.format("Joystick status: %s", status));
 		};
 
-		/* JoystickReaderV2 joystickReader = */ new JoystickReaderV2(JOYSTICK_INPUT_0, callback);
+		/* JoystickReaderV2 joystickReader = */ new JoystickReaderV2(JOYSTICK_INPUT_0, null); // callback);
 	}
 }

@@ -50,6 +50,10 @@ Requires a [WebSocket client](https://pypi.org/project/websocket_client/).
 ```
  $ pip install websocket_client
 ``` 
-More details to come here soon.
+ 
+First early version:
+```
+ $ python src/main/python/sample_implementation.py
+```
 
 ---
