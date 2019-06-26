@@ -62,6 +62,10 @@ public class JoystickReaderV2 {
 								.map(b -> String.format("%02X", (b & 0xFF)))
 								.collect(Collectors.joining(" "));
 
+						String binDump = byteStream.stream() // The 8 bytes
+								.map(b -> String.format("0b%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0'))
+								.collect(Collectors.joining(" "));
+
 						byte status = JOYSTICK_NONE;
 						if (byteStream.get(5) == (byte)0x80) {
 							if (byteStream.get(7) == 0x00) {
@@ -84,8 +88,9 @@ public class JoystickReaderV2 {
 							this.statusCallback.accept(status);
 						}
 						if (this.statusCallback == null || DEBUG) {
-							System.out.println(String.format("\t%s, [0x%02X 0x%02X] => 0b%s",
+							System.out.println(String.format("\t%s (%s), [0x%02X 0x%02X] => 0b%s",
 									dump,
+									binDump,
 									byteStream.get(5), byteStream.get(7), // 5 & 7
 									String.format("%4s",
 											Integer.toBinaryString(status & 0xFF)).replace(' ', '0')));
