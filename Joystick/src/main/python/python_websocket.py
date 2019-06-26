@@ -1,6 +1,5 @@
 import websocket
-from websocket import WebSocket
-
+import sys
 import constants
 
 
@@ -8,7 +7,14 @@ class WebSocketFeeder:
 
     def __init__(self, uri):
         self.uri = uri
-        self.ws: WebSocket = websocket.create_connection(uri)
+        self.ws = None
+        try:
+            self.ws = websocket.create_connection(uri)
+        except ConnectionRefusedError:
+            print("ConnectionRefusedError")
+            print("Make sure you've started the WebSocket server (here 'node joystick.server.js')")
+            print("Also check your proxy settings...")
+            sys.exit(1)
 
     def send(self, status):
         try:
