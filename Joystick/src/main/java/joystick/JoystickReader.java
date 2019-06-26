@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 /**
  * Warning: This is not serial port related!
- * Not Serial, ByteArrayInputStream
+ * Not Serial, DataInputStream
  *
  * RAW Reader, for discovery
  */

@@ -31,4 +31,10 @@ From the same directory (where `build.gradle` is):
 
 ![Bottom Right](./docimg/02.png)
 
+## Python version
+Requires a [WebSocket client](https://pypi.org/project/websocket_client/).
+```
+ $ pip install websocket_client
+``` 
+
 ---

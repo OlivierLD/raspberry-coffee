@@ -1,4 +1,6 @@
 /**
+ * Joystick and WebSockets
+ *
  * To debug:
  *   Prompt> set HTTP_PROXY=http://www-proxy.us.oracle.com:80 # if needed
  *   Prompt> npm install -g node-inspector
@@ -195,7 +197,7 @@ wsServer.on('request', function(request) {
 
   // user sent some message
   connection.on('message', function(message) {
-//  console.log(">>> DEBUG >>> Received " + JSON.stringify(message));
+    console.log(">>> DEBUG >>> Received " + JSON.stringify(message));
     if (message.type === 'utf8') { // accept only text
    // console.log((new Date()) + ' Received WS Message: ' + message.utf8Data);
    // console.log("Nb Clients:" + clients.length);

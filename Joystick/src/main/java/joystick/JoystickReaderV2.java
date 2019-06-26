@@ -8,12 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
  * Warning: This is not serial port related!
- * Not Serial, ByteArrayInputStream
+ * Not Serial, DataInputStream
  */
 public class JoystickReaderV2 {
 
