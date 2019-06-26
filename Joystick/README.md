@@ -26,7 +26,7 @@ From the same directory (where `build.gradle` is):
 <http://[raspberry.address]:9876/web/index.html>
 
 
-### Screehshots
+### Screenshots
 ![Center](./docimg/01.png)
 
 ![Bottom Right](./docimg/02.png)
