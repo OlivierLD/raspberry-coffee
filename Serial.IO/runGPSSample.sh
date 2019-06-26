@@ -2,7 +2,7 @@
 #
 # Read a GPS
 #
-CP=./build/libs/Serial.IO-1.0-all.jar
+CP=./build/libs/Serial.IO-1.0.jar
 CP=$CP:/usr/share/java/RXTXcomm.jar
 echo Make sure the GPS is connected through its USB socket.
 #

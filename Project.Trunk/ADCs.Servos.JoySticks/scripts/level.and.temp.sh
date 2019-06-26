@@ -9,7 +9,7 @@
 # Prompt> cd node; node level.server.js
 # GUI will be available at http://machine:9876/level.station/analog.html
 #
-CP=../build/libs/ADCs.Servos.Joysticks-1.0-all.jar
+CP=../build/libs/ADCs.Servos.Joysticks-1.0.jar
 #
 JAVA_OPTIONS=
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true"

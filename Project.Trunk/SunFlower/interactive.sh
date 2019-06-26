@@ -2,7 +2,7 @@
 #
 # Device heading from the terminal console
 #
-CP=./build/libs/SunFlower-1.0-all.jar
+CP=./build/libs/SunFlower-1.0.jar
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070 -Declination=14"
 JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true -Dastro.verbose=true"

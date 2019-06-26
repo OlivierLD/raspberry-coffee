@@ -1,5 +1,5 @@
 #!/bin/bash
-CP=./build/libs/Button.Reflex-1.0-all.jar
+CP=./build/libs/Button.Reflex-1.0.jar
 #
 JAVA_OPTIONS=
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true"

@@ -62,7 +62,7 @@ public class JoystickReaderV2 {
 								.collect(Collectors.joining(" "));
 
 						String binDump = byteStream.stream() // The 8 bytes
-								.map(b -> String.format("0b%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0'))
+								.map(b -> String.format("%8s", Integer.toBinaryString(b & 0xFF)).replace(' ', '0'))
 								.collect(Collectors.joining(" "));
 
 						byte status = JOYSTICK_NONE;
@@ -149,6 +149,6 @@ public class JoystickReaderV2 {
 			System.out.println(String.format("Joystick status: %s", status));
 		};
 
-		/* JoystickReaderV2 joystickReader = */ new JoystickReaderV2(JOYSTICK_INPUT_0, null); // callback);
+		/* JoystickReaderV2 joystickReader = */ new JoystickReaderV2(JOYSTICK_INPUT_0); // callback);
 	}
 }

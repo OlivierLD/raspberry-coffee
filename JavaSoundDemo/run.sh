@@ -1,5 +1,5 @@
 #!/bin/bash
-CP=./build/libs/JavaSoundDemo-1.0-all.jar
+CP=./build/libs/JavaSoundDemo-1.0.jar
 #
 java -cp $CP olivsound.First
 #

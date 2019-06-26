@@ -1,5 +1,5 @@
 #!/bin/bash
-CP=build/libs/http-tiny-server-1.0-all.jar
+CP=build/libs/http-tiny-server-1.0.jar
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose.dump=true"

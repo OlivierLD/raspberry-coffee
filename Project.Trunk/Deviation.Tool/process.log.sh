@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-CP=./build/libs/Deviation.Tool-1.0-all.jar
+CP=./build/libs/Deviation.Tool-1.0.jar
 #
 echo -e "Convert NMEA to JSON"
 echo -e "Usage is $0 [log.life [json.file [declination.to.use]]]"

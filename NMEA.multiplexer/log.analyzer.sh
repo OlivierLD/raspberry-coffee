@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-CP=./build/libs/NMEA.multiplexer-1.0-all.jar
+CP=./build/libs/NMEA.multiplexer-1.0.jar
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dspeed.unit=KN"
 #

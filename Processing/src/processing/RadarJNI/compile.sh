@@ -21,7 +21,7 @@ CP=$CP:application.macosx/Radar.app/Contents/Java/jogl-all.jar
 CP=$CP:application.macosx/Radar.app/Contents/Java/gluegen-rt-natives-macosx-universal.jar
 CP=$CP:application.macosx/Radar.app/Contents/Java/jogl-all-natives-macosx-universal.jar
 #
-CP=$CP:code/RasPiRadar-1.0-all.jar
+CP=$CP:code/RasPiRadar-1.0.jar
 #
 javac -d classes -cp $CP application.macosx/source/Radar.java
 #

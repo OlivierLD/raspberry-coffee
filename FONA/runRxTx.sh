@@ -3,7 +3,7 @@
 # Note: Serial ports on MacOS:
 # may require Prolific drivers: https://plugable.com/drivers/prolific/
 #
-CP=./build/libs/FONA-1.0-all.jar
+CP=./build/libs/FONA-1.0.jar
 #
 JAVA_OPTIONS=
 # Initial verbose
