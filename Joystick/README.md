@@ -1,4 +1,18 @@
 ## WIP: Using a Joystick
+The challenge here is to read one or more Joystick ports, and to render their positions
+in a web page.
+
+Reading the data emitted by the joystick can be done from Java or Python (and many other languages of course,
+we'll stick to those two here).
+
+Pushing those data to a web page can be achieved using WebSockets (which is a W3C standard).
+
+So, we will have 3 distinct components here:
+- A WebSocket server, implemented here on NodeJS
+- A Java or Python component, reading the joystick data, and pushing them onto the WebSocket server every time they change. The server will then re-broadcast those data to all the WebSocket clients connected to it
+- A Web page - WebSocket aware - that will receive the data re-broadcasted by the server. This web page can be served by the Node server implementing the WebSocket layer.
+
+In theory, we could have several web pages connected to the WebSocket server, even if this is unlikely to happen.
 
 ### Install the NodeJS server part
 From the directory where `package.json` is:
@@ -17,7 +31,7 @@ From the same directory (where `build.gradle` is):
  $ node joystick.server.js
 ```
 
-### Start the joystick driver
+### Start the Java joystick driver
 ```
  $ ./joystick.sh
 ```
@@ -36,5 +50,6 @@ Requires a [WebSocket client](https://pypi.org/project/websocket_client/).
 ```
  $ pip install websocket_client
 ``` 
+More details to come here soon.
 
 ---
