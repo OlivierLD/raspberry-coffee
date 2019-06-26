@@ -1,50 +1,53 @@
 #
 # Reading a Joystick, 101.
+# class JoystickReader
 #
-import signal
-import sys
-
 import constants
 
-ba = []
-try:
-    # joystick_input = open(constants.JOYSTICK_INPUT_0, "rb")  # rb: read, binary
-    joystick_input = open(constants.SIMULATOR, "rb")  # rb: read, binary
 
-    def interrupt(signal, frame):
-        joystick_input.close()
-        print("\nCtrl+C >> Bye!")
-        sys.exit(0)
+class JoystickReader:
 
-    signal.signal(signal.SIGINT, interrupt)
+    def __init__(self, name, callback):
+        self.name = name
+        self.callback = callback
+        self.keep_reading = True
 
-    while True:
-        # print("        Tonk!")
+    def stop_reading(self):
+        self.keep_reading = False
 
-        b = joystick_input.read(1)
-        if len(b) == 1:
-            print("read {0:08b}".format(b[0]), " 0x{:02X}".format(b[0]))
-            ba.append(b[0])
-        if len(ba) == 8:
-            dump = ''
-            for x in ba:
-                dump += "0x{:02X} ".format(x)
-            print(">> 8 bytes:", dump)
-            status = constants.JOYSTICK_NONE
-            if ba[5] == 0x80:
-                if ba[7] == 0x00:
-                    status = constants.JOYSTICK_DOWN
-                elif ba[7] == 0x01:
-                    status = constants.JOYSTICK_LEFT
-            elif ba[5] == 0x7F:
-                if ba[7] == 0x00:
-                    status = constants.JOYSTICK_UP
-                elif ba[7] == 0x01:
-                    status = constants.JOYSTICK_RIGHT
-            # TODO broadcast status (callback ?)
-            print("--- Status {0:08b}".format(status))
-            ba.clear()
-except (FileNotFoundError, EOFError):
-    print("Done reading")
-
-print("Bye...")
+    def start_reading(self):
+        ba = []
+        try:
+            joystick_input = open(self.name, "rb")  # rb: read, binary
+            while self.keep_reading:
+                # print("        Tonk!")
+                b = joystick_input.read(1)
+                if len(b) == 1:
+                    # print("read {0:08b}".format(b[0]), " 0x{:02X}".format(b[0]))
+                    ba.append(b[0])
+                if len(ba) == 8:
+                    dump = ''
+                    for x in ba:
+                        dump += "0x{:02X} ".format(x)
+                    # print(">> 8 bytes:", dump)
+                    status = constants.JOYSTICK_NONE
+                    if ba[5] == 0x80:
+                        if ba[7] == 0x00:
+                            status = constants.JOYSTICK_DOWN
+                        elif ba[7] == 0x01:
+                            status = constants.JOYSTICK_LEFT
+                    elif ba[5] == 0x7F:
+                        if ba[7] == 0x00:
+                            status = constants.JOYSTICK_UP
+                        elif ba[7] == 0x01:
+                            status = constants.JOYSTICK_RIGHT
+                    # broadcast status (callback ?)
+                    if self.callback is not None:
+                        self.callback(status)
+                    else:
+                        print("--- Status {0:08b}".format(status))
+                    ba.clear()
+            print("Releasing {}".format(self.name))
+            joystick_input.close()
+        except (FileNotFoundError, EOFError):
+            print("Done reading")
