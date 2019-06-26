@@ -16,7 +16,8 @@ def callback_example(status):
     wsf.send(status)
 
 
-js1 = jsr.JoystickReader(constants.SIMULATOR, callback_example)
+# js1 = jsr.JoystickReader(constants.SIMULATOR, callback_example)
+js1 = jsr.JoystickReader(constants.JOYSTICK_INPUT_0, callback_example)
 
 
 def interrupt(signal, frame):
