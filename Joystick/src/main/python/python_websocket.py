@@ -23,7 +23,11 @@ try:
     if b & constants.JOYSTICK_DOWN == constants.JOYSTICK_DOWN:
         down = True
 
-    json = '"left": {}, "right": {}, "up": {}, "down": {} '.format("true" if left else "false", "true" if right else "false", "true" if up else "false", "true" if down else "false")
+    json = '"left": {}, "right": {}, "up": {}, "down": {} '.format(
+        "true" if left else "false",
+        "true" if right else "false",
+        "true" if up else "false",
+        "true" if down else "false")
     json = "{" + json + "}"
     print("JSON:", json)
 
