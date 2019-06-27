@@ -55,9 +55,9 @@ strA = ''
 operation = ''
 strB = ''
 while keepLooping:
-    mess = "Composing Number A. Enter a image location, or +, -, * or / > "
+    mess = "Composing Number A ({}). Enter an image location, or +, -, * or / > ".format(strA)
     if len(operation) > 0:
-        mess = "Composing Number B. Enter a image location, or = > "
+        mess = "Composing Number B ({}). Enter an image location, or = > ".format(strB)
     userInput = input(mess)
     # TODO Use Camera Settings to take a real picture snapshot (on Mac)
     if userInput != '+' and userInput != '-' and userInput != '*' and userInput != '/' and userInput != '=':
@@ -95,7 +95,7 @@ while keepLooping:
                         strA + (" plus " if operation == '+'
                                 else " minus " if operation == '-'
                                 else " multiplied by " if operation == '*'
-                                else " divided by ") + strB + " equals" + str(result)])
+                                else " divided by ") + strB + " equals " + str(result)])
         else:
             operation = userInput
 
