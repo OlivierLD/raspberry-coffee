@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 tf_version = tf.__version__
-print("TensorFlow", tf_version)
+# print("TensorFlow", tf_version)
 tf_split = tf_version.split('.')
 # print(tf_split, len(tf_split))
 tf_major = int(tf_split[0])

@@ -2,6 +2,10 @@
 #
 # Handwritten figures recognition => classification
 # Mathplotlib doc at https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.html
+# also see https://www.tensorflow.org/api_docs/python/tf/keras and similar pages.
+#
+# For the figures images, see https://github.com/myleott/mnist_png
+# images are 28px x 28px big.
 #
 import tensorflow as tf
 import numpy as np
@@ -15,7 +19,7 @@ import tf_utils
 warnings.filterwarnings('ignore')
 
 tf_version = tf.__version__
-print("TensorFlow", tf_version)
+print("TensorFlow version", tf_version)
 print("Keras version", tf.keras.__version__)
 
 print("{} script arguments.".format(len(sys.argv)))
@@ -61,7 +65,7 @@ print("Train images shape:", x_train.shape, ", ", len(y_train), "labels")
 print("Test images shape:", x_test.shape, ", ", len(y_test), "labels")
 
 x_train, x_test = x_train / 255.0, x_test / 255.0
-print("Import completed, displaying a random set of data, close it to move on.")
+print("Import completed, displaying a random set of data, once displayed, close the image to move on.")
 
 if not loadOnly:
     start_idx = random.randint(0, len(x_train)) - 1
@@ -123,7 +127,7 @@ if not loadOnly:
     print("Model was saved")
 else:
     model = tf.keras.models.load_model('training.h5')
-    print("Model is now loaded")
+    print(">> Model is now loaded")
 #
 # See https://medium.com/tensorflow/hello-deep-learning-fashion-mnist-with-keras-50fcff8cd74a
 #
@@ -142,7 +146,9 @@ while keepLooping:
                 print("We said between 0 and {} and you said {}. Try again.".format(len(x_test) - 1, test_idx))
             else:
                 digit = x_test[test_idx]
-                print("Test index {} ...".format(test_idx))
+                print("Test index {} ... image of {} rows of {} bytes.".format(test_idx, len(digit), len(digit[0])))
+                # with open('digit_{}.png'.test_idx, 'wb') as f:
+                #     f.write(digit)
                 plt.imshow(digit, cmap=plt.cm.binary)
                 plt.show()
 
