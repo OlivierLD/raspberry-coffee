@@ -3,10 +3,12 @@
 # Handwritten figures recognition => classification
 # also see https://www.tensorflow.org/api_docs/python/tf/keras and similar pages.
 #
-# Enter digit images to compose number A
-# Enter operation (+, -, *, /)
-# Enter digit images to compose number B
-# Enter = to get the result
+# Synopsis:
+# - Enter digit images to compose number A
+# - Enter operation (+, -, *, /)
+# - Enter digit images to compose number B
+# - Enter = to get the result
+#
 # Model training.h5 must already exist
 #
 # Great doc at https://medium.com/@ashok.tankala/build-the-mnist-model-with-your-own-handwritten-digits-using-tensorflow-keras-and-python-f8ec9f871fd3
