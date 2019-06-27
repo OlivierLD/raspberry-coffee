@@ -639,6 +639,54 @@ Another example, try:
 $ python sample.06.py
 ```
 
+### Your own hand-written digits recognition
+Use a webcam, to take a snapshot of a notepad:
+
+![Setting](./img/settings.jpg)
+
+Then (on a Mac) use `Photo Booth` (possibly with `Camera Settings`) to take the actual snapshot.
+
+![6 5 3](./digits/six.five.three.jpg)
+
+Even a fuzzy picture like this should be OK.
+
+Separate the 3 digits the image contains, I use `GIMP`.
+
+| Six | Five | Three |
+|:---:|:----:|:-----:|
+| ![Six](./digits/six.png) | ![Five](./digits/five.png) | ![Three](./digits/three.png) |
+
+Then, use
+```buildoutcfg
+ $ ./sample.05.2.2.py
+ TensorFlow version 1.13.1
+Keras version 2.2.4-tf
+1 script arguments.
+2019-06-27 16:46:09.435934: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+----- D E V I C E S -----
+/job:localhost/replica:0/task:0/device:CPU:0
+-------------------------
+WARNING:tensorflow:From /Users/olediour/anaconda3/lib/python3.7/site-packages/tensorflow/python/ops/resource_variable_ops.py:435: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Colocations handled automatically by placer.
+WARNING:tensorflow:From /Users/olediour/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/layers/core.py:143: calling dropout (from tensorflow.python.ops.nn_ops) with keep_prob is deprecated and will be removed in a future version.
+Instructions for updating:
+Please use `rate` instead of `keep_prob`. Rate should be set to `rate = 1 - keep_prob`.
+WARNING:tensorflow:Sequential models without an `input_shape` passed to the first layer cannot reload their optimizer state. As a result, your model isstarting with a freshly initialized optimizer.
+>> Model is now loaded
+Type Q or q to exit the loop
+Enter the image file name (Q to quit) > digits/six.png
+Prediction: it looks like a  [6]  ( 100.0 % sure ), Nb predictions: 1
+Enter the image file name (Q to quit) > digits/five.png
+Prediction: it looks like a  [5]  ( 100.0 % sure ), Nb predictions: 1
+Enter the image file name (Q to quit) > digits/three.png
+Prediction: it looks like a  [3]  ( 100.0 % sure ), Nb predictions: 1
+Enter the image file name (Q to quit) > q
+Bye!
+ $
+
+```
+
 ### Conclusion
 Go ahead! Just do it!
 

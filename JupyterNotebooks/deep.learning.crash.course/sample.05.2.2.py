@@ -16,13 +16,11 @@ import tensorflow as tf
 import numpy as np
 import sys
 import warnings
-# Python Imaging Library.
-# If 'pip install PIL' fails, try 'pip install Pillow'
-from PIL import Image
 import subprocess as sp
 import platform
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import cv2
 
 import tf_utils
 
@@ -56,8 +54,13 @@ while keepLooping:
     # TODO Use Camera Settings to take a real picture snapshot (on Mac use Camera Settings & Photo Booth)
     if userInput != 'Q' and userInput != 'q':
         try:
-            img = Image.open(userInput).convert("L")
-            img = np.resize(img, (28, 28, 1))
+            img = cv2.imread(userInput, cv2.IMREAD_GRAYSCALE)
+            img = cv2.resize(255-img, (28, 28))
+
+            # Show the image, as it's been transformed
+            # plt.imshow(img, cmap=plt.cm.binary)
+            # plt.show()
+
             im2arr = np.array(img)
             im2arr = im2arr.reshape(1, 28, 28, 1)
             pred = model.predict_classes(im2arr)
@@ -65,7 +68,7 @@ while keepLooping:
             print("Prediction: it looks like a ", pred, " (", precision[0][np.argmax(precision)] * 100, "% sure ), Nb predictions:", len(precision))
             if platform.system() == 'Darwin':
                 sp.run(['say',
-                        'It looks like a ' + np.array2string(pred) + ' to me, I\'m {:2.0f}% sure'.format(precision[0][np.argmax(precision)] * 100)])
+                        'It looks like a ' + str(int(pred[0])) + ' to me, I\'m {:2.0f}% sure'.format(precision[0][np.argmax(precision)] * 100)])
             plt.imshow(mpimg.imread(userInput))
             # plt.imshow(img, cmap=plt.cm.binary)
             plt.show()
