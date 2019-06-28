@@ -53,6 +53,10 @@ while keepLooping:
     userInput = input("Enter the image file name (Q to quit) > ")
     if userInput != 'Q' and userInput != 'q':
         try:
+            """
+            This allows ANY image to be used, 
+            not only the ones the model has been trained with
+            """
             img = cv2.imread(userInput, cv2.IMREAD_GRAYSCALE)
             img = cv2.resize(255-img, (28, 28))
 

@@ -4,7 +4,10 @@ import constants
 
 
 class WebSocketFeeder:
-
+    """
+    Feed a WebSocket server.
+    Provide ws uri as parameter of the constructor (like 'ws://localhost:9876')
+    """
     def __init__(self, uri):
         self.uri = uri
         self.ws = None
@@ -17,6 +20,12 @@ class WebSocketFeeder:
             sys.exit(1)
 
     def send(self, status):
+        """
+        Will send a message corresponding to the joystick's status, as a String.
+
+        :param status: as provided to JoystickReader.start_reading's callback
+        :return: None
+        """
         try:
             up = False
             down = False
@@ -46,5 +55,10 @@ class WebSocketFeeder:
             print("Also check your proxy settings...")
 
     def close(self):
+        """
+        To invoke to release the WS resource.
+
+        :return: None
+        """
         print("Closing WS Feeder")
         self.ws.close()

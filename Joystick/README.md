@@ -51,9 +51,20 @@ Requires a [WebSocket client](https://pypi.org/project/websocket_client/).
  $ pip install websocket_client
 ``` 
  
-First early version:
+First early version (like Java, requires the Node server to be running):
 ```
  $ python src/main/python/sample_implementation.py
 ```
+
+Also try things like this
+```
+ $ python -i src/main/python/joystick_reader.py
+ >>> help(JoystickReader)
+ . . .
+ >>> execfile('src/main/python/sample_implementation.py')
+ . . .
+```
+
+The the same Web UI should respond, like above.
 
 ---

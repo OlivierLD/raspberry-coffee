@@ -63,6 +63,8 @@ while keepLooping:
             precision = model.predict(im2arr)
             print("Prediction: it looks like a ", pred, " (", precision[0][np.argmax(precision)] * 100, "% sure ), Nb predictions:", len(precision))
             if platform.system() == 'Darwin':
+                # for voice list, see https://gist.github.com/mculp/4b95752e25c456d425c6
+                # also, try 'say -v ?'
                 sp.run(['say',
                         'It looks like a ' + np.array2string(pred) + ' to me, I\'m {:2.0f}% sure'.format(precision[0][np.argmax(precision)] * 100)])
             plt.imshow(mpimg.imread(userInput))

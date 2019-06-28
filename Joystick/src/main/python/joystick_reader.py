@@ -6,16 +6,32 @@ import constants
 
 
 class JoystickReader:
+    """
+    Joystick Reader
+    Provide the port (like /dev/input/js0) as first parameter
+    The second parameter is a callback function (consumer) fed with a byte containing the status of the Joystick
 
+    The callback is invoked every time the joystick's status changes, once the 8 bytes are received from the port.
+    """
     def __init__(self, name, callback):
         self.name = name
         self.callback = callback
         self.keep_reading = True
 
     def stop_reading(self):
+        """
+        Stop reading the joystick port
+        :return: None
+        """
         self.keep_reading = False
 
     def start_reading(self):
+        """
+        Start reading the port.
+        Use stop_reading to stop reading.
+
+        :return: None
+        """
         ba = []
         try:
             joystick_input = open(self.name, "rb")  # rb: read, binary
