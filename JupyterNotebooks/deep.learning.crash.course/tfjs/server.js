@@ -17,20 +17,20 @@
 process.title = 'TinyNodeServer';
 
 // HTTP port
-var port = 8080;
+let port = 8080;
 
-var http = require('http');
-var fs = require('fs');
+let http = require('http');
+let fs = require('fs');
 
-var verbose = false;
+let verbose = false;
 
-var workDir = process.cwd();
+let workDir = process.cwd();
 
 console.log("----------------------------------------------------");
 console.log("Usage: node " + __filename + " --verbose:true|false --port:XXXX --wdir:path/to/working/dir");
 console.log("----------------------------------------------------");
 
-for (var i=0; i<process.argv.length; i++) {
+for (let i=0; i<process.argv.length; i++) {
 	console.log("arg #%d: %s", i, process.argv[i]);
 }
 
@@ -47,16 +47,16 @@ if (typeof String.prototype.endsWith !== 'function') {
 }
 
 if (process.argv.length > 2) {
-	for (var argc=2; argc<process.argv.length; argc++) {
+	for (let argc=2; argc<process.argv.length; argc++) {
 		if (process.argv[argc].startsWith("--verbose:")) {
-			var value = process.argv[argc].substring("--verbose:".length);
+			let value = process.argv[argc].substring("--verbose:".length);
 			if (value !== 'true' && value !== 'false') {
 				console.log("Invalid verbose value [%s]. Only 'true' and 'false' are supported.", value);
 				process.exit(1);
 			}
 			verbose = (value === 'true');
 		} else if (process.argv[argc].startsWith("--port:")) {
-			var value = process.argv[argc].substring("--port:".length);
+			let value = process.argv[argc].substring("--port:".length);
 			try {
 				port = parseInt(value);
 			} catch (err) {
@@ -64,7 +64,7 @@ if (process.argv.length > 2) {
 				process.exit(1);
 			}
 		} else if (process.argv[argc].startsWith("--wdir:")) {
-			var value = process.argv[argc].substring("--wdir:".length);
+			let value = process.argv[argc].substring("--wdir:".length);
 			try {
 				process.chdir(value);
 				workDir = process.cwd();
@@ -86,14 +86,14 @@ console.log("----------------------------------------------------");
  * Small Simple and Stupid little web server.
  * Very basic. Lighter than Express.
  */
-var handler = function(req, res) {
-	var respContent = "";
+function handler(req, res) {
+	let respContent = "";
 	if (verbose) {
 		console.log("Speaking HTTP from " + workDir); // was __dirname
 		console.log("Server received an HTTP Request:\n" + req.method + "\n" + req.url + "\n-------------");
 		console.log("ReqHeaders:" + JSON.stringify(req.headers, null, '\t'));
 		console.log('Request:' + req.url);
-		var prms = require('url').parse(req.url, true);
+		let prms = require('url').parse(req.url, true);
 		console.log(prms);
 		console.log("Search: [" + prms.search + "]");
 		console.log("-------------------------------");
@@ -105,7 +105,7 @@ var handler = function(req, res) {
 		}
 	} else if (req.url.startsWith("/")) { // Assuming static resource
 		if (req.method === "GET") {
-			var resource = req.url.substring("/".length);
+			let resource = req.url.substring("/".length);
 			if (resource.length === 0) {
 				console.log('Defaulting to index.html');
 				resource = 'index.html';
@@ -114,12 +114,12 @@ var handler = function(req, res) {
 				resource = resource.substring(0, resource.indexOf("?"));
 			}
 
-			var exist = fs.existsSync(workDir + '/' + resource);
+			let exist = fs.existsSync(workDir + '/' + resource);
 
 			if (exist === true && fs.lstatSync(workDir + '/' + resource).isDirectory()) {
 				// try adding index.html
 				console.log('Defaulting to index.html...');
-				var resourceBackup = resource;
+				let resourceBackup = resource;
 				resource += ((resource.endsWith("/") ? "" : "/") + "index.html");
 				exist = fs.existsSync(workDir + '/' + resource);
 				if (!exist) {
@@ -143,7 +143,7 @@ var handler = function(req, res) {
 						if (verbose) {
 							console.log("Read resource content:\n---------------\n" + data + "\n--------------");
 						}
-						var contentType = "text/plain"; // Default
+						let contentType = "text/plain"; // Default
 						if (resource.endsWith(".css") || resource.endsWith(".css.map")) {
 							contentType = "text/css";
 						} else if (resource.endsWith(".html")) {
@@ -203,21 +203,21 @@ var handler = function(req, res) {
 		res.writeHead(404, {'Content-Type': 'text/plain'});
 		res.end(); // respContent);
 	}
-}; // HTTP Handler
+} // HTTP Handler
 
 /**
  * Helper function for escaping input strings
  */
-var htmlEntities = function(str) {
+function htmlEntities(str) {
 	return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;')
 			.replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-};
+}
 
 /**
  * HTTP server
  */
 console.log((new Date()) + ": Starting server on port " + port);
-var server = http.createServer(handler);
+let server = http.createServer(handler);
 
 process.on('uncaughtException', function(err) {
 	if (err.errno === 'EADDRINUSE') {
@@ -229,8 +229,9 @@ process.on('uncaughtException', function(err) {
 });
 
 try {
-	server.listen(port, function () {
+	server.listen(port, () => {
 		console.log((new Date()) + ": Server is listening on port " + port);
+		console.log("Try http://localhost:" + port + "/ from your browser");
 	});
 } catch (err) {
 	console.log("There was an error:");
