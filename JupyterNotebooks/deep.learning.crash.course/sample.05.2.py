@@ -53,7 +53,6 @@ keepLooping = True
 print("Type Q or q to exit the loop")
 while keepLooping:
     userInput = input("Enter the image file name (Q to quit) > ")
-    # TODO Use Camera Settings to take a real picture snapshot (on Mac use Camera Settings & Photo Booth)
     if userInput != 'Q' and userInput != 'q':
         try:
             img = Image.open(userInput).convert("L")

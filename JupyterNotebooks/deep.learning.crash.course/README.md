@@ -667,12 +667,7 @@ Keras version 2.2.4-tf
 /job:localhost/replica:0/task:0/device:CPU:0
 -------------------------
 WARNING:tensorflow:From /Users/olediour/anaconda3/lib/python3.7/site-packages/tensorflow/python/ops/resource_variable_ops.py:435: colocate_with (from tensorflow.python.framework.ops) is deprecated and will be removed in a future version.
-Instructions for updating:
-Colocations handled automatically by placer.
-WARNING:tensorflow:From /Users/olediour/anaconda3/lib/python3.7/site-packages/tensorflow/python/keras/layers/core.py:143: calling dropout (from tensorflow.python.ops.nn_ops) with keep_prob is deprecated and will be removed in a future version.
-Instructions for updating:
-Please use `rate` instead of `keep_prob`. Rate should be set to `rate = 1 - keep_prob`.
-WARNING:tensorflow:Sequential models without an `input_shape` passed to the first layer cannot reload their optimizer state. As a result, your model isstarting with a freshly initialized optimizer.
+Blah blah blah . . .
 >> Model is now loaded
 Type Q or q to exit the loop
 Enter the image file name (Q to quit) > digits/six.png
