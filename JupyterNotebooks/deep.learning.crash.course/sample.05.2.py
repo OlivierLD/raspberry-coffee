@@ -49,8 +49,9 @@ try:
     print("Loading the model...")
     model = tf.keras.models.load_model('training.h5')
     print(">> Model is now loaded")
-except OSError:
+except OSError as ose:
     print('Model not found?')
+    print(ose)
     sys.exit(1)
 
 keepLooping = True

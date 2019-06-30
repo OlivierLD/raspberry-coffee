@@ -58,7 +58,7 @@
 	  worldMap.clear();
 	  worldMap.setMouseMoveCallback(mouseMoveCallback);
 	  worldMap.setMouseClickCallback(mouseClickCallback);
-	  worldMap.setPositionLabel("SF");
+	  worldMap.setPositionLabel("Pos");
 	  setTimeout(function () {
 		  worldMap.drawWorldMap();
 	  }, 1);
@@ -85,15 +85,22 @@
   	console.log("Mouse clicked on the map", obj);
 		let lat = obj.lat;
 		let lng = obj.lng;
-		document.getElementById('routing-pos-lat-sign-01').value = (lat < 0 ? "S" : "N");
-	  document.getElementById('routing-pos-lng-sign-01').value = (lng < 0 ? "W" : "E");
-	  lat = Math.abs(lat);
-	  lng = Math.abs(lng);
-	  document.getElementById('routing-pos-lat-deg-01').value = Math.floor(lat).toFixed(0);
-	  document.getElementById('routing-pos-lng-deg-01').value = Math.floor(lng).toFixed(0);
+		if (document.getElementById('rb-going-to').checked) {
+			document.getElementById('routing-pos-lat-sign-01').value = (lat < 0 ? "S" : "N");
+			document.getElementById('routing-pos-lng-sign-01').value = (lng < 0 ? "W" : "E");
+			lat = Math.abs(lat);
+			lng = Math.abs(lng);
+			document.getElementById('routing-pos-lat-deg-01').value = Math.floor(lat).toFixed(0);
+			document.getElementById('routing-pos-lng-deg-01').value = Math.floor(lng).toFixed(0);
 
-	  document.getElementById('routing-pos-lat-min-01').value = ((lat - Math.floor(lat)) * 60).toFixed(2);
-	  document.getElementById('routing-pos-lng-min-01').value = ((lng - Math.floor(lng)) * 60).toFixed(2);
+			document.getElementById('routing-pos-lat-min-01').value = ((lat - Math.floor(lat)) * 60).toFixed(2);
+			document.getElementById('routing-pos-lng-min-01').value = ((lng - Math.floor(lng)) * 60).toFixed(2);
+		} else {
+			position.lat = obj.lat;
+			position.lng = obj.lng;
+			worldMap.setUserPosition({ latitude: position.lat, longitude: position.lng });
+			redraw();
+		}
   };
 
   var mouseMoveCallback = function(obj) {
@@ -1110,6 +1117,11 @@
 		</div>
 
 	<!-- For tests, only -->
+		<div>
+			Click on map sets:
+			<input type="radio" name="from-to" value="position" id="rb-position" checked>Start from (position)
+			<input type="radio" name="from-to" value="going-to" id="rb-going-to">Going to
+		</div>
 		Going to: Latitude:
 		<select id="routing-pos-lat-sign-01">
 			<option value="N" selected>N</option>

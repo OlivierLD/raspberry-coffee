@@ -26,16 +26,82 @@ public class LCD1in3Sample {
 	private final static SimpleDateFormat SDF_MM = new SimpleDateFormat("mm");
 	private final static SimpleDateFormat SDF_SS = new SimpleDateFormat("ss");
 
+	private static boolean verbose = "true".equals(System.getProperty("waveshare.verbose", "false"));
+
 	private static boolean k1 = false, k2 = false, k3 = false, jUp = false, jDown = false, jRight = false, jLeft = false, jPressed = false;
-	private static Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> k1 = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> key1Consumer =(event) -> k1 = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> key1ConsumerVerbose =(event) -> {
+		key1Consumer.accept(event);
+		if (k1) {
+			System.out.println("Key 1 down");
+		} else {
+			System.out.println("Key 1 up");
+		}
+	};
 	private static Consumer<GpioPinDigitalStateChangeEvent> key2Consumer = (event) -> k2 = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> key2ConsumerVerbose =(event) -> {
+		key2Consumer.accept(event);
+		if (k2) {
+			System.out.println("Key 2 down");
+		} else {
+			System.out.println("Key 2 up");
+		}
+	};
 	private static Consumer<GpioPinDigitalStateChangeEvent> key3Consumer = (event) -> k3 = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> key3ConsumerVerbose =(event) -> {
+		key3Consumer.accept(event);
+		if (k3) {
+			System.out.println("Key 3 down");
+		} else {
+			System.out.println("Key 3 up");
+		}
+	};
 
 	private static Consumer<GpioPinDigitalStateChangeEvent> jUpConsumer = (event) -> jUp = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> jUpConsumerVerbose =(event) -> {
+		jUpConsumer.accept(event);
+		if (jUp) {
+			System.out.println("jUp down");
+		} else {
+			System.out.println("jUp up");
+		}
+	};
 	private static Consumer<GpioPinDigitalStateChangeEvent> jDownConsumer = (event) -> jDown = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> jDownConsumerVerbose =(event) -> {
+		jDownConsumer.accept(event);
+		if (jDown) {
+			System.out.println("jDown down");
+		} else {
+			System.out.println("jDown up");
+		}
+	};
 	private static Consumer<GpioPinDigitalStateChangeEvent> jLeftConsumer = (event) -> jLeft = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> jLeftConsumerVerbose =(event) -> {
+		jLeftConsumer.accept(event);
+		if (jLeft) {
+			System.out.println("jLeft down");
+		} else {
+			System.out.println("jLeft up");
+		}
+	};
 	private static Consumer<GpioPinDigitalStateChangeEvent> jRightConsumer = (event) -> jRight = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> jRightConsumerVerbose =(event) -> {
+		jRightConsumer.accept(event);
+		if (jRight) {
+			System.out.println("jRight down");
+		} else {
+			System.out.println("jRight up");
+		}
+	};
 	private static Consumer<GpioPinDigitalStateChangeEvent> jPressedConsumer = (event) -> jPressed = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> jPressedConsumerVerbose =(event) -> {
+		jPressedConsumer.accept(event);
+		if (jPressed) {
+			System.out.println("jPressed down");
+		} else {
+			System.out.println("jPressed up");
+		}
+	};
 
 	private static void keyListenerScreen(LCD1in3 lcd) {
 		lcd.GUIClear(LCD1in3.WHITE);
@@ -237,14 +303,14 @@ public class LCD1in3Sample {
 
 		LCD1in3 lcd = new LCD1in3(LCD1in3.HORIZONTAL, LCD1in3.BLUE);
 		// Key listeners
-		lcd.setKey1Consumer(key1Consumer);
-		lcd.setKey2Consumer(key2Consumer);
-		lcd.setKey3Consumer(key3Consumer);
-		lcd.setJUpConsumer(jUpConsumer);
-		lcd.setJDownConsumer(jDownConsumer);
-		lcd.setJLeftConsumer(jLeftConsumer);
-		lcd.setJRightConsumer(jRightConsumer);
-		lcd.setJPressedConsumer(jPressedConsumer);
+		lcd.setKey1Consumer(verbose ? key1ConsumerVerbose : key1Consumer);
+		lcd.setKey2Consumer(verbose ? key2ConsumerVerbose : key2Consumer);
+		lcd.setKey3Consumer(verbose ? key3ConsumerVerbose : key3Consumer);
+		lcd.setJUpConsumer(verbose ? jUpConsumerVerbose : jUpConsumer);
+		lcd.setJDownConsumer(verbose ? jDownConsumerVerbose : jDownConsumer);
+		lcd.setJLeftConsumer(verbose ? jLeftConsumerVerbose : jLeftConsumer);
+		lcd.setJRightConsumer(verbose ? jRightConsumerVerbose : jRightConsumer);
+		lcd.setJPressedConsumer(verbose ? jPressedConsumerVerbose : jPressedConsumer);
 
 		lcd.GUINewImage(LCD1in3.IMAGE_RGB, LCD1in3.LCD_WIDTH, LCD1in3.LCD_HEIGHT, rotation, LCD1in3.IMAGE_COLOR_POSITIVE);
 		lcd.GUIClear(LCD1in3.WHITE);

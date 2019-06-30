@@ -679,7 +679,6 @@ Prediction: it looks like a  [3]  ( 100.0 % sure ), Nb predictions: 1
 Enter the image file name (Q to quit) > q
 Bye!
  $
-
 ```
 
 ### Conclusion
