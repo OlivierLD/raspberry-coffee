@@ -609,6 +609,15 @@ Then open <http://localhost:8080/index.html> in your browser.
 ##### Preparing the data
 ![Preparing the Data](./img/prepare.data.jpg)
 
+###### Example: the image of an hand-written '8', 18x18 pixels
+ 
+| Image of an '8' | data of an '8' |
+|:---------------:|:--------------:|
+| ![8](./img/8.grey.png) | ![8](./img/8.num.png) |
+
+As a 1-dimension (18x18 = 324) array:
+![8](./img/8.v2.png) 
+
 ##### TODO
 - Java version
 
