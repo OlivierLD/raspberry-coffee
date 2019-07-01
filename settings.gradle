@@ -77,4 +77,5 @@ include "JupyterNotebooks:deep.learning.crash.course"
 include "oliv.scratch.pad:some.tests"
 include 'REST.clients'
 include 'springboot-sensors'
+include 'opencv'
 
