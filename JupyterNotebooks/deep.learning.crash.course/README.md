@@ -9,6 +9,7 @@ First, some links:
 - [TensorFlow](https://www.tensorflow.org/)
 - [TensorFlow.js](https://www.tensorflow.org/js) 
 - Deep Learning Crash Course [GitHub repo](https://github.com/DJCordhose/deep-learning-crash-course-notebooks/blob/master/README.md)
+- [Adam Geitgey](https://medium.com/@ageitgey)'s blog
 
 The last link above points to a github repo that includes _a lot_ of Jupyter Notebooks.
 Those are great tools, specially for courses and tutorials.
