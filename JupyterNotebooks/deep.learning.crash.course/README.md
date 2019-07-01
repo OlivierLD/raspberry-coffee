@@ -608,6 +608,10 @@ See the code in it for brute-force code review.
 Then open <http://localhost:8080/index.html> in your browser.
 
 ##### Preparing the data
+Data preparation is this process that reshapes the input data so they're easier to ingest by the network.
+This process applies to the training, testing, and must be the same for the runtime,  once the network is trained
+and the model available.
+
 ![Preparing the Data](./img/prepare.data.jpg)
 
 ###### Example: the image of an hand-written '8', 18x18 pixels
