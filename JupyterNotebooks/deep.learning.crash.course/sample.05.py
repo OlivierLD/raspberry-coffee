@@ -74,8 +74,10 @@ if not loadOnly:
     # fig = plt.figure(figsize=(10, 10))
     fig = plt.figure(figsize=(5, 6))
     fig.canvas.set_window_title("Examples and labels of the training dataset")
-    for i in range(49):
-        subplot = plt.subplot(7, 7, i + 1)
+    rows = 7
+    columns = 7
+    for i in range(rows * columns):
+        subplot = plt.subplot(rows, columns, i + 1)
         plt.xticks([])
         plt.yticks([])
         plt.grid(False)

@@ -44,20 +44,22 @@ test_images = test_images / 255.0
 
 fig = plt.figure(figsize=(10, 10))
 fig.canvas.set_window_title("25 first examples of the training dataset")
-for i in range(25):
-	plt.subplot(5, 5, i + 1)
-	plt.xticks([])
-	plt.yticks([])
-	plt.grid(False)
-	plt.imshow(train_images[i], cmap=plt.cm.binary)
-	plt.xlabel(class_names[train_labels[i]])
+rows = 5
+columns = 5
+for i in range(rows * columns):
+    plt.subplot(rows, columns, i + 1)
+    plt.xticks([])
+    plt.yticks([])
+    plt.grid(False)
+    plt.imshow(train_images[i], cmap=plt.cm.binary)
+    plt.xlabel(class_names[train_labels[i]])
 plt.show()
 
 print("Building model")
 model = keras.Sequential([
-	keras.layers.Flatten(input_shape=(28, 28)),
-	keras.layers.Dense(128, activation=tf.nn.relu),
-	keras.layers.Dense(10, activation=tf.nn.softmax)
+    keras.layers.Flatten(input_shape=(28, 28)),
+    keras.layers.Dense(128, activation=tf.nn.relu),
+    keras.layers.Dense(10, activation=tf.nn.softmax)
 ])
 
 print("Compiling model")
@@ -89,36 +91,37 @@ print("TestLabel[0]", test_labels[0])
 
 
 def plot_image(i, predictions_array, true_label, img):
-	predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]
-	plt.grid(False)
-	plt.xticks([])
-	plt.yticks([])
+    predictions_array, true_label, img = predictions_array[i], true_label[i], img[i]
+    plt.grid(False)
+    plt.xticks([])
+    plt.yticks([])
 
-	plt.imshow(img, cmap=plt.cm.binary)
+    plt.imshow(img, cmap=plt.cm.binary)
 
-	predicted_label = np.argmax(predictions_array)
-	if predicted_label == true_label:
-		color = 'blue'
-	else:
-		color = 'red'
+    predicted_label = np.argmax(predictions_array)
+    if predicted_label == true_label:
+        color = 'blue'
+    else:
+        color = 'red'
 
-	plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],
-										 100 * np.max(predictions_array),
-										 class_names[true_label]),
-			   color=color)
+    plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],
+                                         100 * np.max(predictions_array),
+                                         class_names[true_label]),
+               color=color)
 
 
 def plot_value_array(i, predictions_array, true_label):
-	predictions_array, true_label = predictions_array[i], true_label[i]
-	plt.grid(False)
-	plt.xticks([])
-	plt.yticks([])
-	thisplot = plt.bar(range(10), predictions_array, color="#777777")
-	plt.ylim([0, 1])
-	predicted_label = np.argmax(predictions_array)
+    predictions_array, true_label = predictions_array[i], true_label[i]
+    plt.grid(False)
+    plt.xticks([])
+    plt.yticks([])
+    this_plot = plt.bar(range(10), predictions_array, color="#777777")
+    plt.ylim([0, 1])
+    predicted_label = np.argmax(predictions_array)
 
-	thisplot[predicted_label].set_color('red')
-	thisplot[true_label].set_color('blue')
+    this_plot[predicted_label].set_color('red')
+    this_plot[true_label].set_color('blue')
+
 
 i = 0
 fig = plt.figure(figsize=(6, 3))
@@ -126,7 +129,7 @@ fig.canvas.set_window_title("Image[0] (prediction)")
 plt.subplot(1, 2, 1)
 plot_image(i, predictions, test_labels, test_images)
 plt.subplot(1, 2, 2)
-plot_value_array(i, predictions,  test_labels)
+plot_value_array(i, predictions, test_labels)
 plt.show()
 
 i = 12
@@ -135,21 +138,21 @@ fig.canvas.set_window_title("Image[12] (prediction)")
 plt.subplot(1, 2, 1)
 plot_image(i, predictions, test_labels, test_images)
 plt.subplot(1, 2, 2)
-plot_value_array(i, predictions,  test_labels)
+plot_value_array(i, predictions, test_labels)
 plt.show()
 
 # Plot the first X test images, their predicted label, and the true label
 # Color correct predictions in blue, incorrect predictions in red
 num_rows = 5
 num_cols = 3
-num_images = num_rows*num_cols
+num_images = num_rows * num_cols
 fig = plt.figure(figsize=(2 * 2 * num_cols, 2 * num_rows))
 fig.canvas.set_window_title("Summary (prediction, test dataset)")
 for i in range(num_images):
-	plt.subplot(num_rows, 2 * num_cols, 2 * i + 1)
-	plot_image(i, predictions, test_labels, test_images)
-	plt.subplot(num_rows, 2 * num_cols, 2 * i + 2)
-	plot_value_array(i, predictions, test_labels)
+    plt.subplot(num_rows, 2 * num_cols, 2 * i + 1)
+    plot_image(i, predictions, test_labels, test_images)
+    plt.subplot(num_rows, 2 * num_cols, 2 * i + 2)
+    plot_value_array(i, predictions, test_labels)
 plt.show()
 
 # Grab an image from the test dataset
@@ -158,7 +161,7 @@ img = test_images[0]
 print("Image Shape", img.shape)
 
 # Add the image to a batch where it's the only member.
-img = (np.expand_dims(img,0))
+img = (np.expand_dims(img, 0))
 
 print("Image Shape", img.shape)
 

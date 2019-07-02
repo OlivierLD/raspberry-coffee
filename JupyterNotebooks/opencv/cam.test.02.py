@@ -16,6 +16,7 @@ while True:
     cv2.imshow('Video Test', frame)
     # Wait for escape key to exit
     if cv2.waitKey(1) == 27:
+        cv2.imwrite('./snap.snap.jpg', frame)
         break  # Exit loop
 
 print('Done!')
