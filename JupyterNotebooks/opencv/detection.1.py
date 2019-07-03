@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
-import sys
+#
+# Hough Lines Probabilistic
+#
 import time
 import cv2
 import numpy as np
-import os
 
 Kernel_size = 15
 low_threshold = 40
@@ -16,11 +16,17 @@ minLineLength = 10
 maxLineGap = 1
 
 # Initialize camera
-video_capture = cv2.VideoCapture(0)
+camera = cv2.VideoCapture(0)
+
+width  = 640
+height = 480
+camera.set(3, width)
+camera.set(4, height)
+
 
 while True:
     # CAPTURE FRAME-BY-FRAME
-    ret, frame = video_capture.read()
+    ret, frame = camera.read()
     time.sleep(0.1)
     # Convert to Grayscale
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -33,7 +39,7 @@ while True:
     # Bigger high_threshold values will provoque to find less edges.
     # Canny recommended ratio upper:lower  between 2:1 or 3:1
     edged = cv2.Canny(blurred, low_threshold, high_threshold)
-    # Perform hough lines probalistic transform
+    # Perform Hough lines probabilistic transform
     lines = cv2.HoughLinesP(edged, rho, theta, threshold, minLineLength, maxLineGap)
 
     # Draw circles in the center of the picture
@@ -65,5 +71,5 @@ while True:
 
 # When everything is done, release the capture
 
-video_capture.release()
+camera.release()
 cv2.destroyAllWindows()

@@ -67,7 +67,8 @@ while True:
         edged = cv2.Canny(blurred, low_threshold, high_threshold)
     else:
         edged = cv2.Canny(gray, low_threshold, high_threshold)
-    # Perform Hough lines probalistic transform
+    # Perform Hough lines probabilistic transform
+
     lines = cv2.HoughLinesP(edged, rho, theta, threshold, minLineLength, maxLineGap)
 
     # Draw circles in the center of the picture

@@ -21,7 +21,11 @@ With image size setting (width & height).
 
 ### `cam.test.06.py`, Color detection, Act 2
 
-### `line.detection.py`, getting started
+### `detection.1.py`, Hough algorithms, getting started
 
-### `line.detection.2.py`, WIP
+### `detection.2.py`, Hough algorithms, WIP
+
+### `detection.3.py`, Hough algorithms, Non Probabilistic
+
+### `detection.4.py`, Hough algorithms, Circle Detection
 
