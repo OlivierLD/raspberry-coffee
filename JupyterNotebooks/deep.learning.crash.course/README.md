@@ -157,6 +157,10 @@ def evaluate_risk(age, speed, miles_per_year):
 ```
 See in this [Java Notebook](./NeuralNetworks.ipynb#A-"Classical"-way-to-program-a-rule), there is a Java implementation of such a rule.
 
+Check out this [Blockly](https://blockly-demo.appspot.com/static/demos/code/index.html#gubz6f) live code.
+
+![Blockly](./img/Blockly.png)
+
 If we plot this on the diagram (red-yellow-green), we have:
 
 ![Plot](./img/rules.plot.png)
