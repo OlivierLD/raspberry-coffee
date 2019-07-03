@@ -2,6 +2,8 @@
 # Adapted from https://github.com/abidrahmank/OpenCV2-Python-Tutorials/blob/master/source/py_tutorials/py_ml/py_knn/py_knn_opencv/py_knn_opencv.rst
 # OCR, letters
 #
+# Using OpenCV ML capabilities.
+#
 import cv2
 import numpy as np
 # import matplotlib.pyplot as plt

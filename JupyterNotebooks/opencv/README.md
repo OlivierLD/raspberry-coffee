@@ -4,6 +4,18 @@
 - [OpenCV Python tutorials](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_tutorials.html).
 - [More OpenCV, with samples](https://github.com/kipr/opencv)
 
+For help on OpenCV:
+```buildoutcfg
+$ python
+Python 3.7.0 (default, Jun 28 2018, 07:39:16) 
+...
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import cv2
+>>> help(cv2)
+
+>>> 
+```
+
 ### `cam.test.01.py`, Basics. Take a snapshot and save it.
 
 ### `cam.test.02.py`, Video test.
@@ -29,3 +41,6 @@ With image size setting (width & height).
 
 ### `detection.4.py`, Hough algorithms, Circle Detection
 
+---
+
+Also check [this](https://towardsdatascience.com/object-detection-with-10-lines-of-code-d6cb4d86f606) out..., Object detection.
