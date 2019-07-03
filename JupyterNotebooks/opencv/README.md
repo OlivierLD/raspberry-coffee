@@ -2,6 +2,7 @@
 > samples in 3 languages: C++, Java, Python.
 
 - [OpenCV Python tutorials](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_tutorials.html).
+- [More OpenCV, with samples](https://github.com/kipr/opencv)
 
 ### `cam.test.01.py`, Basics. Take a snapshot and save it.
 

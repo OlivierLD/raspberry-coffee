@@ -1,6 +1,7 @@
 import websocket
 import sys
 import constants
+import json
 
 
 class WebSocketFeeder:
@@ -41,14 +42,14 @@ class WebSocketFeeder:
             if status & constants.JOYSTICK_DOWN == constants.JOYSTICK_DOWN:
                 down = True
 
-            json = '"left": {}, "right": {}, "up": {}, "down": {} '.format(
-                "true" if left else "false",
-                "true" if right else "false",
-                "true" if up else "false",
-                "true" if down else "false")
-            json = "{" + json + "}"
+            json_obj = {
+                "left": left,
+                "right": right,
+                "up": up,
+                "down": down
+            }
             # print("JSON:", json)
-            self.ws.send(json)
+            self.ws.send(json.dumps(json_obj))
         except:
             print("Argh!")
             print("Make sure you've started the WebSocket server (here 'node joystick.server.js')")
