@@ -4,6 +4,9 @@
 
 <https://opencv-java-tutorials.readthedocs.io/en/latest/index.html>
 
+> Great resource [here](https://docs.opencv.org/master/d9/df8/tutorial_root.html),
+> samples in 3 languages: C++, Java, Python.
+
 Java stuff:
 ```
 ll /usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4
