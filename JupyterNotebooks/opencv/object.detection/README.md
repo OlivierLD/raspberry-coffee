@@ -14,7 +14,7 @@ pip3 install https://github.com/OlafenwaMoses/ImageAI/releases/download/2.0.2/im
 
 Then
 ```buildoutcfg
- python FirstDetection.py
+ python FirstDetection.py [/Users/olediour/repos/raspberry-coffee/TensorFlow/img/zebra.jpeg]
 ```
 ... and check `imagenew.jpg`.
 
