@@ -3,3 +3,4 @@
 - VMG ? Ok.
 - Use Web-Components for the Web UIs.
 - Get rid of the JQuery dependencies, use ES6 Promises
+- `runner.html` and `logMgmt.html` available in the standard

@@ -1,4 +1,4 @@
-This example shows how to extend the `NavServer`.
+This example shows how to _**extend**_  the `NavServer`.
 
 It shows how to add features like push-buttons, and take ownership of a screen (Nokia, SSD1306...)
 
@@ -18,6 +18,8 @@ This is built just like the other examples in this module, just run
  ```
  and follow the instructions in the console.
  
- ---
+---
  
- More to come. Diagrams, screenshots, pictures.
+More to come. Diagrams, screenshots, pictures.
+
+See [here](../Project.Trunk/REST.clients/TCP.Watch.01/README.md).
