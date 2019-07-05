@@ -2,6 +2,9 @@
 #
 # Build a Minimal NMEA Multiplexer.
 #
+# Add testing tool for the GPS
+cp ../../NMEA.multiplexer/nmea.test.sh
+#
 mkdir web
 cp ../../NMEA.multiplexer/web/index.min.html web/index.html
 cp ../../NMEA.multiplexer/web/admin.html web/
