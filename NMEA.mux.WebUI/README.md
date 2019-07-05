@@ -109,7 +109,7 @@ This project directory is a play ground, again, it is here for **you** to _compo
 
 Means not **me**. 🤓
 
-## Examples
+## Examples (for inspiration)
 > Note: The Raspberry Pi (pretty much all models) can host the navigation server, along with its REST/HTTP companion,
 > without problem.
 > One possibly challenging thing though, would be to run the Web GUI on the Graphical Desktop.
