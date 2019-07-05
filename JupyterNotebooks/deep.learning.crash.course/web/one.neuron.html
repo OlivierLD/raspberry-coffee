@@ -9,6 +9,26 @@
 
 <body>
   <h1>One Neuron</h1>
+	<!--
+	--cell-radius: 55px;
+	--cell-font-size: 3em;
+	--cell-width: 120px;
+	-->
+	<div>
+		Cell Radius
+		<input type="range" value="55" min="10" max="200" style="width: 80%;" oninput="setRadius(this); radius01.value = (this.value + 'px');" />
+		<output name="radius" id="radius01">55px</output>
+	</div>
+	<div>
+		Cell Size
+		<input type="range" value="120" min="10" max="200" style="width: 80%;" oninput="setCellSize(this); cellsize01.value = (this.value + 'px');" />
+		<output name="cellsize" id="cellsize01">120px</output>
+	</div>
+	<div>
+		Font size
+		<input type="range" value="3" min="1" max="10" step="0.1" style="width: 80%;" oninput="setFontSize(this); fontsize01.value = (this.value + 'em');" />
+		<output name="fontsize" id="fontsize01">3em</output>
+	</div>
 	<div class="neuron-frame">
 		<div class="neuron-input"> <!-- Values -->
 			<div id="input-one" class="neuron-input-cell neuron-cell">8.5</div>
@@ -44,6 +64,21 @@ Modify weights and bias to see the result.
 
 		let result = output + bias;
 		document.getElementById("result").innerText = result.toFixed(2);
+	}
+
+	function setRadius(range) {
+		var v = range.value;
+		document.documentElement.style.setProperty("--cell-radius", v + "px");
+	}
+
+	function setCellSize(range) {
+		var v = range.value;
+		document.documentElement.style.setProperty("--cell-width", v + "px");
+	}
+
+	function setFontSize(range) {
+		var v = range.value;
+		document.documentElement.style.setProperty("--cell-font-size", v + "em");
 	}
 
 	(() => {
