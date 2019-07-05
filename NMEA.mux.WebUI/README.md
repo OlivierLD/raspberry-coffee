@@ -417,6 +417,16 @@ Distortion of the reflected screen can be controlled in the CSS Stylesheet, by a
 
 > Note: Try on a Raspberry Pi 3B+, the client part (running in the browser) is a bit demanding...
 
+### For logged data
+See in the `NMEA.multiplexer` project
+- `log.analyzer.sh`
+- `log.shrinker.sh`
+- `log.to.kml.sh`
+- `log.to.gps.sh`
+
+In the `NMEA.mux.WebUI` project, `logged` folder
+- `concat.sh`
+
 ---
 
 ... More to come
