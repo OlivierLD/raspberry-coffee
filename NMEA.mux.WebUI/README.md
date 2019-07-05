@@ -428,6 +428,7 @@ In the `NMEA.mux.WebUI` project, `logged` folder
 - `concat.sh`
 
 ## TODO REST clients in other projects
+<https://github.com/OlivierLD/raspberry-coffee/blob/master/Project.Trunk/REST.clients/TCP.Watch.01/README.md>
 
 ---
 
