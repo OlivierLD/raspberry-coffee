@@ -31,7 +31,7 @@ be served from a _**single archive**_, as this feature is available from the HTT
 > We want to footprint of all this to be as minimal sa possible. We will *not* have to clone
 > the git repo on the destination machine, many of its components might not be required.
 
-## Close to production
+## Close to "production"
 It will not require the `git` repository to be cloned on the machine the server runs on.
 
 We will:
