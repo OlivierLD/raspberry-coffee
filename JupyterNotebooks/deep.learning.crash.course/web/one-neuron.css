@@ -1,0 +1,46 @@
+:root {
+	--cell-radius: 55px;
+	--cell-font-size: 3em;
+	--cell-width: 120px;
+}
+
+.neuron-frame {
+	display: grid;
+	justify-self: start;
+	grid-template-columns: var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width);
+	grid-template-rows: auto;
+	justify-items: center;
+	grid-gap: 3px;
+	align-items: center;
+	padding: 0px;
+}
+
+.neuron-input {
+	display: grid;
+	grid-template-columns: var(--cell-width);
+	grid-template-rows: auto;
+	justify-items: center;
+	grid-gap: 3px;
+	align-items: center;
+}
+
+.neuron-input-cell {
+	width: calc(var(--cell-radius) * 2);
+	height: calc(var(--cell-radius) * 2);
+	display: flex;
+	font-size: var(--cell-font-size);
+	justify-content: center;
+	align-items: center;
+}
+
+.neuron-input-field {
+	font-size: calc(var(--cell-font-size) / 4);
+}
+
+.neuron-cell {
+	border: 4px solid gray;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+}
+

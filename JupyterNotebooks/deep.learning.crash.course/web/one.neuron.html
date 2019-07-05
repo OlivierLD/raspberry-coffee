@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>One Neuron</title>
+	<link rel="stylesheet" href="./stylesheet.css"/>
+	<link rel="stylesheet" href="./one-neuron.css"/>
+</head>
+
+<body>
+  <h1>One Neuron</h1>
+	<div class="neuron-frame">
+		<div class="neuron-input"> <!-- Values -->
+			<div id="input-one" class="neuron-input-cell neuron-cell">8.5</div>
+			<div id="input-two" class="neuron-input-cell neuron-cell">0.65</div>
+			<div id="input-three" class="neuron-input-cell neuron-cell">1.2</div>
+		</div>
+		<div class="neuron-input"> <!-- Weights -->
+			<div class="neuron-input-cell"><input class="neuron-input-field" title="Weight" id="w-1" type="number" step="0.1" min="-1" max="1" value="0.1" onchange="recompute();"></div>
+			<div class="neuron-input-cell"><input class="neuron-input-field" title="Weight" id="w-2" type="number" step="0.1" min="-1" max="1" value="0.2" onchange="recompute();"></div>
+			<div class="neuron-input-cell"><input class="neuron-input-field" title="Weight" id="w-3" type="number" step="0.1" min="-1" max="1" value="0.0" onchange="recompute();"></div>
+		</div>
+		<div id="output" class="neuron-input-cell neuron-cell">Output</div>
+		<div class="neuron-input-cell"><input class="neuron-input-field" title="Bias" id="bias" type="number" step="0.01" min="-2" max="2" value="0.0" onchange="recompute();"></div>
+		<div id="result" class="neuron-input-cell neuron-cell">Result</div>
+	</div>
+<hr/>
+Modify weights and bias to see the result.
+</body>
+<script type="text/javascript">
+	function recompute() {
+		let v1 = parseFloat(document.getElementById("input-one").innerText);
+		let v2 = parseFloat(document.getElementById("input-two").innerText);
+		let v3 = parseFloat(document.getElementById("input-three").innerText);
+
+		let w1 = parseFloat(document.getElementById("w-1").value);
+		let w2 = parseFloat(document.getElementById("w-2").value);
+		let w3 = parseFloat(document.getElementById("w-3").value);
+
+		let bias = parseFloat(document.getElementById("bias").value);
+
+		let output = (v1 * w1) + (v2 * w2) + (v3 * w3);
+		document.getElementById("output").innerText = output.toFixed(2);
+
+		let result = output + bias;
+		document.getElementById("result").innerText = result.toFixed(2);
+	}
+
+	(() => {
+		recompute();
+	})();
+</script>
+</html>
