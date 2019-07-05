@@ -145,6 +145,11 @@ All features: NMEA multiplexer, Web Interface, Celestial Computer, Tides, Almana
  $ cd minimal.mux
  $ ./builder.sh
 ```
+See in the `builder.sh` how web resources are copied, and from where.
+Then look into `to.prod.sh` how it launches a Gradle build, and in the corresponding `build.gradle`
+that it only depends on `NMEA.multiplexer`.
+
+TODO Screenshots of the settings (hardware).
 
 ### Full Nav Server, extended 
 all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
