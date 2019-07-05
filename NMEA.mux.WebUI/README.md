@@ -427,6 +427,8 @@ See in the `NMEA.multiplexer` project
 In the `NMEA.mux.WebUI` project, `logged` folder
 - `concat.sh`
 
+## TODO REST clients in other projects
+
 ---
 
 ... More to come
