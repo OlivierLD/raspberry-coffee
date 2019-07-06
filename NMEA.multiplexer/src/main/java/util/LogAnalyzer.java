@@ -4,6 +4,7 @@ import calc.GeomUtil;
 import nmea.parser.GeoPos;
 import nmea.parser.RMC;
 import nmea.parser.StringParsers;
+import util.swing.SwingFrame;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,6 +13,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 
 import static nmea.parser.StringParsers.GGA_ALT_IDX;
 
@@ -95,6 +97,7 @@ public class LogAnalyzer {
 		if (args.length == 0) {
 			throw new IllegalArgumentException("Please provide the name of the file to analyze as first parameter");
 		}
+		List<GeoPos> positions = new ArrayList<>();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(args[0]));
 			// Accumulators and others
@@ -132,6 +135,7 @@ public class LogAnalyzer {
 								}
 								GeoPos gp = rmc.getGp();
 								if (gp != null) {
+									positions.add(gp);
 									minLat = Math.min(minLat, gp.lat);
 									maxLat = Math.max(maxLat, gp.lat);
 									minLng = Math.min(minLng, gp.lng);
@@ -180,6 +184,11 @@ public class LogAnalyzer {
 			System.out.println(String.format("Top-Left    :%s", new GeoPos(maxLat, minLng).toString()));
 			System.out.println(String.format("Bottom-Right:%s", new GeoPos(minLat, maxLng).toString()));
 
+			// A Map on a canvas?
+			SwingFrame frame = new SwingFrame(positions);
+			frame.setVisible(true);
+
+			frame.doYourJob();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}

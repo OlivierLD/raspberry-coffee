@@ -102,6 +102,7 @@ public class NMEAtoKML {
 			double minAlt = Double.MAX_VALUE, maxAlt = -Double.MAX_VALUE;
 			long nbRec = 0L, totalNbRec = 0L;
 			Date start = null;
+			GeoPos startPos = null;
 			Date arrival = null;
 			String line = "";
 			double alt = -Double.MAX_VALUE;
@@ -129,7 +130,9 @@ public class NMEAtoKML {
 								}
 								GeoPos gp = rmc.getGp();
 								if (gp != null) {
-
+									if (startPos == null) {
+										startPos = gp;
+									}
 									String coordinates = String.format("%f,%f,%f", gp.lng, gp.lat, (alt != -Double.MAX_VALUE ? alt : 0d));
 									bw.write(coordinates + "\n");
 
@@ -176,8 +179,8 @@ public class NMEAtoKML {
 			bw.close();
 
 			// Display summary
-			System.out.println(String.format("Started %s", SDF.format(start)));
-			System.out.println(String.format("Arrived %s", SDF.format(arrival)));
+			System.out.println(String.format("Started %s from %s", SDF.format(start), startPos.toString()));
+			System.out.println(String.format("Arrived %s at %s", SDF.format(arrival), previousPos.toString()));
 			System.out.println(String.format("%s record(s) out of %s. Total distance: %.03f km, in %s. Avg speed:%.03f km/h",
 					NumberFormat.getInstance().format(nbRec),
 					NumberFormat.getInstance().format(totalNbRec),
