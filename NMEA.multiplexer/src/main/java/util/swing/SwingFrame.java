@@ -1,24 +1,40 @@
 package util.swing;
 
-import nmea.parser.GeoPos;
+import util.LogAnalyzer;
 
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * A Canvas & Frame, in Swing.
  */
 public class SwingFrame extends JFrame {
-	private SwingFrame instance = this;
 	private SwingPanel swingPanel;
 
-	private List<GeoPos> positions = null;
+	private List<LogAnalyzer.DatedPosition> positions = null;
 
-	public SwingFrame(List<GeoPos> positions) {
+	private JSlider fromSlider = null;
+	private JSlider toSlider = null;
+	private final int MAX_SLIDER = 1_000;
+	private JCheckBox allAtOnce = null;
+
+	public SwingFrame(List<LogAnalyzer.DatedPosition> positions) {
 		this.positions = positions;
 		initComponents();
 		this.setSize(new Dimension(400, 400));
@@ -35,8 +51,6 @@ public class SwingFrame extends JFrame {
 		}
 		this.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
 		this.setVisible(true);
-
-		final SwingFrame instance = this;
 	}
 
 	/**
@@ -47,31 +61,179 @@ public class SwingFrame extends JFrame {
 		swingPanel = new SwingPanel();
 		swingPanel.setPointColor(Color.RED);
 
-		this.addWindowListener(new java.awt.event.WindowAdapter() {
+		this.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(java.awt.event.WindowEvent evt) {
+				System.out.println("Bye!");
 				exitForm(evt);
 			}
 		});
 		this.add(swingPanel, BorderLayout.CENTER);
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setLayout(new GridBagLayout());
+
+		// TODO Populate bottom panel, button (zoom in and out, execute), sliders (from, to), etc
+		JLabel fromLabel = new JLabel("From");
+		fromSlider = new JSlider(JSlider.HORIZONTAL, 0, MAX_SLIDER, 0);
+		fromSlider.setEnabled(true);
+		fromSlider.addChangeListener(changeEvent -> {
+//			System.out.println("From listener" + changeEvent);
+//			fromSlider.setToolTipText(String.format("%d", fromSlider.getValue()));
+			setTooltipText(fromSlider);
+			manageSliders(FROM);
+		});
+		setTooltipText(fromSlider);
+
+		JLabel toLabel = new JLabel("To");
+		toSlider = new JSlider(JSlider.HORIZONTAL, 0, MAX_SLIDER, MAX_SLIDER);
+		toSlider.setEnabled(true);
+//		toSlider.setValue(1000);
+		toSlider.addChangeListener(changeEvent -> {
+//			System.out.println("To listener" + changeEvent);
+//			toSlider.setToolTipText(String.format("%d", toSlider.getValue()));
+			setTooltipText(toSlider);
+			manageSliders(TO);
+		});
+		setTooltipText(toSlider);
+
+		bottomPanel.add(fromLabel, new GridBagConstraints(0,
+				0,
+				1,
+				1,
+				0.0,
+				0.0,
+				GridBagConstraints.EAST,
+				GridBagConstraints.NONE,
+				new Insets(0, 0, 0, 0), 0, 0));
+		bottomPanel.add(fromSlider, new GridBagConstraints(1,
+				0,
+				1,
+				1,
+				0.0,
+				0.0,
+				GridBagConstraints.EAST,
+				GridBagConstraints.HORIZONTAL,
+				new Insets(0, 0, 0, 0), 0, 0));
+
+		bottomPanel.add(toLabel, new GridBagConstraints(0,
+				1,
+				1,
+				1,
+				0.0,
+				0.0,
+				GridBagConstraints.EAST,
+				GridBagConstraints.NONE,
+				new Insets(0, 0, 0, 0), 0, 0));
+		bottomPanel.add(toSlider, new GridBagConstraints(1,
+				1,
+				1,
+				1,
+				0.0,
+				0.0,
+				GridBagConstraints.EAST,
+				GridBagConstraints.HORIZONTAL,
+				new Insets(0, 0, 0, 0), 0, 0));
+
+		allAtOnce = new JCheckBox("All at once");
+		allAtOnce.setSelected(true);
+		bottomPanel.add(allAtOnce, new GridBagConstraints(0,
+				2,
+				2,
+				1,
+				0.0,
+				0.0,
+				GridBagConstraints.EAST,
+				GridBagConstraints.HORIZONTAL,
+				new Insets(0, 0, 0, 0), 0, 0));
+
+
+		JButton button = new JButton("Plot");
+		button.addActionListener((actionEvent) -> {
+//			System.out.println("Click event:" + actionEvent);
+			List<LogAnalyzer.DatedPosition> toPlot = null;
+			if (positions != null) {
+				int indexFrom = (int)Math.floor((double)positions.size() * ((double)fromSlider.getValue() / (double)MAX_SLIDER));
+				indexFrom = (indexFrom >= positions.size()) ? indexFrom - 1 : indexFrom;
+				int indexTo = (int)Math.floor((double)positions.size() * ((double)toSlider.getValue() / (double)MAX_SLIDER));
+				indexTo = (indexTo >= positions.size()) ? indexTo - 1 : indexTo;
+				final int _from = indexFrom, _to = indexTo;
+				toPlot = IntStream.range(0, positions.size())
+						.filter(i -> (i >= _from && i <= _to))
+						.mapToObj(i -> positions.get(i))
+						.collect(Collectors.toList());
+				this.plot(toPlot, !allAtOnce.isSelected());
+			}
+		});
+
+		bottomPanel.add(button, new GridBagConstraints(0,
+				3,
+				2,
+				1,
+				0.0,
+				0.0,
+				GridBagConstraints.CENTER,
+				GridBagConstraints.NONE,
+				new Insets(0, 0, 0, 0), 0, 0));
+
+		this.add(bottomPanel, BorderLayout.SOUTH);
 
 		this.pack();
+	}
+
+	private void setTooltipText(JSlider slider) {
+		int value = slider.getValue();
+		String tooltip = String.valueOf(value);
+		if (positions != null) {
+			int index = (int)Math.floor((double)positions.size() * ((double)value / (double)MAX_SLIDER));
+			index = (index >= positions.size()) ? index - 1 : index;
+//			System.out.println("Tooltip: " + index);
+			tooltip = positions.get(index).getDate().toString();
+		}
+		slider.setToolTipText(tooltip);
+	}
+
+	private final String FROM = "from";
+	private final String TO = "to";
+
+	private void manageSliders(String origin) {
+		int valueFrom = fromSlider.getValue();
+		int valueTo = toSlider.getValue();
+//		System.out.println(String.format("Origin: %s => From = %d, To = %d", origin, valueFrom, valueTo));
+		if (origin.equals(FROM)) {
+			if (valueFrom > valueTo) {
+//				System.out.println("Increasing TO value");
+				toSlider.setValue(valueFrom);
+				toSlider.repaint();
+			}
+		} else if (origin.equals(TO)) {
+			if (valueTo < valueFrom) {
+//				System.out.println("Increasing FROM value");
+				fromSlider.setValue(valueTo);
+				fromSlider.repaint();
+			}
+		}
 	}
 
 	private void display() {
 		swingPanel.repaint();
 	}
 
-	public void doYourJob() {
-		SwingFrame lcd = instance;
-    instance.repaint();
-		swingPanel.plot(this.positions);
+	public void plot() {
+		plot(this.positions);
+	}
+	public void plot(List<LogAnalyzer.DatedPosition> pos) {
+		plot(pos, !allAtOnce.isSelected());
+	}
+	public void plot(List<LogAnalyzer.DatedPosition> pos, boolean progressing) {
+		// TODO Disable/enable plot button
+		swingPanel.plot(pos, progressing);
 	}
 
 	/**
 	 * Exit the Application
 	 */
-	private void exitForm(java.awt.event.WindowEvent evt) {
-		System.out.println("Bye");
+	private void exitForm(WindowEvent evt) {
+		System.out.println("Done");
 		System.exit(0);
 	}
 
@@ -82,6 +244,6 @@ public class SwingFrame extends JFrame {
 		SwingFrame frame = new SwingFrame(null);
 		frame.setVisible(true);
 
-		frame.doYourJob();
+		frame.plot(null);
 	}
 }

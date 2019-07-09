@@ -11,9 +11,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 
 import static nmea.parser.StringParsers.GGA_ALT_IDX;
 
@@ -76,6 +76,29 @@ public class LogAnalyzer {
 
 	private static SpeedUnit unitToUse = SpeedUnit.KMH;
 
+	public static class DatedPosition {
+		GeoPos position;
+		Date date;
+
+		DatedPosition position(GeoPos position) {
+			this.position = position;
+			return this;
+		}
+
+		DatedPosition date(Date date) {
+			this.date = date;
+			return this;
+		}
+
+		public GeoPos getPosition() {
+			return this.position;
+		}
+
+		public Date getDate() {
+			return this.date;
+		}
+	}
+
 	public static void main(String... args) {
 
 		String speedUnit = System.getProperty("speed.unit");
@@ -97,7 +120,7 @@ public class LogAnalyzer {
 		if (args.length == 0) {
 			throw new IllegalArgumentException("Please provide the name of the file to analyze as first parameter");
 		}
-		List<GeoPos> positions = new ArrayList<>();
+		List<DatedPosition> positions = new ArrayList<>();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(args[0]));
 			// Accumulators and others
@@ -107,6 +130,12 @@ public class LogAnalyzer {
 			double minLng = Double.MAX_VALUE, maxLng = -Double.MAX_VALUE;
 			double maxSpeed = -Double.MAX_VALUE;
 			double minAlt = Double.MAX_VALUE, maxAlt = -Double.MAX_VALUE;
+
+			long minLatIdx = -1,
+				 	 minLngIdx = -1,
+					 maxLatIdx = -1,
+					 maxLngIdx = -1;
+
 			long nbRec = 0L, totalNbRec = 0L;
 			Date start = null;
 			Date arrival = null;
@@ -135,11 +164,27 @@ public class LogAnalyzer {
 								}
 								GeoPos gp = rmc.getGp();
 								if (gp != null) {
-									positions.add(gp);
-									minLat = Math.min(minLat, gp.lat);
-									maxLat = Math.max(maxLat, gp.lat);
-									minLng = Math.min(minLng, gp.lng);
-									maxLng = Math.max(maxLng, gp.lng);
+									if (rmcTime != null) {
+										positions.add(new DatedPosition()
+												.date(rmcTime)
+												.position(gp));
+									}
+									if (gp.lat < minLat) {
+										minLat = gp.lat;
+										minLatIdx = totalNbRec - 1;
+									}
+									if (gp.lat > maxLat) {
+										maxLat = gp.lat;
+										maxLatIdx = totalNbRec - 1;
+									}
+									if (gp.lng < minLng) {
+										minLng = gp.lng;
+										minLngIdx = totalNbRec - 1;
+									}
+									if (gp.lng > maxLng) {
+										maxLng = gp.lng;
+										maxLngIdx = totalNbRec - 1;
+									}
 									if (previousPos != null) {
 										double distance = GeomUtil.haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
 //									System.out.println(String.format("Step: %.03f km between %s and %s (%s)",
@@ -181,14 +226,18 @@ public class LogAnalyzer {
 					distanceInKm / ((arrival.getTime() - start.getTime()) / ((double) HOUR))));
 			System.out.println(String.format("Max Speed: %.03f %s", maxSpeed * unitToUse.convert(), unitToUse.label()));
 			System.out.println(String.format("Min alt: %.02f m, Max alt: %.02f m, delta %.02f m", minAlt, maxAlt, (maxAlt - minAlt)));
-			System.out.println(String.format("Top-Left    :%s", new GeoPos(maxLat, minLng).toString()));
-			System.out.println(String.format("Bottom-Right:%s", new GeoPos(minLat, maxLng).toString()));
+			System.out.println(String.format("Top-Left    :%s (%f / %f)", new GeoPos(maxLat, minLng).toString(), maxLat, minLng));
+			System.out.println(String.format("Bottom-Right:%s (%f / %f)", new GeoPos(minLat, maxLng).toString(), minLat, maxLng));
+			System.out.println(String.format("Min Lat idx: %d", minLatIdx));
+			System.out.println(String.format("Max Lat idx: %d", maxLatIdx));
+			System.out.println(String.format("Min Lng idx: %d", minLngIdx));
+			System.out.println(String.format("Max Lng idx: %d", maxLngIdx));
 
 			// A Map on a canvas?
 			SwingFrame frame = new SwingFrame(positions);
 			frame.setVisible(true);
 
-			frame.doYourJob();
+			frame.plot();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
