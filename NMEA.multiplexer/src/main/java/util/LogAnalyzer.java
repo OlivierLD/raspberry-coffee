@@ -6,8 +6,11 @@ import nmea.parser.RMC;
 import nmea.parser.StringParsers;
 import util.swing.SwingFrame;
 
+import java.awt.HeadlessException;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -123,6 +126,10 @@ public class LogAnalyzer {
 		List<DatedPosition> positions = new ArrayList<>();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(args[0]));
+
+			// TODO Option to check chronology and continuity
+			BufferedWriter bw = new BufferedWriter(new FileWriter("stat.csv"));
+
 			// Accumulators and others
 			GeoPos previousPos = null;
 			double distanceInKm = 0d;
@@ -130,6 +137,12 @@ public class LogAnalyzer {
 			double minLng = Double.MAX_VALUE, maxLng = -Double.MAX_VALUE;
 			double maxSpeed = -Double.MAX_VALUE;
 			double minAlt = Double.MAX_VALUE, maxAlt = -Double.MAX_VALUE;
+			// For stat file
+			long previousDate = -1L;
+			long statLineNo = 0;
+
+			bw.write("Idx;time;deltaT;deltaDist;deltaT(2);\n");
+			statLineNo += 1;
 
 			long minLatIdx = -1,
 				 	 minLngIdx = -1,
@@ -193,8 +206,15 @@ public class LogAnalyzer {
 //													gp.toString(),
 //													SDF.format(rmcTime)));
 										distanceInKm += distance;
+										bw.write(String.format("%d;%d;%d;%f;=(B%d-B%d);\n", (totalNbRec - 1), rmcTime.getTime(), (rmcTime.getTime() - previousDate), distance, (statLineNo + 1), statLineNo));
+										//                                                                                                                                      |
+										//                                                                                                                                      Based on 1, not 0.
+									} else {
+										bw.write(String.format("%d;%d;%d;;;\n", (totalNbRec - 1), rmcTime.getTime(), (rmcTime.getTime() - previousDate)));
 									}
+									statLineNo += 1;
 									previousPos = gp;
+									previousDate = rmcTime.getTime();
 								}
 								maxSpeed = Math.max(maxSpeed, rmc.getSog());
 							}
@@ -214,6 +234,8 @@ public class LogAnalyzer {
 				}
 			}
 			br.close();
+			bw.close();
+			System.out.println("Checkout the spreadsheet stat.csv.");
 
 			// Display summary
 			System.out.println(String.format("Started %s", SDF.format(start)));
@@ -233,11 +255,14 @@ public class LogAnalyzer {
 			System.out.println(String.format("Min Lng idx: %d", minLngIdx));
 			System.out.println(String.format("Max Lng idx: %d", maxLngIdx));
 
-			// A Map on a canvas?
-			SwingFrame frame = new SwingFrame(positions);
-			frame.setVisible(true);
-
-			frame.plot();
+			try {
+				// A Map on a canvas?
+				SwingFrame frame = new SwingFrame(positions);
+				frame.setVisible(true);
+				frame.plot();
+			} catch (HeadlessException he) {
+				System.out.println("Headless Exception. Try in a graphical environment to visualize the data.");
+			}
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
