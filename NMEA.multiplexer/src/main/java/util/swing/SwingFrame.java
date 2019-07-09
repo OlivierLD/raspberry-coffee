@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -73,6 +74,7 @@ public class SwingFrame extends JFrame {
 		this.add(swingPanel, BorderLayout.CENTER);
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new GridBagLayout());
+		bottomPanel.setBorder(new LineBorder(Color.GRAY, 1));
 
 		// Populate bottom panel, plotButton (zoom in and out, execute), sliders (from, to), etc
 		JLabel fromLabel = new JLabel("From");
@@ -111,7 +113,7 @@ public class SwingFrame extends JFrame {
 				0,
 				1,
 				1,
-				0.0,
+				1.0,
 				0.0,
 				GridBagConstraints.EAST,
 				GridBagConstraints.HORIZONTAL,
@@ -130,7 +132,7 @@ public class SwingFrame extends JFrame {
 				1,
 				1,
 				1,
-				0.0,
+				1.0,
 				0.0,
 				GridBagConstraints.EAST,
 				GridBagConstraints.HORIZONTAL,
@@ -214,10 +216,6 @@ public class SwingFrame extends JFrame {
 				fromSlider.repaint();
 			}
 		}
-	}
-
-	private void display() {
-		swingPanel.repaint();
 	}
 
 	private Consumer<Object> plotCallback = (obj) -> {
