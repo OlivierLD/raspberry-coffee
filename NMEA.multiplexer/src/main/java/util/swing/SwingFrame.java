@@ -18,6 +18,7 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -33,6 +34,7 @@ public class SwingFrame extends JFrame {
 	private JSlider toSlider = null;
 	private final int MAX_SLIDER = 1_000;
 	private JCheckBox allAtOnce = null;
+	private JButton plotButton = null;
 
 	public SwingFrame(List<LogAnalyzer.DatedPosition> positions) {
 		this.positions = positions;
@@ -72,7 +74,7 @@ public class SwingFrame extends JFrame {
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new GridBagLayout());
 
-		// TODO Populate bottom panel, button (zoom in and out, execute), sliders (from, to), etc
+		// Populate bottom panel, plotButton (zoom in and out, execute), sliders (from, to), etc
 		JLabel fromLabel = new JLabel("From");
 		fromSlider = new JSlider(JSlider.HORIZONTAL, 0, MAX_SLIDER, 0);
 		fromSlider.setEnabled(true);
@@ -147,8 +149,8 @@ public class SwingFrame extends JFrame {
 				new Insets(0, 0, 0, 0), 0, 0));
 
 
-		JButton button = new JButton("Plot");
-		button.addActionListener((actionEvent) -> {
+		plotButton = new JButton("Plot");
+		plotButton.addActionListener((actionEvent) -> {
 //			System.out.println("Click event:" + actionEvent);
 			List<LogAnalyzer.DatedPosition> toPlot = null;
 			if (positions != null) {
@@ -165,7 +167,7 @@ public class SwingFrame extends JFrame {
 			}
 		});
 
-		bottomPanel.add(button, new GridBagConstraints(0,
+		bottomPanel.add(plotButton, new GridBagConstraints(0,
 				3,
 				2,
 				1,
@@ -218,6 +220,12 @@ public class SwingFrame extends JFrame {
 		swingPanel.repaint();
 	}
 
+	private Consumer<Object> plotCallback = (obj) -> {
+		System.out.println("Button Callback!");
+		plotButton.setEnabled(true);
+		plotButton.repaint();
+	};
+
 	public void plot() {
 		plot(this.positions);
 	}
@@ -225,8 +233,13 @@ public class SwingFrame extends JFrame {
 		plot(pos, !allAtOnce.isSelected());
 	}
 	public void plot(List<LogAnalyzer.DatedPosition> pos, boolean progressing) {
-		// TODO Disable/enable plot button
-		swingPanel.plot(pos, progressing);
+		Consumer<Object> callback = null;
+		if (progressing) {
+			callback = plotCallback;
+			// Disable/enable plot plotButton
+			plotButton.setEnabled(false);
+		}
+		swingPanel.plot(pos, progressing, callback);
 	}
 
 	/**

@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,7 +32,7 @@ public class SwingPanel
 		this.repaint();
 	}
 
-	public void plot(List<LogAnalyzer.DatedPosition> pos, boolean progressing) {
+	public void plot(List<LogAnalyzer.DatedPosition> pos, boolean progressing, Consumer<Object> plotCallback) {
 
 		int from = (progressing ? 0 : pos.size() - 1);
 		Thread plotter = new Thread(() -> {
@@ -45,7 +46,9 @@ public class SwingPanel
 						instance.repaint();
 					});
 				}
-				System.out.println("Repaint, done!"); // TODO Enable plot button
+				if (plotCallback != null) {
+					plotCallback.accept(null);
+				}
 			} catch (InterruptedException | InvocationTargetException ie) {
 				ie.printStackTrace();
 			}
