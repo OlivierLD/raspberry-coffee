@@ -2,6 +2,7 @@ package util.swing;
 
 import util.LogAnalyzer;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -40,8 +41,8 @@ public class SwingFrame extends JFrame {
 	public SwingFrame(List<LogAnalyzer.DatedPosition> positions) {
 		this.positions = positions;
 		initComponents();
-		this.setSize(new Dimension(400, 400));
-		this.setPreferredSize(new Dimension(400, 400));
+		this.setSize(new Dimension(400, 500));
+		this.setPreferredSize(new Dimension(400, 500));
 		this.setTitle("Positions");
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -74,7 +75,8 @@ public class SwingFrame extends JFrame {
 		this.add(swingPanel, BorderLayout.CENTER);
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new GridBagLayout());
-		bottomPanel.setBorder(new LineBorder(Color.GRAY, 1));
+//		bottomPanel.setBorder(new LineBorder(Color.RED, 1));
+		bottomPanel.setBorder(BorderFactory.createTitledBorder("Track Parameters"));
 
 		// Populate bottom panel, plotButton (zoom in and out, execute), sliders (from, to), etc
 		JLabel fromLabel = new JLabel("From");
@@ -104,7 +106,7 @@ public class SwingFrame extends JFrame {
 				0,
 				1,
 				1,
-				0.0,
+				0.1,
 				0.0,
 				GridBagConstraints.EAST,
 				GridBagConstraints.NONE,
@@ -123,7 +125,7 @@ public class SwingFrame extends JFrame {
 				1,
 				1,
 				1,
-				0.0,
+				0.1,
 				0.0,
 				GridBagConstraints.EAST,
 				GridBagConstraints.NONE,

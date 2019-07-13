@@ -250,10 +250,10 @@ public class LogAnalyzer {
 			System.out.println(String.format("Min alt: %.02f m, Max alt: %.02f m, delta %.02f m", minAlt, maxAlt, (maxAlt - minAlt)));
 			System.out.println(String.format("Top-Left    :%s (%f / %f)", new GeoPos(maxLat, minLng).toString(), maxLat, minLng));
 			System.out.println(String.format("Bottom-Right:%s (%f / %f)", new GeoPos(minLat, maxLng).toString(), minLat, maxLng));
-			System.out.println(String.format("Min Lat idx: %d", minLatIdx));
-			System.out.println(String.format("Max Lat idx: %d", maxLatIdx));
-			System.out.println(String.format("Min Lng idx: %d", minLngIdx));
-			System.out.println(String.format("Max Lng idx: %d", maxLngIdx));
+			System.out.println(String.format("Min Lat record idx: %d", minLatIdx));
+			System.out.println(String.format("Max Lat record idx: %d", maxLatIdx));
+			System.out.println(String.format("Min Lng record idx: %d", minLngIdx));
+			System.out.println(String.format("Max Lng record idx: %d", maxLngIdx));
 
 			try {
 				// A Map on a canvas?
