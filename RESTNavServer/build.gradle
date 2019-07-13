@@ -9,6 +9,22 @@ plugins {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+tasks.withType(JavaCompile) {
+  if (JavaVersion.current() != project.targetCompatibility) {
+    throw new GradleException(
+            "+---- Please change your Java version (JAVA_HOME) to move on ----\n" +
+            "| The java version used ${JavaVersion.current()} is not the expected version ${project.targetCompatibility}.\n" +
+            "+----------------------------------------------------------------"
+    )
+  } else {
+    println ">> From task $name, using java version ${JavaVersion.current()} "
+  }
+  options.encoding = 'UTF-8'
+}
+
 //sourceSets {
 //  main {
 //    java {
