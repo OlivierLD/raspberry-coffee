@@ -1,5 +1,7 @@
 // Composite Catalog (Weather Wizard)
-// A nice NOAA Chart list at https://www.nws.noaa.gov/om/marine/hfhi_mobile.htm
+// A nice NOAA Chart list at
+// Pacific: https://www.nws.noaa.gov/om/marine/hfhi_mobile.htm
+// Atlantic: https://www.nws.noaa.gov/om/marine/hfmarsh_mobile.htm
 const faxColors = { // Must match ImageColor, in PullTxManager
 	black: "BLACK",
 	white: "WHITE",
@@ -421,6 +423,86 @@ const compositeCatalog = [
 			}
 		],
 		gribRequest: 'GFS:65N,10N,100W,10E|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN'
+	},
+	{
+		key: "ATL-0001-FINE",
+		name: "North Atlantic, current analysis (fine)",
+		map: {
+			projection: mapProjections.mercator,
+			north: 65.5,
+			south: 10,
+			east: 28.2,
+			west: -101.8
+		},
+		canvas: {
+			w: 900,
+			h: 600
+		},
+		faxData: [
+			{
+				faxUrl: "https://tgftp.nws.noaa.gov/fax/PYAA12.gif",
+				name: "North-West Atl surface analysis",
+				transp: faxColors.white,
+				rotation: 90,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.red
+				},
+				effect: faxEffects.blur,
+				zoom: 0.32291855775920775,
+				location: {
+					x: 13,
+					y: 8
+				}
+			},
+			{
+				faxUrl: "https://tgftp.nws.noaa.gov/fax/PYAA11.gif",
+				name: "North-East Atl surface analysis",
+				transp: faxColors.white,
+				rotation: 90,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.red
+				},
+				effect: faxEffects.blur,
+				zoom: 0.32291855775920775,
+				location: {
+					x: 401,
+					y: 8
+				}
+			},
+			{
+				faxUrl: "https://tgftp.nws.noaa.gov/fax/PPAA10.gif",
+				name: "North Atl 500mb analysis",
+				transp: faxColors.white,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.blue
+				},
+				effect: faxEffects.blur,
+				zoom: 0.49330500605497085,
+				location: {
+					x: 26,
+					y: 27
+				}
+			},
+			{
+				faxUrl: "https://tgftp.nws.noaa.gov/fax/PJAA99.gif",
+				name: "North Atl Sea state",
+				transp: faxColors.white,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.darkgreen
+				},
+				effect: faxEffects.blur,
+				zoom: 0.4928121938611098,
+				location: {
+					x: 26,
+					y: 27
+				}
+			}
+		],
+		gribRequest: 'GFS:65N,10N,100W,10E|1,1|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN'
 	},
 	{
 		key: "MED-0001",

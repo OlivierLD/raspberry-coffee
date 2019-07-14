@@ -22,8 +22,21 @@ detections = detector.detectObjectsFromImage(input_image=os.path.join(execution_
                                              output_image_path=os.path.join(execution_path, "imagenew.jpg"))
 
 print('Detections:')
+detected = {}
 for eachObject in detections:
+    # Build a map, 2 cars, 3 persons, 1 zebra, etc...
+    objName = eachObject["name"]
+    try:
+        member = detected[objName]
+    except KeyError:
+        member = 0
+    detected[objName] = member + 1
     print(eachObject["name"], " : ", eachObject["percentage_probability"])
+
+print(detected)
+for member in detected:
+    print("{}: {}".format(member, detected[member]))
+
 
 plt.imshow(mpimg.imread("imagenew.jpg"))
 # plt.show(block=False)
