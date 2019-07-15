@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'application' // provides the 'run' task.
+    id 'application' // -> provides the 'run' task.
 }
 
 group 'oliv.raspi.coffee'
@@ -10,6 +10,8 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    mavenLocal()
+    // Also see https://mvnrepository.com/artifact/org.openpnp/opencv, https://mvnrepository.com/artifact/com.quickbirdstudios/opencv/4.0.1 ?
 }
 
 dependencies {

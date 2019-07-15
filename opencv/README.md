@@ -1,6 +1,6 @@
 ## Tentative! OpenCV in Java!
 
-#### Misc bulk notes
+#### Misc bulk notes, scratch-pad, scribblings, etc.
 
 <https://opencv-java-tutorials.readthedocs.io/en/latest/index.html>
 
@@ -24,7 +24,7 @@ You need
 cd /usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4
 ln -s libopencv_java410.dylib libopencv_java410.so 
 ```
-See in `build.gradle`.
+See in [`build.gradle`](./build.gradle).
 
 ```
  ../gradlew runFX
