@@ -16,8 +16,8 @@ DEBUG = False
 def read_nmea_sentence(serial_port):
     """
     Reads the serial port until a '\n' is met.
-    :param serial_port: the port, as returned by serial.Serial
-    :return: the full NMEA String, with its EOL '\r\n'
+    :param serial_port: the port to read, as returned by serial.Serial
+    :return: the full NMEA String, with its EOS '\r\n'
     """
     rv = []
     while True:
@@ -44,5 +44,6 @@ while True:
     # print("\tReceived:" + repr(rcv))  # repr: displays also non printable characters between quotes.
     try:
         nmea_obj = NMEAParser.parse_nmea_sentence(rcv)
+        print("=> {}".format(nmea_obj))
     except Exception as ex:
-        print("Ooops! {}".format(ex))
+        print("\t\tOoops! {}".format(ex))

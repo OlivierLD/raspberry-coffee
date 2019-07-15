@@ -6,17 +6,14 @@ DEBUG = False
 
 
 def sex_to_dec(deg_str, min_str):
-    deg = 0
-    min = 0
-    ret = 0
     try:
-        deg = float(deg_str)
-        min = float(min_str)
-        min *= (10.0 / 60.0)
-        ret = deg + min / 100.0
+        degrees = float(deg_str)
+        minutes = float(min_str)
+        minutes *= (10.0 / 6.0)
+        ret = degrees + minutes / 100.0
+        return ret
     except ValueError:
-        raise Exception("Bad number [{}] [{}]".format(deg_str, min_str))
-    return ret
+        raise Exception("Bad numbers [{}] [{}]".format(deg_str, min_str))
 
 
 def gll_parser(sentence, valid=False):
@@ -26,7 +23,7 @@ def gll_parser(sentence, valid=False):
         print("Implement validation here")
     data = sentence[:-3].split(',')
     print("Parsing GLL, {} elements".format(len(data)))
-    return {"gll": parsed}
+    return {"type": "gll", "parsed": parsed}
 
 
 def txt_parser(sentence, valid=False):
@@ -35,7 +32,7 @@ def txt_parser(sentence, valid=False):
         # Validation (Checksum, etc) goes here
         print("Implement validation here")
     data = sentence[:-3].split(',')
-    # TXT Structure (non NMEA official):
+    # TXT Structure (non NMEA standard):
     # 0      1  2  3  4
     # $GPTXT,01,01,02,ANTSTATUS=OK*3B
     #        |  |  |  |
@@ -46,11 +43,11 @@ def txt_parser(sentence, valid=False):
     #
     if len(data) >= 4:
         parsed["content"] = data[4]
-    return {"txt": parsed}
+    return {"type": "txt", "parsed": parsed}
 
 
 def gsa_parser(sentence, valid=False):
-    return {"gsa": sentence}
+    return {"type": "gsa", "parsed": sentence}
 
 
 def rmc_parser(sentence, valid=False):
@@ -75,7 +72,8 @@ def rmc_parser(sentence, valid=False):
     #         |      Active or Void
     #         UTC
     #
-    print("Parsing RMC, {} items".format(len(data)))
+    if DEBUG:
+        print("Parsing RMC, {} items".format(len(data)))
     parsed["valid"] = "true" if (data[2] == 'A') else "false"
 
     if len(data[3]) > 0 and len(data[5]) > 0:
@@ -95,7 +93,7 @@ def rmc_parser(sentence, valid=False):
 
         parsed["position"] = pos
 
-    return {"rmc": parsed}
+    return {"type": "rmc", "parsed": parsed}
 
 
 NMEA_PARSER_DICT = {
@@ -115,19 +113,19 @@ def calculate_check_sum(sentence):
 
 
 def valid_check_sum(sentence):
-    star_index = -1
     try:
-        star_index = sentence.index('*')
+        _ = sentence.index('*')
     except Exception:
         if DEBUG:
-            print("No star was found")
+            print("No star was found in the NMEA string")
         return False
     cs_key = sentence[-2:]
     # print("CS Key: {}".format(cs_key))
     try:
         csk = int(cs_key, 16)
     except Exception:
-        print("Invalid Hex CS Key {}".format(cs_key))
+        if DEBUG:
+            print("Invalid Hex CS Key {}".format(cs_key))
         return False
 
     string_to_validate = sentence[1:-3]  # no $, no *CS
@@ -144,7 +142,6 @@ def valid_check_sum(sentence):
 
 
 def parse_nmea_sentence(sentence):
-    nmea_dict = {}
     if sentence.startswith('$'):
         if sentence.endswith('\r\n'):
             sentence = sentence.strip()  # drops the \r\n
@@ -164,11 +161,12 @@ def parse_nmea_sentence(sentence):
                             parser = NMEA_PARSER_DICT[key]
                             break
                     if parser is None:
-                        raise Exception("No parser exists for {}".format(sentence_id))
+                        raise Exception("No parser exists (yet) for {}".format(sentence_id))
                     else:
                         # print("Proceeding... {}".format(sentence_id))
                         obj = parser(sentence)
-                        print("Parsed: {}".format(obj))
+                        # print("Parsed: {}".format(obj))
+                        return obj
             else:
                 raise Exception('Incorrect sentence prefix "{}". Should be 6 character long.'.format(sentence_prefix))
         else:
@@ -190,15 +188,14 @@ if __name__ == "__main__":
         "$IIVTG,054.7,T,034.4,M,005.5,N,010.2,K,A*XX\r\n",
         "$GPRMC,183333.000,A,4047.7034,N,07247.9938,W,0.66,196.21,150912,,,A*7C\r\n"
     ]
-
     # akeu = sex_to_dec("12", "34.XX")
-
     for sentence in samples:
         try:
             nmea_obj = parse_nmea_sentence(sentence)
+            print("=> {}".format(nmea_obj))
         except Exception as ex:
             print("Ooops! {}".format(ex))
 else:
     print("---------------------")
-    print("{} NOT running as main".format(__name__))
+    print("{} NOT running as main, probably imported.".format(__name__))
     print("---------------------")
