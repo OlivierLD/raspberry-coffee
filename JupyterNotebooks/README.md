@@ -1,4 +1,4 @@
-## [Jupyter Notebooks](https://jupyter.org/), for Java
+## [Jupyter Notebooks](https://jupyter.org/), also for Java
 Emergence of AI and Deep Learning contributed to the popularity of the Jupyter Notebooks.
 
 Notebooks contain **_executable_** code (<u>yes</u>, you can execute the code of a Notebook in real time), possibly (extensively) commented and illustrated.
