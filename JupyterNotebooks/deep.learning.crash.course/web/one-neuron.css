@@ -44,3 +44,26 @@
 	border-radius: 50%;
 }
 
+knob-and-display:focus {
+	outline: none;
+}
+
+.knob-css {
+	--display-background-gradient-from: transparent;
+	--display-background-gradient-to: transparent;
+	--knob-radial-gradient-from: black;
+	--knob-radial-gradient-to: silver;
+	--index-radial-gradient-from: black;
+	--index-radial-gradient-to: white;
+	--display-outline-color: silver;
+	--display-background-color: white;
+	--display-ticks-color: darkgray;
+	--needle-outline-color: black;
+	--needle-fill-color: red;
+	--tick-color: rgba(0, 0, 0, 0.9);
+	--value-color: blue;
+	--label-color: white;
+	--value-nb-decimal: 2;
+	--label-font: 'Courier New';
+	--value-font: Arial;
+}
