@@ -26,7 +26,7 @@ import java.util.Map;
  * Also, another funny one:
  * <ul>
  * <li>The data read from the accelerometer are read in the order X, Y, Z</li>
- * <li>The data read from the magnetometer are read in the order X, <b style='color: red;'>Z</b>, Y, ,<u>funny</u> isn't it?</li>
+ * <li>The data read from the magnetometer are read in the order X, <b style='color: red;'>Z</b>, Y, <u>funny</u> isn't it?</li>
  * </ul>
  * And they both have different endianness.
  * <br>
@@ -52,6 +52,8 @@ public class LSM303 {
   50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
   60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
   70: -- -- -- -- -- -- -- --
+
+  Note: 1E is also the address of the HMC5883L
    */
 	// Those 2 next addresses are returned by "sudo i2cdetect -y 1", see above.
 	private final static int LSM303_ADDRESS_ACCEL = (0x32 >> 1); // 0011001x, 0x19
@@ -73,17 +75,18 @@ public class LSM303 {
 	private final static int LSM303_MAGGAIN_5_6 = 0xC0; // +/- 5.6
 	private final static int LSM303_MAGGAIN_8_1 = 0xE0; // +/- 8.1
 
-	private final static float _lsm303Accel_MG_LSB = 0.001F; // 1, 2, 4 or 12 mg per lsb
+//	private final static float _lsm303Accel_MG_LSB = 0.001F; // 1, 2, 4 or 12 mg per lsb
+	private final static float _lsm303Accel_MG_LSB = 16_704.0F;
 	private static float _lsm303Mag_Gauss_LSB_XY = 1_100.0F; // Varies with gain
 	private static float _lsm303Mag_Gauss_LSB_Z = 980.0F;    // Varies with gain
 
 	private float SENSORS_GRAVITY_EARTH = 9.80665f;        // Earth's gravity in m/s^2
 	private float SENSORS_GRAVITY_MOON = 1.6f;             // The moon's gravity in m/s^2
 	private float SENSORS_GRAVITY_SUN = 275.0f;            // The sun's gravity in m/s^2
-	private float SENSORS_GRAVITY_STANDARD = SENSORS_GRAVITY_EARTH;
+	private float SENSORS_GRAVITY_STANDARD = SENSORS_GRAVITY_EARTH; // Earth, by default ;)
 	private float SENSORS_MAGFIELD_EARTH_MAX = 60.0f;      // Maximum magnetic field on Earth's surface
 	private float SENSORS_MAGFIELD_EARTH_MIN = 30.0f;      // Minimum magnetic field on Earth's surface
-	private float SENSORS_PRESSURE_SEALEVELHPA = 1_013.25f;// Average sea level pressure is 1013.25 hPa
+	private float SENSORS_PRESSURE_SEALEVELHPA = 1_013.25f;// Average sea level pressure is 1013.25 hPa, on Earth
 	private float SENSORS_DPS_TO_RADS = 0.017453293f;      // Degrees/s to rad/s multiplier
 	private float SENSORS_GAUSS_TO_MICROTESLA = 100;       // Gauss to micro-Tesla multiplier
 
