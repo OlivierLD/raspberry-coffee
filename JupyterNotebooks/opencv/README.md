@@ -44,7 +44,10 @@ With image size setting (width & height).
 ### `detection.5.py`, Path detection, contours approach
 
 ### `detection.6.py`, Path detection, pixel approach, not bad!
-On only one static image. Implement camera.
+On only one static image. Will implement camera later.
+
+### `detection.7.py`, Path detection, pixel approach, with camera
+Like `detection.6.py`, with a camera.
 
 ---
 
