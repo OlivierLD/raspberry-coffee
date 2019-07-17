@@ -17,11 +17,11 @@ targetCompatibility = 1.8
 
 tasks.withType(JavaCompile) {
   if (JavaVersion.current() != project.targetCompatibility) {
-    throw new GradleException(
-                    "+---- Please change your Java version (JAVA_HOME) to move on ----\n" +
-                    "| The java version used ${JavaVersion.current()} is not the expected version ${project.targetCompatibility}.\n" +
-                    "+----------------------------------------------------------------"
-    )
+//    throw new GradleException(
+    println "+------ Warning: Java version (JAVA_HOME) possible mismatch -----\n" +
+            "| The java version used ${JavaVersion.current()} is not the expected version ${project.targetCompatibility}.\n" +
+            "+----------------------------------------------------------------"
+//    )
   } else {
     println ">> From task $name, using java version ${JavaVersion.current()} "
   }

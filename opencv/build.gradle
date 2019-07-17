@@ -3,10 +3,11 @@ plugins {
     id 'application' // -> provides the 'run' task.
 }
 
-group 'oliv.raspi.coffee'
+group 'oliv.opencv'
 version '1.0'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.9
+targetCompatibility = 1.9
 
 repositories {
     mavenCentral()

@@ -15,7 +15,16 @@ Kernel_size = 31  # 15
 #
 # On ONE image, static.
 # Pixel by pixel approach
+# - Take am image
+# - resize it
+# - make it gray
+# - blur it
+# - threshold it
+# - get the first and last black pixel every x lines
+# - get center of the 'boxes'
+# - calculate heading from center to center
 #
+
 # img_path = "path.jpg"
 img_path = "path.2.png"
 #
@@ -56,7 +65,7 @@ for h in range(height - 1, 0, -40):  # begin at the bottom of the image
     first_black = -1
     last_black = -1
     for w in range(width):
-        px = thresh[h, w]
+        px = thresh[h, w]  # Take the pixel in the threshed image
         if px == 0: # 0: black, 255: white
             # print("h:{}, w:{}, px {}".format(h, w, px))
             if first_black == -1:
@@ -76,6 +85,7 @@ for step in tiles:
     if previous_step is not None:
         bottom, bottom_left, bottom_right = previous_step
         top, top_left, top_right = step
+        # Draw a box
         cv2.line(new_threshed, (bottom_left, bottom), (bottom_right, bottom), color, 2)
         cv2.line(new_threshed, (bottom_right, bottom), (top_right, top), color, 2)
         cv2.line(new_threshed, (top_right, top), (top_left, top), color, 2)

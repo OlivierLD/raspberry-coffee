@@ -74,6 +74,7 @@ public final class GeomUtil {
 
 	/**
 	 * Get the direction
+	 * TODO: use Math.atan2
 	 *
 	 * @param x horizontal displacement
 	 * @param y vertical displacement
