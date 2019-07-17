@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Path detection
 # Same as detection.6, but frame by frame
@@ -20,10 +21,23 @@ maxLineGap = 1
 # Initialize camera
 camera = cv2.VideoCapture(0)
 
-width  = 640
+width = 640
 height = 480
 camera.set(3, width)
 camera.set(4, height)
+
+# degree_sign = "º"
+# degree_sign = chr(176)
+degree_sign = ""
+
+font = cv2.FONT_HERSHEY_SIMPLEX
+# font = cv2.FONT_HERSHEY_DUPLEX
+# font = cv2.FONT_HERSHEY_PLAIN
+# font = cv2.FONT_HERSHEY_COMPLEX
+# font = cv2.FONT_HERSHEY_TRIPLEX
+# font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+# font = cv2.FONT_HERSHEY_SCRIPT_COMPLEX
+# font = cv2.FONT_HERSHEY_SCRIPT_SIMPLEX
 
 
 def get_dir(x, y):
@@ -74,6 +88,7 @@ while True:
     color = (0, 255, 0)  # green
     previous_step = None
     previous_center = None
+    first_tile = True
     for step in tiles:
         # print("Step:", step)
         if previous_step is not None:
@@ -94,15 +109,21 @@ while True:
                 prev_x, prev_y = previous_center
                 course = get_dir(center_x - prev_x, prev_y - center_y)
                 print("Course is {}".format(course))
+                if first_tile:
+                    mess = 'Steer: {:3.0f}{}'.format(course, degree_sign)  # .encode('utf8')
+                    # print('\t', mess)
+                    cv2.putText(frame, mess, (10, 26), font, 1, (0, 255, 0), 3)
+                    first_tile = False
             previous_center = (center_x, center_y)
         previous_step = step
 
     cv2.imshow('Detected path', frame)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord('q'):  # select the image window and hit 'q' to quit
         break
 
 # When everything is done, release the capture
-
 camera.release()
 cv2.destroyAllWindows()
+
+print("Bye!")
