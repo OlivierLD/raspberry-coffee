@@ -48,6 +48,10 @@ On only one static image. Will implement camera later.
 
 ### `detection.7.py`, Path detection, pixel approach, with camera
 Like `detection.6.py`, with a camera.
+![Path detection](./docimg/snap.03.png)
+
+The path is plotted on the image, the courses are displayed in the background terminal.
+Those information would be sufficient to drive the robot carrying the camera. 
 
 ---
 
