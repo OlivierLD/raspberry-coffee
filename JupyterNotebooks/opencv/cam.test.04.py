@@ -12,6 +12,7 @@ cam.set(3, w)
 cam.set(4, h)
 
 verboseContour = False
+verbose = False
 
 while True:
     ret, image = cam.read()
@@ -50,8 +51,11 @@ while True:
 
         except ValueError as ve:
             # keep going
-            if False:
+            if verbose:
                 print(ve)
+        finally:
+            if verbose:
+                print('Moving on')
     else:
         print('Oops!')
     key = cv2.waitKey(1) & 0xFF
