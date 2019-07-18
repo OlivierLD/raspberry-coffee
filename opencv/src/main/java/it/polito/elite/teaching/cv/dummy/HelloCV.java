@@ -17,6 +17,7 @@ import org.opencv.imgproc.Imgproc;
 public class HelloCV {
 	public static void main(String[] args) {
 		// load the OpenCV native library
+		System.out.println("Loading " + Core.NATIVE_LIBRARY_NAME);
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
 		// create and print on screen a 3x3 identity matrix

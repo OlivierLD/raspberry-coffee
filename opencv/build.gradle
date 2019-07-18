@@ -3,6 +3,8 @@ plugins {
     id 'application' // -> provides the 'run' task.
 }
 
+// Application plugin doc at https://docs.gradle.org/current/userguide/application_plugin.html
+
 group 'oliv.opencv'
 version '1.0'
 
@@ -23,11 +25,18 @@ dependencies {
 }
 
 if (!hasProperty('mainClassName')) {
+    println "No mainClassName, using default"
     ext.mainClassName = 'it.polito.elite.teaching.cv.HelloCV'
+//} else {
+//    println ">> Found mainClassName: $mainClassName"
+//    ext.mainClassName = mainClassName
 }
 
 mainClassName = 'it.polito.elite.teaching.cv.dummy.HelloCV'
 ext.mainClassNameFX = 'it.polito.elite.teaching.cv.FXHelloCV'
+ext.mainClassNameOliv101 = 'oliv.opencv.OpenCV101'
+ext.mainClassNameOlivSwing = 'oliv.opencv.OpenCVSwing'
+ext.mainClassNameOlivSwingCamera = 'oliv.opencv.OpenCVSwingCamera'
 
 tasks.withType(JavaExec) {
     systemProperty "java.library.path", "/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4" // For Mac
@@ -46,5 +55,21 @@ tasks.withType(JavaExec) {
 
 task runFX(type:JavaExec) {
     main = mainClassNameFX
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+// Could not use gradlew run -PmainClassName=oliv.opencv.OpenCV101
+task runOliv101(type:JavaExec) {
+    main = mainClassNameOliv101
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task runOlivSwing(type:JavaExec) {
+    main = mainClassNameOlivSwing
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task runOlivSwingCamera(type:JavaExec) {
+    main = mainClassNameOlivSwingCamera
     classpath = sourceSets.main.runtimeClasspath
 }

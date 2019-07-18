@@ -1,6 +1,6 @@
 package it.polito.elite.teaching.cv;
 
-import it.polito.elite.teaching.cv.utils.Utils;
+import cv.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

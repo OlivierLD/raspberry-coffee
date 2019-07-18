@@ -1,4 +1,4 @@
-package it.polito.elite.teaching.cv.utils;
+package cv.utils;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -34,6 +34,15 @@ public final class Utils {
 		}
 	}
 
+	public static java.awt.image.BufferedImage mat2AWTImage(Mat frame) {
+		try {
+			return matToBufferedImage(frame);
+		} catch (Exception e) {
+			System.err.println("Cannot convert the Mat object: " + e);
+			return null;
+		}
+	}
+
 	/**
 	 * Generic method for putting element running on a non-JavaFX thread on the
 	 * JavaFX thread, to properly update the UI
@@ -48,9 +57,9 @@ public final class Utils {
 	}
 
 	/**
-	 * Support for the {@link mat2image()} method
+	 * Support for the {@link #mat2Image(Mat)} method
 	 *
-	 * @param original the {@link Mat} object in BGR or grayscale
+	 * @param original the {@link Mat} object in BGR or gray scale
 	 * @return the corresponding {@link BufferedImage}
 	 */
 	private static BufferedImage matToBufferedImage(Mat original) {

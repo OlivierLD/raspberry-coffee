@@ -29,3 +29,11 @@ See in [`build.gradle`](./build.gradle).
 ```
  ../gradlew runFX
 ```
+
+### Custom code
+##### Using Java Swing
+Interactive, transforming images returned by the camera.
+```
+ ../gradlew runOlivSwingCamera
+```
+![Swing UI](./docimg/snap.01.png)

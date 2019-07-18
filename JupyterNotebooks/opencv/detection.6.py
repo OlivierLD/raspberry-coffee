@@ -66,7 +66,7 @@ for h in range(height - 1, 0, -40):  # begin at the bottom of the image
     last_black = -1
     for w in range(width):
         px = thresh[h, w]  # Take the pixel in the threshed image
-        if px == 0: # 0: black, 255: white
+        if px == 0:  # 0: black, 255: white
             # print("h:{}, w:{}, px {}".format(h, w, px))
             if first_black == -1:
                 first_black = w
