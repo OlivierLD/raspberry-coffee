@@ -59,6 +59,7 @@ Those information would be sufficient to drive the robot carrying the camera.
 ---
 
 Also check [this](https://towardsdatascience.com/object-detection-with-10-lines-of-code-d6cb4d86f606) out..., Object detection.
+and [this](https://towardsdatascience.com/simple-guide-to-hyperparameter-tuning-in-neural-networks-3fe03dad8594)
 
 ---
 

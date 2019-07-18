@@ -23,6 +23,7 @@ graphics, this is quite impressive and convenient.
 - [Teachable Machine](https://teachablemachine.withgoogle.com/)
 - [Quick, draw](https://quickdraw.withgoogle.com/)
 - [Deep Learning in Java](https://deeplearning4j.org/docs/latest/keras-import-overview)
+- [Tuning a Neural Network](https://towardsdatascience.com/simple-guide-to-hyperparameter-tuning-in-neural-networks-3fe03dad8594)
 
 We will also provide here several Python scripts, that can reproduce the features illustrated in the Notebooks, but
 without comments and graphics.

@@ -26,6 +26,8 @@ height = 480
 camera.set(3, width)
 camera.set(4, height)
 
+show_thresh = True
+
 # degree_sign = "º"
 # degree_sign = chr(176)
 degree_sign = ""
@@ -62,6 +64,8 @@ while True:
     # ret, thresh = cv2.threshold(img_gray, 127, 255, 0)
     ret, thresh = cv2.threshold(blurred, 127, 255, 0)
     height, width = thresh.shape[:2]
+    if show_thresh:
+        cv2.imshow('Threshed', thresh)
 
     # The thresh image is close to pure black and white,
     # close to displaying the path only
@@ -80,8 +84,6 @@ while True:
                     first_black = w
                 else:
                     last_black = w
-                # color = (0, 255, 255)    # yellow
-                # cv2.line(new_threshed, (w, h), (w, h), color, 2)  # A dot
         tiles.append((h, first_black, last_black))
 
     # print("Tiles:", tiles)
