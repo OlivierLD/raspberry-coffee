@@ -34,6 +34,12 @@ public final class Utils {
 		}
 	}
 
+	/**
+	 * Suitable for Swing
+	 *
+	 * @param frame
+	 * @return
+	 */
 	public static java.awt.image.BufferedImage mat2AWTImage(Mat frame) {
 		try {
 			return matToBufferedImage(frame);

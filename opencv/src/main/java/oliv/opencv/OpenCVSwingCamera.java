@@ -201,7 +201,7 @@ public class OpenCVSwingCamera {
 		System.out.println("Loading " + Core.NATIVE_LIBRARY_NAME);
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-		OpenCVSwingCamera swingCamera = new OpenCVSwingCamera();
+		new OpenCVSwingCamera();
 
 		System.out.println("Bye!");
 	}
