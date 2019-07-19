@@ -5,6 +5,9 @@
 - <https://github.com/opencv-java/>
 
 
+### Face recognition, OpenCV and DL
+- <https://www.freecodecamp.org/news/facial-recognition-using-opencv-in-java-92fa40c22f62/>
+
 #### Misc bulk notes, scratch-pad, scribblings, etc.
 
 > Great resource [here](https://docs.opencv.org/master/d9/df8/tutorial_root.html),
