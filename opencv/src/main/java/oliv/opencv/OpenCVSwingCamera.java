@@ -75,7 +75,7 @@ public class OpenCVSwingCamera {
 
 			this.camera.open(cameraId);
 
-			// TODO Not able to set the frame size...
+			// TODO Not able to set the frame size... Works from Python though.
 			boolean wSet = this.camera.set(Videoio.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH);
 			boolean hSet = this.camera.set(Videoio.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT);
 			System.out.println(String.format("Setting video frame size to %.02f x %.02f => W set: %s, H set: %s", VIDEO_WIDTH, VIDEO_HEIGHT, wSet, hSet));
@@ -176,7 +176,7 @@ public class OpenCVSwingCamera {
 			if (swingFrame.isContoursOnNewImageChecked()) {
 				newMat = new Mat(original.height(), original.width(), CvType.CV_8UC1); // Write on a new image
 			} else {
-				newMat = original.clone(); // Write on original image
+				newMat = original.clone(); // Write on ORIGINAL image
 			}
 			try {
 				List<MatOfPoint> contours = new ArrayList<>();
