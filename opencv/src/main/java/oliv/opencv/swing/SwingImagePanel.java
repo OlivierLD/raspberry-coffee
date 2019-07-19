@@ -11,9 +11,15 @@ public class SwingImagePanel
 
 	private Image image = null;
 
+	private final static int DEFAULT_WIDTH = 800;
+	private final static int DEFAULT_HEIGHT = 600;
+
 	public SwingImagePanel() {
-		this.setPreferredSize(new Dimension(800, 600));
-		this.setSize(new Dimension(800, 600));
+		this(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	}
+	public SwingImagePanel(int width, int height) {
+		this.setPreferredSize(new Dimension(width, height));
+		this.setSize(new Dimension(width, height));
 		this.clear();
 	}
 
@@ -28,8 +34,6 @@ public class SwingImagePanel
 		this.setSize(newDimension);
 		repaint();
 	}
-
-	private final static boolean DEBUG = false;
 
 	@Override
 	public void paintComponent(Graphics gr) {

@@ -1,7 +1,6 @@
 package oliv.opencv;
 
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -131,6 +130,8 @@ public class OpenCV101 {
 		// load the OpenCV native library
 		System.out.println("Loading " + Core.NATIVE_LIBRARY_NAME);
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+		System.out.println(String.format("Using OpenCV version %s (%d.%d.%d)", Core.getVersionString(), Core.getVersionMajor(), Core.getVersionMinor(), Core.getVersionRevision()));
 
 		System.out.println("Image 1...");
 		long before = System.currentTimeMillis();

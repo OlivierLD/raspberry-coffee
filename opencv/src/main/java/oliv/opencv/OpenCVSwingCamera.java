@@ -4,6 +4,7 @@ import cv.utils.Utils;
 import oliv.opencv.swing.SwingFrameWithWidgets;
 import org.opencv.core.Core;
 import org.opencv.core.CvException;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Scalar;
@@ -12,6 +13,8 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -30,15 +33,24 @@ import java.util.concurrent.TimeUnit;
 public class OpenCVSwingCamera {
 
 	private ScheduledExecutorService timer;
-	private VideoCapture capture = new VideoCapture();
+	private VideoCapture camera = null;
 	private boolean cameraActive = false;
 	private static int cameraId = 0;
 
 
 	private static SwingFrameWithWidgets swingFrame = null;
 
+	private final static int DEFAULT_FRAME_WIDTH = 800;
+	private final static int DEFAULT_FRAME_HEIGHT = 800;
+	private final static int DEFAULT_IMAGE_WIDTH = 800;
+	private final static int DEFAULT_IMAGE_HEIGHT = 600;
+
 	public OpenCVSwingCamera() {
-		swingFrame = new SwingFrameWithWidgets(600, 600);
+		swingFrame = new SwingFrameWithWidgets(DEFAULT_FRAME_WIDTH, DEFAULT_FRAME_HEIGHT, DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT);
+		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+		int x = (int) ((dimension.getWidth() - swingFrame.getWidth()) / 2);
+		int y = (int) ((dimension.getHeight() - swingFrame.getHeight()) / 2);
+		swingFrame.setLocation(x, y);
 		swingFrame.setVisible(true);
 
 		swingFrame.addWindowListener(new WindowAdapter() {
@@ -49,58 +61,40 @@ public class OpenCVSwingCamera {
 				System.exit(0);
 			}
 		});
-
 		startCamera();
 	}
 
+	private final static double VIDEO_WIDTH = (double)DEFAULT_IMAGE_WIDTH;
+	private final static double VIDEO_HEIGHT = (double)DEFAULT_IMAGE_HEIGHT;
+
 	protected void startCamera() {
+		this.camera = new VideoCapture(); // cameraId, Videoio.CAP_ANY); // With a cameraId: also opens the camera
+		System.out.println(String.format("Camera opened: %s", this.camera.isOpened()));
+
 		if (!this.cameraActive) {
-			// start the video capture
-			this.capture.open(cameraId);
 
-			// is the video stream available?
-			if (this.capture.isOpened()) {
+			this.camera.open(cameraId);
 
-				System.out.println("Setting video frame size");
-				this.capture.set(Videoio.CAP_PROP_FRAME_WIDTH, 400);
-				this.capture.set(Videoio.CAP_PROP_FRAME_HEIGHT, 300);
+			// TODO Not able to set the frame size...
+			boolean wSet = this.camera.set(Videoio.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH);
+			boolean hSet = this.camera.set(Videoio.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT);
+			System.out.println(String.format("Setting video frame size to %.02f x %.02f => W set: %s, H set: %s", VIDEO_WIDTH, VIDEO_HEIGHT, wSet, hSet));
+			System.out.println(String.format(">> Capture size WxH: %.02f x %.02f", this.camera.get(Videoio.CAP_PROP_FRAME_WIDTH), this.camera.get(Videoio.CAP_PROP_FRAME_HEIGHT)));
 
-				try {
-					Thread.sleep(1_000L); // Wait to set the size
-				} catch (InterruptedException ie) {
-					ie.printStackTrace();
-				}
-
+			if (this.camera.isOpened()) {
 				this.cameraActive = true;
-
 				// grab a frame every 33 ms (30 frames/sec)
-				Runnable frameGrabber = new Runnable() {
-
-					@Override
-					public void run() {
-						// effectively grab and process a single frame
-						Mat frame = grabFrame();
-						// convert and show the frame
-						process(frame);
-					}
+				Runnable frameGrabber = () -> {
+					process(grabFrame());
 				};
 
 				this.timer = Executors.newSingleThreadScheduledExecutor();
 				this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
-
-				// update the button content
-//				this.button.setText("Stop Camera");
 			} else {
-				// log the error
 				System.err.println("Impossible to open the camera connection...");
 			}
 		} else {
-			// the camera is not active at this point
 			this.cameraActive = false;
-			// update again the button content
-//			this.button.setText("Start Camera");
-
-			// stop the timer
 			this.stopAcquisition();
 		}
 	}
@@ -111,24 +105,15 @@ public class OpenCVSwingCamera {
 	 * @return the {@link Mat} to show
 	 */
 	private Mat grabFrame() {
-		// init everything
 		Mat frame = new Mat();
-
-		// check if the capture is open
-		if (this.capture.isOpened()) {
+		if (this.camera.isOpened()) {
 			try {
-				// read the current frame
-				this.capture.read(frame);
-
-				// if the frame is not empty, process it
-				process(frame);
-
+				this.camera.read(frame);
 			} catch (Exception e) {
-				// log the error
-				System.err.println("Exception during the image elaboration: " + e);
+				System.err.println("Exception during camera capture: " + e);
 			}
 		}
-
+//		System.out.println(String.format("Read image from camera %d x %d", frame.width(), frame.height()));
 		return frame;
 	}
 
@@ -142,29 +127,34 @@ public class OpenCVSwingCamera {
 				this.timer.shutdown();
 				this.timer.awaitTermination(33, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException e) {
-				// log any exception
-				System.err.println("Exception in stopping the frame capture, trying to release the camera now... " + e);
+				System.err.println("Exception when stopping the frame camera, will try to release the camera now... " + e);
 			}
 		}
 
-		if (this.capture.isOpened()) {
-			// release the camera
-			this.capture.release();
+		if (this.camera.isOpened()) {
+			this.camera.release();
 		}
 	}
 
 	public static void process(Mat frame) {
 
-		Mat original = frame.clone();
+		Mat original; // For the contours, if needed.
+		if (swingFrame.isDivideChecked()) {
+			original = new Mat();
+			Imgproc.resize(frame, original, new Size(frame.width() / 2, frame.height() / 2));
+		} else {
+			original = frame.clone();
+		}
 		Mat newMat = null;
-		Mat lastMat = frame;
+		Mat lastMat = original;
+
 		// All required Tx (checkboxes in the UI)
 		if (swingFrame.isGrayChecked()) {
 			newMat = new Mat();
 			Imgproc.cvtColor(lastMat, newMat, Imgproc.COLOR_BGR2GRAY);
 			lastMat = newMat;
 		}
-		if (swingFrame.isBlurrChecked()) {
+		if (swingFrame.isBlurChecked()) {
 			newMat = new Mat();
 			double sigmaX = 0d;
 			int gkSize = swingFrame.getGaussianKernelSize();
@@ -183,26 +173,31 @@ public class OpenCVSwingCamera {
 			lastMat = newMat;
 		}
 		if (swingFrame.isContoursChecked()) {
-			newMat = original.clone();
+			if (swingFrame.isContoursOnNewImageChecked()) {
+				newMat = new Mat(original.height(), original.width(), CvType.CV_8UC1); // Write on a new image
+			} else {
+				newMat = original.clone(); // Write on original image
+			}
 			try {
 				List<MatOfPoint> contours = new ArrayList<>();
 				Imgproc.findContours(lastMat, contours, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-				Imgproc.drawContours(newMat, contours, -1, new Scalar(0, 255, 0), 2);
+				Scalar contourColor = swingFrame.isContoursOnNewImageChecked() ? new Scalar(255, 255, 255) : new Scalar(0, 255, 0);
+				Imgproc.drawContours(newMat, contours, -1, contourColor, 2);
 				lastMat = newMat;
 			} catch (CvException cve) {
 				cve.printStackTrace();
 			}
 		}
-		swingFrame.plot(Utils.mat2AWTImage(lastMat));
+		swingFrame.plot(Utils.mat2AWTImage(lastMat), String.format("OpenCV %s", Core.getVersionString()));
 	}
 
 	public static void main(String[] args) {
 		// load the OpenCV native library
-		System.out.println("Loading " + Core.NATIVE_LIBRARY_NAME);
+		System.out.println("Loading lib " + Core.NATIVE_LIBRARY_NAME);
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
 		new OpenCVSwingCamera();
 
-		System.out.println("Bye!");
+		System.out.println("On its way!");
 	}
 }
