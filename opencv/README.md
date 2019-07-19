@@ -35,8 +35,23 @@ See in [`build.gradle`](./build.gradle).
 
 ### Custom code
 ##### Using Java Swing
+
+Path detection on one image.
+
+Would also work each frame returned by the camera
+```
+ ../gradlew runOlivSwing
+```
+| Path detection with a camera  |
+|:-----------------------------:|
+| ![Path detection](./docimg/snap.03.png) |
+This could be the basis to drive a robot carrying the camera
+
+
 Interactive, transforming images returned by the camera.
 ```
  ../gradlew runOlivSwingCamera
 ```
-![Swing UI](./docimg/snap.01.png)
+| Transformations  |
+|:-----------------------------:|
+| ![Swing UI](./docimg/snap.01.png) |
