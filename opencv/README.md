@@ -51,6 +51,7 @@ Would also work each frame returned by the camera
 
 This could be the basis to drive a robot carrying the camera
 
+---
 
 Interactive, transforming images returned by the camera.
 ```
@@ -59,3 +60,5 @@ Interactive, transforming images returned by the camera.
 | Transformations  |
 |:-----------------------------:|
 | ![Swing UI](./docimg/snap.01.png) |
+
+---
