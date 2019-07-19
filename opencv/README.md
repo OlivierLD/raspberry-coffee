@@ -48,6 +48,7 @@ Would also work each frame returned by the camera
 | Path detection with a camera  |
 |:-----------------------------:|
 | ![Path detection](./docimg/snap.03.png) |
+
 This could be the basis to drive a robot carrying the camera
 
 
