@@ -161,7 +161,7 @@ Java, Scala and Kotlin require a compilation. C too, but not from Gradle.
 
 Run
 ```
- $ ../gradlew shadowJar
+ $ ../../gradlew shadowJar [ -x:Project.Trunk:System.Languages:compileClojure ]
 ```
 
 #### A quick note
@@ -175,7 +175,7 @@ The sources are in [`src/main/java/matrix`](./src/main/java/matrix).
 
 To run it:
 ```
- $ java -cp ./build/libs/RasPISamples-1.0-all.jar raspisamples.matrix.SystemUtil
+ $ java -cp ./build/libs/System.Languages-1.0.jar matrix.SystemUtil
 ```
 
 #### Scala
@@ -183,18 +183,18 @@ The sources are in [`src/main/scala/systems`](./src/main/scala/systems).
 
 To run it:
 ```
- $ scala -cp ./build/libs/RasPISamples-1.0-all.jar systems.SystemUtils
+ $ scala -cp ./build/libs/System.Languages-1.0.jar systems.SystemUtils
 ```
 
 #### Kotlin
 The sources are in [`src/main/kotlin/KtSystemSolver.kt`](./src/main/kotlin).
 
 ```
- $ java -cp ./build/libs/RasPISamples-1.0-all.jar systemsKt.KtSystemSolverKt
+ $ java -cp ./build/libs/System.Languages-1.0.jar systemsKt.KtSystemSolverKt
 ```
 or
 ```
- $ kotlin -classpath ./build/libs/RasPISamples-1.0-all.jar systemsKt.KtSystemSolverKt
+ $ kotlin -classpath ./build/libs/System.Languages-1.0.jar systemsKt.KtSystemSolverKt
 ```
 
 
@@ -218,7 +218,7 @@ To run it:
  $ python system.py
 ```
 
-> Note: there is a popular numerical library called `numpy`. We present here an
+> Note: there is or Python a popular numerical library called `numpy`. We present here an
 > example using is, just run
 ```
  $ python system.np.py
