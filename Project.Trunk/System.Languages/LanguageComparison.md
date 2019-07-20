@@ -243,7 +243,7 @@ On the Raspberry Pi, use:
 ```
 
 #### PHP
-Sources are in [`src/main/php/`](./src/main/php). Thanks to Sébastien Morel for tuning up the php code.
+Sources are in [`src/main/php/`](./src/main/php). Thanks to Sébastien Morel for tuning up the `php` code.
 
 See instructions at [src/php/README.md](src/main/php/README.md).
 

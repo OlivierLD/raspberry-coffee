@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 #
-# A Python NMEA Parser
+# A Python NMEA Parser. WIP.
 #
-DEBUG = False
+import datetime
+
+DEBUG = True
 
 
 def sex_to_dec(deg_str, min_str):
@@ -27,6 +29,12 @@ def gll_parser(sentence, valid=False):
 
 
 def txt_parser(sentence, valid=False):
+    """
+    This is not an NMEA Standard, but used some times (by my small USB-GPS U-blox7
+    :param sentence: The NMEA Sentence to parse, starting with '$', ending with '*CS' (CS is the CheckSum).
+    :param valid:
+    :return: A dict, like { 'type': 'txt', 'parsed': { ... parsed object ... }}
+    """
     parsed = {}
     if valid:
         # Validation (Checksum, etc) goes here
@@ -51,11 +59,13 @@ def gsa_parser(sentence, valid=False):
 
 
 def rmc_parser(sentence, valid=False):
+    if DEBUG:
+        print("Parsing {}".format(sentence))
     parsed = {}
     if valid:
         # Validation (Checksum, etc) goes here
         print("Implement validation here")
-    data = sentence[:-3].split(',')
+    data = sentence[:-3].split(',')  # Drop the CheckSum
     # RMC Structure is
     #  0      1      2 3        4 5         6 7     8     9      10    11
     #  $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A
@@ -75,7 +85,26 @@ def rmc_parser(sentence, valid=False):
     if DEBUG:
         print("Parsing RMC, {} items".format(len(data)))
     parsed["valid"] = "true" if (data[2] == 'A') else "false"
+    # Time and Date
+    if len(data[1]) > 0:
+        utc = float(data[1])
+        hours = int(utc / 10_000)
+        mins = int((utc - (10_000 * hours)) / 100)
+        secs = (utc % 100)
+        if len(data[9]) > 0:
+            day = int(data[9][:2])
+            month = int(data[9][2:4])
+            year = int(data[9][4:6])
+            if year > 50:
+                year += 1_900
+            else:
+                year += 2_000
+            date = datetime.datetime(year, month, day, hours, mins, int(secs), 0, tzinfo=datetime.timezone.utc)
+            if DEBUG:
+                print(date.strftime("%A %d %B %Y %H:%M:%S %z %Z, also %c"))
+            parsed["utc-date"] = date
 
+    # Position
     if len(data[3]) > 0 and len(data[5]) > 0:
         pos = {}
         lat_deg = data[3][0:2]
@@ -93,9 +122,42 @@ def rmc_parser(sentence, valid=False):
 
         parsed["position"] = pos
 
+    # SOG
+    if len(data[7]) > 0:
+        sog = float(data[7])
+        parsed["sog"] = sog
+
+    # COG
+    if len(data[8]) > 0:
+        cog = float(data[8])
+        parsed["cog"] = cog
+
+    # Mag Decl. (variation, actually)
+    if len(data[10]) > 0 and len(data[11]) > 0:
+        decl = float(data[10])
+        if "W" == data[11]:
+            decl = -decl
+        parsed["declination"] = decl
+
+    # Extra field, recently added to the spec
+    if data[12] is not None:
+        # The value can be A=autonomous, D=differential, E=Estimated, N=not valid, S=Simulator.
+        type = "None"
+        if data[12] == 'A':
+            type = "autonomous"
+        elif data[12] == 'D':
+            type = "differential"
+        elif data[12] == 'E':
+            type = "estimated"
+        elif data[12] == 'N':
+            type = "not valid"
+        elif data[12] == 'S':
+            type = "simulator"
+        parsed["type"] = type
+
     return {"type": "rmc", "parsed": parsed}
 
-
+# Populate this dict as parsers are available
 NMEA_PARSER_DICT = {
     "TXT": txt_parser,
     "GLL": gll_parser,
@@ -178,15 +240,16 @@ def parse_nmea_sentence(sentence):
 
 # For tests
 if __name__ == "__main__":
-    print("---------------------")
-    print("{} running as main".format(__name__))
-    print("---------------------")
+    print("------------------------------")
+    print("{} running as main (for tests)".format(__name__))
+    print("------------------------------")
     samples = [
         "$IIRMC,092551,A,1036.145,S,15621.845,W,04.8,317,,10,E,A*0D\r\n",
         "$IIMWV,088,T,14.34,N,A*27\r\n",
         "$IIVWR,148.,L,02.4,N,01.2,M,04.4,K*XX\r\n",
         "$IIVTG,054.7,T,034.4,M,005.5,N,010.2,K,A*XX\r\n",
-        "$GPRMC,183333.000,A,4047.7034,N,07247.9938,W,0.66,196.21,150912,,,A*7C\r\n"
+        "$GPRMC,183333.000,A,4047.7034,N,07247.9938,W,0.66,196.21,150912,,,A*7C\r\n",
+        "$GPRMC,012047.00,A,3744.93470,N,12230.42777,W,0.035,,030519,,,D*61\r\n"  # Returned by the U-blox7
     ]
     # akeu = sex_to_dec("12", "34.XX")
     for sentence in samples:

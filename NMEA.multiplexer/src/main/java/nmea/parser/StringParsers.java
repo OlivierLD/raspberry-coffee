@@ -1341,9 +1341,11 @@ public class StringParsers {
 		}
 		s = s.substring(0, s.indexOf("*"));
     /* RMC Structure is
+     *                                                                    12
      *         1      2 3        4 5         6 7     8     9      10    11
-     *  $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A
-     *         |      | |        | |         | |     |     |      |     |
+     *  $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W,T*6A
+     *         |      | |        | |         | |     |     |      |     | |
+     *         |      | |        | |         | |     |     |      |     | Type: A=autonomous, D=differential, E=Estimated, N=not valid, S=Simulator
      *         |      | |        | |         | |     |     |      |     Variation sign
      *         |      | |        | |         | |     |     |      Variation value
      *         |      | |        | |         | |     |     Date DDMMYY (see rmc.date.offset property)
@@ -1471,6 +1473,28 @@ public class StringParsers {
 					if ("W".equals(data[11]))
 						d = -d;
 					rmc = rmc.setDeclination(d);
+				}
+				if (data.length > 12) {
+					switch (data[12]) {
+						case "A":
+							rmc = rmc.setRmcType(RMC.RMC_TYPE.AUTONOMOUS);
+							break;
+						case "D":
+							rmc = rmc.setRmcType(RMC.RMC_TYPE.DIFFERENTIAL);
+							break;
+						case "E":
+							rmc = rmc.setRmcType(RMC.RMC_TYPE.ESTIMATED);
+							break;
+						case "N":
+							rmc = rmc.setRmcType(RMC.RMC_TYPE.NOT_VALID);
+							break;
+						case "S":
+							rmc = rmc.setRmcType(RMC.RMC_TYPE.SIMULATOR);
+							break;
+						default:
+							rmc = rmc.setRmcType(null);
+							break;
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -1866,8 +1890,7 @@ public class StringParsers {
 		float utcOffset = 0F;
 
 		String trailer = duration.substring(19);
-		if (trailer.indexOf("+") >= 0 ||
-						trailer.indexOf("-") >= 0) {
+		if (trailer.indexOf("+") >= 0 || trailer.indexOf("-") >= 0) {
 //    System.out.println(trailer);
 			if (trailer.indexOf("+") >= 0) {
 				trailer = trailer.substring(trailer.indexOf("+") + 1);
@@ -1891,6 +1914,13 @@ public class StringParsers {
 		} else {
 			calendar.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
 		}
+		int milliSec = 0;
+		try {
+			milliSec = Integer.parseInt(ms); // OK for 000,would fail if like '10:', where it is the TZ Offset.
+		} catch (NumberFormatException nfe) {
+			// Absorb
+			milliSec = 0;
+		}
 		try {
 			calendar.set(Integer.parseInt(yyyy),
 							Integer.parseInt(mm) - 1,
@@ -1898,7 +1928,7 @@ public class StringParsers {
 							Integer.parseInt(hh),
 							Integer.parseInt(mi),
 							Integer.parseInt(ss));
-			calendar.set(Calendar.MILLISECOND, Integer.parseInt(ms));
+			calendar.set(Calendar.MILLISECOND, milliSec);
 		} catch (NumberFormatException nfe) {
 			throw new RuntimeException("durationToDate, for [" + duration + "] : " + nfe.getMessage());
 		}
@@ -2079,6 +2109,7 @@ public class StringParsers {
 		System.out.println("Valid:" + validCheckSum(str));
 
 		rmc = parseRMC(str);
+		System.out.println("Parsed:" + str);
 		System.out.println("RMC:" + rmc);
 
 		str = "$IIVWR,148.,L,02.4,N,01.2,M,04.4,K*XX";

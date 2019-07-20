@@ -18,6 +18,16 @@ public class RMC implements Serializable {
 	private Date rmcTime = null;
 	private double declination = -Double.MAX_VALUE;
 
+	public enum RMC_TYPE {
+		AUTONOMOUS,
+		DIFFERENTIAL,
+		ESTIMATED,
+		NOT_VALID,
+		SIMULATOR
+	}
+
+	private RMC_TYPE rmcType = null;
+
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("E dd-MMM-yyyy HH:mm:ss.SS");
 
 	static {
@@ -72,6 +82,12 @@ public class RMC implements Serializable {
 		if (declination != -Double.MAX_VALUE) {
 			str += ("D:" + Double.toString(declination));
 		}
+		if (rmcType != null) {
+			if (!str.endsWith(" ")) {
+				str += " ";
+			}
+			str += ("[ " + rmcType.toString() + " ]");
+		}
 		return str;
 	}
 
@@ -100,5 +116,14 @@ public class RMC implements Serializable {
 
 	public Date getRmcTime() {
 		return rmcTime;
+	}
+
+	public RMC setRmcType(RMC_TYPE type) {
+		this.rmcType = type;
+		return this;
+	}
+
+	public RMC_TYPE getRmcType() {
+		return this.rmcType;
 	}
 }
