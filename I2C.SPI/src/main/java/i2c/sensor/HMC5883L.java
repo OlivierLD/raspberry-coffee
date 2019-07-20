@@ -12,6 +12,7 @@ import java.text.NumberFormat;
 
 /*
  * 3 Axis compass
+ * TODO Reuse the code of LSM303
  */
 public class HMC5883L {
 	private final static int HMC5883L_ADDRESS = 0x1E;

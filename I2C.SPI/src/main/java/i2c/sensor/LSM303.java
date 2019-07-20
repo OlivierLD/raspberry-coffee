@@ -326,10 +326,10 @@ public class LSM303 {
 
 			int accelX = 0, accelY = 0, accelZ = 0;
 			double accX = 0d, accY = 0d, accZ = 0d;
-			double accXfiltered = 0d, accYfiltered = 0d, accZfiltered = 0d;
+			double accXFiltered = 0d, accYFiltered = 0d, accZFiltered = 0d;
 			int magneticX = 0, magneticY = 0, magneticZ = 0;
 			double magX = 0d, magY = 0d, magZ = 0d;
-			double magXfiltered = 0d, magYfiltered = 0d, magZfiltered = 0d;
+			double magXFiltered = 0d, magYFiltered = 0d, magZFiltered = 0d;
 
 			double pitchDegrees = -Double.MAX_VALUE, rollDegrees = -Double.MAX_VALUE;
 			double heading = 0f;
@@ -371,27 +371,27 @@ public class LSM303 {
 				accZ = calibrationMap.get(ACC_Z_OFFSET) + (accZ * calibrationMap.get(ACC_Z_COEFF));
 
 				if (useLowPassFilter) {
-					accXfiltered = lowPass(ALPHA, accX, accXfiltered);
-					accYfiltered = lowPass(ALPHA, accY, accYfiltered);
-					accZfiltered = lowPass(ALPHA, accZ, accZfiltered);
+					accXFiltered = lowPass(ALPHA, accX, accXFiltered);
+					accYFiltered = lowPass(ALPHA, accY, accYFiltered);
+					accZFiltered = lowPass(ALPHA, accZ, accZFiltered);
 				} else {
-					accXfiltered = accX;
-					accYfiltered = accY;
-					accZfiltered = accZ;
+					accXFiltered = accX;
+					accYFiltered = accY;
+					accZFiltered = accZ;
 				}
 				/*
 					pitch = atan (x / sqrt(y^2 + z^2));
 					roll  = atan (y / sqrt(x^2 + z^2));
 				 */
-				pitchDegrees = Math.toDegrees(Math.atan(accXfiltered / Math.sqrt((accYfiltered * accYfiltered) + (accZfiltered * accZfiltered))));
-				rollDegrees  = Math.toDegrees(Math.atan(accYfiltered / Math.sqrt((accXfiltered * accXfiltered) + (accZfiltered * accZfiltered))));
+				pitchDegrees = Math.toDegrees(Math.atan(accXFiltered / Math.sqrt((accYFiltered * accYFiltered) + (accZFiltered * accZFiltered))));
+				rollDegrees  = Math.toDegrees(Math.atan(accYFiltered / Math.sqrt((accXFiltered * accXFiltered) + (accZFiltered * accZFiltered))));
 
 				setPitch(pitchDegrees);
 				setRoll(rollDegrees);
 
 				if (verboseAcc) {
 					System.out.println("Pitch & Roll with Accelerometer:");
-					System.out.println(String.format("\tX:%f, Y:%f, Z:%f", accXfiltered, accYfiltered, accZfiltered));
+					System.out.println(String.format("\tX:%f, Y:%f, Z:%f", accXFiltered, accYFiltered, accZFiltered));
 					System.out.println(String.format("\tPitch:%f, Roll:%f", pitchDegrees, rollDegrees));
 				}
 			}
@@ -427,39 +427,39 @@ public class LSM303 {
 				magZ = (calibrationMap.get(MAG_Z_OFFSET) + (magZ * calibrationMap.get(MAG_Z_COEFF)));
 
 				// TODO See that..., optional? They're all constants...
-//				magX = magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-//				magY = magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-//				magZ = magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
+//				magX /= (_lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA);
+//				magY /= (_lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA);
+//				magZ /= (_lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA);
 
 				if (useLowPassFilter) {
-					magXfiltered = lowPass(ALPHA, magX, magXfiltered);
-					magYfiltered = lowPass(ALPHA, magY, magYfiltered);
-					magZfiltered = lowPass(ALPHA, magZ, magZfiltered);
+					magXFiltered = lowPass(ALPHA, magX, magXFiltered);
+					magYFiltered = lowPass(ALPHA, magY, magYFiltered);
+					magZFiltered = lowPass(ALPHA, magZ, magZFiltered);
 				} else {
-					magXfiltered = magX;
-					magYfiltered = magY;
-					magZfiltered = magZ;
+					magXFiltered = magX;
+					magYFiltered = magY;
+					magZFiltered = magZ;
 				}
 
-				double magXcomp = magXfiltered;
-				double magYcomp = magYfiltered;
+				double magXComp = magXFiltered;
+				double magYComp = magYFiltered;
 
-				double beforeAdjust = GeomUtil.getDir((float)magYcomp, (float)magXcomp); // For dev
+				double beforeAdjust = GeomUtil.getDir((float)magYComp, (float)magXComp); // For dev
 
 				if (pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
-					magXcomp = (magXfiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZfiltered * Math.sin(Math.toRadians(pitchDegrees)));
-					magYcomp = (magYfiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZfiltered * Math.sin(Math.toRadians(rollDegrees)));
+					magXComp = (magXFiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZFiltered * Math.sin(Math.toRadians(pitchDegrees)));
+					magYComp = (magYFiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZFiltered * Math.sin(Math.toRadians(rollDegrees)));
 				}
 
-				double afterAdjust = GeomUtil.getDir((float)magYcomp, (float)magXcomp); // For dev
+				double afterAdjust = GeomUtil.getDir((float)magYComp, (float)magXComp); // For dev
 
-				heading = Math.toDegrees(Math.atan2(magYcomp, magXcomp));
+				heading = Math.toDegrees(Math.atan2(magYComp, magXComp));
 				while (heading < 0) {
 					heading += 360f;
 				}
 
 				if (verbose) {
-					System.out.println(String.format("RAW mag data (2): X:%f Y:%f => (before %.02f) (after %.02f) (HDG %.02f) ", magXcomp, magYcomp, beforeAdjust, afterAdjust, heading));
+					System.out.println(String.format("RAW mag data (2): X:%f Y:%f => (before %.02f) (after %.02f) (HDG %.02f) ", magXComp, magYComp, beforeAdjust, afterAdjust, heading));
 				}
 
 				setHeading(heading);
@@ -494,15 +494,19 @@ public class LSM303 {
 								accelX,       // Raw data
 								accelY,
 								accelZ,
+
 								magneticX,
 								magneticY,
 								magneticZ,
-								accXfiltered, // filtered (smoothed, low pass filter)
-								accYfiltered,
-								accZfiltered,
-								magXfiltered,
-								magYfiltered,
-								magZfiltered,
+
+								accXFiltered, // filtered (smoothed, low pass filter)
+								accYFiltered,
+								accZFiltered,
+
+								magXFiltered,
+								magYFiltered,
+								magZFiltered,
+
 								accNorm,      // norms
 								magNorm));
 			}

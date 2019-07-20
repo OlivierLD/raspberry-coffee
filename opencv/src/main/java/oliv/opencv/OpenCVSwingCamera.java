@@ -27,8 +27,6 @@ import java.util.concurrent.TimeUnit;
  * Oliv did it.
  * Basic OpenCV image manipulations on frames returned by the Camera
  * Display images in a Swing JPanel
- *
- * Uses assertions.
  */
 public class OpenCVSwingCamera {
 
@@ -40,9 +38,9 @@ public class OpenCVSwingCamera {
 
 	private static SwingFrameWithWidgets swingFrame = null;
 
-	private final static int DEFAULT_FRAME_WIDTH = 800;
-	private final static int DEFAULT_FRAME_HEIGHT = 800;
-	private final static int DEFAULT_IMAGE_WIDTH = 800;
+	private final static int DEFAULT_FRAME_WIDTH =  800;
+	private final static int DEFAULT_FRAME_HEIGHT = 760;
+	private final static int DEFAULT_IMAGE_WIDTH =  800;
 	private final static int DEFAULT_IMAGE_HEIGHT = 600;
 
 	public OpenCVSwingCamera() {
@@ -75,7 +73,7 @@ public class OpenCVSwingCamera {
 
 			this.camera.open(cameraId);
 
-			// TODO Not able to set the frame size... Works from Python though.
+			// Not able to set the frame size on the internal camera of the Mac (USB WebCam OK)... Works from Python though.
 			boolean wSet = this.camera.set(Videoio.CAP_PROP_FRAME_WIDTH, VIDEO_WIDTH);
 			boolean hSet = this.camera.set(Videoio.CAP_PROP_FRAME_HEIGHT, VIDEO_HEIGHT);
 			System.out.println(String.format("Setting video frame size to %.02f x %.02f => W set: %s, H set: %s", VIDEO_WIDTH, VIDEO_HEIGHT, wSet, hSet));
@@ -157,7 +155,7 @@ public class OpenCVSwingCamera {
 		if (swingFrame.isBlurChecked()) {
 			newMat = new Mat();
 			double sigmaX = 0d;
-			int gkSize = swingFrame.getGaussianKernelSize();
+			int gkSize = swingFrame.getGaussianKernelSize(); // From the slider
 			final Size kSize = new Size(gkSize, gkSize);
 			Imgproc.GaussianBlur(lastMat, newMat, kSize, sigmaX);
 			lastMat = newMat;
