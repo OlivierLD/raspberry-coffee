@@ -4,10 +4,16 @@
 #
 import datetime
 
-DEBUG = True
+DEBUG = False
 
 
 def sex_to_dec(deg_str, min_str):
+    """
+    Sexagesimal to decimal
+    :param deg_str: degrees value (as string containing an int) like '12'
+    :param min_str: minutes value (as a string containing a float) like '45.00'
+    :return: decimal value, like 12.75 here.
+    """
     try:
         degrees = float(deg_str)
         minutes = float(min_str)
@@ -32,7 +38,7 @@ def txt_parser(sentence, valid=False):
     """
     This is not an NMEA Standard, but used some times (by my small USB-GPS U-blox7
     :param sentence: The NMEA Sentence to parse, starting with '$', ending with '*CS' (CS is the CheckSum).
-    :param valid:
+    :param valid: default False, will perform sentence validation if True
     :return: A dict, like { 'type': 'txt', 'parsed': { ... parsed object ... }}
     """
     parsed = {}
@@ -59,6 +65,12 @@ def gsa_parser(sentence, valid=False):
 
 
 def rmc_parser(sentence, valid=False):
+    """
+    NMEA Standard
+    :param sentence: The NMEA Sentence to parse, starting with '$', ending with '*CS' (CS is the CheckSum).
+    :param valid: default False, will perform sentence validation if True
+    :return: A dict, like { 'type': 'rmc', 'parsed': { ... parsed object ... }}
+    """
     if DEBUG:
         print("Parsing {}".format(sentence))
     parsed = {}
@@ -67,9 +79,11 @@ def rmc_parser(sentence, valid=False):
         print("Implement validation here")
     data = sentence[:-3].split(',')  # Drop the CheckSum
     # RMC Structure is
+    #                                                                   12
     #  0      1      2 3        4 5         6 7     8     9      10    11
-    #  $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A
+    #  $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W,A*6A
     #         |      | |        | |         | |     |     |      |     |
+    #         |      | |        | |         | |     |     |      |     Type: A=autonomous, D=differential, E=Estimated, N=not valid, S=Simulator
     #         |      | |        | |         | |     |     |      |     Variation sign
     #         |      | |        | |         | |     |     |      Variation value
     #         |      | |        | |         | |     |     Date DDMMYY (see rmc.date.offset property)
@@ -167,6 +181,11 @@ NMEA_PARSER_DICT = {
 
 
 def calculate_check_sum(sentence):
+    """
+    Calculates the NMEA CheckSum
+    :param sentence: NMEA Sentence to calculate the checksum of, with NO *CS at the end, and no '$' at the beginning
+    :return: the expected checksum, as in int
+    """
     cs = 0
     char_array = list(sentence)
     for c in range(len(sentence)):
@@ -175,16 +194,21 @@ def calculate_check_sum(sentence):
 
 
 def valid_check_sum(sentence):
+    """
+    Validates an NMEA Sentence
+    :param sentence: Full one, with '$' at the start, and checksumn at the end
+    :return: True if valid, False if not
+    """
     try:
         _ = sentence.index('*')
     except Exception:
         if DEBUG:
             print("No star was found in the NMEA string")
         return False
-    cs_key = sentence[-2:]
+    cs_key = sentence[-2:]  # the 2 last characters, should be an hexadecimal value
     # print("CS Key: {}".format(cs_key))
     try:
-        csk = int(cs_key, 16)
+        csk = int(cs_key, 16)  # int value
     except Exception:
         if DEBUG:
             print("Invalid Hex CS Key {}".format(cs_key))
