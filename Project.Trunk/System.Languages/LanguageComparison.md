@@ -218,6 +218,13 @@ To run it:
  $ python system.py
 ```
 
+> Note: there is a popular numerical library called `numpy`. We present here an
+> example using is, just run
+```
+ $ python system.np.py
+```
+> It makes the code much simpler.
+
 #### C
 Sources are in [`src/main/C/system.c`](./src/main/C).
 
