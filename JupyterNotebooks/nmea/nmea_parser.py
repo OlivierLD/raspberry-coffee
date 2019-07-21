@@ -7,6 +7,16 @@ import datetime
 DEBUG = False
 
 
+class InvalidChecksumException(Exception):
+    """Raised when checksum is invalid"""
+    pass
+
+
+class NoParserException(Exception):
+    """Raised when parser is not implemented"""
+    pass
+
+
 def sex_to_dec(deg_str, min_str):
     """
     Sexagesimal to decimal
@@ -24,20 +34,21 @@ def sex_to_dec(deg_str, min_str):
         raise Exception("Bad numbers [{}] [{}]".format(deg_str, min_str))
 
 
-def gll_parser(sentence, valid=False):
+def gll_parser(nmea_sentence, valid=False):
     parsed = {}
     if valid:
         # Validation (Checksum, etc) goes here
         print("Implement validation here")
-    data = sentence[:-3].split(',')
-    print("Parsing GLL, {} elements".format(len(data)))
+    data = nmea_sentence[:-3].split(',')
+    if DEBUG:
+        print("Parsing GLL, {} elements".format(len(data)))
     return {"type": "gll", "parsed": parsed}
 
 
-def txt_parser(sentence, valid=False):
+def txt_parser(nmea_sentence, valid=False):
     """
     This is not an NMEA Standard, but used some times (by my small USB-GPS U-blox7
-    :param sentence: The NMEA Sentence to parse, starting with '$', ending with '*CS' (CS is the CheckSum).
+    :param nmea_sentence: The NMEA Sentence to parse, starting with '$', ending with '*CS' (CS is the CheckSum).
     :param valid: default False, will perform sentence validation if True
     :return: A dict, like { 'type': 'txt', 'parsed': { ... parsed object ... }}
     """
@@ -45,7 +56,7 @@ def txt_parser(sentence, valid=False):
     if valid:
         # Validation (Checksum, etc) goes here
         print("Implement validation here")
-    data = sentence[:-3].split(',')
+    data = nmea_sentence[:-3].split(',')
     # TXT Structure (non NMEA standard):
     # 0      1  2  3  4
     # $GPTXT,01,01,02,ANTSTATUS=OK*3B
@@ -60,30 +71,37 @@ def txt_parser(sentence, valid=False):
     return {"type": "txt", "parsed": parsed}
 
 
-def gsa_parser(sentence, valid=False):
-    return {"type": "gsa", "parsed": sentence}
+def gsa_parser(nmea_sentence, valid=False):
+    if valid:
+        # Validation (Checksum, etc) goes here
+        print("Implement validation here")
+    return {"type": "gsa", "parsed": nmea_sentence}
 
 
-def rmc_parser(sentence, valid=False):
+def rmc_parser(nmea_sentence, valid=False):
     """
     NMEA Standard
-    :param sentence: The NMEA Sentence to parse, starting with '$', ending with '*CS' (CS is the CheckSum).
+    :param nmea_sentence: The NMEA Sentence to parse, starting with '$', ending with '*CS' (CS is the CheckSum).
     :param valid: default False, will perform sentence validation if True
     :return: A dict, like { 'type': 'rmc', 'parsed': { ... parsed object ... }}
     """
     if DEBUG:
-        print("Parsing {}".format(sentence))
+        print("Parsing {}".format(nmea_sentence))
     parsed = {}
     if valid:
         # Validation (Checksum, etc) goes here
         print("Implement validation here")
-    data = sentence[:-3].split(',')  # Drop the CheckSum
+    data = nmea_sentence[:-3].split(',')  # Drop the CheckSum
     # RMC Structure is
     #                                                                   12
     #  0      1      2 3        4 5         6 7     8     9      10    11
     #  $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W,A*6A
-    #         |      | |        | |         | |     |     |      |     |
-    #         |      | |        | |         | |     |     |      |     Type: A=autonomous, D=differential, E=Estimated, N=not valid, S=Simulator
+    #         |      | |        | |         | |     |     |      |     | |
+    #         |      | |        | |         | |     |     |      |     | Type: A=autonomous,
+    #         |      | |        | |         | |     |     |      |     |       D=differential,
+    #         |      | |        | |         | |     |     |      |     |       E=Estimated,
+    #         |      | |        | |         | |     |     |      |     |       N=not valid,
+    #         |      | |        | |         | |     |     |      |     |       S=Simulator
     #         |      | |        | |         | |     |     |      |     Variation sign
     #         |      | |        | |         | |     |     |      Variation value
     #         |      | |        | |         | |     |     Date DDMMYY (see rmc.date.offset property)
@@ -156,20 +174,21 @@ def rmc_parser(sentence, valid=False):
     # Extra field, recently added to the spec
     if data[12] is not None:
         # The value can be A=autonomous, D=differential, E=Estimated, N=not valid, S=Simulator.
-        type = "None"
+        rmc_type = "None"
         if data[12] == 'A':
-            type = "autonomous"
+            rmc_type = "autonomous"
         elif data[12] == 'D':
-            type = "differential"
+            rmc_type = "differential"
         elif data[12] == 'E':
-            type = "estimated"
+            rmc_type = "estimated"
         elif data[12] == 'N':
-            type = "not valid"
+            rmc_type = "not valid"
         elif data[12] == 'S':
-            type = "simulator"
-        parsed["type"] = type
+            rmc_type = "simulator"
+        parsed["type"] = rmc_type
 
     return {"type": "rmc", "parsed": parsed}
+
 
 # Populate this dict as parsers are available
 NMEA_PARSER_DICT = {
@@ -180,41 +199,42 @@ NMEA_PARSER_DICT = {
 }
 
 
-def calculate_check_sum(sentence):
+def calculate_check_sum(nmea_sentence):
     """
     Calculates the NMEA CheckSum
-    :param sentence: NMEA Sentence to calculate the checksum of, with NO *CS at the end, and no '$' at the beginning
+    :param nmea_sentence: NMEA Sentence to calculate the checksum of,
+                          with NO *CS at the end, and no '$' at the beginning
     :return: the expected checksum, as in int
     """
     cs = 0
-    char_array = list(sentence)
-    for c in range(len(sentence)):
+    char_array = list(nmea_sentence)
+    for c in range(len(nmea_sentence)):
         cs = cs ^ ord(char_array[c])  # This is an XOR
     return cs
 
 
-def valid_check_sum(sentence):
+def valid_check_sum(nmea_sentence):
     """
     Validates an NMEA Sentence
-    :param sentence: Full one, with '$' at the start, and checksumn at the end
+    :param nmea_sentence: Full one, with '$' at the start, and checksumn at the end
     :return: True if valid, False if not
     """
     try:
-        _ = sentence.index('*')
-    except Exception:
+        _ = nmea_sentence.index('*')
+    except Exception as exception:
         if DEBUG:
-            print("No star was found in the NMEA string")
+            print("No star was found in the NMEA string, {}".format(exception))
         return False
-    cs_key = sentence[-2:]  # the 2 last characters, should be an hexadecimal value
+    cs_key = nmea_sentence[-2:]  # the 2 last characters, should be an hexadecimal value
     # print("CS Key: {}".format(cs_key))
     try:
         csk = int(cs_key, 16)  # int value
-    except Exception:
+    except Exception as exception:
         if DEBUG:
-            print("Invalid Hex CS Key {}".format(cs_key))
+            print("Invalid Hex CS Key {}, {}".format(cs_key, exception))
         return False
 
-    string_to_validate = sentence[1:-3]  # no $, no *CS
+    string_to_validate = nmea_sentence[1:-3]  # no $, no *CS
     # print("Key in HEX is {}, validating {}".format(csk, string_to_validate))
     calculated = calculate_check_sum(string_to_validate)
     if calculated != csk:
@@ -227,18 +247,18 @@ def valid_check_sum(sentence):
     return True
 
 
-def parse_nmea_sentence(sentence):
-    if sentence.startswith('$'):
-        if sentence.endswith('\r\n'):
-            sentence = sentence.strip()  # drops the \r\n
-            members = sentence.split(',')
+def parse_nmea_sentence(nmea_sentence):
+    if nmea_sentence.startswith('$'):
+        if nmea_sentence.endswith('\r\n'):
+            nmea_sentence = nmea_sentence.strip()  # drops the \r\n
+            members = nmea_sentence.split(',')
             # print("Split: {}".format(members))
             sentence_prefix = members[0]
             if len(sentence_prefix) == 6:
                 # print("Sentence ID: {}".format(sentence_prefix))
-                valid = valid_check_sum(sentence)
+                valid = valid_check_sum(nmea_sentence)
                 if not valid:
-                    raise Exception('Invalid checksum')
+                    raise InvalidChecksumException('Invalid checksum for {}'.format(nmea_sentence))
                 else:
                     sentence_id = sentence_prefix[3:]
                     parser = None
@@ -247,10 +267,10 @@ def parse_nmea_sentence(sentence):
                             parser = NMEA_PARSER_DICT[key]
                             break
                     if parser is None:
-                        raise Exception("No parser exists (yet) for {}".format(sentence_id))
+                        raise NoParserException("No parser exists (yet) for {}".format(sentence_id))
                     else:
                         # print("Proceeding... {}".format(sentence_id))
-                        obj = parser(sentence)
+                        obj = parser(nmea_sentence)
                         # print("Parsed: {}".format(obj))
                         return obj
             else:
@@ -259,7 +279,6 @@ def parse_nmea_sentence(sentence):
             raise Exception('Sentence should end with \\r\\n')
     else:
         raise Exception('Sentence should start with $')
-    return nmea_dict
 
 
 # For tests

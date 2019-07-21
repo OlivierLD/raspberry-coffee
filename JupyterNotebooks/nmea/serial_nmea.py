@@ -21,7 +21,10 @@ def read_nmea_sentence(serial_port):
     """
     rv = []
     while True:
-        ch = serial_port.read()
+        try:
+            ch = serial_port.read()
+        except KeyboardInterrupt as ki:
+            raise ki
         if DEBUG:
             print("Read {} from Serial Port".format(ch))
         rv.append(ch)
@@ -40,10 +43,26 @@ baud_rate = 4800
 port = serial.Serial(port_name, baudrate=baud_rate, timeout=3.0)
 print("Let's go. Hit Ctrl+C to stop")
 while True:
-    rcv = read_nmea_sentence(port)
-    # print("\tReceived:" + repr(rcv))  # repr: displays also non printable characters between quotes.
     try:
+        rcv = read_nmea_sentence(port)
+        # print("\tReceived:" + repr(rcv))  # repr: displays also non printable characters between quotes.
         nmea_obj = NMEAParser.parse_nmea_sentence(rcv)
-        print("=> {}".format(nmea_obj))
+        try:
+            if nmea_obj["type"] == 'rmc':
+                print("RMC => {}".format(nmea_obj))
+            else:
+                print("{} => {}".format(nmea_obj["type"], nmea_obj))
+        except AttributeError as ae:
+            print("AttributeError for {}".format(nmea_obj))
+    except NMEAParser.NoParserException as npe:
+        # absorb
+        if DEBUG:
+            print("- No parser")
+    except KeyboardInterrupt:
+        print("\n\t\tUser interrupted, exiting.")
+        port.close()
+        break
     except Exception as ex:
-        print("\t\tOoops! {}".format(ex))
+        print("\t\tOoops! {} {}".format(type(ex), ex))
+
+print("Bye.")
