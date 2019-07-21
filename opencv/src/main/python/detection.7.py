@@ -18,7 +18,7 @@ theta = np.pi / 180
 minLineLength = 10
 maxLineGap = 1
 
-# Initialize camera
+# Initialize and open camera
 camera = cv2.VideoCapture(0)
 
 width = 640

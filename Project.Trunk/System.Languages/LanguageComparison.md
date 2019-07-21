@@ -376,6 +376,10 @@ Java is using a syntax similar to C. It uses a similar way to declare functions 
 - It runs on a Java Virtual Machine. As a result, a `class` compiled somewhere will run
 _without any modification_ on any other system where a JVM is available. The portability is taken care of by the
 implementation of the virtual machine.
+    - The Java Virtual Machine (JVM) runs three threads:
+        - The `runtime`, that runs your programs
+        - The `finalizer`, that flags the variables no longer in use, so they can be freed
+        - The `garbage collector` (GC) that removes (frees) the variables flagged by the `finalizer`
 - Java does not need linkage (link libraries),  the `classpath` takes care of it.
 
 This eliminates a lot of the issues inherent to `C`.
