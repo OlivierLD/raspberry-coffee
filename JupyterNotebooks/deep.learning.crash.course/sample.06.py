@@ -2,6 +2,7 @@
 # From https://www.tensorflow.org/tutorials/keras/basic_classification
 #
 # Fashion mnist, images classification
+# Train the model, then use it.
 #
 from __future__ import absolute_import, division, print_function
 

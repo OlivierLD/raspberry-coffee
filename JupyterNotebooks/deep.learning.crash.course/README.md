@@ -708,6 +708,9 @@ With
 Show your hand-writing to the WebCam, and press `s` to take a snapshot.
 The snapshot will be reworked, and sent to the `model` for recognition.
 
+### An example of objects recognition
+Look in [this module](https://github.com/OlivierLD/raspberry-coffee/tree/master/opencv/src/main/python/object.detection).
+
 ### Conclusion
 Go ahead! Just do it!
 

@@ -1,6 +1,6 @@
 ### Requirements
 ```buildoutcfg
-pip install tesorflow
+pip install tensorflow
 pip install numpy
 pip install scipy
 pip install opencv-python
