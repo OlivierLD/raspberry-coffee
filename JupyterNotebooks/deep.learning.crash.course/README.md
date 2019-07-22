@@ -677,8 +677,8 @@ Separate the 3 digits the image contains, I use `GIMP`.
 
 Then, use
 ```buildoutcfg
- $ ./sample.05.2.2.py
- TensorFlow version 1.13.1
+ $ ./sample.05.2.py
+TensorFlow version 1.13.1
 Keras version 2.2.4-tf
 1 script arguments.
 2019-06-27 16:46:09.435934: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
@@ -699,6 +699,14 @@ Enter the image file name (Q to quit) > q
 Bye!
  $
 ```
+
+### Even better: Use OpenCV and a WebCam
+With
+```buildoutcfg
+ $ ./sample.05.21.py
+```
+Show your hand-writing to the WebCam, and press `s` to take a snapshot.
+The snapshot will be reworked, and sent to the `model` for recognition.
 
 ### Conclusion
 Go ahead! Just do it!

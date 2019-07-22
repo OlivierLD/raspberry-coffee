@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 #
+# Main for an NMEA Parser. Read a serial port, and parse its output.
+#
 # May require:
 # pip install pyserial
 #
@@ -57,7 +59,7 @@ while True:
     except NMEAParser.NoParserException as npe:
         # absorb
         if DEBUG:
-            print("- No parser")
+            print("- No parser, {}".format(npe))
     except KeyboardInterrupt:
         print("\n\t\tUser interrupted, exiting.")
         port.close()

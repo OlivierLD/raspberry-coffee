@@ -53,7 +53,7 @@ while True:
     # Frame by Frame
     ret, frame = camera.read()
     time.sleep(0.1)
-    # cv2.imshow('Original', image)
+    # cv2.imshow('Original', frame)
 
     img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     # cv2.imshow('Gray', img_gray)
@@ -121,8 +121,12 @@ while True:
 
     cv2.imshow('Detected path', frame)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):  # select the image window and hit 'q' to quit
+    key = cv2.waitKey(1) & 0xFF
+    # print("Key : {}".format(key))
+    if key == ord('q'):  # select the image window and hit 'q' to quit
         break
+    if key == ord('s'):  # Take snapshot
+        print('\t\tTaking snapshot?')
 
 # When everything is done, release the capture
 camera.release()

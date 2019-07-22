@@ -5,6 +5,7 @@
 #
 # Similar to sample.05.py, but with YOUR own images.
 # Model training.h5 must already exist
+# Uses OpenCV to reshape the images as expected by the model
 #
 # Great doc at https://medium.com/@ashok.tankala/build-the-mnist-model-with-your-own-handwritten-digits-using-tensorflow-keras-and-python-f8ec9f871fd3
 #
