@@ -734,7 +734,7 @@ Prediction: it looks like a  3  ( 100.0 % sure ), Nb predictions: 1
 ```
 Once the ROI has been identified:
 - We turn it to gray
-- We blur it, to make the background line of the paper disappear
+- We blur it, to make the background lines of the paper disappear
 - We "thresh" (short for "threshold") it, to get a "pure" black-and white image (or close, some gray might still be there, see the code for that)
 - We resize it to the expected dimension (28x28)
     - Now we have data looking like the ones for the hand-written `8` above...
