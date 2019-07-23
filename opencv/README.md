@@ -37,7 +37,7 @@ See in [`build.gradle`](./build.gradle).
 ```
 
 ### Custom code
-##### Using Java Swing
+> Using Java Swing
 
 Path detection on one image.
 
