@@ -715,9 +715,9 @@ We transform them - using OpenCV - into something the model expects.
 
 Here are all the steps (they can be hidden):
 
-|  WebCam, hit 's'                    | Select Region Of Interest (ROI)     | Select ROI, hit [Space] + [Ctrl]  |
+|  WebCam, hit 's'                    | Select Region Of Interest (ROI)     | Select ROI, hit [Space] + [Enter]  |
 |:-----------------------------------:|:-----------------------------------:|:-----------------------------------:|
-| ![WebCam, hit 's'](./img/cr.01.png) | ![ROI](./img/cr.02.png) | ![WebCam, hit 's'](./img/cr.03.png) |
+| ![WebCam, hit 's'](./img/cr.01.png) | ![ROI](./img/cr.02.png) | ![Select](./img/cr.03.png) |
 |  Selected ROI is grayed   | then blurred     | and threshed  |
 | ![Grayed](./img/cr.04.png) | ![Blurred](./img/cr.05.png) | ![Threshed](./img/cr.06.png) |
 |  finally reworked and submitted to the model |     |   |
