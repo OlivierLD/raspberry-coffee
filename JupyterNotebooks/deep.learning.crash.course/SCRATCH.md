@@ -60,3 +60,11 @@ You need to have downloaded the data before running the scripts:
 ```
 $ curl -O https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-course-notebooks/master/data/insurance-customers-1500.csv
 ```
+
+## Misc pointers
+- [Oliv's OpenCV WIP, in Java & Python](https://github.com/OlivierLD/raspberry-coffee/tree/master/opencv)
+- [Facial recognition, OpenCV & Java](https://docs.opencv.org/2.4/doc/tutorials/imgproc/threshold/threshold.html)
+- [Machine Learning in Digital Process Automation - Part 1](https://medium.com/oracledevs/machine-learning-in-digital-process-automation-part-i-7c7468e23804)
+- [Machine Learning in Digital Process Automation - Part 2](https://medium.com/@ralf_mueller/ebeeec8763dc)
+- [Data mining concepts](https://docs.oracle.com/en/database/oracle/oracle-database/19/dmcon/index.html)
+- [Serverless and Recurrent Neural Networks with Fn, GraphPipe and TensorFlow](https://medium.com/fnproject/serverless-and-recurrent-neural-networks-with-tensorflow-and-graphpipe-fc73785f1a16)
