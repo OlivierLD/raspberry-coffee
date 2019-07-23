@@ -62,6 +62,14 @@ except OSError as ose:
     print(ose)
     sys.exit(1)
 
+THRESHOLD_TYPE = {
+    "BINARY": 0,
+    "BINARY_INVERTED": 1,
+    "TRUNCATED": 2,
+    "TO_ZERO": 3,
+    "TO_ZERO_INVERTED": 4
+}
+
 
 def apply_model(image, show_all_steps=False, kernel_size=15):
 
@@ -77,8 +85,8 @@ def apply_model(image, show_all_steps=False, kernel_size=15):
     last_image = blurred
 
     if True:
-        threshold_value = 127  # for the 127: dark conditions, 200: good light conditions
-        _, thresh = cv2.threshold(last_image, threshold_value, 255, 0)
+        threshold_value = 127  # 127: dark conditions, 200: good light conditions
+        _, thresh = cv2.threshold(last_image, threshold_value, 255, THRESHOLD_TYPE["BINARY"])
         if show_all_steps:
             cv2.imshow('Threshed', thresh)
         last_image = thresh
