@@ -47,8 +47,8 @@ Would also work each frame returned by the camera
 ```
 | ![Original](./docimg/step.01.png) | ![Gray](./docimg/step.02.png) | ![Blur](./docimg/step.03.png) |
 |:--------:|:--------:|:--------:|
-| ![Original](./docimg/step.04.png) | ![Gray](./docimg/step.05.png) | ![Blur](./docimg/step.06.png) |
-| ![Original](./docimg/step.07.png) |  |  |
+| ![Threshed](./docimg/step.04.png) | ![Contours](./docimg/step.05.png) | ![Canny Edges](./docimg/step.06.png) |
+| ![Detected](./docimg/step.07.png) |  |  |
 
 This could be the basis to drive a robot carrying the camera
 
