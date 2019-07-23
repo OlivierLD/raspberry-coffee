@@ -708,9 +708,14 @@ With
 Show your hand-writing to the WebCam, and press `s` to take a snapshot.
 The snapshot will be reworked, and sent to the `model` for recognition.
 
+Again, preparing the data is one of the keys to the solutions.
+You have to feed the model with something close to what it has been trained with.
+Here, small gray images, 28x28 pixels. In this case, we take snapshots from a web-cam (color images, much bigger than 28x28 px).
+We transform them - using OpenCV - into something the model expects.
+
 Here are all the steps (they can be hidden):
 
-|  WebCam, hit 's'                    | Select Region Of Interest (ROI)     | Selected ROI, hit [Space] + [Ctrl]  |
+|  WebCam, hit 's'                    | Select Region Of Interest (ROI)     | Select ROI, hit [Space] + [Ctrl]  |
 |:-----------------------------------:|:-----------------------------------:|:-----------------------------------:|
 | ![WebCam, hit 's'](./img/cr.01.png) | ![ROI](./img/cr.02.png) | ![WebCam, hit 's'](./img/cr.03.png) |
 |  Selected ROI is grayed   | then blurred     | and threshed  |
@@ -727,6 +732,13 @@ Select a ROI and then press SPACE or ENTER button!
 Cancel the selection process by pressing c button!
 Prediction: it looks like a  3  ( 100.0 % sure ), Nb predictions: 1
 ```
+Once the ROI has been identified:
+- We turn it to gray
+- We blur it, to make the background line of the paper disappear
+- We "thresh" (short for "threshold") it, to get a "pure" black-and white image (or close, some gray might still be there, see the code for that)
+- We resize it to the expected dimension (28x28)
+    - Now we have data looking like the ones for the hand-written `8` above...
+- And we send it to the model for identification...
 
 ### An example of objects recognition
 Look in [this module](https://github.com/OlivierLD/raspberry-coffee/tree/master/opencv/src/main/python/object.detection).

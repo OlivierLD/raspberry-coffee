@@ -159,6 +159,7 @@ while keepLooping:
     if key == ord('s'):  # Take snapshot
         print('\t\tTaking snapshot -')  # Invoke model
         # Select ROI
+        # Nice ROI summary: https://www.learnopencv.com/how-to-select-a-bounding-box-roi-in-opencv-cpp-python/
         roi = cv2.selectROI(image)  # Interactive selection
         cropped_image = image[int(roi[1]):int(roi[1] + roi[3]), int(roi[0]):int(roi[0] + roi[2])]
         cv2.imshow('Selected ROI', cropped_image)
