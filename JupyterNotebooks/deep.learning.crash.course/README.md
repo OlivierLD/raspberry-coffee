@@ -206,13 +206,7 @@ Example
 
  <img src="./img/neuron.example.png" alt="Neuron" width="404" height="253"/>
 
-See a [Java Notebook](./NeuralNetworks.ipynb#Neurons!) for an example.
-
-Or this piece of HTML5/CSS3/WebComponents:
-
-<figure>
-  <iframe src="https://olivierld.github.io/nn/one.neuron.webcomp.html" frameborder="0"></iframe>
-</figure>
+See a [Java Notebook](./NeuralNetworks.ipynb#Neurons!) for an example, or <a href="https://olivierld.github.io/nn/one.neuron.webcomp.html" target="new">this piece</a> of HTML5/CSS3/WebComponents.
 
 In a classification problem, a single neuron can draw a single line as a decision boundary.
 
