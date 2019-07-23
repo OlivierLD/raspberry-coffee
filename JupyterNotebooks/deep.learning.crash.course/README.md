@@ -708,6 +708,26 @@ With
 Show your hand-writing to the WebCam, and press `s` to take a snapshot.
 The snapshot will be reworked, and sent to the `model` for recognition.
 
+Here are all the steps (they can be hidden):
+
+|  WebCam, hit 's'                    | Select Region Of Interest (ROI)     | Selected ROI, hit [Space] + [Ctrl]  |
+|:-----------------------------------:|:-----------------------------------:|:-----------------------------------:|
+| ![WebCam, hit 's'](./img/cr.01.png) | ![ROI](./img/cr.02.png) | ![WebCam, hit 's'](./img/cr.03.png) |
+|  Selected ROI is grayed   | then blurred     | and threshed  |
+| ![Grayed](./img/cr.04.png) | ![Blurred](./img/cr.05.png) | ![Threshed](./img/cr.06.png) |
+|  finally reworked and submitted to the model |     |   |
+| ![Reworked](./img/cr.07.png) |  |  |
+```
+>> Model is now loaded
++---------------------------------------------------------+
+| Type Q or q to exit the loop, S or s to take a snapshot |
++---------------------------------------------------------+
+		Taking snapshot -
+Select a ROI and then press SPACE or ENTER button!
+Cancel the selection process by pressing c button!
+Prediction: it looks like a  3  ( 100.0 % sure ), Nb predictions: 1
+```
+
 ### An example of objects recognition
 Look in [this module](https://github.com/OlivierLD/raspberry-coffee/tree/master/opencv/src/main/python/object.detection).
 

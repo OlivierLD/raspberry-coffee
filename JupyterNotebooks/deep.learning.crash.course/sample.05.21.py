@@ -33,8 +33,6 @@ import cv2
 import tf_utils
 
 warnings.filterwarnings('ignore')
-Kernel_size = 31
-
 
 print("Let's go!")
 
@@ -65,30 +63,35 @@ except OSError as ose:
     sys.exit(1)
 
 
-def apply_model(image):
-    img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+def apply_model(image, show_all_steps=False, kernel_size=15):
 
-    blurred = cv2.GaussianBlur(img, (Kernel_size, Kernel_size), 0)
-    # cv2.imshow('Blurred', blurred)
+    last_image = image
+    gray = cv2.cvtColor(last_image, cv2.COLOR_BGR2GRAY)
+    if show_all_steps:
+        cv2.imshow('Grayed', gray)
+    last_image = gray
 
-    # ret, thresh = cv2.threshold(img_gray, 127, 255, 0)
-    _, thresh = cv2.threshold(blurred, 127, 255, 0)
+    blurred = cv2.GaussianBlur(last_image, (kernel_size, kernel_size), 0)
+    if show_all_steps:
+        cv2.imshow('Blurred', blurred)
+    last_image = blurred
 
-    # reworked = cv2.resize(255-img, (28, 28))
-    reworked = cv2.resize(255 - thresh, (28, 28))
+    if True:
+        _, thresh = cv2.threshold(last_image, 200, 255, 0)  # for the 2nd prm, 200 seems right, 127 is not enough
+        if show_all_steps:
+            cv2.imshow('Threshed', thresh)
+        last_image = thresh
+
+    reworked = cv2.resize(255 - last_image, (28, 28))
+    last_image = reworked
 
     # Show the image, as it's been transformed to be processed
-    cv2.imshow("As transformed for processing", reworked)
+    cv2.imshow("As transformed for processing", last_image)
 
-    # Below: pure black and white (not necessary here)
-    # thresh = 127
-    # img_bw = cv2.threshold(img, thresh, 255, cv2.THRESH_BINARY)[1]
-    # # cv2.imwrite('blackwhite.png', im_bw)
-    # plt.imshow(img_bw, cmap=plt.cm.binary)
-    # plt.show()
+    time.sleep(0.5)
 
     # To match the model requirements
-    im2arr = np.array(reworked)
+    im2arr = np.array(last_image)
     im2arr = im2arr.reshape(1, 28, 28, 1)
     pred = model.predict_classes(im2arr)
     precision = model.predict(im2arr)
@@ -108,10 +111,14 @@ def apply_model(image):
 # The core of the program
 camera = cv2.VideoCapture(0)
 
-width = 480
+width = 640
 height = 640
 camera.set(3, width)
 camera.set(4, height)
+
+mirror = False
+zoom = False
+scale = 25  # Zoom scale. Percent of the original (radius). 50 => 100%
 
 keepLooping = True
 print("+---------------------------------------------------------+")
@@ -122,8 +129,26 @@ while keepLooping:
     _, frame = camera.read()
     time.sleep(0.1)
     try:
+        image = frame;
+        if mirror:
+            image = cv2.flip(image, 1)
+
+        if zoom:
+            # Zoom on the image, see 'scale' (in %)
+            # get the webcam size
+            img_height, img_width, channels = image.shape
+            # prepare the crop
+            centerX, centerY = int(img_height / 2), int(img_width / 2)
+            radiusX, radiusY = int(scale * img_height / 100), int(scale * img_width / 100)
+
+            minX, maxX = centerX - radiusX, centerX + radiusX
+            minY, maxY = centerY - radiusY, centerY + radiusY
+
+            cropped = frame[minX:maxX, minY:maxY]
+            image = cv2.resize(cropped, (img_width, img_height))
+
         # Original image
-        cv2.imshow('Original', frame)
+        cv2.imshow('Original', image)
     except Exception as ex:
         print("Oops! {}".format(ex))
 
@@ -133,7 +158,12 @@ while keepLooping:
         keepLooping = False
     if key == ord('s'):  # Take snapshot
         print('\t\tTaking snapshot -')  # Invoke model
-        apply_model(frame)
+        # Select ROI
+        roi = cv2.selectROI(image)  # Interactive selection
+        cropped_image = image[int(roi[1]):int(roi[1] + roi[3]), int(roi[0]):int(roi[0] + roi[2])]
+        cv2.imshow('Selected ROI', cropped_image)
+        time.sleep(0.5)
+        apply_model(cropped_image, True)
 
 # Releasing resources
 camera.release()
