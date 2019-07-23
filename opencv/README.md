@@ -58,7 +58,7 @@ Interactive, transforming images returned by the camera in real time.
 ```
  ../gradlew runOlivSwingCamera
 ```
-| Transformations  |
+| Interactive transformations from Swing |
 |:-----------------------------:|
 | ![Swing UI](./docimg/snap.01.png) |
 
