@@ -210,7 +210,9 @@ See a [Java Notebook](./NeuralNetworks.ipynb#Neurons!) for an example.
 
 Or this piece of HTML5/CSS3/WebComponents:
 
-<iframe src="https://olivierld.github.io/nn/one.neuron.webcomp.html" frameborder="0"/>
+<figure>
+  <iframe src="https://olivierld.github.io/nn/one.neuron.webcomp.html" frameborder="0"/>
+</figure>
 
 In a classification problem, a single neuron can draw a single line as a decision boundary.
 
