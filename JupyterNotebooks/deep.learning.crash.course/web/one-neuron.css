@@ -44,6 +44,26 @@
 	border-radius: 50%;
 }
 
+table .left-right {
+	width: auto;
+	text-align: right;
+	white-space: nowrap;
+}
+
+table .content {
+	width: 100%;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 5px;
+	width: 100%;
+	border: 1px solid silver;
+	border-radius: 10px;
+	padding: 10px;
+	margin: 10px;
+}
+
 knob-and-display:focus {
 	outline: none;
 }

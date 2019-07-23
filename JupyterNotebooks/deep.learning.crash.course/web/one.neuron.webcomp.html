@@ -1,4 +1,4 @@
-H<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -10,96 +10,100 @@ H<!DOCTYPE html>
 </head>
 
 <body>
-  <h1>One Neuron</h1>
-	<!--
-	--cell-radius: 55px;
-	--cell-font-size: 3em;
-	--cell-width: 120px;
-	-->
-	<div>
-		Cell Radius
-		<input type="range" value="55" min="10" max="200" style="width: 80%;" oninput="setRadius(this); radius01.value = (this.value + 'px');" />
-		<output name="radius" id="radius01">55px</output>
+<h1>One Neuron</h1>
+<!--
+--cell-radius: 55px;
+--cell-font-size: 3em;
+--cell-width: 120px;
+-->
+<table style="width: 98%" border="1">
+	<tr>
+		<td class="left-right">Cell Radius</td>
+		<td class="content"><input type="range" value="55" min="10" max="200" style="width: 100%;" oninput="setRadius(this); radius01.value = (this.value + 'px');" /></td>
+		<td class="left-right"><output name="radius" id="radius01">55px</output></td>
+	</tr>
+	<tr>
+		<td class="left-right">Cell Size</td>
+		<td class="content"><input type="range" value="120" min="10" max="200" style="width: 100%;" oninput="setCellSize(this); cellsize01.value = (this.value + 'px');" /></td>
+		<td class="left-right"><output name="cellsize" id="cellsize01">120px</output></td>
+	</tr>
+	<tr>
+		<td class="left-right">Font size</td>
+		<td class="content"><input type="range" value="3" min="1" max="10" step="0.1" style="width: 100%;" oninput="setFontSize(this); fontsize01.value = (this.value + 'em');" /></td>
+		<td class="left-right"><output name="fontsize" id="fontsize01">3em</output></td>
+	</tr>
+</table>
+<div class="neuron-frame">
+	<div class="neuron-input"> <!-- Values -->
+		<div id="input-one" class="neuron-input-cell neuron-cell">8.5</div>
+		<div id="input-two" class="neuron-input-cell neuron-cell">0.65</div>
+		<div id="input-three" class="neuron-input-cell neuron-cell">1.2</div>
 	</div>
-	<div>
-		Cell Size
-		<input type="range" value="120" min="10" max="200" style="width: 80%;" oninput="setCellSize(this); cellsize01.value = (this.value + 'px');" />
-		<output name="cellsize" id="cellsize01">120px</output>
-	</div>
-	<div>
-		Font size
-		<input type="range" value="3" min="1" max="10" step="0.1" style="width: 80%;" oninput="setFontSize(this); fontsize01.value = (this.value + 'em');" />
-		<output name="fontsize" id="fontsize01">3em</output>
-	</div>
-	<div class="neuron-frame">
-		<div class="neuron-input"> <!-- Values -->
-			<div id="input-one" class="neuron-input-cell neuron-cell">8.5</div>
-			<div id="input-two" class="neuron-input-cell neuron-cell">0.65</div>
-			<div id="input-three" class="neuron-input-cell neuron-cell">1.2</div>
-		</div>
-		<div class="neuron-input"> <!-- Weights -->
-			<!--div class="neuron-input-cell"><input class="neuron-input-field" title="Weight" id="w-1" type="number" step="0.1" min="-1" max="1" value="0.1" onchange="recompute();"></div-->
-			<div class="neuron-input-cell">
-				<knob-and-display id="w-1"
-								  tabindex="-1"
-								  class="knob-css"
-								  width="120"
-								  height="120"
-								  minimum="-1"
-								  maximum="1"
-								  value="0.1"
-								  label="W1"
-								  onchange="recompute"
-								  title="Drag the knob's index around to change the value"/>
-			</div>
-			<!--div class="neuron-input-cell"><input class="neuron-input-field" title="Weight" id="w-2" type="number" step="0.1" min="-1" max="1" value="0.2" onchange="recompute();"></div-->
-			<div class="neuron-input-cell">
-				<knob-and-display id="w-2"
-								  tabindex="-1"
-								  class="knob-css"
-								  width="120"
-								  height="120"
-								  minimum="-1"
-								  maximum="1"
-								  value="0.2"
-								  label="W2"
-								  onchange="recompute"
-								  title="Drag the knob's index around to change the value"/>
-			</div>
-			<!--div class="neuron-input-cell"><input class="neuron-input-field" title="Weight" id="w-3" type="number" step="0.1" min="-1" max="1" value="0.0" onchange="recompute();"></div-->
-			<div class="neuron-input-cell">
-				<knob-and-display id="w-3"
-								  tabindex="-1"
-								  class="knob-css"
-								  width="120"
-								  height="120"
-								  minimum="-1"
-								  maximum="1"
-								  value="0.0"
-								  label="W3"
-								  onchange="recompute"
-								  title="Drag the knob's index around to change the value"/>
-			</div>
-		</div>
-		<div id="output" class="neuron-input-cell neuron-cell">Output</div>
-		<!--div class="neuron-input-cell"><input class="neuron-input-field" title="Bias" id="bias" type="number" step="0.01" min="-2" max="2" value="0.0" onchange="recompute();"></div-->
+	<div class="neuron-input"> <!-- Weights -->
+		<!--div class="neuron-input-cell"><input class="neuron-input-field" title="Weight" id="w-1" type="number" step="0.1" min="-1" max="1" value="0.1" onchange="recompute();"></div-->
 		<div class="neuron-input-cell">
-			<knob-and-display id="bias"
-							  tabindex="-1"
-							  class="knob-css"
-							  width="120"
-							  height="120"
-							  minimum="-2"
-							  maximum="2"
-							  value="0.0"
-							  label="bias"
-							  onchange="recompute"
-							  title="Drag the knob's index around to change the value"/>
+			<knob-and-display id="w-1"
+												tabindex="-1"
+												class="knob-css"
+												width="120"
+												height="120"
+												minimum="-1"
+												maximum="1"
+												value="0.1"
+												label="W1"
+												onchange="recompute"
+												title="Drag the knob's index around to change the value"/>
 		</div>
-		<div id="result" class="neuron-input-cell neuron-cell">Result</div>
+		<!--div class="neuron-input-cell"><input class="neuron-input-field" title="Weight" id="w-2" type="number" step="0.1" min="-1" max="1" value="0.2" onchange="recompute();"></div-->
+		<div class="neuron-input-cell">
+			<knob-and-display id="w-2"
+												tabindex="-1"
+												class="knob-css"
+												width="120"
+												height="120"
+												minimum="-1"
+												maximum="1"
+												value="0.2"
+												label="W2"
+												onchange="recompute"
+												title="Drag the knob's index around to change the value"/>
+		</div>
+		<!--div class="neuron-input-cell"><input class="neuron-input-field" title="Weight" id="w-3" type="number" step="0.1" min="-1" max="1" value="0.0" onchange="recompute();"></div-->
+		<div class="neuron-input-cell">
+			<knob-and-display id="w-3"
+												tabindex="-1"
+												class="knob-css"
+												width="120"
+												height="120"
+												minimum="-1"
+												maximum="1"
+												value="0.0"
+												label="W3"
+												onchange="recompute"
+												title="Drag the knob's index around to change the value"/>
+		</div>
 	</div>
+	<div id="output" class="neuron-input-cell neuron-cell">Output</div>
+	<!--div class="neuron-input-cell"><input class="neuron-input-field" title="Bias" id="bias" type="number" step="0.01" min="-2" max="2" value="0.0" onchange="recompute();"></div-->
+	<div class="neuron-input-cell">
+		<knob-and-display id="bias"
+											tabindex="-1"
+											class="knob-css"
+											width="120"
+											height="120"
+											minimum="-2"
+											maximum="2"
+											value="0.0"
+											label="bias"
+											onchange="recompute"
+											title="Drag the knob's index around to change the value"/>
+	</div>
+	<div id="result" class="neuron-input-cell neuron-cell">Result</div>
+</div>
 <hr/>
 Modify weights and bias to see the result.
+<br/>
+<small>You can use the index on the knobs, or the keyboard left and right arrows after selecting the knob.</small>
 </body>
 <script type="text/javascript">
 
@@ -110,11 +114,13 @@ Modify weights and bias to see the result.
 		let v3 = parseFloat(document.getElementById("input-three").innerText);
 
 		// let w1 = parseFloat(document.getElementById("w-1").value);
-		let w1 = parseFloat(document.getElementById("w-1").value || 0.1);
-		let w2 = parseFloat(document.getElementById("w-2").value || 0.2);
-		let w3 = parseFloat(document.getElementById("w-3").value || 0.0);
+		let w1 = Number(parseFloat(document.getElementById("w-1").value || 0.1).toFixed(2));
+		let w2 = Number(parseFloat(document.getElementById("w-2").value || 0.2).toFixed(2));
+		let w3 = Number(parseFloat(document.getElementById("w-3").value || 0.0).toFixed(2));
 
-		let bias = parseFloat(document.getElementById("bias").value || 0.0);
+		let bias = Number(parseFloat(document.getElementById("bias").value || 0.0).toFixed(2));
+
+		console.log(`Values W1:${w1} W2:${w2} W3:${w3} bias:${bias}`);
 
 		let output = (v1 * w1) + (v2 * w2) + (v3 * w3);
 		document.getElementById("output").innerText = output.toFixed(2);
