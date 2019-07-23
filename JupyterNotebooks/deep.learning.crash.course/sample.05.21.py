@@ -77,7 +77,8 @@ def apply_model(image, show_all_steps=False, kernel_size=15):
     last_image = blurred
 
     if True:
-        _, thresh = cv2.threshold(last_image, 200, 255, 0)  # for the 2nd prm, 200 seems right, 127 is not enough
+        threshold_value = 127  # for the 127: dark conditions, 200: good light conditions
+        _, thresh = cv2.threshold(last_image, threshold_value, 255, 0)
         if show_all_steps:
             cv2.imshow('Threshed', thresh)
         last_image = thresh
@@ -157,10 +158,10 @@ while keepLooping:
     if key == ord('q'):  # select the image window and hit 'q' to quit
         keepLooping = False
     if key == ord('s'):  # Take snapshot
-        print('\t\tTaking snapshot -')  # Invoke model
+        print('\t\tTaking snapshot -')  # And invoke model
         # Select ROI
         # Nice ROI summary: https://www.learnopencv.com/how-to-select-a-bounding-box-roi-in-opencv-cpp-python/
-        roi = cv2.selectROI(image)  # Interactive selection
+        roi = cv2.selectROI(image, showCrosshair=False)  # Interactive selection
         cropped_image = image[int(roi[1]):int(roi[1] + roi[3]), int(roi[0]):int(roi[0] + roi[2])]
         cv2.imshow('Selected ROI', cropped_image)
         time.sleep(0.5)
