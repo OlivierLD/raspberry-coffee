@@ -1,4 +1,4 @@
-## OpenCV in Java!
+## OpenCV in Java and Python
 
 ### Good resources, OpenCV & JavaFX
 - <https://opencv-java-tutorials.readthedocs.io/en/latest/index.html>
@@ -45,9 +45,10 @@ Would also work each frame returned by the camera
 ```
  ../gradlew runOlivSwing
 ```
-| Path detection with a camera  |
-|:-----------------------------:|
-| ![Path detection](./docimg/snap.03.png) |
+| ![Original](./docimg/step.01.png) | ![Gray](./docimg/step.02.png) | ![Blur](./docimg/step.03.png) |
+|:--------:|:--------:|:--------:|
+| ![Original](./docimg/step.04.png) | ![Gray](./docimg/step.05.png) | ![Blur](./docimg/step.06.png) |
+| ![Original](./docimg/step.07.png) |  |  |
 
 This could be the basis to drive a robot carrying the camera
 
