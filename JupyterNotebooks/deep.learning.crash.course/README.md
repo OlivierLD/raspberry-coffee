@@ -7,7 +7,7 @@ A lecture by [Emmet "Doc" Brown](https://www.google.com/url?sa=i&source=images&c
 First, some links:
 - [Google Colab](https://colab.research.google.com/notebooks/welcome.ipynb)
 - [TensorFlow](https://www.tensorflow.org/)
-- [TensorFlow.js](https://www.tensorflow.org/js) 
+- [TensorFlow.js](https://www.tensorflow.org/js)
 - Deep Learning Crash Course [GitHub repo](https://github.com/DJCordhose/deep-learning-crash-course-notebooks/blob/master/README.md)
 - [Adam Geitgey](https://medium.com/@ageitgey)'s blog
 
@@ -90,8 +90,8 @@ Classical programming applies rules on data to get answers.
 ###### Weather Routing?
 No. It is not even Artificial Intelligence. There is no training process involved, it is all
 about (classical) computing. It may require resources and heavy calculations, but no learning process.
- 
-###### Deep Blue defeating Garry Kasparov? 
+
+###### Deep Blue defeating Garry Kasparov?
 Maybe Artificial Intelligence, but not Deep Learning, as the machine did not go through a learning process.
 IBM actually called this GOFAI (Good Old-Fashioned Artificial Intelligence)...
 The computer was able to identify _already played games_ (very fast), and was mimicking what was done before.
@@ -102,7 +102,7 @@ Yes! The game won by the computer had _never_ been played before. And the machin
 on a model elaborated by a training process.
 
 ### The path from design to production
-- You start from real historical data, that will contain the parameters or dimensions used as input for your future system, as well as the data containing the decisions (output) you want to teach your model to make. From those data, you will extract 
+- You start from real historical data, that will contain the parameters or dimensions used as input for your future system, as well as the data containing the decisions (output) you want to teach your model to make. From those data, you will extract
     - Training dataset
     - Test dataset
     - Validation dataset
@@ -130,7 +130,7 @@ So, in the figure above, we actually have 3 dimensions:
 - Risk group, encoded with the color.
 > Note: The `miles per year` dimension is dropped in this case.
 
-If we restore the `number of thousands of miles driven per year` dimension, 
+If we restore the `number of thousands of miles driven per year` dimension,
 a programmer would write _rules_ like this (in Python):
 ```python
 red = 0
@@ -143,18 +143,18 @@ def evaluate_risk(age, speed, miles_per_year):
       return red # Crazy young guy, car too fast
     else:
       return yellow # Car is slow enough for medium risk
-    
+
   if age > 75:
     return red # Get off the road, old man!
-  
+
   if miles_per_year > 30:
     return red # You drive too much
-    
+
   if miles_per_year > 20:
-    return yellow 
-  
+    return yellow
+
   return green # otherwise, low risk  
-      
+
 ```
 See in this [Java Notebook](./NeuralNetworks.ipynb#A-"Classical"-way-to-program-a-rule), there is a Java implementation of such a rule.
 
@@ -172,7 +172,7 @@ If we plot this on the diagram (red-yellow-green), we have:
 > Example: self driving cars will have to:
 > - detect objects on the road
 > - recognize them (cars, bikes, pedestrians, traffic lights, curbs, etc)
-> - classify them, to then make the right decision (brake, turn right, slow down, etc) 
+> - classify them, to then make the right decision (brake, turn right, slow down, etc)
 
 ![Objects detection](./img/object-detection.jpg)
 
@@ -201,18 +201,22 @@ TensorFlow playground at <https://playground.tensorflow.org>
 - Its formula is
 
  ![Neuron](./img/neuron.formula.png)
- 
-Example 
+
+Example
 
  <img src="./img/neuron.example.png" alt="Neuron" width="404" height="253"/>
 
 See a [Java Notebook](./NeuralNetworks.ipynb#Neurons!) for an example.
 
-In a classification problem, a single neuron can draw a single line as a decision boundary. 
+Or this piece of HTML5/CSS3/WebComponents:
+
+<iframe src="https://olivierld.github.io/nn/one.neuron.webcomp.html" frameborder="0"/>
+
+In a classification problem, a single neuron can draw a single line as a decision boundary.
 
 > Note:
 
-In the case of a one neuron layer, the expression 
+In the case of a one neuron layer, the expression
 <pre>
  y = &Sigma; (x<sub><small>i</small></sub> . w<sub><small>i</small></sub>) + b  
 </pre>
@@ -233,11 +237,11 @@ In the screenshot above:
 - The output will be a single number, ranging from -1 to +1.
 - The background of the graphic on the right will reflect the prediction, it will be orange if y < 0, and blue if y > 0.
 - You can change the weights associated with each box (dimensions and neuron(s)), as well as the bias of each neuron.
- 
+
 With _one_ neuron, you can draw _one_ straight boundary.
 The neuron will allow you to change the slope (weight), and the offset (bias).
 
-In the figure above, we have two dimensions X<small><sub>1</sub></small> and X<small><sub>2</sub></small>, and we have 
+In the figure above, we have two dimensions X<small><sub>1</sub></small> and X<small><sub>2</sub></small>, and we have
 one neuron (in an _hidden_ layer).
 
 This means that all the points of our training dataset have three values:
@@ -251,7 +255,7 @@ For example, in the figure above, we have `P1(-2.1, 0.2, 'orange')`, `P2(3.2, 4.
 
 We are looking for the best parameters of the neuron (weight and bias) that will generate a line (or boundary)
 correctly separating the two groups.      
- 
+
 When you hit the \[Start\] <!-- &#10162; --> button, we iterate over the values of those weights and bias parameters.
 The tuning of those values **_is_** what Machine Learning is all about.
 
@@ -263,12 +267,12 @@ The tuning of those values **_is_** what Machine Learning is all about.
 ##### What we want
 We want to obtain the parameters (weights, bias) that will generate the right background for the points of our training dataset.
 
-> Important precision: 
+> Important precision:
 > We are **not**  looking for the _equation_ of the boundary !!
-> We are looking for some way to determine for _each point_ of the plan (2D in this case) what category it belongs to. 
+> We are looking for some way to determine for _each point_ of the plan (2D in this case) what category it belongs to.
 
-We know what data we start from (training data), we are trying to minimize the number 
-of misclassified points (an orange dot on a blue background and vice-versa). 
+We know what data we start from (training data), we are trying to minimize the number
+of misclassified points (an orange dot on a blue background and vice-versa).
 
 In this example, the classification can be operated by a single neuron.
 
@@ -276,7 +280,7 @@ In this example, the classification can be operated by a single neuron.
 The Activation Function sits between the calculated output, and the actual output of the neuron (`y`).
 It compresses the calculated output between 2 other values (like 0 and 1, -1 and +1, etc). This is
 a way to normalize the output data _of a layer_, so the next one knows what to deal with.
-For example, in  the TensorFlow playground, the orange values will be the one ranging from -1 to 0, and the blue ones from 0 to 1. 
+For example, in  the TensorFlow playground, the orange values will be the one ranging from -1 to 0, and the blue ones from 0 to 1.
 Notice that the output `y` becomes the `x` of the Activation Function.
 
 Among them, we have:
@@ -301,7 +305,7 @@ Samples are not typically separable by a single line..., like this one for examp
 
 ![Sample 2](./img/sample.02.png)
 
-As each neuron will generate one line (boundary, separation, whatever you call it), we will add more 
+As each neuron will generate one line (boundary, separation, whatever you call it), we will add more
 neuron to the picture to see how it goes.
 
 We add a neuron in the first _hidden layer_, and we combine these two neurons into a so-called _fully connected layer_.
@@ -327,9 +331,9 @@ The first thing is to know how well the network works.
 In the picture above, it does _not_ work great.
 Again, the prediction is reflected by the color of the background, and some points are on the wrong background.
 
-To know how well the network is working, we will consider - for each point - the difference between 
+To know how well the network is working, we will consider - for each point - the difference between
 the prediction (reflected by the background color), and the reality (reflected by the point color).
-We combine the value of the error for _all_ the data point in our training dataset, which we do using the 
+We combine the value of the error for _all_ the data point in our training dataset, which we do using the
 mean squared error (MSE).
 
 ![MSE](./img/MSE.png)
@@ -378,13 +382,13 @@ This will give you a better idea of the problems to tackle when training your ow
 In TensorFlow playground, use the bottom left data type (2 groups)
 - _ONE_ neuron in _ONE_ hidden layer
 - Learning rate 0.03
-- Activation Tanh 
+- Activation Tanh
 
 This should be resolved quickly.
 
 Try to modify the different weights, and the bias of the neuron.
 
-Let's say we have 
+Let's say we have
 - X<small><sub>1</sub></small> &isin; \[-6, +6\]
 - X<small><sub>2</sub></small> &isin; \[-6, +6\]
 - W<small><sub>1</sub></small> = -0.69
@@ -419,9 +423,9 @@ Use the top-right data (4 groups, in 4 squares)
 - Add One neuron, try again (still with Sigmoid), go up to 1000 epoch at least
 - Try with Tanh
 - Try with ReLU <- This one is the best!
- 
+
 Flip the 'Discretize output' box.
- 
+
 ###### Lab 3
 Use the 'circular' data (top left)
 - with 4 neurons, learning rate 0.03, Act ReLU, Tanh, or Sigmoid,
@@ -432,9 +436,9 @@ Use the spiral data (bottom right)
 - Use the _**7**_ input dimensions, 2 hidden layers, 5 and 6 neurons
 - Act Func Tanh, ReLU, should be OK around 500 epochs
 - Do look at the curves when using a Sigmoid
-  
+
 Play around, and see how it moves ;)
- 
+
 #### Finding the sweet spot
 
 Over-fitting vs Under-fitting.
@@ -457,7 +461,7 @@ It does not only iterate through the possible values of all the parameters, it i
 where the loss is the smallest, and this in an optimized fashion.
 
 The curves displayed at the top-right corner of the playground page reflect those
-values. 
+values.
 This will explain several of the statements we will need to use when taking
 a programmatic approach to the problem (Python, or Colab Notebooks).
 
@@ -481,13 +485,13 @@ This first Notebook imports data from a CSV (Comma-Separated-Values) file, using
 ```
  curl -O https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-course-notebooks/master/data/insurance-customers-1500.csv
 ```
-If you are behind a proxy, use 
+If you are behind a proxy, use
 ```
  curl -x http://www-proxy.us.oracle.com:80 -O https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-course-notebooks/master/data/insurance-customers-1500.csv
 ```
 See what the data look like doing (after the `curl` command above)
 ```
- $ head ./insurance-customers-1500.csv 
+ $ head ./insurance-customers-1500.csv
 speed;age;miles;group
 98.0;44.0;25.0;1
 118.0;54.0;24.0;1
@@ -502,7 +506,7 @@ $
 ```
 To know how many lines it contains, use the `word count` command:
 ```
- $ wc -l insurance-customers-1500.csv 
+ $ wc -l insurance-customers-1500.csv
     1501 insurance-customers-1500.csv
 ```
 It has 1501 lines, the first one being the headers (`speed;age;miles;group`), that makes 1500 lines of actual data.
@@ -517,7 +521,7 @@ Then press Shift + Enter to execute it.
 
 ```
 $ curl -O https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-course-notebooks/master/exercise/plot.py
-$ cat plot.py 
+$ cat plot.py
 ```
 
 ### Data Encoding
@@ -533,7 +537,7 @@ Run `which python` in a console to know if it is available:
 ```
 $ which python
 ~/anaconda3/bin/python
-``` 
+```
 If the command returns nothing on the second line, Google will tell you how to install Python on your machine.
 Or check [this](https://realpython.com/installing-python/). Unless you have reasons not to do so, install `python3`.
 
@@ -545,7 +549,7 @@ $ pip install numpy
 $ pip install matplotlib
 $ pip install pandas
 $ pip install seaborn
-$ pip install sklearn 
+$ pip install sklearn
 ```
 - pip documentation is [here](https://pip.pypa.io/en/stable/).
 
@@ -563,12 +567,12 @@ Using SoftMax (as activation function on the last layer)
 > (In the example above, `0.3 + 0.6 + 0.1 = 1.0`).
 > The biggest value is the one to use to find the finally expected item in the list of possible options:
 > In the example, in `[0.3, 0.6, 0.1]`, the biggest value (`0.6`) is the _second_ one, we pick the _second_ value of
-> `[ red, green, yellow ]`, and the item we end up with is `green`. 
+> `[ red, green, yellow ]`, and the item we end up with is `green`.
 
 You train your machine with your data to make it learn the relationship between some input data and a certain label (`label` = `y`).
 _**This is called supervised learning.**_
 
-Here we do not use the TensorFlow playground anymore, we do it _for real_ on a dedicated machine. 
+Here we do not use the TensorFlow playground anymore, we do it _for real_ on a dedicated machine.
 
 We create a `sequential` model, using the Keras API. Keras is written in Python.
 
@@ -620,13 +624,13 @@ and the model available.
 ![Preparing the Data](./img/prepare.data.jpg)
 
 ###### Example: the image of an hand-written '8', 18x18 pixels
- 
+
 | Image of an '8' | data of an '8' |
 |:---------------:|:--------------:|
 | ![8](./img/8.grey.png) | ![8](./img/8.num.png) |
 
 As a 1-dimension (18x18 = 324) array:
-![8](./img/8.v2.png) 
+![8](./img/8.v2.png)
 
 ##### TODO
 - Java version
@@ -646,7 +650,7 @@ Let's take a look at a more realistic example, hand-written digits recognition.
 
 It is a serie of images representing handwritten figures, along with their actual values.
 We will use this to train a neural network, and use the trained network to recognize hand-written digits from the
-test dataset. 
+test dataset.
 
 This can be run locally (after installing the required Python packages):
 ```

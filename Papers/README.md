@@ -30,7 +30,7 @@ To render an HTML page hosted on `github` as your browser would, just use a URL 
 ```
 https://htmlpreview.github.io/?https://github.com/OlivierLD/OlivierLD.github.io/blob/master/first.test.html
 ```
-Does not work all the times, but at least some times...
+Does not work all the times, but at least some times. You may face some CORS Policy issues...
 
 ---
 
