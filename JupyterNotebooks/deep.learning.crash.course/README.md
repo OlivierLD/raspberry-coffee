@@ -616,8 +616,8 @@ Then open <http://localhost:8080/index.html> in your browser.
 ### Another example, character recognition
 Now we've set the scene, we can move to a slightly more complex example.
 
-So far, for our insurance demo, we were considering the `age of the driver`, the `power of the car`, and the `number of thousands of miles` driven per year
-to establish if the potential customer was at `low`, `medium` or `high` risk to cost money to the company.
+So far, for our insurance demo, we were considering the `age of the driver`, the `power of the car`, and the `number of thousands of miles driven per year`
+to establish if the potential customer is at `low`, `medium` or `high` risk to cost money to the company.
 
 In  other words, we had 3 dimensions in input, and one out of three choices in output.  
 
