@@ -24,6 +24,7 @@ import platform
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
+sys.path.append('../')
 import tf_utils
 
 warnings.filterwarnings('ignore')

@@ -25,9 +25,10 @@ import warnings
 from PIL import Image
 import subprocess as sp
 import platform
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
+# import matplotlib.pyplot as plt
+# import matplotlib.image as mpimg
 
+sys.path.append('../')
 import tf_utils
 
 warnings.filterwarnings('ignore')

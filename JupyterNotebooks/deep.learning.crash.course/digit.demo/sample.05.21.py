@@ -30,6 +30,7 @@ import subprocess as sp
 import platform
 import cv2
 
+sys.path.append('../')
 import tf_utils
 
 warnings.filterwarnings('ignore')

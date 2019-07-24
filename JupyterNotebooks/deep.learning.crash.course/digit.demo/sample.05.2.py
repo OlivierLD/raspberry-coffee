@@ -27,6 +27,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import cv2
 
+sys.path.append('../')
 import tf_utils
 
 warnings.filterwarnings('ignore')

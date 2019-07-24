@@ -12,6 +12,7 @@ from tensorflow.keras.layers import Dense, Dropout, BatchNormalization, Activati
 import os.path
 import subprocess as sp
 import sys
+sys.path.append('../')
 import tf_utils
 
 warnings.filterwarnings('ignore')
@@ -87,11 +88,11 @@ model.compile(loss='sparse_categorical_crossentropy',
 model.summary()
 
 print("Starting the training")
-BATCH_SIZE = 1000
-EPOCHS = 2000
+BATCH_SIZE = 1_000
+EPOCHS = 2_000
 
-# Actual training, fit method.
-history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_split=0.2, verbose=0)
+# Actual training, fit method. Turn verbose to 0 to zip it up.
+history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_split=0.2, verbose=1)
 print("Training completed")
 
 train_loss, train_accuracy = model.evaluate(X_train, y_train, batch_size=BATCH_SIZE)

@@ -13,6 +13,7 @@ import os.path
 import subprocess as sp
 import sys
 
+sys.path.append('../')
 import tf_utils
 
 warnings.filterwarnings('ignore')
@@ -52,8 +53,8 @@ if not found_data:
         sys.exit()
 
 df = pd.read_csv('./insurance-customers-1500.csv', sep=';')
-y = df['group']
-df.drop('group', axis='columns', inplace=True)
+y = df['group']  # This will be holding the expected output
+df.drop('group', axis='columns', inplace=True)  # Remove it from the input parameters
 X = df.as_matrix()
 
 df.head()
@@ -89,17 +90,19 @@ model.add(Dense(num_categories, name='SoftmaxLayer', activation='softmax'))
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer='adam',
               metrics=['accuracy'])
+print("\nModel summary:")
 model.summary()
 
 # reducing batch size might increase over-fitting,
 # but might be necessary to reduce memory requirements
-BATCH_SIZE = 1000
+BATCH_SIZE = 1_000
 
 # reduce this based on what you see in the training history
-EPOCHS = 10000
+EPOCHS = 10_000
 
 print("Starting the training...")
-history = model.fit(X_train_2_dim, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_split=0.2, verbose=0)
+# below, set verbose to 0 to zip it up
+history = model.fit(X_train_2_dim, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_split=0.2, verbose=1)
 print("Training completed!")
 
 train_loss, train_accuracy = model.evaluate(X_train_2_dim, y_train, batch_size=BATCH_SIZE)

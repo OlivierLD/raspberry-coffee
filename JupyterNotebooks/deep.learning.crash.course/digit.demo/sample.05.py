@@ -14,6 +14,7 @@ import random
 import sys
 import warnings
 
+sys.path.append('../')
 import tf_utils
 
 warnings.filterwarnings('ignore')

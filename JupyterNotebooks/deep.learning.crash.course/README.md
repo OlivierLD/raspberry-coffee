@@ -58,11 +58,11 @@ We have in this project Jupyter Notebooks, and Python scripts:
 </td>
 <td valign="top">
 
-- **sample.01.py**, basic sanity checks, on the data
-- **sample.03.py**, building and training a network (insurance data), with TensorFlow and Keras
-- **sample.04.py**, like the one above, but more accurate
-- **sample.05.py**, with TensorFlow and Keras, hand-written figures recognition, from scratch.
-- **sample.06.py**, with TensorFlow and Keras, pictures recognition.
+- **insurance.demo/sample.01.py**, basic sanity checks, on the data
+- **insurance.demo/sample.03.py**, building and training a network (insurance data), with TensorFlow and Keras
+- **insurance.demo/sample.04.py**, like the one above, but more accurate
+- **digit.demo/sample.05.py**, with TensorFlow and Keras, hand-written figures recognition, from scratch.
+- **digit.demo/sample.06.py**, with TensorFlow and Keras, pictures recognition.
 
 </td>
 </tr>
@@ -577,9 +577,10 @@ We create a `sequential` model, using the Keras API. Keras is written in Python.
 ```
 And we start from there.
 
-See the [final Python script](./sample.04.py). This can be run for real on your machine, after you've downloaded the data in `insurance-customers-1500.csv`, with `curl`.
+See the [final Python script](insurance.demo/sample.04.py). This can be run for real on your machine, after you've downloaded the data in `insurance-customers-1500.csv`, with `curl`.
 ```
-$ python sample.04.py
+$ cd insurance.demo
+$ ./sample.04.py
 ```
 
 Also look at the Jupyter Notebooks in this directory.
@@ -607,12 +608,25 @@ See the code in it for brute-force code review.
 
 > To run the Web pages (requires `NodeJS` to be available):
 ```
- $ cd tfjs
+ $ cd insurance.demo/tfjs
  $ node server.js
 ```
 Then open <http://localhost:8080/index.html> in your browser.
 
-##### Preparing the data
+### Another example, character recognition
+Now we've set the scene, we can move to a slightly more complex example.
+
+So far, for our insurance demo, we were considering the `age of the driver`, the `power of the car`, and the `number of thousands of miles` driven per year
+to establish if the potential customer was at `low`, `medium` or `high` risk to cost money to the company.
+
+In  other words, we had 3 dimensions in input, and one out of three choices in output.  
+
+Now, what if we ask our neural network to take an image in input, to make a decision?
+
+An image can be a complex object, it can be seen as a 3 dimension matrix (width, height, channels (nb of colors)).
+How can a neuron deal with such an object?
+
+#### Preparing the data
 Data preparation is this process that reshapes the input data so they're easier to ingest by the network.
 This process applies to the training, testing, and must be the same for the runtime,  once the network is trained
 and the model available.
@@ -625,8 +639,13 @@ and the model available.
 |:---------------:|:--------------:|
 | ![8](./img/8.grey.png) | ![8](./img/8.num.png) |
 
+Notice here that we do not use colors. This simplifies the compexity of the image. If the image arrives as a color image,
+we turn it to a gray-scale or black-and-white image.
+
 As a 1-dimension (18x18 = 324) array:
 ![8](./img/8.v2.png)
+
+> Note: to void potential ambiguities: the network we will use later will be trained on images 28x28 (=784)
 
 ##### TODO
 - Java version
@@ -650,12 +669,12 @@ test dataset.
 
 This can be run locally (after installing the required Python packages):
 ```
-$ python sample.05.py [ L | --help ]
+$ python digit.demo/sample.05.py [ L | --help ]
 ```
 
 Another example, try:
 ```
-$ python sample.06.py
+$ python digit.demo/sample.06.py
 ```
 
 ### Your own hand-written digits recognition
@@ -677,6 +696,7 @@ Separate the 3 digits the image contains, I use `GIMP`.
 
 Then, use
 ```buildoutcfg
+ $ cd digit.demo
  $ ./sample.05.2.py
 TensorFlow version 1.13.1
 Keras version 2.2.4-tf
@@ -703,6 +723,7 @@ Bye!
 ### Even better: Use OpenCV and a WebCam
 With
 ```buildoutcfg
+ $ cd digit.demo
  $ ./sample.05.21.py
 ```
 Show your hand-writing to the WebCam, and press `s` to take a snapshot.
