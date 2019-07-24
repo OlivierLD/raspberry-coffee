@@ -155,7 +155,7 @@ Modify weights and bias to see the result.
 
 		let bias = Number(parseFloat(document.getElementById("bias").value || 0.0).toFixed(2));
 
-		let finalW = Number(parseFloat(document.getElementById("final-w").value || 0.0).toFixed(2));
+		let finalW = Number(parseFloat(document.getElementById("final-w").value || 1.0).toFixed(2));
 
 		console.log(`Values W1:${w1} W2:${w2} W3:${w3} bias:${bias} finalW:${finalW}`);
 
@@ -166,7 +166,7 @@ Modify weights and bias to see the result.
 		document.getElementById("result").innerText = result.toFixed(2);
 
 		let activationFunction = document.getElementById("function").value;
-		console.log("Function:", activationFunction);
+		// console.log("Function:", activationFunction);
 		let final = result;
 		switch (activationFunction) {
 			case "tanh":
