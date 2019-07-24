@@ -189,7 +189,7 @@ Modify weights and bias to see the result.
 	}
 
 	function setRadius(range) {
-		var v = range.value;
+		let v = range.value;
 		document.documentElement.style.setProperty("--cell-radius", v + "px");
 		let knobs = ['w-1', 'w-2', 'w-3', 'bias', 'final-w'];
 		for (idx in knobs) {
@@ -202,12 +202,12 @@ Modify weights and bias to see the result.
 	}
 
 	function setCellSize(range) {
-		var v = range.value;
+		let v = range.value;
 		document.documentElement.style.setProperty("--cell-width", v + "px");
 	}
 
 	function setFontSize(range) {
-		var v = range.value;
+		let v = range.value;
 		document.documentElement.style.setProperty("--cell-font-size", v + "em");
 	}
 
