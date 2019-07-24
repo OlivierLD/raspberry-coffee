@@ -12,20 +12,20 @@
 <body>
 <h1>One Neuron</h1>
 <!--
---cell-radius: 55px;
+--cell-radius: 60px;
 --cell-font-size: 3em;
 --cell-width: 120px;
 -->
 <table style="width: 98%" border="1">
 	<tr>
 		<td class="left-right">Cell Radius</td>
-		<td class="content"><input type="range" value="55" min="10" max="200" style="width: 100%;" oninput="setRadius(this); radius01.value = (this.value + 'px');" /></td>
-		<td class="left-right"><output name="radius" id="radius01">55px</output></td>
+		<td class="content"><input type="range" value="60" min="10" max="200" style="width: 100%;" oninput="setRadius(this); radius01.value = (this.value + 'px');" /></td>
+		<td class="left-right"><output name="radius" id="radius01">60px</output></td>
 	</tr>
 	<tr>
 		<td class="left-right">Cell Size</td>
-		<td class="content"><input type="range" value="120" min="10" max="200" style="width: 100%;" oninput="setCellSize(this); cellsize01.value = (this.value + 'px');" /></td>
-		<td class="left-right"><output name="cellsize" id="cellsize01">120px</output></td>
+		<td class="content"><input type="range" value="130" min="10" max="200" style="width: 100%;" oninput="setCellSize(this); cellsize01.value = (this.value + 'px');" /></td>
+		<td class="left-right"><output name="cellsize" id="cellsize01">130px</output></td>
 	</tr>
 	<tr>
 		<td class="left-right">Font size</td>
@@ -191,6 +191,16 @@ Modify weights and bias to see the result.
 	function setRadius(range) {
 		var v = range.value;
 		document.documentElement.style.setProperty("--cell-radius", v + "px");
+		let knobs = ['w-1', 'w-2', 'w-3', 'bias', 'final-w'];
+		for (idx in knobs) {
+
+			console.log("Sizing %s to %d", knobs[idx], (v * 2));
+			let knob = document.getElementById(knobs[idx]);
+			knob.width = v * 2;
+			knob.height = v * 2;
+		}
+
+		document.getElementById('w-1')
 	}
 
 	function setCellSize(range) {

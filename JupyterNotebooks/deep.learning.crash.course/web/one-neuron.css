@@ -1,7 +1,7 @@
 :root {
-	--cell-radius: 55px;
+	--cell-radius: 60px;
 	--cell-font-size: 3em;
-	--cell-width: 120px;
+	--cell-width: 130px;
 }
 
 .neuron-frame {
@@ -71,7 +71,7 @@ select {
 input {
 	font-size: calc(var(--cell-font-size) / 3.5);
 	color: blue;
-	width: calc(var(--cell-width) * 0.8);
+	width: calc(var(--cell-width) * 0.7);
 	text-align: center;
 	border: none;
 }
