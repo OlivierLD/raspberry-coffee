@@ -8,11 +8,18 @@ print('Using OpenCV version', cv2.__version__)
 index = 0
 cam_arr = []
 while True:
-    cap = cv2.VideoCapture(index)
+    print("Trying camera #{}".format(index))
+    try:
+        cap = cv2.VideoCapture(index)
+    except Exception as ex:  # No Exception fired even if index does not exist.
+        print("Error: {}".format(ex))
+    print('Trying to read')
     if not cap.read()[0]:
+        print("\t>> No #{}".format(index))
         break
     else:
+        print("Found cam #{}".format(index))
         cam_arr.append(index)
     cap.release()
     index += 1
-print("Camera found:", cam_arr)
+print("Camera(s) found:", cam_arr)
