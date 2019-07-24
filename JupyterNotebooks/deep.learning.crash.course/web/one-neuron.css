@@ -69,7 +69,7 @@ select {
 }
 
 input {
-	font-size: calc(var(--cell-font-size) / 4);
+	font-size: calc(var(--cell-font-size) / 3.5);
 	color: blue;
 	width: calc(var(--cell-width) * 0.8);
 	text-align: center;
