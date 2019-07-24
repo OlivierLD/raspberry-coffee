@@ -60,6 +60,9 @@ This could be the basis to drive a robot carrying the camera
 ---
 
 Interactive, transforming images returned by the camera in real time.
+
+Resize image, color to gray-scale, gaussian blur, threshold, canny edges, contours detection,
+contrasts and brightness...
 ```
  ../gradlew runOlivSwingCamera
 ```
