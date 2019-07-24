@@ -49,13 +49,30 @@ def get_dir(x, y):
     return direction
 
 
+control_contrast_brightness = False
+alpha = 1.0   # Contrast
+beta = 0      # Brightness
+
 while True:
     # Frame by Frame
     ret, frame = camera.read()
     time.sleep(0.1)
     # cv2.imshow('Original', frame)
 
-    img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    tweaked_image = np.zeros(frame.shape, frame.dtype)
+    # Contrast and Brightness control
+    if control_contrast_brightness:
+        alpha = 2.0  # in [1.0, 3.0]
+        beta = 50  # in [0, 100]
+        for y in range(frame.shape[0]):
+            for x in range(frame.shape[1]):
+                for c in range(frame.shape[2]):
+                    tweaked_image[y, x, c] = np.clip(alpha * frame[y, x, c] + beta, 0, 255)
+        cv2.imshow('Tweaked', tweaked_image)
+    else:
+        tweaked_image = frame
+
+    img_gray = cv2.cvtColor(tweaked_image, cv2.COLOR_BGR2GRAY)
     # cv2.imshow('Gray', img_gray)
 
     blurred = cv2.GaussianBlur(img_gray, (Kernel_size, Kernel_size), 0)

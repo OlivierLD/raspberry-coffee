@@ -134,6 +134,12 @@ public class OpenCVSwingCamera {
 		}
 	}
 
+	private static byte saturate(double val) {
+		int iVal = (int) Math.round(val);
+		iVal = iVal > 255 ? 255 : (iVal < 0 ? 0 : iVal);
+		return (byte) iVal;
+	}
+
 	public static void process(Mat frame) {
 
 		Mat original; // For the contours, if needed.
@@ -145,6 +151,27 @@ public class OpenCVSwingCamera {
 		}
 		Mat newMat = null;
 		Mat lastMat = original;
+
+		// Brightness & Contrast
+		if (swingFrame.isContrastBrightnessChecked()) {
+			newMat = Mat.zeros(lastMat.size(), lastMat.type());
+			double alpha = swingFrame.getContrastValue();  // Simple contrast control [1.0, 3.0]
+			int beta = swingFrame.getBrightnessValue();    // Simple brightness control [0, 100]
+			byte[] imageData = new byte[(int) (lastMat.total() * lastMat.channels())];
+			lastMat.get(0, 0, imageData);
+			byte[] newImageData = new byte[(int) (newMat.total() * newMat.channels())];
+			for (int y = 0; y < lastMat.rows(); y++) {
+				for (int x = 0; x < lastMat.cols(); x++) {
+					for (int c = 0; c < lastMat.channels(); c++) {
+						double pixelValue = imageData[(y * lastMat.cols() + x) * lastMat.channels() + c];
+						pixelValue = pixelValue < 0 ? pixelValue + 256 : pixelValue;
+						newImageData[(y * lastMat.cols() + x) * lastMat.channels() + c] = saturate(alpha * pixelValue + beta);
+					}
+				}
+			}
+			newMat.put(0, 0, newImageData);
+			lastMat = newMat;
+		}
 
 		// All required Tx (checkboxes in the UI)
 		if (swingFrame.isGrayChecked()) {
