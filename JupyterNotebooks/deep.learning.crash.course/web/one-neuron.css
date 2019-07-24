@@ -7,7 +7,7 @@
 .neuron-frame {
 	display: grid;
 	justify-self: start;
-	grid-template-columns: var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width);
+	grid-template-columns: var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width);
 	grid-template-rows: auto;
 	justify-items: center;
 	grid-gap: 3px;
@@ -62,6 +62,18 @@ table {
 	border-radius: 10px;
 	padding: 10px;
 	margin: 10px;
+}
+
+select {
+	font-size: calc(var(--cell-font-size) / 6);
+}
+
+input {
+	font-size: calc(var(--cell-font-size) / 4);
+	color: blue;
+	width: calc(var(--cell-width) * 0.8);
+	text-align: center;
+	border: none;
 }
 
 knob-and-display:focus {
