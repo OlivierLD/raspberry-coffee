@@ -98,6 +98,19 @@
 											onchange="recompute"
 											title="Drag the knob's index around to change the value"/>
 	</div>
+	<div class="neuron-input-cell">
+		<knob-and-display id="final-w"
+											tabindex="-1"
+											class="knob-css"
+											width="120"
+											height="120"
+											minimum="-2"
+											maximum="2"
+											value="1.0"
+											label="finalW"
+											onchange="recompute"
+											title="Drag the knob's index around to change the value"/>
+	</div>
 	<div id="result" class="neuron-input-cell neuron-cell">Result</div>
 	<!-- Activation function -->
 	<div id="activation-function" class="neuron-input-cell neuron-cell">
@@ -142,12 +155,14 @@ Modify weights and bias to see the result.
 
 		let bias = Number(parseFloat(document.getElementById("bias").value || 0.0).toFixed(2));
 
-		console.log(`Values W1:${w1} W2:${w2} W3:${w3} bias:${bias}`);
+		let finalW = Number(parseFloat(document.getElementById("final-w").value || 0.0).toFixed(2));
+
+		console.log(`Values W1:${w1} W2:${w2} W3:${w3} bias:${bias} finalW:${finalW}`);
 
 		let output = (v1 * w1) + (v2 * w2) + (v3 * w3);
 		document.getElementById("output").innerText = output.toFixed(2);
 
-		let result = output + bias;
+		let result = (output + bias) * finalW;
 		document.getElementById("result").innerText = result.toFixed(2);
 
 		let activationFunction = document.getElementById("function").value;
@@ -193,6 +208,7 @@ Modify weights and bias to see the result.
 		let wgt2 = document.getElementById("w-2");
 		let wgt3 = document.getElementById("w-3");
 		let bias1 = document.getElementById("bias");
+		let finalWgt = document.getElementById("final-w");
 
 		wgt1.addEventListener(
 				'keydown',
@@ -286,10 +302,36 @@ Modify weights and bias to see the result.
 								recompute();
 							}
 						} else if (evt.key === 'ArrowDown' || evt.key === 'ArrowLeft') {
-							if (val > wgt1.minimum) {
+							if (val > bias1.minimum) {
 								let newVal = val - 0.01;
 								bias1.value = newVal;
 								bias1.repaint();
+								recompute();
+							}
+						}
+					} else {
+						console.log('... Bad.');
+					}
+				}, false);
+
+		finalWgt.addEventListener(
+				'keydown',
+				evt => { // ArrowRight, ArrowUp, ArrowLeft, ArrowDown
+					if (evt.key !== undefined) {
+						let val = finalWgt.value;
+						// console.log("Key:", evt.key, "Code:", evt.keyCode);
+						if (evt.key === 'ArrowUp' || evt.key === 'ArrowRight') {
+							if (val < finalWgt.maximum) {
+								let newVal = val + 0.01;
+								finalWgt.value = newVal;
+								finalWgt.repaint();
+								recompute();
+							}
+						} else if (evt.key === 'ArrowDown' || evt.key === 'ArrowLeft') {
+							if (val > finalWgt.minimum) {
+								let newVal = val - 0.01;
+								finalWgt.value = newVal;
+								finalWgt.repaint();
 								recompute();
 							}
 						}

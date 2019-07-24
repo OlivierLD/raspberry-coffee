@@ -7,7 +7,7 @@
 .neuron-frame {
 	display: grid;
 	justify-self: start;
-	grid-template-columns: var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width);
+	grid-template-columns: var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width) var(--cell-width);
 	grid-template-rows: auto;
 	justify-items: center;
 	grid-gap: 3px;
