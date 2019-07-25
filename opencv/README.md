@@ -4,6 +4,13 @@
 - <https://opencv-java-tutorials.readthedocs.io/en/latest/index.html>
 - <https://github.com/opencv-java/>
 
+#### For OpenCV on the Raspberry Pi
+- <https://www.learnopencv.com/install-opencv-4-on-raspberry-pi/> <- Good start!
+- [For Java](https://elbauldelprogramador.com/en/compile-opencv-3.2-with-java-intellij-idea/)
+- <https://opencv-java-tutorials.readthedocs.io/en/latest/01-installing-opencv-for-java.html>
+- <https://medium.com/@manishbansal8843/face-recognition-using-opencv-in-java-updated-8fc329863e52>
+- [Motion detection](https://www.pyimagesearch.com/2016/01/18/multiple-cameras-with-the-raspberry-pi-and-opencv/)
+
 
 ### Face recognition, OpenCV and DL
 - <https://www.freecodecamp.org/news/facial-recognition-using-opencv-in-java-92fa40c22f62/>
