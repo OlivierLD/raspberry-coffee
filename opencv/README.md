@@ -11,6 +11,8 @@
 - <https://medium.com/@manishbansal8843/face-recognition-using-opencv-in-java-updated-8fc329863e52>
 - [Motion detection](https://www.pyimagesearch.com/2016/01/18/multiple-cameras-with-the-raspberry-pi-and-opencv/)
 
+- [Even for Scala](https://docs.opencv.org/3.4/d9/d52/tutorial_java_dev_intro.html)
+
 
 ### Face recognition, OpenCV and DL
 - <https://www.freecodecamp.org/news/facial-recognition-using-opencv-in-java-92fa40c22f62/>

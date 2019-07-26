@@ -33,6 +33,11 @@
 	align-items: center;
 }
 
+.neuron-cell-with-frame {
+	border: 1px solid silver;
+	border-radius: 10px;
+}
+
 .neuron-input-field {
 	font-size: calc(var(--cell-font-size) / 4);
 }
