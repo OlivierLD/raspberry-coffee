@@ -32,10 +32,16 @@ public class Train {
 
 	private static int NB_LOOPS = 10;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		if (args.length != 2) {
-			System.err.println("Require two arguments: The GraphDef file and checkpoint directory");
+			System.err.println("+--------------------------------------------------------------------+");
+			System.err.println("| Requires two arguments: The GraphDef file and checkpoint directory |");
+			System.err.println("+--------------------------------------------------------------------+");
 			System.exit(1);
+		} else {
+			String javaLibPath = System.getProperty("java.library.path");
+			System.out.println(String.format("\n\t>> Running from %s, Java Lib Path: %s\n", System.getProperty("user.dir"), javaLibPath));
+			System.out.println(String.format("Runtime args: %s, %s", args[0], args[1]));
 		}
 
 		final byte[] graphDef = Files.readAllBytes(Paths.get(args[0]));
@@ -45,7 +51,8 @@ public class Train {
 		try (Graph graph = new Graph();
 		     Session sess = new Session(graph);
 		     Tensor<String> checkpointPrefix =
-				     Tensors.create(Paths.get(checkpointDir, "ckpt").toString())) {
+				     Tensors.create(Paths.get(checkpointDir, "ckpt").toString())) { // Graph and Session, auto-closeable
+
 			graph.importGraphDef(graphDef);
 
 			// Initialize or restore.

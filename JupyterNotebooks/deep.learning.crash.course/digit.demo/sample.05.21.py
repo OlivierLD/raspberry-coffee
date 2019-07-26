@@ -10,6 +10,8 @@
 #     SHOW AN HAND-WRITTEN CHARACTER TO THE CAMERA
 #     HIT 'S' TO HAVE IT RECOGNIZED
 #
+#     REQUIRES THE MODEL 'training.h5' TO BE AVAILABLE
+#
 # Great doc at
 # https://medium.com/@ashok.tankala/build-the-mnist-model-with-your-own-handwritten-digits-using-tensorflow-keras-and-python-f8ec9f871fd3
 #

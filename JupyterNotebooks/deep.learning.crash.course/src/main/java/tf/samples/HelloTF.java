@@ -7,6 +7,10 @@ import org.tensorflow.TensorFlow;
 
 public class HelloTF {
 	public static void main(String[] args) throws Exception {
+
+		String javaLibPath = System.getProperty("java.library.path");
+		System.out.println(String.format("\n\t>> Running from %s, Java Lib Path: %s\n", System.getProperty("user.dir"), javaLibPath));
+
 		try (Graph g = new Graph()) {
 			final String value = "Hello from TF " + TensorFlow.version();
 

@@ -14,7 +14,7 @@ import org.nd4j.linalg.io.ClassPathResource;
 public class KerasImport {
 	public static void main(String... args) throws Exception {
 //		String simpleMlp = new ClassPathResource("insurance.h5").getFile().getPath();
-		String simpleMlp = "insurance.h5";
+		String simpleMlp = "insurance.demo/insurance.h5";
 		MultiLayerNetwork model = KerasModelImport.importKerasSequentialModelAndWeights(simpleMlp);
 
 //		const example = tf.tensor([[100, 47, 10]]); // The tensor
