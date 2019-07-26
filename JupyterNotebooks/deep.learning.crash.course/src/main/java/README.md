@@ -55,13 +55,9 @@ and reach <http://localhost:6006/> from your browser.
 
 ---
 
+## 2 different approaches
 - [DL4J](https://deeplearning4j.org/)
 - [TensorFlow for Java](https://www.tensorflow.org/install/lang_java)
-
-
-## 2 different approaches
-- TensorFlow for Java
-- DL4J, that includes `Keras` models imports.
 
 ### For TensorFlow in Java
 Do follow instructions [here](https://www.tensorflow.org/install/lang_java#download) (JNI settings).
