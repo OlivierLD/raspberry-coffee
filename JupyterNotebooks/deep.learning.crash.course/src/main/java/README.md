@@ -66,7 +66,7 @@ Do follow instructions [here](https://www.tensorflow.org/install/lang_java#downl
 
 Requires the following dependencies (in `build.gradle`):
 ```
-  compile 'org.tensorflow:tensorflow:1.13.1'
+  compile 'org.tensorflow:tensorflow:1.14.0'
   compile 'org.deeplearning4j:deeplearning4j-modelimport:1.0.0-beta4'
   compile 'org.nd4j:nd4j-native-platform:1.0.0-beta4'
 ```
