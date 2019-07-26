@@ -4,6 +4,8 @@ with runnable material (remote, and local)
 
 A lecture by [Emmet "Doc" Brown](https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwivz666m-riAhXY3J4KHWuuDisQjRx6BAgBEAU&url=%2Furl%3Fsa%3Di%26source%3Dimages%26cd%3D%26ved%3D%26url%3Dhttps%253A%252F%252Fbacktothefuture.fandom.com%252Fwiki%252FGreat_Scott%26psig%3DAOvVaw22pDeG021kyl_liLkNMEnf%26ust%3D1560644320531602&psig=AOvVaw22pDeG021kyl_liLkNMEnf&ust=1560644320531602)
 
+---
+
 First, some links:
 - [Google Colab](https://colab.research.google.com/notebooks/welcome.ipynb)
 - [TensorFlow](https://www.tensorflow.org/)
@@ -28,17 +30,19 @@ graphics, this is quite impressive and convenient.
 We will also provide here several Python scripts, that can reproduce the features illustrated in the Notebooks, but
 without comments and graphics.
 
-- _All_ the softwares mentioned in this document are free and Open Source.
+- _All_ the software mentioned in this document are free and Open Source.
 - _All_ the code for you to replay _all_ the examples in this documents are available in the project hosting this document, or on the web (in which cases links will be provided).
 
 ### Material
+We will use Jupyter Notebooks (for Python and Java), as well as plain Python scripts.
+
 See how to install Jupyter and Jupyter for Java in [this document](../../README.md).
 
 Then run
 ```
  $ jupyter notebook
 ```
-We have in this project Jupyter Notebooks, and Python scripts:
+Here is a non exhaustive list of the Jupyter Notebooks and Python scripts we provide:
 <table>
 <tr>
 <th>Jupyter Notebooks</th>
@@ -60,7 +64,7 @@ We have in this project Jupyter Notebooks, and Python scripts:
 
 - **insurance.demo/sample.01.py**, basic sanity checks, on the data
 - **insurance.demo/sample.03.py**, building and training a network (insurance data), with TensorFlow and Keras
-- **insurance.demo/sample.04.py**, like the one above, but more accurate
+- **insurance.demo/sample.04.py**, like the one above, but more accurate, and with TensorBoard.
 - **digit.demo/sample.05.py**, with TensorFlow and Keras, hand-written figures recognition, from scratch.
 - **digit.demo/sample.06.py**, with TensorFlow and Keras, pictures recognition.
 
@@ -69,11 +73,11 @@ We have in this project Jupyter Notebooks, and Python scripts:
 </table>
 
 ### Deep Learning and AI, where it fits
-![Where](./img/01fig01.jpg)
-
 And even AI (Artificial Intelligence) itself is part of the even bigger picture called Data Science.
 
-![Data Science](./img/DataScience.png)
+|  |  |
+|:---:|:---:|
+| ![Where](./img/01fig01.jpg) | ![Data Science](./img/DataScience.png) |
 
 (KDD: Knowledge Discovery in Databases)
 
@@ -82,10 +86,14 @@ And even AI (Artificial Intelligence) itself is part of the even bigger picture 
 
 Classical programming applies rules on data to get answers.
 
+Here we want to elaborate the rules, based on the input data, and the output facts (answers).
+
 > The goal of machine learning is to _**produce the rules**_, by finding the path between the original data and the answers/facts/conclusions produced subsequently.
 > In other words, it relies on the way in behaved in the past, to predict/deduct the way it will behave in the future.
+>
+> Those _**rules**_ will be used later on as a _**model**_, in which you will inject new data (aka facts) to predict answers.
 
-#### Is that Deep Learning?
+#### Examples: Is that Deep Learning?
 
 ###### Weather Routing?
 No. It is not even Artificial Intelligence. There is no training process involved, it is all
@@ -107,11 +115,12 @@ on a model elaborated by a training process.
     - Test dataset
     - Validation dataset
 - With those datasets, you will **_train_** your model
-    - This **is** _where the machine is learning_.
+    - This **is** _where the machine is learning_. 👈
 - Once the model is _trained_, you will use it to make decision on real data (real world, and real time)
 
-### So, we start from real data (from a database)
-We will use an example to illustrate the path, let's say we run an insurance company,
+### So, we start from real data (from a database, or any vast storage)
+##### We will use an example to illustrate the path: 
+Let's say we run an insurance company,
 and we want to determine the risk associated with a customer, based on
 - his age
 - the max speed of his car
@@ -128,7 +137,7 @@ So, in the figure above, we actually have 3 dimensions:
 - Age of the driver
 - Max Speed of the car
 - Risk group, encoded with the color.
-> Note: The `miles per year` dimension is dropped in this case.
+> Note: The `miles per year` dimension is dropped in this case, for the clarity of the diagram.
 
 If we restore the `number of thousands of miles driven per year` dimension,
 a programmer would write _rules_ like this (in Python):
@@ -166,7 +175,7 @@ If we plot this on the diagram (red-yellow-green), we have:
 
 ![Plot](./img/rules.plot.png)
 
-> The problem we want to address here is a _**classification**_ problem. We will put the points in different (3) categories.
+> The problem we want to address here is a specific one, it is a  _**classification**_ problem: we will put the points in different (3) categories.
 > Other problems may be addressed by Deep Learning, like _**objects detection**_, _**objects recognition**_, and many more.
 
 > Example: self driving cars will have to:
@@ -176,7 +185,7 @@ If we plot this on the diagram (red-yellow-green), we have:
 
 ![Objects detection](./img/object-detection.jpg)
 
-### Deep - supervised - machine learning
+### Back to our example: Deep - supervised - machine learning
 
 The `model` will replace the `rules` we had before.
 
@@ -186,7 +195,7 @@ It will be able to make predictions like this:
 
 We will use Neural Networks to elaborate the model.
 
-And specifically the `TensorFlow playground`.
+To see how Neural Networks work, let's take a look at the `TensorFlow playground`.
 
 <!-- 2. BASIC CONCEPTS OF DEEP SUPERVISED MACHINE LEARNING -->
 
@@ -202,9 +211,24 @@ TensorFlow playground at <https://playground.tensorflow.org>
 
  ![Neuron](./img/neuron.formula.png)
 
-Example
+##### Example
 
  <img src="./img/neuron.example.png" alt="Neuron" width="404" height="253"/>
+ 
+##### Quick remark here:
+In the figure above, we have in input a triplet of values: `(10, 6, 8)`.
+And the output is `17`.
+
+During the training of the network, the `17` is the value we need to obtain, and we will tune the 
+weights of the different inputs, as well as the bias to find this value, `17`.
+Notice that several combinations of weights and bias may very well lead to the targeted value, `17`.
+
+During the learning process, the computer (the machine) will try _**all**_ the possible combinations of weights and bias on _**all**_ the data of the training data set,
+calculate the cumulated error, and determine what weights-and-bias combination has the lowest cumulated error, the best accuracy.
+
+Determination of this minimal/smallest error is an important key of an efficient machine learning process.
+
+Obviously, the more input data you can have, the more precise your training can be. 
 
 See a [Java Notebook](./NeuralNetworks.ipynb#Neurons!) for an example, or <a href="https://olivierld.github.io/nn/one.neuron.webcomp.html" target="new">this piece</a> of HTML5/CSS3/WebComponents (also includes activation functions).
 
@@ -220,9 +244,10 @@ becomes
 <pre>
  y = (a . x) + b
 </pre>
-This looks like the equation of a straight line, with its directing coefficient and offset.
+This looks like the equation of a straight line, with its directing coefficient and offset. You may think of this as the equation of the border between the 
+two categories we need to distinguish.
 
-#### Neurons at work
+#### Neurons at work, TensorFlow Playground
 
 ![TensorFlow Playground](./img/tf.playground.png)
 
@@ -288,9 +313,10 @@ Among them, we have:
 
 For example, if we use a Sigmoid for the value used above (`17`), we would probably return a value around `0.91`...
 
-| Sigmoid  | Hyperbolic Tangent | ReLU     |
-|:--------:|:------------------:|:--------:|
-| ![Sigmoid](./img/Sigmoid.png) | ![H Tan](./img/HTan.jpg) | ![Sigmoid](./img/ReLU.png) |
+| Sigmoid  | Hyperbolic Tangent | ReLU     | Step  |
+|:--------:|:------------------:|:--------:|:-----:|
+| ![Sigmoid](./img/sigmoid.png) | ![H Tan](./img/TanH.png) | ![ReLU](./img/relu.png) | ![Step](./img/step.png) |
+| x -> (1 / (1 + e<sup><small>(-x)</small></sup>)) | x -> (e<sup><small>x</small></sup> - e<sup><small>(-x)</small></sup>) / (e<sup><small>x</small></sup> + e<sup><small>(-x)</small></sup>)   | x -> x < 0 ? 0 : x | x -> x < 0 ? 0 : 1 |
 
 See this [Jupyter Java Notebook](./NeuralNetworks.ipynb) for more details.
 
