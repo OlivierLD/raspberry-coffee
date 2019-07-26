@@ -232,7 +232,7 @@ Obviously, the more input data you can have, the more precise your training can 
 
 | Example |
 |:--------|
-| See a [Java Notebook](./NeuralNetworks.ipynb#Neurons!) for an example, or <a href="https://olivierld.github.io/nn/one.neuron.webcomp.html" target="new">this piece</a> of HTML5/CSS3/WebComponents (also includes activation functions). |
+| See this [Java Notebook](./NeuralNetworks.ipynb#Neurons!) for an example, or <a href="https://olivierld.github.io/nn/one.neuron.webcomp.html" target="new">this piece</a> of HTML5/CSS3/WebComponents (also includes activation functions). |
 
 In a classification problem, a single neuron can draw a single line as a decision boundary.
 
