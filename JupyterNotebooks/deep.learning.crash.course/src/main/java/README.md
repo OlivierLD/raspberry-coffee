@@ -2,7 +2,7 @@ The goal here is to do in Java all what's done in Python.
 
 Java seems to be lagging a bit behind...
 
-The `KerasImpoirt` raises a 
+With DL4J, the `KerasImport` raises a 
 ```
  Unsupported keras layer type BatchNormalizationV1
 ```
