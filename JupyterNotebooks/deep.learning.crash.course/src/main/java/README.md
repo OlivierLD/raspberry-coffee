@@ -29,7 +29,7 @@ Otherwise, use:
 ```
  $ saved_model_cli show --dir ./model
 ```
-- `tensorboard --logdir .`
+- `tensorboard`
     - in Python, when creating the `graph`, use:
 ```python
 writer = tf.summary.FileWriter('.')
