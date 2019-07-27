@@ -64,7 +64,9 @@ Would also work each frame returned by the camera
 | Path detected! | | |
 | ![Detected](./docimg/step.07.png) |  |  |
 
-This could be the basis to drive a robot carrying the camera
+This could be the basis to drive a robot carrying the camera, as in `OpenCVContinuousPathDetection.java`:
+
+![Continuous](./docimg/continuous.course.detection.png)
 
 ---
 

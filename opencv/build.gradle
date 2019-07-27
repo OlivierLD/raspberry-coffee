@@ -39,6 +39,7 @@ ext.mainClassNameOlivSwing = 'oliv.opencv.OpenCVSwing'
 ext.mainClassNameOlivSwingCamera = 'oliv.opencv.OpenCVSwingCamera'
 ext.mainClassNameFaceDetect = 'oliv.opencv.FaceRecognitionSample'
 ext.mainClassNameContinuousFaceDetect = 'oliv.opencv.OpenCVContinuousFaceDetection'
+ext.mainClassNameContinuousPathDetect = 'oliv.opencv.OpenCVContinuousPathDetection'
 
 tasks.withType(JavaExec) {
     systemProperty "java.library.path", "/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4" // For Mac
@@ -73,6 +74,12 @@ task runOlivSwing(type:JavaExec) {
 
 task runOlivSwingCamera(type:JavaExec) {
     main = mainClassNameOlivSwingCamera
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+
+task continuousPathDetect(type:JavaExec) {
+    main = mainClassNameContinuousPathDetect
     classpath = sourceSets.main.runtimeClasspath
 }
 

@@ -19,7 +19,7 @@ import oliv.opencv.swing.SwingFrame;
 
 /**
  * Oliv did it.
- * Basic OpenCV image manipulations.
+ * Basic OpenCV image manipulations, with path detection.
  * Display images in Swing
  *
  * Uses assertions.
