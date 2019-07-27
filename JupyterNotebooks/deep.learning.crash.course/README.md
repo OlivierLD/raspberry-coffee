@@ -452,16 +452,16 @@ Flip the 'Discretize output' box.
 
 ###### Lab 3
 Use the 'circular' data (top left)
-- with 4 neurons, learning rate 0.03, Act ReLU, Tanh, or Sigmoid,
+- with 4 neurons, learning rate 0.03, Activation function ReLU, Tanh, or Sigmoid,
 - compare the output curves, see the different parameters
 
 ###### Lab 4
 Use the spiral data (bottom right)
-- Use the _**7**_ input dimensions, 2 hidden layers, 5 and 6 neurons
-- Act Func Tanh, ReLU, should be OK around 500 epochs
+- Use the <b><u>7</u></b> (yes, all of them) input dimensions, 2 hidden layers, 5 and 6 neurons
+- Activation Function Tanh, ReLU, should be OK around 500 epochs
 - Do look at the curves when using a Sigmoid
 
-Play around, and see how it moves ;)
+Play around, and see how it moves 😜
 
 #### Finding the sweet spot
 
