@@ -226,7 +226,7 @@ Notice that several combinations of weights and bias may very well lead to the t
 During the learning process, the computer (the machine) will try _**all**_ the possible combinations of weights and bias on _**all**_ the data of the training data set,
 calculate the cumulated error, and determine what weights-and-bias combination has the lowest cumulated error, the best accuracy.
 
-Determination of this minimal/smallest error is an important key of an efficient machine learning process.
+Determination of this minimal/smallest error is a _major_ key of an efficient machine learning process.
 
 Obviously, the more input data you can have, the more precise your training can be. 
 
@@ -246,8 +246,8 @@ becomes
 <pre>
  y = (a . x) + b
 </pre>
-This looks like the equation of a straight line, with its directing coefficient and offset. You may think of this as the equation of the border between the 
-two categories we need to distinguish.
+This looks like the equation of a straight line, with its directing coefficient and offset. In the case of a classification problem, you may think of this as the equation of the border between the 
+two categories you want to distinguish.
 
 #### Neurons at work, TensorFlow Playground
 
