@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  * Oliv did it.
  * OpenCV image manipulations on frames returned by the Camera
  * Display images in a Swing JPanel
- * Detect the faces on the last processed imaged (depends on the checkboxes in the Swing UI)
+ * Detect the faces on the last processed image (depends on the checkboxes in the Swing UI)
  */
 public class OpenCVContinuousFaceDetection {
 
