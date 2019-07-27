@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 #
 # Path detection
-# Same as detection.6, but frame by frame (camera)
+# Same as detection.6, but continuous,
+# frame by frame (camera)
 #
 import time
 import cv2
