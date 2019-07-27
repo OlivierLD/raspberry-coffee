@@ -45,12 +45,10 @@ See in [`build.gradle`](./build.gradle).
  ../gradlew runFX
 ```
 
-### Custom code
-> Using Java Swing
+### Custom Java code
+> Using Java Swing for the GUI.
 
-Path detection on one image.
-
-Would also work each frame returned by the camera
+#### Path detection on one image.
 ```
  ../gradlew runOlivSwing
 ```
@@ -64,14 +62,14 @@ Would also work each frame returned by the camera
 | Path detected! | | |
 | ![Detected](./docimg/step.07.png) |  |  |
 
+#### Continuous path detection
 This could be the basis to drive a robot carrying the camera, as in `OpenCVContinuousPathDetection.java`:
-
+```
+ ../gradlew continuousPathDetect
+```
 ![Continuous](./docimg/continuous.course.detection.png)
 
----
-
-Interactive, transforming images returned by the camera in real time.
-
+#### Interactive, transforming images returned by the camera in real time.
 Resize image, color to gray-scale, gaussian blur, threshold, canny edges, contours detection,
 contrasts and brightness...
 ```
@@ -81,7 +79,7 @@ contrasts and brightness...
 |:-----------------------------:|
 | ![Swing UI](./docimg/snap.01.png) |
 
-#### Face detection, from an image, or from the camera
+#### Face detection, on an image
 Run:
 ```
  ../gradlew faceDetect
@@ -91,6 +89,7 @@ Run:
 |-----:|:-------:|:-----|
 | ![original](./src/main/resources/several.jpeg) | => | ![detected](./docimg/faceDetection.png) |
 
+#### Continuous face detection
 For continuous detection, see `OpenCVContinuousFaceDetection.java`, run
 ```
  ../gradlew continuousFaceDetect
