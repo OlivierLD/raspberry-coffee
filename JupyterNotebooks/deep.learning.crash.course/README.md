@@ -1,4 +1,4 @@
-# Deep Learning Crash Course 🚀
+# Deep Learning, from scratch 🚀
 A transcript adapted from the Manning Video `Deep Learning Crash Course` by <a href="http://lmgtfy.com/?q=Oliver+Zeigermann" target="google">Oliver Zeigermann</a>,
 with runnable material (remote, and local)
 

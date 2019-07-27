@@ -10,10 +10,10 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
-//
-// Detects faces in an image, draws boxes around them, and writes the results
-// to "faceDetection.png".
-//
+/*
+ * Detects faces in an image, draws boxes around them, and writes the results
+ * to "faceDetection.png".
+*/
 class FaceDetectDemo {
 
 	public void run() {
