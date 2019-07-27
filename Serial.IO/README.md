@@ -179,4 +179,28 @@ The output is the same as above.
 
 A GPS with a USB cable would also produce interesting output.
 
+#### Wiring for [Adafruit Ultimate GPS](https://www.adafruit.com/product/746)
+![Adafruit GPS](./Adafruit.Ultimate.GPS_bb.png)
+
+In the script `runGPSSample.sh`:
+```
+#!/bin/bash
+#
+# Read a GPS
+#
+CP=./build/libs/Serial.IO-1.0.jar
+CP=$CP:/usr/share/java/RXTXcomm.jar
+#
+SERIAL_PORT=/dev/ttyS0 # RPi. This port may vary
+BAUD_RATE=9600
+#
+JAVA_OPTS="-Dserial.port=$SERIAL_PORT -Dbaud.rate=$BAUD_RATE"
+. . . 
+
+```
+
+### USB-Key GPS
+[This one](https://www.amazon.com/HiLetgo-G-Mouse-GLONASS-Receiver-Windows/dp/B01MTU9KTF/ref=sr_1_9?crid=28K7KG7FGLBO6&keywords=u-blox+usb+gps&qid=1564254911&s=gateway&sprefix=U-blox%2Caps%2C207&sr=8-9) works fine as well.
+
+
 ---
