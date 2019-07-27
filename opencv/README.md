@@ -79,4 +79,19 @@ contrasts and brightness...
 |:-----------------------------:|
 | ![Swing UI](./docimg/snap.01.png) |
 
+#### Face detection, from an image, or from the camera
+Run:
+```
+ ../gradlew faceDetect
+``` 
+
+| this | becomes | that |
+|-----:|:-------:|:-----|
+| ![original](./src/main/resources/several.jpeg) | => | ![detected](./docimg/faceDetection.png) |
+
+For continuous detection, see `OpenCVContinuousFaceDetection.java`, run
+```
+ ../gradlew continuousFaceDetect
+``` 
+
 ---
