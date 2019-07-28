@@ -17,7 +17,7 @@ description = """helidon-sensors"""
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-tasks.withType(JavaCompile) {/
+tasks.withType(JavaCompile) {
     if (JavaVersion.current() != project.targetCompatibility) {
         throw new GradleException("The java version used ${JavaVersion.current()} is not the expected version ${project.targetCompatibility}.")
     }
