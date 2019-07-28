@@ -158,6 +158,8 @@ JAVA_OPTS="$JAVA_OPTS -Xms64M -Xmx1G"
 #
 # For remote debugging:
 # JAVA_OPTS="$JAVA_OPTS -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000"
+# For remote JVM Monitoring
+# JAVA_OPTS="$JAVA_OPTS -Dcom.sun.management.jmxremote.port=1234 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=$(hostname)"
 #
 echo -e "Using properties:$JAVA_OPTS"
 #
