@@ -17,7 +17,7 @@ description = """helidon-sensors"""
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile) {/
     if (JavaVersion.current() != project.targetCompatibility) {
         throw new GradleException("The java version used ${JavaVersion.current()} is not the expected version ${project.targetCompatibility}.")
     }
@@ -30,7 +30,8 @@ repositories {
     maven { url "http://repo.maven.apache.org/maven2" }
     maven { url "https://oss.sonatype.org/content/groups/public" }
 }
-dependencies {
+dep
+endencies {
 
     compile 'oliv.raspi.coffee:I2C.SPI:1.0'
 

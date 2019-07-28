@@ -4,6 +4,7 @@ import nmea.ais.AISParser;
 import utils.DumpUtil;
 import nmea.parser.StringParsers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public final class NMEAParser extends Thread {
 		NMEAListeners = al;
 		this.addNMEAListener(new NMEAListener() {
 			public void dataRead(NMEAEvent e) {
-//        System.out.println("Receieved Data:" + e.getContent());
+//        System.out.println("Received Data:" + e.getContent());
 				nmeaStream.append(e.getContent());
 				// Send to parser
 				String s = "";
@@ -235,17 +236,24 @@ public final class NMEAParser extends Thread {
 	}
 
 	protected void fireDataDetected(NMEAEvent e) {
-		this.NMEAListeners.stream().forEach(listener -> listener.dataDetected(e));
+		if (this.NMEAListeners != null) {
+			this.NMEAListeners.stream().forEach(listener -> listener.dataDetected(e));
+		}
 	}
 
 	public synchronized void addNMEAListener(NMEAListener l) {
+		if (this.NMEAListeners == null) {
+			this.NMEAListeners = new ArrayList<>();
+		}
 		if (!this.NMEAListeners.contains(l)) {
 			this.NMEAListeners.add(l);
 		}
 	}
 
 	public synchronized void removeNMEAListener(NMEAListener l) {
-		NMEAListeners.remove(l);
+		if (this.NMEAListeners != null) {
+			NMEAListeners.remove(l);
+		}
 	}
 
 	public void run() {
