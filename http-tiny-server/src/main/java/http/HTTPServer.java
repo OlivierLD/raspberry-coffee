@@ -994,6 +994,7 @@ public class HTTPServer {
 					System.err.println("+-------------------------");
 				}
 			} else {
+				System.err.println(String.format(">> Cause: %s, Message: %s", se.getCause(), se.getMessage()));
 				se.printStackTrace();
 			}
 		} catch (IOException e) {
