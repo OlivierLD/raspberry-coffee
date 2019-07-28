@@ -988,9 +988,11 @@ public class HTTPServer {
 			}
 		} catch (SocketException se) {
 			if (se.getMessage().contains("Broken pipe")) {
-				System.err.println("+-------------------------");
-				System.err.println(String.format("| %s - Oops, client hung up! Response was:\n%s", new Date().toString(), response.toString()));
-				System.err.println("+-------------------------");
+				if (verbose) {
+					System.err.println("+-------------------------");
+					System.err.println(String.format("| %s - Managed error, client hung up! Response was:\n%s", new Date().toString(), response.toString()));
+					System.err.println("+-------------------------");
+				}
 			} else {
 				se.printStackTrace();
 			}
