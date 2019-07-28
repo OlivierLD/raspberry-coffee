@@ -237,11 +237,13 @@ public final class NMEAParser extends Thread {
 
 	protected void fireDataDetected(NMEAEvent e) {
 		if (this.NMEAListeners != null) {
-			this.NMEAListeners.stream().forEach(listener -> {
-				if (listener != null) {
-					listener.dataDetected(e);
-				}
-			});
+			synchronized (this.NMEAListeners) {
+				this.NMEAListeners.stream().forEach(listener -> {
+					if (listener != null) {
+						listener.dataDetected(e);
+					}
+				});
+			}
 		}
 	}
 

@@ -969,6 +969,19 @@ public class HTTPServer {
 		return false;
 	}
 
+	private void manageSocketException(SocketException se, String content) {
+		if (se.getMessage().contains("Broken pipe")) {
+			if (verbose) {
+				System.err.println("+-------------------------");
+				System.err.println(String.format("| %s - Managed error, client hung up! Response was:\n%s", new Date().toString(), content));
+				System.err.println("+-------------------------");
+			}
+		} else {
+			System.err.println(String.format(">> Cause: %s, Message: %s", se.getCause(), se.getMessage()));
+			se.printStackTrace();
+		}
+	}
+
 	private void sendResponse(Response response, OutputStream os) {
 		try {
 			os.write(String.format("%s %d \r\n", response.getProtocol(), response.getStatus()).getBytes());
@@ -976,8 +989,10 @@ public class HTTPServer {
 				response.getHeaders().keySet().stream().forEach(k -> {
 					try {
 						os.write(String.format("%s: %s\r\n", k, response.getHeaders().get(k)).getBytes());
-					} catch (IOException e) {
-						e.printStackTrace();
+					} catch (SocketException se) {
+						manageSocketException(se, response.toString());
+					} catch (IOException ioe) {
+						ioe.printStackTrace();
 					}
 				});
 			}
@@ -987,16 +1002,7 @@ public class HTTPServer {
 				os.flush();
 			}
 		} catch (SocketException se) {
-			if (se.getMessage().contains("Broken pipe")) {
-				if (verbose) {
-					System.err.println("+-------------------------");
-					System.err.println(String.format("| %s - Managed error, client hung up! Response was:\n%s", new Date().toString(), response.toString()));
-					System.err.println("+-------------------------");
-				}
-			} else {
-				System.err.println(String.format(">> Cause: %s, Message: %s", se.getCause(), se.getMessage()));
-				se.printStackTrace();
-			}
+			manageSocketException(se, response.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
