@@ -23,7 +23,7 @@ tasks.withType(JavaCompile) {
             "+----------------------------------------------------------------"
 //    )
   } else {
-    println ">> From task $name ($project.name), using java version ${JavaVersion.current()} "
+    println ">> From task $name (in $project.name), using java version ${JavaVersion.current()} "
   }
   options.encoding = 'UTF-8'
 }

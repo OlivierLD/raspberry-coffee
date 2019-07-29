@@ -68,3 +68,4 @@ $ curl -O https://raw.githubusercontent.com/DJCordhose/deep-learning-crash-cours
 - [Machine Learning in Digital Process Automation - Part 2](https://medium.com/@ralf_mueller/ebeeec8763dc)
 - [Data mining concepts](https://docs.oracle.com/en/database/oracle/oracle-database/19/dmcon/index.html)
 - [Serverless and Recurrent Neural Networks with Fn, GraphPipe and TensorFlow](https://medium.com/fnproject/serverless-and-recurrent-neural-networks-with-tensorflow-and-graphpipe-fc73785f1a16)
+- [Simple Guide to Hyperparameter Tuning in Neural Networks](https://towardsdatascience.com/simple-guide-to-hyperparameter-tuning-in-neural-networks-3fe03dad8594)

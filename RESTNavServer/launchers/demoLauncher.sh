@@ -50,9 +50,12 @@ do
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  P. Launch proxy CLI, to visualize HTTP & REST traffic 🔎                               |"
 	echo -e "| PG. Launch proxy GUI, to visualize HTTP & REST traffic 🕵️‍                                |"
-	echo -e "+-----------------------------------------------------------------------------------------+"
-	echo -e "|  J. JConsole (JVM Monitoring) 📡                                                        |"
-	echo -e "+-----------------------------------------------------------------------------------------+"
+	echo -e "+------------------------------------+----------------------------------------------------+"
+	echo -e "|  J. JConsole (JVM Monitoring) 📡   |  JV. JVisualVM 📡                                  |"
+	echo -e "+                                    | - Note: for remote monitoring, jstatd must be      |"
+	echo -e "+                                    |         running on the remote machine.             |"
+	echo -e "+                                    |     Enter 'JVH' for some help.                     |"
+	echo -e "+------------------------------------+----------------------------------------------------+"
 	echo -e "| >> Hint: use 'killns.sh' to stop any running NavServer 💣                               |"
 	echo -e "| >> Hint: use 'killproxy.sh' to stop any running Proxy Server 💣                         |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
@@ -100,6 +103,14 @@ do
 	    ;;
 	  "J" | "j")
 	    jconsole &
+	    ;;
+	  "JV" | "jv")
+	    jvisualvm &
+	    ;;
+	  "JVH" | "jvh")
+	    echo "More here soon..."
+	    echo -en "Hit [Return]"
+	    read a
 	    ;;
 	  "1")
 	    PROP_FILE=nmea.mux.no.gps.properties
