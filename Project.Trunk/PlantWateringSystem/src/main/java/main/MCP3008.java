@@ -48,6 +48,8 @@ public class MCP3008 implements Probe {
 
 	private final static long DEFAULT_LOGGING_PACE = 10_000L; // 10 seconds
 
+	private final static int STOP_WATERING_IF_STILL_DRY_AFTER_TRYING_X_TIME = 3;
+
 	// Default values
 	private static int humidityThreshold = DEFAULT_HUMIDITY_THRESHOLD;
 	private static long wateringDuration = DEFAULT_WATERING_DURATION;
@@ -658,7 +660,9 @@ public class MCP3008 implements Probe {
 
 		double humBeforeWatering = -1D;
 		long lastHumidityCheckTime = 0L;
+		int nb_dry_detections = 0;
 		final AtomicBoolean justStoppedWatering = new AtomicBoolean(false);
+
 		while (go) {
 
 			if (!enforceSensorSimulation) {
@@ -674,41 +678,56 @@ public class MCP3008 implements Probe {
 					double hum = probe.readHumidity(); // temperature);
 
 					if (watchTheProbe) {
-						if (justStoppedWatering.get() && !(hum > humBeforeWatering)) { // Humidity did not increase after watering, tank must be empty, send email
-							Date lastCheck = new Date(lastHumidityCheckTime);
-							Date stoppedWateringAt = new Date(lastWatering);
-							Date now = new Date();
+						if (justStoppedWatering.get()) {
 
-							String here = "This machine";
-							try {
-								InetAddress me = InetAddress.getLocalHost();
-								here = me.getHostName();
-							} catch (UnknownHostException ex) {
-								ex.printStackTrace();
-							}
+							if (!(hum > humBeforeWatering)) { // Humidity did not increase after watering, tank must be empty, send email
 
-							String messContent = String.format("<i>From %s</i>" +
-											"" +
-											"<ul>" +
-											"<li>Watering started at %s (was %.02f%%)</li>" +
-											"<li>stopped at %s</li>" +
-											"<li>humidity now (%s) is %.02f%%</li>" +
-											"</ul>",
-									here,
-									lastCheck.toString(),
-									humBeforeWatering,
-									stoppedWateringAt.toString(),
-									now.toString(),
-									hum);
+								nb_dry_detections += 1;
 
-							System.out.println("Tank must be empty, do something!!");
-							System.out.println(messContent);
+								Date lastCheck = new Date(lastHumidityCheckTime);
+								Date stoppedWateringAt = new Date(lastWatering);
+								Date now = new Date();
 
-							if (emailSender != null) {
-								emailSender.send(emailSender.getEmailDest().split(","),
-										emailSender.getEventSubject(),
-										"<h1>The water tank must be empty, do something!</h1>" + messContent,
-										"text/html");
+								String here = "this machine";
+								try {
+									InetAddress me = InetAddress.getLocalHost();
+									here = me.getHostName();
+								} catch (UnknownHostException ex) {
+									ex.printStackTrace();
+								}
+
+								String messContent = String.format("<i>From %s</i>" +
+												"(Warning #%d)" +
+												"<ul>" +
+												"<li>Watering started at %s (was %.02f%%)</li>" +
+												"<li>stopped at %s</li>" +
+												"<li>humidity now (%s) is %.02f%%</li>" +
+												"</ul>",
+										here,
+										nb_dry_detections,
+										lastCheck.toString(),
+										humBeforeWatering,
+										stoppedWateringAt.toString(),
+										now.toString(),
+										hum);
+
+								System.out.println("Tank must be empty, do something!!");
+								System.out.println(messContent);
+
+								if (emailSender != null) {
+									emailSender.send(emailSender.getEmailDest().split(","),
+											emailSender.getEventSubject(),
+											"<h1>The water tank must be empty, do something!</h1>" + messContent,
+											"text/html");
+								}
+
+								// Too many dry detections in a row, could be serious!!
+								if (nb_dry_detections >= STOP_WATERING_IF_STILL_DRY_AFTER_TRYING_X_TIME) {
+									System.out.println("Stop watering, request manual assistance.");
+									// TODO Manage that.
+								}
+							} else {
+								nb_dry_detections = 0;
 							}
 						}
 						justStoppedWatering.set(false);
@@ -948,6 +967,10 @@ public class MCP3008 implements Probe {
 		}
 
 		probe.shutdown();
+		// Make sure it's off
+		synchronized (relay) {
+			relay.off();
+		}
 		relay.shutdownGPIO();
 
 		System.out.println("Bye-bye!");
