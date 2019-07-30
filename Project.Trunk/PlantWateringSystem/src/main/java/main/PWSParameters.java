@@ -4,6 +4,7 @@ public class PWSParameters {
 	private int humidityThreshold = -1;
 	private long wateringTime = -1;
 	private long resumeWatchAfter = -1;
+	private boolean wateringWasStopped = false; // Because dryness does not go down after watering
 
 	public PWSParameters() {}
 	public PWSParameters humidityThreshold(int ht) {
@@ -18,6 +19,10 @@ public class PWSParameters {
 		this.resumeWatchAfter = rwa;
 		return this;
 	}
+	public PWSParameters wateringWasStopped(boolean b) {
+		this.wateringWasStopped = b;
+		return this;
+	}
 	public int humidityThreshold() {
 		return this.humidityThreshold;
 	}
@@ -26,5 +31,8 @@ public class PWSParameters {
 	}
 	public long resumeWatchAfter() {
 		return this.resumeWatchAfter;
+	}
+	public boolean wateringWasStopped() {
+		return this.wateringWasStopped;
 	}
 }

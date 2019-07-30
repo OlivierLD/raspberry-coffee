@@ -62,6 +62,7 @@ public class MCP3008 implements Probe {
 	private static long loggingPace = DEFAULT_LOGGING_PACE;
 
 	private static Long lastWatering = null;
+	private static boolean wateringWasStopped = false;
 	private static EmailSender emailSender = null;
 
 	// Program arguments
@@ -234,7 +235,8 @@ public class MCP3008 implements Probe {
 		return new PWSParameters()
 				.humidityThreshold(humidityThreshold)
 				.wateringTime(wateringDuration)
-				.resumeWatchAfter(resumeSensorWatchAfter);
+				.resumeWatchAfter(resumeSensorWatchAfter)
+				.wateringWasStopped(wateringWasStopped);
 	}
 
 	@Override
@@ -248,6 +250,11 @@ public class MCP3008 implements Probe {
 		if (pwsParameters.resumeWatchAfter() != -1) {
 			resumeSensorWatchAfter = pwsParameters.resumeWatchAfter();
 		}
+	}
+
+	@Override
+	public void resumeWatering() {
+		wateringWasStopped = false;
 	}
 
 	@Override
@@ -677,7 +684,7 @@ public class MCP3008 implements Probe {
 				try {
 					double hum = probe.readHumidity(); // temperature);
 
-					if (watchTheProbe) {
+					if (watchTheProbe && !wateringWasStopped) {
 						if (justStoppedWatering.get()) {
 
 							if (!(hum > humBeforeWatering)) { // Humidity did not increase after watering, tank must be empty, send email
@@ -724,7 +731,18 @@ public class MCP3008 implements Probe {
 								// Too many dry detections in a row, could be serious!!
 								if (nb_dry_detections >= STOP_WATERING_IF_STILL_DRY_AFTER_TRYING_X_TIME) {
 									System.out.println("Stop watering, request manual assistance.");
-									// TODO Manage that.
+									wateringWasStopped = true; // Can be reset through REST, or by restarting the program.
+									if (emailSender != null) {
+										String alertContent = String.format("<i>From %s</i>" +
+														"(Warning #%d)" +
+														"Watering is stopped until someone resets it. Use REST service to reset it to true once the problem is fixed, or re-start the machine.",
+												here,
+												nb_dry_detections);
+										emailSender.send(emailSender.getEmailDest().split(","),
+												"Plant watering was stopped",
+												alertContent,
+												"text/html");
+									}
 								}
 							} else {
 								nb_dry_detections = 0;
@@ -800,7 +818,7 @@ public class MCP3008 implements Probe {
 			/*
 			 * the watchTheProbe variable is used to nap after watering.
 			 */
-			if (watchTheProbe && humidity < humidityThreshold) { // Ah! Need some water
+			if (watchTheProbe && !wateringWasStopped && humidity < humidityThreshold) { // Ah! Need some water
 
 				// Store the current humidity value, to make sure it changed (increased) after watering. Send email otherwise, to refill the tank.
 				humBeforeWatering = humidity;

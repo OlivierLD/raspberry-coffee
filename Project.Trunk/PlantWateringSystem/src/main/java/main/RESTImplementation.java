@@ -107,6 +107,11 @@ public class RESTImplementation {
 					this::setPWSParameters,
 					"Set the Program's parameters"),
 			new Operation(
+					"PUT",
+					PWS_PREFIX + "/resume-watering",
+					this::resumeWatering,
+					"After refilling the tank, resume interrupted watering"),
+			new Operation(
 					"GET",
 					PWS_PREFIX + "/last-data",
 					this::getProbeLastData,
@@ -294,6 +299,20 @@ public class RESTImplementation {
 			return response;
 		}
 
+		return response;
+	}
+
+	/**
+	 * No payload required.
+	 *
+	 * @param request
+	 * @return
+	 */
+	private Response resumeWatering(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		synchronized (probe) {
+			probe.resumeWatering();
+		}
 		return response;
 	}
 

@@ -142,6 +142,12 @@ public class STH10 implements Probe {
 	public void setTemperature(double temp) {
 		temperature = temp;
 	}
+
+	@Override
+	public void resumeWatering() {
+		// Duh
+	}
+
 	@Override
 	public void setHumidity(double hum) {
 		humidity = hum;

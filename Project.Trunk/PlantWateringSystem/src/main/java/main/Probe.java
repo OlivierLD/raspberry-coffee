@@ -8,6 +8,7 @@ public interface Probe {
 	double getTemperature();
 	void setHumidity(double humidity);
 	void setTemperature(double temperature);
+	void resumeWatering();
 	PWSParameters getPWSParameters();
 	PinState getRelayState();
 	void setRelayState(PinState state);
