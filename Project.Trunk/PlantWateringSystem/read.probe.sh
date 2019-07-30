@@ -99,6 +99,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dvalve.test=true"
 # Will send email if water tank runs empty
 # Refers to (and requires) email.properties
 JAVA_OPTIONS="$JAVA_OPTIONS -Demail.provider=google"
+JAVA_OPTIONS="$JAVA_OPTIONS -Demail.verbose=true"
 #
 #
 # java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
