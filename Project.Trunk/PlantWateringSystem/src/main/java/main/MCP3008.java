@@ -30,7 +30,8 @@ import static utils.TimeUtil.msToHMS;
 
 /**
  * Example / Working prototype...
- * MCP3008, ADC for  SparkFun Soil Moisture Sensor. No temperature sensor.
+ * MCP3008, ADC for SparkFun Soil Moisture Sensor. No temperature sensor.
+ * Uses a Low Pass Filter to smooth the humidity data.
  */
 public class MCP3008 implements Probe {
 
@@ -64,6 +65,7 @@ public class MCP3008 implements Probe {
 	private static Long lastWatering = null;
 	private static boolean wateringWasStopped = false;
 	private static EmailSender emailSender = null;
+	private static boolean emailVerbose = "true".equals(System.getProperty("email.verbose"));
 
 	// Program arguments
 	private enum ProgramArguments {
@@ -224,7 +226,7 @@ public class MCP3008 implements Probe {
 		return lastWatering;
 	}
 
-	final static double ALPHA = 0.015;
+	final static double ALPHA = 0.015; // This is for the Low Pass Filter
 
 	static double lowPassFilter(double alpha, double value, double acc) {
 		return (value * alpha) + (acc * (1 - alpha));
@@ -687,36 +689,36 @@ public class MCP3008 implements Probe {
 					if (watchTheProbe && !wateringWasStopped) {
 						if (justStoppedWatering.get()) {
 
+							Date lastCheck = new Date(lastHumidityCheckTime);
+							Date stoppedWateringAt = new Date(lastWatering);
+							Date now = new Date();
+
+							String here = "this machine";
+							try {
+								InetAddress me = InetAddress.getLocalHost();
+								here = me.getHostName();
+							} catch (UnknownHostException ex) {
+								ex.printStackTrace();
+							}
+
+							String messContent = String.format("<i>From %s</i>" +
+											"(Info #%d)" +
+											"<ul>" +
+											"<li>Watering started at %s (was %.02f%%)</li>" +
+											"<li>stopped at %s</li>" +
+											"<li>humidity now (%s) is %.02f%%</li>" +
+											"</ul>",
+									here,
+									nb_dry_detections,
+									lastCheck.toString(),
+									humBeforeWatering,
+									stoppedWateringAt.toString(),
+									now.toString(),
+									hum);
+
 							if (!(hum > humBeforeWatering)) { // Humidity did not increase after watering, tank must be empty, send email
 
 								nb_dry_detections += 1;
-
-								Date lastCheck = new Date(lastHumidityCheckTime);
-								Date stoppedWateringAt = new Date(lastWatering);
-								Date now = new Date();
-
-								String here = "this machine";
-								try {
-									InetAddress me = InetAddress.getLocalHost();
-									here = me.getHostName();
-								} catch (UnknownHostException ex) {
-									ex.printStackTrace();
-								}
-
-								String messContent = String.format("<i>From %s</i>" +
-												"(Warning #%d)" +
-												"<ul>" +
-												"<li>Watering started at %s (was %.02f%%)</li>" +
-												"<li>stopped at %s</li>" +
-												"<li>humidity now (%s) is %.02f%%</li>" +
-												"</ul>",
-										here,
-										nb_dry_detections,
-										lastCheck.toString(),
-										humBeforeWatering,
-										stoppedWateringAt.toString(),
-										now.toString(),
-										hum);
 
 								System.out.println("Tank must be empty, do something!!");
 								System.out.println(messContent);
@@ -746,6 +748,12 @@ public class MCP3008 implements Probe {
 								}
 							} else {
 								nb_dry_detections = 0;
+								if (emailVerbose && emailSender != null) { // Then tell them all is good
+										emailSender.send(emailSender.getEmailDest().split(","),
+												emailSender.getEventSubject(),
+												"<h1>Plant Watering went well</h1>" + messContent,
+												"text/html");
+								}
 							}
 						}
 						justStoppedWatering.set(false);
