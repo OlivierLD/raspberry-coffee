@@ -125,5 +125,13 @@ public class Base64Util {
 		} catch (IllegalArgumentException iae) {
 			System.out.println("3. Bad Base64 String...");
 		}
+
+//		String sshKey = "AAAAB3NzaC1yc2EAAAADAQABAAACAQCrWhhJQo89W1SCtDKD9+e/CImjvcgZIRNNVmJkjv4Fxd8w6x6i0nAuSuMbc+0Jm4nD6Wl8oG1dc3k80BYQseO7h+vrYX8+ae7LixLrPSDi48MvgDyprJRtiXhVrdAvKCUSluPV8rzGTeX1szzaq15B8v83fZibRcFGX/f5srCkBNixvKZqXHqhLLNIGqcpUOsQwUTsQDRF3yVJ4cAaKmU38cYC9d10C/jazb6FKY2NTjvcPe4v0+PUFBTJoJYT2MwnC71gJHr0CKNKjrtCi1IgGsmsM6+ona5waa3yPGQwksIYoUa+vyeznBsYdoDdT/e4wfeWgX0apf17X9W68sem7Dsk6sFDBAEiyH1uFWfdKAo2AUwWQcOFpWwwqcbOCwT+OQPSuuoihs2r2DPPc/wb/5bC7bumKgr4rkcHfY7JRUVXfP81yR3lK0g/tBei7MB3hkDp2bhfO5LP4OMDjPfFyiBgLEZGS1U8cjLzg84eHk5weO1b71J25mMIWe6kNpsXfMN9QLJ34SSqaCcsEPv92v7cpQ29hYlGgqQxI57Za9oXkQrkrzeNsS6Tx8V0BTUNdKenIGV0VKSJ95MhA3OOscaFCJ/jWc2E0eH7ftnALhHgRqcWxLvCoI2J26sLO87rbJ6dARBLfAU9BQkNGjFDYUWGDhSoalqZVYrdHpaZ2Q==";
+//		try {
+//			String decoded_ = Base64Util.decodeToString(sshKey);
+//			System.out.println("SSH Key decoded:" + decoded_);
+//		} catch (IllegalArgumentException iae) {
+//			System.out.println("4. Bad Base64 String...");
+//		}
 	}
 }

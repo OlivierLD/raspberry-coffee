@@ -11,6 +11,7 @@ import sensors.sparkfunsoilhumiditysensor.MCP3008Wrapper;
 import utils.PinUtil;
 import utils.StaticUtil;
 import utils.StringUtils;
+import utils.TimeUtil;
 import utils.WeatherUtil;
 
 import java.net.InetAddress;
@@ -605,21 +606,25 @@ public class MCP3008 implements Probe {
 			System.out.println("\nExiting (Main Hook)");
 
 			try {
-				Thread.sleep(1_500L);
+				long wait = "true".equals(System.getProperty("slowdown.for.debug")) ? 10_000L : 1_500L;
+				Thread.sleep(wait);
 			} catch (InterruptedException ie) {
 				Thread.currentThread().interrupt();
 			}
 
-			relay.off(); // Any way!
+			boolean doCleanupHere = false;
+			if (doCleanupHere) {
+				relay.off(); // In any case!
 
-			loggers.forEach(DataLoggerInterface::close);
+				loggers.forEach(DataLoggerInterface::close);
 
-			relay.shutdownGPIO();
-			probe.shutdown();
-			try {
-				Thread.sleep(1_500L);
-			} catch (InterruptedException ie) {
-				Thread.currentThread().interrupt();
+				relay.shutdownGPIO();
+				probe.shutdown();
+				try {
+					Thread.sleep(1_500L);
+				} catch (InterruptedException ie) {
+					Thread.currentThread().interrupt();
+				}
 			}
 			System.out.println("Bye (at last)!");
 		}));
@@ -977,6 +982,12 @@ public class MCP3008 implements Probe {
 			}
 		}
 
+		if (verbose != VERBOSE.NONE) {
+			System.out.println(">> Out of the loop!");
+		}
+
+		loggers.forEach(DataLoggerInterface::close);
+
 		if (withRESTServer) {
 			if (httpServer.isRunning()) {
 				httpServer.stopRunning();
@@ -992,22 +1003,38 @@ public class MCP3008 implements Probe {
 			System.out.println(String.format("Simulated humidity between %.02f and %.02f", minSimHum, maxSimHum));
 		}
 
+		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
+			System.out.println("Waiting a bit...");
+			TimeUtil.delay(2_000L);
+		}
 		if (verbose != VERBOSE.NONE) {
-			System.out.println("Shutting down the probe");
+			System.out.println("1. Shutting down the probe");
 		}
 		probe.shutdown();
 		// Make sure it's off
+		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
+			System.out.println("Waiting a bit...");
+			TimeUtil.delay(2_000L);
+		}
 		synchronized (relay) {
 			if (verbose != VERBOSE.NONE) {
-				System.out.println("Setting the relay on Off");
+				System.out.println("2. Setting the relay on Off");
 			}
 			relay.off();
 		}
+		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
+			System.out.println("Waiting a bit...");
+			TimeUtil.delay(2_000L);
+		}
 		if (verbose != VERBOSE.NONE) {
-			System.out.println("Shutting down the GPIO");
+			System.out.println("3. Shutting down the GPIO");
 		}
 		relay.shutdownGPIO();
 
+		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
+			System.out.println("Waiting a bit before leaving...");
+			TimeUtil.delay(2_000L);
+		}
 		System.out.println("Bye-bye!");
 	}
 }

@@ -849,7 +849,7 @@ public class HTTPServer {
 				Thread.sleep(1_000L);
 			} catch (InterruptedException ie) {
 			}
-			System.out.println("Dead.");
+			System.out.println("HTTPServer Dead.");
 		}));
 		if (startImmediately) {
 			this.startServer();
