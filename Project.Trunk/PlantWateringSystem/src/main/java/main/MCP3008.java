@@ -992,10 +992,19 @@ public class MCP3008 implements Probe {
 			System.out.println(String.format("Simulated humidity between %.02f and %.02f", minSimHum, maxSimHum));
 		}
 
+		if (verbose != VERBOSE.NONE) {
+			System.out.println("Shutting down the probe");
+		}
 		probe.shutdown();
 		// Make sure it's off
 		synchronized (relay) {
+			if (verbose != VERBOSE.NONE) {
+				System.out.println("Setting the relay on Off");
+			}
 			relay.off();
+		}
+		if (verbose != VERBOSE.NONE) {
+			System.out.println("Shutting down the GPIO");
 		}
 		relay.shutdownGPIO();
 

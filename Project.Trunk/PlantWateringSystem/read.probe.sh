@@ -4,34 +4,54 @@
 #
 CP=build/libs/PlantWateringSystem-1.0.jar
 #
-echo "Usage is $0 [debug|remote-debug|verbose|wait]"
+echo "Usage is $0 debug remote-debug [verbose|ansi] wait"
 echo "   Use 'remote-debug' to remote-debug from another machine."
-echo "   Use 'verbose' for a regular look on what's going on."
+echo "   Use 'verbose' for a regular look on what's going on, oe 'ansi' for an ansi console."
 echo "   Use 'debug' for a close look on what's going on."
 echo "   Use 'wait' to wait 10 sec before actually starting."
 #
 echo `date`
 #
 VERBOSE=false
+ANSI=false
 DEBUG=false
 REMOTE_DEBUG=false
 WAIT=false
-if [ "$1" == "verbose" ]
+#
+SUDO=
+DARWIN=$(uname -a | grep Darwin)
+#
+if [ "$DARWIN" != "" ]
 then
-  VERBOSE=true
+	echo Running on Mac
+  JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"  # for Mac
+else
+	echo Assuming Linux/Raspberry Pi
+  JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
+  SUDO="sudo "
 fi
-if [ "$1" == "wait" ]
-then
-  WAIT=true
-fi
-if [ "$1" == "debug" ]
-then
-  DEBUG=true
-fi
-if [ "$1" == "remote-debug" ]
-then
-  REMOTE_DEBUG=true
-fi
+#
+for ARG in "$@"
+do
+	echo -e "Managing prm $ARG"
+	if [ "$ARG" == "verbose" ]
+	then
+	  VERBOSE=true
+	elif [ "$ARG" == "ansi" ]
+	then
+	  ANSI=true
+	elif [ "$ARG" == "wait" ]
+	then
+	  WAIT=true
+	elif [ "$ARG" == "debug" ]
+	then
+	  DEBUG=true
+	elif [ "$ARG" == "remote-debug" ]
+	then
+	  REMOTE_DEBUG=true
+	fi
+done
+#
 JAVA_OPTIONS="-Dsth.debug=$DEBUG"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmcp3008.debug=$DEBUG"
 #
@@ -56,6 +76,9 @@ fi
 #
 # verbose: ANSI, STDOUT, NONE
 if [ "$VERBOSE" == "true" ]
+then
+  USER_PRM="--verbose:STDOUT"
+elif [ "$ANSI" == "true" ]
 then
   USER_PRM="--verbose:ANSI"
 else
@@ -124,6 +147,6 @@ then
   sleep 10
 fi
 #
-echo -e "Running $COMMAND"
-sudo $COMMAND
+echo -e "Running ${SUDO}$COMMAND"
+${SUDO}$COMMAND
 #
