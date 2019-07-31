@@ -702,7 +702,7 @@ public class MCP3008 implements Probe {
 							}
 
 							String messContent = String.format("<i>From %s</i>" +
-											"(Info #%d)" +
+											"<br/>(Info #%d)" +
 											"<ul>" +
 											"<li>Watering started at %s (was %.02f%%)</li>" +
 											"<li>stopped at %s</li>" +
@@ -736,7 +736,7 @@ public class MCP3008 implements Probe {
 									wateringWasStopped = true; // Can be reset through REST, or by restarting the program.
 									if (emailSender != null) {
 										String alertContent = String.format("<i>From %s</i>" +
-														"(Warning #%d)" +
+														"<br/>(Warning #%d)<br/>" +
 														"Watering is stopped until someone resets it. Use REST service to reset it to true once the problem is fixed, or re-start the machine.",
 												here,
 												nb_dry_detections);
