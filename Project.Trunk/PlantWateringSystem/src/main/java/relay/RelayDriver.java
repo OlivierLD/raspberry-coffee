@@ -47,8 +47,9 @@ public class RelayDriver {
 			try {
 				this.gpio = GpioFactory.getInstance();
 				this.signalPin = _signalPin;
-				this.signal = gpio.provisionDigitalOutputPin(signalPin, "Relay", PinState.HIGH); // HIGH is off
-				this.signal.setShutdownOptions(true, PinState.HIGH); // Yes HIGH ~released, off.
+				// HIGH is off, it's like a button. It is ON when pressed (down).
+				this.signal = gpio.provisionDigitalOutputPin(signalPin, "Relay", PinState.HIGH);
+				this.signal.setShutdownOptions(true, PinState.HIGH); // Yes HIGH, released, off. Triggered when the GpioController is killed.
 			} catch (UnsatisfiedLinkError ule) {
 				System.out.println(ule.toString());
 				if ("true".equals(System.getProperty("gpio.verbose"))) {
