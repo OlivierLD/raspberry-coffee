@@ -2,6 +2,8 @@ package utils;
 
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DumpUtil {
 	private final static int LINE_LEN = 16;
@@ -124,11 +126,26 @@ public class DumpUtil {
 		return ch >= 32 && ch < 127;
 	}
 
+	/**
+	 * Small utility to know where a method is called from.
+	 * @return
+	 */
+	public static List<String> whoCalledMe() {
+		Throwable t = new Throwable();
+		List<String> stackTrace = Arrays.stream(t.getStackTrace())
+				.filter(el -> !el.equals(t.getStackTrace()[0])) // Except first one
+				.map(StackTraceElement::toString)
+				.collect(Collectors.toList());
+		return stackTrace;
+	}
+
 	public static void main(String... args) {
 		String forTests = "$GPGSA,A,3,07,17,30,11,28,13,01,19,,,,,2.3,1.4,1.9*3D";
 		String[] dd = dualDump(forTests);
 		for (String l : dd) {
 			System.out.println(l);
 		}
+
+		whoCalledMe().stream().forEach(System.out::println);
 	}
 }

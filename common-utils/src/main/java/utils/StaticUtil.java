@@ -407,8 +407,7 @@ public class StaticUtil {
 		}
 		h = betweenRows + (data.length * (f.getSize() + betweenRows)) + betweenRows;
 
-		if (paintBackground) // Glossy
-		{
+		if (paintBackground) { // Glossy
 			boolean glossy = (bgLightColor != null && bgDarkColor != null);
 			Color c = gr.getColor();
 			if (glossy) {

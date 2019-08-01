@@ -985,11 +985,22 @@ public class MCP3008 implements Probe {
 		if (verbose != VERBOSE.NONE) {
 			System.out.println(">> Out of the loop!");
 		}
+		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
+			System.out.println("-- Waiting a bit before closing all loggers");
+			TimeUtil.delay(2_000L);
+		}
 
 		loggers.forEach(DataLoggerInterface::close);
 
 		if (withRESTServer) {
 			if (httpServer.isRunning()) {
+				if (verbose != VERBOSE.NONE) {
+					System.out.println("Shutting down HTTP Server");
+				}
+				if ("true".equals(System.getProperty("slowdown.for.debug"))) {
+					System.out.println("-- Waiting a bit before shutting down http server");
+					TimeUtil.delay(2_000L);
+				}
 				httpServer.stopRunning();
 			}
 		}
@@ -1004,7 +1015,7 @@ public class MCP3008 implements Probe {
 		}
 
 		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
-			System.out.println("Waiting a bit...");
+			System.out.println("-- Waiting a bit... before shutting down the probe");
 			TimeUtil.delay(2_000L);
 		}
 		if (verbose != VERBOSE.NONE) {
@@ -1013,7 +1024,7 @@ public class MCP3008 implements Probe {
 		probe.shutdown();
 		// Make sure it's off
 		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
-			System.out.println("Waiting a bit...");
+			System.out.println("-- Waiting a bit... before turning relay off");
 			TimeUtil.delay(2_000L);
 		}
 		synchronized (relay) {
@@ -1023,7 +1034,7 @@ public class MCP3008 implements Probe {
 			relay.off();
 		}
 		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
-			System.out.println("Waiting a bit...");
+			System.out.println("Waiting a bit... before shutting down GPIO");
 			TimeUtil.delay(2_000L);
 		}
 		if (verbose != VERBOSE.NONE) {
@@ -1032,7 +1043,7 @@ public class MCP3008 implements Probe {
 		relay.shutdownGPIO();
 
 		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
-			System.out.println("Waiting a bit before leaving...");
+			System.out.println("Waiting a bit before finally leaving...");
 			TimeUtil.delay(2_000L);
 		}
 		System.out.println("Bye-bye!");

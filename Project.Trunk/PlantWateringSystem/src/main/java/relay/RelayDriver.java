@@ -6,6 +6,7 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import utils.DumpUtil;
 import utils.PinUtil;
 
 import java.io.File;
@@ -13,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -75,6 +77,11 @@ public class RelayDriver {
 	}
 
 	public void on() {
+		if ("true".equals(System.getProperty("gpio.verbose"))) {
+			System.out.println(">> Relay goes ON, from:");
+			List<String> st = DumpUtil.whoCalledMe();
+			st.stream().forEach(el -> System.out.println(String.format("\t%s", el)));
+		}
 		if (this.listener != null) {
 			this.listener.accept(PinState.LOW);
 		}
@@ -86,6 +93,11 @@ public class RelayDriver {
 	}
 
 	public void off() {
+		if ("true".equals(System.getProperty("gpio.verbose"))) {
+			System.out.println(">> Relay goes OFF, from:");
+			List<String> st = DumpUtil.whoCalledMe();
+			st.stream().forEach(el -> System.out.println(String.format("\t%s", el)));
+		}
 		if (this.listener != null) {
 			this.listener.accept(PinState.HIGH);
 		}
