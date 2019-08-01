@@ -134,7 +134,7 @@ PIN_MAPPING="--miso-pin:23 --mosi-pin:24 --clk-pin:18 --cs-pin:25 --adc-channel-
 LOGGING_FLAG=
 LOGGING_FLAG="-Djava.util.logging.config.file=./logging.properties"
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -Dslowdown.for.debug=true"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Dslowdown.for.debug=true"
 #
 # COMMAND="${SUDO}java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM"
 COMMAND="${SUDO}java $JAVA_OPTIONS -cp $CP $LOGGING_FLAG main.MCP3008 $USER_PRM $PIN_MAPPING"

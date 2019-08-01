@@ -38,6 +38,8 @@ public class MCP3008 implements Probe {
 
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
+	private static Thread closingThread = null;
+
 	static {
 		LOGGER.setLevel(Level.INFO);
 	}
@@ -590,7 +592,7 @@ public class MCP3008 implements Probe {
 		}
 
 		// Shutdown hook
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+		closingThread = new Thread(() -> {
 			System.out.println();
 			System.out.println("+--------------------------+");
 			System.out.println("| Bringing the house down! |");
@@ -598,36 +600,20 @@ public class MCP3008 implements Probe {
 
 			go = false;
 			watchTheProbe = false;
-			if (relay.getState() == PinState.LOW) {
-				System.out.println("Relay is on, pump is pumping, turning it off.");
-			} else {
-				System.out.println("Pump is off, all is good.");
-			}
 			System.out.println("\nExiting (Main Hook)");
 
 			try {
-				long wait = "true".equals(System.getProperty("slowdown.for.debug")) ? 10_000L : 1_500L;
-				Thread.sleep(wait);
+//				long wait = "true".equals(System.getProperty("slowdown.for.debug")) ? 10_000L : 5_000L;
+//				Thread.sleep(wait);
+				synchronized(closingThread) {
+					closingThread.wait();
+				}
 			} catch (InterruptedException ie) {
 				Thread.currentThread().interrupt();
 			}
-
-			boolean doCleanupHere = false;
-			if (doCleanupHere) {
-				relay.off(); // In any case!
-
-				loggers.forEach(DataLoggerInterface::close);
-
-				relay.shutdownGPIO();
-				probe.shutdown();
-				try {
-					Thread.sleep(1_500L);
-				} catch (InterruptedException ie) {
-					Thread.currentThread().interrupt();
-				}
-			}
 			System.out.println("Bye (at last)!");
-		}));
+		});
+		Runtime.getRuntime().addShutdownHook(closingThread);
 
 		// If simulating
 		if ((probe.isSimulating() || enforceSensorSimulation) && !"true".equals(System.getProperty("random.simulator"))) {
@@ -985,23 +971,40 @@ public class MCP3008 implements Probe {
 		if (verbose != VERBOSE.NONE) {
 			System.out.println(">> Out of the loop!");
 		}
+		int step = 1;
+		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
+			System.out.println("Waiting a bit... before turning relay off");
+			TimeUtil.delay(2_000L);
+		}
+		if (relay.getState() == PinState.LOW) {
+			System.out.println("Relay is on, pump is pumping, turning it off.");
+		} else {
+			System.out.println("Pump is off, all is good.");
+		}
+		synchronized (relay) {
+			if (verbose != VERBOSE.NONE) {
+				System.out.println(String.format("%d. Setting the relay on Off, in any case", step));
+			}
+			relay.off();
+		}
+		step += 1;
 		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
 			System.out.println("-- Waiting a bit before closing all loggers");
 			TimeUtil.delay(2_000L);
 		}
-
 		loggers.forEach(DataLoggerInterface::close);
 
 		if (withRESTServer) {
 			if (httpServer.isRunning()) {
 				if (verbose != VERBOSE.NONE) {
-					System.out.println("Shutting down HTTP Server");
+					System.out.println(String.format("%d. Shutting down HTTP Server", step));
 				}
 				if ("true".equals(System.getProperty("slowdown.for.debug"))) {
 					System.out.println("-- Waiting a bit before shutting down http server");
 					TimeUtil.delay(2_000L);
 				}
 				httpServer.stopRunning();
+				step += 1;
 			}
 		}
 
@@ -1019,33 +1022,30 @@ public class MCP3008 implements Probe {
 			TimeUtil.delay(2_000L);
 		}
 		if (verbose != VERBOSE.NONE) {
-			System.out.println("1. Shutting down the probe");
+			System.out.println(String.format("%d. Shutting down the probe", step));
 		}
+		step += 1;
 		probe.shutdown();
 		// Make sure it's off
 		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
 			System.out.println("-- Waiting a bit... before turning relay off");
 			TimeUtil.delay(2_000L);
 		}
-		synchronized (relay) {
-			if (verbose != VERBOSE.NONE) {
-				System.out.println("2. Setting the relay on Off");
-			}
-			relay.off();
-		}
-		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
-			System.out.println("Waiting a bit... before shutting down GPIO");
-			TimeUtil.delay(2_000L);
-		}
 		if (verbose != VERBOSE.NONE) {
-			System.out.println("3. Shutting down the GPIO");
+			System.out.println(String.format("%d. Shutting down the GPIO", step));
 		}
-		relay.shutdownGPIO();
+		step += 1;
+		relay.shutdownGPIO(); // Should be off already, SIGINT killed it.
 
 		if ("true".equals(System.getProperty("slowdown.for.debug"))) {
 			System.out.println("Waiting a bit before finally leaving...");
 			TimeUtil.delay(2_000L);
 		}
 		System.out.println("Bye-bye!");
+		if (closingThread != null) {
+			synchronized (closingThread) {
+				closingThread.notify();
+			}
+		}
 	}
 }
