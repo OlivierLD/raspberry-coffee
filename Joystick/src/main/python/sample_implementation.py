@@ -26,7 +26,7 @@ def interrupt(signal, frame):
     wsf.close()
 
 
-signal.signal(signal.SIGINT, interrupt)
+signal.signal(signal.SIGINT, interrupt)  # callback defined above.
 js1.start_reading()
 
 print("Bye...")

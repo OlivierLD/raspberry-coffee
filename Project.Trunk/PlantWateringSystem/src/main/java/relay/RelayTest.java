@@ -25,7 +25,7 @@ public class RelayTest {
 		final GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, "BCM 17", PinState.HIGH);
 
 		// set shutdown state for this pin
-		pin.setShutdownOptions(true, PinState.LOW);
+		pin.setShutdownOptions(true, PinState.HIGH);
 
 		System.out.println("--> GPIO state should be: ON");
 

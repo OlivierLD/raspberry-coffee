@@ -86,7 +86,10 @@ With an Adafruit Bonnet, and a 5v pump (same power supply as the RPi).
 
 #### June 2019: bonus
 If after watering, the humidity does not go up, that may mean that the tank is empty.
-In that case, you have the possibility to send an email to a list of recipients, telling them to do something about it. 
+In that case, you have the possibility to send an email to a list of recipients, telling them to do something about it.
+
+#### Aug 1, 2019
+The `setShutdownOptions` problem (in `RelayDriver.java`) is fixed. It made the pump go on when the process was killed.
 
 ### Flowchart
 
