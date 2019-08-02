@@ -386,6 +386,7 @@ public class HTTPServer {
 	}
 
 	private boolean keepRunning = true;
+	private boolean autoBind = false;
 	private List<String> staticDocumentsLocation = null;
 	private List<String> staticZippedDocumentsLocation = null;
 	private static final String DEFAULT_RESOURCE = "index.html";
@@ -443,6 +444,10 @@ public class HTTPServer {
 		return this.port;
 	}
 
+	private void incPort() {
+		this.port += 1;
+	}
+
 	public HTTPServer() throws Exception {
 		this(defaultPort, null, new Properties(), false);
 	}
@@ -453,6 +458,10 @@ public class HTTPServer {
 
 	public HTTPServer(int port) throws Exception {
 		this(port, null, new Properties(), false);
+	}
+
+	public HTTPServer(int port, Properties properties) throws Exception {
+		this(port, null, properties, false);
 	}
 
 	public HTTPServer(int port, boolean startImmediately) throws Exception {
@@ -512,6 +521,9 @@ public class HTTPServer {
 		}
 		this.staticDocumentsLocation = Arrays.asList(properties.getProperty("static.docs", "/web/").split(","));
 		this.staticZippedDocumentsLocation = Arrays.asList(properties.getProperty("static.zip.docs", "/zip/").split(","));
+		this.autoBind = "true".equals(properties.getProperty("autobind"));
+
+		HTTPServer httpServerInstance = this;
 
 		addRequestManager(requestManager);
 		// Infinite loop, waiting for requests
@@ -519,9 +531,25 @@ public class HTTPServer {
 			public void run() {
 				try {
 					boolean okToStop = false;
-					ServerSocket ss = new ServerSocket(port);
+					ServerSocket ss = null;
+					boolean keepTrying = true;
+					while (keepTrying) {
+						try {
+							ss = new ServerSocket(httpServerInstance.getPort());
+							keepTrying = false;
+							System.out.println(String.format("Port open: %d", httpServerInstance.getPort()));
+						} catch (BindException be) {
+							if (httpServerInstance.autoBind) {
+								httpServerInstance.incPort();
+								HTTPContext.getInstance().getLogger().info(String.format("Port in use, trying %d", httpServerInstance.getPort()));
+							} else {
+								keepTrying = false;
+								throw be;
+							}
+						}
+					}
 					if (verbose) {
-						HTTPContext.getInstance().getLogger().info("Port " + port + " opened successfully.");
+						HTTPContext.getInstance().getLogger().info("Port " + httpServerInstance.getPort() + " opened successfully.");
 					}
 					while (isRunning()) {
 						Socket client = ss.accept(); // Blocking read
@@ -812,14 +840,14 @@ public class HTTPServer {
 					} // while (isRunning())
 					ss.close();
 				} catch (BindException be) {
-					HTTPContext.getInstance().getLogger().severe(String.format(">>> BindException: Port %d, %s >>>", port, be.toString()));
+					HTTPContext.getInstance().getLogger().severe(String.format(">>> BindException: Port %d, %s >>>", httpServerInstance.getPort(), be.toString()));
 					HTTPContext.getInstance().getLogger().log(Level.SEVERE, be.getMessage(), be);
-					HTTPContext.getInstance().getLogger().severe(String.format("<<< BindException: Port %d <<<", port));
+					HTTPContext.getInstance().getLogger().severe(String.format("<<< BindException: Port %d <<<", httpServerInstance.getPort()));
 					System.exit(1);
 				} catch (Exception e) {
-					HTTPContext.getInstance().getLogger().severe(String.format(">>> Port %d, %s >>>", port, e.toString()));
+					HTTPContext.getInstance().getLogger().severe(String.format(">>> Port %d, %s >>>", httpServerInstance.getPort(), e.toString()));
 					HTTPContext.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);
-					HTTPContext.getInstance().getLogger().severe(String.format("<<< Port %d <<<", port));
+					HTTPContext.getInstance().getLogger().severe(String.format("<<< Port %d <<<", httpServerInstance.getPort()));
 				} finally {
 					if (verbose) {
 						HTTPContext.getInstance().getLogger().info("HTTP Server is done.");
@@ -840,7 +868,7 @@ public class HTTPServer {
 			onExit();
 			// Send /exit
 			try {
-				String returned = HTTPClient.getContent(String.format("http://localhost:%d/exit", port));
+				String returned = HTTPClient.getContent(String.format("http://localhost:%d/exit", httpServerInstance.getPort()));
 				System.out.println("Exiting -> " + returned);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1074,7 +1102,7 @@ public class HTTPServer {
 	 * For dev tests, example, default proxy.
  	 */
 	public static void main(String... args) throws Exception {
-		int port = 8765;
+		int port = 9999;
 		try {
 			port = Integer.parseInt(System.setProperty("http.port", String.valueOf(port)));
 		} catch (NumberFormatException nfe) {
@@ -1085,7 +1113,10 @@ public class HTTPServer {
 				nfe.printStackTrace();
 			}
 		}
-		HTTPServer httpServer = new HTTPServer(port);
+		Properties props = new Properties();
+		props.setProperty("autobind", "true"); // AutoBind test
+
+		HTTPServer httpServer = new HTTPServer(port, props);
 //		httpServer.setProxyFunction(HTTPServer::defaultProxy);
 
 		if (withRest) {
@@ -1120,7 +1151,7 @@ public class HTTPServer {
 		}
 
 		httpServer.startServer();
-		System.out.println("Started");
+		System.out.println(String.format("Started on port %d", httpServer.getPort()));
 		System.out.println(String.format("Static pages (in a zip or not)%s", (withRest ? ", plus REST service GET /oplist are available" : "")));
 
 		if (true) {
