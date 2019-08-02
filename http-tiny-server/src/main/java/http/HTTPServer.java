@@ -387,6 +387,7 @@ public class HTTPServer {
 
 	private boolean keepRunning = true;
 	private boolean autoBind = false;
+	private boolean sendCleanStopSignal = true;
 	private List<String> staticDocumentsLocation = null;
 	private List<String> staticZippedDocumentsLocation = null;
 	private static final String DEFAULT_RESOURCE = "index.html";
@@ -526,6 +527,27 @@ public class HTTPServer {
 		HTTPServer httpServerInstance = this;
 
 		addRequestManager(requestManager);
+
+		// Intercept Ctrl+C
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println(" <- HTTP: Ctrl+C intercepted.");
+			onExit();
+			// Send /exit
+			if (httpServerInstance.sendCleanStopSignal) {
+				try {
+					String returned = HTTPClient.getContent(String.format("http://localhost:%d/exit", httpServerInstance.getPort()));
+					System.out.println("Exiting -> " + returned);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				try {
+					Thread.sleep(1_000L);
+				} catch (InterruptedException ie) {
+				}
+			}
+			System.out.println("HTTPServer Dead.");
+		}));
+
 		// Infinite loop, waiting for requests
 		httpListenerThread = new Thread("HTTPListener") {
 			public void run() {
@@ -843,7 +865,8 @@ public class HTTPServer {
 					HTTPContext.getInstance().getLogger().severe(String.format(">>> BindException: Port %d, %s >>>", httpServerInstance.getPort(), be.toString()));
 					HTTPContext.getInstance().getLogger().log(Level.SEVERE, be.getMessage(), be);
 					HTTPContext.getInstance().getLogger().severe(String.format("<<< BindException: Port %d <<<", httpServerInstance.getPort()));
-					System.exit(1);
+					// throw new RuntimeException(be);
+					httpServerInstance.sendCleanStopSignal = false; // Not to kill already running instance on this port
 				} catch (Exception e) {
 					HTTPContext.getInstance().getLogger().severe(String.format(">>> Port %d, %s >>>", httpServerInstance.getPort(), e.toString()));
 					HTTPContext.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);
@@ -859,26 +882,10 @@ public class HTTPServer {
 					}
 					System.out.println("Bye from HTTP");
 				}
+				System.out.println("HTTP Thread, end of run.");
 			}
 		};
 
-		// Intercept Ctrl+C
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println(" <- HTTP: Ctrl+C intercepted.");
-			onExit();
-			// Send /exit
-			try {
-				String returned = HTTPClient.getContent(String.format("http://localhost:%d/exit", httpServerInstance.getPort()));
-				System.out.println("Exiting -> " + returned);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			try {
-				Thread.sleep(1_000L);
-			} catch (InterruptedException ie) {
-			}
-			System.out.println("HTTPServer Dead.");
-		}));
 		if (startImmediately) {
 			this.startServer();
 		}
@@ -1114,7 +1121,7 @@ public class HTTPServer {
 			}
 		}
 		Properties props = new Properties();
-		props.setProperty("autobind", "true"); // AutoBind test
+//		props.setProperty("autobind", "true"); // AutoBind test
 
 		HTTPServer httpServer = new HTTPServer(port, props);
 //		httpServer.setProxyFunction(HTTPServer::defaultProxy);
@@ -1160,6 +1167,7 @@ public class HTTPServer {
 					synchronized (this) {
 						try {
 							this.wait();
+							System.out.println("Waiter is done waiting.");
 						} catch (InterruptedException ex) {
 							Thread.currentThread().interrupt();
 						}
