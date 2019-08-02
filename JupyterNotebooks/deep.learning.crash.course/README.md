@@ -323,7 +323,7 @@ For example, if we use a Sigmoid for the value used above (`17`), we would proba
 | Sigmoid  | Hyperbolic Tangent | ReLU     | Step  |
 |:--------:|:------------------:|:--------:|:-----:|
 | ![Sigmoid](./img/sigmoid.png) | ![H Tan](./img/TanH.png) | ![ReLU](./img/relu.png) | ![Step](./img/step.png) |
-| x -> (1 / (1 + e<sup><small>(-x)</small></sup>)) | x -> (e<sup><small>x</small></sup> - e<sup><small>(-x)</small></sup>) / (e<sup><small>x</small></sup> + e<sup><small>(-x)</small></sup>)   | x -> x < 0 ? 0 : x | x -> x < 0 ? 0 : 1 |
+| x -> (1 / (1 + e<sup><small>-x</small></sup>)) | x -> (e<sup><small>x</small></sup> - e<sup><small>-x</small></sup>) / (e<sup><small>x</small></sup> + e<sup><small>-x</small></sup>)   | x -> x < 0 ? 0 : x | x -> x < 0 ? 0 : 1 |
 
 See this [Jupyter Java Notebook](./NeuralNetworks.ipynb) for more details.
 

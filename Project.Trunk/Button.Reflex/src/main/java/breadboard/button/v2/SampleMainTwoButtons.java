@@ -6,10 +6,20 @@ import utils.PinUtil;
 
 import java.util.Arrays;
 
+/**
+ * Two buttons:
+ * - One App button
+ * - One Shift button
+ *
+ * Trap the following events on the App button, with or without [Shift]:
+ * - Single click
+ * - Double click
+ * - Long click
+ */
 public class SampleMainTwoButtons {
 
 	private final static String BUTTON_PREFIX = "--button:";
-	private final static String SHIFT_PREFIX  = "--shift:";
+	private final static String SHIFT_PREFIX  = "--shift:";  // Acts like a [Shift] key
 
 	// Default button pins
 	private static Pin appPin   = RaspiPin.GPIO_01; // The hot pin for this button. The other is 3v3.
@@ -61,7 +71,7 @@ public class SampleMainTwoButtons {
 		String[] map = new String[3];
 		map[0] = String.valueOf(PinUtil.findByPin(appPin).pinNumber()) + ":" + "BUTTON Hot Wire";
 		map[1] = String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "3v3";
-		map[2] = String.valueOf(PinUtil.findByPin(shiftPin).pinNumber()) + ":" + "Shft";
+		map[2] = String.valueOf(PinUtil.findByPin(shiftPin).pinNumber()) + ":" + "Shift";
 
 		PinUtil.print(map);
 
