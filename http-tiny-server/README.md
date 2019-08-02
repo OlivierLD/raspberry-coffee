@@ -27,7 +27,7 @@ They are:
 - `autobind`
 - `web.archive`
 
-If `autobind` exists and is set to `true`, No `BindException` will be raised. The default port (or the one given in `-Dhttp.port`) will be incremented until a free one is found. 
+If `autobind` exists and is set to `true`, no `BindException` will be raised even if the specified port is busy. The default port (or the one given in `-Dhttp.port`) will be incremented until a free one is found. 
 
 ##### Static pages
 Driven by the `static.docs` property, of the `Properties` object mentioned above. Defaulted to `/web/`.
