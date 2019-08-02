@@ -1,21 +1,33 @@
-## HTTP Server (WIP)
+## HTTP Server (WIP, never finished...)
 Can be used
 - to serve
     - static HTML (and related) documents (from the file system, or archived in a zip)
     - REST requests
 - as an HTTP Proxy
 
-Designed to be as tiny and small as possible, to run on small boards (like the Raspberry Pi Zero).
+**Designed to be as tiny and small as possible**, to run on small boards (like the Raspberry Pi Zero).
 
-No security (SSL) available. _Not even multi-threaded_.
+- No security (SSL) available. 
+- _Not even multi-threaded_.
+- Not compliant with any coding standard, like JAX-RS, MicroProfile, JEE, etc
 
-> May 2019: The core classes are just above _**2M**_ big.
+> May 2019: The core classes are just above _**2M**_ big. Compare it to micro server like Helidon or SpringBoot...
+> Helidon or SpringBoot would definitely run on a Raspberry Pi, I've tested it. But again,
+> the goal here is to be HTTP and REST compliant (any REST or HTTP client would work), and remain as small as possible. 
 
 Logging available.
 Some special requests are reserved, like `/exit`, `/test`, feel free to comment them.
 
 The constructor of the `HTTPServer` class can take a `Properties` object as parameter.
-Those properties will be detailed below.
+Some will be detailed below.
+
+They are:
+- `static.docs`
+- `static.zip.docs`
+- `autobind`
+- `web.archive`
+
+If `autobind` exists and is set to `true`, No `BindException` will be raised. The default port (or the one given in `-Dhttp.port`) will be incremented until a free one is found. 
 
 ##### Static pages
 Driven by the `static.docs` property, of the `Properties` object mentioned above. Defaulted to `/web/`.
