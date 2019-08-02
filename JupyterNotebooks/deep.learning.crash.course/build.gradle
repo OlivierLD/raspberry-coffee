@@ -47,8 +47,10 @@ shadowJar {
 }
 
 task listJars {
-  configurations.compile.each {
-    File file -> println file.name
+  doLast {
+    configurations.compile.each {
+      File file -> println "${file} => ${file.name}"
+    }
   }
 }
 
