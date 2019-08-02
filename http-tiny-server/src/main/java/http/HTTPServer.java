@@ -70,6 +70,7 @@ import java.util.zip.ZipInputStream;
  * - http.port
  * - static.docs
  * - static.zip.docs
+ * - autobind
  * - web.archive
  *
  * </p>
@@ -1121,7 +1122,7 @@ public class HTTPServer {
 			}
 		}
 		Properties props = new Properties();
-//		props.setProperty("autobind", "true"); // AutoBind test
+		props.setProperty("autobind", "true"); // AutoBind test
 
 		HTTPServer httpServer = new HTTPServer(port, props);
 //		httpServer.setProxyFunction(HTTPServer::defaultProxy);
