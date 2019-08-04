@@ -45,8 +45,8 @@ We will:
 Several of those steps can be scripted or automated, as you would see in the examples provided here.
 This basically all you need to get up and running.
 
-We provide here several sub-directories, from which you will be able to run some provided scripts
-building several flavors of Nav Servers.
+We provide here **_several sub-directories_**, from which you will be able to run some provided scripts
+building several flavors of Nav Server flavors.
 
 They all come with at least 3 files:
 - `builder.sh`, _the one you run_, that will trigger all the required others

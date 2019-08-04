@@ -49,6 +49,7 @@ public class ServerWithButtons extends NavServer {
 				nfe.printStackTrace();
 			}
 
+			// TODO Use the PushButtonMaster v2
 			buttonOne = gpio.provisionDigitalInputPin(buttonOnePin, PinPullResistance.PULL_DOWN);
 			buttonOne.addListener((GpioPinListenerDigital) event -> {
 				if (event.getState().isHigh()) {
