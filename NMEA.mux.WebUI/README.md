@@ -451,4 +451,13 @@ In the `NMEA.mux.WebUI` project, `logged` folder
 - With UART GPS
 - Push Buttons and Switches
 
+### For the logger:
+- 2 Bonnets:
+    - One for the GPS ([Adafruit Ultimate GPS](https://www.adafruit.com/product/746))
+    - Another on top, with a HAT (Hardware Attached on Top) like this:
+
+![HAT](../Project.Trunk/REST.clients/TCP.Watch.01/img/front.jpg)
+
+See [here](../Project.Trunk/REST.clients/TCP.Watch.01#raspberry-pi-zero-w-and-ssd1306-128x64) for the wiring diagrams.
+
 ---

@@ -40,7 +40,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.DoubleStream;
 
 /**
  * Uses SPI interface for the 128x64 OLED Screen
@@ -146,6 +145,7 @@ public class TCPWatch {
 	private static GpioPinDigitalInput key1Pin = null;
 	private static GpioPinDigitalInput key2Pin = null;
 
+	// TODO Implement the breadboard.button.v2.PushButtonMaster
 	private static boolean k1 = false, k2 = false;
 	private static Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> {
 		k1 = event.getState().isLow(); // low: down
