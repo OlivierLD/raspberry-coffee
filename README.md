@@ -7,9 +7,20 @@ It uses the [PI4J library](http://pi4j.com).
 $ curl -s get.pi4j.com | sudo bash
 ```
 ---
+
+### Get started, from scratch, now!
+```
+bash -c "$(curl -L https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/master/install.sh)"
+```
+
+---
 This project contains Java code, mostly translated from Python, dedicated to usually *one* board (like BMP180, LSM303, etc).
 More consistent samples can be found in the RasPISamples module (being moved to the Project.Trunk module), where several components have been assembled together.
 Do take a look, it also comes with a readme file.
+
+---
+
+Raspberry Pi's [Mechanical drawings](https://www.raspberrypi.org/documentation/hardware/raspberrypi/mechanical/README.md)
 
 ---
 - [Main highlights](./Papers/README.md)

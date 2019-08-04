@@ -8,7 +8,7 @@
 #
 # For libRxTx on Mac, see http://jlog.org/rxtx-mac.html
 #
-CP=./build/libs/Serial.IO-1.0-all.jar
+CP=./build/libs/Serial.IO-1.0.jar
 #
 JAVA_OPTIONS=
 SERIAL_PRMS=

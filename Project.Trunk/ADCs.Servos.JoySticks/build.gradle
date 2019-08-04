@@ -1,8 +1,9 @@
 
 plugins {
   id 'java'
+  id 'idea'
   id 'maven'
-  id 'com.github.johnrengelman.shadow' version '4.0.2'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
 shadowJar {
@@ -13,18 +14,18 @@ group = 'oliv.raspi.coffee'
 version = '1.0'
 
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src/java'
-    }
-  }
-  test {
-    java {
-      srcDir 'tests/java'
-    }
-  }
-}
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src/java'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests/java'
+//    }
+//  }
+//}
 
 repositories {
   mavenCentral()

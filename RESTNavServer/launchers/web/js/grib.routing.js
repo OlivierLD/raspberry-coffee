@@ -5,6 +5,7 @@
  set DEBUG to true.
  */
 var DEBUG = false;
+var VERBOSE = false;
 var DEFAULT_TIMEOUT = 60000;
 
 // var errManager = console.log;
@@ -162,6 +163,9 @@ var ajustedLongitude = function(leftBoundary, eastIncrease) {
 };
 
 const ARROW_LENGTH = 20;
+const WIND_ARROW_TRANSPARENCY = 0.3;
+
+
 
 var drawWindArrow = function(context, at, twd, tws) {
 
@@ -170,7 +174,7 @@ var drawWindArrow = function(context, at, twd, tws) {
 	var roundTWS = Math.round(tws);
 	var dTWD = Math.toRadians(twd);
 
-	context.strokeStyle = 'rgba(0, 0, 255, 0.75)';
+	context.strokeStyle = 'rgba(0, 0, 255, ' + WIND_ARROW_TRANSPARENCY.toString() + ')';
 
 	var x = at.x;
 	var y = at.y;
@@ -289,6 +293,7 @@ var plotBestRoute = function(canvas, context) {
 // Invoked by the callback
 var drawGrib = function(canvas, context, gribData, date, type) {
 	var oneDateGRIB = gribData[0]; // Default
+
 	// Look for the right date
 	for (var i=0; i<gribData.length; i++) {
 		if (gribData[i].gribDate.formattedUTCDate === date) {
@@ -323,10 +328,11 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 			break;
 		default:
 			break;
-
 	}
-	// console.log("Width :", data.x[0].length);
-	// console.log("Height:", data.x.length);
+	if (VERBOSE) {
+		console.log(">> Type %s, Date: %s", type, date);
+		console.log("   Dim (W x H) : %d x %d", data.x[0].length, data.x.length);
+	}
 
 	var maxTWS = 0;
 
@@ -374,6 +380,9 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 
 			// BG Color
 			context.fillStyle = getBGColor(gribValue, type);
+			if (VERBOSE && type === 'htsgw' && gribValue > 4) {
+				console.log(">> Cell (X, Y) (%d, %d): %s => %f", wGRIB, hGRIB, type, gribValue);
+			}
 			context.fillRect(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
 //		context.stroke();
 

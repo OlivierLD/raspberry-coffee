@@ -711,7 +711,7 @@ window.onload = () => {
 					}
 				}, false);
 	}
-}
+};
 
 function displayErr(err) {
 	if (err !== undefined) {

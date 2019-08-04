@@ -91,6 +91,11 @@
       var cb = document.getElementById('with-border');
       cb.checked = (border === 'Y');
     }
+
+    var anim = getQSPrm('animate');
+    if (anim !== undefined) {
+      animate = (anim === 'true');
+    }
     // events subscription
 
     if (false) {
@@ -219,6 +224,12 @@
           <input type="checkbox" id="rain-ok" disabled="true">Rain
           <br>
           <input type="checkbox" id="dew-ok" disabled="true">Dew Point Temp
+          <br><br>
+          Last updated
+          <br>
+          <span id="update-date"></span>
+          <br>
+          <span id="update-time"></span>
         </td>
         <td>
           <div id="displays-1" style="display: inline;">
@@ -276,6 +287,8 @@
       </tr>
     </table>
     <div id="err-mess" style="display: none;"></div>
+    <!--a href="digital.html" style="color: silver;">Digital version</a> <a href="#" onclick="location.reload();" style="color: silver;">Reload</a-->
+    <button onclick="location.href = 'digital.html';">Digital version</button> <button onclick="location.reload();">Reload</button>
     <hr>
     <address>The HTML5 Weather Console</address>
   </body>

@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Weather Station</title>
-    <link rel="stylesheet" href="../css/stylesheet.css" type="text/css"/>
-		<link rel="stylesheet" href="../css/black.css" type="text/css"/>
+    <link rel="stylesheet" href="./css/stylesheet.css" type="text/css"/>
+		<link rel="stylesheet" href="./css/black.css" type="text/css"/>
     <link rel="icon" type="image/ico" href="favicon.ico">
     <style type="text/css">
 
@@ -113,10 +113,11 @@
     <table width="100%" border="0">
       <tr>
         <td valign="top"><h2>Weather Station</h2></td>
+				<td>Last updated:<span id="update-date"></span>&nbsp;<span id="update-time"></span></td>
 				<td align="right"><button onclick="toggleHeadsUp();" style="border-radius: 5px;">Head Up</button></td>
       </tr>
       <tr>
-        <td valign="top" colspan="2">
+        <td valign="top" colspan="3">
           <table width="100%">
             <tr>
 							<td width="20%" align="center">
@@ -213,7 +214,7 @@
         </td>
       </tr>
 			<tr>
-				<td align="center" colspan="2">
+				<td align="center" colspan="3">
 					<!-- Perspective sliders -->
 					<table width="100%">
 						<tr>
@@ -233,16 +234,18 @@
 				</td>
 			</tr>
       <tr>
-        <td align="left" colspan="2">
+        <td align="left" colspan="3">
+					<!--a href="analog.all.html?animate=false" style="color: cyan;">Analog version</a> <a href="#" onclick="location.reload();" style="color: cyan;">Reload</a-->
+					<button onclick="location.href = 'analog.all.html?animate=false';">Analog version</button> <button onclick="location.reload();">Reload</button>
           <div id="status" style="padding:5px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height: 40px;">
             <i>Status will go here when needed...</i>
           </div>
         </td>
       </tr>
       <tr>
-        <td valign="top" align="right" colspan="2"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
+        <td valign="top" align="right" colspan="3"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
       </tr>
     </table>
     <hr>
-  </body>
+	</body>
 </html>

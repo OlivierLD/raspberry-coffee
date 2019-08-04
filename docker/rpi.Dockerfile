@@ -1,4 +1,5 @@
 FROM resin/raspberrypi3-debian:latest
+# FROM hypriot/rpi-java
 #
 # WebComponents running on the Raspberry Pi.
 # Uses NodeJS
@@ -22,6 +23,7 @@ RUN echo "java -version" >> $HOME/.bashrc
 
 RUN mkdir /workdir
 WORKDIR /workdir
+# TODO Make sure this works...
 RUN git clone https://github.com/OlivierLD/raspberry-coffee.git
 WORKDIR /workdir/raspberry-coffee/WebComponents
 

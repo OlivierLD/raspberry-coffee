@@ -6,6 +6,8 @@
  ! Uses ES6 Promises to get to Ajax
  !
  ! Try query string like that console.gps.html?style=orange&bg=black&border=n&boat-data=n
+ !
+ ! HTML graphical entities, good doc at https://www.toptal.com/designers/htmlarrows/symbols/
  +-->
 <head>
 	<meta charset="UTF-8">
@@ -21,6 +23,7 @@
 	<script type="module" src="./DirectionDisplay.js"></script>
 	<script type="module" src="./AnalogDisplay.js"></script>
 	<script type="module" src="./WindAngleDisplay.js"></script>
+	<script type="module" src="./SatellitePlotter.js"></script>
 	<script type="module" src="./AnalogWatch.js"></script>
 	<script type="module" src="./CalendarDisplay.js"></script>
 	<script type="module" src="./CompassRose.js"></script>
@@ -214,6 +217,7 @@
 		});
 		events.subscribe('sog', (val) => {
 			setData('bsp-01', val);
+			document.getElementById('bsp-01').value2 = val * 0.514444;
 		});
 		events.subscribe('nmea', (val) => {
 			setRawNMEA(val.data);
@@ -234,6 +238,9 @@
 		events.subscribe('gps-sat', (val) => {
 //		console.log("Satellite data:", val);
 			gpsSatelliteData = val;
+			let plotter = document.getElementById('sp-01');
+			plotter.setSatellites(val);
+			plotter.repaint();
 		});
 		events.subscribe('cog', (val) => {
 			setData('compass-rose-01', val);
@@ -363,6 +370,7 @@
 			padding: 14px 16px;
 			transition: 0.3s;
 			font-size: 17px;
+			text-shadow: 1px 1px 2px rgba(0, 255, 255, 0.5), 0 0 25px white, 0 0 5px silver;
 		}
 
 		/* Change background color of buttons on hover */
@@ -616,7 +624,7 @@
 		<span id="boat-data-switch" onclick="expandCollapseBoatData();" style="cursor: pointer; padding-left: 40px;">- Boat Data</span>
 		<div id="nmea-widgets-1" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 0px 10px 10px 10px; text-align: center;">
 			<div id="boat-data" class="boat-data" style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 2; grid-template-columns: auto;">
-				<div id="row-1" style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto; padding: 10px;">
+				<div id="row-1" style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto auto; padding: 10px;">
 					<!--
 					   BOUSSOLE...
 					 +-->
@@ -626,8 +634,8 @@
 															 class="green"
 															 title="Heading"
 															 value="0"
-															 width="200"
-															 height="200"
+															 width="250"
+															 height="250"
 															 major-ticks="45"
 															 minor-ticks="5"
 															 label="HDG"></compass-display>
@@ -664,8 +672,8 @@
 																 with-rose="true"
 																 with-border="true"
 																 label="COG"
-																 width="200"
-																 height="200"></direction-display>
+																 width="250"
+																 height="250"></direction-display>
 						</div>
 						<div class="black-frame centered mid">
 							<!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-01');" checked -->
@@ -692,18 +700,26 @@
 						<div class="black-frame centered">
 							<!-- Note: No initial value="0" attribute, it would be considered as the miniVal. -->
 							<analog-display class="analogdisplay-day"
-															title="Speed Over Ground in knots"
+															title="Speed Over Ground&#13;in knots and m/s"
 															id="bsp-01"
 															min-value="0"
 															max-value="15"
+															value="0.0"
+															value-2="0.0"
 															major-ticks="1"
 															minor-ticks="0.1"
 															with-border="true"
 															with-min-max="true"
 															overlap="40"
 															label="SOG"
-															width="200"
-															height="200"></analog-display>
+															max-value-2="7.71667"
+															major-ticks-2="1"
+															minor-ticks-2="0.1"
+															unit="kn"
+															unit-2="m/s"
+															rotate-digits="false"
+															width="250"
+															height="250"></analog-display>
 						</div>
 						<div class="black-frame centered mid">
 							<!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked -->
@@ -723,6 +739,31 @@
 							</label>
 						</div>
 					</div>
+
+					<!--
+							GPS Satellites
+					+-->
+					<div id="satellites">
+						<div class="black-frame centered">
+							<satellite-plotter class="sat-plot-02"
+																 title="Satellites in view"
+																 id="sp-01"
+																 width="250"
+																 height="250"
+																 sat-in-view='{}'></satellite-plotter>
+						</div>
+						<div class="black-frame centered mid">
+							<!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked -->
+							With Border
+							<label class="rocker rocker-tiny">
+								<input type="checkbox" onchange="setBorder(this, 'sp-01');" checked>
+								<span class="switch-left">Yes</span>
+								<span class="switch-right">No</span>
+							</label>
+
+						</div>
+					</div>
+
 				</div>
 				<div id="row-2" style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 1; grid-template-columns: auto; padding: 10px; text-align: center;">
 					<!--

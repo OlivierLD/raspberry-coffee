@@ -233,6 +233,7 @@ function WorldMap (cName, prj) {
 	};
 
 	var mouseMoveCallback;
+	var mouseClickCallback;
 
 	/*
 	 func is a function taking an object as parameter, like:
@@ -245,6 +246,9 @@ function WorldMap (cName, prj) {
 	 */
 	this.setMouseMoveCallback = function(func) {
 		mouseMoveCallback = func;
+	};
+	this.setMouseClickCallback = function(func) {
+		mouseClickCallback = func;
 	};
 
 	// 2 custom functions (callbacks)
@@ -355,6 +359,24 @@ function WorldMap (cName, prj) {
 //    console.log("Mouse: x=" + x + ", y=" + y);
 			var pos = pointToPos(x, y);
 			mouseMoveCallback({
+				x: x,
+				y: y,
+				lat: pos.lat,
+				lng: pos.lng
+			});
+		}
+	}, 0);
+
+	canvas.addEventListener('click', function(evt) {
+
+		if (mouseClickCallback !== undefined) {
+			var rect = canvas.getBoundingClientRect();
+			var x = Math.round(evt.clientX - rect.left);
+			var y = Math.round(evt.clientY - rect.top);
+
+//    console.log("Mouse: x=" + x + ", y=" + y);
+			var pos = pointToPos(x, y);
+			mouseClickCallback({
 				x: x,
 				y: y,
 				lat: pos.lat,

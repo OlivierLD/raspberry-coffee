@@ -13,7 +13,7 @@ JAVA_OPTS="$JAVA_OPTS -Dadc.channel=2"
 JAVA_OPTS="$JAVA_OPTS -Dserver.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=false"
 #
-CP=./build/libs/REST.assembler-1.0-all.jar
+CP=./build/libs/REST.assembler-1.0.jar
 #
 # For remote debugging:
 # JAVA_OPTS="$JAVA_OPTS -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-CP=./build/libs/RESTRouting-1.0-all.jar
+CP=./build/libs/RESTRouting-1.0.jar
 #
 # java -cp $CP poc.GRIBBulk
 #

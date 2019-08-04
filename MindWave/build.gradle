@@ -1,5 +1,8 @@
-apply plugin: 'java'
-apply plugin: 'maven'
+plugins {
+    id 'java'
+    id 'idea'
+    id 'maven'
+}
 
 group = 'oliv.raspi.coffee'
 version = '1.0'
@@ -10,18 +13,18 @@ repositories {
     maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src'
-    }
-  }
-  test {
-    java {
-      srcDir 'tests'
-    }
-  }
-}
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests'
+//    }
+//  }
+//}
 
 compileJava.options.compilerArgs += ["-Xlint:unchecked"]
 

@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'idea'
 }
 
 group = 'oliv.raspi.coffee'
@@ -11,18 +12,18 @@ repositories {
     maven { url "http://lediouris.net/maven2" }
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/java']
-        }
-    }
-    test {
-        java {
-            srcDir 'tests/java'
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        java {
+//            srcDirs = ['src/java']
+//        }
+//    }
+//    test {
+//        java {
+//            srcDir 'tests/java'
+//        }
+//    }
+//}
 
 dependencies {
     compile 'javax:jai_codec:1.1.3'

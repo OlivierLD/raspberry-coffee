@@ -1,7 +1,8 @@
 plugins {
   id 'java'
   id 'maven'
-  id 'com.github.johnrengelman.shadow' version '4.0.2'
+  id 'idea'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
 shadowJar {
@@ -13,18 +14,18 @@ version = '1.0'
 
 sourceCompatibility = 1.8
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src/java'
-    }
-  }
-  test {
-    java {
-      srcDir 'tests'
-    }
-  }
-}
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src/java'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests'
+//    }
+//  }
+//}
 
 repositories {
   mavenCentral()

@@ -76,6 +76,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.date.offset=7168"
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
 CP=$(ls ./build/libs/*.jar)
+SUDO=
 if [ "$OS" == "Darwin" ]
 then
   CP=$CP:./libs/RXTXcomm.jar          # for Mac
@@ -83,6 +84,7 @@ fi
 if [ "$OS" == "Linux" ]
 then
   CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
+  SUDO="sudo "
 fi
 #
 # For JFR
@@ -100,7 +102,7 @@ LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 # sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
 # java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
 # sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navrest.NavServer
-COMMAND="java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navrest.NavServer"
+COMMAND="${SUDO}java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navrest.NavServer"
 echo -e "Running $COMMAND"
 $COMMAND
 #

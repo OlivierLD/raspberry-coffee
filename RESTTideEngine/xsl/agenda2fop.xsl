@@ -78,8 +78,8 @@
     <!ENTITY deg     "&#176;">
     ]>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-        xmlns:fo="http://www.w3.org/1999/XSL/Format"
-        xmlns:fox="http://xml.apache.org/fop/extensions" version="2.0">
+                xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                version="2.0">
   <xsl:template match="/">
     <fo:root>
       <fo:layout-master-set>
@@ -168,14 +168,15 @@
               </fo:table-cell>
             </fo:table-row>
           </fo:table-header>
-          <fo:table-body font-size="7pt">
+          <fo:table-body font-size="5pt">
             <xsl:for-each select="./date">
               <xsl:if test="(position() - 1) mod 3 = 0">
                 <xsl:text disable-output-escaping="yes">&lt;fo:table-row&gt;</xsl:text>
               </xsl:if>
               <!--fo:table-row-->
               <fo:table-cell border="0.5pt solid black"
-                       text-align="center">
+                             height="0.85in"
+                             text-align="center">
                 <xsl:if test="./@specBG = 'y'">
                   <xsl:attribute name="background-color">silver</xsl:attribute>
                 </xsl:if>

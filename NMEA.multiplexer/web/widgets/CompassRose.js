@@ -28,28 +28,28 @@ function CompassRose(cName,                     // Canvas Name
                      title,
                      width,                     // Display width
                      height,                    // Display height
-                     value, 
+                     value,
                      textColor) {
   // base = w 200 h 50
-  var scale = 1;   
+  var scale = 1;
 
   var canvasName = cName;
-  
+
   var displayWidth  = width;
   var displayHeight = height;
 
   var valueToDisplay = 0;
   var totalViewAngle = 60; // must be even...
-  
+
   if (value !== undefined)
     valueToDisplay = value;
   if (textColor === undefined)
     textColor = roseColorConfig.digitColor;
-  
+
   var instance = this;
-  
+
   (function(){ drawDisplay(canvasName, displayWidth, displayHeight); })(); // Invoked automatically
-  
+
   this.repaint = function() {
     drawDisplay(canvasName, displayWidth, displayHeight);
   };
@@ -58,19 +58,23 @@ function CompassRose(cName,                     // Canvas Name
     valueToDisplay = val;
     drawDisplay(canvasName, displayWidth, displayHeight);
   };
-  
+
   this.setDisplaySize = function(dw, dh) {
  // scale = ds / 100;
     displayWidth  = dw;
     displayHeight = dh;
     drawDisplay(canvasName, displayWidth, displayHeight);
   };
-  
+
   function getStyleRuleValue(style, selector, sheet) {
     var sheets = typeof sheet !== 'undefined' ? [sheet] : document.styleSheets;
     for (var i = 0, l = sheets.length; i < l; i++) {
       var sheet = sheets[i];
-      if (!sheet.cssRules) { continue; }
+      try {
+        if (!sheet.cssRules) { continue; }
+      } catch (error) {
+        continue;
+      }
       for (var j = 0, k = sheet.cssRules.length; j < k; j++) {
         var rule = sheet.cssRules[j];
         if (rule.selectorText && rule.selectorText.split(',').indexOf(selector) !== -1) {
@@ -99,13 +103,13 @@ function CompassRose(cName,                     // Canvas Name
     grd.addColorStop(0, roseColorConfig.displayBackgroundGradient.from); // 0  Beginning
     grd.addColorStop(1, roseColorConfig.displayBackgroundGradient.to);  // 1  End
     context.fillStyle = grd;
-  
+
     // Background
-    roundRect(context, 0, 0, canvas.width, canvas.height, 10, true, false);    
+    roundRect(context, 0, 0, canvas.width, canvas.height, 10, true, false);
     // Ticks
     context.strokeStyle = roseColorConfig.tickColor;
     context.lineWidth   = 0.5;
-    
+
     var startValue = valueToDisplay - (totalViewAngle / 2);
     var endValue   = valueToDisplay + (totalViewAngle / 2);
     for (var tick=startValue; tick<=endValue; tick++) {
@@ -118,7 +122,7 @@ function CompassRose(cName,                     // Canvas Name
       context.moveTo(x, 0);
       context.lineTo(x, tickHeight);
       context.closePath();
-      context.stroke();    
+      context.stroke();
       if (tick % 15 === 0) {
         var tk = tick;
         while (tk < 0) tk += 360;
@@ -136,7 +140,7 @@ function CompassRose(cName,                     // Canvas Name
         }
         context.font = "bold " + Math.round(scale * 20) + "px " + roseColorConfig.font; // "bold 16px Arial"
         var metrics = context.measureText(txt);
-        len = metrics.width;    
+        len = metrics.width;
         context.fillStyle = roseColorConfig.digitColor;
         context.fillText(txt, x - (len / 2), canvas.height - 10);
       }
@@ -146,13 +150,13 @@ function CompassRose(cName,                     // Canvas Name
     // Value, top left corner
     context.font = "bold " + Math.round(scale * 16) + "px Courier New"; // "bold 16px Arial"
     context.fillText(valueToDisplay.toString() + "\272", 5, 14);
-    
+
     context.strokeStyle = roseColorConfig.indexColor; // The index
     context.beginPath();
     context.moveTo(canvas.width / 2, 0);
     context.lineTo(canvas.width / 2, canvas.height);
     context.closePath();
-    context.stroke();    
+    context.stroke();
   };
 
   function roundRect(ctx, x, y, width, height, radius, fill, stroke)  {
@@ -181,6 +185,6 @@ function CompassRose(cName,                     // Canvas Name
     }
     if (fill) {
       ctx.fill();
-    }        
+    }
   };
 };

@@ -7,9 +7,9 @@ PATH=$PATH:/usr/local/bin
 # export http_proxy=http://www-proxy.us.oracle.com:80
 # export https_proxy=http://www-proxy.us.oracle.com:80
 #
-CP=./build/libs/RasPISamples-1.0-all.jar
+CP=./build/libs/RasPISamples-1.0.jar
 #
-WEATHER_STATION_IP=192.168.42.13
+WEATHER_STATION_IP=192.168.42.18
 #
 while true
 do
@@ -19,7 +19,7 @@ do
   NOW=$(date +"%Y_%m_%d_%H_%M_%S")
   IMG_NAME=snap-$NOW.jpg
   # Download the snapshot from the Raspberry Pi
-  sshpass -p 'pi' scp pi@$WEATHER_STATION_IP:~/raspberry-pi4j-samples/RasPISamples/web/snap-test.jpg ./web/$IMG_NAME
+  sshpass -p 'pi' scp pi@$WEATHER_STATION_IP:~/raspberry-coffee/RasPISamples/web/snap-test.jpg ./web/$IMG_NAME
   # open web
   echo see $IMG_NAME in the 'web' directory.
   #

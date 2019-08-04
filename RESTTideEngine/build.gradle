@@ -1,29 +1,30 @@
 plugins {
   id 'java'
 //id 'scala'
+  id 'idea'
   id 'maven'
-  id 'com.github.johnrengelman.shadow' version '4.0.2'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
 //id 'findbugs'
 }
 
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src/java'
-    }
-    resources {
-      srcDir 'src/resources'
-    }
-  }  
-  test {
-    java {
-      srcDir 'tests/java'
-    }
-  }  
-}
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src/java'
+//    }
+//    resources {
+//      srcDir 'src/resources'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests/java'
+//    }
+//  }
+//}
 
 repositories {
   mavenCentral()
@@ -37,7 +38,6 @@ dependencies {
   compile 'com.google.code.gson:gson:2.8.0'
   compile 'org.fusesource.jansi:jansi:1.11'
   compile 'oracle:xmlparser:2.0'
-  compile project (':common-utils')
   compile project (':RESTNauticalAlmanac')
   compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
 }

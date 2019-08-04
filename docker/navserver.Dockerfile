@@ -2,6 +2,10 @@ ARG http_proxy=""
 ARG https_proxy=""
 ARG no_proxy=""
 #
+#ARG http_proxy="http://www-proxy.us.oracle.com:80"
+#ARG https_proxy="http://www-proxy.us.oracle.com:80"
+#ARG no_proxy=""
+#
 FROM debian
 #
 # To run on a laptop - not necessaritly on an RPi (hence the default-jdk below)
@@ -44,6 +48,7 @@ RUN ./gradlew tasks
 WORKDIR /workdir/raspberry-coffee/RESTNavServer
 RUN ../gradlew shadowJar
 # RUN ../gradlew shadowJar -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80
+WORKDIR /workdir/raspberry-coffee/RESTNavServer/launchers
 
 #ENV http_proxy ""
 #ENV https_proxy ""

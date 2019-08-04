@@ -50,7 +50,7 @@ ASTRO_VERBOSE=false
 IMAGE_VERBOSE=false
 GRIB_VERBOSE=false
 #
-CP=../build/libs/RESTNavServer-1.0-all.jar
+CP=../build/libs/RESTNavServer-1.0.jar
 OS=`uname -a | awk '{ print $1 }'`
 if [ "$OS" == "Darwin" ]
 then
@@ -158,6 +158,8 @@ JAVA_OPTS="$JAVA_OPTS -Xms64M -Xmx1G"
 #
 # For remote debugging:
 # JAVA_OPTS="$JAVA_OPTS -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000"
+# For remote JVM Monitoring
+# JAVA_OPTS="$JAVA_OPTS -Dcom.sun.management.jmxremote.port=1234 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=$(hostname)"
 #
 echo -e "Using properties:$JAVA_OPTS"
 #
@@ -172,7 +174,11 @@ then
 else
 	echo Assuming Linux/Raspberry Pi
   JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
-  SUDO="sudo "
+  # No sudo require if running as root, in Docker for example.
+  if [ "$(whoami)" != "root" ]
+  then
+    SUDO="sudo "
+  fi
 fi
 #
 COMMAND="${SUDO}java -cp $CP $JAVA_OPTS navrest.NavServer"

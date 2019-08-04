@@ -11,7 +11,7 @@
 
 Run
 ```bash
- $> ../../gradlew clean shadowJar
+ $ ../../gradlew clean shadowJar
 ```
 Then just run the script named `pushbutton`.
 

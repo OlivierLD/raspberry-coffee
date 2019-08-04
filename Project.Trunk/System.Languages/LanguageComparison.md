@@ -139,6 +139,8 @@ We will use the following programming languages:
     - The system above can be resolved very quickly in just a couple of lines:
 
     ![Mathematica](./img/Mathematica.png)
+    
+    <!--iframe width='800' height='400' src='https://www.wolframcloud.com/obj/olivier3/Published/system.nb?_view=EMBED' frameborder='0'></iframe-->
 
 #### Output
 All versions of the program pretty much return the same output, like
@@ -159,7 +161,7 @@ Java, Scala and Kotlin require a compilation. C too, but not from Gradle.
 
 Run
 ```
- $ ../gradlew shadowJar
+ $ ../../gradlew shadowJar [ -x:Project.Trunk:System.Languages:compileClojure ]
 ```
 
 #### A quick note
@@ -168,31 +170,31 @@ But it certainly gives a taste of what the different languages can feel like. If
 available in `git`.
 
 #### Java
-The sources are in [`src/java/matrix`](./src/java/matrix).
-(See also [this document](./src/java/smoothing/README.md) ).
+The sources are in [`src/main/java/matrix`](./src/main/java/matrix).
+(See also [this document](./src/main/java/smoothing/README.md) ).
 
 To run it:
 ```
- $ java -cp ./build/libs/RasPISamples-1.0-all.jar raspisamples.matrix.SystemUtil
+ $ java -cp ./build/libs/System.Languages-1.0.jar matrix.SystemUtil
 ```
 
 #### Scala
-The sources are in [`src/scala/systems`](./src/scala/systems).
+The sources are in [`src/main/scala/systems`](./src/main/scala/systems).
 
 To run it:
 ```
- $ scala -cp ./build/libs/RasPISamples-1.0-all.jar systems.SystemUtils
+ $ scala -cp ./build/libs/System.Languages-1.0.jar systems.SystemUtils
 ```
 
 #### Kotlin
-The sources are in [`src/kotlin/KtSystemSolver.kt`](./src/kotlin).
+The sources are in [`src/main/kotlin/KtSystemSolver.kt`](./src/main/kotlin).
 
 ```
- $ java -cp ./build/libs/RasPISamples-1.0-all.jar systemsKt.KtSystemSolverKt
+ $ java -cp ./build/libs/System.Languages-1.0.jar systemsKt.KtSystemSolverKt
 ```
 or
 ```
- $ kotlin -classpath ./build/libs/RasPISamples-1.0-all.jar systemsKt.KtSystemSolverKt
+ $ kotlin -classpath ./build/libs/System.Languages-1.0.jar systemsKt.KtSystemSolverKt
 ```
 
 
@@ -208,42 +210,49 @@ From `node.js`:
 Or just load `smoothing.spray.html` in a browser.
 
 #### Python
-Sources are in [`src/python/system.py`](./src/python).
+Sources are in [`src/main/python/system.py`](./src/main/python).
 
 To run it:
 ```
- $ cd src/python
+ $ cd src/main/python
  $ python system.py
 ```
 
+> Note: there is or Python a popular numerical library called `numpy`. We present here an
+> example using is, just run
+```
+ $ python system.np.py
+```
+> It makes the code much simpler.
+
 #### C
-Sources are in [`src/C/system.c`](./src/C).
+Sources are in [`src/main/C/system.c`](./src/main/C).
 
 To compile and run (the compilation is _not_ done by Gradle, and may vary depending on your system):
 ```
- $ cd src/C
+ $ cd src/main/C
  $ gcc -lm -o system system.c
  $ ./system
 ```
 
 On the Raspberry Pi, use:
 ```
- $ cd src/C
+ $ cd src/main/C
  $ g++ -Wall -o system system.c
  $ ./system
 ```
 
 #### PHP
-Sources are in [`src/php/`](./src/php). Thanks to Sébastien Morel for tuning up the php code.
+Sources are in [`src/main/php/`](./src/main/php). Thanks to Sébastien Morel for tuning up the `php` code.
 
-See instructions at [src/php/README.md](src/php/README.md).
+See instructions at [src/php/README.md](src/main/php/README.md).
 
 #### Groovy
-Sources are in [`scr/groovy/system.groovy`](./src/groovy).
+Sources are in [`scr/main/groovy/system.groovy`](./src/main/groovy).
 
 To run it, after installing Groovy on your machine:
 ```
- $ cd src/groovy
+ $ cd src/main/groovy
  $ groovy system.groovy
 ```
 or just
@@ -252,20 +261,20 @@ or just
 ```
 
 #### Ruby
-Sources are in [`src/ruby/matrix.rb`](./src/ruby)
+Sources are in [`src/main/ruby/matrix.rb`](./src/main/ruby)
 
 To run the system resolution, type
 ```
- $ cd src/ruby
+ $ cd src/main/ruby
  $ irb matrix.rb
 ```
 
 #### Go
-Sources are in [`src/go/system.go`](./src/go).
+Sources are in [`src/main/go/system.go`](./src/main/go).
 
 To run it - after you've installed Go on your machine:
 ```
- $ cd src/go
+ $ cd src/main/go
  $ go run system.go
 ```
 It can be built (compiled) into a native executable:
@@ -277,19 +286,19 @@ It can be built (compiled) into a native executable:
 #### Clojure
 > This is a Work In Progress, I'm learning (I should have picked up Chinese, that would have been simpler).
 
-Sources are (will be) in [`src/clojure`](./src/clojure).
+Sources are (will be) in [`src/main/clojure`](./src/main/clojure).
 
 To run it, after [installing Clojure](http://clojure.org) on your machine:
 ```
- $ cd src/clojure
- $ CLOJURE_JAR=[whereever-you-put-it]/clojure-tools-1.9.0.381.jar
+ $ cd src/main/clojure
+ $ CLOJURE_JAR=[wherever-you-put-it]/clojure-tools-1.9.0.381.jar
  $ CP=.:$CLOJURE_JAR
  $ java -cp .:$CP clojure.main --main systems.matrix
 
 ```
 
 #### Processing
-Sources are in [`src/Processing`](./src/Processing).
+Sources are in [`src/main/Processing`](./src/main/Processing).
 
 It is an interactive curve resolution, using the `least squares` method.
 
@@ -367,6 +376,10 @@ Java is using a syntax similar to C. It uses a similar way to declare functions 
 - It runs on a Java Virtual Machine. As a result, a `class` compiled somewhere will run
 _without any modification_ on any other system where a JVM is available. The portability is taken care of by the
 implementation of the virtual machine.
+    - The Java Virtual Machine (JVM) runs three threads:
+        - The `runtime`, that runs your programs
+        - The `finalizer`, that flags the variables no longer in use, so they can be freed
+        - The `garbage collector` (GC) that removes (frees) the variables flagged by the `finalizer`
 - Java does not need linkage (link libraries),  the `classpath` takes care of it.
 
 This eliminates a lot of the issues inherent to `C`.

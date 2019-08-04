@@ -15,14 +15,6 @@ limitations under the License.
 
 package org.tensorflow.examples;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
 import org.tensorflow.DataType;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
@@ -31,7 +23,19 @@ import org.tensorflow.Tensor;
 import org.tensorflow.TensorFlow;
 import org.tensorflow.types.UInt8;
 
-/** Sample use of the TensorFlow Java API to label images using a pre-trained model. */
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * Sample use of the TensorFlow Java API to label images using a pre-trained model.
+ */
 public class LabelImage {
 	private static void printUsage(PrintStream s) {
 		final String url =
@@ -49,7 +53,10 @@ public class LabelImage {
 		s.println("<image file> is the path to a JPEG image file");
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
+		System.out.println(String.format("%d Arguments:\n%s",
+				args.length,
+				Arrays.asList(args).stream().map(arg -> "- " + arg).collect(Collectors.joining("\n"))));
 		if (args.length != 2) {
 			printUsage(System.err);
 			System.exit(1);
@@ -97,7 +104,7 @@ public class LabelImage {
 											b.expandDims(
 													b.cast(b.decodeJpeg(input, 3), Float.class),
 													b.constant("make_batch", 0)),
-											b.constant("size", new int[] {H, W})),
+											b.constant("size", new int[]{H, W})),
 									b.constant("mean", mean)),
 							b.constant("scale", scale));
 			try (Session s = new Session(g)) {
@@ -207,6 +214,7 @@ public class LabelImage {
 						.<T>output(0);
 			}
 		}
+
 		Output<String> constant(String name, byte[] value) {
 			return this.constant(name, value, String.class);
 		}
@@ -230,6 +238,7 @@ public class LabelImage {
 		private <T, U, V> Output<T> binaryOp3(String type, Output<U> in1, Output<V> in2) {
 			return g.opBuilder(type, type).addInput(in1).addInput(in2).build().<T>output(0);
 		}
+
 		private Graph g;
 	}
 }

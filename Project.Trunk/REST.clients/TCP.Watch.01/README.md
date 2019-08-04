@@ -419,7 +419,7 @@ The screens shown here are just examples. Its very easy to come up with your own
 I keep writing them, possibilities are endless and this document might not be 100% up-to-date.
 
 #### Video
-YouTube has it: https://youtu.be/6Dz-3qKJtjk
+YouTube has it: <https://youtu.be/6Dz-3qKJtjk>
 
 #### Connect it to the Server's network
 > Note: The way to configure the _server_ so it emits its own network (like a WiFi hotspot) is described [here](https://github.com/OlivierLD/raspberry-coffee#raspberry-pi-as-an-access-point-and-internet-access).

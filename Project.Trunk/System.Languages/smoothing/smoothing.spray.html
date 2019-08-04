@@ -98,6 +98,19 @@
                 }
         };
 
+        var zoomIn = function() {
+          let minX, maxX, minY, maxY;
+          [minX, maxX, minY, maxY] = dataGraph.getBoundaries();
+          dataGraph.setBoundaries(minX * 0.75, maxX * 0.75, minY * 0.75, maxY * 0.75);
+          dataGraph.drawPoints("dataCanvas", graphData);
+        };
+        var zoomOut = function() {
+          let minX, maxX, minY, maxY;
+          [minX, maxX, minY, maxY] = dataGraph.getBoundaries();
+          dataGraph.setBoundaries(minX / 0.75, maxX / 0.75, minY / 0.75, maxY / 0.75);
+          dataGraph.drawPoints("dataCanvas", graphData);
+        };
+
         var setSpray = function(cb) {
             dataGraph.setSprayPoints(cb.checked);
         };
@@ -109,7 +122,7 @@
     </script>
   </head>
   <body>
-    <table width="100%">
+    <table width="100%" border="1">
       <tr>
         <td colspan="2">
           <h2>Polynomial Smoothing</h2>
@@ -117,7 +130,7 @@
         </td>
       </tr>
       <tr>
-        <td valign="top" align="left" valign="top">
+        <td valign="top" align="left" valign="top" colspan="2">
           Required Degree : <input id="degree" type="number" style="text-align: right; width: 40px;" placeholder="Degree" size="3" value="3">
           <br>
           <input type="checkbox" id="with-spray" onchange="setSpray(this);" checked>Spray points
@@ -129,9 +142,13 @@
         <td colspan="1">
           <small>Spray points on the canvas below (click and drag the mouse), and click </small><button onclick="goDrawing();">Display</button>
         </td>
+        <td colspan="1" align="right">
+          <button onclick="zoomIn();">Zoom In</button>
+          <button onclick="zoomOut();">Zoom Out</button>
+        </td>
       </tr>
       <tr>
-        <td align="center" colspan="1">
+        <td align="center" colspan="2">
           <canvas id="dataCanvas" height="500" title="Points and curves"></canvas>
         </td>
       </tr>

@@ -41,7 +41,7 @@ const spAnalogDisplayColorConfigBlack = {
 	knobOutlineColor: 'blue',
 	font: 'Arial'
 };
-let analogDisplayColorConfig = spAnalogDisplayColorConfigBlack; // analogDisplayColorConfigBlack; // White is the default
+let spAnalogDisplayColorConfig = spAnalogDisplayColorConfigBlack; // analogDisplayColorConfigBlack; // White is the default
 
 function SatellitesPlotter(cName,                     // Canvas Name
                            dSize) {                   // Display radius
@@ -77,7 +77,11 @@ function SatellitesPlotter(cName,                     // Canvas Name
 		let sheets = typeof sheet !== 'undefined' ? [sheet] : document.styleSheets;
 		for (let i = 0, l = sheets.length; i < l; i++) {
 			let sheet = sheets[i];
-			if (!sheet.cssRules) {
+			try {
+				if (!sheet.cssRules) {
+					continue;
+				}
+			} catch (error) {
 				continue;
 			}
 			for (let j = 0, k = sheet.cssRules.length; j < k; j++) {
@@ -94,9 +98,9 @@ function SatellitesPlotter(cName,                     // Canvas Name
 
 		let schemeColor = getStyleRuleValue('color', '.display-scheme');
 		if (schemeColor === 'black') {
-			analogDisplayColorConfig = analogDisplayColorConfigBlack;
+			spAnalogDisplayColorConfig = analogDisplayColorConfigBlack;
 		} else if (schemeColor === 'white') {
-			analogDisplayColorConfig = analogDisplayColorConfigWhite;
+			spAnalogDisplayColorConfig = analogDisplayColorConfigWhite;
 		}
 
 		let canvas = document.getElementById(displayCanvasName);
@@ -111,7 +115,7 @@ function SatellitesPlotter(cName,                     // Canvas Name
 
 		// Cleanup
 		//context.fillStyle = "#ffffff";
-		context.fillStyle = analogDisplayColorConfig.bgColor;
+		context.fillStyle = spAnalogDisplayColorConfig.bgColor;
 		//context.fillStyle = "transparent";
 		context.fillRect(0, 0, canvas.width, canvas.height);
 		//context.fillStyle = 'rgba(255, 255, 255, 0.0)';
@@ -123,24 +127,24 @@ function SatellitesPlotter(cName,                     // Canvas Name
 			context.lineWidth = 5;
 		}
 
-		if (analogDisplayColorConfig.withGradient) {
+		if (spAnalogDisplayColorConfig.withGradient) {
 			let grd = context.createLinearGradient(0, 5, 0, radius);
-			grd.addColorStop(0, analogDisplayColorConfig.displayBackgroundGradient.from);// 0  Beginning
-			grd.addColorStop(1, analogDisplayColorConfig.displayBackgroundGradient.to);  // 1  End
+			grd.addColorStop(0, spAnalogDisplayColorConfig.displayBackgroundGradient.from);// 0  Beginning
+			grd.addColorStop(1, spAnalogDisplayColorConfig.displayBackgroundGradient.to);  // 1  End
 			context.fillStyle = grd;
 		} else {
-			context.fillStyle = analogDisplayColorConfig.displayBackgroundGradient.to;
+			context.fillStyle = spAnalogDisplayColorConfig.displayBackgroundGradient.to;
 		}
 
-		if (analogDisplayColorConfig.withDisplayShadow) {
+		if (spAnalogDisplayColorConfig.withDisplayShadow) {
 			context.shadowOffsetX = 3;
 			context.shadowOffsetY = 3;
 			context.shadowBlur = 3;
-			context.shadowColor = analogDisplayColorConfig.shadowColor;
+			context.shadowColor = spAnalogDisplayColorConfig.shadowColor;
 		}
 		context.lineJoin = "round";
 		context.fill();
-		context.strokeStyle = analogDisplayColorConfig.outlineColor;
+		context.strokeStyle = spAnalogDisplayColorConfig.outlineColor;
 		context.stroke();
 		context.closePath();
 
@@ -187,7 +191,7 @@ function SatellitesPlotter(cName,                     // Canvas Name
 				context.arc(centerSat.x, centerSat.y, SAT_RADIUS, 0, 2 * Math.PI, false);
 
 				let text = satellites[satNum].svID;
-				context.font = "bold " + Math.round(scale * 12) + "px " + analogDisplayColorConfig.font; // "bold 40px Arial"
+				context.font = "bold " + Math.round(scale * 12) + "px " + spAnalogDisplayColorConfig.font; // "bold 40px Arial"
 				let metrics = context.measureText(text);
 				let len = metrics.width;
 
@@ -200,6 +204,85 @@ function SatellitesPlotter(cName,                     // Canvas Name
 		}
 	}
 
+	/**
+	 *
+	 * @param sat like this:
+	 *
+{
+  "3": {
+    "svID": 3,
+    "elevation": 42,
+    "azimuth": 178,
+    "snr": 44
+  },
+  "4": {
+    "svID": 4,
+    "elevation": 13,
+    "azimuth": 52,
+    "snr": 31
+  },
+  "6": {
+    "svID": 6,
+    "elevation": 11,
+    "azimuth": 277,
+    "snr": 26
+  },
+  "7": {
+    "svID": 7,
+    "elevation": 42,
+    "azimuth": 259,
+    "snr": 34
+  },
+  "8": {
+    "svID": 8,
+    "elevation": 2,
+    "azimuth": 142,
+    "snr": 0
+  },
+  "9": {
+    "svID": 9,
+    "elevation": 54,
+    "azimuth": 319,
+    "snr": 35
+  },
+  "16": {
+    "svID": 16,
+    "elevation": 47,
+    "azimuth": 66,
+    "snr": 42
+  },
+  "22": {
+    "svID": 22,
+    "elevation": 18,
+    "azimuth": 164,
+    "snr": 29
+  },
+  "23": {
+    "svID": 23,
+    "elevation": 74,
+    "azimuth": 38,
+    "snr": 38
+  },
+  "26": {
+    "svID": 26,
+    "elevation": 24,
+    "azimuth": 45,
+    "snr": 31
+  },
+  "27": {
+    "svID": 27,
+    "elevation": 8,
+    "azimuth": 111,
+    "snr": 26
+  },
+  "30": {
+    "svID": 30,
+    "elevation": 7,
+    "azimuth": 246,
+    "snr": 22
+  }
+}
+	 */
 	this.setSatellites = function (sat) {
 		satellites = sat;
 		drawDisplay(canvasName, displaySize);

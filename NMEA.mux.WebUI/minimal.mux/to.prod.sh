@@ -37,7 +37,7 @@ mkdir $distdir/build/libs
 # 3 - Copying needed resources
 #
 echo -e "Copying resources"
-cp ./build/libs/*-1.0-all.jar $distdir/build/libs
+cp ./build/libs/*-1.0.jar $distdir/build/libs
 # Log folder
 mkdir $distdir/logged
 # Web resources
@@ -47,6 +47,7 @@ cp *.properties $distdir
 # If needed, more resources would go here (like dev curves, etc)
 cp mux.sh $distdir
 cp killmux.sh $distdir
+cp nmea.test.sh $distdir
 #
 # 4 - Archiving
 #

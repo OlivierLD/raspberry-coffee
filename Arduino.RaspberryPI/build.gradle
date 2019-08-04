@@ -1,21 +1,24 @@
-apply plugin: 'java'
-apply plugin: 'maven'
+plugins {
+  id 'java'
+  id 'idea'
+  id 'maven'
+}
 
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src'
-    }
-  }
-  test {
-    java {
-      srcDir 'tests'
-    }
-  }
-}
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests'
+//    }
+//  }
+//}
 
 repositories {
   mavenCentral()

@@ -35,7 +35,7 @@ function SquareMatrix(dim) {
     this.setMatrixElements = function(me) {
         this.matrixElements = me;
     };
-};
+}
 
 var minor = function(m, row, col) {
     var small = new SquareMatrix(m.getDimension() - 1);

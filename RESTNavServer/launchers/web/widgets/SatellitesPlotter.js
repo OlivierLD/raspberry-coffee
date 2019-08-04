@@ -41,7 +41,7 @@ var spAnalogDisplayColorConfigBlack = {
     knobOutlineColor: 'blue',
     font: 'Arial'
 };
-var analogDisplayColorConfig = spAnalogDisplayColorConfigBlack; // analogDisplayColorConfigBlack; // White is the default
+var spAnalogDisplayColorConfig = spAnalogDisplayColorConfigBlack; // analogDisplayColorConfigBlack; // White is the default
 
 function SatellitesPlotter(cName,                     // Canvas Name
                            dSize) {                   // Display radius
@@ -94,9 +94,9 @@ function SatellitesPlotter(cName,                     // Canvas Name
 
         var schemeColor = getStyleRuleValue('color', '.display-scheme');
         if (schemeColor === 'black')
-            analogDisplayColorConfig = analogDisplayColorConfigBlack;
+            spAnalogDisplayColorConfig = analogDisplayColorConfigBlack;
         else if (schemeColor === 'white')
-            analogDisplayColorConfig = analogDisplayColorConfigWhite;
+            spAnalogDisplayColorConfig = analogDisplayColorConfigWhite;
 
         var canvas = document.getElementById(displayCanvasName);
         var center = {
@@ -109,7 +109,7 @@ function SatellitesPlotter(cName,                     // Canvas Name
         var radius = displayRadius;
 
         // Cleanup
-        context.fillStyle = analogDisplayColorConfig.bgColor;
+        context.fillStyle = spAnalogDisplayColorConfig.bgColor;
         context.fillRect(0, 0, canvas.width, canvas.height);
 
         context.beginPath();
@@ -118,24 +118,24 @@ function SatellitesPlotter(cName,                     // Canvas Name
             context.lineWidth = 5;
         }
 
-        if (analogDisplayColorConfig.withGradient) {
+        if (spAnalogDisplayColorConfig.withGradient) {
             var grd = context.createLinearGradient(0, 5, 0, radius);
-            grd.addColorStop(0, analogDisplayColorConfig.displayBackgroundGradient.from);// 0  Beginning
-            grd.addColorStop(1, analogDisplayColorConfig.displayBackgroundGradient.to);  // 1  End
+            grd.addColorStop(0, spAnalogDisplayColorConfig.displayBackgroundGradient.from);// 0  Beginning
+            grd.addColorStop(1, spAnalogDisplayColorConfig.displayBackgroundGradient.to);  // 1  End
             context.fillStyle = grd;
         } else {
-            context.fillStyle = analogDisplayColorConfig.displayBackgroundGradient.to;
+            context.fillStyle = spAnalogDisplayColorConfig.displayBackgroundGradient.to;
         }
 
-        if (analogDisplayColorConfig.withDisplayShadow) {
+        if (spAnalogDisplayColorConfig.withDisplayShadow) {
             context.shadowOffsetX = 3;
             context.shadowOffsetY = 3;
             context.shadowBlur = 3;
-            context.shadowColor = analogDisplayColorConfig.shadowColor;
+            context.shadowColor = spAnalogDisplayColorConfig.shadowColor;
         }
         context.lineJoin = "round";
         context.fill();
-        context.strokeStyle = analogDisplayColorConfig.outlineColor;
+        context.strokeStyle = spAnalogDisplayColorConfig.outlineColor;
         context.stroke();
         context.closePath();
 
@@ -182,7 +182,7 @@ function SatellitesPlotter(cName,                     // Canvas Name
                 context.arc(centerSat.x, centerSat.y, SAT_RADIUS, 0, 2 * Math.PI, false);
 
                 var text = satellites[satNum].svID;
-                context.font = "bold " + Math.round(scale * 12) + "px " + analogDisplayColorConfig.font; // "bold 40px Arial"
+                context.font = "bold " + Math.round(scale * 12) + "px " + spAnalogDisplayColorConfig.font; // "bold 40px Arial"
                 var metrics = context.measureText(text);
                 var len = metrics.width;
 

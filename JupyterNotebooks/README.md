@@ -1,4 +1,4 @@
-## [Jupyter Notebooks](https://jupyter.org/), for Java
+## [Jupyter Notebooks](https://jupyter.org/), also for Java
 Emergence of AI and Deep Learning contributed to the popularity of the Jupyter Notebooks.
 
 Notebooks contain **_executable_** code (<u>yes</u>, you can execute the code of a Notebook in real time), possibly (extensively) commented and illustrated.
@@ -37,11 +37,14 @@ To add the required Java features, see
 
 Will provide examples as notebooks, for the features presented in this project.
 
-From this directory (_here_, when this file you're reading is), just run
+From this directory (_here_, right where this file you're reading is), just run
 ```
  $ jupyter notebook
 ```
 And from a browser any where on the network of the Raspberry Pi, `raspberry-pi` being the name or address of the Raspberry Pi where the notebook server is running, reach `http://raspberry-pi:8888/tree` to start playing!
+ 
+> Note: You can run the above wherever you have installed `jupyter`, on a Raspberry PI, on a Linux laptop, on a Windows box, etc.
+> If you are in a graphical environment, `Jupyter` might even be smart enough to display its home page in your default browser.  
  
 Come back here soon.
 

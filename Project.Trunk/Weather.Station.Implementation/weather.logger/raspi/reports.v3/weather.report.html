@@ -162,7 +162,7 @@ Line.prototype.drawWithWindFeathers = function(ctx, ws) {
   ctx.restore();
 };
     </script>
-    <script src="http://maps.googleapis.com/maps/api/js?v=3&amp;sensor=false&amp;key=AIzaSyDu5cW4UXjXZTswehBdIO8jCZdzUbk2v5o"
+    <script src="http://maps.googleapis.com/maps/api/js?v=3&amp;sensor=false&amp;key=your-key-goes-here"
             type="text/javascript"></script>
     <script type="text/javascript">
 let markers = [];
@@ -542,6 +542,7 @@ function clearMarkers() {
 let period, type, graphData;
 
 function getData(type, period) {
+  // Like http://donpedro.lediouris.net/php/weather/reports.v3/json.data.php?type=ALL&period=WEEK
   let promise = getPromise('json.data.php?type=' + type + '&period=' + period, DEFAULT_TIMEOUT, 'GET', 200);
   return promise;
 }

@@ -1,27 +1,28 @@
 plugins {
   id 'java'
   id 'maven'
-  id 'com.github.johnrengelman.shadow' version '4.0.2'
+  id 'idea'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src/java'
-    }
-    resources {
-      srcDir 'src/resources'
-    }
-  }  
-  test {
-    java {
-      srcDir 'tests/java'
-    }
-  }  
-}
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src/java'
+//    }
+//    resources {
+//      srcDir 'src/resources'
+//    }
+//  }  
+//  test {
+//    java {
+//      srcDir 'tests/java'
+//    }
+//  }  
+//}
 
 repositories {
   mavenCentral()
@@ -33,7 +34,6 @@ repositories {
 
 dependencies {
   compile 'com.google.code.gson:gson:2.8.0'
-  compile project (':common-utils')
   compile project (':NMEA.multiplexer')
   compile project(':Project.Trunk:PolarSmoother')
 }

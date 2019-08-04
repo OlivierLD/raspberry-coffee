@@ -198,6 +198,10 @@ function Graph(cName,       // Canvas Name
     setScales();
   };
 
+  this.getBoundaries = function() {
+    return [ minx, maxx, miny, maxy ];
+  };
+
   this.getData = function() {
     return graphData;
   };

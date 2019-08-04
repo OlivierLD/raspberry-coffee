@@ -290,7 +290,14 @@ function Graph(cName,       // Canvas Name
 		reloadColor = true;
 	};
 
-	this.drawGraph = function (displayCanvasName, data, idx) {
+	/*
+	 * threshold: {
+	    "humidityThreshold": 70,
+	    "wateringTime": 10,
+	    "resumeWatchAfter": 120
+		}
+	 */
+	this.drawGraph = function (displayCanvasName, data, idx, threshold) {
 
 		if (reloadColor) {
 			// In case the CSS has changed, dynamically.
@@ -320,11 +327,16 @@ function Graph(cName,       // Canvas Name
 		if (idx !== undefined) {
 			_idxX = idx * xScale;
 		}
+		var _minY = miny;
+		if (threshold !== undefined && threshold.humidityThreshold !== undefined) {
+			_minY = Math.min(miny, threshold.humidityThreshold - 2);
+			yScale = canvas.getContext('2d').canvas.clientHeight / (maxy - _minY);
+		}
 
-		document.getElementById(displayCanvasName).title = data.length + " elements, [" + miny + ", " + maxy + "]";
+		document.getElementById(displayCanvasName).title = data.length + " elements, [" + _minY + ", " + maxy + "]";
 
 		var gridXStep = Math.round(data.length / 10);
-		var gridYStep = (maxy - miny) < 5 ? 1 : Math.round((maxy - miny) / 5);
+		var gridYStep = (maxy - _minY) < 5 ? 1 : Math.round((maxy - _minY) / 5);
 
 		// Clear
 		context.fillStyle = "white";
@@ -342,12 +354,12 @@ function Graph(cName,       // Canvas Name
 			context.fillRect(0, 0, width, height);
 		}
 		// Horizontal grid (Data Unit)
-		for (var i = Math.round(miny); gridYStep > 0 && i < maxy; i += gridYStep) {
+		for (var i = Math.floor(_minY); gridYStep > 0 && i < maxy; i += gridYStep) {
 			context.beginPath();
 			context.lineWidth = 1;
 			context.strokeStyle = graphColorConfig.horizontalGridColor;
-			context.moveTo(0, height - (i - miny) * yScale);
-			context.lineTo(width, height - (i - miny) * yScale);
+			context.moveTo(0, height - (i - _minY) * yScale);
+			context.lineTo(width, height - (i - _minY) * yScale);
 			context.stroke();
 
 			context.save();
@@ -355,7 +367,7 @@ function Graph(cName,       // Canvas Name
 			context.fillStyle = graphColorConfig.horizontalGridTextColor;
 			var str = i.toString() + " " + unit;
 			var len = context.measureText(str).width;
-			context.fillText(str, width - (len + 2), height - ((i - miny) * yScale) - 2);
+			context.fillText(str, width - (len + 2), height - ((i - _minY) * yScale) - 2);
 			context.restore();
 			context.closePath();
 		}
@@ -382,16 +394,30 @@ function Graph(cName,       // Canvas Name
 			context.closePath();
 		}
 
+		if (threshold !== undefined) {
+			if (threshold.humidityThreshold !== undefined) {
+				humThreshold = threshold.humidityThreshold;
+				context.beginPath();
+				context.lineWidth = 3;
+				context.strokeStyle = 'blue';
+				context.moveTo(0, height - (humThreshold - _minY) * yScale);
+				context.lineTo(width, height - (humThreshold - _minY) * yScale);
+				context.stroke();
+				context.closePath();
+			}
+		}
+
+		// Data
 		if (withRawData && data.length > 0) {
 			context.beginPath();
 			context.lineWidth = 3;
 			context.strokeStyle = graphColorConfig.rawDataLineColor;
 
 			var previousPoint = data[0];
-			context.moveTo((0 - minx) * xScale, height - (data[0] - miny) * yScale);
+			context.moveTo((0 - minx) * xScale, height - (data[0] - _minY) * yScale);
 			for (var i = 1; i < data.length; i++) {
-				//  context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint - miny) * yScale);
-				context.lineTo((i - minx) * xScale, height - (data[i] - miny) * yScale);
+				//  context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint - _minY) * yScale);
+				context.lineTo((i - minx) * xScale, height - (data[i] - _minY) * yScale);
 				//  context.stroke();
 				previousPoint = data[i];
 			}

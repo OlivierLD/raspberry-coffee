@@ -15,3 +15,4 @@ done
 rm containers > /dev/null
 echo Done.
 
+# docker rm $(docker ps -aq)

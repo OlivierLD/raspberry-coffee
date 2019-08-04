@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-CP=./build/libs/LSM303-1.0-all.jar
+CP=./build/libs/LSM303-1.0.jar
 #
 JAVA_OPTIONS=
 #

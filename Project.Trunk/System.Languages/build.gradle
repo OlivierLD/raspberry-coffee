@@ -18,6 +18,7 @@ apply plugin: 'kotlin'
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'scala'
+apply plugin: 'idea'
 apply plugin: "nebula.clojure"
 apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -29,30 +30,30 @@ shadowJar {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src/java'
-    }
-    scala {
-      srcDir 'src/scala'
-    }
-    kotlin {
-      srcDir 'src/kotlin'
-    }
-    groovy {
-      srcDirs = ['src/groovy']
-    }
-    clojure {
-      srcDirs = ['src/clojure']
-    }
-  }
-  test {
-    java {
-      srcDir 'tests/java'
-    }
-  }
-}
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src/java'
+//    }
+//    scala {
+//      srcDir 'src/scala'
+//    }
+//    kotlin {
+//      srcDir 'src/kotlin'
+//    }
+//    groovy {
+//      srcDirs = ['src/groovy']
+//    }
+//    clojure {
+//      srcDirs = ['src/clojure']
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests/java'
+//    }
+//  }
+//}
 
 repositories {
   mavenCentral()
@@ -70,6 +71,6 @@ dependencies {
 //compile 'com.pi4j:pi4j-core:1.1'
   compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
   compile 'org.scala-lang:scala-library:2.12.3'
-  compile project(':common-utils')
+  compile project(':http-tiny-server')
   testCompile group: 'junit', name: 'junit', version: '4.11'
 }

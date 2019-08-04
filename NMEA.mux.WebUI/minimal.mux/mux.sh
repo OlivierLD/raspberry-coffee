@@ -3,7 +3,7 @@
 # Note: Serial ports on MacOS:
 # may require Prolific drivers: https://plugable.com/drivers/prolific/
 #
-OS=`uname -a | awk '{ print $1 }'`
+# OS=`uname -a | awk '{ print $1 }'`
 #
 MUX_PROP_FILE=nmea.mux.gps.log.properties
 if [ $# -gt 0 ]
@@ -14,14 +14,6 @@ fi
 echo Using properties file $MUX_PROP_FILE
 #
 JAVA_OPTIONS=
-if [ "$OS" == "Darwin" ]
-then
-  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"       # for Mac
-fi
-if [ "$OS" == "Linux" ]
-then
-  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
-fi
 #
 # This variable is used to set the System variable process.on.start.
 # (See below).
@@ -66,13 +58,21 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dcalculate.solar.with.eot=true"
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
 CP=$(ls ./build/libs/*.jar)
-if [ "$OS" == "Darwin" ]
+#
+SUDO=
+# DARWIN=`uname -a | grep Darwin`
+DARWIN=$(uname -a | grep Darwin)
+#
+if [ "$DARWIN" != "" ]
 then
+	echo Running on Mac
+  JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"  # for Mac
   CP=$CP:./libs/RXTXcomm.jar          # for Mac
-fi
-if [ "$OS" == "Linux" ]
-then
+else
+	echo Assuming Linux/Raspberry Pi
+  JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
   CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
+  SUDO="sudo "
 fi
 #
 # For JFR
@@ -88,5 +88,6 @@ LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
 # use sudo on Raspberry Pi
 # sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
-java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
+COMMAND="${SUDO}java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer"
+$COMMAND
 #

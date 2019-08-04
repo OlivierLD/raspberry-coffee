@@ -65,7 +65,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dcalculate.solar.with.eot=true"
 #
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
-CP=./build/libs/NMEA.multiplexer-1.0-all.jar
+CP=./build/libs/NMEA.multiplexer-1.0.jar
 if [ "$OS" == "Darwin" ]
 then
   CP=$CP:./libs/RXTXcomm.jar          # for Mac

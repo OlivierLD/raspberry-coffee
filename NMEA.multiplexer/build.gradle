@@ -1,8 +1,9 @@
 plugins {
     id 'java'
     id 'scala'
+    id 'idea'
     id 'maven'
-    id 'com.github.johnrengelman.shadow' version '4.0.2'
+    id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
 group = 'oliv.raspi.coffee'
@@ -16,21 +17,21 @@ repositories {
 //  maven { url "http://lediouris.net/maven2" }
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/java']
-        }
-        scala {
-            srcDirs = ['src/scala']
-        }
-    }
-    test {
-        java {
-            srcDir 'tests/java'
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        java {
+//            srcDirs = ['src/java']
+//        }
+//        scala {
+//            srcDirs = ['src/scala']
+//        }
+//    }
+//    test {
+//        java {
+//            srcDir 'tests/java'
+//        }
+//    }
+//}
 
 compileJava.options.compilerArgs += ["-Xlint:none"]
 
@@ -44,7 +45,7 @@ dependencies {
     compile 'org.java-websocket:Java-WebSocket:1.3.7'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'org.fusesource.jansi:jansi:1.11'
-    compile project(':common-utils')
+    compile project(':http-tiny-server')
     compile project(':I2C.SPI')
 //    compile project(':SunFlower')
 //    compile project(':GPS.sun.servo')

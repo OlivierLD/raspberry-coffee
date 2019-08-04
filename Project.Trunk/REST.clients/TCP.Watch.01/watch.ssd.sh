@@ -2,7 +2,7 @@
 #
 # SSD1306 version
 #
-CP=./build/libs/TCP.Watch.01-1.0-all.jar
+CP=./build/libs/TCP.Watch.01-1.0.jar
 #
 # This is the address and port of the logger
 # BASE_URL="-Dbase.url=http://localhost:9999"

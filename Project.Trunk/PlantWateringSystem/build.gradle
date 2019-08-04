@@ -14,6 +14,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'scala'
 apply plugin: 'groovy'
+apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -25,24 +26,24 @@ compileJava {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src/java'
-        }
-        scala {
-            srcDir 'src/scala'
-        }
-        groovy {
-            srcDirs = ['src/groovy']
-        }
-    }
-    test {
-        java {
-            srcDir 'src/tests'
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        java {
+//            srcDir 'src/java'
+//        }
+//        scala {
+//            srcDir 'src/scala'
+//        }
+//        groovy {
+//            srcDirs = ['src/groovy']
+//        }
+//    }
+//    test {
+//        java {
+//            srcDir 'src/tests'
+//        }
+//    }
+//}
 
 repositories {
     mavenCentral()
@@ -55,9 +56,9 @@ dependencies {
     compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'org.fusesource.jansi:jansi:1.11'
-    compile project(':common-utils')
     compile 'org.scala-lang:scala-library:2.12.3'
     compile 'org.codehaus.groovy:groovy-all:2.4.6'
+    compile project(':http-tiny-server')
     compile project(':ADC')
 }
 

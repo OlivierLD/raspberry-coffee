@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
 </head>
 <body>
-  <h3>Sample, 3 faxes</h3>
+  <h3>Sample, 4 faxes</h3>
 	<table>
 		<tr>
 			<td valign="top" rowspan="2">
@@ -24,10 +24,13 @@
 					<input type="checkbox" onchange="showHide(2, this);" checked>Show fax #2
 					<br/>
 					<input type="checkbox" onchange="showHide(3, this);" checked>Show fax #3
+					<br/>
+					<input type="checkbox" onchange="showHide(4, this);" checked>Show fax #4
 					<hr/>
 					<div id="fax-1">Fax 1:</div>
 					<div id="fax-2">Fax 2:</div>
 					<div id="fax-3">Fax 3:</div>
+					<div id="fax-3">Fax 4:</div>
 				</div>
 			</td>
 		</tr>
@@ -41,6 +44,8 @@
 					<input type="radio" name="faxnum" value="2" onclick="changeFax(this.value);">Fax #2
 					<br/>
 					<input type="radio" name="faxnum" value="3" onclick="changeFax(this.value);">Fax #3
+					<br/>
+					<input type="radio" name="faxnum" value="4" onclick="changeFax(this.value);">Fax #4
 					<hr/>
 					Zoom: <button onclick="zoomOut();">-</button><button onclick="zoomIn();">+</button>
 					<hr/>
@@ -65,15 +70,17 @@
 		var faxObj_1 = new Image();
 		var faxObj_2 = new Image();
 		var faxObj_3 = new Image();
+		var faxObj_4 = new Image();
 
 		var show = [true, true, true];
 
 		// For 3 faxes Sfc, 500mb, StreamLines
-		var zoom = [0.3418498710866215, 0.5209310701416114, 1.0040821009550305];
+		var zoom = [0.3418498710866215, 0.5209310701416114, 1.0040821009550305, 1];
 		var topLeft = [
 				[10, 10],
 				[15, 30],
-				[-41, 460]
+				[-41, 460],
+				[1, 1]
 		];
 		// Default
 //		var zoom = [1, 1, 1];
@@ -88,6 +95,7 @@
 			speakUp(1);
 			speakUp(2);
 			speakUp(3);
+			speakUp(4);
 		};
 
 		faxObj_1.onload = function() {
@@ -99,9 +107,13 @@
 		faxObj_3.onload = function() {
 			context.drawImage(faxObj_3, topLeft[2][0], topLeft[2][1], (parseInt(faxObj_3.width) * zoom[2]), (parseInt(faxObj_3.height) * zoom[2]));
 		};
+		faxObj_4.onload = function() {
+			context.drawImage(faxObj_4, topLeft[3][0], topLeft[3][1], (parseInt(faxObj_4.width) * zoom[3]), (parseInt(faxObj_4.height) * zoom[3]));
+		};
 		faxObj_1.src = '<FAX_1>';
 		faxObj_2.src = '<FAX_2>';
 		faxObj_3.src = '<FAX_3>';
+		faxObj_4.src = '<FAX_3>';
 
 		var speakUp = function(num) {
 			switch (num) {
@@ -116,6 +128,10 @@
 				case 3:
 				case "3":
 					document.getElementById("fax-3").innerText = 'Fax #3: x=' + topLeft[2][0] + ", y=" + topLeft[2][1] + ', zoom=' + zoom[2];
+					break;
+				case 4:
+				case "4":
+					document.getElementById("fax-4").innerText = 'Fax #4: x=' + topLeft[3][0] + ", y=" + topLeft[3][1] + ', zoom=' + zoom[3];
 					break;
 				default:
 					break;
@@ -174,6 +190,9 @@
 			}
 			if (show[2] === true) {
 				context.drawImage(faxObj_3, topLeft[2][0], topLeft[2][1], (parseInt(faxObj_3.width) * zoom[2]), (parseInt(faxObj_3.height) * zoom[2]));
+			}
+			if (show[3] === true) {
+				context.drawImage(faxObj_4, topLeft[3][0], topLeft[3][1], (parseInt(faxObj_4.width) * zoom[3]), (parseInt(faxObj_4.height) * zoom[3]));
 			}
 		};
 

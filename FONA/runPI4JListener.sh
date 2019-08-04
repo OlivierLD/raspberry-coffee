@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-CP=./build/libs/FONA-1.0-all.jar
+CP=./build/libs/FONA-1.0.jar
 #
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dbaud.rate=4800"

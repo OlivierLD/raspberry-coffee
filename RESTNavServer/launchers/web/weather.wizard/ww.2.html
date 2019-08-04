@@ -57,7 +57,8 @@
 
 	  worldMap.clear();
 	  worldMap.setMouseMoveCallback(mouseMoveCallback);
-	  worldMap.setPositionLabel("SF");
+	  worldMap.setMouseClickCallback(mouseClickCallback);
+	  worldMap.setPositionLabel("Pos");
 	  setTimeout(function () {
 		  worldMap.drawWorldMap();
 	  }, 1);
@@ -78,6 +79,28 @@
 				}
 			}
 	  }
+  };
+
+  var mouseClickCallback = function(obj) {
+  	console.log("Mouse clicked on the map", obj);
+		let lat = obj.lat;
+		let lng = obj.lng;
+		if (document.getElementById('rb-going-to').checked) {
+			document.getElementById('routing-pos-lat-sign-01').value = (lat < 0 ? "S" : "N");
+			document.getElementById('routing-pos-lng-sign-01').value = (lng < 0 ? "W" : "E");
+			lat = Math.abs(lat);
+			lng = Math.abs(lng);
+			document.getElementById('routing-pos-lat-deg-01').value = Math.floor(lat).toFixed(0);
+			document.getElementById('routing-pos-lng-deg-01').value = Math.floor(lng).toFixed(0);
+
+			document.getElementById('routing-pos-lat-min-01').value = ((lat - Math.floor(lat)) * 60).toFixed(2);
+			document.getElementById('routing-pos-lng-min-01').value = ((lng - Math.floor(lng)) * 60).toFixed(2);
+		} else {
+			position.lat = obj.lat;
+			position.lng = obj.lng;
+			worldMap.setUserPosition({ latitude: position.lat, longitude: position.lng });
+			redraw();
+		}
   };
 
   var mouseMoveCallback = function(obj) {
@@ -202,8 +225,8 @@
 					case 'htsgw':
 						displayType = 'WAVES';
 						if (oneDateGRIB.typedData[idx].data[0].length !== oneDateGRIB.gribDate.width) {
-							// Re-adjust. Not very elegant... TODO See when/why this happens
-							let _xCell = xCell * Math.floor(oneDateGRIB.typedData[idx].data[0].length / oneDateGRIB.gribDate.width);
+							// Re-adjust. Waves do not have the same grid size...
+							let _xCell = Math.floor(xCell * oneDateGRIB.typedData[idx].data[0].length / oneDateGRIB.gribDate.width);
 							value = oneDateGRIB.typedData[idx].data[yCell][_xCell];
 						}
 						try {
@@ -492,17 +515,39 @@
 		getExistingComposites(cb, filter);
 	};
 
-	var testRouting = function() {
+	var displaySummary = function(bestRoute) {
+		bestRoute.waypoints.forEach(wp => {
+			console.log("At", wp.datetime, "Position", wp.position.latitude, wp.position.longitude);
+			console.log("  TWS", wp.tws, "TWD", wp.twd, "BSP", wp.bsp, "HDG", wp.hdg);
+		});
+	};
+
+  var DURATION_FMT = "Y-m-dTH:i:s";
+
+  var testRouting = function() {
+
+		console.log('GRIB Data:', gribFileLocation); // Use this one?
+
+		if (gribFileLocation === undefined) {
+			alert("No GRIB File location, aborting");
+			return;
+		}
+		var toL = (document.getElementById('routing-pos-lat-sign-01').value === 'S' ? -1 : 1) * (parseInt(document.getElementById('routing-pos-lat-deg-01').value) +
+				(parseFloat(parseInt(document.getElementById('routing-pos-lat-min-01').value) / 60 )));
+		var toG = (document.getElementById('routing-pos-lng-sign-01').value === 'W' ? -1 : 1) * (parseInt(document.getElementById('routing-pos-lng-deg-01').value) +
+				(parseFloat(parseInt(document.getElementById('routing-pos-lng-min-01').value) / 60 )));
+		var now = new Date();
+	  var utc = new Date(now.getTime() + (now.getTimezoneOffset() * 60 * 1000)).format(DURATION_FMT);
 		var sampleRequest = {
-			"fromL": 37.122,
-			"fromG": -122.5,
-			"toL": -9.75,
-			"toG": -139.1,
-			"startTime": "2018-11-12T07:00:00",
-			"gribName": "./web/2018/11/12/PAC-0001_081150/grib.grb",
+			"fromL": position.lat,
+			"fromG": position.lng,
+			"toL": toL,
+			"toG": toG,
+			"startTime": utc,
+			"gribName": gribFileLocation + "/grib.grb",
 			"polarFile": "./sample.data/polars/CheoyLee42.polar-coeff",
 			"outputType": "JSON",
-			"timeInterval": 24,
+			"timeInterval": 24,    // Watch the OutOfMemoryError...
 			"routingForkWidth": 140,
 			"routingStep": 10,
 			"limitTWS": -1,
@@ -513,12 +558,13 @@
 			"verbose": false
 		};
 		var callback = function(bestRoute) {
-			console.log(bestRoute);
+			// console.log(bestRoute);
 			bestRouteToPlot = JSON.parse(bestRoute); // in grib.routing.js
+			displaySummary(bestRouteToPlot);
 			plotBestRoute(canvas, context);
 		};
 		getBestRoute(sampleRequest, callback);
-	}
+	};
 
 	var compositeInterval;
   var timerInterval;
@@ -576,6 +622,17 @@
 
   	var compositeData = (existingData === undefined ? findCompositeByKey(key) : existingData);
 
+  	gribFileLocation = undefined;
+  	if (existingData !== undefined && existingData.gribRequest !== undefined) {
+			gribFileLocation = existingData.gribRequest;
+			if (gribFileLocation.endsWith("grib.grb")) {
+				gribFileLocation = gribFileLocation.substring(0, gribFileLocation.length - "grib.grb".length);
+			}
+			if (gribFileLocation.startsWith("file:")) {
+				gribFileLocation = gribFileLocation.substring("file:".length);
+			}
+			document.getElementById('current-grib-location').innerText = ('GRIB in ' + gribFileLocation);
+		}
   	console.log("Loading", compositeData);
 	  worldMap.setCanvasWidth(compositeData.canvas.w);
 	  worldMap.setCanvasHeight(compositeData.canvas.h);
@@ -639,6 +696,9 @@
 					oneFax.from = fax.tx.from;
 					oneFax.to = fax.tx.to;
 				}
+				if (fax.rotation !== undefined) {
+					oneFax.rotation = fax.rotation;
+				}
 				requestData.push(oneFax);
 
 			/*
@@ -679,6 +739,7 @@
 				row.appendChild(col2);
 				var div2 = document.createElement('div');
 				div2.id = 'name-' + (idx + 1);
+				div2.style.whiteSpace = "nowrap";
 				div2.appendChild(document.createTextNode(fax.name));
 				col2.appendChild(div2);
 
@@ -716,7 +777,7 @@
 		}
 
 		if (compositeData.gribRequest !== undefined) {
-			makeGRIBRequest(compositeData.gribRequest, 'web/' + year + '/' + month + '/' + day + '/' + time); // grib file Location
+			makeGRIBRequest(compositeData.gribRequest, existingData === undefined ? 'web/' + year + '/' + month + '/' + day + '/' + time : undefined); // grib file Location
 		}
 	};
 
@@ -894,8 +955,9 @@
 	  if (where !== undefined) {
 	  	console.log('... into', where);
 		  jsonRequest.directory = where;
-		}
-
+		  gribFileLocation = where; // Used for routing. Directory of grib.grb
+		  document.getElementById('current-grib-location').innerText = ('GRIB in ' + gribFileLocation);
+	  }
 	  worldMap.setAfterDrawing(renderGRIBData); // That is the callback
 
 	  requestGRIB(jsonRequest, plotGrib);
@@ -948,7 +1010,7 @@
 				display: block;
 				height: 500px;    /* Overridden onload */
 				width: 850px;
-				resize: both;
+				resize: both;     /* Resize! */
 				overflow-x: auto;
 				overflow-y: auto;
 				text-align: center;
@@ -974,19 +1036,23 @@
 				border: 1px solid #CCC;
 				margin-top: 10px;
 			}
+
+			button {
+				border-radius: 5px;
+			}
 		</style>
   </head>
   <body style="background-color: rgba(255, 255, 255, 0.2); background-image: none;">
     <h2>Weather Wizard in HTML5 - Operations <span id="time-to-next"></span></h2>
 		<div>
-    <table border="0">
+    <table border="0" width="100%">
       <tr>
         <td valign="top" rowspan="2">
           <div id="map-container" class="map-style">
             <canvas id="mapCanvas" width="1400" height="900"></canvas>
           </div>
         </td>
-        <td valign="top">
+        <td valign="top" style="max-width: 300px; overflow-x: scroll;">
 					<input type="checkbox" onchange="changeChart(this);" checked/> With Chart&nbsp;
           <input type="checkbox" onchange="changeGrid(this);" checked/> With Grid&nbsp;
 	        <input type="checkbox" onchange="changeTropics(this);" /> With Tropics
@@ -998,7 +1064,7 @@
 					<input type="checkbox" onchange="continuousLoad(this);"/>Every 6 hours
 					<hr/>
 					<input type="radio" name="grib-origin" value="web" checked onchange="flipGRIB(this);">From the Web
-					<input type="radio" name="grib-origin" value="json" onchange="flipGRIB(this);">From Storage
+					<input type="radio" name="grib-origin" value="json" onchange="flipGRIB(this);">From Server Storage
 					<hr/>
 					<div id="grib-web">
 					</div>
@@ -1035,7 +1101,7 @@
 						</table>
 	        </div>
 
-					<!-- TODO Displays for the values -->
+					<!-- TODO Analog displays for the values -->
 					<div id="mouse-data" class="table-style"></div>
 
 					<div id="composite-info"></div>
@@ -1050,15 +1116,69 @@
     </table>
 		</div>
 
-		<table width="100%" cellpadding="0" cellspacing="0" border="0" style="position: fixed; bottom: 0;">
+	<!-- For tests, only -->
+		<div>
+			Click on map sets:
+			<input type="radio" name="from-to" value="position" id="rb-position" checked>Start from (position)
+			<input type="radio" name="from-to" value="going-to" id="rb-going-to">Going to
+		</div>
+		Going to: Latitude:
+		<select id="routing-pos-lat-sign-01">
+			<option value="N" selected>N</option>
+			<option value="S">S</option>
+		</select>
+		<input type="number"
+					 id="routing-pos-lat-deg-01"
+					 placeholder="Deg"
+					 title="Lat degrees to set"
+					 style="width: 40px; text-align: center;"
+					 min="0"
+					 max="90"
+					 step="1"
+					 value="0"/>
+		<input type="number"
+					 id="routing-pos-lat-min-01"
+					 placeholder="Minutes"
+					 title="Lat minutes to set"
+					 style="width: 60px; text-align: center;"
+					 min="0"
+					 max="59.99"
+					 step="0.01"
+					 value="00.00"/>
+		&nbsp;&nbsp;Longitude:
+		<select id="routing-pos-lng-sign-01">
+			<option value="E" selected>E</option>
+			<option value="W">W</option>
+		</select>
+		<input type="number"
+					 id="routing-pos-lng-deg-01"
+					 placeholder="Deg"
+					 title="Lng degrees to set"
+					 style="width: 40px; text-align: center;"
+					 min="0"
+					 max="180"
+					 step="1"
+					 value="0"/>
+		<input type="number"
+					 id="routing-pos-lng-min-01"
+					 placeholder="Minutes"
+					 title="Lng minutes to set"
+					 style="width: 60px; text-align: center;"
+					 min="0"
+					 max="59.99"
+					 step="0.01"
+					 value="00.00"/>
+		<button onclick="testRouting();" title="Early test, no UI" style="color: red;">Routing <b>Test</b></button>
+    <div style="min-height: 16px;">
+			<span id="current-grib-location"></span>
+		</div>
+		<!-- End of Test -->
+		<table width="100%" cellpadding="0" cellspacing="0" border="0"> <!--  style="position: fixed; bottom: 0;" -->
 			<tr>
 				<td align="left" valign="top" height="40">
 					<address><span id="console-type"></span></address>
 				</td>
 			</tr>
 		</table>
-	<!-- For tests, only -->
-		<button onclick="testRouting();" title="Early test, no UI">Routing Test</button>
-	<!-- End of Test -->
   </body>
 </html>

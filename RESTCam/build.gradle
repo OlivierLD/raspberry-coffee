@@ -1,26 +1,27 @@
 plugins {
   id 'java'
 //id 'scala'
+  id 'idea'
   id 'maven'
-  id 'com.github.johnrengelman.shadow' version '4.0.2'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 compileJava.options.encoding = 'UTF-8'
 
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src/java'
-    }
-  }
-  test {
-    java {
-      srcDir 'tests/java'
-    }
-  }
-}
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src/java'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests/java'
+//    }
+//  }
+//}
 
 repositories {
   mavenCentral()
@@ -31,7 +32,7 @@ repositories {
 dependencies {
 //compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
   compile 'com.google.code.gson:gson:2.8.0'
-  compile project (':common-utils')
+  compile project(':http-tiny-server')
   compile project(':I2C.SPI') // For the Servo Board (PCA9685)
 }
 

@@ -4,9 +4,9 @@ We want to have a Nav Server:
 - Able to compute data
 - Able to send or broadcast data on several channels
 - Able to run even if no WiFi network is available
-- Able to provide a Web Graphical User Interface
+- Able to provide a Web Graphical User Interface, accessing server side REST Services
 
-The [`NMEA.multiplexer`](../NMEA.multiplexer/README.md) is able to read, compute, and broadcast data.
+The [`NMEA.multiplexer`](../NMEA.multiplexer/README.md) is able to read, compute, and broadcast data, also accessible from a REST client.
 
 To work even if no WiFi network is available, the best is probably to have the Raspberry Pi emit its own.
 This is totally feasible, follow the instructions provided [here](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software).
@@ -27,7 +27,11 @@ be served from a _**single archive**_, as this feature is available from the HTT
  sudo apt-get install librxtx-java
 ```
 
-## Close to production
+> Another note:
+> We want to footprint of all this to be as minimal sa possible. We will *not* have to clone
+> the git repo on the destination machine, many of its components might not be required.
+
+## Close to "production"
 It will not require the `git` repository to be cloned on the machine the server runs on.
 
 We will:
@@ -109,29 +113,59 @@ This project directory is a play ground, again, it is here for **you** to _compo
 
 Means not **me**. 🤓
 
-## Examples
-### Full Nav Server (all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...)
+## Examples (for inspiration)
+> Note: The Raspberry Pi (pretty much all models) can host the navigation server, along with its REST/HTTP companion,
+> without problem.
+> One possibly challenging thing though, would be to run the Web GUI on the Graphical Desktop.
+> This turns out to be quite demanding, and this requires a more beefy Raspberry Pi.
+> As usual, and as everywhere, a GUI is something very demanding.
+
+The examples list contains
+- [Full Navigation Server](#full-nav-server)
+    - Read Serial port (NMEA, GPS), log, display on small screen, TCP rebroadcast, Web Interface, Celestial Computer, Tide Computer, etc
+- [Minimal Navigation server](#minimal-multiplexer)
+    - Read a GPS (or NMEA Station), and log data into a file. Suitable for running, kayaking, and such small configurations.
+- [Extended Navigation Server](#full-nav-server-extended)
+    - Based on the `Full Navigation Server` above, shows how to add 2 push-buttons to the configuration, for the user to interact with the software. 
+- [Embarked Head Up display](#head-up-display)
+    - Uses the Graphical Desktop to display a Web Interface in a browser. More demanding than the others, requires a more powerful config (Raspberry Pi 3B+). 
+
+### Full Nav Server 
+All features: NMEA multiplexer, Web Interface, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
+
+![Full Server](./docimg/full.server.png)
+
 ```
  $ cd full.server
  $ ./builder.sh
 ```
 
-<!-- TODO Screenshots, diagrams, pictures -->
+![Small SSD1306 Oled Screen](./docimg/oled.02.jpg)
+
+![Small Nokia cellphone Screen](./docimg/Nokia5110.jpg)
 
 ### Minimal Multiplexer
 ```
  $ cd minimal.mux
  $ ./builder.sh
 ```
+See in the `builder.sh` how web resources are copied, and from where.
+Then look into `to.prod.sh` how it launches a Gradle build, and in the corresponding `build.gradle`
+that it only depends on `NMEA.multiplexer`.
 
-### Full Nav Server, extended (all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...)
-The idea here is to show how to _extend_ the classes provided in the project.
+TODO Screenshots of the settings (hardware).
+
+### Full Nav Server, extended 
+all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
+
+The idea here is to show how to _extend_ the classes provided in the project to implement your own extra features.
 ```
  $ cd full.server.extended
  $ ./builder.sh
 ```
 
-### With a 5" or 7" TFT display, setup for **Head-Up-Display**
+### Head-Up-Display
+With a 5" or 7" TFT screen
 ```
  $ cd head.up
  $ ./builder.sh
@@ -152,7 +186,7 @@ To do that, you need to have Chromium installed, and boot to the Graphical Deskt
 To start Chromium when the Desktop starts, and load one or several URLs (in different tabs), edit the file named
 `~/.config/lxsession/LXDE-pi/autostart`, and add, at the end, the following lines:
 ```
-@chromium-browser --incognito --kiosk http://localhost:9999/web/nmea/headup.html \
+@chromium-browser --incognito --kiosk [--force-device-scale-factor=0.90] http://localhost:9999/web/nmea/headup.html \
                                       [url.2] \
                                       [url.3] \
                                       [url.4]
@@ -160,7 +194,7 @@ To start Chromium when the Desktop starts, and load one or several URLs (in diff
 It will start Chromium in `kiosk` (aka full screen) mode, and load the URLs mentioned above.
 
 ##### Also important here
-A Graphical Desktop will by default go to sleep if not sollicited for a while, and we do not want that.
+A Graphical Desktop will by default go to sleep if not solicited for a while, and we do not want that.
 To fix it: 
 - Edit `/etc/lightdm/lightdm.conf`
 - Have a/the line that starts with `xserver-command=` to look like `xserver-command=X -s 0 -dpms`
@@ -389,6 +423,21 @@ Distortion of the reflected screen can be controlled in the CSS Stylesheet, by a
 
 > In the car, with an `OBD` (On Board Diagnostic) interface (usually using Bluetooth), we could display all kind of data.
 > This will be another project.
+
+> Note: Try on a Raspberry Pi 3B+, the client part (running in the browser) is a bit demanding...
+
+### For logged data
+See in the `NMEA.multiplexer` project
+- `log.analyzer.sh`
+- `log.shrinker.sh`
+- `log.to.kml.sh`
+- `log.to.gps.sh`
+
+In the `NMEA.mux.WebUI` project, `logged` folder
+- `concat.sh`
+
+## TODO REST clients in other projects
+<https://github.com/OlivierLD/raspberry-coffee/blob/master/Project.Trunk/REST.clients/TCP.Watch.01/README.md>
 
 ---
 

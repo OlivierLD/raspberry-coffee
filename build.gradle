@@ -1,13 +1,36 @@
-apply plugin: 'java'
+plugins {
+  id 'java'
+  id 'scala'
+  id 'idea'
+  id 'maven'
+  id 'com.github.johnrengelman.shadow' version '4.0.2'
+}
+
 compileJava.options.encoding = 'ISO-8859-1'
 compileJava.options.compilerArgs += ["-Xlint:unchecked"]
-apply plugin: 'maven'
 
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+tasks.withType(JavaCompile) {
+  if (JavaVersion.current() != project.targetCompatibility) {
+//    throw new GradleException(
+    println "+------ Warning: Java version (JAVA_HOME) possible mismatch -----\n" +
+            "| In task $name ($project.name), the java version used ${JavaVersion.current()} is not the expected version ${project.targetCompatibility}.\n" +
+            "+----------------------------------------------------------------"
+//    )
+  } else {
+    println ">> From task $name (in $project.name), using java version ${JavaVersion.current()} "
+  }
+  options.encoding = 'UTF-8'
+}
+
 dependencies {
   compile project(':common-utils')
+  compile project(':http-tiny-server')
   compile project(':Adafruit.IO.REST')
   compile project(':SevenSegDisplay')
   compile project(':AlaMode.101')
@@ -53,16 +76,19 @@ dependencies {
   compile project(':Project.Trunk:RasPiRadar')
   compile project(':Project.Trunk:REST.clients:TCP.Watch.01')
   compile project(':Project.Trunk:REST.clients:REST.assembler')
+  compile project(':Project.Trunk:REST.clients:REST.assembler:springboot-sensors')
   compile project(':Project.Trunk:PolarSmoother')
   compile project(':Project.Trunk:Deviation.Tool')
   compile project(':TensorFlow')
   compile project(':Bluetooth')
+  compile project(':Joystick')
+  compile project(':JupyterNotebooks:deep.learning.crash.course')
 }
 
 repositories {
+  mavenLocal()
   mavenCentral()
   maven { url "http://lediouris.net/maven2" }
   maven { url "http://www.datanucleus.org/downloads/maven2" }
-  mavenLocal()
   maven { url "https://oss.sonatype.org/content/groups/public" }
 }

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<script type="text/javascript" src="tf.js"></script>
+<script>
+	(async () => {
+		const model = await tf.loadLayersModel('ml_insurance/model.json');
+
+		// max speed, age, thousand miles per year
+		let speed = 140;
+		let age = 60;
+		let mpy = 10;
+		const example = tf.tensor([[ speed, age, mpy ]]); // The tensor
+		const prediction = model.predict(example);
+
+		const value = await prediction.data();
+		// softmax indexes:
+		// # 0: red
+		// # 1: green
+		// # 2: yellow
+		console.log(value);
+		// [0.00334801129065454, 0.8710343241691589, 0.12561771273612976]
+		// Find the highest value, this is the predicted group.
+		let [red, green, yellow] = value;
+		let level = "";
+		if (red > green && red > yellow) {
+			level = "High";
+		}
+		if (yellow > green && yellow > red) {
+			level = "Medium";
+		}
+		if (green > red && green > yellow) {
+			level = "Low";
+		}
+		// Minimal output
+		console.log("For speed %d, age %d, %d Km per year, risk %s", speed, age, mpy, level);
+		document.write("For speed " + speed + ", age " + age + ", " + mpy + " Km per year, => " + level + " Risk");
+	})();
+</script>
+</html>

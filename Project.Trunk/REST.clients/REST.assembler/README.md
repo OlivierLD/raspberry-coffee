@@ -28,8 +28,10 @@ All Open Source, Soft & Hard
     - MQTT  
 - in term of tools and frameworks
   - [Maven](https://maven.apache.org/) - a build tool for Java.
-  - [Helidon](http://helidon.io) - Micro-service oriented.
-  - [fnProject](https://fnproject.io/) - FaaS oriented.
+  - Third-party micro-servers, we have 3 possibilities (only one is needed, if you choose this route):
+    - [Helidon](http://helidon.io) - Micro-service oriented.
+    - [SpringBoot](https://spring.io/) - Micro-service oriented.
+    - [fnProject](https://fnproject.io/) - FaaS oriented.
   - Possibly [Swagger](https://swagger.io/) - the de-facto standard in term of REST API documentation (and more).
   - [Node-RED](https://nodered.org/) - A very cool service orchestration (and more) tool based on NodeJS. 
 - in term of reusable code
@@ -174,6 +176,7 @@ We will explore several options.
 We need some kind of server to run on the Raspberry Pi, so the outer world can reach it to get to the data and possibly interact with them.
 
 - [Helidon](#helidon) is an implementation of such a micro-server, implementing SE (Micro-Framework) and MP (Micro-Profile) flavors.
+- [SpringBoot](#springboot), Spring's implementation of Micro Services.
 - [fnProject](#fnproject), FaaS server implementation, Docker based
 - a [Custom micro-server](#using-a-light-custom-micro-http-server), part of this project
 - NodeJS. This is another project, but this should work just fine. Look into [this repo](https://github.com/OlivierLD/node.pi).
@@ -181,6 +184,9 @@ We need some kind of server to run on the Raspberry Pi, so the outer world can r
 <!-- Serverless... Actually means that the server can be anywhere, everywhere, etc.
 
 FaaS, Function as a Service. -->
+
+#### Helidon
+2 flavors, MP and SE
 
 ##### Helidon-MP
 MP stands for `micro-profile`. Relies on JAX-RS among other things.
@@ -371,6 +377,27 @@ $ docker build -t helidon-sensors target
 $ docker run --rm -p 8080:8080 helidon-sensors:latest
 ```
 
+##### SpringBoot
+```
+$ cd springboot-sensors
+$ ./gradlew clean build
+$ java -Dserver.verbose=true -jar build/libs/sensors-spring-boot-0.1.0.jar --help
+```
+
+Then
+```
+GET http://localhost:8080/light/ambient
+```
+
+```
+GET http://localhost:8080/relay/status/1
+```
+
+```
+POST http://localhost:8080/relay/status/1
+{ "status": true }
+```
+
 ##### fnProject
 - Still in development, but quite promising.
 - Definitely `FaaS` oriented.
@@ -392,7 +419,7 @@ This one also acts as a Web Pages server (HTML, JavaScript, etc).
 
 For small boards (like the Raspberry Pi Zero), this would be my preferred option.
 
-Memory minimal footprint ~40Mb
+Memory minimal footprint ~40Mb, all included (not only the HTTP Server part).
 
 The code is located in this project, see the `httpserver` package.
 

@@ -1,7 +1,8 @@
 plugins {
   id 'java'
+  id 'idea'
   id 'maven'
-  id 'com.github.johnrengelman.shadow' version '4.0.2'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
 group = 'oliv.raspi.coffee'
@@ -13,23 +14,24 @@ repositories {
   maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
-sourceSets {
-  main {
-    java {
-      srcDir 'src/main/java'
-    }
-  }
-  test {
-    java {
-      srcDir 'tests'
-    }
-  }
-}
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src/main/java'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests'
+//    }
+//  }
+//}
 
 dependencies {
 //  compile 'com.pi4j:pi4j-core:1.1'
 //  compile 'comm:rxtx:1.0'
-  compile 'org.tensorflow:tensorflow:1.8.0'
+  compile 'org.tensorflow:tensorflow:1.13.1'
+//  compile 'org.tensorflow:tensorflow:1.8.0'
   compile 'org.rxtx:rxtx:2.1.7'
   compile project(':common-utils')
 }

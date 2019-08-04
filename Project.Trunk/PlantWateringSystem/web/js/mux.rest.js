@@ -87,6 +87,10 @@ var getPWSStatus = function () {
 	return getDeferred('/pws/pws-status', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
+var getPWSParameters = function() {
+	return getDeferred('/pws/pws-parameters', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
 var userChange = true; // Allow/forbid user to set the relay status
 
 var relayStatus = function () {
@@ -108,6 +112,41 @@ var relayStatus = function () {
 			}
 		}
 		errManager.display("Failed to get the relay status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	});
+};
+
+var pwsPrms;
+
+var getPWSPrms = function () {
+	if (pwsPrms === undefined) {
+		deviceParameters();
+	}
+	return pwsPrms;
+};
+
+var deviceParameters = function() {
+	var getData = getPWSParameters();
+	getData.done(function (value) {
+		var json = JSON.parse(value);
+		/*
+{
+  "humidityThreshold": 70,
+  "wateringTime": 10,
+  "resumeWatchAfter": 120
+}
+		 */
+		pwsPrms = json;
+	});
+	getData.fail(function (error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager.display("Failed to get the device parameters..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };
 
@@ -162,7 +201,8 @@ var humDataBuffer = function () {
 		//document.getElementById("hum-01").repaint();
 		// Draw a curve
 		flowData = json;
-		flowGraph.drawGraph("flowCanvas", flowData, undefined);
+		var prms = getPWSPrms();
+		flowGraph.drawGraph("flowCanvas", flowData, undefined, prms);
 	});
 	getData.fail(function (error, errmess) {
 		var message;
@@ -176,7 +216,6 @@ var humDataBuffer = function () {
 		errManager.display("Failed to get the Humidity history data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };
-
 
 var deviceStatus = function() {
 	var getStatus = getPWSStatus();

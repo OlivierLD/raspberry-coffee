@@ -1,5 +1,5 @@
 #!/bin/bash
-CP=./build/libs/RESTRelay-1.0-all.jar
+CP=./build/libs/RESTRelay-1.0.jar
 #
 JAVA_OPTS="-Dhttp.port=9876"
 JAVA_OPTS="$JAVA_OPTS -Drelay.map=1:11"

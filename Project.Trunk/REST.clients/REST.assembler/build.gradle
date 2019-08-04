@@ -17,6 +17,7 @@ apply plugin: 'kotlin'
 apply plugin: 'java'
 apply plugin: 'scala'
 apply plugin: 'groovy'
+apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -26,7 +27,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 //    id 'kotlin'
 //    id 'groovy'
 //    id 'maven'
-//    id 'com.github.johnrengelman.shadow' version '4.0.2'
+//    id 'com.github.johnrengelman.shadow' // version '4.0.2'
 //}
 
 shadowJar {
@@ -36,23 +37,23 @@ shadowJar {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src/java'
-        }
-        scala {
-            srcDir 'src/scala'
-        }
-        kotlin {
-            srcDir 'src/kotlin'
-        }    }
-    test {
-        java {
-            srcDir 'tests/java'
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        java {
+//            srcDir 'src/java'
+//        }
+//        scala {
+//            srcDir 'src/scala'
+//        }
+//        kotlin {
+//            srcDir 'src/kotlin'
+//        }    }
+//    test {
+//        java {
+//            srcDir 'tests/java'
+//        }
+//    }
+//}
 
 repositories {
     mavenCentral()
@@ -61,6 +62,7 @@ repositories {
 }
 
 dependencies {
+
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'org.codehaus.groovy:groovy-all:2.4.6'
     compile 'org.codehaus.groovy:http-builder:0.4.0'
@@ -74,10 +76,12 @@ dependencies {
     compile 'io.swagger:swagger-codegen-cli:2.2.0'
     compile 'org.ajoberstar:gradle-git:1.1.0'
     compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
+
+    compile project(':http-tiny-server')
     compile project(':ADC')
 }
 
-task swaggerNode(type: JavaExec, description: "Generate nodejs server code for the weather station") {
+task swaggerNode(type: JavaExec, description: "Generate nodejs server code for the ligth and relay example") {
     classpath = configurations.runtime
     main = 'io.swagger.codegen.SwaggerCodegen'
     args "generate",
@@ -86,7 +90,7 @@ task swaggerNode(type: JavaExec, description: "Generate nodejs server code for t
             "-o", "./generated/node"
 }
 
-task swaggerClj(type: JavaExec, description: "Generate Clojure server code for the weather station") {
+task swaggerClj(type: JavaExec, description: "Generate Clojure server code for the ligth and relay example") {
     classpath = configurations.runtime
     main = 'io.swagger.codegen.SwaggerCodegen'
     args "generate",
@@ -95,7 +99,7 @@ task swaggerClj(type: JavaExec, description: "Generate Clojure server code for t
             "-o", "./generated/clj"
 }
 
-task swaggerJaxRS(type: JavaExec, description: "Generate JAX-RS server code for the weather station") {
+task swaggerJaxRS(type: JavaExec, description: "Generate JAX-RS server code for the ligth and relay example") {
     classpath = configurations.runtime
     main = 'io.swagger.codegen.SwaggerCodegen'
     args "generate",
@@ -104,7 +108,7 @@ task swaggerJaxRS(type: JavaExec, description: "Generate JAX-RS server code for 
             "-o", "./generated/jaxrs"
 }
 
-task swaggerGO(type: JavaExec, description: "Generate GO server code for the weather station") {
+task swaggerGO(type: JavaExec, description: "Generate GO server code for the ligth and relay example") {
     classpath = configurations.runtime
     main = 'io.swagger.codegen.SwaggerCodegen'
     args "generate",
@@ -113,7 +117,7 @@ task swaggerGO(type: JavaExec, description: "Generate GO server code for the wea
             "-o", "./generated/go"
 }
 
-task swaggerScala(type: JavaExec, description: "Generate GO server code for the weather station") {
+task swaggerScala(type: JavaExec, description: "Generate GO server code for the ligth and relay example") {
     classpath = configurations.runtime
     main = 'io.swagger.codegen.SwaggerCodegen'
     args "generate",

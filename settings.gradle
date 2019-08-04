@@ -32,6 +32,7 @@ include "ukulele"
 include "LoRa"
 include "common-utils"
 include "common-image-utils"
+include "http-tiny-server"
 include "RESTNavServer"
 include "RESTTideEngine"
 include "RESTNauticalAlmanac"
@@ -44,6 +45,7 @@ include "WebComponents"
 include "HanoiTower"
 include "TensorFlow"
 include "Bluetooth"
+include "Joystick"
 // NMEA.mux.WebUI sub-projects
 include(':NMEA.mux.WebUI:full.server')
 include(':NMEA.mux.WebUI:minimal.mux')
@@ -65,8 +67,15 @@ include "Project.Trunk:Misc.and.Various.Stuff"
 include "Project.Trunk:PolarSmoother"
 include "Project.Trunk:REST.clients:TCP.Watch.01"
 include "Project.Trunk:REST.clients:REST.assembler"
+include "Project.Trunk:REST.clients:REST.assembler:springboot-sensors"
+
 include "Project.Trunk:Deviation.Tool"
+
+include "JupyterNotebooks:deep.learning.crash.course"
+
 // Scratch pad
 include "oliv.scratch.pad:some.tests"
 include 'REST.clients'
+include 'springboot-sensors'
+include 'opencv'
 

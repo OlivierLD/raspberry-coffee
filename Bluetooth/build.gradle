@@ -11,9 +11,12 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'com.github.johnrengelman.shadow'
+plugins {
+    id 'java'
+    id 'idea'
+    id 'maven'
+    id 'com.github.johnrengelman.shadow' // version '4.0.2'
+}
 
 group = 'oliv.raspi.coffee'
 version = '1.0'
@@ -23,18 +26,18 @@ compileJava {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/java']
-        }
-    }
-    test {
-        java {
-            srcDir 'tests/java'
-        }
-    }
-}
+//sourceSets {
+//    main {
+//        java {
+//            srcDirs = ['src/java']
+//        }
+//    }
+//    test {
+//        java {
+//            srcDir 'tests/java'
+//        }
+//    }
+//}
 
 repositories {
     mavenCentral()

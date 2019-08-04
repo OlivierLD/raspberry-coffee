@@ -1,0 +1,101 @@
+plugins {
+    id 'java'
+    id 'application' // -> provides the 'run' task.
+}
+
+// Application plugin doc at https://docs.gradle.org/current/userguide/application_plugin.html
+
+group 'oliv.opencv'
+version '1.0'
+
+sourceCompatibility = 1.9
+targetCompatibility = 1.9
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    // Also see https://mvnrepository.com/artifact/org.openpnp/opencv, https://mvnrepository.com/artifact/com.quickbirdstudios/opencv/4.0.1 ?
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(dir: '/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4', include: ['*.jar'])
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+task listJars {
+    doLast {
+        configurations.compile.each {
+            File file -> println "${file} => ${file.name}"
+        }
+    }
+}
+
+if (!hasProperty('mainClassName')) {
+    println "No mainClassName, using default"
+    ext.mainClassName = 'it.polito.elite.teaching.cv.HelloCV'
+//} else {
+//    println ">> Found mainClassName: $mainClassName"
+//    ext.mainClassName = mainClassName
+}
+
+mainClassName = 'it.polito.elite.teaching.cv.dummy.HelloCV'
+ext.mainClassNameFX = 'it.polito.elite.teaching.cv.FXHelloCV'
+ext.mainClassNameOliv101 = 'oliv.opencv.OpenCV101'
+ext.mainClassNameOlivSwing = 'oliv.opencv.OpenCVSwing'
+ext.mainClassNameOlivSwingCamera = 'oliv.opencv.OpenCVSwingCamera'
+ext.mainClassNameFaceDetect = 'oliv.opencv.FaceRecognitionSample'
+ext.mainClassNameContinuousFaceDetect = 'oliv.opencv.OpenCVContinuousFaceDetection'
+ext.mainClassNameContinuousPathDetect = 'oliv.opencv.OpenCVContinuousPathDetection'
+
+tasks.withType(JavaExec) {
+    systemProperty "java.library.path", "/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4" // For Mac
+    if (System.getProperty('DEBUG', 'false') == 'true') {
+        jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9099'
+    }
+}
+
+//task run01(type: JavaExec, ) {
+//    classpath = configurations.runtime
+//    classpath sourceSets.main.runtimeClasspath
+//    main = 'it.polito.elite.teaching.cv.HelloCV'
+//    workingDir "."
+//}
+//
+
+task runFX(type:JavaExec) {
+    main = mainClassNameFX
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+// Could not use gradlew run -PmainClassName=oliv.opencv.OpenCV101
+task runOliv101(type:JavaExec) {
+    main = mainClassNameOliv101
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task runOlivSwing(type:JavaExec) {
+    main = mainClassNameOlivSwing
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task runOlivSwingCamera(type:JavaExec) {
+    main = mainClassNameOlivSwingCamera
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+
+task continuousPathDetect(type:JavaExec) {
+    main = mainClassNameContinuousPathDetect
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task faceDetect(type:JavaExec) {
+    main = mainClassNameFaceDetect
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task continuousFaceDetect(type:JavaExec) {
+    main = mainClassNameContinuousFaceDetect
+    classpath = sourceSets.main.runtimeClasspath
+}

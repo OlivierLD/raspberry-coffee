@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-CP=./build/libs/Bluetooth-1.0-all.jar
+CP=./build/libs/Bluetooth-1.0.jar
 JAVA_OPTS=
 JAVA_OPT="$JAVA_OPTS -Dobd.verbose=true"
 # JAVA_OPTS="$JAVA_OPTS -Dserial.port=/dev/ttyS0"
