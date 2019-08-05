@@ -125,7 +125,7 @@ public class TCPWatch {
 
 	private static boolean SCREEN_00_VERBOSE = "true".equals(System.getProperty("verbose.00", "false"));
 	private static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
-	private static String BASE_URL = System.getProperty("base.url", "http://192.168.50.10:9999");
+	private static String BASE_URL = System.getProperty("base.url", "http://192.168.50.10:9999"); // GPS Logger
 
 	private final static SimpleDateFormat SDF_1 = new SimpleDateFormat("E dd MMM yyyy");
 	private final static SimpleDateFormat SDF_2 = new SimpleDateFormat("HH:mm:ss Z");
@@ -560,10 +560,11 @@ public class TCPWatch {
 		int defaultRST  = 5;
 		int defaultDC   = 4;
 
+		// The 2 buttons (default pins)
 		int defaultK1   = 29;
 		int defaultK2   = 28;
 
-		// The oled screen
+		// The oled screen, SPI interface (no MISO)
 		int clkPin  = Integer.parseInt(System.getProperty("CLK", String.valueOf(defaultCLK)));
 		int mosiPin = Integer.parseInt(System.getProperty("MOSI", String.valueOf(defaultMOSI)));
 		int csPin   = Integer.parseInt(System.getProperty("CS", String.valueOf(defaultCS)));
@@ -573,8 +574,6 @@ public class TCPWatch {
 		// The 2 buttons
 		int k1Pin = Integer.parseInt(System.getProperty("K1", String.valueOf(defaultK1)));
 		int k2Pin = Integer.parseInt(System.getProperty("K2", String.valueOf(defaultK2)));
-
-
 
 		LOGGER.log(Level.FINE, "Starting...");
 

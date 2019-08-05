@@ -445,7 +445,7 @@ JAVA_OPTS="$JAVA_OPTS -client -agentlib:jdwp=transport=dt_socket,server=y,addres
 echo -e "Running with JAVA_OPT=$JAVA_OPTS"
 sudo java -cp $CP $JAVA_OPTS httpserver.HttpRequestServer
 ```
-I run the server on the Raspberry Pi, and I set breakpoint(s) in an IDE on a more beefy laptop, to see what it is actually doing.
+I run the server on the Raspberry Pi (started as above), and I set breakpoint(s) in an IDE on a more beefy laptop, to see what it is actually doing.
 
 <img src="./img/remote.debug.png" width="667" height="216" title="IDE Remote config">
 
