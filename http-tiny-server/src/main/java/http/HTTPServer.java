@@ -721,7 +721,7 @@ public class HTTPServer {
 								if (zipPath != null) {
 									fName = fName.substring(zipPath.length());
 
-									String webArchive = System.getProperty("web.archive", "web.zip");
+									String webArchive = System.getProperty("web.archive", "web.zip"); // TODO Make sure it is a zip archive
 									if (verbose) {
 										System.out.println(String.format("%s => reading %s in %s", zipPath, fName, webArchive));
 									}
@@ -892,8 +892,8 @@ public class HTTPServer {
 		}
 	}
 
-	private static InputStream getZipInputStream(String zipName, String entryName) throws Exception
-	{
+	private static InputStream getZipInputStream(String zipName, String entryName)
+			throws Exception {
 		ZipInputStream zip = new ZipInputStream(new FileInputStream(zipName));
 		InputStream is = null;
 		boolean go = true;
