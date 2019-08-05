@@ -3,7 +3,7 @@
 The doc to get started is [here](https://fnproject.io/tutorials/JavaFDKIntroduction/)
 
 We need three features:
-- read the photo cell to get tha ambient light
+- read the photo cell to get the ambient light
 - set the relay status
 - get the relay status
 
