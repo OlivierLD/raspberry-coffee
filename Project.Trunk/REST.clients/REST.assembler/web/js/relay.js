@@ -79,7 +79,7 @@ function getRelayStatus() {
 		{ name: 'Accept', value: 'application/json' },
 		{ name: 'X-AIO-Key', value: window.aio_key }
 	];
-	return getPromise('https://io.adafruit.com/api/feeds/onoff/data', DEFAULT_TIMEOUT, 'GET', headers,200);
+	return getPromise('https://io.adafruit.com/api/feeds/onoff/data', DEFAULT_TIMEOUT, 'GET', headers, 200);
 }
 
 function getStatus(callback) {
@@ -91,7 +91,7 @@ function getStatus(callback) {
 			if (callback !== undefined) {
 				callback(json);
 			} else {
-				console.info('Status', relay, json);
+				console.info('Status', json);
 			}
 		} catch (err) {
 			console.log("Error:", err, ("\nfor value [" + value + "]"));
