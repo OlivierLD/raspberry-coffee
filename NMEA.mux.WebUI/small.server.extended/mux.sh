@@ -24,6 +24,7 @@ if [ "$WITH_HTTP_SERVER" == "yes" ]
 then
   PORT=`cat $MUX_PROP_FILE | grep http.port=`
   PORT=${PORT#*http.port=}
+  PORT=$(expr $PORT + 1)
   JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.port=$PORT"
 fi
 #
