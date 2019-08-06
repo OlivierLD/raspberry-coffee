@@ -554,15 +554,15 @@ public class TCPWatch {
 		boolean mirror = "true".equals(System.getProperty("mirror.screen", "false")); // Screen is to be seen in a mirror.
 
 		// Use WiringPi numbers.
-		int defaultCLK  = 14;
-		int defaultMOSI = 12;
-		int defaultCS   = 10;
-		int defaultRST  = 5;
-		int defaultDC   = 4;
+		int defaultCLK  = 14;  // Physical #23
+		int defaultMOSI = 12;  // Physical #19
+		int defaultCS   = 10;  // Physical #24
+		int defaultRST  = 5;   // Physical #18
+		int defaultDC   = 4;   // Physical #16
 
 		// The 2 buttons (default pins)
-		int defaultK1   = 29;
-		int defaultK2   = 28;
+		int defaultK1   = 29;  // Physical #40
+		int defaultK2   = 28;  // Physical #38
 
 		// The oled screen, SPI interface (no MISO)
 		int clkPin  = Integer.parseInt(System.getProperty("CLK", String.valueOf(defaultCLK)));

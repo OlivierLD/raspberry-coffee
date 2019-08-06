@@ -1,15 +1,18 @@
 This example shows how to _**extend**_  the `NavServer`.
 
-It shows how to add features like push-buttons, and take ownership of a screen (Nokia, SSD1306...)
+It shows how to add features like **TWO** push-buttons, and take ownership of a screen (Nokia, SSD1306...)
 
-It comes with a class named `navserver.ServerWithButtons`, that extends the `navrest.NavServer`.
+It comes with a class named `navserver.ServerWithKewlButtons`, that extends the `navrest.NavServer`.
 As a result, it's driven by the exact same `properties` file.
 
 To see how to interact with the buttons (to start and stop the logging for example, or
 to shutdown the whole server), look for the variables named `buttonOne` and `buttonTwo`.
+
+Implements `simple-click`, `double-click`, and `long-click`.
+
 ```java
- private GpioPinDigitalInput buttonOne = null;
- private GpioPinDigitalInput buttonTwo = null;
+final static PushButtonMaster pbmOne = new PushButtonMaster();
+final static PushButtonMaster pbmShift = new PushButtonMaster();
 ```
 
 This is built just like the other examples in this module, just run

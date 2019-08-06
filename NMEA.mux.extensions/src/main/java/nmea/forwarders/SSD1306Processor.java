@@ -26,6 +26,7 @@ import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
 import calc.GeomUtil;
 import lcd.substitute.SwingLedPanel;
+import utils.PinUtil;
 
 /**
  * This is an example of a <b>transformer</b>.
@@ -43,7 +44,6 @@ import lcd.substitute.SwingLedPanel;
  * It auto-scrolls across available values.
  *
  * TODO Manage the delay.time if <= 0
- * TODO Manage the onButtonPressed, and up and down.
  */
 public class SSD1306Processor implements Forwarder {
 	private boolean keepWorking = true;
@@ -116,6 +116,22 @@ public class SSD1306Processor implements Forwarder {
 	private SCREEN_SIZE screenDimension = SCREEN_SIZE._128x32;
 	private int width = 128;
 	private int height = 32;
+
+	// Default SSD1306 pins:
+	/*              | function                     | Wiring/PI4J    |Cobbler | Name      |GPIO/BCM
+	 * -------------+------------------------------+----------------+--------=-----------+----
+	 * @param clock | Clock Pin.        Default is |RaspiPin.GPIO_14|Pin #23 |SPI0_SCLK  | 11    Clock
+	 * @param mosi, | MOSI / Data Pin.  Default is |RaspiPin.GPIO_12|Pin #19 |SPI0_MOSI  | 10    Master Out Slave In
+	 * @param cs,   | CS Pin.           Default is |RaspiPin.GPIO_10|Pin #24 |SPI0_CE0_N |  8    Chip Select
+	 * @param rst,  | RST Pin.          Default is |RaspiPin.GPIO_05|Pin #18 |GPIO_24    | 24    Reset
+	 * @param dc,   | DC Pin.           Default is |RaspiPin.GPIO_04|Pin #16 |GPIO_23    | 23    Data Control (?)
+   */
+	// Use WiringPi numbers.
+	int ssd1306CLK  = 14;  // Physical #23
+	int ssd1306MOSI = 12;  // Physical #19
+	int ssd1306CS   = 10;  // Physical #24
+	int ssd1306RST  = 5;   // Physical #18
+	int ssd1306DC   = 4;   // Physical #16
 
 	private static SSD1306Processor instance = null;
 	private boolean externallyOwned = false;
@@ -292,7 +308,14 @@ public class SSD1306Processor implements Forwarder {
 			if (oledInterface == OLED_INTERFACE.I2C) {
 				oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS, width, height);
 			} else { // SPI
-				oled = new SSD1306( width, height); // Default pins. TODO Parameters for the pins
+				oled = new SSD1306(
+						PinUtil.getPinByWiringPiNumber(ssd1306CLK),
+						PinUtil.getPinByWiringPiNumber(ssd1306MOSI),
+						PinUtil.getPinByWiringPiNumber(ssd1306CS),
+						PinUtil.getPinByWiringPiNumber(ssd1306RST),
+						PinUtil.getPinByWiringPiNumber(ssd1306DC),
+						width,
+						height); // See Default pins in SSD1306.
 			}
 			oled.begin();
 			oled.clear();
@@ -779,6 +802,11 @@ public class SSD1306Processor implements Forwarder {
 		// SPI pins?
 		// Override the default pin:  Clock              MOSI                CS               RST                DC
 //  oled = new SSD1306(RaspiPin.GPIO_12, RaspiPin.GPIO_13, RaspiPin.GPIO_14, RaspiPin.GPIO_15, RaspiPin.GPIO_16);
+		ssd1306CLK  = Integer.parseInt(props.getProperty("ssd1306.clk", String.valueOf(ssd1306CLK)));
+		ssd1306MOSI = Integer.parseInt(props.getProperty("ssd1306.mosi", String.valueOf(ssd1306MOSI)));
+		ssd1306CS   = Integer.parseInt(props.getProperty("ssd1306.cs", String.valueOf(ssd1306CS)));
+		ssd1306RST  = Integer.parseInt(props.getProperty("ssd1306.rst", String.valueOf(ssd1306RST)));
+		ssd1306DC   = Integer.parseInt(props.getProperty("ssd1306.dc", String.valueOf(ssd1306DC)));
 
 		// Display size, mirror, verbose?
 		String screenSize = props.getProperty("screen.size", "128x32");
