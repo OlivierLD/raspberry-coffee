@@ -68,9 +68,11 @@ public class  SSD1306 {
 
 	//private final static int SPI_PORT =  0;
 	private final static int SPI_DEVICE = Spi.CHANNEL_0; // 0
+  private final static int DEFAULT_WIDTH = 128,
+		                       DEFAULT_HEIGHT = 32;
 
-	private int width = 128,
-							height = 32;
+	private int width = DEFAULT_WIDTH,
+							height = DEFAULT_HEIGHT;
 	private int clockHertz = 8_000_000; // 8 MHz
 	private int vccstate = 0; // or SSD1306_EXTERNALVCC
 	private int pages = 0;
@@ -156,6 +158,9 @@ public class  SSD1306 {
 		initSSD1306(w, h);
 	}
 
+	public SSD1306(int i2cAddr) throws I2CFactory.UnsupportedBusNumberException, IOException {
+		this(i2cAddr, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	}
 	/**
 	 * I2C Interface
 	 *
@@ -163,8 +168,9 @@ public class  SSD1306 {
 	 * @throws I2CFactory.UnsupportedBusNumberException
 	 * @throws IOException
 	 */
-	public SSD1306(int i2cAddr) throws I2CFactory.UnsupportedBusNumberException, IOException {
-
+	public SSD1306(int i2cAddr, int w, int h) throws I2CFactory.UnsupportedBusNumberException, IOException {
+		this.width = w;
+		this.height = h;
 		if (verbose) {
 			String[] map = new String[2];
 			map[0] = String.valueOf(PinUtil.findEnumName("SDA1").pinNumber()) + ":" + "SDA";

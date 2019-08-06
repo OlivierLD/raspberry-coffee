@@ -441,12 +441,12 @@ In the `NMEA.mux.WebUI` project, `logged` folder
 
 ---
 
-... More to come
+... More to come (coming)
 
 <!-- TODO: Docker images ? -->
 
 - With SSD1306 32x128
-- With SSD1306 64x128
+- With SSD1306 64x128. &#9989; Done
 - With Nokia5110
 - With UART GPS
 - Push Buttons and Switches

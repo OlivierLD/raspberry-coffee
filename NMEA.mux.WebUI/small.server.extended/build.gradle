@@ -25,9 +25,6 @@ targetCompatibility = 1.8
 //        java {
 //            srcDirs = ['src/java']
 //        }
-//        scala {
-//            srcDirs = ['src/scala']
-//        }
 //    }
 //    test {
 //        java {
@@ -39,7 +36,7 @@ targetCompatibility = 1.8
 compileJava.options.compilerArgs += ["-Xlint:none"]
 
 dependencies {
-//    compile project(':NMEA.mux.extensions')
+    compile project(':NMEA.mux.extensions')
     compile project(':RESTNavServer')
 //    compile project(':NMEA.multiplexer') // RESTNavServer contains NMEA.multiplexer
 }
