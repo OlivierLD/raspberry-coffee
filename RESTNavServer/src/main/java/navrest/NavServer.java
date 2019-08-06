@@ -39,7 +39,7 @@ public class NavServer {
 			}
 		}
 
-		System.out.println(String.format("Running on port %d", httpPort));
+		System.out.println(String.format("From %s, running on port %d",this.getClass().getName(),  httpPort));
 		this.httpServer = startHttpServer(httpPort, new NavRequestManager(this));
 		// Add astronomical features...
 		this.httpServer.addRequestManager(new AstroRequestManager());

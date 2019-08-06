@@ -566,7 +566,10 @@ public class HTTPServer {
 								httpServerInstance.incPort();
 								HTTPContext.getInstance().getLogger().info(String.format("Port in use, trying %d", httpServerInstance.getPort()));
 							} else {
+								System.err.println(String.format("Address in use: %d", httpServerInstance.getPort()));
 								keepTrying = false;
+								List<String> st = DumpUtil.whoCalledMe();
+								st.stream().forEach(el -> System.err.println(String.format("\t%s", el)));
 								throw be;
 							}
 						}
