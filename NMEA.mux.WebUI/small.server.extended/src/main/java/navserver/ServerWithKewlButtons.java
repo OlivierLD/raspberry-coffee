@@ -21,6 +21,8 @@ public class ServerWithKewlButtons extends NavServer {
 	final static PushButtonMaster pbmOne = new PushButtonMaster();
 	final static PushButtonMaster pbmShift = new PushButtonMaster();
 
+	private SSD1306Processor oled = null;
+
 	// Action to take depending on the type of click.
 	// TODO Propagate the button events to the SSD1306Processor (simple clicks, up and down)
 	Runnable onClick = () -> {
@@ -75,7 +77,7 @@ public class ServerWithKewlButtons extends NavServer {
 
 		// Was the SSD1306 loaded? This is loaded by the properties file.
 		// Use the SSD1306Processor, SPI version.
-		SSD1306Processor oled = SSD1306Processor.getInstance();
+		oled = SSD1306Processor.getInstance();
 		if (oled == null) {
 			System.out.println("SSD1306 was NOT loaded");
 		} else {
@@ -86,9 +88,9 @@ public class ServerWithKewlButtons extends NavServer {
 			oled.setExternallyOwned(true); // Taking ownership on the screen
 			TimeUtil.delay(1_000L);
 			oled.displayLines(new String[] { "Taking ownership", "on the screen"});
-			TimeUtil.delay(1_000L);
+			TimeUtil.delay(5_000L);
 			oled.displayLines(new String[] { "Releasing the screen"});
-			TimeUtil.delay(500L);
+			TimeUtil.delay(2_000L);
 			System.out.println("Releasing ownership on the screen");
 			oled.setExternallyOwned(false); // Releasing ownership on the screen
 		}

@@ -184,11 +184,24 @@ public class SSD1306Processor implements Forwarder {
 
 	SpeedUnit speedUnit = SpeedUnit.KNOTS;
 
-	// Use it to scroll across data, can be extended or overridden. TODO Scroll Up, scroll down.
+	// Use it to scroll across data, can be extended or overridden.
 	public void onButtonPressed() {
 		currentOption++;
 		if (currentOption >= optionList.size()) {
 			currentOption = 0;
+		}
+	}
+
+	// Use this one if there are 2 buttons, instead of just one
+	public void onButtonUpPressed() {
+		onButtonPressed();
+	}
+
+	// Second button
+	public void onButtonDownPressed() {
+		currentOption--;
+		if (currentOption < 0) {
+			currentOption = optionList.size() - 1;
 		}
 	}
 

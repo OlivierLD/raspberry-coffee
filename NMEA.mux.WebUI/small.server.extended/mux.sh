@@ -17,6 +17,16 @@ JAVA_OPTIONS="$JAVA_OPTIONS" # From parent script, possibly
 #
 echo -e "In $0, inherited JAVA_OPTIONS: $JAVA_OPTIONS"
 #
+# The NavServer uses -Dhttp.port for its http port, not the one in the properties file, which is an admin server port.
+WITH_HTTP_SERVER=`cat $MUX_PROP_FILE | grep with.http.server=`
+WITH_HTTP_SERVER=${WITH_HTTP_SERVER#*with.http.server=}
+if [ "$WITH_HTTP_SERVER" == "yes" ]
+then
+  PORT=`cat $MUX_PROP_FILE | grep http.port=`
+  PORT=${PORT#*http.port=}
+  JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.port=$PORT"
+fi
+#
 if [ "$OS" == "Darwin" ]
 then
   JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"       # for Mac
