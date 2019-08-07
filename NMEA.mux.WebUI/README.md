@@ -127,6 +127,8 @@ The examples list contains
     - Read a GPS (or NMEA Station), and log data into a file. Suitable for running, kayaking, and such small configurations.
 - [Extended Navigation Server](#full-nav-server-extended)
     - Based on the `Full Navigation Server` above, shows how to add 2 push-buttons to the configuration, for the user to interact with the software. 
+- [Extended Navigation Server, #2](#small-nav-server-extended)
+    - Based on the `Full Navigation Server` above, shows how to add 2 push-buttons to the configuration, for the user to interact with the software, including shutting down the machine. Also has a GPS on a bonnet. 
 - [Embarked Head Up display](#head-up-display)
     - Uses the Graphical Desktop to display a Web Interface in a browser. More demanding than the others, requires a more powerful config (Raspberry Pi 3B+). 
 
@@ -163,6 +165,9 @@ The idea here is to show how to _extend_ the classes provided in the project to 
  $ cd full.server.extended
  $ ./builder.sh
 ```
+### Small Nav Server, extended 
+all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
+Push buttons for interaction with the software, embedded GPS, LiPo battery.
 
 ### Head-Up-Display
 With a 5" or 7" TFT screen
@@ -447,9 +452,9 @@ In the `NMEA.mux.WebUI` project, `logged` folder
 
 - With SSD1306 32x128
 - With SSD1306 64x128. &#9989; Done
-- With Nokia5110
+- With Nokia5110. &#9989; Done
 - With UART GPS
-- Push Buttons and Switches
+- Push Buttons and Switches. &#9989; Done
 
 ### For the logger:
 - 2 Bonnets:
