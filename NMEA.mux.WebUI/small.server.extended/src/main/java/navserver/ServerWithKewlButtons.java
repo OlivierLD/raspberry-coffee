@@ -28,6 +28,7 @@ public class ServerWithKewlButtons extends NavServer {
 	// Action to take depending on the type of click.
 	// Propagate the button events to the SSD1306Processor (simple clicks, up and down)
 	// Shft + LongClick on button one: Shutdown (confirm with double-click within 1 second)
+	// TODO: Start & Stop logging
 	private boolean shutdownRequested = false;
 	private Runnable onClickOne = () -> {
 		System.out.println(String.format(">> %sSingle click on button 1", (pbmShift.isPushed() ? "[Shft] + " : "")));

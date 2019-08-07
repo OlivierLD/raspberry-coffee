@@ -5,7 +5,7 @@
     - One with the Adafruit Ultimate GPS
 - LiPo battery
 - Buttons can be used to scroll through the different displays
-- A specific combination on the button can shut down the machine.
+- A specific combination on the buttons can shut down the machine.
 
 This example shows how to _**extend**_  the `NavServer`.
 
@@ -15,7 +15,7 @@ It comes with a class named `navserver.ServerWithKewlButtons`, that extends the 
 As a result, it's driven by the exact same `properties` file.
 
 To see how to interact with the buttons (to start and stop the logging for example, or
-to shutdown the whole server), look for the variables named `buttonOne` and `buttonTwo`.
+to shutdown the whole server), look for the variables named `pbmOne` and `pbmShift`.
 
 Implements `simple-click`, `double-click`, and `long-click`.
 
