@@ -23,6 +23,7 @@ public class ServerWithKewlButtons extends NavServer {
 	final static PushButtonMaster pbmShift = new PushButtonMaster();
 
 	private SSD1306Processor oledForwarder = null;
+	private static boolean keepLooping = true;
 
 	// Action to take depending on the type of click.
 	// TODO Propagate the button events to the SSD1306Processor (simple clicks, up and down)
@@ -103,6 +104,10 @@ public class ServerWithKewlButtons extends NavServer {
 			oledForwarder.setExternallyOwned(false); // Releasing ownership on the screen
 		}
 
+		while (keepLooping) {
+			TimeUtil.delay(200);
+		}
+
 		synchronized (me) {
 			try {
 				me.wait(); // Wait for the button events
@@ -110,12 +115,15 @@ public class ServerWithKewlButtons extends NavServer {
 				// Bam!
 			}
 		}
+
 	}
 
 	public static void freeResources() {
 		// Cleanup
 		pbmOne.freeResources();
 		pbmShift.freeResources();
+
+		keepLooping  = false;
 
 		synchronized (me) {
 			me.notify();
