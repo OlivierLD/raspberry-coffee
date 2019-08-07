@@ -171,6 +171,7 @@ public class ServerWithKewlButtons extends NavServer {
 					oledForwarder.setExternallyOwned(false); // Releasing ownership
 				}
 			});
+			screenSaverThread.start();
 		} else {
 			System.out.println("Already in screensaver mode");
 		}
