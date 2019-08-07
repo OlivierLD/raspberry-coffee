@@ -13,39 +13,58 @@ var initAjax = function (forwardErrors) {
 };
 
 var getNMEAData = function () {
-	var deferred = $.Deferred(),  // a jQuery deferred
-			url = '/mux/cache',
+
+	var url = '/mux/cache',
 			xhr = new XMLHttpRequest(),
+			verb = 'GET',
 			TIMEOUT = 10000;
 
-	xhr.open('GET', url, true);
-	xhr.setRequestHeader("Content-type", "application/json");
-	xhr.send();
+	let promise = new Promise(function (resolve, reject) {
+		let xhr = new XMLHttpRequest();
+		let TIMEOUT = timeout;
 
-	var requestTimer = setTimeout(function () {
-		xhr.abort();
-		deferred.reject(408, {message: 'Timeout'});
-	}, TIMEOUT);
-
-	xhr.onload = function () {
-		clearTimeout(requestTimer);
-		if (xhr.status === 200) {
-			deferred.resolve(xhr.response);
-		} else {
-			deferred.reject(xhr.status, xhr.response);
+		let req = verb + " " + url;
+		if (data !== undefined && data !== null) {
+			req += ("\n" + JSON.stringify(data, null, 2));
 		}
-	};
-	return deferred.promise();
+
+		xhr.open(verb, url, true);
+		xhr.setRequestHeader("Content-type", "application/json");
+		try {
+			if (data === undefined || data === null) {
+				xhr.send();
+			} else {
+				xhr.send(JSON.stringify(data));
+			}
+		} catch (err) {
+			console.log("Send Error ", err);
+		}
+
+		let requestTimer = setTimeout(function () {
+			xhr.abort();
+			let mess = {code: 408, message: 'Timeout'};
+			reject(mess);
+		}, TIMEOUT);
+
+		xhr.onload = function () {
+			clearTimeout(requestTimer);
+			if (xhr.status === happyCode) {
+				resolve(xhr.response);
+			} else {
+				reject({code: xhr.status, message: xhr.response});
+			}
+		};
+	});
+	return promise;
 };
 
 var fetch = function () {
 	var getData = getNMEAData();
-	getData.done(function (value) {
+	getData.then(function (value) {
 		console.log("Done:", value);
 		var json = JSON.parse(value);
 		onMessage(json);
-	});
-	getData.fail(function (error, errmess) {
+	}, function (error, errmess) {
 		var message;
 		if (errmess !== undefined) {
 			var mess = JSON.parse(errmess);

@@ -1,47 +1,70 @@
 /*
  * @author Olivier Le Diouris
- * Uses jQuery Deferreds
  */
-var initAjax = function () {
+var forwardAjaxErrors = true;
+
+var initAjax = function (forwardErrors) {
+	if (forwardErrors !== undefined) {
+		forwardAjaxErrors = forwardErrors;
+	}
 	var interval = setInterval(function () {
 		fetch();
 	}, 1000);
 };
 
 var getNMEAData = function () {
-	var deferred = $.Deferred(),  // a jQuery deferred
-			url = '/mux/cache',
+
+	var url = '/mux/cache',
 			xhr = new XMLHttpRequest(),
+			verb = 'GET',
 			TIMEOUT = 10000;
 
-	xhr.open('GET', url, true);
-	xhr.setRequestHeader("Content-type", "application/json");
-	xhr.send();
+	let promise = new Promise(function (resolve, reject) {
+		let xhr = new XMLHttpRequest();
+		let TIMEOUT = timeout;
 
-	var requestTimer = setTimeout(function () {
-		xhr.abort();
-		deferred.reject(408, {message: 'Timeout'});
-	}, TIMEOUT);
-
-	xhr.onload = function () {
-		clearTimeout(requestTimer);
-		if (xhr.status === 200) {
-			deferred.resolve(xhr.response);
-		} else {
-			deferred.reject(xhr.status, xhr.response);
+		let req = verb + " " + url;
+		if (data !== undefined && data !== null) {
+			req += ("\n" + JSON.stringify(data, null, 2));
 		}
-	};
-	return deferred.promise();
+
+		xhr.open(verb, url, true);
+		xhr.setRequestHeader("Content-type", "application/json");
+		try {
+			if (data === undefined || data === null) {
+				xhr.send();
+			} else {
+				xhr.send(JSON.stringify(data));
+			}
+		} catch (err) {
+			console.log("Send Error ", err);
+		}
+
+		let requestTimer = setTimeout(function () {
+			xhr.abort();
+			let mess = {code: 408, message: 'Timeout'};
+			reject(mess);
+		}, TIMEOUT);
+
+		xhr.onload = function () {
+			clearTimeout(requestTimer);
+			if (xhr.status === happyCode) {
+				resolve(xhr.response);
+			} else {
+				reject({code: xhr.status, message: xhr.response});
+			}
+		};
+	});
+	return promise;
 };
 
 var fetch = function () {
 	var getData = getNMEAData();
-	getData.done(function (value) {
-//      console.log("Done:", value);
+	getData.then(function (value) {
+		console.log("Done:", value);
 		var json = JSON.parse(value);
 		onMessage(json);
-	});
-	getData.fail(function (error, errmess) {
+	}, function (error, errmess) {
 		var message;
 		if (errmess !== undefined) {
 			var mess = JSON.parse(errmess);
@@ -49,7 +72,7 @@ var fetch = function () {
 				message = mess.message;
 			}
 		}
-		alert("Failed to get NMEA data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		alert("Failed to get nmea data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };
 
@@ -83,9 +106,7 @@ var onMessage = function (json) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "log (" + err + ")");
 		}
 		try {
-			var gdt = json["GPS Date & Time"];
-			var gpsDate = new Date(gdt.fmtDate.year, gdt.fmtDate.month - 1, gdt.fmtDate.day, gdt.fmtDate.hour, gdt.fmtDate.min, gdt.fmtDate.sec, 0);
-			// UTC dates
+			var gpsDate = json["GPS Date & Time"].date;
 			events.publish('gps-time', gpsDate);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "GPS Date (" + err + ")");
@@ -94,45 +115,39 @@ var onMessage = function (json) {
 		try {
 			var hdg = json["HDG true"].angle;
 			events.publish('hdg', hdg);
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "heading");
 		}
 		try {
 			var twd = json.TWD.angle;
 			events.publish('twd', twd);
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "TWD");
 		}
 		try {
 			var twa = json.TWA.angle;
 			events.publish('twa', twa);
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "TWA");
 		}
 		try {
 			var tws = json.TWS.speed;
 			events.publish('tws', tws);
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "TWS");
 		}
 
 		try {
 			var waterTemp = json["Water Temperature"].temperature;
 			events.publish('wt', waterTemp);
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "water temperature");
 		}
 
 		try {
 			var airTemp = json["Air Temperature"].temperature;
 			events.publish('at', airTemp);
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "air temperature");
 		}
 		// Battery_Voltage, Relative_Humidity, Barometric_Pressure
@@ -141,8 +156,7 @@ var onMessage = function (json) {
 			if (baro != 0) {
 				events.publish('prmsl', baro);
 			}
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "PRMSL");
 		}
 		try {
@@ -150,84 +164,56 @@ var onMessage = function (json) {
 			if (hum > 0) {
 				events.publish('hum', hum);
 			}
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Relative_Humidity");
 		}
 		try {
 			var aws = json.AWS.speed;
 			events.publish('aws', aws);
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "AWS");
 		}
 		try {
 			var awa = json.AWA.angle;
 			events.publish('awa', awa);
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "AWA");
 		}
 		try {
 			var cdr = json.CDR.angle;
 			events.publish('cdr', cdr);
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CDR");
 		}
 
 		try {
 			var cog = json.COG.angle;
 			events.publish('cog', cog);
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "COG");
 		}
 		try {
 			var cmg = json.CMG.angle;
 			events.publish('cmg', cmg);
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CMG");
 		}
 		try {
 			var leeway = json.Leeway.angle;
 			events.publish('leeway', leeway);
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Leeway");
 		}
 		try {
 			var csp = json.CSP.speed;
 			events.publish('csp', csp);
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CSP");
 		}
-
-		// Buffered current
-		try {
-			var buffered = json['Current calculated with damping'];
-			if (buffered !== undefined) {
-				var keys = Object.keys(buffered);
-				for (var i=0; i<keys.length; i++) {
-					var k = keys[i];
-//				console.log("K:" + k);
-					var damp = buffered[k];
-//				console.log("Publishing csp-" + k);
-					events.publish("csp-" + k, damp.speed.speed);
-					events.publish("cdr-" + k, damp.direction.angle);
-				}
-			}
-		} catch (err) {
-			console.log(err);
-		}
-
 		try {
 			var sog = json.SOG.speed;
 			events.publish('sog', sog);
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "SOG");
 		}
 		// to-wp, vmg-wind, vmg-wp, b2wp
@@ -238,8 +224,7 @@ var onMessage = function (json) {
 				'to_wp': to_wp,
 				'b2wp': b2wp
 			});
-		}
-		catch (err) {
+		} catch (err) {
 		}
 
 		try {
@@ -247,14 +232,27 @@ var onMessage = function (json) {
 				'onwind': json["VMG on Wind"],
 				'onwp': json["VMG to Waypoint"]
 			});
-
-		}
-		catch (err) {
+		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "VMG");
 		}
 
-		if (errMess !== undefined)
+		try {
+			var prate = json.prate;
+			events.publish('prate', prate);
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "prate");
+		}
+		try {
+			var dew = json.dewpoint;
+			events.publish('dew', dew);
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "dew");
+		}
+
+
+		if (errMess !== undefined && forwardAjaxErrors) {
 			displayErr(errMess);
+		}
 	}
 	catch (err) {
 		displayErr(err);

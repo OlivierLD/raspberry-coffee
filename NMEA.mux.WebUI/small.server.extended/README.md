@@ -38,5 +38,4 @@ See [here](../../Project.Trunk/REST.clients/TCP.Watch.01/README.md#raspberry-pi-
 
 # TODO
 Describe the way to get to the log files, download, etc.
-`runner.html`, `logMgmt.html`, `admin.html`, etc.
-
+`runner.html`, `logMgmt.html`, etc.
