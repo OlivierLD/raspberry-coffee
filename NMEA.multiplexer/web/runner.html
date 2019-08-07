@@ -172,7 +172,7 @@
 	</style>
 	<script type="text/javascript">
 
-		var logEnabled = function (cb) {
+		function logEnabled(cb) {
 			if (cb.checked) {
 				console.log('On');
 				enableLogging(true);
@@ -180,22 +180,22 @@
 				console.log('Off');
 				enableLogging(false);
 			}
-		};
+		}
 
-		var speedUnit = function (su) {
+		function speedUnit(su) {
 			if (su.value !== undefined && su.value.trim().length > 0) {
 				setSpeedUnit(su.value);
 			}
-		};
+		}
 
-		var forwarderStatus = function () {
-			var getData = getForwarderStatus(); // A promise
+		function forwarderStatus() {
+			let getData = getForwarderStatus(); // A promise
 			getData.then(function (value) {
-				var json = JSON.parse(value); // Like {"processing":false,"started":1501082121336}
-				var status = json.processing;
+				let json = JSON.parse(value); // Like {"processing":false,"started":1501082121336}
+				let status = json.processing;
 				document.getElementById("flip-1").checked = status; // a boolean
 			}, function (error, errmess) {
-				var message;
+				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
 						message = errmess.message;
@@ -205,15 +205,15 @@
 				}
 				console.log("Failed to get the forwarders status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
-		};
+		}
 
-		var speedAndCourse = function () {
-			var getData = getSOGCOG(); // A promise
+		function speedAndCourse() {
+			let getData = getSOGCOG(); // A promise
 			getData.then(function (value) {
-				var json = JSON.parse(value);
-				var speedFactor = 1;
-				var unitStr = "kts";
-				var unit = document.getElementById("speed-unit").value;
+				let json = JSON.parse(value);
+				let speedFactor = 1;
+				let unitStr = "kts";
+				let unit = document.getElementById("speed-unit").value;
 				switch (unit) {
 					case "":
 					case "ms":
@@ -246,7 +246,7 @@
 					}
 				}
 			}, function (error, errmess) {
-				var message;
+				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
 						message = errmess.message;
@@ -256,15 +256,15 @@
 				}
 				console.log("Failed to get the Speed and Course..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
-		};
+		}
 
-		var getDistanceTraveled = function () {
-			var getData = getDistance(); // A promise
+		function getDistanceTraveled() {
+			let getData = getDistance(); // A promise
 			getData.then(function (value) {
-				var json = JSON.parse(value); // Speed comes in knots
-				var unit = document.getElementById("speed-unit").value;
-				var distFactor = 1;
-				var unitStr = "nm";
+				let json = JSON.parse(value); // Speed comes in knots
+				let unit = document.getElementById("speed-unit").value;
+				let distFactor = 1;
+				let unitStr = "nm";
 				switch (unit) {
 					case "":
 					case "ms":
@@ -288,7 +288,7 @@
 				}
 				document.getElementById("dist-val").innerText = ((json["distance"] !== undefined ? (json["distance"] * distFactor).toFixed(2) : "-") + " " + unitStr);
 			}, function (error, errmess) {
-				var message;
+				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
 						message = errmess.message;
@@ -298,16 +298,16 @@
 				}
 				console.log("Failed to get the Distance traveled..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
-		};
+		}
 
-		var getDeltaAltitude = function () {
-			var getData = getDeltaAlt(); // A promise
+		function getDeltaAltitude() {
+			let getData = getDeltaAlt(); // A promise
 			getData.then(function (value) {
-				var json = JSON.parse(value);
+				let json = JSON.parse(value);
 				if (json !== undefined) {
-					var unit = document.getElementById("speed-unit").value; // Altitude comes in meters
-					var unitFactor = 1;
-					var unitStr = "m";
+					let unit = document.getElementById("speed-unit").value; // Altitude comes in meters
+					let unitFactor = 1;
+					let unitStr = "m";
 					switch (unit) {
 						case "":
 						case "ms":
@@ -332,7 +332,7 @@
 					document.getElementById("delta-alt-val").innerText = ((json["delta-altitude"] !== undefined ?(json["delta-altitude"] * unitFactor).toFixed(2) : "-") + " " + unitStr);
 				}
 			}, function (error, errmess) {
-				var message;
+				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
 						message = errmess.message;
@@ -342,21 +342,21 @@
 				}
 				console.log("Failed to get the Delta Altitude..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
-		};
+		}
 
 	</script>
 </head>
 <body>
 		<h1>Run &amp; Log</h1>
 
-		<table>
+		<table style="margin: auto;">
 			<tr>
-				<td>Logging</td>
-				<td>Units</td>
+				<th>Logging</th>
+				<th>Units</th>
 			</tr>
 			<tr>
 				<td>
-					<label class="rocker rocker-small">
+					<label class="rocker rocker-small"> <!-- One way widget. Will NOT be notified of a change on the server. -->
 						<input type="checkbox" id="flip-1" onchange="logEnabled(this);" checked>
 						<span class="switch-left">On</span>
 						<span class="switch-right">Off</span>
@@ -376,8 +376,8 @@
 
 	<table width="100%">
 		<tr>
-			<td style="height:40px">Distance<br><span id="dist-val"></span></td>
-			<td style="height:40px">Delta Alt<br><span id="delta-alt-val"></span></td>
+			<th style="height:40px; text-align: left;">Distance<br><span id="dist-val"></span></th>
+			<th style="height:40px; text-align: left;">Delta Alt<br><span id="delta-alt-val"></span></th>
 		</tr>
 		<tr>
 			<td><span id="sog" style="font-weight: bold; font-size: 30px;">0.0</span></td>
@@ -385,10 +385,10 @@
 		</tr>
 	</table>
 
-	<div>
-		<button data-theme="a" id="b-reset" title="Reset Dist & Alt" onclick="reset();">Reset</button>
-		<button data-theme="a" id="b-log-mgmt" title="Log Management" onclick="goLogMgmt();">Log</button>
-		<button data-theme="a" id="b-terminate" title="Stop the server" onclick="kill();">Kill</button>
+	<div style="width: 100%; text-align: center; padding: 10px;">
+		<button id="b-reset" title="Reset Dist & Alt" onclick="reset();">Reset</button>
+		<button id="b-log-mgmt" title="Log Management" onclick="goLogMgmt();">Log</button>
+		<button id="b-terminate" title="Stop the server" onclick="kill();">Kill</button>
 	</div>
 
 	<table width="100%">
@@ -423,19 +423,20 @@
 
 	</div>
 	<script>
-		var getTravelData = function () {
+
+		function getTravelData() {
 			getDistanceTraveled();
 			getDeltaAltitude();
 			speedAndCourse();
-		};
+		}
 
-		var appendMess = function (txt) {
-			var content = document.getElementById("message").text;
+		function appendMess(txt) {
+			let content = document.getElementById("message").text;
 			content += ((content.length > 0 ? '\n' : '') + txt);
 			document.getElementById("message").text = content;
-		};
+		}
 
-		var terminateOK = function () {
+		function terminateOK() {
 			terminate();
 			document.getElementById("b-terminate").disabled = true;
 			// Say bye-bye...
@@ -445,7 +446,7 @@
 					'<p style="color: gray; font-family: Verdana, Helvetica, Geneva;">&nbsp;Restart the server from a terminal to continue.</p>' +
 					'<hr/>' +
 					'<i style="font-family: Verdana, Helvetica, Geneva;">&nbsp;&copy; OlivSoft, 2017</i>';
-		};
+		}
 
 		function kill() {
 			console.log('Terminate was clicked');

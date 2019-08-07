@@ -133,13 +133,66 @@ public class HTTPClient {
 			conn.setRequestProperty(h, headers.get(h));
 		}
 		conn.setRequestProperty("Content-Type", "application/json"); // Uhu ?
-		conn.setRequestProperty("Content-Length", String.valueOf(payload.getBytes().length));
+		if (payload != null) {
+			conn.setRequestProperty("Content-Length", String.valueOf(payload.getBytes().length));
+		}
 		// conn.setRequestProperty("Content-Language", "en-US");
 		conn.setUseCaches(false);
 
 		conn.setDoOutput(true);
 		OutputStream os = conn.getOutputStream();
-		os.write(payload.getBytes());
+		os.write(payload != null ? payload.getBytes() : "".getBytes());
+		os.flush();
+		os.close();
+
+		responseCode = conn.getResponseCode();
+
+		HTTPResponse response = new HTTPResponse();
+		response.code = responseCode;
+
+		if (true) { // Ben oui tiens!
+			// Response payload
+			BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+
+			StringBuffer sb = new StringBuffer();
+			String output;
+			if (DEBUG) {
+				System.out.println("Output from Server .... \n");
+			}
+			while ((output = br.readLine()) != null) {
+				if (DEBUG) {
+					System.out.println(output);
+				}
+				sb.append(output);
+			}
+			response.response = sb.toString();
+		}
+		conn.disconnect();
+
+		return response;
+	}
+
+	public static HTTPResponse doPut(String urlStr, Map<String, String> headers, String payload) throws Exception {
+		int responseCode = 0;
+		URL url = new URL(urlStr);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//  String userCredentials = "username:password";
+//  String basicAuth = "Basic " + new String(new Base64().encode(userCredentials.getBytes()));
+//  conn.setRequestProperty ("Authorization", basicAuth);
+		conn.setRequestMethod("PUT");
+		for (String h : headers.keySet()) {
+			conn.setRequestProperty(h, headers.get(h));
+		}
+		conn.setRequestProperty("Content-Type", "application/json"); // Uhu ?
+		if (payload != null) {
+			conn.setRequestProperty("Content-Length", String.valueOf(payload.getBytes().length));
+		}
+		// conn.setRequestProperty("Content-Language", "en-US");
+		conn.setUseCaches(false);
+
+		conn.setDoOutput(true);
+		OutputStream os = conn.getOutputStream();
+		os.write(payload != null ? payload.getBytes() : "".getBytes());
 		os.flush();
 		os.close();
 

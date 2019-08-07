@@ -8,12 +8,15 @@ package navserver;
 
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
+import http.client.HTTPClient;
 import navrest.NavServer;
 import navserver.button.PushButtonMaster;
 import nmea.forwarders.SSD1306Processor;
 import utils.PinUtil;
 import utils.StaticUtil;
 import utils.TimeUtil;
+
+import java.util.HashMap;
 
 public class ServerWithKewlButtons extends NavServer {
 
@@ -32,9 +35,12 @@ public class ServerWithKewlButtons extends NavServer {
 
 	// Action to take depending on the type of click.
 	// Propagate the button events to the SSD1306Processor (simple clicks, up and down)
-	// Shft + LongClick on button one: Shutdown (confirm with double-click within 1 second)
+	// - Shft + LongClick on button one: Shutdown (confirm with double-click within 1 second)
+	// DoubleClick on button one: Show local menu
 	// TODO: Start & Stop logging: PUT /mux/mux-process/on /mux/mux-process/off
 	private boolean shutdownRequested = false;
+	private boolean displayingLocalMenu = false;
+
 	private Runnable onClickOne = () -> {
 		System.out.println(String.format(">> %sSingle click on button 1", (pbmShift.isPushed() ? "[Shft] + " : "")));
 		if (!pbmShift.isPushed() && oledForwarder != null) {
@@ -44,14 +50,20 @@ public class ServerWithKewlButtons extends NavServer {
 	private Runnable onDoubleClickOne = () -> {
 		System.out.println(String.format(">> %sDouble click on button 1", (pbmShift.isPushed() ? "[Shft] + " : "")));
 		if (shutdownRequested) {
-			// Shutting down
+			// Shutting down the server AND the machine.
 			try {
 				System.out.println("Shutting down");
 				if (oledForwarder != null) {
 					oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
 					oledForwarder.displayLines(new String[]{"Shutting down!"});
 				}
-				// TODO "POST", "/mux/terminate"
+				try {
+					HTTPClient.doPost(this.terminateMuxURL, new HashMap<>(), null);
+					TimeUtil.delay(2_000L);
+				} catch (Exception ex) {
+					System.err.println("PUT failed:");
+					ex.printStackTrace();
+				}
 				StaticUtil.shutdown();
 			} catch (Throwable ex) {
 				ex.printStackTrace();
@@ -60,6 +72,9 @@ public class ServerWithKewlButtons extends NavServer {
 					oledForwarder.setExternallyOwned(false);
 				}
 			}
+		} else { // Display menu?
+			displayingLocalMenu = true;
+			// TODO Do it...
 		}
 	};
 	private Runnable onLongClickOne = () -> {
@@ -115,6 +130,7 @@ public class ServerWithKewlButtons extends NavServer {
 		System.out.println(String.format("To terminate the multiplexer, user POST %s", this.terminateMuxURL));
 
 		System.out.println(String.format("Also try http://localhost:%d/zip/index.html from a browser", serverPort));
+		System.out.println(String.format("     and http://localhost:%d/zip/extra/runner.html ", serverPort));
 
 		try {
 			// Provision buttons here
@@ -174,6 +190,17 @@ public class ServerWithKewlButtons extends NavServer {
 			System.out.println("Releasing ownership on the screen");
 			oledForwarder.setExternallyOwned(false); // Releasing ownership on the screen
 		}
+		if (false) { // Test REST requests
+			TimeUtil.delay(5_000L);
+			System.out.println("Killing the mux");
+			try {
+				HTTPClient.doPost(this.terminateMuxURL, new HashMap<>(), null);
+			} catch (Exception ex) {
+				System.err.println("PUT failed:");
+				ex.printStackTrace();
+			}
+		}
+		System.out.println("Nav Server fully initialized");
 	}
 
 	public static void freeResources() {
