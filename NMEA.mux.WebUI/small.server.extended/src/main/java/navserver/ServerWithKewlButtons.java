@@ -104,17 +104,17 @@ public class ServerWithKewlButtons extends NavServer {
 			oledForwarder.setExternallyOwned(false); // Releasing ownership on the screen
 		}
 
-		while (keepLooping) {
-			TimeUtil.delay(200);
-		}
-
-		synchronized (me) {
-			try {
-				me.wait(); // Wait for the button events
-			} catch (InterruptedException ie) {
-				// Bam!
-			}
-		}
+//		while (keepLooping) {
+//			TimeUtil.delay(200);
+//		}
+//
+//		synchronized (me) {
+//			try {
+//				me.wait(); // Wait for the button events
+//			} catch (InterruptedException ie) {
+//				// Bam!
+//			}
+//		}
 
 	}
 
