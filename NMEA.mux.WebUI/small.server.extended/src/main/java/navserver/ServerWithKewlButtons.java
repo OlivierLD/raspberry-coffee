@@ -20,6 +20,8 @@ import java.util.HashMap;
 
 public class ServerWithKewlButtons extends NavServer {
 
+	private static boolean buttonVerbose = "true".equals(System.getProperty("button.verbose"));
+
 	private Pin appPin;
 	private Pin shiftPin;
 
@@ -37,18 +39,34 @@ public class ServerWithKewlButtons extends NavServer {
 	// Propagate the button events to the SSD1306Processor (simple clicks, up and down)
 	// - Shft + LongClick on button one: Shutdown (confirm with double-click within 1 second)
 	// DoubleClick on button one: Show local menu
+	// DoubleClick on button two: Screen Saver mode. Any simple-click to resume.
 	// TODO: Start & Stop logging: PUT /mux/mux-process/on /mux/mux-process/off
 	private boolean shutdownRequested = false;
 	private boolean displayingLocalMenu = false;
+	private boolean screenSaverMode = false;
+	private Thread screenSaverThread = null;
 
 	private Runnable onClickOne = () -> {
-		System.out.println(String.format(">> %sSingle click on button 1", (pbmShift.isPushed() ? "[Shft] + " : "")));
+		if (buttonVerbose) {
+			System.out.println(String.format(">> %sSingle click on button 1", (pbmShift.isPushed() ? "[Shft] + " : "")));
+		}
+		if (screenSaverMode) {
+			if (buttonVerbose) {
+				System.out.println("Releasing screen saver");
+			}
+			screenSaverMode = !screenSaverMode;
+		}
 		if (!pbmShift.isPushed() && oledForwarder != null) {
+			if (buttonVerbose) {
+				System.out.println("1 up!");
+			}
 			oledForwarder.onButtonUpPressed();
 		}
 	};
 	private Runnable onDoubleClickOne = () -> {
-		System.out.println(String.format(">> %sDouble click on button 1", (pbmShift.isPushed() ? "[Shft] + " : "")));
+		if (buttonVerbose) {
+			System.out.println(String.format(">> %sDouble click on button 1", (pbmShift.isPushed() ? "[Shft] + " : "")));
+		}
 		if (shutdownRequested) {
 			// Shutting down the server AND the machine.
 			try {
@@ -58,7 +76,9 @@ public class ServerWithKewlButtons extends NavServer {
 					oledForwarder.displayLines(new String[]{"Shutting down!"});
 				}
 				try {
+					System.out.println("Shutting down the MUX");
 					HTTPClient.doPost(this.terminateMuxURL, new HashMap<>(), null);
+					System.out.println("Killing the box");
 					TimeUtil.delay(2_000L);
 				} catch (Exception ex) {
 					System.err.println("PUT failed:");
@@ -78,7 +98,9 @@ public class ServerWithKewlButtons extends NavServer {
 		}
 	};
 	private Runnable onLongClickOne = () -> {
-		System.out.println(String.format(">> %sLong click on button 1", (pbmShift.isPushed() ? "[Shft] + " : "")));
+		if (buttonVerbose) {
+			System.out.println(String.format(">> %sLong click on button 1", (pbmShift.isPushed() ? "[Shft] + " : "")));
+		}
 		if (pbmShift.isPushed()) { // Shift + LongClick on button one
 			if (oledForwarder != null) {
 				oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
@@ -104,16 +126,59 @@ public class ServerWithKewlButtons extends NavServer {
 		}
 	};
 	private Runnable onClickTwo = () -> {
-		System.out.println(String.format(">> %sSingle click on button 2", (pbmOne.isPushed() ? "[Shft] + " : "")));
+		if (buttonVerbose) {
+			System.out.println(String.format(">> %sSingle click on button 2", (pbmOne.isPushed() ? "[Shft] + " : "")));
+		}
+		if (screenSaverMode) {
+			if (buttonVerbose) {
+				System.out.println("Releasing screen saver");
+			}
+			screenSaverMode = !screenSaverMode;
+		}
 		if (!pbmOne.isPushed() && oledForwarder != null) {
+			if (buttonVerbose) {
+				System.out.println("1 down!");
+			}
 			oledForwarder.onButtonDownPressed();
 		}
 	};
 	private Runnable onDoubleClickTwo = () -> {
-		System.out.println(String.format(">> %sDouble click on button 2", (pbmOne.isPushed() ? "[Shft] + " : "")));
+		if (buttonVerbose) {
+			System.out.println(String.format(">> %sDouble click on button 2", (pbmOne.isPushed() ? "[Shft] + " : "")));
+		}
+		if (!screenSaverMode) {
+			if (buttonVerbose) {
+				System.out.println("Starting screen saver...");
+			}
+			screenSaverMode = true;
+			if (oledForwarder != null) {
+				oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
+			}
+			// Start thread
+			screenSaverThread = new Thread(() -> {
+				boolean on = true;
+				while (screenSaverMode) {
+					if (oledForwarder != null) {
+						oledForwarder.displayLines(new String[]{String.format("%s", on ? "." : "")});
+						on = !on;
+						TimeUtil.delay(1_000L);
+					}
+				}
+				if (buttonVerbose) {
+					System.out.println("Screen back to life");
+				}
+				if (oledForwarder != null) {
+					oledForwarder.setExternallyOwned(false); // Releasing ownership
+				}
+			});
+		} else {
+			System.out.println("Already in screensaver mode");
+		}
 	};
 	private Runnable onLongClickTwo = () -> {
-		System.out.println(String.format(">> %sLong click on button 2", (pbmOne.isPushed() ? "[Shft] + " : "")));
+		if (buttonVerbose) {
+			System.out.println(String.format(">> %sLong click on button 2", (pbmOne.isPushed() ? "[Shft] + " : "")));
+		}
 	};
 	/**
 	 *  For the Shift button, no operation needed. We only need if it is up or down.
