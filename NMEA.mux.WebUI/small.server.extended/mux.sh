@@ -17,15 +17,20 @@ JAVA_OPTIONS="$JAVA_OPTIONS" # From parent script, possibly
 #
 echo -e "In $0, inherited JAVA_OPTIONS: $JAVA_OPTIONS"
 #
-# The NavServer uses -Dhttp.port for its http port, not the one in the properties file, which is an admin server port.
+JAVA_OPTIONS="$JAVA_OPTIONS -Dwith.sun.flower=false"
+#
+# The NavServer (Mux actually) uses -Dhttp.port for its HTTP/REST port, not the one in the properties file, which is an admin server port.
+# It would be 9999 by default. You can also set it explicitly.
 WITH_HTTP_SERVER=`cat $MUX_PROP_FILE | grep with.http.server=`
 WITH_HTTP_SERVER=${WITH_HTTP_SERVER#*with.http.server=}
 if [ "$WITH_HTTP_SERVER" == "yes" ]
 then
   PORT=`cat $MUX_PROP_FILE | grep http.port=`
   PORT=${PORT#*http.port=}
-  PORT=$(expr $PORT + 1)
+#  PORT=$(expr $PORT + 1)
   JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.port=$PORT"
+else
+  JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.port=8888"
 fi
 #
 if [ "$OS" == "Darwin" ]

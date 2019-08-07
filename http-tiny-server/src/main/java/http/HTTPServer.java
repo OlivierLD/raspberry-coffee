@@ -441,6 +441,15 @@ public class HTTPServer {
 	}
 
 	private static int defaultPort = 9999;
+	static {
+		String httpPort = System.getProperty("http.port", String.valueOf(defaultPort));
+		try {
+			defaultPort = Integer.parseInt(httpPort);
+		} catch (NumberFormatException nfe) {
+			throw new RuntimeException(nfe);
+		}
+	}
+
 
 	public int getPort() {
 		return this.port;
@@ -482,8 +491,8 @@ public class HTTPServer {
 		this(defaultPort, requestManager, new Properties(), false);
 	}
 
-	public HTTPServer(RESTRequestManager requestManager, boolean startImmediatly) throws Exception {
-		this(defaultPort, requestManager, new Properties(), startImmediatly);
+	public HTTPServer(RESTRequestManager requestManager, boolean startImmediately) throws Exception {
+		this(defaultPort, requestManager, new Properties(), startImmediately);
 	}
 
 	/**
@@ -511,12 +520,13 @@ public class HTTPServer {
 	 * Port can be overridden by -Dhttp.port. Takes precedence on anything else.
 	 */
 	public HTTPServer(int port, RESTRequestManager requestManager, Properties properties, boolean startImmediately) throws Exception {
-		String httpPort = System.getProperty("http.port", String.valueOf(port));
-		try {
-			this.port = Integer.parseInt(httpPort);
-		} catch (NumberFormatException nfe) {
-			throw new RuntimeException(nfe);
-		}
+		this.port = port;
+//		String httpPort = System.getProperty("http.port", String.valueOf(port));
+//		try {
+//			this.port = Integer.parseInt(httpPort);
+//		} catch (NumberFormatException nfe) {
+//			throw new RuntimeException(nfe);
+//		}
 
 		if (properties == null) {
 			throw new RuntimeException("Properties parameter should not be null");
@@ -561,15 +571,21 @@ public class HTTPServer {
 							ss = new ServerSocket(httpServerInstance.getPort());
 							keepTrying = false;
 							System.out.println(String.format("Port open: %d", httpServerInstance.getPort()));
+							System.out.println("-- Dumping: --");
+							List<String> st = DumpUtil.whoCalledMe();
+							st.stream().forEach(el -> System.out.println(String.format("\t%s", el)));
+							System.out.println("--------------");
 						} catch (BindException be) {
 							if (httpServerInstance.autoBind) {
 								httpServerInstance.incPort();
 								HTTPContext.getInstance().getLogger().info(String.format("Port in use, trying %d", httpServerInstance.getPort()));
 							} else {
 								System.err.println(String.format("Address in use: %d", httpServerInstance.getPort()));
-								keepTrying = false;
+//								keepTrying = false;
+								System.err.println("-- Dumping: --");
 								List<String> st = DumpUtil.whoCalledMe();
 								st.stream().forEach(el -> System.err.println(String.format("\t%s", el)));
+								System.err.println("--------------");
 								throw be;
 							}
 						}
