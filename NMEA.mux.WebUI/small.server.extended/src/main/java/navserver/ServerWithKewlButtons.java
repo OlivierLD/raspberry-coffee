@@ -43,6 +43,8 @@ public class ServerWithKewlButtons extends NavServer {
 	 *  See {@link PushButtonMaster#isPushed()}
 	 */
 
+	private static Thread me = Thread.currentThread();
+
 	public ServerWithKewlButtons() {
 
 		super(); // NavServer
@@ -79,6 +81,8 @@ public class ServerWithKewlButtons extends NavServer {
 			error.printStackTrace();
 		}
 
+		System.out.println(">> Button provisioned!");
+
 		// Was the SSD1306 loaded? This is loaded by the properties file.
 		// Use the SSD1306Processor, SPI version.
 		oledForwarder = SSD1306Processor.getInstance();
@@ -98,12 +102,24 @@ public class ServerWithKewlButtons extends NavServer {
 			System.out.println("Releasing ownership on the screen");
 			oledForwarder.setExternallyOwned(false); // Releasing ownership on the screen
 		}
+
+		synchronized (me) {
+			try {
+				me.wait(); // Wait for the button events
+			} catch (InterruptedException ie) {
+				// Bam!
+			}
+		}
 	}
 
 	public static void freeResources() {
 		// Cleanup
 		pbmOne.freeResources();
 		pbmShift.freeResources();
+
+		synchronized (me) {
+			me.notify();
+		}
 	}
 
 
