@@ -52,14 +52,14 @@ public class ServerWithKewlButtons extends NavServer {
 
 		try {
 			// Provision buttons here
-			appPin = RaspiPin.GPIO_01;  // Physical #12.
-			shiftPin = RaspiPin.GPIO_02;// Physical #13.
+			appPin = RaspiPin.GPIO_29;  // Physical #40.
+			shiftPin = RaspiPin.GPIO_28;// Physical #38.
 
 			// Change pins, based on system properties. Use physical pin numbers.
 			try {
 				// Identified by the PHYSICAL pin numbers
-				String buttonOnePinStr = System.getProperty("buttonOne", "12"); // GPIO_01
-				String buttonTwoPinStr = System.getProperty("buttonTwo", "13"); // GPIO_02
+				String buttonOnePinStr = System.getProperty("buttonOne", "40"); // GPIO_29
+				String buttonTwoPinStr = System.getProperty("buttonTwo", "38"); // GPIO_28
 
 				appPin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr));
 				shiftPin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonTwoPinStr));
