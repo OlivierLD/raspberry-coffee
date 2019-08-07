@@ -54,7 +54,7 @@ public class NavServer {
 		// Add GRIB features
 		this.httpServer.addRequestManager(new GRIBRequestManager());
 		// Add SunFlower, for sun data, if needed
-		if (!"false".equals(System.getProperty("with.sun.flower", "true"))) {
+		if ("true".equals(System.getProperty("with.sun.flower", "false"))) {
 			this.httpServer.addRequestManager(new SunFlowerRequestManager());
 		}
 	}

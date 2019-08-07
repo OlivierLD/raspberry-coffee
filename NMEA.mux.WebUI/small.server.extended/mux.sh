@@ -17,7 +17,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS" # From parent script, possibly
 #
 echo -e "In $0, inherited JAVA_OPTIONS: $JAVA_OPTIONS"
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -Dwith.sun.flower=false"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dwith.sun.flower=false"  # Default
 #
 # The NavServer (Mux actually) uses -Dhttp.port for its HTTP/REST port, not the one in the properties file, which is an admin server port.
 # It would be 9999 by default. You can also set it explicitly.
