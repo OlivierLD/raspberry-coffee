@@ -25,10 +25,15 @@ public class ServerWithKewlButtons extends NavServer {
 
 	private SSD1306Processor oledForwarder = null;
 
+	private static int serverPort = 9999;
+	private String turnLoggingOnURL = "";
+	private String turnLoggingOffURL = "";
+	private String terminateMuxURL = "";
+
 	// Action to take depending on the type of click.
 	// Propagate the button events to the SSD1306Processor (simple clicks, up and down)
 	// Shft + LongClick on button one: Shutdown (confirm with double-click within 1 second)
-	// TODO: Start & Stop logging
+	// TODO: Start & Stop logging: PUT /mux/mux-process/on /mux/mux-process/off
 	private boolean shutdownRequested = false;
 	private Runnable onClickOne = () -> {
 		System.out.println(String.format(">> %sSingle click on button 1", (pbmShift.isPushed() ? "[Shft] + " : "")));
@@ -46,6 +51,7 @@ public class ServerWithKewlButtons extends NavServer {
 					oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
 					oledForwarder.displayLines(new String[]{"Shutting down!"});
 				}
+				// TODO "POST", "/mux/terminate"
 				StaticUtil.shutdown();
 			} catch (Throwable ex) {
 				ex.printStackTrace();
@@ -99,6 +105,16 @@ public class ServerWithKewlButtons extends NavServer {
 	public ServerWithKewlButtons() {
 
 		super(); // NavServer
+
+		this.turnLoggingOnURL = String.format("http://localhost:%d/mux/mux-process/on", serverPort);
+		this.turnLoggingOffURL = String.format("http://localhost:%d/mux/mux-process/off", serverPort);
+		this.terminateMuxURL = String.format("http://localhost:%d/mux/terminate", serverPort);
+
+		System.out.println(String.format("To turn logging ON, user PUT %s", this.turnLoggingOnURL));
+		System.out.println(String.format("To turn logging OFF, user PUT %s", this.turnLoggingOffURL));
+		System.out.println(String.format("To terminate the multiplexer, user POST %s", this.terminateMuxURL));
+
+		System.out.println(String.format("Also try http://localhost:%d/zip/index.html from a browser", serverPort));
 
 		try {
 			// Provision buttons here
@@ -167,6 +183,14 @@ public class ServerWithKewlButtons extends NavServer {
 	}
 
 	public static void main(String... args) {
+
+		try {
+			serverPort = Integer.parseInt(System.getProperty("http.port", String.valueOf(serverPort)));
+		} catch (NumberFormatException nfe) {
+			System.err.println("Ooops");
+			nfe.printStackTrace();
+		}
+		System.out.println(String.format(">>> Server port is %d", serverPort));
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			freeResources();

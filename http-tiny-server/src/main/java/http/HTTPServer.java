@@ -68,10 +68,10 @@ import java.util.zip.ZipInputStream;
  * - http.verbose
  * - http.verbose.dump
  * - http.port
- * - static.docs
- * - static.zip.docs
+ * - static.docs      Path element of the static documents (like "/web/")
+ * - static.zip.docs  Path element of the documents to find in `web.archive` (like "/zip/")
  * - autobind
- * - web.archive
+ * - web.archive default web.zip
  *
  * </p>
  */
@@ -571,10 +571,12 @@ public class HTTPServer {
 							ss = new ServerSocket(httpServerInstance.getPort());
 							keepTrying = false;
 							System.out.println(String.format("Port open: %d", httpServerInstance.getPort()));
-							System.out.println("-- Dumping: --");
-							List<String> st = DumpUtil.whoCalledMe();
-							st.stream().forEach(el -> System.out.println(String.format("\t%s", el)));
-							System.out.println("--------------");
+							if (verbose) {
+								System.out.println("-- Dumping: --");
+								List<String> st = DumpUtil.whoCalledMe();
+								st.stream().forEach(el -> System.out.println(String.format("\t%s", el)));
+								System.out.println("--------------");
+							}
 						} catch (BindException be) {
 							if (httpServerInstance.autoBind) {
 								httpServerInstance.incPort();

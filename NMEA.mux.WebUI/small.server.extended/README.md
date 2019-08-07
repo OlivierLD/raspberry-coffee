@@ -29,12 +29,14 @@ This is built just like the other examples in this module, just run
  $ ./builder.sh
  ```
  and follow the instructions in the console.
- 
+
 ---
- 
+
 More to come. Diagrams, screenshots, pictures.
 
 See [here](../../Project.Trunk/REST.clients/TCP.Watch.01/README.md#raspberry-pi-zero-w-and-ssd1306-128x64).
 
 # TODO
 Describe the way to get to the log files, download, etc.
+`runner.html`, `logMgmt.html`, `admin.html`, etc.
+
