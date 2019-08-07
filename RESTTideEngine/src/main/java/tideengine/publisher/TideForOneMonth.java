@@ -313,7 +313,7 @@ public class TideForOneMonth {
 		List<TimedValue> slackList = null;
 		int trend = 0;
 
-		slackList = new ArrayList<TimedValue>();
+		slackList = new ArrayList<>();
 		double previousWH = Double.NaN;
 		for (int h = 0; h < 24; h++) {
 			for (int m = 0; m < 60; m++) {
@@ -402,9 +402,7 @@ public class TideForOneMonth {
 			timeAL.add(new TimedValue(ts.isTideStation() ? "HW" : "MF", high2Cal, high2));
 		}
 		if (ts.isCurrentStation() && slackList != null && slackList.size() > 0) {
-			for (TimedValue tv : slackList) {
-				timeAL.add(tv);
-			}
+			timeAL.addAll(slackList);
 		}
 		Collections.sort(timeAL);
 		return timeAL;
