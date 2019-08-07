@@ -122,7 +122,10 @@ public class PushButtonMaster {
 
 	private void initCtx(Pin buttonPin) {
 		if (this.gpio != null) {
-			// provision gpio pin as an output pin and turn it off
+			if (verbose) {
+				System.out.println(String.format(">> InitCtx on %s, %s", this.buttonName, buttonPin));
+			}
+			// provision gpio pin as an output pin and turn it off/pushed down
 			this.button = gpio.provisionDigitalInputPin(buttonPin, PinPullResistance.PULL_DOWN);
 			this.button.addListener((GpioPinListenerDigital) event -> {
 				if (event.getState().isHigh()) { // Button pressed
@@ -182,6 +185,10 @@ public class PushButtonMaster {
 					}
 				}
 			});
+		} else {
+			if (verbose) {
+				System.out.println(String.format("No GPIO InitCtx on %s, %s", this.buttonName, buttonPin));
+			}
 		}
 	}
 

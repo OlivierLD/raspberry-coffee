@@ -81,7 +81,7 @@ public class ServerWithKewlButtons extends NavServer {
 			error.printStackTrace();
 		}
 
-		System.out.println(">> Button provisioned!");
+		System.out.println(">> Buttons provisioned!");
 
 		// Was the SSD1306 loaded? This is loaded by the properties file.
 		// Use the SSD1306Processor, SPI version.
