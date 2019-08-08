@@ -1,6 +1,6 @@
 package navserver;
 
-/**
+/*
  * Shows how to add push buttons to interact with the NavServer
  * Buttons with click, double-click, long-click, and other combinations.
  * Uses a small screen (oled SSD1306, Nokia, etc)
@@ -96,7 +96,7 @@ public class ServerWithKewlButtons extends NavServer {
 	private boolean screenSaverMode = false;
 	private Thread screenSaverThread = null;
 
-	private void displayLocalMenuItems() {
+	private void displayLocalMenu() {
 		if (oledForwarder != null) {
 			oledForwarder.displayLines(new String[]{
 					"Up and down to Scroll",
@@ -134,7 +134,7 @@ public class ServerWithKewlButtons extends NavServer {
 			if (localMenuItemIndex > (localMenuItems.length - 1)) {
 				localMenuItemIndex = 0;
 			}
-			displayLocalMenuItems();
+			displayLocalMenu();
 		} else if (!pbmTwo.isPushed() && oledForwarder != null) {
 			if (buttonVerbose) {
 				System.out.println("1 up!");
@@ -186,7 +186,7 @@ public class ServerWithKewlButtons extends NavServer {
 			if (oledForwarder != null) {
 				oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
 				localMenuItemIndex = 0;
-				displayLocalMenuItems();
+				displayLocalMenu();
 			}
 		}
 	};
@@ -230,7 +230,7 @@ public class ServerWithKewlButtons extends NavServer {
 			if (localMenuItemIndex < 0) {
 				localMenuItemIndex = (localMenuItems.length - 1);
 			}
-			displayLocalMenuItems();
+			displayLocalMenu();
 		} else if (!pbmOne.isPushed() && oledForwarder != null) {
 			if (buttonVerbose) {
 				System.out.println("1 down!");
