@@ -8,6 +8,8 @@ package navserver;
  * This class use making use of Runnable.
  */
 
+// TODO Button simulator, in swing?
+
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import http.client.HTTPClient;
@@ -315,8 +317,8 @@ public class ServerWithKewlButtons extends NavServer {
 
 		try {
 			// Provision buttons here
-			buttonOnePin = RaspiPin.GPIO_29;  // Physical #38.
-			buttonTwoPin = RaspiPin.GPIO_28;// Physical #40.
+			buttonOnePin = RaspiPin.GPIO_29; // Physical #38.
+			buttonTwoPin = RaspiPin.GPIO_28; // Physical #40.
 
 			// Change pins, based on system properties. Use physical pin numbers.
 			try {
@@ -331,14 +333,14 @@ public class ServerWithKewlButtons extends NavServer {
 			}
 
 			pbmOne.update(
-					"App-Button",
+					"Top-Button",
 					buttonOnePin,
 					onClickOne,
 					onDoubleClickOne,
 					onLongClickOne);
 
 			pbmTwo.update(
-					"Shift-Button",
+					"Bottom-Button",
 					buttonTwoPin,
 					onClickTwo,
 					onDoubleClickTwo,
@@ -353,34 +355,37 @@ public class ServerWithKewlButtons extends NavServer {
 		// Was the SSD1306 loaded? This is loaded by the properties file.
 		// Use the SSD1306Processor, SPI version.
 		oledForwarder = SSD1306Processor.getInstance();
-		// Following block just for tests.
 		if (oledForwarder == null) {
 			System.out.println("SSD1306 was NOT loaded");
 		} else {
-			System.out.println("SSD1306 was loaded!");
-			// Now let's write in the screen...
-			TimeUtil.delay(10_000L);
-			System.out.println("Taking ownership on the screen");
-			oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
-			TimeUtil.delay(500L);
+			boolean simulating = oledForwarder.isSimulating();
+			System.out.println(String.format("SSD1306 was loaded! (%s)", simulating ? "simulating" : "for real"));
+			// Following block just for tests and dev.
+			if (true) {
+				// Now let's write in the screen...
+				TimeUtil.delay(10_000L);
+				System.out.println("Taking ownership on the screen");
+				oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
+				TimeUtil.delay(500L);
 //			oledForwarder.displayLines(new String[] { "Taking ownership", "on the screen"});
-			oledForwarder.displayLines(new String[] { "Shutting down...", "Confirm with",  "double-click (top)", "within 3 s"});
-			TimeUtil.delay(4_000L);
+				oledForwarder.displayLines(new String[]{"Shutting down...", "Confirm with", "double-click (top)", "within 3 s"});
+				TimeUtil.delay(4_000L);
 
-			oledForwarder.displayLines(new String[] {
-					"Up and down to Scroll",
-					"--------------------",
-					"- Menu Operation", // Sample
-					"--------------------",
-					"Db-clk 1: select",
-					"Db-clk 2: cancel"
-			});
-			TimeUtil.delay(5_000L);
+				oledForwarder.displayLines(new String[]{
+						"Up and down to Scroll",
+						"--------------------",
+						"- Menu Operation", // Sample
+						"--------------------",
+						"Db-clk 1: select",
+						"Db-clk 2: cancel"
+				});
+				TimeUtil.delay(5_000L);
 
-			oledForwarder.displayLines(new String[] { "Releasing the screen"});
-			TimeUtil.delay(2_000L);
-			System.out.println("Releasing ownership on the screen");
-			oledForwarder.setExternallyOwned(false); // Releasing ownership on the screen
+				oledForwarder.displayLines(new String[]{"Releasing the screen"});
+				TimeUtil.delay(2_000L);
+				System.out.println("Releasing ownership on the screen");
+				oledForwarder.setExternallyOwned(false); // Releasing ownership on the screen
+			}
 		}
 		if (false) { // Test REST requests
 			TimeUtil.delay(5_000L);

@@ -766,6 +766,10 @@ public class SSD1306Processor implements Forwarder {
 		}
 	}
 
+	public boolean isSimulating() {
+		return (oled == null && substitute != null);
+	}
+
 	public static class OLEDI2CBean {
 		private String cls;
 		private String type = "oled-i2c";
