@@ -26,6 +26,8 @@ public class ServerWithKewlButtons extends NavServer {
 
 	private static boolean buttonVerbose = "true".equals(System.getProperty("button.verbose"));
 
+	private SSD1306Processor oledForwarder = null;
+
 	private Runnable pauseLogging = () -> {
 		try {
 			HTTPClient.doPut(this.turnLoggingOffURL, new HashMap<>(), null);
@@ -40,6 +42,27 @@ public class ServerWithKewlButtons extends NavServer {
 			HTTPClient.doPut(this.turnLoggingOnURL, new HashMap<>(), null);
 		} catch (Exception ex) {
 			System.err.println("Resuming logging:");
+			ex.printStackTrace();
+		}
+	};
+
+	private Runnable terminateMux = () -> {
+		try {
+			HTTPClient.doPost(this.terminateMuxURL, new HashMap<>(), null);
+		} catch (Exception ex) {
+			System.err.println("Terminate Mux:");
+			ex.printStackTrace();
+		}
+	};
+
+	private Runnable sayHello = () -> {
+		try {
+			if (oledForwarder != null) {
+				oledForwarder.displayLines(new String[]{ "Hello !" });
+				TimeUtil.delay(4_000L);
+			}
+		} catch (Exception ex) {
+			System.err.println("Say Hello:");
 			ex.printStackTrace();
 		}
 	};
@@ -66,9 +89,11 @@ public class ServerWithKewlButtons extends NavServer {
 		public Runnable getAction() { return this.action; }
 	}
 
-	private MenuItem[] localMenuItems = new MenuItem[] {
-		new MenuItem().title("Pause logging").action(pauseLogging),
-		new MenuItem().title("Resume logging").action(resumeLogging)
+	private MenuItem[] localMenuItems = new MenuItem[]{
+			new MenuItem().title("Pause logging").action(pauseLogging),
+			new MenuItem().title("Resume logging").action(resumeLogging),
+			new MenuItem().title("Terminate Multiplexer").action(terminateMux),
+			new MenuItem().title("Say Hello").action(sayHello)
 	};
 	private int localMenuItemIndex = 0;
 
@@ -77,8 +102,6 @@ public class ServerWithKewlButtons extends NavServer {
 
 	final static PushButtonMaster pbmOne = new PushButtonMaster();
 	final static PushButtonMaster pbmTwo = new PushButtonMaster();
-
-	private SSD1306Processor oledForwarder = null;
 
 	private static int serverPort = 9999;
 	private String turnLoggingOnURL = "";
@@ -157,11 +180,15 @@ public class ServerWithKewlButtons extends NavServer {
 				}
 				try {
 					System.out.println("Shutting down the MUX");
-					HTTPClient.doPost(this.terminateMuxURL, new HashMap<>(), null);
+					try {
+						HTTPClient.doPost(this.terminateMuxURL, new HashMap<>(), null);
+					} catch (Exception wasDownAlready) {
+						// I know...
+					}
 					System.out.println("Killing the box");
 					TimeUtil.delay(2_000L);
 				} catch (Exception ex) {
-					System.err.println("PUT failed:");
+					System.err.println("Shutdown failed:");
 					ex.printStackTrace();
 				}
 				StaticUtil.shutdown();
@@ -367,7 +394,7 @@ public class ServerWithKewlButtons extends NavServer {
 			boolean simulating = oledForwarder.isSimulating();
 			System.out.println(String.format("SSD1306 was loaded! (%s)", simulating ? "simulating" : "for real"));
 			// Following block just for tests and dev.
-			if (true) {
+			if (false) {
 				// Now let's write in the screen...
 				TimeUtil.delay(10_000L);
 				System.out.println("Taking ownership on the screen");
