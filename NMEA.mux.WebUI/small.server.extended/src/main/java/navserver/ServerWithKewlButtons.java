@@ -22,6 +22,47 @@ public class ServerWithKewlButtons extends NavServer {
 
 	private static boolean buttonVerbose = "true".equals(System.getProperty("button.verbose"));
 
+	private Runnable pauseLogging = () -> {
+		try {
+			HTTPClient.doPut(this.turnLoggingOffURL, new HashMap<>(), null);
+		} catch (Exception ex) {
+			System.err.println("Pausing logging:");
+			ex.printStackTrace();
+		}
+	};
+
+	private Runnable resumeLogging = () -> {
+		try {
+			HTTPClient.doPut(this.turnLoggingOnURL, new HashMap<>(), null);
+		} catch (Exception ex) {
+			System.err.println("Resuming logging:");
+			ex.printStackTrace();
+		}
+	};
+
+	private class MenuItem {
+		private String title;
+		private Runnable action;
+
+		public MenuItem() {}
+		public MenuItem title(String title) {
+			this.title = title;
+			return this;
+		}
+		public MenuItem action(Runnable action) {
+			this.action = action;
+			return this;
+		}
+		public String getTitle() { return this.title; }
+		public Runnable getAction() { return this.action; }
+	}
+
+	private MenuItem[] localMenuItems = new MenuItem[] {
+		new MenuItem().title("Pause logging").action(pauseLogging),
+		new MenuItem().title("Resume logging").action(resumeLogging)
+	};
+	private int localMenuItemIndex = 0;
+
 	private Pin appPin;
 	private Pin shiftPin;
 
@@ -40,11 +81,24 @@ public class ServerWithKewlButtons extends NavServer {
 	// - Shft + LongClick on button one: Shutdown (confirm with double-click within 1 second)
 	// DoubleClick on button one: Show local menu
 	// DoubleClick on button two: Screen Saver mode. Any simple-click to resume.
-	// TODO: Start & Stop logging: PUT /mux/mux-process/on /mux/mux-process/off
+	// In the local menu: Start & Stop logging: PUT /mux/mux-process/on /mux/mux-process/off
 	private boolean shutdownRequested = false;
 	private boolean displayingLocalMenu = false;
 	private boolean screenSaverMode = false;
 	private Thread screenSaverThread = null;
+
+	private void displayLocalMenuItems() {
+		if (oledForwarder != null) {
+			oledForwarder.displayLines(new String[]{
+					"Up and down to Scroll",
+					"--------------------",
+					"- " + localMenuItems[localMenuItemIndex].getTitle(),
+					"--------------------",
+					"Db-clk 1: select",
+					"Db-clk 2: cancel"
+			});
+		}
+	}
 
 	private void releaseScreenSaver() {
 		if (buttonVerbose) {
@@ -65,6 +119,13 @@ public class ServerWithKewlButtons extends NavServer {
 		}
 		if (screenSaverMode) {
 			releaseScreenSaver();
+		} else if (displayingLocalMenu) {
+			// Previous menu item
+			localMenuItemIndex += 1;
+			if (localMenuItemIndex > (localMenuItems.length - 1)) {
+				localMenuItemIndex = 0;
+			}
+			displayLocalMenuItems();
 		} else if (!pbmShift.isPushed() && oledForwarder != null) {
 			if (buttonVerbose) {
 				System.out.println("1 up!");
@@ -101,9 +162,23 @@ public class ServerWithKewlButtons extends NavServer {
 					oledForwarder.setExternallyOwned(false);
 				}
 			}
+		} else if (displayingLocalMenu) {
+			// Execute and return to normal mode
+			localMenuItems[localMenuItemIndex].getAction().run();
+			displayingLocalMenu = false;
+			if (oledForwarder != null) {
+				oledForwarder.setExternallyOwned(false); // Release
+			}
 		} else { // Display menu?
+			if (buttonVerbose) {
+				System.out.println("Displaying local menu items");
+			}
 			displayingLocalMenu = true;
-			// TODO Do it...
+			if (oledForwarder != null) {
+				oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
+				localMenuItemIndex = 0;
+				displayLocalMenuItems();
+			}
 		}
 	};
 	private Runnable onLongClickOne = () -> {
@@ -140,6 +215,13 @@ public class ServerWithKewlButtons extends NavServer {
 		}
 		if (screenSaverMode) {
 			releaseScreenSaver();
+		} else if (displayingLocalMenu) {
+			// Previous menu item
+			localMenuItemIndex -= 1;
+			if (localMenuItemIndex < 0) {
+				localMenuItemIndex = (localMenuItems.length - 1);
+			}
+			displayLocalMenuItems();
 		} else if (!pbmOne.isPushed() && oledForwarder != null) {
 			if (buttonVerbose) {
 				System.out.println("1 down!");
@@ -151,7 +233,13 @@ public class ServerWithKewlButtons extends NavServer {
 		if (buttonVerbose) {
 			System.out.println(String.format(">> %sDouble click on button 2", (pbmOne.isPushed() ? "[Shft] + " : "")));
 		}
-		if (!screenSaverMode) {
+		if (displayingLocalMenu) {
+			// Cancel
+			displayingLocalMenu = false;
+			if (oledForwarder != null) {
+				oledForwarder.setExternallyOwned(false); // Release
+			}
+		} else if (!screenSaverMode) {
 			if (buttonVerbose) {
 				System.out.println("Starting screen saver...");
 			}
@@ -209,7 +297,7 @@ public class ServerWithKewlButtons extends NavServer {
 		System.out.println(String.format("To terminate the multiplexer, user POST %s", this.terminateMuxURL));
 
 		System.out.println(String.format("Also try http://localhost:%d/zip/index.html from a browser", serverPort));
-		System.out.println(String.format("     and http://localhost:%d/zip/extra/runner.html ", serverPort));
+		System.out.println(String.format("     and http://localhost:%d/zip/runner.html ", serverPort));
 
 		// Help display here
 		System.out.println("+---------------------------------------------------------------------------------------+");
@@ -264,13 +352,24 @@ public class ServerWithKewlButtons extends NavServer {
 		} else {
 			System.out.println("SSD1306 was loaded!");
 			// Now let's write in the screen...
-			TimeUtil.delay(20_000L);
+			TimeUtil.delay(10_000L);
 			System.out.println("Taking ownership on the screen");
 			oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
-			TimeUtil.delay(1_000L);
+			TimeUtil.delay(500L);
 //			oledForwarder.displayLines(new String[] { "Taking ownership", "on the screen"});
 			oledForwarder.displayLines(new String[] { "Shutting down...", "Confirm with",  "double-click", "within 1s"});
+			TimeUtil.delay(4_000L);
+
+			oledForwarder.displayLines(new String[] {
+					"Up and down to Scroll",
+					"--------------------",
+					"- Menu Operation",
+					"--------------------",
+					"Db-clk 1: select",
+					"Db-clk 2: cancel"
+			});
 			TimeUtil.delay(5_000L);
+
 			oledForwarder.displayLines(new String[] { "Releasing the screen"});
 			TimeUtil.delay(2_000L);
 			System.out.println("Releasing ownership on the screen");
