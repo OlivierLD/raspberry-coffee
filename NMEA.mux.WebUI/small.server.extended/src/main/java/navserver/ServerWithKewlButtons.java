@@ -188,7 +188,7 @@ public class ServerWithKewlButtons extends NavServer {
 		if (pbmShift.isPushed()) { // Shift + LongClick on button one
 			if (oledForwarder != null) {
 				oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
-				oledForwarder.displayLines(new String[] { "Shutting down...", "Confirm with",  "double-click", "within 3s"});
+				oledForwarder.displayLines(new String[] { "Shutting down...", "Confirm with",  "double-click (top)", "within 3 s"});
 			} else {
 				System.out.println("Shutting down, confirm with double-click");
 			}
@@ -357,13 +357,13 @@ public class ServerWithKewlButtons extends NavServer {
 			oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
 			TimeUtil.delay(500L);
 //			oledForwarder.displayLines(new String[] { "Taking ownership", "on the screen"});
-			oledForwarder.displayLines(new String[] { "Shutting down...", "Confirm with",  "double-click", "within 1s"});
+			oledForwarder.displayLines(new String[] { "Shutting down...", "Confirm with",  "double-click (top)", "within 3 s"});
 			TimeUtil.delay(4_000L);
 
 			oledForwarder.displayLines(new String[] {
 					"Up and down to Scroll",
 					"--------------------",
-					"- Menu Operation",
+					"- Menu Operation", // Sample
 					"--------------------",
 					"Db-clk 1: select",
 					"Db-clk 2: cancel"
