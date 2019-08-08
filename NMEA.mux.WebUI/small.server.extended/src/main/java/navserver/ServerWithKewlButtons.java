@@ -104,7 +104,7 @@ public class ServerWithKewlButtons extends NavServer {
 		if (pbmShift.isPushed()) { // Shift + LongClick on button one
 			if (oledForwarder != null) {
 				oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
-				oledForwarder.displayLines(new String[] { "Shutting down...", "Confirm with",  "double-click", "within 1s"});
+				oledForwarder.displayLines(new String[] { "Shutting down...", "Confirm with",  "double-click", "within 3s"});
 			} else {
 				System.out.println("Shutting down, confirm with double-click");
 			}
@@ -112,7 +112,7 @@ public class ServerWithKewlButtons extends NavServer {
 			Thread waiter = new Thread(() -> {
 				try {
 					synchronized (this) {
-						this.wait(1_000L);
+						this.wait(3_000L);
 					}
 					shutdownRequested = false;
 					if (oledForwarder != null) {
@@ -199,6 +199,13 @@ public class ServerWithKewlButtons extends NavServer {
 
 		System.out.println(String.format("Also try http://localhost:%d/zip/index.html from a browser", serverPort));
 		System.out.println(String.format("     and http://localhost:%d/zip/extra/runner.html ", serverPort));
+
+		// Help display here
+		System.out.println("+---------------------------------------------------------------------------------------+");
+		System.out.println("| Shft + LongClick on button one: Shutdown (confirm with double-click within 3 seconds) |");
+		System.out.println("| DoubleClick on button one: Show local menu                                            |");
+		System.out.println("| DoubleClick on button two: Screen Saver mode. Any simple-click to resume.             |");
+		System.out.println("+---------------------------------------------------------------------------------------+");
 
 		try {
 			// Provision buttons here
