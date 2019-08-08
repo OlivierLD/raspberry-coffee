@@ -74,7 +74,7 @@ fi
 # JAVA_OPTIONS="$JAVA_OPTIONS -Drest.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dbutton.verbose=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dbutton.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dscreen.verbose=true" #now in ssd1306.properties
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dwith.sun.flower=true"

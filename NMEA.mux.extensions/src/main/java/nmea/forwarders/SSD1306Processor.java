@@ -41,9 +41,8 @@ import utils.PinUtil;
  * used at startup. It - for now - cannot be managed from the Web UI.
  * The REST api is not aware of it.
  *
- * It auto-scrolls across available values.
+ * It auto-scrolls across available values, if display.time (-Ddisplay.time) is greater than 0
  *
- * TODO Manage the delay.time if <= 0
  */
 public class SSD1306Processor implements Forwarder {
 	private boolean keepWorking = true;
@@ -330,9 +329,9 @@ public class SSD1306Processor implements Forwarder {
 		sb = new ScreenBuffer(width, height);
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
-		Thread scrollThread = new Thread("ScrollThread") { // TODO if scrollWait > 0
+		Thread scrollThread = new Thread("ScrollThread") { // if scrollWait > 0
 			public void run() {
-				while (keepWorking) {
+				while (keepWorking && scrollWait > 0) {
 					try { Thread.sleep(scrollWait); } catch (Exception ignore) {}
 					onButtonPressed();
 				}
@@ -786,7 +785,7 @@ public class SSD1306Processor implements Forwarder {
 
 	@Override
 	public void setProperties(Properties props) {
-		String betweenLoops = props.getProperty("display.time", "5");
+		String betweenLoops = props.getProperty("display.time", "5"); // Works if greater than 0
 		try {
 			scrollWait = Long.parseLong(betweenLoops) * 1_000L;
 		} catch (NumberFormatException nfe) {
