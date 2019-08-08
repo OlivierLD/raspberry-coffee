@@ -577,11 +577,9 @@ public class StaticUtil {
 
 		if ("Linux".equals(operatingSystem) || "Mac OS X".equals(operatingSystem)) {
 			shutdownCommand = "shutdown -h now";
-		}
-		else if ("Windows".equals(operatingSystem)) {
+		} else if ("Windows".equals(operatingSystem)) {
 			shutdownCommand = "shutdown.exe -s -t 0";
-		}
-		else {
+		} else {
 			throw new RuntimeException("Unsupported operating system.");
 		}
 

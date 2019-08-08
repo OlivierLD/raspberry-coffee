@@ -46,15 +46,25 @@ public class ServerWithKewlButtons extends NavServer {
 	private boolean screenSaverMode = false;
 	private Thread screenSaverThread = null;
 
+	private void releaseScreenSaver() {
+		if (buttonVerbose) {
+			System.out.println("Releasing screen saver");
+		}
+		screenSaverMode = false;
+		if (screenSaverThread != null) {
+			synchronized (screenSaverThread) {
+				screenSaverThread.notify();
+			}
+		}
+		screenSaverThread = null;
+	}
+
 	private Runnable onClickOne = () -> {
 		if (buttonVerbose) {
 			System.out.println(String.format(">> %sSingle click on button 1", (pbmShift.isPushed() ? "[Shft] + " : "")));
 		}
 		if (screenSaverMode) {
-			if (buttonVerbose) {
-				System.out.println("Releasing screen saver");
-			}
-			screenSaverMode = !screenSaverMode;
+			releaseScreenSaver();
 		}
 		if (!pbmShift.isPushed() && oledForwarder != null) {
 			if (buttonVerbose) {
@@ -130,10 +140,7 @@ public class ServerWithKewlButtons extends NavServer {
 			System.out.println(String.format(">> %sSingle click on button 2", (pbmOne.isPushed() ? "[Shft] + " : "")));
 		}
 		if (screenSaverMode) {
-			if (buttonVerbose) {
-				System.out.println("Releasing screen saver");
-			}
-			screenSaverMode = !screenSaverMode;
+			releaseScreenSaver();
 		}
 		if (!pbmOne.isPushed() && oledForwarder != null) {
 			if (buttonVerbose) {
@@ -161,7 +168,13 @@ public class ServerWithKewlButtons extends NavServer {
 					if (oledForwarder != null) {
 						oledForwarder.displayLines(new String[]{String.format("%s", on ? "." : "")});
 						on = !on;
-						TimeUtil.delay(1_000L);
+						try {
+							synchronized (this) {
+								this.wait(1_000L);
+							}
+						} catch (InterruptedException ie) {
+							// I know...
+						}
 					}
 				}
 				if (buttonVerbose) {
