@@ -7,7 +7,7 @@
  Publish like that:
  events.publish('topic', val);
  */
-var events = {
+let events = {
     listener: [],
 
     subscribe: function (topic, action) {

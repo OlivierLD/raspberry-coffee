@@ -68,15 +68,15 @@
 	</style>
 	<script type="text/javascript">
 
-		var getSystemDate = function(cb) {
-			var getTime = getSystemTime(); // A promise
+		function getSystemDate(cb) {
+			let getTime = getSystemTime(); // A promise
 			getTime.then(function (value) {
 				console.log("System date:", value);
 				if (cb !== undefined) {
 					cb(value);
 				}
 			}, function (error, errmess) {
-				var message;
+				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
 						message = errmess.message;
@@ -86,23 +86,23 @@
 				}
 				console.log("GetSystemTime failed..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
-		};
+		}
 
-		var getLogFilesList = function () {
-			var self = this;
-			var getData = getLogFiles(); // A promise
+		function getLogFilesList() {
+			let self = this;
+			let getData = getLogFiles(); // A promise
 			getData.then(function (value) {
-				var logFiles = JSON.parse(value);
+				let logFiles = JSON.parse(value);
 //      console.log("Log files", json);
 				// get active file forwarder lo file name
-				var getForwarders = self.getForwarders(); // Another promise
+				let getForwarders = self.getForwarders(); // Another promise
 				getForwarders.then(function (value) {
 					document.body.style.cursor = 'default';
-					var fwdrs = JSON.parse(value);
+					let fwdrs = JSON.parse(value);
 					buildFileList(logFiles, fwdrs);
 				}, function (error, errmess) {
 					document.body.style.cursor = 'default';
-					var message;
+					let message;
 					if (errmess !== undefined) {
 						if (errmess.message !== undefined) {
 							message = errmess.message;
@@ -123,17 +123,17 @@
 				}
 				console.log("Failed to get the log files list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
-		};
+		}
 
-		var deleteLog = function (fName) {
-			var deleteData = deleteLogFile(fName); // A promise
+		function deleteLog(fName) {
+			let deleteData = deleteLogFile(fName); // A promise
 			deleteData.then(function (value) {
 //		var json = JSON.parse(value);
 				console.log("Delete log file OK");
 				// Rebuild the list
 				getLogFilesList();
 			}, function (error, errmess) {
-				var message;
+				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
 						message = errmess.message;
@@ -143,7 +143,7 @@
 				}
 				console.log("Failed to delete the log file..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
-		};
+		}
 
 		const formatter = new Intl.NumberFormat('en-US', {
 			minimumFractionDigits: 0
@@ -151,8 +151,8 @@
 
 		function buildFileList(fileArray, forwarders) {
 
-			var activeLogFile = [];
-			for (var i=0; i<forwarders.length; i++) {
+			let activeLogFile = [];
+			for (let i=0; i<forwarders.length; i++) {
 				if (forwarders[i].type === 'file') {
 					activeLogFile.push(forwarders[i].log);
 				}
@@ -187,7 +187,7 @@
 			document.getElementById("table-body").innerHTML = tableHtml;
 		}
 
-		window.onload = function() {
+		window.onload = () => {
 			getLogFilesList();
 			getSystemDate(function(date) {
 				document.getElementById("syst-date").innerHTML = '<b>System Date: ' + date + '</b>';
