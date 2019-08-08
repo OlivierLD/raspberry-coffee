@@ -142,6 +142,7 @@ public class ServerWithKewlButtons extends NavServer {
 			oledForwarder.onButtonUpPressed();
 		}
 	};
+
 	private Runnable onDoubleClickOne = () -> {
 		if (buttonVerbose) {
 			System.out.println(String.format(">> %sDouble click on button 1", (pbmTwo.isPushed() ? "[Shft] + " : "")));
@@ -190,6 +191,7 @@ public class ServerWithKewlButtons extends NavServer {
 			}
 		}
 	};
+
 	private Runnable onLongClickOne = () -> {
 		if (buttonVerbose) {
 			System.out.println(String.format(">> %sLong click on button 1", (pbmTwo.isPushed() ? "[Shft] + " : "")));
@@ -218,6 +220,7 @@ public class ServerWithKewlButtons extends NavServer {
 			waiter.start();
 		}
 	};
+
 	private Runnable onClickTwo = () -> {
 		if (buttonVerbose) {
 			System.out.println(String.format(">> %sSingle click on button 2", (pbmOne.isPushed() ? "[Shft] + " : "")));
@@ -238,6 +241,7 @@ public class ServerWithKewlButtons extends NavServer {
 			oledForwarder.onButtonDownPressed();
 		}
 	};
+
 	private Runnable onDoubleClickTwo = () -> {
 		if (buttonVerbose) {
 			System.out.println(String.format(">> %sDouble click on button 2", (pbmOne.isPushed() ? "[Shft] + " : "")));
@@ -284,11 +288,13 @@ public class ServerWithKewlButtons extends NavServer {
 			System.out.println("Already in screensaver mode");
 		}
 	};
+
 	private Runnable onLongClickTwo = () -> {
 		if (buttonVerbose) {
 			System.out.println(String.format(">> %sLong click on button 2", (pbmOne.isPushed() ? "[Shft] + " : "")));
 		}
 	};
+
 	/**
 	 *  For the Shift button, no operation needed. We only need if it is up or down.
 	 *  See {@link PushButtonMaster#isPushed()}
