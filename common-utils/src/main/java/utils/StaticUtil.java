@@ -583,7 +583,7 @@ public class StaticUtil {
 			throw new RuntimeException("Unsupported operating system.");
 		}
 
-		Runtime.getRuntime().exec(shutdownCommand);
+		Runtime.getRuntime().exec(shutdownCommand); // Migght require a sudo, hey...
 		System.exit(0);
 	}
 

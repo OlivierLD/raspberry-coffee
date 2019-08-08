@@ -65,8 +65,7 @@ public class ServerWithKewlButtons extends NavServer {
 		}
 		if (screenSaverMode) {
 			releaseScreenSaver();
-		}
-		if (!pbmShift.isPushed() && oledForwarder != null) {
+		} else if (!pbmShift.isPushed() && oledForwarder != null) {
 			if (buttonVerbose) {
 				System.out.println("1 up!");
 			}
@@ -141,8 +140,7 @@ public class ServerWithKewlButtons extends NavServer {
 		}
 		if (screenSaverMode) {
 			releaseScreenSaver();
-		}
-		if (!pbmOne.isPushed() && oledForwarder != null) {
+		} else if (!pbmOne.isPushed() && oledForwarder != null) {
 			if (buttonVerbose) {
 				System.out.println("1 down!");
 			}
