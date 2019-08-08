@@ -11,7 +11,7 @@
     <script type="text/javascript" src="js/qrcode.js"></script>
     <script type="text/javascript">
 
-  window.onload = function() {
+  window.onload = () => {
     document.getElementById('server-ip').value = document.location.hostname;
     makeCode();
   };
@@ -50,23 +50,23 @@
                 <div id="qrcode" style="width:250px; height:250px; margin-top:15px;"></div>
                   <script type="text/javascript">
 
-var qrcode = new QRCode(document.getElementById("qrcode"), {
+let qrcode = new QRCode(document.getElementById("qrcode"), {
   width:  250,
   height: 250
 });
 
-var makeCode = function() {
-  var server = document.getElementById("server-ip");
-  var dataport = document.getElementById("data-port");
-	var pathprms = document.getElementById("path-prms");
+function makeCode() {
+  let server = document.getElementById("server-ip");
+  let dataport = document.getElementById("data-port");
+  let pathprms = document.getElementById("path-prms");
 
-  var toDisplay = 'http://' + server.value + ':' + (dataport.value.length === 0 ? "80" : dataport.value) + pathprms.value
+  let toDisplay = 'http://' + server.value + ':' + (dataport.value.length === 0 ? "80" : dataport.value) + pathprms.value
 
   try { document.getElementById("url-2-display").innerHTML = "<a href='" + toDisplay + "' target='test' title='Test me'>" + toDisplay + "</a>"; }
   catch (err) {}
 
   qrcode.makeCode(toDisplay);
-};
+}
 
 makeCode();
 

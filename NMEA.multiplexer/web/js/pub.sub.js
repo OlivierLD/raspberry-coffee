@@ -18,7 +18,7 @@ let events = {
     },
 
     publish: function (topic, value) {
-        for (var i = 0; i < this.listener.length; i++) {
+        for (let i = 0; i < this.listener.length; i++) {
             if (this.listener[i].topic === topic) {
                 this.listener[i].actionListener(value);
             }

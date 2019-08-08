@@ -6,7 +6,7 @@ let storedHistory = "";
 let storedHistoryOut = "";
 let storedElapsed = "";
 
-const DEBUG = false
+const DEBUG = false;
 
 /* Uses ES6 Promises */
 function getPromise(
@@ -33,6 +33,9 @@ function getPromise(
 		if (data !== undefined && data !== null) {
 			req += ("\n" + JSON.stringify(data, null, 2));
 		}
+		if (DEBUG) {
+		    console.log("Request:", req);
+    }
 
 		xhr.open(verb, url, true);
 		xhr.setRequestHeader("Content-type", "application/json");
@@ -201,9 +204,9 @@ function pushData(flow) {
 
 function protocolTest() {
 	let postData = protocolTestFunc();
-	postData.then(function (value) {
+	postData.then((value) => {
 		console.log(value);
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		let message;
 		if (errmess !== undefined) {
 			if (errmess.message !== undefined) {
@@ -219,11 +222,11 @@ function protocolTest() {
 function forwarderStatus() {
 	// No REST traffic for this one.
 	let getData = getForwarderStatus();
-	getData.then(function (value) {
+	getData.then((value) => {
 		let json = JSON.parse(value); // Like {"processing":false,"started":1501082121336}
 		let status = json.processing;
 		document.getElementById("forwarders-status").innerText = (status === true ? 'ON' : 'Paused');
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		let message;
 		if (errmess !== undefined) {
 			if (errmess.message !== undefined) {
@@ -241,7 +244,7 @@ function dataVolume() {
 	// No REST traffic for this one.
 	document.getElementById('flow').style.cursor = 'progress';
 	let getData = getVolume();
-	getData.then(function (value) {
+	getData.then((value) => {
 		let json = JSON.parse(value); // Like { "nmea-bytes": 13469, "started": 1489004962194 }
 		let currentTime = new Date().getTime();
 		let elapsed = currentTime - json.started;
@@ -249,7 +252,7 @@ function dataVolume() {
 		let flow = Math.round(volume / (elapsed / 1000));
 		pushData(flow);
 		document.getElementById('flow').style.cursor = 'auto';
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		let message;
 		if (errmess !== undefined) {
 			if (errmess.message !== undefined) {
@@ -278,7 +281,7 @@ let lastTimeStamp = 0;
 function getLastNMEASentence() {
 	// No REST traffic for this one.
 	let getData = getLastSentence();
-	getData.then(function (value) {
+	getData.then((value) => {
 		let json = JSON.parse(value); // Like { "nmea-bytes": 13469, "started": 1489004962194 }
 		let lastString = json["last-data"];
 		let timestamp = json["timestamp"];
@@ -287,7 +290,7 @@ function getLastNMEASentence() {
 			lastTimeStamp = timestamp;
 //          console.log(lastString)
 		}
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		let message;
 		if (errmess !== undefined) {
 			if (errmess.message !== undefined) {
@@ -303,7 +306,7 @@ function getLastNMEASentence() {
 function serialPortList() {
 	let before = new Date().getTime();
 	let getData = getSerialPorts();
-	getData.then(function (value) {
+	getData.then((value) => {
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
 		console.log("Done in " + (after - before) + " ms :", value);
@@ -322,7 +325,7 @@ function serialPortList() {
 		document.getElementById("lists").innerHTML = html;
 		document.getElementById("diagram").style.display = 'none';
 		document.getElementById("lists").style.display = 'block';
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -397,7 +400,7 @@ function clearRESTOutData() {
 function channelList() {
 	let before = new Date().getTime();
 	let getData = getChannels();
-	getData.then(function (value) {
+	getData.then((value) => {
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
 		console.log("Done in " + (after - before) + " ms :", value);
@@ -458,7 +461,7 @@ function channelList() {
 		document.getElementById("lists").innerHTML = html;
 		document.getElementById("diagram").style.display = 'none';
 		document.getElementById("lists").style.display = 'block';
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -475,7 +478,7 @@ function channelList() {
 function forwarderList() {
 	let before = new Date().getTime();
 	let getData = getForwarders();
-	getData.then(function (value) {
+	getData.then((value) => {
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
 		console.log("Done in " + (after - before) + " ms :", value);
@@ -521,7 +524,7 @@ function forwarderList() {
 		document.getElementById("lists").innerHTML = html;
 		document.getElementById("diagram").style.display = 'none';
 		document.getElementById("lists").style.display = 'block';
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -538,7 +541,7 @@ function forwarderList() {
 function computerList() {
 	let before = new Date().getTime();
 	let getData = getComputers();
-	getData.then(function (value) {
+	getData.then((value) => {
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
 		console.log("Done in " + (after - before) + " ms :", value);
@@ -562,7 +565,7 @@ function computerList() {
 		document.getElementById("lists").innerHTML = html;
 		document.getElementById("diagram").style.display = 'none';
 		document.getElementById("lists").style.display = 'block';
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -604,7 +607,7 @@ function generateDiagram() {
 	let computerTable = "";
 
 	let getChannelPromise = getChannels();
-	getChannelPromise.then(function (value) {
+	getChannelPromise.then((value) => {
 		let before = new Date().getTime();
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
@@ -692,7 +695,7 @@ function generateDiagram() {
 			document.getElementById("diagram").style.display = 'block';
 			document.getElementById("lists").style.display = 'none';
 		}
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -715,7 +718,7 @@ function generateDiagram() {
 	});
 
 	let getForwarderPromise = getForwarders();
-	getForwarderPromise.then(function (value) {
+	getForwarderPromise.then((value) => {
 		let before = new Date().getTime();
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
@@ -763,7 +766,7 @@ function generateDiagram() {
 			document.getElementById("diagram").style.display = 'block';
 			document.getElementById("lists").style.display = 'none';
 		}
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -786,7 +789,7 @@ function generateDiagram() {
 	});
 
 	let getComputerPromise = getComputers();
-	getComputerPromise.then(function (value) {
+	getComputerPromise.then((value) => {
 		let before = new Date().getTime();
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
@@ -812,7 +815,7 @@ function generateDiagram() {
 			document.getElementById("diagram").style.display = 'block';
 			document.getElementById("lists").style.display = 'none';
 		}
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -836,13 +839,13 @@ function generateDiagram() {
 function createChannel(channel) {
 	let before = new Date().getTime();
 	let postData = addChannel(channel);
-	postData.then(function (value) {
+	postData.then((value) => {
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		channelList(); // refetch
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -859,13 +862,13 @@ function createChannel(channel) {
 function createForwarder(forwarder) {
 	let before = new Date().getTime();
 	let postData = addForwarder(forwarder);
-	postData.then(function (value) {
+	postData.then((value) => {
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		forwarderList(); // refetch
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -882,13 +885,13 @@ function createForwarder(forwarder) {
 function createComputer(computer) {
 	let before = new Date().getTime();
 	let postData = addComputer(computer);
-	postData.then(function (value) {
+	postData.then((value) => {
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		computerList(); // refetch
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -905,13 +908,13 @@ function createComputer(computer) {
 function removeChannel(channel) {
 	let before = new Date().getTime();
 	let deleteData = deleteChannel(channel);
-	deleteData.then(function (value) {
+	deleteData.then((value) => {
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		channelList(); // refetch
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -928,13 +931,13 @@ function removeChannel(channel) {
 function removeForwarder(channel) {
 	let before = new Date().getTime();
 	let deleteData = deleteForwarder(channel);
-	deleteData.then(function (value) {
+	deleteData.then((value) => {
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		forwarderList(); // refetch
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -951,13 +954,13 @@ function removeForwarder(channel) {
 function removeComputer(computer) {
 	let before = new Date().getTime();
 	let deleteData = deleteComputer(computer);
-	deleteData.then(function (value) {
+	deleteData.then((value) => {
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		computerList(); // refetch
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -974,13 +977,13 @@ function removeComputer(computer) {
 function changeChannel(channel) {
 	let before = new Date().getTime();
 	let putData = updateChannel(channel);
-	putData.then(function (value) {
+	putData.then((value) => {
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		channelList(); // refetch
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -997,13 +1000,13 @@ function changeChannel(channel) {
 function changeComputer(computer) {
 	let before = new Date().getTime();
 	let putData = updateComputer(computer);
-	putData.then(function (value) {
+	putData.then((value) => {
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		computerList(); // refetch
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -1034,13 +1037,13 @@ function manageComputerVerbose(cb, computer) {
 function manageMuxVerbose(cb) {
 	let before = new Date().getTime();
 	let updateMux = updateMuxVerbose(cb.checked ? 'on' : 'off');
-	updateMux.then(function (value) {
+	updateMux.then((value) => {
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
 		RESTPayload = value;
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {
@@ -1057,13 +1060,13 @@ function manageMuxVerbose(cb) {
 function resetCache() {
 	let before = new Date().getTime();
 	let reset = resetDataCache();
-	reset.then(function (value) {
+	reset.then((value) => {
 		let after = new Date().getTime();
 		document.body.style.cursor = 'default';
 		RESTPayload = value;
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
-	}, function (error, errmess) {
+	}, (error, errmess) => {
 		document.body.style.cursor = 'default';
 		let message;
 		if (errmess !== undefined) {

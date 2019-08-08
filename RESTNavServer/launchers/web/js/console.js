@@ -3,8 +3,8 @@
  */
 "use strict";
 
-var displayBSP, displayLog, displayTWD, displayTWS, thermometer, athermometer, displayHDG, rose,
-		displayBaro, displayHum, displayDate, displayTime, displayOverview, displayOverview,
+let displayBSP, displayLog, displayTWD, displayTWS, thermometer, athermometer, displayHDG, rose,
+		displayBaro, displayHum, displayDate, displayTime, displayOverview,
 		jumboBSP, jumboHDG, jumboTWD, jumboLWY, jumboAWA, jumboTWA, jumboAWS, jumboTWS, jumboCOG, jumboCDR, jumboSOG,
 		jumboCSP, jumboVMG,
 		displayAW, displayCurrent, displayCurrent2,

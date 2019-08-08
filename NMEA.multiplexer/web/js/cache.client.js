@@ -1,72 +1,88 @@
 "use strict";
 
-var cacheClient = function(dataManager, bp) {
+function cacheClient(dataManager, bp) {
 
-    var onMessage = dataManager; // Client function
-    var betweenPing = 1000;
-    if (bp !== undefined) {
-        betweenPing = bp;
-    }
+	let onMessage = dataManager; // Client function
+	let betweenPing = 1000;
+	if (bp !== undefined) {
+		betweenPing = bp;
+	}
 
-    var getNMEAData = function () {
-        var deferred = $.Deferred(),  // a jQuery deferred
-            url = '/mux/cache',
-            xhr = new XMLHttpRequest(),
-            TIMEOUT = 10000;
+	function getNMEAData() {
 
-        xhr.open('GET', url, true);
-        xhr.setRequestHeader("Content-type", "application/json");
-        try {
-            xhr.send();
-        } catch (err) {
-            throw err;
-        }
+		let url = '/mux/cache',
+				xhr = new XMLHttpRequest(),
+				verb = 'GET',
+				TIMEOUT = 10000,
+        happyCode = 200,
+        data = null;
 
-        var requestTimer = setTimeout(function () {
-            xhr.abort();
-            deferred.reject(408, {message: 'Timeout'});
-        }, TIMEOUT);
+		let promise = new Promise(function (resolve, reject) {
+			let xhr = new XMLHttpRequest();
 
-        xhr.onload = function () {
-            clearTimeout(requestTimer);
-            if (xhr.status === 200) {
-                deferred.resolve(xhr.response);
-            } else {
-                deferred.reject(xhr.status, xhr.response);
-            }
-        };
-        return deferred.promise();
-    };
+			let req = verb + " " + url;
+			if (data !== undefined && data !== null) {
+				req += ("\n" + JSON.stringify(data, null, 2));
+			}
+
+			xhr.open(verb, url, true);
+			xhr.setRequestHeader("Content-type", "application/json");
+			try {
+				if (data === undefined || data === null) {
+					xhr.send();
+				} else {
+					xhr.send(JSON.stringify(data));
+				}
+			} catch (err) {
+				console.log("Send Error ", err);
+			}
+
+			let requestTimer = setTimeout(function () {
+				xhr.abort();
+				let mess = {code: 408, message: 'Timeout'};
+				reject(mess);
+			}, TIMEOUT);
+
+			xhr.onload = function () {
+				clearTimeout(requestTimer);
+				if (xhr.status === happyCode) {
+					resolve(xhr.response);
+				} else {
+					reject({code: xhr.status, message: xhr.response});
+				}
+			};
+		});
+		return promise;
+	}
 
 // Executed at startup
-    (function () {
-        // Long poll
-        setInterval(function () {
-            fetch();
-        }, betweenPing);
-    })();
+	(() => {
+		// Long poll
+		setInterval(function () {
+			fetch();
+		}, betweenPing);
+	})();
 
-    var fetch = function () {
-        var getData = getNMEAData();
-        getData.done(function (value) {
-            //  console.log("Done:", value);
-            var json = JSON.parse(value);
-            onMessage(json);
-        });
-        getData.fail(function (error, errmess) {
-            var message;
-            if (errmess !== undefined) {
-                try {
-                    var mess = JSON.parse(errmess);
-                    if (mess.message !== undefined) {
-                        message = mess.message;
-                    }
-                } catch (err) {
-                //  console.log(errmess);
-                }
-            }
-            console.log("Failed to get nmea data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-        });
-    };
+	function fetch() {
+		let getData = getNMEAData();
+		getData.then((value) => {
+			//  console.log("Done:", value);
+			let json = JSON.parse(value);
+			onMessage(json);
+		}, (error, errmess) => {
+			let message;
+			if (errmess !== undefined) {
+				try {
+					let mess = JSON.parse(errmess);
+					if (mess.message !== undefined) {
+						message = mess.message;
+					}
+				} catch (err) {
+					//  console.log(errmess);
+				}
+			}
+			console.log("Failed to get nmea data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		});
+	}
 
 };

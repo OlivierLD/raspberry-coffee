@@ -68,15 +68,15 @@
 	</style>
 	<script type="text/javascript">
 
-		var getSystemDate = function(cb) {
-			var getTime = getSystemTime(); // A promise
-			getTime.then(function (value) {
+		function getSystemDate(cb) {
+			let getTime = getSystemTime(); // A promise
+			getTime.then((value) => {
 				console.log("System date:", value);
 				if (cb !== undefined) {
 					cb(value);
 				}
-			}, function (error, errmess) {
-				var message;
+			}, (error, errmess) => {
+				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
 						message = errmess.message;
@@ -86,23 +86,23 @@
 				}
 				console.log("GetSystemTime failed..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
-		};
+		}
 
-		var getLogFilesList = function () {
-			var self = this;
-			var getData = getLogFiles(); // A promise
-			getData.then(function (value) {
-				var logFiles = JSON.parse(value);
+		function getLogFilesList() {
+			let self = this;
+			let getData = getLogFiles(); // A promise
+			getData.then((value) => {
+				let logFiles = JSON.parse(value);
 //      console.log("Log files", json);
 				// get active file forwarder lo file name
-				var getForwarders = self.getForwarders(); // Another promise
-				getForwarders.then(function (value) {
+				let getForwarders = self.getForwarders(); // Another promise
+				getForwarders.then((value) => {
 					document.body.style.cursor = 'default';
-					var fwdrs = JSON.parse(value);
+					let fwdrs = JSON.parse(value);
 					buildFileList(logFiles, fwdrs);
-				}, function (error, errmess) {
+				}, (error, errmess) => {
 					document.body.style.cursor = 'default';
-					var message;
+					let message;
 					if (errmess !== undefined) {
 						if (errmess.message !== undefined) {
 							message = errmess.message;
@@ -112,7 +112,7 @@
 					}
 					console.log("Failed to get the forwarders list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 				});
-			}, function (error, errmess) {
+			}, (error, errmess) => {
 				var message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
@@ -123,17 +123,17 @@
 				}
 				console.log("Failed to get the log files list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
-		};
+		}
 
-		var deleteLog = function (fName) {
-			var deleteData = deleteLogFile(fName); // A promise
-			deleteData.then(function (value) {
+		function deleteLog(fName) {
+			let deleteData = deleteLogFile(fName); // A promise
+			deleteData.then((value) => {
 //		var json = JSON.parse(value);
 				console.log("Delete log file OK");
 				// Rebuild the list
 				getLogFilesList();
-			}, function (error, errmess) {
-				var message;
+			}, (error, errmess) => {
+				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
 						message = errmess.message;
@@ -143,7 +143,7 @@
 				}
 				console.log("Failed to delete the log file..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
-		};
+		}
 
 		const formatter = new Intl.NumberFormat('en-US', {
 			minimumFractionDigits: 0
@@ -151,8 +151,8 @@
 
 		function buildFileList(fileArray, forwarders) {
 
-			var activeLogFile = [];
-			for (var i=0; i<forwarders.length; i++) {
+			let activeLogFile = [];
+			for (let i=0; i<forwarders.length; i++) {
 				if (forwarders[i].type === 'file') {
 					activeLogFile.push(forwarders[i].log);
 				}
@@ -175,8 +175,8 @@
 				tableHtml +=
 						'<tr>\n' +
 						(isTotal ? '<td style="font-style: italic;">total</td>\n' : '  <td><div class="scrollable-file-name"><a href="/mux/log-files/' + encodeURIComponent(lf.split(' ')[1]) + '" target="ext" title="Click to download">' + lf.split(' ')[1] + '</a></div></td>\n') +
-// Flex			(isTotal ? '<td style="font-style: italic;">total</td>\n' : '  <td class="file-name-content"><div class="flex-parent"><a class="flex-child" href="/mux/log-files/' + encodeURIComponent(lf.split(' ')[1]) + '" target="ext" title="Click to download">' + lf.split(' ')[1] + '</a></div></td>\n') +
-// Raw				(isTotal ? '<td style="font-style: italic;">total</td>\n' : '  <td style="min-width: 5px;"><div><a href="/mux/log-files/' + encodeURIComponent(lf.split(' ')[1]) + '" target="ext" title="Click to download">' + lf.split(' ')[1] + '</a></div></td>\n') +
+						// Flex			(isTotal ? '<td style="font-style: italic;">total</td>\n' : '  <td class="file-name-content"><div class="flex-parent"><a class="flex-child" href="/mux/log-files/' + encodeURIComponent(lf.split(' ')[1]) + '" target="ext" title="Click to download">' + lf.split(' ')[1] + '</a></div></td>\n') +
+						// Raw				(isTotal ? '<td style="font-style: italic;">total</td>\n' : '  <td style="min-width: 5px;"><div><a href="/mux/log-files/' + encodeURIComponent(lf.split(' ')[1]) + '" target="ext" title="Click to download">' + lf.split(' ')[1] + '</a></div></td>\n') +
 						'  <td style="text-align: right; font-style: italic;">' + formatter.format(lf.split(' ')[0]) + '</td>\n' +
 						// 9989: check, 9995: open hand, 10006: Heavy cross. All dingbats at https://www.w3schools.com/charsets/ref_utf_dingbats.asp
 						(isActive ? '  <td class="active-file" title="File is active!">&#10006;</td>\n' : '  <td></td>\n' ) +
@@ -187,38 +187,38 @@
 			document.getElementById("table-body").innerHTML = tableHtml;
 		}
 
-		window.onload = function() {
+		window.onload = () => {
 			getLogFilesList();
 			getSystemDate(function(date) {
 				document.getElementById("syst-date").innerHTML = '<b>System Date: ' + date + '</b>';
 			});
 		};
-		</script>
+	</script>
 </head>
 <body>
 <div id="main">
-    <div>
-			<h1 style="margin-left: 10px;"><span onclick="window.history.back();" title="Go back">&#8678;&nbsp;</span> Log Manager <img src="icons/reload.png" title="reload page" width="36" height="36" style="vertical-align: middle; margin-left: 20px;" onclick="location.reload();"></h1>
-    </div>
-		<div id="syst-date" style="margin: 10px;"></div>
-    <div id="file-table">
-			<div id="count" style="margin-left: 10px;"></div>
-			<table id="log-files-table" class="data-table">
-				<thead>
-				<tr>
-					<th>File Name</th>
-					<th>Nb Lines</th>
-					<th title="Active log file">Act?</th>
-					<th>Del.</th>
-				</tr>
-				</thead>
-				<tbody id="table-body"></tbody>
-			</table>
+	<div>
+		<h1 style="margin-left: 10px;"><span onclick="window.history.back();" title="Go back">&#8678;&nbsp;</span> Log Manager <img src="icons/reload.png" title="reload page" width="36" height="36" style="vertical-align: middle; margin-left: 20px;" onclick="location.reload();"></h1>
+	</div>
+	<div id="syst-date" style="margin: 10px;"></div>
+	<div id="file-table">
+		<div id="count" style="margin-left: 10px;"></div>
+		<table id="log-files-table" class="data-table">
+			<thead>
+			<tr>
+				<th>File Name</th>
+				<th>Nb Lines</th>
+				<th title="Active log file">Act?</th>
+				<th>Del.</th>
+			</tr>
+			</thead>
+			<tbody id="table-body"></tbody>
+		</table>
 
-		</div>
-    <div style="display: none"> <!-- turn display to block or inline for debugging -->
-        <textarea id="message" style="width: 98%; height: 150px;"></textarea>
-    </div>
+	</div>
+	<div style="display: none"> <!-- turn display to block or inline for debugging -->
+		<textarea id="message" style="width: 98%; height: 150px;"></textarea>
+	</div>
 </div>
 <script>
 

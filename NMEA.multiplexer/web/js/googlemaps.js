@@ -1,15 +1,15 @@
-var n = "N";
-var s = "S";
-var e = "E";
-var w = "W";
+let n = "N";
+let s = "S";
+let e = "E";
+let w = "W";
 
-var ns = "NS";
-var ew = "EW";
+let ns = "NS";
+let ew = "EW";
 
-var homePos = new google.maps.LatLng(37.748857, -122.507248);
+let homePos = new google.maps.LatLng(37.748857, -122.507248);
 
 google.maps.visualRefresh = true;
-var map;
+let map;
 
 
 function initialize() {
@@ -31,6 +31,6 @@ function initialize() {
         }
     });
     map.setTilt(45);
-};
+}
 google.maps.event.addDomListener(window, 'load', initialize);
 

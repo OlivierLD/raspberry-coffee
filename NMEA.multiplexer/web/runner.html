@@ -190,11 +190,11 @@
 
 		function forwarderStatus() {
 			let getData = getForwarderStatus(); // A promise
-			getData.then(function (value) {
+			getData.then((value) => {
 				let json = JSON.parse(value); // Like {"processing":false,"started":1501082121336}
 				let status = json.processing;
 				document.getElementById("flip-1").checked = status; // a boolean
-			}, function (error, errmess) {
+			}, (error, errmess) => {
 				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
@@ -209,7 +209,7 @@
 
 		function speedAndCourse() {
 			let getData = getSOGCOG(); // A promise
-			getData.then(function (value) {
+			getData.then((value) => {
 				let json = JSON.parse(value);
 				let speedFactor = 1;
 				let unitStr = "kts";
@@ -239,13 +239,13 @@
 				document.getElementById("cog").innerText = ((json.cog.cog !== undefined ? json.cog.cog.toFixed(0) : "-") + "\272");
 				if (json.pos !== undefined) {
 					if (json.pos.lat !== undefined) {
-						document.getElementById("at").innerText = decToSex(json.pos.lat, "NS", true);
+						document.getElementById("lat").innerText = decToSex(json.pos.lat, "NS", true);
 					}
 					if (json.pos.lng !== undefined) {
 						document.getElementById("lng").innerText = decToSex(json.pos.lng, "EW", true);
 					}
 				}
-			}, function (error, errmess) {
+			}, (error, errmess) => {
 				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
@@ -260,7 +260,7 @@
 
 		function getDistanceTraveled() {
 			let getData = getDistance(); // A promise
-			getData.then(function (value) {
+			getData.then((value) => {
 				let json = JSON.parse(value); // Speed comes in knots
 				let unit = document.getElementById("speed-unit").value;
 				let distFactor = 1;
@@ -287,7 +287,7 @@
 						break;
 				}
 				document.getElementById("dist-val").innerText = ((json["distance"] !== undefined ? (json["distance"] * distFactor).toFixed(2) : "-") + " " + unitStr);
-			}, function (error, errmess) {
+			}, (error, errmess) => {
 				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
@@ -302,7 +302,7 @@
 
 		function getDeltaAltitude() {
 			let getData = getDeltaAlt(); // A promise
-			getData.then(function (value) {
+			getData.then((value) => {
 				let json = JSON.parse(value);
 				if (json !== undefined) {
 					let unit = document.getElementById("speed-unit").value; // Altitude comes in meters
@@ -331,7 +331,7 @@
 					}
 					document.getElementById("delta-alt-val").innerText = ((json["delta-altitude"] !== undefined ?(json["delta-altitude"] * unitFactor).toFixed(2) : "-") + " " + unitStr);
 				}
-			}, function (error, errmess) {
+			}, (error, errmess) => {
 				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {

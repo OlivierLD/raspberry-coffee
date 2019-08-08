@@ -70,12 +70,12 @@
 
 		function getSystemDate(cb) {
 			let getTime = getSystemTime(); // A promise
-			getTime.then(function (value) {
+			getTime.then((value) => {
 				console.log("System date:", value);
 				if (cb !== undefined) {
 					cb(value);
 				}
-			}, function (error, errmess) {
+			}, (error, errmess) => {
 				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
@@ -91,16 +91,16 @@
 		function getLogFilesList() {
 			let self = this;
 			let getData = getLogFiles(); // A promise
-			getData.then(function (value) {
+			getData.then((value) => {
 				let logFiles = JSON.parse(value);
 //      console.log("Log files", json);
 				// get active file forwarder lo file name
 				let getForwarders = self.getForwarders(); // Another promise
-				getForwarders.then(function (value) {
+				getForwarders.then((value) => {
 					document.body.style.cursor = 'default';
 					let fwdrs = JSON.parse(value);
 					buildFileList(logFiles, fwdrs);
-				}, function (error, errmess) {
+				}, (error, errmess) => {
 					document.body.style.cursor = 'default';
 					let message;
 					if (errmess !== undefined) {
@@ -112,7 +112,7 @@
 					}
 					console.log("Failed to get the forwarders list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 				});
-			}, function (error, errmess) {
+			}, (error, errmess) => {
 				var message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
@@ -127,12 +127,12 @@
 
 		function deleteLog(fName) {
 			let deleteData = deleteLogFile(fName); // A promise
-			deleteData.then(function (value) {
+			deleteData.then((value) => {
 //		var json = JSON.parse(value);
 				console.log("Delete log file OK");
 				// Rebuild the list
 				getLogFilesList();
-			}, function (error, errmess) {
+			}, (error, errmess) => {
 				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
