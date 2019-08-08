@@ -4,6 +4,8 @@ package navserver;
  * Shows how to add push buttons to interact with the NavServer
  * Buttons with click, double-click, long-click, and other combinations.
  * Uses a small screen (oled SSD1306, Nokia, etc)
+ *
+ * This class use making use of Runnable.
  */
 
 import com.pi4j.io.gpio.Pin;
@@ -40,6 +42,11 @@ public class ServerWithKewlButtons extends NavServer {
 		}
 	};
 
+	/**
+	 * MenuItem class
+	 * Used to store the label and action of each item
+	 * of the local menu.
+	 */
 	private class MenuItem {
 		private String title;
 		private Runnable action;
@@ -63,11 +70,11 @@ public class ServerWithKewlButtons extends NavServer {
 	};
 	private int localMenuItemIndex = 0;
 
-	private Pin appPin;
-	private Pin shiftPin;
+	private Pin buttonOnePin; // Top
+	private Pin buttonTwoPin; // Bottom
 
 	final static PushButtonMaster pbmOne = new PushButtonMaster();
-	final static PushButtonMaster pbmShift = new PushButtonMaster();
+	final static PushButtonMaster pbmTwo = new PushButtonMaster();
 
 	private SSD1306Processor oledForwarder = null;
 
@@ -115,7 +122,7 @@ public class ServerWithKewlButtons extends NavServer {
 
 	private Runnable onClickOne = () -> {
 		if (buttonVerbose) {
-			System.out.println(String.format(">> %sSingle click on button 1", (pbmShift.isPushed() ? "[Shft] + " : "")));
+			System.out.println(String.format(">> %sSingle click on button 1", (pbmTwo.isPushed() ? "[Shft] + " : "")));
 		}
 		if (screenSaverMode) {
 			releaseScreenSaver();
@@ -126,7 +133,7 @@ public class ServerWithKewlButtons extends NavServer {
 				localMenuItemIndex = 0;
 			}
 			displayLocalMenuItems();
-		} else if (!pbmShift.isPushed() && oledForwarder != null) {
+		} else if (!pbmTwo.isPushed() && oledForwarder != null) {
 			if (buttonVerbose) {
 				System.out.println("1 up!");
 			}
@@ -135,7 +142,7 @@ public class ServerWithKewlButtons extends NavServer {
 	};
 	private Runnable onDoubleClickOne = () -> {
 		if (buttonVerbose) {
-			System.out.println(String.format(">> %sDouble click on button 1", (pbmShift.isPushed() ? "[Shft] + " : "")));
+			System.out.println(String.format(">> %sDouble click on button 1", (pbmTwo.isPushed() ? "[Shft] + " : "")));
 		}
 		if (shutdownRequested) {
 			// Shutting down the server AND the machine.
@@ -183,9 +190,9 @@ public class ServerWithKewlButtons extends NavServer {
 	};
 	private Runnable onLongClickOne = () -> {
 		if (buttonVerbose) {
-			System.out.println(String.format(">> %sLong click on button 1", (pbmShift.isPushed() ? "[Shft] + " : "")));
+			System.out.println(String.format(">> %sLong click on button 1", (pbmTwo.isPushed() ? "[Shft] + " : "")));
 		}
-		if (pbmShift.isPushed()) { // Shift + LongClick on button one
+		if (pbmTwo.isPushed()) { // Shift + LongClick on button one
 			if (oledForwarder != null) {
 				oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
 				oledForwarder.displayLines(new String[] { "Shutting down...", "Confirm with",  "double-click (top)", "within 3 s"});
@@ -308,8 +315,8 @@ public class ServerWithKewlButtons extends NavServer {
 
 		try {
 			// Provision buttons here
-			appPin = RaspiPin.GPIO_29;  // Physical #38.
-			shiftPin = RaspiPin.GPIO_28;// Physical #40.
+			buttonOnePin = RaspiPin.GPIO_29;  // Physical #38.
+			buttonTwoPin = RaspiPin.GPIO_28;// Physical #40.
 
 			// Change pins, based on system properties. Use physical pin numbers.
 			try {
@@ -317,22 +324,22 @@ public class ServerWithKewlButtons extends NavServer {
 				String buttonOnePinStr = System.getProperty("buttonOne", "38"); // GPIO_28
 				String buttonTwoPinStr = System.getProperty("buttonTwo", "40"); // GPIO_29
 
-				appPin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr));
-				shiftPin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonTwoPinStr));
+				buttonOnePin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr));
+				buttonTwoPin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonTwoPinStr));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
 
 			pbmOne.update(
 					"App-Button",
-					appPin,
+					buttonOnePin,
 					onClickOne,
 					onDoubleClickOne,
 					onLongClickOne);
 
-			pbmShift.update(
+			pbmTwo.update(
 					"Shift-Button",
-					shiftPin,
+					buttonTwoPin,
 					onClickTwo,
 					onDoubleClickTwo,
 					onLongClickTwo);
@@ -391,7 +398,7 @@ public class ServerWithKewlButtons extends NavServer {
 	public static void freeResources() {
 		// Cleanup
 		pbmOne.freeResources();
-		pbmShift.freeResources();
+		pbmTwo.freeResources();
 	}
 
 	public static void main(String... args) {

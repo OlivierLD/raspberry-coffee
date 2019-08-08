@@ -21,7 +21,7 @@ Implements `simple-click`, `double-click`, and `long-click`.
 
 ```java
 final static PushButtonMaster pbmOne = new PushButtonMaster();
-final static PushButtonMaster pbmShift = new PushButtonMaster();
+final static PushButtonMaster pbmTwo = new PushButtonMaster();
 ```
 
 This is built just like the other examples in this module, just run
