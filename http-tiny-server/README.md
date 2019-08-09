@@ -29,6 +29,8 @@ They are:
 
 If `autobind` exists and is set to `true`, no `BindException` will be raised even if the specified port is busy. The default port (or the one given in `-Dhttp.port`) will be incremented until a free one is found. 
 
+It also comes with a Java client so you can make HTTP requests from your Java code, see [`http.client.HTTPClient.java`](src/java/http/client/HTTPClient.java).
+
 ##### Static pages
 Driven by the `static.docs` property, of the `Properties` object mentioned above. Defaulted to `/web/`.
 Whatever request points to this resource(s) will be treated as a static request.
