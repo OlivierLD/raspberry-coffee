@@ -51,6 +51,7 @@ cp ssd1306i2cDisplay.sh $distdir
 cp killmux.sh $distdir
 cp rc.local $distdir
 cp start-mux.sh $distdir
+cp zero-deviation.csv $distdir
 #
 # 4 - Archiving
 #

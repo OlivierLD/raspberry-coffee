@@ -4,9 +4,9 @@
  For debugging,
  set DEBUG to true.
  */
-const DEBUG = false;
-const VERBOSE = false;
-const DEFAULT_TIMEOUT = 60000;
+var DEBUG = false;
+var VERBOSE = false;
+var DEFAULT_TIMEOUT = 60000;
 
 // var errManager = console.log;
 var errManager = function(mess) {

@@ -151,9 +151,9 @@ public class PushButtonController {
 				System.out.println(String.format("Button [%s] was down for %s ms.", this.buttonName, NumberFormat.getInstance().format(this.releaseTime - this.pushedTime)));
 			}
 		}
-		// Test the click type here, and take action
+		// Test the click type here, and take action. Event callbacks on button release only
 		// TODO Make sure this is right...
-		if (status == ButtonStatus.LOW) { // Was before: (this.button.isLow()) { // Event callbacks on release only
+		if (status == ButtonStatus.LOW) { // Was before: (this.button.isLow()) {
 			if (verbose) {
 				System.out.println(
 						String.format("Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releaseTime: %s, previousReleaseTime: %s ",
@@ -179,7 +179,7 @@ public class PushButtonController {
 				// If single-click... May be the first of a double-click
 				if (this.maybeDoubleClick) {
 					try {
-						Thread.sleep(DOUBLE_CLICK_DELAY); // Can work in simulation mode if not in a Thread
+						Thread.sleep(DOUBLE_CLICK_DELAY); // Cannot work in simulation mode if not in a Thread
 						if (this.maybeDoubleClick) { // Can have been set to false by a double-click
 							if (verbose) {
 								System.out.println("++++ maybeDoubleClick still true");
