@@ -3,12 +3,15 @@ package lcd.substitute;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import lcd.ScreenBuffer;
@@ -47,6 +50,10 @@ public class SwingLedPanel
 			return this.height;
 		}
 	}
+
+	Consumer<KeyEvent> onKeyPressed = (keyEvent) -> {};
+	Consumer<KeyEvent> onKeyReleased = (keyEvent) -> {};
+	Consumer<KeyEvent> onKeyTyped = (keyEvent) -> {};
 
 	private ScreenDefinition config;
 	// Default SSD1306
@@ -110,6 +117,38 @@ public class SwingLedPanel
 		});
 		add(bottomPanel, java.awt.BorderLayout.SOUTH);
 		pack();
+
+		// Key listener
+		this.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+//				System.out.println("Key typed," + e);
+				onKeyTyped.accept(e);
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+//				System.out.println("Key pressed," + e);
+				onKeyPressed.accept(e);
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+//				System.out.println("Key released," + e);
+				onKeyReleased.accept(e);
+			}
+		});
+	}
+
+	public void setKeyTypedConsumer(Consumer<KeyEvent> consumer) {
+		this.onKeyTyped = consumer;
+	}
+	public void setKeyPressedConsumer(Consumer<KeyEvent> consumer) {
+		this.onKeyPressed = consumer;
+	}
+	public void setKeyReleasedConsumer(Consumer<KeyEvent> consumer) {
+		this.onKeyReleased = consumer;
 	}
 
 	public void setLedColor(Color color) {

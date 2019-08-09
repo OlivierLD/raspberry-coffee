@@ -45,6 +45,12 @@ More to come. Diagrams, screenshots, pictures.
 
 See [here](../../Project.Trunk/REST.clients/TCP.Watch.01/README.md#raspberry-pi-zero-w-and-ssd1306-128x64).
 
+### Screenshots
+
+| NMEA Data | Local Menu | Local Menu, 2 | Screen Saver (one dot blinking) | Complete Shutdown |
+|:---------:|:---------:|:---------:|:---------:|:---------:|
+| ![NMEA](./docimg/01.png) | ![NMEA](./docimg/02.png) | ![NMEA](./docimg/03.png) | ![NMEA](./docimg/04.png) | ![NMEA](./docimg/05.png) |
+
 # TODO
 - Describe the way to get to the log files, download, etc.
 - Document Web UI: `runner.html`, `logMgmt.html`, etc.
@@ -54,4 +60,4 @@ Button-2 + LongClick on Button-1: Shutdown (confirm with double-click within 3 s
 DoubleClick on Button-1: Show local menu                                                
 DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.
 ```
-- Simulator for the buttons
+- Simulator for the buttons. Done.

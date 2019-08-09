@@ -4,13 +4,14 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import http.client.HTTPClient;
 import navrest.NavServer;
-import navserver.button.PushButtonMaster;
+import navserver.button.PushButtonController;
 import nmea.forwarders.SSD1306Processor;
 import utils.PinUtil;
 import utils.StaticUtil;
 import utils.TCPUtils;
 import utils.TimeUtil;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,7 +28,6 @@ import java.util.List;
  * - buttonTwo, default 40 (Physical pin #)
  * - http.port, default 9999
  *
- * TODO Button simulator, in swing?
  */
 public class ServerWithKewlButtons extends NavServer {
 
@@ -35,6 +35,7 @@ public class ServerWithKewlButtons extends NavServer {
 
 	private SSD1306Processor oledForwarder = null;
 
+	// Local menu operations
 	private Runnable pauseLogging = () -> {
 		try {
 			HTTPClient.doPut(this.turnLoggingOffURL, new HashMap<>(), null);
@@ -107,8 +108,8 @@ public class ServerWithKewlButtons extends NavServer {
 	private Pin buttonOnePin; // Top
 	private Pin buttonTwoPin; // Bottom
 
-	final static PushButtonMaster pbmOne = new PushButtonMaster();
-	final static PushButtonMaster pbmTwo = new PushButtonMaster();
+	final static PushButtonController buttonOne = new PushButtonController();
+	final static PushButtonController buttonTwo = new PushButtonController();
 
 	private static int serverPort = 9999;
 	private String turnLoggingOnURL = "";
@@ -152,9 +153,10 @@ public class ServerWithKewlButtons extends NavServer {
 		screenSaverThread = null;
 	}
 
+	// Buttons Runnables
 	private Runnable onClickOne = () -> {
-		if (buttonVerbose) {
-			System.out.println(String.format(">> %sSingle click on button 1", (pbmTwo.isPushed() ? "[Shft] + " : "")));
+		if (buttonVerbose || oledForwarder.isSimulating()) {
+			System.out.println(String.format(">> %sSingle click on button 1", (buttonTwo.isPushed() ? "[Shft] + " : "")));
 		}
 		if (screenSaverMode) {
 			releaseScreenSaver();
@@ -165,7 +167,7 @@ public class ServerWithKewlButtons extends NavServer {
 				localMenuItemIndex = 0;
 			}
 			displayLocalMenu();
-		} else if (!pbmTwo.isPushed() && oledForwarder != null) {
+		} else if (!buttonTwo.isPushed() && oledForwarder != null) {
 			if (buttonVerbose) {
 				System.out.println("1 up!");
 			}
@@ -174,8 +176,8 @@ public class ServerWithKewlButtons extends NavServer {
 	};
 
 	private Runnable onDoubleClickOne = () -> {
-		if (buttonVerbose) {
-			System.out.println(String.format(">> %sDouble click on button 1", (pbmTwo.isPushed() ? "[Shft] + " : "")));
+		if (buttonVerbose || oledForwarder.isSimulating()) {
+			System.out.println(String.format(">> %sDouble click on button 1", (buttonTwo.isPushed() ? "[Shft] + " : "")));
 		}
 		if (shutdownRequested) {
 			// Shutting down the server AND the machine.
@@ -227,10 +229,10 @@ public class ServerWithKewlButtons extends NavServer {
 	};
 
 	private Runnable onLongClickOne = () -> {
-		if (buttonVerbose) {
-			System.out.println(String.format(">> %sLong click on button 1", (pbmTwo.isPushed() ? "[Shft] + " : "")));
+		if (buttonVerbose || oledForwarder.isSimulating()) {
+			System.out.println(String.format(">> %sLong click on button 1", (buttonTwo.isPushed() ? "[Shft] + " : "")));
 		}
-		if (pbmTwo.isPushed()) { // Shift + LongClick on button one
+		if (buttonTwo.isPushed()) { // Shift + LongClick on button one
 			if (oledForwarder != null) {
 				oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
 				oledForwarder.displayLines(new String[] { "Shutting down...", "Confirm with",  "double-click (top)", "within 3 s"});
@@ -256,8 +258,8 @@ public class ServerWithKewlButtons extends NavServer {
 	};
 
 	private Runnable onClickTwo = () -> {
-		if (buttonVerbose) {
-			System.out.println(String.format(">> %sSingle click on button 2", (pbmOne.isPushed() ? "[Shft] + " : "")));
+		if (buttonVerbose || oledForwarder.isSimulating()) {
+			System.out.println(String.format(">> %sSingle click on button 2", (buttonOne.isPushed() ? "[Shft] + " : "")));
 		}
 		if (screenSaverMode) {
 			releaseScreenSaver();
@@ -268,7 +270,7 @@ public class ServerWithKewlButtons extends NavServer {
 				localMenuItemIndex = (localMenuItems.length - 1);
 			}
 			displayLocalMenu();
-		} else if (!pbmOne.isPushed() && oledForwarder != null) {
+		} else if (!buttonOne.isPushed() && oledForwarder != null) {
 			if (buttonVerbose) {
 				System.out.println("1 down!");
 			}
@@ -277,8 +279,8 @@ public class ServerWithKewlButtons extends NavServer {
 	};
 
 	private Runnable onDoubleClickTwo = () -> {
-		if (buttonVerbose) {
-			System.out.println(String.format(">> %sDouble click on button 2", (pbmOne.isPushed() ? "[Shft] + " : "")));
+		if (buttonVerbose || oledForwarder.isSimulating()) {
+			System.out.println(String.format(">> %sDouble click on button 2", (buttonOne.isPushed() ? "[Shft] + " : "")));
 		}
 		if (displayingLocalMenu) {
 			// Cancel
@@ -324,14 +326,14 @@ public class ServerWithKewlButtons extends NavServer {
 	};
 
 	private Runnable onLongClickTwo = () -> {
-		if (buttonVerbose) {
-			System.out.println(String.format(">> %sLong click on button 2", (pbmOne.isPushed() ? "[Shft] + " : "")));
+		if (buttonVerbose || oledForwarder.isSimulating()) {
+			System.out.println(String.format(">> %sLong click on button 2", (buttonOne.isPushed() ? "[Shft] + " : "")));
 		}
 	};
 
 	/**
-	 *  For the Shift button, no operation needed. We only need if it is up or down.
-	 *  See {@link PushButtonMaster#isPushed()}
+	 *  Now using all the above
+	 *  See {@link PushButtonController#isPushed()}
 	 */
 	public ServerWithKewlButtons() {
 
@@ -389,14 +391,14 @@ public class ServerWithKewlButtons extends NavServer {
 				nfe.printStackTrace();
 			}
 
-			pbmOne.update(
+			buttonOne.update(
 					"Top-Button",
 					buttonOnePin,
 					onClickOne,
 					onDoubleClickOne,
 					onLongClickOne);
 
-			pbmTwo.update(
+			buttonTwo.update(
 					"Bottom-Button",
 					buttonTwoPin,
 					onClickTwo,
@@ -416,7 +418,30 @@ public class ServerWithKewlButtons extends NavServer {
 			System.out.println("SSD1306 was NOT loaded");
 		} else {
 			boolean simulating = oledForwarder.isSimulating();
+
+			int SHIFT_KEY = 16,
+					CTRL_KEY = 17;
 			System.out.println(String.format("SSD1306 was loaded! (%s)", simulating ? "simulating" : "for real"));
+			if (simulating) {
+				oledForwarder.setSimutatorLedColor(Color.WHITE);
+				System.out.println(">> Simulating button with [Shift]: Button 1: Ctrl, Button 2: Shift");
+				oledForwarder.setSimulatorKeyPressedConsumer((keyEvent) -> {
+//					System.out.println("KeyPressed:" + keyEvent);
+					if (keyEvent.getKeyCode() == SHIFT_KEY) { // Shift, left or right
+						buttonTwo.manageButtonState(PushButtonController.ButtonStatus.HIGH);
+					} else if (keyEvent.getKeyCode() == CTRL_KEY) {
+						buttonOne.manageButtonState(PushButtonController.ButtonStatus.HIGH);
+					}
+				});
+				oledForwarder.setSimulatorKeyReleasedConsumer((keyEvent) -> {
+//					System.out.println("KeyReleased:" + keyEvent);
+					if (keyEvent.getKeyCode() == SHIFT_KEY) { // Shift, left or right
+						buttonTwo.manageButtonState(PushButtonController.ButtonStatus.LOW);
+					} else if (keyEvent.getKeyCode() == CTRL_KEY) {
+						buttonOne.manageButtonState(PushButtonController.ButtonStatus.LOW);
+					}
+				});
+			}
 			// Following block just for tests and dev.
 			if (false) {
 				// Now let's write in the screen...
@@ -459,8 +484,8 @@ public class ServerWithKewlButtons extends NavServer {
 
 	public static void freeResources() {
 		// Cleanup
-		pbmOne.freeResources();
-		pbmTwo.freeResources();
+		buttonOne.freeResources();
+		buttonTwo.freeResources();
 	}
 
 	public static void main(String... args) {

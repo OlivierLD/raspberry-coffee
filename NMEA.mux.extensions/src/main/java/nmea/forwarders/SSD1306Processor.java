@@ -2,10 +2,14 @@ package nmea.forwarders;
 
 import context.ApplicationContext;
 import context.NMEADataCache;
+
+import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Consumer;
 
 import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
@@ -108,7 +112,7 @@ public class SSD1306Processor implements Forwarder {
 		private double hum;
 	}
 
-	private enum SCREEN_SIZE {
+	public enum SCREEN_SIZE {
 		_128x32,
 		_128x64
 	};
@@ -767,6 +771,32 @@ public class SSD1306Processor implements Forwarder {
 
 	public boolean isSimulating() {
 		return (oled == null && substitute != null);
+	}
+
+	public void setSimutatorLedColor(Color c) {
+		if (!isSimulating()) {
+			throw new RuntimeException("Not in simulator mode");
+		}
+		substitute.setLedColor(c);
+	}
+
+	public void setSimulatorKeyTypedConsumer(Consumer<KeyEvent> consumer) {
+		if (!isSimulating()) {
+			throw new RuntimeException("Not in simulator mode");
+		}
+		substitute.setKeyTypedConsumer(consumer);
+	}
+	public void setSimulatorKeyPressedConsumer(Consumer<KeyEvent> consumer) {
+		if (!isSimulating()) {
+			throw new RuntimeException("Not in simulator mode");
+		}
+		substitute.setKeyPressedConsumer(consumer);
+	}
+	public void setSimulatorKeyReleasedConsumer(Consumer<KeyEvent> consumer) {
+		if (!isSimulating()) {
+			throw new RuntimeException("Not in simulator mode");
+		}
+		substitute.setKeyReleasedConsumer(consumer);
 	}
 
 	public static class OLEDI2CBean {
