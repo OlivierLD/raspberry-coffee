@@ -342,10 +342,9 @@ public class ServerWithKewlButtons extends NavServer {
 
 		List<String[]> addresses = TCPUtils.getIPAddresses(true);
 		System.out.println("IP addresses for localhost:");
-		for (String[] addr : addresses) {
-			System.out.println(String.format("- %s", addr));
-		}
-
+		addresses.stream().forEach(pair -> {
+			System.out.println(String.format("%s -> %s", pair[0], pair[1]));
+		});
 		System.out.println(String.format("Also try http://localhost:%d/zip/index.html from a browser", serverPort));
 		System.out.println(String.format("     and http://localhost:%d/zip/runner.html ", serverPort));
 
