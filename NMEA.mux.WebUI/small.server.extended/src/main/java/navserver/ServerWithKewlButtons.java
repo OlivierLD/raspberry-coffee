@@ -18,9 +18,11 @@ import navserver.button.PushButtonMaster;
 import nmea.forwarders.SSD1306Processor;
 import utils.PinUtil;
 import utils.StaticUtil;
+import utils.TCPUtils;
 import utils.TimeUtil;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class ServerWithKewlButtons extends NavServer {
 
@@ -338,15 +340,21 @@ public class ServerWithKewlButtons extends NavServer {
 		System.out.println(String.format("To turn logging OFF, user PUT %s", this.turnLoggingOffURL));
 		System.out.println(String.format("To terminate the multiplexer, user POST %s", this.terminateMuxURL));
 
+		List<String[]> addresses = TCPUtils.getIPAddresses(true);
+		System.out.println("IP addresses for localhost:");
+		for (String[] addr : addresses) {
+			System.out.println(String.format("- %s", addr));
+		}
+
 		System.out.println(String.format("Also try http://localhost:%d/zip/index.html from a browser", serverPort));
 		System.out.println(String.format("     and http://localhost:%d/zip/runner.html ", serverPort));
 
 		// Help display here
-		System.out.println("+---------------------------------------------------------------------------------------+");
-		System.out.println("| Shft + LongClick on button one: Shutdown (confirm with double-click within 3 seconds) |");
-		System.out.println("| DoubleClick on button one: Show local menu                                            |");
-		System.out.println("| DoubleClick on button two: Screen Saver mode. Any simple-click to resume.             |");
-		System.out.println("+---------------------------------------------------------------------------------------+");
+		System.out.println("+-----------------------------------------------------------------------------------------+");
+		System.out.println("| Button-2 + LongClick on Button-1: Shutdown (confirm with double-click within 3 seconds) |");
+		System.out.println("| DoubleClick on Button-1: Show local menu                                                |");
+		System.out.println("| DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.                 |");
+		System.out.println("+-----------------------------------------------------------------------------------------+");
 
 		try {
 			// Provision buttons here
