@@ -5,7 +5,16 @@
     - One with the Adafruit Ultimate GPS
 - LiPo battery
 - Buttons can be used to scroll through the different displays
+    - also features a "local" menu (to be browsed with the buttons) that can execute different tasks, easy to customize like
+        - Pausing the logging
+        - Resuming the logging
+        - Shutting down the Multiplexer
+        - Shutting down the machine (see below)
+        - etc...
+    - Activate a screen saver mode
 - A specific combination on the buttons can shut down the machine.
+
+---
 
 This example shows how to _**extend**_  the `NavServer`.
 
@@ -37,5 +46,12 @@ More to come. Diagrams, screenshots, pictures.
 See [here](../../Project.Trunk/REST.clients/TCP.Watch.01/README.md#raspberry-pi-zero-w-and-ssd1306-128x64).
 
 # TODO
-Describe the way to get to the log files, download, etc.
-`runner.html`, `logMgmt.html`, etc.
+- Describe the way to get to the log files, download, etc.
+- Document Web UI: `runner.html`, `logMgmt.html`, etc.
+- Cue-card for the UI (depends on your implementation):
+```
+Button-2 + LongClick on Button-1: Shutdown (confirm with double-click within 3 seconds) 
+DoubleClick on Button-1: Show local menu                                                
+DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.
+```
+- Simulator for the buttons

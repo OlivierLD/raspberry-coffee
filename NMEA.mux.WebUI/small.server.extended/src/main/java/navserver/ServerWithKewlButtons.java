@@ -1,15 +1,5 @@
 package navserver;
 
-/*
- * Shows how to add push buttons to interact with the NavServer
- * Buttons with click, double-click, long-click, and other combinations.
- * Uses a small screen (oled SSD1306, Nokia, etc)
- *
- * This class use making use of Runnable.
- */
-
-// TODO Button simulator, in swing?
-
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import http.client.HTTPClient;
@@ -24,6 +14,21 @@ import utils.TimeUtil;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Shows how to add push buttons to interact with the NavServer
+ * Buttons with click, double-click, long-click, and other combinations.
+ * Uses a small screen (oled SSD1306, Nokia, etc)
+ *
+ * This class use making use of Runnable.
+ *
+ * System properties:
+ * - button.verbose, default false
+ * - buttonOne, default 38 (Physical pin #)
+ * - buttonTwo, default 40 (Physical pin #)
+ * - http.port, default 9999
+ *
+ * TODO Button simulator, in swing?
+ */
 public class ServerWithKewlButtons extends NavServer {
 
 	private static boolean buttonVerbose = "true".equals(System.getProperty("button.verbose"));
@@ -341,12 +346,24 @@ public class ServerWithKewlButtons extends NavServer {
 		System.out.println(String.format("To terminate the multiplexer, user POST %s", this.terminateMuxURL));
 
 		List<String[]> addresses = TCPUtils.getIPAddresses(true);
+		String machineName = "localhost";
+		if (addresses.size() == 1) {
+			machineName = addresses.get(0)[1];
+		}
+		StringBuffer sb = new StringBuffer();
 		System.out.println("IP addresses for localhost:");
-		addresses.stream().forEach(pair -> {
+		addresses.forEach(pair -> {
 			System.out.println(String.format("%s -> %s", pair[0], pair[1]));
+			// for tests
+			if (pair[1].startsWith("192.168.")) {
+				sb.append(pair[1]);
+			}
 		});
-		System.out.println(String.format("Also try http://localhost:%d/zip/index.html from a browser", serverPort));
-		System.out.println(String.format("     and http://localhost:%d/zip/runner.html ", serverPort));
+		if (sb.length() > 0) {
+			machineName = sb.toString();
+		}
+		System.out.println(String.format("Also try http://%s:%d/zip/index.html from a browser", machineName, serverPort));
+		System.out.println(String.format("     and http://%s:%d/zip/runner.html ", machineName, serverPort));
 
 		// Help display here
 		System.out.println("+-----------------------------------------------------------------------------------------+");

@@ -26,6 +26,9 @@ import java.text.NumberFormat;
  *   1,536,096,764,842
  *               |
  *               seconds
+ *
+ * System properties:
+ * - button.verbose, default false
  */
 public class PushButtonMaster {
 	private GpioController gpio = null;
