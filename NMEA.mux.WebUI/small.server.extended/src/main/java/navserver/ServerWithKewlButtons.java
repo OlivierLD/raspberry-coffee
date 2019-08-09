@@ -122,12 +122,12 @@ public class ServerWithKewlButtons extends NavServer {
 	private void displayLocalMenu() {
 		if (oledForwarder != null) {
 			oledForwarder.displayLines(new String[]{
-					"Up and down to Scroll",
+					"> Up and down to Scroll",
 					"--------------------",
-					"- " + localMenuItems[localMenuItemIndex].getTitle(),
+					localMenuItems[localMenuItemIndex].getTitle(),
 					"--------------------",
-					"Db-clk 1: select",
-					"Db-clk 2: cancel"
+					"> Db-clk 1: select",
+					"> Db-clk 2: cancel"
 			});
 		}
 	}
