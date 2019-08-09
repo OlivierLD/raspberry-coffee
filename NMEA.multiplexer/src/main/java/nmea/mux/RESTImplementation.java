@@ -78,7 +78,7 @@ import java.util.stream.Collectors;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
- *
+ * <p>
  * This list is defined in the <code>List&lt;Operation&gt;</code> named <code>operations</code>.
  * <br>
  * The Multiplexer will use the {@link #processRequest(Request)} method of this class to
@@ -301,7 +301,7 @@ public class RESTImplementation {
 		if (restVerbose()) {
 			System.out.println(String.format("%s => %d operations", this.getClass().getName(), this.operations.size()));
 		}
-		return  this.operations;
+		return this.operations;
 	}
 
 	/**
@@ -311,14 +311,14 @@ public class RESTImplementation {
 	 * @return the actual result.
 	 */
 	public HTTPServer.Response processRequest(HTTPServer.Request request)
-		throws UnsupportedOperationException {
+			throws UnsupportedOperationException {
 		if (restVerbose()) {
 			System.out.println(">> " + request.getResource());
 		}
 		Optional<Operation> opOp = operations
-						.stream()
-						.filter(op -> op.getVerb().equals(request.getVerb()) && RESTProcessorUtil.pathMatches(op.getPath(), request.getPath()))
-						.findFirst();
+				.stream()
+				.filter(op -> op.getVerb().equals(request.getVerb()) && RESTProcessorUtil.pathMatches(op.getPath(), request.getPath()))
+				.findFirst();
 		if (opOp.isPresent()) {
 			Operation op = opOp.get();
 			request.setRequestPattern(op.getPath()); // To get the path parameters later on.
@@ -351,8 +351,8 @@ public class RESTImplementation {
 
 		List<Object> channelList = getInputChannelList();
 		Object[] channelArray = channelList.stream()
-						.collect(Collectors.toList())
-						.toArray(new Object[channelList.size()]);
+				.collect(Collectors.toList())
+				.toArray(new Object[channelList.size()]);
 
 		String content = new Gson().toJson(channelArray);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
@@ -365,8 +365,8 @@ public class RESTImplementation {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		List<Object> forwarderList = getForwarderList();
 		Object[] forwarderArray = forwarderList.stream()
-						.collect(Collectors.toList())
-						.toArray(new Object[forwarderList.size()]);
+				.collect(Collectors.toList())
+				.toArray(new Object[forwarderList.size()]);
 
 		String content = new Gson().toJson(forwarderArray);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
@@ -379,8 +379,8 @@ public class RESTImplementation {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		List<Object> computerList = getComputerList();
 		Object[] forwarderArray = computerList.stream()
-						.collect(Collectors.toList())
-						.toArray(new Object[computerList.size()]);
+				.collect(Collectors.toList())
+				.toArray(new Object[computerList.size()]);
 
 		String content = new Gson().toJson(forwarderArray);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
@@ -400,8 +400,8 @@ public class RESTImplementation {
 			switch (id) {
 				case "console":
 					opFwd = nmeaDataForwarders.stream()
-									.filter(fwd -> fwd instanceof ConsoleWriter)
-									.findFirst();
+							.filter(fwd -> fwd instanceof ConsoleWriter)
+							.findFirst();
 					response = removeForwarderIfPresent(request, opFwd);
 					break;
 				case "serial":
@@ -410,9 +410,9 @@ public class RESTImplementation {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
 						SerialWriter.SerialBean serialBean = gson.fromJson(stringReader, SerialWriter.SerialBean.class);
 						opFwd = nmeaDataForwarders.stream()
-										.filter(fwd -> fwd instanceof SerialWriter &&
-														((SerialWriter) fwd).getPort().equals(serialBean.getPort()))
-										.findFirst();
+								.filter(fwd -> fwd instanceof SerialWriter &&
+										((SerialWriter) fwd).getPort().equals(serialBean.getPort()))
+								.findFirst();
 						response = removeForwarderIfPresent(request, opFwd);
 					} else {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -425,9 +425,9 @@ public class RESTImplementation {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
 						DataFileWriter.DataFileBean dataFileBean = gson.fromJson(stringReader, DataFileWriter.DataFileBean.class);
 						opFwd = nmeaDataForwarders.stream()
-										.filter(fwd -> fwd instanceof DataFileWriter &&
-														((DataFileWriter) fwd).getLog().equals(dataFileBean.getLog()))
-										.findFirst();
+								.filter(fwd -> fwd instanceof DataFileWriter &&
+										((DataFileWriter) fwd).getLog().equals(dataFileBean.getLog()))
+								.findFirst();
 						response = removeForwarderIfPresent(request, opFwd);
 					} else {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -440,9 +440,9 @@ public class RESTImplementation {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
 						TCPServer.TCPBean tcpBean = gson.fromJson(stringReader, TCPServer.TCPBean.class);
 						opFwd = nmeaDataForwarders.stream()
-										.filter(fwd -> fwd instanceof TCPServer &&
-														((TCPServer) fwd).getTcpPort() == tcpBean.getPort())
-										.findFirst();
+								.filter(fwd -> fwd instanceof TCPServer &&
+										((TCPServer) fwd).getTcpPort() == tcpBean.getPort())
+								.findFirst();
 						response = removeForwarderIfPresent(request, opFwd);
 					} else {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -455,9 +455,9 @@ public class RESTImplementation {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
 						GPSdServer.GPSdBean gpsdBean = gson.fromJson(stringReader, GPSdServer.GPSdBean.class);
 						opFwd = nmeaDataForwarders.stream()
-										.filter(fwd -> fwd instanceof GPSdServer &&
-														((GPSdServer) fwd).getTcpPort() == gpsdBean.getPort())
-										.findFirst();
+								.filter(fwd -> fwd instanceof GPSdServer &&
+										((GPSdServer) fwd).getTcpPort() == gpsdBean.getPort())
+								.findFirst();
 						response = removeForwarderIfPresent(request, opFwd);
 					} else {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -470,9 +470,9 @@ public class RESTImplementation {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
 						RMIServer.RMIBean rmiBean = gson.fromJson(stringReader, RMIServer.RMIBean.class);
 						opFwd = nmeaDataForwarders.stream()
-										.filter(fwd -> fwd instanceof RMIServer &&
-														((RMIServer) fwd).getRegistryPort() == rmiBean.getPort())
-										.findFirst();
+								.filter(fwd -> fwd instanceof RMIServer &&
+										((RMIServer) fwd).getRegistryPort() == rmiBean.getPort())
+								.findFirst();
 						response = removeForwarderIfPresent(request, opFwd);
 					} else {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -485,9 +485,9 @@ public class RESTImplementation {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
 						WebSocketWriter.WSBean wsBean = gson.fromJson(stringReader, WebSocketWriter.WSBean.class);
 						opFwd = nmeaDataForwarders.stream()
-										.filter(fwd -> fwd instanceof WebSocketWriter &&
-														((WebSocketWriter) fwd).getWsUri().equals(wsBean.getWsUri()))
-										.findFirst();
+								.filter(fwd -> fwd instanceof WebSocketWriter &&
+										((WebSocketWriter) fwd).getWsUri().equals(wsBean.getWsUri()))
+								.findFirst();
 						response = removeForwarderIfPresent(request, opFwd);
 					} else {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -500,9 +500,9 @@ public class RESTImplementation {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
 						WebSocketProcessor.WSBean wsBean = gson.fromJson(stringReader, WebSocketProcessor.WSBean.class);
 						opFwd = nmeaDataForwarders.stream()
-										.filter(fwd -> fwd instanceof WebSocketProcessor &&
-														((WebSocketProcessor) fwd).getWsUri().equals(wsBean.getWsUri()))
-										.findFirst();
+								.filter(fwd -> fwd instanceof WebSocketProcessor &&
+										((WebSocketProcessor) fwd).getWsUri().equals(wsBean.getWsUri()))
+								.findFirst();
 						response = removeForwarderIfPresent(request, opFwd);
 					} else {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -516,10 +516,10 @@ public class RESTImplementation {
 					if (request.getContent() != null) {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
 						@SuppressWarnings("unchecked")
-						Map<String, String> custom = (Map<String, String>)new Gson().fromJson(stringReader, Object.class);
+						Map<String, String> custom = (Map<String, String>) new Gson().fromJson(stringReader, Object.class);
 						opFwd = nmeaDataForwarders.stream()
-										.filter(fwd -> fwd.getClass().getName().equals(custom.get("cls")))
-										.findFirst();
+								.filter(fwd -> fwd.getClass().getName().equals(custom.get("cls")))
+								.findFirst();
 						response = removeForwarderIfPresent(request, opFwd);
 					} else {
 						response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED);
@@ -547,9 +547,9 @@ public class RESTImplementation {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
 						DataFileClient.DataFileBean dataFileBean = gson.fromJson(stringReader, DataFileClient.DataFileBean.class);
 						opClient = nmeaDataClients.stream()
-										.filter(channel -> channel instanceof DataFileClient &&
-														((DataFileClient.DataFileBean) ((DataFileClient) channel).getBean()).getFile().equals(dataFileBean.getFile()))
-										.findFirst();
+								.filter(channel -> channel instanceof DataFileClient &&
+										((DataFileClient.DataFileBean) ((DataFileClient) channel).getBean()).getFile().equals(dataFileBean.getFile()))
+								.findFirst();
 						response = removeChannelIfPresent(request, opClient);
 					} else {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -562,9 +562,9 @@ public class RESTImplementation {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
 						SerialClient.SerialBean serialBean = gson.fromJson(stringReader, SerialClient.SerialBean.class);
 						opClient = nmeaDataClients.stream()
-										.filter(channel -> channel instanceof SerialClient &&
-														((SerialClient.SerialBean) ((SerialClient) channel).getBean()).getPort().equals(serialBean.getPort())) // No need for BaudRate
-										.findFirst();
+								.filter(channel -> channel instanceof SerialClient &&
+										((SerialClient.SerialBean) ((SerialClient) channel).getBean()).getPort().equals(serialBean.getPort())) // No need for BaudRate
+								.findFirst();
 						response = removeChannelIfPresent(request, opClient);
 					} else {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -577,9 +577,9 @@ public class RESTImplementation {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
 						TCPClient.TCPBean tcpBean = gson.fromJson(stringReader, TCPClient.TCPBean.class);
 						opClient = nmeaDataClients.stream()
-										.filter(channel -> channel instanceof TCPClient &&
-														((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getPort() == tcpBean.getPort())
-										.findFirst();
+								.filter(channel -> channel instanceof TCPClient &&
+										((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getPort() == tcpBean.getPort())
+								.findFirst();
 						response = removeChannelIfPresent(request, opClient);
 					} else {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -592,9 +592,9 @@ public class RESTImplementation {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
 						WebSocketClient.WSBean wsBean = gson.fromJson(stringReader, WebSocketClient.WSBean.class);
 						opClient = nmeaDataClients.stream()
-										.filter(channel -> channel instanceof WebSocketClient &&
-														((WebSocketClient.WSBean) ((WebSocketClient) channel).getBean()).getWsUri().equals(wsBean.getWsUri()))
-										.findFirst();
+								.filter(channel -> channel instanceof WebSocketClient &&
+										((WebSocketClient.WSBean) ((WebSocketClient) channel).getBean()).getWsUri().equals(wsBean.getWsUri()))
+								.findFirst();
 						response = removeChannelIfPresent(request, opClient);
 					} else {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -603,48 +603,48 @@ public class RESTImplementation {
 					break;
 				case "bmp180":
 					opClient = nmeaDataClients.stream()
-									.filter(channel -> channel instanceof BMP180Client)
-									.findFirst();
+							.filter(channel -> channel instanceof BMP180Client)
+							.findFirst();
 					response = removeChannelIfPresent(request, opClient);
 					break;
 				case "bme280":
 					opClient = nmeaDataClients.stream()
-									.filter(channel -> channel instanceof BME280Client)
-									.findFirst();
+							.filter(channel -> channel instanceof BME280Client)
+							.findFirst();
 					response = removeChannelIfPresent(request, opClient);
 					break;
 				case "lsm303":
 					opClient = nmeaDataClients.stream()
-									.filter(channel -> channel instanceof LSM303Client)
-									.findFirst();
+							.filter(channel -> channel instanceof LSM303Client)
+							.findFirst();
 					response = removeChannelIfPresent(request, opClient);
 					break;
 				case "htu21df":
 					opClient = nmeaDataClients.stream()
-									.filter(channel -> channel instanceof HTU21DFClient)
-									.findFirst();
+							.filter(channel -> channel instanceof HTU21DFClient)
+							.findFirst();
 					response = removeChannelIfPresent(request, opClient);
 					break;
 				case "rnd":
 					opClient = nmeaDataClients.stream()
-									.filter(channel -> channel instanceof RandomClient)
-									.findFirst();
+							.filter(channel -> channel instanceof RandomClient)
+							.findFirst();
 					response = removeChannelIfPresent(request, opClient);
 					break;
 				case "zda":
 					opClient = nmeaDataClients.stream()
-									.filter(channel -> channel instanceof ZDAClient)
-									.findFirst();
+							.filter(channel -> channel instanceof ZDAClient)
+							.findFirst();
 					response = removeChannelIfPresent(request, opClient);
 					break;
 				default:
 					if (request.getContent() != null) {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
 						@SuppressWarnings("unchecked")
-						Map<String, String> custom = (Map<String, String>)new Gson().fromJson(stringReader, Object.class);
+						Map<String, String> custom = (Map<String, String>) new Gson().fromJson(stringReader, Object.class);
 						opClient = nmeaDataClients.stream()
-										.filter(channel -> channel.getClass().getName().equals(custom.get("cls")))
-										.findFirst();
+								.filter(channel -> channel.getClass().getName().equals(custom.get("cls")))
+								.findFirst();
 						response = removeChannelIfPresent(request, opClient);
 					} else {
 						response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED);
@@ -670,8 +670,8 @@ public class RESTImplementation {
 					gson = new GsonBuilder().create();
 					if (request.getContent() != null) {  // Really? Need that?
 						opComputer = nmeaDataComputers.stream()
-										.filter(cptr -> cptr instanceof ExtraDataComputer)
-										.findFirst();
+								.filter(cptr -> cptr instanceof ExtraDataComputer)
+								.findFirst();
 						response = removeComputerIfPresent(request, opComputer);
 					} else {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -682,10 +682,10 @@ public class RESTImplementation {
 					if (request.getContent() != null) {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
 						@SuppressWarnings("unchecked")
-						Map<String, String> custom = (Map<String, String>)new Gson().fromJson(stringReader, Object.class);
+						Map<String, String> custom = (Map<String, String>) new Gson().fromJson(stringReader, Object.class);
 						opComputer = nmeaDataComputers.stream()
-										.filter(cptr -> cptr.getClass().getName().equals(custom.get("cls")))
-										.findFirst();
+								.filter(cptr -> cptr.getClass().getName().equals(custom.get("cls")))
+								.findFirst();
 						response = removeComputerIfPresent(request, opComputer);
 					} else {
 						response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED);
@@ -717,8 +717,8 @@ public class RESTImplementation {
 			case "console":
 				// Check existence
 				opFwd = nmeaDataForwarders.stream()
-								.filter(fwd -> fwd instanceof ConsoleWriter)
-								.findFirst();
+						.filter(fwd -> fwd instanceof ConsoleWriter)
+						.findFirst();
 				if (!opFwd.isPresent()) {
 					try {
 						Forwarder consoleForwarder = new ConsoleWriter();
@@ -742,9 +742,9 @@ public class RESTImplementation {
 				SerialWriter.SerialBean serialJson = new Gson().fromJson(new String(request.getContent()), SerialWriter.SerialBean.class);
 				// Check if not there yet.
 				opFwd = nmeaDataForwarders.stream()
-								.filter(fwd -> fwd instanceof SerialWriter &&
-												((SerialWriter) fwd).getPort() == serialJson.getPort())
-								.findFirst();
+						.filter(fwd -> fwd instanceof SerialWriter &&
+								((SerialWriter) fwd).getPort() == serialJson.getPort())
+						.findFirst();
 				if (!opFwd.isPresent()) {
 					try {
 						Forwarder serialForwarder = new SerialWriter(serialJson.getPort(), serialJson.getBR());
@@ -767,9 +767,9 @@ public class RESTImplementation {
 				TCPServer.TCPBean tcpJson = new Gson().fromJson(new String(request.getContent()), TCPServer.TCPBean.class);
 				// Check if not there yet.
 				opFwd = nmeaDataForwarders.stream()
-								.filter(fwd -> fwd instanceof TCPServer &&
-												((TCPServer) fwd).getTcpPort() == tcpJson.getPort())
-								.findFirst();
+						.filter(fwd -> fwd instanceof TCPServer &&
+								((TCPServer) fwd).getTcpPort() == tcpJson.getPort())
+						.findFirst();
 				if (!opFwd.isPresent()) {
 					try {
 						Forwarder tcpForwarder = new TCPServer(tcpJson.getPort());
@@ -792,9 +792,9 @@ public class RESTImplementation {
 				GPSdServer.GPSdBean gpsdJson = new Gson().fromJson(new String(request.getContent()), GPSdServer.GPSdBean.class);
 				// Check if not there yet.
 				opFwd = nmeaDataForwarders.stream()
-								.filter(fwd -> fwd instanceof GPSdServer &&
-												((GPSdServer) fwd).getTcpPort() == gpsdJson.getPort())
-								.findFirst();
+						.filter(fwd -> fwd instanceof GPSdServer &&
+								((GPSdServer) fwd).getTcpPort() == gpsdJson.getPort())
+						.findFirst();
 				if (!opFwd.isPresent()) {
 					try {
 						Forwarder gpsdForwarder = new GPSdServer(gpsdJson.getPort());
@@ -817,9 +817,9 @@ public class RESTImplementation {
 				RMIServer.RMIBean rmiJson = new Gson().fromJson(new String(request.getContent()), RMIServer.RMIBean.class);
 				// Check if not there yet.
 				opFwd = nmeaDataForwarders.stream()
-								.filter(fwd -> fwd instanceof RMIServer &&
-												((RMIServer) fwd).getRegistryPort() == rmiJson.getPort())
-								.findFirst();
+						.filter(fwd -> fwd instanceof RMIServer &&
+								((RMIServer) fwd).getRegistryPort() == rmiJson.getPort())
+						.findFirst();
 				if (!opFwd.isPresent()) {
 					try {
 						Forwarder rmiForwarder = new RMIServer(rmiJson.getPort(), rmiJson.getBindingName());
@@ -842,9 +842,9 @@ public class RESTImplementation {
 				DataFileWriter.DataFileBean fileJson = new Gson().fromJson(new String(request.getContent()), DataFileWriter.DataFileBean.class);
 				// Check if not there yet.
 				opFwd = nmeaDataForwarders.stream()
-								.filter(fwd -> fwd instanceof DataFileWriter &&
-												((DataFileWriter) fwd).getLog().equals(fileJson.getLog()))
-								.findFirst();
+						.filter(fwd -> fwd instanceof DataFileWriter &&
+								((DataFileWriter) fwd).getLog().equals(fileJson.getLog()))
+						.findFirst();
 				if (!opFwd.isPresent()) {
 					try {
 						Forwarder fileForwarder = new DataFileWriter(fileJson.getLog(), fileJson.append());
@@ -866,9 +866,9 @@ public class RESTImplementation {
 				WebSocketWriter.WSBean wsJson = new Gson().fromJson(new String(request.getContent()), WebSocketWriter.WSBean.class);
 				// Check if not there yet.
 				opFwd = nmeaDataForwarders.stream()
-								.filter(fwd -> fwd instanceof WebSocketWriter &&
-												((WebSocketWriter) fwd).getWsUri() == wsJson.getWsUri())
-								.findFirst();
+						.filter(fwd -> fwd instanceof WebSocketWriter &&
+								((WebSocketWriter) fwd).getWsUri() == wsJson.getWsUri())
+						.findFirst();
 				if (!opFwd.isPresent()) {
 					try {
 						Forwarder wsForwarder = new WebSocketWriter(wsJson.getWsUri());
@@ -891,9 +891,9 @@ public class RESTImplementation {
 				WebSocketProcessor.WSBean wspJson = new Gson().fromJson(new String(request.getContent()), WebSocketProcessor.WSBean.class);
 				// Check if not there yet.
 				opFwd = nmeaDataForwarders.stream()
-								.filter(fwd -> fwd instanceof WebSocketProcessor &&
-												((WebSocketProcessor) fwd).getWsUri() == wspJson.getWsUri())
-								.findFirst();
+						.filter(fwd -> fwd instanceof WebSocketProcessor &&
+								((WebSocketProcessor) fwd).getWsUri() == wspJson.getWsUri())
+						.findFirst();
 				if (!opFwd.isPresent()) {
 					try {
 						Forwarder wspForwarder = new WebSocketProcessor(wspJson.getWsUri());
@@ -917,7 +917,7 @@ public class RESTImplementation {
 				Object custom = new Gson().fromJson(payload, Object.class);
 				if (custom instanceof Map) {
 					@SuppressWarnings("unchecked")
-					Map<String, String> map = (Map<String, String>)custom;
+					Map<String, String> map = (Map<String, String>) custom;
 					String forwarderClass = map.get("forwarderClass").trim();
 					String propFile = map.get("propFile");
 					// Make sure client and reader are not null
@@ -928,14 +928,14 @@ public class RESTImplementation {
 					}
 					// Check Existence
 					opFwd = nmeaDataForwarders.stream()
-									.filter(fwd -> fwd.getClass().getName().equals(forwarderClass))
-									.findFirst();
+							.filter(fwd -> fwd.getClass().getName().equals(forwarderClass))
+							.findFirst();
 					if (!opFwd.isPresent()) {
 						try {
 							// Create dynamic forwarder
 							Object dynamic = Class.forName(forwarderClass).newInstance();
 							if (dynamic instanceof Forwarder) {
-								Forwarder forwarder = (Forwarder)dynamic;
+								Forwarder forwarder = (Forwarder) dynamic;
 
 								if (propFile != null && propFile.trim().length() > 0) {
 									try {
@@ -998,10 +998,10 @@ public class RESTImplementation {
 			case "tcp":
 				TCPClient.TCPBean tcpJson = new Gson().fromJson(new String(request.getContent()), TCPClient.TCPBean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof SerialClient &&
-												((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getPort() == tcpJson.getPort() &&
-												((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getHostname().equals(tcpJson.getHostname()))
-								.findFirst();
+						.filter(channel -> channel instanceof SerialClient &&
+								((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getPort() == tcpJson.getPort() &&
+								((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getHostname().equals(tcpJson.getHostname()))
+						.findFirst();
 				if (!opClient.isPresent()) {
 					try {
 						NMEAClient tcpClient = new TCPClient(tcpJson.getDeviceFilters(), tcpJson.getSentenceFilters(), this.mux);
@@ -1026,12 +1026,12 @@ public class RESTImplementation {
 			case "serial":
 				SerialClient.SerialBean serialJson = new Gson().fromJson(new String(request.getContent()), SerialClient.SerialBean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof SerialClient &&
-												((SerialClient.SerialBean) ((SerialClient) channel).getBean()).getPort().equals(serialJson.getPort()))
-								.findFirst();
+						.filter(channel -> channel instanceof SerialClient &&
+								((SerialClient.SerialBean) ((SerialClient) channel).getBean()).getPort().equals(serialJson.getPort()))
+						.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient serialClient = new SerialClient(serialJson.getDeviceFilters(), serialJson.getSentenceFilters(),this.mux);
+						NMEAClient serialClient = new SerialClient(serialJson.getDeviceFilters(), serialJson.getSentenceFilters(), this.mux);
 						serialClient.initClient();
 						serialClient.setReader(new SerialReader(serialClient.getListeners(), serialJson.getPort(), serialJson.getBr()));
 						nmeaDataClients.add(serialClient);
@@ -1054,12 +1054,12 @@ public class RESTImplementation {
 				WebSocketClient.WSBean wsJson = new Gson().fromJson(new String(request.getContent()), WebSocketClient.WSBean.class);
 				// Check if not there yet.
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof WebSocketClient &&
-												((WebSocketClient.WSBean) ((WebSocketClient) channel).getBean()).getWsUri().equals(wsJson.getWsUri()))
-								.findFirst();
+						.filter(channel -> channel instanceof WebSocketClient &&
+								((WebSocketClient.WSBean) ((WebSocketClient) channel).getBean()).getWsUri().equals(wsJson.getWsUri()))
+						.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient wsClient = new WebSocketClient(wsJson.getDeviceFilters(), wsJson.getSentenceFilters(),this.mux);
+						NMEAClient wsClient = new WebSocketClient(wsJson.getDeviceFilters(), wsJson.getSentenceFilters(), this.mux);
 						wsClient.initClient();
 						wsClient.setReader(new WebSocketReader(wsClient.getListeners(), wsJson.getWsUri()));
 						nmeaDataClients.add(wsClient);
@@ -1082,12 +1082,12 @@ public class RESTImplementation {
 				DataFileClient.DataFileBean fileJson = new Gson().fromJson(new String(request.getContent()), DataFileClient.DataFileBean.class);
 				// Check if not there yet.
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof DataFileClient &&
-												((DataFileClient.DataFileBean) ((DataFileClient) channel).getBean()).getFile().equals(fileJson.getFile()))
-								.findFirst();
+						.filter(channel -> channel instanceof DataFileClient &&
+								((DataFileClient.DataFileBean) ((DataFileClient) channel).getBean()).getFile().equals(fileJson.getFile()))
+						.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient fileClient = new DataFileClient(fileJson.getDeviceFilters(), fileJson.getSentenceFilters(),this.mux);
+						NMEAClient fileClient = new DataFileClient(fileJson.getDeviceFilters(), fileJson.getSentenceFilters(), this.mux);
 						fileClient.initClient();
 						fileClient.setReader(new DataFileReader(fileClient.getListeners(), fileJson.getFile(), fileJson.getPause()));
 						nmeaDataClients.add(fileClient);
@@ -1109,11 +1109,11 @@ public class RESTImplementation {
 			case "bmp180":
 				BMP180Client.BMP180Bean bmp180Json = new Gson().fromJson(new String(request.getContent()), BMP180Client.BMP180Bean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof BMP180Client)
-								.findFirst();
+						.filter(channel -> channel instanceof BMP180Client)
+						.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient bmp180Client = new BMP180Client(bmp180Json.getDeviceFilters(), bmp180Json.getSentenceFilters(),this.mux);
+						NMEAClient bmp180Client = new BMP180Client(bmp180Json.getDeviceFilters(), bmp180Json.getSentenceFilters(), this.mux);
 						bmp180Client.initClient();
 						bmp180Client.setReader(new BMP180Reader(bmp180Client.getListeners()));
 						// To do BEFORE startWorking and AFTER setReader
@@ -1121,7 +1121,7 @@ public class RESTImplementation {
 							if (bmp180Json.getDevicePrefix().trim().length() != 2) {
 								throw new RuntimeException(String.format("Device prefix length must be exactly 2. [%s] is not valid", bmp180Json.getDevicePrefix().trim()));
 							} else {
-								((BMP180Client)bmp180Client).setSpecificDevicePrefix(bmp180Json.getDevicePrefix().trim());
+								((BMP180Client) bmp180Client).setSpecificDevicePrefix(bmp180Json.getDevicePrefix().trim());
 							}
 						}
 						nmeaDataClients.add(bmp180Client);
@@ -1147,16 +1147,16 @@ public class RESTImplementation {
 			case "lsm303":
 				LSM303Client.LSM303Bean lsm303Json = new Gson().fromJson(new String(request.getContent()), LSM303Client.LSM303Bean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof LSM303Client)
-								.findFirst();
+						.filter(channel -> channel instanceof LSM303Client)
+						.findFirst();
 				if (!opClient.isPresent()) {
 					try {
 						NMEAClient lsm303Client = new LSM303Client(lsm303Json.getDeviceFilters(), lsm303Json.getSentenceFilters(), this.mux);
 						if (lsm303Json.getHeadingOffset() != 0) {
-							((LSM303Client)lsm303Client).setHeadingOffset(lsm303Json.getHeadingOffset());
+							((LSM303Client) lsm303Client).setHeadingOffset(lsm303Json.getHeadingOffset());
 						}
 						if (lsm303Json.getReadFrequency() != null) {
-							((LSM303Client)lsm303Client).setReadFrequency(lsm303Json.getReadFrequency());
+							((LSM303Client) lsm303Client).setReadFrequency(lsm303Json.getReadFrequency());
 						}
 						lsm303Client.initClient();
 						lsm303Client.setReader(new LSM303Reader(lsm303Client.getListeners()));
@@ -1165,7 +1165,7 @@ public class RESTImplementation {
 							if (lsm303Json.getDevicePrefix().trim().length() != 2) {
 								throw new RuntimeException(String.format("Device prefix length must be exactly 2. [%s] is not valid", lsm303Json.getDevicePrefix().trim()));
 							} else {
-								((LSM303Client)lsm303Client).setSpecificDevicePrefix(lsm303Json.getDevicePrefix().trim());
+								((LSM303Client) lsm303Client).setSpecificDevicePrefix(lsm303Json.getDevicePrefix().trim());
 							}
 						}
 						nmeaDataClients.add(lsm303Client);
@@ -1191,8 +1191,8 @@ public class RESTImplementation {
 			case "zda":
 				ZDAClient.ZDABean zdaJson = new Gson().fromJson(new String(request.getContent()), ZDAClient.ZDABean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof ZDAClient)
-								.findFirst();
+						.filter(channel -> channel instanceof ZDAClient)
+						.findFirst();
 				if (!opClient.isPresent()) {
 					try {
 						NMEAClient zdaClient = new ZDAClient(zdaJson.getDeviceFilters(), zdaJson.getSentenceFilters(), this.mux);
@@ -1203,7 +1203,7 @@ public class RESTImplementation {
 							if (zdaJson.getDevicePrefix().trim().length() != 2) {
 								throw new RuntimeException(String.format("Device prefix length must be exactly 2. [%s] is not valid", zdaJson.getDevicePrefix().trim()));
 							} else {
-								((ZDAClient)zdaClient).setSpecificDevicePrefix(zdaJson.getDevicePrefix().trim());
+								((ZDAClient) zdaClient).setSpecificDevicePrefix(zdaJson.getDevicePrefix().trim());
 							}
 						}
 						nmeaDataClients.add(zdaClient);
@@ -1229,11 +1229,11 @@ public class RESTImplementation {
 			case "bme280":
 				BME280Client.BME280Bean bme280Json = new Gson().fromJson(new String(request.getContent()), BME280Client.BME280Bean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof BME280Client)
-								.findFirst();
+						.filter(channel -> channel instanceof BME280Client)
+						.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient bme280Client = new BME280Client(bme280Json.getDeviceFilters(), bme280Json.getSentenceFilters(),this.mux);
+						NMEAClient bme280Client = new BME280Client(bme280Json.getDeviceFilters(), bme280Json.getSentenceFilters(), this.mux);
 						bme280Client.initClient();
 						bme280Client.setReader(new BME280Reader(bme280Client.getListeners()));
 						// To do BEFORE startWorking and AFTER setReader
@@ -1241,7 +1241,7 @@ public class RESTImplementation {
 							if (bme280Json.getDevicePrefix().trim().length() != 2) {
 								throw new RuntimeException(String.format("Device prefix length must be exactly 2. [%s] is not valid", bme280Json.getDevicePrefix().trim()));
 							} else {
-								((BME280Client)bme280Client).setSpecificDevicePrefix(bme280Json.getDevicePrefix().trim());
+								((BME280Client) bme280Client).setSpecificDevicePrefix(bme280Json.getDevicePrefix().trim());
 							}
 						}
 						nmeaDataClients.add(bme280Client);
@@ -1267,11 +1267,11 @@ public class RESTImplementation {
 			case "htu21df":
 				HTU21DFClient.HTU21DFBean htu21dfJson = new Gson().fromJson(new String(request.getContent()), HTU21DFClient.HTU21DFBean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof HTU21DFClient)
-								.findFirst();
+						.filter(channel -> channel instanceof HTU21DFClient)
+						.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient htu21dfClient = new HTU21DFClient(htu21dfJson.getDeviceFilters(), htu21dfJson.getSentenceFilters(),this.mux);
+						NMEAClient htu21dfClient = new HTU21DFClient(htu21dfJson.getDeviceFilters(), htu21dfJson.getSentenceFilters(), this.mux);
 						htu21dfClient.initClient();
 						htu21dfClient.setReader(new HTU21DFReader(htu21dfClient.getListeners()));
 						// To do BEFORE startWorking and AFTER setReader
@@ -1279,7 +1279,7 @@ public class RESTImplementation {
 							if (htu21dfJson.getDevicePrefix().trim().length() != 2) {
 								throw new RuntimeException(String.format("Device prefix length must be exactly 2. [%s] is not valid", htu21dfJson.getDevicePrefix().trim()));
 							} else {
-								((HTU21DFClient)htu21dfClient).setSpecificDevicePrefix(htu21dfJson.getDevicePrefix().trim());
+								((HTU21DFClient) htu21dfClient).setSpecificDevicePrefix(htu21dfJson.getDevicePrefix().trim());
 							}
 						}
 						nmeaDataClients.add(htu21dfClient);
@@ -1305,11 +1305,11 @@ public class RESTImplementation {
 			case "rnd":
 				RandomClient.RandomBean rndJson = new Gson().fromJson(new String(request.getContent()), RandomClient.RandomBean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof RandomClient)
-								.findFirst();
+						.filter(channel -> channel instanceof RandomClient)
+						.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient rndClient = new RandomClient(rndJson.getDeviceFilters(), rndJson.getSentenceFilters(),this.mux);
+						NMEAClient rndClient = new RandomClient(rndJson.getDeviceFilters(), rndJson.getSentenceFilters(), this.mux);
 						rndClient.initClient();
 						rndClient.setReader(new RandomReader(rndClient.getListeners()));
 						nmeaDataClients.add(rndClient);
@@ -1333,12 +1333,12 @@ public class RESTImplementation {
 				Object custom = new Gson().fromJson(payload, Object.class);
 				if (custom instanceof Map) {
 					@SuppressWarnings("unchecked")
-					Map<String, Object> map = (Map<String, Object>)custom;
-					String clientClass = ((String)map.get("clientClass")).trim();
-					String readerClass = ((String)map.get("readerClass")).trim();
-					String propFile = (String)map.get("propFile");
-					List<String> deviceFilters = (List<String>)map.get("deviceFilters");
-					List<String> sentenceFilters = (List<String>)map.get("sentenceFilters");
+					Map<String, Object> map = (Map<String, Object>) custom;
+					String clientClass = ((String) map.get("clientClass")).trim();
+					String readerClass = ((String) map.get("readerClass")).trim();
+					String propFile = (String) map.get("propFile");
+					List<String> deviceFilters = (List<String>) map.get("deviceFilters");
+					List<String> sentenceFilters = (List<String>) map.get("sentenceFilters");
 					// Make sure client and reader are not null
 					if (clientClass == null || clientClass.length() == 0 || readerClass == null || readerClass.length() == 0) {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -1347,8 +1347,8 @@ public class RESTImplementation {
 					}
 					// Check Existence
 					opClient = nmeaDataClients.stream()
-									.filter(channel -> channel.getClass().getName().equals(clientClass))
-									.findFirst();
+							.filter(channel -> channel.getClass().getName().equals(clientClass))
+							.findFirst();
 					if (!opClient.isPresent()) {
 						try {
 							// Create
@@ -1365,10 +1365,10 @@ public class RESTImplementation {
 								senFilters = senList.toArray(senFilters);
 							}
 							Object dynamic = Class.forName(clientClass)
-											.getDeclaredConstructor(String[].class, String[].class, Multiplexer.class)
-											.newInstance(devFilters, senFilters, this);
+									.getDeclaredConstructor(String[].class, String[].class, Multiplexer.class)
+									.newInstance(devFilters, senFilters, this);
 							if (dynamic instanceof NMEAClient) {
-								NMEAClient nmeaClient = (NMEAClient)dynamic;
+								NMEAClient nmeaClient = (NMEAClient) dynamic;
 
 								if (propFile != null && propFile.trim().length() > 0) {
 									try {
@@ -1386,7 +1386,7 @@ public class RESTImplementation {
 								NMEAReader reader = null;
 								try {
 									// Cannot invoke declared constructor with a generic type... :(
-									reader = (NMEAReader)Class.forName(readerClass).getDeclaredConstructor(List.class).newInstance(nmeaClient.getListeners());
+									reader = (NMEAReader) Class.forName(readerClass).getDeclaredConstructor(List.class).newInstance(nmeaClient.getListeners());
 								} catch (Exception ex) {
 									response.setStatus(HTTPServer.Response.BAD_REQUEST);
 									RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
@@ -1445,15 +1445,15 @@ public class RESTImplementation {
 				ExtraDataComputer.ComputerBean twJson = new Gson().fromJson(new String(request.getContent()), ExtraDataComputer.ComputerBean.class);
 				// Check if not there yet.
 				opComputer = nmeaDataComputers.stream()
-								.filter(channel -> channel instanceof ExtraDataComputer)
-								.findFirst();
+						.filter(channel -> channel instanceof ExtraDataComputer)
+						.findFirst();
 				if (!opComputer.isPresent()) {
 					try {
 						String[] timeBuffers = twJson.getTimeBufferLength().split(",");
-						List<Long> timeBufferLengths  = Arrays.asList(timeBuffers).stream().map(tbl -> Long.parseLong(tbl.trim())).collect(Collectors.toList());
+						List<Long> timeBufferLengths = Arrays.asList(timeBuffers).stream().map(tbl -> Long.parseLong(tbl.trim())).collect(Collectors.toList());
 						// Check duplicates
-						for (int i=0; i<timeBufferLengths.size() - 1; i++) {
-							for (int j=i+1; j< timeBufferLengths.size(); j++) {
+						for (int i = 0; i < timeBufferLengths.size() - 1; i++) {
+							for (int j = i + 1; j < timeBufferLengths.size(); j++) {
 								if (timeBufferLengths.get(i).equals(timeBufferLengths.get(j))) {
 									throw new RuntimeException(String.format("Duplicates in time buffer lengths: %d ms.", timeBufferLengths.get(i)));
 								}
@@ -1480,7 +1480,7 @@ public class RESTImplementation {
 				Object custom = new Gson().fromJson(payload, Object.class);
 				if (custom instanceof Map) {
 					@SuppressWarnings("unchecked")
-					Map<String, String> map = (Map<String, String>)custom;
+					Map<String, String> map = (Map<String, String>) custom;
 					String computerClass = map.get("computerClass").trim();
 					String propFile = map.get("propFile");
 					// Make sure client and reader are not null
@@ -1491,14 +1491,14 @@ public class RESTImplementation {
 					}
 					// Check Existence
 					opComputer = nmeaDataComputers.stream()
-									.filter(fwd -> fwd.getClass().getName().equals(computerClass))
-									.findFirst();
+							.filter(fwd -> fwd.getClass().getName().equals(computerClass))
+							.findFirst();
 					if (!opComputer.isPresent()) {
 						try {
 							// Create
 							Object dynamic = Class.forName(computerClass).getDeclaredConstructor(Multiplexer.class).newInstance(this);
 							if (dynamic instanceof Computer) {
-								Computer computer = (Computer)dynamic;
+								Computer computer = (Computer) dynamic;
 
 								if (propFile != null && propFile.trim().length() > 0) {
 									try {
@@ -1573,9 +1573,9 @@ public class RESTImplementation {
 			case "serial":
 				SerialClient.SerialBean serialJson = new Gson().fromJson(new String(request.getContent()), SerialClient.SerialBean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof SerialClient &&
-												((SerialClient.SerialBean) ((SerialClient) channel).getBean()).getPort().equals(serialJson.getPort()))
-								.findFirst();
+						.filter(channel -> channel instanceof SerialClient &&
+								((SerialClient.SerialBean) ((SerialClient) channel).getBean()).getPort().equals(serialJson.getPort()))
+						.findFirst();
 				if (!opClient.isPresent()) {
 					response.setStatus(HTTPServer.Response.NOT_FOUND);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'serial' was not found");
@@ -1590,9 +1590,9 @@ public class RESTImplementation {
 			case "file":
 				DataFileClient.DataFileBean fileJson = new Gson().fromJson(new String(request.getContent()), DataFileClient.DataFileBean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof DataFileClient &&
-												((DataFileClient.DataFileBean) ((DataFileClient) channel).getBean()).getFile().equals(fileJson.getFile()))
-								.findFirst();
+						.filter(channel -> channel instanceof DataFileClient &&
+								((DataFileClient.DataFileBean) ((DataFileClient) channel).getBean()).getFile().equals(fileJson.getFile()))
+						.findFirst();
 				if (!opClient.isPresent()) {
 					response.setStatus(HTTPServer.Response.NOT_FOUND);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'file' was not found");
@@ -1608,10 +1608,10 @@ public class RESTImplementation {
 			case "tcp":
 				TCPClient.TCPBean tcpJson = new Gson().fromJson(new String(request.getContent()), TCPClient.TCPBean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof TCPClient &&
-												((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getHostname().equals(tcpJson.getHostname()) &&
-												((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getPort() == tcpJson.getPort())
-								.findFirst();
+						.filter(channel -> channel instanceof TCPClient &&
+								((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getHostname().equals(tcpJson.getHostname()) &&
+								((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getPort() == tcpJson.getPort())
+						.findFirst();
 				if (!opClient.isPresent()) {
 					response.setStatus(HTTPServer.Response.NOT_FOUND);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'tcp' was not found");
@@ -1626,9 +1626,9 @@ public class RESTImplementation {
 			case "ws":
 				WebSocketClient.WSBean wsJson = new Gson().fromJson(new String(request.getContent()), WebSocketClient.WSBean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof WebSocketClient &&
-												((WebSocketClient.WSBean) ((WebSocketClient) channel).getBean()).getWsUri().equals(wsJson.getWsUri()))
-								.findFirst();
+						.filter(channel -> channel instanceof WebSocketClient &&
+								((WebSocketClient.WSBean) ((WebSocketClient) channel).getBean()).getWsUri().equals(wsJson.getWsUri()))
+						.findFirst();
 				if (!opClient.isPresent()) {
 					response.setStatus(HTTPServer.Response.NOT_FOUND);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'ws' was not found");
@@ -1643,8 +1643,8 @@ public class RESTImplementation {
 			case "bmp180":
 				BMP180Client.BMP180Bean bmp180Json = new Gson().fromJson(new String(request.getContent()), BMP180Client.BMP180Bean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof BMP180Client)
-								.findFirst();
+						.filter(channel -> channel instanceof BMP180Client)
+						.findFirst();
 				if (!opClient.isPresent()) {
 					response.setStatus(HTTPServer.Response.NOT_FOUND);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'bmp180' was not found");
@@ -1659,8 +1659,8 @@ public class RESTImplementation {
 			case "bme280":
 				BME280Client.BME280Bean bme280Json = new Gson().fromJson(new String(request.getContent()), BME280Client.BME280Bean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof BME280Client)
-								.findFirst();
+						.filter(channel -> channel instanceof BME280Client)
+						.findFirst();
 				if (!opClient.isPresent()) {
 					response.setStatus(HTTPServer.Response.NOT_FOUND);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'bme280' was not found");
@@ -1675,8 +1675,8 @@ public class RESTImplementation {
 			case "lsm303":
 				LSM303Client.LSM303Bean lsm303Json = new Gson().fromJson(new String(request.getContent()), LSM303Client.LSM303Bean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof LSM303Client)
-								.findFirst();
+						.filter(channel -> channel instanceof LSM303Client)
+						.findFirst();
 				if (!opClient.isPresent()) {
 					response.setStatus(HTTPServer.Response.NOT_FOUND);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'lsm303' was not found");
@@ -1691,8 +1691,8 @@ public class RESTImplementation {
 			case "zda":
 				ZDAClient.ZDABean zdaJson = new Gson().fromJson(new String(request.getContent()), ZDAClient.ZDABean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof ZDAClient)
-								.findFirst();
+						.filter(channel -> channel instanceof ZDAClient)
+						.findFirst();
 				if (!opClient.isPresent()) {
 					response.setStatus(HTTPServer.Response.NOT_FOUND);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'da' was not found");
@@ -1707,8 +1707,8 @@ public class RESTImplementation {
 			case "htu21df":
 				HTU21DFClient.HTU21DFBean htu21dfJson = new Gson().fromJson(new String(request.getContent()), HTU21DFClient.HTU21DFBean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof HTU21DFClient)
-								.findFirst();
+						.filter(channel -> channel instanceof HTU21DFClient)
+						.findFirst();
 				if (!opClient.isPresent()) {
 					response.setStatus(HTTPServer.Response.NOT_FOUND);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'htu21df' was not found");
@@ -1723,8 +1723,8 @@ public class RESTImplementation {
 			case "rnd":
 				RandomClient.RandomBean rndJson = new Gson().fromJson(new String(request.getContent()), RandomClient.RandomBean.class);
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof RandomClient)
-								.findFirst();
+						.filter(channel -> channel instanceof RandomClient)
+						.findFirst();
 				if (!opClient.isPresent()) {
 					response.setStatus(HTTPServer.Response.NOT_FOUND);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'rnd' was not found");
@@ -1738,16 +1738,16 @@ public class RESTImplementation {
 				break;
 			default:
 				@SuppressWarnings("unchecked")
-				Map<String, Object> custom = (Map<String, Object>)new Gson().fromJson(new String(request.getContent()), Object.class);
+				Map<String, Object> custom = (Map<String, Object>) new Gson().fromJson(new String(request.getContent()), Object.class);
 				opClient = nmeaDataClients.stream()
-								.filter(cptr -> cptr.getClass().getName().equals(custom.get("cls")))
-								.findFirst();
+						.filter(cptr -> cptr.getClass().getName().equals(custom.get("cls")))
+						.findFirst();
 				if (!opClient.isPresent()) {
 					response.setStatus(HTTPServer.Response.NOT_FOUND);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "'custom' not found");
 				} else { // Then update
 					NMEAClient nmeaClient = opClient.get();
-					boolean verbose = ((Boolean)custom.get("verbose")).booleanValue();
+					boolean verbose = ((Boolean) custom.get("verbose")).booleanValue();
 					nmeaClient.setVerbose(verbose);
 					String content = new Gson().toJson(nmeaClient.getBean());
 					RESTProcessorUtil.generateResponseHeaders(response, content.length());
@@ -1825,8 +1825,8 @@ public class RESTImplementation {
 			case "tw-current":
 				ExtraDataComputer.ComputerBean twJson = new Gson().fromJson(new String(request.getContent()), ExtraDataComputer.ComputerBean.class);
 				opComputer = nmeaDataComputers.stream()
-								.filter(cptr -> cptr instanceof ExtraDataComputer)
-								.findFirst();
+						.filter(cptr -> cptr instanceof ExtraDataComputer)
+						.findFirst();
 				if (!opComputer.isPresent()) {
 					response.setStatus(HTTPServer.Response.NOT_FOUND);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "'tw-current' not found");
@@ -1841,16 +1841,16 @@ public class RESTImplementation {
 				break;
 			default:
 				@SuppressWarnings("unchecked")
-				Map<String, Object> custom = (Map<String, Object>)new Gson().fromJson(new String(request.getContent()), Object.class);
+				Map<String, Object> custom = (Map<String, Object>) new Gson().fromJson(new String(request.getContent()), Object.class);
 				opComputer = nmeaDataComputers.stream()
-								.filter(cptr -> cptr.getClass().getName().equals(custom.get("cls")))
-								.findFirst();
+						.filter(cptr -> cptr.getClass().getName().equals(custom.get("cls")))
+						.findFirst();
 				if (!opComputer.isPresent()) {
 					response.setStatus(HTTPServer.Response.NOT_FOUND);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "'custom' not found");
 				} else { // Then update
 					Computer computer = opComputer.get();
-					boolean verbose = ((Boolean)custom.get("verbose")).booleanValue();
+					boolean verbose = ((Boolean) custom.get("verbose")).booleanValue();
 					computer.setVerbose(verbose);
 					String content = new Gson().toJson(computer.getBean());
 					RESTProcessorUtil.generateResponseHeaders(response, content.length());
@@ -1905,7 +1905,7 @@ public class RESTImplementation {
 		// find . -name '*.nmea' -print0 | xargs -0 ls -lisah | awk '{ print $7, $8, $9, $10, $11 }'
 		String findCommand = "find . -name '*.nmea' | xargs wc -l";
 		try {
-			Process process = Runtime.getRuntime().exec(new String[] { "bash", "-c", findCommand });
+			Process process = Runtime.getRuntime().exec(new String[]{"bash", "-c", findCommand});
 			int exitStatus = process.waitFor();
 
 			BufferedReader stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -1965,7 +1965,6 @@ public class RESTImplementation {
 	}
 
 	/**
-	 *
 	 * @param request file name is the first (only) request prm. MUST be URLEncoded, specially if it contains slashes ('/' => %2F)
 	 * @return
 	 */
@@ -2002,7 +2001,7 @@ public class RESTImplementation {
 					sb.append(line + "\n");
 				}
 			}
-	    br.close();
+			br.close();
 		} catch (FileNotFoundException fnfe) {
 			fnfe.printStackTrace();
 		} catch (IOException ioe) {
@@ -2017,7 +2016,6 @@ public class RESTImplementation {
 	}
 
 	/**
-	 *
 	 * @param request file name is the first (only) request prm. MUST be URLEncoded, specially if it contains slashes ('/' => %2F)
 	 * @return
 	 */
@@ -2078,7 +2076,7 @@ public class RESTImplementation {
 		System.out.println("Managing " + protocolContent);
 		Map<String, Object> responsePayload = new HashMap<>(1);
 		try {
-		responsePayload.put("payload", URLDecoder.decode(protocolContent, "utf-8"));
+			responsePayload.put("payload", URLDecoder.decode(protocolContent, "utf-8"));
 		} catch (UnsupportedEncodingException uee) {
 			uee.printStackTrace();
 		}
@@ -2088,11 +2086,11 @@ public class RESTImplementation {
 		return response;
 	}
 
-  /**
+	/**
 	 * This one is a very unusual REST resource; it kills its own server.
 	 * And it is a recursive one, it itself invokes another REST resource.
 	 * Hence the thread, see the code.
-   */
+	 */
 	private HTTPServer.Response stopAll(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		boolean ok = true;
@@ -2128,7 +2126,7 @@ public class RESTImplementation {
 		return response;
 	}
 
-	private transient static final List<String> REMOVE_WHEN_TINY = Arrays.asList(new String[] {
+	private transient static final List<String> REMOVE_WHEN_TINY = Arrays.asList(new String[]{
 			NMEADataCache.LAST_NMEA_SENTENCE,
 			NMEADataCache.GPS_TIME,
 //			NMEADataCache.GPS_SOLAR_TIME,
@@ -2213,7 +2211,7 @@ public class RESTImplementation {
 			synchronized (cache) {
 				NMEAUtils.calculateVMGs(cache);
 				final JsonElement _jsonElement = new Gson().toJsonTree(cache); // I know, ah shit!
-		//	String str = new Gson().toJson(cache);
+				//	String str = new Gson().toJson(cache);
 				((JsonObject) _jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client, drop it.
 				if (tiny || txt) {
 					REMOVE_WHEN_TINY.stream()
@@ -2229,28 +2227,35 @@ public class RESTImplementation {
 		if (txt) { // Transformation into text
 			specialContentType = "text/plain";
 			double bsp = 0;
-			try { bsp = ((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.BSP).get("speed").getAsDouble(); } catch (Exception absorb) {}
+			try {
+				bsp = ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.BSP).get("speed").getAsDouble();
+			} catch (Exception absorb) {
+			}
 			double latitude = 0, longitude = 0;
 			try {
-				latitude = ((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.POSITION).get("lat").getAsDouble();
-				longitude = ((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.POSITION).get("lng").getAsDouble();
-			} catch (Exception absorb) {}
-			double sog = 0; int cog = 0;
+				latitude = ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.POSITION).get("lat").getAsDouble();
+				longitude = ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.POSITION).get("lng").getAsDouble();
+			} catch (Exception absorb) {
+			}
+			double sog = 0;
+			int cog = 0;
 			try {
-				sog = ((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.SOG).get("speed").getAsDouble();
-				cog = ((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.COG).get("angle").getAsInt();
-			} catch (Exception absorb) {}
+				sog = ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.SOG).get("speed").getAsDouble();
+				cog = ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.COG).get("angle").getAsInt();
+			} catch (Exception absorb) {
+			}
 			String date = "";
 			int year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0;
 			try {
-				date = ((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("date").getAsString();
-				year = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("year").getAsInt();
-				month = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("month").getAsInt();
-				day = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("day").getAsInt();
-				hours = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("hour").getAsInt();
-				mins = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("min").getAsInt();
-				secs = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("sec").getAsInt();
-			} catch (Exception absorb) {}
+				date = ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("date").getAsString();
+				year = ((JsonObject) ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("year").getAsInt();
+				month = ((JsonObject) ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("month").getAsInt();
+				day = ((JsonObject) ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("day").getAsInt();
+				hours = ((JsonObject) ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("hour").getAsInt();
+				mins = ((JsonObject) ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("min").getAsInt();
+				secs = ((JsonObject) ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("sec").getAsInt();
+			} catch (Exception absorb) {
+			}
 
 			int solHours = 0, solMins = 0, solSecs = 0;
 			/*
@@ -2268,16 +2273,18 @@ public class RESTImplementation {
 		    }, ...
 			 */
 			try {
-				solHours = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_SOLAR_TIME).get("fmtDate")).get("hour").getAsInt();
-				solMins = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_SOLAR_TIME).get("fmtDate")).get("min").getAsInt();
-				solSecs = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_SOLAR_TIME).get("fmtDate")).get("sec").getAsInt();
+				solHours = ((JsonObject) ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.GPS_SOLAR_TIME).get("fmtDate")).get("hour").getAsInt();
+				solMins = ((JsonObject) ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.GPS_SOLAR_TIME).get("fmtDate")).get("min").getAsInt();
+				solSecs = ((JsonObject) ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.GPS_SOLAR_TIME).get("fmtDate")).get("sec").getAsInt();
 
-			} catch (Exception absorb) {}
+			} catch (Exception absorb) {
+			}
 
 			boolean rmcStatus = false;
 			try {
-				rmcStatus = ((JsonObject)jsonElement).get(NMEADataCache.RMC_STATUS).getAsBoolean();
-			} catch (Exception absorb) {}
+				rmcStatus = ((JsonObject) jsonElement).get(NMEADataCache.RMC_STATUS).getAsBoolean();
+			} catch (Exception absorb) {
+			}
 
 			content = String.format(
 					"BSP=%.2f\nLAT=%f\nLNG=%f\nSOG=%.2f\nCOG=%d\nDATE=%s\nYEAR=%d\nMONTH=%d\nDAY=%d\nHOUR=%d\nMIN=%d\nSEC=%d\nS_HOUR=%d\nS_MIN=%d\nS_SEC=%d\nRMC_OK=%s",
@@ -2294,7 +2301,7 @@ public class RESTImplementation {
 	private HTTPServer.Response getPosition(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
-		GeoPos position =(GeoPos)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.POSITION);
+		GeoPos position = (GeoPos) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.POSITION);
 
 		JsonElement jsonElement = null;
 		try {
@@ -2342,9 +2349,9 @@ public class RESTImplementation {
 	private HTTPServer.Response getSCOG(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
-		Speed sog = (Speed)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.SOG);
-		Angle360 cog = (Angle360)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.COG);
-		GeoPos position =(GeoPos)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.POSITION);
+		Speed sog = (Speed) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.SOG);
+		Angle360 cog = (Angle360) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.COG);
+		GeoPos position = (GeoPos) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.POSITION);
 
 		Map<String, Object> map = new HashMap<>(2);
 
@@ -2379,8 +2386,8 @@ public class RESTImplementation {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
 		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
-		Speed sog = (Speed)cache.get(NMEADataCache.SOG);
-		Angle360 cog = (Angle360)cache.get(NMEADataCache.COG);
+		Speed sog = (Speed) cache.get(NMEADataCache.SOG);
+		Angle360 cog = (Angle360) cache.get(NMEADataCache.COG);
 
 		Map<String, Object> map = new HashMap<>(5);
 
@@ -2393,24 +2400,24 @@ public class RESTImplementation {
 		cogMap.put("cog", (cog != null) ? cog.getValue() : null);
 		cogMap.put("unit", "deg");
 
-		Double dist = (Double)cache.get(NMEADataCache.SMALL_DISTANCE);
+		Double dist = (Double) cache.get(NMEADataCache.SMALL_DISTANCE);
 
 		Map<String, Object> distMap = new HashMap<>(2);
 		distMap.put("distance", dist);
 		distMap.put("unit", "nm");
 
-		Double delta = (Double)cache.get(NMEADataCache.DELTA_ALTITUDE);
-		Double altitude = (Double)cache.get(NMEADataCache.ALTITUDE);
+		Double delta = (Double) cache.get(NMEADataCache.DELTA_ALTITUDE);
+		Double altitude = (Double) cache.get(NMEADataCache.ALTITUDE);
 		Map<String, Object> altMap = new HashMap<>(2);
 		altMap.put("delta-altitude", delta);
 		altMap.put("altitude", altitude);
 		altMap.put("unit", "m");
 
 		map.put("started", cache.getStartTime());
-		map.put("sog",     sogMap);
-		map.put("cog",     cogMap);
-		map.put("dist",    distMap);
-		map.put("alt",     altMap);
+		map.put("sog", sogMap);
+		map.put("cog", cogMap);
+		map.put("dist", distMap);
+		map.put("alt", altMap);
 
 		JsonElement jsonElement = null;
 		try {
@@ -2428,7 +2435,7 @@ public class RESTImplementation {
 	private HTTPServer.Response getDistance(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
-		Double dist = (Double)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.SMALL_DISTANCE);
+		Double dist = (Double) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.SMALL_DISTANCE);
 
 		Map<String, Object> map = new HashMap<>(2);
 		map.put("distance", dist);
@@ -2450,7 +2457,7 @@ public class RESTImplementation {
 	private HTTPServer.Response getDeltaAlt(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
-		Double delta = (Double)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.DELTA_ALTITUDE);
+		Double delta = (Double) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.DELTA_ALTITUDE);
 
 		Map<String, Object> map = new HashMap<>(2);
 		map.put("delta-altitude", delta);
@@ -2476,8 +2483,8 @@ public class RESTImplementation {
 		cache.reset();
 		// Also reset computers
 		nmeaDataComputers.stream()
-						.filter(channel -> channel instanceof ExtraDataComputer)
-						.forEach(extraDataComputer -> ((ExtraDataComputer)extraDataComputer).resetCurrentComputers());
+				.filter(channel -> channel instanceof ExtraDataComputer)
+				.forEach(extraDataComputer -> ((ExtraDataComputer) extraDataComputer).resetCurrentComputers());
 		RESTProcessorUtil.generateResponseHeaders(response, 0);
 
 		return response;
@@ -2562,14 +2569,15 @@ public class RESTImplementation {
 
 	/**
 	 * Dynamically composed, based on the <code>operations</code> List.
+	 *
 	 * @param request
 	 * @return
 	 */
 	private HTTPServer.Response getOperationList(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		Operation[] channelArray = operations.stream()
-						.collect(Collectors.toList())
-						.toArray(new Operation[operations.size()]);
+				.collect(Collectors.toList())
+				.toArray(new Operation[operations.size()]);
 		String content = new Gson().toJson(channelArray);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
@@ -2578,6 +2586,7 @@ public class RESTImplementation {
 
 	/**
 	 * Use this as a temporary placeholder when creating a new operation.
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -2590,11 +2599,11 @@ public class RESTImplementation {
 	/**
 	 * Used to broadcast an event a component would be listening to.
 	 * <p>
-	 *   This service can be used to broadcast any payload, on any topic.
-	 *   Whatever component that has subscribed to the topic will receive the event.
+	 * This service can be used to broadcast any payload, on any topic.
+	 * Whatever component that has subscribed to the topic will receive the event.
 	 * </p>
 	 * <p>
-	 *   See {@link Context#addTopicListener(Context.TopicListener)}
+	 * See {@link Context#addTopicListener(Context.TopicListener)}
 	 * </p>
 	 *
 	 * @param request the REST/HTTP request.

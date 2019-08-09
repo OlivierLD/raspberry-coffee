@@ -89,6 +89,7 @@ public class NMEAUtils {
 			}
 			//  System.out.println("Declination:" + dec);
 
+			@SuppressWarnings("unchecked")
 			double dev = getDeviation(heading, (List<double[]>)cache.get(NMEADataCache.DEVIATION_DATA));
 			cache.put(NMEADataCache.DEVIATION, new Angle180EW(dev));
 

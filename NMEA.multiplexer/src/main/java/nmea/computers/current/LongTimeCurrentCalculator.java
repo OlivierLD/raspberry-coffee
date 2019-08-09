@@ -246,6 +246,7 @@ public class LongTimeCurrentCalculator {
 											System.out.println("Inserting Current: on:" + NumberFormat.getInstance().format(bufferLength) + " ms, " + currentSpeed + " kts, dir:" + currentDir);
 										}
 
+
 										((Map<Long, NMEADataCache.CurrentDefinition>) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.CALCULATED_CURRENT)).put(bufferLength,
 														new NMEADataCache.CurrentDefinition(
 																		bufferLength,
@@ -256,6 +257,7 @@ public class LongTimeCurrentCalculator {
 																		timeBuffer.get(timeBuffer.size() - 1).toString(),
 																		timeBuffer.get(timeBuffer.size() - 1).getValue().getTime() - timeBuffer.get(0).getValue().getTime()));
 										if (verbose) {
+											@SuppressWarnings("unchecked")
 											Map<Long, NMEADataCache.CurrentDefinition> map = (Map<Long, NMEADataCache.CurrentDefinition>) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.CALCULATED_CURRENT);
 											System.out.println("Calculated Current Map:" + map.size() + " entry(ies)");
 										}
