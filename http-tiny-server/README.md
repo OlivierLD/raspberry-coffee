@@ -11,7 +11,7 @@ Can be used
 - _Not even multi-threaded_.
 - Not compliant with any coding standard, like JAX-RS, MicroProfile, JEE, etc
 
-> May 2019: The core classes are just above _**2M**_ big. Compare it to micro servers like Helidon or SpringBoot...
+> May 2019: The archive containing the core classes are just above _**2M**_ big. Compare it to micro servers like Helidon or SpringBoot...
 > Helidon or SpringBoot would definitely run on a Raspberry Pi, I've tested it. But again,
 > the goal here is to be HTTP and REST compliant (any REST or HTTP client would work), and remain as small as possible. 
 
@@ -95,7 +95,7 @@ After building the project:
 ````
 Run the `HTTPServer` as it is (it comes with a `main`, for illustration):
 ```
-CP=build/libs/http-tiny-server-1.0-all.jar
+CP=build/libs/http-tiny-server-1.0.jar
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose.dump=true"
