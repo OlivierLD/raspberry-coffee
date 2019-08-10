@@ -34,6 +34,10 @@ repositories {
 //}
 
 compileJava.options.compilerArgs += ["-Xlint:none"]
+//compileJava {
+//    options.encoding = 'UTF-8'
+//    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+//}
 
 dependencies {
 //  compile project(':LoRa')

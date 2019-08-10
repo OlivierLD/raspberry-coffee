@@ -547,7 +547,7 @@ public class STH10 implements Probe {
 						try {
 							logger.accept(new LogData()
 									.feed(LogData.FEEDS.AIR)
-									.value(temperature));
+									.numValue(temperature));
 						} catch (Exception ex) {
 							System.err.println(String.format("At %s :", new Date().toString()));
 							System.err.println(ex.toString());
@@ -556,7 +556,7 @@ public class STH10 implements Probe {
 						try {
 							logger.accept(new LogData()
 									.feed(LogData.FEEDS.HUM)
-									.value(humidity));
+									.numValue(humidity));
 						} catch (Exception ex) {
 							System.err.println(String.format("At %s :", new Date().toString()));
 							System.err.println(ex.toString());

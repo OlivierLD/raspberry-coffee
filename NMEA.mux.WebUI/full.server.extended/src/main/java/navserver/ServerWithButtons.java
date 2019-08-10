@@ -13,7 +13,7 @@ import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import navrest.NavServer;
-import nmea.forwarders.SSD1306ProcessorI2C;
+import nmea.forwarders.SSD1306Processor;
 import utils.PinUtil;
 import utils.TimeUtil;
 
@@ -71,7 +71,7 @@ public class ServerWithButtons extends NavServer {
 		}
 
 		// Was the SSD1306 loaded?
-		SSD1306ProcessorI2C oled = SSD1306ProcessorI2C.getInstance();
+		SSD1306Processor oled = SSD1306Processor.getInstance();
 		if (oled == null) {
 			System.out.println("SSD1306 was NOT loaded");
 		} else {

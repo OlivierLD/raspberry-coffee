@@ -84,9 +84,12 @@ public class NMEAUtils {
 				dec = ((Angle180EW) cache.get(NMEADataCache.DECLINATION)).getValue();
 			} catch (Exception ex) {
 			}
-			if (dec == -Double.MAX_VALUE)
+			if (dec == -Double.MAX_VALUE) {
 				dec = ((Angle180EW) cache.get(NMEADataCache.DEFAULT_DECLINATION)).getValue();
+			}
 			//  System.out.println("Declination:" + dec);
+
+			@SuppressWarnings("unchecked")
 			double dev = getDeviation(heading, (List<double[]>)cache.get(NMEADataCache.DEVIATION_DATA));
 			cache.put(NMEADataCache.DEVIATION, new Angle180EW(dev));
 
@@ -104,6 +107,7 @@ public class NMEAUtils {
 			try {
 				heading = ((Angle360) cache.get(NMEADataCache.HDG_TRUE)).getValue() + ((Double) cache.get(NMEADataCache.HDG_OFFSET)).doubleValue();
 			} catch (Exception ex) {
+				// Absorb
 			}
 
 		double twa = 0d,

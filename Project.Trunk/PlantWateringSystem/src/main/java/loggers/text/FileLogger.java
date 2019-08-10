@@ -24,7 +24,7 @@ public class FileLogger implements DataLoggerInterface {
 	@Override
 	public void accept(LogData feedData) {
 		String data = feedData.feed().value();
-		double value = feedData.value();
+		double value = feedData.numValue();
 
 		if (DEBUG) {
 			System.out.println(String.format("Received %s: %.02f", data, value));

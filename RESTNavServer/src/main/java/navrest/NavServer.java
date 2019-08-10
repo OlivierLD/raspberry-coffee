@@ -39,7 +39,7 @@ public class NavServer {
 			}
 		}
 
-		System.out.println(String.format("Running on port %d", httpPort));
+		System.out.println(String.format("From %s, running on port %d",this.getClass().getName(),  httpPort));
 		this.httpServer = startHttpServer(httpPort, new NavRequestManager(this));
 		// Add astronomical features...
 		this.httpServer.addRequestManager(new AstroRequestManager());
@@ -54,7 +54,7 @@ public class NavServer {
 		// Add GRIB features
 		this.httpServer.addRequestManager(new GRIBRequestManager());
 		// Add SunFlower, for sun data, if needed
-		if (!"false".equals(System.getProperty("with.sun.flower", "true"))) {
+		if ("true".equals(System.getProperty("with.sun.flower", "false"))) {
 			this.httpServer.addRequestManager(new SunFlowerRequestManager());
 		}
 	}

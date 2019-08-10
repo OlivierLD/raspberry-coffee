@@ -46,7 +46,7 @@ var init = function () {
 
 };
 
-var DEFAULT_TIMEOUT = 60000;
+// var DEFAULT_TIMEOUT = 60000;
 
 var getDeferred = function(
 		url,                          // full api path

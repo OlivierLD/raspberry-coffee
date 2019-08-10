@@ -1,17 +1,17 @@
 /*
  * @author Olivier Le Diouris
  */
-var displayBSP, displayLog, displayTWD, displayTWS, thermometer, athermometer, displayHDG, rose,
-    displayBaro, displayHum, displayDate, displayTime, displayOverview, displayOverview,
+let displayBSP, displayLog, displayTWD, displayTWS, thermometer, athermometer, displayHDG, rose,
+    displayBaro, displayHum, displayDate, displayTime, displayOverview,
     jumboBSP, jumboHDG, jumboTWD, jumboLWY, jumboAWA, jumboTWA, jumboAWS, jumboTWS, jumboCOG, jumboCDR, jumboSOG, jumboCSP, jumboVMG,
     displayAW, displayCurrent,
     twdEvolution, twsEvolution;
 
-var jumboList = [];
+let jumboList = [];
 
-var editing = false;
+let editing = false;
 
-var init = function () {
+function init() {
     displayBSP = new AnalogDisplay('bspCanvas', 100, 15, 5, 1);
     displayLog = new NumericDisplay('logCanvas', 60, 5);
 
@@ -48,9 +48,9 @@ var init = function () {
     displayCurrent = new CurrentDisplay('currentDisplayCanvas', 80, 45, 5);
     twdEvolution = new TWDEvolution('twdEvolutionCanvas');
     twsEvolution = new TWSEvolution('twsEvolutionCanvas');
-};
+}
 
-var changeBorder = function (b) {
+function changeBorder(b) {
     displayBSP.setBorder(b);
     displayHDG.setBorder(b);
     displayTWD.setBorder(b);
@@ -61,11 +61,11 @@ var changeBorder = function (b) {
     displayHum.repaint();
     displayAW.setBorder(b);
     displayCurrent.setBorder(b);
-};
+}
 
-var TOTAL_WIDTH = 1200;
+const TOTAL_WIDTH = 1200;
 
-var resizeDisplays = function (width) {
+function resizeDisplays(width) {
     if (displayBSP !== undefined && displayTWS !== undefined) { // TODO Other displays
         displayBSP.setDisplaySize(100 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH));
         displayTWS.setDisplaySize(100 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH));
@@ -80,16 +80,17 @@ var resizeDisplays = function (width) {
         twdEvolution.drawGraph();
         twsEvolution.drawGraph();
 
-        var jumboFactor = width / TOTAL_WIDTH;
-        for (var i = 0; i < jumboList.length; i++) {
+        let jumboFactor = width / TOTAL_WIDTH;
+        for (let i = 0; i < jumboList.length; i++) {
             if (jumboList[i] !== undefined)
                 jumboList[i].setDisplaySize(120 * jumboFactor, 60 * jumboFactor);
         }
     }
-};
+}
 
-var lpad = function (str, pad, len) {
-    while (str.length < len)
+function lpad(str, pad, len) {
+    while (str.length < len) {
         str = pad + str;
+    }
     return str;
-};
+}

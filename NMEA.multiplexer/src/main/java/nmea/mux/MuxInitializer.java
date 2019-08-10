@@ -453,6 +453,7 @@ public class MuxInitializer {
 								ex.printStackTrace();
 							}
 						}
+						forwarder.init();
 						nmeaDataForwarders.add(forwarder);
 					} else {
 						throw new RuntimeException(String.format("Expected a Forwarder, found a [%s]", dynamic.getClass().getName()));
@@ -492,6 +493,7 @@ public class MuxInitializer {
 									forwarderProps.load(new FileReader(propFileSerial));
 									serialForwarder.setProperties(forwarderProps);
 								}
+								serialForwarder.init();
 								nmeaDataForwarders.add(serialForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -513,6 +515,7 @@ public class MuxInitializer {
 									forwarderProps.load(new FileReader(tcpPropFile));
 									tcpForwarder.setProperties(forwarderProps);
 								}
+								tcpForwarder.init();
 								nmeaDataForwarders.add(tcpForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -534,6 +537,7 @@ public class MuxInitializer {
 									forwarderProps.load(new FileReader(gpsdPropFile));
 									gpsdForwarder.setProperties(forwarderProps);
 								}
+								gpsdForwarder.init();
 								nmeaDataForwarders.add(gpsdForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -568,6 +572,7 @@ public class MuxInitializer {
 									forwarderProps.load(new FileReader(propFile));
 									fileForwarder.setProperties(forwarderProps);
 								}
+								fileForwarder.init();
 								nmeaDataForwarders.add(fileForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -589,6 +594,7 @@ public class MuxInitializer {
 									forwarderProps.load(new FileReader(wsPropFile));
 									wsForwarder.setProperties(forwarderProps);
 								}
+								wsForwarder.init();
 								nmeaDataForwarders.add(wsForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -610,6 +616,7 @@ public class MuxInitializer {
 									forwarderProps.load(new FileReader(wspPropFile));
 									wspForwarder.setProperties(forwarderProps);
 								}
+								wspForwarder.init();
 								nmeaDataForwarders.add(wspForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -630,6 +637,7 @@ public class MuxInitializer {
 									forwarderProps.load(new FileReader(consolePropFile));
 									consoleForwarder.setProperties(forwarderProps);
 								}
+								consoleForwarder.init();
 								nmeaDataForwarders.add(consoleForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -652,6 +660,7 @@ public class MuxInitializer {
 									forwarderProps.load(new FileReader(rmiPropFile));
 									rmiServerForwarder.setProperties(forwarderProps);
 								}
+								rmiServerForwarder.init();
 								nmeaDataForwarders.add(rmiServerForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();

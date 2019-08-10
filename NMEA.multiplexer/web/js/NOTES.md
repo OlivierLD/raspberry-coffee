@@ -1,0 +1,2 @@
+- jquery.mobile-1.3.2.min.js not used any more
+- jquery-2.1.3.js just in the SunFlower UIs

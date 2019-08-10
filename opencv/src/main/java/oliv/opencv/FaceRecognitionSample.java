@@ -45,7 +45,7 @@ class FaceDetectDemo {
 
 		System.out.println(String.format(">> Detected %s face(s)", faceDetections.toArray().length));
 
-		// Draw a bounding box around each face.
+		// Draw a green bounding box around each face. Or whatever you want ;)
 		for (Rect rect : faceDetections.toArray()) {
 			Imgproc.rectangle(image, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height), new Scalar(0, 255, 0), 3);
 		}

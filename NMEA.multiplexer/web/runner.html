@@ -5,262 +5,414 @@
 	<meta charset="utf-8">
 	<link rel="icon" type="image/jpg" href="icons/palm.04.jpg">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="./css/jquery.mobile-1.3.2.min.css"/>
-	<script src="js/jquery-2.1.3.js"></script>
-	<script src="./js/jquery.mobile-1.3.2.min.js"></script>
+	<link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
 	<script type="text/javascript" src="js/ajax.manager.js"></script>
 	<script type="text/javascript" src="js/mux.rest.js"></script>
+	<style>
+		button {
+			padding: 4px 20px;
+			/* give the background a gradient */
+			background:#ffae00; /* fallback for browsers that don't support gradients */
+			background: -webkit-linear-gradient(top, #ffae00, #d67600);
+			background: -moz-linear-gradient(top, #ffae00, #d67600);
+			background: -o-linear-gradient(top, #ffae00, #d67600);
+			background: linear-gradient(top, #ffae00, #d67600);
+			border:2px outset #dad9d8;
+			/* style the text */
+			font-family:Lato, Verdana, Andika, Arial, sans-serif; /* Andkia is available at http://www.google.com/webfonts/specimen/Andika */
+			font-size:1.1em;
+			letter-spacing:0.05em;
+			text-transform:uppercase;
+			color:#fff;
+			text-shadow: 0px 1px 10px #000;
+			/* add to small curve to the corners of the button */
+			-webkit-border-radius: 15px;
+			-moz-border-radius: 15px;
+			border-radius: 15px;
+			/* give the button a drop shadow */
+			-webkit-box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;
+			-moz-box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;
+			box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;
+		}
+		/* NOW STYLE THE BUTTON'S HOVER STATE */
+		/*	button#rCoffee:hover, button#rCoffee:focus { */
+		button:hover, button:focus {
+			border:2px solid #dad9d8;
+		}
+
+		/* Switch starts here */
+		.rocker {
+			display: inline-block;
+			position: relative;
+			/*
+			SIZE OF SWITCH
+			==============
+			All sizes are in em - therefore
+			changing the font-size here
+			will change the size of the switch.
+			See .rocker-small below as example.
+			*/
+			font-size: 2em;
+			font-weight: bold;
+			text-align: center;
+			text-transform: uppercase;
+			color: #888;
+			width: 7em;
+			height: 4em;
+			overflow: hidden;
+			border-bottom: 0.5em solid #eee;
+		}
+
+		.rocker-small {
+			font-size: 0.75em; /* Sizes the switch */
+			margin: 1em;
+		}
+
+		.rocker-tiny {
+			font-size: 0.50em; /* Sizes the switch */
+			margin: 1em;
+		}
+
+		.rocker::before {
+			content: "";
+			position: absolute;
+			top: 0.5em;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #999;
+			border: 0.5em solid #eee;
+			border-bottom: 0;
+		}
+
+		.rocker input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+		.switch-left,
+		.switch-right {
+			cursor: pointer;
+			position: absolute;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 2.5em;
+			width: 3em;
+			transition: 0.2s;
+		}
+
+		.switch-left {
+			height: 2.4em;
+			width: 2.75em;
+			left: 0.85em;
+			bottom: 0.4em;
+			background-color: #ddd;
+			transform: rotate(15deg) skewX(15deg);
+		}
+
+		.switch-right {
+			right: 0.5em;
+			bottom: 0;
+			background-color: #bd5757;
+			color: #fff;
+		}
+
+		.switch-left::before,
+		.switch-right::before {
+			content: "";
+			position: absolute;
+			width: 0.4em;
+			height: 2.45em;
+			bottom: -0.45em;
+			background-color: #ccc;
+			transform: skewY(-65deg);
+		}
+
+		.switch-left::before {
+			left: -0.4em;
+		}
+
+		.switch-right::before {
+			right: -0.375em;
+			background-color: transparent;
+			transform: skewY(65deg);
+		}
+
+		input:checked + .switch-left {
+			background-color: #4d9c41; /* #0084d0; */
+			color: #fff;
+			bottom: 0px;
+			left: 0.5em;
+			height: 2.5em;
+			width: 3em;
+			transform: rotate(0deg) skewX(0deg);
+		}
+
+		input:checked + .switch-left::before {
+			background-color: transparent;
+			width: 3.0833em;
+		}
+
+		input:checked + .switch-left + .switch-right {
+			background-color: #ddd;
+			color: #888;
+			bottom: 0.4em;
+			right: 0.8em;
+			height: 2.4em;
+			width: 2.75em;
+			transform: rotate(-15deg) skewX(-15deg);
+		}
+
+		input:checked + .switch-left + .switch-right::before {
+			background-color: #ccc;
+		}
+
+		select {
+			font-size: 22px;
+		}
+
+	</style>
 	<script type="text/javascript">
 
-		/* global $ */
+		function logEnabled(cb) {
+			if (cb.checked) {
+				console.log('On');
+				enableLogging(true);
+			} else {
+				console.log('Off');
+				enableLogging(false);
+			}
+		}
 
-	var logEnabled = function(cb) {
-    if ("on" === cb.value) {
-      console.log('On');
-      enableLogging(true);
-    } else {
-      console.log('Off');
-      enableLogging(false);
-    }
-  };
+		function speedUnit(su) {
+			if (su.value !== undefined && su.value.trim().length > 0) {
+				setSpeedUnit(su.value);
+			}
+		}
 
-  var speedUnit = function(su) {
-    if (su.value !== undefined && su.value.trim().length > 0) {
-      setSpeedUnit(su.value);
-    }
-  };
-
-  var forwarderStatus = function() {
-    var getData = getForwarderStatus(); // A promise
-    getData.done(function(value) {
-        var json = JSON.parse(value); // Like {"processing":false,"started":1501082121336}
-        var status = json.processing;
-        $("#flip-1").val(status === true ? 'on' : 'off').slider('refresh'); // important: slider.refresh
-    });
-    getData.fail(function(error, errmess) {
-        var message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
-            } else {
-                message = errmess;
-            }
-        }
-        console.log("Failed to get the forwarders status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-    });
-  };
-
-  var speedAndCourse = function() {
-    var getData = getSOGCOG(); // A promise
-    getData.done(function(value) {
-        var json = JSON.parse(value);
-        var speedFactor = 1;
-        var unitStr = "kts";
-        var unit = $("#speed-unit").val();
-        switch (unit) {
-          case "":
-          case "ms":
-            speedFactor = 1.852 * (1000 / 3600);
-            unitStr = "m/s";
-            break;
-          case "kmh":
-            speedFactor = 1.852;
-            unitStr = "km/h";
-            break;
-          case "mph":
-            speedFactor = 1.15078; // 1.852 / 1.609;
-            unitStr = "mph";
-            break;
-          case "knots":
-            speedFactor = 1;
-            unitStr = "kts";
-            break;
-          default:
-            break;
-        }
-        $("#sog").text((json.sog.sog * speedFactor).toFixed(2) + " " + unitStr);
-        $("#cog").text((json.cog.cog).toFixed(0) + "\272");
-				if (json.pos !== undefined) {
-					if (json.pos.lat !== undefined) {
-						$("#lat").text(decToSex(json.pos.lat, "NS", true));
-					}
-					if (json.pos.lng !== undefined) {
-						$("#lng").text(decToSex(json.pos.lng, "EW", true));
+		function forwarderStatus() {
+			let getData = getForwarderStatus(); // A promise
+			getData.then((value) => {
+				let json = JSON.parse(value); // Like {"processing":false,"started":1501082121336}
+				let status = json.processing;
+				document.getElementById("flip-1").checked = status; // a boolean
+			}, (error, errmess) => {
+				let message;
+				if (errmess !== undefined) {
+					if (errmess.message !== undefined) {
+						message = errmess.message;
+					} else {
+						message = errmess;
 					}
 				}
-    });
-    getData.fail(function(error, errmess) {
-        var message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
-            } else {
-                message = errmess;
-            }
-        }
-        console.log("Failed to get the Speed and Course..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-    });
-  };
+				console.log("Failed to get the forwarders status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+			});
+		}
 
-  var getDistanceTraveled = function() {
-    var getData = getDistance(); // A promise
-    getData.done(function(value) {
-        var json = JSON.parse(value); // Speed comes in knots
-        var unit = $("#speed-unit").val();
-        var distFactor = 1;
-        var unitStr = "nm";
-        switch (unit) {
-          case "":
-          case "ms":
-            distFactor = 1852; // 1.852 * (1000 / 3600);
-            unitStr = "m";
-            break;
-          case "kmh":
-            distFactor = 1.852;
-            unitStr = "km";
-            break;
-          case "mph":
-            distFactor = 1.15078; // 1.852 / 1.609;
-            unitStr = "miles";
-            break;
-          case "knots":
-            distFactor = 1;
-            unitStr = "nm";
-            break;
-          default:
-            break;
-        }
-        $("#dist-val").text((json["distance"] * distFactor).toFixed(2) + " " + unitStr);
-    });
-    getData.fail(function(error, errmess) {
-        var message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
-            } else {
-                message = errmess;
-            }
-        }
-        console.log("Failed to get the Distance traveled..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-    });
-  };
+		function speedAndCourse() {
+			let getData = getSOGCOG(); // A promise
+			getData.then((value) => {
+				let json = JSON.parse(value);
+				let speedFactor = 1;
+				let unitStr = "kts";
+				let unit = document.getElementById("speed-unit").value;
+				switch (unit) {
+					case "":
+					case "ms":
+						speedFactor = 1.852 * (1000 / 3600);
+						unitStr = "m/s";
+						break;
+					case "kmh":
+						speedFactor = 1.852;
+						unitStr = "km/h";
+						break;
+					case "mph":
+						speedFactor = 1.15078; // 1.852 / 1.609;
+						unitStr = "mph";
+						break;
+					case "knots":
+						speedFactor = 1;
+						unitStr = "kts";
+						break;
+					default:
+						break;
+				}
+				document.getElementById("sog").innerText = ((json.sog.sog !== undefined ? (json.sog.sog * speedFactor).toFixed(2) : "-") + " " + unitStr);
+				document.getElementById("cog").innerText = ((json.cog.cog !== undefined ? json.cog.cog.toFixed(0) : "-") + "\272");
+				if (json.pos !== undefined) {
+					if (json.pos.lat !== undefined) {
+						document.getElementById("lat").innerText = decToSex(json.pos.lat, "NS", true);
+					}
+					if (json.pos.lng !== undefined) {
+						document.getElementById("lng").innerText = decToSex(json.pos.lng, "EW", true);
+					}
+				}
+			}, (error, errmess) => {
+				let message;
+				if (errmess !== undefined) {
+					if (errmess.message !== undefined) {
+						message = errmess.message;
+					} else {
+						message = errmess;
+					}
+				}
+				console.log("Failed to get the Speed and Course..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+			});
+		}
 
-  var getDeltaAltitude = function() {
-    var getData = getDeltaAlt(); // A promise
-    getData.done(function(value) {
-        var json = JSON.parse(value);
-        if (json !== undefined) {
-          var unit = $("#speed-unit").val(); // Altitude comes in meters
-          var unitFactor = 1;
-          var unitStr = "m";
-          switch (unit) {
-            case "":
-            case "ms":
-              unitFactor = 1;
-              unitStr = "m";
-              break;
-            case "kmh":
-              unitFactor = 1;
-              unitStr = "m";
-              break;
-            case "mph":
-              unitFactor = 3.28084;
-              unitStr = "feet";
-              break;
-            case "knots":
-              unitFactor = 1;
-              unitStr = "m";
-              break;
-            default:
-              break;
-          }
-          $("#delta-alt-val").text((json["delta-altitude"] * unitFactor).toFixed(2) + " " + unitStr);
-        }
-    });
-    getData.fail(function(error, errmess) {
-        var message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
-            } else {
-                message = errmess;
-            }
-        }
-        console.log("Failed to get the Delta Altitude..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-    });
-  };
+		function getDistanceTraveled() {
+			let getData = getDistance(); // A promise
+			getData.then((value) => {
+				let json = JSON.parse(value); // Speed comes in knots
+				let unit = document.getElementById("speed-unit").value;
+				let distFactor = 1;
+				let unitStr = "nm";
+				switch (unit) {
+					case "":
+					case "ms":
+						distFactor = 1852; // 1.852 * (1000 / 3600);
+						unitStr = "m";
+						break;
+					case "kmh":
+						distFactor = 1.852;
+						unitStr = "km";
+						break;
+					case "mph":
+						distFactor = 1.15078; // 1.852 / 1.609;
+						unitStr = "miles";
+						break;
+					case "knots":
+						distFactor = 1;
+						unitStr = "nm";
+						break;
+					default:
+						break;
+				}
+				document.getElementById("dist-val").innerText = ((json["distance"] !== undefined ? (json["distance"] * distFactor).toFixed(2) : "-") + " " + unitStr);
+			}, (error, errmess) => {
+				let message;
+				if (errmess !== undefined) {
+					if (errmess.message !== undefined) {
+						message = errmess.message;
+					} else {
+						message = errmess;
+					}
+				}
+				console.log("Failed to get the Distance traveled..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+			});
+		}
 
-    </script>
+		function getDeltaAltitude() {
+			let getData = getDeltaAlt(); // A promise
+			getData.then((value) => {
+				let json = JSON.parse(value);
+				if (json !== undefined) {
+					let unit = document.getElementById("speed-unit").value; // Altitude comes in meters
+					let unitFactor = 1;
+					let unitStr = "m";
+					switch (unit) {
+						case "":
+						case "ms":
+							unitFactor = 1;
+							unitStr = "m";
+							break;
+						case "kmh":
+							unitFactor = 1;
+							unitStr = "m";
+							break;
+						case "mph":
+							unitFactor = 3.28084;
+							unitStr = "feet";
+							break;
+						case "knots":
+							unitFactor = 1;
+							unitStr = "m";
+							break;
+						default:
+							break;
+					}
+					document.getElementById("delta-alt-val").innerText = ((json["delta-altitude"] !== undefined ?(json["delta-altitude"] * unitFactor).toFixed(2) : "-") + " " + unitStr);
+				}
+			}, (error, errmess) => {
+				let message;
+				if (errmess !== undefined) {
+					if (errmess.message !== undefined) {
+						message = errmess.message;
+					} else {
+						message = errmess;
+					}
+				}
+				console.log("Failed to get the Delta Altitude..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+			});
+		}
+
+	</script>
 </head>
 <body>
-<div data-role="page" id="main">
-	<div data-role="header" class="jqm-header">
 		<h1>Run &amp; Log</h1>
+
+		<table style="margin: auto;">
+			<tr>
+				<th>Logging</th>
+				<th>Units</th>
+			</tr>
+			<tr>
+				<td>
+					<label class="rocker rocker-small"> <!-- One way widget. Will NOT be notified of a change on the server. -->
+						<input type="checkbox" id="flip-1" onchange="logEnabled(this);" checked>
+						<span class="switch-left">On</span>
+						<span class="switch-right">Off</span>
+					</label>
+				</td>
+				<td>
+					<select name="speed-unit" id="speed-unit" onchange="speedUnit(this);">
+						<option value=""></option>
+						<option value="kmh">km/h, km and meters</option>
+						<option value="mph">mph, statute miles and feet</option>
+						<option value="ms">m/s and meters</option>
+						<option value="kts">knots, nautical miles and meters</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+
+	<table width="100%">
+		<tr>
+			<th style="height:40px; text-align: left;">Distance<br><span id="dist-val"></span></th>
+			<th style="height:40px; text-align: left;">Delta Alt<br><span id="delta-alt-val"></span></th>
+		</tr>
+		<tr>
+			<td><span id="sog" style="font-weight: bold; font-size: 30px;">0.0</span></td>
+			<td><span id="cog" style="font-weight: bold; font-size: 30px;">000</span></td>
+		</tr>
+	</table>
+
+	<div style="width: 100%; text-align: center; padding: 10px;">
+		<button id="b-reset" title="Reset Dist & Alt" onclick="reset();">Reset</button>
+		<button id="b-log-mgmt" title="Log Management" onclick="goLogMgmt();">Log</button>
+		<button id="b-terminate" title="Stop the server" onclick="kill();">Kill</button>
 	</div>
 
-	<div data-role="content">
-
-		<label for="flip-1">Logging:</label>
-		<select name="flip-1" id="flip-1" data-role="slider" onchange="logEnabled(this);">
-			<option value="off">Off</option>
-			<option value="on">On</option>
-		</select>
-
-		<label for="speed-unit">Units:</label>
-		<select name="speed-unit" id="speed-unit" onchange="speedUnit(this);">
-			<option value=""></option>
-			<option value="kmh">km/h, km and meters</option>
-			<option value="mph">mph, statute miles and feet</option>
-			<option value="ms">m/s and meters</option>
-			<option value="kts">knots, nautical miles and meters</option>
-		</select>
-
-		<div class="ui-grid-a">
-			<div class="ui-block-a" style="text-align: center;">
-				<span id="sog" style="font-weight: bold; font-size: 30px;">0.0</span>
-			</div>
-			<div class="ui-block-b" style="text-align: center;">
-				<span id="cog" style="font-weight: bold; font-size: 30px;">000</span>
-			</div>
-		</div>
-
-		<div class="ui-grid-a">
-			<div class="ui-block-a">
-				<div class="ui-bar ui-bar-e" style="height:40px">Distance<br><span id="dist-val"></span></div>
-			</div>
-			<div class="ui-block-b">
-				<div class="ui-bar ui-bar-e" style="height:40px">Delta Alt<br><span id="delta-alt-val"></span></div>
-			</div>
-		</div>
-
-		<div class="ui-body ui-body-b">
-			<fieldset class="ui-grid-b">
-				<div class="ui-block-a">
-					<button data-theme="a" id="b-reset" title="Reset Dist & Alt">Reset</button>
-				</div>
-				<div class="ui-block-b">
-					<button data-theme="a" id="b-log-mgmt" title="Log Management">Log</button>
-				</div>
-				<div class="ui-block-c">
-					<button data-theme="a" id="b-terminate" title="Stop the server">Kill</button>
-				</div>
-			</fieldset>
-		</div>
-
-		<div class="ui-grid-a">
-			<div class="ui-block-a" style="text-align: left;">
+	<table width="100%">
+		<tr>
+			<td style="text-align: left;">
 				<span style="font-weight: bold; font-size: 20px;">Latitude</span>
-			</div>
-			<div class="ui-block-b" style="text-align: right;">
+			</td>
+			<td style="text-align: right;">
 				<span id="lat" style="font-weight: bold; font-size: 24px;">N 00&deg;00.00'</span>
-			</div>
-			<div class="ui-block-a" style="text-align: left;">
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align: left;">
 				<span style="font-weight: bold; font-size: 20px;">Longitude</span>
-			</div>
-			<div class="ui-block-b" style="text-align: right;">
+			</td>
+			<td style="text-align: right;">
 				<span id="lng" style="font-weight: bold; font-size: 24px;">W 000&deg;00.00'</span>
-			</div>
-		</div>
+			</td>
+		</tr>
+	</table>
 
 	</div>
 	<div style="display: none"> <!-- turn display to block or inline for debugging -->
@@ -273,37 +425,34 @@
 		</p>
 	</div>
 
-</div>
-<script>
-	var getTravelData = function() {
-		getDistanceTraveled();
-		getDeltaAltitude();
-		speedAndCourse();
-	};
+	</div>
+	<script>
 
-	var appendMess = function(txt) {
-		var content = $('#message').text();
-		content += ((content.length > 0 ? '\n' : '') + txt);
-		$('#message').text(content);
-	};
+		function getTravelData() {
+			getDistanceTraveled();
+			getDeltaAltitude();
+			speedAndCourse();
+		}
 
-	var terminateOK = function() {
-		terminate();
-		$("#b-terminate").prop('disabled', true);
-		// Say bye-bye...
-		document.body.innerHTML =
-				'<h1 style="color: blue; font-family: Verdana, Helvetica, Geneva;">&nbsp;Bye-bye...</h1>' +
-				'<h2 style="color: navy; font-family: Verdana, Helvetica, Geneva;">&nbsp;🏴‍☠️&nbsp;Server is going down upon your request.</h2>' +
-				'<p style="color: gray; font-family: Verdana, Helvetica, Geneva;">&nbsp;Restart the server from a terminal to continue.</p>' +
-				'<hr/>' +
-				'<i style="font-family: Verdana, Helvetica, Geneva;">&nbsp;&copy; OlivSoft, 2017</i>';
-	};
+		function appendMess(txt) {
+			let content = document.getElementById("message").text;
+			content += ((content.length > 0 ? '\n' : '') + txt);
+			document.getElementById("message").text = content;
+		}
 
-	$().ready(function() {
+		function terminateOK() {
+			terminate();
+			document.getElementById("b-terminate").disabled = true;
+			// Say bye-bye...
+			document.body.innerHTML =
+					'<h1 style="color: blue; font-family: Verdana, Helvetica, Geneva;">&nbsp;Bye-bye...</h1>' +
+					'<h2 style="color: navy; font-family: Verdana, Helvetica, Geneva;">&nbsp;🏴‍☠️&nbsp;Server is going down upon your request.</h2>' +
+					'<p style="color: gray; font-family: Verdana, Helvetica, Geneva;">&nbsp;Restart the server from a terminal to continue.</p>' +
+					'<hr/>' +
+					'<i style="font-family: Verdana, Helvetica, Geneva;">&nbsp;&copy; OlivSoft, 2017</i>';
+		}
 
-		forwarderStatus();
-
-		$("#b-terminate").click(function() {
+		function kill() {
 			console.log('Terminate was clicked');
 
 			document.body.innerHTML =
@@ -328,20 +477,24 @@
 					'<p align="center">' +
 					'<button onclick="terminateOK();">OK</button> &nbsp;' +
 					'<button onclick="document.location.reload();">Cancel</button></p>';
-		});
+		}
 
-		$("#b-reset").click(function() {
+		function reset() {
 			console.log("reset");
 			resetDataCache();
-		});
+		}
 
-		$("#b-log-mgmt").click(function() {
+		function goLogMgmt() {
 			console.log("Log Management");
 			document.location = "logMgmt.html";
-		});
+		}
 
-		setInterval(getTravelData, 1000); // Distance and delta-alt
-	});
-</script>
+		(() => {
+
+			forwarderStatus();
+
+			setInterval(getTravelData, 1000); // Distance and delta-alt
+		})();
+	</script>
 </body>
 </html>

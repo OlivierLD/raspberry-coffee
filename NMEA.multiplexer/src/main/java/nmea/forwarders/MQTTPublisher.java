@@ -37,7 +37,7 @@ public class MQTTPublisher implements Forwarder {
 	/*
 	 * brokerURL like tcp://hostname:port
 	 */
-	private void init() throws Exception {
+	private void initMqtt() throws Exception {
 		if (props == null) {
 			throw new RuntimeException("Need props!");
 		}
@@ -74,7 +74,7 @@ public class MQTTPublisher implements Forwarder {
 
 		if (mqttClient == null) {
 			try {
-				init();
+				initMqtt();
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

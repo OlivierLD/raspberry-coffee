@@ -65,7 +65,7 @@ public class LoRaPublisher implements Forwarder {
 		}
 	}
 
-	private ArduinoLoRaClient init() throws Exception {
+	private ArduinoLoRaClient initLora() throws Exception {
 		return new ArduinoLoRaClient(this.portName, this.baudRate, this::onDataFromArduino);
 	}
 
@@ -73,7 +73,7 @@ public class LoRaPublisher implements Forwarder {
 	public void write(byte[] message) {
 		if (bridge == null && openTheSerialPort) {
 			try {
-				bridge = init();
+				bridge = initLora();
 			} catch (NoSuchPortException nspe) {
 				System.out.println(String.format(" >> Serial port [%s] not available...", this.portName));
 				openTheSerialPort = false; // Forget it.

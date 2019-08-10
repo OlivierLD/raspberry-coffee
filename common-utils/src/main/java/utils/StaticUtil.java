@@ -99,7 +99,7 @@ public class StaticUtil {
 
 	/**
 	 * @param filename
-	 * @param extension with the preceeding ".", like ".ptrn"
+	 * @param extension with the preceding ".", like ".ptrn"
 	 * @return
 	 */
 	public static String makeSureExtensionIsOK(String filename, String extension) {
@@ -243,15 +243,6 @@ public class StaticUtil {
 		} else {
 			throw new RuntimeException("showFileSystem method on OS [" + os + "] not implemented yet.\nFor now, you should open [" + where + "] by yourself.");
 		}
-	}
-
-	public static void main(String... args) throws Exception {
-		String akeu = userInput("Tell me > ");
-		System.out.println(akeu);
-//  System.setProperty("os.name", "Mac OS X");
-//  showFileSystem(System.getProperty("user.dir"));
-		long elapsed = 231_234_567_890L; // 123456L; //
-		System.out.println("Readable time (" + elapsed + ") : " + readableTime(elapsed));
 	}
 
 	public static int sign(double d) {
@@ -479,48 +470,6 @@ public class StaticUtil {
 		return (System.getProperty(c.getName() + ".verbose", "false").equals("true") || System.getProperty("all.verbose", "false").equals("true"));
 	}
 
-	public static String readableTime(long elapsed) {
-		return readableTime(elapsed, false);
-	}
-
-	public static String readableTime(long elapsed, boolean small) {
-		long amount = elapsed;
-		String str = "";
-		final long SECOND = 1_000L;
-		final long MINUTE = 60 * SECOND;
-		final long HOUR = 60 * MINUTE;
-		final long DAY = 24 * HOUR;
-		final long WEEK = 7 * DAY;
-
-		if (amount >= WEEK) {
-			int week = (int) (amount / WEEK);
-			str += (week + (small ? " w " : " week(s) "));
-			amount -= (week * WEEK);
-		}
-		if (amount >= DAY || str.length() > 0) {
-			int day = (int) (amount / DAY);
-			str += (day + (small ? " d " : " day(s) "));
-			amount -= (day * DAY);
-		}
-		if (amount >= HOUR || str.length() > 0) {
-			int hour = (int) (amount / HOUR);
-			str += (hour + (small ? " h " : " hour(s) "));
-			amount -= (hour * HOUR);
-		}
-		if (amount >= MINUTE || str.length() > 0) {
-			int minute = (int) (amount / MINUTE);
-			str += (minute + (small ? " m " : " minute(s) "));
-			amount -= (minute * MINUTE);
-		}
-//  if (amount > SECOND || str.length() > 0)
-		{
-			int second = (int) (amount / SECOND);
-			str += (second + ((amount % 1_000) != 0 ? "." + (amount % 1_000) : "") + (small ? " s " : " second(s) "));
-			amount -= (second * SECOND);
-		}
-		return str;
-	}
-
 	static class ToolFileFilter extends FileFilter {
 		private Hashtable<String, FileFilter> filters = null;
 		private String description = null;
@@ -620,5 +569,28 @@ public class StaticUtil {
 		public boolean isExtensionListInDescription() {
 			return useExtensionsInDescription;
 		}
+	}
+
+	public static void shutdown() throws RuntimeException, IOException {
+		String shutdownCommand;
+		String operatingSystem = System.getProperty("os.name");
+
+		if ("Linux".equals(operatingSystem) || "Mac OS X".equals(operatingSystem)) {
+			shutdownCommand = "shutdown -h now";
+		} else if ("Windows".equals(operatingSystem)) {
+			shutdownCommand = "shutdown.exe -s -t 0";
+		} else {
+			throw new RuntimeException("Unsupported operating system.");
+		}
+
+		Runtime.getRuntime().exec(shutdownCommand); // Migght require a sudo, hey...
+		System.exit(0);
+	}
+
+	public static void main(String... args) throws Exception {
+		String akeu = userInput("Tell me > ");
+		System.out.println(akeu);
+//  System.setProperty("os.name", "Mac OS X");
+//  showFileSystem(System.getProperty("user.dir"));
 	}
 }

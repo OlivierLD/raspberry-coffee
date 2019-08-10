@@ -716,7 +716,7 @@ public class MCP3008 implements Probe {
 
 								if (emailSender != null) {
 									emailSender.send(emailSender.getEmailDest().split(","),
-											emailSender.getEventSubject(),
+											"⚠️ " + emailSender.getEventSubject(),
 											"<h1>The water tank must be empty, do something!</h1>" + messContent,
 											"text/html");
 								}
@@ -732,7 +732,7 @@ public class MCP3008 implements Probe {
 												here,
 												nb_dry_detections);
 										emailSender.send(emailSender.getEmailDest().split(","),
-												"Plant watering was stopped",
+												"\uD83D\uDED1 Plant watering was stopped",
 												alertContent,
 												"text/html");
 									}
@@ -741,7 +741,7 @@ public class MCP3008 implements Probe {
 								nb_dry_detections = 0;
 								if (emailVerbose && emailSender != null) { // Then tell them all is good
 										emailSender.send(emailSender.getEmailDest().split(","),
-												emailSender.getEventSubject(),
+												"\uD83D\uDC4D " + emailSender.getEventSubject(),
 												"<h1>Plant Watering went well</h1>" + messContent,
 												"text/html");
 								}
@@ -775,7 +775,7 @@ public class MCP3008 implements Probe {
 						try {
 							logger.accept(new LogData()
 									.feed(LogData.FEEDS.AIR)
-									.value(temperature));
+									.numValue(temperature));
 						} catch (Exception ex) {
 							System.err.println(String.format("At %s :", new Date().toString()));
 							System.err.println(ex.toString());
@@ -785,7 +785,7 @@ public class MCP3008 implements Probe {
 						try {
 							logger.accept(new LogData()
 									.feed(humFeed)
-									.value(humidity));
+									.numValue(humidity));
 						} catch (Exception ex) {
 							System.err.println(String.format("At %s :", new Date().toString()));
 							System.err.println(ex.toString());

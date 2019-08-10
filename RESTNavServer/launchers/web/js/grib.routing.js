@@ -259,7 +259,7 @@ var getBGColor = function(value, type) {
 			}
 			break;
 		case 'htsgw': // green, [0..15]
-			color = 'rgba(0, 255, 0,' + Math.min((value) / 15, 1) + ')';
+			color = 'rgba(0, 100, 0,' + Math.min((value) / 15, 1) + ')';
 			break;
 		default:
 			break;

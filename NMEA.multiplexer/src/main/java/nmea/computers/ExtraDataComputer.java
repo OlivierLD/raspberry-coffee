@@ -248,6 +248,7 @@ public class ExtraDataComputer extends Computer {
 
 					try {
 						long currentTimeBuffer = 0L;
+						@SuppressWarnings("unchecked")
 						Map<Long, NMEADataCache.CurrentDefinition> currentMap =
 										((Map<Long, NMEADataCache.CurrentDefinition>) cache.get(NMEADataCache.CALCULATED_CURRENT));
 						Set<Long> keys = currentMap.keySet();

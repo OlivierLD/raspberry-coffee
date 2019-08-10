@@ -1,6 +1,6 @@
 "use strict";
 
-var SunFlowerClient = function(dataManager, bp){
+function SunFlowerClient(dataManager, bp){
 
     var onMessage = dataManager; // Client function
     var betweenPing = 1000;
@@ -39,14 +39,14 @@ var SunFlowerClient = function(dataManager, bp){
     };
 
 // Executed at startup
-    (function () {
+    (() => {
         // Long poll
         setInterval(function () {
             fetch();
         }, betweenPing);
     })();
 
-    var fetch = function () {
+    function fetch() {
         var getData = getSunFlowerData();
         getData.done(function (value) {
             //  console.log("Done:", value);

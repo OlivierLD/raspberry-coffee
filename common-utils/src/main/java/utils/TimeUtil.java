@@ -186,6 +186,48 @@ public class TimeUtil {
 		return str;
 	}
 
+	public static String readableTime(long elapsed) {
+		return readableTime(elapsed, false);
+	}
+
+	public static String readableTime(long elapsed, boolean small) {
+		long amount = elapsed;
+		String str = "";
+		final long SECOND = 1_000L;
+		final long MINUTE = 60 * SECOND;
+		final long HOUR = 60 * MINUTE;
+		final long DAY = 24 * HOUR;
+		final long WEEK = 7 * DAY;
+
+		if (amount >= WEEK) {
+			int week = (int) (amount / WEEK);
+			str += (week + (small ? " w " : " week(s) "));
+			amount -= (week * WEEK);
+		}
+		if (amount >= DAY || str.length() > 0) {
+			int day = (int) (amount / DAY);
+			str += (day + (small ? " d " : " day(s) "));
+			amount -= (day * DAY);
+		}
+		if (amount >= HOUR || str.length() > 0) {
+			int hour = (int) (amount / HOUR);
+			str += (hour + (small ? " h " : " hour(s) "));
+			amount -= (hour * HOUR);
+		}
+		if (amount >= MINUTE || str.length() > 0) {
+			int minute = (int) (amount / MINUTE);
+			str += (minute + (small ? " m " : " minute(s) "));
+			amount -= (minute * MINUTE);
+		}
+//  if (amount > SECOND || str.length() > 0)
+		{
+			int second = (int) (amount / SECOND);
+			str += (second + ((amount % 1_000) != 0 ? "." + (amount % 1_000) : "") + (small ? " s " : " second(s) "));
+			amount -= (second * SECOND);
+		}
+		return str;
+	}
+
 	public static void main(String args[]) {
 		SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
@@ -214,7 +256,7 @@ public class TimeUtil {
 		}
 		try {
 			year = Integer.parseInt(retString);
-		} catch (NumberFormatException numberformatexception) {
+		} catch (NumberFormatException numberFormatException) {
 		}
 		prompt = "Please enter a month (1-12) [99] > ";
 		System.err.print(prompt);
@@ -225,7 +267,7 @@ public class TimeUtil {
 		}
 		try {
 			month = Integer.parseInt(retString);
-		} catch (NumberFormatException numberformatexception1) {
+		} catch (NumberFormatException numberFormatException1) {
 		}
 		prompt = "Please enter a day (1-31) [99]   > ";
 		System.err.print(prompt);
@@ -236,7 +278,7 @@ public class TimeUtil {
 		}
 		try {
 			day = Integer.parseInt(retString);
-		} catch (NumberFormatException numberformatexception2) {
+		} catch (NumberFormatException numberFormatException2) {
 		}
 		prompt = "Please enter an hour (0-23) [99] > ";
 		System.err.print(prompt);
@@ -247,7 +289,7 @@ public class TimeUtil {
 		}
 		try {
 			h = Integer.parseInt(retString);
-		} catch (NumberFormatException numberformatexception3) {
+		} catch (NumberFormatException numberFormatException3) {
 		}
 		Calendar cal = Calendar.getInstance();
 		cal.set(year, month - 1, day, h, 0, 0);
@@ -262,7 +304,7 @@ public class TimeUtil {
 		}
 		try {
 			gmtOffset = Integer.parseInt(retString);
-		} catch (NumberFormatException numberformatexception4) {
+		} catch (NumberFormatException numberFormatException4) {
 		}
 		Date d = cal.getTime();
 		long lTime = d.getTime();
@@ -278,5 +320,9 @@ public class TimeUtil {
 
 		long _now = System.currentTimeMillis();
 		System.out.println(String.format("Now: %s", fmtDHMS(msToHMS(_now))));
+
+		long elapsed = 231_234_567_890L; // 123456L; //
+		System.out.println("Readable time (" + elapsed + ") : " + readableTime(elapsed));
+
 	}
 }

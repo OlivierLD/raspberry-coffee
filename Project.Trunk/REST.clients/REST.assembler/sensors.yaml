@@ -17,7 +17,7 @@ paths:
   /sensors/ambient-light:
     get:
       description: |
-        Read data from a Soil Humidity sensor.
+        Read data from photo cell sensor (aka light sensor, photo-resistor).
       operationId: readAmbientLight
       tags:
         - Sensors

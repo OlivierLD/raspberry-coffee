@@ -15,3 +15,10 @@
 	- Have a/the line that starts with "xserver-command=" to look like "xserver-command=X -s 0 -dpms"
 
 ------------------------
+
+Note:
+-----
+To close a tab on Chrome: Ctrl-W or Ctrl+F4.
+The Web Interface is quite demanding, it might be too much for a small machine.
+Server part runs OK though.
+

@@ -9,9 +9,7 @@
 	<meta charset="utf-8">
 	<link rel="icon" type="image/jpg" href="icons/palm.04.jpg">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="./css/jquery.mobile-1.3.2.min.css"/>
-	<script src="js/jquery-2.1.3.js"></script>
-	<script src="./js/jquery.mobile-1.3.2.min.js"></script>
+	<link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
 	<script type="text/javascript" src="js/mux.rest.js"></script>
 	<style>
 
@@ -70,16 +68,15 @@
 	</style>
 	<script type="text/javascript">
 
-		var getSystemDate = function(cb) {
-			var getTime = getSystemTime(); // A promise
-			getTime.done(function (value) {
+		function getSystemDate(cb) {
+			let getTime = getSystemTime(); // A promise
+			getTime.then((value) => {
 				console.log("System date:", value);
 				if (cb !== undefined) {
 					cb(value);
 				}
-			});
-			getTime.fail(function (error, errmess) {
-				var message;
+			}, (error, errmess) => {
+				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
 						message = errmess.message;
@@ -89,24 +86,23 @@
 				}
 				console.log("GetSystemTime failed..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
-		};
+		}
 
-		var getLogFilesList = function () {
-			var self = this;
-			var getData = getLogFiles(); // A promise
-			getData.done(function (value) {
-				var logFiles = JSON.parse(value);
+		function getLogFilesList() {
+			let self = this;
+			let getData = getLogFiles(); // A promise
+			getData.then((value) => {
+				let logFiles = JSON.parse(value);
 //      console.log("Log files", json);
 				// get active file forwarder lo file name
-				var getForwarders = self.getForwarders(); // Another promise
-				getForwarders.done(function (value) {
+				let getForwarders = self.getForwarders(); // Another promise
+				getForwarders.then((value) => {
 					document.body.style.cursor = 'default';
-					var fwdrs = JSON.parse(value);
+					let fwdrs = JSON.parse(value);
 					buildFileList(logFiles, fwdrs);
-				});
-				getForwarders.fail(function (error, errmess) {
+				}, (error, errmess) => {
 					document.body.style.cursor = 'default';
-					var message;
+					let message;
 					if (errmess !== undefined) {
 						if (errmess.message !== undefined) {
 							message = errmess.message;
@@ -116,8 +112,7 @@
 					}
 					console.log("Failed to get the forwarders list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 				});
-			});
-			getData.fail(function (error, errmess) {
+			}, (error, errmess) => {
 				var message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
@@ -128,18 +123,17 @@
 				}
 				console.log("Failed to get the log files list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
-		};
+		}
 
-		var deleteLog = function (fName) {
-			var deleteData = deleteLogFile(fName); // A promise
-			deleteData.done(function (value) {
+		function deleteLog(fName) {
+			let deleteData = deleteLogFile(fName); // A promise
+			deleteData.then((value) => {
 //		var json = JSON.parse(value);
 				console.log("Delete log file OK");
 				// Rebuild the list
 				getLogFilesList();
-			});
-			deleteData.fail(function (error, errmess) {
-				var message;
+			}, (error, errmess) => {
+				let message;
 				if (errmess !== undefined) {
 					if (errmess.message !== undefined) {
 						message = errmess.message;
@@ -149,7 +143,7 @@
 				}
 				console.log("Failed to delete the log file..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
-		};
+		}
 
 		const formatter = new Intl.NumberFormat('en-US', {
 			minimumFractionDigits: 0
@@ -157,8 +151,8 @@
 
 		function buildFileList(fileArray, forwarders) {
 
-			var activeLogFile = [];
-			for (var i=0; i<forwarders.length; i++) {
+			let activeLogFile = [];
+			for (let i=0; i<forwarders.length; i++) {
 				if (forwarders[i].type === 'file') {
 					activeLogFile.push(forwarders[i].log);
 				}
@@ -193,7 +187,7 @@
 			document.getElementById("table-body").innerHTML = tableHtml;
 		}
 
-		window.onload = function() {
+		window.onload = () => {
 			getLogFilesList();
 			getSystemDate(function(date) {
 				document.getElementById("syst-date").innerHTML = '<b>System Date: ' + date + '</b>';

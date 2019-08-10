@@ -11,7 +11,7 @@ import java.util.Map;
 import static utils.StaticUtil.userInput;
 
 /**
- * Requires your Adafruit-IO Key in the System proerty "aio.key" to work properly.
+ * Requires your Adafruit-IO Key in the System property "aio.key" to work properly.
  * Use -Daio.key=AHGSFHGFHGSFHGFS
  */
 public class AdafruitIOClient implements DataLoggerInterface {
@@ -26,7 +26,7 @@ public class AdafruitIOClient implements DataLoggerInterface {
 		Map<String, String> headers = new HashMap<>(1);
 		headers.put("X-AIO-Key", AdafruitIOClient.key.trim()); // System property
 		JsonObject json = new JsonObject();
-		json.addProperty("value", feedData.value());
+		json.addProperty("value", feedData.numValue());
 
 		if (DEBUG) {
 			System.out.println("POSTing " + json.toString() + " to " + url);
@@ -80,7 +80,11 @@ public class AdafruitIOClient implements DataLoggerInterface {
 					String data = str; // Feed Humidity feed, for tests
 					LogData feedData = new LogData()
 							.feed(LogData.FEEDS.HUM)
-							.value(Double.parseDouble(data));
+							.numValue(Double.parseDouble(data));
+//					String data = str; // Feed last-watering feed, for tests
+//					LogData feedData = new LogData()
+//							.feed(LogData.FEEDS.LAST_TIME)
+//							.strValue(data);
 					postFeeder.accept(feedData);
 				}
 			}
