@@ -66,6 +66,17 @@ public class PinUtil {
 		return pin;
 	}
 
+	public static int getPhysicalByWiringPiNumber(Pin wPi) {
+		int physical = 0;
+		for (GPIOPin gpioPin : GPIOPin.values()) {
+			if (gpioPin.pin != null && gpioPin.pin.equals(wPi)) {
+				physical = gpioPin.pinNumber;
+				break;
+			}
+		}
+		return physical;
+	}
+
 	public static Pin getPinByWiringPiNumber(int n) {
 		Pin pin = null;
 		for (GPIOPin gpioPin : GPIOPin.values()) {
@@ -200,5 +211,8 @@ public class PinUtil {
 
 		System.out.println("\nAs for an MCP3008, with GPIO prefix:");
 		print(true, "23:CLK", "21:Dout", "19:Din", "24:CS");
+
+		int physical = getPhysicalByWiringPiNumber(RaspiPin.GPIO_29);
+		System.out.println(String.format("GPIO_29 => #%d", physical)); // Should be #40
 	}
 }

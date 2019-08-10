@@ -14,9 +14,10 @@ import utils.TimeUtil;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
- * Shows how to add push buttons to interact with the NavServer
+ * Shows how to add two push buttons to interact with the NavServer
  * Buttons with click, double-click, long-click, and other combinations.
  * Uses a small screen (oled SSD1306, Nokia, etc)
  *
@@ -35,7 +36,7 @@ public class ServerWithKewlButtons extends NavServer {
 
 	private SSD1306Processor oledForwarder = null;
 
-	// Local menu operations
+	/* ----- Local menu operations ----- */
 	private Runnable pauseLogging = () -> {
 		try {
 			HTTPClient.doPut(this.turnLoggingOffURL, new HashMap<>(), null);
@@ -129,14 +130,13 @@ public class ServerWithKewlButtons extends NavServer {
 
 	private void displayLocalMenu() {
 		if (oledForwarder != null) {
-			oledForwarder.displayLines(new String[]{
+			oledForwarder.displayLines(
 					"> Up and down to Scroll",
 					"--------------------",
 					localMenuItems[localMenuItemIndex].getTitle(),
 					"--------------------",
 					"> Db-clk 1: select",
-					"> Db-clk 2: cancel"
-			});
+					"> Db-clk 2: cancel");
 		}
 	}
 
@@ -153,7 +153,7 @@ public class ServerWithKewlButtons extends NavServer {
 		screenSaverThread = null;
 	}
 
-	// Buttons Runnables
+	/* ----- Buttons Runnables (actions) ----- */
 	private Runnable onClickOne = () -> {
 		if (buttonVerbose || oledForwarder.isSimulating()) {
 			System.out.println(String.format(">> %sSingle click on button 1", (buttonTwo.isPushed() ? "[Shft] + " : "")));
@@ -332,8 +332,9 @@ public class ServerWithKewlButtons extends NavServer {
 	};
 
 	/**
-	 *  Now using all the above
-	 *  See {@link PushButtonController#isPushed()}
+	 *  Now using all the above.
+	 *  Notice the call made to {@link SSD1306Processor#setSimulatorKeyPressedConsumer(Consumer)} and {@link SSD1306Processor#setSimulatorKeyReleasedConsumer(Consumer)}
+	 *  They implement the buttons simulators.
 	 */
 	public ServerWithKewlButtons() {
 
@@ -376,14 +377,15 @@ public class ServerWithKewlButtons extends NavServer {
 
 		try {
 			// Provision buttons here
-			buttonOnePin = RaspiPin.GPIO_29; // Physical #38.
-			buttonTwoPin = RaspiPin.GPIO_28; // Physical #40.
+			buttonOnePin = RaspiPin.GPIO_29; // Physical #40.
+			buttonTwoPin = RaspiPin.GPIO_28; // Physical #38.
 
 			// Change pins, based on system properties. Use physical pin numbers.
 			try {
 				// Identified by the PHYSICAL pin numbers
-				String buttonOnePinStr = System.getProperty("buttonOne", "38"); // GPIO_28
-				String buttonTwoPinStr = System.getProperty("buttonTwo", "40"); // GPIO_29
+
+				String buttonOnePinStr = System.getProperty("buttonOne", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonOnePin))); // GPIO_28
+				String buttonTwoPinStr = System.getProperty("buttonTwo", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonTwoPin))); // GPIO_29
 
 				buttonOnePin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr));
 				buttonTwoPin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonTwoPinStr));
@@ -413,17 +415,19 @@ public class ServerWithKewlButtons extends NavServer {
 
 		// Was the SSD1306 loaded? This is loaded by the properties file.
 		// Use the SSD1306Processor, SPI version.
-		oledForwarder = SSD1306Processor.getInstance();
+		oledForwarder = SSD1306Processor.getInstance(); // A singleton.
 		if (oledForwarder == null) {
 			System.out.println("SSD1306 was NOT loaded");
 		} else {
 			boolean simulating = oledForwarder.isSimulating();
 
-			int SHIFT_KEY = 16,
-					CTRL_KEY = 17;
+			final int SHIFT_KEY = 16,
+								CTRL_KEY = 17;
+
 			System.out.println(String.format("SSD1306 was loaded! (%s)", simulating ? "simulating" : "for real"));
 			if (simulating) {
 				oledForwarder.setSimutatorLedColor(Color.WHITE);
+				// Seems not to be possible to have left shift and right shift. When one is on, the other is ignored.
 				System.out.println(">> Simulating button with [Shift]: Button 1: Ctrl, Button 2: Shift");
 				oledForwarder.setSimulatorKeyPressedConsumer((keyEvent) -> {
 //					System.out.println("KeyPressed:" + keyEvent);
@@ -453,14 +457,13 @@ public class ServerWithKewlButtons extends NavServer {
 				oledForwarder.displayLines(new String[]{"Shutting down...", "Confirm with", "double-click (top)", "within 3 s"});
 				TimeUtil.delay(4_000L);
 
-				oledForwarder.displayLines(new String[]{
+				oledForwarder.displayLines(
 						"Up and down to Scroll",
 						"--------------------",
-						"- Menu Operation", // Sample
+						"- Menu Operation",        // Sample
 						"--------------------",
 						"Db-clk 1: select",
-						"Db-clk 2: cancel"
-				});
+						"Db-clk 2: cancel");
 				TimeUtil.delay(5_000L);
 
 				oledForwarder.displayLines(new String[]{"Releasing the screen"});

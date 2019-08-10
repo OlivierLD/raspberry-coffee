@@ -2,6 +2,9 @@
 #
 # A Python NMEA Parser. WIP.
 #
+__author__ = 'Olivier LeDiouris'
+__version__ = '0.0.5'
+
 import datetime
 
 DEBUG = False
