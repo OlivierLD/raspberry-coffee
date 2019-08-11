@@ -25,8 +25,8 @@ import java.util.function.Consumer;
  *
  * System properties:
  * - button.verbose, default false
- * - buttonOne, default 38 (Physical pin #)
- * - buttonTwo, default 40 (Physical pin #)
+ * - buttonOne, default 40 (Physical pin #)
+ * - buttonTwo, default 38 (Physical pin #)
  * - http.port, default 9999
  *
  */
@@ -393,6 +393,27 @@ public class ServerWithKewlButtons extends NavServer {
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
+
+			// Pin mapping display for info
+			String[] map = new String[11];
+			map[0]  = String.valueOf(PinUtil.findByPin(buttonOnePin).pinNumber()) + ":" + "Button 1 Hot Wire";
+			map[1]  = String.valueOf(PinUtil.findByPin(buttonTwoPin).pinNumber()) + ":" + "Button 2 Hot Wire";
+
+			map[2]  = String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "3v3";
+			map[3]  = String.valueOf(PinUtil.GPIOPin.PWR_2.pinNumber()) + ":" + "5v0";
+
+			map[4]  = String.valueOf(PinUtil.GPIOPin.GPIO_15.pinNumber()) + ":" + "Tx";
+			map[5]  = String.valueOf(PinUtil.GPIOPin.GPIO_16.pinNumber()) + ":" + "Rx";
+
+			map[6]  = String.valueOf(PinUtil.GPIOPin.GPIO_14.pinNumber()) + ":" + "Clock";
+			map[7]  = String.valueOf(PinUtil.GPIOPin.GPIO_12.pinNumber()) + ":" + "Data"; // Aka MOSI
+			map[8]  = String.valueOf(PinUtil.GPIOPin.GPIO_10.pinNumber()) + ":" + "CS";
+			map[9]  = String.valueOf(PinUtil.GPIOPin.GPIO_5.pinNumber()) + ":" + "Rst";
+			map[10] = String.valueOf(PinUtil.GPIOPin.GPIO_4.pinNumber()) + ":" + "DC";
+
+			PinUtil.print(map);
+			System.out.println("Buttons, Screen and GPS are powered with 5.0, 3v3 is not used.");
+			System.out.println("--------------------------------------------------------------\n");
 
 			buttonOne.update(
 					"Top-Button",
