@@ -51,6 +51,13 @@ See [here](../../Project.Trunk/REST.clients/TCP.Watch.01/README.md#raspberry-pi-
 |:---------:|:---------:|:---------:|:---------:|:---------:|
 | ![NMEA](./docimg/01.png) | ![NMEA](./docimg/02.png) | ![NMEA](./docimg/03.png) | ![NMEA](./docimg/04.png) | ![NMEA](./docimg/05.png) |
 
+### Wiring
+![Bare wiring](../Adafruit.Ultimate.GPS.RPiZero_bb.png)
+
+![On Bonnet](../Adafruit.Ultimate.GPS.RPiZero.Bonnet.1_bb.png)
+
+![Bonnet wiring](../Adafruit.Ultimate.GPS.RPiZero.Bonnet.2_bb.png)
+
 # TODO
 - Describe the way to get to the log files, download, etc.
 - Document Web UI: `runner.html`, `logMgmt.html`, etc.

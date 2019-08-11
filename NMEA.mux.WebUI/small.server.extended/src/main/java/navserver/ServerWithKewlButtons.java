@@ -333,7 +333,8 @@ public class ServerWithKewlButtons extends NavServer {
 
 	/**
 	 *  Now using all the above.
-	 *  Notice the call made to {@link SSD1306Processor#setSimulatorKeyPressedConsumer(Consumer)} and {@link SSD1306Processor#setSimulatorKeyReleasedConsumer(Consumer)}
+	 *  Notice the call made to {@link SSD1306Processor#setSimulatorKeyPressedConsumer(Consumer)}
+	 *  and {@link SSD1306Processor#setSimulatorKeyReleasedConsumer(Consumer)}
 	 *  They implement the buttons simulators.
 	 */
 	public ServerWithKewlButtons() {
@@ -380,10 +381,10 @@ public class ServerWithKewlButtons extends NavServer {
 			buttonOnePin = RaspiPin.GPIO_29; // Physical #40.
 			buttonTwoPin = RaspiPin.GPIO_28; // Physical #38.
 
-			// Change pins, based on system properties. Use physical pin numbers.
+			// Change pins, based on system properties.
+			// Use physical pin numbers.
 			try {
 				// Identified by the PHYSICAL pin numbers
-
 				String buttonOnePinStr = System.getProperty("buttonOne", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonOnePin))); // GPIO_28
 				String buttonTwoPinStr = System.getProperty("buttonTwo", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonTwoPin))); // GPIO_29
 
@@ -421,7 +422,7 @@ public class ServerWithKewlButtons extends NavServer {
 		} else {
 			boolean simulating = oledForwarder.isSimulating();
 
-			final int SHIFT_KEY = 16,
+			final int SHFT_KEY = 16,
 								CTRL_KEY = 17;
 
 			System.out.println(String.format("SSD1306 was loaded! (%s)", simulating ? "simulating" : "for real"));
@@ -429,9 +430,10 @@ public class ServerWithKewlButtons extends NavServer {
 				oledForwarder.setSimutatorLedColor(Color.WHITE);
 				// Seems not to be possible to have left shift and right shift. When one is on, the other is ignored.
 				System.out.println(">> Simulating button with [Shift]: Button 1: Ctrl, Button 2: Shift");
+				// Runnables for the simulator
 				oledForwarder.setSimulatorKeyPressedConsumer((keyEvent) -> {
 //					System.out.println("KeyPressed:" + keyEvent);
-					if (keyEvent.getKeyCode() == SHIFT_KEY) { // Shift, left or right
+					if (keyEvent.getKeyCode() == SHFT_KEY) { // Shift, left or right
 						buttonTwo.manageButtonState(PushButtonController.ButtonStatus.HIGH);
 					} else if (keyEvent.getKeyCode() == CTRL_KEY) {
 						buttonOne.manageButtonState(PushButtonController.ButtonStatus.HIGH);
@@ -439,7 +441,7 @@ public class ServerWithKewlButtons extends NavServer {
 				});
 				oledForwarder.setSimulatorKeyReleasedConsumer((keyEvent) -> {
 //					System.out.println("KeyReleased:" + keyEvent);
-					if (keyEvent.getKeyCode() == SHIFT_KEY) { // Shift, left or right
+					if (keyEvent.getKeyCode() == SHFT_KEY) { // Shift, left or right
 						buttonTwo.manageButtonState(PushButtonController.ButtonStatus.LOW);
 					} else if (keyEvent.getKeyCode() == CTRL_KEY) {
 						buttonOne.manageButtonState(PushButtonController.ButtonStatus.LOW);
