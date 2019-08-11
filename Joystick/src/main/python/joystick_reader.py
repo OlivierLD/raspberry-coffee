@@ -4,6 +4,8 @@
 #
 import constants
 
+__author__ = 'Olivier LeDiouris'
+__version__ = '0.0.5'
 
 class JoystickReader:
     """
