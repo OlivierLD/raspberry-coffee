@@ -748,6 +748,18 @@ public class MCP3008 implements Probe {
 							}
 						}
 						justStoppedWatering.set(false);
+					} else if (wateringWasStopped) { // See if watering can be resumed (hum above threshold)?
+						if (hum > humidityThreshold) {
+							// Tentative watering resume.
+							wateringWasStopped = false;
+							if (emailVerbose && emailSender != null) { // Then tell them all is good
+								String messContent = "Resuming probe watch, humidity came back up...";
+								emailSender.send(emailSender.getEmailDest().split(","),
+										"⚠️ " + emailSender.getEventSubject(),
+										"<h1>Resuming watering</h1>" + messContent,
+										"text/html");
+							}
+						}
 					}
 
 					// Low Pass Filter
