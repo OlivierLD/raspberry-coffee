@@ -47,9 +47,11 @@ See [here](../../Project.Trunk/REST.clients/TCP.Watch.01/README.md#raspberry-pi-
 
 ### Screenshots
 
-| NMEA Data | Local Menu | Local Menu, 2 | Screen Saver (one dot blinking) | Complete Shutdown |
-|:---------:|:---------:|:---------:|:---------:|:---------:|
-| ![NMEA](./docimg/01.png) | ![NMEA](./docimg/02.png) | ![NMEA](./docimg/03.png) | ![NMEA](./docimg/04.png) | ![NMEA](./docimg/05.png) |
+| NMEA Data | Local Menu | Local Menu, 2 |
+|:---------:|:---------:|:---------:|
+| ![NMEA](./docimg/01.png) | ![NMEA](./docimg/02.png) | ![NMEA](./docimg/03.png) |
+| Screen Saver (one dot blinking) | Complete Shutdown |
+| ![NMEA](./docimg/04.png) | ![NMEA](./docimg/05.png) |
 
 ### Wiring
 ![Bare wiring](../Adafruit.Ultimate.GPS.RPiZero_bb.png)
