@@ -406,13 +406,12 @@ public class ServerWithKewlButtons extends NavServer {
 			map[5]  = String.valueOf(PinUtil.GPIOPin.GPIO_16.pinNumber()) + ":" + "Rx";
 
 			map[6]  = String.valueOf(PinUtil.GPIOPin.GPIO_14.pinNumber()) + ":" + "Clock";
-			map[7]  = String.valueOf(PinUtil.GPIOPin.GPIO_12.pinNumber()) + ":" + "Data"; // Aka MOSI
+			map[7]  = String.valueOf(PinUtil.GPIOPin.GPIO_12.pinNumber()) + ":" + "Data"; // Aka MOSI. Slave is the Screen, Master the RPi
 			map[8]  = String.valueOf(PinUtil.GPIOPin.GPIO_10.pinNumber()) + ":" + "CS";
 			map[9]  = String.valueOf(PinUtil.GPIOPin.GPIO_5.pinNumber()) + ":" + "Rst";
 			map[10] = String.valueOf(PinUtil.GPIOPin.GPIO_4.pinNumber()) + ":" + "DC";
 
-			System.out.println("---------------------------------------------------------------------------------------------");
-			System.out.println("> Pin mapping:");
+			System.out.println("---------------------------- P I N   M A P P I N G ------------------------------------------");
 			PinUtil.print(map);
 			System.out.println("> Buttons, Screen and GPS are powered with 5.0, 3v3 is not used.");
 			System.out.println("---------------------------------------------------------------------------------------------\n");
