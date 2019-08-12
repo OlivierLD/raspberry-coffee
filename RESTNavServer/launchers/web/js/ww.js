@@ -14,7 +14,7 @@ var errManager = function(mess) {
 	console.log(mess);
 };
 
-var DEFAULT_TIMEOUT = 60000;
+var DEFAULT_TIMEOUT = 120000;
 
 /*
  *  Demo features

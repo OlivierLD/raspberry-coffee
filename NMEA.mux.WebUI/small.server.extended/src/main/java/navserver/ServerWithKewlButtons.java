@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  * Buttons with click, double-click, long-click, and other combinations.
  * Uses a small screen (oled SSD1306, Nokia, etc)
  *
- * This class use making use of Runnable.
+ * This class use making use of Runnable and Consumers (thank you Java 8).
  *
  * System properties:
  * - button.verbose, default false
@@ -450,8 +450,10 @@ public class ServerWithKewlButtons extends NavServer {
 
 			System.out.println(String.format("SSD1306 was loaded! (%s)", simulating ? "simulating" : "for real"));
 			if (simulating) {
+				// Simulator led color
 				oledForwarder.setSimutatorLedColor(Color.WHITE);
 				// Seems not to be possible to have left shift and right shift. When one is on, the other is ignored.
+				// Buttons simulator
 				System.out.println(">> Simulating button with [Shift]: Button 1: Ctrl, Button 2: Shift");
 				// Runnables for the simulator
 				oledForwarder.setSimulatorKeyPressedConsumer((keyEvent) -> {
@@ -479,13 +481,17 @@ public class ServerWithKewlButtons extends NavServer {
 				oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
 				TimeUtil.delay(500L);
 //			oledForwarder.displayLines(new String[] { "Taking ownership", "on the screen"});
-				oledForwarder.displayLines(new String[]{"Shutting down...", "Confirm with", "double-click (top)", "within 3 s"});
+				oledForwarder.displayLines(new String[]{
+						"Shutting down...",
+						"Confirm with",
+						"double-click (top)",
+						"within 3 s"});
 				TimeUtil.delay(4_000L);
 
 				oledForwarder.displayLines(
 						"Up and down to Scroll",
 						"--------------------",
-						"- Menu Operation",        // Sample
+						"- Menu Operation",        // <- Sample
 						"--------------------",
 						"Db-clk 1: select",
 						"Db-clk 2: cancel");
