@@ -162,6 +162,11 @@ public class STH10 implements Probe {
 		return humidity;
 	}
 
+	@Override
+	public double getRawHumidity() {
+		return 0;
+	}
+
 
 	@Override
 	public PinState getRelayState() {

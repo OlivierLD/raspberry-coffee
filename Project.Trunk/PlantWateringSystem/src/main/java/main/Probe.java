@@ -4,7 +4,8 @@ import com.pi4j.io.gpio.PinState;
 import java.util.List;
 
 public interface Probe {
-	double getHumidity();
+	double getHumidity(); // Smoothed
+	double getRawHumidity();
 	double getTemperature();
 	void setHumidity(double humidity);
 	void setTemperature(double temperature);
