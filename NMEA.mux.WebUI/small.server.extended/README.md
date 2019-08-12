@@ -58,13 +58,15 @@ See [here](../../Project.Trunk/REST.clients/TCP.Watch.01/README.md#raspberry-pi-
 
 ![Bonnet wiring](../Adafruit.Ultimate.GPS.RPiZero.Bonnet.2_bb.png)
 
-# TODO
-- Describe the way to get to the log files, download, etc.
-- Document Web UI: `runner.html`, `logMgmt.html`, etc.
+### Extras
 - Cue-card for the UI (depends on your implementation):
 ```
 Button-2 + LongClick on Button-1: Shutdown (confirm with double-click within 3 seconds) 
 DoubleClick on Button-1: Show local menu                                                
 DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.
 ```
-- Simulator for the buttons. Done.
+
+# TODO
+- Describe the way to get to the log files, download, etc.
+- Document Web UI: `runner.html`, `logMgmt.html`, etc.
+- Simulator for the buttons. &#9989; Done.

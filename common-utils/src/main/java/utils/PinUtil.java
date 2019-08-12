@@ -139,7 +139,7 @@ public class PinUtil {
 	 * @param maps string array like "xx:text" where xx is the physical number, and text the label to display (5 letters max)
 	 */
 	public static void print(boolean prefixBCMWithGPIO, String... maps) {
-		System.out.println(getBuffer(prefixBCMWithGPIO, maps).toString());
+		System.out.print(getBuffer(prefixBCMWithGPIO, maps).toString());
 	}
 
 	public static StringBuffer getBuffer(boolean prefixBCMWithGPIO, String... maps) {
