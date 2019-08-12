@@ -85,7 +85,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dprocess.on.start=$PROCESS_ON_START"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dno.ais=false" # Accept AIS Strings
 JAVA_OPTIONS="$JAVA_OPTIONS -Dcalculate.solar.with.eot=true"
-#
+# Useful for data replay:
 JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GGA.date.time=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GLL.date.time=true"
 #

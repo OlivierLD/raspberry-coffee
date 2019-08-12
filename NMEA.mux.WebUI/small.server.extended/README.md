@@ -72,5 +72,4 @@ DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.
 - Describe the way to get to the log files, download, etc.
 - Document Web UI: `runner.html`, `logMgmt.html`, etc.
 - Simulator for the buttons. &#9989; Done.
-- 3D printed enclosure
-
+- 3D printed enclosure, to contain the Raspberry Pi, the 2 bonnets, and a LiPo battery.
