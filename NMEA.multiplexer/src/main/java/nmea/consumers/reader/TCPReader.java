@@ -19,28 +19,32 @@ import java.util.List;
  * TCP reader
  */
 public class TCPReader extends NMEAReader {
-	private int tcpport = 80;
-	private String hostName = "localhost";
+	private final static String DEFAULT_HOST_NAME = "localhost";
+	private final static int DEFAULT_TCP_PORT = 80;
+	private int tcpPort = DEFAULT_TCP_PORT;
+	private String hostName = DEFAULT_HOST_NAME;
 
 	public TCPReader(List<NMEAListener> al) {
-		super(al);
+		this(null, al, DEFAULT_HOST_NAME, DEFAULT_TCP_PORT);
 	}
 
 	public TCPReader(List<NMEAListener> al, int tcp) {
-		super(al);
-		tcpport = tcp;
+		this(null, al, DEFAULT_HOST_NAME, tcp);
 	}
 
 	public TCPReader(List<NMEAListener> al, String host, int tcp) {
-		super(al);
+		this(null, al, host, tcp);
+	}
+	public TCPReader(String threadName, List<NMEAListener> al, String host, int tcp) {
+		super(threadName, al);
 		hostName = host;
-		tcpport = tcp;
+		tcpPort = tcp;
 	}
 
 	private Socket skt = null;
 
 	public int getPort() {
-		return this.tcpport;
+		return this.tcpPort;
 	}
 
 	public String getHostname() {
@@ -53,7 +57,7 @@ public class TCPReader extends NMEAReader {
 		try {
 			InetAddress address = InetAddress.getByName(hostName);
 //    System.out.println("INFO:" + hostName + " (" + address.toString() + ")" + " is" + (address.isMulticastAddress() ? "" : " NOT") + " a multicast address");
-			skt = new Socket(address, tcpport);
+			skt = new Socket(address, tcpPort);
 
 			InputStream theInput = skt.getInputStream();
 			byte buffer[] = new byte[4096];
@@ -88,7 +92,7 @@ public class TCPReader extends NMEAReader {
 			System.out.println("Stop Reading TCP port.");
 			theInput.close();
 		} catch (BindException be) {
-			System.err.println("From " + this.getClass().getName() + ", " + hostName + ":" + tcpport);
+			System.err.println("From " + this.getClass().getName() + ", " + hostName + ":" + tcpPort);
 			be.printStackTrace();
 			manageError(be);
 		} catch (final SocketException se) {

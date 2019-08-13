@@ -22,7 +22,10 @@ public class HTU21DFReader extends NMEAReader {
   private static final long BETWEEN_LOOPS = 1_000L; // TODO: Make it an external parameter.
 
   public HTU21DFReader(List<NMEAListener> al) {
-    super(al);
+    this(null, al);
+  }
+  public HTU21DFReader(String threadName, List<NMEAListener> al) {
+    super(threadName, al);
     try {
       this.htu21df = new HTU21DF();
     } catch (I2CFactory.UnsupportedBusNumberException e) {

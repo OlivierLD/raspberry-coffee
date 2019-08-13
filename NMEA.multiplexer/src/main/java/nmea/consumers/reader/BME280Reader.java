@@ -23,7 +23,10 @@ public class BME280Reader extends NMEAReader {
 	private static final long BETWEEN_LOOPS = 1_000L; // TODO: Make it an external parameter?
 
 	public BME280Reader(List<NMEAListener> al) {
-		super(al);
+		this(null, al);
+	}
+	public BME280Reader(String threadName, List<NMEAListener> al) {
+		super(threadName, al);
 		try {
 			this.bme280 = new BME280();
 		} catch (I2CFactory.UnsupportedBusNumberException e) {

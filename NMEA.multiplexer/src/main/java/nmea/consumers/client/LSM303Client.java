@@ -179,7 +179,7 @@ public class LSM303Client extends NMEAClient {
 		});
 
 		nmeaClient.initClient();
-		nmeaClient.setReader(new LSM303Reader(nmeaClient.getListeners()));
+		nmeaClient.setReader(new LSM303Reader("LSM303Reader", nmeaClient.getListeners()));
 		nmeaClient.startWorking();
 	}
 }

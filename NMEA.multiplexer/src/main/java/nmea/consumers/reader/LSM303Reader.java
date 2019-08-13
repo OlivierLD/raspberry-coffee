@@ -36,7 +36,10 @@ public class LSM303Reader extends NMEAReader {
 	private DampingService<DegreeAngle> dampingService;
 
 	public LSM303Reader(List<NMEAListener> al) {
-		super(al);
+		this(null, al);
+	}
+	public LSM303Reader(String threadName, List<NMEAListener> al) {
+		super(threadName, al);
 		this.setVerbose("true".equals(System.getProperty("lsm303.data.verbose", "false")));
 		this.dampingService = new DampingService<>(damping);
 		try {

@@ -15,6 +15,9 @@ public class ZDAReader extends NMEAReader {
 	private static final String DEFAULT_DEVICE_PREFIX = "GP";
 	private String devicePrefix = DEFAULT_DEVICE_PREFIX;
 
+	public ZDAReader(String threadName, List<NMEAListener> al) {
+		super(threadName, al);
+	}
 	public ZDAReader(List<NMEAListener> al) {
 		super(al);
 	}

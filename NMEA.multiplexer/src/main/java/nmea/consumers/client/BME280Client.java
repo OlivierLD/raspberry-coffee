@@ -110,7 +110,7 @@ public class BME280Client extends NMEAClient {
 		});
 
 		nmeaClient.initClient();
-		nmeaClient.setReader(new BME280Reader(nmeaClient.getListeners()));
+		nmeaClient.setReader(new BME280Reader("BME280Reader", nmeaClient.getListeners()));
 		nmeaClient.startWorking();
 	}
 }

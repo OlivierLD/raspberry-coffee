@@ -16,7 +16,10 @@ import utils.StringUtils;
 public class RandomReader extends NMEAReader {
 
 	public RandomReader(List<NMEAListener> al) {
-		super(al);
+		this(null, al);
+	}
+	public RandomReader(String threadName, List<NMEAListener> al) {
+		super(threadName, al);
 	}
 
 	@Override

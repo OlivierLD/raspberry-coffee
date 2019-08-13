@@ -39,7 +39,10 @@ public class SerialReader
 	}
 
 	public SerialReader(List<NMEAListener> al, String com, int br) {
-		super(al);
+		this(null, al, com, br);
+	}
+	public SerialReader(String threadName, List<NMEAListener> al, String com, int br) {
+		super(threadName, al);
 		this.comPort = com;
 		this.br = br;
 	}

@@ -87,7 +87,7 @@ public class ClientSkeleton extends NMEAClient {
 			}
 		});
 		nmeaClient.initClient();
-		nmeaClient.setReader(new ReaderSkeleton(nmeaClient.getListeners()));
+		nmeaClient.setReader(new ReaderSkeleton("ReaderSkeleton", nmeaClient.getListeners()));
 		nmeaClient.startWorking();
 	}
 }

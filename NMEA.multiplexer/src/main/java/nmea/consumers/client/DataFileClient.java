@@ -121,7 +121,7 @@ public class DataFileClient extends NMEAClient {
 		});
 
 		nmeaClient.initClient();
-		nmeaClient.setReader(new DataFileReader(nmeaClient.getListeners(), dataFile, 10L)); // 10 overrides the default (500)
+		nmeaClient.setReader(new DataFileReader("DataFileReader", nmeaClient.getListeners(), dataFile, 10L)); // 10 overrides the default (500)
 		nmeaClient.getReader().setVerbose("true".equals(System.getProperty("file.data.verbose", "false")));
 		((DataFileReader)nmeaClient.getReader()).setLoop(false);
 		nmeaClient.startWorking();

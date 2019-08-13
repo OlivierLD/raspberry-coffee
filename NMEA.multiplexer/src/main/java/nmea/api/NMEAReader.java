@@ -31,14 +31,26 @@ public abstract class NMEAReader extends Thread {
 	}
 
 	public NMEAReader() {
-		this(null, false);
+		this(null, null, false);
+	}
+
+	public NMEAReader(String threadName) {
+		this(threadName, null, false);
+	}
+
+	public NMEAReader(String threadName, List<NMEAListener> al) {
+		this(threadName, al, false);
 	}
 
 	public NMEAReader(List<NMEAListener> al) {
-		this(al, false);
+		this(null, al, false);
 	}
 
 	public NMEAReader(List<NMEAListener> al, boolean verbose) {
+		this(null, al, verbose);
+	}
+	public NMEAReader(String threadName, List<NMEAListener> al, boolean verbose) {
+		super(threadName);
 		this.verbose = verbose;
 		if (verbose) {
 			System.out.println(this.getClass().getName() + ":Creating reader");

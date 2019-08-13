@@ -18,10 +18,16 @@ public class DataFileReader extends NMEAReader {
 	private boolean loop = true;
 
 	public DataFileReader(List<NMEAListener> al, String fName) {
-		this(al, fName, 500);
+		this(null, al, fName, 500);
+	}
+	public DataFileReader(String threadName, List<NMEAListener> al, String fName) {
+		this(threadName, al, fName, 500);
 	}
 	public DataFileReader(List<NMEAListener> al, String fName, long pause) {
-		super(al);
+		this(null, al, fName, pause);
+	}
+	public DataFileReader(String threadName, List<NMEAListener> al, String fName, long pause) {
+		super(threadName, al);
 		if (verbose) {
 			System.out.println(this.getClass().getName() + ": There are " + al.size() + " listener(s)");
 		}

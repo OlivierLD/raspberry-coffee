@@ -117,9 +117,9 @@ public class MuxInitializer {
 							String readerClass = muxProps.getProperty(readerProp);
 							// Cannot invoke declared constructor with a generic type... :(
 							if (readerProperties == null) {
-								reader = (NMEAReader) Class.forName(readerClass).getDeclaredConstructor(List.class).newInstance(nmeaClient.getListeners());
+								reader = (NMEAReader) Class.forName(readerClass).getDeclaredConstructor(String.class, List.class).newInstance(readerProp, nmeaClient.getListeners());
 							} else {
-								reader = (NMEAReader) Class.forName(readerClass).getDeclaredConstructor(List.class, Properties.class).newInstance(nmeaClient.getListeners(), readerProperties);
+								reader = (NMEAReader) Class.forName(readerClass).getDeclaredConstructor(String.class, List.class, Properties.class).newInstance(readerProp, nmeaClient.getListeners(), readerProperties);
 							}
 						} catch (Exception ex) {
 							ex.printStackTrace();
@@ -154,7 +154,7 @@ public class MuxInitializer {
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 												mux);
 								serialClient.initClient();
-								serialClient.setReader(new SerialReader(serialClient.getListeners(), serialPort, Integer.parseInt(br)));
+								serialClient.setReader(new SerialReader("MUX-SerialReader", serialClient.getListeners(), serialPort, Integer.parseInt(br)));
 								serialClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								nmeaDataClients.add(serialClient);
 							} catch (Exception e) {
@@ -172,7 +172,7 @@ public class MuxInitializer {
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 												mux);
 								tcpClient.initClient();
-								tcpClient.setReader(new TCPReader(tcpClient.getListeners(), tcpServer, Integer.parseInt(tcpPort)));
+								tcpClient.setReader(new TCPReader("MUX-TCPReader", tcpClient.getListeners(), tcpServer, Integer.parseInt(tcpPort)));
 								tcpClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								nmeaDataClients.add(tcpClient);
 							} catch (Exception e) {
@@ -198,7 +198,7 @@ public class MuxInitializer {
 												mux);
 								((DataFileClient)fileClient).setLoop(loop);
 								fileClient.initClient();
-								fileClient.setReader(new DataFileReader(fileClient.getListeners(), filename, betweenRec));
+								fileClient.setReader(new DataFileReader("MUX-FileReader", fileClient.getListeners(), filename, betweenRec));
 								fileClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								nmeaDataClients.add(fileClient);
 							} catch (Exception e) {
@@ -215,7 +215,7 @@ public class MuxInitializer {
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 												mux);
 								wsClient.initClient();
-								wsClient.setReader(new WebSocketReader(wsClient.getListeners(), wsUri));
+								wsClient.setReader(new WebSocketReader("MUX-WSReader", wsClient.getListeners(), wsUri));
 								wsClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								nmeaDataClients.add(wsClient);
 							} catch (Exception e) {
@@ -232,7 +232,7 @@ public class MuxInitializer {
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 												mux);
 								htu21dfClient.initClient();
-								htu21dfClient.setReader(new HTU21DFReader(htu21dfClient.getListeners()));
+								htu21dfClient.setReader(new HTU21DFReader("MUX-HTU21DFReader", htu21dfClient.getListeners()));
 								htu21dfClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								// Important: after the setReader
 								if (htu21dfDevicePrefix.trim().length() > 0) {
@@ -258,7 +258,7 @@ public class MuxInitializer {
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 												mux);
 								rndClient.initClient();
-								rndClient.setReader(new RandomReader(rndClient.getListeners()));
+								rndClient.setReader(new RandomReader("MUX-RndReader", rndClient.getListeners()));
 								rndClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								nmeaDataClients.add(rndClient);
 							} catch (Exception e) {
@@ -276,7 +276,7 @@ public class MuxInitializer {
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 												mux);
 								zdaClient.initClient();
-								zdaClient.setReader(new ZDAReader(zdaClient.getListeners()));
+								zdaClient.setReader(new ZDAReader("MUX-ZDAReader", zdaClient.getListeners()));
 								zdaClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								nmeaDataClients.add(zdaClient);
 							} catch (Exception e) {
@@ -325,7 +325,7 @@ public class MuxInitializer {
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 												mux);
 								lsm303Client.initClient();
-								lsm303Client.setReader(new LSM303Reader(lsm303Client.getListeners()));
+								lsm303Client.setReader(new LSM303Reader("MUX-LSM303Reader", lsm303Client.getListeners()));
 								lsm303Client.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								// Important: after the setReader
 								if (headingOffset != 0) {
@@ -361,7 +361,7 @@ public class MuxInitializer {
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 												mux);
 								bme280Client.initClient();
-								bme280Client.setReader(new BME280Reader(bme280Client.getListeners()));
+								bme280Client.setReader(new BME280Reader("MUX-BME280", bme280Client.getListeners()));
 								bme280Client.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								// Important: after the setReader
 								if (bme280DevicePrefix.trim().length() > 0) {
@@ -388,7 +388,7 @@ public class MuxInitializer {
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 												mux);
 								bmp180Client.initClient();
-								bmp180Client.setReader(new BMP180Reader(bmp180Client.getListeners()));
+								bmp180Client.setReader(new BMP180Reader("MUX-BMP180Reader", bmp180Client.getListeners()));
 								bmp180Client.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								// Important: after the setReader
 								if (bmp180DevicePrefix.trim().length() > 0) {

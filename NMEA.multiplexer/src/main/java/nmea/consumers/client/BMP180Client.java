@@ -110,7 +110,7 @@ public class BMP180Client extends NMEAClient {
 		});
 
 		nmeaClient.initClient();
-		nmeaClient.setReader(new BMP180Reader(nmeaClient.getListeners()));
+		nmeaClient.setReader(new BMP180Reader("BMP180Reader", nmeaClient.getListeners()));
 		nmeaClient.startWorking();
 	}
 }
