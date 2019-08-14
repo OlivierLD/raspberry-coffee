@@ -106,11 +106,12 @@ run_image: fnproject/fn-java-fdk:jre11-1.0.98
 cmd: rpi.sensors.LightSensor::retrieveData
 triggers:
 ```
-> Note: the package namecan change, the class name can change, even the method name can change.
+> Note: the package name can change, the class name can change, even the method name can change.
 > all you need is the code and the `yaml` to be in sync.
 
 - Redeploy to make sure all is right
 ```
+ $ fn build
  $ fn deploy --app java-light --local
 ```
 - And re-run
@@ -120,7 +121,7 @@ Hello, world!
 ```
 Good.
 
-Now let's change the code to manage JSON objects:
+Now let's change the code to manage JSON objects closer to what we want:
 ```java
 package rpi.sensors;
 
@@ -148,9 +149,14 @@ public class LightSensor {
 }
 ```
 You might want to add `<skipTests>true</skipTests>` in the `pom.xml`'s properties.
+
+Re-build and re-deploy:
 ```
  $ fn build
  $ fn deploy --app java-light --local
+```
+Invoke from the command line:
+```
  $ echo -n '{"name":"Oliv"}' | fn invoke java-light ambientlight
  {"requester":"Oliv","dataType":"ambient-light","value":45.967487}
 ```
@@ -160,3 +166,4 @@ Then invoke with `curl`
  $ curl -X POST -H "Content-Type: application/json" http://localhost:8080/t/java-light/ambientlight -d '{"name":"Oliv"}'
  {"requester":"Oliv","dataType":"ambient-light","value":89.65619}
 ```
+
