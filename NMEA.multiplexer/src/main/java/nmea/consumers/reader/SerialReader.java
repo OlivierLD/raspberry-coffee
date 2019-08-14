@@ -105,12 +105,13 @@ public class SerialReader
 			return;
 		}
 		int portType = com.getPortType();
-		if (portType == CommPortIdentifier.PORT_PARALLEL)
+		if (portType == CommPortIdentifier.PORT_PARALLEL) {
 			System.out.println("This is a parallel port");
-		else if (portType == CommPortIdentifier.PORT_SERIAL)
+		} else if (portType == CommPortIdentifier.PORT_SERIAL) {
 			System.out.println("This is a serial port");
-		else
+		} else {
 			System.out.println("This is an unknown port:" + portType);
+		}
 		if (portType == CommPortIdentifier.PORT_SERIAL) {
 			this.serialPort = (SerialPort) thePort;
 			try {

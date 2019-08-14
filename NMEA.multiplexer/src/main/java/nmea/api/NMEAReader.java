@@ -70,11 +70,19 @@ public abstract class NMEAReader extends Thread {
 	 * @see nmea.api.NMEAParser
 	 */
 	protected void fireDataRead(NMEAEvent e) {
-		this.NMEAListeners.stream().forEach(listener -> listener.dataRead(e));
+		this.NMEAListeners.stream().forEach(listener -> {
+			synchronized(listener) {
+				listener.dataRead(e);
+			}
+		});
 	}
 
 	protected void fireStopReading(NMEAEvent e) {
-		this.NMEAListeners.stream().forEach(listener -> listener.stopReading(e));
+		this.NMEAListeners.stream().forEach(listener -> {
+			synchronized (listener) {
+				listener.stopReading(e);
+			}
+		});
 	}
 
 	public synchronized void addNMEAListener(NMEAListener l) {
@@ -106,14 +114,20 @@ public abstract class NMEAReader extends Thread {
 
 	public abstract void closeReader() throws Exception;
 
+	@Override
 	public void run() {
-		if (verbose)
-			System.out.println(this.getClass().getName() + ":Reader Running");
+		if (verbose) {
+			System.out.println(String.format(">> %s: Reader Running", this.getClass().getName()));
+		}
 		try {
 			startReader();
 		} catch (Exception ex) {
 			this.NMEAListeners.stream().forEach(listener -> listener.fireError(ex));
 			throw new RuntimeException(ex);
+		} finally {
+			if (verbose) {
+				System.out.println(String.format(">> %s: Reader Completed", this.getClass().getName()));
+			}
 		}
 	}
 }

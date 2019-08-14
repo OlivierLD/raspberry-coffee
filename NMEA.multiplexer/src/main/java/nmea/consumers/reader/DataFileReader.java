@@ -51,7 +51,7 @@ public class DataFileReader extends NMEAReader {
 		super.enableReading();
 		try {
 			this.fis = new FileInputStream(this.dataFileName);
-			while (canRead()) {
+			while (this.canRead()) {
 				double size = Math.random();
 				int dim = 1 + ((int) (750 * size)); // At least 1, no zero. Random size of the data chunk to read.
 				byte[] ba = new byte[dim];

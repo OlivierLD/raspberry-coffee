@@ -63,7 +63,7 @@ public class UDPReader extends NMEAReader {
 
 			byte buffer[] = new byte[4096];
 			String s;
-			while (canRead()) {
+			while (this.canRead()) {
 				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 				// Wait here.
 				Thread waiter = Thread.currentThread();

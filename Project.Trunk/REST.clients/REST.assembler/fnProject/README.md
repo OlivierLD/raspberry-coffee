@@ -103,7 +103,7 @@ triggers:
 to
 ```yaml
 run_image: fnproject/fn-java-fdk:jre11-1.0.98
-cmd: rpi.sensors.LightSensor::handleRequest
+cmd: rpi.sensors.LightSensor::retrieveData
 triggers:
 ```
 - Redeploy to make sure all is right
@@ -128,12 +128,17 @@ public class LightSensor {
   }
 
   public static class Result {
-    public String salutation;
+    public String requester;
+    public String dataType;
+    public float value;
   }
 
-  public Result handleRequest(Input input) {
+  public Result retrieveData(Input input) {
     Result result = new Result();
-    result.salutation = String.format("Hello %s!", (input != null && input.name != null && !input.name.isEmpty() ? input.name : "World"));
+    result.requester = String.format("%s", (input != null && input.name != null && !input.name.isEmpty() ? input.name : "Nobody"));
+    result.dataType = "ambient-light";
+    result.value = (float)(100 * Math.random());
+
     return result;
   }
 
@@ -144,11 +149,11 @@ You might want to add `<skipTests>true</skipTests>` in the `pom.xml`'s propertie
  $ fn build
  $ fn deploy --app java-light --local
  $ echo -n '{"name":"Oliv"}' | fn invoke java-light ambientlight
- {"salutation":"Hello Oliv!"}
+ {"requester":"Oliv","dataType":"ambient-light","value":45.967487}
 ```
 
 Then invoke with `curl`
 ```
- $ curl -H "Content-Type: application/json" http://localhost:8080/t/java-light/ambientlight -d '{"name":"Oliv"}'
- {"salutation":"Hello Oliv!"}
+ $ curl -X POST -H "Content-Type: application/json" http://localhost:8080/t/java-light/ambientlight -d '{"name":"Oliv"}'
+ {"requester":"Oliv","dataType":"ambient-light","value":89.65619}
 ```

@@ -63,7 +63,7 @@ public class TCPReader extends NMEAReader {
 			byte buffer[] = new byte[4096];
 			String s;
 			int nbReadTest = 0;
-			while (canRead()) {
+			while (this.canRead()) {
 				int bytesRead = theInput.read(buffer);
 				if (bytesRead == -1) {
 					System.out.println("Nothing to read...");
