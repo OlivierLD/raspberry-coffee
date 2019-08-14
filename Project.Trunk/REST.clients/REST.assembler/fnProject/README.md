@@ -86,7 +86,7 @@ package rpi.sensors;
 
 public class LightSensor {
 
-  public String handleRequest(String input) {
+  public String retrieveData(String input) {
     String name = (input == null || input.isEmpty()) ? "world"  : input;
 
     return "Hello, " + name + "!";
@@ -106,6 +106,9 @@ run_image: fnproject/fn-java-fdk:jre11-1.0.98
 cmd: rpi.sensors.LightSensor::retrieveData
 triggers:
 ```
+> Note: the package namecan change, the class name can change, even the method name can change.
+> all you need is the code and the `yaml` to be in sync.
+
 - Redeploy to make sure all is right
 ```
  $ fn deploy --app java-light --local
