@@ -176,25 +176,23 @@ public class LevelAndTemperature implements LevelListenerInterface {
 		tempReader.start();
 
 		final Thread me = Thread.currentThread();
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				System.out.println();
-				setReadTemperature(false); // Exit the temperature thread
-				sac.quit();                // Stop observing the level
-				if (webSocketClient != null)
-					webSocketClient.close();
-				else
-					System.out.println("No websocket client to close");
-				synchronized (me) {
-					me.notify();
-				}
-				System.out.println("Program stopped by user's request.");
-				try {
-					Thread.sleep(1_000L);
-				} catch (Exception ex) {
-				} // Wait a bit for everything to shutdown cleanly...
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println();
+			setReadTemperature(false); // Exit the temperature thread
+			sac.quit();                // Stop observing the level
+			if (webSocketClient != null)
+				webSocketClient.close();
+			else
+				System.out.println("No websocket client to close");
+			synchronized (me) {
+				me.notify();
 			}
-		});
+			System.out.println("Program stopped by user's request.");
+			try {
+				Thread.sleep(1_000L);
+			} catch (Exception ex) {
+			} // Wait a bit for everything to shutdown cleanly...
+		}, "Shutdown Hook"));
 		synchronized (me) {
 			System.out.println("Main thread waiting...");
 			me.wait();

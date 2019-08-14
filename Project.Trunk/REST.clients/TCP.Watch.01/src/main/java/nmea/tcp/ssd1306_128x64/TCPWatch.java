@@ -760,7 +760,7 @@ public class TCPWatch {
 			LOGGER.log(Level.INFO, "\nCtrl+C !");
 			keepLooping = false;
 			TimeUtil.delay(5_000);// Wait for the screen to shut off
-		}));
+		}, "Shutdown Hook"));
 
 		SSD1306 oled = null;
 		try {

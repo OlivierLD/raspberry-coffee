@@ -81,7 +81,7 @@ public class PushButtonTester {
 				}
 				System.out.println("Bye");
 			}
-		}));
+		}, "Shutdown Hook"));
 		System.out.println("Ready...");
 		synchronized (waiter) {
 			try {

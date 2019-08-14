@@ -618,7 +618,7 @@ public class MCP3008 implements Probe {
 				Thread.currentThread().interrupt();
 			}
 			System.out.println("Bye (at last)!");
-		});
+		}, "Shutdown Hook");
 		Runtime.getRuntime().addShutdownHook(closingThread);
 
 		// If simulating

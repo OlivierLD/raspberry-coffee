@@ -99,27 +99,25 @@ public class LevelSimulator implements LevelListenerInterface {
 		};
 		simulator.start();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				System.out.println();
-				simulating = false;
-				if (webSocketClient != null)
-					webSocketClient.close();
-				else
-					System.out.println("No websocket client to close");
-				synchronized (simulator) {
-					simulator.notify();
-				}
-				synchronized (me) {
-					me.notify();
-				}
-				System.out.println("Program stopped by user's request.");
-				try {
-					Thread.sleep(1_000L);
-				} catch (Exception ex) {
-				} // Wait a bit for everything to shutdown cleanly...
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println();
+			simulating = false;
+			if (webSocketClient != null)
+				webSocketClient.close();
+			else
+				System.out.println("No websocket client to close");
+			synchronized (simulator) {
+				simulator.notify();
 			}
-		});
+			synchronized (me) {
+				me.notify();
+			}
+			System.out.println("Program stopped by user's request.");
+			try {
+				Thread.sleep(1_000L);
+			} catch (Exception ex) {
+			} // Wait a bit for everything to shutdown cleanly...
+		}, "Shutdown Hook"));
 		synchronized (me) {
 			System.out.println("Main thread waiting...");
 			me.wait();

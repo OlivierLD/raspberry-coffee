@@ -63,7 +63,7 @@ public class AnalogTemperatureSensorReader {
 			}
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("Shutdown Hook") {
 			public void run() {
 				System.out.println("\nShutting down");
 				if (obs != null) {

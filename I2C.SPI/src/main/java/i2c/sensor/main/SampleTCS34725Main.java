@@ -30,7 +30,7 @@ public class SampleTCS34725Main {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			go = false;
 			System.out.println("\nBye");
-		}));
+		}, "Shutdown Hook"));
 		// Main loop
 		while (go) {
 			sensor.setInterrupt(false); // turn led on

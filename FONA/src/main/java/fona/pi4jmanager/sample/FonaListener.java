@@ -50,15 +50,13 @@ public class FonaListener implements FONAClient {
 
 			final Thread me = Thread.currentThread();
 
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				public void run() {
-					System.out.println();
-					synchronized (me) {
-						me.notify();
-					}
-					System.out.println("Program stopped by user's request.");
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+				System.out.println();
+				synchronized (me) {
+					me.notify();
 				}
-			});
+				System.out.println("Program stopped by user's request.");
+			}, "Shutdown Hook"));
 
 			synchronized (me) {
 				me.wait();

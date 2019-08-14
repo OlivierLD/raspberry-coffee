@@ -43,6 +43,6 @@ public class Subscriber {
 			} catch (MqttException e) {
 				e.printStackTrace();
 			}
-		}));
+		}, "Shutdown Hook"));
 	}
 }

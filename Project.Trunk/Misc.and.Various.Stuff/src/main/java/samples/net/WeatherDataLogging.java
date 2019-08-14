@@ -144,13 +144,7 @@ public class WeatherDataLogging
       }
     }
 
-    Runtime.getRuntime().addShutdownHook(new Thread()
-                                         {
-                                           public void run()
-                                           {
-                                             System.out.println("\nBye now.");
-                                           }
-                                         });
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> System.out.println("\nBye now."), "Shutdown Hook"));
 
     while (true) // forever loop
     {

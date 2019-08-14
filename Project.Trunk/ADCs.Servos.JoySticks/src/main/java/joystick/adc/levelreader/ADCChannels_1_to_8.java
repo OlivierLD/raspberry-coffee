@@ -133,16 +133,14 @@ public class ADCChannels_1_to_8 {
 
 		final ADCChannels_1_to_8 sac = new ADCChannels_1_to_8(listening2, null);
 		final Thread me = Thread.currentThread();
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				System.out.println();
 				sac.quit();
 				synchronized (me) {
 					me.notify();
 				}
 				System.out.println("Program stopped by user's request.");
-			}
-		});
+			}, "Shutdown Hook"));
 		synchronized (me) {
 			System.out.println("Main thread waiting...");
 			me.wait();

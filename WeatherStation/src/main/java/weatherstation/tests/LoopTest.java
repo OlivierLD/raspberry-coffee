@@ -13,7 +13,7 @@ public class LoopTest {
 				coreThread.notify();
 			}
 			System.out.println("Unleashed");
-		}));
+		}, "Shutdown Hook"));
 
 		while (go) {
 			System.out.println("Blah");

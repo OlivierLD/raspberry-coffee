@@ -58,13 +58,11 @@ public class VCNL4000ProximityWithSound {
 		}
 		final BeepThread beeper = new BeepThread();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				go = false;
-				beeper.stopBeeping();
-				System.out.println("\nBye");
-			}
-		});
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			go = false;
+			beeper.stopBeeping();
+			System.out.println("\nBye");
+		}, "Shutdown Hook"));
 		System.out.println("-- Ready --");
 		beeper.start();
 		while (go) //  && i++ < 5)

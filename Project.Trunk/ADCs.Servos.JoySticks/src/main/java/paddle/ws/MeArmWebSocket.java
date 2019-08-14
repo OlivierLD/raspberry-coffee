@@ -213,14 +213,12 @@ public class MeArmWebSocket {
 			test(proto);
 		} else {
 			System.out.println("Driving the robot.");
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				public void run() {
-					proto.bye();
-					synchronized (me) {
-						me.notify();
-					}
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+				proto.bye();
+				synchronized (me) {
+					me.notify();
 				}
-			});
+			}, "Shutdown Hook"));
 			synchronized (me) {
 				try {
 					me.wait();

@@ -279,21 +279,19 @@ public class WebSocketFeeder implements MindWaveCallbacks,
 		serialReader.start();
 
 		final Thread waiter = Thread.currentThread();
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				synchronized (waiter) {
-					// Hanging up.
-					try {
-						c1.closeAll(mwc);
-					} catch (IOException ioe) {
-						ioe.printStackTrace();
-					}
-					webSocketClient.close();
-					waiter.notify();
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			synchronized (waiter) {
+				// Hanging up.
+				try {
+					c1.closeAll(mwc);
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
 				}
-				System.out.println("Released Waiter...");
+				webSocketClient.close();
+				waiter.notify();
 			}
-		});
+			System.out.println("Released Waiter...");
+		}, "Shutdown Hook"));
 
 //  short hID = (short)0x9228;
 //  mwc.connectHeadSet(hID);

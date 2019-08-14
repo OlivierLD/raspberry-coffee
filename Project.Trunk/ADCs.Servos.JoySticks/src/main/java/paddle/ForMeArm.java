@@ -286,7 +286,7 @@ public class ForMeArm {
 				}
 				System.out.println("Bye main thread");
 			}
-		}));
+		}, "Shutdown Hook"));
 		System.out.println("Ready...");
 		synchronized (waiter) {
 			try {

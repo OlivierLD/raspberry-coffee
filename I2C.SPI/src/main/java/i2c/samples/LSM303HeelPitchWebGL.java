@@ -95,7 +95,7 @@ public class LSM303HeelPitchWebGL {
 					System.err.println(ie.getMessage());
 				}
 			}
-		}));
+		}, "Shutdown Hook"));
 		System.out.println("Starting listening...");
 		sensor.startReading();
 	}

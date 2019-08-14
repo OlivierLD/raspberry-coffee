@@ -289,7 +289,7 @@ public class HanoiPilot {
 			}
 			MeArmPilot.runMacro(RESET);
 			System.out.println("\nInterrupted.");
-		}));
+		}, "Shutdown Hook"));
 
 		MeArmPilot.runMacro(RESET);
 		// Initial position

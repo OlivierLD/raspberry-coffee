@@ -69,7 +69,7 @@ public class TwoJoyStick {
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				if (obs != null)
 					obs.stop();
-			}));
+			}, "Shutdown Hook"));
 		}
 	}
 

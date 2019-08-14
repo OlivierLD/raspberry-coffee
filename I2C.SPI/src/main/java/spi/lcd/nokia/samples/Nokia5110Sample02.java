@@ -26,7 +26,7 @@ public class Nokia5110Sample02 {
 			lcd.shutdown();
 			System.out.println("\nExiting");
 			go = false;
-		}));
+		}, "Shutdown Hook"));
 
 		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
 		while (go) {

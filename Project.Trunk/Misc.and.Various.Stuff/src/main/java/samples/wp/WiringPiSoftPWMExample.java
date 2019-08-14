@@ -32,7 +32,7 @@ public class WiringPiSoftPWMExample {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			go = false;
 			try { Thread.sleep(1_000L); } catch (Exception ignore) {}
-		}));
+		}, "Shutdown Hook"));
 
 		for (int idx = 0; idx < 3; idx++) {
 			System.out.println(">> 0");

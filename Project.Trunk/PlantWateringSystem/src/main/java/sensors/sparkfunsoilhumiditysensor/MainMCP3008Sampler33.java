@@ -152,15 +152,13 @@ public class MainMCP3008Sampler33 {
 
 		MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				System.out.println("\nShutting down.");
-				go = false;
-				synchronized (Thread.currentThread()) {
-					Thread.currentThread().notify();
-				}
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println("\nShutting down.");
+			go = false;
+			synchronized (Thread.currentThread()) {
+				Thread.currentThread().notify();
 			}
-		});
+		}, "Shutdown Hook"));
 		int lastRead = 0;
 		int tolerance = 5;
 		boolean first = true;

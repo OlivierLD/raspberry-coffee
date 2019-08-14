@@ -43,7 +43,7 @@ public class JoyStickAndServos {
 			ss1.stop();
 			ss2.stop();
 			System.out.println("\nBye (Ctrl+C)");
-		}));
+		}, "Shutdown Hook"));
 
 		try {
 			joyStick = new JoyStick(jsc);

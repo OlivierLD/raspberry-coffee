@@ -28,7 +28,7 @@ public class VCNL4000ProximityWithDisplay {
 				ioe.printStackTrace();
 			}
 			System.out.println("\nBye");
-		}));
+		}, "Shutdown Hook"));
 		while (go) { //  && i++ < 5)
 			try {
 				//      prox = sensor.readProximity();

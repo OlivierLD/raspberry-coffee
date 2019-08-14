@@ -71,12 +71,11 @@ public class FiveChannelListener {
 		});
 		obs.start();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				if (obs != null)
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+				if (obs != null) {
 					obs.stop();
-			}
-		});
+				}
+			}, "Shutdown Hook"));
 	}
 
 	public static void main(String... args) throws Exception {

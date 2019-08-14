@@ -175,16 +175,14 @@ public class SevenADCChannels {
 		// Channels are hard-coded
 		final SevenADCChannels sac = new SevenADCChannels();
 		final Thread me = Thread.currentThread();
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				System.out.println();
 				sac.quit();
 				synchronized (me) {
 					me.notify();
 				}
 				System.out.println("Program stopped by user's request.");
-			}
-		});
+			}, "Shutdown Hook"));
 		synchronized (me) {
 			System.out.println("Main thread waiting...");
 			me.wait();

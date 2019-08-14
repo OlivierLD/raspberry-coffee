@@ -9,14 +9,12 @@ public class SampleMain {
 		final MotionDetector md = new MotionDetector(RaspiPin.GPIO_05, () -> System.out.println("Something is moving!!"));
 		final Thread coreThread = Thread.currentThread();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				System.out.println("\nUser interrupted.");
 				synchronized (coreThread) {
 					coreThread.notify();
 				}
-			}
-		});
+			}, "Shutdown Hook"));
 
 		System.out.println("...On watch.");
 		try {

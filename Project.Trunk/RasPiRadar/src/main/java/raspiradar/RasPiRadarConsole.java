@@ -100,7 +100,7 @@ public class RasPiRadarConsole {
 			PinUtil.print(map);
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> loop = false));
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> loop = false, "Shutdown Hook"));
 
 		rpr.setDataConsumer(data -> {
 			buffer.add(data.range());

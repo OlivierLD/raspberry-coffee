@@ -89,7 +89,7 @@ public class HomeWeatherStation {
 				}
 				coreThread.notify();
 			}
-		}));
+		}, "Shutdown Hook"));
 
 		SDLWeather80422 weatherStation = new SDLWeather80422(); // With default parameters.
 		weatherStation.setWindMode(SDLWeather80422.SdlMode.SAMPLE, SAMPLE_TIME);

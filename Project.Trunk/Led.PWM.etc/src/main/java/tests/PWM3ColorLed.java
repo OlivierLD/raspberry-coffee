@@ -41,7 +41,6 @@ public class PWM3ColorLed {
 			}
 		});
 
-
 		Thread.sleep(1_000);
 
 		pin00.emitPWM(0);

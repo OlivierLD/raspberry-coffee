@@ -110,18 +110,16 @@ public class GPSReader implements SerialIOCallbacks {
 		}
 		final Thread thread = Thread.currentThread();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				try {
-					synchronized (thread) {
-						thread.notify();
-						Thread.sleep(1_000L);
-					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			try {
+				synchronized (thread) {
+					thread.notify();
+					Thread.sleep(1_000L);
 				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
-		});
+		}, "Shutdown Hook"));
 		try {
 			sc.connect(serialPort, "GPS", Integer.parseInt(baudRateStr));
 			boolean b = sc.initIOStream();

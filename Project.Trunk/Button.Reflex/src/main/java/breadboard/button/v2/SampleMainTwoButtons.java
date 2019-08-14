@@ -92,7 +92,7 @@ public class SampleMainTwoButtons {
 			synchronized (me) {
 				me.notify();
 			}
-		}));
+		}, "Shutdown Hook"));
 
 		synchronized(me) {
 			try {

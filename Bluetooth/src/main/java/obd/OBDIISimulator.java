@@ -527,7 +527,7 @@ public class OBDIISimulator implements SerialIOCallbacks {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("\nCtrl+C intercepted");
 			go = false;
-		}));
+		}, "Shutdown Hook"));
 		while (go) {
 			simulator.loop();
 		}

@@ -20,7 +20,7 @@ public class SampleL3GD20ReadRealData {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				go = false;
 				System.out.println("\nBye.");
-			}));
+			}, "Shutdown Hook"));
 		sensor.init();
 		sensor.calibrate();
 		long wait = 20L;

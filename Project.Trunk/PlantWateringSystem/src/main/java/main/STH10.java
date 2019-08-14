@@ -484,7 +484,7 @@ public class STH10 implements Probe {
 			try { Thread.sleep(1_500L); } catch (InterruptedException ie) {
 				Thread.currentThread().interrupt();
 			}
-		}));
+		}, "Shutdown Hook"));
 
 		if ((probe.isSimulating() || enforceSensorSimulation) && !"true".equals(System.getProperty("random.simulator"))) {
 			// Manual input, stdin.

@@ -201,7 +201,7 @@ public class HMC5883L {
 					System.err.println(ie.getMessage());
 				}
 			}
-		}));
+		}, "Shutdown Hook"));
 		sensor.startReading();
 	}
 }

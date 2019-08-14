@@ -557,7 +557,7 @@ public class HTTPServer {
 				}
 			}
 			System.out.println("HTTPServer Dead.");
-		}));
+		}, "Shutdown Hook"));
 
 		// Infinite loop, waiting for requests
 		httpListenerThread = new Thread("HTTPListener") {

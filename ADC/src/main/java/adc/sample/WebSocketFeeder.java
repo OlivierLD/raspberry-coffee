@@ -47,7 +47,7 @@ public class WebSocketFeeder {
 			}
 			keepWorking = false;
 			webSocketClient.close();
-		}));
+		}, "Shutdown Hook"));
 	}
 
 	private void initWebSocketConnection(String serverURI) {
@@ -107,40 +107,40 @@ public class WebSocketFeeder {
       {
         System.out.println("    .Your status is now [" + status + "]");
       }
-      
+
       @Override
       public void onPong(String s)
       {
         if (DEBUG)
           System.out.println("WS Pong");
       }
-      
+
       @Override
       public void onPing(String s)
       {
         if (DEBUG)
           System.out.println("WS Ping");
       }
-      
+
       @Override
       public void onHandShakeSentAsClient()
       {
         System.out.println("WS-HS sent as client");
       }
-      
+
       @Override
       public void onHandShakeReceivedAsServer()
       {
         if (DEBUG)
           System.out.println("WS-HS received as server");
       }
-      
+
       @Override
       public void onHandShakeReceivedAsClient()
       {
         if (DEBUG)
           System.out.println("WS-HS received as client");
-      }      
+      }
     };
     */
 		try {

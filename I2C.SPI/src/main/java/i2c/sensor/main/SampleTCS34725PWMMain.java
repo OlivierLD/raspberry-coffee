@@ -43,7 +43,7 @@ public class SampleTCS34725PWMMain {
 
 			gpio.shutdown();
 			System.out.println("\nBye");
-		}));
+		}, "Shutdown Hook"));
 		// Main loop
 		while (go) {
 			sensor.setInterrupt(false); // turn led on

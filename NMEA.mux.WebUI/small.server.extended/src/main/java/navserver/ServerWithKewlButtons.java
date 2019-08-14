@@ -533,7 +533,7 @@ public class ServerWithKewlButtons extends NavServer {
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			freeResources();
-		}));
+		}, "Shutdown Hook"));
 		new ServerWithKewlButtons();
 	}
 

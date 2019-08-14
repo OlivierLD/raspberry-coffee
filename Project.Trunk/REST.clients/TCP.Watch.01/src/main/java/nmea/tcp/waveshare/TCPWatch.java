@@ -245,7 +245,7 @@ public class TCPWatch {
 			System.out.println("\nCtrl+C !");
 			keepLooping = false;
 			TimeUtil.delay(15_000);// Wait for the screen to shut off
-		}));
+		}, "Shutdown Hook"));
 
 		// Display Data loop
 		while (keepLooping) {

@@ -61,11 +61,7 @@ public class POSTSnapshot {
 			System.exit(1);
 		}
 		System.out.println("Ctrl + C to stop.");
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				setLoop(false);
-			}
-		});
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> setLoop(false), "Shutdown Hook"));
 
 		while (getLoop()) {
 			try {

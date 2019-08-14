@@ -86,13 +86,7 @@ public class BMP180Logging
     float temp  = 0;
     double alt  = 0;
 
-    Runtime.getRuntime().addShutdownHook(new Thread()
-                                         {
-                                           public void run()
-                                           {
-                                             System.out.println("\nBye now.");
-                                           }
-                                         });
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> System.out.println("\nBye now."), "Shutdown Hook"));
 
     while (true)
     {

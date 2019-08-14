@@ -288,24 +288,20 @@ public class ClientTwo implements MindWaveCallbacks,
     serialReader.start();
 
     final Thread waiter = Thread.currentThread();
-    Runtime.getRuntime().addShutdownHook(new Thread()
-     {
-       public void run()
-       {
-         synchronized (waiter)
-         {
-           // Hanging up.
-           try { c2.closeAll(mwc); }
-           catch (IOException ioe) {
-             ioe.printStackTrace();
-           }
-           dumpRawValues();
-           waiter.notify();
-         }
-         System.out.println("Released Waiter...");
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      synchronized (waiter)
+      {
+        // Hanging up.
+        try { c2.closeAll(mwc); }
+        catch (IOException ioe) {
+          ioe.printStackTrace();
+        }
+        dumpRawValues();
+        waiter.notify();
+      }
+      System.out.println("Released Waiter...");
 
-       }
-     });
+    }, "Shutdown Hook"));
 
   //  short hID = (short)0x9228;
   //  mwc.connectHeadSet(hID);

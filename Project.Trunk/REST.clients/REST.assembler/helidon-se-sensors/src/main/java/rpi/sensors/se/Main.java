@@ -47,7 +47,7 @@ public final class Main {
 	 * @param args command line arguments.
 	 * @throws IOException if there are problems reading logging properties
 	 */
-	public static void main(final String[] args) throws IOException {
+	public static void main(final String... args) throws IOException {
 		System.out.println("Starting the SE Server");
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -55,7 +55,7 @@ public final class Main {
 			ADCChannel.close();
 			RelayManager.shutdown();
 			System.out.println("Resources released.");
-		}));
+		}, "Shutdown Hook"));
 		startServer();
 	}
 

@@ -162,7 +162,7 @@ public class TemperatureRelaySample {
 			synchronized (me) {
 				me.notify();
 			}
-		}));
+		}, "Shutdown Hook"));
 
 		trs.setWorking(true);
 		thermometerThread.start();

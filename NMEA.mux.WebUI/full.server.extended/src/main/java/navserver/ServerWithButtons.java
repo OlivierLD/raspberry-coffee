@@ -119,7 +119,7 @@ public class ServerWithButtons extends NavServer {
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			freeResources();
-		}));
+		}, "Shutdown Hook"));
 		new ServerWithButtons();
 	}
 

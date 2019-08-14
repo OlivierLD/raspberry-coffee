@@ -204,7 +204,7 @@ public class ServoHat {
 				synchronized (me) {
 					me.notify();
 				}
-			}));
+			}, "Shutdown Hook"));
 			synchronized (me) {
 				try {
 					me.wait();

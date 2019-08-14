@@ -111,22 +111,18 @@ public class WeatherDataFileLogging
       }
     }
 
-    Runtime.getRuntime().addShutdownHook(new Thread()
-                                         {
-                                           public void run()
-                                           {
-                                             System.out.println("\nBye now.");
-                                             // Close log file
-                                             if (log != null)
-                                             {
-                                               try
-                                               {
-                                                 log.flush();
-                                                 log.close();
-                                               } catch (Exception ex) { ex.printStackTrace(); }
-                                             }
-                                           }
-                                         });
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      System.out.println("\nBye now.");
+      // Close log file
+      if (log != null)
+      {
+        try
+        {
+          log.flush();
+          log.close();
+        } catch (Exception ex) { ex.printStackTrace(); }
+      }
+    }, "Shutdown Hook"));
 
     while (true)
     {

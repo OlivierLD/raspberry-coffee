@@ -134,7 +134,7 @@ public class TwoSteppersDemo {
 				Thread.sleep(5_000);
 			} catch (Exception absorbed) {
 			}
-		}));
+		}, "Shutdown Hook"));
 
 		demoOne.go();
 		try { Thread.sleep(1_500); } catch (Exception ignore) {}

@@ -47,7 +47,7 @@ public class HomeWeatherStationSimulator {
 				}
 				coreThread.notify();
 			}
-		}));
+		}, "Shutdown Hook"));
 
 		double windSpeed = 0d;
 		double windGust = 0d;

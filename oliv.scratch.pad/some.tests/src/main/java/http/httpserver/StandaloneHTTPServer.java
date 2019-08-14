@@ -206,12 +206,10 @@ public class StandaloneHTTPServer {
 			System.out.println("java -Dhttp.port=6789 -Dhttp.host=localhost " + new StandaloneHTTPServer().getClass().getName());
 			System.exit(0);
 		}
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				System.out.println("\nShutting down nicely...");
 				shutdown();
-			}
-		});
+			}, "Shutdown Hook"));
 		new StandaloneHTTPServer(args);
 	}
 

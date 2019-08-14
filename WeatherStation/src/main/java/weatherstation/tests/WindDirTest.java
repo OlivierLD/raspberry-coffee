@@ -26,7 +26,7 @@ public class WindDirTest {
 			synchronized (coreThread) {
 				coreThread.notify();
 			}
-		}));
+		}, "Shutdown Hook"));
 
 		final Pin ANEMOMETER_PIN = RaspiPin.GPIO_16; // <- WiringPi number. aka GPIO 15, #10
 		final Pin RAIN_PIN = RaspiPin.GPIO_01; // <- WiringPi number. aka GPIO 18, #12

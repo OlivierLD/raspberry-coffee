@@ -15,11 +15,7 @@ public class CPUTempSample {
 
 	public static void main(String... args) throws IOException, InterruptedException, I2CFactory.UnsupportedBusNumberException {
 		SevenSegment segment = new SevenSegment(0x70, true);
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				setGo(false);
-			}
-		});
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> setGo(false), "Shutdown Hook"));
 
 		while (go) {
 			float cpuTemp = SystemInfo.getCpuTemperature();

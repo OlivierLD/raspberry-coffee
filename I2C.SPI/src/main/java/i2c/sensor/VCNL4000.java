@@ -230,14 +230,12 @@ public class VCNL4000 {
 			e.printStackTrace();
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				go = false;
 				System.out.println("\nBye");
 				System.out.println("Proximity between " + minProx + " and " + maxProx);
 				System.out.println("Ambient between " + minAmbient + " and " + maxAmbient);
-			}
-		});
+			}, "Shutdown Hook"));
 		System.out.println("-- Ready --");
 		int i = 0;
 		while (go) { //  && i++ < 5)

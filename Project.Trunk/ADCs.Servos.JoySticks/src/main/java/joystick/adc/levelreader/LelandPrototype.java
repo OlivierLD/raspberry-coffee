@@ -73,16 +73,14 @@ public class LelandPrototype implements AirWaterOilInterface {
 		AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
 
 		final Thread me = Thread.currentThread();
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				System.out.println();
 				sac.quit();
 				synchronized (me) {
 					me.notify();
 				}
 				System.out.println("Program stopped by user's request.");
-			}
-		});
+			}, "Shutdown Hook"));
 		synchronized (me) {
 			System.out.println("Main thread waiting...");
 			me.wait();
