@@ -58,7 +58,7 @@ public class SampleMain {
 			if (obs != null) {
 				obs.stop();
 			}
-		}));
+		}, "Shutdown Hook"));
 	}
 
 	public static void main(String... args) throws Exception {

@@ -57,10 +57,10 @@ public class NMEAMultiplexer implements Multiplexer {
 		tcpClient.setReader(new TCPReader(tcpClient.getListeners(), tcpServerName, tcpPort));
 
 		fileClient.initClient();
-		fileClient.setReader(new DataFileReader(fileClient.getListeners(), dataFile));
+		fileClient.setReader(new DataFileReader("DataFileReader", fileClient.getListeners(), dataFile));
 
 		serialClient.initClient();
-		serialClient.setReader(new SerialReader(serialClient.getListeners(), serialPort, serialBaudRate));
+		serialClient.setReader(new SerialReader("SerialReader", serialClient.getListeners(), serialPort, serialBaudRate));
 
 		tcpClient.startWorking();
 		fileClient.startWorking();

@@ -39,7 +39,10 @@ public class SerialReader
 	}
 
 	public SerialReader(List<NMEAListener> al, String com, int br) {
-		super(al);
+		this(null, al, com, br);
+	}
+	public SerialReader(String threadName, List<NMEAListener> al, String com, int br) {
+		super(threadName, al);
 		this.comPort = com;
 		this.br = br;
 	}
@@ -102,12 +105,13 @@ public class SerialReader
 			return;
 		}
 		int portType = com.getPortType();
-		if (portType == CommPortIdentifier.PORT_PARALLEL)
+		if (portType == CommPortIdentifier.PORT_PARALLEL) {
 			System.out.println("This is a parallel port");
-		else if (portType == CommPortIdentifier.PORT_SERIAL)
+		} else if (portType == CommPortIdentifier.PORT_SERIAL) {
 			System.out.println("This is a serial port");
-		else
+		} else {
 			System.out.println("This is an unknown port:" + portType);
+		}
 		if (portType == CommPortIdentifier.PORT_SERIAL) {
 			this.serialPort = (SerialPort) thePort;
 			try {

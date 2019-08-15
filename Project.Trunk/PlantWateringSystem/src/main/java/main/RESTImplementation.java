@@ -41,6 +41,7 @@ public class RESTImplementation {
 	public static class ProbeData {
 		double temperature;
 		double humidity;
+		double rawHumidity;
 
 		public ProbeData temperature(double t) {
 			this.temperature = t;
@@ -48,6 +49,10 @@ public class RESTImplementation {
 		}
 		public ProbeData humidity(double h) {
 			this.humidity = h;
+			return this;
+		}
+		public ProbeData rawHumidity(double h) {
+			this.rawHumidity = h;
 			return this;
 		}
 	}
@@ -148,7 +153,8 @@ public class RESTImplementation {
 		synchronized (probe) {
 			ProbeData data = new ProbeData()
 					.temperature(this.probe.getTemperature())
-					.humidity(this.probe.getHumidity());
+					.humidity(this.probe.getHumidity())
+					.rawHumidity(this.probe.getRawHumidity());
 			String content = new Gson().toJson(data);
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());

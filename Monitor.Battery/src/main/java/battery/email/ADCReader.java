@@ -176,6 +176,6 @@ public class ADCReader {
 					adcReader.getBatteryMonitor().stop();
 				}
 				System.out.println("Bye now");
-			}));
+			}, "Shutdown Hook"));
 	}
 }

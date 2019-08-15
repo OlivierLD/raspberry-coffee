@@ -94,7 +94,7 @@ public class ServoAndPotentiometer {
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			loop = false;
-		}));
+		}, "Shutdown Hook"));
 
 		int lastRead = 0;
 		int tolerance = 1; // This is used for damping...

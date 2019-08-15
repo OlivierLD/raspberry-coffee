@@ -66,7 +66,7 @@ public class Ephemeris {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-		}));
+		}, "Shutdown Hook"));
 
 		loop.start();
 	}

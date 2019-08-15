@@ -15,7 +15,10 @@ import utils.StringUtils;
 public class ReaderSkeleton extends NMEAReader {
 
 	public ReaderSkeleton(List<NMEAListener> al) {
-		super(al);
+		this(null, al);
+	}
+	public ReaderSkeleton(String threadName, List<NMEAListener> al) {
+		super(threadName, al);
 	}
 
 	@Override

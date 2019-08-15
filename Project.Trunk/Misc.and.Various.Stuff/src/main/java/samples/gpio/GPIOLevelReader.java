@@ -76,7 +76,7 @@ public class GPIOLevelReader {
 			synchronized (me) {
 				me.notify();
 			}
-		}));
+		}, "Shutdown Hook"));
 
 		/*  GPIOLevelReader gpioLevelReader = */
 		new GPIOLevelReader();

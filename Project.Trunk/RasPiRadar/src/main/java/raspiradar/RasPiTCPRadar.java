@@ -198,7 +198,7 @@ public class RasPiTCPRadar {
 			PinUtil.print(map);
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> loop = false));
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> loop = false, "Shutdown Hook"));
 
 		RasPiTCPRadar radar = new RasPiTCPRadar();
 		radar.tcpPort = Integer.parseInt(System.getProperty("tcp.port", String.valueOf(radar.tcpPort)));

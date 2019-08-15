@@ -76,7 +76,7 @@ public class WebSocketSample {
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			wsFeeder.shutdown();
-		}));
+		}, "Shutdown Hook"));
 
 		/* JoystickReaderV2 joystickReader = */ new JoystickReaderV2(JOYSTICK_INPUT_0, callback);
 	}

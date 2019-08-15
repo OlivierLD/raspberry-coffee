@@ -53,7 +53,7 @@ public class HC_SR04andLeds {
 			}
 			gpio.shutdown();
 			System.out.println("Exiting nicely.");
-		}));
+		}, "Shutdown Hook"));
 
 		System.out.println("Waiting for the sensor to be ready (2s)...");
 		Thread.sleep(2_000L);

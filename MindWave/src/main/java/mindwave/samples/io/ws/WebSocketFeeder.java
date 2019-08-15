@@ -306,25 +306,23 @@ public class WebSocketFeeder
 		}
 		final Thread waiter = Thread.currentThread();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				if (replay == null) {
-					mwc.disconnectHeadSet();
-					try {
-						sc.disconnect();
-						if (logSerial)
-							log.close();
-					} catch (IOException ioe) {
-						ioe.printStackTrace();
-					}
-				}
-				webSocketClient.close();
-				synchronized (waiter) {
-					System.out.println("User Interrupted.");
-					waiter.notify();
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			if (replay == null) {
+				mwc.disconnectHeadSet();
+				try {
+					sc.disconnect();
+					if (logSerial)
+						log.close();
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
 				}
 			}
-		});
+			webSocketClient.close();
+			synchronized (waiter) {
+				System.out.println("User Interrupted.");
+				waiter.notify();
+			}
+		}, "Shutdown Hook"));
 
 		CommPortIdentifier mwPort = pm.get(serialPort);
 		try {

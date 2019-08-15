@@ -197,7 +197,7 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 			PinUtil.print(map);
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> loop = false));
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> loop = false, "Shutdown Hook"));
 
 		// Will take care of sending data to the serial port.
 		rpr.setDataConsumer(data -> {

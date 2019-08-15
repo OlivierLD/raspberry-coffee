@@ -175,7 +175,7 @@ public class SerialReaderSample implements SerialIOCallbacks {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-		}));
+		}, "Shutdown Hook"));
 		try {
 			sc.connect(serialPort, "Serial", Integer.parseInt(baudRateStr));
 			boolean b = sc.initIOStream();

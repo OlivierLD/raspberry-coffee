@@ -136,8 +136,7 @@ public class SerialLevelReader {
 		// create an instance of the serial communications class
 		final Serial serial = SerialFactory.createInstance();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				try {
 					System.out.println("\n------------------------------------");
 					System.out.println("Shutting down.");
@@ -148,8 +147,7 @@ public class SerialLevelReader {
 				} finally {
 					System.out.println("Bye.");
 				}
-			}
-		});
+			}, "Shutdown Hook"));
 
 		// create and register the serial data listener
 		serial.addListener(event -> {

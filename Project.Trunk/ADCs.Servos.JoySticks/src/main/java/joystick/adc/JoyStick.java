@@ -89,7 +89,7 @@ public class JoyStick {
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				if (obs != null)
 					obs.stop();
-			}));
+			}, "Shutdown Hook"));
 		}
 	}
 }

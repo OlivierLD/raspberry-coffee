@@ -119,7 +119,7 @@ public class JoyBonnet {
 				try { Thread.sleep(20); } catch (Exception ex) {}
 				System.out.println("Bye");
 			}
-		}));
+		}, "Shutdown Hook"));
 		double[] voltage = {0d, 0d, 0d, 0d};
 		double[] read = {0.0, 0.0, 0.0, 0.0};
 		while (keepReading) {

@@ -89,7 +89,7 @@ public class WebSocketClient extends NMEAClient {
 			}
 		});
 		nmeaClient.initClient();
-		nmeaClient.setReader(new WebSocketReader(nmeaClient.getListeners(), serverUri));
+		nmeaClient.setReader(new WebSocketReader("WebSocketReader", nmeaClient.getListeners(), serverUri));
 		nmeaClient.startWorking();
 	}
 }

@@ -39,7 +39,10 @@ public class WeatherStationWSReader extends NMEAReader {
 		}
 	}
 	public WeatherStationWSReader(List<NMEAListener> al, String wsUri) {
-		super(al);
+		this(null, al, wsUri);
+	}
+	public WeatherStationWSReader(String threadName, List<NMEAListener> al, String wsUri) {
+		super(threadName, al);
 		this.wsUri = wsUri;
 		try {
 			this.wsClient = this.createWebSocketClient();

@@ -18,10 +18,16 @@ public class DataFileReader extends NMEAReader {
 	private boolean loop = true;
 
 	public DataFileReader(List<NMEAListener> al, String fName) {
-		this(al, fName, 500);
+		this(null, al, fName, 500);
+	}
+	public DataFileReader(String threadName, List<NMEAListener> al, String fName) {
+		this(threadName, al, fName, 500);
 	}
 	public DataFileReader(List<NMEAListener> al, String fName, long pause) {
-		super(al);
+		this(null, al, fName, pause);
+	}
+	public DataFileReader(String threadName, List<NMEAListener> al, String fName, long pause) {
+		super(threadName, al);
 		if (verbose) {
 			System.out.println(this.getClass().getName() + ": There are " + al.size() + " listener(s)");
 		}
@@ -45,7 +51,7 @@ public class DataFileReader extends NMEAReader {
 		super.enableReading();
 		try {
 			this.fis = new FileInputStream(this.dataFileName);
-			while (canRead()) {
+			while (this.canRead()) {
 				double size = Math.random();
 				int dim = 1 + ((int) (750 * size)); // At least 1, no zero. Random size of the data chunk to read.
 				byte[] ba = new byte[dim];

@@ -102,7 +102,7 @@ public class UDPClient extends NMEAClient {
 			}
 		});
 		nmeaClient.initClient();
-		nmeaClient.setReader(new UDPReader(nmeaClient.getListeners(), serverName, 8001));
+		nmeaClient.setReader(new UDPReader("UDPReader", nmeaClient.getListeners(), serverName, 8001));
 		nmeaClient.startWorking();
 	}
 }

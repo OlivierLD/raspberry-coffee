@@ -20,7 +20,7 @@ public class ClockSample {
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
-		}));
+		}, "Shutdown Hook"));
 
 		// Continually update the time on a 4 char, 7-segment display
 		while (true) {

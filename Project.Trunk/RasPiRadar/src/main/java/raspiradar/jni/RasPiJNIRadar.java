@@ -268,9 +268,7 @@ public class RasPiJNIRadar {
 			System.out.println("Not on a Pi? Moving on...");
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			loop = false;
-		}));
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> loop = false, "Shutdown Hook"));
 
 		rpr.setDataConsumer(data -> {
 			// TODO Damping?

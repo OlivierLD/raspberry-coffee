@@ -117,7 +117,7 @@ public class StepperDemo {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			demo.stop();
 			try { Thread.sleep(5_000); } catch (Exception absorbed) {}
-		}));
+		}, "Shutdown Hook"));
 
 		demo.go();
 

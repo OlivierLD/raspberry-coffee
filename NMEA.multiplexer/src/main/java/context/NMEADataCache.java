@@ -497,6 +497,10 @@ public class NMEADataCache
 										this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
 									}
 								}
+							} else {
+								if ("true".equals(System.getProperty("verbose", "false"))) {
+									System.out.println("\t>> NOT Injecting GLL Time in the cache");
+								}
 							}
 						}
 						break;

@@ -35,7 +35,7 @@ public class PanTiltWebSocket {
 		ssUD.setAngle(0f);
 		ssLR.setAngle(0f);
 
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> close()));
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> close(), "Shutdown Hook"));
 
 		delay(2_000);
 

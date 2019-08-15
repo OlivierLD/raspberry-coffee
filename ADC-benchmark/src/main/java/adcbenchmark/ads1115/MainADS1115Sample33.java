@@ -24,7 +24,7 @@ public class MainADS1115Sample33 {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("\nOut of here.");
 			go = false;
-		}));
+		}, "Shutdown Hook"));
 
 		int prevValue = -1;
 		while (go) {

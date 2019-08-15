@@ -140,7 +140,7 @@ public class SimplePanelOrienter {
 				if (ansiConsole) {
 					AnsiConsole.systemUninstall();
 				}
-			}));
+			}, "Shutdown Hook"));
 
 			mess = "Start listening to the LSM303";
 			if (ansiConsole){

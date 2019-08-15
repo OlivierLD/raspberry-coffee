@@ -124,7 +124,7 @@ public class LSM303Reader {
 		LSM303Reader reader = new LSM303Reader();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			read = false;
-		}));
+		}, "Shutdown Hook"));
 		reader.startReader();
 	}
 }

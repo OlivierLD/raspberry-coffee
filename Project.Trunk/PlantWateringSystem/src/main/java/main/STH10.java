@@ -162,6 +162,11 @@ public class STH10 implements Probe {
 		return humidity;
 	}
 
+	@Override
+	public double getRawHumidity() {
+		return 0;
+	}
+
 
 	@Override
 	public PinState getRelayState() {
@@ -479,7 +484,7 @@ public class STH10 implements Probe {
 			try { Thread.sleep(1_500L); } catch (InterruptedException ie) {
 				Thread.currentThread().interrupt();
 			}
-		}));
+		}, "Shutdown Hook"));
 
 		if ((probe.isSimulating() || enforceSensorSimulation) && !"true".equals(System.getProperty("random.simulator"))) {
 			// Manual input, stdin.

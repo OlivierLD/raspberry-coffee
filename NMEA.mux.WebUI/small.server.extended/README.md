@@ -47,17 +47,29 @@ See [here](../../Project.Trunk/REST.clients/TCP.Watch.01/README.md#raspberry-pi-
 
 ### Screenshots
 
-| NMEA Data | Local Menu | Local Menu, 2 | Screen Saver (one dot blinking) | Complete Shutdown |
-|:---------:|:---------:|:---------:|:---------:|:---------:|
-| ![NMEA](./docimg/01.png) | ![NMEA](./docimg/02.png) | ![NMEA](./docimg/03.png) | ![NMEA](./docimg/04.png) | ![NMEA](./docimg/05.png) |
+| NMEA Data | Local Menu | Local Menu, 2 |
+|:---------:|:---------:|:---------:|
+| ![NMEA](./docimg/01.png) | ![NMEA](./docimg/02.png) | ![NMEA](./docimg/03.png) |
+| Screen Saver (one dot blinking) | Complete Shutdown |
+| ![NMEA](./docimg/04.png) | ![NMEA](./docimg/05.png) |
 
-# TODO
-- Describe the way to get to the log files, download, etc.
-- Document Web UI: `runner.html`, `logMgmt.html`, etc.
+### Wiring
+![Bare wiring](../Adafruit.Ultimate.GPS.RPiZero_bb.png)
+
+![On Bonnet](../Adafruit.Ultimate.GPS.RPiZero.Bonnet.1_bb.png)
+
+![Bonnet wiring](../Adafruit.Ultimate.GPS.RPiZero.Bonnet.2_bb.png)
+
+### Extras
 - Cue-card for the UI (depends on your implementation):
 ```
 Button-2 + LongClick on Button-1: Shutdown (confirm with double-click within 3 seconds) 
 DoubleClick on Button-1: Show local menu                                                
 DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.
 ```
-- Simulator for the buttons. Done.
+
+# TODO
+- Describe the way to get to the log files, download, etc.
+- Document Web UI: `runner.html`, `logMgmt.html`, etc.
+- Simulator for the buttons. &#9989; Done.
+- 3D printed enclosure, to contain the Raspberry Pi, the 2 bonnets, and a LiPo battery.

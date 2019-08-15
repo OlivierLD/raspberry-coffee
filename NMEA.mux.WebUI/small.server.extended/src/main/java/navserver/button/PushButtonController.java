@@ -20,7 +20,7 @@ import java.text.NumberFormat;
  * - Click
  * - Double Click
  * - Long Click
- * - Two-button click (or more..., Shft, Ctrl, etc)
+ * - Two-button click (or more..., Shft, Ctrl, etc. You implement it)
  *
  * Note: System.currentTimeMillis returns values like
  *   1,536,096,764,842
@@ -29,12 +29,15 @@ import java.text.NumberFormat;
  *
  * System properties:
  * - button.verbose, default false
+ *
+ * Also works in simulator mode, the simulator calls the manageButtonState method.
  */
 public class PushButtonController {
-	private GpioController gpio = null;
-	private GpioPinDigitalInput button = null;
 
-	private boolean isHighForSimulation = false;
+	private GpioController gpio = null;
+	private GpioPinDigitalInput button = null;    // Will remain null in simulation mode
+
+	private boolean isHighForSimulation = false;  // Will be used in simulation mode
 
 	private String buttonName = "Button";
 	private boolean verbose = "true".equals(System.getProperty("button.verbose"));
@@ -179,7 +182,7 @@ public class PushButtonController {
 				// If single-click... May be the first of a double-click
 				if (this.maybeDoubleClick) {
 					try {
-						Thread.sleep(DOUBLE_CLICK_DELAY); // Cannot work in simulation mode if not in a Thread
+						Thread.sleep(DOUBLE_CLICK_DELAY); // !! Cannot work in simulation mode if not in a Thread !!
 						if (this.maybeDoubleClick) { // Can have been set to false by a double-click
 							if (verbose) {
 								System.out.println("++++ maybeDoubleClick still true");

@@ -409,7 +409,7 @@ public class BatteryMonitor {
 					ex.printStackTrace();
 				}
 			}
-		}));
+		}, "Shutdown Hook"));
 
 		new BatteryMonitor(channel);
 

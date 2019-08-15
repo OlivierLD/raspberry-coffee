@@ -258,20 +258,18 @@ public class BlinkDetector
 
 		final Thread waiter = Thread.currentThread();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				mwc.disconnectHeadSet();
-				try {
-					sc.disconnect();
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
-				synchronized (waiter) {
-					System.out.println("User Interrupted.");
-					waiter.notify();
-				}
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			mwc.disconnectHeadSet();
+			try {
+				sc.disconnect();
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
 			}
-		});
+			synchronized (waiter) {
+				System.out.println("User Interrupted.");
+				waiter.notify();
+			}
+		}, "Shutdown Hook"));
 
 		CommPortIdentifier mwPort = pm.get(serialPort);
 		try {

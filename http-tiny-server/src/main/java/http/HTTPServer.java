@@ -557,7 +557,7 @@ public class HTTPServer {
 				}
 			}
 			System.out.println("HTTPServer Dead.");
-		}));
+		}, "Shutdown Hook"));
 
 		// Infinite loop, waiting for requests
 		httpListenerThread = new Thread("HTTPListener") {
@@ -1027,7 +1027,7 @@ public class HTTPServer {
 	}
 
 	private void manageSocketException(SocketException se, String content) {
-		if (se.getMessage().contains("Broken pipe")) {
+		if (se.getMessage().contains("Broken pipe") || se.getMessage().contains("Protocol wrong type for socket")) {
 			if (verbose) {
 				System.err.println("+-------------------------");
 				System.err.println(String.format("| %s - Managed error, client hung up! Response was:\n%s", new Date().toString(), content));

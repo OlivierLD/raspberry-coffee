@@ -73,7 +73,7 @@ public class AIOSubscriber {
 			}
 			subscriber.getRelayManager().shutdown();
 			System.out.println("Bye.");
-		}));
+		}, "Shutdown Hook"));
 
 		subscriber.start();
 	}

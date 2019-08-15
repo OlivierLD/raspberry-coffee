@@ -31,7 +31,7 @@ All Open Source, Soft & Hard
   - Third-party micro-servers, we have 3 possibilities (only one is needed, if you choose this route):
     - [Helidon](http://helidon.io) - Micro-service oriented.
     - [SpringBoot](https://spring.io/) - Micro-service oriented.
-    - [fnProject](https://fnproject.io/) - FaaS oriented.
+    - [fnProject](https://fnproject.io/) - FaaS (Function as a Service) oriented.
   - Possibly [Swagger](https://swagger.io/) - the de-facto standard in term of REST API documentation (and more).
   - [Node-RED](https://nodered.org/) - A very cool service orchestration (and more) tool based on NodeJS. 
 - in term of reusable code

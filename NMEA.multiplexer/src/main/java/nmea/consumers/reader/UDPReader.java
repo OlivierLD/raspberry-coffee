@@ -13,22 +13,26 @@ import java.net.SocketException;
 import java.util.List;
 
 public class UDPReader extends NMEAReader {
-	private int udpport = 8001;
+	private final static String DEFAULT_HOST_NAME = "localhost";
+	private final static int DEFAULT_UDP_PORT = 8001;
+	private String host = DEFAULT_HOST_NAME;
+	private int udpPort = DEFAULT_UDP_PORT;
 	private long timeout = 5_000L; // Default value
-	private String host = "localhost";
 
 	public UDPReader(List<NMEAListener> al) {
-		super(al);
+		this(null, al, DEFAULT_HOST_NAME, DEFAULT_UDP_PORT);
 	}
 
 	public UDPReader(List<NMEAListener> al, int udp) {
-		super(al);
-		udpport = udp;
+		this(null, al, DEFAULT_HOST_NAME, udp);
 	}
 
 	public UDPReader(List<NMEAListener> al, String host, int udp) {
-		super(al);
-		udpport = udp;
+		this(null, al, host, udp);
+	}
+	public UDPReader(String threadName, List<NMEAListener> al, String host, int udp) {
+		super(threadName, al);
+		udpPort = udp;
 		this.host = host;
 	}
 
@@ -36,7 +40,7 @@ public class UDPReader extends NMEAReader {
 	private DatagramSocket dsocket = null;
 
 	public int getPort() {
-		return this.udpport;
+		return this.udpPort;
 	}
 
 	public String getHostname() {
@@ -45,21 +49,21 @@ public class UDPReader extends NMEAReader {
 
 	@Override
 	public void startReader() {
-		System.out.println("From " + getClass().getName() + " Reading UDP Port " + udpport);
+		System.out.println("From " + getClass().getName() + " Reading UDP Port " + udpPort);
 		super.enableReading();
 		try {
 			InetAddress address = InetAddress.getByName(host);
 			if (address.isMulticastAddress()) {
-				dsocket = new MulticastSocket(udpport);
+				dsocket = new MulticastSocket(udpPort);
 				((MulticastSocket) dsocket).joinGroup(address);
 				group = address;
 			} else {
-				dsocket = new DatagramSocket(udpport, address);
+				dsocket = new DatagramSocket(udpPort, address);
 			}
 
 			byte buffer[] = new byte[4096];
 			String s;
-			while (canRead()) {
+			while (this.canRead()) {
 				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 				// Wait here.
 				Thread waiter = Thread.currentThread();

@@ -59,7 +59,7 @@ public class StandaloneHC_SR04 {
 			System.out.println("\nOops!");
 			gpio.shutdown();
 			System.out.println("Exiting nicely.");
-		}));
+		}, "Shutdown Hook"));
 
 		System.out.println(">>> Waiting for the sensor to be ready (2s)...");
 		TimeUtil.delay(2_000L);

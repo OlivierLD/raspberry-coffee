@@ -88,7 +88,7 @@ public class RandomClient extends NMEAClient {
 		});
 
 		nmeaClient.initClient();
-		nmeaClient.setReader(new RandomReader(nmeaClient.getListeners()));
+		nmeaClient.setReader(new RandomReader("RndReader", nmeaClient.getListeners()));
 		nmeaClient.startWorking();
 	}
 }

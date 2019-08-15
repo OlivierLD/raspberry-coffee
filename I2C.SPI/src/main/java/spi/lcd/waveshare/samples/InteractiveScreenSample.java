@@ -142,7 +142,7 @@ public class InteractiveScreenSample {
 			lcd.LCDDisplay();
 		}
 
-		Thread closingThread = new Thread() {
+		Thread closingThread = new Thread("Shutdown Hook") {
 			public void run() {
 				System.out.println("Ctrl+C !");
 				keepLooping = false;

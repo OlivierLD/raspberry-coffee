@@ -134,7 +134,7 @@ public class PanTiltJoyStick {
 			ssUD.stop();
 			ssLR.stop();
 			System.out.println("\nBye (Ctrl+C)");
-		}));
+		}, "Shutdown Hook"));
 
 		try {
 			new JoyStick(jsc, adcUD, adcLR);

@@ -52,12 +52,10 @@ public class FourADCChannels {
 		});
 		obs.start();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				if (obs != null)
 					obs.stop();
-			}
-		});
+			}, "Shutdown Hook"));
 	}
 
 	public static void main(String... args) throws Exception {

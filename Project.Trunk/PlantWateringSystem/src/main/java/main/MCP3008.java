@@ -146,6 +146,7 @@ public class MCP3008 implements Probe {
 
 	private static double temperature = 20d;
 	private static double humidity = 50d;
+	private static double rawHumidity = 50d;
 	private static String message = "";
 
 	private final static int DATA_BUFFER_MAX_SIZE = 1_000;
@@ -192,6 +193,11 @@ public class MCP3008 implements Probe {
 	@Override
 	public double getHumidity() {
 		return humidity;
+	}
+
+	@Override
+	public double getRawHumidity() {
+		return rawHumidity;
 	}
 
 	@Override
@@ -612,7 +618,7 @@ public class MCP3008 implements Probe {
 				Thread.currentThread().interrupt();
 			}
 			System.out.println("Bye (at last)!");
-		});
+		}, "Shutdown Hook");
 		Runtime.getRuntime().addShutdownHook(closingThread);
 
 		// If simulating
@@ -676,6 +682,7 @@ public class MCP3008 implements Probe {
 //				}
 				try {
 					double hum = probe.readHumidity(); // temperature);
+					rawHumidity = hum;
 
 					if (watchTheProbe && !wateringWasStopped) {
 						if (justStoppedWatering.get()) {
@@ -748,6 +755,18 @@ public class MCP3008 implements Probe {
 							}
 						}
 						justStoppedWatering.set(false);
+					} else if (wateringWasStopped) { // See if watering can be resumed (hum above threshold)?
+						if (hum > humidityThreshold) {
+							// Tentative watering resume.
+							wateringWasStopped = false;
+							if (emailVerbose && emailSender != null) { // Then tell them all is good
+								String messContent = "Resuming probe watch, humidity came back up...";
+								emailSender.send(emailSender.getEmailDest().split(","),
+										"⚠️ " + emailSender.getEventSubject(),
+										"<h1>Resuming watering</h1>" + messContent,
+										"text/html");
+							}
+						}
 					}
 
 					// Low Pass Filter

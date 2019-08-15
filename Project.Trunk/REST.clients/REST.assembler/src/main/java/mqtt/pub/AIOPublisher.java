@@ -107,7 +107,7 @@ public class AIOPublisher {
 				}
 			}
 			System.out.println("Bye...");
-		}));
+		}, "Shutdown Hook"));
 
 		publisher.start();
 	}

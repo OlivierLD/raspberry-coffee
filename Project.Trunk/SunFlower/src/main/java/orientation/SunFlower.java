@@ -1554,7 +1554,7 @@ public class SunFlower implements RESTRequestManager {
 					AnsiConsole.systemUninstall();
 				}
 				System.out.println("Finished!");
-			}));
+			}, "Shutdown Hook"));
 		} catch (Throwable ex) {
 			System.err.println(">>> Panel Orienter... <<< BAM!");
 			ex.printStackTrace();

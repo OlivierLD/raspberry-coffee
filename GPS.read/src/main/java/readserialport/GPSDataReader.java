@@ -73,23 +73,21 @@ public class GPSDataReader {
 		});
 
 		final Thread t = Thread.currentThread();
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				System.out.println("\nShutting down...");
-				try {
-					if (serial.isOpen()) {
-						serial.close();
-						System.out.println("Serial port closed");
-					}
-					synchronized (t) {
-						t.notify();
-						System.out.println("Thread notified");
-					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println("\nShutting down...");
+			try {
+				if (serial.isOpen()) {
+					serial.close();
+					System.out.println("Serial port closed");
 				}
+				synchronized (t) {
+					t.notify();
+					System.out.println("Thread notified");
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
-		});
+		}, "Shutdown Hook"));
 		try {
 			System.out.println("Opening port [" + port + "]");
 			boolean open = false;

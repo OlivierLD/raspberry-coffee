@@ -51,9 +51,9 @@ public class SwingLedPanel
 		}
 	}
 
-	Consumer<KeyEvent> onKeyPressed = (keyEvent) -> {};
-	Consumer<KeyEvent> onKeyReleased = (keyEvent) -> {};
-	Consumer<KeyEvent> onKeyTyped = (keyEvent) -> {};
+	Consumer<KeyEvent> onKeyPressed = (keyEvent) -> {};   // Empty, NoOp
+	Consumer<KeyEvent> onKeyReleased = (keyEvent) -> {};  // Empty, NoOp
+	Consumer<KeyEvent> onKeyTyped = (keyEvent) -> {};     // Empty, NoOp
 
 	private ScreenDefinition config;
 	// Default SSD1306

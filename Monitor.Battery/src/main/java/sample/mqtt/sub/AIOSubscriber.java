@@ -63,7 +63,7 @@ public class AIOSubscriber {
 				}
 			}
 			System.out.println("Bye.");
-		}));
+		}, "Shutdown Hook"));
 
 		subscriber.start();
 	}

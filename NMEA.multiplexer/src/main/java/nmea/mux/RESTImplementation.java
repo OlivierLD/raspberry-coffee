@@ -1006,7 +1006,7 @@ public class RESTImplementation {
 					try {
 						NMEAClient tcpClient = new TCPClient(tcpJson.getDeviceFilters(), tcpJson.getSentenceFilters(), this.mux);
 						tcpClient.initClient();
-						tcpClient.setReader(new TCPReader(tcpClient.getListeners(), tcpJson.getHostname(), tcpJson.getPort()));
+						tcpClient.setReader(new TCPReader("MUX-TCPReader", tcpClient.getListeners(), tcpJson.getHostname(), tcpJson.getPort()));
 						nmeaDataClients.add(tcpClient);
 						tcpClient.startWorking();
 						String content = new Gson().toJson(tcpClient.getBean());
@@ -1033,7 +1033,7 @@ public class RESTImplementation {
 					try {
 						NMEAClient serialClient = new SerialClient(serialJson.getDeviceFilters(), serialJson.getSentenceFilters(), this.mux);
 						serialClient.initClient();
-						serialClient.setReader(new SerialReader(serialClient.getListeners(), serialJson.getPort(), serialJson.getBr()));
+						serialClient.setReader(new SerialReader("MUX-SerialReader", serialClient.getListeners(), serialJson.getPort(), serialJson.getBr()));
 						nmeaDataClients.add(serialClient);
 						serialClient.startWorking();
 						String content = new Gson().toJson(serialClient.getBean());
@@ -1061,7 +1061,7 @@ public class RESTImplementation {
 					try {
 						NMEAClient wsClient = new WebSocketClient(wsJson.getDeviceFilters(), wsJson.getSentenceFilters(), this.mux);
 						wsClient.initClient();
-						wsClient.setReader(new WebSocketReader(wsClient.getListeners(), wsJson.getWsUri()));
+						wsClient.setReader(new WebSocketReader("MUX-WSReader", wsClient.getListeners(), wsJson.getWsUri()));
 						nmeaDataClients.add(wsClient);
 						wsClient.startWorking();
 						String content = new Gson().toJson(wsClient.getBean());
@@ -1089,7 +1089,7 @@ public class RESTImplementation {
 					try {
 						NMEAClient fileClient = new DataFileClient(fileJson.getDeviceFilters(), fileJson.getSentenceFilters(), this.mux);
 						fileClient.initClient();
-						fileClient.setReader(new DataFileReader(fileClient.getListeners(), fileJson.getFile(), fileJson.getPause()));
+						fileClient.setReader(new DataFileReader("MUX-FileReader", fileClient.getListeners(), fileJson.getFile(), fileJson.getPause()));
 						nmeaDataClients.add(fileClient);
 						fileClient.startWorking();
 						String content = new Gson().toJson(fileClient.getBean());
@@ -1115,7 +1115,7 @@ public class RESTImplementation {
 					try {
 						NMEAClient bmp180Client = new BMP180Client(bmp180Json.getDeviceFilters(), bmp180Json.getSentenceFilters(), this.mux);
 						bmp180Client.initClient();
-						bmp180Client.setReader(new BMP180Reader(bmp180Client.getListeners()));
+						bmp180Client.setReader(new BMP180Reader("MUX-BMP180Reader", bmp180Client.getListeners()));
 						// To do BEFORE startWorking and AFTER setReader
 						if (bmp180Json.getDevicePrefix() != null) {
 							if (bmp180Json.getDevicePrefix().trim().length() != 2) {
@@ -1159,7 +1159,7 @@ public class RESTImplementation {
 							((LSM303Client) lsm303Client).setReadFrequency(lsm303Json.getReadFrequency());
 						}
 						lsm303Client.initClient();
-						lsm303Client.setReader(new LSM303Reader(lsm303Client.getListeners()));
+						lsm303Client.setReader(new LSM303Reader("MUX-LSM303Reader", lsm303Client.getListeners()));
 						// To do BEFORE startWorking and AFTER setReader
 						if (lsm303Json.getDevicePrefix() != null) {
 							if (lsm303Json.getDevicePrefix().trim().length() != 2) {
@@ -1197,7 +1197,7 @@ public class RESTImplementation {
 					try {
 						NMEAClient zdaClient = new ZDAClient(zdaJson.getDeviceFilters(), zdaJson.getSentenceFilters(), this.mux);
 						zdaClient.initClient();
-						zdaClient.setReader(new ZDAReader(zdaClient.getListeners()));
+						zdaClient.setReader(new ZDAReader("MUX-ZDAReader", zdaClient.getListeners()));
 						// To do BEFORE startWorking and AFTER setReader
 						if (zdaJson.getDevicePrefix() != null) {
 							if (zdaJson.getDevicePrefix().trim().length() != 2) {
@@ -1235,7 +1235,7 @@ public class RESTImplementation {
 					try {
 						NMEAClient bme280Client = new BME280Client(bme280Json.getDeviceFilters(), bme280Json.getSentenceFilters(), this.mux);
 						bme280Client.initClient();
-						bme280Client.setReader(new BME280Reader(bme280Client.getListeners()));
+						bme280Client.setReader(new BME280Reader("MUX-BME280Reader", bme280Client.getListeners()));
 						// To do BEFORE startWorking and AFTER setReader
 						if (bme280Json.getDevicePrefix() != null) {
 							if (bme280Json.getDevicePrefix().trim().length() != 2) {
@@ -1273,7 +1273,7 @@ public class RESTImplementation {
 					try {
 						NMEAClient htu21dfClient = new HTU21DFClient(htu21dfJson.getDeviceFilters(), htu21dfJson.getSentenceFilters(), this.mux);
 						htu21dfClient.initClient();
-						htu21dfClient.setReader(new HTU21DFReader(htu21dfClient.getListeners()));
+						htu21dfClient.setReader(new HTU21DFReader("MUX-HTU21DFReader", htu21dfClient.getListeners()));
 						// To do BEFORE startWorking and AFTER setReader
 						if (htu21dfJson.getDevicePrefix() != null) {
 							if (htu21dfJson.getDevicePrefix().trim().length() != 2) {
@@ -1311,7 +1311,7 @@ public class RESTImplementation {
 					try {
 						NMEAClient rndClient = new RandomClient(rndJson.getDeviceFilters(), rndJson.getSentenceFilters(), this.mux);
 						rndClient.initClient();
-						rndClient.setReader(new RandomReader(rndClient.getListeners()));
+						rndClient.setReader(new RandomReader("MUX-RndReader", rndClient.getListeners()));
 						nmeaDataClients.add(rndClient);
 						rndClient.startWorking();
 						String content = new Gson().toJson(rndClient.getBean());
@@ -1386,7 +1386,7 @@ public class RESTImplementation {
 								NMEAReader reader = null;
 								try {
 									// Cannot invoke declared constructor with a generic type... :(
-									reader = (NMEAReader) Class.forName(readerClass).getDeclaredConstructor(List.class).newInstance(nmeaClient.getListeners());
+									reader = (NMEAReader) Class.forName(readerClass).getDeclaredConstructor(String.class, List.class).newInstance("MUX-" + readerClass, nmeaClient.getListeners());
 								} catch (Exception ex) {
 									response.setStatus(HTTPServer.Response.BAD_REQUEST);
 									RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());

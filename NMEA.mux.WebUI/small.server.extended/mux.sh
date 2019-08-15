@@ -85,8 +85,11 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dprocess.on.start=$PROCESS_ON_START"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dno.ais=false" # Accept AIS Strings
 JAVA_OPTIONS="$JAVA_OPTIONS -Dcalculate.solar.with.eot=true"
+# Useful for data replay:
+JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GGA.date.time=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GLL.date.time=true"
 #
-JAVA_OPTS="$JAVA_OPTS -DdeltaT=69.2201" # 01-Jan-2019
+JAVA_OPTIONS="$JAVA_OPTIONS -DdeltaT=69.2201" # 01-Jan-2019
 # For the small USB GPS
 # JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.date.offset=7168"
 #

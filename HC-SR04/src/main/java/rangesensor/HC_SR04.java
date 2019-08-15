@@ -132,7 +132,7 @@ public class HC_SR04 {
 			System.out.println("\nOops!");
 			hcSR04.stop();
 			System.out.println("Exiting nicely.");
-		}));
+		}, "Shutdown Hook"));
 
 		System.out.println(">>> Waiting for the sensor to be ready (2s)...");
 		TimeUtil.delay(2_000L);

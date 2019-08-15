@@ -19,7 +19,10 @@ public class WebSocketReader extends NMEAReader {
 	private String wsUri;
 
 	public WebSocketReader(List<NMEAListener> al, String wsUri) {
-		super(al);
+		this(null, al, wsUri);
+	}
+	public WebSocketReader(String threadName, List<NMEAListener> al, String wsUri) {
+		super(threadName, al);
 		this.wsUri = wsUri;
 		try {
 			this.wsClient = new WebSocketClient(new URI(wsUri)) {

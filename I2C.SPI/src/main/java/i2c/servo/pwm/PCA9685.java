@@ -180,7 +180,7 @@ public class PCA9685 {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, 0); // Stop the standard one
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
-		}));
+		}, "Shutdown Hook"));
 
 		for (int i = 0; true && i < 5; i++) {
 			System.out.println("i=" + i);
@@ -322,7 +322,7 @@ public class PCA9685 {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, 0); // Stop the standard one
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
-		}));
+		}, "Shutdown Hook"));
 
 		System.out.println(String.format("min: %d, max: %d", servoMin, servoMax));
 		for (int i = 0; true && i < 5; i++) {

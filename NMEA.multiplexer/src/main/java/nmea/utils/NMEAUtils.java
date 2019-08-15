@@ -69,6 +69,7 @@ public class NMEAUtils {
 		computeAndSendValuesToCache(cache, false);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void computeAndSendValuesToCache(NMEADataCache cache, boolean isHDTPresent) {
 		double heading = 0d;
 		if (!isHDTPresent) {

@@ -21,7 +21,7 @@ public class SampleL3GD20ReadRawData {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				go = false;
 				System.out.println("\nBye.");
-			}));
+			}, "Shutdown Hook"));
 //  sensor.init();
 		sensor.calibrateZ();
 

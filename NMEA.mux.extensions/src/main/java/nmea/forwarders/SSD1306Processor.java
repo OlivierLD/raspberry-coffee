@@ -112,7 +112,7 @@ public class SSD1306Processor implements Forwarder {
 		private double hum;
 	}
 
-	public enum SCREEN_SIZE {
+	public static enum SCREEN_SIZE {
 		_128x32,
 		_128x64
 	};

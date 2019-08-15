@@ -20,7 +20,7 @@ public class ComparatorSample
       adc.stopContinuousConversion();
       try { Thread.sleep(250L); } catch (Exception ex) {}
       setGo(false);
-    }));
+    }, "Shutdown Hook"));
     adc.startSingleEndedComparator(ADS1x15.Channels.CHANNEL_2, 200, 100, 1024, 250);
     while (go)
     {

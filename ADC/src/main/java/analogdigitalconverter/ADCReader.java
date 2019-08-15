@@ -151,7 +151,7 @@ public class ADCReader {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("Shutting down.");
 			go = false;
-		}));
+		}, "Shutdown Hook"));
 		int lastRead = 0;
 		int tolerance = 1; // This is used for damping...
 		System.out.println("Reading.");

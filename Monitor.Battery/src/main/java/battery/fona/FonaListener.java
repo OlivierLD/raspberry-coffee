@@ -111,7 +111,7 @@ public class FonaListener implements FONAClient {
 					me.notify();
 				}
 				System.out.println("Program stopped by user's request.");
-			}));
+			}, "Shutdown Hook"));
 
 			synchronized (me) {
 				me.wait();

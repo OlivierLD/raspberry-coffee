@@ -96,7 +96,7 @@ public class WeatherStationWSClient extends NMEAClient {
 			}
 		});
 		nmeaClient.initClient();
-		nmeaClient.setReader(new WeatherStationWSReader(nmeaClient.getListeners(), serverUri));
+		nmeaClient.setReader(new WeatherStationWSReader("WeatherStationWSReader", nmeaClient.getListeners(), serverUri));
 		nmeaClient.startWorking();
 	}
 }

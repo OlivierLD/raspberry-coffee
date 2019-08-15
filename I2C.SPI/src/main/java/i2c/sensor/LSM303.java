@@ -599,7 +599,7 @@ public class LSM303 {
 						System.err.println(ie.getMessage());
 					}
 				}
-			}));
+			}, "Shutdown Hook"));
 			sensor.startReading();
 		} catch (I2CFactory.UnsupportedBusNumberException ubne) {
 			System.err.println("Bad bus. Not on a Raspberry Pi?");

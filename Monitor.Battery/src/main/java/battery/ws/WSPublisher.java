@@ -140,13 +140,13 @@ public class WSPublisher {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-		});
+		}, "Battery Thread");
 		batteryThread.start();
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			publisher.stop();
 			System.out.println("Bye...");
-		}));
+		}, "Shutdown Hook"));
 		publisher.start();
 	}
 }

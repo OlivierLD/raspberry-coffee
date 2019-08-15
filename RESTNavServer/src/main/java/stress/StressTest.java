@@ -35,6 +35,6 @@ public class StressTest {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("Stop requested");
 			go = false;
-		}));
+		}, "Shutdown Hook"));
 	}
 }
