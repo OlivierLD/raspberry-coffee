@@ -359,7 +359,7 @@ public class ServerWithKewlButtons extends NavServer {
 		addresses.forEach(pair -> {
 			System.out.println(String.format("%s -> %s", pair[0], pair[1]));
 			// for tests
-			if (pair[1].startsWith("192.168.")) {
+			if (pair[1].startsWith("192.168.")) { // ...a bit tough.
 				sb.append(pair[1]);
 			}
 		});

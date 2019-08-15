@@ -1,6 +1,10 @@
 ## fnProject (WIP)
 
+fnProject on Raspberry Pi: <https://medium.com/@varpa89/run-fn-project-on-your-raspberry-pi-fa17f5067b47>
+
 The doc to get started is [here](https://fnproject.io/tutorials/JavaFDKIntroduction/)
+
+- Fn Flows doc at <https://github.com/fnproject/fdk-java/blob/master/docs/FnFlowsUserGuide.md>
 
 ```
  $ fn start

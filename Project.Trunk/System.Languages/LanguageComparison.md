@@ -268,7 +268,11 @@ To run the system resolution, type
  $ cd src/main/ruby
  $ irb matrix.rb
 ```
-
+or without the REPL:
+```
+ $ cd src/main/ruby
+ $ ruby matrix.rb
+```
 #### Go
 Sources are in [`src/main/go/system.go`](./src/main/go).
 

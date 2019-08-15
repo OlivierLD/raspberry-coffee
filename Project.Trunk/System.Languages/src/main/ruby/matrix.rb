@@ -4,6 +4,9 @@
 # or
 # $ irb matrix.rb
 #
+# Just run:
+# $ ruby matrix.rb
+#
 matrix = [
     [12, 13, 14],
     [1.345, -654, 0.001],
