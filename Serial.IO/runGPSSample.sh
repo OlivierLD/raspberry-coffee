@@ -7,8 +7,9 @@ CP=$CP:/usr/share/java/RXTXcomm.jar
 echo Make sure the GPS is connected through its USB socket.
 #
 # SERIAL_PORT=/dev/ttyUSB0 # RPi
+SERIAL_PORT=/dev/ttyS80 # RPi
 # SERIAL_PORT=/dev/tty.Bluetooth-Incoming-Port # Mac
-SERIAL_PORT=/dev/tty.usbmodem14201 
+# SERIAL_PORT=/dev/tty.usbmodem14201 
 # SERIAL_PORT=/dev/tty.usbserial # Mac
 BAUD_RATE=4800
 #
