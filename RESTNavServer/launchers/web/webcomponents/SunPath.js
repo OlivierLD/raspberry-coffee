@@ -599,12 +599,19 @@ class SunPath extends HTMLElement {
 			context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
 			context.stroke();
 			context.closePath();
-			// Up to the Sun
+			// Up/Down to the Sun
 			context.beginPath();
 			context.moveTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
-			for (let alt = 0; alt <= this.sunHe; alt++) {
-				panelPoint = this.rotateBothWays(alt + this.rotation, this.sunZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
-				context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+			if (this.sunHe >= 0) {
+				for (let alt = 0; alt <= this.sunHe; alt++) {
+					panelPoint = this.rotateBothWays(alt + this.rotation, this.sunZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+					context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+				}
+			} else {
+				for (let alt = 0; alt >= this.sunHe; alt--) {
+					panelPoint = this.rotateBothWays(alt + this.rotation, this.sunZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+					context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+				}
 			}
 			panelPoint = this.rotateBothWays(this.sunHe + this.rotation, this.sunZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
 			context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
@@ -720,12 +727,19 @@ class SunPath extends HTMLElement {
 			context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
 			context.stroke();
 			context.closePath();
-			// Up to the Moon
+			// Up/Down to the Moon
 			context.beginPath();
 			context.moveTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
-			for (let alt = 0; alt <= this.moonHe; alt++) {
-				panelPoint = this.rotateBothWays(alt + this.rotation, this.moonZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
-				context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+			if (this.moonHe > 0) {
+				for (let alt = 0; alt <= this.moonHe; alt++) {
+					panelPoint = this.rotateBothWays(alt + this.rotation, this.moonZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+					context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+				}
+			} else {
+				for (let alt = 0; alt >= this.moonHe; alt--) {
+					panelPoint = this.rotateBothWays(alt + this.rotation, this.moonZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+					context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+				}
 			}
 			panelPoint = this.rotateBothWays(this.moonHe + this.rotation, this.moonZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
 			context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
