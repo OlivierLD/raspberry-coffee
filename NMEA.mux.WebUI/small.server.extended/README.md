@@ -1,7 +1,7 @@
 # WIP, Full NavServer running on a Raspberry Pi Zero W
 **Features**:
 - 2 Adafruit Bonnets
-    - One with a 132x64 oled screen, 2 push buttons, 1 switch
+    - One with a 132x64 oled screen, 2 push buttons, 1 switch for the power supply
     - One with the Adafruit Ultimate GPS and a BME280 (Humidity, Temperature, Atmospheric Pressure)
 - LiPo battery
 - Buttons can be used to scroll through the different displays
