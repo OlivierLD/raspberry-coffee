@@ -33,7 +33,7 @@ final static PushButtonMaster pbmOne = new PushButtonMaster();
 final static PushButtonMaster pbmTwo = new PushButtonMaster();
 ```
 
-> Note: the code to add here is just here for the buttons management. There is _absolutely no code_
+> Note: the code to add here is just there for the buttons management. There is _absolutely no code_
 > to add for the `BMP280`, the GPS, or the `SSD1306` screen. It is all taken care of by the properties files.
 
 > See `nmea.mux.gps.log.properties` to know how to reference those devices, and 
