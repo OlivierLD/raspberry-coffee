@@ -1,4 +1,4 @@
-package oliv.annotations;
+package oliv.annotations.basic;
 
 //import java.lang.annotation.Annotation;
 

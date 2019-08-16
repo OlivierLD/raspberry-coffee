@@ -1,6 +1,4 @@
-package oliv.annotations;
-
-import java.util.Date;
+package oliv.annotations.basic;
 
 @UserInfo (
 		priority = UserInfo.Priority.HIGH,
