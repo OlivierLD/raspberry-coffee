@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD) // Class level
+@Target(ElementType.METHOD) // Method level
 public @interface VerboseInfo {
 	boolean verbose() default false;
 }

@@ -21,7 +21,9 @@ public class AnnotationRunner {
 		for (Method method : obj.getDeclaredMethods()) {
 			if (method.isAnnotationPresent(VerboseInfo.class)) {
 				VerboseInfo verboseInfo = method.getAnnotation(VerboseInfo.class);
-				System.out.println(String.format("Method %s, verbose: %s", method.getName(), verboseInfo.verbose()));
+				System.out.println(String.format("Method %s, verbose: %s.", method.getName(), verboseInfo.verbose()));
+			} else {
+				System.out.println(String.format("Method %s is not annotated.", method.getName()));
 			}
 		}
 	}

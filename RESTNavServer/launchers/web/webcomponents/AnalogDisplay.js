@@ -1,6 +1,12 @@
 const analogVerbose = false;
 const ANALOG_TAG_NAME = 'analog-display';
 
+if (Math.toRadians === undefined) {
+	Math.toRadians = (deg) => {
+		return deg * (Math.PI / 180);
+	};
+}
+
 /*
 * See custom properties in CSS.
 * =============================

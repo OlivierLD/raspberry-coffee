@@ -113,16 +113,18 @@
 		let incTwd = 1.0;
 		let incHdg = 1.0;
 
-		let justDemo = false;
+		let justDemo = true;
 
 		window.onload = () => {
 			displayBSP = new AnalogDisplay('bspCanvas', 123, 15, 1, 0.1, true, 40); // 123: ((250/2) - 2)
 			displayBSP.setValue(bsp);
 			displayBSP.setLabel('BSP');
+			displayBSP.repaint();
 
 			displayTWS = new AnalogDisplay('twsCanvas', 123, 65, 5, 1, true, 40); // 123: ((250/2) - 2)
 			displayTWS.setValue(tws);
 			displayTWS.setLabel('TWS');
+			displayTWS.repaint();
 
 			displayTWD = new Direction('twdCanvas', 123, 45, 5, true, true); // 123: ((250/2) - 2)
 			displayTWD.setValue(twd);
@@ -137,10 +139,12 @@
 				context.strokeStyle = 'orange';
 				context.stroke();
 			});
+			displayTWD.repaint();
 
 			displayHDG = new CircularCompass('hdgCanvas', 123, 45, 1, true); // 123: ((250/2) - 2)
 			displayHDG.setValue(twd);
 			displayHDG.setLabel('HDG');
+			displayHDG.repaint();
 
 			if (justDemo) {
 				window.setInterval(() => { // Move the hand
@@ -209,19 +213,19 @@
 		<div class="slideshow-container">
 
 			<div class="the-slides fade">
-				<canvas id="bspCanvas" width="250" height="250" title="Whatever value..."></canvas>
+				<canvas id="bspCanvas" width="250" height="250" title="BSP"></canvas>
 			</div>
 
 			<div class="the-slides fade">
-				<canvas id="twsCanvas" width="250" height="250" title="Whatever value..."></canvas>
+				<canvas id="twsCanvas" width="250" height="250" title="TWS"></canvas>
 			</div>
 
 			<div class="the-slides fade">
-				<canvas id="twdCanvas" width="250" height="250" title="Whatever value..."></canvas>
+				<canvas id="twdCanvas" width="250" height="250" title="TWD"></canvas>
 			</div>
 
 			<div class="the-slides fade">
-				<canvas id="hdgCanvas" width="250" height="250" title="Whatever value..."></canvas>
+				<canvas id="hdgCanvas" width="250" height="250" title="HDG"></canvas>
 			</div>
 
 		</div>

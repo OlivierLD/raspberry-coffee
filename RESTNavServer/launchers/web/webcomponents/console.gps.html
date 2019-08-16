@@ -223,7 +223,7 @@
 			setRawNMEA(val.data);
 		});
 		events.subscribe('gps-time', (val) => {
-			console.log(">> GPS-Time: ", val);
+			// console.log(">> GPS-Time: ", val);
 			// val.format("Y-M-d H:i:s")
 			let time = new Date(val).format("H:i:s");
 			setData('analog-watch-01', time);

@@ -61,6 +61,8 @@ class SunPath extends HTMLElement {
 
 		this.sunHe = undefined;
 		this.sunZ = undefined;
+		this.moonHe = undefined;
+		this.moonZ = undefined;
 
 		this.userPosition = undefined;
 		this._sunRise = undefined;
@@ -181,6 +183,11 @@ class SunPath extends HTMLElement {
 	set sunPos(sunPos) {
 		this.sunHe = sunPos.he;
 		this.sunZ = sunPos.z;
+	}
+
+	set moonPos(moonPos) {
+		this.moonHe = moonPos.he;
+		this.moonZ = moonPos.z;
 	}
 
 	set userPos(position) { // { latitude: xxx, longitude: xxx }
@@ -700,6 +707,59 @@ class SunPath extends HTMLElement {
 				context.fillText(str, (this._width / 2) - (metrics.width / 2), this._height - 2);
 			}
 
+			context.restore();
+		}
+
+		// Current Moon Pos.
+		if (this.moonHe !== undefined && this.moonZ !== undefined) {
+			context.strokeStyle = 'white'; // TODO Moon color this.sunPathColorConfig.sunColor;
+			panelPoint = this.rotateBothWays(this.rotation, this.moonZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset)); // Horizon under the Moon
+			// From center to horizon
+			context.beginPath();
+			context.moveTo(center.x, center.y);
+			context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+			context.stroke();
+			context.closePath();
+			// Up to the Moon
+			context.beginPath();
+			context.moveTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+			for (let alt = 0; alt <= this.moonHe; alt++) {
+				panelPoint = this.rotateBothWays(alt + this.rotation, this.moonZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+				context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+			}
+			panelPoint = this.rotateBothWays(this.moonHe + this.rotation, this.moonZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+			context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+			context.stroke();
+			context.closePath();
+			// Draw the Moon
+			context.fillStyle = 'rgba(255, 255, 255, 0.75)'; // 'white'; // TODO this.sunPathColorConfig.sunColor;
+			// if (this.sunHe > -5 && this.sunHe < 5) {
+			// 	context.fillStyle = 'rgba(255,0,0,0.5)';
+			// } else if (this.sunHe < -5) {
+			// 	context.fillStyle = 'rgba(255,255,0,0.3)';
+			// }
+			context.beginPath();
+			context.arc(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius), 8, 2 * Math.PI, false);
+			context.fill();
+			context.closePath();
+			// Dotted line to center
+			context.fillStyle = 'white'; // TODO this.sunPathColorConfig.sunColor;
+			context.save();
+			context.setLineDash([5, 3]);
+			context.beginPath();
+			context.moveTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+			context.lineTo(center.x, center.y);
+			context.stroke();
+			context.closePath();
+			context.restore();
+			// Display values
+			context.save();
+			fontSize = 14;
+			context.font = "" + Math.round(fontSize) + "px " + this.sunPathColorConfig.font;
+			let strAlt = Utilities.decToSex(this.moonHe);
+			let strZ = Utilities.decToSex(this.moonZ);
+			context.fillText("Elevation:" + strAlt, 10, 60);
+			context.fillText("Azimuth:" + strZ, 10, 80);
 			context.restore();
 		}
 	}

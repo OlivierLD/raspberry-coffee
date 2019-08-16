@@ -422,6 +422,16 @@ function astroCallback(data) {
 
 	sunAltitude = data.sunObs.alt; // For the doBefore method
 
+	let moonPos = {};
+	try {
+		moonPos = {
+			he: data.moonObs.alt,
+			z: data.moonObs.z
+		};
+	} catch (err) {
+		// missing
+	}
+
 	let dataTable =
 			'<table border="1" class="raw-table">' + '<tr><th>Body</th><th>D</th><th>GHA</th><th>LHA</th><th>Elev</th><th>Z</th></tr>' +
 			'<tr><td align="left">' + bodyName("sun") + '</td><td>' + worldMap.decToSex(data.sun.decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.sun.gha) + '</td><td align="right">' + worldMap.decToSex(sunLHA) + '</td><td align="right">' +	worldMap.decToSex(data.sunObs.alt) + '</td><td align="right">' + worldMap.decToSex(data.sunObs.z) + '</td></tr>' +
@@ -500,6 +510,9 @@ function astroCallback(data) {
 	// console.log("Transit:", tPass);
 	let now = new Date();
 	document.getElementById('sun-path-01').now = { time: now.getTime() };
+	if (moonPos !== {}) {
+		document.getElementById('sun-path-01').moonPos = moonPos;
+	}
 
 	worldMap.setAstronomicalData(data);
 	worldMap.repaint();
