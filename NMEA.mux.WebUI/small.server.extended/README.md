@@ -2,7 +2,7 @@
 **Features**:
 - 2 Adafruit Bonnets
     - One with a 132x64 oled screen, 2 push buttons, 1 switch
-    - One with the Adafruit Ultimate GPS
+    - One with the Adafruit Ultimate GPS and a BME280 (Humidity, Temperature, Atmospheric Pressure)
 - LiPo battery
 - Buttons can be used to scroll through the different displays
     - also features a "local" menu (to be browsed with the buttons) that can execute different tasks, easy to customize like
@@ -32,6 +32,12 @@ Implements `simple-click`, `double-click`, and `long-click`.
 final static PushButtonMaster pbmOne = new PushButtonMaster();
 final static PushButtonMaster pbmTwo = new PushButtonMaster();
 ```
+
+> Note: the code to add here is just here for the buttons management. There is _absolutely no code_
+> to add for the `BMP280`, the GPS, or the SSD1306` screen. It is all taken care of by the properties files.
+
+> See `nmea.mux.gps.log.properties` to know how to reference those devices, and 
+> `ssd1306.properties` to see how to choose the data to display on the oled screen. 
 
 This is built just like the other examples in this module, just run
 ```
