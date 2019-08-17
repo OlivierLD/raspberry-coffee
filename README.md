@@ -120,7 +120,34 @@ $ which wget
         - Then the command to use to reach Jupyter would show up in the console.
     - _Note:_ Training a Neural Network is a very demanding operation, that requires computing resources not granted on a Raspberry Pi. Installing Keras on a Raspberry Pi might not be relevant. OpenCV, though, would be an option to consider. Google it ;).
 
-##### Connect to the Raspberry Pi from your laptop, using USB
+### Extra softs
+- Docker
+```
+ $  curl -sSL https://get.docker.com | sh
+```
+- Go    
+```
+ $ wget https://dl.google.com/go/go1.9.2.linux-armv6l.tar.gz
+ $ sudo tar -C /usr/local -xzf go1.9.2.linux-armv6l.tar.gz
+ $ export PATH=$PATH:/usr/local/go/bin
+ $ go version
+ go version go1.9.2 linux/arm
+```
+- dep - Package manager for Go
+```
+ $ go get -u github.com/golang/dep/cmd/dep
+ $ sudo cp ~/go/bin/dep /usr/local/bin/
+ $ dep version
+ dep:
+  version : devel
+  build date :
+  git hash :
+   go version : go1.9.2
+  go compiler : gc
+  platform : linux/arm
+```    
+
+##### Connect to the Raspberry Pi from your laptop, using a USB cable
 It's easy, and convenient. See [here](https://www.thepolyglotdeveloper.com/2016/06/connect-raspberry-pi-zero-usb-cable-ssh/).
 
 To connect to a Raspberry Pi Zero, all you need is a USB cable [A-to-microB](https://www.adafruit.com/product/592).

@@ -51,9 +51,11 @@ public class ServerRunner {
 
 	public static void main(String... args) {
 		Class<SampleServerDefinition> server = SampleServerDefinition.class;
+		String root = "/";
 		// Class annotation
-		if (server.isAnnotationPresent(OperationDefinition.class)) {
-			//
+		if (server.isAnnotationPresent(RootPath.class)) {
+			RootPath rootPath = server.getAnnotation(RootPath.class);
+			root = rootPath.path();
 		}
 
 		List<Operation> operations = new ArrayList<>();
@@ -61,10 +63,10 @@ public class ServerRunner {
 		for (Method method : server.getDeclaredMethods()) {
 			if (method.isAnnotationPresent(OperationDefinition.class)) {
 				OperationDefinition operation = method.getAnnotation(OperationDefinition.class);
-				System.out.println(String.format("Method %s, used for: %s %s, %s", method.getName(), operation.verb(), operation.path(), operation.description()));
+				System.out.println(String.format("Method %s, used for: %s %s, %s", method.getName(), operation.verb(), root + operation.path(), operation.description()));
 				operations.add(new Operation(
 						operation.verb().toString(),
-						operation.path(),
+						root + operation.path(),
 						request -> {  // Maybe there is a better way...
 							try {
 								System.out.println(String.format("Invoking %s, with a %s", method.getName(), request.getClass().getName()));
