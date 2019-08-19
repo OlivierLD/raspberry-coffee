@@ -1,12 +1,15 @@
 #!/bin/bash
-# Math REST server
 #
 echo -e "----------------------------"
 echo -e "Usage is $0 [-px|--proxy] [-p:|--port:2345] "
 echo -e "     -px or --proxy means with a proxy"
 echo -e "----------------------------"
 #
-echo -e "Starting the Math Rest Server"
+# Test: Using GraalVM:
+export JAVA_HOME=~/graalvm-ce-19.1.1/Contents/Home
+export PATH=$JAVA_HOME/bin:$PATH
+#
+echo -e "Starting the Rest Server"
 USE_PROXY=false
 HTTP_PORT=2345
 #

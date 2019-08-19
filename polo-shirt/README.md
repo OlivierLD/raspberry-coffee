@@ -1,4 +1,4 @@
-## Feasibility test
+## Polo Shirt - Feasibility test
 An annotated REST server, like JAX-RS (Jersey -> Polo).
 
 <table>
@@ -15,3 +15,6 @@ An annotated REST server, like JAX-RS (Jersey -> Polo).
 </td>
 </tr>
 </table>
+
+#### TODO
+Custom Swagger generator?
