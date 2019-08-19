@@ -1,0 +1,84 @@
+swagger: '2.0'
+info:
+  title: Polo shirt example
+  description: |
+    Not much to learn here
+  version: "0.0.2"
+host: localhost:2345
+schemes:
+  - http
+basePath: /
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /oplist:
+    get:
+      description: |
+        Returns the list of all the available operations.
+      operationId: getOperationList
+      tags:
+        - Operations
+      responses:
+        200:
+          description: "Read successful"
+          schema:
+            $ref: "#/definitions/operation-list"
+
+  /top-root/greeting:
+    get:
+      description: |
+        With one parameter
+      operationId: greet
+      parameters:
+        - name: name
+          type: string
+          in: query
+      tags:
+        - Greeting
+      responses:
+        200:
+          description: The final greeting
+          type: string
+
+definitions:
+
+  greeting-message:
+    type: object
+    description: Result of the greeting process
+    properties:
+      message:
+        type: string
+        description: The final greeting
+
+  greeting-request:
+    type: object
+    description: Name and Greeting
+    properties:
+      name:
+        type: string
+        description: the name to greet
+      salutation:
+        type: string
+        description: the way to greet
+
+  operation:
+    type: object
+    description: The REST operation
+    properties:
+      verb:
+        type: string
+        description: GET, POST, PUT, DELETE
+      path:
+        type: string
+        description: The path of the Request
+      description:
+        type: string
+        description: The description
+
+  operation-list:
+    type: array
+    items:
+      $ref: '#/definitions/operation'
+

@@ -15,3 +15,5 @@ Custom Swagger generator?
 - [Swagger Codegen](https://swagger.io/tools/swagger-codegen/)
 - [Customizing the generator](https://github.com/swagger-api/swagger-codegen#customizing-the-generator)
 
+<https://symfony.com/doc/current/components/yaml/yaml_format.html>
+<https://swagger.io/docs/specification/data-models/data-types/>
