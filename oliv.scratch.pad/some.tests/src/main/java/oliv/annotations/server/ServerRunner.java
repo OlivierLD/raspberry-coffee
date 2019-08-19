@@ -1,5 +1,6 @@
 package oliv.annotations.server;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ public class ServerRunner {
 	public static class Request {
 	}
 	public static class Response {
+		Object payload;
 	}
 
 	public static class Operation {
@@ -64,20 +66,53 @@ public class ServerRunner {
 			if (method.isAnnotationPresent(OperationDefinition.class)) {
 				OperationDefinition operation = method.getAnnotation(OperationDefinition.class);
 				System.out.println(String.format("Method %s, used for: %s %s, %s", method.getName(), operation.verb(), root + operation.path(), operation.description()));
+				Class<?> returnType = method.getReturnType();
+				Class<?>[] parameterTypes = method.getParameterTypes();
+				for (Class<?> cls : parameterTypes) {
+					System.out.println(String.format("- type %s", cls.getName()));
+				}
+				Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+				if (parameterAnnotations != null && parameterAnnotations.length > 0) {
+					for (int prmIdx = 0; prmIdx < parameterAnnotations.length; prmIdx++) {
+						if (parameterAnnotations[prmIdx] != null && parameterAnnotations[prmIdx].length > 0) {
+							String paramAnnotation = "";
+							if (parameterAnnotations[prmIdx][0] instanceof QueryParam) {
+								paramAnnotation = QueryParam.class.getName();
+							} else if (parameterAnnotations[prmIdx][0] instanceof BodyParam) {
+								paramAnnotation = BodyParam.class.getName();
+							} else if (parameterAnnotations[prmIdx][0] instanceof PathParam) {
+								paramAnnotation = PathParam.class.getName();
+							}
+							System.out.println(String.format(">> %s Annotated parameter, with %s",
+									method.getParameterTypes()[prmIdx].getName(),
+									paramAnnotation)); // First annotation only
+						}
+					}
+				}
+
+
 				operations.add(new Operation(
 						operation.verb().toString(),
 						root + operation.path(),
 						request -> {  // Maybe there is a better way...
 							try {
 								System.out.println(String.format("Invoking %s, with a %s", method.getName(), request.getClass().getName()));
-								Class<?> returnType = method.getReturnType();
 								System.out.println(String.format("%s, returns a %s", method.getName(), returnType.getName()));
-								Class<?>[] parameterTypes = method.getParameterTypes();
 								System.out.println(String.format("Invoking %s, expects %d prms", method.getName(), parameterTypes.length));
-								for (Class<?> cls : parameterTypes) {
-									System.out.println(String.format("- type %s", cls.getName()));
+								Object[] prms = { request };
+								if (parameterTypes.length == 2) { // Then we assume it is the sayHello method (this is just for this example).
+									prms = new String[] { "Machin", "Salut" };
 								}
-								return (Response)method.invoke(server, request);
+								Object response = method.invoke(server, prms); // Second prm can be an array
+								Response toReturn = null;
+								if (response instanceof SampleServerDefinition.Greeting) {
+									System.out.println(String.format(">>> %s", response));
+									toReturn = new Response();
+									toReturn.payload = response;
+								} else {
+									toReturn = (Response)response;
+								}
+								return toReturn;
 							} catch (Exception ex) {
 								throw new RuntimeException(ex);
 							}

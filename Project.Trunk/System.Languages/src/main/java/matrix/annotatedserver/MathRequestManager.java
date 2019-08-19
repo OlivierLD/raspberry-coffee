@@ -95,11 +95,13 @@ public class MathRequestManager implements RESTRequestManager {
 	public HTTPServer.Response processRequest(HTTPServer.Request request) throws UnsupportedOperationException {
 		Optional<HTTPServer.Operation> opOp = operations
 				.stream()
-				.filter(op -> op.getVerb().equals(request.getVerb()) && RESTProcessorUtil.pathMatches(op.getPath(), request.getPath()))
+				.filter(op -> op.getVerb().equals(request.getVerb()) &&
+						RESTProcessorUtil.pathMatches(op.getPath(), request.getPath()))
 				.findFirst();
 		if (opOp.isPresent()) {
 			HTTPServer.Operation op = opOp.get();
 			request.setRequestPattern(op.getPath()); // To get the prms later on.
+			// TODO See how to invoke the embedded method through a function built here, with all method's parameters, and returned value.
 			HTTPServer.Response processed = op.getFn().apply(request); // Execute here.
 			return processed;
 		} else {

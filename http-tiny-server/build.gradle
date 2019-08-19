@@ -32,7 +32,7 @@ targetCompatibility = 1.8
 //}
 
 dependencies {
-    compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
+//    compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
     compile 'com.google.code.gson:gson:2.8.5'
     compile project(':common-utils')
     testCompile group: 'junit', name: 'junit', version: '4.11'

@@ -35,16 +35,9 @@ public class AnnotatedRESTImplementation {
 	private MathRequestManager mathRequestManager;
 
 	public AnnotatedRESTImplementation(MathRequestManager restRequestManager) {
-
 		this.mathRequestManager = restRequestManager;
 	}
 
-	/**
-	 * This is the method to invoke to have a REST request processed as defined above.
-	 *
-	 * @param request as it comes from the client
-	 * @return the actual result.
-	 */
 	@OperationDefinition(
 			verb = OperationDefinition.Verbs.GET,
 			path = "/oplist",
@@ -565,6 +558,7 @@ public class AnnotatedRESTImplementation {
 		}
 		return response;
 	}
+
 	/**
 	 * Can be used as a temporary placeholder when creating a new operation.
 	 *

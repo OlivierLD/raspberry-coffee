@@ -31,6 +31,7 @@ sourceCompatibility = 1.8
 //}
 
 dependencies {
+    // TODO Make  version without PI4J (used in PinUtils)
     compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
     compile 'com.google.code.gson:gson:2.8.5'
 //    compile 'javax.mail:mail:1.4.4' // Important! Later versions might not work (2015...)
