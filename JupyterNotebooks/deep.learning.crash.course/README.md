@@ -659,6 +659,8 @@ Now, what if we ask our neural network to take an image in input, to make a deci
 An image can be a complex object, it can be seen as a 3 dimension matrix (width, height, channels (nb of colors)).
 How can a neuron deal with such an object?
 
+> Note: For images manipulation, we will be also using `OpenCV`. There are some [OpenCV resources](../../opencv) in this repo.
+
 #### Preparing the data
 Data preparation is this process that reshapes the input data so they're easier to ingest by the network.
 This process applies to the training, testing, and must be the same for the runtime,  once the network is trained
