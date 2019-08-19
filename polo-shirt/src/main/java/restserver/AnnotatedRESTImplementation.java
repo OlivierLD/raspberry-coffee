@@ -1,6 +1,7 @@
 package restserver;
 
 import http.HTTPServer;
+import restserver.annotations.BodyParam;
 import restserver.annotations.OperationDefinition;
 import restserver.annotations.PathParam;
 import restserver.annotations.QueryParam;
@@ -14,8 +15,10 @@ import java.util.stream.Collectors;
  * Unlike in the non-annotated case, Operations need to be non-private,
  * as they will be dynamically invoked by the {@link PoloRESTRequestManager}
  *
+ * This is an EXAMPLE of implementation.
+ *
  */
-@RootPath(path = "/top-root")
+@RootPath("/top-root")
 public class AnnotatedRESTImplementation {
 
 	private boolean verbose = "true".equals(System.getProperty("server.rest.verbose"));
@@ -30,7 +33,7 @@ public class AnnotatedRESTImplementation {
 			verb = OperationDefinition.Verbs.GET,
 			path = "/oplist",
 			absolutePath = true,
-			description = "List of all available operations, on all request managers."
+			description = "List of all available operations."
 	)
 	protected List<HTTPServer.Operation> getOperationList() {
 		List<HTTPServer.Operation> opList = this.restRequestManager.getRestOperationList()
@@ -70,6 +73,44 @@ public class AnnotatedRESTImplementation {
 	)
 	protected static Message greetV2(@PathParam(name = "greet") String salutation, @QueryParam(name = "name") String who) {
 		String greeting = String.format("%s %s!", (salutation == null ? "Hello" : salutation), (who != null ? who : "world"));
+		Message message = new Message();
+		message.message = greeting;
+		return message;
+	}
+
+	public class GreetingObject {
+		private String salutation;
+		private String name;
+
+		public GreetingObject() {
+		}
+
+		public String getSalutation() {
+			return salutation;
+		}
+
+		public void setSalutation(String salutation) {
+			this.salutation = salutation;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+	}
+
+	@OperationDefinition(
+			verb = OperationDefinition.Verbs.POST,
+			path = "/greeting/v3",
+			description = "A simple example, taking a BodyParam, returning a Bean"
+	)
+	protected static Message greetV3(@BodyParam() GreetingObject greetingObj) {
+		String greeting = String.format("%s %s!",
+				(greetingObj.getSalutation() == null ? "Hello" : greetingObj.getSalutation()),
+				(greetingObj.getName() != null ? greetingObj.getName() : "world"));
 		Message message = new Message();
 		message.message = greeting;
 		return message;

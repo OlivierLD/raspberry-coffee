@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE) // Class level
 public @interface RootPath {
-	String path() default "/";
+	String value() default "/"; // Must be named value for the prm name to be possibly omitted when using the annotation.
 }
