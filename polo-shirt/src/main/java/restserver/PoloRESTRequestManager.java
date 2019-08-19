@@ -215,7 +215,7 @@ public class PoloRESTRequestManager implements http.RESTRequestManager {
 	private List<RESTOperation> buildOperationList(AnnotatedRESTImplementation instance) {
 		Class<AnnotatedRESTImplementation> server = (Class<AnnotatedRESTImplementation>)instance.getClass();
 		String root = "/";
-		// Class annotation, for the path root.
+		// Class annotation, for the root path.
 		if (server.isAnnotationPresent(RootPath.class)) {
 			RootPath rootPath = server.getAnnotation(RootPath.class);
 			root = rootPath.path();
