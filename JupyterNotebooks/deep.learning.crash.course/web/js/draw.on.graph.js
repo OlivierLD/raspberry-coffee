@@ -5,13 +5,15 @@
 /**
  *
  * @param cName
- * @param graphData, for all inputs (3 inputs by default) : { Xi value, Wi value }, and Bias
+ * @param initialData, for all inputs (3 inputs by default) : { Xi value, Wi value }, and Bias
  * @constructor
  */
-function Graph(cName, graphData) {
+function Graph(cName, initialData) {
 
 	let instance = this;
 	let context;
+
+	let graphData = initialData;
 
 	let canvas = document.getElementById(cName);
 	let minY = graphData.minY,
@@ -20,11 +22,24 @@ function Graph(cName, graphData) {
 			maxX = graphData.maxX;
 	let gridXStep = 1,
 			gridYStep = 1;
-	let xScale = 1,
-			yScale = 1;
 
-	this.drawGraph = function(displayCanvasName, data) {
+	this.zoomIn = () => {
+		canvas.width = Number((canvas.width * 1.1).toFixed(0));
+		canvas.height = Number((canvas.height * 1.1).toFixed(0));
+		this.repaint();
+	}
 
+	this.zoomOut = () => {
+		canvas.width = Number((canvas.width / 1.1).toFixed(0));
+		canvas.height = Number((canvas.height / 1.1).toFixed(0));
+		this.repaint();
+	}
+
+	this.repaint = (data) => {
+
+		if (data !== undefined) {
+			graphData = data;
+		}
 		context = canvas.getContext('2d');
 
 		let width = context.canvas.clientWidth;
@@ -33,7 +48,7 @@ function Graph(cName, graphData) {
 		if (width === 0 || height === 0) { // Not visible
 			return;
 		}
-		this.init(data);
+		this.init(graphData);
 
 		// Set the canvas size from its container.
 		canvas.width = width;
@@ -45,7 +60,7 @@ function Graph(cName, graphData) {
 		// Horizontal grid (x)
 		for (let i=minY; i<maxY; i+=gridYStep) {
 			context.beginPath();
-			context.lineWidth = 1;
+			context.lineWidth = i === 0 ? 2 : 1;
 			context.strokeStyle = 'rgba(0, 0, 128, 0.5)';
 			let h = ((i - minY) / (maxY - minY)) * height;
 			context.moveTo(0, height - h);
@@ -65,7 +80,7 @@ function Graph(cName, graphData) {
 		// Vertical grid (y)
 		for (let i=minX; i<maxX; i+=gridXStep) {
 			context.beginPath();
-			context.lineWidth = 1;
+			context.lineWidth = i === 0 ? 2 : 1;
 			context.strokeStyle = 'rgba(0, 0, 128, 0.5)';
 			let w = ((i - minX) / (maxX - minX)) * width;
 			context.moveTo(w, 0);
@@ -85,39 +100,43 @@ function Graph(cName, graphData) {
 			context.closePath();
 		}
 
-		colors = [ 'blue', 'green', 'red' ];
+		let colors = [ 'blue', 'green', 'red' ];
 		// Drawing the functions
-		for (neuron in data.neurons) {
-			// console.log(data.neurons[neuron], data.bias);
+		for (neuron in graphData.neurons) {
+			// console.log(graphData.neurons[neuron], graphData.bias);
 			context.beginPath();
 			context.lineWidth = 2;
 			context.strokeStyle = colors[neuron % colors.length];
 			context.fillStyle = context.strokeStyle;
-			let fX = (minX * data.neurons[neuron].w) + data.bias;
+			let fX = (minX * graphData.neurons[neuron].w) + graphData.bias;
 			let y = ((fX - minY) / (maxY - minY)) * height;
 			let w = 0;
 			context.moveTo(w, height - y);
-			fX = (maxX * data.neurons[neuron].w) + data.bias;
+			fX = (maxX * graphData.neurons[neuron].w) + graphData.bias;
 			y = ((fX - minY) / (maxY - minY)) * height;
 			w = width;
 			context.lineTo(w, height - y);
 			context.stroke();
 			context.closePath();
 			// The point
-			// console.log(data);
-			fX = (data.neurons[neuron].x * data.neurons[neuron].w) + data.bias;
+			// console.log(graphData);
+			fX = (graphData.neurons[neuron].x * graphData.neurons[neuron].w) + graphData.bias;
 			y = ((fX - minY) / (maxY - minY)) * height;
-			let x = width * ((data.neurons[neuron].x - minX) / (maxX - minX));
+			let x = width * ((graphData.neurons[neuron].x - minX) / (maxX - minX));
 			context.arc(x, height - y, 4, 0, 2 * Math.PI, false); // 60 degrees
 			context.fill();
 		}
 	};
 
-	this.init = function(data) {
+	this.init = (data) => {
+		minY = data.minY;
+		maxY = data.maxY;
+		minX = data.minX;
+		maxX = data.maxX;
 	};
 
-	(function() {
-		instance.init(graphData);
-		instance.drawGraph(cName, graphData);
+	(() => {
+		// instance.init(initialData);
+		instance.repaint(initialData);
 	})(); // Invoked automatically when new is invoked.
 }

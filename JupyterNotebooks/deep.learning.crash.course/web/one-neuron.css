@@ -81,6 +81,12 @@ input {
 	border: none;
 }
 
+button {
+	border-radius: 5px;
+	margin: 5px;
+	box-shadow: 0px 0px 5px #666666;
+}
+
 knob-and-display:focus {
 	outline: none;
 }

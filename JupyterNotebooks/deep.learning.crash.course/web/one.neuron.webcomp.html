@@ -127,8 +127,21 @@
 
 	<div id="final-result" class="neuron-input-cell neuron-cell">Final Result</div>
 </div>
-<div id="graph" style="height: 200px; border: 1px silver solid; border-radius: 5px; margin: 10px; overflow: scroll;">
-  <canvas id="the-graph" height="400" width="400"></canvas>
+<div style="width: 90%;">
+	<table border="0" style=" border: none;">
+		<tr>
+			<td valign="top" width="400">
+				<div id="graph" style="max-height: 400px; max-width: 400px; border: 1px silver solid; border-radius: 5px; margin: 10px; overflow: scroll;">
+					<canvas id="the-graph" height="400" width="400"></canvas>
+				</div>
+			</td>
+			<td valign="top">
+				<button onclick="zoomIn();">Zoom In</button>
+				<br/>
+				<button onclick="zoomOut();">Zoom Out</button>
+			</td>
+		</tr>
+	</table>
 </div>
 <hr/>
 Modify weights and bias to see the result.
@@ -204,7 +217,15 @@ Modify weights and bias to see the result.
 			minY: -10,
 			maxY: 10
 		};
-		functionGraph.drawGraph("the-graph", newData);
+		functionGraph.repaint(newData);
+	}
+
+	function zoomIn() {
+		functionGraph.zoomIn();
+	}
+
+	function zoomOut() {
+		functionGraph.zoomOut();
 	}
 
 	function setRadius(range) {
