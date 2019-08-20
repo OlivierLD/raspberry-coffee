@@ -31,6 +31,7 @@ Try that:
 Then from another console:
 ```
  $ curl -X GET http://localhost:2345/oplist
+ {"code":4,"type":"ok","message":"magic!"}
 ```
 > Note: in IntelliJ, right-click on the pom.xml in generated/jaxrs, and add to project. 
 
