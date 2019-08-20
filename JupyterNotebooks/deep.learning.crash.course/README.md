@@ -220,6 +220,10 @@ TensorFlow playground at <https://playground.tensorflow.org>
 
  <img src="./img/neuron.example.png" alt="Neuron" width="404" height="253"/>
  
+- [Draw a function](http://fooplot.com/) on line.
+    - Try `((e^x) - (e^(-x))) / ((e^x) + (e^(-x)))`
+- See also the spreadsheet `neuron.ods`
+    
 ##### Quick remark here:
 In the figure above, we have in input a triplet of values: `(10, 6, 8)`.
 And the output is `17`.
