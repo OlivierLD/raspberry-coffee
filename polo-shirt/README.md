@@ -31,14 +31,14 @@ Custom Swagger generator?
 #### To install Swagger Codegen
 Look [here](https://swagger.io/docs/open-source-tools/swagger-codegen/).
 
-For Linux:
+For Linux, one of:
 ```
  $ wget https://oss.sonatype.org/content/repositories/releases/io/swagger/swagger-codegen-cli/2.2.1/swagger-codegen-cli-2.2.1.jar
  $ wget -e use_proxy=yes -e http_proxy=http://www-proxy.us.oracle.com:80 -e https_proxy=http://www-proxy.us.oracle.com:80 https://oss.sonatype.org/content/repositories/releases/io/swagger/swagger-codegen-cli/2.2.1/swagger-codegen-cli-2.2.1.jar
  $ wget https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/3.0.0-rc1/swagger-codegen-cli-3.0.0-rc1.jar
  $ wget -e use_proxy=yes -e http_proxy=http://www-proxy.us.oracle.com:80 -e https_proxy=http://www-proxy.us.oracle.com:80 https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/3.0.0-rc1/swagger-codegen-cli-3.0.0-rc1.jar
 ```
-Then to run it:
+Then to run it (depending on the version you want):
 ```
  $ java -jar swagger-codegen-cli-2.2.1.jar help
  $ java -jar swagger-codegen-cli-3.0.0-rc1.jar
