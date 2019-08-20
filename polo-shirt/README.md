@@ -26,6 +26,24 @@ Custom Swagger generator?
 
 ---
 
+> Note: For Swagger and Jetty related stuff, use Java 8, _not_ 9.
+
+#### To install Swagger Codegen
+Look [here](https://swagger.io/docs/open-source-tools/swagger-codegen/).
+
+For Linux:
+```
+ $ wget https://oss.sonatype.org/content/repositories/releases/io/swagger/swagger-codegen-cli/2.2.1/swagger-codegen-cli-2.2.1.jar
+ $ wget -e use_proxy=yes -e http_proxy=http://www-proxy.us.oracle.com:80 -e https_proxy=http://www-proxy.us.oracle.com:80 https://oss.sonatype.org/content/repositories/releases/io/swagger/swagger-codegen-cli/2.2.1/swagger-codegen-cli-2.2.1.jar
+ $ wget https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/3.0.0-rc1/swagger-codegen-cli-3.0.0-rc1.jar
+ $ wget -e use_proxy=yes -e http_proxy=http://www-proxy.us.oracle.com:80 -e https_proxy=http://www-proxy.us.oracle.com:80 https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/3.0.0-rc1/swagger-codegen-cli-3.0.0-rc1.jar
+```
+Then to run it:
+```
+ $ java -jar swagger-codegen-cli-2.2.1.jar help
+ $ java -jar swagger-codegen-cli-3.0.0-rc1.jar
+```
+
 Try that:
 ```
  $ ./swagger.sh
@@ -37,7 +55,7 @@ Then from another console:
  $ curl -X GET http://localhost:2345/oplist
  {"code":4,"type":"ok","message":"magic!"}
 ```
-> Note: in IntelliJ, right-click on the pom.xml in generated/jaxrs, and add to project. 
+> Note: in IntelliJ, right-click on the pom.xml in generated/jaxrs, and `Add as Maven Project`. 
 
 Flesh out your methods (that one in `samples.io.impl.TopRootApiServiceImpl`):
 ```java
