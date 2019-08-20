@@ -34,7 +34,7 @@ Then from another console:
 ```
 > Note: in IntelliJ, right-click on the pom.xml in generated/jaxrs, and add to project. 
 
-Flesh out your methods:
+Flesh out your methods (that one in `samples.io.impl.TopRootApiServiceImpl`):
 ```java
 @Override
 public Response greetV3(GreetingRequest body, SecurityContext securityContext) throws NotFoundException {
