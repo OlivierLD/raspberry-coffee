@@ -1,0 +1,151 @@
+openapi: 3.0.1
+info:
+  title: Polo shirt example
+  termsOfService: 'urn://Use-and-Reuse-at-will'
+  description: |
+    Not much to learn here, this is just an example for now.
+    From this [Repo](https://github.com/OlivierLD/raspberry-coffee/tree/master/polo-shirt).
+    This is a simple one, mostly to be used with a custom generator.
+  version: "0.0.2"
+  contact:
+    email: "batman@gotham.gov"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+servers:
+  - url: 'http://localhost:2345'
+paths:
+  /oplist:
+    get:
+      description: |
+        Returns the list of all the available operations.
+      operationId: getOperationList
+      tags:
+        - Operations
+      responses:
+        '200':
+          description: "Read successful"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/operation-list"
+
+  /top-root/greeting:
+    get:
+      summary: Say Hello
+      description: |
+        With one query parameter
+      operationId: greet
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+      tags:
+        - Greeting
+      responses:
+        '200':
+          description: The final greeting
+          content:
+            application/json:
+              schema:
+                type: string
+
+  /top-root/greeting/v2:
+    get:
+      summary: Say Hello, in another way
+      description: |
+        With one query parameter, returns result as an object
+      operationId: greetV2
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+        - name: salutation
+          required: true
+          in: path
+          schema:
+            type: string
+      tags:
+        - Greeting
+      responses:
+        '200':
+          description: The final greeting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/greeting-message'
+
+  /top-root/greeting/v3:
+    post:
+      summary: Say Hello, in yet another way
+      description: |
+        With one body parameter, returns result as an object.
+      operationId: greetV3
+      requestBody:
+        $ref: '#/components/requestBodies/greeting-request'
+      tags:
+        - Greeting
+      responses:
+        '200':
+          description: The final greeting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/greeting-message'
+
+components:
+  schemas:
+    greeting-message:
+      type: object
+      description: Result of the greeting process
+      properties:
+        message:
+          type: string
+          description: The final greeting
+
+    greeting-request:
+      type: object
+      description: Name and Greeting
+      properties:
+        name:
+          type: string
+          description: the name to greet
+        salutation:
+          type: string
+          description: the way to greet
+      required:
+        - name
+
+    operation:
+      type: object
+      description: The REST operation
+      properties:
+        verb:
+          type: string
+          description: For now restricted to GET, POST, PUT, DELETE
+          enum:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+        path:
+          type: string
+          description: The path of the Request
+        description:
+          type: string
+          description: The description of the operation
+
+    operation-list:
+      type: array
+      items:
+        $ref: '#/components/schemas/operation'
+
+  requestBodies:
+    greeting-request:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/greeting-request'
+      description: An object, with name and salutation

@@ -224,6 +224,7 @@ TensorFlow playground at <https://playground.tensorflow.org>
  
 - [Draw a function](http://fooplot.com/) on line.
     - Try `((e^x) - (e^(-x))) / ((e^x) + (e^(-x)))`
+- Try also [this](https://www.desmos.com/calculator/fiqkgpg9pv), or [this](https://www.wolframalpha.com/examples/mathematics/plotting-and-graphics/).    
 - See also the spreadsheet `neuron.ods`
     
 ##### Quick remark here:
