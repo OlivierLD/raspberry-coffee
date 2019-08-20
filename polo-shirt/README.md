@@ -18,9 +18,13 @@ Custom Swagger generator?
 - [Customizing the generator](https://github.com/swagger-api/swagger-codegen#customizing-the-generator)
 - Online yaml editor: <https://app.swaggerhub.com/apis/OlivierLD/PoloShirt.101/1.0.0>
 
-<https://symfony.com/doc/current/components/yaml/yaml_format.html>
-<https://swagger.io/docs/specification/data-models/data-types/>
-<https://gettaurus.org/docs/YAMLTutorial/>
+---
+
+- <https://symfony.com/doc/current/components/yaml/yaml_format.html>
+- <https://swagger.io/docs/specification/data-models/data-types/>
+- <https://gettaurus.org/docs/YAMLTutorial/>
+
+---
 
 Try that:
 ```
