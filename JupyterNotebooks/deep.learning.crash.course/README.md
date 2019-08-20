@@ -215,6 +215,8 @@ TensorFlow playground at <https://playground.tensorflow.org>
 - Its formula is
 
  ![Neuron](./img/neuron.formula.png)
+ 
+> Note: In the next sections, this kind of neurons are the ones part of what will be called _hidden layers_.
 
 ##### Example
 
