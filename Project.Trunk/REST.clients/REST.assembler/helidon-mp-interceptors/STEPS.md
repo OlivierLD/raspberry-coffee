@@ -185,7 +185,7 @@ What happened (among others):
 - The call to the annotated method has been intercepted (`getMessage`)
 - Annotation value(s) was (were) read  (`SAY_HI`, `DIS_BONJOUR`)
 - Paramater(s) value(s) were read, and transformed before the method was invoked (`Olivier` -> `reivilO`)
-- Value returned by the invocation was reworked before being returned to the caller (`{"message":"Hello reivilO!"}` -> `{"message":"Hello reivilO! (with permissions [SAY_HI, DIS_BONJOUR])"}`)
+- Value returned by the invocation was reworked before being returned to the caller, `curl` here (`{"message":"Hello reivilO!"}` -> `{"message":"Hello reivilO! (with permissions [SAY_HI, DIS_BONJOUR])"}`)
 
 
 ---
