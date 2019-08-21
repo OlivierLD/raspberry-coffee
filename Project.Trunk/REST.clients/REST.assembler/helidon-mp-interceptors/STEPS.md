@@ -98,7 +98,7 @@ public class GreetResource {
 ```
 
 ### Repeatable Annotations
-In case you want the same annotation repeated several times at the same level, it need to be repeatable.
+In case you want the same annotation repeated several times at the same level, it needs to be repeatable.
 ```java
     @Path("/{name}")
     @GET
