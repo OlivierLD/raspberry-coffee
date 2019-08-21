@@ -162,8 +162,8 @@ To run the code as it is in the repo:
 ```
 Then from another console
 ```
-curl http://localhost:8080/greet/Olivier
-{"message":"Hello reivilO! (with permissions [SAY_HI, DIS_BONJOUR])"}
+ $ curl http://localhost:8080/greet/Olivier
+ {"message":"Hello reivilO! (with permissions [SAY_HI, DIS_BONJOUR])"}
 ```
 And the interceptor's console says:
 ```
