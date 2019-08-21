@@ -1,4 +1,5 @@
 rpi/interceptors/GreetingProvider.class
+rpi/annotations/SecurityCheck$List.class
 rpi/annotations/SecurityCheckInterceptor.class
 rpi/interceptors/Main.class
 rpi/interceptors/GreetResource.class
