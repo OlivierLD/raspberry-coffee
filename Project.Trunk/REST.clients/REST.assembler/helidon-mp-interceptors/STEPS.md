@@ -128,7 +128,7 @@ public @interface SecurityCheck {
 	}
 }
 ```
-From the interceptor's code, it is consider as another type of annotation:
+From the interceptor's code, it is considered as another type of annotation:
 ```java
 @Interceptor
 @SecurityCheck
