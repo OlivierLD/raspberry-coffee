@@ -147,12 +147,45 @@ public class SecurityCheckInterceptor {
 		if (context.getMethod().isAnnotationPresent(SecurityCheck.List.class)) {
 			SecurityCheck.List securityChecks = context.getMethod().getAnnotation(SecurityCheck.List.class);
 			Arrays.asList(securityChecks.value()).forEach(securityCheck -> permissionList.add(securityCheck.permission()));
-			System.out.println(String.format("Permission: %s", permissionList.stream().collect(Collectors.joining(", "))));
+			System.out.println(String.format("Permission List: %s", permissionList.stream().collect(Collectors.joining(", "))));
 		}
 
   . . .
 ```
 See the code for more details on the interceptor.
+
+### Give it a try
+To run the code as it is in the repo:
+```
+ $ mvn clean package -Dmaven.test.skip=true
+ $ java -jar target/helidon-mp-interceptors.jar
+```
+Then from another console
+```
+curl http://localhost:8080/greet/Olivier
+{"message":"Hello reivilO! (with permissions [SAY_HI, DIS_BONJOUR])"}
+```
+And the interceptor's console says:
+```
+=> In rpi.annotations.SecurityCheckInterceptor, intercepting execution of getMessage, Target: rpi.interceptors.GreetResource$Proxy$_$$_WeldSubclass
+@ -> javax.ws.rs.Path
+@ -> javax.ws.rs.GET
+@ -> javax.ws.rs.Produces
+@ -> rpi.annotations.SecurityCheck$List
+Permission List: SAY_HI, DIS_BONJOUR
+Prm #0 annotated with com.sun.proxy.$Proxy46 > java.lang.reflect.Proxy > java.lang.Object > javax.ws.rs.PathParam
+- We have 1 parameter
+- Param java.lang.String, Olivier
+> Transforming parameter #0
+In getMessage, name: reivilO
+Returned a org.glassfish.json.JsonObjectBuilderImpl$JsonObjectImpl: {"message":"Hello reivilO!"}
+-> Eventually reworked into {"message":"Hello reivilO! (with permissions [SAY_HI, DIS_BONJOUR])"}
+```
+What happened (among others):
+- The call to the annotated method has been intercepted
+- Annotation value(s) was (were) read
+- Paramater(s) value(s) were read, and transformed before the method was invoked
+- Value returned by the invocation was reworked before being returned to the caller 
 
 ---
 
