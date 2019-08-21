@@ -34,7 +34,7 @@ public @interface SecurityCheck {
 ``` 
 - `SecurityCheckInterceptor.java`, the actual interceptor.
 
-In the pom.xml, add in the `<dependencies>` section:
+In the `pom.xml`, add (or make sure you have) in the `<dependencies>` section:
 ```
     <dependency>
         <groupId>javax.interceptor</groupId>
