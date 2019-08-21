@@ -17,12 +17,12 @@ description = """helidon-sensors"""
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-tasks.withType(JavaCompile) {
-    if (JavaVersion.current() != project.targetCompatibility) {
-        throw new GradleException("The java version used ${JavaVersion.current()} is not the expected version ${project.targetCompatibility}.")
-    }
-    options.encoding = 'UTF-8'
-}
+//tasks.withType(JavaCompile) {
+//    if (JavaVersion.current() != project.targetCompatibility) {
+//        throw new GradleException("The java version used ${JavaVersion.current()} is not the expected version ${project.targetCompatibility}.")
+//    }
+//    options.encoding = 'UTF-8'
+//}
 
 repositories {
     mavenLocal()
@@ -37,6 +37,7 @@ endencies {
 
     compile group: 'io.helidon.microprofile.bundles', name: 'helidon-microprofile-1.2', version:'0.11.0'
     compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-binding', version:'2.26'
+    compile group: 'javax.interceptor', name: 'javax.interceptor-api', version: '1.2.2'
     runtime group: 'org.jboss', name: 'jandex', version:'2.0.4.Final'
     runtime group: 'javax.activation', name: 'javax.activation-api', version:'1.2.0'
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version:'5.0.1'

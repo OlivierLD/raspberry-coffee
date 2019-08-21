@@ -6,12 +6,11 @@
 - Monoliths
 - Client-server
 - J(2)EE servers
-- Clusters
+- Clusters (Docker, K8S)
 - . . . 
 - SOA
 - Micro-services
-- FaaS
-- IoT and friends...
+- FaaS, IoT and friends...
 
 #### Micro-services
 - Helidon, what this is

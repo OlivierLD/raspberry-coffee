@@ -26,7 +26,7 @@ Custom Swagger generator?
 
 ---
 
-> Note: For Swagger and Jetty related stuff, use Java 8, _not_ 9.
+> Note: For Swagger and Jetty related stuff, use Java 8, _not_ 9 (for some `jaxb` reasons).
 
 #### To install Swagger Codegen
 Look [here](https://swagger.io/docs/open-source-tools/swagger-codegen/).

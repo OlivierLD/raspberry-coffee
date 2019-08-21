@@ -1,0 +1,14 @@
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/swaggen/jaxrs/src/main/java/sensors/io/impl/SensorsApiServiceImpl.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/swaggen/jaxrs/src/gen/java/io/swagger/model/AmbientLight.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/swaggen/jaxrs/src/gen/java/sensors/io/JacksonJsonProvider.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/swaggen/jaxrs/src/main/java/sensors/io/factories/SensorsApiServiceFactory.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/swaggen/jaxrs/src/gen/java/sensors/io/ApiOriginFilter.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/swaggen/jaxrs/src/gen/java/sensors/io/NotFoundException.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/swaggen/jaxrs/src/gen/java/io/swagger/model/RelayStatus.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/swaggen/jaxrs/src/main/java/sensors/io/Bootstrap.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/swaggen/jaxrs/src/gen/java/sensors/io/ApiResponseMessage.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/swaggen/jaxrs/src/gen/java/sensors/io/SensorsApiService.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/swaggen/jaxrs/src/gen/java/sensors/io/SensorsApi.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/swaggen/jaxrs/src/gen/java/sensors/io/StringUtil.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/swaggen/jaxrs/src/gen/java/sensors/io/ApiException.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/swaggen/jaxrs/src/gen/java/sensors/io/RFC3339DateFormat.java

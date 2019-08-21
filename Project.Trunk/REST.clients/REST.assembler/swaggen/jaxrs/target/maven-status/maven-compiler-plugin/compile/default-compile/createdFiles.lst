@@ -1,0 +1,14 @@
+sensors/io/JacksonJsonProvider.class
+sensors/io/factories/SensorsApiServiceFactory.class
+sensors/io/impl/SensorsApiServiceImpl.class
+sensors/io/ApiException.class
+sensors/io/StringUtil.class
+sensors/io/ApiResponseMessage.class
+sensors/io/Bootstrap.class
+io/swagger/model/RelayStatus.class
+sensors/io/RFC3339DateFormat.class
+io/swagger/model/AmbientLight.class
+sensors/io/ApiOriginFilter.class
+sensors/io/NotFoundException.class
+sensors/io/SensorsApi.class
+sensors/io/SensorsApiService.class

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2018, 2019 Oracle and/or its affiliates. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -19,17 +19,17 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.helidon.examples</groupId>
-    <artifactId>helidon-sensors</artifactId>
+    <groupId>oic.helidon.examples</groupId>
+    <artifactId>helidon-mp-interceptors</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.artifactId}</name>
 
     <properties>
-        <helidon.version>0.11.0</helidon.version>
+        <helidon.version>1.0.0</helidon.version>
         <!-- Default package. Will be overriden by Maven archetype -->
         <package>io.helidon.examples.quickstart.mp</package>
-        <mainClass>rpi.sensors.mp.Main</mainClass>
+        <mainClass>rpi.interceptors.Main</mainClass>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
         <libs.classpath.prefix>libs</libs.classpath.prefix>
@@ -39,27 +39,6 @@
         <argLine>-Dfile.encoding=UTF-8</argLine>
         <checkstyle.config.location>etc/checkstyle.xml</checkstyle.config.location>
     </properties>
-
-    <repositories>
-
-        <repository>
-            <id>central</id>
-            <url>http://central</url>
-            <releases><enabled>true</enabled><updatePolicy>always</updatePolicy></releases>
-            <snapshots><enabled>true</enabled><updatePolicy>always</updatePolicy></snapshots>
-        </repository>
-
-        <repository>
-            <id>java-net-repo</id>
-            <url>https://maven.java.net/content/repositories/public/</url>
-        </repository>
-
-        <repository>
-            <id>sonatype-repo</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-
-    </repositories>
 
     <build>
         <finalName>${project.artifactId}</finalName>
@@ -241,20 +220,10 @@
         </dependency>
 
         <!-- Added -->
-        <!--dependency>
-            <groupId>com.pi4j</groupId>
-            <artifactId>pi4j-core</artifactId>
-            <version>1.2-SNAPSHOT</version>
-        </dependency-->
         <dependency>
             <groupId>javax.interceptor</groupId>
             <artifactId>javax.interceptor-api</artifactId>
             <version>1.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>oliv.raspi.coffee</groupId>
-            <artifactId>ADC</artifactId>
-            <version>1.0</version>
         </dependency>
 
     </dependencies>
