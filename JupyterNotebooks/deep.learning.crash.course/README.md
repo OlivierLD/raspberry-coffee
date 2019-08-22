@@ -742,7 +742,7 @@ This can be run locally (after installing the required Python packages):
 $ python digit.demo/sample.05.1.py [ L | --help ]
 ```
 
-Here is - in the code - the structure of the network:
+Here is - in the code - the structure of the network used for the training:
 ```python
     model = tf.keras.models.Sequential([
         tf.keras.layers.Flatten(),  # https://www.tensorflow.org/api_docs/python/tf/keras/layers/Flatten
