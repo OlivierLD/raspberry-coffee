@@ -33,6 +33,34 @@ without comments and graphics.
 - _All_ the software mentioned in this document are free and Open Source.
 - _All_ the code for you to replay _all_ the examples in this documents are available in the project hosting this document, or on the web (in which cases links will be provided).
 
+### Content
+<table width="98%">
+<tr>
+<td valign="top">
+
+- AI – Where does DL fit?
+- How is it different from “Classical” Programming
+- Path from Design to Production
+- What is a Neuron
+  - With live examples
+- Neuronal Network: TensorFlow playground
+
+</td>
+<td valign="top">
+
+- Machine Learning
+  - Layers
+  - See it at work on TF Playground
+- Training a Model
+  - Building the Network
+- Insurance Demo
+- Character Recognition
+  - With OpenCV
+  
+</td>
+</tr>
+</table>
+
 ### Material
 We will use Jupyter Notebooks (for Python and Java), as well as plain Python scripts.
 
