@@ -1,8 +1,11 @@
 ## Swagger generation
 
 #### From the Command Line Interface (CLI)
-Old vs New: <https://openapi-generator.tech/docs/swagger-codegen-migration>
-
+- Old vs New: <https://openapi-generator.tech/docs/swagger-codegen-migration>
+- On a Mac : `brew install openapi-generator`
+- Everywhere, with node: `npm install @openapitools/openapi-generator-cli -g`
+- Or also: `wget http://central.maven.org/maven2/org/openapitools/openapi-generator-cli/3.3.4/openapi-generator-cli-3.3.4.jar -O openapi-generator-cli.jar`
+- `$ openapi-generator config-help --generator-help jaxrs-jersey`
 
 For Java/JAXRS
 ```

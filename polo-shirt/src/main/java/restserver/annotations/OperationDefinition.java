@@ -5,6 +5,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * verb - One of Verbs
+ * path - May contain {path-param}s
+ * absolutePath - ignores possible RootPath if true
+ * description - as you think!
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD) // Method level
 public @interface OperationDefinition {
