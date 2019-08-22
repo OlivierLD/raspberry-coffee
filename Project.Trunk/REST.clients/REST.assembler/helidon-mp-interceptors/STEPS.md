@@ -1,4 +1,6 @@
 ## Interceptors
+Good paper on Interceptors [here](https://www.ibm.com/support/knowledgecenter/en/SS7K4U_8.5.5/com.ibm.websphere.zseries.doc/ae/twbs_jaxrs_jcdi_decoratorsandmethod.html).
+
 > Interceptors _only_ work in a EE or MP context.
 
 > Interceptors need to be declared in a `beans.xml` file.

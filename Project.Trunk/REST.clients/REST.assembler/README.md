@@ -592,7 +592,7 @@ run the NodeJS generator, just to have the documentation web pages up and runnin
 For example:
 > Note: We provide here a simple `sensors.yaml`, as an example. This is the file the `gradle` task below will start from.
 
-- From the directory this page you're reading lives in, run
+- From the directory this page you're reading lives in, run <!-- TODO Updte to OAS 3.0 -->
 ```
  $ ../../../gradlew swaggerNode
 ```
