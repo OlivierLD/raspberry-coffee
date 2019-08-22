@@ -3,7 +3,7 @@
 # Handwritten figures recognition => classification
 # also see https://www.tensorflow.org/api_docs/python/tf/keras and similar pages.
 #
-# Similar to sample.05.py, but with YOUR own images.
+# Similar to sample.05.1.py, but with YOUR own images.
 # Model training.h5 must already exist
 #
 # Great doc at https://medium.com/@ashok.tankala/build-the-mnist-model-with-your-own-handwritten-digits-using-tensorflow-keras-and-python-f8ec9f871fd3

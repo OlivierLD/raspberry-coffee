@@ -30,7 +30,7 @@ with tf.Session() as sess:
 
     # run model to check calculations
     not_activated_output, activated_output = sess.run([Z, A], feed_dict={X: [[4, 3, 2, 1]]})
-    print(">> NotActivatedOutpout:", not_activated_output)  # should be [[41. 51.5 62.]]
+    print(">> NotActivatedOutput:", not_activated_output)  # should be [[41. 51.5 62.]]
 
     # Now save the model
     output_node_names = "not_activated_output,output"

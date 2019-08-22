@@ -739,8 +739,46 @@ test dataset.
 
 This can be run locally (after installing the required Python packages):
 ```
-$ python digit.demo/sample.05.py [ L | --help ]
+$ python digit.demo/sample.05.1.py [ L | --help ]
 ```
+
+Here is - in the code - the structure of the network:
+```python
+    model = tf.keras.models.Sequential([
+        tf.keras.layers.Flatten(),  # https://www.tensorflow.org/api_docs/python/tf/keras/layers/Flatten
+        tf.keras.layers.Dense(512, name='FirstDense-512', activation=tf.nn.relu),
+        tf.keras.layers.Dropout(0.2),  # https://www.tensorflow.org/api_docs/python/tf/keras/layers/Dropout
+        tf.keras.layers.Dense(10, name='SecondDense-10', activation=tf.nn.softmax)
+    ])
+    model.compile(optimizer='adam',
+                  loss='sparse_categorical_crossentropy',
+                  metrics=['accuracy'])
+    epochs = 5
+    print("----------------------------------")
+    print("Starting the training, on {} epochs".format(epochs))
+    print("----------------------------------")
+    model.fit(x_train, y_train, epochs=epochs, verbose=1)
+    model.summary()
+    print("------ Number of parameters: Explanation -------")
+    print("  401,920 = 512 x 785 ")
+    print("              |   785 = (28 x 28) + 1")
+    print("              |                |    | ")
+    print("              |                |    bias ")
+    print("              |                input shape ")
+    print("              # neurons 1st (hidden) layer ")
+    print(" +  5,130 = (512 x 10) + 10")
+    print("               |    |     | ")
+    print("               |    |     bias ")
+    print("               |    final # of neurons ")
+    print("               # neurons previous layer ")
+    print("-----------")
+    print("= 407,050 Trainable params ")
+    print("------------------------------------------------")
+```
+Notice:
+- `tf.keras.layers.Flatten()` for the input nodes.
+- The 2 `Dense` layers, and their activation functions.
+- The number of trainable parameters, explained in the `println` statements.
 
 Another example, try:
 ```

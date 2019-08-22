@@ -113,7 +113,7 @@ if not loadOnly:
     print("              |                |    | ")
     print("              |                |    bias ")
     print("              |                input shape ")
-    print("              # neurons 1st layer ")
+    print("              # neurons 1st (hidden) layer ")
     print(" +  5,130 = (512 x 10) + 10")
     print("               |    |     | ")
     print("               |    |     bias ")

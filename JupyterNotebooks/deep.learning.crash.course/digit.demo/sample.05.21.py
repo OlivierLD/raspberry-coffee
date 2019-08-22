@@ -3,7 +3,7 @@
 # Handwritten figures recognition => classification
 # also see https://www.tensorflow.org/api_docs/python/tf/keras and similar pages.
 #
-# Similar to sample.05.py, but with YOUR own images, read from the camera.
+# Similar to sample.05.1.py, but with YOUR own images, read from the camera.
 # Model training.h5 must already exist
 # Uses OpenCV to reshape the images as expected by the model
 #
