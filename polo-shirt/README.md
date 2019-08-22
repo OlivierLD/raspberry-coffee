@@ -29,9 +29,10 @@ Custom Swagger generator?
 > Note: For Swagger and Jetty related stuff, use Java 8, _not_ 9 (for some `jaxb` reasons).
 
 #### To install Swagger Codegen
-Look [here](https://swagger.io/docs/open-source-tools/swagger-codegen/).
+Look [here](https://openapi-generator.tech/docs/installation).
 
-For Linux, one of:
+For Linux, (or any system)):
+<!--
 ```
  $ wget https://oss.sonatype.org/content/repositories/releases/io/swagger/swagger-codegen-cli/2.2.1/swagger-codegen-cli-2.2.1.jar
  $ wget -e use_proxy=yes -e http_proxy=http://www-proxy.us.oracle.com:80 -e https_proxy=http://www-proxy.us.oracle.com:80 https://oss.sonatype.org/content/repositories/releases/io/swagger/swagger-codegen-cli/2.2.1/swagger-codegen-cli-2.2.1.jar
@@ -39,14 +40,14 @@ For Linux, one of:
  $ wget -e use_proxy=yes -e http_proxy=http://www-proxy.us.oracle.com:80 -e https_proxy=http://www-proxy.us.oracle.com:80 https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/3.0.0-rc1/swagger-codegen-cli-3.0.0-rc1.jar
 ```
 Also try
+-->
 ```
  $ wget http://central.maven.org/maven2/org/openapitools/openapi-generator-cli/3.3.4/openapi-generator-cli-3.3.4.jar -O openapi-generator-cli.jar
 ```
 
 Then to run it (depending on the version you want):
 ```
- $ java -jar swagger-codegen-cli-2.2.1.jar help
- $ java -jar swagger-codegen-cli-3.0.0-rc1.jar
+ $ java -jar openapi-generator-cli.jar help
 ```
 
 Try that:
