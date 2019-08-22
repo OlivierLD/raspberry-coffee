@@ -189,6 +189,48 @@ What happened (among others):
 - Paramater(s) value(s) were read, and transformed before the method was invoked (`Olivier` -> `reivilO`)
 - Value returned by the invocation was reworked before being returned to the caller, `curl` here (`{"message":"Hello reivilO!"}` -> `{"message":"Hello reivilO! (with permissions [SAY_HI, DIS_BONJOUR])"}`)
 
-
 ---
 
+## Real World scenario
+```java
+    @GET
+    @Path("/integrations")
+    @Produces({"application/json"})
+    @AuthorizationPermission(AuthVerbs.INTEGRATION_INSPECT)
+    @ResourceAssociationReviewed //required to allow cross tenancy otherwise use @RejectCrossTenancyRequest
+    public PaginatedResponse<IntegrationSummary> listIntegrations(@NonNull @QueryParam("compartmentId") String compartmentId,
+                                                                  @QueryParam("namespace") String namespace,
+                                                                  @QueryParam("displayName") String displayName,
+                                                                  @QueryParam("limit") Integer limit,
+                                                                  @QueryParam("page") String page,
+                                                                  @QueryParam("sortOrder") String sortOrder,
+                                                                  @QueryParam("sortBy") String sortBy,
+                                                                  @HeaderParam("opc-request-id") String opcRequestId,
+                                                                  @PrincipalContext Principal principal,
+                                                                  @AuthorizationRequestContext AuthorizationRequest authorizationRequest) {
+        // Log the call.
+        log.info("Attempting to list resources, compartmentId {}, limit {}, " +
+                        "displayName {}, sortOrder {}, " +
+                        "sortBy {}", compartmentId,
+                limit, displayName, sortOrder, sortBy);
+
+
+        // Validate Compartment Id, sortOrder, sortBy etc.
+        ResourceUtils.validateRequiredParameter("Compartment Id", compartmentId);
+        ResourceUtils.validateOptionalParameter("Display Name", displayName);
+        ResourceUtils.validateOptionalParameter("opcRequestId", opcRequestId);
+        ResourceUtils.validateOptionalParameter("page", page);
+        ResourceUtils.validateOptionalParameter("Sort Order", sortOrder);
+        ResourceUtils.validateOptionalParameter("Sort By", sortBy);
+        ResourceUtils.validateOptionalPositiveIntegerParameter("limit", limit);
+
+        authorizationRequest.addVariable(ContextVariableFactory.string("target.compartment.id", compartmentId));
+        authorizationRequest.addVariable(ContextVariableFactory.string("target.integration.namespace", namespace));
+        authorizationHelper.authorize(principal, authorizationRequest, compartmentId, INTEGRATION_RESOURCE_KIND);
+
+```
+The last line
+```
+        authorizationHelper.authorize(principal, authorizationRequest, compartmentId, INTEGRATION_RESOURCE_KIND);
+```
+could be performed with an intercepted Annotation, even if `authorizationHelper` is a class-level field.
