@@ -680,6 +680,7 @@ See the code in it for brute-force code review.
  $ node server.js
 ```
 Then open <http://localhost:8080/index.html> in your browser.
+> 💡 : Try [`GraalVM`](https://www.graalvm.org/) 👍
 
 ### Another example, character recognition
 Now we've set the scene, we can move to a slightly more complex example.
@@ -715,7 +716,9 @@ we turn it to a gray-scale or black-and-white image.
 As a 1-dimension (18x18 = 324) array:
 ![8](./img/8.v2.png)
 
-> Note: to void potential ambiguities: the network we will use later will be trained on images 28x28 (=784)
+As a result, the input layer will have 324 nodes...
+
+> Note: _to avoid potential future ambiguities_: the network we will use later will be trained on images 28x28 (=784)
 
 ##### TODO
 - Java version
