@@ -587,29 +587,19 @@ based on the `json` or `yaml` definition you started from.
 This documentation part is a very cool feature.
 
 Swagger's most recent avatar is OpenAPI, this is the one to go for.
-
+See [here](https://github.com/OlivierLD/raspberry-coffee/tree/master/polo-shirt#openapi-spec-formerly-swagger).
 
 Interestingly, even if you do not intend to implement your application in NodeJS, you may very well
 run the NodeJS generator, just to have the documentation web pages up and running.
 
 For example:
-> Note: We provide here a simple `sensors.yaml`, as an example. This is the file the `gradle` task below will start from.
+> Note: We provide here a simple `sensors.yaml`, as an example.
 
-- From the directory this page you're reading lives in, run the nodeJs generation:
+For the documentation, run
 ```
- $ openapi-generator generate --generator-name nodejs-express-server --input-spec yaml/sample.yaml --output nodejs
+ $ openapi-generator generate -g html -i yaml/sample.yaml -o doc
 ```
-Among others, this will generate in its `nodejs` directory a `package.json`.
-Assuming you've installed NodeJS in your environment, do a 
-```
- $ cd nodejs
- $ npm install
-```
-followed by a 
-```
- $ node index.js
-```
-Then from a browser on the same machine, just reach http://localhost:8765/docs. 
+Then open `doc/index.html` in a browser.
 
 ![Swagger Doc](./img/swagger.01.png)
 
@@ -625,6 +615,30 @@ The services can be invoke from any REST client. `curl`, `PostMan`, a browser (f
  $ curl -X GET --header 'Accept: application/json' 'http://localhost:8765/v1/sensors/relay'
 ```
 
+#### Bonus: OpenAPI Spec (OAS) Generation
+We will be using customized generation templates, as explained [here](https://github.com/OlivierLD/raspberry-coffee/tree/master/polo-shirt#to-install-openapi-generator).
+
+Run
+```
+ $ openapi-generator generate --generator-name jaxrs-jersey --input-spec sensors.v3.yaml --output oas --api-package rest.oas --template-dir ~/.openapi-generator/JavaJaxRS/libraries/jersey1
+```
+Then you are ready to flesh out your code, in `oas/src/main/java/rest/oas/impl/SensorsApiServiceImpl.java`.
+
+To get the components required for the GPIO interaction, you can use the `ServletContext` in `rest.oas.Bootstrap.java` to store them to be re-used later.
+
+This is a pure JAX-RS code, you even have the possibility to add security.
+
+You can run is as is right now:
+```
+ $ cd oas
+ $ mvn clean package jetty:run
+```
+Then you can call (from another console):
+```
+ $ curl http://localhost:8765/sensors/ambient-light
+ ```
+
+ 
 ---
 
 #### Glossary

@@ -213,7 +213,7 @@ $ openapi-generator generate \
                     --generator-name jaxrs-jersey \ 
                     --input-spec yaml/sample.yaml \
                     --output customTest \
-                    --package-name oliv.api \ 
+                    --api-package oliv.api \ 
                     --template-dir ~/.openapi-generator/JavaJaxRS/libraries/jersey1 \ 
                     --verbose
 ```

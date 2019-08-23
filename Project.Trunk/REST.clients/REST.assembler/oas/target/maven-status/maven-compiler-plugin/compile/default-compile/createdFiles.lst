@@ -1,0 +1,14 @@
+org/openapitools/model/AmbientLight.class
+org/openapitools/model/RelayStatus.class
+rest/oas/ApiException.class
+rest/oas/ApiOriginFilter.class
+rest/oas/impl/SensorsApiServiceImpl.class
+rest/oas/RFC3339DateFormat.class
+rest/oas/SensorsApiService.class
+rest/oas/SensorsApi.class
+rest/oas/ApiResponseMessage.class
+rest/oas/factories/SensorsApiServiceFactory.class
+rest/oas/NotFoundException.class
+rest/oas/JacksonJsonProvider.class
+rest/oas/StringUtil.class
+rest/oas/Bootstrap.class
