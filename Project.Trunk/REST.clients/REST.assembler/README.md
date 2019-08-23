@@ -599,6 +599,15 @@ For the documentation, run
 ```
  $ openapi-generator generate -g html -i yaml/sample.yaml -o doc
 ```
+
+> Note: generation flavors for the doc are:
+- cwiki
+- dynamic-html
+- html
+- html2
+- openapi
+- openapi-yaml
+
 Then open `doc/index.html` in a browser.
 
 ![Swagger Doc](./img/swagger.01.png)
@@ -638,7 +647,7 @@ Then you can call (from another console):
  $ curl http://localhost:8765/sensors/ambient-light
  ```
 
- 
+
 ---
 
 #### Glossary
