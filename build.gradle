@@ -3,7 +3,7 @@ plugins {
   id 'scala'
   id 'idea'
   id 'maven'
-  id 'com.github.johnrengelman.shadow' version '4.0.2'
+  id 'com.github.johnrengelman.shadow' version '5.0.0'
 }
 
 compileJava.options.encoding = 'ISO-8859-1'
