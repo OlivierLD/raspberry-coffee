@@ -105,7 +105,7 @@ specifically, the method signature is:
 ```java
     public Response greetV3(@Parameter(description = "An object, with name and salutation" ) GreetingRequest body, @Context SecurityContext securityContext)
 ```
-I may very well need more from parameters from the context, like `@Context ServletContext servletContext`, `@Context UriInfo uriInfo`, etc.
+I may very well need more parameters from the context, like `@Context ServletContext servletContext`, `@Context UriInfo uriInfo`, etc.
 Let's say I want to add:
 - `@Context Application app`
 - `@Context ServletContext context`
@@ -216,4 +216,4 @@ $ openapi-generator generate \
                     --template-dir ~/.openapi-generator/JavaJaxRS/libraries/jersey1 \ 
                     --verbose
 ```
-> Note: the --template-dir is the directory where the template live in, not anything higher in the tree.
+> Note: the `--template-dir` is the directory where the template live in, not anything higher in the tree.
