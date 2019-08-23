@@ -29,7 +29,7 @@ A single command can generate, build, package and run the services.
 
 > Note: For Swagger and Jetty related stuff, use Java 8, _not_ 9 (for some `jaxb` reasons).
 
-#### To install Swagger Codegen
+#### To install OpenAPI Generator
 Look [here](https://openapi-generator.tech/docs/installation).
 
 For Linux, (or any system)):
