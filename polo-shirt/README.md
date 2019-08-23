@@ -7,15 +7,16 @@ An annotation-based REST server, like JAX-RS (Jersey -> Polo), latching on the [
 - The implementation - with its annotations - is in `restserver.AnnotatedRESTImplementation`.
 - Annotation definitions are in the package `restserver.annotations`.
 
-#### Swagger
-Swagger is not related to this project, but it could be considered. Since recently, it is not only a way to document and generate your API, it can also be run directly on Jetty.
+#### OpenAPI Spec (formerly Swagger)
+OpenAPI is not related to this project, but it could be considered. Since recently, it is not only a way to document and generate your API, it can also be run directly on Jetty.
 A single command can generate, build, package and run the services.
 
 > Note the `yaml` structure has changed between version 2 and version 3.
 
 - [Swagger](https://swagger.io/)
 - [Swagger Codegen](https://swagger.io/tools/swagger-codegen/)
-- [Customizing the generator](https://github.com/swagger-api/swagger-codegen#customizing-the-generator)
+- [OpenAPI](https://openapi-generator.tech/)
+- [Customizing the Swagger generator](https://github.com/swagger-api/swagger-codegen#customizing-the-generator)
 - Online yaml editor: <https://app.swaggerhub.com/apis/OlivierLD/PoloShirt.101/1.0.0>
 
 ---

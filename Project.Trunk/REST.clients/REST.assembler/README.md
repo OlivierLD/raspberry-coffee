@@ -579,12 +579,15 @@ You can see the light going on when the light sensor is covered (simulating dark
 > We have been using here nodes pre-defined by Node-RED, to invoke REST services, write the function, etc.
 > There are _many_ such pre-defined nodes. You can even ping an email inbox; you can turn the light on or off by sending an email.
 
-### Using Swagger (aka Open API)
+### Using Swagger (aka OpenAPI)
 [`Swagger`](https://swagger.io/) has been designed to facilitate the development of REST Services.
 You can start from the service definition (in `json` or `yaml` format, `yaml` being the easiest to deal with), and then
 you can generate the skeleton of your implementation (in the language of your choice), for the client, for the server, _as well as the documentation_ of your services,
 based on the `json` or `yaml` definition you started from.
 This documentation part is a very cool feature.
+
+Swagger's most recent avatar is OpenAPI, this is the one to go for.
+
 
 Interestingly, even if you do not intend to implement your application in NodeJS, you may very well
 run the NodeJS generator, just to have the documentation web pages up and running.
@@ -592,14 +595,14 @@ run the NodeJS generator, just to have the documentation web pages up and runnin
 For example:
 > Note: We provide here a simple `sensors.yaml`, as an example. This is the file the `gradle` task below will start from.
 
-- From the directory this page you're reading lives in, run <!-- TODO Updte to OAS 3.0 -->
+- From the directory this page you're reading lives in, run the nodeJs generation:
 ```
- $ ../../../gradlew swaggerNode
+ $ openapi-generator generate --generator-name nodejs-express-server --input-spec yaml/sample.yaml --output nodejs
 ```
-Among others, this will generate in its `node` directory a `package.json`.
+Among others, this will generate in its `nodejs` directory a `package.json`.
 Assuming you've installed NodeJS in your environment, do a 
 ```
- $ cd generated/node
+ $ cd nodejs
  $ npm install
 ```
 followed by a 

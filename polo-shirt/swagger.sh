@@ -2,6 +2,8 @@
 GENERATION_FOLDER=./generated/jaxrs
 YAML_FILE=./yaml/sample.yaml
 DESTINATION_PACKAGE=oliv.io
+FLAVOR=jaxrs-jersey
+# FLAVOR=nodejs-express-server
 if [ -d $GENERATION_FOLDER ]
 then
 	echo -e "----------------------------------------------------------------------------------------------------"
@@ -24,7 +26,7 @@ VERBOSE=
 # openapi-generator generate --generator-name jaxrs-jersey --input-spec $YAML_FILE --output $GENERATION_FOLDER --package-name $DESTINATION_PACKAGE $VERBOSE
 # With custom templates
 TEMPLATE_DIR=~/.openapi-generator/JavaJaxRS/libraries/jersey1
-COMMAND="openapi-generator generate --generator-name jaxrs-jersey --input-spec $YAML_FILE --output $GENERATION_FOLDER --api-package $DESTINATION_PACKAGE --template-dir $TEMPLATE_DIR $VERBOSE"
+COMMAND="openapi-generator generate --generator-name $FLAVOR --input-spec $YAML_FILE --output $GENERATION_FOLDER --api-package $DESTINATION_PACKAGE --template-dir $TEMPLATE_DIR $VERBOSE"
 echo -e "We are going to run:"
 echo -e "$COMMAND"
 echo -en "Proceed y|n ? > "
