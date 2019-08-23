@@ -671,7 +671,7 @@ $ ./sample.04.py
 
 Also look at the Jupyter Notebooks in this directory.
 
-Then, to go to production, we use TensorFlow.js.
+Then, **_to go to production_**, we use TensorFlow.js.
 We will convert our model (the `h5` file) with `tensorflowjs_converter`.
 Install it as explained [here](https://www.tensorflow.org/js/tutorials/conversion/import_keras).
 
