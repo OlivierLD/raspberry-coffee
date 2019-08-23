@@ -272,7 +272,7 @@ Obviously, the more input data you can have, the more precise your training can 
 
 | Example |
 |:--------|
-| See this [Java Notebook](./NeuralNetworks.ipynb#Neurons!) for an example, or <a href="https://olivierld.github.io/nn/one.neuron.webcomp.html" target="new">this piece</a> of HTML5/CSS3/WebComponents (also includes activation functions). |
+| > 💡 : See this [Java Notebook](./NeuralNetworks.ipynb#Neurons!) for an example, or <a href="https://olivierld.github.io/nn/one.neuron.webcomp.html" target="new">this piece</a> of HTML5/CSS3/WebComponents (also includes activation functions). |
 
 In a classification problem, a single neuron can draw a single line as a decision boundary.
 
@@ -417,7 +417,7 @@ Then we can plot the value of this bias (abscissa) to the loss (ordinate).
 This loss is displayed on the diagrams of the TensorFlow playground, on the top left part (Test loss),
 the curve(s) represent the value of the loss as the training goes. If the loss drops, this is good.
 
-Try [this](https://www.benfrederickson.com/numerical-optimization/) interactive page.
+> 💡 : Try [this](https://www.benfrederickson.com/numerical-optimization/) interactive page.
 
 This is the goal of the training algorithm, it changes the bias to minimize the loss.
 
@@ -427,7 +427,7 @@ figures in the TensorFlow diagram.
 
 A big `learning rate` will accelerate the learning process, but might very well miss local minima if it is too big.
 
-Do look at [this interactive document](https://www.benfrederickson.com/numerical-optimization/), it is a good one.
+> 💡 : Do look at [this interactive document](https://www.benfrederickson.com/numerical-optimization/), it is a good one.
 
 ![Learning rate](./img/sample.04.png)
 
@@ -436,7 +436,7 @@ This strategy is called _Gradient Descent_.
 The `epoch` represents the number of steps it went through so far. For each step, the algorithm is evaluating the error for all the points of the training dataset.
 You can see the loss curve(s) as the process goes on, and the decision boundaries are updated in real time as well.
 
-See this [complex one](http://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=spiral&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=40&networkShape=4,2&seed=0.31018&showTestData=true&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false&problem_hide=true&regularization_hide=true&batchSize_hide=true&regularizationRate_hide=true).
+> 💡 : See this [complex one](http://playground.tensorflow.org/#activation=tanh&batchSize=10&dataset=spiral&regDataset=reg-plane&learningRate=0.03&regularizationRate=0&noise=40&networkShape=4,2&seed=0.31018&showTestData=true&discretize=false&percTrainData=50&x=true&y=true&xTimesY=false&xSquared=false&ySquared=false&cosX=false&sinX=false&cosY=false&sinY=false&collectStats=false&problem=classification&initZero=false&hideText=false&problem_hide=true&regularization_hide=true&batchSize_hide=true&regularizationRate_hide=true).
 
 ##### Try for yourself
 Now we have a better understanding of the problem, you should see how to address it in the TensorFlow playground.
@@ -817,7 +817,8 @@ Then (on a Mac) use `Photo Booth` (possibly with `Camera Settings`) to take the 
 
 Even a fuzzy picture like this should be OK.
 
-Separate the 3 digits the image contains, I use `GIMP`.
+Separate the 3 digits the image contains, you can use any image manipulation software (`GIMP` is free).
+> `OpenCV` will come later in the picture.
 
 | Six | Five | Three |
 |:---:|:----:|:-----:|
