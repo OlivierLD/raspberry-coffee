@@ -713,7 +713,7 @@ and the model available.
 Notice here that we do not use colors. This simplifies the compexity of the image. If the image arrives as a color image,
 we turn it to a gray-scale or black-and-white image.
 
-As a 1-dimension (18x18 = 324) array:
+As a 1-dimension - aka Flatten - (18x18 = 324) array:
 ![8](./img/8.v2.png)
 
 As a result, the input layer will have 324 nodes...
