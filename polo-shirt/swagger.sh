@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 GENERATION_FOLDER=./generated/jaxrs
 YAML_FILE=./yaml/sample.yaml
-DESTINATION_PACKAGE=samples.io
+DESTINATION_PACKAGE=oliv.io
 if [ -d $GENERATION_FOLDER ]
 then
 	echo -e "----------------------------------------------------------------------------------------------------"
@@ -18,5 +18,18 @@ then
   fi
 fi
 #
-# swagger-codegen generate --lang jaxrs-jersey --input-spec $YAML_FILE --output $GENERATION_FOLDER --api-package $DESTINATION_PACKAGE --verbose
-openapi-generator generate --generator-name jaxrs-jersey $YAML_FILE --output $GENERATION_FOLDER --package-name $DESTINATION_PACKAGE --verbose
+VERBOSE=
+# VERBOSE=--verbose
+# swagger-codegen generate --lang jaxrs-jersey --input-spec $YAML_FILE --output $GENERATION_FOLDER --api-package $DESTINATION_PACKAGE $VERBOSE
+# openapi-generator generate --generator-name jaxrs-jersey --input-spec $YAML_FILE --output $GENERATION_FOLDER --package-name $DESTINATION_PACKAGE $VERBOSE
+# With custom templates
+TEMPLATE_DIR=~/.openapi-generator/JavaJaxRS/libraries/jersey1
+COMMAND="openapi-generator generate --generator-name jaxrs-jersey --input-spec $YAML_FILE --output $GENERATION_FOLDER --api-package $DESTINATION_PACKAGE --template-dir $TEMPLATE_DIR $VERBOSE"
+echo -e "We are going to run:"
+echo -e "$COMMAND"
+echo -en "Proceed y|n ? > "
+read a
+if [ "$a" == "y" ] || [ "$a" == "Y" ]
+then
+  $COMMAND
+fi

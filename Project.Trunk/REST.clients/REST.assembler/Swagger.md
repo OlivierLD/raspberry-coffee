@@ -57,5 +57,6 @@ To add to the pom for the Java/Jersey generation:
     </dependency>
 ```
 
-Explicitly add the code in Bootstrap, web.xml.
-Explicitly add the @Context ServletContext parameters to interfaces and implementation if you wish to use it.
+- Explicitly add the code in Bootstrap, web.xml.
+- Explicitly add the `@Context ServletContext` parameters to interfaces and implementation if you wish to use it.
+    - See [here](https://openapi-generator.tech/docs/templating) to learn about customizing mustache templates.
