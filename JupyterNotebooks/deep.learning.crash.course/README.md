@@ -36,7 +36,7 @@ without comments and graphics.
 ### Content
 <table width="98%">
 <tr>
-<td valign="top">
+<td valign="top" width="50%">
 
 - AI – Where does DL fit?
 - How is it different from “Classical” Programming
@@ -46,7 +46,7 @@ without comments and graphics.
 - Neuronal Network: TensorFlow playground
 
 </td>
-<td valign="top">
+<td valign="top" width="50%">
 
 - Machine Learning
   - Layers
