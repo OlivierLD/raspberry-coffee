@@ -93,7 +93,7 @@ Here is a non exhaustive list of the Jupyter Notebooks and Python scripts we pro
 - **insurance.demo/sample.01.py**, basic sanity checks, on the data
 - **insurance.demo/sample.03.py**, building and training a network (insurance data), with TensorFlow and Keras
 - **insurance.demo/sample.04.py**, like the one above, but more accurate, and with TensorBoard.
-- **digit.demo/sample.05.py**, with TensorFlow and Keras, hand-written figures recognition, from scratch.
+- **digit.demo/sample.05.1.py**, with TensorFlow and Keras, hand-written figures recognition, from scratch.
 - **digit.demo/sample.06.py**, with TensorFlow and Keras, pictures recognition.
 
 </td>
@@ -641,9 +641,27 @@ Here we do not use the TensorFlow playground anymore, we do it _for real_ on a d
 We create a `sequential` model, using the Keras API. Keras is written in Python.
 
 ```python
- model = keras.Sequential()
+num_categories = 3
+model = keras.Sequential()
+
+model.add(Dense(100, name='Hidden1Layer1', input_dim=3))
+model.add(BatchNormalization())
+model.add(Activation('relu'))
+model.add(Dropout(dropout))
+
+model.add(Dense(100, name='HiddenLayer2'))
+model.add(BatchNormalization())
+model.add(Activation('relu'))
+model.add(Dropout(dropout))
+
+# Last layer, SoftMax, as many neurons as categories we want (3)
+model.add(Dense(num_categories, name='SoftmaxLayer', activation='softmax'))
 ```
 And we start from there.
+As you can see:
+- We have 3 input nodes (age, milage, speed)
+- 2 hidden layers of 100 nodes each, activated by a `ReLU` function
+- The last layer has 3 outputs (low, medium, high), rendered with `SoftMax`
 
 See the [final Python script](insurance.demo/sample.04.py). This can be run for real on your machine, after you've downloaded the data in `insurance-customers-1500.csv`, with `curl`.
 ```
