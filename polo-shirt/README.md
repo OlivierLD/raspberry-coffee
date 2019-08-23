@@ -63,7 +63,7 @@ Then from another console:
 ```
 > Note: in IntelliJ, right-click on the pom.xml in generated/jaxrs, and `Add as Maven Project`. 
 
-Flesh out your methods (that one in `samples.io.impl.TopRootApiServiceImpl`):
+Flesh out your methods (that one in `oliv.io.impl.TopRootApiServiceImpl`):
 ```java
 @Override
 public Response greetV3(GreetingRequest body, SecurityContext securityContext) throws NotFoundException {
