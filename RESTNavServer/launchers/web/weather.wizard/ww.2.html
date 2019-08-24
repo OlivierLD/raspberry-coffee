@@ -622,6 +622,9 @@
 
   	var compositeData = (existingData === undefined ? findCompositeByKey(key) : existingData);
 
+  	// Clear previous one if any
+		gribData = undefined;
+
   	gribFileLocation = undefined;
   	if (existingData !== undefined && existingData.gribRequest !== undefined) {
 			gribFileLocation = existingData.gribRequest;
