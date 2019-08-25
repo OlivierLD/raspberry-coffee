@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application' // -> provides the 'run' task.
+    id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
 // Application plugin doc at https://docs.gradle.org/current/userguide/application_plugin.html
@@ -29,6 +30,10 @@ task listJars {
             File file -> println "${file} => ${file.name}"
         }
     }
+}
+
+shadowJar {
+    zip64 true
 }
 
 if (!hasProperty('mainClassName')) {
@@ -83,7 +88,6 @@ task runOlivSwingCamera(type:JavaExec) {
     main = mainClassNameOlivSwingCamera
     classpath = sourceSets.main.runtimeClasspath
 }
-
 
 task continuousPathDetect(type:JavaExec) {
     main = mainClassNameContinuousPathDetect

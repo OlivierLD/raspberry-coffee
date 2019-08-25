@@ -27,6 +27,7 @@ Java stuff:
 ll /usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4
 ```
 
+Make sure you use Java 9.
 ```
  export JAVA_HOME=`/usr/libexec/java_home -v 9.0.1`
  ../gradlew run
