@@ -133,9 +133,11 @@ zoom = False
 scale = 25  # Zoom scale. Percent of the original (radius). 50 => 100%
 
 keepLooping = True
-print("+---------------------------------------------------------+")
-print("| Type Q or q to exit the loop, S or s to take a snapshot |")
-print("+---------------------------------------------------------+")
+print("+----------------------------------------------------+")
+print("| Type Q, q or Ctrl+C to exit the loop               |")
+print("| Type S or s to take a snapshot                     |")
+print("| > Select the main image before hitting a key... ;) |")
+print("+----------------------------------------------------+")
 while keepLooping:
 
     _, frame = camera.read()
