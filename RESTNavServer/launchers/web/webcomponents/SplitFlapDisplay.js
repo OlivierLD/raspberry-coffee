@@ -4,7 +4,8 @@ const SPLIT_FLAP_TAG_NAME = 'split-flap-display';
 const SPLIT_FLAP_CHARACTERS = [
 	"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
 	"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-	"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", ":", " "
+	"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+	"-", ":", ".", ",", "?", "!", "+", "=", "/", " " // Add more here if needed
 ];
 
 const splitFlapDefaultColorConfig = {
@@ -37,6 +38,10 @@ class SplitFlapDisplay extends HTMLElement {
 		this._shadowRoot = this.attachShadow({mode: 'open'}); // 'open' means it is accessible from external JavaScript.
 		// create and append a <canvas>
 		this.canvas = document.createElement("canvas");
+		let fallbackElemt = document.createElement("h1");
+		let content = document.createTextNode("This is a Split-Flap Display, on an HTML5 canvas");
+		fallbackElemt.appendChild(content);
+		this.canvas.appendChild(fallbackElemt);
 		this.shadowRoot.appendChild(this.canvas);
 
 		this._connected = false;
@@ -250,7 +255,7 @@ class SplitFlapDisplay extends HTMLElement {
 	}
 
 	drawOneFlap(context, char, x, y, w, h, scale) {
-		var grd = context.createLinearGradient(x, y, x + w, y + h);
+		let grd = context.createLinearGradient(x, y, x + w, y + h);
 		grd.addColorStop(0, this.splitFlapColorConfig.displayBackgroundGradient.from); // 0  Beginning
 		grd.addColorStop(1, this.splitFlapColorConfig.displayBackgroundGradient.to);   // 1  End
 
@@ -258,7 +263,7 @@ class SplitFlapDisplay extends HTMLElement {
 		context.strokeStyle = this.splitFlapColorConfig.frameColor;
 		context.lineWidth = 0.5;
 		// Background
-		this.roundRect(context, x, y, w, h, 1, true, false);
+		SplitFlapDisplay.roundRect(context, x, y, w, h, 1, true, false);
 
 		context.beginPath();
 		context.moveTo(x, y + (h / 2));
@@ -349,14 +354,14 @@ class SplitFlapDisplay extends HTMLElement {
 
 		context.fillStyle = this.splitFlapColorConfig.bgColor;
 		// Background
-		this.roundRect(context, 0, 0, this.canvas.width, this.canvas.height, 5, true, false);
+		SplitFlapDisplay.roundRect(context, 0, 0, this.canvas.width, this.canvas.height, 5, true, false);
 
 		for (let i=0; i<upperCaseValue.length; i++) {
 			this.drawOneFlap(context, upperCaseValue[i], i * oneWidth, 0, oneWidth, height, scale);
 		}
 	}
 
-	roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+	static roundRect(ctx, x, y, width, height, radius, fill, stroke) {
 		if (fill === undefined) {
 			fill = true;
 		}
