@@ -9,6 +9,9 @@
 /Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/oas/src/main/java/rest/oas/impl/SensorsApiServiceImpl.java
 /Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/oas/src/gen/java/org/openapitools/model/AmbientLight.java
 /Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/oas/src/gen/java/org/openapitools/model/RelayStatus.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/oas/src/main/java/rest/oas/impl/RelayManager.java
 /Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/oas/src/main/java/rest/oas/Bootstrap.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/oas/src/main/java/rest/oas/impl/ADCChannel.java
 /Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/oas/src/main/java/rest/oas/factories/SensorsApiServiceFactory.java
+/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/oas/src/main/java/rest/oas/impl/SensorData.java
 /Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/oas/src/gen/java/rest/oas/StringUtil.java

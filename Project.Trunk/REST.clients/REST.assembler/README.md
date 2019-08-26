@@ -647,6 +647,12 @@ Then you can call (from another console):
  $ curl http://localhost:8765/sensors/ambient-light
  ```
 
+##### Flesh it out
+- Make sure you run Java 8
+- Add dependencies
+- Bump java version to 1.8
+- Add utility classes for sensors
+- Flesh out the `SensorsAPiServiceImpl`
 
 ---
 

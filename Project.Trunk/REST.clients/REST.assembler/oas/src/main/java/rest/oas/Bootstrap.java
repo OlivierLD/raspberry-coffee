@@ -4,6 +4,8 @@ import io.swagger.jaxrs.config.SwaggerContextService;
 import io.swagger.models.*;
 
 import io.swagger.models.auth.*;
+import rest.oas.impl.ADCChannel;
+import rest.oas.impl.RelayManager;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.ServletContext;
@@ -25,6 +27,11 @@ public class Bootstrap extends HttpServlet {
 
     ServletContext context = config.getServletContext();
     Swagger swagger = new Swagger().info(info);
+
+    ADCChannel adcChannel = new ADCChannel();
+    RelayManager relayManager = new RelayManager("1,11");
+    context.setAttribute("adc-channel", adcChannel);
+    context.setAttribute("relay-manager", relayManager);
 
     new SwaggerContextService().withServletConfig(config).updateSwagger(swagger);
   }

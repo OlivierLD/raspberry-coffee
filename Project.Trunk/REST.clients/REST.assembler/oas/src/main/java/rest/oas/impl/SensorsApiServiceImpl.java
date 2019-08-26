@@ -36,7 +36,12 @@ public class SensorsApiServiceImpl extends SensorsApiService {
     public Response readAmbientLight(SecurityContext securityContext, Application app, ServletContext context, ServletConfig config, HttpHeaders headers, UriInfo uriInfo)
     throws NotFoundException {
         // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+        ADCChannel adcChannel = (ADCChannel)context.getAttribute("adc-chaannel");
+        float ambientLight = adcChannel.readChannelVolume();
+        SensorData.AmbientLight sensorData = new SensorData.AmbientLight();
+        sensorData.setLight(ambientLight);
+//        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+        return Response.ok().entity(sensorData).build();
     }
     @Override
     public Response setRelayStatus(RelayStatus relayStatus, SecurityContext securityContext, Application app, ServletContext context, ServletConfig config, HttpHeaders headers, UriInfo uriInfo)
