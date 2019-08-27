@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Oliv did it.
  * Basic OpenCV image manipulations on frames returned by the Camera
- * Display images in a Swing JPanel
+ * Display images in a Swing JPanel, with widgets to interact with some OpenCV options
  */
 public class OpenCVSwingCamera {
 
@@ -34,7 +34,6 @@ public class OpenCVSwingCamera {
 	private VideoCapture camera = null;
 	private boolean cameraActive = false;
 	private static int cameraId = 0;
-
 
 	private static SwingFrameWithWidgets swingFrame = null;
 

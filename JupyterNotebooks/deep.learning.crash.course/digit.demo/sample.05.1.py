@@ -106,6 +106,21 @@ if not loadOnly:
     print("Starting the training, on {} epochs".format(epochs))
     print("----------------------------------")
     model.fit(x_train, y_train, epochs=epochs, verbose=1)
+
+    show_details = True
+    if show_details:
+        # config = model.get_config()
+        # from keras.models import model_from_json
+        json_string = model.to_json()
+        print("Model, json format: {}".format(json_string))
+        for layer in model.layers:
+            try:
+                weights = layer.get_weights()[0]
+                biases = layer.get_weights()[1]
+                print("Weights: {}\nBiases: {}".format(weights, biases))
+            except Exception:
+                print("Oops")
+
     model.summary()
     print("------ Number of parameters: Explanation -------")
     print("  401,920 = 512 x 785 ")

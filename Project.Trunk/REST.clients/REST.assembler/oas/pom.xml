@@ -92,6 +92,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
         <configuration>
           <source>8</source>
           <target>8</target>
@@ -191,11 +192,11 @@
         <scope>provided</scope>
     </dependency>
     <!-- Added -->
-    <dependency>
+    <!--dependency>
 		  <groupId>com.pi4j</groupId>
 		  <artifactId>pi4j-core</artifactId>
 		  <version>1.2-SNAPSHOT</version>
-    </dependency>
+    </dependency-->
     <!--dependency>
       <groupId>javax.interceptor</groupId>
       <artifactId>javax.interceptor-api</artifactId>

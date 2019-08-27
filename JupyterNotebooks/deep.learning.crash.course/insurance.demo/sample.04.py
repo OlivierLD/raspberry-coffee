@@ -104,6 +104,20 @@ EPOCHS = 2_000
 history = model.fit(X_train, y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, validation_split=0.2, verbose=0, callbacks=[tensorboard])
 print("Training completed")
 
+show_details = True
+if show_details:
+    # config = model.get_config()
+    # from keras.models import model_from_json
+    json_string = model.to_json()
+    print("Model, json format: {}".format(json_string))
+    for layer in model.layers:
+        try:
+            weights = layer.get_weights()[0]
+            biases = layer.get_weights()[1]
+            print("Weights: {}\nBiases: {}".format(weights, biases))
+        except Exception:
+            print("Oops")
+
 train_loss, train_accuracy = model.evaluate(X_train, y_train, batch_size=BATCH_SIZE)
 print("Training Loss {}, Quality {}%".format(train_loss, 100 * train_accuracy))
 

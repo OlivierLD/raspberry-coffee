@@ -36,7 +36,7 @@ public class SensorsApiServiceImpl extends SensorsApiService {
     public Response readAmbientLight(SecurityContext securityContext, Application app, ServletContext context, ServletConfig config, HttpHeaders headers, UriInfo uriInfo)
     throws NotFoundException {
         // do some magic!
-        ADCChannel adcChannel = (ADCChannel)context.getAttribute("adc-chaannel");
+        ADCChannel adcChannel = (ADCChannel)context.getAttribute("adc-channel");
         float ambientLight = adcChannel.readChannelVolume();
         SensorData.AmbientLight sensorData = new SensorData.AmbientLight();
         sensorData.setLight(ambientLight);

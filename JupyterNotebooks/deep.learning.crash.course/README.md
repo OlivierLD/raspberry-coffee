@@ -407,12 +407,9 @@ mean squared error (MSE).
 - We sum all the differences for all the data set
 - We divide by the cardinality of the dataset (normalization)
 
-To understand better, we restrict the picture to only one neuron again, to deal with only one parameter (of the neuron),
-that would be the bias.
+We can plot the value of the loss (ordinate) as the training goes (epoch, as abscissa).
 
-Then we can plot the value of this bias (abscissa) to the loss (ordinate).
-
-![Loss vs Bias](./img/loss.vs.bias.png)
+![Loss vs Bias](./img/local.global.minimum.png)
 
 This loss is displayed on the diagrams of the TensorFlow playground, on the top left part (Test loss),
 the curve(s) represent the value of the loss as the training goes. If the loss drops, this is good.
