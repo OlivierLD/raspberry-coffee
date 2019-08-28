@@ -429,8 +429,8 @@ public class ServerWithKewlButtons extends NavServer {
 			map[9]  = String.valueOf(PinUtil.GPIOPin.GPIO_5.pinNumber())  + ":Rst";
 			map[10] = String.valueOf(PinUtil.GPIOPin.GPIO_4.pinNumber())  + ":DC";
 
-			map[11] = String.valueOf(PinUtil.GPIOPin.GPIO_8.pinNumber())  + ":I2C-SDA";
-			map[12] = String.valueOf(PinUtil.GPIOPin.GPIO_9.pinNumber())  + ":I2C-SLC";
+			map[11] = String.valueOf(PinUtil.GPIOPin.GPIO_8.pinNumber())  + ":SDA";
+			map[12] = String.valueOf(PinUtil.GPIOPin.GPIO_9.pinNumber())  + ":SLC";
 
 			System.out.println("---------------------------- P I N   M A P P I N G ------------------------------------------");
 			PinUtil.print(map);

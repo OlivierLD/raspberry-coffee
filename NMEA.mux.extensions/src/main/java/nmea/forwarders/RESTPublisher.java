@@ -62,6 +62,7 @@ public class RESTPublisher implements Forwarder {
 	 * @throws Exception
 	 */
 	public RESTPublisher() throws Exception {
+//		System.out.println(String.format(">> Instantiating %s", this.getClass().getName()));
 	}
 
 	private void setFeedValue(String key, String baseUrl, String feed, String value) throws Exception {
@@ -70,7 +71,7 @@ public class RESTPublisher implements Forwarder {
 		headers.put("X-AIO-Key", key);
 		JSONObject json = new JSONObject();
 		json.put("value", new Double(value));
-		if ("true".equals(this.properties.getProperty("aio.verbose"))) {
+		if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
 			System.out.println(String.format("URL:%s, key:%s", baseUrl, key));
 			System.out.println(String.format("->->-> POSTing to feed [%s]: %s to %s", feed, json.toString(2), url));
 			System.out.println("Headers:");
@@ -191,8 +192,8 @@ public class RESTPublisher implements Forwarder {
 		if (StringParsers.validCheckSum(str)) {
 //		String deviceId = StringParsers.getDeviceID(str);
 			String sentenceId = StringParsers.getSentenceID(str);
-			if ("true".equals(this.properties.getProperty("aio.verbose"))) {
-				System.out.println(String.format("->->-> From NMEA data [%s]", str.trim()));
+			if ("true".equals(this.properties.getProperty("aio.verbose.2"))) {
+				System.out.println(String.format("\t->->-> From NMEA data [%s]", str.trim()));
 			}
 			if ("MDA".equals(sentenceId)) {
 				StringParsers.MDA mda = StringParsers.parseMDA(str);
@@ -235,7 +236,11 @@ public class RESTPublisher implements Forwarder {
 						logPRate(xdr.getValue());
 					}
 				});
-			} // Other sentences ignored (like GLL)
+			} else {  // Other sentences ignored (like GLL)
+				if ("true".equals(this.properties.getProperty("aio.verbose.2"))) {
+					System.out.println("\tNothing to log (REST)");
+				}
+			}
 		}
 	}
 
@@ -260,7 +265,14 @@ public class RESTPublisher implements Forwarder {
 
 	@Override
 	public void setProperties(Properties props) {
+
 		this.properties = props;
+
+//		for (Object obj : this.properties.keySet()) {
+//			String property = this.properties.getProperty(obj.toString());
+//			System.out.println(String.format("%s = %s", obj.toString(), property));
+//		}
+
 		try {
 			pushInterval = 1_000L * Long.parseLong(this.properties.getProperty("aio.push.interval", "60"));
 		} catch (Exception ex) {
