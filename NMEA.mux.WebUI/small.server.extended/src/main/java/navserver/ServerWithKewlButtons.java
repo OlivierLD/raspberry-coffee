@@ -345,9 +345,9 @@ public class ServerWithKewlButtons extends NavServer {
 		this.turnLoggingOffURL = String.format("http://localhost:%d/mux/mux-process/off", serverPort);
 		this.terminateMuxURL = String.format("http://localhost:%d/mux/terminate", serverPort);
 
-		System.out.println(String.format("To turn logging ON, user PUT %s", this.turnLoggingOnURL));
-		System.out.println(String.format("To turn logging OFF, user PUT %s", this.turnLoggingOffURL));
-		System.out.println(String.format("To terminate the multiplexer, user POST %s", this.terminateMuxURL));
+		System.out.println(String.format("To turn logging ON, use PUT %s", this.turnLoggingOnURL));
+		System.out.println(String.format("To turn logging OFF, use PUT %s", this.turnLoggingOffURL));
+		System.out.println(String.format("To terminate the multiplexer, use POST %s", this.terminateMuxURL));
 
 		List<String[]> addresses = TCPUtils.getIPAddresses(true);
 		String machineName = "localhost";
@@ -378,8 +378,8 @@ public class ServerWithKewlButtons extends NavServer {
 
 		try {
 			// Provision buttons here
-			buttonOnePin = RaspiPin.GPIO_29; // Physical #40.
-			buttonTwoPin = RaspiPin.GPIO_28; // Physical #38.
+			buttonOnePin = RaspiPin.GPIO_28; // Physical #38.
+			buttonTwoPin = RaspiPin.GPIO_29; // Physical #40.
 
 			// Change pins, based on system properties.
 			// Use physical pin numbers.
