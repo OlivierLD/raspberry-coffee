@@ -25,8 +25,8 @@ import java.util.function.Consumer;
  *
  * System properties:
  * - button.verbose, default false
- * - buttonOne, default 40 (Physical pin #)
- * - buttonTwo, default 38 (Physical pin #)
+ * - buttonOne, default 38 (Physical pin #)
+ * - buttonTwo, default 40 (Physical pin #)
  * - http.port, default 9999
  *
  */
@@ -155,6 +155,8 @@ public class ServerWithKewlButtons extends NavServer {
 
 	/* ----- Buttons Runnables (actions) ----- */
 	private Runnable onClickOne = () -> {
+		// Timestamp. Go to screen saver mode after a given threshold
+		lastButtonInteraction = System.currentTimeMillis();
 		if (buttonVerbose || oledForwarder.isSimulating()) {
 			System.out.println(String.format(">> %sSingle click on button 1", (buttonTwo.isPushed() ? "[Shft] + " : "")));
 		}
@@ -176,6 +178,8 @@ public class ServerWithKewlButtons extends NavServer {
 	};
 
 	private Runnable onDoubleClickOne = () -> {
+		// Timestamp. Go to screen saver mode after a given threshold
+		lastButtonInteraction = System.currentTimeMillis();
 		if (buttonVerbose || oledForwarder.isSimulating()) {
 			System.out.println(String.format(">> %sDouble click on button 1", (buttonTwo.isPushed() ? "[Shft] + " : "")));
 		}
@@ -229,6 +233,8 @@ public class ServerWithKewlButtons extends NavServer {
 	};
 
 	private Runnable onLongClickOne = () -> {
+		// Timestamp. Go to screen saver mode after a given threshold
+		lastButtonInteraction = System.currentTimeMillis();
 		if (buttonVerbose || oledForwarder.isSimulating()) {
 			System.out.println(String.format(">> %sLong click on button 1", (buttonTwo.isPushed() ? "[Shft] + " : "")));
 		}
@@ -258,6 +264,8 @@ public class ServerWithKewlButtons extends NavServer {
 	};
 
 	private Runnable onClickTwo = () -> {
+		// Timestamp. Go to screen saver mode after a given threshold
+		lastButtonInteraction = System.currentTimeMillis();
 		if (buttonVerbose || oledForwarder.isSimulating()) {
 			System.out.println(String.format(">> %sSingle click on button 2", (buttonOne.isPushed() ? "[Shft] + " : "")));
 		}
@@ -279,6 +287,8 @@ public class ServerWithKewlButtons extends NavServer {
 	};
 
 	private Runnable onDoubleClickTwo = () -> {
+		// Timestamp. Go to screen saver mode after a given threshold
+		lastButtonInteraction = System.currentTimeMillis();
 		if (buttonVerbose || oledForwarder.isSimulating()) {
 			System.out.println(String.format(">> %sDouble click on button 2", (buttonOne.isPushed() ? "[Shft] + " : "")));
 		}
@@ -292,45 +302,53 @@ public class ServerWithKewlButtons extends NavServer {
 			if (buttonVerbose) {
 				System.out.println("Starting screen saver...");
 			}
-			screenSaverMode = true;
-			if (oledForwarder != null) {
-				oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
-			}
-			// Start thread
-			screenSaverThread = new Thread(() -> {
-				boolean on = true;
-				while (screenSaverMode) {
-					if (oledForwarder != null) {
-						oledForwarder.displayLines(new String[]{String.format("%s", on ? "." : "")});
-						on = !on;
-						try {
-							synchronized (this) {
-								this.wait(1_000L);
-							}
-						} catch (InterruptedException ie) {
-							// I know...
-						}
-					}
-				}
-				if (buttonVerbose) {
-					System.out.println("Screen back to life");
-				}
-				if (oledForwarder != null) {
-					oledForwarder.setExternallyOwned(false); // Releasing ownership
-				}
-			});
-			screenSaverThread.start();
+			startScreenSaver();
 		} else {
 			System.out.println("Already in screensaver mode");
 		}
 	};
 
 	private Runnable onLongClickTwo = () -> {
+		// Timestamp. Go to screen saver mode after a given threshold
+		lastButtonInteraction = System.currentTimeMillis();
 		if (buttonVerbose || oledForwarder.isSimulating()) {
 			System.out.println(String.format(">> %sLong click on button 2", (buttonOne.isPushed() ? "[Shft] + " : "")));
 		}
 	};
 
+	private void startScreenSaver() {
+		screenSaverMode = true;
+		if (oledForwarder != null) {
+			oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
+		}
+		// Start thread
+		screenSaverThread = new Thread(() -> {
+			boolean on = true;
+			while (screenSaverMode) {
+				if (oledForwarder != null) {
+					oledForwarder.displayLines(new String[]{String.format("%s", on ? "." : "")});
+					on = !on;
+					try {
+						synchronized (this) {
+							this.wait(1_000L);
+						}
+					} catch (InterruptedException ie) {
+						// I know...
+					}
+				}
+			}
+			if (buttonVerbose) {
+				System.out.println("Screen back to life");
+			}
+			if (oledForwarder != null) {
+				oledForwarder.setExternallyOwned(false); // Releasing ownership
+			}
+		});
+		screenSaverThread.start();
+	}
+
+	private long lastButtonInteraction = 0L;
+	private final static long GO_TO_SLEEP_AFTER = 5 * 60_000L; // 5 minutes
 	/**
 	 *  Now using all the above.
 	 *  Notice the call made to {@link SSD1306Processor#setSimulatorKeyPressedConsumer(Consumer)}
@@ -385,8 +403,8 @@ public class ServerWithKewlButtons extends NavServer {
 			// Use physical pin numbers.
 			try {
 				// Identified by the PHYSICAL pin numbers
-				String buttonOnePinStr = System.getProperty("buttonOne", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonOnePin))); // GPIO_29
-				String buttonTwoPinStr = System.getProperty("buttonTwo", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonTwoPin))); // GPIO_28
+				String buttonOnePinStr = System.getProperty("buttonOne", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonOnePin))); // GPIO_28
+				String buttonTwoPinStr = System.getProperty("buttonTwo", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonTwoPin))); // GPIO_29
 
 				buttonOnePin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr));
 				buttonTwoPin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonTwoPinStr));
@@ -395,7 +413,7 @@ public class ServerWithKewlButtons extends NavServer {
 			}
 
 			// Pin mapping display for info
-			String[] map = new String[11];
+			String[] map = new String[13];
 			map[0]  = String.valueOf(PinUtil.findByPin(buttonOnePin).pinNumber()) + ":Button 1 Hot Wire";
 			map[1]  = String.valueOf(PinUtil.findByPin(buttonTwoPin).pinNumber()) + ":Button 2 Hot Wire";
 
@@ -411,9 +429,12 @@ public class ServerWithKewlButtons extends NavServer {
 			map[9]  = String.valueOf(PinUtil.GPIOPin.GPIO_5.pinNumber())  + ":Rst";
 			map[10] = String.valueOf(PinUtil.GPIOPin.GPIO_4.pinNumber())  + ":DC";
 
+			map[11] = String.valueOf(PinUtil.GPIOPin.GPIO_8.pinNumber())  + ":I2C-SDA";
+			map[12] = String.valueOf(PinUtil.GPIOPin.GPIO_9.pinNumber())  + ":I2C-SLC";
+
 			System.out.println("---------------------------- P I N   M A P P I N G ------------------------------------------");
 			PinUtil.print(map);
-			System.out.println("> Buttons, Screen and GPS are powered with 5.0, 3v3 is not used.");
+			System.out.println("> Buttons, Screen and GPS are powered with 5.0, 3v3 is used by the BME280.");
 			System.out.println("---------------------------------------------------------------------------------------------\n");
 
 			buttonOne.update(
@@ -453,7 +474,9 @@ public class ServerWithKewlButtons extends NavServer {
 				oledForwarder.setSimutatorLedColor(Color.WHITE);
 				// Seems not to be possible to have left shift and right shift. When one is on, the other is ignored.
 				// Buttons simulator
-				System.out.println(">> Simulating button with [Shift]: Button 1: Ctrl, Button 2: Shift");
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+				System.out.println(">> Simulating buttons: Button 1: Ctrl, Button 2: Shift");
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 				// Runnables for the simulator
 				oledForwarder.setSimulatorKeyPressedConsumer((keyEvent) -> {
 //					System.out.println("KeyPressed:" + keyEvent);
@@ -513,6 +536,21 @@ public class ServerWithKewlButtons extends NavServer {
 			}
 		}
 		System.out.println("Nav Server fully initialized");
+
+		lastButtonInteraction = System.currentTimeMillis();
+		Thread sleeper = new Thread(() -> {
+			while (true) {
+				if (!screenSaverMode && (System.currentTimeMillis() - lastButtonInteraction) > GO_TO_SLEEP_AFTER) {
+					startScreenSaver();
+				}
+				try {
+					Thread.sleep(1_000L);
+				} catch (InterruptedException ie) {
+					ie.printStackTrace();
+				}
+			}
+		}, "sleeper");
+		sleeper.start();
 	}
 
 	public static void freeResources() {
