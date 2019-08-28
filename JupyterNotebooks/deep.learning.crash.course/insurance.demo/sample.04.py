@@ -106,17 +106,71 @@ print("Training completed")
 
 show_details = True
 if show_details:
+    network_details = open("network.details.properties", "w")
     # config = model.get_config()
     # from keras.models import model_from_json
     json_string = model.to_json()
-    print("Model, json format: {}".format(json_string))
-    for layer in model.layers:
+    network_details.write("structure: {}\n".format(json_string))
+    network_details.write("name: {}\n".format(model.name))
+    # print("Model, json format: {}".format(json_string))
+    layers = model.layers
+    network_details.write("nb.layers: {}\n".format(len(layers)))
+    print("Model, {} layer(s)".format(len(layers)))
+    layer_idx = 0
+    for layer in layers:
         try:
-            weights = layer.get_weights()[0]
-            biases = layer.get_weights()[1]
-            print("Weights: {}\nBiases: {}".format(weights, biases))
-        except Exception:
-            print("Oops")
+            print("Name: {}, trainable: {}".format(layer.name, layer.trainable))
+            network_details.write("layer.{:02d}.name = {}\n".format(layer_idx, layer.name))
+            if len(layer.get_weights()) > 0:
+                weights = layer.get_weights()[0]
+                # weights is an ndarray
+                w_dim = weights.ndim
+                if w_dim > 1:
+                    for idx in range(w_dim):
+                        weight_csv = ''
+                        for weight in weights[idx]:
+                            if len(weight_csv) == 0:
+                                weight_csv = "{}".format(weight)
+                            else:
+                                weight_csv = "{}, {}".format(weight_csv, weight)
+                        network_details.write("layer.{:02d}.weights.{:02d} = {}\n".format(layer_idx, idx, weight_csv))
+                else:
+                    weight_csv = ''
+                    for weight in weights:
+                        if len(weight_csv) == 0:
+                            weight_csv = "{}".format(weight)
+                        else:
+                            weight_csv = "{}, {}".format(weight_csv, weight)
+                    network_details.write("layer.{:02d}.weights = {}\n".format(layer_idx, weight_csv))
+
+                biases = layer.get_weights()[1]
+                # biases is an ndarray
+                b_dim = biases.ndim
+                if b_dim > 1:
+                    for idx in range(b_dim):
+                        biases_csv = ''
+                        for bias in biases[idx]:
+                            if len(biases_csv) == 0:
+                                biases_csv = "{}".format(bias)
+                            else:
+                                biases_csv = "{}, {}".format(biases_csv, bias)
+                        network_details.write("layer.{:02d}.biases.{:02d} = {}\n".format(layer_idx, idx, biases_csv))
+                else:
+                    biases_csv = ''
+                    for bias in biases:
+                        if len(biases_csv) == 0:
+                            biases_csv = "{}".format(bias)
+                        else:
+                            biases_csv = "{}, {}".format(biases_csv, bias)
+                    network_details.write("layer.{:02d}.biases = {}\n".format(layer_idx, biases_csv))
+
+                # print("Weights: {}\nBiases: {}".format(weights, biases))
+            else:
+                print("No weights")
+        except Exception as exception:
+            print("Oops: {}".format(exception))
+        layer_idx += 1
+    network_details.close()
 
 train_loss, train_accuracy = model.evaluate(X_train, y_train, batch_size=BATCH_SIZE)
 print("Training Loss {}, Quality {}%".format(train_loss, 100 * train_accuracy))
