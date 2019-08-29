@@ -16,6 +16,9 @@ coded_colors = ["red", "green", "yellow"]
 
 
 class CoreFeatures:
+	"""
+	Implements the methods used in the REST operations below
+	"""
 
 	model_name = 'insurance.h5'
 	model = None

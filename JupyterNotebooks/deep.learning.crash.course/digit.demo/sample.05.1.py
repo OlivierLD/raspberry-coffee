@@ -4,6 +4,8 @@
 # Mathplotlib doc at https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.html
 # also see https://www.tensorflow.org/api_docs/python/tf/keras and similar pages.
 #
+# Model training
+#
 # For the figures images, see https://github.com/myleott/mnist_png
 # images are 28px x 28px big.
 #
@@ -26,7 +28,7 @@ print("Keras version", tf.keras.__version__)
 print("{} script arguments.".format(len(sys.argv)))
 
 # Evaluate user's parameters
-loadOnly = False
+loadOnly = False  # Load model, do not train it (if it is there already)
 if len(sys.argv) > 1 and sys.argv[1] == '--help':
     print("\nUsage is ")
     print("\tpython {} [--help | L]".format(sys.argv[0]))
@@ -68,7 +70,7 @@ print("Test images shape:", x_test.shape, ", ", len(y_test), "labels")
 x_train, x_test = x_train / 255.0, x_test / 255.0
 print("Import completed, displaying a random set of data, once displayed, close the image to move on.")
 
-if not loadOnly:
+if not loadOnly:  # Model to be trained
     start_idx = random.randint(0, len(x_train)) - 1
     print("Starting sample display at index {}".format(start_idx))
 
@@ -87,14 +89,19 @@ if not loadOnly:
         # subplot.set_title(i + start_idx)
     plt.show()
 
+    #
+    # Define model here
+    #
+    # First layer (Flatten) takes arrays of 28x28=784 pixels. See below "Number of parameters: Explanation"
     # Last layer has 10 neurons, because we have 10 categories (0-9 digits)
+    # Dropout is here to avoid over-fitting
     # SoftMax layer will dispatch the value so the highest is the one to choose,
     # and its value the percentage of reliability
     model = tf.keras.models.Sequential([
         tf.keras.layers.Flatten(),  # https://www.tensorflow.org/api_docs/python/tf/keras/layers/Flatten
-        tf.keras.layers.Dense(512, name='FirstDense-512', activation=tf.nn.relu),
+        tf.keras.layers.Dense(512, name='FirstDense-512', activation=tf.nn.relu),   # ReLU for the first layer
         tf.keras.layers.Dropout(0.2),  # https://www.tensorflow.org/api_docs/python/tf/keras/layers/Dropout
-        tf.keras.layers.Dense(10, name='SecondDense-10', activation=tf.nn.softmax)
+        tf.keras.layers.Dense(10, name='SecondDense-10', activation=tf.nn.softmax)  # SoftMax at the last layer
     ])
 
     model.compile(optimizer='adam',
@@ -108,7 +115,7 @@ if not loadOnly:
     model.fit(x_train, y_train, epochs=epochs, verbose=1)
 
     show_details = True
-    if show_details:
+    if show_details:  # Display model details
         # config = model.get_config()
         # from keras.models import model_from_json
         json_string = model.to_json()
