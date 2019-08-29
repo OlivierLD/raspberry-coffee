@@ -82,3 +82,4 @@ DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.
 - Simulator for the buttons. &#9989; Done.
 - 3D printed enclosure, to contain the Raspberry Pi, the 2 bonnets, and a LiPo battery.
 - Go to screen saver mode after a given amount of time of inactivity. &#9989; Done.
+- Compare several Raspberry Pi versions (Zero, A, B)
