@@ -152,7 +152,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			# prints all the keys and values of the json file
 			self.wfile.write(json.dumps(sample_data).encode())
 
-	# VIEW method definition
+	# VIEW method definition. WTF ? (What the French)
 	def do_VIEW(self):
 		# dict var. for pretty print
 		display = {}

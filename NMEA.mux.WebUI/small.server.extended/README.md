@@ -47,9 +47,11 @@ This is built just like the other examples in this module, just run
 
 ---
 
-More to come. Diagrams, screenshots, pictures.
-
-See [here](../../Project.Trunk/REST.clients/TCP.Watch.01/README.md#raspberry-pi-zero-w-and-ssd1306-128x64).
+### A first prototype
+| Pressure (BMP280) | Position (GPS) | Side view |
+|:--:|:--:|:--:|
+| ![PRMSL](./docimg/06.jpg) | ![POS](./docimg/07.jpg) | ![All the layers](./docimg/08.jpg) |
+||| Here it is powered by a USB Cable, it can also be powered by a LiPo battery at the bottom |
 
 ### Screenshots
 
