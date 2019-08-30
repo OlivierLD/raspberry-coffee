@@ -106,7 +106,7 @@ public class RESTPublisher implements Forwarder {
 				}
 			}
 		} else if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
-			System.out.println(String.format("\t>>> Feed Name [%s] is filtered (prevented)"));
+			System.out.println(String.format("\t>>> Feed Name [%s] is filtered (prevented)", feed));
 		}
 	}
 
