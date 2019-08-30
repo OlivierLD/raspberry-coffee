@@ -74,6 +74,9 @@ public class RESTPublisher implements Forwarder {
 		if (feedPatterns.isEmpty()) {
 			String filters = this.properties.getProperty("feed.filter", "*");
 			for (String filter : filters.split(",")) {
+				if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
+					System.out.println(String.format("Managing pattern for [%s]", filter.trim()));
+				}
 				Pattern pattern = Pattern.compile(filter.trim());
 				feedPatterns.add(pattern);
 			}
@@ -86,6 +89,9 @@ public class RESTPublisher implements Forwarder {
 
 	private void setFeedValue(String key, String baseUrl, String feed, String value) throws Exception {
 		if (goesThroughFilter(feed)) {
+			if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
+				System.out.println(String.format("\t>>> Feed Name [%s] is will be logged", feed));
+			}
 			String url = baseUrl + "/api/feeds/" + feed + "/data";
 			Map<String, String> headers = new HashMap<>(1);
 			headers.put("X-AIO-Key", key);

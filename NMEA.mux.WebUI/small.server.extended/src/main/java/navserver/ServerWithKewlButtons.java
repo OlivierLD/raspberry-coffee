@@ -358,6 +358,7 @@ public class ServerWithKewlButtons extends NavServer {
 	public ServerWithKewlButtons() {
 
 		super(); // NavServer
+		System.out.println(">> Starting extension (after super())...");
 
 		this.turnLoggingOnURL = String.format("http://localhost:%d/mux/mux-process/on", serverPort);
 		this.turnLoggingOffURL = String.format("http://localhost:%d/mux/mux-process/off", serverPort);
