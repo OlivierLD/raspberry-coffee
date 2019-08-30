@@ -53,12 +53,7 @@ This is built just like the other examples in this module, just run
 | Pressure (BMP280) | Position (GPS) | Side view |
 |:--:|:--:|:--:|
 | ![PRMSL](./docimg/06.jpg) | ![POS](./docimg/07.jpg) | ![All the layers](./docimg/08.jpg) |
-||| Here it is powered by a USB Cable, it can also be powered by a LiPo battery at the bottom |
-
-#### Autonomous, with a 2200mAH LiPo battery
-| Pressure (BMP280) | Position (GPS) |
-|:--:|:--:|
-| ![PRMSL](./docimg/09.jpg) | ![POS](./docimg/10.jpg) |
+| ![PRMSL](./docimg/09.jpg) | ![POS](./docimg/10.jpg) | Here it is powered by a USB Cable, it can also be powered by a LiPo battery at the bottom |
 
 ### Screenshots
 
