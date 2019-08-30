@@ -55,6 +55,11 @@ This is built just like the other examples in this module, just run
 | ![PRMSL](./docimg/06.jpg) | ![POS](./docimg/07.jpg) | ![All the layers](./docimg/08.jpg) |
 ||| Here it is powered by a USB Cable, it can also be powered by a LiPo battery at the bottom |
 
+#### Autonomous, with a 2000mAH LiPo battery
+| Pressure (BMP280) | Position (GPS) |
+|:--:|:--:|
+| ![PRMSL](./docimg/09.jpg) | ![POS](./docimg/10.jpg) |
+
 ### Screenshots
 
 | NMEA Data | Local Menu | Local Menu, 2 |
