@@ -90,7 +90,7 @@ public class RESTPublisher implements Forwarder {
 	private void setFeedValue(String key, String baseUrl, String userName, String feed, String value) throws Exception {
 		if (goesThroughFilter(feed)) {
 			if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
-				System.out.println(String.format("\t>>> Feed Name [%s] is will be logged", feed));
+				System.out.println(String.format("\t>>> Feed Name [%s] will be logged", feed));
 			}
 			String url = String.format("%s/api/v2/%s/feeds/%s/data",
 					baseUrl,
