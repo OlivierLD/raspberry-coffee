@@ -22,13 +22,19 @@ elif [ "$YES" == "0" ]
 then
   a=n
 else
-  echo -en "Remove data.nmea ? y|n > "
-  read a
+  if [ -f data.nmea ]
+  then
+    echo -en "Remove data.nmea ? y|n > "
+    read a
+  fi
 fi
 if [ "$a" = "y" ]
 then
   echo -e "Removing previous log file"
-  sudo rm data.nmea
+  if [ -f data.nmea ]
+  then
+    sudo rm data.nmea
+  fi
   sudo rm nohup.out
 else
   # Rename existing ones
