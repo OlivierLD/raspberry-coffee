@@ -72,10 +72,10 @@ public class RESTPublisher implements Forwarder {
 
 	private boolean goesThroughFilter(String feedName) {
 		if (feedPatterns.isEmpty()) {
-			String filters = this.properties.getProperty("feed.filter", "*");
+			String filters = this.properties.getProperty("feed.filter", ".*");
 			for (String filter : filters.split(",")) {
 				if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
-					System.out.println(String.format("Managing pattern for [%s]", filter.trim()));
+					System.out.println(String.format("- Managing pattern for [%s]", filter.trim()));
 				}
 				Pattern pattern = Pattern.compile(filter.trim());
 				feedPatterns.add(pattern);
@@ -92,7 +92,10 @@ public class RESTPublisher implements Forwarder {
 			if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
 				System.out.println(String.format("\t>>> Feed Name [%s] is will be logged", feed));
 			}
-			String url = baseUrl + "/api/feeds/" + feed + "/data";
+			String url = String.format("%s/api/v2/%s/feeds/%s/data",
+					baseUrl,
+					this.properties.getProperty("aio.user.name"),
+					feed);
 			Map<String, String> headers = new HashMap<>(1);
 			headers.put("X-AIO-Key", key);
 			JSONObject json = new JSONObject();
@@ -107,7 +110,7 @@ public class RESTPublisher implements Forwarder {
 			}
 			if ("true".equals(this.properties.getProperty("aio.push.to.server", "true"))) {
 				HTTPClient.HTTPResponse response = HTTPClient.doPost(url, headers, json.toString());
-				if (response.getCode() > 299) {
+				if (response.getCode() > 299 || "true".equals(this.properties.getProperty("aio.verbose.1"))) {
 					System.out.println(String.format("POST Ret: %d, %s", response.getCode(), response.getPayload()));
 				}
 			}
