@@ -98,10 +98,11 @@ public class RESTPublisher implements Forwarder {
 					feed);
 			Map<String, String> headers = new HashMap<>(1);
 			headers.put("X-AIO-Key", key);
+			headers.put("content-type", "application/json");
 			JSONObject json = new JSONObject();
 			json.put("value", new Double(value));
 			if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
-				System.out.println(String.format("URL:%s, key:%s", baseUrl, key));
+				System.out.println(String.format("URL:%s, key:%s", url, key));
 				System.out.println(String.format("->->-> POSTing to feed [%s]: %s to %s", feed, json.toString(2), url));
 				System.out.println("Headers:");
 				headers.forEach((a, b) -> {
