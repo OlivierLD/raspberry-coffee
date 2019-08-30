@@ -1,8 +1,8 @@
 # WIP, Full NavServer running on a Raspberry Pi Zero W
 **Features**:
-- 2 Adafruit Bonnets
-    - One with a 132x64 oled screen, 2 push buttons, 1 switch for the power supply
-    - One with the Adafruit Ultimate GPS and a BME280 (Humidity, Temperature, Atmospheric Pressure)
+- 2 [Adafruit Bonnets](https://www.adafruit.com/product/3203), $4.50 each
+    - One with a [132x64 oled screen](https://www.adafruit.com/product/938), $19.95, 2 push buttons, 1 switch for the power supply
+    - One with the [Adafruit Ultimate GPS](https://www.adafruit.com/product/746), $39.95, and a [BME280](https://www.adafruit.com/product/2652) (Humidity, Temperature, Atmospheric Pressure), $19.95
 - LiPo battery
 - Buttons can be used to scroll through the different displays
     - also features a "local" menu (to be browsed with the buttons) that can execute different tasks, easy to customize like
@@ -13,6 +13,8 @@
         - etc...
     - Activate a screen saver mode
 - A specific combination on the buttons can shut down the machine.
+
+> Prices, August 2019.
 
 ---
 
