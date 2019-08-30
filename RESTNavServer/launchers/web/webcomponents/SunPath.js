@@ -64,6 +64,15 @@ class SunPath extends HTMLElement {
 		this.moonHe = undefined;
 		this.moonZ = undefined;
 
+		this.venusHe = undefined;
+		this.venusZ = undefined;
+		this.marsHe = undefined;
+		this.marsZ = undefined;
+		this.jupiterHe = undefined;
+		this.jupiterZ = undefined;
+		this.saturnHe = undefined;
+		this.saturnZ = undefined;
+
 		this.userPosition = undefined;
 		this._sunRise = undefined;
 		this._sunSet = undefined;
@@ -188,6 +197,26 @@ class SunPath extends HTMLElement {
 	set moonPos(moonPos) {
 		this.moonHe = moonPos.he;
 		this.moonZ = moonPos.z;
+	}
+
+	set venusPos(pos) {
+		this.venusHe = pos.he;
+		this.venusZ = pos.z;
+	}
+
+	set marsPos(pos) {
+		this.marsHe = pos.he;
+		this.marsZ = pos.z;
+	}
+
+	set jupiterPos(pos) {
+		this.jupiterHe = pos.he;
+		this.jupiterZ = pos.z;
+	}
+
+	set saturnPos(pos) {
+		this.saturnHe = pos.he;
+		this.saturnZ = pos.z;
 	}
 
 	set userPos(position) { // { latitude: xxx, longitude: xxx }
@@ -772,6 +801,77 @@ class SunPath extends HTMLElement {
 			context.font = "" + Math.round(fontSize) + "px " + this.sunPathColorConfig.font;
 			let strAlt = Utilities.decToSex(this.moonHe);
 			let strZ = Utilities.decToSex(this.moonZ);
+			context.fillText("Elevation:" + strAlt, 10, 60);
+			context.fillText("Azimuth:" + strZ, 10, 80);
+			context.restore();
+		}
+
+		// Planets here
+		if (this.venusHe !== undefined && this.venusZ !== undefined) {
+			this.plotPlanet(context, center, radius, 'orange', 'orange', this.venusHe, this.venusZ);
+		}
+		if (this.marsHe !== undefined && this.marsZ !== undefined) {
+			this.plotPlanet(context, center, radius, 'red', 'red', this.marsHe, this.marsZ);
+		}
+		if (this.jupiterHe !== undefined && this.jupiterZ !== undefined) {
+			this.plotPlanet(context, center, radius, 'pink', 'pink', this.jupiterHe, this.jupiterZ);
+		}
+		if (this.saturnHe !== undefined && this.saturnZ !== undefined) {
+			this.plotPlanet(context, center, radius, 'lightyellow', 'lightyellow', this.saturnHe, this.saturnZ);
+		}
+
+	}
+
+	plotPlanet(context, center, radius, stroke, fill, he, z) {
+		context.strokeStyle = stroke;
+		let panelPoint = this.rotateBothWays(this.rotation, z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset)); // Horizon under the Body
+		// From center to horizon
+		context.beginPath();
+		context.moveTo(center.x, center.y);
+		context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+		context.stroke();
+		context.closePath();
+		// Up/Down to the body
+		context.beginPath();
+		context.moveTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+		if (he > 0) {
+			for (let alt = 0; alt <= he; alt++) {
+				panelPoint = this.rotateBothWays(alt + this.rotation, z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+				context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+			}
+		} else {
+			for (let alt = 0; alt >= he; alt--) {
+				panelPoint = this.rotateBothWays(alt + this.rotation, z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+				context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+			}
+		}
+		panelPoint = this.rotateBothWays(he + this.rotation, z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+		context.lineTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+		context.stroke();
+		context.closePath();
+		// Draw the Body
+		context.fillStyle = fill;
+		context.beginPath();
+		context.arc(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius), 2, 2 * Math.PI, false);
+		context.fill();
+		context.closePath();
+		// Dotted line to center
+		context.fillStyle = fill;
+		context.save();
+		context.setLineDash([5, 3]);
+		context.beginPath();
+		context.moveTo(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+		context.lineTo(center.x, center.y);
+		context.stroke();
+		context.closePath();
+		context.restore();
+		// Display values
+		if (false) {
+			context.save();
+			let fontSize = 14;
+			context.font = "" + Math.round(fontSize) + "px " + this.sunPathColorConfig.font;
+			let strAlt = Utilities.decToSex(he);
+			let strZ = Utilities.decToSex(z);
 			context.fillText("Elevation:" + strAlt, 10, 60);
 			context.fillText("Azimuth:" + strZ, 10, 80);
 			context.restore();

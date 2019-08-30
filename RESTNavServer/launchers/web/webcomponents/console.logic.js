@@ -423,6 +423,10 @@ function astroCallback(data) {
 	sunAltitude = data.sunObs.alt; // For the doBefore method
 
 	let moonPos = {};
+	let venusPos = {};
+	let marsPos = {};
+	let jupiterPos = {};
+	let saturnPos = {};
 	try {
 		moonPos = {
 			he: data.moonObs.alt,
@@ -431,6 +435,51 @@ function astroCallback(data) {
 	} catch (err) {
 		// missing
 	}
+	try {
+		let venus = data.wanderingBodies.find(wb => { return wb.name === 'venus' }).fromPos.observed;
+		venusPos = {
+			he: venus.alt,
+			z: venus.z
+		};
+	} catch (err) {
+		// nope
+	}
+	try {
+		let mars = data.wanderingBodies.find(wb => { return wb.name === 'mars' }).fromPos.observed;
+		marsPos = {
+			he: mars.alt,
+			z: mars.z
+		};
+	} catch (err) {
+		// nope
+	}
+	try {
+		let jupiter = data.wanderingBodies.find(wb => { return wb.name === 'jupiter' }).fromPos.observed;
+		jupiterPos = {
+			he: jupiter.alt,
+			z: jupiter.z
+		};
+	} catch (err) {
+		// nope
+	}
+	try {
+		let saturn = data.wanderingBodies.find(wb => { return wb.name === 'saturn' }).fromPos.observed;
+		saturnPos = {
+			he: saturn.alt,
+			z: saturn.z
+		};
+	} catch (err) {
+		// nope
+	}
+
+	/*
+	TODO Other wanreding bodies:
+	data.wanderingBodies["name" = "venus"].fromPos.observed.(alt, z)
+	data.wanderingBodies.find(wb => {
+    return wb.name === 'venus'
+  }).fromPos.observed.z
+
+	 */
 
 	let dataTable =
 			'<table border="1" class="raw-table">' + '<tr><th>Body</th><th>D</th><th>GHA</th><th>LHA</th><th>Elev</th><th>Z</th></tr>' +
@@ -512,6 +561,18 @@ function astroCallback(data) {
 	document.getElementById('sun-path-01').now = { time: now.getTime() };
 	if (moonPos !== {}) {
 		document.getElementById('sun-path-01').moonPos = moonPos;
+	}
+	if (venusPos !== {}) {
+		document.getElementById('sun-path-01').venusPos = venusPos;
+	}
+	if (marsPos !== {}) {
+		document.getElementById('sun-path-01').marsPos = marsPos;
+	}
+	if (jupiterPos !== {}) {
+		document.getElementById('sun-path-01').jupiterPos = jupiterPos;
+	}
+	if (saturnPos !== {}) {
+		document.getElementById('sun-path-01').saturnPos = saturnPos;
 	}
 
 	worldMap.setAstronomicalData(data);
