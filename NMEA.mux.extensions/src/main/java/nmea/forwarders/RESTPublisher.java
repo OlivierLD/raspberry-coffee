@@ -5,10 +5,13 @@ import nmea.parser.StringGenerator;
 import nmea.parser.StringParsers;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 /**
  * This is a {@link Forwarder}, forwarding chosen data to a REST server (POST).
@@ -58,6 +61,8 @@ public class RESTPublisher implements Forwarder {
 	private long previousTWSLog = 0;
 	private long previousTWDLog = 0;
 
+	private List<Pattern> feedPatterns = new ArrayList<>();
+
 	/*
 	 * @throws Exception
 	 */
@@ -65,35 +70,52 @@ public class RESTPublisher implements Forwarder {
 //		System.out.println(String.format(">> Instantiating %s", this.getClass().getName()));
 	}
 
-	private void setFeedValue(String key, String baseUrl, String feed, String value) throws Exception {
-		String url = baseUrl + "/api/feeds/" + feed + "/data";
-		Map<String, String> headers = new HashMap<>(1);
-		headers.put("X-AIO-Key", key);
-		JSONObject json = new JSONObject();
-		json.put("value", new Double(value));
-		if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
-			System.out.println(String.format("URL:%s, key:%s", baseUrl, key));
-			System.out.println(String.format("->->-> POSTing to feed [%s]: %s to %s", feed, json.toString(2), url));
-			System.out.println("Headers:");
-			headers.forEach((a, b) -> {
-				System.out.println(String.format("%s: %s", a, b));
-			});
-		}
-		if ("true".equals(this.properties.getProperty("aio.push.to.server", "true"))) {
-			HTTPClient.HTTPResponse response = HTTPClient.doPost(url, headers, json.toString());
-			if (response.getCode() > 299) {
-				System.out.println(String.format("POST Ret: %d, %s", response.getCode(), response.getPayload()));
+	private boolean goesThroughFilter(String feedName) {
+		if (feedPatterns.isEmpty()) {
+			String filters = this.properties.getProperty("feed.filter", "*");
+			for (String filter : filters.split(",")) {
+				Pattern pattern = Pattern.compile(filter.trim());
+				feedPatterns.add(pattern);
 			}
+		}
+		Optional<Pattern> firstMatch = feedPatterns.stream()
+				.filter(pattern -> pattern.matcher(feedName).matches())
+				.findFirst();
+		return firstMatch.isPresent();
+	}
+
+	private void setFeedValue(String key, String baseUrl, String feed, String value) throws Exception {
+		if (goesThroughFilter(feed)) {
+			String url = baseUrl + "/api/feeds/" + feed + "/data";
+			Map<String, String> headers = new HashMap<>(1);
+			headers.put("X-AIO-Key", key);
+			JSONObject json = new JSONObject();
+			json.put("value", new Double(value));
+			if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
+				System.out.println(String.format("URL:%s, key:%s", baseUrl, key));
+				System.out.println(String.format("->->-> POSTing to feed [%s]: %s to %s", feed, json.toString(2), url));
+				System.out.println("Headers:");
+				headers.forEach((a, b) -> {
+					System.out.println(String.format("%s: %s", a, b));
+				});
+			}
+			if ("true".equals(this.properties.getProperty("aio.push.to.server", "true"))) {
+				HTTPClient.HTTPResponse response = HTTPClient.doPost(url, headers, json.toString());
+				if (response.getCode() > 299) {
+					System.out.println(String.format("POST Ret: %d, %s", response.getCode(), response.getPayload()));
+				}
+			}
+		} else if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
+			System.out.println(String.format("\t>>> Feed Name [%s] is filtered (prevented)"));
 		}
 	}
 
 	private void logAirTemp(double value) {
-		String feed = AIR_TEMP;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
 		if (Math.abs(now - previousTempLog) > pushInterval) {
 			try {
-				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
+				setFeedValue(this.properties.getProperty("aio.key"), url, AIR_TEMP, String.valueOf(value));
 				previousTempLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -102,12 +124,11 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private void logDewTemp(double value) {
-		String feed = DEWPOINT;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
 		if (Math.abs(now - previousDewLog) > pushInterval) {
 			try {
-				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
+				setFeedValue(this.properties.getProperty("aio.key"), url, DEWPOINT, String.valueOf(value));
 				previousDewLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -116,12 +137,11 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private void logHumidity(double value) {
-		String feed = HUMIDITY;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
 		if (Math.abs(now - previousHumLog) > pushInterval) {
 			try {
-				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
+				setFeedValue(this.properties.getProperty("aio.key"), url, HUMIDITY, String.valueOf(value));
 				previousHumLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -130,12 +150,11 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private void logPressure(double value) {
-		String feed = ATM_PRESS;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
 		if (Math.abs(now - previousPressLog) > pushInterval) {
 			try {
-				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
+				setFeedValue(this.properties.getProperty("aio.key"), url, ATM_PRESS, String.valueOf(value));
 				previousPressLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -144,12 +163,11 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private void logPRate(double value) {
-		String feed = PRATE;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
 		if (Math.abs(now - previousPRateLog) > pushInterval) {
 			try {
-				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
+				setFeedValue(this.properties.getProperty("aio.key"), url, PRATE, String.valueOf(value));
 				previousPRateLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -158,12 +176,11 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private void logTWS(double value) {
-		String feed = TWS;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
 		if (Math.abs(now - previousTWSLog) > pushInterval) {
 			try {
-				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
+				setFeedValue(this.properties.getProperty("aio.key"), url, TWS, String.valueOf(value));
 				previousTWSLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -172,12 +189,11 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private void logTWD(double value) {
-		String feed = TWD;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
 		if (Math.abs(now - previousTWDLog) > pushInterval) {
 			try {
-				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
+				setFeedValue(this.properties.getProperty("aio.key"), url, TWD, String.valueOf(value));
 				previousTWDLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
