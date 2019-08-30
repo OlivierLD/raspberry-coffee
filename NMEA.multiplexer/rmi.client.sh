@@ -9,10 +9,10 @@
 # and of course
 # samples/rmi/client/SampleRMIClient.class
 #
-# Those classes are in build/lib/NMEA.multiplexer-1.0.jar (../gradlew --daemon build), but this jar
+# Those classes are in build/lib/NMEA.multiplexer-1.0-all.jar (../gradlew --daemon build), but this jar
 # can be shrunk.
 #
-CP=./build/libs/NMEA.multiplexer-1.0.jar
+CP=./build/libs/NMEA.multiplexer-1.0-all.jar
 #
 java -cp $CP samples.rmi.client.SampleRMIClient
 #

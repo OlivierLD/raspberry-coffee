@@ -82,7 +82,7 @@ do
 	case "$option" in
 	  "PG" | "pg")
 	    export HTTP_PROXY_PORT=9876
-	    java -cp ../build/libs/RESTNavServer-1.0.jar -Dhttp.port=$HTTP_PROXY_PORT utils.proxyguisample.ProxyGUI &
+	    java -cp ../build/libs/RESTNavServer-1.0-all.jar -Dhttp.port=$HTTP_PROXY_PORT utils.proxyguisample.ProxyGUI &
 	    echo -e "Make sure you use a proxy from your browser(s): Host: this machine, Port: $HTTP_PROXY_PORT"
 	    echo -en "Hit [Return]"
 	    read a
@@ -96,7 +96,7 @@ do
 			#
 			# JAVA_OPTIONS="$JAVA_OPTIONS -Djava.util.logging.config.file=logging.properties"
 			#
-			java -cp ../build/libs/RESTNavServer-1.0.jar -Dhttp.port=$HTTP_PROXY_PORT $JAVA_OPTIONS http.HTTPServer &
+			java -cp ../build/libs/RESTNavServer-1.0-all.jar -Dhttp.port=$HTTP_PROXY_PORT $JAVA_OPTIONS http.HTTPServer &
 	    echo -e "Make sure you use a proxy from your browser(s): Host: this machine, Port: $HTTP_PROXY_PORT"
 	    echo -en "Hit [Return]"
 	    read a

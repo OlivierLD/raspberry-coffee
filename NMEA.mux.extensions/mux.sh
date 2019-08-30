@@ -64,7 +64,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dno.ais=false" # Accept AIS Strings
 #
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
-CP=./build/libs/NMEA.mux.extensions-1.0.jar
+CP=./build/libs/NMEA.mux.extensions-1.0-all.jar
 if [ "$OS" == "Darwin" ]
 then
   CP=$CP:./libs/RXTXcomm.jar          # for Mac

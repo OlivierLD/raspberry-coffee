@@ -4,7 +4,7 @@
 cat rest.txt
 echo -e "Starting the Tide Rest Server"
 #
-CP=./build/libs/RESTTideEngine-1.0.jar
+CP=./build/libs/RESTTideEngine-1.0-all.jar
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dtide.verbose=true"

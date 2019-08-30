@@ -7,7 +7,7 @@ PATH=$PATH:/usr/local/bin
 # export http_proxy=http://www-proxy.us.oracle.com:80
 # export https_proxy=http://www-proxy.us.oracle.com:80
 #
-CP=./build/libs/RasPISamples-1.0.jar
+CP=./build/libs/RasPISamples-1.0-all.jar
 #
 WEATHER_STATION_IP=192.168.42.18
 #

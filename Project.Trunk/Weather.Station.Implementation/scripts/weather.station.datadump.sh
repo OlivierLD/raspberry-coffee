@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-CP=../build/libs/Weather.Station.Implementation-1.0.jar
+CP=../build/libs/Weather.Station.Implementation-1.0-all.jar
 #
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wspeed.coeff=1.0"

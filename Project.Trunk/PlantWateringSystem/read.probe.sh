@@ -2,7 +2,7 @@
 #
 # WARNING: Works for both STH10 and MCP3008. Comment/uncomment the required lines below
 #
-CP=build/libs/PlantWateringSystem-1.0.jar
+CP=build/libs/PlantWateringSystem-1.0-all.jar
 #
 echo "Usage is $0 debug remote-debug [verbose|ansi] wait"
 echo "   Use 'remote-debug' to remote-debug from another machine."

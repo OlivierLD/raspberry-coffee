@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-CP=./build/libs/RasPISamples-1.0.jar
+CP=./build/libs/RasPISamples-1.0-all.jar
 #
 # To invoke after running ./remote.snap.sh
 #

@@ -13,7 +13,7 @@ echo Transforming ${RADICAL}.xml into ${RADICAL}.pdf
 #
 export HOME=..
 #
-export CP=$CP:../../build/libs/RESTNavServer-1.0.jar
+export CP=$CP:../../build/libs/RESTNavServer-1.0-all.jar
 export CP=${CP}:${HOME}/libs/orai18n-collation.jar
 export CP=${CP}:${HOME}/libs/orai18n-mapping.jar
 export CP=${CP}:${HOME}/libs/fnd2.zip

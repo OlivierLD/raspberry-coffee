@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 CP=
-CP=$CP:./build/libs/Weather.Station.Implementation-1.0.jar
+CP=$CP:./build/libs/Weather.Station.Implementation-1.0-all.jar
 #
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Dsimulator.verbose=false"

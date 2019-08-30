@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-CP=./build/libs/FONA-1.0.jar
+CP=./build/libs/FONA-1.0-all.jar
 #
 JAVA_OPTIONS=
 # Initial verbose

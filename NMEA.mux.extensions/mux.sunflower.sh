@@ -46,9 +46,9 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
 CP=.
-CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0.jar  # SolarPanelOrienter lives in this one, must have been built.
-CP=$CP:./build/libs/NMEA.multiplexer-1.0.jar
-# CP=$CP:../SunFlower/build/libs/SunFlower-1.0.jar # Included in GPS.sun.servo-1.0.jar
+CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0-all.jar  # SolarPanelOrienter lives in this one, must have been built.
+CP=$CP:./build/libs/NMEA.multiplexer-1.0-all.jar
+# CP=$CP:../SunFlower/build/libs/SunFlower-1.0-all.jar # Included in GPS.sun.servo-1.0-all.jar
 #
 if [ "$MACHINE" = "Mac" ]
 then

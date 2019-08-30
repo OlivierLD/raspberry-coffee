@@ -7,4 +7,4 @@ JAVA_OPTS=
 # JAVA_OPTS="$JAVA_OPTS -Dwith.gradient=false"
 JAVA_OPTS="$JAVA_OPTS -Dwith.transparency=false"
 #
-java $JAVA_OPTS -cp ./build/libs/HanoiTower-1.0.jar hanoitower.gui.HanoiSolver
+java $JAVA_OPTS -cp ./build/libs/HanoiTower-1.0-all.jar hanoitower.gui.HanoiSolver

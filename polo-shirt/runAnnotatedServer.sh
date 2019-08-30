@@ -30,7 +30,7 @@ HTTP_VERBOSE=false
 MATH_REST_VERBOSE=true
 SYSTEM_VERBOSE=true
 #
-CP=./build/libs/polo-shirt-1.0.jar
+CP=./build/libs/polo-shirt-1.0-all.jar
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=$HTTP_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dmath.rest.verbose=$MATH_REST_VERBOSE"

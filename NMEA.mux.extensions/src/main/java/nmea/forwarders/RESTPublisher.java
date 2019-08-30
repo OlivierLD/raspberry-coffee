@@ -87,14 +87,14 @@ public class RESTPublisher implements Forwarder {
 		return firstMatch.isPresent();
 	}
 
-	private void setFeedValue(String key, String baseUrl, String feed, String value) throws Exception {
+	private void setFeedValue(String key, String baseUrl, String userName, String feed, String value) throws Exception {
 		if (goesThroughFilter(feed)) {
 			if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
 				System.out.println(String.format("\t>>> Feed Name [%s] is will be logged", feed));
 			}
 			String url = String.format("%s/api/v2/%s/feeds/%s/data",
 					baseUrl,
-					this.properties.getProperty("aio.user.name"),
+					userName,
 					feed);
 			Map<String, String> headers = new HashMap<>(1);
 			headers.put("X-AIO-Key", key);
@@ -120,11 +120,14 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private void logAirTemp(double value) {
-		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
 		if (Math.abs(now - previousTempLog) > pushInterval) {
 			try {
-				setFeedValue(this.properties.getProperty("aio.key"), url, AIR_TEMP, String.valueOf(value));
+				setFeedValue(this.properties.getProperty("aio.key"),
+						this.properties.getProperty("aio.url"),
+						this.properties.getProperty("aio.user.name"),
+						AIR_TEMP,
+						String.valueOf(value));
 				previousTempLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -133,11 +136,14 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private void logDewTemp(double value) {
-		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
 		if (Math.abs(now - previousDewLog) > pushInterval) {
 			try {
-				setFeedValue(this.properties.getProperty("aio.key"), url, DEWPOINT, String.valueOf(value));
+				setFeedValue(this.properties.getProperty("aio.key"),
+						this.properties.getProperty("aio.url"),
+						this.properties.getProperty("aio.user.name"),
+						DEWPOINT,
+						String.valueOf(value));
 				previousDewLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -146,11 +152,14 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private void logHumidity(double value) {
-		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
 		if (Math.abs(now - previousHumLog) > pushInterval) {
 			try {
-				setFeedValue(this.properties.getProperty("aio.key"), url, HUMIDITY, String.valueOf(value));
+				setFeedValue(this.properties.getProperty("aio.key"),
+						this.properties.getProperty("aio.url"),
+						this.properties.getProperty("aio.user.name"),
+						HUMIDITY,
+						String.valueOf(value));
 				previousHumLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -159,11 +168,14 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private void logPressure(double value) {
-		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
 		if (Math.abs(now - previousPressLog) > pushInterval) {
 			try {
-				setFeedValue(this.properties.getProperty("aio.key"), url, ATM_PRESS, String.valueOf(value));
+				setFeedValue(this.properties.getProperty("aio.key"),
+						this.properties.getProperty("aio.url"),
+						this.properties.getProperty("aio.user.name"),
+						ATM_PRESS,
+						String.valueOf(value));
 				previousPressLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -172,11 +184,14 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private void logPRate(double value) {
-		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
 		if (Math.abs(now - previousPRateLog) > pushInterval) {
 			try {
-				setFeedValue(this.properties.getProperty("aio.key"), url, PRATE, String.valueOf(value));
+				setFeedValue(this.properties.getProperty("aio.key"),
+						this.properties.getProperty("aio.url"),
+						this.properties.getProperty("aio.user.name"),
+						PRATE,
+						String.valueOf(value));
 				previousPRateLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -185,11 +200,14 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private void logTWS(double value) {
-		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
 		if (Math.abs(now - previousTWSLog) > pushInterval) {
 			try {
-				setFeedValue(this.properties.getProperty("aio.key"), url, TWS, String.valueOf(value));
+				setFeedValue(this.properties.getProperty("aio.key"),
+						this.properties.getProperty("aio.url"),
+						this.properties.getProperty("aio.user.name"),
+						TWS,
+						String.valueOf(value));
 				previousTWSLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -198,11 +216,14 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private void logTWD(double value) {
-		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
 		if (Math.abs(now - previousTWDLog) > pushInterval) {
 			try {
-				setFeedValue(this.properties.getProperty("aio.key"), url, TWD, String.valueOf(value));
+				setFeedValue(this.properties.getProperty("aio.key"),
+						this.properties.getProperty("aio.url"),
+						this.properties.getProperty("aio.user.name"),
+						TWD,
+						String.valueOf(value));
 				previousTWDLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();

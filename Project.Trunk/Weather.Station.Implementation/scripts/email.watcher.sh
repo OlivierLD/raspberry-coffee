@@ -8,7 +8,7 @@ then
   echo ">>> exiting."
   exit 1
 fi
-CP=../build/libs/Weather.Station.Implementation-1.0.jar
+CP=../build/libs/Weather.Station.Implementation-1.0-all.jar
 #
 PROXY=
 # PROXY="-Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"

@@ -1,5 +1,5 @@
 #!/bin/bash
-CP=../build/libs/ADCs.Servos.Joysticks-1.0.jar
+CP=../build/libs/ADCs.Servos.Joysticks-1.0-all.jar
 #
 echo MCP3008, seven channels
 JAVA_OPTIONS=

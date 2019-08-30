@@ -6,7 +6,7 @@ then
   echo -e "example: $0 sample.data/estero.drake.2018-09-29.nmea \"Kayak Drake Estero\" \"28-Sep-2018\""
   exit 1
 fi
-CP=./build/libs/NMEA.multiplexer-1.0.jar
+CP=./build/libs/NMEA.multiplexer-1.0-all.jar
 JAVA_OPTIONS=
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"

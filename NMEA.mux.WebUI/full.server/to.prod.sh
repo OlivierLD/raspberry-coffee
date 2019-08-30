@@ -43,7 +43,7 @@ mkdir $distdir/build/libs
 # 3 - Copying needed resources
 #
 echo -e "Copying resources"
-cp ./build/libs/*-1.0.jar $distdir/build/libs
+cp ./build/libs/*-1.0-all.jar $distdir/build/libs
 # Log folder
 mkdir $distdir/logged
 # Web resources
