@@ -76,6 +76,16 @@ DoubleClick on Button-1: Show local menu
 DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.
 ```
 
+### Configurations
+##### Raspberry Pi Zero
+- Good for logging
+- A bit challenging when acting as a server (Web and REST)
+
+##### Raspberry Pi A+
+
+##### Raspberry Pi B
+
+
 # TODO
 - Describe the way to get to the log files, download, etc.
 - Document Web UI: `runner.html`, `logMgmt.html`, etc.
