@@ -200,23 +200,43 @@ class SunPath extends HTMLElement {
 	}
 
 	set venusPos(pos) {
-		this.venusHe = pos.he;
-		this.venusZ = pos.z;
+		if (pos !== undefined) {
+			this.venusHe = pos.he;
+			this.venusZ = pos.z;
+		} else {
+			this.venusHe = undefined;
+			this.venusZ = undefined;
+		}
 	}
 
 	set marsPos(pos) {
-		this.marsHe = pos.he;
-		this.marsZ = pos.z;
+		if (pos !== undefined) {
+			this.marsHe = pos.he;
+			this.marsZ = pos.z;
+		} else {
+			this.marsHe = undefined;
+			this.marsZ = undefined;
+		}
 	}
 
 	set jupiterPos(pos) {
-		this.jupiterHe = pos.he;
-		this.jupiterZ = pos.z;
+		if (pos !== undefined) {
+			this.jupiterHe = pos.he;
+			this.jupiterZ = pos.z;
+		} else {
+			this.jupiterHe = undefined;
+			this.jupiterZ = undefined;
+		}
 	}
 
 	set saturnPos(pos) {
-		this.saturnHe = pos.he;
-		this.saturnZ = pos.z;
+		if (pos !== undefined) {
+			this.saturnHe = pos.he;
+			this.saturnZ = pos.z;
+		} else {
+			this.saturnHe = undefined;
+			this.saturnZ = undefined;
+		}
 	}
 
 	set userPos(position) { // { latitude: xxx, longitude: xxx }
@@ -808,21 +828,21 @@ class SunPath extends HTMLElement {
 
 		// Planets here
 		if (this.venusHe !== undefined && this.venusZ !== undefined) {
-			this.plotPlanet(context, center, radius, 'orange', 'orange', this.venusHe, this.venusZ);
+			this.plotPlanet(context, center, radius, 'orange', 'orange', this.venusHe, this.venusZ, "Venus");
 		}
 		if (this.marsHe !== undefined && this.marsZ !== undefined) {
-			this.plotPlanet(context, center, radius, 'red', 'red', this.marsHe, this.marsZ);
+			this.plotPlanet(context, center, radius, 'red', 'red', this.marsHe, this.marsZ, "Mars");
 		}
 		if (this.jupiterHe !== undefined && this.jupiterZ !== undefined) {
-			this.plotPlanet(context, center, radius, 'pink', 'pink', this.jupiterHe, this.jupiterZ);
+			this.plotPlanet(context, center, radius, 'pink', 'pink', this.jupiterHe, this.jupiterZ, "Jupiter");
 		}
 		if (this.saturnHe !== undefined && this.saturnZ !== undefined) {
-			this.plotPlanet(context, center, radius, 'lightyellow', 'lightyellow', this.saturnHe, this.saturnZ);
+			this.plotPlanet(context, center, radius, 'lightyellow', 'lightyellow', this.saturnHe, this.saturnZ, "Saturn");
 		}
 
 	}
 
-	plotPlanet(context, center, radius, stroke, fill, he, z) {
+	plotPlanet(context, center, radius, stroke, fill, he, z, name) {
 		context.strokeStyle = stroke;
 		let panelPoint = this.rotateBothWays(this.rotation, z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset)); // Horizon under the Body
 		// From center to horizon
@@ -855,6 +875,13 @@ class SunPath extends HTMLElement {
 		context.arc(center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius), 2, 2 * Math.PI, false);
 		context.fill();
 		context.closePath();
+		if (name !== undefined) { // Plot the name of the body
+			context.save();
+			let fontSize = 10;
+			context.font = "" + Math.round(fontSize) + "px " + this.sunPathColorConfig.font;
+			context.fillText(name, 5 + center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+			context.restore();
+		}
 		// Dotted line to center
 		context.fillStyle = fill;
 		context.save();

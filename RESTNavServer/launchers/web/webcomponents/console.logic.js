@@ -562,17 +562,26 @@ function astroCallback(data) {
 	if (moonPos !== {}) {
 		document.getElementById('sun-path-01').moonPos = moonPos;
 	}
-	if (venusPos !== {}) {
+	let withWanderingBodies = document.getElementById('with-wb').checked;
+	if (venusPos !== {} && withWanderingBodies) {
 		document.getElementById('sun-path-01').venusPos = venusPos;
+	} else {
+		document.getElementById('sun-path-01').venusPos = undefined;
 	}
-	if (marsPos !== {}) {
+	if (marsPos !== {} && withWanderingBodies) {
 		document.getElementById('sun-path-01').marsPos = marsPos;
+	} else {
+		document.getElementById('sun-path-01').marsPos = undefined;
 	}
-	if (jupiterPos !== {}) {
+	if (jupiterPos !== {} && withWanderingBodies) {
 		document.getElementById('sun-path-01').jupiterPos = jupiterPos;
+	} else {
+		document.getElementById('sun-path-01').jupiterPos = undefined;
 	}
-	if (saturnPos !== {}) {
+	if (saturnPos !== {} && withWanderingBodies) {
 		document.getElementById('sun-path-01').saturnPos = saturnPos;
+	} else {
+		document.getElementById('sun-path-01').saturnPos = undefined;
 	}
 
 	worldMap.setAstronomicalData(data);
