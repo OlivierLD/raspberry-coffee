@@ -14,6 +14,8 @@ public class ReverseString {
 				.collect(Collectors.joining(""));
 
 		System.out.println(String.format("%s becomes %s", str, reversed));
+		// Another method
+		System.out.println(String.format("%s becomes %s", str, new StringBuffer(str).reverse().toString()));
 
 		IntStream.range(1, 29)
 				.boxed()

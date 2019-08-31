@@ -435,7 +435,7 @@ function astroCallback(data) {
 	} catch (err) {
 		// missing
 	}
-	try {
+	try { // Notice the find method on the array (wanderingBodies)
 		let venus = data.wanderingBodies.find(wb => { return wb.name === 'venus' }).fromPos.observed;
 		venusPos = {
 			he: venus.alt,
