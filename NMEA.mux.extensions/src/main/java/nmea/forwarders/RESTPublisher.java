@@ -255,6 +255,11 @@ public class RESTPublisher implements Forwarder {
 	public void write(byte[] message) {
 		String str = new String(message);
 //	System.out.println(">>>> Mess:" + str);
+
+		// Log time. Not based on a specific sentence id.
+		long now = System.currentTimeMillis();
+		logTime(now);
+
 		if (StringParsers.validCheckSum(str)) {
 //		String deviceId = StringParsers.getDeviceID(str);
 			String sentenceId = StringParsers.getSentenceID(str);
@@ -302,10 +307,6 @@ public class RESTPublisher implements Forwarder {
 						logPRate(xdr.getValue());
 					}
 				});
-			} else if ("RMC".equals(sentenceId)) {
-				// Log time
-				RMC rmc = StringParsers.parseRMC(str);
-				logTime(rmc.getRmcDate().getTime());
 			} else {  // Other sentences ignored (like GLL)
 				if ("true".equals(this.properties.getProperty("aio.verbose.2"))) {
 					System.out.println("\tNothing to log (REST)");
