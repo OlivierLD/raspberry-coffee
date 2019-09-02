@@ -297,7 +297,7 @@ public class NMEADataCache
 					}
 					this.put(AIS, aisMap);
 				} catch (Exception ex) {
-					System.err.println(String.format("For AIS Sentence [%s]", nmeaSentence));
+					System.err.println(String.format("\nFor AIS Sentence [%s]", nmeaSentence));
 					ex.printStackTrace();
 				}
 			} else { // NMEA

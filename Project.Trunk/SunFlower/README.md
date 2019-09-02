@@ -52,7 +52,7 @@ After that, the build of this project should work:
 -->
 ### To build the project:
 ```bash
- SunFlower $ ../gradlew clean shadowJar
+ SunFlower $ ../../gradlew clean shadowJar
 ```
 You can test the Almanac behavior by running
 ```bash
@@ -140,7 +140,7 @@ If the `http.port` variable is here and greater than 0, an HTTP Server - with RE
 
 Here is an example of a REST request, that returns the list of available operations:
 ```
- $> curl http://192.168.42.1:9999/oplist
+ $ curl http://192.168.42.1:9999/oplist
  [
      {
          "verb": "GET",
@@ -167,6 +167,17 @@ Here is an example of a REST request, that returns the list of available operati
 And this is a snapshot of the sample page mentioned above, the "led" sections can be collapsed or expanded:
 <!-- ![Web REST Sample](./doc/web.ui.png) -->
 <img src="./doc/web.ui.png" width="400" height="388">
+
+### To run the real project
+You want to start the script above in a way it does not stop when you disconnect.
+You need to use 
+```
+ nohup ./run.sh resthttp
+```
+This needs to be run from a script, just use 
+```
+ $ ./start.sun.data.sh
+```
 
 ## Inversion
 Standard servos like the `SG92R` (and many - if not all - others) rotate on 180 degrees, from -90° to 90°.

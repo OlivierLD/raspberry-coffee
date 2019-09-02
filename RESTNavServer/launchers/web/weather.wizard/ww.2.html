@@ -913,9 +913,43 @@
 			}
 		});
 
-		gribData = jsonGrib; // gribData defined in ww.js
-		redraw();
+		gribData = jsonGrib; // gribData is a function prm
+	  // Min and max for each grib data
+	  findMinMax(gribData, 0);
+
+	  redraw();
   };
+
+  function findMinMax(gribData, idx) { // TODO Call this when GRIB date changes
+	  console.log("Display min and max for index", idx);
+	  let gribObj = gribData[idx];
+	  console.log(gribObj.gribDate.formattedUTCDate);
+	  for (let i=0; i<gribObj.typedData.length; i++) {
+	  	let gribTypeData = gribObj.typedData[i];
+			if (gribTypeData.gribType.type !== 'vgrd' && gribTypeData.gribType.type !== 'ugrd') {
+				console.log("Type %s (%s), min=%f, max=%f", gribTypeData.gribType.desc, gribTypeData.gribType.type, gribTypeData.gribType.min, gribTypeData.gribType.max);
+				switch (gribTypeData.gribType.type) {
+					case 'tmp':
+						try {
+							document.getElementById('min-max-atemp').innerText = `Air Temp: min ${(gribTypeData.gribType.min - 273).toFixed(2)}\xB0C, max ${(gribTypeData.gribType.max - 273).toFixed(2)}\xB0C`;
+						} catch (err) {}
+						break;
+					case 'htsgw':
+						try {
+							document.getElementById('max-waves').innerText = `Waves: max ${(gribTypeData.gribType.max).toFixed(2)} m`;
+						} catch (err) {}
+						break;
+					case 'prate':
+						try {
+							document.getElementById('max-prate').innerText = `P-Rate: max ${(3600 * gribTypeData.gribType.max).toFixed(2)} mm/h`;
+						} catch (err) {}
+						break;
+					default:
+						break;
+				}
+			}
+		}
+  }
 
   let displayCompositeInfo = function() {
 	  console.log('Displaying');
@@ -1103,6 +1137,13 @@
 			        </tr>
 						</table>
 	        </div>
+
+					<div id="min-max-data" class="table-style">
+						<div id="max-wind"></div>
+						<div id="min-max-atemp"></div>
+						<div id="max-waves"></div>
+						<div id="max-prate"></div>
+					</div>
 
 					<!-- TODO Analog displays for the values -->
 					<div id="mouse-data" class="table-style"></div>

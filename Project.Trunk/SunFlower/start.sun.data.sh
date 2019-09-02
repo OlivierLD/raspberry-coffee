@@ -7,7 +7,7 @@
 # but the Sun data [art remains (hence its interest).
 #
 echo Starting Sun Data REST Server
-nohup ./run resthttp &
+nohup ./run.sh resthttp &
 echo Done
 ADDR=$(hostname -I)
 TRIM="$(echo -e "${ADDR}" | tr -d '[:space:]')"

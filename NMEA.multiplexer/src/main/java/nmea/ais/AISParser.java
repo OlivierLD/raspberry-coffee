@@ -136,21 +136,25 @@ AIS Message type 2:
 //  System.out.println(binString);
 
 		for (AISData a : AISData.values()) {
-			String binStr = binString.substring(a.from(), a.to());
-			int intValue = Integer.parseInt(binStr, 2);
-			if (a.equals(AISData.LATITUDE) || a.equals(AISData.LONGITUDE)) {
-				if ((a.equals(AISData.LATITUDE) && intValue != (91 * 600_000) && intValue > (90 * 600_000)) ||
-						(a.equals(AISData.LONGITUDE) && intValue != (181 * 600_000) && intValue > (180 * 600_000))) {
-					intValue = -Integer.parseInt(neg(binStr), 2);
+			if (a.to() < binString.length()) {
+				String binStr = binString.substring(a.from(), a.to());
+				int intValue = Integer.parseInt(binStr, 2);
+				if (a.equals(AISData.LATITUDE) || a.equals(AISData.LONGITUDE)) {
+					if ((a.equals(AISData.LATITUDE) && intValue != (91 * 600_000) && intValue > (90 * 600_000)) ||
+							(a.equals(AISData.LONGITUDE) && intValue != (181 * 600_000) && intValue > (180 * 600_000))) {
+						intValue = -Integer.parseInt(neg(binStr), 2);
+					}
+				} else if (a.equals(AISData.ROT)) {
+					if (intValue > 128) {
+						intValue = -Integer.parseInt(neg(binStr), 2);
+					}
 				}
-			} else if (a.equals(AISData.ROT)) {
-				if (intValue > 128) {
-					intValue = -Integer.parseInt(neg(binStr), 2);
+				setAISData(a, aisRecord, intValue);
+				if (verbose) {
+					System.out.println(a + " [" + binStr + "] becomes [" + intValue + "]");
 				}
-			}
-			setAISData(a, aisRecord, intValue);
-			if (verbose) {
-				System.out.println(a + " [" + binStr + "] becomes [" + intValue + "]");
+			} else if (verbose) {
+				System.out.println(">> Out of binString");
 			}
 		}
 //		if (aisRecord.getMmsi() == 368031880) {
@@ -420,6 +424,9 @@ AIS Message type 2:
 			System.out.println(parseAIS(ais));
 
 			ais = "!AIVDM,1,1,,B,177KQJ5000G?tO`K>RA1wUbN0TKH,0*5C";
+			System.out.println(parseAIS(ais));
+
+			ais = "!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52";
 			System.out.println(parseAIS(ais));
 		}
 	}

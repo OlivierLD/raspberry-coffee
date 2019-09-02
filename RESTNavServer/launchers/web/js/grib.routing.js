@@ -412,7 +412,10 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 			}
 		}
 	}
-//console.log("Max TWS: %d kn", maxTWS);
+	console.log("Max TWS: %d kn", maxTWS);
+	try {
+		document.getElementById('max-wind').innerText = `Max GRIB TWS: ${maxTWS.toFixed(2)} kn`;
+	} catch (err) {}
 	// Is there a route to draw here?
 	if (bestRouteToPlot !== undefined) {
 		plotBestRoute(canvas, context);

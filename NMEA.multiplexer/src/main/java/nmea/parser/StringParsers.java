@@ -1760,6 +1760,40 @@ public class StringParsers {
 		}
 	}
 
+	public static String parseTXT(String sentence) {
+		/*
+		 * WIP
+		 * Structure:
+		 * $AITXT,01,01,91,FREQ,2087,2088*57
+		 * $GPTXT,01,01,02,u-blox ag - www.u-blox.com*50
+		 * $GPTXT,01,01,02,HW  UBX-G70xx   00070000 FF7FFFFFo*69
+		 * $GPTXT,01,01,02,ROM CORE 1.00 (59842) Jun 27 2012 17:43:52*59
+		 *        |  |  |  |                                          |
+		 *        |  |  |  |                                          Checksum
+		 *        |  |  |  Content
+		 *        |  |  ?
+		 *        |  ?
+		 *        ?
+		 *
+		 * $GPTXT,01,01,02,PROTVER 14.00*1E
+		 * $GPTXT,01,01,02,ANTSUPERV=AC SD PDoS SR*20
+		 * $GPTXT,01,01,02,ANTSTATUS=OK*3B
+		 * $GPTXT,01,01,02,LLC FFFFFFFF-FFFFFFFF-FFFFFFFF-FFFFFFFF-FFFFFFFD*2C
+		 *
+		 * Pending questions: what are 01,01,02 ?
+		 */
+		String s = sentence.trim();
+		if (s.length() < 6 || s.indexOf("*") < 0) {
+			return null;
+		}
+		if (!validCheckSum(sentence)) {
+			return null;
+		}
+		String[] elmts = sentence.substring(0, sentence.indexOf("*")).split(",");
+
+		return elmts.length > 4 ? elmts[4] : null;
+	}
+
 	public static boolean validCheckSum(String sentence) {
 		return validCheckSum(sentence, false);
 	}
@@ -1971,6 +2005,7 @@ public class StringParsers {
 		MWD("MWD", "Wind Direction & Speed", StringParsers::parseMWD),
 		MWV("MWV", "Wind Speed and Angle", StringParsers::parseMWV),
 		RMB("RMB", "Recommended Minimum Navigation Information, B", StringParsers::parseRMB),
+		TXT("TXT", "Text Transmission", StringParsers::parseTXT),
 		VDR("VDR", "Set and Drift", StringParsers::parseVDR),
 		VHW("VHW", "Water speed and heading", StringParsers::parseVHW),
 		VLW("VLW", "Distance Traveled through Water", StringParsers::parseVLW),
@@ -2483,6 +2518,20 @@ public class StringParsers {
 		System.clearProperty("rmc.date.offset");
 		str = "$GPRMC,012047.00,A,3744.93470,N,12230.42777,W,0.035,,030519,,,D*61\n"; // Small GSP-USB-Key
 		System.out.println(String.format("From [%s], %s", str.trim(), parseRMCtoString(str)));
+
+		String[] txt = new String[]{
+				"$AITXT,01,01,91,FREQ,2087,2088*57",
+				"$GPTXT,01,01,02,u-blox ag - www.u-blox.com*50",
+				"$GPTXT,01,01,02,HW  UBX-G70xx   00070000 FF7FFFFFo*69",
+				"$GPTXT,01,01,02,ROM CORE 1.00 (59842) Jun 27 2012 17:43:52*59",
+				"$GPTXT,01,01,02,PROTVER 14.00*1E",
+				"$GPTXT,01,01,02,ANTSUPERV=AC SD PDoS SR*20",
+				"$GPTXT,01,01,02,ANTSTATUS=OK*3B",
+				"$GPTXT,01,01,02,LLC FFFFFFFF-FFFFFFFF-FFFFFFFF-FFFFFFFF-FFFFFFFD*2C"
+		};
+		for (String s : txt) {
+			System.out.println(String.format("%s => %s", s, parseTXT(s)));
+		}
 
 		System.out.println("\nDone!");
 	}
