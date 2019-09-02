@@ -295,6 +295,7 @@ if __name__ == "__main__":
         "$IIVWR,148.,L,02.4,N,01.2,M,04.4,K*XX\r\n",
         "$IIVTG,054.7,T,034.4,M,005.5,N,010.2,K,A*XX\r\n",
         "$GPRMC,183333.000,A,4047.7034,N,07247.9938,W,0.66,196.21,150912,,,A*7C\r\n",
+        "$GPTXT,01,01,02,u-blox ag - www.u-blox.com*50\r\n",
         "$GPRMC,012047.00,A,3744.93470,N,12230.42777,W,0.035,,030519,,,D*61\r\n"  # Returned by the U-blox7
     ]
     # akeu = sex_to_dec("12", "34.XX")

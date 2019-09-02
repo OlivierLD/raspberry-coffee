@@ -1,6 +1,7 @@
 package nmea.forwarders;
 
 import http.client.HTTPClient;
+import nmea.parser.RMC;
 import nmea.parser.StringGenerator;
 import nmea.parser.StringParsers;
 import org.json.JSONObject;
@@ -46,6 +47,7 @@ public class RESTPublisher implements Forwarder {
 	private static String TWD        = "twd";
 	private static String PRATE      = "prate";
 	private static String DEWPOINT   = "dewpoint";
+	private static String TIME       = "time";
 
 	private Properties properties;
 
@@ -60,6 +62,7 @@ public class RESTPublisher implements Forwarder {
 	private long previousPRateLog = 0;
 	private long previousTWSLog = 0;
 	private long previousTWDLog = 0;
+	private long previousTimeLog = 0;
 
 	private List<Pattern> feedPatterns = new ArrayList<>();
 
@@ -117,6 +120,22 @@ public class RESTPublisher implements Forwarder {
 			}
 		} else if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {
 			System.out.println(String.format("\t>>> Feed Name [%s] is filtered (prevented)", feed));
+		}
+	}
+
+	private void logTime(double value) {
+		long now = System.currentTimeMillis();
+		if (Math.abs(now - previousTempLog) > pushInterval) {
+			try {
+				setFeedValue(this.properties.getProperty("aio.key"),
+						this.properties.getProperty("aio.url"),
+						this.properties.getProperty("aio.user.name"),
+						TIME,
+						String.valueOf(value));
+				previousTimeLog = now;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 
@@ -283,6 +302,10 @@ public class RESTPublisher implements Forwarder {
 						logPRate(xdr.getValue());
 					}
 				});
+			} else if ("RMC".equals(sentenceId)) {
+				// Log time
+				RMC rmc = StringParsers.parseRMC(str);
+				logTime(rmc.getRmcDate().getTime());
 			} else {  // Other sentences ignored (like GLL)
 				if ("true".equals(this.properties.getProperty("aio.verbose.2"))) {
 					System.out.println("\tNothing to log (REST)");

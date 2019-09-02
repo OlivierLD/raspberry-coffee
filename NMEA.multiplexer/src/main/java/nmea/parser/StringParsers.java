@@ -1767,6 +1767,8 @@ public class StringParsers {
 		 * $AITXT,01,01,91,FREQ,2087,2088*57
 		 * $GPTXT,01,01,02,u-blox ag - www.u-blox.com*50
 		 * $GPTXT,01,01,02,HW  UBX-G70xx   00070000 FF7FFFFFo*69
+		 *
+		 *        1  2  3  4
 		 * $GPTXT,01,01,02,ROM CORE 1.00 (59842) Jun 27 2012 17:43:52*59
 		 *        |  |  |  |                                          |
 		 *        |  |  |  |                                          Checksum
