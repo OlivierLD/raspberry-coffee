@@ -82,6 +82,7 @@ DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.
 ##### Raspberry Pi Zero
 - Good for logging
 - A bit challenging when acting as a server (Web and REST)
+- With a 2200mAH LiPo battery, alive between 1:00:31pm and 8:05:57pm (lifespan: 7:05:26)
 
 ##### Raspberry Pi A+
 
