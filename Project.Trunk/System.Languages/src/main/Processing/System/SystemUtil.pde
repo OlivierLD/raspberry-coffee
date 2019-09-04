@@ -1,6 +1,6 @@
 static class SystemUtil {
   static boolean debug = false;
-  
+
   static double[] solveSystem(SquareMatrix m,
                                      double[] c) {
     double[] result;
@@ -29,7 +29,7 @@ static class SystemUtil {
     for (int row=0; row<dimension; row++) {
       String line = "";
       for (int col=0; col<dimension; col++) {
-        line += String.format("%s(%f x %c)", (line.trim().length() > 0 ? " + " : ""), squareMatrix.getElementAt(row, col), unknowns.charAt(col));
+        line += String.format("%s(%f x %c)", (!line.trim().isEmpty() ? " + " : ""), squareMatrix.getElementAt(row, col), unknowns.charAt(col));
       }
       line += String.format(" = %f", constants[row]);
       println(line);

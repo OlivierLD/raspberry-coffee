@@ -66,7 +66,7 @@ public class SystemUtil {
 		IntStream.range(0, squareMatrix.getDimension()).forEach(row -> {
 			final StringBuffer sb = new StringBuffer();
 			IntStream.range(0, squareMatrix.getDimension()).forEach(col -> {
-				sb.append(String.format("%s(%f x %c)", (sb.toString().trim().length() > 0 ? " + " : ""), squareMatrix.getElementAt(row, col), unknowns.charAt(col)));
+				sb.append(String.format("%s(%f x %c)", (!sb.toString().trim().isEmpty() ? " + " : ""), squareMatrix.getElementAt(row, col), unknowns.charAt(col)));
 			});
 			sb.append(String.format(" = %f", constants[row]));
 			System.out.println(sb.toString());

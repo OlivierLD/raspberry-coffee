@@ -60,12 +60,12 @@ public class StringParsers {
 					if (xdrt.unit().equals(unit)) {
 						foundUnit = true;
 						try {
-							if (valStr.trim().length() > 0) {
+							if (!valStr.trim().isEmpty()) {
 								double value = Double.parseDouble(valStr);
 								lxdr.add(new StringGenerator.XDRElement(xdrt, value, tname));
 							}
 						} catch (NumberFormatException nfe) {
-							if (valStr.trim().length() > 0) {
+							if (!valStr.trim().isEmpty()) {
 								throw new RuntimeException(nfe);
 							}
 						}
@@ -135,7 +135,7 @@ public class StringParsers {
 		MDA mda = new MDA();
 		for (int i = 0; i < sa.length; i++) {
 			//  System.out.println(sa[i]);
-			if (i % 2 == 1 && sa[i].trim().length() > 0) {
+			if (i % 2 == 1 && !sa[i].trim().isEmpty()) {
 				double d = 0;
 				try {
 					d = Double.parseDouble(sa[i]);
@@ -508,7 +508,7 @@ public class StringParsers {
 			}
 		}
 		for (int i = 3; i < 15; i++) {
-			if (elements[i].trim().length() > 0) {
+			if (!elements[i].trim().isEmpty()) {
 				int sv = Integer.parseInt(elements[i]);
 				gsa.getSvArray().add(sv);
 			}
@@ -676,7 +676,7 @@ public class StringParsers {
 				if (s.indexOf(",R,") > -1 && s.indexOf(",N,") > -1) {
 					speed = s.substring(s.indexOf(",R,") + ",R,".length(), s.indexOf(",N,"));
 				}
-				if (speed.trim().length() == 0 && angle.trim().length() == 0) {
+				if (speed.trim().isEmpty() && angle.trim().isEmpty()) {
 					if (s.indexOf("MWV,") > -1 && s.indexOf(",T,") > -1) {
 						flavor = TRUE_WIND;
 						angle = s.substring(s.indexOf("MWV,") + "MWV,".length(), s.indexOf(",T,"));    // True

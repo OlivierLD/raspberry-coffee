@@ -207,7 +207,7 @@ public class ModulesControls {
 
 	private static void listControls(String module, String controlList) {
 		System.out.println(String.format("For Module [%s]", module));
-		if (controlList.trim().length() > 0) {
+		if (!controlList.trim().isEmpty()) {
 			List<String> controls = Arrays.asList(controlList.split(","));
 			controls.stream().forEach(id -> {
 				System.out.println(String.format("   %s, %s", id.trim(), controlMap.get(id.trim())));

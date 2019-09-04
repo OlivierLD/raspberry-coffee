@@ -127,7 +127,7 @@ public class InteractiveFona implements FONAClient {
 						System.out.println("Verbose is now " + (FONAManager.getVerbose() ? "on" : "off") + ".");
 					} else if ("?".equalsIgnoreCase(userInput) || "".equalsIgnoreCase(userInput)) {
 						displayMenu();
-					} else if (userInput.trim().length() > 0) {
+					} else if (!userInput.trim().isEmpty()) {
 						if (fona.isSerialOpen()) {
 							String cmd = "";
 							try {
@@ -164,12 +164,12 @@ public class InteractiveFona implements FONAClient {
 								{
 									System.out.println("> Note: Enter [Return] at the prompt to cancel the 'send SMS' operation <");
 									String sendTo = userInput("  Send messsage to (like 14153505547) ?> ");
-									if (sendTo.trim().length() > 0) {
+									if (!sendTo.trim().isEmpty()) {
 										if (FONAManager.getVerbose()) {
 											System.out.println("Sending message to " + sendTo);
 										}
 										String messagePayload = userInput("  Mess Content (140 char max)?         > ");
-										if (messagePayload.trim().length() > 0) {
+										if (!messagePayload.trim().isEmpty()) {
 											fona.sendSMS(sendTo, messagePayload);
 											System.out.println("Sent.");
 										} else {

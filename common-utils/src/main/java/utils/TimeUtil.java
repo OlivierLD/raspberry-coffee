@@ -176,12 +176,12 @@ public class TimeUtil {
 		String str = "";
 		if (date[0] > 0)
 			str = String.format("%d day%s ", date[0], (date[0] > 1 ? "s" : ""));
-		if (date[1] > 0 || str.trim().length() > 0)
+		if (date[1] > 0 || !str.trim().isEmpty())
 			str += String.format("%d hour%s ", date[1], (date[1] > 1 ? "s" : ""));
-		if (date[2] > 0 || str.trim().length() > 0)
+		if (date[2] > 0 || !str.trim().isEmpty())
 			str += (String.format("%d minute%s", date[2], (date[2] > 1 ? "s" : "")));
 		if (date[3] > 0 || date[4] > 0) {
-			str += (String.format("%s%d.%03d sec%s", (str.trim().length() > 0 ? " " : ""), date[3], date[4], (date[3] > 1 ? "s" : "")));
+			str += (String.format("%s%d.%03d sec%s", (!str.trim().isEmpty() ? " " : ""), date[3], date[4], (date[3] > 1 ? "s" : "")));
 		}
 		return str;
 	}

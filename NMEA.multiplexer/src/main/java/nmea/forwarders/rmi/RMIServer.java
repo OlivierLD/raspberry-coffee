@@ -62,7 +62,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 						}
 					}
 				}
-				if (address.trim().length() > 0) {
+				if (!address.trim().isEmpty()) {
 					break;
 				}
 			}

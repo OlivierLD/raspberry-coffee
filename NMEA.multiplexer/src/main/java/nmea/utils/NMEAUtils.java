@@ -685,7 +685,7 @@ public class NMEAUtils {
 				}
 				cache.put(NMEADataCache.VMG_ON_WIND, vmg);
 
-				if (cache.get(NMEADataCache.TO_WP) != null && cache.get(NMEADataCache.TO_WP).toString().trim().length() > 0) {
+				if (cache.get(NMEADataCache.TO_WP) != null && !cache.get(NMEADataCache.TO_WP).toString().trim().isEmpty()) {
 					double b2wp = ((Angle360) cache.get(NMEADataCache.B2WP)).getValue();
 					sog = (((Speed) cache.get(NMEADataCache.SOG)).getValue());
 					cog = ((Angle360) cache.get(NMEADataCache.COG)).getValue();

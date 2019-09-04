@@ -204,7 +204,7 @@ public class ChordPanel
 			if (sharp) {
 				title = title.replace('#', 'B');
 			}
-			if ((title != null) && (title.trim().length() > 0)) {
+			if (title != null && !title.trim().isEmpty()) {
 				AttributedString astr = new AttributedString(title);
 				astr.addAttribute(TextAttribute.FONT, f2);
 				Map<TextAttribute, Object> map = new HashMap<>();

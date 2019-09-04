@@ -31,7 +31,7 @@ public class EmailVoltage {
 				System.exit(0);
 			}
 		}
-		if (dest == null || dest.length == 0 || dest[0].trim().length() == 0) {
+		if (dest == null || dest.length == 0 || dest[0].trim().isEmpty()) {
 			throw new RuntimeException("No destination email. Use the help (-help).");
 		}
 

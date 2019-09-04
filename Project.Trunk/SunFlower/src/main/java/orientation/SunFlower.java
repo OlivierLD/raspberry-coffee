@@ -244,7 +244,7 @@ public class SunFlower implements RESTRequestManager {
 				previousTiltAngle = 0;
 				servosZero();
 			} else {
-				if (strZ.trim().length() > 0) {
+				if (!strZ.trim().isEmpty()) {
 					try {
 						z = Double.parseDouble(strZ);
 						if (z < 0 || z > 360) {
@@ -264,7 +264,7 @@ public class SunFlower implements RESTRequestManager {
 					previousTiltAngle = 0;
 					servosZero();
 				} else {
-					if (strHe.trim().length() > 0) {
+					if (!strHe.trim().isEmpty()) {
 						try {
 							he = Double.parseDouble(strHe);
 							if (he < -90 || he > 90) {

@@ -33,7 +33,7 @@ public class SimpleMain {
 				System.exit(0);
 			}
 		}
-		if (dest == null || dest.length == 0 || dest[0].trim().length() == 0) {
+		if (dest == null || dest.length == 0 || dest[0].trim().isEmpty()) {
 			throw new RuntimeException("No destination email (use -sendto:). Use the help (-help).");
 		}
 

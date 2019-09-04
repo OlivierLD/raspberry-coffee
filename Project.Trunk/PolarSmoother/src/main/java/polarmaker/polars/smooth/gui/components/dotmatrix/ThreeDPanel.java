@@ -255,7 +255,7 @@ public class ThreeDPanel
 		g.fillRect(0, 0, r.width, r.height);
 
 		g.setColor(textColor);
-		if (panelLabel.trim().length() > 0) {
+		if (!panelLabel.trim().isEmpty()) {
 			g.drawString(panelLabel, 3, 12);
 		}
 		g.setColor(bgColor);

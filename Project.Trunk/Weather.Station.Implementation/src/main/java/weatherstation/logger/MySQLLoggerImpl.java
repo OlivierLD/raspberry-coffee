@@ -83,40 +83,40 @@ public class MySQLLoggerImpl implements LoggerInterface {
 		String qs = "";
 		String s = json2qs(json, "avgdir", "WDIR");
 		if (s != null) {
-			qs += ((qs.trim().length() == 0 ? "" : "&") + s);
+			qs += ((qs.trim().isEmpty() ? "" : "&") + s);
 		} else {
 			s = json2qs(json, "dir", "WDIR");
 			if (s != null) {
-				qs += ((qs.trim().length() == 0 ? "" : "&") + s);
+				qs += ((qs.trim().isEmpty() ? "" : "&") + s);
 			}
 		}
 		s = json2qs(json, "speed", "WSPEED");
 		if (s != null) {
-			qs += ((qs.trim().length() == 0 ? "" : "&") + s);
+			qs += ((qs.trim().isEmpty() ? "" : "&") + s);
 		}
 		s = json2qs(json, "gust", "WGUST");
 		if (s != null) {
-			qs += ((qs.trim().length() == 0 ? "" : "&") + s);
+			qs += ((qs.trim().isEmpty() ? "" : "&") + s);
 		}
 		s = json2qs(json, "rain", "RAIN");
 		if (s != null) {
-			qs += ((qs.trim().length() == 0 ? "" : "&") + s);
+			qs += ((qs.trim().isEmpty() ? "" : "&") + s);
 		}
 		s = json2qs(json, "press", "PRMSL");
 		if (s != null) {
-			qs += ((qs.trim().length() == 0 ? "" : "&") + s);
+			qs += ((qs.trim().isEmpty() ? "" : "&") + s);
 		}
 		s = json2qs(json, "temp", "ATEMP");
 		if (s != null) {
-			qs += ((qs.trim().length() == 0 ? "" : "&") + s);
+			qs += ((qs.trim().isEmpty() ? "" : "&") + s);
 		}
 		s = json2qs(json, "hum", "HUM");
 		if (s != null) {
-			qs += ((qs.trim().length() == 0 ? "" : "&") + s);
+			qs += ((qs.trim().isEmpty() ? "" : "&") + s);
 		}
 		s = json2qs(json, "dew", "DEW");
 		if (s != null) {
-			qs += ((qs.trim().length() == 0 ? "" : "&") + s);
+			qs += ((qs.trim().isEmpty() ? "" : "&") + s);
 		}
 		return qs;
 	}

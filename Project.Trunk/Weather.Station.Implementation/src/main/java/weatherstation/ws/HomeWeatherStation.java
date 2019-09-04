@@ -69,7 +69,7 @@ public class HomeWeatherStation {
 			String[] loggerClasses = loggerClassNames.split(",");
 			loggers = new ArrayList<>();
 			for (String loggerClassName : loggerClasses) {
-				if (loggerClassName.trim().length() > 0) {
+				if (!loggerClassName.trim().isEmpty()) {
 					try {
 						Class<? extends LoggerInterface> logClass = Class.forName(loggerClassName).asSubclass(LoggerInterface.class);
 						loggers.add(logClass.newInstance());

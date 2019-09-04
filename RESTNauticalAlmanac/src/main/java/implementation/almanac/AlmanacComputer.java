@@ -126,12 +126,12 @@ public class AlmanacComputer {
 		int fromYear = 0, fromMonth = 0, fromDay = 0, toYear = 0, toMonth = 0, toDay = 0;
 
 		if ("from-to".equals(type)) {
-			if ((fromYearPrm == null || fromYearPrm.trim().length() == 0) ||
-					(fromMonthPrm == null || fromMonthPrm.trim().length() == 0) ||
-					(fromDayPrm == null || fromDayPrm.trim().length() == 0) ||
-					(toYearPrm == null || toYearPrm.trim().length() == 0) ||
-					(toMonthPrm == null || toMonthPrm.trim().length() == 0) ||
-					(toDayPrm == null || toDayPrm.trim().length() == 0)) {
+			if ((fromYearPrm == null || fromYearPrm.trim().isEmpty()) ||
+					(fromMonthPrm == null || fromMonthPrm.trim().isEmpty()) ||
+					(fromDayPrm == null || fromDayPrm.trim().isEmpty()) ||
+					(toYearPrm == null || toYearPrm.trim().isEmpty()) ||
+					(toMonthPrm == null || toMonthPrm.trim().isEmpty()) ||
+					(toDayPrm == null || toDayPrm.trim().isEmpty())) {
 				displayHelp();
 				throw new RuntimeException("Some mandatory parameter(s) missing.");
 			}

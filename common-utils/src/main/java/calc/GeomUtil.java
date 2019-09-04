@@ -132,7 +132,7 @@ public final class GeomUtil {
 				minutes = fullString.substring(degSignIndex + 1);
 			}
 			double d = 0L;
-			if (seconds.trim().length() > 0) {
+			if (!seconds.trim().isEmpty()) {
 				d = sexToDec(degrees, minutes, seconds);
 			} else {
 				d = sexToDec(degrees, minutes);

@@ -287,7 +287,7 @@ public class GUIFrame
 				"Polar Data",
 				"Polar Data",
 				"Create");
-		if (newFName != null && newFName.trim().length() > 0) {
+		if (newFName != null && !newFName.trim().isEmpty()) {
 			try {
 				File f = new File(newFName);
 				boolean go = true;
@@ -341,7 +341,7 @@ public class GUIFrame
 	}
 
 	public void reOpen(String fName) {
-		if (fName != null && fName.trim().length() > 0) {
+		if (fName != null && !fName.trim().isEmpty()) {
 			if (mainPanel1 != null) {
 				mainPanel1.setDataFile(fName);
 			}
@@ -365,7 +365,7 @@ public class GUIFrame
 				"Polar Data",
 				"Polar Data",
 				"Save As");
-		if (newFName != null && newFName.trim().length() > 0) {
+		if (newFName != null && !newFName.trim().isEmpty()) {
 			save(newFName);
 		}
 	}
@@ -505,7 +505,7 @@ public class GUIFrame
 		System.out.println("Generate coefficients");
 		if (mainPanel1.getTreeRoot() != null) {
 			String fName = PolarUtilities.chooseFile(JFileChooser.FILES_ONLY, "polar-coeff", "Coefficients", "Save Coefficient File", "Save As");
-			if (fName.trim().length() > 0) {
+			if (!fName.trim().isEmpty()) {
 				fName = PolarUtilities.makeSureExtensionIsOK(fName, ".polar-coeff");
 				// Loop on the different sections. Assume we have a tree of sections, with all the degrees.
 				PolarTreeNode treeRoot = (PolarTreeNode) mainPanel1.getTreeRoot();
@@ -622,7 +622,7 @@ public class GUIFrame
 
 	private void importFromMaxSeaFile() {
 		fName = PolarUtilities.chooseFile(JFileChooser.FILES_AND_DIRECTORIES, "pol", "MaxSea Polars", "MaxSea", "Open");
-		if (fName != null && fName.trim().length() > 0) {
+		if (fName != null && !fName.trim().isEmpty()) {
 			openMaxSeaPolarFile(fName);
 		}
 	}
@@ -728,7 +728,7 @@ public class GUIFrame
 				String fName = PolarUtilities.chooseFile(JFileChooser.FILES_AND_DIRECTORIES, "pol", "MaxSea Polar Data", "MaxSea", "Save As");
 				fName = PolarUtilities.makeSureExtensionIsOK(fName, ".pol");
 
-				if (fName != null && fName.trim().length() > 0) {
+				if (fName != null && !fName.trim().isEmpty()) {
 					FileWriter fw = new FileWriter(fName);
 					fw.write("TWA\t");
 					for (int i = Constants.getMinWindSpeed(); i <= Constants.getMaxWindSpeed(); i++) {

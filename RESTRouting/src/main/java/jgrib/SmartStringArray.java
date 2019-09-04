@@ -2,22 +2,22 @@
  * ===============================================================================
  * $Id: SmartStringArray.java,v 1.3 2006/07/25 13:46:23 frv_peg Exp $
  * ===============================================================================
- * JGRIB library  
- *  
+ * JGRIB library
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  * Authors:
  * See AUTHORS file
  * ===============================================================================
@@ -34,17 +34,17 @@ public class SmartStringArray
 	 * "stack pointer" to keep track of position in the array
 	 */
    int sp = 0;
-   
+
    /**
     * The array of strings
     */
    private String[] array;
-   
+
    /**
     * How much to add
     */
    private int growthSize;
-   
+
    /**
     * Start value
     */
@@ -101,7 +101,7 @@ public class SmartStringArray
 
    /**
    * Add one string
-   * @param str 
+   * @param str
    */
    public void add(String str )
    {
@@ -117,7 +117,7 @@ public class SmartStringArray
 
    /**
    * Return normal array
-   * @return strings in an array 
+   * @return strings in an array
    */
    public String[] toArray()
    {
@@ -136,8 +136,8 @@ public class SmartStringArray
 
    /**
    * Split string in an array
-   * @param token 
-   * @param string 
+   * @param token
+   * @param string
    * @return String array
    */
    public static String[] split( String token, String string )
@@ -157,8 +157,7 @@ public class SmartStringArray
       {
          //String sub = string.substring( previousLoc, loc );
          /*
-         if (sub.trim().length() > 0)
-         {
+         if (!sub.trim().isEmpty()) {
             ssa.add(sub);
          }
          */
@@ -170,8 +169,7 @@ public class SmartStringArray
 
       //String sub = string.substring( previousLoc);
       /*
-      if (sub.trim().length() > 0)
-      {
+      if (!sub.trim().isEmpty()) {
          ssa.add(sub);
       }
       */
@@ -183,7 +181,7 @@ public class SmartStringArray
    /**
    * Remove array elements with blanks and blanks inside a string
    * Alter number of elements
-   * @param inArr 
+   * @param inArr
    * @return string array
    */
    public static String[] removeBlanks(String[] inArr)
@@ -222,8 +220,8 @@ public class SmartStringArray
 
    /**
    * Join some elements with a token in between
-   * @param token 
-   * @param strings 
+   * @param token
+   * @param strings
    * @return joined string
    */
    public static String join( String token, String[] strings )

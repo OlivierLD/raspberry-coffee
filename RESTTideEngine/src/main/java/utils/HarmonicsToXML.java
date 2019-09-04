@@ -88,7 +88,7 @@ public class HarmonicsToXML {
 						String coeffName = constSpeed[0];
 						String coeffValue = "";
 						for (int i = 1; i < constSpeed.length; i++) {
-							if (constSpeed[i].trim().length() > 0) {
+							if (!constSpeed[i].trim().isEmpty()) {
 								coeffValue = constSpeed[i];
 								break;
 							}
@@ -313,7 +313,7 @@ public class HarmonicsToXML {
 									//              System.out.print(" -> Coeff: ");
 									int coeffFound = 0;
 									for (int i = 1; i < coeffElement.length; i++) {
-										if (coeffElement[i].trim().length() > 0) {
+										if (!coeffElement[i].trim().isEmpty()) {
 											coeffFound++;
 											if (coeffFound == 1) {
 												harm.setAttribute("amplitude", coeffElement[i].trim());

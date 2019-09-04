@@ -879,7 +879,13 @@ class SunPath extends HTMLElement {
 			context.save();
 			let fontSize = 10;
 			context.font = "" + Math.round(fontSize) + "px " + this.sunPathColorConfig.font;
-			context.fillText(name, 5 + center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius));
+			context.fillText(name, 5 + center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius) + 5);
+
+			let strAlt = Utilities.decToSex(he);
+			let strZ = Utilities.decToSex(z);
+			context.fillText("El.:" + strAlt, 5 + center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius) + 17);
+			context.fillText("Z:" + strZ, 5 + center.x + (panelPoint.x * radius * this.invertX), center.y - (panelPoint.y * radius) + 29);
+
 			context.restore();
 		}
 		// Dotted line to center

@@ -68,7 +68,7 @@ public final class NMEAParser extends Thread {
 							boolean broadcast = true;
 							if (nmeaPrefix != null) {
 								for (String device : nmeaPrefix) {
-									if (device.trim().length() > 0 &&
+									if (!device.trim().isEmpty() &&
 													( (!device.startsWith("~") && !device.equals(StringParsers.getDeviceID(s))) ||
 															device.startsWith("~") && device.substring(1).equals(StringParsers.getDeviceID(s)))) {
 										broadcast = false;
@@ -118,7 +118,7 @@ public final class NMEAParser extends Thread {
 	}
 
 	public void setDeviceFilters(String[] s) {
-		if (s != null && s.length == 1 && s[0].trim().length() == 0) {
+		if (s != null && s.length == 1 && s[0].trim().isEmpty()) {
 			this.nmeaPrefix = null;
 		} else {
 			this.nmeaPrefix = s;
@@ -130,7 +130,7 @@ public final class NMEAParser extends Thread {
 	}
 
 	public void setSentenceFilters(String[] sa) {
-		if (sa != null && sa.length == 1 && sa[0].trim().length() == 0) {
+		if (sa != null && sa.length == 1 && sa[0].trim().isEmpty()) {
 			this.nmeaSentence = null;
 		} else {
 			this.nmeaSentence = sa;

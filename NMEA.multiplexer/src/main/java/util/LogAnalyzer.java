@@ -46,10 +46,10 @@ public class LogAnalyzer {
 		if (days > 0) {
 			str = days + " day(s) ";
 		}
-		if (hours > 0 || str.trim().length() > 0) {
+		if (hours > 0 || !str.trim().isEmpty()) {
 			str += hours + " hour(s) ";
 		}
-		if (minutes > 0 || str.trim().length() > 0) {
+		if (minutes > 0 || !str.trim().isEmpty()) {
 			str += minutes + " minute(s) ";
 		}
 		str += seconds + " sec(s)";

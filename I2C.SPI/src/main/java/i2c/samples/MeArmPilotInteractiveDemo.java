@@ -110,13 +110,13 @@ public class MeArmPilotInteractiveDemo {
 		// Now looping on user input.
 		boolean keepAsking = true;
 		int nbCommand = 0;
-		System.out.println("Entre 'Q' at the prompt to quit.");
+		System.out.println("Enter 'Q' at the prompt to quit.");
 		System.out.println("Type HELP for help.");
 		while (keepAsking) {
 			String cmd = userInput(String.format("%d> ", ++nbCommand));
 			if ("Q".equalsIgnoreCase(cmd)) {
 				keepAsking = false;
-			} else if (cmd.trim().length() > 0) {
+			} else if (!cmd.trim().isEmpty()) {
 				boolean ok = true;
 				try {
 					MeArmPilot.validateCommand(cmd, nbCommand);

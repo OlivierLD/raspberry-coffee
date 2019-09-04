@@ -47,7 +47,7 @@ public class RESTPublisher implements Forwarder {
 	private static String TWD        = "twd";
 	private static String PRATE      = "prate";
 	private static String DEWPOINT   = "dewpoint";
-	private static String TIME       = "time";
+	private static String TIME       = "time";     // Can be used to evaluate lifespan, on battery.
 
 	private Properties properties;
 

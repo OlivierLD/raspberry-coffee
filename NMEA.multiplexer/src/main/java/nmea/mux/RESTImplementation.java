@@ -937,7 +937,7 @@ public class RESTImplementation {
 							if (dynamic instanceof Forwarder) {
 								Forwarder forwarder = (Forwarder) dynamic;
 
-								if (propFile != null && propFile.trim().length() > 0) {
+								if (propFile != null && !propFile.trim().isEmpty()) {
 									try {
 										Properties properties = new Properties();
 										properties.load(new FileReader(propFile));
@@ -1370,7 +1370,7 @@ public class RESTImplementation {
 							if (dynamic instanceof NMEAClient) {
 								NMEAClient nmeaClient = (NMEAClient) dynamic;
 
-								if (propFile != null && propFile.trim().length() > 0) {
+								if (propFile != null && !propFile.trim().isEmpty()) {
 									try {
 										Properties properties = new Properties();
 										properties.load(new FileReader(propFile));
@@ -1500,7 +1500,7 @@ public class RESTImplementation {
 							if (dynamic instanceof Computer) {
 								Computer computer = (Computer) dynamic;
 
-								if (propFile != null && propFile.trim().length() > 0) {
+								if (propFile != null && !propFile.trim().isEmpty()) {
 									try {
 										Properties properties = new Properties();
 										properties.load(new FileReader(propFile));

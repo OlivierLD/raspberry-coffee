@@ -696,7 +696,7 @@ public class Nokia5110Processor implements Forwarder {
 		}
 		// Data to display on the small screen
 		String csv = props.getProperty("to.display", "");
-		if (csv.trim().length() > 0) {
+		if (!csv.trim().isEmpty()) {
 			Arrays.stream(csv.trim().split(",")).forEach(id -> {
 				switch (id) {
 					case "POS": // Position
