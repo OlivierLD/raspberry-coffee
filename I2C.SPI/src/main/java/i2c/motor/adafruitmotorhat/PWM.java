@@ -1,15 +1,16 @@
-package i2c.servo.adafruitmotorhat;
+package i2c.motor.adafruitmotorhat;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
+import i2c.servo.pwm.PCA9685;
 
 import java.io.IOException;
 
 import static utils.TimeUtil.delay;
 
 /**
- * Also see {@link i2c.servo.pwm.PCA9685}
+ * Also see {@link PCA9685}
  */
 public class PWM {
 	// Registers/etc.

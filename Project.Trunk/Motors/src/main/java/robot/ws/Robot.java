@@ -1,7 +1,7 @@
 package robot.ws;
 
 import com.pi4j.io.i2c.I2CFactory;
-import i2c.servo.adafruitmotorhat.AdafruitMotorHAT;
+import i2c.motor.adafruitmotorhat.AdafruitMotorHAT;
 
 import java.io.IOException;
 

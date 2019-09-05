@@ -3,13 +3,10 @@ package i2c.samples;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import static utils.StaticUtil.userInput;
 
 /*
- * Two servos - one standard, one continous
+ * Two servos - one standard, one continuous
  * Enter all the values from the command line, and see for yourself.
  */
 public class Servo001 {

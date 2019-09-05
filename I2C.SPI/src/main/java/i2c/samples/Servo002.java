@@ -3,9 +3,6 @@ package i2c.samples;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
 import static utils.StaticUtil.userInput;
 
 /*

@@ -1,4 +1,4 @@
-package i2c.servo.adafruitmotorhat;
+package i2c.motor.adafruitmotorhat;
 
 import com.pi4j.io.i2c.I2CFactory;
 

@@ -9,11 +9,11 @@ then
 		rm -rf $DESTINATION_FOLDER
 		mkdir $DESTINATION_FOLDER
 	fi
-else	
+else
 	mkdir $DESTINATION_FOLDER
 fi
 #
-# Process the data
+# Process the data, CSV files on the Desktop
 #
 for datafile in ~/Desktop/*.csv
 do
