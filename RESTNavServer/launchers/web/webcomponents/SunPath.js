@@ -693,7 +693,7 @@ class SunPath extends HTMLElement {
 			context.font = "" + Math.round(fontSize) + "px " + this.sunPathColorConfig.font;
 			let strAlt = Utilities.decToSex(this.sunHe);
 			let strZ = Utilities.decToSex(this.sunZ);
-			context.fillText("Elevation:" + strAlt, 10, 20);
+			context.fillText("\u2609 Elevation:" + strAlt, 10, 20);
 			context.fillText("Azimuth:" + strZ, 10, 40);
 			if (this.userPosition !== undefined) {
 				let strLat = Utilities.decToSex(this.userPosition.latitude, 'NS');
@@ -821,7 +821,7 @@ class SunPath extends HTMLElement {
 			context.font = "" + Math.round(fontSize) + "px " + this.sunPathColorConfig.font;
 			let strAlt = Utilities.decToSex(this.moonHe);
 			let strZ = Utilities.decToSex(this.moonZ);
-			context.fillText("Elevation:" + strAlt, 10, 60);
+			context.fillText("\u263D Elevation:" + strAlt, 10, 60);
 			context.fillText("Azimuth:" + strZ, 10, 80);
 			context.restore();
 		}
