@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>GPS Api test</title>
+	<style type="text/css">
+		.gps-text {
+			font-family: "Source Code Pro", "Courier New", "Helvetica Neue", "Lato", Verdana, Helvetica, Geneva, sans-serif;
+			font-size: x-large;
+			font-weight: bold;
+			color: navy;
+		}
+	</style>
+</head>
+<body>
+	<h1 class="gps-text">Geolocation Api Demo &nbsp;<span id="working" title="Traffic">&#11044;</span></h1>
+	<hr/>
+  <div id="textbox" class="gps-text"></div>
+	<hr/>
+</body>
+<script type="text/javascript">
+
+	let status = 'tick';
+	// Activity witness
+	function flipLight() {
+		var element = document.getElementById('working');
+		if (status === 'tick') {
+			status = 'tock';
+			element.style.color = 'red';
+		} else {
+			status = 'tick';
+			element.style.color = 'green';
+		}
+		element.title = new Date().toString();
+	}
+
+	let options = {
+		enableHighAccuracy: true,
+		maximumAge: 0,
+		timeout: 5000
+	};
+
+	function onPosSuccess(pos) {
+		// Doc at https://w3c.github.io/geolocation-api/
+		// Position object at https://w3c.github.io/geolocation-api/#position_interface
+		//
+		// Check privileges in config.xml
+		//
+		console.log('lat= ' + pos.coords.latitude + ' lon= ' + pos.coords.longitude);
+		console.log('hdg= ' + pos.coords.heading + ' spd= ' + pos.coords.speed + ' m/s');
+//  console.log("Pos data:" + pos.coords);
+		let hdg = 0;
+		let speed = 0.0;
+		try {
+			hdg = pos.coords.heading.toFixed(0);
+			speed = pos.coords.speed.toFixed(2);
+		} catch (err) {}
+		let newContent =
+				'LAT = ' + decToSex(pos.coords.latitude, 'NS') + "<br/>" +
+				'LNG = ' + decToSex(pos.coords.longitude, 'EW') + "<br/>" +
+				'HDG = ' + hdg + '<br/>' +
+				'SPD = ' + speed + ' m/s';
+		let box = document.querySelector('#textbox');
+		box.innerHTML = newContent;
+		flipLight();
+	}
+
+	// Called from navigator.geolocation.getCurrentPosition
+	function onPosError(err) {
+		let errMess = '';
+		if (err.code == err.PERMISSION_DENIED) {
+			errMess = 'Location access was denied by the user.';
+		} else {
+			errMess = 'location error (' + err.code + '): ' + err.message;
+		}
+		let box = document.querySelector('#textbox');
+		box.innerHTML = errMess;
+	}
+
+	function decToSex(val, ns_ew) {
+		let absVal = Math.abs(val);
+		let intValue = Math.floor(absVal);
+		let dec = absVal - intValue;
+		let i = intValue;
+		dec *= 60;
+		let s = i + "°" + dec.toFixed(2) + "'";
+
+		if (val < 0) {
+			s += (ns_ew === 'NS' ? 'S' : 'W');
+		} else {
+			s += (ns_ew === 'NS' ? 'N' : 'E');
+		}
+		return s;
+	}
+
+	(() => {
+		setInterval(() => {
+			let watchId = navigator.geolocation.getCurrentPosition(onPosSuccess, onPosError, options);
+		}, 1000);
+	})();
+</script>
+</html>

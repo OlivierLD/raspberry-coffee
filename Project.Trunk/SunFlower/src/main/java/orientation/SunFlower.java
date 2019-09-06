@@ -8,7 +8,7 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.i2c.I2CFactory;
 import http.HTTPServer;
 import http.RESTRequestManager;
-import i2c.servo.pwm.PCA9685;
+import i2c.servo.PCA9685;
 import org.fusesource.jansi.AnsiConsole;
 import utils.PinUtil;
 import utils.StringUtils;

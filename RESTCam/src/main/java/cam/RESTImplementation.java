@@ -8,7 +8,7 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
-import i2c.servo.pwm.PCA9685;
+import i2c.servo.PCA9685;
 import implementation.cam.CameraManager;
 
 import java.io.StringReader;

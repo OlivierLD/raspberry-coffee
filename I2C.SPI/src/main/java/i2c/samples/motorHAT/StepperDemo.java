@@ -47,38 +47,38 @@ public class StepperDemo {
 				if (keepGoing) {
 					System.out.println("-- 1. Single coil steps --");
 					System.out.println("  Forward");
-					this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.FORWARD, AdafruitMotorHAT.Style.SINGLE);
+					this.stepper.step(nbSteps, AdafruitMotorHAT.MotorCommand.FORWARD, AdafruitMotorHAT.Style.SINGLE);
 				}
 				if (keepGoing) {
 					System.out.println("  Backward");
-					this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.BACKWARD, AdafruitMotorHAT.Style.SINGLE);
+					this.stepper.step(nbSteps, AdafruitMotorHAT.MotorCommand.BACKWARD, AdafruitMotorHAT.Style.SINGLE);
 				}
 				if (keepGoing) {
 					System.out.println("-- 2. Double coil steps --");
 					System.out.println("  Forward");
-					this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.FORWARD, AdafruitMotorHAT.Style.DOUBLE);
+					this.stepper.step(nbSteps, AdafruitMotorHAT.MotorCommand.FORWARD, AdafruitMotorHAT.Style.DOUBLE);
 				}
 				if (keepGoing) {
 					System.out.println("  Backward");
-					this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.BACKWARD, AdafruitMotorHAT.Style.DOUBLE);
+					this.stepper.step(nbSteps, AdafruitMotorHAT.MotorCommand.BACKWARD, AdafruitMotorHAT.Style.DOUBLE);
 				}
 				if (keepGoing) {
 					System.out.println("-- 3. Interleaved coil steps --");
 					System.out.println("  Forward");
-					this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.FORWARD, AdafruitMotorHAT.Style.INTERLEAVE);
+					this.stepper.step(nbSteps, AdafruitMotorHAT.MotorCommand.FORWARD, AdafruitMotorHAT.Style.INTERLEAVE);
 				}
 				if (keepGoing) {
 					System.out.println("  Backward");
-					this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.BACKWARD, AdafruitMotorHAT.Style.INTERLEAVE);
+					this.stepper.step(nbSteps, AdafruitMotorHAT.MotorCommand.BACKWARD, AdafruitMotorHAT.Style.INTERLEAVE);
 				}
 				if (keepGoing) {
 					System.out.println("-- 4. Microsteps --");
 					System.out.println("  Forward");
-					this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.FORWARD, AdafruitMotorHAT.Style.MICROSTEP);
+					this.stepper.step(nbSteps, AdafruitMotorHAT.MotorCommand.FORWARD, AdafruitMotorHAT.Style.MICROSTEP);
 				}
 				if (keepGoing) {
 					System.out.println("  Backward");
-					this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.BACKWARD, AdafruitMotorHAT.Style.MICROSTEP);
+					this.stepper.step(nbSteps, AdafruitMotorHAT.MotorCommand.BACKWARD, AdafruitMotorHAT.Style.MICROSTEP);
 				}
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
@@ -93,10 +93,10 @@ public class StepperDemo {
 		this.keepGoing = false;
 		if (mh != null) {
 			try { // Release all
-				mh.getMotor(AdafruitMotorHAT.Motor.M1).run(AdafruitMotorHAT.ServoCommand.RELEASE);
-				mh.getMotor(AdafruitMotorHAT.Motor.M2).run(AdafruitMotorHAT.ServoCommand.RELEASE);
-				mh.getMotor(AdafruitMotorHAT.Motor.M3).run(AdafruitMotorHAT.ServoCommand.RELEASE);
-				mh.getMotor(AdafruitMotorHAT.Motor.M4).run(AdafruitMotorHAT.ServoCommand.RELEASE);
+				mh.getMotor(AdafruitMotorHAT.Motor.M1).run(AdafruitMotorHAT.MotorCommand.RELEASE);
+				mh.getMotor(AdafruitMotorHAT.Motor.M2).run(AdafruitMotorHAT.MotorCommand.RELEASE);
+				mh.getMotor(AdafruitMotorHAT.Motor.M3).run(AdafruitMotorHAT.MotorCommand.RELEASE);
+				mh.getMotor(AdafruitMotorHAT.Motor.M4).run(AdafruitMotorHAT.MotorCommand.RELEASE);
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}

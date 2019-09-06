@@ -1,12 +1,14 @@
 package i2c.motor.adafruitmotorhat;
 
 import com.pi4j.io.i2c.I2CFactory;
+import i2c.pwm.PWM;
 
 import java.io.IOException;
 
 import static utils.TimeUtil.delay;
 
 /**
+ * For https://www.adafruit.com/product/2348
  * Adapted from the python code at https://github.com/adafruit/Adafruit-Motor-HAT-Python-Library.git
  * WIP.
  */
@@ -19,7 +21,7 @@ public class AdafruitMotorHAT {
 		M1, M2, M3, M4
 	}
 
-	public enum ServoCommand {
+	public enum MotorCommand {
 		FORWARD, BACKWARD, BRAKE, RELEASE
 	}
 
@@ -137,17 +139,17 @@ public class AdafruitMotorHAT {
 			}
 		}
 
-		public void run(ServoCommand command) throws IOException {
+		public void run(MotorCommand command) throws IOException {
 			if (this.mh == null) {
 				return;
 			}
-			if (command == ServoCommand.FORWARD) {
+			if (command == MotorCommand.FORWARD) {
 				this.mh.setPin(this.IN2pin, 0);
 				this.mh.setPin(this.IN1pin, 1);
-			} else if (command == ServoCommand.BACKWARD) {
+			} else if (command == MotorCommand.BACKWARD) {
 				this.mh.setPin(this.IN1pin, 0);
 				this.mh.setPin(this.IN2pin, 1);
-			} else if (command == ServoCommand.RELEASE) {
+			} else if (command == MotorCommand.RELEASE) {
 				this.mh.setPin(this.IN1pin, 0);
 				this.mh.setPin(this.IN2pin, 0);
 			}
@@ -214,22 +216,25 @@ public class AdafruitMotorHAT {
 			this.steppingCounter = 0;
 			this.currentStep = 0;
 
-			if ((num - 1) == 0) { // num == STEPPER_1
-				this.PWMA = 8;
-				this.AIN2 = 9;
-				this.AIN1 = 10;
-				this.PWMB = 13;
-				this.BIN2 = 12;
-				this.BIN1 = 11;
-			} else if ((num - 1) == 1) { // num == STEPPER_2
-				this.PWMA = 2;
-				this.AIN2 = 3;
-				this.AIN1 = 4;
-				this.PWMB = 7;
-				this.BIN2 = 6;
-				this.BIN1 = 5;
-			} else {
-				throw new RuntimeException("MotorHAT Stepper must be 1 or 2");
+			switch (num - 1) {
+				case 0: // num == STEPPER_1
+					this.PWMA = 8;
+					this.AIN2 = 9;
+					this.AIN1 = 10;
+					this.PWMB = 13;
+					this.BIN2 = 12;
+					this.BIN1 = 11;
+					break;
+				case 1: // num == STEPPER_2
+					this.PWMA = 2;
+					this.AIN2 = 3;
+					this.AIN1 = 4;
+					this.PWMB = 7;
+					this.BIN2 = 6;
+					this.BIN1 = 5;
+					break;
+				default:
+					throw new RuntimeException("MotorHAT Stepper must be 1 or 2");
 			}
 		}
 
@@ -255,7 +260,7 @@ public class AdafruitMotorHAT {
 			return this.rpm;
 		}
 
-		public int oneStep(ServoCommand dir, Style style) throws IOException {
+		public int oneStep(MotorCommand dir, Style style) throws IOException {
 			int pwmA = 255,
 					pwmB = 255;
 
@@ -263,14 +268,14 @@ public class AdafruitMotorHAT {
 			if (style == Style.SINGLE) {
 				if ((int)(this.currentStep / (int)(this.MICROSTEPS / 2)) % 2 == 1) {
 					// we're at an odd step, weird
-					if (dir == ServoCommand.FORWARD) {
+					if (dir == MotorCommand.FORWARD) {
 						this.currentStep += ((int)(this.MICROSTEPS / 2));
 					} else {
 						this.currentStep -= ((int)(this.MICROSTEPS / 2));
 					}
 				} else {
 					// go to next even step
-					if (dir == ServoCommand.FORWARD) {
+					if (dir == MotorCommand.FORWARD) {
 						this.currentStep += this.MICROSTEPS;
 					} else {
 						this.currentStep -= this.MICROSTEPS;
@@ -279,27 +284,27 @@ public class AdafruitMotorHAT {
 			} else if (style == Style.DOUBLE) {
 				if ((int)(this.currentStep / (int)(this.MICROSTEPS / 2)) % 2 == 0) {
 					// we're at an even step, weird
-					if (dir == ServoCommand.FORWARD) {
+					if (dir == MotorCommand.FORWARD) {
 						this.currentStep += ((int)(this.MICROSTEPS / 2));
 					} else {
 						this.currentStep -= ((int)(this.MICROSTEPS / 2));
 					}
 				} else {
 					// go to next odd step
-					if (dir == ServoCommand.FORWARD) {
+					if (dir == MotorCommand.FORWARD) {
 						this.currentStep += this.MICROSTEPS;
 					} else {
 						this.currentStep -= this.MICROSTEPS;
 					}
 				}
 			} else if (style == Style.INTERLEAVE) {
-				if (dir == ServoCommand.FORWARD) {
+				if (dir == MotorCommand.FORWARD) {
 					this.currentStep += ((int)(this.MICROSTEPS / 2));
 				} else {
 					this.currentStep -= ((int)(this.MICROSTEPS / 2));
 				}
 			} else if (style == Style.MICROSTEP) {
-				if (dir == ServoCommand.FORWARD) {
+				if (dir == MotorCommand.FORWARD) {
 					this.currentStep += 1;
 				} else {
 					this.currentStep -= 1;
@@ -367,7 +372,7 @@ public class AdafruitMotorHAT {
 			return this.currentStep;
 		}
 
-		public void step(int steps, ServoCommand direction, Style stepStyle) throws IOException {
+		public void step(int steps, MotorCommand direction, Style stepStyle) throws IOException {
 			double sPerS = this.secPerStep;
 			int latestStep = 0;
 

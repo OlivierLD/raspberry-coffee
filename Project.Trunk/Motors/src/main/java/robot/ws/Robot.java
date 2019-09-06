@@ -23,8 +23,8 @@ public class Robot {
 		this.rightMotor = mh.getMotor(rightMotorID);
 		// Start with the motors turned off
 		try {
-			this.leftMotor.run(AdafruitMotorHAT.ServoCommand.RELEASE);
-			this.rightMotor.run(AdafruitMotorHAT.ServoCommand.RELEASE);
+			this.leftMotor.run(AdafruitMotorHAT.MotorCommand.RELEASE);
+			this.rightMotor.run(AdafruitMotorHAT.MotorCommand.RELEASE);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -41,8 +41,8 @@ public class Robot {
 
 	public void stop() {
 		try {
-			this.leftMotor.run(AdafruitMotorHAT.ServoCommand.RELEASE);
-			this.rightMotor.run(AdafruitMotorHAT.ServoCommand.RELEASE);
+			this.leftMotor.run(AdafruitMotorHAT.MotorCommand.RELEASE);
+			this.rightMotor.run(AdafruitMotorHAT.MotorCommand.RELEASE);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -73,8 +73,8 @@ public class Robot {
 	public void forward(int speed, float seconds) throws IOException {
 		this.leftMotor.setSpeed(speed);
 		this.rightMotor.setSpeed(speed);
-		this.leftMotor.run(AdafruitMotorHAT.ServoCommand.FORWARD);
-		this.rightMotor.run(AdafruitMotorHAT.ServoCommand.FORWARD);
+		this.leftMotor.run(AdafruitMotorHAT.MotorCommand.FORWARD);
+		this.rightMotor.run(AdafruitMotorHAT.MotorCommand.FORWARD);
 		if (seconds > 0) {
 			delay(seconds);
 			this.stop();
@@ -88,8 +88,8 @@ public class Robot {
 	public void backward(int speed, float seconds) throws IOException {
 		this.leftMotor.setSpeed(speed);
 		this.rightMotor.setSpeed(speed);
-		this.leftMotor.run(AdafruitMotorHAT.ServoCommand.BACKWARD);
-		this.rightMotor.run(AdafruitMotorHAT.ServoCommand.BACKWARD);
+		this.leftMotor.run(AdafruitMotorHAT.MotorCommand.BACKWARD);
+		this.rightMotor.run(AdafruitMotorHAT.MotorCommand.BACKWARD);
 		if (seconds > 0) {
 			delay(seconds);
 			this.stop();
@@ -103,8 +103,8 @@ public class Robot {
 	public void right(int speed, float seconds) throws IOException {
 		this.leftMotor.setSpeed(speed);
 		this.rightMotor.setSpeed(speed);
-		this.leftMotor.run(AdafruitMotorHAT.ServoCommand.FORWARD);
-		this.rightMotor.run(AdafruitMotorHAT.ServoCommand.BACKWARD);
+		this.leftMotor.run(AdafruitMotorHAT.MotorCommand.FORWARD);
+		this.rightMotor.run(AdafruitMotorHAT.MotorCommand.BACKWARD);
 		if (seconds > 0) {
 			delay(seconds);
 			this.stop();
@@ -118,8 +118,8 @@ public class Robot {
 	public void left(int speed, float seconds) throws IOException {
 		this.leftMotor.setSpeed(speed);
 		this.rightMotor.setSpeed(speed);
-		this.leftMotor.run(AdafruitMotorHAT.ServoCommand.BACKWARD);
-		this.rightMotor.run(AdafruitMotorHAT.ServoCommand.FORWARD);
+		this.leftMotor.run(AdafruitMotorHAT.MotorCommand.BACKWARD);
+		this.rightMotor.run(AdafruitMotorHAT.MotorCommand.FORWARD);
 		if (seconds > 0) {
 			delay(seconds);
 			this.stop();

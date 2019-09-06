@@ -2,7 +2,7 @@ package raspiradar.jni;
 
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.i2c.I2CFactory;
-import i2c.servo.pwm.PCA9685;
+import i2c.servo.PCA9685;
 import rangesensor.JNI_HC_SR04;
 import utils.PinUtil;
 import utils.TimeUtil;

@@ -2,7 +2,7 @@ package servo;
 
 import analogdigitalconverter.mcp3008.MCP3008Reader;
 import com.pi4j.io.i2c.I2CFactory;
-import i2c.servo.pwm.PCA9685;
+import i2c.servo.PCA9685;
 import utils.StringUtils;
 
 import static utils.TimeUtil.delay;

@@ -29,7 +29,7 @@ public class OneMotorDemo {
 		this.mh = new AdafruitMotorHAT();
 		this.motor = mh.getMotor(motorID);
 		try {
-			this.motor.run(AdafruitMotorHAT.ServoCommand.RELEASE);
+			this.motor.run(AdafruitMotorHAT.MotorCommand.RELEASE);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -38,7 +38,7 @@ public class OneMotorDemo {
 
 	public void stop() {
 		try {
-			this.motor.run(AdafruitMotorHAT.ServoCommand.RELEASE);
+			this.motor.run(AdafruitMotorHAT.MotorCommand.RELEASE);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -60,7 +60,7 @@ public class OneMotorDemo {
 
 	public void forward(int speed, float seconds) throws IOException {
 		this.motor.setSpeed(speed);
-		this.motor.run(AdafruitMotorHAT.ServoCommand.FORWARD);
+		this.motor.run(AdafruitMotorHAT.MotorCommand.FORWARD);
 		if (seconds > 0) {
 			delay(seconds);
 			this.stop();
@@ -73,7 +73,7 @@ public class OneMotorDemo {
 
 	public void backward(int speed, float seconds) throws IOException {
 		this.motor.setSpeed(speed);
-		this.motor.run(AdafruitMotorHAT.ServoCommand.BACKWARD);
+		this.motor.run(AdafruitMotorHAT.MotorCommand.BACKWARD);
 		if (seconds > 0) {
 			delay(seconds);
 			this.stop();
