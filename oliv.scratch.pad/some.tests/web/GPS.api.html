@@ -56,8 +56,8 @@
 			speed = pos.coords.speed.toFixed(2);
 		} catch (err) {}
 		let newContent =
-				'LAT = ' + decToSex(pos.coords.latitude, 'NS') + "<br/>" +
-				'LNG = ' + decToSex(pos.coords.longitude, 'EW') + "<br/>" +
+				'LAT = ' + decToSex(pos.coords.latitude, 'NS') + '<br/>' +
+				'LNG = ' + decToSex(pos.coords.longitude, 'EW') + '<br/>' +
 				'HDG = ' + hdg + '<br/>' +
 				'SPD = ' + speed + ' m/s';
 		let box = document.querySelector('#textbox');
@@ -68,7 +68,7 @@
 	// Called from navigator.geolocation.getCurrentPosition
 	function onPosError(err) {
 		let errMess = '';
-		if (err.code == err.PERMISSION_DENIED) {
+		if (err.code === err.PERMISSION_DENIED) {
 			errMess = 'Location access was denied by the user.';
 		} else {
 			errMess = 'location error (' + err.code + '): ' + err.message;

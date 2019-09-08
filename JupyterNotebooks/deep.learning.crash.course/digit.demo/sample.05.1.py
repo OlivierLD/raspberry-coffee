@@ -4,7 +4,8 @@
 # Mathplotlib doc at https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.html
 # also see https://www.tensorflow.org/api_docs/python/tf/keras and similar pages.
 #
-# Model training
+# Model training.
+# Model can be saved from here too.
 #
 # For the figures images, see https://github.com/myleott/mnist_png
 # images are 28px x 28px big.
