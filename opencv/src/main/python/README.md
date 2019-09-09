@@ -79,6 +79,9 @@ Resources at
 Very good paper:
 - https://likegeeks.com/python-image-processing/
 
+### Object recognition (classification)
+See [Here](./object.detection/README.md)
+
 ##### Glossary:
 - ROI: Region Of Interest
 - PID algorithm: proportional-integral-derivative

@@ -96,4 +96,10 @@ For continuous detection, see `OpenCVContinuousFaceDetection.java`, run
  ../gradlew continuousFaceDetect
 ``` 
 
+### In Python
+See [here](./src/main/python/README.md)
+
+#### Object Classification (Python too)
+See [here](./src/main/python/object.detection/README.md)
+
 ---
