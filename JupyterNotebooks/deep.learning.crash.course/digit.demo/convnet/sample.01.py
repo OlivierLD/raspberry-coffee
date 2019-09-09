@@ -210,11 +210,13 @@ while keepLooping:
                 print("It's a", np.argmax(predictions[test_idx]),
                       "({:2.0f}% sure).".format(100 * predictions[test_idx][np.argmax(predictions[test_idx])]))
                 print("-----------------------------")
-                if platform.system() == 'Darwin':
-                    sp.run(['say',
-                            'It looks like a ' +
-                            str(np.argmax(predictions[test_idx])) +
-                            ' to me, I\'m {:2.0f}% sure'.format(100 * predictions[test_idx][np.argmax(predictions[test_idx])])])
+                say_it = False
+                if say_it:
+                    if platform.system() == 'Darwin':
+                        sp.run(['say',
+                                'It looks like a ' +
+                                str(np.argmax(predictions[test_idx])) +
+                                ' to me, I\'m {:2.0f}% sure'.format(100 * predictions[test_idx][np.argmax(predictions[test_idx])])])
         except ValueError:
             print("Bad integer..., try again")
     else:
