@@ -179,17 +179,36 @@ else:
 print("Training Images", len(train_images), "elements, dim", train_images.ndim)
 print("Testing Images ", len(test_images), "elements, dim", test_images.ndim)
 
-keepLooping = True
+# Prediction is ALL here. In one shot, on al the test data.
+predictions = model.predict(test_images)
+print("We have", len(predictions), "predictions")
+
+find_lowest = True
+if find_lowest:
+    lowest_confidence = 100.0
+    lowest_confidence_idx = -1
+    print("We have", len(predictions), "predictions")
+    for idx in range(len(predictions)):
+        confidence = 100 * predictions[idx][np.argmax(predictions[idx])]
+        if confidence < 90:
+            print("Confidence {} at index {}".format(confidence, idx))
+        if confidence < lowest_confidence:
+            lowest_confidence = confidence
+            lowest_confidence_idx = idx
+print("Lowest Confidence {}, at index {}".format(lowest_confidence, lowest_confidence_idx))
+
+keep_looping = True
 # test_idx = random.randint(0, len(x_test)) - 1
 print("Type Q or q to exit the loop")
-while keepLooping:
-    userInput = input("Enter an index between 0 and {} (Q to quit) > ".format(len(test_images) - 1))
-    if userInput != 'Q' and userInput != 'q':
+while keep_looping:
+    user_input = input("Enter an index between 0 and {} (Q to quit) > ".format(len(test_images) - 1))
+    if user_input != 'Q' and user_input != 'q':
         try:
-            test_idx = int(userInput)
+            test_idx = int(user_input)
             if test_idx < 0 or test_idx >= len(test_images):
                 print("We said between 0 and {} and you said {}. Try again.".format(len(test_images) - 1, test_idx))
             else:
+                # Display the image to 'guess'
                 digit = test_images[test_idx]
                 print("Input shape: {}".format(digit.shape))
                 digit.astype('float32')
@@ -200,26 +219,22 @@ while keepLooping:
                 #     f.write(digit)
                 # plt.imshow(digit, cmap=plt.cm.binary)
                 plt.show()
-
-                predictions = model.predict(test_images)
-
-                print("We have", len(predictions), "predictions")
-                print("First prediction", predictions[test_idx])
+                # predictions = model.predict(test_images)
+                print("This prediction", predictions[test_idx])  # SoftMax
                 print("Best match {}, category (%) {}".format(np.argmax(predictions[test_idx]), predictions[test_idx][np.argmax(predictions[test_idx])]))
                 print("-----------------------------")
                 print("It's a", np.argmax(predictions[test_idx]),
-                      "({:2.0f}% sure).".format(100 * predictions[test_idx][np.argmax(predictions[test_idx])]))
+                      "({:2.2f}% sure).".format(100 * predictions[test_idx][np.argmax(predictions[test_idx])]))
                 print("-----------------------------")
-                say_it = False
-                if say_it:
-                    if platform.system() == 'Darwin':
-                        sp.run(['say',
-                                'It looks like a ' +
-                                str(np.argmax(predictions[test_idx])) +
-                                ' to me, I\'m {:2.0f}% sure'.format(100 * predictions[test_idx][np.argmax(predictions[test_idx])])])
+                say_it = True
+                if say_it and platform.system() == 'Darwin':  # On Mac (use speech on Debian/Raspbian)
+                    sp.run(['say',
+                            'It looks like a ' +
+                            str(np.argmax(predictions[test_idx])) +
+                            ' to me, I\'m {:2.0f}% sure'.format(100 * predictions[test_idx][np.argmax(predictions[test_idx])])])
         except ValueError:
             print("Bad integer..., try again")
     else:
-        keepLooping = False
+        keep_looping = False
 
 print("Bye!")

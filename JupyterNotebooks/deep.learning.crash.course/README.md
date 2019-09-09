@@ -899,3 +899,15 @@ Go ahead! Just do it!
 
 Bonus: AI example
 - <https://www.youtube.com/watch?v=aovJqfcY0kE>
+
+#### TODO
+Will come next:
+- Document Convolutional Networks for MNIST data set
+- Document Regression Sample (Boston Housing)
+- Prediction (like weather forecast)
+
+To add:
+- Illustrate and present different types of predictions:
+    - Classification (Insurance, MNIST)
+    - Regression (Housing price)
+    - Prediction (Stock market, Weather forecast)
