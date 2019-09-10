@@ -900,6 +900,8 @@ Go ahead! Just do it!
 Bonus: AI example
 - <https://www.youtube.com/watch?v=aovJqfcY0kE>
 
+---
+
 #### TODO
 Will come next:
 - Document Convolutional Networks for MNIST data set
@@ -910,4 +912,16 @@ To add:
 - Illustrate and present different types of predictions:
     - Classification (Insurance, MNIST)
     - Regression (Housing price)
-    - Prediction (Stock market, Weather forecast)
+    - Prediction (Stock market, Weather forecast) See [this](https://www.kaggle.com/amarpreetsingh/stock-prediction-lstm-using-keras)
+        - See LSTM (Long Short-Term Memory) layer
+            - [Keras doc](https://www.tensorflow.org/api_docs/python/tf/keras/layers/LSTM)
+            - [kaggle](https://www.kaggle.com/amarpreetsingh/stock-prediction-lstm-using-keras)
+        - like that
+```
+model = Sequential()
+model.add(LSTM(256,input_shape=(7,1)))
+model.add(Dense(1))
+model.compile(optimizer='adam',loss='mse')
+ . . .
+Xt = model.predict(X_test[i].reshape(1,7,1))
+```

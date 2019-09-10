@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # Handwritten figures recognition => classification
-# Mathplotlib doc at https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.html
+# Matplotlib doc at https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.html
 # also see https://www.tensorflow.org/api_docs/python/tf/keras and similar pages.
 #
 # Model training. Convolutional Network (aka convnet)
@@ -21,7 +21,6 @@ import sys
 import warnings
 import subprocess as sp
 import platform
-
 
 sys.path.append('../../')
 import tf_utils
@@ -73,28 +72,37 @@ mnist = tf.keras.datasets.mnist
 # |            Train labels
 # Train images
 #
-print("Train images shape:", train_images.shape, ", ", len(train_images), "labels")
-print("Test images shape:", test_images.shape, ", ", len(test_images), "labels")
+print(">> Before reshaping:")
+print("Train images shape: {}, {} inputs".format(train_images.shape, len(train_images)))
+print("Test images shape : {}, {} inputs".format(test_images.shape, len(test_images)))
+print("Train labels      : {}, {} labels".format(train_labels.shape, len(train_labels)))
+print("Test labels       : {}, {} labels".format(test_labels.shape, len(test_labels)))
 
-# Reshaping
-train_images = train_images.reshape((60000, 28, 28, 1))
-train_images = train_images.astype('float32') / 255
+# Reshaping (same cardinality)
+train_images = train_images.reshape((60000, 28, 28, 1))  # Adding nb Channels
+train_images = train_images.astype('float32') / 255  # Resetting in range float [0, 1] (instead of int [0, 255]
 
-test_images = test_images.reshape((10000, 28, 28, 1))
-test_images = test_images.astype('float32') / 255
+test_images = test_images.reshape((10000, 28, 28, 1))  # Adding nb Channels
+test_images = test_images.astype('float32') / 255  # Resetting in range float [0, 1] (instead of int [0, 255]
 
+# to_categorical adds a second dimension, number of categories (labels)
 train_labels = to_categorical(train_labels)
 test_labels = to_categorical(test_labels)
 
-print("Import completed, displaying a random set of data, once displayed, close the image to move on.")
+print(">> After reshaping:")
+print("Train images shape: {}, {} inputs".format(train_images.shape, len(train_images)))
+print("Test images shape : {}, {} inputs".format(test_images.shape, len(test_images)))
+print("Train labels      : {}, {} labels".format(train_labels.shape, len(train_labels)))
+print("Test labels       : {}, {} labels".format(test_labels.shape, len(test_labels)))
 
 if not loadOnly:  # Model to be trained
     display_samples = True
     if display_samples:
+        print("----------------\n" +
+              "Import completed, displaying a random set of data, once displayed, close the image to move on.")
         start_idx = random.randint(0, len(train_images)) - 1
         print("Starting sample display at index {}".format(start_idx))
 
-        # fig = plt.figure(figsize=(10, 10))
         fig = plt.figure(figsize=(5, 6))
         fig.canvas.set_window_title("Examples and labels of the training dataset")
         rows = 7
@@ -115,12 +123,8 @@ if not loadOnly:  # Model to be trained
         plt.show()
     #
     # Define model here
+    # =================
     #
-    # First layer (Flatten) takes arrays of 28x28=784 pixels. See below "Number of parameters: Explanation"
-    # Last layer has 10 neurons, because we have 10 categories (0-9 digits)
-    # Dropout is here to avoid over-fitting
-    # SoftMax layer will dispatch the value so the highest is the one to choose,
-    # and its value the percentage of reliability
     model = models.Sequential()
     model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1), name='Conv2D-one'))
     model.add(layers.MaxPooling2D((2, 2)))
@@ -130,13 +134,23 @@ if not loadOnly:  # Model to be trained
 
     model.summary()
 
+    # First layer (Flatten) takes arrays of whatever comes from above
+    # Last layer has 10 neurons, because we have 10 categories (0-9 digits)
+    # Dropout is here to avoid over-fitting -- See below what dropout would do here, on the accuracy.
+    # SoftMax layer will dispatch the value so the highest is the one to choose,
+    # and its value the percentage of reliability
     model.add(layers.Flatten())
     model.add(layers.Dense(64, activation='relu', name='Dense64-one'))  # 64, like above
+    # model.add(layers.Dropout(0.2))  # Was not there, this is a test
+    # With and without dropout (values may vary, test values are randomly chosen):
+    # No Dropout:  final test accuracy is 0.9914. Lowest confidence if 43.16 % (index 3727).
+    # Dropout 0.2: final test accuracy is 0.9926. Lowest confidence if 34.38 % (index 3060).
+    # Here, Dropout seem not to have a noticeable impact
     model.add(layers.Dense(10, activation='softmax'))  # 10: [0..9]
 
     model.summary()
 
-    model.compile(optimizer='rmsprop',
+    model.compile(optimizer='rmsprop',  # TODO test other optimizers. rmsprop does better than adam here
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
@@ -160,13 +174,13 @@ if not loadOnly:  # Model to be trained
                 weights = layer.get_weights()[0]
                 biases = layer.get_weights()[1]
                 print("Weights: {}\nBiases: {}".format(weights, biases))
-            except Exception:
-                print("Oops")
+            except Exception as exception:
+                print("Oops: {}".format(exception))
 
     print("Model evaluate:")
     model.evaluate(test_images, test_labels)
     #
-    # TODO Display values on diagram, compare with Dense network only.
+    # TODO Display values on diagram, compare with Dense network only (no convnet).
     #
     model.save('convnet.h5')
     print("Model was saved")
@@ -176,18 +190,17 @@ else:
 #
 # See https://medium.com/tensorflow/hello-deep-learning-fashion-mnist-with-keras-50fcff8cd74a
 #
-print("Training Images", len(train_images), "elements, dim", train_images.ndim)
-print("Testing Images ", len(test_images), "elements, dim", test_images.ndim)
+print("{} Training Images, dim {}".format(len(train_images), train_images.ndim))
+print("{} Testing Images, dim {} ".format(len(test_images), test_images.ndim))
 
 # Prediction is ALL here. In one shot, on al the test data.
 predictions = model.predict(test_images)
-print("We have", len(predictions), "predictions")
+print("We have {} predictions".format(len(predictions)))
 
 find_lowest = True
 if find_lowest:
     lowest_confidence = 100.0
     lowest_confidence_idx = -1
-    print("We have", len(predictions), "predictions")
     for idx in range(len(predictions)):
         confidence = 100 * predictions[idx][np.argmax(predictions[idx])]
         if confidence < 90:
@@ -195,7 +208,7 @@ if find_lowest:
         if confidence < lowest_confidence:
             lowest_confidence = confidence
             lowest_confidence_idx = idx
-print("Lowest Confidence {}, at index {}".format(lowest_confidence, lowest_confidence_idx))
+    print("Lowest Confidence {}, at index {}".format(lowest_confidence, lowest_confidence_idx))
 
 keep_looping = True
 # test_idx = random.randint(0, len(x_test)) - 1
@@ -217,21 +230,21 @@ while keep_looping:
                 print("Test index {} ... image of {} rows of {} bytes.".format(test_idx, len(digit), len(digit[0])))
                 # with open('digit_{}.png'.test_idx, 'wb') as f:
                 #     f.write(digit)
-                # plt.imshow(digit, cmap=plt.cm.binary)
                 plt.show()
-                # predictions = model.predict(test_images)
-                print("This prediction", predictions[test_idx])  # SoftMax
-                print("Best match {}, category (%) {}".format(np.argmax(predictions[test_idx]), predictions[test_idx][np.argmax(predictions[test_idx])]))
+                print("This prediction: {}".format(predictions[test_idx]))  # SoftMax
+                print("Best match {}, category (%) {}".format(np.argmax(predictions[test_idx]),
+                                                              predictions[test_idx][np.argmax(predictions[test_idx])]))
                 print("-----------------------------")
-                print("It's a", np.argmax(predictions[test_idx]),
-                      "({:2.2f}% sure).".format(100 * predictions[test_idx][np.argmax(predictions[test_idx])]))
+                print("It's a {} ({:2.2f}% sure).".format(
+                    np.argmax(predictions[test_idx]),
+                    100 * predictions[test_idx][np.argmax(predictions[test_idx])]))
                 print("-----------------------------")
                 say_it = True
                 if say_it and platform.system() == 'Darwin':  # On Mac (use speech on Debian/Raspbian)
                     sp.run(['say',
-                            'It looks like a ' +
-                            str(np.argmax(predictions[test_idx])) +
-                            ' to me, I\'m {:2.0f}% sure'.format(100 * predictions[test_idx][np.argmax(predictions[test_idx])])])
+                            'It looks like a {} to me, I\'m {:2.0f}% sure'.format(str(np.argmax(predictions[test_idx])),
+                                                                                  100 * predictions[test_idx][np.argmax(
+                                                                                      predictions[test_idx])])])
         except ValueError:
             print("Bad integer..., try again")
     else:
