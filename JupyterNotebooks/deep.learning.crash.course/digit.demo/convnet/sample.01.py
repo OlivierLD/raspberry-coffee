@@ -219,7 +219,7 @@ while keep_looping:
         try:
             test_idx = int(user_input)
             if test_idx < 0 or test_idx >= len(test_images):
-                print("We said between 0 and {} and you said {}. Try again.".format(len(test_images) - 1, test_idx))
+                print("We said between 0 and {} and you said {}. Try again, you can do it.".format(len(test_images) - 1, test_idx))
             else:
                 # Display the image to 'guess'
                 digit = test_images[test_idx]
@@ -249,5 +249,6 @@ while keep_looping:
             print("Bad integer..., try again")
     else:
         keep_looping = False
+        print("OK, quitting")
 
 print("Bye!")
