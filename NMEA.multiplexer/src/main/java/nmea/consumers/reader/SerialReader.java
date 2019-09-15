@@ -127,7 +127,7 @@ public class SerialReader
 			this.serialPort.notifyOnDataAvailable(true);
 
 			try {
-				this.serialPort.enableReceiveTimeout(1_000);
+				this.serialPort.enableReceiveTimeout(50);
 			} catch (UnsupportedCommOperationException ucoe) { // Do NOT stop on this error...
 				System.err.println(String.format("enableReceiveTimeout: Unsupported Comm Operation, BR: %d", this.br));
 				// this.serialPort.close();
