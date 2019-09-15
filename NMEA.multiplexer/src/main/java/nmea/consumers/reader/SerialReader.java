@@ -141,7 +141,8 @@ public class SerialReader
 								SerialPort.STOPBITS_1,
 								SerialPort.PARITY_NONE);
 			} catch (UnsupportedCommOperationException ucoe) {
-				System.err.println("Unsupported Comm Operation");
+				System.err.println("setSerialPortParams: Unsupported Comm Operation");
+				ucoe.printStackTrace();
 				return;
 			}
 			try {
