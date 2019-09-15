@@ -124,14 +124,16 @@ public class SerialReader
 				return;
 			}
 			this.serialPort.notifyOnDataAvailable(true);
-			try {
-				this.serialPort.enableReceiveTimeout(TIMEOUT);
-			} catch (UnsupportedCommOperationException ucoe) { // Do NOT stop on this error...
-				// this.serialPort.close();
-				System.err.println(ucoe.getMessage());
-				System.err.println("... Moving on anyway.");
-				// return;
-			}
+
+//			try {
+//				this.serialPort.enableReceiveTimeout(TIMEOUT);
+//			} catch (UnsupportedCommOperationException ucoe) { // Do NOT stop on this error...
+//				// this.serialPort.close();
+//				System.err.println(ucoe.getMessage());
+//				System.err.println("... Moving on anyway.");
+//				// return;
+//			}
+
 			try {
 				// Settings for B&G Hydra, TackTick, NKE, most of the NMEA Stations (BR 4800).
 				this.serialPort.setSerialPortParams(this.br,
