@@ -12,6 +12,7 @@ import gnu.io.UnsupportedCommOperationException;
 import nmea.api.NMEAEvent;
 import nmea.api.NMEAListener;
 import nmea.api.NMEAReader;
+import utils.TimeUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -92,9 +93,9 @@ public class SerialReader
 		}
 		CommPortIdentifier com = null;
 		try {
-			com = CommPortIdentifier.getPortIdentifier(comPort);
+			com = CommPortIdentifier.getPortIdentifier(this.comPort);
 		} catch (NoSuchPortException nspe) {
-			System.err.println(comPort + ": No Such Port");
+			System.err.println(this.comPort + ": No Such Port");
 			nspe.printStackTrace();
 			return;
 		}
@@ -125,26 +126,38 @@ public class SerialReader
 			}
 			this.serialPort.notifyOnDataAvailable(true);
 
-//			try {
-//				this.serialPort.enableReceiveTimeout(TIMEOUT);
-//			} catch (UnsupportedCommOperationException ucoe) { // Do NOT stop on this error...
-//				// this.serialPort.close();
-//				System.err.println(ucoe.getMessage());
-//				System.err.println("... Moving on anyway.");
-//				// return;
-//			}
-
 			try {
-				// Settings for B&G Hydra, TackTick, NKE, most of the NMEA Stations (BR 4800).
-				this.serialPort.setSerialPortParams(this.br,
-								SerialPort.DATABITS_8,
-								SerialPort.STOPBITS_1,
-								SerialPort.PARITY_NONE);
-			} catch (UnsupportedCommOperationException ucoe) {
-				System.err.println("setSerialPortParams: Unsupported Comm Operation");
-				ucoe.printStackTrace();
-				return;
+				this.serialPort.enableReceiveTimeout(TIMEOUT);
+			} catch (UnsupportedCommOperationException ucoe) { // Do NOT stop on this error...
+				System.err.println(String.format("enableReceiveTimeout: Unsupported Comm Operation, BR: %d", this.br));
+				// this.serialPort.close();
+				System.err.println(ucoe.getMessage());
+				System.err.println("... Moving on anyway.");
+				// return;
 			}
+
+			final int MAX_TRIES = 5;
+			boolean allGood = false;
+			int nbTries = 0;
+			while (!allGood && nbTries < MAX_TRIES) {
+				try {
+					// Settings for B&G Hydra, TackTick, NKE, most of the NMEA Stations (BR 4800).
+					this.serialPort.setSerialPortParams(this.br,
+							SerialPort.DATABITS_8,
+							SerialPort.STOPBITS_1,
+							SerialPort.PARITY_NONE);
+					allGood = true;
+				} catch (UnsupportedCommOperationException ucoe) {
+					System.err.println(String.format("setSerialPortParams: Unsupported Comm Operation, BR: %d", this.br)); // Try again if it fails
+					ucoe.printStackTrace();
+					nbTries++;
+					TimeUtil.delay(01f);
+				}
+			}
+			if (!allGood) {
+				throw new RuntimeException(String.format("Too many tries (%d), cannot set SerialPortParam for %s", MAX_TRIES, this.comPort));
+			}
+
 			try {
 				this.serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
 				theInput = this.serialPort.getInputStream();
