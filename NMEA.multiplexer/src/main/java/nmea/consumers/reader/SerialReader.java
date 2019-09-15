@@ -151,7 +151,7 @@ public class SerialReader
 					System.err.println(String.format("setSerialPortParams: Unsupported Comm Operation, BR: %d", this.br)); // Try again if it fails
 					ucoe.printStackTrace();
 					nbTries++;
-					TimeUtil.delay(01f);
+					TimeUtil.delay(01f); // Wait 1 sec before trying again
 				}
 			}
 			if (!allGood) {

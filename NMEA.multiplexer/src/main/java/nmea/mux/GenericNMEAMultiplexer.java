@@ -174,6 +174,9 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 
 		nmeaDataClients.stream()
 						.forEach(client -> {
+							if (verbose) {
+								System.out.println(String.format(">> NMEADataClient: Starting %s...", client.getClass().getName()));
+							}
 							try {
 								client.startWorking();
 							} catch (Exception ex) {
