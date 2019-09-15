@@ -1045,7 +1045,7 @@
 		<style>
 			.map-style {
 				display: block;
-				height: 500px;    /* Overridden onload */
+				height: 400px;    /* Overridden onload */
 				width: 850px;
 				resize: both;     /* Resize! */
 				overflow-x: auto;
@@ -1082,74 +1082,72 @@
   <body style="background-color: rgba(255, 255, 255, 0.2); background-image: none;">
     <h2>Weather Wizard in HTML5 - Operations <span id="time-to-next"></span></h2>
 		<div>
-    <table border="0" width="100%">
+    <table border="0" >
       <tr>
         <td valign="top" rowspan="2">
           <div id="map-container" class="map-style">
             <canvas id="mapCanvas" width="1400" height="900"></canvas>
           </div>
         </td>
-        <td valign="top" style="max-width: 300px; overflow-x: scroll;">
-					<input type="checkbox" onchange="changeChart(this);" checked/> With Chart&nbsp;
-          <input type="checkbox" onchange="changeGrid(this);" checked/> With Grid&nbsp;
-	        <input type="checkbox" onchange="changeTropics(this);" /> With Tropics
-					<input id="grib-checkbox" type="checkbox" onchange="changeGRIB(this);" disabled /> With GRIB Data
-					<hr/>
-					<select id="composites" onchange="updateGRIBRequest(this);" onmouseover="displayCompositeInfo();" onmouseleave="hideCompositeInfo();"></select> <!-- TODO Composite Info on mouse over -->
-					<button id="load-composites" onclick="loadComposite();">Load documents</button>
+        <td valign="top">
+					<div style="max-width: 350px; height: 630px; overflow-x: scroll; overflow-y: scroll;">
+						<input type="checkbox" onchange="changeChart(this);" checked/> With Chart&nbsp;
+						<input type="checkbox" onchange="changeGrid(this);" checked/> With Grid&nbsp;
+						<input type="checkbox" onchange="changeTropics(this);" /> With Tropics
+						<input id="grib-checkbox" type="checkbox" onchange="changeGRIB(this);" disabled /> With GRIB Data
+						<hr/>
+						<select id="composites" onchange="updateGRIBRequest(this);" onmouseover="displayCompositeInfo();" onmouseleave="hideCompositeInfo();"></select> <!-- TODO Composite Info on mouse over -->
+						<button id="load-composites" onclick="loadComposite();">Load documents</button>
 
-					<input type="checkbox" onchange="continuousLoad(this);"/>Every 6 hours
-					<hr/>
-					<input type="radio" name="grib-origin" value="web" checked onchange="flipGRIB(this);">From the Web
-					<input type="radio" name="grib-origin" value="json" onchange="flipGRIB(this);">From Server Storage
-					<hr/>
-					<div id="grib-web">
+						<input type="checkbox" onchange="continuousLoad(this);"/>Every 6 hours
+						<hr/>
+						<input type="radio" name="grib-origin" value="web" checked onchange="flipGRIB(this);">From the Web
+						<input type="radio" name="grib-origin" value="json" onchange="flipGRIB(this);">From Server Storage
+						<hr/>
+						<div id="grib-web">
+						</div>
+						<div id="grib-json" style="display: none;">
+							<button onclick="getCompositeList();">Get Composites list</button> <input type="text" id="comp-name-filter" placeholder="Composite Name Filter" title="Enter the Composite key, or any part of the name of the directory the composite lives in."/>
+							<div id="composite-list" class="complist-style"></div>
+						</div>
+						<hr/>
+						Zoom for the whole thing: <button onclick="changeCanvasSize(0.9);">-</button><button onclick="changeCanvasSize(1.1);">+</button>
+						<hr/>
+						<div class="table-style">
+							<table>
+								<tr><th>Date</th><th>Type</th></tr>
+								<tr>
+									<td>
+										<select id="grib-dates" onchange="redraw()"></select>
+									</td>
+									<td>
+										<select id="grib-types" onchange="redraw()"></select>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div id="dyn-faxes" class="table-style">
+							<table id="fax-table">
+								<tr>
+									<th>Show</th>
+									<th>#</th>
+									<th>Name</th>
+									<th>x</th>
+									<th>y</th>
+									<th>zoom</th>
+								</tr>
+							</table>
+						</div>
+						<div id="min-max-data" class="table-style">
+							<div id="max-wind"></div>
+							<div id="min-max-atemp"></div>
+							<div id="max-waves"></div>
+							<div id="max-prate"></div>
+						</div>
+						<!-- TODO Analog displays for the values -->
+						<div id="mouse-data" class="table-style"></div>
+						<div id="composite-info"></div>
 					</div>
-					<div id="grib-json" style="display: none;">
-						<button onclick="getCompositeList();">Get Composites list</button> <input type="text" id="comp-name-filter" placeholder="Composite Name Filter" title="Enter the Composite key, or any part of the name of the directory the composite lives in."/>
-						<div id="composite-list" class="complist-style"></div>
-					</div>
-					<hr/>
-					Zoom for the whole thing: <button onclick="changeCanvasSize(0.9);">-</button><button onclick="changeCanvasSize(1.1);">+</button>
-					<hr/>
-					<div class="table-style">
-						<table>
-							<tr><th>Date</th><th>Type</th></tr>
-							<tr>
-								<td>
-									<select id="grib-dates" onchange="redraw()"></select>
-								</td>
-								<td>
-									<select id="grib-types" onchange="redraw()"></select>
-								</td>
-							</tr>
-						</table>
-					</div>
-	        <div id="dyn-faxes" class="table-style">
-		        <table id="fax-table">
-			        <tr>
-				        <th>Show</th>
-				        <th>#</th>
-				        <th>Name</th>
-				        <th>x</th>
-				        <th>y</th>
-				        <th>zoom</th>
-			        </tr>
-						</table>
-	        </div>
-
-					<div id="min-max-data" class="table-style">
-						<div id="max-wind"></div>
-						<div id="min-max-atemp"></div>
-						<div id="max-waves"></div>
-						<div id="max-prate"></div>
-					</div>
-
-					<!-- TODO Analog displays for the values -->
-					<div id="mouse-data" class="table-style"></div>
-
-					<div id="composite-info"></div>
-
 				</td>
       </tr>
       <tr>

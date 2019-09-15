@@ -26,6 +26,8 @@ public class SerialReader
 	private int br = 4800;
 	private SerialPort serialPort;
 
+	private final static int TIMEOUT = 10_000;
+
 	public SerialReader() {
 	}
 
@@ -99,7 +101,7 @@ public class SerialReader
 		CommPort thePort = null;
 		try {
 			com.addPortOwnershipListener(this);
-			thePort = com.open("NMEAPort", 10_000);
+			thePort = com.open("NMEAPort", TIMEOUT);
 		} catch (PortInUseException piue) {
 			System.err.println("Port In Use");
 			return;
@@ -123,11 +125,12 @@ public class SerialReader
 			}
 			this.serialPort.notifyOnDataAvailable(true);
 			try {
-				this.serialPort.enableReceiveTimeout(30);
-			} catch (UnsupportedCommOperationException ucoe) {
-				this.serialPort.close();
+				this.serialPort.enableReceiveTimeout(TIMEOUT);
+			} catch (UnsupportedCommOperationException ucoe) { // Do NOT stop on this error...
+				// this.serialPort.close();
 				System.err.println(ucoe.getMessage());
-				return;
+				System.err.println("... Moving on anyway.");
+				// return;
 			}
 			try {
 				// Settings for B&G Hydra, TackTick, NKE, most of the NMEA Stations (BR 4800).
