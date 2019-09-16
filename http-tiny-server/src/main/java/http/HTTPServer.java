@@ -18,6 +18,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.file.Files;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -570,7 +571,7 @@ public class HTTPServer {
 						try {
 							ss = new ServerSocket(httpServerInstance.getPort());
 							keepTrying = false;
-							System.out.println(String.format("Port open: %d", httpServerInstance.getPort()));
+							System.out.println(String.format("%s - Port open: %d", NumberFormat.getInstance().format(System.currentTimeMillis()), httpServerInstance.getPort()));
 							if (verbose) {
 								System.out.println("-- Dumping: --");
 								List<String> st = DumpUtil.whoCalledMe();
@@ -595,6 +596,7 @@ public class HTTPServer {
 					if (verbose) {
 						HTTPContext.getInstance().getLogger().info("Port " + httpServerInstance.getPort() + " opened successfully.");
 					}
+					System.out.println(String.format("%s - %s now accepting requests", NumberFormat.getInstance().format(System.currentTimeMillis()), httpServerInstance.getClass().getName()));
 					while (isRunning()) {
 						Socket client = ss.accept(); // Blocking read
 						InputStreamReader in = new InputStreamReader(client.getInputStream());

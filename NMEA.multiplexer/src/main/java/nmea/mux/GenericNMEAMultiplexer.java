@@ -14,6 +14,7 @@ import nmea.mux.context.Context;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -163,13 +164,16 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 		Context.getInstance().setStartTime(System.currentTimeMillis());
 
 		if (infraVerbose) {
-			System.out.println(String.format("Initializing RESTImplementation..."));
+			System.out.println(String.format("\t>> %s - Constructor %s, Initializing RESTImplementation...", NumberFormat.getInstance().format(System.currentTimeMillis()), this.getClass().getName()));
 		}
 			// Read initial config from the properties file. See the main method.
 //		verbose = "true".equals(System.getProperty("mux.data.verbose", "false")); // Initial verbose.
 		restImplementation = new RESTImplementation(nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, this);
 		MuxInitializer.setup(muxProps, nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, this);
 
+		if (infraVerbose) {
+			System.out.println(String.format("\t>> %s - RESTImplementation initialized.", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		}
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			if (!softStop) {
 				terminateMux();
@@ -179,7 +183,7 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 		nmeaDataClients.stream()
 						.forEach(client -> {
 							if (infraVerbose) {
-								System.out.println(String.format(">> NMEADataClient: Starting %s...", client.getClass().getName()));
+								System.out.println(String.format("\t>> %s - NMEADataClient: Starting %s...", NumberFormat.getInstance().format(System.currentTimeMillis()), client.getClass().getName()));
 							}
 							try {
 								client.startWorking();
@@ -188,7 +192,7 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 							}
 						});
 		if (infraVerbose) {
-			System.out.println(String.format("\t>> %s constructor completed.",this.getClass().getName()));
+			System.out.println(String.format("\t>> %s - %s constructor completed.", NumberFormat.getInstance().format(System.currentTimeMillis()), this.getClass().getName()));
 		}
 	}
 
@@ -196,6 +200,9 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 		try {
 			this.adminServer = new HTTPServer(port, this);
 			this.adminServer.startServer();
+			if (infraVerbose) {
+				System.out.println(String.format("\t>> %s - Starting Admin server", NumberFormat.getInstance().format(System.currentTimeMillis())));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

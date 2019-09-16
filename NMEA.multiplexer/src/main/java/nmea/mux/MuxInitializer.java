@@ -62,6 +62,13 @@ public class MuxInitializer {
 
 	private final static NumberFormat MUX_IDX_FMT = new DecimalFormat("00");
 
+	static void setup(Properties muxProps,
+	                  List<NMEAClient> nmeaDataClients,
+	                  List<Forwarder> nmeaDataForwarders,
+	                  List<Computer> nmeaDataComputers,
+	                  Multiplexer mux) {
+		setup(muxProps, nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, mux, false);
+	}
 	/**
 	 * This is the method to call to initialize the {@link Multiplexer}.
 	 * The 3 <code>List</code>s must have been created in it, as they will be populated here.
@@ -71,12 +78,14 @@ public class MuxInitializer {
 	 * @param nmeaDataForwarders List of the output channels
 	 * @param nmeaDataComputers List of the data computers
 	 * @param mux the Multiplexer instance to initialize
+	 * @param verbose Speak up!
 	 */
 	static void setup(Properties muxProps,
 	                  List<NMEAClient> nmeaDataClients,
 	                  List<Forwarder> nmeaDataForwarders,
 	                  List<Computer> nmeaDataComputers,
-	                  Multiplexer mux) {
+	                  Multiplexer mux,
+	                  boolean verbose) {
 		int muxIdx = 1;
 		boolean thereIsMore = true;
 		// 1 - Input channels
@@ -84,6 +93,9 @@ public class MuxInitializer {
 			String classProp = String.format("mux.%s.cls", MUX_IDX_FMT.format(muxIdx));
 			String clss = muxProps.getProperty(classProp);
 			if (clss != null) { // Dynamic loading
+				if (verbose) {
+					System.out.println(String.format("\t>> %s - Dynamic loading for input channel %s", NumberFormat.getInstance().format(System.currentTimeMillis()), classProp));
+				}
 				try {
 					// Devices and Sentences filters.
 					String deviceFilters = "";
@@ -140,6 +152,9 @@ public class MuxInitializer {
 				if (type == null) {
 					thereIsMore = false;
 				} else {
+					if (verbose) {
+						System.out.println(String.format("\t>> %s - Loading channel %s (%s)", NumberFormat.getInstance().format(System.currentTimeMillis()), typeProp, type));
+					}
 					String deviceFilters = "";
 					String sentenceFilters = "";
 					switch (type) {
@@ -413,10 +428,16 @@ public class MuxInitializer {
 			}
 			muxIdx++;
 		}
+		if (verbose) {
+			System.out.println(String.format("\t>> %s - Done with input channels", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		}
 
 		// Data Cache
 		if ("true".equals(muxProps.getProperty("init.cache", "false"))) {
 			try {
+				if (verbose) {
+					System.out.println(String.format("\t>> %s - Initializing Cache", NumberFormat.getInstance().format(System.currentTimeMillis())));
+				}
 				String deviationFile = muxProps.getProperty("deviation.file.name", "zero-deviation.csv");
 				double maxLeeway = Double.parseDouble(muxProps.getProperty("max.leeway", "0"));
 				double bspFactor = Double.parseDouble(muxProps.getProperty("bsp.factor", "1"));
@@ -438,6 +459,9 @@ public class MuxInitializer {
 			String classProp = String.format("forward.%s.cls", MUX_IDX_FMT.format(fwdIdx));
 			String clss = muxProps.getProperty(classProp);
 			if (clss != null) { // Dynamic loading
+				if (verbose) {
+					System.out.println(String.format("\t>> %s - Dynamic loading for output %s", NumberFormat.getInstance().format(System.currentTimeMillis()), classProp));
+				}
 				try {
 					Object dynamic = Class.forName(clss).newInstance();
 					if (dynamic instanceof Forwarder) {
@@ -475,6 +499,9 @@ public class MuxInitializer {
 				if (type == null) {
 					thereIsMore = false;
 				} else {
+					if (verbose) {
+						System.out.println(String.format("\t>> %s - Loading for output channel %s (%s)", NumberFormat.getInstance().format(System.currentTimeMillis()), typeProp, type));
+					}
 					switch (type) {
 						case "serial":
 							String serialPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
@@ -673,6 +700,9 @@ public class MuxInitializer {
 			}
 			fwdIdx++;
 		}
+		if (verbose) {
+			System.out.println(String.format("\t>> %s - Don with forwarders", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		}
 		// Init cache (for Computers).
 		if ("true".equals(muxProps.getProperty("init.cache", "false"))) {
 			try {
@@ -684,6 +714,9 @@ public class MuxInitializer {
 					String classProp = String.format("computer.%s.cls", MUX_IDX_FMT.format(cptrIdx));
 					String clss = muxProps.getProperty(classProp);
 					if (clss != null) { // Dynamic loading
+						if (verbose) {
+							System.out.println(String.format("\t>> %s - Dynamic loading for computer %s", NumberFormat.getInstance().format(System.currentTimeMillis()), classProp));
+						}
 						try {
 							Object dynamic = Class.forName(clss).getDeclaredConstructor(Multiplexer.class).newInstance(mux);
 							if (dynamic instanceof Computer) {
@@ -712,6 +745,9 @@ public class MuxInitializer {
 						if (type == null) {
 							thereIsMore = false;
 						} else {
+							if (verbose) {
+								System.out.println(String.format("\t>> %s - Loading computer %s (%s)", NumberFormat.getInstance().format(System.currentTimeMillis()), typeProp, type));
+							}
 							switch (type) {
 								case "tw-current":
 									String prefix = muxProps.getProperty(String.format("computer.%s.prefix", MUX_IDX_FMT.format(cptrIdx)), "OS");
@@ -739,6 +775,9 @@ public class MuxInitializer {
 						}
 					}
 					cptrIdx++;
+				}
+				if (verbose) {
+					System.out.println(String.format("\t>> %s - Done with conmputers", NumberFormat.getInstance().format(System.currentTimeMillis())));
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();

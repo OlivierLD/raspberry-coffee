@@ -10,6 +10,7 @@ import orientation.SunFlower;
 import orientation.SunFlowerRequestManager;
 import tiderest.TideRequestManager;
 
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -79,6 +80,7 @@ public class NavServer {
 		try {
 			newHttpServer = new HTTPServer(port, requestManager);
 			newHttpServer.startServer();
+			System.out.println(String.format("\t>> %s - Starting HTTP server", NumberFormat.getInstance().format(System.currentTimeMillis())));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
