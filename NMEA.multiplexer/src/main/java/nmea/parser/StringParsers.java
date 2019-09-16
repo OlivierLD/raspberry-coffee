@@ -1563,7 +1563,7 @@ public class StringParsers {
 	/**
 	 * For GSV, returns the message number, and the total number of messages to expect.
 	 *
-	 * @param gsvString the stgring to parse
+	 * @param gsvString the string to parse
 	 * @return teh expected int array
 	 */
 	public static int[] getMessNum(String gsvString) {

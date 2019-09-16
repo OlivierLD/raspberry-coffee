@@ -6,6 +6,7 @@ __author__ = 'Olivier LeDiouris'
 __version__ = '0.0.5'
 
 import datetime
+import math
 
 DEBUG = False
 
@@ -37,14 +38,79 @@ def sex_to_dec(deg_str, min_str):
         raise Exception("Bad numbers [{}] [{}]".format(deg_str, min_str))
 
 
+NS = 0
+EW = 1
+
+
+def dec_to_sex(value, type):
+    abs_val = abs(value)  # (-value) if (value < 0) else value
+    int_value = math.floor(abs_val)
+    i = int(int_value)
+    dec = abs_val - int_value
+    dec *= 60
+    sign = "N"
+    if type == NS:
+        if value < 0:
+            sign = "S"
+    else:
+        if value < 0:
+            sign = "W"
+        else:
+            sign = "E"
+    formatted = "{} {}\272{:0.2f}'".format(sign, i, dec)
+    return formatted
+
+
 def gll_parser(nmea_sentence, valid=False):
     parsed = {}
     if valid:
         # Validation (Checksum, etc) goes here
-        print("Implement validation here")
+        ok = valid_check_sum(nmea_sentence)
+        if not ok:
+            raise InvalidChecksumException('Invalid checksum for {}'.format(nmea_sentence))
     data = nmea_sentence[:-3].split(',')
+    # Structure is
+    #  0     1       2 3       4 5         6
+    # $aaGLL,llll.ll,a,gggg.gg,a,hhmmss.ss,A*hh
+    #        |       | |       | |         |
+    #        |       | |       | |         A: data valid (Active), V: void
+    #        |       | |       | UTC of position
+    #        |       | |       Long sign: E / W
+    #        |       | Longitude
+    #        |       Lat sign: N / S
+    #        Latitude
+
     if DEBUG:
         print("Parsing GLL, {} elements".format(len(data)))
+    parsed["valid"] = "true" if (data[6] == 'A') else "false"
+    # Position
+    if len(data[1]) > 0 and len(data[3]) > 0:
+        pos = {}
+        lat_deg = data[1][0:2]
+        lat_min = data[1][2:]
+        lat = sex_to_dec(lat_deg, lat_min)
+        if data[2] == 'S':
+            lat *= -1
+        pos["latitude"] = lat
+        lng_deg = data[3][0:3]
+        lng_min = data[3][3:]
+        lng = sex_to_dec(lng_deg, lng_min)
+        if data[4] == 'W':
+            lng *= -1
+        pos["longitude"] = lng
+
+        parsed["position"] = pos
+
+    # Time (UTC)
+    if len(data[5]) > 0:
+        utc = float(data[5])
+        hours = int(utc / 10_000)
+        mins = int((utc - (10_000 * hours)) / 100)
+        secs = (utc % 100)
+        time = datetime.time(hours, mins, int(secs), 0, tzinfo=datetime.timezone.utc)
+        if DEBUG:
+            print(time.strftime("%H:%M:%S %z %Z, also %c"))
+        parsed["utc-time"] = time
     return {"type": "gll", "parsed": parsed}
 
 
@@ -93,7 +159,9 @@ def rmc_parser(nmea_sentence, valid=False):
     parsed = {}
     if valid:
         # Validation (Checksum, etc) goes here
-        print("Implement validation here")
+        ok = valid_check_sum(nmea_sentence)
+        if not ok:
+            raise InvalidChecksumException('Invalid checksum for {}'.format(nmea_sentence))
     data = nmea_sentence[:-3].split(',')  # Drop the CheckSum
     # RMC Structure is
     #                                                                   12
@@ -149,7 +217,7 @@ def rmc_parser(nmea_sentence, valid=False):
             lat *= -1
         pos["latitude"] = lat
         lng_deg = data[5][0:3]
-        lng_min = data[3][3:]
+        lng_min = data[5][3:]
         lng = sex_to_dec(lng_deg, lng_min)
         if data[6] == 'W':
             lng *= -1
@@ -286,6 +354,10 @@ def parse_nmea_sentence(nmea_sentence):
 
 # For tests
 if __name__ == "__main__":
+
+    print("Lat: {} => {}".format(37.748911666666665, dec_to_sex(37.748911666666665, NS)))
+    print("Lng: {} => {}".format(-122.5071295, dec_to_sex(-122.5071295, EW)))
+
     print("------------------------------")
     print("{} running as main (for tests)".format(__name__))
     print("------------------------------")
@@ -296,6 +368,7 @@ if __name__ == "__main__":
         "$IIVTG,054.7,T,034.4,M,005.5,N,010.2,K,A*XX\r\n",
         "$GPRMC,183333.000,A,4047.7034,N,07247.9938,W,0.66,196.21,150912,,,A*7C\r\n",
         "$GPTXT,01,01,02,u-blox ag - www.u-blox.com*50\r\n",
+        "$IIGLL,3739.854,N,12222.812,W,014003,A,A*49\r\n",
         "$GPRMC,012047.00,A,3744.93470,N,12230.42777,W,0.035,,030519,,,D*61\r\n"  # Returned by the U-blox7
     ]
     # akeu = sex_to_dec("12", "34.XX")
@@ -303,6 +376,12 @@ if __name__ == "__main__":
         try:
             nmea_obj = parse_nmea_sentence(sentence)
             print("=> {}".format(nmea_obj))
+            if nmea_obj["type"] == 'rmc':
+                print("This is RMC: {} / {}".format(dec_to_sex(nmea_obj['parsed']['position']['latitude'], NS),
+                                                    dec_to_sex(nmea_obj['parsed']['position']['longitude'], EW)))
+            elif nmea_obj["type"] == 'gll':
+                print("This is GLL: {} / {}".format(dec_to_sex(nmea_obj['parsed']['position']['latitude'], NS),
+                                                    dec_to_sex(nmea_obj['parsed']['position']['longitude'], EW)))
         except Exception as ex:
             print("Ooops! {}".format(ex))
 else:

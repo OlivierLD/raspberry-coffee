@@ -777,7 +777,7 @@ public class MuxInitializer {
 					cptrIdx++;
 				}
 				if (verbose) {
-					System.out.println(String.format("\t>> %s - Done with conmputers", NumberFormat.getInstance().format(System.currentTimeMillis())));
+					System.out.println(String.format("\t>> %s - Done with computers", NumberFormat.getInstance().format(System.currentTimeMillis())));
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
