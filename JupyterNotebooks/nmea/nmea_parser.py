@@ -107,7 +107,8 @@ def gll_parser(nmea_sentence, valid=False):
         hours = int(utc / 10_000)
         mins = int((utc - (10_000 * hours)) / 100)
         secs = (utc % 100)
-        time = datetime.time(hours, mins, int(secs), 0, tzinfo=datetime.timezone.utc)
+        microsecs = (secs - int(secs)) * 1_000_000
+        time = datetime.time(hours, mins, int(secs), int(microsecs), tzinfo=datetime.timezone.utc)
         if DEBUG:
             print(time.strftime("%H:%M:%S %z %Z, also %c"))
         parsed["utc-time"] = time

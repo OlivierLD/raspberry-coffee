@@ -52,6 +52,8 @@ while True:
         try:
             if nmea_obj["type"] == 'rmc':
                 print("RMC => {}".format(nmea_obj))
+            elif nmea_obj["type"] == 'gll':
+                print("GLL => {}".format(nmea_obj))
             else:
                 print("{} => {}".format(nmea_obj["type"], nmea_obj))
         except AttributeError as ae:
