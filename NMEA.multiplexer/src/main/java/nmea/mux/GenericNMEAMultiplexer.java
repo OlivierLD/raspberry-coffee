@@ -124,6 +124,7 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 	}
 
 	private boolean verbose = "true".equals(System.getProperty("mux.data.verbose"));
+	private boolean infraVerbose = "true".equals(System.getProperty("mux.infra.verbose"));
 	private boolean process = true; // onData, forward to computers and forwarders
 
 	private boolean softStop = false;
@@ -161,8 +162,11 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 
 		Context.getInstance().setStartTime(System.currentTimeMillis());
 
-		// Read initial config from the properties file. See the main method.
-		verbose = "true".equals(System.getProperty("mux.data.verbose", "false")); // Initial verbose.
+		if (infraVerbose) {
+			System.out.println(String.format("Initializing RESTImplementation..."));
+		}
+			// Read initial config from the properties file. See the main method.
+//		verbose = "true".equals(System.getProperty("mux.data.verbose", "false")); // Initial verbose.
 		restImplementation = new RESTImplementation(nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, this);
 		MuxInitializer.setup(muxProps, nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, this);
 
@@ -174,7 +178,7 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 
 		nmeaDataClients.stream()
 						.forEach(client -> {
-							if (verbose) {
+							if (infraVerbose) {
 								System.out.println(String.format(">> NMEADataClient: Starting %s...", client.getClass().getName()));
 							}
 							try {
@@ -183,6 +187,9 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 								ex.printStackTrace();
 							}
 						});
+		if (infraVerbose) {
+			System.out.println(String.format("\t>> %s constructor completed.",this.getClass().getName()));
+		}
 	}
 
 	public void startAdminServer(int port) {

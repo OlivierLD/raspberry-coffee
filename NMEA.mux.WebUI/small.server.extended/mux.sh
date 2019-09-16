@@ -74,6 +74,7 @@ fi
 # JAVA_OPTIONS="$JAVA_OPTIONS -Drest.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.infra.verbose=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dbutton.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dscreen.verbose=true" #now in ssd1306.properties
 #
@@ -91,7 +92,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GLL.date.time=true"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -DdeltaT=69.2201" # 01-Jan-2019
 # For the small USB GPS
-# JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.date.offset=7168"
+JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.date.offset=7168"
 #
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #

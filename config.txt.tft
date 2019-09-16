@@ -29,7 +29,7 @@ hdmi_group=2
 # hdmi_mode=6
 hdmi_mode=1
 hdmi_mode=87
-hdmi_cvt=800 480 60 6 0 0 0
+hdmi_cvt=800 478 60 6 0 0 0
 
 max_usb_current=1
 
