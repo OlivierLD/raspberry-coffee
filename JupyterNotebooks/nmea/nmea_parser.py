@@ -192,17 +192,17 @@ def rmc_parser(nmea_sentence, valid=False):
     # Time and Date
     if len(data[1]) > 0:
         utc = float(data[1])
-        hours = int(utc / 10_000)
-        mins = int((utc - (10_000 * hours)) / 100)
+        hours = int(utc / 10000)
+        mins = int((utc - (10000 * hours)) / 100)
         secs = (utc % 100)
         if len(data[9]) > 0:
             day = int(data[9][:2])
             month = int(data[9][2:4])
             year = int(data[9][4:6])
             if year > 50:
-                year += 1_900
+                year += 1900
             else:
-                year += 2_000
+                year += 2000
             date = datetime.datetime(year, month, day, hours, mins, int(secs), 0, tzinfo=datetime.timezone.utc)
             if DEBUG:
                 print(date.strftime("%A %d %B %Y %H:%M:%S %z %Z, also %c"))
