@@ -40,7 +40,8 @@ def read_nmea_sentence(serial_port):
 
 # On mac, USB GPS on port /dev/tty.usbmodem14101,
 # Raspberry Pi, use /dev/ttyUSB0 or so.
-port_name = "/dev/tty.usbmodem14101"
+# port_name = "/dev/tty.usbmodem14101"
+port_name = "/dev/ttyS80"
 baud_rate = 4800
 port = serial.Serial(port_name, baudrate=baud_rate, timeout=3.0)
 print("Let's go. Hit Ctrl+C to stop")
