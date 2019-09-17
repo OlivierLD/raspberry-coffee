@@ -104,10 +104,10 @@ def gll_parser(nmea_sentence, valid=False):
     # Time (UTC)
     if len(data[5]) > 0:
         utc = float(data[5])
-        hours = int(utc / 10_000)
-        mins = int((utc - (10_000 * hours)) / 100)
+        hours = int(utc / 10000)
+        mins = int((utc - (10000 * hours)) / 100)
         secs = (utc % 100)
-        microsecs = (secs - int(secs)) * 1_000_000
+        microsecs = (secs - int(secs)) * 1000000
         time = datetime.time(hours, mins, int(secs), int(microsecs), tzinfo=datetime.timezone.utc)
         if DEBUG:
             print(time.strftime("%H:%M:%S %z %Z, also %c"))

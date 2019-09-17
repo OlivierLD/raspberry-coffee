@@ -52,8 +52,12 @@ while True:
         try:
             if nmea_obj["type"] == 'rmc':
                 print("RMC => {}".format(nmea_obj))
+                print("This is RMC: {} / {}".format(dec_to_sex(nmea_obj['parsed']['position']['latitude'], NS),
+                                                    dec_to_sex(nmea_obj['parsed']['position']['longitude'], EW)))
             elif nmea_obj["type"] == 'gll':
                 print("GLL => {}".format(nmea_obj))
+                print("This is GLL: {} / {}".format(dec_to_sex(nmea_obj['parsed']['position']['latitude'], NS),
+                                                    dec_to_sex(nmea_obj['parsed']['position']['longitude'], EW)))
             else:
                 print("{} => {}".format(nmea_obj["type"], nmea_obj))
         except AttributeError as ae:
