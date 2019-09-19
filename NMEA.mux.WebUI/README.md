@@ -113,6 +113,19 @@ This project directory is a play ground, again, it is here for **you** to _compo
 
 Means not **me**. 🤓
 
+##### A quick note
+> In case you have problem reading `/dev/ttyACM0`, create a symbolic link
+> ```bash
+> $ sudo ln -s /dev/ttyACM0 /dev/ttyS80
+> ```
+> Then try reading or writing on /dev/ttyS80
+>
+> To unlink:
+> ```bash
+> $ sudo unlink /dev/ttyS80
+> ```
+
+
 ## Examples (for inspiration)
 > Note: The Raspberry Pi (pretty much all models) can host the navigation server, along with its REST/HTTP companion,
 > without problem.

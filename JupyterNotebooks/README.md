@@ -26,6 +26,17 @@ Install Jupyter on the Raspberry Pi is easy:
 ```
  $ sudo pip3 install jupyter
 ```
+or
+```
+sudo su -
+apt-get update
+apt-get install python3-matplotlib
+apt-get install python3-scipy
+pip3 install --upgrade pip
+reboot
+sudo pip3 install jupyter
+sudo apt-get clean
+```
 
 To add the required Java features, see 
 - <https://blog.frankel.ch/teaching-java-jupyter-notebooks/>
@@ -40,6 +51,10 @@ Will provide examples as notebooks, for the features presented in this project.
 From this directory (_here_, right where this file you're reading is), just run
 ```
  $ jupyter notebook
+```
+or more recently
+```
+ $ jupyter-notebook
 ```
 And from a browser any where on the network of the Raspberry Pi, `raspberry-pi` being the name or address of the Raspberry Pi where the notebook server is running, reach `http://raspberry-pi:8888/tree` to start playing!
  

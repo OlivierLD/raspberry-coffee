@@ -17,6 +17,18 @@ It requires:
  $ sudo cp /usr/lib/jni/* /usr/lib
 ```
 
+##### A quick note
+> In case you have problem reading `/dev/ttyACM0`, create a symbolic link
+> ```bash
+> $ sudo ln -s /dev/ttyACM0 /dev/ttyS80
+> ```
+> Then try reading or writing on /dev/ttyS80
+>
+> To unlink:
+> ```bash
+> $ sudo unlink /dev/ttyS80
+> ```
+
 ### To run the example
 The example illustrates a Serial communication between the Raspberry Pi (or any other machine) and an Arduino Uno.
 
