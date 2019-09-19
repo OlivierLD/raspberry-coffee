@@ -476,6 +476,7 @@ In the `NMEA.mux.WebUI` project, `logged` folder
 
 ![HAT](../Project.Trunk/REST.clients/TCP.Watch.01/img/front.jpg)
 
-See [here](../Project.Trunk/REST.clients/TCP.Watch.01#raspberry-pi-zero-w-and-ssd1306-128x64) for the wiring diagrams.
+See [here](../Project.Trunk/REST.clients/TCP.Watch.01#raspberry-pi-zero-w-and-ssd1306-128x64) for the wiring diagrams,
+and [here](./small.server.extended/README.md).
 
 ---
