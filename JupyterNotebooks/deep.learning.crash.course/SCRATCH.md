@@ -1,6 +1,13 @@
 ### Keras, TensorFlow, and friends
 See [Keras web site](http://keras.io) for instructions on how to install Keras
 
+#### pip install
+```
+$ sudo pip3 install tensorflow
+$ sudo pip3 install keras
+```
+
+#### From the Keras repo
 I did:
 ```
 $ git clone https://github.com/keras-team/keras.git
