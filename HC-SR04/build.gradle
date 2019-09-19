@@ -9,7 +9,7 @@ shadowJar {
   zip64 true
 }
 
-sourceCompatibility = 1.8
+// sourceCompatibility = 1.8
 
 group = 'oliv.raspi.coffee'
 version = '1.0'

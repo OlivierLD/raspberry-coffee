@@ -15,7 +15,7 @@ repositories {
     maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
-sourceCompatibility = 1.8
+// sourceCompatibility = 1.8
 
 //sourceSets {
 //    main {

@@ -17,8 +17,8 @@ repositories {
     maven { url "http://lediouris.net/maven2" }
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+// sourceCompatibility = 1.8
+// targetCompatibility = 1.8
 
 //sourceSets {
 //    main {

@@ -12,8 +12,8 @@ compileJava.options.compilerArgs += ["-Xlint:unchecked"]
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+// sourceCompatibility = 1.8
+// targetCompatibility = 1.8
 
 tasks.withType(JavaCompile) {
   if (JavaVersion.current() != project.targetCompatibility) {

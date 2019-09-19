@@ -14,8 +14,8 @@ version = '1.0-SNAPSHOT'
 
 description = """helidon-sensors"""
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+// sourceCompatibility = 1.8
+// targetCompatibility = 1.8
 
 //tasks.withType(JavaCompile) {
 //    if (JavaVersion.current() != project.targetCompatibility) {
