@@ -70,12 +70,14 @@
  <!ENTITY uacute  "&#250;">
  <!ENTITY ucirc   "&#251;">
  <!ENTITY uuml    "&#252;">
- <!ENTITY yacute  "&#253;">  
+ <!ENTITY yacute  "&#253;">
 ]>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xsl-util="http://www.oracle.com/XSL/Transform/java/calc.calculation.nauticalalmanac.xsl.XSLUtil"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
+                exclude-result-prefixes="xsl-util"
                 version="1.0">
-                
+
   <xsl:variable name="GEOMUTIL.HTML"   select="0"/>
   <xsl:variable name="GEOMUTIL.SHELL"  select="1"/>
   <xsl:variable name="GEOMUTIL.SWING"  select="2"/>
@@ -84,114 +86,118 @@
   <xsl:variable name="GEOMUTIL.NONE" select="0"/>
   <xsl:variable name="GEOMUTIL.NS"   select="1"/>
   <xsl:variable name="GEOMUTIL.EW"   select="2"/>
-  
+
   <xsl:variable name="GEOMUTIL.LEADING_SIGN"  select="0"/>
   <xsl:variable name="GEOMUTIL.TRAILING_SIGN" select="1"/>
-  
+
   <xsl:variable name="star-per-col" select="29"/>
 
-  <xsl:variable name="oliv-soft">par Oliv Soft</xsl:variable>
-  <xsl:variable name="calculated-with">Calcul&eacute; avec&nbsp;</xsl:variable>
-  <xsl:variable name="compare-with">&Agrave; comparer avec</xsl:variable>
-  
-  <xsl:variable name="SHA-warning">AHso est donn&eacute; pour le Soleil, la Lune et les Plan&egrave;tes. C'est redondant, mais pratique pour porter ces corps c&eacute;lestes sur le Star Finder 2102-D.</xsl:variable>
+  <xsl:variable name="oliv-soft">by Oliv Soft</xsl:variable>
+  <xsl:variable name="calculated-with">Calculated with&nbsp;</xsl:variable>
+  <xsl:variable name="compare-with">Compare with</xsl:variable>
 
-  <xsl:variable name="perpetual-almanac">&Eacute;ph&eacute;m&eacute;rides &agrave; long terme</xsl:variable>
-  <xsl:variable name="nautical-almanac">&Eacute;ph&eacute;m&eacute;rides Nautiques</xsl:variable>
-  <xsl:variable name="lunar-distances">Distances Lunaires</xsl:variable>
-  <xsl:variable name="for">pour </xsl:variable>
-  
-  <xsl:variable name="from">du </xsl:variable>
-  <xsl:variable name="to"> au </xsl:variable>
+  <xsl:variable name="SHA-warning">SHA is given for Sun, Moon and Planets. This is redundant, but convenient to plot those bodies in the Star Finder 2102-D.</xsl:variable>
 
-  <xsl:variable name="sun">Soleil</xsl:variable>
-  <xsl:variable name="moon">Lune</xsl:variable>
-  <xsl:variable name="aries">Pt Vernal</xsl:variable>
+  <xsl:variable name="perpetual-almanac">Long Term Almanac</xsl:variable>
+  <xsl:variable name="nautical-almanac">Nautical Almanac</xsl:variable>
+  <xsl:variable name="lunar-distances">Lunar Distances</xsl:variable>
+  <xsl:variable name="for">for </xsl:variable>
 
-  <xsl:variable name="hp">p.h.</xsl:variable>
-  <xsl:variable name="eot12">&Eacute;qu. temps &agrave; 12:00 : </xsl:variable>
-  <xsl:variable name="mp">Temps Pass. au m&eacute;ridien : </xsl:variable>
+  <xsl:variable name="from">from </xsl:variable>
+  <xsl:variable name="to"> to </xsl:variable>
+
+  <xsl:variable name="sun">Sun</xsl:variable>
+  <xsl:variable name="moon">Moon</xsl:variable>
+  <xsl:variable name="aries">Aries</xsl:variable>
+
+  <xsl:variable name="hp">hp</xsl:variable>
+  <xsl:variable name="eot12">Eq. of Time at 12:00 : </xsl:variable>
+  <xsl:variable name="mp">Meridian Pass. Time : </xsl:variable>
   <xsl:variable name="age">Age : </xsl:variable>
-  <xsl:variable name="phase">Phase &agrave; 12:00 : </xsl:variable>
+  <xsl:variable name="phase">Phase at 12:00 : </xsl:variable>
 
-  <xsl:variable name="venus">V&eacute;nus</xsl:variable>
+  <xsl:variable name="venus">Venus</xsl:variable>
   <xsl:variable name="mars">Mars</xsl:variable>
   <xsl:variable name="jupiter">Jupiter</xsl:variable>
-  <xsl:variable name="saturn">Saturne</xsl:variable>
+  <xsl:variable name="saturn">Saturn</xsl:variable>
 
-  <xsl:variable name="gha">AHvo</xsl:variable>
-  <xsl:variable name="gha-moon-planets">AHao</xsl:variable>
-  <xsl:variable name="gha-aries">AHso</xsl:variable>
-  <xsl:variable name="dec">D</xsl:variable>
+  <xsl:variable name="gha">GHA</xsl:variable>
+  <xsl:variable name="gha-moon-planets">GHA</xsl:variable>
+  <xsl:variable name="gha-aries">GHA</xsl:variable>
+  <xsl:variable name="dec">Dec</xsl:variable>
   <xsl:variable name="z">Z</xsl:variable>
-  
+
   <xsl:variable name="dist">Dist</xsl:variable>
-  
-  <xsl:variable name="rise">Lever</xsl:variable>
-  <xsl:variable name="set">Coucher</xsl:variable>
-  
-  <xsl:variable name="set-rise-banner">Calcul&eacute;&nbsp;&agrave; 12:00 UCT &agrave; Greenwich</xsl:variable>
-  
-  <xsl:variable name="at000uct">Calcul&eacute;&nbsp;&agrave; 00:00:00 U.T.</xsl:variable>
-  <xsl:variable name="moe">Obliquit&eacute; moyenne de l'&eacute;cliptique</xsl:variable>
-  <xsl:variable name="toe">Obliquit&eacute; vraie de l'&eacute;cliptique</xsl:variable>
-  <xsl:variable name="o0">Obliquit&eacute;</xsl:variable>
-  <xsl:variable name="to0">Obliquit&eacute; vraie</xsl:variable>
-  <xsl:variable name="jd">Jour Julien</xsl:variable>
-  <xsl:variable name="jde">Jour Julien des &Eacute;ph&eacute;m&eacute;rides</xsl:variable>
 
-  <xsl:variable name="stars-banner">&Eacute;toiles &agrave; 0000 U.T. (AHao(&Eacute;toile) = AHso(&Eacute;toile) + AHao(Pt Vernal))</xsl:variable>
+  <xsl:variable name="rise">Rise</xsl:variable>
+  <xsl:variable name="set">Set</xsl:variable>
 
-  <xsl:variable name="name">Nom</xsl:variable>
-  <xsl:variable name="sha">AHso</xsl:variable>
+  <xsl:variable name="set-rise-banner">Calculated at 12:00 UCT at Greenwich</xsl:variable>
+
+  <xsl:variable name="at000uct">Calculated at 00:00:00 U.T.</xsl:variable>
+  <xsl:variable name="moe">Mean Obliquity of Ecliptic</xsl:variable>
+  <xsl:variable name="toe">True Obliquity of Ecliptic</xsl:variable>
+  <xsl:variable name="o0">Obliquity</xsl:variable>
+  <xsl:variable name="to0">True Obliquity</xsl:variable>
+  <xsl:variable name="jd">Julian Date</xsl:variable>
+  <xsl:variable name="jde">Julian Ephemeris Date</xsl:variable>
+
+  <xsl:variable name="stars-banner">Stars at 0000 U.T. (GHA(Star) = SHA(Star) + GHA(Aries))</xsl:variable>
+
+  <xsl:variable name="name">Name</xsl:variable>
+  <xsl:variable name="sha">SHA</xsl:variable>
 
   <xsl:template name="date-fmt">
     <xsl:param name="year"/>
     <xsl:param name="month"/>
     <xsl:param name="day"/>
     <xsl:param name="dow"/>
-    <xsl:param name="lang"/>
     <xsl:choose>
-      <xsl:when test="$dow = 'monday'">Lundi</xsl:when>
-      <xsl:when test="$dow = 'tuesday'">Mardi</xsl:when>
-      <xsl:when test="$dow = 'wednesday'">Mercredi</xsl:when>
-      <xsl:when test="$dow = 'thursday'">Jeudi</xsl:when>
-      <xsl:when test="$dow = 'friday'">Vendredi</xsl:when>
-      <xsl:when test="$dow = 'saturday'">Samedi</xsl:when>
-      <xsl:when test="$dow = 'sunday'">Dimanche</xsl:when>
+      <xsl:when test="$dow = 'monday'">Monday, </xsl:when>
+      <xsl:when test="$dow = 'tuesday'">Tuesday, </xsl:when>
+      <xsl:when test="$dow = 'wednesday'">Wednesday, </xsl:when>
+      <xsl:when test="$dow = 'thursday'">Thursday, </xsl:when>
+      <xsl:when test="$dow = 'friday'">Friday, </xsl:when>
+      <xsl:when test="$dow = 'saturday'">Saturday, </xsl:when>
+      <xsl:when test="$dow = 'sunday'">Sunday, </xsl:when>
     </xsl:choose>
+    <xsl:choose>
+      <xsl:when test="$month = 1">January</xsl:when>
+      <xsl:when test="$month = 2">February</xsl:when>
+      <xsl:when test="$month = 3">March</xsl:when>
+      <xsl:when test="$month = 4">April</xsl:when>
+      <xsl:when test="$month = 5">May</xsl:when>
+      <xsl:when test="$month = 6">June</xsl:when>
+      <xsl:when test="$month = 7">July</xsl:when>
+      <xsl:when test="$month = 8">August</xsl:when>
+      <xsl:when test="$month = 9">September</xsl:when>
+      <xsl:when test="$month = 10">October</xsl:when>
+      <xsl:when test="$month = 11">November</xsl:when>
+      <xsl:when test="$month = 12">December</xsl:when>
+    </xsl:choose>
+    <!--xsl:text> the </xsl:text-->
     <xsl:text> </xsl:text>
     <xsl:value-of select="$day"/>
-    <xsl:choose>
-      <xsl:when test="$day = 1"><fo:inline baseline-shift="super" font-size="75%">er</fo:inline></xsl:when>
-    </xsl:choose>
-    <xsl:text> </xsl:text>
-    <xsl:choose>
-      <xsl:when test="$month = 1">janvier</xsl:when>
-      <xsl:when test="$month = 2"><xsl:text disable-output-escaping="yes">f&#233;vrier</xsl:text></xsl:when>
-      <xsl:when test="$month = 3">mars</xsl:when>
-      <xsl:when test="$month = 4">avril</xsl:when>
-      <xsl:when test="$month = 5">mai</xsl:when>
-      <xsl:when test="$month = 6">juin</xsl:when>
-      <xsl:when test="$month = 7">juillet</xsl:when>
-      <xsl:when test="$month = 8"><xsl:text disable-output-escaping="yes">ao&#251;t</xsl:text></xsl:when>
-      <xsl:when test="$month = 9">septembre</xsl:when>
-      <xsl:when test="$month = 10">octobre</xsl:when>
-      <xsl:when test="$month = 11">novembre</xsl:when>
-      <xsl:when test="$month = 12"><xsl:text disable-output-escaping="yes">d&#233;cembre</xsl:text></xsl:when>
-    </xsl:choose>
-    <xsl:text> </xsl:text>
+    <fo:inline baseline-shift="super" font-size="75%"> <!-- font-size="smaller" -->
+      <xsl:choose>
+        <xsl:when test="$day = 1 or $day = 21 or $day = 31">st</xsl:when>
+        <xsl:when test="$day = 2 or $day = 22">nd</xsl:when>
+        <xsl:when test="$day = 3 or $day = 23">rd</xsl:when>
+        <xsl:otherwise>th</xsl:otherwise>
+      </xsl:choose>
+    </fo:inline>
+    <xsl:text>, </xsl:text>
     <xsl:value-of select="$year"/>
   </xsl:template>
 
-  <xsl:template name="front-page-date">  
+  <xsl:template name="front-page-date">
     <xsl:param name="nb-month"/>
     <xsl:param name="y"/>
     <xsl:param name="nb-day"/>
     <xsl:param name="m"/>
     <xsl:param name="dow"/>
     <xsl:param name="d"/>
-    
+
     <xsl:choose>
       <!-- One year -->
       <xsl:when test="$nb-month > 1">
@@ -200,52 +206,53 @@
       <!-- One month -->
       <xsl:when test="$nb-day > 1">
         <xsl:choose>
-          <xsl:when test="$m = 1">janvier </xsl:when>
-          <xsl:when test="$m = 2">f&eacute;vrier </xsl:when>
-          <xsl:when test="$m = 3">mars </xsl:when>
-          <xsl:when test="$m = 4">avril </xsl:when>
-          <xsl:when test="$m = 5">mai </xsl:when>
-          <xsl:when test="$m = 6">juin </xsl:when>
-          <xsl:when test="$m = 7">juillet </xsl:when>
-          <xsl:when test="$m = 8">ao&ucirc;t </xsl:when>
-          <xsl:when test="$m = 9">septembre </xsl:when>
-          <xsl:when test="$m = 10">octobre </xsl:when>
-          <xsl:when test="$m = 11">novembre </xsl:when>
-          <xsl:when test="$m = 12">d&eacute;cembre </xsl:when>
+          <xsl:when test="$m = 1">January </xsl:when>
+          <xsl:when test="$m = 2">February </xsl:when>
+          <xsl:when test="$m = 3">March </xsl:when>
+          <xsl:when test="$m = 4">April </xsl:when>
+          <xsl:when test="$m = 5">May </xsl:when>
+          <xsl:when test="$m = 6">June </xsl:when>
+          <xsl:when test="$m = 7">July </xsl:when>
+          <xsl:when test="$m = 8">August </xsl:when>
+          <xsl:when test="$m = 9">September </xsl:when>
+          <xsl:when test="$m = 10">October </xsl:when>
+          <xsl:when test="$m = 11">November </xsl:when>
+          <xsl:when test="$m = 12">December </xsl:when>
         </xsl:choose>
         <xsl:value-of select="$y"/>
       </xsl:when>
       <!-- One day -->
       <xsl:otherwise>
         <!-- Day of Week -->
-        <xsl:text>le </xsl:text>
+        <xsl:value-of select="xsl-util:initCap($dow)"/>
+        <xsl:text>, </xsl:text>
         <xsl:choose>
-          <xsl:when test="$dow = 'monday'">lundi</xsl:when>
-          <xsl:when test="$dow = 'tuesday'">mardi</xsl:when>
-          <xsl:when test="$dow = 'wednesday'">mercredi</xsl:when>
-          <xsl:when test="$dow = 'thrusday'">jeudi</xsl:when>
-          <xsl:when test="$dow = 'friday'">vendredi</xsl:when>
-          <xsl:when test="$dow = 'saturday'">samedi</xsl:when>
-          <xsl:when test="$dow = 'sunday'">dimanche</xsl:when>
+          <xsl:when test="$m = 1">January </xsl:when>
+          <xsl:when test="$m = 2">February </xsl:when>
+          <xsl:when test="$m = 3">March </xsl:when>
+          <xsl:when test="$m = 4">April </xsl:when>
+          <xsl:when test="$m = 5">May </xsl:when>
+          <xsl:when test="$m = 6">June </xsl:when>
+          <xsl:when test="$m = 7">July </xsl:when>
+          <xsl:when test="$m = 8">August </xsl:when>
+          <xsl:when test="$m = 9">September </xsl:when>
+          <xsl:when test="$m = 10">October </xsl:when>
+          <xsl:when test="$m = 11">November </xsl:when>
+          <xsl:when test="$m = 12">December </xsl:when>
         </xsl:choose>
-        <xsl:text> </xsl:text>
+		<!--xsl:text> the </xsl:text-->
+		<xsl:text> </xsl:text>
         <xsl:value-of select="$d"/>
-        <xsl:text> </xsl:text>
-        <xsl:choose>
-          <xsl:when test="$m = 1">janvier </xsl:when>
-          <xsl:when test="$m = 2">f&eacute;vrier </xsl:when>
-          <xsl:when test="$m = 3">mars </xsl:when>
-          <xsl:when test="$m = 4">avril </xsl:when>
-          <xsl:when test="$m = 5">mai </xsl:when>
-          <xsl:when test="$m = 6">juin </xsl:when>
-          <xsl:when test="$m = 7">juillet </xsl:when>
-          <xsl:when test="$m = 8">ao&ucirc;t </xsl:when>
-          <xsl:when test="$m = 9">septembre </xsl:when>
-          <xsl:when test="$m = 10">octobre </xsl:when>
-          <xsl:when test="$m = 11">novembre </xsl:when>
-          <xsl:when test="$m = 12">d&eacute;cembre </xsl:when>
-        </xsl:choose>
-        <xsl:text> </xsl:text>
+        <!-- in English... -->
+        <fo:inline baseline-shift="super" font-size="75%"> <!-- font-size="smaller" -->
+          <xsl:choose>
+            <xsl:when test="$d mod 10 = 1 and not($d = 11)">st</xsl:when>
+            <xsl:when test="$d mod 10 = 2 and not($d = 12)">nd</xsl:when>
+            <xsl:when test="$d mod 10 = 3 and not($d = 13)">rd</xsl:when>
+            <xsl:otherwise>th</xsl:otherwise>
+          </xsl:choose>
+        </fo:inline>
+        <xsl:text>, </xsl:text>
         <xsl:value-of select="$y"/>
       </xsl:otherwise>
     </xsl:choose>

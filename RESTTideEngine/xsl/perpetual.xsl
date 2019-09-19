@@ -72,14 +72,14 @@
  <!ENTITY uacute  "&#250;">
  <!ENTITY ucirc   "&#251;">
  <!ENTITY uuml    "&#252;">
- <!ENTITY yacute  "&#253;">  
+ <!ENTITY yacute  "&#253;">
 ]>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:fox="http://xml.apache.org/fop/extensions" 
+                xmlns:fox="http://xml.apache.org/fop/extensions"
                 xmlns:geom-util="http://www.oracle.com/XSL/Transform/java/user.util.GeomUtil"
                 xmlns:j-string="http://www.oracle.com/XSL/Transform/java/java.lang.String"
-                xmlns:xsl-util="http://www.oracle.com/XSL/Transform/java/nauticalalmanac.xsl.XSLUtil"
+                xmlns:xsl-util="http://www.oracle.com/XSL/Transform/java/calc.calculation.nauticalalmanac.xsl.XSLUtil"
                 exclude-result-prefixes="data j-string xsl-util geom-util"
                 version="2.0">
   <xsl:import href="literals.xsl"/>
@@ -89,13 +89,13 @@
     <fo:root>
       <fo:layout-master-set>
         <fo:simple-page-master master-name="portrait-page"
-                               page-width="8.5in" 
+                               page-width="8.5in"
                                page-height="11in"> <!-- Portrait -->
           <fo:region-body margin="0in"/>
           <fo:region-after region-name="footer" extent="20mm"/>
         </fo:simple-page-master>
-        <fo:simple-page-master master-name="landscape-page" 
-                               page-height="8.5in" 
+        <fo:simple-page-master master-name="landscape-page"
+                               page-height="8.5in"
                                page-width="11in"> <!-- Portrait -->
           <fo:region-body margin="0in"/>
           <fo:region-after region-name="footer" extent="20mm"/>
@@ -115,7 +115,7 @@
             <fo:block text-align="center" font-family="Book Antiqua" font-size="10pt" font-weight="bold" margin="0.25in">
               <xsl:value-of select="$oliv-soft"/>
             </fo:block>
-            <fo:block text-align="center" font-family="Book Antiqua" font-size="30pt" font-weight="bold" margin="1in">       
+            <fo:block text-align="center" font-family="Book Antiqua" font-size="30pt" font-weight="bold" margin="1in">
               For the Sun &amp; Aries
             </fo:block>
             <fo:block text-align="center">
@@ -208,7 +208,7 @@
               </fo:block>
               <fo:block margin="0.25in"/> <!-- Filler -->
               <fo:block text-align="left" font-family="Arial" font-size="8pt" font-style="italic">
-                &copy; Oliv Cool Stuff Soft (<xsl:value-of select="$language"/>), based on Henning Umland's formula. 
+                &copy; Oliv Cool Stuff Soft (<xsl:value-of select="$language"/>), based on Henning Umland's formula.
               </fo:block>
             </fo:block>
           </fo:block>
@@ -232,7 +232,7 @@
       </fo:page-sequence>
     </fo:root>
   </xsl:template>
-  
+
   <xsl:template name="4-sun-aries">
     <xsl:param name="d1"/>
     <xsl:param name="d2"/>
@@ -255,7 +255,7 @@
       </fo:table>
     </fo:block>
   </xsl:template>
-    
+
   <!--xsl:template match="day" name="sun-aries"-->
   <xsl:template name="one-day-sun-aries">
     <xsl:param name="d"/>
@@ -304,7 +304,7 @@
           <!-- Extra -->
           <!--fo:table-row>
             <fo:table-cell number-columns-spanned="5"><fo:block>&nbsp;</fo:block></fo:table-cell>
-          </fo:table-row-->    
+          </fo:table-row-->
           <fo:table-row>
             <fo:table-cell number-columns-spanned="2" padding="medium" border="0.5pt solid black"><fo:block text-align="left" font-family="Arial" font-size="8pt">&nbsp;&frac12;&Oslash;&nbsp;<fo:inline font-family="Courier" font-size="8pt"><xsl:value-of select="xsl-util:formatX4($d/data[@hours=12]/sun-sd)"/>'</fo:inline></fo:block></fo:table-cell>
             <fo:table-cell number-columns-spanned="3" padding="medium" border="0.5pt solid black"><fo:block text-align="left" font-family="Arial" font-size="8pt">&nbsp;<xsl:value-of select="$hp"/> (<fo:inline font-family="Symbol">p</fo:inline>) <fo:inline font-family="Courier" font-size="8pt"><xsl:value-of select="xsl-util:formatX4($d/data[@hours=12]/sun-hp)"/>'</fo:inline></fo:block></fo:table-cell>
@@ -319,5 +319,5 @@
       </fo:table>
     </fo:block>
   </xsl:template>
-  
+
 </xsl:stylesheet>

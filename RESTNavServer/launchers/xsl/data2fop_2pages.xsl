@@ -70,15 +70,15 @@
  <!ENTITY uacute  "&#250;">
  <!ENTITY ucirc   "&#251;">
  <!ENTITY uuml    "&#252;">
- <!ENTITY yacute  "&#253;">  
+ <!ENTITY yacute  "&#253;">
 ]>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:fox="http://xml.apache.org/fop/extensions" 
+                xmlns:fox="http://xml.apache.org/fop/extensions"
                 xmlns:data="urn:nautical-almanac"
                 xmlns:geom-util="http://www.oracle.com/XSL/Transform/java/calc.GeomUtil"
                 xmlns:j-string="http://www.oracle.com/XSL/Transform/java/java.lang.String"
-                xmlns:xsl-util="http://www.oracle.com/XSL/Transform/java/nauticalalmanac.xsl.XSLUtil"
+                xmlns:xsl-util="http://www.oracle.com/XSL/Transform/java/calc.calculation.nauticalalmanac.xsl.XSLUtil"
                 exclude-result-prefixes="data j-string xsl-util geom-util"
                 version="1.0">
   <xsl:import href="literals.xsl"/>
@@ -89,13 +89,13 @@
     <fo:root>
       <fo:layout-master-set>
         <fo:simple-page-master master-name="portrait-page"
-                               page-width="8.5in" 
+                               page-width="8.5in"
                                page-height="11in"> <!-- Portrait, Letter -->
           <fo:region-body margin="0in"/>
           <fo:region-after region-name="footer" extent="20mm"/>
         </fo:simple-page-master>
-        <fo:simple-page-master master-name="landscape-page" 
-                               page-height="8.5in" 
+        <fo:simple-page-master master-name="landscape-page"
+                               page-height="8.5in"
                                page-width="11in"> <!-- Portrait -->
           <fo:region-body margin="0in"/>
           <fo:region-after region-name="footer" extent="20mm"/>
@@ -115,10 +115,10 @@
             <fo:block text-align="center" font-family="Book Antiqua" font-size="10pt" font-weight="bold" margin="0.25in">
               <xsl:value-of select="$oliv-soft"/>
             </fo:block>
-            <fo:block text-align="center" font-family="Book Antiqua" font-size="30pt" font-weight="bold" margin="1in">       
+            <fo:block text-align="center" font-family="Book Antiqua" font-size="30pt" font-weight="bold" margin="1in">
               <xsl:choose>
                 <xsl:when test="/data:almanac/@type = 'continuous'">
-                  <xsl:value-of select="$for"/> 
+                  <xsl:value-of select="$for"/>
                   <xsl:call-template name="front-page-date">
                     <xsl:with-param name="nb-month"><xsl:value-of select="count(/data:almanac/data:year/data:month)"/></xsl:with-param>
                     <xsl:with-param name="y"><xsl:value-of select="/data:almanac/data:year/@value"/></xsl:with-param>
@@ -129,7 +129,7 @@
                   </xsl:call-template>
                 </xsl:when>
                 <xsl:when test="/data:almanac/@type = 'from-to'">
-                  <xsl:value-of select="$from"/> 
+                  <xsl:value-of select="$from"/>
                   <xsl:call-template name="date-fmt">
                     <xsl:with-param name="lang" select="$language"/>
                     <xsl:with-param name="year" select="//data:year[1]/@value"/>
@@ -137,8 +137,8 @@
                     <xsl:with-param name="day" select="//data:year[1]/data:month[1]/data:day[1]/@value"/>
                     <xsl:with-param name="dow" select="//data:year[1]/data:month[1]/data:day[1]/data:data[1]/data:misc-data/data:dow"/>
                   </xsl:call-template>
-                  <xsl:value-of select="$to"/> 
-              
+                  <xsl:value-of select="$to"/>
+
                   <xsl:call-template name="date-fmt">
                     <xsl:with-param name="lang" select="$language"/>
                     <xsl:with-param name="year" select="//data:year[last()]/@value"/>
@@ -165,7 +165,7 @@
               </fo:block>
               <fo:block margin="0.8in"/>
               <fo:block text-align="left" font-family="Arial" font-size="8pt" font-style="italic">
-                &#169; Oliv Cool Stuff Soft (<xsl:value-of select="$language"/>, <xsl:value-of select="$with-stars"/>) 
+                &#169; Oliv Cool Stuff Soft (<xsl:value-of select="$language"/>, <xsl:value-of select="$with-stars"/>)
               </fo:block>
             </fo:block>
           </fo:block>
@@ -179,7 +179,7 @@
       </fo:page-sequence>
     </fo:root>
   </xsl:template>
-  
+
   <xsl:template match="data:day" name="sun-moon-planets-stars">
     <fo:block text-align="center" font-family="Courier" font-size="10pt" break-after="page" margin="0.1in">
       <!-- Sun, moon, aries, planets, stars -->
@@ -222,12 +222,12 @@
             <fo:table-row>
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-family="Arial" font-size="10pt"><xsl:value-of select="$gha"/></fo:block></fo:table-cell>
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-family="Arial" font-size="10pt"><fo:inline font-style="italic"><fo:inline font-family="Symbol">d</fo:inline> gha</fo:inline></fo:block></fo:table-cell>
-              <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-family="Arial" font-size="10pt"><xsl:value-of select="$sha"/></fo:block></fo:table-cell> 
+              <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-family="Arial" font-size="10pt"><xsl:value-of select="$sha"/></fo:block></fo:table-cell>
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-family="Arial" font-size="10pt"><xsl:value-of select="$dec"/></fo:block></fo:table-cell>
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-family="Arial" font-size="10pt"><fo:inline font-style="italic">d</fo:inline></fo:block></fo:table-cell>
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-family="Arial" font-size="10pt"><xsl:value-of select="$gha-moon-planets"/></fo:block></fo:table-cell>
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-family="Arial" font-size="10pt"><fo:inline font-style="italic"><fo:inline font-family="Symbol">d</fo:inline> gha</fo:inline></fo:block></fo:table-cell>
-              <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-family="Arial" font-size="10pt"><xsl:value-of select="$sha"/></fo:block></fo:table-cell> 
+              <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-family="Arial" font-size="10pt"><xsl:value-of select="$sha"/></fo:block></fo:table-cell>
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-family="Arial" font-size="10pt"><xsl:value-of select="$dec"/></fo:block></fo:table-cell>
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-family="Arial" font-size="10pt"><fo:inline font-style="italic">d</fo:inline></fo:block></fo:table-cell>
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-family="Arial" font-size="10pt"><xsl:value-of select="$hp"/> (<fo:inline font-family="Symbol">p</fo:inline>)</fo:block></fo:table-cell>
@@ -250,12 +250,12 @@
                 </fo:inline>&nbsp;<xsl:value-of select="xsl-util:formatX4(./data:data[@hour = '12']/data:body[@name='Aries']/@varGHA)"/>&#176;</fo:block>
               </fo:table-cell>
               <fo:table-cell number-columns-spanned="1"><fo:block>&nbsp;</fo:block></fo:table-cell>
-            </fo:table-row>    
-			
+            </fo:table-row>
+
             <!-- Extra -->
             <fo:table-row>
               <fo:table-cell number-columns-spanned="14"><fo:block>&nbsp;</fo:block></fo:table-cell> <!-- Blank Line -->
-            </fo:table-row>    
+            </fo:table-row>
             <fo:table-row>
               <fo:table-cell number-rows-spanned="3" padding="medium" border="0.5pt solid black"><fo:block text-align="left" font-family="Arial" font-size="10pt"/></fo:table-cell>
               <fo:table-cell number-columns-spanned="2" padding="medium" border="0.5pt solid black"><fo:block text-align="left" font-family="Arial" font-size="8pt">&nbsp;&frac12;&Oslash;&nbsp;<fo:inline font-family="Courier" font-size="8pt"><xsl:value-of select="xsl-util:formatX4(./data:data[./@hour='12']/data:body[./@name='Sun']/@sd-minute)"/>'</fo:inline></fo:block></fo:table-cell>
@@ -273,88 +273,88 @@
                  <xsl:choose>
                    <xsl:when test="$phase-value = '01' or $phase-value = '29'">
                      <fo:external-graphic src="url('phase01.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '02'">
                      <fo:external-graphic src="url('phase02.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '03'">
                      <fo:external-graphic src="url('phase03.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '04'">
                      <fo:external-graphic src="url('phase04.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '05'">
                      <fo:external-graphic src="url('phase05.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '06'">
                      <fo:external-graphic src="url('phase06.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '07'">
                      <fo:external-graphic src="url('phase07.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '08'">
                      <fo:external-graphic src="url('phase08.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '09'">
                      <fo:external-graphic src="url('phase09.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '10'">
                      <fo:external-graphic src="url('phase10.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '11'">
                      <fo:external-graphic src="url('phase11.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '12'">
                      <fo:external-graphic src="url('phase12.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '13'">
                      <fo:external-graphic src="url('phase13.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '14'">
                      <fo:external-graphic src="url('phase14.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '15'">
                      <fo:external-graphic src="url('phase15.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '16'">
                      <fo:external-graphic src="url('phase16.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '17'">
                      <fo:external-graphic src="url('phase17.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '18'">
                      <fo:external-graphic src="url('phase18.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '19'">
                      <fo:external-graphic src="url('phase19.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '20'">
                      <fo:external-graphic src="url('phase20.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '21'">
                      <fo:external-graphic src="url('phase21.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '22'">
                      <fo:external-graphic src="url('phase22.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '23'">
                      <fo:external-graphic src="url('phase23.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '24'">
                      <fo:external-graphic src="url('phase24.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '25'">
                      <fo:external-graphic src="url('phase25.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '26'">
                      <fo:external-graphic src="url('phase26.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '27'">
                      <fo:external-graphic src="url('phase27.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                    <xsl:when test="$phase-value = '28'">
                      <fo:external-graphic src="url('phase28.gif')" vertical-align="middle"/>
-                   </xsl:when>  
+                   </xsl:when>
                  </xsl:choose>
                 </fo:block>
               </fo:table-cell>
@@ -426,7 +426,7 @@
             </xsl:for-each>
             <!-- Delta GHA and D -->
             <fo:table-row>
-              <!-- One blank cell -->                      
+              <!-- One blank cell -->
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-weight="bold"></fo:block></fo:table-cell>
               <!-- Venus -->
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center"><fo:inline font-style="italic"><fo:inline font-family="Symbol">d</fo:inline></fo:inline>&nbsp;<xsl:value-of select="xsl-util:formatX4(./data:data[@hour = '1']/data:planets/data:body[@name='Venus']/@varGHA)"/>&#176;</fo:block></fo:table-cell>
@@ -444,7 +444,7 @@
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center"><fo:inline font-style="italic"><fo:inline font-family="Symbol">d</fo:inline></fo:inline>&nbsp;<xsl:value-of select="xsl-util:formatX4(./data:data[@hour = '1']/data:planets/data:body[@name='Saturn']/@varGHA)"/>&#176;</fo:block></fo:table-cell>
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center">&nbsp;</fo:block></fo:table-cell>
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center"><fo:inline font-style="italic">d</fo:inline>&nbsp;<xsl:value-of select="xsl-util:formatX4(number(./data:data[@hour = '1']/data:planets/data:body[@name='Saturn']/@varD * 60))"/>'</fo:block></fo:table-cell>
-              <!-- One blank cell -->                      
+              <!-- One blank cell -->
               <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-weight="bold"></fo:block></fo:table-cell>
             </fo:table-row>
           </fo:table-body>
@@ -453,8 +453,8 @@
           </fo:table-footer-->
         </fo:table>
       </fo:block>
-    </fo:block>    
-    <!-- Stars --> 
+    </fo:block>
+    <!-- Stars -->
     <xsl:if test="$with-stars = 'true'">
       <fo:block text-align="center" font-family="Courier" font-size="10pt" break-after="page" margin="0.5in">
         <fo:block text-align="left" font-family="Arial" font-size="10pt" font-style="italic" font-weight="bold">
@@ -564,7 +564,7 @@
                     <fo:table-body>
                       <fo:table-row>
                         <fo:table-cell number-columns-spanned="2" padding="medium" text-align="center" border="0.5pt solid black"><fo:block font-weight="bold"><xsl:value-of select="$at000uct"/></fo:block></fo:table-cell>
-                      </fo:table-row>  
+                      </fo:table-row>
                       <fo:table-row>
                         <fo:table-cell text-align="left"><fo:block><xsl:value-of select="$moe"/></fo:block></fo:table-cell>
                         <fo:table-cell><fo:block font-family="Courier" font-size="10pt"><xsl:value-of select="geom-util:formatDMS(./data:data[1]/data:misc-data/data:mean-obl-of-ecl)"/></fo:block></fo:table-cell>
@@ -602,7 +602,7 @@
                 </fo:block>
               </fo:table-cell>
 			  <!-- Right, rise and set -->
-              <fo:table-cell padding="medium"> 
+              <fo:table-cell padding="medium">
                 <fo:table>
                   <fo:table-column column-width="0.40in"/>
                   <fo:table-column column-width="0.50in"/>
@@ -650,11 +650,11 @@
               </fo:table-cell>
             </fo:table-row>
           </fo:table-body>
-        </fo:table> 
-      </fo:block> 
+        </fo:table>
+      </fo:block>
     </xsl:if>
   </xsl:template>
-  
+
   <xsl:template match="data:data" name="sun-moon-aries">
     <xsl:param name="data"/>
     <fo:table-row>
@@ -710,7 +710,7 @@
     <xsl:if test="(number(./@hour) mod 6) = 5">
       <fo:table-row>
         <fo:table-cell number-columns-spanned="14"><fo:block>&nbsp;</fo:block></fo:table-cell>
-      </fo:table-row>    
+      </fo:table-row>
     </xsl:if>
   </xsl:template>
 
@@ -735,7 +735,7 @@
     <xsl:if test="(number(./@hour) mod 6) = 5"> <!-- Blank line -->
       <fo:table-row>
         <fo:table-cell number-columns-spanned="14"><fo:block>&nbsp;</fo:block></fo:table-cell>
-      </fo:table-row>    
+      </fo:table-row>
     </xsl:if>
   </xsl:template>
 

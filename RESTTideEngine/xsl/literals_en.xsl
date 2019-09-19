@@ -70,14 +70,14 @@
  <!ENTITY uacute  "&#250;">
  <!ENTITY ucirc   "&#251;">
  <!ENTITY uuml    "&#252;">
- <!ENTITY yacute  "&#253;">  
+ <!ENTITY yacute  "&#253;">
 ]>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:xsl-util="http://www.oracle.com/XSL/Transform/java/nauticalalmanac.xsl.XSLUtil"
+                xmlns:xsl-util="http://www.oracle.com/XSL/Transform/java/calc.calculation.nauticalalmanac.xsl.XSLUtil"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
                 exclude-result-prefixes="xsl-util"
                 version="1.0">
-                
+
   <xsl:variable name="GEOMUTIL.HTML"   select="0"/>
   <xsl:variable name="GEOMUTIL.SHELL"  select="1"/>
   <xsl:variable name="GEOMUTIL.SWING"  select="2"/>
@@ -86,30 +86,30 @@
   <xsl:variable name="GEOMUTIL.NONE" select="0"/>
   <xsl:variable name="GEOMUTIL.NS"   select="1"/>
   <xsl:variable name="GEOMUTIL.EW"   select="2"/>
-  
+
   <xsl:variable name="GEOMUTIL.LEADING_SIGN"  select="0"/>
   <xsl:variable name="GEOMUTIL.TRAILING_SIGN" select="1"/>
-  
+
   <xsl:variable name="star-per-col" select="29"/>
 
   <xsl:variable name="oliv-soft">by Oliv Soft</xsl:variable>
   <xsl:variable name="calculated-with">Calculated with&nbsp;</xsl:variable>
   <xsl:variable name="compare-with">Compare with</xsl:variable>
-    
+
   <xsl:variable name="SHA-warning">SHA is given for Sun, Moon and Planets. This is redundant, but convenient to plot those bodies in the Star Finder 2102-D.</xsl:variable>
 
   <xsl:variable name="perpetual-almanac">Long Term Almanac</xsl:variable>
   <xsl:variable name="nautical-almanac">Nautical Almanac</xsl:variable>
   <xsl:variable name="lunar-distances">Lunar Distances</xsl:variable>
   <xsl:variable name="for">for </xsl:variable>
-  
+
   <xsl:variable name="from">from </xsl:variable>
   <xsl:variable name="to"> to </xsl:variable>
 
   <xsl:variable name="sun">Sun</xsl:variable>
   <xsl:variable name="moon">Moon</xsl:variable>
   <xsl:variable name="aries">Aries</xsl:variable>
-  
+
   <xsl:variable name="hp">hp</xsl:variable>
   <xsl:variable name="eot12">Eq. of Time at 12:00 : </xsl:variable>
   <xsl:variable name="mp">Meridian Pass. Time : </xsl:variable>
@@ -126,14 +126,14 @@
   <xsl:variable name="gha-aries">GHA</xsl:variable>
   <xsl:variable name="dec">Dec</xsl:variable>
   <xsl:variable name="z">Z</xsl:variable>
-  
+
   <xsl:variable name="dist">Dist</xsl:variable>
-  
+
   <xsl:variable name="rise">Rise</xsl:variable>
   <xsl:variable name="set">Set</xsl:variable>
-  
+
   <xsl:variable name="set-rise-banner">Calculated at 12:00 UCT at Greenwich</xsl:variable>
-  
+
   <xsl:variable name="at000uct">Calculated at 00:00:00 U.T.</xsl:variable>
   <xsl:variable name="moe">Mean Obliquity of Ecliptic</xsl:variable>
   <xsl:variable name="toe">True Obliquity of Ecliptic</xsl:variable>
@@ -141,12 +141,12 @@
   <xsl:variable name="to0">True Obliquity</xsl:variable>
   <xsl:variable name="jd">Julian Date</xsl:variable>
   <xsl:variable name="jde">Julian Ephemeris Date</xsl:variable>
-  
+
   <xsl:variable name="stars-banner">Stars at 0000 U.T. (GHA(Star) = SHA(Star) + GHA(Aries))</xsl:variable>
 
   <xsl:variable name="name">Name</xsl:variable>
   <xsl:variable name="sha">SHA</xsl:variable>
-  
+
   <xsl:template name="date-fmt">
     <xsl:param name="year"/>
     <xsl:param name="month"/>
@@ -190,14 +190,14 @@
     <xsl:value-of select="$year"/>
   </xsl:template>
 
-  <xsl:template name="front-page-date">  
+  <xsl:template name="front-page-date">
     <xsl:param name="nb-month"/>
     <xsl:param name="y"/>
     <xsl:param name="nb-day"/>
     <xsl:param name="m"/>
     <xsl:param name="dow"/>
     <xsl:param name="d"/>
-    
+
     <xsl:choose>
       <!-- One year -->
       <xsl:when test="$nb-month > 1">
@@ -255,7 +255,7 @@
         <xsl:text>, </xsl:text>
         <xsl:value-of select="$y"/>
       </xsl:otherwise>
-    </xsl:choose>    
+    </xsl:choose>
   </xsl:template>
 
 </xsl:stylesheet>

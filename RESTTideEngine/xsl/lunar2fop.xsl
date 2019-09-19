@@ -70,15 +70,15 @@
  <!ENTITY uacute  "&#250;">
  <!ENTITY ucirc   "&#251;">
  <!ENTITY uuml    "&#252;">
- <!ENTITY yacute  "&#253;">  
+ <!ENTITY yacute  "&#253;">
 ]>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format"
-                xmlns:fox="http://xml.apache.org/fop/extensions" 
+                xmlns:fox="http://xml.apache.org/fop/extensions"
                 xmlns:data="urn:nautical-almanac"
                 xmlns:geom-util="http://www.oracle.com/XSL/Transform/java/user.util.GeomUtil"
                 xmlns:j-string="http://www.oracle.com/XSL/Transform/java/java.lang.String"
-                xmlns:xsl-util="http://www.oracle.com/XSL/Transform/java/nauticalalmanac.xsl.XSLUtil"
+                xmlns:xsl-util="http://www.oracle.com/XSL/Transform/java/calc.calculation.nauticalalmanac.xsl.XSLUtil"
                 exclude-result-prefixes="data j-string xsl-util geom-util"
                 version="1.0">
   <xsl:import href="literals.xsl"/>
@@ -88,13 +88,13 @@
     <fo:root>
       <fo:layout-master-set>
         <fo:simple-page-master master-name="portrait-page"
-                               page-width="8.5in" 
+                               page-width="8.5in"
                                page-height="11in"> <!-- Portrait -->
           <fo:region-body margin="0in"/>
           <fo:region-after region-name="footer" extent="20mm"/>
         </fo:simple-page-master>
-        <fo:simple-page-master master-name="landscape-page" 
-                               page-height="8.5in" 
+        <fo:simple-page-master master-name="landscape-page"
+                               page-height="8.5in"
                                page-width="11in"> <!-- Landscape -->
           <fo:region-body margin="0in"/>
           <fo:region-after region-name="footer" extent="20mm"/>
@@ -114,10 +114,10 @@
             <fo:block text-align="center" font-family="Book Antiqua" font-size="10pt" font-weight="bold" margin="0.25in">
               <xsl:value-of select="$oliv-soft"/>
             </fo:block>
-            <fo:block text-align="center" font-family="Book Antiqua" font-size="30pt" font-weight="bold" margin="1in">              
+            <fo:block text-align="center" font-family="Book Antiqua" font-size="30pt" font-weight="bold" margin="1in">
               <xsl:choose>
                 <xsl:when test="/data:almanac/@type = 'continuous'">
-                  <xsl:value-of select="$for"/> 
+                  <xsl:value-of select="$for"/>
                   <xsl:call-template name="front-page-date">
                     <xsl:with-param name="nb-month"><xsl:value-of select="count(/data:almanac/data:year/data:month)"/></xsl:with-param>
                     <xsl:with-param name="y"><xsl:value-of select="/data:almanac/data:year/@value"/></xsl:with-param>
@@ -128,7 +128,7 @@
                   </xsl:call-template>
                 </xsl:when>
                 <xsl:when test="/data:almanac/@type = 'from-to'">
-                  <xsl:value-of select="$from"/> 
+                  <xsl:value-of select="$from"/>
                   <xsl:call-template name="date-fmt">
                     <xsl:with-param name="lang" select="$language"/>
                     <xsl:with-param name="year" select="//data:year[1]/@value"/>
@@ -136,8 +136,8 @@
                     <xsl:with-param name="day" select="//data:year[1]/data:month[1]/data:day[1]/@value"/>
                     <xsl:with-param name="dow" select="//data:year[1]/data:month[1]/data:day[1]/data:data[1]/data:misc-data/data:dow"/>
                   </xsl:call-template>
-                  <xsl:value-of select="$to"/> 
-              
+                  <xsl:value-of select="$to"/>
+
                   <xsl:call-template name="date-fmt">
                     <xsl:with-param name="lang" select="$language"/>
                     <xsl:with-param name="year" select="//data:year[last()]/@value"/>
@@ -160,7 +160,7 @@
               </fo:block>
               <fo:block margin="1in"/>
               <fo:block text-align="left" font-family="Arial" font-size="8pt" font-style="italic">
-                &#169; Oliv Cool Stuff Soft (<xsl:value-of select="$language"/>) 
+                &#169; Oliv Cool Stuff Soft (<xsl:value-of select="$language"/>)
               </fo:block>
             </fo:block>
           </fo:block>
@@ -179,7 +179,7 @@
       </fo:page-sequence>
     </fo:root>
   </xsl:template>
-  
+
   <xsl:template name="page-one">
     <xsl:param name="day"/>
     <fo:block text-align="center" font-family="Courier" font-size="10pt" break-after="page" margin="0.1in">
@@ -300,20 +300,20 @@
             </fo:table-body>
           </fo:table>
         </fo:block>
-        
-        
+
+
       </fo:block>
-    </fo:block>    
+    </fo:block>
   </xsl:template>
-  
+
   <xsl:template match="data:data" name="lunar-dist-one"> <!-- For one line of sun and planets -->
     <xsl:param name="data"/>
     <fo:table-row>
       <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="center" font-weight="bold"><xsl:value-of select="xsl-util:formatI2($data/@hour)"/></fo:block></fo:table-cell>
-      
+
       <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="right"><xsl:value-of select="xsl-util:formatX4($data/data:body[./@name='Moon']/@hp-minute)"/>'</fo:block></fo:table-cell>
       <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="right"><xsl:value-of select="xsl-util:formatX4($data/data:body[./@name='Moon']/@sd-minute)"/>'</fo:block></fo:table-cell>
-      
+
       <fo:table-cell padding="medium" border="0.5pt solid black"><fo:block text-align="right"><xsl:value-of select="xsl-util:decToSex($data/data:body[@name='Sun']/@moonDist, $GEOMUTIL.SWING, $GEOMUTIL.NONE)"/></fo:block></fo:table-cell>
       <fo:table-cell padding="medium" border="0.5pt solid black">
         <fo:block text-align="right" font-size="6pt">
@@ -359,7 +359,7 @@
     <xsl:if test="(number(./@hour) mod 6) = 5">
       <fo:table-row>
         <fo:table-cell number-columns-spanned="12"><fo:block>&nbsp;</fo:block></fo:table-cell>
-      </fo:table-row>    
+      </fo:table-row>
     </xsl:if>
   </xsl:template>
 
@@ -468,9 +468,9 @@
           </fo:table-body>
         </fo:table>
       </fo:block>
-    </fo:block>    
+    </fo:block>
   </xsl:template>
-  
+
   <xsl:template match="data:data" name="stars-lunar-dist-table-one"> <!-- For one line -->
     <xsl:param name="data"/>
     <fo:table-row>
@@ -520,7 +520,7 @@
     <xsl:if test="(number(./@hour) mod 6) = 5">
       <fo:table-row>
         <fo:table-cell number-columns-spanned="12"><fo:block>&nbsp;</fo:block></fo:table-cell>
-      </fo:table-row>    
+      </fo:table-row>
     </xsl:if>
   </xsl:template>
 
@@ -573,7 +573,7 @@
     <xsl:if test="(number(./@hour) mod 6) = 5">
       <fo:table-row>
         <fo:table-cell number-columns-spanned="12"><fo:block>&nbsp;</fo:block></fo:table-cell>
-      </fo:table-row>    
+      </fo:table-row>
     </xsl:if>
   </xsl:template>
 
@@ -626,7 +626,7 @@
     <xsl:if test="(number(./@hour) mod 6) = 5">
       <fo:table-row>
         <fo:table-cell number-columns-spanned="12"><fo:block>&nbsp;</fo:block></fo:table-cell>
-      </fo:table-row>    
+      </fo:table-row>
     </xsl:if>
   </xsl:template>
 
