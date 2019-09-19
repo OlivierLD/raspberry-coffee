@@ -466,7 +466,7 @@ In the `NMEA.mux.WebUI` project, `logged` folder
 - With SSD1306 32x128
 - With SSD1306 64x128. &#9989; Done
 - With Nokia5110. &#9989; Done
-- With UART GPS
+- With UART GPS. &#9989; Done
 - Push Buttons and Switches. &#9989; Done
 
 ### For the logger:
