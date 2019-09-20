@@ -79,20 +79,38 @@ DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.
 ```
 
 ### Configurations
-##### Raspberry Pi Zero
-- Good for logging
+#### Raspberry Pi Zero
+- <u>**Good for logging**</u>
 - A bit challenging when acting as a server (Web and REST)
 - With a 2200mAH LiPo battery, alive between 1:00:31pm and 8:05:57pm (lifespan: 7:05:26)
 
-##### Raspberry Pi A+
+#### Raspberry Pi A+
+> TODO
 
-##### Raspberry Pi B
+#### Raspberry Pi B
+> TODO
 
+##### Raspberry Pi 4, with 4Gb of RAM
+Easy! Perfect. 
+All features available without having to wait.
+- REST Server
+- HTTP Server
+- Publication of almanacs (Celestial and Tide)
+- Sight reduction
+- Logging
+- Admin
+- everything!
+
+Emits its own network. Reachable from other devices (laptops, tablets, smart-phones, smart-watches)
+through all available channels (ssh, vnc, tcp, http, etc).
+No attached screen required.
+> TODO: Evaluate power consumption, and the way it heats up.
 
 # TODO
 - Describe the way to get to the log files, download, etc.
 - Document Web UI: `runner.html`, `logMgmt.html`, etc.
-- Simulator for the buttons. &#9989; Done.
+- Simulator for the buttons. &#9989; Done!
 - 3D printed enclosure, to contain the Raspberry Pi, the 2 bonnets, and a LiPo battery.
 - Go to screen saver mode after a given amount of time of inactivity. &#9989; Done.
 - Compare several Raspberry Pi versions (Zero, A, B)
+- Compare/comment on different GPSs
