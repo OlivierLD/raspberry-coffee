@@ -39,7 +39,7 @@ public class ServerWithKewlButtons extends NavServer {
 
 	private SSD1306Processor oledForwarder = null;
 
-	/* ----- Local menu operations ----- */
+	// ----- Local menu operations, one Runnable for each operation -----
 	private Runnable pauseLogging = () -> {
 		try {
 			HTTPClient.doPut(this.turnLoggingOffURL, new HashMap<>(), null);
@@ -64,6 +64,8 @@ public class ServerWithKewlButtons extends NavServer {
 		} catch (Exception ex) {
 			System.err.println("Terminate Mux:");
 			ex.printStackTrace();
+			System.err.println("\t>> Forcing exit.");
+			System.exit(1); // Force exit.
 		}
 	};
 
@@ -111,8 +113,13 @@ public class ServerWithKewlButtons extends NavServer {
 				ex.printStackTrace();
 			}
 		}
+		// for demo...
+		if (display.size() == 0) {
+			display.add("Logger-Net");
+		}
+
 		try {
-			String line = "IP:";
+			String line = "IP Addr.:";
 			display.add(line);
 //		List<String> addresses = TCPUtils.getIPAddresses("wlan0", true);
 			List<String[]> addresses = TCPUtils.getIPAddresses(true);
@@ -162,7 +169,7 @@ public class ServerWithKewlButtons extends NavServer {
 			new MenuItem().title("Resume logging").action(resumeLogging),
 			new MenuItem().title("Terminate Multiplexer").action(terminateMux),
 			new MenuItem().title("Network Config").action(displayNetworkParameters),
-			new MenuItem().title("Say Hello").action(sayHello)
+			new MenuItem().title("Say Hello").action(sayHello) // As an example...
 	};
 	private int localMenuItemIndex = 0;
 
