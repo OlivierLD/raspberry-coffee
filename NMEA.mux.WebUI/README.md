@@ -455,8 +455,8 @@ In the `NMEA.mux.WebUI` project, `logged` folder
 - `concat.sh`
 
 ## TODO REST clients in other projects
-<https://github.com/OlivierLD/raspberry-coffee/blob/master/Project.Trunk/REST.clients/TCP.Watch.01/README.md>
-
+- <https://github.com/OlivierLD/raspberry-coffee/blob/master/Project.Trunk/REST.clients/TCP.Watch.01/README.md>
+- M5Stick-C
 ---
 
 ... More to come (coming)
@@ -468,6 +468,7 @@ In the `NMEA.mux.WebUI` project, `logged` folder
 - With Nokia5110. &#9989; Done
 - With UART GPS. &#9989; Done
 - Push Buttons and Switches. &#9989; Done
+- Display IP Address and Network Name in the small loggers
 
 ### For the logger:
 - 2 Bonnets:
@@ -480,3 +481,100 @@ See [here](../Project.Trunk/REST.clients/TCP.Watch.01#raspberry-pi-zero-w-and-ss
 and [here](./small.server.extended/README.md).
 
 ---
+#### Log from small.server.extended
+```
+$ ./to.mux.sh 
+JAVA_OPTIONS in to.mux.sh: 
+On its way!
+Reach http://192.168.42.13:9999/zip/index.html
+  or  http://192.168.42.13:9999/zip/small-screens/small.console.02.html
+Using properties file nmea.mux.gps.log.properties
+In ./to.mux.sh, inherited JAVA_OPTIONS: 
+System date is Fri Sep 20 06:18:08 PDT 2019
+pi@rpi64:~/raspberry-coffee/NMEA.mux.WebUI/small.server.extended $ Running sudo java  -Dwith.sun.flower=false -Dhttp.port=5678 -Djava.library.path=/usr/lib/jni -Dmux.infra.verbose=true -Dbutton.verbose=false -Dprocess.on.start=true -Dmux.properties=nmea.mux.gps.log.properties -Dno.ais=false -Dcalculate.solar.with.eot=true -Ddo.not.use.GGA.date.time=true -Ddo.not.use.GLL.date.time=true -DdeltaT=69.2201 -Drmc.date.offset=7168 -Djava.util.logging.config.file=./logging.properties   -cp ./build/libs/small.server.extended-1.0-all.jar:/usr/share/java/RXTXcomm.jar navserver.ServerWithKewlButtons
+>>> Server port is 5678
+From navserver.ServerWithKewlButtons, running on port 5678
+1,568,985,493,169 - Port open: 5678
+	>> 1,568,985,493,170 - Starting HTTP server
+1,568,985,493,206 - http.HTTPServer now accepting requests
+Using Delta-T:69.220100
+	>> 1,568,985,545,260 - Constructor nmea.mux.GenericNMEAMultiplexer, Initializing RESTImplementation...
+nmea.consumers.reader.SerialReader: There are 3 listener(s)
+	>> 1,568,985,550,942 - RESTImplementation initialized.
+	>> 1,568,985,550,997 - NMEADataClient: Starting nmea.consumers.client.SerialClient...
+>> nmea.consumers.reader.SerialReader: Reader Running
+	>> 1,568,985,551,023 - NMEADataClient: Starting nmea.consumers.client.BME280Client...
+	>> 1,568,985,551,045 - nmea.mux.GenericNMEAMultiplexer constructor completed.
+>> Starting reader [nmea.consumers.reader.BME280Reader] (BM). Enabled:true
+Stable Library
+=========================================
+Native lib Version = RXTX-2.2pre2
+Java lib Version   = RXTX-2.1-7
+WARNING:  RXTX Version mismatch
+	Jar version = RXTX-2.1-7
+	native lib Version = RXTX-2.2pre2
+Port: /dev/ttyS0, SERIAL
+Found 1 port(s)
+>> Starting extension (after super())...
+To turn logging ON, use PUT http://localhost:5678/mux/mux-process/on
+To turn logging OFF, use PUT http://localhost:5678/mux/mux-process/off
+To terminate the multiplexer, use POST http://localhost:5678/mux/terminate
+ownership changed: type=1
+This is a serial port
+Reading serial port...
+/dev/ttyS0:Port is open...
+>> nmea.consumers.reader.SerialReader: Reader Completed
+IP addresses for localhost:
+wlan0 -> 192.168.42.13
+Also try http://192.168.42.13:5678/zip/index.html from a browser
+     and http://192.168.42.13:5678/zip/runner.html 
++-----------------------------------------------------------------------------------------+
+| Button-2 + LongClick on Button-1: Shutdown (confirm with double-click within 3 seconds) |
+| DoubleClick on Button-1: Show local menu                                                |
+| DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.                 |
++-----------------------------------------------------------------------------------------+
+---------------------------- P I N   M A P P I N G ------------------------------------------
+Received from Serial:$GPGGA,131912.000,3744.9329,N,12230.4200,W,2,7,1.55,-3.4,M,-25.5,M,0000,0000*46
+Received from Serial:$GPGSA,A,3,19,06,24,25,12,17,02,,,,,,2.68,1.55,2.18*0C
+Received from Serial:$GPRMC,131912.000,A,3744.9329,N,12230.4200,W,0.02,297.68,200919,,,D*72
+       +-----+-----+--------------+-----++-----+--------------+-----+-----+
+       | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |
+       +-----+-----+--------------+-----++-----+--------------+-----+-----+
+   3v3 |     |     | 3v3          | #01 || #02 |          5v0 |     |     | 5v0   
+   SDA |  02 |  08 | SDA1         | #03 || #04 |          5v0 |     |     |       
+   SLC |  03 |  09 | SCL1         | #05 || #06 |          GND |     |     |       
+       |  04 |  07 | GPCLK0       | #07 || #08 |    UART0_TXD | 15  | 14  | Tx    
+       |     |     | GND          | #09 || #10 |    UART0_RXD | 16  | 15  | Rx    
+       |  17 |  00 | GPIO_0       | #11 || #12 | PCM_CLK/PWM0 | 01  | 18  |       
+       |  27 |  02 | GPIO_2       | #13 || #14 |          GND |     |     |       
+       |  22 |  03 | GPIO_3       | #15 || #16 |       GPIO_4 | 04  | 23  | DC    
+       |     |     | 3v3          | #17 || #18 |       GPIO_5 | 05  | 24  | Rst   
+  Data |  10 |  12 | SPI0_MOSI    | #19 || #20 |          GND |     |     |       
+       |  09 |  13 | SPI0_MISO    | #21 || #22 |       GPIO_6 | 06  | 25  |       
+ Clock |  11 |  14 | SPI0_CLK     | #23 || #24 |   SPI0_CS0_N | 10  | 08  | CS    
+       |     |     | GND          | #25 || #26 |   SPI0_CS1_N | 11  | 07  |       
+       |     |  30 | SDA0         | #27 || #28 |         SCL0 | 31  |     |       
+       |  05 |  21 | GPCLK1       | #29 || #30 |          GND |     |     |       
+       |  06 |  22 | GPCLK2       | #31 || #32 |         PWM0 | 26  | 12  |       
+       |  13 |  23 | PWM1         | #33 || #34 |          GND |     |     |       
+       |  19 |  24 | PCM_FS/PWM1  | #35 || #36 |      GPIO_27 | 27  | 16  |       
+       |  26 |  25 | GPIO_25      | #37 || #38 |      PCM_DIN | 28  | 20  | Button 1 Hot Wire 
+       |     |     | GND          | #39 || #40 |     PCM_DOUT | 29  | 21  | Button 2 Hot Wire 
+       +-----+-----+--------------+-----++-----+--------------+-----+-----+
+       | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |
+       +-----+-----+--------------+-----++-----+--------------+-----+-----+
+> Buttons, Screen and GPS are powered with 5.0, 3v3 is used by the BME280.
+---------------------------------------------------------------------------------------------
+
+>> Buttons provisioned!
+SSD1306 was loaded! (for real)
+Nav Server fully initialized
+Received from Serial:$GPVTG,297.68,T,,M,0.02,N,0.04,K,D*3C
+Received from Serial:$GPGSA,A,3,19,06,24,25,12,17,02,,,,,,2.68,1.55,2.18*0C
+Received from Serial:$GPGSV,3,1,10,02,65,178,30,06,58,065,33,12,54,322,31,24,52,240,17*7C
+Received from Serial:$GPGSV,3,2,10,46,45,190,39,19,36,051,38,17,21,059,38,25,14,306,17*79
+Received from Serial:$GPGSV,3,3,10,28,03,114,16,29,02,253,*7F
+Received from Serial:$GPRMC,131913.000,A,3744.9329,N,12230.4200,W,0.01,297.68,200919,,,D*70
+Received from Serial:$GPVTG,297.68,T,,M,0.01,N,0.02,K,D*39
+
+```

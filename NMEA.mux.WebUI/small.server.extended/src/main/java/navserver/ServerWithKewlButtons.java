@@ -12,6 +12,9 @@ import utils.TCPUtils;
 import utils.TimeUtil;
 
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
@@ -76,6 +79,62 @@ public class ServerWithKewlButtons extends NavServer {
 		}
 	};
 
+	private Runnable displayNetworkParameters = () -> {
+		List<String> display = new ArrayList<>();
+		try {
+			String command = "iwconfig"; // "iwconfig | grep wlan0 | awk '{ print $4 }'";
+			Process p = Runtime.getRuntime().exec(command);
+			p.waitFor();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			String line = "";
+			if (buttonVerbose) {
+				System.out.println(String.format("Reading %s output", command));
+			}
+			while (line != null) {
+				line = reader.readLine();
+				if (line != null) {
+					final String essid = "ESSID:";
+					if (line.indexOf(essid) > -1) {
+						display.add(line.substring(line.indexOf(essid) + essid.length()));
+						if (buttonVerbose) {
+							System.out.println(line);
+						}
+					}
+				}
+			}
+			if (buttonVerbose) {
+				System.out.println(String.format("Done with %s", command));
+			}
+			reader.close();
+		} catch (Exception ex) {
+			if (buttonVerbose) {
+				ex.printStackTrace();
+			}
+		}
+		try {
+			String line = "IP:";
+			display.add(line);
+//		List<String> addresses = TCPUtils.getIPAddresses("wlan0", true);
+			List<String[]> addresses = TCPUtils.getIPAddresses(true);
+			for (String[] addr : addresses) {
+//				line += (addr[1] + " ");
+				display.add(addr[1]);
+				if (buttonVerbose) {
+					System.out.println(addr);
+				}
+			}
+//			display.add(line);
+		} catch (Exception ex) {
+			if (buttonVerbose) {
+				ex.printStackTrace();
+			}
+		}
+		if (oledForwarder != null) {
+			oledForwarder.displayLines(display.toArray(new String[display.size()]));
+			TimeUtil.delay(5_000L);
+		}
+	};
+
 	/**
 	 * MenuItem class
 	 * Used to store the label and action of each item
@@ -102,6 +161,7 @@ public class ServerWithKewlButtons extends NavServer {
 			new MenuItem().title("Pause logging").action(pauseLogging),
 			new MenuItem().title("Resume logging").action(resumeLogging),
 			new MenuItem().title("Terminate Multiplexer").action(terminateMux),
+			new MenuItem().title("Network Config").action(displayNetworkParameters),
 			new MenuItem().title("Say Hello").action(sayHello)
 	};
 	private int localMenuItemIndex = 0;
