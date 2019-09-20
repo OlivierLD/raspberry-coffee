@@ -468,7 +468,8 @@ In the `NMEA.mux.WebUI` project, `logged` folder
 - With Nokia5110. &#9989; Done
 - With UART GPS. &#9989; Done
 - Push Buttons and Switches. &#9989; Done
-- Display IP Address and Network Name in the small loggers
+- Display IP Address and Network Name in the small loggers. &#9989; Done
+- Same as `small.server.extended` with 2-button user-interface, (which is _not_ small), based on `GenericNMEAMultiplexer`, with less `RESTRequestManager`s than the `NavServer`.
 
 ### For the logger:
 - 2 Bonnets:
@@ -576,5 +577,4 @@ Received from Serial:$GPGSV,3,2,10,46,45,190,39,19,36,051,38,17,21,059,38,25,14,
 Received from Serial:$GPGSV,3,3,10,28,03,114,16,29,02,253,*7F
 Received from Serial:$GPRMC,131913.000,A,3744.9329,N,12230.4200,W,0.01,297.68,200919,,,D*70
 Received from Serial:$GPVTG,297.68,T,,M,0.01,N,0.02,K,D*39
-
 ```
