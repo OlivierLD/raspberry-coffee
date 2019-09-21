@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -78,6 +79,14 @@ public class TCPUtils {
 		}
 		reader.close();
 		return networkList;
+	}
+
+	public static String getHostName() {
+		try {
+			return InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+      return null;
+		}
 	}
 
 	public static void main(String... args) {

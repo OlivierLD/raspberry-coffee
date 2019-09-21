@@ -136,6 +136,16 @@ public class ServerWithKewlButtons extends NavServer {
 				ex.printStackTrace();
 			}
 		}
+		try {
+			String hostName = TCPUtils.getHostName();
+			if (hostName != null) {
+				display.add(hostName);
+			}
+		} catch (Exception ex) {
+			if (buttonVerbose) {
+				ex.printStackTrace();
+			}
+		}
 		if (oledForwarder != null) {
 			oledForwarder.displayLines(display.toArray(new String[display.size()]));
 			TimeUtil.delay(5_000L);
