@@ -109,6 +109,11 @@ All features available without having to wait.
 Emits its own network. Reachable from other devices (laptops, tablets, smart-phones, smart-watches)
 through all available channels (ssh, vnc, tcp, http, etc).
 No attached screen required.
+
+> _Note_: HDMI ports are `Micro-HDMI`, power supply requires a `USB-C`, and not a `Micro-B` as the other models.
+> ![USBs](./docimg/usb_types.jpg)
+
+
 > TODO: Evaluate power consumption, and the way it heats up.
 
 ### About GPSs

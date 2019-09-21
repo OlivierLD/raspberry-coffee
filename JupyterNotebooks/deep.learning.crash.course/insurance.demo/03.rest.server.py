@@ -1,3 +1,9 @@
+#
+# Requires:
+# pip3 install http
+# pip3 install tensorflow
+# pip3 install numpy
+#
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
 import tensorflow as tf
