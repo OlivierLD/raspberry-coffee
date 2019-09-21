@@ -111,7 +111,7 @@ through all available channels (ssh, vnc, tcp, http, etc).
 No attached screen required.
 
 > _Note_: HDMI ports are `Micro-HDMI`, power supply requires a `USB-C`, and not a `Micro-B` as the other models.
-> ![USBs](./docimg/usb_types.jpg)
+> ![USBs](./docimg/usb_types.jpg) ![AllUSB](./docimg/all_usb.jpg)
 
 
 > TODO: Evaluate power consumption, and the way it heats up.
