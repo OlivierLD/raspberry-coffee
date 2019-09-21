@@ -122,16 +122,16 @@ No attached screen required, as ssh and VNC can do the job remotely.
 - $14.95 for the [antenna](https://www.adafruit.com/product/960)
 - $3.95 for the [connector](https://www.adafruit.com/product/851)
 
-Not 100% reliable, sometimes stop reading...
+Not 100% reliable, "sometimes" stops reading, I don't know why...
 
 #### GT-3731-44 (USB, 44 channels)
-It is an old one, I got mine around 2004. Works fine, but the date (RMC) recently got off by 7168 days! Probably some kind of overflow...
+It is an old one, I got mine around 2004. Works fine, but the date (RMC) recently got off by 7168 days! Probably some kind of overflow... `7168 = 0x1C00`
 
 #### [U-blox7, small USB dongle](https://www.amazon.com/Diymall-G-Mouse-Glonass-Raspberry-Aviation/dp/B00NWEEWW8/ref=sr_1_3?keywords=Stratux+Vk-162+Remote+Mount+USB+GPS&qid=1569081064&s=wireless&sr=1-3-catcorr)
 $13.49. Ok on a laptop, could not get it to read correctly on a Raspberry Pi.
 
 #### [Stratux Vk-162 Remote Mount USB GPS](https://www.amazon.com/Navigation-External-Receiver-Raspberry-Geekstory/dp/B078Y52FGQ/ref=sr_1_1?keywords=Stratux+Vk-162+Remote+Mount+USB+GPS&qid=1569081064&s=wireless&sr=1-1-catcorr)
-$17.98. Works OK!
+$17.98. Works OK everywhere I tested it! 👍
 
 # TODO
 - Describe the way to get to the log files, download, etc.
