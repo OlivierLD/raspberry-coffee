@@ -116,7 +116,7 @@ No attached screen required, as ssh and VNC can do the job remotely.
 
 > TODO: Evaluate power consumption, and the way it heats up.
 
-### About GPSs
+### About Some GPS devices I tested
 #### Adafruit Ultimate GPS, 66 channels
 - $39.95 for the [breakout board](https://www.adafruit.com/product/746) 
 - $14.95 for the [antenna](https://www.adafruit.com/product/960)
@@ -140,4 +140,3 @@ $17.98. Works OK everywhere I tested it! 👍
 - 3D printed enclosure, to contain the Raspberry Pi, the 2 bonnets, and a LiPo battery.
 - Go to screen saver mode after a given amount of time of inactivity. &#9989; Done.
 - Compare several Raspberry Pi versions (Zero, A, B)
-- Compare/comment on different GPSs
