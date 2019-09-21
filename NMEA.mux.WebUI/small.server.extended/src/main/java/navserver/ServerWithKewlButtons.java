@@ -197,8 +197,8 @@ public class ServerWithKewlButtons extends NavServer {
 			new MenuItem().title("Pause logging").action(pauseLogging),
 			new MenuItem().title("Resume logging").action(resumeLogging),
 			new MenuItem().title("Terminate Multiplexer").action(terminateMux),
-			new MenuItem().title("Shutdown").action(shutdown),
-			new MenuItem().title("Reboot").action(reboot),
+			new MenuItem().title("! Shutdown").action(shutdown),
+			new MenuItem().title("! Reboot").action(reboot),
 			new MenuItem().title("Network Config").action(displayNetworkParameters),
 			new MenuItem().title("Say Hello").action(sayHello)                       // As an example...
 	};
