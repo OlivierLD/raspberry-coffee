@@ -96,7 +96,7 @@ DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.
 > TODO
 
 ##### Raspberry Pi 4, with 4Gb of RAM
-Easy! Perfect. 
+Easy: Perfect! 
 All features available without having to wait.
 - REST Server
 - HTTP Server
@@ -108,7 +108,7 @@ All features available without having to wait.
 
 Emits its own network. Reachable from other devices (laptops, tablets, smart-phones, smart-watches)
 through all available channels (ssh, vnc, tcp, http, etc).
-No attached screen required.
+No attached screen required, as ssh and VNC can do the job remotely.
 
 > _Note_: HDMI ports are `Micro-HDMI`, power supply requires a `USB-C`, and not a `Micro-B` as the other models.
 > ![USBs](./docimg/usb_types.jpg) ![AllUSB](./docimg/all_usb.jpg)
