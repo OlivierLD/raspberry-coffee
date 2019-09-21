@@ -152,6 +152,25 @@ public class ServerWithKewlButtons extends NavServer {
 		}
 	};
 
+	private Runnable shutdown = () -> {
+		try {
+			StaticUtil.shutdown();
+		} catch (Exception ex) {
+			System.err.println("Shutdown:");
+			ex.printStackTrace();
+		}
+	};
+
+	private Runnable reboot = () -> {
+		try {
+			StaticUtil.reboot();
+		} catch (Exception ex) {
+			System.err.println("Reboot:");
+			ex.printStackTrace();
+		}
+	};
+
+
 	/**
 	 * MenuItem class
 	 * Used to store the label and action of each item
@@ -174,12 +193,14 @@ public class ServerWithKewlButtons extends NavServer {
 		public Runnable getAction() { return this.action; }
 	}
 
-	private MenuItem[] localMenuItems = new MenuItem[]{
+	private MenuItem[] localMenuItems = new MenuItem[] {
 			new MenuItem().title("Pause logging").action(pauseLogging),
 			new MenuItem().title("Resume logging").action(resumeLogging),
 			new MenuItem().title("Terminate Multiplexer").action(terminateMux),
+			new MenuItem().title("Shutdown").action(shutdown),
+			new MenuItem().title("Reboot").action(reboot),
 			new MenuItem().title("Network Config").action(displayNetworkParameters),
-			new MenuItem().title("Say Hello").action(sayHello) // As an example...
+			new MenuItem().title("Say Hello").action(sayHello)                       // As an example...
 	};
 	private int localMenuItemIndex = 0;
 
@@ -455,7 +476,7 @@ public class ServerWithKewlButtons extends NavServer {
 		addresses.forEach(pair -> {
 			System.out.println(String.format("%s -> %s", pair[0], pair[1]));
 			// for tests
-			if (pair[1].startsWith("192.168.")) { // ...a bit tough.
+			if (pair[1].startsWith("192.168.")) { // ...a bit tough. I know.
 				sb.append(pair[1]);
 			}
 		});

@@ -583,7 +583,25 @@ public class StaticUtil {
 			throw new RuntimeException("Unsupported operating system.");
 		}
 
-		Runtime.getRuntime().exec(shutdownCommand); // Migght require a sudo, hey...
+		Runtime.getRuntime().exec(shutdownCommand); // Might require a sudo, hey...
+		System.exit(0);
+	}
+
+	public static void reboot() throws RuntimeException, IOException {
+		String shutdownCommand;
+		String operatingSystem = System.getProperty("os.name");
+
+		if ("Linux".equals(operatingSystem) || "Mac OS X".equals(operatingSystem)) {
+			shutdownCommand = "sudo init 6";
+		} else if ("Windows".equals(operatingSystem)) {
+			// shutdownCommand = "shutdown.exe -s -t 0"; ???
+			System.err.println("Oops! How to you do this on Windows?...");
+			shutdownCommand = "echo 'Oops'";
+		} else {
+			throw new RuntimeException("Unsupported operating system.");
+		}
+
+		Runtime.getRuntime().exec(shutdownCommand); // Might require a sudo, hey...
 		System.exit(0);
 	}
 
