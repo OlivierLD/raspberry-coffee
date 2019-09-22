@@ -26,10 +26,11 @@ public class TCPClient extends NMEAClient {
 		this.verbose = "true".equals(System.getProperty("tcp.data.verbose", "false"));
 	}
 
-		@Override
+	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if (verbose)
+		if (verbose) {
 			System.out.println("Received from TCP :" + e.getContent());
+		}
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
 		}

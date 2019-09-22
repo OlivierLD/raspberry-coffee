@@ -133,6 +133,8 @@ Emits its own network. Reachable from other devices (laptops, tablets, smart-pho
 through all available channels (ssh, vnc, tcp, http, etc).
 No attached screen required, as ssh and VNC can do the job remotely.
 
+Evn OpenCPN seems to be running fine on this machine.
+
 > _Note_: HDMI ports are `Micro-HDMI`, power supply requires a `USB-C`, and not a `Micro-B` as the other models.
 > ![USBs](./docimg/usb_types.jpg) ![AllUSB](./docimg/all_usb.jpg)
 
