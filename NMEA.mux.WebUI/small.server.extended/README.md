@@ -93,23 +93,30 @@ DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.
 #### [Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/)
 RAM: 512 Mb
 - **_Good for logging_**
-- A bit challenging when acting as a server (Web and REST)
+- A bit challenging when acting as a server (Web and REST), too small.
 - With a 2200mAH LiPo battery, alive between 1:00:31pm and 8:05:57pm (lifespan: 7:05:26)
 - With a TCP forwarder, it's OK to reach it from another device, running OpenCPN for example.
+- Not enough memory for the xsl/fop/pdf publications
 
 #### [Raspberry Pi 3 A+](https://www.raspberrypi.org/products/raspberry-pi-3-model-a-plus/)
 RAM: 512 Mb
 
-More powerful that the `Raspberry Pi Zero`, obviously, but still a bit challenged 
-when displaying the web pages involving REST requests.
+- More powerful that the `Raspberry Pi Zero`, obviously, but still a bit challenged 
+when displaying the web pages involving intensive REST requests.
+- With a TCP forwarder, it's OK to reach it from another device, running OpenCPN for example.
+- Not enough memory for the xsl/fop/pdf publications
 
-With a TCP forwarder, it's OK to reach it from another device, running OpenCPN for example.
+> _TODO_: Use a [Perma-Proto Pi HAT](https://www.adafruit.com/product/2310)
 
 #### [Raspberry Pi 3 B](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/)
 #### [Raspberry Pi 3 B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/)
 RAM: 1Gb
 
-> TODO
+- Still a bit challenged when displaying the web pages involving intensive REST requests.
+- OK for almanac publication.
+- With a TCP forwarder, it's OK to reach it from another device, running OpenCPN for example.
+
+> _TODO_: Use a [Perma-Proto Pi HAT](https://www.adafruit.com/product/2310)
 
 ##### Raspberry Pi 4 B, with 4Gb of RAM
 Easy: Perfect! 
@@ -156,4 +163,4 @@ $17.98. Works OK everywhere I tested it! 👍
 - Simulator for the buttons. &#9989; Done!
 - 3D printed enclosure, to contain the Raspberry Pi, the 2 bonnets, and a LiPo battery.
 - Go to screen saver mode after a given amount of time of inactivity. &#9989; Done.
-- Compare several Raspberry Pi versions (Zero, A, B)
+- Compare several Raspberry Pi versions (Zero, A, B). &#9989; Done.
