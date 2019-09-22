@@ -36,7 +36,7 @@ final static PushButtonMaster pbmTwo = new PushButtonMaster();
 ```
 
 > Note: the code to add here is just there for the buttons management. There is _absolutely no code_
-> to add for the `BMP280`, the GPS, or the `SSD1306` screen. It is all taken care of by the properties files.
+> to add for the `BME280`, the GPS, or the `SSD1306` screen. It is all taken care of by the properties files.
 
 > See `nmea.mux.gps.log.properties` to know how to reference those devices, and 
 > `ssd1306.properties` to see how to choose the data to display on the oled screen. 
@@ -50,7 +50,7 @@ This is built just like the other examples in this module, just run
 ---
 
 ### A first prototype
-| Pressure (BMP280) | Position (GPS) | Side view |
+| Pressure (BME280) | Position (GPS) | Side view |
 |:--:|:--:|:--:|
 | ![PRMSL](./docimg/06.jpg) | ![POS](./docimg/07.jpg) | ![All the layers](./docimg/08.jpg) |
 | ![PRMSL](./docimg/09.jpg) | ![POS](./docimg/10.jpg) | On top, it is powered by a USB Cable, it can also be powered by a LiPo battery at the bottom (left, 2200mAH) |
@@ -82,6 +82,12 @@ DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.
 > ```
 > $ sudo usermod -a -G tty pi
 > ```
+> In case you use a USB GPS, if it shows up on port `/dev/ttyACM0` and you have trouble reading it,
+> do a 
+> ```
+> $ sudo ln -s /dev/ttyACM0 /dev/ttyS80
+> ```
+> then read the port `/dev/ttyS80`.
 
 ### Configurations
 #### Raspberry Pi Zero
@@ -113,6 +119,7 @@ No attached screen required, as ssh and VNC can do the job remotely.
 > _Note_: HDMI ports are `Micro-HDMI`, power supply requires a `USB-C`, and not a `Micro-B` as the other models.
 > ![USBs](./docimg/usb_types.jpg) ![AllUSB](./docimg/all_usb.jpg)
 
+_Remember_: the U in USB stands for Universal...
 
 > TODO: Evaluate power consumption, and the way it heats up.
 
