@@ -90,18 +90,28 @@ DoubleClick on Button-2: Screen Saver mode. Any simple-click to resume.
 > then read the port `/dev/ttyS80`.
 
 ### Configurations
-#### Raspberry Pi Zero
+#### [Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/)
+RAM: 512 Mb
 - **_Good for logging_**
 - A bit challenging when acting as a server (Web and REST)
 - With a 2200mAH LiPo battery, alive between 1:00:31pm and 8:05:57pm (lifespan: 7:05:26)
+- With a TCP forwarder, it's OK to reach it from another device, running OpenCPN for example.
 
-#### Raspberry Pi A+
+#### [Raspberry Pi 3 A+](https://www.raspberrypi.org/products/raspberry-pi-3-model-a-plus/)
+RAM: 512 Mb
+
+More powerful that the `Raspberry Pi Zero`, obviously, but still a bit challenged 
+when displaying the web pages involving REST requests.
+
+With a TCP forwarder, it's OK to reach it from another device, running OpenCPN for example.
+
+#### [Raspberry Pi 3 B](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/)
+#### [Raspberry Pi 3 B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/)
+RAM: 1Gb
+
 > TODO
 
-#### Raspberry Pi B
-> TODO
-
-##### Raspberry Pi 4, with 4Gb of RAM
+##### Raspberry Pi 4 B, with 4Gb of RAM
 Easy: Perfect! 
 All features available without having to wait.
 - REST Server
