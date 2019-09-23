@@ -106,7 +106,9 @@ when displaying the web pages involving intensive REST requests.
 - With a TCP forwarder, it's OK to reach it from another device, running OpenCPN for example.
 - Not enough memory for the xsl/fop/pdf publications
 
-> _TODO_: Use a [Perma-Proto Pi HAT](https://www.adafruit.com/product/2310)
+> Use a [Perma-Proto Pi HAT](https://www.adafruit.com/product/2310)
+![Bigger](../perma-proto-pi-hat_bb_01.png)
+![Bigger](../perma-proto-pi-hat_bb_02.png)
 
 #### [Raspberry Pi 3 B](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/)
 #### [Raspberry Pi 3 B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/)
@@ -116,7 +118,7 @@ RAM: 1Gb
 - OK for almanac publication.
 - With a TCP forwarder, it's OK to reach it from another device, running OpenCPN for example.
 
-> _TODO_: Use a [Perma-Proto Pi HAT](https://www.adafruit.com/product/2310)
+> Use a [Perma-Proto Pi HAT](https://www.adafruit.com/product/2310), same as above
 
 ##### Raspberry Pi 4 B, with 4Gb of RAM
 Easy: Perfect! 
@@ -161,8 +163,8 @@ $17.98. Works OK everywhere I tested it! 👍
 
 # TODO
 - Describe the way to get to the log files, download, etc.
-- Document Web UI: `runner.html`, `logMgmt.html`, etc.
-- Simulator for the buttons. &#9989; Done!
+- Document Web UI: `runner.html`, `logMgmt.html`, etc. (maybe)
+- Simulator for the buttons. &#9989; Done! And working great.
 - 3D printed enclosure, to contain the Raspberry Pi, the 2 bonnets, and a LiPo battery.
 - Go to screen saver mode after a given amount of time of inactivity. &#9989; Done.
 - Compare several Raspberry Pi versions (Zero, A, B). &#9989; Done.
