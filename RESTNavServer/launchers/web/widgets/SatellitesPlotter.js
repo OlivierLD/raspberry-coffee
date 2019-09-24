@@ -77,7 +77,11 @@ function SatellitesPlotter(cName,                     // Canvas Name
         var sheets = typeof sheet !== 'undefined' ? [sheet] : document.styleSheets;
         for (var i = 0, l = sheets.length; i < l; i++) {
             var sheet = sheets[i];
-            if (!sheet.cssRules) {
+            try {
+                if (!sheet.cssRules) {
+                    continue;
+                }
+            } catch (err) {
                 continue;
             }
             for (var j = 0, k = sheet.cssRules.length; j < k; j++) {
