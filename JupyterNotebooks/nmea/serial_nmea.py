@@ -38,40 +38,44 @@ def read_nmea_sentence(serial_port):
             return string
 
 
-# On mac, USB GPS on port /dev/tty.usbmodem14101,
-# Raspberry Pi, use /dev/ttyUSB0 or so.
-# port_name = "/dev/tty.usbmodem14101"
-port_name = "/dev/ttyS80"
-baud_rate = 4800
-port = serial.Serial(port_name, baudrate=baud_rate, timeout=3.0)
-print("Let's go. Hit Ctrl+C to stop")
-while True:
-    try:
-        rcv = read_nmea_sentence(port)
-        # print("\tReceived:" + repr(rcv))  # repr: displays also non printable characters between quotes.
-        nmea_obj = NMEAParser.parse_nmea_sentence(rcv)
+# For tests
+if __name__ == "__main__":
+    # On mac, USB GPS on port /dev/tty.usbmodem14101,
+    # Raspberry Pi, use /dev/ttyUSB0 or so.
+    port_name = "/dev/tty.usbmodem14101"
+    # port_name = "/dev/ttyS80"
+    baud_rate = 4800
+    port = serial.Serial(port_name, baudrate=baud_rate, timeout=3.0)
+    print("Let's go. Hit Ctrl+C to stop")
+    while True:
         try:
-            if nmea_obj["type"] == 'rmc':
-                print("RMC => {}".format(nmea_obj))
-                print("This is RMC: {} / {}".format(NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
-                                                    NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['longitude'], NMEAParser.EW)))
-            elif nmea_obj["type"] == 'gll':
-                print("GLL => {}".format(nmea_obj))
-                print("This is GLL: {} / {}".format(NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
-                                                    NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['longitude'], NMEAParser.EW)))
-            else:
-                print("{} => {}".format(nmea_obj["type"], nmea_obj))
-        except AttributeError as ae:
-            print("AttributeError for {}".format(nmea_obj))
-    except NMEAParser.NoParserException as npe:
-        # absorb
-        if DEBUG:
-            print("- No parser, {}".format(npe))
-    except KeyboardInterrupt:
-        print("\n\t\tUser interrupted, exiting.")
-        port.close()
-        break
-    except Exception as ex:
-        print("\t\tOoops! {} {}".format(type(ex), ex))
+            rcv = read_nmea_sentence(port)
+            # print("\tReceived:" + repr(rcv))  # repr: displays also non printable characters between quotes.
+            nmea_obj = NMEAParser.parse_nmea_sentence(rcv)
+            try:
+                if nmea_obj["type"] == 'rmc':
+                    print("RMC => {}".format(nmea_obj))
+                    if 'position' in nmea_obj['parsed']:
+                        print("This is RMC: {} / {}".format(NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
+                                                            NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['longitude'], NMEAParser.EW)))
+                elif nmea_obj["type"] == 'gll':
+                    print("GLL => {}".format(nmea_obj))
+                    if 'position' in nmea_obj['parsed']:
+                        print("This is GLL: {} / {}".format(NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
+                                                            NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['longitude'], NMEAParser.EW)))
+                else:
+                    print("{} => {}".format(nmea_obj["type"], nmea_obj))
+            except AttributeError as ae:
+                print("AttributeError for {}".format(nmea_obj))
+        except NMEAParser.NoParserException as npe:
+            # absorb
+            if DEBUG:
+                print("- No parser, {}".format(npe))
+        except KeyboardInterrupt:
+            print("\n\t\tUser interrupted, exiting.")
+            port.close()
+            break
+        except Exception as ex:
+            print("\t\tOoops! {} {}".format(type(ex), ex))
 
-print("Bye.")
+    print("Bye.")
