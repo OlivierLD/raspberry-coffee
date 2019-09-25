@@ -42,6 +42,7 @@ into that
 - Does it end with `\r\n`?
 - Does it end with `*XX` (where `X` is in `[0, F]`)?
 - Is the checksum valid?
+    - Checksum is a logical `XOR` on all the characters of the sentence, without the first `$`, and ending before the `*` preceding the checksum
 
 #### Data parsing
 - Drop the prefix (optional)
@@ -64,7 +65,7 @@ RMC Structure is
          |      | |        | |         | |     |     |      |     |       S=Simulator
          |      | |        | |         | |     |     |      |     Variation sign
          |      | |        | |         | |     |     |      Variation value
-         |      | |        | |         | |     |     Date DDMMYY 
+         |      | |        | |         | |     |     Date DDMMYY
          |      | |        | |         | |     COG
          |      | |        | |         | SOG
          |      | |        | |         Longitude Sign
