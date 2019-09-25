@@ -113,7 +113,7 @@ def gll_parser(nmea_sentence, valid=False):
         time = datetime.time(hours, mins, int(secs), int(microsecs), tzinfo=datetime.timezone.utc)
         if DEBUG or GLL_DEBUG:
             print(time.strftime("%H:%M:%S %z %Z, also %c"))
-        parsed["utc-time"] = time
+        # parsed["utc-time"] = time
         itemized_time = {}
         itemized_time["hours"] = hours
         itemized_time["minutes"] = mins
@@ -213,7 +213,7 @@ def rmc_parser(nmea_sentence, valid=False):
             date = datetime.datetime(year, month, day, hours, mins, int(secs), 0, tzinfo=datetime.timezone.utc)
             if DEBUG or RMC_DEBUG:
                 print(date.strftime("%A %d %B %Y %H:%M:%S %z %Z, also %c"))
-            parsed["utc-date"] = date
+            # parsed["utc-date"] = date
             itemized_date = {}
             itemized_date["year"] = year
             itemized_date["month"] = month
@@ -388,7 +388,6 @@ if __name__ == "__main__":
         "$IIGLL,3739.854,N,12222.812,W,014003,A,A*49\r\n",
         "$GPRMC,012047.00,A,3744.93470,N,12230.42777,W,0.035,,030519,,,D*61\r\n"  # Returned by the U-blox7
     ]
-    # akeu = sex_to_dec("12", "34.XX")
     for sentence in samples:
         try:
             nmea_obj = parse_nmea_sentence(sentence)

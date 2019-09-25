@@ -3,7 +3,6 @@ Just run
 ```
  $ [sudo] python3 setup.py install
 ```
-
 Good doc on `setup.py` at <https://python-packaging.readthedocs.io/en/latest/dependencies.html>
 
 ### NMEA Parser
@@ -78,14 +77,14 @@ RMC Structure is
 > _Note_: In `GPRMC`, `GP` is the _device prefix_, `RMC` is called the _sentence ID_
 
 ### Ideas for Christophe
-- GPS: History (Loran, Decca, Htyperbolic Navigation System), 24 satellites on 6 orbits
+- GPS: History (Loran, Decca, Hyperbolic Navigation System), 24 satellites on 6 orbits
 - Pair programming
-- Tests!!!
+- Write tests!!!
 - Python, NodeJS, Java (and Co)
 - Jupyter Notebooks for
-    - Checksum validation
-    - NMEA Sentence parsing (like RMC)
-    - Decimal to Sexagesimal and vice-versa
+    - Checksum validation - Ok
+    - NMEA Sentence parsing (like RMC) - Ok
+    - Decimal to Sexagesimal and vice-versa - Ok
 - Explain knots and nautical miles
 - Record and replay
 - Google Maps APIs
