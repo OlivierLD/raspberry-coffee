@@ -18,7 +18,9 @@ import threading
 
 sample_data = {"1": "First", "2": "Second", "3": "Third", "4": "Fourth"}  # Used for non-implemented operations.
 server_port = 8080
-DEBUG = False
+REST_DEBUG = False
+SERIAL_DEBUG = False
+GPS_DEBUG = False
 
 
 # On mac, USB GPS on port /dev/tty.usbmodem14101,
@@ -37,13 +39,14 @@ class CoreFeatures:
 
     def update_cache(self, key, value):
         try:
-            if DEBUG:
+            if REST_DEBUG:
                 print("Putting {} as {} in {}".format(value, key, self.cache))
             self.cache[key] = value
-            print("Cache is now {}".format(self.cache))
+            if REST_DEBUG:
+                print("Cache is now {}".format(self.cache))
         except KeyError as ke:
-            if DEBUG:
-                print("No position yet")
+            if REST_DEBUG:
+                print("KeyError {}".format(ke))
         except Exception as ex:
             print("in update_cache: {}: {}, key {}, data {}".format(type(ex), ex, key, value))
 
@@ -66,13 +69,13 @@ def read_nmea_sentence(serial_port):
             ch = serial_port.read()
         except KeyboardInterrupt as ki:
             raise ki
-        if DEBUG:
+        if SERIAL_DEBUG:
             print("Read {} from Serial Port".format(ch))
         rv.append(ch)
         if ch == b'\n':
             # string = [x.decode('utf-8') for x in rv]
             string = "".join(map(bytes.decode, rv))
-            if DEBUG:
+            if SERIAL_DEBUG:
                 print("Returning {}".format(string))
             return string
 
@@ -87,35 +90,45 @@ def read_gps():
             nmea_obj = NMEAParser.parse_nmea_sentence(rcv)
             try:
                 if nmea_obj["type"] == 'rmc':
-                    if 'position' in nmea_obj['parsed']:
-                        if DEBUG:
-                            print("RMC => {}".format(nmea_obj))
-                            print("This is RMC: {} / {}".format(
-                                NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
-                                NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['longitude'], NMEAParser.EW)))
-                        core.update_cache('position', nmea_obj['parsed']['position']);
+                    if 'valid' in nmea_obj['parsed'] and nmea_obj['parsed']['valid'] == 'true':
+                        if 'position' in nmea_obj['parsed']:
+                            if GPS_DEBUG:
+                                print("RMC => {}".format(nmea_obj))
+                                print("This is RMC: {} / {}".format(
+                                    NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
+                                    NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['longitude'], NMEAParser.EW)))
+                            core.update_cache('position', nmea_obj['parsed']['position']);
+                        if 'sog' in nmea_obj['parsed']:
+                            core.update_cache('sog', nmea_obj['parsed']['sog'])
+                        if 'cog' in nmea_obj['parsed']:
+                            core.update_cache('cog', nmea_obj['parsed']['cog'])
+                        if 'utc-date-itemized' in nmea_obj['parsed']:
+                            core.update_cache('utc-date', nmea_obj['parsed']['utc-date-itemized'])
                     else:
-                        if DEBUG:
+                        if GPS_DEBUG:
                             print("No position yet")
-                    # TODO COG, SOG, date & time, etc.
                 elif nmea_obj["type"] == 'gll':
-                    if 'position' in nmea_obj['parsed']:
-                        if DEBUG:
-                            print("GLL => {}".format(nmea_obj))
-                            print("This is GLL: {} / {}".format(
-                                NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
-                                NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['longitude'], NMEAParser.EW)))
-                        core.update_cache('position', nmea_obj['parsed']['position']);
+                    if 'valid' in nmea_obj['parsed'] and nmea_obj['parsed']['valid'] == 'true':
+                        if 'position' in nmea_obj['parsed']:
+                            if GPS_DEBUG:
+                                print("GLL => {}".format(nmea_obj))
+                                print("This is GLL: {} / {}".format(
+                                    NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
+                                    NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['longitude'], NMEAParser.EW)))
+                            core.update_cache('position', nmea_obj['parsed']['position']);
+                        if 'gll-time-itemized' in nmea_obj['parsed']:
+                            core.update_cache('gll-time', nmea_obj['parsed']['gll-time-itemized'])
                     else:
-                        if DEBUG:
+                        if GPS_DEBUG:
                             print("No position yet")
                 else:
-                    print("{} => {}".format(nmea_obj["type"], nmea_obj))
+                    if GPS_DEBUG:
+                        print("{} => {}".format(nmea_obj["type"], nmea_obj))
             except AttributeError as ae:
                 print("AttributeError for {}".format(nmea_obj))
         except NMEAParser.NoParserException as npe:
             # absorb
-            if DEBUG:
+            if GPS_DEBUG:
                 print("- No parser, {}".format(npe))
         except KeyboardInterrupt:
             print("\n\t\tUser interrupted, exiting.")

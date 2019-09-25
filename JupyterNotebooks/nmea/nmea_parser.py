@@ -9,6 +9,8 @@ import datetime
 import math
 
 DEBUG = False
+RMC_DEBUG = False
+GLL_DEBUG = False
 
 
 class InvalidChecksumException(Exception):
@@ -80,7 +82,7 @@ def gll_parser(nmea_sentence, valid=False):
     #        |       Lat sign: N / S
     #        Latitude
 
-    if DEBUG:
+    if DEBUG or GLL_DEBUG:
         print("Parsing GLL, {} elements".format(len(data)))
     parsed["valid"] = "true" if (data[6] == 'A') else "false"
     # Position
@@ -109,9 +111,14 @@ def gll_parser(nmea_sentence, valid=False):
         secs = (utc % 100)
         microsecs = (secs - int(secs)) * 1000000
         time = datetime.time(hours, mins, int(secs), int(microsecs), tzinfo=datetime.timezone.utc)
-        if DEBUG:
+        if DEBUG or GLL_DEBUG:
             print(time.strftime("%H:%M:%S %z %Z, also %c"))
         parsed["utc-time"] = time
+        itemized_time = {}
+        itemized_time["hours"] = hours
+        itemized_time["minutes"] = mins
+        itemized_time["seconds"] = int(secs)
+        parsed["gll-time-itemized"] = itemized_time
     return {"type": "gll", "parsed": parsed}
 
 
@@ -155,7 +162,7 @@ def rmc_parser(nmea_sentence, valid=False):
     :param valid: default False, will perform sentence validation if True
     :return: A dict, like { 'type': 'rmc', 'parsed': { ... parsed object ... }}
     """
-    if DEBUG:
+    if DEBUG or RMC_DEBUG:
         print("Parsing {}".format(nmea_sentence))
     parsed = {}
     if valid:
@@ -186,7 +193,7 @@ def rmc_parser(nmea_sentence, valid=False):
     #         |      Active or Void
     #         UTC
     #
-    if DEBUG:
+    if DEBUG or RMC_DEBUG:
         print("Parsing RMC, {} items".format(len(data)))
     parsed["valid"] = "true" if (data[2] == 'A') else "false"
     # Time and Date
@@ -204,10 +211,17 @@ def rmc_parser(nmea_sentence, valid=False):
             else:
                 year += 2000
             date = datetime.datetime(year, month, day, hours, mins, int(secs), 0, tzinfo=datetime.timezone.utc)
-            if DEBUG:
+            if DEBUG or RMC_DEBUG:
                 print(date.strftime("%A %d %B %Y %H:%M:%S %z %Z, also %c"))
             parsed["utc-date"] = date
-
+            itemized_date = {}
+            itemized_date["year"] = year
+            itemized_date["month"] = month
+            itemized_date["day"] = day
+            itemized_date["hours"] = hours
+            itemized_date["minutes"] = mins
+            itemized_date["seconds"] = int(secs)
+            parsed["utc-date-itemized"] = itemized_date
     # Position
     if len(data[3]) > 0 and len(data[5]) > 0:
         pos = {}
@@ -258,6 +272,8 @@ def rmc_parser(nmea_sentence, valid=False):
         elif data[12] == 'S':
             rmc_type = "simulator"
         parsed["type"] = rmc_type
+    if RMC_DEBUG:
+        print(">> RMC {}".format(parsed))
 
     return {"type": "rmc", "parsed": parsed}
 
@@ -346,11 +362,11 @@ def parse_nmea_sentence(nmea_sentence):
                         # print("Parsed: {}".format(obj))
                         return obj
             else:
-                raise Exception('Incorrect sentence prefix "{}". Should be 6 character long.'.format(sentence_prefix))
+                raise Exception("Incorrect sentence prefix \"{}\". Should be 6 character long. [{}]".format(sentence_prefix, nmea_sentence))
         else:
-            raise Exception('Sentence should end with \\r\\n')
+            raise Exception("Sentence should end with \\r\\n [{}]".format(nmea_sentence))
     else:
-        raise Exception('Sentence should start with $')
+        raise Exception("Sentence should start with $ [{}]".format(nmea_sentence))
 
 
 # For tests
