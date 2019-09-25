@@ -77,4 +77,17 @@ RMC Structure is
 ```
 > _Note_: In `GPRMC`, `GP` is the _device prefix_, `RMC` is called the _sentence ID_
 
+### Ideas for Christophe
+- GPS: History (Loran, Decca, Htyperbolic Navigation System), 24 satellites on 6 orbits
+- Pair programming
+- Tests!!!
+- Python, NodeJS, Java (and Co)
+- Jupyter Notebooks for
+    - Checksum validation
+    - NMEA Sentence parsing (like RMC)
+    - Decimal to Sexagesimal and vice-versa
+- Explain knots and nautical miles
+- Record and replay
+- Google Maps APIs
+
 ---

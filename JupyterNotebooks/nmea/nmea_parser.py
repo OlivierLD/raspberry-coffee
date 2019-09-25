@@ -304,7 +304,7 @@ def calculate_check_sum(nmea_sentence):
 def valid_check_sum(nmea_sentence):
     """
     Validates an NMEA Sentence
-    :param nmea_sentence: Full one, with '$' at the start, and checksumn at the end
+    :param nmea_sentence: Full one, with '$' at the start, and checksum at the end
     :return: True if valid, False if not
     """
     try:
