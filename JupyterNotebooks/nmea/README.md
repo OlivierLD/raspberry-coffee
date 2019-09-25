@@ -75,5 +75,6 @@ RMC Structure is
          |      Active or Void
          UTC
 ```
+> _Note_: In `GPRMC`, `GP` is the _device prefix_, `RMC` is called the _sentence ID_
 
 ---
