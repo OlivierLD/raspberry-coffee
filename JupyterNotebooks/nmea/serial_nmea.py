@@ -54,6 +54,7 @@ if __name__ == "__main__":
             nmea_obj = NMEAParser.parse_nmea_sentence(rcv)
             try:
                 if nmea_obj["type"] == 'rmc':
+                    print("RMC => {}".format(rcv))
                     print("RMC => {}".format(nmea_obj))
                     if 'position' in nmea_obj['parsed']:
                         print("This is RMC: {} / {}".format(NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
