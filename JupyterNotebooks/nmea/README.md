@@ -40,7 +40,7 @@ into that
 #### Data validation
 - Does the string begin with `$`?
 - Does it end with `\r\n`?
-- Does it end with `*XX` (where X is in [0, F])?
+- Does it end with `*XX` (where `X` is in `[0, F]`)?
 - Is the checksum valid?
 
 #### Data parsing
@@ -64,7 +64,7 @@ RMC Structure is
          |      | |        | |         | |     |     |      |     |       S=Simulator
          |      | |        | |         | |     |     |      |     Variation sign
          |      | |        | |         | |     |     |      Variation value
-         |      | |        | |         | |     |     Date DDMMYY (see rmc.date.offset property)
+         |      | |        | |         | |     |     Date DDMMYY 
          |      | |        | |         | |     COG
          |      | |        | |         | SOG
          |      | |        | |         Longitude Sign
