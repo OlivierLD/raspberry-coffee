@@ -113,7 +113,7 @@ def gll_parser(nmea_sentence, valid=False):
         time = datetime.time(hours, mins, int(secs), int(microsecs), tzinfo=datetime.timezone.utc)
         if DEBUG or GLL_DEBUG:
             print(time.strftime("%H:%M:%S %z %Z, also %c"))
-        # parsed["utc-time"] = time
+        # parsed["utc-time"] = time  # Might not be rendered correctly
         itemized_time = {}
         itemized_time["hours"] = hours
         itemized_time["minutes"] = mins
@@ -213,7 +213,7 @@ def rmc_parser(nmea_sentence, valid=False):
             date = datetime.datetime(year, month, day, hours, mins, int(secs), 0, tzinfo=datetime.timezone.utc)
             if DEBUG or RMC_DEBUG:
                 print(date.strftime("%A %d %B %Y %H:%M:%S %z %Z, also %c"))
-            # parsed["utc-date"] = date
+            # parsed["utc-date"] = date  # Might not be rendered correctly
             itemized_date = {}
             itemized_date["year"] = year
             itemized_date["month"] = month
@@ -393,11 +393,13 @@ if __name__ == "__main__":
             nmea_obj = parse_nmea_sentence(sentence)
             print("=> {}".format(nmea_obj))
             if nmea_obj["type"] == 'rmc':
-                print("This is RMC: {} / {}".format(dec_to_sex(nmea_obj['parsed']['position']['latitude'], NS),
-                                                    dec_to_sex(nmea_obj['parsed']['position']['longitude'], EW)))
+                print("This is RMC: {} / {}".format(
+                    dec_to_sex(nmea_obj['parsed']['position']['latitude'], NS),
+                    dec_to_sex(nmea_obj['parsed']['position']['longitude'], EW)))
             elif nmea_obj["type"] == 'gll':
-                print("This is GLL: {} / {}".format(dec_to_sex(nmea_obj['parsed']['position']['latitude'], NS),
-                                                    dec_to_sex(nmea_obj['parsed']['position']['longitude'], EW)))
+                print("This is GLL: {} / {}".format(
+                    dec_to_sex(nmea_obj['parsed']['position']['latitude'], NS),
+                    dec_to_sex(nmea_obj['parsed']['position']['longitude'], EW)))
         except Exception as ex:
             print("Ooops! {}".format(ex))
 else:

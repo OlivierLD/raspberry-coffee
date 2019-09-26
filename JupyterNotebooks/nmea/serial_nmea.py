@@ -57,13 +57,15 @@ if __name__ == "__main__":
                     print("RMC => {}".format(rcv))
                     print("RMC => {}".format(nmea_obj))
                     if 'position' in nmea_obj['parsed']:
-                        print("This is RMC: {} / {}".format(NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
-                                                            NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['longitude'], NMEAParser.EW)))
+                        print("This is RMC: {} / {}".format(
+                            NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
+                            NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['longitude'], NMEAParser.EW)))
                 elif nmea_obj["type"] == 'gll':
                     print("GLL => {}".format(nmea_obj))
                     if 'position' in nmea_obj['parsed']:
-                        print("This is GLL: {} / {}".format(NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
-                                                            NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['longitude'], NMEAParser.EW)))
+                        print("This is GLL: {} / {}".format(
+                            NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
+                            NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['longitude'], NMEAParser.EW)))
                 else:
                     print("{} => {}".format(nmea_obj["type"], nmea_obj))
             except AttributeError as ae:

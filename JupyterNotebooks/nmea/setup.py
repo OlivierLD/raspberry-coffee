@@ -11,8 +11,7 @@ setup(
     author_email='olivier@lediouris.net',
     description='NMEA tools, read a GPS',
     install_requires=[
-        'http',
-        'pyserial'
+        'http', 'pyserial', 'serial'
     ],
     zip_safe=False
 )

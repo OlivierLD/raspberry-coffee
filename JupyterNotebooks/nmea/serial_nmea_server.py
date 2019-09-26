@@ -97,7 +97,7 @@ def read_gps():
                                 print("This is RMC: {} / {}".format(
                                     NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
                                     NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['longitude'], NMEAParser.EW)))
-                            core.update_cache('position', nmea_obj['parsed']['position']);
+                            core.update_cache('position', nmea_obj['parsed']['position'])
                         if 'sog' in nmea_obj['parsed']:
                             core.update_cache('sog', nmea_obj['parsed']['sog'])
                         if 'cog' in nmea_obj['parsed']:
@@ -115,7 +115,7 @@ def read_gps():
                                 print("This is GLL: {} / {}".format(
                                     NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['latitude'], NMEAParser.NS),
                                     NMEAParser.dec_to_sex(nmea_obj['parsed']['position']['longitude'], NMEAParser.EW)))
-                            core.update_cache('position', nmea_obj['parsed']['position']);
+                            core.update_cache('position', nmea_obj['parsed']['position'])
                         if 'gll-time-itemized' in nmea_obj['parsed']:
                             core.update_cache('gll-time', nmea_obj['parsed']['gll-time-itemized'])
                     else:
@@ -176,11 +176,11 @@ class ServiceHandler(BaseHTTPRequestHandler):
         self.end_headers()
         #
         full_path = self.path
-        splitted = full_path.split('?')
-        path = splitted[0]
+        split = full_path.split('?')
+        path = split[0]
         qs = None
-        if len(splitted) > 1:
-            qs = splitted[1]
+        if len(split) > 1:
+            qs = split[1]
         # The parameters into a map
         prm_map = {}
         if qs is not None:
@@ -255,9 +255,9 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
 
 # Server Initialization
-port = server_port
-print("Starting server on port {}".format(port))
-server = HTTPServer(('127.0.0.1', port), ServiceHandler)
+port_number = server_port
+print("Starting server on port {}".format(port_number))
+server = HTTPServer(('127.0.0.1', port_number), ServiceHandler)
 #
 print("Try curl -X GET http://localhost:8080/gps/cache")
 #
