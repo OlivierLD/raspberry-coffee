@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 #  Read a serial port, spit it out
-#  Run ./serial_102.py --detect to detect start and end of sequences
+#  Run ./serial_102.py --detect --display to detect start and end of sequences
 #
 # May require:
 # pip install pyserial
