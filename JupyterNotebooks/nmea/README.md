@@ -79,6 +79,7 @@ RMC Structure is
 <!-- Ideas for Christophe
     - GPS: History (Loran, Decca, Hyperbolic Navigation System), 24 satellites on 6 orbits
     - Pair programming
+    - github
     - Write tests!!!
     - Python, NodeJS, Java (and Co)
     - Jupyter Notebooks for
