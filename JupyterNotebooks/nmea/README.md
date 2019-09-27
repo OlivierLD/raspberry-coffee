@@ -6,9 +6,11 @@ Just run
 Good doc on `setup.py` at <https://python-packaging.readthedocs.io/en/latest/dependencies.html>
 
 ### NMEA Parser
-What's that?
+[NMEA](http://nmea.org) (National Marine Electronics Association) is one of the oldest IT standards, defining how sensor data should be conveyed.
 
-Turn this
+A parser is the tool that takes data flows (user input, data streams, etc) and turns them in a way that can be processed by a computer program.
+
+In our NMEA case, it would turn things like this
 ```
 $GNRMC,132857.00,A,3744.93332,N,12230.41996,W,0.097,,250919,,,D*76
 ```
@@ -37,6 +39,7 @@ into that
 }
 ```
 #### Data validation
+To make sure the data we want to parse are valid, based on the NMEA spec, we need to
 - Does the string begin with `$`?
 - Does it end with `\r\n`?
 - Does it end with `*XX` (where `X` is in `[0, F]`)?
@@ -76,6 +79,8 @@ RMC Structure is
 ```
 > _Note_: In `GPRMC`, `GP` is the _device prefix_, `RMC` is called the _sentence ID_
 
+There is [a Jupyter Notebook](./python.nmea.ipynb) illustrating the full process, from reading the serial flow byte by byte to displaying the data carried over.
+
 <!-- Ideas for Christophe
     - GPS: History (Loran, Decca, Hyperbolic Navigation System), 24 satellites on 6 orbits
     - Pair programming
@@ -88,7 +93,11 @@ RMC Structure is
         - Decimal to Sexagesimal and vice-versa - Ok
     - Explain knots and nautical miles
     - Record and replay
-    - Google Maps APIs
+    - Google Maps APIs -> Geolocalisation API: https://olivierld.github.io/web.stuff/gps/GPS.api.html
 -->
+
+### Links
+- [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-coffee/blob/master/NMEA.multiplexer/README.md)
+- There is a good NMEA documenattion [here](https://gpsd.gitlab.io/gpsd/NMEA.html)
 
 ---
