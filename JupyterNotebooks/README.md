@@ -21,6 +21,7 @@ To install Java 9 on the Raspberry Pi, see [here](https://www.raspberrypi.org/fo
 > April 2019: Still having problems to install JDK 9 on a Raspberry Pi B3+ ... Certificate stuff.
 > But all the features described here can be run on a system where Java 9 is happy.
 
+> Aug 2019: The last Raspbian version (Buster) comes with Java 11. All is fixed.
 
 Install Jupyter on the Raspberry Pi is easy:
 ```
@@ -37,6 +38,7 @@ reboot
 sudo pip3 install jupyter
 sudo apt-get clean
 ```
+> Also see the [Jupyter Installation](https://jupyter.org/install) guide.
 
 To add the required Java features, see 
 - <https://blog.frankel.ch/teaching-java-jupyter-notebooks/>
