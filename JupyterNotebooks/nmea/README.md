@@ -84,9 +84,9 @@ RMC Structure is
          |      Active or Void
          UTC
 ```
-> _Note_: In `GPRMC`, `GP` is the _device prefix_, `RMC` is called the _sentence ID_
+> _Note_: In `GPRMC`, `GP` is the _device prefix_ (aka _Talker ID_), `RMC` is called the _sentence ID_
 
-Fo more details on the process, there is [a Jupyter Notebook](./python.nmea.ipynb) illustrating the full process, from reading the serial flow byte by byte to displaying the data carried over.
+For more details on the process, there is [a Jupyter Notebook](./python.nmea.ipynb) illustrating the full process, from reading the serial flow byte by byte to displaying the data carried over.
 
 <!-- Ideas for Christophe
     - GPS: History (Loran, Decca, Hyperbolic Navigation System), 24 satellites on 6 orbits
