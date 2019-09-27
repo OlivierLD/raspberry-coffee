@@ -48,14 +48,16 @@ To make sure the data we want to parse are valid, based on the NMEA spec, we nee
 - Does it end with `\r\n`?
 - Does it end with `*XX` (where `X` is in `[0, F]`)?
 - Is the checksum valid?
-    - Checksum is a logical `XOR` on all the characters of the sentence, without the first `$`, and ending before the `*` preceding the checksum
+    - Checksum is a logical `XOR` (aka eXclusive OR) on all the characters of the sentence, without the first `$`, and ending before the `*` preceding the checksum
 
 #### Data parsing
 Once the data validity has been determine, we can get to the data. To do so, we
-- Drop the prefix (optional)
 - Drop the Checksum
 - Split at `,`
-- Now get to the data!
+
+Now we can get to the data, they are at this stage represented as an array of strings.
+The cardinality of this array depends on the Sentence ID (this will be `RMC` in the example below).
+Also keep in mind that some members of such an array can very well be empty.
 
 #### Data Structure. Example: `RMC`
 All NMEA Sentences are clearly documented.
@@ -84,7 +86,7 @@ RMC Structure is
 ```
 > _Note_: In `GPRMC`, `GP` is the _device prefix_, `RMC` is called the _sentence ID_
 
-There is [a Jupyter Notebook](./python.nmea.ipynb) illustrating the full process, from reading the serial flow byte by byte to displaying the data carried over.
+Fo more details on the process, there is [a Jupyter Notebook](./python.nmea.ipynb) illustrating the full process, from reading the serial flow byte by byte to displaying the data carried over.
 
 <!-- Ideas for Christophe
     - GPS: History (Loran, Decca, Hyperbolic Navigation System), 24 satellites on 6 orbits
@@ -103,6 +105,6 @@ There is [a Jupyter Notebook](./python.nmea.ipynb) illustrating the full process
 
 ### Links
 - [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-coffee/blob/master/NMEA.multiplexer/README.md)
-- There is a good NMEA documenattion [here](https://gpsd.gitlab.io/gpsd/NMEA.html)
+- There is a good NMEA documentation [here](https://gpsd.gitlab.io/gpsd/NMEA.html)
 
 ---
