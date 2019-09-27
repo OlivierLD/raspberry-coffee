@@ -8,13 +8,13 @@ Good doc on `setup.py` at <https://python-packaging.readthedocs.io/en/latest/dep
 ### NMEA Parser
 [NMEA](http://nmea.org) (National Marine Electronics Association) is one of the oldest IT standards, defining how sensor data should be conveyed.
 
-A parser is the tool that takes data flows (user input, data streams, etc) and turns them in a way that can be processed by a computer program.
+A parser is the tool that takes data flows (user input, data streams, etc) and turns them in a format that can be processed by a computer program.
 
 In our NMEA case, it would turn things like this
 ```
 $GNRMC,132857.00,A,3744.93332,N,12230.41996,W,0.097,,250919,,,D*76
 ```
-into that
+into something like that
 ```
 {
   'type': 'rmc',
@@ -38,6 +38,10 @@ into that
   }
 }
 ```
+> Note: The above represents a JSON Objet (JavaScript Object Notation). This is far from being the only format a parser can produce. A given parser
+> is tied to a language. There are parsers for JSON (for JavaScript), for Java, for C, for Python, etc. If you want to work in `Language A`, then you
+> need a parser for `Language A`.
+
 #### Data validation
 To make sure the data we want to parse are valid, based on the NMEA spec, we need to
 - Does the string begin with `$`?
