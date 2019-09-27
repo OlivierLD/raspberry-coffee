@@ -43,7 +43,7 @@ into something like that
 > need a parser for `Language A`.
 
 #### Data validation
-To make sure the data we want to parse are valid, based on the NMEA spec, we need to
+To make sure the data we want to parse are valid, based on the NMEA spec, we need to check the following points:
 - Does the string begin with `$`?
 - Does it end with `\r\n`?
 - Does it end with `*XX` (where `X` is in `[0, F]`)?
@@ -51,6 +51,7 @@ To make sure the data we want to parse are valid, based on the NMEA spec, we nee
     - Checksum is a logical `XOR` on all the characters of the sentence, without the first `$`, and ending before the `*` preceding the checksum
 
 #### Data parsing
+Once the data validity has been determine, we can get to the data. To do so, we
 - Drop the prefix (optional)
 - Drop the Checksum
 - Split at `,`
