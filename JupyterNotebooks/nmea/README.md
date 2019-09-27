@@ -51,7 +51,7 @@ To make sure the data we want to parse are valid, based on the NMEA spec, we nee
     - Checksum is a logical `XOR` (aka eXclusive OR) on all the characters of the sentence, without the first `$`, and ending before the `*` preceding the checksum
 
 #### Data parsing
-Once the data validity has been determine, we can get to the data. To do so, we
+Once the data validity has been determined, we can get to the data. To do so, we
 - Drop the Checksum
 - Split at `,`
 
