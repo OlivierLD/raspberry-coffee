@@ -120,6 +120,13 @@ RAM: 1Gb
 
 > Use a [Perma-Proto Pi HAT](https://www.adafruit.com/product/2310), same as above
 
+#### Second Proto
+Suitable for Raspberry Pi A and B. The GPS is external, using a USB port.
+
+| In place | At work |
+|:--------:|:-------:|
+| ![Perma-Hat 01](./docimg/perma-hat/perma-hat.01.jpg) | ![Perma-Hat 02](./docimg/perma-hat/perma-hat.02.jpg) |
+
 ##### Raspberry Pi 4 B, with 4Gb of RAM
 Easy: Perfect! 
 All features available without having to wait.
