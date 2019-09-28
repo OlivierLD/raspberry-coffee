@@ -168,6 +168,13 @@ $13.49. Ok on a laptop, could not get it to read correctly on a Raspberry Pi.
 #### [Stratux Vk-162 Remote Mount USB GPS](https://www.amazon.com/Navigation-External-Receiver-Raspberry-Geekstory/dp/B078Y52FGQ/ref=sr_1_1?keywords=Stratux+Vk-162+Remote+Mount+USB+GPS&qid=1569081064&s=wireless&sr=1-1-catcorr), 50 channels.
 $17.98. Works OK everywhere I tested it! 👍
 
+## Lessons learned, conclusions
+- For a fully featured Navigation Server, with Tide Computation, Almanacs publication, REST and Web Server (remotely accessible)
+with real time astronomical data through REST and WebComponents, the Raspberry 3+ seems to be the minimal requirement.
+- All other versions of the Raspberry Pi (including the Zero) are fitted to run the NMEA Multiplexer, with any Channels, Forwarders or Computers.
+In this case, with a forward on TCP, the data it consumes, computes and forwards can be available remotely, 
+for other programs (like OpenCPN, SeaWi, whatever understands TCP and NMEA) to consume them.  
+
 # TODO
 - Describe the way to get to the log files, download, etc.
 - Document Web UI: `runner.html`, `logMgmt.html`, etc. (maybe)

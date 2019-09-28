@@ -93,7 +93,7 @@ For more details on the process, there is [a Jupyter Notebook](./python.nmea.ipy
     - Pair programming
     - github
     - Write tests!!!
-    - Python, NodeJS, Java (and Co)
+    - Python, NodeJS, Java (and Co), Processing
     - Jupyter Notebooks for
         - Checksum validation - Ok
         - NMEA Sentence parsing (like RMC) - Ok
