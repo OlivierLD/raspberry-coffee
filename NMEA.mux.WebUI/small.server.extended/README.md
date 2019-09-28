@@ -126,6 +126,8 @@ Suitable for Raspberry Pi A and B. The GPS is external, using a USB port.
 | In place | At work |
 |:--------:|:-------:|
 | ![Perma-Hat 01](./docimg/perma-hat/perma-hat.01.jpg) | ![Perma-Hat 02](./docimg/perma-hat/perma-hat.02.jpg) |
+| ![Consumption](./docimg/perma-hat/consumption.jpg) | |
+In this configuration, the consumption is between 0.25 and 0.30 Amps.
 
 ##### Raspberry Pi 4 B, with 4Gb of RAM
 Easy: Perfect! 
