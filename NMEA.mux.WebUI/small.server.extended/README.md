@@ -1,4 +1,4 @@
-# WIP, Full NavServer running on a Raspberry Pi Zero W
+# Case study (WIP) Full NavServer running on a Raspberry Pi Zero W, and others
 **Features**:
 - 2 [Adafruit Bonnets](https://www.adafruit.com/product/3203), $4.50 each
     - One with a [132x64 oled screen](https://www.adafruit.com/product/938), $19.95, 2 push buttons, 1 switch for the power supply
