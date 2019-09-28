@@ -172,18 +172,18 @@ def rmc_parser(nmea_sentence, valid=False):
             raise InvalidChecksumException('Invalid checksum for {}'.format(nmea_sentence))
     data = nmea_sentence[:-3].split(',')  # Drop the CheckSum
     # RMC Structure is
-    #                                                                   12
+    #                                                                    12
     #  0      1      2 3        4 5         6 7     8     9      10    11
     #  $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W,A*6A
     #         |      | |        | |         | |     |     |      |     | |
     #         |      | |        | |         | |     |     |      |     | Type: A=autonomous,
     #         |      | |        | |         | |     |     |      |     |       D=differential,
-    #         |      | |        | |         | |     |     |      |     |       E=Estimated,
+    #         |      | |        | |         | |     |     |      |     |       E=estimated,
     #         |      | |        | |         | |     |     |      |     |       N=not valid,
-    #         |      | |        | |         | |     |     |      |     |       S=Simulator
+    #         |      | |        | |         | |     |     |      |     |       S=simulator
     #         |      | |        | |         | |     |     |      |     Variation sign
     #         |      | |        | |         | |     |     |      Variation value
-    #         |      | |        | |         | |     |     Date DDMMYY (see rmc.date.offset property)
+    #         |      | |        | |         | |     |     Date DDMMYY
     #         |      | |        | |         | |     COG
     #         |      | |        | |         | SOG
     #         |      | |        | |         Longitude Sign
