@@ -453,29 +453,33 @@ See in the `NMEA.multiplexer` project
 In the `NMEA.mux.WebUI` project, `logged` folder
 - `concat.sh`
 
-## TODO REST clients in other projects
-- <https://github.com/OlivierLD/raspberry-coffee/blob/master/Project.Trunk/REST.clients/TCP.Watch.01/README.md>
-- M5Stick-C
+## REST clients in other projects
+- [TCP Watch](https://github.com/OlivierLD/raspberry-coffee/blob/master/Project.Trunk/REST.clients/TCP.Watch.01/README.md)
+- [M5Stick-C](https://github.com/OlivierLD/small-boards/tree/master/M5StickC/HttpClient)
 ---
 
 ... More to come (coming)
 
 <!-- TODO: Docker images ? -->
 
-- With SSD1306 32x128
-- With SSD1306 64x128. &#9989; Done
+- With SSD1306 32x128 or 64x128. &#9989; Done
 - With Nokia5110. &#9989; Done
 - With UART GPS. &#9989; Done
 - Push Buttons and Switches. &#9989; Done
 - Display IP Address and Network Name in the small loggers. &#9989; Done
-- Same as `small.server.extended` with 2-button user-interface, (which is _not_ small), based on `GenericNMEAMultiplexer`, with less `RESTRequestManager`s than the `NavServer`.
+- Same as `small.server.extended` with 2-button user-interface, (which is _not_ small), based on `GenericNMEAMultiplexer`, with less `RESTRequestManager`s than the `NavServer`. &#9989; Done
 
-### For the logger:
-- 2 Bonnets:
-    - One for the GPS ([Adafruit Ultimate GPS](https://www.adafruit.com/product/746))
-    - Another on top, with a HAT (Hardware Attached on Top) like this:
+### Hardware configurations:
+- Raspberry Pi Zero, with 2 Bonnets, stacked:
+    - One for the GPS ([Adafruit Ultimate GPS](https://www.adafruit.com/product/746)) and a [BME280](https://www.adafruit.com/product/2652)
+    - With OLED Screen and push buttons
+- Raspberry Pi A & B
+    - One perma-hat, with an OLED screen, BME280, and push-buttons. The GPS is an external USB one. 
 
-![HAT](../Project.Trunk/REST.clients/TCP.Watch.01/img/front.jpg)
+
+| For RPI Zero, with a GPS | For RPi A & B, external (USB) GPS |
+|:----------:|:------------------:|
+| ![HAT](./small.server.extended/docimg/08.jpg) | ![USB GPS](./small.server.extended/docimg/perma-hat/perma-hat.02.jpg) |
 
 See [here](../Project.Trunk/REST.clients/TCP.Watch.01#raspberry-pi-zero-w-and-ssd1306-128x64) for the wiring diagrams,
 and [here](./small.server.extended/README.md).
