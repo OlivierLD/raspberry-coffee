@@ -168,8 +168,6 @@ See in the `builder.sh` how web resources are copied, and from where.
 Then look into `to.prod.sh` how it launches a Gradle build, and in the corresponding `build.gradle`
 that it only depends on `NMEA.multiplexer`.
 
-TODO Screenshots of the settings (hardware).
-
 ### Full Nav Server, extended 
 all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
 
@@ -181,6 +179,7 @@ The idea here is to show how to _extend_ the classes provided in the project to 
 ### Small Nav Server, extended 
 all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
 Push buttons for interaction with the software, embedded GPS, LiPo battery.
+> Note: The `Small` in `Small Nav Server` refers to the size of the hardware ;)
 
 ### Head-Up-Display
 With a 5" or 7" TFT screen
@@ -220,7 +219,7 @@ To fix it:
 This will take effect after reboot. 
 
 #### With a small USB GPS like `U-blox 7`
-The [`U-blox 7`](https://www.amazon.com/HiLetgo-G-Mouse-GLONASS-Receiver-Windows/dp/B01MTU9KTF/ref=pd_lpo_vtph_107_lp_img_3?_encoding=UTF8&psc=1&refRID=BNCKEAMR8044EX51JYM5) is a small and cheap GPS you can plug with a USB socket.
+The [`U-blox 7`](https://www.amazon.com/HiLetgo-G-Mouse-GLONASS-Receiver-Windows/dp/B01MTU9KTF/ref=pd_lpo_vtph_107_lp_img_3?_encoding=UTF8&psc=1&refRID=BNCKEAMR8044EX51JYM5) is a small and cheap GPS you can plug in a USB port.
 And it works.
 
 ```
