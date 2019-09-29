@@ -124,6 +124,8 @@ Here we want to elaborate the rules, based on the input data, and the output fac
 #### Examples: Is that Deep Learning?
 
 ###### Weather Routing?
+![Example](https://i1.wp.com/blog.mytimezero.com/wp-content/uploads/2017/10/ezgif-com-video-to-gif.gif)
+
 No. It is not even Artificial Intelligence. There is no training process involved, it is all
 about (classical) computing. It may require resources and heavy calculations, but no learning process.
 
