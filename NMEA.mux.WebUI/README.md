@@ -8,6 +8,9 @@ We want to have a Nav Server:
 
 The [`NMEA.multiplexer`](../NMEA.multiplexer/README.md) is able to read, compute, and broadcast data, also accessible from a REST client.
 
+> _Note_: We will also demonstrate projects involving and extending the [`RESTNavServer`](../RESTNavServer/README.md), which is itself extending the `NMEA.multiplexer`, adding to it 
+> extra features like almanac publication, tide computation, extra REST services and Web Components, etc. See below for more details. 
+
 To work even if no WiFi network is available, the best is probably to have the Raspberry Pi emit its own.
 This is totally feasible, follow the instructions provided [here](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software).
 
@@ -140,8 +143,10 @@ The examples list contains
     - Read a GPS (or NMEA Station), and log data into a file. Suitable for running, kayaking, and such small configurations.
 - [Extended Navigation Server](#full-nav-server-extended)
     - Based on the `Full Navigation Server` above, shows how to add 2 push-buttons to the configuration, for the user to interact with the software. 
-- [Extended Navigation Server, #2](#small-nav-server-extended)
-    - Based on the `Full Navigation Server` above, shows how to add 2 push-buttons to the configuration, for the user to interact with the software, including shutting down the machine. Also has a GPS on a bonnet. 
+- [Extended Navigation Server, V2](#full-nav-server-extended-v2)
+    - Based on the `Full Navigation Server` above, shows how to add 2 push-buttons to the configuration, for the user to interact with the software, including shutting down the machine. Also has an optional GPS on a bonnet. 
+- [Extended Multiplexer](#extended-multiplexer)
+    - Based on the `Minimal Navigation server` above, shows how to add 2 push-buttons to the configuration, for the user to interact with the software, including shutting down the machine. Uses the same hardware as the `Extended Navigation Server, #2` above.
 - [Embarked Head Up display](#head-up-display)
     - Uses the Graphical Desktop to display a Web Interface in a browser. More demanding than the others, requires a more powerful config (Raspberry Pi 3B+). 
 
@@ -176,10 +181,12 @@ The idea here is to show how to _extend_ the classes provided in the project to 
  $ cd full.server.extended
  $ ./builder.sh
 ```
-### Small Nav Server, extended 
+### Full Nav Server, extended, V2 
 all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
 Push buttons for interaction with the software, embedded GPS, LiPo battery.
-> Note: The `Small` in `Small Nav Server` refers to the size of the hardware ;)
+
+### Extended Multiplexer
+The `Minimal Multiplexer` with the HAT of the `Full Nav Server, extended, V2`.
 
 ### Head-Up-Display
 With a 5" or 7" TFT screen

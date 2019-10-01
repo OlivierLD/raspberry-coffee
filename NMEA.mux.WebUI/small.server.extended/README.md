@@ -1,4 +1,21 @@
-# Case study (WIP) Full NavServer running on a Raspberry Pi Zero W, and others
+# Case study (WIP) NMEA Multiplexer running on a Raspberry Pi Zero W, and others
+This is a case study, using different hardware configurations to run the same software configuration (the full RESTNavServer).
+
+The hardware configuration will be made out of two parts:
+- The machine (different Raspberry Pi models)
+- The Hardware Attached on Top (HAT)
+
+The HAT will have two configurations, involving pretty much the same components:
+- Two push buttons
+- A 128x64 OLED screen
+- A BME280 (temperature, humidity, pressure sensor)
+- In the Raspberry Zero case, we will also have
+    - A power switch
+    - An Adafruit Ultimate GPS
+- For the Raspberry Pi A and B cases, the GPS will be external, plugged on a USB port.  
+
+> OLED Screen and push buttons will be used to interact with the system, for monitoring purpose.
+
 **Features**:
 - 2 [Adafruit Bonnets](https://www.adafruit.com/product/3203), $4.50 each
     - One with a [132x64 oled screen](https://www.adafruit.com/product/938), $19.95, 2 push buttons, 1 switch for the power supply

@@ -46,12 +46,12 @@ public class LSM303Client extends NMEAClient {
 	}
 
 	public int getHeadingOffset() {
-		int headingOffet = 0;
+		int headingOffset = 0;
 		NMEAReader reader = this.getReader();
 		if (reader != null && reader instanceof LSM303Reader) {
-			headingOffet = ((LSM303Reader)reader).getHeadingOffset();
+			headingOffset = ((LSM303Reader)reader).getHeadingOffset();
 		}
-		return headingOffet;
+		return headingOffset;
 	}
 
 	public void setHeadingOffset(int headingOffset) {

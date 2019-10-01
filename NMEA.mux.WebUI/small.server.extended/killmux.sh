@@ -4,7 +4,7 @@
 ps -ef | grep GenericNMEAMultiplexer | grep -v grep | awk '{ print $2 }' > km
 # ps -ef | grep NavServer | grep -v grep | grep sudo | awk '{ print $2 }' >> km
 ps -ef | grep NavServer | grep -v grep | awk '{ print $2 }' >> km
-ps -ef | grep ServerWithKewlButtons | grep -v grep | awk '{ print $2 }' >> km
+ps -ef | grep MultiplexerWithTwoButtons | grep -v grep | awk '{ print $2 }' >> km
 for pid in `cat km`
 do
   echo Killing process $pid
