@@ -468,6 +468,8 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		System.out.println(String.format("To turn logging OFF, use PUT %s", this.turnLoggingOffURL));
 		System.out.println(String.format("To terminate the multiplexer, use POST %s", this.terminateMuxURL));
 
+		System.out.println(String.format("\nREST Operations: GET http://localhost:%d/mux/oplist\n", serverPort));
+
 		List<String[]> addresses = TCPUtils.getIPAddresses(true);
 		String machineName = "localhost";
 		if (addresses.size() == 1) {

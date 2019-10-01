@@ -20,6 +20,8 @@ public class BME280Reader extends NMEAReader {
 	private static final String DEFAULT_DEVICE_PREFIX = "RP";
 	private String devicePrefix = DEFAULT_DEVICE_PREFIX;
 
+	private boolean alreadySaidDeviceMissing = false;
+
 	private static final long BETWEEN_LOOPS = 1_000L; // TODO: Make it an external parameter?
 
 	public BME280Reader(List<NMEAListener> al) {
@@ -49,44 +51,51 @@ public class BME280Reader extends NMEAReader {
 		while (this.canRead()) {
 			// Read data every 1 second
 			try {
-				float humidity = bme280.readHumidity();
-				float temperature = bme280.readTemperature();
-				float pressure = bme280.readPressure();
-				// Generate NMEA String
-				int deviceIdx = 0; // Instead of "BME280"...
-				String nmeaXDR = StringGenerator.generateXDR(devicePrefix,
-								new StringGenerator.XDRElement(StringGenerator.XDRTypes.HUMIDITY,
-												humidity,
-												String.valueOf(deviceIdx++)), // %, Humidity
-								new StringGenerator.XDRElement(StringGenerator.XDRTypes.TEMPERATURE,
-												temperature,
-												String.valueOf(deviceIdx++)), // Celcius, Temperature
-								new StringGenerator.XDRElement(StringGenerator.XDRTypes.PRESSURE_P,
-												pressure,
-												String.valueOf(deviceIdx++))); // Pascal, pressure
-				nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;
-				fireDataRead(new NMEAEvent(this, nmeaXDR));
+				if (bme280 != null) {
+					float humidity = bme280.readHumidity();
+					float temperature = bme280.readTemperature();
+					float pressure = bme280.readPressure();
+					// Generate NMEA String
+					int deviceIdx = 0; // Instead of "BME280"...
+					String nmeaXDR = StringGenerator.generateXDR(devicePrefix,
+							new StringGenerator.XDRElement(StringGenerator.XDRTypes.HUMIDITY,
+									humidity,
+									String.valueOf(deviceIdx++)), // %, Humidity
+							new StringGenerator.XDRElement(StringGenerator.XDRTypes.TEMPERATURE,
+									temperature,
+									String.valueOf(deviceIdx++)), // Celcius, Temperature
+							new StringGenerator.XDRElement(StringGenerator.XDRTypes.PRESSURE_P,
+									pressure,
+									String.valueOf(deviceIdx++))); // Pascal, pressure
+					nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+					fireDataRead(new NMEAEvent(this, nmeaXDR));
 
-				String nmeaMDA = StringGenerator.generateMDA(devicePrefix,
-								pressure / 100,
-								temperature,
-								-Double.MAX_VALUE,
-								humidity,
-								-Double.MAX_VALUE,
-								-Double.MAX_VALUE,
-								-Double.MAX_VALUE,
-								-Double.MAX_VALUE,
-								-Double.MAX_VALUE);
-				nmeaMDA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
-				fireDataRead(new NMEAEvent(this, nmeaMDA));
+					String nmeaMDA = StringGenerator.generateMDA(devicePrefix,
+							pressure / 100,
+							temperature,
+							-Double.MAX_VALUE,
+							humidity,
+							-Double.MAX_VALUE,
+							-Double.MAX_VALUE,
+							-Double.MAX_VALUE,
+							-Double.MAX_VALUE,
+							-Double.MAX_VALUE);
+					nmeaMDA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+					fireDataRead(new NMEAEvent(this, nmeaMDA));
 
-				String nmeaMTA = StringGenerator.generateMTA(devicePrefix, temperature);
-				nmeaMTA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
-				fireDataRead(new NMEAEvent(this, nmeaMTA));
+					String nmeaMTA = StringGenerator.generateMTA(devicePrefix, temperature);
+					nmeaMTA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+					fireDataRead(new NMEAEvent(this, nmeaMTA));
 
-				String nmeaMMB = StringGenerator.generateMMB(devicePrefix, pressure / 100);
-				nmeaMMB += NMEAParser.NMEA_SENTENCE_SEPARATOR;
-				fireDataRead(new NMEAEvent(this, nmeaMMB));
+					String nmeaMMB = StringGenerator.generateMMB(devicePrefix, pressure / 100);
+					nmeaMMB += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+					fireDataRead(new NMEAEvent(this, nmeaMMB));
+				} else {
+					if (!alreadySaidDeviceMissing) {
+						System.out.println(">> No BME280 device found.");
+						alreadySaidDeviceMissing = true;
+					}
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
