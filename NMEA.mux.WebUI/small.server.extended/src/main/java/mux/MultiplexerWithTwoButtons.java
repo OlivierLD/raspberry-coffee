@@ -487,8 +487,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		if (sb.length() > 0) {
 			machineName = sb.toString();
 		}
-		System.out.println(String.format("Also try http://%s:%d/zip/index.html from a browser", machineName, serverPort));
-		System.out.println(String.format("     and http://%s:%d/zip/runner.html ", machineName, serverPort));
+		System.out.println(String.format("Also try http://%s:%d/web/index.html from a browser", machineName, serverPort));
 
 		// Help display here
 		System.out.println("+-----------------------------------------------------------------------------------------+");
