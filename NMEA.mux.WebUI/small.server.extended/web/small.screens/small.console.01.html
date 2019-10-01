@@ -215,6 +215,31 @@
 	<script type="text/javascript" src="../js/ajax.manager.js"></script>
 
 	<script type="text/javascript">
+
+		function decToSex(val, ns_ew, withDeg) {
+			let absVal = Math.abs(val);
+			let intValue = Math.floor(absVal);
+			let dec = absVal - intValue;
+			let i = intValue;
+			dec *= 60;
+//    let s = i + "°" + dec.toFixed(2) + "'";
+//    let s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+			let s = "";
+			if (val < 0) {
+				s += (ns_ew === 'NS' ? 'S' : 'W');
+			} else {
+				s += (ns_ew === 'NS' ? 'N' : 'E');
+			}
+			s += " ";
+			let sep = " ";
+			if (withDeg === true) {
+				sep = "°";
+			}
+//    s += i + "\"" + dec.toFixed(2) + "'";
+			s += i + sep + dec.toFixed(2) + "'";
+			return s;
+		}
+
 		/**
 		 *  SUBSCRIBERS HERE.
 		 *
@@ -223,23 +248,23 @@
 		 *
 		 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
 		 */
-		events.subscribe('sog', function(val) {
+		events.subscribe('sog', (val) => {
 			document.getElementById('sog').innerText = val.toFixed(2);
 		});
-		events.subscribe('cog', function(val) {
+		events.subscribe('cog', (val) => {
 			document.getElementById('cog').innerText = val.toFixed(0);
 		});
-		events.subscribe('pos', function(val) {
+		events.subscribe('pos', (val) => {
 			document.getElementById('lat').innerText = decToSex(val.lat, "NS", true);
 			document.getElementById('lng').innerText = decToSex(val.lng, "EW", true);
 		});
-		events.subscribe('at', function(val) {
+		events.subscribe('at', (val)=>  {
 			document.getElementById('mat').innerText = val.toFixed(1);
 		});
-		events.subscribe('hum', function(val) {
+		events.subscribe('hum', (val) => {
 			document.getElementById('hum').innerText = val.toFixed(0);
 		});
-		events.subscribe('prmsl', function(val) {
+		events.subscribe('prmsl', (val) => {
 			document.getElementById('prmsl').innerText = val.toFixed(1);
 		});
 
