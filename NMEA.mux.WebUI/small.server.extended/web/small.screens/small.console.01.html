@@ -255,8 +255,8 @@
 			document.getElementById('cog').innerText = val.toFixed(0);
 		});
 		events.subscribe('pos', (val) => {
-			document.getElementById('lat').innerText = decToSex(val.lat, "NS", true);
-			document.getElementById('lng').innerText = decToSex(val.lng, "EW", true);
+			document.getElementById('lat').innerHTML = decToSex(val.lat, "NS", true);
+			document.getElementById('lng').innerHTML = decToSex(val.lng, "EW", true);
 		});
 		events.subscribe('at', (val)=>  {
 			document.getElementById('mat').innerText = val.toFixed(1);
