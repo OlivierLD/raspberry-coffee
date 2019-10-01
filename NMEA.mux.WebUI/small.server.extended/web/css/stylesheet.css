@@ -3,7 +3,7 @@ html {
 }
 
 body {
-  color : blue;
+  color : cyan;
   font-weight: normal;
   font-size: 10pt;
   font-family: "Lato", Verdana, Helvetica, Geneva, sans-serif;
@@ -139,6 +139,7 @@ a:visited { color : #8080FF}
   height: 100%;
   /* #027bc7 -8%, #014372 55% */
   /*background: radial-gradient(at top, rgba(255, 255, 0, 0.5) 20%, rgba(1, 67, 114, 0.75) 55%), url("../images/sunset.sea.png") no-repeat center;*/
-  background: radial-gradient(at top, rgba(255, 255, 255, 0.5) 20%, rgba(0, 0, 0, 0.6) 55%);
+  /*background: radial-gradient(at top, rgba(255, 255, 255, 0.5) 20%, rgba(0, 0, 0, 0.6) 55%);*/
+  background: black;
   background-size: cover;
 }
