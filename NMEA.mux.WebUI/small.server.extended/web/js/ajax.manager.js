@@ -3,6 +3,10 @@
  */
 let forwardAjaxErrors = true;
 
+displayErr = (mess) => {
+	console.log(mess);
+};
+
 function initAjax(forwardErrors) {
 	if (forwardErrors !== undefined) {
 		forwardAjaxErrors = forwardErrors;
