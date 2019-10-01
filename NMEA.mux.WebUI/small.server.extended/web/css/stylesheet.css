@@ -125,9 +125,9 @@ img {
   color:red;
 }
 
-a:link { color : #0000A0}
-a:active { color: #8080FF}
-a:visited { color : #8080FF}
+a:link { color : cyan}
+a:active { color: lime}
+a:visited { color : greenyellow}
 
 .yellow-oh {
   color: 'yellow';
