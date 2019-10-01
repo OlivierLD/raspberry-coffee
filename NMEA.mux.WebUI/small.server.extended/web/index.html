@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Nav Home Page</title>
+	<link rel="icon" type="image/jpg" href="icons/palm.04.jpg">
+	<link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
+	<style>
+		body {
+			font-family: "Lato", Verdana, sans-serif;
+			color: cyan;
+		}
+
+		.sidenav {
+			height: 100%;
+			width: 0;
+			position: fixed;
+			z-index: 1;
+			top: 0;
+			left: 0;
+	/*	background-color: rgba(0, 0, 0, 0.6); */
+	/*		background-image: linear-gradient(rgba(128, 128, 128, 0.6), rgba(0, 0, 0, 0.6));*/
+			background-image: linear-gradient(rgba(255, 255, 0, 0.6), rgba(0, 0, 0, 0.6));
+			overflow-x: hidden;
+			transition: 0.5s;
+			padding-top: 60px;
+		}
+
+		.sidenav a {
+			padding: 4px 4px 4px 16px;
+			text-decoration: none;
+			font-size: 14px;
+			color: white; /* #818181; */
+			display: block;
+			transition: 0.3s;
+		}
+
+		.sidenav a:hover, .offcanvas a:focus{
+			color: cyan; /* #f1f1f1; */
+		}
+
+		.sidenav .closebtn {
+			position: absolute;
+			top: 0;
+			right: 25px;
+			font-size: 24px;
+			margin-left: 50px;
+		}
+
+		.submenu {
+			font-size: 14px;
+			text-align: right;
+			margin-right: 25px;
+		}
+
+		@media screen and (max-height: 450px) {
+			.sidenav {padding-top: 15px;}
+			.sidenav a {font-size: 18px;}
+		}
+
+		#wrap { position:fixed; left:0; width:100%; top:40px; height:100%; }
+
+	</style>
+</head>
+<body class="bg-img">
+	<div id="side-nav" class="sidenav" onmouseleave="closeNav()">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<a href="javascript:void(0)" onclick="document.getElementById('the-frame').src='';" title="Remove all data, clean screen.">Clear</a>
+		<a href="javascript:void(0)" title="NMEA, Sensors, etc.">NMEA Consoles</a>
+		<a href="runner.html" target="iframe_a" title="Overview" class="submenu">Overview</a>
+		<a href="logMgmt.html" target="iframe_a" title="Log Management" class="submenu">Log Management</a>
+		<a href="small.screens/small.console.01.html" title="Data Console, For small screens" class="submenu">Small Console</a>
+
+	</div>
+
+	<div style="width: 100%;">
+	  <span style="font-size:20px; cursor:pointer;" title="Click for menu" onclick="openNav()">&#9776; Nav Menu</span> <!-- the hamburger -->
+	</div>
+
+	<p style="text-align: center;">
+		<table width="100%" border="0">
+			<tr>
+				<td align="center">
+					<div id="wrap">
+						<iframe id="the-frame" frameborder="0" src="" name="iframe_a" style="width: 100%; height: 95%;"></iframe>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</p>
+
+	<!-- page bottom -->
+	<table width="100%" cellpadding="0" cellspacing="0" border="0" style="position: fixed; bottom: 0;">
+		<tr>
+			<td align="left" valign="bottom" height="60">
+				<address>&copy; 2017, Le Diouris &amp; Co.</address>
+			</td>
+		</tr>
+	</table>
+
+	<script type="text/javascript">
+		var openNav = function() {
+			document.getElementById("side-nav").style.width = "350px";
+		};
+
+		var closeNav = function() {
+			document.getElementById("side-nav").style.width = "0";
+		};
+	</script>
+</body>
+</html>
