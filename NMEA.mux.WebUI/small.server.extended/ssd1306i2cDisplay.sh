@@ -1,5 +1,17 @@
 #!/bin/bash
-CP=./build/libs/NMEA.mux.WebUI-1.0-all.jar
+CP=./build/libs/small.server.extended-1.0-all.jar
+#
+SUDO=
+# DARWIN=`uname -a | grep Darwin`
+DARWIN=$(uname -a | grep Darwin)
+#
+if [ "$DARWIN" != "" ]
+then
+	echo Running on Mac
+else
+	echo Assuming Linux/Raspberry Pi
+  SUDO="sudo "
+fi
 #
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false "
@@ -28,6 +40,6 @@ then
 	  printf "| NO OLED Detected |\n"
 	fi
 else
-  sudo java $JAVA_OPTIONS -cp $CP i2c.samples.oled.OLEDSSD1306_I2C_DisplayStrings "$1"
+  ${SUDO}java $JAVA_OPTIONS -cp $CP i2c.samples.oled.OLEDSSD1306_I2C_DisplayStrings "$1"
 fi
 #
