@@ -255,7 +255,7 @@
 			document.getElementById('cog').innerText = val.toFixed(0);
 		});
 		events.subscribe('pos', (val) => {
-			document.getElementById('lat').innerHTML = decToSex(val.lat, "NS", true);
+			document.getElementById('lat').innerHTML = decToSex(val.lat, "NS", true); // innerHTML for the &deg; sign
 			document.getElementById('lng').innerHTML = decToSex(val.lng, "EW", true);
 		});
 		events.subscribe('at', (val)=>  {
@@ -266,6 +266,16 @@
 		});
 		events.subscribe('prmsl', (val) => {
 			document.getElementById('prmsl').innerText = val.toFixed(1);
+		});
+		events.subscribe('gps-time', (val) => {
+			let elmts = val.split(',');
+			document.getElementById('gps-date').innerText = elmts[0] + ', ' + elmts[1];
+			document.getElementById('gps-time').innerText = elmts[2];
+		});
+		events.subscribe('solar-time', (val) => {
+			let elmts = val.split(',');
+			document.getElementById('solar-date').innerText = elmts[0] + ', ' + elmts[1];
+			document.getElementById('solar-time').innerText = elmts[2];
 		});
 
 		window.onload = () => {
@@ -280,7 +290,7 @@
 <div class="slideshow-container">
 
 	<div class="the-slides fade">
-		<div class="number-text">1 / 6</div>
+		<div class="number-text">1 / 8</div>
 		<div class="display">
 			<span class="display-title">Position</span>
 			<div class="display-data-2">
@@ -294,7 +304,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">2 / 6</div>
+		<div class="number-text">2 / 8</div>
 		<div class="display">
 			<span class="display-title">Relative Humidity</span>
 			<span class="display-data" id="hum">00.00</span>
@@ -304,7 +314,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">3 / 6</div>
+		<div class="number-text">3 / 8</div>
 		<div class="display">
 			<span class="display-title">Air Temperature</span>
 			<span class="display-data" id="mat">00.0</span>
@@ -314,7 +324,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">4 / 6</div>
+		<div class="number-text">4 / 8</div>
 		<div class="display">
 			<span class="display-title">Pressure</span>
 			<span class="display-data" id="prmsl">0000.0</span>
@@ -324,7 +334,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">5 / 6</div>
+		<div class="number-text">5 / 8</div>
 		<div class="display">
 			<span class="display-title">Course Over Ground</span>
 			<span class="display-data" id="cog">000</span>
@@ -334,13 +344,41 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">6 / 6</div>
+		<div class="number-text">6 / 8</div>
 		<div class="display">
 			<span class="display-title">Speed Over Ground</span>
 			<span class="display-data" id="sog">00.00</span>
 			<span class="display-unit">knots</span>
 		</div>
 		<div class="text">SOG</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">7 / 8</div>
+		<div class="display">
+			<span class="display-title">GPS Time</span>
+			<div class="display-data-2">
+				<span id="gps-date">Jan 01, 1970</span>
+				<br/>
+				<span id="gps-time">12:00:00 AM</span>
+			</div>
+			<span class="display-unit"></span>
+		</div>
+		<div class="text">GPS</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="number-text">8 / 8</div>
+		<div class="display">
+			<span class="display-title">Solar Time</span>
+			<div class="display-data-2">
+				<span id="solar-date">Jan 01, 1970</span>
+				<br/>
+				<span id="solar-time">12:00:00 AM</span>
+			</div>
+			<span class="display-unit"></span>
+		</div>
+		<div class="text">SOL</div>
 	</div>
 
 	<div class="prev" onclick="plusSlides(-1);">&#10094;</div>

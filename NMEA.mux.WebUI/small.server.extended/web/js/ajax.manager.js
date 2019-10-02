@@ -118,6 +118,13 @@ function onMessage(json) {
 		}
 
 		try {
+			let solarDate = json["Solar Time"].date;
+			events.publish('solar-time', solarDate);
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "GPS Date (" + err + ")");
+		}
+
+		try {
 			let hdg = json["HDG true"].angle;
 			events.publish('hdg', hdg);
 		} catch (err) {
