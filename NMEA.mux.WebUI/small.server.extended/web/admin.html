@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<!--
+ | This is an example illustrating the way to use the
+ | REST API provided to administer the NMEA Multiplexer
+ | Provided "as is".
+ | The main goal is to have something LIGHT!
+ | It needs to run fine, even on small boards like the Raspberry Pi Zero,
+ | and for now, it does.
+ |
+ | Also see mux.rest.js. It contains some logic associated with this dashboard.
+ +-->
+<html>
+  <head>
+    <title>NMEA Multiplexer Admin</title>
+
+    <!--link rel="icon" type="image/ico" href="icons/ajax.ico"-->
+    <link rel="icon" type="image/jpg" href="../icons/palm.04.jpg">
+
+    <!--script type="text/javascript" src="js/jquery-2.1.3.js"></script-->
+    <script type="text/javascript" src="./js/pub.sub.js"></script>
+    <script type="text/javascript" src="./js/mux.rest.js"></script>
+    <script type="text/javascript" src="./widgets/Graph.js"></script>
+    <link id="page-ux" rel="stylesheet" href="./css/stylesheet.css" type="text/css"/>
+    <style>
+      .selectedButton {
+        padding:5px;
+        border-top-right-radius: 10px;
+        border:1px solid #CCC;
+        margin-top:10px;
+        border-bottom: none;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .unselectedButton {
+        padding:5px;
+        border-top-right-radius: 10px;
+        border:1px solid #CCC;
+        margin-top:10px;
+        border-bottom: none;
+        font-size: 12px;
+        font-weight: normal;
+      }
+      .addbox {
+        padding: 1px;
+        border-radius: 5px;
+        border: 1px solid #CCC;
+        width: auto;
+        height: auto;
+        margin: 80px auto 0px auto;
+        overflow: auto;
+      }
+
+      th, td {
+         border: 1px solid #CCC;
+         border-radius: 5px;
+         padding: 3px;
+      }
+
+      canvas {
+        width: 100%;
+        height: 100px;
+      }
+
+      .smooth {
+        /*height: 0;*/
+        /*visibility: hidden;*/
+        /*opacity: 0;*/
+        /*transition: visibility 0.5s, height 0.5s, opacity 0.5s linear;*/
+        height: 0;
+        max-height: 0;
+        margin: auto;
+        /*transition: transform 0.5s, max-height 1s, height 1s;*/
+        transition: all 0.5s ease;
+        opacity: 0;
+        transform: scaleY(0);
+        transform-origin: top;
+        overflow: hidden;
+      }
+
+      .visible-div {
+        opacity: 1;
+        width: auto;
+        height: auto;
+        max-height: 1600px;
+        transform: scaleY(1);
+        margin-top: 5px;
+      }
+
+    </style>
+    <link id="graph-ux" rel="stylesheet" href="./css/graph.ux.01.css" type="text/css"/>
+    <script type="text/javascript">
+
+        function cssSelectManager() {
+            let x = document.getElementById("css-select").value;
+            let css = document.getElementById("page-ux");
+            let cssName = "./css/" + x;
+            css.href =  cssName;
+        }
+        function graphCssSelectManager() {
+            let x = document.getElementById("graph-css-select").value;
+            let css = document.getElementById("graph-ux");
+            let cssName = "./css/" + x;
+            css.href =  cssName;
+            // Broadcast the event, for reload of the css by the component.
+            events.publish('color-scheme-changed', cssName); // Name is not used...
+        }
+
+        /**
+         * Displays the errors in a non-modal way.
+         * @param mess the error message to display.
+         */
+        function errorHandler(mess) {
+          let messZone = document.getElementById("err-mess");
+          messZone.innerText = mess;
+          setTimeout(function() {
+              messZone.innerText = "";
+          }, 10000);
+        }
+
+        // Executed at startup
+        (function () {
+            errManager.display = errorHandler; // in mux.rest.js
+        })();
+
+        function channelSelectManager() {
+            let x = document.getElementById("channel-select").value;
+            manageChannelSelection(x);
+        }
+
+        function forwardSelectManager() {
+            let x = document.getElementById("forwarder-select").value;
+            manageForwardSelection(x);
+        }
+
+        function computerSelectManager() {
+            let x = document.getElementById("computer-select").value;
+            manageComputerSelection(x);
+        }
+
+        let showRESTData = false;
+        function showHideRESTData() {
+            showRESTData = !showRESTData;
+            if (showRESTData) {
+              showDiv("raw-data-div");
+            } else {
+              hideDiv("raw-data-div");
+            }
+
+            document.getElementById("show-hide-raw-data").innerHTML = (showRESTData ? "<small>&nbsp;<img src='img/pandown.gif'> Hide REST Traffic</small>" : "<small>&nbsp;<img src='img/panright.gif'> Show REST Traffic</small>");
+        }
+
+        function manageChannelSelection(selected) {
+            switch (selected) {
+                case 'serial':
+                    document.getElementById("channel-serial").style.display = 'inline';
+                    document.getElementById("channel-tcp").style.display = 'none';
+                    document.getElementById("channel-file").style.display = 'none';
+                    document.getElementById("channel-ws").style.display = 'none';
+                    document.getElementById("channel-rnd").style.display = 'none';
+                    document.getElementById("channel-bmp180").style.display = 'none';
+                    document.getElementById("channel-bme280").style.display = 'none';
+                    document.getElementById("channel-lsm303").style.display = 'none';
+                    document.getElementById("channel-htu21df").style.display = 'none';
+                    document.getElementById("channel-zda").style.display = 'none';
+                    document.getElementById("channel-custom").style.display = 'none';
+                    break;
+                case 'tcp':
+                    document.getElementById("channel-serial").style.display = 'none';
+                    document.getElementById("channel-tcp").style.display = 'inline';
+                    document.getElementById("channel-file").style.display = 'none';
+                    document.getElementById("channel-ws").style.display = 'none';
+                    document.getElementById("channel-rnd").style.display = 'none';
+                    document.getElementById("channel-bmp180").style.display = 'none';
+                    document.getElementById("channel-bme280").style.display = 'none';
+                    document.getElementById("channel-lsm303").style.display = 'none';
+                    document.getElementById("channel-htu21df").style.display = 'none';
+                    document.getElementById("channel-zda").style.display = 'none';
+                    document.getElementById("channel-custom").style.display = 'none';
+                    break;
+                case 'file':
+                    document.getElementById("channel-serial").style.display = 'none';
+                    document.getElementById("channel-tcp").style.display = 'none';
+                    document.getElementById("channel-file").style.display = 'inline';
+                    document.getElementById("channel-ws").style.display = 'none';
+                    document.getElementById("channel-rnd").style.display = 'none';
+                    document.getElementById("channel-bmp180").style.display = 'none';
+                    document.getElementById("channel-bme280").style.display = 'none';
+                    document.getElementById("channel-lsm303").style.display = 'none';
+                    document.getElementById("channel-htu21df").style.display = 'none';
+                    document.getElementById("channel-zda").style.display = 'none';
+                    document.getElementById("channel-custom").style.display = 'none';
+                    break;
+                case 'ws':
+                    document.getElementById("channel-serial").style.display = 'none';
+                    document.getElementById("channel-tcp").style.display = 'none';
+                    document.getElementById("channel-file").style.display = 'none';
+                    document.getElementById("channel-ws").style.display = 'inline';
+                    document.getElementById("channel-rnd").style.display = 'none';
+                    document.getElementById("channel-bmp180").style.display = 'none';
+                    document.getElementById("channel-bme280").style.display = 'none';
+                    document.getElementById("channel-lsm303").style.display = 'none';
+                    document.getElementById("channel-htu21df").style.display = 'none';
+                    document.getElementById("channel-zda").style.display = 'none';
+                    document.getElementById("channel-custom").style.display = 'none';
+                    break;
+                case 'rnd':
+                    document.getElementById("channel-serial").style.display = 'none';
+                    document.getElementById("channel-tcp").style.display = 'none';
+                    document.getElementById("channel-file").style.display = 'none';
+                    document.getElementById("channel-ws").style.display = 'none';
+                    document.getElementById("channel-rnd").style.display = 'inline';
+                    document.getElementById("channel-bmp180").style.display = 'none';
+                    document.getElementById("channel-bme280").style.display = 'none';
+                    document.getElementById("channel-lsm303").style.display = 'none';
+                    document.getElementById("channel-htu21df").style.display = 'none';
+                    document.getElementById("channel-zda").style.display = 'none';
+                    document.getElementById("channel-custom").style.display = 'none';
+                    break;
+                case 'bmp180':
+                    document.getElementById("channel-serial").style.display = 'none';
+                    document.getElementById("channel-tcp").style.display = 'none';
+                    document.getElementById("channel-file").style.display = 'none';
+                    document.getElementById("channel-ws").style.display = 'none';
+                    document.getElementById("channel-rnd").style.display = 'none';
+                    document.getElementById("channel-bmp180").style.display = 'inline';
+                    document.getElementById("channel-bme280").style.display = 'none';
+                    document.getElementById("channel-lsm303").style.display = 'none';
+                    document.getElementById("channel-htu21df").style.display = 'none';
+                    document.getElementById("channel-zda").style.display = 'none';
+                    document.getElementById("channel-custom").style.display = 'none';
+                    break;
+                case 'bme280':
+                    document.getElementById("channel-serial").style.display = 'none';
+                    document.getElementById("channel-tcp").style.display = 'none';
+                    document.getElementById("channel-file").style.display = 'none';
+                    document.getElementById("channel-ws").style.display = 'none';
+                    document.getElementById("channel-rnd").style.display = 'none';
+                    document.getElementById("channel-bmp180").style.display = 'none';
+                    document.getElementById("channel-bme280").style.display = 'inline';
+                    document.getElementById("channel-lsm303").style.display = 'none';
+                    document.getElementById("channel-htu21df").style.display = 'none';
+                    document.getElementById("channel-zda").style.display = 'none';
+                    document.getElementById("channel-custom").style.display = 'none';
+                    break;
+                case 'lsm303':
+                    document.getElementById("channel-serial").style.display = 'none';
+                    document.getElementById("channel-tcp").style.display = 'none';
+                    document.getElementById("channel-file").style.display = 'none';
+                    document.getElementById("channel-ws").style.display = 'none';
+                    document.getElementById("channel-rnd").style.display = 'none';
+                    document.getElementById("channel-bmp180").style.display = 'none';
+                    document.getElementById("channel-bme280").style.display = 'none';
+                    document.getElementById("channel-lsm303").style.display = 'inline';
+                    document.getElementById("channel-htu21df").style.display = 'none';
+                    document.getElementById("channel-zda").style.display = 'none';
+                    document.getElementById("channel-custom").style.display = 'none';
+                    break;
+                case 'htu21df':
+                    document.getElementById("channel-serial").style.display = 'none';
+                    document.getElementById("channel-tcp").style.display = 'none';
+                    document.getElementById("channel-file").style.display = 'none';
+                    document.getElementById("channel-ws").style.display = 'none';
+                    document.getElementById("channel-rnd").style.display = 'none';
+                    document.getElementById("channel-bmp180").style.display = 'none';
+                    document.getElementById("channel-bme280").style.display = 'none';
+                    document.getElementById("channel-lsm303").style.display = 'none';
+                    document.getElementById("channel-htu21df").style.display = 'inline';
+                    document.getElementById("channel-zda").style.display = 'none';
+                    document.getElementById("channel-custom").style.display = 'none';
+                    break;
+                case 'zda':
+                    document.getElementById("channel-serial").style.display = 'none';
+                    document.getElementById("channel-tcp").style.display = 'none';
+                    document.getElementById("channel-file").style.display = 'none';
+                    document.getElementById("channel-ws").style.display = 'none';
+                    document.getElementById("channel-rnd").style.display = 'none';
+                    document.getElementById("channel-bmp180").style.display = 'none';
+                    document.getElementById("channel-bme280").style.display = 'none';
+                    document.getElementById("channel-lsm303").style.display = 'none';
+                    document.getElementById("channel-htu21df").style.display = 'none';
+                    document.getElementById("channel-zda").style.display = 'inline';
+                    document.getElementById("channel-custom").style.display = 'none';
+                    break;
+                case 'custom':
+                    document.getElementById("channel-serial").style.display = 'none';
+                    document.getElementById("channel-tcp").style.display = 'none';
+                    document.getElementById("channel-file").style.display = 'none';
+                    document.getElementById("channel-ws").style.display = 'none';
+                    document.getElementById("channel-rnd").style.display = 'none';
+                    document.getElementById("channel-bmp180").style.display = 'none';
+                    document.getElementById("channel-bme280").style.display = 'none';
+                    document.getElementById("channel-lsm303").style.display = 'none';
+                    document.getElementById("channel-htu21df").style.display = 'none';
+                    document.getElementById("channel-zda").style.display = 'none';
+                    document.getElementById("channel-custom").style.display = 'inline';
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function manageForwardSelection(selected) {
+            switch (selected) {
+                case 'serial':
+                    document.getElementById("forward-serial").style.display = 'inline';
+                    document.getElementById("forward-tcp").style.display = 'none';
+                    document.getElementById("forward-gpsd").style.display = 'none';
+                    document.getElementById("forward-rmi").style.display = 'none';
+                    document.getElementById("forward-file").style.display = 'none';
+                    document.getElementById("forward-ws").style.display = 'none';
+                    document.getElementById("forward-console").style.display = 'none';
+                    document.getElementById("forward-custom").style.display = 'none';
+                    break;
+                case 'tcp':
+                    document.getElementById("forward-serial").style.display = 'none';
+                    document.getElementById("forward-tcp").style.display = 'inline';
+                    document.getElementById("forward-gpsd").style.display = 'none';
+                    document.getElementById("forward-rmi").style.display = 'none';
+                    document.getElementById("forward-file").style.display = 'none';
+                    document.getElementById("forward-ws").style.display = 'none';
+                    document.getElementById("forward-console").style.display = 'none';
+                    document.getElementById("forward-custom").style.display = 'none';
+                    break;
+                case 'gpsd':
+                    document.getElementById("forward-serial").style.display = 'none';
+                    document.getElementById("forward-tcp").style.display = 'none';
+                    document.getElementById("forward-gpsd").style.display = 'inline';
+                    document.getElementById("forward-rmi").style.display = 'none';
+                    document.getElementById("forward-file").style.display = 'none';
+                    document.getElementById("forward-ws").style.display = 'none';
+                    document.getElementById("forward-console").style.display = 'none';
+                    document.getElementById("forward-custom").style.display = 'none';
+                    break;
+                case 'rmi':
+                    document.getElementById("forward-serial").style.display = 'none';
+                    document.getElementById("forward-tcp").style.display = 'none';
+                    document.getElementById("forward-gpsd").style.display = 'none';
+                    document.getElementById("forward-rmi").style.display = 'inline';
+                    document.getElementById("forward-file").style.display = 'none';
+                    document.getElementById("forward-ws").style.display = 'none';
+                    document.getElementById("forward-console").style.display = 'none';
+                    document.getElementById("forward-custom").style.display = 'none';
+                    break;
+                case 'file':
+                    document.getElementById("forward-serial").style.display = 'none';
+                    document.getElementById("forward-tcp").style.display = 'none';
+                    document.getElementById("forward-gpsd").style.display = 'none';
+                    document.getElementById("forward-rmi").style.display = 'none';
+                    document.getElementById("forward-file").style.display = 'inline';
+                    document.getElementById("forward-ws").style.display = 'none';
+                    document.getElementById("forward-console").style.display = 'none';
+                    document.getElementById("forward-custom").style.display = 'none';
+                    break;
+                case 'ws':
+                    document.getElementById("forward-serial").style.display = 'none';
+                    document.getElementById("forward-tcp").style.display = 'none';
+                    document.getElementById("forward-gpsd").style.display = 'none';
+                    document.getElementById("forward-rmi").style.display = 'none';
+                    document.getElementById("forward-file").style.display = 'none';
+                    document.getElementById("forward-ws").style.display = 'inline';
+                    document.getElementById("forward-console").style.display = 'none';
+                    document.getElementById("forward-custom").style.display = 'none';
+                    break;
+                case 'console':
+                    document.getElementById("forward-serial").style.display = 'none';
+                    document.getElementById("forward-tcp").style.display = 'none';
+                    document.getElementById("forward-gpsd").style.display = 'none';
+                    document.getElementById("forward-rmi").style.display = 'none';
+                    document.getElementById("forward-file").style.display = 'none';
+                    document.getElementById("forward-ws").style.display = 'none';
+                    document.getElementById("forward-console").style.display = 'inline';
+                    document.getElementById("forward-custom").style.display = 'none';
+                    break;
+                case 'custom':
+                    document.getElementById("forward-serial").style.display = 'none';
+                    document.getElementById("forward-tcp").style.display = 'none';
+                    document.getElementById("forward-gpsd").style.display = 'none';
+                    document.getElementById("forward-rmi").style.display = 'none';
+                    document.getElementById("forward-file").style.display = 'none';
+                    document.getElementById("forward-ws").style.display = 'none';
+                    document.getElementById("forward-console").style.display = 'none';
+                    document.getElementById("forward-custom").style.display = 'inline';
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function manageComputerSelection(selected) {
+            switch (selected) {
+                case 'tw-current':
+                    document.getElementById("computer-twc").style.display = 'inline';
+                    document.getElementById("computer-custom").style.display = 'none';
+                    break;
+                case 'custom':
+                    document.getElementById("computer-twc").style.display = 'none';
+                    document.getElementById("computer-custom").style.display = 'inline';
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function requestChannelCreation() {
+            let x = document.getElementById("channel-select").value;
+            let dFilters, sFilters, port, server, portName, br, dPrefix;
+            switch (x) {
+                case 'serial':
+                    portName = document.getElementById("serial-port").value;
+                    br = document.getElementById("baud-rate").value;
+                    if (portName.trim().length === 0 || br.trim().length === 0) {
+                        alert('Both port name and baud rate are required');
+                        return;
+                    }
+                    dFilters = document.getElementById("serial-dev-filters").value.split(",");
+                    sFilters = document.getElementById("serial-sentence-filters").value.split(",");
+                    createChannel({
+                        type: 'serial',
+                        port: portName,
+                        br: br,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
+                    });
+                    break;
+                case 'tcp':
+                    port = document.getElementById("tcp-port").value;
+                    server = document.getElementById("tcp-server").value;
+                    if (port.trim().length === 0 || server.trim().length === 0) {
+                        alert('Both port and server name are required');
+                        return;
+                    }
+                    dFilters = document.getElementById("tcp-dev-filters").value.split(",");
+                    sFilters = document.getElementById("tcp-sentence-filters").value.split(",");
+                    createChannel({
+                        type: 'tcp',
+                        port: port,
+                        hostname: server,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
+                    });
+                    break;
+                case 'file':
+                    let logfile = document.getElementById("data-file").value;
+                    if (logfile.trim().length === 0) {
+                        alert('Log file name required');
+                        return;
+                    }
+                    let pause = document.getElementById("data-between-reads").value.trim();
+                    let betweenReads;
+                    try {
+                        betweenReads = parseInt(pause);
+                    } catch (error) {
+                        betweenReads = 500;
+                    }
+                    dFilters = document.getElementById("data-dev-filters").value.split(",");
+                    sFilters = document.getElementById("data-sentence-filters").value.split(",");
+                    createChannel({
+                        type: 'file',
+                        file: logfile,
+                        pause: betweenReads,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
+                    });
+                    break;
+                case 'ws':
+                    let uri = document.getElementById("wsuri").value;
+                    if (uir.trim().length === 0) {
+                        alert('WebSocket URI is required');
+                        return;
+                    }
+                    dFilters = document.getElementById("ws-dev-filters").value.split(",");
+                    sFilters = document.getElementById("ws-sentence-filters").value.split(",");
+                    createChannel({
+                        type: 'ws',
+                        wsUri: uri,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
+                    });
+                    break;
+                case 'rnd':
+                    dFilters = document.getElementById("rnd-dev-filters").value.split(",");
+                    sFilters = document.getElementById("rnd-sentence-filters").value.split(",");
+                    createChannel({
+                        type: 'rnd',
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
+                    });
+                    break;
+                case 'bmp180':
+                    dFilters = document.getElementById("bmp180-dev-filters").value.split(",");
+                    sFilters = document.getElementById("bmp180-sentence-filters").value.split(",");
+                    dPrefix = document.getElementById('bmp180-dev-prefix').value;
+                    createChannel({
+                        type: 'bmp180',
+                        devicePrefix: dPrefix,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
+                    });
+                    break;
+                case 'bme280':
+                    dFilters = document.getElementById("bme280-dev-filters").value.split(",");
+                    sFilters = document.getElementById("bme280-sentence-filters").value.split(",");
+                    dPrefix = document.getElementById('bme280-dev-prefix').value;
+                    createChannel({
+                        type: 'bme280',
+                        devicePrefix: dPrefix,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
+                    });
+                    break;
+                case 'lsm303':
+                    dFilters = document.getElementById("lsm303-dev-filters").value.split(",");
+                    sFilters = document.getElementById("lsm303-sentence-filters").value.split(",");
+                    dPrefix = document.getElementById('lsm303-dev-prefix').value;
+                    let hOffset = document.getElementById('lsm303-heading-offset').value;
+	                	let rFreq = document.getElementById('lsm303-read-frequency').value;
+	                	let dampSize = document.getElementById('lsm303-damping-size').value;
+                    createChannel({
+                        type: 'lsm303',
+                        devicePrefix: dPrefix,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters,
+                        headingOffset: hOffset,
+												readFrequency: rFreq,
+												dampingSize: dampSize
+                    });
+                    break;
+                case 'zda':
+                    dFilters = document.getElementById("zda-dev-filters").value.split(",");
+                    sFilters = document.getElementById("zda-sentence-filters").value.split(",");
+                    dPrefix = document.getElementById('zda-dev-prefix').value;
+                    createChannel({
+                        type: 'zda',
+                        devicePrefix: dPrefix,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
+                    });
+                    break;
+                case 'htu21df':
+                    dFilters = document.getElementById("htu21df-dev-filters").value.split(",");
+                    sFilters = document.getElementById("htu21df-sentence-filters").value.split(",");
+                    dPrefix = document.getElementById('htu21df-dev-prefix').value;
+                    createChannel({
+                        type: 'htu21df',
+                        devicePrefix: dPrefix,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
+                    });
+                    break;
+                case 'custom':
+                    let clientClass = document.getElementById("ch-custom-class").value;
+                    let readerClass = document.getElementById("ch-custom-reader").value;
+                    let propfile = document.getElementById("ch-custom-prop-file").value;
+                    dFilters = document.getElementById("ch-custom-dev-filters").value.split(",");
+                    sFilters = document.getElementById("ch-custom-sentence-filters").value.split(",");
+                    createChannel({
+                        type: 'custom',
+                        clientClass: clientClass,
+                        readerClass: readerClass,
+                        propFile: propfile,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function requestForwardCreation() {
+            let x = document.getElementById("forwarder-select").value;
+            let port;
+            switch (x) {
+                case 'serial':
+                    let portName = document.getElementById("serial-port-fwd").value;
+                    let br = document.getElementById("baud-rate-fwd").value;
+                    if (portName.trim().length === 0 || br.trim().length === 0) {
+                        alert('Both port name and baud rate are required');
+                        return;
+                    }
+                    createForwarder({
+                        type: 'serial',
+                        port: portName,
+                        br: br
+                    });
+                    break;
+                case 'tcp':
+                    port = document.getElementById("fwd-tcp-port").value;
+                    if (port.trim().length === 0) {
+                        alert('Port is required');
+                        return;
+                    }
+                    createForwarder({
+                        type: 'tcp',
+                        port: port
+                    });
+                    break;
+                case 'gpsd':
+                    port = document.getElementById("fwd-gpsd-port").value;
+                    if (port.trim().length === 0) {
+                        alert('Port is required');
+                        return;
+                    }
+                    createForwarder({
+                        type: 'gpsd',
+                        port: port
+                    });
+                    break;
+                case 'rmi':
+                    port = document.getElementById("fwd-rmi-port").value;
+                    if (port.trim().length === 0) {
+                        alert('Port is required');
+                        return;
+                    }
+                    let name = document.getElementById("fwd-rmi-binding-name").value;
+                    if (name.trim().length === 0) {
+                        alert('Name is required');
+                        return;
+                    }
+                    createForwarder({
+                        type: 'rmi',
+                        port: port,
+                        bindingName: name
+                    });
+                    break;
+                case 'file':
+                    let logfile = document.getElementById("fwd-data-file").value;
+                    if (logfile.trim().length === 0) {
+                        alert('Log file name is required');
+                        return;
+                    }
+                    let append = document.getElementById("fwd-data-file-app").is(':checked');
+                    createForwarder({
+                        type: 'file',
+                        log: logfile,
+                        append: append
+                    });
+                    break;
+                case 'ws':
+                    let uri = document.getElementById("fwd-wsuri").value;
+                    if (uri.trim().length === 0) {
+                        alert('WebSocket URI is required');
+                        return;
+                    }
+                    createForwarder({
+                        type: 'ws',
+                        wsUri: uri
+                    });
+                    break;
+                case 'console':
+                    createForwarder({
+                        type: 'console'
+                    });
+                    break;
+                case 'custom':
+                    let forwarderClass = document.getElementById("fwd-custom-class").value;
+                    let propfile = document.getElementById('fwd-custom-prop-file').value;
+                    createForwarder({
+                        type: 'custom',
+                        forwarderClass: forwarderClass,
+                        propFile: propfile
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function requestComputerCreation() {
+            let x = document.getElementById("computer-select").value;
+            switch (x) {
+                case 'tw-current':
+                    let prefix = document.getElementById("cptr-twc-prefix").value;
+                    let tbl = document.getElementById("cptr-twc-tbl").value;
+                    if (prefix.trim().length === 0 || tbl.trim().length === 0) {
+                        alert('Prefix and TimeBuffer length are required');
+                        return;
+                    }
+                    createComputer({
+                        type: 'tw-current',
+                        prefix: prefix,
+                        timeBufferLength: tbl
+                    });
+                    break;
+                case 'custom':
+                    let computerClass = document.getElementById("cptr-custom-class").value;
+                    let propfile = document.getElementById('cptr-custom-prop-file').value;
+                    createComputer({
+                        type: 'custom',
+                        computerClass: computerClass,
+                        propFile: propfile
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function manageClick(div) {
+            document.getElementById('showPorts').className = (div.id === 'showPorts' ? 'selectedButton' : 'unselectedButton');
+            document.getElementById('showChannels').className = (div.id === 'showChannels' ? 'selectedButton' : 'unselectedButton');
+            document.getElementById('showForwarders').className = (div.id === 'showForwarders' ? 'selectedButton' : 'unselectedButton');
+            document.getElementById('showComputers').className = (div.id === 'showComputers' ? 'selectedButton' : 'unselectedButton');
+            document.getElementById('showDiagram').className = (div.id === 'showDiagram' ? 'selectedButton' : 'unselectedButton');
+            switch (div.id) {
+                case 'showPorts':
+                    serialPortList();
+                    break;
+                case 'showChannels':
+                    channelList();
+                    break;
+                case 'showForwarders':
+                    forwarderList();
+                    break;
+                case 'showComputers':
+                    computerList();
+                    break;
+                case 'showDiagram':
+                    generateDiagram();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        let flowGraph; // The graph itself.
+        let flowData = [];
+        const GRAPH_MAX_LEN = 300; // 60 = 1 minute
+
+        let idx2plot;
+
+        function graphCallback(idx) {
+            console.log("Click on pos " + idx + ", flow " + flowData[idx].getY());
+            idx2plot = idx;
+        }
+
+        window.onload = () => {
+          // Available when canvas is visible
+          flowGraph = new Graph("flowCanvas", flowData, graphCallback, "b/s");
+
+          let interv = setInterval(() => {
+              dataVolume();
+              forwarderStatus();
+              flowGraph.drawGraph("flowCanvas", flowData, idx2plot);
+          }, 1000);
+        };
+
+        let graphVisible = false;
+        function showHideGraph() {
+            if (flowData.length >= 10) {
+                graphVisible = !graphVisible;
+             // document.getElementById("graphdiv").css('display', graphVisible ? 'block' : 'none');
+                if (graphVisible) {
+                  showDiv("graphdiv");
+                } else {
+                  hideDiv("graphdiv");
+                }
+            } else {
+                alert("Not enough data to show on the graph... \n" +
+                      "Need at least 10 data points, just got " + flowData.length + "\n" +
+                      "Please wait!");
+            }
+        }
+
+        function toggleForwarders() {
+          if ("ON" === document.getElementById("forwarders-status").innerText) {
+            enableLogging(false);
+          } else {
+            enableLogging(true);
+          }
+        }
+
+        function setSmooth(cb) {
+            flowGraph.setSmoothing(cb.checked);
+        }
+
+        function setTooltip(cb) {
+            flowGraph.setTooltip(cb.checked);
+        }
+
+        let inboundDataInterval;
+        function showInboundData(cb) {
+            if (cb.checked) {
+                showDiv("inbound-data-div");
+                pingLastSentence();
+            } else {
+                hideDiv("inbound-data-div");
+                clearInterval(inboundDataInterval);
+            }
+        }
+
+        function pingLastSentence() {
+          inboundDataInterval = setInterval(getLastNMEASentence, 1000);
+        }
+
+        function shutdownMux() {
+          if (confirm("You are about to bring the whole Multiplexer down.\nPlease confirm.") === true) {
+            terminate();
+            document.body.innerHTML = '<h1>Bye-bye...</h1>' +
+            '<h2>Server is going down upon your request.</h2>' +
+            '<p>Restart the server from a console to continue...</p>';
+          } else {
+            console.log('Canceled');
+          }
+        }
+    </script>
+  </head>
+  <body>
+    <table width="100%">
+      <tr>
+        <td><h2>NMEA Multiplexer Admin</h2></td>
+        <td align="center">Forwarders are <span id="forwarders-status" onclick="toggleForwarders();" title="Click to toggle value" style="cursor: pointer;"></span></td>
+        <td align="center">
+          Page CSS:
+          <select id="css-select" onchange="cssSelectManager();" title="Page StyleSheet">
+            <option value="stylesheet.css">Day</option>
+            <option value="night.stylesheet.css">Night</option>
+            <!-- More here if needed -->
+          </select> &nbsp;
+          Graph CSS:
+          <select id="graph-css-select" onchange="graphCssSelectManager();" title="Graph StyleSheet">
+            <option value="graph.ux.01.css">One</option>
+            <option value="graph.ux.02.css">Two</option>
+            <option value="graph.ux.03.css">Three</option>
+            <!-- More here if needed -->
+          </select>
+        </td>
+        <td align="right">Flow <span id="flow" onclick="showHideGraph();" title="Click to show/hide graph" style="cursor: pointer;"></span></td>
+      </tr>
+      <tr>
+        <td colspan="4" align="center">
+          <div id="graphdiv" class="smooth">
+            <input type="checkbox" id="smooth-data" onchange="setSmooth(this);">Smoothed <input type="checkbox" id="with-tooltip" onchange="setTooltip(this);">Tooltip
+            <br>
+            <canvas id="flowCanvas" height="120" title="Flow History"></canvas>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" align="left">Bring the house down: <button title="Really? At your own risk..." onclick="shutdownMux();">Terminate</button></td>
+        <td colspan="3" align="right"><input type="checkbox" id="show-inbound-data" onchange="showInboundData(this);">Show Inbound Data</td>
+      </tr>
+      <tr>
+        <td colspan="4" align="left">
+          <div id="inbound-data-div" class="smooth" style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 100px; overflow-y: scroll;">
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <small>Ajax, REST, JSON..., Multiplexer Admin.</small>
+    <p>
+    <div style="margin-bottom: 0px;">
+      <span id="showPorts"  onclick="manageClick(this);"  class="selectedButton" style="margin-left: 5px; cursor: pointer;">Fetch Serial Ports list <img src="img/refresh_icon.png" width="10" height="12"/></span>
+      <span id="showChannels" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Channels list <img src="img/refresh_icon.png" width="10" height="12"/></span>
+      <span id="showForwarders" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Forwarders list <img src="img/refresh_icon.png" width="10" height="12"/></span>
+      <span id="showComputers" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Computers list <img src="img/refresh_icon.png" width="10" height="12"/></span>
+      <span id="showDiagram" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Full view <img src="img/refresh_icon.png" width="10" height="12"/></span>
+      <button onclick="resetCache();" style="margin-bottom: 3px;">Reset Cache</button>
+      <input type='checkbox' onchange='manageMuxVerbose(this);'> Multiplexer verbose
+    </div>
+    <div id="lists" style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
+    <div id="diagram" style="display: none; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px;"></div>
+    <div id="show-hide-raw-data" onclick="showHideRESTData();" style="cursor: pointer; margin-top: 5px;"><small>&nbsp;<img src='img/panright.gif'> Show REST Traffic</small></div>
+    <div id="raw-data-div" class="smooth">
+      <table width="100%" border="0">
+        <tr>
+          <td style="width: 50%;" valign="top" title="In&#013;(From the server)">
+            <div id="raw-data" style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
+          </td>
+          <td style="width: 40%;" valign="top" title="Out&#013;(From client to Server)">
+            <div id="raw-data-out" style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
+          </td>
+          <td style="width: 10%;" valign="top" title="Elapsed">
+            <div id="rest-elapsed" style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="1">
+            <button onclick="clearRESTData();">Clear</button>
+          </td>
+          <td colspan="2">
+            <button onclick="clearRESTOutData();">Clear</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    </p>
+    <p>
+      <button onclick="showAddChannel();">Add a Channel</button>&nbsp;
+      <button onclick="showAddForwarder();">Add a Forwarder</button>&nbsp;
+      <button onclick="showAddComputer();">Add a Computer</button>
+      <div id="add-channel" class="smooth">
+        <hr/>
+        <h4>Add an input Channel</h4>
+        <table style="padding: 5px; border-radius: 5px; border: 1px solid #CCC; margin-bottom: 5px;">
+          <tr>
+            <td valign="top">
+              <select id="channel-select" onchange="channelSelectManager();">
+                <option value="serial">Serial</option>
+                <option value="tcp">TCP</option>
+                <option value="file">Data File</option>
+                <option value="ws">Web Socket</option>
+                <option value="rnd">Random</option>
+                <option value="bmp180">BMP180</option>
+                <option value="bme280">BME280</option>
+                <option value="lsm303">LSM303</option>
+                <option value="htu21df">HTU21DF</option>
+                <option value="zda">ZDA</option>
+                <option value="custom">Custom</option>
+              </select>
+            </td>
+            <td valign="top">
+              <div id="channel-serial" style="display: inline;">
+                <table>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="serial-port" type="text" placeholder="Serial Port Name" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Baud Rate</td>
+                    <td>
+                      <select id="baud-rate">
+                        <option value="1200">1200</option>
+                        <option value="2400">2400</option>
+                        <option value="4800">4800</option>
+                        <option value="9600">9600</option>
+                        <option value="19200">19200</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="serial-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="serial-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-tcp" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Server</td>
+                    <td><input id="tcp-server" type="text" placeholder="Server Name" size="20"></td>
+                  </tr>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="tcp-port" type="text" placeholder="Port" size="10"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="tcp-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="tcp-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-file" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Data File</td>
+                    <td><input id="data-file" type="text" placeholder="Log File" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Between reads</td>
+                    <td><input id="data-between-reads" type="text" placeholder="500 ms" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="data-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="data-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-ws" style="display: none;">
+                <table>
+                  <tr>
+                    <td>WebSocket URI</td>
+                    <td><input id="wsuri" type="text" placeholder="ws://machine-name:9876/" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="ws-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="ws-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-rnd" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="rnd-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="rnd-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-bmp180" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Device Prefix</td>
+                    <td><input id="bmp180-dev-prefix" type="text" placeholder="Device Prefix" size="10" value="RP"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="bmp180-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="bmp180-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-bme280" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Device Prefix</td>
+                    <td><input id="bme280-dev-prefix" type="text" placeholder="Device Prefix" size="10" value="RP"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="bme280-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="bme280-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-lsm303" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Device Prefix</td>
+                    <td><input id="lsm303-dev-prefix" type="text" placeholder="Device Prefix" size="10" value="II"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="lsm303-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="lsm303-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Heading Offset</td>
+                    <td><input id="lsm303-heading-offset" type="text" placeholder="0" size="4" style="text-align: right;"></td>
+                    <td><small>Integer<b>[-180..180]</b></small></td>
+                  </tr>
+									<tr>
+										<td>Read Frequency</td>
+										<td><input id="lsm303-read-frequency" type="text" placeholder="1000" size="4" style="text-align: right;"></td>
+										<td><small>in ms</small></td>
+									</tr>
+									<tr>
+										<td>Damping Size</td>
+										<td><input id="lsm303-damping-size" type="text" placeholder="200" size="4" style="text-align: right;"></td>
+										<td><small>in elements</small></td>
+									</tr>
+                </table>
+              </div>
+              <div id="channel-zda" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Device Prefix</td>
+                    <td><input id="zda-dev-prefix" type="text" placeholder="Device Prefix" size="10" value="GP"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="zda-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="zda-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-htu21df" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Device Prefix</td>
+                    <td><input id="htu21df-dev-prefix" type="text" placeholder="Device Prefix" size="10" value="RP"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="htu21df-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="htu21df-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-custom" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Client Class</td>
+                    <td><input id="ch-custom-class" type="text" placeholder="Client Class" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Reader Class</td>
+                    <td><input id="ch-custom-reader" type="text" placeholder="Reader Class" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Properties file</td>
+                    <td><input id="ch-custom-prop-file" type="text" placeholder="Properties file name" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="ch-custom-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="ch-custom-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <button onclick="requestChannelCreation();">Add</button>
+      </div>
+      <div id="add-forwarder" class="smooth">
+        <hr/>
+        <h4>Add a forwarder</h4>
+        <table style="padding: 5px; border-radius: 5px; border: 1px solid #CCC; margin-bottom: 5px;">
+          <tr>
+            <td valign="top">
+              <select id="forwarder-select" onchange="forwardSelectManager();">
+                <option value="serial">Serial</option>
+                <option value="tcp">TCP</option>
+                <option value="gpsd">GPSd</option>
+                <option value="rmi">RMI</option>
+                <option value="file">Data File</option>
+                <option value="ws">Web Socket</option>
+                <option value="console">Console</option>
+                <option value="custom">Custom</option>
+              </select>
+            </td>
+            <td valign="top">
+              <div id="forward-serial" style="display: inline;">
+                <table>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="serial-port-fwd" type="text" placeholder="Serial Port Name" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Baud Rate</td>
+                    <td>
+                      <select id="baud-rate-fwd">
+                        <option value="1200">1200</option>
+                        <option value="2400">2400</option>
+                        <option value="4800">4800</option>
+                        <option value="9600">9600</option>
+                        <option value="19200">19200</option>
+                      </select>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-tcp" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="fwd-tcp-port" type="text" placeholder="Port" size="10"></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-gpsd" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="fwd-gpsd-port" type="text" placeholder="Port, like 2947" size="10"></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-rmi" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="fwd-rmi-port" type="text" placeholder="Port" size="10"></td>
+                  </tr>
+                  <tr>
+                    <td>Binding Name</td>
+                    <td><input id="fwd-rmi-binding-name" type="text" placeholder="Binding Name" size="20"></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-file" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Data File</td>
+                    <td><input id="fwd-data-file" type="text" placeholder="Log File" size="30"></td>
+                    <td><input type='checkbox' id="fwd-data-file-app" title="Reset, or append."> Append</td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-ws" style="display: none;">
+                <table>
+                  <tr>
+                    <td>WebSocket URI</td>
+                    <td><input id="fwd-wsuri" type="text" placeholder="ws://machine-name:9876/" size="30"></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-console" style="display: none;">
+                <i>No Parameters</i>
+              </div>
+              <div id="forward-custom" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Forwarder Class</td>
+                    <td><input id="fwd-custom-class" type="text" placeholder="Forwarder Class" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Properties file</td>
+                    <td><input id="fwd-custom-prop-file" type="text" placeholder="Properties file name" size="30"></td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <button onclick="requestForwardCreation();">Add</button>
+      </div>
+      <div id="add-computer" class="smooth">
+        <hr/>
+        <h4>Add a computer</h4>
+        <table style="padding: 5px; border-radius: 5px; border: 1px solid #CCC; margin-bottom: 5px;">
+          <tr>
+            <td valign="top">
+              <select id="computer-select" onchange="computerSelectManager();">
+                <option value="tw-current">True Wind and Current</option>
+                <option value="custom">Custom</option>
+              </select>
+            </td>
+            <td valign="top">
+              <div id="computer-twc" style="display: inline;">
+                <table>
+                  <tr>
+                    <td>Prefix</td>
+                    <td><input id="cptr-twc-prefix" type="text" placeholder="OS" size="5"></td>
+                  </tr>
+                  <tr>
+                    <td>Time Buffer Length</td>
+                    <td><input id="cptr-twc-tbl" type="text" placeholder="60, 120, 300" size="30"> in <i>seconds</i>.</td>
+                  </tr>
+                </table>
+              </div>
+              <div id="computer-custom" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Computer Class</td>
+                    <td><input id="cptr-custom-class" type="text" placeholder="Computer Class" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Properties file</td>
+                    <td><input id="cptr-custom-prop-file" type="text" placeholder="Properties file name" size="30"></td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <button onclick="requestComputerCreation();">Add</button>
+    </div>
+    <div id="err-mess" style="color: red;"></div>
+    <hr/>
+    <!--button onclick="protocolTest();">Protocol test</button>
+    <hr/-->
+    <button onclick="document.location = './logMgmt.html';">Log files Management</button>
+    <hr/>
+    <address>Oliv fecit, AD 2016.</address>
+  </body>
+</html>

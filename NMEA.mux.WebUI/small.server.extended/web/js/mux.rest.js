@@ -584,7 +584,7 @@ function buildTable(channels, forwarders, computers) {
 			"<tr><th width='45%'>Pulled in from</th><th width='10%'></th><th width='45%'>Pushed out to</th></tr>" +
 			"<tr><td valign='middle' align='center' rowspan='2' title='Channels'>" + channels + "</td>" +
 			//      "<td valign='middle' align='center' rowspan='2'><b><i>MUX</i></b></td>" +
-			"<td valign='middle' align='center' rowspan='2'><img src='images/antenna.png' width='32' height='32' alt='MUX' title='MUX'></td>" +
+			"<td valign='middle' align='center' rowspan='2'><img src='img/antenna.png' width='32' height='32' alt='MUX' title='MUX'></td>" +
 			"<td valign='middle' align='center' title='Forwarders'>" + forwarders + "</td></tr>" +
 			"<tr><td valign='middle' align='center' title='Computers'>" + computers + "</td></tr>" +
 			"</table>";
