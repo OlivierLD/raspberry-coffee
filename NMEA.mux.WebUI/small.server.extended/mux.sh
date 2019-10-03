@@ -23,10 +23,12 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dwith.sun.flower=false"  # Default
 # It would be 9999 by default. You can also set it explicitly.
 WITH_HTTP_SERVER=`cat $MUX_PROP_FILE | grep with.http.server=`
 WITH_HTTP_SERVER=${WITH_HTTP_SERVER#*with.http.server=}
+#
+PORT=`cat $MUX_PROP_FILE | grep http.port=`
+PORT=${PORT#*http.port=}
+#
 if [ "$WITH_HTTP_SERVER" == "yes" ]
 then
-  PORT=`cat $MUX_PROP_FILE | grep http.port=`
-  PORT=${PORT#*http.port=}
 #  PORT=$(expr $PORT + 1)
   JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.port=$PORT"
 else
@@ -118,6 +120,8 @@ REMOTE_DEBUG_FLAGS=
 #
 LOGGING_FLAG=
 LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
+#
+echo -e "Try reaching http://$(hostname -I):${PORT}/web/index.html from a browser"
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
 # use sudo on Raspberry Pi
