@@ -281,6 +281,10 @@
 			return s;
 		}
 
+		const MONTHS = [
+				"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+				"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+		];
 		/**
 		 *  SUBSCRIBERS HERE.
 		 *
@@ -309,14 +313,13 @@
 			document.getElementById('prmsl').innerText = val.toFixed(1);
 		});
 		events.subscribe('gps-time', (val) => {
-			let elements = val.split(',');
-			document.getElementById('gps-date').innerText = elements[0] + ', ' + elements[1];
-			document.getElementById('gps-time').innerText = elements[2];
+			document.getElementById('gps-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
+			document.getElementById('gps-time').innerText = `${val.hour}:${val.min}:${val.sec}`;
 		});
 		events.subscribe('solar-time', (val) => {
 			let elements = val.split(',');
-			document.getElementById('solar-date').innerText = elements[0] + ', ' + elements[1];
-			document.getElementById('solar-time').innerText = elements[2];
+			document.getElementById('solar-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
+			document.getElementById('solar-time').innerText = `${val.hour}:${val.min}:${val.sec}`;
 		});
 
 		window.onload = () => {

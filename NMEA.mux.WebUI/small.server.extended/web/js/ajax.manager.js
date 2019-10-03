@@ -111,14 +111,14 @@ function onMessage(json) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "log (" + err + ")");
 		}
 		try {
-			let gpsDate = json["GPS Date & Time"].date;
+			let gpsDate = json["GPS Date & Time"].fmtDate;
 			events.publish('gps-time', gpsDate);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "GPS Date (" + err + ")");
 		}
 
 		try {
-			let solarDate = json["Solar Time"].date;
+			let solarDate = json["Solar Time"].fmtDate;
 			events.publish('solar-time', solarDate);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "GPS Date (" + err + ")");
