@@ -1,6 +1,8 @@
 #!/bin/bash
 CP=./build/libs/small.server.extended-1.0-all.jar
 #
+# Try ./ssd1306i2cDisplay.sh "Lorem ipsum dolor sit|amet, tellus tempus|vitae tempor|pellentesque. Lobortis|condimentum tortor|volutpat ipsum augue,..."
+#
 SUDO=
 # DARWIN=`uname -a | grep Darwin`
 DARWIN=$(uname -a | grep Darwin)
@@ -14,9 +16,11 @@ else
 fi
 #
 JAVA_OPTIONS=
-JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false "
-JAVA_OPTIONS="$JAVA_OPTIONS -Dssd1306.verbose=false "
+JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dssd1306.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmirror.screen=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Doled.height=64"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dled.color=white"
 #
 # Separate the lines with a pipe |
 #
