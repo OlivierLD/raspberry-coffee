@@ -317,7 +317,6 @@
 			document.getElementById('gps-time').innerText = `${val.hour}:${val.min}:${val.sec}`;
 		});
 		events.subscribe('solar-time', (val) => {
-			let elements = val.split(',');
 			document.getElementById('solar-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
 			document.getElementById('solar-time').innerText = `${val.hour}:${val.min}:${val.sec}`;
 		});
