@@ -2,6 +2,8 @@
 <!--
  | Should be suitable for a small screen device (tablet, smart-phone, smart-watch...)
  | Warning: this is not a responsive UI
+ |
+ | Implement left-right swipe to scroll through screens.
  +-->
 <html>
 <head>
@@ -216,6 +218,45 @@
 
 	<script type="text/javascript">
 
+		// Left-right swipe gesture management
+		let xDown = null;
+		let yDown = null;
+
+		function handleTouchStart(evt) {
+			xDown = evt.touches[0].clientX;
+			yDown = evt.touches[0].clientY;
+		}
+
+		function handleTouchMove(evt) {
+			if (!xDown || !yDown) {
+				return;
+			}
+			let xUp = evt.touches[0].clientX;
+			let yUp = evt.touches[0].clientY;
+			let xDiff = xDown - xUp;
+			let yDiff = yDown - yUp;
+
+			// most significant
+			if (Math.abs(xDiff) > Math.abs(yDiff)) { // Left-right
+				if (xDiff > 0) {
+					/* left swipe */
+					plusSlides(1);
+				} else {
+					/* right swipe */
+					plusSlides(-1);
+				}
+			} else { // Up-Down, not needed here (yet...)
+				if (yDiff > 0) {
+					/* up swipe */
+				} else {
+					/* down swipe */
+				}
+			}
+			/* reset values */
+			xDown = null;
+			yDown = null;
+		}
+
 		function decToSex(val, ns_ew, withDeg) {
 			let absVal = Math.abs(val);
 			let intValue = Math.floor(absVal);
@@ -268,17 +309,21 @@
 			document.getElementById('prmsl').innerText = val.toFixed(1);
 		});
 		events.subscribe('gps-time', (val) => {
-			let elmts = val.split(',');
-			document.getElementById('gps-date').innerText = elmts[0] + ', ' + elmts[1];
-			document.getElementById('gps-time').innerText = elmts[2];
+			let elements = val.split(',');
+			document.getElementById('gps-date').innerText = elements[0] + ', ' + elements[1];
+			document.getElementById('gps-time').innerText = elements[2];
 		});
 		events.subscribe('solar-time', (val) => {
-			let elmts = val.split(',');
-			document.getElementById('solar-date').innerText = elmts[0] + ', ' + elmts[1];
-			document.getElementById('solar-time').innerText = elmts[2];
+			let elements = val.split(',');
+			document.getElementById('solar-date').innerText = elements[0] + ', ' + elements[1];
+			document.getElementById('solar-time').innerText = elements[2];
 		});
 
 		window.onload = () => {
+			// Swipe detection
+			document.addEventListener('touchstart', handleTouchStart);
+			document.addEventListener('touchmove', handleTouchMove);
+
 			initAjax();
 		}
 	</script>
@@ -391,6 +436,8 @@
 		<span class="dot" onclick="currentSlide(4);" title="PRMSL"></span>
 		<span class="dot" onclick="currentSlide(5);" title="COG"></span>
 		<span class="dot" onclick="currentSlide(6);" title="SOG"></span>
+		<span class="dot" onclick="currentSlide(7);" title="GPS"></span>
+		<span class="dot" onclick="currentSlide(8);" title="SOL"></span>
 	</div>
 </div>
 <br>
