@@ -508,7 +508,8 @@ public class NMEADataCache
 						break;
 					case "HDM": // Heading, magnetic
 						int hdg = StringParsers.parseHDM(nmeaSentence);
-						this.put(HDG_COMPASS, new Angle360(hdg));
+//						this.put(HDG_COMPASS, new Angle360(hdg));
+						this.put(HDG_MAG, new Angle360(hdg));
 						break;
 					case "HDT": // Heading, true
 						this.put(NMEADataCache.HDG_TRUE, new Angle360(StringParsers.parseHDT(nmeaSentence)));
