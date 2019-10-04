@@ -26,7 +26,7 @@ for iteration in range(20):
 input = 2
 weight = 0.5
 alpha = 0.1
-print("---- Input = {} -----".format(input))
+print("---- Input = {}, alpha {} -----".format(input, alpha))
 for iteration in range(20):
     pred = input * weight
     error = (pred - goal_pred) ** 2
