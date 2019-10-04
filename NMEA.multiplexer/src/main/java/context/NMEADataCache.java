@@ -341,7 +341,9 @@ public class NMEADataCache
 								this.previousPosition = rmc.getGp();
 								this.put(COG, new Angle360(rmc.getCog()));
 								this.put(SOG, new Speed(rmc.getSog()));
-								this.put(DECLINATION, new Angle180EW(rmc.getDeclination()));
+								if (rmc.getDeclination() != -Double.MAX_VALUE) {
+									this.put(DECLINATION, new Angle180EW(rmc.getDeclination()));
+								}
 								if (rmc.getRmcDate() != null) {
 									this.put(GPS_DATE_TIME, new UTCDate(rmc.getRmcDate()));
 								}
