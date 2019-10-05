@@ -441,7 +441,7 @@ public class SSD1306Processor implements Forwarder {
 								} else {
 									Object defaultDecl = cache.get(NMEADataCache.DEFAULT_DECLINATION);
 									if (defaultDecl != null) {
-										System.out.println("Default Declination is a " + defaultDecl.getClass().getName());
+										// System.out.println("Default Declination is a " + defaultDecl.getClass().getName());
 										declination = ((Angle180EW)defaultDecl).getValue();
 									}
 								}
