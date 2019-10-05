@@ -128,7 +128,19 @@ function onMessage(json) {
 			let hdg = json["HDG true"].angle;
 			events.publish('hdg', hdg);
 		} catch (err) {
-			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "heading");
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "true heading");
+		}
+		try {
+			let hdg = json["HDG c."].angle;
+			events.publish('hdg', hdg); // TODO See declination, json["Default Declination"]
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "compass heading");
+		}
+		try {
+			let hdg = json["HDG mag."].angle;
+			events.publish('hdg', hdg); // TODO See declination
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "magnetic heading");
 		}
 		try {
 			let twd = json.TWD.angle;

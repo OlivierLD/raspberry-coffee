@@ -70,7 +70,13 @@ This is built just like the other examples in this module, just run
 | Pressure (BME280) | Position (GPS) | Side view |
 |:--:|:--:|:--:|
 | ![PRMSL](./docimg/06.jpg) | ![POS](./docimg/07.jpg) | ![All the layers](./docimg/08.jpg) |
-| ![PRMSL](./docimg/09.jpg) | ![POS](./docimg/10.jpg) | On top, it is powered by a USB Cable, it can also be powered by a LiPo battery at the bottom (left, 2200mAH) |
+| Position                  | Position                | The 2 layers, apart |
+| ![PRMSL](./docimg/09.jpg) | ![POS](./docimg/10.jpg) | ![apart](./docimg/apart.jpg) |
+| One layer only, with a small I2C Oled screen | | |
+| ![Small Screen](./docimg/small.screen.jpg) | | |
+
+On top, it is powered by a USB Cable, it can also be powered by a LiPo battery at the bottom (left, 2200mAH).
+
 
 ### Screenshots
 
