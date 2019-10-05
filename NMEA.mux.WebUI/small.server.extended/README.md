@@ -57,7 +57,7 @@ No attached screen required, as ssh and VNC can do the job remotely.
 
 ### Miscellaneous and various stuff 
 Sample console output with an LSM303
-<pre>
+```
 $BMXDR,H,40.3,P,0,C,25.7,C,1,P,102093,P,2*64
 $BMMDA,30.148,I,1.021,B,25.7,C,,,40.3,,,,,,,,,,,*34
 $BMMTA,25.7,C*0A
@@ -377,7 +377,7 @@ $BMXDR,H,40.2,P,0,C,25.7,C,1,P,102092,P,2*64
 $BMMDA,30.148,I,1.021,B,25.7,C,,,40.2,,,,,,,,,,,*35
 $BMMTA,25.7,C*0A
 $BMMMB,30.1513,I,1.0209,B*79
-</pre>
+```
 
 Sample of NMEA Cache, as a JSON object (`GET /mux/cache`):
 ```json

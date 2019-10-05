@@ -430,15 +430,25 @@ public class SSD1306Processor implements Forwarder {
 						}
 						Object hdg = cache.get(NMEADataCache.HDG_COMPASS);
 						if (hdg != null) {
-							bean.hdg = (int)Math.round(((Angle360)hdg).getValue());
+							bean.hdg = (int)Math.round(((Angle360)hdg).getValue());  // Compass Heading. TODO Variation like below
 						} else {
 							hdg = cache.get(NMEADataCache.HDG_MAG);
 							if (hdg != null) {
 								double declination = 0d;
+								double deviation = 0d;
 								if (decl != null) {
 									declination = ((Angle180EW)decl).getValue();
+								} else {
+									Object defaultDecl = cache.get(NMEADataCache.DEFAULT_DECLINATION);
+									if (defaultDecl != null) {
+										System.out.println("Default Declination is a " + defaultDecl.getClass().getName());
+										declination = ((Angle180EW)defaultDecl).getValue();
+									}
 								}
-								bean.hdg = (int) Math.round(((Angle360) hdg).getValue() + declination);
+								if (dev != null) {
+									deviation = ((Angle180EW)dev).getValue();
+								}
+								bean.hdg = (int) Math.round(((Angle360) hdg).getValue() + (declination + deviation));
 							}
 						}
 						Object cmg = cache.get(NMEADataCache.CMG);
