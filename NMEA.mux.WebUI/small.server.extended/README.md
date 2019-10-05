@@ -57,7 +57,7 @@ No attached screen required, as ssh and VNC can do the job remotely.
 
 ### Miscellaneous and various stuff 
 Sample console output with an LSM303
-```
+<pre>
 $BMXDR,H,40.3,P,0,C,25.7,C,1,P,102093,P,2*64
 $BMMDA,30.148,I,1.021,B,25.7,C,,,40.3,,,,,,,,,,,*34
 $BMMTA,25.7,C*0A
@@ -377,4 +377,169 @@ $BMXDR,H,40.2,P,0,C,25.7,C,1,P,102092,P,2*64
 $BMMDA,30.148,I,1.021,B,25.7,C,,,40.2,,,,,,,,,,,*35
 $BMMTA,25.7,C*0A
 $BMMMB,30.1513,I,1.0209,B*79
+</pre>
+
+Sample of NMEA Cache, as a JSON object (`GET /mux/cache`):
+```json
+{
+    "NMEA_AS_IS": {
+        "HDM": "$LSHDM,246,M*23",
+        "GGA": "$GNGGA,161203.00,3744.93208,N,12230.41451,W,2,12,0.61,9.1,M,-29.9,M,,0000*74\r",
+        "TXT": "$GNTXT,01,01,02,PF=3FF*4B\r",
+        "MMB": "$BMMMB,30.1366,I,1.0204,B*70",
+        "GSA": "$GNGSA,A,3,81,88,79,65,66,78,82,,,,,,1.23,0.61,1.07*1C\r",
+        "GLL": "$GNGLL,3744.93208,N,12230.41451,W,161203.00,A,D*64\r",
+        "XDR": "$LSXDR,A,-4,D,PTCH,A,-1,D,ROLL*46",
+        "VTG": "$GNVTG,,T,,M,0.061,N,0.113,K,D*3C\r",
+        "RMC": "$GNRMC,161203.00,A,3744.93208,N,12230.41451,W,0.061,,051019,,,D*76\r",
+        "MDA": "$BMMDA,30.133,I,1.020,B,25.2,C,,,40.5,,,,,,,,,,,*3A",
+        "MTA": "$BMMTA,25.2,C*0F",
+        "GSV": [
+            "$GLGSV,3,1,11,65,34,048,33,66,42,134,19,67,07,175,18,72,02,019,*64",
+            "$GLGSV,3,2,11,78,10,207,15,79,32,256,17,80,21,315,,81,53,349,32*6F",
+            "$GLGSV,3,3,11,82,20,298,18,87,02,089,09,88,38,061,35*58"
+        ]
+    },
+    "Damping": 1,
+    "HDG Offset": 0.0,
+    "Relative Humidity": 40.5,
+    "Delta Altitude": 4.9,
+    "Air Temperature": {
+        "temperature": 25.2
+    },
+    "Max Leeway": 0.0,
+    "COG": {
+        "angle": 0.0
+    },
+    "AWA Offset": 0.0,
+    "RMCStatus": true,
+    "Current calculated with damping": {},
+    "Position": {
+        "lat": 37.748868,
+        "lng": -122.5069085
+    },
+    "Solar Time": {
+        "date": "Oct 5, 2019 1:13:30 AM",
+        "fmtDate": {
+            "epoch": 1570263210119,
+            "year": 2019,
+            "month": 10,
+            "day": 5,
+            "hour": 8,
+            "min": 13,
+            "sec": 30
+        }
+    },
+    "Default Declination": {
+        "angle": 14.0
+    },
+    "Deviation file name": "zero-deviation.csv",
+    "HDG mag.": {
+        "angle": 246.0
+    },
+    "SOG": {
+        "speed": 0.061
+    },
+    "GPS Date & Time": {
+        "date": "Oct 5, 2019 9:12:03 AM",
+        "epoch": 1570291923000,
+        "fmtDate": {
+            "epoch": 1570291923000,
+            "year": 2019,
+            "month": 10,
+            "day": 5,
+            "hour": 16,
+            "min": 12,
+            "sec": 3
+        }
+    },
+    "BSP Factor": 1.0,
+    "Barometric Pressure": {
+        "pressure": 1020.4
+    },
+    "GPS Time": {
+        "date": "Oct 5, 2019 9:12:03 AM",
+        "fmtDate": {
+            "epoch": 1570291923000,
+            "year": 2019,
+            "month": 10,
+            "day": 5,
+            "hour": 16,
+            "min": 12,
+            "sec": 3
+        }
+    },
+    "AWS Factor": 1.0,
+    "Satellites in view": {
+        "80": {
+            "svID": 80,
+            "elevation": 21,
+            "azimuth": 315,
+            "snr": 0
+        },
+        "65": {
+            "svID": 65,
+            "elevation": 34,
+            "azimuth": 48,
+            "snr": 33
+        },
+        "81": {
+            "svID": 81,
+            "elevation": 53,
+            "azimuth": 349,
+            "snr": 32
+        },
+        "66": {
+            "svID": 66,
+            "elevation": 42,
+            "azimuth": 134,
+            "snr": 19
+        },
+        "82": {
+            "svID": 82,
+            "elevation": 20,
+            "azimuth": 298,
+            "snr": 18
+        },
+        "67": {
+            "svID": 67,
+            "elevation": 7,
+            "azimuth": 175,
+            "snr": 18
+        },
+        "87": {
+            "svID": 87,
+            "elevation": 2,
+            "azimuth": 89,
+            "snr": 9
+        },
+        "72": {
+            "svID": 72,
+            "elevation": 2,
+            "azimuth": 19,
+            "snr": 0
+        },
+        "88": {
+            "svID": 88,
+            "elevation": 38,
+            "azimuth": 61,
+            "snr": 35
+        },
+        "78": {
+            "svID": 78,
+            "elevation": 10,
+            "azimuth": 207,
+            "snr": 15
+        },
+        "79": {
+            "svID": 79,
+            "elevation": 32,
+            "azimuth": 256,
+            "snr": 17
+        }
+    },
+    "Small Distance": 0.005438754177712566,
+    "NMEA": "$LSXDR,A,-4,D,PTCH,A,-1,D,ROLL*46",
+    "Altitude": 9.1
+}
 ```
