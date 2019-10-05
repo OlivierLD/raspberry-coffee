@@ -72,7 +72,7 @@ This is built just like the other examples in this module, just run
 | ![PRMSL](./docimg/06.jpg) | ![POS](./docimg/07.jpg) | ![All the layers](./docimg/08.jpg) |
 | Position                  | Position                | The 2 layers, apart |
 | ![PRMSL](./docimg/09.jpg) | ![POS](./docimg/10.jpg) | ![apart](./docimg/apart.jpg) |
-| One layer only, with a small I2C Oled screen | | |
+| One layer only, with a small 128x32 I2C oled screen (no buttons) | | |
 | ![Small Screen](./docimg/small.screen.jpg) | | |
 
 On top, it is powered by a USB Cable, it can also be powered by a LiPo battery (here 2200mAH).

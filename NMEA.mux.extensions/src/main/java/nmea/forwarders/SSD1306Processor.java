@@ -431,6 +431,15 @@ public class SSD1306Processor implements Forwarder {
 						Object hdg = cache.get(NMEADataCache.HDG_COMPASS);
 						if (hdg != null) {
 							bean.hdg = (int)Math.round(((Angle360)hdg).getValue());
+						} else {
+							hdg = cache.get(NMEADataCache.HDG_MAG);
+							if (hdg != null) {
+								double declination = 0d;
+								if (decl != null) {
+									declination = ((Angle180EW)decl).getValue();
+								}
+								bean.hdg = (int) Math.round(((Angle360) hdg).getValue() + declination);
+							}
 						}
 						Object cmg = cache.get(NMEADataCache.CMG);
 						if (cmg != null) {
