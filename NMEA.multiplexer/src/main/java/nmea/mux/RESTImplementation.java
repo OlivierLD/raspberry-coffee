@@ -152,6 +152,11 @@ public class RESTImplementation {
 					this::getComputers,
 					"Get the list of the computers"),
 			new Operation(
+					"GET",
+					REST_PREFIX + "/mux-config",
+					this::getMuxConfig,
+					"Get the full mux config, channels, forwarders, and computers"),
+			new Operation(
 					"DELETE",
 					REST_PREFIX + "/forwarders/{id}",
 					this::deleteForwarder,
@@ -378,11 +383,42 @@ public class RESTImplementation {
 	private HTTPServer.Response getComputers(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		List<Object> computerList = getComputerList();
-		Object[] forwarderArray = computerList.stream()
+		Object[] computerArray = computerList.stream()
 				.collect(Collectors.toList())
 				.toArray(new Object[computerList.size()]);
 
-		String content = new Gson().toJson(forwarderArray);
+		String content = new Gson().toJson(computerArray);
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private HTTPServer.Response getMuxConfig(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+
+		List<Object> channelList = getInputChannelList();
+		List<Object> forwarderList = getForwarderList();
+		List<Object> computerList = getComputerList();
+
+		Object[] channelArray = channelList.stream()
+				.collect(Collectors.toList())
+				.toArray(new Object[channelList.size()]);
+
+		Object[] forwarderArray = forwarderList.stream()
+				.collect(Collectors.toList())
+				.toArray(new Object[forwarderList.size()]);
+
+		Object[] computerArray = computerList.stream()
+				.collect(Collectors.toList())
+				.toArray(new Object[computerList.size()]);
+
+		Map<String, Object[]> map = new HashMap<>();
+		map.put("channels", channelArray);
+		map.put("forwarders", forwarderArray);
+		map.put("computers", computerArray);
+
+		String content = new Gson().toJson(map);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
