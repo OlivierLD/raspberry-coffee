@@ -80,8 +80,8 @@ public class CharacterModeConsole {
 		suffixes.put("MMB", new AssociatedData("mb", DF_4));  // Pressure at Sea Level
 		suffixes.put("DBT", new AssociatedData("m", DF_31));  // Depth
 		suffixes.put("LOG", new AssociatedData("nm", DF_4));  // Log
-		suffixes.put("CCS", new AssociatedData("kt", DF_22)); // Current Speed
-		suffixes.put("CCD", new AssociatedData("t", DF_3));   // Current Direction
+		suffixes.put("CCS", new AssociatedData("kt", DF_22)); // Computed Current Speed
+		suffixes.put("CCD", new AssociatedData("t", DF_3));   // Computed Current Direction
 		suffixes.put("TBF", new AssociatedData("m", DF_4));   // Time buffer (in minutes) for current calculation
 		suffixes.put("XTE", new AssociatedData("nm", DF_22)); // Cross Track Error
 		suffixes.put("HUM", new AssociatedData("%", DF_31));  // Humidity

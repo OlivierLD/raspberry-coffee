@@ -1,5 +1,7 @@
 package mux;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import http.client.HTTPClient;
@@ -41,6 +43,27 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 	private SSD1306Processor oledForwarder = null;
 
 	// ----- Local Menu Operations, one Runnable for each operation -----
+	private Runnable loggingStatus = () -> {
+		try {
+			String loggingStatus = HTTPClient.doGet(this.getLoggingStatusURL, new HashMap<>());
+			/*
+{
+    "processing": true,
+    "started": 1570376199022
+}
+			 */
+			JsonObject json = new JsonParser().parse(loggingStatus).getAsJsonObject();
+			boolean status = json.get("processing").getAsBoolean();
+			if (oledForwarder != null) {
+				oledForwarder.displayLines(new String[]{ String.format("Logging is %s.", (status ? "ON" : "OFF")) });
+				TimeUtil.delay(4_000L);
+			}
+		} catch (Exception ex) {
+			System.err.println("Logging Status:");
+			ex.printStackTrace();
+		}
+	};
+
 	private Runnable pauseLogging = () -> {
 		try {
 			HTTPClient.doPut(this.turnLoggingOffURL, new HashMap<>(), null);
@@ -195,11 +218,12 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 	}
 
 	private MenuItem[] localMenuItems = new MenuItem[] {
+			new MenuItem().title("Logging status").action(loggingStatus),
 			new MenuItem().title("Pause logging").action(pauseLogging),
 			new MenuItem().title("Resume logging").action(resumeLogging),
 			new MenuItem().title("Terminate Multiplexer").action(terminateMux),
-			new MenuItem().title("! Shutdown").action(shutdown),
-			new MenuItem().title("! Reboot").action(reboot),
+			new MenuItem().title("-> Shutdown").action(shutdown),
+			new MenuItem().title("-> Reboot").action(reboot),
 			new MenuItem().title("Network Config").action(displayNetworkParameters),
 			new MenuItem().title("Say Hello").action(sayHello)                       // As an example...
 	};
@@ -212,6 +236,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 	final static PushButtonController buttonTwo = new PushButtonController();
 
 	private static int serverPort = 9999;
+	private String getLoggingStatusURL = "";
 	private String turnLoggingOnURL = "";
 	private String turnLoggingOffURL = "";
 	private String terminateMuxURL = "";
@@ -460,6 +485,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		super(muxProps); // GenericNMEAMultiplexer
 		System.out.println(">> Starting extension (after super())...");
 
+		this.getLoggingStatusURL = String.format("http://localhost:%d/mux/mux-process", serverPort);
 		this.turnLoggingOnURL = String.format("http://localhost:%d/mux/mux-process/on", serverPort);
 		this.turnLoggingOffURL = String.format("http://localhost:%d/mux/mux-process/off", serverPort);
 		this.terminateMuxURL = String.format("http://localhost:%d/mux/terminate", serverPort);
