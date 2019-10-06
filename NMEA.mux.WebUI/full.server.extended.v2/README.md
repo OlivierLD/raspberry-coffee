@@ -188,7 +188,7 @@ Not 100% reliable, "sometimes" stops reading, I don't know why...
 It is an old one, I got mine around 2004. Works fine, but the date (RMC) recently got off by 7168 days! Probably some kind of overflow... `7168 = 0x1C00`
 
 #### [U-blox7, small USB dongle](https://www.amazon.com/Diymall-G-Mouse-Glonass-Raspberry-Aviation/dp/B00NWEEWW8/ref=sr_1_3?keywords=Stratux+Vk-162+Remote+Mount+USB+GPS&qid=1569081064&s=wireless&sr=1-3-catcorr), 56 channels.
-$13.49. Ok on a laptop, could not get it to read correctly (valid RMC sentences) on a Raspberry Pi.
+$13.49. Works fine for me. From a laptop or a Raspberry Pi.
 
 #### [Stratux Vk-162 Remote Mount USB GPS](https://www.amazon.com/Navigation-External-Receiver-Raspberry-Geekstory/dp/B078Y52FGQ/ref=sr_1_1?keywords=Stratux+Vk-162+Remote+Mount+USB+GPS&qid=1569081064&s=wireless&sr=1-1-catcorr), 50 channels.
 $17.98. Works OK everywhere I tested it! 👍
@@ -199,6 +199,14 @@ with real time astronomical data through REST and WebComponents, the Raspberry 3
 - All other versions of the Raspberry Pi (including the Zero) are fitted to run the NMEA Multiplexer, with any Channels, Forwarders or Computers.
 In this case, with a forward on TCP, the data it consumes, computes and forwards can be available remotely, 
 for other programs (like OpenCPN, SeaWi, whatever understands TCP and NMEA) to consume them.  
+
+### Examples
+
+Raspberry Pi Zero W, 1 bonnet with a 128x64 oled screen and 2 push-buttons and one power swicth, a 4400 mAh LiPo battery,
+all in a small waterproof case. The GPS is a U-blox7, small USB dongle.
+Good for all terrain logging!
+
+![Small config](../docimg/small.logger.jpg)
 
 # TODO
 - Describe the way to get to the log files, download, etc.

@@ -87,7 +87,7 @@ public class CharacterModeConsole {
 		suffixes.put("HUM", new AssociatedData("%", DF_31));  // Humidity
 	}
 
-	private static Map<String, Integer> nonNumericData = new HashMap<String, Integer>(); // Key, str length.
+	private static Map<String, Integer> nonNumericData = new HashMap<>(); // Key, str length.
 
 	static {
 		nonNumericData.put("POS", 24); // Geographical Position

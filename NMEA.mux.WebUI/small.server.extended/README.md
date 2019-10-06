@@ -55,6 +55,15 @@ Emits its own network. Reachable from other devices (laptops, tablets, smart-pho
 through all available channels (ssh, vnc, tcp, http, etc).
 No attached screen required, as ssh and VNC can do the job remotely.
 
+### Examples
+
+Raspberry Pi Zero W, 1 bonnet with a 128x64 oled screen and 2 push-buttons and one power swicth, a 4400 mAh LiPo battery,
+all in a small waterproof case. The GPS is a U-blox7, small USB dongle.
+Good for all terrain logging!
+
+![Small config](../docimg/small.logger.jpg)
+
+
 ### Miscellaneous and various stuff 
 Sample console output with an LSM303
 ```
