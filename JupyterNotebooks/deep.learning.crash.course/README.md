@@ -131,6 +131,7 @@ about (classical) computing. It may require resources and heavy calculations, bu
 
 ###### May 11 1997, Deep Blue defeating Garry Kasparov?
 ![Kasparov](./img/kasparov.jpg)
+
 Maybe Artificial Intelligence, but not Deep Learning, as the machine did not go through a learning process.
 IBM actually called this GOFAI (Good Old-Fashioned Artificial Intelligence)...
 The computer was able to identify _already played games_ (very fast), and was mimicking what was done before.
@@ -139,10 +140,11 @@ Kasparov may very well have been defeated by one of his _own_ previous games...
 ###### May 25, 2017: Google's AlphaGo beating Go champion Ke Jie?
 <table>
 <tr>
-<td>![Ke Jie](./img/keJie.jpg)</td>
-<td>![Ke Jie](./img/keJie.02.jpg)</td>
+<td><img src="./img/keJie.jpg"></td>
+<td><img src="./img/keJie.02.jpg"></td>
 </tr>
 </table>
+
 Yes! The game won by the computer had _never_ been played before. And the machine relied
 on a model elaborated by a training process.
 
