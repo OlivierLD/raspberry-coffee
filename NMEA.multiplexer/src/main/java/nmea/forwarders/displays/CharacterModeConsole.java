@@ -1,16 +1,20 @@
 package nmea.forwarders.displays;
 
-import nmea.parser.Angle360;
+import calc.GeomUtil;
+import context.NMEADataCache;
 import nmea.parser.Angle180;
-import nmea.parser.Distance;
-import nmea.parser.Temperature;
-import nmea.parser.Pressure;
-import nmea.parser.Depth;
+import nmea.parser.Angle360;
 import nmea.parser.Current;
+import nmea.parser.Depth;
+import nmea.parser.Distance;
 import nmea.parser.GeoPos;
+import nmea.parser.Pressure;
 import nmea.parser.SolarDate;
 import nmea.parser.Speed;
+import nmea.parser.Temperature;
 import nmea.parser.UTCDate;
+import org.fusesource.jansi.AnsiConsole;
+import utils.StringUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -28,11 +32,6 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.fusesource.jansi.AnsiConsole;
-import context.NMEADataCache;
-import calc.GeomUtil;
-import utils.StringUtils;
 
 public class CharacterModeConsole {
 	private final static boolean DEBUG = "true".equals(System.getProperty("cc.verbose", "false"));

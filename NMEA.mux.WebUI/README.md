@@ -474,7 +474,7 @@ In the `NMEA.mux.WebUI` project, `logged` folder
 - With UART GPS. &#9989; Done
 - Push Buttons and Switches. &#9989; Done
 - Display IP Address and Network Name in the small loggers. &#9989; Done
-- Same as `small.server.extended` with 2-button user-interface, (which is _not_ small), based on `GenericNMEAMultiplexer`, with less `RESTRequestManager`s than the `NavServer`. &#9989; Done
+- Same as `full.server.extended.v2` with 2-button user-interface, (which is _not_ small), based on `GenericNMEAMultiplexer`, with less `RESTRequestManager`s than the `NavServer`. &#9989; Done
 
 ### Hardware configurations:
 - Raspberry Pi Zero, with 2 Bonnets, stacked:

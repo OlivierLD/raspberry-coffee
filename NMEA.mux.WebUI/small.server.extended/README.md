@@ -58,11 +58,19 @@ No attached screen required, as ssh and VNC can do the job remotely.
 ### Examples
 
 Raspberry Pi Zero W, 1 bonnet with a 128x64 oled screen and 2 push-buttons and one power swicth, a 4400 mAh LiPo battery,
-all in a small waterproof case. The GPS is a U-blox7, small USB dongle.
+all in a small waterproof case. The GPS is a `U-blox7`, small USB dongle.
 Good for all terrain logging!
+
+Next we will do a 3D-printed enclosure, with a possibility to supply the power from a small solar panel. See [here](https://learn.adafruit.com/solar-boost-bag).
 
 ![Small config](../docimg/small.logger.jpg)
 
+> _Note_: As this configuration provides a way for the user to interact with the system, the logging is not starting as the machine starts.
+> In the script `mux.sh`, the system variable `process.on.start` is set to false:
+>```
+>JAVA_OPTIONS="$JAVA_OPTIONS -Dprocess.on.start=false"
+>```
+> The logging is started by the user with the push buttons, there is a `Resume logging` item in the `user menu`. 
 
 ### Miscellaneous and various stuff 
 Sample console output with an LSM303
