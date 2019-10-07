@@ -57,7 +57,7 @@ No attached screen required, as ssh and VNC can do the job remotely.
 
 ### Examples
 
-Raspberry Pi Zero W, 1 bonnet with a 128x64 oled screen and 2 push-buttons and one power swicth, a 4400 mAh LiPo battery,
+Raspberry Pi Zero W, 1 bonnet with a 128x64 oled screen and 2 push-buttons and one power switch, a 4400 mAh LiPo battery,
 all in a small waterproof case. The GPS is a `U-blox7`, small USB dongle.
 Good for all terrain logging!
 
@@ -71,6 +71,9 @@ Next we will do a 3D-printed enclosure, with a possibility to supply the power f
 >JAVA_OPTIONS="$JAVA_OPTIONS -Dprocess.on.start=false"
 >```
 > The logging is started by the user with the push buttons, there is a `Resume logging` item in the `user menu`. 
+
+### TODO
+A Docker image?
 
 ### Miscellaneous and various stuff 
 Sample console output with an LSM303
