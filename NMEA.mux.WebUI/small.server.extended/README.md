@@ -72,8 +72,8 @@ Next we will do a 3D-printed enclosure, with a possibility to supply the power f
 >```
 > The logging is started by the user with the push buttons, there is a `Resume logging` item in the `user menu`. 
 
-### TODO
-A Docker image?
+### A Docker image
+It's possible to run directly from a Docker image, see [here](../../docker/README.md#pre-defined-docker-images) for inspiration, option `6`.
 
 ### Miscellaneous and various stuff 
 Sample console output with an LSM303
