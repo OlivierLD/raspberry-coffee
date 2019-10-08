@@ -76,6 +76,8 @@ Next we will do a 3D-printed enclosure, with a possibility to supply the power f
 It's possible to run directly from a Docker image, see [here](../../docker/README.md#pre-defined-docker-images) for inspiration, option `6`.
 
 ### Miscellaneous and various stuff 
+Funny REST client [here](https://github.com/OlivierLD/small-boards/tree/master/M5StickC)... 
+
 Sample console output with an LSM303
 ```
 $BMXDR,H,40.3,P,0,C,25.7,C,1,P,102093,P,2*64
