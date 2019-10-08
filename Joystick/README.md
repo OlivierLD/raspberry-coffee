@@ -15,7 +15,7 @@ So, we will have 3 distinct components here:
 In theory, we could have several web pages connected to the WebSocket server, even if this is unlikely to happen.
 
 ### Install the NodeJS server part
-To install NodeJS on the Raspberry Pi, see [here](https://www.w3schools.com/nodejs/nodejs_raspberrypi.asp).
+To install NodeJS on the Raspberry Pi, see [here](https://www.w3schools.com/nodejs/nodejs_raspberrypi.asp), and [here](https://github.com/nodesource/distributions#debinstall).
 
 From the directory where `package.json` is:
 ```
