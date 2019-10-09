@@ -10,6 +10,11 @@
 	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=3">
 	<title>Multi-Screen</title>
 	<style>
+		:root {
+			--slide-width: 200px;
+			--slide-height: 300px;
+		}
+
 		html {
 			display: table;
 			width: 100%;
@@ -31,7 +36,7 @@
 
 		.the-slides {
 			/*display: none;*/
-			height: 300px;
+			height: var(--slide-height);
 			grid-area: center;
 			margin: auto;
 			transition: max-height 1s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out;
@@ -43,13 +48,13 @@
 
 		.visible-slide {
 			opacity: 1;
-			max-width: 200px;
+			max-width: var(--slide-width);
 			transform: scaleX(1);
 		}
 
 		/* Slideshow container */
 		.slideshow-container {
-			max-width: 300px;
+			max-width: calc(var(--slide-width) + 100px);
 			margin: auto;
 			text-align: center;
 			display: grid;
@@ -156,15 +161,15 @@
 		}
 
 		/* On smaller screens, decrease text size */
-		@media only screen and (max-width: 300px) {
+		@media only screen and (max-width: var(--slide-width)) {
 			.prev, .next, .text {
 				font-size: 11px
 			}
 		}
 
 		.display {
-			width: 200px;
-			height: 300px;
+			width: var(--slide-width);
+			height: var(--slide-height);
 			border: 4px solid; /* Comment 2 lines to remove the frame */
 			border-radius: 10px;
 			display: grid;

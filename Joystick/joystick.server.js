@@ -1,13 +1,15 @@
 /**
  * Joystick and WebSockets
  *
- * To debug:
+ * To debug, before node 7:
  *   Prompt> set HTTP_PROXY=http://www-proxy.us.oracle.com:80 # if needed
  *   Prompt> npm install -g node-inspector
  *   Prompt> node-inspector
  *
  * From another console:
  *   Prompt> node --debug server.js
+ *
+ *  Since node 7: see https://nodejs.org/de/docs/guides/debugging-getting-started/
  */
 "use strict";
 
