@@ -3,6 +3,7 @@
 
 - [OpenCV Python tutorials](https://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_tutorials.html).
 - [More OpenCV, with samples](https://github.com/kipr/opencv)
+- [Pyimagesearch tutorial](https://www.pyimagesearch.com/start-here/?__s=wovspfff7eebsahwp9s9)
 
 For help on OpenCV:
 ```buildoutcfg
