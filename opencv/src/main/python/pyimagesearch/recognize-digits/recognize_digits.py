@@ -32,6 +32,8 @@ gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 edged = cv2.Canny(blurred, 50, 200, 255)
 
+# cv2.imshow("Edged", edged)
+
 # find contours in the edge map, then sort them by their
 # size in descending order
 cnts = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,
@@ -57,6 +59,8 @@ for c in cnts:
 warped = four_point_transform(gray, displayCnt.reshape(4, 2))
 output = four_point_transform(image, displayCnt.reshape(4, 2))
 
+cv2.imshow("Warped Display", warped)
+
 # threshold the warped image, then apply a series of morphological
 # operations to cleanup the thresholded image
 thresh = cv2.threshold(warped, 0, 255,
@@ -64,6 +68,7 @@ thresh = cv2.threshold(warped, 0, 255,
 kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (1, 5))
 thresh = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
 
+cv2.imshow("Before split", thresh)
 # find contours in the thresholded image, then initialize the
 # digit contours lists
 cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
@@ -77,7 +82,7 @@ for c in cnts:
     (x, y, w, h) = cv2.boundingRect(c)
 
     # if the contour is sufficiently large, it must be a digit
-    if w >= 15 and (h >= 30 and h <= 40):
+    if w >= 15 and 30 <= h <= 40:
         digitCnts.append(c)
 
 # sort the contours from left-to-right, then initialize the
@@ -87,11 +92,13 @@ digitCnts = contours.sort_contours(digitCnts,
 digits = []
 
 # loop over each of the digits
+idx = 0
 for c in digitCnts:
+    idx += 1
     # extract the digit ROI
     (x, y, w, h) = cv2.boundingRect(c)
     roi = thresh[y:y + h, x:x + w]
-
+    cv2.imshow("Edged-{}".format(idx), roi)
     # compute the width and height of each of the 7 segments
     # we are going to examine
     (roiH, roiW) = roi.shape
@@ -100,13 +107,13 @@ for c in digitCnts:
 
     # define the set of 7 segments
     segments = [
-        ((0, 0), (w, dH)),  # top
-        ((0, 0), (dW, h // 2)),  # top-left
-        ((w - dW, 0), (w, h // 2)),  # top-right
+        ((0, 0), (w, dH)),                           # top
+        ((0, 0), (dW, h // 2)),                      # top-left
+        ((w - dW, 0), (w, h // 2)),                  # top-right
         ((0, (h // 2) - dHC), (w, (h // 2) + dHC)),  # center
-        ((0, h // 2), (dW, h)),  # bottom-left
-        ((w - dW, h // 2), (w, h)),  # bottom-right
-        ((0, h - dH), (w, h))  # bottom
+        ((0, h // 2), (dW, h)),                      # bottom-left
+        ((w - dW, h // 2), (w, h)),                  # bottom-right
+        ((0, h - dH), (w, h))                        # bottom
     ]
     on = [0] * len(segments)
 
