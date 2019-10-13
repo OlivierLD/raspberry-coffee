@@ -50,6 +50,8 @@ import java.util.Properties;
  * -Dlsm303.verbose.acc default false
  * -Dlsm303.log.for.calibration default false
  *
+ * -Dlsm303.pitch.roll.adjust default true
+ *
  * -Dlsm303.cal.prop.file default "lsm303.cal.properties"
  */
 public class LSM303 {
@@ -115,6 +117,8 @@ public class LSM303 {
 
 	private static boolean useLowPassFilter = "true".equals(System.getProperty("lsm303.low.pass.filter", "true")); // default true
 	private static boolean logForCalibration = "true".equals(System.getProperty("lsm303.log.for.calibration", "false"));
+
+	private static boolean pitchRollHeadingAdjust = "true".equals(System.getProperty("lsm303.pitch.roll.adjust", "true"));
 
 	private double pitch = 0D, roll = 0D, heading = 0D;
 
@@ -496,7 +500,7 @@ public class LSM303 {
 
 					double beforeAdjust = GeomUtil.getDir((float) magYComp, (float) magXComp); // For dev
 
-					if (pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
+					if (pitchRollHeadingAdjust && pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
 						magXComp = (magXFiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZFiltered * Math.sin(Math.toRadians(pitchDegrees)));
 						magYComp = (magYFiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZFiltered * Math.sin(Math.toRadians(rollDegrees)));
 					}

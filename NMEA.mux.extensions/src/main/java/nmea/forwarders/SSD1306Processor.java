@@ -449,7 +449,7 @@ public class SSD1306Processor implements Forwarder {
 									deviation = ((Angle180EW)dev).getValue();
 								}
 								int hdt = (int) Math.round(((Angle360) hdg).getValue() + (declination + deviation));
-								while (hdt > 360) {
+								while (hdt >= 360) {
 									hdt -= 360;
 								}
 								while (hdt < 0) {
