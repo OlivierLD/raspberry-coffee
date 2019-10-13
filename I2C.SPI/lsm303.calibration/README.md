@@ -13,7 +13,7 @@ Save the logged (csv) file.
 ### What we want
 We want the data points to be disposed on circles, centered on `[0,0]`.
 
-For that, we will determine offsets and coefficients, for each plan (XY, XZ, and YZ), for for both devices (magnetometer, accelerometer).
+For that, we will determine offsets and coefficients, for each plan (XY, XZ, and YZ), and for both devices (magnetometer, accelerometer).
 
 ### Get to the calibration parameters
 Use the `lsm303.csv` file, open it as a spreadsheet (I use LibreOffice).
