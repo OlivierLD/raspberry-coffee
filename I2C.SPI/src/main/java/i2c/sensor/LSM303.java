@@ -41,6 +41,14 @@ import java.util.Properties;
  * <p>
  * Very good doc, explaining the calibration problem:
  * https://github.com/praneshkmr/node-lsm303/wiki/Understanding-the-calibration-of-the-LSM303-magnetometer-(compass)
+ *
+ * Uses the following System variables:
+ * -Dlsm303.low.pass.filter default true
+ * -Dlsm303.verbose default false
+ * -Dlsm303.verbose.raw default false
+ * -Dlsm303.verbose.mag default false
+ * -Dlsm303.verbose.acc default false
+ * -Dlsm303.log.for.calibration default false
  */
 public class LSM303 {
 	/*
