@@ -448,7 +448,14 @@ public class SSD1306Processor implements Forwarder {
 								if (dev != null) {
 									deviation = ((Angle180EW)dev).getValue();
 								}
-								bean.hdg = (int) Math.round(((Angle360) hdg).getValue() + (declination + deviation));
+								int hdt = (int) Math.round(((Angle360) hdg).getValue() + (declination + deviation));
+								while (hdt > 360) {
+									hdt -= 360;
+								}
+								while (hdt < 0) {
+									hdt += 360;
+								}
+								bean.hdg = hdt;
 							}
 						}
 						Object cmg = cache.get(NMEADataCache.CMG);
