@@ -379,9 +379,9 @@ public class LSM303 {
 						accZ /= accNorm;
 					}
 
-					accX = calibrationMap.get(ACC_X_OFFSET) + (accX * calibrationMap.get(ACC_X_COEFF));
-					accY = calibrationMap.get(ACC_Y_OFFSET) + (accY * calibrationMap.get(ACC_Y_COEFF));
-					accZ = calibrationMap.get(ACC_Z_OFFSET) + (accZ * calibrationMap.get(ACC_Z_COEFF));
+					accX = calibrationMap.get(ACC_X_COEFF) * (calibrationMap.get(ACC_X_OFFSET) + accX);
+					accY = calibrationMap.get(ACC_Y_COEFF) * (calibrationMap.get(ACC_Y_OFFSET) + accY);
+					accZ = calibrationMap.get(ACC_Z_COEFF) * (calibrationMap.get(ACC_Z_OFFSET) + accZ);
 
 					if (useLowPassFilter) {
 						accXFiltered = lowPass(ALPHA, accX, accXFiltered);
