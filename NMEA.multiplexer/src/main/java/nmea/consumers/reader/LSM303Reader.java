@@ -81,6 +81,9 @@ public class LSM303Reader extends NMEAReader {
 
 	public void setDampingSize(Integer dmp) {
 		this.damping = dmp;
+		if (dampingService != null) {
+			dampingService.resetBufferSize(dmp);
+		}
 	}
 
 	@Override

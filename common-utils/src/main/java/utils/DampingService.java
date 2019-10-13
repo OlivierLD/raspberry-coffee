@@ -21,6 +21,10 @@ public class DampingService<T> {
 		buffer = new ArrayList<>();
 	}
 
+	public void resetBufferSize(int size) {
+		this.maxLength = size;
+	}
+
 	public void append(Smoothable<T> element) {
 		this.buffer.add(element.get());
 		while (buffer.size() > maxLength) {

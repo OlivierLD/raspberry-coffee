@@ -348,6 +348,9 @@ public class MuxInitializer {
 												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
 												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
 												mux);
+								lsm303Client.initClient();
+								lsm303Client.setReader(new LSM303Reader("MUX-LSM303Reader", lsm303Client.getListeners()));
+								lsm303Client.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								// Important: after the setReader
 								if (headingOffset != 0) {
 									((LSM303Client) lsm303Client).setHeadingOffset(headingOffset);
@@ -365,9 +368,6 @@ public class MuxInitializer {
 										throw new RuntimeException(String.format("Bad prefix [%s] for LSM303. Must be 2 character long, exactly.", lsm303DevicePrefix.trim()));
 									}
 								}
-								lsm303Client.initClient();
-								lsm303Client.setReader(new LSM303Reader("MUX-LSM303Reader", lsm303Client.getListeners()));
-								lsm303Client.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								nmeaDataClients.add(lsm303Client);
 							} catch (Exception e) {
 								e.printStackTrace();
