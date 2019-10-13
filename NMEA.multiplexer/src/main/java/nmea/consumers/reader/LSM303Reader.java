@@ -43,7 +43,7 @@ public class LSM303Reader extends NMEAReader {
 		this.setVerbose("true".equals(System.getProperty("lsm303.data.verbose", "false")));
 		this.dampingService = new DampingService<>(damping);
 		try {
-			this.lsm303 = new LSM303(); // TODO Calibration parameters!!
+			this.lsm303 = new LSM303(); // Calibration parameters in a properties file.
 		} catch (I2CFactory.UnsupportedBusNumberException e) {
 			e.printStackTrace();
 		} catch (IOException ioe) {

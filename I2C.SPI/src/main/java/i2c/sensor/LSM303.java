@@ -264,6 +264,38 @@ public class LSM303 {
 				System.out.println("Magnetometer OK.");
 			}
 		}
+
+		Properties lsm303CalProps = new Properties();
+		try {
+			lsm303CalProps.load(new FileReader(System.getProperty("lsm303.cal.prop.file", "lsm303.cal.properties")));
+		} catch (Exception ex) {
+			System.out.println("Defaulting Calibration Properties");
+		}
+		// Calibration values
+		if (!"true".equals(System.getProperty("lsm303.log.for.calibration"))) {
+			// WARNING: Those value might not fit your device!!! They ~fit one of mines...
+
+			// MAG offsets
+			this.setCalibrationValue(LSM303.MAG_X_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_X_OFFSET, "0")));
+			this.setCalibrationValue(LSM303.MAG_Y_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Y_OFFSET, "0")));
+			this.setCalibrationValue(LSM303.MAG_Z_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Z_OFFSET, "0")));
+			// MAG coeffs
+			this.setCalibrationValue(LSM303.MAG_X_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_X_COEFF, "1")));
+			this.setCalibrationValue(LSM303.MAG_Y_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Y_COEFF, "1")));
+			this.setCalibrationValue(LSM303.MAG_Z_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Z_COEFF, "1")));
+
+			// ACC offsets
+			this.setCalibrationValue(LSM303.ACC_X_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_X_OFFSET, "0")));
+			this.setCalibrationValue(LSM303.ACC_Y_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Y_OFFSET, "0")));
+			this.setCalibrationValue(LSM303.ACC_Z_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Z_OFFSET, "0")));
+			// ACC coeffs
+			this.setCalibrationValue(LSM303.ACC_X_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_X_COEFF, "1")));
+			this.setCalibrationValue(LSM303.ACC_Y_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Y_COEFF, "1")));
+			this.setCalibrationValue(LSM303.ACC_Z_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Z_COEFF, "1")));
+
+			System.out.println("Calibration parameters:" + this.getCalibrationMap());
+		}
+
 		if (autoStart) {
 			startReading();
 		} else if (verbose) {
@@ -588,37 +620,6 @@ public class LSM303 {
 		try {
 			LSM303 sensor = new LSM303(EnabledFeature.BOTH, false);
 			sensor.setWait(250); // 1/4 sec between reads
-
-			Properties lsm303CalProps = new Properties();
-			try {
-				lsm303CalProps.load(new FileReader(System.getProperty("lsm303.cal.prop.file", "lsm303.cal.properties")));
-			} catch (Exception ex) {
-				System.out.println("Defaulting Calibration Properties");
-			}
-			// Calibration values
-			if (!"true".equals(System.getProperty("lsm303.log.for.calibration"))) {
-				// WARNING: Those value might not fit your device!!! They ~fit one of mines...
-
-				// MAG offsets
-				sensor.setCalibrationValue(LSM303.MAG_X_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_X_OFFSET, "0")));
-				sensor.setCalibrationValue(LSM303.MAG_Y_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Y_OFFSET, "0")));
-				sensor.setCalibrationValue(LSM303.MAG_Z_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Z_OFFSET, "0")));
-				// MAG coeffs
-				sensor.setCalibrationValue(LSM303.MAG_X_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_X_COEFF, "1")));
-				sensor.setCalibrationValue(LSM303.MAG_Y_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Y_COEFF, "1")));
-				sensor.setCalibrationValue(LSM303.MAG_Z_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Z_COEFF, "1")));
-
-				// ACC offsets
-				sensor.setCalibrationValue(LSM303.ACC_X_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_X_OFFSET, "0")));
-				sensor.setCalibrationValue(LSM303.ACC_Y_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Y_OFFSET, "0")));
-				sensor.setCalibrationValue(LSM303.ACC_Z_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Z_OFFSET, "0")));
-				// ACC coeffs
-				sensor.setCalibrationValue(LSM303.ACC_X_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_X_COEFF, "1")));
-				sensor.setCalibrationValue(LSM303.ACC_Y_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Y_COEFF, "1")));
-				sensor.setCalibrationValue(LSM303.ACC_Z_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Z_COEFF, "1")));
-
-				System.out.println("Calibration parameters:" + sensor.getCalibrationMap());
-			}
 
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				if (verbose) {
