@@ -49,6 +49,8 @@ import java.util.Properties;
  * -Dlsm303.verbose.mag default false
  * -Dlsm303.verbose.acc default false
  * -Dlsm303.log.for.calibration default false
+ *
+ * -Dlsm303.cal.prop.file default "lsm303.cal.properties"
  */
 public class LSM303 {
 	/*
@@ -346,133 +348,143 @@ public class LSM303 {
 			double magNorm = 0d, accNorm = 0d;
 
 			if (accelerometer != null) {
-				accelerometer.write((byte) (LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80));
+				try {
+					accelerometer.write((byte) (LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80));
 
-				int r = accelerometer.read(accelData, 0, 6);
-				if (r != 6) {
-					System.out.println("Error reading accel data, < 6 bytes");
-				}
-				// raw Acc data
-				accelX = accel12(accelData, 0);
-				accelY = accel12(accelData, 2);
-				accelZ = accel12(accelData, 4);
+					int r = accelerometer.read(accelData, 0, 6);
+					if (r != 6) {
+						System.out.println("Error reading accel data, < 6 bytes");
+					}
+					// raw Acc data
+					accelX = accel12(accelData, 0);
+					accelY = accel12(accelData, 2);
+					accelZ = accel12(accelData, 4);
 
-				if (verboseAcc) {
-					System.out.println(String.format("Raw(int)Acc XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X)", accelX, accelY, accelZ, accelX & 0xFFFF, accelY & 0xFFFF, accelZ & 0xFFFF));
-				}
+					if (verboseAcc) {
+						System.out.println(String.format("Raw(int)Acc XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X)", accelX, accelY, accelZ, accelX & 0xFFFF, accelY & 0xFFFF, accelZ & 0xFFFF));
+					}
 
-				accX = accelX * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
-				accY = accelY * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
-				accZ = accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
+					accX = accelX * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
+					accY = accelY * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
+					accZ = accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 
-				accNorm = Math.sqrt((accX * accX) + (accY * accY) + (accZ * accZ));
+					accNorm = Math.sqrt((accX * accX) + (accY * accY) + (accZ * accZ));
 
-				if (verboseAcc) {
-					System.out.println(String.format("Acc norm: %f", accNorm));
-				}
-				if (USE_NORM && accNorm != 0) {
-					accX /= accNorm;
-					accY /= accNorm;
-					accZ /= accNorm;
-				}
+					if (verboseAcc) {
+						System.out.println(String.format("Acc norm: %f", accNorm));
+					}
+					if (USE_NORM && accNorm != 0) {
+						accX /= accNorm;
+						accY /= accNorm;
+						accZ /= accNorm;
+					}
 
-				accX = calibrationMap.get(ACC_X_OFFSET) + (accX * calibrationMap.get(ACC_X_COEFF));
-				accY = calibrationMap.get(ACC_Y_OFFSET) + (accY * calibrationMap.get(ACC_Y_COEFF));
-				accZ = calibrationMap.get(ACC_Z_OFFSET) + (accZ * calibrationMap.get(ACC_Z_COEFF));
+					accX = calibrationMap.get(ACC_X_OFFSET) + (accX * calibrationMap.get(ACC_X_COEFF));
+					accY = calibrationMap.get(ACC_Y_OFFSET) + (accY * calibrationMap.get(ACC_Y_COEFF));
+					accZ = calibrationMap.get(ACC_Z_OFFSET) + (accZ * calibrationMap.get(ACC_Z_COEFF));
 
-				if (useLowPassFilter) {
-					accXFiltered = lowPass(ALPHA, accX, accXFiltered);
-					accYFiltered = lowPass(ALPHA, accY, accYFiltered);
-					accZFiltered = lowPass(ALPHA, accZ, accZFiltered);
-				} else {
-					accXFiltered = accX;
-					accYFiltered = accY;
-					accZFiltered = accZ;
-				}
+					if (useLowPassFilter) {
+						accXFiltered = lowPass(ALPHA, accX, accXFiltered);
+						accYFiltered = lowPass(ALPHA, accY, accYFiltered);
+						accZFiltered = lowPass(ALPHA, accZ, accZFiltered);
+					} else {
+						accXFiltered = accX;
+						accYFiltered = accY;
+						accZFiltered = accZ;
+					}
 				/*
 					pitch = atan (x / sqrt(y^2 + z^2));
 					roll  = atan (y / sqrt(x^2 + z^2));
 				 */
-				pitchDegrees = Math.toDegrees(Math.atan(accXFiltered / Math.sqrt((accYFiltered * accYFiltered) + (accZFiltered * accZFiltered))));
-				rollDegrees  = Math.toDegrees(Math.atan(accYFiltered / Math.sqrt((accXFiltered * accXFiltered) + (accZFiltered * accZFiltered))));
+					pitchDegrees = Math.toDegrees(Math.atan(accXFiltered / Math.sqrt((accYFiltered * accYFiltered) + (accZFiltered * accZFiltered))));
+					rollDegrees = Math.toDegrees(Math.atan(accYFiltered / Math.sqrt((accXFiltered * accXFiltered) + (accZFiltered * accZFiltered))));
 
-				setPitch(pitchDegrees);
-				setRoll(rollDegrees);
+					setPitch(pitchDegrees);
+					setRoll(rollDegrees);
 
-				if (verboseAcc) {
-					System.out.println("Pitch & Roll with Accelerometer:");
-					System.out.println(String.format("\tX:%f, Y:%f, Z:%f", accXFiltered, accYFiltered, accZFiltered));
-					System.out.println(String.format("\tPitch:%f, Roll:%f", pitchDegrees, rollDegrees));
+					if (verboseAcc) {
+						System.out.println("Pitch & Roll with Accelerometer:");
+						System.out.println(String.format("\tX:%f, Y:%f, Z:%f", accXFiltered, accYFiltered, accZFiltered));
+						System.out.println(String.format("\tPitch:%f, Roll:%f", pitchDegrees, rollDegrees));
+					}
+				} catch (IOException ioe) {
+					System.err.println("Error writing to Accelerometer");
+					ioe.printStackTrace();
 				}
 			}
 			// Request magnetometer measurements.
 			if (magnetometer != null) {
-				magnetometer.write((byte) LSM303_REGISTER_MAG_OUT_X_H_M);
-				// Reading magnetometer measurements.
-				int r = magnetometer.read(magData, 0, 6);
-				if (r != 6) {
-					System.out.println("Error reading mag data, < 6 bytes");
-				} else if (verboseMag) {
-					dumpBytes(magData);
-				}
-				// Mag raw data. !!! Warning !!! Order here is X, Z, Y
-				magneticX = mag16(magData, 0); // X
-				magneticZ = mag16(magData, 2); // Yes, Z
-				magneticY = mag16(magData, 4); // Then Y
+				try {
+					magnetometer.write((byte) LSM303_REGISTER_MAG_OUT_X_H_M);
+					// Reading magnetometer measurements.
+					int r = magnetometer.read(magData, 0, 6);
+					if (r != 6) {
+						System.out.println("Error reading mag data, < 6 bytes");
+					} else if (verboseMag) {
+						dumpBytes(magData);
+					}
+					// Mag raw data. !!! Warning !!! Order here is X, Z, Y
+					magneticX = mag16(magData, 0); // X
+					magneticZ = mag16(magData, 2); // Yes, Z
+					magneticY = mag16(magData, 4); // Then Y
 
-				magX = magneticX;
-				magY = magneticY;
-				magZ = magneticZ;
+					magX = magneticX;
+					magY = magneticY;
+					magZ = magneticZ;
 
-				magNorm = Math.sqrt((magX * magX) + (magY * magY) + (magZ * magZ));
+					magNorm = Math.sqrt((magX * magX) + (magY * magY) + (magZ * magZ));
 
-				if (USE_NORM && magNorm != 0) {
-					magX /= magNorm;
-					magY /= magNorm;
-					magZ /= magNorm;
-				}
+					if (USE_NORM && magNorm != 0) {
+						magX /= magNorm;
+						magY /= magNorm;
+						magZ /= magNorm;
+					}
 
-				magX = calibrationMap.get(MAG_X_COEFF) * (calibrationMap.get(MAG_X_OFFSET) + magX);
-				magY = calibrationMap.get(MAG_Y_COEFF) * (calibrationMap.get(MAG_Y_OFFSET) + magY);
-				magZ = calibrationMap.get(MAG_Z_COEFF) * (calibrationMap.get(MAG_Z_OFFSET) + magZ);
+					magX = calibrationMap.get(MAG_X_COEFF) * (calibrationMap.get(MAG_X_OFFSET) + magX);
+					magY = calibrationMap.get(MAG_Y_COEFF) * (calibrationMap.get(MAG_Y_OFFSET) + magY);
+					magZ = calibrationMap.get(MAG_Z_COEFF) * (calibrationMap.get(MAG_Z_OFFSET) + magZ);
 
-				// TODO See that..., optional? They're all constants...
+					// TODO See that..., optional? They're all constants...
 //				magX /= (_lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA);
 //				magY /= (_lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA);
 //				magZ /= (_lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA);
 
-				if (useLowPassFilter) {
-					magXFiltered = lowPass(ALPHA, magX, magXFiltered);
-					magYFiltered = lowPass(ALPHA, magY, magYFiltered);
-					magZFiltered = lowPass(ALPHA, magZ, magZFiltered);
-				} else {
-					magXFiltered = magX;
-					magYFiltered = magY;
-					magZFiltered = magZ;
+					if (useLowPassFilter) {
+						magXFiltered = lowPass(ALPHA, magX, magXFiltered);
+						magYFiltered = lowPass(ALPHA, magY, magYFiltered);
+						magZFiltered = lowPass(ALPHA, magZ, magZFiltered);
+					} else {
+						magXFiltered = magX;
+						magYFiltered = magY;
+						magZFiltered = magZ;
+					}
+
+					double magXComp = magXFiltered;
+					double magYComp = magYFiltered;
+
+					double beforeAdjust = GeomUtil.getDir((float) magYComp, (float) magXComp); // For dev
+
+					if (pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
+						magXComp = (magXFiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZFiltered * Math.sin(Math.toRadians(pitchDegrees)));
+						magYComp = (magYFiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZFiltered * Math.sin(Math.toRadians(rollDegrees)));
+					}
+
+					double afterAdjust = GeomUtil.getDir((float) magYComp, (float) magXComp); // For dev
+
+					heading = Math.toDegrees(Math.atan2(magYComp, magXComp));
+					while (heading < 0) {
+						heading += 360f;
+					}
+
+					if (verbose) {
+						System.out.println(String.format("RAW mag data (2): X:%f Y:%f => (before %.02f) (after %.02f) (HDG %.02f) ", magXComp, magYComp, beforeAdjust, afterAdjust, heading));
+					}
+
+					setHeading(heading);
+				} catch (IOException ioe) {
+					System.err.println("Error writing to Magnetometer");
+					ioe.printStackTrace();
 				}
-
-				double magXComp = magXFiltered;
-				double magYComp = magYFiltered;
-
-				double beforeAdjust = GeomUtil.getDir((float)magYComp, (float)magXComp); // For dev
-
-				if (pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
-					magXComp = (magXFiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZFiltered * Math.sin(Math.toRadians(pitchDegrees)));
-					magYComp = (magYFiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZFiltered * Math.sin(Math.toRadians(rollDegrees)));
-				}
-
-				double afterAdjust = GeomUtil.getDir((float)magYComp, (float)magXComp); // For dev
-
-				heading = Math.toDegrees(Math.atan2(magYComp, magXComp));
-				while (heading < 0) {
-					heading += 360f;
-				}
-
-				if (verbose) {
-					System.out.println(String.format("RAW mag data (2): X:%f Y:%f => (before %.02f) (after %.02f) (HDG %.02f) ", magXComp, magYComp, beforeAdjust, afterAdjust, heading));
-				}
-
-				setHeading(heading);
 			} else {
 				if (verbose) {
 					System.out.println("magnetometer is null");
