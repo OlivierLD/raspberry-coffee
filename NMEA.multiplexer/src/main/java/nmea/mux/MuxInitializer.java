@@ -335,6 +335,15 @@ public class MuxInitializer {
 								} catch (NumberFormatException nfe) {
 									nfe.printStackTrace();
 								}
+								if (verbose) {
+									System.out.println(String.format("For LSM303 channel: deviceFilters: %s, sentenceFilters: %s, devicePrefix: %s, headingOffset: %d, readFrequency: %d, dampingSize: %d",
+											deviceFilters,
+											sentenceFilters,
+											lsm303DevicePrefix,
+											headingOffset,
+											readFrequency,
+											dampingSize));
+								}
 								NMEAClient lsm303Client = new LSM303Client(
 												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
 												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,

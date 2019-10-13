@@ -276,22 +276,22 @@ public class LSM303 {
 			// WARNING: Those value might not fit your device!!! They ~fit one of mines...
 
 			// MAG offsets
-			this.setCalibrationValue(LSM303.MAG_X_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_X_OFFSET, "0")));
-			this.setCalibrationValue(LSM303.MAG_Y_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Y_OFFSET, "0")));
-			this.setCalibrationValue(LSM303.MAG_Z_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Z_OFFSET, "0")));
+			this.setCalibrationValue(LSM303.MAG_X_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_X_OFFSET, String.valueOf(DEFAULT_MAP.get(LSM303.MAG_X_OFFSET)))));
+			this.setCalibrationValue(LSM303.MAG_Y_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Y_OFFSET, String.valueOf(DEFAULT_MAP.get(LSM303.MAG_Y_OFFSET)))));
+			this.setCalibrationValue(LSM303.MAG_Z_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Z_OFFSET, String.valueOf(DEFAULT_MAP.get(LSM303.MAG_Z_OFFSET)))));
 			// MAG coeffs
-			this.setCalibrationValue(LSM303.MAG_X_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_X_COEFF, "1")));
-			this.setCalibrationValue(LSM303.MAG_Y_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Y_COEFF, "1")));
-			this.setCalibrationValue(LSM303.MAG_Z_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Z_COEFF, "1")));
+			this.setCalibrationValue(LSM303.MAG_X_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_X_COEFF, String.valueOf(DEFAULT_MAP.get(LSM303.MAG_X_COEFF)))));
+			this.setCalibrationValue(LSM303.MAG_Y_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Y_COEFF, String.valueOf(DEFAULT_MAP.get(LSM303.MAG_Y_COEFF)))));
+			this.setCalibrationValue(LSM303.MAG_Z_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.MAG_Z_COEFF, String.valueOf(DEFAULT_MAP.get(LSM303.MAG_Z_COEFF)))));
 
 			// ACC offsets
-			this.setCalibrationValue(LSM303.ACC_X_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_X_OFFSET, "0")));
-			this.setCalibrationValue(LSM303.ACC_Y_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Y_OFFSET, "0")));
-			this.setCalibrationValue(LSM303.ACC_Z_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Z_OFFSET, "0")));
+			this.setCalibrationValue(LSM303.ACC_X_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_X_OFFSET, String.valueOf(DEFAULT_MAP.get(LSM303.ACC_X_OFFSET)))));
+			this.setCalibrationValue(LSM303.ACC_Y_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Y_OFFSET, String.valueOf(DEFAULT_MAP.get(LSM303.ACC_Y_OFFSET)))));
+			this.setCalibrationValue(LSM303.ACC_Z_OFFSET, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Z_OFFSET, String.valueOf(DEFAULT_MAP.get(LSM303.ACC_Z_OFFSET)))));
 			// ACC coeffs
-			this.setCalibrationValue(LSM303.ACC_X_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_X_COEFF, "1")));
-			this.setCalibrationValue(LSM303.ACC_Y_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Y_COEFF, "1")));
-			this.setCalibrationValue(LSM303.ACC_Z_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Z_COEFF, "1")));
+			this.setCalibrationValue(LSM303.ACC_X_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_X_COEFF, String.valueOf(DEFAULT_MAP.get(LSM303.ACC_X_COEFF)))));
+			this.setCalibrationValue(LSM303.ACC_Y_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Y_COEFF, String.valueOf(DEFAULT_MAP.get(LSM303.ACC_Y_COEFF)))));
+			this.setCalibrationValue(LSM303.ACC_Z_COEFF, Double.parseDouble(lsm303CalProps.getProperty(LSM303.ACC_Z_COEFF, String.valueOf(DEFAULT_MAP.get(LSM303.ACC_Z_COEFF)))));
 
 			System.out.println("Calibration parameters:" + this.getCalibrationMap());
 		}

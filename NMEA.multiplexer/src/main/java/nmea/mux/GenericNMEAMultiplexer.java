@@ -169,7 +169,7 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 			// Read initial config from the properties file. See the main method.
 //		verbose = "true".equals(System.getProperty("mux.data.verbose", "false")); // Initial verbose.
 		restImplementation = new RESTImplementation(nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, this);
-		MuxInitializer.setup(muxProps, nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, this);
+		MuxInitializer.setup(muxProps, nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, this, verbose);
 
 		if (infraVerbose) {
 			System.out.println(String.format("\t>> %s - RESTImplementation initialized.", NumberFormat.getInstance().format(System.currentTimeMillis())));
