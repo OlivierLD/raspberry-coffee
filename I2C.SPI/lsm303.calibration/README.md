@@ -1,4 +1,4 @@
-## Magnetometer calibration
+## LSM303 calibration
 
 ### Log data for calibration
 Run the script `lsm303.sh` with
@@ -8,7 +8,12 @@ JAVA_OPTS="$JAVA_OPTS -Dlsm303.log.for.calibration=true"
 sudo java $JAVA_OPTS -cp $CP i2c.sensor.LSM303 > lsm303.csv
 ```
 Move the device in every possible directions and positions..., then stop (`Ctrl+C`) the program.
-Same the logged (csv) file.
+Save the logged (csv) file.
+
+### What we want
+We want the data points to be disposed on circles, centered on `[0,0]`.
+
+For that, we will determine offsets and coefficients, for each plan (XY, XZ, and YZ), for for both devices (magnetometer, accelerometer).
 
 ### Get to the calibration parameters
 Use the `lsm303.csv` file, open it as a spreadsheet (I use LibreOffice).
@@ -52,5 +57,5 @@ AccZCoeff=1.05
 
 The default properties file name is `lsm303.cal.properties`. 
 
-See the code for details... ;)
+See the code of `LSM303.java` for details... ;)
 
