@@ -16,6 +16,8 @@ import utils.DampingService;
  * Reads data from an LSM303 sensor.
  * Pitch and Roll, as XDR Strings.
  * Heading, as an HDM String.
+ *
+ * -Dlsm303.use.damping default true
  */
 public class LSM303Reader extends NMEAReader {
 
@@ -41,7 +43,9 @@ public class LSM303Reader extends NMEAReader {
 	public LSM303Reader(String threadName, List<NMEAListener> al) {
 		super(threadName, al);
 		this.setVerbose("true".equals(System.getProperty("lsm303.data.verbose", "false")));
-		this.dampingService = new DampingService<>(damping);
+		if ("true".equals(System.getProperty("lsm303.use.damping", "true"))) {
+			this.dampingService = new DampingService<>(damping);
+		}
 		try {
 			this.lsm303 = new LSM303(); // Calibration parameters in a properties file.
 		} catch (I2CFactory.UnsupportedBusNumberException e) {
@@ -103,10 +107,12 @@ public class LSM303Reader extends NMEAReader {
 			public void run() {
 				while (instance.canRead()) {
 					DegreeAngle smooth = null;
-					synchronized (dampingService) {
-						smooth = dampingService.smooth(new SmoothableDegreeAngle());
-						if (instance.verbose) {
-							System.out.println(String.format(">>> Smoothed Heading in degrees %f, %d entries.", smooth.getAngleInDegrees(), dampingService.getBufferSize()));
+					if (dampingService != null) {
+						synchronized (dampingService) {
+							smooth = dampingService.smooth(new SmoothableDegreeAngle());
+							if (instance.verbose) {
+								System.out.println(String.format(">>> Smoothed Heading in degrees %f, %d entries.", smooth.getAngleInDegrees(), dampingService.getBufferSize()));
+							}
 						}
 					}
 					String nmeaHDM = StringGenerator.generateHDM(devicePrefix, (int) Math.round(smooth.getAngleInDegrees()));
@@ -122,7 +128,9 @@ public class LSM303Reader extends NMEAReader {
 				System.out.println(">>> Damping Heading Service stopped");
 			}
 		};
-		feeder.start();
+		if (dampingService != null) {
+			feeder.start();
+		}
 
 		while (this.canRead()) {
 			// Read data every 1 second
@@ -146,10 +154,12 @@ public class LSM303Reader extends NMEAReader {
 						heading += 360;
 					}
 				}
-				// Only for Heading for now...
-				DegreeAngle degreeAngle = new DegreeAngle(Math.sin(Math.toRadians(heading)), Math.cos(Math.toRadians(heading)));
-				synchronized (dampingService) {
-					dampingService.append(new SmoothableDegreeAngle(degreeAngle));
+				if (dampingService != null) {
+					// Only for Heading for now...
+					DegreeAngle degreeAngle = new DegreeAngle(Math.sin(Math.toRadians(heading)), Math.cos(Math.toRadians(heading)));
+					synchronized (dampingService) {
+						dampingService.append(new SmoothableDegreeAngle(degreeAngle));
+					}
 				}
 
 				if (this.verbose) {
@@ -167,9 +177,11 @@ public class LSM303Reader extends NMEAReader {
 				nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 				fireDataRead(new NMEAEvent(this, nmeaXDR));
 
-//				String nmeaHDM = StringGenerator.generateHDM(devicePrefix, (int)Math.round(heading));
-//				nmeaHDM += NMEAParser.NMEA_SENTENCE_SEPARATOR;
-//				fireDataRead(new NMEAEvent(this, nmeaHDM));
+				if (dampingService == null) {
+					String nmeaHDM = StringGenerator.generateHDM(devicePrefix, (int)Math.round(heading));
+					nmeaHDM += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+					fireDataRead(new NMEAEvent(this, nmeaHDM));
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
