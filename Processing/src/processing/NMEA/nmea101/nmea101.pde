@@ -1,6 +1,10 @@
 import processing.serial.*;
 
-/* RMC Structure is
+/* 
+ * Reads RMC sentences from a Serial GPS, and displays the position on the screen.
+ * Modify the Serial port name if needed, look for "serialPort = new Serial("...
+ *
+ * RMC Structure is
  *                                                                    12
  *         1      2 3        4 5         6 7     8     9      10    11
  *  $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W,T*6A
@@ -55,8 +59,9 @@ boolean validCheckSum(String data) {
   boolean b = false;
   try {
     int starIndex = sentence.indexOf("*");
-    if (starIndex < 0)
+    if (starIndex < 0) {
       return false;
+    }
     String csKey = sentence.substring(starIndex + 1);
     int csk = Integer.parseInt(csKey, 16);
     String str2validate = sentence.substring(1, sentence.indexOf("*"));
@@ -124,7 +129,10 @@ void draw() {
       }
       if (validCheckSum(sentence)) {
         
+        
         String[] data = sentence.substring(0, sentence.indexOf("*")).split(",");
+        // TODO Make sure it is an RMC String, data[0] like '$GPRMC' (GP may vary)
+
         boolean valid = data[2].equals("A");
         if (valid) {
           if (data[3].length() > 0 && data[5].length() > 0) {
