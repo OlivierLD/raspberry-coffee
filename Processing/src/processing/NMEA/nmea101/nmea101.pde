@@ -1,5 +1,9 @@
 import processing.serial.*;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
 /* 
  * Reads RMC sentences from a Serial GPS, and displays the position on the screen.
  * Modify the Serial port name if needed, look for "serialPort = new Serial("...
@@ -107,6 +111,8 @@ String decToSex(double v, DATA_TYPE dataType) {
 }
 
 GeoPos position = null;
+static String RMC_PATTERN = "^\\$[A-Z]{2}RMC$";
+static Pattern COMPILED_PATTERN = Pattern.compile(RMC_PATTERN);
 
 void draw() {
   while (serialPort.available() > 0) { //<>//
@@ -129,34 +135,40 @@ void draw() {
       }
       if (validCheckSum(sentence)) {
         
-        
         String[] data = sentence.substring(0, sentence.indexOf("*")).split(",");
         // TODO Make sure it is an RMC String, data[0] like '$GPRMC' (GP may vary)
+        Matcher matcher = COMPILED_PATTERN.matcher(data[0]);
+        if (matcher.find()) {
 
-        boolean valid = data[2].equals("A");
-        if (valid) {
-          if (data[3].length() > 0 && data[5].length() > 0) {
-            String deg = data[3].substring(0, 2);
-            String min = data[3].substring(2);
-            double l = sexToDec(deg, min);
-            if ("S".equals(data[4])) {
-              l = -l;
+          boolean valid = data[2].equals("A");
+          if (valid) {
+            if (data[3].length() > 0 && data[5].length() > 0) {
+              String deg = data[3].substring(0, 2);
+              String min = data[3].substring(2);
+              double l = sexToDec(deg, min);
+              if ("S".equals(data[4])) {
+                l = -l;
+              }
+              deg = data[5].substring(0, 3);
+              min = data[5].substring(3);
+              double g = sexToDec(deg, min);
+              if ("W".equals(data[6])) {
+                g = -g;
+              }
+              position = new GeoPos()
+                .latitude(l)
+                .longitude(g);
             }
-            deg = data[5].substring(0, 3);
-            min = data[5].substring(3);
-            double g = sexToDec(deg, min);
-            if ("W".equals(data[6])) {
-              g = -g;
-            }
-            position = new GeoPos()
-              .latitude(l)
-              .longitude(g);
+            background(0);
+            fill(255);
+            text("Position", 5, 72);
+            text(decToSex(position.latitude, DATA_TYPE.LATITUDE), 5, 144);
+            text(decToSex(position.longitude, DATA_TYPE.LONGITUDE), 5, 216);
+          } else {
+            println(String.format("%s not active yet.", sentence));
           }
-          background(0);
-          fill(255);
-          text("Position", 5, 72);
-          text(decToSex(position.latitude, DATA_TYPE.LATITUDE), 5, 144);
-          text(decToSex(position.longitude, DATA_TYPE.LONGITUDE), 5, 216);
+        } else {
+          println(String.format("Driopping [%s], not RMC.", data[0]));
         }
       } else {
         println(String.format("Invalid checksum for %s !", sentence));
