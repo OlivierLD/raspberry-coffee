@@ -997,8 +997,9 @@ public class StringParsers {
 			return (Object[]) null;
 		}
 		/* Structure is
-     *  $aaGLL,llll.ll,a,gggg.gg,a,hhmmss.ss,A*hh
-     *         |       | |       | |         |
+     *  $aaGLL,llll.ll,a,gggg.gg,a,hhmmss.ss,A,D*hh
+		 *         |       | |       | |         | |
+ 		 *         |       | |       | |         | Type: A=autonomous, D=differential, E=Estimated, N=not valid, S=Simulator (not always there)
      *         |       | |       | |         A:data valid (Active), V: void
      *         |       | |       | UTC of position
      *         |       | |       Long sign :E/W
