@@ -219,6 +219,10 @@ public class LSM303 {
 		this(EnabledFeature.BOTH, autoStart);
 	}
 
+	public LSM303(EnabledFeature feature) throws I2CFactory.UnsupportedBusNumberException, IOException {
+		this(feature, true);
+	}
+
 	public LSM303(EnabledFeature feature, boolean autoStart) throws I2CFactory.UnsupportedBusNumberException, IOException {
 		if (verbose) {
 			System.out.println("Starting sensors reading.");

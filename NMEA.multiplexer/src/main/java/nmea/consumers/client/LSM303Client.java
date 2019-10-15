@@ -1,5 +1,6 @@
 package nmea.consumers.client;
 
+import i2c.sensor.LSM303;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
@@ -45,6 +46,23 @@ public class LSM303Client extends NMEAClient {
 		}
 	}
 
+	public void setDeviceFeature(String feature) {
+		NMEAReader reader = this.getReader();
+		LSM303.EnabledFeature found = null;
+		for(LSM303.EnabledFeature type : LSM303.EnabledFeature.values()) {
+			if (type.toString().equals(feature)) {
+				found = type;
+				break;
+			}
+		}
+		if (found == null) {
+			throw new RuntimeException(String.format("%s is not a valid LSM303.EnabledFeature", feature));
+		}
+		if (reader != null && reader instanceof LSM303Reader) {
+			((LSM303Reader)reader).setDeviceFeature(found);
+		}
+	}
+
 	public int getHeadingOffset() {
 		int headingOffset = 0;
 		NMEAReader reader = this.getReader();
@@ -77,7 +95,7 @@ public class LSM303Client extends NMEAClient {
 		}
 	}
 
-	public int geDampingSize() {
+	public int getDampingSize() {
 		Integer dampingSize = null;
 		NMEAReader reader = this.getReader();
 		if (reader != null && reader instanceof LSM303Reader) {
@@ -90,6 +108,22 @@ public class LSM303Client extends NMEAClient {
 		NMEAReader reader = this.getReader();
 		if (reader != null && reader instanceof LSM303Reader) {
 			((LSM303Reader)reader).setDampingSize(dampingSize);
+		}
+	}
+
+	public LSM303.EnabledFeature getLSM303Feature() {
+		LSM303.EnabledFeature feature = null;
+		NMEAReader reader = this.getReader();
+		if (reader != null && reader instanceof LSM303Reader) {
+			feature = ((LSM303Reader)reader).getDeviceFeature();
+		}
+		return feature;
+	}
+
+	public void setLSM303Feature(LSM303.EnabledFeature feature) {
+		NMEAReader reader = this.getReader();
+		if (reader != null && reader instanceof LSM303Reader) {
+			((LSM303Reader)reader).setDeviceFeature(feature);
 		}
 	}
 
@@ -115,6 +149,7 @@ public class LSM303Client extends NMEAClient {
 		private int headingOffset;
 		private Long readFrequency;
 		private Integer dampingSize;
+		private LSM303.EnabledFeature feature = LSM303.EnabledFeature.BOTH;
 
 		public LSM303Bean(LSM303Client instance) {
 			cls = instance.getClass().getName();
@@ -124,7 +159,8 @@ public class LSM303Client extends NMEAClient {
 			devicePrefix = instance.getSpecificDevicePrefix();
 			headingOffset = instance.getHeadingOffset();
 			readFrequency = instance.getReadFrequency();
-			dampingSize = instance.geDampingSize();
+			dampingSize = instance.getDampingSize();
+			feature = instance.getLSM303Feature();
 		}
 
 		@Override
@@ -156,6 +192,8 @@ public class LSM303Client extends NMEAClient {
 		public Integer getDampingSize() {
 			return this.dampingSize;
 		}
+
+		public LSM303.EnabledFeature getLSM303Feature() { return this.feature; }
 	}
 
 	@Override

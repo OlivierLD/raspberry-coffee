@@ -61,7 +61,7 @@ About 20 lines...
   </tr>
 </table>
 
-### A note: Processing and Java
+### _A note_: Processing and Java
 As you would notice, the code of a `sketch` looks like Java code, but it is not _exactly_ Java code...
 
 Actually, the Processing Development Environment (aka `PDE`) wraps the code with what is missing for Java to be 100% happy.

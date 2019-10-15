@@ -305,6 +305,7 @@ public class MuxInitializer {
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								String lsm303DevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
+								String lsm303DeviceFeature = muxProps.getProperty(String.format("mux.%s.device.feature", MUX_IDX_FMT.format(muxIdx)), "BOTH"); // BOTH, MAGNETOMETER, or ACCELEROMETER
 								int headingOffset = 0;
 								try {
 									headingOffset = Integer.parseInt(muxProps.getProperty(String.format("mux.%s.heading.offset", MUX_IDX_FMT.format(muxIdx)), "0"));
@@ -366,6 +367,13 @@ public class MuxInitializer {
 										((LSM303Client) lsm303Client).setSpecificDevicePrefix(lsm303DevicePrefix.trim());
 									} else {
 										throw new RuntimeException(String.format("Bad prefix [%s] for LSM303. Must be 2 character long, exactly.", lsm303DevicePrefix.trim()));
+									}
+								}
+								if (!lsm303DeviceFeature.trim().isEmpty()) {
+									try {
+										((LSM303Client) lsm303Client).setDeviceFeature(lsm303DeviceFeature.trim());
+									} catch (Exception ex) {
+										throw ex;
 									}
 								}
 								nmeaDataClients.add(lsm303Client);

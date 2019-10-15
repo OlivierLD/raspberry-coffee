@@ -24,6 +24,7 @@ public class LSM303Reader extends NMEAReader {
 	private LSM303 lsm303;
 	private static final String DEFAULT_DEVICE_PREFIX = "RP";
 	private String devicePrefix = DEFAULT_DEVICE_PREFIX;
+	private LSM303.EnabledFeature feature;
 	private static final long BETWEEN_LOOPS = 1_000L;
 	/*
 	 * Heading offset is the *read* bearing of the magnetic north.
@@ -41,13 +42,17 @@ public class LSM303Reader extends NMEAReader {
 		this(null, al);
 	}
 	public LSM303Reader(String threadName, List<NMEAListener> al) {
+		this(LSM303.EnabledFeature.BOTH, threadName, al);
+	}
+	public LSM303Reader(LSM303.EnabledFeature feature, String threadName, List<NMEAListener> al) {
 		super(threadName, al);
+		this.feature = feature;
 		this.setVerbose("true".equals(System.getProperty("lsm303.data.verbose", "false")));
 		if ("true".equals(System.getProperty("lsm303.use.damping", "true"))) {
 			this.dampingService = new DampingService<>(damping);
 		}
 		try {
-			this.lsm303 = new LSM303(); // Calibration parameters in a properties file.
+			this.lsm303 = new LSM303(this.feature); // NOTE: Calibration parameters in a properties file.
 		} catch (I2CFactory.UnsupportedBusNumberException e) {
 			e.printStackTrace();
 		} catch (IOException ioe) {
@@ -61,6 +66,14 @@ public class LSM303Reader extends NMEAReader {
 
 	public void setDevicePrefix(String devicePrefix) {
 		this.devicePrefix = devicePrefix;
+	}
+
+	public LSM303.EnabledFeature getDeviceFeature() {
+		return this.feature;
+	}
+
+	public void setDeviceFeature(LSM303.EnabledFeature feature) {
+		this.feature = feature;
 	}
 
 	public int getHeadingOffset() {
@@ -98,7 +111,7 @@ public class LSM303Reader extends NMEAReader {
 		} else {
 			System.out.println("   >>> No LSM303 started, not found.");
 		}
-		System.out.println(String.format(">> Starting reader [%s] (prefix %s). Enabled:%s", this.getClass().getName(), this.devicePrefix, this.canRead()));
+		System.out.println(String.format(">> Starting reader [%s] (prefix %s, feature %s). Enabled:%s", this.getClass().getName(), this.devicePrefix, this.feature.toString(), this.canRead()));
 
 		// Start a thread that will broadcast the *damped* values, every second.
 		final LSM303Reader instance = this;
