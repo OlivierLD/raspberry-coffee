@@ -104,7 +104,7 @@ public class Sketch extends PApplet {
 
   public void settings() {  size(200, 200); }
   static public void main(String[] passedArgs) {
-    String[] appletArgs = new String[] { "Sketch" };
+    String[] appletArgs = new String[] { "your.sketch.Sketch" };
     if (passedArgs != null) {
       PApplet.main(concat(appletArgs, passedArgs));
     } else {
