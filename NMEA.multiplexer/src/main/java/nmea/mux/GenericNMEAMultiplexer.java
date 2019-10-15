@@ -159,7 +159,7 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 	 * Constructor.
 	 * @param muxProps Initial config. See {@link #main(String...)} method.
 	 */
-	public GenericNMEAMultiplexer(Properties muxProps) {
+	public GenericNMEAMultiplexer(Properties muxProps) { // TODO A Constructor with yaml
 
 		Context.getInstance().setStartTime(System.currentTimeMillis());
 
@@ -234,7 +234,7 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 		Properties definitions = GenericNMEAMultiplexer.getDefinitions();
 
 		boolean startProcessingOnStart = "true".equals(System.getProperty("process.on.start", "true"));
-		GenericNMEAMultiplexer mux = new GenericNMEAMultiplexer(definitions);
+		GenericNMEAMultiplexer mux = new GenericNMEAMultiplexer(definitions); // TODO Yaml definition
 		mux.setEnableProcess(startProcessingOnStart);
 		// with.http.server=yes
 		// http.port=9999

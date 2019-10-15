@@ -62,6 +62,7 @@ public class MuxInitializer {
 
 	private final static NumberFormat MUX_IDX_FMT = new DecimalFormat("00");
 
+  // TODO A Constructor with a yaml instead of Properties
 	static void setup(Properties muxProps,
 	                  List<NMEAClient> nmeaDataClients,
 	                  List<Forwarder> nmeaDataForwarders,
