@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /*
- * Reads RMC sentences from a Serial GPS, and displays the position on the screen.
+ * Reads RMC & GLL sentences from a Serial GPS, and displays the position on the screen.
  * Modify the Serial port name if needed, look for "serialPort = new Serial("...
  *
  * RMC Structure is                                                  12
@@ -37,7 +37,6 @@ import java.util.regex.PatternSyntaxException;
  *         |        Lat sign :N/S
  *         Latitude
  */
-
 
 Serial serialPort;
 
@@ -117,8 +116,8 @@ String decToSex(double v, DATA_TYPE dataType) {
   double dec = absVal - intValue;
   int i = (int) intValue;
   dec *= 60D;
-  String sign = (v < 0 ? (dataType == DATA_TYPE.LATITUDE ? "S " : "W") : (dataType == DATA_TYPE.LATITUDE ? "N " : "E")); //<>//
-
+  String sign = (v < 0 ? (dataType == DATA_TYPE.LATITUDE ? "S" : "W") : (dataType == DATA_TYPE.LATITUDE ? "N" : "E"));
+ //<>//
   s = String.format("%s %d\272%.02f'", sign, i, dec); //<>//
   return s;
 }
@@ -128,8 +127,8 @@ static String RMC_PATTERN = "^\\$[A-Z]{2}RMC$";
 static String GLL_PATTERN = "^\\$[A-Z]{2}GLL$";
 static Pattern RMC_COMPILED_PATTERN = Pattern.compile(RMC_PATTERN);
 static Pattern GLL_COMPILED_PATTERN = Pattern.compile(GLL_PATTERN);
- //<>//
-void draw() {
+
+void draw() { //<>//
   while (serialPort.available() > 0) { //<>//
     int serialByte = serialPort.read();
     char currentChar = (char)serialByte;
@@ -142,8 +141,8 @@ void draw() {
     }
 
     //println(sb.toString());
- //<>//
-    if (currentChar == '\n' && previousChar == '\r') {
+
+    if (currentChar == '\n' && previousChar == '\r') { //<>//
       String sentence = sb.toString(); //<>//
       if (DEBUG) {
         println(String.format("Sentence detected: %s", sentence));
