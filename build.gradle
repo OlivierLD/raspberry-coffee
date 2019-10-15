@@ -81,6 +81,7 @@ dependencies {
   compile project(':Project.Trunk:PolarSmoother')
   compile project(':Project.Trunk:Deviation.Tool')
   compile project(':TensorFlow')
+  compile project(':Processing')
   compile project(':Bluetooth')
   compile project(':Joystick')
   compile project(':JupyterNotebooks:deep.learning.crash.course')

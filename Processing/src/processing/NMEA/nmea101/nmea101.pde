@@ -73,6 +73,7 @@ int calculateCheckSum(String str) {
 }
 
 boolean validCheckSum(String data) {
+  
   String sentence = data.trim();
   boolean b = false;
   try {
@@ -116,8 +117,8 @@ String decToSex(double v, DATA_TYPE dataType) {
   double absVal = Math.abs(v);
   double intValue = Math.floor(absVal);
   double dec = absVal - intValue;
-  int i = (int) intValue;
-  dec *= 60D; //<>//
+  int i = (int) intValue; //<>//
+  dec *= 60D;
   String sign = (v < 0 ? (dataType == DATA_TYPE.LATITUDE ? "S" : "W") : (dataType == DATA_TYPE.LATITUDE ? "N" : "E"));
 
   s = String.format("%s %d\272%.02f'", sign, i, dec);
@@ -127,8 +128,8 @@ String decToSex(double v, DATA_TYPE dataType) {
 GeoPos position = null;
 static String RMC_PATTERN = "^\\$[A-Z]{2}RMC$";
 static String GLL_PATTERN = "^\\$[A-Z]{2}GLL$";
-static Pattern RMC_COMPILED_PATTERN = Pattern.compile(RMC_PATTERN);
-static Pattern GLL_COMPILED_PATTERN = Pattern.compile(GLL_PATTERN); //<>//
+static Pattern RMC_COMPILED_PATTERN = Pattern.compile(RMC_PATTERN); //<>//
+static Pattern GLL_COMPILED_PATTERN = Pattern.compile(GLL_PATTERN);
 
 void draw() {
   while (serialPort.available() > 0) { //<>//
@@ -141,8 +142,8 @@ void draw() {
     if (currentChar == START_CHARACTER && DEBUG) {
       println("\tStart of sentence detected");
     }
-
-    //println(sb.toString()); //<>//
+ //<>//
+    //println(sb.toString());
 
     if (currentChar == '\n' && previousChar == '\r') {
       String sentence = sb.toString(); //<>//

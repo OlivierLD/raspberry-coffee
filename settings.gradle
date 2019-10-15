@@ -45,6 +45,7 @@ include "Camera"
 include "WebComponents"
 include "HanoiTower"
 include "TensorFlow"
+include "Processing"
 include "Bluetooth"
 include "Joystick"
 // NMEA.mux.WebUI sub-projects
