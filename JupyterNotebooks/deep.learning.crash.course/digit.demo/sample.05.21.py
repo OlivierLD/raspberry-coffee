@@ -177,6 +177,7 @@ while keepLooping:
         roi = cv2.selectROI(image, showCrosshair=False)  # Interactive selection
         cropped_image = image[int(roi[1]):int(roi[1] + roi[3]), int(roi[0]):int(roi[0] + roi[2])]
         cv2.imshow('Selected ROI', cropped_image)
+        # TODO: Several digits in the same snapshot
         time.sleep(0.5)
         apply_model(cropped_image, True)
 
