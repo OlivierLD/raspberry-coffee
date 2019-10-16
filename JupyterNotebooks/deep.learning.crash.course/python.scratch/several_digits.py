@@ -69,6 +69,7 @@ def process_image(image, show_all_steps=False, kernel_size=15):
 
     # loop over each of the digits
     idx = 0
+    padding = 10
     for c in digitCnts:
         idx += 1
         # extract the digit ROI
@@ -76,7 +77,8 @@ def process_image(image, show_all_steps=False, kernel_size=15):
         roi = thresh[y:y + h, x:x + w]  # THIS is the image that will be processed (recognized) later on.
         cv2.imshow("Digit {}".format(idx), roi)
         #
-        cv2.rectangle(saved_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        # cv2.rectangle(saved_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.rectangle(saved_image, (x - padding, y - padding), (x + w + (2 * padding), y + h + (2 * padding)), (0, 255, 0), 2)
         # cv2.putText(output, str(digit), (x - 10, y - 10),
         #             cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 255, 0), 2)
         #
