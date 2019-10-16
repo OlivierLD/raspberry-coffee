@@ -45,10 +45,11 @@ def process_image(image, show_all_steps=False, kernel_size=15):
     all_contours = imutils.grab_contours(all_contours)
     print("Found {} contours".format(len(all_contours)))
 
-    cv2.drawContours(image, all_contours, -1, (0, 255, 0), 3)  # in green
-    cv2.imshow('Contours', image)
+    if show_all_steps:
+        cv2.drawContours(image, all_contours, -1, (0, 255, 0), 3)  # in green
+        cv2.imshow('Contours', image)
 
-    digitCnts = []
+    digit_contours = []
 
     # loop over the digit area candidates
     for c in all_contours:
@@ -58,45 +59,40 @@ def process_image(image, show_all_steps=False, kernel_size=15):
         # if the contour is sufficiently large, it must be a digit
         if w >= 15 and h >= 50:  # <= That's the tricky part
             print("\tAdding Contours x:{} y:{} w:{} h:{}".format(x, y, w, h))
-            digitCnts.append(c)
+            digit_contours.append(c)
 
-    print("Retained {}".format(len(digitCnts)))
+    print("Retained {}".format(len(digit_contours)))
     # sort the contours from left-to-right, then initialize the
     # actual digits themselves
-    digitCnts = contours.sort_contours(digitCnts,
+    digit_contours = contours.sort_contours(digit_contours,
                                        method="left-to-right")[0]
-    digits = []
-
     # loop over each of the digits
     idx = 0
     padding = 10
-    for c in digitCnts:
+    for c in digit_contours:
         idx += 1
         # extract the digit ROI
         (x, y, w, h) = cv2.boundingRect(c)
         roi = thresh[y:y + h, x:x + w]  # THIS is the image that will be processed (recognized) later on.
-        cv2.imshow("Digit {}".format(idx), roi)
+        if show_all_steps:
+            cv2.imshow("Digit {}".format(idx), roi)
         #
         # cv2.rectangle(saved_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
         cv2.rectangle(saved_image, (x - padding, y - padding), (x + w + (2 * padding), y + h + (2 * padding)), (0, 255, 0), 2)
+        # TODO Send for identification, and print it on the image
         # cv2.putText(output, str(digit), (x - 10, y - 10),
         #             cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 255, 0), 2)
         #
-        # compute the width and height of each of the 7 segments
-        # we are going to examine
-        (roiH, roiW) = roi.shape
-        (dW, dH) = (int(roiW * 0.25), int(roiH * 0.15))
-        dHC = int(roiH * 0.05)
     cv2.imshow("Recognized characters", saved_image)
 
 
 print("Starting")
-image = cv2.imread("../digits/ten.digits.jpg")
-cv2.imshow('Original', image)
+original_image = cv2.imread("../digits/ten.digits.jpg")
+cv2.imshow('Original', original_image)
 # TODO: an ROI?
-process_image(image, True)
+process_image(original_image, False)
 
-print("Hit [Return]")
+print("Hit [Return] on the image")
 cv2.waitKey(0)
 
 cv2.destroyAllWindows()
