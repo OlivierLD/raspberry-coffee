@@ -766,6 +766,13 @@ It is a serie of images representing handwritten figures, along with their actua
 We will use this to train a neural network, and use the trained network to recognize hand-written digits from the
 test dataset.
 
+See how much data files we have:
+```
+$ cd mnist_png
+$ find . -type f -name '*.png' | wc -l
+  70000
+```
+
 This can be run locally (after installing the required Python packages):
 ```
 $ python digit.demo/sample.05.1.py [ L | --help ]

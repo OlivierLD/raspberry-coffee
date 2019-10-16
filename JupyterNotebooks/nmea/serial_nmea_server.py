@@ -7,7 +7,7 @@
 # Reads the Serial Port
 # Parses the NMEA Data
 # Pushes the parsed data in a cache
-# Provides REST access to the cache
+# Provides REST access to the cache, try http://localhost:8080/gps/cache
 #
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import nmea_parser as NMEAParser
