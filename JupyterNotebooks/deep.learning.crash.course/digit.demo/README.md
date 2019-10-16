@@ -2,8 +2,8 @@
 - `sample.05.1.py`
     - Will use images from the training data set to evaluate the digits it represents
 - `sample.05.2.py`
-    - Similar to sample.05.1.py, but with YOUR own images.
-    - Model training.h5 must already exist
+    - Similar to `sample.05.1.py`, but with YOUR own images.
+    - Model `training.h5` must already exist
     - Uses OpenCV to reshape the images as expected by the model
 - `sample.05.2.save.py`
 - `sample.05.3.py`
@@ -12,11 +12,11 @@
         - Enter operation (+, -, *, /)
         - Enter digit images to compose number B
         - Enter = to get the result
-    - Model training.h5 must already exist
+    - Model `training.h5` must already exist
     - Use images from training or test dataset.
 - `sample.05.21.py`
-    - Similar to sample.05.1.py, but with YOUR own images, read from the camera.
-    - Model training.h5 must already exist
+    - Similar to `sample.05.1.py`, but with YOUR own images, read from the camera.
+    - Model `training.h5` must already exist
     - Uses OpenCV to reshape the images as expected by the model
         - SHOW AN HAND-WRITTEN CHARACTER TO THE CAMERA
         - HIT 'S' TO HAVE IT RECOGNIZED
