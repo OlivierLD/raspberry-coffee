@@ -25,3 +25,5 @@
     - Model can be saved from here too.
 - `sample.06.py`
     - Images recognition, like dresses, shirts, shoes, etc.
+- `python.scratch/several_digits.py`
+    - Splitting a multi-digit hand-written number into specific characters (for recognition)
