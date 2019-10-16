@@ -1,5 +1,5 @@
 #
-# Isolate the different characters in an image
+# Use OpenCV to isolate the different characters in an image
 #
 from imutils import contours
 import imutils
@@ -73,7 +73,9 @@ def process_image(image, show_all_steps=False, kernel_size=15):
         idx += 1
         # extract the digit ROI
         (x, y, w, h) = cv2.boundingRect(c)
-        roi = thresh[y:y + h, x:x + w]  # THIS is the image that will be processed (recognized) later on.
+        #
+        roi = thresh[y:y + h, x:x + w]  # <= THIS is the image that will be processed (recognized) later on.
+        #
         if show_all_steps:
             cv2.imshow("Digit {}".format(idx), roi)
         #
