@@ -15,7 +15,6 @@ THRESHOLD_TYPE = {
 
 
 def process_image(image, show_all_steps=False, kernel_size=15):
-
     saved_image = image.copy()
     last_image = image
     gray = cv2.cvtColor(last_image, cv2.COLOR_BGR2GRAY)
@@ -65,7 +64,7 @@ def process_image(image, show_all_steps=False, kernel_size=15):
     # sort the contours from left-to-right, then initialize the
     # actual digits themselves
     digit_contours = contours.sort_contours(digit_contours,
-                                       method="left-to-right")[0]
+                                            method="left-to-right")[0]
     # loop over each of the digits
     idx = 0
     padding = 10
@@ -80,7 +79,8 @@ def process_image(image, show_all_steps=False, kernel_size=15):
             cv2.imshow("Digit {}".format(idx), roi)
         #
         # cv2.rectangle(saved_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        cv2.rectangle(saved_image, (x - padding, y - padding), (x + w + (2 * padding), y + h + (2 * padding)), (0, 255, 0), 2)
+        cv2.rectangle(saved_image, (x - padding, y - padding), (x + w + (2 * padding), y + h + (2 * padding)),
+                      (0, 255, 0), 2)
         # TODO Send for identification, and print it on the image
         # cv2.putText(output, str(digit), (x - 10, y - 10),
         #             cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 255, 0), 2)

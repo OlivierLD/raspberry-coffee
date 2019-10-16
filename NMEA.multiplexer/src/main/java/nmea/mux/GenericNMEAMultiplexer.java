@@ -210,6 +210,9 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 
 	public static Properties getDefinitions() {
 		String propertiesFile = System.getProperty("mux.properties", "nmea.mux.properties");
+		if (propertiesFile.endsWith(".yaml")) {
+			throw new RuntimeException(String.format("Definition file type (%s) not supported yet.", propertiesFile));
+		}
 
 		Properties definitions = new Properties();
 		File propFile = new File(propertiesFile);
