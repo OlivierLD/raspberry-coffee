@@ -924,6 +924,10 @@ On the `Boxed` step, we can see the relevant Regions Of Interest (ROI) have been
 to copy them into new images, and process them for recognition as before.
 
 This is what `sample.05.22.py` is doing.
+> _Note_: You can use
+```
+ $ ./sample.05.22.py [--show-all-steps]
+```
 
 ### An example of objects recognition
 Look in [this module](https://github.com/OlivierLD/raspberry-coffee/tree/master/opencv/src/main/python/object.detection).
