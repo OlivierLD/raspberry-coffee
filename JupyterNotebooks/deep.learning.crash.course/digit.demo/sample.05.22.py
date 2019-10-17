@@ -7,7 +7,7 @@
 # Model training.h5 must already exist
 # Uses OpenCV to reshape the images as expected by the model
 #
-#     SHOW HAND-WRITTEN CHARACTERs TO THE CAMERA (will split)
+#     SHOW ONE OR MORE HAND-WRITTEN CHARACTERS TO THE CAMERA (will split)
 #     HIT 'S' TO HAVE IT RECOGNIZED
 #
 #     REQUIRES THE MODEL 'training.h5' TO BE AVAILABLE

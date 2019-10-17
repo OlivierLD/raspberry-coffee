@@ -907,6 +907,9 @@ Once the ROI has been identified:
     - Now we have data looking like the ones for the hand-written `8` above...
 - And we send it to the model for identification...
 
+#### Several characters, splitted
+- Split the characters displayed on an image
+
 ### An example of objects recognition
 Look in [this module](https://github.com/OlivierLD/raspberry-coffee/tree/master/opencv/src/main/python/object.detection).
 
