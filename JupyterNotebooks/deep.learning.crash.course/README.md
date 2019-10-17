@@ -923,7 +923,7 @@ Once the ROI has been identified:
 On the `Boxed` step, we can see the relevant Regions Of Interest (ROI) have been identified. Then it is easy
 to copy them into new images, and process them for recognition as before.
 
-> `sample.05.22.py` is a work in progress.
+This is what `sample.05.22.py` is doing.
 
 ### An example of objects recognition
 Look in [this module](https://github.com/OlivierLD/raspberry-coffee/tree/master/opencv/src/main/python/object.detection).

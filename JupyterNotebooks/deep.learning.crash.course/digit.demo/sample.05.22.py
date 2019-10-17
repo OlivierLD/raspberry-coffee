@@ -78,31 +78,33 @@ THRESHOLD_TYPE = {
 }
 
 
-def apply_model(image, show_all_steps=False, kernel_size=15):
+def apply_model(image, show_all_steps=False, img_index=None, kernel_size=15):
 
     last_image = image
     gray = cv2.cvtColor(last_image, cv2.COLOR_BGR2GRAY)
     if show_all_steps:
-        cv2.imshow('Grayed', gray)
+        cv2.imshow('Grayed{}'.format('' if img_index is None else '-{}'.format(img_index)), gray)
     last_image = gray
 
     blurred = cv2.GaussianBlur(last_image, (kernel_size, kernel_size), 0)
     if show_all_steps:
-        cv2.imshow('Blurred', blurred)
+        cv2.imshow('Blurred{}'.format('' if img_index is None else '-{}'.format(img_index)), blurred)
     last_image = blurred
 
     if True:
         threshold_value = 127  # 127: dark conditions, 200: good light conditions
         _, thresh = cv2.threshold(last_image, threshold_value, 255, THRESHOLD_TYPE["BINARY"])
         if show_all_steps:
-            cv2.imshow('Threshed', thresh)
+            cv2.imshow('Threshed{}'.format('' if img_index is None else '-{}'.format(img_index)), thresh)
         last_image = thresh
 
     reworked = cv2.resize(255 - last_image, (28, 28))
     last_image = reworked
 
     # Show the image, as it's been transformed to be processed
-    cv2.imshow("As transformed for processing", last_image)
+    if show_all_steps:
+        cv2.imshow("As transformed for processing{}".format('' if img_index is None else '-{}'.format(img_index)),
+                   last_image)
 
     time.sleep(0.5)
 
@@ -112,6 +114,17 @@ def apply_model(image, show_all_steps=False, kernel_size=15):
     pred = model.predict_classes(im2arr)
     precision = model.predict(im2arr)
     return int(pred[0])
+
+
+# https://www.w3schools.com/colors/colors_names.asp
+CONTOUR_COLORS = [
+    {'name': 'red', 'value': (255, 0, 0)},
+    {'name': 'green', 'value': (0, 255, 0)},
+    {'name': 'blue', 'value': (0, 0, 255)},
+    {'name': 'cyan', 'value': (0, 255, 255)},
+    {'name': 'pink', 'value': (0xff, 0xc0, 0xcb)},
+    {'name': 'orange', 'value': (0xff, 0xa5, 0x00)}
+]
 
 
 def process_image(image, show_all_steps=False, kernel_size=15):
@@ -149,20 +162,26 @@ def process_image(image, show_all_steps=False, kernel_size=15):
     print("Found {} contours".format(len(all_contours)))
 
     if show_all_steps:
-        cv2.drawContours(image, all_contours, -1, (0, 255, 0), 3)  # in green
+        for idx in range(len(all_contours)):
+            cv2.drawContours(image, all_contours[idx], -1, CONTOUR_COLORS[idx % len(CONTOUR_COLORS)]['value'], 3)
         cv2.imshow('Contours', image)
 
     digit_contours = []
 
     # loop over the digit area candidates
+    contour_index = 0
     for c in all_contours:
         # compute the bounding box of the contour
         (x, y, w, h) = cv2.boundingRect(c)
-        print("Found Contours x:{} y:{} w:{} h:{}".format(x, y, w, h))
+        print("Found Contours x:{} y:{} w:{} h:{} ({})".format(x, y, w, h,
+                                                               CONTOUR_COLORS[contour_index % len(CONTOUR_COLORS)]['name']))
         # if the contour is sufficiently large, it must be a digit
-        if w >= 15 and h >= 130:  # <= That's the tricky part
+        min_height = int(image.shape[0] * 0.6)
+        print("Original {}x{}, Min Height: {}".format(image.shape[1], image.shape[0], min_height))
+        if w >= 15 and h >= min_height:  # <= That's the tricky part
             print("\tAdding Contours x:{} y:{} w:{} h:{}".format(x, y, w, h))
             digit_contours.append(c)
+        contour_index += 1
 
     print("Retained {}".format(len(digit_contours)))
     # sort the contours from left-to-right, then initialize the
@@ -171,22 +190,36 @@ def process_image(image, show_all_steps=False, kernel_size=15):
                                             method="left-to-right")[0]
     # loop over each of the digits
     idx = 0
-    padding = 25
+    padding = int(image.shape[0] * 0.05)
     for c in digit_contours:
         idx += 1
         # extract the digit ROI
         (x, y, w, h) = cv2.boundingRect(c)
         #
         # roi = saved_image[y:y + h, x:x + w]  # <= THIS is the image that will be processed (recognized) later on.
-        roi = saved_image[y - padding :y + h + (2 * padding), x - padding:x + w + (2 * padding)]  # <= THIS is the image that will be processed (recognized) later on.
+        top = y - padding
+        bottom = y + h + padding
+        left = x - padding
+        right = x + w + padding
+        roi = saved_image[top:bottom, left:right]  # <= THIS is the image that will be processed (recognized) later on.
+        # Paste this image into a bigger, white and square one
+        max_dim = max(bottom - top, right - left)
+        new_image = np.zeros((max_dim, max_dim, 3), np.uint8)
+        color = (255, 255, 255)  # white
+        new_image[:] = color
+        x_offset = (max_dim - (right - left)) // 2
+        y_offset = (max_dim - (bottom - top)) // 2
+        new_image[y_offset:y_offset + roi.shape[0], x_offset:x_offset+roi.shape[1]] = roi
         #
         if show_all_steps:
-            cv2.imshow("Digit {}".format(idx), roi)
+            cv2.imshow("ROI Digit {}".format(idx), roi)
+            cv2.imshow("Padded Digit {}".format(idx), new_image)
         #
         # cv2.rectangle(saved_image, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        cv2.rectangle(copied_image, (x - padding, y - padding), (x + w + (2 * padding), y + h + (2 * padding)),
+        cv2.rectangle(copied_image, (left, top), (right, bottom),
                       (0, 255, 0), 2)
-        digit = apply_model(roi, show_all_steps, kernel_size)
+        # Digit identification here, use the padded image
+        digit = apply_model(new_image, show_all_steps, idx, kernel_size)
 
         cv2.putText(copied_image, str(digit), (x - 10 - padding, y - 10 - padding),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 255, 0), 2)
@@ -195,9 +228,16 @@ def process_image(image, show_all_steps=False, kernel_size=15):
     cv2.imshow("Recognized characters", copied_image)
     print("Final Number is {}".format(final_number))
     print("Prediction: I've read {}".format(final_number))
+    in_french = True
     if platform.system() == 'Darwin':
-        sp.run(['say',
-                'I have read {}.'.format(final_number)])
+        if in_french:
+            sp.run(['say',
+                    '-v',
+                    'Amelie',   # 'Thomas',
+                    'Ça nous fait {}.'.format(final_number)])
+        else:
+            sp.run(['say',
+                    'I have read {}.'.format(final_number)])
 
 
 # The core of the program
@@ -212,12 +252,15 @@ mirror = False
 zoom = False
 scale = 25  # Zoom scale. Percent of the original (radius). 50 => 100%
 
-keepLooping = True
+show_process_steps = False
+if len(sys.argv) > 1 and sys.argv[1] == '--show-all-steps':
+    show_process_steps = True
 print("+----------------------------------------------------+")
 print("| Type Q, q or Ctrl+C to exit the loop               |")
 print("| Type S or s to take a snapshot                     |")
 print("| > Select the main image before hitting a key... ;) |")
 print("+----------------------------------------------------+")
+keepLooping = True
 while keepLooping:
 
     _, frame = camera.read()
@@ -260,9 +303,10 @@ while keepLooping:
             print("Selected ROI: {} {} {} {}".format(int(roi[1]), int(roi[1] + roi[3]), int(roi[0]), int(roi[0] + roi[2])))
         try:
             cropped_image = original_image[int(roi[1]):int(roi[1] + roi[3]), int(roi[0]):int(roi[0] + roi[2])]
-            cv2.imshow('Selected ROI', cropped_image)
+            if show_process_steps:
+                cv2.imshow('Selected ROI', cropped_image)
             time.sleep(0.5)
-            process_image(cropped_image, True)
+            process_image(cropped_image, show_process_steps)
         except Exception as ex:  # ROI was canceled?
             print("Oops! {}".format(ex))
             print("Ok, canceled.")
