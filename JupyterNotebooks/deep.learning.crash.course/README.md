@@ -904,11 +904,13 @@ Once the ROI has been identified:
 - We blur it, to make the background lines of the paper disappear
 - We "thresh" (short for "threshold") it, to get a "pure" black-and white image (or close, some gray might still be there, see the code for that)
 - We resize it to the expected dimension (28x28)
-    - Now we have data looking like the ones for the hand-written `8` above...
+    - Now we have data looking like the ones for the hand-written `8` above in the [#preparing-the-data](preparing the data) section...
 - And we send it to the model for identification...
 
 #### Several characters, splitted
 - Split the characters displayed on an image
+- The script `sample.05.22.py` is an example of such a split
+- The path is a bit different, we will use the **contours** of the digits to detect them
 
 ### An example of objects recognition
 Look in [this module](https://github.com/OlivierLD/raspberry-coffee/tree/master/opencv/src/main/python/object.detection).
