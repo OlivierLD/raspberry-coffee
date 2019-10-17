@@ -920,6 +920,9 @@ Once the ROI has been identified:
 | Boxed | Separated |  |
 | ![Boxed](./img/sep.final.png) | ![Separated](./img/sep.all.digits.png) |  |
 
+On the `Boxed` step, we can see the relevant Regions Of Interest (ROI) have been identified. Then it is easy
+to copy them into new images, and process them for recognition as before.
+
 > `sample.05.22.py` is a work in progress.
 
 ### An example of objects recognition
