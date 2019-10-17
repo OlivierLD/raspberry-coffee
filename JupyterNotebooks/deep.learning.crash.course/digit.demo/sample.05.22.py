@@ -229,7 +229,7 @@ def process_image(image, show_all_steps=False, kernel_size=15):
     print("Final Number is {}".format(final_number))
     print("Prediction: I've read {}".format(final_number))
     if platform.system() == 'Darwin':
-        if in_french:
+        if in_french:  # Use "say -v ?"  for a list of all voices.
             sp.run(['say',
                     '-v',
                     'Amelie',   # 'Thomas',
