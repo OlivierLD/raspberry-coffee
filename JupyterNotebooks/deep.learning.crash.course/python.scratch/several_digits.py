@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #
 # Use OpenCV to isolate the different characters in an image
 #

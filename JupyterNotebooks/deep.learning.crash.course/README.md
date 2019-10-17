@@ -909,8 +909,18 @@ Once the ROI has been identified:
 
 #### Several characters, splitted
 - Split the characters displayed on an image
-- The script `sample.05.22.py` is an example of such a split
+- The script `separate_characters.py` is an example of such a split
 - The path is a bit different, we will use the **contours** of the digits to detect them
+
+| Original snapshot | Grayed | Blurred |
+|:------------------|:-------|:--------|
+| ![Original](./img/sep.original.png) | ![Original](./img/sep.grayed.png) | ![Original](./img/sep.blurred.png) |
+| Edged | Threshed | Contours |
+| ![Edged](./img/sep.edged.png) | ![Grayed](./img/sep.threshed.png) | ![Contours](./img/sep.contours.png) |
+| Boxed | Separated |  |
+| ![Boxed](./img/sep.final.png) | ![Separated](./img/sep.all.digits.png) |  |
+
+> `sample.05.22.py` is a work in progress.
 
 ### An example of objects recognition
 Look in [this module](https://github.com/OlivierLD/raspberry-coffee/tree/master/opencv/src/main/python/object.detection).
