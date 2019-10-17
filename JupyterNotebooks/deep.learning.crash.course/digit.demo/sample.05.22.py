@@ -228,7 +228,6 @@ def process_image(image, show_all_steps=False, kernel_size=15):
     cv2.imshow("Recognized characters", copied_image)
     print("Final Number is {}".format(final_number))
     print("Prediction: I've read {}".format(final_number))
-    in_french = True
     if platform.system() == 'Darwin':
         if in_french:
             sp.run(['say',
@@ -253,8 +252,13 @@ zoom = False
 scale = 25  # Zoom scale. Percent of the original (radius). 50 => 100%
 
 show_process_steps = False
-if len(sys.argv) > 1 and sys.argv[1] == '--show-all-steps':
-    show_process_steps = True
+in_french = False
+if len(sys.argv) > 1:
+    for i in range(1, len(sys.argv)):
+        if sys.argv[i] == '--show-all-steps':
+            show_process_steps = True
+        elif sys.argv[i] == '--in-french':
+            in_french = True
 print("+----------------------------------------------------+")
 print("| Type Q, q or Ctrl+C to exit the loop               |")
 print("| Type S or s to take a snapshot                     |")
