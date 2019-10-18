@@ -10,6 +10,7 @@ from tensorflow.python import keras
 from tensorflow.python.keras.callbacks import TensorBoard
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.layers import Dense, Dropout, BatchNormalization, Activation
+from tensorflow.python.keras.utils.vis_utils import plot_model
 import os.path
 import subprocess as sp
 import sys
@@ -21,10 +22,17 @@ warnings.filterwarnings('ignore')
 
 print("Panda version", pd.__version__)
 
-tf.logging.set_verbosity(tf.logging.ERROR)
+sess = tf_utils.get_TF_session()
+
+try:
+    tf.logging.set_verbosity(tf.logging.ERROR)
+except Exception as ex:
+    print("Ooops {}".format(ex))
+finally:
+    print("Moving on")
+
 print("TensorFlow version", tf.__version__)
 
-sess = tf_utils.get_TF_session()
 devices = sess.list_devices()
 print("----- D E V I C E S -----")
 for d in devices:
@@ -80,6 +88,8 @@ model.add(Dropout(dropout))
 
 # Last layer, SoftMax, as many neurons as categories we want (3)
 model.add(Dense(num_categories, name='SoftmaxLayer', activation='softmax'))
+
+plot_model(model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
 
 model.compile(loss='sparse_categorical_crossentropy',
               optimizer='adam',

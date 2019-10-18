@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 import random
 import sys
 import warnings
+from tensorflow.python.keras.utils.vis_utils import plot_model
 
 sys.path.append('../')
 import tf_utils
@@ -104,6 +105,8 @@ if not loadOnly:  # Model to be trained
         tf.keras.layers.Dropout(0.2),  # https://www.tensorflow.org/api_docs/python/tf/keras/layers/Dropout
         tf.keras.layers.Dense(10, name='SecondDense-10', activation=tf.nn.softmax)  # SoftMax at the last layer
     ])
+
+    # plot_model(model, to_file='model_plot.png', show_shapes=True, show_layer_names=True)
 
     model.compile(optimizer='adam',
                   loss='sparse_categorical_crossentropy',
