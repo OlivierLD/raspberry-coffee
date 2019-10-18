@@ -12,6 +12,8 @@ Python 3.7.0 (default, Jun 28 2018, 07:39:16)
 ...
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import cv2
+>>> cv2.__version__
+'4.1.0'
 >>> help(cv2)
 
 >>> 

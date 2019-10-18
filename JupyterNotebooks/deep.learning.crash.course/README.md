@@ -956,7 +956,7 @@ To add:
         - See LSTM (Long Short-Term Memory) layer
             - [Keras doc](https://www.tensorflow.org/api_docs/python/tf/keras/layers/LSTM)
             - [kaggle](https://www.kaggle.com/amarpreetsingh/stock-prediction-lstm-using-keras)
-        - like that
+        - like that:
 ```
 model = Sequential()
 model.add(LSTM(256,input_shape=(7,1)))

@@ -4,7 +4,8 @@
 
 Good article [here](https://howchoo.com/g/nmrlzmq1ymn/how-to-install-docker-on-your-raspberry-pi).
 
-First, [get Docker](https://store.docker.com/search?type=edition&offering=community) on your system.
+- First, [get Docker](https://store.docker.com/search?type=edition&offering=community) on your system.
+- For a Raspberry Pi, also see [here](https://medium.com/free-code-camp/the-easy-way-to-set-up-docker-on-a-raspberry-pi-7d24ced073ef).
 
 #### To get started...
 Try this:
