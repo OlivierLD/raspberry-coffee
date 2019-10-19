@@ -24,17 +24,26 @@ print("OpenCV version", cv2.__version__)
 print("{} script arguments.".format(len(sys.argv)))
 
 # The core of the program
-camera = cv2.VideoCapture(0)
+camera = cv2.VideoCapture(1)
 
 width = 640
 height = 640
 camera.set(3, width)
 camera.set(4, height)
 
-mirror = False
+mirror = True
 zoom = False
-verboseContour = False
+verbose_contour = False
 scale = 25  # Zoom scale. Percent of the original (radius). 50 => 100%
+show_all_steps = False
+
+
+def distance(pt_a, pt_b):
+    delta_x = pt_a[0] - pt_b[0]
+    delta_y = pt_a[1] - pt_b[1]
+    dist_ab = math.sqrt((delta_x * delta_x) + (delta_y * delta_y))
+    return dist_ab
+
 
 print("+----------------------------------------------------+")
 print("| Type Q, q or Ctrl+C to exit the loop               |")
@@ -65,20 +74,49 @@ while keepLooping:
             original_image = cv2.resize(cropped, (img_width, img_height))
 
         # Original image
-        cv2.imshow('Original', original_image)
+        if show_all_steps:
+            cv2.imshow('Original', original_image)
         image = original_image.copy()
+        last_image = image
 
-        img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        cv2.imshow('Gray', img_gray)
+        # Contrasts & Brightness
+        if False:
+            alpha = 1.5  # Contrast control (1.0-3.0)
+            beta = 0     # Brightness control (0-100)
+            adjusted = cv2.convertScaleAbs(last_image, alpha=alpha, beta=beta)
+            if show_all_steps:
+                cv2.imshow('Adjusted', adjusted)
+            last_image = adjusted
 
-        ret, thresh = cv2.threshold(img_gray, 127, 255, 0)
+        img_gray = cv2.cvtColor(last_image, cv2.COLOR_BGR2GRAY)
+        if show_all_steps:
+            cv2.imshow('Gray', img_gray)
+        last_image = img_gray
+
+        if False:
+            kernel_size = 15
+            blurred = cv2.GaussianBlur(last_image, (kernel_size, kernel_size), 0)
+            if show_all_steps:
+                cv2.imshow('Blurred', blurred)
+            last_image = blurred
+
+        if False:
+            edged = cv2.Canny(last_image, 50, 200, 255)
+            if show_all_steps:
+                cv2.imshow("Edged", edged)
+            last_image = edged
+
+        ret, thresh = cv2.threshold(last_image, 127, 255, 0)
+        last_image = thresh
         height, width = thresh.shape[:2]
+
         # cv2.imshow('Thresh {}x{}'.format(width, height), thresh)
-        cv2.imshow('Thresh', thresh)
+        if show_all_steps:
+            cv2.imshow('Thresh', thresh)
         try:
             # Only 2 prms returned!!!
-            contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-            if verboseContour:
+            contours, hierarchy = cv2.findContours(last_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            if verbose_contour:
                 print("Contours were found!! list of {} elements (ndarrays)".format(len(contours)))
                 for i in range(len(contours)):
                     nb_points = len(contours[i])
@@ -99,7 +137,8 @@ while keepLooping:
         for cnt in contours:
             (x, y, w, h) = cv2.boundingRect(cnt)
             size = w * h
-            if size > biggest_size:
+            # print("Image size {} x {}, contour {} x {}".format(image.shape[1], image.shape[0], w, h))
+            if w < (image.shape[1] - 5) and h < (image.shape[0] - 5) and size > biggest_size:
                 biggest_size = size
                 biggest_contour = cnt
 
@@ -124,12 +163,10 @@ while keepLooping:
             for i in range(len(hull)):
                 # print("Pt {}".format(hull[i][0]))   # x, y
                 pt = (hull[i][0][0], hull[i][0][1])
-                if pt[1] < (image.shape[0] / 4):   # From the topq
+                if pt[1] < (image.shape[0] * 7 / 8):   # From the top
                     if prev_point is not None:
-                        delta_x = prev_point[0] - pt[0]
-                        delta_y = prev_point[1] - pt[1]
-                        dist = math.sqrt((delta_x * delta_x) + (delta_y * delta_y))
-                        # print("Dist between {} and {}: {}".format(prev_point, pt, dist))
+                        dist = distance(prev_point, pt)
+                        # print("Dist between {} and {} (i={}): {}".format(prev_point, pt, i, dist))
                     if prev_point is None or (prev_point is not None and dist > min_dist):
                         # if prev_point is None:
                         #     print("\t>> Adding first point {}".format(pt))
@@ -144,7 +181,9 @@ while keepLooping:
             # print("Image h:{} x w:{}, Hull:\n{}".format(image.shape[0], image.shape[1], hull))
 
         cv2.imshow('Detected Contours', image)
-
+    except KeyboardInterrupt:
+        print("\n\t\tUser interrupted, exiting.")
+        keepLooping = False
     except Exception as ex:
         print("Oops! {}".format(ex))
 
@@ -153,7 +192,7 @@ while keepLooping:
     if key == ord('q'):  # select the image window and hit 'q' to quit
         keepLooping = False
     if key == ord('s'):  # Take snapshot
-        print('\t>> Taking snapshot -')  # Saving imageq
+        print('\t>> Taking snapshot -')  # TODO Save image...
 
 # Releasing resources
 camera.release()
