@@ -1,13 +1,17 @@
 package nmea.mux;
 
 import context.ApplicationContext;
+
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
@@ -62,7 +66,6 @@ public class MuxInitializer {
 
 	private final static NumberFormat MUX_IDX_FMT = new DecimalFormat("00");
 
-  // TODO A Constructor with a yaml instead of Properties
 	static void setup(Properties muxProps,
 	                  List<NMEAClient> nmeaDataClients,
 	                  List<Forwarder> nmeaDataForwarders,
@@ -70,6 +73,7 @@ public class MuxInitializer {
 	                  Multiplexer mux) {
 		setup(muxProps, nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, mux, false);
 	}
+
 	/**
 	 * This is the method to call to initialize the {@link Multiplexer}.
 	 * The 3 <code>List</code>s must have been created in it, as they will be populated here.
@@ -801,5 +805,68 @@ public class MuxInitializer {
 				ex.printStackTrace();
 			}
 		}
+	}
+
+	static Properties yamlToProperties(Map<String, Object> yamlMap) {
+		Properties properties = new Properties();
+
+		yamlMap.keySet().forEach(k -> {
+//			System.out.println(String.format("%s -> %s", k, yamlMap.get(k).getClass().getName()));
+			switch (k) {
+				case "name":
+					System.out.println(String.format("Definition Name: %s", yamlMap.get(k)));
+					break;
+				case "context":
+					Map<String, Object> context = (Map<String, Object>)yamlMap.get(k);
+					context.keySet().forEach(ck -> {
+						properties.setProperty(ck, context.get(ck).toString());
+					});
+					System.out.println(context);
+					break;
+				case "channels":
+					List<Map<String, Object>> channels = (List<Map<String, Object>>)yamlMap.get(k);
+					AtomicInteger nbChannels = new AtomicInteger(0);
+					channels.forEach(channel -> {
+						int nb = nbChannels.incrementAndGet();
+						channel.keySet().forEach(channelKey -> {
+							String propName = String.format("mux.%02d.%s", nb, channelKey);
+							properties.setProperty(propName, channel.get(channelKey).toString());
+						});
+					});
+					break;
+				case "forwarders":
+					List<Map<String, Object>> forwarders = (List<Map<String, Object>>)yamlMap.get(k);
+					AtomicInteger nbForwarders = new AtomicInteger(0);
+					forwarders.forEach(channel -> {
+						int nb = nbForwarders.incrementAndGet();
+						channel.keySet().forEach(forwardKey -> {
+							String propName = String.format("forward.%02d.%s", nb, forwardKey);
+							properties.setProperty(propName, channel.get(forwardKey).toString());
+						});
+					});
+					break;
+				case "computers":
+					List<Map<String, Object>> computers = (List<Map<String, Object>>)yamlMap.get(k);
+					AtomicInteger nbComputers = new AtomicInteger(0);
+					computers.forEach(channel -> {
+						int nb = nbComputers.incrementAndGet();
+						channel.keySet().forEach(computeKey -> {
+							String propName = String.format("computer.%02d.%s", nb, computeKey);
+							properties.setProperty(propName, channel.get(computeKey).toString());
+						});
+					});
+					break;
+				default:
+					break;
+			}
+		});
+
+		// For tests
+//		try {
+//			properties.store(new FileOutputStream("multiplexer.properties"), "Generated from yaml");
+//		} catch (IOException ioe) {
+//			ioe.printStackTrace();
+//		}
+		return properties;
 	}
 }

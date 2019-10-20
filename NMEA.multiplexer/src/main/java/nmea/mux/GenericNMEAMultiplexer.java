@@ -4,6 +4,7 @@ import http.RESTRequestManager;
 import nmea.computers.Computer;
 import context.ApplicationContext;
 import http.HTTPServer;
+import org.yaml.snakeyaml.Yaml;
 import utils.DumpUtil;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
@@ -12,11 +13,14 @@ import nmea.forwarders.Forwarder;
 import nmea.mux.context.Context;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -209,23 +213,32 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 	}
 
 	public static Properties getDefinitions() {
+		Properties properties = null;
 		String propertiesFile = System.getProperty("mux.properties", "nmea.mux.properties");
 		if (propertiesFile.endsWith(".yaml")) {
-			throw new RuntimeException(String.format("Definition file type (%s) not supported yet.", propertiesFile));
-		}
-
-		Properties definitions = new Properties();
-		File propFile = new File(propertiesFile);
-		if (!propFile.exists()) {
-			throw new RuntimeException(String.format("File [%s] not found", propertiesFile));
-		} else {
+			Yaml yaml = new Yaml();
 			try {
-				definitions.load(new FileReader(propFile));
+				InputStream inputStream = new FileInputStream(propertiesFile);
+				Map<String, Object> map = yaml.load(inputStream);
+				properties = MuxInitializer.yamlToProperties(map);
 			} catch (IOException ioe) {
-				ioe.printStackTrace();
+				throw new RuntimeException(String.format("File [%s] not found", propertiesFile));
+			}
+		} else if (propertiesFile.endsWith(".properties")) {
+			Properties definitions = new Properties();
+			File propFile = new File(propertiesFile);
+			if (!propFile.exists()) {
+				throw new RuntimeException(String.format("File [%s] not found", propertiesFile));
+			} else {
+				try {
+					definitions.load(new FileReader(propFile));
+					properties = definitions;
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
 			}
 		}
-		return definitions;
+		return properties;
 	}
 
 	/**
@@ -237,7 +250,7 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 		Properties definitions = GenericNMEAMultiplexer.getDefinitions();
 
 		boolean startProcessingOnStart = "true".equals(System.getProperty("process.on.start", "true"));
-		GenericNMEAMultiplexer mux = new GenericNMEAMultiplexer(definitions); // TODO Yaml definition
+		GenericNMEAMultiplexer mux = new GenericNMEAMultiplexer(definitions);
 		mux.setEnableProcess(startProcessingOnStart);
 		// with.http.server=yes
 		// http.port=9999
