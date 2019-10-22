@@ -115,6 +115,30 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
      time.buffer.length: 30, 60, 600
 ```
 
+Channel `properties` like: 
+```properties                                       
+mux.01.type=lsm303           
+mux.01.device.prefix=II
+mux.01.verbose=false
+mux.01.sentence.filters=HDM,XDR
+mux.01.heading.offset=0
+mux.01.feature=BOTH
+mux.01.damping.size=5
+mux.01.read.frequency=1000
+```
+are equivalent to `yaml` like
+```yaml
+channels:
+ - type:lsm303           
+   device.prefix: II
+   verbose: false
+   sentence.filters: HDM,XDR
+   heading.offset: 0
+   feature: BOTH
+   damping.size: 5
+   read.frequency: 1000
+```  
+
 #### Pre-defined channel types
 
 - `serial`
@@ -170,6 +194,8 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
     mux.01.verbose=false
     mux.01.sentence.filters=HDM,XDR
     mux.01.heading.offset=0
+    mux.01.feature: "BOTH"
+    mux.01.damping.size: 5
     mux.01.read.frequency=1000
     ```
 - `bme280`
