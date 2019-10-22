@@ -194,8 +194,8 @@ channels:
     mux.01.verbose=false
     mux.01.sentence.filters=HDM,XDR
     mux.01.heading.offset=0
-    mux.01.feature: "BOTH"
-    mux.01.damping.size: 5
+    mux.01.feature=BOTH
+    mux.01.damping.size=5
     mux.01.read.frequency=1000
     ```
 - `bme280`
