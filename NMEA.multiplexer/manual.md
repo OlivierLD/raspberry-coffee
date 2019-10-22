@@ -61,6 +61,60 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
 > If the loaded class does not extend the right `superclass` or implement the right `interface`, an error
 > will be raised.
 
+> _Note_: Since October 2019, a `yaml` format is also supported for the properties of the multiplexer.
+> It's a bit easier than the `properties` syntax.
+>
+> Example:
+```yaml
+ #
+ # This is an example of the way a MUX could be defined with YAML.
+ #
+ name: "NMEA with GPS, BME280, LSM303"
+ context:
+   with.http.server: true
+   http.port: 5678
+   init.cache: true
+   default.declination: 14
+   deviation.file.name: "dp_2011_04_15.csv"
+   # Leeway = max.leeway * cos(awa)
+   max.leeway: 10
+   bsp.factor: 1.0
+   aws.factor: 1.0
+   awa.offset: 0
+   hdg.offset: 0
+   damping: 30
+ channels:
+   - type: serial
+     port: "/dev/ttyS80"
+     baud.rate: 4800
+     verbose: false
+   - type: bme280
+     prefix: "BM"
+     verbose: false
+   - type: lsm303
+     prefix: "LS"
+     feature: "BOTH"
+     verbose: false
+     sentence.filters: "HDM,XDR"
+     heading.offset: 0
+     read.frequency: 1000
+     damping.size: 5
+ forwarders:
+   - type: file
+     timebase.filename: true
+     filename.suffix: "_LOG"
+     log.dir: "logged"
+     split: "hour"
+   - class: "nmea.forwarder.SSD1306Processor"
+     properties: "ssd1306.properties"
+   - type: "tcp"
+     port: 7001
+ computers:
+   - type: "tw-current"
+     prefix: "CC"
+     time.buffer.length: 30, 60, 600
+```
+
 #### Pre-defined channel types
 
 - `serial`
