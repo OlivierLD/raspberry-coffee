@@ -11,13 +11,15 @@ import utils.PinUtil;
 import static utils.TimeUtil.delay;
 
 /**
- * uses -Dservo.pin, physical number of the servo pin, default is 13
+ * uses -Dservo.pin, physical number of the servo pin, default is 12
+ *
+ * GPIO_01, GPIO_23, GPIO_24, GPIO_26.
  */
 public class Pwm01 {
 	public static void main(String... args)
 					throws InterruptedException {
 
-		Pin servoPin = RaspiPin.GPIO_02; // GPIO_02 => Physical #13, BCM 27
+		Pin servoPin = RaspiPin.GPIO_01; // GPIO_01 => Physical #12, BCM 18
 
 		String servoPinSysVar = System.getProperty("servo.pin"); // Physical number
 		if (servoPinSysVar != null) {
@@ -30,6 +32,7 @@ public class Pwm01 {
 		}
 
 		System.out.println(String.format("PWM Control - pin %s ... started.", PinUtil.findByPin(servoPin).pinName()));
+		PinUtil.print(new String[] { String.valueOf(PinUtil.findByPin(servoPin).pinNumber()) + ":" + "Servo" });
 
 		// create gpio controller
 		final GpioController gpio = GpioFactory.getInstance();
