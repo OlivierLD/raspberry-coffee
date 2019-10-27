@@ -22,8 +22,8 @@ public class Pwm01 {
 		// create gpio controller
 		final GpioController gpio = GpioFactory.getInstance();
 
-		GpioPinPwmOutput pin = gpio.provisionSoftPwmOutputPin(RaspiPin.GPIO_02); // , "Standard-Servo");
-//	GpioPinPwmOutput pin = gpio.provisionPwmOutputPin(RaspiPin.GPIO_01); // , "Standard-Servo");
+		GpioPinPwmOutput pin = gpio.provisionSoftPwmOutputPin(RaspiPin.GPIO_02, "Standard-Servo"); // GPIO_02 => Physical #13
+//	GpioPinPwmOutput pin = gpio.provisionPwmOutputPin(RaspiPin.GPIO_01); // , "Standard-Servo"); // GPIO_01 => Physical #12
 
 //	pin.setMode(PinMode.PWM_OUTPUT);
 		pin.setPwmRange(100);
