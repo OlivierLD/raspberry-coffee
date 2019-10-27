@@ -7,8 +7,9 @@ PIN=18
 if [[ $# -gt 0 ]]
 then
   PIN=$1
-  echo -e "Using pin #$PIN"
 fi
+echo -e "Using pin #$PIN"
+#
 gpio -g mode $PIN pwm
 gpio pwm-ms
 gpio pwmc 192
