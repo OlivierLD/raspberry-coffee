@@ -21,9 +21,12 @@ int main (void) {
    fprintf(stdout, "\tWriting 150\n");
    pwmWrite(18, 150);
    delay(1000);
-   fprintf(stdout, "\tWriting 200\n");
-   pwmWrite(18, 200);
-   delay(1000);
+   int i = 0;
+   for (i=0; i<1000; i++) {}
+     fprintf(stdout, "\tWriting %d\n", i);
+     pwmWrite(18, i);
+     delay(200);
+   }
    fprintf(stdout, "\tWriting 2000\n");
    pwmWrite(18, 2000);
    delay(1000);
