@@ -138,6 +138,8 @@ channels:
    damping.size: 5
    read.frequency: 1000
 ```  
+> Notice that the yaml does not require `mux.01.xxx` and `mux.02.xxx` as the `properties` do. That 
+> makes it a bit more convenient and flexible to use.
 
 #### Pre-defined channel types
 
