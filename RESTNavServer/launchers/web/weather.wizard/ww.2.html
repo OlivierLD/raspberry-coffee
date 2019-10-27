@@ -864,8 +864,10 @@
 	  currentFax = val;
   };
 
+  const GRIB_DEBUG = false;
+
   var plotGrib = function(jsonGrib) {
-  	if (false) { // DEBUG
+  	if (GRIB_DEBUG) { // DEBUG
 			console.log("Received GRIB");
 			// Extract the dates
 			jsonGrib.forEach((grib, idx) => {
