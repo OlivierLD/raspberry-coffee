@@ -18,12 +18,16 @@ int main (void) {
    pwmSetMode (PWM_MODE_MS);
    pwmSetRange (2000);
    pwmSetClock (192);
+   fprintf(stdout, "\tWriting 150\n");
    pwmWrite(18, 150);
    delay(1000);
+   fprintf(stdout, "\tWriting 200\n");
    pwmWrite(18, 200);
    delay(1000);
+   fprintf(stdout, "\tWriting 2000\n");
    pwmWrite(18, 2000);
    delay(1000);
+   fprintf(stdout, "\tWriting 200\n");
    pwmWrite(18, 200);
    fprintf(stdout, "Done\n");
    return 0;
