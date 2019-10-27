@@ -22,7 +22,7 @@ int main (void) {
    pwmWrite(18, 150);
    delay(1000);
    int i = 0;
-   for (i=0; i<1000; i++) {}
+   for (i=0; i<1000; i++) {
      fprintf(stdout, "\tWriting %d\n", i);
      pwmWrite(18, i);
      delay(200);
