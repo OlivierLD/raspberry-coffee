@@ -25,7 +25,7 @@ int main (void) {
    fprintf(stdout, "\tWriting %d\n", i);
    pwmWrite(18, i);
    delay(1000);
-   for (i=0; i<1000; i++) {
+   for (i=0; i<250; i++) {
      fprintf(stdout, "\tWriting %d\n", i);
      pwmWrite(18, i);
      delay(50);
