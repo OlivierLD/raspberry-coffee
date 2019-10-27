@@ -34,6 +34,8 @@ repositories {
 
 dependencies {
 //compile 'com.pi4j:pi4j-core:1.1'
-  compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
+//  compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
+  // https://mvnrepository.com/artifact/com.pi4j/pi4j-core
+  compile group: 'com.pi4j', name: 'pi4j-core', version: '1.2'
   compile project(':common-utils')
 }
