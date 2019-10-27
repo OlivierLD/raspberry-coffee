@@ -4,6 +4,10 @@
 # pin GPIO_27 is #13
 #
 PIN=18
+if [[ $# -gt 0 ]]
+then
+  PIN=$1
+fi
 gpio -g mode $PIN pwm
 gpio pwm-ms
 gpio pwmc 192
