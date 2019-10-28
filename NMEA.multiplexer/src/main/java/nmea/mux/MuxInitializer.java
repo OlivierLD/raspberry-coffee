@@ -862,11 +862,13 @@ public class MuxInitializer {
 		});
 
 		// For tests
-//		try {
-//			properties.store(new FileOutputStream("multiplexer.properties"), "Generated from yaml");
-//		} catch (IOException ioe) {
-//			ioe.printStackTrace();
-//		}
+		if ("yes".equals(System.getProperty("yaml.tx.verbose", "no"))) {
+			try {
+				properties.store(new FileOutputStream("multiplexer.properties"), "Generated from yaml");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
+		}
 		return properties;
 	}
 }

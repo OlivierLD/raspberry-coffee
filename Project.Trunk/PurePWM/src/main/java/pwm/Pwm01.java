@@ -40,7 +40,7 @@ public class Pwm01 {
 		GpioPinPwmOutput pin = gpio.provisionPwmOutputPin(servoPin, "Standard-Servo");
 
 //		pin.setMode(PinMode.PWM_OUTPUT);
-		pin.setPwmRange(2000);
+		pin.setPwmRange(2_000);
 		delay(1_000L);
 
 		int val = 150;

@@ -114,8 +114,8 @@ do
 	    read a
 	    ;;
 	  "1")
-			# PROP_FILE=nmea.mux.no.gps.properties
-			PROP_FILE=nmea.mux.no.gps.yaml
+  	    # PROP_FILE=nmea.mux.no.gps.properties
+  	    PROP_FILE=nmea.mux.no.gps.yaml
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:$PROP_FILE --no-date $NAV_SERVER_EXTRA_OPTIONS &
 	    if [ "$LAUNCH_BROWSER" == "Y" ]
