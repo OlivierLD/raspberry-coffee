@@ -11,14 +11,14 @@ MESSAGE="Bye! ✋\n"
 #
 # Make sure docker is available
 DOCKER=`which docker`
-if [ "$DOCKER" == "" ]
+if [[ "$DOCKER" == "" ]]
 then
   echo -e "Docker not available on this machine, exiting."
   echo -e "To install Docker, see https://store.docker.com/search?type=edition&offering=community"
   exit 1
 fi
 #
-while [ "$OK" = "false" ]
+while [[ "$OK" = "false" ]]
 do
   # Menu
   echo -e "+-------------- D O C K E R   I M A G E   B U I L D E R ---------------+"
@@ -141,7 +141,7 @@ do
 			#
       # MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
 			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
-			if [ "$IP_ADDR" = "" ]
+			if [[ "$IP_ADDR" = "" ]]
 			then
 			  IP_ADDR="localhost"
 			fi
@@ -162,7 +162,7 @@ do
 			#                      tcp port as seen from outside (this machine)
 			#
 			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
-			if [ "$IP_ADDR" = "" ]
+			if [[ "$IP_ADDR" = "" ]]
 			then
 			  IP_ADDR="localhost"
 			fi
@@ -187,7 +187,7 @@ do
 			#
       # MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
 			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
-			if [ "$IP_ADDR" = "" ]
+			if [[ "$IP_ADDR" = "" ]]
 			then
 			  IP_ADDR="localhost"
 			fi
@@ -283,7 +283,7 @@ do
 			#
       # MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
 			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
-			if [ "$IP_ADDR" = "" ]
+			if [[ "$IP_ADDR" = "" ]]
 			then
 			  IP_ADDR="localhost"
 			fi
@@ -302,7 +302,7 @@ do
 done
 #
 #
-if [ "$DOCKER_FILE" != "" ]
+if [[ "$DOCKER_FILE" != "" ]]
 then
   #
   # Proxies, if needed
@@ -310,7 +310,7 @@ then
   # export HTTPS_PROXY=http://www-proxy.us.oracle.com:80
   #
   EXTRA=
-  if [ "$EXTRA_PRM" != "" ]
+  if [[ "$EXTRA_PRM" != "" ]]
   then
     EXTRA="with $EXTRA_PRM"
   fi
@@ -327,19 +327,19 @@ then
 fi
 printf "%b" "$MESSAGE"
 # Prompt for export
-if [ "$DOCKER_FILE" != "" ]
+if [[ "$DOCKER_FILE" != "" ]]
 then
   # echo -en "== Do you want to export this container $CONTAINER_ID ? [n]|y > "
   # read a
   a=N
-  if [ "$a" == "Y" ]  || [ "$a" == "y" ]
+  if [[ "$a" == "Y" ]]  || [[ "$a" == "y" ]]
   then
     echo -e "Last generated one is $IMAGE_NAME:latest, its ID is $CONTAINER_ID"
     echo -en "== Please enter the name of the tar file to generate (like export.tar) > "
     read fName
     echo -en "Will export container $CONTAINER_ID into $fName - Is that correct ? [n]|y > "
     read a
-    if [ "$a" == "Y" ]  || [ "$a" == "y" ]
+    if [[ "$a" == "Y" ]]  || [[ "$a" == "y" ]]
     then
       docker export --output $fName $CONTAINER_ID
     fi
