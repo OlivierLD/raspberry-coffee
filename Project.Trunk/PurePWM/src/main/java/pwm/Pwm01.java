@@ -37,8 +37,8 @@ public class Pwm01 {
 		// create gpio controller
 		final GpioController gpio = GpioFactory.getInstance();
 
-		GpioPinPwmOutput pin = gpio.provisionSoftPwmOutputPin(servoPin, "Standard-Servo");
-
+//	GpioPinPwmOutput pin = gpio.provisionSoftPwmOutputPin(servoPin, "Standard-Servo");
+		GpioPinPwmOutput pin = gpio.provisionPwmOutputPin(servoPin, "Standard-Servo");
 
 		pin.setMode(PinMode.PWM_OUTPUT);
 		pin.setPwmRange(100);
