@@ -681,7 +681,7 @@ public class AstroComputer {
 		double obsAlt = sru.getHe();
 		double z = sru.getZ();
 
-		System.out.println(String.format("He %s, Z: %.02f", GeomUtil.decToSex(obsAlt, GeomUtil.SWING, GeomUtil.NONE), z));
+		System.out.println(String.format("Elev.: %s, Z: %.02f\272", GeomUtil.decToSex(obsAlt, GeomUtil.SWING, GeomUtil.NONE), z));
 
 		EpochAndZ[] epochAndZs = sunRiseAndSetEpoch(lat, lng);
 
