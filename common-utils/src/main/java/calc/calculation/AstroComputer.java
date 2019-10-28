@@ -1,5 +1,6 @@
 package calc.calculation;
 
+import calc.GeomUtil;
 import calc.calculation.nauticalalmanac.Anomalies;
 import calc.calculation.nauticalalmanac.Context;
 import calc.calculation.nauticalalmanac.Core;
@@ -662,6 +663,23 @@ public class AstroComputer {
 
 		double[] riseAndSet = sunRiseAndSet(lat, lng);
 		System.out.println(String.format("Time Rise: %f, Time Set: %f, ZRise: %f, ZSet: %f", riseAndSet[0], riseAndSet[1], riseAndSet[2], riseAndSet[3]));
+
+		System.out.println(String.format("Sun data:\nDeclination: %s\nGHA: %s",
+				GeomUtil.decToSex(getSunDecl(), GeomUtil.SWING, GeomUtil.NONE),
+				GeomUtil.decToSex(getSunGHA(), GeomUtil.SWING, GeomUtil.NONE)));
+
+		SightReductionUtil sru = new SightReductionUtil();
+
+		sru.setL(lat);
+		sru.setG(lng);
+
+		sru.setAHG(getSunGHA());
+		sru.setD(getSunDecl());
+		sru.calculate();
+		double obsAlt = sru.getHe();
+		double z = sru.getZ();
+
+		System.out.println(String.format("He %s, Z: %.02f", GeomUtil.decToSex(obsAlt, GeomUtil.SWING, GeomUtil.NONE), z));
 
 		EpochAndZ[] epochAndZs = sunRiseAndSetEpoch(lat, lng);
 

@@ -86,6 +86,36 @@ As for an MCP3008:
 
 The labels are applied to the *physical* pin numbers.
 
+---
+## Astro Computer
+To run an example:
+```
+ $ java -cp ./build/libs/common-utils-1.0-all.jar calc.calculation.AstroComputer
+Moon phase:276.5864365388287
+TimeOffset:-9.5
+TimeOffset for Pacific/Marquesas:-9.5
+TimeOffset for America/Los_Angeles:-7.0
+TimeOffset for GMT:0.0
+TimeOffset for Europe/Paris:1.0
+TimeOffset for Europe/Moscow:3.0
+TimeOffset for Australia/Sydney:11.0
+TimeOffset for Australia/Adelaide:10.5
+TZ:Marquesas Time, -9.5
+On Mon Oct 28 13:13:02 PDT 2019, TimeOffset for America/Los_Angeles:-7.0
+On Sat Dec 28 13:13:02 PST 2019, TimeOffset for America/Los_Angeles:-8.0
+Sun EoT: 19.896542
+Transit Time:Mon Oct 28 12:53:47 PDT 2019
+Time Rise: 14.577296, Time Set: 25.215788, ZRise: 106.145519, ZSet: 253.854481
+Sun data:
+Declination: -13°13.34'
+GHA:  127°19.03'
+He  38°49.74', Z: 186.01
+
+With epochs
+Rise Date: Mon Oct 28 07:35:29 PDT 2019 (Z:106.71º)
+Set Date: Mon Oct 28 18:11:38 PDT 2019 (Z:253.10º)
+
+```
 
 ... and more!
 
