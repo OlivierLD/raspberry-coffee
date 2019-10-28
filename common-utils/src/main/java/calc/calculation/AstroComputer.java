@@ -654,6 +654,8 @@ public class AstroComputer {
 		double lat = 37.7489;
 		double lng = -122.5070;
 
+		System.out.println(String.format("\nFrom position %s / %s", GeomUtil.decToSex(lat, GeomUtil.SWING, GeomUtil.NS), GeomUtil.decToSex(lng, GeomUtil.SWING, GeomUtil.EW)));
+
 		double sunMeridianPassageTime = getSunMeridianPassageTime(lat, lng);
 		System.out.println(String.format("Sun EoT: %f", sunMeridianPassageTime));
 
@@ -665,7 +667,7 @@ public class AstroComputer {
 		System.out.println(String.format("Time Rise: %f, Time Set: %f, ZRise: %f, ZSet: %f", riseAndSet[0], riseAndSet[1], riseAndSet[2], riseAndSet[3]));
 
 		System.out.println(String.format("Sun data:\nDeclination: %s\nGHA: %s",
-				GeomUtil.decToSex(getSunDecl(), GeomUtil.SWING, GeomUtil.NONE),
+				GeomUtil.decToSex(getSunDecl(), GeomUtil.SWING, GeomUtil.NS),
 				GeomUtil.decToSex(getSunGHA(), GeomUtil.SWING, GeomUtil.NONE)));
 
 		SightReductionUtil sru = new SightReductionUtil();

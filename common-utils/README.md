@@ -101,20 +101,21 @@ TimeOffset for Europe/Moscow:3.0
 TimeOffset for Australia/Sydney:11.0
 TimeOffset for Australia/Adelaide:10.5
 TZ:Marquesas Time, -9.5
-On Mon Oct 28 13:13:02 PDT 2019, TimeOffset for America/Los_Angeles:-7.0
-On Sat Dec 28 13:13:02 PST 2019, TimeOffset for America/Los_Angeles:-8.0
-Sun EoT: 19.896542
+On Mon Oct 28 13:32:50 PDT 2019, TimeOffset for America/Los_Angeles:-7.0
+On Sat Dec 28 13:32:50 PST 2019, TimeOffset for America/Los_Angeles:-8.0
+
+From position 37°44.93'N / 122°30.42'W
+Sun EoT: 19.896525
 Transit Time:Mon Oct 28 12:53:47 PDT 2019
-Time Rise: 14.577296, Time Set: 25.215788, ZRise: 106.145519, ZSet: 253.854481
+Time Rise: 14.577533, Time Set: 25.215517, ZRise: 106.151402, ZSet: 253.848598
 Sun data:
-Declination: -13°13.34'
-GHA:  127°19.03'
-He  38°49.74', Z: 186.01
+Declination: 13°13.62'S
+GHA:  132°16.05'
+He  38°12.43', Z: 192.12
 
 With epochs
 Rise Date: Mon Oct 28 07:35:29 PDT 2019 (Z:106.71º)
 Set Date: Mon Oct 28 18:11:38 PDT 2019 (Z:253.10º)
-
 ```
 
 ... and more!
