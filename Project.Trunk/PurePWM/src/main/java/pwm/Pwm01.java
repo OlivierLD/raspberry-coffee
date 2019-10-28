@@ -4,7 +4,6 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinPwmOutput;
 import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.RaspiPin;
 import utils.PinUtil;
 
@@ -41,28 +40,30 @@ public class Pwm01 {
 		GpioPinPwmOutput pin = gpio.provisionPwmOutputPin(servoPin, "Standard-Servo");
 
 //		pin.setMode(PinMode.PWM_OUTPUT);
-		pin.setPwmRange(200);
+		pin.setPwmRange(2000);
 		delay(1_000L);
 
-		int[] servoValues = new int[] {
-				20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160
-		};
+		int val = 150;
+		System.out.println(String.format("Setting PWM to %d", val));
+		pin.setPwm(val);
+		delay(1_000L);
 
-		for (int val : servoValues) {
-			System.out.println(String.format("Setting PWM to %d", val));
-			pin.setPwm(val);
-			delay(1_000L);
+		for (int i=0; i<250; i++) {
+			System.out.println(String.format("Setting PWM to %d", i));
+			pin.setPwm(i);
+			delay(50L);
 		}
-		if (false) {
-			System.out.println("Setting PWM to 100");
-			pin.setPwm(100);
-			delay(1_000L);
-			System.out.println("Setting PWM to 50");
-			pin.setPwm(50);
-			delay(1_000L);
-			System.out.println("Setting PWM to 0");
-			pin.setPwm(0);
-		}
+
+		val = 2000;
+		System.out.println(String.format("Setting PWM to %d", val));
+		pin.setPwm(val);
+		delay(1_000L);
+
+		val = 200;
+		System.out.println(String.format("Setting PWM to %d", val));
+		pin.setPwm(val);
+		delay(1_000L);
+
 		// stop all GPIO activity/threads by shutting down the GPIO controller
 		// (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
 		gpio.shutdown();
