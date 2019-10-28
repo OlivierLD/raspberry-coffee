@@ -41,17 +41,28 @@ public class Pwm01 {
 		GpioPinPwmOutput pin = gpio.provisionPwmOutputPin(servoPin, "Standard-Servo");
 
 		pin.setMode(PinMode.PWM_OUTPUT);
-		pin.setPwmRange(100);
+		pin.setPwmRange(200);
 		delay(1_000L);
-		System.out.println("Setting PWM to 100");
-		pin.setPwm(100);
-		delay(1_000L);
-		System.out.println("Setting PWM to 50");
-		pin.setPwm(50);
-		delay(1_000L);
-		System.out.println("Setting PWM to 0");
-		pin.setPwm(0);
 
+		int[] servoValues = new int[] {
+				20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160
+		};
+
+		for (int val : servoValues) {
+			System.out.println(String.format("Setting PWM to %d", val));
+			pin.setPwm(val);
+			delay(1_000L);
+		}
+		if (false) {
+			System.out.println("Setting PWM to 100");
+			pin.setPwm(100);
+			delay(1_000L);
+			System.out.println("Setting PWM to 50");
+			pin.setPwm(50);
+			delay(1_000L);
+			System.out.println("Setting PWM to 0");
+			pin.setPwm(0);
+		}
 		// stop all GPIO activity/threads by shutting down the GPIO controller
 		// (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
 		gpio.shutdown();
