@@ -11,12 +11,12 @@ sourceSets {
     java {
       srcDir 'src'
     }
-  }  
+  }
   test {
     java {
       srcDir 'tests'
     }
-  }  
+  }
 }
 
 repositories {
@@ -27,7 +27,7 @@ repositories {
 
 dependencies {
 //compile 'com.pi4j:pi4j-core:1.1'
-  compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
+  compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
 }
 
 // Warning: Must be run as root

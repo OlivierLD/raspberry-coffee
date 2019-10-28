@@ -46,7 +46,7 @@ repositories {
 }
 
 dependencies {
-//  compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
+//  compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
     compile 'org.rxtx:rxtx:2.1.7'
     compile project(':common-utils')
     compile project(':Serial.IO')

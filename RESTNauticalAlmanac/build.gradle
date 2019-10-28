@@ -37,7 +37,7 @@ repositories {
 }
 
 dependencies {
-//compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
+//compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
   compile 'com.google.code.gson:gson:2.8.0'
   compile 'oracle:xmlparser:2.0'
 //  compile project(':common-utils')
