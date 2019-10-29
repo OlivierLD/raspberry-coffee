@@ -26,7 +26,7 @@ public class RealPWMServo {
 		}
 
 		System.out.println(String.format("PWM Control - pin %s ... started.", PinUtil.findByPin(servoPin).pinName()));
-		PinUtil.print(new String[] { String.valueOf(PinUtil.findByPin(servoPin).pinNumber()) + ":" + "Servo" });
+		PinUtil.print(new String[] { String.format("%d:Servo", PinUtil.findByPin(servoPin).pinNumber()) });
 		GpioController gpio = null;
 		try {
 			gpio = GpioFactory.getInstance();
