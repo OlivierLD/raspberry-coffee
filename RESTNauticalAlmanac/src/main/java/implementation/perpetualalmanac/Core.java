@@ -10,7 +10,7 @@ import java.text.DecimalFormat;
  */
 public class Core {
 	public static double[] compute(int year, int month, int day, int hours, int minutes, int seconds) {
-		double ut = hours + (minutes / 60d) + (seconds / 3600d);
+		double ut = hours + (minutes / 60d) + (seconds / 3_600d);
 		double T = (367d * year) -
 				Math.floor(1.75 * (year + Math.floor((month + 9d) / 12d))) +
 				Math.floor(275d * (month / 9d)) +
@@ -57,13 +57,13 @@ public class Core {
 
 	public static void main(String... args) {
 		long before = System.currentTimeMillis();
-		double[] data = compute(2010, 2, 23, 12, 0, 0);
+		double[] data = compute(2_010, 2, 23, 12, 0, 0);
 		long after = System.currentTimeMillis();
 		System.out.println("Sun Declination : " + GeomUtil.decToSex(data[0], GeomUtil.SWING, GeomUtil.NS, GeomUtil.LEADING_SIGN));
 		System.out.println("Sun GHA:        : " + GeomUtil.decToSex(data[1], GeomUtil.SWING, GeomUtil.NONE));
 		System.out.println("Aries GHA:      : " + GeomUtil.decToSex(data[2], GeomUtil.SWING, GeomUtil.NONE));
 		int m = (int) Math.floor(Math.abs(data[3]) * 60d);
-		int s = (int) Math.round(3600d * Math.abs(data[3]) - (m * 60d));
+		int s = (int) Math.round(3_600d * Math.abs(data[3]) - (m * 60d));
 		System.out.println("Equation of Time: " + (data[3] > 0 ? "+" : "-") + Integer.toString(m) + "m" + Integer.toString(s) + "s");
 		System.out.println("Sun sd          : " + df2.format(data[4]) + "'");
 		System.out.println("Sun hp          : " + df2.format(data[5]) + "'");

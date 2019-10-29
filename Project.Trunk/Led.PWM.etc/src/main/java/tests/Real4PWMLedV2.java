@@ -8,6 +8,9 @@ import pwm.PWMPin;
 
 import static utils.StaticUtil.userInput;
 
+/**
+ * With 4 leds
+ */
 public class Real4PWMLedV2 {
 	public static void main(String... args)
 			throws InterruptedException {

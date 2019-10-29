@@ -9,6 +9,6 @@ fi
 echo -e "Using physical pin #$PIN"
 #
 JAVA_OPTIONS=
-JAVA_OPTIONS="$JAVA_OPTIONS -Dled.pin=$PIN"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dservo.pin=$PIN"
 #
-sudo java -cp $CP $JAVA_OPTIONS tests.RealPWMLed
+sudo java $JAVA_OPTIONS -cp $CP tests.RealPWMServo

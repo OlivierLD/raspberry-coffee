@@ -151,7 +151,7 @@ public class LoRaPublisher implements Forwarder {
 		try {
 			this.baudRate = Integer.parseInt(baudRateStr);
 		} catch (NumberFormatException nfe) {
-			this.baudRate = 9600;
+			this.baudRate = 9_600;
 		}
 		String[] sentences = props.getProperty("nmea.filter", "RMC").split(",");
 		this.sentenceList = Arrays.asList(sentences);

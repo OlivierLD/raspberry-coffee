@@ -45,6 +45,8 @@ import com.pi4j.util.Console;
 public class SoftPwmExample {
 
 	/**
+	 * From the PI4J Examples.
+	 *
 	 * [ARGUMENT/OPTION "--pin (#)" | "-p (#)" ]
 	 * This example program accepts an optional argument for specifying the GPIO pin (by number)
 	 * to use with this GPIO listener example. If no argument is provided, then GPIO #1 will be used.

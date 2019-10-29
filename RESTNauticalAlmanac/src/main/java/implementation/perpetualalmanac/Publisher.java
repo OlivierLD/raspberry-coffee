@@ -66,7 +66,7 @@ public class Publisher {
 	public static void main(String... args) throws Exception {
 		int from = Integer.parseInt(args[0]);
 		int to = Integer.parseInt(args[1]);
-		if (from < 1900 || to > 2100) {
+		if (from < 1_900 || to > 2_100) {
 			throw new RuntimeException("Only between 1900 and 2100");
 		}
 		if (from > to) {
