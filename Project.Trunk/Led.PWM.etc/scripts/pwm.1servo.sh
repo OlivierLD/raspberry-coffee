@@ -10,5 +10,6 @@ echo -e "Using physical pin #$PIN"
 #
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dservo.pin=$PIN"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dpwm.debug=true"
 #
 sudo java ${JAVA_OPTIONS} -cp $CP tests.RealPWMServo
