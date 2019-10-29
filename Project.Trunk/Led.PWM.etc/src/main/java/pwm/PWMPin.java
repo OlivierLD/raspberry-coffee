@@ -29,6 +29,7 @@ public class PWMPin extends GPIOPinAdapter {
 		}
 		if (debug) {
 			System.out.println("Starting thread with Volume:" + percentToVolume(percent) + "/" + CYCLE_WIDTH);
+			System.out.println(String.format("pwmVolume: %d", pwmVolume));
 		}
 		Thread pwmThread = new Thread(() -> {
 			emittingPWM = true;
@@ -38,7 +39,7 @@ public class PWMPin extends GPIOPinAdapter {
 					pin.pulse(pwmVolume, true); // 'pin' is defined in the superclass GPIOPinAdapter, set second argument to 'true' makes a blocking call
 				}
 				pin.low();
-				delay(CYCLE_WIDTH - pwmVolume);  // Wait for the rest of the cycle
+				delay(Math.max(CYCLE_WIDTH - pwmVolume, 0));  // Wait for the rest of the cycle
 			}
 			System.out.println("Stopping PWM");
 			// Notify the ones waiting for this thread to end
@@ -59,7 +60,11 @@ public class PWMPin extends GPIOPinAdapter {
 		if (percent < 0 || percent > 100) {
 			throw new IllegalArgumentException("Percent MUST be in [0, 100], not [" + percent + "]");
 		}
-		return percent / (100 / CYCLE_WIDTH);
+		int volume = percent / (100 / CYCLE_WIDTH);
+		if (debug) {
+			System.out.println(String.format("percentToVolume: percent: %d => volume: %d (width: %d)", percent, volume, CYCLE_WIDTH));
+		}
+		return volume;
 	}
 
 	public void adjustPWMVolume(int percent) {
