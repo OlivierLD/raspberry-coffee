@@ -10,6 +10,10 @@ import utils.PinUtil;
 
 import static utils.StaticUtil.userInput;
 
+/**
+ * No breakout board required.
+ * Pure Soft PWM fro the GPIO header.
+ */
 public class RealPWMServo {
 	public static void main(String... args)
 			throws InterruptedException {
@@ -26,7 +30,11 @@ public class RealPWMServo {
 		}
 
 		System.out.println(String.format("PWM Control - pin %s ... started.", PinUtil.findByPin(servoPin).pinName()));
-		PinUtil.print(new String[] { String.format("%d:Servo", PinUtil.findByPin(servoPin).pinNumber()) });
+		PinUtil.print(
+				String.format("%d:Servo", PinUtil.findByPin(servoPin).pinNumber()), // Yellow
+				"6:brown", // Can also be black
+				"2:red"    // Orange-ish
+		);
 		GpioController gpio = null;
 		try {
 			gpio = GpioFactory.getInstance();
