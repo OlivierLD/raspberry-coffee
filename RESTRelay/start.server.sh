@@ -6,4 +6,4 @@ JAVA_OPTS="$JAVA_OPTS -Drelay.map=1:11"
 JAVA_OPTS="$JAVA_OPTS -Drelay.verbose=true"
 #
 # sudo java -cp $CP httprelay.RelayServer $*
-java -cp $CP $JAVA_OPTS httprelay.RelayServer $*
+java -cp ${CP} ${JAVA_OPTS} httprelay.RelayServer $*

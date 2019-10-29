@@ -12,7 +12,7 @@ echo -e "---------------------------"
 echo -e "Tilt servo is #$SERVO_TILT, Heading servo is #$SERVO_HEADING"
 echo -en "Is that OK y|[n] ? > "
 read REPLY
-if [ "$REPLY" == "" ]
+if [[ "$REPLY" == "" ]]
 then
   REPLY=n
 fi
@@ -35,18 +35,18 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.port=$HTTP_PORT"
 #
 HOST=`hostname`
 DOMAIN=`domainname`
-if [ "$DOMAIN" != "" ]
+if [[ "$DOMAIN" != "" ]]
 then
-	HOST=$HOST.$DOMAIN
+	HOST=${HOST}.${DOMAIN}
 fi
 URL=http://${HOST}:${HTTP_PORT}/web/test.html
 #
 IP_ADDR=`ifconfig wlan0 2> /dev/null  | awk '/inet addr:/ {print $2}' | sed 's/addr://'`
-if [ "$IP_ADDR" != "" ]
+if [[ "$IP_ADDR" != "" ]]
 then
-	echo Server IP is $IP_ADDR
+	echo Server IP is ${IP_ADDR}
 fi
 #
 echo "Try opening $URL in a browser"
 #
-sudo java -cp $CP $JAVA_OPTIONS cam.CamServer
+sudo java -cp ${CP} ${JAVA_OPTIONS} cam.CamServer

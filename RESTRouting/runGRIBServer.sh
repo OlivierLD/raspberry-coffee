@@ -12,5 +12,5 @@ JAVA_OPT="$JAVA_OPT -Dhttp.port=8080"
 # For remote debugging:
 # JAVA_OPT="$JAVA_OPT -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000"
 #
-java -cp $CP $JAVA_OPT gribprocessing.GRIBServer
+java -cp ${CP} ${JAVA_OPT} gribprocessing.GRIBServer
 #

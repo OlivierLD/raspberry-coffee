@@ -10,11 +10,11 @@ then
 fi
 echo -e "Using pin #$PIN"
 #
-gpio -g mode $PIN pwm
+gpio -g mode ${PIN} pwm
 gpio pwm-ms
 gpio pwmc 192
 gpio pwmr 2000
-gpio -g pwm $PIN 150
+gpio -g pwm ${PIN} 150
 sleep 1
-gpio -g pwm $PIN 200
+gpio -g pwm ${PIN} 200
 echo Done.

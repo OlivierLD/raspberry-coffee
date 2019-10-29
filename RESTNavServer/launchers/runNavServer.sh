@@ -24,20 +24,20 @@ PROP_FILE=
 for ARG in "$@"
 do
 	echo -e "Managing prm $ARG"
-  if [ "$ARG" == "-p" ] || [ "$ARG" == "--proxy" ]
+  if [[ "$ARG" == "-p" ]] || [[ "$ARG" == "--proxy" ]]
   then
     USE_PROXY=true
-  elif [ "$ARG" == "--no-date" ]
+  elif [[ "$ARG" == "--no-date" ]]
   then
     NO_DATE=true
-  elif [ "$ARG" == "--no-rmc-time" ]
+  elif [[ "$ARG" == "--no-rmc-time" ]]
   then
     RMC_TIME_OK=false
-  elif [ "$ARG" == "-sf" ] || [ "$ARG" == "--sun-flower" ]
+  elif [[ "$ARG" == "-sf" ]] || [[ "$ARG" == "--sun-flower" ]]
   then
     SUN_FLOWER=true
     echo -e "SUN_FLOWER is now $SUN_FLOWER"
-  elif [[ $ARG == -m:* ]] || [[ $ARG == --mux:* ]] # !! No quotes !!
+  elif [[ ${ARG} == -m:* ]] || [[ ${ARG} == --mux:* ]] # !! No quotes !!
   then
     PROP_FILE=${ARG#*:}
     echo -e "Detected properties file $PROP_FILE"
@@ -52,21 +52,21 @@ GRIB_VERBOSE=false
 #
 CP=../build/libs/RESTNavServer-1.0-all.jar
 OS=`uname -a | awk '{ print $1 }'`
-if [ "$OS" == "Darwin" ]
+if [[ "$OS" == "Darwin" ]]
 then
-  CP=$CP:./libs/RXTXcomm.jar          # for Mac
+  CP=${CP}:./libs/RXTXcomm.jar          # for Mac
 fi
-if [ "$OS" == "Linux" ]
+if [[ "$OS" == "Linux" ]]
 then
-  CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
+  CP=${CP}:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
 fi
 #
 JAVA_OPTS=
-if [ "$OS" == "Darwin" ]
+if [[ "$OS" == "Darwin" ]]
 then
   JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"       # for Mac
 fi
-if [ "$OS" == "Linux" ]
+if [[ "$OS" == "Linux" ]]
 then
   JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
 fi
@@ -88,7 +88,7 @@ JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=$ASTRO_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dimage.verbose=$IMAGE_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dgrib.verbose=$GRIB_VERBOSE"
 #
-if [ "$USE_PROXY" == "true" ]
+if [[ "$USE_PROXY" == "true" ]]
 then
   echo -e "Using proxy (hard-coded)"
   JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
@@ -97,7 +97,7 @@ fi
 # refers to nmea.mux.properties, unless -Dmux.properties is set
 WEATHER_STATION=false # Hard coded, for now...
 #
-if [ "$WEATHER_STATION" == "true" ]
+if [[ "$WEATHER_STATION" == "true" ]]
 then
 	echo -e "+----------------------------------------------------------------+"
 	echo -e "| Using nmea.mux.home.properties, TCP input from Weather station |"
@@ -106,13 +106,13 @@ then
 	JAVA_OPTS="$JAVA_OPTS -Ddefault.sf.latitude=37.7489 -Ddefault.sf.longitude=-122.5070" # San Francisco.
 else
   JAVA_OPTS="$JAVA_OPTS -Dwith.sun.flower=$SUN_FLOWER"
-  if [ "$PROP_FILE" != "" ]
+  if [[ "$PROP_FILE" != "" ]]
   then
     JAVA_OPTS="$JAVA_OPTS -Dmux.properties=$PROP_FILE"
   fi
 fi
 #
-if [ "$WEATHER_STATION" == "false" ] && [ "$SUN_FLOWER" == "true" ]
+if [[ "$WEATHER_STATION" == "false" ]] && [[ "$SUN_FLOWER" == "true" ]]
 then
   JAVA_OPTS="$JAVA_OPTS -Dwith.sun.flower=$SUN_FLOWER"
 	JAVA_OPTS="$JAVA_OPTS -Ddefault.sf.latitude=37.7489 -Ddefault.sf.longitude=-122.5070" # SF.
@@ -120,7 +120,7 @@ fi
 #
 # Specific/Temporary
 # JAVA_OPTS="$JAVA_OPTS -Dnmea.cache.verbose=true"
-if [ "$NO_DATE" == "true" ]
+if [[ "$NO_DATE" == "true" ]]
 then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
 	# Uses only date from RMC sentences
@@ -128,7 +128,7 @@ then
 	JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GLL.date.time=true"
 fi
 #
-if [ "$RMC_TIME_OK" == "false" ]
+if [[ "$RMC_TIME_OK" == "false" ]]
 then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
 	JAVA_OPTS="$JAVA_OPTS -Drmc.time.ok=false"
@@ -150,7 +150,7 @@ JAVA_OPTS="$JAVA_OPTS -Dzda.verbose=false"
 #
 # For the small USB GPS
 GPS_OFFSET=false
-if [ "$GPS_OFFSET" == "true" ]
+if [[ "$GPS_OFFSET" == "true" ]]
 then
 	echo -e "+------------------------+"
 	echo -e " Warning: GPS Offset 7168"
@@ -173,7 +173,7 @@ SUDO=
 # DARWIN=`uname -a | grep Darwin`
 DARWIN=$(uname -a | grep Darwin)
 #
-if [ "$DARWIN" != "" ]
+if [[ "$DARWIN" != "" ]]
 then
 	echo Running on Mac
   JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"  # for Mac
@@ -181,7 +181,7 @@ else
 	echo Assuming Linux/Raspberry Pi
   JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
   # No sudo require if running as root, in Docker for example.
-  if [ "$(whoami)" != "root" ]
+  if [[ "$(whoami)" != "root" ]]
   then
     SUDO="sudo "
   fi
@@ -192,7 +192,7 @@ fi
 #
 COMMAND="${SUDO}java -cp $CP $JAVA_OPTS navrest.NavServer"
 echo -e "Running $COMMAND"
-$COMMAND
+${COMMAND}
 #
 echo -e "Bye now ✋"
 #

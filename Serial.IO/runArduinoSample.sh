@@ -24,5 +24,5 @@ SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/cu.usbmodem1421"
 SERIAL_PRMS="$SERIAL_PRMS -Dbaud.rate=115200"
 #
 echo Make sure you have uploaded the right sketch on the Arduino, and connected it through its USB cable.
-sudo java $JAVA_OPTIONS $SERIAL_PRMS -cp $CP sample.ArduinoEchoClient
+sudo java ${JAVA_OPTIONS} ${SERIAL_PRMS} -cp ${CP} sample.ArduinoEchoClient
 #

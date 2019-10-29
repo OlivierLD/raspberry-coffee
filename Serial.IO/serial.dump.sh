@@ -3,7 +3,7 @@
 # Read a Serial device
 #
 CP=./build/libs/Serial.IO-1.0-all.jar
-CP=$CP:/usr/share/java/RXTXcomm.jar
+CP=${CP}:/usr/share/java/RXTXcomm.jar
 echo Make sure the device is connected through its USB socket.
 #
 # SERIAL_PORT=/dev/ttyUSB0 # RPi
@@ -38,4 +38,4 @@ COMMAND="${SUDO}java $JAVA_OPTS -cp $CP sample.SerialReaderSample"
 echo -e "Executing $COMMAND ..."
 echo -e "Enter [Return]"
 read a
-$COMMAND
+${COMMAND}

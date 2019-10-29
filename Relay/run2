@@ -1,4 +1,4 @@
 #!/bin/bash
 echo Driving a relay, pin [0, 20] as parameter.
 CP=build/libs/Relay-1.0-all.jar
-sudo java -cp $CP relay.Relay02 $*
+sudo java -cp ${CP} relay.Relay02 $*

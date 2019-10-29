@@ -11,4 +11,4 @@ echo -e "Using physical pin #$PIN"
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dservo.pin=$PIN"
 #
-sudo java $JAVA_OPTIONS -cp $CP tests.RealPWMServo
+sudo java ${JAVA_OPTIONS} -cp $CP tests.RealPWMServo

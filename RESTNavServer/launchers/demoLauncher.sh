@@ -8,18 +8,18 @@ WITH_PROXY=N
 #
 NAV_SERVER_EXTRA_OPTIONS=
 #
-if [ $# -gt 0 ]
+if [[ $# -gt 0 ]]
 then
 	for prm in $*
 	do
 	  echo "Processing $prm ..."
-	  if [[ $prm == "--browser:"* ]]
+	  if [[ ${prm} == "--browser:"* ]]
 	  then
 	    LAUNCH_BROWSER=${prm#*:}
-	  elif [[ $prm == "--proxy:"* ]]
+	  elif [[ ${prm} == "--proxy:"* ]]
 	  then
 	    WITH_PROXY=${prm#*:}
-	    if [ "$WITH_PROXY" == "Y" ] || [ "$WITH_PROXY" == "y" ]
+	    if [[ "$WITH_PROXY" == "Y" ]] || [[ "$WITH_PROXY" == "y" ]]
 	    then
 	      NAV_SERVER_EXTRA_OPTIONS="$NAV_SERVER_EXTRA_OPTIONS --proxy"
 	    fi
@@ -40,7 +40,7 @@ function openBrowser() {
 #
 GO=true
 #
-while [ "$GO" == "true" ]
+while [[ "$GO" == "true" ]]
 do
 	clear
 	echo -e ">> Note ⚠️ : Optional Script Parameters : "
@@ -83,7 +83,7 @@ do
 	case "$option" in
 	  "PG" | "pg")
 	    export HTTP_PROXY_PORT=9876
-	    java -cp ../build/libs/RESTNavServer-1.0-all.jar -Dhttp.port=$HTTP_PROXY_PORT utils.proxyguisample.ProxyGUI &
+	    java -cp ../build/libs/RESTNavServer-1.0-all.jar -Dhttp.port=${HTTP_PROXY_PORT} utils.proxyguisample.ProxyGUI &
 	    echo -e "Make sure you use a proxy from your browser(s): Host: this machine, Port: $HTTP_PROXY_PORT"
 	    echo -en "Hit [Return]"
 	    read a
@@ -97,7 +97,7 @@ do
 			#
 			# JAVA_OPTIONS="$JAVA_OPTIONS -Djava.util.logging.config.file=logging.properties"
 			#
-			java -cp ../build/libs/RESTNavServer-1.0-all.jar -Dhttp.port=$HTTP_PROXY_PORT $JAVA_OPTIONS http.HTTPServer &
+			java -cp ../build/libs/RESTNavServer-1.0-all.jar -Dhttp.port=${HTTP_PROXY_PORT} ${JAVA_OPTIONS} http.HTTPServer &
 	    echo -e "Make sure you use a proxy from your browser(s): Host: this machine, Port: $HTTP_PROXY_PORT"
 	    echo -en "Hit [Return]"
 	    read a
@@ -117,8 +117,8 @@ do
   	    # PROP_FILE=nmea.mux.no.gps.properties
   	    PROP_FILE=nmea.mux.no.gps.yaml
 	    echo -e "Launching Nav Server with $PROP_FILE"
-	    ./runNavServer.sh --mux:$PROP_FILE --no-date $NAV_SERVER_EXTRA_OPTIONS &
-	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
@@ -129,8 +129,8 @@ do
 	  "2")
 	    PROP_FILE=nmea.mux.interactive.time.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
-	    ./runNavServer.sh --mux:$PROP_FILE --no-date $NAV_SERVER_EXTRA_OPTIONS &
-	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
@@ -141,7 +141,7 @@ do
 	  "3")
 	    PROP_FILE=nmea.mux.home.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
-	    ./runNavServer.sh --mux:$PROP_FILE $NAV_SERVER_EXTRA_OPTIONS &
+	    ./runNavServer.sh --mux:${PROP_FILE} ${NAV_SERVER_EXTRA_OPTIONS} &
 	#   sleep 5 # Wait for the server to be operational
 	#   openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
 	    GO=false
@@ -149,8 +149,8 @@ do
 	  "4")
 	    PROP_FILE=nmea.mux.gps.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
-	    ./runNavServer.sh --mux:$PROP_FILE --no-date $NAV_SERVER_EXTRA_OPTIONS &
-	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
@@ -161,8 +161,8 @@ do
 	  "5")
 	    PROP_FILE=nmea.mux.no.gps.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
-	    ./runNavServer.sh --mux:$PROP_FILE --no-date --sun-flower $NAV_SERVER_EXTRA_OPTIONS &
-	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    ./runNavServer.sh --mux:${PROP_FILE} --no-date --sun-flower ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
@@ -174,8 +174,8 @@ do
 	  "6")
 	    PROP_FILE=nmea.mux.kayak.log.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
-	    ./runNavServer.sh --mux:$PROP_FILE --no-rmc-time --no-date $NAV_SERVER_EXTRA_OPTIONS &
-	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    ./runNavServer.sh --mux:${PROP_FILE} --no-rmc-time --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
@@ -186,8 +186,8 @@ do
 	  "7")
 	    PROP_FILE=nmea.mux.driving.log.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
-	    ./runNavServer.sh --mux:$PROP_FILE --no-rmc-time --no-date $NAV_SERVER_EXTRA_OPTIONS &
-	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    ./runNavServer.sh --mux:${PROP_FILE} --no-rmc-time --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
@@ -198,8 +198,8 @@ do
 	  "10")
 	    PROP_FILE=nmea.mux.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
-	    ./runNavServer.sh --mux:$PROP_FILE --no-date $NAV_SERVER_EXTRA_OPTIONS &
-	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
@@ -210,8 +210,8 @@ do
 	  "11")
 	    PROP_FILE=nmea.mux.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
-	    ./runNavServer.sh --proxy --mux:$PROP_FILE --no-date $NAV_SERVER_EXTRA_OPTIONS &
-	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    ./runNavServer.sh --proxy --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
@@ -224,14 +224,14 @@ do
 	    ps -ef | grep navrest.NavServer | grep -v grep
 	    ps -ef | grep navrest.NavServer | grep -v grep | grep -v killns | awk '{ print $2 }' > km
 			NB_L=`cat km | wc -l`
-			if [ $NB_L == 0 ]
+			if [[ ${NB_L} == 0 ]]
 			then
 			  echo -e "No NavServer process found."
 			else
 			  echo -e "----------- NavServer HTTP Ports ---------"
 				for pid in `cat km`
 				do
-				  netstat -vanp tcp | grep $pid | grep LISTEN
+				  netstat -vanp tcp | grep ${pid} | grep LISTEN
 				done
 			  echo -e "------------------------------------------"
 				rm km
