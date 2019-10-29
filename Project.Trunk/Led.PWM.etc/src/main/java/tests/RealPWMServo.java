@@ -72,6 +72,8 @@ public class RealPWMServo {
 					pin.adjustPWMVolume(vol);
 				} catch (NumberFormatException nfe) {
 					System.out.println(nfe.toString());
+				} catch (Throwable t) {
+					System.out.println(t.toString());
 				}
 			}
 		}
