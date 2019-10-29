@@ -56,9 +56,9 @@ public class RealPWMServo {
 		while (go) {
 			String userInput = userInput("Volume > ");
 			if ("S".equalsIgnoreCase(userInput) ||
-					"quit".equalsIgnoreCase(userInput))
+					"quit".equalsIgnoreCase(userInput)) {
 				go = false;
-			else {
+			} else {
 				try {
 					int vol = Integer.parseInt(userInput);
 					pin.adjustPWMVolume(vol);
