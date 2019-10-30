@@ -4,6 +4,7 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinPwmOutput;
 import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.RaspiPin;
 import utils.PinUtil;
 
@@ -38,10 +39,10 @@ public class Pwm01 {
 		// create gpio controller
 		final GpioController gpio = GpioFactory.getInstance();
 
-//	GpioPinPwmOutput pin = gpio.provisionSoftPwmOutputPin(servoPin, "Standard-Servo");
-		GpioPinPwmOutput pin = gpio.provisionPwmOutputPin(servoPin, "Standard-Servo");
+		GpioPinPwmOutput pin = gpio.provisionSoftPwmOutputPin(servoPin, "Standard-Servo");
+//		GpioPinPwmOutput pin = gpio.provisionPwmOutputPin(servoPin, "Standard-Servo");
 
-//		pin.setMode(PinMode.PWM_OUTPUT);
+		pin.setMode(PinMode.PWM_OUTPUT);
 		pin.setPwmRange(2_000);
 		delay(1_000L);
 
