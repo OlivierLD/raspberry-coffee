@@ -13,6 +13,8 @@ import static utils.TimeUtil.delay;
  * uses -Dservo.pin, physical number of the servo pin, default is 12
  *
  * GPIO_01, GPIO_23, GPIO_24, GPIO_26.
+ *
+ * Warning: requires a bug fix in GpioProviderBase, available after 13-Jul-2019
  */
 public class Pwm01 {
 	public static void main(String... args)
@@ -31,7 +33,7 @@ public class Pwm01 {
 		}
 
 		System.out.println(String.format("PWM Control - pin %s ... started.", PinUtil.findByPin(servoPin).pinName()));
-		PinUtil.print(new String[] { String.valueOf(PinUtil.findByPin(servoPin).pinNumber()) + ":" + "Servo" });
+		PinUtil.print(String.format("%d:Servo", PinUtil.findByPin(servoPin).pinNumber()));
 
 		// create gpio controller
 		final GpioController gpio = GpioFactory.getInstance();
@@ -54,7 +56,7 @@ public class Pwm01 {
 			delay(50L);
 		}
 
-		val = 2000;
+		val = 2_000;
 		System.out.println(String.format("Setting PWM to %d", val));
 		pin.setPwm(val);
 		delay(1_000L);

@@ -43,7 +43,8 @@ public class RealPWMServo {
 			System.exit(1);
 		}
 
-		PWMPin pin = new PWMPin(servoPin, "OneServo", PinState.LOW);
+		int cycleWidth = 20; // In ms. 50 Hertz, 1000 / 20. 60 Hz: 16.6666 ms.
+		PWMPin pin = new PWMPin(servoPin, "OneServo", PinState.LOW, cycleWidth);
 		// pin.low(); // Useless
 
 		System.out.println("PWM, up and down in [0..100]");

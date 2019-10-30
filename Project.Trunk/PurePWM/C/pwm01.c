@@ -14,7 +14,7 @@
 int main (void) {
    fprintf(stdout, "Raspberry Pi PWM wiringPi test program\n");
    wiringPiSetupGpio();
-   pinMode (18, PWM_OUTPUT); // Pin #12
+   pinMode (18, PWM_OUTPUT); // Pin #12, BCM 18
    pwmSetMode (PWM_MODE_MS);
    pwmSetRange (2000);
    pwmSetClock (192);
