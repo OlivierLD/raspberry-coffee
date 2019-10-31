@@ -79,9 +79,9 @@ public class RealPWMServo {
 			}
 		}
 		System.out.println("Exiting loop");
-		if (pin.isPWMing()) {
-			pin.stopPWM();
-		}
+//		if (pin.isPWMing()) {
+//			pin.stopPWM();
+//		}
 		pin.stopPWM();
 
 		Thread.sleep(1_000);

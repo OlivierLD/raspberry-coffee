@@ -38,9 +38,6 @@ public class PWMPin extends GPIOPinAdapter {
 			System.out.println("Starting thread with Volume:" + percentToVolume(percent) + "/" + this.pulseCycleWidth);
 			System.out.println(String.format("pwmVolume: %d", pwmVolume));
 		}
-		if (this.isPWMing()) {
-			this.stopPWM();
-		}
 		Thread pwmThread = new Thread(() -> {
 			emittingPWM = true;
 			pwmVolume = percentToVolume(percent);
@@ -56,7 +53,10 @@ public class PWMPin extends GPIOPinAdapter {
 			synchronized (mainThread) {
 				mainThread.notify();
 			}
-		});
+		}, "percent-thread");
+		if (this.isPWMing()) {
+			this.stopPWM();
+		}
 		pwmThread.start();
 	}
 
@@ -66,9 +66,6 @@ public class PWMPin extends GPIOPinAdapter {
 		}
 		if (pulseLength > this.pulseCycleWidth) {
 			throw new IllegalArgumentException(String.format("Pulse length (%f) cannot be greater than cycle width (%f)", pulseLength, this.pulseCycleWidth));
-		}
-		if (this.isPWMing()) {
-			this.stopPWM();
 		}
 		Thread pwmThread = new Thread(() -> {
 			emittingPWM = true;
@@ -84,7 +81,10 @@ public class PWMPin extends GPIOPinAdapter {
 			synchronized (mainThread) {
 				mainThread.notify();
 			}
-		});
+		}, "pulse-length");
+		if (this.isPWMing()) {
+			this.stopPWM();
+		}
 		pwmThread.start();
 	}
 
