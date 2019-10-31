@@ -8,5 +8,5 @@ JAVA_OPTS=
 # JAVA_OPTS="$JAVA_OPTS -Dlsm303.verbose.acc=true"
 # JAVA_OPTS="$JAVA_OPTS -Dlsm303.log.for.calibration=true"
 #
-sudo java $JAVA_OPTS -cp $CP i2c.sensor.LSM303
+sudo java ${JAVA_OPTS} -cp ${CP} i2c.sensor.LSM303
 

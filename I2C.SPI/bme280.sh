@@ -3,4 +3,4 @@ CP=./build/libs/I2C.SPI-1.0-all.jar
 #
 OPTS=-Dbme280.debug=true
 #
-sudo java -cp $CP $OPTS i2c.sensor.BME280
+sudo java -cp ${CP} ${OPTS} i2c.sensor.BME280

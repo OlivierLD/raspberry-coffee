@@ -8,4 +8,4 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dhmc5883l.verbose=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dhmc5883l.verbose.raw=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dhmc5883l.verbose.mag=true"
 #
-sudo java $JAVA_OPTIONS -cp $CP i2c.sensor.HMC5883L
+sudo java ${JAVA_OPTIONS} -cp ${CP} i2c.sensor.HMC5883L

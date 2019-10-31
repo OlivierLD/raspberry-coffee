@@ -25,6 +25,9 @@ import java.util.TimeZone;
  * http://aa.usno.navy.mil/data/docs/celnavtable.php,
  * http://maia.usno.navy.mil/
  * http://maia.usno.navy.mil/ser7/deltat.data
+ *
+ * https://www.usno.navy.mil/USNO/earth-orientation/eo-products/long-term
+ *
  */
 public class AstroComputer {
 	private static int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;

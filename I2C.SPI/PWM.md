@@ -71,7 +71,7 @@ As an example, let us calculate for a `60 Hz` frequency the `pulse` value to sen
 for a `1.5` millisecond PWM:
 
 - 1 cycle has a duration of `1 / 60` second, or `16.66666` milliseconds.
-- each cycle is divided in `4096` slots, we can say that `4096` = `16.6666`.
+- each cycle is divided in `4096` slots, we can say that `4096` slots = `16.6666` ms.
 - the solution is provided by a rule of three: `value` = `4096` * (`pulse` / `16.66666`), which is `368.64`, rounded to `369`.
 
 #### A comment about servos

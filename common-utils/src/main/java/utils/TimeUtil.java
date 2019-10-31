@@ -2,6 +2,7 @@ package utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -148,7 +149,11 @@ public class TimeUtil {
 	 * @param sec in seconds
 	 */
 	public static void delay(float sec) {
-		delay(Math.round(sec * 1_000));
+		long ms = (long)Math.floor(sec * 1_000);
+		int ns = (int)((sec * 1_000_000_000) - (ms * 1_000_000));
+		// Micro: \u03bc
+		// System.out.println(String.format("Waiting %s ms and %s \u212bs", NumberFormat.getInstance().format(ms), NumberFormat.getInstance().format(ns)));
+		delay(ms, ns);
 	}
 
 
@@ -229,6 +234,9 @@ public class TimeUtil {
 	}
 
 	public static void main(String args[]) {
+
+		delay((1_000f / 60f) / 1_000f); // 16.66666f
+
 		SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 		String retString = "";
@@ -323,6 +331,5 @@ public class TimeUtil {
 
 		long elapsed = 231_234_567_890L; // 123456L; //
 		System.out.println("Readable time (" + elapsed + ") : " + readableTime(elapsed));
-
 	}
 }

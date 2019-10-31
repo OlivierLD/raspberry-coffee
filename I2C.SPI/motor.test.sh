@@ -5,4 +5,4 @@ OPTS=-Dhat.debug=false
 #
 echo motor num \(1..4\) as parameter. Default is 1.
 #
-sudo java -cp $CP $OPTS i2c.samples.motorHAT.OneMotorDemo $*
+sudo java -cp ${CP} ${OPTS} i2c.samples.motorHAT.OneMotorDemo $*

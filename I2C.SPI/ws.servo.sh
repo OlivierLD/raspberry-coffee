@@ -4,4 +4,4 @@ CP=./build/libs/I2C.SPI-1.0-all.jar
 #
 echo -e "Requires a WebSocket server running"
 echo -e "Can be started with 'node server.js'"
-sudo java -cp $CP i2c.samples.ws.WebSocketListener
+sudo java -cp ${CP} i2c.samples.ws.WebSocketListener

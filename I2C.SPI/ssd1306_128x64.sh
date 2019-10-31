@@ -7,4 +7,4 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dssd1306.verbose=true "
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmirror.screen=false"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dreturn.to.move.on=true"
 #
-sudo java $JAVA_OPTIONS -cp $CP spi.lcd.oled.samples.OLEDSSD1306_128x64_Sample
+sudo java ${JAVA_OPTIONS} -cp ${CP} spi.lcd.oled.samples.OLEDSSD1306_128x64_Sample

@@ -12,7 +12,18 @@ import static utils.StaticUtil.userInput;
 
 /**
  * No breakout board required.
- * Pure Soft PWM fro the GPIO header.
+ * Pure Soft PWM from the GPIO header.
+ *
+ * _**Theoretically**_, servos follow those rules:
+ *
+ * | Pulse  | Standard  | Continuous         |
+ * |-------:|----------:|:------------------:|
+ * | 1.5 ms |   0 &deg; | Stop               |
+ * | 2.0 ms |  90 &deg; | FullSpeed forward  |
+ * | 1.0 ms | -90 &deg; | FullSpeed backward |
+ *
+ * That happens not to be always true, some servos (like <a href="https://www.adafruit.com/product/169">https://www.adafruit.com/product/169</a> or <a href="https://www.adafruit.com/product/155">https://www.adafruit.com/product/155</a>)
+ * have values going between `0.5 ms` and `2.5 ms`.
  */
 public class RealPWMServo {
 	public static void main(String... args)
@@ -43,34 +54,24 @@ public class RealPWMServo {
 			System.exit(1);
 		}
 
-		int cycleWidth = 20; // In ms. 50 Hertz, 1000 / 20. 60 Hz: 16.6666 ms.
+		float cycleWidth = 16.6666f; // In ms. 50 Hertz, 1000 / 20. 60 Hz: 16.6666 ms.
 		PWMPin pin = new PWMPin(servoPin, "OneServo", PinState.LOW, cycleWidth);
 		// pin.low(); // Useless
 
-		System.out.println("PWM, up and down in [0..100]");
-		// PWM
-		pin.emitPWM(0);
-		Thread.sleep(1_000);
-		for (int vol = 0; vol < 100; vol++) {
-			pin.adjustPWMVolume(vol);
-			Thread.sleep(10);
-		}
-		for (int vol = 100; vol >= 0; vol--) {
-			pin.adjustPWMVolume(vol);
-			Thread.sleep(10);
-		}
-
-		System.out.println("Enter \"S\" or \"quit\" to stop, or a volume [0..100]");
+		System.out.println("PWM, by pulse length");
+		pin.emitPWM(1.5f); // PWM, center servo.
+//  Thread.sleep(1_000);
+		System.out.println(String.format("Enter \"S\" or \"quit\" to stop, or a pulse in ms [0..%.02f]", cycleWidth));
 		boolean go = true;
 		while (go) {
-			String userInput = userInput("Volume > ");
+			String userInput = userInput("Pulse in ms > ");
 			if ("S".equalsIgnoreCase(userInput) ||
 					"quit".equalsIgnoreCase(userInput)) {
 				go = false;
 			} else {
 				try {
-					int vol = Integer.parseInt(userInput);
-					pin.adjustPWMVolume(vol);
+					float pulse = Float.parseFloat(userInput);
+					pin.emitPWM(pulse);
 				} catch (NumberFormatException nfe) {
 					System.out.println(nfe.toString());
 				} catch (Throwable t) {
@@ -79,6 +80,9 @@ public class RealPWMServo {
 			}
 		}
 		System.out.println("Exiting loop");
+		if (pin.isPWMing()) {
+			pin.stopPWM();
+		}
 		pin.stopPWM();
 
 		Thread.sleep(1_000);
@@ -86,9 +90,6 @@ public class RealPWMServo {
 		System.out.println("Bye-bye");
 		pin.low();
 		Thread.sleep(500);
-		pin.high();
-		Thread.sleep(500);
-		pin.low();
 
 		gpio.shutdown();
 	}
