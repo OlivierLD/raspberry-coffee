@@ -43,7 +43,7 @@ public class PWMPin extends GPIOPinAdapter {
 			pwmVolume = percentToVolume(percent);
 			while (emittingPWM) {
 				if (pwmVolume > 0) { // On
-					pin.pulse(pwmVolume, true); // , TimeUnit.MICROSECONDS); // 'pin' is defined in the superclass GPIOPinAdapter, set second argument to 'true' makes a blocking call
+					pin.pulse(pwmVolume, true); // 'pin' is defined in the superclass GPIOPinAdapter, set second argument to 'true' makes a blocking call
 				}
 				pin.low();           // Off
 				delay(Math.max((int)this.pulseCycleWidth - pwmVolume, 0));  // Wait for the rest of the cycle
@@ -60,7 +60,7 @@ public class PWMPin extends GPIOPinAdapter {
 		pwmThread.start();
 	}
 
-	public void emitPWM(final float pulseLength) {
+	public void emitPWM(float pulseLength) {
 		if (pulseLength < 0) {
 			throw new IllegalArgumentException(String.format("Pulse length must be positive, not %f", pulseLength));
 		}
@@ -70,6 +70,7 @@ public class PWMPin extends GPIOPinAdapter {
 		Thread pwmThread = new Thread(() -> {
 			emittingPWM = true;
 			long widthInMicroSec = Math.round(pulseLength * 1_000L);
+			System.out.println(String.format("Starting PWM (widthInMicroSec %d \u03bcs)", widthInMicroSec));
 			while (emittingPWM) {
 				pin.pulse(widthInMicroSec, true, TimeUnit.MICROSECONDS); // 'pin' is defined in the superclass GPIOPinAdapter, set second argument to 'true' makes a blocking call
 				pin.low();           // Off
