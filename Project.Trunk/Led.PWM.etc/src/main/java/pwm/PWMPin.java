@@ -75,14 +75,18 @@ public class PWMPin extends GPIOPinAdapter {
 			emittingPWM = true;
 //			long widthInMicroSec = Math.round(pulseLength * 1_000L); // in micro secs
 			long widthInMicroSec = Math.round(pulseLength); // in ms
-			System.out.println(String.format("Starting PWM (widthInMicroSec %d \u03bcs)", widthInMicroSec));
-			while (emittingPWM) {
-				pin.pulse(widthInMicroSec, true); // , TimeUnit.MICROSECONDS); // 'pin' is defined in the superclass GPIOPinAdapter, set second argument to 'true' makes a blocking call
-				pin.low();           // Off. Should be already off after the pulse
-				float remainderInSeconds = ((this.pulseCycleWidth * 1_000L) - widthInMicroSec) / 1_000_000;
-				delay(remainderInSeconds);  // Wait for the rest of the cycle
+			if (widthInMicroSec > 0) {
+				System.out.println(String.format("Starting PWM (widthInMicroSec %d \u03bcs)", widthInMicroSec));
+				while (emittingPWM) {
+					pin.pulse(widthInMicroSec, true); // , TimeUnit.MICROSECONDS); // 'pin' is defined in the superclass GPIOPinAdapter, set second argument to 'true' makes a blocking call
+					pin.low();           // Off. Should be already off after the pulse
+					float remainderInSeconds = ((this.pulseCycleWidth * 1_000L) - widthInMicroSec) / 1_000_000;
+					delay(remainderInSeconds);  // Wait for the rest of the cycle
+				}
+				System.out.println("Stopping PWM");
+			} else {
+				System.out.println("\t(Not doing it, pulse is equal to 0)");
 			}
-			System.out.println("Stopping PWM");
 			// Notify the ones waiting for this thread to end
 			synchronized (mainThread) {
 				mainThread.notify();
