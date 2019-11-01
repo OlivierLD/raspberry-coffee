@@ -75,8 +75,8 @@ public class PWMPin extends GPIOPinAdapter {
 		if (widthInMicroSec > 0) {
 			Thread pwmThread = new Thread(() -> {
 				emittingPWM = true;
-				float timeOn = (float)(widthInMicroSec / 1_000_000); // in seconds
-				float remainderInSeconds = ((this.pulseCycleWidth * 1_000L) - widthInMicroSec) / 1_000_000;
+				float timeOn = (float)(widthInMicroSec / 1_000_000f); // in seconds
+				float remainderInSeconds = ((this.pulseCycleWidth * 1_000L) - widthInMicroSec) / 1_000_000f;
 				System.out.println(String.format("Starting PWM (widthInMicroSec %d \u03bcs => on: %f off: %f)", widthInMicroSec, timeOn, remainderInSeconds));
 				while (emittingPWM) {
 //					pin.pulse(widthInMicroSec, true, TimeUnit.MICROSECONDS); // 'pin' is defined in the superclass GPIOPinAdapter, set second argument to 'true' makes a blocking call
