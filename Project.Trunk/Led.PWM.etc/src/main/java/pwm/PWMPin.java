@@ -60,6 +60,10 @@ public class PWMPin extends GPIOPinAdapter {
 		pwmThread.start();
 	}
 
+	/**
+	 *
+	 * @param pulseLength in ms
+	 */
 	public void emitPWM(float pulseLength) {
 		if (pulseLength < 0) {
 			throw new IllegalArgumentException(String.format("Pulse length must be positive, not %f", pulseLength));

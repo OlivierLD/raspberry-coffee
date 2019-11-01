@@ -53,18 +53,25 @@ public class RealPWMServo {
 			System.exit(1);
 		}
 
-		float cycleWidth = (1_000f / 60f); // 16.6666f; // In ms. 50 Hertz, 1000 / 20. 60 Hz: 16.6666 ms.
+		float cycleWidth = (1_000f / 50f); // 16.6666f; // In ms. 50 Hertz, 1000 / 20. 60 Hz: 16.6666 ms.
 		PWMPin pin = new PWMPin(servoPin, "OneServo", PinState.LOW, cycleWidth);
 		// pin.low(); // Useless
+
+		System.out.println("PWM, [0..3]");
+		for (float pulse = 0f; pulse < 3.0f; pulse += 0.1f) {
+			pin.emitPWM(pulse);
+			Thread.sleep(500);
+		}
 
 		System.out.println("PWM, by pulse length");
 		pin.emitPWM(1.5f); // PWM, center servo.
 //  Thread.sleep(1_000);
-		System.out.println(String.format("Enter \"S\" or \"quit\" to stop, or a pulse in ms [0..%.02f]", cycleWidth));
+		System.out.println(String.format("Enter \"S\", \"Q\" or \"quit\" to stop, or a pulse in ms [0..%.02f]", cycleWidth));
 		boolean go = true;
 		while (go) {
 			String userInput = userInput("Pulse in ms > ");
 			if ("S".equalsIgnoreCase(userInput) ||
+					"Q".equalsIgnoreCase(userInput) ||
 					"quit".equalsIgnoreCase(userInput)) {
 				go = false;
 			} else {

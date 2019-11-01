@@ -45,11 +45,12 @@ public class RealPWMLed {
 			Thread.sleep(10);
 		}
 
-		System.out.println("Enter \"S\" or \"quit\" to stop, or a volume [0..100]");
+		System.out.println("Enter \"S\", \"Q\" or \"quit\" to stop, or a volume [0..100]");
 		boolean go = true;
 		while (go) {
 			String userInput = userInput("Volume > ");
 			if ("S".equalsIgnoreCase(userInput) ||
+					"Q".equalsIgnoreCase(userInput) ||
 					"quit".equalsIgnoreCase(userInput)) {
 				go = false;
 			} else {
