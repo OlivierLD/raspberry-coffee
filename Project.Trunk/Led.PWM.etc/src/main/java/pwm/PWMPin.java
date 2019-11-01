@@ -65,8 +65,8 @@ public class PWMPin extends GPIOPinAdapter {
 	 * @param pulseLength in ms
 	 */
 	public void emitPWM(float pulseLength) {
-		if (pulseLength < 0) {
-			throw new IllegalArgumentException(String.format("Pulse length must be positive, not %f", pulseLength));
+		if (pulseLength <= 0) {
+			throw new IllegalArgumentException(String.format("Pulse length must be greater than 0, not %f", pulseLength));
 		}
 		if (pulseLength > this.pulseCycleWidth) {
 			throw new IllegalArgumentException(String.format("Pulse length (%f) cannot be greater than cycle width (%f)", pulseLength, this.pulseCycleWidth));

@@ -58,7 +58,7 @@ public class RealPWMServo {
 		// pin.low(); // Useless
 
 		System.out.println("PWM, [0..3]");
-		for (float pulse = 0f; pulse < 3.0f; pulse += 0.1f) {
+		for (float pulse = 1f; pulse < 3.0f; pulse += 0.1f) {
 			pin.emitPWM(pulse);
 			Thread.sleep(500);
 		}
