@@ -26,7 +26,7 @@ public class RealPWMLed {
 		}
 
 		System.out.println(String.format("PWM Control - pin %s ... started.", PinUtil.findByPin(servoPin).pinName()));
-		PinUtil.print(new String[] { String.valueOf(PinUtil.findByPin(servoPin).pinNumber()) + ":" + "Servo" });
+		PinUtil.print(String.format("%d:Led 3.3", PinUtil.findByPin(servoPin).pinNumber()));
 		final GpioController gpio = GpioFactory.getInstance();
 
 		PWMPin pin = new PWMPin(servoPin, "OneLed", PinState.LOW);
