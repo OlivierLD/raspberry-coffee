@@ -3,8 +3,6 @@ package pwm;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 
-import java.util.concurrent.TimeUnit;
-
 import static utils.TimeUtil.delay;
 
 /**
@@ -71,11 +69,11 @@ public class PWMPin extends GPIOPinAdapter {
 		if (pulseLength > this.pulseCycleWidth) {
 			throw new IllegalArgumentException(String.format("Pulse length (%f) cannot be greater than cycle width (%f)", pulseLength, this.pulseCycleWidth));
 		}
-		Thread pwmThread = new Thread(() -> {
-			emittingPWM = true;
-//			long widthInMicroSec = Math.round(pulseLength * 1_000L); // in micro secs
-			long widthInMicroSec = Math.round(pulseLength); // in ms
-			if (widthInMicroSec > 0) {
+//		final long widthInMicroSec = Math.round(pulseLength * 1_000L); // in micro secs
+		final long widthInMicroSec = Math.round(pulseLength); // in ms
+		if (widthInMicroSec > 0) {
+			Thread pwmThread = new Thread(() -> {
+				emittingPWM = true;
 				System.out.println(String.format("Starting PWM (widthInMicroSec %d \u03bcs)", widthInMicroSec));
 				while (emittingPWM) {
 					pin.pulse(widthInMicroSec, true); // , TimeUnit.MICROSECONDS); // 'pin' is defined in the superclass GPIOPinAdapter, set second argument to 'true' makes a blocking call
@@ -84,18 +82,18 @@ public class PWMPin extends GPIOPinAdapter {
 					delay(remainderInSeconds);  // Wait for the rest of the cycle
 				}
 				System.out.println("Stopping PWM");
-			} else {
-				System.out.println("\t(Not doing it, pulse is equal to 0)");
+				// Notify the ones waiting for this thread to end
+				synchronized (mainThread) {
+					mainThread.notify();
+				}
+			}, "pulse-length");
+			if (this.isPWMing()) {
+				this.stopPWM();
 			}
-			// Notify the ones waiting for this thread to end
-			synchronized (mainThread) {
-				mainThread.notify();
-			}
-		}, "pulse-length");
-		if (this.isPWMing()) {
-			this.stopPWM();
+			pwmThread.start();
+		} else {
+			System.out.println("\t(Not starting a thread, pulse equals to 0)");
 		}
-		pwmThread.start();
 	}
 
 	/**
