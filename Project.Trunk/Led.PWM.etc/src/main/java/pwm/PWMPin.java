@@ -101,7 +101,7 @@ public class PWMPin extends GPIOPinAdapter {
 		}
 		int volume = (int)Math.round((double)percent / (100d / (double) this.pulseCycleWidth));
 		if (debug) {
-			System.out.println(String.format("percentToVolume: percent: %d => volume: %d (width: %d)", percent, volume, this.pulseCycleWidth));
+			System.out.println(String.format("percentToVolume: percent: %d => volume: %d (width: %f)", percent, volume, this.pulseCycleWidth));
 		}
 		return volume;
 	}
