@@ -83,9 +83,9 @@ public class PWMPin extends GPIOPinAdapter {
 					try {
 //					pin.pulse(widthInMicroSec, true, TimeUnit.MICROSECONDS); // 'pin' is defined in the superclass GPIOPinAdapter, set second argument to 'true' makes a blocking call
 						pin.high();
-						delay(timeOn);
+						delay(timeOn, "ON");
 						pin.low();           // Off. Should be already off after a pulse
-						delay(remainderInSeconds);  // Wait for the rest of the cycle
+						delay(remainderInSeconds, "OFF");  // Wait for the rest of the cycle
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}

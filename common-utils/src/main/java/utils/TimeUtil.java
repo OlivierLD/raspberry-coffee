@@ -154,7 +154,13 @@ public class TimeUtil {
 	public static void delay(float sec) {
 	  delay(sec, 	TimeUnit.SECONDS);
 	}
+	public static void delay(float sec, String debugMess) {
+		delay(sec, 	TimeUnit.SECONDS, debugMess);
+	}
 	public static void delay(float amount, TimeUnit unit) {
+		delay(amount, unit, null);
+	}
+	public static void delay(float amount, TimeUnit unit, String debugMess) {
 		double amountToMs = 1_000;
 		long amountToNanoS = 1_000_000_000;
 		final long msToNanoS = 1_000_000;
@@ -177,7 +183,8 @@ public class TimeUtil {
 		int ns = (int)((amount * amountToNanoS) - (ms * msToNanoS));
 		if (verbose) {
 			// Micro: \u03bc, Nano: \u212b
-			System.out.println(String.format("Wait requested: %f %s => Waiting %s ms and %s nano-s",
+			System.out.println(String.format("Wait requested%s: %f %s => Waiting %s ms and %s nano-s",
+					debugMess != null ? String.format(" (%s)", debugMess) : "",
 					amount,
 					unit,
 					NumberFormat.getInstance().format(ms),
