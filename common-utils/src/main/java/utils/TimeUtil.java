@@ -181,6 +181,11 @@ public class TimeUtil {
 		}
 		long ms = (long)Math.floor(amount * amountToMs);
 		int ns = (int)((amount * amountToNanoS) - (ms * msToNanoS));
+		// rounding issues workaround
+		if (ns >= 1_000_000) { // Would raise an IllegalArgumentException
+			ms += 1;
+			ns -= 1_000_000;
+		}
 		if (verbose) {
 			// Micro: \u03bc, Nano: \u212b
 			System.out.println(String.format("Wait requested%s: %f %s => Waiting %s ms and %s nano-s",

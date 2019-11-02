@@ -100,13 +100,12 @@ public class RealPWMServo {
 //		if (pin.isPWMing()) {
 //			pin.stopPWM();
 //		}
-		pin.stopPWM();
+		// pin.stopPWM();
+		pin.low();
 
 		Thread.sleep(1_000);
-		// Last blink
 		System.out.println("Bye-bye");
-		pin.low();
-		Thread.sleep(500);
+		// Thread.sleep(500);
 
 		gpio.shutdown();
 	}
