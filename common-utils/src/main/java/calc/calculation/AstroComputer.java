@@ -122,7 +122,7 @@ public class AstroComputer {
 	 * @see http://aa.usno.navy.mil/data/docs/RS_OneYear.php
 	 * @see http://www.jgiesen.de/SunMoonHorizon/
 	 *
-	 * @deprecated Use #sunRiseAndSetEpoch
+	 * @Deprecated Use #sunRiseAndSetEpoch
 	 */
 	public static synchronized double[] sunRiseAndSet(double latitude, double longitude) {
 		//  out.println("Sun HP:" + Context.HPsun);

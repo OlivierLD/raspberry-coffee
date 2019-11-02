@@ -17,7 +17,7 @@ import java.io.IOException;
  *
  * Basic implementation
  *
- * @deprecated See {@link VL53L0X} instead
+ * @Deprecated See {@link VL53L0X} instead
  */
 public class VL53L0X_v1 {
 	public final static int VL53L0X_I2CADDR = 0x29;
