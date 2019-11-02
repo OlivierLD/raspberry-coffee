@@ -176,8 +176,8 @@ public class TimeUtil {
 		long ms = (long)Math.floor(amount * amountToMs);
 		int ns = (int)((amount * amountToNanoS) - (ms * msToNanoS));
 		if (verbose) {
-			// Micro: \u03bc
-			System.out.println(String.format("Wait requested: %f %s => Waiting %s ms and %s \u212bs",
+			// Micro: \u03bc, Nano: \u212b
+			System.out.println(String.format("Wait requested: %f %s => Waiting %s ms and %s nano-s",
 					amount,
 					unit,
 					NumberFormat.getInstance().format(ms),

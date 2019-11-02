@@ -58,11 +58,11 @@ public class RealPWMServo {
 		}
 
 		float cycleWidth = (1_000f / 50f); // In ms. 50 Hertz: 20ms. 60 Hz: 16.6666 ms.
-		System.out.println(String.format("Cycle width: %f", cycleWidth));
+		System.out.println(String.format("Cycle width: %f ms", cycleWidth));
 		PWMPin pin = new PWMPin(servoPin, "OneServo", PinState.LOW, cycleWidth);
 		// pin.low(); // Useless
 
-		System.out.println("PWM, [0..3]");
+		System.out.println("PWM, [0.5, 1.0, 1.5, 2.0, 2.5]");
 		float[] values = { 0.5f, 1.0f, 1.5f, 2.0f, 2.5f };
 		for (float pulse : values) {
 			pin.emitPWM(pulse);
