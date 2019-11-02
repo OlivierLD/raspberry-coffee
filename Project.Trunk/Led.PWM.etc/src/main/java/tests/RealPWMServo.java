@@ -14,6 +14,8 @@ import static utils.StaticUtil.userInput;
  * No breakout board required.
  * Pure Soft PWM from the GPIO header.
  * <br/>
+ * Servos expect a pulse every 20ms (=> 50 Hz)
+ * <br/>
  * <b><i>Theoretically</i></b>, servos follow those rules:
  * <table border='1'>
  * <tr><th>Pulse</th><th>Standard</th><th>Continuous</th></tr>
@@ -23,6 +25,8 @@ import static utils.StaticUtil.userInput;
  * </table>
  * That happens not to be always true, some servos (like <a href="https://www.adafruit.com/product/169">https://www.adafruit.com/product/169</a> or <a href="https://www.adafruit.com/product/155">https://www.adafruit.com/product/155</a>)
  * have values going between `0.5 ms` and `2.5 ms`.
+ * <br/>
+ * See doc <a href="https://www.jameco.com/jameco/workshop/howitworks/how-servo-motors-work.html>here</a>.
  */
 public class RealPWMServo {
 	public static void main(String... args)
@@ -53,14 +57,16 @@ public class RealPWMServo {
 			System.exit(1);
 		}
 
-		float cycleWidth = (1_000f / 50f); // 16.6666f; // In ms. 50 Hertz, 1000 / 20. 60 Hz: 16.6666 ms.
+		float cycleWidth = (1_000f / 50f); // In ms. 50 Hertz: 20ms. 60 Hz: 16.6666 ms.
+		System.out.println(String.format("Cycle width: %f", cycleWidth));
 		PWMPin pin = new PWMPin(servoPin, "OneServo", PinState.LOW, cycleWidth);
 		// pin.low(); // Useless
 
 		System.out.println("PWM, [0..3]");
-		for (float pulse = 0.1f; pulse < 3.0f; pulse += 0.1f) {
+		float[] values = { 0.5f, 1.0f, 1.5f, 2.0f, 2.5f };
+		for (float pulse : values) {
 			pin.emitPWM(pulse);
-			Thread.sleep(250);
+			Thread.sleep(1_000);
 		}
 
 		System.out.println("PWM, by pulse length");

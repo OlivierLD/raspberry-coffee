@@ -7,8 +7,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public class TimeUtil {
+
+	private static boolean verbose = "true".equals(System.getProperty("time.verbose"));
 
 	public static class DMS {
 		int hours;
@@ -149,11 +152,43 @@ public class TimeUtil {
 	 * @param sec in seconds
 	 */
 	public static void delay(float sec) {
-		long ms = (long)Math.floor(sec * 1_000);
-		int ns = (int)((sec * 1_000_000_000) - (ms * 1_000_000));
-		// Micro: \u03bc
-		// System.out.println(String.format("Waiting %s ms and %s \u212bs", NumberFormat.getInstance().format(ms), NumberFormat.getInstance().format(ns)));
+	  delay(sec, 	TimeUnit.SECONDS);
+	}
+	public static void delay(float amount, TimeUnit unit) {
+		double amountToMs = 1_000;
+		long amountToNanoS = 1_000_000_000;
+		final long msToNanoS = 1_000_000;
+		long before = 0, after = 0;
+		if (unit.equals(TimeUnit.SECONDS)) {
+			// Default values above
+		} else if (unit.equals(TimeUnit.MILLISECONDS)) {
+			amountToMs = 1;
+			amountToNanoS = 1_000_000;
+		} else if (unit.equals(TimeUnit.MICROSECONDS)) {
+			amountToMs = 0.001;
+			amountToNanoS = 1_000;
+		} else if (unit.equals(TimeUnit.NANOSECONDS)) {
+			amountToMs = 0.000_001;
+			amountToNanoS = 1;
+		} else {
+			throw new RuntimeException("Unsupported TimeUnit, only seconds, milliseconds, microseconds and nanoseconds are supported.");
+		}
+		long ms = (long)Math.floor(amount * amountToMs);
+		int ns = (int)((amount * amountToNanoS) - (ms * msToNanoS));
+		if (verbose) {
+			// Micro: \u03bc
+			System.out.println(String.format("Wait requested: %f %s => Waiting %s ms and %s \u212bs",
+					amount,
+					unit,
+					NumberFormat.getInstance().format(ms),
+					NumberFormat.getInstance().format(ns)));
+			before = System.currentTimeMillis();
+		}
 		delay(ms, ns);
+		if (verbose) {
+			after = System.currentTimeMillis();
+			System.out.println(String.format("\tMeasured diff: %s ms", NumberFormat.getInstance().format(after - before)));
+		}
 	}
 
 	private final static long SEC  = 1_000L;
@@ -232,103 +267,112 @@ public class TimeUtil {
 		return str;
 	}
 
-	public static void main(String args[]) {
+	public static void main(String... args) {
+
+		System.setProperty("time.verbose", "true");
+		verbose = true;
 
 		delay((1_000f / 60f) / 1_000f); // 16.66666f
+		delay(2.5f, TimeUnit.MILLISECONDS);
+		delay(1.5f, TimeUnit.MICROSECONDS);
+		delay(150f, TimeUnit.NANOSECONDS);
 
-		SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
-		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-		String retString = "";
-		String prompt = "?> ";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		System.out.println("Your GMT Offset:" + Integer.toString(getGMTOffset()) + " hours");
-		System.out.println("Current Time is : " + (new Date()).toString());
-		System.out.println("GMT is          : " + sdf.format(getGMT()) + " GMT");
-		System.out.println("");
-		prompt = "Please enter a year [9999]       > ";
-		int year = 0;
-		int month = 0;
-		int day = 0;
-		int h = 0;
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		try {
-			year = Integer.parseInt(retString);
-		} catch (NumberFormatException numberFormatException) {
-		}
-		prompt = "Please enter a month (1-12) [99] > ";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		try {
-			month = Integer.parseInt(retString);
-		} catch (NumberFormatException numberFormatException1) {
-		}
-		prompt = "Please enter a day (1-31) [99]   > ";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		try {
-			day = Integer.parseInt(retString);
-		} catch (NumberFormatException numberFormatException2) {
-		}
-		prompt = "Please enter an hour (0-23) [99] > ";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		try {
-			h = Integer.parseInt(retString);
-		} catch (NumberFormatException numberFormatException3) {
-		}
-		Calendar cal = Calendar.getInstance();
-		cal.set(year, month - 1, day, h, 0, 0);
-		System.out.println("You've entered:" + sdf.format(cal.getTime()));
-		int gmtOffset = 0;
-		prompt = "\nPlease enter the GMT offset for that date > ";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		try {
-			gmtOffset = Integer.parseInt(retString);
-		} catch (NumberFormatException numberFormatException4) {
-		}
-		Date d = cal.getTime();
-		long lTime = d.getTime();
-		lTime -= 3_600_000L * gmtOffset;
-		System.out.println("GMT for your date:" + sdf.format(new Date(lTime)));
+		boolean more = false;
+		if (more) {
+			SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+			BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+			String retString = "";
+			String prompt = "?> ";
+			System.err.print(prompt);
+			try {
+				retString = stdin.readLine();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			System.out.println("Your GMT Offset:" + Integer.toString(getGMTOffset()) + " hours");
+			System.out.println("Current Time is : " + (new Date()).toString());
+			System.out.println("GMT is          : " + sdf.format(getGMT()) + " GMT");
+			System.out.println("");
+			prompt = "Please enter a year [9999]       > ";
+			int year = 0;
+			int month = 0;
+			int day = 0;
+			int h = 0;
+			System.err.print(prompt);
+			try {
+				retString = stdin.readLine();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			try {
+				year = Integer.parseInt(retString);
+			} catch (NumberFormatException numberFormatException) {
+			}
+			prompt = "Please enter a month (1-12) [99] > ";
+			System.err.print(prompt);
+			try {
+				retString = stdin.readLine();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			try {
+				month = Integer.parseInt(retString);
+			} catch (NumberFormatException numberFormatException1) {
+			}
+			prompt = "Please enter a day (1-31) [99]   > ";
+			System.err.print(prompt);
+			try {
+				retString = stdin.readLine();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			try {
+				day = Integer.parseInt(retString);
+			} catch (NumberFormatException numberFormatException2) {
+			}
+			prompt = "Please enter an hour (0-23) [99] > ";
+			System.err.print(prompt);
+			try {
+				retString = stdin.readLine();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			try {
+				h = Integer.parseInt(retString);
+			} catch (NumberFormatException numberFormatException3) {
+			}
+			Calendar cal = Calendar.getInstance();
+			cal.set(year, month - 1, day, h, 0, 0);
+			System.out.println("You've entered:" + sdf.format(cal.getTime()));
+			int gmtOffset = 0;
+			prompt = "\nPlease enter the GMT offset for that date > ";
+			System.err.print(prompt);
+			try {
+				retString = stdin.readLine();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			try {
+				gmtOffset = Integer.parseInt(retString);
+			} catch (NumberFormatException numberFormatException4) {
+			}
+			Date d = cal.getTime();
+			long lTime = d.getTime();
+			lTime -= 3_600_000L * gmtOffset;
+			System.out.println("GMT for your date:" + sdf.format(new Date(lTime)));
 
-		System.out.println();
-		Date now = new Date();
-		System.out.println("Date:" + now.toString());
-		System.out.println("GTM :" + (new SimpleDateFormat("yyyy MMMMM dd HH:mm:ss 'GMT'").format(getGMT(now))));
+			System.out.println();
+			Date now = new Date();
+			System.out.println("Date:" + now.toString());
+			System.out.println("GTM :" + (new SimpleDateFormat("yyyy MMMMM dd HH:mm:ss 'GMT'").format(getGMT(now))));
 
-		System.out.println("To DMS:" + decHoursToDMS(13.831260480533272));
+			System.out.println("To DMS:" + decHoursToDMS(13.831260480533272));
 
-		long _now = System.currentTimeMillis();
-		System.out.println(String.format("Now: %s", fmtDHMS(msToHMS(_now))));
+			long _now = System.currentTimeMillis();
+			System.out.println(String.format("Now: %s", fmtDHMS(msToHMS(_now))));
 
-		long elapsed = 231_234_567_890L; // 123456L; //
-		System.out.println("Readable time (" + elapsed + ") : " + readableTime(elapsed));
+			long elapsed = 231_234_567_890L; // 123456L; //
+			System.out.println("Readable time (" + elapsed + ") : " + readableTime(elapsed));
+		}
 	}
 }
