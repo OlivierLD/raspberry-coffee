@@ -102,13 +102,13 @@ public class PCA9685 {
 			System.out.println("Final pre-scale: " + preScale);
 		}
 		try {
-			byte oldmode = (byte) servoDriver.read(MODE1);
-			byte newmode = (byte) ((oldmode & 0x7F) | 0x10); // sleep
-			servoDriver.write(MODE1, newmode);               // go to sleep
+			byte oldMode = (byte) servoDriver.read(MODE1);
+			byte newMode = (byte) ((oldMode & 0x7F) | 0x10); // sleep
+			servoDriver.write(MODE1, newMode);               // go to sleep
 			servoDriver.write(PRESCALE, (byte) (Math.floor(preScale)));
-			servoDriver.write(MODE1, oldmode);
+			servoDriver.write(MODE1, oldMode);
 			delay(5);
-			servoDriver.write(MODE1, (byte) (oldmode | 0x80));
+			servoDriver.write(MODE1, (byte) (oldMode | 0x80));
 		} catch (IOException ioe) {
 			throw new RuntimeException(ioe);
 		}
