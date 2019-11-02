@@ -65,8 +65,11 @@ public class RealPWMServo {
 		System.out.println("PWM, [0.5, 1.0, 1.5, 2.0, 2.5]");
 		float[] values = { 0.5f, 1.0f, 1.5f, 2.0f, 2.5f };
 		for (float pulse : values) {
+			System.out.println(String.format("\t=> Pulse %f ms", pulse));
 			pin.emitPWM(pulse);
-			Thread.sleep(1_000);
+			Thread.sleep(250);
+			pin.stopPWM();
+			Thread.sleep(750);
 		}
 
 		System.out.println("PWM, by pulse length");
