@@ -14,6 +14,8 @@ import static utils.StaticUtil.userInput;
  * No breakout board required.
  * Pure Soft PWM from the GPIO header.
  * <br/>
+ * <b>WARNING</b>: Does NOT work as expected.
+ * <br/>
  * Servos expect a pulse every 20ms (=> 50 Hz)
  * <br/>
  * <b><i>Theoretically</i></b>, servos follow those rules:
@@ -24,9 +26,9 @@ import static utils.StaticUtil.userInput;
  * <tr><td>1.0 ms</td><td align='right'>-90 &deg;</td><td>FullSpeed backward</td></tr>
  * </table>
  * That happens not to be always true, some servos (like <a href="https://www.adafruit.com/product/169">https://www.adafruit.com/product/169</a> or <a href="https://www.adafruit.com/product/155">https://www.adafruit.com/product/155</a>)
- * have values going between `0.5 ms` and `2.5 ms`.
+ * have values going between <code>0.5 ms</code> and <code>2.5 ms</code>.
  * <br/>
- * See doc <a href="https://www.jameco.com/jameco/workshop/howitworks/how-servo-motors-work.html>here</a>.
+ * See doc <a href="https://www.jameco.com/jameco/workshop/howitworks/how-servo-motors-work.html">here</a>.
  */
 public class RealPWMServo {
 	public static void main(String... args)
