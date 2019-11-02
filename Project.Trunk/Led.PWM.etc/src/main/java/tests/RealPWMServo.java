@@ -73,7 +73,7 @@ public class RealPWMServo {
 		}
 
 		System.out.println("PWM, by pulse length");
-		pin.emitPWM(1.5f); // PWM, center servo.
+//		pin.emitPWM(1.5f); // PWM, center servo.
 //  Thread.sleep(1_000);
 		System.out.println(String.format("Enter \"S\", \"Q\" or \"quit\" to stop, or a pulse in ms [0..%.02f]", cycleWidth));
 		boolean go = true;
@@ -87,6 +87,8 @@ public class RealPWMServo {
 				try {
 					float pulse = Float.parseFloat(userInput);
 					pin.emitPWM(pulse);
+					Thread.sleep(250);
+					pin.stopPWM();
 				} catch (NumberFormatException nfe) {
 					System.out.println(nfe.toString());
 				} catch (Throwable t) {
