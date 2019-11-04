@@ -8,7 +8,7 @@ Requires `ACCESS_FINE_LOCATION` and `ACCESS_COARSE_LOCATION`.
 On the phone, go to `Settings` > `Apps` > `Astro Computer` > `Permissions`, and turn `Location ` on.
 
 ### Dependencies
-Will use the Celestial resources from other projects (in `raspberry.coffee``, for the calculations.
+Will use the Celestial resources from other projects (in [`raspberry.coffee`](https://github.com/OlivierLD/raspberry-coffee)), for the calculations.
 
 Install it on your local maven reopo:
 ```
