@@ -11,8 +11,11 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
-import oliv.android.astrocomputer.calc.GeomUtil;
+import calc.GeomUtil;
+import calc.calculation.AstroComputer;
+import calc.calculation.SightReductionUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
             while (!this.exit) {
                 String content = "";
                 String gpsData = " No GPS ";
+                String sunData = " - none -";
                 // Current date and time
                 Calendar c = Calendar.getInstance();
 //                System.out.println("Current time => " + c.getTime());
@@ -55,12 +59,37 @@ public class MainActivity extends AppCompatActivity {
                                 GeomUtil.decToSex(longitude, GeomUtil.DEFAULT_DEG, GeomUtil.EW),
                                 String.format(Locale.getDefault(), "SOG: %.02f kn", sog),  // Verify unit
                                 String.format(Locale.getDefault(), "COG: %.01f\272", cog));
+
+                        // Celestial Data
+                        if (true) {
+                            Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // Now
+                            AstroComputer.calculate(
+                                    date.get(Calendar.YEAR),
+                                    date.get(Calendar.MONTH) + 1,
+                                    date.get(Calendar.DAY_OF_MONTH),
+                                    date.get(Calendar.HOUR_OF_DAY), // and not just HOUR !!!!
+                                    date.get(Calendar.MINUTE),
+                                    date.get(Calendar.SECOND));
+                            SightReductionUtil sru = new SightReductionUtil();
+
+                            sru.setL(latitude);
+                            sru.setG(longitude);
+
+                            sru.setAHG(AstroComputer.getSunGHA());
+                            sru.setD(AstroComputer.getSunDecl());
+                            sru.calculate();
+                            double obsAlt = sru.getHe();
+                            double z = sru.getZ();
+
+                            sunData = String.format("Sun: Elev.: %s, Z: %.02f\272", calc.GeomUtil.decToSex(obsAlt, calc.GeomUtil.SWING, calc.GeomUtil.NONE), z);
+                        }
+
                     } else {
                         gpsData = "Cannot get Position";
                     }
                 }
 
-                content = String.format("%s\n%s", formattedDate, gpsData);
+                content = String.format("%s\n%s\n%s", formattedDate, gpsData, sunData);
                 Toast.makeText(instance, content, Toast.LENGTH_SHORT).show();
                 instance.timeHolder.setText(content);
 
