@@ -9,6 +9,7 @@ public final class GeomUtil {
 	public static final int SHELL = 1;
 	public static final int SWING = 2;
 	public static final int NO_DEG = 3;
+	public static final int DEFAULT_DEG = 4;
 
 	public static final int NONE = 0;
 	public static final int NS = 1;

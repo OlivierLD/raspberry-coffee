@@ -24,5 +24,6 @@ repositories {
 }
 
 dependencies {
-    compile 'com.pi4j:pi4j-core:1.1'
+//    compile 'com.pi4j:pi4j-core:1.1'
+    compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT'  // -SNAPSHOT'
 }
