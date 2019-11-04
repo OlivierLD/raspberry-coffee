@@ -1,5 +1,7 @@
 Uses permissions, and dependencies on other projects.
 
+Much better managed with `Android Studio`. See [here](https://developer.android.com/studio/install).
+
 ### Permissions
 Requires `ACCESS_FINE_LOCATION` and `ACCESS_COARSE_LOCATION`.
 
