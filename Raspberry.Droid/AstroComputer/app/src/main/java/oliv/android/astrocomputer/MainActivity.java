@@ -13,9 +13,9 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import calc.GeomUtil;
-import calc.calculation.AstroComputer;
-import calc.calculation.SightReductionUtil;
+import oliv.android.AstroComputer;
+import oliv.android.GeomUtil;
+import oliv.android.SightReductionUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                             double obsAlt = sru.getHe();
                             double z = sru.getZ();
 
-                            sunData = String.format("Sun: Elev.: %s, Z: %.02f\272", calc.GeomUtil.decToSex(obsAlt, calc.GeomUtil.SWING, calc.GeomUtil.NONE), z);
+                            sunData = String.format("Sun: Elev.: %s, Z: %.02f\272", GeomUtil.decToSex(obsAlt, GeomUtil.SWING, GeomUtil.NONE), z);
                         }
 
                     } else {
