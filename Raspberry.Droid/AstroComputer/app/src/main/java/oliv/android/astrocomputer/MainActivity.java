@@ -1,30 +1,27 @@
 package oliv.android.astrocomputer;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.Gravity;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import oliv.android.AstroComputer;
+import oliv.android.GeomUtil;
+import oliv.android.SightReductionUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import oliv.android.AstroComputer;
-import oliv.android.GeomUtil;
-import oliv.android.SightReductionUtil;
-
 public class MainActivity extends AppCompatActivity {
-
 
     private TextView timeHolder = null;
     private final MainActivity instance = this;
     private final SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss Z z");
 
-    private void setText(final TextView text,final String value){
+    private void setText(final TextView text, final String value) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
