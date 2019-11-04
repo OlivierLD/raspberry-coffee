@@ -24,6 +24,15 @@ public class MainActivity extends AppCompatActivity {
     private final MainActivity instance = this;
     private final SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss Z z");
 
+    private void setText(final TextView text,final String value){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                text.setText(value);
+            }
+        });
+    }
+
     private class Chronometer implements Runnable {
 
         private volatile transient boolean exit = false;
@@ -91,7 +100,9 @@ public class MainActivity extends AppCompatActivity {
 
                 content = String.format("%s\n%s\n%s", formattedDate, gpsData, sunData);
                 Toast.makeText(instance, content, Toast.LENGTH_SHORT).show();
-                instance.timeHolder.setText(content);
+
+                setText(instance.timeHolder, content);
+//                instance.timeHolder.setText(content);
 
                 try {
                     Thread.sleep(1_000L);
