@@ -208,6 +208,11 @@ Good for all terrain logging!
 
 ![Small config](../docimg/small.logger.jpg)
 
+Start it with
+```
+ $ ./start-mux.sh
+```
+
 # TODO
 - Describe the way to get to the log files, download, etc.
 - Document Web UI: `runner.html`, `logMgmt.html`, etc. (maybe)

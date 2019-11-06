@@ -7,7 +7,7 @@ SUDO=
 # DARWIN=`uname -a | grep Darwin`
 DARWIN=$(uname -a | grep Darwin)
 #
-if [ "$DARWIN" != "" ]
+if [[ "$DARWIN" != "" ]]
 then
 	echo Running on Mac
 else
@@ -24,26 +24,26 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dled.color=white"
 #
 # Separate the lines with a pipe |
 #
-if [ "$1" = "IP" ]
+if [[ "$1" = "IP" ]]
 then
   _IP=$(hostname -I) || true
-	if [ "$_IP" ]
+	if [[ "$_IP" ]]
 	then
 	  printf "My IP address is %s\n" "$_IP"
 	fi
 	#
 	_OLED=`i2cdetect -y 1 | grep 3c`
-	if [ "$_OLED" ]
+	if [[ "$_OLED" ]]
 	then
 	  printf "+---------------+\n"
 	  printf "| OLED Detected |\n"
 	  printf "+---------------+\n"
 	  MESS="$_IP | on RPi-Logger | default 192.168.127.1"
-    sudo java $JAVA_OPTIONS -cp $CP i2c.samples.oled.OLEDSSD1306_I2C_DisplayStrings "$MESS"
+    sudo java ${JAVA_OPTIONS} -cp ${CP} i2c.samples.oled.OLEDSSD1306_I2C_DisplayStrings "$MESS"
 	else
 	  printf "| NO OLED Detected |\n"
 	fi
 else
-  ${SUDO}java $JAVA_OPTIONS -cp $CP i2c.samples.oled.OLEDSSD1306_I2C_DisplayStrings "$1"
+  ${SUDO}java ${JAVA_OPTIONS} -cp ${CP} i2c.samples.oled.OLEDSSD1306_I2C_DisplayStrings "$1"
 fi
 #

@@ -6,12 +6,12 @@
 OS=`uname -a | awk '{ print $1 }'`
 #
 MUX_PROP_FILE=nmea.mux.gps.log.properties
-if [ $# -gt 0 ]
+if [[ $# -gt 0 ]]
 then
   MUX_PROP_FILE=$1
 fi
 #
-echo Using properties file $MUX_PROP_FILE
+echo Using properties file ${MUX_PROP_FILE}
 #
 JAVA_OPTIONS="$JAVA_OPTIONS" # From parent script, possibly
 #
@@ -21,11 +21,11 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dwith.sun.flower=false"  # Default
 #
 # The NavServer (Mux actually) uses -Dhttp.port for its HTTP/REST port, not the one in the properties file, which is an admin server port.
 # It would be 9999 by default. You can also set it explicitly.
-WITH_HTTP_SERVER=`cat $MUX_PROP_FILE | grep with.http.server=`
+WITH_HTTP_SERVER=`cat ${MUX_PROP_FILE} | grep with.http.server=`
 WITH_HTTP_SERVER=${WITH_HTTP_SERVER#*with.http.server=}
-if [ "$WITH_HTTP_SERVER" == "yes" ]
+if [[ "$WITH_HTTP_SERVER" == "yes" ]]
 then
-  PORT=`cat $MUX_PROP_FILE | grep http.port=`
+  PORT=`cat ${MUX_PROP_FILE} | grep http.port=`
   PORT=${PORT#*http.port=}
 #  PORT=$(expr $PORT + 1)
   JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.port=$PORT"
@@ -33,11 +33,11 @@ else
   JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.port=8888"
 fi
 #
-if [ "$OS" == "Darwin" ]
+if [[ "$OS" == "Darwin" ]]
 then
   JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"       # for Mac
 fi
-if [ "$OS" == "Linux" ]
+if [[ "$OS" == "Linux" ]]
 then
   JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
 fi
@@ -48,10 +48,10 @@ fi
 #
 PROCESS_ON_START=true # Default is true for process.on.start
 #
-if [ "$PROCESS_ON_START" = "false" ]
+if [[ "$PROCESS_ON_START" = "false" ]]
 then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
-  PORT=`cat $MUX_PROP_FILE | grep http.port=`
+  PORT=`cat ${MUX_PROP_FILE} | grep http.port=`
   PORT=${PORT#*http.port=}
   echo -e "+-------- N O T E   o n   F O R W A R D E R S ------------------"
   echo -e "| You will need to start the forwarders yourself,"
@@ -99,13 +99,13 @@ JAVA_OPTIONS="$JAVA_OPTIONS -DdeltaT=69.2201" # 01-Jan-2019
 # CP=$(ls ./build/libs/*.jar)
 CP=./build/libs/small.server.extended-1.0-all.jar
 SUDO=
-if [ "$OS" == "Darwin" ]
+if [[ "$OS" == "Darwin" ]]
 then
-  CP=$CP:./libs/RXTXcomm.jar          # for Mac, could need to be tweaked
+  CP=${CP}:./libs/RXTXcomm.jar          # for Mac, could need to be tweaked
 fi
-if [ "$OS" == "Linux" ]
+if [[ "$OS" == "Linux" ]]
 then
-  CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
+  CP=${CP}:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
   SUDO="sudo "
 fi
 #
@@ -126,5 +126,5 @@ LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 # sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navrest.NavServer
 COMMAND="${SUDO}java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navserver.ServerWithKewlButtons"
 echo -e "Running $COMMAND"
-$COMMAND
+${COMMAND}
 #

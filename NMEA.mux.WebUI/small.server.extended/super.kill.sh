@@ -7,7 +7,7 @@ ps -ef | grep NavServer | grep -v grep | awk '{ print $2 }' >> km
 ps -ef | grep MultiplexerWithTwoButtons | grep -v grep | awk '{ print $2 }' >> km
 for pid in `cat km`
 do
-  echo Killing process $pid
-  sudo kill -9 $pid
+  echo Killing process ${pid}
+  sudo kill -9 ${pid}
 done
 rm km

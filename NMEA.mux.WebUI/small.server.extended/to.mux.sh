@@ -95,7 +95,7 @@ do
   elif [[ "$ARG" == "--no-rmc-time" ]]
   then
     RMC_TIME_OK=false
-  elif [[ $ARG == -m:* ]] || [[ $ARG == --mux:* ]] # !! No quotes !!
+  elif [[ ${ARG} == -m:* ]] || [[ ${ARG} == --mux:* ]] # !! No quotes !!
   then
     PROP_FILE=${ARG#*:}
     echo -e "Detected properties file $PROP_FILE"
@@ -118,7 +118,7 @@ fi
 echo -e "JAVA_OPTIONS in to.mux.sh: $JAVA_OPTIONS"
 # The script below uses $JAVA_OPTIONS (hence the .)
 # nohup ./mux.sh $PROP_FILE &
-. ./mux.sh $PROP_FILE &
+. ./mux.sh ${PROP_FILE} &
 #
 echo On its way!
 MY_IP=$(hostname -I | awk '{ print $1 }')

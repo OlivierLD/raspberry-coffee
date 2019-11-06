@@ -6,12 +6,12 @@
 # OS=`uname -a | awk '{ print $1 }'`
 #
 MUX_PROP_FILE=nmea.mux.gps.log.properties
-if [ $# -gt 0 ]
+if [[ $# -gt 0 ]]
 then
   MUX_PROP_FILE=$1
 fi
 #
-echo Using properties file $MUX_PROP_FILE
+echo Using properties file ${MUX_PROP_FILE}
 #
 JAVA_OPTIONS=
 #
@@ -21,10 +21,10 @@ JAVA_OPTIONS=
 #
 PROCESS_ON_START=true # Default is true for process.on.start
 #
-if [ "$PROCESS_ON_START" = "false" ]
+if [[ "$PROCESS_ON_START" = "false" ]]
 then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
-  PORT=`cat $MUX_PROP_FILE | grep http.port=`
+  PORT=`cat ${MUX_PROP_FILE} | grep http.port=`
   PORT=${PORT#*http.port=}
   echo -e "+-------- N O T E   o n   F O R W A R D E R S ------------------"
   echo -e "| You will need to start the forwarders yourself,"
@@ -63,15 +63,15 @@ SUDO=
 # DARWIN=`uname -a | grep Darwin`
 DARWIN=$(uname -a | grep Darwin)
 #
-if [ "$DARWIN" != "" ]
+if [[ "$DARWIN" != "" ]]
 then
 	echo Running on Mac
   JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"  # for Mac
-  CP=$CP:./libs/RXTXcomm.jar          # for Mac
+  CP=${CP}:./libs/RXTXcomm.jar          # for Mac
 else
 	echo Assuming Linux/Raspberry Pi
   JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
-  CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
+  CP=${CP}:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
   SUDO="sudo "
 fi
 #
@@ -89,5 +89,5 @@ LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 # use sudo on Raspberry Pi
 # sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
 COMMAND="${SUDO}java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer"
-$COMMAND
+${COMMAND}
 #

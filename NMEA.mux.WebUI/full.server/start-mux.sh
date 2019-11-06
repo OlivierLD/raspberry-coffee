@@ -11,7 +11,7 @@ _PAPIRUS=$(i2cdetect -y 1 | grep 48) || true
 # echo "OLED: $_OLED"
 # echo "PAPIRUS: $_PAPIRUS"
 #
-if [ "$1" == "-w" ] # To wait for everything to start?
+if [[ "$1" == "-w" ]] # To wait for everything to start?
 then
 	echo -e ""
 	echo -e "+-------------------------------+"
@@ -25,36 +25,36 @@ then
 fi
 #
 MY_IP=$(hostname -I | awk '{ print $1 }')
-if [ "$MY_IP" == "" ]
+if [[ "$MY_IP" == "" ]]
 then
   MY_IP="192.168.50.10" # Change as needed
 fi
 #
 NETWORK_NAME=$(iwconfig | grep wlan0 | awk '{ print $4 }')
 NETWORK_NAME=${NETWORK_NAME:6}
-if [ "$NETWORK_NAME" == "aster" ] # From Mode:Master TODO Get it from the config file...
+if [[ "$NETWORK_NAME" == "aster" ]] # From Mode:Master TODO Get it from the config file...
 then
 	NETWORK_NAME="RPi-Gateway" # Change as needed
 fi
-if [ "$NETWORK_NAME" == "" ]
+if [[ "$NETWORK_NAME" == "" ]]
 then
   NETWORK_NAME="RPi-Gateway" # Change as needed
 fi
 #
-if [ "$_OLED" ]; then
+if [[ "$_OLED" ]]; then
   printf "+---------------+\n"
   printf "| OLED Detected |\n"
   printf "+---------------+\n"
 # cd ~pi/NMEADist
   MESS=""
-  if [ "$_IP" ]; then
+  if [[ "$_IP" ]]; then
     MESS="$_IP|"
   fi
   MESS="$MESS on $NETWORK_NAME| IP $MY_IP"
   ./ssd1306i2cDisplay.sh "$MESS"
-elif [ "$_PAPIRUS" ]; then
+elif [[ "$_PAPIRUS" ]]; then
   MESS=""
-  if [ "$_IP" ]; then
+  if [[ "$_IP" ]]; then
     MESS="$_IP,"
   fi
   MESS="$MESS on $NETWORK_NAME, IP $MY_IP"
@@ -65,12 +65,12 @@ else
 fi
 #
 # cd ~pi/NMEADist
-if [ -f "to.mux.sh" ]
+if [[ -f "to.mux.sh" ]]
 then
   printf "+----------------------+\n"
   printf "| Starting Multiplexer |\n"
   printf "+----------------------+\n"
-  if [ "$1" != "" ]
+  if [[ "$1" != "" ]]
   then
     echo -e ">> Script param: $1 <<"
   else

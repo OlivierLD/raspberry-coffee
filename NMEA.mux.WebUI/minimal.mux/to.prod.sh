@@ -23,37 +23,38 @@ echo -e "+----------------------------------------------------------------------
 echo -en "Which (non existent) folder should we create the distribution in ? > "
 # Directory name, that will become the archive name.
 read distdir
-if [ -d "$distdir" ]
+if [[ -d "$distdir" ]]
 then
 	echo -e "Folder $distdir exists. Please drop it or choose another name"
 	echo -e "Exiting now."
 	exit 1
 fi
 echo -e "Creating folder $distdir"
-mkdir $distdir
-mkdir $distdir/build
-mkdir $distdir/build/libs
+mkdir ${distdir}
+mkdir ${distdir}/build
+mkdir ${distdir}/build/libs
 #
 # 3 - Copying needed resources
 #
 echo -e "Copying resources"
-cp ./build/libs/*-1.0-all.jar $distdir/build/libs
+cp ./build/libs/*-1.0-all.jar ${distdir}/build/libs
 # Log folder
-mkdir $distdir/logged
+mkdir ${distdir}/logged
 # Web resources
-cp web.zip $distdir
+cp web.zip ${distdir}
 # Properties files
-cp *.properties $distdir
+cp *.properties ${distdir}
+cp *.yaml ${distdir}
 # If needed, more resources would go here (like dev curves, etc)
-cp mux.sh $distdir
-cp killmux.sh $distdir
-cp nmea.test.sh $distdir
+cp mux.sh ${distdir}
+cp killmux.sh ${distdir}
+cp nmea.test.sh ${distdir}
 #
 # 4 - Archiving
 #
-# zip -q -r $distdir.zip $distdir
-tar -cvzf $distdir.tar.gz $distdir
-rm -rf $distdir
+# zip -q -r ${distdir}.zip ${distdir}
+tar -cvzf ${distdir}.tar.gz ${distdir}
+rm -rf ${distdir}
 #
 # 5 - Ready!
 #
