@@ -16,6 +16,7 @@ RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 RUN apt-get update
 RUN apt-get install -y sysvbanner
 RUN apt-get install -y curl git build-essential
+# RUN apt-get install -y default-jdk
 RUN apt-get install -y oracle-java8-jdk
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
 RUN apt-get install -y nodejs

@@ -29,6 +29,10 @@ import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Warning: This class involves artifacts from swing and awt.
+ * It might not be suitable for all platforms (like Android...)
+ */
 public class StaticUtil {
 
 	private static final InputStreamReader inputStream = new InputStreamReader(System.in);
@@ -40,7 +44,7 @@ public class StaticUtil {
 		try {
 			retString = stdin.readLine();
 		} catch (Exception e) {
-			System.out.println(e);
+			System.out.println(e.toString());
 			try {
 				userInput("<Oooch/>");
 			} catch (Exception exception) {
@@ -50,9 +54,9 @@ public class StaticUtil {
 		return retString;
 	}
 
-	public static byte[] appendByteArrays(byte c[], byte b[], int n) {
+	public static byte[] appendByteArrays(byte[] c, byte[] b, int n) {
 		int newLength = c != null ? c.length + n : n;
-		byte newContent[] = new byte[newLength];
+		byte[] newContent = new byte[newLength];
 		if (c != null) {
 			for (int i = 0; i < c.length; i++) {
 				newContent[i] = c[i];
@@ -125,7 +129,7 @@ public class StaticUtil {
 
 	public static String getMacAddress() throws IOException {
 		String macAddress = null;
-		if (System.getProperty("os.name").indexOf("Windows") > -1) {
+		if (System.getProperty("os.name").contains("Windows")) {
 			String command = "ipconfig /all";
 			Process pid = Runtime.getRuntime().exec(command);
 			BufferedReader in = new BufferedReader(new InputStreamReader(pid.getInputStream()));
@@ -142,8 +146,9 @@ public class StaticUtil {
 				}
 			}
 			in.close();
-		} else
+		} else {
 			macAddress = "Unknown";
+		}
 		return macAddress;
 	}
 
@@ -193,28 +198,26 @@ public class StaticUtil {
 			clipboard.setContents(stringSelection, null);
 			JOptionPane.showMessageDialog(null, mess, "Showing in Browser", JOptionPane.ERROR_MESSAGE);
 		}
-//    String os = System.getProperty("os.name");
-//    if (os.indexOf("Windows") > -1)
-//    {
-//      String cmd = "";
-//      if (page.indexOf(" ") != -1)
-//        cmd = "cmd /k start \"" + page + "\"";
-//      else
-//        cmd = "cmd /k start " + page + "";
-//      System.out.println("Command:" + cmd);
-//      Runtime.getRuntime().exec(cmd); // Can contain blanks...
-//    }
-//    else if (os.indexOf("Linux") > -1) // Assuming htmlview
-//      Runtime.getRuntime().exec("htmlview " + page);
-//    else
-//    {
-//      throw new RuntimeException("OS [" + os + "] not supported yet");
-//    }
+//		String os = System.getProperty("os.name");
+//		if (os.indexOf("Windows") > -1) {
+//			String cmd = "";
+//			if (page.indexOf(" ") != -1) {
+//				cmd = "cmd /k start \"" + page + "\"";
+//			} else {
+//				cmd = "cmd /k start " + page + "";
+//			}
+//			System.out.println("Command:" + cmd);
+//			Runtime.getRuntime().exec(cmd); // Can contain blanks...
+//		} else if (os.indexOf("Linux") > -1) { // Assuming htmlview
+//			Runtime.getRuntime().exec("htmlview " + page);
+//		} else {
+//			throw new RuntimeException("OS [" + os + "] not supported yet");
+//		}
 	}
 
 	public static void showFileSystem(String where) throws Exception {
 		String os = System.getProperty("os.name");
-		if (os.indexOf("Windows") > -1) {
+		if (os.contains("Windows")) {
 			String cmd = "cmd /k start /D\"" + where + "\" .";
 			//    System.out.println("Executing [" + cmd + "]");
 			Runtime.getRuntime().exec(cmd); // Can contain blanks, need quotes around it...
@@ -300,7 +303,7 @@ public class StaticUtil {
 		return ret;
 	}
 
-	public static byte[] appendByte(byte c[], byte b) {
+	public static byte[] appendByte(byte[] c, byte b) {
 		int newLength = c != null ? c.length + 1 : 1;
 		byte newContent[] = new byte[newLength];
 		for (int i = 0; i < newLength - 1; i++) {
@@ -527,7 +530,7 @@ public class StaticUtil {
 
 		public void addExtension(String extension) {
 			if (filters == null) {
-				filters = new Hashtable<String, FileFilter>(5);
+				filters = new Hashtable<>(5);
 			}
 			filters.put(extension.toLowerCase(), this);
 			fullDescription = null;
@@ -543,9 +546,9 @@ public class StaticUtil {
 					// build the description from the extension list
 					Enumeration extensions = filters.keys();
 					if (extensions != null) {
-						fullDescription += "." + (String) extensions.nextElement();
+						fullDescription += ("." + extensions.nextElement());
 						while (extensions.hasMoreElements()) {
-							fullDescription += ", " + (String) extensions.nextElement();
+							fullDescription += (", " + extensions.nextElement());
 						}
 					}
 					fullDescription += ")";

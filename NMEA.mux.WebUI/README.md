@@ -31,7 +31,7 @@ be served from a _**single archive**_, as this feature is available from the HTT
 ```
 
 > Another note:
-> We want to footprint of all this to be as minimal sa possible. We will *not* have to clone
+> We want to footprint of all this to be as minimal as possible. We will *not* have to clone
 > the git repo on the destination machine, many of its components might not be required.
 
 ## Close to "production"
@@ -103,7 +103,7 @@ on the destination machine to start the Multiplexer at boot time.
 
 The script `to.prod.sh` (available in each directory) is not carved in stone. It is also here for inspiration.
 
-> Note: To make sure the runtime components will be 100% compatible with your Raspberry Pi target, I use to run this build _on a Raspberry Pi_ (not on a Windows or Mac laptop, carefull with Linux, probably OK with a Raspberry Pi Desktop).
+> Note: To make sure the runtime components will be 100% compatible with your Raspberry Pi target, I use to run this build _on a Raspberry Pi_ (not on a Windows or Mac laptop, careful with Linux, probably OK with a Raspberry Pi Desktop).
 > The (only) problem that can potentially show up is a Java version mismatch.
 > The build process might be a bit too heavy for a Raspberry Pi Zero...
 > I usually build on a bigger board (A, or B), and then `scp` the result to a Raspberry Pi Zero if that is the one I want to run my server on,

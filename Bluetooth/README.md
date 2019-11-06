@@ -1,11 +1,9 @@
 ## Misc resources and bulk notes.
 
 BLE Setup:
-https://www.instructables.com/id/Control-Bluetooth-LE-Devices-From-A-Raspberry-Pi/ (2015)
-
-https://www.cnet.com/how-to/how-to-setup-bluetooth-on-a-raspberry-pi-3/ < :O(
-
-https://learn.pi-supply.com/make/fix-raspberry-pi-3-bluetooth-issues/ < :O)
+- <https://www.instructables.com/id/Control-Bluetooth-LE-Devices-From-A-Raspberry-Pi/> (2015)
+- <https://www.cnet.com/how-to/how-to-setup-bluetooth-on-a-raspberry-pi-3/> 
+- <https://learn.pi-supply.com/make/fix-raspberry-pi-3-bluetooth-issues/>
 
 From the UI, make the RPi discoverable
 
@@ -13,10 +11,9 @@ From the UI, make the RPi discoverable
 
 > sudo service bluetooth status
 
-On your Mac, choose Apple menu > System Preferences, then click Bluetooth. Your Mac is now discoverable.
+On your Mac, choose `Apple menu` > `System Preferences`, then click `Bluetooth`. Your Mac is now discoverable.
 
-https://www.piborg.org/blog/pi-zero-wifi-bluetooth
-
+Also see <https://www.piborg.org/blog/pi-zero-wifi-bluetooth>.
 
 ### On the Raspberry Pi
 ```
@@ -52,9 +49,8 @@ Discovery started
 [DEL] Controller 00:15:83:0C:BF:EB rpi64 [default]
 ```
 
-Good post: https://www.raspberrypi.org/forums/viewtopic.php?t=199308
-
-To check: https://www.evernote.com/shard/s188/nl/21492849/418caa6f-f527-4f37-a31d-39aee311cd1e/
+- Good post: <https://www.raspberrypi.org/forums/viewtopic.php?t=199308>
+- To check: <https://www.evernote.com/shard/s188/nl/21492849/418caa6f-f527-4f37-a31d-39aee311cd1e/>
 
 ```
 pi@rpi64:~ $ bluetoothctl

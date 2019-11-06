@@ -94,7 +94,9 @@ public class SightReductionUtil {
 	 */
 	public void calculate() {
 		double AHL = this.AHG + this.G;
-		while (AHL < 0.0) AHL = 360.0 + AHL;
+		while (AHL < 0.0) {
+			AHL = 360.0 + AHL;
+		}
 		// Formula to solve : sin He = sin L sin D + cos L cos D cos AHL
 		double sinL = Math.sin(Math.toRadians(this.L));
 		double sinD = Math.sin(Math.toRadians(this.D));
