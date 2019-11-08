@@ -33,7 +33,6 @@ public class HTTPServerTests {
 						this::emptyOperation,
 						"Hard stop, shutdown. VERY unusual REST resource..."));
 
-
 		List<HTTPServer.Operation> opList2 = Arrays.asList(
 				new HTTPServer.Operation(
 						"GET",
@@ -51,19 +50,18 @@ public class HTTPServerTests {
 						this::emptyOperation,
 						"Hard stop, shutdown. VERY unusual REST resource..."));
 
-		 RESTRequestManager restServerImplOne = new RESTRequestManager() {
+		RESTRequestManager restServerImplOne = new RESTRequestManager() {
 
-			 @Override
-			 public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
-				 return null;
-			 }
+			@Override
+			public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
+				return null;
+			}
 
-			 @Override
-			 public List<HTTPServer.Operation> getRESTOperationList() {
-				 return opList1;
-			 }
-		 };
-
+			@Override
+			public List<HTTPServer.Operation> getRESTOperationList() {
+				return opList1;
+			}
+		};
 
 		RESTRequestManager restServerImplTwo = new RESTRequestManager() {
 
@@ -173,7 +171,6 @@ public class HTTPServerTests {
 
 	private HTTPServer.Response emptyOperation(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
-
 		return response;
 	}
 }
