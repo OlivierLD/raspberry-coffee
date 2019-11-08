@@ -58,9 +58,9 @@ public class StandaloneHTTPServer {
 			throw nfe;
 		}
 
-		if (verbose)
+		if (verbose) {
 			System.out.println("Server running from [" + System.getProperty("user.dir") + "]");
-
+		}
 		// For the example: Start a Thread that does its own job...
 		Thread dummyThread = new Thread() {
 			public void run() {

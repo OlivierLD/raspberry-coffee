@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DeleteDirectory {
 
-	private static boolean deleteAll(File directoryRoot) {
+	public static boolean deleteAll(File directoryRoot) {
 		File[] allContents = directoryRoot.listFiles();
 		if (allContents != null) {
 			for (File file : allContents) {
@@ -21,7 +21,7 @@ public class DeleteDirectory {
 		return directoryRoot.delete();
 	}
 
-	private static boolean deleteDown(String path, int nbParent) throws IllegalArgumentException {
+	public static boolean deleteDown(String path, int nbParent) throws IllegalArgumentException {
 		List<Integer> separatorIndexes = new ArrayList<>();
 		String tmpPath = path;
 		boolean go = true;
@@ -35,7 +35,7 @@ public class DeleteDirectory {
 			}
 		}
 		if (nbParent < 1 || nbParent > (separatorIndexes.size() - 1)) {
-			throw new IllegalArgumentException(String.format("Unsuitable nbParent %d, we have only %d separator(s).", nbParent, separatorIndexes.size()));
+			throw new IllegalArgumentException(String.format("Unsuitable level %d, we have only %d separator(s).", nbParent, separatorIndexes.size()));
 		}
 		int level = nbParent - 1;
 		int indexToUse = separatorIndexes.get(level);
@@ -53,9 +53,10 @@ public class DeleteDirectory {
 		InputStream is = new FileInputStream(ROOT_DIRECTORY + File.separator + DIRECTORY_NAME + File.separator + "temp.txt");
 		Field pathField = FileInputStream.class.getDeclaredField("path");
 		pathField.setAccessible(true);
-		String path = pathField.get((FileInputStream) is).toString();
+		String path = pathField.get(is).toString();
 		System.out.println("Path:" + path);
 
-		deleteDown(path, 0);
+		boolean ok = deleteDown(path, 1);
+		System.out.println(String.format("Delete: %s", ok ? "OK" : "Not OK"));
 	}
 }

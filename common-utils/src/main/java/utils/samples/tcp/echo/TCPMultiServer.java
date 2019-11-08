@@ -12,8 +12,9 @@ public class TCPMultiServer {
 
 	public void start(int port) throws Exception {
 		serverSocket = new ServerSocket(port);
-		while (true)
+		while (true) {
 			new EchoClientHandler(serverSocket.accept()).start(); // All in once!
+		}
 	}
 
 	public void stop() throws Exception {
@@ -32,17 +33,18 @@ public class TCPMultiServer {
 		public void run() {
 			try {
 				out = new PrintWriter(clientSocket.getOutputStream(), true);
-				in = new BufferedReader(
-						new InputStreamReader(clientSocket.getInputStream()));
+				in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
 				String inputLine;
 				while ((inputLine = in.readLine()) != null) {
+					System.out.println(String.format("Read >> %s", inputLine));
 					if (".".equals(inputLine)) {
 						out.println("bye");
 						break;
 					}
 					out.println(inputLine);
 				}
+				System.out.println("- End of thread");
 
 				in.close();
 				out.close();

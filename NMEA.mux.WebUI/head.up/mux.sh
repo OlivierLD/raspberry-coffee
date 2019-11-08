@@ -6,22 +6,22 @@
 OS=`uname -a | awk '{ print $1 }'`
 #
 MUX_PROP_FILE=nmea.mux.gps.log.properties
-if [ $# -gt 0 ]
+if [[ $# -gt 0 ]]
 then
   MUX_PROP_FILE=$1
 fi
 #
-echo Using properties file $MUX_PROP_FILE
+echo Using properties file ${MUX_PROP_FILE}
 #
 JAVA_OPTIONS="$JAVA_OPTIONS" # From parent script, possibly
 #
 echo -e "In $0, inherited JAVA_OPTIONS: $JAVA_OPTIONS"
 #
-if [ "$OS" == "Darwin" ]
+if [[ "$OS" == "Darwin" ]]
 then
   JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"       # for Mac
 fi
-if [ "$OS" == "Linux" ]
+if [[ "$OS" == "Linux" ]]
 then
   JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
 fi
@@ -32,10 +32,10 @@ fi
 #
 PROCESS_ON_START=true # Default is true for process.on.start
 #
-if [ "$PROCESS_ON_START" = "false" ]
+if [[ "$PROCESS_ON_START" == "false" ]]
 then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
-  PORT=`cat $MUX_PROP_FILE | grep http.port=`
+  PORT=`cat ${MUX_PROP_FILE} | grep http.port=`
   PORT=${PORT#*http.port=}
   echo -e "+-------- N O T E   o n   F O R W A R D E R S ------------------"
   echo -e "| You will need to start the forwarders yourself,"
@@ -77,13 +77,13 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.date.offset=7168"
 #
 CP=$(ls ./build/libs/*.jar)
 SUDO=
-if [ "$OS" == "Darwin" ]
+if [[ "$OS" == "Darwin" ]]
 then
-  CP=$CP:./libs/RXTXcomm.jar          # for Mac
+  CP=${CP}:./libs/RXTXcomm.jar          # for Mac
 fi
-if [ "$OS" == "Linux" ]
+if [[ "$OS" == "Linux" ]]
 then
-  CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
+  CP=${CP}:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
   SUDO="sudo "
 fi
 #
@@ -104,5 +104,5 @@ LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 # sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navrest.NavServer
 COMMAND="${SUDO}java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navrest.NavServer"
 echo -e "Running $COMMAND"
-$COMMAND
+${COMMAND}
 #
