@@ -16,7 +16,6 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -45,9 +44,9 @@ public class HTTPClient {
 			}
 
 			InputStream inputStream = conn.getInputStream();
-			byte aByte[] = new byte[2];
+			byte[] aByte = new byte[2];
 
-			byte content[] = null;
+			byte[] content = null;
 			int nbLoop = 1;
 			long started = System.currentTimeMillis();
 
@@ -58,7 +57,7 @@ public class HTTPClient {
 					long delta = now - started;
 					double rate = (double) content.length / ((double) delta / 1_000D);
 					if (DEBUG) {
-						System.out.println("Downloading at " + rate + " bytes per second.");
+						System.out.println(String.format("Downloading at %.02f bytes per second.", rate));
 					}
 					nbLoop++;
 				}
@@ -97,14 +96,12 @@ public class HTTPClient {
 
 		Map<String, List<String>> headerFields = conn.getHeaderFields();
 		Map<String, String> map = new HashMap<>();
-		headerFields.keySet().forEach(key -> {
-			map.put(key, headerFields.get(key).stream().collect(Collectors.joining(",")));
-		});
+		headerFields.keySet().forEach(key -> map.put(key, String.join(",", headerFields.get(key))));
 		response.setHeaders(map);
 
 		// Response payload
 		BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		String output;
 	  if (DEBUG) {
 	  	System.out.println("Output from Server .... \n");
@@ -154,7 +151,7 @@ public class HTTPClient {
 			// Response payload
 			BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			String output;
 			if (DEBUG) {
 				System.out.println("Output from Server .... \n");
@@ -205,7 +202,7 @@ public class HTTPClient {
 			// Response payload
 			BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			String output;
 			if (DEBUG) {
 				System.out.println("Output from Server .... \n");
@@ -256,7 +253,7 @@ public class HTTPClient {
 	public static String getContent(String url) throws Exception {
 		String ret;
 		try {
-			byte content[] = readURL(new URL(url));
+			byte[] content = readURL(new URL(url));
 			ret = new String(content);
 		} catch (Exception e) {
 			throw e;
@@ -265,11 +262,11 @@ public class HTTPClient {
 	}
 
 	private static byte[] readURL(URL url) throws Exception {
-		byte content[] = null;
+		byte[] content = null;
 		try {
 			URLConnection newURLConn = url.openConnection();
 			InputStream inputStream = newURLConn.getInputStream();
-			byte aByte[] = new byte[2];
+			byte[] aByte = new byte[2];
 			long started = System.currentTimeMillis();
 			int nbLoop = 1;
 			while (inputStream.read(aByte, 0, 1) != -1) {

@@ -16,10 +16,10 @@ import javax.swing.JPanel;
  */
 public class ProxyGUI extends JFrame {
 
-	TrafficRawPanel requestPanel = null;
-	TrafficRawPanel responsePanel = null;
+	private TrafficRawPanel requestPanel;
+	private TrafficRawPanel responsePanel;
 
-	static int port = 9999; // Default
+	private static int port = 9999; // Default
 
 	public static void main(String... args) throws Exception {
 		port = Integer.parseInt(System.getProperty("http.port", String.valueOf(port)));

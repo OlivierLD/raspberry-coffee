@@ -12,8 +12,6 @@ public interface RESTRequestManager {
 	default boolean containsOp(String verb, String path) {
 		return this.getRESTOperationList()
 				.stream()
-				.filter(operation -> operation.getVerb().equals(verb) && RESTProcessorUtil.pathMatches(operation.getPath(), path))
-				.findFirst()
-				.isPresent();
+				.anyMatch(operation -> operation.getVerb().equals(verb) && RESTProcessorUtil.pathMatches(operation.getPath(), path));
 	}
 }

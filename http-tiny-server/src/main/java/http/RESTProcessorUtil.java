@@ -18,16 +18,14 @@ public class RESTProcessorUtil {
 	public static void checkDuplicateOperations(List<HTTPServer.Operation> opList) {
 		IntStream.range(0, opList.size())
 				.boxed()
-				.forEach(i -> {
-					IntStream.range(i + 1, opList.size())
-							.boxed()
-							.forEach(j -> {
-								if (opList.get(i).getVerb().equals(opList.get(j).getVerb()) &&
-										RESTProcessorUtil.pathsAreIdentical(opList.get(i).getPath(), opList.get(j).getPath())) {
-									throw new RuntimeException(String.format("Duplicate entry in operations list %s %s", opList.get(i).getVerb(), opList.get(i).getPath()));
-								}
-							});
-				});
+				.forEach(i -> IntStream.range(i + 1, opList.size())
+						.boxed()
+						.forEach(j -> {
+							if (opList.get(i).getVerb().equals(opList.get(j).getVerb()) &&
+									RESTProcessorUtil.pathsAreIdentical(opList.get(i).getPath(), opList.get(j).getPath())) {
+								throw new RuntimeException(String.format("Duplicate entry in operations list %s %s", opList.get(i).getVerb(), opList.get(i).getPath()));
+							}
+						}));
 	}
 
 	/**
@@ -116,9 +114,9 @@ public class RESTProcessorUtil {
 		List<String> returned = new ArrayList<>();
 		String[] patternElem = pattern.split("/");
 
-		for (int i = 0; i < patternElem.length; i++) {
-			if (patternElem[i].startsWith("{") && patternElem[i].endsWith("}")) {
-				returned.add(patternElem[i]);
+		for (String s : patternElem) {
+			if (s.startsWith("{") && s.endsWith("}")) {
+				returned.add(s);
 			}
 		}
 		return returned;
@@ -148,7 +146,7 @@ public class RESTProcessorUtil {
 	 * Used along with HTTP Error codes to contain a more significant message.
 	 */
 	public static class ErrorMessage {
-		private String message;
+		private final String message;
 
 		public ErrorMessage(String mess) {
 			this.message = mess;

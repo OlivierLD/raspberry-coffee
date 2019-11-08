@@ -125,7 +125,7 @@ public class HTTPServer {
 			this.path = pathAndQueryString[0];
 			if (pathAndQueryString.length > 1) {
 				String[] nvPairs = pathAndQueryString[1].split("&");
-				Arrays.asList(nvPairs).stream().forEach(nv -> {
+				Arrays.stream(nvPairs).forEach(nv -> {
 					if (queryStringParameters == null) {
 						queryStringParameters = new HashMap<>();
 					}
@@ -203,16 +203,14 @@ public class HTTPServer {
 		@Override
 		public String toString() {
 			final StringBuffer string = new StringBuffer();
-			string.append(this.verb + " " + this.path + " " + this.protocol);
+			string.append(this.verb).append(" ").append(this.path).append(" ").append(this.protocol);
 
 			if (this.headers != null) {
 				this.headers.keySet().stream()
-								.forEach(k -> {
-									string.append("\n" + k + ":" + this.headers.get(k));
-								});
+								.forEach(k -> string.append("\n").append(k).append(":").append(this.headers.get(k)));
 			}
 			if (this.content != null) {
-				string.append("\n\n" + new String(this.content));
+				string.append("\n\n").append(new String(this.content));
 			}
 
 			return string.toString();
@@ -277,16 +275,14 @@ public class HTTPServer {
 		@Override
 		public String toString() {
 			final StringBuffer sb = new StringBuffer();
-			sb.append(this.status + " " + this.protocol);
+			sb.append(this.status).append(" ").append(this.protocol);
 
 			if (this.headers != null) {
 				this.headers.keySet().stream()
-								.forEach(k -> {
-									sb.append("\n" + k + ":" + this.headers.get(k));
-								});
+								.forEach(k -> sb.append("\n").append(k).append(":").append(this.headers.get(k)));
 			}
 			if (this.payload != null) {
-				sb.append("\n\n" + new String(this.payload));
+				sb.append("\n\n").append(new String(this.payload));
 			}
 			return sb.toString();
 		}
@@ -555,6 +551,7 @@ public class HTTPServer {
 				try {
 					Thread.sleep(1_000L);
 				} catch (InterruptedException ie) {
+					Thread.currentThread().interrupt();
 				}
 			}
 			System.out.println("HTTPServer Dead.");
@@ -621,6 +618,7 @@ public class HTTPServer {
 								try {
 									Thread.sleep(100L);
 								} catch (InterruptedException ie) {
+									Thread.currentThread().interrupt();
 								}
 								top = false;
 							}
@@ -675,7 +673,7 @@ public class HTTPServer {
 											inPayload = true;
 											request.setHeaders(headers);
 										}
-										if (request == null && line.indexOf(" ") != -1) {
+										if (request == null && line.contains(" ")) {
 											String firstWord = line.substring(0, line.indexOf(" "));
 											if (Request.VERBS.contains(firstWord)) { // Start Line
 												String[] requestElements = line.split(" ");
@@ -686,7 +684,7 @@ public class HTTPServer {
 											}
 										}
 										if (request != null && !inPayload) {
-											if (line.indexOf(":") > -1) { // Header?
+											if (line.contains(":")) { // Header?
 												if (line.indexOf(" ") > 0 && line.indexOf(" ") < line.indexOf(":") ) { // TODO: Not start with Verb
 													// Not a GET http://machine HTTP/1.1	, with the protocol in the request
 												} else {
@@ -737,7 +735,7 @@ public class HTTPServer {
 
 								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 								String fName = path;
-								if (fName.indexOf("?") > -1) {
+								if (fName.contains("?")) {
 									fName = fName.substring(0, fName.indexOf("?"));
 								}
 								String zipPath = zipPath(fName);
@@ -770,7 +768,7 @@ public class HTTPServer {
 							} else if (pathIsStatic(path)) { // Static content, on the file system. See "static.docs" property. Defaulted to "/web/"
 								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 								String fName = path;
-								if (fName.indexOf("?") > -1) {
+								if (fName.contains("?")) {
 									fName = fName.substring(0, fName.indexOf("?"));
 								}
 								File f = new File("." + fName);
@@ -952,17 +950,13 @@ public class HTTPServer {
 	private boolean pathIsStatic(String path) {
 		return this.staticDocumentsLocation
 				.stream()
-				.filter(elmt -> path.startsWith(elmt))
-				.findFirst()
-				.isPresent();
+				.anyMatch(path::startsWith);
 	}
 
 	private boolean pathIsZipStatic(String path) {
 		return this.staticZippedDocumentsLocation
 				.stream()
-				.filter(elmt -> path.startsWith(elmt))
-				.findFirst()
-				.isPresent();
+				.anyMatch(path::startsWith);
 	}
 
 	private String zipPath(String fullPath) {
@@ -1019,13 +1013,10 @@ public class HTTPServer {
 	}
 
 	public static boolean isText(String mimeType) { // May require some tweaks...
-		if (mimeType.trim().startsWith("text/") ||
+		return mimeType.trim().startsWith("text/") ||
 				mimeType.contains("json") ||
 				mimeType.contains("xml") ||
-				mimeType.contains("script")) {
-			return true;
-		}
-		return false;
+				mimeType.contains("script");
 	}
 
 	private void manageSocketException(SocketException se, String content) {

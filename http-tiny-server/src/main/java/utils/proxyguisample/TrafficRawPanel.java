@@ -13,9 +13,9 @@ import java.awt.SystemColor;
 
 public class TrafficRawPanel
 		extends JPanel {
-	private BorderLayout borderLayout1 = new BorderLayout();
-	private JScrollPane jScrollPane = new JScrollPane();
-	private JTextArea textArea = new JTextArea();
+	private final BorderLayout borderLayout1 = new BorderLayout();
+	private final JScrollPane jScrollPane = new JScrollPane();
+	private final JTextArea textArea = new JTextArea();
 
 	public TrafficRawPanel(String label) {
 		try {
@@ -31,7 +31,7 @@ public class TrafficRawPanel
 		this.setPreferredSize(new Dimension(300, 500));
 		this.setMinimumSize(new Dimension(70, 70));
 
-		textArea.setFont(new Font("Source Code Pro", 0, 11));
+		textArea.setFont(new Font("Source Code Pro", Font.PLAIN, 11));
 		textArea.setForeground(Color.green);
 		textArea.setBackground(SystemColor.windowText);
 		textArea.setLineWrap(true);
