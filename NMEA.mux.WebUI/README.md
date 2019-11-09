@@ -493,6 +493,14 @@ and [here](./small.server.extended/README.md).
 
 ---
 #### Log from small.server.extended
+
+##### Sample setup
+Hard waterproof case, with customizable foam .
+
+| Open. With GPS and power bank               | With the foam                               |
+|:-------------------------------------------:|:-------------------------------------------:| 
+| ![Custom Foam](./docimg/custom.foam.01.jpg) | ![Custom Foam](./docimg/custom.foam.02.jpg) |
+
 ```
 $ ./to.mux.sh 
 JAVA_OPTIONS in to.mux.sh: 
