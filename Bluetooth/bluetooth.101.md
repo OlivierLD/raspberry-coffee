@@ -68,7 +68,7 @@ port = serial.Serial("/dev/rfcomm0", baudrate=9600)
 # rfcomm0 -> this could be different
 data = 0
 while True:
-  print("DIGITAL LOGIC -- > SENDING...")
+  print("Digital Logic --> Sending...")
   port.write(str.encode(str(data)))
   data = 1 if data == 0 else 0
   rcv = port.readline()
