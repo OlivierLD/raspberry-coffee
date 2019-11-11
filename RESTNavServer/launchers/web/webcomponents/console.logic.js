@@ -473,7 +473,7 @@ function astroCallback(data) {
 	}
 
 	/*
-	TODO Other wanreding bodies:
+	TODO Other wandering bodies:
 	data.wanderingBodies["name" = "venus"].fromPos.observed.(alt, z)
 	data.wanderingBodies.find(wb => {
     return wb.name === 'venus'
@@ -563,6 +563,12 @@ function astroCallback(data) {
 		document.getElementById('sun-path-01').moonPos = moonPos;
 	}
 	let withWanderingBodies = document.getElementById('with-wb').checked;
+	if (data.ghaAries !== undefined) {
+		document.getElementById('sun-path-01').ariesGHA = data.ghaAries;
+	}
+	if (data.eclipticObliquity !== undefined) {
+		document.getElementById('sun-path-01').eclipticObliquity = data.eclipticObliquity;
+	}
 	if (venusPos !== {} && withWanderingBodies) {
 		document.getElementById('sun-path-01').venusPos = venusPos;
 	} else {

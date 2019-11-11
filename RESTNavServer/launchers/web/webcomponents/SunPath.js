@@ -9,6 +9,12 @@ if (Math.toRadians === undefined) {
 	};
 }
 
+if (Math.toDegrees === undefined) {
+	Math.toDegrees = (rad) => {
+		return rad * (180 / Math.PI);
+	};
+}
+
 import * as Utilities from "./utilities/Utilities.js";
 
 const sunPathDefaultColorConfig = {
@@ -72,6 +78,9 @@ class SunPath extends HTMLElement {
 		this.jupiterZ = undefined;
 		this.saturnHe = undefined;
 		this.saturnZ = undefined;
+
+		this.ghaAries = undefined;
+		this.eclObliquity = undefined;
 
 		this.userPosition = undefined;
 		this._sunRise = undefined;
@@ -236,6 +245,22 @@ class SunPath extends HTMLElement {
 		} else {
 			this.saturnHe = undefined;
 			this.saturnZ = undefined;
+		}
+	}
+
+	set ariesGHA(val) {
+		if (val !== undefined) {
+			this.ghaAries = val;
+		} else {
+			this.ghaAries = undefined;
+		}
+	}
+
+	set eclipticObliquity(val) {
+		if (val !== undefined) {
+			this.eclObliquity = val;
+		} else {
+			this.eclObliquity = undefined;
 		}
 	}
 
@@ -826,6 +851,10 @@ class SunPath extends HTMLElement {
 			context.restore();
 		}
 
+		// Ecliptic ?
+		if (this.ghaAries !== undefined && this.eclObliquity !== undefined) {
+			this.drawEcliptic(context, this.ghaAries, this.eclObliquity, center, radius);
+		}
 		// Planets here
 		if (this.venusHe !== undefined && this.venusZ !== undefined) {
 			this.plotPlanet(context, center, radius, 'orange', 'orange', this.venusHe, this.venusZ, "Venus");
@@ -840,6 +869,122 @@ class SunPath extends HTMLElement {
 			this.plotPlanet(context, center, radius, 'lightyellow', 'lightyellow', this.saturnHe, this.saturnZ, "Saturn");
 		}
 
+	}
+
+	/**
+	 * Start from 'from', and return the position reached after 'dist' nm in the 'route' bearing.
+	 * @param from GeoPoint, L & G in Radians
+	 * @param dist distance in nm
+	 * @param route route in Degrees
+	 * @return DR Position, L & G in Radians
+	 */
+	deadReckoningRadians(from, dist, route) {
+		let radianDistance = Math.toRadians(dist / 60);
+		let finalLat = (Math.asin((Math.sin(from.lat) * Math.cos(radianDistance)) +
+				(Math.cos(from.lat) * Math.sin(radianDistance) * Math.cos(Math.toRadians(route)))));
+		let finalLng = from.lng + Math.atan2(Math.sin(Math.toRadians(route)) * Math.sin(radianDistance) * Math.cos(from.lat),
+				Math.cos(radianDistance) - Math.sin(from.lat) * Math.sin(finalLat));
+		return {lat: finalLat, lng: finalLng};
+	}
+
+	sightReduction(bodyGP, userPos) {
+		let ahgBody = bodyGP.longitude < 0 ? -bodyGP.longitude : 360 - bodyGP.longitude; // Longitude to GHA
+		let ahl = ahgBody + userPos.longitude;
+		while (ahl < 0.0) {
+			ahl += 360.0;
+		}
+		// Formula to solve : sin He = sin L sin D + cos L cos D cos AHL
+		let sinL = Math.sin(Math.toRadians(userPos.latitude));
+		let sinD = Math.sin(Math.toRadians(bodyGP.latitude));
+		let cosL = Math.cos(Math.toRadians(userPos.latitude));
+		let cosD = Math.cos(Math.toRadians(bodyGP.latitude));
+		let cosAHL = Math.cos(Math.toRadians(ahl));
+
+		let sinHe = (sinL * sinD) + (cosL * cosD * cosAHL);
+		let He = Math.toDegrees(Math.asin(sinHe));
+		let dHe = He;
+
+		// Formula to solve : tg Z = sin P / cos L tan D - sin L cos P
+		let P = (ahl < 180.0) ? ahl : (360.0 - ahl);
+		let sinP = Math.sin(Math.toRadians(P));
+		let cosP = Math.cos(Math.toRadians(P));
+		let tanD = Math.tan(Math.toRadians(bodyGP.latitude));
+		let tanZ = sinP / ((cosL * tanD) - (sinL * cosP));
+		let Z = Math.toDegrees(Math.atan(tanZ));
+
+		if (ahl < 180.0) { // Westward
+			if (Z < 0.0) { // south to north
+				Z = 180.0 - Z;
+			} else {         // North to South
+				Z = 360.0 - Z;
+			}
+		} else {           // Eastward
+			if (Z < 0.0) { // south to north
+				Z = 180.0 + Z;
+//    } else {       // north to south
+//      Z = Z;
+			}
+		}
+		let dZ = Z;
+		return { elev: dHe, z: dZ};
+	}
+
+	drawEcliptic(context, ghaAries, obl, center, radius) {
+		let longitude = (ghaAries < 180) ? -ghaAries : 360 - ghaAries;
+		longitude += 90; // Extremum
+		while (longitude > 360) {
+			longitude -= 360;
+		}
+		let aries = { lat: Math.toRadians(obl), lng: Math.toRadians(longitude) };
+		let eclCenter = this.deadReckoningRadians(aries, 90 * 60, 0); // "Center" (top point) of the Ecliptic
+
+		context.fillStyle = 'gray'; // this.worldmapColorConfig.tropicColor;
+		context.lineWidth = 1;
+		context.save();
+		context.setLineDash([2, 2]);
+
+		let pt = this.deadReckoningRadians(eclCenter, 90 * 60, 0); // Coordinates in radians
+		let lat = Math.toDegrees(pt.lat);
+		let lng = Math.toDegrees(pt.lng);
+		while (lng > 360) {
+			lng -= 360;
+		}
+		while (lng < -360) {
+			lng += 360;
+		}
+
+		let inTheSky = this.sightReduction({ latitude: lat, longitude: lng }, this.userPosition);
+
+		let h = inTheSky.elev;
+		let z = inTheSky.z;
+
+		// console.log(`HDG 0 => h ${h} z ${z} body ${lat}, ${lng} ,user Pos ${JSON.stringify(this.userPosition)}`);
+
+		let pp = this.rotateBothWays(h + this.rotation, z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+		context.beginPath();
+		context.moveTo(center.x + (pp.x * radius * this.invertX), center.y - (pp.y * radius));
+
+		for (let hdg=1; hdg<=360; hdg++) {
+			pt = this.deadReckoningRadians(eclCenter, 90 * 60, hdg); // Coordinates in radians
+			lat = Math.toDegrees(pt.lat);
+			lng = Math.toDegrees(pt.lng);
+			while (lng > 360) {
+				lng -= 360;
+			}
+			while (lng < -360) {
+				lng += 360;
+			}
+			inTheSky = this.sightReduction({ latitude: lat, longitude: lng }, this.userPosition);
+			h = inTheSky.elev;
+			z = inTheSky.z
+			// console.log("Ecliptic point ", lat, lng);
+
+			pp = this.rotateBothWays(h + this.rotation, z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+			context.lineTo(center.x + (pp.x * radius * this.invertX), center.y - (pp.y * radius));
+		}
+		context.stroke();
+		context.closePath();
+		context.restore();
 	}
 
 	plotPlanet(context, center, radius, stroke, fill, he, z, name) {

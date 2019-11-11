@@ -165,8 +165,6 @@ var ajustedLongitude = function(leftBoundary, eastIncrease) {
 const ARROW_LENGTH = 20;
 const WIND_ARROW_TRANSPARENCY = 0.3;
 
-
-
 var drawWindArrow = function(context, at, twd, tws) {
 
 	context.lineWidth = 1;
@@ -247,15 +245,21 @@ var getBGColor = function(value, type) {
 		case 'hgt': // blue, 5640, [4700..6000], inverted
 			color = 'rgba(0, 0, 255, ' + (1 - Math.min((value - 4700) / (6000 - 4700), 1)) + ')';
 			break;
-		case 'prate': // black, [0..7]. Unit is Kg x m-2 x s-1, which is 1mm.s-1. Turned into mm/h
-			var transp = 	Math.min(((value * 3600) / 7), 1);
-			color = 'rgba(0, 0, 0, ' + transp.toFixed(2) + ')'; // 7 mm/h
+		case 'prate': // black, [0..30]. Unit is Kg x m-2 x s-1, which is 1mm.s-1. Turned into mm/h
+			var max = 30;
+			var mm_per_hour = value * 3600;
+			var transp = 	Math.min(((mm_per_hour) / max), 1);
+			var blue = Math.max(255 - (mm_per_hour * (255 / max)), 0).toFixed(0);
+			// if (mm_per_hour > 20) {
+			// 	console.log(`>> Value: ${mm_per_hour} => Blue: ${blue}`);
+			// }
+			color = `rgba(0, 0, ${blue}, ${transp.toFixed(2)})`; // max 30 mm/h
 			break;
 		case 'tmp': // blue, to red, [233..323] (Celcius [-40..50]). [-40..0] -> blue. [0..50] -> red
-			if (value <= 273) { // 0 C
-				color = 'rgba(0, 0, 255,' + (1 - Math.min((value - 233) / (273 - 233), 1)) + ')';
+			if (value <= 273) { // lower than 0 C
+				color = 'rgba(0, 0, 255,' + (1 - Math.min((value - 233) / (273 - 233), 1)) + ')'; // Blue
 			} else {
-				color = 'rgba(255, 0, 0,' + Math.min((value - 273) / (323 - 273), 1) + ')';
+				color = 'rgba(255, 0, 0,' + Math.min((value - 273) / (323 - 273), 1) + ')'; // Red
 			}
 			break;
 		case 'htsgw': // green, [0..15]
