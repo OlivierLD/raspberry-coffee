@@ -4,6 +4,14 @@ Bluetooth is a pier-to-pier communication protocol based on a Serial Communicati
 
 Once two devices are **paired** with Bluetooth, the communication between them is just a regular Serial Communication, a demoed below. 
 
+Learn about Bluetooth devices in sight:
+```
+$ hcitool scan
+Scanning ...
+	98:D3:61:FD:67:23	HC-05
+	18:65:90:CF:BF:80	olivs-mac
+```
+
 ### To get started
 I used an Arduino UNO with a `HC-05` module, to act as a bluetooth device,
 and some Python code to run on the Raspberry Pi, acting as a Bluetooth client.
@@ -55,6 +63,7 @@ $ sudo apt-get install bluetooth bluez blueman
 and reboot.
 
 With the Arduino with its `HC-05` module up and running, pair your device from the Raspberry Pi desktop (use `1234` for the code) as explained [here](https://medium.com/@mahesh_joshi/raspberry-pi-3-and-arduino-communication-via-bluetooth-hc-05-5d7b6f162ab3).
+`hcitool` command mentioned above can help.
 
 Then, run this code on the Raspberry Pi
 ```python
@@ -83,3 +92,24 @@ Run it:
  $ ./bt.101.py
 ```
 You should see the led blinking every 3 seconds on the Arduino.
+
+### From Java
+Seems there is a problem to fix with `javalib-rx-tx`, when trying to read `/dev/rfcomm0`:
+```
+$ ./java.101.sh 
+Stable Library
+=========================================
+Native lib Version = RXTX-2.2pre2
+Java lib Version   = RXTX-2.1-7
+WARNING:  RXTX Version mismatch
+	Jar version = RXTX-2.1-7
+	native lib Version = RXTX-2.2pre2
+== Serial Port List ==
+-> /dev/ttyS0
+======================
+Opening port /dev/rfcomm0:9600
+Port /dev/rfcomm0 not found, aborting
+```
+
+## To check
+- On OBD: <https://pypi.org/project/obd/>
