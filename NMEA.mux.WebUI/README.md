@@ -588,8 +588,10 @@ Received from Serial:$GPGSV,3,3,10,28,03,114,16,29,02,253,*7F
 Received from Serial:$GPRMC,131913.000,A,3744.9329,N,12230.4200,W,0.01,297.68,200919,,,D*70
 Received from Serial:$GPVTG,297.68,T,,M,0.01,N,0.02,K,D*39
 ```
-##### Smaller, sample setup
-Hard waterproof case, with customizable (pre-cut) foam .
+##### Hardware example: smaller, sample setup
+Suitable (if not ideal!) for kayaking, hiking, or so.
+
+Hard waterproof case, with customizable (pre-cut) foam, like [that one](https://www.amazon.com/gp/product/B00ZFTEDOA/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1).
 
 | Open. With GPS and power bank               | With the foam                               |
 |:-------------------------------------------:|:-------------------------------------------:| 
