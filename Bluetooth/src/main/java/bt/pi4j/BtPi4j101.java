@@ -1,4 +1,4 @@
-package bt;
+package bt.pi4j;
 
 import com.pi4j.io.serial.*;
 import com.pi4j.util.CommandArgumentParser;
@@ -11,7 +11,7 @@ public class BtPi4j101 {
 	/**
 	 * This example program supports the following optional command arguments/options:
 	 *   "--device (device-path)"                   [DEFAULT: /dev/ttyAMA0]
-	 *   "--baud (baud-rate)"                       [DEFAULT: 38400]
+	 *   "--baud (baud-rate)"                       [DEFAULT: 9600]
 	 *   "--data-bits (5|6|7|8)"                    [DEFAULT: 8]
 	 *   "--parity (none|odd|even)"                 [DEFAULT: none]
 	 *   "--stop-bits (1|2)"                        [DEFAULT: 1]
