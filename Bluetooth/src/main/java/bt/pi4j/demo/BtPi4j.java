@@ -18,9 +18,11 @@ import static utils.TimeUtil.delay;
 public class BtPi4j {
 	/**
 	 * From scratch, not from the PI4J samples.
+	 * Uses the Serial library from PI4J.
+	 *
 	 * This example program supports the following optional System variables:
 	 * "port.name"                   [DEFAULT: /dev/ttyS0]
-	 * "baud.rate"                   [DEFAULT: 9600]
+	 * "baud.rate"                   [DEFAULT: 115200]
 	 *
 	 * @param args
 	 */
@@ -51,7 +53,7 @@ public class BtPi4j {
 
 			// set default serial settings (device, baud rate, flow control, etc)
 			String portName = System.getProperty("port.name", "/dev/ttyS0");
-			String brStr =  System.getProperty("baud.rate", "9600");
+			String brStr =  System.getProperty("baud.rate", "115200");
 			Baud br;
 			try {
 				br = Baud.getInstance(Integer.parseInt(brStr));
