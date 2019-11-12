@@ -195,6 +195,8 @@ public class SimpleODBReader implements SerialIOCallbacks {
 	public static void main(String... args) {
 
 		SimpleODBReader obdReader = new SimpleODBReader();
+		obdReader.simulateSerial = true;
+
 		obdReader.init("/dev/tty.Bluetooth-Incoming-Port"); // TODO A system variable
 		obdReader.initBluetoothComm();
 

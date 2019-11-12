@@ -32,7 +32,7 @@ Upload the following code on the Arduino (available in `bt.101.py`):
  * no resistor needed, no extra led.
  */
 #define ledPin LED_BUILTIN
-int state = 0;
+int state = 0; // This is the character code.
 
 void setup() {
   pinMode(ledPin, OUTPUT);
@@ -147,3 +147,5 @@ Let's get started
 
 ## To check
 - On OBD: <https://pypi.org/project/obd/>
+- OBD Dataset <https://www.kaggle.com/vbandaru/data-from-obd-on-board-diagnostics>
+- <https://www.obdsol.com/knowledgebase/obd-software-development/reading-real-time-data/>
