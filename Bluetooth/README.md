@@ -1,97 +1,152 @@
-## Misc resources and bulk notes.
+Bluetooth is a pier-to-pier communication protocol based on a Serial Communication.
 
-BLE Setup:
-- <https://www.instructables.com/id/Control-Bluetooth-LE-Devices-From-A-Raspberry-Pi/> (2015)
-- <https://www.cnet.com/how-to/how-to-setup-bluetooth-on-a-raspberry-pi-3/> 
-- <https://learn.pi-supply.com/make/fix-raspberry-pi-3-bluetooth-issues/>
+Once two devices are **paired** with Bluetooth, the communication between them is just a regular Serial Communication, as demoed below. 
 
-From the UI, make the RPi discoverable
+See <https://medium.com/@mahesh_joshi/raspberry-pi-3-and-arduino-communication-via-bluetooth-hc-05-5d7b6f162ab3>
 
-> hciconfig
-
-> sudo service bluetooth status
-
-On your Mac, choose `Apple menu` > `System Preferences`, then click `Bluetooth`. Your Mac is now discoverable.
-
-Also see <https://www.piborg.org/blog/pi-zero-wifi-bluetooth>.
-
-### On the Raspberry Pi
+Learn about Bluetooth devices in sight:
 ```
- $ lsusb
+$ hcitool scan
+Scanning ...
+	98:D3:61:FD:67:23	HC-05
+	18:65:90:CF:BF:80	olivs-mac
 ```
 
+### To get started
+I used an Arduino UNO with an [`HC-05` module](https://www.allelectronics.com/item/hc-05/hc-05-bluetooth-module/1.html), to act as a bluetooth device,
+and some Python (and then Java) code to run on the Raspberry Pi, acting as a Bluetooth client.
+
+The sketch running on the Arduino turns a led on or off, depending on what's read from the Bluetooth device.
+
+The Raspberry Pi will send serial data to the Bluetooth device, and we should then see the Arduino's led go on and off.
+In return, the Raspberry receives the status of the led, sent by the Arduino, through the Bluetooth device.
+
+This way, it demonstrates how the Raspberry Pi can _send_ and _receive_ Bluetooth data.   
+
+![Wiring](./Arduino.HC-05_bb.png)
+
+Upload the following code on the Arduino (available in `bt.101.py`):
+```c
+/*
+ * Use the LED_BUILTIN, 
+ * no resistor needed, no extra led.
+ */
+#define ledPin LED_BUILTIN
+int state = 0; // This is the character code.
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);
+  Serial.begin(9600); // 38400); // Default communication rate of the Bluetooth module
+}
+
+void loop() {
+  if (Serial.available() > 0) { // Checks whether data is comming from the serial port
+    state = Serial.read(); // Reads the data from the serial port
+  }
+
+  if (state == '0') {
+    digitalWrite(ledPin, LOW); // Turn LED OFF
+    Serial.println("LED: OFF"); // Send back, to the phone, the String "LED: ON"
+    state = 0;
+  } else if (state == '1') {
+    digitalWrite(ledPin, HIGH);
+    Serial.println("LED: ON");;
+    state = 0;
+  }
+}
 ```
- $ hciconfig
- $ hcitool dev
- $ hcitool scan
+> _Note_: Both `HC-05` and the code uploader for the Arduino are using the serial port. If
+> the `HC-05` is active, the code cannot be uploaded through the serial port.
+> Just unplug (red wire) the `HC-05` when you want to upload your code, re-plug it after that.
+
+> _Note_: we use the `BUILTIN_LED`, the red one labeled `L` on the left side of the Arduino on the picture above.
+
+From the Raspberry Pi, run once:
+```
+$ sudo apt-get install pi-bluetooth
+$ sudo apt-get install bluetooth bluez blueman
+```
+and reboot.
+
+With the Arduino with its `HC-05` module up and running, pair your device from the Raspberry Pi desktop (use `1234` for the code) as explained [here](https://medium.com/@mahesh_joshi/raspberry-pi-3-and-arduino-communication-via-bluetooth-hc-05-5d7b6f162ab3).
+`hcitool` command mentioned above can help.
+
+Then, run this code on the Raspberry Pi
+```python
+#!/usr/bin/env python3
+import serial
+import time
+
+port = serial.Serial("/dev/rfcomm0", baudrate=9600)
+ 
+# reading and writing data from and to arduino serially.                                      
+# rfcomm0 -> this could be different
+data = 0
+while True:
+  print("Digital Logic --> Sending...")
+  port.write(str.encode(str(data)))
+  data = 1 if data == 0 else 0  # Flip value
+  rcv = port.readline()
+  if rcv:
+    print(rcv)
+  time.sleep(3)
+```
+Notice the port name, and the baud rate.
+
+Run it:
+```
+ $ ./bt.101.py
+```
+You should see the led blinking every 3 seconds on the Arduino.
+
+### From Java
+Compile and archive the code provided here:
+```
+ $ ../gradlew clean shadowJar
 ```
 
+Seems there is a problem to fix with `javalib-rx-tx`, when trying to read `/dev/rfcomm0`:
 ```
- $ lsmod
- $ dmesg
+$ ./java.101.sh 
+Stable Library
+=========================================
+Native lib Version = RXTX-2.2pre2
+Java lib Version   = RXTX-2.1-7
+WARNING:  RXTX Version mismatch
+	Jar version = RXTX-2.1-7
+	native lib Version = RXTX-2.2pre2
+== Serial Port List ==
+-> /dev/ttyS0
+======================
+Opening port /dev/rfcomm0:9600
+Port /dev/rfcomm0 not found, aborting
+```
+The `Pi4J` approach seems to work though. See `bt.pi4j.BtPi4j103.java`.
+
+Run this on the Raspberry Pi:
+```
+ $ sudo java -cp ./build/libs/Bluetooth-1.0-all.jar bt.pi4j.BtPi4j103 --device /dev/rfcomm0
+Let's get started
+[HEX DATA]   4C,45,44,3A,20,4F,46,46,0D,0A
+[ASCII DATA] LED: OFF
+
+[HEX DATA]   4C,45,44,3A,20,4F,4E,0D,0A
+[ASCII DATA] LED: ON
+
+[HEX DATA]   4C,45,44,3A,20,4F,46,46,0D,0A
+[ASCII DATA] LED: OFF
+
+[HEX DATA]   4C,45,44,3A,20,4F,4E,0D,0A
+[ASCII DATA] LED: ON
+
+[HEX DATA]   4C,45,44,3A,20,4F,46,46,0D,0A
+[ASCII DATA] LED: OFF
+. . .
 ```
 
-```
- $ bluetoothctl
-[NEW] Controller 00:15:83:0C:BF:EB rpi64 [default]
-[bluetooth]# scan on
-Discovery started
-[CHG] Controller 00:15:83:0C:BF:EB Discovering: yes
-[NEW] Device 18:65:90:CF:BF:80 18-65-90-CF-BF-80
-[NEW] Device 00:19:6D:36:50:1B 00-19-6D-36-50-1B
-[CHG] Device 18:65:90:CF:BF:80 LegacyPairing: no
-[CHG] Device 18:65:90:CF:BF:80 RSSI: 127
-[CHG] Device 18:65:90:CF:BF:80 Name: olediour-Mac
-[CHG] Device 18:65:90:CF:BF:80 Alias: olediour-Mac
-[CHG] Device 18:65:90:CF:BF:80 LegacyPairing: yes
-[CHG] Device 18:65:90:CF:BF:80 RSSI is nil
-[bluetooth]# quit
-[DEL] Controller 00:15:83:0C:BF:EB rpi64 [default]
-```
-
-- Good post: <https://www.raspberrypi.org/forums/viewtopic.php?t=199308>
-- To check: <https://www.evernote.com/shard/s188/nl/21492849/418caa6f-f527-4f37-a31d-39aee311cd1e/>
-
-```
-pi@rpi64:~ $ bluetoothctl
-[NEW] Controller 00:15:83:0C:BF:EB rpi64 #1 [default]
-[NEW] Device 18:65:90:CF:BF:80 olediour-Mac
-[NEW] Controller B8:27:EB:97:05:FD rpi64
-[NEW] Device 00:19:6D:36:50:1B OBDII
-[NEW] Device 18:65:90:CF:BF:80 olediour-Mac
-[NEW] Device 94:8B:C1:8C:5E:E5 Olivs-android-phone
-[bluetooth]# power on
-Changing power on succeeded
-[bluetooth]# agent
-Missing on/off/capability argument
-[bluetooth]# agent on
-Agent registered
-[bluetooth]# agent
-Missing on/off/capability argument
-[bluetooth]# agent off
-Agent unregistered
-[bluetooth]# agent KeyboardOnly
-Agent registered
-[bluetooth]# pair 18:65:90:CF:BF:80
-Attempting to pair with 18:65:90:CF:BF:80
-[CHG] Device 18:65:90:CF:BF:80 Connected: yes
-Request PIN code
-[agent] Enter PIN code: 1234
-[CHG] Device 18:65:90:CF:BF:80 Modalias: bluetooth:v004Cp4A3Ad1011
-[CHG] Device 18:65:90:CF:BF:80 UUIDs: 00001101-0000-1000-8000-00805f9b34fb
-[CHG] Device 18:65:90:CF:BF:80 UUIDs: 0000110a-0000-1000-8000-00805f9b34fb
-[CHG] Device 18:65:90:CF:BF:80 UUIDs: 0000110c-0000-1000-8000-00805f9b34fb
-[CHG] Device 18:65:90:CF:BF:80 UUIDs: 00001112-0000-1000-8000-00805f9b34fb
-[CHG] Device 18:65:90:CF:BF:80 UUIDs: 00001117-0000-1000-8000-00805f9b34fb
-[CHG] Device 18:65:90:CF:BF:80 UUIDs: 0000111f-0000-1000-8000-00805f9b34fb
-[CHG] Device 18:65:90:CF:BF:80 UUIDs: 00001200-0000-1000-8000-00805f9b34fb
-[CHG] Device 18:65:90:CF:BF:80 UUIDs: 02030302-1d19-415f-86f2-22a2106a0a77
-[CHG] Device 18:65:90:CF:BF:80 ServicesResolved: yes
-[CHG] Device 18:65:90:CF:BF:80 Paired: yes
-Pairing successful
-[CHG] Device 18:65:90:CF:BF:80 ServicesResolved: no
-[CHG] Device 18:65:90:CF:BF:80 Connected: no
-[DEL] Device 18:65:90:CF:BF:80 olediour-Mac
-[bluetooth]# quit
-pi@rpi64:~ $
-```
+## To check
+- On OBD: <https://pypi.org/project/obd/>
+- OBD Dataset <https://www.kaggle.com/vbandaru/data-from-obd-on-board-diagnostics>
+- <https://www.obdsol.com/knowledgebase/obd-software-development/reading-real-time-data/>
+- OBD Codes: <http://www.fastfieros.com/tech/diagnostic_trouble_codes_for_obdii.htm>
