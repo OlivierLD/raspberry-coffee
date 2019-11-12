@@ -21,7 +21,7 @@ The sketch running on the Arduino turns a led on or off, depending on what's rea
 The Raspberry Pi will send serial data to the Bluetooth device, and we should then see the Arduino's led go on and off.
 In return, the Raspberry receives the status of the led, sent by the Arduino, through the Bluetooth device.
 
-This way, it demonstrate how the Raspberry Pi can _send_ and _receive_ Bluetooth data.   
+This way, it demonstrates how the Raspberry Pi can _send_ and _receive_ Bluetooth data.   
 
 ![Wiring](./Arduino.HC-05_bb.png)
 
