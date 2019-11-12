@@ -8,7 +8,6 @@ import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialFactory;
 import com.pi4j.io.serial.StopBits;
-import com.pi4j.util.CommandArgumentParser;
 import utils.DumpUtil;
 
 import java.io.IOException;
@@ -18,6 +17,7 @@ import static utils.TimeUtil.delay;
 
 public class BtPi4j {
 	/**
+	 * From scratch, not from the PI4J samples.
 	 * This example program supports the following optional System variables:
 	 * "port.name"                   [DEFAULT: /dev/ttyS0]
 	 * "baud.rate"                   [DEFAULT: 9600]

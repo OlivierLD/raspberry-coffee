@@ -2,9 +2,9 @@
 const TABS = ['one', 'two', 'three', 'four', 'five'];
 
 function openTab(evt, tabNum) {
-	let tablinks = document.getElementsByClassName("tablinks");
-	for (let i=0; i<tablinks.length; i++) {
-		tablinks[i].className = tablinks[i].className.replace(" active", ""); // Reset
+	let tabLinks = document.getElementsByClassName("tablinks");
+	for (let i=0; i<tabLinks.length; i++) {
+		tabLinks[i].className = tabLinks[i].className.replace(" active", ""); // Reset
 	}
 	for (let i=0; i<TABS.length; i++) {
 		document.getElementById(TABS[i]).style.display = (i === tabNum) ? 'block' : 'none';
@@ -130,7 +130,7 @@ function setRawNMEA(sentence) {
 		storedHistory.shift();
 	}
 
-	var content = '<pre>';
+	let content = '<pre>';
 	storedHistory.forEach(str => {
 		content += (str + '\n');
 	});
@@ -266,7 +266,7 @@ function plotSatellite(context, worldMap, userPos, satColor, name, satellite) {
 
 // More colors at https://www.w3schools.com/colors/colors_picker.asp
 function getSNRColor(snr) {
-	var c = 'lightGray';
+	let c = 'lightGray';
 	if (snr !== undefined && snr !== null) {
 		if (snr > 0) {
 			c = 'red';
@@ -309,7 +309,7 @@ function callAfter(id) {
 
 			// GPS Satellites in view
 			if (document.getElementById('gps-sat-01').checked && gpsSatelliteData !== undefined) {
-				for (var sat in gpsSatelliteData) {
+				for (let sat in gpsSatelliteData) {
 					let satellite = gpsSatelliteData[sat];
 					let satellitePosition = worldMap.deadReckoningRadians({
 						lat: worldMap.toRadians(worldMap.userPosition.latitude),
@@ -642,7 +642,7 @@ function toggleHeadsUp() {
 }
 
 function setPadding(range) {
-	var v = range.value;
+	let v = range.value;
 	document.getElementById('nmea-widgets-1').style.setProperty("--padding", v + "px");
 	document.getElementById('nmea-widgets-2').style.setProperty("--padding", v + "px");
 	document.getElementById('sky-maps-1').style.setProperty("--padding", v + "px");
@@ -650,7 +650,7 @@ function setPadding(range) {
 }
 
 function setPerspective(range) {
-	var v = range.value;
+	let v = range.value;
 	document.getElementById('nmea-widgets-1').style.setProperty("--perspective", v + "em");
 	document.getElementById('nmea-widgets-2').style.setProperty("--perspective", v + "em");
 	document.getElementById('sky-maps-1').style.setProperty("--perspective", v + "em");
@@ -658,7 +658,7 @@ function setPerspective(range) {
 }
 
 function setRotateX(range) {
-	var v = range.value;
+	let v = range.value;
 	document.getElementById('nmea-widgets-1').style.setProperty("--rotateX", v + "deg");
 	document.getElementById('nmea-widgets-2').style.setProperty("--rotateX", v + "deg");
 	document.getElementById('sky-maps-1').style.setProperty("--rotateX", v + "deg");
@@ -666,7 +666,7 @@ function setRotateX(range) {
 }
 
 function setScaleY(scale) {
-	var v = scale.value;
+	let v = scale.value;
 	document.body.style.setProperty("--scaleY", v);
 	// document.getElementById('nmea-widgets-1').style.setProperty("--scaleY", v);
 	// document.getElementById('nmea-widgets-2').style.setProperty("--scaleY", v);
