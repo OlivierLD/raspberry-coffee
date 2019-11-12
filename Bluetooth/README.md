@@ -151,3 +151,4 @@ Let's get started
 - <https://www.obdsol.com/knowledgebase/obd-software-development/reading-real-time-data/>
 - OBD Codes: <http://www.fastfieros.com/tech/diagnostic_trouble_codes_for_obdii.htm>
 - Sparkfun's [Getting Started with OBD-II](https://learn.sparkfun.com/tutorials/getting-started-with-obd-ii/all).
+- Instructable's [Control Bluetooth LE Devices From a Raspberry Pi](https://www.instructables.com/id/Control-Bluetooth-LE-Devices-From-A-Raspberry-Pi/).

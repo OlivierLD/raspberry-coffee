@@ -562,8 +562,15 @@ function astroCallback(data) {
 	if (moonPos !== {}) {
 		document.getElementById('sun-path-01').moonPos = moonPos;
 	}
-	let withWanderingBodies = document.getElementById('with-wb').checked;
-	let withEcliptic = true; // document.getElementById('with-wb').checked; // TODO A checkbox?
+	let planetDataAvailable = venusPos.he !== undefined && marsPos.he !== undefined && jupiterPos.he !== undefined && saturnPos.he !== undefined;
+	document.getElementById('with-wb').disabled = !planetDataAvailable;
+	let withWanderingBodies = planetDataAvailable && document.getElementById('with-wb').checked;
+	document.getElementById('ecliptic').disabled = !withWanderingBodies;
+	let withEcliptic = withWanderingBodies && document.getElementById('ecliptic').checked;
+	if (!withEcliptic) {
+		document.getElementById('sun-path-01').ariesGHA = undefined;
+		document.getElementById('sun-path-01').eclipticObliquity = undefined;
+	}
 	if (withEcliptic && data.ghaAries !== undefined) {
 		document.getElementById('sun-path-01').ariesGHA = data.ghaAries;
 	}
