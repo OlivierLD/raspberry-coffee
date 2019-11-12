@@ -26,7 +26,7 @@ This way, it demonstrates how the Raspberry Pi can _send_ and _receive_ Bluetoot
 ![Wiring](./Arduino.HC-05_bb.png)
 
 Upload the following code on the Arduino (available in `bt.101.py`):
-```
+```c
 /*
  * Use the LED_BUILTIN, 
  * no resistor needed, no extra led.
