@@ -108,8 +108,8 @@ public class SimpleODBReader implements SerialIOCallbacks {
 			System.out.println("Did you run as administrator (sudo) ?");
 		}
 		System.out.println("== Serial Port List ==");
-		for (String serialport : ports) {
-			System.out.println("-> " + serialport);
+		for (String serialPort : ports) {
+			System.out.println("-> " + serialPort);
 		}
 		System.out.println("======================");
 

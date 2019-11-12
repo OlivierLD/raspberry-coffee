@@ -1,8 +1,8 @@
-See <https://medium.com/@mahesh_joshi/raspberry-pi-3-and-arduino-communication-via-bluetooth-hc-05-5d7b6f162ab3>
-
 Bluetooth is a pier-to-pier communication protocol based on a Serial Communication.
 
 Once two devices are **paired** with Bluetooth, the communication between them is just a regular Serial Communication, a demoed below. 
+
+See <https://medium.com/@mahesh_joshi/raspberry-pi-3-and-arduino-communication-via-bluetooth-hc-05-5d7b6f162ab3>
 
 Learn about Bluetooth devices in sight:
 ```
@@ -13,8 +13,15 @@ Scanning ...
 ```
 
 ### To get started
-I used an Arduino UNO with a `HC-05` module, to act as a bluetooth device,
+I used an Arduino UNO with an [`HC-05` module](https://www.allelectronics.com/item/hc-05/hc-05-bluetooth-module/1.html), to act as a bluetooth device,
 and some Python code to run on the Raspberry Pi, acting as a Bluetooth client.
+
+The sketch running on the Arduino turns a led on or off, depending on what's read from the Bluetooth device.
+
+The Raspberry Pi will send serial data to the Bluetooth device, and we should then see the Arduino's led go on and off.
+In return, the Raspberry receives the status of the led, sent by the Arduino, through the Bluetooth device.
+
+This way, it demonstrate how the Raspberry Pi can _send_ and _receive_ Bluetooth data.   
 
 ![Wiring](./Arduino.HC-05_bb.png)
 
@@ -53,7 +60,7 @@ void loop() {
 > the `HC-05` is active, the code cannot be uploaded through the serial port.
 > Just unplug (red wire) the `HC-05` when you want to upload your code, re-plug it after that.
 
-> _Note_: we use the `BUILTIN_LED`, the red one labeled `L` on the left side of then Arduino on the picture above.
+> _Note_: we use the `BUILTIN_LED`, the red one labeled `L` on the left side of the Arduino on the picture above.
 
 From the Raspberry Pi, run once:
 ```
@@ -79,7 +86,7 @@ data = 0
 while True:
   print("Digital Logic --> Sending...")
   port.write(str.encode(str(data)))
-  data = 1 if data == 0 else 0
+  data = 1 if data == 0 else 0  # Flip value
   rcv = port.readline()
   if rcv:
     print(rcv)
@@ -94,6 +101,11 @@ Run it:
 You should see the led blinking every 3 seconds on the Arduino.
 
 ### From Java
+Compile and archive the code provided here:
+```
+ $ ../gradlew clean shadowJar
+```
+
 Seems there is a problem to fix with `javalib-rx-tx`, when trying to read `/dev/rfcomm0`:
 ```
 $ ./java.101.sh 
@@ -109,6 +121,28 @@ WARNING:  RXTX Version mismatch
 ======================
 Opening port /dev/rfcomm0:9600
 Port /dev/rfcomm0 not found, aborting
+```
+The `Pi4J` approach seems to work though. See `bt.pi4j.BtPi4j103.java`.
+
+Run this on the Raspberry Pi:
+```
+ $ sudo java -cp ./build/libs/Bluetooth-1.0-all.jar bt.pi4j.BtPi4j103 --device /dev/rfcomm0
+Let's get started
+[HEX DATA]   4C,45,44,3A,20,4F,46,46,0D,0A
+[ASCII DATA] LED: OFF
+
+[HEX DATA]   4C,45,44,3A,20,4F,4E,0D,0A
+[ASCII DATA] LED: ON
+
+[HEX DATA]   4C,45,44,3A,20,4F,46,46,0D,0A
+[ASCII DATA] LED: OFF
+
+[HEX DATA]   4C,45,44,3A,20,4F,4E,0D,0A
+[ASCII DATA] LED: ON
+
+[HEX DATA]   4C,45,44,3A,20,4F,46,46,0D,0A
+[ASCII DATA] LED: OFF
+. . .
 ```
 
 ## To check

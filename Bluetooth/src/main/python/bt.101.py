@@ -10,7 +10,7 @@ data = 0
 while True:
   print("Digital Logic --> Sending...")
   port.write(str.encode(str(data)))
-  data = 1 if data == 0 else 0
+  data = 1 if data == 0 else 0  # Flip value
   rcv = port.readline()
   if rcv:
     print(rcv)
