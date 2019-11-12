@@ -150,3 +150,4 @@ Let's get started
 - OBD Dataset <https://www.kaggle.com/vbandaru/data-from-obd-on-board-diagnostics>
 - <https://www.obdsol.com/knowledgebase/obd-software-development/reading-real-time-data/>
 - OBD Codes: <http://www.fastfieros.com/tech/diagnostic_trouble_codes_for_obdii.htm>
+- Sparkfun's [Getting Started with OBD-II](https://learn.sparkfun.com/tutorials/getting-started-with-obd-ii/all).
