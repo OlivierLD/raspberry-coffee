@@ -1,6 +1,6 @@
 Bluetooth is a pier-to-pier communication protocol based on a Serial Communication.
 
-Once two devices are **paired** with Bluetooth, the communication between them is just a regular Serial Communication, a demoed below. 
+Once two devices are **paired** with Bluetooth, the communication between them is just a regular Serial Communication, as demoed below. 
 
 See <https://medium.com/@mahesh_joshi/raspberry-pi-3-and-arduino-communication-via-bluetooth-hc-05-5d7b6f162ab3>
 
@@ -14,7 +14,7 @@ Scanning ...
 
 ### To get started
 I used an Arduino UNO with an [`HC-05` module](https://www.allelectronics.com/item/hc-05/hc-05-bluetooth-module/1.html), to act as a bluetooth device,
-and some Python code to run on the Raspberry Pi, acting as a Bluetooth client.
+and some Python (and then Java) code to run on the Raspberry Pi, acting as a Bluetooth client.
 
 The sketch running on the Arduino turns a led on or off, depending on what's read from the Bluetooth device.
 
