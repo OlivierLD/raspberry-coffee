@@ -1,4 +1,4 @@
-Bluetooth is a pier-to-pier communication protocol based on a Serial Communication.
+Bluetooth is a pier-to-pier (P2P) communication protocol based on a Serial Communication.
 
 Once two devices are **paired** with Bluetooth, the communication between them is just a regular Serial Communication, as demoed below. 
 
@@ -13,6 +13,7 @@ Scanning ...
 ```
 
 ### To get started
+#### Act 1: Arduino as Bluetooth device, Raspberry Pi as Bluetooth client
 I used an Arduino UNO with an [`HC-05` module](https://www.allelectronics.com/item/hc-05/hc-05-bluetooth-module/1.html), to act as a bluetooth device,
 and some Python (and then Java) code to run on the Raspberry Pi, acting as a Bluetooth client.
 
@@ -21,11 +22,11 @@ The sketch running on the Arduino turns a led on or off, depending on what's rea
 The Raspberry Pi will send serial data to the Bluetooth device, and we should then see the Arduino's led go on and off.
 In return, the Raspberry receives the status of the led, sent by the Arduino, through the Bluetooth device.
 
-This way, it demonstrates how the Raspberry Pi can _send_ and _receive_ Bluetooth data.   
+This way, it demonstrates how the Raspberry Pi can _send_ and _receive_ data over Bluetooth.   
 
 ![Wiring](./Arduino.HC-05_bb.png)
 
-Upload the following code on the Arduino (available in `bt.101.py`):
+Upload the following code on the Arduino:
 ```c
 /*
  * Use the LED_BUILTIN, 
@@ -47,7 +48,7 @@ void loop() {
 
   if (state == '0') {
     digitalWrite(ledPin, LOW); // Turn LED OFF
-    Serial.println("LED: OFF"); // Send back, to the phone, the String "LED: ON"
+    Serial.println("LED: OFF"); // Send back to the client, the String "LED: ON"
     state = 0;
   } else if (state == '1') {
     digitalWrite(ledPin, HIGH);
@@ -72,14 +73,14 @@ and reboot.
 With the Arduino with its `HC-05` module up and running, pair your device from the Raspberry Pi desktop (use `1234` for the code) as explained [here](https://medium.com/@mahesh_joshi/raspberry-pi-3-and-arduino-communication-via-bluetooth-hc-05-5d7b6f162ab3).
 `hcitool` command mentioned above can help.
 
-Then, run this code on the Raspberry Pi
+Then, run this code on the Raspberry Pi (available in `bt.101.py`)
 ```python
 #!/usr/bin/env python3
 import serial
 import time
 
 port = serial.Serial("/dev/rfcomm0", baudrate=9600)
- 
+
 # reading and writing data from and to arduino serially.                                      
 # rfcomm0 -> this could be different
 data = 0
@@ -96,17 +97,17 @@ Notice the port name, and the baud rate.
 
 Run it:
 ```
- $ ./bt.101.py
+$ ./bt.101.py
 ```
 You should see the led blinking every 3 seconds on the Arduino.
 
 ### From Java
 Compile and archive the code provided here:
 ```
- $ ../gradlew clean shadowJar
+$ ../gradlew clean shadowJar
 ```
 
-Seems there is a problem to fix with `javalib-rx-tx`, when trying to read `/dev/rfcomm0`:
+Seems there is a problem to fix on the Raspberry Pi, with `librxtx-java`, when trying to read `/dev/rfcomm0`:
 ```
 $ ./java.101.sh 
 Stable Library
@@ -122,11 +123,89 @@ WARNING:  RXTX Version mismatch
 Opening port /dev/rfcomm0:9600
 Port /dev/rfcomm0 not found, aborting
 ```
-The `Pi4J` approach seems to work though. See `bt.pi4j.BtPi4j103.java`.
+
+That seems to work OK on Mac though (the Serial port is - in this case - `/dev/tty.HC-05-DevB`):
+```
+$ ./java.101.sh 
+Stable Library
+=========================================
+Native lib Version = RXTX-2.2pre2
+Java lib Version   = RXTX-2.1-7
+WARNING:  RXTX Version mismatch
+	Jar version = RXTX-2.1-7
+	native lib Version = RXTX-2.2pre2
+== Serial Port List ==
+-> /dev/tty.HC-05-DevB
+-> /dev/cu.SLAB_USBtoUART
+-> /dev/tty.Bluetooth-Incoming-Port
+======================
+Opening port /dev/tty.HC-05-DevB:9600
+---------------------
+Flipping the switch  
+---------------------
+Ctrl + C to stop
+Bluetooth connected: true
+IO Streams initialized
+Writing to the serial port.
+	>>> [From Bluetooth] Received:
+		---+--------------------------------------------------+------------------
+		   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+		---+--------------------------------------------------+------------------
+		00 | 4C 45 44 3A 20 4F 4E 0D 0A                       |  LED: ON..
+		---+--------------------------------------------------+------------------
+Data written to the serial port.
+Writing to the serial port.
+	>>> [From Bluetooth] Received:
+		---+--------------------------------------------------+------------------
+		   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+		---+--------------------------------------------------+------------------
+		00 | 4C 45 44 3A 20 4F 46 46 0D 0A                    |  LED: OFF..
+		---+--------------------------------------------------+------------------
+Data written to the serial port.
+Writing to the serial port.
+	>>> [From Bluetooth] Received:
+		---+--------------------------------------------------+------------------
+		   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+		---+--------------------------------------------------+------------------
+		00 | 4C 45 44 3A 20 4F 4E 0D 0A                       |  LED: ON..
+		---+--------------------------------------------------+------------------
+Data written to the serial port.
+Writing to the serial port.
+	>>> [From Bluetooth] Received:
+		---+--------------------------------------------------+------------------
+		   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+		---+--------------------------------------------------+------------------
+		00 | 4C 45 44 3A 20 4F 46 46 0D 0A                    |  LED: OFF..
+		---+--------------------------------------------------+------------------
+
+. . .
+
+Data written to the serial port.
+Writing to the serial port.
+	>>> [From Bluetooth] Received:
+		---+--------------------------------------------------+------------------
+		   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+		---+--------------------------------------------------+------------------
+		00 | 4C 45 44 3A 20 4F 4E 0D 0A                       |  LED: ON..
+		---+--------------------------------------------------+------------------
+Data written to the serial port.
+Writing to the serial port.
+	>>> [From Bluetooth] Received:
+		---+--------------------------------------------------+------------------
+		   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+		---+--------------------------------------------------+------------------
+		00 | 4C 45 44 3A 20 4F 46 46 0D 0A                    |  LED: OFF..
+		---+--------------------------------------------------+------------------
+^C
+Exiting...
+```
+The led is indeed blinking on the Arduino.
+
+On the Raspberry Pi though, the `PI4J` approach seems to work. See `bt.pi4j.BtPi4j103.java`.
 
 Run this on the Raspberry Pi:
 ```
- $ sudo java -cp ./build/libs/Bluetooth-1.0-all.jar bt.pi4j.BtPi4j103 --device /dev/rfcomm0
+$ sudo java -cp ./build/libs/Bluetooth-1.0-all.jar bt.pi4j.BtPi4j103 --device /dev/rfcomm0
 Let's get started
 [HEX DATA]   4C,45,44,3A,20,4F,46,46,0D,0A
 [ASCII DATA] LED: OFF
@@ -144,9 +223,21 @@ Let's get started
 [ASCII DATA] LED: OFF
 . . .
 ```
+Also try to run the script `java.BT.sh`.
 
-## To check
+
+### TODO
+- Raspberry as a Bluetooth device
+    - As an OBD (see below) server?
+
+
+## On Board Diagnostic (ODB)
+ODB is used in the car industry to convey sensor dta. It runs over Bluetooth.
+We'll see here if it can be considered as a sibling of NMEA or not.
+
+#### To check
 - On OBD: <https://pypi.org/project/obd/>
+    - Github [repo](https://github.com/brendan-w/python-OBD)
 - OBD Dataset <https://www.kaggle.com/vbandaru/data-from-obd-on-board-diagnostics>
 - <https://www.obdsol.com/knowledgebase/obd-software-development/reading-real-time-data/>
 - OBD Codes: <http://www.fastfieros.com/tech/diagnostic_trouble_codes_for_obdii.htm>
