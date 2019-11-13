@@ -229,11 +229,14 @@ Also try to run the script `java.BT.sh`.
 ### TODO
 - Raspberry as a Bluetooth device
     - As an OBD (see below) server?
+    - See [this](https://ubidots.com/blog/setup-raspberry-wifi-ubidots-send-data/)
 
 
 ## On Board Diagnostic (ODB)
-ODB is used in the car industry to convey sensor dta. It runs over Bluetooth.
+ODB is used in the car industry to convey sensor data. It runs over Bluetooth.
 We'll see here if it can be considered as a sibling of NMEA or not.
+> Most cars have OBD now, even mine... Mine has a socket in which I could plug a cheap and small device like [that one](https://www.amazon.com/gp/product/B0746H9Y9Z/ref=ppx_yo_dt_b_search_asin_image?ie=UTF8&psc=1),
+> and I was able to read the data from some free app running on my phone (like [Torque Lite](https://play.google.com/store/apps/details?id=org.prowl.torquefree&hl=en_US)).
 
 #### To check
 - On OBD: <https://pypi.org/project/obd/>
