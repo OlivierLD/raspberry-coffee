@@ -14,35 +14,35 @@ import java.util.Set;
  *   Add a GPS?
  *   Add logging
  */
-public class SimpleODBReader implements SerialIOCallbacks {
+public class SimpleOBDReader implements SerialIOCallbacks {
 
 	private final static int DEFAULT_BAUDRATE = 115_200;
 
 	private final int MODE_01 = 0x0100;
-//private final int PIDS_AVAIL = 0x00;
+	private final int PIDS_AVAIL = 0x00;
 	private final int ENGINE_RPM = 0x0C;
 	private final int VEHICLE_SPEED = 0x0D;
 	private final int ACCEL_POS = 0x11;
 
 	// Change this according to your vehicle!
-	private final int  RESPONSE_PREFIX_OFFSET = 4;
+	private final int RESPONSE_PREFIX_OFFSET = 4;
 
-	private final static String obdMacAddress = "1D,A5,68988B";
-	private final static String cmdCheck = "AT";
-	private final static String cmdInit = "+INIT";
-	private final static String cmdPair = "+PAIR=";
-	private final static String cmdPairTimeout = ",10";
-	private final static String cmdPairCheck = "+FSAD=";
-	private final static String cmdConnect = "+LINK=";
-	private final static String cmdPids = "0100";
-	private final static String cmdRpm = "010C";
-	private final static String cmdSpeed = "010D";
-	private final static String cmdThrottle = "0111";
-	private final static String newLine = "\r\n";
-	private final static String btResponseOk = "OK";
-	private final static String btResponseError = "ERROR";
-	private final static String btResponseFail = "FAIL";
-	private final static String obdNoData = "NO DATA";
+	private final static String OBD_MAC_ADDRESS = "1D,A5,68988B";
+	private final static String CMD_CHECK = "AT";
+	private final static String CMD_INIT = "+INIT";
+	private final static String CMD_PAIR = "+PAIR=";
+	private final static String CMD_PAIR_TIMEOUT = ",10";
+	private final static String CMD_PAIR_CHECK = "+FSAD=";
+	private final static String CMD_CONNECT = "+LINK=";
+	private final static String CMD_PIDS = "0100";  // MODE_01 | PIDS_AVAIL
+	private final static String CMD_RPM = "010C";   // MODE_01 | ENGINE_RPM
+	private final static String CMD_SPEED = "010D"; // MODE_01 | VEHICLE_SPEED
+	private final static String CMD_THROTTLE = "0111"; // MODE_01 | ACCEL_POS
+	private final static String NEW_LINE = "\r\n";
+	private final static String BT_RESPONSE_OK = "OK";
+	private final static String BT_RESPONSE_ERROR = "ERROR";
+	private final static String BT_RESPONSE_FAIL = "FAIL";
+	private final static String OBD_NO_DATA = "NO DATA";
 
 	private int commandCount = 0;
 
@@ -63,7 +63,7 @@ public class SimpleODBReader implements SerialIOCallbacks {
 	//	System.out.println(String.format("Current Buffer > [%s]", response.toString()));
 			DumpUtil.displayDualDump(response.toString());
 		}
-		if (response.toString().endsWith("\n\r")) {
+		if (response.toString().endsWith("\n\r")) {  // Ends with LF CR, aka NEW_LINE
 			this.responseReceived = true;
 			synchronized (Thread.currentThread()) {
 				Thread.currentThread().notify();
@@ -159,7 +159,7 @@ public class SimpleODBReader implements SerialIOCallbacks {
 
 	public void connectToOBDDevice() {
 		try {
-			serialCommunicator.writeData(cmdCheck + newLine);
+			serialCommunicator.writeData(CMD_CHECK + NEW_LINE);
 			// Wait for reply
 			String reply = waitForResponse();
 			if (verbose) {
@@ -171,7 +171,7 @@ public class SimpleODBReader implements SerialIOCallbacks {
 		}
 	}
 
-	private String waitForResponse() {
+	private String waitForResponse() { // TODO Return String or byte[] ?
 
 		synchronized (Thread.currentThread()) {
 			try {
@@ -181,7 +181,7 @@ public class SimpleODBReader implements SerialIOCallbacks {
 			}
 		}
 		String resp = "";
-		// Get the response
+		// Get the response // TODO Use DumpUtil.dualDump
 		if (this.responseReceived) {
 			resp = this.response.toString();
 			this.response.delete(0, this.response.length()); // Reset
@@ -194,10 +194,11 @@ public class SimpleODBReader implements SerialIOCallbacks {
 
 	public static void main(String... args) {
 
-		SimpleODBReader obdReader = new SimpleODBReader();
-		obdReader.simulateSerial = true;
+		SimpleOBDReader obdReader = new SimpleOBDReader();
+		obdReader.simulateSerial = false;
 
-		obdReader.init("/dev/tty.Bluetooth-Incoming-Port"); // TODO A system variable
+		String bluetoothSerialPort = System.getProperty("bt.serial.port", "/dev/tty.Bluetooth-Incoming-Port");
+		obdReader.init(bluetoothSerialPort);
 		obdReader.initBluetoothComm();
 
 		obdReader.closeSerialConnection();
