@@ -136,8 +136,11 @@ WARNING:  RXTX Version mismatch
 	native lib Version = RXTX-2.2pre2
 == Serial Port List ==
 -> /dev/tty.HC-05-DevB
--> /dev/cu.SLAB_USBtoUART
 -> /dev/tty.Bluetooth-Incoming-Port
+-> /dev/tty.usbmodeme2df64a32
+-> /dev/cu.Bluetooth-Incoming-Port
+-> /dev/cu.HC-05-DevB
+-> /dev/cu.usbmodeme2df64a32
 ======================
 Opening port /dev/tty.HC-05-DevB:9600
 ---------------------

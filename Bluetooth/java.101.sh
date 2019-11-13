@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 SUDO=
-# DARWIN=`uname -a | grep Darwin`
 DARWIN=$(uname -a | grep Darwin)
 #
 CP=./build/libs/Bluetooth-1.0-all.jar

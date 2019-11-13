@@ -6,7 +6,6 @@ if [[ "$DARWIN" != "" ]]
 then
 	echo Running on Mac
   JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"  # for Mac
-  CP=${CP}:./libs/RXTXcomm.jar          # for Mac
 else
 	echo Assuming Linux/Raspberry Pi
   JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
