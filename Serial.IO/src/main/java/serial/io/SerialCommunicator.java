@@ -213,7 +213,7 @@ public class SerialCommunicator
 
 	public void writeData(byte b) throws IOException {
 		if (verbose) {
-			System.out.println("Written to serial port => character [0x" + Integer.toHexString(b) + "]");
+			System.out.println("Written to serial port => character [0x" + Integer.toHexString(b).toUpperCase() + "]");
 		}
 		try {
 			output.write(b & 0xFF);

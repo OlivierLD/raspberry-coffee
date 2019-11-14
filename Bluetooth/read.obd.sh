@@ -20,4 +20,5 @@ JAVA_OPT="$JAVA_OPTS -Dobd.verbose=true"
 JAVA_OPTS="$JAVA_OPTS -Dbt.serial.port=/dev/tty.HC-05-DevB"
 #
 COMMAND="${SUDO}java -cp $CP $JAVA_OPTS obd.SimpleOBDReader"
+echo -e "Running ${COMMAND}"
 ${COMMAND}

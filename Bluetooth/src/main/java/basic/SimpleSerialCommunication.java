@@ -1,59 +1,30 @@
-package obd;
+package basic;
 
 import gnu.io.CommPortIdentifier;
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 import utils.DumpUtil;
+import utils.StaticUtil;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
 /*
- * WIP - TODO:
- *   Add a GPS?
- *   Add logging
+ * A skeleton for further implementation.
+ * Use it for example with an Arduino and an HC-05 module, running `bluetooth.102.ino`
  */
-public class SimpleOBDReader implements SerialIOCallbacks {
+public class SimpleSerialCommunication implements SerialIOCallbacks {
 
 	private final static int DEFAULT_BAUDRATE = 115_200;
 
-	private final int MODE_01 = 0x0100;
-	private final int PIDS_AVAIL = 0x00;
-	private final int ENGINE_RPM = 0x0C;
-	private final int VEHICLE_SPEED = 0x0D;
-	private final int ACCEL_POS = 0x11;
-
-	// Change this according to your vehicle!
-	private final int RESPONSE_PREFIX_OFFSET = 4;
-
-	private final static String OBD_MAC_ADDRESS = "1D,A5,68988B";
-	private final static String CMD_CHECK = "AT";
-	private final static String CMD_INIT = "+INIT";
-	private final static String CMD_PAIR = "+PAIR=";
-	private final static String CMD_PAIR_TIMEOUT = ",10";
-	private final static String CMD_PAIR_CHECK = "+FSAD=";
-	private final static String CMD_CONNECT = "+LINK=";
-	private final static String CMD_PIDS = "0100";  // MODE_01 | PIDS_AVAIL
-	private final static String CMD_RPM = "010C";   // MODE_01 | ENGINE_RPM
-	private final static String CMD_SPEED = "010D"; // MODE_01 | VEHICLE_SPEED
-	private final static String CMD_THROTTLE = "0111"; // MODE_01 | ACCEL_POS
-	private final static String NEW_LINE = "\r\n";
-	private final static String BT_RESPONSE_OK = "OK";
-	private final static String BT_RESPONSE_ERROR = "ERROR";
-	private final static String BT_RESPONSE_FAIL = "FAIL";
-	private final static String OBD_NO_DATA = "NO DATA";
-
-	private int commandCount = 0;
-
-	private boolean nextCommandReady = false;
+	private final static String NEW_LINE = "\n";
 	private boolean responseReceived = false;
-
 	private StringBuffer response = new StringBuffer();
 
 	@Override
 	public void connected(boolean b) {
-
+		System.out.println("Connected!");
 	}
 
 	@Override
@@ -63,7 +34,7 @@ public class SimpleOBDReader implements SerialIOCallbacks {
 	//	System.out.println(String.format("Current Buffer > [%s]", response.toString()));
 			DumpUtil.displayDualDump(response.toString());
 		}
-		if (response.toString().endsWith("\n\r")) {  // Ends with LF CR, aka NEW_LINE
+		if (response.toString().endsWith(NEW_LINE)) {
 			this.responseReceived = true;
 			synchronized (Thread.currentThread()) {
 				Thread.currentThread().notify();
@@ -76,15 +47,7 @@ public class SimpleOBDReader implements SerialIOCallbacks {
 		System.out.println(String.format("onSerialData-2 [%s]", new String(ba)));
 	}
 
-	public static class OBDHolder {
-		short RPM;
-		byte speed;
-		byte throttle;
-	}
-
-	private OBDHolder currentObdReading = new OBDHolder();
-
-	private static boolean verbose = "true".equals(System.getProperty("obd.verbose"));
+	private static boolean verbose = "true".equals(System.getProperty("bt.verbose"));
 
 	private static SerialCommunicator serialCommunicator = null;
 	private boolean simulateSerial = false;
@@ -149,27 +112,30 @@ public class SimpleOBDReader implements SerialIOCallbacks {
 	}
 
 	public void initBluetoothComm() {
-		this.nextCommandReady = true;
-		this.currentObdReading.RPM = -1;
-		this.currentObdReading.speed = -1;
-		this.currentObdReading.throttle = -1;
-
-		this.connectToOBDDevice();
+		this.serialDialog();
 	}
 
-	public void connectToOBDDevice() {
-		try {
-			String dataToWrite = CMD_CHECK + NEW_LINE;
-			System.out.println(String.format("Writing: %s", dataToWrite));
-			serialCommunicator.writeData(dataToWrite.getBytes());
-			// Wait for reply
-			String reply = waitForResponse();
-			if (verbose) {
-				System.out.println(String.format(">> Received [%s]", reply));
+	public void serialDialog() {
+		boolean keepLooping = true;
+		while (keepLooping) {
+			try {
+				String userInput = StaticUtil.userInput("(Q to quit) > ");
+				if ("Q".equalsIgnoreCase(userInput)) {
+					keepLooping = false;
+				} else {
+					String dataToWrite = userInput + NEW_LINE;
+					System.out.println(String.format("Writing: %s", dataToWrite));
+					serialCommunicator.writeData(dataToWrite.getBytes());
+					// Wait for reply
+					String reply = waitForResponse();
+					if (verbose) {
+						System.out.println(String.format(">> Received [%s]", reply));
+						DumpUtil.displayDualDump(reply);
+					}
+				}
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
 			}
-
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
 		}
 	}
 
@@ -183,7 +149,7 @@ public class SimpleOBDReader implements SerialIOCallbacks {
 			}
 		}
 		String resp = "";
-		// Get the response // TODO Use DumpUtil.dualDump
+		// Get the response
 		if (this.responseReceived) {
 			resp = this.response.toString();
 			this.response.delete(0, this.response.length()); // Reset
@@ -196,18 +162,25 @@ public class SimpleOBDReader implements SerialIOCallbacks {
 
 	public static void main(String... args) {
 
-		SimpleOBDReader obdReader = new SimpleOBDReader();
-		obdReader.simulateSerial = false;
+		SimpleSerialCommunication simpleSerialCommunication = new SimpleSerialCommunication();
+		simpleSerialCommunication.simulateSerial = "true".equals(System.getProperty("serial.simulate"));
 
 		String bluetoothSerialPort = System.getProperty("bt.serial.port", "/dev/tty.Bluetooth-Incoming-Port");
+		int bluetoothSerialPortBaudRate = Integer.parseInt(System.getProperty("bt.serial.baud.rate", String.valueOf(DEFAULT_BAUDRATE)));
 		if (verbose) {
-			System.out.println(String.format("Opening %s:%d", bluetoothSerialPort, bluetoothSerialPort));
+			System.out.println(String.format("Opening %s:%d", bluetoothSerialPort, bluetoothSerialPortBaudRate));
 		}
 
-		obdReader.init(bluetoothSerialPort);
-		obdReader.initBluetoothComm();
-		System.out.println("Closing connection");
-		obdReader.closeSerialConnection();
+		simpleSerialCommunication.init(bluetoothSerialPort, bluetoothSerialPortBaudRate);
+
+		simpleSerialCommunication.initBluetoothComm();
+
+		System.out.println("Closing connection.");
+		simpleSerialCommunication.closeSerialConnection();
 		System.out.println("Bye!");
+		synchronized (Thread.currentThread()) {
+			Thread.currentThread().notify();
+		}
+		System.exit(0);
 	}
 }

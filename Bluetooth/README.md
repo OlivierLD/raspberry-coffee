@@ -26,7 +26,7 @@ This way, it demonstrates how the Raspberry Pi can _send_ and _receive_ data ove
 
 ![Wiring](./Arduino.HC-05_bb.png)
 
-Upload the following code on the Arduino:
+Upload the following code on the Arduino (available in `src/main/arduino/bluetooth.101`):
 ```c
 /*
  * Use the LED_BUILTIN, 
@@ -38,7 +38,7 @@ int state = 0; // This is the character code.
 void setup() {
   pinMode(ledPin, OUTPUT);
   digitalWrite(ledPin, LOW);
-  Serial.begin(9600); // 38400); // Default communication rate of the Bluetooth module
+  Serial.begin(9600);  // Default communication rate of the Bluetooth module
 }
 
 void loop() {
