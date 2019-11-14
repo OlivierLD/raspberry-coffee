@@ -16,9 +16,9 @@ else
   SUDO="sudo "
 fi
 #
-JAVA_OPTS="$JAVA_OPTS -Dbt.verbose=false"
+JAVA_OPTS="$JAVA_OPTS -Dbt.verbose=true"
 JAVA_OPTS="$JAVA_OPTS -Dserial.simulate=false"
-JAVA_OPTS="$JAVA_OPTS -Dbt.serial.baud.rate=9600"
+JAVA_OPTS="$JAVA_OPTS -Dbt.serial.baud.rate=38400"
 ############################
 # For Raspberry Pi
 # JAVA_OPTS="$JAVA_OPTS -Dserial.port=/dev/ttyS0"

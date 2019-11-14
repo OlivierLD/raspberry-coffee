@@ -18,7 +18,7 @@ public class SimpleSerialCommunication implements SerialIOCallbacks {
 
 	private final static int DEFAULT_BAUDRATE = 115_200;
 
-	private final static String NEW_LINE = "\n";
+	private final static String NEW_LINE = "\r\n"; // \n = 0xA, \r = 0xD
 	private boolean responseReceived = false;
 	private StringBuffer response = new StringBuffer();
 
@@ -124,9 +124,17 @@ public class SimpleSerialCommunication implements SerialIOCallbacks {
 					keepLooping = false;
 				} else {
 					String dataToWrite = userInput + NEW_LINE;
-					System.out.println(String.format("Writing: %s", dataToWrite));
+					if (verbose) {
+						//	System.out.println(String.format("Current Buffer > [%s]", response.toString()));
+						DumpUtil.displayDualDump(dataToWrite);
+					} else {
+						System.out.println(String.format("Writing: %s", userInput));
+					}
 					serialCommunicator.writeData(dataToWrite.getBytes());
 					// Wait for reply
+					if (verbose) {
+						System.out.println("Waiting for reply...");
+					}
 					String reply = waitForResponse();
 					if (verbose) {
 						System.out.println(String.format(">> Received [%s]", reply));
