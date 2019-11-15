@@ -1,4 +1,6 @@
-Three is a cool on-line Arduino (and others) simulator on [Tinkercad](http://www.tinkercad.com).
+Arduino language reference [here](https://www.arduino.cc/reference/en/).
+
+There is a cool on-line Arduino (and others) simulator on [Tinkercad](http://www.tinkercad.com).
 
 - Log in using a gmail account.
 - Choose "Circuits"
