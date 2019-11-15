@@ -121,7 +121,7 @@ public class SimpleSerialPI4JCommunication {
 			System.out.println("Out of the loop");
 			serial.close();
 			System.out.println("Serial is closed, bye!");
-
+			System.exit(0);
 		} catch (IOException ex) {
 			System.out.println(" => Argh! : " + ex.getMessage());
 			return;
@@ -131,6 +131,8 @@ public class SimpleSerialPI4JCommunication {
 			}
 			t.printStackTrace();
 			return;
+		} finally {
+			System.out.println("Bam.");
 		}
 	}
 }

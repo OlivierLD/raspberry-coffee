@@ -8,7 +8,7 @@ Can be used
 **Designed to be as tiny and small as possible**, to run on small boards (like the Raspberry Pi Zero).
 
 - No security (SSL) available. 
-- ~~_Not even multi-threaded_~~. Nov 2019: Multi-threaded
+- ~~_Not even multi-threaded_~~. Nov 2019: Now multi-threaded
 - Not compliant with any coding standard, like JAX-RS, MicroProfile, JEE, etc
 
 > May 2019: The archive containing the core classes is just above _**2M**_ big. Compare it to micro servers like Helidon or SpringBoot...
