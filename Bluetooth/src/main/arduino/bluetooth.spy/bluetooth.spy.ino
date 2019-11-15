@@ -1,27 +1,27 @@
 /*
- * Use the LED_BUILTIN,
+ * Use the LED_BUILTIN, 
  * no resistor needed, no extra led.
- *
+ * 
  * Two serial ports.
  * - One for BT
  * - One for the Serial Monitor
- *
- * Default Serial uses something equivalent to SoftwareSerial(0, 1);
+ * 
+ * Default Serial uses something equivalent to SoftwareSerial(0, 1); 
  * Here, we use SoftwareSerial(0, 1) for the Serial monitor,
- * and SoftwareSerial(2, 3) for Bluetooth. Make sure it is wired correctly.
+ * and SoftwareSerial(2, 3) for Bluetooth.
  */
 
 #include <SoftwareSerial.h>
 
 #define CONSOLE_BR 9600
 #define BT_BR    115200
-
+ 
 #define ledPin LED_BUILTIN
-int state = 0; // This is the character code.
+int state = 0; // This is the character code. 
 
 #define rxPin 2
 #define txPin 3
-SoftwareSerial btSerial = SoftwareSerial(rxPin, txPin);
+SoftwareSerial btSerial = SoftwareSerial(rxPin, txPin); 
 
 void setup() {
   pinMode(ledPin, OUTPUT);
@@ -36,15 +36,15 @@ void loop() {
 
   boolean gotSome = false;
   int nb = 0;
-  while (btSerial.available() > 0) { // Checks whether data is coming from the serial port
-    state = btSerial.read();         // Reads the data from the serial port
+  while (btSerial.available() > 0) { // Checks whether data is comming from the serial port
+    state = btSerial.read(); // Reads the data from the serial port
     if (DEBUG) {
       gotSome = true;
       if (nb == 0) {
         Serial.print("Received (HEX): ");
       }
       nb += 1;
-//      Serial.print("("); Serial.print(nb); Serial.print(") ");
+//      Serial.print("("); Serial.print(nb); Serial.print(") "); 
       Serial.print(state, HEX); Serial.print(" ");
     }
   }

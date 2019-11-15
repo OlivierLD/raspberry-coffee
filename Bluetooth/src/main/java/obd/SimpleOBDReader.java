@@ -63,7 +63,7 @@ public class SimpleOBDReader implements SerialIOCallbacks {
 	//	System.out.println(String.format("Current Buffer > [%s]", response.toString()));
 			DumpUtil.displayDualDump(response.toString());
 		}
-		if (response.toString().endsWith("\n\r")) {  // Ends with LF CR, aka NEW_LINE
+		if (response.toString().endsWith(NEW_LINE)) {  // Ends with CR LF, aka NEW_LINE
 			this.responseReceived = true;
 			synchronized (Thread.currentThread()) {
 				Thread.currentThread().notify();
@@ -94,6 +94,8 @@ public class SimpleOBDReader implements SerialIOCallbacks {
 	}
 
 	public void init(String port, int br) {
+		assert port != null;
+
 		if (!simulateSerial) {
 			serialCommunicator = new SerialCommunicator(this);
 		} else {
@@ -165,7 +167,8 @@ public class SimpleOBDReader implements SerialIOCallbacks {
 			// Wait for reply
 			String reply = waitForResponse();
 			if (verbose) {
-				System.out.println(String.format(">> Received [%s]", reply));
+//				System.out.println(String.format(">> Received [%s]", reply));
+				DumpUtil.displayDualDump(reply);
 			}
 
 		} catch (IOException ioe) {
@@ -183,7 +186,7 @@ public class SimpleOBDReader implements SerialIOCallbacks {
 			}
 		}
 		String resp = "";
-		// Get the response // TODO Use DumpUtil.dualDump
+		// Get the response
 		if (this.responseReceived) {
 			resp = this.response.toString();
 			this.response.delete(0, this.response.length()); // Reset

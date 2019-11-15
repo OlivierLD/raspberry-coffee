@@ -9,4 +9,6 @@ There is a cool on-line Arduino (and others) simulator on [Tinkercad](http://www
 - Drag a "Arduino Uno R3" on the empty center pane
 - Click the "Code" button in the toolbar (on the right)
 
-...And you're good to go! You even have a cool Blockly option.
+...And you're good to go! You even have a cool [Blockly](https://developers.google.com/blockly) option.
+
+---
