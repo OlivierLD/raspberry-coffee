@@ -69,7 +69,6 @@ public class BtPi4j {
 					.stopBits(StopBits._1)
 					.flowControl(FlowControl.NONE);
 
-			// display connection details
 			System.out.println("Let's get started");
 
 			// open the default serial device/port with the configuration settings

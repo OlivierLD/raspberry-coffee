@@ -75,7 +75,6 @@ public class SimpleSerialPI4JCommunication {
 					.stopBits(StopBits._1)
 					.flowControl(FlowControl.NONE);
 
-			// display connection details
 			System.out.println("Let's get started");
 
 			// open the default serial device/port with the configuration settings
@@ -91,24 +90,23 @@ public class SimpleSerialPI4JCommunication {
 			while (keepLooping.get()) {
 
 				try {
-					String userInput = StaticUtil.userInput("(Q to quit) > ");
+					String userInput = StaticUtil.userInput("(Q to quit) > "); // Blocking input
 					if ("Q".equalsIgnoreCase(userInput)) {
 						System.out.println("Exiting...");
 						keepLooping.set(false);
 					} else {
 						String dataToWrite = userInput + "\r\n";
 						if (verbose) {
-							//	System.out.println(String.format("Current Buffer > [%s]", response.toString()));
 							DumpUtil.displayDualDump(dataToWrite);
 						} else {
 							System.out.println(String.format("Writing: %s", userInput));
 						}
-						serial.write(dataToWrite);
+						serial.write(dataToWrite); // <--
 						// Wait for reply
 						if (verbose) {
 							System.out.println("Waiting for reply...");
 						}
-						if (false) {
+						if (false) { // TODO Implement a waitForResponse in the listener
 							String reply = ""; // waitForResponse();
 							if (verbose) {
 								System.out.println(String.format(">> Received [%s]", reply));
@@ -122,6 +120,7 @@ public class SimpleSerialPI4JCommunication {
 			}
 			System.out.println("Out of the loop");
 			serial.close();
+			System.out.println("Serial is closed, bye!");
 
 		} catch (IOException ex) {
 			System.out.println(" => Argh! : " + ex.getMessage());
