@@ -506,6 +506,317 @@ public class HTTPServer {
 		this(port, requestManager, new Properties(), startImmediately);
 	}
 
+	private class RequestHandler extends Thread {
+		private Socket client;
+
+		public RequestHandler(Socket socket) {
+			this.client = socket;
+			if (verbose) {
+				System.out.println("Starting new RequestHandler thread");
+			}
+		}
+
+		public void run() {
+			boolean okToStop = false;
+			if (verbose) {
+				System.out.println("\tRequestHandler thread running");
+			}
+			try {
+				InputStreamReader in = new InputStreamReader(client.getInputStream());
+				OutputStream out = client.getOutputStream();
+				Request request = null;
+				String line = "";
+				boolean top = true;
+				Map<String, String> headers = new HashMap<>();
+//					while ((line = in.readLine()) != null)
+				int read = 0;
+				boolean cr = false, lf = false;
+				boolean lineAvailable = false;
+				boolean inPayload = false;
+				StringBuffer sb = new StringBuffer();
+				boolean keepReading = true;
+//					System.out.println(">>> Top of the Loop <<<");
+				if (verbose) {
+					HTTPContext.getInstance().getLogger().info(">>> HTTP: Top of the loop <<<");
+				}
+				while (keepReading) {
+					if (top) { // Ugly!! Argh! :( I know. Will improve.
+						try {
+							Thread.sleep(100L);
+						} catch (InterruptedException ie) {
+							Thread.currentThread().interrupt();
+						}
+						top = false;
+					}
+					try {
+						if (in.ready()) {
+							read = in.read();
+						} else {
+							if (verbose) {
+								HTTPContext.getInstance().getLogger().info(">>> End of InputStream <<<");
+							}
+							read = -1;
+						}
+					} catch (IOException ioe) {
+						read = -1;
+					}
+					if (read == -1) {
+						keepReading = false;
+					} else {
+						if (!inPayload) {
+							sb.append((char) read);
+							if (!cr && read == '\r') {
+								cr = true;
+							}
+							if (!lf && read == '\n') {
+								lf = true;
+							}
+							if (cr && lf) {
+								line = sb.toString().trim(); // trim removes CR & LF
+								sb = new StringBuffer();
+								lineAvailable = true;
+								cr = lf = false;
+							}
+						} else {
+							sb.append((char) read);
+						}
+						// Super-DEBUG
+//								System.out.println("======================");
+//								DumpUtil.displayDualDump(sb.toString());
+//								System.out.println("======================");
+						if (!inPayload) {
+							if (lineAvailable) {
+								if (verboseDump) {
+//							      System.out.println("HTTP Request line : " + line);
+									DumpUtil.displayDualDump(line);
+									System.out.println(); // Blank between lines
+								}
+								if (verbose) {
+									System.out.println(line);
+								}
+								if (request != null && line.length() == 0) {
+									// Payload begins
+									inPayload = true;
+									request.setHeaders(headers);
+								}
+								if (request == null && line.contains(" ")) {
+									String firstWord = line.substring(0, line.indexOf(" "));
+									if (Request.VERBS.contains(firstWord)) { // Start Line
+										String[] requestElements = line.split(" ");
+										request = new Request(requestElements[0], requestElements[1], requestElements[2]);
+										if (verbose) {
+											HTTPContext.getInstance().getLogger().info(">>> New request: " + line + " <<<");
+										}
+									}
+								}
+								if (request != null && !inPayload) {
+									if (line.contains(":")) { // Header?
+										if (line.indexOf(" ") > 0 && line.indexOf(" ") < line.indexOf(":")) { // TODO: Not start with Verb
+											// Not a GET http://machine HTTP/1.1	, with the protocol in the request
+										} else {
+											String headerKey = line.substring(0, line.indexOf(":"));
+											String headerValue = line.substring(line.indexOf(":") + 1);
+											headers.put(headerKey, headerValue);
+										}
+									}
+								}
+							}
+							lineAvailable = false;
+						}
+					}
+				}
+				String payload = sb.toString();
+				if (payload != null && request != null) {
+					request.setContent(payload.getBytes());
+				}
+				if (verbose) {
+					HTTPContext.getInstance().getLogger().info(">>> End of HTTP Request <<<");
+				}
+				if (request != null) {
+					String path = request.getPath();
+					if (request.getQueryStringParameters() != null && request.getQueryStringParameters().keySet().contains("verbose")) {
+						String verb = request.getQueryStringParameters().get("verbose");
+						verbose = (verb == null || verb.toUpperCase().equals("YES") || verb.toUpperCase().equals("TRUE") || verb.toUpperCase().equals("ON"));
+					}
+					if ("/exit".equals(path)) {
+						System.out.println("Received an exit signal (path)");
+						Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+						String content = "Exiting";
+						RESTProcessorUtil.generateResponseHeaders(response, "text/html", content.length());
+						response.setPayload(content.getBytes());
+						sendResponse(response, out);
+						okToStop = true;
+					} else if ("/test".equals(path)) {
+						Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+						String content = "Test is OK";
+						if (request.getContent() != null && request.getContent().length > 0) {
+							content += String.format("\nYour payload was [%s]", new String(request.getContent()));
+						}
+						RESTProcessorUtil.generateResponseHeaders(response, "text/html", content.length());
+						response.setPayload(content.getBytes());
+						sendResponse(response, out);
+					} else if (pathIsZipStatic(path)) { // Static content, in an archive. See "static.zip.docs" property. Defaulted to "/zip/"
+						// What zip file should we look into? Assume web.zip, unless -Dweb.archive is set.
+						// url will be like /zip/index.html, where ./index.html is the path in the archive.
+
+						Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+						String fName = path;
+						if (fName.contains("?")) {
+							fName = fName.substring(0, fName.indexOf("?"));
+						}
+						String zipPath = zipPath(fName);
+						if (zipPath != null) {
+							fName = fName.substring(zipPath.length());
+
+							String webArchive = System.getProperty("web.archive", "web.zip"); // TODO Make sure it is a zip archive
+							if (verbose) {
+								System.out.println(String.format("%s => reading %s in %s", zipPath, fName, webArchive));
+							}
+
+							InputStream is = getZipInputStream(webArchive, fName);
+							if (is != null) {
+								ByteArrayOutputStream baos = new ByteArrayOutputStream();
+								StaticUtil.copy(is, baos);
+								baos.close();
+								byte[] content = baos.toByteArray();
+								RESTProcessorUtil.generateResponseHeaders(response, getContentType(path), content.length);
+								response.setPayload(content);
+
+							} else {
+								response = new Response(request.getProtocol(), Response.NOT_FOUND);
+								response.setPayload(String.format("File [%s] not found in %s.", fName, "web.zip").getBytes());
+							}
+						} else {
+							response = new Response(request.getProtocol(), Response.NOT_FOUND);
+							response.setPayload(String.format("ZipPath not found for %s .", fName).getBytes());
+						}
+						sendResponse(response, out);
+					} else if (pathIsStatic(path)) { // Static content, on the file system. See "static.docs" property. Defaulted to "/web/"
+						Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+						String fName = path;
+						if (fName.contains("?")) {
+							fName = fName.substring(0, fName.indexOf("?"));
+						}
+						File f = new File("." + fName);
+
+						if ((!f.exists() || f.isDirectory()) && fName.endsWith("/")) { // try index.html
+							fName += DEFAULT_RESOURCE;
+							path += DEFAULT_RESOURCE; // Will be used for Content-Type
+							f = new File("." + fName);
+						}
+
+						if (!f.exists()) {
+							response = new Response(request.getProtocol(), Response.NOT_FOUND);
+							response.setPayload(String.format("File [%s] not found (%s).", fName, f.getAbsolutePath()).getBytes());
+						} else {
+							ByteArrayOutputStream baos = new ByteArrayOutputStream();
+							Files.copy(f.toPath(), baos);
+							baos.close();
+							byte[] content = baos.toByteArray();
+							RESTProcessorUtil.generateResponseHeaders(response, getContentType(path), content.length);
+							response.setPayload(content);
+						}
+						sendResponse(response, out);
+					} else {
+						if (requestManagers != null && requestManagers.size() > 0) {  // Manage it as a REST Request
+							boolean unManagedRequest = true;
+							synchronized (requestManagers) {
+								try {
+									final Request _request = request;
+									Optional<RESTRequestManager> restRequestManager;
+									synchronized (requestManagers) {
+										restRequestManager = requestManagers.stream()
+												.filter(rm -> rm.containsOp(_request.getVerb(), _request.getPath()))
+												.findFirst();
+									}
+									if (restRequestManager.isPresent()) {
+										unManagedRequest = false;
+										Response response = restRequestManager.get().onRequest(request); // REST Request, most likely.
+										try {
+											sendResponse(response, out);
+										} catch (Exception err) {
+											System.err.println("+-----------------------------------------------");
+											System.err.println(String.format("| Caught error sending back response:\n%s", response.toString()));
+											System.err.println("+-----------------------------------------------");
+											err.printStackTrace();
+										}
+									}
+									// Old implementation
+//											for (RESTRequestManager reqMgr : requestManagers) { // Loop on requestManagers
+//												synchronized (reqMgr) {
+//													try {
+//														Response response = reqMgr.onRequest(request); // REST Request, most likely.
+//														sendResponse(response, out);
+////								          System.out.println(">> Returned REST response.");
+//														unManagedRequest = false; // Found it.
+//														break;
+//													} catch (UnsupportedOperationException usoe) { // No such operation available, probably no the right RequestManager
+//														// Absorb
+//													} catch (Exception ex) {
+//														System.err.println("Ooch");
+//														ex.printStackTrace();
+//													}
+//												}
+//											}
+								} catch (Exception ooch) {
+									// Keep going
+									ooch.printStackTrace();
+								}
+							}
+							if (unManagedRequest) {
+								Response response = new Response(request.getProtocol(), Response.NOT_IMPLEMENTED);
+								sendResponse(response, out);
+							}
+						} else {
+							if (verbose) {
+								HTTPContext.getInstance().getLogger().info(">>> REST Request and no RequestManager. Proxy? <<<");
+							}
+							// explicit 'proxy' implementation
+							if (proxyFunction != null) {
+								// In a Thread, not to block
+								final Request req = request;
+								Thread proxyThread = new Thread(() -> {
+									try {
+										Response response = proxyFunction.apply(req);
+										sendResponse(response, out); // Back to caller
+									} catch (Exception ex) {
+										ex.printStackTrace();
+									}
+								});
+								proxyThread.start();
+							}
+						}
+					}
+				} else { // Specific. Is that a GPSd request?
+					if (payload != null && payload.length() > 0 && payload.startsWith("?WATCH=")) { // GPSd ?  ?WATCH={...}; ?POLL; ?DEVICE;
+						System.out.println(String.format(">>>>>>>> GPSd: [%s]", payload)); // This is the first embryo of a GPSd implementation...
+						String json = payload.substring("?WATCH=".length());
+						String responsePayload = "{\"class\":\"SKY\",\"device\":\"/dev/pts/1\",\"time\":\"2005-07-08T11:28:07.114Z\",\"xdop\":1.55,\"hdop\":1.24,\"pdop\":1.99,\"satellites\":[{\"PRN\":23,\"el\":6,\"az\":84,\"ss\":0,\"used\":false},{\"PRN\":28,\"el\":7,\"az\":160,\"ss\":0,\"used\":false},{\"PRN\":8,\"el\":66,\"az\":189,\"ss\":44,\"used\":true},{\"PRN\":29,\"el\":13,\"az\":273,\"ss\":0,\"used\":false},{\"PRN\":10,\"el\":51,\"az\":304,\"ss\":29,\"used\":true},{\"PRN\":4,\"el\":15,\"az\":199,\"ss\":36,\"used\":true},{\"PRN\":2,\"el\":34,\"az\":241,\"ss\":43,\"used\":true},{\"PRN\":27,\"el\":71,\"az\":76,\"ss\":43,\"used\":true}]}" + "\n";
+						out.write(responsePayload.getBytes());
+						out.flush();
+					} else if (line != null && line.length() != 0) {
+						HTTPContext.getInstance().getLogger().warning(">>>>>>>>>> What?"); // TODO See when/why this happens...
+						HTTPContext.getInstance().getLogger().warning(">>>>>>>>>> Last line was [" + line + "]");
+						HTTPContext.getInstance().getLogger().warning(String.format(">>>>>>>>>> line: %s, in payload: %s, request %s", lineAvailable, inPayload, request));
+					}
+				}
+				out.flush();
+				out.close();
+				in.close();
+				client.close();
+				if (okToStop) {
+					stopRunning();
+				}
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			if (verbose) {
+				System.out.println("\tRequestHandler, end of thread");
+			}
+		}
+	}
 	/**
 	 *
 	 * @param port
@@ -561,7 +872,6 @@ public class HTTPServer {
 		httpListenerThread = new Thread("HTTPListener") {
 			public void run() {
 				try {
-					boolean okToStop = false;
 					ServerSocket ss = null;
 					boolean keepTrying = true;
 					while (keepTrying) {
@@ -595,292 +905,8 @@ public class HTTPServer {
 					}
 					System.out.println(String.format("%s - %s now accepting requests", NumberFormat.getInstance().format(System.currentTimeMillis()), httpServerInstance.getClass().getName()));
 					while (isRunning()) {
-						Socket client = ss.accept(); // Blocking read
-						InputStreamReader in = new InputStreamReader(client.getInputStream());
-						OutputStream out = client.getOutputStream();
-						Request request = null;
-						String line = "";
-						boolean top = true;
-						Map<String, String> headers = new HashMap<>();
-//					while ((line = in.readLine()) != null)
-						int read = 0;
-						boolean cr = false, lf = false;
-						boolean lineAvailable = false;
-						boolean inPayload = false;
-						StringBuffer sb = new StringBuffer();
-						boolean keepReading = true;
-//					System.out.println(">>> Top of the Loop <<<");
-						if (verbose) {
-							HTTPContext.getInstance().getLogger().info(">>> HTTP: Top of the loop <<<");
-						}
-						while (keepReading) {
-							if (top) { // Ugly!! Argh! :( I know. Will improve.
-								try {
-									Thread.sleep(100L);
-								} catch (InterruptedException ie) {
-									Thread.currentThread().interrupt();
-								}
-								top = false;
-							}
-							try {
-								if (in.ready()) {
-									read = in.read();
-								} else {
-									if (verbose) {
-										HTTPContext.getInstance().getLogger().info(">>> End of InputStream <<<");
-									}
-									read = -1;
-								}
-							} catch (IOException ioe) {
-								read = -1;
-							}
-							if (read == -1) {
-								keepReading = false;
-							} else {
-								if (!inPayload) {
-									sb.append((char) read);
-									if (!cr && read == '\r') {
-										cr = true;
-									}
-									if (!lf && read == '\n') {
-										lf = true;
-									}
-									if (cr && lf) {
-										line = sb.toString().trim(); // trim removes CR & LF
-										sb = new StringBuffer();
-										lineAvailable = true;
-										cr = lf = false;
-									}
-								} else {
-									sb.append((char) read);
-								}
-								// Super-DEBUG
-//								System.out.println("======================");
-//								DumpUtil.displayDualDump(sb.toString());
-//								System.out.println("======================");
-								if (!inPayload) {
-									if (lineAvailable) {
-										if (verboseDump) {
-//							      System.out.println("HTTP Request line : " + line);
-											DumpUtil.displayDualDump(line);
-											System.out.println(); // Blank between lines
-										}
-										if (verbose) {
-											System.out.println(line);
-										}
-										if (request != null && line.length() == 0) {
-											// Payload begins
-											inPayload = true;
-											request.setHeaders(headers);
-										}
-										if (request == null && line.contains(" ")) {
-											String firstWord = line.substring(0, line.indexOf(" "));
-											if (Request.VERBS.contains(firstWord)) { // Start Line
-												String[] requestElements = line.split(" ");
-												request = new Request(requestElements[0], requestElements[1], requestElements[2]);
-												if (verbose) {
-													HTTPContext.getInstance().getLogger().info(">>> New request: " + line + " <<<");
-												}
-											}
-										}
-										if (request != null && !inPayload) {
-											if (line.contains(":")) { // Header?
-												if (line.indexOf(" ") > 0 && line.indexOf(" ") < line.indexOf(":") ) { // TODO: Not start with Verb
-													// Not a GET http://machine HTTP/1.1	, with the protocol in the request
-												} else {
-													String headerKey = line.substring(0, line.indexOf(":"));
-													String headerValue = line.substring(line.indexOf(":") + 1);
-													headers.put(headerKey, headerValue);
-												}
-											}
-										}
-									}
-									lineAvailable = false;
-								}
-							}
-						}
-						String payload = sb.toString();
-						if (payload != null && request != null) {
-							request.setContent(payload.getBytes());
-						}
-						if (verbose) {
-							HTTPContext.getInstance().getLogger().info(">>> End of HTTP Request <<<");
-						}
-						if (request != null) {
-							String path = request.getPath();
-							if (request.getQueryStringParameters() != null && request.getQueryStringParameters().keySet().contains("verbose")) {
-								String verb = request.getQueryStringParameters().get("verbose");
-								verbose = (verb == null || verb.toUpperCase().equals("YES") || verb.toUpperCase().equals("TRUE") || verb.toUpperCase().equals("ON"));
-							}
-							if ("/exit".equals(path)) {
-								System.out.println("Received an exit signal (path)");
-								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-								String content = "Exiting";
-								RESTProcessorUtil.generateResponseHeaders(response, "text/html", content.length());
-								response.setPayload(content.getBytes());
-								sendResponse(response, out);
-								okToStop = true;
-							} else if ("/test".equals(path)) {
-								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-								String content = "Test is OK";
-								if (request.getContent() != null && request.getContent().length > 0) {
-									content += String.format("\nYour payload was [%s]", new String(request.getContent()));
-								}
-								RESTProcessorUtil.generateResponseHeaders(response, "text/html", content.length());
-								response.setPayload(content.getBytes());
-								sendResponse(response, out);
-							} else if (pathIsZipStatic(path)) { // Static content, in an archive. See "static.zip.docs" property. Defaulted to "/zip/"
-								// What zip file should we look into? Assume web.zip, unless -Dweb.archive is set.
-								// url will be like /zip/index.html, where ./index.html is the path in the archive.
-
-								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-								String fName = path;
-								if (fName.contains("?")) {
-									fName = fName.substring(0, fName.indexOf("?"));
-								}
-								String zipPath = zipPath(fName);
-								if (zipPath != null) {
-									fName = fName.substring(zipPath.length());
-
-									String webArchive = System.getProperty("web.archive", "web.zip"); // TODO Make sure it is a zip archive
-									if (verbose) {
-										System.out.println(String.format("%s => reading %s in %s", zipPath, fName, webArchive));
-									}
-
-									InputStream is = getZipInputStream(webArchive, fName);
-									if (is != null) {
-										ByteArrayOutputStream baos = new ByteArrayOutputStream();
-										StaticUtil.copy(is, baos);
-										baos.close();
-										byte[] content = baos.toByteArray();
-										RESTProcessorUtil.generateResponseHeaders(response, getContentType(path), content.length);
-										response.setPayload(content);
-
-									} else {
-										response = new Response(request.getProtocol(), Response.NOT_FOUND);
-										response.setPayload(String.format("File [%s] not found in %s.", fName, "web.zip").getBytes());
-									}
-								} else {
-									response = new Response(request.getProtocol(), Response.NOT_FOUND);
-									response.setPayload(String.format("ZipPath not found for %s .", fName).getBytes());
-								}
-								sendResponse(response, out);
-							} else if (pathIsStatic(path)) { // Static content, on the file system. See "static.docs" property. Defaulted to "/web/"
-								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-								String fName = path;
-								if (fName.contains("?")) {
-									fName = fName.substring(0, fName.indexOf("?"));
-								}
-								File f = new File("." + fName);
-
-								if ((!f.exists() || f.isDirectory()) && fName.endsWith("/")) { // try index.html
-									fName += DEFAULT_RESOURCE;
-									path  += DEFAULT_RESOURCE; // Will be used for Content-Type
-									f = new File("." + fName);
-								}
-
-								if (!f.exists()) {
-									response = new Response(request.getProtocol(), Response.NOT_FOUND);
-									response.setPayload(String.format("File [%s] not found (%s).", fName, f.getAbsolutePath()).getBytes());
-								} else {
-									ByteArrayOutputStream baos = new ByteArrayOutputStream();
-									Files.copy(f.toPath(), baos);
-									baos.close();
-									byte[] content = baos.toByteArray();
-									RESTProcessorUtil.generateResponseHeaders(response, getContentType(path), content.length);
-									response.setPayload(content);
-								}
-								sendResponse(response, out);
-							} else {
-								if (requestManagers != null && requestManagers.size() > 0) {  // Manage it as a REST Request
-									boolean unManagedRequest = true;
-									synchronized (requestManagers) {
-										try {
-											final Request _request = request;
-											Optional<RESTRequestManager> restRequestManager;
-											synchronized (requestManagers) {
-												restRequestManager = requestManagers.stream()
-														.filter(rm -> rm.containsOp(_request.getVerb(), _request.getPath()))
-														.findFirst();
-											}
-											if (restRequestManager.isPresent()) {
-												unManagedRequest = false;
-												Response response = restRequestManager.get().onRequest(request); // REST Request, most likely.
-												try {
-													sendResponse(response, out);
-												} catch (Exception err) {
-													System.err.println("+-----------------------------------------------");
-													System.err.println(String.format("| Caught error sending back response:\n%s", response.toString()));
-													System.err.println("+-----------------------------------------------");
-													err.printStackTrace();
-												}
-											}
-											// Old implementation
-//											for (RESTRequestManager reqMgr : requestManagers) { // Loop on requestManagers
-//												synchronized (reqMgr) {
-//													try {
-//														Response response = reqMgr.onRequest(request); // REST Request, most likely.
-//														sendResponse(response, out);
-////								          System.out.println(">> Returned REST response.");
-//														unManagedRequest = false; // Found it.
-//														break;
-//													} catch (UnsupportedOperationException usoe) { // No such operation available, probably no the right RequestManager
-//														// Absorb
-//													} catch (Exception ex) {
-//														System.err.println("Ooch");
-//														ex.printStackTrace();
-//													}
-//												}
-//											}
-										} catch (Exception ooch){
-											// Keep going
-											ooch.printStackTrace();
-										}
-									}
-									if (unManagedRequest) {
-										Response response = new Response(request.getProtocol(), Response.NOT_IMPLEMENTED);
-										sendResponse(response, out);
-									}
-								} else {
-									if (verbose) {
-										HTTPContext.getInstance().getLogger().info(">>> REST Request and no RequestManager. Proxy? <<<");
-									}
-									// explicit 'proxy' implementation
-									if (proxyFunction != null) {
-										// In a Thread, not to block
-										final Request req = request;
-										Thread proxyThread = new Thread(() -> {
-											try {
-												Response response = proxyFunction.apply(req);
-												sendResponse(response, out); // Back to caller
-											} catch (Exception ex) {
-												ex.printStackTrace();
-											}
-										});
-										proxyThread.start();
-									}
-								}
-							}
-						} else { // Specific. Is that a GPSd request?
-							if (payload != null && payload.length() > 0 && payload.startsWith("?WATCH=")) { // GPSd ?  ?WATCH={...}; ?POLL; ?DEVICE;
-								System.out.println(String.format(">>>>>>>> GPSd: [%s]", payload)); // This is the first embryo of a GPSd implementation...
-								String json = payload.substring("?WATCH=".length());
-								String responsePayload = "{\"class\":\"SKY\",\"device\":\"/dev/pts/1\",\"time\":\"2005-07-08T11:28:07.114Z\",\"xdop\":1.55,\"hdop\":1.24,\"pdop\":1.99,\"satellites\":[{\"PRN\":23,\"el\":6,\"az\":84,\"ss\":0,\"used\":false},{\"PRN\":28,\"el\":7,\"az\":160,\"ss\":0,\"used\":false},{\"PRN\":8,\"el\":66,\"az\":189,\"ss\":44,\"used\":true},{\"PRN\":29,\"el\":13,\"az\":273,\"ss\":0,\"used\":false},{\"PRN\":10,\"el\":51,\"az\":304,\"ss\":29,\"used\":true},{\"PRN\":4,\"el\":15,\"az\":199,\"ss\":36,\"used\":true},{\"PRN\":2,\"el\":34,\"az\":241,\"ss\":43,\"used\":true},{\"PRN\":27,\"el\":71,\"az\":76,\"ss\":43,\"used\":true}]}" + "\n";
-								out.write(responsePayload.getBytes());
-								out.flush();
-							} else if (line != null && line.length() != 0) {
-								HTTPContext.getInstance().getLogger().warning(">>>>>>>>>> What?"); // TODO See when/why this happens...
-								HTTPContext.getInstance().getLogger().warning(">>>>>>>>>> Last line was [" + line + "]");
-								HTTPContext.getInstance().getLogger().warning(String.format(">>>>>>>>>> line: %s, in payload: %s, request %s", lineAvailable, inPayload, request));
-							}
-						}
-						out.flush();
-						out.close();
-						in.close();
-						client.close();
-						if (okToStop) {
-							stopRunning();
-						}
+						// Socket client = ss.accept(); // Blocking read
+						new RequestHandler(ss.accept()).start();
 					} // while (isRunning())
 					ss.close();
 				} catch (BindException be) {
