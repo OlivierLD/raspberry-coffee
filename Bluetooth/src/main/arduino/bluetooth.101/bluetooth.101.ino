@@ -11,7 +11,7 @@ int state = 0; // This is the character code.
 void setup() {
   pinMode(ledPin, OUTPUT);
   digitalWrite(ledPin, LOW);
-  Serial.begin(38400); // 38400); // Default communication rate of the Bluetooth module
+  Serial.begin(9600); // 38400); // Default communication rate of the Bluetooth module
 }
 
 void loop() {

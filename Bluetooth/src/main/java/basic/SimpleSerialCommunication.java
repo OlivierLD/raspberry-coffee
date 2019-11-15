@@ -173,7 +173,7 @@ public class SimpleSerialCommunication implements SerialIOCallbacks {
 		SimpleSerialCommunication simpleSerialCommunication = new SimpleSerialCommunication();
 		simpleSerialCommunication.simulateSerial = "true".equals(System.getProperty("serial.simulate"));
 
-		String bluetoothSerialPort = System.getProperty("bt.serial.port", "/dev/tty.Bluetooth-Incoming-Port");
+		String bluetoothSerialPort = System.getProperty("serial.port", "/dev/tty.Bluetooth-Incoming-Port");
 		int bluetoothSerialPortBaudRate = Integer.parseInt(System.getProperty("bt.serial.baud.rate", String.valueOf(DEFAULT_BAUDRATE)));
 		if (verbose) {
 			System.out.println(String.format("Opening %s:%d", bluetoothSerialPort, bluetoothSerialPortBaudRate));
