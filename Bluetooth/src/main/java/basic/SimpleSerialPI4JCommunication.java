@@ -93,6 +93,7 @@ public class SimpleSerialPI4JCommunication {
 				try {
 					String userInput = StaticUtil.userInput("(Q to quit) > ");
 					if ("Q".equalsIgnoreCase(userInput)) {
+						System.out.println("Exiting...");
 						keepLooping.set(false);
 					} else {
 						String dataToWrite = userInput + "\r\n";
@@ -102,7 +103,7 @@ public class SimpleSerialPI4JCommunication {
 						} else {
 							System.out.println(String.format("Writing: %s", userInput));
 						}
-						serial.write(dataToWrite.getBytes());
+						serial.write(dataToWrite);
 						// Wait for reply
 						if (verbose) {
 							System.out.println("Waiting for reply...");
@@ -119,6 +120,7 @@ public class SimpleSerialPI4JCommunication {
 					ioe.printStackTrace();
 				}
 			}
+			System.out.println("Out of the loop");
 			serial.close();
 
 		} catch (IOException ex) {
