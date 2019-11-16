@@ -1,8 +1,21 @@
 Bluetooth is a pier-to-pier (P2P) communication protocol based on a Serial Communication.
 
-Once two devices are **paired** with Bluetooth, the communication between them is just a regular Serial Communication, as demoed below. 
+In other words, each device (each pier) is listening or writing to a Serial port, and those ports is using a wireless protocol to send and receive data.
 
-See <https://medium.com/@mahesh_joshi/raspberry-pi-3-and-arduino-communication-via-bluetooth-hc-05-5d7b6f162ab3>
+It can be seen it like this:
+```
+  Device A > SerialPort ..))))  wifi  ((((. SerialPort < Device B 
+```
+That can seem uselessly complicated, but it is not. Think again.
+Bluetooth is taking care of the serial-to-wireless (and vice-versa) part (taken care of by the `pi-bluetooth`, `bluetooth`, `bluez` and `blueman` packages mentioned further), 
+and as a developer, all you need to care about is the serial communication, on either side.
+
+Once two devices are **paired** with Bluetooth, the communication between them is just a regular Serial Communication, as demoed below.
+
+> Example: Once your Bluetooth mouse is paired with a computer A, a computer B cannot access it.
+> Your BT mouse does not drive more than one computer. This could make some sense 🤓 
+
+I started form this: <https://medium.com/@mahesh_joshi/raspberry-pi-3-and-arduino-communication-via-bluetooth-hc-05-5d7b6f162ab3>
 
 Learn about Bluetooth devices in sight:
 ```
@@ -228,6 +241,12 @@ Let's get started
 ```
 Also try to run the script `java.BT.sh`.
 
+### Morse Code generator
+Here's an eloquent example, illustrating all the above. From a Terminal, you send a string (like `get me a pizza with pickles`) through bluetooth,
+and the targeted Arduino is blinking it in morse code.
+
+Wired as above, upload the `morse.generator.ino` to the Arduino. Make sure you've paired the `HC-05` as expected, and on the Raspberry Pi, 
+run `java.basic.pi4j.sh`.
 
 ### TODO
 - Raspberry as a Bluetooth device
@@ -255,3 +274,5 @@ We'll see here if it can be considered as a sibling of NMEA or not.
 - Sparkfun's [Getting Started with OBD-II](https://learn.sparkfun.com/tutorials/getting-started-with-obd-ii/all).
 - Instructables' [Control Bluetooth LE Devices From a Raspberry Pi](https://www.instructables.com/id/Control-Bluetooth-LE-Devices-From-A-Raspberry-Pi/).
 - An [Arduino OBD-II Simulator](https://github.com/dplanella/arduino-odb2sim.git), by David Planella.
+
+---
