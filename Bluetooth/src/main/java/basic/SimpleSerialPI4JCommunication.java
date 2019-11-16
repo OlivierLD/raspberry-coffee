@@ -31,12 +31,15 @@ import static utils.TimeUtil.delay;
 public class SimpleSerialPI4JCommunication {
 
 	private final static String NEW_LINE = "\r\n"; // \n = 0xA, \r = 0xD
-	private static boolean responseReceived = false;
-	private static StringBuffer response = new StringBuffer();
+	private boolean responseReceived = false;
+	private StringBuffer response = new StringBuffer();
 
 	private static boolean verbose = "true".equals(System.getProperty("bt.verbose"));
 
-	private static String waitForResponse() { // TODO Return String or byte[] ?
+	public SimpleSerialPI4JCommunication() {
+	}
+
+	private String waitForResponse() { // TODO Return String or byte[] ?
 
 		synchronized (Thread.currentThread()) {
 			try {
@@ -50,10 +53,10 @@ public class SimpleSerialPI4JCommunication {
 		}
 		String resp = "";
 		// Get the response
-		if (responseReceived) {
-			resp = response.toString();
-			response.delete(0, response.length()); // Reset
-			responseReceived = false;
+		if (this.responseReceived) {
+			resp = this.response.toString();
+			this.response.delete(0, this.response.length()); // Reset
+			this.responseReceived = false;
 		} else {
 			System.out.println("Bizarre...");
 		}
@@ -63,7 +66,7 @@ public class SimpleSerialPI4JCommunication {
 		return resp;
 	}
 
-	public static void main(String... args) {
+	public void initComm(String portName, int baudRate) {
 
 		// create an instance of the serial communications class
 		final Serial serial = SerialFactory.createInstance();
@@ -72,16 +75,16 @@ public class SimpleSerialPI4JCommunication {
 		serial.addListener(event -> {
 			// print out the data received to the console
 			try {
-				response.append(event.getAsciiString());
+				this.response.append(event.getAsciiString());
 				if (verbose) {
 					//	System.out.println(String.format("Current Buffer > [%s]", response.toString()));
-					DumpUtil.displayDualDump(response.toString());
+					DumpUtil.displayDualDump(this.response.toString());
 				}
-				if (response.toString().endsWith(NEW_LINE)) {
+				if (this.response.toString().endsWith(NEW_LINE)) {
 					if (verbose) {
 						System.out.println("\tNew line detected");
 					}
-					responseReceived = true;
+					this.responseReceived = true;
 					synchronized (Thread.currentThread()) {
 						Thread.currentThread().notify();
 					}
@@ -96,17 +99,8 @@ public class SimpleSerialPI4JCommunication {
 			SerialConfig config = new SerialConfig(); // May display Error, but does not throw it.
 
 			// set default serial settings (device, baud rate, flow control, etc)
-			String portName = System.getProperty("port.name", "/dev/rfcomm0");
-			String brStr =  System.getProperty("baud.rate", "9600");
-
 			Baud br;
-			try {
-				br = Baud.getInstance(Integer.parseInt(brStr));
-			} catch (NumberFormatException nfe) {
-				System.err.println(String.format("Bad value for baud rate: %s, try again.", brStr));
-				nfe.printStackTrace();
-				return;
-			}
+			br = Baud.getInstance(baudRate);
 			config.device(portName)
 					.baud(br)
 					.dataBits(DataBits._8)
@@ -171,5 +165,12 @@ public class SimpleSerialPI4JCommunication {
 		} finally {
 			System.out.println("Bam.");
 		}
+	}
+
+	public static void main(String... args) {
+		SimpleSerialPI4JCommunication comm = new SimpleSerialPI4JCommunication();
+		String portName = System.getProperty("port.name", "/dev/rfcomm0");
+		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
+		comm.initComm(portName, br);
 	}
 }
