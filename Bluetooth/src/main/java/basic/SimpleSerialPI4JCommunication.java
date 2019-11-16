@@ -6,6 +6,7 @@ import com.pi4j.io.serial.FlowControl;
 import com.pi4j.io.serial.Parity;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
+import com.pi4j.io.serial.SerialDataEvent;
 import com.pi4j.io.serial.SerialFactory;
 import com.pi4j.io.serial.StopBits;
 import utils.DumpUtil;
@@ -33,19 +34,21 @@ public class SimpleSerialPI4JCommunication {
 	private final static String NEW_LINE = "\r\n"; // \n = 0xA, \r = 0xD
 	private boolean responseReceived = false;
 	private StringBuffer response = new StringBuffer();
+	private Thread waiter;
 
 	private static boolean verbose = "true".equals(System.getProperty("bt.verbose"));
 
 	public SimpleSerialPI4JCommunication() {
+		this.waiter = Thread.currentThread();
 	}
 
 	private String waitForResponse() { // TODO Return String or byte[] ?
 
-		synchronized (Thread.currentThread()) {
+		synchronized (waiter) {
 			try {
-				Thread.currentThread().wait();
+				waiter.wait();
 				if (verbose) {
-					System.out.println("\tThread released");
+					System.out.println("\tWaiter thread released");
 				}
 			} catch (InterruptedException ie) {
 				Thread.currentThread().interrupt();
@@ -66,33 +69,37 @@ public class SimpleSerialPI4JCommunication {
 		return resp;
 	}
 
+	private void eventManager(SerialDataEvent event) {
+		// print out the data received to the console
+		try {
+			this.response.append(event.getAsciiString());
+			if (verbose) {
+				//	System.out.println(String.format("Current Buffer > [%s]", response.toString()));
+				DumpUtil.displayDualDump(this.response.toString());
+			}
+			if (this.response.toString().endsWith(NEW_LINE)) {
+				if (verbose) {
+					System.out.println("\tNew line detected");
+				}
+				this.responseReceived = true;
+				synchronized (waiter) {
+					waiter.notify();
+					if (verbose) {
+						System.out.println("\tWaiter thread notified");
+					}
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
 	public void initComm(String portName, int baudRate) {
 
-		// create an instance of the serial communications class
 		final Serial serial = SerialFactory.createInstance();
 
 		// create and register the serial data listener
-		serial.addListener(event -> {
-			// print out the data received to the console
-			try {
-				this.response.append(event.getAsciiString());
-				if (verbose) {
-					//	System.out.println(String.format("Current Buffer > [%s]", response.toString()));
-					DumpUtil.displayDualDump(this.response.toString());
-				}
-				if (this.response.toString().endsWith(NEW_LINE)) {
-					if (verbose) {
-						System.out.println("\tNew line detected");
-					}
-					this.responseReceived = true;
-					synchronized (Thread.currentThread()) {
-						Thread.currentThread().notify();
-					}
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		});
+		serial.addListener(this::eventManager);
 
 		try {
 			// create serial config object
