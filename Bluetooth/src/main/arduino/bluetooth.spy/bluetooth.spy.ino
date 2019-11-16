@@ -60,7 +60,7 @@ void loop() {
       String morse = renderCode(receivedSentence.charAt(i));
       fullTranslation.concat(morse);
       delay(100); // between letters
-      fullTranslation.concat("/");
+      fullTranslation.concat("/ ");
     }
     btSerial.println(fullTranslation); // Back to client
   }

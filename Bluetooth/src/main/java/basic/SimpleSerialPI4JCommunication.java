@@ -67,7 +67,7 @@ public class SimpleSerialPI4JCommunication {
 		serial.addListener(event -> {
 			// print out the data received to the console
 			try {
-				response.append(event.getBytes());
+				response.append(event.getAsciiString());
 				if (verbose) {
 					//	System.out.println(String.format("Current Buffer > [%s]", response.toString()));
 					DumpUtil.displayDualDump(response.toString());
