@@ -274,6 +274,18 @@ This way, you do not need to unplug the `HC-05` to upload a sketch, the program 
 and you can have the desired output in the Serial Monitor of the Arduino IDE.
 ![2 outputs](./2.serial.ports.png)
 
+##### With a piezo buzzer
+Now, not only you can see the light blinking, but with a buzzer like [that](https://www.allelectronics.com/item/sbz-204/3-18-vdc-piezo-buzzer/1.html),
+you can also hear it beeping.
+
+In the code of the Arduino sketch (`bluetooth.spy.ino`), comment or uncomment the line #20.
+```C
+#define buzzerPin 8
+```
+If uncommented, then you can wire your circuit like that:
+![Buzzer wiring](./Arduino.HC-05.buzzer_bb.png)
+
+
 ### TODO
 - Raspberry as a Bluetooth device
     - As an OBD (see below) server?

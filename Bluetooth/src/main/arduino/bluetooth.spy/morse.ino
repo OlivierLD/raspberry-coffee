@@ -46,6 +46,12 @@ void initMorseAlphabet() {
   alphabet[35].letter = '0'; alphabet[35].code = "_____";
 }
 
+/**
+ * Takes on character (A-Z, 0-9) as parameter.
+ * Returns the morse translation AND emits the corresponding blink on ledPin 
+ * (ledPin defined in bluetooth.spy)
+ * Ignores unknown characters.
+ */
 String renderCode(char letter) {
   String translated = "";
   if (letter != '\n' && letter != '\r') {
@@ -66,6 +72,9 @@ String renderCode(char letter) {
       String code = found->code;
       for (int i = 0; i < code.length(); i++) {
         digitalWrite(ledPin, HIGH);
+#ifdef buzzerPin
+        digitalWrite(buzzerPin, HIGH);
+#endif  
         if (code.charAt(i) == '.') {
           translated.concat(". ");
           if (VERBOSE) {
@@ -80,6 +89,9 @@ String renderCode(char letter) {
           delay(750);
         }
         digitalWrite(ledPin, LOW);
+#ifdef buzzerPin
+        digitalWrite(buzzerPin, LOW);
+#endif  
         delay(100); // Between signs
       }
       if (VERBOSE) {

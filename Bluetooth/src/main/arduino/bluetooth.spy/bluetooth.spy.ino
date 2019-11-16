@@ -1,4 +1,4 @@
-/*
+/**
  * Use the LED_BUILTIN, 
  * no resistor needed, no extra led.
  * 
@@ -17,6 +17,7 @@
 #define BT_BR      9600
  
 #define ledPin LED_BUILTIN
+#define buzzerPin 8
 
 #define rxPin 2
 #define txPin 3
@@ -33,11 +34,17 @@ SoftwareSerial btSerial = SoftwareSerial(rxPin, txPin);
 
 void setup() {
   pinMode(ledPin, OUTPUT);
+#ifdef buzzerPin
+  pinMode(buzzerPin, OUTPUT);
+#endif  
   digitalWrite(ledPin, LOW);
+#ifdef buzzerPin
+  digitalWrite(buzzerPin, LOW);
+#endif  
   btSerial.begin(BT_BR);    // Communication rate of the Bluetooth module
   Serial.begin(CONSOLE_BR); // Serial Monitor
 
-  initMorseAlphabet();
+  initMorseAlphabet(); // in morse.ino
 }
 
 void loop() {
@@ -57,7 +64,7 @@ void loop() {
     Serial.println(receivedSentence);
     String fullTranslation = "";
     for (int i = 0; i < receivedSentence.length(); i++) {
-      String morse = renderCode(receivedSentence.charAt(i));
+      String morse = renderCode(receivedSentence.charAt(i)); // in morse.ino
       fullTranslation.concat(morse);
       delay(100); // between letters
       fullTranslation.concat("/ ");
