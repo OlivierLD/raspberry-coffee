@@ -255,7 +255,7 @@ run `java.basic.pi4j.sh`.
 
 
 ## On Board Diagnostic (ODB)
-ODB is used in the car industry to convey sensor data. It runs over Bluetooth.
+ODB is used in the car industry to convey sensor data. It can run over Bluetooth.
 We'll see here if it can be considered as a sibling of NMEA or not.
 
 > Any vehicle manufacture from 1996 or later is required by law to have the OBD-II computer system. 

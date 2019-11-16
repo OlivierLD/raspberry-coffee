@@ -14,59 +14,57 @@
 #include <SoftwareSerial.h>
 
 #define CONSOLE_BR 9600
-#define BT_BR    115200
+#define BT_BR      9600
  
 #define ledPin LED_BUILTIN
-int state = 0; // This is the character code. 
 
 #define rxPin 2
 #define txPin 3
+
+#define NULL 0
+
+#define true 1
+#define false 0
+#define VERBOSE true
+
+String EOS = "\r\n";
+String receivedSentence = "";
 SoftwareSerial btSerial = SoftwareSerial(rxPin, txPin); 
 
 void setup() {
   pinMode(ledPin, OUTPUT);
   digitalWrite(ledPin, LOW);
-  btSerial.begin(BT_BR); // Communication rate of the Bluetooth module
-  Serial.begin(CONSOLE_BR);
-}
+  btSerial.begin(BT_BR);    // Communication rate of the Bluetooth module
+  Serial.begin(CONSOLE_BR); // Serial Monitor
 
-#define DEBUG 1
+  initMorseAlphabet();
+}
 
 void loop() {
 
-  boolean gotSome = false;
-  int nb = 0;
-  while (btSerial.available() > 0) { // Checks whether data is comming from the serial port
-    state = btSerial.read(); // Reads the data from the serial port
-    if (DEBUG) {
-      gotSome = true;
-      if (nb == 0) {
-        Serial.print("Received (HEX): ");
-      }
-      nb += 1;
-//      Serial.print("("); Serial.print(nb); Serial.print(") "); 
-      Serial.print(state, HEX); Serial.print(" ");
-    }
+  int data = -1;
+  while (btSerial.available() > 0) { // Checks whether data is coming from the serial port
+    data = btSerial.read();          // Reads the data from the serial port
+    receivedSentence.concat((char)data);
   }
-  if (DEBUG) {
-    if (gotSome) {
-      Serial.println();
+  // Received a String
+  if (receivedSentence.length() > 0) {
+    if (receivedSentence.endsWith(EOS)) {
+      receivedSentence = receivedSentence.substring(0, receivedSentence.length() - EOS.length());
     }
+    receivedSentence.toUpperCase();
+    Serial.print("Translating: ");
+    Serial.println(receivedSentence);
+    String fullTranslation = "";
+    for (int i = 0; i < receivedSentence.length(); i++) {
+      String morse = renderCode(receivedSentence.charAt(i));
+      fullTranslation.concat(morse);
+      delay(100); // between letters
+      fullTranslation.concat("/");
+    }
+    btSerial.println(fullTranslation); // Back to client
   }
+  receivedSentence = ""; // Reset
+  delay(500);
 
-  if (state == '0') { // 0x30
-    digitalWrite(ledPin, LOW); // Turn LED OFF
-    btSerial.println("LED: OFF"); // Send back to the client, the String "LED: ON"
-    state = 0; // sort of reset
-  } else if (state == '1') { // 0x31
-    digitalWrite(ledPin, HIGH);
-    btSerial.println("LED: ON");
-    state = 0; // sort of reset
-  } else if (gotSome) {
-    if (DEBUG) {
-      Serial.println("\t(No 0, no 1)");
-    }
-    Serial.println("\tTalking back");
-    btSerial.println("Tagada");
-  }
 }

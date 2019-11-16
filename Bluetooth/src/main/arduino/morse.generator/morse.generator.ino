@@ -9,6 +9,7 @@
 #define false 0
 #define VERBOSE false
 
+String EOS = "\r\n";
 String receivedSentence = "";
 
 typedef struct {
@@ -121,13 +122,15 @@ void loop() {
   int data = -1;
   while (Serial.available() > 0) { // Checks whether data is coming from the serial port
     data = Serial.read(); // Reads the data from the serial port
-    // You can use Serial.print(data, HEX); in the Serial console, NOT if another process is expecting the response
     receivedSentence.concat((char)data);
   }
   // Received a String
   if (receivedSentence.length() > 0) {
+    if (receivedSentence.endsWith(EOS)) {
+      receivedSentence = receivedSentence.substring(0, receivedSentence.length() - EOS.length());
+    }
     receivedSentence.toUpperCase();
-    Serial.print("To translate:");
+    Serial.print("Translating: ");
     Serial.println(receivedSentence);
     for (int i = 0; i < receivedSentence.length(); i++) {
       renderCode(receivedSentence.charAt(i));

@@ -17,6 +17,34 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static utils.TimeUtil.delay;
 
 public class SimpleSerialPI4JCommunication {
+
+	private final static String NEW_LINE = "\r\n"; // \n = 0xA, \r = 0xD
+	private static boolean responseReceived = false;
+	private static StringBuffer response = new StringBuffer();
+
+	private static boolean verbose = "true".equals(System.getProperty("bt.verbose"));
+
+	private static String waitForResponse() { // TODO Return String or byte[] ?
+
+		synchronized (Thread.currentThread()) {
+			try {
+				Thread.currentThread().wait();
+			} catch (InterruptedException ie) {
+				Thread.currentThread().interrupt();
+			}
+		}
+		String resp = "";
+		// Get the response
+		if (responseReceived) {
+			resp = response.toString();
+			response.delete(0, response.length()); // Reset
+			responseReceived = false;
+		} else {
+			System.out.println("Bizarre...");
+		}
+		return resp;
+	}
+
 	/**
 	 * From scratch, not from the PI4J samples.
 	 * Uses the Serial library from PI4J.
@@ -39,11 +67,15 @@ public class SimpleSerialPI4JCommunication {
 		serial.addListener(event -> {
 			// print out the data received to the console
 			try {
-				String[] sa = DumpUtil.dualDump(event.getBytes());
-				if (sa != null) {
-					System.out.println("\t>>> [From Bluetooth] Received:");
-					for (String s : sa) {
-						System.out.println("\t\t" + s);
+				response.append(event.getBytes());
+				if (verbose) {
+					//	System.out.println(String.format("Current Buffer > [%s]", response.toString()));
+					DumpUtil.displayDualDump(response.toString());
+				}
+				if (response.toString().endsWith(NEW_LINE)) {
+					responseReceived = true;
+					synchronized (Thread.currentThread()) {
+						Thread.currentThread().notify();
 					}
 				}
 			} catch (Exception ex) {
@@ -58,7 +90,6 @@ public class SimpleSerialPI4JCommunication {
 			// set default serial settings (device, baud rate, flow control, etc)
 			String portName = System.getProperty("port.name", "/dev/rfcomm0");
 			String brStr =  System.getProperty("baud.rate", "9600");
-			boolean verbose = "true".equals(System.getProperty("bt.verbose"));
 
 			Baud br;
 			try {
@@ -101,17 +132,15 @@ public class SimpleSerialPI4JCommunication {
 						} else {
 							System.out.println(String.format("Writing: %s", userInput));
 						}
-						serial.write(dataToWrite); // <--
+						serial.write(dataToWrite); // <-- write to device
 						// Wait for reply
 						if (verbose) {
 							System.out.println("Waiting for reply...");
 						}
-						if (false) { // TODO Implement a waitForResponse in the listener
-							String reply = ""; // waitForResponse();
-							if (verbose) {
-								System.out.println(String.format(">> Received [%s]", reply));
-								DumpUtil.displayDualDump(reply);
-							}
+						String reply = waitForResponse();
+						if (verbose) {
+							System.out.println(String.format(">> Received [%s]", reply));
+							DumpUtil.displayDualDump(reply);
 						}
 					}
 				} catch (IOException ioe) {
