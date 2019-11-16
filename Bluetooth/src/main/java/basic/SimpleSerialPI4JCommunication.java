@@ -115,7 +115,7 @@ public class SimpleSerialPI4JCommunication {
 			final AtomicBoolean keepLooping = new AtomicBoolean(true);
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				keepLooping.set(false);
-				System.out.println("Exiting the loop");
+				System.out.println("\nExiting the loop");
 				delay(1_000);
 			}));
 			while (keepLooping.get()) {
@@ -123,7 +123,7 @@ public class SimpleSerialPI4JCommunication {
 				try {
 					String userInput = StaticUtil.userInput("(Q to quit) > "); // Blocking input
 					if ("Q".equalsIgnoreCase(userInput)) {
-						System.out.println("Exiting...");
+						System.out.println("\tExiting...");
 						keepLooping.set(false);
 					} else {
 						String dataToWrite = userInput + "\r\n";
@@ -140,8 +140,8 @@ public class SimpleSerialPI4JCommunication {
 						String reply = waitForResponse();
 						if (verbose) {
 							System.out.println(String.format(">> Received [%s]", reply));
-							DumpUtil.displayDualDump(reply);
 						}
+						DumpUtil.displayDualDump(reply);
 					}
 				} catch (IOException ioe) {
 					ioe.printStackTrace();
