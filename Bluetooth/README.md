@@ -1,6 +1,6 @@
-Bluetooth is a pier-to-pier (P2P) communication protocol based on a Serial Communication.
+Bluetooth is a wireless and pier-to-pier (P2P) communication protocol based on a Serial Communication.
 
-In other words, each device (each pier) is listening or writing to a Serial port, and those ports is using a wireless protocol to send and receive data.
+In other words, each device (each pier) is listening or writing to a Serial port, and those ports are linked together by a wireless protocol to send and receive data.
 
 It can be seen it like this:
 ```
