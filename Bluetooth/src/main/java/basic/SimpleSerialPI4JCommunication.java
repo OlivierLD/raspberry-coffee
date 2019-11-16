@@ -16,6 +16,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static utils.TimeUtil.delay;
 
+/**
+ * From scratch, not from the PI4J samples.
+ * Uses the Serial library from PI4J.
+ *
+ * This example program supports the following optional System variables:
+ * "port.name"                   [DEFAULT: /dev/rfcomm0]
+ * "baud.rate"                   [DEFAULT: 9600]
+ *
+ * A skeleton for further implementation.
+ * Use it for example with an Arduino and an HC-05 module, running `bluetooth.102.ino` or `bluetooth.spy.ino`
+ *
+ */
 public class SimpleSerialPI4JCommunication {
 
 	private final static String NEW_LINE = "\r\n"; // \n = 0xA, \r = 0xD
@@ -29,6 +41,9 @@ public class SimpleSerialPI4JCommunication {
 		synchronized (Thread.currentThread()) {
 			try {
 				Thread.currentThread().wait();
+				if (verbose) {
+					System.out.println("\tThread released");
+				}
 			} catch (InterruptedException ie) {
 				Thread.currentThread().interrupt();
 			}
@@ -42,22 +57,12 @@ public class SimpleSerialPI4JCommunication {
 		} else {
 			System.out.println("Bizarre...");
 		}
+		if (verbose) {
+			System.out.println(String.format("Dispatching response [%s]", resp));
+		}
 		return resp;
 	}
 
-	/**
-	 * From scratch, not from the PI4J samples.
-	 * Uses the Serial library from PI4J.
-	 *
-	 * This example program supports the following optional System variables:
-	 * "port.name"                   [DEFAULT: /dev/rfcomm0]
-	 * "baud.rate"                   [DEFAULT: 9600]
-	 *
-	 * A skeleton for further implementation.
-	 * Use it for example with an Arduino and an HC-05 module, running `bluetooth.102.ino`
-	 *
-	 * @param args
-	 */
 	public static void main(String... args) {
 
 		// create an instance of the serial communications class
@@ -73,6 +78,9 @@ public class SimpleSerialPI4JCommunication {
 					DumpUtil.displayDualDump(response.toString());
 				}
 				if (response.toString().endsWith(NEW_LINE)) {
+					if (verbose) {
+						System.out.println("\tNew line detected");
+					}
 					responseReceived = true;
 					synchronized (Thread.currentThread()) {
 						Thread.currentThread().notify();
