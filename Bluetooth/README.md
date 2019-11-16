@@ -248,6 +248,29 @@ and the targeted Arduino is blinking it in morse code.
 Wired as above, upload the `morse.generator.ino` to the Arduino. Make sure you've paired the `HC-05` as expected, and on the Raspberry Pi, 
 run `java.basic.pi4j.sh`.
 
+#### With 2 Serial ports
+In the previous Arduino sketches, we've seen that the Serial Monitor and the `HC-05` are using the same serial port.
+This is why you need to unplug the `HC-05` when uploading a sketch.
+
+It is possible though to have a Serial Monitor on its default port, and the `HC-05` on another one.
+See for this the sketch `bluetooth.spy.ino`, it replicates the features of the `morse.generator.ino`, but with two serial ports.
+See in it the usage of 
+```C
+#define rxPin 2
+#define txPin 3
+```
+and
+```C
+ SoftwareSerial btSerial = SoftwareSerial(rxPin, txPin); 
+```
+Default pins (for the Serial Monitor) are `0` and `1`, here we use `2` and `3` for the `HC-05`.
+This requires a slight modification in the wiring:
+![New wiring](./Arduino.HC-05_bb.v2.png)
+
+This way, you do not need to unplug the `HC-05` to upload a sketch, the program (`basic.SimpleSerialPI4JCommunication`) interacts with the `HC-05`, and you can
+have the desired output in the Serial Monitor of the Arduino IDE.
+![2 outputs](./2.serial.ports.png)
+
 ### TODO
 - Raspberry as a Bluetooth device
     - As an OBD (see below) server?
