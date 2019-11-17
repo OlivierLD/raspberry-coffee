@@ -146,11 +146,15 @@ public class SimpleSerialPI4JCommunication {
 						if (verbose) {
 							System.out.println("Waiting for reply...");
 						}
+						// Move on.
 						String reply = waitForResponse();
-						if (verbose) {
-							System.out.println(String.format(">> Received [%s]", reply));
+						if (reply.indexOf(NEW_LINE) > -1) {
+							reply = reply.substring(0, reply.length() - NEW_LINE.length());
 						}
-						DumpUtil.displayDualDump(reply);
+						if (verbose) {
+							DumpUtil.displayDualDump(reply);
+						}
+						System.out.println(String.format(">> Received [%s]", reply));
 					}
 				} catch (IOException ioe) {
 					ioe.printStackTrace();

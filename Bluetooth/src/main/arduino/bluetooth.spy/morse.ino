@@ -100,7 +100,7 @@ String renderCode(char letter) {
     } else {
       if (letter == ' ') {
         translated.concat("  ");
-        delay(100); // Between signs of a character
+        delay(100); // Between signs (. and _) of a character
       } else {
         if (VERBOSE) {
           Serial.print("[");
