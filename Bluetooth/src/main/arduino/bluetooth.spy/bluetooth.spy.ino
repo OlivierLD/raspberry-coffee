@@ -1,21 +1,23 @@
 /**
- * Use the LED_BUILTIN, 
+ * Use the LED_BUILTIN,
  * no resistor needed, no extra led.
- * 
+ *
  * Two serial ports.
  * - One for BT
  * - One for the Serial Monitor
- * 
- * Default Serial uses something equivalent to SoftwareSerial(0, 1); 
+ *
+ * Default Serial uses something equivalent to SoftwareSerial(0, 1);
  * Here, we use SoftwareSerial(0, 1) for the Serial monitor,
  * and SoftwareSerial(2, 3) for Bluetooth.
+ *
+ * Extra piezo buzzer can be hooked on pin 8
  */
 
 #include <SoftwareSerial.h>
 
 #define CONSOLE_BR 9600
 #define BT_BR      9600
- 
+
 #define ledPin LED_BUILTIN
 #define buzzerPin 8
 
@@ -30,17 +32,17 @@
 
 String EOS = "\r\n";
 String receivedSentence = "";
-SoftwareSerial btSerial = SoftwareSerial(rxPin, txPin); 
+SoftwareSerial btSerial = SoftwareSerial(rxPin, txPin);
 
 void setup() {
   pinMode(ledPin, OUTPUT);
 #ifdef buzzerPin
   pinMode(buzzerPin, OUTPUT);
-#endif  
+#endif
   digitalWrite(ledPin, LOW);
 #ifdef buzzerPin
   digitalWrite(buzzerPin, LOW);
-#endif  
+#endif
   btSerial.begin(BT_BR);    // Communication rate of the Bluetooth module
   Serial.begin(CONSOLE_BR); // Serial Monitor
 

@@ -72,6 +72,10 @@ functionGlobalContext: {
 ```bash
  $> node-red-start
 ```
+or more recently
+```bash
+ $> node-red-pi
+```
 
 - Then you can access `Node-RED` from a browser, like with [http://192.168.1.136:1880/](http://192.168.1.136:1880/). You should see
   a node named `log-replay` in the left pane, under the `storage` section.

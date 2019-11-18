@@ -1,9 +1,9 @@
 typedef struct {
   char letter;
-  String code;
+  String code; // contains no blank.
 } morseCode;
 
-morseCode alphabet[36];
+morseCode alphabet[36]; // 26 letters, 10 digits
 
 void initMorseAlphabet() {
   // Letters

@@ -376,7 +376,7 @@ This is what paved to way for Java.
 
 Java is using a syntax similar to C. It uses a similar way to declare functions and methods, uses curly braces `{}` to define code blocks, *but*:
 - There is no `#define` statement
-- It does not require the programmer to deal with pointers
+- It does not require the programmer to deal with pointers (it introduces the concept of Garbage Collector (GC))
 - It runs on a Java Virtual Machine. As a result, a `class` compiled somewhere will run
 _without any modification_ on any other system where a JVM is available. The portability is taken care of by the
 implementation of the virtual machine.

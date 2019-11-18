@@ -20,14 +20,13 @@ import static utils.TimeUtil.delay;
 /**
  * From scratch, not from the PI4J samples.
  * Uses the Serial library from PI4J.
- *
+ * <p>
  * This example program supports the following optional System variables:
  * "port.name"                   [DEFAULT: /dev/rfcomm0]
  * "baud.rate"                   [DEFAULT: 9600]
- *
+ * <p>
  * A skeleton for further implementation.
  * Use it for example with an Arduino and an HC-05 module, running `bluetooth.102.ino` or `bluetooth.spy.ino`
- *
  */
 public class SimpleSerialPI4JCommunication {
 
@@ -127,8 +126,8 @@ public class SimpleSerialPI4JCommunication {
 				System.out.println("\nExiting the loop");
 				delay(1_000);
 			}));
-			while (keepLooping.get()) {
 
+			while (keepLooping.get()) {
 				try {
 					String userInput = StaticUtil.userInput("(Q to quit) > "); // Blocking input
 					if ("Q".equalsIgnoreCase(userInput)) {
@@ -146,7 +145,7 @@ public class SimpleSerialPI4JCommunication {
 						if (verbose) {
 							System.out.println("Waiting for reply...");
 						}
-						// Move on.
+						// ... Move on!
 						String reply = waitForResponse();
 						if (reply.indexOf(NEW_LINE) > -1) {
 							reply = reply.substring(0, reply.length() - NEW_LINE.length());
@@ -184,4 +183,5 @@ public class SimpleSerialPI4JCommunication {
 		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
 		comm.initComm(portName, br);
 	}
+
 }
