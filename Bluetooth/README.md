@@ -4,7 +4,7 @@ In other words, each device (each pier) is listening or writing to a Serial port
 
 It can be seen it like this:
 ```
-  Device A > SerialPort ..))))  wifi  ((((. SerialPort < Device B 
+  Device A > SerialPort ..))))  wifi  ((((.. SerialPort < Device B 
 ```
 That can seem uselessly complicated, but it is not. Think again.
 Bluetooth is taking care of the serial-to-wireless (and vice-versa) part (taken care of by the `pi-bluetooth`, `bluetooth`, `bluez` and `blueman` packages mentioned further), 
