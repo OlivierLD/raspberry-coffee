@@ -33,7 +33,7 @@ public class SimpleSerialPI4JCommunication {
 	private final static String NEW_LINE = "\r\n"; // \n = 0xA, \r = 0xD
 	private boolean responseReceived = false;
 	private StringBuffer response = new StringBuffer();
-	private Thread waiter;
+	private final Thread waiter;
 
 	private static boolean verbose = "true".equals(System.getProperty("bt.verbose"));
 

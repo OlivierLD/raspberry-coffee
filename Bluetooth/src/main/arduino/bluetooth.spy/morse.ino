@@ -5,6 +5,16 @@ typedef struct {
 
 morseCode alphabet[36]; // 26 letters, 10 digits
 
+/**
+ * A note for the french-speaking readers:
+ * Below we provide a mnemonic way to learn the Morse code:
+ * - Each word begins with the letter to translate
+ * - Each word has as many syllables as it has signs
+ * - A syllable with an 'O' is a dash, otherwise it is a dot.
+ *
+ * Example Z: Zo-ro-as-tre : _ _ . .
+ */
+
 void initMorseAlphabet() {
   // Letters
   alphabet[0].letter = 'A';  alphabet[0].code = "._";    // Allo
@@ -24,7 +34,7 @@ void initMorseAlphabet() {
   alphabet[14].letter = 'O'; alphabet[14].code = "___";  // Oloron
   alphabet[15].letter = 'P'; alphabet[15].code = ".__."; // Pyrophore
   alphabet[16].letter = 'Q'; alphabet[16].code = "__._"; // Quocorico
-  alphabet[17].letter = 'R'; alphabet[17].code = "._";   // Raisonne
+  alphabet[17].letter = 'R'; alphabet[17].code = "._.";  // Raisonne
   alphabet[18].letter = 'S'; alphabet[18].code = "...";  // Salade
   alphabet[19].letter = 'T'; alphabet[19].code = "_";    // Top
   alphabet[20].letter = 'U'; alphabet[20].code = ".._";  // Unisson
@@ -48,7 +58,7 @@ void initMorseAlphabet() {
 
 /**
  * Takes on character (A-Z, 0-9) as parameter.
- * Returns the morse translation AND emits the corresponding blink on ledPin 
+ * Returns the morse translation AND emits the corresponding blink on ledPin
  * (ledPin defined in bluetooth.spy)
  * Ignores unknown characters.
  */
@@ -74,7 +84,7 @@ String renderCode(char letter) {
         digitalWrite(ledPin, HIGH);
 #ifdef buzzerPin
         digitalWrite(buzzerPin, HIGH);
-#endif  
+#endif
         if (code.charAt(i) == '.') {
           translated.concat(". ");
           if (VERBOSE) {
@@ -91,7 +101,7 @@ String renderCode(char letter) {
         digitalWrite(ledPin, LOW);
 #ifdef buzzerPin
         digitalWrite(buzzerPin, LOW);
-#endif  
+#endif
         delay(100); // Between signs
       }
       if (VERBOSE) {

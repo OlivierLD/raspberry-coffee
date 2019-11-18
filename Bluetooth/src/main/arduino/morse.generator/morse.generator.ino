@@ -38,7 +38,7 @@ void initMorseAlphabet() {
   alphabet[14].letter = 'O'; alphabet[14].code = "___";  // Oloron
   alphabet[15].letter = 'P'; alphabet[15].code = ".__."; // Pyrophore
   alphabet[16].letter = 'Q'; alphabet[16].code = "__._"; // Quocorico
-  alphabet[17].letter = 'R'; alphabet[17].code = "._";   // Raisonne
+  alphabet[17].letter = 'R'; alphabet[17].code = "._.";  // Raisonne
   alphabet[18].letter = 'S'; alphabet[18].code = "...";  // Salade
   alphabet[19].letter = 'T'; alphabet[19].code = "_";    // Top
   alphabet[20].letter = 'U'; alphabet[20].code = ".._";  // Unisson
