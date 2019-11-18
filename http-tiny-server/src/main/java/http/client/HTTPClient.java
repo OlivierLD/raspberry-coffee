@@ -33,8 +33,10 @@ public class HTTPClient {
 			URL url = new URL(urlStr);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
-			for (String h : headers.keySet()) {
-				conn.setRequestProperty(h, headers.get(h));
+			if (headers != null) {
+				for (String h : headers.keySet()) {
+					conn.setRequestProperty(h, headers.get(h));
+				}
 			}
 			conn.setUseCaches(false);
 			responseCode = conn.getResponseCode();

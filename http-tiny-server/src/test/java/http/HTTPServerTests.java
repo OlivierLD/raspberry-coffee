@@ -1,13 +1,16 @@
 package http;
 
+import com.google.gson.Gson;
 import http.client.HTTPClient;
 import org.junit.Test;
 
 import java.net.ProtocolException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class HTTPServerTests {
@@ -167,6 +170,66 @@ public class HTTPServerTests {
 		} catch (Exception ex) {
 			fail(ex.toString());
 		}
+	}
+
+	private List<HTTPServer.Operation> opList = null;
+	@Test
+	public void bombardSeveralRequests() {
+
+		this.opList = Arrays.asList(
+				new HTTPServer.Operation(
+						"GET",
+						"/oplist",
+						this::getOperationList,
+						"List of all available operations."));
+
+		RESTRequestManager restServerImpl = new RESTRequestManager() {
+
+			@Override
+			public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
+				return null;
+			}
+
+			@Override
+			public List<HTTPServer.Operation> getRESTOperationList() {
+				return opList;
+			}
+		};
+		HTTPServer httpServer = null;
+		PORT_TO_USE += 1;
+		try {
+			httpServer = new HTTPServer(PORT_TO_USE, restServerImpl, true);
+		} catch (Exception ex) {
+			fail(ex.toString());
+		}
+		assertNotNull(httpServer);
+		try {
+			Runnable runnable = () -> {
+				try {
+					String response = HTTPClient.doGet(String.format("http://localhost:%d/oplist", PORT_TO_USE), null); // Response will be empty, but that 's OK.
+					assertTrue("Response is null", response != null);
+				} catch (Exception ex) {
+					fail(ex.toString());
+				}
+			};
+			Thread t1 = new Thread(runnable, "T1");
+			Thread t2 = new Thread(runnable, "T2");
+			Thread t3 = new Thread(runnable, "T3");
+			t1.start();
+			t2.start();
+			t3.start();
+		} catch (Exception ex) {
+			fail(ex.toString());
+		}
+	}
+
+	private HTTPServer.Response getOperationList(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+
+		String content = new Gson().toJson(this.opList);
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+		return response;
 	}
 
 	private HTTPServer.Response emptyOperation(HTTPServer.Request request) {
