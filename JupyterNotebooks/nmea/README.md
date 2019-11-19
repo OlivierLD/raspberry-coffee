@@ -99,8 +99,8 @@ For more details on the process, there is [a Jupyter Notebook](./python.nmea.ipy
         - NMEA Sentence parsing (like RMC) - Ok
         - Decimal to Sexagesimal and vice-versa - Ok
     - Explain knots and nautical miles
-    - Record and replay
-    - Google Maps APIs -> Geolocalisation API: https://olivierld.github.io/web.stuff/gps/GPS.api.html
+    - Record and replay (demoLauncher)
+    - Google Maps APIs => Geolocalisation API: https://olivierld.github.io/web.stuff/gps/GPS.api.html
 -->
 
 ### Links

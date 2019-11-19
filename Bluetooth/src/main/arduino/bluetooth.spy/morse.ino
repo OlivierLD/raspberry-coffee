@@ -57,7 +57,7 @@ void initMorseAlphabet() {
 }
 
 /**
- * Takes on character (A-Z, 0-9) as parameter.
+ * Takes one character (A-Z, 0-9) as parameter.
  * Returns the morse translation AND emits the corresponding blink on ledPin
  * (ledPin defined in bluetooth.spy)
  * Ignores unknown characters.

@@ -12,3 +12,5 @@ There is a cool on-line Arduino (and others) simulator on [Tinkercad](http://www
 ...And you're good to go! You even have a cool [Blockly](https://developers.google.com/blockly) option.
 
 ---
+
+The BLE Part is a Work In Progress...
