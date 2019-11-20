@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView timeHolder = null;
     private final MainActivity instance = this;
-    private final SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss Z z");
+    private final SimpleDateFormat DF = new SimpleDateFormat("dd-MMM-yyyy'\n'HH:mm:ss Z z");
 
     private void setText(final TextView text, final String value) {
         runOnUiThread(new Runnable() {
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                 // Current date and time
                 Calendar c = Calendar.getInstance();
 //                System.out.println("Current time => " + c.getTime());
-                String formattedDate = df.format(c.getTime());
+                String formattedDate = DF.format(c.getTime());
                 // formattedDate have current date/time
 
                 if (gps != null) {
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // \n is for new line
 //                    Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-                        gpsData = String.format("GPS:\n%s\n%s\n%s\n%s",
+                        gpsData = String.format("GPS Data:\n%s\n%s\n%s\n%s",
                                 GeomUtil.decToSex(latitude, GeomUtil.DEFAULT_DEG, GeomUtil.NS) ,
                                 GeomUtil.decToSex(longitude, GeomUtil.DEFAULT_DEG, GeomUtil.EW),
                                 String.format(Locale.getDefault(), "SOG: %.02f kn", sog),  // Verify unit
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                             double obsAlt = sru.getHe();
                             double z = sru.getZ();
 
-                            sunData = String.format("Sun: Elev.: %s, Z: %.02f\272", GeomUtil.decToSex(obsAlt, GeomUtil.SWING, GeomUtil.NONE), z);
+                            sunData = String.format("Sun Data:\nElevation: %s\nZ: %.02f\272", GeomUtil.decToSex(obsAlt, GeomUtil.SWING, GeomUtil.NONE), z);
                         }
 
                     } else {
