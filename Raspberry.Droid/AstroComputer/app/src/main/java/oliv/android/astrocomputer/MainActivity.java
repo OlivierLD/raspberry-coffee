@@ -2,7 +2,6 @@ package oliv.android.astrocomputer;
 
 import android.os.Bundle;
 import android.os.Looper;
-import android.view.Gravity;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +16,9 @@ import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView timeHolder = null;
+    private TextView dateTimeHolder = null;
+    private TextView gpsDataHolder = null;
+    private TextView sunDataHolder = null;
     private final MainActivity instance = this;
     private final SimpleDateFormat DF = new SimpleDateFormat("dd-MMM-yyyy'\n'HH:mm:ss Z z");
 
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
             while (!this.exit) {
                 String content = "";
+                String dateTimeData = " No Clock ";
                 String gpsData = " No GPS ";
                 String sunData = " - none -";
                 // Current date and time
@@ -95,11 +97,17 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                content = String.format("%s\n%s\n%s", formattedDate, gpsData, sunData);
-                Toast.makeText(instance, content, Toast.LENGTH_SHORT).show();
+//                content = String.format("%s\n%s\n%s", formattedDate, gpsData, sunData);
+//                Toast.makeText(instance, content, Toast.LENGTH_SHORT).show();
+//                setText(instance.dateTimeHolder, content);
+//                instance.dateTimeHolder.setText(content);
 
-                setText(instance.timeHolder, content);
-//                instance.timeHolder.setText(content);
+                Toast.makeText(instance, formattedDate, Toast.LENGTH_SHORT).show();
+                Toast.makeText(instance, gpsData, Toast.LENGTH_SHORT).show();
+                Toast.makeText(instance, sunData, Toast.LENGTH_SHORT).show();
+                setText(instance.dateTimeHolder, formattedDate);
+                setText(instance.gpsDataHolder, gpsData);
+                setText(instance.sunDataHolder, sunData);
 
                 try {
                     Thread.sleep(1_000L);
@@ -122,11 +130,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 //        Toast.makeText(this, formattedDate, Toast.LENGTH_SHORT).show();
         // Now we display formattedDate value in TextView
-        this.timeHolder = new TextView(this);
-        timeHolder.setText(String.format("Current Date and Time :\n%s", "---"));
-        timeHolder.setGravity(Gravity.CENTER);
-        timeHolder.setTextSize(20);
-        setContentView(timeHolder);
+        // Warning: the lines below create a TextView programmatically, ignoring the LayoutEditor directives
+//        this.dateTimeHolder = new TextView(this);
+//        dateTimeHolder.setGravity(Gravity.CENTER);
+//        dateTimeHolder.setTextSize(20);
+//        dateTimeHolder.setTextColor(Color.BLUE);
+//        setContentView(dateTimeHolder);
+        // By ID:
+        this.dateTimeHolder = this.findViewById(R.id.dateTime);
+        this.gpsDataHolder = this.findViewById(R.id.gpsData);
+        this.sunDataHolder = this.findViewById(R.id.sunData);
+
+        this.dateTimeHolder.setText("- No date -"); // String.format("Current Date and Time :\n%s", "---"));
+        this.gpsDataHolder.setText("- No GPS -"); // String.format("Current Date and Time :\n%s", "---"));
+        this.sunDataHolder.setText("- No Sun data -"); // String.format("Current Date and Time :\n%s", "---"));
+
         chronometer = new Chronometer();
         Thread timer = new Thread(chronometer, "Chronometer");
         timer.start();
