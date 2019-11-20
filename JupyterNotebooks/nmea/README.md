@@ -100,6 +100,7 @@ For more details on the process, there is [a Jupyter Notebook](./python.nmea.ipy
         - Decimal to Sexagesimal and vice-versa - Ok
     - Explain knots and nautical miles
     - Record and replay (demoLauncher)
+    - Tools: NMEA log to KML, log to GPX.
     - Google Maps APIs => Geolocalisation API: https://olivierld.github.io/web.stuff/gps/GPS.api.html
 -->
 
