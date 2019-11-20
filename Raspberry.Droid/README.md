@@ -11,3 +11,20 @@ This section is about giving it a try...
 ![Astro](./Screenshot_Astro_Computer.jpg)
 
 ---
+
+### Notes
+- `adb` basic usage: <https://www.androidcentral.com/10-basic-terminal-commands-you-should-know>
+- `adb`is in `/Users/olediour/Library/Android/sdk/platform-tools`
+
+```
+ $ export PATH=$PATH:/Users/olediour/Library/Android/sdk/platform-tools
+ $ adb devives [-l]
+List of devices attached
+e2df64a3	device
+emulator-5554	device
+```
+then
+```
+ $ adb -s e2df64a3 shell
+heroqlteatt:/ $ 
+```

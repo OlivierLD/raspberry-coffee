@@ -1,3 +1,14 @@
+## Android Astro Computer
+This is a basic Android application.
+
+What it does:
+- Reads the position from the internal GPS
+- Get the time
+- Computes the Sun's position and displays for the current position and time
+    - the Sun's elevation
+    - the Sun's azimuth
+
+
 Uses permissions, and dependencies on other projects.
 
 Much better managed with `Android Studio`. See [here](https://developer.android.com/studio/install).
@@ -28,3 +39,6 @@ Then its content can be referred to as in:
 ```
 
 > Note: Android may require Java 8, not 9.
+
+## Layout Editor
+- See <https://developer.android.com/training/basics/firstapp/building-ui>
