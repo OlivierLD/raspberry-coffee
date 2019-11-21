@@ -46,7 +46,7 @@ void setup() {
   // List available ports
   printArray(Serial.list());
   // Trying one
-  serialPort = new Serial(this, "/dev/tty.usbmodem141401", 4800);
+  serialPort = new Serial(this, "/dev/tty.usbmodem14101", 4800);
 
   size(600, 400);
   stroke(255);
@@ -126,8 +126,9 @@ String decToSex(double v, DATA_TYPE dataType) {
 }
 
 GeoPos position = null;
-static String RMC_PATTERN = "^\\$[A-Z]{2}RMC$";
-static String GLL_PATTERN = "^\\$[A-Z]{2}GLL$";
+// RegEx cheat-sheet at https://www.rexegg.com/regex-quickstart.html
+static String RMC_PATTERN = "^\\$[A-Z]{2}RMC.*";
+static String GLL_PATTERN = "^\\$[A-Z]{2}GLL.*";
 static Pattern RMC_COMPILED_PATTERN = Pattern.compile(RMC_PATTERN); //<>//
 static Pattern GLL_COMPILED_PATTERN = Pattern.compile(GLL_PATTERN);
 
@@ -181,7 +182,7 @@ void draw() {
             text(decToSex(position.latitude, DATA_TYPE.LATITUDE), 5, 144);
             text(decToSex(position.longitude, DATA_TYPE.LONGITUDE), 5, 216);
           } else {
-            println(String.format("%s not active yet.", sentence));
+            println(String.format("%s not active yet.", sentence.trim()));
             text("RMC Not Active yet", 5, 72);
           }
         } else if (gllMatcher.find()) {
@@ -210,8 +211,8 @@ void draw() {
             text(decToSex(position.latitude, DATA_TYPE.LATITUDE), 5, 144);
             text(decToSex(position.longitude, DATA_TYPE.LONGITUDE), 5, 216);
           } else {
-            println(String.format("%s not active yet.", sentence));
-            text("GLL Not Active yet", 5, 72);
+            println(String.format("%s not active yet.", sentence.trim()));
+            text("GLL Not Active yet", 5, 144);
           }
         } else {
           println(String.format("Dropping [%s], not RMC, not GLL (%s).", data[0], sentence.trim()));
