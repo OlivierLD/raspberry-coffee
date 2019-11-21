@@ -22,7 +22,6 @@ def setup():
     
 
 def draw():
-    global nb
     background(0)  # Set background to black
     # Draw the letter to the center of the screen
     textSize(36)
