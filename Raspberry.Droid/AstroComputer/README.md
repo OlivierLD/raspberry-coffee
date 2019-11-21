@@ -3,11 +3,17 @@ This is a basic Android application.
 
 What it does:
 - Reads the position from the internal GPS
-- Get the time
-- Computes the Sun's position and displays for the current position and time
+- Get the time from the internal clock
+- Computes the chosen body's position and displays for the current position and time
     - the Sun's elevation
     - the Sun's azimuth
-
+- Available bodies are
+    - Sun
+    - Moon
+    - Venus
+    - Mars
+    - Jupiter
+    - Saturn
 
 Uses permissions, and dependencies on other projects.
 
