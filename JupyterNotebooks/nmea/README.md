@@ -1,3 +1,18 @@
+### A trick to find the Serial port to use
+With the GPS **not** plugged in, type
+```
+ $ ls -lisah /dev/tty* > before.txt
+```
+Then connect the GPS on its USB socket
+```
+ $ ls -lisah /dev/tty* > after.txt
+ $ diff before.txt after.txt
+   3a4,5
+   > 2589 0 crw-rw-rw-  1 root      wheel   18, 110 Nov 21 07:54 /dev/tty.usbmodem14101
+   > 2593 0 crw-rw-rw-  1 root      wheel   18, 112 Nov 21 07:54 /dev/tty.usbmodeme2df64a32
+ $
+```
+
 ## To install the dependencies
 Just run
 ```

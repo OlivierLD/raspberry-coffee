@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Astronomical Computer</string>
+
+    <string name="body_prompt">Choose a body</string>
+    <string-array name="bodies_array">
+        <item>Sun</item>
+        <item>Moon</item>
+        <item>Venus</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+    </string-array>
+
 </resources>

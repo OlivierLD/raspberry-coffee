@@ -2,6 +2,9 @@ package oliv.android.astrocomputer;
 
 import android.os.Bundle;
 import android.os.Looper;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +22,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView dateTimeHolder = null;
     private TextView gpsDataHolder = null;
     private TextView sunDataHolder = null;
+    private Spinner bodySpinner = null;
+
+    private enum Body {
+        SUN, MOON, VENUS, MARS, JUPITER, SATURN
+    }
+
+    private Body currentBody = Body.SUN;
+
     private final MainActivity instance = this;
     private final SimpleDateFormat DF = new SimpleDateFormat("dd-MMM-yyyy'\n'HH:mm:ss Z z");
 
@@ -89,7 +100,9 @@ public class MainActivity extends AppCompatActivity {
                             double obsAlt = sru.getHe();
                             double z = sru.getZ();
 
-                            sunData = String.format("Sun Data:\nElevation: %s\nZ: %.02f\272", GeomUtil.decToSex(obsAlt, GeomUtil.SWING, GeomUtil.NONE), z);
+                            Object selectedBody = instance.bodySpinner.getSelectedItem();
+
+                            sunData = String.format("%s Data:\nElevation: %s\nZ: %.02f\272", selectedBody.toString(), GeomUtil.decToSex(obsAlt, GeomUtil.SWING, GeomUtil.NONE), z);
                         }
 
                     } else {
@@ -140,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
         this.dateTimeHolder = this.findViewById(R.id.dateTime);
         this.gpsDataHolder = this.findViewById(R.id.gpsData);
         this.sunDataHolder = this.findViewById(R.id.sunData);
+        this.bodySpinner = this.findViewById(R.id.body);
 
         this.dateTimeHolder.setText("- No date -"); // String.format("Current Date and Time :\n%s", "---"));
         this.gpsDataHolder.setText("- No GPS -"); // String.format("Current Date and Time :\n%s", "---"));

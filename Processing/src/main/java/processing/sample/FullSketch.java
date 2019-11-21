@@ -10,7 +10,7 @@ public class FullSketch extends PApplet {
 		stroke(255);
 		noFill();
 		textSize(72);
-		// You can use Java 8 syntax
+		// Here you can use Java 8 syntax
 		List<String> testListJava8 = Arrays.asList(new String[] {"One", "Two", "Three"});
 		testListJava8.stream().forEach(System.out::println);
 	}

@@ -38,6 +38,20 @@
         android:textSize="24sp"
         android:textStyle="bold|italic" />
 
+    <Spinner
+        android:id="@+id/body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/spinnerBackground"
+        android:entries="@array/bodies_array"
+        android:prompt="@string/body_prompt"
+        android:spinnerMode="dropdown"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
     <TextView
         android:id="@+id/sunData"
         android:layout_width="match_parent"
@@ -45,7 +59,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:text="Sun Data"
+        android:text="Body Data"
         android:textAlignment="viewStart"
         android:textColor="#FF5722"
         android:textSize="24sp"
