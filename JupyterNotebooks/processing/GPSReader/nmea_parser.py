@@ -85,6 +85,8 @@ def gll_parser(nmea_sentence, valid=False):
     if DEBUG or GLL_DEBUG:
         print("Parsing GLL, {} elements".format(len(data)))
     parsed["valid"] = "true" if (data[6] == 'A') else "false"
+    if DEBUG or GLL_DEBUG:
+        print("\tvalid: {}".format(parsed))
     # Position
     if len(data[1]) > 0 and len(data[3]) > 0:
         pos = {}
@@ -103,6 +105,8 @@ def gll_parser(nmea_sentence, valid=False):
 
         parsed["position"] = pos
 
+    if DEBUG or GLL_DEBUG:
+        print("\tposition: {}".format(parsed))
     # Time (UTC)
     if len(data[5]) > 0:
         utc = float(data[5])
@@ -110,9 +114,10 @@ def gll_parser(nmea_sentence, valid=False):
         mins = int((utc - (10000 * hours)) / 100)
         secs = (utc % 100)
         microsecs = (secs - int(secs)) * 1000000
-        time = datetime.time(hours, mins, int(secs), int(microsecs), tzinfo=datetime.timezone.utc)
+        time = None  # datetime.time(hours, mins, int(secs), int(microsecs), tzinfo=datetime.timezone.utc)
         if DEBUG or GLL_DEBUG:
-            print(time.strftime("%H:%M:%S %z %Z, also %c"))
+            if time is not None:
+              print(time.strftime("%H:%M:%S %z %Z, also %c"))
         # parsed["utc-time"] = time  # Might not be rendered correctly
         itemized_time = {}
         itemized_time["hours"] = hours
@@ -210,9 +215,10 @@ def rmc_parser(nmea_sentence, valid=False):
                 year += 1900
             else:
                 year += 2000
-            date = datetime.datetime(year, month, day, hours, mins, int(secs), 0, tzinfo=datetime.timezone.utc)
+            date = None  # datetime.datetime(year, month, day, hours, mins, int(secs), 0, tzinfo=datetime.timezone.utc)
             if DEBUG or RMC_DEBUG:
-                print(date.strftime("%A %d %B %Y %H:%M:%S %z %Z, also %c"))
+                if date is not None:
+                  print(date.strftime("%A %d %B %Y %H:%M:%S %z %Z, also %c"))
             # parsed["utc-date"] = date  # Might not be rendered correctly
             itemized_date = {}
             itemized_date["year"] = year
@@ -357,9 +363,9 @@ def parse_nmea_sentence(nmea_sentence):
                     if parser is None:
                         raise NoParserException("No parser exists (yet) for {}".format(sentence_id))
                     else:
-                        # print("Proceeding... {}".format(sentence_id))
+                        print("Processing... {}".format(sentence_id))
                         obj = parser(nmea_sentence)
-                        # print("Parsed: {}".format(obj))
+                        print("Parsed: {}".format(obj))
                         return obj
             else:
                 raise Exception("Incorrect sentence prefix \"{}\". Should be 6 character long. [{}]".format(sentence_prefix, nmea_sentence))
@@ -401,7 +407,7 @@ if __name__ == "__main__":
                     dec_to_sex(nmea_obj['parsed']['position']['latitude'], NS),
                     dec_to_sex(nmea_obj['parsed']['position']['longitude'], EW)))
         except Exception as ex:
-            print("Ooops! {}".format(ex))
+            print(">> Ooops! {}".format(ex))
 else:
     print("---------------------")
     print("{} NOT running as main, probably imported.".format(__name__))

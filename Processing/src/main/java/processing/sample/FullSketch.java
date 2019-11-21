@@ -18,8 +18,8 @@ public class FullSketch extends PApplet {
 	public void draw() {
 		background(0);
 		fill(255);
-		int value = (int)Math.floor(1023 * Math.random());  // Simulation
-		text(String.format("%04d", value), 10, 100);
+		int value = (int)Math.floor(65_535 * Math.random());  // Simulation
+		text(String.format("%05d", value), 10, 100);
 	}
 
 	public void settings() {  size(600, 400); }
