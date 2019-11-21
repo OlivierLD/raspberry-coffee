@@ -1,12 +1,12 @@
-## Android Astro Computer
+## Android Astronomical Computer
 This is a basic Android application.
 
 What it does:
 - Reads the position from the internal GPS
 - Get the time from the internal clock
 - Computes the chosen body's position and displays for the current position and time
-    - the Sun's elevation
-    - the Sun's azimuth
+    - the chosen body's elevation
+    - the chosen body's azimuth
 - Available bodies are
     - Sun
     - Moon

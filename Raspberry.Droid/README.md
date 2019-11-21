@@ -7,8 +7,11 @@ This section is about giving it a try...
 
 ---
 ### Projects
-- [`AstroComputer`](./AstroComputer), a phone or tablet app, displaying current time, current position, and Sun coordinates (Elevation and azimuth)
-![Astro](./Screenshot_Astro_Computer.jpg)
+- [`AstroComputer`](./AstroComputer), a phone or tablet app, displaying current time, current position, and a chosen celestial body's coordinates (elevation and azimuth)
+
+| Screenshot |
+|:-----------|
+| ![Astro](./Screenshot_Astro_Computer.jpg) |
 
 ---
 
