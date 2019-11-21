@@ -24,12 +24,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView sunDataHolder = null;
     private Spinner bodySpinner = null;
 
-    private enum Body {
-        SUN, MOON, VENUS, MARS, JUPITER, SATURN
-    }
-
-    private Body currentBody = Body.SUN;
-
     private final MainActivity instance = this;
     private final SimpleDateFormat DF = new SimpleDateFormat("dd-MMM-yyyy'\n'HH:mm:ss Z z");
 
@@ -52,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
 //            Looper.loop();
 
             while (!this.exit) {
-                String content = "";
-                String dateTimeData = " No Clock ";
                 String gpsData = " No GPS ";
                 String sunData = " - none -";
                 // Current date and time
@@ -94,13 +86,40 @@ public class MainActivity extends AppCompatActivity {
                             sru.setL(latitude);
                             sru.setG(longitude);
 
-                            sru.setAHG(AstroComputer.getSunGHA());
-                            sru.setD(AstroComputer.getSunDecl());
+                            Object selectedBody = instance.bodySpinner.getSelectedItem();
+                            switch (selectedBody.toString()) {
+                                case "Moon":
+                                    sru.setAHG(AstroComputer.getMoonGHA());
+                                    sru.setD(AstroComputer.getMoonDecl());
+                                    break;
+                                case "Venus":
+                                    sru.setAHG(AstroComputer.getVenusGHA());
+                                    sru.setD(AstroComputer.getVenusDecl());
+                                    break;
+                                case "Mars":
+                                    sru.setAHG(AstroComputer.getMarsGHA());
+                                    sru.setD(AstroComputer.getMarsDecl());
+                                    break;
+                                case "Jupiter":
+                                    sru.setAHG(AstroComputer.getJupiterGHA());
+                                    sru.setD(AstroComputer.getJupiterDecl());
+                                    break;
+                                case "Saturn":
+                                    sru.setAHG(AstroComputer.getSaturnGHA());
+                                    sru.setD(AstroComputer.getSaturnDecl());
+                                    break;
+                                case "Sun":
+                                default:
+                                    sru.setAHG(AstroComputer.getSunGHA());
+                                    sru.setD(AstroComputer.getSunDecl());
+                                    break;
+                            }
+
+//                            sru.setAHG(AstroComputer.getSunGHA());
+//                            sru.setD(AstroComputer.getSunDecl());
                             sru.calculate();
                             double obsAlt = sru.getHe();
                             double z = sru.getZ();
-
-                            Object selectedBody = instance.bodySpinner.getSelectedItem();
 
                             sunData = String.format("%s Data:\nElevation: %s\nZ: %.02f\272", selectedBody.toString(), GeomUtil.decToSex(obsAlt, GeomUtil.SWING, GeomUtil.NONE), z);
                         }
@@ -154,6 +173,9 @@ public class MainActivity extends AppCompatActivity {
         this.gpsDataHolder = this.findViewById(R.id.gpsData);
         this.sunDataHolder = this.findViewById(R.id.sunData);
         this.bodySpinner = this.findViewById(R.id.body);
+        this.bodySpinner.setSelection(0, true);
+        View v = this.bodySpinner.getSelectedView();
+        ((TextView)v).setTextSize(30);
 
         this.dateTimeHolder.setText("- No date -"); // String.format("Current Date and Time :\n%s", "---"));
         this.gpsDataHolder.setText("- No GPS -"); // String.format("Current Date and Time :\n%s", "---"));

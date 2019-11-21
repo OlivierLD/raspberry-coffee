@@ -1,4 +1,4 @@
-# Some NMEA Samples
+# Some NMEA Samples on Processing
 
 - `serial101` Basic reading of a Serial port, no display.
 - `serial102` Display NMEA Sentences as they come fro the Serial port

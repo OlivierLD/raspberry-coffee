@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /* Reads RMC & GLL sentences from a Serial GPS, and displays the position on the screen.
- * 
+ *
  * Note: This is just a demo, there are many ways to optimize all this!
  *
  * Modify the Serial port name if needed, look for "serialPort = new Serial("...
@@ -73,7 +73,7 @@ int calculateCheckSum(String str) {
 }
 
 boolean validCheckSum(String data) {
-  
+
   String sentence = data.trim();
   boolean b = false;
   try {
@@ -127,8 +127,9 @@ String decToSex(double v, DATA_TYPE dataType) {
 
 GeoPos position = null;
 // RegEx cheat-sheet at https://www.rexegg.com/regex-quickstart.html
-static String RMC_PATTERN = "^\\$[A-Z]{2}RMC.*";
-static String GLL_PATTERN = "^\\$[A-Z]{2}GLL.*";
+// Following 2 patterns will be used to match the FIRST element of a sentence, before the first comma ','.
+static String RMC_PATTERN = "^\\$[A-Z]{2}RMC$";
+static String GLL_PATTERN = "^\\$[A-Z]{2}GLL$";
 static Pattern RMC_COMPILED_PATTERN = Pattern.compile(RMC_PATTERN); //<>//
 static Pattern GLL_COMPILED_PATTERN = Pattern.compile(GLL_PATTERN);
 

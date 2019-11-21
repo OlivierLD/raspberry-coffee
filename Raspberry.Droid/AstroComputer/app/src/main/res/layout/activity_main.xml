@@ -40,17 +40,16 @@
 
     <Spinner
         android:id="@+id/body"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:background="@color/spinnerBackground"
         android:entries="@array/bodies_array"
-        android:prompt="@string/body_prompt"
         android:spinnerMode="dropdown"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/sunData"
