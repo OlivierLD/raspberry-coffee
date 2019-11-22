@@ -9,14 +9,22 @@
 # Pushes the parsed data in a cache
 # Provides REST access to the cache, try http://localhost:8080/gps/cache
 #
-from http.server import HTTPServer, BaseHTTPRequestHandler
-import nmea_parser as NMEAParser
-import serial
 import json
-import sys, traceback
+import sys
 import threading
+import traceback
+from http.server import HTTPServer, BaseHTTPRequestHandler
 
-sample_data = {"1": "First", "2": "Second", "3": "Third", "4": "Fourth"}  # Used for non-implemented operations.
+import serial
+
+import nmea_parser as NMEAParser
+
+sample_data = {  # Used for non-implemented operations. Fallback.
+    "1": "First",
+    "2": "Second",
+    "3": "Third",
+    "4": "Fourth"
+}
 server_port = 8080
 REST_DEBUG = False
 SERIAL_DEBUG = False
@@ -25,7 +33,7 @@ GPS_DEBUG = False
 
 # On mac, USB GPS on port /dev/tty.usbmodem14101,
 # Raspberry Pi, use /dev/ttyUSB0 or so.
-port_name = "/dev/tty.usbmodem14101"
+port_name = "/dev/tty.usbmodem14201"
 # port_name = "/dev/ttyS80"
 baud_rate = 4800
 
@@ -125,7 +133,7 @@ def read_gps():
                     if GPS_DEBUG:
                         print("{} => {}".format(nmea_obj["type"], nmea_obj))
             except AttributeError as ae:
-                print("AttributeError for {}".format(nmea_obj))
+                print("AttributeError for {}: {}".format(nmea_obj, ae))
         except NMEAParser.NoParserException as npe:
             # absorb
             if GPS_DEBUG:

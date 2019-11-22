@@ -21,7 +21,7 @@ This section is about giving it a try...
 
 ```
  $ export PATH=$PATH:/Users/olediour/Library/Android/sdk/platform-tools
- $ adb devives [-l]
+ $ adb devices [-l]
 List of devices attached
 e2df64a3	device
 emulator-5554	device

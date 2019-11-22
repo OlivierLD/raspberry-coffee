@@ -64,5 +64,38 @@
         android:textSize="24sp"
         android:textStyle="bold|italic" />
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_weight="1"
+        android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:id="@+id/userMessage"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="100dp"
+        android:layout_weight="1"
+        android:text="Message..." />
+
+    <LinearLayout
+        android:id="@+id/buttonHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/logButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Log GPS Data"
+            android:onClick="onLogButtonClick"/>
+
+    </LinearLayout>
+
 
 </LinearLayout>

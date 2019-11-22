@@ -44,14 +44,14 @@ NS = 0
 EW = 1
 
 
-def dec_to_sex(value, type):
+def dec_to_sex(value, data_type):
     abs_val = abs(value)  # (-value) if (value < 0) else value
     int_value = math.floor(abs_val)
     i = int(int_value)
     dec = abs_val - int_value
     dec *= 60
     sign = "N"
-    if type == NS:
+    if data_type == NS:
         if value < 0:
             sign = "S"
     else:
@@ -114,10 +114,7 @@ def gll_parser(nmea_sentence, valid=False):
         if DEBUG or GLL_DEBUG:
             print(time.strftime("%H:%M:%S %z %Z, also %c"))
         # parsed["utc-time"] = time  # Might not be rendered correctly
-        itemized_time = {}
-        itemized_time["hours"] = hours
-        itemized_time["minutes"] = mins
-        itemized_time["seconds"] = int(secs)
+        itemized_time = {"hours": hours, "minutes": mins, "seconds": int(secs)}
         parsed["gll-time-itemized"] = itemized_time
     return {"type": "gll", "parsed": parsed}
 
@@ -214,13 +211,8 @@ def rmc_parser(nmea_sentence, valid=False):
             if DEBUG or RMC_DEBUG:
                 print(date.strftime("%A %d %B %Y %H:%M:%S %z %Z, also %c"))
             # parsed["utc-date"] = date  # Might not be rendered correctly
-            itemized_date = {}
-            itemized_date["year"] = year
-            itemized_date["month"] = month
-            itemized_date["day"] = day
-            itemized_date["hours"] = hours
-            itemized_date["minutes"] = mins
-            itemized_date["seconds"] = int(secs)
+            itemized_date = {"year": year, "month": month, "day": day, "hours": hours, "minutes": mins,
+                             "seconds": int(secs)}
             parsed["utc-date-itemized"] = itemized_date
     # Position
     if len(data[3]) > 0 and len(data[5]) > 0:
@@ -362,7 +354,8 @@ def parse_nmea_sentence(nmea_sentence):
                         # print("Parsed: {}".format(obj))
                         return obj
             else:
-                raise Exception("Incorrect sentence prefix \"{}\". Should be 6 character long. [{}]".format(sentence_prefix, nmea_sentence))
+                raise Exception("Incorrect sentence prefix \"{}\". Should be 6 character long. [{}]".format(
+                    sentence_prefix, nmea_sentence))
         else:
             raise Exception("Sentence should end with \\r\\n [{}]".format(nmea_sentence))
     else:

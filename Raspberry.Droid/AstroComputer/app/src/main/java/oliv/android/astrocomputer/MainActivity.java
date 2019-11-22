@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,6 +13,10 @@ import oliv.android.AstroComputer;
 import oliv.android.GeomUtil;
 import oliv.android.SightReductionUtil;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -23,6 +28,13 @@ public class MainActivity extends AppCompatActivity {
     private TextView gpsDataHolder = null;
     private TextView sunDataHolder = null;
     private Spinner bodySpinner = null;
+    private TextView userMessageZone = null;
+    private Button logButton = null;
+
+    private boolean isLogging = false;
+    private BufferedWriter logger = null;
+
+    private final static String LOG_FILE_NAME = "GPS_DATA.csv";
 
     private final MainActivity instance = this;
     private final SimpleDateFormat DF = new SimpleDateFormat("dd-MMM-yyyy'\n'HH:mm:ss Z z");
@@ -34,6 +46,37 @@ public class MainActivity extends AppCompatActivity {
                 text.setText(value);
             }
         });
+    }
+
+    public void onLogButtonClick(View view) {
+        isLogging = !isLogging;
+        logButton.setText(isLogging ? "Pause Logging" : "Resume Logging");
+        if (isLogging) {
+            try {
+                File logFile = new File(getExternalFilesDir(null), LOG_FILE_NAME);
+                boolean exists = logFile.exists();
+                logger = new BufferedWriter(new FileWriter(logFile, true)); // true: append
+                userMessageZone.setText(String.format("Logging data in %s", LOG_FILE_NAME));
+                if (!exists) {
+                    String loggingHeader = "epoch;fmt-date;latitude;longitude;speed;heading\n";
+                    logger.write(loggingHeader);
+                }
+                String loggingComment = String.format("# Logging %s at %d\n", (exists ? "resumed" : "started"), System.currentTimeMillis());
+                userMessageZone.setText(userMessageZone.getText() + "\n" + loggingComment);
+            } catch (IOException ioe) {
+                userMessageZone.setText(ioe.toString());
+            }
+        } else {
+            if (logger != null) {
+                try {
+                    logger.flush();
+                    logger.close();
+                    userMessageZone.setText("Logging was paused");
+                } catch (IOException ioe) {
+                    userMessageZone.setText(ioe.toString());
+                }
+            }
+        }
     }
 
     private class Chronometer implements Runnable {
@@ -53,15 +96,19 @@ public class MainActivity extends AppCompatActivity {
 //                System.out.println("Current time => " + c.getTime());
                 String formattedDate = DF.format(c.getTime());
                 // formattedDate have current date/time
+                double latitude = -Double.MAX_VALUE;
+                double longitude = -Double.MAX_VALUE;
+                float sog = -1f;
+                float cog = -1f;
 
                 if (gps != null) {
                     if (gps.canGetLocation()) {
 
-                        double latitude = gps.getLatitude();
-                        double longitude = gps.getLongitude();
+                        latitude = gps.getLatitude();
+                        longitude = gps.getLongitude();
 
-                        float sog = gps.getSpeed();
-                        float cog = gps.getBearing();
+                        sog = gps.getSpeed();
+                        cog = gps.getBearing();
 
                         // \n is for new line
 //                    Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
@@ -141,6 +188,25 @@ public class MainActivity extends AppCompatActivity {
                 setText(instance.gpsDataHolder, gpsData);
                 setText(instance.sunDataHolder, sunData);
 
+                if (instance.isLogging) {
+                    // Log data here
+                    // "epoch;fmt-date;latitude;longitude;speed;heading";
+                    String dataLine = String.format(
+                            "%d;%s;%f;%f;%f;%f\n",
+                            c.getTimeInMillis(),
+                            formattedDate.replace('\n', ' '),
+                            latitude,
+                            longitude,
+                            sog,
+                            cog
+                    );
+                    try {
+                        logger.write(dataLine);
+                    } catch (IOException ioe) {
+                        userMessageZone.setText(String.format("Error logging data: %s", ioe.toString()));
+                    }
+                }
+
                 try {
                     Thread.sleep(1_000L);
                 } catch (InterruptedException ie) {
@@ -176,6 +242,8 @@ public class MainActivity extends AppCompatActivity {
         this.bodySpinner.setSelection(0, true);
         View v = this.bodySpinner.getSelectedView();
         ((TextView)v).setTextSize(30);
+        this.userMessageZone = this.findViewById(R.id.userMessage);
+        this.logButton = this.findViewById(R.id.logButton);
 
         this.dateTimeHolder.setText("- No date -"); // String.format("Current Date and Time :\n%s", "---"));
         this.gpsDataHolder.setText("- No GPS -"); // String.format("Current Date and Time :\n%s", "---"));
@@ -192,6 +260,14 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         if (chronometer != null) {
             chronometer.stop();
+        }
+        if (isLogging) {
+            try {
+                logger.flush();
+                logger.close();
+            } catch (IOException ioe) {
+                //
+            }
         }
     }
 }
