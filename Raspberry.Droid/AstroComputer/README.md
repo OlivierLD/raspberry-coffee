@@ -75,6 +75,7 @@ heroqlteatt:/ $ rm sdcard/Android/data/oliv.android.astrocomputer/files/GPS_DATA
 ```
 
 You can also - if you do not want to deal with the command line interface - use a tool like [Android File Transfer](https://www.android.com/filetransfer/).
+![Android File Transfer](./AndroidFileTransfer.png)
 
 ### Permissions
 Requires `ACCESS_FINE_LOCATION` and `ACCESS_COARSE_LOCATION` for the GPS data.
