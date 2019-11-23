@@ -4,9 +4,7 @@ import android.content.pm.ActivityInfo;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
-import android.service.voice.VoiceInteractionSession;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -92,36 +90,53 @@ public class MainActivity extends AppCompatActivity {
             Looper.prepare(); // Mandatory for a Thread on Android.
 //            Looper.loop();
 
+            double latitude = -Double.MAX_VALUE;
+            double longitude = -Double.MAX_VALUE;
+            double sog = -1f;
+            double cog = -1f;
+
+            Location lastLocation = null;
+
             while (!this.exit) {
                 String gpsData = " No GPS ";
-                String sunData = " - none -";
+                String astroData = " - none -";
                 // Current date and time
                 Calendar c = Calendar.getInstance();
 //                System.out.println("Current time => " + c.getTime());
                 String formattedDate = DF.format(c.getTime());
                 // formattedDate have current date/time
-                double latitude = -Double.MAX_VALUE;
-                double longitude = -Double.MAX_VALUE;
-                float sog = -1f;
-                float cog = -1f;
 
                 if (gps != null) {
                     if (gps.canGetLocation()) {
 
                         Location gpsLocation = gps.getLocation(instance);
+                        double elapsedTime = 0d;
 
                         latitude = gpsLocation.getLatitude();
                         longitude = gpsLocation.getLongitude();
 
-                        sog = gpsLocation.getSpeed();
-                        cog = gpsLocation.getBearing();
+                        if (gpsLocation.hasSpeed()) {
+                            sog = gpsLocation.getSpeed();
+                            cog = gpsLocation.getBearing();
+                        } else {
+
+                            if (lastLocation != null) {
+                                elapsedTime = (gpsLocation.getTime() - lastLocation.getTime()) / 1_000; // Convert milliseconds to seconds
+                                if (elapsedTime > 0) {
+                                    sog = lastLocation.distanceTo(gpsLocation) /* in meters */ / elapsedTime;
+                                }
+                                cog = lastLocation.bearingTo(gpsLocation);
+                            }
+                        }
+                        lastLocation = gpsLocation;
+                        userMessageZone.setText(String.format("Got GPS Data: %s: %f / %f\n(elapsed %.02f s)", formattedDate, latitude, longitude, elapsedTime));
 
                         // \n is for new line
 //                    Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
                         gpsData = String.format("GPS Data:\n%s\n%s\n%s\n%s",
                                 GeomUtil.decToSex(latitude, GeomUtil.DEFAULT_DEG, GeomUtil.NS) ,
                                 GeomUtil.decToSex(longitude, GeomUtil.DEFAULT_DEG, GeomUtil.EW),
-                                String.format(Locale.getDefault(), "SOG: %.02f kn", sog),  // Verify unit
+                                String.format(Locale.getDefault(), "SOG: %.02f m/s", sog),
                                 String.format(Locale.getDefault(), "COG: %.01f\272", cog));
 
                         // Celestial Data
@@ -174,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                             double obsAlt = sru.getHe();
                             double z = sru.getZ();
 
-                            sunData = String.format("%s Data:\nElevation: %s\nZ: %.02f\272",
+                            astroData = String.format("%s Data:\nElevation: %s\nZ: %.02f\272",
                                     selectedBody.toString(),
                                     GeomUtil.decToSex(obsAlt,
                                             GeomUtil.SWING,
@@ -187,17 +202,17 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-//                content = String.format("%s\n%s\n%s", formattedDate, gpsData, sunData);
+//                content = String.format("%s\n%s\n%s", formattedDate, gpsData, astroData);
 //                Toast.makeText(instance, content, Toast.LENGTH_SHORT).show();
 //                setText(instance.dateTimeHolder, content);
 //                instance.dateTimeHolder.setText(content);
 
-                Toast.makeText(instance, formattedDate, Toast.LENGTH_SHORT).show();
-                Toast.makeText(instance, gpsData, Toast.LENGTH_SHORT).show();
-                Toast.makeText(instance, sunData, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(instance, formattedDate, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(instance, gpsData, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(instance, astroData, Toast.LENGTH_SHORT).show();
                 setText(instance.dateTimeHolder, formattedDate);
                 setText(instance.gpsDataHolder, gpsData);
-                setText(instance.sunDataHolder, sunData);
+                setText(instance.sunDataHolder, astroData);
 
                 if (instance.isLogging) {
                     // Log data here
