@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:keepScreenOn="true"
     tools:context=".MainActivity">
 
     <TextView
@@ -62,7 +63,7 @@
         android:textAlignment="viewStart"
         android:textColor="#FF5722"
         android:textSize="24sp"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold" />
 
     <View
         android:id="@+id/divider"
@@ -79,7 +80,7 @@
         android:layout_marginRight="10dp"
         android:layout_height="100dp"
         android:layout_weight="1"
-        android:text="Message..." />
+        android:text="Messages will go here..." />
 
     <LinearLayout
         android:id="@+id/buttonHolder"

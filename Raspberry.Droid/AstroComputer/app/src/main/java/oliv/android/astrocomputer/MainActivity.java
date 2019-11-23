@@ -1,7 +1,10 @@
 package oliv.android.astrocomputer;
 
+import android.content.pm.ActivityInfo;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.service.voice.VoiceInteractionSession;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -79,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Loops every second. The thread way for Android...
     private class Chronometer implements Runnable {
 
         private volatile transient boolean exit = false;
@@ -104,11 +108,13 @@ public class MainActivity extends AppCompatActivity {
                 if (gps != null) {
                     if (gps.canGetLocation()) {
 
-                        latitude = gps.getLatitude();
-                        longitude = gps.getLongitude();
+                        Location gpsLocation = gps.getLocation(instance);
 
-                        sog = gps.getSpeed();
-                        cog = gps.getBearing();
+                        latitude = gpsLocation.getLatitude();
+                        longitude = gpsLocation.getLongitude();
+
+                        sog = gpsLocation.getSpeed();
+                        cog = gpsLocation.getBearing();
 
                         // \n is for new line
 //                    Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
@@ -168,7 +174,12 @@ public class MainActivity extends AppCompatActivity {
                             double obsAlt = sru.getHe();
                             double z = sru.getZ();
 
-                            sunData = String.format("%s Data:\nElevation: %s\nZ: %.02f\272", selectedBody.toString(), GeomUtil.decToSex(obsAlt, GeomUtil.SWING, GeomUtil.NONE), z);
+                            sunData = String.format("%s Data:\nElevation: %s\nZ: %.02f\272",
+                                    selectedBody.toString(),
+                                    GeomUtil.decToSex(obsAlt,
+                                            GeomUtil.SWING,
+                                            GeomUtil.NONE),
+                                    z);
                         }
 
                     } else {
@@ -226,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); // Force portrait, to avoid restart (there must be a better way...)
 //        Toast.makeText(this, formattedDate, Toast.LENGTH_SHORT).show();
         // Now we display formattedDate value in TextView
         // Warning: the lines below create a TextView programmatically, ignoring the LayoutEditor directives
@@ -234,20 +246,21 @@ public class MainActivity extends AppCompatActivity {
 //        dateTimeHolder.setTextSize(20);
 //        dateTimeHolder.setTextColor(Color.BLUE);
 //        setContentView(dateTimeHolder);
+
         // By ID:
         this.dateTimeHolder = this.findViewById(R.id.dateTime);
         this.gpsDataHolder = this.findViewById(R.id.gpsData);
         this.sunDataHolder = this.findViewById(R.id.sunData);
         this.bodySpinner = this.findViewById(R.id.body);
         this.bodySpinner.setSelection(0, true);
-        View v = this.bodySpinner.getSelectedView();
-        ((TextView)v).setTextSize(30);
+        View view = this.bodySpinner.getSelectedView();
+        ((TextView)view).setTextSize(20);
         this.userMessageZone = this.findViewById(R.id.userMessage);
         this.logButton = this.findViewById(R.id.logButton);
 
         this.dateTimeHolder.setText("- No date -"); // String.format("Current Date and Time :\n%s", "---"));
         this.gpsDataHolder.setText("- No GPS -"); // String.format("Current Date and Time :\n%s", "---"));
-        this.sunDataHolder.setText("- No Sun data -"); // String.format("Current Date and Time :\n%s", "---"));
+        this.sunDataHolder.setText("- No Celestial data -"); // String.format("Current Date and Time :\n%s", "---"));
 
         chronometer = new Chronometer();
         Thread timer = new Thread(chronometer, "Chronometer");

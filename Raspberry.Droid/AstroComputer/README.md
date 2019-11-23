@@ -1,3 +1,5 @@
+I'm learning Android...
+
 ## Android Astronomical Computer
 This is a basic Android application.
 
@@ -17,6 +19,9 @@ What it does:
 
 Uses permissions, and dependencies on other projects.
 
+This app is explicitly stuck in portrait mode (`setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);` in the `MainActivity`), and stays on (`android:keepScreenOn="true"` in the `activity_main.xml`).
+There must be a better way not to interrupt the logging, but this is the way ot is for now.
+
 Much better managed with `Android Studio`. See [here](https://developer.android.com/studio/install).
 
 Also implements some logging features.
@@ -27,6 +32,7 @@ GPS Data would be logged in `GPS_DATA.csv`, located in `/Android/data/oliv.andro
 > You can use the Android Debugging Bridge (aka `adb`), located in `$HOME/Library/Android/sdk/platform-tools` if you have installed Android Studio.
 
 ```
+ # From your Mac or Linux
  $ export PATH=$PATH:$HOME/Library/Android/sdk/platform-tools
 ```
 

@@ -17,7 +17,7 @@ function cacheClient(dataManager, bp) {
         happyCode = 200,
         data = null;
 
-		let promise = new Promise(function (resolve, reject) {
+		let promise = new Promise((resolve, reject) => {
 			let xhr = new XMLHttpRequest();
 
 			let req = verb + " " + url;
@@ -37,13 +37,13 @@ function cacheClient(dataManager, bp) {
 				console.log("Send Error ", err);
 			}
 
-			let requestTimer = setTimeout(function () {
+			let requestTimer = setTimeout(() => {
 				xhr.abort();
 				let mess = {code: 408, message: 'Timeout'};
 				reject(mess);
 			}, TIMEOUT);
 
-			xhr.onload = function () {
+			xhr.onload = () => {
 				clearTimeout(requestTimer);
 				if (xhr.status === happyCode) {
 					resolve(xhr.response);
@@ -58,7 +58,7 @@ function cacheClient(dataManager, bp) {
 // Executed at startup
 	(() => {
 		// Long poll
-		setInterval(function () {
+		setInterval(() => {
 			fetch();
 		}, betweenPing);
 	})();
@@ -84,5 +84,4 @@ function cacheClient(dataManager, bp) {
 			console.log("Failed to get nmea data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 		});
 	}
-
 };

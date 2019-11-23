@@ -25,7 +25,7 @@ function getPromise(
 		console.log(">>> Promise", verb, url);
 	}
 
-	let promise = new Promise(function (resolve, reject) {
+	let promise = new Promise((resolve, reject) => {
 		let xhr = new XMLHttpRequest();
 		let TIMEOUT = timeout;
 
@@ -49,13 +49,13 @@ function getPromise(
 			console.log("Send Error ", err);
 		}
 
-		let requestTimer = setTimeout(function () {
+		let requestTimer = setTimeout(() => {
 			xhr.abort();
 			let mess = {code: 408, message: 'Timeout'};
 			reject(mess);
 		}, TIMEOUT);
 
-		xhr.onload = function () {
+		xhr.onload = () => {
 			clearTimeout(requestTimer);
 			if (xhr.status === happyCode) {
 				resolve(xhr.response);
@@ -315,7 +315,7 @@ function serialPortList() {
 		let html = "<h5>Available Serial Ports</h5>";
 		if (json.length > 0) {
 			html += "<table>";
-			json.forEach(function (line, idx) {
+			json.forEach((line, idx) => {
 				html += ("<tr><td>" + line + "</td></tr>");
 			});
 			html += "</table>";

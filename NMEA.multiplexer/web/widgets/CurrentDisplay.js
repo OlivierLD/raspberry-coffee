@@ -43,7 +43,7 @@ var currentDisplayColorConfigBlack =
         knobOutlineColor: 'blue',
         font: 'Arial'
     };
-var currentDisplayColorConfig = currentDisplayColorConfigWhite; // 
+var currentDisplayColorConfig = currentDisplayColorConfigWhite; //
 
 function CurrentDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
     if (majorTicks === undefined)
@@ -84,7 +84,7 @@ function CurrentDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
         withBorder = b;
     };
 
-    this.startStop = function (buttonName) {
+    this.startStop = (buttonName) => {
 //  console.log('StartStop requested on ' + buttonName);
         var button = document.getElementById(buttonName);
         running = !running;

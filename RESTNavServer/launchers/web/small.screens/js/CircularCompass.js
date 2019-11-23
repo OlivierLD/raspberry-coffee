@@ -52,7 +52,7 @@ function CircularCompass(cName, dSize, majorTicks, minorTicks, withRose) {
 //				console.log("  >>> Found it!");
 					let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 					let cssTextElems = cssText.split(";");
-					cssTextElems.forEach(function (elem) {
+					cssTextElems.forEach((elem) => {
 						if (elem.trim().length > 0) {
 							let keyValPair = elem.split(":");
 							let key = keyValPair[0].trim();

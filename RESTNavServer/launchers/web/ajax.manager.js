@@ -7,7 +7,7 @@ function initAjax(forwardErrors) {
 	if (forwardErrors !== undefined) {
 		forwardAjaxErrors = forwardErrors;
 	}
-	let interval = setInterval(function () {
+	let interval = setInterval(() => {
 		fetch();
 	}, 1000);
 }
@@ -21,7 +21,7 @@ function getNMEAData() {
 			happyCode = 200,
 			TIMEOUT = 10000;
 
-	let promise = new Promise(function (resolve, reject) {
+	let promise = new Promise((resolve, reject) => {
 		let xhr = new XMLHttpRequest();
 
 		let req = verb + " " + url;
@@ -41,7 +41,7 @@ function getNMEAData() {
 			console.log("Send Error ", err);
 		}
 
-		let requestTimer = setTimeout(function () {
+		let requestTimer = setTimeout(() => {
 			xhr.abort();
 			let mess = {code: 408, message: 'Timeout'};
 			reject(mess);

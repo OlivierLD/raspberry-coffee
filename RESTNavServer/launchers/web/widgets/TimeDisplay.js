@@ -3,7 +3,7 @@
  */
 
 function TimeDisplay(cName,     // Canvas Name
-                     dSize)     // height         
+                     dSize)     // height
 {
 	if (dSize === undefined)
 		dSize = 20;
@@ -44,7 +44,7 @@ function TimeDisplay(cName,     // Canvas Name
 //				console.log("  >>> Found it!");
 					var cssText = document.styleSheets[s].cssRules[r].style.cssText;
 					var cssTextElems = cssText.split(";");
-					cssTextElems.forEach(function (elem) {
+					cssTextElems.forEach((elem) => {
 						if (elem.trim().length > 0) {
 							var keyValPair = elem.split(":");
 							var key = keyValPair[0].trim();

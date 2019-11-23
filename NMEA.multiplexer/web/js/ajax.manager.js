@@ -21,7 +21,7 @@ function getNMEAData() {
 			happyCode = 200,
 			TIMEOUT = 10000;
 
-	let promise = new Promise(function (resolve, reject) {
+	let promise = new Promise((resolve, reject) => {
 		let xhr = new XMLHttpRequest();
 
 		let req = verb + " " + url;
@@ -47,7 +47,7 @@ function getNMEAData() {
 			reject(mess);
 		}, TIMEOUT);
 
-		xhr.onload = function () {
+		xhr.onload = () => {
 			clearTimeout(requestTimer);
 			if (xhr.status === happyCode) {
 				resolve(xhr.response);

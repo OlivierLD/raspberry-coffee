@@ -916,7 +916,7 @@ class SkyMap extends HTMLElement {
 		if (this._wanderingBodiesData !== undefined) {
 			let self = this;
 			let ghaAries = SkyMap.findGHAAries(this._wanderingBodiesData);
-			this._wanderingBodiesData.forEach(function(body) {
+			this._wanderingBodiesData.forEach((body) => {
 				let dec = body.decl * self._hemisphere;
 				let lng = body.gha - ghaAries;
 				lng += (/*this._hemisphere * */self.LHAAries);
