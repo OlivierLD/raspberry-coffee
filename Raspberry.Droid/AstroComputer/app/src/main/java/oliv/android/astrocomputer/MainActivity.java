@@ -20,6 +20,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -36,10 +37,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean firstTimeLogging = false;
     private BufferedWriter logger = null;
 
-    private final static String LOG_FILE_NAME = "GPS_DATA.csv";
+    private String logFileName = "";
 
     private final MainActivity instance = this;
     private final SimpleDateFormat DF = new SimpleDateFormat("dd-MMM-yyyy'\n'HH:mm:ss Z z", Locale.getDefault());
+    private final SimpleDateFormat DF_FILE_NAME = new SimpleDateFormat("'GPS_DATA_'dd_MMM_yyyy_HH_mm_ss'.cvs'", Locale.getDefault());
 
     private void setText(final TextView text, final String value) {
         runOnUiThread(new Runnable() {
@@ -56,13 +58,13 @@ public class MainActivity extends AppCompatActivity {
         logButton.setText(isLogging ? "Pause Logging" : "Resume Logging");
         if (isLogging) {
             try {
-                File logFile = new File(getExternalFilesDir(null), LOG_FILE_NAME);
+                File logFile = new File(getExternalFilesDir(null), logFileName);
                 boolean exists = logFile.exists();
                 if (exists && firstTimeLogging) {
                     logFile.delete();
-                    userMessageZone.setText(String.format("Resetting data in %s", LOG_FILE_NAME));
+                    userMessageZone.setText(String.format("Resetting data in %s", logFileName));
                 } else {
-                    userMessageZone.setText(String.format("Logging data in %s", LOG_FILE_NAME));
+                    userMessageZone.setText(String.format("Logging data in %s", logFileName));
                 }
                 logger = new BufferedWriter(new FileWriter(logFile, true)); // true: append
                 if (!exists) {
@@ -290,6 +292,8 @@ public class MainActivity extends AppCompatActivity {
         Thread timer = new Thread(chronometer, "Chronometer");
         timer.start();
         gps = new GPSTracker(this);
+
+        logFileName = DF_FILE_NAME.format(new Date());
     }
 
     @Override

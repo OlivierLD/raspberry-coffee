@@ -25,7 +25,8 @@ There must be a better way not to interrupt the logging, but this is the way ot 
 Much better managed with `Android Studio`. See [here](https://developer.android.com/studio/install).
 
 Also implements some logging features.
-GPS Data would be logged in `GPS_DATA.csv`, located in `/Android/data/oliv.android.astrocomputer/files`.
+GPS Data would be logged in `GPS_DATA_xxxx.csv`, located in `/Android/data/oliv.android.astrocomputer/files`.
+The Pattern is `"'GPS_DATA_'dd_MMM_yyyy_HH_mm_ss'.cvs'"`, the file name would be like `GPS_DATA_23_Nov_2019_13_37_19.csv`, it is set everytime the application starts.
 
 > To get to the logged data:
 
@@ -45,10 +46,10 @@ To get the connected devices ID's:
 
 To get the log file:
 ```
- $ adb pull sdcard/Android/data/oliv.android.astrocomputer/files/GPS_DATA.csv .
- sdcard/Android/data/oliv.android.astrocomputer/files/GPS_DATA.csv: 1 file pulled. 0.6 MB/s (2342 bytes in 0.004s)
+ $ adb pull sdcard/Android/data/oliv.android.astrocomputer/files/GPS_DATA_23_Nov_2019_13_37_19.csv ./GPS_DATA.csv
+ sdcard/Android/data/oliv.android.astrocomputer/files/GPS_DATA_23_Nov_2019_13_37_19.csv: 1 file pulled. 0.6 MB/s (2342 bytes in 0.004s)
 ```
-The log file named `GPS_DATA.log` is now in your current directory, it can be opened in any text editor, or as a spreadsheet.
+The log file named `GPS_DATA.csv` is now in your current directory, it can be opened in any text editor, or as a spreadsheet.
 
 ```csv
 epoch;fmt-date;latitude;longitude;speed;heading
@@ -77,7 +78,7 @@ epoch;fmt-date;latitude;longitude;speed;heading
 > To do so:
 ```
  $ adb shell
-heroqlteatt:/ $ rm sdcard/Android/data/oliv.android.astrocomputer/files/GPS_DATA.csv
+heroqlteatt:/ $ rm sdcard/Android/data/oliv.android.astrocomputer/files/GPS_DATA_23_Nov_2019_13_37_19.csv
 ```
 
 You can also - if you do not want to deal with the command line interface - use a tool like [Android File Transfer](https://www.android.com/filetransfer/).
