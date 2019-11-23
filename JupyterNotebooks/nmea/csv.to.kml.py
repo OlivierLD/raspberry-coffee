@@ -7,7 +7,7 @@
 # Usage is:
 #   csv.to.kml.py --in:GPS_DATA.csv --out:somefile.kml --title:"Cool Logging" --sub-title:"Done today by myself"
 #
-# Then, in  google maps, logged in:
+# Then, in google maps, logged in:
 # - Menu (hamburger)
 # - Your places
 # - MAPS (toolbar, right)
@@ -20,7 +20,7 @@ import sys
 
 print("{} script arguments.".format(len(sys.argv) - 1))
 
-if len(sys.argv) < 5:
+if len(sys.argv) < 5:  # Script name + 4 args
     print("\nUsage is ")
     print(
         '\tpython {} --in:GPS_DATA.csv --out:somefile.kml --title:"Cool Logging" --sub-title:"Done today by myself"'.format(
