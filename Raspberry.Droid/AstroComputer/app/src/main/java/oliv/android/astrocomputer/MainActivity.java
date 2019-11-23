@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+//import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import oliv.android.AstroComputer;
 import oliv.android.GeomUtil;
@@ -33,12 +33,13 @@ public class MainActivity extends AppCompatActivity {
     private Button logButton = null;
 
     private boolean isLogging = false;
+    private boolean firstTimeLogging = false;
     private BufferedWriter logger = null;
 
     private final static String LOG_FILE_NAME = "GPS_DATA.csv";
 
     private final MainActivity instance = this;
-    private final SimpleDateFormat DF = new SimpleDateFormat("dd-MMM-yyyy'\n'HH:mm:ss Z z");
+    private final SimpleDateFormat DF = new SimpleDateFormat("dd-MMM-yyyy'\n'HH:mm:ss Z z", Locale.getDefault());
 
     private void setText(final TextView text, final String value) {
         runOnUiThread(new Runnable() {
@@ -51,19 +52,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void onLogButtonClick(View view) {
         isLogging = !isLogging;
+        firstTimeLogging = "Log GPS Data".equals(logButton.getText()); // Compare to original button label
         logButton.setText(isLogging ? "Pause Logging" : "Resume Logging");
         if (isLogging) {
             try {
                 File logFile = new File(getExternalFilesDir(null), LOG_FILE_NAME);
                 boolean exists = logFile.exists();
+                if (exists && firstTimeLogging) {
+                    logFile.delete();
+                    userMessageZone.setText(String.format("Resetting data in %s", LOG_FILE_NAME));
+                } else {
+                    userMessageZone.setText(String.format("Logging data in %s", LOG_FILE_NAME));
+                }
                 logger = new BufferedWriter(new FileWriter(logFile, true)); // true: append
-                userMessageZone.setText(String.format("Logging data in %s", LOG_FILE_NAME));
                 if (!exists) {
                     String loggingHeader = "epoch;fmt-date;latitude;longitude;speed;heading\n";
                     logger.write(loggingHeader);
                 }
-                String loggingComment = String.format("# Logging %s at %d\n", (exists ? "resumed" : "started"), System.currentTimeMillis());
-                userMessageZone.setText(userMessageZone.getText() + "\n" + loggingComment);
+                String loggingComment = String.format(Locale.getDefault(), "# Logging %s at %d\n", (exists ? "resumed" : "started"), System.currentTimeMillis());
+                userMessageZone.setText(String.format(Locale.getDefault(), "%s\n%s", userMessageZone.getText(), loggingComment));
             } catch (IOException ioe) {
                 userMessageZone.setText(ioe.toString());
             }
@@ -129,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                         lastLocation = gpsLocation;
-                        userMessageZone.setText(String.format("Got GPS Data: %s: %f / %f\n(elapsed %.02f s)", formattedDate, latitude, longitude, elapsedTime));
+                        userMessageZone.setText(String.format(Locale.getDefault(), "Got GPS Data: %s: %f / %f\n(elapsed %.02f s)", formattedDate, latitude, longitude, elapsedTime));
 
                         // \n is for new line
 //                    Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
@@ -189,7 +196,8 @@ public class MainActivity extends AppCompatActivity {
                             double obsAlt = sru.getHe();
                             double z = sru.getZ();
 
-                            astroData = String.format("%s Data:\nElevation: %s\nZ: %.02f\272",
+                            astroData = String.format(Locale.getDefault(),
+                                    "%s Data:\nElevation: %s\nZ: %.02f\272",
                                     selectedBody.toString(),
                                     GeomUtil.decToSex(obsAlt,
                                             GeomUtil.SWING,
@@ -218,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
                     // Log data here
                     // "epoch;fmt-date;latitude;longitude;speed;heading";
                     String dataLine = String.format(
+                            Locale.getDefault(),
                             "%d;%s;%f;%f;%f;%f\n",
                             c.getTimeInMillis(),
                             formattedDate.replace('\n', ' '),
