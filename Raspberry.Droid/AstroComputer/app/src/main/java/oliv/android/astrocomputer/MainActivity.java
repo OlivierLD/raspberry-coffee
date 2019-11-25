@@ -27,6 +27,7 @@ import java.util.TimeZone;
 public class MainActivity extends AppCompatActivity {
 
     private final static long BW_LOOPS = 250L;
+    private final static int SPEED_THRESHOLD = 40; // Ignore if speed is above this limit (im m/s)
 
     private TextView dateTimeHolder = null;
     private TextView gpsDataHolder = null;
@@ -157,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                                     if (cog < 0) {
                                         cog += 360;
                                     }
-                                    if (sog > 40) { // Wacky point
+                                    if (sog > SPEED_THRESHOLD) { // Wacky point
                                         validLocation = false;
                                     }
                                 }
