@@ -1,5 +1,6 @@
 package nmea.parser;
 
+import java.io.PrintStream;
 import java.text.NumberFormat;
 
 import java.text.SimpleDateFormat;
@@ -22,6 +23,37 @@ public class StringParsers {
   /*
    * Generic form is
    * $<talker ID><sentence ID,>[parameter 1],[parameter 2],...[<*checksum>]<CR><LF> (\r\n)
+   *
+   * Available parsers:
+   * - BAT (not standard)
+   * - DBT (Depth Below Transducer)
+   * - DPT (Depth)
+   * - GGA (GPS Data)
+   * - GLL (Geographical Latitude Longitude)
+   * - GSA (GPS Satellites Data)
+   * - GSV (GPS Detailed satellites data)
+   * - HDM (Heading, Magnetic)
+   * - HDT (Heading, True)
+   * - MDA (Meteorological Composite)
+   * - MMB (Atmospheric Pressure)
+   * - MTA (Air Temperature)
+   * - MTW (Water Temperature)
+   * - MWD (Wind Direction and Speed)
+   * - MWV (Wind Speed and Angle)
+   * - RMB (Recommended Minimum, version B)
+   * - RMC (Recommended Minimum, version C)
+   * - STD (Not standard, STarteD)
+   * - TXT (Text)
+   * - VDR (Current Speed and Direction)
+   * - VHW (Water, Heading and Speed)
+   * - VLW (Distance Travelled through Water)
+   * - VTG (Track Made Good and Ground Speed)
+   * - VWR (Relative Wind Speed and Angle)
+   * - VWT (True Wind Speed and Angle - obsolete)
+   * - XDR (Transducers Measurement, Various Sensors)
+   * - ZDA (UTC DCate and Time)
+   *
+   * @See #Dispatcher, #listDispatchers
    *
    * TASK Implement the following:
    *
@@ -2075,6 +2107,17 @@ public class StringParsers {
 		}
 	}
 
+	/**
+	 * Lists available parsers, key and description.
+	 */
+	public static void listDispatcher() {
+		listDispatchers(System.out);
+	}
+	public static void listDispatchers(PrintStream out) {
+		Arrays.asList(Dispatcher.values()).stream()
+				.forEach(disp -> out.println(String.format("%s: %s", disp.key(), disp.description())));
+	}
+
 	public static ParsedData autoParse(String data) {
 		ParsedData parsedData = null;
 		if (!validCheckSum(data)) {
@@ -2099,6 +2142,10 @@ public class StringParsers {
 	 * @param args
 	 */
 	public static void main(String... args) {
+
+		listDispatcher();
+		System.out.println("----------------------");
+
 		String str = "";
 
 		str = "2006-05-05T17:35:48.000Z";
@@ -2493,7 +2540,7 @@ public class StringParsers {
 		rmc = StringParsers.parseRMC(str);
 		System.out.println("Parsed");
 
-		// Auto parse
+		// Auto parse. Use listDispatchers
 		System.out.println("=============");
 		Arrays.asList(Dispatcher.values()).stream()
 				.forEach(disp -> System.out.println(String.format("%s: %s", disp.key(), disp.description())));
