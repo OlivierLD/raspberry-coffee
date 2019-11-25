@@ -26,11 +26,14 @@ import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final static long BW_LOOPS = 250L;
+
     private TextView dateTimeHolder = null;
     private TextView gpsDataHolder = null;
     private TextView sunDataHolder = null;
     private Spinner bodySpinner = null;
     private TextView userMessageZone = null;
+    private TextView progMessageZone = null;
     private Button logButton = null;
 
     private boolean isLogging = false;
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final MainActivity instance = this;
     private final SimpleDateFormat DF = new SimpleDateFormat("dd-MMM-yyyy'\n'HH:mm:ss Z z", Locale.getDefault());
-    private final SimpleDateFormat DF_FILE_NAME = new SimpleDateFormat("'GPS_DATA_'dd_MMM_yyyy_HH_mm_ss'.cvs'", Locale.getDefault());
+    private final SimpleDateFormat DF_FILE_NAME = new SimpleDateFormat("'GPS_DATA_'dd_MMM_yyyy_HH_mm_ss'.csv'", Locale.getDefault());
 
     private void setText(final TextView text, final String value) {
         runOnUiThread(new Runnable() {
@@ -52,7 +55,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private long lastClick = -1;
+
     public void onLogButtonClick(View view) {
+        long thisClick = System.currentTimeMillis();
+        if ((thisClick - lastClick) > 750) { // Double-click. Each click less that 750ms apart.
+            userMessageZone.setText("First click...");
+            lastClick = thisClick;
+            return;
+        }
+        lastClick = thisClick;
         isLogging = !isLogging;
         firstTimeLogging = "Log GPS Data".equals(logButton.getText()); // Compare to original button label
         logButton.setText(isLogging ? "Pause Logging" : "Resume Logging");
@@ -61,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
                 File logFile = new File(getExternalFilesDir(null), logFileName);
                 boolean exists = logFile.exists();
                 if (exists && firstTimeLogging) {
-                    logFile.delete();
-                    userMessageZone.setText(String.format("Resetting data in %s", logFileName));
+                    boolean ok = logFile.delete();
+                    userMessageZone.setText(String.format("Resetting data in %s: %s", logFileName, (ok ? "OK" : "failed")));
                 } else {
                     userMessageZone.setText(String.format("Logging data in %s", logFileName));
                 }
@@ -86,6 +98,12 @@ public class MainActivity extends AppCompatActivity {
                     userMessageZone.setText(ioe.toString());
                 }
             }
+        }
+    }
+
+    protected void setProgMessage(double elapsed, String mess) {
+        if (elapsed > 0) {
+            progMessageZone.setText(mess);
         }
     }
 
@@ -115,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
                 String formattedDate = DF.format(c.getTime());
                 // formattedDate have current date/time
 
+                boolean validLocation = false;
+
                 if (gps != null) {
                     if (gps.canGetLocation()) {
 
@@ -128,24 +148,33 @@ public class MainActivity extends AppCompatActivity {
                             sog = gpsLocation.getSpeed();
                             cog = gpsLocation.getBearing();
                         } else {
-
                             if (lastLocation != null) {
                                 elapsedTime = (gpsLocation.getTime() - lastLocation.getTime()) / 1_000; // Convert milliseconds to seconds
                                 if (elapsedTime > 0) {
+                                    validLocation = true;
                                     sog = lastLocation.distanceTo(gpsLocation) /* in meters */ / elapsedTime;
+                                    cog = lastLocation.bearingTo(gpsLocation);
+                                    if (cog < 0) {
+                                        cog += 360;
+                                    }
+                                    if (sog > 40) { // Wacky point
+                                        validLocation = false;
+                                    }
                                 }
-                                cog = lastLocation.bearingTo(gpsLocation);
                             }
                         }
                         lastLocation = gpsLocation;
-                        userMessageZone.setText(String.format(Locale.getDefault(), "Got GPS Data: %s: %f / %f\n(elapsed %.02f s)", formattedDate, latitude, longitude, elapsedTime));
+                        progMessageZone.setText(String.format(Locale.getDefault(), "Got GPS Data: %s: %f / %f\n(elapsed %.02f s)", formattedDate, latitude, longitude, elapsedTime));
+                        //if (elapsedTime > 0) {
+                        //  instance.setProgMessage(elapsedTime, String.format(Locale.getDefault(), "Got GPS Data: %s: %f / %f\n(elapsed %.02f s)", formattedDate, latitude, longitude, elapsedTime));
+                        //}
 
                         // \n is for new line
 //                    Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
                         gpsData = String.format("GPS Data:\n%s\n%s\n%s\n%s",
                                 GeomUtil.decToSex(latitude, GeomUtil.DEFAULT_DEG, GeomUtil.NS) ,
                                 GeomUtil.decToSex(longitude, GeomUtil.DEFAULT_DEG, GeomUtil.EW),
-                                String.format(Locale.getDefault(), "SOG: %.02f m/s", sog),
+                                String.format(Locale.getDefault(), "SOG: %.02f m/s (%.02f km/h)", sog, (sog * 3.6)),
                                 String.format(Locale.getDefault(), "COG: %.01f\272", cog));
 
                         // Celestial Data
@@ -164,32 +193,24 @@ public class MainActivity extends AppCompatActivity {
                             sru.setG(longitude);
 
                             Object selectedBody = instance.bodySpinner.getSelectedItem();
-                            switch (selectedBody.toString()) {
-                                case "Moon":
-                                    sru.setAHG(AstroComputer.getMoonGHA());
-                                    sru.setD(AstroComputer.getMoonDecl());
-                                    break;
-                                case "Venus":
-                                    sru.setAHG(AstroComputer.getVenusGHA());
-                                    sru.setD(AstroComputer.getVenusDecl());
-                                    break;
-                                case "Mars":
-                                    sru.setAHG(AstroComputer.getMarsGHA());
-                                    sru.setD(AstroComputer.getMarsDecl());
-                                    break;
-                                case "Jupiter":
-                                    sru.setAHG(AstroComputer.getJupiterGHA());
-                                    sru.setD(AstroComputer.getJupiterDecl());
-                                    break;
-                                case "Saturn":
-                                    sru.setAHG(AstroComputer.getSaturnGHA());
-                                    sru.setD(AstroComputer.getSaturnDecl());
-                                    break;
-                                case "Sun":
-                                default:
-                                    sru.setAHG(AstroComputer.getSunGHA());
-                                    sru.setD(AstroComputer.getSunDecl());
-                                    break;
+                            if (selectedBody.toString().contains("Moon")) {
+                                sru.setAHG(AstroComputer.getMoonGHA());
+                                sru.setD(AstroComputer.getMoonDecl());
+                            } else if (selectedBody.toString().contains("Venus")) {
+                                sru.setAHG(AstroComputer.getVenusGHA());
+                                sru.setD(AstroComputer.getVenusDecl());
+                            } else if (selectedBody.toString().contains("Mars")) {
+                                sru.setAHG(AstroComputer.getMarsGHA());
+                                sru.setD(AstroComputer.getMarsDecl());
+                            } else if (selectedBody.toString().contains("Jupiter")) {
+                                sru.setAHG(AstroComputer.getJupiterGHA());
+                                sru.setD(AstroComputer.getJupiterDecl());
+                            } else if (selectedBody.toString().contains("Saturn")) {
+                                sru.setAHG(AstroComputer.getSaturnGHA());
+                                sru.setD(AstroComputer.getSaturnDecl());
+                            } else {
+                                sru.setAHG(AstroComputer.getSunGHA());
+                                sru.setD(AstroComputer.getSunDecl());
                             }
 
 //                            sru.setAHG(AstroComputer.getSunGHA());
@@ -224,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
                 setText(instance.gpsDataHolder, gpsData);
                 setText(instance.sunDataHolder, astroData);
 
-                if (instance.isLogging) {
+                if (instance.isLogging && validLocation) {
                     // Log data here
                     // "epoch;fmt-date;latitude;longitude;speed;heading";
                     String dataLine = String.format(
@@ -245,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 try {
-                    Thread.sleep(1_000L);
+                    Thread.sleep(BW_LOOPS);
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
@@ -282,6 +303,7 @@ public class MainActivity extends AppCompatActivity {
         View view = this.bodySpinner.getSelectedView();
         ((TextView)view).setTextSize(20);
         this.userMessageZone = this.findViewById(R.id.userMessage);
+        this.progMessageZone = this.findViewById(R.id.progMessage);
         this.logButton = this.findViewById(R.id.logButton);
 
         this.dateTimeHolder.setText("- No date -"); // String.format("Current Date and Time :\n%s", "---"));
