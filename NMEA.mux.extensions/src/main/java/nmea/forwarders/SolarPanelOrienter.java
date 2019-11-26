@@ -5,6 +5,7 @@ import java.util.Properties;
 import calc.GeomUtil;
 import nmea.parser.GLL;
 import nmea.parser.GeoPos;
+import nmea.parser.HDG;
 import nmea.parser.RMC;
 import nmea.parser.StringParsers;
 import orientation.SunFlower;
@@ -73,10 +74,10 @@ public class SolarPanelOrienter implements Forwarder {
 					}
 					break;
 				case "HDG":
-					double[] hdg = StringParsers.parseHDG(str);
-					double heading = hdg[StringParsers.HDG_in_HDG];
-					if (hdg[StringParsers.VAR_in_HDG] != -Double.MAX_VALUE) {
-						this.declination = hdg[StringParsers.VAR_in_HDG];
+					HDG hdg = StringParsers.parseHDG(str);
+					double heading = hdg.getHeading();
+					if (hdg.getVariation() != -Double.MAX_VALUE && hdg.getVariation() != 0d) {
+						this.declination = hdg.getVariation();
 					}
 					double trueHeading = heading - this.declination;
 					while (trueHeading < 0) {
