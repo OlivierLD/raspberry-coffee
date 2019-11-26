@@ -1967,7 +1967,7 @@ public class StringParsers {
 	}
 	public static void listDispatchers(PrintStream out) {
 		Arrays.asList(Dispatcher.values()).stream()
-				.forEach(disp -> out.println(String.format("%s: %s", disp.key(), disp.description())));
+				.forEach(dispatcher -> out.println(String.format("%s: %s", dispatcher.key(), dispatcher.description())));
 	}
 
 	public static ParsedData autoParse(String data) {

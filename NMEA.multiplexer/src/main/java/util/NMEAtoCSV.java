@@ -25,7 +25,7 @@ public class NMEAtoCSV {
 	private final static boolean VERBOSE = "true".equals(System.getProperty("verbose"));
 
 	private final static String SEPARATOR = ";";
-	private final static String BREAK_ON_STRING = "RMC";
+	private final static String BREAK_ON_STRING = "RMC"; // Default
 
 	private static String dataMapToCSVLine(List<String> dataToWrite, Map<String, String> map, String separator) {
 		StringBuffer line = new StringBuffer();

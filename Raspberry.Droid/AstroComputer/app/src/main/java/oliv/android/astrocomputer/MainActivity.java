@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView progMessageZone = null;
     private Button logButton = null;
 
-    private boolean isLogging = false;
+    private boolean isLogging = false;  // Logging GPS Data
     private boolean firstTimeLogging = false;
     private BufferedWriter logger = null;
 

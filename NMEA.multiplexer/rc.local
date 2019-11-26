@@ -14,7 +14,7 @@
 
 # Print the IP address
 _IP=$(hostname -I) || true
-if [ "$_IP" ]; then
+if [[ "$_IP" ]]; then
   printf ">> IP address is %s\n" "$_IP"
 fi
 #
@@ -27,20 +27,20 @@ _PAPIRUS=$(i2cdetect -y 1 | grep 48) || true
 # echo "OLED: $_OLED"
 # echo "PAPIRUS: $_PAPIRUS"
 #
-if [ "$_OLED" ]; then
+if [[ "$_OLED" ]]; then
   printf "+---------------+\n"
   printf "| OLED Detected |\n"
   printf "+---------------+\n"
   cd /home/pi/raspberry-coffee/I2C.SPI
   MESS=""
-  if [ "$_IP" ]; then
+  if [[ "$_IP" ]]; then
     MESS="$_IP|"
   fi
   MESS="$MESS on Pi-Net| default 192.168.127.1"
   ./ssd1306i2cDisplay "$MESS"
-elif [ "$_PAPIRUS" ]; then
+elif [[ "$_PAPIRUS" ]]; then
   MESS=""
-  if [ "$_IP" ]; then
+  if [[ "$_IP" ]]; then
     MESS="$_IP,"
   fi
   MESS="$MESS on Pi-Net, default 192.168.127.1"
@@ -50,7 +50,7 @@ else
 fi
 #
 cd ~pi
-if [ -f "tomux.sh" ]
+if [[ -f "tomux.sh" ]]
 then
   printf "+----------------------+\n"
   printf "| Starting Multiplexer |\n"

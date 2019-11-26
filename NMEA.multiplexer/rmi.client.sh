@@ -14,5 +14,5 @@
 #
 CP=./build/libs/NMEA.multiplexer-1.0-all.jar
 #
-java -cp $CP samples.rmi.client.SampleRMIClient
+java -cp ${CP} samples.rmi.client.SampleRMIClient
 #
