@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 logger = new BufferedWriter(new FileWriter(logFile, true)); // true: append
                 if (!exists) {
-                    String loggingHeader = "epoch;fmt-date;latitude;longitude;speed;heading\n";
+                    String loggingHeader = "epoch;fmt-date;longitude;latitude;speed;heading\n";
                     logger.write(loggingHeader);
                 }
                 String loggingComment = String.format(Locale.getDefault(), "# Logging %s at %d\n", (exists ? "resumed" : "started"), System.currentTimeMillis());
@@ -254,8 +254,8 @@ public class MainActivity extends AppCompatActivity {
                             "%d;%s;%f;%f;%f;%f\n",
                             c.getTimeInMillis(),
                             formattedDate.replace('\n', ' '),
-                            latitude,
                             longitude,
+                            latitude,
                             sog,
                             cog
                     );
