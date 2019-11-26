@@ -1881,7 +1881,7 @@ public class StringParsers {
 		MTA("MTA", "Air Temperature, Celcius", StringParsers::parseMTA, Double.class),
 		MTW("MTW", "Mean Temperature of Water", StringParsers::parseMTW, Double.class),
 		MWD("MWD", "Wind Direction & Speed", StringParsers::parseMWD, TrueWind.class),
-		MWV("MWV", "Wind Speed and Angle", StringParsers::parseMWV, Wind.class),
+		MWV("MWV", "Wind Speed and Angle", StringParsers::parseMWV, ApparentWind.class), // Careful, actually returns Wind.class
 		RMB("RMB", "Recommended Minimum Navigation Information, B", StringParsers::parseRMB, RMB.class),
 		TXT("TXT", "Text Transmission", StringParsers::parseTXT, String.class),
 		VDR("VDR", "Set and Drift", StringParsers::parseVDR, Current.class),

@@ -31,14 +31,14 @@ public class GLL extends NMEAComposite implements Serializable {
 
 	// @Override
 	public static String getCsvHeader(String separator) {
-		return String.format("latitude%slongitude%sdate-time%sfmt-date-time", SEP, SEP, SEP).replace(SEP, separator);
+		return String.format("longitude%slatitude%sdate-time%sfmt-date-time", SEP, SEP, SEP).replace(SEP, separator);
 	}
 
 	@Override
 	public String getCsvData(String separator) {
 		return String.format("%s%s%s%s%s%s%s",
-				(gllPos != null ? String.valueOf(gllPos.lat) : ""), separator,
 				(gllPos != null ? String.valueOf(gllPos.lng) : ""), separator,
+				(gllPos != null ? String.valueOf(gllPos.lat) : ""), separator,
 				(gllTime != null ? String.valueOf(gllTime.getTime()) : ""), separator,
 				(gllTime != null ? SDF.format(gllTime) : ""));
 	}

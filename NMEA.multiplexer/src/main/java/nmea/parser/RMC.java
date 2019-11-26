@@ -20,14 +20,14 @@ public class RMC extends NMEAComposite implements Serializable {
 
 	// @Override
 	public static String getCsvHeader(String separator) {
-		return String.format("latitude%slongitude%ssog%scog%sdecl%srmc-valid%sdate-time%sfmt-date-time%stype", SEP, SEP, SEP, SEP, SEP, SEP, SEP, SEP).replace(SEP, separator);
+		return String.format("longitude%slatitude%ssog%scog%sdecl%srmc-valid%sdate-time%sfmt-date-time%stype", SEP, SEP, SEP, SEP, SEP, SEP, SEP, SEP).replace(SEP, separator);
 	}
 
 	@Override
 	public String getCsvData(String separator) {
 		return String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s",
-				(gp != null ? String.valueOf(gp.lat) : ""), separator,
 				(gp != null ? String.valueOf(gp.lng) : ""), separator,
+				(gp != null ? String.valueOf(gp.lat) : ""), separator,
 				String.valueOf(sog), separator,
 				String.valueOf(sog), separator,
 				(declination != -Double.MAX_VALUE ? String.valueOf(declination) : ""), separator,
