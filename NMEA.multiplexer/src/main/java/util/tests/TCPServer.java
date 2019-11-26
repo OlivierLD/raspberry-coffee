@@ -69,6 +69,6 @@ public class TCPServer {
 	}
 
 	public static void main(String... args) {
-		TCPServer server = new TCPServer("2947");
+		new TCPServer("2947");
 	}
 }

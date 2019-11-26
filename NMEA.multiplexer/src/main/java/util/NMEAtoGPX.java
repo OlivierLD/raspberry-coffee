@@ -1,5 +1,8 @@
 package util;
 
+import nmea.parser.RMC;
+import nmea.parser.StringParsers;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -9,9 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
-
-import nmea.parser.RMC;
-import nmea.parser.StringParsers;
 
 /**
  * GPX generator, from NMEA log.
@@ -25,14 +25,12 @@ public class NMEAtoGPX {
 		UTC_MASK.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
 	}
 
-	public static void transform(String fileInName,
-	                             String fileOutName) throws Exception {
-		String file = fileInName;
-		String track = fileOutName;
-		BufferedReader br = new BufferedReader(new FileReader(file));
+	private static void transform(String fileInName,
+	                              String fileOutName) throws Exception {
+		BufferedReader br = new BufferedReader(new FileReader(fileInName));
 		String line = "";
 
-		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(track)));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(new File(fileOutName)));
 		bw.write("<?xml version=\"1.0\"?>\n" +
 				"<gpx version=\"1.1\" creator=\"OpenCPN\" " +
 				"     xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
@@ -53,7 +51,7 @@ public class NMEAtoGPX {
 				if (line.startsWith("$") && line.length() > 6) {
 					String prefix = line.substring(3, 6);
 					Integer nb = map.get(prefix);
-					map.put(prefix, (nb == null) ? nb = new Integer(1) : new Integer(nb.intValue() + 1));
+					map.put(prefix, (nb == null) ? new Integer(1) : new Integer(nb + 1));
 					// Specific
 					if ("RMC".equals(prefix)) {
 						if (StringParsers.validCheckSum(line)) {
@@ -88,6 +86,6 @@ public class NMEAtoGPX {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		map.keySet().stream().forEach(key -> System.out.println(String.format("%s: %d records", key, map.get(key))));
+		map.keySet().forEach(key -> System.out.println(String.format("%s: %d records", key, map.get(key))));
 	}
 }

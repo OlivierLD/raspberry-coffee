@@ -18,7 +18,7 @@ import java.net.SocketException;
 import java.util.Date;
 
 public class TCPClient {
-	private int tcpport = 80;
+	private int tcpPort = 80;
 	private String hostName = "localhost";
 
 	private boolean goRead = true;
@@ -27,12 +27,12 @@ public class TCPClient {
 	}
 
 	public TCPClient(int tcp) {
-		tcpport = tcp;
+		tcpPort = tcp;
 	}
 
 	public TCPClient(String host, int tcp) {
 		hostName = host;
-		tcpport = tcp;
+		tcpPort = tcp;
 	}
 
 	private Socket skt = null;
@@ -47,11 +47,11 @@ public class TCPClient {
 
 	public void read(String request) {
 		boolean verbose = "true".equals((System.getProperty("verbose", "false")));
-		System.out.println("From " + getClass().getName() + " Reading TCP Port " + tcpport + " on " + hostName);
+		System.out.println("From " + getClass().getName() + " Reading TCP Port " + tcpPort + " on " + hostName);
 		try {
 			InetAddress address = InetAddress.getByName(hostName);
 //    System.out.println("INFO:" + hostName + " (" + address.toString() + ")" + " is" + (address.isMulticastAddress() ? "" : " NOT") + " a multicast address");
-			skt = new Socket(address, tcpport);
+			skt = new Socket(address, tcpPort);
 
 			if (request != null) {
 				OutputStream os = skt.getOutputStream();
@@ -61,16 +61,16 @@ public class TCPClient {
 			}
 
 			InputStream theInput = skt.getInputStream();
-			byte buffer[] = new byte[4096];
-			String s;
+			byte[] buffer = new byte[4_096];
 			int nbReadTest = 0;
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			while (canRead()) {
 				int bytesRead = theInput.read(buffer);
 				if (bytesRead == -1) {
 					System.out.println("Nothing to read...");
-					if (nbReadTest++ > 10)
+					if (nbReadTest++ > 10) {
 						break;
+					}
 				} else {
 					baos.write(buffer, 0, bytesRead);
 					if (verbose) {
@@ -88,25 +88,24 @@ public class TCPClient {
 			System.out.println("Stop Reading TCP port.");
 			theInput.close();
 		} catch (BindException be) {
-			System.err.println("From " + this.getClass().getName() + ", " + hostName + ":" + tcpport);
+			System.err.println("From " + this.getClass().getName() + ", " + hostName + ":" + tcpPort);
 			be.printStackTrace();
 			manageError(be);
 		} catch (final SocketException se) {
 //    se.printStackTrace();
-			if (se.getMessage().indexOf("Connection refused") > -1) {
+			if (se.getMessage().contains("Connection refused")) {
 				System.err.println("Refused (1)");
 				se.printStackTrace();
-			} else if (se.getMessage().indexOf("Connection reset") > -1) {
+			} else if (se.getMessage().contains("Connection reset")) {
 				System.err.println("Reset (2)");
 				se.printStackTrace();
 			} else {
-				boolean tryAgain = false;
-				if (se instanceof ConnectException && "Connection timed out: connect".equals(se.getMessage()))
+				boolean tryAgain;
+				if (se instanceof ConnectException && "Connection timed out: connect".equals(se.getMessage())) {
 					tryAgain = true;
-				else if (se instanceof ConnectException && "Network is unreachable: connect".equals(se.getMessage()))
+				} else if (se instanceof ConnectException && "Network is unreachable: connect".equals(se.getMessage())) {
 					tryAgain = true;
-				else if (se instanceof ConnectException) // Et hop!
-				{
+				} else if (se instanceof ConnectException) { // Et hop!
 					tryAgain = false;
 					System.err.println("TCP :" + se.getMessage());
 					se.printStackTrace();
@@ -145,7 +144,7 @@ public class TCPClient {
 				skt = null;
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			throw ex;
 		}
 	}
 
@@ -178,10 +177,10 @@ public class TCPClient {
 
 					tcpClient.closeReader();
 					long howMuch = 1_000L;
-					System.out.println("Will try to reconnect in " + Long.toString(howMuch) + "ms.");
+					System.out.println("Will try to reconnect in " + howMuch + "ms.");
 					try {
 						Thread.sleep(howMuch);
-					} catch (InterruptedException ie) {
+					} catch (InterruptedException ignored) {
 					}
 				}
 				keepTrying = false;

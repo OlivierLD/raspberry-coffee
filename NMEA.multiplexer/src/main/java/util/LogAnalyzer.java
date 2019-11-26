@@ -152,7 +152,7 @@ public class LogAnalyzer {
 			long nbRec = 0L, totalNbRec = 0L;
 			Date start = null;
 			Date arrival = null;
-			String line = "";
+			String line;
 			boolean keepReading = true;
 			while (keepReading) {
 				line = br.readLine();
@@ -165,6 +165,7 @@ public class LogAnalyzer {
 						if (id.equals("RMC")) {
 							nbRec++;
 							RMC rmc = StringParsers.parseRMC(line);
+							assert (rmc != null);
 							if (rmc.isValid()) {
 								// Get date, speed, position (for distance)
 								Date rmcDate = rmc.getRmcDate();
@@ -198,6 +199,7 @@ public class LogAnalyzer {
 										maxLng = gp.lng;
 										maxLngIdx = totalNbRec - 1;
 									}
+									assert (rmcTime != null);
 									if (previousPos != null) {
 										double distance = GeomUtil.haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
 //									System.out.println(String.format("Step: %.03f km between %s and %s (%s)",
@@ -238,6 +240,7 @@ public class LogAnalyzer {
 			System.out.println("Checkout the spreadsheet stat.csv.");
 
 			// Display summary
+			assert (start != null && arrival != null);
 			System.out.println(String.format("Started %s", SDF.format(start)));
 			System.out.println(String.format("Arrived %s", SDF.format(arrival)));
 			System.out.println(String.format("%s record(s) out of %s. Total distance: %.03f km, in %s. Avg speed:%.03f km/h",

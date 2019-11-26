@@ -1,15 +1,11 @@
 package util;
 
-import nmea.parser.GeoPos;
 import nmea.parser.RMC;
 import nmea.parser.StringParsers;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Small utility, remove the first records where speed is zero, as well as the last ones...
@@ -25,7 +21,7 @@ public class LogShrinker {
 		String fileName = args[0];
 		try {
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
-			String line = "";
+			String line;
 			long lineNum = 0L;
 			long starsAtRecNo = 0L;
 			long endsAtRecNo = 0L;
@@ -43,6 +39,7 @@ public class LogShrinker {
 						switch (sentenceID) {
 							case "RMC":
 								RMC rmc = StringParsers.parseRMC(line);
+								assert (rmc != null);
 								double speed = rmc.getSog();
 								if (speed > 0) {
 									started = true;

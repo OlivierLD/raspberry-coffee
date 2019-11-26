@@ -27,7 +27,7 @@ public class LogScanner {
 		String fileName = args[0];
 		try {
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
-			String line = "";
+			String line;
 			long lineNum = 0L;
 			boolean go = true;
 			while (go) {
@@ -45,6 +45,7 @@ public class LogScanner {
 						switch (sentenceID) {
 							case "RMC":
 								RMC rmc = StringParsers.parseRMC(line);
+								assert (rmc != null);
 								GeoPos geoPos = rmc.getGp();
 								Date rmcDate = rmc.getRmcDate();
 								if (geoPos != null) {
@@ -68,7 +69,6 @@ public class LogScanner {
 		}
 		System.out.println("Distinct sentences:");
 		distinctSentences.keySet()
-						.stream()
 						.forEach(k -> {
 							System.out.println(String.format("%s -> %d sentence(s)", k, distinctSentences.get(k)));
 						});

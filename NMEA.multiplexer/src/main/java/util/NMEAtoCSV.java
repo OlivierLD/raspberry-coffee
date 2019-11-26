@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * Generates a CSV file from a log file (nmea LogFile)
@@ -29,16 +28,14 @@ public class NMEAtoCSV {
 
 	private static String dataMapToCSVLine(List<String> dataToWrite, Map<String, String> map, String separator) {
 		StringBuffer line = new StringBuffer();
-		dataToWrite.forEach(key -> {
-			line.append((line.length() > 0 ? separator : "") + map.get(key));
-		});
+		dataToWrite.forEach(key -> line.append(line.length() > 0 ? separator : "").append(map.get(key)));
 		return line.toString();
 	}
 
-	public final static String INPUT_PRM_PREFIX = "--in:";
-	public final static String OUTPUT_PRM_PREFIX = "--out:";
-	public final static String STRINGS_PRM_PREFIX = "--data:";
-	public final static String BREAK_AT_PRM_PREFIX = "--break-at:";
+	private final static String INPUT_PRM_PREFIX = "--in:";
+	private final static String OUTPUT_PRM_PREFIX = "--out:";
+	private final static String STRINGS_PRM_PREFIX = "--data:";
+	private final static String BREAK_AT_PRM_PREFIX = "--break-at:";
 
 	public static void main(String... args) {
 
@@ -60,12 +57,13 @@ public class NMEAtoCSV {
 			} else if (arg.startsWith(BREAK_AT_PRM_PREFIX)) {
 				breakAt = arg.substring(BREAK_AT_PRM_PREFIX.length());
 			}
-		};
+		}
 
 		if (nmeaFileName.isEmpty() ||
 				csvOutputName.isEmpty() ||
 				nmeaStringsToParse.isEmpty()) {
-			System.err.println(String.format("Require all --in:, --out: and --data: arguments\nlike --in:./sample-data/my.logging.nmea --out:./today.csv --data:RMC,HDG,VHW,MWV,MTW"));
+			System.err.println("Require all --in:, --out: and --data: arguments\n" +
+					"like --in:./sample-data/my.logging.nmea --out:./today.csv --data:RMC,HDG,VHW,MWV,MTW");
 			throw new IllegalArgumentException("Require --in:, --out: and --data: arguments.");
 		}
 
@@ -75,7 +73,7 @@ public class NMEAtoCSV {
 		List<String> dataToWrite = Arrays.asList(nmeaStringsToParse.split(","));
 		AtomicInteger ai = new AtomicInteger(0);
 		List<String> badStrings = new ArrayList<>();
-		dataToWrite.stream().forEach(key -> {
+		dataToWrite.forEach(key -> {
 			if (VERBOSE) {
 				System.out.println(String.format("String %s", key));
 			}
@@ -127,7 +125,7 @@ public class NMEAtoCSV {
 //		System.out.println(String.format("CSV Header: %s", fullCsvHeader.toString()));
 		if (ai.get() > 0) {
 			System.err.println(String.format("%d  un-managed string(s):", ai.get()));
-			String badOnes = badStrings.stream().collect(Collectors.joining(", "));
+			String badOnes = String.join(", ", badStrings);
 			System.err.println(badOnes);
 			throw new IllegalArgumentException(String.format("Not suited for CSV: %s", badOnes));
 		}
@@ -136,7 +134,7 @@ public class NMEAtoCSV {
 		if (!dataToWrite.contains(breakAt)) {
 			throw new IllegalArgumentException(String.format("Break At Sentence [%s] is not in the Sentence list [%s]",
 					breakAt,
-					dataToWrite.stream().collect(Collectors.joining(", "))));
+					String.join(", ", dataToWrite)));
 		}
 		System.out.println(String.format("Will turn %s into %s, using strings %s, breaking at %s",
 				nmeaFileName,
@@ -152,7 +150,7 @@ public class NMEAtoCSV {
 			// Write CSV header
 			output.write(fullCsvHeader.toString() + "\n");
 
-			String line = "";
+			String line;
 			while ((line = input.readLine()) != null) {
 				if (line.trim().length() > 0) {
 					try {

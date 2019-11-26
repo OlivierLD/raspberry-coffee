@@ -104,7 +104,7 @@ public class NMEAtoKML {
 			Date start = null;
 			GeoPos startPos = null;
 			Date arrival = null;
-			String line = "";
+			String line;
 			double alt = -Double.MAX_VALUE;
 			boolean keepReading = true;
 			while (keepReading) {
@@ -118,6 +118,7 @@ public class NMEAtoKML {
 						if (id.equals("RMC")) {
 							nbRec++;
 							RMC rmc = StringParsers.parseRMC(line);
+							assert (rmc != null);
 							if (rmc.isValid()) {
 								// Get date, speed, position (for distance)
 								Date rmcDate = rmc.getRmcDate();
@@ -179,6 +180,7 @@ public class NMEAtoKML {
 			bw.close();
 
 			// Display summary
+			assert (startPos != null && start != null && arrival != null);
 			System.out.println(String.format("Started %s from %s", SDF.format(start), startPos.toString()));
 			System.out.println(String.format("Arrived %s at %s", SDF.format(arrival), previousPos.toString()));
 			System.out.println(String.format("%s record(s) out of %s. Total distance: %.03f km, in %s. Avg speed:%.03f km/h",

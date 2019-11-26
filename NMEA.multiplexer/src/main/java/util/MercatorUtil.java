@@ -14,15 +14,14 @@ public final class MercatorUtil {
 	 * @return Increasing Latitude, in degrees.
 	 */
 	public static double getIncLat(double lat) {
-		double angle = (Math.PI / 4D) + (Math.toRadians(lat) / 2D);
-		double tan = Math.tan(angle);
+//		double angle = (Math.PI / 4D) + (Math.toRadians(lat) / 2D);
+//		double tan = Math.tan(angle);
 		double il = Math.log(Math.tan((Math.PI / 4D) + (Math.toRadians(lat) / 2D)));
 		return Math.toDegrees(il);
 	}
 
 	public static double getInvIncLat(double il) {
-		double ret = 0.0D;
-		ret = Math.toRadians(il);
+		double ret = Math.toRadians(il);
 		ret = Math.exp(ret);
 		ret = Math.atan(ret);
 		ret -= (Math.PI / 4d); // 0.78539816339744828D;
@@ -46,8 +45,6 @@ public final class MercatorUtil {
 		return new GreatCirclePoint(l2, g2);
 	}
 
-	private final static int MERCATOR_SCALE_HEIGHT = 70;
-
 	// Ratio on *one* degree, that is the trick.
 	public static double getIncLatRatio(double lat) {
 		if (lat == 0d)
@@ -68,9 +65,9 @@ public final class MercatorUtil {
 		System.out.println("Ratio at L=60:" + getIncLatRatio(60D));
 
 		System.out.println("-----------------------");
-		for (int i = 0; i <= 90; i += 10)
-			System.out.println("Ratio at " + i + "=" + getIncLatRatio((double) i));
-
+		for (int i = 0; i <= 90; i += 10) {
+			System.out.println("Ratio at " + i + "=" + getIncLatRatio(i));
+		}
 		System.out.println("IncLat(90)=" + getIncLat(90D));
 	}
 }
