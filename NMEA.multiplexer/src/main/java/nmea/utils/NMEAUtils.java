@@ -7,6 +7,7 @@ import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
 import nmea.parser.Angle180LR;
 import nmea.parser.Angle360;
+import nmea.parser.HDG;
 import nmea.parser.OverGround;
 import nmea.parser.RMC;
 import nmea.parser.Speed;
@@ -528,12 +529,12 @@ public class NMEAUtils {
 									String key = line.substring(3, 6);
 									if ("HDG".equals(key)) {
 										try {
-											double[] val = StringParsers.parseHDG(line);
-											if (val[StringParsers.DEV_in_HDG] != -Double.MAX_VALUE ||
-															val[StringParsers.VAR_in_HDG] != -Double.MAX_VALUE) {
-												decl = Math.max(val[StringParsers.DEV_in_HDG], val[StringParsers.VAR_in_HDG]);
+											HDG val = StringParsers.parseHDG(line);
+											if (val.getDeviation() != -Double.MAX_VALUE ||
+															val.getVariation() != -Double.MAX_VALUE) {
+												decl = Math.max(val.getDeviation(), val.getVariation());
 											}
-											hdg = val[StringParsers.HDG_in_HDG];
+											hdg = val.getHeading();
 											if (decl != -Double.MAX_VALUE) {
 												hdg += decl;
 											} else {
@@ -602,18 +603,18 @@ public class NMEAUtils {
 									String key = line.substring(3, 6);
 									if ("HDG".equals(key)) {
 										try {
-											double[] val = StringParsers.parseHDG(line);
-											if (val[StringParsers.DEV_in_HDG] != -Double.MAX_VALUE ||
-															val[StringParsers.VAR_in_HDG] != -Double.MAX_VALUE) {
-												decl = Math.max(val[StringParsers.DEV_in_HDG], val[StringParsers.VAR_in_HDG]);
+											HDG val = StringParsers.parseHDG(line);
+											if (val.getDeviation() != -Double.MAX_VALUE ||
+															val.getVariation() != -Double.MAX_VALUE) {
+												decl = Math.max(val.getDeviation(), val.getVariation());
 											}
-											hdg = val[StringParsers.HDG_in_HDG];
+											hdg = val.getHeading();
 										} catch (Exception ex) {
 										}
 									} else if (counter.get("HDM").intValue() == 0 && "HDG".equals(key)) {
 										hdg = StringParsers.parseHDM(line);
 									} else if ("GLL".equals(key)) {
-										// Just for the rythm. Write data here
+										// Just for the rhythm. Write data here
 										if (cog != -Double.MAX_VALUE) {
 											double delta = cog - hdg;
 //                    System.out.println("HDG:" + hdg + "\272, W:" + delta + "\272");

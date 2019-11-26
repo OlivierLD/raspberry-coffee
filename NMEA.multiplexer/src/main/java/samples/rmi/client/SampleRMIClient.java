@@ -97,7 +97,7 @@ public class SampleRMIClient {
 					nmea.parser.TrueWind tw = comp.executeTask(trueWind);
 					after = System.currentTimeMillis();
 					System.out.println(String.format("TrueWind execution took %s ms.", NumberFormat.getInstance().format(after - before)));
-					System.out.println(String.format("TW is %f knots, from %d", tw.speed, tw.angle));
+					System.out.println(String.format("TW is %f knots, from %d", tw.getSpeed(), tw.getAngle()));
 				} catch (Exception ex) {
 					System.err.println("Ooops! TW:" + ex.toString());
 				}

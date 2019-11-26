@@ -640,8 +640,8 @@ public class StringGenerator {
 
 		String gll = generateGLL("XX", 37.7489, -122.5070, System.currentTimeMillis());
 		System.out.println(gll);
-		Object[] parsedGLL = StringParsers.parseGLL(gll);
-		GeoPos ll = (GeoPos)parsedGLL[0];
+		GLL parsedGLL = StringParsers.parseGLL(gll);
+		GeoPos ll = parsedGLL.getGllPos();
 		System.out.println(String.format(">> Pos %s", ll.toString()));
 	}
 }

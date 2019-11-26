@@ -9,6 +9,7 @@ import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
 import nmea.parser.Angle360;
 import nmea.parser.ApparentWind;
+import nmea.parser.HDG;
 import nmea.parser.OverGround;
 import nmea.parser.RMC;
 import nmea.parser.SolarDate;
@@ -18,6 +19,7 @@ import nmea.parser.StringParsers;
 import nmea.parser.TrueWindSpeed;
 import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
+import nmea.parser.VHW;
 import nmea.parser.Wind;
 import nmea.utils.NMEAUtils;
 
@@ -148,21 +150,21 @@ public class ExtraDataComputer extends Computer {
 						}
 						break;
 					case "VHW":
-						double[] vhw = StringParsers.parseVHW(sentence);
+						VHW vhw = StringParsers.parseVHW(sentence);
 						if (vhw == null) {
 							return;
 						}
-						double bsp = vhw[StringParsers.BSP_in_VHW];
+						double bsp = vhw.getBsp();
 				//	double hdm = vhw[StringParsers.HDM_in_VHW];
 						if (bsp != -Double.MAX_VALUE) {
 							cache.put(NMEADataCache.BSP, new Speed(bsp));
 						}
 						break;
 					case "HDG":
-						double[] hdgs = StringParsers.parseHDG(sentence);
-						int hdg = (int) hdgs[StringParsers.HDG_in_HDG];
-						double dev = hdgs[StringParsers.DEV_in_HDG];
-						double var = hdgs[StringParsers.VAR_in_HDG];
+						HDG hdgs = StringParsers.parseHDG(sentence);
+						int hdg = (int) hdgs.getHeading();
+						double dev = hdgs.getDeviation();
+						double var = hdgs.getVariation();
 						if (dev == -Double.MAX_VALUE && var == -Double.MAX_VALUE) {
 							cache.put(NMEADataCache.HDG_COMPASS, new Angle360(hdg));
 						} else {
@@ -187,8 +189,8 @@ public class ExtraDataComputer extends Computer {
 						Wind mwv = StringParsers.parseMWV(sentence);
 						if (mwv != null && mwv instanceof ApparentWind) { // TrueWind not used for now
 							Map<String, Object> map = new HashMap<>(2);
-							map.put(NMEADataCache.AWS, new Speed(mwv.speed));
-							int awa = mwv.angle;
+							map.put(NMEADataCache.AWS, new Speed(mwv.getSpeed()));
+							int awa = mwv.getAngle();
 							if (awa > 180) {
 								awa -= 360;
 							}
@@ -197,11 +199,11 @@ public class ExtraDataComputer extends Computer {
 						}
 						break;
 					case "VWR":
-						Wind vwr = StringParsers.parseVWR(sentence);
+						ApparentWind vwr = StringParsers.parseVWR(sentence);
 						if (vwr != null) {
 							Map<String, Object> map = new HashMap<>(2);
-							map.put(NMEADataCache.AWS, new Speed(vwr.speed));
-							int awa = vwr.angle;
+							map.put(NMEADataCache.AWS, new Speed(vwr.getSpeed()));
+							int awa = vwr.getAngle();
 							if (awa > 180) {
 								awa -= 360;
 							}

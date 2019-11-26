@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.TimeZone;
 import java.util.function.Function;
 
@@ -36,7 +36,7 @@ import calc.GeomUtil;
  * - MMB (Atmospheric Pressure)
  * - MTA (Air Temperature)
  * - MTW (Water Temperature)
- * - MWD (Wind Direction and Speed)
+ * - MWD ((True) Wind Direction and Speed)
  * - MWV (Wind Speed and Angle)
  * - RMB (Recommended Minimum, version B)
  * - RMC (Recommended Minimum, version C)
@@ -556,19 +556,15 @@ public class StringParsers {
 		return gsa;
 	}
 
-	public final static int BSP_in_VHW = 0;
-	public final static int HDM_in_VHW = 1;
-	public final static int HDG_in_VHW = 2;
-
 	// VHW Water speed and heading
-	public static double[] parseVHW(String data) {
+	public static VHW parseVHW(String data) {
 		return parseVHW(data, 0d);
 	}
 
-	public static double[] parseVHW(String data, double defaultBSP) {
+	public static VHW parseVHW(String data, double defaultBSP) {
 		String s = data.trim();
 		if (s.length() < 6) {
-			return (double[]) null;
+			return (VHW) null;
 		}
     /* Structure is
      *         1   2 3   4 5   6 7   8
@@ -600,29 +596,17 @@ public class StringParsers {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return (double[]) null;
+			return (VHW) null;
 		}
 
-		return new double[]{speed, hdm, hdg};
+		return new VHW().bsp(speed).hdm(hdm).hdg(hdg);
 	}
-
-	public static String parseVHWtoString(String s) {
-		String ret = "";
-		try {
-			ret = Double.toString(parseVHW(s)[BSP_in_VHW]);
-		} catch (Exception ignore) {
-		}
-		return ret;
-	}
-
-	public final static int LOG_in_VLW = 0;
-	public final static int DAILYLOG_in_VLW = 1;
 
 	// VLW Distance Traveled through Water
-	public static double[] parseVLW(String data) {
+	public static VLW parseVLW(String data) {
 		String s = data.trim();
 		if (s.length() < 6) {
-			return (double[]) null;
+			return (VLW) null;
 		}
 
 		double cumulative = 0d;
@@ -641,9 +625,9 @@ public class StringParsers {
 			sinceReset = parseNMEADouble(nmeaElements[3]);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return (double[]) null;
+			return (VLW) null;
 		}
-		return new double[]{cumulative, sinceReset};
+		return new VLW().log(cumulative).daily(sinceReset);
 	}
 
 	// MTW Water Temperature
@@ -742,7 +726,7 @@ public class StringParsers {
 	}
 
 	// MWD Wind Direction & Speed
-	public static Wind parseMWD(String data) {
+	public static TrueWind parseMWD(String data) {
 			/* $WIMWD,<1>,<2>,<3>,<4>,<5>,<6>,<7>,<8>*hh
 	     *
 	     * NMEA 0183 standard Wind Direction and Speed, with respect to north.
@@ -756,7 +740,7 @@ public class StringParsers {
 	     * <7> Wind speed, meters/second, to the nearest 0.1 m/s.
 	     * <8> M = Meters/second
 	     */
-		Wind tw = null;
+		TrueWind tw = null;
 		if (validCheckSum(data)) {
 			String[] part = data.split(",");
 			double dir = 0;
@@ -781,8 +765,8 @@ public class StringParsers {
 	 *        |     Calculated wind Speed, knots
 	 *        Calculated wind angle relative to the vessel, 0 to 180, left/right L/R of vessel heading
 	 */
-	public static Wind parseVWT(String data) {
-		Wind wind = null;
+	public static TrueWind parseVWT(String data) {
+		TrueWind wind = null;
 		String s = data.trim();
 		if (s.length() < 6) {
 			return null;
@@ -796,41 +780,10 @@ public class StringParsers {
 		return wind;
 	}
 
-	public static String parseMWVtoString(String s) {
-		String ret = "";
-		try {
-			ret = parseMWV(s).toString();
-		} catch (Exception ignore) {
-		}
-		return ret;
-	}
-
-	public static String getAWAFromMWV(String s) {
-		String awa = "";
-		try {
-			Wind wind = parseMWV(s);
-			awa = Integer.toString(wind.angle);
-		} catch (Exception ex) {
-			awa = "-";
-		}
-		return awa;
-	}
-
-	public static String getAWSFromMWV(String s) {
-		String aws = "";
-		try {
-			Wind wind = parseMWV(s);
-			aws = Double.toString(wind.speed);
-		} catch (Exception ex) {
-			aws = "-";
-		}
-		return aws;
-	}
-
 	// VWR Relative Wind Speed and Angle
 	// AWA, AWS
 	// Example: VWR,148.,L,02.4,N,01.2,M,04.4,K*XX
-	public static Wind parseVWR(String data) {
+	public static ApparentWind parseVWR(String data) {
 		String s = data.trim();
 		if (s.length() < 6) {
 			return null;
@@ -845,7 +798,7 @@ public class StringParsers {
      *         Wind angle 0 to 180 degrees
      */
 		// We're interested only in Speed in knots.
-		Wind aw = null;
+		ApparentWind aw = null;
 		try {
 			if (false && s.indexOf("K*") == -1) { // Data invalid // Watafok???
 				return aw;
@@ -887,37 +840,6 @@ public class StringParsers {
 //    e.printStackTrace();
 		}
 		return aw;
-	}
-
-	public static String parseVWRtoString(String s) {
-		String ret = "";
-		try {
-			ret = parseVWR(s).toString();
-		} catch (Exception ignore) {
-		}
-		return ret;
-	}
-
-	public static String getAWAFromVWR(String s) {
-		String awa = "";
-		try {
-			Wind wind = parseVWR(s);
-			awa = Integer.toString(wind.angle);
-		} catch (Exception ex) {
-			awa = "-";
-		}
-		return awa;
-	}
-
-	public static String getAWSFromVWR(String s) {
-		String aws = "";
-		try {
-			Wind wind = parseVWR(s);
-			aws = Double.toString(wind.speed);
-		} catch (Exception ex) {
-			aws = "-";
-		}
-		return aws;
 	}
 
 	// VTG Track made good and Ground speed
@@ -984,48 +906,14 @@ public class StringParsers {
 		return og;
 	}
 
-	public static String parseVTGtoString(String s) {
-		String ret = "";
-		try {
-			ret = parseVTG(s).toString();
-		} catch (Exception ignore) {
-		}
-		return ret;
-	}
-
-	public static String getCOGFromVTG(String s) {
-		String cog = "";
-		try {
-			OverGround og = parseVTG(s);
-			cog = Integer.toString(og.getCourse());
-		} catch (Exception ex) {
-			cog = "-";
-		}
-		return cog;
-	}
-
-	public static String getSOGFromVTG(String s) {
-		String sog = "";
-		try {
-			OverGround og = parseVTG(s);
-			sog = Double.toString(og.getSpeed());
-		} catch (Exception ex) {
-			sog = "-";
-		}
-		return sog;
-	}
-
-	public final static int GP_in_GLL = 0;
-	public final static int DATE_in_GLL = 1;
-
 	// GLL Geographical Latitude & Longitude
-	public static Object[] parseGLL(String data) {
+	public static GLL parseGLL(String data) {
 		String s = data.trim();
 		if (s.length() < 6) {
-			return (Object[]) null;
+			return (GLL) null;
 		}
 		if (!validCheckSum(s)) {
-			return (Object[]) null;
+			return (GLL) null;
 		}
 		/* Structure is
      *  $aaGLL,llll.ll,a,gggg.gg,a,hhmmss.ss,A,D*hh
@@ -1042,7 +930,7 @@ public class StringParsers {
 		Date date = null;
 		try {
 			if (s.indexOf("A*") == -1) { // Not Active, Data invalid (void)
-				return (Object[]) null;
+				return (GLL) null;
 			} else {
 				int i = s.indexOf(",");
 				if (i > -1) {
@@ -1084,12 +972,12 @@ public class StringParsers {
 					float sec = (float) (utc % 100f);
 					Calendar local = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // new GregorianCalendar();
 //					local.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
-					local.set(Calendar.YEAR, 1970);
+					local.set(Calendar.YEAR, 1_970);
 					local.set(Calendar.MONDAY, Calendar.JANUARY);
 					local.set(Calendar.DAY_OF_MONTH, 1);
 					local.set(Calendar.HOUR_OF_DAY, h);
 					local.set(Calendar.MINUTE, mn);
-					local.set(Calendar.SECOND, (int) Math.round(sec));
+					local.set(Calendar.SECOND, Math.round(sec));
 					local.set(Calendar.MILLISECOND, 0);
 					try {
 						date = local.getTime();
@@ -1102,38 +990,7 @@ public class StringParsers {
 			System.err.println("parseGLL for [" + s + "] " + e.toString());
 //    e.printStackTrace();
 		}
-		return new Object[]{ll, date};
-	}
-
-	public static String parseGLLtoString(String s) {
-		String ret = "";
-		try {
-			ret = parseGLL(s).toString();
-		} catch (Exception ignore) {
-		}
-		return ret;
-	}
-
-	public static String getLatFromGLL(String s) {
-		String result = "";
-		try {
-			GeoPos pos = (GeoPos) parseGLL(s)[GP_in_GLL];
-			result = Double.toString(pos.lat);
-		} catch (Exception ex) {
-			result = "-";
-		}
-		return result;
-	}
-
-	public static String getLongFromGLL(String s) {
-		String result = "";
-		try {
-			GeoPos pos = (GeoPos) parseGLL(s)[GP_in_GLL];
-			result = Double.toString(pos.lng);
-		} catch (Exception ex) {
-			result = "-";
-		}
-		return result;
+		return new GLL().gllPos(ll).gllDate(date);
 	}
 
 	// HDT Heading - True
@@ -1215,20 +1072,16 @@ public class StringParsers {
 		return ret;
 	}
 
-	public final static int HDG_in_HDG = 0;
-	public final static int DEV_in_HDG = 1;
-	public final static int VAR_in_HDG = 2;
-
 	// HDG - Magnetic heading, deviation, variation
-	public static double[] parseHDG(String data) {
-		double[] ret = null;
+	public static HDG parseHDG(String data) {
+		HDG ret = null;
 		String s = data.trim();
 		if (s.length() < 6) {
 			return ret;
 		}
 		double hdg = 0d;
-		double dev = -Double.MAX_VALUE;
-		double var = -Double.MAX_VALUE;
+		double dev = 0d; // -Double.MAX_VALUE;
+		double var = 0d; // -Double.MAX_VALUE;
     /* Structure is
      * $xxHDG,x.x,x.x,a,x.x,a*hh<CR><LF>
      *        |   |   | |   | |
@@ -1259,19 +1112,10 @@ public class StringParsers {
 				var = -var;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return (double[]) null;
+			return (HDG) null;
 		}
-		ret = new double[]{hdg, dev, var};
+		ret = new HDG().heading(hdg).deviation(dev).variation(var);
 
-		return ret;
-	}
-
-	public static String parseHDGtoString(String s) {
-		String ret = "";
-		try {
-			ret = Integer.toString((int) parseHDG(s)[HDG_in_HDG]);
-		} catch (Exception ignore) {
-		}
 		return ret;
 	}
 
@@ -2022,41 +1866,43 @@ public class StringParsers {
 
 	public enum Dispatcher {
 
-		RMC("RMC", "Recommended Minimum Navigation Information, C", StringParsers::parseRMC),
-		GLL("GLL", "Geographical Lat & Long", StringParsers::parseGLL),
-		DBT("DBT", "Depth Below Transducer", StringParsers::parseDBT),
-		DPT("DPT", "Depth of Water", StringParsers::parseDPT),
-		GGA("GGA", "Global Positioning System Fix Data", StringParsers::parseGGA),
-		GSA("GSA", "GPS DOP and active satellites", StringParsers::parseGSA),
-		GSV("GSV", "Satellites in view", StringParsers::parseGSV),
-		HDG("HDG", "Heading - Deviation & Variation", StringParsers::parseHDG),
-		HDM("HDM", "Heading - Magnetic", StringParsers::parseHDM),
-		HDT("HDT", "Heading - True", StringParsers::parseHDT),
-		MDA("MDA", "Meteo Composite", StringParsers::parseMDA),
-		MMB("MMB", "Atm Pressure", StringParsers::parseMMB),
-		MTA("MTA", "Air Temperature, Celcius", StringParsers::parseMTA),
-		MTW("MTW", "Mean Temperature of Water", StringParsers::parseMTW),
-		MWD("MWD", "Wind Direction & Speed", StringParsers::parseMWD),
-		MWV("MWV", "Wind Speed and Angle", StringParsers::parseMWV),
-		RMB("RMB", "Recommended Minimum Navigation Information, B", StringParsers::parseRMB),
-		TXT("TXT", "Text Transmission", StringParsers::parseTXT),
-		VDR("VDR", "Set and Drift", StringParsers::parseVDR),
-		VHW("VHW", "Water speed and heading", StringParsers::parseVHW),
-		VLW("VLW", "Distance Traveled through Water", StringParsers::parseVLW),
-		VTG("VTG", "Track made good and Ground speed", StringParsers::parseVTG),
-		VWR("VWR", "Relative Wind Speed and Angle", StringParsers::parseVWR),
-		VWT("VWT", "Wind Data", StringParsers::parseVWT),
-		XDR("XDR", "Transducer Measurement", StringParsers::parseXDR),
-		ZDA("ZDA", "Time & Date - UTC, day, month, year and local time zone", StringParsers::parseZDA);
+		RMC("RMC", "Recommended Minimum Navigation Information, C", StringParsers::parseRMC, RMC.class),
+		GLL("GLL", "Geographical Lat & Long", StringParsers::parseGLL, GLL.class),
+		DBT("DBT", "Depth Below Transducer", StringParsers::parseDBT, Float.class),
+		DPT("DPT", "Depth of Water", StringParsers::parseDPT, Object.class),
+		GGA("GGA", "Global Positioning System Fix Data", StringParsers::parseGGA, List.class),
+		GSA("GSA", "GPS DOP and active satellites", StringParsers::parseGSA, GSA.class),
+		GSV("GSV", "Satellites in view", StringParsers::parseGSV, Map.class),
+		HDG("HDG", "Heading - Deviation & Variation", StringParsers::parseHDG, HDG.class),
+		HDM("HDM", "Heading - Magnetic", StringParsers::parseHDM, Integer.class),
+		HDT("HDT", "Heading - True", StringParsers::parseHDT, Integer.class),
+		MDA("MDA", "Meteo Composite", StringParsers::parseMDA, MDA.class),
+		MMB("MMB", "Atm Pressure", StringParsers::parseMMB, Double.class),
+		MTA("MTA", "Air Temperature, Celcius", StringParsers::parseMTA, Double.class),
+		MTW("MTW", "Mean Temperature of Water", StringParsers::parseMTW, Double.class),
+		MWD("MWD", "Wind Direction & Speed", StringParsers::parseMWD, TrueWind.class),
+		MWV("MWV", "Wind Speed and Angle", StringParsers::parseMWV, Wind.class),
+		RMB("RMB", "Recommended Minimum Navigation Information, B", StringParsers::parseRMB, RMB.class),
+		TXT("TXT", "Text Transmission", StringParsers::parseTXT, String.class),
+		VDR("VDR", "Set and Drift", StringParsers::parseVDR, Current.class),
+		VHW("VHW", "Water speed and heading", StringParsers::parseVHW, VHW.class),
+		VLW("VLW", "Distance Traveled through Water", StringParsers::parseVLW, VLW.class),
+		VTG("VTG", "Track made good and Ground speed", StringParsers::parseVTG, OverGround.class),
+		VWR("VWR", "Relative Wind Speed and Angle", StringParsers::parseVWR, ApparentWind.class),
+		VWT("VWT", "Wind Data", StringParsers::parseVWT, TrueWind.class),                              // Obsolete
+		XDR("XDR", "Transducer Measurement", StringParsers::parseXDR, List.class),
+		ZDA("ZDA", "Time & Date - UTC, day, month, year and local time zone", StringParsers::parseZDA, UTCDate.class);
 
 		private final String key;
 		private final String description;
 		private final Function<String, Object> parser;
+		private final Class returnedType;
 
-		Dispatcher(String key, String description, Function<String, Object> parser) {
+		Dispatcher(String key, String description, Function<String, Object> parser, Class returned) {
 			this.key = key;
 			this.description = description;
 			this.parser = parser;
+			returnedType = returned;
 		}
 
 		public String key() {
@@ -2068,6 +1914,7 @@ public class StringParsers {
 		public Function<String, Object> parser() {
 			return this.parser;
 		}
+		public Class returnedType() { return this.returnedType; }
 	}
 
 	public static class ParsedData {
@@ -2106,6 +1953,12 @@ public class StringParsers {
 		}
 	}
 
+	public static Dispatcher findDispatcherByKey(String key) {
+		Optional<Dispatcher> first = Arrays.asList(Dispatcher.values()).stream()
+				.filter(disp -> key.equals(disp.key()))
+				.findFirst();
+		return first.isPresent() ? first.get() : null;
+	}
 	/**
 	 * Lists available parsers, key and description.
 	 */
@@ -2120,7 +1973,7 @@ public class StringParsers {
 	public static ParsedData autoParse(String data) {
 		ParsedData parsedData = null;
 		if (!validCheckSum(data)) {
-			throw new RuntimeException(String.format("Invalid NMEA Sentence [%s]", data));
+			throw new RuntimeException(String.format("Invalid NMEA Sentence CheckSum [%s]", data));
 		}
 		parsedData = new ParsedData().fullSentence(data);
 		String key = getSentenceID(data);
@@ -2213,8 +2066,8 @@ public class StringParsers {
 		System.out.println("Wind  :" + w);
 
 		str = "$aaVLW,123.45,N,12.34,N*hh";
-		double[] d = parseVLW(str);
-		System.out.println("Log - Cumul:" + d[StringParsers.LOG_in_VLW] + ", Daily:" + d[StringParsers.DAILYLOG_in_VLW]);
+		VLW vlw = parseVLW(str);
+		System.out.println("Log - Cumul:" + vlw.getLog() + ", Daily:" + vlw.getDaily());
 
 		str = "$xxMTW,+18.0,C*hh";
 		double t = parseMTW(str);
@@ -2235,8 +2088,8 @@ public class StringParsers {
 			System.out.println("No RMB Data");
 
 		str = "$IIGLL,3739.854,N,12222.812,W,014003,A,A*49";
-		Object[] obj = parseGLL(str);
-		System.out.println("Position:" + ((GeoPos) obj[GP_in_GLL]).toString() + ", Date:" + ((Date) obj[DATE_in_GLL]).toString());
+		GLL gll = parseGLL(str);
+		System.out.println("Position:" + gll.getGllPos().toString() + ", Date:" + gll.getGllTime().toString());
 
 		str = "$IIVTG,311.,T,,M,05.6,N,10.4,K,A*2F";
 		og = parseVTG(str);
@@ -2299,12 +2152,12 @@ public class StringParsers {
 		System.out.println("With checksum: $" + str);
 
 		str = "$IIHDG,178.,,,,*77";
-		double[] hdgData = StringParsers.parseHDG(str);
-		System.out.println("Hdg:" + hdgData[StringParsers.HDG_in_HDG] + ", d:" + hdgData[StringParsers.DEV_in_HDG] + " W:" + hdgData[StringParsers.VAR_in_HDG]);
+		HDG hdgData = StringParsers.parseHDG(str);
+		System.out.println("Hdg:" + hdgData.getHeading() + ", d:" + hdgData.getDeviation() + " W:" + hdgData.getVariation());
 
 		str = "$IIHDG,126,,,10,E*16";
 		hdgData = StringParsers.parseHDG(str);
-		System.out.println("Hdg:" + hdgData[StringParsers.HDG_in_HDG] + ", d:" + hdgData[StringParsers.DEV_in_HDG] + " W:" + hdgData[StringParsers.VAR_in_HDG]);
+		System.out.println("Hdg:" + hdgData.getHeading() + ", d:" + hdgData.getDeviation() + " W:" + hdgData.getVariation());
 
 		str = "$IIRMC,220526.00,A,3754.34,N,12223.20,W,3.90,250,,015,E,N*07";
 		rmc = StringParsers.parseRMC(str);

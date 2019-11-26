@@ -17,7 +17,9 @@ import nmea.parser.ApparentWind;
 import nmea.parser.Current;
 import nmea.parser.Depth;
 import nmea.parser.Distance;
+import nmea.parser.GLL;
 import nmea.parser.GeoPos;
+import nmea.parser.HDG;
 import nmea.parser.NMEADoubleValueHolder;
 import nmea.parser.OverGround;
 import nmea.parser.Pressure;
@@ -33,6 +35,8 @@ import nmea.parser.TrueWind;
 import nmea.parser.UTC;
 import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
+import nmea.parser.VHW;
+import nmea.parser.VLW;
 import nmea.parser.Wind;
 import calc.GeomUtil;
 
@@ -412,22 +416,22 @@ public class NMEADataCache
 						}
 						break;
 					case "VHW": // Water Speed and Heading
-						double[] vhw = StringParsers.parseVHW(nmeaSentence);
+						VHW vhw = StringParsers.parseVHW(nmeaSentence);
 						if (vhw == null) {
 							return;
 						}
-						double bsp = vhw[StringParsers.BSP_in_VHW];
-						double hdm = vhw[StringParsers.HDM_in_VHW];
+						double bsp = vhw.getBsp();
+						double hdm = vhw.getHdm();
 						if (bsp != -Double.MAX_VALUE) {
 							this.put(BSP, new Speed(bsp));
 						}
 						this.put(HDG_COMPASS, new Angle360(hdm /* - dec */));
 						break;
 					case "VLW": // Log
-						double[] d = StringParsers.parseVLW(nmeaSentence);
+						VLW vlw = StringParsers.parseVLW(nmeaSentence);
 						HashMap<String, Object> map = new HashMap<String, Object>(2);
-						this.put(LOG, new Distance(d[StringParsers.LOG_in_VLW]));
-						this.put(DAILY_LOG, new Distance(d[StringParsers.DAILYLOG_in_VLW]));
+						this.put(LOG, new Distance(vlw.getLog()));
+						this.put(DAILY_LOG, new Distance(vlw.getDaily()));
 						break;
 					case "MTW": // Water Temperature
 						double wt = StringParsers.parseMTW(nmeaSentence);
@@ -444,8 +448,8 @@ public class NMEADataCache
 					case "MWV": // Apparent Wind Speed and Direction
 						Wind wind = StringParsers.parseMWV(nmeaSentence);
 						if (wind != null && wind instanceof ApparentWind) { // TODO: TrueWind not used for now
-							this.put(AWS, new Speed(wind.speed));
-							int awa = wind.angle;
+							this.put(AWS, new Speed(wind.getSpeed()));
+							int awa = wind.getAngle();
 							if (awa > 180) {
 								awa -= 360;
 							}
@@ -457,10 +461,10 @@ public class NMEADataCache
 						this.put(NMEADataCache.VDR_CURRENT, current);
 						break;
 					case "VWR": // Apparent Wind Speed and Direction (2)
-						Wind aWind = StringParsers.parseVWR(nmeaSentence);
+						ApparentWind aWind = StringParsers.parseVWR(nmeaSentence);
 						if (aWind != null) {
-							this.put(AWS, new Speed(aWind.speed));
-							int awa = aWind.angle;
+							this.put(AWS, new Speed(aWind.getSpeed()));
+							int awa = aWind.getAngle();
 							if (awa > 180) {
 								awa -= 360;
 							}
@@ -475,9 +479,9 @@ public class NMEADataCache
 						}
 						break;
 					case "GLL": // Lat & Long, UTC (No date, just time)
-						Object[] obj = StringParsers.parseGLL(nmeaSentence);
-						if (obj != null) {
-							GeoPos pos = (GeoPos) obj[StringParsers.GP_in_GLL];
+						GLL gll = StringParsers.parseGLL(nmeaSentence);
+						if (gll != null) {
+							GeoPos pos = gll.getGllPos();
 							if (pos != null) {
 								this.put(POSITION, pos);
 								if (this.previousPosition != null) {
@@ -487,7 +491,7 @@ public class NMEADataCache
 								this.previousPosition = pos;
 							}
 							if (!"true".equals(System.getProperty("do.not.use.GLL.date.time"))) { // Not good when replaying, contains only H:M:S, no Y:N:D
-								Date date = (Date) obj[StringParsers.DATE_in_GLL];
+								Date date = gll.getGllTime();
 								if (date != null) {
 									this.put(GPS_TIME, new UTCTime(date));
 									if ("true".equals(System.getProperty("calculate.solar.with.eot")) && pos != null) {
@@ -515,10 +519,10 @@ public class NMEADataCache
 						this.put(NMEADataCache.HDG_TRUE, new Angle360(StringParsers.parseHDT(nmeaSentence)));
 						break;
 					case "HDG": // Heading
-						double[] hdgData = StringParsers.parseHDG(nmeaSentence);
-						int heading = (int) hdgData[StringParsers.HDG_in_HDG];
-						double dev = hdgData[StringParsers.DEV_in_HDG];
-						double var = hdgData[StringParsers.VAR_in_HDG];
+						HDG hdgData = StringParsers.parseHDG(nmeaSentence);
+						int heading = (int) hdgData.getHeading();
+						double dev = hdgData.getDeviation();
+						double var = hdgData.getVariation();
 						if (dev == -Double.MAX_VALUE && var == -Double.MAX_VALUE) {
 							this.put(HDG_COMPASS, new Angle360(heading));
 						} else {
@@ -604,20 +608,20 @@ public class NMEADataCache
 						}
 						break;
 					case "MWD": // Wind Speed and Direction
-						Wind mwdWind = StringParsers.parseMWD(nmeaSentence);
-						if (mwdWind != null && mwdWind instanceof TrueWind) {
-							this.put(TWS, new Speed(mwdWind.speed));
-							this.put(TWD, new Angle360(mwdWind.angle));
+						TrueWind mwdWind = StringParsers.parseMWD(nmeaSentence);
+						if (mwdWind != null) {
+							this.put(TWS, new Speed(mwdWind.getSpeed()));
+							this.put(TWD, new Angle360(mwdWind.getAngle()));
 						}
 						break;
 					case "VWT": // True Wind Speed and Angle (deprecated, use MWV)
-						Wind trueWind = StringParsers.parseVWT(nmeaSentence);
+						TrueWind trueWind = StringParsers.parseVWT(nmeaSentence);
 						if (trueWind != null) {
-							this.put(TWS, new Speed(trueWind.speed));
-							this.put(TWA, new Angle180(trueWind.angle));
+							this.put(TWS, new Speed(trueWind.getSpeed()));
+							this.put(TWA, new Angle180(trueWind.getAngle()));
 							Angle360 trueHeading = (Angle360) this.get(HDG_TRUE);
 							if (trueHeading != null) {
-								double twd = trueHeading.getValue() + trueWind.angle;
+								double twd = trueHeading.getValue() + trueWind.getAngle();
 								System.out.println("TWD: " + twd); // TODO: Implement put(TWD, new Angle360(twd))
 							}
 						}

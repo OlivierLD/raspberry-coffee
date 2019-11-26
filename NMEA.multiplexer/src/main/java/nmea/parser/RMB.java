@@ -2,7 +2,7 @@ package nmea.parser;
 
 import java.io.Serializable;
 
-public class RMB implements Serializable {
+public class RMB extends NMEAComposite implements Serializable {
 	private GeoPos dest;  // Destination Waypoint position
 	private String owpid; // Origin WP ID
 	private String dwpid; // Destination WP ID
@@ -86,5 +86,25 @@ public class RMB implements Serializable {
 
 	public String getAs() {
 		return as;
+	}
+
+	// @Override
+	public static String getCsvHeader(String separator) {
+		return String.format("dest-lat%sdest-lng%sorig-wp%sdest-wp%sxte%sdts%srtd%sbtd%sdvc%sas", SEP, SEP, SEP, SEP, SEP, SEP, SEP, SEP, SEP).replace(SEP, separator);
+	}
+
+	@Override
+	public String getCsvData(String separator) {
+		return String.format("%s%s%s%s%s%s%s%s%f%s%s%s%f%s%f%s%f%s%s",
+				(this.dest != null ? String.valueOf(this.dest.lat) : ""), separator,
+				(this.dest != null ? String.valueOf(this.dest.lng) : ""), separator,
+				owpid, separator,
+				dwpid, separator,
+				xte, separator,
+				dts, separator,
+				rtd, separator,
+				btd, separator,
+				dcv, separator,
+				as);
 	}
 }

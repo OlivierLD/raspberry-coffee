@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class RMC implements Serializable {
+public class RMC extends NMEAComposite implements Serializable {
 	private GeoPos gp = null;
 	private double sog = 0D;
 	private double cog = 0D;
@@ -17,6 +17,25 @@ public class RMC implements Serializable {
 	private Date rmcDate = null;
 	private Date rmcTime = null;
 	private double declination = -Double.MAX_VALUE;
+
+	// @Override
+	public static String getCsvHeader(String separator) {
+		return String.format("latitude%slongitude%ssog%scog%sdecl%srmc-valid%sdate-time%sfmt-date-time%stype", SEP, SEP, SEP, SEP, SEP, SEP, SEP, SEP).replace(SEP, separator);
+	}
+
+	@Override
+	public String getCsvData(String separator) {
+		return String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s",
+				(gp != null ? String.valueOf(gp.lat) : ""), separator,
+				(gp != null ? String.valueOf(gp.lng) : ""), separator,
+				String.valueOf(sog), separator,
+				String.valueOf(sog), separator,
+				(declination != -Double.MAX_VALUE ? String.valueOf(declination) : ""), separator,
+				(valid ? "Y" : "N"), separator,
+				(rmcDate != null ? String.valueOf(rmcDate.getTime()) : ""), separator,
+				(rmcDate != null ? SDF.format(rmcDate) : ""), separator,
+				(rmcType != null ? rmcType.toString() : ""));
+	}
 
 	public enum RMC_TYPE {
 		AUTONOMOUS,
@@ -73,6 +92,7 @@ public class RMC implements Serializable {
 		return this.valid;
 	}
 
+	@Override
 	public String toString() {
 		String str = "";
 		str = (gp != null ? gp.toString() : "[no pos]") + (!valid ? "(Warning)" : "") + ", " + "SOG:" + sog + ", COG:" + cog;

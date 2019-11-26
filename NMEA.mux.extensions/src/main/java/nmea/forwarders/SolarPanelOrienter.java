@@ -3,6 +3,7 @@ package nmea.forwarders;
 import java.util.Properties;
 
 import calc.GeomUtil;
+import nmea.parser.GLL;
 import nmea.parser.GeoPos;
 import nmea.parser.RMC;
 import nmea.parser.StringParsers;
@@ -64,8 +65,8 @@ public class SolarPanelOrienter implements Forwarder {
 					}
 					break;
 				case "GLL":
-					Object[] objects = StringParsers.parseGLL(str);
-					GeoPos pos = (GeoPos)objects[StringParsers.GP_in_GLL];
+					GLL gll = StringParsers.parseGLL(str);
+					GeoPos pos = gll.getGllPos();
 					if (pos != null) {
 						sunFlower.setLatitude(pos.lat);
 						sunFlower.setLongitude(pos.lng);

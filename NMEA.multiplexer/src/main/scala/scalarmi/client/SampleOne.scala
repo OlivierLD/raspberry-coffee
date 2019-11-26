@@ -87,7 +87,7 @@ object SampleOne extends App {
         val tw = comp.executeTask(trueWind)
         after = System.currentTimeMillis
         println(s"TrueWind execution took ${NumberFormat.getInstance.format(after - before)} ms")
-        println(s"TW is ${tw.speed} knots, from ${tw.angle}")
+        println(s"TW is ${tw.getSpeed} knots, from ${tw.getAngle}")
         val calc = comp.executeTask(calculatedCurrent)
         val inst = comp.executeTask(instantCurrent)
         println(s"Instant Current    ${inst.speed} knots, dir ${inst.angle}")
