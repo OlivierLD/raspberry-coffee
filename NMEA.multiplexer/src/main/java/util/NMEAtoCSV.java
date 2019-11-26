@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 public class NMEAtoCSV {
 
-	private final static boolean VERBOSE = false;
+	private final static boolean VERBOSE = "true".equals(System.getProperty("verbose"));
 
 	private final static String SEPARATOR = ";";
 	private final static String BREAK_ON_STRING = "RMC";
