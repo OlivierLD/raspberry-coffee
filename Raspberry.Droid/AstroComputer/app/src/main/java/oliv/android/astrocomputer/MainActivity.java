@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -24,6 +25,12 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import static oliv.android.astrocomputer.GPSTracker.LOG_TAG;
+
+/*
+ * There is commented code in this class.
+ * This is still a work in progress, mostly at the life cycle level.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private final static long BW_LOOPS = 250L;
@@ -209,13 +216,14 @@ public class MainActivity extends AppCompatActivity {
                             } else if (selectedBody.toString().contains("Saturn")) {
                                 sru.setAHG(AstroComputer.getSaturnGHA());
                                 sru.setD(AstroComputer.getSaturnDecl());
-                            } else {
+                            } else { // Sun by default
                                 sru.setAHG(AstroComputer.getSunGHA());
                                 sru.setD(AstroComputer.getSunDecl());
                             }
 
 //                            sru.setAHG(AstroComputer.getSunGHA());
 //                            sru.setD(AstroComputer.getSunDecl());
+
                             sru.calculate();
                             double obsAlt = sru.getHe();
                             double z = sru.getZ();
@@ -242,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
 //                Toast.makeText(instance, formattedDate, Toast.LENGTH_SHORT).show();
 //                Toast.makeText(instance, gpsData, Toast.LENGTH_SHORT).show();
 //                Toast.makeText(instance, astroData, Toast.LENGTH_SHORT).show();
+
                 setText(instance.dateTimeHolder, formattedDate);
                 setText(instance.gpsDataHolder, gpsData);
                 setText(instance.sunDataHolder, astroData);
@@ -269,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     Thread.sleep(BW_LOOPS);
                 } catch (InterruptedException ie) {
-                    ie.printStackTrace();
+                    Log.d(LOG_TAG, ie.toString());
                 }
             }
         }
@@ -355,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
                 logger.flush();
                 logger.close();
             } catch (IOException ioe) {
-                //
+                Log.d(LOG_TAG, ioe.toString());
             }
         }
     }
