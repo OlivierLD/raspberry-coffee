@@ -82,12 +82,23 @@ kml_preamble_part_2 = "      <Placemark>\n" \
 data_out.write(kml_preamble_part_1)
 data_out.write(kml_preamble_part_2)
 
+latitude_index = -1
+longitude_index = -1
+
 for input_line in data_in:
     # print(input_line)
     data = input_line.split(';')
-    # Coordinates format is 'longitude,latitude,altitude' <= Careful: longitude goes first.
-    if data[2] != 'latitude':  # That would be the header
-        output_line = "{},{},{}\n".format(data[3], data[2], 0)
+    if latitude_index == -1 and longitude_index == -1:  # Look for the indexes of interest
+        for idx in range(len(data)):
+            if data[idx] == 'latitude':
+                latitude_index = idx
+            if data[idx] == 'longitude':
+                longitude_index = idx
+            if latitude_index != -1 and longitude_index != -1:
+                break
+        print("Found latitude in column {}, longitude in column {}".format(latitude_index, longitude_index))
+    else:  # Coordinates format is 'longitude,latitude,altitude' <= Careful: longitude goes first.
+        output_line = "{},{},{}\n".format(data[longitude_index], data[latitude_index], 0)
         data_out.write(output_line)
 
 # Closing tags
