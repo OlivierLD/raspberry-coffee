@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Generates a CSV file from a log file (nmea LogFile)
- *
  */
 public class NMEAtoCSV {
 
