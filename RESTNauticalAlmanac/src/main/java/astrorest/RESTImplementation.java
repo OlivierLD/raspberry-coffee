@@ -24,7 +24,6 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1388,7 +1387,7 @@ public class RESTImplementation {
 									"true".equals(System.getProperty("astro.verbose", "false")));
 
 							hDip = sru.getHorizonDip();
-							refr = sru.getRefr();
+							refr = sru.getRefraction();
 							parallax = sru.getPa();
 
 							totalCorrection = 0d;
@@ -1437,7 +1436,7 @@ public class RESTImplementation {
 							hDip = SightReductionUtil.getHorizonDip(userData.cbd.eyeHeight);
 							// sd, we have already
 							parallax = SightReductionUtil.getParallax(hp, obsAlt);
-							refr = SightReductionUtil.getRefr(obsAlt - parallax);
+							refr = SightReductionUtil.getRefraction(obsAlt - parallax);
 							double hi = obsAlt;
 							if (userData.cbd.limb.equals(CelestialBodyData.Limb.UPPER)) {
 								sd = -sd;

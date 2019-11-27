@@ -48,7 +48,7 @@ public class RoutingUtil {
 				Math.toRadians(finalDestination.getPosition().getG())));
 //  gc.calculateGreatCircle(10);
 //  double gcDistance = Math.toDegrees(gc.getDistance() * 60D);
-		GreatCircle.calculateRhumLine();
+		GreatCircle.calculateRhumbLine();
 		double rlZ = gc.getRhumbLineRoute();
 		brg = (int) Math.round(Math.toDegrees(rlZ));
 		return brg;
@@ -62,7 +62,7 @@ public class RoutingUtil {
 				Math.toRadians(dest.getPosition().getG())));
 		//  gc.calculateGreatCircle(10);
 		//  double gcDistance = Math.toDegrees(gc.getDistance() * 60D);
-		GreatCircle.calculateRhumLine();
+		GreatCircle.calculateRhumbLine();
 		double rlZ = gc.getRhumbLineRoute();
 		brg = (int) Math.round(Math.toDegrees(rlZ));
 		return brg;

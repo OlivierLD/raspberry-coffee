@@ -194,7 +194,7 @@ public class SightReductionUtil {
 	 * Corrections
 	 */
 	static double horizonDip = 0.0;
-	static double refr = 0.0;
+	static double refraction = 0.0;
 	static double pa = 0.0;
 
 	public final static int UPPER_LIMB = 0;
@@ -207,31 +207,29 @@ public class SightReductionUtil {
 		return horizonDip;
 	}
 
-	public double getRefr() {
-		return refr;
+	public double getRefraction() {
+		return refraction;
 	}
 
 	public double getPa() {
 		return pa;
 	}
 
-	public static double getHorizonDip(double eyeHeight) // In meters
-	{
+	public static double getHorizonDip(double eyeHeight) { // In meters
 		return 1.76 * Math.sqrt(eyeHeight);
 	}
 
-	public static double getRefr(double alt) // Works, according to the Correction Tables...
-	{
+	public static double getRefraction(double alt) { // Works, according to the Correction Tables...
 		return 0.97127 * Math.tan(Math.toRadians(90.0 - alt)) -
 					 0.00137 * Math.pow(Math.tan(Math.toRadians(90.0 - alt)), 3.0);
 	}
 
-//  public static double getRefr(double alt)
+//  public static double getRefraction(double alt)
 //  {
 //    double r = 0.0D;
 //    r = 1.0D / (Math.tan(Math.toRadians(alt)) + (7.31D / (alt + 4.4D)));
 //    r -= 0.06D * Math.sin(Math.toRadians(((14.7D * r) + 13D) / 60d));
-//    return r; // Result in mnutes
+//    return r; // Result in minutes
 //  }
 
 	/**
@@ -330,11 +328,11 @@ public class SightReductionUtil {
 			System.out.println("-> With Hor.Dip :" + df.format(observedAltitude) + " (Horizon Dip for " + eyeHeight + "m:" + df.format(horizonDip) + "', total correction:" + df.format(correction * 60d) + "')");
 		}
 		// Refraction
-		refr = getRefr(observedAltitude);
-		correction -= (refr / 60.0);
+		refraction = getRefraction(observedAltitude);
+		correction -= (refraction / 60.0);
 		observedAltitude = appAltitude + correction;
 		if (verbose) {
-			System.out.println("-> With Refr    :" + df.format(observedAltitude) + " (Refraction:" + df.format(refr) + "', total correction:" + df.format(correction * 60d) + "')");
+			System.out.println("-> With Refr    :" + df.format(observedAltitude) + " (Refraction:" + df.format(refraction) + "', total correction:" + df.format(correction * 60d) + "')");
 		}
 		// Barometric & temp correction - stby for now
 
@@ -375,7 +373,7 @@ public class SightReductionUtil {
 	}
 
 	/**
-	 * @param hp     Hozizontal Parallax (in degrees)
+	 * @param hp     Horizontal Parallax (in degrees)
 	 * @param obsAlt Observed Altitude (in degrees)
 	 * @return parallax in degrees
 	 */
@@ -396,10 +394,10 @@ public class SightReductionUtil {
 			System.out.println("Observed:" + df.format(obsAlt));
 			System.out.println(" for hp:" + df.format(hp) + ", parallax:" + df.format(parallax) + ", app. alt:" + df.format(appAlt));
 		}
-		double refr = getRefr(appAlt);
-		appAlt += (refr / 60.0);
+		double refraction = getRefraction(appAlt);
+		appAlt += (refraction / 60.0);
 		if (verbose) {
-			System.out.println(" refraction:" + df.format(refr / 60.0) + ", app. alt:" + df.format(appAlt));
+			System.out.println(" refraction:" + df.format(refraction / 60.0) + ", app. alt:" + df.format(appAlt));
 		}
 		return appAlt;
 	}
@@ -453,11 +451,11 @@ public class SightReductionUtil {
 		if (verbose && !artificialHorizon) {
 			System.out.println("-> With Hor.Dip :" + df.format(observedAltitude) + " (Horizon Dip:" + df.format(horizonDip) + "')");
 		}
-		refr = getRefr(observedAltitude);
-		correction -= (refr / 60D);
+		refraction = getRefraction(observedAltitude);
+		correction -= (refraction / 60D);
 		observedAltitude = instrAltitude + correction;
 		if (verbose) {
-			System.out.println("-> With Refr    :" + df.format(observedAltitude) + " (Refraction:" + df.format(refr) + "')");
+			System.out.println("-> With Refr    :" + df.format(observedAltitude) + " (Refraction:" + df.format(refraction) + "')");
 		}
 		double pa = 0.0D;
 		pa = getParallax(hp, observedAltitude);

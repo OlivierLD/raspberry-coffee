@@ -68,14 +68,16 @@ public final class GreatCircle {
 	}
 
 	public void calculateGreatCircle(int nbPoints) {
-		if (arrival.getL() > start.getL())
+		if (arrival.getL() > start.getL()) {
 			nsDir = TO_NORTH;
-		else
+		} else {
 			nsDir = TO_SOUTH;
-		if (arrival.getG() > start.getG())
+		}
+		if (arrival.getG() > start.getG()) {
 			ewDir = TO_EAST;
-		else
+		} else {
 			ewDir = TO_WEST;
+		}
 		if (Math.abs(arrival.getG() - start.getG()) > Math.PI) {
 			if (ewDir == TO_EAST) {
 				ewDir = TO_WEST;
@@ -95,43 +97,51 @@ public final class GreatCircle {
 			double tanStartAngle = Math.sin(deltag) / (Math.cos(smallStart.getL()) * Math.tan(arrival.getL()) - Math.sin(smallStart.getL()) * Math.cos(deltag));
 			double smallL = Math.atan(Math.tan(smallStart.getL()) * Math.cos(interval) + Math.sin(interval) / (tanStartAngle * Math.cos(smallStart.getL())));
 			double rpG = g + interval;
-			if (rpG > Math.PI)
+			if (rpG > Math.PI) {
 				rpG -= (2 * Math.PI);
-			if (rpG < -Math.PI)
+			}
+			if (rpG < -Math.PI) {
 				rpG = (2 * Math.PI) + rpG;
+			}
 			GreatCirclePoint routePoint = new GreatCirclePoint(smallL, rpG);
 			double ari = Math.toDegrees(Math.atan(tanStartAngle));
-			if (ari < 0.0D)
+			if (ari < 0.0D) {
 				ari = Math.abs(ari);
+			}
 			int _nsDir;
-			if (routePoint.getL() > smallStart.getL())
+			if (routePoint.getL() > smallStart.getL()) {
 				_nsDir = TO_NORTH;
-			else
+			} else {
 				_nsDir = TO_SOUTH;
+			}
 			double arrG = routePoint.getG();
 			double staG = smallStart.getG();
 			if (sign(arrG) != sign(staG)) {
-				if (sign(arrG) > 0)
+				if (sign(arrG) > 0) {
 					arrG -= (2 * Math.PI);
-				else
+				} else {
 					arrG = Math.PI - arrG;
+				}
 			}
 			int _ewDir;
-			if (arrG > staG)
+			if (arrG > staG) {
 				_ewDir = TO_EAST;
-			else
+			} else {
 				_ewDir = TO_WEST;
+			}
 			double _start = 0.0D;
 			if (_nsDir == 1) {
 				_start = 180D;
-				if (_ewDir == 2)
+				if (_ewDir == 2) {
 					ari = _start - ari;
-				else
+				} else {
 					ari = _start + ari;
-			} else if (_ewDir == 2)
+				}
+			} else if (_ewDir == 2) {
 				ari = _start + ari;
-			else
+			} else {
 				ari = _start - ari;
+			}
 			for (; ari < 0.0D; ari += 360) ;
 			route.addElement(new GreatCircleWayPoint(smallStart, arrival.equals(smallStart) ? null : new Double(ari)));
 			smallStart = routePoint;
@@ -188,58 +198,70 @@ public final class GreatCircle {
 		return Math.toDegrees(dist) * 60D;
 	}
 
-	public static void calculateRhumLine() {
-		if (arrival.getL() > start.getL())
+	public static void calculateRhumbLine() {
+		if (arrival.getL() > start.getL()) {
 			nsDir = TO_NORTH;
-		else
+		} else {
 			nsDir = TO_SOUTH;
+		}
 		double arrG = arrival.getG();
 		double staG = start.getG();
 		if (sign(arrG) != sign(staG) && Math.abs(arrG - staG) > Math.PI) {
-			if (sign(arrG) > 0)
+			if (sign(arrG) > 0) {
 				arrG -= (2 * Math.PI);
-			else
+			} else {
 				arrG = Math.PI - arrG;
+			}
 		}
-		if (arrG - staG > 0.0D)
+		if (arrG - staG > 0.0D) {
 			ewDir = TO_EAST;
-		else
+		} else {
 			ewDir = TO_WEST;
+		}
 		double deltaL = Math.toDegrees((arrival.getL() - start.getL())) * 60D;
 		double radianDeltaG = arrival.getG() - start.getG();
-		if (Math.abs(radianDeltaG) > Math.PI)
+		if (Math.abs(radianDeltaG) > Math.PI) {
 			radianDeltaG = (2 * Math.PI) - Math.abs(radianDeltaG);
+		}
 		double deltaG = Math.toDegrees(radianDeltaG) * 60D;
-		if (deltaG < 0.0D)
+		if (deltaG < 0.0D) {
 			deltaG = -deltaG;
+		}
 		double startLC = Math.log(Math.tan((Math.PI / 4D) + start.getL() / 2D));
 		double arrLC = Math.log(Math.tan((Math.PI / 4D) + arrival.getL() / 2D));
 		double deltaLC = 3437.7467707849396D * (arrLC - startLC);
-		if (deltaLC != 0d)
+		if (deltaLC != 0d) {
 			rv = Math.atan(deltaG / deltaLC);
-		else if (radianDeltaG > 0d)
+		} else if (radianDeltaG > 0d) {
 			rv = (Math.PI / 2D);
-		else
+		} else {
 			rv = (3 * Math.PI / 2D);
-		if (deltaL != 0d)
-			dLoxo = deltaL / Math.cos(rv);
-		else
-			dLoxo = deltaG * Math.cos(start.getL()); // TASK Make sure that's right...
-		if (dLoxo < 0.0D)
-			dLoxo = -dLoxo;
-		if (rv < 0.0D)
-			rv = -rv;
-		if (ewDir == TO_EAST) {
-			if (nsDir != TO_NORTH)
-				rv = Math.PI - rv;
-		} else if (deltaLC != 0d) {
-			if (nsDir == TO_NORTH)
-				rv = (2 * Math.PI) - rv;
-			else
-				rv = Math.PI + rv;
 		}
-		while (rv >= (2 * Math.PI))
+		if (deltaL != 0d) {
+			dLoxo = deltaL / Math.cos(rv);
+		} else {
+			dLoxo = deltaG * Math.cos(start.getL()); // TASK Make sure that's right...
+		}
+		if (dLoxo < 0.0D) {
+			dLoxo = -dLoxo;
+		}
+		if (rv < 0.0D) {
+			rv = -rv;
+		}
+		if (ewDir == TO_EAST) {
+			if (nsDir != TO_NORTH) {
+				rv = Math.PI - rv;
+			}
+		} else if (deltaLC != 0d) {
+			if (nsDir == TO_NORTH) {
+				rv = (2 * Math.PI) - rv;
+			} else {
+				rv = Math.PI + rv;
+			}
+		}
+		while (rv >= (2 * Math.PI)) {
 			rv -= (2 * Math.PI);
+		}
 	}
 
 	/*
@@ -247,60 +269,70 @@ public final class GreatCircle {
 	 */
 	public static double calculateRhumLineDistance(GreatCirclePoint f, GreatCirclePoint t) {
 		int _nsDir = 0;
-		if (t.getL() > f.getL())
+		if (t.getL() > f.getL()) {
 			_nsDir = TO_NORTH;
-		else
+		} else {
 			_nsDir = TO_SOUTH;
+		}
 		double arrG = t.getG();
 		double staG = f.getG();
 		if (sign(arrG) != sign(staG) && Math.abs(arrG - staG) > Math.PI) {
-			if (sign(arrG) > 0)
+			if (sign(arrG) > 0) {
 				arrG -= (2 * Math.PI);
-			else
+			} else {
 				arrG = Math.PI - arrG;
+			}
 		}
 		int _ewDir;
-		if ((arrG - staG) > 0.0D)
+		if ((arrG - staG) > 0.0D) {
 			_ewDir = TO_EAST;
-		else
+		} else {
 			_ewDir = TO_WEST;
+		}
 		double deltaL = Math.toDegrees((t.getL() - f.getL())) * 60D;
 		double radianDeltaG = t.getG() - f.getG();
-		if (Math.abs(radianDeltaG) > Math.PI)
+		if (Math.abs(radianDeltaG) > Math.PI) {
 			radianDeltaG = (2 * Math.PI) - Math.abs(radianDeltaG);
+		}
 		double deltaG = Math.toDegrees(radianDeltaG) * 60D;
-		if (deltaG < 0.0D)
+		if (deltaG < 0.0D) {
 			deltaG = -deltaG;
+		}
 		double startLC = Math.log(Math.tan((Math.PI / 4D) + f.getL() / 2D));
 		double arrLC = Math.log(Math.tan((Math.PI / 4D) + t.getL() / 2D));
 		double deltaLC = 3437.7467707849396D * (arrLC - startLC);
 		double _rv = 0.0D;
-		if (deltaLC != 0d)
+		if (deltaLC != 0d) {
 			_rv = Math.atan(deltaG / deltaLC);
-		else {
-			if (radianDeltaG > 0d)
+		} else {
+			if (radianDeltaG > 0d) {
 				_rv = (Math.PI / 2D);
-			else
+			} else {
 				_rv = (3 * Math.PI / 2D);
+			}
 		}
 		double _dLoxo = deltaL / Math.cos(_rv);
 		if (deltaL == 0) {
 			_dLoxo = radianDeltaG * Math.cos(Math.toRadians(f.getL()));
 		}
-		if (_dLoxo < 0.0D)
+		if (_dLoxo < 0.0D) {
 			_dLoxo = -_dLoxo;
-		if (_rv < 0.0D)
-			_rv = -_rv;
-		if (_ewDir == TO_EAST) {
-			if (_nsDir != TO_NORTH)
-				_rv = Math.PI - _rv;
-		} else if (deltaLC != 0d) {
-			if (_nsDir == TO_NORTH)
-				_rv = (2 * Math.PI) - _rv;
-			else
-				_rv = Math.PI + _rv;
 		}
-		for (; _rv >= (2 * Math.PI); _rv -= (2 * Math.PI)) ;
+		if (_rv < 0.0D) {
+			_rv = -_rv;
+		}
+		if (_ewDir == TO_EAST) {
+			if (_nsDir != TO_NORTH) {
+				_rv = Math.PI - _rv;
+			}
+		} else if (deltaLC != 0d) {
+			if (_nsDir == TO_NORTH) {
+				_rv = (2 * Math.PI) - _rv;
+			} else {
+				_rv = Math.PI + _rv;
+			}
+		}
+		for (; _rv >= (2 * Math.PI); _rv -= (2 * Math.PI));
 		return _dLoxo;
 	}
 
@@ -309,62 +341,74 @@ public final class GreatCircle {
 	 * Points coordinates in Radians
 	 * returned value in radians
 	 */
-	public static double calculateRhumLineRoute(GreatCirclePoint f, GreatCirclePoint t) {
+	public static double calculateRhumbLineRoute(GreatCirclePoint f, GreatCirclePoint t) {
 		int _nsDir = 0;
-		if (t.getL() > f.getL())
+		if (t.getL() > f.getL()) {
 			_nsDir = TO_NORTH;
-		else
+		} else {
 			_nsDir = TO_SOUTH;
+		}
 		double arrG = t.getG();
 		double staG = f.getG();
-		if (sign(arrG) != sign(staG) && Math.abs(arrG - staG) > Math.PI)
-			if (sign(arrG) > 0)
+		if (sign(arrG) != sign(staG) && Math.abs(arrG - staG) > Math.PI) {
+			if (sign(arrG) > 0) {
 				arrG -= (2 * Math.PI);
-			else
+			} else {
 				arrG = Math.PI - arrG;
+			}
+		}
 		int _ewDir;
-		if (arrG - staG > 0.0D)
+		if (arrG - staG > 0.0D) {
 			_ewDir = TO_EAST;
-		else
+		} else {
 			_ewDir = TO_WEST;
+		}
 		double deltaL = Math.toDegrees((t.getL() - f.getL())) * 60D;
 		double radianDeltaG = t.getG() - f.getG();
-		if (Math.abs(radianDeltaG) > Math.PI)
+		if (Math.abs(radianDeltaG) > Math.PI) {
 			radianDeltaG = (2 * Math.PI) - Math.abs(radianDeltaG);
+		}
 		double deltaG = Math.toDegrees(radianDeltaG) * 60D;
-		if (deltaG < 0.0D)
+		if (deltaG < 0.0D) {
 			deltaG = -deltaG;
+		}
 		double startLC = Math.log(Math.tan((Math.PI / 4D) + f.getL() / 2D));
 		double arrLC = Math.log(Math.tan((Math.PI / 4D) + t.getL() / 2D));
 		double deltaLC = 3437.7467707849396D * (arrLC - startLC);
 		double _rv = 0.0D;
-		if (deltaLC != 0d)
+		if (deltaLC != 0d) {
 			_rv = Math.atan(deltaG / deltaLC);
-		else if (radianDeltaG > 0d)
+		} else if (radianDeltaG > 0d) {
 			_rv = (Math.PI / 2D);
-		else
+		} else {
 			_rv = (3 * Math.PI / 2D);
-		double _dLoxo = deltaL / Math.cos(_rv);
-		if (_dLoxo < 0.0D)
-			_dLoxo = -_dLoxo;
-		if (_rv < 0.0D)
-			_rv = -_rv;
-		if (_ewDir == TO_EAST) {
-			if (_nsDir != TO_NORTH)
-				_rv = Math.PI - _rv;
-		} else if (deltaLC != 0d) {
-			if (_nsDir == TO_NORTH)
-				_rv = (2 * Math.PI) - _rv;
-			else
-				_rv = Math.PI + _rv;
 		}
-		for (; _rv >= (2 * Math.PI); _rv -= (2 * Math.PI)) ;
+		double _dLoxo = deltaL / Math.cos(_rv);
+		if (_dLoxo < 0.0D) {
+			_dLoxo = -_dLoxo;
+		}
+		if (_rv < 0.0D) {
+			_rv = -_rv;
+		}
+		if (_ewDir == TO_EAST) {
+			if (_nsDir != TO_NORTH) {
+				_rv = Math.PI - _rv;
+			}
+		} else if (deltaLC != 0d) {
+			if (_nsDir == TO_NORTH) {
+				_rv = (2 * Math.PI) - _rv;
+			} else {
+				_rv = Math.PI + _rv;
+			}
+		}
+		for (; _rv >= (2 * Math.PI); _rv -= (2 * Math.PI));
 		return _rv;
 	}
 
 	private static int sign(double d) {
-		if (d == 0.0D)
+		if (d == 0.0D) {
 			return 0;
+		}
 		return d >= 0.0D ? 1 : -1;
 	}
 
@@ -433,7 +477,7 @@ public final class GreatCircle {
 		test.setArrival(p);
 		test.calculateGreatCircle(20);
 		double gcDist = Math.toDegrees(test.getDistance()) * 60.0;
-		test.calculateRhumLine();
+		test.calculateRhumbLine();
 		double dist = test.getRhumbLineDistance();
 		double route = test.getRhumbLineRoute();
 		System.out.println("Dist:" + dist + " (" + gcDist + "), route:" + Math.toDegrees(route));
@@ -442,7 +486,7 @@ public final class GreatCircle {
 		test = new GreatCircle();
 		test.setStart(new GreatCirclePoint(Math.toRadians(47.67941), Math.toRadians(-3.368855)));
 		test.setArrival(new GreatCirclePoint(Math.toRadians(47.666931), Math.toRadians(-3.39822)));
-		test.calculateRhumLine();
+		test.calculateRhumbLine();
 		dist = test.getRhumbLineDistance();
 		route = test.getRhumbLineRoute();
 		System.out.println("Dist:" + dist + " (" + gcDist + "), route:" + Math.toDegrees(route));

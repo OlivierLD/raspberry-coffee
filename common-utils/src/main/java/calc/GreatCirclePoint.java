@@ -34,10 +34,10 @@ public final class GreatCirclePoint
 	}
 
 	public boolean equals(GreatCirclePoint p) {
-		String g = GeomUtil.decToSex(longitude, 1, 2);
-		String gp = GeomUtil.decToSex(p.getG(), 1, 2);
-		String l = GeomUtil.decToSex(latitude, 1, 1);
-		String lp = GeomUtil.decToSex(p.getL(), 1, 1);
+		String g = GeomUtil.decToSex(longitude, GeomUtil.SHELL, GeomUtil.EW);
+		String gp = GeomUtil.decToSex(p.getG(), GeomUtil.SHELL, GeomUtil.EW);
+		String l = GeomUtil.decToSex(latitude, GeomUtil.SHELL, GeomUtil.NS);
+		String lp = GeomUtil.decToSex(p.getL(), GeomUtil.SHELL, GeomUtil.NS);
 		return g.equals(gp) && l.equals(lp);
 	}
 
@@ -77,7 +77,7 @@ public final class GreatCirclePoint
 		GreatCircle gc = new GreatCircle();
 		gc.setStart(new GreatCirclePoint(Math.toRadians(this.getL()), Math.toRadians(this.getG())));
 		gc.setArrival(new GreatCirclePoint(Math.toRadians(target.getL()), Math.toRadians(target.getG())));
-		gc.calculateRhumLine();
+		gc.calculateRhumbLine();
 		double d = gc.getRhumbLineDistance();
 
 		return d;

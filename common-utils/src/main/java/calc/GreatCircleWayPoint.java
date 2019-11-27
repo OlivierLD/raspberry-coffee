@@ -1,10 +1,11 @@
 package calc;
 
-
 // Referenced classes of package astro.calc:
 //      Point
 
 public final class GreatCircleWayPoint {
+	private GreatCirclePoint p;
+	private Double z;
 
 	public GreatCircleWayPoint(GreatCirclePoint p, Double z) {
 		this.p = p;
@@ -18,7 +19,4 @@ public final class GreatCircleWayPoint {
 	public Double getZ() {
 		return z;
 	}
-
-	GreatCirclePoint p;
-	Double z;
 }

@@ -7,7 +7,7 @@ public class Samples {
 		GreatCirclePoint to = new GreatCirclePoint(37.49403906867881, -122.48468399047852); // HMB Entrance
 
 		double dist = from.gcDistanceBetween(to);
-		double heading = GreatCircle.calculateRhumLineRoute(from.degreesToRadians(),
+		double heading = GreatCircle.calculateRhumbLineRoute(from.degreesToRadians(),
 				to.degreesToRadians());
 		dist = GreatCircle.calculateRhumLineDistance(from.degreesToRadians(),
 				to.degreesToRadians());

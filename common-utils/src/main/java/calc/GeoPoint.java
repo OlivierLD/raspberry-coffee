@@ -74,7 +74,7 @@ public final class GeoPoint
 		GreatCircle gc = new GreatCircle();
 		gc.setStart(new GreatCirclePoint(Math.toRadians(this.getL()), Math.toRadians(this.getG())));
 		gc.setArrival(new GreatCirclePoint(Math.toRadians(target.getL()), Math.toRadians(target.getG())));
-		gc.calculateRhumLine();
+		gc.calculateRhumbLine();
 		double d = gc.getRhumbLineDistance();
 
 		return d;

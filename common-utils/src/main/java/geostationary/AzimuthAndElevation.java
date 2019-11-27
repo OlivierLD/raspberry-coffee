@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 /**
- * Calculate azimuth, elevation and tilt to orient an antenna toward a GeoStationary satellite
+ * Calculate azimuth, elevation and tilt, to orient an antenna toward a GeoStationary satellite
  *
  * See http://www.csgnetwork.com/geosatposcalc.html
  * See http://www.dishpointer.com/
@@ -48,8 +48,7 @@ public class AzimuthAndElevation {
 		double latRad = Math.toRadians(earthStationLat);
 		double v1 = R1 * Math.cos(latRad) * Math.cos(deltaG) - 1;
 		double v2 = R1 * Math.sqrt(1 - Math.cos(latRad) * Math.cos(latRad) * Math.cos(deltaG) * Math.cos(deltaG));
-		double earthStationElevation = Math.toDegrees(Math.atan(v1/v2));
-		return earthStationElevation;
+		return Math.toDegrees(Math.atan(v1/v2)); // earthStationElevation
 	}
 
 	private static double tilt(double satLong, double earthStationLat, double earthStationLong) {

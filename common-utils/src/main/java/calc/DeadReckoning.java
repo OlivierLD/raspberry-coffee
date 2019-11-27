@@ -21,7 +21,7 @@ public class DeadReckoning {
 	private double G;
 	private static final DecimalFormat df = new DecimalFormat("##0.000");
 	static double horizonDip;
-	static double refr;
+	static double refraction;
 	static double pa;
 	public static final int UPPER_LIMB = 0;
 	public static final int LOWER_LIMB = 1;
@@ -79,12 +79,12 @@ public class DeadReckoning {
 			this.refraction = refraction;
 		}
 
-		public double getSemidiameter() {
-			return semidiameter;
+		public double getSemiDiameter() {
+			return semiDiameter;
 		}
 
-		public void setSemidiameter(double semidiameter) {
-			this.semidiameter = semidiameter;
+		public void setSemiDiameter(double semiDiameter) {
+			this.semiDiameter = semiDiameter;
 		}
 
 		double index;
@@ -93,7 +93,7 @@ public class DeadReckoning {
 		double refraction;
 		double parallax;
 		double parallax2;
-		double semidiameter;
+		double semiDiameter;
 
 		public Correction() {
 			index = 0.0D;
@@ -102,7 +102,7 @@ public class DeadReckoning {
 			refraction = 0.0D;
 			parallax = 0.0D;
 			parallax2 = 0.0D;
-			semidiameter = 0.0D;
+			semiDiameter = 0.0D;
 		}
 	}
 
@@ -184,8 +184,8 @@ public class DeadReckoning {
 		return horizonDip;
 	}
 
-	public double getRefr() {
-		return refr;
+	public double getRefraction() {
+		return refraction;
 	}
 
 	public double getPa() {
@@ -196,7 +196,7 @@ public class DeadReckoning {
 		return 1.76D * Math.sqrt(eyeHeight);
 	}
 
-	public static double getRefr(double alt) {
+	public static double getRefraction(double alt) {
 		double r = 0.0D;
 		r = 1.0D / Math.tan(Math.toRadians(alt + 7.31D / (alt + 4.4D)));
 		r -= 0.06D * Math.sin(Math.toRadians((14.7D * r + 13D) / 60D));
@@ -330,7 +330,6 @@ public class DeadReckoning {
 			System.out.println("  </obs-altitude>");
 		}
 		// Semi diameter, from the almanac
-
 		System.out.println("</moon-corrections>");
 	}
 
@@ -383,50 +382,61 @@ public class DeadReckoning {
 	                                           Correction corrections,
 	                                           boolean verbose) {
 		double correction = 0.0D;
-		if (corrections != null)
+		if (corrections != null) {
 			corrections.setEyeHeight(eyeHeight);
+		}
 		if (!artificialHorizon) {
 			horizonDip = getHorizonDip(eyeHeight);
-			if (corrections != null)
+			if (corrections != null) {
 				corrections.setDipCorrection(horizonDip);
+			}
 			correction -= horizonDip / 60D;
 		}
-		if (verbose)
+		if (verbose) {
 			System.out.println("Original Altitude:" + df.format(instrAltitude));
+		}
 		double observedAltitude = instrAltitude + correction;
-		if (verbose && !artificialHorizon)
+		if (verbose && !artificialHorizon) {
 			System.out.println("-> With Hor.Dip :" + df.format(observedAltitude) + " (Horizon Dip:" + df.format(horizonDip) + "')");
-		refr = getRefr(observedAltitude);
-		if (corrections != null)
-			corrections.setRefraction(refr);
-		correction -= refr / 60D;
+		}
+		refraction = getRefraction(observedAltitude);
+		if (corrections != null) {
+			corrections.setRefraction(refraction);
+		}
+		correction -= refraction / 60D;
 		observedAltitude = instrAltitude + correction;
-		if (verbose)
-			System.out.println("-> With Refr    :" + df.format(observedAltitude) + " (Refraction:" + df.format(refr) + "')");
+		if (verbose) {
+			System.out.println("-> With Refr    :" + df.format(observedAltitude) + " (Refraction:" + df.format(refraction) + "')");
+		}
 		double pa = 0.0D;
 		pa = getParallax(hp, observedAltitude, lat, Z, corrections);
 		correction += pa;
 		observedAltitude = instrAltitude + correction;
-		if (verbose)
+		if (verbose) {
 			System.out.println("-> With Parallax:" + df.format(observedAltitude) + " (Parallax:" + df.format(pa * 57.295779513082323D) + "')");
+		}
 		if (limb == LOWER_LIMB) {
 			correction += sd / 60D;
-			if (corrections != null)
-				corrections.setSemidiameter(sd);
-			if (verbose)
+			if (corrections != null) {
+				corrections.setSemiDiameter(sd);
+			}
+			if (verbose) {
 				System.out.println("  Semi-Diameter:" + df.format(sd) + "'");
+			}
 		} else if (limb == UPPER_LIMB) {
 			correction -= sd / 60D;
-			if (corrections != null)
-				corrections.setSemidiameter(-sd);
-			if (verbose)
+			if (corrections != null) {
+				corrections.setSemiDiameter(-sd);
+			}
+			if (verbose) {
 				System.out.println("  Semi-Diameter:" + df.format(-sd) + "'");
+			}
 		}
 		observedAltitude = instrAltitude + correction;
-		if (verbose)
+		if (verbose) {
 			System.out.println("-> With Semi-Diam:" + df.format(observedAltitude));
-		if (verbose)
 			System.out.println("- Total Correction:" + df.format(correction));
+		}
 		return correction;
 	}
 
@@ -457,10 +467,11 @@ public class DeadReckoning {
 			System.out.println("Observed:" + df.format(obsAlt));
 			System.out.println(" for hp:" + df.format(hp) + ", parallax:" + df.format(parallax) + ", app. alt:" + df.format(appAlt));
 		}
-		double refr = getRefr(appAlt);
-		appAlt += refr / 60D;
-		if (verbose)
-			System.out.println(" refraction:" + df.format(refr / 60D) + ", app. alt:" + df.format(appAlt));
+		double refraction = getRefraction(appAlt);
+		appAlt += refraction / 60D;
+		if (verbose) {
+			System.out.println(" refraction:" + df.format(refraction / 60D) + ", app. alt:" + df.format(appAlt));
+		}
 		return appAlt;
 	}
 
