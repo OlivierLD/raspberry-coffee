@@ -11,3 +11,6 @@ context:
   init.cache: true
 channels:
   - type: zda
+forwarders:
+  - type: "tcp"
+    port: 7001

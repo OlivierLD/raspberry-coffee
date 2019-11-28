@@ -10,10 +10,10 @@ import java.util.Properties;
 
 public class TCPServer implements Forwarder {
 	private TCPServer instance = this;
-	private List<Socket> clientSocketlist = new ArrayList<>(1);
+	private List<Socket> clientSocketList = new ArrayList<>(1);
 	private Properties props = null;
 
-	private int tcpPort = 7001;
+	private int tcpPort = 7001; // Default
 	private ServerSocket serverSocket = null;
 
 	public TCPServer(int port) throws Exception {
@@ -32,19 +32,20 @@ public class TCPServer implements Forwarder {
 	}
 
 	protected void setSocket(Socket skt) {
-		this.clientSocketlist.add(skt);
+		this.clientSocketList.add(skt);
 	}
 
 	@Override
 	public void write(byte[] message) {
 		List<Socket> toRemove = new ArrayList<>();
-		synchronized( clientSocketlist) {
-			clientSocketlist.stream().forEach(tcpSocket -> { // TODO Synchronize the stream?
+		synchronized(clientSocketList) {
+			clientSocketList.stream().forEach(tcpSocket -> { // TODO Synchronize the stream?
 				synchronized (tcpSocket) {
 					try {
 						DataOutputStream out = null;
-						if (out == null)
+						if (out == null) {
 							out = new DataOutputStream(tcpSocket.getOutputStream());
+						}
 						out.write(message);
 						out.flush();
 					} catch (SocketException se) {
@@ -58,14 +59,14 @@ public class TCPServer implements Forwarder {
 		}
 
 		if (toRemove.size() > 0) {
-			synchronized (clientSocketlist) {
-				toRemove.stream().forEach(this.clientSocketlist::remove);
+			synchronized (clientSocketList) {
+				toRemove.stream().forEach(this.clientSocketList::remove);
 			}
 		}
 	}
 
 	private int getNbClients() {
-		return clientSocketlist.size();
+		return clientSocketList.size();
 	}
 
 	private String formatByteHexa(byte b) {
@@ -79,7 +80,7 @@ public class TCPServer implements Forwarder {
 	public void close() {
 		System.out.println("- Stop writing to " + this.getClass().getName());
 		try {
-			for (Socket tcpSocket : clientSocketlist)
+			for (Socket tcpSocket : clientSocketList)
 				tcpSocket.close();
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
