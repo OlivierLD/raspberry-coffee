@@ -6,7 +6,8 @@
 ::      RXTX_HOME is the fully qualified name of the folder where RXTXcomm.jar is
 ::      -Djava.library.path=%RXTX_HOME%\Windows\i368-mingw32 designates the folder where rxtxSerial.dll is
 ::
-set PROP_FILE_NAME=nmea.mux.no.gps.yaml
+set PROP_FILE_NAME=nmea.mux.2.serial.yaml
+:: 
 set CP=..\build\libs\RESTNavServer-1.0-all.jar
 :: Add the java-librxtx
 set RXTX_HOME=C:\Users\olivier\rxtx-2.1-7-bins-r2
