@@ -2244,16 +2244,18 @@ public class RESTImplementation {
 		JsonElement jsonElement = null;
 		try {
 			// Calculate VMG(s)
-			synchronized (cache) {
-				NMEAUtils.calculateVMGs(cache);
-				final JsonElement _jsonElement = new Gson().toJsonTree(cache); // I know, ah shit!
-				//	String str = new Gson().toJson(cache);
-				((JsonObject) _jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client, drop it.
-				if (tiny || txt) {
-					REMOVE_WHEN_TINY.stream()
-							.forEach(member -> ((JsonObject) _jsonElement).remove(member));
+			if (cache != null) {
+				synchronized (cache) {
+					NMEAUtils.calculateVMGs(cache);
+					final JsonElement _jsonElement = new Gson().toJsonTree(cache); // I know, ah shit!
+					//	String str = new Gson().toJson(cache);
+					((JsonObject) _jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client, drop it.
+					if (tiny || txt) {
+						REMOVE_WHEN_TINY.stream()
+								.forEach(member -> ((JsonObject) _jsonElement).remove(member));
+					}
+					jsonElement = _jsonElement; // Same as above
 				}
-				jsonElement = _jsonElement; // Same as above
 			}
 		} catch (Exception ex) {
 			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getCache", ex);

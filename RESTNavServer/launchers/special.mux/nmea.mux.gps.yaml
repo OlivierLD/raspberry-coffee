@@ -1,0 +1,17 @@
+#
+# MUX definition.
+#
+name: "With a GPS, filtered, -> TCP:7002"
+context:
+  with.http.server: false
+  http.port: 9999
+  init.cache: false
+channels:
+  - type: serial
+    port: /dev/tty.usbmodem14201
+    baudrate: 4800
+    sentence.filters: RMC,GLL
+    verbose: true
+forwarders:
+  - type: "tcp"
+    port: 7002

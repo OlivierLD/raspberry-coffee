@@ -220,54 +220,56 @@ public class ExtraDataComputer extends Computer {
 				double decl = 0d;
 				double csp = 0d;
 				int cdr = 0;
-				synchronized (cache) {
-					NMEAUtils.computeAndSendValuesToCache(cache);
-					// True Wind
-					try {
-						twa = ((Angle180) cache.get(NMEADataCache.TWA)).getValue();
-					} catch (NullPointerException ignore) {
-					} catch (Exception ignore) {
-						System.err.println("From " + this.getClass().getName() + ", getting TWA from the cache:" + ignore.toString());
-					}
-					try {
-						tws = ((TrueWindSpeed) cache.get(NMEADataCache.TWS)).getValue();
-					} catch (NullPointerException ignore) {
-					} catch (Exception ignore) {
-						System.err.println("From " + this.getClass().getName() + ", getting TWS from the cache:" + ignore.toString());
-					}
-					try {
-						twd = ((Angle360) cache.get(NMEADataCache.TWD)).getValue();
-					} catch (NullPointerException ignore) {
-					} catch (Exception ignore) {
-						System.err.println("From " + this.getClass().getName() + ", getting TWD from the cache:" + ignore.toString());
-					}
-					try {
-						decl = ((Angle180EW) cache.get(NMEADataCache.DECLINATION)).getValue();
-					} catch (NullPointerException ignore) {
-					} catch (Exception ignore) {
-						System.err.println("From " + this.getClass().getName() + ", getting Decl from the cache:" + ignore.toString());
-					}
-
-					try {
-						long currentTimeBuffer = 0L;
-						@SuppressWarnings("unchecked")
-						Map<Long, NMEADataCache.CurrentDefinition> currentMap =
-										((Map<Long, NMEADataCache.CurrentDefinition>) cache.get(NMEADataCache.CALCULATED_CURRENT));
-						Set<Long> keys = currentMap.keySet();
-					  if (this.verbose && keys.size() != 1) {
-						  System.out.println("1 - Nb entry(ies) in Calculated Current Map:" + keys.size());
-					  }
-						for (Long l : keys) {
-							int tbl = (int) (l / (60_000));
-							if (tbl > currentTimeBuffer) { // Take the bigger one.
-								currentTimeBuffer = tbl;
-								csp = currentMap.get(l).getSpeed().getValue();
-								cdr = (int) Math.round(currentMap.get(l).getDirection().getValue());
-							}
+				if (cache != null) {
+					synchronized (cache) {
+						NMEAUtils.computeAndSendValuesToCache(cache);
+						// True Wind
+						try {
+							twa = ((Angle180) cache.get(NMEADataCache.TWA)).getValue();
+						} catch (NullPointerException ignore) {
+						} catch (Exception ignore) {
+							System.err.println("From " + this.getClass().getName() + ", getting TWA from the cache:" + ignore.toString());
 						}
-					} catch (NullPointerException ignore) {
-					} catch (Exception ignore) {
-						System.err.println("From " + this.getClass().getName() + ", getting CALCULATED_CURRENT from the cache:" + ignore.toString());
+						try {
+							tws = ((TrueWindSpeed) cache.get(NMEADataCache.TWS)).getValue();
+						} catch (NullPointerException ignore) {
+						} catch (Exception ignore) {
+							System.err.println("From " + this.getClass().getName() + ", getting TWS from the cache:" + ignore.toString());
+						}
+						try {
+							twd = ((Angle360) cache.get(NMEADataCache.TWD)).getValue();
+						} catch (NullPointerException ignore) {
+						} catch (Exception ignore) {
+							System.err.println("From " + this.getClass().getName() + ", getting TWD from the cache:" + ignore.toString());
+						}
+						try {
+							decl = ((Angle180EW) cache.get(NMEADataCache.DECLINATION)).getValue();
+						} catch (NullPointerException ignore) {
+						} catch (Exception ignore) {
+							System.err.println("From " + this.getClass().getName() + ", getting Decl from the cache:" + ignore.toString());
+						}
+
+						try {
+							long currentTimeBuffer = 0L;
+							@SuppressWarnings("unchecked")
+							Map<Long, NMEADataCache.CurrentDefinition> currentMap =
+									((Map<Long, NMEADataCache.CurrentDefinition>) cache.get(NMEADataCache.CALCULATED_CURRENT));
+							Set<Long> keys = currentMap.keySet();
+							if (this.verbose && keys.size() != 1) {
+								System.out.println("1 - Nb entry(ies) in Calculated Current Map:" + keys.size());
+							}
+							for (Long l : keys) {
+								int tbl = (int) (l / (60_000));
+								if (tbl > currentTimeBuffer) { // Take the bigger one.
+									currentTimeBuffer = tbl;
+									csp = currentMap.get(l).getSpeed().getValue();
+									cdr = (int) Math.round(currentMap.get(l).getDirection().getValue());
+								}
+							}
+						} catch (NullPointerException ignore) {
+						} catch (Exception ignore) {
+							System.err.println("From " + this.getClass().getName() + ", getting CALCULATED_CURRENT from the cache:" + ignore.toString());
+						}
 					}
 				}
 				//  System.out.println("From TrueWindSentenceInsertion, TWS:" + tws);
