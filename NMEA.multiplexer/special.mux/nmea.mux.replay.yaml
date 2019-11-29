@@ -4,7 +4,7 @@
 name: "Replay logged boat data, filtered, -> TCP:7001"
 context:
   with.http.server: false
-  http.port: 9999
+  http.port: 9990
   init.cache: false
 channels:
   - type: file

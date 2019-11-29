@@ -38,6 +38,8 @@ public class NavServer {
 			} catch (NumberFormatException nfe) {
 				System.err.println(nfe.toString());
 			}
+		} else {
+			System.out.println(String.format("HTTP Port defaulted to %d", httpPort));
 		}
 		System.out.println(String.format("From %s, running on port %d", this.getClass().getName(), httpPort));
 		this.httpServer = startHttpServer(httpPort, new NavRequestManager(this));

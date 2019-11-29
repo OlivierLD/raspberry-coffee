@@ -8,7 +8,7 @@
 ::
 set PROP_FILE_NAME=nmea.mux.2.serial.yaml
 ::
-set CP=..\build\libs\RESTNavServer-1.0-all.jar
+set CP=..\build\libs\NMEA.multiplexer-1.0-all.jar
 :: Add the java-librxtx
 set RXTX_HOME=C:\Users\olivier\rxtx-2.1-7-bins-r2
 ::
@@ -19,7 +19,7 @@ set JAVA_OPTS=%JAVA_OPTS% -DdeltaT=69.2201
 set JAVA_OPTS=%JAVA_OPTS% -Xms64M -Xmx1G
 set JAVA_OPTS=%JAVA_OPTS% -Djava.library.path=%RXTX_HOME%\Windows\i368-mingw32
 set JAVA_OPTS=%JAVA_OPTS% -Dmux.properties=%PROP_FILE_NAME%
-set COMMAND=java -cp %CP% %JAVA_OPTS% navrest.NavServer
+set COMMAND=java -cp %CP% %JAVA_OPTS% nmea.mux.GenericNMEAMultiplexer
 echo "Running %COMMAND%"
 %COMMAND%
 ::

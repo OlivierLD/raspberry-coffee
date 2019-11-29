@@ -4,7 +4,7 @@
 name: "With a GPS, filtered, -> TCP:7002"
 context:
   with.http.server: false
-  http.port: 9999
+  http.port: 8888
   init.cache: false
 channels:
   - type: serial
