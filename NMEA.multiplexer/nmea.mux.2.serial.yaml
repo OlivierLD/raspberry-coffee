@@ -1,13 +1,13 @@
 #
 # MUX definition.
 #
-name: "Read 2 serial ports, generate one log file"
+name: "Read 2 serial ports, generate one log file, for Windows."
 context:
   with.http.server: false
   init.cache: false
 channels:
   - type: serial
-    port: COM3
+    port: COM1
     baudrate: 4800
     verbose: false
   - type: serial
@@ -16,8 +16,8 @@ channels:
     verbose: false
 forwarders:
   - type: file
-    filename: ./data.nmea
-    verbose: false
+    filename: data.nmea
+    # verbose: false
     # forward.01.timebase.filename=true
     # forward.01.filename.suffix=_LOG
     # forward.01.log.dir=logged

@@ -145,7 +145,7 @@ Those settings can be modified once the mux is started, throught the REST API.
 
 To compile and build:
 ```
- $> ../gradlew --daemon shadowJar
+ $> ../gradlew [--daemon] shadowJar
 ```
 To run it, modify `mux.sh` to fit your environment, and run
 ```
@@ -167,9 +167,9 @@ A (sentence) filter like `"HDM", "GLL", "~RMC", "~XDR"` would mean
 It is the user's responsibility not to have contradiction in the filters, like `[ "GLL", "~GLL" ]`,
 no verification is done in this area.
 
-_Note_:
-This is just providing the possibility to negate an expression. Convenient, but limited. The best would probably be to use regular expressions (RegExp).
-Big drawback though: for the majority of the users, the RegExp syntax could be complex, too complex, or even scary...
+> _Note_:
+> This is just providing the possibility to negate an expression. Convenient, but limited. The best would probably be to use regular expressions (RegExp).
+> Big drawback though: for the majority of the users, the RegExp syntax could be complex, too complex, or even scary...
 
 ##### About transformers
 There is an example of a `transformer` in `WebSocketProcessor.java`. As you would see, it is just implementing the `Forwarder` interface,
@@ -177,7 +177,7 @@ and this is where it fits in the picture above.
 A `Transformer` is just reworking the data before forwarding them as a regular `forwarder` would.
 
 The example in `WebSocketProcessor.java` is transforming the NMEA Data in the format expected by a Pebble (this is a smart watch) application.
-See it [here](https://github.com/OlivierLD/pebble/tree/master/NMEA). Data are expected as a json object, over WebSocket.
+See it [here](https://github.com/OlivierLD/pebble/tree/master/NMEA). Data are expected as a `json` object, over WebSocket.
 The expected data look like:
 ```json
 {
@@ -377,7 +377,7 @@ returns a payload like
 ```
 
 ```text
- DELETE /mux/forwarders/:type
+ DELETE /mux/forwarders/{type}
 ```
 `type` is one of
 - `file`. requires a body like
@@ -407,7 +407,7 @@ identical to the elements returned by `GET /mux/forwarders`.
 identical to the elements returned by `GET /mux/forwarders`.
 
 ```
- DELETE /mux/channels/:type
+ DELETE /mux/channels/{type}
 ```
 
 ```
@@ -691,7 +691,8 @@ Generated file sample.data/alcatraz.2018.may.5.nmea.kml is ready.
 ```
 Then open the generated file in Google Map or Google Earth.
 
-- The same feature is also available for GPX (for navigation software like OpenCPN), from `util.NMEAtoGPX`.
+- The same feature is also available for GPX (for navigation software like OpenCPN), use `util.NMEAtoGPX`, from the script `log.to.gpx.sh`.
+- Idem for Comma Separated Values (CSV, spreadsheet compatible), use `util.NMEAtoCSV`,  from the script `log.to.csv.sh`.
 
 ## Builder
 As an example, there is in the `NMEA.mux.WebUI` module a script called `to.prod.sh` that shows a way to
@@ -712,3 +713,36 @@ Then you can distribute the archive.
 All the user has to do it to un-archive it and run the `mux.sh` script.
 
 -------------------------------
+
+### Misc and others
+Porting this on other systems...
+
+#### Windows 10
+To read a Serial Port on Windows 10, with PowerShell:
+```
+Write-Host "Running PowerShell, reading Serial port"
+[System.IO.Ports.SerialPort]::getportnames()
+$port = new-Object System.IO.Ports.SerialPort COM1,4800,None,8,one
+$port.open()
+# $val = 0
+# while ($val -ne 10) {
+while ($true) {
+  # $val++
+  $port.ReadLine()
+}
+$port.close()
+```
+To authorize the execution of such a script:
+> Run once, as administrator:
+```
+ dos> powershell
+ PS > get-executionpolicy
+ PS > set-executionpolicy unrestricted
+ PS > exit
+ dos>
+```
+
+To execute a script in PowerShell, with redirection:
+```
+ dos> powershell ".\serial.ps1" > out.txt
+```

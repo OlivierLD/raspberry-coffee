@@ -8,7 +8,7 @@
 ::
 set PROP_FILE_NAME=nmea.mux.2.serial.yaml
 ::
-set CP=..\build\libs\NMEA.multiplexer-1.0-all.jar
+set CP=.\build\libs\NMEA.multiplexer-1.0-all.jar
 :: Add the java-librxtx
 set RXTX_HOME=C:\Users\olivier\rxtx-2.1-7-bins-r2
 ::
