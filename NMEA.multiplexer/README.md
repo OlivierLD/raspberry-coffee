@@ -73,7 +73,7 @@ properties file used at startup.
 
 This cache is necessary to perform damping and smoothing operations - among others.
 
-Finally, we have _tranformers_, that transform NMEA data into another (proprietary) format, and then behave like a a regular _forwarder_ to provide them to whoever is interested.
+Finally, we have _transformers_, that transform NMEA data into another (proprietary) format, and then behave like a a regular _forwarder_ to provide them to whoever is interested.
  A _transformer_ is also a _forwarder_. See below examples of `transformers`.
 
 ##### Examples
