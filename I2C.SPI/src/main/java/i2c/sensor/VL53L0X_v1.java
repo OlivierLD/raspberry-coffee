@@ -17,8 +17,9 @@ import java.io.IOException;
  *
  * Basic implementation
  *
- * @Deprecated See {@link VL53L0X} instead
+ * @deprecated See {@link VL53L0X} instead
  */
+@Deprecated
 public class VL53L0X_v1 {
 	public final static int VL53L0X_I2CADDR = 0x29;
 
@@ -34,7 +35,7 @@ public class VL53L0X_v1 {
 	public final static int VL53L0X_GOOD_ACCURACY_MODE      = 0;   // Good Accuracy mode
 	public final static int VL53L0X_BETTER_ACCURACY_MODE    = 1;   // Better Accuracy mode
 	public final static int VL53L0X_BEST_ACCURACY_MODE      = 2;   // Best Accuracy mode
-	public final static int VL53L0X_LONG_RANGE_MODE         = 3;   // Longe Range mode
+	public final static int VL53L0X_LONG_RANGE_MODE         = 3;   // Long Range mode
 	public final static int VL53L0X_HIGH_SPEED_MODE         = 4;   // High Speed mode
 
 	private static boolean verbose = "true".equals(System.getProperty("vl53l0x.debug", "false"));
