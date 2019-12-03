@@ -26,7 +26,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 
 	private boolean verbose = false;
 
-	private final static String ipPattern = "(?:(?:1\\d?\\d|[1-9]?\\d|2[0-4]\\d|25[0-5])\\.){3}(?:1\\d?\\d|[1-9]?\\d|2[0-4]\\d|25[0-\u200C\u200B5])(?:[:]\\d+)?";
+	private final static String IP_PATTERN = "(?:(?:1\\d?\\d|[1-9]?\\d|2[0-4]\\d|25[0-5])\\.){3}(?:1\\d?\\d|[1-9]?\\d|2[0-4]\\d|25[0-\u200C\u200B5])(?:[:]\\d+)?";
 
 	public RMIServer(int port) throws RemoteException {
 		this(port, DEFAULT_NAME);
@@ -41,7 +41,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 		this.registryPort = port;
 		this.bindingName = bindingName;
 
-		Pattern pattern = Pattern.compile(ipPattern);
+		Pattern pattern = Pattern.compile(IP_PATTERN);
 
 		try {
 //		this.serverAddress = (InetAddress.getLocalHost()).toString();
