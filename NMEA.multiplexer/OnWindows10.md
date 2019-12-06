@@ -196,7 +196,7 @@ forwarders:
 This would read 2 serial ports, `COM3` and `COM4`, and merge the output into a single file named `data.nmea`.
 
 ### 6 - Run the program
-This step will start the Multiplexer. As instructed by the `yaml` file abiove, it will read 2 serial ports and produce a log file. 
+This step will start the Multiplexer. As instructed by the `yaml` file above, it will read 2 serial ports and produce a log file. 
 <pre>
  C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>windows.test</b>
 </pre>
