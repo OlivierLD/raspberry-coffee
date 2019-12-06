@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Slide Effect</title>
+	<style type="text/css">
+		body {
+			background-color: #1D1F20;
+			color: #EFEFFF;
+		}
+		.wrapper {
+			position: relative;
+			overflow: hidden;
+			width: 600px;
+			height: 370px;
+			border: 1px solid red;
+		}
+
+		#slide {
+			position: absolute;
+			left: -600px;
+			width: 600px;
+			height: 370px;
+			background: blue;
+			animation: slide 0.5s forwards;
+			animation-delay: 2s;
+		}
+
+		@keyframes slide {
+			100% { left: 0; }
+		}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<img id="slide" src="https://s3.amazonaws.com/content.sitezoogle.com/u/107988/124d7075bd224fceaecf8172ca200f088653378f/large/IKnew-nologo.jpg?1373829530" />
+	</div>
+</body>
+</html>

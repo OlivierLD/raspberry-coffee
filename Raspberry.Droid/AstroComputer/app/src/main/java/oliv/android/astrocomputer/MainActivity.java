@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                             } else if (selectedBody.toString().contains("Saturn")) {
                                 sru.setAHG(AstroComputer.getSaturnGHA());
                                 sru.setD(AstroComputer.getSaturnDecl());
-                            } else { // Sun by default
+                            } else {                                  // Sun by default
                                 sru.setAHG(AstroComputer.getSunGHA());
                                 sru.setD(AstroComputer.getSunDecl());
                             }
