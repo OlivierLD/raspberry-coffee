@@ -208,5 +208,7 @@ a Comma Separated Value (csv) file, so it can be opened as a spreadsheet,
 we have a utility for that.
 
 <pre>
- C:\Users\olivier\raspberry-coffee\NMEA.multiplexer>
+ C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>log.to.csv data.nmea 2019Dec06.csv</b>
 </pre>
+
+---
