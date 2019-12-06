@@ -1,5 +1,5 @@
 ## Instructions for Windows 10
-When ask to type commands, type on the the commands in **bold**.
+When asked to type commands, type only the commands in **bold**.
 Others are sample outputs.
 
 - Make sure `git` and `java` are available on your machine, from a `Terminal`, type
@@ -37,6 +37,7 @@ From a DOS Terminal, in a directory of your choice (does not need to be a new on
 ### 2 - Build the software
 We will be using `gradlew`.
 
+First (and only once), let's make sure all is in place:
 <pre>
  C:\Users\olivier><b>cd raspberry-coffee</b>
  C:\Users\olivier\raspberry-coffee><b>cd NMEA.multiplexer</b>
@@ -131,6 +132,7 @@ We will be using `gradlew`.
  C:\Users\olivier\raspberry-coffee\NMEA.multiplexer>
 </pre>
 
+Now, we can start the actual build:
 <pre>
  C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>..\gradlew shadowJar -x :NMEA.multiplexer:compileScala</b>
  > Configure project :
@@ -142,7 +144,7 @@ We will be using `gradlew`.
  Deprecated Gradle features were used in this build, making it incompatible with Gradle 6.0.
  Use '--warning-mode all' to show the individual deprecation warnings.
  See https://docs.gradle.org/5.4.1/userguide/command_line_interface.html#sec:command_line_warnings
- BUILD SUCCESSFUL in 43s
+ <span style="color: green;">BUILD SUCCESSFUL</span> in 43s
  15 actionable tasks: 3 executed, 12 up-to-date
  C:\Users\olivier\raspberry-coffee\NMEA.multiplexer>
 </pre>
@@ -153,7 +155,7 @@ Download and install a recent version of `java-librxtx`, from <http://rxtx.qbang
 Notice where this has been installed, we will need this location.
 
 ### 4 - Modify the `windows.test.bat`
-In t a text editor (`Notepad`, `Atom`, ...), open `windows.test.bat`.
+In a text editor (`Notepad`, `Atom`, ...), open `windows.test.bat`.
 <pre>
  C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>Notepad windows.test.bat</b>
 </pre>
@@ -194,6 +196,7 @@ forwarders:
 This would read 2 serial ports, `COM3` and `COM4`, and merge the output into a single file named `data.nmea`.
 
 ### 6 - Run the program
+This step will start the Multiplexer. As instructed by the `yaml` file abiove, it will read 2 serial ports and produce a log file. 
 <pre>
  C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>windows.test</b>
 </pre>
