@@ -755,3 +755,5 @@ To execute a script in PowerShell, with redirection:
 ```
  dos> powershell ".\serial.ps1" > out.txt
 ```
+
+See instructions for Windows 10 [here](./OnWindows10.md)
