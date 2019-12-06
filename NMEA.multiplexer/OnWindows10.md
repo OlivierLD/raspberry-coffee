@@ -1,6 +1,8 @@
 As the Multiplexer may run somewhere else than on a Raspberry Pi (Linux or MacOS will support the same commands as on the Raspberry Pi), here are some
 instructions to run it on Windows.
 
+To edit the code, I like to use [Atom](https://atom.io/), free, open source, and powerful.
+
 ## Instructions for Windows 10
 When asked to type commands, type only the commands in **bold**.
 Others are sample outputs.
@@ -160,7 +162,7 @@ Notice where this has been installed, we will need this location.
 ### 4 - Modify the `windows.test.bat`
 In a text editor (`Notepad`, `Atom`, ...), open `windows.test.bat`.
 <pre>
- C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>Notepad windows.test.bat</b>
+ C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>atom windows.test.bat</b>
 </pre>
 You need to modify this line (`#13`), so it matches your settings:
 <pre>
@@ -171,7 +173,7 @@ As you would see, there are more instructions in the script itself.
 This step will tell the multiplexer what to read, and what to write.
 In a text editor, open `nmea.mux.2.serial.yaml`:
 <pre>
- C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>Notepad nmea.mux.2.serial.yaml</b>
+ C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>atom nmea.mux.2.serial.yaml</b>
 </pre>
 #### Example:
 See this file:
