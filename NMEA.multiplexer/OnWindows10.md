@@ -170,6 +170,19 @@ You need to modify this line (`#13`), so it matches your settings:
 <pre>
  set RXTX_HOME=<i>C:\Users\olivier\rxtx-2.1-7-bins-r2</i>
 </pre>
+Version 2.2-pre2 works too
+<pre>
+ set RXTX_HOME=<i>C:\Users\olivier\rxtx-2.2pre2-bins</i>
+</pre>
+Also make sure the line mentioning `java.library.path` is accurate:
+<pre>
+set JAVA_OPTS=%JAVA_OPTS% -Djava.library.path=%RXTX_HOME%\Windows\i368-mingw32
+</pre>
+or depending on your version
+<pre>
+set JAVA_OPTS=%JAVA_OPTS% -Djava.library.path=%RXTX_HOME%\win32
+</pre>
+
 As you would see, there are more instructions in the script itself.
 ### 5 - Setup the config file
 This step will tell the multiplexer what to read, and what to write.
