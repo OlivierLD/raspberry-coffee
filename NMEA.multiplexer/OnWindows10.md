@@ -169,7 +169,7 @@ You need to modify this line (#13), so it matches your settings:
 As you would see, there are more instructions in the script itself.
 ### 5 - Setup the config file
 This step will tell the multiplexer what to read, and what to write.
-In a text editor, edit `nmea.mux.2.serial.yaml`:
+In a text editor, open `nmea.mux.2.serial.yaml`:
 <pre>
  C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>Notepad nmea.mux.2.serial.yaml</b>
 </pre>
