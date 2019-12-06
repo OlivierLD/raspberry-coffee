@@ -1,3 +1,6 @@
+As the Multiplexer may run somewhere else than on a Raspberry Pi (Linux or MacOS will support the same commands as on the Raspberry Pi), here are some
+instructions to run it on Windows.
+
 ## Instructions for Windows 10
 When asked to type commands, type only the commands in **bold**.
 Others are sample outputs.
