@@ -162,7 +162,7 @@ In a text editor (`Notepad`, `Atom`, ...), open `windows.test.bat`.
 <pre>
  C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>Notepad windows.test.bat</b>
 </pre>
-You need to modify this line (#13), so it matches your settings:
+You need to modify this line (`#13`), so it matches your settings:
 <pre>
  set RXTX_HOME=<i>C:\Users\olivier\rxtx-2.1-7-bins-r2</i>
 </pre>
