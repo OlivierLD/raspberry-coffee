@@ -170,7 +170,7 @@ You need to modify this line (`#13`), so it matches your settings:
 <pre>
  set RXTX_HOME=<i>C:\Users\olivier\rxtx-2.1-7-bins-r2</i>
 </pre>
-Version 2.2-pre2 works too
+Version `2.2-pre2` works too
 <pre>
  set RXTX_HOME=<i>C:\Users\olivier\rxtx-2.2pre2-bins</i>
 </pre>
