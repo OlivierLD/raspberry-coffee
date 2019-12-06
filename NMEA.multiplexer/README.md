@@ -2,6 +2,14 @@
 
 NMEA channels management, in and out.
 
+This is - obviously - a _software_ multiplexer (**no** hardware required), that can read data from
+multiple sources, compute extra data (like current) if needed, and broadcast them onto (possibly) several output destinations.
+
+For example:
+- Read one or more serial ports (GPS, boat data), write them into a log file
+- Read a serial port, read e `BME280` sensor (air temperature, atmospheric pressure, relative humidity), and broadcast everything on a TCP port, for `OpenCPN`.
+- etc...
+
 -------------------------------------
 
 [NMEA](http://nmea.org) (National Marine Electronics Association) is one of the oldest IT standards, defining how sensor data should be conveyed.
