@@ -157,13 +157,47 @@ In t a text editor (`Notepad`, `Atom`, ...), open `windows.test.bat`.
 <pre>
  C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>Notepad windows.test.bat</b>
 </pre>
-
+You need to modify this line (#13), so it matches your settings:
+<pre>
+ set RXTX_HOME=<i>C:\Users\olivier\rxtx-2.1-7-bins-r2</i>
+</pre>
+As you would see, there are more instructions in the script itself.
 ### 5 - Setup the config file
+This step will tell the multiplexer what to read, and what to write.
+In a text editor, edit `nmea.mux.2.serial.yaml`:
+<pre>
+ C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>Notepad nmea.mux.2.serial.yaml</b>
+</pre>
+#### Example:
+See this file:
+<pre>
+#
+# MUX definition.
+#
+name: "Read 2 serial ports, generate one log file, for Windows."
+context:
+  with.http.server: false
+  init.cache: false
+channels:
+  - type: serial
+    port: COM3
+    baudrate: 4800
+    verbose: false
+  - type: serial
+    port: COM4
+    baudrate: 4800
+    verbose: false
+forwarders:
+  - type: file
+    filename: data.nmea
+</pre>
+This would read 2 serial ports, `COM3` and `COM4`, and merge the output in a single file named `data.nmea`.
 
 ### 6 - Run the program
 <pre>
  C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>windows.test</b>
 </pre>
+Use `[Ctrl+C]` in the console where it is running to stop it when needed.
 
 ### Bonus: turn the log file into csv
 Once you have completed you logging session, the log file can be turned into
