@@ -8,6 +8,7 @@ multiple sources, compute extra data (like current) if needed, and broadcast the
 For example:
 - Read one or more serial ports (GPS, boat data), write them into a log file
 - Read a serial port, read a `BME280` sensor (air temperature, atmospheric pressure, relative humidity), and broadcast everything on a TCP port, for `OpenCPN`.
+- Read a file of logged data, and send them over `TCP` to `OpenCPN`, for replay.
 - etc...
 
 -------------------------------------
