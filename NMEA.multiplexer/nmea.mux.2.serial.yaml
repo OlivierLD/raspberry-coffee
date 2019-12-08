@@ -7,7 +7,7 @@ context:
   init.cache: false
 channels:
   - type: serial
-    port: COM1
+    port: COM3
     baudrate: 4800
     verbose: false
   - type: serial

@@ -1,5 +1,4 @@
 ## Weather Station
----
 
 ### <a name="weatherstation"></a>Home Weather Station
 This one uses the `SDLWeather80422` class, from the `WeatherStation` project.
@@ -159,6 +158,9 @@ To start Chromium when the Desktop starts, and load one or several URLs (in diff
                                       http://192.168.42.6:9999/web/samples/now.from.SF.html
 ```
 It will start Chromium in `kiosk` (full screen) mode, and load the URLs mentioned above.
+> Remember: 
+> - To close a Tab in Chrome or Chromium: `[Ctrl+W]`.
+> - To scroll from tab to tab: `[Ctrl+Tab]`.
 
 To disable the screen saver:
 - Edit `/etc/lightdm/lightdm.conf`
