@@ -4,7 +4,6 @@ buildscript {
     repositories {
         google()
         jcenter()
-        
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
@@ -18,7 +17,9 @@ allprojects {
     repositories {
         google()
         jcenter()
-        
+        mavenLocal()  // For common-utils (must be installed)
+        maven { url "https://oss.sonatype.org/content/groups/public" } // For Pi4J
+        // maven { url "http://www.datanucleus.org/downloads/maven2" }
     }
 }
 
