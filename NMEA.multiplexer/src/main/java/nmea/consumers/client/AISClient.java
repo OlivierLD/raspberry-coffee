@@ -36,7 +36,7 @@ public class AISClient {
 						try {
 							AISParser.AISRecord rec = AISParser.parseAIS(line);
 							if (rec != null) {
-								map.put(rec.getMmsi(), rec);
+								map.put(rec.getMMSI(), rec);
 								System.out.println("(" + map.size() + " boat(s)) " + rec.toString());
 							}
 						} catch (Exception ex) {

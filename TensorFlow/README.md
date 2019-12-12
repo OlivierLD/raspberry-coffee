@@ -9,7 +9,7 @@ Getting started...
 I used Gradle, see the `build.gradle` file.
 
 To run the LabelImage sample: 
-```
+```sh
 $ curl -O https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip
 ```
 Unzip it, then run

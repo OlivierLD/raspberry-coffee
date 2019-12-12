@@ -292,4 +292,9 @@ Terminal-X$ docker run -it --rm -p 5901:5901 -p 8888:8888 -e USER=root -v tensor
 
 The docker image you're now on reflects the changes done before the container was exported.
 
+##### If `Docker.raw` becomes too big...
+```
+ $ docker system prune
+```
+
 -------------------------------

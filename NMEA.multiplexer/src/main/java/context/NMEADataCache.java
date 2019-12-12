@@ -296,7 +296,7 @@ public class NMEADataCache
 				try {
 					AISParser.AISRecord rec = AISParser.parseAIS(nmeaSentence);
 					if (rec != null) {
-						aisMap.put(rec.getMmsi(), rec);
+						aisMap.put(rec.getMMSI(), rec);
 				//	System.out.println("(" + aisMap.size() + " boat(s)) " + rec.toString());
 					}
 					this.put(AIS, aisMap);

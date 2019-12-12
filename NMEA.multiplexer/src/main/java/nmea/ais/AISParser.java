@@ -111,11 +111,11 @@ AIS Message type 2:
 	}
 
 	public final static String AIS_PREFIX = "!AIVDM";
-	public final static int PREFIX_POS = 0;
-	public final static int NB_SENTENCES_POS = 1;
-	public final static int AIS_DATA_POS = 5;
+	private final static int PREFIX_POS = 0;
+	private final static int NB_SENTENCES_POS = 1;
+	private final static int AIS_DATA_POS = 5;
 
-	public static AISRecord parseAIS(String sentence) throws Exception {
+	public static AISRecord parseAIS(String sentence) {
 		boolean valid = StringParsers.validCheckSum(sentence);
 		if (!valid) {
 			throw new RuntimeException("Invalid AIS Data (Bad checksum) for [" + sentence + "]");
@@ -126,7 +126,8 @@ AIS Message type 2:
 		}
 
 		if (!dataElement[NB_SENTENCES_POS].equals("1")) { // More than 1 message: Not Managed
-			return null;
+			throw new RuntimeException(String.format("String [%s], more than 1 message (%s). Not managed yet.", sentence, dataElement[NB_SENTENCES_POS]));
+			// return null;
 		}
 
 		AISRecord aisRecord = new AISRecord(System.currentTimeMillis());
@@ -167,15 +168,15 @@ AIS Message type 2:
 	/**
 	 * 2's complement, for negative numbers.
 	 *
-	 * @param binStr
-	 * @return
+	 * @param binStr binary String
+	 * @return the 2's complement value
 	 */
 	private static String neg(String binStr) {
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		for (int i = 0; i < binStr.length(); i++) {
-			s += (binStr.charAt(i) == '0' ? '1' : '0');
+			s.append(binStr.charAt(i) == '0' ? '1' : '0');
 		}
-		return s;
+		return s.toString();
 	}
 
 	private static void setAISData(AISData a, AISRecord ar, int value) {
@@ -184,9 +185,9 @@ AIS Message type 2:
 		} else if (a.equals(AISData.REPEAT_INDICATOR)) {
 			ar.setRepeatIndicator(value);
 		} else if (a.equals(AISData.MMSI)) {
-			ar.setMmsi(value);
+			ar.setMMSI(value);
 		} else if (a.equals(AISData.NAV_STATUS)) {
-			ar.setNavstatus(value);
+			ar.setNavStatus(value);
 		} else if (a.equals(AISData.ROT)) {
 			ar.setRot(value);
 		} else if (a.equals(AISData.SOG)) {
@@ -207,7 +208,7 @@ AIS Message type 2:
 	}
 
 	private static String encodedAIStoBinaryString(String encoded) {
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < encoded.length(); i++) {
 			int c = encoded.charAt(i);
 			c -= 48;
@@ -227,8 +228,8 @@ AIS Message type 2:
 	public static class AISRecord {
 		private int messageType;
 		private int repeatIndicator;
-		private int mmsi;
-		private int navstatus;
+		private int MMSI;
+		private int navStatus;
 		private int rot;
 		private float sog;
 		private int posAcc;
@@ -239,7 +240,7 @@ AIS Message type 2:
 		private int utc;
 		private long recordTimeStamp;
 
-		public AISRecord(long now) {
+		AISRecord(long now) {
 			super();
 			recordTimeStamp = now;
 		}
@@ -260,20 +261,20 @@ AIS Message type 2:
 			return repeatIndicator;
 		}
 
-		public void setMmsi(int mmsi) {
-			this.mmsi = mmsi;
+		public void setMMSI(int MMSI) {
+			this.MMSI = MMSI;
 		}
 
-		public int getMmsi() {
-			return mmsi;
+		public int getMMSI() {
+			return MMSI;
 		}
 
-		public void setNavstatus(int navstatus) {
-			this.navstatus = navstatus;
+		public void setNavStatus(int navStatus) {
+			this.navStatus = navStatus;
 		}
 
-		public int getNavstatus() {
-			return navstatus;
+		public int getNavStatus() {
+			return navStatus;
 		}
 
 		public void setRot(int rot) {
@@ -340,7 +341,7 @@ AIS Message type 2:
 			return utc;
 		}
 
-		public static String decodeStatus(int stat) {
+		static String decodeStatus(int stat) {
 			String status = "";
 			switch (stat) {
 				case 0:
@@ -353,10 +354,10 @@ AIS Message type 2:
 					status = "Not under command";
 					break;
 				case 3:
-					status = "Restricted manoeuverability";
+					status = "Restricted maneuverability";
 					break;
 				case 4:
-					status = "Constrained by her daught";
+					status = "Constrained by her draught";
 					break;
 				case 5:
 					status = "Moored";
@@ -371,20 +372,10 @@ AIS Message type 2:
 					status = "Under way sailing";
 					break;
 				case 9:
-					status = "Reserved for future...";
-					break;
 				case 10:
-					status = "Reserved for future...";
-					break;
 				case 11:
-					status = "Reserved for future...";
-					break;
 				case 12:
-					status = "Reserved for future...";
-					break;
 				case 13:
-					status = "Reserved for future...";
-					break;
 				case 14:
 					status = "Reserved for future...";
 					break;
@@ -396,9 +387,10 @@ AIS Message type 2:
 			return status;
 		}
 
+		@Override
 		public String toString() {
 			String str = "";
-			str = "Type:" + messageType + ", Repeat:" + repeatIndicator + ", MMSI:" + mmsi + ", status:" + decodeStatus(navstatus) + ", rot:" + rot +
+			str = "Type:" + messageType + ", Repeat:" + repeatIndicator + ", MMSI:" + MMSI + ", status:" + decodeStatus(navStatus) + ", rot:" + rot +
 							", Pos:" + latitude + "/" + longitude + " (Acc:" + posAcc + "), COG:" + cog + ", SOG:" + sog + ", HDG:" + hdg;
 			return str;
 		}
@@ -428,11 +420,16 @@ AIS Message type 2:
 
 			ais = "!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52";
 			System.out.println(parseAIS(ais));
-		}
-	}
 
-	public static void main__(String... args) throws Exception {
-		String dataFileName = "sample.data/nais400-merrimac.log";
+			ais = "!AIVDM,2,2,2,B,RADP,0*10";
+			try {
+				System.out.println(parseAIS(ais));
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		String dataFileName = "sample.data/ais.nmea";
 		if (args.length > 0) {
 			dataFileName = args[0];
 		}
@@ -441,14 +438,21 @@ AIS Message type 2:
 		while (line != null) {
 			line = br.readLine();
 			if (line != null) {
-				if (!line.startsWith("#") && line.startsWith("!")) {
+				if (!line.startsWith("#") && line.startsWith(AIS_PREFIX)) {
 					try {
-						System.out.println(parseAIS(line));
+						AISRecord aisRecord = parseAIS(line);
+						if (aisRecord != null) {
+							System.out.println(aisRecord);
+						} else {
+							System.out.println(String.format(">> NULL AIS Record for %s", line));
+						}
 					} catch (Exception ex) {
 						System.err.println("For [" + line + "], " + ex.toString());
 					}
+				} else if (!line.startsWith("#")) {
+					// TODO else parse NMEA
+					System.out.println(String.format("Non AIS String... %s", line));
 				}
-				// TODO else parse NMEA
 			}
 		}
 		br.close();

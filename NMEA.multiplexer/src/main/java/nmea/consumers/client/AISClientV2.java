@@ -4,10 +4,6 @@ import nmea.ais.AISParser;
 import nmea.api.NMEAEvent;
 import nmea.consumers.reader.TCPReader;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +41,7 @@ public class AISClientV2 {
 						try {
 							AISParser.AISRecord rec = AISParser.parseAIS(aisMessage);
 							if (rec != null) {
-								map.put(rec.getMmsi(), rec);
+								map.put(rec.getMMSI(), rec);
 								System.out.println(String.format("(%d boat%s in sight): %s", map.size(), map.size() > 1 ? "s" : "", rec.toString()));
 							}
 						} catch (Exception ex) {
