@@ -30,6 +30,7 @@ tasks.withType(JavaCompile) {
 
 dependencies {
   compile project(':common-utils')
+  compile project(':common-utils-swing')
   compile project(':http-tiny-server')
   compile project(':Adafruit.IO.REST')
   compile project(':SevenSegDisplay')

@@ -6,6 +6,10 @@ import com.pi4j.io.gpio.RaspiPin;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Utility, to display the Raspberry Pi's header 40 pins
+ * in their (many) different lingos...
+ */
 public class PinUtil {
 	// Disposed as on the board
 	public enum GPIOPin {

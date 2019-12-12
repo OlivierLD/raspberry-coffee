@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'maven'
+    id 'com.github.johnrengelman.shadow' // version '4.0.2'
+}
+
+group = 'oliv.raspi.coffee'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+//  maven { url "http://lediouris.net/maven2" }
+    maven { url "https://oss.sonatype.org/content/groups/public" }
+}
+
+// sourceCompatibility = 1.8
+
+//sourceSets {
+//    main {
+//        java {
+//            srcDirs = ['src/main/java']
+//        }
+//    }
+//    test {
+//        java {
+//            srcDirs = ['src/test/java']
+//        }
+//    }
+//}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+shadowJar {
+    zip64 true
+}
