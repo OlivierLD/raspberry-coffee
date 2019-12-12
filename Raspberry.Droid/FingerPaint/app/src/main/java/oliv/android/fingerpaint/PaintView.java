@@ -96,16 +96,23 @@ public class PaintView extends View {
         canvas.save();
         mCanvas.drawColor(backgroundColor);
 
+        if (false) {
+            mCanvas.drawColor(Color.BLUE);
+            mPaint.setStyle(Paint.Style.FILL);
+            mCanvas.drawCircle(10, 10, 10, mPaint);
+            mCanvas.drawColor(backgroundColor);
+        }
+
         for (FingerPath fp : paths) {
             mPaint.setColor(fp.color);
             mPaint.setStrokeWidth(fp.strokeWidth);
             mPaint.setMaskFilter(null);
 
-            if (fp.emboss)
+            if (fp.emboss) {
                 mPaint.setMaskFilter(mEmboss);
-            else if (fp.blur)
+            } else if (fp.blur) {
                 mPaint.setMaskFilter(mBlur);
-
+            }
             mCanvas.drawPath(fp.path, mPaint);
 
         }
