@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# @deprecated
+# and the lib directory is not there anymore.
+#
 mkdir classes
 JAVAC_OPTIONS="-sourcepath ./src"
 JAVAC_OPTIONS="$JAVAC_OPTIONS -d ./classes"
@@ -13,4 +17,3 @@ COMMAND="javac $JAVAC_OPTIONS `find ./src -name '*.java' -print`"
 echo Compiling: $COMMAND
 $COMMAND
 echo Done
-

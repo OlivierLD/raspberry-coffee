@@ -1,7 +1,4 @@
 #!/bin/bash
-#CP=./classes
-#CP=$CP:./lib/jansi-1.9.jar
-#CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 CP=./build/libs/ADC-1.0-all.jar
 java -cp $CP adc.sample.FiveChannelListener
 
