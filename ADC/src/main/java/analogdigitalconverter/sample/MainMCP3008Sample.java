@@ -8,7 +8,7 @@ import utils.StringUtils;
 import static utils.StringUtils.lpad;
 
 public class MainMCP3008Sample {
-	private final static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
+	private final static boolean DEBUG = "true".equals(System.getProperty("adc.verbose", "false"));
 	private static boolean go = true;
 	private static int adcChannel =
 					MCPReader.MCP3008InputChannels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008

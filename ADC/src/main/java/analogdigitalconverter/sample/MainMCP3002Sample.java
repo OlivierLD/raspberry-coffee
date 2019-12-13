@@ -11,7 +11,7 @@ import static utils.StringUtils.lpad;
  * Got one from SparkFun: https://www.sparkfun.com/products/8636
  */
 public class MainMCP3002Sample {
-	private final static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
+	private final static boolean DEBUG = "true".equals(System.getProperty("adc.verbose", "false"));
 	private static boolean go = true;
 	private static int adcChannel =
 					MCPReader.MCP3002InputChannels.CH0.ch(); // Between 0 and 1, 2 channels on the MCP3002
