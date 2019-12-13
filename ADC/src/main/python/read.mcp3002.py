@@ -5,7 +5,7 @@ import time
 
 # Start SPI protocol.
 spi = spidev.SpiDev()
-spi.open(0,0) # This is the CE0 Pin (GPIO 08) on the RPi, for CE1, use (0,1)
+spi.open(0, 0) # This is the CE0 Pin (GPIO 08) on the RPi, for CE1, use (0,1)
 
 #Function to read in CE0 channel
 def read_spi(channel):
