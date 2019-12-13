@@ -241,15 +241,15 @@
         </dependency>
 
         <!-- Added -->
-        <!--dependency>
-            <groupId>com.pi4j</groupId>
-            <artifactId>pi4j-core</artifactId>
-            <version>1.2-SNAPSHOT</version>
-        </dependency-->
         <dependency>
             <groupId>javax.interceptor</groupId>
             <artifactId>javax.interceptor-api</artifactId>
             <version>1.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.pi4j</groupId>
+            <artifactId>pi4j-core</artifactId>
+            <version>1.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>oliv.raspi.coffee</groupId>

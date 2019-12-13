@@ -7,6 +7,9 @@ import utils.StringUtils;
 
 import static utils.StringUtils.lpad;
 
+/**
+ * Got one from SparkFun: https://www.sparkfun.com/products/8636
+ */
 public class MainMCP3002Sample {
 	private final static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
 	private static boolean go = true;
@@ -78,8 +81,15 @@ public class MainMCP3002Sample {
 					String chValue = prm.substring(CHANNEL_PREFIX.length());
 					try {
 						adcChannel = Integer.parseInt(chValue);
-						if (adcChannel > 1 || adcChannel < 0) {
-							throw new RuntimeException("Channel in [0..1] please");
+						boolean validChannel = false;
+						for (MCPReader.MCP3002InputChannels channel : MCPReader.MCP3002InputChannels.values()) {
+							if (channel.ch() == adcChannel) {
+								validChannel = true;
+								break;
+							}
+						}
+						if (!validChannel) {
+							throw new IllegalArgumentException(String.format("Non-suitable channel for MCP3002: %d", adcChannel));
 						}
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad value for %s, must be an integer [%s]", prm, pinValue));

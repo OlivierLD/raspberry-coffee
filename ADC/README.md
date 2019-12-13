@@ -1,17 +1,17 @@
-# MCP3008
+# MCP3008 & MCP3002
 ### 10 bits Analog to Digital Converter
 
-A Java library to read the MCP3008 ADC
+A Java library to read the MCP3008 and MCP3002 ADCs
 
 ```
 $ ../gradlew shadowJar
 ...
-$ ./run
+$ ./adcreader.3008.sh
 Read an ADC
-Usage is ./run --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
+Usage is ./adcreader.3008.sh --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
  For miso, mosi, clk & cs, use BCM pin numbers
-Password:
-Usage is java analogdigitalconverter.mcp3008.sample.MainMCP3008Sample --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
+Password: ****
+Usage is java analogdigitalconverter.sample.MainMCP3008Sample --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
 Values above are default values (GPIO/BCM numbers).
 
 Reading MCP3008 on channel 0
@@ -79,7 +79,7 @@ On the diagram above,
 - The `MCP3008`'s `Din` (`#11`) aka `MOSI`, is connected on the RPi's `GPIO_5` (`#18`) - Blue wire
 - The `MCP3008`'s `CS` (`#10`) is connected on the RPi's `GPIO_6` (`#22`) - Green wire
 
-The `./run` command would be issued like
+The `./adcreader.3008.sh` command would be issued like
 ```
- $ ./run --miso:16 --mosi:18 --clk:12 --cs:22 --channel:0
+ $ ./adcreader.3008.sh --miso:16 --mosi:18 --clk:12 --cs:22 --channel:0
 ```

@@ -78,8 +78,15 @@ public class MainMCP3008Sample {
 					String chValue = prm.substring(CHANNEL_PREFIX.length());
 					try {
 						adcChannel = Integer.parseInt(chValue);
-						if (adcChannel > 7 || adcChannel < 0) {
-							throw new RuntimeException("Channel in [0..7] please");
+						boolean validChannel = false;
+						for (MCPReader.MCP3008InputChannels channel : MCPReader.MCP3008InputChannels.values()) {
+							if (channel.ch() == adcChannel) {
+								validChannel = true;
+								break;
+							}
+						}
+						if (!validChannel) {
+							throw new IllegalArgumentException(String.format("Non-suitable channel for MCP3008: %d", adcChannel));
 						}
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad value for %s, must be an integer [%s]", prm, pinValue));

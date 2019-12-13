@@ -1,6 +1,5 @@
 #!/bin/bash
 echo Read an ADC
 #
-# CP=./classes:$PI4J_HOME/lib/pi4j-core.jar
 CP=./build/libs/ADC-1.0-all.jar
 sudo java -cp $CP adc.gui.AnalogDisplayApp

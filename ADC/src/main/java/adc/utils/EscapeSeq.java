@@ -66,7 +66,7 @@ public class EscapeSeq {
 	}
 
 	// An example
-	public static void main(String... args) {
+	public static void main_(String... args) {
 		String str80 = "                                                                                ";
 		AnsiConsole.systemInstall();
 		AnsiConsole.out.println(ANSI_CLS);
@@ -80,20 +80,25 @@ public class EscapeSeq {
 			int value5 = (int) Math.round(Math.random() * 80);
 
 			String str1 = "";
-			for (int j = 0; j < value1; j++)
+			for (int j = 0; j < value1; j++) {
 				str1 += ".";
+			}
 			String str2 = "";
-			for (int j = 0; j < value2; j++)
+			for (int j = 0; j < value2; j++) {
 				str2 += ".";
+			}
 			String str3 = "";
-			for (int j = 0; j < value3; j++)
+			for (int j = 0; j < value3; j++) {
 				str3 += ".";
+			}
 			String str4 = "";
-			for (int j = 0; j < value4; j++)
+			for (int j = 0; j < value4; j++) {
 				str4 += ".";
+			}
 			String str5 = "";
-			for (int j = 0; j < value5; j++)
+			for (int j = 0; j < value5; j++) {
 				str5 += ".";
+			}
 
 			str1 = superpose(str1, "Cell 1:" + Integer.toString(value1));
 			str2 = superpose(str2, "Cell 2:" + Integer.toString(value2));
@@ -120,23 +125,28 @@ public class EscapeSeq {
 		}
 
 		System.out.println(ansiSetTextAndBackgroundColor(ANSI_GREEN, ANSI_RED) + "this concludes the " + ansiSetTextColor(ANSI_WHITE) + "Jansi" + ansiSetTextColor(ANSI_GREEN) + " demo" + ANSI_NORMAL);
+		AnsiConsole.systemUninstall();
 	}
 
 	public static String superpose(String orig, String override) {
 		byte[] ret = orig.getBytes();
-		for (int i = 0; i < Math.min(orig.length(), override.length()); i++)
+		for (int i = 0; i < Math.min(orig.length(), override.length()); i++) {
 			ret[i] = (byte) override.charAt(i);
+		}
 		return new String(ret);
 	}
 
-	public static void main_(String... args) {
+	public static void main(String... args) {
 		AnsiConsole.systemInstall();
 		AnsiConsole.out.println(ANSI_CLS);
 		AnsiConsole.out.println(ANSI_AT55 + ANSI_REVERSE + "10,10 reverse : Hello world" + ANSI_NORMAL);
 		AnsiConsole.out.println(ANSI_HOME + ANSI_WHITEONBLUE + "WhiteOnBlue : Hello world" + ANSI_NORMAL);
 		AnsiConsole.out.print(ANSI_BOLD + "Bold : Press return..." + ANSI_NORMAL);
+
+		System.out.println();
+
 		try {
-			System.in.read();
+			System.in.read(); // User hit [Return]
 		} catch (Exception e) {
 		}
 		//  AnsiConsole.out.println(ANSI_CLS);
@@ -149,12 +159,13 @@ public class EscapeSeq {
 		for (String line : SOME_TEXT) {
 			System.out.print(ANSI_HEAD + line);
 			try {
-				Thread.sleep(1_000);
+				Thread.sleep(1_000L);
 			} catch (Exception ex) {
 			}
 		}
 		System.out.println();
 
 		System.out.println(ansiSetTextAndBackgroundColor(ANSI_GREEN, ANSI_RED) + "this concludes the " + ansiSetTextColor(ANSI_WHITE) + "Jansi" + ansiSetTextColor(ANSI_GREEN) + " demo" + ANSI_NORMAL);
+		AnsiConsole.systemUninstall();
 	}
 }

@@ -1,6 +1,5 @@
 @setlocal
 @echo off
-set CP=.\classes
-set CP=%CP%;.\lib\jansi-1.9.jar
+set CP=.\build\libs\ADC-1.0-all.jar
 java -cp %CP% adc.utils.EscapeSeq
 @endlocal
