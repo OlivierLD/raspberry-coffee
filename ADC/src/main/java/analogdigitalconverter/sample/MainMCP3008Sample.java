@@ -132,7 +132,7 @@ public class MainMCP3008Sample {
 		System.out.println("- Dout on the MCP3008 goes to MISO on the RPi");
 		System.out.println("- Din on the MCP3008 goes to MOSI on the RPi");
 		System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
-		System.out.println("       +--------+ ");
+		System.out.println(               "       +--------+ ");
 		System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ",  (adcChannel == 0 ? "*" : " ")));
 		System.out.println(String.format("%s CH1 -+  2  15 +- Vref ", (adcChannel == 1 ? "*" : " ")));
 		System.out.println(String.format("%s CH2 -+  3  14 +- aGnd ", (adcChannel == 2 ? "*" : " ")));
@@ -141,7 +141,7 @@ public class MainMCP3008Sample {
 		System.out.println(String.format("%s CH5 -+  6  11 +- Din ",  (adcChannel == 5 ? "*" : " ")));
 		System.out.println(String.format("%s CH6 -+  7  10 +- CS ",   (adcChannel == 6 ? "*" : " ")));
 		System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (adcChannel == 7 ? "*" : " ")));
-		System.out.println("       +--------+ ");
+		System.out.println(               "       +--------+ ");
 
 		// Compose mapping for PinUtil
 		String[] map = new String[4];

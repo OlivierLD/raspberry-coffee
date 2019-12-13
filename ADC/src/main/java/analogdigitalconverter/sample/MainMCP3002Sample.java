@@ -136,12 +136,12 @@ public class MainMCP3002Sample {
 		System.out.println("- Din on the MCP3002 goes to MOSI on the RPi");
 		System.out.println("Pins on the MCP3002 are numbered from 1 to 8, beginning top left, counter-clockwise.");
 
-		System.out.println("       +------+ ");
+		System.out.println(               "       +------+ ");
 		System.out.println(               "   CS -+ 1  8 +- Vdd/Vref ");
 		System.out.println(String.format("%s CH0 -+ 2  7 +- CLK ", (adcChannel == 0 ? "*" : " ")));
 		System.out.println(String.format("%s CH1 -+ 3  6 +- Dout ", (adcChannel == 1 ? "*" : " ")));
 		System.out.println(               "  Vss -+ 4  5 +- Din ");
-		System.out.println("       +------+ ");
+		System.out.println(               "       +------+ ");
 
 		// Compose mapping for PinUtil
 		String[] map = new String[4];
