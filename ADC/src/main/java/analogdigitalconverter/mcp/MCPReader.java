@@ -10,9 +10,11 @@ import com.pi4j.io.gpio.RaspiPin;
 import static utils.StringUtils.lpad;
 
 /**
- * Read an Analog to Digital Converter
+ * Read an SPI Analog to Digital Converter.
+ * Suitable for MCP3008 & MCP3002.
  */
 public class MCPReader {
+
 	private final static boolean DISPLAY_DIGIT = "true".equals(System.getProperty("display.digit", "false"));
 	// Note: "Mismatch" 23-24. The wiring says DOUT->#23, DIN->#24
 	// 23: DOUT on the ADC is IN on the GPIO. ADC:Slave, GPIO:Master
@@ -75,14 +77,12 @@ public class MCPReader {
 	public static void initMCP() {
 		initMCP(MCPFlavor.MCP3008, spiMiso, spiMosi, spiClk, spiCs);
 	}
-
 	public static void initMCP(MCPFlavor adc) {
 		initMCP(adc, spiMiso, spiMosi, spiClk, spiCs);
 	}
 	public static void initMCP(Pin miso, Pin mosi, Pin clk, Pin cs) {
 		initMCP(MCPFlavor.MCP3008, miso, mosi, clk, cs);
 	}
-
 	public static void initMCP(MCPFlavor adc, Pin miso, Pin mosi, Pin clk, Pin cs) {
 		adcFlavor = adc;
 		spiMiso = miso;
@@ -104,6 +104,27 @@ public class MCPReader {
 	}
 
 	public static int readMCP(int channel) {
+
+		boolean validChannel = false;
+		if (adcFlavor.equals(MCPFlavor.MCP3008)) {
+			for (MCPReader.MCP3008InputChannels adcChannel : MCPReader.MCP3008InputChannels.values()) {
+				if (adcChannel.ch() == channel) {
+					validChannel = true;
+					break;
+				}
+			}
+		} else if (adcFlavor.equals(MCPFlavor.MCP3002)) {
+			for (MCPReader.MCP3002InputChannels adcChannel : MCPReader.MCP3002InputChannels.values()) {
+				if (adcChannel.ch() == channel) {
+					validChannel = true;
+					break;
+				}
+			}
+		}
+		if (!validChannel) {
+			throw new IllegalArgumentException(String.format("Non-suitable channel for %s: %d", adcFlavor, channel));
+		}
+
 		chipSelectOutput.high();
 
 		clockOutput.low();
