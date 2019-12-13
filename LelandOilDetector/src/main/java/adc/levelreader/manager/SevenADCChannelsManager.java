@@ -7,6 +7,7 @@ import adc.levelreader.ADCObserverSimulator;
 import adc.levelreader.main.LelandPrototype;
 import adc.utils.EscapeSeq;
 import adc.utils.LowPassFilter;
+import analogdigitalconverter.mcp.MCPReader;
 import org.fusesource.jansi.AnsiConsole;
 import utils.StringUtils;
 
@@ -41,14 +42,14 @@ public class SevenADCChannelsManager {
 	 * - Air   : less than 30%
 	 */
 
-	protected static ADCObserver.MCP3008_input_channels channel[] = new ADCObserver.MCP3008_input_channels[] {
-					ADCObserver.MCP3008_input_channels.CH0,
-					ADCObserver.MCP3008_input_channels.CH1,
-					ADCObserver.MCP3008_input_channels.CH2,
-					ADCObserver.MCP3008_input_channels.CH3,
-					ADCObserver.MCP3008_input_channels.CH4,
-					ADCObserver.MCP3008_input_channels.CH5,
-					ADCObserver.MCP3008_input_channels.CH6
+	protected static MCPReader.MCP3008InputChannels channel[] = new MCPReader.MCP3008InputChannels[] {
+					MCPReader.MCP3008InputChannels.CH0,
+					MCPReader.MCP3008InputChannels.CH1,
+					MCPReader.MCP3008InputChannels.CH2,
+					MCPReader.MCP3008InputChannels.CH3,
+					MCPReader.MCP3008InputChannels.CH4,
+					MCPReader.MCP3008InputChannels.CH5,
+					MCPReader.MCP3008InputChannels.CH6
 			};
 
 	private final int[] channelValues = new int[]{0, 0, 0, 0, 0, 0, 0}; // [0..1023]
@@ -77,7 +78,7 @@ public class SevenADCChannelsManager {
 
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
-			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
+			public void valueUpdated(MCPReader.MCP3008InputChannels inputChannel, int newValue) {
 				// new value [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 //         if (inputChannel.equals(channel))
 				{
@@ -162,7 +163,7 @@ public class SevenADCChannelsManager {
 	}
 //public static int getOilThreshold() { return OIL_THRESHOLD; }
 
-	public static ADCObserver.MCP3008_input_channels[] getChannel() {
+	public static MCPReader.MCP3008InputChannels[] getChannel() {
 		return channel;
 	}
 

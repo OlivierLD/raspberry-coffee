@@ -3,28 +3,29 @@ package joystick.adc.levelreader;
 import adc.ADCContext;
 import adc.ADCListener;
 import adc.ADCObserver;
+import analogdigitalconverter.mcp.MCPReader;
 import utils.StringUtils;
 
 public class FourADCChannels {
 	private final static boolean DEBUG = false;
 
-	private static ADCObserver.MCP3008_input_channels channel[] = null;
+	private static MCPReader.MCP3008InputChannels channel[] = null;
 	private final int[] channelValues = new int[]{-1, -1, -1, -1};
 	private final int[] calibrationValues = new int[]{-1, -1, -1, -1};
 
 	public FourADCChannels() throws Exception {
-		channel = new ADCObserver.MCP3008_input_channels[]
+		channel = new MCPReader.MCP3008InputChannels[]
 				{
-						ADCObserver.MCP3008_input_channels.CH0,
-						ADCObserver.MCP3008_input_channels.CH1,
-						ADCObserver.MCP3008_input_channels.CH2,
-						ADCObserver.MCP3008_input_channels.CH3
+						MCPReader.MCP3008InputChannels.CH0,
+						MCPReader.MCP3008InputChannels.CH1,
+						MCPReader.MCP3008InputChannels.CH2,
+						MCPReader.MCP3008InputChannels.CH3
 				};
 		final ADCObserver obs = new ADCObserver(channel);
 
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
-			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
+			public void valueUpdated(MCPReader.MCP3008InputChannels inputChannel, int newValue) {
 //         if (inputChannel.equals(channel))
 				{
 					int volume = (int) (newValue / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]

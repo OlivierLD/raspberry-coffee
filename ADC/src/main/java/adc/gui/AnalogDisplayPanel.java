@@ -5,7 +5,7 @@ import adc.ADCContext;
 
 import adc.ADCListener;
 
-import adc.ADCObserver;
+import analogdigitalconverter.mcp.MCPReader;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -32,7 +32,7 @@ import javax.swing.SwingUtilities;
 
 public class AnalogDisplayPanel
 		extends JPanel {
-	@SuppressWarnings("compatibility:-6774783565143675115")
+
 	public final static long serialVersionUID = 1L;
 
 	private final static boolean GLOSSY_DISPLAY = true;
@@ -88,13 +88,13 @@ public class AnalogDisplayPanel
 
 	protected int radius = 0;
 	protected Point center = null;
-	final ADCObserver.MCP3008_input_channels channel;
+	final MCPReader.MCP3008InputChannels channel;
 
-	public AnalogDisplayPanel(ADCObserver.MCP3008_input_channels channel, double s) {
+	public AnalogDisplayPanel(MCPReader.MCP3008InputChannels channel, double s) {
 		this(channel, s, INCREMENT_DEFAULT_VALUE, TICK_DEFAULT_VALUE);
 	}
 
-	public AnalogDisplayPanel(ADCObserver.MCP3008_input_channels channel, double s, double inc, int tick) {
+	public AnalogDisplayPanel(MCPReader.MCP3008InputChannels channel, double s, double inc, int tick) {
 		this.channel = channel;
 		this.maxValue = s;
 		this.increment = inc;
@@ -117,7 +117,7 @@ public class AnalogDisplayPanel
 
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
-			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
+			public void valueUpdated(MCPReader.MCP3008InputChannels inputChannel, int newValue) {
 				if (inputChannel.equals(channel)) {
 					int volume = (int) (newValue / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 					instance.setValue(volume);
@@ -136,10 +136,11 @@ public class AnalogDisplayPanel
 		try {
 			String fontRes = RESOURCE_PATH + fontName;
 			InputStream fontDef = null;
-			if (parent != null)
+			if (parent != null) {
 				fontDef = parent.getClass().getResourceAsStream(fontRes);
-			else
+			} else {
 				fontDef = AnalogDisplayPanel.class.getResourceAsStream(fontRes);
+			}
 			if (fontDef == null) {
 				throw new NullPointerException("Could not find font resource \"" + fontName +
 						"\"\n\t\tin \"" + fontRes +
@@ -224,9 +225,9 @@ public class AnalogDisplayPanel
 				gradientOrigin.y + (2 * radius / 3),
 				darkColor); // vertical, light on top
 		g2d.setPaint(gradient);
-//  g2d.fillOval((int)(center.x - (radius * 0.90)), 
-//               (int)(center.y - (radius * 0.95)), 
-//               (int)(2 * radius * 0.9), 
+//  g2d.fillOval((int)(center.x - (radius * 0.90)),
+//               (int)(center.y - (radius * 0.95)),
+//               (int)(2 * radius * 0.9),
 //               (int)(2 * radius * 0.95));
 		g2d.fillArc((int) (center.x - (radius * 0.90)),
 				(int) (center.y - (radius * 0.95)),
@@ -265,7 +266,7 @@ public class AnalogDisplayPanel
 			// White disc scale, outside
 //    g2d.setColor(Color.white);
 //    int extRadius = (int)(radius * EXTERNAL_RADIUS_COEFF) + 15; // 10 is the font size, for the months (in case of map)
-//    g2d.fillOval(center.x - extRadius, center.y - extRadius, 2 * extRadius, 2 * extRadius);      
+//    g2d.fillOval(center.x - extRadius, center.y - extRadius, 2 * extRadius, 2 * extRadius);
 			// Glossy Display
 			drawGlossyHalfCircularDisplay(g2d, center, radius, Color.lightGray, Color.darkGray, 1f);
 		}
@@ -313,9 +314,9 @@ public class AnalogDisplayPanel
 		g2d.setStroke(origStroke);
 		int externalScaleRadius = (int) (radius * EXTERNAL_RADIUS_COEFF);
 		int internalScaleRadius = (int) (radius * INTERNAL_RADIUS_COEFF);
-//  g2d.drawOval(center.x - externalScaleRadius, 
-//               center.y - externalScaleRadius, 
-//               2 * externalScaleRadius, 
+//  g2d.drawOval(center.x - externalScaleRadius,
+//               center.y - externalScaleRadius,
+//               2 * externalScaleRadius,
 //               2 * externalScaleRadius);
 		g2d.drawArc(center.x - externalScaleRadius,
 				center.y - externalScaleRadius,

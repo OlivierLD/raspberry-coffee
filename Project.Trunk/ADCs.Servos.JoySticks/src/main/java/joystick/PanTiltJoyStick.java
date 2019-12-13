@@ -1,6 +1,6 @@
 package joystick;
 
-import adc.ADCObserver;
+import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.i2c.I2CFactory;
 import joystick.adc.JoyStick;
 import joystick.adc.JoyStickClient;
@@ -31,9 +31,9 @@ public class PanTiltJoyStick {
 	private final static String ADC_UD_PREFIX = "-adcUD:";
 	private final static String ADC_LR_PREFIX = "-adcLR:";
 
-	private static ADCObserver.MCP3008_input_channels getChannelByNumber(int num) {
-		ADCObserver.MCP3008_input_channels channel = null;
-		for (ADCObserver.MCP3008_input_channels ch : ADCObserver.MCP3008_input_channels.values()) {
+	private static MCPReader.MCP3008InputChannels getChannelByNumber(int num) {
+		MCPReader.MCP3008InputChannels channel = null;
+		for (MCPReader.MCP3008InputChannels ch : MCPReader.MCP3008InputChannels.values()) {
 			if (ch.ch() == num) {
 				channel = ch;
 				break;
@@ -45,8 +45,8 @@ public class PanTiltJoyStick {
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 
 		int ud = 14, lr = 15; // Default
-		ADCObserver.MCP3008_input_channels adcUD = ADCObserver.MCP3008_input_channels.CH0;
-		ADCObserver.MCP3008_input_channels adcLR = ADCObserver.MCP3008_input_channels.CH1;
+		MCPReader.MCP3008InputChannels adcUD = MCPReader.MCP3008InputChannels.CH0;
+		MCPReader.MCP3008InputChannels adcLR = MCPReader.MCP3008InputChannels.CH1;
 
 		if (args.length > 0) {
 			for (int i=0; i<args.length; i++) {

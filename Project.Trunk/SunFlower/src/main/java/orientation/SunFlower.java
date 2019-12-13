@@ -1,6 +1,6 @@
 package orientation;
 
-import analogdigitalconverter.mcp3008.MCP3008Reader;
+import analogdigitalconverter.mcp.MCPReader;
 import calc.GeomUtil;
 import calc.calculation.AstroComputer;
 import calc.calculation.SightReductionUtil;
@@ -160,9 +160,9 @@ public class SunFlower implements RESTRequestManager {
 	private static boolean withPhotocell = false;
 
 	private static int adcChannel =
-			MCP3008Reader.MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008. Default is 0.
+			MCPReader.MCP3008InputChannels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008. Default is 0.
 	private static int photocellChannel =
-			MCP3008Reader.MCP3008_input_channels.CH1.ch(); // Between 0 and 7, 8 channels on the MCP3008. Default is 1.
+			MCPReader.MCP3008InputChannels.CH1.ch(); // Between 0 and 7, 8 channels on the MCP3008. Default is 1.
 
 	private static final String WITH_ADC_PREFIX       = "--with-adc:"; // For battery monitoring
 	private static final String WITH_PHOTOCELL_PREFIX = "--with-photocell:";
@@ -842,7 +842,7 @@ public class SunFlower implements RESTRequestManager {
 	public BatteryData getBatteryData() {
 		int adc = 0;
 		if (foundMCP3008) {
-			adc = MCP3008Reader.readMCP3008(adcChannel);
+			adc = MCPReader.readMCP(adcChannel);
 			// TODO Damping here?
 		}
 		if (adcVerbose) {
@@ -880,7 +880,7 @@ public class SunFlower implements RESTRequestManager {
 	public PhotocellData getPhotocellData() {
 		int adc = 0;
 		if (foundMCP3008) {
-			adc = MCP3008Reader.readMCP3008(photocellChannel);
+			adc = MCPReader.readMCP(photocellChannel);
 			// TODO Damping here?
 		}
 		if (adcVerbose) {
@@ -1145,7 +1145,7 @@ public class SunFlower implements RESTRequestManager {
 
 		if (foundMCP3008) {
 			try {
-				MCP3008Reader.shutdownMCP3008();
+				MCPReader.shutdownMCP();
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -1239,7 +1239,7 @@ public class SunFlower implements RESTRequestManager {
 
 	public static void initADC() {
 		try {
-			MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
+			MCPReader.initMCP(miso, mosi, clk, cs);
 		} catch (UnsatisfiedLinkError ule) {
 			// Still not on a PI, hey?
 			System.err.println(ule.toString());

@@ -1,6 +1,6 @@
 package servo;
 
-import analogdigitalconverter.ADCReader;
+import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.PCA9685;
 
@@ -80,6 +80,16 @@ public class ServoAndPotentiometer {
 			if (str.startsWith(ADC_CHANNEL)) {
 				String s = str.substring(ADC_CHANNEL.length());
 				adcChannel = Integer.parseInt(s);
+				boolean validChannel = false;
+				for (MCPReader.MCP3008InputChannels channel : MCPReader.MCP3008InputChannels.values()) {
+					if (channel.ch() == adcChannel) {
+						validChannel = true;
+						break;
+					}
+				}
+				if (!validChannel) {
+					throw new IllegalArgumentException(String.format("Invalid MCP3008 Channel: %d", adcChannel));
+				}
 			} else if (str.startsWith(PCA9685_SERVO_PORT)) {
 				String s = str.substring(PCA9685_SERVO_PORT.length());
 				servoPort = Integer.parseInt(s);
@@ -90,7 +100,7 @@ public class ServoAndPotentiometer {
 		System.out.println("Reading MCP300 on Channel " + adcChannel);
 
 		ServoAndPotentiometer ss = new ServoAndPotentiometer(servoPort);
-		ADCReader mcp3008 = new ADCReader(); // with default wiring
+		MCPReader.initMCP(MCPReader.MCPFlavor.MCP3008); // with default wiring
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			loop = false;
@@ -102,7 +112,7 @@ public class ServoAndPotentiometer {
 		try {
 			ss.stop(); // init
 			while (loop) {
-				int adc = mcp3008.readAdc(adcChannel); // [0..1023]
+				int adc = MCPReader.readMCP(adcChannel); // [0..1023]
 				int potAdjust = Math.abs(adc - lastRead);
 				if (potAdjust > tolerance) {
 					try {
@@ -115,7 +125,7 @@ public class ServoAndPotentiometer {
 			}
 		} finally {
 			ss.stop();
-			mcp3008.closeReader();
+			MCPReader.shutdownMCP();
 		}
 		System.out.println("Done.");
 	}

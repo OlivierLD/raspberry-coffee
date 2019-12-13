@@ -6,6 +6,7 @@ import adc.ADCObserver;
 
 import adc.utils.EscapeSeq;
 
+import analogdigitalconverter.mcp.MCPReader;
 import org.fusesource.jansi.AnsiConsole;
 
 import static utils.StringUtils.lpad;
@@ -19,17 +20,17 @@ public class FiveChannelListener {
 
 	private static int displayOption = ANALOG_OPTION;
 
-	private static ADCObserver.MCP3008_input_channels channel[] = null;
+	private static MCPReader.MCP3008InputChannels channel[] = null;
 	private final int[] channelValues = new int[]{0, 0, 0, 0, 0};
 
 	public FiveChannelListener() throws Exception {
-		channel = new ADCObserver.MCP3008_input_channels[]
+		channel = new MCPReader.MCP3008InputChannels[]
 				{
-						ADCObserver.MCP3008_input_channels.CH0,
-						ADCObserver.MCP3008_input_channels.CH1,
-						ADCObserver.MCP3008_input_channels.CH2,
-						ADCObserver.MCP3008_input_channels.CH3,
-						ADCObserver.MCP3008_input_channels.CH4
+						MCPReader.MCP3008InputChannels.CH0,
+						MCPReader.MCP3008InputChannels.CH1,
+						MCPReader.MCP3008InputChannels.CH2,
+						MCPReader.MCP3008InputChannels.CH3,
+						MCPReader.MCP3008InputChannels.CH4
 				};
 		final ADCObserver obs = new ADCObserver(channel);
 
@@ -37,7 +38,7 @@ public class FiveChannelListener {
 
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
-			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
+			public void valueUpdated(MCPReader.MCP3008InputChannels inputChannel, int newValue) {
 //         if (inputChannel.equals(channel))
 				{
 					int ch = inputChannel.ch();

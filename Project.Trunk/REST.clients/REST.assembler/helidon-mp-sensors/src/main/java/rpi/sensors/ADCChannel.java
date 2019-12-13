@@ -1,12 +1,12 @@
 package rpi.sensors;
 
-import analogdigitalconverter.mcp3008.MCP3008Reader;
+import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
 
 public class ADCChannel {
 	private int adcChannel =
-			MCP3008Reader.MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
+			MCPReader.MCP3008InputChannels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
 
 	public ADCChannel(int channel) {
 		this(9, 10, 11, 8, channel); // Default. Use BCM numbers
@@ -22,7 +22,7 @@ public class ADCChannel {
 		Pin clkPin = PinUtil.getPinByGPIONumber(clk);
 		Pin csPin = PinUtil.getPinByGPIONumber(cs);
 
-		MCP3008Reader.initMCP3008(misoPin, mosiPin, clkPin, csPin);
+		MCPReader.initMCP(misoPin, mosiPin, clkPin, csPin);
 	}
 
 	public ADCChannel(int miso, int mosi, int clk, int cs, int channel) {
@@ -31,12 +31,12 @@ public class ADCChannel {
 		Pin clkPin = PinUtil.getPinByGPIONumber(clk);
 		Pin csPin = PinUtil.getPinByGPIONumber(cs);
 
-		MCP3008Reader.initMCP3008(misoPin, mosiPin, clkPin, csPin);
+		MCPReader.initMCP(misoPin, mosiPin, clkPin, csPin);
 		this.adcChannel = channel;
 	}
 
 	public int readChannel() {
-		int adc = MCP3008Reader.readMCP3008(this.adcChannel);
+		int adc = MCPReader.readMCP(this.adcChannel);
 		System.out.println(String.format(">> Reading channel %d => %d", adcChannel, adc));
 		return adc; // [0..1023]
 	}
@@ -48,6 +48,6 @@ public class ADCChannel {
 	}
 
 	public void close() {
-		MCP3008Reader.shutdownMCP3008();
+		MCPReader.shutdownMCP();
 	}
 }

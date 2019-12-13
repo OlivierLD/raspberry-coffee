@@ -4,6 +4,7 @@ import adc.ADCContext;
 import adc.ADCListener;
 import adc.ADCObserver;
 import adc.utils.EscapeSeq;
+import analogdigitalconverter.mcp.MCPReader;
 import org.fusesource.jansi.AnsiConsole;
 import utils.StringUtils;
 
@@ -28,7 +29,7 @@ public class SevenADCChannels {
 	private final static NumberFormat DF33 = new DecimalFormat("##0.000");
 	private final static NumberFormat DF4 = new DecimalFormat("###0");
 
-	private static ADCObserver.MCP3008_input_channels channel[] = null;
+	private static MCPReader.MCP3008InputChannels channel[] = null;
 	private final int[] channelValues = new int[]{0, 0, 0, 0, 0, 0, 0};
 	private final int[] channelVolumes = new int[]{0, 0, 0, 0, 0, 0, 0};
 
@@ -46,21 +47,21 @@ public class SevenADCChannels {
 		for (int i = 0; i < smoothedChannel.length; i++)
 			smoothedChannel[i] = new ArrayList<Integer>(WINDOW_WIDTH);
 
-		channel = new ADCObserver.MCP3008_input_channels[]
+		channel = new MCPReader.MCP3008InputChannels[]
 				{
-						ADCObserver.MCP3008_input_channels.CH0,
-						ADCObserver.MCP3008_input_channels.CH1,
-						ADCObserver.MCP3008_input_channels.CH2,
-						ADCObserver.MCP3008_input_channels.CH3,
-						ADCObserver.MCP3008_input_channels.CH4,
-						ADCObserver.MCP3008_input_channels.CH5,
-						ADCObserver.MCP3008_input_channels.CH6
+						MCPReader.MCP3008InputChannels.CH0,
+						MCPReader.MCP3008InputChannels.CH1,
+						MCPReader.MCP3008InputChannels.CH2,
+						MCPReader.MCP3008InputChannels.CH3,
+						MCPReader.MCP3008InputChannels.CH4,
+						MCPReader.MCP3008InputChannels.CH5,
+						MCPReader.MCP3008InputChannels.CH6
 				};
 		obs = new ADCObserver(channel);
 
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
-			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
+			public void valueUpdated(MCPReader.MCP3008InputChannels inputChannel, int newValue) {
 //         if (inputChannel.equals(channel))
 				{
 					int ch = inputChannel.ch();

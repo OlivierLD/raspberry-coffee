@@ -1,6 +1,6 @@
 package sensors;
 
-import analogdigitalconverter.mcp3008.MCP3008Reader;
+import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
 import utils.StringUtils;
@@ -15,7 +15,7 @@ public class MainMCP3008Sample33 {
 	private final static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
 	private static boolean go = true;
 	private static int adcChannel =
-			MCP3008Reader.MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
+			MCPReader.MCP3008InputChannels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
 
 	private static final String MISO_PRM_PREFIX = "--miso:";
 	private static final String MOSI_PRM_PREFIX = "--mosi:";
@@ -149,7 +149,7 @@ public class MainMCP3008Sample33 {
 
 		PinUtil.print(map);
 
-		MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
+		MCPReader.initMCP(miso, mosi, clk, cs);
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("\nShutting down.");
@@ -165,7 +165,7 @@ public class MainMCP3008Sample33 {
 		// Reading loop
 		while (go) {
 			//	System.out.println("Reading channel " + adcChannel);
-			int adc = MCP3008Reader.readMCP3008(adcChannel);
+			int adc = MCPReader.readMCP(adcChannel);
 			//	System.out.println(String.format("From ch %d: %d", adcChannel, adc));
 			int postAdjust = Math.abs(adc - lastRead);
 			if (first || postAdjust > tolerance) {
@@ -191,6 +191,6 @@ public class MainMCP3008Sample33 {
 			}
 		}
 		System.out.println("Bye, freeing resources.");
-		MCP3008Reader.shutdownMCP3008();
+		MCPReader.shutdownMCP();
 	}
 }

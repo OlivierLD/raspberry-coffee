@@ -1,6 +1,6 @@
 package sensors.sparkfunsoilhumiditysensor;
 
-import analogdigitalconverter.mcp3008.MCP3008Reader;
+import analogdigitalconverter.mcp.MCPReader;
 import main.MCP3008;
 import utils.PinUtil;
 
@@ -30,7 +30,7 @@ public class MCP3008Wrapper {
 		instance.channel = channel;
 		instance.debug = debug;
 		try {
-			MCP3008Reader.initMCP3008(
+			MCPReader.initMCP(
 					PinUtil.getPinByGPIONumber(misoPin),
 					PinUtil.getPinByGPIONumber(mosiPin),
 					PinUtil.getPinByGPIONumber(clkPin),
@@ -49,7 +49,7 @@ public class MCP3008Wrapper {
 
 	public void shutdown() {
 		if (!this.isSimulating()) {
-			MCP3008Reader.shutdownMCP3008();
+			MCPReader.shutdownMCP();
 		}
 	}
 
@@ -65,7 +65,7 @@ public class MCP3008Wrapper {
 
 		int volume = 0;
 		//	System.out.println("Reading channel " + adcChannel);
-		int adc = MCP3008Reader.readMCP3008(channel);
+		int adc = MCPReader.readMCP(channel);
 		//	System.out.println(String.format("From ch %d: %d", adcChannel, adc));
 		volume = (int)(adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 		if (debug) {

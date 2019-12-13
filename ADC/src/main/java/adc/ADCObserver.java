@@ -1,5 +1,6 @@
 package adc;
 
+import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
@@ -27,28 +28,7 @@ public class ADCObserver {
 
 	private Thread parentToNotify = null;
 
-	public static enum MCP3008_input_channels {
-		CH0(0),
-		CH1(1),
-		CH2(2),
-		CH3(3),
-		CH4(4),
-		CH5(5),
-		CH6(6),
-		CH7(7);
-
-		private int ch;
-
-		MCP3008_input_channels(int chNum) {
-			this.ch = chNum;
-		}
-
-		public int ch() {
-			return this.ch;
-		}
-	}
-
-	private MCP3008_input_channels[] adcChannel; // Between 0 and 7, 8 channels on the MCP3008
+	private MCPReader.MCP3008InputChannels[] adcChannel; // Between 0 and 7, 8 channels on the MCP3008
 
 	private static GpioPinDigitalInput misoInput = null;
 	private static GpioPinDigitalOutput mosiOutput = null;
@@ -61,19 +41,19 @@ public class ADCObserver {
 		super();
 	}
 
-	public ADCObserver(MCP3008_input_channels channel) {
-		this(new MCP3008_input_channels[]{channel});
+	public ADCObserver(MCPReader.MCP3008InputChannels channel) {
+		this(new MCPReader.MCP3008InputChannels[]{channel});
 	}
 
-	public ADCObserver(MCP3008_input_channels channel, Pin clk, Pin miso, Pin mosi, Pin cs) {
-		this(new MCP3008_input_channels[]{channel}, clk, miso, mosi, cs);
+	public ADCObserver(MCPReader.MCP3008InputChannels channel, Pin clk, Pin miso, Pin mosi, Pin cs) {
+		this(new MCPReader.MCP3008InputChannels[]{channel}, clk, miso, mosi, cs);
 	}
 
-	public ADCObserver(MCP3008_input_channels[] channel) {
+	public ADCObserver(MCPReader.MCP3008InputChannels[] channel) {
 		adcChannel = channel;
 	}
 
-	public ADCObserver(MCP3008_input_channels[] channel, Pin clk, Pin miso, Pin mosi, Pin cs) {
+	public ADCObserver(MCPReader.MCP3008InputChannels[] channel, Pin clk, Pin miso, Pin mosi, Pin cs) {
 		adcChannel = channel;
 		spiClk = clk;
 		spiMiso = miso;
@@ -154,7 +134,7 @@ public class ADCObserver {
 		parentToNotify = toNotify;
 	}
 
-	private int readAdc(MCP3008_input_channels channel) {
+	private int readAdc(MCPReader.MCP3008InputChannels channel) {
 		chipSelectOutput.high();
 
 		clockOutput.low();

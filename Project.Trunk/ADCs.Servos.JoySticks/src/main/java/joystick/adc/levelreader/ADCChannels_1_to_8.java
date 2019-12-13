@@ -4,6 +4,7 @@ import adc.ADCContext;
 import adc.ADCListener;
 import adc.ADCObserver;
 import adc.utils.EscapeSeq;
+import analogdigitalconverter.mcp.MCPReader;
 import org.fusesource.jansi.AnsiConsole;
 import joystick.adc.levelreader.samples.LevelListenerInterface;
 import utils.StringUtils;
@@ -18,7 +19,7 @@ public class ADCChannels_1_to_8 {
 	private final static NumberFormat DF3 = new DecimalFormat("##0");
 	private final static NumberFormat DF4 = new DecimalFormat("###0");
 
-	private static ADCObserver.MCP3008_input_channels channel[] = null;
+	private static MCPReader.MCP3008InputChannels channel[] = null;
 	private final int[] channelValues;
 	private final int[] channelVolumes;
 
@@ -26,7 +27,7 @@ public class ADCChannels_1_to_8 {
 
 	private final ADCObserver obs;
 
-	public ADCChannels_1_to_8(ADCObserver.MCP3008_input_channels[] ADCInput, final LevelListenerInterface lli) throws Exception {
+	public ADCChannels_1_to_8(MCPReader.MCP3008InputChannels[] ADCInput, final LevelListenerInterface lli) throws Exception {
 		channel = ADCInput;
 		System.out.println("Reading " + channel.length + " ADC Channel(s).");
 		obs = new ADCObserver(channel);
@@ -37,7 +38,7 @@ public class ADCChannels_1_to_8 {
 
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
-			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
+			public void valueUpdated(MCPReader.MCP3008InputChannels inputChannel, int newValue) {
 				int ch = inputChannel.ch();
 				int volume = (int) (newValue / 10.23);
 				channelValues[ch] = newValue;
@@ -120,15 +121,15 @@ public class ADCChannels_1_to_8 {
 		/**
 		 * This is the list of the channels to listen to.
 		 */
-		ADCObserver.MCP3008_input_channels[] listening2 = new ADCObserver.MCP3008_input_channels[]
+		MCPReader.MCP3008InputChannels[] listening2 = new MCPReader.MCP3008InputChannels[]
 				{
-						ADCObserver.MCP3008_input_channels.CH0,
-						ADCObserver.MCP3008_input_channels.CH1,
-						ADCObserver.MCP3008_input_channels.CH2,
-						ADCObserver.MCP3008_input_channels.CH3,
-						ADCObserver.MCP3008_input_channels.CH4,
-						ADCObserver.MCP3008_input_channels.CH5,
-						ADCObserver.MCP3008_input_channels.CH6
+						MCPReader.MCP3008InputChannels.CH0,
+						MCPReader.MCP3008InputChannels.CH1,
+						MCPReader.MCP3008InputChannels.CH2,
+						MCPReader.MCP3008InputChannels.CH3,
+						MCPReader.MCP3008InputChannels.CH4,
+						MCPReader.MCP3008InputChannels.CH5,
+						MCPReader.MCP3008InputChannels.CH6
 				};
 
 		final ADCChannels_1_to_8 sac = new ADCChannels_1_to_8(listening2, null);

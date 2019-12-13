@@ -1,6 +1,6 @@
 package joystick.adc.levelreader.samples;
 
-import adc.ADCObserver;
+import analogdigitalconverter.mcp.MCPReader;
 import i2c.sensor.BMP180;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -122,15 +122,15 @@ public class LevelAndTemperature implements LevelListenerInterface {
 		/**
 		 * This is the list of the ADC channels to listen to.
 		 */
-		ADCObserver.MCP3008_input_channels[] listening2 = new ADCObserver.MCP3008_input_channels[]
+		MCPReader.MCP3008InputChannels[] listening2 = new MCPReader.MCP3008InputChannels[]
 				{
-						ADCObserver.MCP3008_input_channels.CH0,
-						ADCObserver.MCP3008_input_channels.CH1,
-						ADCObserver.MCP3008_input_channels.CH2,
-						ADCObserver.MCP3008_input_channels.CH3,
-						ADCObserver.MCP3008_input_channels.CH4,
-						ADCObserver.MCP3008_input_channels.CH5,
-						ADCObserver.MCP3008_input_channels.CH6
+						MCPReader.MCP3008InputChannels.CH0,
+						MCPReader.MCP3008InputChannels.CH1,
+						MCPReader.MCP3008InputChannels.CH2,
+						MCPReader.MCP3008InputChannels.CH3,
+						MCPReader.MCP3008InputChannels.CH4,
+						MCPReader.MCP3008InputChannels.CH5,
+						MCPReader.MCP3008InputChannels.CH6
 				};
 
 		final ADCChannels_1_to_8 sac = new ADCChannels_1_to_8(listening2, lat);

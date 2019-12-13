@@ -1,6 +1,6 @@
 package rpi.sensors;
 
-import analogdigitalconverter.mcp3008.MCP3008Reader;
+import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
 
@@ -8,7 +8,7 @@ public class ADCChannel {
 
 	private static boolean simulating = false;
 
-	private static int DEFAULT_CHANNEL = MCP3008Reader.MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
+	private static int DEFAULT_CHANNEL = MCPReader.MCP3008InputChannels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
 	private int adcChannel = DEFAULT_CHANNEL;
 
 	public ADCChannel(int channel) {
@@ -30,7 +30,7 @@ public class ADCChannel {
 		Pin csPin = PinUtil.getPinByGPIONumber(cs);
 
 		try {
-			MCP3008Reader.initMCP3008(misoPin, mosiPin, clkPin, csPin);
+			MCPReader.initMCP(misoPin, mosiPin, clkPin, csPin);
 		} catch (Throwable error) {
 			System.out.println("Will simulate the ADC...");
 			simulating = true;
@@ -41,7 +41,7 @@ public class ADCChannel {
 	public int readChannel() {
 		int adc = 0;
 		if (!simulating) {
-			adc = MCP3008Reader.readMCP3008(this.adcChannel);
+			adc = MCPReader.readMCP(this.adcChannel);
 		} else {
 			adc = (int)Math.round(1024 * Math.random());
 		}
@@ -57,7 +57,7 @@ public class ADCChannel {
 
 	public static void close() {
 		if (!simulating) {
-			MCP3008Reader.shutdownMCP3008();
+			MCPReader.shutdownMCP();
 		}
 	}
 }

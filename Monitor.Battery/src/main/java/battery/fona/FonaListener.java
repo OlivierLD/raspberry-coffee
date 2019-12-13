@@ -1,7 +1,7 @@
 package battery.fona;
 
-import adc.ADCObserver;
 import adc.sample.BatteryMonitor;
+import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialPortException;
 import fona.pi4jmanager.FONAClient;
@@ -61,7 +61,7 @@ public class FonaListener implements FONAClient {
 				if (verbose) {
 					System.out.println("Creating BatteryMonitor...");
 				}
-				BatteryMonitor batteryMonitor = new BatteryMonitor(ADCObserver.MCP3008_input_channels.CH0.ch(), fonaListener::consumer);
+				BatteryMonitor batteryMonitor = new BatteryMonitor(MCPReader.MCP3008InputChannels.CH0.ch(), fonaListener::consumer);
 				fonaListener.setBatteryMonitor(batteryMonitor);
 				if (verbose) {
 					System.out.println("Creating BatteryMonitor: done");

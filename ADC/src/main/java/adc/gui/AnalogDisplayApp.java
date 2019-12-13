@@ -1,6 +1,7 @@
 package adc.gui;
 
 import adc.ADCObserver;
+import analogdigitalconverter.mcp.MCPReader;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -13,7 +14,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 public class AnalogDisplayApp {
-	private ADCObserver.MCP3008_input_channels channel = null;
+	private MCPReader.MCP3008InputChannels channel = null;
 	private final ADCObserver obs;
 
 	public AnalogDisplayApp(int ch) {
@@ -71,32 +72,32 @@ public class AnalogDisplayApp {
 			obs.stop();
 	}
 
-	private static ADCObserver.MCP3008_input_channels findChannel(int ch) throws IllegalArgumentException {
-		ADCObserver.MCP3008_input_channels channel = null;
+	private static MCPReader.MCP3008InputChannels findChannel(int ch) throws IllegalArgumentException {
+		MCPReader.MCP3008InputChannels channel = null;
 		switch (ch) {
 			case 0:
-				channel = ADCObserver.MCP3008_input_channels.CH0;
+				channel = MCPReader.MCP3008InputChannels.CH0;
 				break;
 			case 1:
-				channel = ADCObserver.MCP3008_input_channels.CH1;
+				channel = MCPReader.MCP3008InputChannels.CH1;
 				break;
 			case 2:
-				channel = ADCObserver.MCP3008_input_channels.CH2;
+				channel = MCPReader.MCP3008InputChannels.CH2;
 				break;
 			case 3:
-				channel = ADCObserver.MCP3008_input_channels.CH3;
+				channel = MCPReader.MCP3008InputChannels.CH3;
 				break;
 			case 4:
-				channel = ADCObserver.MCP3008_input_channels.CH4;
+				channel = MCPReader.MCP3008InputChannels.CH4;
 				break;
 			case 5:
-				channel = ADCObserver.MCP3008_input_channels.CH5;
+				channel = MCPReader.MCP3008InputChannels.CH5;
 				break;
 			case 6:
-				channel = ADCObserver.MCP3008_input_channels.CH6;
+				channel = MCPReader.MCP3008InputChannels.CH6;
 				break;
 			case 7:
-				channel = ADCObserver.MCP3008_input_channels.CH7;
+				channel = MCPReader.MCP3008InputChannels.CH7;
 				break;
 			default:
 				throw new IllegalArgumentException("No channel " + Integer.toString(ch));

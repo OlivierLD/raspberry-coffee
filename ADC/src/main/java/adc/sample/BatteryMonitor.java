@@ -15,6 +15,7 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.function.Consumer;
 
+import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
 import utils.StringUtils;
@@ -23,7 +24,7 @@ public class BatteryMonitor {
 	private static boolean debug = false;
 	private static boolean calib = false;
 	private static boolean simulate = false;
- 	private ADCObserver.MCP3008_input_channels channel = null;
+ 	private MCPReader.MCP3008InputChannels channel = null;
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	private final static TimeZone HERE = TimeZone.getTimeZone("America/Los_Angeles");
 
@@ -131,7 +132,7 @@ public class BatteryMonitor {
 		}
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
-			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
+			public void valueUpdated(MCPReader.MCP3008InputChannels inputChannel, int newValue) {
 				if (inputChannel.equals(channel)) {
 					long now = System.currentTimeMillis();
 					if (calib || Math.abs(now - lastLogTimeStamp) > 1_000) {
@@ -433,32 +434,32 @@ public class BatteryMonitor {
 		}
 	}
 
-	private static ADCObserver.MCP3008_input_channels findChannel(int ch) throws IllegalArgumentException {
-		ADCObserver.MCP3008_input_channels channel = null;
+	private static MCPReader.MCP3008InputChannels findChannel(int ch) throws IllegalArgumentException {
+		MCPReader.MCP3008InputChannels channel = null;
 		switch (ch) {
 			case 0:
-				channel = ADCObserver.MCP3008_input_channels.CH0;
+				channel = MCPReader.MCP3008InputChannels.CH0;
 				break;
 			case 1:
-				channel = ADCObserver.MCP3008_input_channels.CH1;
+				channel = MCPReader.MCP3008InputChannels.CH1;
 				break;
 			case 2:
-				channel = ADCObserver.MCP3008_input_channels.CH2;
+				channel = MCPReader.MCP3008InputChannels.CH2;
 				break;
 			case 3:
-				channel = ADCObserver.MCP3008_input_channels.CH3;
+				channel = MCPReader.MCP3008InputChannels.CH3;
 				break;
 			case 4:
-				channel = ADCObserver.MCP3008_input_channels.CH4;
+				channel = MCPReader.MCP3008InputChannels.CH4;
 				break;
 			case 5:
-				channel = ADCObserver.MCP3008_input_channels.CH5;
+				channel = MCPReader.MCP3008InputChannels.CH5;
 				break;
 			case 6:
-				channel = ADCObserver.MCP3008_input_channels.CH6;
+				channel = MCPReader.MCP3008InputChannels.CH6;
 				break;
 			case 7:
-				channel = ADCObserver.MCP3008_input_channels.CH7;
+				channel = MCPReader.MCP3008InputChannels.CH7;
 				break;
 			default:
 				throw new IllegalArgumentException("No channel " + Integer.toString(ch));

@@ -3,6 +3,7 @@ package joystick.adc;
 import adc.ADCContext;
 import adc.ADCListener;
 import adc.ADCObserver;
+import analogdigitalconverter.mcp.MCPReader;
 
 /**
  * A two-channel listener. Uses an MCP3008 to get the values of the 2 joystick's channels.
@@ -11,7 +12,7 @@ import adc.ADCObserver;
  * Wiring at http://raspberrypi.lediouris.net/joystick/readme.html
  */
 public class TwoJoyStick {
-	private static ADCObserver.MCP3008_input_channels channel[] = null;
+	private static MCPReader.MCP3008InputChannels channel[] = null;
 	private final int[] channelValues = new int[]{0, 0, 0, 0}; // (0..100)
 
 	private TwoJoyStickClient joyStickClient = null;
@@ -27,17 +28,17 @@ public class TwoJoyStick {
 		System.out.println(">> Channel MCP3008 #3: Left-Right, 2");
 
 		joyStickClient = jsc;
-		channel = new ADCObserver.MCP3008_input_channels[] {
-										ADCObserver.MCP3008_input_channels.CH0, // UD, Joystick One
-										ADCObserver.MCP3008_input_channels.CH1, // LR, Joystick One
-										ADCObserver.MCP3008_input_channels.CH2, // UD, Joystick Two
-										ADCObserver.MCP3008_input_channels.CH3  // LR, Joystick Two
+		channel = new MCPReader.MCP3008InputChannels[] {
+										MCPReader.MCP3008InputChannels.CH0, // UD, Joystick One
+										MCPReader.MCP3008InputChannels.CH1, // LR, Joystick One
+										MCPReader.MCP3008InputChannels.CH2, // UD, Joystick Two
+										MCPReader.MCP3008InputChannels.CH3  // LR, Joystick Two
 						};
 		final ADCObserver obs = new ADCObserver(channel);
 
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
-			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
+			public void valueUpdated(MCPReader.MCP3008InputChannels inputChannel, int newValue) {
 				int ch = getChannelIndex(channel, inputChannel.ch());
 				int volume = (int) (newValue / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 				if ("true".equals(System.getProperty("joystick.verbose", "false"))) {
@@ -73,7 +74,7 @@ public class TwoJoyStick {
 		}
 	}
 
-	private static int getChannelIndex(ADCObserver.MCP3008_input_channels[] channelArray, int channel) {
+	private static int getChannelIndex(MCPReader.MCP3008InputChannels[] channelArray, int channel) {
 		int idx = -1;
 		for (int i=0; i<channelArray.length; i++) {
 			if (channelArray[i].ch() == channel) {

@@ -1,5 +1,7 @@
 package adc;
 
+import analogdigitalconverter.mcp.MCPReader;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class ADCContext {
 		return this.listeners;
 	}
 
-	public void fireValueChanged(ADCObserver.MCP3008_input_channels channel, int newValue) {
+	public void fireValueChanged(MCPReader.MCP3008InputChannels channel, int newValue) {
 		for (ADCListener listener : listeners) {
 			listener.valueUpdated(channel, newValue);
 		}

@@ -3,6 +3,7 @@ package adc.sample;
 import adc.ADCContext;
 import adc.ADCListener;
 import adc.ADCObserver;
+import analogdigitalconverter.mcp.MCPReader;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -21,7 +22,7 @@ import java.util.TimeZone;
  */
 public class AnalogTemperatureSensorReader {
 	private static boolean debug = false;
-	private ADCObserver.MCP3008_input_channels channel = null;
+	private MCPReader.MCP3008InputChannels channel = null;
 	private final static NumberFormat NF = new DecimalFormat("00.00");
 
 	private static ADCObserver obs;
@@ -31,7 +32,7 @@ public class AnalogTemperatureSensorReader {
 		obs = new ADCObserver(channel);
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
-			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
+			public void valueUpdated(MCPReader.MCP3008InputChannels inputChannel, int newValue) {
 				if (inputChannel.equals(channel)) {
 					// Logic here
 					// We use the 3V3 pin for the input.
@@ -84,32 +85,32 @@ public class AnalogTemperatureSensorReader {
 		new AnalogTemperatureSensorReader(channel);
 	}
 
-	private static ADCObserver.MCP3008_input_channels findChannel(int ch) throws IllegalArgumentException {
-		ADCObserver.MCP3008_input_channels channel = null;
+	private static MCPReader.MCP3008InputChannels findChannel(int ch) throws IllegalArgumentException {
+		MCPReader.MCP3008InputChannels channel = null;
 		switch (ch) {
 			case 0:
-				channel = ADCObserver.MCP3008_input_channels.CH0;
+				channel = MCPReader.MCP3008InputChannels.CH0;
 				break;
 			case 1:
-				channel = ADCObserver.MCP3008_input_channels.CH1;
+				channel = MCPReader.MCP3008InputChannels.CH1;
 				break;
 			case 2:
-				channel = ADCObserver.MCP3008_input_channels.CH2;
+				channel = MCPReader.MCP3008InputChannels.CH2;
 				break;
 			case 3:
-				channel = ADCObserver.MCP3008_input_channels.CH3;
+				channel = MCPReader.MCP3008InputChannels.CH3;
 				break;
 			case 4:
-				channel = ADCObserver.MCP3008_input_channels.CH4;
+				channel = MCPReader.MCP3008InputChannels.CH4;
 				break;
 			case 5:
-				channel = ADCObserver.MCP3008_input_channels.CH5;
+				channel = MCPReader.MCP3008InputChannels.CH5;
 				break;
 			case 6:
-				channel = ADCObserver.MCP3008_input_channels.CH6;
+				channel = MCPReader.MCP3008InputChannels.CH6;
 				break;
 			case 7:
-				channel = ADCObserver.MCP3008_input_channels.CH7;
+				channel = MCPReader.MCP3008InputChannels.CH7;
 				break;
 			default:
 				throw new IllegalArgumentException("No channel " + Integer.toString(ch));

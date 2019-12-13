@@ -25,7 +25,7 @@ Could not resolve all files for configuration ':Project.Trunk:REST.clients:REST.
 then you need to `install` (Maven) the dependencies in your local Maven repo.
 For example, in the case of the error above, you do:
 ```
-$ cd .../RMI.sample
+$ cd ../RMI.sample
 $ ../gradlew install
 ```
 Same for all the dependency errors you would see.

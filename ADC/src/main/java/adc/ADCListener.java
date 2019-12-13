@@ -1,6 +1,8 @@
 package adc;
 
+import analogdigitalconverter.mcp.MCPReader;
+
 public class ADCListener {
-	public void valueUpdated(ADCObserver.MCP3008_input_channels channel, int newValue) {
+	public void valueUpdated(MCPReader.MCP3008InputChannels channel, int newValue) {
 	}
 }

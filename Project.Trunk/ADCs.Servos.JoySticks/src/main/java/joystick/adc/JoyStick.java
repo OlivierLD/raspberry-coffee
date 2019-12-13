@@ -3,6 +3,7 @@ package joystick.adc;
 import adc.ADCContext;
 import adc.ADCListener;
 import adc.ADCObserver;
+import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
 
@@ -19,7 +20,7 @@ public class JoyStick {
 	private static Pin defaultClk  = PinUtil.GPIOPin.GPIO_14.pin();
 	private static Pin defaultCs   = PinUtil.GPIOPin.GPIO_10.pin();
 
-	private static ADCObserver.MCP3008_input_channels channel[] = null;
+	private static MCPReader.MCP3008InputChannels channel[] = null;
 	private final int[] channelValues = new int[]{0, 0}; // (0..100)
 
 	private JoyStickClient joyStickClient = null;
@@ -30,15 +31,15 @@ public class JoyStick {
 	}
 	public JoyStick(JoyStickClient jsc, boolean withHook) throws Exception {
 		this(jsc,
-				ADCObserver.MCP3008_input_channels.CH0,
-				ADCObserver.MCP3008_input_channels.CH1,
+				MCPReader.MCP3008InputChannels.CH0,
+				MCPReader.MCP3008InputChannels.CH1,
 				defaultClk,
 				defaultMiso,
 				defaultMosi,
 				defaultCs,
 				withHook);
 	}
-	public JoyStick(JoyStickClient jsc, ADCObserver.MCP3008_input_channels ud, ADCObserver.MCP3008_input_channels lr) throws Exception {
+	public JoyStick(JoyStickClient jsc, MCPReader.MCP3008InputChannels ud, MCPReader.MCP3008InputChannels lr) throws Exception {
 		this(jsc,
 				ud,
 				lr,
@@ -49,8 +50,8 @@ public class JoyStick {
 				true);
 	}
 	public JoyStick(JoyStickClient jsc,
-	                ADCObserver.MCP3008_input_channels ud,
-	                ADCObserver.MCP3008_input_channels lr,
+	                MCPReader.MCP3008InputChannels ud,
+	                MCPReader.MCP3008InputChannels lr,
 	                Pin clk,
 	                Pin miso,
 	                Pin mosi,
@@ -60,12 +61,12 @@ public class JoyStick {
 		System.out.println(String.format(">> Channel MCP3008 #%s: Left-Right", lr.toString()));
 
 		joyStickClient = jsc;
-		channel = new ADCObserver.MCP3008_input_channels[] { ud, lr };
+		channel = new MCPReader.MCP3008InputChannels[] { ud, lr };
 		final ADCObserver obs = new ADCObserver(channel, clk, miso, mosi, cs);
 
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
-			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
+			public void valueUpdated(MCPReader.MCP3008InputChannels inputChannel, int newValue) {
 				int ch = inputChannel.ch();
 				int volume = (int) (newValue / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 				if ("true".equals(System.getProperty("joystick.verbose", "false")))

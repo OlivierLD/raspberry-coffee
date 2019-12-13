@@ -5,13 +5,9 @@ import adc.ADCObserver;
 
 import adc.levelreader.main.LelandPrototype;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-
 import java.net.URI;
 
-import java.util.Properties;
-
+import analogdigitalconverter.mcp.MCPReader;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -25,18 +21,18 @@ import org.json.JSONObject;
 public class ADCObserverSimulator
   extends ADCObserver
 {
-  private static ADCObserver.MCP3008_input_channels[] adcChannel;
+  private static MCPReader.MCP3008InputChannels[] adcChannel;
   private static WebSocketClient webSocketClient = null;
-  
+
   private static int currentWaterLevel = -1,
                      currentOilLevel   = -1;
-  
+
   public ADCObserverSimulator()
   {
     super();
   }
-  
-  public ADCObserverSimulator(ADCObserver.MCP3008_input_channels[] mcp3008InputChannels)
+
+  public ADCObserverSimulator(MCPReader.MCP3008InputChannels[] mcp3008InputChannels)
   {
     super(mcp3008InputChannels);
     adcChannel = mcp3008InputChannels;
@@ -49,12 +45,12 @@ public class ADCObserverSimulator
     currentWaterLevel = wl;
     currentOilLevel   = ol;
   }
-  
+
   private void simulateADCRead()
   {
     int wl = currentWaterLevel;
     int ol = currentOilLevel;
-    
+
     for (int chan = 0; chan <= wl; chan++)
     {
 //    System.out.println("   -- Channel " + chan + " : Water");
@@ -74,7 +70,7 @@ public class ADCObserverSimulator
  //   try { Thread.sleep(100); } catch (InterruptedException ie) {}
     }
   }
-  
+
   private static void initWebSocketConnection(String serverURI)
   {
     try
@@ -130,12 +126,12 @@ public class ADCObserverSimulator
           LelandPrototype.displayAppMess("WS On Error");
   //      exception.printStackTrace();
         }
-      }; 
+      };
     }
     catch (Exception ex)
     {
       ex.printStackTrace();
-    }    
+    }
   }
 
   @Override

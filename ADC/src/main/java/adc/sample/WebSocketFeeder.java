@@ -6,6 +6,7 @@ import adc.ADCObserver;
 
 import java.net.URI;
 
+import analogdigitalconverter.mcp.MCPReader;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
@@ -14,7 +15,7 @@ import static utils.StringUtils.lpad;
 
 public class WebSocketFeeder {
 	private final static boolean DEBUG = false;
-	private ADCObserver.MCP3008_input_channels channel = null;
+	private MCPReader.MCP3008InputChannels channel = null;
 	private boolean keepWorking = true;
 	private WebSocketClient webSocketClient = null;
 
@@ -26,7 +27,7 @@ public class WebSocketFeeder {
 		final ADCObserver obs = new ADCObserver(channel); // Note: We could instantiate more than one observer (on several channels).
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
-			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
+			public void valueUpdated(MCPReader.MCP3008InputChannels inputChannel, int newValue) {
 				if (inputChannel.equals(channel)) {
 					int volume = (int) (newValue / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 					if (DEBUG) {
@@ -177,32 +178,32 @@ public class WebSocketFeeder {
 		new WebSocketFeeder(channel);
 	}
 
-	private static ADCObserver.MCP3008_input_channels findChannel(int ch) throws IllegalArgumentException {
-		ADCObserver.MCP3008_input_channels channel = null;
+	private static MCPReader.MCP3008InputChannels findChannel(int ch) throws IllegalArgumentException {
+		MCPReader.MCP3008InputChannels channel = null;
 		switch (ch) {
 			case 0:
-				channel = ADCObserver.MCP3008_input_channels.CH0;
+				channel = MCPReader.MCP3008InputChannels.CH0;
 				break;
 			case 1:
-				channel = ADCObserver.MCP3008_input_channels.CH1;
+				channel = MCPReader.MCP3008InputChannels.CH1;
 				break;
 			case 2:
-				channel = ADCObserver.MCP3008_input_channels.CH2;
+				channel = MCPReader.MCP3008InputChannels.CH2;
 				break;
 			case 3:
-				channel = ADCObserver.MCP3008_input_channels.CH3;
+				channel = MCPReader.MCP3008InputChannels.CH3;
 				break;
 			case 4:
-				channel = ADCObserver.MCP3008_input_channels.CH4;
+				channel = MCPReader.MCP3008InputChannels.CH4;
 				break;
 			case 5:
-				channel = ADCObserver.MCP3008_input_channels.CH5;
+				channel = MCPReader.MCP3008InputChannels.CH5;
 				break;
 			case 6:
-				channel = ADCObserver.MCP3008_input_channels.CH6;
+				channel = MCPReader.MCP3008InputChannels.CH6;
 				break;
 			case 7:
-				channel = ADCObserver.MCP3008_input_channels.CH7;
+				channel = MCPReader.MCP3008InputChannels.CH7;
 				break;
 			default:
 				throw new IllegalArgumentException("No channel " + Integer.toString(ch));

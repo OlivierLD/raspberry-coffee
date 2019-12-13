@@ -1,6 +1,6 @@
 package servo;
 
-import analogdigitalconverter.mcp3008.MCP3008Reader;
+import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.PCA9685;
 import utils.StringUtils;
@@ -14,7 +14,7 @@ import static utils.TimeUtil.delay;
 public class StandardFeedbackServo {
 
 	private static int ADC_CHANNEL =
-					MCP3008Reader.MCP3008_input_channels.CH1.ch(); // Between 0 and 7, 8 channels on the MCP3008
+					MCPReader.MCP3008InputChannels.CH1.ch(); // Between 0 and 7, 8 channels on the MCP3008
 
 	private static boolean go = true;
 
@@ -107,7 +107,7 @@ public class StandardFeedbackServo {
 		StandardFeedbackServo ss = new StandardFeedbackServo(channel);
 		ss.setAngle(0); // Set to 0
 
-		MCP3008Reader.initMCP3008();
+		MCPReader.initMCP();
 
 		// Read the ADC in a thread
 		Thread adcReader = new Thread(() -> {
@@ -115,7 +115,7 @@ public class StandardFeedbackServo {
 			int tolerance = 10;
 
 			while (go) {
-				int adc = MCP3008Reader.readMCP3008(ADC_CHANNEL);
+				int adc = MCPReader.readMCP(ADC_CHANNEL);
 				int diffAdc = Math.abs(adc - prevAdc);
 				if (diffAdc > tolerance) {
 					System.out.println(String.format(">>  (diff:%d, prev=%04d) adc: %04d (0x%s, 0&%s) => Deg:%+03d\272",
@@ -136,7 +136,7 @@ public class StandardFeedbackServo {
 				ie.printStackTrace();
 			}
 			System.out.println("Bye, freeing resources.");
-			MCP3008Reader.shutdownMCP3008();
+			MCPReader.shutdownMCP();
 		});
 		adcReader.start();
 

@@ -1,14 +1,10 @@
 package battery.rest;
 
 import adafruit.io.rest.HttpClient;
-import adc.ADCObserver;
 import adc.sample.BatteryMonitor;
+import analogdigitalconverter.mcp.MCPReader;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,7 +74,7 @@ public class PostVoltage {
 					if (DEBUG) {
 						System.out.println("Creating BatteryMonitor...");
 					}
-					BatteryMonitor batteryMonitor = new BatteryMonitor(ADCObserver.MCP3008_input_channels.CH0.ch(), postVoltage::consumer);
+					BatteryMonitor batteryMonitor = new BatteryMonitor(MCPReader.MCP3008InputChannels.CH0.ch(), postVoltage::consumer);
 					postVoltage.setBatteryMonitor(batteryMonitor);
 					if (DEBUG) {
 						System.out.println("Creating BatteryMonitor: done");

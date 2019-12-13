@@ -1,6 +1,5 @@
 package battery.ws;
 
-import adc.ADCObserver;
 import adc.sample.BatteryMonitor;
 
 import java.nio.channels.NotYetConnectedException;
@@ -9,6 +8,7 @@ import java.text.NumberFormat;
 
 import java.net.URI;
 
+import analogdigitalconverter.mcp.MCPReader;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
@@ -132,7 +132,7 @@ public class WSPublisher {
 				if (verbose) {
 					System.out.println("Creating BatteryMonitor...");
 				}
-				BatteryMonitor batteryMonitor = new BatteryMonitor(ADCObserver.MCP3008_input_channels.CH0.ch(), publisher::consumer);
+				BatteryMonitor batteryMonitor = new BatteryMonitor(MCPReader.MCP3008InputChannels.CH0.ch(), publisher::consumer);
 				publisher.setBatteryMonitor(batteryMonitor);
 				if (verbose) {
 					System.out.println("Creating BatteryMonitor: done");

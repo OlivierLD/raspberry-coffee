@@ -1,7 +1,7 @@
 package battery.mqtt.pub;
 
-import adc.ADCObserver;
 import adc.sample.BatteryMonitor;
+import analogdigitalconverter.mcp.MCPReader;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -135,7 +135,7 @@ public class AIOPublisher {
 				if (verbose) {
 					System.out.println("Creating BatteryMonitor...");
 				}
-				BatteryMonitor batteryMonitor = new BatteryMonitor(ADCObserver.MCP3008_input_channels.CH0.ch(), publisher::consumer);
+				BatteryMonitor batteryMonitor = new BatteryMonitor(MCPReader.MCP3008InputChannels.CH0.ch(), publisher::consumer);
 				publisher.setBatteryMonitor(batteryMonitor);
 				if (verbose) {
 					System.out.println("Creating BatteryMonitor: done");

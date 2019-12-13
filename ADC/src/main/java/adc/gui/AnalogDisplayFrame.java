@@ -1,6 +1,6 @@
 package adc.gui;
 
-import adc.ADCObserver;
+import analogdigitalconverter.mcp.MCPReader;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -20,7 +20,7 @@ public class AnalogDisplayFrame
 	private AnalogDisplayPanel displayPanel = null;
 	private transient AnalogDisplayApp caller;
 
-	public AnalogDisplayFrame(ADCObserver.MCP3008_input_channels channel, AnalogDisplayApp parent) {
+	public AnalogDisplayFrame(MCPReader.MCP3008InputChannels channel, AnalogDisplayApp parent) {
 		this.caller = parent;
 		displayPanel = new AnalogDisplayPanel(channel, 100);
 		try {

@@ -1,7 +1,7 @@
 package battery.email;
 
-import adc.ADCObserver;
 import adc.sample.BatteryMonitor;
+import analogdigitalconverter.mcp.MCPReader;
 import email.EmailSender;
 
 import java.text.DecimalFormat;
@@ -121,7 +121,7 @@ public class ADCReader {
 					if (verbose) {
 						System.out.println("Creating BatteryMonitor...");
 					}
-					BatteryMonitor batteryMonitor = new BatteryMonitor(ADCObserver.MCP3008_input_channels.CH0.ch(), adcReader::consumer);
+					BatteryMonitor batteryMonitor = new BatteryMonitor(MCPReader.MCP3008InputChannels.CH0.ch(), adcReader::consumer);
 					adcReader.setBatteryMonitor(batteryMonitor);
 					if (verbose) {
 						System.out.println("Creating BatteryMonitor: done");
