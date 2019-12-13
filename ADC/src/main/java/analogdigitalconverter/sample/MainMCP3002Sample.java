@@ -1,4 +1,4 @@
-package analogdigitalconverter.mcp3002.sample;
+package analogdigitalconverter.sample;
 
 import analogdigitalconverter.mcp3002.MCP3002Reader;
 import com.pi4j.io.gpio.Pin;
