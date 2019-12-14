@@ -73,6 +73,8 @@ Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clock
 ### Example
 ![Wiring](./RPi-MCP3008-Pot_bb.png)
 
+> ⚠️ The resistor on the potentiometer is important! 
+
 On the diagram above,
 - The `MCP3008`'s `CLK` (`#13`) is connected on the RPi's `PCM_CLK` (`#12`) - Orange wire
 - The `MCP3008`'s `Dout` (`#12`) aka `MISO`, is connected on the RPi's `GPIO_4` (`#16`) - Yellow wire
