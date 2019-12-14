@@ -281,13 +281,14 @@ and you can have the desired output in the Serial Monitor of the Arduino IDE.
 Now, not only you can see the light blinking, but with a buzzer like [that](https://www.allelectronics.com/item/sbz-204/3-18-vdc-piezo-buzzer/1.html),
 you can also hear it beeping.
 
-In the code of the Arduino sketch (`bluetooth.spy.ino`), comment or uncomment the line #20.
+In the code of the Arduino sketch (`bluetooth.spy.ino`), comment or uncomment this line:
 ```C
 #define buzzerPin 8
 ```
 If uncommented, then you can wire your circuit like that:
 ![Buzzer wiring](./Arduino.HC-05.buzzer_bb.png)
 
+The buzzer's hot wire to the pin #8, the other grounded.
 
 ### TODO
 - Raspberry as a Bluetooth device
