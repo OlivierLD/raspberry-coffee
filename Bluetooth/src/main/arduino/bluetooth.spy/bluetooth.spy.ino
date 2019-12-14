@@ -2,7 +2,7 @@
  * Use the LED_BUILTIN,
  * no resistor needed, no extra led.
  *
- * Two serial ports.
+ * Two serial ports (hence the 'spy')
  * - One for BT
  * - One for the Serial Monitor
  *
@@ -11,6 +11,8 @@
  * and SoftwareSerial(2, 3) for Bluetooth.
  *
  * Extra piezo buzzer can be hooked on pin 8
+ * 
+ * If you have no Arduino, see https://www.tinkercad.com/things/7RGhSjmQfOj-morse-generator
  */
 
 #include <SoftwareSerial.h>
@@ -19,18 +21,20 @@
 #define BT_BR      9600
 
 #define ledPin LED_BUILTIN
-#define buzzerPin 8
+#define buzzerPin 8   // Comment this if there is no buzzer
 
 #define rxPin 2
 #define txPin 3
 
 #define NULL 0
 
-#define true 1
-#define false 0
+// true & false already defined in Arduino
+// #define true 1
+// #define false 0
+
 #define VERBOSE true
 
-String EOS = "\r\n";
+const String EOS = "\r\n";
 String receivedSentence = "";
 SoftwareSerial btSerial = SoftwareSerial(rxPin, txPin);
 

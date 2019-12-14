@@ -30,6 +30,9 @@ Scanning ...
 I used an Arduino UNO with an [`HC-05` module](https://www.allelectronics.com/item/hc-05/hc-05-bluetooth-module/1.html), to act as a bluetooth device,
 and some Python (and then Java) code to run on the Raspberry Pi, acting as a Bluetooth client.
 
+> Note: there is a cool and free Arduino on-line emulator at <https://www.tinkercad.com/dashboard?type=circuits>.
+> Log in with a Google account, and you're good to go.
+
 The sketch running on the Arduino turns a led on or off, depending on what's read from the Bluetooth device.
 
 The Raspberry Pi will send serial data to the Bluetooth device, and we should then see the Arduino's led go on and off.
