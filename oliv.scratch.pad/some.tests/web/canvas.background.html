@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!--
+ ! The scaffolding for an animated background
+ +-->
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Canvas Background</title>
+</head>
+
+<style>
+	* {
+	  font-family: Verdana;
+		color: blue;
+	}
+
+	body {
+		margin: 0;
+		padding: 0;
+	}
+
+	#bgCanvas {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
+	}
+
+	/*div {*/
+	/*	position: absolute;*/
+	/*	z-index: 0;*/
+	/*	left: 12px;*/
+	/*	top: 10px;*/
+	/*}*/
+</style>
+<body>
+
+<!--canvas id="bgCanvas" width="600" height="600" style="border:1px solid #c3c3c3;"-->
+<canvas id="bgCanvas">
+	Your browser does not support the canvas element.
+</canvas>
+<h1 style="margin: 10px;">Some regular stuff</h1>
+<h2 style="margin: 10px;">This is showing how to use a canvas as background</h2>
+
+<div style="margin: 40px; padding: 10px;">Lorem ipsum dolor sit amet, etc</div>
+
+<script type="text/javascript">
+
+	let bgCanvas;
+	let rotAngle = 0;
+
+	function toRadians(deg) {
+		return deg * Math.PI / 180;
+	}
+
+	function doBgStuff() {
+		rotAngle += 0.5;
+		rotAngle %= 360;
+		let radius = 0.9 * Math.min(bgCanvas.width, bgCanvas.height) / 2;
+		let centerX = bgCanvas.width / 2;
+		let centerY = bgCanvas.height / 2;
+		let ctx = bgCanvas.getContext("2d");
+		if (rotAngle % 180 == 0) {
+			paintBG();
+		}
+		// console.log(rotAngle);
+		ctx.lineWidth = 0.1;
+		ctx.beginPath();
+		ctx.moveTo(centerX - (radius * Math.cos(toRadians(rotAngle))), centerY - (radius * Math.sin(toRadians(rotAngle))));
+		ctx.lineTo(centerX + (radius * Math.cos(toRadians(rotAngle))), centerY + (radius * Math.sin(toRadians(rotAngle))));
+		ctx.stroke();
+		ctx.closePath();
+	}
+
+	function paintBG() {
+		let ctx = bgCanvas.getContext("2d");
+		let grd = ctx.createLinearGradient(0, 0, bgCanvas.width, bgCanvas.height);
+		grd.addColorStop(0, "#f00");
+		grd.addColorStop(1, "#0f0");
+		ctx.fillStyle = grd;
+		ctx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+	}
+
+	window.onload = () => {
+		bgCanvas = document.getElementById("bgCanvas");
+		paintBG();
+
+		setInterval(doBgStuff, 50);
+	};
+
+</script>
+
+</body>
+</html>
