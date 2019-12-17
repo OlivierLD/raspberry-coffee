@@ -17,7 +17,6 @@
 
 	<link rel="stylesheet" href="css/stylesheet.css">
 	<link rel="stylesheet" href="css/web-components.css">
-	<link rel="stylesheet" href="css/web-components.css">
 	<link rel="stylesheet" href="css/rocker.css">
 
 	<!-- Web Components -->
@@ -249,6 +248,57 @@
 			setData('compass-display-01', val);
 		});
 
+		const DAY = 24 * 3600 * 1000;
+		function loadDeclinations() {
+			// Payload: { bodies: [ "Sun", "Moon" ], from: '2019-12-15T00:00:00', to: '2019-12-25T00:00:00' }
+			let now = new Date(); // Get it in UTC
+			// console.log("TimeOffset:", now.getTimezoneOffset());
+			now.setTime(now.getTime() + (now.getTimezoneOffset() * 60000)); // timeOffset returned in minutes.
+			let dateOffset = 5 * DAY; // 5 days
+			let from = new Date();
+			from.setTime(now.getTime() - dateOffset);
+			let to = new Date();
+			to.setTime(now.getTime() + dateOffset);
+			let payload = {
+				bodies: [ "Sun" ],                 // TODO More bodies?
+				from: from.format(DURATION_FMT),
+				to: to.format(DURATION_FMT)
+			};
+			// console.log("Payload:", payload);
+
+			let getData = requestDeclinations(payload); // Empty obj, means use default
+			getData.then((value) => { // Resolve
+//  		console.log("Done:", value);
+				try {
+					let json = JSON.parse(value);
+					// console.log('Declinations', json);
+
+					// TODO Display
+					let declMap = json['Sun'];
+					let mini = 90;
+					let maxi = -90;
+					let maxTime = '', minTime = '';
+					Object.keys(declMap).forEach(key => {
+						let decl = declMap[key];
+						if (decl < mini) {
+							mini = decl;
+							minTime = key;
+						}
+						if (decl > maxi) {
+							maxi = decl;
+							maxTime = key;
+						}
+					});
+					console.log(`Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
+
+				} catch (err) {
+					console.log("Error:", err, ("\nfor value [" + value + "]"));
+				}
+			}, (error) => { // Reject
+				console.log("Failed to get Declinations..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
+			});
+		}
+
 		function loadSunPath() {
 			// Payload: { position: { latitude: 37.76661945, longitude: -122.5166988 }, step: 10 }
 			let payload = {};
@@ -280,7 +330,6 @@
 			}, (error) => { // Reject
 				console.log("Failed to get Sun Path..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
 			});
-
 		}
 
 		function setNewTilt(range, id) {
@@ -978,7 +1027,7 @@
 					<table>
 						<tr>
 							<td>
-								<button onclick="loadSunPath();" style="border-radius: 3px; padding: 3px; margin-left: 10px;">Load Sun Path</button>
+								<button onclick="loadSunPath(); loadDeclinations();" style="border-radius: 3px; padding: 3px; margin-left: 10px;">Load Sun Path</button>
 								<br/>
 								<input style="margin: 10px;" type="checkbox" id="with-wb" checked>Planets
 								<br/>

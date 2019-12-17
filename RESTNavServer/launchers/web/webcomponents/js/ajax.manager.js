@@ -90,11 +90,16 @@ function fetch() {
 	});
 }
 
+function requestDeclinations(payload) {
+	let url = "/astro/declination";
+	return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, payload, false);
+}
+
+
 function requestSunPath(pos) {
 	let url = "/astro/sun-path-today";
 	return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
 }
-
 
 function requestSunData(pos) {
 	let url = "/astro/sun-now";
