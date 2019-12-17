@@ -132,24 +132,28 @@ public class MCPReader {
 
 		int adcCommand = channel;
 		if (DISPLAY_DIGIT) {
-			System.out.println("1 -       ADCCOMMAND: 0x" + lpad(Integer.toString(adcCommand, 16).toUpperCase(), 4, "0") +
-					", 0&" + lpad(Integer.toString(adcCommand, 2).toUpperCase(), 16, "0"));
+			System.out.println(String.format("1 -       ADCCOMMAND: 0x%s, 0&%s",
+					lpad(Integer.toString(adcCommand, 16).toUpperCase(), 4, "0"),
+					lpad(Integer.toString(adcCommand, 2).toUpperCase(), 16, "0")));
 		}
 		adcCommand |= 0x18; // 0x18: 00011000
 		if (DISPLAY_DIGIT) {
-			System.out.println("2 -       ADCCOMMAND: 0x" + lpad(Integer.toString(adcCommand, 16).toUpperCase(), 4, "0") +
-					", 0&" + lpad(Integer.toString(adcCommand, 2).toUpperCase(), 16, "0"));
+			System.out.println(String.format("2 -       ADCCOMMAND: 0x%s, 0&%s",
+					lpad(Integer.toString(adcCommand, 16).toUpperCase(), 4, "0"),
+					lpad(Integer.toString(adcCommand, 2).toUpperCase(), 16, "0")));
 		}
 		adcCommand <<= 3;
 		if (DISPLAY_DIGIT) {
-			System.out.println("3 -       ADCCOMMAND: 0x" + lpad(Integer.toString(adcCommand, 16).toUpperCase(), 4, "0") +
-					", 0&" + lpad(Integer.toString(adcCommand, 2).toUpperCase(), 16, "0"));
+			System.out.println(String.format("3 -       ADCCOMMAND: 0x%s, 0&%s",
+					lpad(Integer.toString(adcCommand, 16).toUpperCase(), 4, "0"),
+					lpad(Integer.toString(adcCommand, 2).toUpperCase(), 16, "0")));
 		}
-		// Send 5 bits: 8 - 3. 8 input channels on the MCP3008.
+		// Send 5 bits: 8 - 3. 8 bits, minus 3, as above in adcCommand <<= 3;
 		for (int i = 0; i < 5; i++) {
 			if (DISPLAY_DIGIT) {
-				System.out.println("4 - (i=" + i + ") ADCCOMMAND: 0x" + lpad(Integer.toString(adcCommand, 16).toUpperCase(), 4, "0") +
-						", 0&" + lpad(Integer.toString(adcCommand, 2).toUpperCase(), 16, "0"));
+				System.out.println(String.format("4 - (i=" + i + ") ADCCOMMAND: 0x%s, 0&%s",
+						lpad(Integer.toString(adcCommand, 16).toUpperCase(), 4, "0"),
+						lpad(Integer.toString(adcCommand, 2).toUpperCase(), 16, "0")));
 			}
 			if ((adcCommand & 0x80) != 0x0) { // 0x80 = 0&10000000
 				mosiOutput.high();
@@ -172,8 +176,9 @@ public class MCPReader {
 				adcOut |= 0x1;
 			}
 			if (DISPLAY_DIGIT) {
-				System.out.println("ADCOUT: 0x" + lpad(Integer.toString(adcOut, 16).toUpperCase(), 4, "0") +
-						", 0&" + lpad(Integer.toString(adcOut, 2).toUpperCase(), 16, "0"));
+				System.out.println(String.format("ADCOUT: 0x%s, 0&%s",
+						lpad(Integer.toString(adcOut, 16).toUpperCase(), 4, "0"),
+						lpad(Integer.toString(adcOut, 2).toUpperCase(), 16, "0")));
 			}
 		}
 		chipSelectOutput.high();

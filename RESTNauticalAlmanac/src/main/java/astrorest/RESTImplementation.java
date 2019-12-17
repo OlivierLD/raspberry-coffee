@@ -35,7 +35,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.SortedMap;
 import java.util.TimeZone;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -55,6 +57,11 @@ public class RESTImplementation {
 	private static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	private static DecimalFormat DF22 = new DecimalFormat("#0.00"); // ("##0'�'00'\''");
 
+	private final static String UTC_TZ = "etc/UTC";
+	private static SimpleDateFormat UTC_FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	static {
+		UTC_FMT.setTimeZone(TimeZone.getTimeZone(UTC_TZ));
+	}
 
 	private final static String ASTRO_PREFIX = "/astro";
 
@@ -94,6 +101,11 @@ public class RESTImplementation {
 					ASTRO_PREFIX + "/sun-path-today",
 					this::getSunPathInTheSky,
 					"Create a request for Sun path today. Requires body payload (GeoPoint & step)"),
+			new Operation( // See payload in the method definition
+					"POST",
+					ASTRO_PREFIX + "/declination",
+					this::getBodyDeclination,
+					"Get declination of one or more bodies between two UTC dates"),
 			new Operation(  // Payload like { latitude: 37.76661945, longitude: -122.5166988 }. POST /astro/sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
 					"POST",
 					ASTRO_PREFIX + "/sun-between-dates",
@@ -693,6 +705,143 @@ public class RESTImplementation {
 			}
 		}
 		return response;
+	}
+
+	/**
+	 * Compute the declinations of given bodies (one or more) between two UTC dates, each hour.
+	 * {
+	 *   bodies: ['Sun', 'Moon', 'Venus', 'Mars', 'Jupiter', 'Saturn'],
+	 *   from: '2019-12-15T00:00:00',
+	 *   to: '2019-12-25T00:00:00'
+	 * }
+	 * @param request Must contain a json object containing the bodies, from and to dates.
+	 * @return Array of Json Objects, one for each body with the declination hour by hour
+	 */
+	private Response getBodyDeclination(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		if (request.getContent() != null && request.getContent().length > 0) {
+			String payload = new String(request.getContent());
+			if (!"null".equals(payload)) {
+				Gson gson = new GsonBuilder().create();
+				StringReader stringReader = new StringReader(payload);
+				try {
+					DeclinationOptions options = gson.fromJson(stringReader, DeclinationOptions.class);
+					List<String> invalids = checkInvalidBodies(options.bodies);
+					if (!invalids.isEmpty()) {
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("ASTRO-0402")
+										.errorMessage(String.format("Invalid body(ies): %s",
+												invalids.stream()
+														.collect(Collectors.joining(", ")))));
+						return response;
+					}
+					// Dates
+					if (options.from == null || options.to == null) {
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("ASTRO-0403")
+										.errorMessage("to and from dates are required."));
+						return response;
+					}
+					DURATION_FMT.setTimeZone(TimeZone.getTimeZone(UTC_TZ));
+
+					Date from = DURATION_FMT.parse(options.from);
+					Date to = DURATION_FMT.parse(options.to);
+					Calendar fromCal = Calendar.getInstance(TimeZone.getTimeZone(UTC_TZ));
+					fromCal.setTime(from);
+					Calendar toCal = Calendar.getInstance(TimeZone.getTimeZone(UTC_TZ));
+					toCal.setTime(to);
+
+//					System.out.println(String.format("Calculating between %s and %s", UTC_FMT.format(fromCal.getTime()), UTC_FMT.format(toCal.getTime())));
+					if (!toCal.after(fromCal)) {
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("ASTRO-0404")
+										.errorMessage(String.format("Bad chronology, %s should be AFTER %s", UTC_FMT.format(toCal.getTime()), UTC_FMT.format(fromCal.getTime()))));
+						return response;
+					}
+					// All prms OK, proceeding.
+					Calendar date = fromCal;
+					boolean keepWorking = true;
+					final Map<String, SortedMap<String, Double>> declHolder = new HashMap<>();
+					// Init map
+					options.bodies.forEach(body -> declHolder.put(body, new TreeMap<>()));
+					while (keepWorking) {
+						AstroComputer.calculate(
+								date.get(Calendar.YEAR),
+								date.get(Calendar.MONTH) + 1,
+								date.get(Calendar.DAY_OF_MONTH),
+								date.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
+								date.get(Calendar.MINUTE),
+								date.get(Calendar.SECOND));
+						for (String body : options.bodies) {
+							double decl = 0D;
+							switch (body) {
+								case "Sun":
+									decl = AstroComputer.getSunDecl();
+									break;
+								case "Moon":
+									decl = AstroComputer.getMoonDecl();
+									break;
+								case "Venus":
+									decl = AstroComputer.getVenusDecl();
+									break;
+								case "Mars":
+									decl = AstroComputer.getMarsDecl();
+									break;
+								case "Jupiter":
+									decl = AstroComputer.getJupiterDecl();
+									break;
+								case "Saturn":
+									decl = AstroComputer.getSaturnDecl();
+									break;
+								default:
+									break;
+							}
+							declHolder.get(body).put(DURATION_FMT.format(date.getTime()), decl);
+						}
+						date.add(Calendar.HOUR, 1);
+						if (date.after(toCal)) {
+							keepWorking = false;
+						}
+					}
+					String content = new Gson().toJson(declHolder);
+					RESTProcessorUtil.generateResponseHeaders(response, content.length());
+					response.setPayload(content.getBytes());
+				} catch (Exception ex) {
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("ASTRO-0401")
+									.errorMessage(ex.toString()));
+					return response;
+				}
+			}
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("ASTRO-0400")
+							.errorMessage("Empty payload. Cannot proceed."));
+			return response;
+		}
+		return response;
+	}
+
+	private final static List<String> VALID_BODIES = Arrays.asList("Sun", "Moon", "Venus", "Mars", "Jupiter", "Saturn");
+	private static List<String> checkInvalidBodies(List<String> bodies) {
+		List<String> invalidBodies = new ArrayList<>();
+		bodies.forEach(body -> {
+			if (!VALID_BODIES.contains(body)) {
+				invalidBodies.add(body);
+			}
+		});
+		return invalidBodies;
 	}
 
 	/**
@@ -2040,5 +2189,11 @@ public class RESTImplementation {
 	private static class PerpetualAlmanacOptions {
 		int from;
 		int to;
+	}
+
+	private static class DeclinationOptions {
+		List<String> bodies;
+		String from;
+		String to;
 	}
 }
