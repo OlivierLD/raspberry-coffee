@@ -25,7 +25,7 @@ class GraphDisplay extends HTMLElement {
 		return [
 			"width",  // Integer. Canvas width
 			"height", // Integer. Canvas height
-			"value",  // Float. Numeric value to display (null by default)
+			"value",  // String. Numeric (or so) value to display (null by default)
 			"label",  // String, like TWS, AWS, etc
 			"data"    // Curve(s) data
 		];
@@ -80,7 +80,7 @@ class GraphDisplay extends HTMLElement {
 		}
 		switch (attrName) {
 			case "value":
-				this._value = (newVal === 'null' ? null : parseFloat(newVal));
+				this._value = (newVal === 'null' ? null : newVal); // parseFloat(newVal));
 				break;
 			case "width":
 				this._width = parseInt(newVal);
@@ -264,8 +264,8 @@ class GraphDisplay extends HTMLElement {
 		context.fillText(this.label, 5, 18);
 		// Value
 		if (this._value !== null) {
-			context.font = "bold " + Math.round(scale * 60) + "px " + this.graphDisplayColorConfig.valueFont;
-			let strVal = this._value.toFixed(this.graphDisplayColorConfig.valueNbDecimal);
+			context.font = "bold " + Math.round(scale * 30) + "px " + this.graphDisplayColorConfig.valueFont;
+			let strVal = this._value; // .toFixed(this.graphDisplayColorConfig.valueNbDecimal);
 			let metrics = context.measureText(strVal);
 			let len = metrics.width;
 

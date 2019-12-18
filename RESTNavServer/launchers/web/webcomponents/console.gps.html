@@ -305,9 +305,10 @@
 				}
 			});
 
-			finalData.maxX = x;
-			finalData.minY = mini;
-			finalData.maxY = maxi;
+			finalData.minX = -1;
+			finalData.maxX = x + 1;
+			finalData.minY = mini - 0.05;
+			finalData.maxY = maxi + 0.05;
 
 // console.log(JSON.stringify(finalData, null, 2));
 			return finalData;

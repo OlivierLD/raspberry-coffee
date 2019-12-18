@@ -486,6 +486,13 @@ function astroCallback(data) {
 			'<tr><td align="left">' + bodyName("sun") + '</td><td>' + worldMap.decToSex(data.sun.decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.sun.gha) + '</td><td align="right">' + worldMap.decToSex(sunLHA) + '</td><td align="right">' +	worldMap.decToSex(data.sunObs.alt) + '</td><td align="right">' + worldMap.decToSex(data.sunObs.z) + '</td></tr>' +
 			'<tr><td align="left">' + bodyName("moon") + '</td><td>' + worldMap.decToSex(data.moon.decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.moon.gha) + '</td><td align="right">' + worldMap.decToSex(moonLHA) + '</td><td align="right">' +	worldMap.decToSex(data.moonObs.alt) + '</td><td align="right">' + worldMap.decToSex(data.moonObs.z) + '</td></tr>';
 
+	// Bonus: Update Sun Decl on the graph
+	try {
+		document.getElementById('decl-graph-01').value = worldMap.decToSex(data.sun.decl, "NS");
+	} catch (err) {
+		// Absorb
+	}
+
 	if (data.wanderingBodies !== undefined) {
 		for (let i=0; i<data.wanderingBodies.length; i++) {
 			if (data.wanderingBodies[i].name !== "aries") {
