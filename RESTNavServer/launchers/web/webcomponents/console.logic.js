@@ -489,6 +489,7 @@ function astroCallback(data) {
 	// Bonus: Update Sun Decl on the graph
 	try {
 		document.getElementById('decl-graph-01').value = worldMap.decToSex(data.sun.decl, "NS");
+		document.getElementById('decl-graph-02').value = worldMap.decToSex(data.moon.decl, "NS");
 	} catch (err) {
 		// Absorb
 	}

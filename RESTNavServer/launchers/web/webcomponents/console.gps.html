@@ -249,7 +249,10 @@
 			setData('compass-display-01', val);
 		});
 
-		function dataToGraph(pivotDate, declMap) {
+		function dataToGraph(pivotDate, declMap, lineColor) {
+			if (lineColor === undefined) {
+				lineColor = 'orange';
+			}
 			let finalData = {
 				withGrid: false,
 				gridColor: 'red',
@@ -260,15 +263,15 @@
 				maxY: 0,
 				data: [
 					{
-						name: 'Sun Declination, start',
-						lineColor: 'orange',
+						name: 'Declination, start',
+						lineColor: lineColor,
 						fillColor: null, // With gradient
 						thickness: 5,
 						x: [],
 						values: [] // Same cardinality as x
 					}, {
-						name: 'Sun Declination, all',
-						lineColor: 'orange',
+						name: 'Declination, all',
+						lineColor: lineColor,
 						fillColor: null, // With gradient
 						thickness: 1,
 						x: [],
@@ -328,7 +331,7 @@
 			let to = new Date();
 			to.setTime(now.getTime() + dateOffset);
 			let payload = {
-				bodies: [ "Sun" ],                 // TODO More bodies?
+				bodies: [ "Sun", "Moon" ],          // TODO More bodies?
 				from: from.format(DURATION_FMT),
 				to: to.format(DURATION_FMT)
 			};
@@ -341,7 +344,7 @@
 					let json = JSON.parse(value);
 					// console.log('Declinations', json);
 
-					// TODO Display (need a new WebComponent)
+					// Display (need a new WebComponent)
 					let declMap = json['Sun'];
 					if (declMap !== undefined) {
 						let mini = 90;
@@ -362,6 +365,31 @@
 						// console.log(JSON.stringify(declMap));
 						let graphData = dataToGraph(now.format(DURATION_FMT), declMap);
 						let graph = document.getElementById('decl-graph-01');
+						graph.data = graphData;
+						graph.repaint();
+					} else {
+						console.log("Oops, Sun Decl data not found...");
+					}
+					declMap = json['Moon'];
+					if (declMap !== undefined) {
+						let mini = 90;
+						let maxi = -90;
+						let maxTime = '', minTime = '';
+						Object.keys(declMap).forEach(key => {
+							let decl = declMap[key];
+							if (decl < mini) {
+								mini = decl;
+								minTime = key;
+							}
+							if (decl > maxi) {
+								maxi = decl;
+								maxTime = key;
+							}
+						});
+						console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
+						// console.log(JSON.stringify(declMap));
+						let graphData = dataToGraph(now.format(DURATION_FMT), declMap, 'white');
+						let graph = document.getElementById('decl-graph-02');
 						graph.data = graphData;
 						graph.repaint();
 					} else {
@@ -1188,7 +1216,16 @@
 														 height="200"
 														 value="null"
 														 label="Sun Declination"
-														 title="Sun Declination"/>
+														 title="Sun Declination"></graph-display>
+
+							<graph-display id="decl-graph-02"
+														 tabindex="-1"
+														 class=""
+														 width="400"
+														 height="200"
+														 value="null"
+														 label="Moon Declination"
+														 title="Moon Declination"></graph-display>
 						</td>
 					</tr>
 					<tr>
