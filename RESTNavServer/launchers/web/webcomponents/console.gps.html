@@ -273,24 +273,27 @@
 					let json = JSON.parse(value);
 					// console.log('Declinations', json);
 
-					// TODO Display
+					// TODO Display (need a new WebComponent)
 					let declMap = json['Sun'];
-					let mini = 90;
-					let maxi = -90;
-					let maxTime = '', minTime = '';
-					Object.keys(declMap).forEach(key => {
-						let decl = declMap[key];
-						if (decl < mini) {
-							mini = decl;
-							minTime = key;
-						}
-						if (decl > maxi) {
-							maxi = decl;
-							maxTime = key;
-						}
-					});
-					console.log(`Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
-
+					if (declMap !== undefined) {
+						let mini = 90;
+						let maxi = -90;
+						let maxTime = '', minTime = '';
+						Object.keys(declMap).forEach(key => {
+							let decl = declMap[key];
+							if (decl < mini) {
+								mini = decl;
+								minTime = key;
+							}
+							if (decl > maxi) {
+								maxi = decl;
+								maxTime = key;
+							}
+						});
+						console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
+					} else {
+						console.log("Oops, Sun Decl data not found...");
+					}
 				} catch (err) {
 					console.log("Error:", err, ("\nfor value [" + value + "]"));
 				}

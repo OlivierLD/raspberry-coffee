@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -841,7 +842,7 @@ public class RESTImplementation {
 				invalidBodies.add(body);
 			}
 		});
-		return invalidBodies;
+		return Collections.unmodifiableList(invalidBodies); // Immutable, just for fun ;)
 	}
 
 	/**
