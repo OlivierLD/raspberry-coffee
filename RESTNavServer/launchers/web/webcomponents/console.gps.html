@@ -32,6 +32,7 @@
 	<script type="module" src="./SkyMap.js"></script>
 	<script type="module" src="./SplitFlapDisplay.js"></script>
 	<script type="module" src="./SunPath.js"></script>
+	<script type="module" src="./GraphDisplay.js"></script>
 
 	<!-- Scripts -->
 	<script type="text/javascript" src="js/date.proto.js"></script>
@@ -248,12 +249,78 @@
 			setData('compass-display-01', val);
 		});
 
+		function dataToGraph(pivotDate, declMap) {
+			let finalData = {
+				withGrid: false,
+				gridColor: 'red',
+				xLabels: [],
+				minX: 0,
+				maxX: 0,
+				minY: 0,
+				maxY: 0,
+				data: [
+					{
+						name: 'Sun Declination, start',
+						lineColor: 'orange',
+						fillColor: null, // With gradient
+						thickness: 5,
+						x: [],
+						values: [] // Same cardinality as x
+					}, {
+						name: 'Sun Declination, all',
+						lineColor: 'orange',
+						fillColor: null, // With gradient
+						thickness: 1,
+						x: [],
+						values: [] // Same cardinality as x
+					}
+				]
+			};
+
+			let mini = 90;
+			let maxi = -90;
+			let x = 0;
+
+			let thick = true;
+
+			Object.keys(declMap).forEach(key => {
+				let decl = declMap[key];
+				if (decl < mini) {
+					mini = decl;
+					minTime = key;
+				}
+				if (decl > maxi) {
+					maxi = decl;
+					maxTime = key;
+				}
+				if (thick) {
+					finalData.data[0].x.push(x);
+					finalData.data[0].values.push(decl);
+				}
+				finalData.data[1].x.push(x);
+				finalData.data[1].values.push(decl);
+				x++;
+				if (key === pivotDate) {
+					thick = false;
+				}
+			});
+
+			finalData.maxX = x;
+			finalData.minY = mini;
+			finalData.maxY = maxi;
+
+// console.log(JSON.stringify(finalData, null, 2));
+			return finalData;
+
+		}
+
 		const DAY = 24 * 3600 * 1000;
 		function loadDeclinations() {
 			// Payload: { bodies: [ "Sun", "Moon" ], from: '2019-12-15T00:00:00', to: '2019-12-25T00:00:00' }
 			let now = new Date(); // Get it in UTC
 			// console.log("TimeOffset:", now.getTimezoneOffset());
 			now.setTime(now.getTime() + (now.getTimezoneOffset() * 60000)); // timeOffset returned in minutes.
+			console.log(`Calculating declination for date ${now.format(DURATION_FMT)}`);
 			let dateOffset = 5 * DAY; // 5 days
 			let from = new Date();
 			from.setTime(now.getTime() - dateOffset);
@@ -291,6 +358,11 @@
 							}
 						});
 						console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
+						// console.log(JSON.stringify(declMap));
+						let graphData = dataToGraph(now.format(DURATION_FMT), declMap);
+						let graph = document.getElementById('decl-graph-01');
+						graph.data = graphData;
+						graph.repaint();
 					} else {
 						console.log("Oops, Sun Decl data not found...");
 					}
@@ -1106,6 +1178,16 @@
 																	height="168"
 																	value="01-01-1970"></calendar-display>
 							</div>
+						</td>
+						<td rowspan="2" valign="top">
+							<graph-display id="decl-graph-01"
+														 tabindex="-1"
+														 class=""
+														 width="400"
+														 height="200"
+														 value="null"
+														 label="Sun Declination"
+														 title="Sun Declination"/>
 						</td>
 					</tr>
 					<tr>
