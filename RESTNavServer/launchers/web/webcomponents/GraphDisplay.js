@@ -25,9 +25,12 @@ class GraphDisplay extends HTMLElement {
 		return [
 			"width",  // Integer. Canvas width
 			"height", // Integer. Canvas height
-			"value",  // String. Numeric (or so) value to display (null by default)
+			"padding", // Integer, internal margin, in pixels
+			"value",  // String. Stringified numeric (or so) value to display (null by default)
 			"label",  // String, like TWS, AWS, etc
-			"data"    // Curve(s) data
+			"data",   // Curve(s) data
+			"vgrid",  // Vertical grid. If exist (not null) a value like "0:10". Means start at 0, line every 10 units
+			"hgrid"   // Horizontal grid. If exist (not null) a value like "5:100.5". Means start at 5, line every 100.5 units
 		];
 	}
 
@@ -46,8 +49,15 @@ class GraphDisplay extends HTMLElement {
 		this._value = null;
 		this._width = 250;
 		this._height = 100;
+		this._padding = 0;
 		this._label = "VAL";
 		this._data = null;
+		this._vgrid = null;
+		this._hgrid = null;
+
+		this._hGridLabelsCallback = (value) => {
+			return value.toFixed(0);
+		}
 
 		this._previousClassName = "";
 		this.graphDisplayColorConfig = graphDisplayDefaultColorConfig;
@@ -88,11 +98,20 @@ class GraphDisplay extends HTMLElement {
 			case "height":
 				this._height = parseInt(newVal);
 				break;
+			case "padding":
+				this._padding = parseInt(newVal);
+				break;
 			case "label":
 				this._label = newVal;
 				break;
 			case "data":
 				this._data = JSON.parse(newVal);
+				break;
+			case "vgrid":
+				this._vgrid = (newVal === 'null' ? null : newVal);
+				break;
+			case "hgrid":
+				this._hgrid = (newVal === 'null' ? null : newVal);
 				break;
 			default:
 				break;
@@ -123,12 +142,24 @@ class GraphDisplay extends HTMLElement {
 		this.setAttribute("height", val);
 	}
 
+	set padding(val) {
+		this.setAttribute("padding", val);
+	}
+
 	set label(val) {
 		this.setAttribute("label", val);
 	}
 
 	set data(val) {
 		this._data = val;
+	}
+
+	set vgrid(val) {
+		this.setAttribute("vgrid", val);
+	}
+
+	set hgrid(val) {
+		this.setAttribute("hgrid", val);
 	}
 
 	set shadowRoot(val) {
@@ -147,12 +178,24 @@ class GraphDisplay extends HTMLElement {
 		return this._height;
 	}
 
+	get padding() {
+		return this._padding;
+	}
+
 	get label() {
 		return this._label;
 	}
 
 	get data() {
 		return this._data;
+	}
+
+	get vgrid() {
+		return this._vgrid;
+	}
+
+	get hgrid() {
+		return this._hgrid;
 	}
 
 	get shadowRoot() {
@@ -220,6 +263,10 @@ class GraphDisplay extends HTMLElement {
 		return colorConfig;
 	}
 
+	setHGridLabelsCallback(func) {
+		this._hGridLabelsCallback = func;
+	}
+
 	repaint() {
 		this.drawGraph();
 	}
@@ -264,7 +311,7 @@ class GraphDisplay extends HTMLElement {
 		context.fillText(this.label, 5, 18);
 		// Value
 		if (this._value !== null) {
-			context.font = "bold " + Math.round(scale * 30) + "px " + this.graphDisplayColorConfig.valueFont;
+			context.font = "bold " + Math.round(scale * 30) + "px " + this.graphDisplayColorConfig.valueFont; // TODO Font size in a style
 			let strVal = this._value; // .toFixed(this.graphDisplayColorConfig.valueNbDecimal);
 			let metrics = context.measureText(strVal);
 			let len = metrics.width;
@@ -279,10 +326,69 @@ class GraphDisplay extends HTMLElement {
 			// console.log(`From ${minX} to ${maxX}`);
 			let xAmpl = maxX - minX;
 			let yAmpl = this._data.maxY - this._data.minY;
-			let xRatio = this._width /  xAmpl;
+			let xRatio = (this._width - (2 * this._padding)) /  xAmpl;
 			let xOffset = minX;
-			let yRatio = this._height / yAmpl;
+			let yRatio = (this._height - (2 * this._padding)) / yAmpl;
 			let yOffset = this._data.minY;
+
+			// Grid? IN the data. No data => no grid
+			if (this._data.withGrid === true) {
+				if (this._vgrid !== null) {
+					let startAt = parseFloat(this._vgrid.substring(0, this._vgrid.indexOf(':')));
+					let step = parseFloat(this._vgrid.substring(this._vgrid.indexOf(':') + 1));
+					context.beginPath();
+					let abscissa = startAt;
+					let keepWorking = true;
+					while (keepWorking) {
+						let _x = this._padding + ((abscissa - xOffset) * xRatio);
+						if (_x > this._width) {
+							keepWorking = false;
+						} else {
+							let _y = this._height - this._padding;
+							context.moveTo(_x, _y);
+							context.lineTo(_x, this._padding);
+							abscissa += step;
+						}
+					}
+					context.lineWidth = 0.5;
+					context.strokeStyle = this._data.gridColor;
+					context.stroke();
+					context.closePath();
+				}
+				if (this._hgrid !== null) {
+					let startAt = parseFloat(this._hgrid.substring(0, this._hgrid.indexOf(':')));
+					let step = parseFloat(this._hgrid.substring(this._hgrid.indexOf(':') + 1));
+					context.beginPath();
+					let ordinate = startAt;
+					let keepWorking = true;
+					while (keepWorking) {
+						let _y = this._height - this._padding - ((ordinate - yOffset) * yRatio);
+						if (_y < 0) {
+							keepWorking = false;
+						} else {
+							let _x = this._padding;
+							context.moveTo(_x, _y);
+							context.lineTo(this._width - this._padding, _y);
+							// Y Label
+							context.fillStyle = this._data.gridColor;
+							context.font = Math.round(scale * 12) + "px " + this.graphDisplayColorConfig.labelFont; // TODO Font size in a style
+							let strVal = this._hGridLabelsCallback(ordinate);
+							let metrics = context.measureText(strVal);
+							let len = metrics.width;
+
+							context.fillText(strVal, this.canvas.width - len - this._padding, _y);
+
+							ordinate += step;
+						}
+					}
+					context.lineWidth = 0.5;
+					context.strokeStyle = this._data.gridColor;
+					context.stroke();
+					context.closePath();
+				}
+			}
+
+			// Curves
 			for (let i=0; i<this._data.data.length; i++) {
 				let curve = this._data.data[i];
 				if (curve.values.length !== curve.x.length) {
@@ -291,15 +397,15 @@ class GraphDisplay extends HTMLElement {
 				}
 				// Curve
 				context.beginPath();
-				let _x = (curve.x[0] - xOffset) * xRatio;
-				let _y = this._height - ((curve.values[0] - yOffset) * yRatio);
+				let _x = this._padding + (curve.x[0] - xOffset) * xRatio;
+				let _y = this._height - this._padding - ((curve.values[0] - yOffset) * yRatio);
 				if (graphDisplayVerbose) {
 					console.log(`Moving to ${_x} / ${_y}`);
 				}
 				context.moveTo(_x, _y);
 				for (let x=1; x<curve.x.length; x++) {
-					_x =(curve.x[x] - xOffset) * xRatio;
-					_y = this._height - ((curve.values[x] - yOffset) * yRatio);
+					_x = this._padding + ((curve.x[x] - xOffset) * xRatio);
+					_y = this._height - this._padding - ((curve.values[x] - yOffset) * yRatio);
 					if (graphDisplayVerbose) {
 						console.log(`Lining to ${_x} / ${_y}`);
 					}
@@ -310,7 +416,6 @@ class GraphDisplay extends HTMLElement {
 				context.stroke();
 				context.closePath();
 			}
-			// Grid?
 
 		}
 

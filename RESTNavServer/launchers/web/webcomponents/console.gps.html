@@ -254,8 +254,8 @@
 				lineColor = 'orange';
 			}
 			let finalData = {
-				withGrid: false,
-				gridColor: 'red',
+				withGrid: true,
+				gridColor: 'lime',
 				xLabels: [],
 				minX: 0,
 				maxX: 0,
@@ -308,14 +308,13 @@
 				}
 			});
 
-			finalData.minX = -1;
-			finalData.maxX = x + 1;
-			finalData.minY = mini - 0.05;
-			finalData.maxY = maxi + 0.05;
+			finalData.minX = 0;
+			finalData.maxX = x;
+			finalData.minY = mini;
+			finalData.maxY = maxi;
 
 // console.log(JSON.stringify(finalData, null, 2));
 			return finalData;
-
 		}
 
 		const DAY = 24 * 3600 * 1000;
@@ -365,6 +364,14 @@
 						// console.log(JSON.stringify(declMap));
 						let graphData = dataToGraph(now.format(DURATION_FMT), declMap);
 						let graph = document.getElementById('decl-graph-01');
+						// Grid parameters. Make sure graphData.withGrid = true
+						let minX = graphData.minX;
+						let maxX = graphData.maxX;
+						let minY = graphData.minY;
+						let maxY = graphData.maxY;
+						graph.vgrid = minX + ":" + ((maxX - minX) / 10);
+						graph.hgrid = minY + ":" + ((maxY - minY) / 10);
+						//
 						graph.data = graphData;
 						graph.repaint();
 					} else {
@@ -391,6 +398,14 @@
 						let graphData = dataToGraph(now.format(DURATION_FMT), declMap, 'white');
 						let graph = document.getElementById('decl-graph-02');
 						graph.data = graphData;
+						// Grid parameters. Make sure graphData.withGrid = true
+						let minX = graphData.minX;
+						let maxX = graphData.maxX;
+						let minY = graphData.minY;
+						let maxY = graphData.maxY;
+						graph.vgrid = minX + ":" + ((maxX - minX) / 10);
+						graph.hgrid = minY + ":" + ((maxY - minY) / 10);
+						//
 						graph.repaint();
 					} else {
 						console.log("Oops, Sun Decl data not found...");
@@ -404,6 +419,18 @@
 		}
 
 		function loadSunPath() {
+
+			let worldMap = document.getElementById('world-map-01');
+			let graphElement01 = document.getElementById('decl-graph-01');
+			let graphElement02 = document.getElementById('decl-graph-02');
+
+			let fmtFunction = function(value) {
+				return worldMap.decToSex(value, "NS");
+			};
+
+			graphElement01.setHGridLabelsCallback(fmtFunction);
+			graphElement02.setHGridLabelsCallback(fmtFunction);
+
 			// Payload: { position: { latitude: 37.76661945, longitude: -122.5166988 }, step: 10 }
 			let payload = {};
 			if (lastKnownPos != null) {
@@ -1214,6 +1241,7 @@
 														 class=""
 														 width="400"
 														 height="200"
+														 padding="5"
 														 value="null"
 														 label="Sun Declination"
 														 title="Sun Declination"></graph-display>
@@ -1223,6 +1251,7 @@
 														 class=""
 														 width="400"
 														 height="200"
+														 padding="5"
 														 value="null"
 														 label="Moon Declination"
 														 title="Moon Declination"></graph-display>
