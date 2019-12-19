@@ -26,9 +26,9 @@ public class AISClientV2 {
 //			String aisUrl = "http://ais.exploratorium.edu:80";
 
 			System.out.println("CustomTCPClient invoked with " + args.length + " Parameter(s).");
-			for (String s : args)
+			for (String s : args) {
 				System.out.println("CustomTCPClient prm:" + s);
-
+			}
 			String serverName = "ais.exploratorium.edu";
 			int serverPort = 80;
 

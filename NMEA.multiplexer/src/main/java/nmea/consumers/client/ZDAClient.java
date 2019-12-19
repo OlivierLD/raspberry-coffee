@@ -97,9 +97,9 @@ public class ZDAClient extends NMEAClient {
 
 	public static void main(String... args) {
 		System.out.println("ZDAClient invoked with " + args.length + " Parameter(s).");
-		for (String s : args)
+		for (String s : args) {
 			System.out.println("ZDAClient prm:" + s);
-
+		}
 		nmeaClient = new ZDAClient();
 
 		Runtime.getRuntime().addShutdownHook(new Thread("ZDAClient shutdown hook") {

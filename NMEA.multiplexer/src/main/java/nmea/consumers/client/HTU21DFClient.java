@@ -97,9 +97,9 @@ public class HTU21DFClient extends NMEAClient {
 
 	public static void main(String... args) {
 		System.out.println("HTU21DFClient invoked with " + args.length + " Parameter(s).");
-		for (String s : args)
+		for (String s : args) {
 			System.out.println("HTU21DFClient prm:" + s);
-
+		}
 		nmeaClient = new HTU21DFClient();
 
 		Runtime.getRuntime().addShutdownHook(new Thread("HTU21DFClient shutdown hook") {

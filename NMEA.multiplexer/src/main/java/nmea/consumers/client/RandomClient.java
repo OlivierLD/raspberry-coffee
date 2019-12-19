@@ -75,9 +75,9 @@ public class RandomClient extends NMEAClient {
 
 	public static void main(String... args) {
 		System.out.println("RandomClient invoked with " + args.length + " Parameter(s).");
-		for (String s : args)
+		for (String s : args) {
 			System.out.println("RandomClient prm:" + s);
-
+		}
 		nmeaClient = new RandomClient();
 
 		Runtime.getRuntime().addShutdownHook(new Thread("RandomClient shutdown hook") {

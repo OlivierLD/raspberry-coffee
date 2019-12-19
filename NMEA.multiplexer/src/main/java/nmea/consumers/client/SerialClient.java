@@ -95,8 +95,9 @@ public class SerialClient extends NMEAClient {
 
 //  String commPort = "/dev/ttyUSB0"; // "COM1";
 		String commPort = "/dev/tty.usbserial"; // Mac
-		if (args.length > 0)
+		if (args.length > 0) {
 			commPort = args[0];
+		}
 
 		nmeaClient = new SerialClient();
 

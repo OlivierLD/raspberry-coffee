@@ -601,15 +601,16 @@ public class MuxInitializer {
 							String radix = muxProps.getProperty(String.format("forward.%s.filename.suffix", MUX_IDX_FMT.format(fwdIdx)));
 							String logDir = muxProps.getProperty(String.format("forward.%s.log.dir", MUX_IDX_FMT.format(fwdIdx)));
 							String split = muxProps.getProperty(String.format("forward.%s.split", MUX_IDX_FMT.format(fwdIdx)));
+							String flush = muxProps.getProperty(String.format("forward.%s.flush", MUX_IDX_FMT.format(fwdIdx)));
 							try {
 								Forwarder fileForwarder;
 								if (fSubClass == null) {
-									fileForwarder = new DataFileWriter(fName, append, timeBased, radix, logDir, split);
+									fileForwarder = new DataFileWriter(fName, append, timeBased, radix, logDir, split, "true".equals(flush));
 								} else {
 									try {
 										fileForwarder = (DataFileWriter) Class.forName(fSubClass.trim())
-												.getConstructor(String.class, Boolean.class, Boolean.class, String.class, String.class, String.class)
-												.newInstance(fName, append, timeBased, radix, logDir, split);
+												.getConstructor(String.class, Boolean.class, Boolean.class, String.class, String.class, String.class, Boolean.class)
+												.newInstance(fName, append, timeBased, radix, logDir, split, "true".equals(flush));
 									} catch (NoSuchMethodException nsme) {
 										fileForwarder = (DataFileWriter) Class.forName(fSubClass.trim()) // Fallback on previous constructor
 												.getConstructor(String.class, Boolean.class)

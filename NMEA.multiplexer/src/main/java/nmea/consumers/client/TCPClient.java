@@ -88,9 +88,9 @@ public class TCPClient extends NMEAClient {
 
 	public static void main(String... args) {
 		System.out.println("CustomTCPClient invoked with " + args.length + " Parameter(s).");
-		for (String s : args)
+		for (String s : args) {
 			System.out.println("CustomTCPClient prm:" + s);
-
+		}
 		String serverName = "192.168.42.2";
 
 		nmeaClient = new TCPClient();

@@ -298,14 +298,17 @@ The lines above means that:
     forward.XX.split=min|hour|day|week|month|year
     #
     forward.XX.append=true
+    forward.XX.flush=true
     ```
-    >Explanations:
+    > Explanations:
     > - `timebase.filename` default value is `false`
     > - if `timebase.filename` is `false` then a `filename` is expected to be provided (default is `data.nmea`).
     > - if `timebase.filename` is `true` then log file name will be based on the time the logging was started, like `2018-10-22_20:04:00_UTC.nmea`.
     >   - if `filename.suffix` exists (default is an empty string) like `LOG_`, then log file name will be `LOG_2018-10-22_20:04:00_UTC.nmea`.
     >   - if `log.dir` exists (default is `.`) log files will be generated in this directory (located under the working directory).
     >   - if `split` exists (default is `null`) and one of `min`, `hour`, `day`, `week`, `month`, `year`, then a new log file will generated every `min`, `hour`, `day`, `week`, `month`, or `year`.
+    > - `flush` will write to the disk every time a record is written. Default is `false`.
+
 
 - `ws`
     - WebSocket server

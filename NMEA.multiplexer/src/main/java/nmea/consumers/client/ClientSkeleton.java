@@ -28,8 +28,9 @@ public class ClientSkeleton extends NMEAClient {
 
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if (verbose)
+		if (verbose) {
 			System.out.println("Received from Skeleton:" + e.getContent());
+		}
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
 		}
@@ -75,9 +76,9 @@ public class ClientSkeleton extends NMEAClient {
 
 	public static void main(String... args) {
 		System.out.println("ClientSkeleton invoked with " + args.length + " Parameter(s).");
-		for (String s : args)
+		for (String s : args) {
 			System.out.println("ClientSkeleton prm:" + s);
-
+		}
 		nmeaClient = new ClientSkeleton();
 
 		Runtime.getRuntime().addShutdownHook(new Thread("ClientSkeleton shutdown hook") {

@@ -97,9 +97,9 @@ public class BME280Client extends NMEAClient {
 
 	public static void main(String... args) {
 		System.out.println("BME280Client invoked with " + args.length + " Parameter(s).");
-		for (String s : args)
+		for (String s : args) {
 			System.out.println("BME280Client prm:" + s);
-
+		}
 		nmeaClient = new BME280Client();
 
 		Runtime.getRuntime().addShutdownHook(new Thread("BME280Client shutdown hook") {

@@ -97,9 +97,9 @@ public class BMP180Client extends NMEAClient {
 
 	public static void main(String... args) {
 		System.out.println("BMP180Client invoked with " + args.length + " Parameter(s).");
-		for (String s : args)
+		for (String s : args) {
 			System.out.println("BMP180Client prm:" + s);
-
+		}
 		nmeaClient = new BMP180Client();
 
 		Runtime.getRuntime().addShutdownHook(new Thread("BMP180Client shutdown hook") {

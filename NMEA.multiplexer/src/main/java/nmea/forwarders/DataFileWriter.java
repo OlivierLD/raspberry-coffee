@@ -24,6 +24,7 @@ public class DataFileWriter implements Forwarder {
 	private String radix;
 	private String dir;
 	private String split;
+	private boolean flush;
 	private long timeSplitThreshold = 0L;
 
 	private final static long MIN_MS  = 60 * 1_000;
@@ -44,10 +45,10 @@ public class DataFileWriter implements Forwarder {
 		this(fName, false);
 	}
 	public DataFileWriter(String fName, boolean append) throws Exception {
-		this(fName, append, false, null, null, null);
+		this(fName, append, false, null, null, null, false);
 	}
 
-	public DataFileWriter(String fName, boolean append, boolean timeBased, String radix, String dir, String split) throws Exception {
+	public DataFileWriter(String fName, boolean append, boolean timeBased, String radix, String dir, String split, boolean flush) throws Exception {
 		System.out.println(String.format("- Start writing to %s, %s ", this.getClass().getName(), fName));
 
 		this.log = fName;
@@ -55,6 +56,7 @@ public class DataFileWriter implements Forwarder {
 		this.timeBased = timeBased;
 		this.radix = radix;
 		this.dir = dir;
+		this.flush = flush;
 		if (this.timeBased) { // Then add a subdirectory, based on the time the logging was started. Each new log series is in its own folder.
 			String subDirName = SDF.format(new Date());
 			this.dir += (File.separator + subDirName);
@@ -87,6 +89,9 @@ public class DataFileWriter implements Forwarder {
 			String mess = new String(message).trim(); // trim removes \r\n
 			if (!mess.isEmpty()) {
 				this.dataFile.write(mess + '\n');
+				if (this.flush) {
+					this.dataFile.flush();
+				}
 				if (this.timeBased) {
 					long now = GregorianCalendar.getInstance(TimeZone.getTimeZone("etc/UTC")).getTimeInMillis();
 					if (this.split != null && now > this.timeSplitThreshold) {
