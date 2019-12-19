@@ -59,6 +59,10 @@ class GraphDisplay extends HTMLElement {
 			return value.toFixed(0);
 		}
 
+		this._vGridLabelsCallback = (value) => {
+			return value.toFixed(1);
+		}
+
 		this._previousClassName = "";
 		this.graphDisplayColorConfig = graphDisplayDefaultColorConfig;
 
@@ -267,6 +271,10 @@ class GraphDisplay extends HTMLElement {
 		this._hGridLabelsCallback = func;
 	}
 
+	setVGridLabelsCallback(func) {
+		this._vGridLabelsCallback = func;
+	}
+
 	repaint() {
 		this.drawGraph();
 	}
@@ -347,6 +355,21 @@ class GraphDisplay extends HTMLElement {
 							let _y = this._height - this._padding;
 							context.moveTo(_x, _y);
 							context.lineTo(_x, this._padding);
+
+							// X Label
+							context.fillStyle = this._data.gridColor;
+							context.font = Math.round(scale * 12) + "px " + this.graphDisplayColorConfig.labelFont; // TODO Font size in a style
+							let strVal = this._vGridLabelsCallback(abscissa);
+							let metrics = context.measureText(strVal);
+							let len = metrics.width;
+							// Rotate
+							context.save();
+							context.translate(_x, this.canvas.height);
+							context.rotate(-Math.PI / 2);
+							// context.fillText(strVal, _x, this._height - this._padding);
+							context.fillText(strVal, 2, 1);
+							context.restore();
+
 							abscissa += step;
 						}
 					}
@@ -375,7 +398,6 @@ class GraphDisplay extends HTMLElement {
 							let strVal = this._hGridLabelsCallback(ordinate);
 							let metrics = context.measureText(strVal);
 							let len = metrics.width;
-
 							context.fillText(strVal, this.canvas.width - len - this._padding, _y);
 
 							ordinate += step;

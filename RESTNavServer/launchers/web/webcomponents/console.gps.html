@@ -349,7 +349,9 @@
 						let mini = 90;
 						let maxi = -90;
 						let maxTime = '', minTime = '';
+						let labels = [];
 						Object.keys(declMap).forEach(key => {
+							labels.push(key);
 							let decl = declMap[key];
 							if (decl < mini) {
 								mini = decl;
@@ -373,6 +375,11 @@
 						graph.hgrid = minY + ":" + ((maxY - minY) / 10);
 						//
 						graph.data = graphData;
+						graph.setVGridLabelsCallback(function(idx) {
+							// console.log('For idx ', idx.toFixed(0));
+							return labels[idx.toFixed(0)];
+						});
+
 						graph.repaint();
 					} else {
 						console.log("Oops, Sun Decl data not found...");
@@ -382,7 +389,9 @@
 						let mini = 90;
 						let maxi = -90;
 						let maxTime = '', minTime = '';
+						let labels = [];
 						Object.keys(declMap).forEach(key => {
+							labels.push(key);
 							let decl = declMap[key];
 							if (decl < mini) {
 								mini = decl;
@@ -406,6 +415,9 @@
 						graph.vgrid = minX + ":" + ((maxX - minX) / 10);
 						graph.hgrid = minY + ":" + ((maxY - minY) / 10);
 						//
+						graph.setVGridLabelsCallback(function(idx) {
+							return labels[idx.toFixed(0)];
+						});
 						graph.repaint();
 					} else {
 						console.log("Oops, Sun Decl data not found...");
@@ -1244,7 +1256,7 @@
 														 padding="5"
 														 value="null"
 														 label="Sun Declination"
-														 title="Sun Declination"></graph-display>
+														 title="Sun Declination&#13;10 days wide"></graph-display>
 
 							<graph-display id="decl-graph-02"
 														 tabindex="-1"
@@ -1254,7 +1266,7 @@
 														 padding="5"
 														 value="null"
 														 label="Moon Declination"
-														 title="Moon Declination"></graph-display>
+														 title="Moon Declination&#13;10 days wide"></graph-display>
 						</td>
 					</tr>
 					<tr>
