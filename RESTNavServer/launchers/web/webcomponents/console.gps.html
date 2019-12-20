@@ -249,7 +249,7 @@
 			setData('compass-display-01', val);
 		});
 
-		function dataToGraph(pivotDate, declMap, lineColor) {
+		function dataToGraph(pivotDate, declMap, lineColor, fillColor1, fillColor2) {
 			if (lineColor === undefined) {
 				lineColor = 'orange';
 			}
@@ -265,14 +265,14 @@
 					{
 						name: 'Declination, start',
 						lineColor: lineColor,
-						fillColor: null, // With gradient
+						fillColor: fillColor1, // With gradient ?
 						thickness: 5,
 						x: [],
 						values: [] // Same cardinality as x
 					}, {
 						name: 'Declination, all',
 						lineColor: lineColor,
-						fillColor: null, // With gradient
+						fillColor: fillColor2, // With gradient ?
 						thickness: 1,
 						x: [],
 						values: [] // Same cardinality as x
@@ -364,7 +364,7 @@
 						});
 						console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
 						// console.log(JSON.stringify(declMap));
-						let graphData = dataToGraph(now.format(DURATION_FMT), declMap);
+						let graphData = dataToGraph(now.format(DURATION_FMT), declMap, 'orange', null, 'rgba(255, 165, 0, 0.35)');
 						let graph = document.getElementById('decl-graph-01');
 						// Grid parameters. Make sure graphData.withGrid = true
 						let minX = graphData.minX;
@@ -410,7 +410,7 @@
 						});
 						console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
 						// console.log(JSON.stringify(declMap));
-						let graphData = dataToGraph(now.format(DURATION_FMT), declMap, 'white');
+						let graphData = dataToGraph(now.format(DURATION_FMT), declMap, 'white', null, 'rgba(255, 255, 255, 0.35)');
 						let graph = document.getElementById('decl-graph-02');
 						graph.data = graphData;
 						// Grid parameters. Make sure graphData.withGrid = true

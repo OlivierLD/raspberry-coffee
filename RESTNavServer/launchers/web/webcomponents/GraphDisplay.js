@@ -30,7 +30,7 @@ class GraphDisplay extends HTMLElement {
 			"data",   // Curve(s) data (injected)
 			"vgrid",  // Vertical grid. If exist (not null) a value like "0:10". Means start at 0, line every 10 units
 			"hgrid"   // Horizontal grid. If exist (not null) a value like "5:100.5". Means start at 5, line every 100.5 units
-			// TODO Tooltips, colored curve's area, CSS Stylesheets.
+			// TODO Tooltips, CSS Stylesheets.
 		];
 	}
 
@@ -423,6 +423,7 @@ class GraphDisplay extends HTMLElement {
 					console.log(`Moving to ${_x} / ${_y}`);
 				}
 				context.moveTo(_x, _y);
+				let first_X = _x, first_Y = _y;
 				for (let x=1; x<curve.x.length; x++) {
 					_x = this._padding + ((curve.x[x] - xOffset) * xRatio);
 					_y = this._height - this._padding - ((curve.values[x] - yOffset) * yRatio);
@@ -433,6 +434,14 @@ class GraphDisplay extends HTMLElement {
 				}
 				context.lineWidth = curve.thickness;
 				context.strokeStyle = curve.lineColor;
+				if (curve.fillColor !== null) {
+					context.lineTo(_x, this._height - this._padding); // Last abscissa, bottom
+					context.lineTo(first_X, this._height - this._padding); // First abscissa, bottom
+					context.lineTo(first_X, first_Y); // First point
+					context.fillStyle = curve.fillColor;
+					context.fill();
+				}
+
 				context.stroke();
 				context.closePath();
 			}
