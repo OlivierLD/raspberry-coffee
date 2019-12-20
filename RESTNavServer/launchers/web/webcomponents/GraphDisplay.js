@@ -1,9 +1,46 @@
 /**
- * This is the graphDisplay Web Component.
+ * This is the graph-display Web Component.
+ *
+ * data are injected at runtime, from JavaScript, as a JSON Object:
+ * document.getElementById('element-id').data = { curve-data };
+ *
+ * Several curves can be drawn on the same graph.
+ * Callbacks can be used to display (reformat) the abscissa and ordinate labels.
+ *
+ * Sample data Object: {
+			withGrid: true,
+			withXLabels: false,
+			withYLabels: true,
+			minX: 0,
+			maxX: 11,
+			minY: 0,
+			maxY: 10,
+			data: [
+				{
+					name: 'data one',
+					lineColor: 'orange',
+					fillColor: 'rgba(0, 255, 0, 0.35)', // With gradient ?
+					thickness: 3,
+					x: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
+					values: [ 1.2, 1.3, 2, 5, 10, 8, 9, 9, 6, 10 ] // Same cardinality as x
+				},
+				{
+					name: 'data two',
+					lineColor: 'red',
+					fillColor: null, // With gradient ?
+					thickness: 1,
+					x: [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
+					values: [ 5, 2.4, 1.3, 2, 5, 9, 8, 2, 9, 6 ] // Same cardinality as x
+				}
+			]
+		}
  */
 
 const graphDisplayVerbose = false;
 const GRAPH_TAG_NAME = 'graph-display';
+
+const VERTICAL_GRAPH = 0;
+const HORIZONTAL_GRAPH = 1;
 
 const graphDisplayDefaultColorConfig = {
 	bgColor: 'white',
@@ -27,10 +64,11 @@ class GraphDisplay extends HTMLElement {
 			"padding", // Integer, internal margin, in pixels
 			"value",  // String. Stringified numeric (or so) value to display (null by default, not displayed)
 			"label",  // String, like TWS, AWS, etc
+			"orientation", // horizontal or vertical. Default horizontal
 			"data",   // Curve(s) data (injected)
 			"vgrid",  // Vertical grid. If exist (not null) a value like "0:10". Means start at 0, line every 10 units
 			"hgrid"   // Horizontal grid. If exist (not null) a value like "5:100.5". Means start at 5, line every 100.5 units
-			// TODO Tooltips, CSS Stylesheets.
+			// TODO Tooltips (callback), CSS Stylesheets.
 		];
 	}
 
@@ -51,17 +89,21 @@ class GraphDisplay extends HTMLElement {
 		this._height = 100;
 		this._padding = 0;
 		this._label = "VAL";
+		this._orientation = HORIZONTAL_GRAPH;
 		this._data = null;
 		this._vgrid = null;
 		this._hgrid = null;
 
 		this._hGridLabelsCallback = (value) => {
-			return value.toFixed(0);
-		}
+			return value.toFixed(1);
+		};
 
 		this._vGridLabelsCallback = (value) => {
 			return value.toFixed(1);
-		}
+		};
+
+		this._doBefore = function(graphDisplay, context) {};
+		this._doAfter = function(graphDisplay, context) {};
 
 		this._previousClassName = "";
 		this.graphDisplayColorConfig = graphDisplayDefaultColorConfig;
@@ -117,6 +159,9 @@ class GraphDisplay extends HTMLElement {
 			case "hgrid":
 				this._hgrid = (newVal === 'null' ? null : newVal);
 				break;
+			case "orientation":
+				this._orientation = (newVal === 'vertical' ? VERTICAL_GRAPH : HORIZONTAL_GRAPH);
+				break;
 			default:
 				break;
 		}
@@ -166,6 +211,10 @@ class GraphDisplay extends HTMLElement {
 		this.setAttribute("hgrid", val);
 	}
 
+	set orientation(val) {
+		this.setAttribute("orientation", val);
+	}
+
 	set shadowRoot(val) {
 		this._shadowRoot = val;
 	}
@@ -200,6 +249,10 @@ class GraphDisplay extends HTMLElement {
 
 	get hgrid() {
 		return this._hgrid;
+	}
+
+	get orientation() {
+		return (this._orientation === VERTICAL_GRAPH ? 'vertical' : 'horizontal');
 	}
 
 	get shadowRoot() {
@@ -272,6 +325,13 @@ class GraphDisplay extends HTMLElement {
 		this._vGridLabelsCallback = func;
 	}
 
+	setDoBefore(func) {
+		this._doBefore = func;
+	}
+	setDoAfter(func) {
+		this._doAfter = func;
+	}
+
 	repaint() {
 		this.drawGraph();
 	}
@@ -310,6 +370,8 @@ class GraphDisplay extends HTMLElement {
 		// Background
 		GraphDisplay.roundRect(context, 0, 0, this.canvas.width, this.canvas.height, 10, true, false);
 
+		this._doBefore(this, context);
+
 		context.fillStyle = this.graphDisplayColorConfig.displayColor;
 		// Label
 		context.font = "bold " + Math.round(scale * 16) + "px " + this.graphDisplayColorConfig.labelFont;
@@ -330,21 +392,26 @@ class GraphDisplay extends HTMLElement {
 			// console.log(`From ${minX} to ${maxX}`);
 			let xAmpl = maxX - minX;
 			let yAmpl = this._data.maxY - this._data.minY;
-			let xRatio = (this._width - (2 * this._padding)) /  xAmpl;
+			let xRatio = ((this._orientation === HORIZONTAL_GRAPH ? this._width : this._height) - (2 * this._padding)) / xAmpl;
 			let xOffset = minX;
-			let yRatio = (this._height - (2 * this._padding)) / yAmpl;
+			let yRatio = ((this._orientation === HORIZONTAL_GRAPH ? this._height : this._width) - (2 * this._padding)) / yAmpl;
 			let yOffset = this._data.minY;
 
 			// Grid? IN the data. No data => no grid
 			if (this._data.withGrid === true) {
-				if (this._vgrid !== null) {
+				if (this._vgrid !== null) { // X axis, abscissa
 					let startAt = parseFloat(this._vgrid.substring(0, this._vgrid.indexOf(':')));
 					let step = parseFloat(this._vgrid.substring(this._vgrid.indexOf(':') + 1));
 					context.beginPath();
 					let abscissa = startAt;
 					let keepWorking = true;
 					while (keepWorking) {
-						let _x = this._padding + ((abscissa - xOffset) * xRatio);
+						let _x;
+						if (this._orientation === HORIZONTAL_GRAPH) {
+							_x = this._padding + ((abscissa - xOffset) * xRatio);
+						} else {
+							_x = this._padding + ((abscissa - yOffset) * yRatio);
+						}
 						if (_x > this._width) {
 							keepWorking = false;
 						} else {
@@ -357,10 +424,12 @@ class GraphDisplay extends HTMLElement {
 								context.fillStyle = this.graphDisplayColorConfig.gridColor;
 								context.font = Math.round(scale * 12) + "px " + this.graphDisplayColorConfig.labelFont;
 								let strVal = this._vGridLabelsCallback(abscissa);
-								let metrics = context.measureText(strVal);
-								let len = metrics.width;
+								// let metrics = context.measureText(strVal);
+								// let len = metrics.width;
 								// Rotate
 								context.save();
+								// context.translate(_x, this._orientation === HORIZONTAL_GRAPH ? this.canvas.height : -this.canvas.height);
+								// context.rotate((this._orientation === HORIZONTAL_GRAPH ? -Math.PI / 2 : Math.PI / 2));
 								context.translate(_x, this.canvas.height);
 								context.rotate(-Math.PI / 2);
 								// context.fillText(strVal, _x, this._height - this._padding);
@@ -375,15 +444,21 @@ class GraphDisplay extends HTMLElement {
 					context.stroke();
 					context.closePath();
 				}
-				if (this._hgrid !== null) {
+				if (this._hgrid !== null) { // Y axis, ordinates
 					let startAt = parseFloat(this._hgrid.substring(0, this._hgrid.indexOf(':')));
 					let step = parseFloat(this._hgrid.substring(this._hgrid.indexOf(':') + 1));
 					context.beginPath();
 					let ordinate = startAt;
 					let keepWorking = true;
 					while (keepWorking) {
-						let _y = this._height - this._padding - ((ordinate - yOffset) * yRatio);
-						if (_y < 0) {
+						let _y;
+						if (this._orientation === HORIZONTAL_GRAPH) {
+							_y = this._height - this._padding - ((ordinate - yOffset) * yRatio);
+						} else {
+							_y = this._padding + ((ordinate - xOffset) * xRatio);
+						}
+						if ((this._orientation === HORIZONTAL_GRAPH &&_y < 0) ||
+								(this._orientation === VERTICAL_GRAPH &&_y > this.height)) {
 							keepWorking = false;
 						} else {
 							let _x = this._padding;
@@ -409,7 +484,7 @@ class GraphDisplay extends HTMLElement {
 			}
 
 			// Curves
-			for (let i=0; i<this._data.data.length; i++) {
+			for (let i = 0; i < this._data.data.length; i++) {
 				let curve = this._data.data[i];
 				if (curve.values.length !== curve.x.length) {
 					console.log(`Cardinality mismatch at index ${i}: ${curve.x.length} x, ${curve.values.length} y`);
@@ -418,36 +493,58 @@ class GraphDisplay extends HTMLElement {
 				// Curve
 				context.beginPath();
 				let _x = this._padding + (curve.x[0] - xOffset) * xRatio;
-				let _y = this._height - this._padding - ((curve.values[0] - yOffset) * yRatio);
+				let _y;
+				if (this._orientation === HORIZONTAL_GRAPH) {
+					_y = this._height - this._padding - ((curve.values[0] - yOffset) * yRatio);
+				} else {
+					_y = this._padding + ((curve.values[0] - yOffset) * yRatio);
+				}
 				if (graphDisplayVerbose) {
 					console.log(`Moving to ${_x} / ${_y}`);
 				}
-				context.moveTo(_x, _y);
-				let first_X = _x, first_Y = _y;
-				for (let x=1; x<curve.x.length; x++) {
+				if (this._orientation === HORIZONTAL_GRAPH) {
+					context.moveTo(_x, _y);
+				} else {
+					context.moveTo(_y, _x);
+				}
+				let firstX = _x, firstY = _y;
+				for (let x = 1; x < curve.x.length; x++) {
 					_x = this._padding + ((curve.x[x] - xOffset) * xRatio);
-					_y = this._height - this._padding - ((curve.values[x] - yOffset) * yRatio);
+					if (this._orientation === HORIZONTAL_GRAPH) {
+						_y = this._height - this._padding - ((curve.values[x] - yOffset) * yRatio);
+					} else {
+						_y = this._padding + ((curve.values[x] - yOffset) * yRatio);
+					}
 					if (graphDisplayVerbose) {
 						console.log(`Lining to ${_x} / ${_y}`);
 					}
-					context.lineTo(_x, _y);
+					if (this._orientation === HORIZONTAL_GRAPH) {
+						context.lineTo(_x, _y);
+					} else {
+						context.lineTo(_y, _x);
+					}
 				}
 				context.lineWidth = curve.thickness;
 				context.strokeStyle = curve.lineColor;
 				if (curve.fillColor !== null) {
-					context.lineTo(_x, this._height - this._padding); // Last abscissa, bottom
-					context.lineTo(first_X, this._height - this._padding); // First abscissa, bottom
-					context.lineTo(first_X, first_Y); // First point
+					if (this._orientation === HORIZONTAL_GRAPH) {
+						context.lineTo(_x, this._height - this._padding);     // Last abscissa, bottom
+						context.lineTo(firstX, this._height - this._padding); // First abscissa, bottom
+						context.lineTo(firstX, firstY); // First point
+					} else {
+						context.lineTo(this._padding, _x);     // Last abscissa, bottom
+						context.lineTo(this._padding, firstX, ); // First abscissa, bottom
+						context.lineTo(firstY, firstX); // First point
+					}
 					context.fillStyle = curve.fillColor;
 					context.fill();
 				}
-
 				context.stroke();
 				context.closePath();
 			}
 
 		}
-
+		this._doAfter(this, context);
 	}
 
 	static roundRect(ctx, x, y, width, height, radius, fill, stroke) {
