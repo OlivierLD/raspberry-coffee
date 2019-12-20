@@ -13,7 +13,6 @@ const graphDisplayDefaultColorConfig = {
 	},
 	gridColor: 'rgba(255, 255, 255, 0.7)',
 	displayColor: 'cyan',
-	valueNbDecimal: 2,
 	labelFont: 'Courier New',
 	valueFont: 'Arial'
 };
@@ -26,11 +25,12 @@ class GraphDisplay extends HTMLElement {
 			"width",  // Integer. Canvas width
 			"height", // Integer. Canvas height
 			"padding", // Integer, internal margin, in pixels
-			"value",  // String. Stringified numeric (or so) value to display (null by default)
+			"value",  // String. Stringified numeric (or so) value to display (null by default, not displayed)
 			"label",  // String, like TWS, AWS, etc
-			"data",   // Curve(s) data
+			"data",   // Curve(s) data (injected)
 			"vgrid",  // Vertical grid. If exist (not null) a value like "0:10". Means start at 0, line every 10 units
 			"hgrid"   // Horizontal grid. If exist (not null) a value like "5:100.5". Means start at 5, line every 100.5 units
+			// TODO Tooltips, colored curve's area, CSS Stylesheets.
 		];
 	}
 
@@ -243,9 +243,6 @@ class GraphDisplay extends HTMLElement {
 										case '--display-color':
 											colorConfig.displayColor = value;
 											break;
-										case '--value-nb-decimal':
-											colorConfig.valueNbDecimal = value;
-											break;
 										case '--label-font':
 											colorConfig.labelFont = value;
 											break;
@@ -319,11 +316,10 @@ class GraphDisplay extends HTMLElement {
 		context.fillText(this.label, 5, 18);
 		// Value
 		if (this._value !== null) {
-			context.font = "bold " + Math.round(scale * 30) + "px " + this.graphDisplayColorConfig.valueFont; // TODO Font size in a style
-			let strVal = this._value; // .toFixed(this.graphDisplayColorConfig.valueNbDecimal);
+			context.font = "bold " + Math.round(scale * 30) + "px " + this.graphDisplayColorConfig.valueFont;
+			let strVal = this._value;
 			let metrics = context.measureText(strVal);
 			let len = metrics.width;
-
 			context.fillText(strVal, this.canvas.width - len - 5, this.canvas.height - 5);
 		}
 
@@ -357,24 +353,25 @@ class GraphDisplay extends HTMLElement {
 							context.lineTo(_x, this._padding);
 
 							// X Label
-							context.fillStyle = this._data.gridColor;
-							context.font = Math.round(scale * 12) + "px " + this.graphDisplayColorConfig.labelFont; // TODO Font size in a style
-							let strVal = this._vGridLabelsCallback(abscissa);
-							let metrics = context.measureText(strVal);
-							let len = metrics.width;
-							// Rotate
-							context.save();
-							context.translate(_x, this.canvas.height);
-							context.rotate(-Math.PI / 2);
-							// context.fillText(strVal, _x, this._height - this._padding);
-							context.fillText(strVal, 2, 1);
-							context.restore();
-
+							if (this._data.withXLabels === true) {
+								context.fillStyle = this.graphDisplayColorConfig.gridColor;
+								context.font = Math.round(scale * 12) + "px " + this.graphDisplayColorConfig.labelFont;
+								let strVal = this._vGridLabelsCallback(abscissa);
+								let metrics = context.measureText(strVal);
+								let len = metrics.width;
+								// Rotate
+								context.save();
+								context.translate(_x, this.canvas.height);
+								context.rotate(-Math.PI / 2);
+								// context.fillText(strVal, _x, this._height - this._padding);
+								context.fillText(strVal, this._padding + 1, 1);
+								context.restore();
+							}
 							abscissa += step;
 						}
 					}
 					context.lineWidth = 0.5;
-					context.strokeStyle = this._data.gridColor;
+					context.strokeStyle = this.graphDisplayColorConfig.gridColor;
 					context.stroke();
 					context.closePath();
 				}
@@ -393,18 +390,19 @@ class GraphDisplay extends HTMLElement {
 							context.moveTo(_x, _y);
 							context.lineTo(this._width - this._padding, _y);
 							// Y Label
-							context.fillStyle = this._data.gridColor;
-							context.font = Math.round(scale * 12) + "px " + this.graphDisplayColorConfig.labelFont; // TODO Font size in a style
-							let strVal = this._hGridLabelsCallback(ordinate);
-							let metrics = context.measureText(strVal);
-							let len = metrics.width;
-							context.fillText(strVal, this.canvas.width - len - this._padding, _y);
-
+							if (this._data.withYLabels === true) {
+								context.fillStyle = this.graphDisplayColorConfig.gridColor;
+								context.font = Math.round(scale * 12) + "px " + this.graphDisplayColorConfig.labelFont;
+								let strVal = this._hGridLabelsCallback(ordinate);
+								let metrics = context.measureText(strVal);
+								let len = metrics.width;
+								context.fillText(strVal, this.canvas.width - len - this._padding, _y);
+							}
 							ordinate += step;
 						}
 					}
 					context.lineWidth = 0.5;
-					context.strokeStyle = this._data.gridColor;
+					context.strokeStyle = this.graphDisplayColorConfig.gridColor;
 					context.stroke();
 					context.closePath();
 				}

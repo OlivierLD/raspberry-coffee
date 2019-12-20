@@ -255,8 +255,8 @@
 			}
 			let finalData = {
 				withGrid: true,
-				gridColor: 'lime',
-				xLabels: [],
+				withXLabels: false,
+				withYLabels: true,
 				minX: 0,
 				maxX: 0,
 				minY: 0,
@@ -376,8 +376,14 @@
 						//
 						graph.data = graphData;
 						graph.setVGridLabelsCallback(function(idx) {
-							// console.log('For idx ', idx.toFixed(0));
-							return labels[idx.toFixed(0)];
+							let label = labels[idx.toFixed(0)];
+							if (label !== undefined) {
+								label =  label.substring(0, label.lastIndexOf(':')).replace('T', ' ');
+							} else {
+								label = ""; // ` -- ${idx.toFixed(0)} --`;
+							}
+							// console.log(`For ${idx.toFixed(0)}, label ${label}`);
+							return label;
 						});
 
 						graph.repaint();
@@ -416,7 +422,14 @@
 						graph.hgrid = minY + ":" + ((maxY - minY) / 10);
 						//
 						graph.setVGridLabelsCallback(function(idx) {
-							return labels[idx.toFixed(0)];
+							let label = labels[idx.toFixed(0)];
+							if (label !== undefined) {
+								label =  label.substring(0, label.lastIndexOf(':')).replace('T', ' ');
+							} else {
+								label = ""; // ` -- ${idx.toFixed(0)} --`;
+							}
+							// console.log(`For ${idx.toFixed(0)}, label ${label}`);
+							return label;
 						});
 						graph.repaint();
 					} else {
@@ -1251,7 +1264,7 @@
 							<graph-display id="decl-graph-01"
 														 tabindex="-1"
 														 class=""
-														 width="400"
+														 width="450"
 														 height="200"
 														 padding="5"
 														 value="null"
@@ -1261,7 +1274,7 @@
 							<graph-display id="decl-graph-02"
 														 tabindex="-1"
 														 class=""
-														 width="400"
+														 width="450"
 														 height="200"
 														 padding="5"
 														 value="null"
