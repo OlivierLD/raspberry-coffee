@@ -76,6 +76,7 @@
 			gpsSatelliteData = val;
 		});
 		events.subscribe('hdg', function(val) {
+			hdg = val;
 			setData('compass-rose-01', val);
 		});
 		events.subscribe('twd', function(val) {

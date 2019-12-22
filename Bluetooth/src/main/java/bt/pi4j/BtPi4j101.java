@@ -9,6 +9,7 @@ import java.util.Date;
 
 public class BtPi4j101 {
 	/**
+	 *
 	 * This example program supports the following optional command arguments/options:
 	 *   "--device (device-path)"                   [DEFAULT: /dev/ttyAMA0]
 	 *   "--baud (baud-rate)"                       [DEFAULT: 9600]

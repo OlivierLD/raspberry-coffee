@@ -11,6 +11,8 @@
 			withGrid: true,
 			withXLabels: false,
 			withYLabels: true,
+			thickX: null,
+			thickY: null,
 			minX: 0,
 			maxX: 11,
 			minY: 0,
@@ -67,7 +69,8 @@ class GraphDisplay extends HTMLElement {
 			"orientation", // horizontal or vertical. Default horizontal
 			"data",   // Curve(s) data (injected)
 			"vgrid",  // Vertical grid. If exist (not null) a value like "0:10". Means start at 0, line every 10 units
-			"hgrid"   // Horizontal grid. If exist (not null) a value like "5:100.5". Means start at 5, line every 100.5 units
+			"hgrid",  // Horizontal grid. If exist (not null) a value like "5:100.5". Means start at 5, line every 100.5 units
+
 			// TODO Tooltips (callback), CSS Stylesheets.
 		];
 	}
@@ -385,7 +388,7 @@ class GraphDisplay extends HTMLElement {
 			context.fillText(strVal, this.canvas.width - len - 5, this.canvas.height - 5);
 		}
 
-		// Curves
+		// Curves & Axis
 		if (this._data !== null) {
 			let minX = this._data.minX;
 			let maxX = this._data.maxX;
@@ -444,6 +447,36 @@ class GraphDisplay extends HTMLElement {
 					context.stroke();
 					context.closePath();
 				}
+				if (this._data.thickX !== null && this._data.thickX !== undefined) {
+					context.beginPath();
+					let _x = this._padding + (this._data.thickX - xOffset) * xRatio;
+					let _y;
+					if (this._orientation === HORIZONTAL_GRAPH) {
+						_y = this._height - this._padding;
+					} else {
+						_y = this._padding;
+					}
+					if (this._orientation === HORIZONTAL_GRAPH) {
+						context.moveTo(_x, _y);
+					} else {
+						context.moveTo(_y, _x);
+					}
+					if (this._orientation === HORIZONTAL_GRAPH) {
+						_y = this._padding;
+					} else {
+						_y = this._width - this._padding;
+					}
+					if (this._orientation === HORIZONTAL_GRAPH) {
+						context.lineTo(_x, _y);
+					} else {
+						context.lineTo(_y, _x);
+					}
+					context.lineWidth = 2;
+					context.strokeStyle = this.graphDisplayColorConfig.gridColor;
+					context.stroke();
+					context.closePath();
+				}
+
 				if (this._hgrid !== null) { // Y axis, ordinates
 					let startAt = parseFloat(this._hgrid.substring(0, this._hgrid.indexOf(':')));
 					let step = parseFloat(this._hgrid.substring(this._hgrid.indexOf(':') + 1));
@@ -477,6 +510,31 @@ class GraphDisplay extends HTMLElement {
 						}
 					}
 					context.lineWidth = 0.5;
+					context.strokeStyle = this.graphDisplayColorConfig.gridColor;
+					context.stroke();
+					context.closePath();
+				}
+				if (this._data.thickY !== null && this._data.thickY !== undefined) {
+					context.beginPath();
+					let _x = this._padding;
+					let _y;
+					if (this._orientation === HORIZONTAL_GRAPH) {
+						_y = this._height - this._padding - ((this._data.thickY - yOffset) * yRatio);
+					} else {
+						_y = this._padding + ((this._data.thickY - yOffset) * yRatio);
+					}
+					if (this._orientation === HORIZONTAL_GRAPH) {
+						context.moveTo(_x, _y);
+					} else {
+						context.moveTo(_y, _x);
+					}
+					_x = (this._orientation === HORIZONTAL_GRAPH ? this._width - this._padding : this._height - this._padding);
+					if (this._orientation === HORIZONTAL_GRAPH) {
+						context.lineTo(_x, _y);
+					} else {
+						context.lineTo(_y, _x);
+					}
+					context.lineWidth = 2;
 					context.strokeStyle = this.graphDisplayColorConfig.gridColor;
 					context.stroke();
 					context.closePath();

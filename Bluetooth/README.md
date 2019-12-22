@@ -275,6 +275,8 @@ This requires a slight modification in the wiring:
 
 This way, you do not need to unplug the `HC-05` to upload a sketch, the program (`basic.SimpleSerialPI4JCommunication`) interacts with the `HC-05` on its own port, 
 and you can have the desired output in the Serial Monitor of the Arduino IDE.
+
+You can run the script named `java.basic.pi4j.sh` from the Raspberry Pi.
 ![2 outputs](./2.serial.ports.png)
 
 ##### With a piezo buzzer
@@ -291,7 +293,7 @@ If uncommented, then you can wire your circuit like that:
 The buzzer's hot wire to the pin #8, the other grounded.
 
 ### TODO
-- Raspberry as a Bluetooth device
+- Raspberry **as** a Bluetooth device
     - As an OBD (see below) server?
     - See [this](https://ubidots.com/blog/setup-raspberry-wifi-ubidots-send-data/)
 

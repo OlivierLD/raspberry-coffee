@@ -152,7 +152,9 @@ public class NMEACache implements Task<NMEADataCache>, Serializable {
 	 */
 	public NMEADataCache execute() {
 		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
-		cache.remove(NMEADataCache.DEVIATION_DATA);
+		if ("true".equals(System.getProperty("remove.dev.curve", "true"))) {
+			cache.remove(NMEADataCache.DEVIATION_DATA);
+		}
 		try {
 			String content = new Gson().toJson(cache).toString(); // For tests
 			System.out.println(">>> Cache, as Json:" + content);

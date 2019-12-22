@@ -1,10 +1,12 @@
 /*
- * Use the LED_BUILTIN, 
- * no resistor needed, no extra led.
+ * Use in standalone, through the Serial Console.
  * 
+ * Use the LED_BUILTIN,
+ * no resistor needed, no extra led.
+ *
  * Expects to receive '0'or '1', as characters.
  */
- 
+
 #define ledPin LED_BUILTIN
 int state = 0; // This is the character code.
 
@@ -15,7 +17,7 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available() > 0) { // Checks whether data is comming from the serial port
+  if (Serial.available() > 0) { // Checks whether data is coming from the serial port
     state = Serial.read(); // Reads the data from the serial port
   }
 

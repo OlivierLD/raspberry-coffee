@@ -612,7 +612,7 @@ class WorldMap extends HTMLElement {
 				s += '-'
 			}
 		}
-		s += i + "°" + dec.toFixed(2) + "'";
+		s += i + "°" + Utilities.lpad(dec.toFixed(2), 5, '0') + "'";
 
 		return s;
 	}

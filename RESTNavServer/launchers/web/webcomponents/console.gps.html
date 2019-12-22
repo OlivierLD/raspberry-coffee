@@ -226,7 +226,8 @@
 		events.subscribe('gps-time', (val) => {
 			// console.log(">> GPS-Time: ", val);
 			// val.format("Y-M-d H:i:s")
-			let time = new Date(val).format("H:i:s");
+			gpsTime = new Date(val);
+			let time = gpsTime.format("H:i:s");
 			setData('analog-watch-01', time);
 			let date = new Date(val).format("d-m-Y-l");
 			setData('calendar-01', date);
@@ -246,7 +247,12 @@
 		events.subscribe('cog', (val) => {
 			setData('compass-rose-01', val);
 			setData('compass-01', val);
+			// setData('compass-display-01', val);
+		});
+		events.subscribe('hdg', (val) => {
+			hdg = val;
 			setData('compass-display-01', val);
+			setHdgOnDevCurve('compass-deviation', val);
 		});
 
 		function dataToGraph(pivotDate, declMap, lineColor, fillColor1, fillColor2) {
@@ -321,8 +327,12 @@
 		function loadDeclinations() {
 			// Payload: { bodies: [ "Sun", "Moon" ], from: '2019-12-15T00:00:00', to: '2019-12-25T00:00:00' }
 			let now = new Date(); // Get it in UTC
-			// console.log("TimeOffset:", now.getTimezoneOffset());
-			now.setTime(now.getTime() + (now.getTimezoneOffset() * 60000)); // timeOffset returned in minutes.
+			if (gpsTime !== undefined) {
+				now = gpsTime;
+			} else {
+				// console.log("TimeOffset:", now.getTimezoneOffset());
+				now.setTime(now.getTime() + (now.getTimezoneOffset() * 60000)); // timeOffset returned in minutes.
+			}
 			console.log(`Calculating declination for date ${now.format(DURATION_FMT)}`);
 			let dateOffset = 5 * DAY; // 5 days
 			let from = new Date();
@@ -364,6 +374,7 @@
 						});
 						console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
 						// console.log(JSON.stringify(declMap));
+						// Use GPS Date if present
 						let graphData = dataToGraph(now.format(DURATION_FMT), declMap, 'orange', null, 'rgba(255, 165, 0, 0.35)');
 						let graph = document.getElementById('decl-graph-01');
 						// Grid parameters. Make sure graphData.withGrid = true
@@ -410,6 +421,7 @@
 						});
 						console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
 						// console.log(JSON.stringify(declMap));
+						// Use GPS Date if present
 						let graphData = dataToGraph(now.format(DURATION_FMT), declMap, 'white', null, 'rgba(255, 255, 255, 0.35)');
 						let graph = document.getElementById('decl-graph-02');
 						graph.data = graphData;
@@ -830,9 +842,9 @@
 		<span id="boat-data-switch" onclick="expandCollapseBoatData();" style="cursor: pointer; padding-left: 40px;">- Boat Data</span>
 		<div id="nmea-widgets-1" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 0px 10px 10px 10px; text-align: center;">
 			<div id="boat-data" class="boat-data" style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 2; grid-template-columns: auto;">
-				<div id="row-1" style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto auto; padding: 10px;">
+				<div id="row-1" style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto auto auto; padding: 10px;">
 					<!--
-					   BOUSSOLE...
+					   BOUSSOLE... HDG
 					 +-->
 					<div id="boussole">
 						<div class="black-frame centered">
@@ -863,6 +875,19 @@
 								<span class="switch-right">No</span>
 							</label>
 						</div>
+					</div>
+					<!--
+					    DEVIATION Curve(s).
+					 +-->
+					<div id="deviation" class="black-frame centered">
+						<graph-display id="compass-deviation"
+													 width="150"
+													 height="300"
+													 padding="5"
+													 value="null"
+													 orientation="vertical"
+													 label="Deviation"
+													 title="Deviation"></graph-display>
 					</div>
 					<!--
 							COG

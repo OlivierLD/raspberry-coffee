@@ -12,6 +12,7 @@ JAVA_OPTS="$JAVA_OPTS -Dbaud.rate=9600"
 ############################
 # JAVA_OPTS="$JAVA_OPTS -Dserial.port=/dev/ttyS0"
 JAVA_OPTS="$JAVA_OPTS -Dport.name=/dev/rfcomm0"
+SUDO="sudo "
 ############################
 COMMAND="${SUDO}java -cp $CP $JAVA_OPTS basic.SimpleSerialPI4JCommunication"
 ${COMMAND}

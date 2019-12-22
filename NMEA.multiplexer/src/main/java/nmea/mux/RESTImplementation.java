@@ -228,6 +228,11 @@ public class RESTImplementation {
 					"Reset the cache"),
 			new Operation(
 					"GET",
+					REST_PREFIX + "/dev-curve",
+					this::getDevCurve,
+					"Get the deviation curve as a json object"),
+			new Operation(
+					"GET",
 					REST_PREFIX + "/position",
 					this::getPosition,
 					"Get position from the cache"),
@@ -2249,7 +2254,7 @@ public class RESTImplementation {
 					NMEAUtils.calculateVMGs(cache);
 					final JsonElement _jsonElement = new Gson().toJsonTree(cache); // I know, ah shit!
 					//	String str = new Gson().toJson(cache);
-					((JsonObject) _jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client, drop it.
+					((JsonObject) _jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Usually useless for the client, drop it.
 					if (tiny || txt) {
 						REMOVE_WHEN_TINY.stream()
 								.forEach(member -> ((JsonObject) _jsonElement).remove(member));
@@ -2336,6 +2341,23 @@ public class RESTImplementation {
 		return response;
 	}
 
+	private HTTPServer.Response getDevCurve(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
+		List<double[]> deviationCurve = (List<double[]>)cache.get(NMEADataCache.DEVIATION_DATA);
+
+		JsonElement jsonElement = null;
+		try {
+			jsonElement = new Gson().toJsonTree(deviationCurve);
+		} catch (Exception ex) {
+			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> Get Dev Curve", ex);
+		}
+		String content = jsonElement != null ? jsonElement.toString() : "";
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
 	private HTTPServer.Response getPosition(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 

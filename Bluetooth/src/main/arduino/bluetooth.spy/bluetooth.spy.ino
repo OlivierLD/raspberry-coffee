@@ -51,6 +51,7 @@ void setup() {
   Serial.begin(CONSOLE_BR); // Serial Monitor
 
   initMorseAlphabet(); // in morse.ino
+  Serial.println("Bluetooth Spy ready");
 }
 
 void loop() {

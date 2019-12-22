@@ -17,6 +17,8 @@ import static utils.TimeUtil.delay;
 
 public class BtPi4j {
 	/**
+	 * Use with Arduino running bluetooth.101.ino
+   *
 	 * From scratch, not from the PI4J samples.
 	 * Uses the Serial library from PI4J.
 	 *

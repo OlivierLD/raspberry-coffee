@@ -14,6 +14,8 @@ import java.io.IOException;
 
 public class BtPi4j103 {
 	/**
+	 * Use with Arduino running bluetooth.101.ino
+	 *
 	 * This example program supports the following optional command arguments/options:
 	 * "--device (device-path)"                   [DEFAULT: /dev/ttyAMA0]
 	 * "--baud (baud-rate)"                       [DEFAULT: 9600]

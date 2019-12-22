@@ -68,6 +68,11 @@ public class RESTImplementation {
 					NAV_PREFIX + "/polar-file-location",
 					this::getPolarFileLocation,
 					"Returns the polar file location passed as System variable."),
+//			new Operation(
+//					"GET",
+//					NAV_PREFIX + "/dev-curve",
+//					this::getDeviationCurve,
+//					"Returns the deviation curve as a JSON Object."),
 
 			new Operation(
 					"POST",

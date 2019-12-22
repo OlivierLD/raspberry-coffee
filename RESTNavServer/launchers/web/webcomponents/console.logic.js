@@ -122,6 +122,40 @@ function setData(id, value) {
 	elem.value = value;                            // value corresponds to the 'set value(val) { ...', invokes the setter in the HTMLElement class
 	elem.repaint();
 }
+
+let deviationCurve = null;
+
+function devFromHdg(hdg) {
+	let dev = 0;
+	if (deviationCurve != null) {
+		let prevIndex = 0;
+		let deltaX = 10;
+		for (let i=0; i<deviationCurve.length; i++) {
+			if (deviationCurve[i][0] > hdg) {
+				prevIndex = i - 1;
+				deltaX = deviationCurve[prevIndex + 1][0] - deviationCurve[prevIndex][0];
+				break;
+			}
+		}
+		dev = deviationCurve[prevIndex][1];
+		if ((prevIndex * 10) !== hdg) {
+			let deltaY = deviationCurve[prevIndex + 1][1] - deviationCurve[prevIndex][1];
+			let diff = (deltaY * ((hdg - (prevIndex * deltaX)) / deltaX));
+			dev += diff;
+		}
+	}
+	return dev;
+}
+
+function setHdgOnDevCurve(id, hdg) { // Triggered when HDG is updated (event.subscribe)
+	let elem = document.getElementById(id);
+	if (elem !== null && elem !== undefined && deviationCurve !== null) {
+		let value = devFromHdg(hdg); // Find dev value with hdg in dev curve
+		elem.value = (value < 0 ? "W " : "E ") + Math.abs(value).toFixed(1) + "°";
+		elem.repaint();
+	}
+}
+
 let storedHistory = [];
 
 function setRawNMEA(sentence) {
@@ -687,6 +721,8 @@ let aws = 0;
 let awa = 0;
 let tws = 0;
 let twa = 0;
+let hdg = 0;
+let gpsTime = undefined;
 
 let gpsPosition = undefined;
 let withStars = false;
@@ -710,7 +746,21 @@ const DISPLAYS = [
 	'aw-01',
 	'analog-watch-01',
 	'analog-watch-02'
+		// TODO Dev Curve Style?
 ];
+
+function devCurveCallback(elmt, context) {
+	// console.log('In DevCurveCallback, hdg=', hdg);
+	context.beginPath();
+	context.lineWidth = 3;
+	context.strokeStyle = 'red';
+	// Assume it is a vertical graph
+	context.moveTo(0, elmt._padding + ((elmt._height - (2 * elmt._padding)) * (hdg / 360)));
+	context.lineTo(elmt._width, elmt._padding + ((elmt._height - (2 * elmt._padding)) * (hdg / 360)));
+	context.stroke();
+	context.closePath();
+}
+
 window.onload = () => {
 	/* global initAjax */
 	initAjax(); // Default. See later for a WebSocket option
@@ -814,6 +864,71 @@ window.onload = () => {
 						console.log('... Bad.');
 					}
 				}, false);
+	}
+
+	let devCurve = document.getElementById('compass-deviation');
+	if (devCurve !== null && devCurve !== undefined) { // TODO Set the callback to position the Compass Heading
+		// Get curve data
+		let getData = requestDevCurve();
+		getData.then((value) => { // Resolve
+			let devData = JSON.parse(value);
+			// console.log('Deviation data:', JSON.stringify(devData, null, 2));
+			deviationCurve = devData;
+			let finalData = {
+				withGrid: true,
+				withXLabels: true,
+				withYLabels: true,
+				minX: 0,
+				maxX: 360,
+				minY: 0,
+				maxY: 0,
+				thickX: null,
+				thickY: 0,
+				data: [
+					{
+						name: 'Deviation dev on HDM',
+						lineColor: 'lime',
+						fillColor: null,
+						thickness: 3,
+						x: [],
+						values: [] // Same cardinality as x
+					} /* , { TODO dev on HDG
+						name: 'Declination, all',
+						lineColor: lineColor,
+						fillColor: fillColor2, // With gradient ?
+						thickness: 1,
+						x: [],
+						values: [] // Same cardinality as x
+					} */
+				]
+			};
+			let mini = Number.MAX_VALUE;
+			let maxi = -Number.MAX_VALUE;
+			let x = [], y = [];
+			devData.forEach(tuple => {
+				let hdg = tuple[0];
+				let dev = tuple[1];
+				mini = Math.min(mini, dev);
+				maxi = Math.max(maxi, dev);
+				x.push(hdg);
+				y.push(dev);
+			});
+			finalData.data[0].x = x;
+			finalData.data[0].values = y;
+			finalData.minY = Math.min(mini, -3);
+			finalData.maxY = Math.max(maxi, 3);
+			console.log("DevCurve data:", finalData);
+			devCurve.data = finalData;
+			let amplitude = finalData.maxY - finalData.minY;
+			devCurve.vgrid = Math.floor(finalData.minY).toFixed(0) + ":" + (amplitude < 7 ? "1" : "2");
+			devCurve.hgrid = "0:45";
+			devCurve.setDoAfter((elmt, context) => {
+				devCurveCallback(elmt, context);
+			});
+			devCurve.repaint();
+		}, (error) => { // Error
+			console.log('Error getting dev curve:', error);
+		});
 	}
 };
 

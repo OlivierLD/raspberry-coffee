@@ -95,6 +95,10 @@ function requestDeclinations(payload) {
 	return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, payload, false);
 }
 
+function requestDevCurve() {
+	let url = "/mux/dev-curve";
+	return getPromise(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+}
 
 function requestSunPath(pos) {
 	let url = "/astro/sun-path-today";

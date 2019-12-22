@@ -27,5 +27,5 @@ JAVA_OPTS="$JAVA_OPTS -Dbaud.rate=9600"
 # JAVA_OPTS="$JAVA_OPTS -Dserial.port=/dev/tty.Bluetooth-Incoming-Port"
 JAVA_OPTS="$JAVA_OPTS -Dserial.port=/dev/tty.HC-05-DevB"
 ############################
-COMMAND="${SUDO}java -cp $CP $JAVA_OPTS bt.BT101"
+COMMAND="${SUDO}java -cp ${CP} ${JAVA_OPTS} bt.BT101"
 ${COMMAND}

@@ -1,4 +1,6 @@
 /*
+ * Use in standalone through the Serial Console.
+ * 
  * Echoes what it receives.
  * Duh.
  */
