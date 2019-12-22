@@ -114,7 +114,7 @@ public class SimpleSerialPI4JCommunication {
 					.stopBits(StopBits._1)
 					.flowControl(FlowControl.NONE);
 
-			System.out.println("Let's get started");
+			System.out.println("Let's get started...");
 
 			// open the default serial device/port with the configuration settings
 			serial.open(config);
