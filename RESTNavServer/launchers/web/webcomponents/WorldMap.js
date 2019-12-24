@@ -1574,6 +1574,19 @@ class WorldMap extends HTMLElement {
 		return g;
 	}
 
+	static lngOn360(g) {
+		return (g < 0 ? 360 + g : g);
+	}
+
+	/**
+	 *
+	 * @param a Lng on 360
+	 * @param b Lng on 360
+	 */
+	static deltaLng(a, b) {
+		return Math.abs((a > 180 ? a : a + 360) - (b > 180 ? b : b + 360))
+	}
+
 	drawFlatNight(context, from, user, gha) {
 		const NINETY_DEGREES = 90 * 60; // in nm
 
@@ -1588,16 +1601,20 @@ class WorldMap extends HTMLElement {
 		}
 
 		// Night limb
-		// Find the first point (west) of the rim
+		// Find the first point (west) of the rim. Minimal diff in longitude.
 		let first = 0;
+		let smallestDiff = Number.MAX_VALUE;
 		for (let x=0; x<nightRim.length; x++) {
 			let lng = WorldMap.toRealLng(Utilities.toDegrees(nightRim[x].lng));
-//		console.log("Night lng: " + lng);
-			if (lng > this._west) {
-				first = Math.max(0, x - 1);
-				break;
+			// console.log(`Night lng (x=${x}): Comparing ${this._west} and  ${lng} (actually ${WorldMap.lngOn360(this._west)} to ${WorldMap.lngOn360(lng)})`);
+			let deltaLng = WorldMap.deltaLng(WorldMap.lngOn360(lng), WorldMap.lngOn360(this._west));
+			if (deltaLng < smallestDiff) {
+				first = x;
+				smallestDiff = deltaLng;
 			}
 		}
+		// console.log(`First point of the night at ${first}`);
+		// console.log("--------------------------------------");
 		context.beginPath();
 		let pt = this.posToCanvas(Utilities.toDegrees(nightRim[first].lat), WorldMap.toRealLng(Utilities.toDegrees(nightRim[first].lng)));
 		context.moveTo(-10 /*pt.x*/, pt.y); // left++

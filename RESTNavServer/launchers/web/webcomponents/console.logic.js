@@ -755,6 +755,8 @@ function devCurveCallback(elmt, context) {
 	context.lineWidth = 3;
 	context.strokeStyle = 'red';
 	// Assume it is a vertical graph
+	// There must be a better way, but this will do for now.
+	// TODO a getCoordinateFromValue in the GraphDisplay Web Component.
 	context.moveTo(0, elmt._padding + ((elmt._height - (2 * elmt._padding)) * (hdg / 360)));
 	context.lineTo(elmt._width, elmt._padding + ((elmt._height - (2 * elmt._padding)) * (hdg / 360)));
 	context.stroke();
@@ -812,7 +814,7 @@ window.onload = () => {
 	}
 
 	if (boatData !== undefined) {
-		if (boatData === 'y' || boatData === 'n') {
+		if (/* boatData === 'y' || */ boatData === 'n') {
 			expandCollapseBoatData();
 		}
 	}
