@@ -2,7 +2,7 @@ Bluetooth is a wireless and pier-to-pier (P2P) communication protocol based on a
 
 In other words, each device (each pier) is listening or writing to a Serial port, and those ports are linked together by a wireless protocol to send and receive data.
 
-It can be seen it like this:
+**It can be seen it like this**:
 ```
   Device A > SerialPort ..))))  wifi  ((((.. SerialPort < Device B 
 ```
