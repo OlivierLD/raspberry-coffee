@@ -13,6 +13,8 @@
 #define ledPin LED_BUILTIN
 #define buzzerPin 8   // Comment this if there is no buzzer
 
+#define SPEED_FACTOR 1
+
 #define NULL 0
 
 // true & false already defined in Arduino
@@ -36,7 +38,7 @@ void setup() {
   Serial.begin(CONSOLE_BR); // Serial Monitor
 
   initMorseAlphabet(); // in morse.ino
-  Serial.println("Bluetooth Spy ready");
+  Serial.println("Morse Generator ready");
 }
 
 void loop() {
