@@ -123,7 +123,7 @@ Compile and archive the code provided here:
 $ ../gradlew clean shadowJar
 ```
 
-Seems there is a problem to fix on the Raspberry Pi, with `librxtx-java`, when trying to read `/dev/rfcomm0`:
+_Seems there is a problem to fix on the Raspberry Pi, with `librxtx-java`, when trying to read `/dev/rfcomm0`_:
 ```
 $ ./java.101.sh 
 Stable Library
@@ -247,16 +247,21 @@ Also try to run the script `java.BT.sh`.
 ### Full story (on Raspberry Pi)
 - Start the Arduino, load and run the `bluetooth.101.ino` sketch, with the `HC-05` device connected to it, its `RXD` on `1`, its `TXD` on `0`.
 - From the Raspberry Pi desktop, pair the `HC-05` device:
+
 ![Add device](./docimg/BT.01.png)
+
 Choose `Add Device...`
 
-![](./docimg/BT.02.png)
+![HC-05](./docimg/BT.02.png)
+
 Choose the `HC-05` device
 
-![](./docimg/BT.03.png)
+![1234](./docimg/BT.03.png)
+
 When prompted, enter the code `1234`
 
 ![Done](./docimg/BT.04.png)
+
 You are done! A port `/dev/rfcomm0` should have been created.
 
 Now, still from the Raspberry Pi,  you can run the script `java.basic.pi4j.sh`, to turn the internal red led on or off: 
