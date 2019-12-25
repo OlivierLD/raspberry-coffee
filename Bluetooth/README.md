@@ -254,7 +254,7 @@ Choose `Add Device...`
 
 ![HC-05](./docimg/BT.02.png)
 
-Choose the `HC-05` device
+Choose the `HC-05` device, click `Pair`
 
 ![1234](./docimg/BT.03.png)
 
