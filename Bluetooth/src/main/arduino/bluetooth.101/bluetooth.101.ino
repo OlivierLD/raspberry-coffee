@@ -1,10 +1,10 @@
 /*
  * Use in standalone, through the Serial Console.
- * 
+ *
  * Use the LED_BUILTIN,
  * no resistor needed, no extra led.
  *
- * Expects to receive '0'or '1', as characters.
+ * Expects to receive '0' or '1', as characters, and turns the led on or off accordingly.
  */
 
 #define ledPin LED_BUILTIN

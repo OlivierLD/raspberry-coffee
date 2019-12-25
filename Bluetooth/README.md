@@ -244,6 +244,82 @@ Let's get started
 ```
 Also try to run the script `java.BT.sh`.
 
+### Full story (on Raspberry Pi)
+- Start the Arduino, load and run the `bluetooth.101.ino` sketch, with the `HC-05` device connected to it, its `RXD` on `1`, its `TXD` on `0`.
+- From the Raspberry Pi desktop, pair the `HC-05` device:
+![Add device](./docimg/BT.01.png)
+Choose `Add Device...`
+
+![](./docimg/BT.02.png)
+Choose the `HC-05` device
+
+![](./docimg/BT.03.png)
+When prompted, enter the code `1234`
+
+![Done](./docimg/BT.04.png)
+You are done! A port `/dev/rfcomm0` should have been created.
+
+Now, still from the Raspberry Pi,  you can run the script `java.basic.pi4j.sh`, to turn the internal red led on or off: 
+```
+$ ./java.basic.pi4j.sh 
+Assuming Linux/Raspberry Pi
+Let's get started...
+(Q to quit) > 1
+	---+--------------------------------------------------+------------------
+	   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+	---+--------------------------------------------------+------------------
+	00 | 31 0D 0A                                         |  1..
+	---+--------------------------------------------------+------------------
+Waiting for reply...
+	---+--------------------------------------------------+------------------
+	   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+	---+--------------------------------------------------+------------------
+	00 | 4C 45 44 3A 20 4F 4E 0D 0A                       |  LED: ON..
+	---+--------------------------------------------------+------------------
+	New line detected
+	Waiter thread notified
+	Waiter thread released
+Dispatching response [LED: ON
+]
+	---+--------------------------------------------------+------------------
+	   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+	---+--------------------------------------------------+------------------
+	00 | 4C 45 44 3A 20 4F 4E                             |  LED: ON
+	---+--------------------------------------------------+------------------
+>> Received [LED: ON]
+(Q to quit) > 0
+	---+--------------------------------------------------+------------------
+	   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+	---+--------------------------------------------------+------------------
+	00 | 30 0D 0A                                         |  0..
+	---+--------------------------------------------------+------------------
+Waiting for reply...
+	---+--------------------------------------------------+------------------
+	   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+	---+--------------------------------------------------+------------------
+	00 | 4C 45 44 3A 20 4F 46 46 0D 0A                    |  LED: OFF..
+	---+--------------------------------------------------+------------------
+	New line detected
+	Waiter thread notified
+	Waiter thread released
+Dispatching response [LED: OFF
+]
+	---+--------------------------------------------------+------------------
+	   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+	---+--------------------------------------------------+------------------
+	00 | 4C 45 44 3A 20 4F 46 46                          |  LED: OFF
+	---+--------------------------------------------------+------------------
+>> Received [LED: OFF]
+(Q to quit) > q
+	Exiting...
+Out of the loop
+Serial is closed, bye!
+
+Exiting the loop
+$ 
+```
+You should have seen the red led turned on when entering `1`, and off when entering `0`.
+
 ### Morse Code generator
 Here's an eloquent example, illustrating all the above. From a Terminal, you send a string (like `get me a pizza with pickles`) through bluetooth,
 and the targeted Arduino is blinking it in morse code.

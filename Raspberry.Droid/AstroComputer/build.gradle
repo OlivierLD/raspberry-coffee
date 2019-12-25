@@ -17,7 +17,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-        mavenLocal()  // For common-utils (must be installed)
+        mavenLocal()  // For common-utils (must be installed, gradlew install)
         maven { url "https://oss.sonatype.org/content/groups/public" } // For Pi4J
         // maven { url "http://www.datanucleus.org/downloads/maven2" }
     }

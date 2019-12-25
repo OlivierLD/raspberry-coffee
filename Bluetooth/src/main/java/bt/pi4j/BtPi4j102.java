@@ -19,12 +19,12 @@ import java.util.Date;
 public class BtPi4j102 {
 	/**
 	 * This example program supports the following optional command arguments/options:
-	 *   "--device (device-path)"                   [DEFAULT: /dev/ttyAMA0]
-	 *   "--baud (baud-rate)"                       [DEFAULT: 9600]
-	 *   "--data-bits (5|6|7|8)"                    [DEFAULT: 8]
-	 *   "--parity (none|odd|even)"                 [DEFAULT: none]
-	 *   "--stop-bits (1|2)"                        [DEFAULT: 1]
-	 *   "--flow-control (none|hardware|software)"  [DEFAULT: none]
+	 * "--device (device-path)"                   [DEFAULT: /dev/ttyAMA0]
+	 * "--baud (baud-rate)"                       [DEFAULT: 9600]
+	 * "--data-bits (5|6|7|8)"                    [DEFAULT: 8]
+	 * "--parity (none|odd|even)"                 [DEFAULT: none]
+	 * "--stop-bits (1|2)"                        [DEFAULT: 1]
+	 * "--flow-control (none|hardware|software)"  [DEFAULT: none]
 	 *
 	 * @param args
 	 * @throws InterruptedException
@@ -84,7 +84,7 @@ public class BtPi4j102 {
 					.flowControl(FlowControl.NONE);
 
 			// parse optional command argument options to override the default serial settings.
-			if(args.length > 0){
+			if (args.length > 0) {
 				config = CommandArgumentParser.getSerialConfig(config, args);
 			}
 
@@ -98,7 +98,7 @@ public class BtPi4j102 {
 			serial.open(config);
 
 			// continuous loop to keep the program running until the user terminates the program
-			while(true) {
+			while (true) {
 				try {
 					// write a formatted string to the serial transmit buffer
 					serial.write("CURRENT TIME: " + new Date().toString());
@@ -116,8 +116,7 @@ public class BtPi4j102 {
 
 					// write a string terminating with CR+LF to the serial transmit buffer
 					serial.writeln("Third Line");
-				}
-				catch(IllegalStateException ex){
+				} catch (IllegalStateException ex) {
 					ex.printStackTrace();
 				}
 
@@ -125,8 +124,7 @@ public class BtPi4j102 {
 				Thread.sleep(1_000);
 			}
 
-		}
-		catch(IOException ex) {
+		} catch (IOException ex) {
 			System.out.println(" ==>> SERIAL SETUP FAILED : " + ex.getMessage());
 			return;
 		}
