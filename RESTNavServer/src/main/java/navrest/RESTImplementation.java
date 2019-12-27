@@ -289,13 +289,13 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
 			String ipAddress = TCPUtils.getIPAddress();
-			String content = new Gson().toJson(ipAddress);
+			String content = ipAddress; // new Gson().toJson(ipAddress);
 
 			if (VERBOSE) {
 				System.out.println(String.format("%s => %s", ipAddress, content));
 			}
 
-			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			RESTProcessorUtil.generateResponseHeaders(response, "application/text", content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
 			response = HTTPServer.buildErrorResponse(response,
@@ -313,13 +313,13 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
 			String cpuTemperature = TCPUtils.getCPUTemperature();
-			String content = new Gson().toJson(cpuTemperature);
+			String content = cpuTemperature; // new Gson().toJson(cpuTemperature);
 
 			if (VERBOSE) {
 				System.out.println(String.format("%s => %s", cpuTemperature, content));
 			}
 
-			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			RESTProcessorUtil.generateResponseHeaders(response, "application/text", content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
 			response = HTTPServer.buildErrorResponse(response,
@@ -337,13 +337,13 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
 			String diskUsage = TCPUtils.getDiskUsage();
-			String content = new Gson().toJson(diskUsage);
+			String content = diskUsage; // new Gson().toJson(diskUsage);
 
 			if (VERBOSE) {
 				System.out.println(String.format("%s => %s", diskUsage, content));
 			}
 
-			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			RESTProcessorUtil.generateResponseHeaders(response, "application/text", content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
 			response = HTTPServer.buildErrorResponse(response,
@@ -361,13 +361,13 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
 			String memoryUsage = TCPUtils.getMemoryUsage();
-			String content = new Gson().toJson(memoryUsage);
+			String content = memoryUsage; // new Gson().toJson(memoryUsage);
 
 			if (VERBOSE) {
 				System.out.println(String.format("%s => %s", memoryUsage, content));
 			}
 
-			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			RESTProcessorUtil.generateResponseHeaders(response, "application/text", content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
 			response = HTTPServer.buildErrorResponse(response,
@@ -385,13 +385,13 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
 			String cpuLoad = TCPUtils.getCPULoad();
-			String content = new Gson().toJson(cpuLoad);
+			String content = cpuLoad; // new Gson().toJson(cpuLoad);
 
 			if (VERBOSE) {
 				System.out.println(String.format("%s => %s", cpuLoad, content));
 			}
 
-			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			RESTProcessorUtil.generateResponseHeaders(response, "application/text", content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
 			response = HTTPServer.buildErrorResponse(response,
@@ -411,6 +411,26 @@ public class RESTImplementation {
 		String cpuLoad;
 		String memoryUsage;
 		String diskUsage;
+
+		public String getIpAddress() {
+			return ipAddress;
+		}
+
+		public String getCpuTemperature() {
+			return cpuTemperature;
+		}
+
+		public String getCpuLoad() {
+			return cpuLoad;
+		}
+
+		public String getMemoryUsage() {
+			return memoryUsage;
+		}
+
+		public String getDiskUsage() {
+			return diskUsage;
+		}
 	}
 	private Response getSystemData(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
