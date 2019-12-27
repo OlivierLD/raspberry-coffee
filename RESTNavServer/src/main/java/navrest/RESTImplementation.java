@@ -405,6 +405,7 @@ public class RESTImplementation {
 		return response;
 	}
 
+	// Must be a Java Bean (with getters and setters) for the toJson to work.
 	private static class SystemData {
 		String ipAddress;
 		String cpuTemperature;
