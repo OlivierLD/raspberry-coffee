@@ -89,6 +89,45 @@ public class TCPUtils {
 		}
 	}
 
+	private static String getCommandResult(String command) throws Exception {
+		Process p = Runtime.getRuntime().exec(command);
+		p.waitFor();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		String line = "";
+		while (line != null) {
+			line = reader.readLine();
+		}
+		return line;
+	}
+
+	/*
+	 * On Linux
+	 */
+	public static String getIPAddress() throws Exception {
+		String command = "hostname -I | cut -d' ' -f1";
+		return getCommandResult(command);
+	}
+
+	public static String getCPUTemperature() throws Exception {
+		String command = "cat /sys/class/thermal/thermal_zone0/temp |  awk '{printf \"CPU Temp: %.1f C\", $(NF-0) / 1000}'";
+		return getCommandResult(command);
+	}
+
+	public static String getCPULoad() throws Exception {
+		String command = "top -bn1 | grep load | awk '{printf \"CPU Load: %.2f%%\", $(NF-2)*100}'";
+		return getCommandResult(command);
+	}
+
+	public static String getMemoryUsage() throws Exception {
+		String command = "free -m | awk 'NR==2{printf \"Mem: %s/%s MB %.2f%%\", $3, $2, $3*100/$2 }'";
+		return getCommandResult(command);
+	}
+
+	public static String getDiskUsage() throws Exception {
+		String command = "df -h | awk '$NF==\" \"{printf \"Disk: %d/%d GB %s\", $3, $2, $5}'";
+		return getCommandResult(command);
+	}
+
 	public static void main(String... args) {
 		List<String[]> addresses = getIPAddresses();
 		addresses.stream().forEach(pair -> {

@@ -91,6 +91,36 @@ public class RESTImplementation {
 					"Get the list of the networks the server is on."),
 			new Operation(
 					"GET",
+					SERVER_PREFIX + "/ip-address",
+					this::getIpAddress,
+					"Get IP Address (Linux only)."),
+			new Operation(
+					"GET",
+					SERVER_PREFIX + "/cpu-load",
+					this::getCPULoad,
+					"Get CPU Load (Linux only)."),
+			new Operation(
+					"GET",
+					SERVER_PREFIX + "/cpu-temperature",
+					this::getCPUTemperature,
+					"Get CPU Temperature (Linux only)."),
+			new Operation(
+					"GET",
+					SERVER_PREFIX + "/disk-usage",
+					this::getDiskUsage,
+					"Get Disk Usage (Linux only)."),
+			new Operation(
+					"GET",
+					SERVER_PREFIX + "/memory-usage",
+					this::getMemoryUsage,
+					"Get Memory Usage (Linux only)."),
+			new Operation(
+					"GET",
+					SERVER_PREFIX + "/system-data",
+					this::getSystemData,
+					"Get all system data (Linux only)."),
+			new Operation(
+					"GET",
 					SERVER_PREFIX + "/addresses", // Optional QS Prm: v4Only=true|[false], iface=wlan0
 					this::getIps,                       // Returns couples like ("iface", "address")
 					"Get the list of IP addresses of the server, with the interface names. QS prms: v4Only [false]|true, iface=XXX (optional)")
@@ -246,6 +276,138 @@ public class RESTImplementation {
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
 							.errorCode("SERVER-0002")
+							.errorMessage(ex.toString())
+							.errorStack(HTTPServer.dumpException(ex)));
+			return response;
+		}
+		return response;
+	}
+
+	private Response getIpAddress(@Nonnull Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			String ipAddress = TCPUtils.getIPAddress();
+			String content = new Gson().toJson(ipAddress);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SERVER-0003")
+							.errorMessage(ex.toString())
+							.errorStack(HTTPServer.dumpException(ex)));
+			return response;
+		}
+		return response;
+	}
+
+	private Response getCPUTemperature(@Nonnull Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			String ipAddress = TCPUtils.getCPUTemperature();
+			String content = new Gson().toJson(ipAddress);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SERVER-0004")
+							.errorMessage(ex.toString())
+							.errorStack(HTTPServer.dumpException(ex)));
+			return response;
+		}
+		return response;
+	}
+
+	private Response getDiskUsage(@Nonnull Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			String ipAddress = TCPUtils.getDiskUsage();
+			String content = new Gson().toJson(ipAddress);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SERVER-0005")
+							.errorMessage(ex.toString())
+							.errorStack(HTTPServer.dumpException(ex)));
+			return response;
+		}
+		return response;
+	}
+
+	private Response getMemoryUsage(@Nonnull Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			String ipAddress = TCPUtils.getMemoryUsage();
+			String content = new Gson().toJson(ipAddress);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SERVER-0006")
+							.errorMessage(ex.toString())
+							.errorStack(HTTPServer.dumpException(ex)));
+			return response;
+		}
+		return response;
+	}
+
+	private Response getCPULoad(@Nonnull Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			String ipAddress = TCPUtils.getCPULoad();
+			String content = new Gson().toJson(ipAddress);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SERVER-0007")
+							.errorMessage(ex.toString())
+							.errorStack(HTTPServer.dumpException(ex)));
+			return response;
+		}
+		return response;
+	}
+
+	private static class SystemData {
+		String ipAddress;
+		String cpuTemperature;
+		String cpuLoad;
+		String memoryUsage;
+		String diskUsage;
+	}
+	private Response getSystemData(@Nonnull Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			String ipAddress = TCPUtils.getIPAddress();
+			String cpuLoad = TCPUtils.getCPULoad();
+			String cpuTemperature = TCPUtils.getCPUTemperature();
+			String memoryUsage = TCPUtils.getMemoryUsage();
+			String diskUsage = TCPUtils.getDiskUsage();
+			SystemData systemData = new SystemData();
+			systemData.ipAddress = ipAddress;
+			systemData.cpuTemperature = cpuTemperature;
+			systemData.cpuLoad = cpuLoad;
+			systemData.memoryUsage = memoryUsage;
+			systemData.diskUsage = diskUsage;
+
+			String content = new Gson().toJson(ipAddress);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SERVER-0008")
 							.errorMessage(ex.toString())
 							.errorStack(HTTPServer.dumpException(ex)));
 			return response;

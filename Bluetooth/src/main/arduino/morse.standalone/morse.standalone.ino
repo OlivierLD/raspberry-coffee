@@ -3,6 +3,7 @@
  * no resistor needed, no extra led.
  *
  * No Bluetooth required. This is to test the morse code generator.
+ * User input comes from the Serial Console.
  * Extra piezo buzzer can be hooked on pin 8
  * 
  * If you have no Arduino, see https://www.tinkercad.com/things/7RGhSjmQfOj-morse-generator
