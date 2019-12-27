@@ -31,6 +31,8 @@ public class RESTImplementation {
 	private final static String NAV_PREFIX = "/nav";
 	private final static String FEATHER_PREFIX = "/feather";
 
+	private final static boolean VERBOSE = "true".equals(System.getProperty("rest.verbose"));
+
 	public RESTImplementation(@Nonnull NavRequestManager restRequestManager) {
 
 		this.navRequestManager = restRequestManager;
@@ -288,6 +290,11 @@ public class RESTImplementation {
 		try {
 			String ipAddress = TCPUtils.getIPAddress();
 			String content = new Gson().toJson(ipAddress);
+
+			if (VERBOSE) {
+				System.out.println(String.format("%s => %s", ipAddress, content));
+			}
+
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
@@ -305,8 +312,13 @@ public class RESTImplementation {
 	private Response getCPUTemperature(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			String ipAddress = TCPUtils.getCPUTemperature();
-			String content = new Gson().toJson(ipAddress);
+			String cpuTemperature = TCPUtils.getCPUTemperature();
+			String content = new Gson().toJson(cpuTemperature);
+
+			if (VERBOSE) {
+				System.out.println(String.format("%s => %s", cpuTemperature, content));
+			}
+
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
@@ -324,8 +336,13 @@ public class RESTImplementation {
 	private Response getDiskUsage(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			String ipAddress = TCPUtils.getDiskUsage();
-			String content = new Gson().toJson(ipAddress);
+			String diskUsage = TCPUtils.getDiskUsage();
+			String content = new Gson().toJson(diskUsage);
+
+			if (VERBOSE) {
+				System.out.println(String.format("%s => %s", diskUsage, content));
+			}
+
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
@@ -343,8 +360,13 @@ public class RESTImplementation {
 	private Response getMemoryUsage(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			String ipAddress = TCPUtils.getMemoryUsage();
-			String content = new Gson().toJson(ipAddress);
+			String memoryUsage = TCPUtils.getMemoryUsage();
+			String content = new Gson().toJson(memoryUsage);
+
+			if (VERBOSE) {
+				System.out.println(String.format("%s => %s", memoryUsage, content));
+			}
+
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
@@ -362,8 +384,13 @@ public class RESTImplementation {
 	private Response getCPULoad(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			String ipAddress = TCPUtils.getCPULoad();
-			String content = new Gson().toJson(ipAddress);
+			String cpuLoad = TCPUtils.getCPULoad();
+			String content = new Gson().toJson(cpuLoad);
+
+			if (VERBOSE) {
+				System.out.println(String.format("%s => %s", cpuLoad, content));
+			}
+
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
@@ -400,7 +427,12 @@ public class RESTImplementation {
 			systemData.memoryUsage = memoryUsage;
 			systemData.diskUsage = diskUsage;
 
-			String content = new Gson().toJson(ipAddress);
+			String content = new Gson().toJson(systemData);
+
+			if (VERBOSE) {
+				System.out.println(String.format("%s => %s", systemData, content));
+			}
+
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
