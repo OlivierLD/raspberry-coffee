@@ -19,6 +19,10 @@ import java.net.URI;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+/**
+ * Created to isolate the Swing related utilities from the rest, so
+ * the others can be imported from system that do not support Swing (like Android).
+ */
 public class SwingStaticUtil {
 
 	public static void openInBrowser(String page) throws Exception {

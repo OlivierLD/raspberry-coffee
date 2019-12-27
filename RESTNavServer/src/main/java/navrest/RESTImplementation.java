@@ -295,7 +295,7 @@ public class RESTImplementation {
 				System.out.println(String.format("%s => %s", ipAddress, content));
 			}
 
-			RESTProcessorUtil.generateResponseHeaders(response, "application/text", content.length());
+			RESTProcessorUtil.generateResponseHeaders(response, "text/plain", content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
 			response = HTTPServer.buildErrorResponse(response,
@@ -319,7 +319,7 @@ public class RESTImplementation {
 				System.out.println(String.format("%s => %s", cpuTemperature, content));
 			}
 
-			RESTProcessorUtil.generateResponseHeaders(response, "application/text", content.length());
+			RESTProcessorUtil.generateResponseHeaders(response, "text/plain", content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
 			response = HTTPServer.buildErrorResponse(response,
@@ -343,7 +343,7 @@ public class RESTImplementation {
 				System.out.println(String.format("%s => %s", diskUsage, content));
 			}
 
-			RESTProcessorUtil.generateResponseHeaders(response, "application/text", content.length());
+			RESTProcessorUtil.generateResponseHeaders(response, "text/plain", content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
 			response = HTTPServer.buildErrorResponse(response,
@@ -367,7 +367,7 @@ public class RESTImplementation {
 				System.out.println(String.format("%s => %s", memoryUsage, content));
 			}
 
-			RESTProcessorUtil.generateResponseHeaders(response, "application/text", content.length());
+			RESTProcessorUtil.generateResponseHeaders(response, "text/plain", content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
 			response = HTTPServer.buildErrorResponse(response,
@@ -391,7 +391,7 @@ public class RESTImplementation {
 				System.out.println(String.format("%s => %s", cpuLoad, content));
 			}
 
-			RESTProcessorUtil.generateResponseHeaders(response, "application/text", content.length());
+			RESTProcessorUtil.generateResponseHeaders(response, "text/plain", content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
 			response = HTTPServer.buildErrorResponse(response,

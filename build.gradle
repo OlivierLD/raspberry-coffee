@@ -75,6 +75,7 @@ dependencies {
   compile project(':Project.Trunk:PlantWateringSystem')
   compile project(':Project.Trunk:ADCs.Servos.JoySticks')
   compile project(':Project.Trunk:Motors')
+  compile project(':Project.Trunk:SteppersPlayground')
   compile project(':Project.Trunk:Weather.Station.Implementation')
   compile project(':Project.Trunk:RasPiRadar')
   compile project(':Project.Trunk:REST.clients:TCP.Watch.01')

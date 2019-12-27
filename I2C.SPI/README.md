@@ -59,14 +59,20 @@ Document: [ADC Benchmark](https://github.com/OlivierLD/raspberry-coffee/blob/mas
 ## Servos & Motors
 
 #### PCA9685
-I<sup>2</sup>C 16-channel 12-bit PWM/Servo driver.
-[from Adafruit](https://www.adafruit.com/product/815)
+I<sup>2</sup>C 16-channel 12-bit PWM/_**Servo driver**_.
+
+From [Adafruit](https://www.adafruit.com/product/815)
 
 About servo calibration, read [this](./PWM.md).
 
 #### Adafruit Motor HAT
-I<sup>2</sup>C, DC and Stepper Motors
-[from Adafruit](https://www.adafruit.com/product/2348)
+I<sup>2</sup>C, DC and Stepper Motors.
+
+From [Adafruit](https://www.adafruit.com/product/2348)
+
+Requires an external power supply (5-12v).
+
+[NEMA-17 diagrams & Docs](https://www.circuitspecialists.com/nema_17_stepper_motor_42bygh4807.html). 
 
 ## Screens
 
