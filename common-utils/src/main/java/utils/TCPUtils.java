@@ -100,7 +100,7 @@ public class TCPUtils {
 		while (line != null) {
 			line = reader.readLine();
 			if (line != null) {
-				System.out.println(line);
+//				System.out.println(line);
 				result = line;
 			}
 		}
