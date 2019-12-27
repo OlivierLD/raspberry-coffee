@@ -141,7 +141,7 @@ public class TCPUtils {
 	}
 
 	public static String getDiskUsage() throws Exception {
-		String command = "df -h | awk '$NF==\" \"{printf \"Disk: %d/%d GB %s\", $3, $2, $5}'";
+		String command = "df -h | awk '$NF==\"/\"{printf \"Disk: %d/%d GB %s\", $3, $2, $5}'";
 		return getCommandResult(command);
 	}
 
