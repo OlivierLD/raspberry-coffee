@@ -412,6 +412,26 @@ public class RESTImplementation {
 		String memoryUsage;
 		String diskUsage;
 
+		public void setIpAddress(String ipAddress) {
+			this.ipAddress = ipAddress;
+		}
+
+		public void setCpuTemperature(String cpuTemperature) {
+			this.cpuTemperature = cpuTemperature;
+		}
+
+		public void setCpuLoad(String cpuLoad) {
+			this.cpuLoad = cpuLoad;
+		}
+
+		public void setMemoryUsage(String memoryUsage) {
+			this.memoryUsage = memoryUsage;
+		}
+
+		public void setDiskUsage(String diskUsage) {
+			this.diskUsage = diskUsage;
+		}
+
 		public String getIpAddress() {
 			return ipAddress;
 		}

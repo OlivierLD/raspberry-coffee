@@ -7,6 +7,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -90,14 +91,30 @@ public class TCPUtils {
 	}
 
 	private static String getCommandResult(String command) throws Exception {
-		Process p = Runtime.getRuntime().exec(command);
+		List<String> commands = Arrays.asList("/bin/bash", "-c", command);
+		Process p = Runtime.getRuntime().exec(commands.toArray(new String[commands.size()]));
 		p.waitFor();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		String line = "";
+		String result = "";
 		while (line != null) {
 			line = reader.readLine();
+			if (line != null) {
+				System.out.println(line);
+				result = line;
+			}
 		}
-		return line;
+		return result;
+	}
+
+	public static String getDirectoryListing() throws Exception {
+		String command = "ls -lisah";
+		return getCommandResult(command);
+	}
+
+	public static String getUname() throws Exception {
+		String command = "uname -a | awk '{print $2}'";
+		return getCommandResult(command);
 	}
 
 	/*
@@ -128,7 +145,7 @@ public class TCPUtils {
 		return getCommandResult(command);
 	}
 
-	public static void main(String... args) {
+	public static void main(String... args) throws Exception {
 		List<String[]> addresses = getIPAddresses();
 		addresses.stream().forEach(pair -> {
 			System.out.println(String.format("%s -> %s", pair[0], pair[1]));
@@ -146,5 +163,9 @@ public class TCPUtils {
 		addresses.stream().forEach(pair -> {
 			System.out.println(String.format("%s -> %s", pair[0], pair[1]));
 		});
+
+		System.out.println(String.format("DiskUsage: %s", getDiskUsage()));
+		System.out.println(String.format("uname: %s", getUname()));
+		System.out.println(String.format("ls: %s", getDirectoryListing()));
 	}
 }
