@@ -192,9 +192,9 @@ public class AdafruitMotorHAT {
 		private int BIN2 = 12;
 		private int BIN1 = 11;
 
-		private int revSteps;
+		private int revSteps; // Steps per Revolution
 		private int motorNum;
-		private double secPerStep = 0.1;
+		private double secPerStep;
 		private int steppingCounter = 0;
 		private int currentStep = 0;
 
@@ -212,7 +212,7 @@ public class AdafruitMotorHAT {
 				throw new RuntimeException(String.format("Motor Num can only be 1 or 2, found %d.", num));
 			}
 			this.motorNum = num;
-			this.secPerStep = 0.1;
+			this.secPerStep = 60.0 / (this.revSteps * rpm);
 			this.steppingCounter = 0;
 			this.currentStep = 0;
 
@@ -394,7 +394,7 @@ public class AdafruitMotorHAT {
 				sPerS /= this.MICROSTEPS;
 				steps *= this.MICROSTEPS;
 			}
-			System.out.println(sPerS + " sec per step");
+			System.out.println(String.format("%.03f sec per step (delay %d ms)", sPerS, (long) (sPerS * 1_000)));
 
 			for (int s = 0; s < steps; s++) {
 				latestStep = this.oneStep(direction, stepStyle);
