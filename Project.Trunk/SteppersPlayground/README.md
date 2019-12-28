@@ -19,3 +19,10 @@ Ratio is thus `21/41`, which is `0.512:1`.
 >> When transmitting directly from the motor's shaft, the ratio is `1:1`.
 >
 
+### Interactive interface
+Steps per Revolution can be set from `35` to `200` (default is `200`).
+
+```
+$ ./interactive.stepper.sh
+ 
+```
