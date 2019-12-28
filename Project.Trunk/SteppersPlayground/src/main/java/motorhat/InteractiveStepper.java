@@ -3,6 +3,7 @@ package motorhat;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.motor.adafruitmotorhat.AdafruitMotorHAT;
 import utils.StaticUtil;
+import utils.TimeUtil;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -43,7 +44,10 @@ public class InteractiveStepper {
 	  @Override
 		public void run() {
 			try {
+				long before = System.currentTimeMillis();
 				this.stepper.step(nbSteps, motorCommand, motorStyle);
+				long after = System.currentTimeMillis();
+				System.out.println(String.format("Move completed in: %s", TimeUtil.fmtDHMS(TimeUtil.msToHMS(after - before))));
 			} catch (IOException ie) {
 				ie.printStackTrace();
 			}
