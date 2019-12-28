@@ -204,7 +204,7 @@ public class AdafruitMotorHAT {
 
 		public AdafruitStepperMotor(AdafruitMotorHAT controller, int num, int steps) {
 			this.mc = controller;
-			if (steps < 35 || steps > 200) {
+			if (steps < 35 || steps > 200) { // Steps per Rev
 				throw new RuntimeException(String.format("StepsPerRevolution must be in [35..200], found %d", steps));
 			}
 			this.revSteps = steps;
@@ -244,6 +244,14 @@ public class AdafruitMotorHAT {
 			this.steppingCounter = 0;
 		}
 
+		public void setStepPerRev(int revSteps) {
+			if (revSteps < 35 || revSteps > 200) { // Steps per Rev
+				throw new RuntimeException(String.format("StepsPerRevolution must be in [35..200], found %d", revSteps));
+			}
+			this.revSteps = revSteps;
+			this.secPerStep = 60.0 / (this.revSteps * rpm);
+			this.steppingCounter = 0;
+		}
 		public int getStepPerRev() {
 			return this.revSteps;
 		}
@@ -254,6 +262,10 @@ public class AdafruitMotorHAT {
 
 		public double getSecPerStep() {
 			return this.secPerStep;
+		}
+
+		public void setRPM(int rpm) {
+			this.setSpeed((double)rpm);
 		}
 
 		public double getRPM() {

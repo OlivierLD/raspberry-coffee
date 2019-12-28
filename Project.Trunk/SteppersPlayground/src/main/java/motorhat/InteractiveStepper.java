@@ -10,6 +10,10 @@ import java.util.List;
 
 /*
  * See https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/using-stepper-motors
+ *
+ * RPM : Revolution Per Minute, speed of the rotation.
+ * Steps per Revolution: How many steps for 360 degrees.
+ * nbSteps: How many steps should the shaft do.
  */
 public class InteractiveStepper {
 	private AdafruitMotorHAT mh;
@@ -17,6 +21,7 @@ public class InteractiveStepper {
 
 	private boolean keepGoing = true;
 	private final static int DEFAULT_RPM = 30;
+	private final static int DEFAULT_STEPS_PER_REV = AdafruitMotorHAT.AdafruitStepperMotor.DEFAULT_NB_STEPS;
 	private int nbSteps;
 
 	private static class MotorThread extends Thread {
@@ -51,9 +56,9 @@ public class InteractiveStepper {
 		int rpm = Integer.parseInt(System.getProperty("rpm", String.valueOf(DEFAULT_RPM)));
 		System.out.println(String.format("RPM set to %d.", rpm));
 
-		nbSteps = Integer.parseInt(System.getProperty("steps", String.valueOf(AdafruitMotorHAT.AdafruitStepperMotor.DEFAULT_NB_STEPS)));
+		nbSteps = Integer.parseInt(System.getProperty("steps", String.valueOf("150")));
 
-		this.mh = new AdafruitMotorHAT(nbSteps); // Default addr 0x60
+		this.mh = new AdafruitMotorHAT(DEFAULT_STEPS_PER_REV); // Default addr 0x60
 		this.stepper = mh.getStepper(AdafruitMotorHAT.AdafruitStepperMotor.PORT_M1_M2);
 		this.stepper.setSpeed(rpm); // Default 30 RPM
 	}
@@ -67,9 +72,11 @@ public class InteractiveStepper {
 			"DOUBLE",
 			"INTERLEAVE",
 			"MICROSTEP",
-
+			"RPM XXX",
+      "STEPS YYYY",
+			"STEPSPERREV ZZZZ",
 			"GO",
-			"OUT" // TODO RPM
+			"OUT"
 	);
 
 	private void go() {
@@ -77,18 +84,17 @@ public class InteractiveStepper {
 		AdafruitMotorHAT.MotorCommand motorCommand = AdafruitMotorHAT.MotorCommand.FORWARD;
 		AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.SINGLE;
 
-		InteractiveStepper instance = this;
 		MotorThread motorThread = null;
 		while (keepGoing) {
 			try {
 				System.out.println(String.format(
-						"-----------------------------------------------------------------------------------\n" +
-								"Motor # %d, RPM set to %f, %d Steps per Rev, %f sec per step, %d steps per move.\n" +
-								"-----------------------------------------------------------------------------------",
+						    "--- Current Status ---------------------------------------------------------------------\n" +
+								"Motor # %d, RPM set to %.02f, %d Steps per Rev, %f millisec per step, taking %d steps.\n" +
+								"----------------------------------------------------------------------------------------",
 						this.stepper.getMotorNum(),
 						this.stepper.getRPM(),
 						this.stepper.getStepPerRev(),
-						this.stepper.getSecPerStep(),
+						this.stepper.getSecPerStep() * 1_000,
 						nbSteps));
 				System.out.println("Enter your options:");
 				System.out.println("Command:");
@@ -133,13 +139,35 @@ public class InteractiveStepper {
 						stop();
 						break;
 					default:
+						if (userInput.startsWith("RPM ")) {
+							try {
+								int rpm = Integer.parseInt(userInput.substring("RPM ".length()));
+								this.stepper.setRPM(rpm);
+							} catch (NumberFormatException nfe) {
+								nfe.printStackTrace();
+							}
+						} else if (userInput.startsWith("STEPS ")) {
+							try {
+								int steps = Integer.parseInt(userInput.substring("STEPS ".length()));
+								nbSteps = steps;
+							} catch (NumberFormatException nfe) {
+								nfe.printStackTrace();
+							}
+						} else if (userInput.startsWith("STEPSPERREV ")) {
+							try {
+								int steps = Integer.parseInt(userInput.substring("STEPSPERREV ".length()));
+								this.stepper.setStepPerRev(steps);
+							} catch (NumberFormatException nfe) {
+								nfe.printStackTrace();
+							}
+						}
 						System.out.println(String.format("%s not supported.", userInput));
 						break;
 				}
 
 				if (startMotor) {
 
-					motorThread = new MotorThread(instance.stepper, nbSteps, motorCommand, motorStyle);
+					motorThread = new MotorThread(this.stepper, nbSteps, motorCommand, motorStyle);
 					motorThread.start();
 				}
 			} catch (Exception ex) {
