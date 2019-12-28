@@ -92,9 +92,9 @@ public class InteractiveStepper {
 						nbSteps));
 				System.out.println("Enter your options:");
 				System.out.println("Command:");
-				supportedUserInput.forEach(cmd -> System.out.println(String.format("       - %s", cmd)));
+				supportedUserInput.forEach(cmd -> System.out.println(String.format("     - %s", cmd)));
 
-				String userInput = StaticUtil.userInput("? > ");
+				String userInput = StaticUtil.userInput("? > ").toUpperCase();
 				boolean startMotor = false;
 
 				switch (userInput) {
