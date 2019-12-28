@@ -90,12 +90,14 @@ public class InteractiveStepper {
 				System.out.println(String.format(
 						    "--- Current Status ---------------------------------------------------------------------\n" +
 								"Motor # %d, RPM set to %.02f, %d Steps per Rev, %.03f millisec per step, taking %d steps.\n" +
+								" Command %s, Style %s \n" +
 								"----------------------------------------------------------------------------------------",
 						this.stepper.getMotorNum(),
 						this.stepper.getRPM(),
 						this.stepper.getStepPerRev(),
 						this.stepper.getSecPerStep() * 1_000,
-						nbSteps));
+						nbSteps,
+						motorCommand, motorStyle));
 				System.out.println("Enter your options:");
 				System.out.println("Command:");
 				supportedUserInput.forEach(cmd -> System.out.println(String.format("     - %s", cmd)));
