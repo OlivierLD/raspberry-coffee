@@ -395,7 +395,10 @@ public class AdafruitMotorHAT {
 				steps *= this.MICROSTEPS;
 			}
 			long waitMS = (long) (sPerS * 1_000);
-			System.out.println(String.format("%.03f sec per step (delay %d ms)", sPerS, waitMS));
+
+			if ("true".equals(System.getProperty("hat.debug", "false"))) {
+				System.out.println(String.format("%.03f sec per step (delay %d ms)", sPerS, waitMS));
+			}
 
 			for (int s = 0; s < steps; s++) {
 				long now = System.nanoTime();
@@ -422,6 +425,9 @@ public class AdafruitMotorHAT {
 						delay(milli, nano);
 					}
 				}
+			}
+			if ("true".equals(System.getProperty("hat.debug", "false"))) {
+				System.out.println(String.format("LatestStep: %d", latestStep));
 			}
 		}
 	}
