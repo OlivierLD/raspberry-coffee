@@ -160,8 +160,9 @@ public class InteractiveStepper {
 							} catch (NumberFormatException nfe) {
 								nfe.printStackTrace();
 							}
+						} else {
+							System.out.println(String.format("%s not supported.", userInput));
 						}
-						System.out.println(String.format("%s not supported.", userInput));
 						break;
 				}
 
