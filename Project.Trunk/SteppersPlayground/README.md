@@ -87,7 +87,7 @@ Enter your options:
 Motor # 1, RPM set to 30.00, 200 Steps per Rev, 10.000 millisec per step, taking 200 steps.
 Command FORWARD, Style SINGLE 
 ----------------------------------------------------------------------------------------
-Your option ? > go   # Turn small whell on 360 degrees
+Your option ? > go   # Turn small wheel on 360 degrees
 --- Current Status ---------------------------------------------------------------------
 Motor # 1, RPM set to 30.00, 200 Steps per Rev, 10.000 millisec per step, taking 200 steps.
 Command FORWARD, Style SINGLE 
