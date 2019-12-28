@@ -25,22 +25,20 @@ public class NonLinearStepperDemo {
 
 	private void go() {
 		try {
-			System.out.println(String.format(
-					    "-----------------------------------------------------------------------------------\n" +
-							"Motor # %d, RPM set to %f, %d Steps per Rev, %f sec per step, %d steps per move.\n" +
-							"-----------------------------------------------------------------------------------",
-					this.stepper.getMotorNum(),
-					this.stepper.getRPM(),
-					this.stepper.getStepPerRev(),
-					this.stepper.getSecPerStep(),
-					nbSteps));
 
-			int completedSteps = 0;
-			nbSteps = 10;
+			nbSteps = 3;
 			for (double speed = 0.1; speed <= 60.0; speed += 0.1) {
 				this.stepper.setSpeed(speed);
-				completedSteps += this.stepper.step(nbSteps, AdafruitMotorHAT.MotorCommand.FORWARD, AdafruitMotorHAT.Style.MICROSTEP);
-				System.out.println(String.format("Speed now %f, completed %d steps so far", speed, completedSteps));
+				System.out.println(String.format(
+						"-----------------------------------------------------------------------------------\n" +
+								"Motor #%d, RPM set to %f, %d Steps per Rev, %f sec per step, %d steps per move.",
+						this.stepper.getMotorNum(),
+						this.stepper.getRPM(),
+						this.stepper.getStepPerRev(),
+						this.stepper.getSecPerStep(),
+						nbSteps));
+				this.stepper.step(nbSteps, AdafruitMotorHAT.MotorCommand.FORWARD, AdafruitMotorHAT.Style.MICROSTEP);
+				System.out.println(String.format("Speed now %f", speed));
 			}
 
 		} catch (IOException ioe) {
