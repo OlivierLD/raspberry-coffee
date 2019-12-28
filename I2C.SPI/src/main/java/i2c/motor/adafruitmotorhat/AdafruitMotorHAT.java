@@ -394,11 +394,19 @@ public class AdafruitMotorHAT {
 				sPerS /= this.MICROSTEPS;
 				steps *= this.MICROSTEPS;
 			}
-			System.out.println(String.format("%.03f sec per step (delay %d ms)", sPerS, (long) (sPerS * 1_000)));
+			long waitMS = (long) (sPerS * 1_000);
+			System.out.println(String.format("%.03f sec per step (delay %d ms)", sPerS, waitMS));
 
 			for (int s = 0; s < steps; s++) {
+				long now = System.nanoTime();
 				latestStep = this.oneStep(direction, stepStyle);
-				delay((long) (sPerS * 1_000));
+				long waitLeft = (waitMS * 1_000_000L) - (System.nanoTime() - now);
+				if (waitLeft > 0) {
+					long milli = (long)Math.floor(waitLeft / 1_000_000L);
+					int nano = (int)(waitLeft - (milli * 1_000_000L));
+					System.out.println(String.format("\t %d ms, %d ns (instead of %d ms)", milli, nano, waitMS));
+					delay(milli, nano);
+				}
 			}
 			if (stepStyle == Style.MICROSTEP) {
 				// this is an edge case, if we are in between full steps, lets just keep going
