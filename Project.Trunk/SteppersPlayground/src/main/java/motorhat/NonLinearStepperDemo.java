@@ -27,7 +27,8 @@ public class NonLinearStepperDemo {
 		try {
 
 			nbSteps = 3;
-			for (double speed = 0.1; speed <= 60.0; speed += 0.1) {
+			double step = 1d; // 0.1, etc...
+			for (double speed = step; speed <= 60.0; speed += step) {
 				this.stepper.setSpeed(speed);
 				System.out.println(String.format(
 						"-----------------------------------------------------------------------------------\n" +
@@ -38,6 +39,20 @@ public class NonLinearStepperDemo {
 						this.stepper.getSecPerStep(),
 						nbSteps));
 				this.stepper.step(nbSteps, AdafruitMotorHAT.MotorCommand.FORWARD, AdafruitMotorHAT.Style.MICROSTEP);
+				System.out.println(String.format("Speed now %f", speed));
+			}
+
+			for (double speed = 60.0; speed > 0; speed -= step) {
+				this.stepper.setSpeed(speed);
+				System.out.println(String.format(
+						"-----------------------------------------------------------------------------------\n" +
+								"Motor #%d, RPM set to %f, %d Steps per Rev, %f sec per step, %d steps per move.",
+						this.stepper.getMotorNum(),
+						this.stepper.getRPM(),
+						this.stepper.getStepPerRev(),
+						this.stepper.getSecPerStep(),
+						nbSteps));
+				this.stepper.step(nbSteps, AdafruitMotorHAT.MotorCommand.BACKWARD, AdafruitMotorHAT.Style.MICROSTEP);
 				System.out.println(String.format("Speed now %f", speed));
 			}
 

@@ -17,7 +17,7 @@ The gears:
 
 Ratio is thus `21/41`, which is `0.512:1`.
 
-> Ratio is the key. It applies to all kinds of settings: this one, worm gears, everything. You **MUST** know yours. You would be lost otherwise.
+> Ratio is the key. It applies to all kinds of settings: this one, worm gears, everything. You **MUST** know yours. You would be lost otherwise. This is the _key_ to your final device's accuracy.
 >> When transmitting directly from the motor's shaft, the ratio is `1:1`.
 >
 
