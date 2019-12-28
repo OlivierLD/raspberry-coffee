@@ -51,6 +51,7 @@ Your option ? >
 The default config is
 - 200 steps per revolution
 - take 200 steps
+
 This means it would do 360 degrees to be done by the small wheel.
 
 Enter `GO` at the prompt to see it for yourself.
@@ -59,7 +60,7 @@ If you want the _big_ wheel to do a 360, you need the small wheel to do `360 / (
 which is `702.8571428571`. 
 
 As `200` steps is equivalent to `360`&deg;, we need to take `200 * (702.8571428571 / 360)` steps,
- which is `390.4761904762`, which we will round to `390` steps.
+ which is `390.4761904762`, rounded to `390` steps.
  
 After a build (`../../gradlew clean shadowJar`), try this:
 ```
