@@ -6,5 +6,6 @@ echo -e "Stepper Motor Demo (WIP)"
 OPTS=
 OPTS="$OPTS -Dmotor.hat.verbose=false"
 OPTS="$OPTS -Dhat.debug=false"
+OPTS="$OPTS -Dsteps=200"
 #
-sudo java -cp ${CP} ${OPTS} motorhat.InteractiveStepper
+sudo java -cp ${CP} ${OPTS} motorhat.NonLinearStepperDemo

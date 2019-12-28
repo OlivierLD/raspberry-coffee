@@ -2,8 +2,10 @@
 
 I'm learning...
 
+[Here](https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/using-stepper-motors) is a good paper by Adafruit.
+
 ### First test ever
-With `motorhat.StepperDemo`, launched by the script `one.stepper.sh`.
+With `motorhat.NonLinearStepperDemo`, launched by the script `one.stepper.sh`.
 
 Using a [Stepper Motor (NEMA-17)](https://www.adafruit.com/product/324), a [Stepper Motor Mount](https://www.adafruit.com/product/1297), and some gears, from a [Gear Set](https://www.allelectronics.com/item/gr-86/4-gear-set/1.html).
 
@@ -122,3 +124,5 @@ Your option ? > quit  # Bye!
 Bye.
 $
 ``` 
+
+### Non-constant speed

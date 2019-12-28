@@ -384,7 +384,7 @@ public class AdafruitMotorHAT {
 			return this.currentStep;
 		}
 
-		public void step(int steps, MotorCommand direction, Style stepStyle) throws IOException {
+		public int step(int steps, MotorCommand direction, Style stepStyle) throws IOException {
 			double sPerS = this.secPerStep;
 			int latestStep = 0;
 
@@ -429,6 +429,7 @@ public class AdafruitMotorHAT {
 			if ("true".equals(System.getProperty("hat.debug", "false"))) {
 				System.out.println(String.format("LatestStep: %d", latestStep));
 			}
+			return latestStep;
 		}
 	}
 }
