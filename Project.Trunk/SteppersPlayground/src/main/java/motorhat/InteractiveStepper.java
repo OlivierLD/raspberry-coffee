@@ -205,7 +205,7 @@ public class InteractiveStepper {
 	 */
 	public static void main(String... args) throws Exception {
 		InteractiveStepper demo = new InteractiveStepper();
-		System.out.println("Hit Ctrl-C to stop the demo");
+		System.out.println("Hit Ctrl-C to stop the demo (or OUT at the prompt)");
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			demo.stop();
 			try { Thread.sleep(5_000); } catch (Exception absorbed) {

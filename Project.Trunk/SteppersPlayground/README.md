@@ -23,6 +23,41 @@ Ratio is thus `21/41`, which is `0.512:1`.
 Steps per Revolution can be set from `35` to `200` (default is `200`).
 
 ```
-$ ./interactive.stepper.sh
- 
+$ ./interactive.stepper.sh 
+Stepper Motor Demo (WIP)
+Starting Stepper Demo
+RPM set to 30.
+Hit Ctrl-C to stop the demo (or OUT at the prompt)
+--- Current Status ---------------------------------------------------------------------
+Motor # 1, RPM set to 30.00, 200 Steps per Rev, 10.000 millisec per step, taking 200 steps.
+ Command FORWARD, Style SINGLE 
+----------------------------------------------------------------------------------------
+Enter your options:
+Command:
+     - FORWARD
+     - BACKWARD
+     - BRAKE
+     - RELEASE
+     - SINGLE
+     - DOUBLE
+     - INTERLEAVE
+     - MICROSTEP
+     - RPM XXX
+     - STEPS YYYY
+     - STEPSPERREV ZZZZ
+     - GO
+     - OUT
+? > 
 ```
+The default config is
+- 200 steps per revolution
+- take 200 steps
+This means it would do 360 degrees to be done by the small wheel.
+
+Enter `GO` at the prompt to see it for yourself.
+
+If you want the _big_ wheel to do a 360, you need the small wheel to do `360 / (21/41)` degrees,
+which is `702.8571428571`. 
+
+As `200` steps is equivalent to `360`&deg;, we need to take `200 * (702.8571428571 / 360)` steps,
+ which is `390.4761904762`, which we will round to `390` steps.
