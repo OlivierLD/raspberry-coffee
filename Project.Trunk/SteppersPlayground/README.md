@@ -1,4 +1,4 @@
-## Driving Stepper Motors with the Adafruit MotorHAT
+## Driving Stepper Motors with the [Adafruit MotorHAT](https://www.adafruit.com/product/2348)
 
 I'm learning...
 
