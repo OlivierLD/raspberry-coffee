@@ -13,13 +13,13 @@ public class StepperDemo {
 	private AdafruitMotorHAT.AdafruitStepperMotor stepper;
 
 	private boolean keepGoing = true;
-	private final static String DEFAULT_RPM = "30";
-	int nbSteps = 100;
+	private final static int DEFAULT_RPM = 30;
+	private int nbSteps;
 
-	public StepperDemo() throws I2CFactory.UnsupportedBusNumberException {
+	private StepperDemo() throws I2CFactory.UnsupportedBusNumberException {
 
 		System.out.println("Starting Stepper Demo");
-		int rpm = Integer.parseInt(System.getProperty("rpm", DEFAULT_RPM));
+		int rpm = Integer.parseInt(System.getProperty("rpm", String.valueOf(DEFAULT_RPM)));
 		System.out.println(String.format("RPM set to %d.", rpm));
 
 		nbSteps = Integer.parseInt(System.getProperty("steps", String.valueOf(AdafruitMotorHAT.AdafruitStepperMotor.DEFAULT_NB_STEPS)));
@@ -29,7 +29,7 @@ public class StepperDemo {
 		this.stepper.setSpeed(rpm); // Default 30 RPM
 	}
 
-	public void go() {
+	private void go() {
 		keepGoing = true;
 		while (keepGoing) {
 			try {
@@ -87,7 +87,7 @@ public class StepperDemo {
 //	try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
 	}
 
-	public void stop() {
+	private void stop() {
 		this.keepGoing = false;
 		if (mh != null) {
 			try { // Release all
@@ -107,14 +107,17 @@ public class StepperDemo {
 	 * hat.debug, default false
 	 *
 	 * @param args Not used
-	 * @throws Exception
+	 * @throws Exception if anything fails...
 	 */
 	public static void main(String... args) throws Exception {
 		StepperDemo demo = new StepperDemo();
 		System.out.println("Hit Ctrl-C to stop the demo");
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			demo.stop();
-			try { Thread.sleep(5_000); } catch (Exception absorbed) {}
+			try { Thread.sleep(5_000); } catch (Exception absorbed) {
+				System.err.println("Ctrl-C: Oops!");
+				absorbed.printStackTrace();
+			}
 		}, "Shutdown Hook"));
 
 		demo.go();

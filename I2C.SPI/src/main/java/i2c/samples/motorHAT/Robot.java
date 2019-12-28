@@ -7,7 +7,7 @@ import java.io.IOException;
 
 /**
  * A robot, with 2 wheels.
- * Each wheel is moved by a DC motor.
+ * Each wheel is moved by a DC motor (or continuous servo?).
  */
 public class Robot {
 	private int addr = 0x60;    // The I2C address of the motor HAT, default is 0x60.
