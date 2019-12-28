@@ -25,15 +25,15 @@ public class InteractiveStepper {
 		private AdafruitMotorHAT.MotorCommand motorCommand;
 		private AdafruitMotorHAT.Style motorStyle;
 
-	  public MotorThread(AdafruitMotorHAT.AdafruitStepperMotor stepper,
-	                     int nbSteps,
-	                     AdafruitMotorHAT.MotorCommand motorCommand,
-	                     AdafruitMotorHAT.Style motorStyle) {
-	  	this.stepper = stepper;
+		MotorThread(AdafruitMotorHAT.AdafruitStepperMotor stepper,
+		            int nbSteps,
+		            AdafruitMotorHAT.MotorCommand motorCommand,
+		            AdafruitMotorHAT.Style motorStyle) {
+			this.stepper = stepper;
 			this.nbSteps = nbSteps;
 			this.motorCommand = motorCommand;
 			this.motorStyle = motorStyle;
-	  }
+		}
 
 	  @Override
 		public void run() {
@@ -69,7 +69,7 @@ public class InteractiveStepper {
 			"MICROSTEP",
 
 			"GO",
-			"STOP" // TODO RPM
+			"OUT" // TODO RPM
 	);
 
 	private void go() {
@@ -91,7 +91,9 @@ public class InteractiveStepper {
 						this.stepper.getSecPerStep(),
 						nbSteps));
 				System.out.println("Enter your options:");
-				System.out.println("Command: FORWARD");
+				System.out.println("Command:");
+				supportedUserInput.forEach(cmd -> System.out.println(String.format("       - %s", cmd)));
+
 				String userInput = StaticUtil.userInput("? > ");
 				boolean startMotor = false;
 
@@ -123,7 +125,7 @@ public class InteractiveStepper {
 					case "GO":
 						startMotor = true;
 						break;
-					case "STOP":
+					case "OUT":
 						keepGoing = false;
 						if (motorThread != null) {
 							motorThread.interrupt();
