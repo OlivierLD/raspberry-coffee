@@ -14,7 +14,7 @@ import java.util.List;
  *
  * RPM : Revolution Per Minute, speed of the rotation.
  * Steps per Revolution: How many steps for 360 degrees.
- * nbSteps: How many steps should the shaft do.
+ * nbSteps: How many steps should the shaft do when started.
  */
 public class InteractiveStepper {
 	private AdafruitMotorHAT mh;
@@ -24,6 +24,8 @@ public class InteractiveStepper {
 	private final static int DEFAULT_RPM = 30;
 	private final static int DEFAULT_STEPS_PER_REV = AdafruitMotorHAT.AdafruitStepperMotor.DEFAULT_NB_STEPS;
 	private int nbSteps;
+
+	private final static boolean MOTOR_HAT_VERBOSE = "true".equals(System.getProperty("motor.hat.verbose"));
 
 	private static class MotorThread extends Thread {
 		private AdafruitMotorHAT.AdafruitStepperMotor stepper;
@@ -47,7 +49,9 @@ public class InteractiveStepper {
 				long before = System.currentTimeMillis();
 				this.stepper.step(nbSteps, motorCommand, motorStyle);
 				long after = System.currentTimeMillis();
-				System.out.println(String.format("Move completed in: %s", TimeUtil.fmtDHMS(TimeUtil.msToHMS(after - before))));
+				if (MOTOR_HAT_VERBOSE) {
+					System.out.println(String.format("\tMove completed in: %s", TimeUtil.fmtDHMS(TimeUtil.msToHMS(after - before))));
+				}
 			} catch (IOException ie) {
 				ie.printStackTrace();
 			}
@@ -60,7 +64,7 @@ public class InteractiveStepper {
 		int rpm = Integer.parseInt(System.getProperty("rpm", String.valueOf(DEFAULT_RPM)));
 		System.out.println(String.format("RPM set to %d.", rpm));
 
-		nbSteps = Integer.parseInt(System.getProperty("steps", String.valueOf("150")));
+		nbSteps = Integer.parseInt(System.getProperty("steps", String.valueOf(200)));
 
 		this.mh = new AdafruitMotorHAT(DEFAULT_STEPS_PER_REV); // Default addr 0x60
 		this.stepper = mh.getStepper(AdafruitMotorHAT.AdafruitStepperMotor.PORT_M1_M2);
@@ -70,8 +74,6 @@ public class InteractiveStepper {
 	private final List<String> supportedUserInput = Arrays.asList(
 			"FORWARD",
 			"BACKWARD",
-			"BRAKE",
-			"RELEASE",
 			"SINGLE",
 			"DOUBLE",
 			"INTERLEAVE",
@@ -80,15 +82,21 @@ public class InteractiveStepper {
       "STEPS YYYY",
 			"STEPSPERREV ZZZZ",
 			"GO",
-			"OUT"
+			"OUT",
+			"QUIT"
 	);
 
 	private void go() {
 		keepGoing = true;
-		AdafruitMotorHAT.MotorCommand motorCommand = AdafruitMotorHAT.MotorCommand.FORWARD;
-		AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.SINGLE;
+		AdafruitMotorHAT.MotorCommand motorCommand = AdafruitMotorHAT.MotorCommand.FORWARD; // Default
+		AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.SINGLE;                  // Default
 
 		MotorThread motorThread = null;
+
+		System.out.println("Set your options, and enter 'GO' to start the motor.");
+		System.out.println("Enter your options:");
+		supportedUserInput.forEach(cmd -> System.out.println(String.format("     - %s", cmd)));
+
 		while (keepGoing) {
 			try {
 				System.out.println(String.format(
@@ -102,11 +110,8 @@ public class InteractiveStepper {
 						this.stepper.getSecPerStep() * 1_000,
 						nbSteps,
 						motorCommand, motorStyle));
-				System.out.println("Enter your options:");
-				System.out.println("Command:");
-				supportedUserInput.forEach(cmd -> System.out.println(String.format("     - %s", cmd)));
 
-				String userInput = StaticUtil.userInput("? > ").toUpperCase();
+				String userInput = StaticUtil.userInput("Your option ? > ").toUpperCase();
 				boolean startMotor = false;
 
 				switch (userInput) {
@@ -115,12 +120,6 @@ public class InteractiveStepper {
 						break;
 					case "BACKWARD":
 						motorCommand = AdafruitMotorHAT.MotorCommand.BACKWARD;
-						break;
-					case "BRAKE":
-						motorCommand = AdafruitMotorHAT.MotorCommand.BRAKE;
-						break;
-					case "RELEASE":
-						motorCommand = AdafruitMotorHAT.MotorCommand.RELEASE;
 						break;
 					case "SINGLE":
 						motorStyle = AdafruitMotorHAT.Style.SINGLE;
@@ -138,6 +137,7 @@ public class InteractiveStepper {
 						startMotor = true;
 						break;
 					case "OUT":
+					case "QUIT":
 						keepGoing = false;
 						if (motorThread != null) {
 							motorThread.interrupt();
@@ -154,8 +154,7 @@ public class InteractiveStepper {
 							}
 						} else if (userInput.startsWith("STEPS ")) {
 							try {
-								int steps = Integer.parseInt(userInput.substring("STEPS ".length()));
-								nbSteps = steps;
+								nbSteps = Integer.parseInt(userInput.substring("STEPS ".length()));
 							} catch (NumberFormatException nfe) {
 								nfe.printStackTrace();
 							}
@@ -167,13 +166,14 @@ public class InteractiveStepper {
 								nfe.printStackTrace();
 							}
 						} else {
-							System.out.println(String.format("%s not supported.", userInput));
+							if (!"".equals(userInput)) {
+								System.out.println(String.format("[%s] not supported.", userInput));
+							}
 						}
 						break;
 				}
 
 				if (startMotor) {
-
 					motorThread = new MotorThread(this.stepper, nbSteps, motorCommand, motorStyle);
 					motorThread.start();
 				}
