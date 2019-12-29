@@ -5,6 +5,7 @@ import i2c.pwm.PWM;
 
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.function.Consumer;
 
 import static utils.TimeUtil.delay;
 
@@ -449,6 +450,9 @@ public class AdafruitMotorHAT {
 		}
 
 		public void step(int steps, MotorCommand direction, Style stepStyle) throws IOException {
+			step(steps, direction, stepStyle, null);
+		}
+		public void step(int steps, MotorCommand direction, Style stepStyle, Consumer<Throwable> exceptionManager) throws IOException {
 			double sPerS = this.secPerStep;
 			int latestStep = 0;
 
@@ -467,13 +471,15 @@ public class AdafruitMotorHAT {
 			for (int s = 0; s < steps; s++) {
 				try {
 					latestStep = this.oneStep(direction, stepStyle, waitMS);
-				} catch (Throwable t) {
-					System.err.println("Error in step common part:");
-					if (t instanceof TookTooLongException) {
-						System.err.println(t.getMessage());
+				} catch (TookTooLongException ttle) {
+					if (exceptionManager != null) {
+						exceptionManager.accept(ttle);
 					} else {
-						t.printStackTrace();
+						System.err.println("Error in step common part:");
+						System.err.println(ttle.getMessage());
 					}
+				} catch (IOException ioe) {
+					throw ioe;
 				}
 			}
 			if (stepStyle == Style.MICROSTEP) {
@@ -482,13 +488,15 @@ public class AdafruitMotorHAT {
 				while (latestStep != 0 && latestStep != this.MICROSTEPS) {
 					try {
 					latestStep = this.oneStep(direction, stepStyle, waitMS);
-					} catch (Throwable t) {
-						System.err.println("Error in step MICROSTEP part:");
-						if (t instanceof TookTooLongException) {
-							System.err.println(t.getMessage());
+					} catch (TookTooLongException ttle) {
+						if (exceptionManager != null) {
+							exceptionManager.accept(ttle);
 						} else {
-							t.printStackTrace();
+							System.err.println("Error in step MICROSTEP part:");
+							System.err.println(ttle.getMessage());
 						}
+					} catch (IOException ioe) {
+						throw ioe;
 					}
 				}
 			}
