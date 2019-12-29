@@ -71,20 +71,35 @@ public class InteractiveStepper {
 		this.stepper.setSpeed(rpm); // Default 30 RPM
 	}
 
-	private final List<String> supportedUserInput = Arrays.asList(
-			"FORWARD",
-			"BACKWARD",
-			"SINGLE",
-			"DOUBLE",
-			"INTERLEAVE",
-			"MICROSTEP",
-			"RPM XXX",
-      "STEPS YYYY",
-			"STEPSPERREV ZZZZ",
-			"GO",
-			"OUT",
-			"QUIT"
-	);
+	enum SupportedUserInput {
+
+		FORWARD("FORWARD", "Set the direction to 'FORWARD'"),
+		BACKWARD("BACKWARD", "Set the direction to 'BACKWARD'"),
+		SINGLE("SINGLE", "Set the style to 'SINGLE'"),
+		DOUBLE("DOUBLE", "Set the style to 'DOUBLE'"),
+		INTERLEAVE("INTERLEAVE", "Set the style to 'INTERLEAVE'"),
+		MICROSTEP("MICROSTEP", "Set the style to 'MICROSTEP'"),
+		RPM("RPM xxx", "Set the Revolution Per Minute to 'xxx', as integer"),
+		STEPS("STEPS yyy", "Set the Number of Steps to make to 'yyy', as integer"),
+		STEPSPERREV("STEPSPERREV zzz", "Set the Steps Per Revolution to 'zzz', as integer"),
+		GO("GO", ""),
+		OUT("OUT", ""),
+		QUIT("QUIT", "");
+
+		private final String command;
+		private final String description;
+		SupportedUserInput(String command, String description) {
+			this.command = command;
+			this.description = description;
+		}
+
+		String command() {
+			return this.command;
+		}
+		String description() {
+			return this.description;
+		}
+	}
 
 	private void go() {
 		keepGoing = true;
@@ -94,8 +109,8 @@ public class InteractiveStepper {
 		MotorThread motorThread = null;
 
 		System.out.println("Set your options, and enter 'GO' to start the motor.");
-		System.out.println("Enter your options:");
-		supportedUserInput.forEach(cmd -> System.out.println(String.format("     - %s", cmd)));
+		System.out.println("Options are (lowercase supported):");
+		Arrays.asList(SupportedUserInput.values()).forEach(sui -> System.out.println(String.format("     - %s\t%s", sui.command(), sui.description())));
 
 		while (keepGoing) {
 			try {
