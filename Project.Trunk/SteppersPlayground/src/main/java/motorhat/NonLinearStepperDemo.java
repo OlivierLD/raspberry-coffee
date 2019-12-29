@@ -27,12 +27,13 @@ public class NonLinearStepperDemo {
 		try {
 
 			nbSteps = 3;
+
 			double step = 1d; // 0.1, etc...
-			for (double speed = step; speed <= 60.0; speed += step) {
+			for (double speed = step; speed <= 60.0; speed += step) { // TODO Try with Math.sin(angle)...
 				this.stepper.setSpeed(speed);
 				System.out.println(String.format(
 						"-----------------------------------------------------------------------------------\n" +
-								"Motor #%d, RPM set to %f, %d Steps per Rev, %f sec per step, %d steps per move.",
+								"Motor #%d, RPM set to %f, %d Steps per Rev, %f sec per step, moving %d steps.",
 						this.stepper.getMotorNum(),
 						this.stepper.getRPM(),
 						this.stepper.getStepPerRev(),
@@ -46,7 +47,7 @@ public class NonLinearStepperDemo {
 				this.stepper.setSpeed(speed);
 				System.out.println(String.format(
 						"-----------------------------------------------------------------------------------\n" +
-								"Motor #%d, RPM set to %f, %d Steps per Rev, %f sec per step, %d steps per move.",
+								"Motor #%d, RPM set to %f, %d Steps per Rev, %f sec per step, moving %d steps.",
 						this.stepper.getMotorNum(),
 						this.stepper.getRPM(),
 						this.stepper.getStepPerRev(),

@@ -4,6 +4,7 @@ import com.pi4j.io.i2c.I2CFactory;
 import i2c.pwm.PWM;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 
 import static utils.TimeUtil.delay;
 
@@ -272,9 +273,45 @@ public class AdafruitMotorHAT {
 			return this.rpm;
 		}
 
+		/**
+		 * <i>Warning:</i> Wait management is to be taken care of by the caller.
+		 * <pre>
+		 *   long waitMS = sPerS * 1_000L;
+		 *   long now = System.nanoTime();
+		 *   int latestStep = <b>this.oneStep(direction, stepStyle);</b>
+		 *   long waitLeft = (waitMS * 1_000_000L) - (System.nanoTime() - now);
+		 * 	 if (waitLeft > 0) {
+		 * 	   long milli = (long)Math.floor(waitLeft / 1_000_000L);
+		 * 		 int nano = (int)(waitLeft - (milli * 1_000_000L));
+		 * 		 delay(milli, nano);
+		 *   } else {
+		 *     // TODO Say something
+		 *   }
+		 * </pre>
+		 * @param dir Direction
+		 * @param style Style
+		 * @return the currentStep (used for the MICROSTEP Style)
+		 * @throws IOException
+		 */
 		public int oneStep(MotorCommand dir, Style style) throws IOException {
+			return oneStep(dir, style, null);
+		}
+
+		/**
+		 *
+		 * @param dir Direction
+		 * @param style Style
+		 * @param waitMS Total step size/width in milliseconds.
+		 *               If not null, wait for the full step will be taken care of accordingly.
+		 *               RuntimeException will be thrown if not enough time remains.
+		 * @return The currentStep. Used to manage MICROSTEP style.
+		 * @throws IOException
+		 */
+		public int oneStep(MotorCommand dir, Style style, Long waitMS) throws IOException {
 			int pwmA = 255,
 					pwmB = 255;
+
+			long now = System.nanoTime();
 
 			// first determine what sort of stepping procedure we're up to
 			if (style == Style.SINGLE) {
@@ -381,6 +418,22 @@ public class AdafruitMotorHAT {
 			this.mc.setPin(this.AIN1, coils[2]);
 			this.mc.setPin(this.BIN2, coils[3]);
 
+			if (waitMS != null) {
+
+				long waitLeft = (waitMS * 1_000_000L) - (System.nanoTime() - now);
+				if (waitLeft > 0) {
+					long milli = (long)Math.floor(waitLeft / 1_000_000L);
+					int nano = (int)(waitLeft - (milli * 1_000_000L));
+//					System.out.println(String.format("\t %d ms, %d ns (instead of %d ms)", milli, nano, waitMS));
+					delay(milli, nano);
+				} else {
+					throw new RuntimeException(String.format(
+							"Step cannot be performed fast enough. %sms were required, missing %s ns after the step",
+							NumberFormat.getInstance().format(waitMS),
+							NumberFormat.getInstance().format(waitLeft)));
+				}
+
+			}
 			return this.currentStep;
 		}
 
@@ -401,28 +454,22 @@ public class AdafruitMotorHAT {
 			}
 
 			for (int s = 0; s < steps; s++) {
-				long now = System.nanoTime();
-				latestStep = this.oneStep(direction, stepStyle);
-				long waitLeft = (waitMS * 1_000_000L) - (System.nanoTime() - now);
-				if (waitLeft > 0) {
-					long milli = (long)Math.floor(waitLeft / 1_000_000L);
-					int nano = (int)(waitLeft - (milli * 1_000_000L));
-//					System.out.println(String.format("\t %d ms, %d ns (instead of %d ms)", milli, nano, waitMS));
-					delay(milli, nano);
+				try {
+					latestStep = this.oneStep(direction, stepStyle, waitMS);
+				} catch (Throwable t) {
+					System.err.println("Error in step common part:");
+					t.printStackTrace();
 				}
 			}
 			if (stepStyle == Style.MICROSTEP) {
 				// this is an edge case, if we are in between full steps, lets just keep going
 				// so we end on a full step
 				while (latestStep != 0 && latestStep != this.MICROSTEPS) {
-					long now = System.nanoTime();
-					latestStep = this.oneStep(direction, stepStyle);
-					long waitLeft = (waitMS * 1_000_000L) - (System.nanoTime() - now);
-					if (waitLeft > 0) {
-						long milli = (long)Math.floor(waitLeft / 1_000_000L);
-						int nano = (int)(waitLeft - (milli * 1_000_000L));
-//					System.out.println(String.format("\t %d ms, %d ns (instead of %d ms)", milli, nano, waitMS));
-						delay(milli, nano);
+					try {
+					latestStep = this.oneStep(direction, stepStyle, waitMS);
+					} catch (Throwable t) {
+						System.err.println("Error in step MICROSTEP part:");
+						t.printStackTrace();
 					}
 				}
 			}

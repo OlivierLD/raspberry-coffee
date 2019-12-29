@@ -126,3 +126,7 @@ $
 ``` 
 
 ### Non-constant speed
+Try that:
+```
+$ ./non-linear.stepper.sh
+```
