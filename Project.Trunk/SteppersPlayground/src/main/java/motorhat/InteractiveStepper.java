@@ -48,9 +48,14 @@ public class InteractiveStepper {
 		public void run() {
 			try {
 				long before = System.currentTimeMillis();
-				this.stepper.step(nbSteps, motorCommand, motorStyle);
-				long after = System.currentTimeMillis();
+				this.stepper.step(nbSteps, motorCommand, motorStyle, t -> {
+					if (MOTOR_HAT_VERBOSE) {
+						// t.printStackTrace();
+						System.out.println(String.format("\t\tToo long! %s", t));
+					}
+				});
 				if (MOTOR_HAT_VERBOSE) {
+					long after = System.currentTimeMillis();
 					System.out.println(String.format("\tMove completed in: %s", TimeUtil.fmtDHMS(TimeUtil.msToHMS(after - before))));
 				}
 			} catch (IOException ie) {
