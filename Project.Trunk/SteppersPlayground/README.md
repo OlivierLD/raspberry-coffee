@@ -130,3 +130,7 @@ Try that:
 ```
 $ ./non-linear.stepper.sh
 ```
+
+### Some comments
+With a `5v` power supply for the motor (the Raspberry Pi does not like to share power),
+some required speed/RPM might be too high.

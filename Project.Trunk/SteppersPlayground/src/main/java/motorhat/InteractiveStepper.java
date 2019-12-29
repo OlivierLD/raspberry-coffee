@@ -3,11 +3,11 @@ package motorhat;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.motor.adafruitmotorhat.AdafruitMotorHAT;
 import utils.StaticUtil;
+import utils.StringUtils;
 import utils.TimeUtil;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 /*
  * See https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/using-stepper-motors
@@ -82,9 +82,9 @@ public class InteractiveStepper {
 		RPM("RPM xxx", "Set the Revolution Per Minute to 'xxx', as integer"),
 		STEPS("STEPS yyy", "Set the Number of Steps to make to 'yyy', as integer"),
 		STEPSPERREV("STEPSPERREV zzz", "Set the Steps Per Revolution to 'zzz', as integer"),
-		GO("GO", ""),
-		OUT("OUT", ""),
-		QUIT("QUIT", "");
+		GO("GO", "Apply current settings and runs the motor for the required number  of steps"),
+		OUT("OUT", "Release the motor and exit."),
+		QUIT("QUIT", "Same as 'OUT'");
 
 		private final String command;
 		private final String description;
@@ -108,9 +108,16 @@ public class InteractiveStepper {
 
 		MotorThread motorThread = null;
 
+		int longestCommand = Arrays.stream(SupportedUserInput.values())
+				.map(sui -> sui.command().length())
+		    .max(Integer::compare)
+				.get();
 		System.out.println("Set your options, and enter 'GO' to start the motor.");
 		System.out.println("Options are (lowercase supported):");
-		Arrays.asList(SupportedUserInput.values()).forEach(sui -> System.out.println(String.format("     - %s\t%s", sui.command(), sui.description())));
+		Arrays.asList(SupportedUserInput.values())
+				.forEach(sui -> System.out.println(String.format("     - %s\t%s",
+						StringUtils.rpad(sui.command(), longestCommand + 1),
+						sui.description())));
 
 		while (keepGoing) {
 			try {
