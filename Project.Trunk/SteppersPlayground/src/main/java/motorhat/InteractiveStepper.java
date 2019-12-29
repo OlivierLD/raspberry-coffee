@@ -129,6 +129,7 @@ public class InteractiveStepper {
 				System.out.println(String.format(
 						    "--- Current Status ---------------------------------------------------------------------\n" +
 								"Motor # %d, RPM set to %.02f, %d Steps per Rev, %.03f millisec per step, taking %d steps.\n" +
+								 " -> this will be %.01f\272 \n" +
 								"Command %s, Style %s \n" +
 								"----------------------------------------------------------------------------------------",
 						this.stepper.getMotorNum(),
@@ -136,6 +137,7 @@ public class InteractiveStepper {
 						this.stepper.getStepPerRev(),
 						this.stepper.getSecPerStep() * 1_000,
 						nbSteps,
+						(360d * (double)nbSteps / (double)this.stepper.getStepPerRev()),
 						motorCommand, motorStyle));
 
 				String userInput = StaticUtil.userInput("Your option ? > ").toUpperCase();
