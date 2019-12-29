@@ -273,8 +273,17 @@ public class AdafruitMotorHAT {
 			return this.rpm;
 		}
 
+		public static class TookTooLongException extends Exception {
+			public TookTooLongException() {
+				super();
+			}
+			public TookTooLongException(String cause) {
+				super(cause);
+			}
+		}
+
 		/**
-		 * <i>Warning:</i> Wait management is to be taken care of by the caller.
+		 * <i>Warning:</i> Wait management is to be taken care of by the caller. No TookTooLongException will be thrown.
 		 * <pre>
 		 *   long waitMS = sPerS * 1_000L;
 		 *   long now = System.nanoTime();
@@ -291,9 +300,9 @@ public class AdafruitMotorHAT {
 		 * @param dir Direction
 		 * @param style Style
 		 * @return the currentStep (used for the MICROSTEP Style)
-		 * @throws IOException
+		 * @throws IOException, TookTooLongException
 		 */
-		public int oneStep(MotorCommand dir, Style style) throws IOException {
+		public int oneStep(MotorCommand dir, Style style) throws IOException, TookTooLongException {
 			return oneStep(dir, style, null);
 		}
 
@@ -305,9 +314,9 @@ public class AdafruitMotorHAT {
 		 *               If not null, wait for the full step will be taken care of accordingly.
 		 *               RuntimeException will be thrown if not enough time remains.
 		 * @return The currentStep. Used to manage MICROSTEP style.
-		 * @throws IOException
+		 * @throws IOException, TookTooLongException
 		 */
-		public int oneStep(MotorCommand dir, Style style, Long waitMS) throws IOException {
+		public int oneStep(MotorCommand dir, Style style, Long waitMS) throws IOException, TookTooLongException {
 			int pwmA = 255,
 					pwmB = 255;
 
@@ -420,17 +429,19 @@ public class AdafruitMotorHAT {
 
 			if (waitMS != null) {
 
-				long waitLeft = (waitMS * 1_000_000L) - (System.nanoTime() - now);
+				long elapsed = System.nanoTime() - now;
+				long waitLeft = (waitMS * 1_000_000L) - elapsed;
 				if (waitLeft > 0) {
 					long milli = (long)Math.floor(waitLeft / 1_000_000L);
 					int nano = (int)(waitLeft - (milli * 1_000_000L));
 //					System.out.println(String.format("\t %d ms, %d ns (instead of %d ms)", milli, nano, waitMS));
 					delay(milli, nano);
 				} else {
-					throw new RuntimeException(String.format(
-							"Step cannot be performed fast enough. %sms were required, missing %s ns after the step",
+					throw new TookTooLongException(String.format(
+							"Step cannot be performed fast enough.\n%s ms were required, took %s ns, missing %s ns after the step",
 							NumberFormat.getInstance().format(waitMS),
-							NumberFormat.getInstance().format(waitLeft)));
+							NumberFormat.getInstance().format(elapsed),
+							NumberFormat.getInstance().format(Math.abs(waitLeft))));
 				}
 
 			}
@@ -458,7 +469,11 @@ public class AdafruitMotorHAT {
 					latestStep = this.oneStep(direction, stepStyle, waitMS);
 				} catch (Throwable t) {
 					System.err.println("Error in step common part:");
-					t.printStackTrace();
+					if (t instanceof TookTooLongException) {
+						System.err.println(t.getMessage());
+					} else {
+						t.printStackTrace();
+					}
 				}
 			}
 			if (stepStyle == Style.MICROSTEP) {
@@ -469,7 +484,11 @@ public class AdafruitMotorHAT {
 					latestStep = this.oneStep(direction, stepStyle, waitMS);
 					} catch (Throwable t) {
 						System.err.println("Error in step MICROSTEP part:");
-						t.printStackTrace();
+						if (t instanceof TookTooLongException) {
+							System.err.println(t.getMessage());
+						} else {
+							t.printStackTrace();
+						}
 					}
 				}
 			}
