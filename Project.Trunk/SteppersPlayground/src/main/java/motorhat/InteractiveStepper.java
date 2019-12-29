@@ -84,7 +84,8 @@ public class InteractiveStepper {
 		STEPSPERREV("STEPSPERREV zzz", "Set the Steps Per Revolution to 'zzz', as integer"),
 		GO("GO", "Apply current settings and runs the motor for the required number  of steps"),
 		OUT("OUT", "Release the motor and exit."),
-		QUIT("QUIT", "Same as 'OUT'");
+		QUIT("QUIT", "Same as 'OUT'"),
+		HELP("HELP", "Display command list");
 
 		private final String command;
 		private final String description;
@@ -101,16 +102,10 @@ public class InteractiveStepper {
 		}
 	}
 
-	private void go() {
-		keepGoing = true;
-		AdafruitMotorHAT.MotorCommand motorCommand = AdafruitMotorHAT.MotorCommand.FORWARD; // Default
-		AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.SINGLE;                  // Default
-
-		MotorThread motorThread = null;
-
+	private void displayHelp() {
 		int longestCommand = Arrays.stream(SupportedUserInput.values())
 				.map(sui -> sui.command().length())
-		    .max(Integer::compare)
+				.max(Integer::compare)
 				.get();
 		System.out.println("Set your options, and enter 'GO' to start the motor.");
 		System.out.println("Options are (lowercase supported):");
@@ -118,6 +113,16 @@ public class InteractiveStepper {
 				.forEach(sui -> System.out.println(String.format("     - %s\t%s",
 						StringUtils.rpad(sui.command(), longestCommand + 1),
 						sui.description())));
+	}
+
+	private void go() {
+		keepGoing = true;
+		AdafruitMotorHAT.MotorCommand motorCommand = AdafruitMotorHAT.MotorCommand.FORWARD; // Default
+		AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.SINGLE;                  // Default
+
+		MotorThread motorThread = null;
+
+		displayHelp();
 
 		while (keepGoing) {
 			try {
@@ -157,6 +162,9 @@ public class InteractiveStepper {
 						break;
 					case "GO":
 						startMotor = true;
+						break;
+					case "HELP":
+						displayHelp();
 						break;
 					case "OUT":
 					case "QUIT":
