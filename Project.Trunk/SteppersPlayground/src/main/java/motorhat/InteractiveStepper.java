@@ -7,6 +7,7 @@ import utils.StringUtils;
 import utils.TimeUtil;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.Arrays;
 
 /*
@@ -129,7 +130,7 @@ public class InteractiveStepper {
 				System.out.println(String.format(
 						    "--- Current Status ---------------------------------------------------------------------\n" +
 								"Motor # %d, RPM set to %.02f, %d Steps per Rev, %.03f millisec per step, taking %d steps.\n" +
-								 " -> this will be %.01f degrees \n" +
+								 " -> this will be %.01f degrees in ~ %s ms\n" +
 								"Command %s, Style %s \n" +
 								"----------------------------------------------------------------------------------------",
 						this.stepper.getMotorNum(),
@@ -138,6 +139,7 @@ public class InteractiveStepper {
 						this.stepper.getSecPerStep() * 1_000,
 						nbSteps,
 						(360d * (double)nbSteps / (double)this.stepper.getStepPerRev()),
+						NumberFormat.getInstance().format(nbSteps * this.stepper.getSecPerStep() * 1_000),
 						motorCommand, motorStyle));
 
 				String userInput = StaticUtil.userInput("Your option ? > ").toUpperCase();
