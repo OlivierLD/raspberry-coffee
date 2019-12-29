@@ -129,7 +129,7 @@ public class InteractiveStepper {
 				System.out.println(String.format(
 						    "--- Current Status ---------------------------------------------------------------------\n" +
 								"Motor # %d, RPM set to %.02f, %d Steps per Rev, %.03f millisec per step, taking %d steps.\n" +
-								 " -> this will be %.01f\272 \n" +
+								 " -> this will be %.01f degrees \n" +
 								"Command %s, Style %s \n" +
 								"----------------------------------------------------------------------------------------",
 						this.stepper.getMotorNum(),
