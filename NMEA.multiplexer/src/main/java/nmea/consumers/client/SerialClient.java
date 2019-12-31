@@ -26,12 +26,15 @@ public class SerialClient extends NMEAClient {
 	public SerialClient(String s[], String[] sa, Multiplexer mux) {
 		super(s, sa, mux);
 		this.verbose = "true".equals(System.getProperty("serial.data.verbose", "false"));
-		this.clientName = ((SerialReader) this.getReader()).getPort();
+		this.clientName = String.valueOf(System.currentTimeMillis()) ; // ((SerialReader) this.getReader()).getPort();
 	}
 
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
 		if (verbose) {
+			if (this.getReader() != null) {
+				this.clientName = ((SerialReader) this.getReader()).getPort();
+			}
 			System.out.println(String.format("Received from Serial (%s): %s", this.clientName, e.getContent()));
 		}
 		if (multiplexer != null) {
