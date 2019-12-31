@@ -9,6 +9,8 @@ import nmea.consumers.reader.SerialReader;
  * Read NMEA Data from a Serial port
  */
 public class SerialClient extends NMEAClient {
+	private String clientName; // TODO Put this in the supertype?
+
 	public SerialClient() {
 		this(null, null, null);
 	}
@@ -24,12 +26,14 @@ public class SerialClient extends NMEAClient {
 	public SerialClient(String s[], String[] sa, Multiplexer mux) {
 		super(s, sa, mux);
 		this.verbose = "true".equals(System.getProperty("serial.data.verbose", "false"));
+		this.clientName = ((SerialReader) this.getReader()).getPort();
 	}
 
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if (verbose)
-			System.out.println("Received from Serial:" + e.getContent());
+		if (verbose) {
+			System.out.println(String.format("Received from Serial (%s): %s", this.clientName, e.getContent()));
+		}
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
 		}

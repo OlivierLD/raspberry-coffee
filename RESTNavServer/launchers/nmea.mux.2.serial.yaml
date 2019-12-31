@@ -10,10 +10,12 @@ channels:
   - type: serial
     port: COM1
     baudrate: 4800
+    sentence.filters: RMC
     verbose: false
   - type: serial
     port: COM3
     baudrate: 4800
+    sentence.filters: ~RMC
     verbose: false
 forwarders:
   - type: file
