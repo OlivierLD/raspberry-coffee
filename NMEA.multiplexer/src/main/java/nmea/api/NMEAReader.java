@@ -126,7 +126,7 @@ public abstract class NMEAReader extends Thread {
 			throw new RuntimeException(ex);
 		} finally {
 			if (verbose) {
-				System.out.println(String.format(">> %s: Reader Completed", this.getClass().getName()));
+				System.out.println(String.format(">> %s: Reader Setting Completed", this.getClass().getName()));
 			}
 		}
 	}

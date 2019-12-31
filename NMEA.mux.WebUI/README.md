@@ -534,7 +534,7 @@ ownership changed: type=1
 This is a serial port
 Reading serial port...
 /dev/ttyS0:Port is open...
->> nmea.consumers.reader.SerialReader: Reader Completed
+>> nmea.consumers.reader.SerialReader: Reader Setting Completed
 IP addresses for localhost:
 wlan0 -> 192.168.42.13
 Also try http://192.168.42.13:5678/zip/index.html from a browser
