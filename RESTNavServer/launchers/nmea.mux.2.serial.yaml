@@ -18,6 +18,7 @@ channels:
 forwarders:
   - type: file
     filename: ./data.nmea
+    flush: true
     verbose: false
     # forward.01.timebase.filename=true
     # forward.01.filename.suffix=_LOG

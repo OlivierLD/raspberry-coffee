@@ -72,19 +72,20 @@ Starting Stepper Demo
 RPM set to 30.
 Hit Ctrl-C to stop the demo (or OUT at the prompt)
 Set your options, and enter 'GO' to start the motor.
-Enter your options:
-     - FORWARD
-     - BACKWARD
-     - SINGLE
-     - DOUBLE
-     - INTERLEAVE
-     - MICROSTEP
-     - RPM XXX
-     - STEPS YYYY
-     - STEPSPERREV ZZZZ
-     - GO
-     - OUT
-     - QUIT
+Options are (lowercase supported):
+     - FORWARD         	Set the direction to 'FORWARD'
+     - BACKWARD        	Set the direction to 'BACKWARD'
+     - SINGLE          	Set the style to 'SINGLE'
+     - DOUBLE          	Set the style to 'DOUBLE'
+     - INTERLEAVE      	Set the style to 'INTERLEAVE'
+     - MICROSTEP       	Set the style to 'MICROSTEP'
+     - RPM xxx         	Set the Revolution Per Minute to 'xxx', as integer
+     - STEPS yyy       	Set the Number of Steps to make to 'yyy', as integer
+     - STEPSPERREV zzz 	Set the Steps Per Revolution to 'zzz', as integer
+     - GO              	Apply current settings and runs the motor for the required number  of steps
+     - OUT             	Release the motor and exit.
+     - QUIT            	Same as 'OUT'
+     - HELP            	Display command list
 --- Current Status ---------------------------------------------------------------------
 Motor # 1, RPM set to 30.00, 200 Steps per Rev, 10.000 millisec per step, taking 200 steps.
 Command FORWARD, Style SINGLE 
@@ -124,6 +125,7 @@ Your option ? > quit  # Bye!
 Bye.
 $
 ``` 
+> Screenshots above might not be 100% accurate, soft keeps evolving.
 
 ### Non-constant speed
 Try that:
@@ -134,3 +136,20 @@ $ ./non-linear.stepper.sh
 ### Some comments
 With a `5v` power supply for the motor (the Raspberry Pi does not like to share power),
 some required speed/RPM might be too high.
+
+> TODO: Try 12v power supply.
+
+### Goals
+
+#### SunFlower
+Following up to the previous micro-servo prototype:
+
+- Using two stepper motors
+- Using the `NMEA.multiplexer` to get the GPS Position and the Heading
+    - Provide defaults...
+- Determine the Sun's location in the sky
+- Orient a solar panel accordingly
+    - Using one motor for the Azimuth
+    - Using the other one for the Elevation
+
+---
