@@ -212,6 +212,7 @@ channels:
 forwarders:
   - type: file
     filename: data.nmea
+    flush: true
 </pre>
 This would read 2 serial ports, `COM3` and `COM4`, and merge the output into a single file named `data.nmea`.
 
