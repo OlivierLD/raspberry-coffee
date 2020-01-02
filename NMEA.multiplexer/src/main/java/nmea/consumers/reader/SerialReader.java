@@ -86,10 +86,10 @@ public class SerialReader
 			System.out.println("----- Serial Port List -----");
 			while (enumeration.hasMoreElements()) {
 				CommPortIdentifier cpi = (CommPortIdentifier) enumeration.nextElement();
-				System.out.println(String.format("Port: %s, %s %s.",
+				System.out.println(String.format("Port: %s, %s, %s.",
 						cpi.getName(),
 						readablePortType(cpi.getPortType()),
-						(cpi.isCurrentlyOwned() ? String.format(", (owned by %s)", cpi.getCurrentOwner()) : ", free")));
+						(cpi.isCurrentlyOwned() ? String.format("(owned by %s)", cpi.getCurrentOwner()) : "free")));
 				nbp++;
 			}
 			System.out.println("Found " + nbp + " port(s)");
