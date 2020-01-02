@@ -7,7 +7,7 @@ context:
   init.cache: false
 channels:
   - type: serial
-    port: /dev/ttyUSB0
+    port: /dev/tty.usbmodem14201
     baudrate: 4800
     verbose: true
   - type: serial

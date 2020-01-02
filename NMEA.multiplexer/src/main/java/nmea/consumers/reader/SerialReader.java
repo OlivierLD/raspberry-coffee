@@ -86,7 +86,10 @@ public class SerialReader
 			System.out.println("----- Serial Port List -----");
 			while (enumeration.hasMoreElements()) {
 				CommPortIdentifier cpi = (CommPortIdentifier) enumeration.nextElement();
-				System.out.println(String.format("Port: %s, %s", cpi.getName(), readablePortType(cpi.getPortType())));
+				System.out.println(String.format("Port: %s, %s %s.",
+						cpi.getName(),
+						readablePortType(cpi.getPortType()),
+						(cpi.isCurrentlyOwned() ? String.format(", (owned by %s)", cpi.getCurrentOwner()) : ", free")));
 				nbp++;
 			}
 			System.out.println("Found " + nbp + " port(s)");
@@ -101,7 +104,7 @@ public class SerialReader
 			try {
 				com = CommPortIdentifier.getPortIdentifier(this.comPort);
 				if (verbose) {
-					System.out.println(String.format("Serial port %s opened after %d try(ies)", this.comPort, (nbOpenTries + 1)));
+					System.out.println(String.format("\t>> Serial port %s opened after %d try(ies)", this.comPort, (nbOpenTries + 1)));
 				}
 			} catch (NoSuchPortException nspe) {
 				nbOpenTries++;
