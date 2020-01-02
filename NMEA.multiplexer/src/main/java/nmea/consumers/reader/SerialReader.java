@@ -100,6 +100,9 @@ public class SerialReader
 		while (nbOpenTries < maxOpenTries && com == null) {
 			try {
 				com = CommPortIdentifier.getPortIdentifier(this.comPort);
+				if (verbose) {
+					System.out.println(String.format("Serial port %s opened after %d try(ies)", this.comPort, (nbOpenTries + 1)));
+				}
 			} catch (NoSuchPortException nspe) {
 				nbOpenTries++;
 				System.err.println(this.comPort + ": No Such Port");

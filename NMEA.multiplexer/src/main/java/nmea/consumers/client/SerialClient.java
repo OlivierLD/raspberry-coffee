@@ -97,9 +97,9 @@ public class SerialClient extends NMEAClient {
 	 */
 	public static void main(String... args) {
 		System.out.println("SerialClient invoked with " + args.length + " Parameter(s).");
-		for (String s : args)
+		for (String s : args) {
 			System.out.println("SerialClient prm:" + s);
-
+		}
 //  String commPort = "/dev/ttyUSB0"; // "COM1";
 		String commPort = "/dev/tty.usbserial"; // Mac
 		if (args.length > 0) {
