@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import java.net.ProtocolException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static junit.framework.TestCase.assertNotNull;

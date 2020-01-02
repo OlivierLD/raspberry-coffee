@@ -7,16 +7,17 @@ context:
   init.cache: false
 channels:
   - type: serial
-    port: COM3
+    port: /dev/ttyUSB0
     baudrate: 4800
-    verbose: false
+    verbose: true
   - type: serial
-    port: COM4
+    port: /dev/ttyS80
     baudrate: 4800
-    verbose: false
+    verbose: true
 forwarders:
   - type: file
     filename: data.nmea
+    flush: true
     # verbose: false
     # forward.01.timebase.filename=true
     # forward.01.filename.suffix=_LOG

@@ -1,7 +1,6 @@
 package nmea.api;
 
 import nmea.ais.AISParser;
-import utils.DumpUtil;
 import nmea.parser.StringParsers;
 
 import java.util.ArrayList;
@@ -40,9 +39,9 @@ public final class NMEAParser extends Thread {
 
 	public final static String NMEA_SENTENCE_SEPARATOR = "\n";
 
-	private List<NMEAListener> NMEAListeners = null; // new ArrayList(2);
+	private List<NMEAListener> NMEAListeners; // new ArrayList(2);
 
-	NMEAParser instance = null;
+	NMEAParser instance;
 
 	/**
 	 * @param al The ArrayList of the Listeners instantiated by the NMEAClient

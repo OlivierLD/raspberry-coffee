@@ -49,7 +49,7 @@ import java.util.Properties;
  * In the overwhelming majority of the cases, an NMEAClient will be created along with its NMEAReader companion.
  */
 public abstract class NMEAClient {
-	private List<NMEAListener> NMEAListeners = new ArrayList<NMEAListener>(2);
+	private List<NMEAListener> NMEAListeners = new ArrayList<>(2);
 	private NMEAParser parser;
 	private NMEAReader reader;
 	private String[] devicePrefix = null;
@@ -160,7 +160,7 @@ public abstract class NMEAClient {
 	}
 
 	public void stopDataRead() {
-		this.getListeners().stream().forEach(listener -> listener.stopReading(new NMEAEvent(this)));
+		this.getListeners().forEach(listener -> listener.stopReading(new NMEAEvent(this)));
 		// Remove listeners
 		removeAllListeners();
 

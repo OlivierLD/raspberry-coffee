@@ -16,6 +16,8 @@ import utils.TimeUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.TooManyListenersException;
@@ -24,23 +26,20 @@ public class SerialReader
 				extends NMEAReader
 				implements SerialPortEventListener, CommPortOwnershipListener {
 	private String comPort = "/dev/ttyUSB0"; // "COM1";
-	private int br = 4800;
+	private int br = 4_800;
 	private SerialPort serialPort;
 
 	private final static int TIMEOUT = 10_000;
 
 	public SerialReader() {
 	}
-
 	public SerialReader(String com, int br) {
 		this.comPort = com;
 		this.br = br;
 	}
-
 	public SerialReader(List<NMEAListener> al) {
 		super(al);
 	}
-
 	public SerialReader(List<NMEAListener> al, String com, int br) {
 		this(null, al, com, br);
 	}
@@ -94,12 +93,26 @@ public class SerialReader
 			System.out.println("----------------------------");
 		}
 		CommPortIdentifier com = null;
-		try {
-			com = CommPortIdentifier.getPortIdentifier(this.comPort);
-		} catch (NoSuchPortException nspe) {
-			System.err.println(this.comPort + ": No Such Port");
-			nspe.printStackTrace();
-			return;
+		final int DEFAULT_MAX_OPEN_TRIES = 5;
+		int maxOpenTries = Integer.parseInt(System.getProperty("serial.max.open.tries", String.valueOf(DEFAULT_MAX_OPEN_TRIES)));
+		final long BETWEEN_TRIES = 1_000L;
+		int nbOpenTries = 0;
+		while (nbOpenTries < maxOpenTries && com == null) {
+			try {
+				com = CommPortIdentifier.getPortIdentifier(this.comPort);
+			} catch (NoSuchPortException nspe) {
+				nbOpenTries++;
+				System.err.println(this.comPort + ": No Such Port");
+				nspe.printStackTrace();
+				if (nbOpenTries < maxOpenTries) {
+					System.err.println(String.format("\t... Retrying to open %s in %d ms", this.comPort, BETWEEN_TRIES));
+					TimeUtil.delay(BETWEEN_TRIES);
+				} else {
+					System.err.println(String.format(">>>>> %s: No Such Port after %d tries, giving up.", this.comPort, maxOpenTries));
+					throw new RuntimeException(nspe);
+//					return;
+				}
+			}
 		}
 		CommPort thePort = null;
 		try {
@@ -231,6 +244,8 @@ public class SerialReader
 	}
 
 	public static void main(String... args) {
-		new SerialReader().startReader();
+		List<NMEAListener> al = new ArrayList<>();
+		// Test the retry
+		new SerialReader("SerialReader", al, "/dev/ttyUSB0", 4_800).startReader();
 	}
 }
