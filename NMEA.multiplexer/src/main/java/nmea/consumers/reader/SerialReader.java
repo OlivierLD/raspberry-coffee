@@ -123,7 +123,7 @@ public class SerialReader
 		CommPort thePort = null;
 		try {
 			com.addPortOwnershipListener(this);
-			thePort = com.open("NMEAPort", TIMEOUT);
+			thePort = com.open(String.format("NMEAPort-%s", this.comPort), TIMEOUT);
 		} catch (PortInUseException piue) {
 			System.err.println("Port In Use");
 			return;
@@ -237,6 +237,9 @@ public class SerialReader
         }
         break;
 			default:
+				if (verbose) {
+					System.out.println(String.format("SerialEvent: %d", serialPortEvent.getEventType()));
+				}
 				break;
 		}
 	}
@@ -245,10 +248,10 @@ public class SerialReader
 	public void ownershipChange(int type) {
 		switch (type) {
 			case CommPortOwnershipListener.PORT_OWNED:
-				System.out.println(String.format("Port Ownership of %s changed: type=%d, %s", this.comPort, type, "Owned"));
+				System.out.println(String.format("Port Ownership of %s changed: type=%d, %s", this.comPort, type, "Owned (Locked)"));
 				break;
 			case CommPortOwnershipListener.PORT_UNOWNED:
-				System.out.println(String.format("Port Ownership %s changed: type=%d, %s", this.comPort, type, "UnOwned"));
+				System.out.println(String.format("Port Ownership %s changed: type=%d, %s", this.comPort, type, "UnOwned (Released)"));
 				break;
 			case CommPortOwnershipListener.PORT_OWNERSHIP_REQUESTED:
 				System.out.println(String.format("Port Ownership %s changed: type=%d, %s", this.comPort, type, "Ownership Requested"));

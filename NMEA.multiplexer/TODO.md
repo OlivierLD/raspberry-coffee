@@ -71,6 +71,7 @@ Received from Serial (/dev/ttyS80): $GPGSA,A,1,,,,,,,,,,,,,99.99,99.99,99.99*30
 
 ### Several tentatives to open serial ports
 Look where it says `/dev/ttyUSB0: No Such Port`, it seems to be related to the lock file that need to be created for exclusive access.
+But if we insist, it will work eventually.
 
 ```
 $ ./mux.sh nmea.mux.2.serial.yaml 
