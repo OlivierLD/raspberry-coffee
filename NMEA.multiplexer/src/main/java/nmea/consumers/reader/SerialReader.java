@@ -245,16 +245,16 @@ public class SerialReader
 	public void ownershipChange(int type) {
 		switch (type) {
 			case CommPortOwnershipListener.PORT_OWNED:
-				System.out.println(String.format("Port Ownership changed: type=%d, %s", type, "Owned"));
+				System.out.println(String.format("Port Ownership of %s changed: type=%d, %s", this.comPort, type, "Owned"));
 				break;
 			case CommPortOwnershipListener.PORT_UNOWNED:
-				System.out.println(String.format("Port Ownership changed: type=%d, %s", type, "UnOwned"));
+				System.out.println(String.format("Port Ownership %s changed: type=%d, %s", this.comPort, type, "UnOwned"));
 				break;
 			case CommPortOwnershipListener.PORT_OWNERSHIP_REQUESTED:
-				System.out.println(String.format("Port Ownership changed: type=%d, %s", type, "Ownership Requested"));
+				System.out.println(String.format("Port Ownership %s changed: type=%d, %s", this.comPort, type, "Ownership Requested"));
 				break;
 			default:
-				System.out.println(String.format("Port Ownership changed: type=%d, %s", type, "Unknown type"));
+				System.out.println(String.format("Port Ownership %s changed: type=%d, %s", this.comPort, type, "Unknown type"));
 				break;
 		}
 	}
