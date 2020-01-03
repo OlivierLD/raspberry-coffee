@@ -59,7 +59,7 @@ public class SerialReader
 
 	private InputStream theInput = null;
 
-	private static String readablePortType(int type) {
+	public static String readablePortType(int type) {
 		switch (type) {
 			case CommPortIdentifier.PORT_I2C:
 				return "I2C";
@@ -243,10 +243,20 @@ public class SerialReader
 
 	@Override
 	public void ownershipChange(int type) {
-		if (type == CommPortOwnershipListener.PORT_OWNERSHIP_REQUESTED) {
-			System.out.println("PORT_OWNERSHIP_REQUESTED");
-		} else
-			System.out.println("ownership changed: type=" + type);
+		switch (type) {
+			case CommPortOwnershipListener.PORT_OWNED:
+				System.out.println(String.format("Port Ownership changed: type=%d, %s", type, "Owned"));
+				break;
+			case CommPortOwnershipListener.PORT_UNOWNED:
+				System.out.println(String.format("Port Ownership changed: type=%d, %s", type, "UnOwned"));
+				break;
+			case CommPortOwnershipListener.PORT_OWNERSHIP_REQUESTED:
+				System.out.println(String.format("Port Ownership changed: type=%d, %s", type, "Ownership Requested"));
+				break;
+			default:
+				System.out.println(String.format("Port Ownership changed: type=%d, %s", type, "Unknown type"));
+				break;
+		}
 	}
 
 	public static void main(String... args) {
