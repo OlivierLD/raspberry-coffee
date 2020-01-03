@@ -70,6 +70,8 @@ Received from Serial (/dev/ttyS80): $GPGSA,A,1,,,,,,,,,,,,,99.99,99.99,99.99*30
 ```
 
 ### Several tentatives to open serial ports
+Look where it says `/dev/ttyUSB0: No Such Port`, it seems to be related to the lock file that need to be created for exclusive access.
+
 ```
 $ ./mux.sh nmea.mux.2.serial.yaml 
 Using properties file nmea.mux.2.serial.yaml
@@ -105,7 +107,7 @@ Port: /dev/ttyS80, SERIAL, free.
 Found 3 port(s)
 ----------------------------
 	>> Serial port /dev/ttyS80 opened after 1 try(ies)  << That one opened successfully
-Port Ownership changed: type=1, Owned
+Port Ownership of /dev/ttyS80 changed: type=1, Owned
 This is a serial port
 Reading serial port...
 /dev/ttyS80:Port is open...
@@ -136,7 +138,7 @@ Received from Serial (/dev/ttyS80): $GNTXT,01,01,02,ANTSUPERV=AC SD PDoS SR*3E
 Received from Serial (/dev/ttyS80): $GNTXT,01,01,02,ANTSTATUS=OK*25
 Received from Serial (/dev/ttyS80): $GNTXT,01,01,02,PF=3FF*4B
 	>> Serial port /dev/ttyUSB0 opened after 2 try(ies)    <<< All good now!
-Port Ownership changed: type=1, Owned
+Port Ownership of /dev/ttyUSB0 changed: type=1, Owned
 This is a serial port
 Reading serial port...
 /dev/ttyUSB0:Port is open...
