@@ -219,11 +219,11 @@ You can also define your own channels (extending `NMEAClient` and with a `reader
 
 Look for `mux.01.cls=nmea.consumers.client.WeatherStationWSClient`.
 
-Channels can use a those three attributes: `properties`, `device.filters`, `sentence.filters`:
+Channels can use those three attributes: `properties`, `device.filters`, `sentence.filters`:
 ```properties
 mux.01.properties=weather.station.properties
 mux.01.device.filters=II, GP
-mux.01.sentence.filters=~MMB, XDR, MDA
+mux.01.sentence.filters=MMB, XDR, MDA
 ```
 `device.filters` and `sentence.filters` both support positive (inclusive) and negative (exclusive) filters.
 Negative filters are prefixed with `~`.
@@ -232,13 +232,16 @@ A line like
 ```properties
 mux.01.sentence.filters=~MMB, ~GGA, ~GSV
 ```
-means everything but no MMB, no GGA, no GSV.
+means everything, but no MMB, no GGA, no GSV.
 
 A line like
 ```properties
 mux.01.sentence.filters=RMC, XDR, MDA
 ```
 means only RMC, XDR or MDA.
+
+> Note: a line like `~RMC, MDA` does not mean much, as it would mean [`no RMC` and `just MDA`]. 
+> A line like `MDA` means the same thing.
 
 #### Forwarders
 

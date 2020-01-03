@@ -10,7 +10,7 @@ public class SerialUtil {
 	public static void main(String... args) {
 		Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
 		int nbp = 0;
-		System.out.println("----- Serial Port List -----");
+		System.out.println("\n----- Serial Port List -----");
 		while (enumeration.hasMoreElements()) {
 			CommPortIdentifier cpi = (CommPortIdentifier) enumeration.nextElement();
 			System.out.println(String.format("Port: %s, %s, %s.",

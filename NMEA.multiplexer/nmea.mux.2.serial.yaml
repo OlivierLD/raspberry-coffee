@@ -9,6 +9,8 @@ channels:
   - type: serial
     port: /dev/ttyUSB0  # /dev/tty.usbmodem14201
     baudrate: 4800
+    device.filters: GP, GN, GL
+    sentence.filters: ~GSV, ~GSA, ~GGA
     verbose: true
   - type: serial
     port: /dev/ttyS80
