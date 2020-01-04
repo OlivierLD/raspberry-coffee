@@ -267,146 +267,156 @@
           <!--xsl:value-of select="./@val"/-->
           <!--xsl:apply-templates select="."/-->
           <xsl:choose>
+	          <xsl:when test="./@moon-phase = '00'">
+		          <fo:external-graphic src="url('phase01.gif')"
+		                               vertical-align="middle" text-align="center"/>
+		          <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
+	          </xsl:when>
             <xsl:when test="./@moon-phase = '01'">
               <fo:external-graphic src="url('phase01.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '02'">
               <fo:external-graphic src="url('phase02.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '03'">
               <fo:external-graphic src="url('phase03.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '04'">
               <fo:external-graphic src="url('phase04.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '05'">
               <fo:external-graphic src="url('phase05.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '06'">
               <fo:external-graphic src="url('phase06.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '07'">
               <fo:external-graphic src="url('phase07.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> <!-- FQ --></fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white">First Q</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '08'">
               <fo:external-graphic src="url('phase08.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '09'">
               <fo:external-graphic src="url('phase09.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '10'">
               <fo:external-graphic src="url('phase10.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '11'">
               <fo:external-graphic src="url('phase11.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '12'">
               <fo:external-graphic src="url('phase12.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '13'">
               <fo:external-graphic src="url('phase13.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
-            <xsl:when test="./@moon-phase = '14'"> <!-- Full moon -->
+            <xsl:when test="./@moon-phase = '14'">
               <fo:external-graphic src="url('phase14.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white">&times; </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
-            <xsl:when test="./@moon-phase = '15'">
+            <xsl:when test="./@moon-phase = '15'"> <!-- Full moon -->
               <fo:external-graphic src="url('phase15.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white">Full</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '16'">
               <fo:external-graphic src="url('phase16.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '17'">
               <fo:external-graphic src="url('phase17.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '18'">
               <fo:external-graphic src="url('phase18.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '19'">
               <fo:external-graphic src="url('phase19.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '20'">
               <fo:external-graphic src="url('phase20.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '21'">
               <fo:external-graphic src="url('phase21.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> <!-- LQ --></fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '22'">
               <fo:external-graphic src="url('phase22.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white">Last Q</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '23'">
               <fo:external-graphic src="url('phase23.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '24'">
               <fo:external-graphic src="url('phase24.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '25'">
               <fo:external-graphic src="url('phase25.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '26'">
               <fo:external-graphic src="url('phase26.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '27'">
               <fo:external-graphic src="url('phase27.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> </fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
             <xsl:when test="./@moon-phase = '28'">
               <fo:external-graphic src="url('phase28.gif')"
                                    vertical-align="middle" text-align="center"/>
-	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white"> <!-- New --></fo:block>
+	            <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="black">.</fo:block>
             </xsl:when>
+	          <xsl:when test="./@moon-phase = '29'">
+		          <fo:external-graphic src="url('phase01.gif')"
+		                               vertical-align="middle" text-align="center"/>
+		          <fo:block text-align="right" font-size="4pt" font-weight="normal" background-color="black" color="white">New</fo:block>
+	          </xsl:when>
           </xsl:choose>
         </fo:block>
 	      <fo:block text-align="center">

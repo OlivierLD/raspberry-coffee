@@ -30,6 +30,8 @@ public class SerialReader
 	private SerialPort serialPort;
 
 	private final static int TIMEOUT = 10_000;
+	private final static int DEFAULT_MAX_OPEN_TRIES = 5;
+	private final static long BETWEEN_TRIES = 1_000L;
 
 	public SerialReader() {
 	}
@@ -80,10 +82,10 @@ public class SerialReader
 	public void startReader() {
 		super.enableReading();
 		// Opening Serial port
-		if (verbose) {
+		if (verbose) { // Serial ports list
 			Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
 			int nbp = 0;
-			System.out.println("\n----- Serial Port List -----");
+			System.out.println("\n----- Serial Ports List -----");
 			while (enumeration.hasMoreElements()) {
 				CommPortIdentifier cpi = (CommPortIdentifier) enumeration.nextElement();
 				System.out.println(String.format("Port: %s, %s, %s.",
@@ -93,12 +95,10 @@ public class SerialReader
 				nbp++;
 			}
 			System.out.println("Found " + nbp + " port(s)");
-			System.out.println("----------------------------");
+			System.out.println("-----------------------------");
 		}
 		CommPortIdentifier com = null;
-		final int DEFAULT_MAX_OPEN_TRIES = 5;
 		int maxOpenTries = Integer.parseInt(System.getProperty("serial.max.open.tries", String.valueOf(DEFAULT_MAX_OPEN_TRIES)));
-		final long BETWEEN_TRIES = 1_000L;
 		int nbOpenTries = 0;
 		while (nbOpenTries < maxOpenTries && com == null) {
 			try {

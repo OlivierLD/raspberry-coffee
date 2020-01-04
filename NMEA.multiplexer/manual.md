@@ -240,7 +240,7 @@ mux.01.sentence.filters=RMC, XDR, MDA
 ```
 means only RMC, XDR or MDA.
 
-> Note: a line like `~RMC, MDA` does not mean much, as it would mean [`no RMC` and `just MDA`]. 
+> _Note_: a line like `~RMC, MDA` does not mean much, as it would mean [`no RMC` and `just MDA`]. 
 > A line like `MDA` means the same thing.
 
 #### Forwarders

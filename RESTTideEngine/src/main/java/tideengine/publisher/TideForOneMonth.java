@@ -36,6 +36,8 @@ public class TideForOneMonth {
 	public final static int SATURDAY  = 5;
 	public final static int SUNDAY    = 6;
 
+	public final static double LUNAR_MONTH_IN_DAYS = 29.53059; // This is an average... Good doc here: https://earthsky.org/astronomy-essentials/lengths-of-lunar-months-in-2019
+
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("EEE dd MMM yyyy");
 	public final static SimpleDateFormat TF = new SimpleDateFormat("HH:mm z");
 
@@ -123,6 +125,7 @@ public class TideForOneMonth {
 		TideStation ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 		int prevYear = now.get(Calendar.YEAR);
 		boolean loop = true;
+		int prevMoonAge = 0; // Workaround...
 		while (loop) {
 			String mess = now.getTime().toString();
 			System.out.println(" -- " + mess);
@@ -204,13 +207,29 @@ public class TideForOneMonth {
 			moonSet.set(Calendar.MINUTE, min);
 			moonSet.set(Calendar.HOUR_OF_DAY, (int) r);
 
-			int phaseInDay = (int) Math.round(moonPhase / (360d / 28d)) + 1;
-			if (phaseInDay > 28) {
-				phaseInDay = 28;
+			int phaseInDay = 0; // (int) Math.round(moonPhase / (360d / 28d)); //  + 1;
+//			if (moonPhase <= ((360d / LUNAR_MONTH_IN_DAYS) / 2d) || moonPhase > (360d - ((360d / LUNAR_MONTH_IN_DAYS) / 2d))) {
+//				phaseInDay = 29; // Full Moon
+//			} else {
+				for (int day=0; day<=29; day++) {
+					if (moonPhase >= (day * (360d / LUNAR_MONTH_IN_DAYS)) - ((360d / LUNAR_MONTH_IN_DAYS) / 2d) && moonPhase < (day * (360d / LUNAR_MONTH_IN_DAYS)) + ((360d / LUNAR_MONTH_IN_DAYS) / 2d)) {
+						phaseInDay = day;
+						break;
+					}
+				}
+//			}
+			if ((phaseInDay == 29 || phaseInDay == 15 || phaseInDay == 7 || phaseInDay == 22) && (prevMoonAge == phaseInDay)) {
+				phaseInDay += 1;
 			}
-			if (phaseInDay < 1) {
-				phaseInDay = 1;
-			}
+			prevMoonAge = phaseInDay;
+//			System.out.println(String.format("\tMoon Age at %s: %d, for phase %f", SDF.format(now.getTime()), phaseInDay, moonPhase));
+
+//			if (phaseInDay > 28) {
+//				phaseInDay = 28;
+//			}
+//			if (phaseInDay < 1) {
+//				phaseInDay = 1;
+//			}
 			if (timeZone != null) {
 				TF.setTimeZone(TimeZone.getTimeZone(timeZone));
 			}
