@@ -12,7 +12,9 @@ if %argCount% neq 2 (
 )
 ::
 set BREAK_AT=RMC
-set DATA=RMC,HDG,VHW,MWV,MTW
+:: set DATA=RMC,HDG,VHW,MWV,MTW
+set DATA=RMC,HDM,VHW,DBT,VWR,MTW
+
 ::
 set CP=.\build\libs/NMEA.multiplexer-1.0-all.jar
 set JAVA_OPTIONS=
