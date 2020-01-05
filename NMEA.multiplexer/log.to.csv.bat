@@ -16,7 +16,7 @@ set BREAK_AT=RMC
 set DATA=RMC,HDM,VHW,DBT,VWR,MTW
 
 ::
-set CP=.\build\libs/NMEA.multiplexer-1.0-all.jar
+set CP=.\build\libs\NMEA.multiplexer-1.0-all.jar
 set JAVA_OPTIONS=
 #
 :: set JAVA_OPTIONS=%JAVA_OPTIONS% -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80
