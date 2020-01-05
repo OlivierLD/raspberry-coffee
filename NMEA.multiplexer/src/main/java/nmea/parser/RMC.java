@@ -29,7 +29,7 @@ public class RMC extends NMEAComposite implements Serializable {
 				(gp != null ? String.valueOf(gp.lng) : ""), separator,
 				(gp != null ? String.valueOf(gp.lat) : ""), separator,
 				String.valueOf(sog), separator,
-				String.valueOf(sog), separator,
+				String.valueOf(cog), separator,
 				(declination != -Double.MAX_VALUE ? String.valueOf(declination) : ""), separator,
 				(valid ? "Y" : "N"), separator,
 				(rmcDate != null ? String.valueOf(rmcDate.getTime()) : ""), separator,
