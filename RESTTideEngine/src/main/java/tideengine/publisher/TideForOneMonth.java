@@ -39,7 +39,7 @@ public class TideForOneMonth {
 	public final static double LUNAR_MONTH_IN_DAYS = 29.53059; // This is an average... Good doc here: https://earthsky.org/astronomy-essentials/lengths-of-lunar-months-in-2019
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("EEE dd MMM yyyy");
-	public final static SimpleDateFormat TF = new SimpleDateFormat("HH:mm z");
+	private final static SimpleDateFormat TF = new SimpleDateFormat("HH:mm z");
 
 	private final static NumberFormat DF2 = new DecimalFormat("00");
 	private final static NumberFormat DF3 = new DecimalFormat("000");

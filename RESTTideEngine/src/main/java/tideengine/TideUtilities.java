@@ -147,11 +147,13 @@ public class TideUtilities {
 		Set<String> keys = tree.keySet();
 		for (String key : keys) {
 			StationTreeNode stn = tree.get(key);
-			for (int i = 0; i < (2 * level); i++) // Indentation
+			for (int i = 0; i < (2 * level); i++) { // Indentation
 				System.out.print(" ");
+			}
 			System.out.println(stn.toString()); // Station name
-			if (stn.getSubTree().size() > 0)
+			if (stn.getSubTree().size() > 0) {
 				renderTree(stn.getSubTree(), level + 1);
+			}
 		}
 	}
 
@@ -170,9 +172,9 @@ public class TideUtilities {
 			int year = when.get(Calendar.YEAR);
 			// Calc Jan 1st of the current year
 			Calendar jan1st = null;
-			if (false)
+			if (false) {
 				jan1st = new GregorianCalendar(year, Calendar.JANUARY, 1);
-			else {
+			} else {
 				jan1st = new GregorianCalendar();
 				jan1st.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
 //      jan1st.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
@@ -186,7 +188,9 @@ public class TideUtilities {
 			}
 			wh = getWaterHeight(when, jan1st, ts, constSpeed, true);
 //    System.out.println("Water Height in " + ts.getFullName() + " on " + when.toString() + " is " + DF22.format(wh) + " " + ts.getUnit());
-		} else if (verbose) System.out.println("Ooch!");
+		} else if (verbose) {
+			System.out.println("Ooch!");
+		}
 
 		return wh;
 	}
@@ -211,8 +215,8 @@ public class TideUtilities {
 			}
 
 			value += (ts.getHarmonics().get(i).getAmplitude() * Math.cos(constSpeed.get(i).getValue() * timeOffset - ts.getHarmonics().get(i).getEpoch()));
-//    if (b && 
-//        d.get(Calendar.MINUTE) == 0 && 
+//    if (b &&
+//        d.get(Calendar.MINUTE) == 0 &&
 //        d.get(Calendar.HOUR_OF_DAY) == 0 &&
 //        "J1".equals(ts.getHarmonics().get(i).getName()))
 //      System.out.println("TS Coefficient:" + ts.getHarmonics().get(i).getName() + " ampl:" + ts.getHarmonics().get(i).getAmplitude() + ", epoch:" + ts.getHarmonics().get(i).getEpoch() + ", timeOffset:" + timeOffset + " value:" + value + ", Date:" + d.getTime().toString());

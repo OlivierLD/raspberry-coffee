@@ -9,7 +9,6 @@ import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-
 /**
  * Access method agnostic front end.
  * Calls the right methods, depending on the chosen option (XML, SQL, JAVA, json, etc)
@@ -46,39 +45,32 @@ public class BackEndTideComputer {
 	}
 
 	public static List<Coefficient> buildSiteConstSpeed() throws Exception {
-		List<Coefficient> constSpeed = null;
-		constSpeed = buildSiteConstSpeed(constituentsObject);
+		List<Coefficient> constSpeed = buildSiteConstSpeed(constituentsObject);
 		return constSpeed;
 	}
 
 	public static double getAmplitudeFix(int year, String name) throws Exception {
-		double d = 0;
-		d = getAmplitudeFix(constituentsObject, year, name);
+		double d = getAmplitudeFix(constituentsObject, year, name);
 		return d;
 	}
 
 	public static double getEpochFix(int year, String name) throws Exception {
-		double d = 0;
-		d = getEpochFix(constituentsObject, year, name);
+		double d = getEpochFix(constituentsObject, year, name);
 		return d;
 	}
 
 	public static TideStation findTideStation(String stationName, int year) throws Exception {
-		TideStation ts = null;
-		ts = findTideStation(stationName, year, constituentsObject, stationsObject);
+		TideStation ts = findTideStation(stationName, year, constituentsObject, stationsObject);
 		return ts;
 	}
 
 	public static List<TideStation> getStationData() throws Exception {
-		List<TideStation> alts = null;
-		alts = getStationData(stationsObject);
+		List<TideStation> alts = getStationData(stationsObject);
 		return alts;
 	}
 
 	public static TreeMap<String, TideUtilities.StationTreeNode> buildStationTree() {
-		TreeMap<String, TideUtilities.StationTreeNode> st = null;
-
-		st = TideUtilities.buildStationTree(stationsObject);
+		TreeMap<String, TideUtilities.StationTreeNode> st = TideUtilities.buildStationTree(stationsObject);
 		return st;
 	}
 
@@ -88,9 +80,9 @@ public class BackEndTideComputer {
 		boolean go = true;
 		while (go) {
 			ZipEntry ze = zip.getNextEntry();
-			if (ze == null)
+			if (ze == null) {
 				go = false;
-			else {
+			} else {
 				if (ze.getName().equals(entryName)) {
 					is = zip;
 					go = false;
@@ -135,7 +127,6 @@ public class BackEndTideComputer {
 					Coefficient coef = new Coefficient(cs.getCoeffName(), cs.getCoeffValue() * TideUtilities.COEFF_FOR_EPOCH);
 					csal.add(coef);
 				});
-
 		return csal;
 	}
 
@@ -174,8 +165,9 @@ public class BackEndTideComputer {
 			for (String s : keys) {
 				if (s.contains(stationName)) {
 					station = stations.getStations().get(s);
-					if (station != null)
+					if (station != null) {
 						break;
+					}
 				}
 			}
 		}
@@ -212,8 +204,9 @@ public class BackEndTideComputer {
 				}
 			}
 			station.setHarmonicsFixedForYear(year);
-			if (verbose)
+			if (verbose) {
 				System.out.println("Sites coefficients of [" + station.getFullName() + "] fixed for " + year);
+			}
 		} else if (verbose) {
 			System.out.println("Coefficients already fixed for " + year);
 		}
@@ -221,8 +214,7 @@ public class BackEndTideComputer {
 	}
 
 	private static TideStation reloadTideStation(String stationName) throws Exception {
-		TideStation ts = null;
-		ts = BackEndXMLTideComputer.reloadOneStation(stationName);
+		TideStation ts = BackEndXMLTideComputer.reloadOneStation(stationName);
 		return ts;
 	}
 

@@ -43,7 +43,6 @@ public class RESTImplementation {
 	private final static SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd");
 	private final static SimpleDateFormat TIME_FMT = new SimpleDateFormat("HH:mm");
 
-
 	public RESTImplementation(@Nonnull TideRequestManager restRequestManager) {
 
 		this.tideRequestManager = restRequestManager;

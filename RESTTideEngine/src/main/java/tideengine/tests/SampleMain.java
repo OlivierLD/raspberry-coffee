@@ -1,6 +1,5 @@
 package tideengine.tests;
 
-
 import tideengine.BackEndTideComputer;
 import tideengine.Coefficient;
 import tideengine.TideStation;
@@ -10,7 +9,6 @@ import tideengine.TideUtilities.TimedValue;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 
 public class SampleMain {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyy-MMM-dd HH:mm z (Z)");
@@ -47,12 +45,12 @@ public class SampleMain {
 							}
 							double wh = TideUtilities.getWaterHeight(ts, constSpeed, now);
 							System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + location + " at " + now.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
-							if (false && ts.isTideStation())
+							if (false && ts.isTideStation()) {
 								System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + location + " at " + now.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(TideUtilities.getWaterHeightIn(wh, ts, TideStation.METERS)) + " " + TideStation.METERS);
+							}
 						}
 					} else {
 						System.out.println(String.format("%s not found :(", location));
-
 					}
 				}
 				if (true) {
@@ -78,8 +76,9 @@ public class SampleMain {
 						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
 						double wh = TideUtilities.getWaterHeight(ts, constSpeed, now);
 						System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + location + " at " + now.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
-					} else
+					} else {
 						System.out.println("-- " + location + " not found...");
+					}
 
 					location = URLEncoder.encode("Alcatraz (North Point)", "UTF-8").replace("+", "%20");
 					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
@@ -173,19 +172,19 @@ public class SampleMain {
 										h, m);
 
 								double wh = TideUtilities.getWaterHeight(ts, constSpeed, cal);
-								if (Double.isNaN(previousWH))
+								if (Double.isNaN(previousWH)) {
 									previousWH = wh;
-								else {
+								} else {
 									if (trend == 0) {
-										if (previousWH > wh)
+										if (previousWH > wh) {
 											trend = -1;
-										else if (previousWH < wh)
+										} else if (previousWH < wh) {
 											trend = 1;
+										}
 									} else {
 										switch (trend) {
 											case RISING:
-												if (previousWH > wh) // Now going down
-												{
+												if (previousWH > wh) { // Now going down
 													if (Double.isNaN(high1)) {
 														high1 = previousWH;
 														cal.add(Calendar.MINUTE, -1);
@@ -199,8 +198,7 @@ public class SampleMain {
 												}
 												break;
 											case FALLING:
-												if (previousWH < wh) // Now going up
-												{
+												if (previousWH < wh) { // Now going up
 													if (Double.isNaN(low1)) {
 														low1 = previousWH;
 														cal.add(Calendar.MINUTE, -1);
@@ -223,20 +221,24 @@ public class SampleMain {
 						System.out.println("High-Low water Calculation took " + Long.toString(after - before) + " ms");
 						System.out.println("-- " + location + " --");
 
-						List<TimedValue> timeAL = new ArrayList<TimedValue>(4);
-						if (low1Cal != null)
+						List<TimedValue> timeAL = new ArrayList<>(4);
+						if (low1Cal != null) {
 							timeAL.add(new TimedValue("LW", low1Cal, low1));
-						if (low2Cal != null)
+						}
+						if (low2Cal != null) {
 							timeAL.add(new TimedValue("LW", low2Cal, low2));
-						if (high1Cal != null)
+						}
+						if (high1Cal != null) {
 							timeAL.add(new TimedValue("HW", high1Cal, high1));
-						if (high2Cal != null)
+						}
+						if (high2Cal != null) {
 							timeAL.add(new TimedValue("HW", high2Cal, high2));
-
+						}
 						Collections.sort(timeAL);
 
-						for (TimedValue tv : timeAL)
+						for (TimedValue tv : timeAL) {
 							System.out.println(tv.getType() + " " + tv.getCalendar().getTime().toString() + " : " + TideUtilities.DF22PLUS.format(tv.getValue()) + " " + ts.getDisplayUnit());
+						}
 					}
 				}
 				// Kodiak for today (every 30 minutes)
@@ -274,19 +276,19 @@ public class SampleMain {
 									h, m);
 							cal.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
 							double wh = TideUtilities.getWaterHeight(ts, constSpeed, cal);
-							if (Double.isNaN(previousWH))
+							if (Double.isNaN(previousWH)) {
 								previousWH = wh;
-							else {
+							} else {
 								if (trend == 0) {
-									if (previousWH > wh)
+									if (previousWH > wh) {
 										trend = -1;
-									else if (previousWH < wh)
+									} else if (previousWH < wh) {
 										trend = 1;
+									}
 								} else {
 									switch (trend) {
 										case RISING:
-											if (previousWH > wh) // Now going down
-											{
+											if (previousWH > wh) { // Now going down
 												if (Double.isNaN(high1)) {
 													high1 = previousWH;
 													cal.add(Calendar.MINUTE, -1);
@@ -300,8 +302,7 @@ public class SampleMain {
 											}
 											break;
 										case FALLING:
-											if (previousWH < wh) // Now going up
-											{
+											if (previousWH < wh) { // Now going up
 												if (Double.isNaN(low1)) {
 													low1 = previousWH;
 													cal.add(Calendar.MINUTE, -1);
@@ -324,26 +325,31 @@ public class SampleMain {
 					System.out.println("High-Low water Calculation took " + Long.toString(after - before) + " ms");
 					System.out.println("-- " + location + " --");
 
-					List<TimedValue> timeAL = new ArrayList<TimedValue>(4);
-					if (low1Cal != null)
+					List<TimedValue> timeAL = new ArrayList<>(4);
+					if (low1Cal != null) {
 						timeAL.add(new TimedValue("LW", low1Cal, low1));
-					if (low2Cal != null)
+					}
+					if (low2Cal != null) {
 						timeAL.add(new TimedValue("LW", low2Cal, low2));
-					if (high1Cal != null)
+					}
+					if (high1Cal != null) {
 						timeAL.add(new TimedValue("HW", high1Cal, high1));
-					if (high2Cal != null)
+					}
+					if (high2Cal != null) {
 						timeAL.add(new TimedValue("HW", high2Cal, high2));
-
+					}
 					Collections.sort(timeAL);
 
 					SDF.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
-					for (TimedValue tv : timeAL)
+					for (TimedValue tv : timeAL) {
 						System.out.println(tv.getType() + " " + SDF.format(tv.getCalendar().getTime()) + " : " + TideUtilities.DF22PLUS.format(tv.getValue()) + " " + ts.getDisplayUnit());
+					}
 				}
 				if (false) {
 					List<String[]> hcList = TideUtilities.getStationHarmonicConstituents(ts, constSpeed);
-					for (String[] line : hcList)
+					for (String[] line : hcList) {
 						System.out.println(line[0] + " " + line[1] + " " + line[2] + " " + line[3] + " " + line[4]);
+					}
 				}
 				if (false && ts != null) {
 //        TimeZone tz = TimeZone.getDefault();

@@ -99,8 +99,7 @@ public class BackEndXMLTideComputer {
 			this.stationName = sn;
 		}
 
-		public StationFinder() {
-		}
+		public StationFinder() { }
 
 		public StationFinder(Map<String, TideStation> map) {
 			this.stationMap = map;

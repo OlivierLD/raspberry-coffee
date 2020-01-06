@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -15,21 +16,15 @@ Rahiroa (Rangiroa) Island => Apia, Samoa Islands
 
 ???C33o?Apia, Samoa Islands                                                                       ?? ??? ?Wxtide32                     Wxtide32                     Rahiroa ?Rangiroa? Island                                                                 ?????D????????8??D;?????
 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
-0         1         2         3         4         5         6         7         8         9         0         1         2         3         4         5         6         7         8         9         0         1         2         3         4         5         6         7         
-0                                                                                                   10                                                                                                  20                                                                             
+0         1         2         3         4         5         6         7         8         9         0         1         2         3         4         5         6         7         8         9         0         1         2         3         4         5         6         7
+0                                                                                                   10                                                                                                  20
 
  */
 
 public class SecondaryStationsTest {
 	private final static NumberFormat NF = new DecimalFormat("###0");
 
-	private final static List<Character> PUNCTUATION = new ArrayList<>();
-
-	static {
-		char[] punc = {',', ';', '.', '!', '(', ')'};
-		for (int i = 0; i < punc.length; i++)
-			PUNCTUATION.add(punc[i]);
-	}
+	private final static List<Character> PUNCTUATION = Arrays.asList(',', ';', '.', '!', '(', ')');
 
 	private final static int LINE_SIZE = 278;
 
@@ -89,28 +84,33 @@ public class SecondaryStationsTest {
 						System.out.println("Characters");
 						for (int i = 0; i < LINE_SIZE; i++) {
 							char c = (char) ba[i];
-							if (Character.isSpaceChar(c) || Character.isLetterOrDigit(c) || PUNCTUATION.contains(c))
+							if (Character.isSpaceChar(c) || Character.isLetterOrDigit(c) || PUNCTUATION.contains(c)) {
 								System.out.print(c);
-							else
+							} else {
 								System.out.print("?");
+							}
 						}
 						System.out.println();
 						System.out.println("Hexa");
-						for (int i = 0; i < LINE_SIZE; i++)
+						for (int i = 0; i < LINE_SIZE; i++) {
 							System.out.print(lpad(Integer.toHexString(ba[i] & 0xff).toUpperCase(), 2, "0") + " ");
+						}
 						System.out.println();
 						System.out.println("Unsigned");
-						for (int i = 0; i < LINE_SIZE; i++)
+						for (int i = 0; i < LINE_SIZE; i++) {
 							System.out.print(Integer.toString(ba[i] & 0xff) + " ");
+						}
 						System.out.println();
 						System.out.println("Signed");
-						for (int i = 0; i < LINE_SIZE; i++)
+						for (int i = 0; i < LINE_SIZE; i++) {
 							System.out.print(Integer.toString(ba[i]) + " ");
+						}
 						System.out.println();
 					}
 				}
-			} else
+			} else {
 				go = false;
+			}
 		}
 		System.out.println("Found " + nbl + " line(s)");
 		br.close();
@@ -120,8 +120,9 @@ public class SecondaryStationsTest {
 		String s = "";
 		int len = toOffset - fromOffset;
 		byte[] ba = new byte[len];
-		for (int i = 0; i < len; i++)
+		for (int i = 0; i < len; i++) {
 			ba[i] = raw[fromOffset + i];
+		}
 		s = new String(ba);
 		return s;
 	}
@@ -129,15 +130,13 @@ public class SecondaryStationsTest {
 	private final static double bytesToDouble(byte[] raw, int fromOffset, int toOffset) {
 		int len = toOffset - fromOffset + 1;
 		byte[] ba = new byte[len];
-		for (int i = 0; i < len; i++)
+		for (int i = 0; i < len; i++) {
 			ba[i] = raw[fromOffset + i];
+		}
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(ba));
 		double d = 0d;
 		try {
-			if (len == 8)
-				d = dis.readFloat();
-			else
-				d = dis.readDouble();
+			d = (len == 8) ? dis.readFloat() : dis.readDouble();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -147,15 +146,13 @@ public class SecondaryStationsTest {
 	private final static int bytesToInt(byte[] raw, int fromOffset, int toOffset) {
 		int len = toOffset - fromOffset + 1;
 		byte[] ba = new byte[len];
-		for (int i = 0; i < len; i++)
+		for (int i = 0; i < len; i++) {
 			ba[i] = raw[fromOffset + i];
+		}
 		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(ba));
 		int d = 0;
 		try {
-			if (len == 4)
-				d = dis.readShort();
-			else
-				d = dis.readInt();
+			d = (len == 4) ? dis.readShort() : dis.readInt();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -164,8 +161,9 @@ public class SecondaryStationsTest {
 
 	private static String lpad(String s, int len, String with) {
 		String str = s;
-		while (str.length() < len)
+		while (str.length() < len) {
 			str = with + str;
+		}
 		return str;
 	}
 }
