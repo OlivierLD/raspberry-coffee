@@ -124,11 +124,11 @@ HDT = HDC + W
 In the above, `W` is called the Compass Variation
 
 > Example:
-- You read `HDC = 61`
-- The chart below returns a `d` of `5.4 E` (ie `+5.4`)
-- The Mag. Decl. is `10 E` (ie `+10`)
-- Then we have `HDM = 61 + 5.4 = 66.4`
-- And `HDT = HDM + 10 = 76.4` 
+- You read `HDC = 61°`
+- The chart below returns a `d` of `5.4°E` (ie `+5.4°`)
+- The Mag. Decl. is `10°E` (ie `+10°)
+- Then we have `HDM = 61 + 5.4 = 66.4°`
+- And `HDT = HDM + 10 = 76.4°` 
 
 > _Important_: You need to know what your GPS or NMEA is returning for the heading. It may depend on your station. Many return an `HDG` string
 > for the Compass Heading (like in the sample data provided here).
