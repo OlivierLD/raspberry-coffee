@@ -145,7 +145,8 @@ In the above, `W` is called the Compass Variation
 
 ![The curve](./screenshot.01.png)
 
----
+The cyan line is showing the `dev` on `Magnetic Headings`.
 
-## TODO
-- Inverted (hdm -> dev)
+The two top-right boxes contain the `csv` values to put in the files holding the deviation curves.
+
+---
