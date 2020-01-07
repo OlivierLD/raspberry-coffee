@@ -1,6 +1,6 @@
-# Read raw Data from a GPS
+# Read raw Data from a Serial port
 ## Through the Serial interface, using PI4J's `com.pi4j.io.serial` package.
-> Note: Not only for GPS
+> _Note_: Not only for GPS
 
 See script named `run`
 ```
