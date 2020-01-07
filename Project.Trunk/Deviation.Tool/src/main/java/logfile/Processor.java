@@ -1,5 +1,6 @@
 package logfile;
 
+import nmea.parser.HDG;
 import nmea.parser.RMC;
 import nmea.parser.StringParsers;
 
@@ -12,6 +13,7 @@ import java.io.PrintStream;
  * Turns it into an array of Json objects like { 'hdm': 111, 'dev': -2 }
  */
 public class Processor {
+
 	public static void main(String... args) throws Exception {
 		long nbRec = 0;
 		double decl = -Double.MAX_VALUE; // Override with system property
@@ -43,11 +45,11 @@ public class Processor {
 				if (line.startsWith("$") && line.length() > 6) {
 					StringParsers.ParsedData parsedData = StringParsers.autoParse(line);
 					if ("HDG".equals(parsedData.getSentenceId())) {
-						double data[] = (double[]) parsedData.getParsedData();
-						double hdg = data[0];
+						HDG heading = (HDG) parsedData.getParsedData();
+						double hdg = heading.getHeading();
 						double hdm = hdg;
-						if (data[2] != -Double.MAX_VALUE) {
-							decl = data[2];
+						if (heading.getVariation() != -Double.MAX_VALUE) {
+							decl = heading.getVariation();
 						}
 						if (decl != -Double.MAX_VALUE) {
 							hdm += decl;

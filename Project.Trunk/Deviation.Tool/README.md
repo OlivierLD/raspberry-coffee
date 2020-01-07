@@ -112,8 +112,29 @@ The circle (the path) should be as big as possible, to allow the COG to be in sy
 
 But again, this is just an example, showing how to use the tool this document is about.
 
+#### This gives the Compass' Deviation for any <u>Compass Heading</u>.
+To use it:
+- Read the Compass Heading (`HDC`)
+- With the chart below, find the compass deviation `d` and add it to `HDC` to get the Magnetic Heading `HDM`.
+- Then, to get the True Heading (`HDT`) you need to add the Magnetic Declination `D` from `HDM`.
+```
+W = D + d
+HDT = HDC + W
+```
+In the above, `W` is called the Compass Variation
+
+> Example:
+- You read `HDC = 61`
+- The chart below returns a `d` of `5.4 E` (ie `+5.4`)
+- The Mag. Decl. is `10 E` (ie `+10`)
+- Then we have `HDM = 61 + 5.4 = 66.4`
+- And `HDT = HDM + 10 = 76.4` 
+
+> _Important_: You need to know what your GPS or NMEA is returning for the heading. It may depend on your station. Many return an `HDG` string
+> for the Compass Heading (like in the sample data provided here).
+
 #### Step by step
-- Transform the NMEA data file into a json document:
+- After  running a build (`../../gradlew clean shadowJar`), transform the NMEA data file into a json document:
   - run `./process.log.sh 2010-11-03.Taiohae.nmea`, this generates a `data.json` (default name).
 - Open `deviation.tool.html` in a browser (it does not need a server to run).
 - Paste the content of the `data.json` in the top text box
@@ -125,4 +146,4 @@ But again, this is just an example, showing how to use the tool this document is
 ---
 
 ## TODO
-- Inverted (hdt -> dev)
+- Inverted (hdm -> dev)
