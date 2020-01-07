@@ -1,5 +1,5 @@
 # Deviation Curve
-Here is a tool allowing you to elaborate your own deviation curve.
+Here is a tool allowing you to elaborate your own deviation curve from logged data.
 
 ## How it works
 The generic format of a deviation curve is
