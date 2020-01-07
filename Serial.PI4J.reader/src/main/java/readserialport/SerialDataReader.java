@@ -8,9 +8,9 @@ import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialFactory;
 import com.pi4j.io.serial.StopBits;
+import utils.DumpUtil;
 
 import java.io.IOException;
-import utils.DumpUtil;
 
 /**
  * Just reads the Serial data (like GPS), with PI4J (no need for libRxTx here).
@@ -32,13 +32,13 @@ public class SerialDataReader {
 	}
 
 	public static void openSerial(Serial serial, String port, int br) throws IOException {
-		SerialConfig config = new SerialConfig();
-		config.device(port)
-						.baud(getBaudRate(br))
-						.dataBits(DataBits._8)
-						.parity(Parity.NONE)
-						.stopBits(StopBits._1)
-						.flowControl(FlowControl.NONE);
+		SerialConfig config = new SerialConfig()
+				.device(port)
+				.baud(getBaudRate(br))
+				.dataBits(DataBits._8)
+				.parity(Parity.NONE)
+				.stopBits(StopBits._1)
+				.flowControl(FlowControl.NONE);
 		serial.open(config);
 	}
 
@@ -49,7 +49,7 @@ public class SerialDataReader {
 		boolean verbose = "true".equals(System.getProperty("verbose", "false"));
 
 		System.out.println("Serial Communication.");
-		System.out.println(" ... connect using settings: " + Integer.toString(br) + ", N, 8, 1.");
+		System.out.println(" ... connect using settings: " + Integer.toString(br) + ", N, 8, 1, N.");
 		System.out.println(" ... data received on serial port should be displayed below.");
 
 		// create an instance of the serial communications class
@@ -65,8 +65,9 @@ public class SerialDataReader {
 					System.out.println(data);
 				}
 				String[] sa = DumpUtil.dualDump(data);
-				for (String str : sa)
+				for (String str : sa) {
 					System.out.println(str);
+				}
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
@@ -109,7 +110,7 @@ public class SerialDataReader {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		} catch (InterruptedException ie) {
-			ie.printStackTrace();
+			throw ie;
 		}
 	}
 }
