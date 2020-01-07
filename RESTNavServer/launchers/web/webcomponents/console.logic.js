@@ -869,7 +869,7 @@ window.onload = () => {
 	}
 
 	let devCurve = document.getElementById('compass-deviation');
-	if (devCurve !== null && devCurve !== undefined) { // TODO Set the callback to position the Compass Heading
+	if (devCurve !== null && devCurve !== undefined) {
 		// Get curve data
 		let getData = requestDevCurve();
 		getData.then((value) => { // Resolve
@@ -888,25 +888,25 @@ window.onload = () => {
 				thickY: 0,
 				data: [
 					{
-						name: 'Deviation dev on HDM',
+						name: 'Deviation dev on Compass Headings',
 						lineColor: 'lime',
 						fillColor: null,
 						thickness: 3,
 						x: [],
 						values: [] // Same cardinality as x
-					} /* , { TODO dev on HDG
-						name: 'Declination, all',
-						lineColor: lineColor,
-						fillColor: fillColor2, // With gradient ?
+					}, { // dev on HDG
+						name: 'Deviation dev on Magnetic Headings',
+						lineColor: 'cyan',
+						fillColor: null, // With gradient ?
 						thickness: 1,
 						x: [],
 						values: [] // Same cardinality as x
-					} */
+					}
 				]
 			};
 			let mini = Number.MAX_VALUE;
 			let maxi = -Number.MAX_VALUE;
-			let x = [], y = [];
+			let x = [], y = [], x2 = [], y2 = [];
 			devData.forEach(tuple => {
 				let hdg = tuple[0];
 				let dev = tuple[1];
@@ -914,9 +914,13 @@ window.onload = () => {
 				maxi = Math.max(maxi, dev);
 				x.push(hdg);
 				y.push(dev);
+				x2.push(hdg - dev);
+				y2.push(dev);
 			});
 			finalData.data[0].x = x;
 			finalData.data[0].values = y;
+			finalData.data[1].x = x2;
+			finalData.data[1].values = y2;
 			finalData.minY = Math.min(mini, -3);
 			finalData.maxY = Math.max(maxi, 3);
 			console.log("DevCurve data:", finalData);
