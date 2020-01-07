@@ -567,7 +567,27 @@ function Graph(cName,       // Canvas Name
 //			context.closePath();
 				context.stroke();
 			}
-			// Main curve
+
+			// Secondary main curve, dev on MagneticHeadings
+			context.beginPath();
+			context.lineWidth = 2;
+			context.strokeStyle = 'cyan'; // graphColorConfig.smoothDataLineColor;
+			var previousPoint;
+			var stepX = (maxx - minx) / 1000;
+			for (var x = minx; x < maxx; x += stepX) {
+//			var y = f(x, coeffs);
+				var y = deviation(x, coeffs);
+				if (previousPoint === undefined) {
+					context.moveTo(((x - y) - minx) * xScale, height - ((y - miny) * yScale));
+				} else {
+					context.lineTo(((x - y) - minx) * xScale, height - ((y - miny) * yScale));
+				}
+				previousPoint = {x: x, y: y};
+			}
+//    context.closePath();
+			context.stroke();
+
+			// Main curve, dev on CompassHeadings
 			context.beginPath();
 			context.lineWidth = 3;
 			context.strokeStyle = 'blue'; // graphColorConfig.smoothDataLineColor;

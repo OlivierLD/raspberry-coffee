@@ -115,6 +115,19 @@
 					return content;
 				};
 
+        var generateCSV2 = function(coeff) {
+	        var content = "";
+	        for (var i=0; i<=360; i+=5) {
+		        var d = coeff[0] +
+				        (coeff[1] * Math.sin(Math.toRadians(i))) +
+				        (coeff[2] * Math.cos(Math.toRadians(i))) +
+				        (coeff[3] * Math.sin(2 * Math.toRadians(i))) +
+				        (coeff[4] * Math.cos(2 * Math.toRadians(i)));
+		        content += ((i - d).toFixed(1) + "," + d + "\n"); // cc - dev, dev
+	        }
+	        return content;
+        };
+
         var goDrawing = function () {
 	        try {
 		        var graphData = dataGraph.getData();
@@ -127,8 +140,13 @@
 				        'e = ' + coeffData[4];
 		        result.innerHTML = content;
 
+		        // dev on CompassHeadings
 		        var csv = document.getElementById('csv');
 		        csv.innerText = generateCSV(coeffData);
+
+		        // dev on MagneticHeadings
+		        var csv2 = document.getElementById('csv2');
+		        csv2.innerText = generateCSV2(coeffData);
 
 		        var decompose = document.getElementById('decompose-cb').checked === true;
 		        dataGraph.drawPoints("dataCanvas", graphData, coeffData, decompose);
@@ -164,11 +182,14 @@
 				<td rowspan="2" width="33%" valign="top"> <!-- Result will go here -->
 					<table width="100%">
 						<tr>
-							<td width="50%" height="100%">
+							<td width="50%" height="100%" valign="top">
 								<div id="coeff-list" style="height: 120px;"><span style="color: silver; font-style: italic;" title="Curve coefficients">Coefficient will show up here</span></div>
 							</td>
 							<td width="50%" height="100%">
-								<div id="csv" style="height: 120px; overflow-x: auto; overflow-y: auto;"><span style="color: silver; font-style: italic;" title="Your CSV deviation file.">CSV data will show up here</span></div>
+								<span style="font-style: italic;">dev on Compass Headings</span>
+								<div id="csv" style="height: 80px; overflow-x: auto; overflow-y: auto; border: 1px solid silver;"><span style="color: silver; font-style: italic;" title="Your CSV deviation file (1).">CSV data will show up here</span></div>
+								<span style="font-style: italic;">dev on Magnetic Headings</span>
+								<div id="csv2" style="height: 80px; overflow-x: auto; overflow-y: auto; border: 1px solid silver;"><span style="color: silver; font-style: italic;" title="Your CSV deviation file (2).">CSV data will show up here</span></div>
 							</td>
 						</tr>
 					</table>
