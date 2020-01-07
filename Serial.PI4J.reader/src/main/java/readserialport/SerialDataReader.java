@@ -13,12 +13,12 @@ import java.io.IOException;
 import utils.DumpUtil;
 
 /**
- * Just reads the GPS data, with PI4J (no need for libRxTx here).
+ * Just reads the Serial data (like GPS), with PI4J (no need for libRxTx here).
  * No parsing, just raw data.
  * <p>
  * Uses the Serial communication packages from PI4J
  */
-public class GPSDataReader {
+public class SerialDataReader {
 
 	private static Baud getBaudRate(int br) {
 		Baud baud = null;

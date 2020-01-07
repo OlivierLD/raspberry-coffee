@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Not a Consumer, just a sample.
+ * Warning: Not a Consumer, just a sample.
  * Any regular one is AIS-aware (Serial, File, TCP, etc).
  *
  * See System variable -Dno.ais

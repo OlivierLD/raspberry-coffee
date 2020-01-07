@@ -17,11 +17,11 @@ include 'Relay'
 include 'RasPISamples'
 include 'Serial.IO'
 include 'SerialRxTx'
+include 'Serial.PI4J.reader'
 include 'SevenSegDisplay'
 include 'system.utils'
 include 'WeatherStation'
 include 'OtherJVM.languages'
-include 'GPS.read'
 include "RMI.sample"
 include "NMEA.multiplexer"
 include "NMEA.mux.extensions"

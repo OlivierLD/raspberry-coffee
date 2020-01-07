@@ -1,11 +1,13 @@
 package nmea.ais;
 
-import java.io.BufferedReader;
-
-import java.io.FileReader;
-
 import nmea.parser.StringParsers;
 import utils.StringUtils;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Work in Progress
@@ -429,32 +431,49 @@ AIS Message type 2:
 			}
 		}
 
+		System.out.println("--- From dAISy ---");
+		// From the dAISy device
+		List<String> aisFromDaisy = Arrays.asList(
+				"!AIVDM,1,1,,A,403Ovk1v@CPI`o>jNnEdjEg0241T,0*5F",
+				"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
+				"!AIVDM,1,1,,A,D03Ovk0m9N>4g@ffpfpNfp0,2*38",
+				"!AIVDM,1,1,,B,D03Ovk0s=N>4g<ffpfpNfp0,2*5D",
+				"!AIVDM,1,1,,B,403Ovk1v@CPN`o>jO8EdjDw02@GT,0*1F",
+				"!AIVDM,1,1,,A,403Ovk1v@CPO`o>jNrEdjEO02<45,0*01");
+		aisFromDaisy.forEach(aisStr -> System.out.println(parseAIS(aisStr)));
+		System.out.println("------------------");
+
 		String dataFileName = "sample.data/ais.nmea";
 		if (args.length > 0) {
 			dataFileName = args[0];
 		}
-		BufferedReader br = new BufferedReader(new FileReader(dataFileName));
-		String line = "";
-		while (line != null) {
-			line = br.readLine();
-			if (line != null) {
-				if (!line.startsWith("#") && line.startsWith(AIS_PREFIX)) {
-					try {
-						AISRecord aisRecord = parseAIS(line);
-						if (aisRecord != null) {
-							System.out.println(aisRecord);
-						} else {
-							System.out.println(String.format(">> NULL AIS Record for %s", line));
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(dataFileName));
+			System.out.println(String.format("---- From data file %s ----", dataFileName));
+			String line = "";
+			while (line != null) {
+				line = br.readLine();
+				if (line != null) {
+					if (!line.startsWith("#") && line.startsWith(AIS_PREFIX)) {
+						try {
+							AISRecord aisRecord = parseAIS(line);
+							if (aisRecord != null) {
+								System.out.println(aisRecord);
+							} else {
+								System.out.println(String.format(">> NULL AIS Record for %s", line));
+							}
+						} catch (Exception ex) {
+							System.err.println("For [" + line + "], " + ex.toString());
 						}
-					} catch (Exception ex) {
-						System.err.println("For [" + line + "], " + ex.toString());
+					} else if (!line.startsWith("#")) {
+						// TODO else parse NMEA
+						System.out.println(String.format("Non AIS String... %s", line));
 					}
-				} else if (!line.startsWith("#")) {
-					// TODO else parse NMEA
-					System.out.println(String.format("Non AIS String... %s", line));
 				}
 			}
+			br.close();
+		} catch (FileNotFoundException fnfe) {
+			fnfe.printStackTrace();
 		}
-		br.close();
 	}
 }

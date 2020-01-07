@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Obsolete. Use gradle.
+#
 JAVAC_OPTIONS="-sourcepath ./src"
 JAVAC_OPTIONS="$JAVAC_OPTIONS -d ./classes"
 echo $JAVAC_OPTIONS

@@ -1,11 +1,7 @@
 #!/bin/bash
 echo Read serial port, raw data
-if [ "$PI4J_HOME" = "" ]
-then
-  PI4J_HOME=/opt/pi4j
-fi
-CP=./build/libs/GPS.read-1.0.jar
-CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+#
+CP=./build/libs/Serial.PI4J.reader-1.0-all.jar
 JAVA_OPTIONS=
 #
 # For USB, use /dev/ttyUSB0 at 4800,
@@ -13,7 +9,8 @@ JAVA_OPTIONS=
 # Default serial port is /dev/ttyAMA0
 #JAVA_OPTIONS="$JAVA_OPTIONS -Dport.name=/dev/ttyUSB0"
 #JAVA_OPTIONS="$JAVA_OPTIONS -Dbaud.rate=4800"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dport.name=/dev/ttyUSB1"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dbaud.rate=9600"
+#
+JAVA_OPTIONS="$JAVA_OPTIONS -Dport.name=/dev/serial0"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dbaud.rate=38400"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true"
-sudo java -cp $CP $JAVA_OPTIONS readserialport.GPSDataReader
+sudo java -cp $CP $JAVA_OPTIONS readserialport.SerialDataReader
