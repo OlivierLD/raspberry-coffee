@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'idea'
     id 'maven'
+    id 'com.github.johnrengelman.shadow' // version '4.0.2'
 }
 
 compileJava.options.encoding = 'ISO-8859-1'
@@ -33,4 +34,8 @@ dependencies {
     //compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
     compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT'  // -SNAPSHOT'
     compile project(':common-utils')
+}
+
+shadowJar {
+    zip64 true
 }

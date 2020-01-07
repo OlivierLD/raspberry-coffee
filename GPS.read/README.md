@@ -1,5 +1,7 @@
 # Read raw Data from a GPS
-## Through the Serial interface, using PI4J 1.1.
+## Through the Serial interface, using PI4J.
+> Note: Not only for GPS
+
 See script named `run`
 ```
 pi@raspberrypi3:~/raspberry-pi4j-samples/GPS.read $ ./run
