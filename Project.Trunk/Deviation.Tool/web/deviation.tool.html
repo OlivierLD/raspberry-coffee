@@ -166,16 +166,20 @@
     </script>
   </head>
   <body>
-    <table width="100%">
+    <table width="100%" border="0">
       <tr>
         <td colspan="1" with="33%" valign="top">
           <h2>Deviation Curve Smoothing</h2>
-					<small>Standalone. Does not require a server to be running. Can be used as a static page.</small>
+					<small>
+						Standalone. Does not require a server to be running.
+						<br/>
+						Can be used as a static page.
+					</small>
 					<br/>
 					Equation's shape is <b>a + b sin(Z) + c cos(Z) + d sin(2.Z) + e cos(2.Z)</b>
         </td>
         <td rowspan="2" width="34%" valign="top">
-          <textarea id="json-dev" spellcheck="false" style="color: darkgrey; border: none; margin: 2px; height: 50px; width: 98%; height: 120px;" onchange="javascript:onDataChange();" placeholder="Paste JSON data here"></textarea>
+          <textarea id="json-dev" spellcheck="false" style="color: darkgrey; border: none; margin: 2px; width: 98%; height: 190px;" onchange="javascript:onDataChange();" placeholder="Paste JSON data here"></textarea>
 					<!--br/>
 					<small>Paste your JSON data &#8679; in the box above ...</small-->
         </td>
@@ -186,9 +190,9 @@
 								<div id="coeff-list" style="height: 120px;"><span style="color: silver; font-style: italic;" title="Curve coefficients">Coefficient will show up here</span></div>
 							</td>
 							<td width="50%" height="100%">
-								<span style="font-style: italic;">dev on Compass Headings</span>
+								<span style="font-style: italic; color: silver;">dev on Compass Headings</span>
 								<div id="csv" style="height: 80px; overflow-x: auto; overflow-y: auto; border: 1px solid silver;"><span style="color: silver; font-style: italic;" title="Your CSV deviation file (1).">CSV data will show up here</span></div>
-								<span style="font-style: italic;">dev on Magnetic Headings</span>
+								<span style="font-style: italic; color: silver;">dev on Magnetic Headings</span>
 								<div id="csv2" style="height: 80px; overflow-x: auto; overflow-y: auto; border: 1px solid silver;"><span style="color: silver; font-style: italic;" title="Your CSV deviation file (2).">CSV data will show up here</span></div>
 							</td>
 						</tr>
