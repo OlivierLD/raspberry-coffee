@@ -45,7 +45,7 @@ public class SerialDataReader {
 	public static void main(String... args)
 					throws InterruptedException, NumberFormatException {
 		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
-		String port = System.getProperty("port.name", Serial.DEFAULT_COM_PORT);
+		String port = System.getProperty("port.name", Serial.DEFAULT_COM_PORT); // Default is "/dev/ttyAMA0"
 		boolean verbose = "true".equals(System.getProperty("verbose", "false"));
 
 		System.out.println("Serial Communication.");
