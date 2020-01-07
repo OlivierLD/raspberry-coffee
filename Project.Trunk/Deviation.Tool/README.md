@@ -126,7 +126,7 @@ In the above, `W` is called the Compass Variation
 > Example:
 - You read `HDC = 61°`
 - The chart below returns a `d` of `5.4°E` (ie `+5.4°`)
-- The Mag. Decl. is `10°E` (ie `+10°)
+- The Mag. Decl. is `10°E` (ie `+10°`)
 - Then we have `HDM = 61 + 5.4 = 66.4°`
 - And `HDT = HDM + 10 = 76.4°` 
 
