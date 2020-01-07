@@ -133,6 +133,8 @@ In the above, `W` is called the Compass Variation
 > _Important_: You need to know what your GPS or NMEA is returning for the heading. It may depend on your station. Many return an `HDG` string
 > for the Compass Heading (like in the sample data provided here).
 
+> The RMC string returns a field named Variation, that in many cases contains only the Mag. Decl.
+
 #### Step by step
 - After  running a build (`../../gradlew clean shadowJar`), transform the NMEA data file into a json document:
   - run `./process.log.sh 2010-11-03.Taiohae.nmea`, this generates a `data.json` (default name).
