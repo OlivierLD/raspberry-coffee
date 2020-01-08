@@ -162,35 +162,6 @@ Disconnecting.
 pi@rpi-buster:~/raspberry-coffee/Serial.IO $ 
 ```
 
-#### First summary
-
-```
-!AIVDM,1,1,,A,D03Ovk0m9N>4g@ffpfpNfp0,2*38
-!AIVDM,1,1,,B,D03Ovk0s=N>4g<ffpfpNfp0,2*5D
-!AIVDM,1,1,,A,?03Ovk1Gcv1`D00,2*3C
-!AIVDM,1,1,,B,?03Ovk1CpiT0D00,2*02
-!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52
-!AIVDM,1,1,,B,D03Ovk0<EN>40Dffp00Nfp0,2*53
-
-!AIVDM,1,1,,B,?03Ovk20AG54D00,2*08
-!AIVDM,1,1,,A,?03Ovk20AG54D00,2*0B
-!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52
-!AIVDM,1,1,,B,D03Ovk0<EN>40Dffp00Nfp0,2*53
-```
-is parsed as 
-```
-Type:20, Repeat:0, MMSI:3669708, status:Under way using engine, rot:-43, Pos:81.94/-250.6231 (Acc:0), COG:377.1, SOG:60.6, HDG:256
-Type:20, Repeat:0, MMSI:3669708, status:Under way using engine, rot:-19, Pos:81.94/-250.6233 (Acc:0), COG:377.1, SOG:86.2, HDG:256
-Type:15, Repeat:0, MMSI:3669708, status:At anchor, rot:94, Pos:0.0/22.787413 (Acc:0), COG:0.0, SOG:76.6, HDG:0
-Type:15, Repeat:0, MMSI:3669708, status:At anchor, rot:79, Pos:0.0/55.99232 (Acc:1), COG:0.0, SOG:56.1, HDG:0
-Type:20, Repeat:0, MMSI:3669708, status:Under way using engine, rot:25, Pos:81.92/-250.7831 (Acc:0), COG:377.1, SOG:9.4, HDG:256
-Type:20, Repeat:0, MMSI:3669708, status:Under way using engine, rot:49, Pos:81.92/-250.78331 (Acc:0), COG:377.1, SOG:35.0, HDG:256
-Type:15, Repeat:0, MMSI:3669708, status:Not under command, rot:1, Pos:0.0/70.847145 (Acc:0), COG:0.0, SOG:8.7, HDG:0
-Type:15, Repeat:0, MMSI:3669708, status:Not under command, rot:1, Pos:0.0/70.847145 (Acc:0), COG:0.0, SOG:8.7, HDG:0
-Type:20, Repeat:0, MMSI:3669708, status:Under way using engine, rot:25, Pos:81.92/-250.7831 (Acc:0), COG:377.1, SOG:9.4, HDG:256
-Type:20, Repeat:0, MMSI:3669708, status:Under way using engine, rot:49, Pos:81.92/-250.78331 (Acc:0), COG:377.1, SOG:35.0, HDG:256
-```
-
 ## More dAISy specific
 
 ```
