@@ -1,0 +1,28 @@
+#
+# MUX definition.
+#
+name: "With a GPS and AIS"
+context:
+  with.http.server: true
+  http.port: 9999
+  init.cache: true
+channels:
+  # GPS replay
+  - type: file
+    filename: ./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea
+    verbose: false
+  # AIS Data
+  - type: tcp
+    server: ais.exploratorium.edu
+    port: 80
+    verbose: true
+
+forwarders:
+  - type: console
+  - type: tcp  # TODO Try no.ais on this one
+    port: 7002
+  - type: tcp
+    subclass: nmea.forwarders.AISTCPServer
+    port: 7003
+    verbose: true
+

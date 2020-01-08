@@ -557,7 +557,7 @@ public class MuxInitializer {
 								if (tcpSubClass == null) {
 									tcpForwarder = new TCPServer(Integer.parseInt(tcpPort));
 								} else {
-									tcpForwarder = (TCPServer)Class.forName(tcpSubClass.trim()).getConstructor(Integer.class).newInstance(tcpPort);
+									tcpForwarder = (TCPServer)Class.forName(tcpSubClass.trim()).getConstructor(Integer.class).newInstance(Integer.parseInt(tcpPort));
 								}
 								if (tcpPropFile != null) {
 									Properties forwarderProps = new Properties();
@@ -579,7 +579,7 @@ public class MuxInitializer {
 								if (gpsdSubClass == null) {
 									gpsdForwarder = new GPSdServer(Integer.parseInt(gpsdPort));
 								} else {
-									gpsdForwarder = (GPSdServer)Class.forName(gpsdSubClass.trim()).getConstructor(Integer.class).newInstance(gpsdPort);
+									gpsdForwarder = (GPSdServer)Class.forName(gpsdSubClass.trim()).getConstructor(Integer.class).newInstance(Integer.parseInt(gpsdPort));
 								}
 								if (gpsdPropFile != null) {
 									Properties forwarderProps = new Properties();

@@ -30,13 +30,13 @@ public class AISParser {
    * AIS: Automatic Identification System
    *
    * See http://gpsd.berlios.de/AIVDM.html
-   *     http://catb.org/gpsd/AIVDM.html
+   *     http://catb.org/gpsd/AIVDM.html > https://gpsd.gitlab.io/gpsd/AIVDM.html
    *
 AIS Message Type 1:
   1-6     Message Type
   7-8     Repeat Indicator
   9-38    userID (MMSI)
-  39-42   Navigation Satus
+  39-42   Navigation Status
   43-50   Rate of Turn (ROT)
   51-60   Speed Over Ground (SOG)
   61-61   Position Accuracy
@@ -56,7 +56,7 @@ AIS Message type 2:
   1-6     Message Type
   7-8     Repeat Indicator
   9-38    userID (MMSI)
-  39-42   Navigation Satus
+  39-42   Navigation Status
   43-50   Rate of Turn (ROT)
   51-60   Speed Over Ground (SOG)
   61-61   Position Accuracy
@@ -73,7 +73,7 @@ AIS Message type 2:
   155-168 SOTDMA Slot Offset
    */
 
-	public enum AISData {
+	public enum AISData { // For types 1, 2 and 3
 		MESSAGE_TYPE(0, 6, "Message Type"),
 		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
 		MMSI(8, 38, "userID (MMSI)"),
@@ -117,7 +117,7 @@ AIS Message type 2:
 	private final static int NB_SENTENCES_POS = 1;
 	private final static int AIS_DATA_POS = 5;
 
-	public static AISRecord parseAIS(String sentence) {
+	public static AISRecord parseAIS(String sentence) throws AISException {
 		boolean valid = StringParsers.validCheckSum(sentence);
 		if (!valid) {
 			throw new RuntimeException("Invalid AIS Data (Bad checksum) for [" + sentence + "]");
@@ -128,7 +128,7 @@ AIS Message type 2:
 		}
 
 		if (!dataElement[NB_SENTENCES_POS].equals("1")) { // More than 1 message: Not Managed
-			throw new RuntimeException(String.format("String [%s], more than 1 message (%s). Not managed yet.", sentence, dataElement[NB_SENTENCES_POS]));
+			throw new AISException(String.format("String [%s], more than 1 message (%s). Not managed yet.", sentence, dataElement[NB_SENTENCES_POS]));
 			// return null;
 		}
 
@@ -138,47 +138,96 @@ AIS Message type 2:
 		String binString = encodedAIStoBinaryString(aisData);
 //  System.out.println(binString);
 
-		for (AISData a : AISData.values()) {
-			if (a.to() < binString.length()) {
-				String binStr = binString.substring(a.from(), a.to());
-				int intValue = Integer.parseInt(binStr, 2);
-				if (a.equals(AISData.LATITUDE) || a.equals(AISData.LONGITUDE)) {
-					if ((a.equals(AISData.LATITUDE) && intValue != (91 * 600_000) && intValue > (90 * 600_000)) ||
-							(a.equals(AISData.LONGITUDE) && intValue != (181 * 600_000) && intValue > (180 * 600_000))) {
-						intValue = -Integer.parseInt(neg(binStr), 2);
-					}
-				} else if (a.equals(AISData.ROT)) {
-					if (intValue > 128) {
-						intValue = -Integer.parseInt(neg(binStr), 2);
-					}
-				}
-				setAISData(a, aisRecord, intValue);
-				if (verbose) {
-					System.out.println(a + " [" + binStr + "] becomes [" + intValue + "]");
-				}
-			} else if (verbose) {
-				System.out.println(">> Out of binString");
-			}
+		int messageType = 0;
+		// Get message type
+		if (AISData.MESSAGE_TYPE.to() < binString.length()) {
+			String binStr = binString.substring(AISData.MESSAGE_TYPE.from(), AISData.MESSAGE_TYPE.to());
+			messageType = Integer.parseInt(binStr, 2);
 		}
+
+		if (messageType == 1 || messageType == 2 || messageType == 3) {
+			for (AISData a : AISData.values()) {
+				if (a.to() < binString.length()) {
+					String binStr = binString.substring(a.from(), a.to());
+					int intValue = Integer.parseInt(binStr, 2);
+					if (a.equals(AISData.LATITUDE) || a.equals(AISData.LONGITUDE)) {
+						if ((a.equals(AISData.LATITUDE) && intValue == (91 * 600_000)) ||
+								(a.equals(AISData.LONGITUDE) && intValue == (181 * 600_000))) {
+							intValue = 0;
+						} else if ((a.equals(AISData.LATITUDE) && intValue > (90 * 600_000)) ||
+								(a.equals(AISData.LONGITUDE) && intValue > (180 * 600_000))) {
+							intValue = -Integer.parseInt(twosComplement(new StringBuffer(binStr)), 2);
+						}
+					} else if (a.equals(AISData.ROT)) {
+						if (intValue > 128) {
+							intValue = -Integer.parseInt(twosComplement(new StringBuffer(binStr)), 2);
+						}
+					}
+					setAISData(a, aisRecord, intValue);
+					if (verbose) {
+						System.out.println(String.format("Data %s, %s, %d chars becomes %d",
+								a,
+								binStr,
+								binStr.length(),
+								intValue));
+					}
+				} else if (verbose) {
+					System.out.println(">> Out of binString");
+				}
+			}
 //		if (aisRecord.getMmsi() == 368031880) {
 //			System.out.println("AIS:" + aisData);
 //			System.out.println(aisRecord.toString());
 //		}
-		return aisRecord;
+			return aisRecord;
+		} else {
+			// Other types than 1, 2, 3, not managed yet.
+			throw new AISException(String.format("Message type %d. Not managed yet.", messageType));
+			// return null;
+		}
 	}
 
+	public static class AISException extends Exception {
+		public AISException() {
+			super();
+		}
+		public AISException(String mess) {
+			super(mess);
+		}
+	}
 	/**
 	 * 2's complement, for negative numbers.
 	 *
 	 * @param binStr binary String
 	 * @return the 2's complement value
 	 */
-	private static String neg(String binStr) {
-		StringBuilder s = new StringBuilder();
-		for (int i = 0; i < binStr.length(); i++) {
-			s.append(binStr.charAt(i) == '0' ? '1' : '0');
+	private static String twosComplement(StringBuffer binStr) {
+		int len = binStr.length();
+
+		// Traverse the string to get first '1' from the last of string
+		int i;
+		for (i = len-1 ; i >= 0 ; i--) {
+			if (binStr.charAt(i) == '1') {
+				break;
+			}
 		}
-		return s.toString();
+
+		// If there exists no '1' concat 1 at the
+		// starting of string
+		if (i == -1) {
+			return "1" + binStr;
+		}
+
+		// Continue traversal after the position of first '1'
+		for (int k = i-1 ; k >= 0; k--) {
+			// Just flip the values
+			if (binStr.charAt(k) == '1') {
+				binStr.replace(k, k + 1, "0");
+			} else {
+				binStr.replace(k, k + 1, "1");
+			}
+		}
+		return binStr.toString();
 	}
 
 	private static void setAISData(AISData a, AISRecord ar, int value) {
@@ -407,27 +456,56 @@ AIS Message type 2:
 	}
 
 	public static void main(String... args) throws Exception {
+
+		// 2's complement
+		String tc = twosComplement(new StringBuffer("1000100"));
+		System.out.println(">> " + tc);
+		assert "11111011".equals(tc);
+		tc = twosComplement(new StringBuffer("00000101"));
+		System.out.println(">> " + tc);
+		assert "0111100".equals(tc);
+
 		String ais; // Error in !AIVDM,1,1,,B,?03Ovk1E6T50D00,2*1E
 		if (args.length > 0) {
-			System.out.println(parseAIS(args[0]));
+			try {
+				System.out.println(parseAIS(args[0]));
+			} catch (AISException t) {
+				System.err.println(t.toString());
+			}
 		} else {
 			ais = "!AIVDM,1,1,,A,14eG;o@034o8sd<L9i:a;WF>062D,0*7D";
-			System.out.println(parseAIS(ais));
+			try {
+				System.out.println(parseAIS(ais));
+			} catch (Throwable t) {
+				System.err.println(t.toString());
+			}
 
 			ais = "!AIVDM,1,1,,A,15NB>cP03jG?l`<EaV0`MFO000S>,0*39";
-			System.out.println(parseAIS(ais));
+			try {
+				System.out.println(parseAIS(ais));
+			} catch (AISException t) {
+				System.err.println(t.toString());
+			}
 
 			ais = "!AIVDM,1,1,,B,177KQJ5000G?tO`K>RA1wUbN0TKH,0*5C";
-			System.out.println(parseAIS(ais));
+			try {
+				System.out.println(parseAIS(ais));
+			} catch (AISException t) {
+				System.err.println(t.toString());
+			}
 
 			ais = "!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52";
-			System.out.println(parseAIS(ais));
+			try {
+				System.out.println(parseAIS(ais));
+			} catch (AISException t) {
+				System.err.println(t.toString());
+			}
 
 			ais = "!AIVDM,2,2,2,B,RADP,0*10";
 			try {
 				System.out.println(parseAIS(ais));
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				System.err.println(ex.toString());
 			}
 		}
 
@@ -451,9 +529,16 @@ AIS Message type 2:
 				"!AIVDM,1,1,,B,?03Ovk20AG54D00,2*08",
 				"!AIVDM,1,1,,A,?03Ovk20AG54D00,2*0B",
 				"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
-				"!AIVDM,1,1,,B,D03Ovk0<EN>40Dffp00Nfp0,2*53"
+				"!AIVDM,1,1,,B,D03Ovk0<EN>40Dffp00Nfp0,2*53",
+				"!AIVDM,1,1,,A,15MU>f002Bo?5cHE`@2qOG`>0@43,0*5B"
 		);
-		aisFromDaisy.forEach(aisStr -> System.out.println(parseAIS(aisStr)));
+		aisFromDaisy.forEach(aisStr -> {
+			try {
+				System.out.println(parseAIS(aisStr));
+			} catch (AISException t) {
+				System.err.println(t.toString());
+			}
+		});
 		System.out.println("------------------");
 
 		String dataFileName = "sample.data/ais.nmea";

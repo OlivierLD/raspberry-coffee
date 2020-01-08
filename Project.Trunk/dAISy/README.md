@@ -190,3 +190,72 @@ Type:15, Repeat:0, MMSI:3669708, status:Not under command, rot:1, Pos:0.0/70.847
 Type:20, Repeat:0, MMSI:3669708, status:Under way using engine, rot:25, Pos:81.92/-250.7831 (Acc:0), COG:377.1, SOG:9.4, HDG:256
 Type:20, Repeat:0, MMSI:3669708, status:Under way using engine, rot:49, Pos:81.92/-250.78331 (Acc:0), COG:377.1, SOG:35.0, HDG:256
 ```
+
+## More dAISy specific
+
+```
+$ ./daisy.dump.sh 
+Assuming Linux/Raspberry Pi
+Executing sudo java -Dserial.port=/dev/ttyS0 -Dbaud.rate=38400 -Dserial.verbose=true -Djava.library.path=/usr/lib/jni -cp ./build/libs/dAISy-1.0-all.jar:/usr/share/java/RXTXcomm.jar ais.sample.AISReaderSample ...
+Enter [Return]
+
+Stable Library
+=========================================
+Native lib Version = RXTX-2.2pre2
+Java lib Version   = RXTX-2.1-7
+WARNING:  RXTX Version mismatch
+	Jar version = RXTX-2.1-7
+	native lib Version = RXTX-2.2pre2
+RXTX Warning:  Removing stale lock file. /var/lock/LCK..ttyS0
+Adding /dev/ttyS0 to the Serial list
+== Serial Port List ==
+-> /dev/ttyS0
+======================
+Opening port /dev/ttyS0:38400
+Serial Port connected: true
+IO Streams initialized
+	>>> [From Serial Port] Received:
+		---+--------------------------------------------------+------------------
+		   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+		---+--------------------------------------------------+------------------
+		00 | 21 41 49 56 44 4D 2C 31 2C 31 2C 2C 41 2C 44 30  |  !AIVDM,1,1,,A,D0
+		01 | 33 4F 76 6B 30 6D 39 4E 3E 34 67 40 66 66 70 66  |  3Ovk0m9N>4g@ffpf
+		02 | 70 4E 66 70 30 2C 32 2A 33 38 0D 0A              |  pNfp0,2*38..
+		---+--------------------------------------------------+------------------
+Parsed: Type:20, Repeat:0, MMSI:3669708, status:Under way using engine, rot:-43, Pos:81.94/-250.6231 (Acc:0), COG:377.1, SOG:60.6, HDG:256
+	>>> [From Serial Port] Received:
+		---+--------------------------------------------------+------------------
+		   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+		---+--------------------------------------------------+------------------
+		00 | 21 41 49 56 44 4D 2C 31 2C 31 2C 2C 42 2C 44 30  |  !AIVDM,1,1,,B,D0
+		01 | 33 4F 76 6B 30 73 3D 4E 3E 34 67 3C 66 66 70 66  |  3Ovk0s=N>4g<ffpf
+		02 | 70 4E 66 70 30 2C 32 2A 35 44 0D 0A              |  pNfp0,2*5D..
+		---+--------------------------------------------------+------------------
+Parsed: Type:20, Repeat:0, MMSI:3669708, status:Under way using engine, rot:-19, Pos:81.94/-250.6233 (Acc:0), COG:377.1, SOG:86.2, HDG:256
+	>>> [From Serial Port] Received:
+		---+--------------------------------------------------+------------------
+		   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+		---+--------------------------------------------------+------------------
+		00 | 21 41 49 56 44 4D 2C 31 2C 31 2C 2C 41 2C 34 30  |  !AIVDM,1,1,,A,40
+		01 | 33 4F 76 6B 31 76 40 44 30 39 60 6F 3E 6A 4E 50  |  3Ovk1v@D09`o>jNP
+		02 | 45 64 6A 43 4F 30 32 34 30 54 2C 30 2A 35 39 0D  |  EdjCO0240T,0*59.
+		03 | 0A                                               |  .
+		---+--------------------------------------------------+------------------
+Parsed: Type:4, Repeat:0, MMSI:3669708, status:At anchor, rot:-6, Pos:88.21433/2.1055584 (Acc:0), COG:327.3, SOG:2.0, HDG:111
+	>>> [From Serial Port] Received:
+		---+--------------------------------------------------+------------------
+		   |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  |
+		---+--------------------------------------------------+------------------
+		00 | 21 41 49 56 44 4D 2C 31 2C 31 2C 2C 42 2C 34 30  |  !AIVDM,1,1,,B,40
+		01 | 33 4F 76 6B 31 76 40 44 30 39 60 6F 3E 6A 4E 50  |  3Ovk1v@D09`o>jNP
+		02 | 45 64 6A 43 4F 30 32 34 30 54 2C 30 2A 35 41 0D  |  EdjCO0240T,0*5A.
+		03 | 0A                                               |  .
+		---+--------------------------------------------------+------------------
+Parsed: Type:4, Repeat:0, MMSI:3669708, status:At anchor, rot:-6, Pos:88.21433/2.1055584 (Acc:0), COG:327.3, SOG:2.0, HDG:111
+^C
+Notified (Main).
+Disconnecting.
+
+Monitor Interrupted
+$ 
+```

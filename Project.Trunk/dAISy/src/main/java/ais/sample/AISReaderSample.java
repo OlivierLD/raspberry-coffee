@@ -129,8 +129,12 @@ public class AISReaderSample implements SerialIOCallbacks {
 				System.out.print(sentence); // Regular output
 			}
 		}
-		AISParser.AISRecord aisRecord = AISParser.parseAIS(new String(mess));
-		System.out.println(String.format("Parsed: %s", aisRecord.toString()));
+		try {
+			AISParser.AISRecord aisRecord = AISParser.parseAIS(new String(mess));
+			System.out.println(String.format("Parsed: %s", aisRecord.toString()));
+		} catch (AISParser.AISException aisEx) {
+			System.err.println(aisEx.toString());
+		}
 	}
 
 	public static void main(String... args) {

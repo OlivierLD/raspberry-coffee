@@ -74,6 +74,7 @@ do
 	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
 	echo -e "| 12. With 2 input serial ports.                                                          |"
 	echo -e "|     - See or modify nmea.mux.2.serial.yaml for details.                                 |"
+	echo -e "| 13. AIS Tests.                                                                          |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  S. Show NavServer process(es) ⚙️                                                        |"
 	echo -e "| SP. Show proxy process(es) ⚙️                                                            |"
@@ -224,6 +225,19 @@ do
 	  "12")
   	    # PROP_FILE=nmea.mux.no.gps.properties
   	    PROP_FILE=nmea.mux.2.serial.yaml
+	    echo -e "Launching Nav Server with $PROP_FILE"
+	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
+	    then
+		    echo -e ">>> Waiting for the server to start..."
+		    sleep 5 # Wait for the server to be operational
+		    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+	    fi
+	    GO=false
+	    ;;
+	  "13")
+  	    # PROP_FILE=nmea.mux.no.gps.properties
+  	    PROP_FILE=nmea.mux.ais.test.yaml
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
