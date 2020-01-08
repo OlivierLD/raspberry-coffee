@@ -18,9 +18,12 @@ For example:
 [NMEA](http://nmea.org) (National Marine Electronics Association) is one of the oldest IT standards, defining how sensor data should be conveyed.
 
 > _Note_: here is an _opened_ question:
-> Some other softwares are using more "modern" technologies to shape the data (like `GPSd`, `SignalK`, ...), but what is the point?
-> The data they convey _are_ NMEA data, and to be able to communicate with other softs, their format will eventually have to be converted back to NMEA...
-> Here we chose _not_ to convert anything. NMEA remains NMEA.   
+>
+> Some softwares are using more "modern" technologies to shape the data (like `GPSd`, `SignalK`, ..., they use JSON over REST/HTTP), but what is the point?
+> `text/plain` has always been a supported mime-type, suitable for NMEA Sentences... 
+> 
+> The conveyed data _are_ NMEA data, and to be able to communicate with other softs, their (proprietary?) format will eventually have to be converted back to NMEA...
+> Here we chose _not_ to convert anything. NMEA remains NMEA, which everyone understands. And everyone's happy.   
 
 --------
 Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any output (File, Serial, TCP, UDP, WebSockets...), and a REST API on top of that.
