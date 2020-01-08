@@ -76,6 +76,7 @@ include "Project.Trunk:REST.clients:REST.assembler"
 include "Project.Trunk:REST.clients:REST.assembler:springboot-sensors"
 
 include "Project.Trunk:Deviation.Tool"
+include "Project.Trunk:dAISy"
 
 include "JupyterNotebooks:deep.learning.crash.course"
 

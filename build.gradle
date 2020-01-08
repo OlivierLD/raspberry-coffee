@@ -83,6 +83,7 @@ dependencies {
   compile project(':Project.Trunk:REST.clients:REST.assembler:springboot-sensors')
   compile project(':Project.Trunk:PolarSmoother')
   compile project(':Project.Trunk:Deviation.Tool')
+  compile project(':Project.Trunk:dAISy')
   compile project(':TensorFlow')
   compile project(':Processing')
   compile project(':Bluetooth')

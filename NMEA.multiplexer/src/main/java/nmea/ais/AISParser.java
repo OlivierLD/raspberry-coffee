@@ -439,7 +439,20 @@ AIS Message type 2:
 				"!AIVDM,1,1,,A,D03Ovk0m9N>4g@ffpfpNfp0,2*38",
 				"!AIVDM,1,1,,B,D03Ovk0s=N>4g<ffpfpNfp0,2*5D",
 				"!AIVDM,1,1,,B,403Ovk1v@CPN`o>jO8EdjDw02@GT,0*1F",
-				"!AIVDM,1,1,,A,403Ovk1v@CPO`o>jNrEdjEO02<45,0*01");
+				"!AIVDM,1,1,,A,403Ovk1v@CPO`o>jNrEdjEO02<45,0*01",
+				// From PI4J
+				"!AIVDM,1,1,,A,D03Ovk0m9N>4g@ffpfpNfp0,2*38",
+				"!AIVDM,1,1,,B,D03Ovk0s=N>4g<ffpfpNfp0,2*5D",
+				"!AIVDM,1,1,,A,?03Ovk1Gcv1`D00,2*3C",
+				"!AIVDM,1,1,,B,?03Ovk1CpiT0D00,2*02",
+				"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
+				"!AIVDM,1,1,,B,D03Ovk0<EN>40Dffp00Nfp0,2*53",
+				// From Serial IO
+				"!AIVDM,1,1,,B,?03Ovk20AG54D00,2*08",
+				"!AIVDM,1,1,,A,?03Ovk20AG54D00,2*0B",
+				"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
+				"!AIVDM,1,1,,B,D03Ovk0<EN>40Dffp00Nfp0,2*53"
+		);
 		aisFromDaisy.forEach(aisStr -> System.out.println(parseAIS(aisStr)));
 		System.out.println("------------------");
 
