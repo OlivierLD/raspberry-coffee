@@ -282,6 +282,8 @@ The lines above means that:
     forward.01.type=tcp
     forward.01.port=7001
     ```
+  > _Note_: using `forward.XX.properties`, you can refer to a properties file containing a `with.ais` properties.
+  > Default value is `true`, it can be set to `false` to prevent the AIS strings to be re-broadcasted.
 - `gpsd`
     - GPSD Server
     ```properties

@@ -297,9 +297,11 @@ public class NMEADataCache
 					AISParser.AISRecord rec = AISParser.parseAIS(nmeaSentence);
 					if (rec != null) {
 						aisMap.put(rec.getMMSI(), rec);
-				//	System.out.println("(" + aisMap.size() + " boat(s)) " + rec.toString());
+						//	System.out.println("(" + aisMap.size() + " boat(s)) " + rec.toString());
 					}
 					this.put(AIS, aisMap);
+				} catch (AISParser.AISException aisExc) {
+					System.err.println(aisExc.toString());
 				} catch (Exception ex) {
 					System.err.println(String.format("\nFor AIS Sentence [%s]", nmeaSentence));
 					ex.printStackTrace();

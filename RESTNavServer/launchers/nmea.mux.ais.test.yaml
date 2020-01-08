@@ -18,14 +18,15 @@ channels:
   - type: tcp
     server: ais.exploratorium.edu
     port: 80
-    verbose: true
+    verbose: false
 
 forwarders:
-  - type: console
-  - type: tcp  # TODO Try no.ais on this one
+  # - type: console
+  - type: tcp
     port: 7002
+    properties: no.ais.properties
   - type: tcp
     subclass: nmea.forwarders.AISTCPServer
     port: 7003
-    verbose: true
+    verbose: false
 

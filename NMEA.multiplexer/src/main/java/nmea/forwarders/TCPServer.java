@@ -1,5 +1,7 @@
 package nmea.forwarders;
 
+import nmea.ais.AISParser;
+
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,6 +17,8 @@ public class TCPServer implements Forwarder {
 
 	private int tcpPort = 7001; // Default
 	private ServerSocket serverSocket = null;
+
+	private boolean withAIS = true;
 
 	public TCPServer(int port) throws Exception {
 		this.tcpPort = port;
@@ -37,6 +41,13 @@ public class TCPServer implements Forwarder {
 
 	@Override
 	public void write(byte[] message) {
+		if (!withAIS) {
+			if (new String(message).trim().startsWith(AISParser.AIS_PREFIX)) {
+//				System.out.println("\t\t>> From TCP Skipping AIS message");
+				return;
+			}
+		}
+
 		List<Socket> toRemove = new ArrayList<>();
 		synchronized(clientSocketList) {
 			clientSocketList.stream().forEach(tcpSocket -> { // TODO Synchronize the stream?
@@ -84,32 +95,6 @@ public class TCPServer implements Forwarder {
 				tcpSocket.close();
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
-		}
-	}
-
-	public static void main(String... args) {
-//	String gpsd = "{\"class\":\"TVP\",\"tag\":\"MID2\",\"time\":\"2010-04-30T11:48:20.10Z\",\"ept\":0.005,\"lat\":46.498204497,\"lon\":7.568061439,\"alt\":1327.689,\"epx\":15.319,\"epy\":17.054,\"epv\":124.484,\"track\":10.3797,\"speed\":0.091,\"climb\":-0.085,\"eps\",34.11,\"mode\":3}";
-		String gpsd = "?WATCH={...};";
-		String wpl = "$GPWPL,3739.856,N,12222.812,W,OPMRNA*59";
-		try {
-			TCPServer tcpw = new TCPServer(2947); // 2947
-//    TCPWriter tcpw = new TCPWriter(7001);
-//    TCPWriter tcpw = new TCPWriter(7001, "theketch-lap.mshome.net");
-			for (int i = 0; i < 50; i++) {
-				System.out.println("Ping...");
-				try {
-					tcpw.write(gpsd.getBytes());
-				} catch (Exception ex) {
-					System.err.println(ex.getLocalizedMessage());
-				}
-				try {
-					Thread.sleep(1_000L);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -162,5 +147,35 @@ public class TCPServer implements Forwarder {
 	@Override
 	public void setProperties(Properties props) {
 		this.props = props;
+		if (this.props != null) {
+			this.withAIS = "true".equals(this.props.getProperty("with.ais", "true"));
+//			System.out.println("\t\t>> NO AIS !!!");
+		}
+	}
+
+	public static void main(String... args) {
+//	String gpsd = "{\"class\":\"TVP\",\"tag\":\"MID2\",\"time\":\"2010-04-30T11:48:20.10Z\",\"ept\":0.005,\"lat\":46.498204497,\"lon\":7.568061439,\"alt\":1327.689,\"epx\":15.319,\"epy\":17.054,\"epv\":124.484,\"track\":10.3797,\"speed\":0.091,\"climb\":-0.085,\"eps\",34.11,\"mode\":3}";
+		String gpsd = "?WATCH={...};";
+		String wpl = "$GPWPL,3739.856,N,12222.812,W,OPMRNA*59";
+		try {
+			TCPServer tcpw = new TCPServer(2947); // 2947
+//    TCPWriter tcpw = new TCPWriter(7001);
+//    TCPWriter tcpw = new TCPWriter(7001, "theketch-lap.mshome.net");
+			for (int i = 0; i < 50; i++) {
+				System.out.println("Ping...");
+				try {
+					tcpw.write(gpsd.getBytes());
+				} catch (Exception ex) {
+					System.err.println(ex.getLocalizedMessage());
+				}
+				try {
+					Thread.sleep(1_000L);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
