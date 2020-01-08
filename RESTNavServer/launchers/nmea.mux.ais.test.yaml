@@ -1,7 +1,7 @@
 #
 # MUX definition.
 #
-name: "With a GPS and AIS"
+name: "With a GPS and AIS, for tests"
 context:
   with.http.server: true
   http.port: 9999
