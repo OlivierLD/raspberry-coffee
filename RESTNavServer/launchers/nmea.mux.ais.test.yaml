@@ -12,6 +12,9 @@ channels:
     filename: ./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea
     verbose: false
   # AIS Data
+  - type: file
+    filename: ./sample.data/ais.nmea
+    verbose: false
   - type: tcp
     server: ais.exploratorium.edu
     port: 80

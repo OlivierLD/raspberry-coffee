@@ -13,7 +13,7 @@ import java.util.Properties;
  */
 public class AISTCPServer extends TCPServer {
 
-	public AISTCPServer(Integer port) throws Exception {
+	public AISTCPServer(Integer port) throws Exception { // Required for dynamic load. int won't work.
 		super(port);
 	}
 	public AISTCPServer(int port) throws Exception {
