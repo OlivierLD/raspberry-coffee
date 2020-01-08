@@ -13,7 +13,14 @@ For example:
 
 -------------------------------------
 
+### NMEA
+
 [NMEA](http://nmea.org) (National Marine Electronics Association) is one of the oldest IT standards, defining how sensor data should be conveyed.
+
+> _Note_: here is an _opened_ question:
+> Some other softwares are using more "modern" technologies to shape the data (like `GPSd`, `SignalK`, ...), but what is the point?
+> The data they convey _are_ NMEA data, and to be able to communicate with other softs, their format will eventually have to be converted back to NMEA...
+> Here we chose _not_ to convert anything. NMEA remains NMEA.   
 
 --------
 Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any output (File, Serial, TCP, UDP, WebSockets...), and a REST API on top of that.
@@ -35,6 +42,7 @@ For the impatient: go [here](#to-see-it-at-work-aka-get-started) to get started 
 -----------------
 ### Includes
 - NMEA Strings Parser
+- AIS Strings Parser (WIP)
 - NMEA Strings generator
 - Serial port Reader / Writer
 - TCP Reader / Writer
@@ -64,7 +72,7 @@ A _channel_ is an NMEA data provider, a _forwarder_ is an NMEA data producer, it
 <td>
 Just to insist: A <i>channel</i> is an NMEA data provider. This means that it produces (pure) NMEA Sentences!!
 This is <i>pure</i> NMEA. Nothing fancy like a JSON Object or whatever object representing the same data in another format.
-NMEA is already a well known and well defined format.
+NMEA is already a well known and defined format.
 </td>
 </tr>
 </table>
