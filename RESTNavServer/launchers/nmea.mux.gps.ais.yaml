@@ -25,4 +25,7 @@ forwarders:
   - type: tcp
     subclass: nmea.forwarders.AISTCPServer
     port: 7003
+computers:
+  - cls: nmea.computers.AISManager
+    properties: ais.mgr.properties
 
