@@ -356,7 +356,7 @@ You can also define your own computers (extending `Computer`).
 
 Look for `computer.02.cls=nmea.computers.ComputerSkeleton`
 
-Also see the computer `nmea.computers.AISManager`. It is a computer to load as in
+Also see the computer `nmea.computers.AISManager`. It is a computer to load as in (`yaml` version)
 ```yaml
 computers:
   - cls: nmea.computers.AISManager
