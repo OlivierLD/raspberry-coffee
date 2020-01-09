@@ -117,6 +117,24 @@ AIS Message type 2:
 	private final static int NB_SENTENCES_POS = 1;
 	private final static int AIS_DATA_POS = 5;
 
+	public static int getMessageType(String sentence) {
+		String[] dataElement = sentence.split(",");
+		if (!dataElement[PREFIX_POS].equals(AIS_PREFIX)) {
+			throw new RuntimeException("Unmanaged AIS Prefix [" + dataElement[PREFIX_POS] + "].");
+		}
+
+		String aisData = dataElement[AIS_DATA_POS];
+		String binString = encodedAIStoBinaryString(aisData);
+
+		int messageType = 0;
+		// Get message type
+		if (AISData.MESSAGE_TYPE.to() < binString.length()) {
+			String binStr = binString.substring(AISData.MESSAGE_TYPE.from(), AISData.MESSAGE_TYPE.to());
+			messageType = Integer.parseInt(binStr, 2);
+		}
+		return messageType;
+	}
+
 	public static AISRecord parseAIS(String sentence) throws AISException {
 		boolean valid = StringParsers.validCheckSum(sentence);
 		if (!valid) {

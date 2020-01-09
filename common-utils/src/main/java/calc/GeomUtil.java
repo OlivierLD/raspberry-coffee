@@ -73,6 +73,33 @@ public final class GeomUtil {
 		return haversineRaw(lat1, long1, lat2, long2) * MILE_EQUATORIAL_EARTH_RADIUS;
 	}
 
+	public static double bearingDiff(double bearingA, double bearingB) {
+		double diff = Math.abs(bearingA - bearingB);
+		while (diff > 180) {
+			diff = 360 - diff;
+		}
+		return diff;
+	}
+	/**
+	 * Calculates great-circle bearing between two points from and to.
+	 * @param fromL latitude from, in degrees
+	 * @param fromG longitude from, in degrees
+	 * @param toL latitude to, in degrees
+	 * @param toG latitude to, in degrees
+	 * @return bearing from-to, in degrees on [0..360]
+	 */
+	public static double bearingFromTo(double fromL, double fromG, double toL, double toG) {
+		double deltaG = toG - fromG;
+		double x = Math.cos(Math.toRadians(toL)) * Math.sin(Math.toRadians(deltaG));
+		double y = (Math.cos(Math.toRadians(fromL)) * Math.sin(Math.toRadians(toL))) -
+				(Math.sin(Math.toRadians(fromL)) * Math.cos(Math.toRadians(toL)) * Math.cos(Math.toRadians(deltaG)));
+		double b = Math.toDegrees(Math.atan2(x, y));
+		while (b < 0) {
+			b += 360;
+		}
+		return b;
+	}
+
 	/**
 	 * Get the direction
 	 * TODO: use Math.atan2
@@ -512,5 +539,18 @@ public final class GeomUtil {
 		double lat = 37.750585;
 		double lng = -122.507891;
 		System.out.println("Grid Square: " + new GeoPoint(lat, lng).toString() + " => " + gridSquare(lat, lng));
+
+		// Bearing from-to
+		double bearing = bearingFromTo(39.099912, -94.581213, 38.627089, -90.200203);
+		System.out.println(String.format("Kansas City to St Louis, Bearing: %.02f\272 ", bearing));
+		System.out.println(String.format("W >> %.02f\272", bearingFromTo(37, -122, 37, -123)));
+		System.out.println(String.format("E >> %.02f\272", bearingFromTo(37, -122, 37, -120)));
+
+		// Bearing diffs
+		System.out.println(String.format("15 >> %.02f\272", bearingDiff(350, 5)));
+		System.out.println(String.format("15 >> %.02f\272", bearingDiff(5, 350)));
+		System.out.println(String.format("15 >> %.02f\272", bearingDiff(20, 5)));
+		System.out.println(String.format("15 >> %.02f\272", bearingDiff(350, 335)));
+		System.out.println(String.format("15 >> %.02f\272", bearingDiff(170, 185)));
 	}
 }
