@@ -555,4 +555,4 @@ HTTP server serving the REST requests can also serve HTML requests, and behave l
 - [Case Study](./casestudy.md)
 
 -----------------
-See the code for more details. _This_ is Open Source ;)
+See the code for more details. _This_ is Open Source 😜
