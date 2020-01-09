@@ -12,7 +12,7 @@ describing the features required by an instance of the Multiplexer (channels, fo
 - [Pre-defined channel types](#pre-defined-channel-types)
 - [Forwarders](#forwarders)
 - [Pre-defined forwarder types](#pre-defined-forwarder-types)
-- [Pre-defined computer type](#pre-defined-computer-types)
+- [Pre-defined computer type(s)](#pre-defined-computer-types)
 - [Other properties](#other-properties)
 - [Example](#example)
 - [Minimal](#minimal)
@@ -75,7 +75,7 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
    http.port: 5678
    init.cache: true
    default.declination: 14
-   deviation.file.name: "dp_2011_04_15.csv"
+   deviation.file.name: dp_2011_04_15.csv
    # Leeway = max.leeway * cos(awa)
    max.leeway: 10
    bsp.factor: 1.0
@@ -85,33 +85,33 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
    damping: 30
  channels:
    - type: serial
-     port: "/dev/ttyS80"
+     port: /dev/ttyS80
      baud.rate: 4800
      verbose: false
    - type: bme280
-     prefix: "BM"
+     prefix: BM
      verbose: false
    - type: lsm303
-     prefix: "LS"
-     feature: "BOTH"
+     prefix: LS
+     feature: BOTH
      verbose: false
-     sentence.filters: "HDM,XDR"
+     sentence.filters: HDM,XDR
      heading.offset: 0
      read.frequency: 1000
      damping.size: 5
  forwarders:
    - type: file
      timebase.filename: true
-     filename.suffix: "_LOG"
-     log.dir: "logged"
-     split: "hour"
-   - class: "nmea.forwarder.SSD1306Processor"
-     properties: "ssd1306.properties"
-   - type: "tcp"
+     filename.suffix: _LOG
+     log.dir: logged
+     split: hour
+   - class: nmea.forwarder.SSD1306Processor
+     properties: ssd1306.properties
+   - type: tcp
      port: 7001
  computers:
-   - type: "tw-current"
-     prefix: "CC"
+   - type: tw-current
+     prefix: CC
      time.buffer.length: 30, 60, 600
 ```
 
