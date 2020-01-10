@@ -263,7 +263,7 @@ public class NMEADataCache
 				longitude);
 		sru.calculate();
 		double he = sru.getHe().doubleValue();
-		double z = sru.getZ().doubleValue();  // TODO Push those 2 in the cache
+		double z = sru.getZ().doubleValue();  // TODO Push those 2 in the cache?
 		// Get Equation of time, used to calculate solar time.
 		double eot = AstroComputer.getSunMeridianPassageTime(latitude, longitude); // in decimal hours
 
@@ -291,12 +291,11 @@ public class NMEADataCache
 //		this.put(NMEA_AS_IS, asIsMap);
 			this.put(LAST_NMEA_SENTENCE, nmeaSentence);
 
-			// AIS
-			if (nmeaSentence.startsWith(AISParser.AIS_PREFIX)) {
+			if (nmeaSentence.startsWith(AISParser.AIS_PREFIX)) { // AIS
 				try {
 					AISParser.AISRecord rec = AISParser.parseAIS(nmeaSentence);
 					if (rec != null) {
-						aisMap.put(rec.getMMSI(), rec);
+						aisMap.put(rec.getMMSI(), rec);  // Id is the MMSI.
 						//	System.out.println("(" + aisMap.size() + " boat(s)) " + rec.toString());
 					}
 					this.put(AIS, aisMap);

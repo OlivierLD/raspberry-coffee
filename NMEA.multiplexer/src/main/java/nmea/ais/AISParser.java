@@ -46,7 +46,7 @@ AIS Message Type 1:
   90-116  latitude
   117-128 Course Over Ground (COG)
   129-137 True Heading (HDG)
-  138-143 Time Stamp (UTC Seconds)
+  138-143 Time Stamp (UTC Seconds, only seconds)
   144-146 Regional RESERVED
   147-148 Spare
   149-149 Receiver Autonomous Integrity Monitoring (RAIM)
@@ -66,7 +66,7 @@ AIS Message type 2:
   90-116  latitude
   117-128 Course Over Ground (COG)
   129-137 True Heading (HDG)
-  138-143 Time Stamp (UTC Seconds)
+  138-143 Time Stamp (UTC Seconds, only seconds)
   144-146 Regional RESERVED
   147-148 Spare
   149-149 Receiver Autonomous Integrity Monitoring (RAIM)
@@ -370,6 +370,7 @@ AIS Message type 2:
 		} else if (a.equals(AISDataType123.HDG)) {
 			ar.setHdg(value);
 		} else if (a.equals(AISDataType123.TIME_STAMP)) {
+//			System.out.println(String.format("AIS TIME_STAMP: %d", value));
 			ar.setUtc(value);
 		}
 	}
@@ -381,9 +382,18 @@ AIS Message type 2:
 			ar.setRepeatIndicator(value);
 		} else if (a.equals(AISDataType4.MMSI)) {
 			ar.setMMSI(value);
-
-			// TODO UTC DateTime
-
+		} else if (a.equals(AISDataType4.UTC_YEAR)) {
+			ar.setUtcYear(value);
+		} else if (a.equals(AISDataType4.UTC_MONTH)) {
+			ar.setUtcMonth(value);
+		} else if (a.equals(AISDataType4.UTC_DAY)) {
+			ar.setUtcDay(value);
+		} else if (a.equals(AISDataType4.UTC_HOUR)) {
+			ar.setUtcHour(value);
+		} else if (a.equals(AISDataType4.UTC_MINUTE)) {
+			ar.setUtcMinute(value);
+		} else if (a.equals(AISDataType4.UTC_SECOND)) {
+			ar.setUtcSecond(value);
 		} else if (a.equals(AISDataType4.POS_ACC)) {
 			ar.setPosAcc(value);
 		} else if (a.equals(AISDataType4.LONGITUDE)) {
@@ -424,6 +434,12 @@ AIS Message type 2:
 		private float cog;
 		private int hdg;
 		private int utc;
+		private int utc_year;
+		private int utc_month;
+		private int utc_day;
+		private int utc_hour;
+		private int utc_minute;
+		private int utc_second;
 		private long recordTimeStamp;
 
 		AISRecord(long now) {
@@ -527,6 +543,48 @@ AIS Message type 2:
 			return utc;
 		}
 
+		public void setUtcYear(int d) {
+			this.utc_year = d;
+		}
+		public int getUtcYear() {
+			return this.utc_year;
+		}
+
+		public void setUtcMonth(int d) {
+			this.utc_month = d;
+		}
+		public int getUtcMonth() {
+			return this.utc_month;
+		}
+
+		public void setUtcDay(int d) {
+			this.utc_day = d;
+		}
+		public int getUtcDay() {
+			return this.utc_day;
+		}
+
+		public void setUtcHour(int d) {
+			this.utc_hour = d;
+		}
+		public int getUtcHour() {
+			return this.utc_hour;
+		}
+
+		public void setUtcMinute(int d) {
+			this.utc_minute = d;
+		}
+		public int getUtcMinute() {
+			return this.utc_minute;
+		}
+
+		public void setUtcSecond(int d) {
+			this.utc_second = d;
+		}
+		public int getUtcSecond() {
+			return this.utc_second;
+		}
+
 		static String decodeStatus(int stat) {
 			String status = "";
 			switch (stat) {
@@ -580,7 +638,7 @@ AIS Message type 2:
 				case 1:
 				case 2:
 				case 3:
-					str = String.format("Type:%d, Repeat:%d, MMSI:%d, status:%s, rot:%d, Pos:%f/%f (Acc:%d), COG:%f, SOG:%f, HDG:%d",
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, status:%s, rot:%d, Pos:%f/%f (Acc:%d), COG:%f, SOG:%f, HDG:%d, TimeStamp: %d",
 							messageType,
 							repeatIndicator,
 							MMSI,
@@ -591,15 +649,22 @@ AIS Message type 2:
 							posAcc,
 							cog,
 							sog,
-							hdg);
+							hdg,
+							utc);
 					break;
 				case 4:
-					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Pos:%f/%f",
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Pos:%f/%f, UTC %d-%d-%d %d:%d:%d",
 							messageType,
 							repeatIndicator,
 							MMSI,
 							latitude,
-							longitude);
+							longitude,
+							utc_year,
+							utc_month,
+							utc_day,
+							utc_hour,
+							utc_minute,
+							utc_second);
 					break;
 				default:
 					break;
