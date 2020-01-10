@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Work in Progress
+ * Good doc at https://gpsd.gitlab.io/gpsd/AIVDM.html
  */
 public class AISParser {
 	public final static boolean verbose = "true".equals(System.getProperty("ais.verbose"));
@@ -73,7 +74,37 @@ AIS Message type 2:
   155-168 SOTDMA Slot Offset
    */
 
-	public enum AISData { // For types 1, 2 and 3
+	public enum AISData { // Generic
+		MESSAGE_TYPE(0, 6, "Message Type"),
+		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
+		MMSI(8, 38, "userID (MMSI)");
+
+		private static final long serialVersionUID = 1L;
+
+		private final int from;          // start offset
+		private final int to;            // end offset
+		public final String description; // Description
+
+		AISData(int from, int to, String desc) {
+			this.from = from;
+			this.to = to;
+			this.description = desc;
+		}
+
+		public int from() {
+			return from;
+		}
+
+		public int to() {
+			return to;
+		}
+
+		public String description() {
+			return description;
+		}
+	}
+
+	public enum AISDataType123 { // For types 1, 2 and 3
 		MESSAGE_TYPE(0, 6, "Message Type"),
 		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
 		MMSI(8, 38, "userID (MMSI)"),
@@ -93,7 +124,46 @@ AIS Message type 2:
 		private final int to;            // end offset
 		public final String description; // Description
 
-		AISData(int from, int to, String desc) {
+		AISDataType123(int from, int to, String desc) {
+			this.from = from;
+			this.to = to;
+			this.description = desc;
+		}
+
+		public int from() {
+			return from;
+		}
+
+		public int to() {
+			return to;
+		}
+
+		public String description() {
+			return description;
+		}
+	}
+
+	public enum AISDataType4 {
+		MESSAGE_TYPE(0, 6, "Message Type"),
+		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
+		MMSI(8, 38, "userID (MMSI)"),
+		UTC_YEAR(38, 52, "UTC Year"),
+		UTC_MONTH(52, 56, "UTC Month"),
+		UTC_DAY(56, 61, "UTC Day"),
+		UTC_HOUR(61, 66, "UTC Hour"),
+		UTC_MINUTE(66, 72, "UTC Minute"),
+		UTC_SECOND(72, 78, "UTC Second"),
+		POS_ACC(78, 79, "Position Accuracy"),
+		LONGITUDE(79, 107, "Longitude"),
+		LATITUDE(107, 134, "Latitude");
+
+		private static final long serialVersionUID = 1L;
+
+		private final int from;          // start offset
+		private final int to;            // end offset
+		public final String description; // Description
+
+		AISDataType4(int from, int to, String desc) {
 			this.from = from;
 			this.to = to;
 			this.description = desc;
@@ -122,7 +192,6 @@ AIS Message type 2:
 		if (!dataElement[PREFIX_POS].equals(AIS_PREFIX)) {
 			throw new RuntimeException("Unmanaged AIS Prefix [" + dataElement[PREFIX_POS] + "].");
 		}
-
 		String aisData = dataElement[AIS_DATA_POS];
 		String binString = encodedAIStoBinaryString(aisData);
 
@@ -163,46 +232,73 @@ AIS Message type 2:
 			messageType = Integer.parseInt(binStr, 2);
 		}
 
-		if (messageType == 1 || messageType == 2 || messageType == 3) {
-			for (AISData a : AISData.values()) {
-				if (a.to() < binString.length()) {
-					String binStr = binString.substring(a.from(), a.to());
-					int intValue = Integer.parseInt(binStr, 2);
-					if (a.equals(AISData.LATITUDE) || a.equals(AISData.LONGITUDE)) {
-						if ((a.equals(AISData.LATITUDE) && intValue == (91 * 600_000)) ||
-								(a.equals(AISData.LONGITUDE) && intValue == (181 * 600_000))) {
-							intValue = 0;
-						} else if ((a.equals(AISData.LATITUDE) && intValue > (90 * 600_000)) ||
-								(a.equals(AISData.LONGITUDE) && intValue > (180 * 600_000))) {
-							intValue = -Integer.parseInt(twosComplement(new StringBuffer(binStr)), 2);
+		switch (messageType) {
+			case 1:
+			case 2:
+			case 3:
+				for (AISDataType123 a : AISDataType123.values()) {
+					if (a.to() < binString.length()) {
+						String binStr = binString.substring(a.from(), a.to());
+						int intValue = Integer.parseInt(binStr, 2);
+						if (a.equals(AISDataType123.LATITUDE) || a.equals(AISDataType123.LONGITUDE)) {
+							if ((a.equals(AISDataType123.LATITUDE) && intValue == (91 * 600_000)) ||
+									(a.equals(AISDataType123.LONGITUDE) && intValue == (181 * 600_000))) {
+								intValue = 0;
+							} else if ((a.equals(AISDataType123.LATITUDE) && intValue > (90 * 600_000)) ||
+									(a.equals(AISDataType123.LONGITUDE) && intValue > (180 * 600_000))) {
+								intValue = -Integer.parseInt(twosComplement(new StringBuffer(binStr)), 2);
+							}
+						} else if (a.equals(AISDataType123.ROT)) {
+							if (intValue > 128) {
+								intValue = -Integer.parseInt(twosComplement(new StringBuffer(binStr)), 2);
+							}
 						}
-					} else if (a.equals(AISData.ROT)) {
-						if (intValue > 128) {
-							intValue = -Integer.parseInt(twosComplement(new StringBuffer(binStr)), 2);
+						setAISData(a, aisRecord, intValue);
+						if (verbose) {
+							System.out.println(String.format("Data %s, %s, %d chars becomes %d",
+									a,
+									binStr,
+									binStr.length(),
+									intValue));
 						}
+					} else if (verbose) {
+						System.out.println(">> Out of binString");
 					}
-					setAISData(a, aisRecord, intValue);
-					if (verbose) {
-						System.out.println(String.format("Data %s, %s, %d chars becomes %d",
-								a,
-								binStr,
-								binStr.length(),
-								intValue));
-					}
-				} else if (verbose) {
-					System.out.println(">> Out of binString");
 				}
-			}
-//		if (aisRecord.getMmsi() == 368031880) {
-//			System.out.println("AIS:" + aisData);
-//			System.out.println(aisRecord.toString());
-//		}
-			return aisRecord;
-		} else {
-			// Other types than 1, 2, 3, not managed yet.
-			throw new AISException(String.format("Message type %d. Not managed yet.", messageType));
-			// return null;
+				break;
+			case 4:
+				for (AISDataType4 a : AISDataType4.values()) {
+					if (a.to() < binString.length()) {
+						String binStr = binString.substring(a.from(), a.to());
+						int intValue = Integer.parseInt(binStr, 2);
+						if (a.equals(AISDataType4.LATITUDE) || a.equals(AISDataType4.LONGITUDE)) {
+							if ((a.equals(AISDataType4.LATITUDE) && intValue == (91 * 600_000)) ||
+									(a.equals(AISDataType4.LONGITUDE) && intValue == (181 * 600_000))) {
+								intValue = 0;
+							} else if ((a.equals(AISDataType4.LATITUDE) && intValue > (90 * 600_000)) ||
+									(a.equals(AISDataType4.LONGITUDE) && intValue > (180 * 600_000))) {
+								intValue = -Integer.parseInt(twosComplement(new StringBuffer(binStr)), 2);
+							}
+						}
+						setAISData(a, aisRecord, intValue);
+						if (verbose) {
+							System.out.println(String.format("Data %s, %s, %d chars becomes %d",
+									a,
+									binStr,
+									binStr.length(),
+									intValue));
+						}
+					} else if (verbose) {
+						System.out.println(">> Out of binString");
+					}
+				}
+				break;
+			default:
+				throw new AISException(String.format("Message type %d. Not managed yet.", messageType));
+				// break;
 		}
+		return aisRecord;
+
 	}
 
 	public static class AISException extends Exception {
@@ -248,31 +344,50 @@ AIS Message type 2:
 		return binStr.toString();
 	}
 
-	private static void setAISData(AISData a, AISRecord ar, int value) {
-		if (a.equals(AISData.MESSAGE_TYPE)) {
+	private static void setAISData(AISDataType123 a, AISRecord ar, int value) {
+		if (a.equals(AISDataType123.MESSAGE_TYPE)) {
 			ar.setMessageType(value);
-		} else if (a.equals(AISData.REPEAT_INDICATOR)) {
+		} else if (a.equals(AISDataType123.REPEAT_INDICATOR)) {
 			ar.setRepeatIndicator(value);
-		} else if (a.equals(AISData.MMSI)) {
+		} else if (a.equals(AISDataType123.MMSI)) {
 			ar.setMMSI(value);
-		} else if (a.equals(AISData.NAV_STATUS)) {
+		} else if (a.equals(AISDataType123.NAV_STATUS)) {
 			ar.setNavStatus(value);
-		} else if (a.equals(AISData.ROT)) {
+		} else if (a.equals(AISDataType123.ROT)) {
 			ar.setRot(value);
-		} else if (a.equals(AISData.SOG)) {
+		} else if (a.equals(AISDataType123.SOG)) {
 			ar.setSog(value);
-		} else if (a.equals(AISData.POS_ACC)) {
+		} else if (a.equals(AISDataType123.POS_ACC)) {
 			ar.setPosAcc(value);
-		} else if (a.equals(AISData.LONGITUDE)) {
+		} else if (a.equals(AISDataType123.LONGITUDE)) {
 			ar.setLongitude(value);
-		} else if (a.equals(AISData.LATITUDE)) {
+		} else if (a.equals(AISDataType123.LATITUDE)) {
 			ar.setLatitude(value);
-		} else if (a.equals(AISData.COG)) {
+		} else if (a.equals(AISDataType123.COG)) {
 			ar.setCog(value);
-		} else if (a.equals(AISData.HDG)) {
+		} else if (a.equals(AISDataType123.HDG)) {
 			ar.setHdg(value);
-		} else if (a.equals(AISData.TIME_STAMP)) {
+		} else if (a.equals(AISDataType123.TIME_STAMP)) {
 			ar.setUtc(value);
+		}
+	}
+
+	private static void setAISData(AISDataType4 a, AISRecord ar, int value) {
+		if (a.equals(AISDataType4.MESSAGE_TYPE)) {
+			ar.setMessageType(value);
+		} else if (a.equals(AISDataType4.REPEAT_INDICATOR)) {
+			ar.setRepeatIndicator(value);
+		} else if (a.equals(AISDataType4.MMSI)) {
+			ar.setMMSI(value);
+
+			// TODO UTC DateTime
+
+		} else if (a.equals(AISDataType4.POS_ACC)) {
+			ar.setPosAcc(value);
+		} else if (a.equals(AISDataType4.LONGITUDE)) {
+			ar.setLongitude(value);
+		} else if (a.equals(AISDataType4.LATITUDE)) {
+			ar.setLatitude(value);
 		}
 	}
 
@@ -459,8 +574,34 @@ AIS Message type 2:
 		@Override
 		public String toString() {
 			String str = "";
-			str = "Type:" + messageType + ", Repeat:" + repeatIndicator + ", MMSI:" + MMSI + ", status:" + decodeStatus(navStatus) + ", rot:" + rot +
-							", Pos:" + latitude + "/" + longitude + " (Acc:" + posAcc + "), COG:" + cog + ", SOG:" + sog + ", HDG:" + hdg;
+			switch (messageType) {
+				case 1:
+				case 2:
+				case 3:
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, status:%s, rot:%d, Pos:%f/%f (Acc:%d), COG:%f, SOG:%f, HDG:%d",
+							messageType,
+							repeatIndicator,
+							MMSI,
+							decodeStatus(navStatus),
+							rot,
+							latitude,
+							longitude,
+							posAcc,
+							cog,
+							sog,
+							hdg);
+					break;
+				case 4:
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Pos:%f/%f",
+							messageType,
+							repeatIndicator,
+							MMSI,
+							latitude,
+							longitude);
+					break;
+				default:
+					break;
+			}
 			return str;
 		}
 
@@ -582,7 +723,7 @@ AIS Message type 2:
 							System.err.println("For [" + line + "], " + ex.toString());
 						}
 					} else if (!line.startsWith("#")) {
-						// TODO else parse NMEA
+						// TODO else parse NMEA?
 						System.out.println(String.format("Non AIS String... %s", line));
 					}
 				}
