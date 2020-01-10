@@ -321,10 +321,9 @@ Works for Sun, Moon, Venus, Mars, Jupiter, Saturn, and 58 stars.
 ## TODOs, next...
 
 - `npm` for non-java resource sharing (local registry)
-- Minify JavaScript resources (Done, see WebComponents repo).
+- Minify JavaScript resources (Done, see [WebComponents repo](https://github.com/OlivierLD/WebComponents)). &#9989;
 - GRIB rendering (in full), coming good.
 - Routing features
 - Use the GRIBs available through [Outernet](https://outernet.is/) (Need more thoughts...) ?
-- Implement visual widgets as `web-components` (see [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WebComponents/oliv-components),
-and [here](http://raspberrypi.lediouris.net/webcomponents/index.html))...
+- Implement visual widgets as `web-components` (see [here](https://olivierld.github.io/webcomponents/gallery.html))...
 
