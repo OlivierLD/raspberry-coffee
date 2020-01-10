@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * Work in Progress
  * Good doc at https://gpsd.gitlab.io/gpsd/AIVDM.html
+ * On-line decoder at https://www.aggsoft.com/ais-decoder.htm
  */
 public class AISParser {
 	public final static boolean verbose = "true".equals(System.getProperty("ais.verbose"));
@@ -74,7 +75,7 @@ AIS Message type 2:
   155-168 SOTDMA Slot Offset
    */
 
-	public enum AISData { // Generic
+	public enum AISData { // Generic, first 3 fields.
 		MESSAGE_TYPE(0, 6, "Message Type"),
 		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
 		MMSI(8, 38, "userID (MMSI)");
@@ -183,6 +184,7 @@ AIS Message type 2:
 	}
 
 	public final static String AIS_PREFIX = "!AIVDM";
+
 	private final static int PREFIX_POS = 0;
 	private final static int NB_SENTENCES_POS = 1;
 	private final static int AIS_DATA_POS = 5;

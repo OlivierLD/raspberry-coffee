@@ -81,7 +81,7 @@ public final class GeomUtil {
 		return diff;
 	}
 	/**
-	 * Calculates great-circle bearing between two points from and to.
+	 * Calculates great-circle (orthodromie) bearing between two points from and to.
 	 * @param fromL latitude from, in degrees
 	 * @param fromG longitude from, in degrees
 	 * @param toL latitude to, in degrees

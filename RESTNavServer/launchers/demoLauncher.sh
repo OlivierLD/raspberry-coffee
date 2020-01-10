@@ -2,7 +2,6 @@
 # Describes the different scenarios
 # Uses runNavServer.sh
 #
-# If first param is 'Y', launch a browser after starting the server
 LAUNCH_BROWSER=N
 WITH_PROXY=N
 #
@@ -241,7 +240,7 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+		    openBrowser "http://localhost:9999/web/nmea/admin.html"
 	    fi
 	    GO=false
 	    ;;

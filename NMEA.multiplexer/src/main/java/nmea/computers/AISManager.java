@@ -16,7 +16,7 @@ import java.util.Properties;
 
 /**
  * AIS Manager
- * Uses current position and AIS data to detect possible threats
+ * Uses current position and AIS data to detect possible collision threats
  */
 public class AISManager extends Computer {
 
@@ -29,8 +29,6 @@ public class AISManager extends Computer {
 	}
 
 	/**
-	 * Receives the data, and potentially produces new ones.
-	 *
 	 * Wait for AIS data (not cached), get the position from the cache,
 	 * and computes threat.
 	 *
