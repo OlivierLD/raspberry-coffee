@@ -21,7 +21,8 @@ import java.util.Properties;
 public class AISManager extends Computer {
 
 	private double minimumDistance = 20D;
-	private final static double HEADING_FORK = 10;
+	private final static double DEFAULT_HEADING_FORK = 10;
+	private double headingFork = DEFAULT_HEADING_FORK;
 
 	public AISManager(Multiplexer mux) {
 		super(mux);
@@ -54,7 +55,7 @@ public class AISManager extends Computer {
 
 							if (distToTarget <= this.minimumDistance) {
 								double diffHeading = GeomUtil.bearingDiff(bearingFromTarget, aisRecord.getCog());
-								if (diffHeading < HEADING_FORK) { // Possible collision route
+								if (diffHeading < this.headingFork) { // Possible collision route
 									// TODO Honk!
 									System.out.println(String.format("!!! Possible collision with %s, at %s / %s\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f",
 											aisRecord.getMMSI(),
@@ -92,6 +93,7 @@ public class AISManager extends Computer {
 	public void setProperties(Properties props) {
 		this.props = props;
 		this.minimumDistance = Double.parseDouble(props.getProperty("minimum.distance", String.valueOf(this.minimumDistance)));
+		this.headingFork = Double.parseDouble(props.getProperty("heading.fork.width", String.valueOf(DEFAULT_HEADING_FORK)));
 	}
 
 	public static class AISComputerBean {
