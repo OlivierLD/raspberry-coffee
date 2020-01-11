@@ -342,6 +342,11 @@ public class AISParser {
 			multipleMessage = true;
 			if ("1".equals(dataElement[CURR_SENTENCE_IDX])) {
 				unfinishedSentence = new StringBuffer();
+			} else {
+				if (unfinishedSentence == null) {
+					// Incoherent state
+					throw new AISException(String.format("Incoherent state: Message #%s, without having seen #1", dataElement[CURR_SENTENCE_IDX]));
+				}
 			}
 		  if (dataElement[NB_SENTENCES_POS].equals(dataElement[CURR_SENTENCE_IDX])) {
 			  multipleMessageReady = true;
@@ -614,27 +619,27 @@ public class AISParser {
 		} else if (a.equals(AISDataType5.MMSI)) {
 			ar.setMMSI(value);
 		} else if (a.equals(AISDataType5.AIS_VERSION)) {
-			ar.setAis_version(value);
+			ar.setAisVersion(value);
 		} else if (a.equals(AISDataType5.IMO_NUMBER)) {
-			ar.setImo_number(value);
+			ar.setImoNumber(value);
 		} else if (a.equals(AISDataType5.SHIP_TYPE)) {
-			ar.setShip_type(value);
+			ar.setShipType(value);
 		} else if (a.equals(AISDataType5.DIM_TO_BOW)) {
-			ar.setDim_to_bow(value);
+			ar.setDimToBow(value);
 		} else if (a.equals(AISDataType5.DIM_TO_STERN)) {
-			ar.setDim_to_stern(value);
+			ar.setDimToStern(value);
 		} else if (a.equals(AISDataType5.DIM_TO_PORT)) {
-			ar.setDim_to_port(value);
+			ar.setDimToPort(value);
 		} else if (a.equals(AISDataType5.DIM_TO_STBD)) {
-			ar.setDim_to_stbd(value);
+			ar.setDimToStbd(value);
 		} else if (a.equals(AISDataType5.ETA_MONTH)) {
-			ar.setEta_month(value);
+			ar.setEtaMonth(value);
 		} else if (a.equals(AISDataType5.ETA_DAY)) {
-			ar.setEta_day(value);
+			ar.setEtaDay(value);
 		} else if (a.equals(AISDataType5.ETA_HOUR)) {
-			ar.setEta_hour(value);
+			ar.setEtaHour(value);
 		} else if (a.equals(AISDataType5.ETA_MINUTE)) {
-			ar.setEta_minute(value);
+			ar.setEtaMinute(value);
 		} else if (a.equals(AISDataType5.DRAUGHT)) {
 			ar.setDraught(value);
 		}
@@ -791,24 +796,36 @@ public class AISParser {
 			recordTimeStamp = now;
 		}
 
-		public int getAis_version() {
-			return (int)recordContent.get(AIS_VERSION);
+		public int getAisVersion() {
+			try {
+				return (int)recordContent.get(AIS_VERSION);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
-		public void setAis_version(int ais_version) {
+		public void setAisVersion(int ais_version) {
 			recordContent.put(AIS_VERSION, ais_version);
 		}
 
-		public int getImo_number() {
-			return (int)recordContent.get(IMO_NUMBER);
+		public int getImoNumber() {
+			try {
+				return (int)recordContent.get(IMO_NUMBER);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
-		public void setImo_number(int imo_number) {
+		public void setImoNumber(int imo_number) {
 			recordContent.put(AIS_VERSION, imo_number);
 		}
 
 		public String getCallSign() {
-			return (String)recordContent.get(CALL_SIGN);
+			try {
+				return (String)recordContent.get(CALL_SIGN);
+			} catch (Exception ex) {
+				return "";
+			}
 		}
 
 		public void setCallSign(String callSign) {
@@ -816,87 +833,131 @@ public class AISParser {
 		}
 
 		public String getVesselName() {
-			return (String)recordContent.get(VESSEL_NAME);
+			try {
+				return (String)recordContent.get(VESSEL_NAME);
+			} catch (Exception ex) {
+				return "";
+			}
 		}
 
 		public void setVesselName(String vesselName) {
 			recordContent.put(VESSEL_NAME, vesselName);
 		}
 
-		public int getShip_type() {
-			return (int)recordContent.get(SHIP_TYPE);
+		public int getShipType() {
+			try {
+				return (int)recordContent.get(SHIP_TYPE);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
-		public void setShip_type(int ship_type) {
+		public void setShipType(int ship_type) {
 			recordContent.put(SHIP_TYPE, ship_type);
 		}
 
-		public int getDim_to_bow() {
-			return (int)recordContent.get(DIM_TO_BOW);
+		public int getDimToBow() {
+			try {
+				return (int)recordContent.get(DIM_TO_BOW);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
-		public void setDim_to_bow(int dim_to_bow) {
+		public void setDimToBow(int dim_to_bow) {
 			recordContent.put(DIM_TO_BOW, dim_to_bow);
 		}
 
-		public int getDim_to_stern() {
-			return (int)recordContent.get(DIM_TO_STERN);
+		public int getDimToStern() {
+			try {
+				return (int)recordContent.get(DIM_TO_STERN);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
-		public void setDim_to_stern(int dim_to_stern) {
+		public void setDimToStern(int dim_to_stern) {
 			recordContent.put(DIM_TO_STERN, dim_to_stern);
 		}
 
-		public int getDim_to_port() {
-			return (int)recordContent.get(DIM_TO_PORT);
+		public int getDimToPort() {
+			try {
+				return (int)recordContent.get(DIM_TO_PORT);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
-		public void setDim_to_port(int dim_to_port) {
+		public void setDimToPort(int dim_to_port) {
 			recordContent.put(DIM_TO_PORT, dim_to_port);
 		}
 
-		public int getDim_to_stbd() {
-			return (int)recordContent.get(DIM_TO_STBD);
+		public int getDimToStbd() {
+			try {
+				return (int)recordContent.get(DIM_TO_STBD);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
-		public void setDim_to_stbd(int dim_to_stbd) {
+		public void setDimToStbd(int dim_to_stbd) {
 			recordContent.put(DIM_TO_STBD, dim_to_stbd);
 		}
 
-		public int getEta_month() {
-			return (int)recordContent.get(ETA_MONTH);
+		public int getEtaMonth() {
+			try {
+				return (int)recordContent.get(ETA_MONTH);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
-		public void setEta_month(int eta_month) {
+		public void setEtaMonth(int eta_month) {
 			recordContent.put(ETA_MONTH, eta_month);
 		}
 
-		public int getEta_day() {
-			return (int)recordContent.get(ETA_DAY);
+		public int getEtaDay() {
+			try {
+				return (int)recordContent.get(ETA_DAY);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
-		public void setEta_day(int eta_day) {
+		public void setEtaDay(int eta_day) {
 			recordContent.put(ETA_DAY, eta_day);
 		}
 
-		public int getEta_hour() {
-			return (int)recordContent.get(ETA_HOUR);
+		public int getEtaHour() {
+			try {
+				return (int)recordContent.get(ETA_HOUR);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
-		public void setEta_hour(int eta_hour) {
+		public void setEtaHour(int eta_hour) {
 			recordContent.put(ETA_HOUR, eta_hour);
 		}
 
-		public int getEta_minute() {
-			return (int)recordContent.get(ETA_MINUTE);
+		public int getEtaMinute() {
+			try {
+				return (int)recordContent.get(ETA_MINUTE);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
-		public void setEta_minute(int eta_minute) {
+		public void setEtaMinute(int eta_minute) {
 			recordContent.put(ETA_MINUTE, eta_minute);
 		}
 
 		public int getDraught() {
-			return (int)recordContent.get(DRAUGHT);
+			try {
+				return (int)recordContent.get(DRAUGHT);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setDraught(int draught) {
@@ -904,7 +965,11 @@ public class AISParser {
 		}
 
 		public String getDestination() {
-			return (String)recordContent.get(DESTINATION);
+			try {
+				return (String)recordContent.get(DESTINATION);
+			} catch (Exception ex) {
+				return "";
+			}
 		}
 
 		public void setDestination(String destination) {
@@ -912,7 +977,11 @@ public class AISParser {
 		}
 
 		public int getOffset1() {
-			return (int)recordContent.get(OFFSET_1);
+			try {
+				return (int)recordContent.get(OFFSET_1);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setOffset1(int offset1) {
@@ -920,7 +989,11 @@ public class AISParser {
 		}
 
 		public int getTimeout1() {
-			return (int)recordContent.get(TIMEOUT_1);
+			try {
+				return (int)recordContent.get(TIMEOUT_1);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setTimeout1(int timeout1) {
@@ -928,7 +1001,11 @@ public class AISParser {
 		}
 
 		public int getIncrement1() {
-			return (int)recordContent.get(INCREMENT_1);
+			try {
+				return (int)recordContent.get(INCREMENT_1);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setIncrement1(int increment1) {
@@ -944,7 +1021,11 @@ public class AISParser {
 		}
 
 		public int getTimeout2() {
-			return (int)recordContent.get(TIMEOUT_2);
+			try {
+				return (int)recordContent.get(TIMEOUT_2);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setTimeout2(int timeout2) {
@@ -952,7 +1033,11 @@ public class AISParser {
 		}
 
 		public int getIncrement2() {
-			return (int)recordContent.get(INCREMENT_2);
+			try {
+				return (int)recordContent.get(INCREMENT_2);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setIncrement2(int increment2) {
@@ -960,7 +1045,11 @@ public class AISParser {
 		}
 
 		public int getOffset3() {
-			return (int)recordContent.get(OFFSET_3);
+			try {
+				return (int)recordContent.get(OFFSET_3);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setOffset3(int offset3) {
@@ -968,7 +1057,11 @@ public class AISParser {
 		}
 
 		public int getTimeout3() {
-			return (int)recordContent.get(TIMEOUT_3);
+			try {
+				return (int)recordContent.get(TIMEOUT_3);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setTimeout3(int timeout3) {
@@ -976,7 +1069,11 @@ public class AISParser {
 		}
 
 		public int getIncrement3() {
-			return (int)recordContent.get(INCREMENT_3);
+			try {
+				return (int)recordContent.get(INCREMENT_3);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setIncrement3(int increment3) {
@@ -984,7 +1081,11 @@ public class AISParser {
 		}
 
 		public int getOffset4() {
-			return (int)recordContent.get(OFFSET_4);
+			try {
+				return (int)recordContent.get(OFFSET_4);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setOffset4(int offset4) {
@@ -992,7 +1093,11 @@ public class AISParser {
 		}
 
 		public int getTimeout4() {
-			return (int)recordContent.get(TIMEOUT_4);
+			try {
+				return (int)recordContent.get(TIMEOUT_4);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setTimeout4(int timeout4) {
@@ -1000,7 +1105,11 @@ public class AISParser {
 		}
 
 		public int getIncrement4() {
-			return (int)recordContent.get(INCREMENT_4);
+			try {
+				return (int)recordContent.get(INCREMENT_4);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setIncrement4(int increment4) {
@@ -1008,7 +1117,11 @@ public class AISParser {
 		}
 
 		public int getInterrogatedMMSI() {
-			return (int)recordContent.get(INTERROGATED_MMSI);
+			try {
+				return (int)recordContent.get(INTERROGATED_MMSI);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setInterrogatedMMSI(int interrogatedMMSI) {
@@ -1016,7 +1129,11 @@ public class AISParser {
 		}
 
 		public int getFirstMessageType() {
-			return (int)recordContent.get(FIRST_MESSAGE_TYPE);
+			try {
+				return (int)recordContent.get(FIRST_MESSAGE_TYPE);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setFirstMessageType(int firstMessageType) {
@@ -1024,7 +1141,11 @@ public class AISParser {
 		}
 
 		public int getFirstSlotOffset() {
-			return (int)recordContent.get(FIRST_SLOT_OFFSET);
+			try {
+				return (int)recordContent.get(FIRST_SLOT_OFFSET);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setFirstSlotOffset(int firstSlotOffset) {
@@ -1032,7 +1153,11 @@ public class AISParser {
 		}
 
 		public int getSecondMessageType() {
-			return (int)recordContent.get(SECOND_MESSAGE_TYPE);
+			try {
+				return (int)recordContent.get(SECOND_MESSAGE_TYPE);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setSecondMessageType(int secondMessageType) {
@@ -1040,7 +1165,11 @@ public class AISParser {
 		}
 
 		public int getSecondSlotOffset() {
-			return (int)recordContent.get(SECOND_SLOT_OFFSET);
+			try {
+				return (int)recordContent.get(SECOND_SLOT_OFFSET);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setSecondSlotOffset(int secondSlotOffset) {
@@ -1048,7 +1177,11 @@ public class AISParser {
 		}
 
 		public int getInterrogatedMMSI2() {
-			return (int)recordContent.get(INTERROGATED_MMSI_2);
+			try {
+				return (int)recordContent.get(INTERROGATED_MMSI_2);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setInterrogatedMMSI2(int interrogatedMMSI2) {
@@ -1056,7 +1189,11 @@ public class AISParser {
 		}
 
 		public int getFirstMessageType2() {
-			return (int)recordContent.get(FIRST_MESSAGE_TYPE_2);
+			try {
+				return (int)recordContent.get(FIRST_MESSAGE_TYPE_2);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setFirstMessageType2(int firstMessageType2) {
@@ -1064,7 +1201,11 @@ public class AISParser {
 		}
 
 		public int getFirstSlotOffset2() {
-			return (int)recordContent.get(FIRST_SLOT_OFFSET_2);
+			try {
+				return (int)recordContent.get(FIRST_SLOT_OFFSET_2);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setFirstSlotOffset2(int firstSlotOffset2) {
@@ -1100,7 +1241,11 @@ public class AISParser {
 		}
 
 		public int getNavStatus() {
-			return (int)recordContent.get(NAV_STATUS);
+			try {
+				return (int) recordContent.get(NAV_STATUS);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setRot(int rot) {
@@ -1108,7 +1253,11 @@ public class AISParser {
 		}
 
 		public int getRot() {
-			return (int)recordContent.get(ROT);
+			try {
+				return (int)recordContent.get(ROT);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setSog(int sog) {
@@ -1116,7 +1265,11 @@ public class AISParser {
 		}
 
 		public float getSog() {
-			return (float)recordContent.get(SOG);
+			try {
+				return (float)recordContent.get(SOG);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setPosAcc(int posAcc) {
@@ -1124,7 +1277,11 @@ public class AISParser {
 		}
 
 		public int getPosAcc() {
-			return (int)recordContent.get(POS_ACC);
+			try {
+				return (int)recordContent.get(POS_ACC);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setLongitude(int longitude) {
@@ -1132,7 +1289,11 @@ public class AISParser {
 		}
 
 		public float getLongitude() {
-			return (float)recordContent.get(LONGITUDE);
+			try {
+				return (float)recordContent.get(LONGITUDE);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setLatitude(int latitude) {
@@ -1140,7 +1301,11 @@ public class AISParser {
 		}
 
 		public float getLatitude() {
-			return (float)recordContent.get(LATITUDE);
+			try {
+				return (float) recordContent.get(LATITUDE);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setCog(int cog) {
@@ -1148,7 +1313,11 @@ public class AISParser {
 		}
 
 		public float getCog() {
-			return (float)recordContent.get(COG);
+			try {
+				return (float)recordContent.get(COG);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setHdg(int hdg) {
@@ -1156,7 +1325,11 @@ public class AISParser {
 		}
 
 		public int getHdg() {
-			return (int)recordContent.get(HDG);
+			try {
+				return (int)recordContent.get(HDG);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setUtc(int utc) {
@@ -1164,49 +1337,77 @@ public class AISParser {
 		}
 
 		public int getUtc() {
-			return (int)recordContent.get(UTC);
+			try {
+				return (int)recordContent.get(UTC);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setUtcYear(int d) {
 			recordContent.put(UTC_YEAR, d);
 		}
 		public int getUtcYear() {
-			return (int)recordContent.get(UTC_YEAR);
+			try {
+				return (int)recordContent.get(UTC_YEAR);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setUtcMonth(int d) {
 			recordContent.put(UTC_MONTH, d);
 		}
 		public int getUtcMonth() {
-			return (int)recordContent.get(UTC_MONTH);
+			try {
+				return (int)recordContent.get(UTC_MONTH);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setUtcDay(int d) {
 			recordContent.put(UTC_DAY, d);
 		}
 		public int getUtcDay() {
-			return (int)recordContent.get(UTC_DAY);
+			try {
+				return (int)recordContent.get(UTC_DAY);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setUtcHour(int d) {
 			recordContent.put(UTC_HOUR, d);
 		}
 		public int getUtcHour() {
-			return (int)recordContent.get(UTC_HOUR);
+			try {
+				return (int)recordContent.get(UTC_HOUR);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setUtcMinute(int d) {
 			recordContent.put(UTC_MINUTE, d);
 		}
 		public int getUtcMinute() {
-			return (int)recordContent.get(UTC_MINUTE);
+			try {
+				return (int)recordContent.get(UTC_MINUTE);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		public void setUtcSecond(int d) {
 			recordContent.put(UTC_SECOND, d);
 		}
 		public int getUtcSecond() {
-			return (int)recordContent.get(UTC_SECOND);
+			try {
+				return (int)recordContent.get(UTC_SECOND);
+			} catch (Exception ex) {
+				return 0;
+			}
 		}
 
 		static String decodeStatus(int stat) {
@@ -1450,14 +1651,14 @@ public class AISParser {
 							MMSI,
 							getCallSign().trim(),
 							getVesselName().trim(),
-							decodeType(getShip_type()),
-							getDim_to_bow() + getDim_to_stern(),
-							getDim_to_port() + getDim_to_stbd(),
+							decodeType(getShipType()),
+							getDimToBow() + getDimToStern(),
+							getDimToPort() + getDimToStbd(),
 							(getDraught() / 10f),
-							getEta_month(),
-							getEta_day(),
-							getEta_hour(),
-							getEta_minute(),
+							getEtaMonth(),
+							getEtaDay(),
+							getEtaHour(),
+							getEtaMinute(),
 							getDestination().trim());
 					break;
 				case 15:
