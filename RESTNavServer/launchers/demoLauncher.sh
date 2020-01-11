@@ -234,7 +234,6 @@ do
 	    ;;
 	  "13")
   	  PROP_FILE=nmea.mux.ais.test.yaml
-  	  NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} -Dais.cache.verbose=true"
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
