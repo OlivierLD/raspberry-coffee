@@ -128,7 +128,7 @@ public class NMEADataCache
 	public static final String NMEA_AS_IS = "NMEA_AS_IS";
 
 	public static final String AIS = "ais";
-	private Map<Integer, AISParser.AISRecord> aisMap = new HashMap<>();
+	private Map<Integer, Map<Integer, AISParser.AISRecord>> aisMap = new HashMap<>();
 
 	// Damping ArrayList's
 	private transient int dampingSize = 1;
@@ -294,9 +294,17 @@ public class NMEADataCache
 			if (nmeaSentence.startsWith(AISParser.AIS_PREFIX)) { // AIS
 				try {
 					AISParser.AISRecord rec = AISParser.parseAIS(nmeaSentence);
-					if (rec != null) {
-						aisMap.put(rec.getMMSI(), rec);  // Id is the MMSI.
+					if (rec != null) { // Case of Multi-Record or un-managed type
+						Map<Integer, AISParser.AISRecord> mapOfTypes = aisMap.get(rec.getMMSI());
+						if (mapOfTypes == null) {
+							mapOfTypes = new HashMap<>();
+						}
+						mapOfTypes.put(rec.getMessageType(), rec);
+						aisMap.put(rec.getMMSI(), mapOfTypes);  // Id is the MMSI/type.
 						//	System.out.println("(" + aisMap.size() + " boat(s)) " + rec.toString());
+						if (System.getProperty("ais.cache.verbose", "false").equals("true")) {
+							System.err.println(String.format(">> AIS %s, type %s", rec.getMMSI(), rec.getMessageType()));
+						}
 					}
 					this.put(AIS, aisMap);
 				} catch (AISParser.AISException aisExc) {
