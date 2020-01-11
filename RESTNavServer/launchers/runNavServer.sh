@@ -49,6 +49,7 @@ TIDE_VERBOSE=false
 ASTRO_VERBOSE=false
 IMAGE_VERBOSE=false
 GRIB_VERBOSE=false
+AIS_VERBOSE=true
 #
 CP=../build/libs/RESTNavServer-1.0-all.jar
 OS=`uname -a | awk '{ print $1 }'`
@@ -87,6 +88,7 @@ JAVA_OPTS="$JAVA_OPTS -Dtide.verbose=$TIDE_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=$ASTRO_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dimage.verbose=$IMAGE_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dgrib.verbose=$GRIB_VERBOSE"
+JAVA_OPTS="$JAVA_OPTS -Dais.cache.verbose=$AIS_VERBOSE"
 # JAVA_OPTS="$JAVA_OPTS -Drest.verbose=true"
 #
 if [[ "$USE_PROXY" == "true" ]]

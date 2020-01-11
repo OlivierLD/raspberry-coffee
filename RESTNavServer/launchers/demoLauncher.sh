@@ -233,7 +233,6 @@ do
 	    GO=false
 	    ;;
 	  "13")
-  	  NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} -Dais.cache.verbose=true"
   	  # PROP_FILE=nmea.mux.ais.test.yaml
   	  PROP_FILE=nmea.mux.gps.ais.yaml
 	    echo -e "Launching Nav Server with $PROP_FILE"
