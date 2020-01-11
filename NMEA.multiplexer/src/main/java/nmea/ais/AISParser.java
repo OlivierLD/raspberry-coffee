@@ -145,6 +145,55 @@ public class AISParser {
 		}
 	}
 
+	// Type 5 (Boat data), on 2 sentences.
+	public enum AISDataType5 {
+		MESSAGE_TYPE(0, 6, "Message Type"),
+		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
+		MMSI(8, 38, "userID (MMSI)"),
+		AIS_VERSION(38, 40, "AIS Version"),
+		IMO_NUMBER(40, 70, "IMO Number"),
+		CALL_SIGN(70, 112, "Call Sign"),
+		VESSEL_NAME(112, 232, "Vessel Name"),
+		SHIP_TYPE(232, 240, "Ship Type"),
+		DIM_TO_BOW(240, 249, "Dimension to Bow"),
+		DIM_TO_STERN(249, 258, "Dimension to Stern"),
+		DIM_TO_PORT(258, 264, "Dimension to Port"),
+		DIM_TO_STBD(264, 270, "Dimension to Starboard"),
+		EPFD(270, 274, "EPFD"),
+		ETA_MONTH(274, 278, "ETA Month"),
+		ETA_DAY(278, 283, "ETA Day"),
+		ETA_HOUR(283, 288, "ETA Hour"),
+		ETA_MINUTE(288, 294, "ETA Minute"),
+		DRAUGHT(294, 302, "Draught"),
+		DESTINATION(302, 422, "Destination"),
+		DTE(422, 423, "DTE"),
+		SPARE(423, 424, "Spare");
+
+		private static final long serialVersionUID = 1L;
+
+		private final int from;          // start offset
+		private final int to;            // end offset
+		public final String description; // Description
+
+		AISDataType5(int from, int to, String desc) {
+			this.from = from;
+			this.to = to;
+			this.description = desc;
+		}
+
+		public int from() {
+			return from;
+		}
+
+		public int to() {
+			return to;
+		}
+
+		public String description() {
+			return description;
+		}
+	}
+
 	public enum AISDataType15 {
 		MESSAGE_TYPE(0, 6, "Message Type"),
 		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
@@ -238,6 +287,7 @@ public class AISParser {
 
 	private final static int PREFIX_POS = 0;
 	private final static int NB_SENTENCES_POS = 1;
+	private final static int CURR_SENTENCE_IDX = 2;
 	private final static int AIS_DATA_POS = 5;
 
 	public static int getMessageType(String sentence) {
@@ -257,6 +307,23 @@ public class AISParser {
 		return messageType;
 	}
 
+	private static String decode6BitCharacters(String binString) {
+		int len = binString.length() / 6;
+		String text = "";
+		for (int i = 0; i < len; i++) {
+			String oneBinChar = binString.substring(i * 6, (i + 1) * 6);
+			int cc = Integer.parseInt(oneBinChar, 2) + 64;
+			if (cc > 96) {
+				cc -= 64;
+			}
+			char c = (char) (cc);
+			text += c;
+		}
+		return text.replace('`', ' ');
+	}
+
+	private static StringBuffer unfinishedSentence = null;
+
 	public static AISRecord parseAIS(String sentence) throws AISException {
 		boolean valid = StringParsers.validCheckSum(sentence);
 		if (!valid) {
@@ -267,8 +334,17 @@ public class AISParser {
 			throw new RuntimeException("Unmanaged AIS Prefix [" + dataElement[PREFIX_POS] + "].");
 		}
 
-		if (!dataElement[NB_SENTENCES_POS].equals("1")) { // More than 1 message: Not Managed
-			throw new AISException(String.format("String [%s], more than 1 message (%s). Not managed yet.", sentence, dataElement[NB_SENTENCES_POS]));
+		boolean multipleMessage = false;
+		boolean multipleMessageReady = false;
+		if (!dataElement[NB_SENTENCES_POS].equals("1")) { // More than 1 message.
+			multipleMessage = true;
+			if ("1".equals(dataElement[CURR_SENTENCE_IDX])) {
+				unfinishedSentence = new StringBuffer();
+			}
+		  if (dataElement[NB_SENTENCES_POS].equals(dataElement[CURR_SENTENCE_IDX])) {
+			  multipleMessageReady = true;
+		  }
+//			throw new AISException(String.format("String [%s], more than 1 message (%s). Not managed yet.", sentence, dataElement[NB_SENTENCES_POS]));
 			// return null;
 		}
 
@@ -277,15 +353,28 @@ public class AISParser {
 //  System.out.println("[" + aisData + "]");
 		String binString = encodedAIStoBinaryString(aisData);
 //  System.out.println(binString);
+		if (multipleMessage) {
+			unfinishedSentence.append(binString);
+		}
+		if (multipleMessage && multipleMessageReady) {
+			binString = unfinishedSentence.toString();
+		}
 
 		int messageType = 0;
 		// Get message type
-		if (AISData.MESSAGE_TYPE.to() < binString.length()) {
-			String binStr = binString.substring(AISData.MESSAGE_TYPE.from(), AISData.MESSAGE_TYPE.to());
-			messageType = Integer.parseInt(binStr, 2);
+		if (multipleMessage && !multipleMessageReady) {
+			aisRecord = null;
+		} else {
+			if (AISData.MESSAGE_TYPE.to() < binString.length()) {
+				String binStr = binString.substring(AISData.MESSAGE_TYPE.from(), AISData.MESSAGE_TYPE.to());
+				messageType = Integer.parseInt(binStr, 2);
+			}
 		}
 
 		switch (messageType) {
+			case 0:
+				// Multiple message, not ready yet
+				break;
 			case 1:
 			case 2:
 			case 3:
@@ -344,6 +433,31 @@ public class AISParser {
 					} else if (verbose) {
 						System.out.println(">> Out of binString");
 					}
+				}
+				break;
+			case 5:
+				if (!multipleMessage) {
+					// Bizarre
+					throw new AISException("Type 5 and only 1 message?...");
+				}
+				if (multipleMessageReady) { // then process
+					for (AISDataType5 a : AISDataType5.values()) {
+						if (a.to() < binString.length()) {
+							String binStr = binString.substring(a.from(), a.to());
+							if (a.equals(AISDataType5.CALL_SIGN) || a.equals(AISDataType5.VESSEL_NAME) || a.equals(AISDataType5.DESTINATION)) {
+								setAISData(a, aisRecord, decode6BitCharacters(binStr));
+							} else {
+								int intValue = Integer.parseInt(binStr, 2);
+								setAISData(a, aisRecord, intValue);
+							}
+						} else if (verbose) {
+							System.out.println(">> Out of binString");
+						}
+					}
+					// After processing, reset buffer
+					unfinishedSentence = null;
+				} else {
+					aisRecord = null;
 				}
 				break;
 			case 15:
@@ -490,6 +604,49 @@ public class AISParser {
 		}
 	}
 
+	private static void setAISData(AISDataType5 a, AISRecord ar, int value) {
+		if (a.equals(AISDataType5.MESSAGE_TYPE)) {
+			ar.setMessageType(value);
+		} else if (a.equals(AISDataType5.REPEAT_INDICATOR)) {
+			ar.setRepeatIndicator(value);
+		} else if (a.equals(AISDataType5.MMSI)) {
+			ar.setMMSI(value);
+		} else if (a.equals(AISDataType5.AIS_VERSION)) {
+			ar.setAis_version(value);
+		} else if (a.equals(AISDataType5.IMO_NUMBER)) {
+			ar.setImo_number(value);
+		} else if (a.equals(AISDataType5.SHIP_TYPE)) {
+			ar.setShip_type(value);
+		} else if (a.equals(AISDataType5.DIM_TO_BOW)) {
+			ar.setDim_to_bow(value);
+		} else if (a.equals(AISDataType5.DIM_TO_STERN)) {
+			ar.setDim_to_stern(value);
+		} else if (a.equals(AISDataType5.DIM_TO_PORT)) {
+			ar.setDim_to_port(value);
+		} else if (a.equals(AISDataType5.DIM_TO_STBD)) {
+			ar.setDim_to_stbd(value);
+		} else if (a.equals(AISDataType5.ETA_MONTH)) {
+			ar.setEta_month(value);
+		} else if (a.equals(AISDataType5.ETA_DAY)) {
+			ar.setEta_day(value);
+		} else if (a.equals(AISDataType5.ETA_HOUR)) {
+			ar.setEta_hour(value);
+		} else if (a.equals(AISDataType5.ETA_MINUTE)) {
+			ar.setEta_minute(value);
+		} else if (a.equals(AISDataType5.DRAUGHT)) {
+			ar.setDraught(value);
+		}
+	}
+	private static void setAISData(AISDataType5 a, AISRecord ar, String value) {
+		if (a.equals(AISDataType5.CALL_SIGN)) {
+			ar.setCallSign(value);
+		} else if (a.equals(AISDataType5.VESSEL_NAME)) {
+			ar.setVesselName(value);
+		} else if (a.equals(AISDataType5.DESTINATION)) {
+			ar.setDestination(value);
+		}
+	}
+
 	private static void setAISData(AISDataType15 a, AISRecord ar, int value) {
 		if (a.equals(AISDataType15.MESSAGE_TYPE)) {
 			ar.setMessageType(value);
@@ -587,6 +744,23 @@ public class AISParser {
 		private int utc_minute;
 		private int utc_second;
 
+		private int ais_version;
+		private int imo_number;
+		private String callSign;
+		private String vesselName;
+		private int ship_type;
+
+		private int dim_to_bow;
+		private int dim_to_stern;
+		private int dim_to_port;
+		private int dim_to_stbd;
+		private int eta_month;
+		private int eta_day;
+		private int eta_hour;
+		private int eta_minute;
+		private int draught;
+		private String destination;
+
 		private int interrogatedMMSI;
 		private int firstMessageType;
 		private int firstSlotOffset;
@@ -605,6 +779,136 @@ public class AISParser {
 		private int offset3;
 		private int timeout3;
 		private int increment3;
+		private int offset4;
+		private int timeout4;
+		private int increment4;
+
+		private long recordTimeStamp;
+
+		AISRecord(long now) {
+			super();
+			recordTimeStamp = now;
+		}
+
+		public int getAis_version() {
+			return ais_version;
+		}
+
+		public void setAis_version(int ais_version) {
+			this.ais_version = ais_version;
+		}
+
+		public int getImo_number() {
+			return imo_number;
+		}
+
+		public void setImo_number(int imo_number) {
+			this.imo_number = imo_number;
+		}
+
+		public String getCallSign() {
+			return callSign;
+		}
+
+		public void setCallSign(String callSign) {
+			this.callSign = callSign;
+		}
+
+		public String getVesselName() {
+			return vesselName;
+		}
+
+		public void setVesselName(String vesselName) {
+			this.vesselName = vesselName;
+		}
+
+		public int getShip_type() {
+			return ship_type;
+		}
+
+		public void setShip_type(int ship_type) {
+			this.ship_type = ship_type;
+		}
+
+		public int getDim_to_bow() {
+			return dim_to_bow;
+		}
+
+		public void setDim_to_bow(int dim_to_bow) {
+			this.dim_to_bow = dim_to_bow;
+		}
+
+		public int getDim_to_stern() {
+			return dim_to_stern;
+		}
+
+		public void setDim_to_stern(int dim_to_stern) {
+			this.dim_to_stern = dim_to_stern;
+		}
+
+		public int getDim_to_port() {
+			return dim_to_port;
+		}
+
+		public void setDim_to_port(int dim_to_port) {
+			this.dim_to_port = dim_to_port;
+		}
+
+		public int getDim_to_stbd() {
+			return dim_to_stbd;
+		}
+
+		public void setDim_to_stbd(int dim_to_stbd) {
+			this.dim_to_stbd = dim_to_stbd;
+		}
+
+		public int getEta_month() {
+			return eta_month;
+		}
+
+		public void setEta_month(int eta_month) {
+			this.eta_month = eta_month;
+		}
+
+		public int getEta_day() {
+			return eta_day;
+		}
+
+		public void setEta_day(int eta_day) {
+			this.eta_day = eta_day;
+		}
+
+		public int getEta_hour() {
+			return eta_hour;
+		}
+
+		public void setEta_hour(int eta_hour) {
+			this.eta_hour = eta_hour;
+		}
+
+		public int getEta_minute() {
+			return eta_minute;
+		}
+
+		public void setEta_minute(int eta_minute) {
+			this.eta_minute = eta_minute;
+		}
+
+		public int getDraught() {
+			return draught;
+		}
+
+		public void setDraught(int draught) {
+			this.draught = draught;
+		}
+
+		public String getDestination() {
+			return destination;
+		}
+
+		public void setDestination(String destination) {
+			this.destination = destination;
+		}
 
 		public int getOffset1() {
 			return offset1;
@@ -702,10 +1006,6 @@ public class AISParser {
 			this.increment4 = increment4;
 		}
 
-		private int offset4;
-		private int timeout4;
-		private int increment4;
-
 		public int getInterrogatedMMSI() {
 			return interrogatedMMSI;
 		}
@@ -768,13 +1068,6 @@ public class AISParser {
 
 		public void setFirstSlotOffset2(int firstSlotOffset2) {
 			this.firstSlotOffset2 = firstSlotOffset2;
-		}
-
-		private long recordTimeStamp;
-
-		AISRecord(long now) {
-			super();
-			recordTimeStamp = now;
 		}
 
 		public void setMessageType(int messageType) {
@@ -961,6 +1254,159 @@ public class AISParser {
 			return status;
 		}
 
+		static String decodeType(int type) {
+			String strType = "";
+			switch (type) {
+				case 20:
+					strType = "WIG";
+					break;
+				case 21:
+					strType = "WIG - Cat A";
+					break;
+				case 22:
+					strType = "WIG - Cat B";
+					break;
+				case 23:
+					strType = "WIG - Cat C";
+					break;
+				case 24:
+					strType = "WIG - Cat D";
+					break;
+				case 30:
+					strType = "Fishing";
+					break;
+				case 31:
+					strType = "Towing";
+					break;
+				case 32:
+					strType = "Towing (Big)";
+					break;
+				case 33:
+					strType = "Dredging";
+					break;
+				case 34:
+					strType = "Diving Ops";
+					break;
+				case 35:
+					strType = "Military Ops";
+					break;
+				case 36:
+					strType = "Sailing";
+					break;
+				case 37:
+					strType = "Pleasure Craft";
+					break;
+				case 40:
+					strType = "High Speed Craft";
+					break;
+				case 41:
+					strType = "High Speed Craft - Cat A";
+					break;
+				case 42:
+					strType = "High Speed Craft - Cat B";
+					break;
+				case 43:
+					strType = "High Speed Craft - Cat C";
+					break;
+				case 44:
+					strType = "High Speed Craft - Cat D";
+					break;
+				case 50:
+					strType = "Pilot";
+					break;
+				case 51:
+					strType = "Search and Rescue vessel";
+					break;
+				case 52:
+					strType = "Tug";
+					break;
+				case 53:
+					strType = "Port Tender";
+					break;
+				case 54:
+					strType = "Anti-pollution Equipment";
+					break;
+				case 55:
+					strType = "Law Enforcement";
+					break;
+				case 58:
+					strType = "Medical Transport";
+					break;
+				case 59:
+					strType = "Non Combatant";
+					break;
+				case 60:
+					strType = "Passenger Ship";
+					break;
+				case 61:
+					strType = "Passenger Ship - Cat A";
+					break;
+				case 62:
+					strType = "Passenger Ship - Cat B";
+					break;
+				case 63:
+					strType = "Passenger Ship - Cat C";
+					break;
+				case 64:
+					strType = "Passenger Ship - Cat D";
+					break;
+				case 70:
+				case 79:
+					strType = "Cargo Ship";
+					break;
+				case 71:
+					strType = "Cargo Ship - Cat A";
+					break;
+				case 72:
+					strType = "Cargo Ship - Cat B";
+					break;
+				case 73:
+					strType = "Cargo Ship - Cat C";
+					break;
+				case 74:
+					strType = "Cargo Ship - Cat D";
+					break;
+				case 80:
+				case 89:
+					strType = "Tanker";
+					break;
+				case 81:
+					strType = "Tanker - Cat A";
+					break;
+				case 82:
+					strType = "Tanker - Cat B";
+					break;
+				case 83:
+					strType = "Tanker - Cat C";
+					break;
+				case 84:
+					strType = "Tanker - Cat D";
+					break;
+				case 90:
+				case 99:
+					strType = "Other";
+					break;
+				case 91:
+					strType = "Other - Cat A";
+					break;
+				case 92:
+					strType = "Other - Cat B";
+					break;
+				case 93:
+					strType = "Other - Cat C";
+					break;
+				case 94:
+					strType = "Other - Cat D";
+					break;
+				case 0:
+				default:
+					strType = "Not available";
+					break;
+			}
+
+			return strType;
+		}
+
 		@Override
 		public String toString() {
 			String str = "";
@@ -995,6 +1441,23 @@ public class AISParser {
 							utc_hour,
 							utc_minute,
 							utc_second);
+					break;
+				case 5:
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, CallSign: %s, Name:%s, type: %s, Length: %d, Width: %d, Draught: %.02f, ETA: %d-%d %d:%d, Destination: %s",
+							messageType,
+							repeatIndicator,
+							MMSI,
+							callSign.trim(),
+							vesselName.trim(),
+							decodeType(ship_type),
+							dim_to_bow + dim_to_stern,
+							dim_to_port + dim_to_stbd,
+							(draught / 10f),
+							eta_month,
+							eta_day,
+							eta_hour,
+							eta_minute,
+							destination.trim());
 					break;
 				case 15:
 					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Int MMSI %d, 1st MessType %d, 1st SlotOffset %d, 2nd MessType %d, 2nd SlotOffset %d, Int MMSI(2) %d, 1st MessType(2) %d, 1st SlotOffset(2) %d",
@@ -1140,7 +1603,10 @@ public class AISParser {
 				"!AIVDM,1,1,,B,D03Ovk1b5N>5N4ffqMhNfp0,2*57",
 				"!AIVDM,1,1,,A,403Ovk1v@EG4Do>jNbEdjDw028;l,0*34",
 				"!AIVDM,1,1,,B,403Ovk1v@EG4Do>jNbEdjDw028;n,0*35",
-				"!AIVDM,1,1,,B,13P<DT00BIo>gG<EW=p2d28R0<23,0*41"
+				"!AIVDM,1,1,,B,13P<DT00BIo>gG<EW=p2d28R0<23,0*41",
+				// Multiple
+				"!AIVDM,2,1,6,B,55T6aT42AGrO<ELCJ20t<D4r0Pu0F22222222216CPIC94DfNBEDp3hB,0*0A",
+				"!AIVDM,2,2,6,B,p88888888888880,2*69"
 		);
 		aisFromDaisy.forEach(aisStr -> {
 			try {
