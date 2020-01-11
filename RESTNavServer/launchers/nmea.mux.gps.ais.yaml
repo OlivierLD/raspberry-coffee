@@ -8,20 +8,20 @@ context:
   http.port: 9999
   init.cache: true
 channels:
-  - type: serial
+        #  - type: serial
     # GPS
-    port: /dev/ttyUSB0
-    baudrate: 4800
-    verbose: false
+    #    port: /dev/ttyUSB0
+    #    baudrate: 4800
+    #    verbose: false
   - type: serial
     # AIS
     port: /dev/ttyS0
     baudrate: 38400
     verbose: false
 forwarders:
-  - type: tcp
-    port: 7002
-    properties: no.ais.properties
+        #  - type: tcp
+        #    port: 7002
+        #    properties: no.ais.properties
   - type: tcp
     subclass: nmea.forwarders.AISTCPServer
     port: 7003
