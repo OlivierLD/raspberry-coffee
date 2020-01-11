@@ -7,7 +7,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Work in Progress
@@ -724,66 +726,65 @@ public class AISParser {
 	}
 
 	public static class AISRecord {
-		private int messageType;
-		private int repeatIndicator;
-		private int MMSI;
-		private int navStatus;
-		private int rot;
-		private float sog;
-		private int posAcc;
-		private float longitude;
-		private float latitude;
-		private float cog;
-		private int hdg;
-		private int utc;
+		private int messageType;      // Mandatory
+		private int repeatIndicator;  // Mandatory
+		private int MMSI;             // Mandatory
+		private long recordTimeStamp; // Mandatory
 
-		private int utc_year;
-		private int utc_month;
-		private int utc_day;
-		private int utc_hour;
-		private int utc_minute;
-		private int utc_second;
+		Map<String, Object> recordContent = new HashMap<>();
 
-		private int ais_version;
-		private int imo_number;
-		private String callSign;
-		private String vesselName;
-		private int ship_type;
+		private static final String NAV_STATUS = "NavStatus";
+		private static final String ROT = "rot";
+		private static final String SOG = "sog";
+		private static final String COG = "cog";
+		private static final String HDG = "hdg";
+		private final static String POS_ACC = "PosAcc";
+		private static final String LONGITUDE = "longitude";
+		private static final String LATITUDE = "latitude";
+		private static final String UTC = "utc";
+		private static final String UTC_YEAR = "UtcYear";
+		private static final String UTC_MONTH = "UtcMonth";
+		private static final String UTC_DAY = "UtDay";
+		private static final String UTC_HOUR = "UtcHour";
+		private static final String UTC_MINUTE = "UtcMinute";
+		private static final String UTC_SECOND = "UtcSecond";
+		private static final String AIS_VERSION = "AisVersion";
+		private static final String IMO_NUMBER = "ImoNumber";
+		private static final String CALL_SIGN = "CallSign";
+		private static final String VESSEL_NAME = "VesselName";
+		private static final String SHIP_TYPE = "ShipType";
+		private static final String DIM_TO_BOW = "Dim2Bow";
+		private static final String DIM_TO_STERN = "Dim2Stern";
+		private static final String DIM_TO_PORT = "Dim2Port";
+		private static final String DIM_TO_STBD = "Dim2Stbd";
+		private static final String ETA_MONTH = "EtaMonth";
+		private static final String ETA_DAY = "EtaDay";
+		private static final String ETA_HOUR = "EtaHour";
+		private static final String ETA_MINUTE = "EtaMinute";
+		private static final String DRAUGHT = "Draught";
+		private static final String DESTINATION = "Destination";
 
-		private int dim_to_bow;
-		private int dim_to_stern;
-		private int dim_to_port;
-		private int dim_to_stbd;
-		private int eta_month;
-		private int eta_day;
-		private int eta_hour;
-		private int eta_minute;
-		private int draught;
-		private String destination;
+		private static final String INTERROGATED_MMSI = "InterrogatedMMSI";
+		private static final String FIRST_MESSAGE_TYPE = "FirstMessageType";
+		private static final String FIRST_SLOT_OFFSET = "FirstSlotOffset";
+		private static final String SECOND_MESSAGE_TYPE = "SecondMessageType";
+		private static final String SECOND_SLOT_OFFSET = "SecondSlotOffset";
+		private static final String INTERROGATED_MMSI_2 = "InterrogatedMMSI2";
+		private static final String FIRST_MESSAGE_TYPE_2 = "FirstMessageType2";
+		private static final String FIRST_SLOT_OFFSET_2 = "FirstSlotOffset2";
 
-		private int interrogatedMMSI;
-		private int firstMessageType;
-		private int firstSlotOffset;
-		private int secondMessageType;
-		private int secondSlotOffset;
-		private int interrogatedMMSI2;
-		private int firstMessageType2;
-		private int firstSlotOffset2;
-
-		private int offset1;
-		private int timeout1;
-		private int increment1;
-		private int offset2;
-		private int timeout2;
-		private int increment2;
-		private int offset3;
-		private int timeout3;
-		private int increment3;
-		private int offset4;
-		private int timeout4;
-		private int increment4;
-
-		private long recordTimeStamp;
+		private static final String OFFSET_1 = "offset1";
+		private static final String TIMEOUT_1 = "timeout1";
+		private static final String INCREMENT_1 = "increment1";
+		private static final String OFFSET_2 = "offset2";
+		private static final String TIMEOUT_2 = "timeout2";
+		private static final String INCREMENT_2 = "increment2";
+		private static final String OFFSET_3 = "offset3";
+		private static final String TIMEOUT_3 = "timeout3";
+		private static final String INCREMENT_3 = "increment3";
+		private static final String OFFSET_4 = "offset4";
+		private static final String TIMEOUT_4 = "timeout4";
+		private static final String INCREMENT_4 = "increment4";
 
 		AISRecord(long now) {
 			super();
@@ -791,283 +792,283 @@ public class AISParser {
 		}
 
 		public int getAis_version() {
-			return ais_version;
+			return (int)recordContent.get(AIS_VERSION);
 		}
 
 		public void setAis_version(int ais_version) {
-			this.ais_version = ais_version;
+			recordContent.put(AIS_VERSION, ais_version);
 		}
 
 		public int getImo_number() {
-			return imo_number;
+			return (int)recordContent.get(IMO_NUMBER);
 		}
 
 		public void setImo_number(int imo_number) {
-			this.imo_number = imo_number;
+			recordContent.put(AIS_VERSION, imo_number);
 		}
 
 		public String getCallSign() {
-			return callSign;
+			return (String)recordContent.get(CALL_SIGN);
 		}
 
 		public void setCallSign(String callSign) {
-			this.callSign = callSign;
+			recordContent.put(CALL_SIGN, callSign);
 		}
 
 		public String getVesselName() {
-			return vesselName;
+			return (String)recordContent.get(VESSEL_NAME);
 		}
 
 		public void setVesselName(String vesselName) {
-			this.vesselName = vesselName;
+			recordContent.put(VESSEL_NAME, vesselName);
 		}
 
 		public int getShip_type() {
-			return ship_type;
+			return (int)recordContent.get(SHIP_TYPE);
 		}
 
 		public void setShip_type(int ship_type) {
-			this.ship_type = ship_type;
+			recordContent.put(SHIP_TYPE, ship_type);
 		}
 
 		public int getDim_to_bow() {
-			return dim_to_bow;
+			return (int)recordContent.get(DIM_TO_BOW);
 		}
 
 		public void setDim_to_bow(int dim_to_bow) {
-			this.dim_to_bow = dim_to_bow;
+			recordContent.put(DIM_TO_BOW, dim_to_bow);
 		}
 
 		public int getDim_to_stern() {
-			return dim_to_stern;
+			return (int)recordContent.get(DIM_TO_STERN);
 		}
 
 		public void setDim_to_stern(int dim_to_stern) {
-			this.dim_to_stern = dim_to_stern;
+			recordContent.put(DIM_TO_STERN, dim_to_stern);
 		}
 
 		public int getDim_to_port() {
-			return dim_to_port;
+			return (int)recordContent.get(DIM_TO_PORT);
 		}
 
 		public void setDim_to_port(int dim_to_port) {
-			this.dim_to_port = dim_to_port;
+			recordContent.put(DIM_TO_PORT, dim_to_port);
 		}
 
 		public int getDim_to_stbd() {
-			return dim_to_stbd;
+			return (int)recordContent.get(DIM_TO_STBD);
 		}
 
 		public void setDim_to_stbd(int dim_to_stbd) {
-			this.dim_to_stbd = dim_to_stbd;
+			recordContent.put(DIM_TO_STBD, dim_to_stbd);
 		}
 
 		public int getEta_month() {
-			return eta_month;
+			return (int)recordContent.get(ETA_MONTH);
 		}
 
 		public void setEta_month(int eta_month) {
-			this.eta_month = eta_month;
+			recordContent.put(ETA_MONTH, eta_month);
 		}
 
 		public int getEta_day() {
-			return eta_day;
+			return (int)recordContent.get(ETA_DAY);
 		}
 
 		public void setEta_day(int eta_day) {
-			this.eta_day = eta_day;
+			recordContent.put(ETA_DAY, eta_day);
 		}
 
 		public int getEta_hour() {
-			return eta_hour;
+			return (int)recordContent.get(ETA_HOUR);
 		}
 
 		public void setEta_hour(int eta_hour) {
-			this.eta_hour = eta_hour;
+			recordContent.put(ETA_HOUR, eta_hour);
 		}
 
 		public int getEta_minute() {
-			return eta_minute;
+			return (int)recordContent.get(ETA_MINUTE);
 		}
 
 		public void setEta_minute(int eta_minute) {
-			this.eta_minute = eta_minute;
+			recordContent.put(ETA_MINUTE, eta_minute);
 		}
 
 		public int getDraught() {
-			return draught;
+			return (int)recordContent.get(DRAUGHT);
 		}
 
 		public void setDraught(int draught) {
-			this.draught = draught;
+			recordContent.put(DRAUGHT, draught);
 		}
 
 		public String getDestination() {
-			return destination;
+			return (String)recordContent.get(DESTINATION);
 		}
 
 		public void setDestination(String destination) {
-			this.destination = destination;
+			recordContent.put(DESTINATION, destination);
 		}
 
 		public int getOffset1() {
-			return offset1;
+			return (int)recordContent.get(OFFSET_1);
 		}
 
 		public void setOffset1(int offset1) {
-			this.offset1 = offset1;
+			recordContent.put(OFFSET_1, offset1);
 		}
 
 		public int getTimeout1() {
-			return timeout1;
+			return (int)recordContent.get(TIMEOUT_1);
 		}
 
 		public void setTimeout1(int timeout1) {
-			this.timeout1 = timeout1;
+			recordContent.put(TIMEOUT_1, timeout1);
 		}
 
 		public int getIncrement1() {
-			return increment1;
+			return (int)recordContent.get(INCREMENT_1);
 		}
 
 		public void setIncrement1(int increment1) {
-			this.increment1 = increment1;
+			recordContent.put(INCREMENT_1, increment1);
 		}
 
 		public int getOffset2() {
-			return offset2;
+			return (int)recordContent.get(OFFSET_2);
 		}
 
 		public void setOffset2(int offset2) {
-			this.offset2 = offset2;
+			recordContent.put(OFFSET_2, offset2);
 		}
 
 		public int getTimeout2() {
-			return timeout2;
+			return (int)recordContent.get(TIMEOUT_2);
 		}
 
 		public void setTimeout2(int timeout2) {
-			this.timeout2 = timeout2;
+			recordContent.put(TIMEOUT_2, timeout2);
 		}
 
 		public int getIncrement2() {
-			return increment2;
+			return (int)recordContent.get(INCREMENT_2);
 		}
 
 		public void setIncrement2(int increment2) {
-			this.increment2 = increment2;
+			recordContent.put(INCREMENT_2, increment2);
 		}
 
 		public int getOffset3() {
-			return offset3;
+			return (int)recordContent.get(OFFSET_3);
 		}
 
 		public void setOffset3(int offset3) {
-			this.offset3 = offset3;
+			recordContent.put(OFFSET_3, offset3);
 		}
 
 		public int getTimeout3() {
-			return timeout3;
+			return (int)recordContent.get(TIMEOUT_3);
 		}
 
 		public void setTimeout3(int timeout3) {
-			this.timeout3 = timeout3;
+			recordContent.put(TIMEOUT_3, timeout3);
 		}
 
 		public int getIncrement3() {
-			return increment3;
+			return (int)recordContent.get(INCREMENT_3);
 		}
 
 		public void setIncrement3(int increment3) {
-			this.increment3 = increment3;
+			recordContent.put(INCREMENT_3, increment3);
 		}
 
 		public int getOffset4() {
-			return offset4;
+			return (int)recordContent.get(OFFSET_4);
 		}
 
 		public void setOffset4(int offset4) {
-			this.offset4 = offset4;
+			recordContent.put(OFFSET_4, offset4);
 		}
 
 		public int getTimeout4() {
-			return timeout4;
+			return (int)recordContent.get(TIMEOUT_4);
 		}
 
 		public void setTimeout4(int timeout4) {
-			this.timeout4 = timeout4;
+			recordContent.put(TIMEOUT_4, timeout4);
 		}
 
 		public int getIncrement4() {
-			return increment4;
+			return (int)recordContent.get(INCREMENT_4);
 		}
 
 		public void setIncrement4(int increment4) {
-			this.increment4 = increment4;
+			recordContent.put(INCREMENT_4, increment4);
 		}
 
 		public int getInterrogatedMMSI() {
-			return interrogatedMMSI;
+			return (int)recordContent.get(INTERROGATED_MMSI);
 		}
 
 		public void setInterrogatedMMSI(int interrogatedMMSI) {
-			this.interrogatedMMSI = interrogatedMMSI;
+			recordContent.put(INTERROGATED_MMSI, interrogatedMMSI);
 		}
 
 		public int getFirstMessageType() {
-			return firstMessageType;
+			return (int)recordContent.get(FIRST_MESSAGE_TYPE);
 		}
 
 		public void setFirstMessageType(int firstMessageType) {
-			this.firstMessageType = firstMessageType;
+			recordContent.put(FIRST_MESSAGE_TYPE, firstMessageType);
 		}
 
 		public int getFirstSlotOffset() {
-			return firstSlotOffset;
+			return (int)recordContent.get(FIRST_SLOT_OFFSET);
 		}
 
 		public void setFirstSlotOffset(int firstSlotOffset) {
-			this.firstSlotOffset = firstSlotOffset;
+			recordContent.put(FIRST_SLOT_OFFSET, firstSlotOffset);
 		}
 
 		public int getSecondMessageType() {
-			return secondMessageType;
+			return (int)recordContent.get(SECOND_MESSAGE_TYPE);
 		}
 
 		public void setSecondMessageType(int secondMessageType) {
-			this.secondMessageType = secondMessageType;
+			recordContent.put(SECOND_MESSAGE_TYPE, secondMessageType);
 		}
 
 		public int getSecondSlotOffset() {
-			return secondSlotOffset;
+			return (int)recordContent.get(SECOND_SLOT_OFFSET);
 		}
 
 		public void setSecondSlotOffset(int secondSlotOffset) {
-			this.secondSlotOffset = secondSlotOffset;
+			recordContent.put(SECOND_SLOT_OFFSET, secondSlotOffset);
 		}
 
 		public int getInterrogatedMMSI2() {
-			return interrogatedMMSI2;
+			return (int)recordContent.get(INTERROGATED_MMSI_2);
 		}
 
 		public void setInterrogatedMMSI2(int interrogatedMMSI2) {
-			this.interrogatedMMSI2 = interrogatedMMSI2;
+			recordContent.put(INTERROGATED_MMSI_2, interrogatedMMSI2);
 		}
 
 		public int getFirstMessageType2() {
-			return firstMessageType2;
+			return (int)recordContent.get(FIRST_MESSAGE_TYPE_2);
 		}
 
 		public void setFirstMessageType2(int firstMessageType2) {
-			this.firstMessageType2 = firstMessageType2;
+			recordContent.put(FIRST_MESSAGE_TYPE_2, firstMessageType2);
 		}
 
 		public int getFirstSlotOffset2() {
-			return firstSlotOffset2;
+			return (int)recordContent.get(FIRST_SLOT_OFFSET_2);
 		}
 
 		public void setFirstSlotOffset2(int firstSlotOffset2) {
-			this.firstSlotOffset2 = firstSlotOffset2;
+			recordContent.put(FIRST_SLOT_OFFSET_2, firstSlotOffset2);
 		}
 
 		public void setMessageType(int messageType) {
@@ -1095,117 +1096,117 @@ public class AISParser {
 		}
 
 		public void setNavStatus(int navStatus) {
-			this.navStatus = navStatus;
+			recordContent.put(NAV_STATUS, navStatus);
 		}
 
 		public int getNavStatus() {
-			return navStatus;
+			return (int)recordContent.get(NAV_STATUS);
 		}
 
 		public void setRot(int rot) {
-			this.rot = rot;
+			recordContent.put(ROT, rot);
 		}
 
 		public int getRot() {
-			return rot;
+			return (int)recordContent.get(ROT);
 		}
 
 		public void setSog(int sog) {
-			this.sog = (sog / 10f);
+			recordContent.put(SOG, (sog / 10f));
 		}
 
 		public float getSog() {
-			return sog;
+			return (float)recordContent.get(SOG);
 		}
 
 		public void setPosAcc(int posAcc) {
-			this.posAcc = posAcc;
+			recordContent.put(POS_ACC, posAcc);
 		}
 
 		public int getPosAcc() {
-			return posAcc;
+			return (int)recordContent.get(POS_ACC);
 		}
 
 		public void setLongitude(int longitude) {
-			this.longitude = (longitude / 600_000f);
+			recordContent.put(LONGITUDE, (longitude / 600_000f));
 		}
 
 		public float getLongitude() {
-			return longitude;
+			return (float)recordContent.get(LONGITUDE);
 		}
 
 		public void setLatitude(int latitude) {
-			this.latitude = (latitude / 600_000f);
+			recordContent.put(LATITUDE, (latitude / 600_000f));
 		}
 
 		public float getLatitude() {
-			return latitude;
+			return (float)recordContent.get(LATITUDE);
 		}
 
 		public void setCog(int cog) {
-			this.cog = (cog / 10f);
+			recordContent.put(COG, (cog / 10f));
 		}
 
 		public float getCog() {
-			return cog;
+			return (float)recordContent.get(COG);
 		}
 
 		public void setHdg(int hdg) {
-			this.hdg = hdg;
+			recordContent.put(HDG, hdg);
 		}
 
 		public int getHdg() {
-			return hdg;
+			return (int)recordContent.get(HDG);
 		}
 
 		public void setUtc(int utc) {
-			this.utc = utc;
+			recordContent.put(UTC, utc);
 		}
 
 		public int getUtc() {
-			return utc;
+			return (int)recordContent.get(UTC);
 		}
 
 		public void setUtcYear(int d) {
-			this.utc_year = d;
+			recordContent.put(UTC_YEAR, d);
 		}
 		public int getUtcYear() {
-			return this.utc_year;
+			return (int)recordContent.get(UTC_YEAR);
 		}
 
 		public void setUtcMonth(int d) {
-			this.utc_month = d;
+			recordContent.put(UTC_MONTH, d);
 		}
 		public int getUtcMonth() {
-			return this.utc_month;
+			return (int)recordContent.get(UTC_MONTH);
 		}
 
 		public void setUtcDay(int d) {
-			this.utc_day = d;
+			recordContent.put(UTC_DAY, d);
 		}
 		public int getUtcDay() {
-			return this.utc_day;
+			return (int)recordContent.get(UTC_DAY);
 		}
 
 		public void setUtcHour(int d) {
-			this.utc_hour = d;
+			recordContent.put(UTC_HOUR, d);
 		}
 		public int getUtcHour() {
-			return this.utc_hour;
+			return (int)recordContent.get(UTC_HOUR);
 		}
 
 		public void setUtcMinute(int d) {
-			this.utc_minute = d;
+			recordContent.put(UTC_MINUTE, d);
 		}
 		public int getUtcMinute() {
-			return this.utc_minute;
+			return (int)recordContent.get(UTC_MINUTE);
 		}
 
 		public void setUtcSecond(int d) {
-			this.utc_second = d;
+			recordContent.put(UTC_SECOND, d);
 		}
 		public int getUtcSecond() {
-			return this.utc_second;
+			return (int)recordContent.get(UTC_SECOND);
 		}
 
 		static String decodeStatus(int stat) {
@@ -1418,78 +1419,78 @@ public class AISParser {
 							messageType,
 							repeatIndicator,
 							MMSI,
-							decodeStatus(navStatus),
-							rot,
-							latitude,
-							longitude,
-							posAcc,
-							cog,
-							sog,
-							hdg,
-							utc);
+							decodeStatus(getNavStatus()),
+							getRot(),
+							getLatitude(),
+							getLongitude(),
+							getPosAcc(),
+							getCog(),
+							getSog(),
+							getHdg(),
+							getUtc());
 					break;
 				case 4:
 					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Pos:%f/%f, UTC %d-%d-%d %d:%d:%d",
 							messageType,
 							repeatIndicator,
 							MMSI,
-							latitude,
-							longitude,
-							utc_year,
-							utc_month,
-							utc_day,
-							utc_hour,
-							utc_minute,
-							utc_second);
+							getLatitude(),
+							getLongitude(),
+							getUtcYear(),
+							getUtcMonth(),
+							getUtcDay(),
+							getUtcHour(),
+							getUtcMinute(),
+							getUtcSecond());
 					break;
 				case 5:
 					str = String.format("Type:%d, Repeat:%d, MMSI:%d, CallSign: %s, Name:%s, type: %s, Length: %d, Width: %d, Draught: %.02f, ETA: %d-%d %d:%d, Destination: %s",
 							messageType,
 							repeatIndicator,
 							MMSI,
-							callSign.trim(),
-							vesselName.trim(),
-							decodeType(ship_type),
-							dim_to_bow + dim_to_stern,
-							dim_to_port + dim_to_stbd,
-							(draught / 10f),
-							eta_month,
-							eta_day,
-							eta_hour,
-							eta_minute,
-							destination.trim());
+							getCallSign().trim(),
+							getVesselName().trim(),
+							decodeType(getShip_type()),
+							getDim_to_bow() + getDim_to_stern(),
+							getDim_to_port() + getDim_to_stbd(),
+							(getDraught() / 10f),
+							getEta_month(),
+							getEta_day(),
+							getEta_hour(),
+							getEta_minute(),
+							getDestination().trim());
 					break;
 				case 15:
 					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Int MMSI %d, 1st MessType %d, 1st SlotOffset %d, 2nd MessType %d, 2nd SlotOffset %d, Int MMSI(2) %d, 1st MessType(2) %d, 1st SlotOffset(2) %d",
 							messageType,
 							repeatIndicator,
 							MMSI,
-							interrogatedMMSI,
-							firstMessageType,
-							firstSlotOffset,
-							secondMessageType,
-							secondSlotOffset,
-							interrogatedMMSI2,
-							firstMessageType2,
-							firstSlotOffset2);
+							getInterrogatedMMSI(),
+							getFirstMessageType(),
+							getFirstSlotOffset(),
+							getSecondMessageType(),
+							getSecondSlotOffset(),
+							getInterrogatedMMSI2(),
+							getFirstMessageType2(),
+							getFirstSlotOffset2());
 					break;
 				case 20:
 					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Offset1: %d, Timeout1: %d, Incr1: %d, Offset2: %d, Timeout2: %d, Incr2: %d, Offset3: %d, Timeout3: %d, Incr3: %d, Offset4: %d, Timeout4: %d, Incr4: %d",
 							messageType,
 							repeatIndicator,
 							MMSI,
-							offset1,
-							timeout1,
-							increment1,
-							offset2,
-							timeout2,
-							increment2,
-							offset3,
-							timeout3,
-							increment3,
-							offset4,
-							timeout4,
-							increment4);
+							getOffset1(),
+							getTimeout1(),
+							getIncrement1(),
+							getOffset2(),
+							getTimeout2(),
+							getIncrement2(),
+							getOffset3(),
+							getTimeout3(),
+							getIncrement3(),
+							getOffset4(),
+							getTimeout4(),
+							getIncrement4());
 					break;
 				default:
 					break;
