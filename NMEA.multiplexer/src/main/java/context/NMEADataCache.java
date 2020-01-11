@@ -300,8 +300,8 @@ public class NMEADataCache
 					}
 					this.put(AIS, aisMap);
 				} catch (AISParser.AISException aisExc) {
-					if (System.getProperty("nmea.cache.verbose", "false").equals("true")) {
-						System.err.println(aisExc.toString());
+					if (System.getProperty("ais.cache.verbose", "false").equals("true")) {
+						System.err.println(String.format(">> AIS %s, %s", nmeaSentence, aisExc.toString()));
 					}
 				} catch (Exception ex) {
 					System.err.println(String.format("\nFor AIS Sentence [%s]", nmeaSentence));
