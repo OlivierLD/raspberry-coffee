@@ -130,6 +130,9 @@ public class NMEADataCache
 	public static final String AIS = "ais";
 	private Map<Integer, Map<Integer, AISParser.AISRecord>> aisMap = new HashMap<>();
 	private final static long AIS_MAX_AGE = 10_000L; // 3_600_000L; // One hour
+	private final static long AIS_CLEANUP_FREQ = 1_000L;
+
+	private Thread aisCleaner = null;
 
 	// Damping ArrayList's
 	private transient int dampingSize = 1;
@@ -198,6 +201,35 @@ public class NMEADataCache
 		// Initialization
 		this.put(CALCULATED_CURRENT, new HashMap<Long, CurrentDefinition>());
 		this.put(NMEA_AS_IS, new HashMap<String, Object>()); // Data is String (regular sentence) or List (like for GSV, List<String>))
+
+		// Start AIS Cleaner thread
+		aisCleaner = new Thread(() -> {
+			while (true) {
+				// Cleanup?
+				synchronized (aisMap) {
+					aisMap.keySet().forEach(mmsi -> {
+						Map<Integer, AISParser.AISRecord> typesMap = aisMap.get(mmsi);
+						typesMap.keySet().forEach(type -> {
+							AISParser.AISRecord aisRecord = typesMap.get(type);
+							if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
+								System.out.println(String.format("Cleanup: Removing AIS Record %d from %d", type, mmsi));
+								typesMap.remove(type);
+							}
+						});
+						if (typesMap.size() == 0) {
+							aisMap.remove(mmsi);
+						}
+					});
+				}
+				try {
+					Thread.sleep(AIS_CLEANUP_FREQ);
+				} catch (InterruptedException ie) {
+					ie.printStackTrace();
+				}
+
+			}
+		}, "AISCleaner");
+		aisCleaner.start();
 	}
 
 	public void reset() {
@@ -303,23 +335,6 @@ public class NMEADataCache
 						synchronized (aisMap) {
 							aisMap.put(rec.getMMSI(), mapOfTypes);  // Id is the MMSI/type.
 						}
-						// Cleanup?
-						synchronized (aisMap) {
-							aisMap.keySet().forEach(mmsi -> {
-								Map<Integer, AISParser.AISRecord> typesMap = aisMap.get(mmsi);
-								typesMap.keySet().forEach(type -> {
-									AISParser.AISRecord aisRecord = typesMap.get(type);
-									if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
-										System.out.println(String.format("Cleanup: Removing AIS Record %d from %d", type, mmsi));
-										typesMap.remove(type);
-									}
-								});
-								if (typesMap.size() == 0) {
-									aisMap.remove(mmsi);
-								}
-							});
-						}
-
 						//	System.out.println("(" + aisMap.size() + " boat(s)) " + rec.toString());
 						if (System.getProperty("ais.cache.verbose", "false").equals("true")) {
 							System.out.println(String.format(">> AIS %s, type %s goes into cache: %s", rec.getMMSI(), rec.getMessageType(), rec.toString()));
