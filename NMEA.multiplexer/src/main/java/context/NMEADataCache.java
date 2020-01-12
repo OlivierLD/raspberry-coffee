@@ -291,7 +291,7 @@ public class NMEADataCache
 //		this.put(NMEA_AS_IS, asIsMap);
 			this.put(LAST_NMEA_SENTENCE, nmeaSentence);
 
-			if (nmeaSentence.startsWith(AISParser.AIS_PREFIX)) { // AIS
+			if (nmeaSentence.startsWith(AISParser.AIS_PREFIX)) { // AIS. TODO A thread to cleanup old AIS records
 				try {
 					AISParser.AISRecord rec = AISParser.parseAIS(nmeaSentence);
 					if (rec != null) { // Case of Multi-Record or un-managed type
@@ -303,7 +303,7 @@ public class NMEADataCache
 						aisMap.put(rec.getMMSI(), mapOfTypes);  // Id is the MMSI/type.
 						//	System.out.println("(" + aisMap.size() + " boat(s)) " + rec.toString());
 						if (System.getProperty("ais.cache.verbose", "false").equals("true")) {
-							System.err.println(String.format(">> AIS %s, type %s", rec.getMMSI(), rec.getMessageType()));
+							System.out.println(String.format(">> AIS %s, type %s goes into cache: %s", rec.getMMSI(), rec.getMessageType(), rec.toString()));
 						}
 					}
 					this.put(AIS, aisMap);
