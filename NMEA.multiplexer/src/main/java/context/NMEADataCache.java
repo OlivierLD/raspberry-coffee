@@ -129,6 +129,7 @@ public class NMEADataCache
 
 	public static final String AIS = "ais";
 	private Map<Integer, Map<Integer, AISParser.AISRecord>> aisMap = new HashMap<>();
+	private final static long AIS_MAX_AGE = 10_000L; // 3_600_000L; // One hour
 
 	// Damping ArrayList's
 	private transient int dampingSize = 1;
@@ -301,6 +302,18 @@ public class NMEADataCache
 						}
 						mapOfTypes.put(rec.getMessageType(), rec);
 						aisMap.put(rec.getMMSI(), mapOfTypes);  // Id is the MMSI/type.
+
+						aisMap.keySet().forEach(k -> {
+							Map<Integer, AISParser.AISRecord> typesMap = aisMap.get(k);
+							typesMap.keySet().forEach(type -> {
+								AISParser.AISRecord aisRecord = typesMap.get(type);
+								if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
+									System.out.println(String.format("Cleanup: Removing AIS Record %d from %d", type, k));
+									typesMap.remove(type);
+								}
+							});
+						});
+
 						//	System.out.println("(" + aisMap.size() + " boat(s)) " + rec.toString());
 						if (System.getProperty("ais.cache.verbose", "false").equals("true")) {
 							System.out.println(String.format(">> AIS %s, type %s goes into cache: %s", rec.getMMSI(), rec.getMessageType(), rec.toString()));
