@@ -206,27 +206,32 @@ public class NMEADataCache
 		aisCleaner = new Thread(() -> {
 			while (true) {
 				// Cleanup?
-				synchronized (aisMap) {
-					aisMap.keySet().forEach(mmsi -> {
-						Map<Integer, AISParser.AISRecord> typesMap = aisMap.get(mmsi);
-						typesMap.keySet().forEach(type -> {
-							AISParser.AISRecord aisRecord = typesMap.get(type);
-							if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
-								System.out.println(String.format("Cleanup: Removing AIS Record %d from %d", type, mmsi));
-								typesMap.remove(type);
+				try {
+					synchronized (aisMap) {
+						aisMap.keySet().forEach(mmsi -> {
+							Map<Integer, AISParser.AISRecord> typesMap = aisMap.get(mmsi);
+							synchronized (typesMap) {
+								typesMap.keySet().forEach(type -> {
+									AISParser.AISRecord aisRecord = typesMap.get(type);
+									if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
+										System.out.println(String.format("=== Cleanup: Removing AIS Record %d from %d ===", type, mmsi));
+										typesMap.remove(type);
+									}
+								});
+								if (typesMap.size() == 0) {
+									aisMap.remove(mmsi);
+								}
 							}
 						});
-						if (typesMap.size() == 0) {
-							aisMap.remove(mmsi);
-						}
-					});
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
 				try {
 					Thread.sleep(AIS_CLEANUP_FREQ);
 				} catch (InterruptedException ie) {
 					ie.printStackTrace();
 				}
-
 			}
 		}, "AISCleaner");
 		aisCleaner.start();
