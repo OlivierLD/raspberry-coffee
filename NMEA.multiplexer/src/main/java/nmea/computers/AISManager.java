@@ -53,7 +53,7 @@ public class AISManager extends Computer {
 
 							if (distToTarget <= this.minimumDistance) {
 								double diffHeading = GeomUtil.bearingDiff(bearingFromTarget, aisRecord.getCog());
-								System.out.println(String.format("In range (%.02f/%.02f nm), diff heading: %.02f", distToTarget, this.minimumDistance, diffHeading));
+								System.out.println(String.format("AISManager >> In range (%.02f/%.02f nm), diff heading: %.02f", distToTarget, this.minimumDistance, diffHeading));
 								if (diffHeading < this.headingFork) { // Possible collision route
 									// TODO Honk!
 									System.out.println(String.format("!!! Possible collision with %s, at %s / %s\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f",
