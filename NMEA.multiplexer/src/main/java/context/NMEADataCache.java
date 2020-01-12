@@ -3,6 +3,7 @@ package context;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import calc.calculation.AstroComputer;
@@ -208,8 +209,10 @@ public class NMEADataCache
 			while (true) {
 				// Cleanup?
 				try {
+					Iterator<Integer> mmsiIterator = aisMap.keySet().iterator();
 					synchronized (aisMap) {
-						aisMap.keySet().forEach(mmsi -> {
+						while (mmsiIterator.hasNext()) {
+							Integer mmsi = mmsiIterator.next();
 							Map<Integer, AISParser.AISRecord> typesMap = aisMap.get(mmsi);
 							synchronized (typesMap) {
 								typesMap.keySet().forEach(type -> {
@@ -223,7 +226,7 @@ public class NMEADataCache
 									aisMap.remove(mmsi);
 								}
 							}
-						});
+						};
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
