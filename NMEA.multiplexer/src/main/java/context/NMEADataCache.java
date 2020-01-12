@@ -1,6 +1,7 @@
 package context;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
 
@@ -128,7 +129,7 @@ public class NMEADataCache
 	public static final String NMEA_AS_IS = "NMEA_AS_IS";
 
 	public static final String AIS = "ais";
-	private Map<Integer, Map<Integer, AISParser.AISRecord>> aisMap = new HashMap<>();
+	private Map<Integer, Map<Integer, AISParser.AISRecord>> aisMap = Collections.synchronizedMap(new HashMap<>());
 	private final static long AIS_MAX_AGE = 10_000L; // 3_600_000L; // One hour
 	private final static long AIS_CLEANUP_FREQ = 1_000L;
 
