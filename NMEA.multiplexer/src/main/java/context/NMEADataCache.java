@@ -1,9 +1,9 @@
 package context;
 
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import calc.calculation.AstroComputer;
@@ -130,7 +130,7 @@ public class NMEADataCache
 	public static final String NMEA_AS_IS = "NMEA_AS_IS";
 
 	public static final String AIS = "ais";
-	private Map<Integer, Map<Integer, AISParser.AISRecord>> aisMap = Collections.synchronizedMap(new HashMap<>());
+	private Map<Integer, Map<Integer, AISParser.AISRecord>> aisMap = new ConcurrentHashMap<>();
 	private final static long AIS_MAX_AGE = 10_000L; // 3_600_000L; // One hour
 	private final static long AIS_CLEANUP_FREQ = 1_000L;
 
@@ -151,7 +151,7 @@ public class NMEADataCache
 					DAMPING,
 					CALCULATED_CURRENT);
 
-	private transient HashMap<String, List<Object>> dampingMap = new HashMap<String, List<Object>>();
+	private transient HashMap<String, List<Object>> dampingMap = new HashMap<>();
 
 	private transient long started = 0L;
 
@@ -223,7 +223,7 @@ public class NMEADataCache
 										System.out.println(String.format("=== Cleanup: Removing AIS Record %d from %d ===", type, mmsi));
 										typesMap.remove(type);
 									}
-								};
+								}
 								if (typesMap.size() == 0) {
 									aisMap.remove(mmsi);
 								}
@@ -340,7 +340,7 @@ public class NMEADataCache
 					if (rec != null) { // Case of Multi-Record or un-managed type
 						Map<Integer, AISParser.AISRecord> mapOfTypes = aisMap.get(rec.getMMSI());
 						if (mapOfTypes == null) {
-							mapOfTypes = Collections.synchronizedMap(new HashMap<>());
+							mapOfTypes = new ConcurrentHashMap<>();
 						}
 						synchronized (mapOfTypes) {
 							mapOfTypes.put(rec.getMessageType(), rec);
