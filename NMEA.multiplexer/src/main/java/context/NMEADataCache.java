@@ -275,7 +275,6 @@ public class NMEADataCache
 
 	public void parseAndFeed(String nmeaSentence) {
 		if (StringParsers.validCheckSum(nmeaSentence)) {
-
 			// Feed pure NMEA cache (NMEA sentences, as they are)
 			String sentenceId = StringParsers.getSentenceID(nmeaSentence);
 			Map<String, Object> asIsMap = (Map<String, Object>)this.get(NMEA_AS_IS);
@@ -301,17 +300,23 @@ public class NMEADataCache
 							mapOfTypes = new HashMap<>();
 						}
 						mapOfTypes.put(rec.getMessageType(), rec);
-						aisMap.put(rec.getMMSI(), mapOfTypes);  // Id is the MMSI/type.
 						synchronized (aisMap) {
-							aisMap.keySet().forEach(k -> {
-								Map<Integer, AISParser.AISRecord> typesMap = aisMap.get(k);
+							aisMap.put(rec.getMMSI(), mapOfTypes);  // Id is the MMSI/type.
+						}
+						// Cleanup?
+						synchronized (aisMap) {
+							aisMap.keySet().forEach(mmsi -> {
+								Map<Integer, AISParser.AISRecord> typesMap = aisMap.get(mmsi);
 								typesMap.keySet().forEach(type -> {
 									AISParser.AISRecord aisRecord = typesMap.get(type);
 									if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
-										System.out.println(String.format("Cleanup: Removing AIS Record %d from %d", type, k));
+										System.out.println(String.format("Cleanup: Removing AIS Record %d from %d", type, mmsi));
 										typesMap.remove(type);
 									}
 								});
+								if (typesMap.size() == 0) {
+									aisMap.remove(mmsi);
+								}
 							});
 						}
 
@@ -320,7 +325,9 @@ public class NMEADataCache
 							System.out.println(String.format(">> AIS %s, type %s goes into cache: %s", rec.getMMSI(), rec.getMessageType(), rec.toString()));
 						}
 					}
-					this.put(AIS, aisMap);
+					synchronized (aisMap) {
+						this.put(AIS, aisMap);
+					}
 				} catch (AISParser.AISException aisExc) {
 					if (System.getProperty("ais.cache.verbose", "false").equals("true")) {
 						System.err.println(String.format(">> AIS %s, %s", nmeaSentence, aisExc.toString()));
