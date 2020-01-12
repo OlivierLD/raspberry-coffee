@@ -214,14 +214,16 @@ public class NMEADataCache
 						while (mmsiIterator.hasNext()) {
 							Integer mmsi = mmsiIterator.next();
 							Map<Integer, AISParser.AISRecord> typesMap = aisMap.get(mmsi);
+							Iterator<Integer> typeIterator = typesMap.keySet().iterator();
 							synchronized (typesMap) {
-								typesMap.keySet().forEach(type -> {
+								while (typeIterator.hasNext()) {
+									Integer type = typeIterator.next();
 									AISParser.AISRecord aisRecord = typesMap.get(type);
 									if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
 										System.out.println(String.format("=== Cleanup: Removing AIS Record %d from %d ===", type, mmsi));
 										typesMap.remove(type);
 									}
-								});
+								};
 								if (typesMap.size() == 0) {
 									aisMap.remove(mmsi);
 								}
@@ -332,15 +334,17 @@ public class NMEADataCache
 //		this.put(NMEA_AS_IS, asIsMap);
 			this.put(LAST_NMEA_SENTENCE, nmeaSentence);
 
-			if (nmeaSentence.startsWith(AISParser.AIS_PREFIX)) { // AIS. TODO A thread to cleanup old AIS records
+			if (nmeaSentence.startsWith(AISParser.AIS_PREFIX)) { // AIS. There is a thread to cleanup old AIS records
 				try {
 					AISParser.AISRecord rec = AISParser.parseAIS(nmeaSentence);
 					if (rec != null) { // Case of Multi-Record or un-managed type
 						Map<Integer, AISParser.AISRecord> mapOfTypes = aisMap.get(rec.getMMSI());
 						if (mapOfTypes == null) {
-							mapOfTypes = new HashMap<>();
+							mapOfTypes = Collections.synchronizedMap(new HashMap<>());
 						}
-						mapOfTypes.put(rec.getMessageType(), rec);
+						synchronized (mapOfTypes) {
+							mapOfTypes.put(rec.getMessageType(), rec);
+						}
 						synchronized (aisMap) {
 							aisMap.put(rec.getMMSI(), mapOfTypes);  // Id is the MMSI/type.
 						}
