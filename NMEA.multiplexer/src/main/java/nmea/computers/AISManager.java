@@ -43,29 +43,30 @@ public class AISManager extends Computer {
 			if (sentence.startsWith(AISParser.AIS_PREFIX)) {
 				try {
 					AISParser.AISRecord aisRecord = AISParser.parseAIS(sentence);
-					if (aisRecord.getLatitude() != 0f && aisRecord.getLongitude() != 0f) {
-						NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
-						GeoPos position = (GeoPos) cache.get(NMEADataCache.POSITION);
-						if (position != null) {
+					if (aisRecord != null) {
+						if (aisRecord.getLatitude() != 0f && aisRecord.getLongitude() != 0f) {
+							NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
+							GeoPos position = (GeoPos) cache.get(NMEADataCache.POSITION);
+							if (position != null) {
 
-							double distToTarget = GeomUtil.haversineNm(position.lat, position.lng, aisRecord.getLatitude(), aisRecord.getLongitude());
-							double bearingFromTarget = GeomUtil.bearingFromTo(aisRecord.getLatitude(), aisRecord.getLongitude(), position.lat, position.lng);
+								double distToTarget = GeomUtil.haversineNm(position.lat, position.lng, aisRecord.getLatitude(), aisRecord.getLongitude());
+								double bearingFromTarget = GeomUtil.bearingFromTo(aisRecord.getLatitude(), aisRecord.getLongitude(), position.lat, position.lng);
 
-							if (distToTarget <= this.minimumDistance) {
-								double diffHeading = GeomUtil.bearingDiff(bearingFromTarget, aisRecord.getCog());
-								System.out.println(String.format("AISManager >> In range (%.02f/%.02f nm), diff heading: %.02f", distToTarget, this.minimumDistance, diffHeading));
-								if (diffHeading < this.headingFork) { // Possible collision route
-									// TODO Honk!
-									System.out.println(String.format("!!! Possible collision with %s, at %s / %s\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f",
-											aisRecord.getMMSI(),
-											GeomUtil.decToSex(aisRecord.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
-											GeomUtil.decToSex(aisRecord.getLongitude(), GeomUtil.SWING, GeomUtil.EW),
-											distToTarget,
-											this.minimumDistance,
-											bearingFromTarget,
-											aisRecord.getCog()));
+								if (distToTarget <= this.minimumDistance) {
+									double diffHeading = GeomUtil.bearingDiff(bearingFromTarget, aisRecord.getCog());
+									System.out.println(String.format("AISManager >> In range (%.02f/%.02f nm), diff heading: %.02f", distToTarget, this.minimumDistance, diffHeading));
+									if (diffHeading < this.headingFork) { // Possible collision route
+										// TODO Honk!
+										System.out.println(String.format("!!! Possible collision with %s, at %s / %s\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f",
+												aisRecord.getMMSI(),
+												GeomUtil.decToSex(aisRecord.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
+												GeomUtil.decToSex(aisRecord.getLongitude(), GeomUtil.SWING, GeomUtil.EW),
+												distToTarget,
+												this.minimumDistance,
+												bearingFromTarget,
+												aisRecord.getCog()));
+									}
 								}
-							}
 //							System.out.println(String.format("Comparing %s with %s / %s\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f",
 //									position.toString(),
 //									GeomUtil.decToSex(aisRecord.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
@@ -74,6 +75,7 @@ public class AISManager extends Computer {
 //									this.minimumDistance,
 //									bearingFromTarget,
 //									aisRecord.getCog()));
+							}
 						}
 					}
 				} catch (AISParser.AISException aisException) { // un-managed AIS type
