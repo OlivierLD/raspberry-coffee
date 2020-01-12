@@ -302,17 +302,18 @@ public class NMEADataCache
 						}
 						mapOfTypes.put(rec.getMessageType(), rec);
 						aisMap.put(rec.getMMSI(), mapOfTypes);  // Id is the MMSI/type.
-
-						aisMap.keySet().forEach(k -> {
-							Map<Integer, AISParser.AISRecord> typesMap = aisMap.get(k);
-							typesMap.keySet().forEach(type -> {
-								AISParser.AISRecord aisRecord = typesMap.get(type);
-								if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
-									System.out.println(String.format("Cleanup: Removing AIS Record %d from %d", type, k));
-									typesMap.remove(type);
-								}
+						synchronized (aisMap) {
+							aisMap.keySet().forEach(k -> {
+								Map<Integer, AISParser.AISRecord> typesMap = aisMap.get(k);
+								typesMap.keySet().forEach(type -> {
+									AISParser.AISRecord aisRecord = typesMap.get(type);
+									if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
+										System.out.println(String.format("Cleanup: Removing AIS Record %d from %d", type, k));
+										typesMap.remove(type);
+									}
+								});
 							});
-						});
+						}
 
 						//	System.out.println("(" + aisMap.size() + " boat(s)) " + rec.toString());
 						if (System.getProperty("ais.cache.verbose", "false").equals("true")) {
