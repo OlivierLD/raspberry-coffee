@@ -43,7 +43,11 @@ MYSQL_VERBOSE=false
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmysql.logger.verbose=$MYSQL_VERBOSE"
 # Option for TCP logger
 JAVA_OPTIONS="$JAVA_OPTIONS -Dtcp.verbose=false"
+# SF Home.
 JAVA_OPTIONS="$JAVA_OPTIONS -Dstation.lat=37.7489 -Dstation.lng=-122.5070"
+# ws seems not to like ws://localhost...
+IP="$(echo -e "$(hostname -I)" | tr -d '[:space:]')"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dws.uri=ws://${IP}:9876/"
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -client -agentlib:jdwp=transport=dt_socket,server=y,address=1044"
 #

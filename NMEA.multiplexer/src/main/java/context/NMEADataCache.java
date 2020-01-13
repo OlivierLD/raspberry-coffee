@@ -55,7 +55,7 @@ import java.util.Set;
 import static nmea.utils.NMEAUtils.longitudeToTime;
 
 public class NMEADataCache
-				extends HashMap<String, Object>
+				extends HashMap<String, Object> // TODO Make it a ConcurrentHashMap ?
 				implements Serializable {
 
 	public static final String LAST_NMEA_SENTENCE = "NMEA";
@@ -131,7 +131,7 @@ public class NMEADataCache
 
 	public static final String AIS = "ais";
 	private Map<Integer, Map<Integer, AISParser.AISRecord>> aisMap = new ConcurrentHashMap<>();
-	private final static long AIS_MAX_AGE = 3_600_000L; // One hour
+	private final static long AIS_MAX_AGE = 600_000L; // Ten minutes
 	private final static long AIS_CLEANUP_FREQ = 60_000L; // One minute
 
 	private Thread aisCleaner = null;

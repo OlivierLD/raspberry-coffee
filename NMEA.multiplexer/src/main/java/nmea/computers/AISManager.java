@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * AIS Manager
+ * AIS Manager. WIP.
  * Uses current position and AIS data to detect possible collision threats
  */
 public class AISManager extends Computer {
@@ -48,14 +48,13 @@ public class AISManager extends Computer {
 							NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
 							GeoPos position = (GeoPos) cache.get(NMEADataCache.POSITION);
 							if (position != null) {
-
 								double distToTarget = GeomUtil.haversineNm(position.lat, position.lng, aisRecord.getLatitude(), aisRecord.getLongitude());
 								double bearingFromTarget = GeomUtil.bearingFromTo(aisRecord.getLatitude(), aisRecord.getLongitude(), position.lat, position.lng);
-
+								// TODO Use the two speeds and headings (here and target)
 								if (distToTarget <= this.minimumDistance) {
 									double diffHeading = GeomUtil.bearingDiff(bearingFromTarget, aisRecord.getCog());
 									System.out.println(String.format("AISManager >> In range (%.02f/%.02f nm), diff heading: %.02f", distToTarget, this.minimumDistance, diffHeading));
-									if (diffHeading < this.headingFork) { // Possible collision route
+									if (diffHeading < this.headingFork) { // Possible collision route (if you don't move)
 										// TODO Honk!
 										System.out.println(String.format("!!! Possible collision with %s, at %s / %s\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f",
 												aisRecord.getMMSI(),
