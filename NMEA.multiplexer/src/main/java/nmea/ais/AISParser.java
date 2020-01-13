@@ -13,7 +13,8 @@ import java.util.Map;
 
 /**
  * AIS: Automatic Identification System
- * Work in Progress
+ * Work in Progress, not all message types are implemented.
+ *
  * Good doc at https://gpsd.gitlab.io/gpsd/AIVDM.html
  * https://www.navcen.uscg.gov/?pageName=AISFAQ
  * On-line decoder at https://www.aggsoft.com/ais-decoder.htm
@@ -810,7 +811,7 @@ public class AISParser {
 				}
 				break;
 			case 24:
-				// Look for Part No
+				// Look for Part No first
 				String partNoBinString = binString.substring(AISDataType24.PART_NO.from(), AISDataType24.PART_NO.to());
 				String partNo = (Integer.parseInt(partNoBinString, 2) == 0 ? "A" : "B");
 
@@ -855,7 +856,6 @@ public class AISParser {
 				// break;
 		}
 		return aisRecord;
-
 	}
 
 	public static class AISException extends Exception {
@@ -1244,6 +1244,7 @@ public class AISParser {
 
 		Map<String, Object> recordContent = new HashMap<>();
 
+		// Below all the possible keys for the Map above.
 		private static final String NAV_STATUS = "NavStatus";
 		private static final String ROT = "rot";
 		private static final String SOG = "sog";
@@ -2372,7 +2373,7 @@ public class AISParser {
 				case 1:
 				case 2:
 				case 3:
-					str = String.format("Type:%d, Repeat:%d, MMSI:%d, status:%s, rot:%d, Pos:%f/%f (Acc:%d), COG:%f, SOG:%f, HDG:%d, TimeStamp: %d (s).",
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, status: %s, rot:%d, Pos:%f/%f (Acc:%d), COG:%.02f, SOG:%.02f, HDG:%s, TimeStamp: %d (s).",
 							messageType,
 							repeatIndicator,
 							MMSI,
@@ -2383,7 +2384,7 @@ public class AISParser {
 							getPosAcc(),
 							getCog(),
 							getSog(),
-							getHdg(),
+							(getHdg() == 511 ? "n/a" : String.valueOf(getHdg())),
 							getUtc());
 					break;
 				case 4:
@@ -2401,7 +2402,7 @@ public class AISParser {
 							StringUtils.lpad(String.valueOf(getUtcSecond()), 2, "0"));
 					break;
 				case 5:
-					str = String.format("Type:%d, Repeat:%d, MMSI:%d, CallSign: %s, Name:%s, type: %s, Length: %d, Width: %d, Draught: %.02f, ETA: %s-%s @ %s:%s, Destination: %s.",
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, CallSign: %s, Vessel Name: %s, type: %s, Length: %d m, Width: %d m, Draught: %.02f m, ETA: %s-%s @ %s:%s, Destination: %s.",
 							messageType,
 							repeatIndicator,
 							MMSI,
@@ -2441,7 +2442,7 @@ public class AISParser {
 							getFirstSlotOffset2());
 					break;
 				case 18:
-					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Pos:%f/%f (Acc:%d), COG:%f, SOG:%f, HDG:%d, TimeStamp: %d (s).",
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Pos:%f/%f (Acc:%d), COG:%.02f, SOG:%.02f, HDG:%s, TimeStamp: %d (s).",
 							messageType,
 							repeatIndicator,
 							MMSI,
@@ -2450,7 +2451,7 @@ public class AISParser {
 							getPosAcc(),
 							getCog(),
 							getSog(),
-							getHdg(),
+							(getHdg() == 511 ? "n/a" : String.valueOf(getHdg())),
 							getUtc());
 					break;
 				case 20:
@@ -2472,7 +2473,7 @@ public class AISParser {
 							getIncrement4());
 					break;
 				case 21:
-					str = String.format("Type:%d, Repeat:%d, MMSI:%d, AidType: %s, Name:%s, Length: %d, Width: %d, L: %f, G :%f, name Ext.: %s.",
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, AidType: %s, Name: %s, Length: %d, Width: %d, L: %f, G :%f, Name Ext.: %s.",
 							messageType,
 							repeatIndicator,
 							MMSI,
@@ -2486,7 +2487,7 @@ public class AISParser {
 					break;
 				case 24:
 					if (getPartNo() == 0) { // Part A
-						str = String.format("Type:%d, Repeat:%d, MMSI:%d, Part#: %s, Vessel Name:%s.",
+						str = String.format("Type:%d, Repeat:%d, MMSI:%d, Part#:%s, Vessel Name: %s.",
 								messageType,
 								repeatIndicator,
 								MMSI,
@@ -2494,7 +2495,7 @@ public class AISParser {
 								getVesselName().replace("@", " ").trim());
 
 					} else {
-						str = String.format("Type:%d, Repeat:%d, MMSI:%d, Part#: %s, ShipType: %s, VendorID: %s, Length: %d, Width: %d, Motheship MMSI: %d.",
+						str = String.format("Type:%d, Repeat:%d, MMSI:%d, Part#:%s, ShipType: %s, VendorID: %s, Length: %d, Width: %d, Mothership MMSI: %d.",
 								messageType,
 								repeatIndicator,
 								MMSI,
@@ -2619,7 +2620,7 @@ public class AISParser {
 				"!AIVDM,1,1,,A,403Ovk1v@EG4Do>jNbEdjDw028;l,0*34",
 				"!AIVDM,1,1,,B,403Ovk1v@EG4Do>jNbEdjDw028;n,0*35",
 				"!AIVDM,1,1,,B,13P<DT00BIo>gG<EW=p2d28R0<23,0*41",
-				// Multiple
+				// Multiple messages
 				"!AIVDM,2,1,6,B,55T6aT42AGrO<ELCJ20t<D4r0Pu0F22222222216CPIC94DfNBEDp3hB,0*0A",
 				"!AIVDM,2,2,6,B,p88888888888880,2*69"
 		);
@@ -2660,7 +2661,7 @@ public class AISParser {
 							}
 						} else if (!line.startsWith("#")) {
 							// TODO else parse NMEA?
-							System.out.println(String.format("Non AIS String... %s", line));
+							System.out.println(String.format("\tNon AIS String... %s", line));
 						}
 					}
 				}

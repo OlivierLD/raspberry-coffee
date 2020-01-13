@@ -55,7 +55,7 @@ import java.util.Set;
 import static nmea.utils.NMEAUtils.longitudeToTime;
 
 public class NMEADataCache
-				extends HashMap<String, Object>
+				extends HashMap<String, Object> // TODO Make it a ConcurrentHashMap ?
 				implements Serializable {
 
 	public static final String LAST_NMEA_SENTENCE = "NMEA";
