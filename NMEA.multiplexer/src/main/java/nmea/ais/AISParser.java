@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * AIS: Automatic Identification System
  * Work in Progress
  * Good doc at https://gpsd.gitlab.io/gpsd/AIVDM.html
  * https://www.navcen.uscg.gov/?pageName=AISFAQ
@@ -23,20 +24,12 @@ public class AISParser {
    * !AIVDM,1,1,,A,15NB>cP03jG?l`<EaV0`MFO000S>,0*39
    * ^      ^ ^  ^ ^                            ^ ^
    * |      | |  | |                            | NMEA Checksum
-   * |      | |  | |                            End of message
+   * |      | |  | |                            End of message. Number of fill bits for padding.
    * |      | |  | Encoded AIS Data
    * |      | |  AIS Channel (A or B)
    * |      | Sentence Number
    * |      Number of sentences
    * NMEA Message type, for AIS
-   */
-
-  /*
-   * AIS: Automatic Identification System
-   *
-   * See http://gpsd.berlios.de/AIVDM.html
-   *     http://catb.org/gpsd/AIVDM.html > https://gpsd.gitlab.io/gpsd/AIVDM.html
-   *
    */
 
 	public enum AISData { // Generic, first 3 fields.
@@ -69,7 +62,7 @@ public class AISParser {
 		}
 	}
 
-	public enum AISDataType123 { // For types 1, 2 and 3
+	public enum AISDataType123 { // For types 1, 2 and 3. Position Report Class A
 		MESSAGE_TYPE(0, 6, "Message Type"),
 		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
 		MMSI(8, 38, "userID (MMSI)"),
@@ -108,7 +101,7 @@ public class AISParser {
 		}
 	}
 
-	public enum AISDataType4 {
+	public enum AISDataType4 { // Base Station Report
 		MESSAGE_TYPE(0, 6, "Message Type"),
 		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
 		MMSI(8, 38, "userID (MMSI)"),
@@ -148,7 +141,7 @@ public class AISParser {
 	}
 
 	// Type 5 (Boat data), on 2 sentences.
-	public enum AISDataType5 {
+	public enum AISDataType5 { // Static and Voyage Related Data
 		MESSAGE_TYPE(0, 6, "Message Type"),
 		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
 		MMSI(8, 38, "userID (MMSI)"),
@@ -196,7 +189,41 @@ public class AISParser {
 		}
 	}
 
-	public enum AISDataType15 {
+	public enum AISDataType8 { // Binary Broadcast Message
+		MESSAGE_TYPE(0, 6, "Message Type"),
+		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
+		MMSI(8, 38, "userID (MMSI)"),
+		SPARE(38, 40, "Spare"),
+		DES_AREA_CODE(40, 50, "Designated Area Code"),
+		FUNC_ID(50, 56, "Functional ID"),
+		DATA(56, 953, "Data"); // May be shorter than 952
+
+		private static final long serialVersionUID = 1L;
+
+		private final int from;          // start offset
+		private final int to;            // end offset
+		public final String description; // Description
+
+		AISDataType8(int from, int to, String desc) {
+			this.from = from;
+			this.to = to;
+			this.description = desc;
+		}
+
+		public int from() {
+			return from;
+		}
+
+		public int to() {
+			return to;
+		}
+
+		public String description() {
+			return description;
+		}
+	}
+
+	public enum AISDataType15 { // Interrogation
 		MESSAGE_TYPE(0, 6, "Message Type"),
 		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
 		MMSI(8, 38, "userID (MMSI)"),
@@ -238,7 +265,7 @@ public class AISParser {
 		}
 	}
 
-	public enum AISDataType20 {
+	public enum AISDataType20 { // Data Link Management Message
 		MESSAGE_TYPE(0, 6, "Message Type"),
 		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
 		MMSI(8, 38, "userID (MMSI)"),
@@ -285,11 +312,13 @@ public class AISParser {
 		}
 	}
 
-	public final static String AIS_PREFIX = "!AIVDM";
+	public final static String AIS_PREFIX = "!AIVDM"; // TODO Other Talker IDs, AIVDM, AIVDO
 
 	private final static int PREFIX_POS = 0;
 	private final static int NB_SENTENCES_POS = 1;
 	private final static int CURR_SENTENCE_IDX = 2;
+	// Pos 3, Sequential Message ID for multi-sentence messages
+	private final static int AIS_CHANNEL_POS = 4;
 	private final static int AIS_DATA_POS = 5;
 
 	public static int getMessageType(String sentence) {
@@ -307,21 +336,6 @@ public class AISParser {
 			messageType = Integer.parseInt(binStr, 2);
 		}
 		return messageType;
-	}
-
-	private static String decode6BitCharacters(String binString) {
-		int len = binString.length() / 6;
-		String text = "";
-		for (int i = 0; i < len; i++) {
-			String oneBinChar = binString.substring(i * 6, (i + 1) * 6);
-			int cc = Integer.parseInt(oneBinChar, 2) + 64;
-			if (cc > 96) {
-				cc -= 64;
-			}
-			char c = (char) (cc);
-			text += c;
-		}
-		return text.replace('`', ' ');
 	}
 
 	private static StringBuffer unfinishedSentence = null;
@@ -466,6 +480,32 @@ public class AISParser {
 				} else {
 					aisRecord = null;
 				}
+				break;
+			case 8:
+//				if (multipleMessageReady) { // then process. TODO See the multi-messages cases.
+					for (AISDataType8 a : AISDataType8.values()) {
+						if (a.to() < binString.length()) {
+							String binStr = binString.substring(a.from(), a.to());
+							if (a.equals(AISDataType8.DATA)) {
+								setAISData(a, aisRecord, binStr);
+							} else {
+								int intValue = Integer.parseInt(binStr, 2);
+								setAISData(a, aisRecord, intValue);
+							}
+						} else if (a.equals(AISDataType8.DATA)) {
+							String binStr = binString.substring(a.from()); // Bin data can be shorter than 952
+							if (a.equals(AISDataType8.DATA)) {
+								setAISData(a, aisRecord, binStr);
+							}
+						} else if (verbose) {
+							System.out.println(">> Out of binString");
+						}
+					}
+					// After processing, reset buffer
+					unfinishedSentence = null;
+//				} else {
+//					aisRecord = null;
+//				}
 				break;
 			case 15:
 				for (AISDataType15 a : AISDataType15.values()) {
@@ -654,6 +694,25 @@ public class AISParser {
 		}
 	}
 
+	private static void setAISData(AISDataType8 a, AISRecord ar, int value) {
+		if (a.equals(AISDataType8.MESSAGE_TYPE)) {
+			ar.setMessageType(value);
+		} else if (a.equals(AISDataType8.REPEAT_INDICATOR)) {
+			ar.setRepeatIndicator(value);
+		} else if (a.equals(AISDataType8.MMSI)) {
+			ar.setMMSI(value);
+		} else if (a.equals(AISDataType8.DES_AREA_CODE)) {
+			ar.setDesignatedAreaCode(value);
+		} else if (a.equals(AISDataType8.FUNC_ID)) {
+			ar.setFuncId(value);
+		}
+	}
+	private static void setAISData(AISDataType8 a, AISRecord ar, String value) {
+		if (a.equals(AISDataType8.DATA)) {
+			ar.setBinData(value);
+		}
+	}
+
 	private static void setAISData(AISDataType15 a, AISRecord ar, int value) {
 		if (a.equals(AISDataType15.MESSAGE_TYPE)) {
 			ar.setMessageType(value);
@@ -730,6 +789,36 @@ public class AISParser {
 		return sb.toString();
 	}
 
+	private static String decode6BitCharacters(String binString) {
+		int len = binString.length() / 6;
+		StringBuilder text = new StringBuilder();
+		for (int i = 0; i < len; i++) {
+			String oneBinChar = binString.substring(i * 6, (i + 1) * 6);
+			int cc = Integer.parseInt(oneBinChar, 2);
+			cc += (cc < 32) ? 64 : 0;
+			text.append((char)cc);
+		}
+		return text.toString().replace('`', ' ');
+	}
+
+	private enum MonthSizeOption {
+		LONG, SHORT
+	};
+	private final static String[] SHORT_MONTHS = {
+			"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+			"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	};
+	private final static String[] LONG_MONTHS = {
+			"January", "February", "March", "April", "May", "June",
+			"July", "August", "September", "October", "November", "December"
+	};
+	private static String decodeMonth(int m) {
+		return decodeMonth(m, MonthSizeOption.SHORT);
+	}
+	private static String decodeMonth(int m, MonthSizeOption option) {
+		return ((m>=1 && m<=12) ? (option.equals(MonthSizeOption.SHORT) ? SHORT_MONTHS[m - 1] : LONG_MONTHS[m - 1]) : "--");
+	}
+
 	public static class AISRecord {
 		private int messageType;      // Mandatory
 		private int repeatIndicator;  // Mandatory
@@ -743,7 +832,7 @@ public class AISParser {
 		private static final String SOG = "sog";
 		private static final String COG = "cog";
 		private static final String HDG = "hdg";
-		private final static String POS_ACC = "PosAcc";
+		private static final String POS_ACC = "PosAcc";
 		private static final String LONGITUDE = "longitude";
 		private static final String LATITUDE = "latitude";
 		private static final String UTC = "utc";
@@ -791,6 +880,11 @@ public class AISParser {
 		private static final String TIMEOUT_4 = "timeout4";
 		private static final String INCREMENT_4 = "increment4";
 
+		private static final String DESIGNATED_AREA_CODE = "DesAreaCode";
+		private static final String FUNC_ID = "FuncID";
+		private static final String BIN_DATA = "BinData";
+
+
 		AISRecord(long now) {
 			super();
 			recordTimeStamp = now;
@@ -808,6 +902,30 @@ public class AISParser {
 			recordContent.put(AIS_VERSION, ais_version);
 		}
 
+		public int getDesignatedAreaCode() {
+			try {
+				return (int)recordContent.get(DESIGNATED_AREA_CODE);
+			} catch (Exception ex) {
+				return 0;
+			}
+		}
+
+		public void setDesignatedAreaCode(int area_code) {
+			recordContent.put(DESIGNATED_AREA_CODE, area_code);
+		}
+
+		public int getFuncId() {
+			try {
+				return (int)recordContent.get(FUNC_ID);
+			} catch (Exception ex) {
+				return 0;
+			}
+		}
+
+		public void setFuncId(int func_id) {
+			recordContent.put(FUNC_ID, func_id);
+		}
+
 		public int getImoNumber() {
 			try {
 				return (int)recordContent.get(IMO_NUMBER);
@@ -818,6 +936,18 @@ public class AISParser {
 
 		public void setImoNumber(int imo_number) {
 			recordContent.put(AIS_VERSION, imo_number);
+		}
+
+		public String getBinData() {
+			try {
+				return (String)recordContent.get(BIN_DATA);
+			} catch (Exception ex) {
+				return "";
+			}
+		}
+
+		public void setBinData(String binData) {
+			recordContent.put(BIN_DATA, binData);
 		}
 
 		public String getCallSign() {
@@ -1616,7 +1746,7 @@ public class AISParser {
 				case 1:
 				case 2:
 				case 3:
-					str = String.format("Type:%d, Repeat:%d, MMSI:%d, status:%s, rot:%d, Pos:%f/%f (Acc:%d), COG:%f, SOG:%f, HDG:%d, TimeStamp: %d",
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, status:%s, rot:%d, Pos:%f/%f (Acc:%d), COG:%f, SOG:%f, HDG:%d, TimeStamp: %d.",
 							messageType,
 							repeatIndicator,
 							MMSI,
@@ -1631,21 +1761,21 @@ public class AISParser {
 							getUtc());
 					break;
 				case 4:
-					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Pos:%f/%f, UTC %d-%d-%d %d:%d:%d",
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Pos:%f/%f, UTC %s-%s-%s %s:%s:%s.",
 							messageType,
 							repeatIndicator,
 							MMSI,
 							getLatitude(),
 							getLongitude(),
-							getUtcYear(),
-							getUtcMonth(),
-							getUtcDay(),
-							getUtcHour(),
-							getUtcMinute(),
-							getUtcSecond());
+							StringUtils.lpad(String.valueOf(getUtcYear()), 4, "0"),
+							decodeMonth(getUtcMonth()),
+							StringUtils.lpad(String.valueOf(getUtcDay()), 2, "0"),
+							StringUtils.lpad(String.valueOf(getUtcHour()), 2, "0"),
+							StringUtils.lpad(String.valueOf(getUtcMinute()), 2, "0"),
+							StringUtils.lpad(String.valueOf(getUtcSecond()), 2, "0"));
 					break;
 				case 5:
-					str = String.format("Type:%d, Repeat:%d, MMSI:%d, CallSign: %s, Name:%s, type: %s, Length: %d, Width: %d, Draught: %.02f, ETA: %d-%d %d:%d, Destination: %s",
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, CallSign: %s, Name:%s, type: %s, Length: %d, Width: %d, Draught: %.02f, ETA: %s-%s @ %s:%s, Destination: %s.",
 							messageType,
 							repeatIndicator,
 							MMSI,
@@ -1655,14 +1785,23 @@ public class AISParser {
 							getDimToBow() + getDimToStern(),
 							getDimToPort() + getDimToStbd(),
 							(getDraught() / 10f),
-							getEtaMonth(),
-							getEtaDay(),
-							getEtaHour(),
-							getEtaMinute(),
+							decodeMonth(getEtaMonth()),
+							StringUtils.lpad(String.valueOf(getEtaDay()), 2, "0"),
+							StringUtils.lpad(String.valueOf(getEtaHour()), 2, "0"),
+							StringUtils.lpad(String.valueOf(getEtaMinute()), 2, "0"),
 							getDestination().trim());
 					break;
+				case 8:
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Des.Area Code %d, FuncID %d, Data: %s",
+							messageType,
+							repeatIndicator,
+							MMSI,
+							getDesignatedAreaCode(),
+							getFuncId(),
+							getBinData());
+					break;
 				case 15:
-					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Int MMSI %d, 1st MessType %d, 1st SlotOffset %d, 2nd MessType %d, 2nd SlotOffset %d, Int MMSI(2) %d, 1st MessType(2) %d, 1st SlotOffset(2) %d",
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Int MMSI %d, 1st MessType %d, 1st SlotOffset %d, 2nd MessType %d, 2nd SlotOffset %d, Int MMSI(2) %d, 1st MessType(2) %d, 1st SlotOffset(2) %d.",
 							messageType,
 							repeatIndicator,
 							MMSI,
@@ -1676,7 +1815,7 @@ public class AISParser {
 							getFirstSlotOffset2());
 					break;
 				case 20:
-					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Offset1: %d, Timeout1: %d, Incr1: %d, Offset2: %d, Timeout2: %d, Incr2: %d, Offset3: %d, Timeout3: %d, Incr3: %d, Offset4: %d, Timeout4: %d, Incr4: %d",
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, Offset1: %d, Timeout1: %d, Incr1: %d, Offset2: %d, Timeout2: %d, Incr2: %d, Offset3: %d, Timeout3: %d, Incr3: %d, Offset4: %d, Timeout4: %d, Incr4: %d.",
 							messageType,
 							repeatIndicator,
 							MMSI,
@@ -1765,25 +1904,25 @@ public class AISParser {
 		System.out.println("--- From dAISy ---");
 		// From the dAISy device
 		List<String> aisFromDaisy = Arrays.asList(
-//				"!AIVDM,1,1,,A,403Ovk1v@CPI`o>jNnEdjEg0241T,0*5F",
-//				"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
-//				"!AIVDM,1,1,,A,D03Ovk0m9N>4g@ffpfpNfp0,2*38",
-//				"!AIVDM,1,1,,B,D03Ovk0s=N>4g<ffpfpNfp0,2*5D",
-//				"!AIVDM,1,1,,B,403Ovk1v@CPN`o>jO8EdjDw02@GT,0*1F",
-//				"!AIVDM,1,1,,A,403Ovk1v@CPO`o>jNrEdjEO02<45,0*01",
-//				// From PI4J
-//				"!AIVDM,1,1,,A,D03Ovk0m9N>4g@ffpfpNfp0,2*38",
-//				"!AIVDM,1,1,,B,D03Ovk0s=N>4g<ffpfpNfp0,2*5D",
-//				"!AIVDM,1,1,,A,?03Ovk1Gcv1`D00,2*3C",
-//				"!AIVDM,1,1,,B,?03Ovk1CpiT0D00,2*02",
-//				"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
-//				"!AIVDM,1,1,,B,D03Ovk0<EN>40Dffp00Nfp0,2*53",
-//				// From Serial IO
-//				"!AIVDM,1,1,,B,?03Ovk20AG54D00,2*08",
-//				"!AIVDM,1,1,,A,?03Ovk20AG54D00,2*0B",
-//				"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
-//				"!AIVDM,1,1,,B,D03Ovk0<EN>40Dffp00Nfp0,2*53",
-//				"!AIVDM,1,1,,A,15MU>f002Bo?5cHE`@2qOG`>0@43,0*5B",
+				"!AIVDM,1,1,,A,403Ovk1v@CPI`o>jNnEdjEg0241T,0*5F",
+				"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
+				"!AIVDM,1,1,,A,D03Ovk0m9N>4g@ffpfpNfp0,2*38",
+				"!AIVDM,1,1,,B,D03Ovk0s=N>4g<ffpfpNfp0,2*5D",
+				"!AIVDM,1,1,,B,403Ovk1v@CPN`o>jO8EdjDw02@GT,0*1F",
+				"!AIVDM,1,1,,A,403Ovk1v@CPO`o>jNrEdjEO02<45,0*01",
+				// From PI4J
+				"!AIVDM,1,1,,A,D03Ovk0m9N>4g@ffpfpNfp0,2*38",
+				"!AIVDM,1,1,,B,D03Ovk0s=N>4g<ffpfpNfp0,2*5D",
+				"!AIVDM,1,1,,A,?03Ovk1Gcv1`D00,2*3C",
+				"!AIVDM,1,1,,B,?03Ovk1CpiT0D00,2*02",
+				"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
+				"!AIVDM,1,1,,B,D03Ovk0<EN>40Dffp00Nfp0,2*53",
+				// From Serial IO
+				"!AIVDM,1,1,,B,?03Ovk20AG54D00,2*08",
+				"!AIVDM,1,1,,A,?03Ovk20AG54D00,2*0B",
+				"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
+				"!AIVDM,1,1,,B,D03Ovk0<EN>40Dffp00Nfp0,2*53",
+				"!AIVDM,1,1,,A,15MU>f002Bo?5cHE`@2qOG`>0@43,0*5B",
 
 				"!AIVDM,1,1,,A,D03Ovk1T1N>5N8ffqMhNfp0,2*6A",
 				"!AIVDM,1,1,,B,D03Ovk1b5N>5N4ffqMhNfp0,2*57",
@@ -1819,7 +1958,7 @@ public class AISParser {
 		});
 		System.out.println("------------------");
 
-		if (false) {
+		if (true) {
 			String dataFileName = "sample.data/ais.nmea";
 			if (args.length > 0) {
 				dataFileName = args[0];
@@ -1837,10 +1976,13 @@ public class AISParser {
 								if (aisRecord != null) {
 									System.out.println(aisRecord);
 								} else {
-									System.out.println(String.format(">> NULL AIS Record for %s", line));
+									System.out.println(String.format(">> null AIS Record for %s", line));
 								}
+							} catch (AISException ex) {
+								System.err.println("For [" + line + "]: " + ex.toString());
 							} catch (Exception ex) {
-								System.err.println("For [" + line + "], " + ex.toString());
+								System.err.println("For [" + line + "]: ");
+								ex.printStackTrace();
 							}
 						} else if (!line.startsWith("#")) {
 							// TODO else parse NMEA?
