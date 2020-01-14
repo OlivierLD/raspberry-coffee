@@ -1,14 +1,8 @@
 package context;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-
+import calc.GeomUtil;
 import calc.calculation.AstroComputer;
 import calc.calculation.SightReductionUtil;
-
 import nmea.ais.AISParser;
 import nmea.mux.context.Context;
 import nmea.parser.Angle;
@@ -40,22 +34,31 @@ import nmea.parser.UTCTime;
 import nmea.parser.VHW;
 import nmea.parser.VLW;
 import nmea.parser.Wind;
-import calc.GeomUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.ConcurrentModificationException;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 import static nmea.utils.NMEAUtils.longitudeToTime;
 
+/**
+ * For AIS, see system property "put.ais.in.cache"
+ *
+ * TODO synchronize all this.put
+ */
 public class NMEADataCache
-				extends HashMap<String, Object> // TODO Make it a ConcurrentHashMap ?
+				extends ConcurrentHashMap<String, Object> // TODO Make it a ConcurrentHashMap instead of just HashMap ?
 				implements Serializable {
 
 	public static final String LAST_NMEA_SENTENCE = "NMEA";
@@ -175,18 +178,18 @@ public class NMEADataCache
 	}
 
 	private void init() {
-		dampingMap.put(BSP, new ArrayList<Object>());
-		dampingMap.put(HDG_TRUE, new ArrayList<Object>());
-		dampingMap.put(AWA, new ArrayList<Object>());
-		dampingMap.put(AWS, new ArrayList<Object>());
-		dampingMap.put(TWA, new ArrayList<Object>());
-		dampingMap.put(TWS, new ArrayList<Object>());
-		dampingMap.put(TWD, new ArrayList<Object>());
-		dampingMap.put(CSP, new ArrayList<Object>());
-		dampingMap.put(CDR, new ArrayList<Object>());
-		dampingMap.put(COG, new ArrayList<Object>());
-		dampingMap.put(SOG, new ArrayList<Object>());
-		dampingMap.put(LEEWAY, new ArrayList<Object>());
+		dampingMap.put(BSP, new ArrayList<>());
+		dampingMap.put(HDG_TRUE, new ArrayList<>());
+		dampingMap.put(AWA, new ArrayList<>());
+		dampingMap.put(AWS, new ArrayList<>());
+		dampingMap.put(TWA, new ArrayList<>());
+		dampingMap.put(TWS, new ArrayList<>());
+		dampingMap.put(TWD, new ArrayList<>());
+		dampingMap.put(CSP, new ArrayList<>());
+		dampingMap.put(CDR, new ArrayList<>());
+		dampingMap.put(COG, new ArrayList<>());
+		dampingMap.put(SOG, new ArrayList<>());
+		dampingMap.put(LEEWAY, new ArrayList<>());
 
 		String strLat  = System.getProperty("default.mux.latitude");
 		String strLong =  System.getProperty("default.mux.longitude");
@@ -195,52 +198,58 @@ public class NMEADataCache
 				double lat = Double.parseDouble(strLat);
 				double lng = Double.parseDouble(strLong);
 				GeoPos defaultPos = new GeoPos(lat, lng);
-				this.put(POSITION, defaultPos);
+				synchronized (this) {
+					this.put(POSITION, defaultPos);
+				}
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
 		}
 		// Initialization
-		this.put(CALCULATED_CURRENT, new HashMap<Long, CurrentDefinition>());
-		this.put(NMEA_AS_IS, new HashMap<String, Object>()); // Data is String (regular sentence) or List (like for GSV, List<String>))
+		synchronized (this) {
+			this.put(CALCULATED_CURRENT, new HashMap<Long, CurrentDefinition>());
+			this.put(NMEA_AS_IS, new HashMap<String, Object>()); // Data is String (regular sentence) or List (like for GSV, List<String>))
+		}
 
-		// Start AIS Cleaner thread
-		aisCleaner = new Thread(() -> {
-			while (true) {
-				// Cleanup?
-				try {
-					Iterator<Integer> mmsiIterator = aisMap.keySet().iterator();
-					synchronized (aisMap) {
-						while (mmsiIterator.hasNext()) {
-							Integer mmsi = mmsiIterator.next();
-							Map<Integer, AISParser.AISRecord> typesMap = aisMap.get(mmsi);
-							Iterator<Integer> typeIterator = typesMap.keySet().iterator();
-							synchronized (typesMap) {
-								while (typeIterator.hasNext()) {
-									Integer type = typeIterator.next();
-									AISParser.AISRecord aisRecord = typesMap.get(type);
-									if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
-										System.out.println(String.format("=== Cleanup: Removing AIS Record %d from %d ===", type, mmsi));
-										typesMap.remove(type);
+		if ("true".equals(System.getProperty("put.ais.in.cache", "true"))) {
+			// Start AIS Cleaner thread
+			aisCleaner = new Thread(() -> {
+				while (true) {
+					// Cleanup?
+					try {
+						Iterator<Integer> mmsiIterator = aisMap.keySet().iterator();
+						synchronized (aisMap) {
+							while (mmsiIterator.hasNext()) {
+								Integer mmsi = mmsiIterator.next();
+								Map<Integer, AISParser.AISRecord> typesMap = aisMap.get(mmsi);
+								Iterator<Integer> typeIterator = typesMap.keySet().iterator();
+								synchronized (typesMap) {
+									while (typeIterator.hasNext()) {
+										Integer type = typeIterator.next();
+										AISParser.AISRecord aisRecord = typesMap.get(type);
+										if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
+											System.out.println(String.format("=== Cleanup: Removing AIS Record %d from %d ===", type, mmsi));
+											typesMap.remove(type);
+										}
+									}
+									if (typesMap.size() == 0) {
+										aisMap.remove(mmsi);
 									}
 								}
-								if (typesMap.size() == 0) {
-									aisMap.remove(mmsi);
-								}
 							}
-						};
+						}
+					} catch (Exception ex) {
+						ex.printStackTrace();
 					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
+					try {
+						Thread.sleep(AIS_CLEANUP_FREQ);
+					} catch (InterruptedException ie) {
+						ie.printStackTrace();
+					}
 				}
-				try {
-					Thread.sleep(AIS_CLEANUP_FREQ);
-				} catch (InterruptedException ie) {
-					ie.printStackTrace();
-				}
-			}
-		}, "AISCleaner");
-		aisCleaner.start();
+			}, "AISCleaner");
+			aisCleaner.start();
+		}
 	}
 
 	public void reset() {
@@ -331,38 +340,43 @@ public class NMEADataCache
 					asIsMap.put(sentenceId, nmeaSentence);
 					break;
 			}
-//		this.put(NMEA_AS_IS, asIsMap);
-			this.put(LAST_NMEA_SENTENCE, nmeaSentence);
-
+			synchronized (this) {
+//		  this.put(NMEA_AS_IS, asIsMap);
+				this.put(LAST_NMEA_SENTENCE, nmeaSentence);
+			}
 			if (nmeaSentence.startsWith(AISParser.AIS_PREFIX)) { // AIS. There is a thread to cleanup old AIS records
-				try {
-					AISParser.AISRecord rec = AISParser.parseAIS(nmeaSentence);
-					if (rec != null) { // Case of Multi-Record or un-managed type
-						Map<Integer, AISParser.AISRecord> mapOfTypes = aisMap.get(rec.getMMSI());
-						if (mapOfTypes == null) {
-							mapOfTypes = new ConcurrentHashMap<>();
+				if ("true".equals(System.getProperty("put.ais.in.cache", "true"))) {
+					try {
+						AISParser.AISRecord rec = AISParser.parseAIS(nmeaSentence);
+						if (rec != null) { // Case of Multi-Record or un-managed type
+							Map<Integer, AISParser.AISRecord> mapOfTypes = aisMap.get(rec.getMMSI());
+							if (mapOfTypes == null) {
+								mapOfTypes = new ConcurrentHashMap<>();
+							}
+							synchronized (mapOfTypes) {
+								mapOfTypes.put(rec.getMessageType(), rec);
+							}
+							synchronized (aisMap) {
+								aisMap.put(rec.getMMSI(), mapOfTypes);  // Id is the MMSI/type.
+							}
+							//	System.out.println("(" + aisMap.size() + " boat(s)) " + rec.toString());
+							if (System.getProperty("ais.cache.verbose", "false").equals("true")) {
+								System.out.println(String.format(">> AIS %s, type %s goes into cache: %s", rec.getMMSI(), rec.getMessageType(), rec.toString()));
+							}
 						}
-						synchronized (mapOfTypes) {
-							mapOfTypes.put(rec.getMessageType(), rec);
+						synchronized (this) {
+							synchronized (aisMap) {
+								this.put(AIS, aisMap);
+							}
 						}
-						synchronized (aisMap) {
-							aisMap.put(rec.getMMSI(), mapOfTypes);  // Id is the MMSI/type.
-						}
-						//	System.out.println("(" + aisMap.size() + " boat(s)) " + rec.toString());
+					} catch (AISParser.AISException aisExc) {
 						if (System.getProperty("ais.cache.verbose", "false").equals("true")) {
-							System.out.println(String.format(">> AIS %s, type %s goes into cache: %s", rec.getMMSI(), rec.getMessageType(), rec.toString()));
+							System.err.println(String.format(">> AIS %s, %s", nmeaSentence, aisExc.toString()));
 						}
+					} catch (Exception ex) {
+						System.err.println(String.format("\nFor AIS Sentence [%s]", nmeaSentence));
+						ex.printStackTrace();
 					}
-					synchronized (aisMap) {
-						this.put(AIS, aisMap);
-					}
-				} catch (AISParser.AISException aisExc) {
-					if (System.getProperty("ais.cache.verbose", "false").equals("true")) {
-						System.err.println(String.format(">> AIS %s, %s", nmeaSentence, aisExc.toString()));
-					}
-				} catch (Exception ex) {
-					System.err.println(String.format("\nFor AIS Sentence [%s]", nmeaSentence));
-					ex.printStackTrace();
 				}
 			} else { // NMEA
 				String id = StringParsers.getSentenceID(nmeaSentence);

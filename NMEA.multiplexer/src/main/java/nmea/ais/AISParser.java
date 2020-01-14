@@ -13,11 +13,14 @@ import java.util.Map;
 
 /**
  * AIS: Automatic Identification System
- * Work in Progress, not all message types are implemented.
+ *
+ * Work in Progress, not all message types are implemented (yet).
  *
  * Good doc at https://gpsd.gitlab.io/gpsd/AIVDM.html
  * https://www.navcen.uscg.gov/?pageName=AISFAQ
  * On-line decoder at https://www.aggsoft.com/ais-decoder.htm
+ *
+ * The main method is here for tests, look at it.
  */
 public class AISParser {
 	public final static boolean verbose = "true".equals(System.getProperty("ais.verbose"));
