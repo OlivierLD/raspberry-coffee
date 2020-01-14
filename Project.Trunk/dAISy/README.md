@@ -292,4 +292,42 @@ $
 ```
 
 ## NMEA.multiplexer integration
+From the `NMEA.multiplexer`, with a yaml like this on the Raspberry PI:
+```yaml
+#
+# MUX definition.
+#
+name: "With a GPS and AIS"
+context:
+  with.http.server: true
+  http.port: 9999
+  init.cache: true
+channels:
+  - type: serial
+    # GPS
+    port: /dev/ttyUSB0
+    baudrate: 4800
+    verbose: false
+  - type: serial
+    # AIS
+    port: /dev/ttyS0
+    baudrate: 38400
+    verbose: false
+forwarders:
+  - type: tcp
+    port: 7002
+    properties: no.ais.properties
+  - type: tcp
+    subclass: nmea.forwarders.AISTCPServer
+    port: 7003
+computers:
+  - cls: nmea.computers.AISManager
+    properties: ais.mgr.properties
+```
+> _Note_: We use here 2 TCP ports, one for NMEA, the other for AIS. All data may go
+> through the same port if needed.
+
+OpenCPN - with a TCP connection on port 7003 of the Raspberry - can render the AIS data:
 ![In OpenCPN](./AIS.png)
+
+---

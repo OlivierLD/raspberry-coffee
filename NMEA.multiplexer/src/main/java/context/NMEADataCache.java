@@ -840,7 +840,6 @@ public class NMEADataCache
 			return direction;
 		}
 
-
 		public CurrentDefinition(long bl, Speed sp, Angle360 dir, int nbp, String old, String last, long len) {
 			this.bufferLength = bl;
 			this.speed = sp;
