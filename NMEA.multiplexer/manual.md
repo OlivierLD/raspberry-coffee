@@ -129,7 +129,7 @@ mux.01.read.frequency=1000
 are equivalent to `yaml` like
 ```yaml
 channels:
- - type:lsm303           
+ - type: lsm303           
    device.prefix: II
    verbose: false
    sentence.filters: HDM,XDR
