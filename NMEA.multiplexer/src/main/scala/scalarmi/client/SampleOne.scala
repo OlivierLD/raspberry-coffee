@@ -14,7 +14,7 @@ import java.text.NumberFormat
 
 object SampleOne extends App {
 
-  val ONE_SEC = 1000L
+  val ONE_SEC = 1_000L
 
 //def main(args: Array[String]): Unit = {
     println("Hello Scala!")

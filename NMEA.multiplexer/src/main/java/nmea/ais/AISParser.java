@@ -530,7 +530,7 @@ public class AISParser {
 	public static int getMessageType(String sentence) {
 		String[] dataElement = sentence.split(",");
 		if (!dataElement[PREFIX_POS].equals(AIS_PREFIX)) {
-			throw new RuntimeException("Unmanaged AIS Prefix [" + dataElement[PREFIX_POS] + "].");
+			throw new RuntimeException(String.format("Unmanaged AIS Prefix [%s].", dataElement[PREFIX_POS]));
 		}
 		String aisData = dataElement[AIS_DATA_POS];
 		String binString = encodedAIStoBinaryString(aisData);
@@ -554,11 +554,11 @@ public class AISParser {
 
 		boolean valid = StringParsers.validCheckSum(sentence);
 		if (!valid) {
-			throw new RuntimeException("Invalid AIS Data (Bad checksum) for [" + sentence + "]");
+			throw new RuntimeException(String.format("Invalid AIS Data (Bad checksum) for [%s]", sentence));
 		}
 		String[] dataElement = sentence.split(",");
 		if (!dataElement[PREFIX_POS].equals(AIS_PREFIX)) {
-			throw new RuntimeException("Unmanaged AIS Prefix [" + dataElement[PREFIX_POS] + "].");
+			throw new RuntimeException(String.format("Unmanaged AIS Prefix [%s].", dataElement[PREFIX_POS]));
 		}
 		String currentChannel = dataElement[AIS_CHANNEL_POS];
 
@@ -1202,7 +1202,7 @@ public class AISParser {
 			String bin = StringUtils.lpad(Integer.toBinaryString(c), 6, "0");
 			sb.append(bin);
 			if (decodeVerbose) {
-				System.out.println(encoded.charAt(i) + " becomes " + bin + " (" + c + ")");
+				System.out.println(String.format("%c becomes %s (%d)", encoded.charAt(i), bin, c));
 			}
 //    sb.append(" ");
 		}

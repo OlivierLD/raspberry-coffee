@@ -32,9 +32,9 @@ import java.util.Properties;
 public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer  {
 	private HTTPServer adminServer = null;
 
-	private List<NMEAClient> nmeaDataClients = new ArrayList<>();
-	private List<Forwarder> nmeaDataForwarders = new ArrayList<>();
-	private List<Computer> nmeaDataComputers = new ArrayList<>();
+	private final List<NMEAClient> nmeaDataClients = new ArrayList<>();
+	private final List<Forwarder> nmeaDataForwarders = new ArrayList<>();
+	private final List<Computer> nmeaDataComputers = new ArrayList<>();
 
 	private RESTImplementation restImplementation;
 
@@ -85,15 +85,13 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 		if (this.process) {
 			// Computers. Must go first, as a computer may re-feed the present onData method.
 			synchronized (nmeaDataComputers) {
-			 	nmeaDataComputers.stream()
-								.forEach(computer -> {
-									computer.write(mess.getBytes());
-								});
+			 	nmeaDataComputers
+								.forEach(computer -> computer.write(mess.getBytes()));
 							}
 
 			// Forwarders
 			synchronized (nmeaDataForwarders) {
-				nmeaDataForwarders.stream()
+				nmeaDataForwarders
 								.forEach(fwd -> {
 									try {
 										fwd.write((mess.trim() + NMEAParser.STANDARD_NMEA_EOS).getBytes());
@@ -147,12 +145,10 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 			}
 //		System.out.println("Done waiting");
 		}
-		nmeaDataClients.stream()
-						.forEach(NMEAClient::stopDataRead);
-		nmeaDataForwarders.stream()
-						.forEach(Forwarder::close);
-		nmeaDataComputers.stream()
-						.forEach(Computer::close);
+		nmeaDataClients.forEach(NMEAClient::stopDataRead);
+		nmeaDataForwarders.forEach(Forwarder::close);
+		nmeaDataComputers.forEach(Computer::close);
+
 		if (adminServer != null) {
 			synchronized (adminServer) {
 				System.out.println("Mux Stopping Admin server");
@@ -185,7 +181,7 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 			}
 		}, "Multiplexer shutdown hook"));
 
-		nmeaDataClients.stream()
+		nmeaDataClients
 						.forEach(client -> {
 							if (infraVerbose) {
 								System.out.println(String.format("\t>> %s - NMEADataClient: Starting %s...", NumberFormat.getInstance().format(System.currentTimeMillis()), client.getClass().getName()));
