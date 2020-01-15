@@ -66,11 +66,11 @@ public class MuxInitializer {
 
 	private final static NumberFormat MUX_IDX_FMT = new DecimalFormat("00");
 
-	private static void setup(Properties muxProps,
-	                          List<NMEAClient> nmeaDataClients,
-	                          List<Forwarder> nmeaDataForwarders,
-	                          List<Computer> nmeaDataComputers,
-	                          Multiplexer mux) {
+	public static void setup(Properties muxProps,
+	                         List<NMEAClient> nmeaDataClients,
+	                         List<Forwarder> nmeaDataForwarders,
+	                         List<Computer> nmeaDataComputers,
+	                         Multiplexer mux) {
 		setup(muxProps, nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, mux, false);
 	}
 
@@ -85,12 +85,12 @@ public class MuxInitializer {
 	 * @param mux the Multiplexer instance to initialize
 	 * @param verbose Speak up!
 	 */
-	private static void setup(Properties muxProps,
-	                          List<NMEAClient> nmeaDataClients,
-	                          List<Forwarder> nmeaDataForwarders,
-	                          List<Computer> nmeaDataComputers,
-	                          Multiplexer mux,
-	                          boolean verbose) {
+	public static void setup(Properties muxProps,
+	                         List<NMEAClient> nmeaDataClients,
+	                         List<Forwarder> nmeaDataForwarders,
+	                         List<Computer> nmeaDataComputers,
+	                         Multiplexer mux,
+	                         boolean verbose) {
 		int muxIdx = 1;
 		boolean thereIsMore = true;
 		// 1 - Input channels
