@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
   <!-- Home location is
        37.74888723023488N,122.50712603330612W
+
+       WebComponents version
    +-->
   <head>
     <title>Weather Report</title>
@@ -42,7 +44,7 @@ function Line(x1, y1, x2, y2) {
   this.y1 = y1;
   this.x2 = x2;
   this.y2 = y2;
-};
+}
 
 Line.prototype.draw = function(ctx) {
   // arbitrary styling
@@ -162,7 +164,7 @@ Line.prototype.drawWithWindFeathers = function(ctx, ws) {
   ctx.restore();
 };
     </script>
-    <script src="http://maps.googleapis.com/maps/api/js?v=3&amp;sensor=false&amp;key=your-key-goes-here"
+    <script src="http://maps.googleapis.com/maps/api/js?v=3&amp;sensor=false&amp;key=AIzaSyDu5cW4UXjXZTswehBdIO8jCZdzUbk2v5o"
             type="text/javascript"></script>
     <script type="text/javascript">
 let markers = [];
@@ -222,8 +224,10 @@ function updateOnClick(idx, tws, gust, twd, prmsl, temp, dew, rain, hum) {
   let txtDate = JSONParser.nmeaData[idx].getNMEADate();
   // console.log("Date is : " + reformatDate(txtDate));
   let utc = document.getElementById("tz");
-  // TODO Make sure utc.selectedIndex != -1
-  document.getElementById("recno").innerHTML = "Record #<b style='color: red;'>" + (idx + 1) + "</b> of " + JSONParser.nmeaData.length + ", " +  reformatDate(txtDate) + " " + utc.options[utc.selectedIndex].text;
+  // Make sure utc.selectedIndex != -1
+  if (utc.selectedIndex != -1) {
+    document.getElementById("recno").innerHTML = "Record #<b style='color: red;'>" + (idx + 1) + "</b> of " + JSONParser.nmeaData.length + ", " + reformatDate(txtDate) + " " + utc.options[utc.selectedIndex].text;
+  }
 
   displayTWD.value = twd;
   displayTWS.value = tws;

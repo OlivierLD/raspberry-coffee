@@ -325,7 +325,7 @@ public class LSM303 {
 				ioe.printStackTrace();
 			}
 		};
-		new Thread(task).start();
+		new Thread(task, "lsm303-reader").start();
 	}
 
 	private void setPitch(double pitch) {
