@@ -1,4 +1,4 @@
-## LSM303 calibration
+## LSM303, Magnetometer calibration
 
 Magnetometers often - if not always - require calibration.
 Here is an easy way to get to the expected calibration parameters.
@@ -58,7 +58,7 @@ We will create a new one, taking the parameters to re-shape it in account.
 See on the figure above, after tweaking the parameters, the circle has a (almost) constant radius of ~40, centered on `[0, 0]`.
 The parameters to remember are on the top left.
 
-Do the same for X & Z, Y & Z, and repeat for the ACC data.
+On the same spreadsheet, repeat the same for plans X & Z, Y & Z.
 
 And finally, you save put those data into a properties file, so it can be used at runtime:
 ```properties
