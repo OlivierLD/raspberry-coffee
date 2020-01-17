@@ -71,7 +71,7 @@ public class LSM303 {
    */
 	// Those 2 next addresses are returned by "sudo i2cdetect -y 1", see above.
 	private final static int LSM303_ADDRESS_ACCEL = (0x32 >> 1); // 0011001x, 0x19
-	private final static int LSM303_ADDRESS_MAG = (0x3C >> 1); // 0011110x, 0x1E <- that is an HMC5883L !
+	private final static int LSM303_ADDRESS_MAG = (0x3C >> 1);   // 0011110x, 0x1E <- that is an HMC5883L !
 	// Default    Type
 	private final static int LSM303_REGISTER_ACCEL_CTRL_REG1_A = 0x20; // 00000111   rw
 	private final static int LSM303_REGISTER_ACCEL_CTRL_REG4_A = 0x23; // 00000000   rw

@@ -1,5 +1,8 @@
 ## LSM303 calibration
 
+Magnetometers often - if not always - require calibration.
+Here is an easy way to get to the expected calibration parameters.
+
 ### Log data for calibration
 Run the script `lsm303.sh` with
 ```
@@ -25,21 +28,32 @@ Select columns `magX` and `magY`, and insert chart.
 The calibration parameters should re-center the circle on `[0, 0]` and make the figure round instead of oval.
 > _Note_: For clarity, make sure the x & y scales are similar... In the figure above, the X steps and scale are quite different from the Y ones. 
 
-- Create new cells, `X offset`, `X coeff`, `Y offset`, `Y coeff`
-- Then, as shown below, create new columns taking those parameters in account, `new MagX` as `=$Q$3*(J2 + $Q$2)`, and `new MagY` as `=$Q$5*(K2 + $Q$4)`, drag each column down to the bottom of the table.
-- Then adjust the offsets and coeffs until you reach the expected result
+It is not necessary to sve this chart, you can get rid of it. We will create a new one, with parameters to re-shape it.
 
-![Adjusted](./Adjusted.png)
+- Create new cells:
+  - `X offset`
+  - `X coeff`
+  - `Y offset`
+  - `Y coeff`
+- Then, as shown below, create new columns taking those parameters in account:
+  - `new MagX`, with the following formula in `R2`: `=$Q$3*(J2 + $Q$2)`
+  - `new MagY`, with the following formula in `S2`: `=$Q$5*(K2 + $Q$4)`
+- Drag each new column down to the bottom of the table.
+- Then with the new columns `new MagX` and `new MagY`, create the same graph as previously (resize the chart so you have square cells...):
+![Adjusting](./Adjusting.1.png)
+
+- Then adjust the offsets and coefficients until you reach the expected result:
+![Adjusting](./Adjusting.2.png)
 
 See on the figure above, the circle has a (almost) constant radius of ~40, centered on `[0, 0]`.
 The parameters to remember are on the top left.
 
 Do the same for X & Z, Y & Z, and repeat for the ACC data.
 
-And finally, you can put those data into a properties file, so it can be used at runtime:
+And finally, you save put those data into a properties file, so it can be used at runtime:
 ```properties
 MagXOffset=12
-MagYOffset=-18.0
+MagYOffset=-15.0
 MagZOffset=-5
 #
 MagXCoeff=1
@@ -57,5 +71,6 @@ AccZCoeff=1.05
 
 The default properties file name is `lsm303.cal.properties`. 
 
-See the code of `LSM303.java` for details... ;)
+See the code of `LSM303.java` for details about the way to apply those parameters... ;)
 
+---
