@@ -23,7 +23,7 @@ For that, we will need to determine offsets and coefficients, for each plan (XY,
 ## Get to the calibration parameters
 Use the recently generated `lsm303.csv` file, open it as a spreadsheet (I use LibreOffice).
 
-First, select columns `magX` and `magY`, and insert a chart.
+First, select columns `magX` and `magY` (`J` and `K`), and insert a chart.
 
 ![MagX-MagY](./magX-magY.png)
 
