@@ -16,9 +16,9 @@ Move the device in every possible directions and positions..., then stop (`Ctrl+
 Save the logged (csv) file.
 
 ### What we want, eventually
-We want the data points to be disposed on circles, centered on `[0,0]`.
+We want the data points to be disposed on circles, centered on `[0, 0]`.
 
-For that, we will determine offsets and coefficients, for each plan (XY, XZ, and YZ), and for both devices (magnetometer, accelerometer).
+For that, we will need to determine offsets and coefficients, for each plan (XY, XZ, and YZ), and for both devices (magnetometer, accelerometer).
 
 ## Get to the calibration parameters
 Use the recently generated `lsm303.csv` file, open it as a spreadsheet (I use LibreOffice).
@@ -28,30 +28,34 @@ First, select columns `magX` and `magY`, and insert a chart.
 ![MagX-MagY](./magX-magY.png)
 
 ### What we see
-Clearly on the chart above, the data are _not_ centered on `[0, 0]`, and the figure is an oval, wider than high, not a circle.
+Clearly on the chart above, the data are _not_ centered on `[0, 0]`, and the figure is an _oval_, wider than high, not a circle.
 
 ### Calibration
-The calibration parameters should re-center the circle on `[0, 0]` and make the figure round instead of oval.
+The calibration parameters should re-center the circle on `[0, 0]` and make the figure circular instead of oval.
 > _Note_: For clarity, do make sure the x & y scales are similar... In the figure above, the X steps and scale are quite different from the Y ones. 
 
-It is not necessary to save this chart, you can get rid of it. We will create a new one, with parameters to re-shape it.
+This gave you a first view on the data. 
+It is not necessary to save this chart, you can get rid of it. 
+We will create a new one, taking the parameters to re-shape it in account.
 
-- Create new cells:
-  - `X offset`
-  - `X coeff`
-  - `Y offset`
-  - `Y coeff`
-- Then, as shown below, create new columns taking those parameters in account:
-  - `new MagX`, with the following formula in `R2`: `=$Q$3*(J2 + $Q$2)`
-  - `new MagY`, with the following formula in `S2`: `=$Q$5*(K2 + $Q$4)`
-- Drag each new column down to the bottom of the table.
-- Then with the new columns `new MagX` and `new MagY`, create the same graph as previously (again: resize the chart so you have square cells...):
+#### Creating parameter cells, and new data columns
+- Create new cells (See the `P` and `Q` columns below):
+  - `X offset`, with an initial value of `0`
+  - `X coeff`, with an initial value of `1`
+  - `Y offset`, with an initial value of `0`
+  - `Y coeff`, with an initial value of `1`
+- Then, as shown below, create new columns applying those parameters to the columns we displayed previously (`J` and `K`):
+  - Column `R`: `new MagX`, with the following formula in `R2`: `=$Q$3*(J2 + $Q$2)`
+  - Column `S`: `new MagY`, with the following formula in `S2`: `=$Q$5*(K2 + $Q$4)`
+- Drag each new cell (`R2` ad `S2`) by its bottom right corner down to the bottom of the table.
+- Then with the new columns `new MagX` and `new MagY`, create the same graph as previously (_again_: resize the chart so you have square cells...):
 ![Adjusting](./Adjusting.1.png)
 
-- Then adjust the offsets and coefficients until you reach the expected result:
+#### Adjusting and getting the calibration parameters
+- Then adjust the offsets and coefficients until you reach the expected result. Offsets will move the points around the center, coefficient will reshape the round figure to obtain the expected circle:
 ![Adjusting](./Adjusting.2.png)
 
-See on the figure above, the circle has a (almost) constant radius of ~40, centered on `[0, 0]`.
+See on the figure above, after tweaking the parameters, the circle has a (almost) constant radius of ~40, centered on `[0, 0]`.
 The parameters to remember are on the top left.
 
 Do the same for X & Z, Y & Z, and repeat for the ACC data.
