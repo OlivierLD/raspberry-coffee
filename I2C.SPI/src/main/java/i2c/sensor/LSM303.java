@@ -516,7 +516,7 @@ public class LSM303 {
 						heading += 360f;
 					}
 
-					if (verbose) {
+					if (verboseRaw) {
 						System.out.println(String.format("RAW mag data (2): X:%f Y:%f => (before %.02f) (after %.02f) (HDG %.02f) ", magXComp, magYComp, beforeAdjust, afterAdjust, heading));
 					}
 
