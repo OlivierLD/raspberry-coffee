@@ -69,14 +69,6 @@ MagZOffset=-5
 MagXCoeff=1
 MagYCoeff=1.05
 MagZCoeff=1
-#
-AccXOffset=0.05
-AccYOffset=0
-AccZOffset=0
-#
-AccXCoeff=1
-AccYCoeff=1.05
-AccZCoeff=1.05
 ```
 
 The default properties file name is `lsm303.cal.properties`. 
