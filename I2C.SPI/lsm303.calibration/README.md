@@ -52,7 +52,7 @@ We will create a new one, taking the parameters to re-shape it in account.
 ![Adjusting](./Adjusting.1.png)
 
 #### Adjusting and getting the calibration parameters
-- Then adjust the offsets and coefficients until you reach the expected result. Offsets will move the points around the center, coefficient will reshape the round figure to obtain the expected circle:
+- Then adjust the offsets and coefficients until you reach the expected result. Offsets will move the points around the center, coefficients will reshape the round figure to obtain the expected circle:
 ![Adjusting](./Adjusting.2.png)
 
 See on the figure above, after tweaking the parameters, the circle has a (almost) constant radius of ~40, centered on `[0, 0]`.
