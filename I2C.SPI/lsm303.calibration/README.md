@@ -4,7 +4,9 @@ Magnetometers often - if not always - require calibration.
 Here is an easy way to get to the expected calibration parameters.
 
 ### Log data for calibration
-Run the script `lsm303.sh` with
+We need raw data from the device, to elaborate its calibration parameters.
+
+To get those data, run the script `lsm303.sh` with
 ```
 ...
 JAVA_OPTS="$JAVA_OPTS -Dlsm303.log.for.calibration=true"
@@ -13,22 +15,26 @@ sudo java $JAVA_OPTS -cp $CP i2c.sensor.LSM303 > lsm303.csv
 Move the device in every possible directions and positions..., then stop (`Ctrl+C`) the program.
 Save the logged (csv) file.
 
-### What we want
+### What we want, eventually
 We want the data points to be disposed on circles, centered on `[0,0]`.
 
 For that, we will determine offsets and coefficients, for each plan (XY, XZ, and YZ), and for both devices (magnetometer, accelerometer).
 
-### Get to the calibration parameters
-Use the `lsm303.csv` file, open it as a spreadsheet (I use LibreOffice).
+## Get to the calibration parameters
+Use the recently generated `lsm303.csv` file, open it as a spreadsheet (I use LibreOffice).
 
-Select columns `magX` and `magY`, and insert chart.
+First, select columns `magX` and `magY`, and insert a chart.
 
 ![MagX-MagY](./magX-magY.png)
 
-The calibration parameters should re-center the circle on `[0, 0]` and make the figure round instead of oval.
-> _Note_: For clarity, make sure the x & y scales are similar... In the figure above, the X steps and scale are quite different from the Y ones. 
+### What we see
+Clearly on the chart above, the data are _not_ centered on `[0, 0]`, and the figure is an oval, wider than high, not a circle.
 
-It is not necessary to sve this chart, you can get rid of it. We will create a new one, with parameters to re-shape it.
+### Calibration
+The calibration parameters should re-center the circle on `[0, 0]` and make the figure round instead of oval.
+> _Note_: For clarity, do make sure the x & y scales are similar... In the figure above, the X steps and scale are quite different from the Y ones. 
+
+It is not necessary to save this chart, you can get rid of it. We will create a new one, with parameters to re-shape it.
 
 - Create new cells:
   - `X offset`
@@ -39,7 +45,7 @@ It is not necessary to sve this chart, you can get rid of it. We will create a n
   - `new MagX`, with the following formula in `R2`: `=$Q$3*(J2 + $Q$2)`
   - `new MagY`, with the following formula in `S2`: `=$Q$5*(K2 + $Q$4)`
 - Drag each new column down to the bottom of the table.
-- Then with the new columns `new MagX` and `new MagY`, create the same graph as previously (resize the chart so you have square cells...):
+- Then with the new columns `new MagX` and `new MagY`, create the same graph as previously (again: resize the chart so you have square cells...):
 ![Adjusting](./Adjusting.1.png)
 
 - Then adjust the offsets and coefficients until you reach the expected result:
