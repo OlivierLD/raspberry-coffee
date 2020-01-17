@@ -94,7 +94,7 @@ public final class GeomUtil {
 		double y = (Math.cos(Math.toRadians(fromL)) * Math.sin(Math.toRadians(toL))) -
 				(Math.sin(Math.toRadians(fromL)) * Math.cos(Math.toRadians(toL)) * Math.cos(Math.toRadians(deltaG)));
 		double b = Math.toDegrees(Math.atan2(x, y));
-		while (b < 0) {
+		while (b < 0) { // on0to360
 			b += 360;
 		}
 		return b;
