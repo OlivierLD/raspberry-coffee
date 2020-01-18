@@ -252,8 +252,7 @@ public class HMC5883L {
 	}
 
 	private static int mag16(byte[] list, int idx) {
-//		int n = ((list[idx] & 0xFF) << 8) | (list[idx + 1] & 0xFF); // High, low bytes
-		int n = ((list[idx] & 0xFF) | ((list[idx + 1] & 0xFF) << 8)); // New
+		int n = ((list[idx] & 0xFF) << 8) | (list[idx + 1] & 0xFF); // High, low bytes
 		return (n < 0x8000 ? n : n - 0x10000);                      // 2's complement signed
 	}
 
