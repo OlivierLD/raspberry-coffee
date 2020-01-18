@@ -3,7 +3,7 @@ plugins {
   id 'scala'
   id 'idea'
   id 'maven'
-  id 'com.github.johnrengelman.shadow' version '5.2.0'
+  id 'com.github.johnrengelman.shadow' version '5.0.0'
 }
 
 compileJava.options.encoding = 'ISO-8859-1'
@@ -92,9 +92,10 @@ dependencies {
 }
 
 repositories {
-  mavenLocal()
-  mavenCentral()
-  maven { url "http://lediouris.net/maven2" }
-  maven { url "http://www.datanucleus.org/downloads/maven2" }
-  maven { url "https://oss.sonatype.org/content/groups/public" }
+    mavenLocal()
+    mavenCentral()
+    maven { url "http://lediouris.net/maven2" }
+//    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "http://www.datanucleus.org/downloads/maven2" }
+    maven { url "https://oss.sonatype.org/content/groups/public" }
 }

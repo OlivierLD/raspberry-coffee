@@ -616,6 +616,7 @@ public class LSM303 {
 	/**
 	 * This is for tests.
 	 * Keep reading until Ctrl+C is received.
+	 * can use --feature:XXX as CLI parameter, XXX can be BOTH, MAGNETOMETER, or ACCELEROMETER
 	 *
 	 * @param args Duh
 	 */
@@ -625,8 +626,24 @@ public class LSM303 {
 
 //	System.setProperty("lsm303.log.for.calibration", "true");
 
+		EnabledFeature feature = EnabledFeature.BOTH;
+
+		if (args.length > 0) {
+			for (String arg : args) {
+				if (arg.startsWith("--feature:")) {
+					String theOne = arg.substring("--feature:".length());
+					for (EnabledFeature f : EnabledFeature.values()) {
+						if (f.toString().equals(theOne)) {
+							feature = f;
+							break;
+						}
+					}
+				}
+			}
+		}
+
 		try {
-			LSM303 sensor = new LSM303(EnabledFeature.BOTH, false);
+			LSM303 sensor = new LSM303(feature, false);
 			sensor.setWait(250); // 1/4 sec between reads
 
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
