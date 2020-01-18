@@ -213,9 +213,9 @@ public class HMC5883L {
 				}
 
 				if (logForCalibration) {
-//					if (!(Math.abs(magX) > 1_000) && !(Math.abs(magY) > 1_000) && !(Math.abs(magZ) > 1_000)) { // Skip aberrations
+					if (!(Math.abs(magX) > 1_000) && !(Math.abs(magY) > 1_000) && !(Math.abs(magZ) > 1_000)) { // Skip aberrations
 						System.out.println(String.format("%d;%d;%d;%.03f;%.03f;%.03f", (int) magX, (int) magY, (int) magZ, magXFiltered, magYFiltered, magZFiltered));
-//					}
+					}
 				}
 
 				heading = (float) Math.toDegrees(Math.atan2(magYFiltered, magXFiltered));
