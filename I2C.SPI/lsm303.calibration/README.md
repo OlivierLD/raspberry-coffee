@@ -16,6 +16,8 @@ sudo java $JAVA_OPTS -cp $CP i2c.sensor.LSM303 > lsm303.csv
 Build for yourself a board where you can fasten the Raspberry Pi along with the LSM303.
 ![The device](./lsm303.cal.jpeg)
 
+<small>The smart ones will notice the prints on the rubber bands...</small>
+
 Start the program and move the device in every possible directions and positions..., then stop (`Ctrl+C`) the program.
 Save the logged (csv) file.
 
