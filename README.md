@@ -120,22 +120,6 @@ $ which wget
         - Then the command to use to reach Jupyter would show up in the console.
     - _Note:_ Training a Neural Network is a very demanding operation, that requires computing resources not granted on a Raspberry Pi. Installing Keras on a Raspberry Pi might not be relevant. OpenCV, though, would be an option to consider. Google it ;).
 
-#### Bonus: Setup a Raspberry Pi Zero W for USB Console
-This allows you to use `ssh` through a USB cable, it can be convenient.
-
-There is a good paper about this setting [here](https://magpi.raspberrypi.org/articles/build-a-raspberry-pi-zero-keyring).
-
-You can use:
-- a USB cable from your laptop to the USB port on the Raspberry pi Zero W (which has the same shape as the power supply)
-- a USB Connector like [this](https://zerostem.io/), pretty cool.
-- or a HAT like [this](https://www.adafruit.com/product/3589) (this one has a switch, nice), or like [that](https://www.adafruit.com/product/3309).
-
-Once you RPi is connected through a USB connection, after configuring it as explained, you can use `ssh` as follow:
-```
-$ ssh pi@raspberrypi.local
-``` 
-where `raspberrypi` is the `hostname` of the Raspberry. No wireless connection or IP address is required.
-
 ### Extra softs
 - Docker
 ```
@@ -164,8 +148,9 @@ where `raspberrypi` is the `hostname` of the Raspberry. No wireless connection o
 ```    
 
 ##### Connect to the Raspberry Pi from your laptop, using a USB cable
-It's easy, and convenient. See [here](https://www.thepolyglotdeveloper.com/2016/06/connect-raspberry-pi-zero-usb-cable-ssh/).
-
+It's easy, and convenient. See [here](https://www.thepolyglotdeveloper.com/2016/06/connect-raspberry-pi-zero-usb-cable-ssh/),
+or [here](https://magpi.raspberrypi.org/articles/build-a-raspberry-pi-zero-keyring).
+   
 To connect to a Raspberry Pi Zero, all you need is a USB cable [A-to-microB](https://www.adafruit.com/product/592).
 
 Some other devices can be nice to have:
@@ -173,10 +158,12 @@ Some other devices can be nice to have:
 - [Zero Stem for Pi Zero 1.3 and Pi Zero W 1.1](https://www.adafruit.com/product/3945)
 - [Adafruit PiUART - USB Console and Power Add-on for Raspberry Pi](https://www.adafruit.com/product/3589)
 
-Once the Raspberry Pi is reachable through a Serial port, you can `ssh` to it, using `ssh pi@<machine-name>.local`, like
+Once your RPi is connected through a USB connection, after configuring it as explained, you can use `ssh` as follow:
 ```
- $ ssh pi@raspberrypi.local
-```
+$ ssh pi@raspberrypi.local
+``` 
+where `raspberrypi` is the `hostname` of the Raspberry. No wireless connection or IP address is required.
+
 ##### Raspberry Pi as an Access Point _and_ Internet access.
 Your Raspberry Pi can be turned into an Access Point, this means that it generates its own network, so you can connect to it from other devices (other Raspberry Pis, laptops, tablets, smart-phones, ESP8266, etc).
 It can be appropriate when there is no network in the area you are in, for example when sailing in the middle of the ocean, kayaking in a remote place, hiking in the boonies, etc.
