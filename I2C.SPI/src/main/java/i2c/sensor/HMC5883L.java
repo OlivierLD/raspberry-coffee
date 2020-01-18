@@ -21,6 +21,7 @@ public class HMC5883L {
 	private final static int HMC5883L_REGISTER_OUT_X_H_M = 0x03;
 
 	private final static float SCALE = 1F; // 0.92F; // TODO This is a constant... is that any useful?
+	private final float ALPHA = 0.15f; // For the low pass filter (smoothing)
 
 	private I2CDevice magnetometer;
 
@@ -29,6 +30,7 @@ public class HMC5883L {
 	private static boolean verboseRaw = "true".equals(System.getProperty("hmc5883l.verbose.raw", "false"));
 	private static boolean verboseMag = "true".equals(System.getProperty("hmc5883l.verbose.mag", "false"));
 
+	private static boolean useLowPassFilter = "true".equals(System.getProperty("hmc5883l.low.pass.filter", "true")); // default true
 	private static boolean logForCalibration = "true".equals(System.getProperty("hmc5883l.log.for.calibration", "false"));
 
 	private double pitch = 0D, roll = 0D, heading = 0D;
@@ -109,12 +111,17 @@ public class HMC5883L {
 		this.keepReading = false;
 	}
 
+	private static double lowPass(double alpha, double value, double acc) {
+		return (value * alpha) + (acc * (1d - alpha));
+	}
+
 	private void readingSensors()
 			throws IOException {
 		while (keepReading) {
 			byte[] magData = new byte[6];
 
 			double magX = 0, magY = 0, magZ = 0;
+			double magXFiltered = 0d, magYFiltered = 0d, magZFiltered = 0d;
 
 			// Request magnetometer measurements.
 			if (magnetometer != null) {
@@ -131,24 +138,34 @@ public class HMC5883L {
 				magZ = mag16(magData, 2) * SCALE; // Yes, Z, not Y
 				magY = mag16(magData, 4) * SCALE; // Then Y
 
-				if (logForCalibration) {
-					System.out.println(String.format("%d;%d;%d", (int)magX, (int)magY, (int)magZ));
+				if (useLowPassFilter) {
+					magXFiltered = lowPass(ALPHA, magX, magXFiltered);
+					magYFiltered = lowPass(ALPHA, magY, magYFiltered);
+					magZFiltered = lowPass(ALPHA, magZ, magZFiltered);
 				} else {
-					// TODO Apply parameters
+					magXFiltered = magX;
+					magYFiltered = magY;
+					magZFiltered = magZ;
+				}
+
+				if (logForCalibration) {
+					System.out.println(String.format("%d;%d;%d;%.03f;%.03f;%.03f", (int)magX, (int)magY, (int)magZ, magXFiltered, magYFiltered, magZFiltered));
+				} else {
+					// TODO Apply parameters, to filtered values
 //					magX = calibrationMap.get(MAG_X_COEFF) * (calibrationMap.get(MAG_X_OFFSET) + magX);
 //					magY = calibrationMap.get(MAG_Y_COEFF) * (calibrationMap.get(MAG_Y_OFFSET) + magY);
 //					magZ = calibrationMap.get(MAG_Z_COEFF) * (calibrationMap.get(MAG_Z_OFFSET) + magZ);
 				}
 
-				heading = (float) Math.toDegrees(Math.atan2(magY, magX));
+				heading = (float) Math.toDegrees(Math.atan2(magYFiltered, magXFiltered));
 				while (heading < 0) {
 					heading += 360f;
 				}
 				setHeading(heading);
 
-				pitch = Math.toDegrees(Math.atan2(magY, magZ)); // See how it's done in LSM303... See what's best.
+				pitch = Math.toDegrees(Math.atan2(magYFiltered, magZFiltered)); // See how it's done in LSM303... See what's best.
 				setPitch(pitch);
-				roll = Math.toDegrees(Math.atan2(magX, magZ));
+				roll = Math.toDegrees(Math.atan2(magXFiltered, magZFiltered));
 				setRoll(roll);
 			}
 //		if (verboseMag) {
@@ -204,14 +221,16 @@ public class HMC5883L {
 //		System.out.println("Verbose: " + verbose);
 
 		if (logForCalibration) {
-			System.out.println("magX;magY;magZ");
+			System.out.println("magX;magY;magZ;filterMagX;filterMagY;filterMagZ");
 		}
 
 		HMC5883L sensor = new HMC5883L();
 		sensor.setWait(250);
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("\nBye.");
+			if (!logForCalibration) {
+				System.out.println("\nBye.");
+			}
 			synchronized (sensor) {
 				sensor.stopReading();
 				try {
