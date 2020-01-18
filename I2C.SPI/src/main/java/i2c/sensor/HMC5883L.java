@@ -12,7 +12,7 @@ import java.text.NumberFormat;
 
 /*
  * 3 Axis compass
- * TODO Reuse the code of LSM303
+ * TODO Reuse the code of LSM303? Or use this one in the LSM303 code?
  */
 public class HMC5883L {
 	private final static int HMC5883L_ADDRESS = 0x1E;
@@ -20,7 +20,7 @@ public class HMC5883L {
 	private final static int HMC5883L_REGISTER_MR_REG_M  = 0x02;
 	private final static int HMC5883L_REGISTER_OUT_X_H_M = 0x03;
 
-	private final static float SCALE = 0.92F;
+	private final static float SCALE = 0.92F; // TODO This is a constant... is that any useful?
 
 	private I2CDevice magnetometer;
 
@@ -28,6 +28,8 @@ public class HMC5883L {
 	private static boolean verbose    = "true".equals(System.getProperty("hmc5883l.verbose", "false"));
 	private static boolean verboseRaw = "true".equals(System.getProperty("hmc5883l.verbose.raw", "false"));
 	private static boolean verboseMag = "true".equals(System.getProperty("hmc5883l.verbose.mag", "false"));
+
+	private static boolean logForCalibration = "true".equals(System.getProperty("hmc5883l.log.for.calibration", "false"));
 
 	private double pitch = 0D, roll = 0D, heading = 0D;
 
@@ -125,9 +127,18 @@ public class HMC5883L {
 					dumpBytes(magData);
 				}
 				// Mag raw data. !!! Warning !!! Order here is X, Z, Y
-				magX = mag16(magData, 0) * SCALE;
-				magZ = mag16(magData, 2) * SCALE; // Yes, Z
+				magX = mag16(magData, 0) * SCALE; // X
+				magZ = mag16(magData, 2) * SCALE; // Yes, Z, not Y
 				magY = mag16(magData, 4) * SCALE; // Then Y
+
+				if (logForCalibration) {
+					System.out.println(String.format("%f;%f;%f", magX, magY, magZ));
+				} else {
+					// TODO Apply parameters
+//					magX = calibrationMap.get(MAG_X_COEFF) * (calibrationMap.get(MAG_X_OFFSET) + magX);
+//					magY = calibrationMap.get(MAG_Y_COEFF) * (calibrationMap.get(MAG_Y_OFFSET) + magY);
+//					magZ = calibrationMap.get(MAG_Z_COEFF) * (calibrationMap.get(MAG_Z_OFFSET) + magZ);
+				}
 
 				heading = (float) Math.toDegrees(Math.atan2(magY, magX));
 				while (heading < 0) {
@@ -135,7 +146,7 @@ public class HMC5883L {
 				}
 				setHeading(heading);
 
-				pitch = Math.toDegrees(Math.atan2(magY, magZ)); // See how it's done in LSM303...
+				pitch = Math.toDegrees(Math.atan2(magY, magZ)); // See how it's done in LSM303... See what's best.
 				setPitch(pitch);
 				roll = Math.toDegrees(Math.atan2(magX, magZ));
 				setRoll(roll);
@@ -189,6 +200,11 @@ public class HMC5883L {
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException, IOException {
 		verbose = "true".equals(System.getProperty("hmc5883l.verbose", "false"));
 		System.out.println("Verbose: " + verbose);
+
+		if (logForCalibration) {
+			System.out.println("magX;magY;magZ");
+		}
+
 		HMC5883L sensor = new HMC5883L();
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
