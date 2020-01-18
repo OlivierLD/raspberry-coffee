@@ -12,7 +12,11 @@ To get those data, run the script `lsm303.sh` with
 JAVA_OPTS="$JAVA_OPTS -Dlsm303.log.for.calibration=true"
 sudo java $JAVA_OPTS -cp $CP i2c.sensor.LSM303 > lsm303.csv
 ```
-Move the device in every possible directions and positions..., then stop (`Ctrl+C`) the program.
+
+Build for yourself a board where you can fasten the Raspberry Pi along with the LSM303.
+![The device](./lsm303.cal.jpeg)
+
+Start the program and move the device in every possible directions and positions..., then stop (`Ctrl+C`) the program.
 Save the logged (csv) file.
 
 ### What we want, eventually
