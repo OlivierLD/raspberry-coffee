@@ -123,10 +123,10 @@ $ which wget
 #### Bonus: Setup a Raspberry Pi Zero W for USB Console
 This allows you to use `ssh` through a USB cable, it can be convenient.
 
-There is a good papaer about this setting [here](https://magpi.raspberrypi.org/articles/build-a-raspberry-pi-zero-keyring).
+There is a good paper about this setting [here](https://magpi.raspberrypi.org/articles/build-a-raspberry-pi-zero-keyring).
 
 You can use:
-- a USB cabel from your laptop to the USB port on the Raspberry pi Zero W (which has the same shape as the power supply)
+- a USB cable from your laptop to the USB port on the Raspberry pi Zero W (which has the same shape as the power supply)
 - a USB Connector like [this](https://zerostem.io/), pretty cool.
 - or a HAT like [this](https://www.adafruit.com/product/3589) (this one has a switch, nice), or like [that](https://www.adafruit.com/product/3309).
 
