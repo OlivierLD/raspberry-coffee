@@ -7,7 +7,6 @@ import utils.StringUtils;
 
 import java.io.FileReader;
 import java.io.IOException;
-
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -182,8 +181,7 @@ public class HMC5883L {
 			if (magnetometer != null) {
 				magnetometer.write((byte) HMC5883L_REGISTER_OUT_X_H_M);
 				// Reading magnetometer measurements.
-				// int r = magnetometer.read(magData, 0, 6);
-				int r = magnetometer.read(magData, 0x80 | 0x08, 6);
+				int r = magnetometer.read(magData, 0, 6);
 				if (r != 6) {
 					System.out.println("Error reading mag data, < 6 bytes");
 				} else if (verboseMag) {
