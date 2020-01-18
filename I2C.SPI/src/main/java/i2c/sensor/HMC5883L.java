@@ -189,9 +189,13 @@ public class HMC5883L {
 					dumpBytes(magData);
 				}
 				// Mag raw data. !!! Warning !!! Order here is X, Z, Y
+//				magX = mag16(magData, 0) * SCALE; // X
+//				magZ = mag16(magData, 2) * SCALE; // Yes, Z, not Y
+//				magY = mag16(magData, 4) * SCALE; // And then Y
+
 				magX = mag16(magData, 0) * SCALE; // X
-				magZ = mag16(magData, 2) * SCALE; // Yes, Z, not Y
-				magY = mag16(magData, 4) * SCALE; // And then Y
+				magY = mag16(magData, 2) * SCALE; // Y
+				magZ = mag16(magData, 4) * SCALE; // Z
 
 				if (!logForCalibration) {
 					magX = calibrationMap.get(MAG_X_COEFF) * (calibrationMap.get(MAG_X_OFFSET) + magX);
@@ -253,8 +257,10 @@ public class HMC5883L {
 	}
 
 	private static int mag16(byte[] list, int idx) {
-		int n = ((list[idx] & 0xFF) << 8) | (list[idx + 1] & 0xFF); // High, low bytes
-		return (n < 0x8000 ? n : n - 0x10000);                      // 2's complement signed
+//		int n = ((list[idx] & 0xFF) << 8) | (list[idx + 1] & 0xFF); // High, low bytes
+//		return (n < 0x8000 ? n : n - 0x10000);                      // 2's complement signed
+
+		return ((list[idx] & 0xFF) | ((list[idx + 1] & 0xFF) << 8));
 	}
 
 	private static void dumpBytes(byte[] ba) {
