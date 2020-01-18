@@ -20,7 +20,7 @@ public class HMC5883L {
 	private final static int HMC5883L_REGISTER_MR_REG_M  = 0x02;
 	private final static int HMC5883L_REGISTER_OUT_X_H_M = 0x03;
 
-	private final static float SCALE = 1; // 0.92F; // TODO This is a constant... is that any useful?
+	private final static float SCALE = 1F; // 0.92F; // TODO This is a constant... is that any useful?
 
 	private I2CDevice magnetometer;
 
@@ -132,7 +132,7 @@ public class HMC5883L {
 				magY = mag16(magData, 4) * SCALE; // Then Y
 
 				if (logForCalibration) {
-					System.out.println(String.format("%f;%f;%f", magX, magY, magZ));
+					System.out.println(String.format("%d;%d;%d", (int)magX, (int)magY, (int)magZ));
 				} else {
 					// TODO Apply parameters
 //					magX = calibrationMap.get(MAG_X_COEFF) * (calibrationMap.get(MAG_X_OFFSET) + magX);

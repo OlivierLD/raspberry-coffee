@@ -504,12 +504,12 @@ public class LSM303 {
 
 					double beforeAdjust = GeomUtil.getDir((float) magYComp, (float) magXComp); // For dev
 
-					if (pitchRollHeadingAdjust && pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
+					if (pitchRollHeadingAdjust && accelerometer != null && pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
 						magXComp = (magXFiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZFiltered * Math.sin(Math.toRadians(pitchDegrees)));
 						magYComp = (magYFiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZFiltered * Math.sin(Math.toRadians(rollDegrees)));
 					}
 
-					double afterAdjust = GeomUtil.getDir((float) magYComp, (float) magXComp); // For dev
+					double afterAdjust = GeomUtil.getDir((float) magYComp, (float) magXComp); // For development
 
 					heading = Math.toDegrees(Math.atan2(magYComp, magXComp));
 					while (heading < 0) {
@@ -517,7 +517,7 @@ public class LSM303 {
 					}
 
 					if (verboseRaw) {
-						System.out.println(String.format("RAW mag data (2): X:%f Y:%f => (before %.02f) (after %.02f) (HDG %.02f) ", magXComp, magYComp, beforeAdjust, afterAdjust, heading));
+						System.out.println(String.format("RAW mag data (2): X:%f Y:%f => (before %.02f, after %.02f, delta %.02f) (HDG %.02f) ", magXComp, magYComp, beforeAdjust, afterAdjust, (afterAdjust - beforeAdjust), heading));
 					}
 
 					setHeading(heading);
