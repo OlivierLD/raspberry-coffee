@@ -182,7 +182,8 @@ public class HMC5883L {
 			if (magnetometer != null) {
 				magnetometer.write((byte) HMC5883L_REGISTER_OUT_X_H_M);
 				// Reading magnetometer measurements.
-				int r = magnetometer.read(magData, 0, 6);
+				// int r = magnetometer.read(magData, 0, 6);
+				int r = magnetometer.read(magData, 0x80 | 0x08, 6);
 				if (r != 6) {
 					System.out.println("Error reading mag data, < 6 bytes");
 				} else if (verboseMag) {
@@ -214,9 +215,9 @@ public class HMC5883L {
 				}
 
 				if (logForCalibration) {
-					if (!(Math.abs(magX) > 1_000) && !(Math.abs(magY) > 1_000) && !(Math.abs(magZ) > 1_000)) { // Skip aberrations
+//					if (!(Math.abs(magX) > 1_000) && !(Math.abs(magY) > 1_000) && !(Math.abs(magZ) > 1_000)) { // Skip aberrations
 						System.out.println(String.format("%d;%d;%d;%.03f;%.03f;%.03f", (int) magX, (int) magY, (int) magZ, magXFiltered, magYFiltered, magZFiltered));
-					}
+//					}
 				}
 
 				heading = (float) Math.toDegrees(Math.atan2(magYFiltered, magXFiltered));
@@ -260,7 +261,8 @@ public class HMC5883L {
 //		int n = ((list[idx] & 0xFF) << 8) | (list[idx + 1] & 0xFF); // High, low bytes
 //		return (n < 0x8000 ? n : n - 0x10000);                      // 2's complement signed
 
-		return ((list[idx] & 0xFF) | ((list[idx + 1] & 0xFF) << 8));
+		int n = ((list[idx] & 0xFF) | ((list[idx + 1] & 0xFF) << 8));
+		return (n < 0x8000 ? n : n - 0x10000);                      // 2's complement signed
 	}
 
 	private static void dumpBytes(byte[] ba) {
