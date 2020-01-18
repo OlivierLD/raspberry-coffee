@@ -120,6 +120,22 @@ $ which wget
         - Then the command to use to reach Jupyter would show up in the console.
     - _Note:_ Training a Neural Network is a very demanding operation, that requires computing resources not granted on a Raspberry Pi. Installing Keras on a Raspberry Pi might not be relevant. OpenCV, though, would be an option to consider. Google it ;).
 
+#### Bonus: Setup a Raspberry Pi Zero W for USB Console
+This allows you to use `ssh` through a USB cable, it can be convenient.
+
+There is a good papaer about this setting [here](https://magpi.raspberrypi.org/articles/build-a-raspberry-pi-zero-keyring).
+
+You can use:
+- a USB cabel from your laptop to the USB port on the Raspberry pi Zero W (which has the same shape as the power supply)
+- a USB Connector like [this](https://zerostem.io/), pretty cool.
+- or a HAT like [this](https://www.adafruit.com/product/3589) (this one has a switch, nice), or like [that](https://www.adafruit.com/product/3309).
+
+Once you RPi is connected through a USB connection, after configuring it as explained, you can use `ssh` as follow:
+```
+$ ssh pi@raspberrypi.local
+``` 
+where `raspberrypi` is the `hostname` of the Raspberry. No wireless connection or IP address is required.
+
 ### Extra softs
 - Docker
 ```
