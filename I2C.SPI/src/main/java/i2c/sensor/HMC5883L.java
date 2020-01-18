@@ -20,7 +20,7 @@ public class HMC5883L {
 	private final static int HMC5883L_REGISTER_MR_REG_M  = 0x02;
 	private final static int HMC5883L_REGISTER_OUT_X_H_M = 0x03;
 
-	private final static float SCALE = 0.92F; // TODO This is a constant... is that any useful?
+	private final static float SCALE = 1; // 0.92F; // TODO This is a constant... is that any useful?
 
 	private I2CDevice magnetometer;
 
@@ -167,10 +167,12 @@ public class HMC5883L {
 						Z_FMT.format(roll)));
 			}
 
-			try {
-				Thread.sleep(this.wait);
-			} catch (InterruptedException ie) {
-				System.err.println(ie.getMessage());
+			if (this.wait > 0) {
+				try {
+					Thread.sleep(this.wait);
+				} catch (InterruptedException ie) {
+					System.err.println(ie.getMessage());
+				}
 			}
 		}
 	}
@@ -199,13 +201,14 @@ public class HMC5883L {
 	 */
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException, IOException {
 		verbose = "true".equals(System.getProperty("hmc5883l.verbose", "false"));
-		System.out.println("Verbose: " + verbose);
+//		System.out.println("Verbose: " + verbose);
 
 		if (logForCalibration) {
 			System.out.println("magX;magY;magZ");
 		}
 
 		HMC5883L sensor = new HMC5883L();
+		sensor.setWait(250);
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("\nBye.");
