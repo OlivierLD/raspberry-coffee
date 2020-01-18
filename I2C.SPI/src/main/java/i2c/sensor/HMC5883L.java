@@ -149,7 +149,9 @@ public class HMC5883L {
 				}
 
 				if (logForCalibration) {
-					System.out.println(String.format("%d;%d;%d;%.03f;%.03f;%.03f", (int)magX, (int)magY, (int)magZ, magXFiltered, magYFiltered, magZFiltered));
+					if (!(Math.abs(magX) > 1_000) && !(Math.abs(magY) > 1_000) && !(Math.abs(magZ) > 1_000)) { // Skip aberrations
+						System.out.println(String.format("%d;%d;%d;%.03f;%.03f;%.03f", (int) magX, (int) magY, (int) magZ, magXFiltered, magYFiltered, magZFiltered));
+					}
 				} else {
 					// TODO Apply parameters, to filtered values
 //					magX = calibrationMap.get(MAG_X_COEFF) * (calibrationMap.get(MAG_X_OFFSET) + magX);
