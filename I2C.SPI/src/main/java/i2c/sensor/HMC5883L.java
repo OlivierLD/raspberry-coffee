@@ -188,13 +188,9 @@ public class HMC5883L {
 					dumpBytes(magData);
 				}
 				// Mag raw data. !!! Warning !!! Order here is X, Z, Y
-//				magX = mag16(magData, 0) * SCALE; // X
-//				magZ = mag16(magData, 2) * SCALE; // Yes, Z, not Y
-//				magY = mag16(magData, 4) * SCALE; // And then Y
-
 				magX = mag16(magData, 0) * SCALE; // X
-				magY = mag16(magData, 2) * SCALE; // Y
-				magZ = mag16(magData, 4) * SCALE; // Z
+				magZ = mag16(magData, 2) * SCALE; // Yes, Z, not Y
+				magY = mag16(magData, 4) * SCALE; // And then Y
 
 				if (!logForCalibration) {
 					magX = calibrationMap.get(MAG_X_COEFF) * (calibrationMap.get(MAG_X_OFFSET) + magX);
