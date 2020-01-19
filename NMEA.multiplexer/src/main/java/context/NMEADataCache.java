@@ -58,7 +58,7 @@ import static nmea.utils.NMEAUtils.longitudeToTime;
  * TODO synchronize all this.put
  */
 public class NMEADataCache
-				extends ConcurrentHashMap<String, Object> // TODO Make it a ConcurrentHashMap instead of just HashMap ?
+				extends ConcurrentHashMap<String, Object> // TODO Make it a ConcurrentHashMap instead of just HashMap ? Check.
 				implements Serializable {
 
 	public static final String LAST_NMEA_SENTENCE = "NMEA";
@@ -131,6 +131,8 @@ public class NMEADataCache
 	public static final String DEW_POINT_TEMP = "dewpoint";
 
 	public static final String NMEA_AS_IS = "NMEA_AS_IS";
+
+	public static final String USER_DEFINED = "UserDefined"; // Free, whatever you like! At your own risk!
 
 	public static final String AIS = "ais";
 	private Map<Integer, Map<Integer, AISParser.AISRecord>> aisMap = new ConcurrentHashMap<>();
