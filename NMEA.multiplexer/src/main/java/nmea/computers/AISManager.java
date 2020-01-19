@@ -25,6 +25,8 @@ public class AISManager extends Computer {
 	private final static double DEFAULT_HEADING_FORK = 10;
 	private double headingFork = DEFAULT_HEADING_FORK;
 
+	private AISParser aisParser = new AISParser();
+
 	public AISManager(Multiplexer mux) {
 		super(mux);
 	}
@@ -43,7 +45,7 @@ public class AISManager extends Computer {
 		if (StringParsers.validCheckSum(sentence)) {
 			if (sentence.startsWith(AISParser.AIS_PREFIX)) {
 				try {
-					AISParser.AISRecord aisRecord = AISParser.parseAIS(sentence);
+					AISParser.AISRecord aisRecord = aisParser.parseAIS(sentence);
 					if (aisRecord != null) {
 						if (aisRecord.getLatitude() != 0f && aisRecord.getLongitude() != 0f) {
 							NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
