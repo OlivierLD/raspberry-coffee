@@ -110,9 +110,13 @@ public class TCPServer implements Forwarder {
 			try {
 				parent.serverSocket = new ServerSocket(tcpPort);
 				while (true) { // Wait for the clients
-          System.out.println(".......... serverSocket waiting (TCP:" + tcpPort + ").");
+					if (instance.props != null && "true".equals(instance.props.getProperty("verbose"))) {
+						System.out.println(".......... serverSocket waiting (TCP:" + tcpPort + ").");
+					}
 					Socket clientSkt = serverSocket.accept();
-          System.out.println(".......... serverSocket accepted (TCP:" + tcpPort + ").");
+					if (instance.props != null && "true".equals(instance.props.getProperty("verbose"))) {
+						System.out.println(".......... serverSocket accepted (TCP:" + tcpPort + ").");
+					}
 					parent.setSocket(clientSkt);
 				}
 			} catch (Exception ex) {
