@@ -98,6 +98,10 @@ public class AISTargetLogger extends Computer {
 						if (aisRecord.getMessageType() == 5 ||
 								aisRecord.getMessageType() == 24) {
 							NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
+
+							if (this.isVerbose()) {
+								System.out.println(String.format("-----------------------------\nCache is %snull!\n-----------------------------", cache == null ? "" : "not "));
+							}
 							int mmsi = aisRecord.getMMSI();
 							String vesselName = aisRecord.getVesselName();
 							if (!vesselName.isEmpty()) {
@@ -119,6 +123,13 @@ public class AISTargetLogger extends Computer {
 										.destination(destination);
 								targetMap.put(mmsi, tnts);
 								cache.put(NMEADataCache.USER_DEFINED, targetMap);
+
+								if (this.isVerbose()) {
+									JsonElement jsonElement = new Gson().toJsonTree(cache);
+									System.out.println("-------------------------------");
+									System.out.println(String.format("Cache is now:\n%s", jsonElement.toString()));
+									System.out.println("-------------------------------");
+								}
 							}
 						}
 					}
@@ -127,6 +138,11 @@ public class AISTargetLogger extends Computer {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void setVerbose(boolean verbose) {
+		super.setVerbose(verbose);
 	}
 
 	@Override
