@@ -138,7 +138,7 @@ public class AISTargetLogger extends Computer {
 						}
 					} else {
 						if (this.isVerbose()) {
-							System.out.println(String.format("In %s, AIS Mess null for %s", this.getClass().getName(), sentence.trim()));
+							System.out.println(String.format(">>\tIn %s, AIS Mess null for %s", this.getClass().getName(), sentence.trim()));
 						}
 					}
 				} catch (AISParser.AISException aisException) { // un-managed AIS type

@@ -367,7 +367,7 @@ public class NMEADataCache
 							}
 							// Debug
 							if (rec.getMessageType() == 5) {
-								System.out.println(String.format("\tAIS Mess Type 5: %s, %s", nmeaSentence.trim(), rec.toString()));
+								System.out.println(String.format(">>> \tAIS Mess Type 5: %s, %s", nmeaSentence.trim(), rec.toString()));
 							}
 						}
 						synchronized (this) {

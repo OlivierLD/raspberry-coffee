@@ -134,11 +134,14 @@ public class GPSdServer implements Forwarder {
 		public void run() {
 			try {
 				parent.serverSocket = new ServerSocket(tcpPort);
-				while (true) // Wait for the clients
-				{
-          System.out.println(".......... serverSocket waiting (GPSd:" + tcpPort + ").");
+				while (true) { // Wait for the clients
+					if (instance.props != null && "true".equals(instance.props.getProperty("verbose"))) {
+						System.out.println(".......... serverSocket waiting (GPSd:" + tcpPort + ").");
+					}
 					Socket clientSkt = serverSocket.accept();
-          System.out.println(".......... serverSocket accepted (GPSd:" + tcpPort + ").");
+					if (instance.props != null && "true".equals(instance.props.getProperty("verbose"))) {
+						System.out.println(".......... serverSocket accepted (GPSd:" + tcpPort + ").");
+					}
 					parent.setSocket(clientSkt);
 
 					DataOutputStream out = new DataOutputStream(clientSkt.getOutputStream());
