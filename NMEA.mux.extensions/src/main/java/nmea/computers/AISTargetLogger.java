@@ -1,7 +1,7 @@
 package nmea.computers;
 
-//import com.google.gson.Gson;
-//import com.google.gson.JsonElement;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import context.ApplicationContext;
 import context.NMEADataCache;
 import nmea.ais.AISParser;
@@ -14,6 +14,7 @@ import java.util.Properties;
 
 /**
  * Puts a map in the USER_DEFINED property.
+ * Will contain the names of the vessels, from message types 5 and 24.
  * WARNING!!! : This one is never cleaned!!
  */
 public class AISTargetLogger extends Computer {
@@ -97,6 +98,10 @@ public class AISTargetLogger extends Computer {
 						if (aisRecord.getMessageType() == 5 ||
 								aisRecord.getMessageType() == 24) {
 							NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
+
+							if (this.isVerbose()) {
+								System.out.println(String.format("-----------------------------\nCache is %snull!\n-----------------------------", cache == null ? "" : "not "));
+							}
 							int mmsi = aisRecord.getMMSI();
 							String vesselName = aisRecord.getVesselName();
 							if (!vesselName.isEmpty()) {
@@ -118,6 +123,13 @@ public class AISTargetLogger extends Computer {
 										.destination(destination);
 								targetMap.put(mmsi, tnts);
 								cache.put(NMEADataCache.USER_DEFINED, targetMap);
+
+								if (this.isVerbose()) {
+									JsonElement jsonElement = new Gson().toJsonTree(cache);
+									System.out.println("-------------------------------");
+									System.out.println(String.format("Cache is now:\n%s", jsonElement.toString()));
+									System.out.println("-------------------------------");
+								}
 							}
 						}
 					}
@@ -126,6 +138,11 @@ public class AISTargetLogger extends Computer {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void setVerbose(boolean verbose) {
+		super.setVerbose(verbose);
 	}
 
 	@Override
@@ -156,22 +173,24 @@ public class AISTargetLogger extends Computer {
 	}
 
 	// For JSON Tests
-//	public static void main(String... args) {
-//		Map<Integer, TargetNameTimeStamp> targetMap = new HashMap<>();
-//		TargetNameTimeStamp tnts = new TargetNameTimeStamp()
-//				.lastSeen(1234567)
-//				.vesselName("ZEBULON")
-//				.callSign("WDC7278")
-//				.destination("FAR-AWAY");
-//		targetMap.put(87654321, tnts);
-//		// ApplicationContext.getInstance().initCache("null.csv", 10, 1, 1, 0, 0, 14, 1);
-//		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
-//		if (cache == null) {
-//			cache = new NMEADataCache();
-//		}
-//		cache.put(NMEADataCache.USER_DEFINED, targetMap);
-//		System.out.println("Cache:" + cache);
-//		JsonElement jsonElement = new Gson().toJsonTree(cache);
-//		System.out.println("JSON:" + jsonElement.toString());
-//	}
+	public static void main(String... args) {
+		Map<Integer, TargetNameTimeStamp> targetMap = new HashMap<>();
+		TargetNameTimeStamp tnts = new TargetNameTimeStamp()
+				.lastSeen(1234567)
+				.vesselName("ZEBULON")
+				.callSign("WDC7278")
+				.destination("FAR-AWAY");
+		targetMap.put(87654321, tnts);
+		ApplicationContext.getInstance().initCache("null.csv", 10, 1, 1, 0, 0, 14, 1);
+		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
+		if (cache == null) {
+			cache = new NMEADataCache();
+		}
+		cache.put(NMEADataCache.USER_DEFINED, targetMap);
+		System.out.println("Cache:" + cache);
+		JsonElement jsonElement = new Gson().toJsonTree(cache);
+		System.out.println("JSON:" + jsonElement.toString());
+
+		System.exit(0);
+	}
 }

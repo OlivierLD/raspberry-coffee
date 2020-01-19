@@ -16,6 +16,10 @@ public abstract class Computer implements Forwarder {
 		this.multiplexer = mux;
 	}
 
+	/**
+	 * Broadcasts data to all forwarders and computers.
+	 * @param mess
+	 */
 	protected synchronized void produce(String mess) {
 		this.multiplexer.onData(mess);
 	}
