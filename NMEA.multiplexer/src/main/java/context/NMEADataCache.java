@@ -365,6 +365,10 @@ public class NMEADataCache
 							if (System.getProperty("ais.cache.verbose", "false").equals("true")) {
 								System.out.println(String.format(">> AIS %s, type %s goes into cache: %s", rec.getMMSI(), rec.getMessageType(), rec.toString()));
 							}
+							// Debug
+							if (rec.getMessageType() == 5) {
+								System.out.println(String.format("\tAIS Mess Type 5: %s, %s", nmeaSentence.trim(), rec.toString()));
+							}
 						}
 						synchronized (this) {
 							synchronized (aisMap) {

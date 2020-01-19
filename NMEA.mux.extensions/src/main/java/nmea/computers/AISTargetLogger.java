@@ -95,7 +95,7 @@ public class AISTargetLogger extends Computer {
 				try {
 					AISParser.AISRecord aisRecord = AISParser.parseAIS(sentence);
 					if (aisRecord != null) {
-						if (true || this.isVerbose()) {
+						if (this.isVerbose()) {
 							System.out.println(String.format("%s received AIS MessType #%d, %s (verb: %s)", this.getClass().getName(), aisRecord.getMessageType(), sentence.trim(), this.verbose));
 						}
 						if (aisRecord.getMessageType() == 5 ||
@@ -135,6 +135,10 @@ public class AISTargetLogger extends Computer {
 									System.out.println("-------------------------------");
 								}
 							}
+						}
+					} else {
+						if (this.isVerbose()) {
+							System.out.println(String.format("In %s, AIS Mess null for %s", this.getClass().getName(), sentence.trim()));
 						}
 					}
 				} catch (AISParser.AISException aisException) { // un-managed AIS type
