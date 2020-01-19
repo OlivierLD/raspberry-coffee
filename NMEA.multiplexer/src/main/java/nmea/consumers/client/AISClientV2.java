@@ -20,6 +20,7 @@ public class AISClientV2 {
 	 * Set proxy at runtime if needed -Dhttp.proxyHost, -Dhttp.proxyPort
 	 */
 	public static void main(String... args) {
+		AISParser aisParser = new AISParser();
 		try {
 			Map<Integer, AISParser.AISRecord> map = new HashMap<>();
 
@@ -39,7 +40,7 @@ public class AISClientV2 {
 					System.out.println(">> " + aisMessage);
 					if (!aisMessage.startsWith("#")) {
 						try {
-							AISParser.AISRecord rec = AISParser.parseAIS(aisMessage);
+							AISParser.AISRecord rec = aisParser.parseAIS(aisMessage);
 							if (rec != null) {
 								map.put(rec.getMMSI(), rec);
 								System.out.println(String.format("(%d boat%s in sight): %s", map.size(), map.size() > 1 ? "s" : "", rec.toString()));
