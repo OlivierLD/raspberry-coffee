@@ -527,7 +527,7 @@ public class AISParser {
 	private final static int AIS_CHANNEL_POS = 4;
 	private final static int AIS_DATA_POS = 5;
 
-	public static int getMessageType(String sentence) {
+	public int getMessageType(String sentence) {
 		String[] dataElement = sentence.split(",");
 		if (!dataElement[PREFIX_POS].equals(AIS_PREFIX)) {
 			throw new RuntimeException(String.format("Unmanaged AIS Prefix [%s].", dataElement[PREFIX_POS]));
@@ -544,9 +544,9 @@ public class AISParser {
 		return messageType;
 	}
 
-	private static StringBuffer unfinishedSentence = null;
+	private StringBuffer unfinishedSentence = null;
 
-	public static AISRecord parseAIS(String sentence) throws AISException {
+	public AISRecord parseAIS(String sentence) throws AISException { // Must be non-static..., for multi-messages types.
 
 		if (verbose) {
 			System.out.println(String.format(">> AIS Parsing [%s]", sentence));
@@ -2527,6 +2527,8 @@ public class AISParser {
 
 	public static void main(String... args) throws Exception {
 
+		AISParser aisParser = new AISParser();
+
 		String ais; // Error in !AIVDM,1,1,,B,?03Ovk1E6T50D00,2*1E
 		if (args.length > 0) {
 			if (args[0].equalsIgnoreCase("--inter")) {
@@ -2538,7 +2540,7 @@ public class AISParser {
 						keepAsking = false;
 					} else {
 						try {
-							System.out.println(parseAIS(userInput));
+							System.out.println(aisParser.parseAIS(userInput));
 						} catch (Exception t) {
 							t.printStackTrace();
 						}
@@ -2546,7 +2548,7 @@ public class AISParser {
 				}
 			} else {
 				try {
-					System.out.println(parseAIS(args[0]));
+					System.out.println(aisParser.parseAIS(args[0]));
 				} catch (AISException t) {
 					System.err.println(t.toString());
 				}
@@ -2562,35 +2564,35 @@ public class AISParser {
 
 			ais = "!AIVDM,1,1,,A,14eG;o@034o8sd<L9i:a;WF>062D,0*7D";
 			try {
-				System.out.println(parseAIS(ais));
+				System.out.println(aisParser.parseAIS(ais));
 			} catch (Throwable t) {
 				System.err.println(t.toString());
 			}
 
 			ais = "!AIVDM,1,1,,A,15NB>cP03jG?l`<EaV0`MFO000S>,0*39";
 			try {
-				System.out.println(parseAIS(ais));
+				System.out.println(aisParser.parseAIS(ais));
 			} catch (AISException t) {
 				System.err.println(t.toString());
 			}
 
 			ais = "!AIVDM,1,1,,B,177KQJ5000G?tO`K>RA1wUbN0TKH,0*5C";
 			try {
-				System.out.println(parseAIS(ais));
+				System.out.println(aisParser.parseAIS(ais));
 			} catch (AISException t) {
 				System.err.println(t.toString());
 			}
 
 			ais = "!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52";
 			try {
-				System.out.println(parseAIS(ais));
+				System.out.println(aisParser.parseAIS(ais));
 			} catch (AISException t) {
 				System.err.println(t.toString());
 			}
 
 			ais = "!AIVDM,2,2,2,B,RADP,0*10";
 			try {
-				System.out.println(parseAIS(ais));
+				System.out.println(aisParser.parseAIS(ais));
 			} catch (Exception ex) {
 				System.err.println(ex.toString());
 			}
@@ -2644,7 +2646,7 @@ public class AISParser {
 			);
 			aisFromDaisy.forEach(aisStr -> {
 				try {
-					System.out.println(parseAIS(aisStr));
+					System.out.println(aisParser.parseAIS(aisStr));
 				} catch (AISException t) {
 					System.err.println(t.toString());
 				}
@@ -2665,7 +2667,7 @@ public class AISParser {
 						if (line != null) {
 							if (!line.startsWith("#") && line.startsWith(AIS_PREFIX)) {
 								try {
-									AISRecord aisRecord = parseAIS(line);
+									AISRecord aisRecord = aisParser.parseAIS(line);
 									if (aisRecord != null) {
 										System.out.println(aisRecord);
 									} else {

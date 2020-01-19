@@ -19,6 +19,8 @@ import java.util.Properties;
  */
 public class AISTargetLogger extends Computer {
 
+	private AISParser aisParser = new AISParser();
+
 	private static class TargetNameTimeStamp {
 		private long lastSeen;
 		private String vesselName;
@@ -93,7 +95,7 @@ public class AISTargetLogger extends Computer {
 		if (StringParsers.validCheckSum(sentence)) {
 			if (sentence.startsWith(AISParser.AIS_PREFIX)) {
 				try {
-					AISParser.AISRecord aisRecord = AISParser.parseAIS(sentence);
+					AISParser.AISRecord aisRecord = aisParser.parseAIS(sentence);
 					if (aisRecord != null) {
 						if (this.isVerbose()) {
 							System.out.println(String.format("%s received AIS MessType #%d, %s (verb: %s)", this.getClass().getName(), aisRecord.getMessageType(), sentence.trim(), this.verbose));

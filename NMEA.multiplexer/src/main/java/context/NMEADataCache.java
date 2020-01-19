@@ -164,6 +164,8 @@ public class NMEADataCache
 	private transient double minAlt =  Double.MAX_VALUE;
 	private transient GeoPos previousPosition = null;
 
+	private AISParser aisParser = new AISParser();
+
 	public NMEADataCache() {
 		super();
 		started = System.currentTimeMillis();
@@ -349,7 +351,7 @@ public class NMEADataCache
 			if (nmeaSentence.startsWith(AISParser.AIS_PREFIX)) { // AIS. There is a thread to cleanup old AIS records
 				if ("true".equals(System.getProperty("put.ais.in.cache", "true"))) {
 					try {
-						AISParser.AISRecord rec = AISParser.parseAIS(nmeaSentence);
+						AISParser.AISRecord rec = aisParser.parseAIS(nmeaSentence);
 						if (rec != null) { // Case of Multi-Record or un-managed type
 							Map<Integer, AISParser.AISRecord> mapOfTypes = aisMap.get(rec.getMMSI());
 							if (mapOfTypes == null) {
