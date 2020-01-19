@@ -279,6 +279,16 @@ public class TimeUtil {
 		return str;
 	}
 
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss");
+
+	public static String getTimeStamp() {
+		String timeStamp = "--:--:--";
+		try {
+			timeStamp = SDF.format(new Date());
+		} catch (Exception ex) {}
+		return timeStamp;
+	}
+
 	public static void main(String... args) {
 
 		System.setProperty("time.verbose", "true");
