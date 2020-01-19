@@ -8,6 +8,8 @@ import nmea.ais.AISParser;
 import nmea.api.Multiplexer;
 import nmea.parser.StringParsers;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -83,6 +85,16 @@ public class AISTargetLogger extends Computer {
 		super(mux);
 	}
 
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss");
+
+	private static String getTimeStamp() {
+		String timeStamp = "--:--:--";
+		try {
+			timeStamp = SDF.format(new Date());
+		} catch (Exception ex) {}
+		return timeStamp;
+	}
+
 	/**
 	 * Log vessel name is available along with timestamp.
 	 * @param mess Received message
@@ -98,7 +110,7 @@ public class AISTargetLogger extends Computer {
 					AISParser.AISRecord aisRecord = aisParser.parseAIS(sentence);
 					if (aisRecord != null) {
 						if (this.isVerbose()) {
-							System.out.println(String.format("%s received AIS MessType #%d, %s (verb: %s)", this.getClass().getName(), aisRecord.getMessageType(), sentence.trim(), this.verbose));
+							System.out.println(String.format("(%s) %s received AIS MessType #%d, %s (verb: %s)", getTimeStamp(), this.getClass().getName(), aisRecord.getMessageType(), sentence.trim(), this.verbose));
 						}
 						if (aisRecord.getMessageType() == 5 ||
 								aisRecord.getMessageType() == 24) {
