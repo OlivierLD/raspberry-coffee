@@ -95,6 +95,9 @@ public class AISTargetLogger extends Computer {
 				try {
 					AISParser.AISRecord aisRecord = AISParser.parseAIS(sentence);
 					if (aisRecord != null) {
+						if (true || this.isVerbose()) {
+							System.out.println(String.format("%s received AIS Mess#%d, %s (verb: %s)", this.getClass().getName(), aisRecord.getMessageType(), sentence, this.verbose));
+						}
 						if (aisRecord.getMessageType() == 5 ||
 								aisRecord.getMessageType() == 24) {
 							NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
@@ -122,8 +125,9 @@ public class AISTargetLogger extends Computer {
 										.callSign(callSign)
 										.destination(destination);
 								targetMap.put(mmsi, tnts);
-								cache.put(NMEADataCache.USER_DEFINED, targetMap);
-
+								synchronized (cache) {
+									cache.put(NMEADataCache.USER_DEFINED, targetMap);
+								}
 								if (this.isVerbose()) {
 									JsonElement jsonElement = new Gson().toJsonTree(cache);
 									System.out.println("-------------------------------");
