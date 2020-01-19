@@ -35,9 +35,15 @@ public class ApplicationContext {
 
 		dataCache = new NMEADataCache();
 
-		List<double[]> deviationCurve = NMEAUtils.loadDeviationCurve(deviationFileName);
-		dataCache.put(NMEADataCache.DEVIATION_FILE, deviationFileName);
-		dataCache.put(NMEADataCache.DEVIATION_DATA, deviationCurve);
+		try {
+			List<double[]> deviationCurve = NMEAUtils.loadDeviationCurve(deviationFileName);
+			dataCache.put(NMEADataCache.DEVIATION_FILE, deviationFileName);
+			dataCache.put(NMEADataCache.DEVIATION_DATA, deviationCurve);
+		} catch (Exception ex) {
+			System.err.println("No deviation curve, sorry.");
+			ex.printStackTrace();
+			System.err.println("... moving on anyway.");
+		}
 		dataCache.put(NMEADataCache.MAX_LEEWAY, maxLeeway);
 
 		dataCache.put(NMEADataCache.BSP_FACTOR, bspFactor);
