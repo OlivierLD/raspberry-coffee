@@ -1,5 +1,7 @@
 package nmea.computers;
 
+//import com.google.gson.Gson;
+//import com.google.gson.JsonElement;
 import context.ApplicationContext;
 import context.NMEADataCache;
 import nmea.ais.AISParser;
@@ -17,8 +19,59 @@ import java.util.Properties;
 public class AISTargetLogger extends Computer {
 
 	private static class TargetNameTimeStamp {
-		long lastSeen;
-		String vesselName;
+		private long lastSeen;
+		private String vesselName;
+		private String callSign;
+		private String destination;
+
+		public TargetNameTimeStamp lastSeen(long lastSeen) {
+			this.lastSeen = lastSeen;
+			return this;
+		}
+		public TargetNameTimeStamp vesselName(String vesselName) {
+			this.vesselName = vesselName;
+			return this;
+		}
+		public TargetNameTimeStamp callSign(String callSign) {
+			this.callSign = callSign;
+			return this;
+		}
+		public TargetNameTimeStamp destination(String destination) {
+			this.destination = destination;
+			return this;
+		}
+
+		public long getLastSeen() {
+			return lastSeen;
+		}
+
+		public void setLastSeen(long lastSeen) {
+			this.lastSeen = lastSeen;
+		}
+
+		public String getVesselName() {
+			return vesselName;
+		}
+
+		public void setVesselName(String vesselName) {
+			this.vesselName = vesselName;
+		}
+
+		public String getCallSign() {
+			return callSign;
+		}
+
+		public void setCallSign(String callSign) {
+			this.callSign = callSign;
+		}
+
+		public String getDestination() {
+			return destination;
+		}
+
+		public void setDestination(String destination) {
+			this.destination = destination;
+		}
 	}
 
 	private Map<Integer, TargetNameTimeStamp> targetMap = null;
@@ -48,6 +101,8 @@ public class AISTargetLogger extends Computer {
 							String vesselName = aisRecord.getVesselName();
 							if (!vesselName.isEmpty()) {
 								long recordTimeStamp = aisRecord.getRecordTimeStamp();
+								String callSign = aisRecord.getCallSign();
+								String destination = aisRecord.getDestination();
 								Object userMap = cache.get(NMEADataCache.USER_DEFINED);
 								if (userMap == null) {
 									targetMap = new HashMap<>();
@@ -56,9 +111,11 @@ public class AISTargetLogger extends Computer {
 										targetMap = (Map<Integer, TargetNameTimeStamp>) userMap;
 									}
 								}
-								TargetNameTimeStamp tnts = new TargetNameTimeStamp();
-								tnts.lastSeen = recordTimeStamp;
-								tnts.vesselName = vesselName;
+								TargetNameTimeStamp tnts = new TargetNameTimeStamp()
+										.lastSeen(recordTimeStamp)
+										.vesselName(vesselName)
+										.callSign(callSign)
+										.destination(destination);
 								targetMap.put(mmsi, tnts);
 								cache.put(NMEADataCache.USER_DEFINED, targetMap);
 							}
@@ -97,4 +154,24 @@ public class AISTargetLogger extends Computer {
 	public Object getBean() {
 		return new AISTargetLoggerBean(this);
 	}
+
+	// For JSON Tests
+//	public static void main(String... args) {
+//		Map<Integer, TargetNameTimeStamp> targetMap = new HashMap<>();
+//		TargetNameTimeStamp tnts = new TargetNameTimeStamp()
+//				.lastSeen(1234567)
+//				.vesselName("ZEBULON")
+//				.callSign("WDC7278")
+//				.destination("FAR-AWAY");
+//		targetMap.put(87654321, tnts);
+//		// ApplicationContext.getInstance().initCache("null.csv", 10, 1, 1, 0, 0, 14, 1);
+//		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
+//		if (cache == null) {
+//			cache = new NMEADataCache();
+//		}
+//		cache.put(NMEADataCache.USER_DEFINED, targetMap);
+//		System.out.println("Cache:" + cache);
+//		JsonElement jsonElement = new Gson().toJsonTree(cache);
+//		System.out.println("JSON:" + jsonElement.toString());
+//	}
 }
