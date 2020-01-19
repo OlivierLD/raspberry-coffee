@@ -129,7 +129,7 @@ mux.01.read.frequency=1000
 are equivalent to `yaml` like
 ```yaml
 channels:
- - type:lsm303           
+ - type: lsm303           
    device.prefix: II
    verbose: false
    sentence.filters: HDM,XDR
@@ -284,6 +284,9 @@ The lines above means that:
     ```
   > _Note_: using `forward.XX.properties`, you can refer to a properties file containing a `with.ais` properties.
   > Default value is `true`, it can be set to `false` to prevent the AIS strings to be re-broadcasted.
+  >
+  > Along the same lines, there is a `put.ais.in.cache` property defaulted to `true`. Set it to `false` if you do not need the 
+  > parsed AIS data to end up in the NMEA Cache. 
 - `gpsd`
     - GPSD Server
     ```properties

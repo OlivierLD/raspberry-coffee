@@ -231,15 +231,16 @@ See below, the data come from the log file _and_ from the Serial GPS.
 
 ### Debugging
 
-- Node-RED is lagging a bit behind, for now. The only tool you have is pretty much `console.log`...
-
+- ~~Node-RED is lagging a bit behind, for now. The only tool you have is pretty much `console.log`...~~
+- See [this article](https://discourse.nodered.org/t/how-to-debug-an-own-node-with-the-node-js-debugger/5737)...
 
 ## Summary
 #### After comparing the Java implementation of the NMEA Multiplexer with what could be done with Node-RED
 
 In both cases, programming skills are required, Java, or JavaScript. And no one is easier than the other.
-The amount of code is much smaller with Node-RED, but there is - for now - _no_ way to debug it, as opposed
-to Java, all the IDEs support the Java Platform Debugging Architecture (JPDA), that allows local and remote debugging.
+The amount of code is much smaller with Node-RED. 
+- All the Java IDEs support the Java Platform Debugging Architecture (JPDA), that allows local and remote debugging.
+- NodeJS now also has debugging capabilities, allowing you to debug your own nodes.
 
 The Node-RED implementation requires `NMEAParser.js`, counterpart of the `nmea.parser.StringParsers.java`.
 
@@ -254,10 +255,10 @@ Node-RED being way more generic.
  One `jar-file` for the Java version (requires `Java`), a couple of `npm` commands for Node-RED (requires `Node.js`).
 
 ###### Debugging Capabilities
- The Java version has all the debugging features that come with Java. Node-RED does not have much.
+ The Java version has all the debugging features that come with Java. Node-RED now benefits from the debugging capabilities of NodeJS.
 
 ###### Ease of Configuration
- The Web UI of Node-RED is an asset. As it is now, the Java version requires more typing.
+ The Web UI of Node-RED is an asset. As it is now, the Java version requires more typing and coding.
 
 ###### Sustainability
  Node-RED is a product, with a development team behind it...
@@ -272,7 +273,7 @@ I like both. Even if I have written the Java implementation myself, Node-RED als
 One thing I find important though: In the case of the Java Multiplexer, whatever comes in or goes out is a _pure_ `NMEA` String (except when transforming them for a specific client, of course).
 I'm a bit reluctant to come up with a specific shape for those objects. Whatever archaic it can look like, `NMEA` is a well defined standard that is well understood and documented.
 
-Lingos like `GPSd` or `SignalK` have good reasons to exist, but you have to comply to yet another way to read their data if you want to see what's in there...
+Lingos like `GPSd` or `SignalK` have good reasons to exist, but you have to comply with yet another way to read their data if you want to see what's in there...
 
 I'd rather stick to `NMEA`.
 
@@ -281,5 +282,5 @@ Note that even if it is happy with `json`, Node-RED has no problem dealing with 
 Another cool thing is that the Java NMEA Multiplexer and Node-RED can seamlessly co-exist.
 
 ---
-_March, April 2017_
+_March, April 2017, January 2020_
 

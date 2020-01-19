@@ -94,21 +94,30 @@ public final class GeomUtil {
 		double y = (Math.cos(Math.toRadians(fromL)) * Math.sin(Math.toRadians(toL))) -
 				(Math.sin(Math.toRadians(fromL)) * Math.cos(Math.toRadians(toL)) * Math.cos(Math.toRadians(deltaG)));
 		double b = Math.toDegrees(Math.atan2(x, y));
-		while (b < 0) {
+		while (b < 0) { // on0to360
 			b += 360;
 		}
 		return b;
 	}
 
 	/**
+	 * Converts [-180, 180] to [0, 360], -45 to 315, etc
+	 * @param angle original
+	 * @return tweaked
+	 */
+	public static double on0to360(double angle) {
+		return (angle < 0) ? angle + 360 : angle;
+	}
+
+	/**
 	 * Get the direction
-	 * TODO: use Math.atan2
+	 * @deprecated use Math.atan2
 	 *
 	 * @param x horizontal displacement
 	 * @param y vertical displacement
-	 * @return the angle, in degrees
+	 * @return the angle, in degrees, [0..360]
 	 */
-	public static double getDir(float x, float y) {
+	public static double getDirV1(float x, float y) {
 		double dir = 0.0D;
 		if (y != 0) {
 			dir = Math.toDegrees(Math.atan((double) x / (double) y));
@@ -136,6 +145,17 @@ public final class GeomUtil {
 		}
 		while (dir >= 360D) dir -= 360D;
 		return dir;
+	}
+
+	/**
+	 * Get the direction
+	 *
+	 * @param x horizontal displacement
+	 * @param y vertical displacement
+	 * @return the angle, in degrees, [0..360]
+	 */
+	public static double getDir(float x, float y) {
+		return on0to360(Math.toDegrees(Math.atan2(x, y)));
 	}
 
 	/**
@@ -552,5 +572,20 @@ public final class GeomUtil {
 		System.out.println(String.format("15 >> %.02f\272", bearingDiff(20, 5)));
 		System.out.println(String.format("15 >> %.02f\272", bearingDiff(350, 335)));
 		System.out.println(String.format("15 >> %.02f\272", bearingDiff(170, 185)));
+
+		// Some getDir tests
+		float deltaX = 50f, deltaY = 50f;
+		System.out.println(String.format("\u0394x %.02f, \u0394y %.02f \t: GetDir: %.02f, atan2: %.02f", deltaX, deltaY, getDirV1(deltaX, deltaY), on0to360(Math.toDegrees(Math.atan2(deltaX, deltaY)))));
+		deltaX = -50;
+		System.out.println(String.format("\u0394x %.02f, \u0394y %.02f \t: GetDir: %.02f, atan2: %.02f", deltaX, deltaY, getDirV1(deltaX, deltaY), on0to360(Math.toDegrees(Math.atan2(deltaX, deltaY)))));
+		deltaY = -50;
+		System.out.println(String.format("\u0394x %.02f, \u0394y %.02f \t: GetDir: %.02f, atan2: %.02f", deltaX, deltaY, getDirV1(deltaX, deltaY), on0to360(Math.toDegrees(Math.atan2(deltaX, deltaY)))));
+		deltaX = 50;
+		System.out.println(String.format("\u0394x %.02f, \u0394y %.02f \t: GetDir: %.02f, atan2: %.02f", deltaX, deltaY, getDirV1(deltaX, deltaY), on0to360(Math.toDegrees(Math.atan2(deltaX, deltaY)))));
+		deltaX = 0;
+		System.out.println(String.format("\u0394x %.02f, \u0394y %.02f \t: GetDir: %.02f, atan2: %.02f", deltaX, deltaY, getDirV1(deltaX, deltaY), on0to360(Math.toDegrees(Math.atan2(deltaX, deltaY)))));
+		deltaX = 50;
+		deltaY = 0;
+		System.out.println(String.format("\u0394x %.02f, \u0394y %.02f \t: GetDir: %.02f, atan2: %.02f", deltaX, deltaY, getDirV1(deltaX, deltaY), on0to360(Math.toDegrees(Math.atan2(deltaX, deltaY)))));
 	}
 }

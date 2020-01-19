@@ -1,3 +1,5 @@
+This is a Work In Progress... 🚧
+
 ## What a Nav Server has to address to be useful
 
 ### What is True Wind and Current calculation?

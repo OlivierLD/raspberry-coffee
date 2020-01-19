@@ -23,7 +23,7 @@ public class StaticUtil {
 
 	public static String userInput(String prompt) {
 		String retString = "";
-		System.err.print(prompt);
+		System.out.print(prompt); // err ?
 		try {
 			retString = stdin.readLine();
 		} catch (Exception e) {

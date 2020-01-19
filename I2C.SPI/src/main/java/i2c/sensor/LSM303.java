@@ -71,7 +71,7 @@ public class LSM303 {
    */
 	// Those 2 next addresses are returned by "sudo i2cdetect -y 1", see above.
 	private final static int LSM303_ADDRESS_ACCEL = (0x32 >> 1); // 0011001x, 0x19
-	private final static int LSM303_ADDRESS_MAG = (0x3C >> 1); // 0011110x, 0x1E <- that is an HMC5883L !
+	private final static int LSM303_ADDRESS_MAG = (0x3C >> 1);   // 0011110x, 0x1E <- that is an HMC5883L !
 	// Default    Type
 	private final static int LSM303_REGISTER_ACCEL_CTRL_REG1_A = 0x20; // 00000111   rw
 	private final static int LSM303_REGISTER_ACCEL_CTRL_REG4_A = 0x23; // 00000000   rw
@@ -325,7 +325,7 @@ public class LSM303 {
 				ioe.printStackTrace();
 			}
 		};
-		new Thread(task).start();
+		new Thread(task, "lsm303-reader").start();
 	}
 
 	private void setPitch(double pitch) {
@@ -504,20 +504,20 @@ public class LSM303 {
 
 					double beforeAdjust = GeomUtil.getDir((float) magYComp, (float) magXComp); // For dev
 
-					if (pitchRollHeadingAdjust && pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
+					if (pitchRollHeadingAdjust && accelerometer != null && pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
 						magXComp = (magXFiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZFiltered * Math.sin(Math.toRadians(pitchDegrees)));
 						magYComp = (magYFiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZFiltered * Math.sin(Math.toRadians(rollDegrees)));
 					}
 
-					double afterAdjust = GeomUtil.getDir((float) magYComp, (float) magXComp); // For dev
+					double afterAdjust = GeomUtil.getDir((float) magYComp, (float) magXComp); // For development
 
 					heading = Math.toDegrees(Math.atan2(magYComp, magXComp));
 					while (heading < 0) {
 						heading += 360f;
 					}
 
-					if (verbose) {
-						System.out.println(String.format("RAW mag data (2): X:%f Y:%f => (before %.02f) (after %.02f) (HDG %.02f) ", magXComp, magYComp, beforeAdjust, afterAdjust, heading));
+					if (verboseRaw) {
+						System.out.println(String.format("RAW mag data (2): X:%f Y:%f => (before %.02f, after %.02f, delta %.02f) (HDG %.02f) ", magXComp, magYComp, beforeAdjust, afterAdjust, (afterAdjust - beforeAdjust), heading));
 					}
 
 					setHeading(heading);
@@ -616,6 +616,7 @@ public class LSM303 {
 	/**
 	 * This is for tests.
 	 * Keep reading until Ctrl+C is received.
+	 * can use --feature:XXX as CLI parameter, XXX can be BOTH, MAGNETOMETER, or ACCELEROMETER
 	 *
 	 * @param args Duh
 	 */
@@ -625,8 +626,24 @@ public class LSM303 {
 
 //	System.setProperty("lsm303.log.for.calibration", "true");
 
+		EnabledFeature feature = EnabledFeature.BOTH;
+
+		if (args.length > 0) {
+			for (String arg : args) {
+				if (arg.startsWith("--feature:")) {
+					String theOne = arg.substring("--feature:".length());
+					for (EnabledFeature f : EnabledFeature.values()) {
+						if (f.toString().equals(theOne)) {
+							feature = f;
+							break;
+						}
+					}
+				}
+			}
+		}
+
 		try {
-			LSM303 sensor = new LSM303(EnabledFeature.BOTH, false);
+			LSM303 sensor = new LSM303(feature, false);
 			sensor.setWait(250); // 1/4 sec between reads
 
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {

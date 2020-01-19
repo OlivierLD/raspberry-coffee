@@ -13,11 +13,14 @@ import java.util.Map;
 
 /**
  * AIS: Automatic Identification System
- * Work in Progress, not all message types are implemented.
+ *
+ * Work in Progress, not all message types are implemented (yet).
  *
  * Good doc at https://gpsd.gitlab.io/gpsd/AIVDM.html
  * https://www.navcen.uscg.gov/?pageName=AISFAQ
  * On-line decoder at https://www.aggsoft.com/ais-decoder.htm
+ *
+ * The main method is here for tests, look at it.
  */
 public class AISParser {
 	public final static boolean verbose = "true".equals(System.getProperty("ais.verbose"));
@@ -527,7 +530,7 @@ public class AISParser {
 	public static int getMessageType(String sentence) {
 		String[] dataElement = sentence.split(",");
 		if (!dataElement[PREFIX_POS].equals(AIS_PREFIX)) {
-			throw new RuntimeException("Unmanaged AIS Prefix [" + dataElement[PREFIX_POS] + "].");
+			throw new RuntimeException(String.format("Unmanaged AIS Prefix [%s].", dataElement[PREFIX_POS]));
 		}
 		String aisData = dataElement[AIS_DATA_POS];
 		String binString = encodedAIStoBinaryString(aisData);
@@ -551,11 +554,11 @@ public class AISParser {
 
 		boolean valid = StringParsers.validCheckSum(sentence);
 		if (!valid) {
-			throw new RuntimeException("Invalid AIS Data (Bad checksum) for [" + sentence + "]");
+			throw new RuntimeException(String.format("Invalid AIS Data (Bad checksum) for [%s]", sentence));
 		}
 		String[] dataElement = sentence.split(",");
 		if (!dataElement[PREFIX_POS].equals(AIS_PREFIX)) {
-			throw new RuntimeException("Unmanaged AIS Prefix [" + dataElement[PREFIX_POS] + "].");
+			throw new RuntimeException(String.format("Unmanaged AIS Prefix [%s].", dataElement[PREFIX_POS]));
 		}
 		String currentChannel = dataElement[AIS_CHANNEL_POS];
 
@@ -1199,7 +1202,7 @@ public class AISParser {
 			String bin = StringUtils.lpad(Integer.toBinaryString(c), 6, "0");
 			sb.append(bin);
 			if (decodeVerbose) {
-				System.out.println(encoded.charAt(i) + " becomes " + bin + " (" + c + ")");
+				System.out.println(String.format("%c becomes %s (%d)", encoded.charAt(i), bin, c));
 			}
 //    sb.append(" ");
 		}
@@ -2524,22 +2527,39 @@ public class AISParser {
 
 	public static void main(String... args) throws Exception {
 
-		// 2's complement
-		String tc = twosComplement(new StringBuffer("1000100"));
-		System.out.println(">> " + tc);
-		assert "11111011".equals(tc);
-		tc = twosComplement(new StringBuffer("00000101"));
-		System.out.println(">> " + tc);
-		assert "0111100".equals(tc);
-
 		String ais; // Error in !AIVDM,1,1,,B,?03Ovk1E6T50D00,2*1E
 		if (args.length > 0) {
-			try {
-				System.out.println(parseAIS(args[0]));
-			} catch (AISException t) {
-				System.err.println(t.toString());
+			if (args[0].equalsIgnoreCase("--inter")) {
+				System.out.println("Enter q to quit");
+				boolean keepAsking = true;
+				while(keepAsking) {
+					String userInput = utils.StaticUtil.userInput("Your AIS sentence > ");
+					if ("Q".equalsIgnoreCase(userInput)) {
+						keepAsking = false;
+					} else {
+						try {
+							System.out.println(parseAIS(userInput));
+						} catch (Exception t) {
+							t.printStackTrace();
+						}
+					}
+				}
+			} else {
+				try {
+					System.out.println(parseAIS(args[0]));
+				} catch (AISException t) {
+					System.err.println(t.toString());
+				}
 			}
 		} else {
+			// 2's complement
+			String tc = twosComplement(new StringBuffer("1000100"));
+			System.out.println(">> " + tc);
+			assert "11111011".equals(tc);
+			tc = twosComplement(new StringBuffer("00000101"));
+			System.out.println(">> " + tc);
+			assert "0111100".equals(tc);
+
 			ais = "!AIVDM,1,1,,A,14eG;o@034o8sd<L9i:a;WF>062D,0*7D";
 			try {
 				System.out.println(parseAIS(ais));
@@ -2574,100 +2594,99 @@ public class AISParser {
 			} catch (Exception ex) {
 				System.err.println(ex.toString());
 			}
-		}
+			System.out.println("--- From dAISy ---");
+			// From the dAISy device
+			List<String> aisFromDaisy = Arrays.asList(
+					"!AIVDM,1,1,,A,403Ovk1v@CPI`o>jNnEdjEg0241T,0*5F",
+					"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
+					"!AIVDM,1,1,,A,D03Ovk0m9N>4g@ffpfpNfp0,2*38",
+					"!AIVDM,1,1,,B,D03Ovk0s=N>4g<ffpfpNfp0,2*5D",
+					"!AIVDM,1,1,,B,403Ovk1v@CPN`o>jO8EdjDw02@GT,0*1F",
+					"!AIVDM,1,1,,A,403Ovk1v@CPO`o>jNrEdjEO02<45,0*01",
+					// From PI4J
+					"!AIVDM,1,1,,A,D03Ovk0m9N>4g@ffpfpNfp0,2*38",
+					"!AIVDM,1,1,,B,D03Ovk0s=N>4g<ffpfpNfp0,2*5D",
+					"!AIVDM,1,1,,A,?03Ovk1Gcv1`D00,2*3C",
+					"!AIVDM,1,1,,B,?03Ovk1CpiT0D00,2*02",
+					"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
+					"!AIVDM,1,1,,B,D03Ovk0<EN>40Dffp00Nfp0,2*53",
+					// From Serial IO
+					"!AIVDM,1,1,,B,?03Ovk20AG54D00,2*08",
+					"!AIVDM,1,1,,A,?03Ovk20AG54D00,2*0B",
+					"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
+					"!AIVDM,1,1,,B,D03Ovk0<EN>40Dffp00Nfp0,2*53",
+					"!AIVDM,1,1,,A,15MU>f002Bo?5cHE`@2qOG`>0@43,0*5B",
 
-		System.out.println("--- From dAISy ---");
-		// From the dAISy device
-		List<String> aisFromDaisy = Arrays.asList(
-				"!AIVDM,1,1,,A,403Ovk1v@CPI`o>jNnEdjEg0241T,0*5F",
-				"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
-				"!AIVDM,1,1,,A,D03Ovk0m9N>4g@ffpfpNfp0,2*38",
-				"!AIVDM,1,1,,B,D03Ovk0s=N>4g<ffpfpNfp0,2*5D",
-				"!AIVDM,1,1,,B,403Ovk1v@CPN`o>jO8EdjDw02@GT,0*1F",
-				"!AIVDM,1,1,,A,403Ovk1v@CPO`o>jNrEdjEO02<45,0*01",
-				// From PI4J
-				"!AIVDM,1,1,,A,D03Ovk0m9N>4g@ffpfpNfp0,2*38",
-				"!AIVDM,1,1,,B,D03Ovk0s=N>4g<ffpfpNfp0,2*5D",
-				"!AIVDM,1,1,,A,?03Ovk1Gcv1`D00,2*3C",
-				"!AIVDM,1,1,,B,?03Ovk1CpiT0D00,2*02",
-				"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
-				"!AIVDM,1,1,,B,D03Ovk0<EN>40Dffp00Nfp0,2*53",
-				// From Serial IO
-				"!AIVDM,1,1,,B,?03Ovk20AG54D00,2*08",
-				"!AIVDM,1,1,,A,?03Ovk20AG54D00,2*0B",
-				"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
-				"!AIVDM,1,1,,B,D03Ovk0<EN>40Dffp00Nfp0,2*53",
-				"!AIVDM,1,1,,A,15MU>f002Bo?5cHE`@2qOG`>0@43,0*5B",
+					"!AIVDM,1,1,,A,D03Ovk1T1N>5N8ffqMhNfp0,2*6A",
+					"!AIVDM,1,1,,B,D03Ovk1b5N>5N4ffqMhNfp0,2*57",
+					"!AIVDM,1,1,,B,403Ovk1v@EG3Do>jOBEdjE?02<4=,0*02",
+					"!AIVDM,1,1,,B,13P<DT012Fo>er2EW:CRd28T0@<I,0*5C",
+					"!AIVDM,1,1,,A,?03Ovk0sNMB0D00,2*3C",
+					"!AIVDM,1,1,,B,13P<DT0wBGo>f<TEW;0BdR8t0D24,0*15",
+					"!AIVDM,1,1,,B,13P<DT0w2Go>fO<EW;f2d29D08K6,0*0E",
+					"!AIVDM,1,1,,A,?03Ovk1GTTnPD00,2*46",
+					"!AIVDM,1,1,,B,13P<DT00jHo>fihEW<LRcR9d0HQl,0*56",
+					"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
+					"!AIVDM,1,1,,A,403Ovk1v@EG40o>jNpEdjBg02806,0*15",
+					"!AIVDM,1,1,,B,403Ovk1v@EG40o>jNpEdjBg02808,0*18",
+					"!AIVDM,1,1,,A,13P<DT012Ho>fs6EW<kBcj800@2:,0*2F",
+					"!AIVDM,1,1,,A,?03Ovk1:9Ob`D00,2*71",
+					"!AIVDM,1,1,,A,?03Ovk0sNMB0D00,2*3C",
+					"!AIVDM,1,1,,A,13P<DT00BHo>g?FEW=U2cj8H0D24,0*5E",
+					"!AIVDM,1,1,,A,D03Ovk1T1N>5N8ffqMhNfp0,2*6A",
+					"!AIVDM,1,1,,B,D03Ovk1b5N>5N4ffqMhNfp0,2*57",
+					"!AIVDM,1,1,,A,403Ovk1v@EG4Do>jNbEdjDw028;l,0*34",
+					"!AIVDM,1,1,,B,403Ovk1v@EG4Do>jNbEdjDw028;n,0*35",
+					"!AIVDM,1,1,,B,13P<DT00BIo>gG<EW=p2d28R0<23,0*41",
+					// Multiple messages
+					"!AIVDM,2,1,6,B,55T6aT42AGrO<ELCJ20t<D4r0Pu0F22222222216CPIC94DfNBEDp3hB,0*0A",
+					"!AIVDM,2,2,6,B,p88888888888880,2*69"
+			);
+			aisFromDaisy.forEach(aisStr -> {
+				try {
+					System.out.println(parseAIS(aisStr));
+				} catch (AISException t) {
+					System.err.println(t.toString());
+				}
+			});
+			System.out.println("------------------");
 
-				"!AIVDM,1,1,,A,D03Ovk1T1N>5N8ffqMhNfp0,2*6A",
-				"!AIVDM,1,1,,B,D03Ovk1b5N>5N4ffqMhNfp0,2*57",
-				"!AIVDM,1,1,,B,403Ovk1v@EG3Do>jOBEdjE?02<4=,0*02",
-				"!AIVDM,1,1,,B,13P<DT012Fo>er2EW:CRd28T0@<I,0*5C",
-				"!AIVDM,1,1,,A,?03Ovk0sNMB0D00,2*3C",
-				"!AIVDM,1,1,,B,13P<DT0wBGo>f<TEW;0BdR8t0D24,0*15",
-				"!AIVDM,1,1,,B,13P<DT0w2Go>fO<EW;f2d29D08K6,0*0E",
-				"!AIVDM,1,1,,A,?03Ovk1GTTnPD00,2*46",
-				"!AIVDM,1,1,,B,13P<DT00jHo>fihEW<LRcR9d0HQl,0*56",
-				"!AIVDM,1,1,,A,D03Ovk06AN>40Hffp00Nfp0,2*52",
-				"!AIVDM,1,1,,A,403Ovk1v@EG40o>jNpEdjBg02806,0*15",
-				"!AIVDM,1,1,,B,403Ovk1v@EG40o>jNpEdjBg02808,0*18",
-				"!AIVDM,1,1,,A,13P<DT012Ho>fs6EW<kBcj800@2:,0*2F",
-				"!AIVDM,1,1,,A,?03Ovk1:9Ob`D00,2*71",
-				"!AIVDM,1,1,,A,?03Ovk0sNMB0D00,2*3C",
-				"!AIVDM,1,1,,A,13P<DT00BHo>g?FEW=U2cj8H0D24,0*5E",
-				"!AIVDM,1,1,,A,D03Ovk1T1N>5N8ffqMhNfp0,2*6A",
-				"!AIVDM,1,1,,B,D03Ovk1b5N>5N4ffqMhNfp0,2*57",
-				"!AIVDM,1,1,,A,403Ovk1v@EG4Do>jNbEdjDw028;l,0*34",
-				"!AIVDM,1,1,,B,403Ovk1v@EG4Do>jNbEdjDw028;n,0*35",
-				"!AIVDM,1,1,,B,13P<DT00BIo>gG<EW=p2d28R0<23,0*41",
-				// Multiple messages
-				"!AIVDM,2,1,6,B,55T6aT42AGrO<ELCJ20t<D4r0Pu0F22222222216CPIC94DfNBEDp3hB,0*0A",
-				"!AIVDM,2,2,6,B,p88888888888880,2*69"
-		);
-		aisFromDaisy.forEach(aisStr -> {
-			try {
-				System.out.println(parseAIS(aisStr));
-			} catch (AISException t) {
-				System.err.println(t.toString());
-			}
-		});
-		System.out.println("------------------");
-
-		if (true) {
-			String dataFileName = "sample.data/ais.nmea";
-			if (args.length > 0) {
-				dataFileName = args[0];
-			}
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(dataFileName));
-				System.out.println(String.format("---- From data file %s ----", dataFileName));
-				String line = "";
-				while (line != null) {
-					line = br.readLine();
-					if (line != null) {
-						if (!line.startsWith("#") && line.startsWith(AIS_PREFIX)) {
-							try {
-								AISRecord aisRecord = parseAIS(line);
-								if (aisRecord != null) {
-									System.out.println(aisRecord);
-								} else {
-									System.out.println(String.format(">> null AIS Record for %s", line));
+			if (true) {
+				String dataFileName = "sample.data/ais.nmea";
+				if (args.length > 0) {
+					dataFileName = args[0];
+				}
+				try {
+					BufferedReader br = new BufferedReader(new FileReader(dataFileName));
+					System.out.println(String.format("---- From data file %s ----", dataFileName));
+					String line = "";
+					while (line != null) {
+						line = br.readLine();
+						if (line != null) {
+							if (!line.startsWith("#") && line.startsWith(AIS_PREFIX)) {
+								try {
+									AISRecord aisRecord = parseAIS(line);
+									if (aisRecord != null) {
+										System.out.println(aisRecord);
+									} else {
+										System.out.println(String.format(">> null AIS Record for %s", line));
+									}
+								} catch (AISException ex) {
+									System.err.println("For [" + line + "]: " + ex.toString());
+								} catch (Exception ex) {
+									System.err.println("For [" + line + "]: ");
+									ex.printStackTrace();
 								}
-							} catch (AISException ex) {
-								System.err.println("For [" + line + "]: " + ex.toString());
-							} catch (Exception ex) {
-								System.err.println("For [" + line + "]: ");
-								ex.printStackTrace();
+							} else if (!line.startsWith("#")) {
+								// TODO else parse NMEA?
+								System.out.println(String.format("\tNon AIS String... %s", line));
 							}
-						} else if (!line.startsWith("#")) {
-							// TODO else parse NMEA?
-							System.out.println(String.format("\tNon AIS String... %s", line));
 						}
 					}
+					br.close();
+				} catch (FileNotFoundException fnfe) {
+					fnfe.printStackTrace();
 				}
-				br.close();
-			} catch (FileNotFoundException fnfe) {
-				fnfe.printStackTrace();
 			}
 		}
 	}

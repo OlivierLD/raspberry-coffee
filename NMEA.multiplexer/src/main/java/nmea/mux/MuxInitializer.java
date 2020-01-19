@@ -1,18 +1,6 @@
 package nmea.mux;
 
 import context.ApplicationContext;
-
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAReader;
@@ -48,6 +36,18 @@ import nmea.forwarders.WebSocketProcessor;
 import nmea.forwarders.WebSocketWriter;
 import nmea.forwarders.rmi.RMIServer;
 
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
 /**
  * Initialize the configuration of the Multiplexer, at startup,
  * with the properties read from the file system., through one
@@ -66,11 +66,11 @@ public class MuxInitializer {
 
 	private final static NumberFormat MUX_IDX_FMT = new DecimalFormat("00");
 
-	static void setup(Properties muxProps,
-	                  List<NMEAClient> nmeaDataClients,
-	                  List<Forwarder> nmeaDataForwarders,
-	                  List<Computer> nmeaDataComputers,
-	                  Multiplexer mux) {
+	public static void setup(Properties muxProps,
+	                         List<NMEAClient> nmeaDataClients,
+	                         List<Forwarder> nmeaDataForwarders,
+	                         List<Computer> nmeaDataComputers,
+	                         Multiplexer mux) {
 		setup(muxProps, nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, mux, false);
 	}
 
@@ -85,12 +85,12 @@ public class MuxInitializer {
 	 * @param mux the Multiplexer instance to initialize
 	 * @param verbose Speak up!
 	 */
-	static void setup(Properties muxProps,
-	                  List<NMEAClient> nmeaDataClients,
-	                  List<Forwarder> nmeaDataForwarders,
-	                  List<Computer> nmeaDataComputers,
-	                  Multiplexer mux,
-	                  boolean verbose) {
+	public static void setup(Properties muxProps,
+	                         List<NMEAClient> nmeaDataClients,
+	                         List<Forwarder> nmeaDataForwarders,
+	                         List<Computer> nmeaDataComputers,
+	                         Multiplexer mux,
+	                         boolean verbose) {
 		int muxIdx = 1;
 		boolean thereIsMore = true;
 		// 1 - Input channels
@@ -169,7 +169,7 @@ public class MuxInitializer {
 								String br = muxProps.getProperty(String.format("mux.%s.baudrate", MUX_IDX_FMT.format(muxIdx)));
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
-								NMEAClient serialClient = new SerialClient(
+								SerialClient serialClient = new SerialClient(
 												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
 												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
 												mux);
@@ -187,7 +187,7 @@ public class MuxInitializer {
 								String tcpServer = muxProps.getProperty(String.format("mux.%s.server", MUX_IDX_FMT.format(muxIdx)));
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
-								NMEAClient tcpClient = new TCPClient(
+								TCPClient tcpClient = new TCPClient(
 												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
 												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
 												mux);
@@ -212,11 +212,11 @@ public class MuxInitializer {
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								boolean loop = "true".equals(muxProps.getProperty(String.format("mux.%s.loop", MUX_IDX_FMT.format(muxIdx)), "true"));
 
-								NMEAClient fileClient = new DataFileClient(
+								DataFileClient fileClient = new DataFileClient(
 												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
 												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
 												mux);
-								((DataFileClient)fileClient).setLoop(loop);
+								fileClient.setLoop(loop);
 								fileClient.initClient();
 								fileClient.setReader(new DataFileReader("MUX-FileReader", fileClient.getListeners(), filename, betweenRec));
 								fileClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
@@ -230,7 +230,7 @@ public class MuxInitializer {
 								String wsUri = muxProps.getProperty(String.format("mux.%s.wsuri", MUX_IDX_FMT.format(muxIdx)));
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
-								NMEAClient wsClient = new WebSocketClient(
+								WebSocketClient wsClient = new WebSocketClient(
 												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
 												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
 												mux);
@@ -247,7 +247,7 @@ public class MuxInitializer {
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								String htu21dfDevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
-								NMEAClient htu21dfClient = new HTU21DFClient(
+								HTU21DFClient htu21dfClient = new HTU21DFClient(
 												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
 												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
 												mux);
@@ -257,7 +257,7 @@ public class MuxInitializer {
 								// Important: after the setReader
 								if (!htu21dfDevicePrefix.trim().isEmpty()) {
 									if (htu21dfDevicePrefix.trim().length() == 2) {
-										((HTU21DFClient) htu21dfClient).setSpecificDevicePrefix(htu21dfDevicePrefix.trim());
+										htu21dfClient.setSpecificDevicePrefix(htu21dfDevicePrefix.trim());
 									} else {
 										throw new RuntimeException(String.format("Bad prefix [%s] for HTU21DF. Must be 2 character long, exactly.", htu21dfDevicePrefix.trim()));
 									}
@@ -273,7 +273,7 @@ public class MuxInitializer {
 							try {
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
-								NMEAClient rndClient = new RandomClient(
+								RandomClient rndClient = new RandomClient(
 												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
 												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
 												mux);
@@ -291,7 +291,7 @@ public class MuxInitializer {
 							try {
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
-								NMEAClient zdaClient = new ZDAClient(
+								ZDAClient zdaClient = new ZDAClient(
 												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
 												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
 												mux);
@@ -350,7 +350,7 @@ public class MuxInitializer {
 											readFrequency,
 											dampingSize));
 								}
-								NMEAClient lsm303Client = new LSM303Client(
+								LSM303Client lsm303Client = new LSM303Client(
 												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
 												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
 												mux);
@@ -359,24 +359,24 @@ public class MuxInitializer {
 								lsm303Client.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								// Important: after the setReader
 								if (headingOffset != 0) {
-									((LSM303Client) lsm303Client).setHeadingOffset(headingOffset);
+									lsm303Client.setHeadingOffset(headingOffset);
 								}
 								if (readFrequency != null) {
-									((LSM303Client) lsm303Client).setReadFrequency(readFrequency);
+									lsm303Client.setReadFrequency(readFrequency);
 								}
 								if (dampingSize != null) {
-									((LSM303Client) lsm303Client).setDampingSize(dampingSize);
+									lsm303Client.setDampingSize(dampingSize);
 								}
 								if (!lsm303DevicePrefix.trim().isEmpty()) {
 									if (lsm303DevicePrefix.trim().length() == 2) {
-										((LSM303Client) lsm303Client).setSpecificDevicePrefix(lsm303DevicePrefix.trim());
+										lsm303Client.setSpecificDevicePrefix(lsm303DevicePrefix.trim());
 									} else {
 										throw new RuntimeException(String.format("Bad prefix [%s] for LSM303. Must be 2 character long, exactly.", lsm303DevicePrefix.trim()));
 									}
 								}
 								if (!lsm303DeviceFeature.trim().isEmpty()) {
 									try {
-										((LSM303Client) lsm303Client).setDeviceFeature(lsm303DeviceFeature.trim());
+										lsm303Client.setDeviceFeature(lsm303DeviceFeature.trim());
 									} catch (Exception ex) {
 										throw ex;
 									}
@@ -393,7 +393,7 @@ public class MuxInitializer {
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								String bme280DevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
-								NMEAClient bme280Client = new BME280Client(
+								BME280Client bme280Client = new BME280Client(
 												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
 												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
 												mux);
@@ -403,7 +403,7 @@ public class MuxInitializer {
 								// Important: after the setReader
 								if (!bme280DevicePrefix.trim().isEmpty()) {
 									if (bme280DevicePrefix.trim().length() == 2) {
-										((BME280Client) bme280Client).setSpecificDevicePrefix(bme280DevicePrefix.trim());
+										bme280Client.setSpecificDevicePrefix(bme280DevicePrefix.trim());
 									} else {
 										throw new RuntimeException(String.format("Bad prefix [%s] for BME280. Must be 2 character long, exactly.", bme280DevicePrefix.trim()));
 									}
@@ -420,7 +420,7 @@ public class MuxInitializer {
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								String bmp180DevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
-								NMEAClient bmp180Client = new BMP180Client(
+								BMP180Client bmp180Client = new BMP180Client(
 												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
 												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
 												mux);
@@ -430,7 +430,7 @@ public class MuxInitializer {
 								// Important: after the setReader
 								if (!bmp180DevicePrefix.trim().isEmpty()) {
 									if (bmp180DevicePrefix.trim().length() == 2) {
-										((BMP180Client) bmp180Client).setSpecificDevicePrefix(bmp180DevicePrefix.trim());
+										bmp180Client.setSpecificDevicePrefix(bmp180DevicePrefix.trim());
 									} else {
 										throw new RuntimeException(String.format("Bad prefix [%s] for BMP180. Must be 2 character long, exactly.", bmp180DevicePrefix.trim()));
 									}
@@ -775,7 +775,7 @@ public class MuxInitializer {
 								case "tw-current": // True Wind and Current computer. True Wind is calculated with GPS COG & SOG), as it should. Also involves the LongTimeCurrentCalculator.
  									String prefix = muxProps.getProperty(String.format("computer.%s.prefix", MUX_IDX_FMT.format(cptrIdx)), "OS");
 									String[] timeBuffers = muxProps.getProperty(String.format("computer.%s.time.buffer.length", MUX_IDX_FMT.format(cptrIdx)), "600000").split(",");
-									List<Long> timeBufferLengths = Arrays.asList(timeBuffers).stream().map(tbl -> Long.parseLong(tbl.trim())).collect(Collectors.toList());
+									List<Long> timeBufferLengths = Arrays.stream(timeBuffers).map(tbl -> Long.parseLong(tbl.trim())).collect(Collectors.toList());
 									// Check duplicates
 									for (int i = 0; i < timeBufferLengths.size() - 1; i++) {
 										for (int j = i + 1; j < timeBufferLengths.size(); j++) {
@@ -812,16 +812,14 @@ public class MuxInitializer {
 		Properties properties = new Properties();
 
 		yamlMap.keySet().forEach(k -> {
-//			System.out.println(String.format("%s -> %s", k, yamlMap.get(k).getClass().getName()));
+//		System.out.println(String.format("%s -> %s", k, yamlMap.get(k).getClass().getName()));
 			switch (k) {
 				case "name":
 					System.out.println(String.format("Definition Name: %s", yamlMap.get(k)));
 					break;
 				case "context":
 					Map<String, Object> context = (Map<String, Object>)yamlMap.get(k);
-					context.keySet().forEach(ck -> {
-						properties.setProperty(ck, context.get(ck).toString());
-					});
+					context.keySet().forEach(ck -> properties.setProperty(ck, context.get(ck).toString()));
 					System.out.println(context);
 					break;
 				case "channels":
