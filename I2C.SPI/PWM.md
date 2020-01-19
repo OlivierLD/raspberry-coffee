@@ -21,6 +21,8 @@ of the resulting brightness.
 |![50](./img/50.png)|![50](./img/50led.png)|
 |![25](./img/25.png)|![25](./img/25led.png)|
 
+For a "pure" PWM implementation, look into the code of `PWMPin.java`.
+
 ---
 
 Same article on [Hocus-Blogus](http://hocus-blogus.blogspot.com/2018/07/raspberry-pi-pwm-servos-and-pca9685.html), with a small video showing how to dim leds with PWM.
@@ -28,7 +30,7 @@ Same article on [Hocus-Blogus](http://hocus-blogus.blogspot.com/2018/07/raspberr
 ---
 
 The Raspberry Pi does not have analog pins, we need to use Pulse Width Modulation to simulate
-analog values, a servo is an analog device.
+analog values, a servo - for example - is an analog device.
 
 We use for that the method `setPWM(channel, 0, pulse);`, that will eventually write to the registers
 of the device.
