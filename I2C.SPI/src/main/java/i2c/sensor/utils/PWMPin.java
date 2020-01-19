@@ -4,6 +4,7 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 
 /**
+ * "pure" PWM implementation.
  * Suitable for an LED, not for a servo (cycle width...)
  */
 public class PWMPin extends GPIOPinAdapter {

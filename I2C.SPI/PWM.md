@@ -8,12 +8,12 @@ The digital device only has pins that can take 2 values: `0` or `3V3`.
 
 `0` means that the led will be off, `3V3` means it will be at 100% of its brightness.
 
-To show it at `50%` of its brightness, the idea is to turn it off 50% of the time, and on 50% of the time.
+To show it at `50%` of its brightness, the idea is to turn it off 50% of _the time_, and on 50% of _the time_.
 
-To show it at `25%` of its brightness, it will be on 25% of the time, and off 75% of the time.
+To show it at `25%` of its brightness, it will be on 25% of _the time_, and off 75% of _the time_.
 
-If the on-off cycles are short and fast enough, a human eye will no be able to see them, it will only have the illusion
-of the resulting brightness.
+If the on-off cycles are **short and fast enough**, a human eye will no be able to see them, it will only have the illusion
+of the resulting brightness. This is called "Persistence Of Vision", aka POV.
 
 | PWM | Brightness |
 |:---:|:----------:|
