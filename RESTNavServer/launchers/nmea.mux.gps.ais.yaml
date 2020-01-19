@@ -29,4 +29,4 @@ computers:
   - cls: nmea.computers.AISManager
     properties: ais.mgr.properties
   - cls: nmea.computers.AISTargetLogger
-    verbose: true
+    properties: target.logger.properties

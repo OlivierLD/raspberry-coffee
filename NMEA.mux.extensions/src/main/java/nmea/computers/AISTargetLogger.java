@@ -96,7 +96,7 @@ public class AISTargetLogger extends Computer {
 					AISParser.AISRecord aisRecord = AISParser.parseAIS(sentence);
 					if (aisRecord != null) {
 						if (true || this.isVerbose()) {
-							System.out.println(String.format("%s received AIS Mess#%d, %s (verb: %s)", this.getClass().getName(), aisRecord.getMessageType(), sentence, this.verbose));
+							System.out.println(String.format("%s received AIS MessType #%d, %s (verb: %s)", this.getClass().getName(), aisRecord.getMessageType(), sentence.trim(), this.verbose));
 						}
 						if (aisRecord.getMessageType() == 5 ||
 								aisRecord.getMessageType() == 24) {
@@ -158,6 +158,7 @@ public class AISTargetLogger extends Computer {
 	public void setProperties(Properties props) {
 		super.setProperties(props);
 		// Anything else?
+		this.setVerbose("true".equals(props.getProperty("verbose")));
 	}
 
 	public static class AISTargetLoggerBean {
