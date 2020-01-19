@@ -1,10 +1,9 @@
-package nmea.computer;
+package nmea.computers;
 
 import context.ApplicationContext;
 import context.NMEADataCache;
 import nmea.ais.AISParser;
 import nmea.api.Multiplexer;
-import nmea.computers.Computer;
 import nmea.parser.StringParsers;
 
 import java.util.HashMap;
