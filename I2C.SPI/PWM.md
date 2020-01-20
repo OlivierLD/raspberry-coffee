@@ -21,7 +21,7 @@ of the resulting brightness. This is called "Persistence Of Vision", aka POV.
 |![50](./img/50.png)|![50](./img/50led.png)|
 |![25](./img/25.png)|![25](./img/25led.png)|
 
-If the cycle is less than 30 ms, an human eye is OK with it, it cannot tell the light is actually blinking (which brings us back to POV).
+If the cycle is less than 30 ms, an human eye is OK with it, it cannot tell if the light is actually blinking (which brings us back to POV).
 
 For a "pure" PWM implementation, look into the code of `PWMPin.java`.
 
