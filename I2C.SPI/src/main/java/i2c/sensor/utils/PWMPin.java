@@ -85,14 +85,13 @@ public class PWMPin extends GPIOPinAdapter {
 		pin.low();
 	}
 
-	private void waitFor(long ms) {
-		if (ms <= 0) {
-			return;
-		}
-		try {
-			Thread.sleep(ms);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
+	private void waitFor(long ms) { // TODO Manage nano secs? Or use delay?
+		if (ms > 0) {
+			try {
+				Thread.sleep(ms);
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
+			}
 		}
 	}
 }
