@@ -1,4 +1,6 @@
 # SunFlower Version 2.0
+![Work In Progress](./wip.jpg)
+
 The goal of this project is to orient a solar panel so it faces the sun as long as it is in the sky.
 
 The [first version ](../SunFlower) used micro-servos to orient a small solar panel.
