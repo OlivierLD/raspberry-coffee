@@ -1,0 +1,40 @@
+plugins {
+  id 'java'
+//id 'scala'
+  id 'maven'
+  id 'idea'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
+}
+
+group = 'oliv.raspi.coffee'
+version = '1.0'
+
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests'
+//    }
+//  }
+//}
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+  maven { url "https://oss.sonatype.org/content/groups/public" }
+  maven { url "http://www.datanucleus.org/downloads/maven2" }
+}
+
+dependencies {
+//compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
+  compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT'  // -SNAPSHOT'
+  compile project(':I2C.SPI')               // For the Motor Hat
+}
+
+shadowJar {
+  zip64 true
+}
