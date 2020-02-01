@@ -327,9 +327,9 @@ public class SunFlowerDriver {
 				throw new IllegalArgumentException(String.format("Expecting a value like '1:123', not %s", zRatioStr));
 			}
 			try {
-				int num = Integer.parseInt(zData[0]);
-				int den = Integer.parseInt(zData[1]);
-				azimuthMotorRatio = (double)num / (double)den;
+				double num = Double.parseDouble(zData[0]);
+				double den = Double.parseDouble(zData[1]);
+				azimuthMotorRatio = num / den;
 			} catch (NumberFormatException nfe) {
 				System.err.println("Bad value");
 				throw nfe;
@@ -342,9 +342,9 @@ public class SunFlowerDriver {
 				throw new IllegalArgumentException(String.format("Expecting a value like '1:123', not %s", elevRatioStr));
 			}
 			try {
-				int num = Integer.parseInt(elevData[0]);
-				int den = Integer.parseInt(elevData[1]);
-				elevationMotorRatio = (double)num / (double)den;
+				double num = Double.parseDouble(elevData[0]);
+				double den = Double.parseDouble(elevData[1]);
+				elevationMotorRatio = num / den;
 			} catch (NumberFormatException nfe) {
 				System.err.println("Bad value");
 				throw nfe;
