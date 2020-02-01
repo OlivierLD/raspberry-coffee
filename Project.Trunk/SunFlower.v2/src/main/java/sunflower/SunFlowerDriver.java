@@ -43,7 +43,7 @@ public class SunFlowerDriver {
 	private CelestialComputerThread astroThread = null;
 
 	private double azimuthMotorRatio   = 1d / 40d; // TODO Set with System variable
-	private double elevationMotorRatio = 1d / 6.4; // TODO Set with System variable
+	private double elevationMotorRatio = 1d / 7.11111; // 18:128 // TODO Set with System variable
 
 	private boolean keepGoing = true;
 	private final static int DEFAULT_RPM = 30;
@@ -193,7 +193,7 @@ public class SunFlowerDriver {
 
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= MIN_DIFF_FOR_MOVE) { // Start a new thread each time a move is requested
-					System.out.println(String.format("\tAt %s, setting device Azimuth from %.02d to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceAzimuth, sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth)));
+					System.out.println(String.format("\tAt %s, setting device Azimuth from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceAzimuth, sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth)));
 					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio);
 					System.out.println(String.format(">> This will be %d steps %s", data.nbSteps, data.motorCommand));
 					if (!simulating) {
