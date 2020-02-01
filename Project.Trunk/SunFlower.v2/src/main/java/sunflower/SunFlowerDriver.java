@@ -25,7 +25,7 @@ import static utils.TimeUtil.delay;
 public class SunFlowerDriver {
 
 	private static GeoPos devicePosition = null; // Can be fed from a GPS, or manually (System variable).
-	private static double sunAzimuth = 180d;
+	private static double sunAzimuth   = 180d;
 	private static double sunElevation = -1d;
 
 	private boolean simulating = false;
@@ -36,7 +36,7 @@ public class SunFlowerDriver {
 	private AdafruitMotorHAT.AdafruitStepperMotor elevationMotor;
 
 	private final static double PARKED_ELEVATION = 90d;
-	private final static double PARKED_AZIMUTH = 180d;
+	private final static double PARKED_AZIMUTH   = 180d;
 
 	private double currentDeviceElevation = PARKED_ELEVATION;
 	private double currentDeviceAzimuth = PARKED_AZIMUTH;
@@ -47,8 +47,8 @@ public class SunFlowerDriver {
 
 	private AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.MICROSTEP;  // Default
 
-	private double azimuthMotorRatio   = 1d / 40d; // TODO Set with System variable
-	private double elevationMotorRatio = 1d / 7.11111; // 18:128 // TODO Set with System variable
+	private static double azimuthMotorRatio   = 1d / 40d; // Set with System variable "azimuth.ratio"
+	private static double elevationMotorRatio = 1d / 7.11111; // 18:128, Set with System variable "elevation.ratio"
 
 	private boolean keepGoing = true;
 	private final static int DEFAULT_RPM = 30;
@@ -88,7 +88,8 @@ public class SunFlowerDriver {
 				});
 				if (true || MOTOR_HAT_VERBOSE) {
 					long after = System.currentTimeMillis();
-					System.out.println(String.format("\tMove completed in: %s on motor #%d",
+					System.out.println(String.format("\tMove (%d steps) completed in: %s on motor #%d",
+							this.nbSteps,
 							TimeUtil.fmtDHMS(TimeUtil.msToHMS(after - before)),
 							this.stepper.getMotorNum()));
 				}
@@ -288,6 +289,7 @@ public class SunFlowerDriver {
 	 * System properties:
 	 * rpm, default 30
 	 * hat.debug, default false
+	 * TODO: the others, deltaT and friends.
 	 *
 	 * @param args Not used
 	 * @throws Exception if anything fails...
@@ -295,6 +297,7 @@ public class SunFlowerDriver {
 	public static void main(String... args) throws Exception {
 		SunFlowerDriver sunFlowerDriver = new SunFlowerDriver();
 		System.out.println("Hit Ctrl-C to stop the program");
+
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("\nShutting down, releasing resources.");
 			sunFlowerDriver.stop();
@@ -303,6 +306,7 @@ public class SunFlowerDriver {
 				absorbed.printStackTrace();
 			}
 		}, "Shutdown Hook"));
+
 		String strLat = System.getProperty("device.lat");
 		String strLng = System.getProperty("device.lng");
 		if (strLat != null && strLng != null) {
@@ -315,8 +319,40 @@ public class SunFlowerDriver {
 			}
 		}
 
+		// Ratios:
+		String zRatioStr = System.getProperty("azimuth.ratio");
+		if (zRatioStr != null) {
+			String[] zData = zRatioStr.split(":");
+			if (zData.length != 2) {
+				throw new IllegalArgumentException(String.format("Expecting a value like '1:123', not %s", zRatioStr));
+			}
+			try {
+				int num = Integer.parseInt(zData[0]);
+				int den = Integer.parseInt(zData[1]);
+				azimuthMotorRatio = (double)num / (double)den;
+			} catch (NumberFormatException nfe) {
+				System.err.println("Bad value");
+				throw nfe;
+			}
+		}
+		String elevRatioStr = System.getProperty("elevation.ratio");
+		if (elevRatioStr != null) {
+			String[] elevData = elevRatioStr.split(":");
+			if (elevData.length != 2) {
+				throw new IllegalArgumentException(String.format("Expecting a value like '1:123', not %s", elevRatioStr));
+			}
+			try {
+				int num = Integer.parseInt(elevData[0]);
+				int den = Integer.parseInt(elevData[1]);
+				elevationMotorRatio = (double)num / (double)den;
+			} catch (NumberFormatException nfe) {
+				System.err.println("Bad value");
+				throw nfe;
+			}
+		}
+
 		sunFlowerDriver.go();
 
-		System.out.println("Bye.");
+		System.out.println("Bye!");
 	}
 }
