@@ -82,7 +82,7 @@ public class SunFlowerDriver {
 						System.out.println(String.format("\t\tToo long! %s", t));
 					}
 				});
-				if (MOTOR_HAT_VERBOSE) {
+				if (true || MOTOR_HAT_VERBOSE) {
 					long after = System.currentTimeMillis();
 					System.out.println(String.format("\tMove completed in: %s", TimeUtil.fmtDHMS(TimeUtil.msToHMS(after - before))));
 				}
