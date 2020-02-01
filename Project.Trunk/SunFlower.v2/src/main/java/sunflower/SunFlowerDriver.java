@@ -41,6 +41,10 @@ public class SunFlowerDriver {
 	private double currentDeviceAzimuth = PARKED_AZIMUTH;
 
 	private CelestialComputerThread astroThread = null;
+	private MotorThread elevationMotorThread = null;
+	private MotorThread azimuthMotorThread = null;
+
+	private AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.MICROSTEP;  // Default
 
 	private double azimuthMotorRatio   = 1d / 40d; // TODO Set with System variable
 	private double elevationMotorRatio = 1d / 7.11111; // 18:128 // TODO Set with System variable
@@ -168,13 +172,31 @@ public class SunFlowerDriver {
 		return motorPayload;
 	}
 
+	private void parkDevice() {
+		if (currentDeviceElevation != PARKED_ELEVATION || currentDeviceAzimuth != PARKED_AZIMUTH) {
+			System.out.println("Parking the device");
+			// Put Z to 0, Elev. to 90.
+			MotorPayload parkElev = getMotorPayload(currentDeviceElevation, PARKED_ELEVATION, elevationMotorRatio);
+			System.out.println(String.format(">> (Elev) This will be %d steps %s", parkElev.nbSteps, parkElev.motorCommand));
+			if (!simulating) {
+				elevationMotorThread = new MotorThread(this.elevationMotor, parkElev.nbSteps, parkElev.motorCommand, motorStyle);
+				elevationMotorThread.start();
+			}
+			currentDeviceElevation = PARKED_ELEVATION; // TODO In the thread
+
+			MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, PARKED_AZIMUTH, azimuthMotorRatio);
+			System.out.println(String.format(">> (Z) This will be %d steps %s", parkZ.nbSteps, parkZ.motorCommand));
+			if (!simulating) {
+				azimuthMotorThread = new MotorThread(this.azimuthMotor, parkZ.nbSteps, parkZ.motorCommand, motorStyle);
+				azimuthMotorThread.start();
+			}
+			currentDeviceAzimuth = PARKED_AZIMUTH; // TODO In the thread
+		} else {
+			System.out.println("Parked");
+		}
+	}
 	private void go() {
 		keepGoing = true;
-		AdafruitMotorHAT.MotorCommand motorCommand = AdafruitMotorHAT.MotorCommand.FORWARD; // Default
-		AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.MICROSTEP;               // Default
-
-		MotorThread elevationMotorThread = null;
-		MotorThread azimuthMotorThread = null;
 
 		astroThread = new CelestialComputerThread();
 		astroThread.start(); // Start calculating
@@ -191,12 +213,11 @@ public class SunFlowerDriver {
 						sunElevation));
 			}
 
-			// TODO Check if the 2 threads can access the board at the same time...
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= MIN_DIFF_FOR_MOVE) { // Start a new thread each time a move is requested
 					System.out.println(String.format("- At %s, setting device Azimuth from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceAzimuth, sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth)));
 					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio);
-					System.out.println(String.format("\t>> This will be %d steps %s", data.nbSteps, data.motorCommand));
+					System.out.println(String.format("\t>> This will be %d steps %s on motor #%d", data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
 					if (!simulating) {
 						if (azimuthMotorThread == null || (azimuthMotorThread != null && !azimuthMotorThread.isAlive())) {
 							azimuthMotorThread = new MotorThread(this.azimuthMotor, data.nbSteps, data.motorCommand, motorStyle);
@@ -210,7 +231,7 @@ public class SunFlowerDriver {
 				if (Math.abs(currentDeviceElevation - sunElevation) >= MIN_DIFF_FOR_MOVE) {
 					System.out.println(String.format("- At %s, setting device Elevation from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceElevation, sunElevation, Math.abs(currentDeviceElevation - sunElevation)));
 					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio);
-					System.out.println(String.format("\t>> This will be %d steps %s", data.nbSteps, data.motorCommand));
+					System.out.println(String.format("\t>> This will be %d steps %s on motor #%d", data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
 					if (!simulating) {
 						if (elevationMotorThread == null || (elevationMotorThread != null && !elevationMotorThread.isAlive())) {
 							elevationMotorThread = new MotorThread(this.elevationMotor, data.nbSteps, data.motorCommand, motorStyle);
@@ -222,27 +243,7 @@ public class SunFlowerDriver {
 					currentDeviceElevation = sunElevation; // TODO Do this in the thread
 				}
 			} else { // Park device
-				if (currentDeviceElevation != PARKED_ELEVATION || currentDeviceAzimuth != PARKED_AZIMUTH) {
-					System.out.println("Parking the device");
-					// Put Z to 0, Elev. to 90.
-					MotorPayload parkElev = getMotorPayload(currentDeviceElevation, PARKED_ELEVATION, elevationMotorRatio);
-					System.out.println(String.format(">> (Elev) This will be %d steps %s", parkElev.nbSteps, parkElev.motorCommand));
-					if (!simulating) {
-						elevationMotorThread = new MotorThread(this.elevationMotor, parkElev.nbSteps, parkElev.motorCommand, motorStyle);
-						elevationMotorThread.start();
-					}
-					currentDeviceElevation = PARKED_ELEVATION; // TODO In the thread
-
-					MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, PARKED_AZIMUTH, azimuthMotorRatio);
-					System.out.println(String.format(">> (Z) This will be %d steps %s", parkZ.nbSteps, parkZ.motorCommand));
-					if (!simulating) {
-						azimuthMotorThread = new MotorThread(this.azimuthMotor, parkZ.nbSteps, parkZ.motorCommand, motorStyle);
-						azimuthMotorThread.start();
-					}
-					currentDeviceAzimuth = PARKED_AZIMUTH; // TODO In the thread
-				} else {
-					System.out.println("Parked");
-				}
+				parkDevice();
 			}
 			// Bottom of the loop
 			delay(1_000L);
@@ -253,6 +254,12 @@ public class SunFlowerDriver {
 
 	private void stop() {
 		this.keepGoing = false;
+		// Park the device
+		parkDevice();
+		while ((azimuthMotorThread != null && azimuthMotorThread.isAlive()) || (elevationMotorThread != null && elevationMotorThread.isAlive())) {
+			System.out.println("Waiting for the device to be parked");
+			delay(1_000L);
+		}
 		if (mh != null) {
 			try { // Release all
 				mh.getMotor(AdafruitMotorHAT.Motor.M1).run(AdafruitMotorHAT.MotorCommand.RELEASE);
