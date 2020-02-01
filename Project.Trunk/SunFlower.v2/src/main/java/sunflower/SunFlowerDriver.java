@@ -201,8 +201,12 @@ public class SunFlowerDriver {
 					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio);
 					System.out.println(String.format(">> This will be %d steps %s", data.nbSteps, data.motorCommand));
 					if (!simulating) {
-						azimuthMotorThread = new MotorThread(this.azimuthMotor, data.nbSteps, data.motorCommand, motorStyle);
-						azimuthMotorThread.start();
+						if (azimuthMotorThread == null || (azimuthMotorThread != null && !azimuthMotorThread.isAlive())) {
+							azimuthMotorThread = new MotorThread(this.azimuthMotor, data.nbSteps, data.motorCommand, motorStyle);
+							azimuthMotorThread.start();
+						} else {
+							System.out.println(">>> Azimuth Thread is already busy at work.");
+						}
 					}
 					currentDeviceAzimuth = sunAzimuth; // TODO Do this in the thread
 				}
@@ -211,8 +215,12 @@ public class SunFlowerDriver {
 					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio);
 					System.out.println(String.format(">> This will be %d steps %s", data.nbSteps, data.motorCommand));
 					if (!simulating) {
-						elevationMotorThread = new MotorThread(this.elevationMotor, data.nbSteps, data.motorCommand, motorStyle);
-						elevationMotorThread.start();
+						if (elevationMotorThread == null || (elevationMotorThread != null && !elevationMotorThread.isAlive())) {
+							elevationMotorThread = new MotorThread(this.elevationMotor, data.nbSteps, data.motorCommand, motorStyle);
+							elevationMotorThread.start();
+						} else {
+							System.out.println(">>> Elevation Thread is already busy at work.");
+						}
 					}
 					currentDeviceElevation = sunElevation; // TODO Do this in the thread
 				}
