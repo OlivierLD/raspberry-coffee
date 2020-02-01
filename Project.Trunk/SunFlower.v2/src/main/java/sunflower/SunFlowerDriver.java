@@ -197,7 +197,7 @@ public class SunFlowerDriver {
 
 			if (sunElevation >= 0) {
 				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= MIN_DIFF_FOR_MOVE) { // Start a new thread each time a move is requested
-					System.out.println(String.format("\tAt %s, setting device Azimuth to %.02f\272 (a %.02f\272 move)", new Date(), sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth)));
+					System.out.println(String.format("\tAt %s, setting device Azimuth to %.02f degrees (a %.02f degrees move)", new Date(), sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth)));
 					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio);
 					System.out.println(String.format(">> This will be %d steps %s", data.nbSteps, data.motorCommand));
 					if (!simulating) {
@@ -211,7 +211,7 @@ public class SunFlowerDriver {
 					currentDeviceAzimuth = sunAzimuth; // TODO Do this in the thread
 				}
 				if (Math.abs(currentDeviceElevation - sunElevation) >= MIN_DIFF_FOR_MOVE) {
-					System.out.println(String.format("\tAt %s, setting device Elevation to %.02f\272 (a %.02f\272 move)", new Date(), sunElevation, Math.abs(currentDeviceElevation - sunElevation)));
+					System.out.println(String.format("\tAt %s, setting device Elevation to %.02f degrees (a %.02f degrees move)", new Date(), sunElevation, Math.abs(currentDeviceElevation - sunElevation)));
 					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio);
 					System.out.println(String.format(">> This will be %d steps %s", data.nbSteps, data.motorCommand));
 					if (!simulating) {
