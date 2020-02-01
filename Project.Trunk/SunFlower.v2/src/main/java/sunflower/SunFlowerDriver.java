@@ -38,10 +38,13 @@ public class SunFlowerDriver {
 	private AdafruitMotorHAT.AdafruitStepperMotor azimuthMotor;
 	private AdafruitMotorHAT.AdafruitStepperMotor elevationMotor;
 
+	private double currentDeviceElevation = 0d;
+	private double currentDeviceAzimuth = 0d;
+
 	private CelestialComputerThread astroThread = null;
 
-	private double azimuthMotorRatio   = 1d / 40d;
-	private double elevationMotorRatio = 1d / 6.4;
+	private double azimuthMotorRatio   = 1d / 40d; // TODO Set with System variable
+	private double elevationMotorRatio = 1d / 6.4; // TODO Set with System variable
 
 	private boolean keepGoing = true;
 	private final static int DEFAULT_RPM = 30;
@@ -104,20 +107,22 @@ public class SunFlowerDriver {
 				Date at = new Date();
 				Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
 				date.setTime(at);
-				if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-					System.out.println("Starting Sun data calculation at " + date.getTime());
-				}
-				// TODO Make it non-static, and synchronized
-				AstroComputer.calculate(
-						date.get(Calendar.YEAR),
-						date.get(Calendar.MONTH) + 1,
-						date.get(Calendar.DAY_OF_MONTH),
-						date.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
-						date.get(Calendar.MINUTE),
-						date.get(Calendar.SECOND));
+//				if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+//					System.out.println("Starting Sun data calculation at " + date.getTime());
+//				}
+				// TODO Make it non-static, and synchronized ?
+				AstroComputer.calculate(date.get(Calendar.YEAR),
+																date.get(Calendar.MONTH) + 1,
+																date.get(Calendar.DAY_OF_MONTH),
+																date.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
+																date.get(Calendar.MINUTE),
+																date.get(Calendar.SECOND));
 				if (devicePosition != null) {
-					DeadReckoning dr = new DeadReckoning(AstroComputer.getSunGHA(), AstroComputer.getSunDecl(), devicePosition.lat, devicePosition.lng);
-					dr.calculate();
+					DeadReckoning dr = new DeadReckoning(AstroComputer.getSunGHA(),
+																							 AstroComputer.getSunDecl(),
+																							 devicePosition.lat,
+																							 devicePosition.lng)
+														 .calculate();
 					sunAzimuth = dr.getZ();
 					sunElevation = dr.getHe();
 					if ("true".equals(System.getProperty("astro.verbose", "false"))) {
@@ -131,9 +136,9 @@ public class SunFlowerDriver {
 		}
 	}
 
-	private SunFlowerDriver() throws I2CFactory.UnsupportedBusNumberException {
+	private SunFlowerDriver() {
 
-		System.out.println("Starting Stepper Demo");
+		System.out.println("Starting Program");
 		int rpm = Integer.parseInt(System.getProperty("rpm", String.valueOf(DEFAULT_RPM)));
 		System.out.println(String.format("RPM set to %d.", rpm));
 
@@ -141,161 +146,103 @@ public class SunFlowerDriver {
 
 		try {
 			this.mh = new AdafruitMotorHAT(DEFAULT_STEPS_PER_REV); // Default addr 0x60
+
 			this.azimuthMotor = mh.getStepper(AdafruitMotorHAT.AdafruitStepperMotor.PORT_M1_M2);
 			this.azimuthMotor.setSpeed(rpm); // Default 30 RPM
+
+			this.elevationMotor = mh.getStepper(AdafruitMotorHAT.AdafruitStepperMotor.PORT_M3_M4);
+			this.elevationMotor.setSpeed(rpm); // Default 30 RPM
+
 		} catch (I2CFactory.UnsupportedBusNumberException ubne) {
 			simulating = true;
 		}
 	}
 
-	enum SupportedUserInput {
-
-		FORWARD("FORWARD", "Set the direction to 'FORWARD'"),
-		BACKWARD("BACKWARD", "Set the direction to 'BACKWARD'"),
-		SINGLE("SINGLE", "Set the style to 'SINGLE'"),
-		DOUBLE("DOUBLE", "Set the style to 'DOUBLE'"),
-		INTERLEAVE("INTERLEAVE", "Set the style to 'INTERLEAVE'"),
-		MICROSTEP("MICROSTEP", "Set the style to 'MICROSTEP'"),
-		RPM("RPM xxx", "Set the Revolution Per Minute to 'xxx', as integer"),
-		STEPS("STEPS yyy", "Set the Number of Steps to make to 'yyy', as integer"),
-		STEPSPERREV("STEPSPERREV zzz", "Set the Steps Per Revolution to 'zzz', as integer"),
-		GO("GO", "Apply current settings and runs the motor for the required number  of steps"),
-		OUT("OUT", "Release the motor and exit."),
-		QUIT("QUIT", "Same as 'OUT'"),
-		HELP("HELP", "Display command list");
-
-		private final String command;
-		private final String description;
-		SupportedUserInput(String command, String description) {
-			this.command = command;
-			this.description = description;
-		}
-
-		String command() {
-			return this.command;
-		}
-		String description() {
-			return this.description;
-		}
+	private final static class MotorPayload {
+		AdafruitMotorHAT.MotorCommand motorCommand = AdafruitMotorHAT.MotorCommand.FORWARD;
+		int nbSteps = 0;
 	}
 
-	private void displayHelp() {
-		int longestCommand = Arrays.stream(SupportedUserInput.values())
-				.map(sui -> sui.command().length())
-				.max(Integer::compare)
-				.get();
-		System.out.println("Set your options, and enter 'GO' to start the motor.");
-		System.out.println("Options are (lowercase supported):");
-		Arrays.asList(SupportedUserInput.values())
-				.forEach(sui -> System.out.println(String.format("     - %s\t%s",
-						StringUtils.rpad(sui.command(), longestCommand + 1),
-						sui.description())));
+	private static MotorPayload getMotorPayload(double from, double to, double ratio) {
+		MotorPayload motorPayload = new MotorPayload();
+		motorPayload.motorCommand = (from > to) ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD;
+	  // Motor: 200 steps: 360 degrees.
+		// Device: 360 degrees = (200 / ratio) steps.
+		motorPayload.nbSteps = (int)Math.round((Math.abs(from - to) / 360d) * 200 / ratio);
+		return motorPayload;
 	}
 
 	private void go() {
 		keepGoing = true;
 		AdafruitMotorHAT.MotorCommand motorCommand = AdafruitMotorHAT.MotorCommand.FORWARD; // Default
-		AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.SINGLE;                  // Default
+		AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.MICROSTEP;               // Default
 
-		MotorThread motorThread = null;
+		MotorThread elevationMotorThread = null;
+		MotorThread azimuthMotorThread = null;
+
 		astroThread = new CelestialComputerThread();
-		astroThread.start();
+		astroThread.start(); // Start calculating
 
-		displayHelp();
+		final double MIN_DIFF_FOR_MOVE = 0.5;
 
 		while (keepGoing) {
-			if (!simulating) {
-				try {
-					System.out.println(String.format(
-							"--- Current Status ---------------------------------------------------------------------\n" +
-									"Motor # %d, RPM set to %.02f, %d Steps per Rev, %.03f millisec per step, taking %d steps.\n" +
-									" -> this will be %.01f degrees in ~ %s ms\n" +
-									"Command %s, Style %s \n" +
-									"----------------------------------------------------------------------------------------",
-							this.azimuthMotor.getMotorNum(),
-							this.azimuthMotor.getRPM(),
-							this.azimuthMotor.getStepPerRev(),
-							this.azimuthMotor.getSecPerStep() * 1_000,
-							nbSteps,
-							(360d * (double) nbSteps / (double) this.azimuthMotor.getStepPerRev()),
-							NumberFormat.getInstance().format(nbSteps * this.azimuthMotor.getSecPerStep() * 1_000),
-							motorCommand, motorStyle));
 
-					String userInput = StaticUtil.userInput("Your option ? > ").toUpperCase();
-					boolean startMotor = false;
+			if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+				System.out.println(String.format("Device Azimuth: %.02f, Device Elevation: %.02f\n" + "Sun Azimuth: %.02f, Sun Elevation: %.02f",
+						currentDeviceAzimuth,
+						currentDeviceElevation,
+						sunAzimuth,
+						sunElevation));
+			}
 
-					switch (userInput) {
-						case "FORWARD":
-							motorCommand = AdafruitMotorHAT.MotorCommand.FORWARD;
-							break;
-						case "BACKWARD":
-							motorCommand = AdafruitMotorHAT.MotorCommand.BACKWARD;
-							break;
-						case "SINGLE":
-							motorStyle = AdafruitMotorHAT.Style.SINGLE;
-							break;
-						case "DOUBLE":
-							motorStyle = AdafruitMotorHAT.Style.DOUBLE;
-							break;
-						case "INTERLEAVE":
-							motorStyle = AdafruitMotorHAT.Style.INTERLEAVE;
-							break;
-						case "MICROSTEP":
-							motorStyle = AdafruitMotorHAT.Style.MICROSTEP;
-							break;
-						case "GO":
-							startMotor = true;
-							break;
-						case "HELP":
-							displayHelp();
-							break;
-						case "OUT":
-						case "QUIT":
-							keepGoing = false;
-							if (motorThread != null) {
-								motorThread.interrupt();
-							}
-							stop();
-							break;
-						default:
-							if (userInput.startsWith("RPM ")) {
-								try {
-									int rpm = Integer.parseInt(userInput.substring("RPM ".length()));
-									this.azimuthMotor.setRPM(rpm);
-								} catch (NumberFormatException nfe) {
-									nfe.printStackTrace();
-								}
-							} else if (userInput.startsWith("STEPS ")) {
-								try {
-									nbSteps = Integer.parseInt(userInput.substring("STEPS ".length()));
-								} catch (NumberFormatException nfe) {
-									nfe.printStackTrace();
-								}
-							} else if (userInput.startsWith("STEPSPERREV ")) {
-								try {
-									int steps = Integer.parseInt(userInput.substring("STEPSPERREV ".length()));
-									this.azimuthMotor.setStepPerRev(steps);
-								} catch (NumberFormatException nfe) {
-									nfe.printStackTrace();
-								}
-							} else {
-								if (!"".equals(userInput)) {
-									System.out.println(String.format("[%s] not supported.", userInput));
-								}
-							}
-							break;
+			if (sunElevation >= 0) {
+				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= MIN_DIFF_FOR_MOVE) { // Start a new thread each time a move is requested
+					System.out.println(String.format("\tAt %s, setting device Azimuth to %.02f\272 (a %.02f\272 move)", new Date(), sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth)));
+					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio);
+					System.out.println(String.format(">> This will be %d steps %s", data.nbSteps, data.motorCommand));
+					if (!simulating) {
+						azimuthMotorThread = new MotorThread(this.azimuthMotor, data.nbSteps, data.motorCommand, motorStyle);
+						azimuthMotorThread.start();
 					}
-
-					if (startMotor) {
-						motorThread = new MotorThread(this.azimuthMotor, nbSteps, motorCommand, motorStyle);
-						motorThread.start();
+					currentDeviceAzimuth = sunAzimuth; // TODO Do this in the thread
+				}
+				if (Math.abs(currentDeviceElevation - sunElevation) >= MIN_DIFF_FOR_MOVE) {
+					System.out.println(String.format("\tAt %s, setting device Elevation to %.02f\272 (a %.02f\272 move)", new Date(), sunElevation, Math.abs(currentDeviceElevation - sunElevation)));
+					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio);
+					System.out.println(String.format(">> This will be %d steps %s", data.nbSteps, data.motorCommand));
+					if (!simulating) {
+						elevationMotorThread = new MotorThread(this.elevationMotor, data.nbSteps, data.motorCommand, motorStyle);
+						elevationMotorThread.start();
 					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
+					currentDeviceElevation = sunElevation; // TODO Do this in the thread
+				}
+			} else { // Park device
+				if (currentDeviceElevation != 90 || currentDeviceAzimuth != 0) {
+					System.out.println("Parking the device");
+					// Put Z to 0, Elev. to 90.
+					MotorPayload parkElev = getMotorPayload(currentDeviceElevation, 90, elevationMotorRatio);
+					System.out.println(String.format(">> (Elev) This will be %d steps %s", parkElev.nbSteps, parkElev.motorCommand));
+					if (!simulating) {
+						elevationMotorThread = new MotorThread(this.elevationMotor, parkElev.nbSteps, parkElev.motorCommand, motorStyle);
+						elevationMotorThread.start();
+					}
+					currentDeviceElevation = 90; // TODO In the thread
+
+					MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, 0, azimuthMotorRatio);
+					System.out.println(String.format(">> (Z) This will be %d steps %s", parkZ.nbSteps, parkZ.motorCommand));
+					if (!simulating) {
+						azimuthMotorThread = new MotorThread(this.azimuthMotor, parkZ.nbSteps, parkZ.motorCommand, motorStyle);
+						azimuthMotorThread.start();
+					}
+					currentDeviceAzimuth = 0; // TODO In the thread
+				} else {
+					System.out.println("Parked");
 				}
 			}
+			// Bottom of the loop
+			delay(1_000L);
 		}
-		System.out.println("... Done with the demo ...");
+		System.out.println("... Done with the program ...");
 //	try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
 	}
 
@@ -326,7 +273,7 @@ public class SunFlowerDriver {
 	 */
 	public static void main(String... args) throws Exception {
 		SunFlowerDriver sunFlowerDriver = new SunFlowerDriver();
-		System.out.println("Hit Ctrl-C to stop the demo (or OUT at the prompt)");
+		System.out.println("Hit Ctrl-C to stop the program (or OUT at the prompt)");
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			sunFlowerDriver.stop();
 			try { Thread.sleep(5_000); } catch (Exception absorbed) {
