@@ -88,7 +88,9 @@ public class SunFlowerDriver {
 				});
 				if (true || MOTOR_HAT_VERBOSE) {
 					long after = System.currentTimeMillis();
-					System.out.println(String.format("\tMove completed in: %s", TimeUtil.fmtDHMS(TimeUtil.msToHMS(after - before))));
+					System.out.println(String.format("\tMove completed in: %s on motor #%d",
+							TimeUtil.fmtDHMS(TimeUtil.msToHMS(after - before)),
+							this.stepper.getMotorNum()));
 				}
 			} catch (IOException ie) {
 				ie.printStackTrace();
