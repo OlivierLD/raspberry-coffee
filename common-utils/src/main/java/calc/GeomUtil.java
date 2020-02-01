@@ -456,6 +456,9 @@ public final class GeomUtil {
 		g = sexToDec("122", "22", "48.94");
 		System.out.println("Don Pedro at Oyster Point - L:" + l + ", G:" + g);
 
+		double z = 123.45;
+		System.out.println(String.format("Z: %s", decToSex(z, NO_DEG, NONE)));
+
 		// Converting degrees to hours
 		g = -sexToDec("142", "01.9");
 		double hours = degrees2hours(g);

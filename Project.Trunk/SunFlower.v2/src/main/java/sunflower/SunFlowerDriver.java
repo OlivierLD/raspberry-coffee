@@ -1,6 +1,7 @@
 package sunflower;
 
 import calc.DeadReckoning;
+import calc.GeomUtil;
 import calc.calculation.AstroComputer;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.motor.adafruitmotorhat.AdafruitMotorHAT;
@@ -214,7 +215,9 @@ public class SunFlowerDriver {
 			}
 
 			if (astroThread.isAlive() && sunElevation >= 0) {
+				boolean hasMoved = false;
 				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= MIN_DIFF_FOR_MOVE) { // Start a new thread each time a move is requested
+					hasMoved = true;
 					System.out.println(String.format("- At %s, setting device Azimuth from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceAzimuth, sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth)));
 					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio);
 					System.out.println(String.format("\t>> This will be %d steps %s on motor #%d", data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
@@ -229,6 +232,7 @@ public class SunFlowerDriver {
 					currentDeviceAzimuth = sunAzimuth; // TODO Do this in the thread
 				}
 				if (Math.abs(currentDeviceElevation - sunElevation) >= MIN_DIFF_FOR_MOVE) {
+					hasMoved = true;
 					System.out.println(String.format("- At %s, setting device Elevation from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceElevation, sunElevation, Math.abs(currentDeviceElevation - sunElevation)));
 					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio);
 					System.out.println(String.format("\t>> This will be %d steps %s on motor #%d", data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
@@ -241,6 +245,9 @@ public class SunFlowerDriver {
 						}
 					}
 					currentDeviceElevation = sunElevation; // TODO Do this in the thread
+				}
+				if (hasMoved) {
+					System.out.println(String.format("Sun's position is now: Elev: %s, Z: %.02f", GeomUtil.decToSex(sunElevation, GeomUtil.NO_DEG, GeomUtil.NONE), sunAzimuth));
 				}
 			} else { // Park device
 				parkDevice();
