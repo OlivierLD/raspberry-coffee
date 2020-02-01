@@ -54,7 +54,7 @@ public class InteractiveStepper {
 						System.out.println(String.format("\t\tToo long! %s", t));
 					}
 				});
-				if (true || MOTOR_HAT_VERBOSE) {
+				if (MOTOR_HAT_VERBOSE) {
 					long after = System.currentTimeMillis();
 					System.out.println(String.format("\tMove completed in: %s", TimeUtil.fmtDHMS(TimeUtil.msToHMS(after - before))));
 				}

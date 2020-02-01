@@ -5,13 +5,9 @@ import calc.calculation.AstroComputer;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.motor.adafruitmotorhat.AdafruitMotorHAT;
 import nmea.parser.GeoPos;
-import utils.StaticUtil;
-import utils.StringUtils;
 import utils.TimeUtil;
 
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -38,8 +34,11 @@ public class SunFlowerDriver {
 	private AdafruitMotorHAT.AdafruitStepperMotor azimuthMotor;
 	private AdafruitMotorHAT.AdafruitStepperMotor elevationMotor;
 
-	private double currentDeviceElevation = 0d;
-	private double currentDeviceAzimuth = 0d;
+	private final static double PARKED_ELEVATION = 90d;
+	private final static double PARKED_AZIMUTH = 180d;
+
+	private double currentDeviceElevation = PARKED_ELEVATION;
+	private double currentDeviceAzimuth = PARKED_AZIMUTH;
 
 	private CelestialComputerThread astroThread = null;
 
@@ -225,24 +224,24 @@ public class SunFlowerDriver {
 					currentDeviceElevation = sunElevation; // TODO Do this in the thread
 				}
 			} else { // Park device
-				if (currentDeviceElevation != 90 || currentDeviceAzimuth != 0) {
+				if (currentDeviceElevation != PARKED_ELEVATION || currentDeviceAzimuth != PARKED_AZIMUTH) {
 					System.out.println("Parking the device");
 					// Put Z to 0, Elev. to 90.
-					MotorPayload parkElev = getMotorPayload(currentDeviceElevation, 90, elevationMotorRatio);
+					MotorPayload parkElev = getMotorPayload(currentDeviceElevation, PARKED_ELEVATION, elevationMotorRatio);
 					System.out.println(String.format(">> (Elev) This will be %d steps %s", parkElev.nbSteps, parkElev.motorCommand));
 					if (!simulating) {
 						elevationMotorThread = new MotorThread(this.elevationMotor, parkElev.nbSteps, parkElev.motorCommand, motorStyle);
 						elevationMotorThread.start();
 					}
-					currentDeviceElevation = 90; // TODO In the thread
+					currentDeviceElevation = PARKED_ELEVATION; // TODO In the thread
 
-					MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, 0, azimuthMotorRatio);
+					MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, PARKED_AZIMUTH, azimuthMotorRatio);
 					System.out.println(String.format(">> (Z) This will be %d steps %s", parkZ.nbSteps, parkZ.motorCommand));
 					if (!simulating) {
 						azimuthMotorThread = new MotorThread(this.azimuthMotor, parkZ.nbSteps, parkZ.motorCommand, motorStyle);
 						azimuthMotorThread.start();
 					}
-					currentDeviceAzimuth = 0; // TODO In the thread
+					currentDeviceAzimuth = PARKED_AZIMUTH; // TODO In the thread
 				} else {
 					System.out.println("Parked");
 				}
