@@ -191,6 +191,7 @@ public class SunFlowerDriver {
 						sunElevation));
 			}
 
+			// TODO Check if the 2 threads can access the board at the same time...
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= MIN_DIFF_FOR_MOVE) { // Start a new thread each time a move is requested
 					System.out.println(String.format("- At %s, setting device Azimuth from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceAzimuth, sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth)));
@@ -279,7 +280,7 @@ public class SunFlowerDriver {
 		SunFlowerDriver sunFlowerDriver = new SunFlowerDriver();
 		System.out.println("Hit Ctrl-C to stop the program");
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("Shutting down, releasing resources.");
+			System.out.println("\nShutting down, releasing resources.");
 			sunFlowerDriver.stop();
 			try { Thread.sleep(5_000); } catch (Exception absorbed) {
 				System.err.println("Ctrl-C: Oops!");
