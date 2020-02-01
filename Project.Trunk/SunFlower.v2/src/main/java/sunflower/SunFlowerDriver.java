@@ -88,7 +88,7 @@ public class SunFlowerDriver {
 				});
 				if (true || MOTOR_HAT_VERBOSE) {
 					long after = System.currentTimeMillis();
-					System.out.println(String.format("\tMove (%d steps) completed in: %s on motor #%d",
+					System.out.println(String.format("\tMove (%d steps) completed in %s on motor #%d",
 							this.nbSteps,
 							TimeUtil.fmtDHMS(TimeUtil.msToHMS(after - before)),
 							this.stepper.getMotorNum()));
