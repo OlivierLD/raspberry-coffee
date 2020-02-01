@@ -24,8 +24,8 @@ import static utils.TimeUtil.delay;
 public class SunFlowerDriver {
 
 	private static GeoPos devicePosition = null; // Can be fed from a GPS, or manually (System variable).
-	private static double sunAzimuth = 0d;
-	private static double sunElevation = 0d;
+	private static double sunAzimuth = 180d;
+	private static double sunElevation = -1d;
 
 	private boolean simulating = false;
 
@@ -48,7 +48,6 @@ public class SunFlowerDriver {
 	private boolean keepGoing = true;
 	private final static int DEFAULT_RPM = 30;
 	private final static int DEFAULT_STEPS_PER_REV = AdafruitMotorHAT.AdafruitStepperMotor.DEFAULT_NB_STEPS;
-	private int nbSteps;
 
 	private final static boolean MOTOR_HAT_VERBOSE = "true".equals(System.getProperty("motor.hat.verbose"));
 
@@ -141,8 +140,6 @@ public class SunFlowerDriver {
 		int rpm = Integer.parseInt(System.getProperty("rpm", String.valueOf(DEFAULT_RPM)));
 		System.out.println(String.format("RPM set to %d.", rpm));
 
-		nbSteps = Integer.parseInt(System.getProperty("steps", String.valueOf(200)));
-
 		try {
 			this.mh = new AdafruitMotorHAT(DEFAULT_STEPS_PER_REV); // Default addr 0x60
 
@@ -194,7 +191,7 @@ public class SunFlowerDriver {
 						sunElevation));
 			}
 
-			if (sunElevation >= 0) {
+			if (astroThread.isAlive() && sunElevation >= 0) {
 				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= MIN_DIFF_FOR_MOVE) { // Start a new thread each time a move is requested
 					System.out.println(String.format("\tAt %s, setting device Azimuth to %.02f degrees (a %.02f degrees move)", new Date(), sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth)));
 					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio);
@@ -280,7 +277,7 @@ public class SunFlowerDriver {
 	 */
 	public static void main(String... args) throws Exception {
 		SunFlowerDriver sunFlowerDriver = new SunFlowerDriver();
-		System.out.println("Hit Ctrl-C to stop the program (or OUT at the prompt)");
+		System.out.println("Hit Ctrl-C to stop the program");
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			sunFlowerDriver.stop();
 			try { Thread.sleep(5_000); } catch (Exception absorbed) {
