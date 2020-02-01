@@ -279,6 +279,7 @@ public class SunFlowerDriver {
 		SunFlowerDriver sunFlowerDriver = new SunFlowerDriver();
 		System.out.println("Hit Ctrl-C to stop the program");
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println("Shutting down, releasing resources.");
 			sunFlowerDriver.stop();
 			try { Thread.sleep(5_000); } catch (Exception absorbed) {
 				System.err.println("Ctrl-C: Oops!");
