@@ -193,9 +193,9 @@ public class SunFlowerDriver {
 
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= MIN_DIFF_FOR_MOVE) { // Start a new thread each time a move is requested
-					System.out.println(String.format("\tAt %s, setting device Azimuth from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceAzimuth, sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth)));
+					System.out.println(String.format("- At %s, setting device Azimuth from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceAzimuth, sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth)));
 					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio);
-					System.out.println(String.format(">> This will be %d steps %s", data.nbSteps, data.motorCommand));
+					System.out.println(String.format("\t>> This will be %d steps %s", data.nbSteps, data.motorCommand));
 					if (!simulating) {
 						if (azimuthMotorThread == null || (azimuthMotorThread != null && !azimuthMotorThread.isAlive())) {
 							azimuthMotorThread = new MotorThread(this.azimuthMotor, data.nbSteps, data.motorCommand, motorStyle);
@@ -207,9 +207,9 @@ public class SunFlowerDriver {
 					currentDeviceAzimuth = sunAzimuth; // TODO Do this in the thread
 				}
 				if (Math.abs(currentDeviceElevation - sunElevation) >= MIN_DIFF_FOR_MOVE) {
-					System.out.println(String.format("\tAt %s, setting device Elevation from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceElevation, sunElevation, Math.abs(currentDeviceElevation - sunElevation)));
+					System.out.println(String.format("- At %s, setting device Elevation from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceElevation, sunElevation, Math.abs(currentDeviceElevation - sunElevation)));
 					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio);
-					System.out.println(String.format(">> This will be %d steps %s", data.nbSteps, data.motorCommand));
+					System.out.println(String.format("\t>> This will be %d steps %s", data.nbSteps, data.motorCommand));
 					if (!simulating) {
 						if (elevationMotorThread == null || (elevationMotorThread != null && !elevationMotorThread.isAlive())) {
 							elevationMotorThread = new MotorThread(this.elevationMotor, data.nbSteps, data.motorCommand, motorStyle);
