@@ -9,8 +9,10 @@ import nmea.parser.GeoPos;
 import utils.TimeUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import static utils.TimeUtil.delay;
@@ -23,6 +25,8 @@ import static utils.TimeUtil.delay;
  * nbSteps: How many steps should the shaft do when started.
  */
 public class SunFlowerDriver {
+
+	private SunFlowerDriver instance = this;
 
 	private static GeoPos devicePosition = null; // Can be fed from a GPS, or manually (System variable).
 	private static double sunAzimuth   = 180d;
@@ -55,12 +59,13 @@ public class SunFlowerDriver {
 	private final static int DEFAULT_STEPS_PER_REV = AdafruitMotorHAT.AdafruitStepperMotor.DEFAULT_NB_STEPS;
 
 	private final static boolean MOTOR_HAT_VERBOSE = "true".equals(System.getProperty("motor.hat.verbose"));
+	private final static boolean ASTRO_VERBOSE = "true".equals(System.getProperty("astro.verbose", "false"));
 
 	public void setDevicePosition(double lat, double lng) {
 		this.devicePosition = new GeoPos(lat, lng);
 	}
 
-	private static class MotorThread extends Thread {
+	private class MotorThread extends Thread {
 		private AdafruitMotorHAT.AdafruitStepperMotor stepper;
 		private int nbSteps;
 		private AdafruitMotorHAT.MotorCommand motorCommand;
@@ -86,11 +91,14 @@ public class SunFlowerDriver {
 						System.out.println(String.format("\t\tToo long! %s", t));
 					}
 				});
-				if (true || MOTOR_HAT_VERBOSE) {
-					long after = System.currentTimeMillis();
-					System.out.println(String.format("\tMove (%d steps) completed in %s on motor #%d",
-							this.nbSteps,
-							TimeUtil.fmtDHMS(TimeUtil.msToHMS(after - before)),
+				long after = System.currentTimeMillis();
+				String mess = String.format("Move (%d steps) completed in %s",
+						this.nbSteps,
+						TimeUtil.fmtDHMS(TimeUtil.msToHMS(after - before)));
+				instance.publish(this.stepper.getMotorNum() == 1 ? EventType.MOVING_AZIMUTH_END : EventType.MOVING_ELEVATION_END, mess);
+				if (MOTOR_HAT_VERBOSE) {
+					System.out.println(String.format("\t%s on motor #%d",
+							mess,
 							this.stepper.getMotorNum()));
 				}
 			} catch (IOException ie) {
@@ -113,7 +121,7 @@ public class SunFlowerDriver {
 				Date at = new Date();
 				Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
 				date.setTime(at);
-//				if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+//				if (ASTRO_VERBOSE) {
 //					System.out.println("Starting Sun data calculation at " + date.getTime());
 //				}
 				// TODO Make it non-static, and synchronized ?
@@ -131,7 +139,7 @@ public class SunFlowerDriver {
 														 .calculate();
 					sunAzimuth = dr.getZ();
 					sunElevation = dr.getHe();
-					if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+					if (ASTRO_VERBOSE) {
 						System.out.println(String.format("At %s, from %s, Z: %.02f, Elev: %.02f ", date.getTime(), devicePosition, sunAzimuth, sunElevation));
 					}
 				} else {
@@ -142,10 +150,42 @@ public class SunFlowerDriver {
 		}
 	}
 
+	public enum EventType {
+		CELESTIAL_DATA,
+		DEVICE_DATA,
+		MOVING_ELEVATION_START,
+		MOVING_AZIMUTH_START,
+		MOVING_ELEVATION_START_2,
+		MOVING_AZIMUTH_START_2,
+		MOVING_ELEVATION_END,
+		MOVING_AZIMUTH_END,
+		MOVING_ELEVATION_INFO,
+		MOVING_AZIMUTH_INFO,
+		DEVICE_INFO
+	}
+	private static abstract class SunFlowerEventListener {
+		public abstract void newMessage(EventType messageType, String messageContent);
+	}
+
+	private List<SunFlowerEventListener> listeners = new ArrayList<>();
+
+	public void subscribe(SunFlowerEventListener listener) {
+		listeners.add(listener);
+	}
+	public void unsubscribe(SunFlowerEventListener listener) {
+		if (listeners.contains(listener)) {
+			listeners.remove(listener);
+		}
+	}
+
+	private void publish(EventType messageType, String messageContent) {
+		listeners.forEach(listener -> listener.newMessage(messageType, messageContent));
+	}
+
 	private SunFlowerDriver() {
 
 		System.out.println("Starting Program");
-		int rpm = Integer.parseInt(System.getProperty("rpm", String.valueOf(DEFAULT_RPM)));
+		int rpm = Integer.parseInt(System.getProperty("rpm", String.valueOf(DEFAULT_RPM))); // 30
 		System.out.println(String.format("RPM set to %d.", rpm));
 
 		try {
@@ -172,13 +212,13 @@ public class SunFlowerDriver {
 		motorPayload.motorCommand = (to > from) ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD;
 	  // Motor: 200 steps: 360 degrees.
 		// Device: 360 degrees = (200 / ratio) steps.
-		motorPayload.nbSteps = (int)Math.round((Math.abs(from - to) / 360d) * 200 / ratio);
+		motorPayload.nbSteps = (int)Math.round((Math.abs(from - to) / 360d) * 200d / ratio);
 		return motorPayload;
 	}
 
 	private void parkDevice() {
 		if (currentDeviceElevation != PARKED_ELEVATION || currentDeviceAzimuth != PARKED_AZIMUTH) {
-			System.out.println("Parking the device");
+			this.publish(EventType.DEVICE_INFO, "Parking the device");
 			// Put Z to 0, Elev. to 90.
 			MotorPayload parkElev = getMotorPayload(currentDeviceElevation, PARKED_ELEVATION, elevationMotorRatio);
 			System.out.println(String.format(">> (Elev) This will be %d steps %s", parkElev.nbSteps, parkElev.motorCommand));
@@ -186,7 +226,7 @@ public class SunFlowerDriver {
 				elevationMotorThread = new MotorThread(this.elevationMotor, parkElev.nbSteps, parkElev.motorCommand, motorStyle);
 				elevationMotorThread.start();
 			}
-			currentDeviceElevation = PARKED_ELEVATION; // TODO In the thread
+			currentDeviceElevation = PARKED_ELEVATION; // TODO In the thread?
 
 			MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, PARKED_AZIMUTH, azimuthMotorRatio);
 			System.out.println(String.format(">> (Z) This will be %d steps %s", parkZ.nbSteps, parkZ.motorCommand));
@@ -194,9 +234,10 @@ public class SunFlowerDriver {
 				azimuthMotorThread = new MotorThread(this.azimuthMotor, parkZ.nbSteps, parkZ.motorCommand, motorStyle);
 				azimuthMotorThread.start();
 			}
-			currentDeviceAzimuth = PARKED_AZIMUTH; // TODO In the thread
+			currentDeviceAzimuth = PARKED_AZIMUTH; // TODO In the thread?
 		} else {
-			System.out.println("Parked");
+			this.publish(EventType.DEVICE_INFO, "Parked");
+			// System.out.println("Parked");
 		}
 	}
 	private void go() {
@@ -209,47 +250,61 @@ public class SunFlowerDriver {
 
 		while (keepGoing) {
 
-			if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-				System.out.println(String.format("Device Azimuth: %.02f, Device Elevation: %.02f\n" + "Sun Azimuth: %.02f, Sun Elevation: %.02f",
-						currentDeviceAzimuth,
-						currentDeviceElevation,
-						sunAzimuth,
-						sunElevation));
+			String deviceData = String.format("Azimuth: %.02f, Elevation: %.02f",
+					currentDeviceAzimuth,
+					currentDeviceElevation);
+			String celestialData = String.format("Azimuth: %.02f, Elevation: %.02f",
+					sunAzimuth,
+					sunElevation);
+			this.publish(EventType.DEVICE_DATA, deviceData);
+			this.publish(EventType.CELESTIAL_DATA, celestialData);
+
+			if (ASTRO_VERBOSE) {
+				System.out.println(String.format("Device : %s\n" + "Sun : %s",
+						deviceData, celestialData));
 			}
 
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				boolean hasMoved = false;
 				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= MIN_DIFF_FOR_MOVE) { // Start a new thread each time a move is requested
 					hasMoved = true;
-					System.out.println(String.format("- At %s, setting device Azimuth from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceAzimuth, sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth)));
+					String mess1 = String.format("At %s, setting device from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceAzimuth, sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth));
+					this.publish(EventType.MOVING_AZIMUTH_START, mess1);
 					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio);
-					System.out.println(String.format("\t>> This will be %d steps %s on motor #%d", data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
 					if (!simulating) {
+						String mess2 = String.format("This will be %d steps %s on motor #%d", data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum());
+						this.publish(EventType.MOVING_AZIMUTH_START_2, mess2);
 						if (azimuthMotorThread == null || (azimuthMotorThread != null && !azimuthMotorThread.isAlive())) {
 							azimuthMotorThread = new MotorThread(this.azimuthMotor, data.nbSteps, data.motorCommand, motorStyle);
 							azimuthMotorThread.start();
 						} else {
-							System.out.println(">>> Azimuth Thread is already busy at work.");
+							String mess3 = "Thread is already busy at work.";
+							this.publish(EventType.MOVING_AZIMUTH_INFO, mess3);
 						}
 					}
-					currentDeviceAzimuth = sunAzimuth; // TODO Do this in the thread
+					currentDeviceAzimuth = sunAzimuth; // TODO Do this in the thread?
 				}
 				if (Math.abs(currentDeviceElevation - sunElevation) >= MIN_DIFF_FOR_MOVE) {
 					hasMoved = true;
-					System.out.println(String.format("- At %s, setting device Elevation from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceElevation, sunElevation, Math.abs(currentDeviceElevation - sunElevation)));
+					String mess1 = String.format("At %s, setting device from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceElevation, sunElevation, Math.abs(currentDeviceElevation - sunElevation));
+					this.publish(EventType.MOVING_ELEVATION_START, mess1);
 					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio);
-					System.out.println(String.format("\t>> This will be %d steps %s on motor #%d", data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
+					if (!simulating) {
+						String mess2 = String.format("This will be %d steps %s on motor #%d", data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum());
+						this.publish(EventType.MOVING_ELEVATION_START_2, mess2);
+					}
 					if (!simulating) {
 						if (elevationMotorThread == null || (elevationMotorThread != null && !elevationMotorThread.isAlive())) {
 							elevationMotorThread = new MotorThread(this.elevationMotor, data.nbSteps, data.motorCommand, motorStyle);
 							elevationMotorThread.start();
 						} else {
-							System.out.println(">>> Elevation Thread is already busy at work.");
+							String mess3 = "Thread is already busy at work.";
+							this.publish(EventType.MOVING_ELEVATION_INFO, mess3);
 						}
 					}
-					currentDeviceElevation = sunElevation; // TODO Do this in the thread
+					currentDeviceElevation = sunElevation; // TODO Do this in the thread?
 				}
-				if (hasMoved) {
+				if (hasMoved && ASTRO_VERBOSE) {
 					System.out.println(String.format("Sun's position is now: Elev: %s, Z: %.02f", GeomUtil.decToSex(sunElevation, GeomUtil.NO_DEG, GeomUtil.NONE), sunAzimuth));
 				}
 			} else { // Park device
@@ -296,6 +351,25 @@ public class SunFlowerDriver {
 	 */
 	public static void main(String... args) throws Exception {
 		SunFlowerDriver sunFlowerDriver = new SunFlowerDriver();
+
+		sunFlowerDriver.subscribe(new SunFlowerEventListener() {
+
+			private EventType lastMessageType = null;
+
+			@Override
+			public void newMessage(EventType messageType, String messageContent) {
+				// Basic, just an example, a verbose spit.
+				if (messageType != lastMessageType) {
+					if (messageType != EventType.DEVICE_INFO &&
+							messageType != EventType.CELESTIAL_DATA &&
+							messageType != EventType.DEVICE_DATA) {
+						System.out.println(String.format("Listener: %s: %s", messageType, messageContent));
+					}
+				}
+				lastMessageType = messageType;
+			}
+		});
+
 		System.out.println("Hit Ctrl-C to stop the program");
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -324,7 +398,7 @@ public class SunFlowerDriver {
 		if (zRatioStr != null) {
 			String[] zData = zRatioStr.split(":");
 			if (zData.length != 2) {
-				throw new IllegalArgumentException(String.format("Expecting a value like '1:123', not %s", zRatioStr));
+				throw new IllegalArgumentException(String.format("Expecting a value like '1:234', not %s", zRatioStr));
 			}
 			try {
 				double num = Double.parseDouble(zData[0]);
@@ -339,7 +413,7 @@ public class SunFlowerDriver {
 		if (elevRatioStr != null) {
 			String[] elevData = elevRatioStr.split(":");
 			if (elevData.length != 2) {
-				throw new IllegalArgumentException(String.format("Expecting a value like '1:123', not %s", elevRatioStr));
+				throw new IllegalArgumentException(String.format("Expecting a value like '1:234', not %s", elevRatioStr));
 			}
 			try {
 				double num = Double.parseDouble(elevData[0]);

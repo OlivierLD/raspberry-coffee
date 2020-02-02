@@ -16,3 +16,5 @@ Some code to look at is in [this folder](../SteppersPlayground).
 ### Wiring
 ![Wiring](./MotorHatWiring.png)
 
+## TODO
+- A REST interface.
