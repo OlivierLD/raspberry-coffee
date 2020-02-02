@@ -360,7 +360,7 @@ public class SunFlowerDriver {
 			public void newMessage(EventType messageType, String messageContent) {
 				// Basic, just an example, a verbose spit.
 				if (messageType != lastMessageType) {
-					if (/* messageType != EventType.DEVICE_INFO && */
+					if (messageType != EventType.DEVICE_INFO && 
 							messageType != EventType.CELESTIAL_DATA &&
 							messageType != EventType.DEVICE_DATA) {
 						System.out.println(String.format("Listener: %s: %s", messageType, messageContent));
