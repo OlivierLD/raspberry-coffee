@@ -365,8 +365,8 @@ public class SunFlowerDriver {
 							messageType != EventType.DEVICE_DATA) {
 						System.out.println(String.format("Listener: %s: %s", messageType, messageContent));
 					}
+					lastMessageType = messageType;
 				}
-				lastMessageType = messageType;
 			}
 		});
 
