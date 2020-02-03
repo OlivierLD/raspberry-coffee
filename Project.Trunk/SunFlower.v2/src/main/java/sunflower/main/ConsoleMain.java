@@ -15,8 +15,8 @@ public class ConsoleMain {
 	 * astro.verbose default false
 	 * device.lat set default device latitude (useful when no GPS)
 	 * device.lng set default device longitude (useful when no GPS)
-	 * azimuth.ratio for the azimuth (vertical axis) gear ratio, like "X:Y, 1:40"
-	 * elevation.ratio for the elevation (horizontal axis) gear ratio, like "X:Y, 18:128"
+	 * azimuth.ratio for the azimuth (vertical axis) gear ratio, like "X:Y", ex: "1:40"
+	 * elevation.ratio for the elevation (horizontal axis) gear ratio, like "X:Y", ex: "18:128"
 	 *
 	 * @param args Not used
 	 * @throws Exception if anything fails...
@@ -34,7 +34,6 @@ public class ConsoleMain {
 
 			@Override
 			public void newMessage(SunFlowerDriver.EventType messageType, String messageContent) {
-				// TODO Something interesting
 				int index = SunFlowerDriver.getTypeIndex(messageType);
 				AnsiConsole.out.println(ansiLocate(0, index + 1) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + messageContent);
 			}
@@ -63,7 +62,7 @@ public class ConsoleMain {
 			}
 		}
 
-		// Ratios:
+		// Gear Ratios:
 		String zRatioStr = System.getProperty("azimuth.ratio");
 		if (zRatioStr != null) {
 			String[] zData = zRatioStr.split(":");

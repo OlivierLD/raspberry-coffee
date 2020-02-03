@@ -15,7 +15,7 @@ public class EscapeSeq {
 	public final static String ANSI_WHITE = "7";
 
 	public static final String ANSI_CLS = ESC + "[2J";
-	public static final String ANSI_HOME = ESC + "[H"; // 0,0
+	public static final String ANSI_HOME = ESC + "[H";  // 0,0
 	public static final String ANSI_HEAD = ESC + "[1G"; // Start of current line, position 1
 
 	public static final String ANSI_NORMAL = ESC + "[0m";
@@ -62,6 +62,14 @@ public class EscapeSeq {
 
 	public static String ansiLocate(int x, int y) {
 		return ESC + "[" + Integer.toString(y) + ";" + Integer.toString(x) + "H"; // Actually Y, X
+	}
+
+	public static String superpose(String orig, String override) {
+		byte[] ret = orig.getBytes();
+		for (int i = 0; i < Math.min(orig.length(), override.length()); i++) {
+			ret[i] = (byte) override.charAt(i);
+		}
+		return new String(ret);
 	}
 
 	// An example
@@ -125,14 +133,6 @@ public class EscapeSeq {
 
 		System.out.println(ansiSetTextAndBackgroundColor(ANSI_GREEN, ANSI_RED) + "this concludes the " + ansiSetTextColor(ANSI_WHITE) + "Jansi" + ansiSetTextColor(ANSI_GREEN) + " demo" + ANSI_NORMAL);
 		AnsiConsole.systemUninstall();
-	}
-
-	public static String superpose(String orig, String override) {
-		byte[] ret = orig.getBytes();
-		for (int i = 0; i < Math.min(orig.length(), override.length()); i++) {
-			ret[i] = (byte) override.charAt(i);
-		}
-		return new String(ret);
 	}
 
 	public static void main(String... args) {
