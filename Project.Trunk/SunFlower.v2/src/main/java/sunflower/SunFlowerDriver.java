@@ -51,8 +51,8 @@ public class SunFlowerDriver {
 
 	private AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.MICROSTEP;  // Default
 
-	private static double azimuthMotorRatio   = 1d / 40d; // Set with System variable "azimuth.ratio"
-	private static double elevationMotorRatio = 1d / 7.11111; // 18:128, Set with System variable "elevation.ratio"
+	public static double azimuthMotorRatio   = 1d / 40d; // Set with System variable "azimuth.ratio"
+	public static double elevationMotorRatio = 1d / 7.11111; // 18:128, Set with System variable "elevation.ratio"
 
 	private boolean keepGoing = true;
 	private final static int DEFAULT_RPM = 30;
@@ -163,7 +163,22 @@ public class SunFlowerDriver {
 		MOVING_AZIMUTH_INFO,
 		DEVICE_INFO
 	}
-	private static abstract class SunFlowerEventListener {
+
+	public static int getTypeIndex(EventType eventType) {
+		int index = -1;
+		int i = 0;
+		for (EventType et : EventType.values()) {
+			if (et.equals(eventType)) {
+				index = i;
+				break;
+			} else {
+				i++;
+			}
+		}
+		return index;
+	}
+
+	public static abstract class SunFlowerEventListener {
 		public abstract void newMessage(EventType messageType, String messageContent);
 	}
 
@@ -182,7 +197,7 @@ public class SunFlowerDriver {
 		listeners.forEach(listener -> listener.newMessage(messageType, messageContent));
 	}
 
-	private SunFlowerDriver() {
+	public SunFlowerDriver() {
 
 		System.out.println("Starting Program");
 		int rpm = Integer.parseInt(System.getProperty("rpm", String.valueOf(DEFAULT_RPM))); // 30
@@ -236,11 +251,11 @@ public class SunFlowerDriver {
 			}
 			currentDeviceAzimuth = PARKED_AZIMUTH; // TODO In the thread?
 		} else {
-			this.publish(EventType.DEVICE_INFO, "Parked");
+			this.publish(EventType.DEVICE_INFO, String.format("%s: Parked", new Date()));
 			// System.out.println("Parked");
 		}
 	}
-	private void go() {
+	public void go() {
 		keepGoing = true;
 
 		astroThread = new CelestialComputerThread();
@@ -250,10 +265,13 @@ public class SunFlowerDriver {
 
 		while (keepGoing) {
 
-			String deviceData = String.format("Azimuth: %.02f, Elevation: %.02f",
+			Date date = new Date();
+			String deviceData = String.format("%s, Device: Azimuth: %.02f, Elevation: %.02f",
+					date,
 					currentDeviceAzimuth,
 					currentDeviceElevation);
-			String celestialData = String.format("Azimuth: %.02f, Elevation: %.02f",
+			String celestialData = String.format("%s, Sun   : Azimuth: %.02f, Elevation: %.02f",
+					date,
 					sunAzimuth,
 					sunElevation);
 			this.publish(EventType.DEVICE_DATA, deviceData);
@@ -268,7 +286,7 @@ public class SunFlowerDriver {
 				boolean hasMoved = false;
 				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= MIN_DIFF_FOR_MOVE) { // Start a new thread each time a move is requested
 					hasMoved = true;
-					String mess1 = String.format("At %s, setting device from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceAzimuth, sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth));
+					String mess1 = String.format("At %s, setting device Azimuth from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceAzimuth, sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth));
 					this.publish(EventType.MOVING_AZIMUTH_START, mess1);
 					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio);
 					if (!simulating) {
@@ -286,7 +304,7 @@ public class SunFlowerDriver {
 				}
 				if (Math.abs(currentDeviceElevation - sunElevation) >= MIN_DIFF_FOR_MOVE) {
 					hasMoved = true;
-					String mess1 = String.format("At %s, setting device from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceElevation, sunElevation, Math.abs(currentDeviceElevation - sunElevation));
+					String mess1 = String.format("At %s, setting device Elevation from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceElevation, sunElevation, Math.abs(currentDeviceElevation - sunElevation));
 					this.publish(EventType.MOVING_ELEVATION_START, mess1);
 					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio);
 					if (!simulating) {
@@ -317,7 +335,7 @@ public class SunFlowerDriver {
 //	try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
 	}
 
-	private void stop() {
+	public void stop() {
 		this.keepGoing = false;
 		// Park the device
 		parkDevice();
@@ -344,7 +362,7 @@ public class SunFlowerDriver {
 	 * System properties:
 	 * rpm, default 30
 	 * hat.debug, default false
-	 * TODO: the others, deltaT and friends.
+	 * TODO: ...the others, deltaT and friends.
 	 *
 	 * @param args Not used
 	 * @throws Exception if anything fails...
@@ -360,7 +378,7 @@ public class SunFlowerDriver {
 			public void newMessage(EventType messageType, String messageContent) {
 				// Basic, just an example, a verbose spit.
 				if (messageType != lastMessageType) {
-					if (messageType != EventType.DEVICE_INFO && 
+					if (messageType != EventType.DEVICE_INFO &&
 							messageType != EventType.CELESTIAL_DATA &&
 							messageType != EventType.DEVICE_DATA) {
 						System.out.println(String.format("Listener: %s: %s", messageType, messageContent));
