@@ -61,6 +61,190 @@ public class SunFlowerDriver {
 	private final static boolean MOTOR_HAT_VERBOSE = "true".equals(System.getProperty("motor.hat.verbose"));
 	private final static boolean ASTRO_VERBOSE = "true".equals(System.getProperty("astro.verbose", "false"));
 
+	public static class MoveCompleted {
+	  private int nbSteps;
+		private long elapsed;
+
+		public MoveCompleted(int nbSteps, long elapsed) {
+			this.nbSteps = nbSteps;
+			this.elapsed = elapsed;
+		}
+
+		public int getNbSteps() {
+			return nbSteps;
+		}
+
+		public long getElapsed() {
+			return elapsed;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("Move (%d steps) completed in %s",
+					this.nbSteps,
+					TimeUtil.fmtDHMS(TimeUtil.msToHMS(this.elapsed)));
+		}
+	}
+
+	public static class DeviceData {
+		private Date date;
+		private double azimuth;
+		private double elevation;
+
+		public DeviceData(Date date, double azimuth, double elevation) {
+			this.date = date;
+			this.azimuth = azimuth;
+			this.elevation = elevation;
+		}
+
+		public Date getDate() {
+			return date;
+		}
+
+		public double getAzimuth() {
+			return azimuth;
+		}
+
+		public double getElevation() {
+			return elevation;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("%s, Device: Azimuth: %.02f, Elevation: %.02f",
+					this.date,
+					this.azimuth,
+					this.elevation);
+		}
+	}
+
+	public static class SunData {
+		private Date date;
+		private double azimuth;
+		private double elevation;
+
+		public SunData(Date date, double azimuth, double elevation) {
+			this.date = date;
+			this.azimuth = azimuth;
+			this.elevation = elevation;
+		}
+
+		public Date getDate() {
+			return date;
+		}
+
+		public double getAzimuth() {
+			return azimuth;
+		}
+
+		public double getElevation() {
+			return elevation;
+		}
+
+		public String toString() {
+			return String.format("%s, Sun: Azimuth: %.02f, Elevation: %.02f",
+					this.date,
+					this.azimuth,
+					this.elevation);
+		}
+	}
+
+	public static class DeviceAzimuthStart {
+		private Date date;
+		private double deviceAzimuth;
+		private double sunAzimuth;
+
+		public DeviceAzimuthStart(Date date, double deviceAzimuth, double sunAzimuth) {
+			this.date = date;
+			this.deviceAzimuth = deviceAzimuth;
+			this.sunAzimuth = sunAzimuth;
+		}
+
+		public Date getDate() {
+			return date;
+		}
+
+		public double getDeviceAzimuth() {
+			return deviceAzimuth;
+		}
+
+		public double getSunAzimuth() {
+			return sunAzimuth;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("At %s, setting device Azimuth from %.02f to %.02f degrees (a %.02f degrees move)",
+					this.date,
+					this.deviceAzimuth,
+					this.sunAzimuth,
+					Math.abs(this.deviceAzimuth - this.sunAzimuth));
+		}
+	}
+
+	public static class MoveDetails {
+		private int nbSteps;
+		private AdafruitMotorHAT.MotorCommand motorCommand;
+		private int motorNum;
+
+		public MoveDetails(int nbSteps, AdafruitMotorHAT.MotorCommand motorCommand, int motorNum) {
+			this.nbSteps = nbSteps;
+			this.motorCommand = motorCommand;
+			this.motorNum = motorNum;
+		}
+
+		public int getNbSteps() {
+			return nbSteps;
+		}
+
+		public AdafruitMotorHAT.MotorCommand getMotorCommand() {
+			return motorCommand;
+		}
+
+		public int getMotorNum() {
+			return motorNum;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("This will be %d steps %s on motor #%d", this.nbSteps, this.motorCommand, this.motorNum);
+		}
+	}
+
+	public static class DeviceElevationStart {
+
+		private Date date;
+		private double deviceElevation;
+		private double sunElevation;
+
+		public DeviceElevationStart(Date date, double deviceElevation, double sunElevation) {
+			this.date = date;
+			this.deviceElevation = deviceElevation;
+			this.sunElevation = sunElevation;
+		}
+
+		public Date getDate() {
+			return date;
+		}
+
+		public double getDeviceElevation() {
+			return deviceElevation;
+		}
+
+		public double getSunElevation() {
+			return sunElevation;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("At %s, setting device Elevation from %.02f to %.02f degrees (a %.02f degrees move)",
+					this.date,
+					this.deviceElevation,
+					this.sunElevation,
+					Math.abs(this.deviceElevation - this.sunElevation));
+		}
+	}
+
 	public void setDevicePosition(double lat, double lng) {
 		this.devicePosition = new GeoPos(lat, lng);
 	}
@@ -92,13 +276,11 @@ public class SunFlowerDriver {
 					}
 				});
 				long after = System.currentTimeMillis();
-				String mess = String.format("Move (%d steps) completed in %s",
-						this.nbSteps,
-						TimeUtil.fmtDHMS(TimeUtil.msToHMS(after - before)));
-				instance.publish(this.stepper.getMotorNum() == 1 ? EventType.MOVING_AZIMUTH_END : EventType.MOVING_ELEVATION_END, mess);
+				MoveCompleted payload = new MoveCompleted(this.nbSteps, (after - before));
+				instance.publish(this.stepper.getMotorNum() == 1 ? EventType.MOVING_AZIMUTH_END : EventType.MOVING_ELEVATION_END, payload);
 				if (MOTOR_HAT_VERBOSE) {
 					System.out.println(String.format("\t%s on motor #%d",
-							mess,
+							payload.toString(),
 							this.stepper.getMotorNum()));
 				}
 			} catch (IOException ie) {
@@ -179,7 +361,7 @@ public class SunFlowerDriver {
 	}
 
 	public static abstract class SunFlowerEventListener {
-		public abstract void newMessage(EventType messageType, String messageContent);
+		public abstract void newMessage(EventType messageType, Object messageContent);
 	}
 
 	private List<SunFlowerEventListener> listeners = new ArrayList<>();
@@ -193,7 +375,7 @@ public class SunFlowerDriver {
 		}
 	}
 
-	private void publish(EventType messageType, String messageContent) {
+	private void publish(EventType messageType, Object messageContent) {
 		listeners.forEach(listener -> listener.newMessage(messageType, messageContent));
 	}
 
@@ -266,32 +448,24 @@ public class SunFlowerDriver {
 		while (keepGoing) {
 
 			Date date = new Date();
-			String deviceData = String.format("%s, Device: Azimuth: %.02f, Elevation: %.02f",
-					date,
-					currentDeviceAzimuth,
-					currentDeviceElevation);
-			String celestialData = String.format("%s, Sun   : Azimuth: %.02f, Elevation: %.02f",
-					date,
-					sunAzimuth,
-					sunElevation);
+			DeviceData deviceData = new DeviceData(date, currentDeviceAzimuth, currentDeviceElevation);
+			SunData sunData = new SunData(date, sunAzimuth, sunElevation);
 			this.publish(EventType.DEVICE_DATA, deviceData);
-			this.publish(EventType.CELESTIAL_DATA, celestialData);
+			this.publish(EventType.CELESTIAL_DATA, sunData);
 
 			if (ASTRO_VERBOSE) {
 				System.out.println(String.format("Device : %s\n" + "Sun : %s",
-						deviceData, celestialData));
+						deviceData, sunData));
 			}
 
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				boolean hasMoved = false;
 				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= MIN_DIFF_FOR_MOVE) { // Start a new thread each time a move is requested
 					hasMoved = true;
-					String mess1 = String.format("At %s, setting device Azimuth from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceAzimuth, sunAzimuth, Math.abs(currentDeviceAzimuth - sunAzimuth));
-					this.publish(EventType.MOVING_AZIMUTH_START, mess1);
+					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, sunAzimuth));
 					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio);
 					if (!simulating) {
-						String mess2 = String.format("This will be %d steps %s on motor #%d", data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum());
-						this.publish(EventType.MOVING_AZIMUTH_START_2, mess2);
+						this.publish(EventType.MOVING_AZIMUTH_START_2, new MoveDetails(data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
 						if (azimuthMotorThread == null || (azimuthMotorThread != null && !azimuthMotorThread.isAlive())) {
 							azimuthMotorThread = new MotorThread(this.azimuthMotor, data.nbSteps, data.motorCommand, motorStyle);
 							azimuthMotorThread.start();
@@ -304,12 +478,10 @@ public class SunFlowerDriver {
 				}
 				if (Math.abs(currentDeviceElevation - sunElevation) >= MIN_DIFF_FOR_MOVE) {
 					hasMoved = true;
-					String mess1 = String.format("At %s, setting device Elevation from %.02f to %.02f degrees (a %.02f degrees move)", new Date(), currentDeviceElevation, sunElevation, Math.abs(currentDeviceElevation - sunElevation));
-					this.publish(EventType.MOVING_ELEVATION_START, mess1);
+					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, sunElevation));
 					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio);
 					if (!simulating) {
-						String mess2 = String.format("This will be %d steps %s on motor #%d", data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum());
-						this.publish(EventType.MOVING_ELEVATION_START_2, mess2);
+						this.publish(EventType.MOVING_ELEVATION_START_2, new MoveDetails(data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
 					}
 					if (!simulating) {
 						if (elevationMotorThread == null || (elevationMotorThread != null && !elevationMotorThread.isAlive())) {
@@ -375,13 +547,13 @@ public class SunFlowerDriver {
 			private EventType lastMessageType = null;
 
 			@Override
-			public void newMessage(EventType messageType, String messageContent) {
+			public void newMessage(EventType messageType, Object messageContent) {
 				// Basic, just an example, a verbose spit.
 				if (messageType != lastMessageType) {
 					if (messageType != EventType.DEVICE_INFO &&
 							messageType != EventType.CELESTIAL_DATA &&
 							messageType != EventType.DEVICE_DATA) {
-						System.out.println(String.format("Listener: %s: %s", messageType, messageContent));
+						System.out.println(String.format("Listener: %s: %s", messageType, messageContent.toString()));
 					}
 					lastMessageType = messageType;
 				}

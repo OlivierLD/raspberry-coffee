@@ -4,6 +4,10 @@ import org.fusesource.jansi.AnsiConsole;
 import sunflower.SunFlowerDriver;
 import sunflower.utils.EscapeSeq;
 
+import static sunflower.utils.EscapeSeq.ANSI_DEFAULT_BACKGROUND;
+import static sunflower.utils.EscapeSeq.ANSI_DEFAULT_TEXT;
+import static sunflower.utils.EscapeSeq.ANSI_NORMAL;
+import static sunflower.utils.EscapeSeq.ansiLocate;
 import static sunflower.utils.EscapeSeq.*;
 
 public class ConsoleMain {
@@ -33,9 +37,51 @@ public class ConsoleMain {
 			private SunFlowerDriver.EventType lastMessageType = null;
 
 			@Override
-			public void newMessage(SunFlowerDriver.EventType messageType, String messageContent) {
+			public void newMessage(SunFlowerDriver.EventType messageType, Object messageContent) {
+
+				String message = "";
+
+				if (messageType.equals(SunFlowerDriver.EventType.CELESTIAL_DATA)) {
+					SunFlowerDriver.SunData sunData = (SunFlowerDriver.SunData)messageContent;
+					// message = sunData.toString();
+					message = ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_BLACK) + ANSI_BOLD + sunData.getDate().toString() + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+							ANSI_BOLD + ", Sun" + ANSI_NORMAL +
+							" Z: " + ANSI_BOLD + String.format("%.02f", sunData.getAzimuth()) + ANSI_NORMAL +
+							" Elev: " + ANSI_BOLD + String.format("%.02f", sunData.getElevation()) + ANSI_NORMAL +
+							ANSI_DEFAULT_TEXT;
+				} else if (messageType.equals(SunFlowerDriver.EventType.DEVICE_DATA)) {
+					SunFlowerDriver.DeviceData deviceData = (SunFlowerDriver.DeviceData)messageContent;
+					message = deviceData.toString();
+				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_ELEVATION_START)) {
+					SunFlowerDriver.DeviceElevationStart des = (SunFlowerDriver.DeviceElevationStart) messageContent;
+					message = des.toString();
+				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_AZIMUTH_START)) {
+					SunFlowerDriver.DeviceAzimuthStart das = (SunFlowerDriver.DeviceAzimuthStart) messageContent;
+					message = das.toString();
+				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_ELEVATION_START_2)) {
+					SunFlowerDriver.MoveDetails md = (SunFlowerDriver.MoveDetails) messageContent;
+					message = md.toString();
+				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_AZIMUTH_START_2)) {
+					SunFlowerDriver.MoveDetails md = (SunFlowerDriver.MoveDetails) messageContent;
+					message = md.toString();
+				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_ELEVATION_END)) {
+					SunFlowerDriver.MoveCompleted mc = (SunFlowerDriver.MoveCompleted) messageContent;
+					message = mc.toString();
+				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_AZIMUTH_END)) {
+					SunFlowerDriver.MoveCompleted mc = (SunFlowerDriver.MoveCompleted)messageContent;
+					message = mc.toString();
+				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_ELEVATION_INFO)) {
+					message = messageContent.toString();
+				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_AZIMUTH_INFO)) {
+					message = messageContent.toString();
+				} else if (messageType.equals(SunFlowerDriver.EventType.DEVICE_INFO)) {
+					message = messageContent.toString();
+				} else {
+					message = messageContent.toString();
+				}
+
 				int index = SunFlowerDriver.getTypeIndex(messageType);
-				AnsiConsole.out.println(ansiLocate(0, index + 1) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + messageContent);
+				AnsiConsole.out.println(ansiLocate(0, index + 1) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + message);
 			}
 		});
 

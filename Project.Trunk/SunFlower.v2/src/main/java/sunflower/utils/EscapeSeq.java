@@ -32,15 +32,14 @@ public class EscapeSeq {
 	public static final String ANSI_DEFAULT_TEXT = ESC + "[39m";
 	public static final String ANSI_DEFAULT_BACKGROUND = ESC + "[49m";
 
-	private final static String[] SOME_TEXT =
-			{
-					"What happens when the boat sends an email:",
-					"On the boat, you compose your email, and you put it in your outbox.",
-					"Then you turn your SSB on, and you use the SailMail client program to contact a land SailMail station.",
-					"When the contact is established, the messages sitting in the outbox go through the modem and the SSB to ",
-					"be streamed to the land station. On receive, the land station then turns the messages back into digital files,",
-					"and uses its Internet connection to post them on the web. From there, it's the usual email story."
-			};
+	private final static String[] SOME_TEXT = {
+			"What happens when the boat sends an email:",
+			"On the boat, you compose your email, and you put it in your outbox.",
+			"Then you turn your SSB on, and you use the SailMail client program to contact a land SailMail station.",
+			"When the contact is established, the messages sitting in the outbox go through the modem and the SSB to ",
+			"be streamed to the land station. On receive, the land station then turns the messages back into digital files,",
+			"and uses its Internet connection to post them on the web. From there, it's the usual email story."
+	};
 
 	public static final String ANSI_AT55 = ESC + "[10;10H"; // Actually 10, 10
 	public static final String ANSI_WHITEONBLUE = ESC + "[37;44m";
