@@ -17,4 +17,7 @@ Some code to look at is in [this folder](../SteppersPlayground).
 ![Wiring](./MotorHatWiring.png)
 
 ## TODO
+- An ANSI Console. 🚧 In progress.
 - A REST interface.
+
+---
