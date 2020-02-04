@@ -49,7 +49,7 @@ public class SunFlowerDriver {
 	private MotorThread elevationMotorThread = null;
 	private MotorThread azimuthMotorThread = null;
 
-	private AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.MICROSTEP;  // Default
+	private AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.SINGLE;  // Default. Try SINGLE, DOUBLE, MICROSTEP, INTERLEAVE...
 
 	private static double azimuthMotorRatio   = 1d / 40d; // Set with System variable "azimuth.ratio"
 	private static double elevationMotorRatio = 1d / 7.11111; // 18:128, Set with System variable "elevation.ratio"
