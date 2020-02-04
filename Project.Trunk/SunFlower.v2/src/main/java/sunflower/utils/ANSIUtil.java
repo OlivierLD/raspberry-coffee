@@ -192,12 +192,12 @@ public class ANSIUtil {
 	public static void printPositionTable() {
 		int line = START_POS_FRAME_AT; // Start from that line
 		AnsiConsole.out.println(
-				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + "- Positions -" + PAD);
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_ITALIC + ANSI_BOLD + "- Positions -" + ANSI_DEFAULT_TEXT + PAD);
 		// Frame top
 		AnsiConsole.out.println(
 				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						TOP_LEFT_CORNER_BOLD +
-						//	TOP_LEFT_ROUND_CORNER +
+						// TOP_LEFT_ROUND_CORNER +
 						drawXChar(SOLID_HORIZONTAL_BOLD, POS_COL_1) +
 						TOP_T_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, POS_COL_2) +
@@ -326,7 +326,7 @@ public class ANSIUtil {
 	public static void printMovementTable() {
 		int line = START_MOV_FRAME_AT; // Start from that line
 		AnsiConsole.out.println(
-				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + "- Movements -" + PAD);
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_ITALIC + ANSI_BOLD + "- Movements -" + ANSI_DEFAULT_TEXT + PAD);
 		// Frame top
 		AnsiConsole.out.println(
 				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
@@ -482,7 +482,7 @@ public class ANSIUtil {
 	public static void printInfoTable() {
 		int line = START_INFO_FRAME_AT; // Start from that line
 		AnsiConsole.out.println(
-				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + "- Status -" + PAD);
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_ITALIC + ANSI_BOLD + "- Status -" + ANSI_DEFAULT_TEXT + PAD);
 		// Frame top
 		AnsiConsole.out.println(
 				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
@@ -546,8 +546,7 @@ public class ANSIUtil {
 		printValueInCol(rpad(str, ONE_INFO_ROW[col]), INFO_LINE, col, ONE_INFO_ROW);
 	}
 
-
-	// An example
+	// Just an example
 	public static void main(String... args) {
 		AnsiConsole.systemInstall();
 		AnsiConsole.out.println(ANSI_CLS);

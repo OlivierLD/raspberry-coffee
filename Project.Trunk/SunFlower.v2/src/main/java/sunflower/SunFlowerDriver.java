@@ -51,8 +51,8 @@ public class SunFlowerDriver {
 
 	private AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.MICROSTEP;  // Default
 
-	public static double azimuthMotorRatio   = 1d / 40d; // Set with System variable "azimuth.ratio"
-	public static double elevationMotorRatio = 1d / 7.11111; // 18:128, Set with System variable "elevation.ratio"
+	private static double azimuthMotorRatio   = 1d / 40d; // Set with System variable "azimuth.ratio"
+	private static double elevationMotorRatio = 1d / 7.11111; // 18:128, Set with System variable "elevation.ratio"
 
 	private boolean keepGoing = true;
 	private final static int DEFAULT_RPM = 30;
@@ -552,41 +552,12 @@ public class SunFlowerDriver {
 		}
 	}
 
-	/**
-	 * System properties:
-	 * rpm, default 30
-	 * hat.debug, default false
-	 * TODO: ...the others, deltaT and friends.
-	 *
-	 * @param args Not used
-	 * @throws Exception if anything fails...
-	 */
-	public static void main(String... args) throws Exception {
-		SunFlowerDriver sunFlowerDriver = new SunFlowerDriver();
-
-		sunFlowerDriver.subscribe(new SunFlowerEventListener() {
-
-			private EventType lastMessageType = null;
-
-			@Override
-			public void newMessage(EventType messageType, Object messageContent) {
-				// Basic, just an example, a verbose spit.
-				if (messageType != lastMessageType) {
-					if (messageType != EventType.DEVICE_INFO &&
-							messageType != EventType.CELESTIAL_DATA &&
-							messageType != EventType.DEVICE_DATA) {
-						System.out.println(String.format("Listener: %s: %s", messageType, messageContent.toString()));
-					}
-					lastMessageType = messageType;
-				}
-			}
-		});
-
+	public void init() {
 		System.out.println("Hit Ctrl-C to stop the program");
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("\nShutting down, releasing resources.");
-			sunFlowerDriver.stop();
+//			System.out.println("\nShutting down, releasing resources.");
+			this.stop();
 			try { Thread.sleep(5_000); } catch (Exception absorbed) {
 				System.err.println("Ctrl-C: Oops!");
 				absorbed.printStackTrace();
@@ -599,7 +570,7 @@ public class SunFlowerDriver {
 			try {
 				double lat = Double.parseDouble(strLat);
 				double lng = Double.parseDouble(strLng);
-				sunFlowerDriver.setDevicePosition(lat, lng);
+				this.setDevicePosition(lat, lng);
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
@@ -636,7 +607,37 @@ public class SunFlowerDriver {
 				throw nfe;
 			}
 		}
+	}
+	/**
+	 * System properties:
+	 * rpm, default 30
+	 * hat.debug, default false
+	 * ... more.
+	 *
+	 * @param args Not used
+	 */
+	public static void main(String... args) {
+		SunFlowerDriver sunFlowerDriver = new SunFlowerDriver();
 
+		sunFlowerDriver.subscribe(new SunFlowerEventListener() {
+
+			private EventType lastMessageType = null;
+
+			@Override
+			public void newMessage(EventType messageType, Object messageContent) {
+				// Basic, just an example, a verbose spit.
+				if (messageType != lastMessageType) {
+					if (messageType != EventType.DEVICE_INFO &&
+							messageType != EventType.CELESTIAL_DATA &&
+							messageType != EventType.DEVICE_DATA) {
+						System.out.println(String.format("Listener: %s: %s", messageType, messageContent.toString()));
+					}
+					lastMessageType = messageType;
+				}
+			}
+		});
+
+		sunFlowerDriver.init();
 		sunFlowerDriver.go();
 
 		System.out.println("Bye!");
