@@ -2,13 +2,12 @@ package sunflower.main;
 
 import org.fusesource.jansi.AnsiConsole;
 import sunflower.SunFlowerDriver;
-import sunflower.utils.EscapeSeq;
+import sunflower.utils.ANSIUtil;
 
-import static sunflower.utils.EscapeSeq.ANSI_DEFAULT_BACKGROUND;
-import static sunflower.utils.EscapeSeq.ANSI_DEFAULT_TEXT;
-import static sunflower.utils.EscapeSeq.ANSI_NORMAL;
-import static sunflower.utils.EscapeSeq.ansiLocate;
-import static sunflower.utils.EscapeSeq.*;
+import static sunflower.utils.ANSIUtil.ANSI_DEFAULT_BACKGROUND;
+import static sunflower.utils.ANSIUtil.ANSI_DEFAULT_TEXT;
+import static sunflower.utils.ANSIUtil.ANSI_NORMAL;
+import static sunflower.utils.ANSIUtil.ansiLocate;
 
 public class ConsoleMain {
 	/**
@@ -28,13 +27,14 @@ public class ConsoleMain {
 	public static void main(String... args) throws Exception {
 
 		AnsiConsole.systemInstall();
-		AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
+		AnsiConsole.out.println(ANSIUtil.ANSI_CLS);
 
 		SunFlowerDriver sunFlowerDriver = new SunFlowerDriver();
 
-		sunFlowerDriver.subscribe(new SunFlowerDriver.SunFlowerEventListener() {
+		ANSIUtil.printPositionTable();
+		ANSIUtil.printMovementTable();
 
-			private SunFlowerDriver.EventType lastMessageType = null;
+		sunFlowerDriver.subscribe(new SunFlowerDriver.SunFlowerEventListener() {
 
 			@Override
 			public void newMessage(SunFlowerDriver.EventType messageType, Object messageContent) {
@@ -43,38 +43,28 @@ public class ConsoleMain {
 
 				if (messageType.equals(SunFlowerDriver.EventType.CELESTIAL_DATA)) {
 					SunFlowerDriver.SunData sunData = (SunFlowerDriver.SunData)messageContent;
-					message = String.format("%s%s%s%.02f%s%.02f.%s      ",
-							//                     |   |      |
-							//                     |   |      Elev
-							//                     |   Z
-							//                     Date
-							(ansiSetTextAndBackgroundColor(ANSI_YELLOW, ANSI_BLACK) + ANSI_BOLD),
-							sunData.getDate().toString(),
-							(ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + ", " + ANSI_ITALIC + "Sun   " + ANSI_NORMAL + " Z: " + ANSI_BOLD),
-							sunData.getAzimuth(),
-							(ANSI_NORMAL + " Elev: " + ANSI_BOLD),
-							sunData.getElevation(),
-							(ANSI_NORMAL + ANSI_DEFAULT_TEXT));
+					ANSIUtil.printSunPosDate(sunData.getDate().toString());
+					ANSIUtil.printSunPosZ(String.format("%.02f", sunData.getAzimuth()));
+					ANSIUtil.printSunPosElev(String.format("%.02f", sunData.getElevation()));
 				} else if (messageType.equals(SunFlowerDriver.EventType.DEVICE_DATA)) {
 					SunFlowerDriver.DeviceData deviceData = (SunFlowerDriver.DeviceData)messageContent;
-					message = String.format("%s%s%s%.02f%s%.02f.%s      ",
-							//                     |   |      |
-							//                     |   |      Elev
-							//                     |   Z
-							//                     Date
-							(ansiSetTextAndBackgroundColor(ANSI_YELLOW, ANSI_BLACK) + ANSI_BOLD),
-							deviceData.getDate().toString(),
-							(ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + ", " + ANSI_ITALIC + "Device" + ANSI_NORMAL + " Z: " + ANSI_BOLD),
-							deviceData.getAzimuth(),
-							(ANSI_NORMAL + " Elev: " + ANSI_BOLD),
-							deviceData.getElevation(),
-							(ANSI_NORMAL + ANSI_DEFAULT_TEXT));
+					ANSIUtil.printDevicePosDate(deviceData.getDate().toString());
+					ANSIUtil.printDevicePosZ(String.format("%.02f", deviceData.getAzimuth()));
+					ANSIUtil.printDevicePosElev(String.format("%.02f", deviceData.getElevation()));
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_ELEVATION_START)) {
 					SunFlowerDriver.DeviceElevationStart des = (SunFlowerDriver.DeviceElevationStart) messageContent;
-					message = des.toString();
+					ANSIUtil.printElevMovDate(des.getDate().toString());
+					ANSIUtil.printElevMovFrom(String.format("%.02f", des.getDeviceElevation()));
+					ANSIUtil.printElevMovTo(String.format("%.02f", des.getSunElevation()));
+					ANSIUtil.printElevMovDiff(String.format("%.02f", Math.abs(des.getDeviceElevation() - des.getSunElevation())));
+//					message = des.toString();
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_AZIMUTH_START)) {
 					SunFlowerDriver.DeviceAzimuthStart das = (SunFlowerDriver.DeviceAzimuthStart) messageContent;
-					message = das.toString();
+					ANSIUtil.printZMovDate(das.getDate().toString());
+					ANSIUtil.printZMovFrom(String.format("%.02f", das.getDeviceAzimuth()));
+					ANSIUtil.printZMovTo(String.format("%.02f", das.getSunAzimuth()));
+					ANSIUtil.printZMovDiff(String.format("%.02f", Math.abs(das.getDeviceAzimuth() - das.getSunAzimuth())));
+//					message = das.toString();
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_ELEVATION_START_2)) {
 					SunFlowerDriver.MoveDetails md = (SunFlowerDriver.MoveDetails) messageContent;
 					message = md.toString();
@@ -93,12 +83,11 @@ public class ConsoleMain {
 					message = messageContent.toString();
 				} else if (messageType.equals(SunFlowerDriver.EventType.DEVICE_INFO)) {
 					message = messageContent.toString();
-				} else {
+				} else { // Default...
 					message = messageContent.toString();
 				}
-
 				int index = SunFlowerDriver.getTypeIndex(messageType);
-				AnsiConsole.out.println(ansiLocate(0, index + 1) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + message);
+				AnsiConsole.out.println(ansiLocate(0, index + 20) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + message);
 			}
 		});
 
