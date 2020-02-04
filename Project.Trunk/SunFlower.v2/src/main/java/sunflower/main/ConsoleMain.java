@@ -33,66 +33,74 @@ public class ConsoleMain {
 
 		ANSIUtil.printPositionTable();
 		ANSIUtil.printMovementTable();
+		ANSIUtil.printInfoTable();
 
 		sunFlowerDriver.subscribe(new SunFlowerDriver.SunFlowerEventListener() {
 
 			@Override
-			public void newMessage(SunFlowerDriver.EventType messageType, Object messageContent) {
+			public void newMessage(SunFlowerDriver.EventType messageType, Object messagePayload) {
 
 				String message = "";
 
 				if (messageType.equals(SunFlowerDriver.EventType.CELESTIAL_DATA)) {
-					SunFlowerDriver.SunData sunData = (SunFlowerDriver.SunData)messageContent;
+					SunFlowerDriver.SunData sunData = (SunFlowerDriver.SunData)messagePayload;
 					ANSIUtil.printSunPosDate(sunData.getDate().toString());
 					ANSIUtil.printSunPosZ(String.format("%.02f", sunData.getAzimuth()));
 					ANSIUtil.printSunPosElev(String.format("%.02f", sunData.getElevation()));
 				} else if (messageType.equals(SunFlowerDriver.EventType.DEVICE_DATA)) {
-					SunFlowerDriver.DeviceData deviceData = (SunFlowerDriver.DeviceData)messageContent;
+					SunFlowerDriver.DeviceData deviceData = (SunFlowerDriver.DeviceData)messagePayload;
 					ANSIUtil.printDevicePosDate(deviceData.getDate().toString());
 					ANSIUtil.printDevicePosZ(String.format("%.02f", deviceData.getAzimuth()));
 					ANSIUtil.printDevicePosElev(String.format("%.02f", deviceData.getElevation()));
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_ELEVATION_START)) {
-					SunFlowerDriver.DeviceElevationStart des = (SunFlowerDriver.DeviceElevationStart) messageContent;
+					SunFlowerDriver.DeviceElevationStart des = (SunFlowerDriver.DeviceElevationStart) messagePayload;
 					ANSIUtil.printElevMovDate(des.getDate().toString());
 					ANSIUtil.printElevMovFrom(String.format("%.02f", des.getDeviceElevation()));
 					ANSIUtil.printElevMovTo(String.format("%.02f", des.getSunElevation()));
 					ANSIUtil.printElevMovDiff(String.format("%.02f", Math.abs(des.getDeviceElevation() - des.getSunElevation())));
-//					message = des.toString();
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_AZIMUTH_START)) {
-					SunFlowerDriver.DeviceAzimuthStart das = (SunFlowerDriver.DeviceAzimuthStart) messageContent;
+					SunFlowerDriver.DeviceAzimuthStart das = (SunFlowerDriver.DeviceAzimuthStart) messagePayload;
 					ANSIUtil.printZMovDate(das.getDate().toString());
 					ANSIUtil.printZMovFrom(String.format("%.02f", das.getDeviceAzimuth()));
 					ANSIUtil.printZMovTo(String.format("%.02f", das.getSunAzimuth()));
 					ANSIUtil.printZMovDiff(String.format("%.02f", Math.abs(das.getDeviceAzimuth() - das.getSunAzimuth())));
-//					message = das.toString();
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_ELEVATION_START_2)) {
-					SunFlowerDriver.MoveDetails md = (SunFlowerDriver.MoveDetails) messageContent;
-					message = md.toString();
+					SunFlowerDriver.MoveDetails md = (SunFlowerDriver.MoveDetails) messagePayload;
+					message = String.format("%s %s", messageType, md.toString());
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_AZIMUTH_START_2)) {
-					SunFlowerDriver.MoveDetails md = (SunFlowerDriver.MoveDetails) messageContent;
-					message = md.toString();
+					SunFlowerDriver.MoveDetails md = (SunFlowerDriver.MoveDetails) messagePayload;
+					message = String.format("%s %s", messageType, md.toString());
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_ELEVATION_END)) {
-					SunFlowerDriver.MoveCompleted mc = (SunFlowerDriver.MoveCompleted) messageContent;
-					message = mc.toString();
+					SunFlowerDriver.MoveCompleted mc = (SunFlowerDriver.MoveCompleted) messagePayload;
+					message = String.format("%s %s", messageType, mc.toString());
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_AZIMUTH_END)) {
-					SunFlowerDriver.MoveCompleted mc = (SunFlowerDriver.MoveCompleted)messageContent;
-					message = mc.toString();
+					SunFlowerDriver.MoveCompleted mc = (SunFlowerDriver.MoveCompleted)messagePayload;
+					message = String.format("%s %s", messageType, mc.toString());
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_ELEVATION_INFO)) {
-					message = messageContent.toString();
+					SunFlowerDriver.DeviceInfo deviceInfo = (SunFlowerDriver.DeviceInfo)messagePayload;
+					// TODO Separate cells
+					ANSIUtil.printInfoDate(deviceInfo.getDate().toString());
+					ANSIUtil.printInfoMessage(deviceInfo.getMessage());
+//					message = String.format("%s %s", messageType, messagePayload.toString());
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_AZIMUTH_INFO)) {
-					message = messageContent.toString();
+					SunFlowerDriver.DeviceInfo deviceInfo = (SunFlowerDriver.DeviceInfo)messagePayload;
+					// TODO Separate cells
+					ANSIUtil.printInfoDate(deviceInfo.getDate().toString());
+					ANSIUtil.printInfoMessage(deviceInfo.getMessage());
+//					message = String.format("%s %s", messageType, messagePayload.toString());
 				} else if (messageType.equals(SunFlowerDriver.EventType.DEVICE_INFO)) {
-					message = messageContent.toString();
+					SunFlowerDriver.DeviceInfo deviceInfo = (SunFlowerDriver.DeviceInfo)messagePayload;
+					ANSIUtil.printInfoDate(deviceInfo.getDate().toString());
+					ANSIUtil.printInfoMessage(deviceInfo.getMessage());
+//					message = String.format("%s %s", messageType, messagePayload.toString());
 				} else { // Default...
-					message = messageContent.toString();
+					message = String.format("%s %s", "Default", messagePayload.toString());
 				}
 				int index = SunFlowerDriver.getTypeIndex(messageType);
 				AnsiConsole.out.println(ansiLocate(0, index + 20) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + message);
 			}
 		});
-
 		System.out.println("Hit Ctrl-C to stop the program");
-
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("\nShutting down, releasing resources.");
 			sunFlowerDriver.stop();

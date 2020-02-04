@@ -245,6 +245,24 @@ public class SunFlowerDriver {
 		}
 	}
 
+	public static class DeviceInfo {
+		private Date date;
+		private String message;
+
+		public DeviceInfo(Date date, String message) {
+			this.date = date;
+			this.message = message;
+		}
+
+		public Date getDate() {
+			return date;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+	}
+
 	public void setDevicePosition(double lat, double lng) {
 		this.devicePosition = new GeoPos(lat, lng);
 	}
@@ -415,7 +433,7 @@ public class SunFlowerDriver {
 
 	private void parkDevice() {
 		if (currentDeviceElevation != PARKED_ELEVATION || currentDeviceAzimuth != PARKED_AZIMUTH) {
-			this.publish(EventType.DEVICE_INFO, "Parking the device");
+			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Parking the device"));
 			// Put Z to 0, Elev. to 90.
 			MotorPayload parkElev = getMotorPayload(currentDeviceElevation, PARKED_ELEVATION, elevationMotorRatio);
 			System.out.println(String.format(">> (Elev) This will be %d steps %s", parkElev.nbSteps, parkElev.motorCommand));
@@ -433,7 +451,7 @@ public class SunFlowerDriver {
 			}
 			currentDeviceAzimuth = PARKED_AZIMUTH; // TODO In the thread?
 		} else {
-			this.publish(EventType.DEVICE_INFO, String.format("%s: Parked", new Date()));
+			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Device Parked"));
 			// System.out.println("Parked");
 		}
 	}
@@ -471,7 +489,7 @@ public class SunFlowerDriver {
 							azimuthMotorThread.start();
 						} else {
 							String mess3 = "Thread is already busy at work.";
-							this.publish(EventType.MOVING_AZIMUTH_INFO, mess3);
+							this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
 					currentDeviceAzimuth = sunAzimuth; // TODO Do this in the thread?
@@ -489,7 +507,7 @@ public class SunFlowerDriver {
 							elevationMotorThread.start();
 						} else {
 							String mess3 = "Thread is already busy at work.";
-							this.publish(EventType.MOVING_ELEVATION_INFO, mess3);
+							this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
 					currentDeviceElevation = sunElevation; // TODO Do this in the thread?

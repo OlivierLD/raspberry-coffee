@@ -140,11 +140,11 @@ public class ANSIUtil {
 			POS_COL_4
 	};
 
-	final static int SUN_POS_LINE = START_POS_FRAME_AT + 3;
-	final static int DEVICE_POS_LINE = START_POS_FRAME_AT + 5;
+	final static int SUN_POS_LINE = START_POS_FRAME_AT + 4;
+	final static int DEVICE_POS_LINE = START_POS_FRAME_AT + 6;
 
 	// Movement frame coordinates
-	final static int START_MOV_FRAME_AT = 8; // Line on screen
+	final static int START_MOV_FRAME_AT = 9; // Line on screen
 	final static int MOV_COL_1 = 5;
 	final static int MOV_COL_2 = 28;
 	final static int MOV_COL_3 = 6;
@@ -159,12 +159,40 @@ public class ANSIUtil {
 			MOV_COL_5
 	};
 
-	final static int ELEV_MOV_LINE = START_MOV_FRAME_AT + 3;
-	final static int Z_MOV_LINE = START_MOV_FRAME_AT + 5;
+	final static int ELEV_MOV_LINE = START_MOV_FRAME_AT + 4;
+	final static int Z_MOV_LINE = START_MOV_FRAME_AT + 6;
+
+	// Info
+	final static int START_INFO_FRAME_AT = 17; // Line on screen
+	final static int INFO_COL_1 = 28;
+	final static int INFO_COL_2 = 64;
+
+	final static int[] ONE_INFO_ROW = {
+			INFO_COL_1,
+			INFO_COL_2
+	};
+
+	final static int INFO_LINE = START_INFO_FRAME_AT + 4;
+
+	private static void displayValue(int x, int y, String str) {
+		AnsiConsole.out.println(
+				ansiLocate(x, y) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + str);
+	}
+	// col is zero-based, in the rowIndexes array.
+	private static void printValueInCol(String str, int line, int col, int[] rowIndexes) {
+		int offset = 1;
+		for (int i=0; i<col; i++) {
+			offset += (rowIndexes[i] + 1);
+		}
+		offset += 1;
+		displayValue(offset, line, str);
+	}
 
 	// Draw an empty frame for position (sun and device)
 	public static void printPositionTable() {
 		int line = START_POS_FRAME_AT; // Start from that line
+		AnsiConsole.out.println(
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + "- Positions -" + PAD);
 		// Frame top
 		AnsiConsole.out.println(
 				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
@@ -269,20 +297,6 @@ public class ANSIUtil {
 						PAD);
 	}
 
-	private static void displayValue(int x, int y, String str) {
-		AnsiConsole.out.println(
-				ansiLocate(x, y) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + str);
-	}
-	// col is zero-based, in the rowIndexes array.
-	private static void printValueInCol(String str, int line, int col, int[] rowIndexes) {
-		int offset = 1;
-		for (int i=0; i<col; i++) {
-			offset += (rowIndexes[i] + 1);
-		}
-		offset += 1;
-		displayValue(offset, line, str);
-	}
-
 	public static void printSunPosDate(String str) {
 		int col = 1;
 		printValueInCol(rpad(str, ONE_POS_ROW[col]), SUN_POS_LINE, col, ONE_POS_ROW);
@@ -311,6 +325,8 @@ public class ANSIUtil {
 	// Draw an empty frame for movements (Elevation and Azimuth)
 	public static void printMovementTable() {
 		int line = START_MOV_FRAME_AT; // Start from that line
+		AnsiConsole.out.println(
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + "- Movements -" + PAD);
 		// Frame top
 		AnsiConsole.out.println(
 				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
@@ -461,6 +477,75 @@ public class ANSIUtil {
 		int col = 4;
 		printValueInCol(lpad(str, ONE_MOV_ROW[col]), Z_MOV_LINE, col, ONE_MOV_ROW);
 	}
+
+	// Draw an empty frame for info
+	public static void printInfoTable() {
+		int line = START_INFO_FRAME_AT; // Start from that line
+		AnsiConsole.out.println(
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + "- Status -" + PAD);
+		// Frame top
+		AnsiConsole.out.println(
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						TOP_LEFT_CORNER_BOLD +
+						//	TOP_LEFT_ROUND_CORNER +
+						drawXChar(SOLID_HORIZONTAL_BOLD, INFO_COL_1) +
+						TOP_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, INFO_COL_2) +
+						TOP_RIGHT_CORNER_BOLD +
+						//	TOP_RIGHT_ROUND_CORNER +
+						PAD);
+		// Headers
+		AnsiConsole.out.println(
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						SOLID_VERTICAL_BOLD +
+						//	TOP_LEFT_ROUND_CORNER +
+						rpad(" Date", INFO_COL_1) +
+						SOLID_VERTICAL_BOLD +
+						rpad(" Info", INFO_COL_2) +
+						SOLID_VERTICAL_BOLD +
+						//	TOP_RIGHT_ROUND_CORNER +
+						PAD);
+		// Under the headers, separator
+		AnsiConsole.out.println(
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						LEFT_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, INFO_COL_1) +
+						CROSS_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, INFO_COL_2) +
+						RIGHT_T_BOLD +
+						PAD);
+		// Only data line.
+		AnsiConsole.out.println(
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						SOLID_VERTICAL_BOLD +
+						//	TOP_LEFT_ROUND_CORNER +
+						rpad("", INFO_COL_1) +
+						SOLID_VERTICAL_BOLD +
+						rpad("", INFO_COL_2) +
+						SOLID_VERTICAL_BOLD +
+						//	TOP_RIGHT_ROUND_CORNER +
+						PAD);
+		// Frame bottom
+		AnsiConsole.out.println(
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						BOTTOM_LEFT_CORNER_BOLD +
+						//	TOP_LEFT_ROUND_CORNER +
+						drawXChar(SOLID_HORIZONTAL_BOLD, INFO_COL_1) +
+						BOTTOM_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, INFO_COL_2) +
+						BOTTOM_RIGHT_CORNER_BOLD +
+						//	TOP_RIGHT_ROUND_CORNER +
+						PAD);
+	}
+	public static void printInfoDate(String str) {
+		int col = 0;
+		printValueInCol(rpad(str, ONE_INFO_ROW[col]), INFO_LINE, col, ONE_INFO_ROW);
+	}
+	public static void printInfoMessage(String str) {
+		int col = 1;
+		printValueInCol(rpad(str, ONE_INFO_ROW[col]), INFO_LINE, col, ONE_INFO_ROW);
+	}
+
 
 	// An example
 	public static void main(String... args) {
