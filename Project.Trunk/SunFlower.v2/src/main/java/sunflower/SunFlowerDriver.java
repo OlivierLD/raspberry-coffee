@@ -62,10 +62,12 @@ public class SunFlowerDriver {
 	private final static boolean ASTRO_VERBOSE = "true".equals(System.getProperty("astro.verbose", "false"));
 
 	public static class MoveCompleted {
+		private Date date;
 	  private int nbSteps;
 		private long elapsed;
 
-		public MoveCompleted(int nbSteps, long elapsed) {
+		public MoveCompleted(Date date, int nbSteps, long elapsed) {
+			this.date = date;
 			this.nbSteps = nbSteps;
 			this.elapsed = elapsed;
 		}
@@ -76,6 +78,10 @@ public class SunFlowerDriver {
 
 		public long getElapsed() {
 			return elapsed;
+		}
+
+		public Date getDate() {
+			return date;
 		}
 
 		@Override
@@ -183,14 +189,20 @@ public class SunFlowerDriver {
 	}
 
 	public static class MoveDetails {
+		private Date date;
 		private int nbSteps;
 		private AdafruitMotorHAT.MotorCommand motorCommand;
 		private int motorNum;
 
-		public MoveDetails(int nbSteps, AdafruitMotorHAT.MotorCommand motorCommand, int motorNum) {
+		public MoveDetails(Date date, int nbSteps, AdafruitMotorHAT.MotorCommand motorCommand, int motorNum) {
+			this.date = date;
 			this.nbSteps = nbSteps;
 			this.motorCommand = motorCommand;
 			this.motorNum = motorNum;
+		}
+
+		public Date getDate() {
+			return date;
 		}
 
 		public int getNbSteps() {
@@ -294,7 +306,7 @@ public class SunFlowerDriver {
 					}
 				});
 				long after = System.currentTimeMillis();
-				MoveCompleted payload = new MoveCompleted(this.nbSteps, (after - before));
+				MoveCompleted payload = new MoveCompleted(new Date(), this.nbSteps, (after - before));
 				instance.publish(this.stepper.getMotorNum() == 1 ? EventType.MOVING_AZIMUTH_END : EventType.MOVING_ELEVATION_END, payload);
 				if (MOTOR_HAT_VERBOSE) {
 					System.out.println(String.format("\t%s on motor #%d",
@@ -487,7 +499,7 @@ public class SunFlowerDriver {
 					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, sunAzimuth));
 					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio);
 					if (!simulating) {
-						this.publish(EventType.MOVING_AZIMUTH_START_2, new MoveDetails(data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
+						this.publish(EventType.MOVING_AZIMUTH_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
 						if (azimuthMotorThread == null || (azimuthMotorThread != null && !azimuthMotorThread.isAlive())) {
 							azimuthMotorThread = new MotorThread(this.azimuthMotor, data.nbSteps, data.motorCommand, motorStyle);
 							azimuthMotorThread.start();
@@ -503,7 +515,7 @@ public class SunFlowerDriver {
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, sunElevation));
 					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio);
 					if (!simulating) {
-						this.publish(EventType.MOVING_ELEVATION_START_2, new MoveDetails(data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
+						this.publish(EventType.MOVING_ELEVATION_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
 					}
 					if (!simulating) {
 						if (elevationMotorThread == null || (elevationMotorThread != null && !elevationMotorThread.isAlive())) {
