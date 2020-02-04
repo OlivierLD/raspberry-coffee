@@ -438,7 +438,7 @@ public class SunFlowerDriver {
 			MotorPayload parkElev = getMotorPayload(currentDeviceElevation, PARKED_ELEVATION, elevationMotorRatio);
 			String mess_1 = String.format(">> (Elev) This will be %d steps %s", parkElev.nbSteps, parkElev.motorCommand);
 //			System.out.println(mess_1);
-			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), mess_1));
+			this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess_1));
 			if (!simulating) {
 				elevationMotorThread = new MotorThread(this.elevationMotor, parkElev.nbSteps, parkElev.motorCommand, motorStyle);
 				elevationMotorThread.start();
@@ -448,7 +448,7 @@ public class SunFlowerDriver {
 			MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, PARKED_AZIMUTH, azimuthMotorRatio);
 			String mess_2 = String.format(">> (Z) This will be %d steps %s", parkZ.nbSteps, parkZ.motorCommand);
 //			System.out.println(mess_2);
-			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), mess_2));
+			this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess_2));
 			if (!simulating) {
 				azimuthMotorThread = new MotorThread(this.azimuthMotor, parkZ.nbSteps, parkZ.motorCommand, motorStyle);
 				azimuthMotorThread.start();

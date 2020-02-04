@@ -172,7 +172,9 @@ public class ANSIUtil {
 			INFO_COL_2
 	};
 
-	final static int INFO_LINE = START_INFO_FRAME_AT + 4;
+	final static int INFO_LINE_1 = START_INFO_FRAME_AT + 4;
+	final static int INFO_LINE_2 = START_INFO_FRAME_AT + 6;
+	final static int INFO_LINE_3 = START_INFO_FRAME_AT + 8;
 
 	private static void displayValue(int x, int y, String str) {
 		AnsiConsole.out.println(
@@ -514,7 +516,45 @@ public class ANSIUtil {
 						drawXChar(SOLID_HORIZONTAL_BOLD, INFO_COL_2) +
 						RIGHT_T_BOLD +
 						PAD);
-		// Only data line.
+		// First data line.
+		AnsiConsole.out.println(
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						SOLID_VERTICAL_BOLD +
+						//	TOP_LEFT_ROUND_CORNER +
+						rpad("", INFO_COL_1) +
+						SOLID_VERTICAL_BOLD +
+						rpad("", INFO_COL_2) +
+						SOLID_VERTICAL_BOLD +
+						//	TOP_RIGHT_ROUND_CORNER +
+						PAD);
+		AnsiConsole.out.println(
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						LEFT_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, INFO_COL_1) +
+						CROSS_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, INFO_COL_2) +
+						RIGHT_T_BOLD +
+						PAD);
+		// Second data line.
+		AnsiConsole.out.println(
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						SOLID_VERTICAL_BOLD +
+						//	TOP_LEFT_ROUND_CORNER +
+						rpad("", INFO_COL_1) +
+						SOLID_VERTICAL_BOLD +
+						rpad("", INFO_COL_2) +
+						SOLID_VERTICAL_BOLD +
+						//	TOP_RIGHT_ROUND_CORNER +
+						PAD);
+		AnsiConsole.out.println(
+				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						LEFT_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, INFO_COL_1) +
+						CROSS_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, INFO_COL_2) +
+						RIGHT_T_BOLD +
+						PAD);
+		// Third data line.
 		AnsiConsole.out.println(
 				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						SOLID_VERTICAL_BOLD +
@@ -537,13 +577,29 @@ public class ANSIUtil {
 						//	TOP_RIGHT_ROUND_CORNER +
 						PAD);
 	}
-	public static void printInfoDate(String str) {
+	public static void printInfoDate1(String str) {
 		int col = 0;
-		printValueInCol(rpad(str, ONE_INFO_ROW[col]), INFO_LINE, col, ONE_INFO_ROW);
+		printValueInCol(rpad(str, ONE_INFO_ROW[col]), INFO_LINE_1, col, ONE_INFO_ROW);
 	}
-	public static void printInfoMessage(String str) {
+	public static void printInfoMessage1(String str) {
 		int col = 1;
-		printValueInCol(rpad(str, ONE_INFO_ROW[col]), INFO_LINE, col, ONE_INFO_ROW);
+		printValueInCol(rpad(str, ONE_INFO_ROW[col]), INFO_LINE_1, col, ONE_INFO_ROW);
+	}
+	public static void printInfoDate2(String str) {
+		int col = 0;
+		printValueInCol(rpad(str, ONE_INFO_ROW[col]), INFO_LINE_2, col, ONE_INFO_ROW);
+	}
+	public static void printInfoMessage2(String str) {
+		int col = 1;
+		printValueInCol(rpad(str, ONE_INFO_ROW[col]), INFO_LINE_2, col, ONE_INFO_ROW);
+	}
+	public static void printInfoDate3(String str) {
+		int col = 0;
+		printValueInCol(rpad(str, ONE_INFO_ROW[col]), INFO_LINE_3, col, ONE_INFO_ROW);
+	}
+	public static void printInfoMessage3(String str) {
+		int col = 1;
+		printValueInCol(rpad(str, ONE_INFO_ROW[col]), INFO_LINE_3, col, ONE_INFO_ROW);
 	}
 
 	// Just an example

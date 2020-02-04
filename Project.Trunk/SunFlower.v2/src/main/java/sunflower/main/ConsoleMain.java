@@ -78,20 +78,18 @@ public class ConsoleMain {
 					message = String.format("%s %s", messageType, mc.toString());
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_ELEVATION_INFO)) {
 					SunFlowerDriver.DeviceInfo deviceInfo = (SunFlowerDriver.DeviceInfo)messagePayload;
-					// TODO Separate cells
-					ANSIUtil.printInfoDate(deviceInfo.getDate().toString());
-					ANSIUtil.printInfoMessage(deviceInfo.getMessage());
+					ANSIUtil.printInfoDate2(deviceInfo.getDate().toString());
+					ANSIUtil.printInfoMessage2(deviceInfo.getMessage());
 //					message = String.format("%s %s", messageType, messagePayload.toString());
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_AZIMUTH_INFO)) {
 					SunFlowerDriver.DeviceInfo deviceInfo = (SunFlowerDriver.DeviceInfo)messagePayload;
-					// TODO Separate cells
-					ANSIUtil.printInfoDate(deviceInfo.getDate().toString());
-					ANSIUtil.printInfoMessage(deviceInfo.getMessage());
+					ANSIUtil.printInfoDate3(deviceInfo.getDate().toString());
+					ANSIUtil.printInfoMessage3(deviceInfo.getMessage());
 //					message = String.format("%s %s", messageType, messagePayload.toString());
 				} else if (messageType.equals(SunFlowerDriver.EventType.DEVICE_INFO)) {
 					SunFlowerDriver.DeviceInfo deviceInfo = (SunFlowerDriver.DeviceInfo)messagePayload;
-					ANSIUtil.printInfoDate(deviceInfo.getDate().toString());
-					ANSIUtil.printInfoMessage(deviceInfo.getMessage());
+					ANSIUtil.printInfoDate1(deviceInfo.getDate().toString());
+					ANSIUtil.printInfoMessage1(deviceInfo.getMessage());
 //					message = String.format("%s %s", messageType, messagePayload.toString());
 				} else { // Default...
 					message = String.format("%s %s", "Default", messagePayload.toString());
