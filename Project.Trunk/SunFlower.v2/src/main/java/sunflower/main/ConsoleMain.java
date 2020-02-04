@@ -43,12 +43,12 @@ public class ConsoleMain {
 
 				if (messageType.equals(SunFlowerDriver.EventType.CELESTIAL_DATA)) {
 					SunFlowerDriver.SunData sunData = (SunFlowerDriver.SunData)messageContent;
-					message = String.format("%s%s%s%.02f%s%.02f%s",
-					//                         |   |      |
-					//                         |   |      Elev
-					//                         |   Z
-					//                         Date
-							(ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_BLACK) + ANSI_BOLD),
+					message = String.format("%s%s%s%.02f%s%.02f.%s",
+							//                     |   |      |
+							//                     |   |      Elev
+							//                     |   Z
+							//                     Date
+							(ansiSetTextAndBackgroundColor(ANSI_YELLOW, ANSI_BLACK) + ANSI_BOLD),
 							sunData.getDate().toString(),
 							(ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + ", " + ANSI_ITALIC + "Sun   " + ANSI_NORMAL + " Z: " + ANSI_BOLD),
 							sunData.getAzimuth(),
@@ -57,12 +57,12 @@ public class ConsoleMain {
 							(ANSI_NORMAL + ANSI_DEFAULT_TEXT));
 				} else if (messageType.equals(SunFlowerDriver.EventType.DEVICE_DATA)) {
 					SunFlowerDriver.DeviceData deviceData = (SunFlowerDriver.DeviceData)messageContent;
-					message = String.format("%s%s%s%.02f%s%.02f%s",
-							//                         |   |      |
-							//                         |   |      Elev
-							//                         |   Z
-							//                         Date
-							(ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_BLACK) + ANSI_BOLD),
+					message = String.format("%s%s%s%.02f%s%.02f.%s",
+							//                     |   |      |
+							//                     |   |      Elev
+							//                     |   Z
+							//                     Date
+							(ansiSetTextAndBackgroundColor(ANSI_YELLOW, ANSI_BLACK) + ANSI_BOLD),
 							deviceData.getDate().toString(),
 							(ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + ", " + ANSI_ITALIC + "Device" + ANSI_NORMAL + " Z: " + ANSI_BOLD),
 							deviceData.getAzimuth(),
