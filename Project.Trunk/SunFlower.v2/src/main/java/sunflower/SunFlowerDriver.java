@@ -17,6 +17,8 @@ import java.util.TimeZone;
 
 import static utils.TimeUtil.delay;
 
+import sunflower.utils.ANSIUtil;
+
 /*
  * See https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/using-stepper-motors
  *
@@ -545,9 +547,10 @@ public class SunFlowerDriver {
 		this.keepGoing = false;
 		// Park the device
 		parkDevice();
+		long howMany = 0;
 		while ((azimuthMotorThread != null && azimuthMotorThread.isAlive()) || (elevationMotorThread != null && elevationMotorThread.isAlive())) {
 //			System.out.println("Waiting for the device to be parked");
-			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Waiting for the device to be parked"));
+			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), ANSIUtil.ansiSetTextColor(howMany++ % 2 == 0 ? ANSIUtil.ANSI_GREEN : ANSIUtil.ANSI_RED) + "Waiting for the device to be parked"));
 			delay(1_000L);
 		}
 		if (mh != null) {
