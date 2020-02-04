@@ -534,7 +534,8 @@ public class SunFlowerDriver {
 		// Park the device
 		parkDevice();
 		while ((azimuthMotorThread != null && azimuthMotorThread.isAlive()) || (elevationMotorThread != null && elevationMotorThread.isAlive())) {
-			System.out.println("Waiting for the device to be parked");
+//			System.out.println("Waiting for the device to be parked");
+			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Waiting for the device to be parked"));
 			delay(1_000L);
 		}
 		if (mh != null) {
