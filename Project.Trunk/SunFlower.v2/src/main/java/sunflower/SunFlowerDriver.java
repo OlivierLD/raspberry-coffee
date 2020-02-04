@@ -51,7 +51,11 @@ public class SunFlowerDriver {
 	private MotorThread elevationMotorThread = null;
 	private MotorThread azimuthMotorThread = null;
 
-	private AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.DOUBLE;  // Default. Try SINGLE, DOUBLE, MICROSTEP, INTERLEAVE...
+	// Default. Try SINGLE, DOUBLE, MICROSTEP, INTERLEAVE...
+	// SINGLE is less accurate
+	// DOUBLE is fine but heats the motors
+	// MICROSTEP sound like a good option
+	private AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.MICROSTEP;  // Default. Try SINGLE, DOUBLE, MICROSTEP, INTERLEAVE...
 
 	private static double azimuthMotorRatio   = 1d / 40d; // Set with System variable "azimuth.ratio"
 	private static double elevationMotorRatio = 1d / 7.11111; // 18:128, Set with System variable "elevation.ratio"
@@ -550,6 +554,7 @@ public class SunFlowerDriver {
 		long howMany = 0;
 		while ((azimuthMotorThread != null && azimuthMotorThread.isAlive()) || (elevationMotorThread != null && elevationMotorThread.isAlive())) {
 //			System.out.println("Waiting for the device to be parked");
+			// TODO Move colors out of here.
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), ANSIUtil.ansiSetTextColor(howMany++ % 2 == 0 ? ANSIUtil.ANSI_GREEN : ANSIUtil.ANSI_RED) + "Waiting for the device to be parked"));
 			delay(1_000L);
 		}
