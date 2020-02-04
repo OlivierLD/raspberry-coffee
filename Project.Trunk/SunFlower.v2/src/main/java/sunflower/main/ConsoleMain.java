@@ -31,6 +31,7 @@ public class ConsoleMain {
 
 		SunFlowerDriver sunFlowerDriver = new SunFlowerDriver();
 
+		// Empty tables
 		ANSIUtil.printPositionTable();
 		ANSIUtil.printMovementTable();
 		ANSIUtil.printInfoTable();
@@ -94,8 +95,10 @@ public class ConsoleMain {
 				} else { // Default...
 					message = String.format("%s %s", "Default", messagePayload.toString());
 				}
-				int index = SunFlowerDriver.getTypeIndex(messageType);
-				AnsiConsole.out.println(ansiLocate(0, index + 20) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + message);
+				// if (message.trim().length() > 0) {
+					int index = SunFlowerDriver.getTypeIndex(messageType);
+					AnsiConsole.out.println(ansiLocate(0, index + 20) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + message);
+				// }
 			}
 		});
 

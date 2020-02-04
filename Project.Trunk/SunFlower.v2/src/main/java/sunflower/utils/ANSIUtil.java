@@ -305,23 +305,23 @@ public class ANSIUtil {
 	}
 	public static void printSunPosZ(String str) {
 		int col = 2;
-		printValueInCol(lpad(str, ONE_POS_ROW[col]), SUN_POS_LINE, col, ONE_POS_ROW);
+		printValueInCol(ANSI_BOLD + lpad(str, ONE_POS_ROW[col]), SUN_POS_LINE, col, ONE_POS_ROW);
 	}
 	public static void printSunPosElev(String str) {
 		int col = 3;
-		printValueInCol(lpad(str, ONE_POS_ROW[col]), SUN_POS_LINE, col, ONE_POS_ROW);
+		printValueInCol(ANSI_BOLD + lpad(str, ONE_POS_ROW[col]), SUN_POS_LINE, col, ONE_POS_ROW);
 	}
 	public static void printDevicePosDate(String str) {
 		int col = 1;
-		printValueInCol(lpad(str, ONE_POS_ROW[col]), DEVICE_POS_LINE, col, ONE_POS_ROW);
+		printValueInCol(rpad(str, ONE_POS_ROW[col]), DEVICE_POS_LINE, col, ONE_POS_ROW);
 	}
 	public static void printDevicePosZ(String str) {
 		int col = 2;
-		printValueInCol(lpad(str, ONE_POS_ROW[col]), DEVICE_POS_LINE, col, ONE_POS_ROW);
+		printValueInCol(ANSI_BOLD + lpad(str, ONE_POS_ROW[col]), DEVICE_POS_LINE, col, ONE_POS_ROW);
 	}
 	public static void printDevicePosElev(String str) {
 		int col = 3;
-		printValueInCol(lpad(str, ONE_POS_ROW[col]), DEVICE_POS_LINE, col, ONE_POS_ROW);
+		printValueInCol(ANSI_BOLD + lpad(str, ONE_POS_ROW[col]), DEVICE_POS_LINE, col, ONE_POS_ROW);
 	}
 
 	// Draw an empty frame for movements (Elevation and Azimuth)
@@ -453,15 +453,15 @@ public class ANSIUtil {
 	}
 	public static void printElevMovFrom(String str) {
 		int col = 2;
-		printValueInCol(lpad(str, ONE_MOV_ROW[col]), ELEV_MOV_LINE, col, ONE_MOV_ROW);
+		printValueInCol(ANSI_BOLD + lpad(str, ONE_MOV_ROW[col]), ELEV_MOV_LINE, col, ONE_MOV_ROW);
 	}
 	public static void printElevMovTo(String str) {
 		int col = 3;
-		printValueInCol(lpad(str, ONE_MOV_ROW[col]), ELEV_MOV_LINE, col, ONE_MOV_ROW);
+		printValueInCol(ANSI_BOLD + lpad(str, ONE_MOV_ROW[col]), ELEV_MOV_LINE, col, ONE_MOV_ROW);
 	}
 	public static void printElevMovDiff(String str) {
 		int col = 4;
-		printValueInCol(lpad(str, ONE_MOV_ROW[col]), ELEV_MOV_LINE, col, ONE_MOV_ROW);
+		printValueInCol(ANSI_BOLD + lpad(str, ONE_MOV_ROW[col]), ELEV_MOV_LINE, col, ONE_MOV_ROW);
 	}
 	public static void printZMovDate(String str) {
 		int col = 1;
@@ -469,15 +469,15 @@ public class ANSIUtil {
 	}
 	public static void printZMovFrom(String str) {
 		int col = 2;
-		printValueInCol(lpad(str, ONE_MOV_ROW[col]), Z_MOV_LINE, col, ONE_MOV_ROW);
+		printValueInCol(ANSI_BOLD + lpad(str, ONE_MOV_ROW[col]), Z_MOV_LINE, col, ONE_MOV_ROW);
 	}
 	public static void printZMovTo(String str) {
 		int col = 3;
-		printValueInCol(lpad(str, ONE_MOV_ROW[col]), Z_MOV_LINE, col, ONE_MOV_ROW);
+		printValueInCol(ANSI_BOLD + lpad(str, ONE_MOV_ROW[col]), Z_MOV_LINE, col, ONE_MOV_ROW);
 	}
 	public static void printZMovDiff(String str) {
 		int col = 4;
-		printValueInCol(lpad(str, ONE_MOV_ROW[col]), Z_MOV_LINE, col, ONE_MOV_ROW);
+		printValueInCol(ANSI_BOLD + lpad(str, ONE_MOV_ROW[col]), Z_MOV_LINE, col, ONE_MOV_ROW);
 	}
 
 	// Draw an empty frame for info
@@ -583,7 +583,7 @@ public class ANSIUtil {
 	}
 	public static void printInfoMessage1(String str) {
 		int col = 1;
-		printValueInCol(rpad(str, ONE_INFO_ROW[col]), INFO_LINE_1, col, ONE_INFO_ROW);
+		printValueInCol(ANSI_BOLD + rpad(str, ONE_INFO_ROW[col]), INFO_LINE_1, col, ONE_INFO_ROW);
 	}
 	public static void printInfoDate2(String str) {
 		int col = 0;
@@ -591,7 +591,7 @@ public class ANSIUtil {
 	}
 	public static void printInfoMessage2(String str) {
 		int col = 1;
-		printValueInCol(rpad(str, ONE_INFO_ROW[col]), INFO_LINE_2, col, ONE_INFO_ROW);
+		printValueInCol(ansiSetTextColor(ANSI_BLUE) + ANSI_BOLD + rpad(str, ONE_INFO_ROW[col]), INFO_LINE_2, col, ONE_INFO_ROW);
 	}
 	public static void printInfoDate3(String str) {
 		int col = 0;
@@ -599,7 +599,7 @@ public class ANSIUtil {
 	}
 	public static void printInfoMessage3(String str) {
 		int col = 1;
-		printValueInCol(rpad(str, ONE_INFO_ROW[col]), INFO_LINE_3, col, ONE_INFO_ROW);
+		printValueInCol(ansiSetTextColor(ANSI_RED) + ANSI_BOLD +rpad(str, ONE_INFO_ROW[col]), INFO_LINE_3, col, ONE_INFO_ROW);
 	}
 
 	// Just an example
