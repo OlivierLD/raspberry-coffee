@@ -43,7 +43,7 @@ public class ConsoleMain {
 
 				if (messageType.equals(SunFlowerDriver.EventType.CELESTIAL_DATA)) {
 					SunFlowerDriver.SunData sunData = (SunFlowerDriver.SunData)messageContent;
-					message = String.format("%s%s%s%.02f%s%.02f.%s",
+					message = String.format("%s%s%s%.02f%s%.02f.%s      ",
 							//                     |   |      |
 							//                     |   |      Elev
 							//                     |   Z
@@ -57,7 +57,7 @@ public class ConsoleMain {
 							(ANSI_NORMAL + ANSI_DEFAULT_TEXT));
 				} else if (messageType.equals(SunFlowerDriver.EventType.DEVICE_DATA)) {
 					SunFlowerDriver.DeviceData deviceData = (SunFlowerDriver.DeviceData)messageContent;
-					message = String.format("%s%s%s%.02f%s%.02f.%s",
+					message = String.format("%s%s%s%.02f%s%.02f.%s      ",
 							//                     |   |      |
 							//                     |   |      Elev
 							//                     |   Z
