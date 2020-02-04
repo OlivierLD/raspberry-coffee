@@ -20,6 +20,7 @@ public class ConsoleMain {
 	 * device.lng set default device longitude (useful when no GPS)
 	 * azimuth.ratio for the azimuth (vertical axis) gear ratio, like "X:Y", ex: "1:40"
 	 * elevation.ratio for the elevation (horizontal axis) gear ratio, like "X:Y", ex: "18:128"
+	 * ansi.boxes set to true for nicer ANSI tables.
 	 *
 	 * @param args Not used
 	 * @throws Exception if anything fails...
