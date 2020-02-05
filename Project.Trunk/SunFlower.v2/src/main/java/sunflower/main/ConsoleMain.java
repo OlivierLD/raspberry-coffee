@@ -77,11 +77,11 @@ public class ConsoleMain {
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_ELEVATION_END)) {
 					SunFlowerDriver.MoveCompleted mc = (SunFlowerDriver.MoveCompleted) messagePayload;
 					ANSIUtil.printInfoDate2(mc.getDate().toString());
-					ANSIUtil.printInfoMessage2(String.format("Move (%d steps) completed in %s", mc.getNbSteps(), TimeUtil.fmtDHMS(TimeUtil.msToHMS(mc.getElapsed()))));
+					ANSIUtil.printInfoMessage2(String.format("Elev.: Move (%d steps) completed in %s", mc.getNbSteps(), TimeUtil.fmtDHMS(TimeUtil.msToHMS(mc.getElapsed()))));
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_AZIMUTH_END)) {
 					SunFlowerDriver.MoveCompleted mc = (SunFlowerDriver.MoveCompleted)messagePayload;
 					ANSIUtil.printInfoDate3(mc.getDate().toString());
-					ANSIUtil.printInfoMessage3(String.format("Move (%d steps) completed in %s", mc.getNbSteps(), TimeUtil.fmtDHMS(TimeUtil.msToHMS(mc.getElapsed()))));
+					ANSIUtil.printInfoMessage3(String.format("Z    : Move (%d steps) completed in %s", mc.getNbSteps(), TimeUtil.fmtDHMS(TimeUtil.msToHMS(mc.getElapsed()))));
 				} else if (messageType.equals(SunFlowerDriver.EventType.MOVING_ELEVATION_INFO)) {
 					SunFlowerDriver.DeviceInfo deviceInfo = (SunFlowerDriver.DeviceInfo)messagePayload;
 					ANSIUtil.printInfoDate2(deviceInfo.getDate().toString());
