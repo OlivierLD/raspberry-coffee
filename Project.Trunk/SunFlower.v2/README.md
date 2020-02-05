@@ -7,11 +7,12 @@ The [first version ](../SunFlower) used micro-servos to orient a small solar pan
 
 Here we want to deal with bigger panels, this will require the usage of bigger motors, like stepper-motors.
 
-The required hardware is described in another [separate project](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand).
+The required hardware is described in a [separate project](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand).
 
 Stepper motors will be driven by an [Adafruit Motor Hat](https://www.adafruit.com/product/2348).
 
-Some code to look at is in [this folder](../SteppersPlayground).
+Some code to look at is in [this folder](../SteppersPlayground), to play with the different options
+of the stepper motors...
 
 ### Wiring
 ![Wiring](./MotorHatWiring.png)
