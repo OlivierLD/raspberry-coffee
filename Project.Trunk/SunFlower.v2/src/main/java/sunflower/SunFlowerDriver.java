@@ -32,7 +32,7 @@ public class SunFlowerDriver {
 
 	private static GeoPos devicePosition = null; // Can be fed from a GPS, or manually (System variable).
 	private static double sunAzimuth   = 180d;
-	private static double sunElevation = -1d;
+	private static double sunElevation =  -1d;
 
 	private boolean simulating = false;
 
@@ -54,7 +54,7 @@ public class SunFlowerDriver {
 	// Default. Try SINGLE, DOUBLE, MICROSTEP, INTERLEAVE...
 	// SINGLE is less accurate
 	// DOUBLE is fine but heats the motors
-	// MICROSTEP sound like a good option
+	// MICROSTEP sound - for this project - like a good option
 	private AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.MICROSTEP;  // Default. Try SINGLE, DOUBLE, MICROSTEP, INTERLEAVE...
 
 	private static double azimuthMotorRatio   = 1d / 40d; // Set with System variable "azimuth.ratio"
@@ -419,7 +419,7 @@ public class SunFlowerDriver {
 
 		System.out.println("Starting Program");
 		int rpm = Integer.parseInt(System.getProperty("rpm", String.valueOf(DEFAULT_RPM))); // 30
-		System.out.println(String.format("RPM set to %d.", rpm));
+//		System.out.println(String.format("RPM set to %d.", rpm));
 
 		try {
 			this.mh = new AdafruitMotorHAT(DEFAULT_STEPS_PER_REV); // Default addr 0x60
@@ -455,7 +455,6 @@ public class SunFlowerDriver {
 			// Put Z to 0, Elev. to 90.
 			MotorPayload parkElev = getMotorPayload(currentDeviceElevation, PARKED_ELEVATION, elevationMotorRatio);
 			String mess_1 = String.format("(Elev) This will be %d steps %s", parkElev.nbSteps, parkElev.motorCommand);
-//			System.out.println(mess_1);
 			this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess_1));
 			if (!simulating) {
 				elevationMotorThread = new MotorThread(this.elevationMotor, parkElev.nbSteps, parkElev.motorCommand, motorStyle);
@@ -465,7 +464,6 @@ public class SunFlowerDriver {
 
 			MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, PARKED_AZIMUTH, azimuthMotorRatio);
 			String mess_2 = String.format("(Z) This will be %d steps %s", parkZ.nbSteps, parkZ.motorCommand);
-//			System.out.println(mess_2);
 			this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess_2));
 			if (!simulating) {
 				azimuthMotorThread = new MotorThread(this.azimuthMotor, parkZ.nbSteps, parkZ.motorCommand, motorStyle);
@@ -474,7 +472,6 @@ public class SunFlowerDriver {
 			currentDeviceAzimuth = PARKED_AZIMUTH; // TODO In the thread?
 		} else {
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Device Parked"));
-			// System.out.println("Parked");
 		}
 	}
 	public void go() {
@@ -596,7 +593,6 @@ public class SunFlowerDriver {
 				nfe.printStackTrace();
 			}
 		}
-
 		// Ratios:
 		String zRatioStr = System.getProperty("azimuth.ratio");
 		if (zRatioStr != null) {

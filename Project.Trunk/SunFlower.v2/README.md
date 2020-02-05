@@ -16,7 +16,7 @@ Some code to look at is in [this folder](../SteppersPlayground).
 ### Wiring
 ![Wiring](./MotorHatWiring.png)
 
-### ANSI Console output
+### ANSI Console output (WiP)
 ```
 - Positions -
 +------+----------------------------+------+-----+
@@ -49,7 +49,7 @@ Hit Ctrl-C to stop the program
 ```
 
 ## TODO
-- An ANSI Console. &#9989; Done.
-- A REST interface.
+- An ANSI Console. &#9989; Done (...ish).
+- A REST interface, with its Web UI.
 
 ---
