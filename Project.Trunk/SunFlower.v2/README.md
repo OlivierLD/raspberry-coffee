@@ -47,6 +47,9 @@ Some code to look at is in [this folder](../SteppersPlayground).
 Hit Ctrl-C to stop the program
 
 ```
+### The Device
+The soft of this project is designed to drive [this device](https://github.com/OlivierLD/3DPrinting/blob/master/OpenSCAD/SolarPanelStand/stl/the.full.stand.stuck.stl).
+Its construction is detailed in [its repo](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand).
 
 ## TODO
 - An ANSI Console. &#9989; Done (...ish).

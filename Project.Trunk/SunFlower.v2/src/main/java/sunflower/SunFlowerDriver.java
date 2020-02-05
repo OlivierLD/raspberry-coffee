@@ -460,7 +460,7 @@ public class SunFlowerDriver {
 				elevationMotorThread = new MotorThread(this.elevationMotor, parkElev.nbSteps, parkElev.motorCommand, motorStyle);
 				elevationMotorThread.start();
 			}
-			currentDeviceElevation = PARKED_ELEVATION; // TODO In the thread?
+			currentDeviceElevation = PARKED_ELEVATION;
 
 			MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, PARKED_AZIMUTH, azimuthMotorRatio);
 			String mess_2 = String.format("(Z) This will be %d steps %s", parkZ.nbSteps, parkZ.motorCommand);
@@ -469,7 +469,7 @@ public class SunFlowerDriver {
 				azimuthMotorThread = new MotorThread(this.azimuthMotor, parkZ.nbSteps, parkZ.motorCommand, motorStyle);
 				azimuthMotorThread.start();
 			}
-			currentDeviceAzimuth = PARKED_AZIMUTH; // TODO In the thread?
+			currentDeviceAzimuth = PARKED_AZIMUTH;
 		} else {
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Device Parked"));
 		}
@@ -511,7 +511,7 @@ public class SunFlowerDriver {
 							this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
-					currentDeviceAzimuth = sunAzimuth; // TODO Do this in the thread?
+					currentDeviceAzimuth = sunAzimuth;
 				}
 				if (Math.abs(currentDeviceElevation - sunElevation) >= MIN_DIFF_FOR_MOVE) {
 					hasMoved = true;
@@ -529,7 +529,7 @@ public class SunFlowerDriver {
 							this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
-					currentDeviceElevation = sunElevation; // TODO Do this in the thread?
+					currentDeviceElevation = sunElevation;
 				}
 				if (hasMoved && ASTRO_VERBOSE) {
 					System.out.println(String.format("Sun's position is now: Elev: %s, Z: %.02f", GeomUtil.decToSex(sunElevation, GeomUtil.NO_DEG, GeomUtil.NONE), sunAzimuth));
