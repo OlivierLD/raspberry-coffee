@@ -16,6 +16,7 @@ public class ConsoleMain {
 	 * rpm, default 30
 	 * hat.debug, default false
 	 * motor.hat.verbose default false
+	 * deltaT
 	 * astro.verbose default false
 	 * device.lat set default device latitude (useful when no GPS)
 	 * device.lng set default device longitude (useful when no GPS)

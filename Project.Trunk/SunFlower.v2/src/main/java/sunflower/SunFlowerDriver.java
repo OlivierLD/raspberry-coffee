@@ -5,7 +5,6 @@ import calc.GeomUtil;
 import calc.calculation.AstroComputer;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.motor.adafruitmotorhat.AdafruitMotorHAT;
-import nmea.parser.GeoPos;
 import utils.TimeUtil;
 
 import java.io.IOException;
@@ -30,7 +29,30 @@ public class SunFlowerDriver {
 
 	private SunFlowerDriver instance = this;
 
-	private static GeoPos devicePosition = null; // Can be fed from a GPS, or manually (System variable).
+	private static class Position {
+		double latitude;
+		double longitude;
+
+		public Position(double latitude, double longitude) {
+			this.latitude = latitude;
+			this.longitude = longitude;
+		}
+
+		public double getLatitude() {
+			return latitude;
+		}
+
+		public double getLongitude() {
+			return longitude;
+		}
+		@Override
+		public String toString() {
+			return String.format("%s / %s",
+					GeomUtil.decToSex(this.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
+					GeomUtil.decToSex(this.getLatitude(), GeomUtil.SWING, GeomUtil.NS));
+		}
+	}
+	private static Position devicePosition = null; // Can be fed from a GPS, or manually (System variable).
 	private static double sunAzimuth   = 180d;
 	private static double sunElevation =  -1d;
 
@@ -332,7 +354,7 @@ public class SunFlowerDriver {
 	}
 
 	public void setDevicePosition(double lat, double lng) {
-		this.devicePosition = new GeoPos(lat, lng);
+		this.devicePosition = new Position(lat, lng);
 	}
 
 	private class MotorThread extends Thread {
@@ -402,8 +424,8 @@ public class SunFlowerDriver {
 				if (devicePosition != null) {
 					DeadReckoning dr = new DeadReckoning(AstroComputer.getSunGHA(),
 																							 AstroComputer.getSunDecl(),
-																							 devicePosition.lat,
-																							 devicePosition.lng)
+																							 devicePosition.getLatitude(),
+																							 devicePosition.getLongitude())
 														 .calculate();
 					sunAzimuth = dr.getZ();
 					sunElevation = dr.getHe();
