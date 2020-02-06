@@ -52,6 +52,32 @@ Hit Ctrl-C to stop the program
 Same as above, but no UI in the console. Data are accessible through REST requests.
 See `server.sh` for details.
 
+Example:
+```
+$ curl http://localhost:8989/sf/status
+{
+  "CELESTIAL_DATA":{
+    "date":"Feb 6, 2020, 8:52:59 AM",
+    "azimuth":126.61237681273008,
+    "elevation":17.201838275625548 },
+  "MOVING_AZIMUTH_START":{
+    "date":"Feb 6, 2020, 8:52:25 AM",
+    "deviceAzimuth":180.0,
+    "sunAzimuth":126.50198638792624 },
+  "DEVICE_DATA":{
+    "date":"Feb 6, 2020, 8:52:59 AM",
+    "azimuth":126.50198638792624,
+    "elevation":17.109124088002982 },
+  "DEVICE_INFO":{
+    "date":"Feb 6, 2020, 8:52:24 AM",
+    "message":"Device was parked" },
+  "MOVING_ELEVATION_START":{
+    "date":"Feb 6, 2020, 8:52:25 AM",
+    "deviceElevation":90.0,
+    "sunElevation":17.109124088002982 }
+}
+```
+
 ### The Device
 The soft of this project is designed to drive [this device](https://github.com/OlivierLD/3DPrinting/blob/master/OpenSCAD/SolarPanelStand/stl/the.full.stand.stuck.stl).
 Its construction is detailed in [its repo](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand).
