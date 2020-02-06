@@ -69,11 +69,13 @@ public class SunFlowerDriver {
 
 	public static class MoveCompleted {
 		private Date date;
+		private long epoch;
 	  private int nbSteps;
 		private long elapsed;
 
 		public MoveCompleted(Date date, int nbSteps, long elapsed) {
 			this.date = date;
+			this.epoch = date.getTime();
 			this.nbSteps = nbSteps;
 			this.elapsed = elapsed;
 		}
@@ -90,6 +92,10 @@ public class SunFlowerDriver {
 			return date;
 		}
 
+		public long getEpoch() {
+			return epoch;
+		}
+
 		@Override
 		public String toString() {
 			return String.format("Move (%d steps) completed in %s",
@@ -100,11 +106,13 @@ public class SunFlowerDriver {
 
 	public static class DeviceData {
 		private Date date;
+		private long epoch;
 		private double azimuth;
 		private double elevation;
 
 		public DeviceData(Date date, double azimuth, double elevation) {
 			this.date = date;
+			this.epoch = date.getTime();
 			this.azimuth = azimuth;
 			this.elevation = elevation;
 		}
@@ -119,6 +127,10 @@ public class SunFlowerDriver {
 
 		public double getElevation() {
 			return elevation;
+		}
+
+		public long getEpoch() {
+			return epoch;
 		}
 
 		@Override
@@ -132,11 +144,13 @@ public class SunFlowerDriver {
 
 	public static class SunData {
 		private Date date;
+		private long epoch;
 		private double azimuth;
 		private double elevation;
 
 		public SunData(Date date, double azimuth, double elevation) {
 			this.date = date;
+			this.epoch = date.getTime();
 			this.azimuth = azimuth;
 			this.elevation = elevation;
 		}
@@ -153,6 +167,10 @@ public class SunFlowerDriver {
 			return elevation;
 		}
 
+		public long getEpoch() {
+			return epoch;
+		}
+
 		public String toString() {
 			return String.format("%s, Sun: Azimuth: %.02f, Elevation: %.02f",
 					this.date,
@@ -163,11 +181,13 @@ public class SunFlowerDriver {
 
 	public static class DeviceAzimuthStart {
 		private Date date;
+		private long epoch;
 		private double deviceAzimuth;
 		private double sunAzimuth;
 
 		public DeviceAzimuthStart(Date date, double deviceAzimuth, double sunAzimuth) {
 			this.date = date;
+			this.epoch = date.getTime();
 			this.deviceAzimuth = deviceAzimuth;
 			this.sunAzimuth = sunAzimuth;
 		}
@@ -184,6 +204,10 @@ public class SunFlowerDriver {
 			return sunAzimuth;
 		}
 
+		public long getEpoch() {
+			return epoch;
+		}
+
 		@Override
 		public String toString() {
 			return String.format("At %s, setting device Azimuth from %.02f to %.02f degrees (a %.02f degrees move)",
@@ -194,14 +218,56 @@ public class SunFlowerDriver {
 		}
 	}
 
+	public static class DeviceElevationStart {
+
+		private Date date;
+		private long epoch;
+		private double deviceElevation;
+		private double sunElevation;
+
+		public DeviceElevationStart(Date date, double deviceElevation, double sunElevation) {
+			this.date = date;
+			this.epoch = date.getTime();
+			this.deviceElevation = deviceElevation;
+			this.sunElevation = sunElevation;
+		}
+
+		public Date getDate() {
+			return date;
+		}
+
+		public double getDeviceElevation() {
+			return deviceElevation;
+		}
+
+		public double getSunElevation() {
+			return sunElevation;
+		}
+
+		public long getEpoch() {
+			return epoch;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("At %s, setting device Elevation from %.02f to %.02f degrees (a %.02f degrees move)",
+					this.date,
+					this.deviceElevation,
+					this.sunElevation,
+					Math.abs(this.deviceElevation - this.sunElevation));
+		}
+	}
+
 	public static class MoveDetails {
 		private Date date;
+		private long epoch;
 		private int nbSteps;
 		private AdafruitMotorHAT.MotorCommand motorCommand;
 		private int motorNum;
 
 		public MoveDetails(Date date, int nbSteps, AdafruitMotorHAT.MotorCommand motorCommand, int motorNum) {
 			this.date = date;
+			this.epoch = date.getTime();
 			this.nbSteps = nbSteps;
 			this.motorCommand = motorCommand;
 			this.motorNum = motorNum;
@@ -223,52 +289,24 @@ public class SunFlowerDriver {
 			return motorNum;
 		}
 
+		public long getEpoch() {
+			return epoch;
+		}
+
 		@Override
 		public String toString() {
 			return String.format("This will be %d steps %s on motor #%d", this.nbSteps, this.motorCommand, this.motorNum);
 		}
 	}
 
-	public static class DeviceElevationStart {
-
-		private Date date;
-		private double deviceElevation;
-		private double sunElevation;
-
-		public DeviceElevationStart(Date date, double deviceElevation, double sunElevation) {
-			this.date = date;
-			this.deviceElevation = deviceElevation;
-			this.sunElevation = sunElevation;
-		}
-
-		public Date getDate() {
-			return date;
-		}
-
-		public double getDeviceElevation() {
-			return deviceElevation;
-		}
-
-		public double getSunElevation() {
-			return sunElevation;
-		}
-
-		@Override
-		public String toString() {
-			return String.format("At %s, setting device Elevation from %.02f to %.02f degrees (a %.02f degrees move)",
-					this.date,
-					this.deviceElevation,
-					this.sunElevation,
-					Math.abs(this.deviceElevation - this.sunElevation));
-		}
-	}
-
 	public static class DeviceInfo {
 		private Date date;
+		private long epoch;
 		private String message;
 
 		public DeviceInfo(Date date, String message) {
 			this.date = date;
+			this.epoch = date.getTime();
 			this.message = message;
 		}
 
@@ -278,6 +316,15 @@ public class SunFlowerDriver {
 
 		public String getMessage() {
 			return message;
+		}
+
+		public long getEpoch() {
+			return epoch;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("%s %s", this.date.toString(), this.message);
 		}
 	}
 

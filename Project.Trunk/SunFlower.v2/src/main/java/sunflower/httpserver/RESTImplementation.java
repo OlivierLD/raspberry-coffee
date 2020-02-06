@@ -58,7 +58,17 @@ public class RESTImplementation {
 					"GET",
 					SF_PREFIX + "/status",
 					this::getDeviceStatus,
-					"Get the device status")
+					"Get the device status"),
+			new Operation(
+					"GET",
+					SF_PREFIX + "/sun-data",
+					this::getSunData,
+					"Get the Sun data"),
+			new Operation(
+					"GET",
+					SF_PREFIX + "/device-data",
+					this::getDeviceData,
+					"Get the device (only) status")
 	);
 
 	protected List<Operation> getOperations() {
@@ -123,6 +133,50 @@ public class RESTImplementation {
 		}
 	}
 
+	private Response getDeviceData(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		List<String> pathParameters = request.getPathParameters(); // If needed...
+
+		try {
+			Object serviceData = this.featureRequestManager.getDataCache().get(SunFlowerDriver.EventType.DEVICE_DATA.toString());
+
+			String content = new Gson().toJson(serviceData);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		} catch (Exception ex1) {
+			ex1.printStackTrace();
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SUN_FLOWER-0002")
+							.errorMessage(ex1.toString()));
+			return response;
+		}
+	}
+
+	private Response getSunData(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		List<String> pathParameters = request.getPathParameters(); // If needed...
+
+		try {
+			Object serviceData = this.featureRequestManager.getDataCache().get(SunFlowerDriver.EventType.CELESTIAL_DATA.toString());
+			String content = new Gson().toJson(serviceData);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		} catch (Exception ex1) {
+			ex1.printStackTrace();
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SUN_FLOWER-0003")
+							.errorMessage(ex1.toString()));
+			return response;
+		}
+	}
 	/**
 	 * Can be used as a temporary placeholder when creating a new operation.
 	 *

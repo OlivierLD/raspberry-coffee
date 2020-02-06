@@ -66,25 +66,35 @@ Example (early preview):
 ```
 $ curl http://localhost:8989/sf/status
 {
-  "CELESTIAL_DATA":{
-    "date":"Feb 6, 2020, 8:52:59 AM",
-    "azimuth":126.61237681273008,
-    "elevation":17.201838275625548 },
-  "MOVING_AZIMUTH_START":{
-    "date":"Feb 6, 2020, 8:52:25 AM",
-    "deviceAzimuth":180.0,
-    "sunAzimuth":126.50198638792624 },
-  "DEVICE_DATA":{
-    "date":"Feb 6, 2020, 8:52:59 AM",
-    "azimuth":126.50198638792624,
-    "elevation":17.109124088002982 },
-  "DEVICE_INFO":{
-    "date":"Feb 6, 2020, 8:52:24 AM",
-    "message":"Device was parked" },
-  "MOVING_ELEVATION_START":{
-    "date":"Feb 6, 2020, 8:52:25 AM",
-    "deviceElevation":90.0,
-    "sunElevation":17.109124088002982 }
+    "CELESTIAL_DATA": {
+        "date": "Feb 6, 2020, 10:26:30 AM",
+        "epoch": 1581013590245,
+        "azimuth": 146.94544209045705,
+        "elevation": 29.916649314162267
+    },
+    "MOVING_AZIMUTH_START": {
+        "date": "Feb 6, 2020, 10:26:15 AM",
+        "epoch": 1581013575179,
+        "deviceAzimuth": 180.0,
+        "sunAzimuth": 146.88339752645817
+    },
+    "DEVICE_DATA": {
+        "date": "Feb 6, 2020, 10:26:30 AM",
+        "epoch": 1581013590245,
+        "azimuth": 146.88339752645817,
+        "elevation": 29.889625427506264
+    },
+    "DEVICE_INFO": {
+        "date": "Feb 6, 2020, 10:26:14 AM",
+        "epoch": 1581013574113,
+        "message": "Device was parked"
+    },
+    "MOVING_ELEVATION_START": {
+        "date": "Feb 6, 2020, 10:26:15 AM",
+        "epoch": 1581013575183,
+        "deviceElevation": 90.0,
+        "sunElevation": 29.889625427506264
+    }
 }
 ```
 
