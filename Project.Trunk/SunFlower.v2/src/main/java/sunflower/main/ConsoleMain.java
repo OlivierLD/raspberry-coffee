@@ -105,7 +105,7 @@ public class ConsoleMain {
 		});
 
 		sunFlowerDriver.init();
-		sunFlowerDriver.go();
+		sunFlowerDriver.start();
 
 		AnsiConsole.systemUninstall();
 		System.out.println("Bye!");

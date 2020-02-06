@@ -522,7 +522,7 @@ public class SunFlowerDriver {
 		}
 	}
 
-	public void go() {
+	public void start() {
 		keepGoing = true;
 
 		astroThread = new CelestialComputerThread();
@@ -703,7 +703,7 @@ public class SunFlowerDriver {
 		});
 
 		sunFlowerDriver.init();
-		sunFlowerDriver.go();
+		sunFlowerDriver.start();
 
 		System.out.println(">> Exiting SunFlowerDriver, Bye!");
 	}

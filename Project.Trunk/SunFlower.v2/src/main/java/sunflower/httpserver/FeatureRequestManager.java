@@ -44,7 +44,7 @@ public class FeatureRequestManager implements RESTRequestManager {
 
 		this.featureManager.init(); // Takes care of the system variables as well.
 		Thread featureThread = new Thread(() -> {
-			this.featureManager.go();
+			this.featureManager.start();
 		}, "feature-thread");
 		featureThread.start();
 	}
