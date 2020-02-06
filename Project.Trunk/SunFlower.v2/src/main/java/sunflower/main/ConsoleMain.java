@@ -40,7 +40,7 @@ public class ConsoleMain {
 		sunFlowerDriver.subscribe(new SunFlowerDriver.SunFlowerEventListener() {
 
 			@Override
-			public void newMessage(SunFlowerDriver.EventType messageType, Object messagePayload) {
+			public void onNewMessage(SunFlowerDriver.EventType messageType, Object messagePayload) {
 
 				String message = "";
 

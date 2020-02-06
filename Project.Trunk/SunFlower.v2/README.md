@@ -50,8 +50,8 @@ Its construction is detailed in [its repo](https://github.com/OlivierLD/3DPrinti
 
 ## TODO
 - An ANSI Console. &#9989; Done (...ish).
-- A Web Console.
-    - REST or WebSockets?
+- A Web Console. WiP.
+    - REST and/or WebSockets?
     
 
 ---

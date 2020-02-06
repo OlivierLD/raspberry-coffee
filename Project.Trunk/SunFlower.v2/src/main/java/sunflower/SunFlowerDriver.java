@@ -397,7 +397,7 @@ public class SunFlowerDriver {
 	}
 
 	public static abstract class SunFlowerEventListener {
-		public abstract void newMessage(EventType messageType, Object messageContent);
+		public abstract void onNewMessage(EventType messageType, Object messageContent);
 	}
 
 	private List<SunFlowerEventListener> listeners = new ArrayList<>();
@@ -412,7 +412,7 @@ public class SunFlowerDriver {
 	}
 
 	private void publish(EventType messageType, Object messageContent) {
-		listeners.forEach(listener -> listener.newMessage(messageType, messageContent));
+		listeners.forEach(listener -> listener.onNewMessage(messageType, messageContent));
 	}
 
 	public SunFlowerDriver() {
@@ -471,7 +471,7 @@ public class SunFlowerDriver {
 			}
 			currentDeviceAzimuth = PARKED_AZIMUTH;
 		} else {
-			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Device Parked"));
+			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Device was parked"));
 		}
 	}
 	public void go() {
@@ -641,7 +641,7 @@ public class SunFlowerDriver {
 			private EventType lastMessageType = null;
 
 			@Override
-			public void newMessage(EventType messageType, Object messageContent) {
+			public void onNewMessage(EventType messageType, Object messageContent) {
 				// Basic, just an example, a verbose spit.
 				if (messageType != lastMessageType) {
 					if (messageType != EventType.DEVICE_INFO &&

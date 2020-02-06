@@ -1,4 +1,4 @@
-## HTTP Server (WIP, never finished...)
+## HTTP Server (WiP, never finished...)
 Can be used
 - to serve
     - static HTML (and related) documents (from the file system, or archived in a zip)

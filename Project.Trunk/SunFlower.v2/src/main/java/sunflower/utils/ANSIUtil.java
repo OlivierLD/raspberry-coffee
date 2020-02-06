@@ -128,10 +128,10 @@ public class ANSIUtil {
 
 	// Position frame coordinates
 	final static int START_POS_FRAME_AT = 1; // Line on screen
-	final static int POS_COL_1 = 6;  // Col-1: Sun or Device, up to 6 characters
-	final static int POS_COL_2 = 28; // Col-2: Date: 28 characters
-	final static int POS_COL_3 = 6;  // Col-3 Z: 6 characters
-	final static int POS_COL_4 = 5;  // Col-4 Elev: 5 characters
+	final static int POS_COL_1 = 7;  // Col-1: Sun or Device, up to 6 characters
+	final static int POS_COL_2 = 29; // Col-2: Date: 28 characters
+	final static int POS_COL_3 = 7;  // Col-3 Z: 6 characters
+	final static int POS_COL_4 = 7;  // Col-4 Elev: 5 characters
 
 	final static int[] ONE_POS_ROW = {
 			POS_COL_1,
@@ -145,11 +145,11 @@ public class ANSIUtil {
 
 	// Movement frame coordinates
 	final static int START_MOV_FRAME_AT = 9; // Line on screen
-	final static int MOV_COL_1 = 5;
-	final static int MOV_COL_2 = 28;
-	final static int MOV_COL_3 = 6;
-	final static int MOV_COL_4 = 6;
-	final static int MOV_COL_5 = 6;
+	final static int MOV_COL_1 = 6;
+	final static int MOV_COL_2 = 29;
+	final static int MOV_COL_3 = 7;
+	final static int MOV_COL_4 = 7;
+	final static int MOV_COL_5 = 7;
 
 	final static int[] ONE_MOV_ROW = {
 			MOV_COL_1,
@@ -164,7 +164,7 @@ public class ANSIUtil {
 
 	// Info
 	final static int START_INFO_FRAME_AT = 17; // Line on screen
-	final static int INFO_COL_1 = 28;
+	final static int INFO_COL_1 = 29;
 	final static int INFO_COL_2 = 64;
 
 	final static int[] ONE_INFO_ROW = {
@@ -221,7 +221,7 @@ public class ANSIUtil {
 						SOLID_VERTICAL_BOLD +
 						rpad(" Z", POS_COL_3) +
 						SOLID_VERTICAL_BOLD +
-						rpad("Elev", POS_COL_4) +
+						rpad("Elev.", POS_COL_4) +
 						SOLID_VERTICAL_BOLD +
 						//	TOP_RIGHT_ROUND_CORNER +
 						PAD);
@@ -355,11 +355,11 @@ public class ANSIUtil {
 						SOLID_VERTICAL_BOLD +
 						rpad(" Date", MOV_COL_2) +
 						SOLID_VERTICAL_BOLD +
-						rpad("from", MOV_COL_3) +
+						rpad(" From", MOV_COL_3) +
 						SOLID_VERTICAL_BOLD +
-						rpad("to", MOV_COL_4) +
+						rpad(" To", MOV_COL_4) +
 						SOLID_VERTICAL_BOLD +
-						rpad("diff", MOV_COL_5) +
+						rpad(" Diff", MOV_COL_5) +
 						SOLID_VERTICAL_BOLD +
 						//	TOP_RIGHT_ROUND_CORNER +
 						PAD);

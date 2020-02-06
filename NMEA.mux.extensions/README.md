@@ -1,4 +1,4 @@
-## NMEA Multiplexer Extensions (WIP: 🏊)
+## NMEA Multiplexer Extensions (WiP: 🏊)
 
 Contains custom (dynamic) forwarders, consumers, computers, etc.
 
