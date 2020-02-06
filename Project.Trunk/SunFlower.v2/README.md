@@ -14,6 +14,7 @@ of the stepper motors...
 ![Wiring](./MotorHatWiring.png)
 
 ### ANSI Console output (WiP)
+Run `sunflower.main.ConsoleMain`, from the script `console.sh`.
 ```
 - Positions -
 +------+----------------------------+------+-----+
@@ -44,6 +45,10 @@ of the stepper motors...
 Hit Ctrl-C to stop the program
 
 ```
+### HTTP Server (WiP)
+Same as above, but no UI in the console. Data are accessible through REST requests.
+See `server.sh` for details.
+
 ### The Device
 The soft of this project is designed to drive [this device](https://github.com/OlivierLD/3DPrinting/blob/master/OpenSCAD/SolarPanelStand/stl/the.full.stand.stuck.stl).
 Its construction is detailed in [its repo](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand).

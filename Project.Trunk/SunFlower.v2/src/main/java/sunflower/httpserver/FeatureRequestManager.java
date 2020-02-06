@@ -27,57 +27,36 @@ public class FeatureRequestManager implements RESTRequestManager {
 	 *
 	 * @param parent to be able to refer to all the request managers
 	 *
-	 * TODO Implement the right code here
 	 */
 	public FeatureRequestManager(SunFlowerServer parent) throws Exception {
-		// Relay map
-		String mapStr = System.getProperty("relay.map", "1:11,2:12");
-		//                                                         | |  | |
-		//                                                         | |  | Physical pin #12 (GPIO_1)
-		//                                                         | |  Relay num for this app
-		//                                                         | Physical pin #11 (GPIO_0)
-		//                                                         Relay num for this app
-		Map<Integer, Pin> relayMap = null;
-		try {
-			relayMap = buildRelayMap(mapStr);
-			if ("true".equals(System.getProperty("relay.verbose", "false"))) {
-				relayMap.entrySet().forEach(entry -> {
-					System.out.println(String.format("Relay #%d mapped to pin %d (%s) ", entry.getKey(), PinUtil.findByPin(entry.getValue()).pinNumber(), PinUtil.findByPin(entry.getValue()).pinName() ));
-				});
-			}
-		} catch (Exception ex) {
-			throw ex;
-		}
-		this.featureManager = new SunFlowerDriver();
-		// TODO Fix this... Implement the listener
-		this.sunFlowerServer = parent;
-		restImplementation = new RESTImplementation(this);
-		restImplementation.setRelayManager(this.featureManager);
-	}
 
-	private Map<Integer, Pin> buildRelayMap(String strMap) {
-		Map<Integer, Pin> map = new HashMap<>();
-		String[] array = strMap.split(",");
-		Arrays.stream(array).forEach(relayPrm -> {
-			String[] tuple = relayPrm.split(":");
-			if (tuple == null || tuple.length != 2) {
-				throw new RuntimeException(String.format("In [%s], bad element [%s]", strMap, relayPrm));
-			}
-			try {
-				int relayNum = Integer.parseInt(tuple[0]);
-				int pinNum = Integer.parseInt(tuple[1]);
-				Pin physicalNumber = PinUtil.getPinByPhysicalNumber(pinNum);
-				if (physicalNumber == null) {
-					throw new RuntimeException(String.format("In [%s], element [%s], pin #%d does not exist", strMap, relayPrm, pinNum));
-				}
-				map.put(relayNum, physicalNumber);
-			} catch (NumberFormatException nfe) {
-				throw new RuntimeException(String.format("In [%s], element [%s], bad numbers", strMap, relayPrm));
+		this.featureManager = new SunFlowerDriver();
+		// The heart of the system... Implement the listener.
+		this.featureManager.subscribe(new SunFlowerDriver.SunFlowerEventListener() {
+
+			@Override
+			public void onNewMessage(SunFlowerDriver.EventType messageType, Object messagePayload) {
+//				System.out.println(String.format("%s => %s", messageType, messagePayload));
+				dataCache.put(messageType.toString(), messagePayload);
 			}
 		});
 
-		return map;
+		this.sunFlowerServer = parent;
+		restImplementation = new RESTImplementation(this);
+		restImplementation.setFeatureManager(this.featureManager);
+
+		this.featureManager.init(); // Takes care of the system variables as well.
+		Thread featureThread = new Thread(() -> {
+			this.featureManager.go();
+		}, "feature-thread");
+		featureThread.start();
 	}
+
+	private Map<String, Object> dataCache = new HashMap<>();
+	public synchronized  Map<String, Object> getDataCache() {
+		return this.dataCache;
+	}
+
 	/**
 	 * Manage the REST requests.
 	 *

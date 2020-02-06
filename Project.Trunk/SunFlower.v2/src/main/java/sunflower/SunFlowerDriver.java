@@ -507,7 +507,7 @@ public class SunFlowerDriver {
 							azimuthMotorThread = new MotorThread(this.azimuthMotor, data.nbSteps, data.motorCommand, motorStyle);
 							azimuthMotorThread.start();
 						} else {
-							String mess3 = "Thread is already busy at work.";
+							String mess3 = "Azimuth thread is already busy at work.";
 							this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
@@ -525,7 +525,7 @@ public class SunFlowerDriver {
 							elevationMotorThread = new MotorThread(this.elevationMotor, data.nbSteps, data.motorCommand, motorStyle);
 							elevationMotorThread.start();
 						} else {
-							String mess3 = "Thread is already busy at work.";
+							String mess3 = "Elevation thread is already busy at work.";
 							this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
@@ -540,7 +540,7 @@ public class SunFlowerDriver {
 			// Bottom of the loop
 			delay(1_000L);
 		}
-		System.out.println("... Done with the program ...");
+		System.out.println("... Done with the SunFlowerDriver program ...");
 //	try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
 	}
 
@@ -571,7 +571,7 @@ public class SunFlowerDriver {
 	}
 
 	public void init() {
-		System.out.println("Hit Ctrl-C to stop the program");
+		System.out.println("Hit Ctrl-C to stop the SunFlowerDriver program");
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 //			System.out.println("\nShutting down, releasing resources.");
@@ -657,6 +657,6 @@ public class SunFlowerDriver {
 		sunFlowerDriver.init();
 		sunFlowerDriver.go();
 
-		System.out.println("Bye!");
+		System.out.println(">> Exiting SunFlowerDriver, Bye!");
 	}
 }

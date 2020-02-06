@@ -12,6 +12,7 @@ import sunflower.SunFlowerDriver;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -25,7 +26,7 @@ public class RESTImplementation {
 	private static boolean verbose = "true".equals(System.getProperty("sun.flower.verbose", "false"));
 	private final static String SF_PREFIX = "/sf";
 
-	private FeatureRequestManager featureRequestManager;
+	private FeatureRequestManager featureRequestManager; // Will hold the data cache
 	private SunFlowerDriver featureManager = null;
 
 	public RESTImplementation(FeatureRequestManager restRequestManager) {
@@ -35,7 +36,7 @@ public class RESTImplementation {
 		RESTProcessorUtil.checkDuplicateOperations(operations);
 	}
 
-	public void setRelayManager(SunFlowerDriver sfManager) {
+	public void setFeatureManager(SunFlowerDriver sfManager) {
 		this.featureManager = sfManager;
 	}
 	/**
@@ -52,12 +53,12 @@ public class RESTImplementation {
 					"GET",
 					SF_PREFIX + "/oplist",
 					this::getOperationList,
-					"List of all available operations on the Relay service."),
+					"List of all available operations on the SunFlower service."),
 			new Operation(
 					"GET",
-					SF_PREFIX + "/status/{relay-id}",
-					this::getRelayStatus,
-					"Get the relay status")
+					SF_PREFIX + "/status",
+					this::getDeviceStatus,
+					"Get the device status")
 	);
 
 	protected List<Operation> getOperations() {
@@ -96,18 +97,18 @@ public class RESTImplementation {
 	}
 
  	/**
-	 * For dev.
+	 * WiP
 	 * @param request
 	 * @return
 	 */
-	private Response getRelayStatus(Request request) {
+	private Response getDeviceStatus(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
-		List<String> pathParameters = request.getPathParameters();
+		List<String> pathParameters = request.getPathParameters(); // If needed...
 
 		try {
-
-			String content = new Gson().toJson(null); // Whatever Object...
+			Map<String, Object> serviceData = this.featureRequestManager.getDataCache(); // TODO Tweak this
+			String content = new Gson().toJson(serviceData);
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 			return response;
@@ -116,7 +117,7 @@ public class RESTImplementation {
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
-							.errorCode("SUN_FLOWER-000X")
+							.errorCode("SUN_FLOWER-0001")
 							.errorMessage(ex1.toString()));
 			return response;
 		}
