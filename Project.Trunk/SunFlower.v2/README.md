@@ -64,7 +64,10 @@ $ ./server.sh
 
 Example (early preview):
 ```
-$ curl http://localhost:8989/sf/status
+$ curl -X GET http://localhost:8989/sf/status
+```
+would produce
+```json
 {
     "CELESTIAL_DATA": {
         "date": "Feb 6, 2020, 10:26:30 AM",
