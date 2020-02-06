@@ -51,6 +51,16 @@ Hit Ctrl-C to stop the program
 ### HTTP Server (WiP) <img src="./cone.png" alt="WIP" width="48" height="48" align="middle">
 Same as above, but no UI in the console. Data are accessible through REST requests.
 See `server.sh` for details.
+```
+$ ./server.sh 
+  >>> Running on port 8989
+  Starting Program
+  Hit Ctrl-C to stop the SunFlowerDriver program
+  1,581,012,167,407 - Port open: 8989
+  1,581,012,167,409 - http.HTTPServer now accepting requests
+
+. . .
+```
 
 Example (early preview):
 ```

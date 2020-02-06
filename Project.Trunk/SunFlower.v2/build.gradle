@@ -9,19 +9,6 @@ plugins {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests'
-//    }
-//  }
-//}
-
 repositories {
   mavenCentral()
   mavenLocal()
@@ -31,9 +18,9 @@ repositories {
 
 dependencies {
 //compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
-  compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT'  // -SNAPSHOT'
+  compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT' // -SNAPSHOT'
   compile project(':I2C.SPI')               // For the Motor Hat
-  compile project(':NMEA.multiplexer')
+  compile project(':NMEA.multiplexer')      // GeoPos etc
 }
 
 shadowJar {
