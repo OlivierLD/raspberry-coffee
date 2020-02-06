@@ -221,7 +221,7 @@ public class ANSIUtil {
 						SOLID_VERTICAL_BOLD +
 						rpad(" Z", POS_COL_3) +
 						SOLID_VERTICAL_BOLD +
-						rpad("Elev.", POS_COL_4) +
+						rpad(" Elev.", POS_COL_4) +
 						SOLID_VERTICAL_BOLD +
 						//	TOP_RIGHT_ROUND_CORNER +
 						PAD);
@@ -301,7 +301,7 @@ public class ANSIUtil {
 
 	public static void printSunPosDate(String str) {
 		int col = 1;
-		printValueInCol(rpad(str, ONE_POS_ROW[col]), SUN_POS_LINE, col, ONE_POS_ROW);
+		printValueInCol(ansiSetTextColor(ANSI_YELLOW) + ANSI_BOLD + rpad(str, ONE_POS_ROW[col]), SUN_POS_LINE, col, ONE_POS_ROW);
 	}
 	public static void printSunPosZ(String str) {
 		int col = 2;
@@ -313,7 +313,7 @@ public class ANSIUtil {
 	}
 	public static void printDevicePosDate(String str) {
 		int col = 1;
-		printValueInCol(rpad(str, ONE_POS_ROW[col]), DEVICE_POS_LINE, col, ONE_POS_ROW);
+		printValueInCol(ansiSetTextColor(ANSI_YELLOW) + ANSI_BOLD + rpad(str, ONE_POS_ROW[col]), DEVICE_POS_LINE, col, ONE_POS_ROW);
 	}
 	public static void printDevicePosZ(String str) {
 		int col = 2;
