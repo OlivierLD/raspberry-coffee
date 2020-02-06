@@ -1,5 +1,5 @@
 # SunFlower Version 2.0
-![Work In Progress](./wip.jpg)
+![Work In Progress](./wip.jpg) 
 
 The goal of this project is to _**automatically**_ orient a solar panel so it faces the sun as long as it is in the sky.
 
@@ -48,7 +48,7 @@ Run `sunflower.main.ConsoleMain`, from the script `console.sh`.
 Hit Ctrl-C to stop the program
 
 ```
-### HTTP Server (WiP)
+### HTTP Server (WiP) <img src="./images/cone.png" alt="WIP" width="48" height="48" align="middle">
 Same as above, but no UI in the console. Data are accessible through REST requests.
 See `server.sh` for details.
 
