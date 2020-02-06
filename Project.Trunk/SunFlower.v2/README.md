@@ -13,7 +13,10 @@ of the stepper motors...
 ### Wiring
 ![Wiring](./MotorHatWiring.png)
 
-### ANSI Console output (WiP)
+### Standard output
+Simple standard output, just run `run.sh`.
+ 
+### ANSI Console output
 Run `sunflower.main.ConsoleMain`, from the script `console.sh`.
 ```
 - Positions -
