@@ -51,6 +51,9 @@ public class SunFlowerDriver {
 	private MotorThread elevationMotorThread = null;
 	private MotorThread azimuthMotorThread = null;
 
+	private final double MIN_DIFF_FOR_MOVE = 0.5;
+	private double minDiffForMove = MIN_DIFF_FOR_MOVE;
+
 	// Default. Try SINGLE, DOUBLE, MICROSTEP, INTERLEAVE...
 	// SINGLE is less accurate
 	// DOUBLE is fine but heats the motors
@@ -528,8 +531,6 @@ public class SunFlowerDriver {
 		astroThread = new CelestialComputerThread();
 		astroThread.start(); // Start calculating
 
-		final double MIN_DIFF_FOR_MOVE = 0.5;
-
 		while (keepGoing) {
 
 			Date date = new Date();
@@ -545,7 +546,7 @@ public class SunFlowerDriver {
 
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				boolean hasMoved = false;
-				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= MIN_DIFF_FOR_MOVE) { // Start a new thread each time a move is requested
+				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
 					hasMoved = true;
 					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, sunAzimuth));
 					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio);
@@ -561,7 +562,7 @@ public class SunFlowerDriver {
 					}
 					currentDeviceAzimuth = sunAzimuth;
 				}
-				if (Math.abs(currentDeviceElevation - sunElevation) >= MIN_DIFF_FOR_MOVE) {
+				if (Math.abs(currentDeviceElevation - sunElevation) >= minDiffForMove) {
 					hasMoved = true;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, sunElevation));
 					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio);
@@ -640,6 +641,13 @@ public class SunFlowerDriver {
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
+		}
+
+		String minDiffStr = System.getProperty("min.diff.for.move", String.valueOf(MIN_DIFF_FOR_MOVE));
+		try {
+			minDiffForMove = Double.parseDouble(minDiffStr);
+		} catch (NumberFormatException nfe) {
+			nfe.printStackTrace();
 		}
 		// Ratios:
 		String zRatioStr = System.getProperty("azimuth.ratio");

@@ -22,6 +22,7 @@ public class ConsoleMain {
 	 * azimuth.ratio for the azimuth (vertical axis) gear ratio, like "X:Y", ex: "1:40"
 	 * elevation.ratio for the elevation (horizontal axis) gear ratio, like "X:Y", ex: "18:128"
 	 * ansi.boxes set to true for nicer ANSI tables.
+	 * min.diff.for.move like 0.5 (defvault)
 	 *
 	 * @param args Not used
 	 */
