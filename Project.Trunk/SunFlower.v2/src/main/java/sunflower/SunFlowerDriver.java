@@ -48,8 +48,8 @@ public class SunFlowerDriver {
 		@Override
 		public String toString() {
 			return String.format("%s / %s",
-					GeomUtil.decToSex(this.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
-					GeomUtil.decToSex(this.getLatitude(), GeomUtil.SWING, GeomUtil.NS));
+					GeomUtil.decToSex(this.latitude, GeomUtil.SWING, GeomUtil.NS),
+					GeomUtil.decToSex(this.longitude, GeomUtil.SWING, GeomUtil.EW));
 		}
 	}
 	private static Position devicePosition = null; // Can be fed from a GPS, or manually (System variable).
