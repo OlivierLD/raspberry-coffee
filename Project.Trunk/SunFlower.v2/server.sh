@@ -8,5 +8,6 @@ JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dmotor.hat.verbose=false"
 #
 JAVA_OPTS="$JAVA_OPTS -Dhttp.port=8989"
+JAVA_OPTS="$JAVA_OPTS http.verbose=false"
 #
 java -cp ${CP} ${JAVA_OPTS} sunflower.httpserver.SunFlowerServer

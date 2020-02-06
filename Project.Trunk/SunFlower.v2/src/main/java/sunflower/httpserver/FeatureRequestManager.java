@@ -1,12 +1,9 @@
 package sunflower.httpserver;
 
-import com.pi4j.io.gpio.Pin;
 import http.HTTPServer;
 import http.RESTRequestManager;
 import sunflower.SunFlowerDriver;
-import utils.PinUtil;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -464,7 +464,7 @@ public class SunFlowerDriver {
 
 	public SunFlowerDriver() {
 
-		System.out.println("Starting Program");
+		System.out.println("Starting SunFlowerDriver");
 		int rpm = Integer.parseInt(System.getProperty("rpm", String.valueOf(DEFAULT_RPM))); // 30
 //		System.out.println(String.format("RPM set to %d.", rpm));
 
@@ -521,6 +521,7 @@ public class SunFlowerDriver {
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Device was parked"));
 		}
 	}
+
 	public void go() {
 		keepGoing = true;
 
