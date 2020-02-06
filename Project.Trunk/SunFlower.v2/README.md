@@ -1,7 +1,7 @@
 # SunFlower Version 2.0
 ![Work In Progress](./wip.jpg)
 
-The goal of this project is to orient a solar panel so it faces the sun as long as it is in the sky.
+The goal of this project is to _**automatically**_ orient a solar panel so it faces the sun as long as it is in the sky.
 
 - The [first version ](../SunFlower) used micro-servos to orient a small solar panel.
 - Here we want to deal with bigger panels, this will require the usage of bigger motors, like stepper-motors.
@@ -52,7 +52,7 @@ Hit Ctrl-C to stop the program
 Same as above, but no UI in the console. Data are accessible through REST requests.
 See `server.sh` for details.
 
-Example:
+Example (early preview):
 ```
 $ curl http://localhost:8989/sf/status
 {
