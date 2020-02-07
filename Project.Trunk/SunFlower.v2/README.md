@@ -17,6 +17,8 @@ of the stepper motors...
 Simple standard output, just run `run.sh`.
 
 #### With the `calibration` option
+Takes its input from the CLI, not from the Astro Thread. Use it to calibrate the device,
+to make sure it is working as expected.
 ```
 $ ./run.sh 
 Starting SunFlowerDriver
