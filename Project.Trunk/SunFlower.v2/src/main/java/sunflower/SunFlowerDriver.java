@@ -631,57 +631,60 @@ public class SunFlowerDriver {
 		while (keepAsking) {
 			System.out.println(String.format("Current status: Z=%.02f, Elev.=%.02f", currentDeviceAzimuth, currentDeviceElevation));
 			String userInput = StaticUtil.userInput("> ");
-			if (userInput.trim().equalsIgnoreCase("Q") || userInput.trim().equalsIgnoreCase("QUIT")) {
-				keepAsking = false;
-			} else if (userInput.trim().equalsIgnoreCase("PARK")) {
-				this.parkDevice();
-			} else {
-				String[] userData = userInput.trim().split("=");
-				if (userData.length != 2) {
-					System.out.println(String.format("Unknown input %s, try something else.", userInput));
+			if (!userInput.isEmpty()) {
+				if (userInput.trim().equalsIgnoreCase("Q") || userInput.trim().equalsIgnoreCase("QUIT")) {
+					keepAsking = false;
+				} else if (userInput.trim().equalsIgnoreCase("PARK")) {
+					this.parkDevice();
 				} else {
-					if (!userData[0].equalsIgnoreCase("Z") && !userData[0].equalsIgnoreCase("E")) {
-						System.out.println(String.format("Choose E or Z, not %s", userData[0]));
+					String[] userData = userInput.trim().split("=");
+					if (userData.length != 2) {
+						System.out.println(String.format("Unknown input [%s], try something else.", userInput));
 					} else {
-						double value = Double.NaN;
-						try {
-							value = Double.parseDouble(userData[1]);
-						} catch (NumberFormatException nfe) {
-							System.out.println(String.format("Bad numeric value %s", userData[1]));
-						}
-						if (value != Double.NaN) {
-							if (userData[0].equalsIgnoreCase("Z")) {
-								if (value < 0 || value > 360) {
-									System.out.println(String.format("Bad Azimuth value: %f, should be in [0..360]", value));
-								} else {
-									MotorPayload data = getMotorPayload(currentDeviceAzimuth, value, azimuthMotorRatio);
-									if (!simulating) {
-										if (azimuthMotorThread == null || (azimuthMotorThread != null && !azimuthMotorThread.isAlive())) {
-											azimuthMotorThread = new MotorThread(this.azimuthMotor, data.nbSteps, data.motorCommand, motorStyle);
-											azimuthMotorThread.start();
-										} else {
-											String mess3 = "Azimuth thread is already busy at work.";
-											System.out.println(mess3);
-										}
-									}
-									currentDeviceAzimuth = value;
-								}
+						if (!userData[0].equalsIgnoreCase("Z") && !userData[0].equalsIgnoreCase("E")) {
+							System.out.println(String.format("Choose E or Z, not [%s]", userData[0]));
+						} else {
+							double value = Double.NaN;
+							try {
+								value = Double.parseDouble(userData[1]);
+							} catch (NumberFormatException nfe) {
+								System.out.println(String.format("Bad numeric value [%s]", userData[1]));
 							}
-							if (userData[0].equalsIgnoreCase("E")) {
-								if (value < 0 || value > 90) {
-									System.out.println(String.format("Bad Elevation value: %f, should be in [0..90]", value));
-								} else {
-									MotorPayload data = getMotorPayload(currentDeviceElevation, value, elevationMotorRatio);
-									if (!simulating) {
-										if (elevationMotorThread == null || (elevationMotorThread != null && !elevationMotorThread.isAlive())) {
-											elevationMotorThread = new MotorThread(this.elevationMotor, data.nbSteps, data.motorCommand, motorStyle);
-											elevationMotorThread.start();
-										} else {
-											String mess3 = "Elevation thread is already busy at work.";
-											System.out.println(mess3);
+							if ( ! Double.isNaN(value) ) {
+								// System.out.println(String.format("Setting %s to %f", userData[0].toUpperCase(), value));
+								if (userData[0].equalsIgnoreCase("Z")) {
+									if (value < 0 || value > 360) {
+										System.out.println(String.format("Bad Azimuth value: %f, should be in [0..360]", value));
+									} else {
+										MotorPayload data = getMotorPayload(currentDeviceAzimuth, value, azimuthMotorRatio);
+										if (!simulating) {
+											if (azimuthMotorThread == null || (azimuthMotorThread != null && !azimuthMotorThread.isAlive())) {
+												azimuthMotorThread = new MotorThread(this.azimuthMotor, data.nbSteps, data.motorCommand, motorStyle);
+												azimuthMotorThread.start();
+											} else {
+												String mess3 = "Azimuth thread is already busy at work.";
+												System.out.println(mess3);
+											}
 										}
+										currentDeviceAzimuth = value;
 									}
-									currentDeviceElevation = value;
+								}
+								if (userData[0].equalsIgnoreCase("E")) {
+									if (value < 0 || value > 90) {
+										System.out.println(String.format("Bad Elevation value: %f, should be in [0..90]", value));
+									} else {
+										MotorPayload data = getMotorPayload(currentDeviceElevation, value, elevationMotorRatio);
+										if (!simulating) {
+											if (elevationMotorThread == null || (elevationMotorThread != null && !elevationMotorThread.isAlive())) {
+												elevationMotorThread = new MotorThread(this.elevationMotor, data.nbSteps, data.motorCommand, motorStyle);
+												elevationMotorThread.start();
+											} else {
+												String mess3 = "Elevation thread is already busy at work.";
+												System.out.println(mess3);
+											}
+										}
+										currentDeviceElevation = value;
+									}
 								}
 							}
 						}
