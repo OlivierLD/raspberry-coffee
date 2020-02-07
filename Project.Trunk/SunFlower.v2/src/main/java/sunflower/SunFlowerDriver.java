@@ -65,7 +65,7 @@ public class SunFlowerDriver {
 	private AdafruitMotorHAT.AdafruitStepperMotor azimuthMotor;
 	private AdafruitMotorHAT.AdafruitStepperMotor elevationMotor;
 
-	private final static double PARKED_ELEVATION = 90d;
+	private final static double PARKED_ELEVATION =  90d;
 	private final static double PARKED_AZIMUTH   = 180d;
 
 	private double currentDeviceElevation = PARKED_ELEVATION;
