@@ -621,10 +621,10 @@ public class SunFlowerDriver {
 	 * Move the device from user's input, not from astro thread
 	 */
 	public void startManualCalibration() {
-		System.out.println("------------------------------ C A L I B R A T I O N ---------------------------");
+		System.out.println("------------------------------ C A L I B R A T I O N ----------------------------");
 		System.out.println("To change the Azimuth (Z) value, enter 'Z=12.34', the value goes from 0 to 360.");
 		System.out.println("To change the Elevation (E) value, enter 'E=23.45', the values goes from 0 to 90.");
-		System.out.println("Enter PARK to park the device.");
+		System.out.println("Enter 'PARK' to park the device.");
 		System.out.println("Enter 'Q' to quit.");
 		System.out.println("---------------------------------------------------------------------------------");
 		boolean keepAsking = true;

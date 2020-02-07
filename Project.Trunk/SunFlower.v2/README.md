@@ -22,10 +22,10 @@ to make sure it is working as expected.
 ```
 $ ./run.sh 
 Starting SunFlowerDriver
------------------------------- C A L I B R A T I O N ---------------------------
+------------------------------ C A L I B R A T I O N ----------------------------
 To change the Azimuth (Z) value, enter 'Z=12.34', the value goes from 0 to 360.
 To change the Elevation (E) value, enter 'E=23.45', the values goes from 0 to 90.
-Enter PARK to park the device.
+Enter 'PARK' to park the device.
 Enter 'Q' to quit.
 ---------------------------------------------------------------------------------
 Current status: Z=180.00, Elev.=90.00
