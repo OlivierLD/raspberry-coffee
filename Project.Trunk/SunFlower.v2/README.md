@@ -15,6 +15,23 @@ of the stepper motors...
 
 ### Standard output
 Simple standard output, just run `run.sh`.
+
+#### With the `calibration` option
+```
+$ ./run.sh 
+Starting SunFlowerDriver
+------------------------------ C A L I B R A T I O N ---------------------------
+To change the Azimuth (Z) value, enter 'Z=12.34', the value goes from 0 to 360.
+To change the Elevation (E) value, enter 'E=23.45', the values goes from 0 to 90.
+Enter PARK to park the device.
+Enter 'Q' to quit.
+---------------------------------------------------------------------------------
+Current status: Z=180.00, Elev.=90.00
+> z=213
+Current status: Z=213.00, Elev.=90.00
+> 
+. . .
+``` 
  
 ### ANSI Console output
 Run `sunflower.main.ConsoleMain`, from the script `console.sh`.
