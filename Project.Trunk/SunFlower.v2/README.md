@@ -109,6 +109,7 @@ Its construction is detailed in [its repo](https://github.com/OlivierLD/3DPrinti
 - An ANSI Console. &#9989; Done (...ish).
 - A Web Console. WiP.
     - REST and/or WebSockets?
+- A utility, to manually/interactively orient the panel from user's inputs. WiP.
     
 
 ---
