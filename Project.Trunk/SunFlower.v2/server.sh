@@ -12,4 +12,5 @@ JAVA_OPTS="$JAVA_OPTS -DdeltaT=69.2201"
 JAVA_OPTS="$JAVA_OPTS -Dhttp.port=8989"
 JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=false"
 #
+echo -e "Try 'nohup ./$0 > sf.log &'"
 java -cp ${CP} ${JAVA_OPTS} sunflower.httpserver.SunFlowerServer
