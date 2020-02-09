@@ -8,5 +8,11 @@ JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dmotor.hat.verbose=false"
 #
 JAVA_OPTS="$JAVA_OPTS -Dcalibration=true"
+JAVA_OPTS="$JAVA_OPTS -Dsun.flower.verbose=true"
+#
+JAVA_OPTS="$JAVA_OPTS -Dstepper.style=MICROSTEP"
+# JAVA_OPTS="$JAVA_OPTS -Dstepper.style=SINGLE"
+# JAVA_OPTS="$JAVA_OPTS -Dstepper.style=DOUBLE"
+# JAVA_OPTS="$JAVA_OPTS -Dstepper.style=INTERLEAVE"
 #
 java -cp ${CP} ${JAVA_OPTS} sunflower.SunFlowerDriver

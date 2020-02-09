@@ -82,7 +82,17 @@ public class SunFlowerDriver {
 	// SINGLE is less accurate
 	// DOUBLE is fine but heats the motors
 	// MICROSTEP sound - for this project - like a good option
-	private AdafruitMotorHAT.Style motorStyle = AdafruitMotorHAT.Style.MICROSTEP;  // Default. Try SINGLE, DOUBLE, MICROSTEP, INTERLEAVE...
+	private final static AdafruitMotorHAT.Style DEFAULT_MOTOR_STYLE = AdafruitMotorHAT.Style.MICROSTEP;  // Default. Try SINGLE, DOUBLE, MICROSTEP, INTERLEAVE...
+
+	private static AdafruitMotorHAT.Style findStyle(String styleStr) {
+		for (AdafruitMotorHAT.Style style : AdafruitMotorHAT.Style.values()) {
+			if (styleStr.equals(style.toString())) {
+				return style;
+			}
+		}
+		return DEFAULT_MOTOR_STYLE;
+	}
+	private AdafruitMotorHAT.Style motorStyle = findStyle(System.getProperty("stepper.style", DEFAULT_MOTOR_STYLE.toString()));
 
 	private static double azimuthMotorRatio   = 1d / 40d; // Set with System variable "azimuth.ratio"
 	private static double elevationMotorRatio = 1d / 7.11111; // 18:128, Set with System variable "elevation.ratio"
@@ -91,6 +101,7 @@ public class SunFlowerDriver {
 	private final static int DEFAULT_RPM = 30;
 	private final static int DEFAULT_STEPS_PER_REV = AdafruitMotorHAT.AdafruitStepperMotor.DEFAULT_NB_STEPS;
 
+	private final static boolean SUN_FLOWER_VERBOSE = "true".equals(System.getProperty("sun.flower.verbose"));
 	private final static boolean MOTOR_HAT_VERBOSE = "true".equals(System.getProperty("motor.hat.verbose"));
 	private final static boolean ASTRO_VERBOSE = "true".equals(System.getProperty("astro.verbose", "false"));
 
@@ -498,10 +509,10 @@ public class SunFlowerDriver {
 		try {
 			this.mh = new AdafruitMotorHAT(DEFAULT_STEPS_PER_REV); // Default addr 0x60
 
-			this.azimuthMotor = mh.getStepper(AdafruitMotorHAT.AdafruitStepperMotor.PORT_M1_M2);
+			this.azimuthMotor = mh.getStepper(AdafruitMotorHAT.AdafruitStepperMotor.PORT_M1_M2);   // Azimuth
 			this.azimuthMotor.setSpeed(rpm); // Default 30 RPM
 
-			this.elevationMotor = mh.getStepper(AdafruitMotorHAT.AdafruitStepperMotor.PORT_M3_M4);
+			this.elevationMotor = mh.getStepper(AdafruitMotorHAT.AdafruitStepperMotor.PORT_M3_M4); // Elevation
 			this.elevationMotor.setSpeed(rpm); // Default 30 RPM
 
 		} catch (I2CFactory.UnsupportedBusNumberException ubne) {
@@ -725,6 +736,10 @@ public class SunFlowerDriver {
 			System.out.println("Hit Ctrl-C to stop the SunFlowerDriver program");
 		}
 
+		if (SUN_FLOWER_VERBOSE) {
+			System.out.println(String.format(">> Motor Style set to %s", motorStyle.toString()));
+		}
+
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 //			System.out.println("\nShutting down, releasing resources.");
 			this.stop();
@@ -788,6 +803,7 @@ public class SunFlowerDriver {
 	 * System properties:
 	 * rpm, default 30
 	 * hat.debug, default false
+	 * motor.style
 	 * ... more.
 	 *
 	 * @param args Not used
