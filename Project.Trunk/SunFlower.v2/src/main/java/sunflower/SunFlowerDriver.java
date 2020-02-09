@@ -632,6 +632,7 @@ public class SunFlowerDriver {
 	 * Move the device from user's input, not from astro thread
 	 */
 	public void startManualCalibration() {
+		String lastCommand = "";
 		System.out.println("------------------------------ C A L I B R A T I O N ----------------------------");
 		System.out.println("To change the Azimuth (Z) value, enter 'Z=12.34', the value goes from 0 to 360.");
 		System.out.println("To change the Elevation (E) value, enter 'E=23.45', the values goes from 0 to 90.");
@@ -643,6 +644,7 @@ public class SunFlowerDriver {
 			System.out.println(String.format("Current status: Z=%.02f, Elev.=%.02f", currentDeviceAzimuth, currentDeviceElevation));
 			String userInput = StaticUtil.userInput("> ");
 			if (!userInput.isEmpty()) {
+				lastCommand = userInput;
 				if (userInput.trim().equalsIgnoreCase("Q") || userInput.trim().equalsIgnoreCase("QUIT")) {
 					keepAsking = false;
 				} else if (userInput.trim().equalsIgnoreCase("PARK")) {
@@ -701,6 +703,8 @@ public class SunFlowerDriver {
 						}
 					}
 				}
+			} else {
+				System.out.println(String.format("Last command was [%s]", lastCommand));
 			}
 		}
 	}
