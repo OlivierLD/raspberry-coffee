@@ -13,6 +13,9 @@ of the stepper motors...
 ### Wiring
 ![Wiring](./MotorHatWiring.png)
 
+> Note: It is also possible to power the `Motor Hat` from a USB port of the Raspberry Pi.
+> This way, only one power supply is required, it's the usual 5v for the Raspberry Pi. 
+
 ### Standard output
 Simple standard output, just run `run.sh`.
 
@@ -128,7 +131,7 @@ Its construction is detailed in [its repo](https://github.com/OlivierLD/3DPrinti
 - An ANSI Console. &#9989; Done (...ish).
 - A Web Console. WiP.
     - REST and/or WebSockets?
-- A utility, to manually/interactively orient the panel from user's inputs. WiP.
+- A utility, to manually/interactively orient the panel from user's inputs. &#9989; Done.
     
 
 ---
