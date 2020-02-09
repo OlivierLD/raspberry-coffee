@@ -10,6 +10,9 @@ JAVA_OPTS="$JAVA_OPTS -Dmotor.hat.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dcalibration=true"
 JAVA_OPTS="$JAVA_OPTS -Dsun.flower.verbose=true"
 #
+# Default is 30, can be increased if not MICROSTEP
+JAVA_OPTS="$JAVA_OPTS -Drpm=30"
+#
 JAVA_OPTS="$JAVA_OPTS -Dstepper.style=MICROSTEP"
 # JAVA_OPTS="$JAVA_OPTS -Dstepper.style=SINGLE"
 # JAVA_OPTS="$JAVA_OPTS -Dstepper.style=DOUBLE"
