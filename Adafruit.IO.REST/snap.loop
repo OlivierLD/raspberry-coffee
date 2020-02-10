@@ -2,7 +2,7 @@
 #
 # To run on the Raspberry Pi.
 # For camera (raspistill) doc, see https://www.raspberrypi.org/documentation/raspbian/applications/camera.md
-# to get the image: scp pi@192.168.42.2:~/snap.jpg snap.jpg
+# to get the image: scp pi@192.168.42.XX:~/snap.jpg snap.jpg
 #
 while :
 do
