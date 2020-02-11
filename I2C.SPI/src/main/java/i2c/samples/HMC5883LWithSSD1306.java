@@ -8,6 +8,10 @@ import java.util.Map;
 
 public class HMC5883LWithSSD1306 {
 
+	// Screen dimensions
+	private final static int WIDTH = 128;
+	private final static int HEIGHT = 32;
+
 	public static void main(String... args) {
 		try {
 			HMC5883L sensor = new HMC5883L();
@@ -16,13 +20,10 @@ public class HMC5883LWithSSD1306 {
 			oled.begin();
 			oled.clear();
 
-			int WIDTH = 128;
-			int HEIGHT = 32;
-
 			ScreenBuffer sb = new ScreenBuffer(WIDTH, HEIGHT);
 			sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
 			if ("true".equals(System.getProperty("ssd1306.verbose", "false"))) {
-				System.out.println("Screenbuffer ready...");
+				System.out.println("ScreenBuffer ready...");
 			}
 
 			// Listener
