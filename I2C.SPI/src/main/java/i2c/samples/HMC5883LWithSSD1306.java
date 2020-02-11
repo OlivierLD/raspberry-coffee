@@ -35,10 +35,10 @@ public class HMC5883LWithSSD1306 {
 						String display = String.format("Heading: %.02f", magData.get(HMC5883L.MagValues.HEADING));
 						sb.text(display, 2, 10 + (line * 10), ScreenBuffer.Mode.WHITE_ON_BLACK);
 						line += 1;
-						display = String.format("Pitch: %.02f", magData.get(HMC5883L.MagValues.PITCH));
+						display =        String.format("Pitch  : %.02f", magData.get(HMC5883L.MagValues.PITCH));
 						sb.text(display, 2, 10 + (line * 10), ScreenBuffer.Mode.WHITE_ON_BLACK);
 						line += 1;
-						display = String.format("Roll: %.02f", magData.get(HMC5883L.MagValues.ROLL));
+						display =        String.format("Roll   : %.02f", magData.get(HMC5883L.MagValues.ROLL));
 						sb.text(display, 2, 10 + (line * 10), ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 						oled.setBuffer(sb.getScreenBuffer());
@@ -66,6 +66,7 @@ public class HMC5883LWithSSD1306 {
 						System.err.println(ie.getMessage());
 					}
 				}
+				oled.clear();
 				oled.shutdown();
 			}, "Shutdown Hook"));
 			sensor.startReading();
