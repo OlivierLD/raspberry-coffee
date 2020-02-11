@@ -15,8 +15,9 @@ import lcd.ScreenBuffer;
 public class OLEDSSD1306Sample {
 
 	public static void main(String... args) throws Exception {
-		if ("true".equals(System.getProperty("verbose", "false")))
+		if ("true".equals(System.getProperty("verbose", "false"))) {
 			System.out.println("Starting...");
+		}
 		SSD1306 oled = new SSD1306(); // Default pins (look in the SSD1306 code)
 		// Override the default pins        Clock             MOSI              CS                RST               DC
 //  oled = new SSD1306(RaspiPin.GPIO_12, RaspiPin.GPIO_13, RaspiPin.GPIO_14, RaspiPin.GPIO_15, RaspiPin.GPIO_16);
