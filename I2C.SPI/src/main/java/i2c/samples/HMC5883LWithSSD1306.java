@@ -12,7 +12,7 @@ public class HMC5883LWithSSD1306 {
 	private final static int WIDTH = 128;
 	private final static int HEIGHT = 32;
 
-	private final static boolean verbose = "true".equals(System.getProperty("ssd1306.verbose", "false"));
+	private final static boolean verbose = "true".equals(System.getProperty("ssd1306.compass.verbose", "false"));
 
 	public static void main(String... args) {
 
