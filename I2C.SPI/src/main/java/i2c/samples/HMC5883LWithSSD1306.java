@@ -21,7 +21,7 @@ public class HMC5883LWithSSD1306 {
 			oled.clear();
 
 			ScreenBuffer sb = new ScreenBuffer(WIDTH, HEIGHT);
-			sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 			if ("true".equals(System.getProperty("ssd1306.verbose", "false"))) {
 				System.out.println("ScreenBuffer ready...");
 			}
@@ -33,14 +33,19 @@ public class HMC5883LWithSSD1306 {
 					// Write on oled screen
 					try {
 						int line = 0;
-						String display = String.format("Heading: %.02f", magData.get(HMC5883L.MagValues.HEADING));
+						String display = String.format("Heading: %06.02f  ", magData.get(HMC5883L.MagValues.HEADING));
 						sb.text(display, 2, 10 + (line * 10), ScreenBuffer.Mode.WHITE_ON_BLACK);
 						line += 1;
-						display =        String.format("Pitch  : %.02f", magData.get(HMC5883L.MagValues.PITCH));
+						display =        String.format("Pitch  :  %05.02f  ", magData.get(HMC5883L.MagValues.PITCH));
 						sb.text(display, 2, 10 + (line * 10), ScreenBuffer.Mode.WHITE_ON_BLACK);
 						line += 1;
-						display =        String.format("Roll   : %.02f", magData.get(HMC5883L.MagValues.ROLL));
+						display =        String.format("Roll   :  %05.02f  ", magData.get(HMC5883L.MagValues.ROLL));
 						sb.text(display, 2, 10 + (line * 10), ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+						// Circle, needle pointing north. If heading is 30, north is -30.
+						// Center is (128 - 16, 16).
+						double heading = magData.get(HMC5883L.MagValues.HEADING);
+						sb.circle(128 - 16, 16, 15);
 
 						oled.setBuffer(sb.getScreenBuffer());
 						oled.display();
@@ -67,8 +72,15 @@ public class HMC5883LWithSSD1306 {
 						System.err.println(ie.getMessage());
 					}
 				}
-				oled.clear();
-				oled.shutdown();
+				try {
+					sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+					oled.setBuffer(sb.getScreenBuffer());
+					oled.display();
+					oled.clear();
+					oled.shutdown();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}, "Shutdown Hook"));
 			sensor.startReading();
 		} catch (Throwable throwable) {
