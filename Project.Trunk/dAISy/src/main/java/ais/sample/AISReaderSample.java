@@ -18,6 +18,7 @@ import java.util.Set;
 public class AISReaderSample implements SerialIOCallbacks {
 	private boolean verbose = "true".equals(System.getProperty("serial.verbose", "false"));
 
+	private AISParser aisParser = new AISParser();
 	private List<String> filters = null;
 	private void setSentenceFilter(List<String> filters) {
 		this.filters = filters;
@@ -130,7 +131,7 @@ public class AISReaderSample implements SerialIOCallbacks {
 			}
 		}
 		try {
-			AISParser.AISRecord aisRecord = AISParser.parseAIS(new String(mess));
+			AISParser.AISRecord aisRecord = aisParser.parseAIS(new String(mess));
 			System.out.println(String.format("Parsed: %s", aisRecord.toString()));
 		} catch (AISParser.AISException aisEx) {
 			System.err.println(aisEx.toString());

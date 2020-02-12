@@ -28,6 +28,12 @@ then
 	  printf "| NO OLED Detected |\n"
 	fi
 else
-  sudo java ${JAVA_OPTIONS} -cp ${CP} i2c.samples.oled.OLEDSSD1306_I2C_DisplayStrings "$1"
+	DATA=$1
+  if [[ "$DATA" == "" ]]
+  then
+    echo -e "You should provide the string to display as parameter of this script..."
+    DATA="No Data to Display"
+  fi
+  sudo java ${JAVA_OPTIONS} -cp ${CP} i2c.samples.oled.OLEDSSD1306_I2C_DisplayStrings "$DATA"
 fi
 #

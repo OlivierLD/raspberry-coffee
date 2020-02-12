@@ -12,4 +12,4 @@ JAVA_OPTS="$JAVA_OPTS -Dansi.console=false"
 #
 JAVA_OPTS="$JAVA_OPTS -Dauto.demo=false"
 #
-sudo java -cp $CP $JAVA_OPTS orientation.InteractivePanelOrienter --heading:14 --tilt:15
+sudo java -cp ${CP} ${JAVA_OPTS} orientation.InteractivePanelOrienter --heading:14 --tilt:15

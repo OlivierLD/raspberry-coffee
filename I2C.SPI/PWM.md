@@ -3,23 +3,27 @@
 Pulse Width Modulation (PWM) is the technique used from a digital source to simulate
 an analog output.
 
-For example, imagine that you want to dim an `led` from a digital device.
-The digital device only has pins that can take 2 values: `0` or `3V3`.
+For example, imagine that you want to dim an `led` from a _digital_ device.
+The digital device only has pins that can take 2 values: `0` (off) or `3V3` (on).
 
 `0` means that the led will be off, `3V3` means it will be at 100% of its brightness.
 
-To show it at `50%` of its brightness, the idea is to turn it off 50% of the time, and on 50% of the time.
+To show it at `50%` of its brightness, the idea is to turn it off 50% of _the time_, and on 50% of _the time_.
 
-To show it at `25%` of its brightness, it will be on 25% of the time, and off 75% of the time.
+To show it at `25%` of its brightness, it will be on 25% of _the time_, and off 75% of _the time_.
 
-If the on-off cycles are short and fast enough, a human eye will no be able to see them, it will only have the illusion
-of the resulting brightness.
+If the on-off cycles (this is what "_the time_" means above) are **short and fast enough**, a human eye will no be able to see them, it will only have the illusion
+of the resulting brightness. This is called "Persistence Of Vision", aka POV.
 
 | PWM | Brightness |
 |:---:|:----------:|
 |![75](./img/75.png)|![75](./img/75led.png)|
 |![50](./img/50.png)|![50](./img/50led.png)|
 |![25](./img/25.png)|![25](./img/25led.png)|
+
+If the cycle is less than 30 ms, an human eye is OK with it, it cannot tell if the light is actually blinking (which brings us back to POV).
+
+For a "pure" PWM implementation, look into the code of [`PWMPin.java`](./src/main/java/i2c/sensor/utils/PWMPin.java).
 
 ---
 
@@ -28,7 +32,7 @@ Same article on [Hocus-Blogus](http://hocus-blogus.blogspot.com/2018/07/raspberr
 ---
 
 The Raspberry Pi does not have analog pins, we need to use Pulse Width Modulation to simulate
-analog values, a servo is an analog device.
+analog values, a servo - for example - is an analog device.
 
 We use for that the method `setPWM(channel, 0, pulse);`, that will eventually write to the registers
 of the device.

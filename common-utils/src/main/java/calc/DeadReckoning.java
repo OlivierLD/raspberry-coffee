@@ -123,7 +123,7 @@ public class DeadReckoning {
 		G = dG;
 	}
 
-	public void calculate() {
+	public DeadReckoning calculate() {
 		double AHL = AHG + G;
 		if (AHL < 0.0D) {
 			AHL = 360D + AHL;
@@ -154,6 +154,7 @@ public class DeadReckoning {
 //  else
 //    Z = Z;
 		dZ = new Double(Z);
+		return this;
 	}
 
 	public Double getHe() {

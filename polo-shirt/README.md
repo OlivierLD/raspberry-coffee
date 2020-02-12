@@ -198,7 +198,7 @@ becomes
     }
     {{/operation}}
 ```
-Ypu also need to add the corresponding imports in each template:
+You also need to add the corresponding imports in each template:
 ```java
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;

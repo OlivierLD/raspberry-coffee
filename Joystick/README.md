@@ -1,4 +1,4 @@
-## WIP: Using a Joystick
+## WiP: Using a Joystick
 The challenge here is to read one or more Joystick ports, and to render their positions
 in a web page.
 

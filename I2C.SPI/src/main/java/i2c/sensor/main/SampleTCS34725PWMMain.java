@@ -7,6 +7,9 @@ import com.pi4j.io.gpio.RaspiPin;
 import i2c.sensor.TCS34725;
 import i2c.sensor.utils.PWMPin;
 
+/**
+ * TCS34725 is a color sensor.
+ */
 public class SampleTCS34725PWMMain {
 	private static boolean go = true;
 

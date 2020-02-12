@@ -1,4 +1,5 @@
 ## REST Relay
+
 Simple example showing:
 - How to interact with a Relay
 - How to expose the relay to a REST Server
@@ -6,6 +7,7 @@ Simple example showing:
   - From a Web Client
   - A Smart Watch
   - An ESP8266
+  - And whatever understands the REST protocol...
 
 ---
 

@@ -45,7 +45,7 @@ For the impatient: go [here](#to-see-it-at-work-aka-get-started) to get started 
 -----------------
 ### Includes
 - NMEA Strings Parser
-- AIS Strings Parser (WIP)
+- AIS Strings Parser (WiP)
 - NMEA Strings generator
 - Serial port Reader / Writer
 - TCP Reader / Writer

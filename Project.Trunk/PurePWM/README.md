@@ -57,5 +57,13 @@ Exception in thread "main" com.pi4j.io.gpio.exception.UnsupportedPinModeExceptio
 	at com.pi4j.io.gpio.impl.GpioControllerImpl.provisionSoftPwmOutputPin(GpioControllerImpl.java:876)
 	at pwm.Pwm01.main(Pwm01.java:21)
 ```
-
+Seems that the Raspberry PI (which is _not_ the only platform `PI4J` runs on) does not like it.
 ... Working on it.
+
+### Four Glowing leds
+See example in `sample.FourPWMLeds.java`, run it with
+```
+$ ./glowing.leds.sh
+```
+
+<!-- TODO Wiring -->

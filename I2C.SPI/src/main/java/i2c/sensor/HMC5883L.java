@@ -9,7 +9,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -71,6 +73,24 @@ public class HMC5883L {
 		return calibrationMap;
 	}
 
+	public static abstract class HMC5883LEventListener {
+		public abstract void onNewData(Map<MagValues, Double> magData);
+	}
+
+	private List<HMC5883LEventListener> listeners = new ArrayList<>();
+
+	public void subscribe(HMC5883LEventListener listener) {
+		listeners.add(listener);
+	}
+	public void unsubscribe(HMC5883LEventListener listener) {
+		if (listeners.contains(listener)) {
+			listeners.remove(listener);
+		}
+	}
+
+	private void publish(Map<MagValues, Double> magData) {
+		listeners.forEach(listener -> listener.onNewData(magData));
+	}
 	public HMC5883L() throws I2CFactory.UnsupportedBusNumberException, IOException {
 		if (verbose) {
 			System.out.println("Starting sensors reading:");
@@ -99,7 +119,7 @@ public class HMC5883L {
 			this.setCalibrationValue(HMC5883L.MAG_X_OFFSET, Double.parseDouble(hmc5883lCalProps.getProperty(HMC5883L.MAG_X_OFFSET, String.valueOf(DEFAULT_MAP.get(HMC5883L.MAG_X_OFFSET)))));
 			this.setCalibrationValue(HMC5883L.MAG_Y_OFFSET, Double.parseDouble(hmc5883lCalProps.getProperty(HMC5883L.MAG_Y_OFFSET, String.valueOf(DEFAULT_MAP.get(HMC5883L.MAG_Y_OFFSET)))));
 			this.setCalibrationValue(HMC5883L.MAG_Z_OFFSET, Double.parseDouble(hmc5883lCalProps.getProperty(HMC5883L.MAG_Z_OFFSET, String.valueOf(DEFAULT_MAP.get(HMC5883L.MAG_Z_OFFSET)))));
-			// MAG coeffs
+			// MAG coefficients
 			this.setCalibrationValue(HMC5883L.MAG_X_COEFF, Double.parseDouble(hmc5883lCalProps.getProperty(HMC5883L.MAG_X_COEFF, String.valueOf(DEFAULT_MAP.get(HMC5883L.MAG_X_COEFF)))));
 			this.setCalibrationValue(HMC5883L.MAG_Y_COEFF, Double.parseDouble(hmc5883lCalProps.getProperty(HMC5883L.MAG_Y_COEFF, String.valueOf(DEFAULT_MAP.get(HMC5883L.MAG_Y_COEFF)))));
 			this.setCalibrationValue(HMC5883L.MAG_Z_COEFF, Double.parseDouble(hmc5883lCalProps.getProperty(HMC5883L.MAG_Z_COEFF, String.valueOf(DEFAULT_MAP.get(HMC5883L.MAG_Z_COEFF)))));
@@ -119,7 +139,7 @@ public class HMC5883L {
 	}
 
 	// Create a separate thread to read the sensors
-	private void startReading() {
+	public void startReading() {
 		Runnable task = () -> {
 			try {
 				readingSensors();
@@ -158,16 +178,24 @@ public class HMC5883L {
 	public void setWait(long wait) {
 		this.wait = wait;
 	}
+	public long getWait() {
+		return this.wait;
+	}
 
 	private boolean keepReading = true;
 
-	private void stopReading() {
+	public void stopReading() {
 		this.keepReading = false;
 	}
 
 	private static double lowPass(double alpha, double value, double acc) {
 		return (value * alpha) + (acc * (1d - alpha));
 	}
+
+	public enum MagValues {
+		HEADING, PITCH, ROLL
+	}
+	private Map<MagValues, Double> valueMap = new HashMap<>();
 
 	private void readingSensors()
 			throws IOException {
@@ -224,6 +252,11 @@ public class HMC5883L {
 				setPitch(pitch);
 				roll = Math.toDegrees(Math.atan2(magXFiltered, magZFiltered));
 				setRoll(roll);
+
+				// Map for subscribers
+				valueMap.put(MagValues.HEADING, heading);
+				valueMap.put(MagValues.PITCH, pitch);
+				valueMap.put(MagValues.ROLL, roll);
 			}
 //		if (verboseMag) {
 //			System.out.println(String.format("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f", magX, magY, magZ, magX & 0xFFFF, magY & 0xFFFF, magZ & 0xFFFF, heading));
@@ -240,6 +273,9 @@ public class HMC5883L {
 						Z_FMT.format(pitch),
 						Z_FMT.format(roll)));
 			}
+
+			// Listeners?
+			listeners.forEach(listener -> listener.onNewData(valueMap));
 
 			if (this.wait > 0) {
 				try {
@@ -267,7 +303,7 @@ public class HMC5883L {
 	}
 
 	/**
-	 * This is for tests.
+	 * This is for tests, or for calibration.
 	 * Keep reading until Ctrl+C is received.
 	 *
 	 * @param args Unused
@@ -282,6 +318,19 @@ public class HMC5883L {
 		}
 
 		HMC5883L sensor = new HMC5883L();
+
+		// Listener test
+		if (!logForCalibration) {
+			sensor.subscribe(new HMC5883L.HMC5883LEventListener() {
+				@Override
+				public void onNewData(Map<MagValues, Double> magData) {
+					System.out.println(String.format("Heading: %.02f, Pitch: %.02f, Roll: %.02f",
+							magData.get(HMC5883L.MagValues.HEADING),
+							magData.get(HMC5883L.MagValues.PITCH),
+							magData.get(HMC5883L.MagValues.ROLL)));
+				}
+			});
+		}
 		sensor.setWait(250);
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {

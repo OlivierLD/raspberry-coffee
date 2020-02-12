@@ -2275,7 +2275,7 @@ public class AISParser {
 					str = "RACON";
 					break;
 				case 3:
-					str = "Fixed Offshore Stgructure";
+					str = "Fixed Offshore Structure";
 					break;
 				case 4:
 					str = "Reserved";

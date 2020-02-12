@@ -150,6 +150,6 @@ Following up to the previous micro-servo prototype:
 - Determine the Sun's location in the sky
 - Orient a solar panel accordingly
     - Using one motor for the Azimuth
-    - Using the other one for the Elevation
+    - Using the other one for the Elevation (aka Altitude)
 
 ---

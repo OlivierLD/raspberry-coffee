@@ -14,5 +14,6 @@ JAVA_OPTIONS=""
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhmc5883l.log.for.calibration=true"
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhmc5883l.cal.prop.file=hmc5883l.cal.properties"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Dssd1306.compass.verbose=false"
 #
-sudo java ${JAVA_OPTIONS} -cp ${CP} i2c.sensor.HMC5883L
+sudo java ${JAVA_OPTIONS} -cp ${CP} i2c.samples.HMC5883LWithSSD1306
