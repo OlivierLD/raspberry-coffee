@@ -32,6 +32,7 @@ public class HMC5883LWithSSD1306 {
 				public void onNewData(Map<HMC5883L.MagValues, Double> magData) {
 					// Write on oled screen
 					try {
+						sb.clear();
 						int line = 0;
 						String display = String.format("Heading: %06.02f  ", magData.get(HMC5883L.MagValues.HEADING));
 						sb.text(display, 2, 10 + (line * 10), ScreenBuffer.Mode.WHITE_ON_BLACK);
