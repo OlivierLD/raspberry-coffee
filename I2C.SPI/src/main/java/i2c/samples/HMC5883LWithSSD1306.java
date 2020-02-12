@@ -45,7 +45,13 @@ public class HMC5883LWithSSD1306 {
 						// Circle, needle pointing north. If heading is 30, north is -30.
 						// Center is (128 - 16, 16).
 						double heading = magData.get(HMC5883L.MagValues.HEADING);
-						sb.circle(128 - 16, 16, 15);
+						int centerX = 128 - 16;
+						int centerY = 16;
+						int radius = 15;
+						sb.circle(centerX, centerY, radius);
+						int needleTipX = centerX + (int)Math.round(Math.sin(Math.toRadians(-heading)) * radius);
+						int needleTipY = centerY - (int)Math.round(Math.cos(Math.toRadians(-heading)) * radius);
+						sb.line(centerX, centerY, needleTipX, needleTipY);
 
 						oled.setBuffer(sb.getScreenBuffer());
 						oled.display();
