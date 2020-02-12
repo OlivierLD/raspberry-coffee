@@ -12,6 +12,8 @@ public class HMC5883LWithSSD1306 {
 	private final static int WIDTH = 128;
 	private final static int HEIGHT = 32;
 
+	private final static boolean verbose = "true".equals(System.getProperty("ssd1306.verbose", "false"));
+
 	public static void main(String... args) {
 		try {
 			HMC5883L sensor = new HMC5883L();
@@ -22,9 +24,6 @@ public class HMC5883LWithSSD1306 {
 
 			ScreenBuffer sb = new ScreenBuffer(WIDTH, HEIGHT);
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
-			if ("true".equals(System.getProperty("ssd1306.verbose", "false"))) {
-				System.out.println("ScreenBuffer ready...");
-			}
 
 			// Listener
 			sensor.subscribe(new HMC5883L.HMC5883LEventListener() {
@@ -56,12 +55,12 @@ public class HMC5883LWithSSD1306 {
 
 						oled.setBuffer(sb.getScreenBuffer());
 						oled.display();
-						/*
-						System.out.println(String.format("Heading: %.02f, Pitch: %.02f, Roll: %.02f",
-								magData.get(HMC5883L.MagValues.HEADING),
-								magData.get(HMC5883L.MagValues.PITCH),
-								magData.get(HMC5883L.MagValues.ROLL)));
-						 */
+						if (verbose) {
+							System.out.println(String.format("Heading: %06.02f, Pitch: %05.02f, Roll: %05.02f",
+									magData.get(HMC5883L.MagValues.HEADING),
+									magData.get(HMC5883L.MagValues.PITCH),
+									magData.get(HMC5883L.MagValues.ROLL)));
+						}
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
