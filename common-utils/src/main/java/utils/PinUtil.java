@@ -210,7 +210,7 @@ public class PinUtil {
 		for (GPIOPin gpioPin : GPIOPin.values()) {
 			System.out.println(String.format("%s is named %s", gpioPin.toString(), gpioPin.pinName()));
 		}
-		
+
 		System.out.println("\nAs for an MCP3008:");
 		print("23:CLK", "21:Dout", "19:Din", "24:CS");
 
@@ -221,6 +221,6 @@ public class PinUtil {
 		System.out.println(String.format("GPIO_29 => #%d", physical)); // Should be #40
 
 		String sdaLabel = String.valueOf(PinUtil.findEnumName("SDA1").pinNumber()) + ":" + "SDA";
-		System.out.println(">> SDA Label:" + sdaLabel);
+		System.out.println(">> SDA Label example : " + sdaLabel);
 	}
 }
