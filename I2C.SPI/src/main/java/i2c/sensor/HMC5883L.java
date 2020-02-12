@@ -324,7 +324,7 @@ public class HMC5883L {
 			sensor.subscribe(new HMC5883L.HMC5883LEventListener() {
 				@Override
 				public void onNewData(Map<MagValues, Double> magData) {
-					System.out.println(String.format("Heading: %.02f, Pitch: %.02f, Roll: %.02f",
+					System.out.println(String.format("Heading: %06.02f, Pitch: %06.02f, Roll: %06.02f",
 							magData.get(HMC5883L.MagValues.HEADING),
 							magData.get(HMC5883L.MagValues.PITCH),
 							magData.get(HMC5883L.MagValues.ROLL)));
