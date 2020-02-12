@@ -38,7 +38,10 @@ public class HMC5883LWithSSD1306 {
 
 			ScreenBuffer sb = new ScreenBuffer(WIDTH, HEIGHT);
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
-
+			sb.text("Starting ...", 2, 10);
+			oled.setBuffer(sb.getScreenBuffer());
+			oled.display();
+			
 			// Listener
 			sensor.subscribe(new HMC5883L.HMC5883LEventListener() {
 				@Override
