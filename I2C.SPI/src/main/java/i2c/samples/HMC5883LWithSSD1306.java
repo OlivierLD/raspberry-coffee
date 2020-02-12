@@ -15,9 +15,23 @@ public class HMC5883LWithSSD1306 {
 	private final static boolean verbose = "true".equals(System.getProperty("ssd1306.verbose", "false"));
 
 	public static void main(String... args) {
+
+		HMC5883L sensor;
+		SSD1306 oled;
+
 		try {
-			HMC5883L sensor = new HMC5883L();
-			SSD1306 oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS); // I2C interface
+			try {
+				sensor = new HMC5883L();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				throw ex;
+			}
+			try {
+				oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS); // I2C interface
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				throw ex;
+			}
 
 			oled.begin();
 			oled.clear();
