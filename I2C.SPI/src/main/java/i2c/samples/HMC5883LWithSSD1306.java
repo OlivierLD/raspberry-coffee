@@ -14,12 +14,12 @@ public class HMC5883LWithSSD1306 {
 
 	private final static boolean verbose = "true".equals(System.getProperty("ssd1306.compass.verbose", "false"));
 
-	public static void main(String... args) {
+	public static void main(String... args) throws Exception {
 
 		HMC5883L sensor;
 		SSD1306 oled;
 
-		try {
+//		 try {
 			try {
 				sensor = new HMC5883L(); // Magnetometer
 			} catch (Exception ex) {
@@ -62,9 +62,9 @@ public class HMC5883LWithSSD1306 {
 						// Circle, needle pointing north. If heading is 30, north is -30.
 						// Center is (128 - 16, 16).
 						double heading = magData.get(HMC5883L.MagValues.HEADING);
-						int centerX = 128 - 16;
-						int centerY = 16;
-						int radius = 15;
+						int centerX = WIDTH - (HEIGHT / 2);
+						int centerY = (HEIGHT / 2);
+						int radius = (HEIGHT / 2) - 1;
 						sb.circle(centerX, centerY, radius);
 						int needleTipX = centerX + (int)Math.round(Math.sin(Math.toRadians(- heading)) * radius);
 						int needleTipY = centerY - (int)Math.round(Math.cos(Math.toRadians(- heading)) * radius);
@@ -109,8 +109,8 @@ public class HMC5883LWithSSD1306 {
 				System.out.println("Oled screen down");
 			}, "Shutdown Hook"));
 			sensor.startReading();
-		} catch (Throwable throwable) {
-			throwable.printStackTrace();
-		}
+//		} catch (Throwable throwable) {
+//			throwable.printStackTrace();
+//		}
 	}
 }
