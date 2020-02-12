@@ -21,13 +21,13 @@ public class HMC5883LWithSSD1306 {
 
 		try {
 			try {
-				sensor = new HMC5883L();
+				sensor = new HMC5883L(); // Magnetometer
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				throw ex;
 			}
 			try {
-				oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS); // I2C interface
+				oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS); // OLED Screen, I2C interface
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				throw ex;
@@ -41,7 +41,7 @@ public class HMC5883LWithSSD1306 {
 			sb.text("Starting ...", 2, 10);
 			oled.setBuffer(sb.getScreenBuffer());
 			oled.display();
-			
+
 			// Listener
 			sensor.subscribe(new HMC5883L.HMC5883LEventListener() {
 				@Override
@@ -66,12 +66,13 @@ public class HMC5883LWithSSD1306 {
 						int centerY = 16;
 						int radius = 15;
 						sb.circle(centerX, centerY, radius);
-						int needleTipX = centerX + (int)Math.round(Math.sin(Math.toRadians(-heading)) * radius);
-						int needleTipY = centerY - (int)Math.round(Math.cos(Math.toRadians(-heading)) * radius);
+						int needleTipX = centerX + (int)Math.round(Math.sin(Math.toRadians(- heading)) * radius);
+						int needleTipY = centerY - (int)Math.round(Math.cos(Math.toRadians(- heading)) * radius);
 						sb.line(centerX, centerY, needleTipX, needleTipY);
 
 						oled.setBuffer(sb.getScreenBuffer());
 						oled.display();
+
 						if (verbose) {
 							System.out.println(String.format("Heading: %06.02f, Pitch: %05.02f, Roll: %05.02f",
 									magData.get(HMC5883L.MagValues.HEADING),

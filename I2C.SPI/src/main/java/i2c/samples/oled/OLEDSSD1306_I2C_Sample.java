@@ -31,7 +31,7 @@ public class OLEDSSD1306_I2C_Sample {
 		ScreenBuffer sb = new ScreenBuffer(WIDTH, HEIGHT);
 		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
 		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("Screenbuffer ready...");
+			System.out.println("ScreenBuffer ready...");
 		}
 
 		if (false) {
