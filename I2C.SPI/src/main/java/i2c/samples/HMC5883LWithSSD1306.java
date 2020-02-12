@@ -91,6 +91,7 @@ public class HMC5883LWithSSD1306 {
 					} catch (InterruptedException ie) {
 						System.err.println(ie.getMessage());
 					}
+					System.out.println("Magnetometer stopped.");
 				}
 				try {
 					sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
@@ -101,6 +102,7 @@ public class HMC5883LWithSSD1306 {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
+				System.out.println("Oled screen down");
 			}, "Shutdown Hook"));
 			sensor.startReading();
 		} catch (Throwable throwable) {
