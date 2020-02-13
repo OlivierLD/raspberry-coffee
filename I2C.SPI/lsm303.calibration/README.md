@@ -1,8 +1,8 @@
 ## Magnetometer calibration
-This document talks about the `LSM303`. It can be used for any other similar magnetometer, like the `HMC5883L`.
-
 Magnetometers often - if not always - require calibration.
 Here is an easy way to get to the expected calibration parameters.
+
+This document talks about the `LSM303`. It can be used for any other similar magnetometer, like the `HMC5883L`.
 
 ### Log data for calibration
 We need raw data from the device, to elaborate its calibration parameters.
