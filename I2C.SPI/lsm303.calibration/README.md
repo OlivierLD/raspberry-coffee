@@ -4,8 +4,22 @@ Here is an easy way to get to the expected calibration parameters.
 
 This document talks about the `LSM303`. It can be used for any other similar magnetometer, like the `HMC5883L`.
 
+Heading, pitch, and roll are calculated from the magnetic field intensity on the 3 axis
+X, Y, and Z, as seen in the code:
+```java
+float heading = (float)Math.toDegrees(Math.atan2(magY, magX));
+float pitch = (float)Math.toDegrees(Math.atan2(magY, magZ));
+float roll = (float)Math.toDegrees(Math.atan2(magX, magZ));
+```
+
 ### Log data for calibration
-We need raw data from the device, to elaborate its calibration parameters.
+We need raw data from the device, to elaborate its _calibration parameters_.
+We will log the `magX`, `magY`, and `magZ` mentioned above.
+> Note: we can also filter (low pass filter) the logged data.
+
+Those logged data will be used to find the _calibration parameters_ as explained below.
+Those parameters will subsequently be used to tune the `magX`, `magY`, and `magZ` before
+calculating `heading`, `pitch` and `roll`, like above.
 
 To get those data, run the script `lsm303.sh` with
 ```
