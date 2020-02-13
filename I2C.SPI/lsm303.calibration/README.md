@@ -7,9 +7,9 @@ This document talks about the `LSM303`. It can be used for any other similar mag
 Heading, pitch, and roll are calculated from the magnetic field intensity on the 3 axis
 X, Y, and Z, as seen in the code:
 ```java
-float heading = (float)Math.toDegrees(Math.atan2(magY, magX));
-float pitch = (float)Math.toDegrees(Math.atan2(magY, magZ));
-float roll = (float)Math.toDegrees(Math.atan2(magX, magZ));
+float heading = (float)Math.toDegrees(Math.atan2(magY, magX)); // Orientation in plan X-Y
+float pitch = (float)Math.toDegrees(Math.atan2(magY, magZ));   // Orientation in plan Y-Z
+float roll = (float)Math.toDegrees(Math.atan2(magX, magZ));    // Orientation in plan X-Z
 ```
 
 ### Log data for calibration
