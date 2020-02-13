@@ -80,7 +80,7 @@ MagZCoeff=1
 
 The default properties file name is `lsm303.cal.properties`. 
 
-See [the code](../src/main/java/i2c/sensor/LSM303.java#L422) of `LSM303.java` for details about the way to apply those parameters... ;)
+See [the code](../src/main/java/i2c/sensor/LSM303.java#L483) of `LSM303.java` for details about the way to apply those parameters... ;)
 
 ## Example
 Here is another example, for a `HMC5883L`:
