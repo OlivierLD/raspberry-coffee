@@ -66,8 +66,8 @@ We will create a new one, taking the parameters to re-shape it in account.
   - `Y offset`, with an initial value of `0`
   - `Y coeff`, with an initial value of `1`
 - Then, as shown below, create new columns applying those parameters to the columns we displayed previously (`J` and `K`):
-  - Column `R`: `new MagX`, as `XCoeff x (XOffset + MagX)`, with the following formula in `R2`: `=$Q$3*(J2 + $Q$2)`
-  - Column `S`: `new MagY`, as `YCoeff x (YOffset + MagY)`, with the following formula in `S2`: `=$Q$5*(K2 + $Q$4)`
+  - Column `R`: `new MagX`, as `XCoeff x (XOffset + MagX)`, with the following formula in `R2`: `=$Q$3*(J2+$Q$2)`
+  - Column `S`: `new MagY`, as `YCoeff x (YOffset + MagY)`, with the following formula in `S2`: `=$Q$5*(K2+$Q$4)`
 - Drag each new cell (`R2` ad `S2`) by its bottom right corner down to the bottom of the table.
 - Then with the new columns `new MagX` and `new MagY`, create the same graph as previously (_again_: resize the chart so you have square cells, similar scales for `x` and `y`...):
 ![Adjusting](./Adjusting.1.png)
