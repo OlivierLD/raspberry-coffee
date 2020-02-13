@@ -1,4 +1,5 @@
-## LSM303, Magnetometer calibration
+## Magnetometer calibration
+This document talks about the `LSM303`. It can be used for any other similar magnetometer, like the `HMC5883L`.
 
 Magnetometers often - if not always - require calibration.
 Here is an easy way to get to the expected calibration parameters.
@@ -64,7 +65,7 @@ We will create a new one, taking the parameters to re-shape it in account.
 See on the figure above, after tweaking the parameters, the circle has a (almost) constant radius of ~40, centered on `[0, 0]`.
 The parameters to remember are on the top left.
 
-On the same spreadsheet, repeat the same for plans X & Z, Y & Z.
+On the same spreadsheet, repeat the same for plans X-Z, and Y-Z.
 
 And finally, you save put those data into a properties file, so it can be used at runtime:
 ```properties
@@ -80,5 +81,9 @@ MagZCoeff=1
 The default properties file name is `lsm303.cal.properties`. 
 
 See the code of `LSM303.java` for details about the way to apply those parameters... ;)
+
+## Example
+Here is another example, for a `HMC5883L`:
+![HMC5883L Calibration](hmc5883l.png)
 
 ---
