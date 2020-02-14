@@ -4,7 +4,7 @@ Here is an easy way to get to the expected calibration parameters.
 
 This document talks about the `LSM303`. It can be used for any other similar magnetometer, like the `HMC5883L`.
 
-Heading, pitch, and roll are calculated from the magnetic field intensity on the 3 axis
+Heading, pitch, and roll are calculated from the magnetic field measurements on the 3 axis
 X, Y, and Z, as seen in the code:
 ```java
 float heading = (float)Math.toDegrees(Math.atan2(magY, magX)); // Orientation in plan X-Y
