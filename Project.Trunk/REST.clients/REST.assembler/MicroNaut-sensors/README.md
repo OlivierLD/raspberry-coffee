@@ -59,6 +59,9 @@ $ curl http://localhost:8080/ambient-light
 ```
 
 ## Configuration
+Your service might need some custom configuration. Here we want to provide the physical number of
+the GPIO pins the `ADC` is connected on. 
+
 In the file `resources/application.yml`, add
 ```yaml
 adc:
