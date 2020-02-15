@@ -1,11 +1,16 @@
 # MicroNaut, serverless microservices.
-Available at [micronaut.io](https://micronaut.io/)
+Just like before, we want to expose features of the Raspberry Pi as a REST Service.
+Here we want to read the ambient light (aka luminosity) from a photocell connected to and 
+Analog to Digital Converter (`ADC`), and make it available to any REST client connected on the network the Raspberry Pi runs on.
 
-Make sure `sdkman` is started:
+We use MicroNaut, available at [micronaut.io](https://micronaut.io/), where you'll find all the instructions you need
+to install it.
+
+Then, make sure `sdkman` is started:
 ```bash
 $ source "$HOME/.sdkman/bin/sdkman-init.sh"
 ```
-Then
+And
 ```bash
 $ mn create-app micronaut.sensors.complete
 ```
