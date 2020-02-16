@@ -232,7 +232,7 @@ It can now be invoked by the operation in the service:
     }
 ```
 
-The service is ready to run, reading the light volume (in %, instead of [0..1023]) from the ADC.
+The service is ready to run, reading the luminosity (in `%`, instead of `[0..1023]`) from the ADC.
 And the Docker step mentioned above works just the same.
 
 ## Next 
