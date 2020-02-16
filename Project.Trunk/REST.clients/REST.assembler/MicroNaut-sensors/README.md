@@ -59,7 +59,10 @@ $ curl http://localhost:8080/ambient-light
 ```
 
 ## Configuration
-Your service might need some custom configuration. Here we want to provide the physical number of
+Your service might need some custom configuration.
+This is well documented [here](https://guides.micronaut.io/micronaut-configuration/guide/index.html). 
+
+Here we want to provide the physical number of
 the GPIO pins the `ADC` is connected on. 
 
 In the file `resources/application.yml`, add
@@ -71,7 +74,7 @@ adc:
   cs: 25
   channel: 2
 ```
-Create an _annotated_ matching bean next to the Controller
+Create an _annotated_ matching bean, next to the Controller
 ```java
 package micronaut.sensors;
 
@@ -157,7 +160,7 @@ Build and run, the first invocation will show the configuration parameters as ex
 > Task :run
 OpenJDK 64-Bit GraalVM CE 19.3.0 warning: forcing TieredStopAtLevel to full optimization because JVMCI is enabled
 07:05:34.029 [main] INFO  io.micronaut.runtime.Micronaut - Startup completed in 1571ms. Server Running: http://localhost:8080
-ADC Config: Channel:2, MISO:23, MOSI:24, CLK:18, CS:25
+**ADC Config: Channel:2, MISO:23, MOSI:24, CLK:18, CS:25**
 <=========----> 75% EXECUTING [4m 13s]
 ```
 
@@ -228,10 +231,10 @@ It can now be invoked by the operation in the service:
     }
 ```
 
-The service is ready to run, reading the light volume from the ADC.
+The service is ready to run, reading the light volume (in %, instead of [0..1023]) from the ADC.
 And the Docker step mentioned above works just the same.
 
 ## Next 
-- Life cycle (on close...)
+- Life cycle management (free resources on close...)
 
 ---
