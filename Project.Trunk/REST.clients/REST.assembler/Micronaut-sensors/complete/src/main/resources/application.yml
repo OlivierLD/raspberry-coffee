@@ -1,9 +1,0 @@
-micronaut:
-  application:
-    name: complete
-adc:
-  clk: 18
-  miso: 23
-  mosi: 24
-  cs: 25
-  channel: 2

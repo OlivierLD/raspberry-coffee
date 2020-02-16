@@ -12,11 +12,11 @@ $ source "$HOME/.sdkman/bin/sdkman-init.sh"
 ```
 And create your app scaffolding:
 ```bash
-$ mn create-app micronaut.sensors.complete
+$ mn create-app micronaut.sensors.sensors
 ```
-This creates a new java project in a `complete` folder, with a `micronaut.sensors` package.
+This creates a new java project in a `sensors` folder, with a `micronaut.sensors` package.
 
-> Note: From an IDE (like IntelliJ), it's much better to open the `complete` directory as a new Project.
+> Note: From an IDE (like IntelliJ), it's much better to open the `sensors` directory as a new Project.
  
 Then add a Controller
 ```java
