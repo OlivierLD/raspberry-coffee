@@ -63,7 +63,7 @@ Your service might need some custom configuration.
 This is well documented [here](https://guides.micronaut.io/micronaut-configuration/guide/index.html). 
 
 Here we want to provide the physical number of
-the GPIO pins the `ADC` is connected on. 
+the GPIO pins the `ADC` is connected on, `MISO`, `MOSI`, `CLOCK` and `CHIP-SELECT` for the `SPI` interface, `Channel` for the analog data input. 
 
 In the file `resources/application.yml`, add
 ```yaml
@@ -155,12 +155,13 @@ public class SensorsController {
     public String index() {
 . . .
 ```
-Build and run, the first invocation will show the configuration parameters as expected above:
+Build and run, the first invocation will show the configuration parameters as expected above,
+from the `yaml` document:
 ```
 > Task :run
 OpenJDK 64-Bit GraalVM CE 19.3.0 warning: forcing TieredStopAtLevel to full optimization because JVMCI is enabled
 07:05:34.029 [main] INFO  io.micronaut.runtime.Micronaut - Startup completed in 1571ms. Server Running: http://localhost:8080
-**ADC Config: Channel:2, MISO:23, MOSI:24, CLK:18, CS:25**
+ADC Config: Channel:2, MISO:23, MOSI:24, CLK:18, CS:25
 <=========----> 75% EXECUTING [4m 13s]
 ```
 
@@ -168,12 +169,12 @@ OpenJDK 64-Bit GraalVM CE 19.3.0 warning: forcing TieredStopAtLevel to full opti
 This project will require the functionalities provided by the `ADC` module,
 in the `raspberry-coffee` project.
 
-From the ADC module, make sur you `install` in your local Maven repo:
+From the ADC module, make sure you `install` it in your local Maven repo:
 ```bash
 ADC$ ../gradlew clean install
 ```
 
-In the `build.gradle` of the MicroNaut service, add the dependency in `build.gradle`:
+From the MicroNaut service project, add the dependency on ADC in `build.gradle`:
 ```groovy
 dependencies {
   . . .
