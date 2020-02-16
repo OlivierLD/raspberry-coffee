@@ -156,7 +156,7 @@ public class SensorsController {
 . . .
 ```
 Build and run, the first invocation will show the configuration parameters as expected above,
-from the `yaml` document:
+as stored in the `yaml` document:
 ```
 > Task :run
 OpenJDK 64-Bit GraalVM CE 19.3.0 warning: forcing TieredStopAtLevel to full optimization because JVMCI is enabled
