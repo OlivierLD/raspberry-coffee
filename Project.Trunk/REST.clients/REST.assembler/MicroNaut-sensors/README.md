@@ -237,5 +237,6 @@ And the Docker step mentioned above works just the same.
 
 ## Next 
 - Life cycle management (free resources on close...)
+- Debugging
 
 ---
