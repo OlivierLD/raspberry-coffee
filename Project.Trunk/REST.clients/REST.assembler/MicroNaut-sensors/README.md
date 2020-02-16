@@ -10,11 +10,14 @@ Then, make sure `sdkman` is started:
 ```bash
 $ source "$HOME/.sdkman/bin/sdkman-init.sh"
 ```
-And
+And create your app scaffolding:
 ```bash
 $ mn create-app micronaut.sensors.complete
 ```
-This creates a new java project in a `complete` folder, with a `micronaut.sensors` package. 
+This creates a new java project in a `complete` folder, with a `micronaut.sensors` package.
+
+> Note: From an IDE (like IntelliJ), it's much better to open the `complete` directory as a new Project.
+ 
 Then add a Controller
 ```java
 package micronaut.sensors;
@@ -41,11 +44,12 @@ $ ./gradlew run
 ```
 
 ```bash
-$ curl -X GET http://localhost:8080/light
+$ curl -X GET http://localhost:8080/ambient-light
+{ "light": 23.45 }
+$
 ```
 
 ## Docker
-
 ```bash
 $ ./gradlew clean shadowJar
 $ docker build . -t micronaut
@@ -56,6 +60,7 @@ $ docker run -p 8080:8080 micronaut
 And from another shell
 ```bash
 $ curl http://localhost:8080/ambient-light
+. . .
 ```
 
 ## Configuration
