@@ -24,6 +24,6 @@ public class SensorsControllerTest {
 		String body = client.toBlocking().retrieve(request);
 
 		assertNotNull(body);
-//		assertEquals("Hello World", body); // TODO Test value
+//		assertEquals("Hello World", body); // TODO Test value?
 	}
 }

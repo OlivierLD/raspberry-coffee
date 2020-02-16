@@ -50,6 +50,7 @@ $
 ```
 
 ## Docker
+> Important: do not miss the `shadowJar` step...
 ```bash
 $ ./gradlew clean shadowJar
 $ docker build . -t micronaut
@@ -64,8 +65,7 @@ $ curl http://localhost:8080/ambient-light
 ```
 
 ## Configuration
-Your service might need some custom configuration.
-This is well documented [here](https://guides.micronaut.io/micronaut-configuration/guide/index.html). 
+In case your service needs some custom configuration, this step is well documented [here](https://guides.micronaut.io/micronaut-configuration/guide/index.html). 
 
 Here we want to provide the physical number of
 the GPIO pins the `ADC` is connected on, `MISO`, `MOSI`, `CLOCK` and `CHIP-SELECT` for the `SPI` interface, `Channel` for the analog data input. 
@@ -79,7 +79,7 @@ adc:
   cs: 25
   channel: 2
 ```
-Create an _annotated_ matching bean, next to the Controller
+Create an _annotated_ matching bean, next to the Controller (or anywhere you want):
 ```java
 package micronaut.sensors;
 
@@ -136,6 +136,10 @@ public class ADCConfiguration {
 	}
 }
 ```
+> Notice above:
+> - the `ConfigurationProperties` annotation above, and the corresponding `yaml` structure.
+> - the _empty_ constructor (no other is required)
+
 Modify the Controller, add a constructor, receiving the configuration bean as parameter:
 ```java
 . . .
@@ -238,7 +242,7 @@ It can now be invoked by the operation in the service:
 ```
 
 The service is ready to run, reading the luminosity (in `%`, instead of `[0..1023]`) from the ADC.
-And the Docker step mentioned above works just the same.
+And the Docker step mentioned above works just the same, thanks to the `shadowJar` gradle task.
 
 ## Next 
 - Life cycle management (free resources on close...)

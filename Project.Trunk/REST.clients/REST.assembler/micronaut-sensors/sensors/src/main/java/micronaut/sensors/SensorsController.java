@@ -15,6 +15,11 @@ public class SensorsController {
     private ADCChannel adcChannel;
 
     public SensorsController(@Nullable ADCConfiguration adcConfiguration) {
+        // For info...
+        System.getProperties().forEach((prop, value) -> {
+            System.out.println(String.format("Prop %s => %s", prop, value));
+        });
+
         this.adcConfiguration = adcConfiguration;
         if (this.adcConfiguration != null) {
             System.out.println(String.format("ADC Config: Channel:%d, MISO:%d, MOSI:%d, CLK:%d, CS:%d",
