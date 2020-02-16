@@ -1,9 +1,9 @@
-# MicroNaut, serverless microservices.
+# Micronaut, serverless microservices.
 Just like before, we want to expose features of the Raspberry Pi as a REST Service.
 Here we want to read the ambient light (aka luminosity) from a photocell connected to and 
 Analog to Digital Converter (`ADC`), and make it available to any REST client connected on the network the Raspberry Pi runs on.
 
-We use MicroNaut, available at [micronaut.io](https://micronaut.io/), where you'll find all the instructions you need
+We use Micronaut, available at [micronaut.io](https://micronaut.io/), where you'll find all the instructions you need
 to install it.
 
 Then, make sure `sdkman` is started:
@@ -179,7 +179,7 @@ From the ADC module, make sure you `install` it in your local Maven repo:
 ADC$ ../gradlew clean install
 ```
 
-From the MicroNaut service project, add the dependency on ADC in `build.gradle`:
+From the Micronaut service project, add the dependency on ADC in `build.gradle`:
 ```groovy
 dependencies {
   . . .
