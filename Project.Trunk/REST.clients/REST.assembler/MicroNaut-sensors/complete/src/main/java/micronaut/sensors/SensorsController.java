@@ -34,7 +34,7 @@ public class SensorsController {
 
     @Get
     @Produces(MediaType.APPLICATION_JSON)
-    public String index() {
+    public String getLuminosity() {
         float volume = 0;
         if (this.adcChannel != null) {
             volume = this.adcChannel.readChannelVolume();

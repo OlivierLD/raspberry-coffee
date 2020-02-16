@@ -28,7 +28,7 @@ import io.micronaut.http.annotation.Produces;
 public class SensorsController {
     @Get 
     @Produces(MediaType.APPLICATION_JSON) 
-    public String index() {
+    public String getLuminosity() {
         return "{ \"light\": 23.45 }"; 
     }
 }
@@ -152,7 +152,7 @@ public class SensorsController {
 
     @Get
     @Produces(MediaType.APPLICATION_JSON)
-    public String index() {
+    public String getLuminosity() {
 . . .
 ```
 Build and run, the first invocation will show the configuration parameters as expected above,
@@ -223,7 +223,7 @@ It can now be invoked by the operation in the service:
 ```java
     @Get
     @Produces(MediaType.APPLICATION_JSON)
-    public String index() {
+    public String getLuminosity() {
         float volume = 0;
         if (this.adcChannel != null) {
             volume = this.adcChannel.readChannelVolume();
