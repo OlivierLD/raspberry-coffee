@@ -243,8 +243,21 @@ It can now be invoked by the operation in the service:
 The service is ready to run, reading the luminosity (in `%`, instead of `[0..1023]`) from the ADC.
 And the Docker step mentioned above works just the same, thanks to the `shadowJar` gradle task.
 
+## Life Cycle Management
+See the documentation [here](https://docs.micronaut.io/latest/guide/index.html#lifecycle).
+
+The `Configuration` Bean can be annotated to trap events that can be used for life-cycle management
+- `@PostConstruct`
+- `@PreDestroy`
+
+This way, I was able to free the ADC resources when the service is shut down.
+Look into the code of `ADCConfiguration` for the details, and about the way it invokes the `ADCChannel.close()` method.
+The instantiation of the `ADCChannel` Object has also be modified to happen in the `Configuration` Bean. This is probably not the only way to do this...
+
+> Note: this works OK when the service runs in its Docker container. A [Ctrl-C] on a `./gradlew run` does not trap the `@PreDestroy` annotated method.
+
 ## Next 
-- Life cycle management (free resources on close...), see [here](https://docs.micronaut.io/latest/guide/index.html#lifecycle). &#9989; Done, to document.
+- Life cycle management (free resources on close...). &#9989; Done.
 - Debugging
 - The same in Kotlin
 
