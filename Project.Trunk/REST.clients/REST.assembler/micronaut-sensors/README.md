@@ -10,7 +10,7 @@ Then, make sure `sdkman` is started:
 ```bash
 $ source "$HOME/.sdkman/bin/sdkman-init.sh"
 ```
-And create your app scaffolding:
+And create your (java) app scaffolding:
 ```bash
 $ mn create-app micronaut.sensors.sensors
 ```
@@ -164,7 +164,7 @@ public class SensorsController {
     public String getLuminosity() {
 . . .
 ```
-Build and run, the first invocation will show the configuration parameters as expected above,
+Build and run, the first invocation of the REST service will show the configuration parameters as expected above,
 as stored in the `yaml` document:
 ```
 > Task :run
@@ -178,7 +178,7 @@ ADC Config: Channel:2, MISO:23, MOSI:24, CLK:18, CS:25
 This project will require the functionalities provided by the `ADC` module,
 in the `raspberry-coffee` project.
 
-From the ADC module, make sure you `install` it in your local Maven repo:
+From the ADC module (which belongs to the `raspberry-coffee` project), make sure you `install` it in your local Maven repo:
 ```bash
 ADC$ ../gradlew clean install
 ```
@@ -199,7 +199,6 @@ repositories {
     maven { url "https://jcenter.bintray.com" }
 }
 ```
-
 Now, create - as featured in this project - the class `rpi.sensors.ADCChannel`, and instantiate it in the Controller's constructor:
 ```java
 @Controller("/ambient-light")
@@ -245,7 +244,8 @@ The service is ready to run, reading the luminosity (in `%`, instead of `[0..102
 And the Docker step mentioned above works just the same, thanks to the `shadowJar` gradle task.
 
 ## Next 
-- Life cycle management (free resources on close...)
+- Life cycle management (free resources on close...), see [here](https://docs.micronaut.io/latest/guide/index.html#lifecycle). &#9989; Done, to document.
 - Debugging
+- The same in Kotlin
 
 ---

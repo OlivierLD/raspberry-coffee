@@ -1,6 +1,11 @@
 package micronaut.sensors;
 
+import analogdigitalconverter.mcp.MCPReader;
 import io.micronaut.context.annotation.ConfigurationProperties;
+import rpi.sensors.ADCChannel;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 @ConfigurationProperties("adc")
 public class ADCConfiguration {
@@ -9,6 +14,8 @@ public class ADCConfiguration {
 	private int mosi;
 	private int cs;
 	private int channel;
+
+	private ADCChannel adcChannel = null;
 
 	public ADCConfiguration() {}
 
@@ -51,4 +58,27 @@ public class ADCConfiguration {
 	public void setChannel(int channel) {
 		this.channel = channel;
 	}
+
+	@PostConstruct
+	public void initialize() {
+		System.out.println("---------------------------------");
+		System.out.println("PostConstruct in ADCConfiguration");
+		System.out.println("---------------------------------");
+	}
+
+	@PreDestroy
+	public void close() { // Invoked when the Docker container is stopped
+		System.out.println("---------------------------------");
+		System.out.println("PreDestroy in ADCConfiguration");
+		System.out.println("---------------------------------");
+		if (this.adcChannel != null) {
+			ADCChannel.close();
+		}
+	}
+
+	public ADCChannel getADCChannel(int miso, int mosi, int clk, int cs, int channel) {
+		this.adcChannel =  new ADCChannel(miso, mosi, clk, cs, channel);
+		return this.adcChannel;
+	}
+
 }
