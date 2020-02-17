@@ -252,7 +252,7 @@ The `Configuration` Bean can be annotated to trap events that can be used for li
 
 This way, I was able to free the ADC resources when the service is shut down.
 Look into the code of `ADCConfiguration` for the details, and about the way it invokes the `ADCChannel.close()` method.
-The instantiation of the `ADCChannel` Object has also be modified to happen in the `Configuration` Bean. This is probably not the only way to do this...
+The instantiation of the `ADCChannel` Object has also been modified to happen in the `Configuration` Bean. This is probably not the only way to do this...
 
 > Note: this works OK when the service runs in its Docker container. A [Ctrl-C] on a `./gradlew run` does not trap the `@PreDestroy` annotated method.
 
