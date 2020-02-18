@@ -6,6 +6,7 @@ Analog to Digital Converter (`ADC`), and make it available to any REST client co
 We use Micronaut, available at [micronaut.io](https://micronaut.io/), where you'll find all the instructions you need
 to install it.
 
+## In Java
 Then, make sure `sdkman` is started:
 ```bash
 $ source "$HOME/.sdkman/bin/sdkman-init.sh"
@@ -49,7 +50,7 @@ $ curl -X GET http://localhost:8080/ambient-light
 $
 ```
 
-## Docker
+### Docker
 > Important: do not miss the `shadowJar` step...
 ```bash
 $ ./gradlew clean shadowJar
@@ -64,7 +65,7 @@ $ curl http://localhost:8080/ambient-light
 . . .
 ```
 
-## Configuration
+### Configuration
 In case your service needs some custom configuration, this step is well documented [here](https://guides.micronaut.io/micronaut-configuration/guide/index.html). 
 
 Here we want to provide the physical number of
@@ -174,7 +175,7 @@ ADC Config: Channel:2, MISO:23, MOSI:24, CLK:18, CS:25
 <=========----> 75% EXECUTING [4m 13s]
 ```
 
-## Dependencies
+### Dependencies
 This project will require the functionalities provided by the `ADC` module,
 in the `raspberry-coffee` project.
 
@@ -243,7 +244,7 @@ It can now be invoked by the operation in the service:
 The service is ready to run, reading the luminosity (in `%`, instead of `[0..1023]`) from the ADC.
 And the Docker step mentioned above works just the same, thanks to the `shadowJar` gradle task.
 
-## Life Cycle Management
+### Life Cycle Management
 See the documentation [here](https://docs.micronaut.io/latest/guide/index.html#lifecycle).
 
 The `Configuration` Bean can be annotated to trap events that can be used for life-cycle management
@@ -256,11 +257,11 @@ The instantiation of the `ADCChannel` Object has also been modified to happen in
 
 > Note: this works OK when the service runs in its Docker container. A [Ctrl-C] on a `./gradlew run` does not trap the `@PreDestroy` annotated method.
 
-## Debugging
+### Debugging
 - Enable Annotation Processor if needed: <https://guides.micronaut.io/micronaut-microservices-services-discover-consul/guide/index.html>
 - Even "locally", use Remote Debug. This obviously requires an IDE, we will use IntelliJ here. 
 
-### Locally
+#### Locally
 - Create a Remote-Debug profile in the IDE
 ![Remote debug profile](./docimg/remote-debug.profile.png)
 - Notice the `port`. In the gradle script, as instructed above, add the required arguments to the `run` target:
@@ -278,7 +279,7 @@ $ curl -X GET http://localhost:8080/ambient-light
 ```
 - That's it! The debugger stops whenever a breakpoint is hit.
  
-### In the Docker image
+#### In the Docker image
 - Create a Remote-Debug profile in the IDE, exactly as explained above
 - Modify your `Dockerfile`:
 ```
@@ -301,6 +302,8 @@ $ docker run -p 8080:8080 -p 4000:4000 micronaut
 $ curl -X GET http://localhost:8080/ambient-light 
 ```
 - You're in! The debugger stops whenever a breakpoint is hit.
+
+## In Kotlin
 
 ## Next 
 - Life cycle management (free resources on close...). &#9989; Done.
