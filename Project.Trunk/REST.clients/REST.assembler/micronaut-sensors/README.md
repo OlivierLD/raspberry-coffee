@@ -268,7 +268,7 @@ The instantiation of the `ADCChannel` Object has also been modified to happen in
 run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxremote',  '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:4000')
 ```
 - Set some breakpoints in your code (in the IDE)
-- Start the gradlew script 
+- Start the gradlew script, with its `run` target 
 ```bash
 $ ./gradlew run
 ```
