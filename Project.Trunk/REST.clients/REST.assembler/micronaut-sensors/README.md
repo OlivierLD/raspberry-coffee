@@ -256,9 +256,55 @@ The instantiation of the `ADCChannel` Object has also been modified to happen in
 
 > Note: this works OK when the service runs in its Docker container. A [Ctrl-C] on a `./gradlew run` does not trap the `@PreDestroy` annotated method.
 
+## Debugging
+- Enable Annotation Processor if needed: <https://guides.micronaut.io/micronaut-microservices-services-discover-consul/guide/index.html>
+- Even "locally", use Remote Debug. This obviously requires an IDE, we will use IntelliJ here. 
+
+### Locally
+- Create a Remote-Debug profile in the IDE
+![Remote debug profile](./docimg/remote-debug.profile.png)
+- Notice the `port`. In the gradle script, as instructed above, add the required arguments to the `run` target:
+```groovy
+run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxremote',  '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:4000')
+```
+- Set some breakpoints in your code (in the IDE)
+- Start the gradlew script 
+```bash
+$ ./gradlew run
+```
+- Invoke the service, from `curl` or any REST client
+```bash
+$ curl -X GET http://localhost:8080/ambient-light 
+```
+- That's it! The debugger stops whenever a breakpoint is hit.
+ 
+### In the Docker image
+- Create a Remote-Debug profile in the IDE, exactly as explained above
+- Modify your `Dockerfile`:
+```
+EXPOSE 8080
+CMD java -Dcom.sun.management.jmxremote -noverify ${JAVA_OPTS} -jar sensors.jar
+```
+becomes
+```
+EXPOSE 8080
+EXPOSE 4000
+CMD java -Dcom.sun.management.jmxremote -noverify ${JAVA_OPTS} -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:4000 -jar sensors.jar
+```
+- Rebuild your image and restart the container (make sure you map the JDWP port)
+```bash
+$ docker build . -t micronaut
+$ docker run -p 8080:8080 -p 4000:4000 micronaut
+```
+- Invoke the service, from `curl` or any REST client
+```bash
+$ curl -X GET http://localhost:8080/ambient-light 
+```
+- You're in! The debugger stops whenever a breakpoint is hit.
+
 ## Next 
 - Life cycle management (free resources on close...). &#9989; Done.
-- Debugging
+- Debugging. &#9989; Done.
 - The same in Kotlin
 
 ---
