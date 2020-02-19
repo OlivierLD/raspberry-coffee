@@ -1,6 +1,5 @@
 package micronaut.sensors;
 
-import io.micronaut.context.annotation.Bean;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -11,7 +10,7 @@ import javax.annotation.Nullable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Controller("/ambient-light")
+@Controller("/ambient-light") // TODO Make it /sensors
 public class SensorsController {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -42,7 +41,7 @@ public class SensorsController {
         }
     }
 
-    @Get
+    @Get // TODO Make it /ambient-light
     @Produces(MediaType.APPLICATION_JSON)
     public String getLuminosity() {
         float volume = 0;

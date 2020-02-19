@@ -304,6 +304,43 @@ $ curl -X GET http://localhost:8080/ambient-light
 - You're in! The debugger stops whenever a breakpoint is hit.
 
 ## In Kotlin
+See [this doc](https://docs.micronaut.io/latest/guide/index.html#kotlin).
+
+```bash
+$ mn create-app sensors-kt --lang kotlin
+```
+Update `Kotlin` to its latest version `1.3.61` in 
+- `build.gradle`
+- `gradle.properties`
+
+Next to `Application.kt`, create a `SensorsController.kt`:
+```kotlin
+package sensors.kt
+
+import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.*
+
+@Controller("/sensors")
+class SensorsController {
+
+	@Get("/ambient-light")
+    @Produces(MediaType.APPLICATION_JSON)
+	fun getLuminosity(): String {
+		val light = 12.34;
+		return "{ \"light\": $light }"
+	}
+}
+```
+Values are hard-coded, but you can already give it a try:
+```bash
+$ ./gradlew run
+```
+And from another prompt
+```bash
+$ curl http://localhost:8080/sensors/ambient-light
+  { "light": 12.34 }
+```
+. . . 
 
 ## Next 
 - Life cycle management (free resources on close...). &#9989; Done.
