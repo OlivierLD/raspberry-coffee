@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Controller("/ambient-light") // TODO Make it /sensors
+@Controller("/sensors")
 public class SensorsController {
 
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -41,7 +41,7 @@ public class SensorsController {
         }
     }
 
-    @Get // TODO Make it /ambient-light
+    @Get("/ambient-light")
     @Produces(MediaType.APPLICATION_JSON)
     public String getLuminosity() {
         float volume = 0;

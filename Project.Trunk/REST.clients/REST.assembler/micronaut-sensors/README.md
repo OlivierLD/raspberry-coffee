@@ -31,9 +31,9 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Produces;
 
-@Controller("/ambient-light") 
+@Controller("/sensors") 
 public class SensorsController {
-    @Get 
+    @Get("/ambient-light") 
     @Produces(MediaType.APPLICATION_JSON) 
     public String getLuminosity() {
         return "{ \"light\": 23.45 }"; 
@@ -48,7 +48,7 @@ $ ./gradlew run
 ```
 
 ```bash
-$ curl -X GET http://localhost:8080/ambient-light
+$ curl -X GET http://localhost:8080/sensors/ambient-light
 { "light": 23.45 }
 $
 ```
@@ -64,7 +64,7 @@ $ docker run -p 8080:8080 micronaut
 
 And from another shell
 ```bash
-$ curl http://localhost:8080/ambient-light
+$ curl http://localhost:8080/sensors/ambient-light
 . . .
 ```
 
@@ -205,7 +205,7 @@ repositories {
 ```
 Now, create - as featured in this project - the class `rpi.sensors.ADCChannel`, and instantiate it in the Controller's constructor:
 ```java
-@Controller("/ambient-light")
+@Controller("/sensors")
 public class SensorsController {
 
     private final ADCConfiguration adcConfiguration;
@@ -233,7 +233,7 @@ public class SensorsController {
 ```
 It can now be invoked by the operation in the service:
 ```java
-    @Get
+    @Get("/ambient-light")
     @Produces(MediaType.APPLICATION_JSON)
     public String getLuminosity() {
         float volume = 0;
@@ -278,7 +278,7 @@ $ ./gradlew run
 ```
 - Invoke the service, from `curl` or any REST client
 ```bash
-$ curl -X GET http://localhost:8080/ambient-light 
+$ curl -X GET http://localhost:8080/sensors/ambient-light 
 ```
 - That's it! The debugger stops whenever a breakpoint is hit.
  
@@ -302,7 +302,7 @@ $ docker run -p 8080:8080 -p 4000:4000 micronaut
 ```
 - Invoke the service, from `curl` or any REST client
 ```bash
-$ curl -X GET http://localhost:8080/ambient-light 
+$ curl -X GET http://localhost:8080/sensors/ambient-light 
 ```
 - You're in! The debugger stops whenever a breakpoint is hit.
 
@@ -326,12 +326,12 @@ import io.micronaut.http.annotation.*
 @Controller("/sensors")
 class SensorsController {
 
-	@Get("/ambient-light")
+    @Get("/ambient-light")
     @Produces(MediaType.APPLICATION_JSON)
-	fun getLuminosity(): String {
-		val light = 12.34;
-		return "{ \"light\": $light }"
-	}
+    fun getLuminosity(): String {
+        val light = 12.34;
+        return "{ \"light\": $light }"
+    }
 }
 ```
 Values are hard-coded, but you can already give it a try:
