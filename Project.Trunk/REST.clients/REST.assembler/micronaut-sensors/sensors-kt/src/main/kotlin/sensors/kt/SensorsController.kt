@@ -5,6 +5,7 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Produces
 import rpi.sensors.ADCChannel
+import utils.PinUtil
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -29,6 +30,15 @@ class SensorsController {
 					this.adcConfiguration?.getMosi(),
 					this.adcConfiguration?.getClk(),
 					this.adcConfiguration?.getCs()))
+
+			val map = arrayOfNulls<String>(4)
+			map[0] = PinUtil.findByPin(PinUtil.getPinByPhysicalNumber(this.adcConfiguration!!.getClk())).pinNumber().toString() + ":" + "CLK"
+			map[1] = PinUtil.findByPin(PinUtil.getPinByPhysicalNumber(this.adcConfiguration!!.getMiso())).pinNumber().toString() + ":" + "Dout"
+			map[2] = PinUtil.findByPin(PinUtil.getPinByPhysicalNumber(this.adcConfiguration!!.getMosi())).pinNumber().toString() + ":" + "Din"
+			map[3] = PinUtil.findByPin(PinUtil.getPinByPhysicalNumber(this.adcConfiguration!!.getCs())).pinNumber().toString() + ":" + "CS"
+
+			PinUtil.print(*map)
+			
 			this.adcChannel = this.adcConfiguration?.getADCChannel(
 					this.adcConfiguration!!.getMiso(),
 					this.adcConfiguration!!.getMosi(),

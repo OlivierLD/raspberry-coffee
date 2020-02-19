@@ -80,4 +80,8 @@ public class ADCConfiguration {
 		return this.adcChannel;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("MISO:%d, MOSI:%d, CLK:%d, CS:%d", this.miso, this.mosi, this.clk, this.cs);
+	}
 }
