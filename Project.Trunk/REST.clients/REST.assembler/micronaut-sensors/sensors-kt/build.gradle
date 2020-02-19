@@ -28,6 +28,7 @@ version "0.1"
 group "sensors.kt"
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven { url "https://plugins.gradle.org/m2/" }
     maven { url "https://jcenter.bintray.com" }
@@ -57,6 +58,7 @@ dependencies {
     testImplementation "io.micronaut.test:micronaut-test-kotlintest"
     testImplementation "io.mockk:mockk:1.9.3"
     testImplementation "io.kotlintest:kotlintest-runner-junit5:3.3.2"
+    compile 'oliv.raspi.coffee:ADC:1.0'
 }
 
 test.classpath += configurations.developmentOnly

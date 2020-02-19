@@ -1,6 +1,5 @@
 package micronaut.sensors;
 
-import analogdigitalconverter.mcp.MCPReader;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import rpi.sensors.ADCChannel;
 
