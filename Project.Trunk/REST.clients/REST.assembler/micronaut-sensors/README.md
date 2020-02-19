@@ -77,10 +77,10 @@ the GPIO pins the `ADC` is connected on, `MISO`, `MOSI`, `CLOCK` and `CHIP-SELEC
 In the file `resources/application.yml`, add
 ```yaml
 adc:
-  clk: 18
-  miso: 23
-  mosi: 24
-  cs: 25
+  mosi: 19
+  miso: 21
+  clk: 23
+  cs: 24
   channel: 2
 ```
 Create an _annotated_ matching bean, next to the Controller (or anywhere you want):
@@ -174,7 +174,7 @@ as stored in the `yaml` document:
 > Task :run
 OpenJDK 64-Bit GraalVM CE 19.3.0 warning: forcing TieredStopAtLevel to full optimization because JVMCI is enabled
 07:05:34.029 [main] INFO  io.micronaut.runtime.Micronaut - Startup completed in 1571ms. Server Running: http://localhost:8080
-ADC Config: Channel:2, MISO:23, MOSI:24, CLK:18, CS:25
+ADC Config: Channel:2, MISO:21, MOSI:19, CLK:23, CS:24
 <=========----> 75% EXECUTING [4m 13s]
 ```
 

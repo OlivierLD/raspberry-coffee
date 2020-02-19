@@ -38,7 +38,7 @@ class SensorsController {
 			map[3] = PinUtil.findByPin(PinUtil.getPinByPhysicalNumber(this.adcConfiguration!!.getCs())).pinNumber().toString() + ":" + "CS"
 
 			PinUtil.print(*map)
-			
+
 			this.adcChannel = this.adcConfiguration?.getADCChannel(
 					this.adcConfiguration!!.getMiso(),
 					this.adcConfiguration!!.getMosi(),
