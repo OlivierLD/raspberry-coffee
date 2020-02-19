@@ -1,10 +1,13 @@
 # Micronaut, serverless microservices.
-Just like before, we want to expose features of the Raspberry Pi as a REST Service.
+Just like before, we want to expose already implemented features of the Raspberry Pi as a REST Service.
+
 Here we want to read the ambient light (aka luminosity) from a photocell connected to and 
 Analog to Digital Converter (`ADC`), and make it available to any REST client connected on the network the Raspberry Pi runs on.
 
 We use Micronaut, available at [micronaut.io](https://micronaut.io/), where you'll find all the instructions you need
 to install it.
+
+---
 
 ## In Java
 Then, make sure `sdkman` is started:
@@ -340,11 +343,144 @@ And from another prompt
 $ curl http://localhost:8080/sensors/ambient-light
   { "light": 12.34 }
 ```
-. . . 
+### Configuration
+For the same reasons as for Java, with the same `yaml` config file, this is what the code looks like:
+```kotlin
+package sensors.kt
 
-## Next 
+import io.micronaut.context.annotation.ConfigurationProperties
+import javax.annotation.PostConstruct
+import javax.annotation.PreDestroy
+import rpi.sensors.ADCChannel
+
+@ConfigurationProperties("adc")
+class ADCConfiguration {
+	private var clk = 0
+	private var miso = 0
+	private var mosi = 0
+	private var cs = 0
+	private var channel = 0
+
+	private var adcChannel: ADCChannel? = null
+
+	fun getClk(): Int {
+		return clk
+	}
+
+	fun setClk(clk: Int) {
+		this.clk = clk
+	}
+
+	fun getMiso(): Int {
+		return miso
+	}
+
+	fun setMiso(miso: Int) {
+		this.miso = miso
+	}
+
+	fun getMosi(): Int {
+		return mosi
+	}
+
+	fun setMosi(mosi: Int) {
+		this.mosi = mosi
+	}
+
+	fun getCs(): Int {
+		return cs
+	}
+
+	fun setCs(cs: Int) {
+		this.cs = cs
+	}
+
+	fun getChannel(): Int {
+		return channel
+	}
+
+	fun setChannel(channel: Int) {
+		this.channel = channel
+	}
+
+	@PostConstruct
+	fun initialize() {
+		println("---------------------------------")
+		println("PostConstruct in ADCConfiguration")
+		println("---------------------------------")
+	}
+
+	@PreDestroy
+	fun close() { // Invoked when the Docker container is stopped
+		println("---------------------------------")
+		println("PreDestroy in ADCConfiguration")
+		println("---------------------------------")
+		if (this.adcChannel != null) {
+			ADCChannel.close()
+		}
+	}
+
+	fun getADCChannel(miso: Int, mosi: Int, clk: Int, cs: Int, channel: Int): ADCChannel? {
+		this.adcChannel = ADCChannel(miso, mosi, clk, cs, channel)
+		return this.adcChannel
+	}
+
+}
+```
+Look in the code to see what `rpi.sensors.ADCChannel.kt` looks like.
+The life-cycle management looks a lot like the one in Java, as you can see above (`@PostConstruct`, `@PreDestroy`)
+And then the Controller code needs to look like this:
+```kotlin
+package sensors.kt
+
+import . . .
+
+@Controller("/sensors")
+class SensorsController {
+
+	private val LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME)
+
+	private var adcConfiguration: ADCConfiguration? = null
+	private var adcChannel: ADCChannel? = null
+
+	constructor (adcConfiguration: ADCConfiguration?) {
+
+		// For info...
+		System.getProperties().forEach { prop: Any?, value: Any? -> println(String.format("Prop %s => %s", prop, value)) }
+
+		this.adcConfiguration = adcConfiguration
+		if (this.adcConfiguration != null) {
+			LOGGER.log(Level.ALL, java.lang.String.format("ADC Config: Channel:%d, MISO:%d, MOSI:%d, CLK:%d, CS:%d",
+					this.adcConfiguration?.getChannel(),
+					this.adcConfiguration?.getMiso(),
+					this.adcConfiguration?.getMosi(),
+					this.adcConfiguration?.getClk(),
+					this.adcConfiguration?.getCs()))
+			this.adcChannel = this.adcConfiguration?.getADCChannel(
+					this.adcConfiguration!!.getMiso(),
+					this.adcConfiguration!!.getMosi(),
+					this.adcConfiguration!!.getClk(),
+					this.adcConfiguration!!.getCs(),
+					this.adcConfiguration!!.getChannel())
+		} else {
+			println("SensorsController: Config is null!!")
+		}
+	}
+
+	@Get("/ambient-light")
+    @Produces(MediaType.APPLICATION_JSON)
+	fun getLuminosity(): String {
+		val light = this.adcChannel!!.readChannelVolume()
+		return "{ \"light\": $light }"
+	}
+}
+```
+### Docker & Debugging
+Same as for Java.
+
+## To Do Next 
 - Life cycle management (free resources on close...). &#9989; Done.
 - Debugging. &#9989; Done.
-- The same in Kotlin
+- The same in Kotlin. &#9989; Done.
 
 ---

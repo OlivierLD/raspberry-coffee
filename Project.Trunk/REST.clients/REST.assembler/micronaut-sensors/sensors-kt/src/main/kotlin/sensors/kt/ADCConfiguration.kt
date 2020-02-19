@@ -5,7 +5,6 @@ import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
 import rpi.sensors.ADCChannel
 
-
 @ConfigurationProperties("adc")
 class ADCConfiguration {
 	private var clk = 0
@@ -15,8 +14,6 @@ class ADCConfiguration {
 	private var channel = 0
 
 	private var adcChannel: ADCChannel? = null
-
-	fun ADCConfiguration() {}
 
 	fun getClk(): Int {
 		return clk
