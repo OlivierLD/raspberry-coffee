@@ -263,9 +263,11 @@ function onMessage(json) {
 //    console.log("latitude:" + latitude)
 			let longitude = json.Position.lng;
 //    console.log("Pt:" + latitude + ", " + longitude);
+			let gridSquare = json.Position.gridSquare;
 			events.publish('pos', {
 				'lat': latitude,
-				'lng': longitude
+				'lng': longitude,
+				'gridSquare': gridSquare
 			});
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "position");
