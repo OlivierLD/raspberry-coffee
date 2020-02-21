@@ -1,4 +1,6 @@
+# Small REST and HTTP server
 - To be opened as a standalone project.
+- Designed to be as small as possible.
 - Here for comparison with the others, specially in term of size.
 - Can run on Docker (`Dockerfile` provided)
 
