@@ -46,7 +46,7 @@ The same `curl` request should work the same way as before!
 
 ---
 
-### Size comparison
+### Sizes comparison
 Compare the Docker images:
 ```bash
 $ docker images
@@ -74,6 +74,6 @@ $ ls -lisah ../micronaut-sensors/sensors/build/libs/
   8690061629 30728 -rw-r--r--  1 olediour  staff    15M Feb 21 09:02 sensors-0.1-all.jar
 ```
 
-This is `15M`, vs `2.7M`, no comment.
+This is `15M`, vs `2.7M`, no comment!
 
 ---
