@@ -83,6 +83,14 @@ $ ./server.sh
 
 . . .
 ```
+or
+```
+$ nohup ./server.sh > sf.log &
+```
+and to stop it:
+```
+$ ./killsf.sh
+```
 
 Example (early preview):
 ```
@@ -126,6 +134,13 @@ would produce
 ### The Device
 The soft of this project is designed to drive [this device](https://github.com/OlivierLD/3DPrinting/blob/master/OpenSCAD/SolarPanelStand/stl/the.full.stand.stuck.stl).
 Its construction is detailed in [its repo](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand).
+
+#### The _real_ device
+Here is a animation - stop motion - of the real device, on 231 minutes, starting before noon, ending after. Event if the sky was obviously not clear, 
+orienting the panel does make a difference on the load. The first frames are too bright, it **was** sunny... ;).
+
+![Stop Motion](./stop.motion.gif)
+
 
 ## TODO
 - An ANSI Console. &#9989; Done (...ish).
