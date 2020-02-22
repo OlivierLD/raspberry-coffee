@@ -59,6 +59,14 @@ micronaut                                                                latest 
 ```
 The Docker images have pretty much the same size.
 
+If built with `openjdk:8-jre-slim`, the image is a bit smaller:
+```
+$ docker build -f debian.java.Dockerfile  -t micro-server .
+$ docker images
+REPOSITORY                                                               TAG                         IMAGE ID            CREATED             SIZE
+micro-server                                                             latest                      0a3e40c1eabc        3 minutes ago       186MB
+```
+
 Now, compare the `jar` sizes. Theses are "fat-jars", containing _all_ the app needs to run, thanks to `shadowJar`.
 ```bash
 $ ls -lisah build/libs/

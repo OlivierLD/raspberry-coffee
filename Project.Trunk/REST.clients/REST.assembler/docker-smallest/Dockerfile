@@ -1,5 +1,7 @@
 FROM adoptopenjdk/openjdk11-openj9:jdk-11.0.1.13-alpine-slim
+
 COPY build/libs/small-docker-sensors-1.0-all.jar sensors.jar
+
 EXPOSE 9876
 EXPOSE 4000
 # RUN echo "JAVA_OPTS=${JAVA_OPTS}"
