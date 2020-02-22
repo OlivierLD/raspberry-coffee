@@ -136,8 +136,8 @@ The soft of this project is designed to drive [this device](https://github.com/O
 Its construction is detailed in [its repo](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand).
 
 #### The _real_ device
-Here is a animation - stop motion - of the real device, on 231 minutes, starting before noon, ending after. Event if the sky was obviously not clear, 
-orienting the panel does make a difference on the load. The first frames are too bright, it **was** sunny... ;).
+Here is a animation - stop motion - of the real device (first prototype), on 231 minutes, starting before noon, ending after. Event if the sky was obviously not clear, 
+orienting the panel does make a difference on the load. The first frames are too bright, it **was** sunny... 😎
 
 ![Stop Motion](./stop.motion.gif)
 
