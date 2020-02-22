@@ -18,7 +18,7 @@ In `http-tiny-server` (for the REST part):
 http-tiny-server $ ../gradlew clean shadowJar install
 ```
 
-In `ADC` (for the Sensors part:
+In `ADC` (for the Sensors part):
 ```bash
 ADC $ ../gradlew clean shadowJar install
 ```

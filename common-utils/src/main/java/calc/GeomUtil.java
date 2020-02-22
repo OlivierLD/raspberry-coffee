@@ -562,6 +562,8 @@ public final class GeomUtil {
 		double lat = 37.750585;
 		double lng = -122.507891;
 		System.out.println("Grid Square: " + new GeoPoint(lat, lng).toString() + " => " + gridSquare(lat, lng));
+		// TODO reverse GRID Square
+		// Also see this: https://www.karhukoti.com/maidenhead-grid-square-locator/?grid=CM87
 
 		// Bearing from-to.
 		double bearing = bearingFromTo(39.099912, -94.581213, 38.627089, -90.200203);

@@ -108,7 +108,7 @@ public class GeoPos implements Serializable {
 
 	public GeoPos updateGridSquare() {
 		this.gridSquare = this.gridSquare();
-		System.out.println(String.format(">> GRID Square: %s", this.gridSquare));
+		System.out.println(String.format(">> from %f/%f => GRID Square: %s", this.lat, this.lng, this.gridSquare));
 		return this;
 	}
 
