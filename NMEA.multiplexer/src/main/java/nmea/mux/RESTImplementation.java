@@ -2245,7 +2245,7 @@ public class RESTImplementation {
 			txt = qsPrms.get("option").equals("txt");
 		}
 
-		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
+		NMEADataCache cache = ApplicationContext.getInstance().getDataCache(); // The point of truth
 
 		JsonElement jsonElement = null;
 		try {

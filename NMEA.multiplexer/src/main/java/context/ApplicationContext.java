@@ -1,6 +1,7 @@
 package context;
 
 import nmea.parser.Angle180EW;
+import nmea.parser.GeoPos;
 import nmea.utils.NMEAUtils;
 
 import java.util.List;
@@ -14,6 +15,14 @@ public class ApplicationContext {
 	}
 
 	public NMEADataCache getDataCache() {
+		if (this.dataCache != null) {
+			GeoPos position = (GeoPos) this.dataCache.get(NMEADataCache.POSITION);
+			if (position != null) {
+				if (position.gridSquare == null || position.gridSquare.isEmpty()) {
+					this.dataCache.put(NMEADataCache.POSITION, position.updateGridSquare());
+				}
+			}
+		}
 		return this.dataCache;
 	}
 

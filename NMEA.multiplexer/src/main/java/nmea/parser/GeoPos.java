@@ -29,7 +29,7 @@ public class GeoPos implements Serializable {
 
 	@Override
 	public String toString() {
-		if (this.gridSquare.isEmpty()) {
+		if (this.gridSquare == null || this.gridSquare.isEmpty()) {
 			this.gridSquare = this.gridSquare();
 		}
 		return this.getLatInDegMinDec() + " / " + this.getLngInDegMinDec() + (this.gridSquare.isEmpty() ? " (-)" : String.format(" (%s)", this.gridSquare));
@@ -108,7 +108,7 @@ public class GeoPos implements Serializable {
 
 	public GeoPos updateGridSquare() {
 		this.gridSquare = this.gridSquare();
-		System.out.println(String.format(">> from %f/%f => GRID Square: %s", this.lat, this.lng, this.gridSquare));
+//		System.out.println(String.format(">> from %f/%f => GRID Square: %s", this.lat, this.lng, this.gridSquare));
 		return this;
 	}
 
