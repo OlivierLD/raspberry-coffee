@@ -2696,7 +2696,7 @@ public class RESTImplementation {
 		}
 		return response;
 	}
-	
+
 	private HTTPServer.Response removeForwarderIfPresent(HTTPServer.Request request, Optional<Forwarder> opFwd) {
 		HTTPServer.Response response;
 		if (opFwd.isPresent()) {
