@@ -9,6 +9,11 @@ to install it.
 
 ---
 
+- [In Java](#in-java)
+- [In Kotlin](#in-kotlin)
+
+---
+
 ## In Java
 Then, make sure `sdkman` is started:
 ```bash
