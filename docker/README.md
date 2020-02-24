@@ -1,4 +1,4 @@
-### Docker
+# Docker
 This folder is not a module of the project. It can be used in standalone.
 
 ![Container Ship](./Container_ship.jpg)
