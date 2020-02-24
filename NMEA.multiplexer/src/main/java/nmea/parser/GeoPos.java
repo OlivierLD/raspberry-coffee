@@ -52,34 +52,29 @@ public class GeoPos implements Serializable {
 	}
 
 	public static double sexToDec(String degrees, String minutes)
-					throws RuntimeException
-	{
+					throws RuntimeException {
 		double deg = 0.0D;
 		double min = 0.0D;
 		double ret = 0.0D;
-		try
-		{
+		try {
 			deg = Double.parseDouble(degrees);
 			min = Double.parseDouble(minutes);
 			min *= (10.0 / 6.0);
 			ret = deg + min / 100D;
 		}
-		catch(NumberFormatException nfe)
-		{
+		catch(NumberFormatException nfe) {
 			throw new RuntimeException("Bad number [" + degrees + "] [" + minutes + "]");
 		}
 		return ret;
 	}
 
 	public static double sexToDec(String degrees, String minutes, String seconds)
-					throws RuntimeException
-	{
+					throws RuntimeException {
 		double deg = 0.0D;
 		double min = 0.0D;
 		double sec = 0.0D;
 		double ret = 0.0D;
-		try
-		{
+		try {
 			deg = Double.parseDouble(degrees);
 			min = Double.parseDouble(minutes);
 			min *= (10.0 / 6.0);
@@ -88,8 +83,7 @@ public class GeoPos implements Serializable {
 			min += ((sec / 0.6) / 100D);
 			ret = deg + (min / 100D);
 		}
-		catch(NumberFormatException nfe)
-		{
+		catch(NumberFormatException nfe) {
 			throw new RuntimeException("Bad number");
 		}
 		return ret;
@@ -99,8 +93,11 @@ public class GeoPos implements Serializable {
 		return new GeoPos(0d, 0d);
 	}
 
-	/*
+	/**
 	 * see http://en.wikipedia.org/wiki/Maidenhead_Locator_System
+	 * and also https://www.karhukoti.com/maidenhead-grid-square-locator/?grid=CM87
+	 *
+	 * Generate the grid square from the lat and lng.
 	 */
 	public String gridSquare() {
 		return GeomUtil.gridSquare(this.lat, this.lng);

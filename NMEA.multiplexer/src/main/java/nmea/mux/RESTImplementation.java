@@ -2168,7 +2168,7 @@ public class RESTImplementation {
 		return response;
 	}
 
-	private transient static final List<String> REMOVE_WHEN_TINY = Arrays.asList(new String[]{
+	private transient static final List<String> REMOVE_WHEN_TINY = Arrays.asList(new String[] {
 			NMEADataCache.LAST_NMEA_SENTENCE,
 			NMEADataCache.GPS_TIME,
 //			NMEADataCache.GPS_SOLAR_TIME,
@@ -2359,6 +2359,7 @@ public class RESTImplementation {
 
 		return response;
 	}
+
 	private HTTPServer.Response getPosition(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
@@ -2695,8 +2696,7 @@ public class RESTImplementation {
 		}
 		return response;
 	}
-
-
+	
 	private HTTPServer.Response removeForwarderIfPresent(HTTPServer.Request request, Optional<Forwarder> opFwd) {
 		HTTPServer.Response response;
 		if (opFwd.isPresent()) {
