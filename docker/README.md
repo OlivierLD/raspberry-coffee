@@ -301,11 +301,11 @@ The docker image you're now on reflects the changes done before the container wa
 At <https://hub.docker.com/>
 
 #### To push an image to Docker Hub
-- `docker tag de1ddc31533e olivierlediouris/navserver:latest`
+- `docker tag de1ddc31533e olivierlediouris/navserver:latest` (`de1ddc31533e` is the image-id, returned by `docker images`)
 - `docker login --username olivierlediouris --password xxxxxx`
 - `docker push olivierlediouris/navserver:latest`
  
-The local image can be removed, and it can now be run like
+The local image can then be removed, and it can now be run like
 - `docker run olivierlediouris/navserver`
 
 -------------------------------
