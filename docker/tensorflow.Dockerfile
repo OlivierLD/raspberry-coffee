@@ -25,7 +25,7 @@ RUN \
   DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y mate-desktop-environment-core curl git build-essential default-jdk sysvbanner vim tightvncserver && \
   rm -rf /var/lib/apt/lists/*
 #
-RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get install -y nodejs
 RUN apt-get install -y procps net-tools wget
 #

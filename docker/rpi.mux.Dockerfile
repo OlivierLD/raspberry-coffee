@@ -18,7 +18,7 @@ RUN apt-get install -y sysvbanner
 RUN apt-get install -y curl git build-essential
 # RUN apt-get install -y default-jdk
 RUN apt-get install -y oracle-java8-jdk
-RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get install -y nodejs
 RUN apt-get install -y librxtx-java
 # RUN apt-get install -y xvfb procps net-tools wget

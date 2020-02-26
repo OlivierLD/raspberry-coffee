@@ -23,7 +23,7 @@ do
   # Menu
   echo -e "+-------------- D O C K E R   I M A G E   B U I L D E R ---------------+"
   echo -e "+----------------- Build 🏗️  and run 🏃 a docker image. ----------------+"
-  echo -e "|  1. Nav Server, Debian                                               |"
+  echo -e "|  1. Nav Server, OpenJDK or Debian                                    |"
   echo -e "| 1p. Nav Server, Debian, through a proxy (as an example)              |"
   echo -e "|  2. Web Components, Debian                                           |"
   echo -e "|  3. To run on a Raspberry Pi, Java, Raspberry Coffee, Web Components |"
