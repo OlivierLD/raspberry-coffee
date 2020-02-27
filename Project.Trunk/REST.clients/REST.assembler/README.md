@@ -31,6 +31,7 @@ All Open Source, Soft & Hard
   - Third-party micro-servers, we have 3 possibilities (only one is needed, if you choose this route):
     - [Helidon](http://helidon.io) - Micro-service oriented.
     - [SpringBoot](https://spring.io/) - Micro-service oriented.
+    - [Micronaut](https://micronaut.io/) - Micro-service oriented.
     <!-- - [fnProject](https://fnproject.io/) - FaaS (Function as a Service) oriented. -->
   - Possibly [Swagger](https://swagger.io/) - the de-facto standard in term of REST API documentation (and more).
   - [Node-RED](https://nodered.org/) - A very cool service orchestration (and more) tool based on NodeJS. 
@@ -176,6 +177,7 @@ We will explore several options.
 We need some kind of server to run on the Raspberry Pi, so the outer world can reach it to get to the data and possibly interact with them.
 
 - [Helidon](#helidon) is an implementation of such a micro-server, implementing SE (Micro-Framework) and MP (Micro-Profile) flavors.
+- [Micronaut](#micronaut) serverless REST micro-services implementation.
 - [SpringBoot](#springboot), Spring's implementation of Micro Services.
 <!-- - [fnProject](#fnproject), FaaS server implementation, Docker based -->
 - a [Custom micro-server](#using-a-light-custom-micro-http-server), part of this project
@@ -376,6 +378,9 @@ Helidon also has some Docker capabilities:
 $ docker build -t helidon-sensors target
 $ docker run --rm -p 8080:8080 helidon-sensors:latest
 ```
+
+##### Micronaut
+See [here](micronaut-sensors/README.md) for all the details.
 
 ##### SpringBoot
 ```

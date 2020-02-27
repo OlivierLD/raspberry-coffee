@@ -1,0 +1,9 @@
+micronaut:
+  application:
+    name: sensors-kt
+adc:
+  mosi: 19
+  miso: 21
+  clk: 23
+  cs: 24
+  channel: 2

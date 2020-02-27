@@ -19,7 +19,7 @@ RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 
 RUN apt-get update
 RUN apt-get install -y curl git build-essential default-jdk
-RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get install -y nodejs
 RUN apt-get install -y procps net-tools wget
 

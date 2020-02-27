@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,7 @@ public class HMC5883L {
 		return calibrationMap;
 	}
 
-	public static abstract class HMC5883LEventListener {
+	public static abstract class HMC5883LEventListener implements EventListener {
 		public abstract void onNewData(Map<MagValues, Double> magData);
 	}
 

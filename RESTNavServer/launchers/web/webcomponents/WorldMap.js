@@ -1921,6 +1921,9 @@ class WorldMap extends HTMLElement {
 			context.font = "bold 16px Arial"; // "bold 40px Arial"
 			context.fillText(strLat, 10, 18);
 			context.fillText(strLng, 10, 38);
+			if (this.userPosition.gridSquare !== undefined) {
+				context.fillText(this.userPosition.gridSquare, 10, 58);
+			}
 		}
 
 		if (this.astronomicalData !== undefined && this.astronomicalData.deltaT !== undefined) {

@@ -37,7 +37,7 @@
 	<!-- Scripts -->
 	<script type="text/javascript" src="js/date.proto.js"></script>
 	<script type="text/javascript" src="js/pub.sub.js"></script>
-	<script type="text/javascript" src="js/ajax.manager.js"></script>
+	<script type="text/javascript" src="js/ajax.manager.js"></script> <!-- Contains REST calls -->
 
 	<script type="text/javascript">
 
@@ -208,7 +208,7 @@
 		/* global events gpsPosition setData gpsSatelliteData */
 		events.subscribe('pos', (val) => {
 			gpsPosition = val;
-			document.getElementById('world-map-01').setUserPosition({ latitude: val.lat, longitude: val.lng });
+			document.getElementById('world-map-01').setUserPosition({ latitude: val.lat, longitude: val.lng, gridSquare: val.gridSquare });
 			lastKnownPos = { // TODO Something nicer (it's in ajax.manager)...
 				latitude: val.lat,
 				longitude: val.lng

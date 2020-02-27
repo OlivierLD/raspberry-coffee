@@ -23,8 +23,8 @@ do
   # Menu
   echo -e "+-------------- D O C K E R   I M A G E   B U I L D E R ---------------+"
   echo -e "+----------------- Build 🏗️  and run 🏃 a docker image. ----------------+"
-  echo -e "|  1. Nav Server, Debian                                               |"
-  echo -e "| 1p. Nav Server, Debian, with proxy (as an example)                   |"
+  echo -e "|  1. Nav Server, OpenJDK or Debian                                    |"
+  echo -e "| 1p. Nav Server, Debian, through a proxy (as an example)              |"
   echo -e "|  2. Web Components, Debian                                           |"
   echo -e "|  3. To run on a Raspberry Pi, Java, Raspberry Coffee, Web Components |"
   echo -e "| 3m. Raspberry Pi minimal config (a base for the future)              |"
@@ -81,8 +81,8 @@ do
       MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       #
-      EXTRA_PRM="--build-arg http_proxy=http://www-proxy-hqdc.us.oracle.com:80"
-      EXTRA_PRM="$EXTRA_PRM --build-arg https_proxy=http://www-proxy-hqdc.us.oracle.com:80"
+      EXTRA_PRM="--build-arg http_proxy=http://www-proxy.us.oracle.com:80"
+      EXTRA_PRM="$EXTRA_PRM --build-arg https_proxy=http://www-proxy.us.oracle.com:80"
       EXTRA_PRM="$EXTRA_PRM --build-arg no_proxy=localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
       ;;
     "2")

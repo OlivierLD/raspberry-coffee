@@ -1,11 +1,14 @@
 package nmea.parser;
 
+import calc.GeomUtil;
+
 import java.io.Serializable;
 import java.text.DecimalFormat;
 
 public class GeoPos implements Serializable {
 	public double lat = 0.0;
 	public double lng = 0.0;
+	public String gridSquare = "";
 
 	private final static DecimalFormat DF_22 = new DecimalFormat("00.00");
 	private final static DecimalFormat DF_2  = new DecimalFormat("00");
@@ -13,22 +16,23 @@ public class GeoPos implements Serializable {
 
 	public final static String DEGREE_SYMBOL = "\u00b0";
 
-	//                                      0         1         2
-	//                                      01234567890123456789012345. Useless beyond 'X' (x=23, pos 24)
-	private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
 	public GeoPos(double l,
 	              double g) {
 		this.lat = l;
 		this.lng = g;
+		this.gridSquare = this.gridSquare();
 	}
 
-	public boolean equals(GeoPos compareto) {
-		return (this.lat == compareto.lat && this.lng == compareto.lng);
+	public boolean equals(GeoPos compareTo) {
+		return (this.lat == compareTo.lat && this.lng == compareTo.lng);
 	}
 
+	@Override
 	public String toString() {
-		return this.getLatInDegMinDec() + " / " + this.getLngInDegMinDec();
+		if (this.gridSquare == null || this.gridSquare.isEmpty()) {
+			this.gridSquare = this.gridSquare();
+		}
+		return this.getLatInDegMinDec() + " / " + this.getLngInDegMinDec() + (this.gridSquare.isEmpty() ? " (-)" : String.format(" (%s)", this.gridSquare));
 	}
 
 	public String getLatInDegMinDec() {
@@ -48,34 +52,29 @@ public class GeoPos implements Serializable {
 	}
 
 	public static double sexToDec(String degrees, String minutes)
-					throws RuntimeException
-	{
+					throws RuntimeException {
 		double deg = 0.0D;
 		double min = 0.0D;
 		double ret = 0.0D;
-		try
-		{
+		try {
 			deg = Double.parseDouble(degrees);
 			min = Double.parseDouble(minutes);
 			min *= (10.0 / 6.0);
 			ret = deg + min / 100D;
 		}
-		catch(NumberFormatException nfe)
-		{
+		catch(NumberFormatException nfe) {
 			throw new RuntimeException("Bad number [" + degrees + "] [" + minutes + "]");
 		}
 		return ret;
 	}
 
 	public static double sexToDec(String degrees, String minutes, String seconds)
-					throws RuntimeException
-	{
+					throws RuntimeException {
 		double deg = 0.0D;
 		double min = 0.0D;
 		double sec = 0.0D;
 		double ret = 0.0D;
-		try
-		{
+		try {
 			deg = Double.parseDouble(degrees);
 			min = Double.parseDouble(minutes);
 			min *= (10.0 / 6.0);
@@ -84,8 +83,7 @@ public class GeoPos implements Serializable {
 			min += ((sec / 0.6) / 100D);
 			ret = deg + (min / 100D);
 		}
-		catch(NumberFormatException nfe)
-		{
+		catch(NumberFormatException nfe) {
 			throw new RuntimeException("Bad number");
 		}
 		return ret;
@@ -97,39 +95,18 @@ public class GeoPos implements Serializable {
 
 	/**
 	 * see http://en.wikipedia.org/wiki/Maidenhead_Locator_System
+	 * and also https://www.karhukoti.com/maidenhead-grid-square-locator/?grid=CM87
 	 *
-	 * @param lat [-90..+90]
-	 * @param lng [-180..+180]
-	 * @return The name of the grid square
+	 * Generate the grid square from the lat and lng.
 	 */
-	public static String gridSquare(double lat, double lng)
-	{
-		String gridSquare = "";
-
-		lng += 180; // [0..360]
-		lat +=  90; // [0..180]
-		int first = (int) (lng / 20d);
-		gridSquare += ALPHABET.charAt(first);
-		int second = (int) (lat / 10d);
-		gridSquare += ALPHABET.charAt(second);
-
-		int third = (int)((lng % 20) / 2);
-		gridSquare += Integer.toString(third);
-		int fourth = (int)((lat % 10));
-		gridSquare += Integer.toString(fourth);
-
-		double d = lng - ((int)(lng / 2) * 2);
-		int fifth = (int)(d * 12);
-		gridSquare += ALPHABET.toLowerCase().charAt(fifth);
-		double e = lat - (int)lat;
-		int sixth = (int)(e * 24);
-		gridSquare += ALPHABET.toLowerCase().charAt(sixth);
-
-		return gridSquare;
+	public String gridSquare() {
+		return GeomUtil.gridSquare(this.lat, this.lng);
 	}
 
-	public String gridSquare() {
-		return gridSquare(this.lat, this.lng);
+	public GeoPos updateGridSquare() {
+		this.gridSquare = this.gridSquare();
+//		System.out.println(String.format(">> from %f/%f => GRID Square: %s", this.lat, this.lng, this.gridSquare));
+		return this;
 	}
 
 	/**
@@ -144,5 +121,8 @@ public class GeoPos implements Serializable {
 		lat = sexToDec("37", "46");
 		lng = sexToDec("122", "31") * -1; // West
 		System.out.println(String.format("Grid Square Ocean Beach (SF) : %s", new GeoPos(lat, lng).gridSquare()));
+
+		System.out.println(String.format("toString: %s", new GeoPos(lat, lng).toString()));
+		System.out.println(String.format("Updated : %s", new GeoPos(lat, lng).updateGridSquare()));
 	}
 }

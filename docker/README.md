@@ -1,5 +1,5 @@
-### Docker
-This folder is not a module of then project. It can be used in standalone.
+# Docker
+This folder is not a module of the project. It can be used in standalone.
 
 ![Container Ship](./Container_ship.jpg)
 
@@ -9,7 +9,7 @@ Good article [here](https://howchoo.com/g/nmrlzmq1ymn/how-to-install-docker-on-y
 - For a Raspberry Pi, also see [here](https://medium.com/free-code-camp/the-easy-way-to-set-up-docker-on-a-raspberry-pi-7d24ced073ef).
 
 #### To get started...
-Try this:
+After installing Docker, try this:
 ```
  $ docker run hello-world
  $ docker run docker/whalesay cowsay Hello there!
@@ -296,5 +296,16 @@ The docker image you're now on reflects the changes done before the container wa
 ```
  $ docker system prune
 ```
+
+### Docker Registry
+At <https://hub.docker.com/>
+
+#### To push an image to Docker Hub
+- `docker tag de1ddc31533e olivierlediouris/navserver:latest` (`de1ddc31533e` is the image-id, returned by `docker images`)
+- `docker login --username olivierlediouris --password xxxxxx`
+- `docker push olivierlediouris/navserver:latest`
+ 
+The local image can then be removed, and it can now be run like
+- `docker run olivierlediouris/navserver`
 
 -------------------------------

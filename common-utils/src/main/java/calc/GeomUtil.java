@@ -562,8 +562,10 @@ public final class GeomUtil {
 		double lat = 37.750585;
 		double lng = -122.507891;
 		System.out.println("Grid Square: " + new GeoPoint(lat, lng).toString() + " => " + gridSquare(lat, lng));
+		// TODO reverse GRID Square
+		// Also see this: https://www.karhukoti.com/maidenhead-grid-square-locator/?grid=CM87
 
-		// Bearing from-to
+		// Bearing from-to.
 		double bearing = bearingFromTo(39.099912, -94.581213, 38.627089, -90.200203);
 		System.out.println(String.format("Kansas City to St Louis, Bearing: %.02f\272 ", bearing));
 		System.out.println(String.format("W >> %.02f\272", bearingFromTo(37, -122, 37, -123)));
@@ -576,7 +578,7 @@ public final class GeomUtil {
 		System.out.println(String.format("15 >> %.02f\272", bearingDiff(350, 335)));
 		System.out.println(String.format("15 >> %.02f\272", bearingDiff(170, 185)));
 
-		// Some getDir tests
+		// Some getDir tests. unicode 394: Delta.
 		float deltaX = 50f, deltaY = 50f;
 		System.out.println(String.format("\u0394x %.02f, \u0394y %.02f \t: GetDir: %.02f, atan2: %.02f", deltaX, deltaY, getDirV1(deltaX, deltaY), on0to360(Math.toDegrees(Math.atan2(deltaX, deltaY)))));
 		deltaX = -50;

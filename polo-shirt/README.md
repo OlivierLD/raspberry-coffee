@@ -4,7 +4,7 @@ An annotation-based REST server, like JAX-RS (Jersey -> Polo), latching on the [
 - The main is `restserver.PoloServer`.
 - The request manager is `restserver.PoloRESTRequestManager implements http.RESTRequestManager`.
     - Annotations re managed in the method `buildOperationList`.
-- The implementation - with its annotations - is in `restserver.AnnotatedRESTImplementation`.
+- An _**example**_ of implementation - with its annotations - is in `restserver.AnnotatedRESTImplementation`.
 - Annotation definitions are in the package `restserver.annotations`.
 
 #### OpenAPI Spec (formerly Swagger)

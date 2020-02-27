@@ -1,5 +1,6 @@
 package nmea.mux;
 
+import calc.GeomUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -2167,7 +2168,7 @@ public class RESTImplementation {
 		return response;
 	}
 
-	private transient static final List<String> REMOVE_WHEN_TINY = Arrays.asList(new String[]{
+	private transient static final List<String> REMOVE_WHEN_TINY = Arrays.asList(new String[] {
 			NMEADataCache.LAST_NMEA_SENTENCE,
 			NMEADataCache.GPS_TIME,
 //			NMEADataCache.GPS_SOLAR_TIME,
@@ -2244,7 +2245,7 @@ public class RESTImplementation {
 			txt = qsPrms.get("option").equals("txt");
 		}
 
-		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
+		NMEADataCache cache = ApplicationContext.getInstance().getDataCache(); // The point of truth
 
 		JsonElement jsonElement = null;
 		try {
@@ -2358,10 +2359,11 @@ public class RESTImplementation {
 
 		return response;
 	}
+
 	private HTTPServer.Response getPosition(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
-		GeoPos position = (GeoPos) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.POSITION);
+		GeoPos position = ((GeoPos)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.POSITION)).updateGridSquare();
 
 		JsonElement jsonElement = null;
 		try {
@@ -2694,7 +2696,6 @@ public class RESTImplementation {
 		}
 		return response;
 	}
-
 
 	private HTTPServer.Response removeForwarderIfPresent(HTTPServer.Request request, Optional<Forwarder> opFwd) {
 		HTTPServer.Response response;

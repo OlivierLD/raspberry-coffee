@@ -10,8 +10,8 @@ Very trending.
  
 - Sensor Code (BMP280, LSM303, Servos, etc)
 - Expose to HTTP
-    - With the HTTPServer in the `common-utils` project (in this repo)
-    - As a Micro Service, with [Helidon](https://helidon.io) or similar <!--[fnProject](http://fnproject.io)-->
+    - With the HTTPServer in the `http-tiny-server` project (in this repo)
+    - As a Micro Service, with [Helidon](https://helidon.io), [Micronaut](https://micronaut.io/), or similar <!--[fnProject](http://fnproject.io)-->
         - Swagger (aka OpenAPI) ? Definition and generation
 - Assemble a flow with [Node-RED](https://nodered.org/) and run it
 
