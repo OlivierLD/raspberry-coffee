@@ -65,7 +65,7 @@ $ ./gradlew clean shadowJar
 $ docker build . -t micronaut
 $ docker run -p 8080:8080 micronaut
 ```
-- The `-t` tags the image.
+- The switch `-t` tags the image.
 
 And from another shell
 ```bash

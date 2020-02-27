@@ -55,6 +55,7 @@ tasks.withType(JavaCompile){
 }
 
 shadowJar {
+    // to create an executable jar-file. Requires mainClassName.
     mergeServiceFiles()
 }
 
