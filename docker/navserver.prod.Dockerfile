@@ -46,8 +46,8 @@ RUN find . -name '*.gz'
 RUN echo "Build is done!"
 
 # 2nd stage, build the runtime image
-FROM openjdk:8-jre-slim
-# FROM resin/raspberrypi3-debian:latest
+# FROM openjdk:8-jre-slim # This one not for Raspberry Pi
+FROM resin/raspberrypi3-debian:latest
 
 # Uncomment if running behind a firewall (also set the proxies at the Docker level to the values below)
 ENV http_proxy ${http_proxy}
