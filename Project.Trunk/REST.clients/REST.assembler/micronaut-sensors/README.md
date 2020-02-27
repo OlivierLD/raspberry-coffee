@@ -191,6 +191,10 @@ From the ADC module (which belongs to the `raspberry-coffee` project), make sure
 ```bash
 ADC$ ../gradlew clean install
 ```
+In `common-utils` (common utilities):
+```bash
+http-tiny-server $ ../gradlew clean shadowJar install
+```
 
 From the Micronaut service project, add the dependency on ADC in `build.gradle`:
 ```groovy
