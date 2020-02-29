@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="icon" type="image/png" href="./favicon-32x32.png">
+		<title>Test page for Celestial Computer</title>
+		<script type="module" src="app.js"></script>
+		<style>
+			h1 {
+				color: silver;
+				font-family: Verdana;
+				font-style: italic;
+			}
+			body {
+				font-family: Verdana;
+			}
+			.day {
+				width: 40px;
+				text-align: center;
+			}
+			.year {
+				width: 80px;
+				text-align: center;
+			}
+			.result {
+				margin-top: 10px;
+				border: solid silver 1px;
+				border-radius: 5px;
+				width: 80%;
+				height: 200px;
+				max-height: 200px;
+				font-family: "Courier New";
+				overflow-y: auto;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>This is a test (Hard-coded DeltaT)</h1>
+		<small>
+			Enter UTC date and time, then click the Compute button.
+		</small>
+		<div>
+			<input class="day" type="number" id="UTC-day" placeholder="day" min="1" max="31">
+			<select class="month" id="UTC-month" >
+				<option value="1">Jan</option>
+				<option value="2">Feb</option>
+				<option value="3">Mar</option>
+				<option value="4">Apr</option>
+				<option value="5">May</option>
+				<option value="6">Jun</option>
+				<option value="7">Jul</option>
+				<option value="8">Aug</option>
+				<option value="9">Sep</option>
+				<option value="10">Oct</option>
+				<option value="11">Nov</option>
+				<option value="12">Dec</option>
+			</select>
+			<input class="year" type="number" id="UTC-year" placeholder="year" min="0">
+		</div>
+		<div>
+			<input class="day" type="number" id="UTC-hour" placeholder="hours" min="0" max="23">:
+			<input class="day" type="number" id="UTC-minute" placeholder="minutes" min="0" max="59">:
+			<input class="day" type="number" id="UTC-second" placeholder="seconds" min="0" max="59">
+		</div>
+
+		<button onclick="compute();">Compute</button>
+
+		<div id="result" class="result">
+		</div>
+	</body>
+	<script type="text/javascript">
+
+const DELTA_T = 69.01;
+
+function compute() {
+
+	let sampleData = {
+		utcyear: parseInt(document.getElementById('UTC-year').value),
+		utcmonth: parseInt(document.getElementById('UTC-month').value), 
+		utcday: parseInt(document.getElementById('UTC-day').value),
+		utchour: parseInt(document.getElementById('UTC-hour').value),
+		utcminute: parseInt(document.getElementById('UTC-minute').value),
+		utcsecond: parseInt(document.getElementById('UTC-second').value),
+		deltaT: DELTA_T
+	};
+
+	let testResult = sampleMain(sampleData);
+	console.log("Calculation done %d-%d-%d %d:%d:%d UTC :", sampleData.utcyear, sampleData.utcmonth, sampleData.utcday, sampleData.utchour, sampleData.utcminute, sampleData.utcsecond);
+	console.log("Result:\n", JSON.stringify(testResult, null, 2));
+
+	document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(testResult, null, 2) + '</pre>';
+}		
+
+window.onload = () => {
+
+	console.log('On Load, ready.');
+
+	let now = new Date();
+	document.getElementById('UTC-day').value = now.getUTCDate();
+	document.getElementById('UTC-month').value = now.getUTCMonth() + 1;
+	document.getElementById('UTC-year').value = now.getUTCFullYear();
+	document.getElementById('UTC-hour').value = now.getUTCHours();
+	document.getElementById('UTC-minute').value = now.getUTCMinutes();
+	document.getElementById('UTC-second').value = now.getUTCSeconds();
+};
+	</script>
+</html>
+

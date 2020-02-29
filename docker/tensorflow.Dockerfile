@@ -5,7 +5,8 @@
 #
 # Pull base image.
 # FROM x11docker/mate
-FROM debian:stretch
+# FROM debian:stretch
+FROM debian:buster
 #
 # To run on a laptop.
 # Demoes Python and TensorFlow.

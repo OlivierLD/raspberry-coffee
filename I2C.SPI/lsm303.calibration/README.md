@@ -100,4 +100,7 @@ See [the code](../src/main/java/i2c/sensor/LSM303.java#L483) of `LSM303.java` fo
 Here is another example, for a `HMC5883L`:
 ![HMC5883L Calibration](hmc5883l.png)
 
+## TODO
+Try on X-Y only, put the device in a gimbal.
+
 ---
