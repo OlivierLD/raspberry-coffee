@@ -69,6 +69,7 @@ class SunPath extends HTMLElement {
 		this.sunZ = undefined;
 		this.moonHe = undefined;
 		this.moonZ = undefined;
+		this.moonPhase = undefined;
 
 		this.venusHe = undefined;
 		this.venusZ = undefined;
@@ -206,6 +207,7 @@ class SunPath extends HTMLElement {
 	set moonPos(moonPos) {
 		this.moonHe = moonPos.he;
 		this.moonZ = moonPos.z;
+		this.moonPhase = moonPos.phase;
 	}
 
 	set venusPos(pos) {
@@ -846,8 +848,10 @@ class SunPath extends HTMLElement {
 			context.font = "" + Math.round(fontSize) + "px " + this.sunPathColorConfig.font;
 			let strAlt = Utilities.decToSex(this.moonHe);
 			let strZ = Utilities.decToSex(this.moonZ);
-			context.fillText("\u263D Elevation:" + strAlt, 10, 60);
+			let strPhase = (this.moonPhase !== undefined ? this.moonPhase.toFixed(2) + "°" : "-");
+			context.fillText("\u263E Elevation:" + strAlt, 10, 60); // was u263D
 			context.fillText("Azimuth:" + strZ, 10, 80);
+			context.fillText("Phase:" + strPhase, 10, 100);
 			context.restore();
 		}
 

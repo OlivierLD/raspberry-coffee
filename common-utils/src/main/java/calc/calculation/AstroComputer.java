@@ -74,6 +74,18 @@ public class AstroComputer {
 	}
 
 	/**
+	 * Assume that calculate has been invoked already
+	 * @return
+	 */
+	public static synchronized double getMoonPhase() {
+		double phase = Context.lambdaMapp - Context.lambda_sun;
+		while (phase < 0d) {
+			phase += 360d;
+		}
+		return phase;
+	}
+
+	/**
 	 *
 	 * @param y Year, on 4 digits, like 2019
 	 * @param m Month, [1..12] <- Unlike Java's Calendar, which is zero-based
@@ -652,6 +664,8 @@ public class AstroComputer {
 				date.get(Calendar.HOUR_OF_DAY), // and not just HOUR !!!!
 				date.get(Calendar.MINUTE),
 				date.get(Calendar.SECOND));
+
+		System.out.println(String.format("Moon Phase (no specific date) : %f", AstroComputer.getMoonPhase()));
 
 		// SF Home
 		double lat = 37.7489;
