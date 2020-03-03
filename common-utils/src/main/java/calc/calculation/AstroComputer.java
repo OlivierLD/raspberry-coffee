@@ -637,7 +637,7 @@ public class AstroComputer {
 	}
 
 	public static void main(String... args) {
-		System.out.println("Moon phase:" + getMoonPhase(2011, 8, 22, 12, 00, 00));
+		System.out.println(String.format("Moon phase for date %d-%d-%d %d:%d:%d: ", 2011, 8, 22, 12, 00, 00) + getMoonPhase(2011, 8, 22, 12, 00, 00));
 		System.out.println("TimeOffset:" + getTimeOffsetInHours("-09:30"));
 		String[] tz = new String[]{"Pacific/Marquesas", "America/Los_Angeles", "GMT", "Europe/Paris", "Europe/Moscow", "Australia/Sydney", "Australia/Adelaide"};
 		for (int i = 0; i < tz.length; i++) {
@@ -665,8 +665,6 @@ public class AstroComputer {
 				date.get(Calendar.MINUTE),
 				date.get(Calendar.SECOND));
 
-		System.out.println(String.format("Moon Phase (no specific date) : %f", AstroComputer.getMoonPhase()));
-
 		// SF Home
 		double lat = 37.7489;
 		double lng = -122.5070;
@@ -682,6 +680,8 @@ public class AstroComputer {
 
 		double[] riseAndSet = sunRiseAndSet(lat, lng);
 		System.out.println(String.format("Time Rise: %f, Time Set: %f, ZRise: %f, ZSet: %f", riseAndSet[0], riseAndSet[1], riseAndSet[2], riseAndSet[3]));
+
+		System.out.println(String.format("Moon Phase (no specific date, current one) : %f", AstroComputer.getMoonPhase()));
 
 		System.out.println(String.format("Sun data:\nDeclination: %s\nGHA: %s",
 				GeomUtil.decToSex(getSunDecl(), GeomUtil.SWING, GeomUtil.NS),
