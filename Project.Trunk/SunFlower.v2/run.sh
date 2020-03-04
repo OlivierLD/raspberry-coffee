@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-echo -e "Interactive tests"
+echo -e "Interactive tests, enter Z and Elev. values from the keyboard."
 #
 CP=./build/libs/SunFlower.v2-1.0-all.jar
 JAVA_OPTS=
