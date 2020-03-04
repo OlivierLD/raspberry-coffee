@@ -1,6 +1,7 @@
 # FROM debian:stretch
 # FROM resin/raspberrypi3-debian:latest
 FROM openjdk:8-jre-slim
+# FROM openjdk:11.0.5-jdk
 
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 
