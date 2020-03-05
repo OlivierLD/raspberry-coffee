@@ -536,6 +536,9 @@ public class SunFlowerDriver {
 
 	private void parkDevice() {
 		if (currentDeviceElevation != PARKED_ELEVATION || currentDeviceAzimuth != PARKED_AZIMUTH) {
+			if (ASTRO_VERBOSE) {
+				System.out.println(">> Parking the device");
+			}
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Parking the device"));
 			// Put Z to 0, Elev. to 90.
 			MotorPayload parkElev = getMotorPayload(currentDeviceElevation, PARKED_ELEVATION, elevationMotorRatio);
