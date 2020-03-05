@@ -5,5 +5,5 @@ is several other languages than Java.
 
 We will have
 - ES6
-- Arduino (C, C++...)
+- Arduino (ino, C, C++...)
  

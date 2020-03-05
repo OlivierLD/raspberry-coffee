@@ -70,13 +70,13 @@
 	</body>
 	<script type="text/javascript">
 
-const DELTA_T = 69.01;
+const DELTA_T = 69.2201;
 
 function compute() {
 
 	let sampleData = {
 		utcyear: parseInt(document.getElementById('UTC-year').value),
-		utcmonth: parseInt(document.getElementById('UTC-month').value), 
+		utcmonth: parseInt(document.getElementById('UTC-month').value),
 		utcday: parseInt(document.getElementById('UTC-day').value),
 		utchour: parseInt(document.getElementById('UTC-hour').value),
 		utcminute: parseInt(document.getElementById('UTC-minute').value),
@@ -89,7 +89,7 @@ function compute() {
 	console.log("Result:\n", JSON.stringify(testResult, null, 2));
 
 	document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(testResult, null, 2) + '</pre>';
-}		
+}
 
 window.onload = () => {
 
