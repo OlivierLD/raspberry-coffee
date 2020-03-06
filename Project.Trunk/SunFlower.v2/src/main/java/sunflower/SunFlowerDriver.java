@@ -33,6 +33,10 @@ import sunflower.utils.ANSIUtil;
  * JAVA_OPTS="$JAVA_OPTS -Ddate.simulation=true"
  * JAVA_OPTS="$JAVA_OPTS -Dstart.date.simulation=2020-03-06T20:00:00"
  * JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"
+ *
+ * Also:
+ * -Dno.motor.movement=true will NOT move the motors.
+ * Use it with -Dmotor.hat.verbose=true
  */
 public class SunFlowerDriver {
 
@@ -403,12 +407,16 @@ public class SunFlowerDriver {
 					System.out.println(String.format("| Starting move of %d steps on motor #%d", nbSteps, this.stepper.getMotorNum()));
 					System.out.println("+----------------------------------------------");
 				}
-				this.stepper.step(nbSteps, motorCommand, motorStyle, t -> {
-					if (MOTOR_HAT_VERBOSE) {
-						// t.printStackTrace();
-						System.out.println(String.format("\t\tToo long! %s", t));
-					}
-				});
+				if ("false".equals(System.getProperty("no.motor.movement", "false"))) {
+					this.stepper.step(nbSteps, motorCommand, motorStyle, t -> {
+						if (MOTOR_HAT_VERBOSE) {
+							// t.printStackTrace();
+							System.out.println(String.format("\t\tToo long! %s", t));
+						}
+					});
+				} else {
+					delay(500); // Half a sec
+				}
 				long after = System.currentTimeMillis();
 				if (MOTOR_HAT_VERBOSE) {
 					System.out.println("+----------------------------------------------");

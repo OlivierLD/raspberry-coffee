@@ -22,5 +22,7 @@ JAVA_OPTS="$JAVA_OPTS -Ddate.simulation=true"
 JAVA_OPTS="$JAVA_OPTS -Dstart.date.simulation=2020-03-06T20:00:00"
 JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"
 #
+JAVA_OPTS="$JAVA_OPTS -Dno.motor.movement=true"
+#
 echo -e "Try 'nohup $0 > sf.log &'"
 java -cp ${CP} ${JAVA_OPTS} sunflower.httpserver.SunFlowerServer
