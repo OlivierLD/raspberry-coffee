@@ -434,7 +434,7 @@ public class SunFlowerDriver {
 				long after = System.currentTimeMillis();
 				if (MOTOR_HAT_VERBOSE) {
 					System.out.println("+----------------------------------------------");
-					System.out.println(String.format("| Completed move of %d steps on motor #%d", nbSteps, this.stepper.getMotorNum()));
+					System.out.println(String.format("| Completed move of %d steps on motor #%d in %d ms", nbSteps, this.stepper.getMotorNum(), (after - before)));
 					System.out.println("+----------------------------------------------");
 				}
 				MoveCompleted payload = new MoveCompleted(new Date(), this.nbSteps, (after - before));
