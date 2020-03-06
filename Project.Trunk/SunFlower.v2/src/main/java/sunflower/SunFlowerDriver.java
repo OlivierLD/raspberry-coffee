@@ -129,6 +129,7 @@ public class SunFlowerDriver {
 
 	private final static boolean SUN_FLOWER_VERBOSE = "true".equals(System.getProperty("sun.flower.verbose"));
 	private final static boolean MOTOR_HAT_VERBOSE = "true".equals(System.getProperty("motor.hat.verbose"));
+	private final static boolean TOO_LONG_EXCEPTION_VERBOSE = "true".equals(System.getProperty("too.long.exception.verbose", "true"));
 	private final static boolean ASTRO_VERBOSE = "true".equals(System.getProperty("astro.verbose", "false"));
 
 	public static class MoveCompleted {
@@ -423,7 +424,7 @@ public class SunFlowerDriver {
 				}
 				if ("false".equals(System.getProperty("no.motor.movement", "false"))) {
 					this.stepper.step(nbSteps, motorCommand, motorStyle, t -> {
-						if (MOTOR_HAT_VERBOSE) {
+						if (MOTOR_HAT_VERBOSE && TOO_LONG_EXCEPTION_VERBOSE) {
 							// t.printStackTrace();
 							System.out.println(String.format("\t\tToo long! %s", t));
 						}
