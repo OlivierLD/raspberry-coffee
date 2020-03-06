@@ -17,5 +17,10 @@ JAVA_OPTS="$JAVA_OPTS -DdeltaT=69.2201"
 JAVA_OPTS="$JAVA_OPTS -Dhttp.port=8989"
 JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=false"
 #
+# For Date simulation:
+JAVA_OPTS="$JAVA_OPTS -Ddate.simulation=true"
+JAVA_OPTS="$JAVA_OPTS -Dstart.date.simulation=2020-03-06T20:00:00"
+JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"
+#
 echo -e "Try 'nohup $0 > sf.log &'"
 java -cp ${CP} ${JAVA_OPTS} sunflower.httpserver.SunFlowerServer

@@ -14,6 +14,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static utils.TimeUtil.delay;
 
@@ -25,6 +27,12 @@ import sunflower.utils.ANSIUtil;
  * RPM : Revolution Per Minute, speed of the rotation.
  * Steps per Revolution: How many steps for 360 degrees.
  * nbSteps: How many steps should the shaft do when started.
+ *
+ * By default, date for Celestial calculations is current date.
+ * It can be simulated for demo or development with the following System variables:
+ * JAVA_OPTS="$JAVA_OPTS -Ddate.simulation=true"
+ * JAVA_OPTS="$JAVA_OPTS -Dstart.date.simulation=2020-03-06T20:00:00"
+ * JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"
  */
 public class SunFlowerDriver {
 
@@ -422,6 +430,8 @@ public class SunFlowerDriver {
 
 	private static class CelestialComputerThread extends Thread {
 		private boolean keepCalculating = true;
+		private Calendar previousDate = null; // Used for simulation, when required
+		private int incrementPerSecond = -1;  // Used for simulation
 
 		public void stopCalculating() {
 			keepCalculating = false;
@@ -430,13 +440,70 @@ public class SunFlowerDriver {
 		@Override
 		public void run() {
 			while (keepCalculating) {
-
-				Date at = new Date();
 				Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
-				date.setTime(at);
-//				if (ASTRO_VERBOSE) {
-//					System.out.println("Starting Sun data calculation at " + date.getTime());
-//				}
+				if ("true".equals(System.getProperty("date.simulation"))) {
+					if (previousDate == null) {
+						System.out.println("\tWill simulate the date for ASTRO calculation");
+						// Init the date
+						String startDate = System.getProperty("start.date.simulation"); // UTC Date
+						if (startDate == null) {
+							throw new RuntimeException("date.simulation required, start.date.simulation must be provided");
+						} else {
+							// Expect Duration Format 2020-03-06T07:20:00
+							//                        |    |  |  |  |  |
+							//                        |    |  |  |  |  17
+							//                        |    |  |  |  14
+							//                        |    |  |  11
+							//                        |    |  8
+							//                        |    5
+							//                        0
+							String patternStr = "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}";
+							Pattern pattern = Pattern.compile(patternStr);
+							Matcher matcher = pattern.matcher(startDate);
+							if (!matcher.matches()) {
+								throw new RuntimeException(String.format("%s does not match expected format %s", startDate, patternStr));
+							} else {
+								System.out.println(String.format("\tSimulation starting %s", startDate));
+								int year = Integer.parseInt(startDate.substring(0, 4));
+								int month = Integer.parseInt(startDate.substring(5, 7));
+								int day = Integer.parseInt(startDate.substring(8, 10));
+								int hour = Integer.parseInt(startDate.substring(11, 13));
+								int min = Integer.parseInt(startDate.substring(14, 16));
+								int sec = Integer.parseInt(startDate.substring(17));
+								// TODO Validate the fields...
+								date.set(Calendar.YEAR, year);
+								date.set(Calendar.MONTH, month - 1);
+								date.set(Calendar.DAY_OF_MONTH, day);
+								date.set(Calendar.HOUR_OF_DAY, hour);
+								date.set(Calendar.MINUTE, min);
+								date.set(Calendar.SECOND, sec);
+								//
+								previousDate = date;
+							}
+						}
+					} else { // Increment, in seconds
+						if (incrementPerSecond < 0) {
+							String strInc = System.getProperty("increment.per.second");
+							if (strInc == null) {
+								throw new RuntimeException("date.simulation required, increment.per.second must be provided");
+							}
+							incrementPerSecond = Integer.parseInt(strInc);
+							if (incrementPerSecond < 1) {
+								throw new RuntimeException("increment.per.second must be greater than 0");
+							}
+							System.out.println(String.format("\tIncrementing date by %d s every second.", incrementPerSecond));
+						} else {
+							previousDate.add(Calendar.SECOND, incrementPerSecond);
+							date.setTime(previousDate.getTime());
+						}
+					}
+				} else {
+					Date at = new Date();
+					date.setTime(at);
+				}
+				if (ASTRO_VERBOSE) {
+					System.out.println("Starting Sun data calculation at " + date.getTime());
+				}
 				// TODO Make it non-static, and synchronized ?
 				AstroComputer.calculate(date.get(Calendar.YEAR),
 																date.get(Calendar.MONTH) + 1,
