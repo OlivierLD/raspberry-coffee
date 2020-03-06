@@ -34,7 +34,7 @@ import sunflower.utils.ANSIUtil;
  * JAVA_OPTS="$JAVA_OPTS -Dstart.date.simulation=2020-03-06T20:00:00"
  * JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"
  * JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10" (only applied if date.simulation=true)
- *
+ * JAVA_OPTS="$JAVA_OPTS -Dfirst.move.slack=30" in seconds (only applied if date.simulation=true). Resumes calculation after this amount of time after the first move of the device
  * Also:
  * -Dno.motor.movement=true will NOT move the motors.
  * Use it with -Dmotor.hat.verbose=true
@@ -461,6 +461,7 @@ public class SunFlowerDriver {
 
 		@Override
 		public void run() {
+			boolean firstMove = true;
 			while (keepCalculating) {
 				Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
 				if ("true".equals(System.getProperty("date.simulation"))) {
@@ -513,7 +514,7 @@ public class SunFlowerDriver {
 							if (incrementPerSecond < 1) {
 								throw new RuntimeException("increment.per.second must be greater than 0");
 							}
-							System.out.println(String.format("\tIncrementing date by %d s every %d second(s).", incrementPerSecond, loopDelay));
+							System.out.println(String.format("\tIncrementing date by %d s every %d second(s).", incrementPerSecond, (loopDelay / 1_000L)));
 						} else {
 							previousDate.add(Calendar.SECOND, incrementPerSecond);
 							date.setTime(previousDate.getTime());
@@ -547,7 +548,15 @@ public class SunFlowerDriver {
 				} else {
 					System.out.println("No position yet!");
 				}
-				delay(loopDelay);
+				long firstSlack = loopDelay;
+				if ("true".equals(System.getProperty("date.simulation"))) {
+					String firstMoveSlack = System.getProperty("first.move.slack");
+					if (firstMoveSlack != null) {
+						firstSlack = Integer.parseInt(firstMoveSlack) * 1_000L;
+					}
+				}
+				delay(firstMove ? firstSlack : loopDelay);
+				firstMove = false;
 			}
 		}
 	}
