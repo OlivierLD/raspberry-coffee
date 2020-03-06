@@ -1,13 +1,17 @@
 // https://www.arduino.cc/reference/en/
 
-#include <Arduino.h>
+// #include <Arduino.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h> 
+
 #include "CelestStruct.h"
 //#endif
-#include <MathUtils.h>
-#include <Earth.h>
+#include "MathUtils.h"
+#include "Earth.h"
 
-const MathUtils cuMu;
-const Earth earth; // No (), this would confuse the compiler.
+MathUtils cuMu;
+Earth earth; // No (), this would confuse the compiler.
 
 bool isLeapYear(int year) {
   bool ly = false;
@@ -26,22 +30,22 @@ bool isLeapYear(int year) {
 char dataBuffer[128];
 
 // Output Sidereal Time
-String outSideralTime(float x) {
+char * outSideralTime(float x) {
 	float GMSTdecimal = x / 15;
 	int GMSTh = floor(GMSTdecimal);
 	float GMSTmdecimal = 60 * (GMSTdecimal - GMSTh);
 	int GMSTm = floor(GMSTmdecimal);
 	float GMSTsdecimal = 60 * (GMSTmdecimal - GMSTm);
 	int GMSTs = round(1000 * GMSTsdecimal) / 1000;
-	if (GMSTs - floor(GMSTs) == 0) {
-		GMSTs += ".000";
-	} else if (10 * GMSTs - floor(10 * GMSTs) == 0) {
-		GMSTs += "00";
-	} else if (100 * GMSTs - floor(100 * GMSTs) == 0) {
-		GMSTs += "0";
-	}
+	// if (GMSTs - floor(GMSTs) == 0) {
+	// 	GMSTs += ".000";
+	// } else if (10 * GMSTs - floor(10 * GMSTs) == 0) {
+	// 	GMSTs += "00";
+	// } else if (100 * GMSTs - floor(100 * GMSTs) == 0) {
+	// 	GMSTs += "0";
+	// }
 	sprintf(dataBuffer, "%dh %dm %ds", GMSTh, GMSTm, GMSTs);
-	return dataBuffer;
+	return &dataBuffer[0];
 }
 
 // Placeholder for all computed data
@@ -91,7 +95,7 @@ void calculateJulianDate(int year, int month, int day, int hour, int minute, int
 
   data->dayFraction = (hour + minute / 60 + second / 3600) / 24;
   if (data->dayFraction < 0 || data->dayFraction > 1) {
-    Serial.println("Time out of range! Restart calculation.");
+    fprintf(stdout, "Time out of range! Restart calculation.");
     return;
   }
   data->deltaT = delta_t;
@@ -156,7 +160,7 @@ void calculateNutation() {
   // Periodic terms for nutation
   const int nutRows = 106,
             nutColumns = 9;
-  const float nut[nutRows][nutColumns] PROGMEM = {
+  const float nut[nutRows][nutColumns] = {
     {  0,  0,  0,  0,  1, -171996, -174.2,  92025,  8.9 },
     {  0,  0,  2, -2,  2,  -13187,   -1.6,   5736, -3.1 },
     {  0,  0,  2,  0,  2,   -2274,   -0.2,    977, -0.5 },
@@ -282,7 +286,7 @@ void calculateNutation() {
   // Corrections (Herring, 1987)
   int corrRows = 4;
   int corrColumns = 9;
-  const float corr[corrRows][corrColumns] PROGMEM = {
+  const float corr[corrRows][corrColumns] = {
     { 0, 0, 0, 0, 1,-725, 417, 213, 224 },
     { 0, 1, 0, 0, 0, 523,  61, 208, -24 },
     { 0, 0, 2,-2, 2, 102,-118, -41, -47 },
@@ -424,7 +428,7 @@ void calculateMoon() {
 	// Longitude and distance
 	int ldRows = 60;
 	int ldColumns = 6;
-	const float ld[ldRows][ldColumns] PROGMEM = {
+	const float ld[ldRows][ldColumns] = {
 		{ 0,  0,  1,  0, 6288774, -20905355 },
 		{ 2,  0, -1,  0, 1274027,  -3699111 },
 		{ 2,  0,  0,  0,  658314,  -2955968 },
@@ -489,7 +493,7 @@ void calculateMoon() {
 
 	int latRows = 60;
 	int latColumns = 5;
-	const float lat[latRows][latColumns] PROGMEM = {
+	const float lat[latRows][latColumns] = {
 		{ 0,  0,  0,  1, 5128122 },
 		{ 0,  0,  1,  1,  280602 },
 		{ 0,  0,  1, -1,  277693 },
@@ -630,7 +634,7 @@ void calculateMoon() {
 	data->illumMoon = round(10 * k) / 10;
 }
 
-String calculateWeekDay() {
+void calculateWeekDay() {
   data->JD0h += 1.5;
   float res = data->JD0h - 7 * floor(data->JD0h / 7);
   if (res == 0) {

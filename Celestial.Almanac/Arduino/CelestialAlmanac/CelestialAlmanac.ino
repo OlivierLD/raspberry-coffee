@@ -4,6 +4,9 @@
  */
 
 #include "CelestStruct.h" 
+#include <MathUtils.h>
+
+MathUtils caMu;
 
 float nb = 0;
 
@@ -24,7 +27,7 @@ void loop() {
   //sprintf(dataBuffer, "nb=%f, Rad=%f", nb, degToRadians(nb));
   //Serial.println(dataBuffer); 
   Serial.print("nb="); Serial.print(nb);
-  Serial.print(", rad="); Serial.println(toRadians(nb));
+  Serial.print(", rad="); Serial.println(caMu.toRadians(nb));
 
   float deltaT = 69.2201;
   int year = 2020, month = 3, day = 5, hour = 9, minute = 15, second = 0;

@@ -391,7 +391,9 @@ public class SunFlowerDriver {
 			try {
 				long before = System.currentTimeMillis();
 				if (MOTOR_HAT_VERBOSE) {
-					System.out.println(String.format("Starting move of %d steps on motor#%d", nbSteps, this.stepper.getMotorNum()));
+					System.out.println("+----------------------------------------------");
+					System.out.println(String.format("| Starting move of %d steps on motor #%d", nbSteps, this.stepper.getMotorNum()));
+					System.out.println("+----------------------------------------------");
 				}
 				this.stepper.step(nbSteps, motorCommand, motorStyle, t -> {
 					if (MOTOR_HAT_VERBOSE) {
@@ -401,7 +403,9 @@ public class SunFlowerDriver {
 				});
 				long after = System.currentTimeMillis();
 				if (MOTOR_HAT_VERBOSE) {
-					System.out.println(String.format("Completed move of %d steps on motor#%d", nbSteps, this.stepper.getMotorNum()));
+					System.out.println("+----------------------------------------------");
+					System.out.println(String.format("| Completed move of %d steps on motor #%d", nbSteps, this.stepper.getMotorNum()));
+					System.out.println("+----------------------------------------------");
 				}
 				MoveCompleted payload = new MoveCompleted(new Date(), this.nbSteps, (after - before));
 				instance.publish(this.stepper.getMotorNum() == 1 ? EventType.MOVING_AZIMUTH_END : EventType.MOVING_ELEVATION_END, payload);
