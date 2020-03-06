@@ -132,6 +132,16 @@ public class SunFlowerDriver {
 	private final static boolean TOO_LONG_EXCEPTION_VERBOSE = "true".equals(System.getProperty("too.long.exception.verbose", "true"));
 	private final static boolean ASTRO_VERBOSE = "true".equals(System.getProperty("astro.verbose", "false"));
 
+	private static int minimumAltitude = -1;
+	static {
+		try {
+			minimumAltitude = Integer.parseInt(System.getProperty("minimum.elevation", String.valueOf(minimumAltitude)));
+		} catch (NumberFormatException nfe) {
+			System.err.println(nfe.toString());
+
+		}
+	}
+
 	public static class MoveCompleted {
 		private Date date;
 		private long epoch;
@@ -713,7 +723,7 @@ public class SunFlowerDriver {
 					}
 					currentDeviceAzimuth = sunAzimuth;
 				}
-				if (Math.abs(currentDeviceElevation - sunElevation) >= minDiffForMove) {
+				if (Math.abs(currentDeviceElevation - Math.max(sunElevation, minimumAltitude)) >= minDiffForMove) {
 					hasMoved = true;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, sunElevation));
 					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio);
