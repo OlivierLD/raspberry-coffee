@@ -33,13 +33,26 @@ import sunflower.utils.ANSIUtil;
  * JAVA_OPTS="$JAVA_OPTS -Ddate.simulation=true"
  * JAVA_OPTS="$JAVA_OPTS -Dstart.date.simulation=2020-03-06T20:00:00"
  * JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"
- * JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10" 
+ * JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10"
  *
  * Also:
  * -Dno.motor.movement=true will NOT move the motors.
  * Use it with -Dmotor.hat.verbose=true
  */
 public class SunFlowerDriver {
+
+	private static long loopDelay = 1_000L;
+	static {
+		if ("true".equals(System.getProperty("date.simulation"))) {
+			String betweenLoops = System.getProperty("between.astro.loops", String.valueOf(loopDelay / 1_000L)); // In seconds
+			try {
+				loopDelay = Long.parseLong(betweenLoops);
+				loopDelay *= 1_000L;
+			} catch (NumberFormatException nfe) {
+				System.err.println("Bad between.astro.loops value [%s], keeping default.");
+			}
+		}
+	}
 
 	private SunFlowerDriver instance = this;
 
@@ -534,17 +547,7 @@ public class SunFlowerDriver {
 				} else {
 					System.out.println("No position yet!");
 				}
-				long delay = 1_000L;
-				if ("true".equals(System.getProperty("date.simulation"))) {
-					String betweenLoops = System.getProperty("between.astro.loops", String.valueOf(delay / 1_000L)); // In seconds
-					try {
-						delay = Long.parseLong(betweenLoops);
-						delay *= 1_000L;
-					} catch (NumberFormatException nfe) {
-						System.err.println("Bad between.astro.loops value [%s], keeping default.");
-					}
-				}
-				delay(delay);
+				delay(loopDelay);
 			}
 		}
 	}
@@ -721,7 +724,7 @@ public class SunFlowerDriver {
 				parkDevice();
 			}
 			// Bottom of the loop
-			delay(1_000L);
+			delay(loopDelay);
 		}
 		System.out.println("... Done with the SunFlowerDriver program ...");
 //	try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
