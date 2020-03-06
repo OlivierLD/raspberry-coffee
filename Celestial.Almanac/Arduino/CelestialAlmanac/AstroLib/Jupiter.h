@@ -2,7 +2,7 @@
 #define JUPITER
 
 class Jupiter {
-  public:
+  public: // TODO Make those static
     Jupiter();
     float lJupiter(float x);
     float bJupiter(float x);

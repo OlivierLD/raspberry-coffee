@@ -2,7 +2,7 @@
 #define MARS
 
 class Mars {
-  public:
+  public: // TODO Make those static
     Mars();
     float lMars(float x);
     float bMars(float x);

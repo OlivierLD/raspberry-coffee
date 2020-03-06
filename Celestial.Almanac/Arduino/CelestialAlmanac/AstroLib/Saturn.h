@@ -2,7 +2,7 @@
 #define SATURN
 
 class Saturn {
-  public:
+  public: // TODO Make those static
     Saturn();
     float lSaturn(float x);
     float bSaturn(float x);

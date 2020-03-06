@@ -6,7 +6,7 @@
 #include <MathUtils.h>
 #include <Earth.h>
 
-const MathUtils cuMu;
+// const MathUtils cuMu;
 const Earth earth; // No (), this would confuse the compiler.
 
 bool isLeapYear(int year) {
@@ -139,19 +139,19 @@ void calculateNutation() {
   // IAU 1980 calculateNutation theory:
 
   // Mean anomaly of the Moon
-  float Mm = 134.962981389 + 198.867398056 * data->TE + cuMu.norm360Deg(477000 * data->TE) + 0.008697222222 * data->TE2 + data->TE3 / 56250;
+  float Mm = 134.962981389 + 198.867398056 * data->TE + MathUtils::norm360Deg(477000 * data->TE) + 0.008697222222 * data->TE2 + data->TE3 / 56250;
 
   // Mean anomaly of the Sun
-  float M = 357.527723333 + 359.05034 * data->TE + cuMu.norm360Deg(35640 * data->TE) - 0.0001602777778 * data->TE2 - data->TE3 / 300000;
+  float M = 357.527723333 + 359.05034 * data->TE + MathUtils::norm360Deg(35640 * data->TE) - 0.0001602777778 * data->TE2 - data->TE3 / 300000;
 
   // Mean distance of the Moon from ascending node
-  float F = 93.271910277 + 82.017538055 * data->TE + cuMu.norm360Deg(483120 * data->TE) - 0.0036825 * data->TE2 + data->TE3 / 327272.7273;
+  float F = 93.271910277 + 82.017538055 * data->TE + MathUtils::norm360Deg(483120 * data->TE) - 0.0036825 * data->TE2 + data->TE3 / 327272.7273;
 
   // Mean elongation of the Moon
-  float D = 297.850363055 + 307.11148 * data->TE + cuMu.norm360Deg(444960 * data->TE) - 0.001914166667 * data->TE2 + data->TE3 / 189473.6842;
+  float D = 297.850363055 + 307.11148 * data->TE + MathUtils::norm360Deg(444960 * data->TE) - 0.001914166667 * data->TE2 + data->TE3 / 189473.6842;
 
   // Longitude of the ascending node of the Moon
-  float omega = 125.044522222 - 134.136260833 * data->TE - cuMu.norm360Deg(1800 * data->TE) + 0.002070833333 * data->TE2 + data->TE3 / 450000;
+  float omega = 125.044522222 - 134.136260833 * data->TE - MathUtils::norm360Deg(1800 * data->TE) + 0.002070833333 * data->TE2 + data->TE3 / 450000;
 
   // Periodic terms for nutation
   const int nutRows = 106,
@@ -274,8 +274,8 @@ void calculateNutation() {
     fF = nut[x][2];
     fD = nut[x][3];
     f_omega = nut[x][4];
-    dp += (nut[x][5] + data->TE * nut[x][6]) * cuMu.sind(fD * D + fM * M + fMm * Mm + fF * F + f_omega * omega);
-    de += (nut[x][7] + data->TE * nut[x][8]) * cuMu.cosd(fD * D + fM * M + fMm * Mm + fF * F + f_omega * omega);
+    dp += (nut[x][5] + data->TE * nut[x][6]) * MathUtils::sind(fD * D + fM * M + fMm * Mm + fF * F + f_omega * omega);
+    de += (nut[x][7] + data->TE * nut[x][8]) * MathUtils::cosd(fD * D + fM * M + fMm * Mm + fF * F + f_omega * omega);
     x++;
   }
 
@@ -295,8 +295,8 @@ void calculateNutation() {
     fF = corr[x][2];
     fD = corr[x][3];
     f_omega = corr[x][4];
-    dp += 0.1 * (corr[x][5] * cuMu.sind(fD * D + fM * M + fMm * Mm + fF * F + f_omega * omega) + corr[x][6] * cuMu.cosd(fD * D + fM * M + fMm * Mm + fF * F + f_omega * omega));
-    de += 0.1 * (corr[x][7] * cuMu.cosd(fD * D + fM * M + fMm * Mm + fF * F + f_omega * omega) + corr[x][8] * cuMu.sind(fD * D + fM * M + fMm * Mm + fF * F + f_omega * omega));
+    dp += 0.1 * (corr[x][5] * MathUtils::sind(fD * D + fM * M + fMm * Mm + fF * F + f_omega * omega) + corr[x][6] * MathUtils::cosd(fD * D + fM * M + fMm * Mm + fF * F + f_omega * omega));
+    de += 0.1 * (corr[x][7] * MathUtils::cosd(fD * D + fM * M + fMm * Mm + fF * F + f_omega * omega) + corr[x][8] * MathUtils::sind(fD * D + fM * M + fMm * Mm + fF * F + f_omega * omega));
     x++;
   }
 
@@ -315,27 +315,27 @@ void calculateNutation() {
 }
 
 void calculateAberration() {
-  data->kappa = cuMu.toRadians(20.49552 / 3600);
-  data->pi0 = cuMu.toRadians(102.93735 + 1.71953 * data->TE + 0.00046 * data->TE2);
+  data->kappa = MathUtils::toRadians(20.49552 / 3600);
+  data->pi0 = MathUtils::toRadians(102.93735 + 1.71953 * data->TE + 0.00046 * data->TE2);
   data->e = 0.016708617 - 0.000042037 * data->TE - 0.0000001236 * data->TE2;
 }
 
 // GHA Aries, GAST, GMST, equation of the equinoxes
 void calculateAries() {
 	// Mean GHA Aries
-	data->GHAAmean = cuMu.norm360Deg(280.46061837 + 360.98564736629 * (data->JD - 2451545) + 0.000387933 * data->T2 - data->T3 / 38710000);
+	data->GHAAmean = MathUtils::norm360Deg(280.46061837 + 360.98564736629 * (data->JD - 2451545) + 0.000387933 * data->T2 - data->T3 / 38710000);
 
 	// GMST
 	data->SidTm = outSideralTime(data->GHAAmean);
 
 	// True GHA Aries
-	data->GHAAtrue = cuMu.norm360Deg(data->GHAAmean + data->deltaPsi * cuMu.cosd(data->eps));
+	data->GHAAtrue = MathUtils::norm360Deg(data->GHAAmean + data->deltaPsi * MathUtils::cosd(data->eps));
 
 	// GAST
 	data->SidTa = outSideralTime(data->GHAAtrue);
 
 	// Equation of the equinoxes
-	data->EoE = 240 * data->deltaPsi * cuMu.cosd(data->eps);
+	data->EoE = 240 * data->deltaPsi * MathUtils::cosd(data->eps);
 	data->EoEout = round(1000 * data->EoE) / 1000;
 	// EoEout = " " + EoEout + "s";
 }
@@ -343,40 +343,40 @@ void calculateAries() {
 // Calculations for the Sun
 void calculateSun() {
 	// Mean longitude of the Sun
-	float Lsun_mean = cuMu.norm360Deg(280.4664567 + 360007.6982779 * data->Tau + 0.03032028 * data->Tau2 + data->Tau3 / 49931 - data->Tau4 / 15299 - data->Tau5 / 1988000);
+	float Lsun_mean = MathUtils::norm360Deg(280.4664567 + 360007.6982779 * data->Tau + 0.03032028 * data->Tau2 + data->Tau3 / 49931 - data->Tau4 / 15299 - data->Tau5 / 1988000);
 
 	// Heliocentric longitude of the Earth
   data->Le = earth.lEarth(data->Tau);
 
 	// Geocentric longitude of the Sun
-	data->Lsun_true = cuMu.norm360Deg(data->Le + 180 - 0.000025);
+	data->Lsun_true = MathUtils::norm360Deg(data->Le + 180 - 0.000025);
 
 	// Heliocentric latitude of Earth
 	data->Be = earth.bEarth(data->Tau);
 
 	// Geocentric latitude of the Sun
-	float beta = cuMu.norm360Deg(- data->Be);
+	float beta = MathUtils::norm360Deg(- data->Be);
 
 	// Corrections
-	data->Lsun_prime = cuMu.norm360Deg(data->Le + 180 - 1.397 * data->TE - 0.00031 * data->TE2);
+	data->Lsun_prime = MathUtils::norm360Deg(data->Le + 180 - 1.397 * data->TE - 0.00031 * data->TE2);
 
-	beta = beta + 0.000011 * (cuMu.cosd(data->Lsun_prime) - cuMu.sind(data->Lsun_prime));
+	beta = beta + 0.000011 * (MathUtils::cosd(data->Lsun_prime) - MathUtils::sind(data->Lsun_prime));
 
 	// Distance Earth-Sun
 	data->Re = earth.rEarth(data->Tau);
 	data->dES = 149597870.691 * data->Re;
 
 	// Apparent longitude of the Sun
-	data->lambdaSun = cuMu.norm360Deg(data->Lsun_true + data->deltaPsi - 0.005691611 / data->Re);
+	data->lambdaSun = MathUtils::norm360Deg(data->Lsun_true + data->deltaPsi - 0.005691611 / data->Re);
 
 	// Right ascension of the Sun, apparent
-	data->RASun = cuMu.toDegrees(cuMu.norm2PiRad(atan2((cuMu.sind(data->lambdaSun) * cuMu.cosd(data->eps) - cuMu.tand(beta) * cuMu.sind(data->eps)), cuMu.cosd(data->lambdaSun))));
+	data->RASun = MathUtils::toDegrees(MathUtils::norm2PiRad(atan2((MathUtils::sind(data->lambdaSun) * MathUtils::cosd(data->eps) - MathUtils::tand(beta) * MathUtils::sind(data->eps)), MathUtils::cosd(data->lambdaSun))));
 
 	// Declination of the Sun, apparent
-	data->DECSun = cuMu.toDegrees(asin(cuMu.sind(beta) * cuMu.cosd(data->eps) + cuMu.cosd(beta) * cuMu.sind(data->eps) * cuMu.sind(data->lambdaSun)));
+	data->DECSun = MathUtils::toDegrees(asin(MathUtils::sind(beta) * MathUtils::cosd(data->eps) + MathUtils::cosd(beta) * MathUtils::sind(data->eps) * MathUtils::sind(data->lambdaSun)));
 
 	// GHA of the Sun
-	data->GHASun = cuMu.norm360Deg(data->GHAAtrue - data->RASun);
+	data->GHASun = MathUtils::norm360Deg(data->GHAAtrue - data->RASun);
 
 	// Semi-diameter of the Sun
 	data->SDSun = 959.63 / data->Re;
@@ -398,24 +398,24 @@ void calculateSun() {
 // Calculations for the moon
 void calculateMoon() {
 	// Mean longitude of the moon
-	float Lmm = cuMu.norm360Deg(218.3164591 + 481267.88134236 * data->TE - 0.0013268 * data->TE2 + data->TE3 / 538841 - data->TE4 / 65194000);
+	float Lmm = MathUtils::norm360Deg(218.3164591 + 481267.88134236 * data->TE - 0.0013268 * data->TE2 + data->TE3 / 538841 - data->TE4 / 65194000);
 
 	// Mean elongation of the moon
-	float D = cuMu.norm360Deg(297.8502042 + 445267.1115168 * data->TE - 0.00163 * data->TE2 + data->TE3 / 545868 - data->TE4 / 113065000);
+	float D = MathUtils::norm360Deg(297.8502042 + 445267.1115168 * data->TE - 0.00163 * data->TE2 + data->TE3 / 545868 - data->TE4 / 113065000);
 
 	// Mean anomaly of the sun
-	float Msm = cuMu.norm360Deg(357.5291092 + 35999.0502909 * data->TE - 0.0001536 * data->TE2 + data->TE3 / 24490000);
+	float Msm = MathUtils::norm360Deg(357.5291092 + 35999.0502909 * data->TE - 0.0001536 * data->TE2 + data->TE3 / 24490000);
 
 	// Mean anomaly of the moon
-	float Mmm = cuMu.norm360Deg(134.9634114 + 477198.8676313 * data->TE + 0.008997 * data->TE2 + data->TE3 / 69699 - data->TE4 / 14712000);
+	float Mmm = MathUtils::norm360Deg(134.9634114 + 477198.8676313 * data->TE + 0.008997 * data->TE2 + data->TE3 / 69699 - data->TE4 / 14712000);
 
 	// Mean distance of the moon from ascending node
-	float F = cuMu.norm360Deg(93.2720993 + 483202.0175273 * data->TE - 0.0034029 * data->TE2 - data->TE3 / 3526000 + data->TE4 / 863310000);
+	float F = MathUtils::norm360Deg(93.2720993 + 483202.0175273 * data->TE - 0.0034029 * data->TE2 - data->TE3 / 3526000 + data->TE4 / 863310000);
 
 	// Corrections
-	float A1 = cuMu.norm360Deg(119.75 + 131.849 * data->TE);
-	float A2 = cuMu.norm360Deg(53.09 + 479264.29 * data->TE);
-	float A3 = cuMu.norm360Deg(313.45 + 481266.484 * data->TE);
+	float A1 = MathUtils::norm360Deg(119.75 + 131.849 * data->TE);
+	float A2 = MathUtils::norm360Deg(53.09 + 479264.29 * data->TE);
+	float A3 = MathUtils::norm360Deg(313.45 + 481266.484 * data->TE);
 	float fE = 1 - 0.002516 * data->TE - 0.0000074 * data->TE2;
 	float fE2 = fE * fE;
 
@@ -570,8 +570,8 @@ void calculateMoon() {
 		} else {
 			f = 1;
 		}
-		sumL += f * coeffs * cuMu.sind(fD * D + fM * Msm + fMm * Mmm + fF * F);
-		sumR += f * coeffc * cuMu.cosd(fD * D + fM * Msm + fMm * Mmm + fF * F);
+		sumL += f * coeffs * MathUtils::sind(fD * D + fM * Msm + fMm * Mmm + fF * F);
+		sumR += f * coeffc * MathUtils::cosd(fD * D + fM * Msm + fMm * Mmm + fF * F);
 		fD2 = lat[x][0];
 		fM2 = lat[x][1];
 		fMm2 = lat[x][2];
@@ -584,16 +584,16 @@ void calculateMoon() {
 		} else {
 			f2 = 1;
 		}
-		sumB += f2 * coeffs2 * cuMu.sind(fD2 * D + fM2 * Msm + fMm2 * Mmm + fF2 * F);
+		sumB += f2 * coeffs2 * MathUtils::sind(fD2 * D + fM2 * Msm + fMm2 * Mmm + fF2 * F);
 		x++;
 	}
 
 	// Corrections
-	sumL = sumL + 3958 * cuMu.sind(A1) + 1962 * cuMu.sind(Lmm - F) + 318 * cuMu.sind(A2);
-	sumB = sumB - 2235 * cuMu.sind(Lmm) + 382 * cuMu.sind(A3) + 175 * cuMu.sind(A1 - F) + 175 * cuMu.sind(A1 + F) + 127 * cuMu.sind(Lmm - Mmm) - 115 * cuMu.sind(Lmm + Mmm);
+	sumL = sumL + 3958 * MathUtils::sind(A1) + 1962 * MathUtils::sind(Lmm - F) + 318 * MathUtils::sind(A2);
+	sumB = sumB - 2235 * MathUtils::sind(Lmm) + 382 * MathUtils::sind(A3) + 175 * MathUtils::sind(A1 - F) + 175 * MathUtils::sind(A1 + F) + 127 * MathUtils::sind(Lmm - Mmm) - 115 * MathUtils::sind(Lmm + Mmm);
 
 	// Longitude of the moon
-	float lambdaMm = cuMu.norm360Deg(Lmm + sumL / 1000000);
+	float lambdaMm = MathUtils::norm360Deg(Lmm + sumL / 1000000);
 
 	// Latitude of the moon
 	float betaM = sumB / 1000000;
@@ -605,25 +605,25 @@ void calculateMoon() {
 	data->lambdaMapp = lambdaMm + data->deltaPsi;
 
 	// Right ascension of the moon, apparent
-	data->RAMoon = cuMu.toDegrees(cuMu.norm2PiRad(atan2((cuMu.sind(data->lambdaMapp) * cuMu.cosd(data->eps) - cuMu.tand(betaM) * cuMu.sind(data->eps)), cuMu.cosd(data->lambdaMapp))));
+	data->RAMoon = MathUtils::toDegrees(MathUtils::norm2PiRad(atan2((MathUtils::sind(data->lambdaMapp) * MathUtils::cosd(data->eps) - MathUtils::tand(betaM) * MathUtils::sind(data->eps)), MathUtils::cosd(data->lambdaMapp))));
 
 	// Declination of the moon
-	data->DECMoon = cuMu.toDegrees(asin(cuMu.sind(betaM) * cuMu.cosd(data->eps) + cuMu.cosd(betaM) * cuMu.sind(data->eps) * cuMu.sind(data->lambdaMapp)));
+	data->DECMoon = MathUtils::toDegrees(asin(MathUtils::sind(betaM) * MathUtils::cosd(data->eps) + MathUtils::cosd(betaM) * MathUtils::sind(data->eps) * MathUtils::sind(data->lambdaMapp)));
 
 	// GHA of the moon
-	data->GHAMoon = cuMu.norm360Deg(data->GHAAtrue - data->RAMoon);
+	data->GHAMoon = MathUtils::norm360Deg(data->GHAAtrue - data->RAMoon);
 
 	// Horizontal parallax of the moon
-	data->HPMoon = cuMu.toDegrees(3600 * asin(6378.14 / dEM));
+	data->HPMoon = MathUtils::toDegrees(3600 * asin(6378.14 / dEM));
 
 	// Semi-diameter of the moon
-	data->SDMoon = cuMu.toDegrees(3600 * asin(1738 / dEM));
+	data->SDMoon = MathUtils::toDegrees(3600 * asin(1738 / dEM));
 
 	// Geocentric angular distance between moon and sun
-	data->LDist = cuMu.toDegrees(acos(cuMu.sind(data->DECMoon) * cuMu.sind(data->DECSun) + cuMu.cosd(data->DECMoon) * cuMu.cosd(data->DECSun) * cuMu.cosd(data->RAMoon - data->RASun)));
+	data->LDist = MathUtils::toDegrees(acos(MathUtils::sind(data->DECMoon) * MathUtils::sind(data->DECSun) + MathUtils::cosd(data->DECMoon) * MathUtils::cosd(data->DECSun) * MathUtils::cosd(data->RAMoon - data->RASun)));
 
 	//Phase angle
-	float i = atan2(data->dES * cuMu.sind(data->LDist), (dEM - data->dES * cuMu.cosd(data->LDist)));
+	float i = atan2(data->dES * MathUtils::sind(data->LDist), (dEM - data->dES * MathUtils::cosd(data->LDist)));
 
 	//Illumination of the moon's disk
 	float k = 100 * (1 + cos(i)) / 2;

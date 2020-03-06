@@ -2,7 +2,7 @@
 #define EARTH
 
 class Earth {
-  public:
+  public: // TODO Make those static
     Earth();
     float lEarth(float x);
     float bEarth(float x);

@@ -2,7 +2,7 @@
 #define VENUS
 
 class Venus {
-  public:
+  public: // TODO Make those static
     Venus();
     float lVenus(float x);
     float bVenus(float x);
