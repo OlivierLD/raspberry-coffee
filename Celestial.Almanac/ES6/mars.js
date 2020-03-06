@@ -5548,7 +5548,7 @@ export function rMars(x) {
 	let x2 = x * x;
 	let x3 = x2 * x;
 	let x4 = x3 * x;
-	let x5 = x4 * x
+	let x5 = x4 * x;
 
 	return (R0 + R1 * x + R2 * x2 + R3 * x3 + R4 * x4 + R5 * x5);
 }

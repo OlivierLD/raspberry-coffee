@@ -648,7 +648,7 @@ void calculateWeekDay() {
   }
   if (res == 3) {
     data->DoW = "WED";
-  }
+  } 
   if (res == 4) {
     data->DoW = "THU";
   }

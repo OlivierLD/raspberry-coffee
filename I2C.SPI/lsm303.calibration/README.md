@@ -1,4 +1,6 @@
 ## Magnetometer calibration
+Magnetic field values at your location, see [here](http://www.magnetic-declination.com/).
+
 Magnetometers often - if not always - require calibration.
 Here is an easy way to get to the expected calibration parameters.
 

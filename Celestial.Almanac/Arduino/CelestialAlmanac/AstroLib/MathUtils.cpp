@@ -1,6 +1,6 @@
 // #include <Arduino.h>
-#include <stdio.h>      /* printf */
-#include <math.h>       /* sin */
+#include <stdio.h> 
+#include <math.h> 
 
 #include "MathUtils.h"
 
