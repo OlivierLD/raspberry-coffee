@@ -33,7 +33,7 @@ import sunflower.utils.ANSIUtil;
  * JAVA_OPTS="$JAVA_OPTS -Ddate.simulation=true"
  * JAVA_OPTS="$JAVA_OPTS -Dstart.date.simulation=2020-03-06T20:00:00"
  * JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"
- * JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10"
+ * JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10" (only applied if date.simulation=true)
  *
  * Also:
  * -Dno.motor.movement=true will NOT move the motors.
@@ -513,7 +513,7 @@ public class SunFlowerDriver {
 							if (incrementPerSecond < 1) {
 								throw new RuntimeException("increment.per.second must be greater than 0");
 							}
-							System.out.println(String.format("\tIncrementing date by %d s every second.", incrementPerSecond));
+							System.out.println(String.format("\tIncrementing date by %d s every %d second(s).", incrementPerSecond, loopDelay));
 						} else {
 							previousDate.add(Calendar.SECOND, incrementPerSecond);
 							date.setTime(previousDate.getTime());
@@ -636,7 +636,11 @@ public class SunFlowerDriver {
 	private void parkDevice() {
 		if (currentDeviceElevation != PARKED_ELEVATION || currentDeviceAzimuth != PARKED_AZIMUTH) {
 			if (ASTRO_VERBOSE) {
+				System.out.println("---------------------------------------------------");
 				System.out.println(">> Parking the device");
+				System.out.println(String.format("\t Elev: from %.02f to %.02f", currentDeviceElevation, PARKED_ELEVATION));
+				System.out.println(String.format("\t Z   : from %.02f to %.02f", currentDeviceAzimuth, PARKED_AZIMUTH));
+				System.out.println("---------------------------------------------------");
 			}
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Parking the device"));
 			// Put Z to 0, Elev. to 90.
