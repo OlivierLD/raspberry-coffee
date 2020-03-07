@@ -9,6 +9,7 @@ JAVA_OPTS="$JAVA_OPTS -Dazimuth.ratio=20:40"  # For V3
 # JAVA_OPTS="$JAVA_OPTS -Delevation.ratio=18:128"
 JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dmotor.hat.verbose=true"
+JAVA_OPTS="$JAVA_OPTS -Dtoo.long.exception.verbose=false"
 #
 JAVA_OPTS="$JAVA_OPTS -Dcalibration=true"
 JAVA_OPTS="$JAVA_OPTS -Dsun.flower.verbose=true"

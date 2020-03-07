@@ -49,6 +49,7 @@ include "TensorFlow"
 include "Processing"
 include "Bluetooth"
 include "Joystick"
+include "jsonQL"
 // NMEA.mux.WebUI sub-projects
 include(':NMEA.mux.WebUI:full.server')
 include(':NMEA.mux.WebUI:minimal.mux')
