@@ -76,11 +76,16 @@ public class HMC5883LWithSSD1306 {
 						// Needle right side
 						int needleRightTipX = centerX - (int)Math.round(Math.cos(Math.toRadians(- heading)) * 3);
 						int needleRightTipY = centerY + (int)Math.round(Math.sin(Math.toRadians(- heading)) * 3);
+						// Needle left side
+						int needleLeftTipX = centerX + (int)Math.round(Math.cos(Math.toRadians(- heading)) * 3);
+						int needleLeftTipY = centerY - (int)Math.round(Math.sin(Math.toRadians(- heading)) * 3);
 
 						// Draw needle
-						sb.line(centerX, centerY, needleTipX, needleTipY);
-						sb.line(needleBackTipX, needleBackTipY, needleRightTipX, needleRightTipY);
-						sb.line(needleRightTipX, needleRightTipY, needleTipX, needleTipY);
+						sb.line(centerX, centerY, needleTipX, needleTipY);                         // Center to N
+						sb.line(needleBackTipX, needleBackTipY, needleRightTipX, needleRightTipY); // S to right
+						sb.line(needleRightTipX, needleRightTipY, needleTipX, needleTipY);         // Right to N
+						sb.line(needleTipX, needleTipY, needleLeftTipX, needleLeftTipY);           // N to left
+						sb.line(needleLeftTipX, needleLeftTipY, needleBackTipX, needleBackTipY);   // left to S
 
 						oled.setBuffer(sb.getScreenBuffer());
 						oled.display();
