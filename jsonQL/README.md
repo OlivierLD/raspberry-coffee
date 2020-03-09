@@ -2,13 +2,17 @@
 
 To use like 
 ```bash
-curl -X GET http://192.168.42.19:8989/sf/status | java -cp ./build/libs/jsonQL-1.0-all.jar oliv.json.JsonQL --query:<Query>
+curl [--silent]  -X GET http://192.168.42.19:8989/sf/status | java -cp ./build/libs/jsonQL-1.0-all.jar oliv.json.JsonQL --query:<Query>
+```
+also try
+```bash
+curl [--silent]  -X GET http://192.168.42.19:8989/sf/status | java -Djson.debug=true -cp ./build/libs/jsonQL-1.0-all.jar oliv.json.JsonQL "--query:.*/(elevation|azimuth)"
 ```
 
-### RegExp support (WiP)
-Use `regexp` syntax.
+### RegEx support (WiP)
+Use `regex` syntax.
 ```bash
-curl -X GET http://192.168.42.19:8989/sf/status | java -cp ./build/libs/jsonQL-1.0-all.jar oliv.json.JsonQL --query:.*_DATA/elevation
+curl [--silent] -X GET http://192.168.42.19:8989/sf/status | java -cp ./build/libs/jsonQL-1.0-all.jar oliv.json.JsonQL --query:.*_DATA/elevation
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100  1130  100  1130    0     0   6890      0 --:--:-- --:--:-- --:--:--  6890
@@ -20,3 +24,6 @@ curl -X GET http://192.168.42.19:8989/sf/status | java -cp ./build/libs/jsonQL-1
 #### Query samples
 - `--query:.*_DATA/elevation`
 - `--query:.*/motor.*`
+- `curl [--silent]  -X GET http://192.168.42.19:8989/sf/status | java -cp ./build/libs/jsonQL-1.0-all.jar oliv.json.JsonQL "--query:.*/(elevation|azimuth)"`
+
+---

@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,13 +13,12 @@ import java.util.stream.Collectors;
 
 public class JsonQL {
 
-	private final static boolean DEBUG = false;
+	private final static boolean DEBUG = "true".equals(System.getProperty("json.debug"));
 
 	private final static String QUERY_PREFIX = "-q:";
 	private final static String FULL_QUERY_PREFIX = "--query:";
 
-
-	// TODO "Where" syntax like /.*_DATA[elevation > 1]/date
+	// TODO "Where" syntax like /.*_DATA[elevation > 1]/date ?
 
 	private static void processQuery(JSONObject json, String[] queryPath, List<String> actualPath, int level) {
 
@@ -46,7 +44,6 @@ public class JsonQL {
 					System.out.println("Not found...");
 				} else {
 					if (obj instanceof JSONObject) {
-
 						JSONObject jsonObject = (JSONObject)obj;
 						if (DEBUG || level == (queryPath.length - 1)) {
 							System.out.println(jsonObject.toString(2));
@@ -129,6 +126,5 @@ public class JsonQL {
 		} else {
 			System.out.println("No query...");
 		}
-
 	}
 }
