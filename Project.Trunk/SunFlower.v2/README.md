@@ -1,9 +1,9 @@
-# SunFlower Version 2.0
+# SunFlower Versions 2.0 and 3.0
 ![Work In Progress](./wip.jpg) 
 
 The goal of this project is to _**automatically**_ orient a solar panel so it faces the sun as long as it is in the sky.
 
-- The [first version ](../SunFlower) used micro-servos to orient a small solar panel.
+- The [first version](../SunFlower) used micro-servos to orient a small solar panel.
 - Here we want to deal with bigger panels, this will require the usage of bigger motors, like stepper-motors.
 - The required hardware is described in a [separate project](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand).
 - Stepper motors will be driven by an [Adafruit Motor Hat](https://www.adafruit.com/product/2348).
@@ -130,6 +130,16 @@ would produce
     }
 }
 ```
+### Date Simulation
+The default date used for Celestial Computation is the current system date.
+
+For development or demo, there is a possibility to simulate this date.
+
+To simulate the date, you need to provide three system variables:
+- `-Ddate.simulation=true`. default `false`
+- `-Dstart.date.simulation=2020-03-06T20:00:00`. Duration Format. no default. Must be provided if `date.simulation` is `true`.
+- `-Dincrement.per.second=600`. In seconds, no default, minimum `1`. Must be provided if `date.simulation` is `true`. Here - for example, this will increment the date by 10 minutes (600 seconds) every second.
+
 
 ### The Device
 The soft of this project is designed to drive [this device](https://github.com/OlivierLD/3DPrinting/blob/master/OpenSCAD/SolarPanelStand/stl/the.full.stand.stuck.stl).

@@ -16,4 +16,17 @@ JAVA_OPTIONS=""
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhmc5883l.cal.prop.file=hmc5883l.cal.properties"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dssd1306.compass.verbose=false"
 #
+if [[ "$1" == "-w" ]] # To wait for everything to start?
+then
+	echo -e ""
+	echo -e "+-------------------------------+"
+	echo -e "| Giving Multiplexer some slack |"
+	echo -e "+-------------------------------+"
+	sleep 10
+	echo -e ""
+	echo -e "+--------------------------+"
+	echo -e "| Now starting Multiplexer |"
+	echo -e "+--------------------------+"
+fi
+#
 sudo java ${JAVA_OPTIONS} -cp ${CP} i2c.samples.HMC5883LWithSSD1306

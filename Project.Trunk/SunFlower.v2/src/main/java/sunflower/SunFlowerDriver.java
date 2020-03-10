@@ -14,6 +14,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static utils.TimeUtil.delay;
 
@@ -25,8 +27,38 @@ import sunflower.utils.ANSIUtil;
  * RPM : Revolution Per Minute, speed of the rotation.
  * Steps per Revolution: How many steps for 360 degrees.
  * nbSteps: How many steps should the shaft do when started.
+ *
+ * By default, date for Celestial calculations is current date.
+ * It can be simulated for demo or development with the following System variables:
+ * JAVA_OPTS="$JAVA_OPTS -Ddate.simulation=true"
+ * JAVA_OPTS="$JAVA_OPTS -Dstart.date.simulation=2020-03-06T20:00:00"
+ * JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"
+ * JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10" (only applied if date.simulation=true)
+ * JAVA_OPTS="$JAVA_OPTS -Dfirst.move.slack=30" in seconds (only applied if date.simulation=true). Resumes calculation after this amount of time after the first move of the device
+ * Also:
+ * -Dno.motor.movement=true will NOT move the motors.
+ * Use it with -Dmotor.hat.verbose=true
+ *
+ * -Delevation.inverted=true|false
+ * -Dazimuth.inverted=true|false
  */
 public class SunFlowerDriver {
+
+	private static long loopDelay = 1_000L;
+	static {
+		if ("true".equals(System.getProperty("date.simulation"))) {
+			String betweenLoops = System.getProperty("between.astro.loops", String.valueOf(loopDelay / 1_000L)); // In seconds
+			try {
+				loopDelay = Long.parseLong(betweenLoops);
+				loopDelay *= 1_000L;
+			} catch (NumberFormatException nfe) {
+				System.err.println("Bad between.astro.loops value [%s], keeping default.");
+			}
+		}
+	}
+
+	private static boolean elevationInverted = "true".equals(System.getProperty("elevation.inverted"));
+	private static boolean azimuthInverted = "true".equals(System.getProperty("azimuth.inverted"));
 
 	private SunFlowerDriver instance = this;
 
@@ -103,7 +135,18 @@ public class SunFlowerDriver {
 
 	private final static boolean SUN_FLOWER_VERBOSE = "true".equals(System.getProperty("sun.flower.verbose"));
 	private final static boolean MOTOR_HAT_VERBOSE = "true".equals(System.getProperty("motor.hat.verbose"));
+	private final static boolean TOO_LONG_EXCEPTION_VERBOSE = "true".equals(System.getProperty("too.long.exception.verbose", "true"));
 	private final static boolean ASTRO_VERBOSE = "true".equals(System.getProperty("astro.verbose", "false"));
+
+	private static int minimumAltitude = -1;
+	static {
+		try {
+			minimumAltitude = Integer.parseInt(System.getProperty("minimum.elevation", String.valueOf(minimumAltitude)));
+		} catch (NumberFormatException nfe) {
+			System.err.println(nfe.toString());
+
+		}
+	}
 
 	public static class MoveCompleted {
 		private Date date;
@@ -390,13 +433,27 @@ public class SunFlowerDriver {
 		public void run() {
 			try {
 				long before = System.currentTimeMillis();
-				this.stepper.step(nbSteps, motorCommand, motorStyle, t -> {
-					if (MOTOR_HAT_VERBOSE) {
-						// t.printStackTrace();
-						System.out.println(String.format("\t\tToo long! %s", t));
-					}
-				});
+				if (MOTOR_HAT_VERBOSE) {
+					System.out.println("+----------------------------------------------");
+					System.out.println(String.format("| Starting move of %d steps on motor #%d (%s)", nbSteps, this.stepper.getMotorNum(), this.stepper.getMotorNum() == 1 ? "Z" : "Elev"));
+					System.out.println("+----------------------------------------------");
+				}
+				if ("false".equals(System.getProperty("no.motor.movement", "false"))) {
+					this.stepper.step(nbSteps, motorCommand, motorStyle, t -> {
+						if (MOTOR_HAT_VERBOSE && TOO_LONG_EXCEPTION_VERBOSE) {
+							// t.printStackTrace();
+							System.out.println(String.format("\t\tToo long! %s", t));
+						}
+					});
+				} else {
+					delay(500); // Half a sec, simulation
+				}
 				long after = System.currentTimeMillis();
+				if (MOTOR_HAT_VERBOSE) {
+					System.out.println("+----------------------------------------------");
+					System.out.println(String.format("| Completed move of %d steps on motor #%d in %d ms", nbSteps, this.stepper.getMotorNum(), (after - before)));
+					System.out.println("+----------------------------------------------");
+				}
 				MoveCompleted payload = new MoveCompleted(new Date(), this.nbSteps, (after - before));
 				instance.publish(this.stepper.getMotorNum() == 1 ? EventType.MOVING_AZIMUTH_END : EventType.MOVING_ELEVATION_END, payload);
 				if (MOTOR_HAT_VERBOSE) {
@@ -412,6 +469,8 @@ public class SunFlowerDriver {
 
 	private static class CelestialComputerThread extends Thread {
 		private boolean keepCalculating = true;
+		private Calendar previousDate = null; // Used for simulation, when required
+		private int incrementPerSecond = -1;  // Used for simulation
 
 		public void stopCalculating() {
 			keepCalculating = false;
@@ -419,14 +478,72 @@ public class SunFlowerDriver {
 
 		@Override
 		public void run() {
+			boolean firstMove = true;
 			while (keepCalculating) {
-
-				Date at = new Date();
 				Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
-				date.setTime(at);
-//				if (ASTRO_VERBOSE) {
-//					System.out.println("Starting Sun data calculation at " + date.getTime());
-//				}
+				if ("true".equals(System.getProperty("date.simulation"))) {
+					if (previousDate == null) {
+						System.out.println("\tWill simulate the date for ASTRO calculation");
+						// Init the date
+						String startDate = System.getProperty("start.date.simulation"); // UTC Date
+						if (startDate == null) {
+							throw new RuntimeException("date.simulation required, start.date.simulation must be provided");
+						} else {
+							// Expect Duration Format 2020-03-06T07:20:00
+							//                        |    |  |  |  |  |
+							//                        |    |  |  |  |  17
+							//                        |    |  |  |  14
+							//                        |    |  |  11
+							//                        |    |  8
+							//                        |    5
+							//                        0
+							String patternStr = "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}";
+							Pattern pattern = Pattern.compile(patternStr);
+							Matcher matcher = pattern.matcher(startDate);
+							if (!matcher.matches()) {
+								throw new RuntimeException(String.format("%s does not match expected format %s", startDate, patternStr));
+							} else {
+								System.out.println(String.format("\tSimulation starting %s", startDate));
+								int year = Integer.parseInt(startDate.substring(0, 4));
+								int month = Integer.parseInt(startDate.substring(5, 7));
+								int day = Integer.parseInt(startDate.substring(8, 10));
+								int hour = Integer.parseInt(startDate.substring(11, 13));
+								int min = Integer.parseInt(startDate.substring(14, 16));
+								int sec = Integer.parseInt(startDate.substring(17));
+								// TODO Validate the fields...
+								date.set(Calendar.YEAR, year);
+								date.set(Calendar.MONTH, month - 1);
+								date.set(Calendar.DAY_OF_MONTH, day);
+								date.set(Calendar.HOUR_OF_DAY, hour);
+								date.set(Calendar.MINUTE, min);
+								date.set(Calendar.SECOND, sec);
+								//
+								previousDate = date;
+							}
+						}
+					} else { // Increment, in seconds
+						if (incrementPerSecond < 0) {
+							String strInc = System.getProperty("increment.per.second");
+							if (strInc == null) {
+								throw new RuntimeException("date.simulation required, increment.per.second must be provided");
+							}
+							incrementPerSecond = Integer.parseInt(strInc);
+							if (incrementPerSecond < 1) {
+								throw new RuntimeException("increment.per.second must be greater than 0");
+							}
+							System.out.println(String.format("\tIncrementing date by %d s every %d second(s).", incrementPerSecond, (loopDelay / 1_000L)));
+						} else {
+							previousDate.add(Calendar.SECOND, incrementPerSecond);
+							date.setTime(previousDate.getTime());
+						}
+					}
+				} else {
+					Date at = new Date();
+					date.setTime(at);
+				}
+				if (ASTRO_VERBOSE) {
+					System.out.println("Starting Sun data calculation at " + date.getTime());
+				}
 				// TODO Make it non-static, and synchronized ?
 				AstroComputer.calculate(date.get(Calendar.YEAR),
 																date.get(Calendar.MONTH) + 1,
@@ -448,7 +565,15 @@ public class SunFlowerDriver {
 				} else {
 					System.out.println("No position yet!");
 				}
-				delay(1_000L);
+				long firstSlack = loopDelay;
+				if ("true".equals(System.getProperty("date.simulation"))) {
+					String firstMoveSlack = System.getProperty("first.move.slack");
+					if (firstMoveSlack != null) {
+						firstSlack = Integer.parseInt(firstMoveSlack) * 1_000L;
+					}
+				}
+				delay(firstMove ? firstSlack : loopDelay);
+				firstMove = false;
 			}
 		}
 	}
@@ -526,8 +651,13 @@ public class SunFlowerDriver {
 	}
 
 	private static MotorPayload getMotorPayload(double from, double to, double ratio) {
+		return getMotorPayload(from, to, ratio, false);
+	}
+	private static MotorPayload getMotorPayload(double from, double to, double ratio, boolean inverted) {
 		MotorPayload motorPayload = new MotorPayload();
-		motorPayload.motorCommand = (to > from) ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD;
+		motorPayload.motorCommand = (to > from) ?
+				(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
+				(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
 	  // Motor: 200 steps: 360 degrees.
 		// Device: 360 degrees = (200 / ratio) steps.
 		motorPayload.nbSteps = (int)Math.round((Math.abs(from - to) / 360d) * 200d / ratio);
@@ -536,9 +666,16 @@ public class SunFlowerDriver {
 
 	private void parkDevice() {
 		if (currentDeviceElevation != PARKED_ELEVATION || currentDeviceAzimuth != PARKED_AZIMUTH) {
+			if (ASTRO_VERBOSE) {
+				System.out.println("---------------------------------------------------");
+				System.out.println(">> Parking the device");
+				System.out.println(String.format("\t Elev: from %.02f to %.02f", currentDeviceElevation, PARKED_ELEVATION));
+				System.out.println(String.format("\t Z   : from %.02f to %.02f", currentDeviceAzimuth, PARKED_AZIMUTH));
+				System.out.println("---------------------------------------------------");
+			}
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Parking the device"));
 			// Put Z to 0, Elev. to 90.
-			MotorPayload parkElev = getMotorPayload(currentDeviceElevation, PARKED_ELEVATION, elevationMotorRatio);
+			MotorPayload parkElev = getMotorPayload(currentDeviceElevation, PARKED_ELEVATION, elevationMotorRatio, elevationInverted);
 			String mess_1 = String.format("(Elev) This will be %d steps %s", parkElev.nbSteps, parkElev.motorCommand);
 			this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess_1));
 			if (!simulating) {
@@ -547,7 +684,7 @@ public class SunFlowerDriver {
 			}
 			currentDeviceElevation = PARKED_ELEVATION;
 
-			MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, PARKED_AZIMUTH, azimuthMotorRatio);
+			MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, PARKED_AZIMUTH, azimuthMotorRatio, azimuthInverted);
 			String mess_2 = String.format("(Z) This will be %d steps %s", parkZ.nbSteps, parkZ.motorCommand);
 			this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess_2));
 			if (!simulating) {
@@ -584,7 +721,7 @@ public class SunFlowerDriver {
 				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
 					hasMoved = true;
 					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, sunAzimuth));
-					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio);
+					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio, azimuthInverted);
 					if (!simulating) {
 						this.publish(EventType.MOVING_AZIMUTH_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
 						if (azimuthMotorThread == null || (azimuthMotorThread != null && !azimuthMotorThread.isAlive())) {
@@ -597,10 +734,10 @@ public class SunFlowerDriver {
 					}
 					currentDeviceAzimuth = sunAzimuth;
 				}
-				if (Math.abs(currentDeviceElevation - sunElevation) >= minDiffForMove) {
+				if (Math.abs(currentDeviceElevation - Math.max(sunElevation, minimumAltitude)) >= minDiffForMove) {
 					hasMoved = true;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, sunElevation));
-					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio);
+					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio, elevationInverted);
 					if (!simulating) {
 						this.publish(EventType.MOVING_ELEVATION_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
 					}
@@ -622,7 +759,7 @@ public class SunFlowerDriver {
 				parkDevice();
 			}
 			// Bottom of the loop
-			delay(1_000L);
+			delay(loopDelay);
 		}
 		System.out.println("... Done with the SunFlowerDriver program ...");
 //	try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
@@ -669,7 +806,7 @@ public class SunFlowerDriver {
 									if (value < 0 || value > 360) {
 										System.out.println(String.format("Bad Azimuth value: %f, should be in [0..360]", value));
 									} else {
-										MotorPayload data = getMotorPayload(currentDeviceAzimuth, value, azimuthMotorRatio);
+										MotorPayload data = getMotorPayload(currentDeviceAzimuth, value, azimuthMotorRatio, azimuthInverted);
 										if (!simulating) {
 											if (azimuthMotorThread == null || (azimuthMotorThread != null && !azimuthMotorThread.isAlive())) {
 												azimuthMotorThread = new MotorThread(this.azimuthMotor, data.nbSteps, data.motorCommand, motorStyle);
@@ -686,7 +823,7 @@ public class SunFlowerDriver {
 									if (value < 0 || value > 90) {
 										System.out.println(String.format("Bad Elevation value: %f, should be in [0..90]", value));
 									} else {
-										MotorPayload data = getMotorPayload(currentDeviceElevation, value, elevationMotorRatio);
+										MotorPayload data = getMotorPayload(currentDeviceElevation, value, elevationMotorRatio, elevationInverted);
 										if (!simulating) {
 											if (elevationMotorThread == null || (elevationMotorThread != null && !elevationMotorThread.isAlive())) {
 												elevationMotorThread = new MotorThread(this.elevationMotor, data.nbSteps, data.motorCommand, motorStyle);

@@ -446,6 +446,10 @@ let sunAltitude = -90;
 function astroCallback(data) {
 //console.log("Astro Data:", data);
 
+	// if (data.moonPhase !== undefined) {
+	// 	console.log("Moon Phase:", data.moonPhase);
+	// }
+
 	let worldMap = document.getElementById('world-map-01');
 	let skyMap = document.getElementById('sky-map-01');
 
@@ -464,7 +468,8 @@ function astroCallback(data) {
 	try {
 		moonPos = {
 			he: data.moonObs.alt,
-			z: data.moonObs.z
+			z: data.moonObs.z,
+			phase: data.moonPhase
 		};
 	} catch (err) {
 		// missing

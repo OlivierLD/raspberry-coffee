@@ -10,7 +10,7 @@ FROM debian AS builder
 #
 # To run on a laptop - not necessaritly on an RPi (hence the default-jdk below)
 # Demos the NavServer (Tide, Almanac, Weather faxes, etc)
-# Clones the repo and recompiles everything, and archivesn it for production (step 2)
+# Clones the repo and recompiles everything, and archive it for production (step 2)
 # proxy settings are passed as ARGs
 #
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"

@@ -555,7 +555,8 @@ public class RESTImplementation {
 						.sun(new GP().gha(AstroComputer.getSunGHA())
 								.decl(AstroComputer.getSunDecl()))
 						.moon(new GP().gha(AstroComputer.getMoonGHA())
-								.decl(AstroComputer.getMoonDecl()));
+								.decl(AstroComputer.getMoonDecl()))
+						.moonPhase(AstroComputer.getMoonPhase());
 
 				double lat = 0d, lng = 0d;
 				if (prms.get("fromL") != null && prms.get("fromG") != null) {
@@ -1808,6 +1809,7 @@ public class RESTImplementation {
 		double deltaT;
 		GP sun;
 		GP moon;
+		double moonPhase; // Moon only, obviously
 		double ghaAries;
 		List<GP> wanderingBodies;
 		List<GP> stars;
@@ -1838,6 +1840,10 @@ public class RESTImplementation {
 		}
 		public PositionsInTheSky moon(GP moon) {
 			this.moon = moon;
+			return this;
+		}
+		public PositionsInTheSky moonPhase(double phase) {
+			this.moonPhase = phase;
 			return this;
 		}
 

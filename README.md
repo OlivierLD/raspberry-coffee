@@ -150,7 +150,7 @@ $ which wget
 ##### Connect to the Raspberry Pi from your laptop, using a USB cable
 It's easy, and convenient. See [here](https://www.thepolyglotdeveloper.com/2016/06/connect-raspberry-pi-zero-usb-cable-ssh/),
 or [here](https://magpi.raspberrypi.org/articles/build-a-raspberry-pi-zero-keyring).
-   
+
 To connect to a Raspberry Pi Zero, all you need is a USB cable [A-to-microB](https://www.adafruit.com/product/592).
 
 Some other devices can be nice to have:
@@ -161,7 +161,7 @@ Some other devices can be nice to have:
 Once your RPi is connected through a USB connection, after configuring it as explained, you can use `ssh` as follow:
 ```
 $ ssh pi@raspberrypi.local
-``` 
+```
 where `raspberrypi` is the `hostname` of the Raspberry. No wireless connection or IP address is required.
 
 ##### Raspberry Pi as an Access Point _and_ Internet access.
@@ -171,10 +171,12 @@ It can be appropriate when there is no network in the area you are in, for examp
 Setting up the Raspberry Pi to be an access point is well documented on the [Adafruit website](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software).
 [This one](http://hawksites.newpaltz.edu/myerse/2018/06/19/dhcp-daemon-on-raspberry-pi/) is also useful.
 
+And [this too](https://learn.sparkfun.com/tutorials/setting-up-a-raspberry-pi-3-as-an-access-point).
+
 As we said above, to enable `hostapd` to have your Raspberry Pi acting as a WiFi hotspot, you can follow
 <a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">those good instructions</a> from the Adafruit website.
 
-> _**Warning**_: Since Raspbian's Stretch release, **a lot** of things have changed for the network config. See [here](http://www.raspberryconnect.com/network/item/333-raspberry-pi-hotspot-access-point-dhcpcd-method). 
+> _**Warning**_: Since Raspbian's Stretch release, **a lot** of things have changed for the network config. See [here](http://www.raspberryconnect.com/network/item/333-raspberry-pi-hotspot-access-point-dhcpcd-method).
 
 **>>> Skip to the next section if you run Stretch or later** (as I am). Consider the Ethernet option ;)
 

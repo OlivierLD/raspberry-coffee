@@ -1,6 +1,8 @@
 package sunflower.httpserver;
 
 import http.HTTPServer;
+import utils.StaticUtil;
+import utils.TCPUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +32,14 @@ public class SunFlowerServer {
 			ex.printStackTrace();
 			System.exit(1);
 		}
+		String ipAddress = "localhost";
+		try {
+			ipAddress = TCPUtils.getIPAddress();
+		} catch (Exception ex) {
+			// Duh
+			ex.printStackTrace();
+		}
+		System.out.println(String.format("Try REST request : GET http://%s:%d/sf/oplist", ipAddress, httpPort));
 	}
 
 	protected List<HTTPServer.Operation> getAllOperationList() {
