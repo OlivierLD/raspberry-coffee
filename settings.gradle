@@ -1,3 +1,5 @@
+rootProject.name = 'raspberry.coffee'
+//
 include 'Adafruit.IO.REST'
 include 'ADC'
 include 'ADC-benchmark'
@@ -84,6 +86,7 @@ include "JupyterNotebooks:deep.learning.crash.course"
 
 // Scratch pad
 include "oliv.scratch.pad:some.tests"
+include "oliv.scratch.pad:http.test"
 include 'REST.clients'
 include 'springboot-sensors'
 include 'opencv'

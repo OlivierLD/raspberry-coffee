@@ -674,7 +674,7 @@ public class SunFlowerDriver {
 				System.out.println("---------------------------------------------------");
 			}
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Parking the device"));
-			// Put Z to 0, Elev. to 90.
+			// Put Z to 0 or 180, Elev. to 90.
 			MotorPayload parkElev = getMotorPayload(currentDeviceElevation, PARKED_ELEVATION, elevationMotorRatio, elevationInverted);
 			String mess_1 = String.format("(Elev) This will be %d steps %s", parkElev.nbSteps, parkElev.motorCommand);
 			this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess_1));
@@ -697,6 +697,19 @@ public class SunFlowerDriver {
 		}
 	}
 
+	/**
+	 * Make the value a multiple of minDiffForMove
+	 * @param sunValue the value to adjust, Azimuth or Elevation.
+	 * @return the adjusted value
+	 */
+	private double adjustDeviceValue(double sunValue) {
+		double adjusted = sunValue;
+		if (sunValue % minDiffForMove != 0D) {
+			adjusted = Math.round(sunValue * (1 / minDiffForMove)) / (1 / minDiffForMove);
+		}
+		return adjusted;
+	}
+
 	public void start() {
 		keepGoing = true;
 
@@ -711,6 +724,8 @@ public class SunFlowerDriver {
 			this.publish(EventType.DEVICE_DATA, deviceData);
 			this.publish(EventType.CELESTIAL_DATA, sunData);
 
+			// Important: Reframe the values of SunData with minDiffForMove, @see adjustDeviceValue
+
 			if (ASTRO_VERBOSE) {
 				System.out.println(String.format("Device : %s\n" + "Sun : %s",
 						deviceData, sunData));
@@ -718,10 +733,11 @@ public class SunFlowerDriver {
 
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				boolean hasMoved = false;
-				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
+				double adjustedAzimuth = adjustDeviceValue(sunAzimuth);
+				if (Math.abs(currentDeviceAzimuth - adjustedAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
 					hasMoved = true;
-					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, sunAzimuth));
-					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio, azimuthInverted);
+					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, adjustedAzimuth));
+					MotorPayload data = getMotorPayload(currentDeviceAzimuth, adjustedAzimuth, azimuthMotorRatio, azimuthInverted);
 					if (!simulating) {
 						this.publish(EventType.MOVING_AZIMUTH_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
 						if (azimuthMotorThread == null || (azimuthMotorThread != null && !azimuthMotorThread.isAlive())) {
@@ -732,12 +748,13 @@ public class SunFlowerDriver {
 							this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
-					currentDeviceAzimuth = sunAzimuth;
+					currentDeviceAzimuth = adjustedAzimuth;
 				}
-				if (Math.abs(currentDeviceElevation - Math.max(sunElevation, minimumAltitude)) >= minDiffForMove) {
+				double adjustedElevation = adjustDeviceValue(sunElevation);
+				if (Math.abs(currentDeviceElevation - Math.max(adjustedElevation, minimumAltitude)) >= minDiffForMove) {
 					hasMoved = true;
-					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, sunElevation));
-					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio, elevationInverted);
+					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, adjustedElevation));
+					MotorPayload data = getMotorPayload(currentDeviceElevation, adjustedElevation, elevationMotorRatio, elevationInverted);
 					if (!simulating) {
 						this.publish(EventType.MOVING_ELEVATION_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
 					}
@@ -750,7 +767,7 @@ public class SunFlowerDriver {
 							this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
-					currentDeviceElevation = sunElevation;
+					currentDeviceElevation = adjustedElevation;
 				}
 				if (hasMoved && ASTRO_VERBOSE) {
 					System.out.println(String.format("Sun's position is now: Elev: %s, Z: %.02f", GeomUtil.decToSex(sunElevation, GeomUtil.NO_DEG, GeomUtil.NONE), sunAzimuth));
@@ -853,7 +870,7 @@ public class SunFlowerDriver {
 		long howMany = 0;
 		while ((azimuthMotorThread != null && azimuthMotorThread.isAlive()) || (elevationMotorThread != null && elevationMotorThread.isAlive())) {
 //			System.out.println("Waiting for the device to be parked");
-			// TODO Move colors out of here.
+			// TODO Move ANSI colors out of here.
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), ANSIUtil.ansiSetTextColor(howMany++ % 2 == 0 ? ANSIUtil.ANSI_GREEN : ANSIUtil.ANSI_RED) + "Waiting for the device to be parked"));
 			delay(1_000L);
 		}
@@ -902,7 +919,7 @@ public class SunFlowerDriver {
 			}
 		}
 
-		String minDiffStr = System.getProperty("min.diff.for.move", String.valueOf(MIN_DIFF_FOR_MOVE));
+		String minDiffStr = System.getProperty("min.diff.for.move", String.valueOf(MIN_DIFF_FOR_MOVE)); // TODO !! Move motor accordingly
 		try {
 			minDiffForMove = Double.parseDouble(minDiffStr);
 		} catch (NumberFormatException nfe) {
