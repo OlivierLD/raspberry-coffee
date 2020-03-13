@@ -60,6 +60,9 @@ public class SunFlowerDriver {
 	private static boolean elevationInverted = "true".equals(System.getProperty("elevation.inverted"));
 	private static boolean azimuthInverted = "true".equals(System.getProperty("azimuth.inverted"));
 
+	private double elevationOffset = 0D;
+	private double azimuthOffset = 0D;
+
 	private SunFlowerDriver instance = this;
 
 	private static class Position {
@@ -190,12 +193,16 @@ public class SunFlowerDriver {
 		private long epoch;
 		private double azimuth;
 		private double elevation;
+		private double azimuthOffset;
+		private double elevationOffset;
 
-		public DeviceData(Date date, double azimuth, double elevation) {
+		public DeviceData(Date date, double azimuth, double elevation, double azimuthOffset, double elevationOffset) {
 			this.date = date;
 			this.epoch = date.getTime();
 			this.azimuth = azimuth;
 			this.elevation = elevation;
+			this.azimuthOffset = azimuthOffset;
+			this.elevationOffset = elevationOffset;
 		}
 
 		public Date getDate() {
@@ -214,12 +221,22 @@ public class SunFlowerDriver {
 			return epoch;
 		}
 
+		public double getAzimuthOffset() {
+			return azimuthOffset;
+		}
+
+		public double getElevationOffset() {
+			return elevationOffset;
+		}
+
 		@Override
 		public String toString() {
-			return String.format("%s, Device: Azimuth: %.02f, Elevation: %.02f",
+			return String.format("%s, Device: Azimuth: %.02f, Elevation: %.02f (Offsets: Z: %.02f, Elev: %.02f",
 					this.date,
 					this.azimuth,
-					this.elevation);
+					this.elevation,
+					this.azimuthOffset,
+					this.elevationOffset);
 		}
 	}
 
@@ -407,6 +424,14 @@ public class SunFlowerDriver {
 		public String toString() {
 			return String.format("%s %s", this.date.toString(), this.message);
 		}
+	}
+
+	public void setElevationOffset(double elevationOffset) {
+		this.elevationOffset = elevationOffset;
+	}
+
+	public void setAzimuthOffset(double azimuthOffset) {
+		this.azimuthOffset = azimuthOffset;
 	}
 
 	public void setDevicePosition(double lat, double lng) {
@@ -703,7 +728,10 @@ public class SunFlowerDriver {
 	 * @return the adjusted value
 	 */
 	private double adjustDeviceValue(double sunValue) {
-		double adjusted = sunValue;
+		return adjustDeviceValue(sunValue, 0D);
+	}
+	private double adjustDeviceValue(double sunValue, double offset) {
+		double adjusted = sunValue + offset;
 		if (sunValue % minDiffForMove != 0D) {
 			adjusted = Math.round(sunValue * (1 / minDiffForMove)) / (1 / minDiffForMove);
 		}
@@ -719,7 +747,7 @@ public class SunFlowerDriver {
 		while (keepGoing) {
 
 			Date date = new Date();
-			DeviceData deviceData = new DeviceData(date, currentDeviceAzimuth, currentDeviceElevation);
+			DeviceData deviceData = new DeviceData(date, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset);
 			SunData sunData = new SunData(date, sunAzimuth, sunElevation);
 			this.publish(EventType.DEVICE_DATA, deviceData);
 			this.publish(EventType.CELESTIAL_DATA, sunData);
@@ -733,7 +761,7 @@ public class SunFlowerDriver {
 
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				boolean hasMoved = false;
-				double adjustedAzimuth = adjustDeviceValue(sunAzimuth);
+				double adjustedAzimuth = adjustDeviceValue(sunAzimuth, azimuthOffset);
 				if (Math.abs(currentDeviceAzimuth - adjustedAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
 					hasMoved = true;
 					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, adjustedAzimuth));
@@ -750,7 +778,7 @@ public class SunFlowerDriver {
 					}
 					currentDeviceAzimuth = adjustedAzimuth;
 				}
-				double adjustedElevation = adjustDeviceValue(sunElevation);
+				double adjustedElevation = adjustDeviceValue(sunElevation, elevationOffset);
 				if (Math.abs(currentDeviceElevation - Math.max(adjustedElevation, minimumAltitude)) >= minDiffForMove) {
 					hasMoved = true;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, adjustedElevation));
