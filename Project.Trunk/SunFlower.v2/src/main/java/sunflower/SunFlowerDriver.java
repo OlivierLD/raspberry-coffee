@@ -201,6 +201,7 @@ public class SunFlowerDriver {
 
 	public static class DeviceData {
 		private Date date;
+		private Position devicePosition;
 		private long epoch;
 		private double azimuth;
 		private double elevation;
@@ -208,8 +209,9 @@ public class SunFlowerDriver {
 		private double elevationOffset;
 		private double deviceHeading;
 
-		public DeviceData(Date date, double azimuth, double elevation, double azimuthOffset, double elevationOffset, double deviceHeading) {
+		public DeviceData(Date date, Position devicePosition, double azimuth, double elevation, double azimuthOffset, double elevationOffset, double deviceHeading) {
 			this.date = date;
+			this.devicePosition = devicePosition;
 			this.epoch = date.getTime();
 			this.azimuth = azimuth;
 			this.elevation = elevation;
@@ -244,6 +246,10 @@ public class SunFlowerDriver {
 
 		public double getDeviceHeading() {
 			return deviceHeading;
+		}
+
+		public Position getDevicePosition() {
+			return devicePosition;
 		}
 
 		@Override
@@ -776,7 +782,7 @@ public class SunFlowerDriver {
 		while (keepGoing) {
 
 			Date date = new Date();
-			DeviceData deviceData = new DeviceData(date, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
+			DeviceData deviceData = new DeviceData(date, devicePosition, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
 			SunData sunData = new SunData(date, sunAzimuth, sunElevation);
 			this.publish(EventType.DEVICE_DATA, deviceData);
 			this.publish(EventType.CELESTIAL_DATA, sunData);

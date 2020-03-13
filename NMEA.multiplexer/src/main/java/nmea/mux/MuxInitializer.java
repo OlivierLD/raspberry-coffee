@@ -9,6 +9,7 @@ import nmea.computers.ExtraDataComputer;
 import nmea.consumers.client.BME280Client;
 import nmea.consumers.client.BMP180Client;
 import nmea.consumers.client.DataFileClient;
+import nmea.consumers.client.HMC5883LClient;
 import nmea.consumers.client.HTU21DFClient;
 import nmea.consumers.client.LSM303Client;
 import nmea.consumers.client.RandomClient;
@@ -305,7 +306,82 @@ public class MuxInitializer {
 								err.printStackTrace();
 							}
 							break;
-						case "lsm303": // Pitch & Roll, plus Heading (possibly).
+						case "hmc5883l": // Heading, Pitch & Roll. Requires calibration
+							try {
+								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								String hmc5883lDevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
+								int headingOffset = 0;
+								try {
+									headingOffset = Integer.parseInt(muxProps.getProperty(String.format("mux.%s.heading.offset", MUX_IDX_FMT.format(muxIdx)), "0"));
+									if (headingOffset > 180 || headingOffset < -180) {
+										System.err.println(String.format("Warning: Bad range for Heading Offset, must be in [-180..180], found %d. Defaulting to 0", headingOffset));
+										headingOffset = 0;
+									}
+								} catch (NumberFormatException nfe) {
+									nfe.printStackTrace();
+								}
+								Long readFrequency = null;
+								try {
+									readFrequency = new Long(muxProps.getProperty(String.format("mux.%s.read.frequency", MUX_IDX_FMT.format(muxIdx))));
+									if (readFrequency < 0) {
+										System.err.println(String.format("Warning: Bad value for Read Frequency, must be positive, found %d.", readFrequency));
+										readFrequency = null;
+									}
+								} catch (NumberFormatException nfe) {
+									nfe.printStackTrace();
+								}
+								Integer dampingSize = null;
+								try {
+									dampingSize = new Integer(muxProps.getProperty(String.format("mux.%s.damping.size", MUX_IDX_FMT.format(muxIdx))));
+									if (dampingSize < 0) {
+										System.err.println(String.format("Warning: Bad value for Damping Size, must be positive, found %d.", dampingSize));
+										dampingSize = null;
+									}
+								} catch (NumberFormatException nfe) {
+									nfe.printStackTrace();
+								}
+								if (verbose) {
+									System.out.println(String.format("For HMC5883L channel: deviceFilters: %s, sentenceFilters: %s, devicePrefix: %s, headingOffset: %d, readFrequency: %d, dampingSize: %d",
+											deviceFilters,
+											sentenceFilters,
+											hmc5883lDevicePrefix,
+											headingOffset,
+											readFrequency,
+											dampingSize));
+								}
+								HMC5883LClient hmc5883lClient = new HMC5883LClient(
+												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
+												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
+												mux);
+								hmc5883lClient.initClient();
+								hmc5883lClient.setReader(new LSM303Reader("MUX-HMC5883LReader", hmc5883lClient.getListeners()));
+								hmc5883lClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
+								// Important: after the setReader
+								if (headingOffset != 0) {
+									hmc5883lClient.setHeadingOffset(headingOffset);
+								}
+								if (readFrequency != null) {
+									hmc5883lClient.setReadFrequency(readFrequency);
+								}
+								if (dampingSize != null) {
+									hmc5883lClient.setDampingSize(dampingSize);
+								}
+								if (!hmc5883lDevicePrefix.trim().isEmpty()) {
+									if (hmc5883lDevicePrefix.trim().length() == 2) {
+										hmc5883lClient.setSpecificDevicePrefix(hmc5883lDevicePrefix.trim());
+									} else {
+										throw new RuntimeException(String.format("Bad prefix [%s] for HMC5883L. Must be 2 character long, exactly.", hmc5883lDevicePrefix.trim()));
+									}
+								}
+								nmeaDataClients.add(hmc5883lClient);
+							} catch (Exception e) {
+								e.printStackTrace();
+							} catch (Error err) {
+								err.printStackTrace();
+							}
+							break;
+						case "lsm303": // Pitch & Roll, plus Heading (possibly). Requires calibration.
 							try {
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
@@ -351,9 +427,9 @@ public class MuxInitializer {
 											dampingSize));
 								}
 								LSM303Client lsm303Client = new LSM303Client(
-												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
-												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
-												mux);
+										!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
+										!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
+										mux);
 								lsm303Client.initClient();
 								lsm303Client.setReader(new LSM303Reader("MUX-LSM303Reader", lsm303Client.getListeners()));
 								lsm303Client.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));

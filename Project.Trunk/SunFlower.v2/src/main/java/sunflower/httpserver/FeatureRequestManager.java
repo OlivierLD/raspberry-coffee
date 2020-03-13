@@ -1,9 +1,13 @@
 package sunflower.httpserver;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import http.HTTPServer;
 import http.RESTRequestManager;
+import http.client.HTTPClient;
 import sunflower.SunFlowerDriver;
 
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +18,95 @@ public class FeatureRequestManager implements RESTRequestManager {
 	private RESTImplementation restImplementation;
 
 	private SunFlowerServer sunFlowerServer = null;
-	private SunFlowerDriver featureManager = null; // Physical
+	private SunFlowerDriver featureManager = null; // Physical, the actual device (SunFlowerDriver)
+
+	/**
+	 * HDM, POS, polls the NMEA Server, feeds the featureManager (setDevicePosition, setDeviceHeading)
+	 */
+	private class NMEADataThread extends Thread {
+		private boolean keepPolling = true;
+		private String baseURL = null;
+
+		public NMEADataThread() {
+			super();
+		}
+		public NMEADataThread(String name) {
+			super(name);
+		}
+		public NMEADataThread(String name, String baseUrl) {
+			super(name);
+			this.baseURL = baseUrl;
+		}
+
+		public void stopPolling() {
+			this.keepPolling = false;
+		}
+
+		public void run() {
+
+			while (keepPolling) {
+				// Fetch data
+				double heading = 180L;
+				double latitude = 0L;
+				double longitude = 0L;
+
+				String strLat = System.getProperty("device.lat");
+				String strLng = System.getProperty("device.lng");
+				if (strLat != null && strLng != null) {
+					try {
+						latitude = Double.parseDouble(strLat);
+						longitude = Double.parseDouble(strLng);
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				}
+
+				// Ping the Server
+				try {
+					String resource = String.format("%s/mux/cache", this.baseURL);
+					String response = HTTPClient.doGet(resource, null);
+//					System.out.println("Cache:" + response);
+					Gson gson = new GsonBuilder().create();
+					StringReader stringReader = new StringReader(response);
+					Map<String, Object> cache = gson.fromJson(stringReader, Map.class);
+//					System.out.println("Cache > " + cache.toString());
+					try {
+						latitude = ((Double)((Map<String, Object>)cache.get("Position")).get("lat")).doubleValue();
+					} catch (Exception ex) {
+						if (httpVerbose) {
+							ex.printStackTrace();
+						}
+					}
+					try {
+						longitude = ((Double) ((Map<String, Object>) cache.get("Position")).get("lng")).doubleValue();
+					} catch (Exception ex) {
+						if (httpVerbose) {
+							ex.printStackTrace();
+						}
+					}
+					try {
+						heading = ((Double)cache.get("HDG c.")).doubleValue();
+					} catch (Exception ex) {
+						if (httpVerbose) {
+							ex.printStackTrace();
+						}
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				featureManager.setDevicePosition(latitude, longitude);
+				featureManager.setDeviceHeading(heading);
+
+				try {
+					Thread.sleep(1_000L); //
+				} catch (InterruptedException ie) {
+					ie.printStackTrace();
+				}
+			}
+			System.out.println("NMEA Thread completed.");
+		}
+	}
+	private NMEADataThread nmeaDataThread = null;
 
 	public FeatureRequestManager() throws Exception {
 		this(null);
@@ -47,6 +139,12 @@ public class FeatureRequestManager implements RESTRequestManager {
 			this.featureManager.start();
 		}, "feature-thread");
 		featureThread.start();
+
+		if ("true".equals(System.getProperty("ping.nmea.server", "false"))) {
+			nmeaDataThread = new NMEADataThread("nmea-thread", System.getProperty("nmea.server.base.url", "http://localhost:9999"));
+			nmeaDataThread.start();
+		}
+
 	}
 
 	private Map<String, Object> dataCache = new HashMap<>();
