@@ -758,8 +758,8 @@ public class SunFlowerDriver {
 	}
 	private double adjustDeviceValue(double sunValue, double offset) {
 		double adjusted = sunValue + offset;
-		if (sunValue % minDiffForMove != 0D) {
-			adjusted = Math.round(sunValue * (1 / minDiffForMove)) / (1 / minDiffForMove);
+		if (adjusted % minDiffForMove != 0D) {
+			adjusted = Math.round(adjusted * (1 / minDiffForMove)) / (1 / minDiffForMove);
 		}
 		return adjusted;
 	}
