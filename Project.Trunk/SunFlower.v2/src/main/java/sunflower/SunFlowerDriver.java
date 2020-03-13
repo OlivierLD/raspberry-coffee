@@ -787,6 +787,9 @@ public class SunFlowerDriver {
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				boolean hasMoved = false;
 				double adjustedAzimuth = adjustDeviceValue(sunAzimuth, azimuthOffset);  // TODO Use deviceHeading here
+
+				System.out.println(String.format("\tAzimuth adjusted from %.02f, with %.02f, to %.02f", sunAzimuth, azimuthOffset, adjustedAzimuth));
+
 				if (Math.abs(currentDeviceAzimuth - adjustedAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
 					hasMoved = true;
 					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, adjustedAzimuth));
