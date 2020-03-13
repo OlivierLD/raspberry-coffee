@@ -90,4 +90,7 @@ include "oliv.scratch.pad:http.test"
 include 'REST.clients'
 include 'springboot-sensors'
 include 'opencv'
+include 'jersey-client-tests'
+include 'oliv.scratch.pad:jersey-client-tests'
+findProject(':oliv.scratch.pad:jersey-client-tests')?.name = 'jersey-client-tests'
 

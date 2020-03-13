@@ -62,6 +62,17 @@ public class SunFlowerDriver {
 
 	private double elevationOffset = 0D;
 	private double azimuthOffset = 0D;
+	// Introduce Heading (default 180?)
+	private final static double DEFAULT_DEVICE_HEADING = 180D;
+	private double deviceHeading = DEFAULT_DEVICE_HEADING;
+
+	public void setDeviceHeading(double hdg) {
+		if (hdg != this.deviceHeading) { // Then orient the device?
+			// TODO Orient?
+			System.out.println(String.format("Heading has changed from %.02f to %.02f", this.deviceHeading, hdg));
+		}
+		this.deviceHeading = hdg;
+	}
 
 	private SunFlowerDriver instance = this;
 
@@ -195,14 +206,16 @@ public class SunFlowerDriver {
 		private double elevation;
 		private double azimuthOffset;
 		private double elevationOffset;
+		private double deviceHeading;
 
-		public DeviceData(Date date, double azimuth, double elevation, double azimuthOffset, double elevationOffset) {
+		public DeviceData(Date date, double azimuth, double elevation, double azimuthOffset, double elevationOffset, double deviceHeading) {
 			this.date = date;
 			this.epoch = date.getTime();
 			this.azimuth = azimuth;
 			this.elevation = elevation;
 			this.azimuthOffset = azimuthOffset;
 			this.elevationOffset = elevationOffset;
+			this.deviceHeading = deviceHeading;
 		}
 
 		public Date getDate() {
@@ -229,14 +242,19 @@ public class SunFlowerDriver {
 			return elevationOffset;
 		}
 
+		public double getDeviceHeading() {
+			return deviceHeading;
+		}
+
 		@Override
 		public String toString() {
-			return String.format("%s, Device: Azimuth: %.02f, Elevation: %.02f (Offsets: Z: %.02f, Elev: %.02f",
+			return String.format("%s, Device: Azimuth: %.02f, Elevation: %.02f (Offsets: Z: %.02f, Elev: %.02f), Device Heading: %.02f",
 					this.date,
 					this.azimuth,
 					this.elevation,
 					this.azimuthOffset,
-					this.elevationOffset);
+					this.elevationOffset,
+					this.deviceHeading);
 		}
 	}
 
@@ -653,6 +671,14 @@ public class SunFlowerDriver {
 	public SunFlowerDriver() {
 
 		System.out.println("Starting SunFlowerDriver");
+
+		String initialHeading = System.getProperty("initial.heading", String.valueOf(this.deviceHeading));
+		try {
+			this.deviceHeading = Double.parseDouble(initialHeading);
+		} catch (NumberFormatException nfe) {
+			nfe.printStackTrace();
+		}
+
 		int rpm = Integer.parseInt(System.getProperty("rpm", String.valueOf(DEFAULT_RPM))); // 30
 //		System.out.println(String.format("RPM set to %d.", rpm));
 
@@ -747,21 +773,20 @@ public class SunFlowerDriver {
 		while (keepGoing) {
 
 			Date date = new Date();
-			DeviceData deviceData = new DeviceData(date, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset);
+			DeviceData deviceData = new DeviceData(date, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
 			SunData sunData = new SunData(date, sunAzimuth, sunElevation);
 			this.publish(EventType.DEVICE_DATA, deviceData);
 			this.publish(EventType.CELESTIAL_DATA, sunData);
-
-			// Important: Reframe the values of SunData with minDiffForMove, @see adjustDeviceValue
 
 			if (ASTRO_VERBOSE) {
 				System.out.println(String.format("Device : %s\n" + "Sun : %s",
 						deviceData, sunData));
 			}
 
+			// Important: Re-frame the values of SunData with minDiffForMove, @see adjustDeviceValue
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				boolean hasMoved = false;
-				double adjustedAzimuth = adjustDeviceValue(sunAzimuth, azimuthOffset);
+				double adjustedAzimuth = adjustDeviceValue(sunAzimuth, azimuthOffset);  // TODO Use deviceHeading here
 				if (Math.abs(currentDeviceAzimuth - adjustedAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
 					hasMoved = true;
 					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, adjustedAzimuth));
