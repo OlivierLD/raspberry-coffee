@@ -200,6 +200,17 @@ channels:
     mux.01.damping.size=5
     mux.01.read.frequency=1000
     ```
+- `hmc5883l`
+    - Triple axis magnetometer
+    ```properties
+    mux.01.type=hmc5883l
+    mux.01.device.prefix=II
+    mux.01.verbose=false
+    mux.01.sentence.filters=HDM,XDR
+    mux.01.heading.offset=0
+    mux.01.damping.size=5
+    mux.01.read.frequency=1000
+    ```
 - `bme280`
     - Humidity, pressure, temperature
     ```properties

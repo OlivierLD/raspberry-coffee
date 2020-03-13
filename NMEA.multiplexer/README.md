@@ -115,7 +115,8 @@ Sensors:
 - **BME280** reads raw data from a BME280 sensor (Temperature, Pressure, Humidity), and produces `XDR` and `MDA` NMEA Sentences.
 - **BMP180** reads raw data from a BMP180 sensor (Temperature, Pressure), and produces `XDR` and `MDA` NMEA Sentences.
 - **HTU21D-F** reads raw data from a HTU21D-F sensor (Temperature, Humidity), and produces `XDR` NMEA Sentences.
-- **LSM303** reads raw data from a LSM303 sensor (3D magnetometer and accelerometer), and produces `XDR` NMEA Sentences for pitch and roll.
+- **LSM303** reads raw data from a LSM303 sensor (3D magnetometer and accelerometer), and produces `XDR` NMEA Sentences for pitch and roll, `HDM` for heading.
+- **HMC5883L** reads raw data from a HMC5883L sensor (3D magnetometer), and produces `XDR` NMEA Sentences for pitch and roll, `HDM` for heading.
 - ... and the list is not closed.
 ![I2C Wiring](./docimages/i2c.png "Sample I2C Wiring for BME280 & L3GD20H")
 
@@ -317,7 +318,7 @@ You can create a Node-RED flow that ingests data from a TCP port, and spits them
 
 - The Multiplexer reads the NMEA data and _forwards_ them on a TCP Channel.
 - Node-RED listens to the TCP port, and _forwards_ the payloads to a WebSocket server
-- The WebSocket server transforms the data it receives into the expected format, and broadcasts them to all the connected cliengs (Pebbles in this case).
+- The WebSocket server transforms the data it receives into the expected format, and broadcasts them to all the connected clients (Pebbles in this case).
 
 Once everything runs, you can reach [http://localhost:9876/data/web/wsconsole.html](http://localhost:9876/data/web/wsconsole.html)
 to see the data as they come through.
