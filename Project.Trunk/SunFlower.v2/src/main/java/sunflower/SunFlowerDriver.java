@@ -760,7 +760,7 @@ public class SunFlowerDriver {
 		return adjustDeviceValue(sunValue, offset, 180D);
 	}
 	private double adjustDeviceValue(double sunValue, double offset, double heading) {
-		double adjusted = sunValue + offset + (heading - 180);
+		double adjusted = sunValue + offset + (180 - heading); // if heading goes right, device must go left.
 		if (adjusted % minDiffForMove != 0D) {
 			adjusted = Math.round(adjusted * (1 / minDiffForMove)) / (1 / minDiffForMove);
 		}
