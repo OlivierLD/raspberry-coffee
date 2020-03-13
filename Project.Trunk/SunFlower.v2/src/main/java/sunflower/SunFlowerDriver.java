@@ -62,7 +62,7 @@ public class SunFlowerDriver {
 
 	private double elevationOffset = 0D;
 	private double azimuthOffset = 0D;
-	// Introduce Heading (default 180?)
+	// Introduce Heading (default 180? <- Northern Hemisphere, when L > Dsun)
 	private final static double DEFAULT_DEVICE_HEADING = 180D;
 	private double deviceHeading = DEFAULT_DEVICE_HEADING;
 
@@ -754,10 +754,13 @@ public class SunFlowerDriver {
 	 * @return the adjusted value
 	 */
 	private double adjustDeviceValue(double sunValue) {
-		return adjustDeviceValue(sunValue, 0D);
+		return adjustDeviceValue(sunValue, 0D, 180D);
 	}
 	private double adjustDeviceValue(double sunValue, double offset) {
-		double adjusted = sunValue + offset;
+		return adjustDeviceValue(sunValue, offset, 180D);
+	}
+	private double adjustDeviceValue(double sunValue, double offset, double heading) {
+		double adjusted = sunValue + offset + (heading - 180);
 		if (adjusted % minDiffForMove != 0D) {
 			adjusted = Math.round(adjusted * (1 / minDiffForMove)) / (1 / minDiffForMove);
 		}
@@ -786,9 +789,9 @@ public class SunFlowerDriver {
 			// Important: Re-frame the values of SunData with minDiffForMove, @see adjustDeviceValue
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				boolean hasMoved = false;
-				double adjustedAzimuth = adjustDeviceValue(sunAzimuth, azimuthOffset);  // TODO Use deviceHeading here
+				double adjustedAzimuth = adjustDeviceValue(sunAzimuth, azimuthOffset, this.deviceHeading);  // Use deviceHeading here
 
-				System.out.println(String.format("\tAzimuth adjusted from %.02f, with %.02f, to %.02f", sunAzimuth, azimuthOffset, adjustedAzimuth));
+//				System.out.println(String.format("\tAzimuth adjusted from %.02f, with %.02f, to %.02f", sunAzimuth, azimuthOffset, adjustedAzimuth));
 
 				if (Math.abs(currentDeviceAzimuth - adjustedAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
 					hasMoved = true;

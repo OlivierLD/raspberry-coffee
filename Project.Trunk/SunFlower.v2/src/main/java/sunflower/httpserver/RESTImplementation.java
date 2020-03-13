@@ -98,7 +98,12 @@ public class RESTImplementation {
 					"POST",
 					SF_PREFIX + "/elevation-offset",
 					this::setElevationOffset,
-					"Set the elevation offset ('value' as QueryString parameter)")
+					"Set the elevation offset ('value' as QueryString parameter)"),
+			new Operation(
+					"POST",
+					SF_PREFIX + "/device-heading",
+					this::setDeviceHeading,
+					"Set the device heading ('value' as QueryString parameter)")
 	);
 
 	protected List<Operation> getOperations() {
@@ -326,6 +331,64 @@ public class RESTImplementation {
 		}
 	}
 
+	private Response setDeviceHeading(Request request) {
+		Response response = new Response(request.getProtocol(), Response.CREATED);
+
+		List<String> pathParameters = request.getPathParameters(); // Not needed...
+		// heading in the query, as 'value'
+		Map<String, String> queryStringParameters = request.getQueryStringParameters();
+		if (queryStringParameters == null) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SUN_FLOWER-0011")
+							.errorMessage("Query String prm 'value' is missing"));
+			return response;
+		}
+		Optional<String> value = queryStringParameters
+				.keySet()
+				.stream()
+				.filter(key -> "value".equals(key))
+				.map(key -> queryStringParameters.get(key))
+				.findFirst();
+		if (!value.isPresent()) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SUN_FLOWER-0011")
+							.errorMessage("Query String prm 'value' is missing"));
+			return response;
+		} else {
+			String val = value.get();
+			double heading = 0;
+			try {
+				heading = Double.parseDouble(val);
+			} catch (NumberFormatException nfe) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("SUN_FLOWER-0012")
+								.errorMessage(nfe.toString()));
+				return response;
+			}
+			try {
+				this.featureManager.setDeviceHeading(heading);
+				ValueHolder valueHolder = new ValueHolder().value(heading);
+				String content = new Gson().toJson(valueHolder);
+				RESTProcessorUtil.generateResponseHeaders(response, content.length());
+				response.setPayload(content.getBytes());
+				return response;
+			} catch (Exception ex1) {
+				ex1.printStackTrace();
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("SUN_FLOWER-0010")
+								.errorMessage(ex1.toString()));
+				return response;
+			}
+		}
+	}
 
 	/**
 	 * Can be used as a temporary placeholder when creating a new operation.
