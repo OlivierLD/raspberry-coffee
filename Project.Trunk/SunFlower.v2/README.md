@@ -140,6 +140,58 @@ To simulate the date, you need to provide three system variables:
 - `-Dstart.date.simulation=2020-03-06T20:00:00`. Duration Format. no default. Must be provided if `date.simulation` is `true`.
 - `-Dincrement.per.second=600`. In seconds, no default, minimum `1`. Must be provided if `date.simulation` is `true`. Here - for example, this will increment the date by 10 minutes (600 seconds) every second.
 
+### Heading input
+If the device has to be carried by a vehicle in motion, we need to have the heading of the device.
+
+Magnetometers like an `HMC5883L` or an `LSM303` can do the job. But the magnetometers
+can go crazy if they're too close to a magnet, and stepper motors heavily use magnets.
+
+Having the magnetometer too close to the stepper motors is **not** a good idea.
+
+This is where we use the `NMEA.multiplexer` project. We have another Raspberry Pi (a Raspberry Pi Zero does the job)
+with a magnetometer attached to it, running the `NMEA.multiplexer`.
+The `NMEA.multiplexer` can also serve as a REST server, storing NMEA data in a cache, queryable from a REST client.
+
+|       HMC5883L                 |     HMC5883L                   |
+|:------------------------------:|:------------------------------:|
+| ![One](./pictures/mag.one.jpg) | ![Two](./pictures/mag.two.jpg) | 
+`STL` files for the gimbal can be found [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Gimbal).
+
+And this is what we do here, we added System properties:
+```bash
+JAVA_OPTS="$JAVA_OPTS -Dping.nmea.server=true"
+JAVA_OPTS="$JAVA_OPTS -Dnmea.server.base.url=http://192.168.42.20:9991"
+``` 
+This tells the code driving the device to ping the NMEA server every second to get the heading from it.
+In this case, it will do a REST request like 
+```
+GET http://192.168.42.20:9991/mux/cache
+``` 
+returning a `json` payload like
+```json
+{
+    "NMEA_AS_IS": {
+        "HDM": "$IIHDM,172,M*38",
+        "XDR": "$IIXDR,A,178,D,PTCH,A,-160,D,ROLL*78"
+    },
+    "Damping": 1,
+    "Current calculated with damping": {},
+    "HDG Offset": 0.0,
+    "Default Declination": {
+        "angle": 14.0
+    },
+    "Deviation file name": "zero-deviation.csv",
+    "HDG mag.": {
+        "angle": 172.0
+    },
+    "BSP Factor": 1.0,
+    "Max Leeway": 0.0,
+    "AWS Factor": 1.0,
+    "AWA Offset": 0.0,
+    "NMEA": "$IIXDR,A,178,D,PTCH,A,-160,D,ROLL*78"
+}
+```
+from which the heading is obtained, and used to calculate the azimuthal orientation of the panel. 
 
 ### The Device
 The soft of this project is designed to drive [this device](https://github.com/OlivierLD/3DPrinting/blob/master/OpenSCAD/SolarPanelStand/stl/the.full.stand.stuck.stl).
