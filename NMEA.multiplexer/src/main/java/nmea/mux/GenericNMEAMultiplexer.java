@@ -246,6 +246,11 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 	public static void main(String... args) {
 		Properties definitions = GenericNMEAMultiplexer.getDefinitions();
 
+		if (infraVerbose) {
+			System.out.println("MUX Definitions:");
+			definitions.list(System.out);
+		}
+
 		boolean startProcessingOnStart = "true".equals(System.getProperty("process.on.start", "true"));
 		GenericNMEAMultiplexer mux = new GenericNMEAMultiplexer(definitions);
 		mux.setEnableProcess(startProcessingOnStart);
