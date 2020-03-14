@@ -17,7 +17,7 @@ channels:
     read.frequency: 1000
     hmc5883l.cal.prop.file: hmc5883l.cal.properties
 forwarders:
-  - type: "tcp"
+  - type: tcp
     port: 8001
     # verbose: false
     # forward.01.timebase.filename=true
