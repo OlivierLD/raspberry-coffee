@@ -143,8 +143,10 @@ To simulate the date, you need to provide three system variables:
 ### Heading input
 If the device has to be carried by a vehicle in motion, we need to have the heading of the device.
 
-Magnetometers like an `HMC5883L` or an `LSM303` can do the job. But the magnetometers
-can go crazy if they're too close to a magnet, and stepper motors heavily use magnets.
+Small magnetometers like an `HMC5883L` or an `LSM303` can do the job.
+> _Note_: Those magnetometers **do require** a calibration, See [here](../../I2C.SPI/lsm303.calibration/README.md) for details. 
+ 
+But the magnetometers can go crazy if they're too close to a magnet, and stepper motors heavily use magnets.
 
 Having the magnetometer too close to the stepper motors is **not** a good idea.
 
