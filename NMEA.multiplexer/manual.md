@@ -416,7 +416,7 @@ The cache is a `Map<String, Object>`, see `context.NMEADataCache` for details.
  GET /mux/cache
 ```
 
-If `init.cache` is set to `true`, the following parameters will be taken in account when inserting data in the cache:
+If `init.cache` is set to `true` or `yes`, the following parameters will be taken in account when inserting data in the cache:
 - `bsp.factor` Boat Speed Factor, number, `0` to `n`
 - `aws.factor` Apparent Wind Speed Factor, number, `0` to `n`
 - `awa.offset` Apparent Wind Angle offset in degrees, from `-180` to `180`

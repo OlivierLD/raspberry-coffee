@@ -251,12 +251,17 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 		mux.setEnableProcess(startProcessingOnStart);
 		// with.http.server=yes
 		// http.port=9999
-		if ("yes".equals(definitions.getProperty("with.http.server", "no"))) {
+		String withHttpServer = definitions.getProperty("with.http.server", "no");
+		if ("yes".equals(withHttpServer) || "true".equals(withHttpServer)) {
 			int httpPort = Integer.parseInt(definitions.getProperty("http.port", "9999"));
 			if (infraVerbose) {
 				System.out.println(String.format("Starting Admin server on port %d", httpPort));
 			}
 			mux.startAdminServer(httpPort);
+		} else {
+			if (infraVerbose) {
+				System.out.println(String.format("\t>> NO Admin server started"));
+			}
 		}
 	}
 }
