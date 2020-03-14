@@ -85,7 +85,8 @@ public class FeatureRequestManager implements RESTRequestManager {
 						}
 					}
 					try {
-						heading = ((Double)cache.get("HDG c.")).doubleValue();
+						heading = // ((Double)cache.get("HDG mag.")).doubleValue();
+								((Double) ((Map<String, Object>) cache.get("HDG mag.")).get("angle")).doubleValue();
 					} catch (Exception ex) {
 						if (httpVerbose) {
 							ex.printStackTrace();
@@ -93,6 +94,9 @@ public class FeatureRequestManager implements RESTRequestManager {
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
+				}
+				if (httpVerbose) {
+					System.out.println(String.format(">> From the cache: lat: %.02f, lng: %.02f, hdg: %.02f", latitude, longitude, heading));
 				}
 				featureManager.setDevicePosition(latitude, longitude);
 				featureManager.setDeviceHeading(heading);

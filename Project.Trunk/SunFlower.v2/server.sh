@@ -32,9 +32,9 @@ JAVA_OPTS="$JAVA_OPTS -Dfirst.move.slack=35"
 JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10" # Give some time to the motor...
 JAVA_OPTS="$JAVA_OPTS -Dno.motor.movement=false"
 #
-# NMEA Data server
+# NMEA Data server, position and heading
 JAVA_OPTS="$JAVA_OPTS -Dping.nmea.server=true"
-# JAVA_OPTS="$JAVA_OPTS -Dnmea.server.base.url=http://...:9999"
+JAVA_OPTS="$JAVA_OPTS -Dnmea.server.base.url=http://192.168.42.20:9991"
 #
 echo -e "Try 'nohup $0 > sf.log &'"
 java -cp ${CP} ${JAVA_OPTS} sunflower.httpserver.SunFlowerServer
