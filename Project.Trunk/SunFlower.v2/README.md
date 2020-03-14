@@ -157,6 +157,7 @@ The `NMEA.multiplexer` can also serve as a REST server, storing NMEA data in a c
 |       HMC5883L                 |     HMC5883L                   |
 |:------------------------------:|:------------------------------:|
 | ![One](./pictures/mag.one.jpg) | ![Two](./pictures/mag.two.jpg) | 
+
 `STL` files for the gimbal can be found [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Gimbal).
 
 And this is what we do here, we added System properties:
