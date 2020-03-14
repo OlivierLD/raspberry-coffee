@@ -109,9 +109,11 @@ public class HMC5883L {
 		}
 		Properties hmc5883lCalProps = new Properties();
 		try {
-			hmc5883lCalProps.load(new FileReader(System.getProperty("hmc5883l.cal.prop.file", "hmc5883l.cal.properties")));
+			String propFileName = System.getProperty("hmc5883l.cal.prop.file", "hmc5883l.cal.properties");
+			hmc5883lCalProps.load(new FileReader(propFileName));
+			System.out.println(String.format("- Properties file %s loaded.", propFileName));
 		} catch (Exception ex) {
-			System.out.println("Defaulting Calibration Properties");
+			System.out.println(">> Defaulting Calibration Properties");
 		}
 		// Calibration values
 		if (!"true".equals(System.getProperty("hmc5883l.log.for.calibration"))) {

@@ -120,7 +120,7 @@ public class TCPServer implements Forwarder {
 					parent.setSocket(clientSkt);
 				}
 			} catch (Exception ex) {
-				System.err.println("SocketThread:" + ex.getLocalizedMessage());
+				System.err.println(String.format("SocketThread port %d: %s",tcpPort , ex.getLocalizedMessage()));
 			}
 			System.out.println("..... End of TCP SocketThread.");
 		}

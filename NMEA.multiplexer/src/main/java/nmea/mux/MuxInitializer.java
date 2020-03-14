@@ -20,6 +20,7 @@ import nmea.consumers.client.ZDAClient;
 import nmea.consumers.reader.BME280Reader;
 import nmea.consumers.reader.BMP180Reader;
 import nmea.consumers.reader.DataFileReader;
+import nmea.consumers.reader.HMC5883LReader;
 import nmea.consumers.reader.HTU21DFReader;
 import nmea.consumers.reader.LSM303Reader;
 import nmea.consumers.reader.RandomReader;
@@ -311,6 +312,9 @@ public class MuxInitializer {
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								String hmc5883lDevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
+								// Calibration properties
+								String hmc5883lCalPropFileName = muxProps.getProperty(String.format("mux.%s.hmc5883l.cal.prop.file", MUX_IDX_FMT.format(muxIdx)), "hmc5883l.cal.properties");
+								System.setProperty("hmc5883l.cal.prop.file", hmc5883lCalPropFileName);
 								int headingOffset = 0;
 								try {
 									headingOffset = Integer.parseInt(muxProps.getProperty(String.format("mux.%s.heading.offset", MUX_IDX_FMT.format(muxIdx)), "0"));
@@ -355,7 +359,7 @@ public class MuxInitializer {
 												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
 												mux);
 								hmc5883lClient.initClient();
-								hmc5883lClient.setReader(new LSM303Reader("MUX-HMC5883LReader", hmc5883lClient.getListeners()));
+								hmc5883lClient.setReader(new HMC5883LReader("MUX-HMC5883LReader", hmc5883lClient.getListeners()));
 								hmc5883lClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								// Important: after the setReader
 								if (headingOffset != 0) {
@@ -387,6 +391,9 @@ public class MuxInitializer {
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								String lsm303DevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
 								String lsm303DeviceFeature = muxProps.getProperty(String.format("mux.%s.device.feature", MUX_IDX_FMT.format(muxIdx)), "BOTH"); // BOTH, MAGNETOMETER, or ACCELEROMETER
+								// Calibration properties
+								String lsm303CalPropFileName = muxProps.getProperty(String.format("mux.%s.lsm303.cal.prop.file", MUX_IDX_FMT.format(muxIdx)), "lsm303.cal.properties");
+								System.setProperty("lsm303.cal.prop.file", lsm303CalPropFileName);
 								int headingOffset = 0;
 								try {
 									headingOffset = Integer.parseInt(muxProps.getProperty(String.format("mux.%s.heading.offset", MUX_IDX_FMT.format(muxIdx)), "0"));

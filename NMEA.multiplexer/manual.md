@@ -98,7 +98,8 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
      sentence.filters: HDM,XDR
      heading.offset: 0
      read.frequency: 1000
-     damping.size: 5
+     damping.size: 5  
+     lsm303.cal.prop.file: lsm303.cal.properties
  forwarders:
    - type: file
      timebase.filename: true
@@ -199,6 +200,7 @@ channels:
     mux.01.feature=BOTH
     mux.01.damping.size=5
     mux.01.read.frequency=1000
+    mux.01.lsm303.cal.prop.file=lsm303.cal.properties
     ```
 - `hmc5883l`
     - Triple axis magnetometer
@@ -210,6 +212,7 @@ channels:
     mux.01.heading.offset=0
     mux.01.damping.size=5
     mux.01.read.frequency=1000
+    mux.01.hmc5883l.cal.prop.file=hmc5883l.cal.properties
     ```
 - `bme280`
     - Humidity, pressure, temperature
