@@ -217,6 +217,7 @@ Here is a animation - stop motion - of the real device (first prototype), on 231
 orienting the panel does make a difference on the load. The first frames are too bright, it **was** sunny... 😎
 
 ![Stop Motion](./stop.motion.gif)
+
 In this animation - just to validate the concept, the Raspberry Pi driving the device, and the one taking the snapshots were both powered by the battery fed by the solar panel.
 
 ## TODO
