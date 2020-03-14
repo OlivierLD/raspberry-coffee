@@ -410,6 +410,12 @@ If `with.http.server` is set to `yes`, the default http port is `9999`. It can b
 `init.cache` is set to `true`.
 The cache is a `Map<String, Object>`, see `context.NMEADataCache` for details.
 
+> _Note_: If the property `with.http.server` is set to `true`, then the cache might also be accessible through a REST interface, as a `json` object reflecting the `Map` above
+> (also see in the `RESTNavServer` for details).
+```
+ GET /mux/cache
+```
+
 If `init.cache` is set to `true`, the following parameters will be taken in account when inserting data in the cache:
 - `bsp.factor` Boat Speed Factor, number, `0` to `n`
 - `aws.factor` Apparent Wind Speed Factor, number, `0` to `n`

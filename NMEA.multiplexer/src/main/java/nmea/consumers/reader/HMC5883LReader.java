@@ -19,6 +19,7 @@ import java.util.List;
  * Heading, as an HDM String.
  *
  * -Dhmc5883l.use.damping default true
+ *
  */
 public class HMC5883LReader extends NMEAReader {
 

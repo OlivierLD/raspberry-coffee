@@ -6,10 +6,11 @@ context:
   with.http.server: true
   http.port: 9991
   init.cache: true
+  default.declination: 14
 channels:
   - type: hmc5883l
-    prefix: II
-    verbose: false
+    device.prefix: II
+    verbose: true
     sentence.filters: HDM,XDR
     heading.offset: 0
     damping.size: 5

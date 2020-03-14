@@ -127,8 +127,8 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 		Runtime.getRuntime().exit(0); // Ctrl-C for the HTTP Server
 	}
 
-	private boolean verbose = "true".equals(System.getProperty("mux.data.verbose"));
-	private boolean infraVerbose = "true".equals(System.getProperty("mux.infra.verbose"));
+	private static boolean verbose = "true".equals(System.getProperty("mux.data.verbose"));
+	private static boolean infraVerbose = "true".equals(System.getProperty("mux.infra.verbose"));
 	private boolean process = true; // onData, forward to computers and forwarders
 
 	private boolean softStop = false;
@@ -202,7 +202,7 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 			this.adminServer = new HTTPServer(port, this);
 			this.adminServer.startServer();
 			if (infraVerbose) {
-				System.out.println(String.format("\t>> %s - Starting Admin server", NumberFormat.getInstance().format(System.currentTimeMillis())));
+				System.out.println(String.format("\t>> %s - Starting Admin server on port %dr", NumberFormat.getInstance().format(System.currentTimeMillis()), port));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -252,7 +252,11 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 		// with.http.server=yes
 		// http.port=9999
 		if ("yes".equals(definitions.getProperty("with.http.server", "no"))) {
-			mux.startAdminServer(Integer.parseInt(definitions.getProperty("http.port", "9999")));
+			int httpPort = Integer.parseInt(definitions.getProperty("http.port", "9999"));
+			if (infraVerbose) {
+				System.out.println(String.format("Starting Admin server on port %d", httpPort));
+			}
+			mux.startAdminServer(httpPort);
 		}
 	}
 }
