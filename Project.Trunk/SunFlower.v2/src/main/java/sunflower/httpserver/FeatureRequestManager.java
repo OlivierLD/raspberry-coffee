@@ -8,6 +8,7 @@ import http.client.HTTPClient;
 import sunflower.SunFlowerDriver;
 
 import java.io.StringReader;
+import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +63,8 @@ public class FeatureRequestManager implements RESTRequestManager {
 				}
 
 				// Ping the Server
+				String resource = String.format("%s/mux/cache", this.baseURL);
 				try {
-					String resource = String.format("%s/mux/cache", this.baseURL);
 					String response = HTTPClient.doGet(resource, null);
 //					System.out.println("Cache:" + response);
 					Gson gson = new GsonBuilder().create();
@@ -71,7 +72,7 @@ public class FeatureRequestManager implements RESTRequestManager {
 					Map<String, Object> cache = gson.fromJson(stringReader, Map.class);
 //					System.out.println("Cache > " + cache.toString());
 					try {
-						latitude = ((Double)((Map<String, Object>)cache.get("Position")).get("lat")).doubleValue();
+						latitude = ((Double) ((Map<String, Object>) cache.get("Position")).get("lat")).doubleValue();
 					} catch (Exception ex) {
 						if (httpVerbose) {
 							ex.printStackTrace();
@@ -92,6 +93,8 @@ public class FeatureRequestManager implements RESTRequestManager {
 							ex.printStackTrace();
 						}
 					}
+				} catch (ConnectException ce) {
+					System.out.println(String.format("NMEA Thread connecting to %s: %s", resource, ce.toString()));
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
