@@ -86,8 +86,7 @@ public class FeatureRequestManager implements RESTRequestManager {
 						}
 					}
 					try {
-						heading = // ((Double)cache.get("HDG mag.")).doubleValue();
-								((Double) ((Map<String, Object>) cache.get("HDG mag.")).get("angle")).doubleValue();
+						heading = ((Double) ((Map<String, Object>) cache.get("HDG mag.")).get("angle")).doubleValue();
 					} catch (Exception ex) {
 						if (httpVerbose) {
 							ex.printStackTrace();

@@ -68,11 +68,13 @@ public class HTTPClient {
 		} catch (EOFException eofe) {
 			System.out.println("EOFException"); // That's ok, nothing is returned
 			eofe.printStackTrace();
+			throw eofe;
 		} catch (SocketException se) {
 			System.out.println("SocketException"); // OK too.
 			se.printStackTrace();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+//			ex.printStackTrace();
+			throw ex;
 		}
 		return getContent;
 	}
