@@ -70,8 +70,9 @@ public class HTTPClient {
 			eofe.printStackTrace();
 			throw eofe;
 		} catch (SocketException se) {
-			System.out.println("SocketException"); // OK too.
-			se.printStackTrace();
+//			System.out.println("SocketException in HTTPClient"); // OK too.
+//			se.printStackTrace();
+			throw se;
 		} catch (Exception ex) {
 //			ex.printStackTrace();
 			throw ex;

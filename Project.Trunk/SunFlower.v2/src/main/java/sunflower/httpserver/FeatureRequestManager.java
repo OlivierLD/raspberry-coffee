@@ -9,6 +9,7 @@ import sunflower.SunFlowerDriver;
 
 import java.io.StringReader;
 import java.net.ConnectException;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +93,7 @@ public class FeatureRequestManager implements RESTRequestManager {
 							ex.printStackTrace();
 						}
 					}
-				} catch (ConnectException ce) {
+				} catch (/*ConnectException | */ SocketException ce) {
 					System.out.println(String.format("NMEA Thread connecting to %s: %s", resource, ce.toString()));
 				} catch (Exception ex) {
 					ex.printStackTrace();
