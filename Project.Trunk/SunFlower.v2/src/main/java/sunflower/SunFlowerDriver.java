@@ -68,7 +68,6 @@ public class SunFlowerDriver {
 
 	public void setDeviceHeading(double hdg) {
 		if (hdg != this.deviceHeading) { // Then orient the device?
-			// TODO Orient?
 			System.out.println(String.format("Heading has changed from %.02f to %.02f", this.deviceHeading, hdg));
 		}
 		this.deviceHeading = hdg;

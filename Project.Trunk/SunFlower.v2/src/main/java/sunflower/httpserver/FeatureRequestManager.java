@@ -99,7 +99,9 @@ public class FeatureRequestManager implements RESTRequestManager {
 					}
 				} catch (/*ConnectException | */ SocketException ce) {
 					if (!alreadyRaisedConnectException) {
-						System.out.println(String.format(">>> %s:NMEA Thread connecting to %s: %s", NumberFormat.getInstance().format(System.currentTimeMillis()), resource, ce.toString()));
+						System.out.println(              "+------------------------------------------------------------------------------------");
+						System.out.println(String.format("| >>> %s:NMEA Thread connecting to %s: %s", NumberFormat.getInstance().format(System.currentTimeMillis()), resource, ce.toString()));
+						System.out.println(              "+------------------------------------------------------------------------------------");
 						alreadyRaisedConnectException = true;
 					}
 				} catch (Exception ex) {
