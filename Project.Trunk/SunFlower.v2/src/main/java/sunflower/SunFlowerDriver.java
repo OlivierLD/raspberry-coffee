@@ -151,6 +151,7 @@ public class SunFlowerDriver {
 	private final static boolean MOTOR_HAT_VERBOSE = "true".equals(System.getProperty("motor.hat.verbose"));
 	private final static boolean TOO_LONG_EXCEPTION_VERBOSE = "true".equals(System.getProperty("too.long.exception.verbose", "true"));
 	private final static boolean ASTRO_VERBOSE = "true".equals(System.getProperty("astro.verbose", "false"));
+	private final static boolean MOVES_VERBOSE = "true".equals(System.getProperty("moves.verbose", "false"));
 
 	private static int minimumAltitude = -1;
 	static {
@@ -841,6 +842,10 @@ public class SunFlowerDriver {
 				}
 				if (hasMoved && ASTRO_VERBOSE) {
 					System.out.println(String.format("Sun's position is now: Elev: %s, Z: %.02f", GeomUtil.decToSex(sunElevation, GeomUtil.NO_DEG, GeomUtil.NONE), sunAzimuth));
+				}
+				if (hasMoved && MOVES_VERBOSE) {
+//					DeviceData deviceData = new DeviceData(date, devicePosition, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
+					System.out.println(String.format(">> Device now: %s", deviceData)); // TODO Make sure this is the right values
 				}
 			} else { // Park device
 				parkDevice();
