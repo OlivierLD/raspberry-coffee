@@ -1,4 +1,4 @@
-# SunFlower Versions 2.0 and 3.0
+# SunFlower Versions 2.0 a and b
 ![Work In Progress](./wip.jpg) 
 
 The goal of this project is to _**automatically**_ orient a solar panel so it faces the sun as long as it is in the sky.
@@ -210,7 +210,7 @@ from which the heading is obtained, and used to calculate the azimuthal orientat
 
 ### The Device
 The soft of this project is designed to drive [this device](https://github.com/OlivierLD/3DPrinting/blob/master/OpenSCAD/SolarPanelStand/stl/the.full.stand.stuck.stl).
-Its construction is detailed in [its repo](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand).
+Its 3D printing construction is detailed in [its repo](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand).
 
 #### The _real_ device
 Here is a animation - stop motion - of the real device (first prototype), on 231 minutes, starting before noon, ending after. Event if the sky was obviously not clear, 
@@ -219,6 +219,13 @@ orienting the panel does make a difference on the load. The first frames are too
 ![Stop Motion](./stop.motion.gif)
 
 In this animation - just to validate the concept, the Raspberry Pi driving the device, and the one taking the snapshots were both powered by the battery fed by the solar panel.
+
+### Some pictures
+
+| At work                             | At work                           |
+|:-----------------------------------:|:---------------------------------:|
+| ![One](./pictures/testing.01.jpg)   | ![Two](./pictures/testing.02.jpg) |
+| ![Three](./pictures/testing.03.jpg) |                                   |
 
 ## TODO
 - An ANSI Console. &#9989; Done (...ish).

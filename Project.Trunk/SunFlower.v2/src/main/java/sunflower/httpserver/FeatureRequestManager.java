@@ -10,6 +10,7 @@ import sunflower.SunFlowerDriver;
 import java.io.StringReader;
 import java.net.ConnectException;
 import java.net.SocketException;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +95,7 @@ public class FeatureRequestManager implements RESTRequestManager {
 						}
 					}
 				} catch (/*ConnectException | */ SocketException ce) {
-					System.out.println(String.format("NMEA Thread connecting to %s: %s", resource, ce.toString()));
+					System.out.println(String.format(">>> %s:NMEA Thread connecting to %s: %s", NumberFormat.getInstance().format(System.currentTimeMillis()), resource, ce.toString()));
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
