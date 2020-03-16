@@ -208,6 +208,7 @@ returning a `json` payload like
 }
 ```
 from which the heading is obtained, and used to calculate the azimuthal orientation of the panel. 
+> See the `NMEADataThread`, in `FeatureRequestManager`.
 
 #### Pushing
 Instead of pulling the heading from wherever it is available, we could also use a push architecture.
