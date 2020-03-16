@@ -732,6 +732,9 @@ public class SunFlowerDriver {
 			}
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Parking the device"));
 			// Put Z to 0 or 180, Elev. to 90.
+
+			// Parking from currentDeviceElevation to PARKED_ELEVATION
+			System.out.println(String.format("\t - Parking elevation %.02f -> %.02f", currentDeviceElevation, PARKED_ELEVATION));
 			MotorPayload parkElev = getMotorPayload(currentDeviceElevation, PARKED_ELEVATION, elevationMotorRatio, elevationInverted);
 			String mess_1 = String.format("(Elev) This will be %d steps %s", parkElev.nbSteps, parkElev.motorCommand);
 			this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess_1));
@@ -741,6 +744,8 @@ public class SunFlowerDriver {
 			}
 			currentDeviceElevation = PARKED_ELEVATION;
 
+			// Parking from currentDeviceAzimuth to PARKED_AZIMUTH
+			System.out.println(String.format("\t - Parking azimuth %.02f -> %.02f", currentDeviceAzimuth, PARKED_AZIMUTH));
 			MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, PARKED_AZIMUTH, azimuthMotorRatio, azimuthInverted);
 			String mess_2 = String.format("(Z) This will be %d steps %s", parkZ.nbSteps, parkZ.motorCommand);
 			this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess_2));

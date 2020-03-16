@@ -49,8 +49,8 @@ public class FeatureRequestManager implements RESTRequestManager {
 
 			while (keepPolling) {
 				// Fetch data
-				double heading = 180L;
-				double latitude = 0L;
+				double heading   = 180L;
+				double latitude  = 0L;
 				double longitude = 0L;
 
 				String strLat = System.getProperty("device.lat");

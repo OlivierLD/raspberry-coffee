@@ -172,6 +172,7 @@ The `NMEA.multiplexer` can also serve as a REST server, storing NMEA data in a c
 
 > `STL` files for the gimbal can be found [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Gimbal).
 
+#### Pulling
 And this is what we do here, we added System properties:
 ```bash
 JAVA_OPTS="$JAVA_OPTS -Dping.nmea.server=true"
@@ -208,6 +209,16 @@ returning a `json` payload like
 ```
 from which the heading is obtained, and used to calculate the azimuthal orientation of the panel. 
 
+#### Pushing
+Instead of pulling the heading from wherever it is available, we could also use a push architecture.
+
+In the `NMEA.multiplexer` project (part of this repo), there is this notion of `forwarder` that could be used here.
+This project could be implement the `forwarder` interface, and the `NMEA.multiplexer` could push
+the required data to the `SunFlowerDriver` (Position & Heading).
+> For inspiration, see the existing forwarder `nmea.forwarders.SolarPanelOrienter`, designed to work
+> with the `SunFlower.v1`, then one working with micro-servos.
+
+
 ### The Device
 The soft of this project is designed to drive [this device](https://github.com/OlivierLD/3DPrinting/blob/master/OpenSCAD/SolarPanelStand/stl/the.full.stand.stuck.stl).
 Its 3D printing construction is detailed in [its repo](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand).
@@ -233,6 +244,6 @@ In this animation - just to validate the concept, the Raspberry Pi driving the d
 - A Web Console. WiP.
     - REST and/or WebSockets?
 - A utility, to manually/interactively orient the panel from user's inputs. &#9989; Done.
-    
+- A `forwarder` for the `NMEA.multiplexer`, as in `SolarPanelOrienter`.    
 
 ---
