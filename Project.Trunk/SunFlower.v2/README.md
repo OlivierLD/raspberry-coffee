@@ -173,7 +173,7 @@ The `NMEA.multiplexer` can also serve as a REST server, storing NMEA data in a c
 > `STL` files for the gimbal can be found [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Gimbal).
 
 #### Pulling
-And this is what we do here, we added System properties:
+And this is what we do here, we've added two System properties:
 ```bash
 JAVA_OPTS="$JAVA_OPTS -Dping.nmea.server=true"
 JAVA_OPTS="$JAVA_OPTS -Dnmea.server.base.url=http://192.168.42.20:9991"
