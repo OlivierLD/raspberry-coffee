@@ -116,6 +116,9 @@ public class SunFlowerDriver {
 	private double currentDeviceElevation = PARKED_ELEVATION;
 	private double currentDeviceAzimuth = PARKED_AZIMUTH;
 
+	private int currentDeviceElevationStepOffset = 0;
+	private int currentDeviceAzimuthStepOffset = 0;
+
 	private CelestialComputerThread astroThread = null;
 	private MotorThread elevationMotorThread = null;
 	private MotorThread azimuthMotorThread = null;
@@ -808,6 +811,8 @@ public class SunFlowerDriver {
 					hasMoved = true;
 					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, adjustedAzimuth));
 					MotorPayload data = getMotorPayload(currentDeviceAzimuth, adjustedAzimuth, azimuthMotorRatio, azimuthInverted);
+					currentDeviceAzimuthStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
+
 					if (!simulating) {
 						this.publish(EventType.MOVING_AZIMUTH_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
 						if (azimuthMotorThread == null || (azimuthMotorThread != null && !azimuthMotorThread.isAlive())) {
@@ -825,6 +830,8 @@ public class SunFlowerDriver {
 					hasMoved = true;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, adjustedElevation));
 					MotorPayload data = getMotorPayload(currentDeviceElevation, adjustedElevation, elevationMotorRatio, elevationInverted);
+					currentDeviceElevationStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
+
 					if (!simulating) {
 						this.publish(EventType.MOVING_ELEVATION_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
 					}
@@ -844,11 +851,13 @@ public class SunFlowerDriver {
 				}
 				if (hasMoved && MOVES_VERBOSE) {
 //					DeviceData deviceData = new DeviceData(date, devicePosition, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
-					System.out.println(String.format(">> Device has moved, now: Elevation %.02f (adjusted %.02f), Azimuth %.02f (adjusted %.02f)",
+					System.out.println(String.format(">> Device has moved, now: Elevation %.02f (adjusted %.02f, stepOffset %d), Azimuth %.02f (adjusted %.02f, stepOffset %d)",
 							currentDeviceElevation,
 							adjustedElevation,
+							currentDeviceElevationStepOffset,
 							currentDeviceAzimuth,
-							adjustedAzimuth));
+							adjustedAzimuth,
+							currentDeviceAzimuthStepOffset));
 				}
 			} else { // Park device
 				parkDevice();
