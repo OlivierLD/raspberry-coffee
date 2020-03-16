@@ -30,6 +30,8 @@ public class FeatureRequestManager implements RESTRequestManager {
 		private boolean keepPolling = true;
 		private String baseURL = null;
 
+		private boolean alreadyRaisedConnectException = false;
+
 		public NMEADataThread() {
 			super();
 		}
@@ -69,6 +71,7 @@ public class FeatureRequestManager implements RESTRequestManager {
 				try {
 					String response = HTTPClient.doGet(resource, null);
 //					System.out.println("Cache:" + response);
+					alreadyRaisedConnectException = false;
 					Gson gson = new GsonBuilder().create();
 					StringReader stringReader = new StringReader(response);
 					Map<String, Object> cache = gson.fromJson(stringReader, Map.class);
@@ -95,7 +98,10 @@ public class FeatureRequestManager implements RESTRequestManager {
 						}
 					}
 				} catch (/*ConnectException | */ SocketException ce) {
-					System.out.println(String.format(">>> %s:NMEA Thread connecting to %s: %s", NumberFormat.getInstance().format(System.currentTimeMillis()), resource, ce.toString()));
+					if (!alreadyRaisedConnectException) {
+						System.out.println(String.format(">>> %s:NMEA Thread connecting to %s: %s", NumberFormat.getInstance().format(System.currentTimeMillis()), resource, ce.toString()));
+						alreadyRaisedConnectException = true;
+					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
