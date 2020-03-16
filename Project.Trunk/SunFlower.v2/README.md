@@ -222,9 +222,10 @@ In this animation - just to validate the concept, the Raspberry Pi driving the d
 
 ### Some pictures
 
-| At work                             | At work                           |
-|:-----------------------------------:|:---------------------------------:|
+<!--| At work                             | At work                           | -->
+
 | ![One](./pictures/testing.01.jpg)   | ![Two](./pictures/testing.02.jpg) |
+|:-----------------------------------:|:---------------------------------:|
 | ![Three](./pictures/testing.03.jpg) |                                   |
 
 ## TODO
