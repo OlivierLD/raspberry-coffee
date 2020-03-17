@@ -742,7 +742,7 @@ public class SunFlowerDriver {
 		} else {
 			// From origin
 			int nbSteps = (int) Math.round((Math.abs(origin - to) / 360d) * STEPS_PER_CIRCLE / ratio);
-			int diff = Math.abs(currentStepOffset - nbSteps);
+			int diff = Math.abs(nbSteps - currentStepOffset);
 			if (SPECIAL_DEBUG_VERBOSE) {
 				System.out.println(String.format("Moving %d step(s) (instead of %d).", diff, (int) Math.round((Math.abs(from - to) / 360d) * STEPS_PER_CIRCLE / ratio)));
 			}
@@ -860,6 +860,9 @@ public class SunFlowerDriver {
 							azimuthMotorRatio,
 							azimuthInverted);
 					currentDeviceAzimuthStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
+					if (SPECIAL_DEBUG_VERBOSE) {
+						System.out.println(String.format("\tAzimuthStepOffset now %d", currentDeviceAzimuthStepOffset));
+					}
 
 					if (!simulating) {
 						this.publish(EventType.MOVING_AZIMUTH_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
@@ -884,6 +887,9 @@ public class SunFlowerDriver {
 							elevationMotorRatio,
 							elevationInverted);
 					currentDeviceElevationStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
+					if (SPECIAL_DEBUG_VERBOSE) {
+						System.out.println(String.format("\tElevationStepOffset now %d", currentDeviceElevationStepOffset));
+					}
 
 					if (!simulating) {
 						this.publish(EventType.MOVING_ELEVATION_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
@@ -979,6 +985,7 @@ public class SunFlowerDriver {
 											}
 										}
 										currentDeviceAzimuth = value;
+										currentDeviceAzimuthStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
 									}
 								}
 								if (userData[0].equalsIgnoreCase("E")) {
@@ -1001,6 +1008,7 @@ public class SunFlowerDriver {
 											}
 										}
 										currentDeviceElevation = value;
+										currentDeviceElevationStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
 									}
 								}
 							}
