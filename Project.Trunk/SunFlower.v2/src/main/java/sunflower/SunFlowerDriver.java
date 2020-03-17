@@ -752,7 +752,7 @@ public class SunFlowerDriver {
 
 			// Parking from currentDeviceAzimuth to PARKED_AZIMUTH
 			System.out.println(String.format("\t - Parking azimuth %.02f -> %.02f", currentDeviceAzimuth, PARKED_AZIMUTH));
-			MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, PARKED_AZIMUTH, azimuthMotorRatio, azimuthInverted);
+			MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, PARKED_AZIMUTH, azimuthMotorRatio, azimuthInverted); // TODO Check with azimuthStepOffset...
 			String mess_2 = String.format("(Z) This will be %d steps %s", parkZ.nbSteps, parkZ.motorCommand);
 			if (MOVES_VERBOSE) {
 				System.out.println(String.format("Parking %s", mess_2));
@@ -852,16 +852,18 @@ public class SunFlowerDriver {
 					}
 					currentDeviceElevation = adjustedElevation;
 				}
-				if (hasMoved && ASTRO_VERBOSE) {
-					System.out.println(String.format("Sun's position is now: Elev: %s, Z: %.02f", GeomUtil.decToSex(sunElevation, GeomUtil.NO_DEG, GeomUtil.NONE), sunAzimuth));
-				}
-				if (hasMoved && MOVES_VERBOSE) {
+				if (hasMoved) {
+					if (ASTRO_VERBOSE) {
+						System.out.println(String.format("Sun's position is now: Elev: %s, Z: %.02f", GeomUtil.decToSex(sunElevation, GeomUtil.NO_DEG, GeomUtil.NONE), sunAzimuth));
+					}
+					if (MOVES_VERBOSE) {
 //					DeviceData deviceData = new DeviceData(date, devicePosition, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
-					System.out.println(String.format(">> Device has moved, now: Elevation %.02f (stepOffset %d), Azimuth %.02f (stepOffset %d)",
-							currentDeviceElevation,
-							currentDeviceElevationStepOffset,
-							currentDeviceAzimuth,
-							currentDeviceAzimuthStepOffset));
+						System.out.println(String.format(">> Device has moved, now: Elevation %.02f (stepOffset %d), Azimuth %.02f (stepOffset %d)",
+								currentDeviceElevation,
+								currentDeviceElevationStepOffset,
+								currentDeviceAzimuth,
+								currentDeviceAzimuthStepOffset));
+					}
 				}
 			} else { // Park device
 				parkDevice();
