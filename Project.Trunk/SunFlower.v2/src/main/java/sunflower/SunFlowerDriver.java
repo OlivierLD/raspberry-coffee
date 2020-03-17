@@ -750,7 +750,7 @@ public class SunFlowerDriver {
 			// From origin
 			int stepsFromOrigin = (int) Math.round(((to - origin) / 360d) * STEPS_PER_CIRCLE / ratio);
 			int diff = stepsFromOrigin - currentStepOffset;
-			diff *= (inverted ? -1 : 1);
+//			diff *= (inverted ? -1 : 1);
 			motorPayload.motorCommand = (diff > 0) ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD;
 //					(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
 //					(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
