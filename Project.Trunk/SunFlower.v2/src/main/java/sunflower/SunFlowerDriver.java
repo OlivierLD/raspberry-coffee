@@ -726,9 +726,6 @@ public class SunFlowerDriver {
 	// Recalculate from origin and get the diff with the currentStepOffset if origin != NaN
 	private static MotorPayload getMotorPayload(double origin, int currentStepOffset, double from, double to, double ratio, boolean inverted) {
 		MotorPayload motorPayload = new MotorPayload();
-		motorPayload.motorCommand = (to > from) ?
-				(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
-				(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
 
 		if (SPECIAL_DEBUG_VERBOSE) {
 			System.out.println(String.format("Calculating motor payload, origin: %.02f, currentOffset: %d, from %.02f to %.02f (ratio: %.02f)",
@@ -739,11 +736,17 @@ public class SunFlowerDriver {
 		// Device: 360 degrees = (200 / ratio) steps.
 		if (Double.isNaN(origin)) {
 			motorPayload.nbSteps = (int) Math.round((Math.abs(from - to) / 360d) * STEPS_PER_CIRCLE / ratio);
+			motorPayload.motorCommand = (to > from) ?
+					(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
+					(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
 		} else {
 			// From origin
-			int stepsFromOrigin = (int) Math.round((Math.abs(origin - to) / 360d) * STEPS_PER_CIRCLE / ratio) *
-					(motorPayload.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1);
-			int diff = Math.abs(stepsFromOrigin - currentStepOffset);
+			int stepsFromOrigin = (int) Math.round((Math.abs(origin - to) / 360d) * STEPS_PER_CIRCLE / ratio);
+			int diff = stepsFromOrigin - currentStepOffset;
+			motorPayload.motorCommand = (diff > 0) ?
+					(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
+					(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
+
 			if (SPECIAL_DEBUG_VERBOSE) {
 				System.out.println(String.format("Moving from %.02f to %.02f: %d step(s) (instead of %d, from origin: %d).",
 						from,
