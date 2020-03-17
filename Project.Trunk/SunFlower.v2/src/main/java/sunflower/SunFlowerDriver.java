@@ -729,6 +729,12 @@ public class SunFlowerDriver {
 		motorPayload.motorCommand = (to > from) ?
 				(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
 				(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
+
+		if (SPECIAL_DEBUG_VERBOSE) {
+			System.out.println(String.format("Calculating motor payload, origin: %.02f, currentOffset: %d, from %.02f to %.02f (ratio: %.02f)",
+					origin, currentStepOffset, from, to, ratio));
+		}
+
 	  // Motor: 200 steps: 360 degrees.
 		// Device: 360 degrees = (200 / ratio) steps.
 		if (Double.isNaN(origin)) {
@@ -738,7 +744,7 @@ public class SunFlowerDriver {
 			int nbSteps = (int) Math.round((Math.abs(origin - to) / 360d) * STEPS_PER_CIRCLE / ratio);
 			int diff = Math.abs(currentStepOffset - nbSteps);
 			if (SPECIAL_DEBUG_VERBOSE) {
-				System.out.println(String.format("Moving %d step(s), instead of %d.", diff, (int) Math.round((Math.abs(from - to) / 360d) * STEPS_PER_CIRCLE / ratio)));
+				System.out.println(String.format("Moving %d step(s) (instead of %d).", diff, (int) Math.round((Math.abs(from - to) / 360d) * STEPS_PER_CIRCLE / ratio)));
 			}
 			motorPayload.nbSteps = diff;
 		}
