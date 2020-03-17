@@ -728,8 +728,10 @@ public class SunFlowerDriver {
 		MotorPayload motorPayload = new MotorPayload();
 
 		if (SPECIAL_DEBUG_VERBOSE) {
+			System.out.println("+-----------------------------------------------------");
 			System.out.println(String.format("Calculating motor payload, origin: %.02f, currentOffset: %d, from %.02f to %.02f (ratio: %.02f)",
 					origin, currentStepOffset, from, to, ratio));
+			System.out.println("+-----------------------------------------------------");
 		}
 
 		motorPayload.motorCommand = (to > from) ?
@@ -757,7 +759,7 @@ public class SunFlowerDriver {
 						from,
 						to,
 						diff,
-						(int) Math.round((Math.abs(from - to) / 360d) * STEPS_PER_CIRCLE / ratio),
+						(int) Math.round(((from - to) / 360d) * STEPS_PER_CIRCLE / ratio),
 						stepsFromOrigin));
 			}
 			motorPayload.nbSteps = Math.abs(diff);
