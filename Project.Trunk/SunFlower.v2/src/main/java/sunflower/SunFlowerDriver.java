@@ -749,7 +749,7 @@ public class SunFlowerDriver {
 		} else {
 			// From origin
 			int stepsFromOrigin = (int) Math.round(((to - origin) / 360d) * STEPS_PER_CIRCLE / ratio);
-			int diff = currentStepOffset - stepsFromOrigin;
+			int diff = stepsFromOrigin - currentStepOffset;
 			motorPayload.motorCommand = (diff > 0) ?
 					(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
 					(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
@@ -797,6 +797,7 @@ public class SunFlowerDriver {
 				elevationMotorThread.start();
 			}
 			currentDeviceElevation = PARKED_ELEVATION;
+			currentDeviceElevationStepOffset += (parkElev.nbSteps * (parkElev.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
 
 			// Parking from currentDeviceAzimuth to PARKED_AZIMUTH
 			System.out.println(String.format("\t - Parking azimuth %.02f -> %.02f", currentDeviceAzimuth, PARKED_AZIMUTH));
@@ -816,6 +817,7 @@ public class SunFlowerDriver {
 				azimuthMotorThread.start();
 			}
 			currentDeviceAzimuth = PARKED_AZIMUTH;
+			currentDeviceAzimuthStepOffset += (parkZ.nbSteps * (parkZ.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
 		} else {
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Device was parked"));
 		}
