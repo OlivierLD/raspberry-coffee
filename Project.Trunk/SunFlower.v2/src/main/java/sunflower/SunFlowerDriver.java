@@ -889,7 +889,10 @@ public class SunFlowerDriver {
 							azimuthInverted);
 					currentDeviceAzimuthStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (azimuthInverted ? -1 : 1));
 					if (SPECIAL_DEBUG_VERBOSE) {
-						System.out.println(String.format("\tAzimuthStepOffset now %d", currentDeviceAzimuthStepOffset));
+						System.out.println(String.format("\tAzimuthStepOffset now %d (command %s, inverted %s)",
+								currentDeviceAzimuthStepOffset,
+								data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? "Fwd" : "Bkd",
+								azimuthInverted ? "true" : "false"));
 					}
 
 					if (!simulating) {
