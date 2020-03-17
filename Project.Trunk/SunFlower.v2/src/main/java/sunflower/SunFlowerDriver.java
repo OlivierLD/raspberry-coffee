@@ -807,7 +807,7 @@ public class SunFlowerDriver {
 				elevationMotorThread.start();
 			}
 			currentDeviceElevation = PARKED_ELEVATION;
-			currentDeviceElevationStepOffset += (parkElev.nbSteps * (parkElev.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
+			currentDeviceElevationStepOffset += (parkElev.nbSteps * (parkElev.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (elevationInverted ? -1 : 1));
 
 			// Parking from currentDeviceAzimuth to PARKED_AZIMUTH
 			System.out.println(String.format("\t - Parking azimuth %.02f -> %.02f", currentDeviceAzimuth, PARKED_AZIMUTH));
@@ -827,7 +827,8 @@ public class SunFlowerDriver {
 				azimuthMotorThread.start();
 			}
 			currentDeviceAzimuth = PARKED_AZIMUTH;
-			currentDeviceAzimuthStepOffset += (parkZ.nbSteps * (parkZ.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
+			currentDeviceAzimuthStepOffset += (parkZ.nbSteps * (parkZ.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (azimuthInverted ? -1 : 1));
+
 		} else {
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Device was parked"));
 		}
@@ -1016,7 +1017,7 @@ public class SunFlowerDriver {
 											}
 										}
 										currentDeviceAzimuth = value;
-										currentDeviceAzimuthStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
+										currentDeviceAzimuthStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (azimuthInverted ? -1 : 1));
 										if (SPECIAL_DEBUG_VERBOSE) {
 											System.out.println(String.format("\tAzimuthStepOffset now %d", currentDeviceAzimuthStepOffset));
 										}
@@ -1042,7 +1043,7 @@ public class SunFlowerDriver {
 											}
 										}
 										currentDeviceElevation = value;
-										currentDeviceElevationStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
+										currentDeviceElevationStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (elevationInverted ? -1 : 1));
 										if (SPECIAL_DEBUG_VERBOSE) {
 											System.out.println(String.format("\tElevationStepOffset now %d", currentDeviceElevationStepOffset));
 										}
