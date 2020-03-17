@@ -741,11 +741,16 @@ public class SunFlowerDriver {
 			motorPayload.nbSteps = (int) Math.round((Math.abs(from - to) / 360d) * STEPS_PER_CIRCLE / ratio);
 		} else {
 			// From origin
-			int nbSteps = (int) Math.round((Math.abs(origin - to) / 360d) * STEPS_PER_CIRCLE / ratio) *
+			int stepsFromOrigin = (int) Math.round((Math.abs(origin - to) / 360d) * STEPS_PER_CIRCLE / ratio) *
 					(motorPayload.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1);
-			int diff = Math.abs(nbSteps - currentStepOffset);
+			int diff = Math.abs(stepsFromOrigin - currentStepOffset);
 			if (SPECIAL_DEBUG_VERBOSE) {
-				System.out.println(String.format("Moving %d step(s) (instead of %d).", diff, (int) Math.round((Math.abs(from - to) / 360d) * STEPS_PER_CIRCLE / ratio)));
+				System.out.println(String.format("Moving from %.02f to %.02f: %d step(s) (instead of %d, from origin: %d).",
+						from,
+						to,
+						diff,
+						(int) Math.round((Math.abs(from - to) / 360d) * STEPS_PER_CIRCLE / ratio),
+						stepsFromOrigin));
 			}
 			motorPayload.nbSteps = diff;
 		}
