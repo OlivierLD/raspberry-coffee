@@ -995,6 +995,9 @@ public class SunFlowerDriver {
 										}
 										currentDeviceAzimuth = value;
 										currentDeviceAzimuthStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
+										if (SPECIAL_DEBUG_VERBOSE) {
+											System.out.println(String.format("\tAzimuthStepOffset now %d", currentDeviceAzimuthStepOffset));
+										}
 									}
 								}
 								if (userData[0].equalsIgnoreCase("E")) {
@@ -1018,6 +1021,9 @@ public class SunFlowerDriver {
 										}
 										currentDeviceElevation = value;
 										currentDeviceElevationStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
+										if (SPECIAL_DEBUG_VERBOSE) {
+											System.out.println(String.format("\tElevationStepOffset now %d", currentDeviceElevationStepOffset));
+										}
 									}
 								}
 							}
