@@ -732,20 +732,21 @@ public class SunFlowerDriver {
 					origin, currentStepOffset, from, to, ratio));
 		}
 
+		motorPayload.motorCommand = (to > from) ?
+				(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
+				(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
+
 	  // Motor: 200 steps: 360 degrees.
 		// Device: 360 degrees = (200 / ratio) steps.
 		if (Double.isNaN(origin)) {
 			motorPayload.nbSteps = (int) Math.round((Math.abs(from - to) / 360d) * STEPS_PER_CIRCLE / ratio);
-			motorPayload.motorCommand = (to > from) ?
-					(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
-					(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
 		} else {
 			// From origin
 			int stepsFromOrigin = (int) Math.round((Math.abs(origin - to) / 360d) * STEPS_PER_CIRCLE / ratio);
-			int diff = stepsFromOrigin - currentStepOffset;
-			motorPayload.motorCommand = (diff > 0) ?
-					(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
-					(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
+			int diff = stepsFromOrigin - (currentStepOffset * (inverted ? - 1 : 1));
+//			motorPayload.motorCommand = (diff > 0) ?
+//					(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
+//					(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
 
 			if (SPECIAL_DEBUG_VERBOSE) {
 				System.out.println(String.format("Moving from %.02f to %.02f: %d step(s) (instead of %d, from origin: %d).",
@@ -755,7 +756,7 @@ public class SunFlowerDriver {
 						(int) Math.round((Math.abs(from - to) / 360d) * STEPS_PER_CIRCLE / ratio),
 						stepsFromOrigin));
 			}
-			motorPayload.nbSteps = diff;
+			motorPayload.nbSteps = Math.abs(diff);
 		}
 		return motorPayload;
 	}
