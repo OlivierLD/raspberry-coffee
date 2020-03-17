@@ -857,10 +857,12 @@ public class SunFlowerDriver {
 				}
 				if (hasMoved && MOVES_VERBOSE) {
 //					DeviceData deviceData = new DeviceData(date, devicePosition, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
-					System.out.println(String.format(">> Device has moved, now: Elevation %.02f (stepOffset %d), Azimuth %.02f (stepOffset %d)",
+					System.out.println(String.format(">> Device has moved, now: Elevation %.02f (delta=%.02f, stepOffset %d), Azimuth %.02f (delta=%.02f, stepOffset %d)",
 							currentDeviceElevation,
+							Math.abs(currentDeviceElevation - Math.max(adjustedElevation, minimumAltitude)),
 							currentDeviceElevationStepOffset,
 							currentDeviceAzimuth,
+							Math.abs(currentDeviceAzimuth - adjustedAzimuth),
 							currentDeviceAzimuthStepOffset));
 				}
 			} else { // Park device
