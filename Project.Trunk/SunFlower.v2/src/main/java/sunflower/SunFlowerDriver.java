@@ -831,8 +831,8 @@ public class SunFlowerDriver {
 					}
 					currentDeviceAzimuth = adjustedAzimuth;
 				}
-				double adjustedElevation = adjustDeviceValue(sunElevation, elevationOffset);
-				if (Math.abs(currentDeviceElevation - Math.max(adjustedElevation, minimumAltitude)) >= minDiffForMove) {
+				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset);
+				if (Math.abs(currentDeviceElevation - adjustedElevation) >= minDiffForMove) {
 					hasMoved = true;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, adjustedElevation));
 					MotorPayload data = getMotorPayload(currentDeviceElevation, adjustedElevation, elevationMotorRatio, elevationInverted);
@@ -859,7 +859,7 @@ public class SunFlowerDriver {
 //					DeviceData deviceData = new DeviceData(date, devicePosition, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
 					System.out.println(String.format(">> Device has moved, now: Elevation %.02f (delta=%.02f, stepOffset %d), Azimuth %.02f (delta=%.02f, stepOffset %d)",
 							currentDeviceElevation,
-							Math.abs(currentDeviceElevation - Math.max(adjustedElevation, minimumAltitude)),
+							Math.abs(currentDeviceElevation - adjustedElevation),
 							currentDeviceElevationStepOffset,
 							currentDeviceAzimuth,
 							Math.abs(currentDeviceAzimuth - adjustedAzimuth),
