@@ -740,6 +740,9 @@ public class SunFlowerDriver {
 			System.out.println(String.format("\t - Parking elevation %.02f -> %.02f", currentDeviceElevation, PARKED_ELEVATION));
 			MotorPayload parkElev = getMotorPayload(currentDeviceElevation, PARKED_ELEVATION, elevationMotorRatio, elevationInverted);
 			String mess_1 = String.format("(Elev) This will be %d steps %s", parkElev.nbSteps, parkElev.motorCommand);
+			if (MOVES_VERBOSE) {
+				System.out.println(String.format("Parking %s", mess_1));
+			}
 			this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess_1));
 			if (!simulating) {
 				elevationMotorThread = new MotorThread(this.elevationMotor, parkElev.nbSteps, parkElev.motorCommand, motorStyle);
@@ -751,6 +754,9 @@ public class SunFlowerDriver {
 			System.out.println(String.format("\t - Parking azimuth %.02f -> %.02f", currentDeviceAzimuth, PARKED_AZIMUTH));
 			MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, PARKED_AZIMUTH, azimuthMotorRatio, azimuthInverted);
 			String mess_2 = String.format("(Z) This will be %d steps %s", parkZ.nbSteps, parkZ.motorCommand);
+			if (MOVES_VERBOSE) {
+				System.out.println(String.format("Parking %s", mess_2));
+			}
 			this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess_2));
 			if (!simulating) {
 				azimuthMotorThread = new MotorThread(this.azimuthMotor, parkZ.nbSteps, parkZ.motorCommand, motorStyle);
@@ -851,12 +857,10 @@ public class SunFlowerDriver {
 				}
 				if (hasMoved && MOVES_VERBOSE) {
 //					DeviceData deviceData = new DeviceData(date, devicePosition, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
-					System.out.println(String.format(">> Device has moved, now: Elevation %.02f (adjusted %.02f, stepOffset %d), Azimuth %.02f (adjusted %.02f, stepOffset %d)",
+					System.out.println(String.format(">> Device has moved, now: Elevation %.02f (stepOffset %d), Azimuth %.02f (stepOffset %d)",
 							currentDeviceElevation,
-							adjustedElevation,
 							currentDeviceElevationStepOffset,
 							currentDeviceAzimuth,
-							adjustedAzimuth,
 							currentDeviceAzimuthStepOffset));
 				}
 			} else { // Park device
@@ -1006,7 +1010,7 @@ public class SunFlowerDriver {
 			}
 		}
 
-		String minDiffStr = System.getProperty("min.diff.for.move", String.valueOf(MIN_DIFF_FOR_MOVE)); // TODO !! Move motor accordingly
+		String minDiffStr = System.getProperty("min.diff.for.move", String.valueOf(MIN_DIFF_FOR_MOVE));
 		try {
 			minDiffForMove = Double.parseDouble(minDiffStr);
 		} catch (NumberFormatException nfe) {
