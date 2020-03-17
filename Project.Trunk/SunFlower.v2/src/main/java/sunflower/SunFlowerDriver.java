@@ -887,7 +887,7 @@ public class SunFlowerDriver {
 							adjustedAzimuth,
 							azimuthMotorRatio,
 							azimuthInverted);
-					currentDeviceAzimuthStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
+					currentDeviceAzimuthStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (azimuthInverted ? -1 : 1));
 					if (SPECIAL_DEBUG_VERBOSE) {
 						System.out.println(String.format("\tAzimuthStepOffset now %d", currentDeviceAzimuthStepOffset));
 					}
@@ -914,7 +914,7 @@ public class SunFlowerDriver {
 							adjustedElevation,
 							elevationMotorRatio,
 							elevationInverted);
-					currentDeviceElevationStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1));
+					currentDeviceElevationStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (elevationInverted ? -1 : 1));
 					if (SPECIAL_DEBUG_VERBOSE) {
 						System.out.println(String.format("\tElevationStepOffset now %d", currentDeviceElevationStepOffset));
 					}
