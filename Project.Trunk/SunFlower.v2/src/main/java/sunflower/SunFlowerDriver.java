@@ -719,7 +719,7 @@ public class SunFlowerDriver {
 		return getMotorPayload(from, to, ratio, false);
 	}
 	private static MotorPayload getMotorPayload(double from, double to, double ratio, boolean inverted) {
-		return getMotorPayload(Double.NaN, 0, from, to, ratio, false);
+		return getMotorPayload(Double.NaN, 0, from, to, ratio, inverted);
 	}
 
 	private final static boolean SPECIAL_DEBUG_VERBOSE = true;
@@ -734,9 +734,9 @@ public class SunFlowerDriver {
 			System.out.println("+-----------------------------------------------------");
 		}
 
-		motorPayload.motorCommand = (to > from) ?
-				(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
-				(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
+//		motorPayload.motorCommand = (to > from) ?
+//				(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
+//				(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
 
 	  // Motor: 200 steps: 360 degrees.
 		// Device: 360 degrees = (200 / ratio) steps.
@@ -751,9 +751,9 @@ public class SunFlowerDriver {
 			int stepsFromOrigin = (int) Math.round(((to - origin) / 360d) * STEPS_PER_CIRCLE / ratio);
 			int diff = stepsFromOrigin - currentStepOffset;
 //			diff *= (inverted ? -1 : 1);
-			motorPayload.motorCommand = (diff > 0) ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD;
-//					(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
-//					(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
+//			motorPayload.motorCommand = (diff > 0) ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD;
+					(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
+					(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
 
 			if (SPECIAL_DEBUG_VERBOSE) {
 				System.out.println(String.format("Moving from %.02f to %.02f: %d step(s) (instead of %d, steps from origin: %d).",
