@@ -724,6 +724,7 @@ public class SunFlowerDriver {
 
 	private final static boolean SPECIAL_DEBUG_VERBOSE = true;
 	// Recalculate from origin and get the diff with the currentStepOffset if origin != NaN
+	// We start from the origin - and considering the current step offset, to avoid accumulating rounding errors.
 	private static MotorPayload getMotorPayload(double origin, int currentStepOffset, double from, double to, double ratio, boolean inverted) {
 		MotorPayload motorPayload = new MotorPayload();
 
@@ -771,7 +772,7 @@ public class SunFlowerDriver {
 						from,
 						to,
 						diff,
-						(int) Math.round(((from - to) / 360d) * STEPS_PER_CIRCLE / ratio),
+						(int) Math.round(((to - from) / 360d) * STEPS_PER_CIRCLE / ratio),
 						stepsFromOrigin));
 			}
 			motorPayload.nbSteps = Math.abs(diff);

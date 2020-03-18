@@ -111,34 +111,67 @@ $ curl -X GET http://localhost:8989/sf/status
 would produce
 ```json
 {
+    "MOVING_ELEVATION_START_2": {
+        "date": "Mar 17, 2020 4:24:40 PM",
+        "epoch": 1584487480619,
+        "nbSteps": 2,
+        "motorCommand": "BACKWARD",
+        "motorNum": 2
+    },
+    "MOVING_ELEVATION_END": {
+        "date": "Mar 17, 2020 4:24:40 PM",
+        "epoch": 1584487480750,
+        "nbSteps": 2,
+        "elapsed": 131
+    },
     "CELESTIAL_DATA": {
-        "date": "Feb 6, 2020, 10:26:30 AM",
-        "epoch": 1581013590245,
-        "azimuth": 146.94544209045705,
-        "elevation": 29.916649314162267
+        "date": "Mar 17, 2020 4:26:33 PM",
+        "epoch": 1584487593637,
+        "azimuth": 239.6758144084604,
+        "elevation": 31.927574791602833
+    },
+    "MOVING_AZIMUTH_END": {
+        "date": "Mar 17, 2020 4:24:35 PM",
+        "epoch": 1584487475614,
+        "nbSteps": 0,
+        "elapsed": 0
     },
     "MOVING_AZIMUTH_START": {
-        "date": "Feb 6, 2020, 10:26:15 AM",
-        "epoch": 1581013575179,
-        "deviceAzimuth": 180.0,
-        "sunAzimuth": 146.88339752645817
+        "date": "Mar 17, 2020 4:24:35 PM",
+        "epoch": 1584487475611,
+        "deviceAzimuth": 239.0,
+        "sunAzimuth": 239.5
     },
     "DEVICE_DATA": {
-        "date": "Feb 6, 2020, 10:26:30 AM",
-        "epoch": 1581013590245,
-        "azimuth": 146.88339752645817,
-        "elevation": 29.889625427506264
+        "date": "Mar 17, 2020 4:26:33 PM",
+        "devicePosition": {
+            "latitude": 37.7489,
+            "longitude": -122.507
+        },
+        "epoch": 1584487593637,
+        "azimuth": 239.5,
+        "elevation": 32.0,
+        "azimuthOffset": 0.0,
+        "elevationOffset": 0.0,
+        "deviceHeading": 180.0
+    },
+    "MOVING_AZIMUTH_START_2": {
+        "date": "Mar 17, 2020 4:24:35 PM",
+        "epoch": 1584487475614,
+        "nbSteps": 0,
+        "motorCommand": "BACKWARD",
+        "motorNum": 1
     },
     "DEVICE_INFO": {
-        "date": "Feb 6, 2020, 10:26:14 AM",
-        "epoch": 1581013574113,
+        "date": "Mar 17, 2020 1:51:17 PM",
+        "epoch": 1584478277383,
         "message": "Device was parked"
     },
     "MOVING_ELEVATION_START": {
-        "date": "Feb 6, 2020, 10:26:15 AM",
-        "epoch": 1581013575183,
-        "deviceElevation": 90.0,
-        "sunElevation": 29.889625427506264
+        "date": "Mar 17, 2020 4:24:40 PM",
+        "epoch": 1584487480616,
+        "deviceElevation": 32.5,
+        "sunElevation": 32.0
     }
 }
 ```
@@ -218,7 +251,6 @@ This project could be implement the `forwarder` interface, and the `NMEA.multipl
 the required data to the `SunFlowerDriver` (Position & Heading).
 > For inspiration, see the existing forwarder `nmea.forwarders.SolarPanelOrienter`, designed to work
 > with the `SunFlower.v1`, then one working with micro-servos.
-
 
 ### The Device
 The soft of this project is designed to drive [this device](https://github.com/OlivierLD/3DPrinting/blob/master/OpenSCAD/SolarPanelStand/stl/the.full.stand.stuck.stl).
