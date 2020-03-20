@@ -434,7 +434,7 @@
 						graph.vgrid = minX + ":" + ((maxX - minX) / 10);
 						graph.hgrid = minY + ":" + ((maxY - minY) / 10);
 						//
-						graph.setVGridLabelsCallback(function(idx) {
+						graph.setVGridLabelsCallback((idx) => {
 							let label = labels[idx.toFixed(0)];
 							if (label !== undefined) {
 								label =  label.substring(0, label.lastIndexOf(':')).replace('T', ' ');
@@ -462,7 +462,7 @@
 			let graphElement01 = document.getElementById('decl-graph-01');
 			let graphElement02 = document.getElementById('decl-graph-02');
 
-			let fmtFunction = function(value) {
+			let fmtFunction = (value) => {
 				return worldMap.decToSex(value, "NS");
 			};
 
@@ -531,6 +531,7 @@
 
 		html {
 			height: 100%;
+			width: 100%;
 			background-color: black;
 		}
 
@@ -626,8 +627,13 @@
 			transition: height 0.5s, visibility 0.5s, opacity 0.5s linear;
 		}
 
-		.boat-data { /* Order is important */
+		.boat-data {
+			/*border: 2px solid cyan;*/
+			/*max-width: inherit;*/
+			/* Order is important */
 			transition: visibility 0.5s, opacity 0.5s linear, height 0.5s;
+			overflow: hidden;
+			overflow-x: scroll;
 		}
 
 	</style>
@@ -660,17 +666,17 @@
 			<tr>
 				<td width="33%">
 					<h5 style="color: cyan;">Perspective</h5>
-					<input type="range" value="100" min="0" max="100" style="width: 90%;" oninput="setPerspective(this); perspective01.value = this.value;" />
+					<input type="range" value="100" min="0" max="100" style="width: 80%;" oninput="setPerspective(this); perspective01.value = this.value;" />
 					<output name="perspective" id="perspective01" style="color: cyan;">100</output>
 				</td>
 				<td width="33%">
 					<h5 style="color: cyan;">Rotate X</h5>
-					<input type="range" value="-15" min="-100" max="100" style="width: 90%;" oninput="setRotateX(this); perspective02.value = this.value;" />
+					<input type="range" value="-15" min="-100" max="100" style="width: 80%;" oninput="setRotateX(this); perspective02.value = this.value;" />
 					<output name="perspective" id="perspective02" style="color: cyan;">-15</output>
 				</td>
 				<td width="33%">
 					<h5 style="color: cyan;">Scale Y</h5>
-					<input type="range" value="1" min="0" max="5" step="0.01" style="width: 90%;" oninput="setScaleY(this); scaleY02.value = this.value;" />
+					<input type="range" value="1" min="0" max="5" step="0.01" style="width: 80%;" oninput="setScaleY(this); scaleY02.value = this.value;" />
 					<output name="scaleY" id="scaleY02" style="color: cyan;">1</output>
 				</td>
 			</tr>
@@ -678,7 +684,7 @@
 	</div>
 	<hr style="margin: 5px;"/>
 	<!-- Page BG -->
-	<table width="98%">
+	<table width="60%">
 		<tr>
 			<td>
 				Widget's Style:
@@ -1014,7 +1020,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="row-X" style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding-left: 10px;">
+			<div id="row-X" style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding-left: 10px; max-width: inherit;">
 				<div style="display: grid; justify-self: start; grid-template-columns: auto; padding: 0px;">
 					<!--
 						SYSTEM TIME

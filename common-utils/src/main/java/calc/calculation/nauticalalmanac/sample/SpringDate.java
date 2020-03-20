@@ -1,5 +1,6 @@
 package calc.calculation.nauticalalmanac.sample;
 
+import calc.GeomUtil;
 import calc.calculation.nauticalalmanac.Anomalies;
 import calc.calculation.nauticalalmanac.Context;
 import calc.calculation.nauticalalmanac.Core;
@@ -17,16 +18,20 @@ public class SpringDate {
 		SDF.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
 	}
 
+	/**
+	 * Look for the exact time of the Spring in 2020
+	 * @param args Unused
+	 */
 	public static void main(String... args) {
+
 		int year = 2020;
 		int month = Calendar.MARCH;
 		int day = 19;
 
-
-		double sunD = -10;
+		double sunD = -10; // South, big time
 
 		Calendar cal = new GregorianCalendar();
-		cal.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+		cal.setTimeZone(TimeZone.getTimeZone("Etc/UTC" /*"America/Los_Angeles"*/));
 		cal.set(Calendar.YEAR, year);
 		cal.set(Calendar.MONTH, month);
 		cal.set(Calendar.DAY_OF_MONTH, day);
@@ -35,13 +40,15 @@ public class SpringDate {
 		cal.set(Calendar.SECOND, 0);
 
 		Calendar march22 = new GregorianCalendar();
-		march22.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+		march22.setTimeZone(TimeZone.getTimeZone("Etc/UTC" /*"America/Los_Angeles"*/));
 		march22.set(Calendar.YEAR, year);
 		march22.set(Calendar.MONTH, month);
 		march22.set(Calendar.DAY_OF_MONTH, 22);
 		march22.set(Calendar.HOUR_OF_DAY, 0);
 		march22.set(Calendar.MINUTE, 0);
 		march22.set(Calendar.SECOND, 0);
+
+		boolean springWasFound = false;
 
 		while (cal.before(march22) && sunD < 0) {
 			Calendar utc = new GregorianCalendar(TimeZone.getTimeZone("Etc/UTC"));
@@ -62,29 +69,23 @@ public class SpringDate {
 			Core.aries();
 			Core.sun();
 
-//    Moon.compute(); // Important! Moon is used for lunar distances, by planets and stars.
-
-//    Venus.compute();
-//    Mars.compute();
-//    Jupiter.compute();
-//    Saturn.compute();
-
-			Core.polaris();
-//    Core.moonPhase();
-//    Core.weekDay();
-
-			double meanOblOfEcl = Context.eps0;
-			double trueOblOfEcl = Context.eps;
-
-			// System.out.println("-- " + utc.getTime().toString() + ", Mean:" + meanOblOfEcl + ", True:" + trueOblOfEcl + ", Aries GHA:" + Context.GHAAtrue);
-			// System.out.println("   Polaris D:" + Context.DECpol + ", Z:" + Context.GHApol);
 			sunD = Context.DECsun;
-			if (sunD >= 0) {
-				Date spring = utc.getTime();
-				System.out.println(String.format("Spring at %s, Sun Decl: %f", SDF.format(spring), sunD));
+
+			if ((utc.get(Calendar.HOUR_OF_DAY) % 3 == 0) && utc.get(Calendar.MINUTE) == 0 && utc.get(Calendar.SECOND) == 0) {
+				Date current = utc.getTime();
+				System.out.println(String.format("... at %s, Sun Decl: %s", SDF.format(current), GeomUtil.decToSex(sunD, GeomUtil.SWING, GeomUtil.NS)));
 			}
 
+			if (sunD >= 0) { // Found it!
+				springWasFound = true;
+				Date spring = utc.getTime();
+				System.out.println(String.format("Spring at %s, Sun Decl: %s (%.16f deg.)", SDF.format(spring), GeomUtil.decToSex(sunD, GeomUtil.SWING, GeomUtil.NS), sunD));
+			}
+			// Keep going
 			cal.add(Calendar.SECOND, 1);
+		}
+		if (!springWasFound) {
+			System.out.println("Spring was not found. Consider changing your time interval.");
 		}
 	}
 }
