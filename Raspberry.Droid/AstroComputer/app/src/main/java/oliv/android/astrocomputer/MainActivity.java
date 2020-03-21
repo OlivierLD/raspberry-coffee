@@ -200,25 +200,39 @@ public class MainActivity extends AppCompatActivity {
                             sru.setL(latitude);
                             sru.setG(longitude);
 
+                            double bodyDecl = 0D;
+                            double bodyGha  = 0D;
                             Object selectedBody = instance.bodySpinner.getSelectedItem();
                             if (selectedBody.toString().contains("Moon")) {
                                 sru.setAHG(AstroComputer.getMoonGHA());
                                 sru.setD(AstroComputer.getMoonDecl());
+                                bodyDecl = AstroComputer.getMoonDecl();
+                                bodyGha = AstroComputer.getMoonGHA();
                             } else if (selectedBody.toString().contains("Venus")) {
                                 sru.setAHG(AstroComputer.getVenusGHA());
                                 sru.setD(AstroComputer.getVenusDecl());
+                                bodyDecl = AstroComputer.getVenusDecl();
+                                bodyGha = AstroComputer.getVenusGHA();
                             } else if (selectedBody.toString().contains("Mars")) {
                                 sru.setAHG(AstroComputer.getMarsGHA());
                                 sru.setD(AstroComputer.getMarsDecl());
+                                bodyDecl = AstroComputer.getMarsDecl();
+                                bodyGha = AstroComputer.getMarsGHA();
                             } else if (selectedBody.toString().contains("Jupiter")) {
                                 sru.setAHG(AstroComputer.getJupiterGHA());
                                 sru.setD(AstroComputer.getJupiterDecl());
+                                bodyDecl = AstroComputer.getJupiterDecl();
+                                bodyGha = AstroComputer.getJupiterGHA();
                             } else if (selectedBody.toString().contains("Saturn")) {
                                 sru.setAHG(AstroComputer.getSaturnGHA());
                                 sru.setD(AstroComputer.getSaturnDecl());
+                                bodyDecl = AstroComputer.getSaturnDecl();
+                                bodyGha = AstroComputer.getSaturnGHA();
                             } else {                                  // Sun by default
                                 sru.setAHG(AstroComputer.getSunGHA());
                                 sru.setD(AstroComputer.getSunDecl());
+                                bodyDecl = AstroComputer.getSunDecl();
+                                bodyGha = AstroComputer.getSunGHA();
                             }
 
 //                            sru.setAHG(AstroComputer.getSunGHA());
@@ -229,12 +243,18 @@ public class MainActivity extends AppCompatActivity {
                             double z = sru.getZ();
 
                             astroData = String.format(Locale.getDefault(),
-                                    "%s Data:\nElevation: %s\nZ: %.02f\272",
+                                    "%s Data:\nElev.: %s\tZ: %.02f\272\nD:%s\tGHA:%s",
                                     selectedBody.toString(),
                                     GeomUtil.decToSex(obsAlt,
                                             GeomUtil.SWING,
                                             GeomUtil.NONE),
-                                    z);
+                                    z,
+                                    GeomUtil.decToSex(bodyDecl,
+                                            GeomUtil.SWING,
+                                            GeomUtil.NS),
+                                    GeomUtil.decToSex(bodyGha,
+                                            GeomUtil.SWING,
+                                            GeomUtil.NONE));
                         }
 
                     } else {

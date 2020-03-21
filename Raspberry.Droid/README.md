@@ -2,6 +2,9 @@
 Android (Android Things) can run on the Raspberry pi.
 This section is about giving it a try...
 
+This also illustrates the way to use some of the libraries of this project
+fro an Android Application (using a Maven repository).
+
 - [Install Android Things on Raspberry Pi](https://developer.android.com/things/hardware/raspberrypi)
 - [Install Android Studio](https://developer.android.com/studio/install)
 
@@ -31,3 +34,9 @@ then
  $ adb -s e2df64a3 shell
 heroqlteatt:/ $ 
 ```
+
+#### GUI
+The GUI is defined by the `xml` files in the `res` section.
+
+Android Studio comes with a graphical editor for those files.
+

@@ -118,3 +118,6 @@ Then its content can be referred to as in:
 
 ## Layout Editor
 - See <https://developer.android.com/training/basics/firstapp/building-ui>
+
+## TODO
+Do it with the Maven coordinates of the `AstroComputer`.  
