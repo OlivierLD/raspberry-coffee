@@ -1,6 +1,6 @@
-See in the `build.gradle`, this project involves 
+See in the `build.gradle`, this project involves others: 
 - the `NMEA.multiplexer`
-- the `NMEA.mux.WebUI`
+- the `NMEA.mux.extensions`
 
 It's all driven by `nmea.mux.hmc5883l.oled.yaml`.
 
