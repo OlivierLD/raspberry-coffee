@@ -98,6 +98,9 @@ public class SSD1306_HDMDisplay implements Forwarder {
 
 	@Override
 	public void init() {
+
+		System.out.println("------ I N I T -------");
+
 		try {
 			// I2C Config
 			if (oledInterface == OLED_INTERFACE.I2C) {
