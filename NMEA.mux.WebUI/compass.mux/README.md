@@ -40,7 +40,7 @@ channels:
     sentence.filters: HDM,XDR
     heading.offset: 0
     damping.size: 5
-    read.frequency: 1000
+    read.frequency: 1000  # Or less...
     hmc5883l.cal.prop.file: hmc5883l.cal.properties
 forwarders:
   - class: nmea.forwarders.SSD1306_HDMDisplay
@@ -143,13 +143,13 @@ Bye now ✋
 ```
  GET http://192.168.42.20:9999/mux/cache
 ```
-> This returns a JSON object, from which the expected heading can be returned
+> This returns a JSON object, from which the expected heading can be obtained
 ```json
 {
-  . . .
+  ...
     "HDG mag.": {
         "angle": 74.0
     },
-  . . .
+  ...
 }
 ```
