@@ -23,7 +23,7 @@ where other devices can be plugged.
 We will be using 
 - an `hmc5883l` input channel to read the magnetometer data
 - a `tcp` forwarder to broadcast the `HDM` and `XDR` `PTCH` and `ROLL` sentences
-- a custom forwarder to display the magnetometer data, next to it.
+- a custom forwarder (small OLED Screen) to display the magnetometer data, next to it.
 
 The `yaml` file looks like this:
 ```yaml
