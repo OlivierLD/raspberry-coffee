@@ -10,7 +10,7 @@ Use it like
 $ ./mux.sh nmea.mux.hmc5883l.oled.yaml
 ```
 
-It has no Web user interface.
+It has no Web User Interface.
 
 ![With a gimbal](./pictures/hmc5883l.gimbal.jpg)
 
