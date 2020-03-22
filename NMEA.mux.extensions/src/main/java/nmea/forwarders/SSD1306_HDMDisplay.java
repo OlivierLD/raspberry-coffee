@@ -194,6 +194,9 @@ public class SSD1306_HDMDisplay implements Forwarder {
 				default:
 					break;
 			}
+			if (doIt) {
+				refreshDisplay();
+			}
 		}
 	}
 
