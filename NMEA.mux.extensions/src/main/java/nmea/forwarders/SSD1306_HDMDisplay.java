@@ -93,6 +93,9 @@ public class SSD1306_HDMDisplay implements Forwarder {
 	}
 
 	public SSD1306_HDMDisplay() throws Exception {
+
+		System.out.println("Creating instance of SSD1306_HDMDisplay");
+
 		instance = this;
 	}
 
