@@ -10,13 +10,15 @@ context:
 channels:
   - type: hmc5883l
     device.prefix: II
-    verbose: true
+    verbose: false
     sentence.filters: HDM,XDR
     heading.offset: 0
     damping.size: 5
     read.frequency: 1000
     hmc5883l.cal.prop.file: hmc5883l.cal.properties
 forwarders:
+  - class: nmea.forwarders.SSD1306_HDMDisplay
+    properties: ssd1306hdm.properties
   - type: tcp
     port: 8001
     # verbose: false
@@ -24,5 +26,3 @@ forwarders:
     # forward.01.filename.suffix=_LOG
     # forward.01.log.dir=logged
     # forward.01.split=hour
-  - class: nmea.forwarders.SSD1306_HDMDisplay
-    properties: ssd1306hdm.properties

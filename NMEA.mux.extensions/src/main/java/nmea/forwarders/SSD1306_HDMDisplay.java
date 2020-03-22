@@ -93,17 +93,13 @@ public class SSD1306_HDMDisplay implements Forwarder {
 	}
 
 	public SSD1306_HDMDisplay() throws Exception {
-
-		System.out.println("Creating instance of SSD1306_HDMDisplay");
-
+//		System.out.println("Creating instance of SSD1306_HDMDisplay");
 		instance = this;
 	}
 
 	@Override
 	public void init() {
-
-		System.out.println("------ I N I T -------");
-
+//		System.out.println("------ I N I T -------");
 		try {
 			// I2C Config
 			if (oledInterface == OLED_INTERFACE.I2C) {
@@ -147,7 +143,7 @@ public class SSD1306_HDMDisplay implements Forwarder {
 		if (StringParsers.validCheckSum(str)) {
 //		String deviceId = StringParsers.getDeviceID(str);
 			String sentenceId = StringParsers.getSentenceID(str);
-			boolean doIt = false;
+			boolean toRefresh = false;
 			switch (sentenceId) {
 
 				case "HDG":
@@ -163,7 +159,7 @@ public class SSD1306_HDMDisplay implements Forwarder {
 					if (verbose) {
 						System.out.println("Something smart");
 					}
-					doIt = true;
+					toRefresh = true;
 					break;
 				case "HDM":
 					this.heading = StringParsers.parseHDM(str);
@@ -174,7 +170,7 @@ public class SSD1306_HDMDisplay implements Forwarder {
 					if (verbose) {
 						System.out.println("Something smart");
 					}
-					doIt = true;
+					toRefresh = true;
 					break;
 				case "XDR":
 					// Pitch & Roll
@@ -183,24 +179,24 @@ public class SSD1306_HDMDisplay implements Forwarder {
 						switch (xdr.getTransducerName()) {
 							case "PTCH":
 								this.pitch = xdr.getValue();
-								doIt = true;
+								toRefresh = true;
 								break;
 							case "ROLL":
 								this.roll = xdr.getValue();
-								doIt = true;
+								toRefresh = true;
 								break;
 							default:
 								break;
 						}
 					}
-					if (verbose && doIt) {
+					if (verbose && toRefresh) {
 						System.out.println("Something smart");
 					}
 					break;
 				default:
 					break;
 			}
-			if (doIt) {
+			if (toRefresh) {
 				refreshDisplay();
 			}
 		}

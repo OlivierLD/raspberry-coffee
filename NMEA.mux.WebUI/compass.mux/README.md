@@ -12,3 +12,6 @@ $ ./mux.sh nmea.mux.hmc5883l.oled.yaml
 It has no Web user interface.
 
 <!-- TODO Add pictures -->
+
+## Rationale
+

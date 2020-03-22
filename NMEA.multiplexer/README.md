@@ -528,7 +528,7 @@ To load a class, mention its name in the properties file used at startup, like f
 #
 # Dynamic loading sample
 #
-forward.03.cls=nmea.forwarders.ProcessorSkeleton
+forward.03.class=nmea.forwarders.ProcessorSkeleton
 #
 ```
 This `ProcessorSkeleton` is part of the project, it is provided as an example you can start from to develop your own forwarders.

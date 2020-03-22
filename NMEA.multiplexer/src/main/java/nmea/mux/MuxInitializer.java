@@ -97,7 +97,7 @@ public class MuxInitializer {
 		boolean thereIsMore = true;
 		// 1 - Input channels
 		while (thereIsMore) {
-			String classProp = String.format("mux.%s.cls", MUX_IDX_FMT.format(muxIdx));
+			String classProp = String.format("mux.%s.class", MUX_IDX_FMT.format(muxIdx));
 			String clss = muxProps.getProperty(classProp);
 			if (clss != null) { // Dynamic loading
 				if (verbose) {
@@ -561,7 +561,7 @@ public class MuxInitializer {
 		int fwdIdx = 1;
 		// 2 - Output channels, aka forwarders
 		while (thereIsMore) {
-			String classProp = String.format("forward.%s.cls", MUX_IDX_FMT.format(fwdIdx));
+			String classProp = String.format("forward.%s.class", MUX_IDX_FMT.format(fwdIdx));
 			String clss = muxProps.getProperty(classProp);
 			if (clss != null) { // Dynamic loading
 				if (verbose) {
@@ -817,7 +817,7 @@ public class MuxInitializer {
 				int cptrIdx = 1;
 				// 3 - Computers
 				while (thereIsMore) {
-					String classProp = String.format("computer.%s.cls", MUX_IDX_FMT.format(cptrIdx));
+					String classProp = String.format("computer.%s.class", MUX_IDX_FMT.format(cptrIdx));
 					String clss = muxProps.getProperty(classProp);
 					if (clss != null) { // Dynamic loading
 						if (verbose) {

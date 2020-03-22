@@ -55,7 +55,7 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
 > containing the name of the Java `class` to load dynamically, with a `Class.forName`.
 > For example, a line like that one
 ```properties
- forward.02.cls=nmea.forwarders.LedBlinker
+ forward.02.class=nmea.forwarders.LedBlinker
 ```
 > would tell the Multiplexer to load a forwarder defined in the class `nmea.forwarders.LedBlinker`.
 > If the loaded class does not extend the right `superclass` or implement the right `interface`, an error
@@ -231,7 +231,7 @@ channels:
 
 You can also define your own channels (extending `NMEAClient` and with a `reader` attribute).
 
-Look for `mux.01.cls=nmea.consumers.client.WeatherStationWSClient`.
+Look for `mux.01.class=nmea.consumers.client.WeatherStationWSClient`.
 
 Channels can use those three attributes: `properties`, `device.filters`, `sentence.filters`:
 ```properties
@@ -273,7 +273,7 @@ The lines above means that:
 > _Note_: if `ExtendedDataFileWriter` happens not to extend the class anticipated by the `type`, a runtime error will be raised.
 
 > _**Dynamic loading versus sub-classing**_:
-> We've seen before that you have the possibility - using a `cls` attribute - to define your own
+> We've seen before that you have the possibility - using a `class` attribute - to define your own
 > elements (Channel, Forwarder or Computer) and dynamically load it at runtime. Here we see the possibility to `extend` a given element type.
 > A dynamically loaded element gives the programmer more flexibility and room for invention, but it _cannot_
 > be managed by the `admin` web page. A sub-class of a given type of element can be much lighter to write,
@@ -359,7 +359,7 @@ The lines above means that:
 
 You can also implement your own forwarder (implementing the `Forwarder` interface).
 
-Look for `forward.02.cls=nmea.forwarders.RESTPublisher`
+Look for `forward.02.class=nmea.forwarders.RESTPublisher`
 
 #### Pre-defined computer type(s)
 
@@ -371,12 +371,12 @@ be stored in a cache _if the property `init.cache` is set to `true`_. See below.
 
 You can also define your own computers (extending `Computer`).
 
-Look for `computer.02.cls=nmea.computers.ComputerSkeleton`
+Look for `computer.02.class=nmea.computers.ComputerSkeleton`
 
 Also see the computer `nmea.computers.AISManager`. It is a computer to load as in (`yaml` version)
 ```yaml
 computers:
-  - cls: nmea.computers.AISManager
+  - class: nmea.computers.AISManager
     properties: ais.mgr.properties
 ```
 It's an example of the way to use AIS data to detect collisions.
