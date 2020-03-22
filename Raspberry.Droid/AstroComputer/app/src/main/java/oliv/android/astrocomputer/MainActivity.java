@@ -133,8 +133,24 @@ public class MainActivity extends AppCompatActivity {
             Location lastLocation = null;
 
             while (!this.exit) {
+
+//                Log.d(LOG_TAG, "Loop top");
+
                 String gpsData = " No GPS ";
-                String astroData = " - none -";
+                String astroData = // " - none -";
+                        String.format(Locale.getDefault(),
+                                "%s Data:\nElev.: %s, Z: %.02f\272\nD:%s, GHA:%s",
+                                "No",
+                                GeomUtil.decToSex(0d,
+                                        GeomUtil.SWING,
+                                        GeomUtil.NONE),
+                                0d,
+                                GeomUtil.decToSex(0d,
+                                        GeomUtil.SWING,
+                                        GeomUtil.NS),
+                                GeomUtil.decToSex(0d,
+                                        GeomUtil.SWING,
+                                        GeomUtil.NONE));
                 // Current date and time
                 Calendar c = Calendar.getInstance();
 //                System.out.println("Current time => " + c.getTime());
@@ -143,7 +159,11 @@ public class MainActivity extends AppCompatActivity {
 
                 boolean validLocation = false;
 
+                Log.d(LOG_TAG, String.format("GPS is %snull.", (gps != null ? "not ":"")));
                 if (gps != null) {
+
+                    /* Location gpsLocation = */ gps.getLocation(instance);
+
                     if (gps.canGetLocation()) {
 
                         Location gpsLocation = gps.getLocation(instance);
@@ -172,7 +192,11 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                         lastLocation = gpsLocation;
-                        progMessageZone.setText(String.format(Locale.getDefault(), "Got GPS Data: %s: %f / %f\n(elapsed %.02f s)", formattedDate, latitude, longitude, elapsedTime));
+                        try {
+                            progMessageZone.setText(String.format(Locale.getDefault(), "Got GPS Data: %s: %f / %f\n(elapsed %.02f s)", formattedDate, latitude, longitude, elapsedTime));
+                        } catch (Exception ex) {
+                            Log.d(LOG_TAG, ex.toString());
+                        }
                         //if (elapsedTime > 0) {
                         //  instance.setProgMessage(elapsedTime, String.format(Locale.getDefault(), "Got GPS Data: %s: %f / %f\n(elapsed %.02f s)", formattedDate, latitude, longitude, elapsedTime));
                         //}
@@ -235,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
                                 bodyGha = AstroComputer.getSunGHA();
                             }
 
+                            // For the sun only (obsolete)
 //                            sru.setAHG(AstroComputer.getSunGHA());
 //                            sru.setD(AstroComputer.getSunDecl());
 
@@ -242,19 +267,30 @@ public class MainActivity extends AppCompatActivity {
                             double obsAlt = sru.getHe();
                             double z = sru.getZ();
 
-                            astroData = String.format(Locale.getDefault(),
-                                    "%s Data:\nElev.: %s\tZ: %.02f\272\nD:%s\tGHA:%s",
-                                    selectedBody.toString(),
-                                    GeomUtil.decToSex(obsAlt,
-                                            GeomUtil.SWING,
-                                            GeomUtil.NONE),
-                                    z,
-                                    GeomUtil.decToSex(bodyDecl,
-                                            GeomUtil.SWING,
-                                            GeomUtil.NS),
-                                    GeomUtil.decToSex(bodyGha,
-                                            GeomUtil.SWING,
-                                            GeomUtil.NONE));
+                            if (true) {
+                                astroData = String.format(Locale.getDefault(),
+                                        "%s Data:\nElev.: %s, Z: %.02f\272\nD:%s, GHA:%s",
+                                        selectedBody.toString(),
+                                        GeomUtil.decToSex(obsAlt,
+                                                GeomUtil.SWING,
+                                                GeomUtil.NONE),
+                                        z,
+                                        GeomUtil.decToSex(bodyDecl,
+                                                GeomUtil.SWING,
+                                                GeomUtil.NS),
+                                        GeomUtil.decToSex(bodyGha,
+                                                GeomUtil.SWING,
+                                                GeomUtil.NONE));
+
+                            } else {
+                                astroData = String.format(Locale.getDefault(),
+                                        "%s Data:\nElev.: %s\nZ: %.02f\272",
+                                        selectedBody.toString(),
+                                        GeomUtil.decToSex(obsAlt,
+                                                GeomUtil.SWING,
+                                                GeomUtil.NONE),
+                                        z);
+                            }
                         }
 
                     } else {
