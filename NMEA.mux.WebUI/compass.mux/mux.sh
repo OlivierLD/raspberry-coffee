@@ -11,6 +11,22 @@ then
   MUX_PROP_FILE=$1
 fi
 #
+if [[ $# -gt 1 ]]
+then
+  if [[ "$2" == "-w" ]]
+  then
+	  echo -e ""
+		echo -e "+------------------------+"
+		echo -e "| Giving Java some slack |"
+		echo -e "+------------------------+"
+		sleep 10
+		echo -e ""
+		echo -e "+-------------------+"
+		echo -e "| Now starting Java |"
+		echo -e "+-------------------+"
+  fi
+fi
+#
 echo Using properties file ${MUX_PROP_FILE}
 #
 JAVA_OPTIONS=
