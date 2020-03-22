@@ -24,5 +24,5 @@ forwarders:
     # forward.01.filename.suffix=_LOG
     # forward.01.log.dir=logged
     # forward.01.split=hour
-  - class: nmea.forwarder.SSD1306_HDMDisplay
+  - class: nmea.forwarders.SSD1306_HDMDisplay
     properties: ssd1306hdm.properties
