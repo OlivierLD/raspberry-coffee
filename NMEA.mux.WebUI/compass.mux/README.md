@@ -1,3 +1,4 @@
+## Extending `NMEA.multiplexer`: A Standalone Compass. 
 See in the `build.gradle`, this project involves others: 
 - the `NMEA.multiplexer`
 - the `NMEA.mux.extensions`
