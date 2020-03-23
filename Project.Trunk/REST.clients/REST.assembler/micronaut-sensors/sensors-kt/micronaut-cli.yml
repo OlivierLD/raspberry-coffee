@@ -1,5 +1,0 @@
-profile: service
-defaultPackage: sensors.kt
----
-testFramework: kotlintest
-sourceLanguage: kotlin

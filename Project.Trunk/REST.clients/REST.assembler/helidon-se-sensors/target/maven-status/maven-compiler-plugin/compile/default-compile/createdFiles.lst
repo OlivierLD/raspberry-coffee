@@ -1,6 +1,0 @@
-rpi/sensors/se/SensorService.class
-rpi/sensors/ADCChannel.class
-rpi/sensors/RelayManager.class
-rpi/sensors/se/Main.class
-rpi/sensors/se/RelayService.class
-rpi/sensors/se/GreetService.class

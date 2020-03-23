@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<config xmlns="urn:oliv-nmea" last-open-file="/Users/olediour/repos/raspberry-pi4j-samples/Project.Trunk/PolarSmoother/sample-files/BavariaMatch35.polar-data">
-  <smoothing-config>
-    <max-boat-speed-for-polars>15</max-boat-speed-for-polars>
-    <min-wind-speed>2</min-wind-speed>
-    <max-wind-speed>40</max-wind-speed>
-  </smoothing-config>
-</config>

@@ -1,3 +1,0 @@
-## Python Script Samples
-
-More to come...

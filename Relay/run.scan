@@ -1,9 +1,0 @@
-#!/bin/bash
-echo Driving a relay, pin [0, 20] as parameter.
-CP=build/libs/Relay-1.0-all.jar
-#
-for i in `seq 0 20`;
-do
-  echo -- Pin $i --
-  sudo java -cp $CP relay.Relay02 $i
-done
