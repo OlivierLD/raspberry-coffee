@@ -1,4 +1,11 @@
 ## Extending `NMEA.multiplexer`: A Standalone Compass. 
+
+### No Coding!
+This bundle involves absolutely **_no_** coding.
+It is all scripted:
+- in `gradle` to build it
+- in the `yaml` properties file used to start the `mux` at runtime.
+
 See in the `build.gradle`, this project involves others: 
 - the `NMEA.multiplexer`
 - the `NMEA.mux.extensions`
@@ -55,10 +62,10 @@ The `tcp` data can then be used in input by another instance the `NMEA.multiplex
 ```bash
 compass.mux $ ./mux.sh nmea.mux.hmc5883l.oled.yaml 
 ``` 
-- In OpenCPN:
+- In OpenCPN (consuming the `tcp` feed):
   ![OpenCPN](./pictures/01.OpenCPN.HDM.png)
   
-- From another `NMEA.multiplexer` (here a `RESTNavServer`):
+- From another `NMEA.multiplexer` (here a `RESTNavServer`, consuming the `tcp` feed):
 With a `yaml` file like that:
 ```yaml
 channels:
