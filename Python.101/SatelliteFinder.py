@@ -49,7 +49,7 @@ def elevation(satLong, earthStationLat, earthStationLong):
     v1 = R1 * math.cos(latRad) * math.cos(deltaG) - 1
     v2 = R1 * math.sqrt(1 - math.cos(latRad) * math.cos(latRad) * math.cos(deltaG) * math.cos(deltaG))
     earthStationElevation = math.degrees(math.atan(v1/v2))
-    return earthStationElevation;
+    return earthStationElevation
 
 def tilt(satLong, earthStationLat, earthStationLong):
     deltaG = math.radians(earthStationLong - satLong)
@@ -57,7 +57,9 @@ def tilt(satLong, earthStationLat, earthStationLong):
     return math.degrees(math.atan(math.sin(deltaG) / math.tan(latRad)))
 
 def calculate(satLong, earthStationLat, earthStationLong):
-    return azimuth(satLong, earthStationLat, earthStationLong), elevation(satLong, earthStationLat, earthStationLong), tilt(satLong, earthStationLat, earthStationLong)
+    return azimuth(satLong, earthStationLat, earthStationLong),
+           elevation(satLong, earthStationLat, earthStationLong),
+           tilt(satLong, earthStationLat, earthStationLong)
 
 def findSat(earthStationLat, earthStationLong):
     for sat in SATS:
