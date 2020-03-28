@@ -7,6 +7,7 @@ from mars import Mars
 from jupiter import Jupiter
 from saturn import Saturn
 
+
 class LongTermAlmanac:
     # local variables
     T = 0
