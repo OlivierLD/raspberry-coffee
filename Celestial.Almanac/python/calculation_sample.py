@@ -5,6 +5,9 @@ DELTA_T = 69.2201
 lta.calculate(2020, 3, 28, 16, 50, 20, DELTA_T)
 
 # Display results
+print("----------------------------------------------")
+print("Calculations done for 2020-Mar-28 16:50:20 UTC")
+print("----------------------------------------------")
 
 # Sun
 fmtGHASun = lta.outHA(lta.GHASun)
