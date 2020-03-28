@@ -18,7 +18,7 @@ import java.util.Properties;
 
 /*
  * 3 Axis compass
- * TODO Reuse the code of LSM303? Or use this one in the LSM303 code?
+ * TODO Q: Reuse the code of LSM303? Or use this one in the LSM303 code?
  */
 public class HMC5883L {
 	private final static int HMC5883L_ADDRESS = 0x1E;
@@ -26,7 +26,7 @@ public class HMC5883L {
 	private final static int HMC5883L_REGISTER_MR_REG_M  = 0x02;
 	private final static int HMC5883L_REGISTER_OUT_X_H_M = 0x03;
 
-	private final static float SCALE = 1F; // 0.92F; // TODO This is a constant... is that any useful?
+	private final static float SCALE = 1F; // 0.92F; // TODO Q: This is a constant... is that any useful?
 	private final float ALPHA = 0.15f; // For the low pass filter (smoothing)
 
 	private I2CDevice magnetometer;

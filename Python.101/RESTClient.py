@@ -1,9 +1,3 @@
-# Features:
-# - REST Client
-# - YAML parser
-# - User Input (prompt)
-# - Sys args parsing
-#
 # Requires a
 # $ pip install requests
 # $ pip install json
@@ -35,7 +29,7 @@ host_name = DEFAULT_HOST_NAME
 protocol = DEFAULT_PROTOCOL
 host_port = DEFAULT_HOST_PORT
 
-# For the agent config
+# For the agent config, default values
 AGENT_SERVICE_URL = "http://localhost:8060"
 AGENT_MESSAGE_PATH = "/agent/transport"
 AGENT_TENANT_NAME = "demo"
@@ -47,6 +41,7 @@ AGENT_THREAD_POOL_SIZE = "10"
 AGENT_SECURITY_CONFIG_FILE_PATH = "~/.oci/config"
 AGENT_SECURITY_PROFILE = "DEFAULT"
 
+# Actual values
 agent_service_URL = AGENT_SERVICE_URL
 agent_message_path = AGENT_MESSAGE_PATH
 agent_tenant_name = AGENT_TENANT_NAME
@@ -115,7 +110,6 @@ def start_agent():
         if resp.status_code != 201:
             raise Exception('POST /start/ {}'.format(resp.status_code))
         print('Status {}, Content {}'.format(resp.status_code, json.dumps(json.loads(resp.content), indent=2)))
-
     except Exception as api_error:
         print("- Error {}".format(api_error))
 
@@ -140,13 +134,17 @@ def destroy_agent():
     print('Status {}, Content {}'.format(resp.status_code, json.dumps(json.loads(resp.content), indent=2)))
 
 
+#
+# Script main part
+#
+
 # Read config file values
-PROP_ARG = '--prop:'
+PROP_ARG_PREFIX = '--prop:'
 
 prop_file_name = DEFAULT_AGENT_PROP_FILE_NAME
 for arg in sys.argv:
-    if arg[:len(PROP_ARG)] == PROP_ARG:
-        prop_file_name = arg[len(PROP_ARG):]
+    if arg[:len(PROP_ARG_PREFIX)] == PROP_ARG_PREFIX:
+        prop_file_name = arg[len(PROP_ARG_PREFIX):]
 
 print("Reading {}".format(prop_file_name))
 try:

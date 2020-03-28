@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class ScanMethod {
 
-	private static interface StuffInterface {
+	private interface StuffInterface {
 		String getStuff();
 	}
 
@@ -20,9 +20,7 @@ public class ScanMethod {
 			return "More Stuff";
 		}
 
-		public void otherStuff() {
-
-		}
+		public void otherStuff() {}
 	}
 
 	private StuffImplementation stuff;

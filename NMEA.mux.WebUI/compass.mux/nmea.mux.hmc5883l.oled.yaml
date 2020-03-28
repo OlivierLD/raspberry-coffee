@@ -14,7 +14,7 @@ channels:
     sentence.filters: HDM,XDR
     heading.offset: 0
     damping.size: 5
-    read.frequency: 1000
+    read.frequency: 250
     hmc5883l.cal.prop.file: hmc5883l.cal.properties
 forwarders:
   - class: nmea.forwarders.SSD1306_HDMDisplay
@@ -22,7 +22,3 @@ forwarders:
   - type: tcp
     port: 8001
     # verbose: false
-    # forward.01.timebase.filename=true
-    # forward.01.filename.suffix=_LOG
-    # forward.01.log.dir=logged
-    # forward.01.split=hour
