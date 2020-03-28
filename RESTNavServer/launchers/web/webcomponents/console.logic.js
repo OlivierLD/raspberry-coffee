@@ -386,6 +386,7 @@ const DURATION_FMT = "Y-m-dTH:i:s";
 const months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 
+// Moon symbol, was "\u263D"
 const BODIES = [{
 		name: "sun",
 		display: {
@@ -396,7 +397,7 @@ const BODIES = [{
 		name: "moon",
 		display: {
 			name: "Moon",
-			symbol: "\u263D"
+			symbol: "\u263E"
 		}
 	},{
 		name: "venus",

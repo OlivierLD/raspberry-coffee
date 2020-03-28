@@ -99,7 +99,7 @@ public class AnnotatedRESTImplementation {
 			description = "Solves a system of equations"
 	)
 	protected Response postSystemResolution(Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK_);
+		Response response = new Response(request.getProtocol(), Response.CREATED);
 		String payload = new String(request.getContent());
 		if (!"null".equals(payload)) {
 			Gson gson = new GsonBuilder().create();
@@ -247,7 +247,7 @@ public class AnnotatedRESTImplementation {
 			description = "Calculate a curve, requires coeff, from, to, optional step."
 	)
 	protected Response calculateCurve(Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK_);
+		Response response = new Response(request.getProtocol(), Response.CREATED);
 		String payload = new String(request.getContent());
 		if (!"null".equals(payload)) {
 			Gson gson = new GsonBuilder().create();
@@ -305,7 +305,7 @@ public class AnnotatedRESTImplementation {
 			description = "Smooth a cloud of points. Requires a SmoothRequest in the payload."
 	)
 	protected Response smooth(Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK_);
+		Response response = new Response(request.getProtocol(), Response.CREATED);
 		String payload = new String(request.getContent());
 		if (!"null".equals(payload)) {
 			Gson gson = new GsonBuilder().create();
@@ -351,7 +351,7 @@ public class AnnotatedRESTImplementation {
 			description = "Smooth a cloud of points. Requires a BestSmoothRequest in the payload."
 	)
 	protected Response intelligentSmooth(Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK_);
+		Response response = new Response(request.getProtocol(), Response.CREATED);
 		String payload = new String(request.getContent());
 		if (!"null".equals(payload)) {
 			Gson gson = new GsonBuilder().create();

@@ -108,7 +108,7 @@ public abstract class NMEAReader extends Thread {
 	 * like a Serial Port for example.
 	 *
 	 * Use the {@link #canRead()} method to know if you can keep reading.
-	 * @throws Exception when something goes wrong
+	 * @throws Exception when something goes wrong. No shit!
 	 */
 	public abstract void startReader() throws Exception;
 

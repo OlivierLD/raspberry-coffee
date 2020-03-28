@@ -274,10 +274,11 @@ public class LSM303 {
 		}
 
 		Properties lsm303CalProps = new Properties();
+		String calPropFileName = System.getProperty("lsm303.cal.prop.file", "lsm303.cal.properties");
 		try {
-			lsm303CalProps.load(new FileReader(System.getProperty("lsm303.cal.prop.file", "lsm303.cal.properties")));
+			lsm303CalProps.load(new FileReader(calPropFileName));
 		} catch (Exception ex) {
-			System.out.println("Defaulting Calibration Properties");
+			System.out.println(String.format("File %s: %s. Defaulting Calibration Properties", calPropFileName, ex.toString()));
 		}
 		// Calibration values
 		if (!"true".equals(System.getProperty("lsm303.log.for.calibration"))) {

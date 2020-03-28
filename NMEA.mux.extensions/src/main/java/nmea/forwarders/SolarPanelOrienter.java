@@ -87,7 +87,7 @@ public class SolarPanelOrienter implements Forwarder {
 					break;
 				case "HDM":
 					int hdm = StringParsers.parseHDM(str);
-					double h = hdm - this.declination;
+					double h = hdm - this.declination; // h is true heading
 					while (h < 0) {
 						h += 360;
 					}

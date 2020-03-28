@@ -26,7 +26,7 @@ forwarders:
     subclass: nmea.forwarders.AISTCPServer
     port: 7003
 computers:
-  - cls: nmea.computers.AISManager
+  - class: nmea.computers.AISManager
     properties: ais.mgr.properties
-  - cls: nmea.computers.AISTargetLogger
+  - class: nmea.computers.AISTargetLogger
     properties: target.logger.properties

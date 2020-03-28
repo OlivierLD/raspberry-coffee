@@ -3,7 +3,7 @@
 - See the original web page [here](https://www.celnav.de/longterm.htm), for reference.
 - Henning Umland's "[A Short Guide to Celestial Navigation](http://www.titulosnauticos.net/astro/)"
 
-### Test it from NodeJS
+### Test it from NodeJS (server) with a Web UI
 Start the provided node server:
 ```
  $ node server.js

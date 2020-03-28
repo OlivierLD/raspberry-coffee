@@ -8,7 +8,7 @@
 
 // MathUtils mu;
 
-Earth::Earth() {}
+// Earth::Earth() {}
 
 // Heliocentric longitude of Earth
 float Earth::lEarth(float x) {

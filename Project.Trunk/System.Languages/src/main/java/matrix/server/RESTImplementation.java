@@ -175,7 +175,7 @@ public class RESTImplementation {
 	 * @return
 	 */
 	private Response postSystemResolution(Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK_);
+		Response response = new Response(request.getProtocol(), Response.CREATED);
 		String payload = new String(request.getContent());
 		if (!"null".equals(payload)) {
 			Gson gson = new GsonBuilder().create();
@@ -318,7 +318,7 @@ public class RESTImplementation {
 	 * @return
 	 */
 	private Response calculateCurve(Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK_);
+		Response response = new Response(request.getProtocol(), Response.CREATED);
 		String payload = new String(request.getContent());
 		if (!"null".equals(payload)) {
 			Gson gson = new GsonBuilder().create();
@@ -371,7 +371,7 @@ public class RESTImplementation {
 	 * @return
 	 */
 	private Response smooth(Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK_);
+		Response response = new Response(request.getProtocol(), Response.CREATED);
 		String payload = new String(request.getContent());
 		if (!"null".equals(payload)) {
 			Gson gson = new GsonBuilder().create();
@@ -412,7 +412,7 @@ public class RESTImplementation {
 	 * @return
 	 */
 	private Response intelligentSmooth(Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK_);
+		Response response = new Response(request.getProtocol(), Response.CREATED);
 		String payload = new String(request.getContent());
 		if (!"null".equals(payload)) {
 			Gson gson = new GsonBuilder().create();

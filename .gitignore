@@ -12,6 +12,7 @@
 *.log.csv
 *.csv
 *.ods
+*.o
 # *.py
 # *.png
 *.iml

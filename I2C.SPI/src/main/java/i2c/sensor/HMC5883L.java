@@ -18,7 +18,7 @@ import java.util.Properties;
 
 /*
  * 3 Axis compass
- * TODO Reuse the code of LSM303? Or use this one in the LSM303 code?
+ * TODO Q: Reuse the code of LSM303? Or use this one in the LSM303 code?
  */
 public class HMC5883L {
 	private final static int HMC5883L_ADDRESS = 0x1E;
@@ -26,7 +26,7 @@ public class HMC5883L {
 	private final static int HMC5883L_REGISTER_MR_REG_M  = 0x02;
 	private final static int HMC5883L_REGISTER_OUT_X_H_M = 0x03;
 
-	private final static float SCALE = 1F; // 0.92F; // TODO This is a constant... is that any useful?
+	private final static float SCALE = 1F; // 0.92F; // TODO Q: This is a constant... is that any useful?
 	private final float ALPHA = 0.15f; // For the low pass filter (smoothing)
 
 	private I2CDevice magnetometer;
@@ -108,10 +108,12 @@ public class HMC5883L {
 			System.out.println("Connected to devices. OK.");
 		}
 		Properties hmc5883lCalProps = new Properties();
+		String propFileName = System.getProperty("hmc5883l.cal.prop.file", "hmc5883l.cal.properties");
 		try {
-			hmc5883lCalProps.load(new FileReader(System.getProperty("hmc5883l.cal.prop.file", "hmc5883l.cal.properties")));
+			hmc5883lCalProps.load(new FileReader(propFileName));
+			System.out.println(String.format("- Properties file %s loaded.", propFileName));
 		} catch (Exception ex) {
-			System.out.println("Defaulting Calibration Properties");
+			System.out.println(String.format(">> File %s: %s. Defaulting Calibration Properties.", propFileName, ex.toString()));
 		}
 		// Calibration values
 		if (!"true".equals(System.getProperty("hmc5883l.log.for.calibration"))) {

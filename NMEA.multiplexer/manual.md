@@ -55,7 +55,7 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
 > containing the name of the Java `class` to load dynamically, with a `Class.forName`.
 > For example, a line like that one
 ```properties
- forward.02.cls=nmea.forwarders.LedBlinker
+ forward.02.class=nmea.forwarders.LedBlinker
 ```
 > would tell the Multiplexer to load a forwarder defined in the class `nmea.forwarders.LedBlinker`.
 > If the loaded class does not extend the right `superclass` or implement the right `interface`, an error
@@ -98,7 +98,8 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
      sentence.filters: HDM,XDR
      heading.offset: 0
      read.frequency: 1000
-     damping.size: 5
+     damping.size: 5  
+     lsm303.cal.prop.file: lsm303.cal.properties
  forwarders:
    - type: file
      timebase.filename: true
@@ -199,6 +200,19 @@ channels:
     mux.01.feature=BOTH
     mux.01.damping.size=5
     mux.01.read.frequency=1000
+    mux.01.lsm303.cal.prop.file=lsm303.cal.properties
+    ```
+- `hmc5883l`
+    - Triple axis magnetometer
+    ```properties
+    mux.01.type=hmc5883l
+    mux.01.device.prefix=II
+    mux.01.verbose=false
+    mux.01.sentence.filters=HDM,XDR
+    mux.01.heading.offset=0
+    mux.01.damping.size=5
+    mux.01.read.frequency=1000
+    mux.01.hmc5883l.cal.prop.file=hmc5883l.cal.properties
     ```
 - `bme280`
     - Humidity, pressure, temperature
@@ -217,7 +231,7 @@ channels:
 
 You can also define your own channels (extending `NMEAClient` and with a `reader` attribute).
 
-Look for `mux.01.cls=nmea.consumers.client.WeatherStationWSClient`.
+Look for `mux.01.class=nmea.consumers.client.WeatherStationWSClient`.
 
 Channels can use those three attributes: `properties`, `device.filters`, `sentence.filters`:
 ```properties
@@ -259,7 +273,7 @@ The lines above means that:
 > _Note_: if `ExtendedDataFileWriter` happens not to extend the class anticipated by the `type`, a runtime error will be raised.
 
 > _**Dynamic loading versus sub-classing**_:
-> We've seen before that you have the possibility - using a `cls` attribute - to define your own
+> We've seen before that you have the possibility - using a `class` attribute - to define your own
 > elements (Channel, Forwarder or Computer) and dynamically load it at runtime. Here we see the possibility to `extend` a given element type.
 > A dynamically loaded element gives the programmer more flexibility and room for invention, but it _cannot_
 > be managed by the `admin` web page. A sub-class of a given type of element can be much lighter to write,
@@ -345,7 +359,7 @@ The lines above means that:
 
 You can also implement your own forwarder (implementing the `Forwarder` interface).
 
-Look for `forward.02.cls=nmea.forwarders.RESTPublisher`
+Look for `forward.02.class=nmea.forwarders.RESTPublisher`
 
 #### Pre-defined computer type(s)
 
@@ -357,12 +371,12 @@ be stored in a cache _if the property `init.cache` is set to `true`_. See below.
 
 You can also define your own computers (extending `Computer`).
 
-Look for `computer.02.cls=nmea.computers.ComputerSkeleton`
+Look for `computer.02.class=nmea.computers.ComputerSkeleton`
 
 Also see the computer `nmea.computers.AISManager`. It is a computer to load as in (`yaml` version)
 ```yaml
 computers:
-  - cls: nmea.computers.AISManager
+  - class: nmea.computers.AISManager
     properties: ais.mgr.properties
 ```
 It's an example of the way to use AIS data to detect collisions.
@@ -396,7 +410,13 @@ If `with.http.server` is set to `yes`, the default http port is `9999`. It can b
 `init.cache` is set to `true`.
 The cache is a `Map<String, Object>`, see `context.NMEADataCache` for details.
 
-If `init.cache` is set to `true`, the following parameters will be taken in account when inserting data in the cache:
+> _Note_: If the property `with.http.server` is set to `true`, then the cache might also be accessible through a REST interface, as a `json` object reflecting the `Map` above
+> (also see in the `RESTNavServer` for details).
+```
+ GET /mux/cache
+```
+
+If `init.cache` is set to `true` or `yes`, the following parameters will be taken in account when inserting data in the cache:
 - `bsp.factor` Boat Speed Factor, number, `0` to `n`
 - `aws.factor` Apparent Wind Speed Factor, number, `0` to `n`
 - `awa.offset` Apparent Wind Angle offset in degrees, from `-180` to `180`

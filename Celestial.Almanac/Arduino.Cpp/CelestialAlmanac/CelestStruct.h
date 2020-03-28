@@ -86,10 +86,10 @@ typedef struct COMPUTED_DATA {
         illumMars,
         illumJupiter,
         illumSaturn;
-  String moonPhase = "",
+  char * moonPhase,
          SidTa,
          SidTm,
-         DoW = "";
+         DoW;
 } ComputedData;
 
 #endif

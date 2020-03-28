@@ -46,6 +46,7 @@ import utils.PinUtil;
  * The REST api is not aware of it.
  *
  * It auto-scrolls across available values, if display.time (-Ddisplay.time) is greater than 0
+ * Also supports push-buttons
  *
  */
 public class SSD1306Processor implements Forwarder {
@@ -112,13 +113,25 @@ public class SSD1306Processor implements Forwarder {
 		private double hum;
 	}
 
-	public static enum SCREEN_SIZE {
-		_128x32,
-		_128x64
-	};
+	public enum SCREEN_SIZE {
+		_128x32(128, 32),
+		_128x64(128, 64);
+
+		private final int w;
+		private final int h;
+
+		SCREEN_SIZE(int w, int h) {
+			this.w = w;
+			this.h = h;
+		}
+
+		public int w() { return this.w; }
+		public int h() { return this.h; }
+	}
+
 	private SCREEN_SIZE screenDimension = SCREEN_SIZE._128x32;
-	private int width = 128;
-	private int height = 32;
+	private int width = screenDimension.w();
+	private int height = screenDimension.h();
 
 	// Default SSD1306 pins:
 	/*              | function                     | Wiring/PI4J    |Cobbler | Name      |GPIO/BCM
@@ -872,10 +885,10 @@ public class SSD1306Processor implements Forwarder {
 		switch (screenSize) {
 			case "128x64":
 				screenDimension = SCREEN_SIZE._128x64;
-				width = 128;
-				height = 64;
+				width = screenDimension.w();
+				height = screenDimension.h();
 				break;
-			case "128x32":
+			case "128x32": // Default
 			default:
 				break;
 		}

@@ -19,14 +19,14 @@ JAVA_OPTIONS=""
 if [[ "$1" == "-w" ]] # To wait for everything to start?
 then
 	echo -e ""
-	echo -e "+-------------------------------+"
-	echo -e "| Giving Multiplexer some slack |"
-	echo -e "+-------------------------------+"
+	echo -e "+------------------------+"
+	echo -e "| Giving Java some slack |"
+	echo -e "+------------------------+"
 	sleep 10
 	echo -e ""
-	echo -e "+--------------------------+"
-	echo -e "| Now starting Multiplexer |"
-	echo -e "+--------------------------+"
+	echo -e "+-------------------+"
+	echo -e "| Now starting Java |"
+	echo -e "+-------------------+"
 fi
 #
 sudo java ${JAVA_OPTIONS} -cp ${CP} i2c.samples.HMC5883LWithSSD1306

@@ -1,3 +1,5 @@
+rootProject.name = 'raspberry.coffee'
+//
 include 'Adafruit.IO.REST'
 include 'ADC'
 include 'ADC-benchmark'
@@ -53,6 +55,7 @@ include "jsonQL"
 // NMEA.mux.WebUI sub-projects
 include(':NMEA.mux.WebUI:full.server')
 include(':NMEA.mux.WebUI:minimal.mux')
+include(':NMEA.mux.WebUI:compass.mux')
 include(':NMEA.mux.WebUI:full.server.extended')
 include(':NMEA.mux.WebUI:full.server.extended.v2')
 include(':NMEA.mux.WebUI:small.server.extended')
@@ -84,7 +87,11 @@ include "JupyterNotebooks:deep.learning.crash.course"
 
 // Scratch pad
 include "oliv.scratch.pad:some.tests"
+include "oliv.scratch.pad:http.test"
 include 'REST.clients'
 include 'springboot-sensors'
 include 'opencv'
+include 'jersey-client-tests'
+include 'oliv.scratch.pad:jersey-client-tests'
+findProject(':oliv.scratch.pad:jersey-client-tests')?.name = 'jersey-client-tests'
 

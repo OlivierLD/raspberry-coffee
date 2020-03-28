@@ -44,6 +44,8 @@ import sunflower.utils.ANSIUtil;
  */
 public class SunFlowerDriver {
 
+	private final static int STEPS_PER_CIRCLE = 200;
+
 	private static long loopDelay = 1_000L;
 	static {
 		if ("true".equals(System.getProperty("date.simulation"))) {
@@ -59,6 +61,19 @@ public class SunFlowerDriver {
 
 	private static boolean elevationInverted = "true".equals(System.getProperty("elevation.inverted"));
 	private static boolean azimuthInverted = "true".equals(System.getProperty("azimuth.inverted"));
+
+	private double elevationOffset = 0D;
+	private double azimuthOffset = 0D;
+	// Introduce Heading (default 180? <- Northern Hemisphere, when L > Dsun)
+	private final static double DEFAULT_DEVICE_HEADING = 180D;
+	private double deviceHeading = DEFAULT_DEVICE_HEADING;
+
+	public void setDeviceHeading(double hdg) {
+		if (hdg != this.deviceHeading) { // Then orient the device?
+			System.out.println(String.format("Heading has changed from %.02f to %.02f", this.deviceHeading, hdg));
+		}
+		this.deviceHeading = hdg;
+	}
 
 	private SunFlowerDriver instance = this;
 
@@ -97,11 +112,17 @@ public class SunFlowerDriver {
 	private AdafruitMotorHAT.AdafruitStepperMotor azimuthMotor;
 	private AdafruitMotorHAT.AdafruitStepperMotor elevationMotor;
 
+	// Origins
 	private final static double PARKED_ELEVATION =  90d;
 	private final static double PARKED_AZIMUTH   = 180d;
 
+	// Init
 	private double currentDeviceElevation = PARKED_ELEVATION;
 	private double currentDeviceAzimuth = PARKED_AZIMUTH;
+
+	// Offsets from Origins above
+	private int currentDeviceElevationStepOffset = 0;
+	private int currentDeviceAzimuthStepOffset = 0;
 
 	private CelestialComputerThread astroThread = null;
 	private MotorThread elevationMotorThread = null;
@@ -113,7 +134,7 @@ public class SunFlowerDriver {
 	// Default. Try SINGLE, DOUBLE, MICROSTEP, INTERLEAVE...
 	// SINGLE is less accurate
 	// DOUBLE is fine but heats the motors
-	// MICROSTEP sound - for this project - like a good option
+	// MICROSTEP sounds - for this project - like a good option
 	private final static AdafruitMotorHAT.Style DEFAULT_MOTOR_STYLE = AdafruitMotorHAT.Style.MICROSTEP;  // Default. Try SINGLE, DOUBLE, MICROSTEP, INTERLEAVE...
 
 	private static AdafruitMotorHAT.Style findStyle(String styleStr) {
@@ -137,6 +158,7 @@ public class SunFlowerDriver {
 	private final static boolean MOTOR_HAT_VERBOSE = "true".equals(System.getProperty("motor.hat.verbose"));
 	private final static boolean TOO_LONG_EXCEPTION_VERBOSE = "true".equals(System.getProperty("too.long.exception.verbose", "true"));
 	private final static boolean ASTRO_VERBOSE = "true".equals(System.getProperty("astro.verbose", "false"));
+	private final static boolean MOVES_VERBOSE = "true".equals(System.getProperty("moves.verbose", "false"));
 
 	private static int minimumAltitude = -1;
 	static {
@@ -187,15 +209,23 @@ public class SunFlowerDriver {
 
 	public static class DeviceData {
 		private Date date;
+		private Position devicePosition;
 		private long epoch;
 		private double azimuth;
 		private double elevation;
+		private double azimuthOffset;
+		private double elevationOffset;
+		private double deviceHeading;
 
-		public DeviceData(Date date, double azimuth, double elevation) {
+		public DeviceData(Date date, Position devicePosition, double azimuth, double elevation, double azimuthOffset, double elevationOffset, double deviceHeading) {
 			this.date = date;
+			this.devicePosition = devicePosition;
 			this.epoch = date.getTime();
 			this.azimuth = azimuth;
 			this.elevation = elevation;
+			this.azimuthOffset = azimuthOffset;
+			this.elevationOffset = elevationOffset;
+			this.deviceHeading = deviceHeading;
 		}
 
 		public Date getDate() {
@@ -214,12 +244,31 @@ public class SunFlowerDriver {
 			return epoch;
 		}
 
+		public double getAzimuthOffset() {
+			return azimuthOffset;
+		}
+
+		public double getElevationOffset() {
+			return elevationOffset;
+		}
+
+		public double getDeviceHeading() {
+			return deviceHeading;
+		}
+
+		public Position getDevicePosition() {
+			return devicePosition;
+		}
+
 		@Override
 		public String toString() {
-			return String.format("%s, Device: Azimuth: %.02f, Elevation: %.02f",
+			return String.format("%s, Device: Azimuth: %.02f, Elevation: %.02f (Offsets: Z: %.02f, Elev: %.02f), Device Heading: %.02f",
 					this.date,
 					this.azimuth,
-					this.elevation);
+					this.elevation,
+					this.azimuthOffset,
+					this.elevationOffset,
+					this.deviceHeading);
 		}
 	}
 
@@ -407,6 +456,14 @@ public class SunFlowerDriver {
 		public String toString() {
 			return String.format("%s %s", this.date.toString(), this.message);
 		}
+	}
+
+	public void setElevationOffset(double elevationOffset) {
+		this.elevationOffset = elevationOffset;
+	}
+
+	public void setAzimuthOffset(double azimuthOffset) {
+		this.azimuthOffset = azimuthOffset;
 	}
 
 	public void setDevicePosition(double lat, double lng) {
@@ -628,6 +685,14 @@ public class SunFlowerDriver {
 	public SunFlowerDriver() {
 
 		System.out.println("Starting SunFlowerDriver");
+
+		String initialHeading = System.getProperty("initial.heading", String.valueOf(this.deviceHeading));
+		try {
+			this.deviceHeading = Double.parseDouble(initialHeading);
+		} catch (NumberFormatException nfe) {
+			nfe.printStackTrace();
+		}
+
 		int rpm = Integer.parseInt(System.getProperty("rpm", String.valueOf(DEFAULT_RPM))); // 30
 //		System.out.println(String.format("RPM set to %d.", rpm));
 
@@ -654,13 +719,64 @@ public class SunFlowerDriver {
 		return getMotorPayload(from, to, ratio, false);
 	}
 	private static MotorPayload getMotorPayload(double from, double to, double ratio, boolean inverted) {
+		return getMotorPayload(Double.NaN, 0, from, to, ratio, inverted);
+	}
+
+	private final static boolean SPECIAL_DEBUG_VERBOSE = true;
+	// Recalculate from origin and get the diff with the currentStepOffset if origin != NaN
+	// We start from the origin - and considering the current step offset, to avoid accumulating rounding errors.
+	private static MotorPayload getMotorPayload(double origin, int currentStepOffset, double from, double to, double ratio, boolean inverted) {
 		MotorPayload motorPayload = new MotorPayload();
-		motorPayload.motorCommand = (to > from) ?
-				(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
-				(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
+
+		if (SPECIAL_DEBUG_VERBOSE) {
+			System.out.println("+-----------------------------------------------------");
+			System.out.println(String.format("Calculating motor payload, origin: %.02f, currentOffset: %d, from %.02f to %.02f (ratio: %.02f)",
+					origin, currentStepOffset, from, to, ratio));
+			System.out.println("+-----------------------------------------------------");
+		}
+
+//		motorPayload.motorCommand = (to > from) ?
+//				(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
+//				(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
+
 	  // Motor: 200 steps: 360 degrees.
 		// Device: 360 degrees = (200 / ratio) steps.
-		motorPayload.nbSteps = (int)Math.round((Math.abs(from - to) / 360d) * 200d / ratio);
+		if (Double.isNaN(origin)) {
+			int deltaSteps = (int) Math.round(((to - from) / 360d) * STEPS_PER_CIRCLE / ratio);
+			motorPayload.motorCommand = (deltaSteps > 0) ?
+					(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
+					(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
+			motorPayload.nbSteps = Math.abs(deltaSteps);
+		} else {
+			// From origin
+			int stepsFromOrigin = (int) Math.round(((to - origin) / 360d) * STEPS_PER_CIRCLE / ratio);
+			int diff = stepsFromOrigin - currentStepOffset;
+
+			if (SPECIAL_DEBUG_VERBOSE) {
+				System.out.println(String.format("\t** Before move: current offset: %d, from %.02f to %.02f, inverted:%s, StepsFromOrig: %d, diff:%d",
+						currentStepOffset,
+						from,
+						to,
+						inverted ? "true" : "false",
+						stepsFromOrigin,
+						diff));
+			}
+
+			diff *= (inverted ? -1 : 1);
+			motorPayload.motorCommand = (diff > 0) ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD;
+//					(!inverted ? AdafruitMotorHAT.MotorCommand.FORWARD : AdafruitMotorHAT.MotorCommand.BACKWARD) :
+//					(!inverted ? AdafruitMotorHAT.MotorCommand.BACKWARD : AdafruitMotorHAT.MotorCommand.FORWARD);
+
+			if (SPECIAL_DEBUG_VERBOSE) {
+				System.out.println(String.format("Moving from %.02f to %.02f: %d step(s) (instead of %d, steps from origin: %d).",
+						from,
+						to,
+						diff,
+						(int) Math.round(((to - from) / 360d) * STEPS_PER_CIRCLE / ratio),
+						stepsFromOrigin));
+			}
+			motorPayload.nbSteps = Math.abs(diff);
+		}
 		return motorPayload;
 	}
 
@@ -674,27 +790,70 @@ public class SunFlowerDriver {
 				System.out.println("---------------------------------------------------");
 			}
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Parking the device"));
-			// Put Z to 0, Elev. to 90.
-			MotorPayload parkElev = getMotorPayload(currentDeviceElevation, PARKED_ELEVATION, elevationMotorRatio, elevationInverted);
+			// Put Z to 0 or 180, Elev. to 90.
+
+			// Parking from currentDeviceElevation to PARKED_ELEVATION
+			System.out.println(String.format("\t - Parking elevation %.02f -> %.02f", currentDeviceElevation, PARKED_ELEVATION));
+			MotorPayload parkElev = getMotorPayload(PARKED_ELEVATION,
+					currentDeviceElevationStepOffset,
+					currentDeviceElevation,
+					PARKED_ELEVATION,
+					elevationMotorRatio,
+					elevationInverted);
 			String mess_1 = String.format("(Elev) This will be %d steps %s", parkElev.nbSteps, parkElev.motorCommand);
+			if (MOVES_VERBOSE) {
+				System.out.println(String.format("Parking %s", mess_1));
+			}
 			this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess_1));
 			if (!simulating) {
 				elevationMotorThread = new MotorThread(this.elevationMotor, parkElev.nbSteps, parkElev.motorCommand, motorStyle);
 				elevationMotorThread.start();
 			}
 			currentDeviceElevation = PARKED_ELEVATION;
+			currentDeviceElevationStepOffset += (parkElev.nbSteps * (parkElev.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (elevationInverted ? -1 : 1));
 
-			MotorPayload parkZ = getMotorPayload(currentDeviceAzimuth, PARKED_AZIMUTH, azimuthMotorRatio, azimuthInverted);
+			// Parking from currentDeviceAzimuth to PARKED_AZIMUTH
+			System.out.println(String.format("\t - Parking azimuth %.02f -> %.02f", currentDeviceAzimuth, PARKED_AZIMUTH));
+			MotorPayload parkZ = getMotorPayload(PARKED_AZIMUTH,
+					currentDeviceAzimuthStepOffset,
+					currentDeviceAzimuth,
+					PARKED_AZIMUTH,
+					azimuthMotorRatio,
+					azimuthInverted);
 			String mess_2 = String.format("(Z) This will be %d steps %s", parkZ.nbSteps, parkZ.motorCommand);
+			if (MOVES_VERBOSE) {
+				System.out.println(String.format("Parking %s", mess_2));
+			}
 			this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess_2));
 			if (!simulating) {
 				azimuthMotorThread = new MotorThread(this.azimuthMotor, parkZ.nbSteps, parkZ.motorCommand, motorStyle);
 				azimuthMotorThread.start();
 			}
 			currentDeviceAzimuth = PARKED_AZIMUTH;
+			currentDeviceAzimuthStepOffset += (parkZ.nbSteps * (parkZ.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (azimuthInverted ? -1 : 1));
+
 		} else {
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Device was parked"));
 		}
+	}
+
+	/**
+	 * Make the value a multiple of minDiffForMove
+	 * @param sunValue the value to adjust, Azimuth or Elevation.
+	 * @return the adjusted value
+	 */
+	private double adjustDeviceValue(double sunValue) {
+		return adjustDeviceValue(sunValue, 0D, 180D);
+	}
+	private double adjustDeviceValue(double sunValue, double offset) {
+		return adjustDeviceValue(sunValue, offset, 180D);
+	}
+	private double adjustDeviceValue(double sunValue, double offset, double heading) {
+		double adjusted = sunValue + offset + (180 - heading); // if heading goes right, device must go left.
+		if (adjusted % minDiffForMove != 0D) {
+			adjusted = Math.round(adjusted * (1 / minDiffForMove)) / (1 / minDiffForMove);
+		}
+		return adjusted;
 	}
 
 	public void start() {
@@ -706,7 +865,7 @@ public class SunFlowerDriver {
 		while (keepGoing) {
 
 			Date date = new Date();
-			DeviceData deviceData = new DeviceData(date, currentDeviceAzimuth, currentDeviceElevation);
+			DeviceData deviceData = new DeviceData(date, devicePosition, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
 			SunData sunData = new SunData(date, sunAzimuth, sunElevation);
 			this.publish(EventType.DEVICE_DATA, deviceData);
 			this.publish(EventType.CELESTIAL_DATA, sunData);
@@ -716,12 +875,30 @@ public class SunFlowerDriver {
 						deviceData, sunData));
 			}
 
+			// Important: Re-frame the values of SunData with minDiffForMove, @see adjustDeviceValue
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				boolean hasMoved = false;
-				if (Math.abs(currentDeviceAzimuth - sunAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
+				double adjustedAzimuth = adjustDeviceValue(sunAzimuth, azimuthOffset, this.deviceHeading);  // Use deviceHeading here
+
+//				System.out.println(String.format("\tAzimuth adjusted from %.02f, with %.02f, to %.02f", sunAzimuth, azimuthOffset, adjustedAzimuth));
+
+				if (Math.abs(currentDeviceAzimuth - adjustedAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
 					hasMoved = true;
-					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, sunAzimuth));
-					MotorPayload data = getMotorPayload(currentDeviceAzimuth, sunAzimuth, azimuthMotorRatio, azimuthInverted);
+					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, adjustedAzimuth));
+					MotorPayload data = getMotorPayload(PARKED_AZIMUTH,
+							currentDeviceAzimuthStepOffset,
+							currentDeviceAzimuth,
+							adjustedAzimuth,
+							azimuthMotorRatio,
+							azimuthInverted);
+					currentDeviceAzimuthStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (azimuthInverted ? -1 : 1));
+					if (SPECIAL_DEBUG_VERBOSE) {
+						System.out.println(String.format("\tAzimuthStepOffset now %d (command %s, inverted %s)",
+								currentDeviceAzimuthStepOffset,
+								data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? "Frwd" : "Bkwd",
+								azimuthInverted ? "true" : "false"));
+					}
+
 					if (!simulating) {
 						this.publish(EventType.MOVING_AZIMUTH_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
 						if (azimuthMotorThread == null || (azimuthMotorThread != null && !azimuthMotorThread.isAlive())) {
@@ -732,12 +909,23 @@ public class SunFlowerDriver {
 							this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
-					currentDeviceAzimuth = sunAzimuth;
+					currentDeviceAzimuth = adjustedAzimuth;
 				}
-				if (Math.abs(currentDeviceElevation - Math.max(sunElevation, minimumAltitude)) >= minDiffForMove) {
+				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset);
+				if (Math.abs(currentDeviceElevation - adjustedElevation) >= minDiffForMove) {
 					hasMoved = true;
-					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, sunElevation));
-					MotorPayload data = getMotorPayload(currentDeviceElevation, sunElevation, elevationMotorRatio, elevationInverted);
+					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, adjustedElevation));
+					MotorPayload data = getMotorPayload(PARKED_ELEVATION,
+							currentDeviceElevationStepOffset,
+							currentDeviceElevation,
+							adjustedElevation,
+							elevationMotorRatio,
+							elevationInverted);
+					currentDeviceElevationStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (elevationInverted ? -1 : 1));
+					if (SPECIAL_DEBUG_VERBOSE) {
+						System.out.println(String.format("\tElevationStepOffset now %d", currentDeviceElevationStepOffset));
+					}
+
 					if (!simulating) {
 						this.publish(EventType.MOVING_ELEVATION_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
 					}
@@ -750,10 +938,20 @@ public class SunFlowerDriver {
 							this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
-					currentDeviceElevation = sunElevation;
+					currentDeviceElevation = adjustedElevation;
 				}
-				if (hasMoved && ASTRO_VERBOSE) {
-					System.out.println(String.format("Sun's position is now: Elev: %s, Z: %.02f", GeomUtil.decToSex(sunElevation, GeomUtil.NO_DEG, GeomUtil.NONE), sunAzimuth));
+				if (hasMoved) {
+					if (ASTRO_VERBOSE) {
+						System.out.println(String.format("Sun's position is now: Elev: %s, Z: %.02f", GeomUtil.decToSex(sunElevation, GeomUtil.NO_DEG, GeomUtil.NONE), sunAzimuth));
+					}
+					if (MOVES_VERBOSE) {
+//					DeviceData deviceData = new DeviceData(date, devicePosition, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
+						System.out.println(String.format(">> Device has moved, now: Elevation %.02f (stepOffset %d), Azimuth %.02f (stepOffset %d)",
+								currentDeviceElevation,
+								currentDeviceElevationStepOffset,
+								currentDeviceAzimuth,
+								currentDeviceAzimuthStepOffset));
+					}
 				}
 			} else { // Park device
 				parkDevice();
@@ -806,7 +1004,12 @@ public class SunFlowerDriver {
 									if (value < 0 || value > 360) {
 										System.out.println(String.format("Bad Azimuth value: %f, should be in [0..360]", value));
 									} else {
-										MotorPayload data = getMotorPayload(currentDeviceAzimuth, value, azimuthMotorRatio, azimuthInverted);
+										MotorPayload data = getMotorPayload(PARKED_AZIMUTH,
+												currentDeviceAzimuthStepOffset,
+												currentDeviceAzimuth,
+												value,
+												azimuthMotorRatio,
+												azimuthInverted);
 										if (!simulating) {
 											if (azimuthMotorThread == null || (azimuthMotorThread != null && !azimuthMotorThread.isAlive())) {
 												azimuthMotorThread = new MotorThread(this.azimuthMotor, data.nbSteps, data.motorCommand, motorStyle);
@@ -817,13 +1020,22 @@ public class SunFlowerDriver {
 											}
 										}
 										currentDeviceAzimuth = value;
+										currentDeviceAzimuthStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (azimuthInverted ? -1 : 1));
+										if (SPECIAL_DEBUG_VERBOSE) {
+											System.out.println(String.format("\tAzimuthStepOffset now %d", currentDeviceAzimuthStepOffset));
+										}
 									}
 								}
 								if (userData[0].equalsIgnoreCase("E")) {
 									if (value < 0 || value > 90) {
 										System.out.println(String.format("Bad Elevation value: %f, should be in [0..90]", value));
 									} else {
-										MotorPayload data = getMotorPayload(currentDeviceElevation, value, elevationMotorRatio, elevationInverted);
+										MotorPayload data = getMotorPayload(PARKED_ELEVATION,
+												currentDeviceElevationStepOffset,
+												currentDeviceElevation,
+												value,
+												elevationMotorRatio,
+												elevationInverted);
 										if (!simulating) {
 											if (elevationMotorThread == null || (elevationMotorThread != null && !elevationMotorThread.isAlive())) {
 												elevationMotorThread = new MotorThread(this.elevationMotor, data.nbSteps, data.motorCommand, motorStyle);
@@ -834,6 +1046,10 @@ public class SunFlowerDriver {
 											}
 										}
 										currentDeviceElevation = value;
+										currentDeviceElevationStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (elevationInverted ? -1 : 1));
+										if (SPECIAL_DEBUG_VERBOSE) {
+											System.out.println(String.format("\tElevationStepOffset now %d", currentDeviceElevationStepOffset));
+										}
 									}
 								}
 							}
@@ -853,7 +1069,7 @@ public class SunFlowerDriver {
 		long howMany = 0;
 		while ((azimuthMotorThread != null && azimuthMotorThread.isAlive()) || (elevationMotorThread != null && elevationMotorThread.isAlive())) {
 //			System.out.println("Waiting for the device to be parked");
-			// TODO Move colors out of here.
+			// TODO Move ANSI colors out of here.
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), ANSIUtil.ansiSetTextColor(howMany++ % 2 == 0 ? ANSIUtil.ANSI_GREEN : ANSIUtil.ANSI_RED) + "Waiting for the device to be parked"));
 			delay(1_000L);
 		}

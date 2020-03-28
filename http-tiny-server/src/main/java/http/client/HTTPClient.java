@@ -16,7 +16,6 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Very limited Java HTTP Client, just suitable for what is
@@ -69,11 +68,14 @@ public class HTTPClient {
 		} catch (EOFException eofe) {
 			System.out.println("EOFException"); // That's ok, nothing is returned
 			eofe.printStackTrace();
+			throw eofe;
 		} catch (SocketException se) {
-			System.out.println("SocketException"); // OK too.
-			se.printStackTrace();
+//			System.out.println("SocketException in HTTPClient"); // OK too.
+//			se.printStackTrace();
+			throw se;
 		} catch (Exception ex) {
-			ex.printStackTrace();
+//			ex.printStackTrace();
+			throw ex;
 		}
 		return getContent;
 	}

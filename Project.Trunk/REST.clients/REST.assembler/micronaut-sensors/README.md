@@ -74,6 +74,16 @@ $ curl http://localhost:8080/sensors/ambient-light
 ```
 
 ### Configuration
+Default HTTP port is `8080`, it can be changed in `resources/application.yml`:
+```yaml
+micronaut:
+  application:
+    name: sensors
+  server:
+      port: 8888
+```
+
+
 In case your service needs some custom configuration, this step is well documented [here](https://guides.micronaut.io/micronaut-configuration/guide/index.html). 
 
 Here we want to provide the physical number of

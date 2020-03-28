@@ -27,5 +27,5 @@ forwarders:
     filename: data.nmea
     flush: true
 computers:
-  - cls: nmea.computers.AISManager
+  - class: nmea.computers.AISManager
     properties: ais.mgr.properties

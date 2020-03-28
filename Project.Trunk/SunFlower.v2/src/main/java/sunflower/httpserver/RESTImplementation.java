@@ -29,6 +29,26 @@ public class RESTImplementation {
 	private FeatureRequestManager featureRequestManager; // Will hold the data cache
 	private SunFlowerDriver featureManager = null;
 
+	private static class ValueHolder {
+		private double value;
+
+		public ValueHolder() {
+		}
+
+		public double getValue() {
+			return value;
+		}
+
+		public void setValue(double value) {
+			this.value = value;
+		}
+
+		public ValueHolder value(double value) {
+			this.value = value;
+			return this;
+		}
+	}
+
 	public RESTImplementation(FeatureRequestManager restRequestManager) {
 
 		this.featureRequestManager = restRequestManager;
@@ -68,7 +88,22 @@ public class RESTImplementation {
 					"GET",
 					SF_PREFIX + "/device-data",
 					this::getDeviceData,
-					"Get the device (only) status")
+					"Get the device (only) status (with azimuth and elevation offsets)"),
+			new Operation(
+					"POST",
+					SF_PREFIX + "/azimuth-offset",
+					this::setAzimuthOffset,
+					"Set the azimuth offset ('value' as QueryString parameter)"),
+			new Operation(
+					"POST",
+					SF_PREFIX + "/elevation-offset",
+					this::setElevationOffset,
+					"Set the elevation offset ('value' as QueryString parameter)"),
+			new Operation(
+					"POST",
+					SF_PREFIX + "/device-heading",
+					this::setDeviceHeading,
+					"Set the device heading ('value' as QueryString parameter)")
 	);
 
 	protected List<Operation> getOperations() {
@@ -177,6 +212,184 @@ public class RESTImplementation {
 			return response;
 		}
 	}
+
+	private Response setAzimuthOffset(Request request) {
+		Response response = new Response(request.getProtocol(), Response.CREATED);
+
+		List<String> pathParameters = request.getPathParameters(); // Not needed...
+		// Azimuth in the query, as 'value'
+		Map<String, String> queryStringParameters = request.getQueryStringParameters();
+		if (queryStringParameters == null) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SUN_FLOWER-0005")
+							.errorMessage("Query String prm 'value' is missing"));
+			return response;
+		}
+		Optional<String> value = queryStringParameters
+				.keySet()
+				.stream()
+				.filter(key -> "value".equals(key))
+				.map(key -> queryStringParameters.get(key))
+				.findFirst();
+		if (!value.isPresent()) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SUN_FLOWER-0005")
+							.errorMessage("Query String prm 'value' is missing"));
+			return response;
+		} else {
+			String val = value.get();
+			double offsetValue = 0;
+			try {
+				offsetValue = Double.parseDouble(val);
+			} catch (NumberFormatException nfe) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("SUN_FLOWER-0006")
+								.errorMessage(nfe.toString()));
+				return response;
+			}
+			try {
+				this.featureManager.setAzimuthOffset(offsetValue);
+				ValueHolder valueHolder = new ValueHolder().value(offsetValue);
+				String content = new Gson().toJson(valueHolder);
+				RESTProcessorUtil.generateResponseHeaders(response, content.length());
+				response.setPayload(content.getBytes());
+				return response;
+			} catch (Exception ex1) {
+				ex1.printStackTrace();
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("SUN_FLOWER-0004")
+								.errorMessage(ex1.toString()));
+				return response;
+			}
+		}
+	}
+
+	private Response setElevationOffset(Request request) {
+		Response response = new Response(request.getProtocol(), Response.CREATED);
+
+		List<String> pathParameters = request.getPathParameters(); // Not needed...
+		// Elevation in the query, as 'value'
+		Map<String, String> queryStringParameters = request.getQueryStringParameters();
+		if (queryStringParameters == null) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SUN_FLOWER-0008")
+							.errorMessage("Query String prm 'value' is missing"));
+			return response;
+		}
+		Optional<String> value = queryStringParameters
+				.keySet()
+				.stream()
+				.filter(key -> "value".equals(key))
+				.map(key -> queryStringParameters.get(key))
+				.findFirst();
+		if (!value.isPresent()) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SUN_FLOWER-0008")
+							.errorMessage("Query String prm 'value' is missing"));
+			return response;
+		} else {
+			String val = value.get();
+			double offsetValue = 0;
+			try {
+				offsetValue = Double.parseDouble(val);
+			} catch (NumberFormatException nfe) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("SUN_FLOWER-0009")
+								.errorMessage(nfe.toString()));
+				return response;
+			}
+			try {
+				this.featureManager.setElevationOffset(offsetValue);
+				ValueHolder valueHolder = new ValueHolder().value(offsetValue);
+				String content = new Gson().toJson(valueHolder);
+				RESTProcessorUtil.generateResponseHeaders(response, content.length());
+				response.setPayload(content.getBytes());
+				return response;
+			} catch (Exception ex1) {
+				ex1.printStackTrace();
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("SUN_FLOWER-0007")
+								.errorMessage(ex1.toString()));
+				return response;
+			}
+		}
+	}
+
+	private Response setDeviceHeading(Request request) {
+		Response response = new Response(request.getProtocol(), Response.CREATED);
+
+		List<String> pathParameters = request.getPathParameters(); // Not needed...
+		// heading in the query, as 'value'
+		Map<String, String> queryStringParameters = request.getQueryStringParameters();
+		if (queryStringParameters == null) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SUN_FLOWER-0011")
+							.errorMessage("Query String prm 'value' is missing"));
+			return response;
+		}
+		Optional<String> value = queryStringParameters
+				.keySet()
+				.stream()
+				.filter(key -> "value".equals(key))
+				.map(key -> queryStringParameters.get(key))
+				.findFirst();
+		if (!value.isPresent()) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SUN_FLOWER-0011")
+							.errorMessage("Query String prm 'value' is missing"));
+			return response;
+		} else {
+			String val = value.get();
+			double heading = 0;
+			try {
+				heading = Double.parseDouble(val);
+			} catch (NumberFormatException nfe) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("SUN_FLOWER-0012")
+								.errorMessage(nfe.toString()));
+				return response;
+			}
+			try {
+				this.featureManager.setDeviceHeading(heading);
+				ValueHolder valueHolder = new ValueHolder().value(heading);
+				String content = new Gson().toJson(valueHolder);
+				RESTProcessorUtil.generateResponseHeaders(response, content.length());
+				response.setPayload(content.getBytes());
+				return response;
+			} catch (Exception ex1) {
+				ex1.printStackTrace();
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("SUN_FLOWER-0010")
+								.errorMessage(ex1.toString()));
+				return response;
+			}
+		}
+	}
+
 	/**
 	 * Can be used as a temporary placeholder when creating a new operation.
 	 *
