@@ -2,7 +2,7 @@
 
 See sample usage in `calculation_sample.py`.
 ```
-$ python calculation_sample.py 
+$ python3 calculation_sample.py 
 ----------------------------------------------
 Calculations done for 2020-Mar-28 16:50:20 UTC
 ----------------------------------------------

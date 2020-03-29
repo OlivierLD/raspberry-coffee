@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from long_term_almanac import LongTermAlmanac as lta
 
 DELTA_T = 69.2201

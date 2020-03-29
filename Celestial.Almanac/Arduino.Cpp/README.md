@@ -11,7 +11,7 @@ It is OK for C++ though. See the `compile.sh` in the `AstroLib` folder (more bel
 ## C++
 This being said, C++ works OK.
 
-Look in to then `AstroLib` folder, run the script `compile.sh`, and you should be able to run the `./astro` generated executable.
+Look into the `AstroLib` folder, run the script `compile.sh`, and you should be able to run the `./astro` generated executable.
 
 Do look into `sample_main.cpp` to see how this is done, how to use the `AstroComputer` for yourself.
 
