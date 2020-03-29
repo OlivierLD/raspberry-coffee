@@ -7,6 +7,6 @@ is several other languages than Java.
 We will have
 - ES6
 - Arduino (ino, C, C++...)
-    - > Note: This is too demanding for an Arduino, but it works OK for C & C++. 
+    - > Note: This is **_way_** too demanding for an Arduino, but it works OK for C & C++. 
 - Python
 

@@ -6,7 +6,7 @@
 
 // MathUtils mu;
 
-Venus::Venus() {}
+// Venus::Venus() {}
 
 
 // Heliocentric longitude of Venus
