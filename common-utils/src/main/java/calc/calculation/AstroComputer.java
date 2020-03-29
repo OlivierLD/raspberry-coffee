@@ -636,6 +636,7 @@ public class AstroComputer {
 		return longitude;
 	}
 
+	// This is for tests
 	public static void main(String... args) {
 		System.out.println(String.format("Moon phase for date %d-%d-%d %d:%d:%d: ", 2011, 8, 22, 12, 00, 00) + getMoonPhase(2011, 8, 22, 12, 00, 00));
 		System.out.println("TimeOffset:" + getTimeOffsetInHours("-09:30"));
