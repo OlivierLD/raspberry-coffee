@@ -401,3 +401,10 @@ Several projects are featured here:
 ---
 
 All the doc - with more details than here - can be reached from [this page](http://raspberrypi.lediouris.net/).
+
+## A Maven repo in GitHub
+Yes, this is possible!
+
+See [this](https://github.com/OlivierLD/raspberry-coffee/tree/repository).
+
+
