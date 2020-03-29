@@ -7,6 +7,7 @@
 
 #include "MathUtils.h"
 #include "Earth.h"
+#include "Venus.h"
 
 #include "AstroComputer.h"
 
@@ -17,7 +18,7 @@ void calculateNutation();
 void calculateAberration();
 void calculateAries();
 void calculateSun();
-// void calculateVenus();
+void calculateVenus();
 // void calculateMars();
 // void calculateJupiter();
 // void calculateSaturn();
@@ -138,7 +139,7 @@ ComputedData * calculate(int year, int month, int day, int hour, int minute, int
   calculateAberration();
   calculateAries();
   calculateSun();
-  // calculateVenus();
+  calculateVenus();
   // calculateMars();
   // calculateJupiter();
   // calculateSaturn();
@@ -152,7 +153,7 @@ ComputedData * calculate(int year, int month, int day, int hour, int minute, int
 
 /**
  * Input data conversion and reworking
- * All data are UTC data (except detlaT)
+ * All data are UTC data (except deltaT)
  **
  * @param year Number, UTC year
  * @param month Number, UTC month, [1..12]
@@ -472,6 +473,79 @@ void calculateSun() {
 	if (data->EoT < -20) {
 		data->EoT += 1440;
 	}
+}
+
+// Calculations for Venus
+void calculateVenus() {
+	// Heliocentric spherical coordinates
+	double L = Venus::lVenus(data->Tau);
+	double B = Venus::bVenus(data->Tau);
+	double R = Venus::rVenus(data->Tau);
+
+	// Rectangular coordinates
+	double x = R * MathUtils::cosd(B) * MathUtils::cosd(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::cosd(data->Le);
+	double y = R * MathUtils::cosd(B) * MathUtils::sind(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::sind(data->Le);
+	double z = R * MathUtils::sind(B) - data->Re * MathUtils::sind(data->Be);
+
+	// Geocentric spherical coordinates
+	double lambda = atan2(y, x);
+	double beta = atan(z / sqrt(x * x + y * y));
+
+	// Distance from Earth / light time
+	double d = sqrt(x * x + y * y + z * z);
+	double lt = 0.0057755183 * d;
+
+	// Time correction
+	double Tau_corr = (data->JDE - lt - 2451545) / 365250;
+
+	// Coordinates corrected for light time
+	L = Venus::lVenus(Tau_corr);
+	B = Venus::bVenus(Tau_corr);
+	R = Venus::rVenus(Tau_corr);
+	x = R * MathUtils::cosd(B) * MathUtils::cosd(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::cosd(data->Le);
+	y = R * MathUtils::cosd(B) * MathUtils::sind(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::sind(data->Le);
+	z = R * MathUtils::sind(B) - data->Re * MathUtils::sind(data->Be);
+
+	lambda = atan2(y, x);
+	beta = atan(z / sqrt(x * x + y * y));
+
+	// aberration
+	double dlambda = (data->e * data->kappa * cos(data->pi0 - lambda) - data->kappa * cos(MathUtils::toRadians(data->Lsun_true) - lambda)) / cos(beta);
+	double dbeta = -data->kappa * sin(beta) * (sin(MathUtils::toRadians(data->Lsun_true) - lambda) - data->e * sin(data->pi0 - lambda));
+
+	lambda += dlambda;
+	beta += dbeta;
+
+	// FK5
+	double lambda_prime = lambda - MathUtils::toRadians(1.397) * data->TE - MathUtils::toRadians(0.00031) * data->TE2;
+
+	dlambda = MathUtils::toRadians(-0.09033) / 3600 + MathUtils::toRadians(0.03916) / 3600 * (cos(lambda_prime) + sin(lambda_prime)) * tan(beta);
+	dbeta = MathUtils::toRadians(0.03916) / 3600 * (cos(lambda_prime) - sin(lambda_prime));
+
+	lambda += dlambda;
+	beta += dbeta;
+
+	// calculateNutation in longitude
+	lambda += MathUtils::toRadians(data->deltaPsi);
+
+	// Right ascension, apparent
+	data->RAVenus = MathUtils::toDegrees(MathUtils::norm2PiRad(atan2((sin(lambda) * MathUtils::cosd(data->eps) - tan(beta) * MathUtils::sind(data->eps)), cos(lambda))));
+
+	// Declination of Venus, apparent
+	data->DECVenus = MathUtils::toDegrees(asin(sin(beta) * MathUtils::cosd(data->eps) + cos(beta) * MathUtils::sind(data->eps) * sin(lambda)));
+
+	// GHA of Venus
+	data->GHAVenus = MathUtils::norm360Deg(data->GHAAtrue - data->RAVenus);
+
+	// Semi-diameter of Venus (including cloud layer)
+	data->SDVenus = 8.41 / d;
+
+	// Horizontal parallax of Venus
+	data->HPVenus = 8.794 / d;
+
+	// Illumination of the planet's disk
+	double k = 100 * (1 + ((R - data->Re * MathUtils::cosd(B) * MathUtils::cosd(L - data->Le)) / d)) / 2;
+	data->illumVenus = round(10 * k) / 10;
 }
 
 // Calculations for the moon

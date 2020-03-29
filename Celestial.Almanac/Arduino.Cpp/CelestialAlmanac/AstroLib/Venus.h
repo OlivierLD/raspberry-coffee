@@ -4,9 +4,9 @@
 class Venus {
   public: // TODO Make those static
     Venus();
-    double lVenus(double x);
-    double bVenus(double x);
-    double rVenus(double x);
+    static double lVenus(double x);
+    static double bVenus(double x);
+    static double rVenus(double x);
 };    // Warning!!!! Do not forget the semicolon!!
 
 #endif
