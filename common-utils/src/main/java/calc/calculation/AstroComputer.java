@@ -567,59 +567,121 @@ public class AstroComputer {
 	public static synchronized double getSunDecl() {
 		return Context.DECsun;
 	}
-
 	public static synchronized double getSunGHA() {
 		return Context.GHAsun;
 	}
-
-	/**
-	 * Warning: Context must have been initialized!
-	 *
-	 * @return
-	 */
-	public static synchronized double getMoonDecl() {
-		return Context.DECmoon;
+	public static synchronized double getSunRA() {
+		return Context.RAsun;
 	}
-
-	public static synchronized double getMoonGHA() {
-		return Context.GHAmoon;
+	public static synchronized double getSunSd() {
+		return Context.SDsun;
 	}
-
-	public static synchronized double getVenusDecl() {
-		return Context.DECvenus;
-	}
-
-	public static synchronized double getMarsDecl() {
-		return Context.DECmars;
-	}
-
-	public static synchronized double getJupiterDecl() {
-		return Context.DECjupiter;
-	}
-
-	public static synchronized double getSaturnDecl() {
-		return Context.DECsaturn;
+	public static synchronized double getSunHp() {
+		return Context.HPsun;
 	}
 
 	public static synchronized double getAriesGHA() {
 		return Context.GHAAtrue;
 	}
 
+	public static synchronized double getMoonDecl() {
+		return Context.DECmoon;
+	}
+	public static synchronized double getMoonGHA() {
+		return Context.GHAmoon;
+	}
+	public static synchronized double getMoonRA() {
+		return Context.RAmoon;
+	}
+	public static synchronized double getMoonSd() {
+		return Context.SDmoon;
+	}
+	public static synchronized double getMoonHp() {
+		return Context.HPmoon;
+	}
+
+	public static synchronized double getVenusDecl() {
+		return Context.DECvenus;
+	}
 	public static synchronized double getVenusGHA() {
 		return Context.GHAvenus;
 	}
+	public static synchronized double getVenusRA() {
+		return Context.RAvenus;
+	}
+	public static synchronized double getVenusSd() {
+		return Context.SDvenus;
+	}
+	public static synchronized double getVenusHp() {
+		return Context.HPvenus;
+	}
 
+	public static synchronized double getMarsDecl() {
+		return Context.DECmars;
+	}
 	public static synchronized double getMarsGHA() {
 		return Context.GHAmars;
 	}
+	public static synchronized double getMarsRA() {
+		return Context.RAmars;
+	}
+	public static synchronized double getMarsSd() {
+		return Context.SDmars;
+	}
+	public static synchronized double getMarsHp() {
+		return Context.HPmars;
+	}
 
+	public static synchronized double getJupiterDecl() {
+		return Context.DECjupiter;
+	}
 	public static synchronized double getJupiterGHA() {
 		return Context.GHAjupiter;
 	}
+	public static synchronized double getJupiterRA() {
+		return Context.RAjupiter;
+	}
+	public static synchronized double getJupiterSd() {
+		return Context.SDjupiter;
+	}
+	public static synchronized double getJupiterHp() {
+		return Context.HPjupiter;
+	}
 
+	public static synchronized double getSaturnDecl() {
+		return Context.DECsaturn;
+	}
 	public static synchronized double getSaturnGHA() {
 		return Context.GHAsaturn;
 	}
+	public static synchronized double getSaturnRA() {
+		return Context.RAsaturn;
+	}
+	public static synchronized double getSaturnSd() {
+		return Context.SDsaturn;
+	}
+	public static synchronized double getSaturnHp() {
+		return Context.HPsaturn;
+	}
+
+	public static synchronized double getPolarisDecl() {
+		return Context.DECpol;
+	}
+	public static synchronized double getPolarisGHA() {
+		return Context.GHApol;
+	}
+	public static synchronized double getPolarisRA() {
+		return Context.RApol;
+	}
+
+	public static synchronized double getEoT() {
+		return Context.EoT;
+	}
+	public static synchronized double getLDist() {
+		return Context.LDist;
+	}
+
+	// Etc. Whatever is needed
 
 	public static synchronized double getMeanObliquityOfEcliptic() {
 		return Context.eps0;
@@ -638,6 +700,7 @@ public class AstroComputer {
 
 	// This is for tests
 	public static void main(String... args) {
+
 		System.out.println(String.format("Moon phase for date %d-%d-%d %d:%d:%d: ", 2011, 8, 22, 12, 00, 00) + getMoonPhase(2011, 8, 22, 12, 00, 00));
 		System.out.println("TimeOffset:" + getTimeOffsetInHours("-09:30"));
 		String[] tz = new String[]{"Pacific/Marquesas", "America/Los_Angeles", "GMT", "Europe/Paris", "Europe/Moscow", "Australia/Sydney", "Australia/Adelaide"};

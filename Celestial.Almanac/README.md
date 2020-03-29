@@ -16,13 +16,13 @@ From this modules root
 ```
 $ ../gradlew clean shadowJar
 $ java -cp build/libs/Celestial.Almanac-1.0-all.jar celestial.almanac.JavaSample
-Calculations done for 2020-03-29 18:40:58 UTC
-Sun data:	Decl.: 3°46.65'N, GHA:  99°06.16'
-Moon data:	Decl.: 19°42.69'N, GHA:  40°34.85'
-Venus data:	Decl.: 22°26.67'N, GHA:  55°39.46'
-Mars data:	Decl.: 21°12.42'S, GHA:  166°13.91'
-Jupiter data:	Decl.: 21°20.69'S, GHA:  171°50.70'
-Saturn data:	Decl.: 20°05.46'S, GHA:  165°06.86'
+Calculations done for 2020-03-29 23:37:52 UTC
+Sun data:	Decl.: 03°51.45'N, GHA:  173°20.58', RA: 00h 35m 47.60s, sd: 16' 00.87", hp:     08.81"
+Moon data:	Decl.: 20°16.94'N, GHA:  112°22.48', RA: 04h 39m 40.00s, sd: 15' 04.66", hp: 55' 20.07"
+Venus data:	Decl.: 22°30.41'N, GHA:  129°53.11', RA: 03h 29m 37.50s, sd:     12.56", hp:     13.13"
+Mars data:	Decl.: 21°10.86'S, GHA:  240°30.53', RA: 20h 07m 07.80s, sd:     03.17", hp:     05.96"
+Jupiter data:	Decl.: 21°20.44'S, GHA:  246°14.70', RA: 19h 44m 11.10s, sd:     18.39", hp:     01.64"
+Saturn data:	Decl.: 20°05.30'S, GHA:  239°31.72', RA: 20h 11m 03.10s, sd:     08.00", hp:     00.85"
 $
 ```
 

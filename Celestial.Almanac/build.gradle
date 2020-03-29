@@ -11,7 +11,7 @@ version = '1.0'
 repositories {
     mavenCentral()
     mavenLocal()
-    maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" } // Git/Maven repo
+//    maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" } // Git/Maven repo (see dependencies below)
     maven { url "https://oss.sonatype.org/content/groups/public" }
     maven { url "http://www.datanucleus.org/downloads/maven2" }
     maven { url "http://lediouris.net/maven2" }
@@ -20,8 +20,8 @@ repositories {
 compileJava.options.compilerArgs += ["-Xlint:none"]
 
 dependencies {
-//    compile project(':common-utils') // For the Java Celestial Almanac, from this project
-    compile 'oliv.raspi.coffee:common-utils:1.0' // Java Celestial Almanac, from the git/maven repo
+    compile project(':common-utils') // For the Java Celestial Almanac, from this project
+//    compile 'oliv.raspi.coffee:common-utils:1.0' // Java Celestial Almanac, from the git/maven repo
 }
 
 shadowJar {
