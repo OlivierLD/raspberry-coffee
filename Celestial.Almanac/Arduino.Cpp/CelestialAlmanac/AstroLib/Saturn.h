@@ -4,9 +4,9 @@
 class Saturn {
   public: // TODO Make those static
     Saturn();
-    double lSaturn(double x);
-    double bSaturn(double x);
-    double rSaturn(double x);
+    static double lSaturn(double x);
+    static double bSaturn(double x);
+    static double rSaturn(double x);
 };    // Warning!!!! Do not forget the semicolon!!
 
 #endif
