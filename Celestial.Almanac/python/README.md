@@ -1,9 +1,18 @@
 # Celestial Computer in Python.
 
 See sample usage in `calculation_sample.py`.
+
+Use
 ```
 $ python3 calculation_sample.py 
-----------------------------------------------
+```
+or just
+```
+$ ./calculation_sample.py 
+```
+Output:
+```
+---
 Calculations done for 2020-Mar-28 16:50:20 UTC
 ----------------------------------------------
 Sun: GHA 071° 21' 49", RA 00h 31m 07.2s, DEC N  03° 21' 30", sd 961.2", hp 8.8"
