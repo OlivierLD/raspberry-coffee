@@ -8,10 +8,13 @@
 #include "MathUtils.h"
 #include "Earth.h"
 #include "Venus.h"
+#include "Mars.h"
+#include "Jupiter.h"
+#include "Saturn.h"
 
 #include "AstroComputer.h"
 
-#define DEBUG true
+#define DEBUG false
 
 void calculateJulianDate(int year, int month, int day, int hour, int minute, int second, double delta_t);
 void calculateNutation();
@@ -19,12 +22,12 @@ void calculateAberration();
 void calculateAries();
 void calculateSun();
 void calculateVenus();
-// void calculateMars();
-// void calculateJupiter();
-// void calculateSaturn();
+void calculateMars();
+void calculateJupiter();
+void calculateSaturn();
 void calculateMoon();
-// void calculatePolaris();
-// void calculateMoonPhase();
+void calculatePolaris();
+void calculateMoonPhase();
 void calculateWeekDay();
 
 // const MathUtils cuMu;
@@ -47,26 +50,19 @@ bool isLeapYear(int year) {
 char dataBuffer[128];
 
 // Output Sidereal Time
-char * outSideralTime(double x) {
+char * outSideralTime(double x, char * data) {
 	double GMSTdecimal = x / 15;
 	int GMSTh = floor(GMSTdecimal);
 	double GMSTmdecimal = 60 * (GMSTdecimal - GMSTh);
 	int GMSTm = floor(GMSTmdecimal);
 	double GMSTsdecimal = 60 * (GMSTmdecimal - GMSTm);
 	int GMSTs = round(1000 * GMSTsdecimal) / 1000;
-	// if (GMSTs - floor(GMSTs) == 0) {
-	// 	GMSTs += ".000";
-	// } else if (10 * GMSTs - floor(10 * GMSTs) == 0) {
-	// 	GMSTs += "00";
-	// } else if (100 * GMSTs - floor(100 * GMSTs) == 0) {
-	// 	GMSTs += "0";
-	// }
-	sprintf(dataBuffer, "%dh %dm %ds", GMSTh, GMSTm, GMSTs);
-	return dataBuffer;
+	sprintf(data, "%dh %dm %ds", GMSTh, GMSTm, GMSTs);
+	return data;
 }
 
 // Output Hour Angles
-char * outHA(double x) {
+char * outHA(double x, char * data) {
   if (DEBUG) {
     fprintf(stdout, "Output HA for %f\n", x);
   }
@@ -81,12 +77,12 @@ char * outHA(double x) {
     GHAmin = 0;
     GHAdeg += 1;
   }
-  sprintf(dataBuffer, "%d° %d' %d\"", GHAdeg, GHAmin, GHAsec);
-  return dataBuffer;
+  sprintf(data, "%d° %d' %d\"", GHAdeg, GHAmin, GHAsec);
+  return data;
 }
 
 // Output Right ascension
-char * outRA(double x) {
+char * outRA(double x, char * data) {
   if (DEBUG) {
     fprintf(stdout, "Output RA for %f\n", x);
   }
@@ -103,22 +99,65 @@ char * outRA(double x) {
     RAmin = 0;
     RAh += 1;
   }
-  sprintf(dataBuffer, "%dh %dm %ds", RAh, RAmin, RAsec);
-  return dataBuffer;
+  sprintf(data, "%dh %dm %ds", RAh, RAmin, RAsec);
+  return data;
 }
 
-char * outEoT(double x) {
+char * outEoT(double x, char * data) {
     double EoT = abs(x);
     int EOTmin = floor(EoT);
     int EOTsec = round(600 * (EoT - EOTmin)) / 10;
 
     if (EOTmin == 0) {
-      sprintf(dataBuffer, "%s %ds", (x < 0 ? "-" : "+"), EOTsec);
+      sprintf(data, "%s %ds", (x < 0 ? "-" : "+"), EOTsec);
     } else {
-      sprintf(dataBuffer, "%s %dm %ds", (x < 0 ? "-" : "+"), EOTmin, EOTsec);
+      sprintf(data, "%s %dm %ds", (x < 0 ? "-" : "+"), EOTmin, EOTsec);
     }
-    return dataBuffer;
+    return data;
 }
+
+char * outDec(double x, char * data) {
+	double DEC = abs(x);
+	int DECdeg = floor(DEC);
+	int DECmin = floor(60 * (DEC - DECdeg));
+	int DECsec = round(3600 * ((DEC - DECdeg) - ((double)DECmin / 60)));
+	if (DECsec == 60) {
+		DECsec = 0;
+		DECmin += 1;
+	}
+	if (DECmin == 60) {
+		DECmin = 0;
+		DECdeg += 1;
+	}
+	sprintf(data, "%s %d°%d'%d\"", (x < 0 ? "S" : "N"), DECdeg, DECmin, DECsec);
+	return data;
+}
+
+// Output SD and HP
+char * outSdHp(double x, char * data) {
+	x = round(10 * x) / 10;
+
+	sprintf(data, "%f\"", x);
+	return data;
+}
+
+// Output Obliquity of Ecliptic
+char * outECL(double x, char * data) {
+	int ECLdeg = floor(x);
+	int ECLmin = floor(60 * (x - ECLdeg));
+	double ECLsec = round(3600000 * ((x - ECLdeg) - ((double)ECLmin / 60))) / 1000;
+	if (ECLsec == 60) {
+		ECLsec = 0;
+		ECLmin += 1;
+	}
+	if (ECLmin == 60) {
+		ECLmin = 0;
+		ECLdeg += 1;
+	}
+	sprintf(data, "%d° %d' %f\"", ECLdeg, ECLmin, ECLsec);
+	return data;
+}
+
 
 // Placeholder for all computed data
 ComputedData * data = (ComputedData *) calloc(1, sizeof(ComputedData));
@@ -140,12 +179,12 @@ ComputedData * calculate(int year, int month, int day, int hour, int minute, int
   calculateAries();
   calculateSun();
   calculateVenus();
-  // calculateMars();
-  // calculateJupiter();
-  // calculateSaturn();
+  calculateMars();
+  calculateJupiter();
+  calculateSaturn();
   calculateMoon();
-  // calculatePolaris();
-  // calculateMoonPhase();
+  calculatePolaris();
+  calculateMoonPhase();
   calculateWeekDay();
 
   return data;
@@ -406,13 +445,13 @@ void calculateAries() {
 	data->GHAAmean = MathUtils::norm360Deg(280.46061837 + 360.98564736629 * (data->JD - 2451545) + 0.000387933 * data->T2 - data->T3 / 38710000);
 
 	// GMST
-	strcpy(data->SidTm, outSideralTime(data->GHAAmean));
+	strcpy(data->SidTm, outSideralTime(data->GHAAmean, dataBuffer));
 
 	// True GHA Aries
 	data->GHAAtrue = MathUtils::norm360Deg(data->GHAAmean + data->deltaPsi * MathUtils::cosd(data->eps));
 
 	// GAST
-  strcpy(data->SidTa, outSideralTime(data->GHAAtrue));
+  strcpy(data->SidTa, outSideralTime(data->GHAAtrue, dataBuffer));
 
 	// Equation of the equinoxes
 	data->EoE = 240 * data->deltaPsi * MathUtils::cosd(data->eps);
@@ -546,6 +585,224 @@ void calculateVenus() {
 	// Illumination of the planet's disk
 	double k = 100 * (1 + ((R - data->Re * MathUtils::cosd(B) * MathUtils::cosd(L - data->Le)) / d)) / 2;
 	data->illumVenus = round(10 * k) / 10;
+}
+
+// Calculations for Mars
+void calculateMars() {
+	// Heliocentric coordinates
+	double L = Mars::lMars(data->Tau);
+	double B = Mars::bMars(data->Tau);
+	double R = Mars::rMars(data->Tau);
+
+	// Rectangular coordinates
+	double x = R * MathUtils::cosd(B) * MathUtils::cosd(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::cosd(data->Le);
+	double y = R * MathUtils::cosd(B) * MathUtils::sind(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::sind(data->Le);
+	double z = R * MathUtils::sind(B) - data->Re * MathUtils::sind(data->Be);
+
+	// Geocentric coordinates
+	double lambda = atan2(y, x);
+	double beta = atan(z / sqrt(x * x + y * y));
+
+	// Distance from earth / light time
+	double d = sqrt(x * x + y * y + z * z);
+	double lt = 0.0057755183 * d;
+
+	// Time correction
+	double Tau_corr = (data->JDE - lt - 2451545) / 365250;
+
+	// Coordinates corrected for light time
+	L = Mars::lMars(Tau_corr);
+	B = Mars::bMars(Tau_corr);
+	R = Mars::rMars(Tau_corr);
+	x = R * MathUtils::cosd(B) * MathUtils::cosd(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::cosd(data->Le);
+	y = R * MathUtils::cosd(B) * MathUtils::sind(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::sind(data->Le);
+	z = R * MathUtils::sind(B) - data->Re * MathUtils::sind(data->Be);
+
+	lambda = atan2(y, x);
+	beta = atan(z / sqrt(x * x + y * y));
+
+	// aberration
+	double dlambda = (data->e * data->kappa * cos(data->pi0 - lambda) - data->kappa * cos(MathUtils::toRadians(data->Lsun_true) - lambda)) / cos(beta);
+	double dbeta = -data->kappa * sin(beta) * (sin(MathUtils::toRadians(data->Lsun_true) - lambda) - data->e * sin(data->pi0 - lambda));
+
+	lambda += dlambda;
+	beta += dbeta;
+
+	// FK5
+	double lambda_prime = lambda - MathUtils::toRadians(1.397) * data->TE -  MathUtils::toRadians(0.00031) * data->TE2;
+
+	dlambda =  MathUtils::toRadians(-0.09033) / 3600 +  MathUtils::toRadians(0.03916) / 3600 * (cos(lambda_prime) + sin(lambda_prime)) * tan(beta);
+	dbeta =  MathUtils::toRadians(0.03916) / 3600 * (cos(lambda_prime) - sin(lambda_prime));
+
+	lambda += dlambda;
+	beta += dbeta;
+
+	// calculateNutation in longitude
+	lambda +=  MathUtils::toRadians(data->deltaPsi);
+
+	// Right ascension, apparent
+	data->RAMars = MathUtils::toDegrees(MathUtils::norm2PiRad(atan2((sin(lambda) * MathUtils::cosd(data->eps) - tan(beta) * MathUtils::sind(data->eps)), cos(lambda))));
+
+	// Declination of Mars, apparent
+	data->DECMars = MathUtils::toDegrees(asin(sin(beta) * MathUtils::cosd(data->eps) + cos(beta) * MathUtils::sind(data->eps) * sin(lambda)));
+
+	//GHA of Mars
+	data->GHAMars = MathUtils::norm360Deg(data->GHAAtrue - data->RAMars);
+
+	// Semi-diameter of Mars
+	data->SDMars = 4.68 / d;
+
+	// Horizontal parallax of Mars
+	data->HPMars = 8.794 / d;
+
+	// Illumination of the planet's disk
+	double k = 100 * (1 + ((R - data->Re * MathUtils::cosd(B) * MathUtils::cosd(L - data->Le)) / d)) / 2;
+	data->illumMars = round(10 * k) / 10;
+}
+
+// Calculations for Jupiter
+void calculateJupiter() {
+	// Heliocentric coordinates
+	double L = Jupiter::lJupiter(data->Tau);
+	double B = Jupiter::bJupiter(data->Tau);
+	double R = Jupiter::rJupiter(data->Tau);
+
+	// Rectangular coordinates
+	double x = R * MathUtils::cosd(B) * MathUtils::cosd(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::cosd(data->Le);
+	double y = R * MathUtils::cosd(B) * MathUtils::sind(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::sind(data->Le);
+	double z = R * MathUtils::sind(B) - data->Re * MathUtils::sind(data->Be);
+
+	// Geocentric coordinates
+	double lambda = atan2(y, x);
+	double beta = atan(z / sqrt(x * x + y * y));
+
+	// Distance from earth / light time
+	double d = sqrt(x * x + y * y + z * z);
+	double lt = 0.0057755183 * d;
+
+	// Time correction
+	double Tau_corr = (data->JDE - lt - 2451545) / 365250;
+
+	// Coordinates corrected for light time
+	L = Jupiter::lJupiter(Tau_corr);
+	B = Jupiter::bJupiter(Tau_corr);
+	R = Jupiter::rJupiter(Tau_corr);
+	x = R * MathUtils::cosd(B) * MathUtils::cosd(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::cosd(data->Le);
+	y = R * MathUtils::cosd(B) * MathUtils::sind(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::sind(data->Le);
+	z = R * MathUtils::sind(B) - data->Re * MathUtils::sind(data->Be);
+
+	lambda = atan2(y, x);
+	beta = atan(z / sqrt(x * x + y * y));
+
+	// aberration
+	double dlambda = (data->e * data->kappa * cos(data->pi0 - lambda) - data->kappa * cos(MathUtils::toRadians(data->Lsun_true) - lambda)) / cos(beta);
+	double dbeta = -data->kappa * sin(beta) * (sin(MathUtils::toRadians(data->Lsun_true) - lambda) - data->e * sin(data->pi0 - lambda));
+
+	lambda += dlambda;
+	beta += dbeta;
+
+	// FK5
+	double lambda_prime = lambda - MathUtils::toRadians(1.397) * data->TE - MathUtils::toRadians(0.00031) * data->TE2;
+
+	dlambda = MathUtils::toRadians(-0.09033) / 3600 + MathUtils::toRadians(0.03916) / 3600 * (cos(lambda_prime) + sin(lambda_prime)) * tan(beta);
+	dbeta = MathUtils::toRadians(0.03916) / 3600 * (cos(lambda_prime) - sin(lambda_prime));
+
+	lambda += dlambda;
+	beta += dbeta;
+
+	// calculateNutation in longitude
+	lambda += MathUtils::toRadians(data->deltaPsi);
+
+	// Right ascension, apparent
+	data->RAJupiter = MathUtils::toDegrees(MathUtils::norm2PiRad(atan2((sin(lambda) * MathUtils::cosd(data->eps) - tan(beta) * MathUtils::sind(data->eps)), cos(lambda))));
+
+	// Declination of Jupiter, apparent
+	data->DECJupiter = MathUtils::toDegrees(asin(sin(beta) * MathUtils::cosd(data->eps) + cos(beta) * MathUtils::sind(data->eps) * sin(lambda)));
+
+	// GHA of Jupiter
+	data->GHAJupiter = MathUtils::norm360Deg(data->GHAAtrue - data->RAJupiter);
+
+	// Semi-diameter of Jupiter (equatorial)
+	data->SDJupiter = 98.44 / d;
+
+	// Horizontal parallax of Jupiter
+	data->HPJupiter = 8.794 / d;
+
+	// Illumination of the planet's disk
+	double k = 100 * (1 + ((R - data->Re * MathUtils::cosd(B) * MathUtils::cosd(L - data->Le)) / d)) / 2;
+	data->illumJupiter = round(10 * k) / 10;
+}
+
+// Calculations for Saturn
+void calculateSaturn() {
+	// Heliocentric coordinates
+	double L = Saturn::lSaturn(data->Tau);
+	double B = Saturn::bSaturn(data->Tau);
+	double R = Saturn::rSaturn(data->Tau);
+
+	// Rectangular coordinates
+	double x = R * MathUtils::cosd(B) * MathUtils::cosd(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::cosd(data->Le);
+	double y = R * MathUtils::cosd(B) * MathUtils::sind(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::sind(data->Le);
+	double z = R * MathUtils::sind(B) - data->Re * MathUtils::sind(data->Be);
+
+	// Geocentric coordinates
+	double lambda = atan2(y, x);
+	double beta = atan(z / sqrt(x * x + y * y));
+
+	// Distance from earth / light time
+	double d = sqrt(x * x + y * y + z * z);
+	double lt = 0.0057755183 * d;
+
+	// Time correction
+	double Tau_corr = (data->JDE - lt - 2451545) / 365250;
+
+	// Coordinates corrected for light time
+	L = Saturn::lSaturn(Tau_corr);
+	B = Saturn::bSaturn(Tau_corr);
+	R = Saturn::rSaturn(Tau_corr);
+	x = R * MathUtils::cosd(B) * MathUtils::cosd(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::cosd(data->Le);
+	y = R * MathUtils::cosd(B) * MathUtils::sind(L) - data->Re * MathUtils::cosd(data->Be) * MathUtils::sind(data->Le);
+	z = R * MathUtils::sind(B) - data->Re * MathUtils::sind(data->Be);
+
+	lambda = atan2(y, x);
+	beta = atan(z / sqrt(x * x + y * y));
+
+	// aberration
+	double dlambda = (data->e * data->kappa * cos(data->pi0 - lambda) - data->kappa * cos(MathUtils::toRadians(data->Lsun_true) - lambda)) / cos(beta);
+	double dbeta = -data->kappa * sin(beta) * (sin(MathUtils::toRadians(data->Lsun_true) - lambda) - data->e * sin(data->pi0 - lambda));
+
+	lambda += dlambda;
+	beta += dbeta;
+
+	// FK5
+	double lambda_prime = lambda - MathUtils::toRadians(1.397) * data->TE - MathUtils::toRadians(0.00031) * data->TE2;
+	dlambda = MathUtils::toRadians(-0.09033) / 3600 + MathUtils::toRadians(0.03916) / 3600 * (cos(lambda_prime) + sin(lambda_prime)) * tan(beta);
+	dbeta = MathUtils::toRadians(0.03916) / 3600 * (cos(lambda_prime) - sin(lambda_prime));
+
+	lambda += dlambda;
+	beta += dbeta;
+
+	// calculateNutation in longitude
+	lambda += MathUtils::toRadians(data->deltaPsi);
+
+	// Right ascension, apparent
+	data->RASaturn = MathUtils::toDegrees(MathUtils::norm2PiRad(atan2((sin(lambda) * MathUtils::cosd(data->eps) - tan(beta) * MathUtils::sind(data->eps)), cos(lambda))));
+
+	// Declination of Saturn, apparent
+	data->DECSaturn = MathUtils::toDegrees(asin(sin(beta) * MathUtils::cosd(data->eps) + cos(beta) * MathUtils::sind(data->eps) * sin(lambda)));
+
+	// GHA of Saturn
+	data->GHASaturn = MathUtils::norm360Deg(data->GHAAtrue - data->RASaturn);
+
+	// Semi-diameter of Saturn (equatorial)
+	data->SDSaturn = 82.73 / d;
+
+	// Horizontal parallax of Saturn
+	data->HPSaturn = 8.794 / d;
+
+	// Illumination of the planet's disk
+	double k = 100 * (1 + ((R - data->Re * MathUtils::cosd(B) * MathUtils::cosd(L - data->Le)) / d)) / 2;
+	data->illumSaturn = round(10 * k) / 10;
 }
 
 // Calculations for the moon
@@ -781,6 +1038,91 @@ void calculateMoon() {
 	//Illumination of the moon's disk
 	double k = 100 * (1 + cos(i)) / 2;
 	data->illumMoon = round(10 * k) / 10;
+}
+
+// Ephemerides of Polaris
+void calculatePolaris() {
+	// Equatorial coordinates of Polaris at 2000.0 (mean equinox and equator 2000.0)
+	double RApol0 = 37.95293333;
+	double DECpol0 = 89.26408889;
+
+	// Proper motion per year
+	double dRApol = 2.98155 / 3600;
+	double dDECpol = -0.0152 / 3600;
+
+	// Equatorial coordinates at Julian Date T (mean equinox and equator 2000.0)
+	double RApol1 = RApol0 + 100 * data->TE * dRApol;
+	double DECpol1 = DECpol0 + 100 * data->TE * dDECpol;
+
+	// Mean obliquity of ecliptic at 2000.0 in degrees
+	double eps0_2000 = 23.439291111;
+
+	// Transformation to ecliptic coordinates in radians (mean equinox and equator 2000.0)
+	double lambdapol1 = atan2((MathUtils::sind(RApol1) * MathUtils::cosd(eps0_2000) + MathUtils::tand(DECpol1) * MathUtils::sind(eps0_2000)), MathUtils::cosd(RApol1));
+	double betapol1 = asin(MathUtils::sind(DECpol1) * MathUtils::cosd(eps0_2000) - MathUtils::cosd(DECpol1) * MathUtils::sind(eps0_2000) * MathUtils::sind(RApol1));
+
+	// Precession
+	double eta = MathUtils::toRadians(47.0029 * data->TE - 0.03302 * data->TE2 + 0.00006 * data->TE3) / 3600;
+	double PI0 = MathUtils::toRadians(174.876384 - (869.8089 * data->TE + 0.03536 * data->TE2) / 3600);
+	double p0 = MathUtils::toRadians(5029.0966 * data->TE + 1.11113 * data->TE2 - 0.0000006 * data->TE3) / 3600;
+
+	double A1 = cos(eta) * cos(betapol1) * sin(PI0 - lambdapol1) - sin(eta) * sin(betapol1);
+	double B1 = cos(betapol1) * cos(PI0 - lambdapol1);
+	double C1 = cos(eta) * sin(betapol1) + sin(eta) * cos(betapol1) * sin(PI0 - lambdapol1);
+	double lambdapol2 = p0 + PI0 - atan2(A1, B1);
+	double betapol2 = asin(C1);
+
+	// calculateNutation in longitude
+	lambdapol2 += MathUtils::toRadians(data->deltaPsi);
+
+	// aberration
+	double dlambdapol = (data->e * data->kappa * cos(data->pi0 - lambdapol2) - data->kappa * cos(MathUtils::toRadians(data->Lsun_true) - lambdapol2)) / cos(betapol2);
+	double dbetapol = -data->kappa * sin(betapol2) * (sin(MathUtils::toRadians(data->Lsun_true) - lambdapol2) - data->e * sin(data->pi0 - lambdapol2));
+
+	lambdapol2 += dlambdapol;
+	betapol2 += dbetapol;
+
+	// Transformation back to equatorial coordinates in radians
+	double RApol2 = atan2((sin(lambdapol2) * MathUtils::cosd(data->eps) - tan(betapol2) * MathUtils::sind(data->eps)), cos(lambdapol2));
+	double DECpol2 = asin(sin(betapol2) * MathUtils::cosd(data->eps) + cos(betapol2) * MathUtils::sind(data->eps) * sin(lambdapol2));
+
+	// Finals
+	data->GHAPol = data->GHAAtrue - MathUtils::toDegrees(RApol2);
+	data->GHAPol = MathUtils::norm360Deg(data->GHAPol);
+	data->RAPol = MathUtils::toDegrees(RApol2);
+	data->DECPol = MathUtils::toDegrees(DECpol2);
+}
+
+// Calculation of the phase of the Moon
+void calculateMoonPhase() {
+	double x = data->lambdaMapp - data->lambdaSun;
+	x = MathUtils::norm360Deg(x);
+	x = round(10 * x) / 10;
+	data->moonPhaseAngle = x;
+	if (x == 0) {
+		strcpy(data->moonPhase, " New");
+	}
+	if (x > 0 && x < 90) {
+		strcpy(data->moonPhase, " +cre");
+	}
+	if (x == 90) {
+		strcpy(data->moonPhase, " FQ");
+	}
+	if (x > 90 && x < 180) {
+		strcpy(data->moonPhase, " +gib");
+	}
+	if (x == 180) {
+		strcpy(data->moonPhase, " Full");
+	}
+	if (x > 180 && x < 270) {
+		strcpy(data->moonPhase, " -gib");
+	}
+	if (x == 270) {
+		strcpy(data->moonPhase, " LQ");
+	}
+	if (x > 270 && x < 360) {
+		strcpy(data->moonPhase, " -cre");
+	}
 }
 
 void calculateWeekDay() {

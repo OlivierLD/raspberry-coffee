@@ -7,7 +7,7 @@ from mars import Mars
 from jupiter import Jupiter
 from saturn import Saturn
 
-DEBUG = True
+DEBUG = False
 
 
 class LongTermAlmanac:
@@ -1161,13 +1161,13 @@ class LongTermAlmanac:
         dEM = 385000.56 + sumR / 1000
     
         # Apparent longitude of the moon
-        lambdaMapp = lambdaMm + LongTermAlmanac.deltaPsi
+        LongTermAlmanac.lambdaMapp = lambdaMm + LongTermAlmanac.deltaPsi
     
         # Right ascension of the moon, apparent
-        LongTermAlmanac.RAMoon = math.degrees(mu.norm2_pi_rad(math.atan2((mu.sind(lambdaMapp) * mu.cosd(LongTermAlmanac.eps) - mu.tand(betaM) * mu.sind(LongTermAlmanac.eps)), mu.cosd(lambdaMapp))))
+        LongTermAlmanac.RAMoon = math.degrees(mu.norm2_pi_rad(math.atan2((mu.sind(LongTermAlmanac.lambdaMapp) * mu.cosd(LongTermAlmanac.eps) - mu.tand(betaM) * mu.sind(LongTermAlmanac.eps)), mu.cosd(LongTermAlmanac.lambdaMapp))))
     
         # Declination of the moon
-        LongTermAlmanac.DECMoon = math.degrees(math.asin(mu.sind(betaM) * mu.cosd(LongTermAlmanac.eps) + mu.cosd(betaM) * mu.sind(LongTermAlmanac.eps) * mu.sind(lambdaMapp)))
+        LongTermAlmanac.DECMoon = math.degrees(math.asin(mu.sind(betaM) * mu.cosd(LongTermAlmanac.eps) + mu.cosd(betaM) * mu.sind(LongTermAlmanac.eps) * mu.sind(LongTermAlmanac.lambdaMapp)))
     
         # GHA of the moon
         LongTermAlmanac.GHAMoon = mu.norm_360_deg(LongTermAlmanac.GHAAtrue - LongTermAlmanac.RAMoon)

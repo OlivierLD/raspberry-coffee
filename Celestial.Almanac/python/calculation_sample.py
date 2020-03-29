@@ -64,6 +64,7 @@ fmtSDMoon = lta.outSdHp(lta.SDMoon)
 fmtHPMoon = lta.outSdHp(lta.HPMoon)
 
 print("Moon: GHA {}, RA {}, DEC {}, sd {}, hp {}".format(fmtGHAMoon, fmtRAMoon, fmtDECMoon, fmtSDMoon, fmtHPMoon))
+print("\tMoon phase {} -> {}".format(lta.moonPhaseAngle, lta.moonPhase))
 
 # Polaris
 fmtGHAPolaris = lta.outHA(lta.GHAPol)
