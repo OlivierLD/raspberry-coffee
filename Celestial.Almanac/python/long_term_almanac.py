@@ -229,7 +229,7 @@ class LongTermAlmanac:
         if GHAsec < 10:
             GHAsec = "0" + str(GHAsec)
 
-        return "{}° {}' {}\"".format(GHAdeg, GHAmin, GHAsec)
+        return "{}\xb0 {}' {}\"".format(GHAdeg, GHAmin, GHAsec)
 
     # Output Right Ascension
     @staticmethod
@@ -305,7 +305,7 @@ class LongTermAlmanac:
         if ECLsec < 10:
             ECLsec = "0" + ECLsec
 
-        return "{}° {}' {}\"".format(ECLdeg, ECLmin, ECLsec)
+        return "{}\xb0 {}' {}\"".format(ECLdeg, ECLmin, ECLsec)
 
     # Output Sidereal Time
     @staticmethod
@@ -362,7 +362,7 @@ class LongTermAlmanac:
         if DECsec < 10:
             DECsec = "0" + str(DECsec)
 
-        return "{}  {}° {}' {}\"".format(name, DECdeg, DECmin, DECsec)
+        return "{}  {}\xb0 {}' {}\"".format(name, DECdeg, DECmin, DECsec)
 
     # Output SD and HP
     @staticmethod
