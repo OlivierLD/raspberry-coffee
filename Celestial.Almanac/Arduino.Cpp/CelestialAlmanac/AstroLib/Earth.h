@@ -2,11 +2,11 @@
 #define EARTH
 
 class Earth {
-  public: 
+  public:
     Earth();
-    static float lEarth(float x);
-    static float bEarth(float x);
-    static float rEarth(float x);
+    static double lEarth(double x);
+    static double bEarth(double x);
+    static double rEarth(double x);
 };    // Warning!!!! Do not forget the semicolon!!
 
 #endif

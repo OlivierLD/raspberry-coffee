@@ -10,8 +10,8 @@ Venus::Venus() {}
 
 
 // Heliocentric longitude of Venus
-float Venus::lVenus(float x) {
-	float l0 = 0;
+double Venus::lVenus(double x) {
+	double l0 = 0;
 	l0 += 3.17614666774;
 	l0 += 0.01353968419 * MathUtils::cost(5.59313319619 + 10213.28554621100 * x);
 	l0 += 0.00089891645 * MathUtils::cost(5.30650048468 + 20426.57109242200 * x);
@@ -380,7 +380,7 @@ float Venus::lVenus(float x) {
 	l0 += 0.00000000046 * MathUtils::cost(4.41738494249 + 34570.06633485260 * x);
 	l0 += 0.00000000037 * MathUtils::cost(4.69675087759 + 44007.82926973960 * x);
 
-	float l1 = 0;
+	double l1 = 0;
 	l1 += 10213.52943052898;
 	l1 += 0.00095707712 * MathUtils::cost(2.46424448979 + 10213.28554621100 * x);
 	l1 += 0.00014444977 * MathUtils::cost(0.51624564679 + 20426.57109242200 * x);
@@ -597,7 +597,7 @@ float Venus::lVenus(float x) {
 	l1 += 0.00000000025 * MathUtils::cost(3.38876180652 + 7058.59846131540 * x);
 	l1 += 0.00000000031 * MathUtils::cost(6.16829805337 + 10192.51015071860 * x);
 
-	float l2 = 0;
+	double l2 = 0;
 	l2 += 0.00054127076;
 	l2 += 0.00003891460 * MathUtils::cost(0.34514360047 + 10213.28554621100 * x);
 	l2 += 0.00001337880 * MathUtils::cost(2.02011286082 + 20426.57109242200 * x);
@@ -669,7 +669,7 @@ float Venus::lVenus(float x) {
 	l2 += 0.00000000013 * MathUtils::cost(5.79700427846 + 29580.47470844380 * x);
 	l2 += 0.00000000014 * MathUtils::cost(3.69205225010 + 27511.46787353720 * x);
 
-	float l3 = 0;
+	double l3 = 0;
 	l3 += 0.00000135742 * MathUtils::cost(4.80389020993 + 10213.28554621100 * x);
 	l3 += 0.00000077846 * MathUtils::cost(3.66876371591 + 20426.57109242200 * x);
 	l3 += 0.00000026023;
@@ -680,31 +680,31 @@ float Venus::lVenus(float x) {
 	l3 += 0.00000000006 * MathUtils::cost(1.27791479726 + 10404.73381232260 * x);
 	l3 += 0.00000000006 * MathUtils::cost(5.76447068962 + 10239.58386601080 * x);
 
-	float l4 = 0;
+	double l4 = 0;
 	l4 -= 0.00000114016;
 	l4 += 0.00000003209 * MathUtils::cost(5.20514170164 + 20426.57109242200 * x);
 	l4 += 0.00000001714 * MathUtils::cost(2.51099591706 + 10213.28554621100 * x);
 	l4 += 0.00000000050 * MathUtils::cost(0.71356059861 + 30639.85663863300 * x);
 	l4 += 0.00000000023 * MathUtils::cost(5.68127607034 + 40853.14218484400 * x);
 
-	float l5 = 0;
+	double l5 = 0;
 	l5 -= 0.00000000874;
 	l5 += 0.00000000117 * MathUtils::cost(0.54643013000 + 20426.57109242200 * x);
 	l5 += 0.00000000118 * MathUtils::cost(1.90548541922 + 10213.28554621100 * x);
 	l5 += 0.00000000002 * MathUtils::cost(1.07734277826 + 40853.14218484400 * x);
 	l5 += 0.00000000002 * MathUtils::cost(1.89460223529 + 30639.85663863300 * x);
 
-	float x2 = x * x;
-	float x3 = x2 * x;
-	float x4 = x3 * x;
-	float x5 = x4 * x;
+	double x2 = x * x;
+	double x3 = x2 * x;
+	double x4 = x3 * x;
+	double x5 = x4 * x;
 
 	return MathUtils::toDegrees(MathUtils::norm2PiRad(l0 + l1 * x + l2 * x2 + l3 * x3 + l4 * x4 + l5 * x5));
 }
 
 // Heliocentric latitude of Venus
-float Venus::bVenus(float x) {
-	float b0 = 0;
+double Venus::bVenus(double x) {
+	double b0 = 0;
 	b0 += 0.05923638472 * MathUtils::cost(0.26702775813 + 10213.28554621100 * x);
 	b0 += 0.00040107978 * MathUtils::cost(1.14737178106 + 20426.57109242200 * x);
 	b0 -= 0.00032814918;
@@ -916,7 +916,7 @@ float Venus::bVenus(float x) {
 	b0 += 0.00000000040 * MathUtils::cost(5.32101847424 + 42430.48572729180 * x);
 	b0 += 0.00000000051 * MathUtils::cost(5.29186795569 + 29587.58825544460 * x);
 
-	float b1 = 0;
+	double b1 = 0;
 	b1 += 0.00513347602 * MathUtils::cost(1.80364310797 + 10213.28554621100 * x);
 	b1 += 0.00004380100 * MathUtils::cost(3.38615711591 + 20426.57109242200 * x);
 	b1 += 0.00000196586 * MathUtils::cost(2.53001197486 + 30639.85663863300 * x);
@@ -1051,7 +1051,7 @@ float Venus::bVenus(float x) {
 	b1 += 0.00000000022 * MathUtils::cost(1.92092469688 + 17085.95866572220 * x);
 	b1 += 0.00000000019 * MathUtils::cost(5.04938942644 + 6681.22485339960 * x);
 
-	float b2 = 0;
+	double b2 = 0;
 	b2 += 0.00022377665 * MathUtils::cost(3.38509143877 + 10213.28554621100 * x);
 	b2 += 0.00000281739;
 	b2 += 0.00000173164 * MathUtils::cost(5.25563766915 + 20426.57109242200 * x);
@@ -1112,7 +1112,7 @@ float Venus::bVenus(float x) {
 	b2 += 0.00000000010 * MathUtils::cost(0.26447399758 + 3930.20969621960 * x);
 	b2 += 0.00000000011 * MathUtils::cost(1.46728576671 + 20419.45754542119 * x);
 
-	float b3 = 0;
+	double b3 = 0;
 	b3 += 0.00000646671 * MathUtils::cost(4.99166565277 + 10213.28554621100 * x);
 	b3 -= 0.00000019952;
 	b3 += 0.00000005540 * MathUtils::cost(0.77376923951 + 20426.57109242200 * x);
@@ -1129,30 +1129,30 @@ float Venus::bVenus(float x) {
 	b3 += 0.00000000007 * MathUtils::cost(4.69592781899 + 18073.70493865020 * x);
 	b3 += 0.00000000006 * MathUtils::cost(2.97926526705 + 22003.91463486980 * x);
 
-	float b4 = 0;
+	double b4 = 0;
 	b4 += 0.00000014102 * MathUtils::cost(0.31537190181 + 10213.28554621100 * x);
 	b4 += 0.00000000190 * MathUtils::cost(2.35466404492 + 20426.57109242200 * x);
 	b4 += 0.00000000164 * MathUtils::cost(0.74476215141 + 30639.85663863300 * x);
 	b4 -= 0.00000000214;
 	b4 += 0.00000000004 * MathUtils::cost(2.34190883009 + 40853.14218484400 * x);
 
-	float b5 = 0;
+	double b5 = 0;
 	b5 += 0.00000000239 * MathUtils::cost(2.05201727566 + 10213.28554621100 * x);
 	b5 += 0.00000000039;
 	b5 += 0.00000000011 * MathUtils::cost(3.82500275251 + 20426.57109242200 * x);
 	b5 += 0.00000000009 * MathUtils::cost(2.32953116868 + 30639.85663863300 * x);
 
-	float x2 = x * x;
-	float x3 = x2 * x;
-	float x4 = x3 * x;
-	float x5 = x4 * x;
+	double x2 = x * x;
+	double x3 = x2 * x;
+	double x4 = x3 * x;
+	double x5 = x4 * x;
 
 	return MathUtils::toDegrees(b0 + b1 * x + b2 * x2 + b3 * x3 + b4 * x4 + b5 * x5);
 }
 
 // Distance Venus-Sun [AU]
-float Venus::rVenus(float x) {
-	float r0 = 0;
+double Venus::rVenus(double x) {
+	double r0 = 0;
 	r0 += 0.72334820905;
 	r0 += 0.00489824185 * MathUtils::cost(4.02151832268 + 10213.28554621100 * x);
 	r0 += 0.00001658058 * MathUtils::cost(4.90206728012 + 20426.57109242200 * x);
@@ -1484,7 +1484,7 @@ float Venus::rVenus(float x) {
 	r0 += 0.00000000030 * MathUtils::cost(3.34585843979 + 39793.76025465480 * x);
 	r0 += 0.00000000026 * MathUtils::cost(5.36096904409 + 1478.86657406440 * x);
 
-	float r1 = 0;
+	double r1 = 0;
 	r1 += 0.00034551039 * MathUtils::cost(0.89198710598 + 10213.28554621100 * x);
 	r1 += 0.00000234203 * MathUtils::cost(1.77224942714 + 20426.57109242200 * x);
 	r1 -= 0.00000233998;
@@ -1666,7 +1666,7 @@ float Venus::rVenus(float x) {
 	r1 += 0.00000000015 * MathUtils::cost(5.34517715140 + 10198.03307502600 * x);
 	r1 += 0.00000000013 * MathUtils::cost(0.45004137509 + 20452.86941222180 * x);
 
-	float r2 = 0;
+	double r2 = 0;
 	r2 += 0.00001406587 * MathUtils::cost(5.06366395190 + 10213.28554621100 * x);
 	r2 += 0.00000015529 * MathUtils::cost(5.47321687981 + 20426.57109242200 * x);
 	r2 += 0.00000013059;
@@ -1731,7 +1731,7 @@ float Venus::rVenus(float x) {
 	r2 += 0.00000000008 * MathUtils::cost(4.67523115598 + 25934.12433108940 * x);
 	r2 += 0.00000000009 * MathUtils::cost(5.97856553283 + 9683.59458111640 * x);
 
-	float r3 = 0;
+	double r3 = 0;
 	r3 += 0.00000049582 * MathUtils::cost(3.22263554520 + 10213.28554621100 * x);
 	r3 += 0.00000000831 * MathUtils::cost(3.21219077104 + 20426.57109242200 * x);
 	r3 -= 0.00000000112;
@@ -1740,19 +1740,19 @@ float Venus::rVenus(float x) {
 	r3 += 0.00000000006 * MathUtils::cost(0.20714935358 + 10186.98722641120 * x);
 	r3 += 0.00000000005 * MathUtils::cost(0.68781956122 + 8635.94200376320 * x);
 
-	float r4 = 0;
+	double r4 = 0;
 	r4 += 0.00000000573 * MathUtils::cost(0.92229697820 + 10213.28554621100 * x);
 	r4 += 0.00000000040 * MathUtils::cost(0.95468912157 + 20426.57109242200 * x);
 	r4 -= 0.00000000006;
 
-	float r5 = 0;
+	double r5 = 0;
 	r5 += 0.00000000045 * MathUtils::cost(0.30032866722 + 10213.28554621100 * x);
 	r5 += 0.00000000002 * MathUtils::cost(5.29627718483 + 20426.57109242200 * x);
 
-	float x2 = x * x;
-	float x3 = x2 * x;
-	float x4 = x3 * x;
-	float x5 = x4 * x;
+	double x2 = x * x;
+	double x3 = x2 * x;
+	double x4 = x3 * x;
+	double x5 = x4 * x;
 
 	return (r0 + r1 * x + r2 * x2 + r3 * x3 + r4 * x4 + r5 * x5);
 }

@@ -4,9 +4,9 @@
 class Mars {
   public: // TODO Make those static
     Mars();
-    float lMars(float x);
-    float bMars(float x);
-    float rMars(float x);
+    double lMars(double x);
+    double bMars(double x);
+    double rMars(double x);
 };    // Warning!!!! Do not forget the semicolon!!
 
 #endif

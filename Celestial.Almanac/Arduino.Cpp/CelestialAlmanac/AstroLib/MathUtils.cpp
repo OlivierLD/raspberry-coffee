@@ -1,38 +1,38 @@
 // #include <Arduino.h>
-#include <stdio.h> 
-#include <math.h> 
+#include <stdio.h>
+#include <math.h>
 
 #include "MathUtils.h"
 
 MathUtils::MathUtils() {}
 
-float MathUtils::toRadians(float deg) {
+double MathUtils::toRadians(double deg) {
   return deg * PI / 180;
 //  return (deg * 71) / 4068;
 }
 
-float MathUtils::toDegrees(float rad) {
+double MathUtils::toDegrees(double rad) {
   return rad * 180 / PI;
 }
 
 // Sine of angles in degrees
-float MathUtils::sind(float x) {
+double MathUtils::sind(double x) {
   return sin(toRadians(x));
 }
 
 // Cosine of angles in degrees
-float MathUtils::cosd(float x) {
+double MathUtils::cosd(double x) {
   return cos(toRadians(x));
 }
 
 // Tangent of angles in degrees
-float MathUtils::tand(float x) {
+double MathUtils::tand(double x) {
   return tan(toRadians(x));
 }
 
 // Normalize large angles
 // Degrees
-float MathUtils::norm360Deg(float x) {
+double MathUtils::norm360Deg(double x) {
   while (x < 0) {
     x += 360;
   }
@@ -43,7 +43,7 @@ float MathUtils::norm360Deg(float x) {
 }
 
 // Radians
-float MathUtils::norm2PiRad(float x) {
+double MathUtils::norm2PiRad(double x) {
   while (x < 0) {
     x += (2 * PI);
   }
@@ -54,6 +54,6 @@ float MathUtils::norm2PiRad(float x) {
 }
 
 // Cosine of normalized angle (in radians)
-float MathUtils::cost(float x) {
+double MathUtils::cost(double x) {
   return cos(norm2PiRad(x));
 }
