@@ -6,14 +6,14 @@
 class MathUtils {
   public:
     MathUtils();
-    static float toRadians(float deg);
-    static float toDegrees(float rad);
-    static float sind(float x);
-    static float cosd(float x);
-    static float tand(float x);
-    static float norm360Deg(float x);
-    static float norm2PiRad(float x);
-    static float cost(float x);
+    static double toRadians(double deg);
+    static double toDegrees(double rad);
+    static double sind(double x);
+    static double cosd(double x);
+    static double tand(double x);
+    static double norm360Deg(double x);
+    static double norm2PiRad(double x);
+    static double cost(double x);
 };    // Warning!!!! Do not forget the semicolon!!
 
 #endif

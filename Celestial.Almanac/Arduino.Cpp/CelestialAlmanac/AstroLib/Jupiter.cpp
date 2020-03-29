@@ -9,8 +9,8 @@
 Jupiter::Jupiter() {}
 
 // Heliocentric longitude of Jupiter
-float Jupiter::lJupiter(float x) {
-	float l0 = 0;
+double Jupiter::lJupiter(double x) {
+	double l0 = 0;
 	l0 += 0.59954691495;
 	l0 += 0.09695898711 * MathUtils::cost(5.06191793105 + 529.69096509460 * x);
 	l0 += 0.00573610145 * MathUtils::cost(1.44406205976 + 7.11354700080 * x);
@@ -772,7 +772,7 @@ float Jupiter::lJupiter(float x) {
 	l0 += 0.00000000085 * MathUtils::cost(1.86831145784 + 25028.52121138500 * x);
 	l0 += 0.00000000079 * MathUtils::cost(2.90602202890 + 2114.83170711530 * x);
 
-	float l1 = 0;
+	double l1 = 0;
 	l1 += 529.93480757497;
 	l1 += 0.00489741194 * MathUtils::cost(4.22066689928 + 529.69096509460 * x);
 	l1 += 0.00228918538 * MathUtils::cost(6.02647464016 + 7.11354700080 * x);
@@ -1143,7 +1143,7 @@ float Jupiter::lJupiter(float x) {
 	l1 += 0.00000000080 * MathUtils::cost(0.04539720100 + 1080.72257119160 * x);
 	l1 += 0.00000000075 * MathUtils::cost(4.26526686574 + 1058.41872234270 * x);
 
-	float l2 = 0;
+	double l2 = 0;
 	l2 += 0.00047233598 * MathUtils::cost(4.32148323554 + 7.11354700080 * x);
 	l2 += 0.00030629053 * MathUtils::cost(2.93021440216 + 529.69096509460 * x);
 	l2 += 0.00038965550;
@@ -1336,7 +1336,7 @@ float Jupiter::lJupiter(float x) {
 	l2 += 0.00000000091 * MathUtils::cost(1.48896790758 + 1567.73225428140 * x);
 	l2 += 0.00000000086 * MathUtils::cost(4.34444949905 + 1069.67687092770 * x);
 
-	float l3 = 0;
+	double l3 = 0;
 	l3 += 0.00006501665 * MathUtils::cost(2.59862880482 + 7.11354700080 * x);
 	l3 += 0.00001356524 * MathUtils::cost(1.34635886411 + 529.69096509460 * x);
 	l3 += 0.00000470716 * MathUtils::cost(2.47503977883 + 14.22709400160 * x);
@@ -1447,7 +1447,7 @@ float Jupiter::lJupiter(float x) {
 	l3 += 0.00000000079 * MathUtils::cost(1.88533153220 + 934.94851496820 * x);
 	l3 += 0.00000000077 * MathUtils::cost(3.80503143236 + 1603.29998928540 * x);
 
-	float l4 = 0;
+	double l4 = 0;
 	l4 += 0.00000669483 * MathUtils::cost(0.85282421090 + 7.11354700080 * x);
 	l4 += 0.00000099961 * MathUtils::cost(0.74258947751 + 14.22709400160 * x);
 	l4 -= 0.00000114019;
@@ -1494,7 +1494,7 @@ float Jupiter::lJupiter(float x) {
 	l4 += 0.00000000085 * MathUtils::cost(5.02317256200 + 1155.36115740700 * x);
 	l4 += 0.00000000075 * MathUtils::cost(3.13198879608 + 632.78373931320 * x);
 
-	float l5 = 0;
+	double l5 = 0;
 	l5 += 0.00000049577 * MathUtils::cost(5.25658966184 + 7.11354700080 * x);
 	l5 += 0.00000015761 * MathUtils::cost(5.25126837478 + 14.22709400160 * x);
 	l5 += 0.00000004343 * MathUtils::cost(0.01461869263 + 536.80451209540 * x);
@@ -1506,17 +1506,17 @@ float Jupiter::lJupiter(float x) {
 	l5 += 0.00000000293 * MathUtils::cost(5.62909357048 + 1059.38193018920 * x);
 	l5 += 0.00000000090 * MathUtils::cost(0.21178119710 + 529.69096509460 * x);
 
-	float x2 = x * x;
-	float x3 = x2 * x;
-	float x4 = x3 * x;
-	float x5 = x4 * x;
+	double x2 = x * x;
+	double x3 = x2 * x;
+	double x4 = x3 * x;
+	double x5 = x4 * x;
 
 	return MathUtils::toDegrees(MathUtils::norm2PiRad(l0 + l1 * x + l2 * x2 + l3 * x3 + l4 * x4 + l5 * x5));
 }
 
 // Heliocentric latitude of Jupiter
-float Jupiter::bJupiter(float x) {
-	float b0 = 0;
+double Jupiter::bJupiter(double x) {
+	double b0 = 0;
 	b0 += 0.02268615703 * MathUtils::cost(3.55852606718 + 529.69096509460 * x);
 	b0 += 0.00109971634 * MathUtils::cost(3.90809347389 + 1059.38193018920 * x);
 	b0 += 0.00110090358;
@@ -1767,7 +1767,7 @@ float Jupiter::bJupiter(float x) {
 	b0 += 0.00000000074 * MathUtils::cost(3.86865238736 + 3067.93946934820 * x);
 	b0 += 0.00000000095 * MathUtils::cost(1.66362447044 + 1151.42900414390 * x);
 
-	float b1 = 0;
+	double b1 = 0;
 	b1 += 0.00177351787 * MathUtils::cost(5.70166488486 + 529.69096509460 * x);
 	b1 += 0.00003230171 * MathUtils::cost(5.77941619340 + 1059.38193018920 * x);
 	b1 += 0.00003081364 * MathUtils::cost(5.47464296527 + 522.57741809380 * x);
@@ -1910,7 +1910,7 @@ float Jupiter::bJupiter(float x) {
 	b1 += 0.00000000072 * MathUtils::cost(5.57619428876 + 530.44172462000 * x);
 	b1 += 0.00000000078 * MathUtils::cost(5.97323507836 + 1585.89150154610 * x);
 
-	float b2 = 0;
+	double b2 = 0;
 	b2 += 0.00008094051 * MathUtils::cost(1.46322843658 + 529.69096509460 * x);
 	b2 += 0.00000742415 * MathUtils::cost(0.95691639003 + 522.57741809380 * x);
 	b2 -= 0.00000813244;
@@ -1993,7 +1993,7 @@ float Jupiter::bJupiter(float x) {
 	b2 += 0.00000000089 * MathUtils::cost(1.22926014128 + 1898.35121793960 * x);
 	b2 += 0.00000000080 * MathUtils::cost(0.62129648755 + 831.85574074960 * x);
 
-	float b3 = 0;
+	double b3 = 0;
 	b3 += 0.00000251624 * MathUtils::cost(3.38087923084 + 529.69096509460 * x);
 	b3 += 0.00000121738 * MathUtils::cost(2.73311837200 + 522.57741809380 * x);
 	b3 += 0.00000048694 * MathUtils::cost(1.03689996685 + 536.80451209540 * x);
@@ -2037,7 +2037,7 @@ float Jupiter::bJupiter(float x) {
 	b3 += 0.00000000088 * MathUtils::cost(3.26874502411 + 213.29909543800 * x);
 	b3 += 0.00000000098 * MathUtils::cost(2.00704668688 + 1574.84580128220 * x);
 
-	float b4 = 0;
+	double b4 = 0;
 	b4 += 0.00000015050 * MathUtils::cost(4.52956999637 + 522.57741809380 * x);
 	b4 += 0.00000005370 * MathUtils::cost(4.47427159142 + 529.69096509460 * x);
 	b4 += 0.00000004456 * MathUtils::cost(5.43908581047 + 536.80451209540 * x);
@@ -2051,24 +2051,24 @@ float Jupiter::bJupiter(float x) {
 	b4 += 0.00000000142 * MathUtils::cost(5.69936472988 + 7.11354700080 * x);
 	b4 += 0.00000000112 * MathUtils::cost(1.16718383135 + 14.22709400160 * x);
 
-	float b5 = 0;
+	double b5 = 0;
 	b5 += 0.00000001445 * MathUtils::cost(0.09198554072 + 522.57741809380 * x);
 	b5 += 0.00000000368 * MathUtils::cost(0.00874408003 + 515.46387109300 * x);
 	b5 += 0.00000000304 * MathUtils::cost(3.27902945138 + 536.80451209540 * x);
 	b5 += 0.00000000129 * MathUtils::cost(0.33959775247 + 529.69096509460 * x);
 	b5 += 0.00000000095 * MathUtils::cost(1.29305954542 + 543.91805909620 * x);
 
-	float x2 = x * x;
-	float x3 = x2 * x;
-	float x4 = x3 * x;
-	float x5 = x4 * x;
+	double x2 = x * x;
+	double x3 = x2 * x;
+	double x4 = x3 * x;
+	double x5 = x4 * x;
 
 	return MathUtils::toDegrees(b0 + b1 * x + b2 * x2 + b3 * x3 + b4 * x4 + b5 * x5);
 }
 
 // Distance Jupiter-Sun [AU]
-float Jupiter::rJupiter(float x) {
-	float r0 = 0;
+double Jupiter::rJupiter(double x) {
+	double r0 = 0;
 	r0 += 5.20887429471;
 	r0 += 0.25209327020 * MathUtils::cost(3.49108640015 + 529.69096509460 * x);
 	r0 += 0.00610599902 * MathUtils::cost(3.84115365602 + 1059.38193018920 * x);
@@ -2815,7 +2815,7 @@ float Jupiter::rJupiter(float x) {
 	r0 += 0.00000000474 * MathUtils::cost(0.71146352197 + 2108.46891963990 * x);
 	r0 += 0.00000000509 * MathUtils::cost(5.53328407404 + 1128.53445446400 * x);
 
-	float r1 = 0;
+	double r1 = 0;
 	r1 += 0.01271801596 * MathUtils::cost(2.64937511122 + 529.69096509460 * x);
 	r1 += 0.00061661771 * MathUtils::cost(3.00076251018 + 1059.38193018920 * x);
 	r1 += 0.00053443592 * MathUtils::cost(3.89717644226 + 522.57741809380 * x);
@@ -3198,7 +3198,7 @@ float Jupiter::rJupiter(float x) {
 	r1 += 0.00000000392 * MathUtils::cost(1.86527946688 + 885.43971066640 * x);
 	r1 += 0.00000000416 * MathUtils::cost(3.81408093105 + 3156.80514956520 * x);
 
-	float r2 = 0;
+	double r2 = 0;
 	r2 += 0.00079644833 * MathUtils::cost(1.35865896596 + 529.69096509460 * x);
 	r2 += 0.00008251618 * MathUtils::cost(5.77773935444 + 522.57741809380 * x);
 	r2 += 0.00007029864 * MathUtils::cost(3.27476965833 + 536.80451209540 * x);
@@ -3390,7 +3390,7 @@ float Jupiter::rJupiter(float x) {
 	r2 += 0.00000000400 * MathUtils::cost(3.13887720912 + 540.73666535850 * x);
 	r2 += 0.00000000378 * MathUtils::cost(0.86122450940 + 525.02509864860 * x);
 
-	float r3 = 0;
+	double r3 = 0;
 	r3 += 0.00003519257 * MathUtils::cost(6.05800633846 + 529.69096509460 * x);
 	r3 += 0.00001073239 * MathUtils::cost(1.67321345760 + 536.80451209540 * x);
 	r3 += 0.00000915666 * MathUtils::cost(1.41329676116 + 522.57741809380 * x);
@@ -3490,7 +3490,7 @@ float Jupiter::rJupiter(float x) {
 	r3 += 0.00000000406 * MathUtils::cost(3.93940190897 + 316.39186965660 * x);
 	r3 += 0.00000000506 * MathUtils::cost(0.18719982992 + 10.29494073850 * x);
 
-	float r4 = 0;
+	double r4 = 0;
 	r4 += 0.00000128628 * MathUtils::cost(0.08419309557 + 536.80451209540 * x);
 	r4 += 0.00000113458 * MathUtils::cost(4.24858855779 + 529.69096509460 * x);
 	r4 += 0.00000082650 * MathUtils::cost(3.29754909408 + 522.57741809380 * x);
@@ -3538,7 +3538,7 @@ float Jupiter::rJupiter(float x) {
 	r4 += 0.00000000491 * MathUtils::cost(1.52912023181 + 405.25754987360 * x);
 	r4 += 0.00000000521 * MathUtils::cost(0.24011424451 + 433.71173787680 * x);
 
-	float r5 = 0;
+	double r5 = 0;
 	r5 += 0.00000011188 * MathUtils::cost(4.75249399945 + 536.80451209540 * x);
 	r5 += 0.00000004255 * MathUtils::cost(5.91516229170 + 522.57741809380 * x);
 	r5 += 0.00000002079 * MathUtils::cost(5.56781555864 + 515.46387109300 * x);
@@ -3549,10 +3549,10 @@ float Jupiter::rJupiter(float x) {
 	r5 += 0.00000001240 * MathUtils::cost(3.77981722506 + 14.22709400160 * x);
 	r5 += 0.00000001033 * MathUtils::cost(4.50671820436 + 529.69096509460 * x);
 
-	float x2 = x * x;
-	float x3 = x2 * x;
-	float x4 = x3 * x;
-	float x5 = x4 * x;
+	double x2 = x * x;
+	double x3 = x2 * x;
+	double x4 = x3 * x;
+	double x5 = x4 * x;
 
 	return (r0 + r1 * x + r2 * x2 + r3 * x3 + r4 * x4 + r5 * x5);
 }

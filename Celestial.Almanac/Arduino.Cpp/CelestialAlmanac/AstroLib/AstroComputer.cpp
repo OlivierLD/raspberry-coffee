@@ -1,5 +1,6 @@
 #include <iostream>
 #include <math.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "CelestStruct.h"
@@ -7,15 +8,26 @@
 #include "MathUtils.h"
 #include "Earth.h"
 
-void calculateJulianDate(int year, int month, int day, int hour, int minute, int second, float delta_t);
+#include "AstroComputer.h"
+
+#define DEBUG true
+
+void calculateJulianDate(int year, int month, int day, int hour, int minute, int second, double delta_t);
 void calculateNutation();
 void calculateAberration();
 void calculateAries();
-// More here
+void calculateSun();
+// void calculateVenus();
+// void calculateMars();
+// void calculateJupiter();
+// void calculateSaturn();
+void calculateMoon();
+// void calculatePolaris();
+// void calculateMoonPhase();
 void calculateWeekDay();
 
 // const MathUtils cuMu;
-const Earth earth; // No (), this would confuse the compiler.
+// const Earth earth; // No (), this would confuse the compiler.
 
 bool isLeapYear(int year) {
   bool ly = false;
@@ -34,12 +46,12 @@ bool isLeapYear(int year) {
 char dataBuffer[128];
 
 // Output Sidereal Time
-char * outSideralTime(float x) {
-	float GMSTdecimal = x / 15;
+char * outSideralTime(double x) {
+	double GMSTdecimal = x / 15;
 	int GMSTh = floor(GMSTdecimal);
-	float GMSTmdecimal = 60 * (GMSTdecimal - GMSTh);
+	double GMSTmdecimal = 60 * (GMSTdecimal - GMSTh);
 	int GMSTm = floor(GMSTmdecimal);
-	float GMSTsdecimal = 60 * (GMSTmdecimal - GMSTm);
+	double GMSTsdecimal = 60 * (GMSTmdecimal - GMSTm);
 	int GMSTs = round(1000 * GMSTsdecimal) / 1000;
 	// if (GMSTs - floor(GMSTs) == 0) {
 	// 	GMSTs += ".000";
@@ -50,6 +62,61 @@ char * outSideralTime(float x) {
 	// }
 	sprintf(dataBuffer, "%dh %dm %ds", GMSTh, GMSTm, GMSTs);
 	return dataBuffer;
+}
+
+// Output Hour Angles
+char * outHA(double x) {
+  if (DEBUG) {
+    fprintf(stdout, "Output HA for %f\n", x);
+  }
+  int GHAdeg = floor(x);
+  int GHAmin = floor(60 * (x - GHAdeg));
+  int GHAsec = round(3600 * ((double)(x - GHAdeg) - ((double)GHAmin / 60)));
+  if (GHAsec == 60) {
+    GHAsec = 0;
+    GHAmin += 1;
+  }
+  if (GHAmin == 60) {
+    GHAmin = 0;
+    GHAdeg += 1;
+  }
+  sprintf(dataBuffer, "%d° %d' %d\"", GHAdeg, GHAmin, GHAsec);
+  return dataBuffer;
+}
+
+// Output Right ascension
+char * outRA(double x) {
+  if (DEBUG) {
+    fprintf(stdout, "Output RA for %f\n", x);
+  }
+  double t = x / 15;
+  int RAh = floor(t);
+  int RAmin = floor(60 * (t -RAh));
+  int RAsec = round(10 * (3600 * ((t - (double)RAh) - ((double)RAmin / 60)))) / 10;
+  if (RAsec == 60) {
+    RAsec = 0;
+    RAmin += 1;
+  }
+
+  if (RAmin == 60) {
+    RAmin = 0;
+    RAh += 1;
+  }
+  sprintf(dataBuffer, "%dh %dm %ds", RAh, RAmin, RAsec);
+  return dataBuffer;
+}
+
+char * outEoT(double x) {
+    double EoT = abs(x);
+    int EOTmin = floor(EoT);
+    int EOTsec = round(600 * (EoT - EOTmin)) / 10;
+
+    if (EOTmin == 0) {
+      sprintf(dataBuffer, "%s %ds", (x < 0 ? "-" : "+"), EOTsec);
+    } else {
+      sprintf(dataBuffer, "%s %dm %ds", (x < 0 ? "-" : "+"), EOTmin, EOTsec);
+    }
+    return dataBuffer;
 }
 
 // Placeholder for all computed data
@@ -65,21 +132,21 @@ ComputedData * data = (ComputedData *) calloc(1, sizeof(ComputedData));
  * @param second Number, UTC second
  * @param delta_t Number, DeltaT
  */
-ComputedData * calculate(int year, int month, int day, int hour, int minute, int second, float delta_t) {
+ComputedData * calculate(int year, int month, int day, int hour, int minute, int second, double delta_t) {
   calculateJulianDate(year, month, day, hour, minute, second, delta_t);
   calculateNutation();
   calculateAberration();
   calculateAries();
-//  calculateSun();
-//  calculateVenus();
-//  calculateMars();
-//  calculateJupiter();
-//  calculateSaturn();
-//  calculateMoon();
-//  calculatePolaris();
-//  calculateMoonPhase();
+  calculateSun();
+  // calculateVenus();
+  // calculateMars();
+  // calculateJupiter();
+  // calculateSaturn();
+  calculateMoon();
+  // calculatePolaris();
+  // calculateMoonPhase();
   calculateWeekDay();
-  // return gatherOutput(); // TODO Return a struct like below
+
   return data;
 }
 
@@ -95,9 +162,9 @@ ComputedData * calculate(int year, int month, int day, int hour, int minute, int
  * @param second Number, UTC second
  * @param delta_t Number, DeltaT
  */
-void calculateJulianDate(int year, int month, int day, int hour, int minute, int second, float delta_t) {
+void calculateJulianDate(int year, int month, int day, int hour, int minute, int second, double delta_t) {
 
-  data->dayFraction = (hour + minute / 60 + second / 3600) / 24;
+  data->dayFraction = ((double)hour + (double)minute / 60 + (double)second / 3600) / 24;
   if (data->dayFraction < 0 || data->dayFraction > 1) {
     fprintf(stdout, "Time out of range! Restart calculation.");
     return;
@@ -111,9 +178,9 @@ void calculateJulianDate(int year, int month, int day, int hour, int minute, int
     year -= 1;
     month += 12;
   }
-  float A = floor(year / 100);
-  float B = 2 - A + floor(A / 4);
-  data->JD0h = floor(365.25 * (year + 4716)) + floor(30.6001 * (month + 1)) + day + B - 1524.5;
+  double A = floor((double)year / 100);
+  double B = 2 - A + floor(A / 4);
+  data->JD0h = floor(365.25 * ((double)year + 4716)) + floor(30.6001 * ((double)month + 1)) + (double)day + B - 1524.5;
 
   data->JD = data->JD0h + data->dayFraction;
 
@@ -140,6 +207,10 @@ void calculateJulianDate(int year, int month, int day, int hour, int minute, int
   data->Tau3 = data->Tau * data->Tau2;
   data->Tau4 = data->Tau * data->Tau3;
   data->Tau5 = data->Tau * data->Tau4;
+
+  if (DEBUG) {
+    fprintf(stdout, "DayFraction: %f, JD0h: %f, JD: %f\n", data->dayFraction, data->JD0h, data->JD);
+  }
 }
 
 // Nutation, obliquity of the ecliptic
@@ -147,24 +218,24 @@ void calculateNutation() {
   // IAU 1980 calculateNutation theory:
 
   // Mean anomaly of the Moon
-  float Mm = 134.962981389 + 198.867398056 * data->TE + MathUtils::norm360Deg(477000 * data->TE) + 0.008697222222 * data->TE2 + data->TE3 / 56250;
+  double Mm = 134.962981389 + 198.867398056 * data->TE + MathUtils::norm360Deg(477000 * data->TE) + 0.008697222222 * data->TE2 + data->TE3 / 56250;
 
   // Mean anomaly of the Sun
-  float M = 357.527723333 + 359.05034 * data->TE + MathUtils::norm360Deg(35640 * data->TE) - 0.0001602777778 * data->TE2 - data->TE3 / 300000;
+  double M = 357.527723333 + 359.05034 * data->TE + MathUtils::norm360Deg(35640 * data->TE) - 0.0001602777778 * data->TE2 - data->TE3 / 300000;
 
   // Mean distance of the Moon from ascending node
-  float F = 93.271910277 + 82.017538055 * data->TE + MathUtils::norm360Deg(483120 * data->TE) - 0.0036825 * data->TE2 + data->TE3 / 327272.7273;
+  double F = 93.271910277 + 82.017538055 * data->TE + MathUtils::norm360Deg(483120 * data->TE) - 0.0036825 * data->TE2 + data->TE3 / 327272.7273;
 
   // Mean elongation of the Moon
-  float D = 297.850363055 + 307.11148 * data->TE + MathUtils::norm360Deg(444960 * data->TE) - 0.001914166667 * data->TE2 + data->TE3 / 189473.6842;
+  double D = 297.850363055 + 307.11148 * data->TE + MathUtils::norm360Deg(444960 * data->TE) - 0.001914166667 * data->TE2 + data->TE3 / 189473.6842;
 
   // Longitude of the ascending node of the Moon
-  float omega = 125.044522222 - 134.136260833 * data->TE - MathUtils::norm360Deg(1800 * data->TE) + 0.002070833333 * data->TE2 + data->TE3 / 450000;
+  double omega = 125.044522222 - 134.136260833 * data->TE - MathUtils::norm360Deg(1800 * data->TE) + 0.002070833333 * data->TE2 + data->TE3 / 450000;
 
   // Periodic terms for nutation
   const int nutRows = 106,
             nutColumns = 9;
-  const float nut[nutRows][nutColumns] = {
+  const double nut[nutRows][nutColumns] = {
     {  0,  0,  0,  0,  1, -171996, -174.2,  92025,  8.9 },
     {  0,  0,  2, -2,  2,  -13187,   -1.6,   5736, -3.1 },
     {  0,  0,  2,  0,  2,   -2274,   -0.2,    977, -0.5 },
@@ -274,7 +345,7 @@ void calculateNutation() {
   };
 
   // Reading periodic terms
-  float fMm, fM, fF, fD, f_omega, dp = 0, de = 0;
+  double fMm, fM, fF, fD, f_omega, dp = 0, de = 0;
   int x = 0;
   while (x < nutRows) {
     fMm = nut[x][0];
@@ -290,7 +361,7 @@ void calculateNutation() {
   // Corrections (Herring, 1987)
   const int corrRows = 4,
             corrColumns = 9;
-  const float corr[corrRows][corrColumns] = {
+  const double corr[corrRows][corrColumns] = {
     { 0, 0, 0, 0, 1,-725, 417, 213, 224 },
     { 0, 1, 0, 0, 0, 523,  61, 208, -24 },
     { 0, 0, 2,-2, 2, 102,-118, -41, -47 },
@@ -334,18 +405,13 @@ void calculateAries() {
 	data->GHAAmean = MathUtils::norm360Deg(280.46061837 + 360.98564736629 * (data->JD - 2451545) + 0.000387933 * data->T2 - data->T3 / 38710000);
 
 	// GMST
-  char sidTm[128];
-
-	strcpy(sidTm, outSideralTime(data->GHAAmean));
-  data->SidTm = sidTm[0] ;
+	strcpy(data->SidTm, outSideralTime(data->GHAAmean));
 
 	// True GHA Aries
 	data->GHAAtrue = MathUtils::norm360Deg(data->GHAAmean + data->deltaPsi * MathUtils::cosd(data->eps));
 
 	// GAST
-  char sidTa[128];
-  strcpy(sidTa, outSideralTime(data->GHAAtrue));
-  data->SidTa = sidTa[0] ;
+  strcpy(data->SidTa, outSideralTime(data->GHAAtrue));
 
 	// Equation of the equinoxes
 	data->EoE = 240 * data->deltaPsi * MathUtils::cosd(data->eps);
@@ -356,7 +422,7 @@ void calculateAries() {
 // Calculations for the Sun
 void calculateSun() {
 	// Mean longitude of the Sun
-	float Lsun_mean = MathUtils::norm360Deg(280.4664567 + 360007.6982779 * data->Tau + 0.03032028 * data->Tau2 + data->Tau3 / 49931 - data->Tau4 / 15299 - data->Tau5 / 1988000);
+	double Lsun_mean = MathUtils::norm360Deg(280.4664567 + 360007.6982779 * data->Tau + 0.03032028 * data->Tau2 + data->Tau3 / 49931 - data->Tau4 / 15299 - data->Tau5 / 1988000);
 
 	// Heliocentric longitude of the Earth
   data->Le = Earth::lEarth(data->Tau);
@@ -368,7 +434,7 @@ void calculateSun() {
 	data->Be = Earth::bEarth(data->Tau);
 
 	// Geocentric latitude of the Sun
-	float beta = MathUtils::norm360Deg(- data->Be);
+	double beta = MathUtils::norm360Deg(- data->Be);
 
 	// Corrections
 	data->Lsun_prime = MathUtils::norm360Deg(data->Le + 180 - 1.397 * data->TE - 0.00031 * data->TE2);
@@ -411,26 +477,26 @@ void calculateSun() {
 // Calculations for the moon
 void calculateMoon() {
 	// Mean longitude of the moon
-	float Lmm = MathUtils::norm360Deg(218.3164591 + 481267.88134236 * data->TE - 0.0013268 * data->TE2 + data->TE3 / 538841 - data->TE4 / 65194000);
+	double Lmm = MathUtils::norm360Deg(218.3164591 + 481267.88134236 * data->TE - 0.0013268 * data->TE2 + data->TE3 / 538841 - data->TE4 / 65194000);
 
 	// Mean elongation of the moon
-	float D = MathUtils::norm360Deg(297.8502042 + 445267.1115168 * data->TE - 0.00163 * data->TE2 + data->TE3 / 545868 - data->TE4 / 113065000);
+	double D = MathUtils::norm360Deg(297.8502042 + 445267.1115168 * data->TE - 0.00163 * data->TE2 + data->TE3 / 545868 - data->TE4 / 113065000);
 
 	// Mean anomaly of the sun
-	float Msm = MathUtils::norm360Deg(357.5291092 + 35999.0502909 * data->TE - 0.0001536 * data->TE2 + data->TE3 / 24490000);
+	double Msm = MathUtils::norm360Deg(357.5291092 + 35999.0502909 * data->TE - 0.0001536 * data->TE2 + data->TE3 / 24490000);
 
 	// Mean anomaly of the moon
-	float Mmm = MathUtils::norm360Deg(134.9634114 + 477198.8676313 * data->TE + 0.008997 * data->TE2 + data->TE3 / 69699 - data->TE4 / 14712000);
+	double Mmm = MathUtils::norm360Deg(134.9634114 + 477198.8676313 * data->TE + 0.008997 * data->TE2 + data->TE3 / 69699 - data->TE4 / 14712000);
 
 	// Mean distance of the moon from ascending node
-	float F = MathUtils::norm360Deg(93.2720993 + 483202.0175273 * data->TE - 0.0034029 * data->TE2 - data->TE3 / 3526000 + data->TE4 / 863310000);
+	double F = MathUtils::norm360Deg(93.2720993 + 483202.0175273 * data->TE - 0.0034029 * data->TE2 - data->TE3 / 3526000 + data->TE4 / 863310000);
 
 	// Corrections
-	float A1 = MathUtils::norm360Deg(119.75 + 131.849 * data->TE);
-	float A2 = MathUtils::norm360Deg(53.09 + 479264.29 * data->TE);
-	float A3 = MathUtils::norm360Deg(313.45 + 481266.484 * data->TE);
-	float fE = 1 - 0.002516 * data->TE - 0.0000074 * data->TE2;
-	float fE2 = fE * fE;
+	double A1 = MathUtils::norm360Deg(119.75 + 131.849 * data->TE);
+	double A2 = MathUtils::norm360Deg(53.09 + 479264.29 * data->TE);
+	double A3 = MathUtils::norm360Deg(313.45 + 481266.484 * data->TE);
+	double fE = 1 - 0.002516 * data->TE - 0.0000074 * data->TE2;
+	double fE2 = fE * fE;
 
 	// Periodic terms for the moon:
 
@@ -502,7 +568,7 @@ void calculateMoon() {
 
 	const int latRows = 60,
             latColumns = 5;
-	const float lat[latRows][latColumns] = {
+	const double lat[latRows][latColumns] = {
 		{ 0,  0,  0,  1, 5128122 },
 		{ 0,  0,  1,  1,  280602 },
 		{ 0,  0,  1, -1,  277693 },
@@ -566,7 +632,7 @@ void calculateMoon() {
 	};
 
 	// Reading periodic terms
-	float fD, fD2, fM, fM2, fMm, fMm2, fF, fF2, coeffs, coeffs2, coeffc, f, f2, sumL = 0, sumR = 0, sumB = 0;
+	double fD, fD2, fM, fM2, fMm, fMm2, fF, fF2, coeffs, coeffs2, coeffc, f, f2, sumL = 0, sumR = 0, sumB = 0;
 	int x = 0;
 
 	while (x < latRows) {
@@ -606,13 +672,13 @@ void calculateMoon() {
 	sumB = sumB - 2235 * MathUtils::sind(Lmm) + 382 * MathUtils::sind(A3) + 175 * MathUtils::sind(A1 - F) + 175 * MathUtils::sind(A1 + F) + 127 * MathUtils::sind(Lmm - Mmm) - 115 * MathUtils::sind(Lmm + Mmm);
 
 	// Longitude of the moon
-	float lambdaMm = MathUtils::norm360Deg(Lmm + sumL / 1000000);
+	double lambdaMm = MathUtils::norm360Deg(Lmm + sumL / 1000000);
 
 	// Latitude of the moon
-	float betaM = sumB / 1000000;
+	double betaM = sumB / 1000000;
 
 	// Distance earth-moon
-	float dEM = 385000.56 + sumR / 1000;
+	double dEM = 385000.56 + sumR / 1000;
 
 	// Apparent longitude of the moon
 	data->lambdaMapp = lambdaMm + data->deltaPsi;
@@ -636,46 +702,40 @@ void calculateMoon() {
 	data->LDist = MathUtils::toDegrees(acos(MathUtils::sind(data->DECMoon) * MathUtils::sind(data->DECSun) + MathUtils::cosd(data->DECMoon) * MathUtils::cosd(data->DECSun) * MathUtils::cosd(data->RAMoon - data->RASun)));
 
 	//Phase angle
-	float i = atan2(data->dES * MathUtils::sind(data->LDist), (dEM - data->dES * MathUtils::cosd(data->LDist)));
+	double i = atan2(data->dES * MathUtils::sind(data->LDist), (dEM - data->dES * MathUtils::cosd(data->LDist)));
 
 	//Illumination of the moon's disk
-	float k = 100 * (1 + cos(i)) / 2;
+	double k = 100 * (1 + cos(i)) / 2;
 	data->illumMoon = round(10 * k) / 10;
 }
 
 void calculateWeekDay() {
   data->JD0h += 1.5;
-  float res = data->JD0h - 7 * floor(data->JD0h / 7);
+  double res = data->JD0h - 7 * floor(data->JD0h / 7);
   // data->DoW = (char *) calloc(4, sizeof(char));
-  char dow[4];
   switch ((int)res) {
     case 0:
-      strcpy(dow, "SUN");
+      strcpy(data->DoW, "SUN");
       break;
     case 1:
-      strcpy(dow, "MON");
+      strcpy(data->DoW, "MON");
       break;
     case 2:
-      strcpy(dow, "TUE");
+      strcpy(data->DoW, "TUE");
       break;
     case 3:
-      strcpy(dow, "WED");
+      strcpy(data->DoW, "WED");
       break;
     case 4:
-      strcpy(dow, "THU");
+      strcpy(data->DoW, "THU");
       break;
     case 5:
-      strcpy(dow, "FRI");
+      strcpy(data->DoW, "FRI");
       break;
     case 6:
-      strcpy(dow, "SAT");
+      strcpy(data->DoW, "SAT");
       break;
     default:
       break;
   }
-  data->DoW = dow[0];
-}
-
-int main () {
-  std::cout << "Hi\n";
 }

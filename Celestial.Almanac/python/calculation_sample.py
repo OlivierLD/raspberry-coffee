@@ -9,6 +9,8 @@ print("----------------------------------------------")
 print("Calculations done for 2020-Mar-28 16:50:20 UTC")
 print("----------------------------------------------")
 
+print("Sideral Time: {}".format(lta.SidTm))
+
 # Sun
 fmtGHASun = lta.outHA(lta.GHASun)
 fmtRASun = lta.outRA(lta.RASun)

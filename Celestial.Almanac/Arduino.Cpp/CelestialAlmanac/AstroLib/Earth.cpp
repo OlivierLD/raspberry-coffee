@@ -11,8 +11,8 @@
 // Earth::Earth() {}
 
 // Heliocentric longitude of Earth
-float Earth::lEarth(float x) {
-  float l0 = 0;
+double Earth::lEarth(double x) {
+  double l0 = 0;
   l0 += 1.75347045673;
   l0 += 0.03341656456 * MathUtils::cost(4.66925680417 + 6283.07584999140 * x);
   l0 += 0.00034894275 * MathUtils::cost(4.62610241759 + 12566.15169998280 * x);
@@ -573,7 +573,7 @@ float Earth::lEarth(float x) {
   l0 += 0.00000000045 * MathUtils::cost(3.18590558749 + 45585.17281218740 * x);
   l0 += 0.00000000049 * MathUtils::cost(2.44790934886 + 13613.80427733600 * x);
 
-  float l1 = 0;
+  double l1 = 0;
   l1 += 6283.31966747491;
   l1 += 0.00206058863 * MathUtils::cost(2.67823455584 + 6283.07584999140 * x);
   l1 += 0.00004303430 * MathUtils::cost(2.63512650414 + 12566.15169998280 * x);
@@ -916,7 +916,7 @@ float Earth::lEarth(float x) {
   l1 += 0.00000000024 * MathUtils::cost(1.40237993205 + 14712.31711645800 * x);
   l1 += 0.00000000025 * MathUtils::cost(5.71466092822 + 25934.12433108940 * x);
 
-  float l2 = 0;
+  double l2 = 0;
   l2 += 0.00052918870;
   l2 += 0.00008719837 * MathUtils::cost(1.07209665242 + 6283.07584999140 * x);
   l2 += 0.00000309125 * MathUtils::cost(0.86728818832 + 12566.15169998280 * x);
@@ -1060,7 +1060,7 @@ float Earth::lEarth(float x) {
   l2 += 0.00000000011 * MathUtils::cost(3.05005267431 + 17260.15465469040 * x);
   l2 += 0.00000000010 * MathUtils::cost(4.93364992366 + 12352.85260454480 * x);
 
-  float l3 = 0;
+  double l3 = 0;
   l3 += 0.00000289226 * MathUtils::cost(5.84384198723 + 6283.07584999140 * x);
   l3 += 0.00000034955;
   l3 += 0.00000016819 * MathUtils::cost(5.48766912348 + 12566.15169998280 * x);
@@ -1084,7 +1084,7 @@ float Earth::lEarth(float x) {
   l3 += 0.00000000005 * MathUtils::cost(3.76879847273 + 12036.46073488820 * x);
   l3 += 0.00000000005 * MathUtils::cost(4.28412873331 + 6275.96230299060 * x);
 
-  float l4 = 0;
+  double l4 = 0;
   l4 -= 0.00000114084;
   l4 += 0.00000007717 * MathUtils::cost(4.13446589358 + 6283.07584999140 * x);
   l4 += 0.00000000765 * MathUtils::cost(3.83803776214 + 12566.15169998280 * x);
@@ -1097,24 +1097,24 @@ float Earth::lEarth(float x) {
   l4 += 0.00000000008 * MathUtils::cost(2.84160570605 + 161000.68573767410 * x);
   l4 += 0.00000000002 * MathUtils::cost(0.54912904658 + 6438.49624942560 * x);
 
-  float l5 = 0;
+  double l5 = 0;
   l5 -= 0.00000000878;
   l5 += 0.00000000172 * MathUtils::cost(2.76579069510 + 6283.07584999140 * x);
   l5 += 0.00000000050 * MathUtils::cost(2.01353298182 + 155.42039943420 * x);
   l5 += 0.00000000028 * MathUtils::cost(2.21496423926 + 12566.15169998280 * x);
   l5 += 0.00000000005 * MathUtils::cost(1.75600058765 + 18849.22754997420 * x);
 
-  float x2 = x * x;
-  float x3 = x2 * x;
-  float x4 = x3 * x;
-  float x5 = x4 * x;
+  double x2 = x * x;
+  double x3 = x2 * x;
+  double x4 = x3 * x;
+  double x5 = x4 * x;
 
   return MathUtils::toDegrees(MathUtils::norm2PiRad(l0 + l1 * x + l2 * x2 + l3 * x3 + l4 * x4 + l5 * x5));
 }
 
 // Heliocentric latitude of Earth
-float Earth::bEarth(float x) {
-  float b0 = 0;
+double Earth::bEarth(double x) {
+  double b0 = 0;
   b0 += 0.00000279620 * MathUtils::cost(3.19870156017 + 84334.66158130829 * x);
   b0 += 0.00000101643 * MathUtils::cost(5.42248619256 + 5507.55323866740 * x);
   b0 += 0.00000080445 * MathUtils::cost(3.88013204458 + 5223.69391980220 * x);
@@ -1300,7 +1300,7 @@ float Earth::bEarth(float x) {
   b0 += 0.00000000039 * MathUtils::cost(3.28500401343 + 71768.50988132549 * x);
   b0 += 0.00000000039 * MathUtils::cost(3.11239910690 + 96900.81328129109 * x);
 
-  float b1 = 0;
+  double b1 = 0;
   b1 += 0.00000009030 * MathUtils::cost(3.89729061890 + 5507.55323866740 * x);
   b1 += 0.00000006177 * MathUtils::cost(1.73038850355 + 5223.69391980220 * x);
   b1 += 0.00000003800 * MathUtils::cost(5.24404145734 + 2352.86615377180 * x);
@@ -1401,7 +1401,7 @@ float Earth::bEarth(float x) {
   b1 += 0.00000000018 * MathUtils::cost(1.58348238359 + 2118.76386037840 * x);
   b1 += 0.00000000019 * MathUtils::cost(0.85407021371 + 14712.31711645800 * x);
 
-  float b2 = 0;
+  double b2 = 0;
   b2 += 0.00000001662 * MathUtils::cost(1.62703209173 + 84334.66158130829 * x);
   b2 += 0.00000000492 * MathUtils::cost(2.41382223971 + 1047.74731175470 * x);
   b2 += 0.00000000344 * MathUtils::cost(2.24353004539 + 5507.55323866740 * x);
@@ -1452,7 +1452,7 @@ float Earth::bEarth(float x) {
   b2 += 0.00000000013 * MathUtils::cost(0.98720797401 + 5729.50644714900 * x);
   b2 += 0.00000000009 * MathUtils::cost(5.94191743597 + 7632.94325965020 * x);
 
-  float b3 = 0;
+  double b3 = 0;
   b3 += 0.00000000011 * MathUtils::cost(0.23877262399 + 7860.41939243920 * x);
   b3 += 0.00000000009 * MathUtils::cost(1.16069982609 + 5507.55323866740 * x);
   b3 += 0.00000000008 * MathUtils::cost(1.65357552925 + 5884.92684658320 * x);
@@ -1465,23 +1465,23 @@ float Earth::bEarth(float x) {
   b3 += 0.00000000006 * MathUtils::cost(5.40160929468 + 1577.34354244780 * x);
   b3 += 0.00000000007 * MathUtils::cost(2.73399865247 + 6309.37416979120 * x);
 
-  float b4 = 0;
+  double b4 = 0;
   b4 += 0.00000000004 * MathUtils::cost(0.79662198849 + 6438.49624942560 * x);
   b4 += 0.00000000005 * MathUtils::cost(0.84308705203 + 1047.74731175470 * x);
   b4 += 0.00000000005 * MathUtils::cost(0.05711572303 + 84334.66158130829 * x);
   b4 += 0.00000000003 * MathUtils::cost(3.46779895686 + 6279.55273164240 * x);
   b4 += 0.00000000003 * MathUtils::cost(2.89822201212 + 6127.65545055720 * x);
 
-  float x2 = x * x;
-  float x3 = x2 * x;
-  float x4 = x3 * x;
+  double x2 = x * x;
+  double x3 = x2 * x;
+  double x4 = x3 * x;
 
   return MathUtils::toDegrees(b0 + b1 * x + b2 * x2 + b3 * x3 + b4 * x4);
 }
 
 // Heliocentric distance of Earth
-float Earth::rEarth(float x) {
-  float r0 = 0;
+double Earth::rEarth(double x) {
+  double r0 = 0;
   r0 += 1.00013988799;
   r0 += 0.01670699626 * MathUtils::cost(3.09846350771 + 6283.07584999140 * x);
   r0 += 0.00013956023 * MathUtils::cost(3.05524609620 + 12566.15169998280 * x);
@@ -2009,7 +2009,7 @@ float Earth::rEarth(float x) {
   r0 += 0.00000000040 * MathUtils::cost(3.30603243754 + 23536.11695768099 * x);
   r0 += 0.00000000050 * MathUtils::cost(6.15760345261 + 78051.34191383338 * x);
 
-  float r1 = 0;
+  double r1 = 0;
   r1 += 0.00103018608 * MathUtils::cost(1.10748969588 + 6283.07584999140 * x);
   r1 += 0.00001721238 * MathUtils::cost(1.06442301418 + 12566.15169998280 * x);
   r1 -= 0.00000702215;
@@ -2303,7 +2303,7 @@ float Earth::rEarth(float x) {
   r1 += 0.00000000019 * MathUtils::cost(2.54227398241 + 77736.78343050249 * x);
   r1 += 0.00000000020 * MathUtils::cost(5.91915117116 + 48739.85989708300 * x);
 
-  float r2 = 0;
+  double r2 = 0;
   r2 += 0.00004359385 * MathUtils::cost(5.78455133738 + 6283.07584999140 * x);
   r2 += 0.00000123633 * MathUtils::cost(5.57934722157 + 12566.15169998280 * x);
   r2 -= 0.00000012341;
@@ -2444,7 +2444,7 @@ float Earth::rEarth(float x) {
   r2 += 0.00000000009 * MathUtils::cost(2.04999402381 + 22003.91463486980 * x);
   r2 += 0.00000000009 * MathUtils::cost(4.91488110218 + 213.29909543800 * x);
 
-  float r3 = 0;
+  double r3 = 0;
   r3 += 0.00000144595 * MathUtils::cost(4.27319435148 + 6283.07584999140 * x);
   r3 += 0.00000006729 * MathUtils::cost(3.91697608662 + 12566.15169998280 * x);
   r3 += 0.00000000774;
@@ -2473,7 +2473,7 @@ float Earth::rEarth(float x) {
   r3 += 0.00000000005 * MathUtils::cost(2.30961231391 + 12036.46073488820 * x);
   r3 += 0.00000000005 * MathUtils::cost(3.71102966917 + 6290.18939699220 * x);
 
-  float r4 = 0;
+  double r4 = 0;
   r4 += 0.00000003858 * MathUtils::cost(2.56384387339 + 6283.07584999140 * x);
   r4 += 0.00000000306 * MathUtils::cost(2.26769501230 + 12566.15169998280 * x);
   r4 += 0.00000000053 * MathUtils::cost(3.44031471924 + 5573.14280143310 * x);
@@ -2485,15 +2485,15 @@ float Earth::rEarth(float x) {
   r4 += 0.00000000006 * MathUtils::cost(3.81514213664 + 149854.40013480789 * x);
   r4 += 0.00000000003 * MathUtils::cost(1.28175749811 + 6286.59896834040 * x);
 
-  float r5 = 0;
+  double r5 = 0;
   r5 += 0.00000000086 * MathUtils::cost(1.21579741687 + 6283.07584999140 * x);
   r5 += 0.00000000012 * MathUtils::cost(0.65617264033 + 12566.15169998280 * x);
   r5 += 0.00000000001 * MathUtils::cost(0.38068797142 + 18849.22754997420 * x);
 
-  float x2 = x * x;
-  float x3 = x2 * x;
-  float x4 = x3 * x;
-  float x5 = x4 * x;
+  double x2 = x * x;
+  double x3 = x2 * x;
+  double x4 = x3 * x;
+  double x5 = x4 * x;
 
   return (r0 + r1 * x + r2 * x2 + r3 * x3 + r4 * x4 + r5 * x5);
 }

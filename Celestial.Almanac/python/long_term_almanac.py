@@ -7,6 +7,8 @@ from mars import Mars
 from jupiter import Jupiter
 from saturn import Saturn
 
+DEBUG = True
+
 
 class LongTermAlmanac:
     # local variables
@@ -193,7 +195,9 @@ class LongTermAlmanac:
         LongTermAlmanac.Tau3 = LongTermAlmanac.Tau * LongTermAlmanac.Tau2
         LongTermAlmanac.Tau4 = LongTermAlmanac.Tau * LongTermAlmanac.Tau3
         LongTermAlmanac.Tau5 = LongTermAlmanac.Tau * LongTermAlmanac.Tau4
-        
+
+        if DEBUG:
+            print("DayFraction {}, JD0h: {}, JD: {}".format(LongTermAlmanac.dayFraction, LongTermAlmanac.JD0h, LongTermAlmanac.JD))
         return
 
     # Output Hour Angle
@@ -201,7 +205,7 @@ class LongTermAlmanac:
     def outHA(x):
         GHAdeg = math.floor(x)
         GHAmin = math.floor(60 * (x - GHAdeg))
-        GHAsec = round(3600 * (x - GHAdeg - GHAmin / 60))
+        GHAsec = round(3600 * ((x - GHAdeg) - (GHAmin / 60)))
         if GHAsec == 60:
             GHAsec = 0
             GHAmin += 1

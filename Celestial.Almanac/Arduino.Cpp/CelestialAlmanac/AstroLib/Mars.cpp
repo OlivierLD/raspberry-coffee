@@ -10,8 +10,8 @@ Mars::Mars() {}
 
 
 // Heliocentric longitude of Mars
-float Mars::lMars(float x) {
-	float l0 = 0;
+double Mars::lMars(double x) {
+	double l0 = 0;
  	l0 += 6.20347711583;
  	l0 += 0.18656368100 * MathUtils::cost(5.05037100303 + 3340.61242669980 * x);
  	l0 += 0.01108216792 * MathUtils::cost(5.40099836958 + 6681.22485339960 * x);
@@ -1230,7 +1230,7 @@ float Mars::lMars(float x) {
  	l0 += 0.00000000045 * MathUtils::cost(2.33470159894 + 3123.79021291280 * x);
  	l0 += 0.00000000039 * MathUtils::cost(4.91767933978 + 8034.61538140740 * x);
 
-	float l1 = 0;
+	double l1 = 0;
  	l1 += 3340.85627474342;
  	l1 += 0.01458227051 * MathUtils::cost(3.60426053609 + 3340.61242669980 * x);
  	l1 += 0.00164901343 * MathUtils::cost(3.92631250962 + 6681.22485339960 * x);
@@ -1918,7 +1918,7 @@ float Mars::lMars(float x) {
  	l1 += 0.00000000024 * MathUtils::cost(0.20355912395 + 3229.42578441220 * x);
  	l1 += 0.00000000032 * MathUtils::cost(3.37195631109 + 2284.75361485960 * x);
 
-	float l2 = 0;
+	double l2 = 0;
  	l2 += 0.00058015791 * MathUtils::cost(2.04979463279 + 3340.61242669980 * x);
  	l2 += 0.00054187645;
  	l2 += 0.00013908426 * MathUtils::cost(2.45742359888 + 6681.22485339960 * x);
@@ -2230,7 +2230,7 @@ float Mars::lMars(float x) {
  	l2 += 0.00000000017 * MathUtils::cost(2.84467149903 + 3344.49376205780 * x);
  	l2 += 0.00000000020 * MathUtils::cost(5.41519706836 + 3205.54734666440 * x);
 
-	float l3 = 0;
+	double l3 = 0;
  	l3 += 0.00001482423 * MathUtils::cost(0.44434694876 + 3340.61242669980 * x);
  	l3 += 0.00000662095 * MathUtils::cost(0.88469178686 + 6681.22485339960 * x);
  	l3 += 0.00000188268 * MathUtils::cost(1.28799982497 + 10021.83728009940 * x);
@@ -2361,7 +2361,7 @@ float Mars::lMars(float x) {
  	l3 += 0.00000000012 * MathUtils::cost(3.28248484262 + 8671.96987044060 * x);
  	l3 += 0.00000000014 * MathUtils::cost(0.23027665815 + 3767.21061757580 * x);
 
-	float l4 = 0;
+	double l4 = 0;
  	l4 -= 0.00000113969;
  	l4 += 0.00000028725 * MathUtils::cost(5.63662412043 + 6681.22485339960 * x);
  	l4 += 0.00000024447 * MathUtils::cost(5.13868481454 + 3340.61242669980 * x);
@@ -2399,7 +2399,7 @@ float Mars::lMars(float x) {
  	l4 += 0.00000000009 * MathUtils::cost(6.15390464542 + 6489.77658728800 * x);
  	l4 += 0.00000000007 * MathUtils::cost(4.23894194106 + 4535.05943692440 * x);
 
-	float l5 = 0;
+	double l5 = 0;
  	l5 += 0.00000000710 * MathUtils::cost(4.04089996521 + 6681.22485339960 * x);
  	l5 -= 0.00000000868;
  	l5 += 0.00000000510 * MathUtils::cost(4.49214901625 + 10021.83728009940 * x);
@@ -2416,17 +2416,17 @@ float Mars::lMars(float x) {
  	l5 += 0.00000000014 * MathUtils::cost(5.95565787085 + 23384.28698689860 * x);
  	l5 += 0.00000000012 * MathUtils::cost(1.93859256739 + 6525.80445396540 * x);
 
-	float x2 = x * x;
-	float x3 = x2 * x;
-	float x4 = x3 * x;
-	float x5 = x4 * x;
+	double x2 = x * x;
+	double x3 = x2 * x;
+	double x4 = x3 * x;
+	double x5 = x4 * x;
 
 	return MathUtils::toDegrees(MathUtils::norm2PiRad(l0 + l1 * x + l2 * x2 + l3 * x3 + l4 * x4 + l5 * x5));
 }
 
 // Heliocentric latitude of Mars
-float Mars::bMars(float x) {
-	float b0 = 0;
+double Mars::bMars(double x) {
+	double b0 = 0;
  	b0 += 0.03197134986 * MathUtils::cost(3.76832042432 + 3340.61242669980 * x);
  	b0 += 0.00298033234 * MathUtils::cost(4.10616996243 + 6681.22485339960 * x);
  	b0 += 0.00289104742;
@@ -2869,7 +2869,7 @@ float Mars::bMars(float x) {
  	b0 += 0.00000000043 * MathUtils::cost(0.51983815091 + 16489.76303806100 * x);
  	b0 += 0.00000000036 * MathUtils::cost(0.84102576439 + 23937.85638974100 * x);
 
-	float b1 = 0;
+	double b1 = 0;
  	b1 += 0.00350068845 * MathUtils::cost(5.36847836211 + 3340.61242669980 * x);
  	b1 -= 0.00014116030;
  	b1 += 0.00009670755 * MathUtils::cost(5.47877786506 + 6681.22485339960 * x);
@@ -3158,7 +3158,7 @@ float Mars::bMars(float x) {
  	b1 += 0.00000000028 * MathUtils::cost(1.30366587075 + 8439.87793181640 * x);
  	b1 += 0.00000000032 * MathUtils::cost(2.13597148493 + 9468.26787725700 * x);
 
-	float b2 = 0;
+	double b2 = 0;
  	b2 += 0.00016726690 * MathUtils::cost(0.60221392419 + 3340.61242669980 * x);
  	b2 -= 0.00004986799;
  	b2 += 0.00000302141 * MathUtils::cost(5.55871276021 + 6681.22485339960 * x);
@@ -3290,7 +3290,7 @@ float Mars::bMars(float x) {
  	b2 += 0.00000000018 * MathUtils::cost(6.22706341047 + 9381.93999378540 * x);
  	b2 += 0.00000000015 * MathUtils::cost(0.54135050421 + 640.87760738220 * x);
 
-	float b3 = 0;
+	double b3 = 0;
  	b3 += 0.00000606506 * MathUtils::cost(1.98050633529 + 3340.61242669980 * x);
  	b3 += 0.00000042611;
  	b3 += 0.00000013652 * MathUtils::cost(1.79588228800 + 6681.22485339960 * x);
@@ -3333,7 +3333,7 @@ float Mars::bMars(float x) {
  	b3 += 0.00000000011 * MathUtils::cost(0.43817745316 + 1059.38193018920 * x);
  	b3 += 0.00000000014 * MathUtils::cost(1.06654064248 + 6836.64525283380 * x);
 
-	float b4 = 0;
+	double b4 = 0;
  	b4 += 0.00000011334 * MathUtils::cost(3.45724352586 + 3340.61242669980 * x);
  	b4 += 0.00000013369;
  	b4 += 0.00000000744 * MathUtils::cost(0.50445805257 + 6681.22485339960 * x);
@@ -3346,24 +3346,24 @@ float Mars::bMars(float x) {
  	b4 += 0.00000000013 * MathUtils::cost(2.06957065662 + 13362.44970679920 * x);
  	b4 += 0.00000000010 * MathUtils::cost(0.95989595600 + 3894.18182954220 * x);
 
-	float b5 = 0;
+	double b5 = 0;
  	b5 += 0.00000000457 * MathUtils::cost(4.86794125358 + 3340.61242669980 * x);
  	b5 += 0.00000000053 * MathUtils::cost(5.30547050586 + 6681.22485339960 * x);
  	b5 += 0.00000000012 * MathUtils::cost(5.75114070583 + 10021.83728009940 * x);
  	b5 += 0.00000000013 * MathUtils::cost(4.17736925293 + 3496.03282613400 * x);
  	b5 += 0.00000000007;
 
-	float x2 = x * x;
-	float x3 = x2 * x;
-	float x4 = x3 * x;
-	float x5 = x4 * x;
+	double x2 = x * x;
+	double x3 = x2 * x;
+	double x4 = x3 * x;
+	double x5 = x4 * x;
 
 	return MathUtils::toDegrees(b0 + b1 * x + b2 * x2 + b3 * x3 + b4 * x4 + b5 * x5);
 }
 
 // Distance Mars-Sun [AU]
-float Mars::rMars(float x) {
-	float r0 = 0;
+double Mars::rMars(double x) {
+	double r0 = 0;
  	r0 += 1.53033488276;
  	r0 += 0.14184953153 * MathUtils::cost(3.47971283519 + 3340.61242669980 * x);
  	r0 += 0.00660776357 * MathUtils::cost(3.81783442097 + 6681.22485339960 * x);
@@ -4483,7 +4483,7 @@ float Mars::rMars(float x) {
  	r0 += 0.00000000059 * MathUtils::cost(4.71734799803 + 6283.09310364360 * x);
  	r0 += 0.00000000068 * MathUtils::cost(5.74655335863 + 987.74627292800 * x);
 
-	float r1 = 0;
+	double r1 = 0;
  	r1 += 0.01107433340 * MathUtils::cost(2.03250524950 + 3340.61242669980 * x);
  	r1 += 0.00103175886 * MathUtils::cost(2.37071845682 + 6681.22485339960 * x);
  	r1 += 0.00012877200;
@@ -5081,7 +5081,7 @@ float Mars::rMars(float x) {
  	r1 += 0.00000000041 * MathUtils::cost(4.26832466355 + 21000.91589075680 * x);
  	r1 += 0.00000000038 * MathUtils::cost(0.73199792046 + 26084.02180621620 * x);
 
-	float r2 = 0;
+	double r2 = 0;
  	r2 += 0.00044242247 * MathUtils::cost(0.47930603943 + 3340.61242669980 * x);
  	r2 += 0.00008138042 * MathUtils::cost(0.86998398093 + 6681.22485339960 * x);
  	r2 += 0.00001274915 * MathUtils::cost(1.22594050809 + 10021.83728009940 * x);
@@ -5396,7 +5396,7 @@ float Mars::rMars(float x) {
  	r2 += 0.00000000025 * MathUtils::cost(1.40880282063 + 8186.51266249260 * x);
  	r2 += 0.00000000024 * MathUtils::cost(4.96463811748 + 26087.90314157420 * x);
 
-	float r3 = 0;
+	double r3 = 0;
  	r3 += 0.00001113107 * MathUtils::cost(5.14987350142 + 3340.61242669980 * x);
  	r3 += 0.00000424446 * MathUtils::cost(5.61343766478 + 6681.22485339960 * x);
  	r3 += 0.00000100044 * MathUtils::cost(5.99726827028 + 10021.83728009940 * x);
@@ -5509,7 +5509,7 @@ float Mars::rMars(float x) {
  	r3 += 0.00000000016 * MathUtils::cost(0.65389503440 + 3340.54511639700 * x);
  	r3 += 0.00000000016 * MathUtils::cost(5.28427106012 + 3333.49887969900 * x);
 
-	float r4 = 0;
+	double r4 = 0;
  	r4 += 0.00000019552 * MathUtils::cost(3.58211650473 + 3340.61242669980 * x);
  	r4 += 0.00000016323 * MathUtils::cost(4.05116076923 + 6681.22485339960 * x);
  	r4 += 0.00000005848 * MathUtils::cost(4.46383962094 + 10021.83728009940 * x);
@@ -5539,7 +5539,7 @@ float Mars::rMars(float x) {
  	r4 += 0.00000000014 * MathUtils::cost(0.76591550754 + 3894.18182954220 * x);
  	r4 += 0.00000000011 * MathUtils::cost(5.47381242145 + 3738.76143010800 * x);
 
-	float r5 = 0;
+	double r5 = 0;
  	r5 += 0.00000000476 * MathUtils::cost(2.47617204701 + 6681.22485339960 * x);
  	r5 += 0.00000000268 * MathUtils::cost(2.91510547706 + 10021.83728009940 * x);
  	r5 += 0.00000000115 * MathUtils::cost(1.76888962311 + 3340.61242669980 * x);
@@ -5550,10 +5550,10 @@ float Mars::rMars(float x) {
  	r5 += 0.00000000012 * MathUtils::cost(4.88179002689 + 3583.34103067380 * x);
  	r5 -= 0.00000000012;
 
-	float x2 = x * x;
-	float x3 = x2 * x;
-	float x4 = x3 * x;
-	float x5 = x4 * x;
+	double x2 = x * x;
+	double x3 = x2 * x;
+	double x4 = x3 * x;
+	double x5 = x4 * x;
 
 	return (r0 + r1 * x + r2 * x2 + r3 * x3 + r4 * x4 + r5 * x5);
 }

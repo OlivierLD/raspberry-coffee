@@ -4,9 +4,9 @@
 class Jupiter {
   public: // TODO Make those static
     Jupiter();
-    float lJupiter(float x);
-    float bJupiter(float x);
-    float rJupiter(float x);
+    double lJupiter(double x);
+    double bJupiter(double x);
+    double rJupiter(double x);
 };    // Warning!!!! Do not forget the semicolon!!
 
 #endif

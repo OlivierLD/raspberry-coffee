@@ -9,8 +9,8 @@
 Saturn::Saturn() {}
 
 // Heliocentric longitude of Saturn
-float Saturn::lSaturn(float x) {
-	float l0 = 0;
+double Saturn::lSaturn(double x) {
+	double l0 = 0;
 	l0 += 0.87401354029;
 	l0 += 0.11107659780 * MathUtils::cost(3.96205090194 + 213.29909543800 * x);
 	l0 += 0.01414150958 * MathUtils::cost(4.58581515873 + 7.11354700080 * x);
@@ -1164,7 +1164,7 @@ float Saturn::lSaturn(float x) {
 	l0 += 0.00000000099 * MathUtils::cost(0.15018241445 + 186.21176006410 * x);
 	l0 += 0.00000000072 * MathUtils::cost(5.15715918322 + 110.15813710960 * x);
 
-	float l1 = 0;
+	double l1 = 0;
 	l1 += 213.54295595986;
 	l1 += 0.01296855005 * MathUtils::cost(1.82820544701 + 213.29909543800 * x);
 	l1 += 0.00564347566 * MathUtils::cost(2.88500136429 + 7.11354700080 * x);
@@ -1808,7 +1808,7 @@ float Saturn::lSaturn(float x) {
 	l1 += 0.00000000078 * MathUtils::cost(5.59819387460 + 364.34676528090 * x);
 	l1 += 0.00000000079 * MathUtils::cost(3.53267171729 + 969.62247809490 * x);
 
-	float l2 = 0;
+	double l2 = 0;
 	l2 += 0.00116441181 * MathUtils::cost(1.17987850633 + 7.11354700080 * x);
 	l2 += 0.00091920844 * MathUtils::cost(0.07425261094 + 213.29909543800 * x);
 	l2 += 0.00090592251;
@@ -2131,7 +2131,7 @@ float Saturn::lSaturn(float x) {
 	l2 += 0.00000000073 * MathUtils::cost(4.85923277221 + 2118.76386037840 * x);
 	l2 += 0.00000000071 * MathUtils::cost(3.64551577433 + 198.32124191100 * x);
 
-	float l3 = 0;
+	double l3 = 0;
 	l3 += 0.00016038734 * MathUtils::cost(5.73945377424 + 7.11354700080 * x);
 	l3 += 0.00004249793 * MathUtils::cost(4.58539675603 + 213.29909543800 * x);
 	l3 += 0.00001906524 * MathUtils::cost(4.76082050205 + 220.41264243880 * x);
@@ -2281,7 +2281,7 @@ float Saturn::lSaturn(float x) {
 	l3 += 0.00000000072 * MathUtils::cost(3.74361312157 + 1485.98012106520 * x);
 	l3 += 0.00000000076 * MathUtils::cost(3.33892447677 + 195.89060769870 * x);
 
-	float l4 = 0;
+	double l4 = 0;
 	l4 += 0.00001661894 * MathUtils::cost(3.99826248978 + 7.11354700080 * x);
 	l4 += 0.00000257107 * MathUtils::cost(2.98436499013 + 220.41264243880 * x);
 	l4 += 0.00000236344 * MathUtils::cost(3.90241428075 + 14.22709400160 * x);
@@ -2351,7 +2351,7 @@ float Saturn::lSaturn(float x) {
 	l4 += 0.00000000096 * MathUtils::cost(2.93247663741 + 224.34479570190 * x);
 	l4 += 0.00000000088 * MathUtils::cost(4.48383632427 + 423.41679713830 * x);
 
-	float l5 = 0;
+	double l5 = 0;
 	l5 += 0.00000123615 * MathUtils::cost(2.25923345732 + 7.11354700080 * x);
 	l5 += 0.00000034190 * MathUtils::cost(2.16250652689 + 14.22709400160 * x);
 	l5 += 0.00000027546 * MathUtils::cost(1.19868150215 + 220.41264243880 * x);
@@ -2380,17 +2380,17 @@ float Saturn::lSaturn(float x) {
 	l5 += 0.00000000089 * MathUtils::cost(1.36371070380 + 412.37109687440 * x);
 	l5 += 0.00000000102 * MathUtils::cost(0.49450039082 + 117.31986822020 * x);
 
-	float x2 = x * x;
-	float x3 = x2 * x;
-	float x4 = x3 * x;
-	float x5 = x4 * x;
+	double x2 = x * x;
+	double x3 = x2 * x;
+	double x4 = x3 * x;
+	double x5 = x4 * x;
 
 	return MathUtils::toDegrees(MathUtils::norm2PiRad(l0 + l1 * x + l2 * x2 + l3 * x3 + l4 * x4 + l5 * x5));
 }
 
 // Heliocentric latitude of Saturn
-float Saturn::bSaturn(float x) {
-	float b0 = 0;
+double Saturn::bSaturn(double x) {
+	double b0 = 0;
 	b0 += 0.04330678040 * MathUtils::cost(3.60284428399 + 213.29909543800 * x);
 	b0 += 0.00240348303 * MathUtils::cost(2.85238489390 + 426.59819087600 * x);
 	b0 += 0.00084745939;
@@ -2892,7 +2892,7 @@ float Saturn::bSaturn(float x) {
 	b0 += 0.00000000072 * MathUtils::cost(4.85259171933 + 392.65794093220 * x);
 	b0 += 0.00000000083 * MathUtils::cost(0.11133738383 + 402.21916848780 * x);
 
-	float b1 = 0;
+	double b1 = 0;
 	b1 += 0.00397554998 * MathUtils::cost(5.33289992556 + 213.29909543800 * x);
 	b1 -= 0.00049478641;
 	b1 += 0.00018571607 * MathUtils::cost(6.09919206378 + 426.59819087600 * x);
@@ -3154,7 +3154,7 @@ float Saturn::bSaturn(float x) {
 	b1 += 0.00000000091 * MathUtils::cost(5.97938003596 + 556.51766803760 * x);
 	b1 += 0.00000000087 * MathUtils::cost(2.71469794199 + 617.80588578620 * x);
 
-	float b2 = 0;
+	double b2 = 0;
 	b2 += 0.00020629977 * MathUtils::cost(0.50482422817 + 213.29909543800 * x);
 	b2 += 0.00003719555 * MathUtils::cost(3.99833475829 + 206.18554843720 * x);
 	b2 += 0.00001627158 * MathUtils::cost(6.18189939500 + 220.41264243880 * x);
@@ -3267,7 +3267,7 @@ float Saturn::bSaturn(float x) {
 	b2 += 0.00000000081 * MathUtils::cost(1.16732337173 + 217.96496188400 * x);
 	b2 += 0.00000000072 * MathUtils::cost(5.47328223678 + 337.73251065900 * x);
 
-	float b3 = 0;
+	double b3 = 0;
 	b3 += 0.00000666252 * MathUtils::cost(1.99006340181 + 213.29909543800 * x);
 	b3 += 0.00000632350 * MathUtils::cost(5.69778316807 + 206.18554843720 * x);
 	b3 += 0.00000398051;
@@ -3327,7 +3327,7 @@ float Saturn::bSaturn(float x) {
 	b3 += 0.00000000085 * MathUtils::cost(1.18898817378 + 728.76296653100 * x);
 	b3 += 0.00000000084 * MathUtils::cost(4.10158366806 + 224.34479570190 * x);
 
-	float b4 = 0;
+	double b4 = 0;
 	b4 += 0.00000080384 * MathUtils::cost(1.11918414679 + 206.18554843720 * x);
 	b4 += 0.00000031660 * MathUtils::cost(3.12218745098 + 213.29909543800 * x);
 	b4 += 0.00000017143 * MathUtils::cost(2.48073200414 + 220.41264243880 * x);
@@ -3355,7 +3355,7 @@ float Saturn::bSaturn(float x) {
 	b4 += 0.00000000115 * MathUtils::cost(5.03884718594 + 117.31986822020 * x);
 	b4 += 0.00000000115 * MathUtils::cost(0.44589613974 + 110.20632121940 * x);
 
-	float b5 = 0;
+	double b5 = 0;
 	b5 += 0.00000007895 * MathUtils::cost(2.81927558645 + 206.18554843720 * x);
 	b5 += 0.00000001014 * MathUtils::cost(0.51187210270 + 220.41264243880 * x);
 	b5 += 0.00000000772 * MathUtils::cost(2.99484124049 + 199.07200143640 * x);
@@ -3368,17 +3368,17 @@ float Saturn::bSaturn(float x) {
 	b5 += 0.00000000088 * MathUtils::cost(6.17828532308 + 440.82528487760 * x);
 	b5 += 0.00000000089 * MathUtils::cost(0.58396864530 + 213.29909543800 * x);
 
-	float x2 = x * x;
-	float x3 = x2 * x;
-	float x4 = x3 * x;
-	float x5 = x4 * x;
+	double x2 = x * x;
+	double x3 = x2 * x;
+	double x4 = x3 * x;
+	double x5 = x4 * x;
 
 	return MathUtils::toDegrees(b0 + b1 * x + b2 * x2 + b3 * x3 + b4 * x4 + b5 * x5);
 }
 
 // Distance Saturn-Sun [AU]
-float Saturn::rSaturn(float x) {
-	float r0 = 0;
+double Saturn::rSaturn(double x) {
+	double r0 = 0;
 	r0 += 9.55758135801;
 	r0 += 0.52921382465 * MathUtils::cost(2.39226219733 + 213.29909543800 * x);
 	r0 += 0.01873679934 * MathUtils::cost(5.23549605091 + 206.18554843720 * x);
@@ -4585,7 +4585,7 @@ float Saturn::rSaturn(float x) {
 	r0 += 0.00000000827 * MathUtils::cost(2.59300433753 + 232.94281541100 * x);
 	r0 += 0.00000000735 * MathUtils::cost(3.05650026582 + 66.91729204110 * x);
 
-	float r1 = 0;
+	double r1 = 0;
 	r1 += 0.06182981282 * MathUtils::cost(0.25843515034 + 213.29909543800 * x);
 	r1 += 0.00506577574 * MathUtils::cost(0.71114650941 + 206.18554843720 * x);
 	r1 += 0.00341394136 * MathUtils::cost(5.79635773960 + 426.59819087600 * x);
@@ -5226,7 +5226,7 @@ float Saturn::rSaturn(float x) {
 	r1 += 0.00000000939 * MathUtils::cost(1.85473712038 + 5062.26991450560 * x);
 	r1 += 0.00000000721 * MathUtils::cost(1.62872794201 + 2200.51599359460 * x);
 
-	float r2 = 0;
+	double r2 = 0;
 	r2 += 0.00436902464 * MathUtils::cost(4.78671673044 + 213.29909543800 * x);
 	r2 += 0.00071922760 * MathUtils::cost(2.50069994874 + 206.18554843720 * x);
 	r2 += 0.00049766792 * MathUtils::cost(4.97168150870 + 220.41264243880 * x);
@@ -5570,7 +5570,7 @@ float Saturn::rSaturn(float x) {
 	r2 += 0.00000000739 * MathUtils::cost(3.33688408107 + 953.10776223290 * x);
 	r2 += 0.00000000745 * MathUtils::cost(6.22304530635 + 1269.49963188950 * x);
 
-	float r3 = 0;
+	double r3 = 0;
 	r3 += 0.00020315005 * MathUtils::cost(3.02186626038 + 213.29909543800 * x);
 	r3 += 0.00008923581 * MathUtils::cost(3.19144205755 + 220.41264243880 * x);
 	r3 += 0.00006908677 * MathUtils::cost(4.35174889353 + 206.18554843720 * x);
@@ -5729,7 +5729,7 @@ float Saturn::rSaturn(float x) {
 	r3 += 0.00000000772 * MathUtils::cost(1.15596098579 + 3053.71237534660 * x);
 	r3 += 0.00000000691 * MathUtils::cost(3.13193109668 + 56.62235130260 * x);
 
-	float r4 = 0;
+	double r4 = 0;
 	r4 += 0.00001202050 * MathUtils::cost(1.41499446465 + 220.41264243880 * x);
 	r4 += 0.00000707796 * MathUtils::cost(1.16153570102 + 213.29909543800 * x);
 	r4 += 0.00000516121 * MathUtils::cost(6.23973568330 + 206.18554843720 * x);
@@ -5795,7 +5795,7 @@ float Saturn::rSaturn(float x) {
 	r4 += 0.00000000969 * MathUtils::cost(1.00708261792 + 1045.15483618760 * x);
 	r4 += 0.00000000716 * MathUtils::cost(1.11042181341 + 1169.58825140860 * x);
 
-	float r5 = 0;
+	double r5 = 0;
 	r5 += 0.00000128612 * MathUtils::cost(5.91282565136 + 220.41264243880 * x);
 	r5 += 0.00000032273 * MathUtils::cost(0.69256228602 + 7.11354700080 * x);
 	r5 += 0.00000026698 * MathUtils::cost(5.91428528629 + 227.52618943960 * x);
@@ -5825,10 +5825,10 @@ float Saturn::rSaturn(float x) {
 	r5 += 0.00000000798 * MathUtils::cost(0.37452846153 + 28.45418800320 * x);
 	r5 += 0.00000000837 * MathUtils::cost(5.04769794123 + 124.43341522100 * x);
 
-	float x2 = x * x;
-	float x3 = x2 * x;
-	float x4 = x3 * x;
-	float x5 = x4 * x;
+	double x2 = x * x;
+	double x3 = x2 * x;
+	double x4 = x3 * x;
+	double x5 = x4 * x;
 
 	return (r0 + r1 * x + r2 * x2 + r3 * x3 + r4 * x4 + r5 * x5);
 }
