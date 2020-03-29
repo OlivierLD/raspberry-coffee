@@ -300,10 +300,10 @@ class LongTermAlmanac:
         if ECLmin == 0:
             ECLmin = "00"
         elif ECLmin < 10:
-            ECLmin = "0" + ECLmin
+            ECLmin = "0" + str(ECLmin)
 
         if ECLsec < 10:
-            ECLsec = "0" + ECLsec
+            ECLsec = "0" + str(ECLsec)
 
         return "{}\xb0 {}' {}\"".format(ECLdeg, ECLmin, ECLsec)
 
