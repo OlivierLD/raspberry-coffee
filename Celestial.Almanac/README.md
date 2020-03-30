@@ -2,7 +2,7 @@
 This is not strictly related to java nor Raspberry Pi.
 
 This is about reproducing the celestial almanac features (available in `common-utils/src/main/java/calc/calculation/nauticalalmanac`)
-is several other languages than Java.
+in several other languages than Java.
 
 > _Note_: This is actually an interesting exercise. Those celestial calculations involve **_a lot_** of code (more than **20K** lines of code, for each language presented here).
 > It is always interesting to consider the following aspects:
