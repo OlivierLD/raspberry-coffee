@@ -19,9 +19,16 @@ in several other languages than Java.
 Beside Java, we (will) have
 - [ES6](./ES6/README.md)
 - [C & C++, (Arduino?)](./Arduino.Cpp/README.md)
-    > Note: This is **_way too demanding_** for an Arduino (mostly because of then _volume_ of the code, mentioned above), but it works OK for C & C++. 
+    > Note: This is **_way too demanding_** for an Arduino (mostly because of the _volume_ of the code, mentioned above), but it works OK for C & C++. 
 - [Python](./Python/README.md)
 - and more when possible (Go, Kotlin,...)
+
+### Integrated Development Environment (IDE)
+Here is a quick list of some IDEs I use. They _all_ have a free version.
+- For Java, IntelliJ, period.
+- For Python, PyCharm.
+- For C & C++, Visual Studio.
+- For JavaScript, IntelliJ, WebStorm.
 
 ### Run it
 #### From Java 
