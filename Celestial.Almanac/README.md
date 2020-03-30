@@ -4,11 +4,20 @@ This is not strictly related to java nor Raspberry Pi.
 This is about reproducing the celestial almanac features (available in `common-utils/src/main/java/calc/calculation/nauticalalmanac`)
 is several other languages than Java.
 
+> _Note_: This is actually an interesting exercise. Those celestial calculations involve **_a lot_** of code (more than **20K** lines of code, for each language presented here).
+> It is always interesting to consider the following aspects:
+> - Productivity (how long it takes to write the _right_ code), with and without an IDE - when it exists
+> - Readability (do you still understand what you wrote two weeks later 🤓)
+> - Speed of execution
+> - Debugging (local, remote, ...)  
+> - Maintainability (can someone who did not write it add feature(s) or maintain the code) 
+
 Beside Java, we (will) have
 - [ES6](./ES6/README.md)
-- [Arduino (ino, C, C++...)](./Arduino.Cpp/README.md)
-    - > Note: This is **_way_** too demanding for an Arduino, but it works OK for C & C++. 
+- [C & C++, (Arduino?)](./Arduino.Cpp/README.md)
+    > Note: This is **_way too demanding_** for an Arduino (mostly because of then _volume_ of the code, mentioned above), but it works OK for C & C++. 
 - [Python](./Python/README.md)
+- and more when possible (Go, Kotlin,...)
 
 ### Run it
 #### From Java 
