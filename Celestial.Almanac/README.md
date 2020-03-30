@@ -25,7 +25,7 @@ Beside Java, we (will) have
 
 ### Run it
 #### From Java 
-From this modules root
+From this module's root
 ```
 $ ../gradlew clean shadowJar
 $ java -cp build/libs/Celestial.Almanac-1.0-all.jar celestial.almanac.JavaSample
