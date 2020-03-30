@@ -264,6 +264,11 @@ orienting the panel does make a difference on the load. The first frames are too
 
 In this animation - just to validate the concept, the Raspberry Pi driving the device, and the one taking the snapshots were both powered by the battery fed by the solar panel.
 
+### Bonus
+The two versions, working together:
+
+![2 versions](./pictures/Two.Sun.Flower.jpg)
+
 ### Some pictures
 
 <!--| At work                             | At work                           | -->
