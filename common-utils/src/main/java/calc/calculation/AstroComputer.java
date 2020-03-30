@@ -33,6 +33,12 @@ public class AstroComputer {
 	private static int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
 	private static double deltaT = 66.4749d; // 2011. Overridden by deltaT system variable.
 
+	private final static String[] WEEK_DAYS = {
+			"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"
+	};
+	private static String dow = "";
+	private static String moonPhase = "";
+
 	// Updated after the calculate invocation.
 	public static synchronized double getDeltaT() {
 		return deltaT;
@@ -114,9 +120,9 @@ public class AstroComputer {
 		Mars.compute();
 		Jupiter.compute();
 		Saturn.compute();
-		// Core.polaris();
-		Core.moonPhase();
-		// Core.weekDay();
+		Core.polaris();
+		moonPhase = Core.moonPhase();
+		dow = WEEK_DAYS[Core.weekDay()];
 	}
 
 	public final static int UTC_RISE_IDX = 0;
@@ -679,6 +685,12 @@ public class AstroComputer {
 	}
 	public static synchronized double getLDist() {
 		return Context.LDist;
+	}
+	public static synchronized String getWeekDay() {
+		return dow;
+	}
+	public static synchronized String getMoonPhaseStr() {
+		return moonPhase;
 	}
 
 	// Etc. Whatever is needed
