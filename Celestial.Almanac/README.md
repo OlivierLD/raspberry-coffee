@@ -109,7 +109,7 @@ Done!
 $
 ```
 
-#### From ES6 (JavaScript, using NodeJS)
+#### From ES6 (JavaScript, using NodeJS as a Web server)
 ```
 $ cd src/main/ES6
 $ node server.js
