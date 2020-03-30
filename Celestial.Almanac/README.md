@@ -25,10 +25,10 @@ Beside Java, we (will) have
 
 ### Integrated Development Environment (IDE)
 Here is a quick list of some IDEs I use. They _all_ have a free version.
-- For Java, IntelliJ, period.
-- For Python, PyCharm.
-- For C & C++, Visual Studio.
-- For JavaScript, IntelliJ, WebStorm.
+- For Java and all JVM-aware languages: IntelliJ, period.
+- For Python: PyCharm.
+- For C & C++: Visual Studio.
+- For JavaScript: IntelliJ, WebStorm.
 
 ### Run it
 #### From Java 
