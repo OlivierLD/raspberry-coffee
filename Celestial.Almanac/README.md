@@ -1,11 +1,6 @@
 ## Celestial Almanac(s)
 This is not strictly related to java nor Raspberry Pi.
 
-> _Note_: those calculations rely on a parameter called `DeltaT`, that can be obtained
-> from the [US Naval Oceanography Portal](https://www.usno.navy.mil/USNO/earth-orientation/eo-products/long-term).
-> This (official) web site is undergoing some upgrade..., if it is down, it will
-> come back to life soon. Last known value of `DeltaT` is `69.2201` sec.
-
 This is about reproducing the celestial almanac features (available in `common-utils/src/main/java/calc/calculation/nauticalalmanac`)
 in several other languages than Java.
 
@@ -20,6 +15,11 @@ in several other languages than Java.
 > _To keep in mind:_ An extra detail, the code presented here can run _**in standalone**_ on a single machine. It does not need to communicate
 > with any other resources (on the net, in the cloud, wherever) to reach its goals, to do its job, to complete its work.
 > Do keep this important aspect in mind when you setup your mind about the best language ever. 😜   
+
+> _Note-2_: those calculations rely on a parameter called `DeltaT`, that can be obtained
+> from the [US Naval Oceanography Portal](https://www.usno.navy.mil/USNO/earth-orientation/eo-products/long-term).
+> This (official) web site is undergoing some upgrade..., if it is down, it will
+> come back to life soon. Last known value of `DeltaT` is `69.2201` sec.
 
 Beside Java, we (will) have
 - [ES6](./ES6/README.md)
