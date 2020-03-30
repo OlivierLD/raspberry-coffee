@@ -6,11 +6,15 @@ is several other languages than Java.
 
 > _Note_: This is actually an interesting exercise. Those celestial calculations involve **_a lot_** of code (more than **20K** lines of code, for each language presented here).
 > It is always interesting to consider the following aspects:
-> - Productivity (how long it takes to write the _right_ code), with and without an IDE - when it exists
+> - Productivity (once you know what you want, how long does it takes to write the _right_ code, with and without an IDE - when it exists)
 > - Readability (do you still understand what you wrote two weeks later 🤓)
-> - Speed of execution
+> - Speed of execution (C is probably the fastest, but how far behind are the others?)
 > - Debugging (local, remote, ...)  
-> - Maintainability (can someone who did not write it add feature(s) or maintain the code) 
+> - Maintainability (can someone who did not write it add feature(s) or maintain the code)
+> 
+> _To keep in mind:_ An extra detail, the code presented here can run _**in standalone**_ on a single machine. It does not need to communicate
+> with any other resources (on the net, in the cloud, wherever) to reach its goals, to do its job, to complete its work.
+> Do keep this important aspect in mind when you setup your mind about the best language ever. 😜   
 
 Beside Java, we (will) have
 - [ES6](./ES6/README.md)
@@ -98,191 +102,8 @@ $ node server.js
 ```
 Then from a browser, load `http://localhost:8080/index.html` and follow the instructions on the page.
 
-You should get a JSON object like this:
-```json   
-{
-  "sun": {
-    "GHA": {
-      "raw": 104.34312607934919,
-      "fmt": "104° 20' 35\""
-    },
-    "RA": {
-      "raw": 324.8703016388234,
-      "fmt": "21h 39m 28.9s"
-    },
-    "DEC": {
-      "raw": -14.006110810890373,
-      "fmt": "S   14° 00' 22\""
-    },
-    "SD": {
-      "raw": 972.3712371377966,
-      "fmt": "972.4\""
-    },
-    "HP": {
-      "raw": 8.910760042297326,
-      "fmt": "8.9\""
-    }
-  },
-  "EOT": {
-    "raw": -14.210829015936724,
-    "fmt": " - 14m 12.6s"
-  },
-  "moon": {
-    "GHA": {
-      "raw": 249.73013980252705,
-      "fmt": "249° 43' 49\""
-    },
-    "RA": {
-      "raw": 179.48328791564552,
-      "fmt": "11h 57m 56s"
-    },
-    "DEC": {
-      "raw": 5.73293116162958,
-      "fmt": "N   05° 43' 59\""
-    },
-    "SD": {
-      "raw": 992.4948640943279,
-      "fmt": "992.5\""
-    },
-    "HP": {
-      "raw": 3642.4486678501053,
-      "fmt": "3642.4\""
-    },
-    "illum": 91,
-    "phase": {
-      "phase": " -gib",
-      "phaseAngle": 214.7
-    }
-  },
-  "venus": {
-    "GHA": {
-      "raw": 64.85952940578073,
-      "fmt": "064° 51' 34\""
-    },
-    "RA": {
-      "raw": 4.353898312391831,
-      "fmt": "00h 17m 24.9s"
-    },
-    "DEC": {
-      "raw": 1.6319770044428068,
-      "fmt": "N   01° 37' 55\""
-    },
-    "SD": {
-      "raw": 8.266740814849628,
-      "fmt": "8.3\""
-    },
-    "HP": {
-      "raw": 8.644199610676294,
-      "fmt": "8.6\""
-    },
-    "illum": 69.8
-  },
-  "mars": {
-    "GHA": {
-      "raw": 162.72083658880223,
-      "fmt": "162° 43' 15\""
-    },
-    "RA": {
-      "raw": 266.49259112937034,
-      "fmt": "17h 45m 58.2s"
-    },
-    "DEC": {
-      "raw": -23.532797272560273,
-      "fmt": "S   23° 31' 58\""
-    },
-    "SD": {
-      "raw": 2.5144066939815386,
-      "fmt": "2.5\""
-    },
-    "HP": {
-      "raw": 4.724720612579841,
-      "fmt": "4.7\""
-    },
-    "illum": 92.4
-  },
-  "jupiter": {
-    "GHA": {
-      "raw": 141.89748479874265,
-      "fmt": "141° 53' 51\""
-    },
-    "RA": {
-      "raw": 287.3159429194299,
-      "fmt": "19h 09m 15.8s"
-    },
-    "DEC": {
-      "raw": -22.458393242885755,
-      "fmt": "S   22° 27' 30\""
-    },
-    "SD": {
-      "raw": 16.483945823855873,
-      "fmt": "16.5\""
-    },
-    "HP": 1.4725702923099202,
-    "illum": 99.7
-  },
-  "saturn": {
-    "GHA": {
-      "raw": 130.94093818782687,
-      "fmt": "130° 56' 27\""
-    },
-    "RA": {
-      "raw": 298.2724895303457,
-      "fmt": "19h 53m 05.4s"
-    },
-    "DEC": {
-      "raw": -20.894138935246513,
-      "fmt": "S   20° 53' 39\""
-    },
-    "SD": {
-      "raw": 7.586006087138657,
-      "fmt": "7.6\""
-    },
-    "HP": {
-      "raw": 0.8063741995684438,
-      "fmt": "0.8\""
-    },
-    "illum": 100
-  },
-  "polaris": {
-    "GHA": {
-      "raw": 25.043779995214884,
-      "fmt": "025° 02' 38\""
-    },
-    "RA": {
-      "raw": 44.169647722957684,
-      "fmt": "02h 56m 40.7s"
-    },
-    "DEC": {
-      "raw": 89.35252081672385,
-      "fmt": "N   89° 21' 09\""
-    }
-  },
-  "sidTmean": {
-    "raw": 69.21742916898802,
-    "fmt": "4h 36m 52.183s"
-  },
-  "sidTapp": {
-    "raw": 69.21342771817257,
-    "fmt": "4h 36m 51.223s"
-  },
-  "EoEquin": -0.96,
-  "dPsi": -15.7,
-  "dEps": -0.614,
-  "obliq": {
-    "raw": 23.43667557083188,
-    "fmt": "23° 26' 12.032\""
-  },
-  "trueObliq": {
-    "raw": 23.43650488421495,
-    "fmt": "23° 26' 11.418\""
-  },
-  "julianDay": 2458891.299711,
-  "julianEphemDay": 2458891.300509,
-  "lunarDist": {
-    "raw": 144.95704848913826,
-    "fmt": "144° 57' 25\""
-  },
-  "dayOfWeek": "TUE"
-}
-```
+You should get a JSON object, and some formatted output, like this:
+![WebUI](./ES6WebUI.png)
+
+---
 

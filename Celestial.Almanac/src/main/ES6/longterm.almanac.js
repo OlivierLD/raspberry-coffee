@@ -1387,7 +1387,10 @@ function gatherOutput() {
 		raw: SDJupiter,
 		fmt: fmtSDJupiter
 	};
-	jupiter.HP = HPJupiter;
+	jupiter.HP = {
+		raw: HPJupiter,
+		fmt: fmtHPJupiter
+	};
 	jupiter.illum = illumJupiter;
 	outForm.jupiter = jupiter;
 

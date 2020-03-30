@@ -67,6 +67,10 @@
 
 		<div id="result" class="result">
 		</div>
+
+		<div id="details" class="result">
+		</div>
+
 	</body>
 	<script type="text/javascript">
 
@@ -89,6 +93,22 @@ function compute() {
 	console.log("Result:\n", JSON.stringify(testResult, null, 2));
 
 	document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(testResult, null, 2) + '</pre>';
+	// More here, ...
+	let detailsContent =
+			" Sun    : GHA: " + testResult.sun.GHA.fmt + ", RA: " + testResult.sun.RA.fmt  + ", Dec: " + testResult.sun.DEC.fmt + ", sd:" + testResult.sun.SD.fmt + ", hp:" + testResult.sun.HP.fmt + "\n" +
+			" Moon   : GHA: " + testResult.moon.GHA.fmt + ", RA: " + testResult.moon.RA.fmt  + ", Dec: " + testResult.moon.DEC.fmt + ", sd:" + testResult.moon.SD.fmt + ", hp:" + testResult.moon.HP.fmt + "\n" +
+			"         Phase:" + testResult.moon.phase.phaseAngle + "\272, " + testResult.moon.phase.phase + "\n" +
+			" Venus  : GHA: " + testResult.venus.GHA.fmt + ", RA: " + testResult.venus.RA.fmt  + ", Dec: " + testResult.venus.DEC.fmt + ", sd:" + testResult.venus.SD.fmt + ", hp:" + testResult.venus.HP.fmt + "\n" +
+			" Mars   : GHA: " + testResult.mars.GHA.fmt + ", RA: " + testResult.mars.RA.fmt  + ", Dec: " + testResult.mars.DEC.fmt + ", sd:" + testResult.mars.SD.fmt + ", hp:" + testResult.mars.HP.fmt + "\n" +
+			" Jupiter: GHA: " + testResult.jupiter.GHA.fmt + ", RA: " + testResult.jupiter.RA.fmt  + ", Dec: " + testResult.jupiter.DEC.fmt + ", sd:" + testResult.jupiter.SD.fmt + ", hp:" + testResult.jupiter.HP.fmt + "\n" +
+			" Saturn : GHA: " + testResult.saturn.GHA.fmt + ", RA: " + testResult.saturn.RA.fmt  + ", Dec: " + testResult.saturn.DEC.fmt + ", sd:" + testResult.saturn.SD.fmt + ", hp:" + testResult.saturn.HP.fmt + "\n" +
+	    "\n" +
+	    " Polaris: GHA:" + testResult.polaris.GHA.fmt + ", RA: " + testResult.polaris.RA.fmt  + ", Dec: " + testResult.polaris.DEC.fmt + "\n" +
+		  " Equation of time:" + testResult.EOT.fmt + "\n" +
+			" Day of Week:" + testResult.dayOfWeek;
+
+	document.getElementById('details').innerHTML = '<pre>' + detailsContent + '</pre>';
+
 }
 
 window.onload = () => {
