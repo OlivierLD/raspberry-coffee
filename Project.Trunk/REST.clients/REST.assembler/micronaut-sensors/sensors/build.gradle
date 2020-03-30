@@ -40,7 +40,7 @@ dependencies {
     testImplementation "io.micronaut.test:micronaut-test-junit5"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 //    compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT'
-    compile 'oliv.raspi.coffee:ADC:1.0'
+    compile 'oliv.raspi.coffee:ADC:1.0'   // mavenLocal
 }
 
 test.classpath += configurations.developmentOnly

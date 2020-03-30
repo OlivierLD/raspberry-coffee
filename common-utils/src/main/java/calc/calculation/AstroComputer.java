@@ -528,6 +528,8 @@ public class AstroComputer {
 	 * @param lat latitude
 	 * @param lng longitude
 	 * @return an array of 4 doubles. See HE_SUN_IDX, HE_MOON_IDX, DEC_SUN_IDX and DEC_MOON_IDX.
+	 *
+	 * TODO Make it a Map<String, Double>
 	 */
 	public static synchronized double[] getSunMoonAltDecl(int y, int m, int d, int h, int mi, int s, double lat, double lng) {
 		double[] values = new double[5];
