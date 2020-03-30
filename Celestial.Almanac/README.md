@@ -69,6 +69,8 @@ $
 ```
 
 #### From C++
+> Note: The `compile.sh` script used below works for Mac & Linux (including Debian & Raspbian).
+> If you need to run this on Windows..., well, Google is your friend!
 ```
 $ cd src/main/cpp
 $ ./compile.sh
