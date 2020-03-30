@@ -25,7 +25,7 @@ public class JavaSample {
 		int minutes = (int)Math.floor(value / 60d);
 		double seconds = value - (minutes * 60);
 		if (minutes > 0) {
-			formatted = String.format("%d' %05.02f\"", minutes, seconds);
+			formatted = String.format("%d'%05.02f\"", minutes, seconds);
 		} else {
 			formatted = String.format("%05.02f\"", seconds);
 		}
@@ -88,39 +88,39 @@ public class JavaSample {
 				lpad(GeomUtil.decToSex(AstroComputer.getSunDecl(), GeomUtil.SWING, GeomUtil.NS), 10, " "),
 				lpad(GeomUtil.decToSex(AstroComputer.getSunGHA(), GeomUtil.SWING, GeomUtil.NONE), 11, " "),
 				renderRA(AstroComputer.getSunRA()),
-				lpad(renderSdHp(AstroComputer.getSunSd()), 10, " "),
-				lpad(renderSdHp(AstroComputer.getSunHp()), 10, " ")));
+				lpad(renderSdHp(AstroComputer.getSunSd()), 9, " "),
+				lpad(renderSdHp(AstroComputer.getSunHp()), 9, " ")));
 		System.out.println(String.format("Moon data:\tDecl.: %s, GHA: %s, RA: %s, sd: %s, hp: %s",
 				lpad(GeomUtil.decToSex(AstroComputer.getMoonDecl(), GeomUtil.SWING, GeomUtil.NS), 10, " "),
 				lpad(GeomUtil.decToSex(AstroComputer.getMoonGHA(), GeomUtil.SWING, GeomUtil.NONE), 11, " "),
 				renderRA(AstroComputer.getMoonRA()),
-				lpad(renderSdHp(AstroComputer.getMoonSd()), 10, " "),
-						lpad(renderSdHp(AstroComputer.getMoonHp()), 10, " ")));
+				lpad(renderSdHp(AstroComputer.getMoonSd()), 9, " "),
+						lpad(renderSdHp(AstroComputer.getMoonHp()), 9, " ")));
 		System.out.println(String.format("\tMoon phase: %s, %s", GeomUtil.decToSex(AstroComputer.getMoonPhase(), GeomUtil.SWING, GeomUtil.NONE), AstroComputer.getMoonPhaseStr()));
 		System.out.println(String.format("Venus data:\tDecl.: %s, GHA: %s, RA: %s, sd: %s, hp: %s",
 				lpad(GeomUtil.decToSex(AstroComputer.getVenusDecl(), GeomUtil.SWING, GeomUtil.NS), 10, " "),
 				lpad(GeomUtil.decToSex(AstroComputer.getVenusGHA(), GeomUtil.SWING, GeomUtil.NONE), 11, " "),
 				renderRA(AstroComputer.getVenusRA()),
-				lpad(renderSdHp(AstroComputer.getVenusSd()), 10, " "),
-				lpad(renderSdHp(AstroComputer.getVenusHp()), 10, " ")));
+				lpad(renderSdHp(AstroComputer.getVenusSd()), 9, " "),
+				lpad(renderSdHp(AstroComputer.getVenusHp()), 9, " ")));
 		System.out.println(String.format("Mars data:\tDecl.: %s, GHA: %s, RA: %s, sd: %s, hp: %s",
 				lpad(GeomUtil.decToSex(AstroComputer.getMarsDecl(), GeomUtil.SWING, GeomUtil.NS), 10, " "),
 				lpad(GeomUtil.decToSex(AstroComputer.getMarsGHA(), GeomUtil.SWING, GeomUtil.NONE), 11, " "),
 				renderRA(AstroComputer.getMarsRA()),
-				lpad(renderSdHp(AstroComputer.getMarsSd()), 10, " "),
-				lpad(renderSdHp(AstroComputer.getMarsHp()), 10, " ")));
+				lpad(renderSdHp(AstroComputer.getMarsSd()), 9, " "),
+				lpad(renderSdHp(AstroComputer.getMarsHp()), 9, " ")));
 		System.out.println(String.format("Jupiter data:\tDecl.: %s, GHA: %s, RA: %s, sd: %s, hp: %s",
 				lpad(GeomUtil.decToSex(AstroComputer.getJupiterDecl(), GeomUtil.SWING, GeomUtil.NS), 10, " "),
 				lpad(GeomUtil.decToSex(AstroComputer.getJupiterGHA(), GeomUtil.SWING, GeomUtil.NONE), 11, " "),
 				renderRA(AstroComputer.getJupiterRA()),
-				lpad(renderSdHp(AstroComputer.getJupiterSd()), 10, " "),
-				lpad(renderSdHp(AstroComputer.getJupiterHp()), 10, " ")));
+				lpad(renderSdHp(AstroComputer.getJupiterSd()), 9, " "),
+				lpad(renderSdHp(AstroComputer.getJupiterHp()), 9, " ")));
 		System.out.println(String.format("Saturn data:\tDecl.: %s, GHA: %s, RA: %s, sd: %s, hp: %s",
 				lpad(GeomUtil.decToSex(AstroComputer.getSaturnDecl(), GeomUtil.SWING, GeomUtil.NS), 10, " "),
 				lpad(GeomUtil.decToSex(AstroComputer.getSaturnGHA(), GeomUtil.SWING, GeomUtil.NONE), 11, " "),
 				renderRA(AstroComputer.getSaturnRA()),
-				lpad(renderSdHp(AstroComputer.getSaturnSd()), 10, " "),
-				lpad(renderSdHp(AstroComputer.getSaturnHp()), 10, " ")));
+				lpad(renderSdHp(AstroComputer.getSaturnSd()), 9, " "),
+				lpad(renderSdHp(AstroComputer.getSaturnHp()), 9, " ")));
 		System.out.println();
 		System.out.println(String.format("Polaris data:\tDecl.: %s, GHA: %s, RA: %s",
 				lpad(GeomUtil.decToSex(AstroComputer.getPolarisDecl(), GeomUtil.SWING, GeomUtil.NS), 10, " "),
