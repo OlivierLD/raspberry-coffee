@@ -2,7 +2,7 @@
 This is not strictly related to java nor Raspberry Pi.
 
 > _Note_: those calculations rely on a parameter called `DeltaT`, that can be obtained
-> from [here](https://www.usno.navy.mil/USNO/earth-orientation/eo-products/long-term).
+> from the [US Naval Oceanography Portal](https://www.usno.navy.mil/USNO/earth-orientation/eo-products/long-term).
 > This (official) web site is undergoing some upgrade..., if it is down, it will
 > come back to life soon. Last known value of `DeltaT` is `69.2201` sec.
 
