@@ -20,3 +20,4 @@ public class GenericHandler<X> {
 		return gh;
 	}
 }
+

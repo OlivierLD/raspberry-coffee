@@ -1,23 +1,32 @@
 #!/bin/bash
 #
 # SunFlower launching script
+# export ASK_ABOUT_DATE=false to skip the date check below.
 #
 CP=./build/libs/SunFlower-1.0-all.jar
 #
 echo Try $0 -help or $0 --help
 #
-echo -en "Date is "
-date
-echo -en "Is that OK [Y]|n ? > "
-read resp
-if [ "$resp" == "n" ] || [ "$resp" == "N" ]
+# Set ASK_ABOUT_DATE=false to skip the date check below
+if [[ ${ASK_ABOUT_DATE} != false ]]
 then
-  echo -en "Enter new date, format '10 NOV 2018 08:55:00' > "
-  read newDate
-  if [ "$newDate" != "" ]
-  then
-    sudo date -s "$newDate"
-   fi
+	echo -en "Date is "
+	date
+	echo -en "Is that OK [Y]|n ? > "
+	read resp
+	if [[ "$resp" == "n" ]] || [[ "$resp" == "N" ]]
+	then
+	  echo -en "Enter new date, format '10 NOV 2018 08:55:00' > "
+	  read newDate
+	  if [[ "$newDate" != "" ]]
+	  then
+	    sudo date -s "$newDate"
+	   fi
+	fi
+else
+	echo -e  "----------------------------------->> "
+	echo -en ">> Not asking if the date is correct, Date is " && date
+	echo -e  "----------------------------------->> "
 fi
 #
 # You can use several servos for heading, several servos for tilt,
@@ -41,11 +50,11 @@ JAVA_OPTS="$JAVA_OPTS -Dtilt.offset=0"
 #
 OPTION=-help
 WITH_HELP=false
-if [ $# -gt 0 ]
+if [[ $# -gt 0 ]]
 then
   OPTION=$1
 fi
-if [ $OPTION = "-help" -o $OPTION = "--help" ] && [ $# -gt 1 ]
+if [[ ${OPTION} = "-help" || ${OPTION} = "--help" ]] && [[ $# -gt 1 ]]
 then
   OPTION=$2
   WITH_HELP=true
@@ -59,7 +68,7 @@ displayHelp() {
   echo -e "=============================================================================="
 }
 #
-if [ $WITH_HELP = true ]
+if [[ ${WITH_HELP} = true ]]
 then
   echo -e "+-----------------------------"
   echo -e "| Explaining option $OPTION"
@@ -168,7 +177,7 @@ case "$OPTION" in
     ;;
 esac
 #
-if [ $WITH_HELP = false ]
+if [[ ${WITH_HELP} = false ]]
 then
 	MISO=9
 	MOSI=10
@@ -182,13 +191,12 @@ then
   # nohup sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID --with-adc:false --with-photocell:false &
   COMMAND="java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID $ADC_PRM"
   echo -e "Executing $COMMAND"
-  sudo $COMMAND
+  sudo ${COMMAND}
 else
-  opts=$(echo $JAVA_OPTS | tr ";" "\n")
+  opts=$(echo ${JAVA_OPTS} | tr ";" "\n")
   for opt in $opts
   do
     echo -e "| $opt"
   done
   echo -e "+-----------------------------"
 fi
-

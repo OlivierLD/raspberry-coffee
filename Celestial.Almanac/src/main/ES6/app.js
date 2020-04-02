@@ -38,7 +38,8 @@ export function sampleMain(userDataObject) {
 
 	let delta_t = userDataObject.deltaT;
 
-	return CelestialComputer.calculate(year, month, day, hour, minute, second, delta_t);
+	let noPlanets = userDataObject.noPlanets || false;
+	return CelestialComputer.calculate(year, month, day, hour, minute, second, delta_t, noPlanets);
 }
 
 window.sampleMain = sampleMain;
