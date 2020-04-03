@@ -272,6 +272,11 @@ In this animation - just to validate the concept, the Raspberry Pi driving the d
 |:-----------------------------------:|:---------------------------------:|
 | ![Three](./pictures/testing.03.jpg) |                                   |
 
+### Bonus
+The two versions, working together:
+
+![2 versions](./pictures/Two.Sun.Flower.jpg)
+
 ## TODO
 - An ANSI Console. &#9989; Done (...ish).
 - A Web Console. WiP.

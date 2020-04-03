@@ -48,21 +48,23 @@ let T, T2, T3, T4, T5, TE, TE2, TE3, TE4, TE5, Tau, Tau2, Tau3, Tau4, Tau5, delt
  * @param second Number, UTC second
  * @param delta_t Number, DeltaT
  */
-export function calculate(year, month, day, hour, minute, second, delta_t) {
+export function calculate(year, month, day, hour, minute, second, delta_t, noPlanets=false) {
 	calculateJulianDate(year, month, day, hour, minute, second, delta_t);
 	calculateNutation();
 	calculateAberration();
 	calculateAries();
 	calculateSun();
-	calculateVenus();
-	calculateMars();
-	calculateJupiter();
-	calculateSaturn();
+	if (!noPlanets) {
+		calculateVenus();
+		calculateMars();
+		calculateJupiter();
+		calculateSaturn();
+	}
 	calculateMoon();
 	calculatePolaris();
 	calculateMoonPhase();
 	calculateWeekDay();
-	return gatherOutput();
+	return gatherOutput(noPlanets);
 }
 
 export function isLeapYear(year) {
@@ -1206,7 +1208,7 @@ function calculateWeekDay() {
 }
 
 // Data output
-function gatherOutput() {
+function gatherOutput(noPlanets=false) {
 	// Sun
 	let fmtGHASun = outHA(GHASun);
 	let fmtRASun = outRA(RASun);
@@ -1215,32 +1217,37 @@ function gatherOutput() {
 	let fmtHPSun = outSdHp(HPSun);
 
 	// Venus
-	let fmtGHAVenus = outHA(GHAVenus);
-	let fmtRAVenus = outRA(RAVenus);
-	let fmtDECVenus = outDec(DECVenus);
-	let fmtSDVenus = outSdHp(SDVenus);
-	let fmtHPVenus = outSdHp(HPVenus);
+	let fmtGHAVenus = noPlanets ? '' : outHA(GHAVenus);
+	let fmtRAVenus = noPlanets ? '' : outRA(RAVenus);
+	let fmtDECVenus = noPlanets ? '' : outDec(DECVenus);
+	let fmtSDVenus = noPlanets ? '' : outSdHp(SDVenus);
+	let fmtHPVenus = noPlanets ? '' : outSdHp(HPVenus);
 
 	// Mars
-	let fmtGHAMars = outHA(GHAMars);
-	let fmtRAMars = outRA(RAMars);
-	let fmtDECMars = outDec(DECMars);
-	let fmtSDMars = outSdHp(SDMars);
-	let fmtHPMars = outSdHp(HPMars);
+	let fmtGHAMars = noPlanets ? '' : outHA(GHAMars);
+	let fmtRAMars = noPlanets ? '' : outRA(RAMars);
+	let fmtDECMars = noPlanets ? '' : outDec(DECMars);
+	let fmtSDMars = noPlanets ? '' : outSdHp(SDMars);
+	let fmtHPMars = noPlanets ? '' : outSdHp(HPMars);
 
 	// Jupiter
-	let fmtGHAJupiter = outHA(GHAJupiter);
-	let fmtRAJupiter = outRA(RAJupiter);
-	let fmtDECJupiter = outDec(DECJupiter);
-	let fmtSDJupiter = outSdHp(SDJupiter);
-	let fmtHPJupiter = outSdHp(HPJupiter);
+	let fmtGHAJupiter = noPlanets ? '' : outHA(GHAJupiter);
+	let fmtRAJupiter = noPlanets ? '' : outRA(RAJupiter);
+	let fmtDECJupiter = noPlanets ? '' : outDec(DECJupiter);
+	let fmtSDJupiter = noPlanets ? '' : outSdHp(SDJupiter);
+	let fmtHPJupiter = noPlanets ? '' : outSdHp(HPJupiter);
 
 	// Saturn
-	let fmtGHASaturn = outHA(GHASaturn);
-	let fmtRASaturn = outRA(RASaturn);
-	let fmtDECSaturn = outDec(DECSaturn);
-	let fmtSDSaturn = outSdHp(SDSaturn);
-	let fmtHPSaturn = outSdHp(HPSaturn);
+	let fmtGHASaturn = noPlanets ? '' : outHA(GHASaturn);
+	let fmtRASaturn = noPlanets ? '' : outRA(RASaturn);
+	let fmtDECSaturn = noPlanets ? '' : outDec(DECSaturn);
+	let fmtSDSaturn = noPlanets ? '' : outSdHp(SDSaturn);
+	let fmtHPSaturn = noPlanets ? '' : outSdHp(HPSaturn);
+
+	// Polaris
+	let fmtGHAPolaris = noPlanets ? '' : outHA(GHAPol);
+	let fmtRAPolaris = noPlanets ? '' : outRA(RAPol);
+	let fmtDECPolaris = noPlanets ? '' : outDec(DECPol);
 
 	// Moon
 	let fmtGHAMoon = outHA(GHAMoon);
@@ -1248,11 +1255,6 @@ function gatherOutput() {
 	let fmtDECMoon = outDec(DECMoon);
 	let fmtSDMoon = outSdHp(SDMoon);
 	let fmtHPMoon = outSdHp(HPMoon);
-
-	// Polaris
-	let fmtGHAPolaris = outHA(GHAPol);
-	let fmtRAPolaris = outRA(RAPol);
-	let fmtDECPolaris = outDec(DECPol);
 
 	// Obliquity of Ecliptic
 	OoE = outECL(eps0);
@@ -1270,7 +1272,7 @@ function gatherOutput() {
 	sun.GHA = {
 		raw: GHASun,
 		fmt: fmtGHASun
- 	};
+	};
 	sun.RA = {
 		raw: RASun,
 		fmt: fmtRASun
@@ -1322,113 +1324,118 @@ function gatherOutput() {
 	};
 	outForm.moon = moon;
 
-	let venus = {};
-	venus.GHA = {
-		raw: GHAVenus,
-		fmt: fmtGHAVenus
-	};
-	venus.RA = {
-		raw: RAVenus,
-		fmt: fmtRAVenus
-	};
-	venus.DEC = {
-		raw: DECVenus,
-		fmt: fmtDECVenus
-	};
-	venus.SD = {
-		raw: SDVenus,
-		fmt: fmtSDVenus
-	};
-	venus.HP = {
-		raw: HPVenus,
-		fmt: fmtHPVenus
-	};
-	venus.illum = illumVenus;
-	outForm.venus = venus;
+	if (!noPlanets) {
+		let venus = {};
+		venus.GHA = {
+			raw: GHAVenus,
+			fmt: fmtGHAVenus
+		};
+		venus.RA = {
+			raw: RAVenus,
+			fmt: fmtRAVenus
+		};
+		venus.DEC = {
+			raw: DECVenus,
+			fmt: fmtDECVenus
+		};
+		venus.SD = {
+			raw: SDVenus,
+			fmt: fmtSDVenus
+		};
+		venus.HP = {
+			raw: HPVenus,
+			fmt: fmtHPVenus
+		};
+		venus.illum = illumVenus;
+		outForm.venus = venus;
 
-	let mars = {};
-	mars.GHA = {
-		raw: GHAMars,
-		fmt: fmtGHAMars
-	};
-	mars.RA = {
-		raw: RAMars,
-		fmt: fmtRAMars
-	};
-	mars.DEC = {
-		raw: DECMars,
-		fmt: fmtDECMars
-	};
-	mars.SD = {
-		raw: SDMars,
-		fmt: fmtSDMars
-	};
-	mars.HP = {
-		raw: HPMars,
-		fmt: fmtHPMars
-	};
-	mars.illum = illumMars;
-	outForm.mars = mars;
+		let mars = {};
+		mars.GHA = {
+			raw: GHAMars,
+			fmt: fmtGHAMars
+		};
+		mars.RA = {
+			raw: RAMars,
+			fmt: fmtRAMars
+		};
+		mars.DEC = {
+			raw: DECMars,
+			fmt: fmtDECMars
+		};
+		mars.SD = {
+			raw: SDMars,
+			fmt: fmtSDMars
+		};
+		mars.HP = {
+			raw: HPMars,
+			fmt: fmtHPMars
+		};
+		mars.illum = illumMars;
+		outForm.mars = mars;
 
-	let jupiter = {};
-	jupiter.GHA = {
-		raw: GHAJupiter,
-		fmt: fmtGHAJupiter
-	};
-	jupiter.RA = {
-		raw: RAJupiter,
-		fmt: fmtRAJupiter
-	};
-	jupiter.DEC = {
-		raw: DECJupiter,
-		fmt: fmtDECJupiter
-	};
-	jupiter.SD = {
-		raw: SDJupiter,
-		fmt: fmtSDJupiter
-	};
-	jupiter.HP = HPJupiter;
-	jupiter.illum = illumJupiter;
-	outForm.jupiter = jupiter;
+		let jupiter = {};
+		jupiter.GHA = {
+			raw: GHAJupiter,
+			fmt: fmtGHAJupiter
+		};
+		jupiter.RA = {
+			raw: RAJupiter,
+			fmt: fmtRAJupiter
+		};
+		jupiter.DEC = {
+			raw: DECJupiter,
+			fmt: fmtDECJupiter
+		};
+		jupiter.SD = {
+			raw: SDJupiter,
+			fmt: fmtSDJupiter
+		};
+		jupiter.HP = {
+			raw: HPJupiter,
+			fmt: fmtHPJupiter
+		};
+		jupiter.illum = illumJupiter;
+		outForm.jupiter = jupiter;
 
-	let saturn = {};
-	saturn.GHA = {
-		raw: GHASaturn,
-		fmt: fmtGHASaturn
-	};
-	saturn.RA = {
-		raw: RASaturn,
-		fmt: fmtRASaturn
-	};
-	saturn.DEC = {
-		raw: DECSaturn,
-		fmt: fmtDECSaturn
-	};
-	saturn.SD = {
-		raw: SDSaturn,
-		fmt: fmtSDSaturn
-	};
-	saturn.HP = {
-		raw: HPSaturn,
-		fmt: fmtHPSaturn
-	};
-	saturn.illum = illumSaturn;
-	outForm.saturn = saturn;
+		let saturn = {};
+		saturn.GHA = {
+			raw: GHASaturn,
+			fmt: fmtGHASaturn
+		};
+		saturn.RA = {
+			raw: RASaturn,
+			fmt: fmtRASaturn
+		};
+		saturn.DEC = {
+			raw: DECSaturn,
+			fmt: fmtDECSaturn
+		};
+		saturn.SD = {
+			raw: SDSaturn,
+			fmt: fmtSDSaturn
+		};
+		saturn.HP = {
+			raw: HPSaturn,
+			fmt: fmtHPSaturn
+		};
+		saturn.illum = illumSaturn;
+		outForm.saturn = saturn;
 
-	let polaris = {};
-	polaris.GHA = {
-		raw: GHAPol,
-		fmt: fmtGHAPolaris
-	};
-	polaris.RA = {
-		raw: RAPol,
-		fmt: fmtRAPolaris
-	};
-	polaris.DEC = {
-		raw: DECPol,
-		fmt: fmtDECPolaris
-	};
-	outForm.polaris = polaris;
+		let polaris = {};
+		polaris.GHA = {
+			raw: GHAPol,
+			fmt: fmtGHAPolaris
+		};
+		polaris.RA = {
+			raw: RAPol,
+			fmt: fmtRAPolaris
+		};
+		polaris.DEC = {
+			raw: DECPol,
+			fmt: fmtDECPolaris
+		};
+		outForm.polaris = polaris;
+	}
 
 	outForm.sidTmean = {
 		raw: GHAAmean,
