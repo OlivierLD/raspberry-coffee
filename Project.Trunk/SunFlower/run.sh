@@ -27,6 +27,8 @@ else
 	echo -e  "----------------------------------->> "
 	echo -en ">> Not asking if the date is correct, Date is " && date
 	echo -e  "----------------------------------->> "
+	# We might be started from /etc/rc.local, give the boot some slack
+	sleep 10
 fi
 #
 # You can use several servos for heading, several servos for tilt,

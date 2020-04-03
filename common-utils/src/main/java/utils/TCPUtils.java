@@ -145,6 +145,20 @@ public class TCPUtils {
 		return getCommandResult(command);
 	}
 
+	// Raspberry Pi temperature, voltage
+	// /opt/vc/bin/vcgencmd measure_temp
+	// /opt/vc/bin/vcgencmd measure_volts [core | sdram_c | sdram_i | sdram_p]
+
+	public static String getCPUTemperature2() throws Exception {
+		String command = "/opt/vc/bin/vcgencmd measure_temp";
+		return getCommandResult(command);
+	}
+
+	public static String getCoreVoltage() throws Exception {
+		String command = "/opt/vc/bin/vcgencmd measure_volts core";
+		return getCommandResult(command);
+	}
+
 	public static void main(String... args) throws Exception {
 		List<String[]> addresses = getIPAddresses();
 		addresses.stream().forEach(pair -> {
@@ -167,5 +181,10 @@ public class TCPUtils {
 		System.out.println(String.format("DiskUsage: %s", getDiskUsage()));
 		System.out.println(String.format("uname: %s", getUname()));
 		System.out.println(String.format("ls: %s", getDirectoryListing()));
+
+		// Temperature & voltage
+		System.out.println();
+		System.out.println(String.format("CPU Temperature %s", getCPUTemperature2()));
+		System.out.println(String.format("Cove Voltage %s", getCoreVoltage()));
 	}
 }
