@@ -1,6 +1,9 @@
 # MCP3008 & MCP3002
 ### 10 bits Analog to Digital Converter
 
+- [MCP3002 Datasheet](http://ww1.microchip.com/downloads/en/DeviceDoc/21294C.pdf)
+- [MCP3008 Datasheet](https://cdn-shop.adafruit.com/datasheets/MCP3008.pdf)
+
 A Java library to read the MCP3008 and MCP3002 ADCs
 
 ```

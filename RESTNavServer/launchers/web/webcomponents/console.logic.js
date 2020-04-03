@@ -459,6 +459,13 @@ function astroCallback(data) {
 	let sunLHA = getLHA(data.sun.gha, data.from.longitude);
 	let moonLHA = getLHA(data.moon.gha, data.from.longitude);
 
+	if (data.moonPhase !== undefined) { // Update MoonPhase WebComp
+		// console.log("Moon Phase:", data.moonPhase);
+		let moonPhase = document.getElementById('moon-phase-01');
+		moonPhase.phase = data.moonPhase;
+		moonPhase.repaint();
+	}
+
 	sunAltitude = data.sunObs.alt; // For the doBefore method
 
 	let moonPos = {};
@@ -576,7 +583,7 @@ function astroCallback(data) {
 	let systemDate = solarDate.format("d-m-Y-l");
 	setData('calendar-04', systemDate);
 
-	// utc-date
+	// utc-date Raw Data tab
 	document.getElementById("utc-date").innerHTML = 'UTC: ' +
 			utcDate.getUTCFullYear() + ' ' +
 			months[utcDate.getUTCMonth()] + ' ' +
@@ -585,6 +592,7 @@ function astroCallback(data) {
 			(utcDate.getUTCMinutes() < 10 ? '0' : '') + utcDate.getUTCMinutes() + ':' +
 			(utcDate.getUTCSeconds() < 10 ? '0' : '') + utcDate.getUTCSeconds();
 
+	// Solar Time Raw Data tab
 	document.getElementById("solar-date").innerHTML = 'Solar Time: ' +
 			data.solarDate.year + ' ' +
 			months[data.solarDate.month - 1] + ' ' +
@@ -593,12 +601,18 @@ function astroCallback(data) {
 			(data.solarDate.min < 10 ? '0' : '') + data.solarDate.min + ':' +
 			(data.solarDate.sec < 10 ? '0' : '') + data.solarDate.sec;
 
-	// Display transit time
+	// Display transit time Raw Data tab
 	document.getElementById("sun-transit").innerHTML = 'Sun Transit: ' +
 			(data.tPass.hour < 10 ? '0' : '') + data.tPass.hour + ':' +
 			(data.tPass.min < 10 ? '0' : '') + data.tPass.min + ':' +
 			(data.tPass.sec < 10 ? '0' : '') + data.tPass.sec + ' ' +
 			data.tPass.tz;
+
+	// Extra data Raw Tab
+	if (data.moonPhase !== undefined) {
+		document.getElementById("moon-phase-rd").innerHTML = 'Moon Phase: ' +
+				data.moonPhase + "°";
+	}
 
 	// tPass has only hh:mi:ss
 	let tPass = new Date();
