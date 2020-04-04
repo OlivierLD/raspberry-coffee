@@ -76,7 +76,7 @@ Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clock
 ### Example
 ![Wiring](./RPi-MCP3008-Pot_bb.png)
 
-> ⚠️ The resistor on the potentiometer is important! 
+> ⚠️ The resistor (220 &Omega; here) on the potentiometer is important! 
 
 On the diagram above,
 - The `MCP3008`'s `CLK` (`#13`) is connected on the RPi's `PCM_CLK` (`#12`) - Orange wire
@@ -87,4 +87,20 @@ On the diagram above,
 The `./adcreader.3008.sh` command would be issued like
 ```
  $ ./adcreader.3008.sh --miso:16 --mosi:18 --clk:12 --cs:22 --channel:0
+```
+
+### MCP3002 version
+![Wiring](./RPi-MCP3002-Pot_bb.png)
+
+> ⚠️ The resistor (220 &Omega; here) on the potentiometer is important! 
+
+On the diagram above,
+- The `MCP3002`'s `CLK` (`#7`) is connected on the RPi's `PCM_CLK` (`#12`) - Orange wire
+- The `MCP3002`'s `Dout` (`#6`) aka `MISO`, is connected on the RPi's `GPIO_4` (`#16`) - Yellow wire
+- The `MCP3002`'s `Din` (`#5`) aka `MOSI`, is connected on the RPi's `GPIO_5` (`#18`) - Blue wire
+- The `MCP3002`'s `CS` (`#1`) is connected on the RPi's `GPIO_6` (`#22`) - Green wire
+
+The `./adcreader.3008.sh` command would be issued like
+```
+ $ ./adcreader.3002.sh --miso:16 --mosi:18 --clk:12 --cs:22 --channel:0
 ```
