@@ -13,8 +13,11 @@ It the linear potentiometer is conveniently hooked to the hardware, then it can 
 to measure this angle (possibly after some calibration step).
 
 #### Test hardware
-For the sake of this demo, we provide some 3D-printed device, `STL` and `scad` files are available
+For the sake of this demo, we use some 3D-printed device, `STL` and `scad` files required to 3D-print it are available
 [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/MiscParts).
+
+When assembling the device, make sure the middle position of the potentiometer is
+centered, so you have the same freedom clockwise and counter-clockwise.
 
 | ![One](./images/linear.pot.stand.jpg) | ![Two](./images/linear.pot.stand.2.jpg) |
 |:-------------------------------------:|:---------------------------------------:|
@@ -30,7 +33,7 @@ If we hookup a multimeter to the potentiometer, we can get readings from it:
 
 | ![One](./images/multimeter/01.jpg) | ![Two](./images/multimeter/02.jpg) | ![Three](./images/multimeter/03.jpg) |
 |:----------------------------------:|:----------------------------------:|:------------------------------------:|
-| Centered                           | ~60&deg; right                     | ~60&deg; left                        |
+| Centered                           | ~60&deg; clockwise                 | ~60&deg; counter-clockwise           |
 
 
 Taking measures every 30 degrees, we have the following table:
