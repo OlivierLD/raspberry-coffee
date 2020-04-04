@@ -164,7 +164,7 @@ Done.
 
 The quality of the potentiometer seems to be _the_ important parameter here.
 
-![Chart](./chart.png)
+![Chart](./images/chart.png)
 
 ### Wiring
 Same for `ADS1015` and `ADS1115`.
