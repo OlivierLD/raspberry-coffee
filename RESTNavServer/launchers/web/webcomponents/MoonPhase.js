@@ -27,6 +27,7 @@ class MoonPhaseDisplay extends HTMLElement {
 			"width",  // Integer. Canvas width
 			"height", // Integer. Canvas height
 			"phase",  // Float. Phase value to display
+			"tilt",   // Float. (ObsLat - MoonD) - 90. Default 0
 			"label"   // String, like Phase, etc
 		];
 	}
@@ -53,6 +54,7 @@ class MoonPhaseDisplay extends HTMLElement {
 
 		// Default values
 		this._phase = 0;
+		this._tilt = 0;
 		this._width = 200;
 		this._height = 200;
 		this._label = "Moon Phase";
@@ -90,6 +92,9 @@ class MoonPhaseDisplay extends HTMLElement {
 			case "phase":
 				this._phase = parseFloat(newVal);
 				break;
+			case "tilt":
+				this._tilt = parseFloat(newVal);
+				break;
 			case "width":
 				this._width = parseInt(newVal);
 				break;
@@ -120,6 +125,10 @@ class MoonPhaseDisplay extends HTMLElement {
 //	this.repaint(); // Done in attributeChangedCallback
 	}
 
+	set tilt(val) {
+		this.setAttribute("tilt", val);
+	}
+
 	set width(val) {
 		this.setAttribute("width", val);
 	}
@@ -138,6 +147,10 @@ class MoonPhaseDisplay extends HTMLElement {
 
 	get phase() {
 		return this._phase;
+	}
+
+	get tilt() {
+		return this._tilt;
 	}
 
 	get width() {
@@ -239,7 +252,6 @@ class MoonPhaseDisplay extends HTMLElement {
 
 		let context = this.canvas.getContext('2d');
 		let scale = this.height / 200;
-
 		if (this.width === 0 || this.height === 0) { // Not visible
 			return;
 		}
@@ -278,10 +290,15 @@ class MoonPhaseDisplay extends HTMLElement {
 			x: this.width / 2,
 			y: this.height / 2
 		};
+
+		context.save();
+		context.translate(center.x, center.y);
+		context.rotate(Math.toRadians(this.tilt));
+
 		// White BG
 		context.fillStyle = 'rgb(255,250,205)'; //  'white';
 		context.beginPath();
-		context.arc(center.x, center.y, radius, 0, radius * Math.PI);
+		context.arc(0, 0, radius, 0, radius * Math.PI);
 		context.fill();
 		context.closePath();
 
@@ -289,25 +306,44 @@ class MoonPhaseDisplay extends HTMLElement {
 		if (moonPhaseVerbose) {
 			console.log('Radius', radius);
 		}
+
+		// For debug, draw tilt axis
+		context.beginPath();
+		context.moveTo(0, - radius);
+		// context.moveTo(center.x + (radius * Math.sin(Math.toRadians(this.tilt))),
+		// 		center.y - (radius * Math.cos(Math.toRadians(this.tilt))));
+		context.lineTo(0, radius);
+		// context.lineTo(center.x - (radius * Math.sin(Math.toRadians(this.tilt))),
+		// 		center.y + (radius * Math.cos(Math.toRadians(this.tilt))));
+		context.strokeStyle = 'orange';  // this.graphDisplayColorConfig.gridColor;
+		context.stroke();
+		context.closePath();
+
 		context.beginPath();
 		// Move on top (of the moon)
-		context.moveTo(center.x, center.y - radius);
+		// context.moveTo(center.x, center.y - radius);
+		context.moveTo(radius * Math.sin(Math.toRadians(this.tilt)),
+				- (radius * Math.cos(Math.toRadians(this.tilt))));
 		// Draw disc rim
 		// Phase > 180, phase < 180, see in lineTo below
+		// let tilt = -this.tilt;
+
 		for (let i=180; i>=0; i-=10) { // Bottom to top
 			let x = radius * Math.sin(Math.toRadians(i));
 			let y = radius * Math.cos(Math.toRadians(i));
-			context.lineTo(center.x + ((this.phase > 180 ? 1 : -1) * x), center.y - y);
+			context.lineTo(((this.phase > 180 ? 1 : -1) * x), - y);
 		}
 		let phaseRimOrientation = Math.cos(Math.toRadians(this.phase));
 		for (let i=0; i<=180; i+=10) { // Top to bottom
 			let x = radius * Math.sin(Math.toRadians(i)) * phaseRimOrientation;
 			let y = radius * Math.cos(Math.toRadians(i));
-			context.lineTo(center.x + ((this.phase > 180 ? -1 : 1) * x), center.y - y);
+			context.lineTo(((this.phase > 180 ? -1 : 1) * x), - y);
 			if (moonPhaseVerbose) {
 				console.log('Ph: ', this.phase,  '=> i=', i, 'X:', x, 'Y:', y);
 			}
 		}
+		context.restore();
+
 		context.lineWidth = 0.5;
 		context.strokeStyle = 'black';  // this.graphDisplayColorConfig.gridColor;
 		context.fillStyle = 'rgba(0, 0, 0, 0.8)';  // this.graphDisplayColorConfig.gridColor;

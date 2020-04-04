@@ -463,7 +463,11 @@ function astroCallback(data) {
 		// console.log("Moon Phase:", data.moonPhase);
 		let moonPhase = document.getElementById('moon-phase-01');
 		moonPhase.phase = data.moonPhase;
-		moonPhase.repaint();
+		if (data.moon.decl !== undefined && data.from.latitude !== undefined) {
+			let moonTilt = (data.from.latitude - data.moon.decl) - 90;
+			moonPhase.tilt = moonTilt;
+		}
+		//moonPhase.repaint();
 	}
 
 	sunAltitude = data.sunObs.alt; // For the doBefore method
