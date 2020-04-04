@@ -25,4 +25,37 @@ Wire it like this:
 With this setting, you turn the knob by hand (this replaces the motor), and we will see
 what the resistance of the potentiometer is.
 
+#### Let's go
+If we hookup a multimeter to the potentiometer, we can get readings from it:
+
+| ![One](./images/multimeter/01.jpg) | ![Two](./images/multimeter/02.jpg) | ![Three](./images/multimeter/03.jpg) |
+|:----------------------------------:|:----------------------------------:|:------------------------------------:|
+| Centered                           | ~60&deg; right                     | ~60&deg; left                        |
+
+
+Taking measures every 30 degrees, we have the following table:
+
+| Angle | Resistance |
+|------:|-----------:|
+| -120&deg;| 0.27 k&Omega;| 
+| -90&deg;| 1.35 k&Omega;| 
+| -60&deg;| 2.42 k&Omega;| 
+| -30&deg;| 3.55 k&Omega;| 
+| 0&deg;| 4.67 k&Omega;| 
+| +30&deg;| 5.78 k&Omega;| 
+| +60&deg;| 6.78 k&Omega;| 
+| +90&deg;| 7.78 k&Omega;| 
+| +120&deg;| 8.74 k&Omega;| 
+
+Rendered on a spreadsheet like that:
+![Ohm vs Angle](./images/resistance.vs.angle.png)
+
+It does indeed look linear.
+
+#### Automated reading
+Let's use a Raspberry Pi to take care of the reading.
+The Raspberry Pi does *not* have analog pins, we will use and ADC to do the job.
+`MCP3002` or `MCP3008`.
+
+
 ---
