@@ -110,22 +110,22 @@ public class MainMCP3002Sample {
 						" |         || Pin# | Name         | Role | GPIO    | wiringPI |\n" +
 						" |         ||      |              |      | /BCM    | /PI4J    |\n" +
 						" +---------++------+--------------+------+---------+----------+");
-		System.out.println(String.format(" | CLK (13)|| #%02d  | %s | CLK  | GPIO_%02d | %02d       |",
+		System.out.println(String.format(" | CLK (7) || #%02d  | %s | CLK  | GPIO_%02d | %02d       |",
 				PinUtil.findByPin(clk).pinNumber(),
 				StringUtils.rpad(PinUtil.findByPin(clk).pinName(), 12, " "),
 				PinUtil.findByPin(clk).gpio(),
 				PinUtil.findByPin(clk).wiringPi()));
-		System.out.println(String.format(" | Din (11)|| #%02d  | %s | MOSI | GPIO_%02d | %02d       |",
+		System.out.println(String.format(" | Din (6) || #%02d  | %s | MOSI | GPIO_%02d | %02d       |",
 				PinUtil.findByPin(mosi).pinNumber(),
 				StringUtils.rpad(PinUtil.findByPin(mosi).pinName(), 12, " "),
 				PinUtil.findByPin(mosi).gpio(),
 				PinUtil.findByPin(mosi).wiringPi()));
-		System.out.println(String.format(" | Dout(12)|| #%02d  | %s | MISO | GPIO_%02d | %02d       |",
+		System.out.println(String.format(" | Dout(5) || #%02d  | %s | MISO | GPIO_%02d | %02d       |",
 				PinUtil.findByPin(miso).pinNumber(),
 				StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 12, " "),
 				PinUtil.findByPin(miso).gpio(),
 				PinUtil.findByPin(miso).wiringPi()));
-		System.out.println(String.format(" | CS  (10)|| #%02d  | %s | CS   | GPIO_%02d | %02d       |",
+		System.out.println(String.format(" | CS  (1) || #%02d  | %s | CS   | GPIO_%02d | %02d       |",
 				PinUtil.findByPin(cs).pinNumber(),
 				StringUtils.rpad(PinUtil.findByPin(cs).pinName(), 12, " "),
 				PinUtil.findByPin(cs).gpio(),
