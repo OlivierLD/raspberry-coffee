@@ -263,7 +263,7 @@ Values to remember:
 - for `-90`: `173`
 - for `+90`: `875`
 
-Now, for real, input values when prompted:
+Now for real. Restart the program, and input values when prompted:
 ```
 pi@rpi-dev-16gb:~/raspberry-coffee/ADC-benchmark $ ./feedback.mcp3008.sh --miso:23 --mosi:24 --clk:18 --cs:25 --channel:0
 Read an MCP3008 ADC, for orientation (angle) feedback
