@@ -40,9 +40,11 @@ If we hookup a multimeter to the potentiometer, we can get readings from it:
 | Centered                           | ~60&deg; clockwise                 | ~60&deg; counter-clockwise           |
 
 
+We consider that `0` is half way between the min (knob all the way clockwise) and max (knob all the way counter-clockwise).
+  
 Taking measures every 30 degrees, we have the following table:
 
-| Angle | Resistance |
+| Knob Angle | Resistance |
 |------:|-----------:|
 | -120&deg;| 0.27 k&Omega;| 
 | -90&deg;| 1.35 k&Omega;| 
