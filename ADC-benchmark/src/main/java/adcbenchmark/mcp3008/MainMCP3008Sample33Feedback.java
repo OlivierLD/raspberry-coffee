@@ -35,7 +35,7 @@ public class MainMCP3008Sample33Feedback {
 	private static final String MINUS_90_PREFIX = "--minus90:";
 	private static final String PLUS_90_PREFIX = "--plus90:";
 
-	private static double range = 300d; // Implies center = 150d
+	private static Function<Integer, Double> adcToDegTransformer = x -> (((x / 1023.0) * 300d) - (300d / 2));
 
 	public static void main(String... args) {
 
@@ -196,6 +196,7 @@ public class MainMCP3008Sample33Feedback {
 					.findFirst();
 			if (minus90.isPresent()) {
 				minus90AdcValue = minus90.getAsInt();
+				// TODO Check if in [0..1023]
 			} else {
 				throw new IllegalArgumentException(String.format("%s required if not in Calibration mode", MINUS_90_PREFIX));
 			}
@@ -205,6 +206,7 @@ public class MainMCP3008Sample33Feedback {
 					.findFirst();
 			if (plus90.isPresent()) {
 				plus90AdcValue = plus90.getAsInt();
+				// TODO Check if in [0..1023]
 			} else {
 				throw new IllegalArgumentException(String.format("%s required if not in Calibration mode", PLUS_90_PREFIX));
 			}
@@ -215,10 +217,12 @@ public class MainMCP3008Sample33Feedback {
 			double coeffA = 180d / (double)(plus90AdcValue - minus90AdcValue);
 			double coeffB = 90d - (plus90AdcValue * coeffA);
 			Function<Integer, Double> adcToDegrees = x -> (coeffA * x + coeffB);
-			// Validation
-			System.out.println(String.format("ADC=512 -> %f\272", adcToDegrees.apply(512)));
-			System.out.println(String.format("ADC=%d -> %f\272", minus90AdcValue, adcToDegrees.apply(minus90AdcValue)));
-			System.out.println(String.format("ADC=%d -> %f\272", plus90AdcValue, adcToDegrees.apply(plus90AdcValue)));
+			System.out.println("\nParameter validation:");
+			System.out.println(String.format("ADC=0512 -> %f\272", adcToDegrees.apply(512)));
+			System.out.println(String.format("ADC=%04d -> %f\272", minus90AdcValue, adcToDegrees.apply(minus90AdcValue)));
+			System.out.println(String.format("ADC=%04d -> %f\272", plus90AdcValue, adcToDegrees.apply(plus90AdcValue)));
+			// Done!
+			adcToDegTransformer = adcToDegrees;
 		}
 
 		// Reading loop
@@ -244,7 +248,7 @@ public class MainMCP3008Sample33Feedback {
 							volume,
 							adc,
 							(3.3 * (adc / 1023.0)),                      // Volts
-							(((adc / 1023.0) * range) - (range / 2))));  // Angle, centered (on 300 degrees range)
+							adcToDegTransformer.apply(adc)));  // Angle, centered (default on 300 degrees range)
 				}
 				lastRead = adc;
 				first = false;
