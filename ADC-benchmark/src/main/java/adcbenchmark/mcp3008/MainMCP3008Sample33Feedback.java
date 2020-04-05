@@ -172,7 +172,7 @@ public class MainMCP3008Sample33Feedback {
 			}
 		}, "Shutdown Hook"));
 		int lastRead = 0;
-		int tolerance = 5;
+		int tolerance = 1; // 5; // TODO Make this a variable?
 		boolean first = true;
 
 		/*
