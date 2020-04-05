@@ -101,6 +101,10 @@ public class MainMCP3008Sample33Feedback {
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad value for %s, must be an integer [%s]", prm, pinValue));
 					}
+				} else if (prm.startsWith(MINUS_90_PREFIX) || prm.startsWith(PLUS_90_PREFIX)) {
+					if (!CALIBRATION) {
+						System.err.println(String.format("%s or %s are not required for calibration", MINUS_90_PREFIX, PLUS_90_PREFIX));
+					}
 				} else {
 					// What?
 					System.err.println(String.format("Un-managed prm: %s", prm));
@@ -188,8 +192,8 @@ public class MainMCP3008Sample33Feedback {
 			System.out.println("- Then move 90 degrees counter-clockwise, and note the ADC value YYYY.");
 			System.out.println("You will use those values in the real world, using the runtime arguments --minus90:XXXX and --plus90:YYYY");
 		} else {
-			int minus90AdcValue = 0,
-					plus90AdcValue = 0;
+			int minus90AdcValue = -1,
+					plus90AdcValue = -1;
 			OptionalInt minus90 = Arrays.stream(args)
 					.filter(arg -> arg.startsWith(MINUS_90_PREFIX))
 					.mapToInt(arg -> Integer.parseInt(arg.substring(MINUS_90_PREFIX.length())))

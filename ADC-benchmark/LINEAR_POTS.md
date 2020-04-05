@@ -69,6 +69,7 @@ The Raspberry Pi does *not* have analog pins, we will use and ADC to do the job.
 Sample setup, with the same device hooked-up to a Raspberry Pi Zero connected to an MCP3008:
 ![Setup](./images/RPi0Setup.jpg)
 
+![Wiring](./RPi-MCP3008-Pot_2_bb.png)
 
 First step, **calibration**, follow instructions at the prompt:
 ```
@@ -255,6 +256,11 @@ Shutting down.
 Bye, freeing resources.
 Done.
 ```
+
+Values to remember:
+- for `-90`: `173`
+- for `+90`: `875`
+
 Now, for real, input values when prompted:
 ```
 pi@rpi-dev-16gb:~/raspberry-coffee/ADC-benchmark $ ./feedback.mcp3008.sh --miso:23 --mosi:24 --clk:18 --cs:25 --channel:0
@@ -277,8 +283,6 @@ Usage is ./feedback.mcp3008.sh --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
 Usage is java adcbenchmark.mcp3008.MainMCP3008Sample33Feedback --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
 Values above are default values (GPIO/BCM numbers).
 
-Un-managed prm: --minus90:173
-Un-managed prm: --plus90:875
 Reading MCP3008 on channel 0
  Wiring of the MCP3008-SPI (without power supply):
  +---------++-----------------------------------------------+
@@ -336,12 +340,21 @@ Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clock
 ```
 Range parameters are validated, 1st degree function is elaborated, see if this is right:
 ```
+Function coefficients: 
+	a: 0.256410,
+	b:-134.358974
+
 Parameter validation:
 ADC=0512 -> -3.076923º
 ADC=0173 -> -90.000000º
 ADC=0875 -> 90.000000º
+ADC=0000 -> -134.358974º
+ADC=1023 -> 127.948718º
 ```
-And off we go, turn the knob back and forth:
+Notice the min and max angle (`-134º`, `+128º`), this may reflect a small offset in the potentiometer position, which is OK.
+This is what the calibration step is here for.
+
+Now turn the knob back and forth:
 ```
 Volume: 050.0% (0511) => 1.648 V, -03.33 degree(s)
 Volume: 050.1% (0513) => 1.655 V, -02.82 degree(s)
