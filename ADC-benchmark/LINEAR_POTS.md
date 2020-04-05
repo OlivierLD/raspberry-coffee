@@ -60,5 +60,10 @@ Let's use a Raspberry Pi to take care of the reading.
 The Raspberry Pi does *not* have analog pins, we will use and ADC to do the job.
 `MCP3002` or `MCP3008`.
 
+##### With an `MCP3008`
+```
+$ ./feedback.mcp3008.sh --miso:23 --mosi:24 --clk:18 --cs:25 --channel:0
+```
+
 
 ---
