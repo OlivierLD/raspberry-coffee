@@ -265,7 +265,7 @@ Values to remember:
 
 Now for real. Restart the program, and input values for `-90` and `+90` from the command line when prompted:
 ```
-pi@rpi-dev-16gb:~/raspberry-coffee/ADC-benchmark $ ./feedback.mcp3008.sh --miso:23 --mosi:24 --clk:18 --cs:25 --channel:0
+$ ./feedback.mcp3008.sh --miso:23 --mosi:24 --clk:18 --cs:25 --channel:0
 Read an MCP3008 ADC, for orientation (angle) feedback
 +----------------+
 | 1: Calibration |
