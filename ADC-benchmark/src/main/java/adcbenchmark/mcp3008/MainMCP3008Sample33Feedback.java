@@ -248,13 +248,22 @@ public class MainMCP3008Sample33Feedback {
 					System.out.println(String.format("Volume: %05.01f%% (ADC: %04d) => %.03f V.",
 							volume,
 							adc,
-							(3.3 * (adc / 1023.0))));                       // Volts
+							(3.3 * (adc / 1023.0))));  // Volts
 				} else {
-					System.out.println(String.format("Volume: %05.01%% (%04d) => %.03f V, %+06.02f degree(s)",
-							volume,
-							adc,
-							(3.3 * (adc / 1023.0)),                      // Volts
-							adcToDegTransformer.apply(adc)));  // Angle, centered (default on 300 degrees range)
+					double deviceAngle = adcToDegTransformer.apply(adc);
+					try {
+						System.out.println(String.format("Volume: %05.01f%% (%04d) => %.03f V, %+06.02f degree(s)",
+								volume,
+								adc,
+								(3.3 * (adc / 1023.0)),  // Volts
+								deviceAngle));           // Angle, centered (default on 300 degrees range)
+					} catch (Exception whatever) {
+						whatever.printStackTrace();
+						System.out.println("Volume :" + volume +
+								"\nADC:" + adc +
+								"\nVolts:" + (3.3 * (adc / 1023.0)) +
+								"\nAngle:" + deviceAngle);
+					}
 				}
 				lastRead = adc;
 				first = false;
