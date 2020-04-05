@@ -31,7 +31,7 @@ As such, returns 2<sup><small>10</small></sup> values, in \[0..1023\].
 
 
 ```
- $ ./run --channel:5
+ $ ./run.sh --channel:5
 Read an ADC for 3.3 Volt estimation
 +------------+
 | 1: MCP3008 |
@@ -162,6 +162,11 @@ Done.
  $
 ```
 
+> Note: Several runtime arguments are available (specially if using an MPC3008)
+```
+$ ./run.sh --miso:23 --mosi:24 --clk:18 --cs:25 --channel:0
+```
+
 The quality of the potentiometer seems to be _the_ important parameter here.
 
 ![Chart](./images/chart.png)
@@ -177,7 +182,7 @@ Same for `ADS1015` and `ADS1115`.
 As such, returns 2<sup><small>12</small></sup> values, in \[0..4095\].
 
 ```
- $ ./run
+ $ ./run.sh
 Read an ADC for 3.3 Volt estimation
 +------------+
 | 1: MCP3008 |
@@ -215,10 +220,10 @@ Done.
 ### ADS1115
 ##### I<sup><small>2</small></sup>C, 4 channels of 16-bit analog input
 
-As such, returns 2<sup><small>16</small></sup> values, inb \[0..65535\].
+As such, returns 2<sup><small>16</small></sup> values, in \[0..65535\].
 
 ```
- $ ./run
+ $ ./run.sh
 Read an ADC for 3.3 Volt estimation
 +------------+
 | 1: MCP3008 |

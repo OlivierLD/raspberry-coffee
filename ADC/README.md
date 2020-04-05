@@ -92,6 +92,9 @@ The `./adcreader.3008.sh` command would be issued like
 ```
 
 ### MCP3002 version
+
+WIP. See [here](https://learn.sparkfun.com/tutorials/python-programming-tutorial-getting-started-with-the-raspberry-pi/experiment-3-spi-and-analog-input)
+
 ![Wiring](./RPi-MCP3002-Pot_bb.png)
 
 > ⚠️ The resistor (220 &Omega; here) on the potentiometer is important! 
