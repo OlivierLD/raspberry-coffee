@@ -196,7 +196,10 @@ public class MainMCP3008Sample33Feedback {
 					.findFirst();
 			if (minus90.isPresent()) {
 				minus90AdcValue = minus90.getAsInt();
-				// TODO Check if in [0..1023]
+				// Check if in [0..1023]
+				if (minus90AdcValue < 0 || minus90AdcValue > 1023) {
+					throw new IllegalArgumentException(String.format("Bad value for %s, %d not in [0..1023]", MINUS_90_PREFIX, minus90AdcValue));
+				}
 			} else {
 				throw new IllegalArgumentException(String.format("%s required if not in Calibration mode", MINUS_90_PREFIX));
 			}
@@ -206,7 +209,10 @@ public class MainMCP3008Sample33Feedback {
 					.findFirst();
 			if (plus90.isPresent()) {
 				plus90AdcValue = plus90.getAsInt();
-				// TODO Check if in [0..1023]
+				// Check if in [0..1023]
+				if (plus90AdcValue < 0 || plus90AdcValue > 1023) {
+					throw new IllegalArgumentException(String.format("Bad value for %s, %d not in [0..1023]", PLUS_90_PREFIX, plus90AdcValue));
+				}
 			} else {
 				throw new IllegalArgumentException(String.format("%s required if not in Calibration mode", PLUS_90_PREFIX));
 			}
@@ -232,19 +238,19 @@ public class MainMCP3008Sample33Feedback {
 	//	System.out.println(String.format("From ch %d: %d", adcChannel, adc));
 			int postAdjust = Math.abs(adc - lastRead);
 			if (first || postAdjust > tolerance) {
-				int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
+				double volume = (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 				if (DEBUG) {
 					System.out.println("readAdc:" + Integer.toString(adc) +
 							" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), 2, "0") +
 							", 0&" + lpad(Integer.toString(adc, 2), 8, "0") + ")");
 				}
 				if (CALIBRATION) {
-					System.out.println(String.format("Volume: %03d%% (ADC: %04d) => %.03f V.",
+					System.out.println(String.format("Volume: %05.01f%% (ADC: %04d) => %.03f V.",
 							volume,
 							adc,
 							(3.3 * (adc / 1023.0))));                       // Volts
 				} else {
-					System.out.println(String.format("Volume: %03d%% (%04d) => %.03f V, %+06.02f degree(s)",
+					System.out.println(String.format("Volume: %05.01%% (%04d) => %.03f V, %+06.02f degree(s)",
 							volume,
 							adc,
 							(3.3 * (adc / 1023.0)),                      // Volts
