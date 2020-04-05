@@ -356,6 +356,9 @@ ADC=1023 -> 127.948718º
 Notice the min and max angle (`-134º`, `+128º`), this may reflect a small offset in the potentiometer position, which is OK.
 This is what the calibration step is here for.
 
+We can do a quick check, inputing those coefficients into a spreadsheet:
+![Quick check](./images/quick.check.png)
+
 Now turn the knob back and forth:
 ```
 Volume: 050.0% (0511) => 1.648 V, -03.33 degree(s)

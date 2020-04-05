@@ -226,7 +226,7 @@ public class MainMCP3008Sample33Feedback {
 			// Full range elaboration here, f(x) = a*x + b, 1st degree function (linear, hey).
 			double coeffA = 180d / (double)(plus90AdcValue - minus90AdcValue);
 			double coeffB = 90d - (plus90AdcValue * coeffA);
-			System.out.println(String.format("Function coefficients: \n\ta: %f,\n\tb:%f", coeffA, coeffB));
+			System.out.println(String.format("Function coefficients for f(x) = a.x + b: \n\ta: %f,\n\tb:%f", coeffA, coeffB));
 			Function<Integer, Double> adcToDegrees = x -> (coeffA * x + coeffB);
 			System.out.println("\nParameter validation:");
 			System.out.println(String.format("ADC=%04d -> %f\272", 512, adcToDegrees.apply(512)));
