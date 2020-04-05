@@ -222,11 +222,15 @@ public class MainMCP3008Sample33Feedback {
 			// Full range elaboration here, f(x) = a*x + b, 1st degree function (linear, hey).
 			double coeffA = 180d / (double)(plus90AdcValue - minus90AdcValue);
 			double coeffB = 90d - (plus90AdcValue * coeffA);
+			System.out.println(String.format("Function coefficients: \n\ta: %f,\n\tb:%f", coeffA, coeffB));
 			Function<Integer, Double> adcToDegrees = x -> (coeffA * x + coeffB);
 			System.out.println("\nParameter validation:");
-			System.out.println(String.format("ADC=0512 -> %f\272", adcToDegrees.apply(512)));
+			System.out.println(String.format("ADC=%04d -> %f\272", 512, adcToDegrees.apply(512)));
 			System.out.println(String.format("ADC=%04d -> %f\272", minus90AdcValue, adcToDegrees.apply(minus90AdcValue)));
 			System.out.println(String.format("ADC=%04d -> %f\272", plus90AdcValue, adcToDegrees.apply(plus90AdcValue)));
+			// ADC values for 0 and 1023 (extrema)
+			System.out.println(String.format("ADC=%04d -> %f\272", 0, adcToDegrees.apply(0)));
+			System.out.println(String.format("ADC=%04d -> %f\272", 1023, adcToDegrees.apply(1023)));
 			// Done!
 			adcToDegTransformer = adcToDegrees;
 		}
