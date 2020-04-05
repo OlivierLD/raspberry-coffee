@@ -211,14 +211,14 @@ public class MainMCP3008Sample33Feedback {
 			if (plus90AdcValue < minus90AdcValue) {
 				throw new IllegalArgumentException(String.format("Bad values [%d, %d], min >= max", minus90AdcValue, plus90AdcValue));
 			}
-			// Full range elaboration here, f(x) = a*x + b
+			// Full range elaboration here, f(x) = a*x + b, 1st degree function (linear, hey).
 			double coeffA = 180d / (double)(plus90AdcValue - minus90AdcValue);
 			double coeffB = 90d - (plus90AdcValue * coeffA);
 			Function<Integer, Double> adcToDegrees = x -> (coeffA * x + coeffB);
 			// Validation
-			System.out.println(String.format("ADC=512 -> %f", adcToDegrees.apply(512)));
-			System.out.println(String.format("ADC=%f -> %f", adcToDegrees.apply(minus90AdcValue)));
-			System.out.println(String.format("ADC=%f -> %f", adcToDegrees.apply(plus90AdcValue)));
+			System.out.println(String.format("ADC=512 -> %f\272", adcToDegrees.apply(512)));
+			System.out.println(String.format("ADC=%d -> %f\272", minus90AdcValue, adcToDegrees.apply(minus90AdcValue)));
+			System.out.println(String.format("ADC=%d -> %f\272", plus90AdcValue, adcToDegrees.apply(plus90AdcValue)));
 		}
 
 		// Reading loop
