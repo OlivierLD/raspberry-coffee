@@ -12,14 +12,18 @@ import java.util.function.Function;
 import static utils.StringUtils.lpad;
 
 /**
- * To measure a voltage, between 0 and 3.3V
+ * To measure a voltage, between 0 and 3.3V or 5.0V (See -DvRef= )
  * And deduct an angle.
  */
 public class MainMCP3008Sample33Feedback {
 
 	private final static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
-
 	private final static boolean CALIBRATION = "true".equals(System.getProperty("calibration", "false"));
+
+	private static double vRef = 3.3;
+	static {
+		vRef = Double.parseDouble(System.getProperty("vRef", String.valueOf(vRef)));
+	}
 
 	private static boolean go = true;
 	private static int adcChannel =
@@ -35,7 +39,7 @@ public class MainMCP3008Sample33Feedback {
 	private static final String MINUS_90_PREFIX = "--minus90:";
 	private static final String PLUS_90_PREFIX = "--plus90:";
 
-	private static Function<Integer, Double> adcToDegTransformer = x -> (((x / 1023.0) * 300d) - (300d / 2));
+	private static Function<Integer, Double> adcToDegTransformer = x -> (((x / 1023.0) * 300d) - (300d / 2)); // Default behavior
 
 	public static void main(String... args) {
 
@@ -46,7 +50,7 @@ public class MainMCP3008Sample33Feedback {
 		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
 		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d %s%d",
-				MainMCP3008Sample33Feedback.class.getName(),
+				MainMCP3008Sample33Feedback.class.getName(),       // <- WhoooAhhhaahahha!
 				MISO_PRM_PREFIX,  PinUtil.findByPin(miso).gpio(),
 				MOSI_PRM_PREFIX,  PinUtil.findByPin(mosi).gpio(),
 				CLK_PRM_PREFIX,   PinUtil.findByPin(clk).gpio(),
@@ -256,20 +260,20 @@ public class MainMCP3008Sample33Feedback {
 					System.out.println(String.format("Volume: %05.01f%% (ADC: %04d) => %.03f V.",
 							volume,
 							adc,
-							(3.3 * (adc / 1023.0))));  // Volts
+							(vRef * (adc / 1023.0))));  // Volts
 				} else {
 					double deviceAngle = adcToDegTransformer.apply(adc);
 					try {
 						System.out.println(String.format("Volume: %05.01f%% (%04d) => %.03f V, %+06.02f degree(s)",
 								volume,
 								adc,
-								(3.3 * (adc / 1023.0)),  // Volts
+								(vRef * (adc / 1023.0)),  // Volts
 								deviceAngle));           // Angle, centered (default on 300 degrees range)
 					} catch (Exception whatever) {
 						whatever.printStackTrace();
 						System.out.println("Volume :" + volume +
 								"\nADC:" + adc +
-								"\nVolts:" + (3.3 * (adc / 1023.0)) +
+								"\nVolts:" + (vRef * (adc / 1023.0)) +
 								"\nAngle:" + deviceAngle);
 					}
 				}

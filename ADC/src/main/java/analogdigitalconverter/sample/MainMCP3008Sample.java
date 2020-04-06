@@ -162,7 +162,7 @@ public class MainMCP3008Sample {
 			}
 		}, "Shutdown Hook"));
 		int lastRead = 0;
-		int tolerance = 5;
+		int tolerance = 5; // TODO  Make this a parameter?
 		boolean first = true;
 		while (go) {
 	//	System.out.println("Reading channel " + adcChannel);
