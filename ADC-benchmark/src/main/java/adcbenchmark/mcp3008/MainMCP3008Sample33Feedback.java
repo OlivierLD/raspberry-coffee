@@ -1,14 +1,30 @@
-package analogdigitalconverter.sample;
+package adcbenchmark.mcp3008;
 
 import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
 import utils.StringUtils;
 
+import java.util.Arrays;
+import java.util.OptionalInt;
+import java.util.function.Function;
+
 import static utils.StringUtils.lpad;
 
-public class MainMCP3008Sample {
-	private final static boolean DEBUG = "true".equals(System.getProperty("adc.verbose", "false"));
+/**
+ * To measure a voltage, between 0 and 3.3V or 5.0V (See -DvRef= )
+ * And deduct an angle.
+ */
+public class MainMCP3008Sample33Feedback {
+
+	private final static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
+	private final static boolean CALIBRATION = "true".equals(System.getProperty("calibration", "false"));
+
+	private static double vRef = 3.3;
+	static {
+		vRef = Double.parseDouble(System.getProperty("vRef", String.valueOf(vRef)));
+	}
+
 	private static boolean go = true;
 	private static int adcChannel =
 					MCPReader.MCP3008InputChannels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
@@ -20,6 +36,11 @@ public class MainMCP3008Sample {
 
 	private static final String CHANNEL_PREFIX  = "--channel:";
 
+	private static final String MINUS_90_PREFIX = "--minus90:";
+	private static final String PLUS_90_PREFIX = "--plus90:";
+
+	private static Function<Integer, Double> adcToDegTransformer = x -> (((x / 1023.0) * 300d) - (300d / 2)); // Default behavior
+
 	public static void main(String... args) {
 
 		// Default pins
@@ -29,7 +50,7 @@ public class MainMCP3008Sample {
 		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
 		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d %s%d",
-				MainMCP3008Sample.class.getName(),
+				MainMCP3008Sample33Feedback.class.getName(),       // <- WhoooAhhhaahahha!
 				MISO_PRM_PREFIX,  PinUtil.findByPin(miso).gpio(),
 				MOSI_PRM_PREFIX,  PinUtil.findByPin(mosi).gpio(),
 				CLK_PRM_PREFIX,   PinUtil.findByPin(clk).gpio(),
@@ -78,18 +99,15 @@ public class MainMCP3008Sample {
 					String chValue = prm.substring(CHANNEL_PREFIX.length());
 					try {
 						adcChannel = Integer.parseInt(chValue);
-						boolean validChannel = false;
-						for (MCPReader.MCP3008InputChannels channel : MCPReader.MCP3008InputChannels.values()) {
-							if (channel.ch() == adcChannel) {
-								validChannel = true;
-								break;
-							}
-						}
-						if (!validChannel) {
-							throw new IllegalArgumentException(String.format("Non-suitable channel for MCP3008: %d", adcChannel));
+						if (adcChannel > 7 || adcChannel < 0) {
+							throw new RuntimeException("Channel in [0..7] please");
 						}
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad value for %s, must be an integer [%s]", prm, pinValue));
+					}
+				} else if (prm.startsWith(MINUS_90_PREFIX) || prm.startsWith(PLUS_90_PREFIX)) {
+					if (!CALIBRATION) {
+						System.err.println(String.format("%s or %s are not required for calibration", MINUS_90_PREFIX, PLUS_90_PREFIX));
 					}
 				} else {
 					// What?
@@ -101,38 +119,38 @@ public class MainMCP3008Sample {
 		System.out.println(String.format("Reading MCP3008 on channel %d", adcChannel));
 		System.out.println(
 				" Wiring of the MCP3008-SPI (without power supply):\n" +
-						" +---------++-------------------------------------------------+\n" +
-						" | MCP3008 || Raspberry Pi                                    |\n" +
-						" +---------++------+--------------+------+---------+----------+\n" +
-						" |         || Pin# | Name         | Role | GPIO    | wiringPI |\n" +
-						" |         ||      |              |      | /BCM    | /PI4J    |\n" +
-						" +---------++------+--------------+------+---------+----------+");
+						" +---------++-----------------------------------------------+\n" +
+						" | MCP3008 || Raspberry Pi                                  |\n" +
+						" +---------++------+------------+------+---------+----------+\n" +
+						" |         || Pin# | Name       | Role | GPIO    | wiringPI |\n" +
+						" |         ||      |            |      | /BCM    | /PI4J    |\n" +
+						" +---------++------+------------+------+---------+----------+");
 		System.out.println(String.format(" | CLK (13)|| #%02d  | %s | CLK  | GPIO_%02d | %02d       |",
 				PinUtil.findByPin(clk).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(clk).pinName(), 12, " "),
+				StringUtils.rpad(PinUtil.findByPin(clk).pinName(), 10, " "),
 				PinUtil.findByPin(clk).gpio(),
 				PinUtil.findByPin(clk).wiringPi()));
 		System.out.println(String.format(" | Din (11)|| #%02d  | %s | MOSI | GPIO_%02d | %02d       |",
 				PinUtil.findByPin(mosi).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(mosi).pinName(), 12, " "),
+				StringUtils.rpad(PinUtil.findByPin(mosi).pinName(), 10, " "),
 				PinUtil.findByPin(mosi).gpio(),
 				PinUtil.findByPin(mosi).wiringPi()));
 		System.out.println(String.format(" | Dout(12)|| #%02d  | %s | MISO | GPIO_%02d | %02d       |",
 				PinUtil.findByPin(miso).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 12, " "),
+				StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 10, " "),
 				PinUtil.findByPin(miso).gpio(),
 				PinUtil.findByPin(miso).wiringPi()));
 		System.out.println(String.format(" | CS  (10)|| #%02d  | %s | CS   | GPIO_%02d | %02d       |",
 				PinUtil.findByPin(cs).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(cs).pinName(), 12, " "),
+				StringUtils.rpad(PinUtil.findByPin(cs).pinName(), 10, " "),
 				PinUtil.findByPin(cs).gpio(),
 				PinUtil.findByPin(cs).wiringPi()));
-		System.out.println(" +---------++------+--------------+-----+----------+----------+");
+		System.out.println(" +---------++------+------------+-----+----------+----------+");
 		System.out.println("Raspberry Pi is the Master, MCP3008 is the Slave:");
 		System.out.println("- Dout on the MCP3008 goes to MISO on the RPi");
 		System.out.println("- Din on the MCP3008 goes to MOSI on the RPi");
 		System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
-		System.out.println(               "       +--------+ ");
+		System.out.println("       +--------+ ");
 		System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ",  (adcChannel == 0 ? "*" : " ")));
 		System.out.println(String.format("%s CH1 -+  2  15 +- Vref ", (adcChannel == 1 ? "*" : " ")));
 		System.out.println(String.format("%s CH2 -+  3  14 +- aGnd ", (adcChannel == 2 ? "*" : " ")));
@@ -141,7 +159,7 @@ public class MainMCP3008Sample {
 		System.out.println(String.format("%s CH5 -+  6  11 +- Din ",  (adcChannel == 5 ? "*" : " ")));
 		System.out.println(String.format("%s CH6 -+  7  10 +- CS ",   (adcChannel == 6 ? "*" : " ")));
 		System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (adcChannel == 7 ? "*" : " ")));
-		System.out.println(               "       +--------+ ");
+		System.out.println("       +--------+ ");
 
 		// Compose mapping for PinUtil
 		String[] map = new String[4];
@@ -155,28 +173,110 @@ public class MainMCP3008Sample {
 		MCPReader.initMCP(MCPReader.MCPFlavor.MCP3008, miso, mosi, clk, cs);
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("Shutting down.");
+			System.out.println("\nShutting down.");
 			go = false;
 			synchronized (Thread.currentThread()) {
 				Thread.currentThread().notify();
 			}
 		}, "Shutdown Hook"));
 		int lastRead = 0;
-		int tolerance = 5; // TODO  Make this a parameter?
+		int tolerance = 1; // 5; // TODO Make this a variable?
 		boolean first = true;
+
+		/*
+		 * By default:
+		 *  50% will be 0 degree
+		 *   0% will be -150 degrees,
+		 * 100% will be 150 degrees.
+		 */
+
+		if (CALIBRATION) {
+			System.out.println("- Rotate the potentiometer to find the position where Volume is 50%");
+			System.out.println("- Then move 90 degrees clockwise, and note the ADC value XXXX.");
+			System.out.println("- Then move 90 degrees counter-clockwise, and note the ADC value YYYY.");
+			System.out.println("You will use those values in the real world, using the runtime arguments --minus90:XXXX and --plus90:YYYY");
+		} else {
+			int minus90AdcValue = -1,
+					plus90AdcValue = -1;
+			OptionalInt minus90 = Arrays.stream(args)
+					.filter(arg -> arg.startsWith(MINUS_90_PREFIX))
+					.mapToInt(arg -> Integer.parseInt(arg.substring(MINUS_90_PREFIX.length())))
+					.findFirst();
+			if (minus90.isPresent()) {
+				minus90AdcValue = minus90.getAsInt();
+				// Check if in [0..1023]
+				if (minus90AdcValue < 0 || minus90AdcValue > 1023) {
+					throw new IllegalArgumentException(String.format("Bad value for %s, %d not in [0..1023]", MINUS_90_PREFIX, minus90AdcValue));
+				}
+			} else {
+				throw new IllegalArgumentException(String.format("%s required if not in Calibration mode", MINUS_90_PREFIX));
+			}
+			OptionalInt plus90 = Arrays.stream(args)
+					.filter(arg -> arg.startsWith(PLUS_90_PREFIX))
+					.mapToInt(arg -> Integer.parseInt(arg.substring(PLUS_90_PREFIX.length())))
+					.findFirst();
+			if (plus90.isPresent()) {
+				plus90AdcValue = plus90.getAsInt();
+				// Check if in [0..1023]
+				if (plus90AdcValue < 0 || plus90AdcValue > 1023) {
+					throw new IllegalArgumentException(String.format("Bad value for %s, %d not in [0..1023]", PLUS_90_PREFIX, plus90AdcValue));
+				}
+			} else {
+				throw new IllegalArgumentException(String.format("%s required if not in Calibration mode", PLUS_90_PREFIX));
+			}
+			if (plus90AdcValue < minus90AdcValue) {
+				throw new IllegalArgumentException(String.format("Bad values [%d, %d], min >= max", minus90AdcValue, plus90AdcValue));
+			}
+			// Full range elaboration here, f(x) = a*x + b, 1st degree function (linear, hey).
+			double coeffA = 180d / (double)(plus90AdcValue - minus90AdcValue);
+			double coeffB = 90d - (plus90AdcValue * coeffA);
+			System.out.println(String.format("Function coefficients for f(x) = a.x + b: \n\ta: %f,\n\tb:%f", coeffA, coeffB));
+			Function<Integer, Double> adcToDegrees = x -> (coeffA * x + coeffB);
+			System.out.println("\nParameter validation:");
+			System.out.println(String.format("ADC=%04d -> %f\272", 512, adcToDegrees.apply(512)));
+			System.out.println(String.format("ADC=%04d -> %f\272", minus90AdcValue, adcToDegrees.apply(minus90AdcValue)));
+			System.out.println(String.format("ADC=%04d -> %f\272", plus90AdcValue, adcToDegrees.apply(plus90AdcValue)));
+			// ADC values for 0 and 1023 (extrema)
+			System.out.println(String.format("ADC=%04d -> %f\272", 0, adcToDegrees.apply(0)));
+			System.out.println(String.format("ADC=%04d -> %f\272", 1023, adcToDegrees.apply(1023)));
+			// Done!
+			adcToDegTransformer = adcToDegrees;
+		}
+
+		// Reading loop
 		while (go) {
 	//	System.out.println("Reading channel " + adcChannel);
 			int adc = MCPReader.readMCP(adcChannel);
 	//	System.out.println(String.format("From ch %d: %d", adcChannel, adc));
 			int postAdjust = Math.abs(adc - lastRead);
 			if (first || postAdjust > tolerance) {
-				int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
+				double volume = (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 				if (DEBUG) {
 					System.out.println("readAdc:" + Integer.toString(adc) +
 							" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), 2, "0") +
 							", 0&" + lpad(Integer.toString(adc, 2), 8, "0") + ")");
 				}
-				System.out.println("Volume:" + volume + "% (" + adc + ")");
+				if (CALIBRATION) {
+					System.out.println(String.format("Volume: %05.01f%% (ADC: %04d) => %.03f V.",
+							volume,
+							adc,
+							(vRef * (adc / 1023.0))));  // Volts
+				} else {
+					double deviceAngle = adcToDegTransformer.apply(adc);
+					try {
+						System.out.println(String.format("Volume: %05.01f%% (%04d) => %.03f V, %+06.02f degree(s)",
+								volume,
+								adc,
+								(vRef * (adc / 1023.0)),  // Volts
+								deviceAngle));           // Angle, centered (default on 300 degrees range)
+					} catch (Exception whatever) {
+						whatever.printStackTrace();
+						System.out.println("Volume :" + volume +
+								"\nADC:" + adc +
+								"\nVolts:" + (vRef * (adc / 1023.0)) +
+								"\nAngle:" + deviceAngle);
+					}
+				}
 				lastRead = adc;
 				first = false;
 			}
@@ -185,7 +285,7 @@ public class MainMCP3008Sample {
 					Thread.currentThread().wait(100L);
 				}
 			} catch (InterruptedException ie) {
-				ie.printStackTrace();
+				Thread.currentThread().interrupt();
 			}
 		}
 		System.out.println("Bye, freeing resources.");

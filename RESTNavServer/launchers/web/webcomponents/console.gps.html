@@ -33,6 +33,7 @@
 	<script type="module" src="./SplitFlapDisplay.js"></script>
 	<script type="module" src="./SunPath.js"></script>
 	<script type="module" src="./GraphDisplay.js"></script>
+	<script type="module" src="./MoonPhase.js"></script>
 
 	<!-- Scripts -->
 	<script type="text/javascript" src="js/date.proto.js"></script>
@@ -1162,6 +1163,15 @@
 															height="168"
 															value="01-01-1970"></calendar-display>
 					</div>
+
+					<div class="black-frame centered">
+						<moon-phase id="moon-phase-01"
+												title="Moon Phase"
+												width="130"
+												height="130"
+												phase="0"
+												tilt="0"/>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -1177,6 +1187,8 @@
 				<div id="utc-date" style="font-size: 20px;"></div>
 				<div id="solar-date" style="font-size: 20px;"></div>
 				<div id="sun-transit" style="font-size: 20px;"></div>
+				<div id="moon-phase-rd" style="font-size: 20px;"></div>
+				<div id="lunar-dist-rd" style="font-size: 20px;"></div>
 			</div>
 		</div>
 	</div> <!-- End of Tab 2 -->
