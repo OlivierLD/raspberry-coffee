@@ -466,6 +466,13 @@ function astroCallback(data) {
 		if (data.moon.decl !== undefined && data.from.latitude !== undefined) {
 			let moonTilt = (data.from.latitude - data.moon.decl) - 90;
 			moonPhase.tilt = moonTilt;
+			if (moonTilt > 90) {
+				moonTilt -= 180;
+			} else if (moonTilt < -90) {
+				moonTilt += 180;
+			}
+			moonPhase.title = `Tilt:${moonTilt>=0?"R":"L"}${Math.abs(moonTilt).toFixed(0)}°`;
+			// moonPhase.title = `Tilt:${(90 - Math.abs(moonTilt + 90)).toFixed(1)}°`; // TODO To Verify...
 		}
 		//moonPhase.repaint();
 	}
@@ -614,8 +621,11 @@ function astroCallback(data) {
 
 	// Extra data Raw Tab
 	if (data.moonPhase !== undefined) {
-		document.getElementById("moon-phase-rd").innerHTML = 'Moon Phase: ' +
-				data.moonPhase + "°";
+		document.getElementById("moon-phase-rd").innerHTML = 'Moon Phase: ' + data.moonPhase + "°";
+		if (data.moon.decl !== undefined && data.from.latitude !== undefined) {
+			let moonTilt = (data.from.latitude - data.moon.decl) - 90;
+			document.getElementById("moon-tilt-rd").innerHTML = `Moon Tilt: ${(90 - Math.abs(moonTilt + 90))}°`; // TODO To Verify...
+		}
 	}
 
 	// tPass has only hh:mi:ss

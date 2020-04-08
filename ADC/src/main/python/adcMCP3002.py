@@ -42,7 +42,7 @@ try:
     while True:
         adc_0 = read_adc(0)
         adc_1 = read_adc(1)
-        print("Ch 0:", round(adc_0, 2), "V Ch 1:", round(adc_1, 2), "V")
+        print("Ch 0: {}V, Ch1: {}V".format(round(adc_0, 2), round(adc_1, 2)))
         time.sleep(0.2)
 
 finally:
