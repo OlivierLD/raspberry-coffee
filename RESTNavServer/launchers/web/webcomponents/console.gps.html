@@ -502,9 +502,9 @@
 			});
 		}
 
-		function setNewTilt(range, id) {
+		function setNewTilt(value, id) {
 			let elem = document.getElementById(id);
-			var val = range.value;
+			let val = value.value;
 			if (elem !== undefined) {
 				elem.tilt = val;
 				elem.repaint();
@@ -513,7 +513,7 @@
 
 		function setNewZOffset(range, id) {
 			let elem = document.getElementById(id);
-			var val = range.value;
+			let val = range.value;
 			if (elem !== undefined) {
 				elem.zOffset = val;
 				elem.repaint();
@@ -1188,6 +1188,7 @@
 				<div id="solar-date" style="font-size: 20px;"></div>
 				<div id="sun-transit" style="font-size: 20px;"></div>
 				<div id="moon-phase-rd" style="font-size: 20px;"></div>
+				<div id="moon-tilt-rd" style="font-size: 20px;"></div>
 				<div id="lunar-dist-rd" style="font-size: 20px;"></div>
 			</div>
 		</div>
