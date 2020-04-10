@@ -46,6 +46,7 @@ gen/*
 # gradlew
 gradle-app.setting
 *.zip
+*.tgz
 NMEA.multiplexer/libs
 SerialRxTx/libs
 C/SatelliteFinder
@@ -58,6 +59,14 @@ RESTTideEngine/*.xml
 RESTRouting/out
 RESTRouting/*.json
 RESTNauticalAlmanac/out
+ADC/out
 Processing/**/*.jar
 .gitignore
 oliv-components/minified/
+RESTNavServer/launchers/web/20*
+**/target
+**/.ipynb_checkpoints
+**/logged
+**/package-lock.json
+**/__pycache__/
+polo-shirt/generated/
