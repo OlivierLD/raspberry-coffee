@@ -71,7 +71,4 @@ try:
         time.sleep(0.2)
 
 finally:
-    try:
-        GPIO.cleanup()
-    finally:
-        print("Bye!")
+    print("Bye!")
