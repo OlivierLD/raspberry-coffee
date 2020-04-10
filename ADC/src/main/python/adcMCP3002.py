@@ -43,6 +43,7 @@ def read_adc(adc_ch):
 
     if VERBOSE:
         print("ADC after loop: {0:b}".format(adc))
+
     # Last bit (0) is not part of ADC value, shift to remove it
     adc = adc >> 1
 
