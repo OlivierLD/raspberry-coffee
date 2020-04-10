@@ -9,6 +9,8 @@ import static utils.StringUtils.lpad;
 
 /**
  * Got one from SparkFun: https://www.sparkfun.com/products/8636
+ *
+ * TODO Not good. See the python code...
  */
 public class MainMCP3002Sample {
 	private final static boolean VERBOSE = "true".equals(System.getProperty("verbose", "false"));
