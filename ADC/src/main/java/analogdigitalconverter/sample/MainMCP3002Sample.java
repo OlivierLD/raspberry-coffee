@@ -11,6 +11,7 @@ import static utils.StringUtils.lpad;
  * Got one from SparkFun: https://www.sparkfun.com/products/8636
  */
 public class MainMCP3002Sample {
+	private final static boolean VERBOSE = "true".equals(System.getProperty("verbose", "false"));
 	private final static boolean DEBUG = "true".equals(System.getProperty("adc.verbose", "false"));
 	private static boolean go = true;
 	private static int adcChannel =
@@ -165,9 +166,13 @@ public class MainMCP3002Sample {
 		int tolerance = 5;
 		boolean first = true;
 		while (go) {
-	//	System.out.println("Reading channel " + adcChannel);
+			if (VERBOSE) {
+				System.out.println("Reading channel " + adcChannel);
+			}
 			int adc = MCPReader.readMCP(adcChannel);
-	//	System.out.println(String.format("From ch %d: %d", adcChannel, adc));
+			if (VERBOSE) {
+				System.out.println(String.format("From ch %d: %d", adcChannel, adc));
+			}
 			int postAdjust = Math.abs(adc - lastRead);
 			if (first || postAdjust > tolerance) {
 				int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
