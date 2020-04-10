@@ -11,6 +11,8 @@ spi_ch = 0
 spi = spidev.SpiDev(0, spi_ch)
 spi.max_speed_hz = 1200000
 
+VERBOSE = True
+
 
 def read_adc(adc_ch):
     # Make sure ADC channel is 0 or 1
@@ -25,8 +27,14 @@ def read_adc(adc_ch):
     #  Next 12 bits: 0 (don't care)
     msg = 0b11
     msg = ((msg << 1) + adc_ch) << 5
+    if VERBOSE:
+        print("msg: {0:b}".format(msg))
     msg = [msg, 0b00000000]
+
     reply = spi.xfer2(msg)
+
+    if VERBOSE:
+        print("reply:", reply)
 
     # Construct single integer out of the reply (2 bytes)
     adc = 0
