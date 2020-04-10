@@ -56,8 +56,9 @@ def read_volts(adc_ch, vref=3.3):
 try:
     while True:
         adc_0 = read_volts(0)
-        adc_1 = read_volts(1)
-        print("Ch 0: {}V, Ch1: {}V".format(round(adc_0, 2), round(adc_1, 2)))
+        # adc_1 = read_volts(1)
+        # print("Ch 0: {}V, Ch1: {}V".format(round(adc_0, 2), round(adc_1, 2)))
+        print("Ch 0: {}V".format(round(adc_0, 2)))
         time.sleep(0.2)
 
 finally:
