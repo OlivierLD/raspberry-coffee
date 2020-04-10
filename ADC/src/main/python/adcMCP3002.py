@@ -1,3 +1,7 @@
+#
+# Original from https://learn.sparkfun.com/tutorials/python-programming-tutorial-getting-started-with-the-raspberry-pi/experiment-3-spi-and-analog-input
+# may require a pip install spidev
+#
 import time
 import spidev
 
@@ -7,8 +11,8 @@ spi_ch = 0
 spi = spidev.SpiDev(0, spi_ch)
 spi.max_speed_hz = 1200000
 
-def read_adc(adc_ch, vref = 3.3):
 
+def read_adc(adc_ch):
     # Make sure ADC channel is 0 or 1
     if adc_ch != 0:
         adc_ch = 1
@@ -32,18 +36,24 @@ def read_adc(adc_ch, vref = 3.3):
     # Last bit (0) is not part of ADC value, shift to remove it
     adc = adc >> 1
 
-    # Calculate voltage form ADC value
-    voltage = (vref * adc) / 1024
+    return adc
 
-    return voltage
+
+def read_volts(adc_ch, vref=3.3):
+    adc = read_adc(adc_ch)
+    return (vref * adc) / 1024
+
 
 # Report the channel 0 and channel 1 voltages to the terminal
 try:
     while True:
-        adc_0 = read_adc(0)
-        adc_1 = read_adc(1)
+        adc_0 = read_volts(0)
+        adc_1 = read_volts(1)
         print("Ch 0: {}V, Ch1: {}V".format(round(adc_0, 2), round(adc_1, 2)))
         time.sleep(0.2)
 
 finally:
-    GPIO.cleanup()
+    try:
+        GPIO.cleanup()
+    finally:
+        print("Bye!")
