@@ -184,6 +184,9 @@ public class MCPReader {
 		chipSelectOutput.high();
 
 		adcOut >>= 1; // Drop first bit
+		if (adcFlavor.equals(MCPFlavor.MCP3002)) {
+			adcOut >>= 1;
+		}
 		return adcOut;
 	}
 
