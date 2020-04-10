@@ -48,7 +48,8 @@ def read_adc(adc_ch):
     adc = adc >> 1
 
     if VERBOSE:
-        print("returned ADC: {0:b} ({})".format(adc, adc))
+        print("returned ADC: {0:b}".format(adc))
+        print("              {}".format(adc))
 
     return adc
 
