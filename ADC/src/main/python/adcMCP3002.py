@@ -34,7 +34,7 @@ def read_adc(adc_ch):
     reply = spi.xfer2(msg)
 
     if VERBOSE:
-        print("reply:", reply)
+        print("reply: {}".format(reply))
 
     # Construct single integer out of the reply (2 bytes)
     adc = 0
@@ -48,6 +48,7 @@ def read_adc(adc_ch):
 
     if VERBOSE:
         print("returned ADC: {0:b} ({})".format(adc, adc))
+
     return adc
 
 
