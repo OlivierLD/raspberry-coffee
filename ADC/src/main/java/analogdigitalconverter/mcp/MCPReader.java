@@ -12,6 +12,8 @@ import static utils.StringUtils.lpad;
 /**
  * Read an SPI Analog to Digital Converter.
  * Suitable for MCP3008 & MCP3002.
+ *
+ * MCP3002: WIP
  */
 public class MCPReader {
 
