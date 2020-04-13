@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--meta charset="windows-1252"></meta-->
+    <meta charset="iso-8859-1"></meta>
+    <title>GPS/GoogleMaps Demo - Driving</title>
+    <style>
+      * { font-family:tahoma; font-size:12px; padding:0px; margin:0px; }
+      p { line-height:18px; }
+    </style>
+
+    <link rel="icon" type="image/ico" href="../icons/jellyfish.ico">
+
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDu5cW4UXjXZTswehBdIO8jCZdzUbk2v5o"></script>
+    <script type="text/javascript" src="../js/googlemaps.js"></script>
+
+    <!--script type="text/javascript" src="js/jquery-2.1.3.js"></script-->
+    <script type="text/javascript" src="../js/pub.sub.js"></script>
+    <script type="text/javascript" src="../js/mux.rest.js"></script>
+    <script type="text/javascript" src="../widgets/Graph.js"></script>
+    <script type="text/javascript" src="../widgets/CompassRose.js"></script>
+    <script type="text/javascript" src="../widgets/SatellitesPlotter.js"></script>
+    <script type="text/javascript" src="../widgets/AnalogDisplay.js"></script>
+    <script type="text/javascript">
+      let statusFld;
+      let satData;
+      let nmeaID;
+      let rose;
+      let displayBSP;
+      let satellitesPlotter;
+
+      let follow = false;
+
+   // There is a "map" let in googlemaps.js
+      let posMarker;
+      let track = [];
+      let polyline;
+      let lastLatlng;
+
+      let altitudeGraph; // The graph itself.
+      let altitudeData = [];
+      let GRAPH_MAX_LEN = 6000; // 60 = 1 minute
+
+      let idx2plot;
+
+      // Used to eliminate "bad" GPS points.
+      let threshold = {
+	      __50_METERS: 0.050, // In km
+	      _100_METERS: 0.100,
+	      _200_METERS: 0.200,
+	      _500_METERS: 0.500
+      };
+
+			let maxDelta = threshold._500_METERS;
+
+      function graphCallback(idx) {
+          console.log("Click on pos " + idx + ", flow " + altitudeData[idx].getY());
+          idx2plot = idx;
+      }
+
+      function setSmooth(cb) {
+          altitudeGraph.setSmoothing(cb.checked);
+      }
+      function setTooltip(cb) {
+          altitudeGraph.setTooltip(cb.checked);
+      }
+
+      window.onload = () => {
+        statusFld = document.getElementById("status");
+        satData = document.getElementById("satData");
+        nmeaID = document.getElementById("id");
+
+        rose = new CompassRose('roseCanvas', 400, 50);
+
+        let max = 100;
+        let bigTick = 10;
+        let smallTick = 5;
+        if (getQueryParameterByName('type') === 'walk') {
+            max = 15;
+            bigTick = 5;
+            smallTick = 1;
+	        	maxDelta = threshold.__50_METERS;
+        }
+
+        displayBSP = // new AnalogDisplay('bspCanvas', 100,   100,  10,  5);
+                     new AnalogDisplay('bspCanvas', 100, max, bigTick, smallTick, true, 40);
+        displayBSP.setWithMinMax(true);
+        satellitesPlotter = new SatellitesPlotter("satCanvas", 100); // 100 is the radius.
+    //  plotPositionOnChart({ lat: 0, lng: 0 }); // Default
+
+        // Available when canvas is visible
+//      let canvasWidth = document.getElementById("altitudeCanvas").getContext('2d').canvas.clientWidth;
+//      console.log("Canvas Width:" + canvasWidth);
+        altitudeGraph = new Graph("altitudeCanvas", altitudeData, graphCallback, "m");
+
+        let interv = setInterval(() => {
+            getAltitudeData();
+            if (altitudeData.length >= 10) {
+              altitudeGraph.drawGraph("altitudeCanvas", altitudeData, idx2plot);
+            }
+          }, 1000);
+      };
+
+      function getQueryParameterByName(name, url) {
+          if (!url) {
+	          url = window.location.href;
+          }
+          name = name.replace(/[\[\]]/g, "\\$&");
+          let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+              results = regex.exec(url);
+          if (!results) return null;
+          if (!results[2]) return '';
+          return decodeURIComponent(results[2].replace(/\+/g, " "));
+      };
+
+      let KM_EQUATORIAL_EARTH_RADIUS = 6378.1370;
+      let NM_EQUATORIAL_EARTH_RADIUS = 3443.9184665227;
+      let MILE_EQUATORIAL_EARTH_RADIUS = 3964.0379117464;
+
+      function toRadians(deg) {
+        return (deg / 180.0) * Math.PI;
+      }
+
+      function haversineRaw(lat1, long1, lat2, long2) {
+        let dlong = toRadians(long2 - long1);
+        let dlat = toRadians(lat2 - lat1);
+        let a = Math.pow(Math.sin(dlat / 2.0), 2) + Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.pow(Math.sin(dlong / 2.0), 2);
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return c;
+      }
+
+      function haversineKm(lat1, long1, lat2, long2) {
+        return haversineRaw(lat1, long1, lat2, long2) * KM_EQUATORIAL_EARTH_RADIUS;
+      }
+
+      function haversineNm(lat1, long1, lat2, long2) {
+        return haversineRaw(lat1, long1, lat2, long2) * NM_EQUATORIAL_EARTH_RADIUS;
+      }
+
+      function haversineMile(lat1, long1, lat2, long2) {
+        return haversineRaw(lat1, long1, lat2, long2) * MILE_EQUATORIAL_EARTH_RADIUS;
+      }
+
+      let maxDeltaPos = 0.0;
+      // Plot position on the chart
+      function plotPositionOnChart(val) {
+
+	      if (val.lat === 0 && val.lng === 0) {
+		      return; // To eliminate points where GPS is not connected...
+	      }
+
+        let pos = new google.maps.LatLng(val.lat, val.lng);
+        if (lastLatlng !== undefined) {
+          let dist = haversineKm(lastLatlng.lat(), lastLatlng.lng(), pos.lat(), pos.lng());
+          if (dist > maxDelta) { // Ignore above this threshold. Warning, can depend on replay speed.
+            console.log("Rejected: Dist %f vs %f", dist, maxDelta);
+        	  return;
+          }
+          maxDeltaPos = Math.max(maxDeltaPos, dist);
+//        console.log("Delta pos:" + dist.toFixed(4) + " km, max:" + maxDeltaPos.toFixed(4) + " km.")
+        }
+      //  new google.maps.LatLng((Math.random() * 180) - 90, (Math.random() * 360) - 180);
+				if (val.lat !== 0 && val.lng !== 0) {
+					lastLatlng = pos;
+				}
+
+        if (posMarker !== undefined) {
+            posMarker.setMap(null);
+        }
+        posMarker = new google.maps.Marker({
+            position: pos,
+            map: map,
+            title: 'GPS Position'
+        });
+        posMarker.addListener('click', onMarkerClick);
+
+        // console.log("Pushing on track", pos);
+        // console.log("Track is now %d pos long", track.length);
+
+        track.push(pos);
+//      track.push(new google.maps.LatLng((Math.random() * 180) - 90, (Math.random() * 360) - 180));
+        if (polyline !== undefined) {
+            polyline.setMap(null);
+        }
+        polyline = new google.maps.Polyline({
+            path: track,
+            geodesic: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+        });
+        polyline.setMap(map);
+
+        if (follow && lastLatlng !== undefined) {
+            map.panTo(lastLatlng);
+        }
+      }
+
+      function plotSatelliteOnChart(position, label, color) { // Don't plot.
+      }
+
+      function onMarkerClick() {
+          let mess = '<b>GPS Position</b><br>' +
+                     'L: ' + decToSex(lastLatlng.lat(), 'NS') + "<br>" +
+                     'G: ' + decToSex(lastLatlng.lng(), 'EW');
+          let popup = new google.maps.InfoWindow({
+              content: mess
+          });
+          popup.open(map, posMarker);
+      }
+
+      function recenter() {
+        follow = !follow;
+        // Set crosshair title
+        let crosshair = document.getElementById('crosshair');
+        let zoomVal = document.getElementById('zoom-value');
+        crosshair.title = (follow === true ? "Stop following" : "Start following");
+        if (lastLatlng !== undefined) {
+          map.panTo(lastLatlng);
+          let cb = document.getElementById("with-zoom");
+          if (cb !== undefined) {
+            if (cb.checked == true) {
+              let zoomValue = parseInt(zoomVal.value);
+              map.setZoom(zoomValue);
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <table cellspacing="10" border="0">
+      <tr>
+        <td align="center" rowspan="2" style="vertical-align: middle; border-radius:5px; border:1px solid #CCC; padding: 2px;">
+          <img src="images/crosshair.png" id="crosshair" width="30" height="30" onclick="recenter();" title="Start Following" alt="Follow">
+          <br/>
+          <input type="checkbox" id="with-zoom">&nbsp;with zoom <select id="zoom-value">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14" selected>14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+          </select>
+        </td>
+        <td valign="top" colspan="1"><h2><div id="title">GPS Data</div></h2></td>
+      </tr>
+      <tr>
+        <td style="vertical-align: middle;"><div id="fixdate"></div><br/>
+        Sentence <span id="id"></span></td>
+      </tr>
+    </table>
+    <table cellspacing="10" border="0">
+      <tr>
+        <td valign="top" rowspan="3"><div id="map-canvas" style="width: 800px; height: 600px; margin: 0px;"></div></td>
+        <td><canvas id="bspCanvas" width="240" height="240" title="Speed (SOG) in mph"></canvas></td>
+        <td valign="top" rowspan="1">
+          <canvas id="satCanvas" width="240" height="240" title="Satellites in sight"></canvas>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top"><canvas id="roseCanvas" width="240" height="50" title="True Heading (COG)"></canvas></td>
+        <td rowspan="2" valign="top" align="center"><div id="satData"></div></td>
+      </tr>
+      <tr>
+        <td>
+          <textarea id="raw-json" placeholder="Raw Data" style="width: 100%; font-family: Courier" rows="20"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td align="center" colspan="2" style="border-radius:5px; border:1px solid #CCC; padding: 5px;">
+          <div id="graphdiv" style="display: inline;">
+            Altitude&nbsp;&nbsp;
+            <input type="checkbox" id="smooth-data" onchange="setSmooth(this);">Smoothed <input type="checkbox" id="with-tooltip" onchange="setTooltip(this);">Tooltip
+            <br>
+            <canvas id="altitudeCanvas" height="120" width="1040" title="Altitude"></canvas>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <address>&copy; Oliv did it.</address>
+    <script src="../js/cache.client.js"></script>
+    <script src="../js/client.driving.js"></script>
+  </body>
+</html>

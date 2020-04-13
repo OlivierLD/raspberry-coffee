@@ -1,20 +1,27 @@
-## Android, Android Things, etc, WIP
+# Android, Android Things, etc, WIP
+## Hints, tips, ideas, stuff...
+
 Android (Android Things) can run on the Raspberry pi.
 This section is about giving it a try...
 
 This also illustrates the way to use some of the libraries of this project
-fro an Android Application (using a Maven repository).
+from an Android Application (using a Maven repository).
+Just in case you want to run the code on an Android device.
 
 - [Install Android Things on Raspberry Pi](https://developer.android.com/things/hardware/raspberrypi)
 - [Install Android Studio](https://developer.android.com/studio/install)
 
 ---
 ### Projects
+- [`GraphicSample`](./GraphicSample), basic sample, shows how to _draw_ a graphic (Tide curve, or what not).
+- [`FingerPaint`](.FingerPaint), another graphic sample.
 - [`AstroComputer`](./AstroComputer), a phone or tablet app, displaying current time, current position, and a chosen celestial body's coordinates (elevation and azimuth)
 
 | Screenshot |
 |:-----------|
 | ![Astro](./Screenshot_Astro_Computer.jpg) |
+
+This one could use other projects' code, through Maven.
 
 ---
 
@@ -32,16 +39,18 @@ emulator-5554	device
 then
 ```
  $ adb -s e2df64a3 shell
-heroqlteatt:/ $ 
+heroqlteatt:/ $
 ```
 
 ### Maven
+> *This* is cool stuff, be prepared!
+
 See this <https://github.com/OlivierLD/raspberry-coffee/tree/repository>
 
 The idea is to have a Maven repo possibly containing the artifacts generated from the `raspberry-coffee` one,
 so they can be referred to from a `gradle` script for Android.
 
-When building those artifacts (before deploying them to the Maven repo), Java version will be something to keep an eye on... 
+When building those artifacts (before deploying them to the Maven repo), Java version will be something to keep an eye on...
 
 #### GUI
 The GUI is defined by the `xml` files in the `res` section.

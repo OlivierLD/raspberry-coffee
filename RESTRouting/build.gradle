@@ -16,12 +16,12 @@ version = '1.0'
 //    resources {
 //      srcDir 'src/resources'
 //    }
-//  }  
+//  }
 //  test {
 //    java {
 //      srcDir 'tests/java'
 //    }
-//  }  
+//  }
 //}
 
 repositories {
@@ -34,8 +34,8 @@ repositories {
 
 dependencies {
   compile 'com.google.code.gson:gson:2.8.0'
-  compile project (':NMEA.multiplexer')
-  compile project(':Project.Trunk:PolarSmoother')
+  compile project(':NMEA-multiplexer')
+  compile project(':Project-Trunk:PolarSmoother')
 }
 
 shadowJar {

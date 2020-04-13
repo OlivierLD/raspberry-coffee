@@ -1,0 +1,29 @@
+html {
+	height: 100%;
+}
+
+body {
+  background-color: black;
+  color: red;
+  font-family: Arial, Helvetica, sans-serif;
+	background-image: linear-gradient(to bottom right, #4d4d4d, black);
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+}
+
+.display-scheme {
+  color: black;
+}
+
+.dataTitle {
+  text-align: center;
+}
+.dataValue {
+  text-align: center;
+  font-size: 80px;
+  color: yellow;
+  padding:5px; 
+  border-radius:5px; 
+  border:1px solid #CCC; 
+  margin-top:10px;
+}

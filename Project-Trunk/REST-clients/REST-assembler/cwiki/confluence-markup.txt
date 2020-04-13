@@ -1,0 +1,145 @@
+h1. RPi Environment Sensors Reader Simple example. Automatically turns a light on or off based on the ambient light. From this [Repo](https://github.com/OlivierLD/raspberry-coffee/tree/master/polo-shirt). 
+
+*Version:* 1.0.0
+
+----
+
+{toc:printable=true|style=square|minLevel=2|maxLevel=3|type=list|outline=false|include=.*}
+
+h2. Endpoints
+
+    h3. getRelayStatus
+    {status:colour=Yellow|title=get|subtle=false}
+    {code}
+    get /sensors/relay
+    {code}
+    *Summary:* 
+    *Description:* Get the current relay status
+
+
+    h4. Parameters
+
+
+
+
+
+
+
+    h4. Responses
+        *Status Code:* 200
+        *Message:*     Got status OK
+        {code:title=Response Type}
+relay-status
+        {code}
+        See [#models]
+
+
+
+        {code:title=Response Schema |collapse=true}
+{
+  "description" : "Got status OK",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/relay-status"
+      }
+    }
+  }
+}
+        {code}
+    ----
+
+    h3. setRelayStatus
+    {status:colour=Yellow|title=put|subtle=false}
+    {code}
+    put /sensors/relay
+    {code}
+    *Summary:* 
+    *Description:* Turn the relay on or off 
+
+
+    h4. Parameters
+
+        h5. Body Parameter
+        ||Name||Description||Required||Default||Pattern||
+        |relayStatus |The relay status to set |(x) | |  |
+
+
+
+
+
+
+
+    h4. Responses
+        *Status Code:* 200
+        *Message:*     Start or stop the pump
+        {code:title=Response Type}
+relay-status
+        {code}
+        See [#models]
+
+
+
+        {code:title=Response Schema |collapse=true}
+{
+  "description" : "Start or stop the pump",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/relay-status"
+      }
+    }
+  }
+}
+        {code}
+    ----
+
+    h3. readAmbientLight
+    {status:colour=Yellow|title=get|subtle=false}
+    {code}
+    get /sensors/ambient-light
+    {code}
+    *Summary:* 
+    *Description:* Read data from photo cell sensor (aka light sensor, photo-resistor). 
+
+
+    h4. Parameters
+
+
+
+
+
+
+
+    h4. Responses
+        *Status Code:* 200
+        *Message:*     Read successful
+        {code:title=Response Type}
+ambient-light
+        {code}
+        See [#models]
+
+
+
+        {code:title=Response Schema |collapse=true}
+{
+  "description" : "Read successful",
+  "content" : {
+    "application/json" : {
+      "schema" : {
+        "$ref" : "#/components/schemas/ambient-light"
+      }
+    }
+  }
+}
+        {code}
+    ----
+
+h2. Models
+
+        h3. AmbientLight
+        ||Field Name||Required||Type||Description||
+         |light | |Float | |
+        h3. RelayStatus
+        ||Field Name||Required||Type||Description||
+         |status | |Boolean |On if true, Off if false |

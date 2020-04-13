@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!-- This is just an example -->
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+	<title>One display</title>
+
+	<style>
+		:root {
+			--display-size: 250px;
+		}
+
+		html {
+			display: table;
+			width: 100%;
+			height: 100%;
+		}
+
+		* {
+			box-sizing: border-box
+		}
+
+		body {
+			display: table-cell;
+			/*text-align: center;*/
+			vertical-align: top;
+			font-family: Verdana, sans-serif;
+			color: silver;
+			background: black;
+		}
+
+		.the-slides {
+			height: var(--display-size);
+			grid-area: center;
+			margin: auto;
+			transition: max-height 1s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out;
+			opacity: 0;
+			max-width: 0;
+			transform: scaleX(0);
+			overflow: hidden;
+		}
+
+		.visible-slide {
+			opacity: 1;
+			max-width: var(--display-size);
+			transform: scaleX(1);
+		}
+
+		/* Slideshow container */
+		.slideshow-container {
+			max-width: var(--display-size);
+			margin: auto;
+			text-align: center;
+			display: grid;
+			grid-template-areas: 'left center right';
+			grid-gap: 0;
+			padding: 0;
+		}
+
+		/* Fading animation */
+		.fade {
+			-webkit-animation-name: fade;
+			-webkit-animation-duration: 1.5s;
+			animation-name: fade;
+			animation-duration: 1.5s;
+		}
+
+		@-webkit-keyframes fade {
+			from {
+				opacity: .4
+			}
+			to {
+				opacity: 1
+			}
+		}
+
+		@keyframes fade {
+			from {
+				opacity: .4
+			}
+			to {
+				opacity: 1
+			}
+		}
+
+	</style>
+
+	<script type="text/javascript" src="./js/AnalogDisplay.js"></script>
+	<script type="text/javascript" src="./js/Direction.js"></script>
+	<script type="text/javascript" src="./js/CircularCompass.js"></script>
+
+	<script type="text/javascript" src="./js/pub.sub.js"></script>
+	<script type="text/javascript" src="./js/ajax.manager.js"></script>
+
+	<script type="text/javascript">
+
+		var displayBSP;
+		var displayTWS;
+
+		var displayTWD;
+		var displayHDG;
+
+		const MIN_BSP = 0, MAX_BSP = 15;
+		const MIN_TWS = 0, MAX_TWS = 65;
+
+		let bsp = 0;
+		let tws = 0;
+		let twd = 0;
+		let hdg = 0;
+
+		let incBsp = 0.1;
+		let incTws = 0.2;
+		let incTwd = 1.0;
+		let incHdg = 1.0;
+
+		let justDemo = true;
+
+		window.onload = () => {
+			displayBSP = new AnalogDisplay('bspCanvas', 123, 15, 1, 0.1, true, 40); // 123: ((250/2) - 2)
+			displayBSP.setValue(bsp);
+			displayBSP.setLabel('BSP');
+			displayBSP.repaint();
+
+			displayTWS = new AnalogDisplay('twsCanvas', 123, 65, 5, 1, true, 40); // 123: ((250/2) - 2)
+			displayTWS.setValue(tws);
+			displayTWS.setLabel('TWS');
+			displayTWS.repaint();
+
+			displayTWD = new Direction('twdCanvas', 123, 45, 5, true, true); // 123: ((250/2) - 2)
+			displayTWD.setValue(twd);
+			displayTWD.setLabel('TWD');
+			displayTWD.setCbAfter((context, radius, displayValue, tipPos) => {
+				console.log('Display Value in the callback:', displayValue);
+				context.beginPath();
+				context.arc(tipPos.x, tipPos.y, 10, 0, 2 * Math.PI, false);
+				context.closePath();
+				context.fillStyle = 'yellow';
+				context.fill();
+				context.strokeStyle = 'orange';
+				context.stroke();
+			});
+			displayTWD.repaint();
+
+			displayHDG = new CircularCompass('hdgCanvas', 123, 45, 1, true); // 123: ((250/2) - 2)
+			displayHDG.setValue(twd);
+			displayHDG.setLabel('HDG');
+			displayHDG.repaint();
+
+			if (justDemo) {
+				window.setInterval(() => { // Move the hand
+					if ((incBsp > 0 && bsp >= MAX_BSP) || (incBsp < 0 && (bsp <= MIN_BSP))) {
+						incBsp *= -1;
+					}
+					bsp += incBsp;
+					displayBSP.setValue(bsp);
+				}, 20);
+
+				window.setInterval(() => { // Move the hand
+					if ((incTws > 0 && tws >= MAX_TWS) || (incTws < 0 && (tws <= MIN_TWS))) {
+						incTws *= -1;
+					}
+					tws += incTws;
+					displayTWS.setValue(tws);
+				}, 50);
+
+				window.setInterval(() => { // Move the hand
+					twd += incTwd;
+					twd %= 360;
+					displayTWD.setValue(twd);
+				}, 50);
+
+				window.setInterval(() => { // Move the hand
+					hdg += incHdg;
+					hdg %= 360;
+					displayHDG.setValue(hdg);
+				}, 50);
+			} else {
+				initAjax();
+
+				/**
+				 *  SUBSCRIBERS HERE.
+				 *
+				 * The following subscriptions make the distinction between Ajax & WebSockets
+				 * (See the initAjax & initWS methods)
+				 *
+				 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
+				 */
+				events.subscribe('bsp', (val) => {
+					displayBSP.setValue(val);
+				});
+				events.subscribe('tws', (val) => {
+					displayTWS.setValue(val);
+				});
+				events.subscribe('twd', (val) => {
+					displayTWD.setValue(val);
+				});
+				events.subscribe('hdg', (val) => {
+					displayHDG.setValue(val);
+				});
+			}
+		};
+
+	</script>
+</head>
+<body bgcolor="white">
+<!--div style="text-align: left; margin-left: 20px;">
+	<h2>An Example: Several displays...</h2>
+	<h3>with transitions</h3>
+</div-->
+
+<div style="text-align: center; max-width: 300px; padding: 20px 10px 10px 10px; margin: 10px; border: 3px solid silver; border-radius: 50px;">
+	<div id="displays">
+		<div class="slideshow-container">
+
+			<div class="the-slides fade">
+				<canvas id="bspCanvas" width="250" height="250" title="BSP"></canvas>
+			</div>
+
+			<div class="the-slides fade">
+				<canvas id="twsCanvas" width="250" height="250" title="TWS"></canvas>
+			</div>
+
+			<div class="the-slides fade">
+				<canvas id="twdCanvas" width="250" height="250" title="TWD"></canvas>
+			</div>
+
+			<div class="the-slides fade">
+				<canvas id="hdgCanvas" width="250" height="250" title="HDG"></canvas>
+			</div>
+
+		</div>
+	</div>
+
+	<div style="margin: 10px 0 0 0;">
+		<button onclick="plusSlides(-1);">&lt;</button>
+		<button onclick="plusSlides(+1);">&gt;</button>
+	</div>
+</div>
+
+<script type="text/javascript">
+	let slideIndex = 1;
+	showSlides(slideIndex);
+
+	function showSlides(n) {
+		let slides = document.getElementsByClassName("the-slides");
+
+		if (n > slides.length) {
+			slideIndex = 1;
+		}
+		if (n < 1) {
+			slideIndex = slides.length;
+		}
+		for (let i = 0; i < slides.length; i++) { // Hide them all
+			slides[i].classList.remove("visible-slide");
+		}
+		slides[slideIndex - 1].classList.add("visible-slide"); // Show active one
+	}
+
+	function plusSlides(n) {
+		showSlides(slideIndex += n);
+	}
+
+</script>
+<hr/>
+<span style="font-style: italic; text-align: left; margin: 10px;">Oliv fecit, 2019</span>
+</body>
+</html>

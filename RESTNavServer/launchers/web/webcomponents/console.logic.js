@@ -624,7 +624,13 @@ function astroCallback(data) {
 		document.getElementById("moon-phase-rd").innerHTML = 'Moon Phase: ' + data.moonPhase + "°";
 		if (data.moon.decl !== undefined && data.from.latitude !== undefined) {
 			let moonTilt = (data.from.latitude - data.moon.decl) - 90;
-			document.getElementById("moon-tilt-rd").innerHTML = `Moon Tilt: ${(90 - Math.abs(moonTilt + 90))}°`; // TODO To Verify...
+			if (moonTilt > 90) {
+				moonTilt -= 180;
+			} else if (moonTilt < -90) {
+				moonTilt += 180;
+			}
+			// document.getElementById("moon-tilt-rd").innerHTML = `Moon Tilt: ${(90 - Math.abs(moonTilt + 90))}°`; // TODO To Verify...
+			document.getElementById("moon-tilt-rd").innerHTML = `Moon Tilt: ${Math.abs(moonTilt)}°, ${moonTilt>=0?"Right ":"Left "}`;
 		}
 	}
 

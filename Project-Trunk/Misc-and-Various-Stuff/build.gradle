@@ -1,0 +1,45 @@
+plugins {
+  id 'java'
+  id 'maven'
+  id 'idea'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
+}
+
+shadowJar {
+  zip64 true
+}
+
+group = 'oliv.raspi.coffee'
+version = '1.0'
+
+// sourceCompatibility = 1.8
+
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src/java'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests'
+//    }
+//  }
+//}
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+  maven { url "https://oss.sonatype.org/content/groups/public" }
+}
+
+dependencies {
+//compile 'com.pi4j:pi4j-core:1.1'
+//compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
+  compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT'  // -SNAPSHOT'
+  compile project(':http-tiny-server')
+  compile project(':I2C-SPI')
+  compile project(':Arduino-RaspberryPI')
+  compile project(':PhoneKeyboard3x4')
+  compile project(':SevenSegDisplay')
+}
