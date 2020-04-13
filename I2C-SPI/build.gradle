@@ -1,0 +1,71 @@
+plugins {
+  id 'java'
+//id 'scala'
+  id 'idea'
+  id 'maven'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
+}
+
+group = 'oliv.raspi.coffee'
+version = '1.0'
+
+// sourceCompatibility = 1.8
+
+//sourceSets {
+//  main {
+//    java {
+//      srcDir 'src'
+//    }
+//  }
+//  test {
+//    java {
+//      srcDir 'tests'
+//    }
+//  }
+//}
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+  maven { url "https://oss.sonatype.org/content/groups/public" }
+}
+
+dependencies {
+//compile 'com.pi4j:pi4j-core:1.1'
+//compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
+  compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT'
+//  compile 'com.pi4j:pi4j-core:1.4-SNAPSHOT'
+  compile 'org.json:json:20141113'
+  compile 'org.java-websocket:Java-WebSocket:1.3.7'
+  compile project(':common-utils')
+  compile project(':RMI-sample')
+}
+
+// Warning: Must be run as root
+task runOled(type: JavaExec, dependsOn: build, description: "Run the OLED Demo") {
+  main = 'spi.lcd.oled.samples.OLEDSSD1306Sample'
+  systemProperty 'verbose', 'true'
+//classpath project.configurations.default
+  classpath sourceSets.main.runtimeClasspath
+//classpath sourceSets.main.output.classesDir
+}
+
+// Warning: Must be run as root
+task runBMP180(type: JavaExec, dependsOn: build, description: "Run the BMP180 Demo") {
+  main = 'i2c.sensor.BMP180'
+  systemProperty 'bmp180.verbose', 'true'
+//classpath project.configurations.default
+  classpath sourceSets.main.runtimeClasspath
+//classpath sourceSets.main.output.classesDir
+}
+
+task runLedPanel(type: JavaExec, dependsOn: build, description: "Run the LED panel simulator (Swing)") {
+  main = 'lcd.utils.LedPanelMain'
+//classpath project.configurations.default
+  classpath sourceSets.main.runtimeClasspath
+//classpath sourceSets.main.output.classesDir
+}
+
+shadowJar {
+  zip64 true
+}

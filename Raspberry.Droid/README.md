@@ -1,9 +1,12 @@
-## Android, Android Things, etc, WIP
+# Android, Android Things, etc, WIP
+## Hints, tips, ideas, stuff...
+
 Android (Android Things) can run on the Raspberry pi.
 This section is about giving it a try...
 
 This also illustrates the way to use some of the libraries of this project
-fro an Android Application (using a Maven repository).
+from an Android Application (using a Maven repository).
+Just in case you want to run the code on an Android device.
 
 - [Install Android Things on Raspberry Pi](https://developer.android.com/things/hardware/raspberrypi)
 - [Install Android Studio](https://developer.android.com/studio/install)
@@ -40,6 +43,8 @@ heroqlteatt:/ $
 ```
 
 ### Maven
+> *This* is cool stuff, be prepared!
+
 See this <https://github.com/OlivierLD/raspberry-coffee/tree/repository>
 
 The idea is to have a Maven repo possibly containing the artifacts generated from the `raspberry-coffee` one,

@@ -1,0 +1,67 @@
+html {
+  height: 100%;
+}
+
+body {
+  background-color: white;
+  color: darkgray;
+  font-family: Arial, Helvetica, sans-serif;
+/*background-image: linear-gradient(to bottom right, white, lightgray); */
+  background: radial-gradient(at top, white -8%, lightgray 55%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.display-scheme {
+  color: white;
+}
+
+.dataTitle {
+  text-align: center;
+}
+.dataValue {
+  text-align: center;
+  font-size: 80px;
+  color: blue;
+  padding:5px; 
+  border-radius:5px; 
+  border:1px solid #CCC; 
+  margin-top:10px;
+}
+
+
+.analogdisplay {
+  --bg-color: rgba(0, 0, 0, 0);
+  --digit-color: black;
+  --with-gradient: true;
+  --display-background-gradient-from: LightGrey;
+  --display-background-gradient-to: white; /* used if --withGradient: false */
+  --display-line-color: rgba(255, 255, 255, 0.5);
+  --label-fill-color: rgba(255, 255, 255, 0.5);
+  --with-display-shadow: true;
+  --shadow-color: rgba(0, 0, 0, 0.75);
+  --outline-color: DarkGrey;
+  --major-tick-color: black;
+  --minor-tick-color: black;
+  --value-color: grey;
+  --value-outline-color: black;
+  --value-nb-decimal: 1;
+  --hand-color: red;
+  --hand-outline-color: black;
+  --with-hand-shadow: true;
+  --knob-color: DarkGrey;
+  --knob-outline-color: black;
+  --index-color: red; /* Compass rose index */
+  --font: Arial;
+}
+
+.numericdisplay {
+  --bg-color: white;
+  --with-gradient: true;
+  --display-background-gradient-from: LightGrey;
+  --display-background-gradient-to: white;
+  --value-color: grey;
+  --value-outline-color: black;
+  --font: Arial;
+}
+

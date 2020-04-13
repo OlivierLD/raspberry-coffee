@@ -1,0 +1,24 @@
+/* Monochrome, cyan */
+.analogdisplay {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: cyan;
+	--with-gradient: false;
+	--display-background-gradient-from: LightGrey; /* used if --withGradient: true */
+	--display-background-gradient-to: rgba(0, 0, 0, 0);
+	--display-line-color: rgba(0, 255, 255, 0.25);
+	--label-fill-color: rgba(0, 0, 0, 0);
+	--with-display-shadow: false;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--outline-color: cyan;
+	--major-tick-color: cyan;
+	--minor-tick-color: cyan;
+	--value-color: cyan;
+	--value-outline-color: cyan;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(0, 0, 0, 0.0);
+	--hand-outline-color: cyan;
+	--with-hand-shadow: false;
+	--knob-color: cyan;
+	--knob-outline-color: cyan;
+	--font: Arial;
+}

@@ -1,34 +1,34 @@
-rootProject.name = 'raspberry.coffee'
+rootProject.name = 'raspberry-coffee'
 //
-include 'Adafruit.IO.REST'
+include 'Adafruit-IO-REST'
 include 'ADC'
 include 'ADC-benchmark'
 include 'AlaMode.101'
-include 'Arduino.RaspberryPI'
+include 'Arduino-RaspberryPI'
 include 'DAC'
 include 'FONA'
 include 'GPIO.01'
-include 'I2C.SPI'
+include 'I2C-SPI'
 include 'LelandOilDetector'
 include 'MindWave'
 include 'PhoneKeyboard3x4'
-include 'PI4J.email'
+include 'PI4J-email'
 include 'PIR'
 include 'HC-SR04'
 include 'Relay'
 include 'RasPISamples'
-include 'Serial.IO'
+include 'Serial-IO'
 include 'SerialRxTx'
-include 'Serial.PI4J.reader'
+include 'Serial-PI4J-reader'
 include 'SevenSegDisplay'
-include 'system.utils'
+include 'system-utils'
 include 'WeatherStation'
-include 'OtherJVM.languages'
-include "RMI.sample"
-include "NMEA.multiplexer"
-include "NMEA.mux.extensions"
+include 'OtherJVMLanguages'
+include "RMI-sample"
+include "NMEA-multiplexer"
+include "NMEA-mux-extensions"
 // include "NMEA.mux.WebUI"
-include "Monitor.Battery"
+include "Monitor-Battery"
 include "JavaSoundDemo"
 include "ukulele"
 include "LoRa"
@@ -51,44 +51,43 @@ include "Processing"
 include "Bluetooth"
 include "Joystick"
 include "jsonQL"
-include "Celestial.Almanac"
+include "Celestial-Almanac"
 // NMEA.mux.WebUI sub-projects
-include(':NMEA.mux.WebUI:full.server')
-include(':NMEA.mux.WebUI:minimal.mux')
-include(':NMEA.mux.WebUI:compass.mux')
-include(':NMEA.mux.WebUI:full.server.extended')
-include(':NMEA.mux.WebUI:full.server.extended.v2')
-include(':NMEA.mux.WebUI:small.server.extended')
-include(':NMEA.mux.WebUI:head.up')
-// Project.Trunk sub-projects
-include "Project.Trunk:RasPiRadar"
-include "Project.Trunk:PurePWM"
-include "Project.Trunk:Button.Reflex"
-include "Project.Trunk:System.Languages"
-include "Project.Trunk:Weather.Station.Implementation"
-include "Project.Trunk:Led.PWM.etc"
-include "Project.Trunk:Motors"
-include "Project.Trunk:SteppersPlayground"
-include "Project.Trunk:LSM303"
-include "Project.Trunk:SunFlower"
-include "Project.Trunk:SunFlower.v2"
-include "Project.Trunk:ADCs.Servos.JoySticks"
-include "Project.Trunk:PlantWateringSystem"
-include "Project.Trunk:Misc.and.Various.Stuff"
-include "Project.Trunk:PolarSmoother"
-include "Project.Trunk:REST.clients:TCP.Watch.01"
-include "Project.Trunk:REST.clients:REST.assembler"
-include "Project.Trunk:REST.clients:REST.assembler:springboot-sensors"
+include(':NMEA-mux-WebUI:full-server')
+include(':NMEA-mux-WebUI:minimal-mux')
+include(':NMEA-mux-WebUI:compass-mux')
+include(':NMEA-mux-WebUI:full-server-extended')
+include(':NMEA-mux-WebUI:full-server-extended-v2')
+include(':NMEA-mux-WebUI:small-server-extended')
+include(':NMEA-mux-WebUI:head-up')
+// Project-Trunk sub-projects
+include "Project-Trunk:RasPiRadar"
+include "Project-Trunk:PurePWM"
+include "Project-Trunk:Button-Relex"
+include "Project-Trunk:System-Languages"
+include "Project-Trunk:Weather-Station-Implementation"
+include "Project-Trunk:Led-PWM-etc"
+include "Project-Trunk:Motors"
+include "Project-Trunk:SteppersPlayground"
+include "Project-Trunk:LSM303"
+include "Project-Trunk:SunFlower"
+include "Project-Trunk:SunFlower-v2"
+include "Project-Trunk:ADCs-Servos-JoySticks"
+include "Project-Trunk:PlantWateringSystem"
+include "Project-Trunk:Misc-and-Various-Stuff"
+include "Project-Trunk:PolarSmoother"
+include "Project-Trunk:REST-clients:TCP-Watch-01"
+include "Project-Trunk:REST-clients:REST-assembler"
+include "Project-Trunk:REST-clients:REST-assembler:springboot-sensors"
 
-include "Project.Trunk:Deviation.Tool"
-include "Project.Trunk:dAISy"
+include "Project-Trunk:Deviation-Tool"
+include "Project-Trunk:dAISy"
 
 // Scratch pad
-include "oliv.scratch.pad:some.tests"
-include "oliv.scratch.pad:http.test"
-include 'REST.clients'
+include "oliv-scratch-pad:some-tests"
+include "oliv-scratch-pad:http-test"
+//include 'REST.clients'
 include 'springboot-sensors'
 include 'jersey-client-tests'
-include 'oliv.scratch.pad:jersey-client-tests'
-findProject(':oliv.scratch.pad:jersey-client-tests')?.name = 'jersey-client-tests'
-
+include 'oliv-scratch-pad:jersey-client-tests'
+findProject(':oliv-scratch-pad:jersey-client-tests')?.name = 'jersey-client-tests'
