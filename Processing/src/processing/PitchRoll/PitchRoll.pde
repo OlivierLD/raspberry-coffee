@@ -1,6 +1,6 @@
 import i2c.sensor.LSM303;
 /**
- * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar 
+ * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C-SPI-1.0-all.jar
  */
 
 // These are the points drawing the boat.
@@ -34,7 +34,7 @@ float[][] rail = new float[][] {
 
 int pts = keel.length; // TODO Verify they all have the same length
 
-// for shaded or wireframe rendering 
+// for shaded or wireframe rendering
 boolean isWireFrame = false;
 
 boolean withSensor = false;
@@ -70,7 +70,7 @@ int rollSign = 1;
 
 void draw(){
   background(50, 64, 42);
-  
+
   // basic lighting setup
   lights();
   // 2 rendering styles
@@ -98,11 +98,11 @@ void draw(){
       pitchSign *= -1;
     }
   }
-  
+
 // Heading given by the mouse (left-right)
   float newXmag = mouseX/float(width) * 180;
   heading = - newXmag;
-  
+
   rotateX((roll * PI / 180) + (PI / 2)); // Roll PI/2: 0 Roll
   rotateY(pitch * (PI / 180)); // Pitch
   rotateZ(heading * (PI / 180)); // Heading. -PI/2: facing
@@ -132,7 +132,7 @@ void draw(){
   }
   endShape();
   popMatrix();
-  
+
   pushMatrix();
   // Transom
   beginShape();
@@ -142,10 +142,10 @@ void draw(){
 
   vertex(rail[pts-1][0], -rail[pts-1][1], rail[pts-1][2]);
   vertex(chine[pts-1][0], -chine[pts-1][1], chine[pts-1][2]);
-  
+
   endShape();
   popMatrix();
-  
+
   // Deck
   pushMatrix();
   beginShape();

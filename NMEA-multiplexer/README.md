@@ -574,7 +574,7 @@ Some (good and open source) softwares
 ## A note on the build
 As you must have seen, we use `Gradle` here, along with the `ShadowJar` plugin. This plugin gathers **all** the dependencies, and puts them
   all together in a single `jar` file (named a fat-jar). This makes your life considerably easier,
-  just put the jar named `build/libs/NMEA.multiplexer-1.0-all.jar` in your classpath (see for example in the `mux.sh`), and you have everything you need in there.
+  just put the jar named `build/libs/NMEA-multiplexer-1.0-all.jar` in your classpath (see for example in the `mux.sh`), and you have everything you need in there.
 
   This `fat-jar` is currently (Apr-2017) a bit more than 7 Mb big. In some cases, you might want to trim the jar down, to make it smaller. If you do not need the classes that can be dynamically loaded,
   if you are not interested in the I<small><sup>2</sup></small>C sensors, etc, you could very well prune those projects, the resulting jar
@@ -684,7 +684,7 @@ And there is an integration with the [REST Nav Server](https://github.com/Olivie
 ## Bonus
 - A sample of a log file analyzer is in `util.LogAnalyzer`:
 ```bash
- $ java -cp ./build/libs/NMEA.multiplexer-1.0-all.jar util.LogAnalyzer ./sample.data/2017.06.17.nmea
+ $ java -cp ./build/libs/NMEA-multiplexer-1.0-all.jar util.LogAnalyzer ./sample.data/2017.06.17.nmea
 
   Started 17-Jun-2017 09:11:01 PDT
   Arrived 17-Jun-2017 11:42:37 PDT
@@ -698,7 +698,7 @@ And there is an integration with the [REST Nav Server](https://github.com/Olivie
 
 - A sample of a kml file generator is in `util.NMEAtoKML`:
 ```bash
- $ java -cp ./build/libs/NMEA.multiplexer-1.0-all.jar util.NMEAtoKML sample.data/alcatraz.2018.may.5.nmea --title:Alcatraz --sub-title:"May 5, 2018"
+ $ java -cp ./build/libs/NMEA-multiplexer-1.0-all.jar util.NMEAtoKML sample.data/alcatraz.2018.may.5.nmea --title:Alcatraz --sub-title:"May 5, 2018"
 Started 05-May-2018 10:32:23 PDT
 Arrived 05-May-2018 15:52:31 PDT
 38,426 record(s) out of 76,821. Total distance: 44.222 km, in 5 hour(s) 20 minute(s) 8.0 sec(s). Avg speed:8.288 km/h

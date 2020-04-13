@@ -1,7 +1,7 @@
 import i2c.sensor.VL53L0X;
 /**
  * Numeric value returned by a VL53L0X.
- * Using the menu Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar
+ * Using the menu Sketch > Add File..., select I2C.SPI/build/libs/I2C-SPI-1.0-all.jar
  */
 
 boolean withSensor = true;

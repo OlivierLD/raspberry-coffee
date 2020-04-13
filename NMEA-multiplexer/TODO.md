@@ -76,7 +76,7 @@ But if we insist, it will work eventually.
 ```
 $ ./mux.sh nmea.mux.2.serial.yaml 
 Using properties file nmea.mux.2.serial.yaml
-Running java  -Djava.library.path=/usr/lib/jni -Dscreen.verbose=true -Dprocess.on.start=true -Dmux.properties=nmea.mux.2.serial.yaml -Dno.ais=false -Dcalculate.solar.with.eot=true -Djava.util.logging.config.file=./logging.properties   -cp ./build/libs/NMEA.multiplexer-1.0-all.jar:/usr/share/java/RXTXcomm.jar nmea.mux.GenericNMEAMultiplexer
+Running java  -Djava.library.path=/usr/lib/jni -Dscreen.verbose=true -Dprocess.on.start=true -Dmux.properties=nmea.mux.2.serial.yaml -Dno.ais=false -Dcalculate.solar.with.eot=true -Djava.util.logging.config.file=./logging.properties   -cp ./build/libs/NMEA-multiplexer-1.0-all.jar:/usr/share/java/RXTXcomm.jar nmea.mux.GenericNMEAMultiplexer
 Definition Name: Read 2 serial ports, generate one log file, for Windows.
 {with.http.server=false, init.cache=false}
 nmea.consumers.reader.SerialReader: There are 3 listener(s)

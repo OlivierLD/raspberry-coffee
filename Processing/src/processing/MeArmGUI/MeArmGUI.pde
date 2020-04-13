@@ -2,7 +2,7 @@
  * 4 Scrollbars to drive a MeArm robotic arm..
  * Move the scrollbars left and right to change the positions of associated servos.
  *
- * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar
+ * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C-SPI-1.0-all.jar
  */
 // import i2c.samples.mearm.MeArmPilot; // Not mandatory in Processing.
 

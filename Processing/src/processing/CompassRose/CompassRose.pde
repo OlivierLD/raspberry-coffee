@@ -2,7 +2,7 @@ import i2c.sensor.LSM303;
 /**
  * Value returned by an LSM303, graphically.
  *
- * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar
+ * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C-SPI-1.0-all.jar
  */
 
 boolean withSensor = true;

@@ -1,10 +1,10 @@
 /*
  * Sends data to the SSD1306, and emulates it. Both displays (oled and Processing Frame) should look the sme.
- * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar
+ * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C-SPI-1.0-all.jar
  */
 
 // import lcd.oled.SSD1306; // Not mandatory in Processing.
- 
+
 int value;
 
 final int NB_LINES = 32;
@@ -28,11 +28,11 @@ ScreenBuffer sb;
 void setup() {
   frameRate(4); // fps. Default is 60. Slow down to 4, to be able to read.
   initLeds();
-  size(1280, 320); // (WIDTH, HEIGHT); 
+  size(1280, 320); // (WIDTH, HEIGHT);
   stroke(BLACK);
   noFill();
   textSize(72); // if text() is used.
-  
+
   try {
     println(String.format("SSD1306 address: 0x%02X", SSD1306.SSD1306_I2C_ADDRESS));
     oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS);
@@ -49,7 +49,7 @@ void draw() {
   fill(WHITE);
   value = (int)Math.floor(1023 * Math.random());  // Simulation
 //text(String.format("%04d", value), 10, 100);
-  
+
   stroke(GRAY); // For the grid
   // Vertical grid
   for (int i=1; i<NB_COLS; i++) {
@@ -61,7 +61,7 @@ void draw() {
     int ord = i * (int)(HEIGHT / NB_LINES);
     line(0, ord, WIDTH, ord);
   }
-  
+
   // Character display
   if (sb == null) {
     sb = new ScreenBuffer(NB_COLS, NB_LINES);
@@ -137,7 +137,7 @@ void setBuffer(int[] screenbuffer) {
   char[][] screenMatrix = new char[NB_LINES][NB_COLS];
   for (int i = 0; i < NB_COLS; i++) {
     // Line is a vertical line, its length is NB_LINES / 8
-    String line = ""; 
+    String line = "";
     for (int l = (NB_LINES / 8) - 1; l >= 0; l--) {
       line += StringUtils.lpad(Integer.toBinaryString(screenbuffer[i + (l * NB_COLS)]), 8, "0").replace('0', ' ').replace('1', 'X');
     }
