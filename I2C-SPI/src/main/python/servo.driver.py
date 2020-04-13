@@ -27,5 +27,18 @@ pwm = GPIO.PWM(servo_pin, 50)
 pwm.start(0)
 
 set_angle(90)
+sleep(1)
+
+set_angle(0)
+sleep(1)
+
+set_angle(180)
+sleep(1)
+
+set_angle(0)
+# sleep(1)
+
 pwm.stop()
+
+
 GPIO.cleanup()
