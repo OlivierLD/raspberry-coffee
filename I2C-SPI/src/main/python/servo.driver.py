@@ -4,6 +4,8 @@
 # 5V (red or orange) on pin #2
 # Signal (white or yellow) on pin #3
 #
+# See also https://tutorials-raspberrypi.com/raspberry-pi-servo-motor-control/
+#
 
 import RPi.GPIO as GPIO
 from time import sleep
@@ -20,7 +22,7 @@ def set_angle(angle):
     pwm.ChangeDutyCycle(0)
 
 
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BOARD)  # Use physical numbers
 GPIO.setup(servo_pin, GPIO.OUT)
 
 pwm = GPIO.PWM(servo_pin, 50)
