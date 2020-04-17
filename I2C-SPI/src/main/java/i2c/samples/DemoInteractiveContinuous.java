@@ -9,8 +9,16 @@ import static utils.TimeUtil.delay;
 /*
  * For PCA9685
  * Continuous, interactive demo.
+ * Servos are analog devices... They may vary.
+ * Amplitude (full speed backward to full speed forward) seems to be around 70. (Note: 4096 / 60 ~= 68)
  *
- * Note: This DOES NOT work as documented.
+ * First: find the middle position: servo is stopped. About 360 (for a parallax continuous). A Micro continuous servo could be 375.
+ * Min is usually middle - (70 / 2)
+ * Max is usually middle + (70 / 2)
+ *
+ * This code will allow you to calibrate the servo.
+ *
+ * Note: This DOES NOT 100% work as documented..., analog devices.
  */
 public class DemoInteractiveContinuous {
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
@@ -24,7 +32,21 @@ public class DemoInteractiveContinuous {
 			}
 		}
 		PCA9685 servoBoard = new PCA9685();
-		int freq = 60;                     // TODO Document the relation between this and the rest of the world.
+		int freq = 60; // in [40..1000] TODO Document the relation between this and the rest of the world. Width =? 4096 / freq ?
+		String freqSysVar = System.getProperty("servo.freq");
+		if (freqSysVar != null) {
+			try {
+				freq = Integer.parseInt(freqSysVar);
+				if (freq < 40 || freq > 1000) {
+					System.err.println(String.format("Bad Value %d, should be in [40..1000]", freq));
+					freq = 60;
+				}
+				System.out.println(String.format("Frequency now set to %d Hz", freq));
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		}
+
 		servoBoard.setPWMFreq(freq); // Set frequency in Hz
 
 		final int CONTINUOUS_SERVO_CHANNEL = (argChannel != -1) ? argChannel : 14;
