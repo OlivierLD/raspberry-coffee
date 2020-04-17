@@ -39,13 +39,15 @@ public class DemoInteractiveContinuous {
 
 		servoBoard.setPWM(servo, 0, 0);   // Stop the servo
 		delay(2_000L);
-		System.out.println(String.format("Let's go. Enter values in [%d..%d], middle: %d, 'Q' to quit.", servoMin, servoMax, servoStopsAt));
+		System.out.println(String.format("Let's go. Enter values in [%d..%d], middle: %d, 'S' to stop the servo, 'Q' to quit.", servoMin, servoMax, servoStopsAt));
 
 		boolean keepLooping = true;
 		while (keepLooping) {
 			String userInput = StaticUtil.userInput("You say: > ");
 			if (userInput.equalsIgnoreCase("Q")) {
-				 keepLooping = false;
+				keepLooping = false;
+			} else if (userInput.equalsIgnoreCase("S")) {
+				servoBoard.setPWM(servo, 0, 0);   // Stop the servo
 			} else {
 				try {
 					int pwmValue = Integer.parseInt(userInput);
