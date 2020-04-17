@@ -24,7 +24,7 @@ public class DemoInteractiveContinuous {
 			}
 		}
 		PCA9685 servoBoard = new PCA9685();
-		int freq = 60;
+		int freq = 60;                     // TODO Document the relation between this and the rest of the world.
 		servoBoard.setPWMFreq(freq); // Set frequency in Hz
 
 		final int CONTINUOUS_SERVO_CHANNEL = (argChannel != -1) ? argChannel : 14;
@@ -39,7 +39,7 @@ public class DemoInteractiveContinuous {
 
 		servoBoard.setPWM(servo, 0, 0);   // Stop the servo
 		delay(2_000L);
-		System.out.println(String.format("Let's go. Enter values in [%d..%d], middle: %d, 'S' to stop the servo, 'Q' to quit.", servoMin, servoMax, servoStopsAt));
+		System.out.println(String.format("Let's go. Enter values in ~[%d..%d], middle: %d, 'S' to stop the servo, 'Q' to quit.", servoMin, servoMax, servoStopsAt));
 
 		boolean keepLooping = true;
 		while (keepLooping) {
@@ -51,13 +51,13 @@ public class DemoInteractiveContinuous {
 			} else {
 				try {
 					int pwmValue = Integer.parseInt(userInput);
-					if (pwmValue < servoMin) {
-						System.err.println(String.format("Bad value, min is %d (%d)", servoMin, pwmValue));
-					} else if (pwmValue > servoMax) {
-						System.err.println(String.format("Bad value, max is %d (%d)", servoMax, pwmValue));
-					} else {
+//					if (pwmValue < servoMin) {
+//						System.err.println(String.format("Bad value, min is %d (%d)", servoMin, pwmValue));
+//					} else if (pwmValue > servoMax) {
+//						System.err.println(String.format("Bad value, max is %d (%d)", servoMax, pwmValue));
+//					} else {
 						servoBoard.setPWM(servo, 0, pwmValue); // Do it!
-					}
+//					}
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
