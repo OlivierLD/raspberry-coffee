@@ -47,7 +47,7 @@ public class DemoInteractiveContinuous {
 	private final static int DEFAULT_CHANNEL = 14;
 
 	private final static String PATTERN_1_STR = "^\\[\\d+:\\d+\\]$";
-	private final static String PATTERN_2_STR = "^\\[\\d+-\\d+\\]$";
+	private final static String PATTERN_2_STR = "^\\[\\d+-\\d+\\.*\\d*\\]$";
 
 	public static void main(String... args) throws /*I2CFactory.UnsupportedBusNumberException*/ Exception {
 
