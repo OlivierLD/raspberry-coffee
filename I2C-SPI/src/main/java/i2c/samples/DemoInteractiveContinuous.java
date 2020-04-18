@@ -6,18 +6,22 @@ import utils.StaticUtil;
 
 import static utils.TimeUtil.delay;
 
-/*
- * For PCA9685
+/**
+ * <h3>For PCA9685</h3>
  * Continuous, interactive demo.
+ * <br/>
  * Servos are analog devices... They may vary.
- * Amplitude (full speed backward to full speed forward) seems to be around 70. (Note: 4096 / 60 ~= 68)
- *
- * First: find the middle position: servo is stopped. About 360 (for a parallax continuous). A Micro continuous servo could be 375.
- * Min is usually middle - (70 / 2)
- * Max is usually middle + (70 / 2)
- *
+ * Amplitude (full speed backward to full speed forward) seems to be around 70. (Note: 4096 / 60 ~= 68 ?)
+ * <br/>
+ * <ul>
+ * <li>First: find the middle position: servo is stopped. About 360 (for a parallax continuous). A Micro continuous servo could be 375.</li>
+ * <li>Min is usually middle - (70 / 2)</li>
+ * <li>Max is usually middle + (70 / 2)</li>
+ * </ul>
  * This code will allow you to calibrate the servo.
- *
+ * <br/>
+ * Also see {@link PCA9685} for more details.
+ * <br/>
  * Note: This DOES NOT 100% work as documented..., analog devices.
  */
 public class DemoInteractiveContinuous {
@@ -32,7 +36,7 @@ public class DemoInteractiveContinuous {
 			}
 		}
 		PCA9685 servoBoard = new PCA9685();
-		int freq = 60; // in [40..1000] TODO Document the relation between this and the rest of the world. Width =? 4096 / freq ?
+		int freq = 60; // in [40..1000] . See below the relation between this and the rest of the world.
 		String freqSysVar = System.getProperty("servo.freq");
 		if (freqSysVar != null) {
 			try {
@@ -46,8 +50,10 @@ public class DemoInteractiveContinuous {
 				nfe.printStackTrace();
 			}
 		}
-
 		servoBoard.setPWMFreq(freq); // Set frequency in Hz
+
+		// Display default theoretical values
+		System.out.println(String.format("Center: %04d, Min: %04d, Max: %04d", PCA9685.getServoCenterValue(freq), PCA9685.getServoMinValue(freq), PCA9685.getServoMaxValue(freq)));
 
 		final int CONTINUOUS_SERVO_CHANNEL = (argChannel != -1) ? argChannel : 14;
 //  final int STANDARD_SERVO_CHANNEL   = 15;
@@ -78,6 +84,7 @@ public class DemoInteractiveContinuous {
 //					} else if (pwmValue > servoMax) {
 //						System.err.println(String.format("Bad value, max is %d (%d)", servoMax, pwmValue));
 //					} else {
+						System.out.println(String.format("From value: %04d, pulse is %.03f", pwmValue, PCA9685.getPulseFromValue(freq, pwmValue)));
 						servoBoard.setPWM(servo, 0, pwmValue); // Do it!
 //					}
 				} catch (NumberFormatException nfe) {
