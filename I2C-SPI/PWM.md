@@ -149,7 +149,7 @@ Commands are:
 	S to Stop
 	Q to Quit
 	TH to Display theoretical values
-	XXX to set the pwnValue on the servo
+	XXX to set the pwmValue on the servo
 	[XXX:YYY] to go with pwmValues from XXX to YYY
 	Pulse XXX to get the pulse corresponding to XXX
 You say: > 615

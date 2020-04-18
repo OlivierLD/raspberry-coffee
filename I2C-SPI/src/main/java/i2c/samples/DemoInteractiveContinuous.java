@@ -36,7 +36,7 @@ public class DemoInteractiveContinuous {
 		System.out.println("\tS to Stop");
 		System.out.println("\tQ to Quit");
 		System.out.println("\tTH to Display theoretical values");
-		System.out.println("\tXXX to set the pwnValue on the servo");
+		System.out.println("\tXXX to set the pwmValue on the servo");
 		System.out.println("\t[XXX:YYY] to go with pwmValues from XXX to YYY");
 		System.out.println("\tPulse XXX to get the pulse corresponding to XXX");
 	}
