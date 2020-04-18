@@ -40,35 +40,38 @@ public class DemoInteractiveContinuous {
 		System.out.println("\tPulse XXX to get the pulse corresponding to XXX");
 	}
 
+	private final static String CHANNEL_PREFIX = "--channel:";
+	private final static String FREQUENCY_PREFIX = "--freq:";
+	private final static int DEFAULT_CHANNEL = 14;
+
 	public static void main(String... args) throws /*I2CFactory.UnsupportedBusNumberException*/ Exception {
 
+
 		int argChannel = -1;
+		int freq = 60; // in [40..1000] . See below the relation between this and the rest of the world.
+
 		if (args.length > 0) {
-			// First arg is channel #
-			argChannel = Integer.parseInt(args[0]);
-			if (argChannel > 15 || argChannel < 0) {
-				throw new IllegalArgumentException("Channel in [0..15] please!");
+			for (String arg : args) {
+				if (arg.startsWith(CHANNEL_PREFIX)) {
+					// First arg is channel #
+					argChannel = Integer.parseInt(arg.substring(CHANNEL_PREFIX.length()));
+					if (argChannel > 15 || argChannel < 0) {
+						throw new IllegalArgumentException("Channel in [0..15] please!");
+					}
+				} else if (arg.startsWith(FREQUENCY_PREFIX)) {
+					// First arg is channel #
+					freq = Integer.parseInt(arg.substring(FREQUENCY_PREFIX.length()));
+					if (freq > 1_000 || freq < 40) {
+						throw new IllegalArgumentException("Frequency in [40..1000] please!");
+					}
+				}
 			}
 		}
 		PCA9685 servoBoard = null;
 		boolean simulating = false;
-		int freq = 60; // in [40..1000] . See below the relation between this and the rest of the world.
 
 		try {
 			servoBoard = new PCA9685();
-			String freqSysVar = System.getProperty("servo.freq");
-			if (freqSysVar != null) {
-				try {
-					freq = Integer.parseInt(freqSysVar);
-					if (freq < 40 || freq > 1000) {
-						System.err.println(String.format("Bad Value %d, should be in [40..1000]", freq));
-						freq = 60;
-					}
-					System.out.println(String.format("Frequency now set to %d Hz", freq));
-				} catch (NumberFormatException nfe) {
-					nfe.printStackTrace();
-				}
-			}
 			servoBoard.setPWMFreq(freq); // Set frequency in Hz
 		} catch (I2CFactory.UnsupportedBusNumberException ubne) {
 			simulating = true;
@@ -86,21 +89,19 @@ public class DemoInteractiveContinuous {
 			throw ex;
 		}
 
-		final int CONTINUOUS_SERVO_CHANNEL = (argChannel != -1) ? argChannel : 14;
-//  final int STANDARD_SERVO_CHANNEL   = 15;
-
-		int servo = CONTINUOUS_SERVO_CHANNEL;
+		int servoChannel = (argChannel != -1) ? argChannel : DEFAULT_CHANNEL;
+		// Theoretical values
 		int servoMin     = 340;
 		int servoStopsAt = 375;
 		int servoMax     = 410;
 
-		System.out.println(String.format("Servo #%d, [%d..%d].", CONTINUOUS_SERVO_CHANNEL, servoMin, servoMax));
+		System.out.println(String.format("Servo #%d, frequency %d Hz, [%d..%d].", servoChannel, freq, servoMin, servoMax));
 
 		Pattern pattern = Pattern.compile("^\\[\\d+:\\d+\\]$");
 		Matcher matcher = null;
 
 		if (!simulating && servoBoard != null) {
-			servoBoard.setPWM(servo, 0, 0);   // Stop the servo
+			servoBoard.setPWM(servoChannel, 0, 0);   // Stop the servo
 			delay(2_000L);
 			System.out.println(String.format("Let's go. Enter values in ~[%d..%d], middle: %d, 'S' to stop the servo, 'Q' to quit.", servoMin, servoMax, servoStopsAt));
 
@@ -114,7 +115,7 @@ public class DemoInteractiveContinuous {
 				} else if (userInput.equalsIgnoreCase("Q")) {
 					keepLooping = false;
 				} else if (userInput.equalsIgnoreCase("S")) {
-					servoBoard.setPWM(servo, 0, 0);   // Stop the servo
+					servoBoard.setPWM(servoChannel, 0, 0);   // Stop the servo
 				} else if (userInput.toUpperCase().startsWith("PULSE ")) {
 					int pulse = Integer.parseInt(userInput.substring("PULSE ".length()));
 					System.out.println(String.format("At %d Hz, Value %04d, pulse %.03f", freq, pulse, PCA9685.getPulseFromValue(freq, pulse)));
@@ -130,21 +131,21 @@ public class DemoInteractiveContinuous {
 						}
 						for (int value=from; value != to; value+=incr) {
 							System.out.println(String.format("Value %04d, pulse %.03f", value, PCA9685.getPulseFromValue(freq, value)));
-							servoBoard.setPWM(servo, 0, value);
+							servoBoard.setPWM(servoChannel, 0, value);
 							TimeUtil.delay(250L);
 						}
 					} else {
 						try {
 							int pwmValue = Integer.parseInt(userInput);
 							System.out.println(String.format("From value: %04d, pulse is %.03f", pwmValue, PCA9685.getPulseFromValue(freq, pwmValue)));
-							servoBoard.setPWM(servo, 0, pwmValue); // Do it!
+							servoBoard.setPWM(servoChannel, 0, pwmValue); // Do it!
 						} catch (NumberFormatException nfe) {
 							nfe.printStackTrace();
 						}
 					}
 				}
 			}
-			servoBoard.setPWM(servo, 0, 0);   // Stop the servo
+			servoBoard.setPWM(servoChannel, 0, 0);   // Stop the servo
 		} else {
 			System.out.println("Go on a Pi...");
 		}
