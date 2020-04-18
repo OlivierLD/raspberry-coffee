@@ -5,6 +5,9 @@ import i2c.servo.PCA9685;
 import utils.StaticUtil;
 import utils.TCPUtils;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static utils.TimeUtil.delay;
 
 /**
@@ -82,10 +85,19 @@ public class DemoInteractiveContinuous {
 
 		System.out.println(String.format("Servo #%d, [%d..%d].", CONTINUOUS_SERVO_CHANNEL, servoMin, servoMax));
 
+		Pattern pattern = Pattern.compile("^[\\d*:\\d*]$");
+		Matcher matcher = null;
+
 		if (!simulating && servoBoard != null) {
 			servoBoard.setPWM(servo, 0, 0);   // Stop the servo
 			delay(2_000L);
 			System.out.println(String.format("Let's go. Enter values in ~[%d..%d], middle: %d, 'S' to stop the servo, 'Q' to quit.", servoMin, servoMax, servoStopsAt));
+
+			System.out.println("Commands are:");
+			System.out.println("\tS to Stop");
+			System.out.println("\tQ to Quit");
+			System.out.println("\tXXX to set the pwnValue on the servo");
+			System.out.println("\t[XXX:YYY] to go with pwmValues from XXX to YYY");
 
 			boolean keepLooping = true;
 			while (keepLooping) {
@@ -95,18 +107,25 @@ public class DemoInteractiveContinuous {
 				} else if (userInput.equalsIgnoreCase("S")) {
 					servoBoard.setPWM(servo, 0, 0);   // Stop the servo
 				} else {
-					try {
-						int pwmValue = Integer.parseInt(userInput);
+
+					matcher = pattern.matcher(userInput);
+					if (matcher.matches()) {
+
+						System.out.println(String.format("Range detected in %s", userInput));
+					} else {
+						try {
+							int pwmValue = Integer.parseInt(userInput);
 //					if (pwmValue < servoMin) {
 //						System.err.println(String.format("Bad value, min is %d (%d)", servoMin, pwmValue));
 //					} else if (pwmValue > servoMax) {
 //						System.err.println(String.format("Bad value, max is %d (%d)", servoMax, pwmValue));
 //					} else {
-						System.out.println(String.format("From value: %04d, pulse is %.03f", pwmValue, PCA9685.getPulseFromValue(freq, pwmValue)));
-						servoBoard.setPWM(servo, 0, pwmValue); // Do it!
+							System.out.println(String.format("From value: %04d, pulse is %.03f", pwmValue, PCA9685.getPulseFromValue(freq, pwmValue)));
+							servoBoard.setPWM(servo, 0, pwmValue); // Do it!
 //					}
-					} catch (NumberFormatException nfe) {
-						nfe.printStackTrace();
+						} catch (NumberFormatException nfe) {
+							nfe.printStackTrace();
+						}
 					}
 				}
 			}
