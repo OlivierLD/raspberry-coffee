@@ -30,6 +30,16 @@ import static utils.TimeUtil.delay;
  * Note: This DOES NOT 100% work as documented..., analog devices.
  */
 public class DemoInteractiveContinuous {
+
+	private static void displayHelp() {
+		System.out.println("Commands are:");
+		System.out.println("\tS to Stop");
+		System.out.println("\tQ to Quit");
+		System.out.println("\tXXX to set the pwnValue on the servo");
+		System.out.println("\t[XXX:YYY] to go with pwmValues from XXX to YYY");
+		System.out.println("\tPulse XXX to get the pulse corresponding to XXX");
+	}
+
 	public static void main(String... args) throws /*I2CFactory.UnsupportedBusNumberException*/ Exception {
 
 		int argChannel = -1;
@@ -94,17 +104,14 @@ public class DemoInteractiveContinuous {
 			delay(2_000L);
 			System.out.println(String.format("Let's go. Enter values in ~[%d..%d], middle: %d, 'S' to stop the servo, 'Q' to quit.", servoMin, servoMax, servoStopsAt));
 
-			System.out.println("Commands are:");
-			System.out.println("\tS to Stop");
-			System.out.println("\tQ to Quit");
-			System.out.println("\tXXX to set the pwnValue on the servo");
-			System.out.println("\t[XXX:YYY] to go with pwmValues from XXX to YYY");
-			System.out.println("\tPulse XXX to get the pulse corresponding to XXX");
+			displayHelp();
 
 			boolean keepLooping = true;
 			while (keepLooping) {
 				String userInput = StaticUtil.userInput("You say: > ");
-				if (userInput.equalsIgnoreCase("Q")) {
+				if (userInput.trim().isEmpty()) {
+					displayHelp();
+				} else if (userInput.equalsIgnoreCase("Q")) {
 					keepLooping = false;
 				} else if (userInput.equalsIgnoreCase("S")) {
 					servoBoard.setPWM(servo, 0, 0);   // Stop the servo
@@ -129,14 +136,8 @@ public class DemoInteractiveContinuous {
 					} else {
 						try {
 							int pwmValue = Integer.parseInt(userInput);
-//					if (pwmValue < servoMin) {
-//						System.err.println(String.format("Bad value, min is %d (%d)", servoMin, pwmValue));
-//					} else if (pwmValue > servoMax) {
-//						System.err.println(String.format("Bad value, max is %d (%d)", servoMax, pwmValue));
-//					} else {
 							System.out.println(String.format("From value: %04d, pulse is %.03f", pwmValue, PCA9685.getPulseFromValue(freq, pwmValue)));
 							servoBoard.setPWM(servo, 0, pwmValue); // Do it!
-//					}
 						} catch (NumberFormatException nfe) {
 							nfe.printStackTrace();
 						}
