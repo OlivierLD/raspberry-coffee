@@ -46,6 +46,8 @@ public class DemoInteractiveContinuous {
 
 	public static void main(String... args) throws /*I2CFactory.UnsupportedBusNumberException*/ Exception {
 
+		System.out.println("Supported program arguments: --channel:14 --freq:60");
+		System.out.println("Values above are default values.");
 
 		int argChannel = -1;
 		int freq = 60; // in [40..1000] . See below the relation between this and the rest of the world.
