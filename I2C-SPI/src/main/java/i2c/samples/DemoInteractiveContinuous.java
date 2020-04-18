@@ -99,6 +99,7 @@ public class DemoInteractiveContinuous {
 			System.out.println("\tQ to Quit");
 			System.out.println("\tXXX to set the pwnValue on the servo");
 			System.out.println("\t[XXX:YYY] to go with pwmValues from XXX to YYY");
+			System.out.println("\tPulse XXX to get the pulse corresponding to XXX");
 
 			boolean keepLooping = true;
 			while (keepLooping) {
@@ -107,8 +108,10 @@ public class DemoInteractiveContinuous {
 					keepLooping = false;
 				} else if (userInput.equalsIgnoreCase("S")) {
 					servoBoard.setPWM(servo, 0, 0);   // Stop the servo
+				} else if (userInput.toUpperCase().startsWith("PULSE ")) {
+					int pulse = Integer.parseInt(userInput.substring("PULSE ".length()));
+					System.out.println(String.format("At %d Hz, Value %04d, pulse %.03f", freq, pulse, PCA9685.getPulseFromValue(freq, pulse)));
 				} else {
-
 					matcher = pattern.matcher(userInput);
 					if (matcher.matches()) {
 						int from = Integer.parseInt(userInput.substring(userInput.indexOf('[') + 1, userInput.indexOf(':')));
@@ -119,6 +122,7 @@ public class DemoInteractiveContinuous {
 							incr = -1;
 						}
 						for (int value=from; value != to; value+=incr) {
+							System.out.println(String.format("Value %04d, pulse %.03f", value, PCA9685.getPulseFromValue(freq, value)));
 							servoBoard.setPWM(servo, 0, value);
 							TimeUtil.delay(250L);
 						}
