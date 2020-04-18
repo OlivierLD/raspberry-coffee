@@ -38,12 +38,16 @@ public class DemoInteractiveContinuous {
 		System.out.println("\tTH to Display theoretical values");
 		System.out.println("\tXXX to set the pwmValue on the servo");
 		System.out.println("\t[XXX:YYY] to go with pwmValues from XXX to YYY");
+		System.out.println("\t[XXX-SS.S] apply pwmValue XXX to the servo for SS second(s).");
 		System.out.println("\tPulse XXX to get the pulse corresponding to XXX");
 	}
 
 	private final static String CHANNEL_PREFIX = "--channel:";
 	private final static String FREQUENCY_PREFIX = "--freq:";
 	private final static int DEFAULT_CHANNEL = 14;
+
+	private final static String PATTERN_1_STR = "^\\[\\d+:\\d+\\]$";
+	private final static String PATTERN_2_STR = "^\\[\\d+-\\d+\\]$";
 
 	public static void main(String... args) throws /*I2CFactory.UnsupportedBusNumberException*/ Exception {
 
@@ -98,7 +102,8 @@ public class DemoInteractiveContinuous {
 		System.out.println(String.format("Servo #%d, frequency %d Hz.", servoChannel, freq));
 		System.out.println("----------------------------");
 
-		Pattern pattern = Pattern.compile("^\\[\\d+:\\d+\\]$");
+		Pattern patternOne = Pattern.compile(PATTERN_1_STR);
+		Pattern patternTwo = Pattern.compile(PATTERN_2_STR);
 		Matcher matcher = null;
 
 		if (!simulating && servoBoard != null) {
@@ -122,7 +127,7 @@ public class DemoInteractiveContinuous {
 					int pulse = Integer.parseInt(userInput.substring("PULSE ".length()));
 					System.out.println(String.format("At %d Hz, Value %04d, pulse %.03f", freq, pulse, PCA9685.getPulseFromValue(freq, pulse)));
 				} else {
-					matcher = pattern.matcher(userInput);
+					matcher = patternOne.matcher(userInput);
 					if (matcher.matches()) {
 						int from = Integer.parseInt(userInput.substring(userInput.indexOf('[') + 1, userInput.indexOf(':')));
 						int to = Integer.parseInt(userInput.substring(userInput.indexOf(':') + 1, userInput.indexOf(']')));
@@ -137,12 +142,23 @@ public class DemoInteractiveContinuous {
 							TimeUtil.delay(250L);
 						}
 					} else {
-						try {
-							int pwmValue = Integer.parseInt(userInput);
-							System.out.println(String.format("From value: %04d, pulse is %.03f", pwmValue, PCA9685.getPulseFromValue(freq, pwmValue)));
-							servoBoard.setPWM(servoChannel, 0, pwmValue); // Do it!
-						} catch (NumberFormatException nfe) {
-							nfe.printStackTrace();
+						matcher = patternTwo.matcher(userInput);
+						if (matcher.matches()) {
+							int value = Integer.parseInt(userInput.substring(userInput.indexOf('[') + 1, userInput.indexOf('-')));
+							float duration = Float.parseFloat(userInput.substring(userInput.indexOf('-') + 1, userInput.indexOf(']')));
+							System.out.println(String.format("Duration detected in %s", userInput));
+							System.out.println(String.format("Value %04d, pulse %.03f", value, PCA9685.getPulseFromValue(freq, value)));
+							servoBoard.setPWM(servoChannel, 0, value);
+							TimeUtil.delay(Math.round(duration * 1_000L));
+							servoBoard.setPWM(servoChannel, 0, 0);   // Stop the servo
+						} else {
+							try {
+								int pwmValue = Integer.parseInt(userInput);
+								System.out.println(String.format("From value: %04d, pulse is %.03f", pwmValue, PCA9685.getPulseFromValue(freq, pwmValue)));
+								servoBoard.setPWM(servoChannel, 0, pwmValue); // Do it!
+							} catch (NumberFormatException nfe) {
+								nfe.printStackTrace();
+							}
 						}
 					}
 				}
