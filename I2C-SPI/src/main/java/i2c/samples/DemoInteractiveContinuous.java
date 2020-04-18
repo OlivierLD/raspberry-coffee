@@ -4,6 +4,7 @@ import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.PCA9685;
 import utils.StaticUtil;
 import utils.TCPUtils;
+import utils.TimeUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -110,8 +111,17 @@ public class DemoInteractiveContinuous {
 
 					matcher = pattern.matcher(userInput);
 					if (matcher.matches()) {
-
+						int from = Integer.parseInt(userInput.substring(userInput.indexOf('[') + 1, userInput.indexOf(':')));
+						int to = Integer.parseInt(userInput.substring(userInput.indexOf(':') + 1, userInput.indexOf(']')));
 						System.out.println(String.format("Range detected in %s", userInput));
+						int incr = 1;
+						if (from > to) {
+							incr = -1;
+						}
+						for (int value=from; value != to; value+=incr) {
+							servoBoard.setPWM(servo, 0, value);
+							TimeUtil.delay(250L);
+						}
 					} else {
 						try {
 							int pwmValue = Integer.parseInt(userInput);
