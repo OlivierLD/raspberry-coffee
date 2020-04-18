@@ -35,6 +35,7 @@ public class DemoInteractiveContinuous {
 		System.out.println("Commands are:");
 		System.out.println("\tS to Stop");
 		System.out.println("\tQ to Quit");
+		System.out.println("\tTH to Display theoretical values");
 		System.out.println("\tXXX to set the pwnValue on the servo");
 		System.out.println("\t[XXX:YYY] to go with pwmValues from XXX to YYY");
 		System.out.println("\tPulse XXX to get the pulse corresponding to XXX");
@@ -80,7 +81,7 @@ public class DemoInteractiveContinuous {
 		}
 
 		// Display default theoretical values
-		System.out.println(String.format("Theoretical values: Center: %04d, Min: %04d, Max: %04d", PCA9685.getServoCenterValue(freq), PCA9685.getServoMinValue(freq), PCA9685.getServoMaxValue(freq)));
+		System.out.println(String.format("Theoretical values: Min: %04d, Center: %04d, Max: %04d", PCA9685.getServoMinValue(freq), PCA9685.getServoCenterValue(freq), PCA9685.getServoMaxValue(freq)));
 
 		System.out.println("System data:");
 		try {
@@ -92,12 +93,8 @@ public class DemoInteractiveContinuous {
 		}
 
 		int servoChannel = (argChannel != -1) ? argChannel : DEFAULT_CHANNEL;
-		// Theoretical values
-		int servoMin     = 340;
-		int servoStopsAt = 375;
-		int servoMax     = 410;
 
-		System.out.println(String.format("Servo #%d, frequency %d Hz, [%d..%d].", servoChannel, freq, servoMin, servoMax));
+		System.out.println(String.format("Servo #%d, frequency %d Hz.", servoChannel, freq));
 
 		Pattern pattern = Pattern.compile("^\\[\\d+:\\d+\\]$");
 		Matcher matcher = null;
@@ -105,8 +102,7 @@ public class DemoInteractiveContinuous {
 		if (!simulating && servoBoard != null) {
 			servoBoard.setPWM(servoChannel, 0, 0);   // Stop the servo
 			delay(2_000L);
-			System.out.println(String.format("Let's go. Enter values in ~[%d..%d], middle: %d, 'S' to stop the servo, 'Q' to quit.", servoMin, servoMax, servoStopsAt));
-
+			System.out.println(String.format("Let's go. Enter 'S' to stop the servo, 'Q' to quit."));
 			displayHelp();
 
 			boolean keepLooping = true;
@@ -118,6 +114,8 @@ public class DemoInteractiveContinuous {
 					keepLooping = false;
 				} else if (userInput.equalsIgnoreCase("S")) {
 					servoBoard.setPWM(servoChannel, 0, 0);   // Stop the servo
+				} else if (userInput.equalsIgnoreCase("TH")) {
+					System.out.println(String.format("Theoretical values at %d Hz: Min: %04d, Center: %04d, Max: %04d", freq, PCA9685.getServoMinValue(freq), PCA9685.getServoCenterValue(freq), PCA9685.getServoMaxValue(freq)));
 				} else if (userInput.toUpperCase().startsWith("PULSE ")) {
 					int pulse = Integer.parseInt(userInput.substring("PULSE ".length()));
 					System.out.println(String.format("At %d Hz, Value %04d, pulse %.03f", freq, pulse, PCA9685.getPulseFromValue(freq, pulse)));
