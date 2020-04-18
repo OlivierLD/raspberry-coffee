@@ -61,7 +61,7 @@ public class DemoInteractiveContinuous {
 		}
 
 		// Display default theoretical values
-		System.out.println(String.format("Center: %04d, Min: %04d, Max: %04d", PCA9685.getServoCenterValue(freq), PCA9685.getServoMinValue(freq), PCA9685.getServoMaxValue(freq)));
+		System.out.println(String.format("Theoretical values: Center: %04d, Min: %04d, Max: %04d", PCA9685.getServoCenterValue(freq), PCA9685.getServoMinValue(freq), PCA9685.getServoMaxValue(freq)));
 
 		System.out.println("System data:");
 		try {
