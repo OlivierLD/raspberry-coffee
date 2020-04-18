@@ -85,7 +85,7 @@ public class DemoInteractiveContinuous {
 
 		System.out.println(String.format("Servo #%d, [%d..%d].", CONTINUOUS_SERVO_CHANNEL, servoMin, servoMax));
 
-		Pattern pattern = Pattern.compile("^[\\d*:\\d*]$");
+		Pattern pattern = Pattern.compile("^\\[\\d+:\\d+\\]$");
 		Matcher matcher = null;
 
 		if (!simulating && servoBoard != null) {
