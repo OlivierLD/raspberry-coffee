@@ -94,7 +94,9 @@ public class DemoInteractiveContinuous {
 
 		int servoChannel = (argChannel != -1) ? argChannel : DEFAULT_CHANNEL;
 
+		System.out.println("----------------------------");
 		System.out.println(String.format("Servo #%d, frequency %d Hz.", servoChannel, freq));
+		System.out.println("----------------------------");
 
 		Pattern pattern = Pattern.compile("^\\[\\d+:\\d+\\]$");
 		Matcher matcher = null;
