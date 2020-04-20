@@ -162,7 +162,7 @@ public class FeedbackPotsServo {
 					String strValue = prm.substring(SERVO_STOP_PWM_PREFIX.length());
 					try {
 						servoStopPWM = Integer.parseInt(strValue);
-						if (servoStopPWM > 1_000 || servoStopPWM < 40) {
+						if (servoStopPWM > 4_095 || servoStopPWM < 0) {
 							throw new RuntimeException("Servo PWM in [0..4095] please");
 						}
 					} catch (NumberFormatException nfe) {
@@ -172,7 +172,7 @@ public class FeedbackPotsServo {
 					String strValue = prm.substring(SERVO_FORWARD_PWM_PREFIX.length());
 					try {
 						servoForwardPWM = Integer.parseInt(strValue);
-						if (servoForwardPWM > 1_000 || servoForwardPWM < 40) {
+						if (servoForwardPWM > 4_095 || servoForwardPWM < 0) {
 							throw new RuntimeException("Servo PWM in [0..4095] please");
 						}
 					} catch (NumberFormatException nfe) {
@@ -182,7 +182,7 @@ public class FeedbackPotsServo {
 					String strValue = prm.substring(SERVO_BACKWARD_PWM_PREFIX.length());
 					try {
 						servoForwardPWM = Integer.parseInt(strValue);
-						if (servoBackwardPWM > 1_000 || servoBackwardPWM < 40) {
+						if (servoBackwardPWM > 4_095 || servoBackwardPWM < 0) {
 							throw new RuntimeException("Servo PWM in [0..4095] please");
 						}
 					} catch (NumberFormatException nfe) {
@@ -230,14 +230,14 @@ public class FeedbackPotsServo {
 		System.out.println("- Din on the MCP3008 goes to MOSI on the RPi");
 		System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
 		System.out.println("       +--------+ ");
-		System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ",  (knobChannel == 0 ? "*" : " ")));
-		System.out.println(String.format("%s CH1 -+  2  15 +- Vref ", (knobChannel == 1 ? "*" : " ")));
-		System.out.println(String.format("%s CH2 -+  3  14 +- aGnd ", (knobChannel == 2 ? "*" : " ")));
-		System.out.println(String.format("%s CH3 -+  4  13 +- CLK ",  (knobChannel == 3 ? "*" : " ")));
-		System.out.println(String.format("%s CH4 -+  5  12 +- Dout ", (knobChannel == 4 ? "*" : " ")));
-		System.out.println(String.format("%s CH5 -+  6  11 +- Din ",  (knobChannel == 5 ? "*" : " ")));
-		System.out.println(String.format("%s CH6 -+  7  10 +- CS ",   (knobChannel == 6 ? "*" : " ")));
-		System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (knobChannel == 7 ? "*" : " ")));
+		System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ",  (knobChannel == 0 || feedbackChannel == 0 ? "*" : " ")));
+		System.out.println(String.format("%s CH1 -+  2  15 +- Vref ", (knobChannel == 1 || feedbackChannel == 1 ? "*" : " ")));
+		System.out.println(String.format("%s CH2 -+  3  14 +- aGnd ", (knobChannel == 2 || feedbackChannel == 2 ? "*" : " ")));
+		System.out.println(String.format("%s CH3 -+  4  13 +- CLK ",  (knobChannel == 3 || feedbackChannel == 3 ? "*" : " ")));
+		System.out.println(String.format("%s CH4 -+  5  12 +- Dout ", (knobChannel == 4 || feedbackChannel == 4 ? "*" : " ")));
+		System.out.println(String.format("%s CH5 -+  6  11 +- Din ",  (knobChannel == 5 || feedbackChannel == 5 ? "*" : " ")));
+		System.out.println(String.format("%s CH6 -+  7  10 +- CS ",   (knobChannel == 6 || feedbackChannel == 6 ? "*" : " ")));
+		System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (knobChannel == 7 || feedbackChannel == 7 ? "*" : " ")));
 		System.out.println("       +--------+ ");
 
 		// Compose mapping for PinUtil
