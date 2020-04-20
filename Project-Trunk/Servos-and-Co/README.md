@@ -112,7 +112,20 @@ Using the scripts `demo.interactive.servo.sh` and `feedback.mcp3008.sh`:
 --servo-forward-pwm:XX 
 --servo-backward-pwm:XX 
 ```
- #### Scenario
- 
+
+#### Scenario / Flowchart
+
+1. Program starts, and loops on:
+2. Read feedback servo
+3. Read knob servo
+4. If values are different
+    - if (`knob` > `feedback`)
+        1. move servo with `servo-forward-pwm` until `knob` and `feedback` values are identical
+        2. stop the servo 
+    - if (`knob` < `feedback`)
+        1. move servo with `servo-backward-pwm` until `knob` and `feedback` values are identical
+        2. stop the servo 
+
+     
 
 --- 
