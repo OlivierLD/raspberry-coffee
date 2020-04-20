@@ -86,5 +86,10 @@ A 5v power supply is required to feed the servos.
 - A Female DC power adapter works fine
 - I was also able to power it from the Raspberry Header (pins #2 (or #4) and #39) for 2 servos without problem.
 
+## Hardware
+To come
+
+## Software
+To come
 
 --- 
