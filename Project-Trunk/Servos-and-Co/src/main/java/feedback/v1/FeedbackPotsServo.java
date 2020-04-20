@@ -50,10 +50,15 @@ public class FeedbackPotsServo {
 	private static int servoForwardPWM  = 400;
 	private static int servoBackwardPWM = 200;
 
+	private static int minDiff = 5;
+
+
 	private static final String MISO_PRM_PREFIX = "--miso:";
 	private static final String MOSI_PRM_PREFIX = "--mosi:";
 	private static final String CLK_PRM_PREFIX  =  "--clk:";
 	private static final String CS_PRM_PREFIX   =   "--cs:";
+
+	private static final String MIN_DIFF_PREFIX           = "--min-diff:";
 
 	private static final String KNOB_CHANNEL_PREFIX       = "--knob-channel:";
 	private static final String FEEDBACK_CHANNEL_PREFIX   = "--feedback-channel:";
@@ -73,7 +78,7 @@ public class FeedbackPotsServo {
 		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
 		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
-		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d \\\n\t%s%d %s%d %s%d %s%d %s%d %s%d ",
+		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d \\\n\t%s%d %s%d %s%d %s%d %s%d %s%d %s%d ",
 				FeedbackPotsServo.class.getName(),       // <- WhoooAhhhaahahha!
 				MISO_PRM_PREFIX,  PinUtil.findByPin(miso).gpio(),
 				MOSI_PRM_PREFIX,  PinUtil.findByPin(mosi).gpio(),
@@ -85,7 +90,8 @@ public class FeedbackPotsServo {
 				SERVO_FREQ_PREFIX, servoFreq,
 				SERVO_STOP_PWM_PREFIX, servoStopPWM,
 				SERVO_FORWARD_PWM_PREFIX, servoForwardPWM,
-				SERVO_BACKWARD_PWM_PREFIX, servoBackwardPWM));
+				SERVO_BACKWARD_PWM_PREFIX, servoBackwardPWM,
+				MIN_DIFF_PREFIX, minDiff));
 		System.out.println("Values above are default values (GPIO/BCM numbers).");
 		System.out.println();
 
@@ -195,6 +201,16 @@ public class FeedbackPotsServo {
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad value for %s, must be an integer [%s]", prm, pinValue));
 					}
+				} else if (prm.startsWith(MIN_DIFF_PREFIX)) {
+					String strValue = prm.substring(MIN_DIFF_PREFIX.length());
+					try {
+						minDiff = Integer.parseInt(strValue);
+						if (minDiff < 0) {
+							throw new RuntimeException("Min Diff > 0 please");
+						}
+					} catch (NumberFormatException nfe) {
+						System.err.println(String.format("Bad value for %s, must be an integer [%s]", prm, pinValue));
+					}
 				} else {
 					// What?
 					System.err.println(String.format("Un-managed prm: %s", prm));
@@ -293,7 +309,6 @@ public class FeedbackPotsServo {
 
 		// Reading loop
 		System.out.println("Starting reading the ADC");
-		int minDiff = 3;
 		servoBoard.setPWM(servoChannel, 0, 0);   // Stop the servo
 		while (go) {
 			int knob = MCPReader.readMCP(knobChannel);
@@ -307,7 +322,7 @@ public class FeedbackPotsServo {
 					System.out.println(String.format("Difference detected: knob=%d, feedback=%d, moving %s", knob, feedback, (knob > feedback) ? "forward" : "backward"));
 				}
 				int direction = (knob > feedback) ? servoForwardPWM : servoBackwardPWM;
-				while (knob != feedback && go) {
+				while (Math.abs(knob - feedback) > minDiff && go) {
 
 					// Start moving
 					if (DEBUG) {

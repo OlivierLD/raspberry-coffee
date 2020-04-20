@@ -113,6 +113,11 @@ Using the scripts `demo.interactive.servo.sh` and `feedback.mcp3008.sh`:
 --servo-backward-pwm:XX 
 ```
 
+```
+--min-diff:10
+```
+
+
 #### Find the servo pwmValues
 Here we try with frequency `100 Hz`.
 - `603` seems to be the value where the servo stops
@@ -180,13 +185,11 @@ Done, bye.
 #### Let's try
 With the values found above:
 ```
-$ ./feedback.pots.sh --servo-channel:1 \
-                     --knob-channel:0 \
-                     --feedback-channel:1 \ 
-                     --servo-freq:100 \
-                     --servo-stop-pwm:603 \
-                     --servo-forward-pwm:640 \ 
-                     --servo-backward-pwm:560 
+$ ./feedback.pots.sh --servo-channel:1 --knob-channel:0 --feedback-channel:1 \ 
+                     --servo-freq:100 --servo-stop-pwm:603 --servo-forward-pwm:640 \ 
+                     --servo-backward-pwm:560 --min-diff:10
 ```
-     
+> Note the `--servo-forward-pwm:560 ` and `--servo-backward-pwm:640`, values are inverted, because of the hardware setting.
+> 
+> ⚠️ Make sure you set those correctly !!     
 --- 
