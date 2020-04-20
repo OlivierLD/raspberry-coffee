@@ -72,13 +72,19 @@ public class FeedbackPotsServo {
 		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
 		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
-		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d %s%d",
+		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d /\n\t%s%d %s%d %s%d %s%d %s%d %s%d ",
 				FeedbackPotsServo.class.getName(),       // <- WhoooAhhhaahahha!
 				MISO_PRM_PREFIX,  PinUtil.findByPin(miso).gpio(),
 				MOSI_PRM_PREFIX,  PinUtil.findByPin(mosi).gpio(),
 				CLK_PRM_PREFIX,   PinUtil.findByPin(clk).gpio(),
 				CS_PRM_PREFIX,    PinUtil.findByPin(cs).gpio(),
-				KNOB_CHANNEL_PREFIX, knobChannel));
+				KNOB_CHANNEL_PREFIX, knobChannel, //
+				FEEDBACK_CHANNEL_PREFIX, feedbackChannel,
+				SERVO_CHANNEL_PREFIX, servoChannel,
+				SERVO_FREQ_PREFIX, servoFreq,
+				SERVO_STOP_PWM_PREFIX, servoStopPWM,
+				SERVO_FORWARD_PWM_PREFIX, servoForwardPWM,
+				SERVO_BACKWARD_PWM_PREFIX, servoBackwardPWM));
 		System.out.println("Values above are default values (GPIO/BCM numbers).");
 		System.out.println();
 
@@ -195,7 +201,7 @@ public class FeedbackPotsServo {
 			}
 		}
 
-		System.out.println(String.format("Reading MCP3008 on channel %d", knobChannel));
+		System.out.println(String.format("Reading MCP3008 on channel %d and %d", knobChannel, feedbackChannel));
 		System.out.println(
 				" Wiring of the MCP3008-SPI (without power supply):\n" +
 						" +---------++-----------------------------------------------+\n" +
@@ -260,10 +266,14 @@ public class FeedbackPotsServo {
 		}, "Shutdown Hook"));
 
 		// Reading loop
+		System.out.println("Starting reading the ADC");
 		while (go) {
 			int knob = MCPReader.readMCP(knobChannel);
 			int feedback = MCPReader.readMCP(feedbackChannel);
 
+			if (DEBUG) {
+				System.out.println(String.format("Read ADC: knob=%d, feedback=%d", knob, feedback));
+			}
 			if (knob != feedback) {  // Now we're talking!
 				if (DEBUG) {
 					System.out.println(String.format("Difference detected: knob=%d, feedback=%d", knob, feedback));
