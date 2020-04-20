@@ -2,8 +2,11 @@ package feedback.v1;
 
 import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.i2c.I2CFactory;
+import i2c.servo.PCA9685;
 import utils.PinUtil;
 import utils.StringUtils;
+import utils.TCPUtils;
 
 import java.util.Arrays;
 import java.util.OptionalInt;
@@ -62,9 +65,7 @@ public class FeedbackPotsServo {
 	private static final String SERVO_FORWARD_PWM_PREFIX  = "--servo-forward-pwm:";
 	private static final String SERVO_BACKWARD_PWM_PREFIX = "--servo-backward-pwm:";
 
-	private static Function<Integer, Double> adcToDegTransformer = x -> (((x / 1023.0) * 300d) - (300d / 2)); // Default behavior
-
-	public static void main(String... args) {
+	public static void main(String... args) throws Exception {
 
 		// Default pins
 		Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
@@ -257,6 +258,31 @@ public class FeedbackPotsServo {
 
 		MCPReader.initMCP(MCPReader.MCPFlavor.MCP3008, miso, mosi, clk, cs);
 
+		PCA9685 servoBoard = null;
+		boolean simulating = false;
+
+		try {
+			servoBoard = new PCA9685();
+			servoBoard.setPWMFreq(servoFreq); // Set frequency in Hz
+		} catch (I2CFactory.UnsupportedBusNumberException ubne) {
+			simulating = true;
+		}
+
+		// Display default theoretical values
+		System.out.println(String.format("Theoretical values: Min: %04d, Center: %04d, Max: %04d",
+				PCA9685.getServoMinValue(servoFreq),
+				PCA9685.getServoCenterValue(servoFreq),
+				PCA9685.getServoMaxValue(servoFreq)));
+
+		System.out.println("System data:");
+		try {
+			System.out.println(String.format("\tCore Voltage %s", TCPUtils.getCoreVoltage()));
+			System.out.println(String.format("\tCPU Temp %s", TCPUtils.getCPUTemperature()));
+			System.out.println(String.format("\tCPU Load %s", TCPUtils.getCPULoad()));
+		} catch (Exception ex) {
+			throw ex;
+		}
+
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("\nShutting down.");
 			go = false;
@@ -268,6 +294,7 @@ public class FeedbackPotsServo {
 		// Reading loop
 		System.out.println("Starting reading the ADC");
 		int minDiff = 3;
+		servoBoard.setPWM(servoChannel, 0, 0);   // Stop the servo
 		while (go) {
 			int knob = MCPReader.readMCP(knobChannel);
 			int feedback = MCPReader.readMCP(feedbackChannel);
@@ -280,9 +307,13 @@ public class FeedbackPotsServo {
 					System.out.println(String.format("Difference detected: knob=%d, feedback=%d, moving %s", knob, feedback, (knob > feedback) ? "forward" : "backward"));
 				}
 				int direction = (knob > feedback) ? servoForwardPWM : servoBackwardPWM;
-				while (knob != feedback) {
+				while (knob != feedback && go) {
 
-					// TODO Start moving
+					// Start moving
+					if (DEBUG) {
+						System.out.println(String.format("Value %04d, pulse %.03f", direction, PCA9685.getPulseFromValue(servoFreq, direction)));
+					}
+					servoBoard.setPWM(servoChannel, 0, direction);
 
 					knob = MCPReader.readMCP(knobChannel);
 					feedback = MCPReader.readMCP(feedbackChannel);
@@ -298,7 +329,8 @@ public class FeedbackPotsServo {
 					}
 
 				}
-				// TODO Stop moving
+				// Stop moving
+				servoBoard.setPWM(servoChannel, 0, 0);   // Stop the servo
 
 				if (DEBUG) {
 					System.out.println("Resuming watch");
@@ -314,6 +346,7 @@ public class FeedbackPotsServo {
 			}
 		}
 		System.out.println("Bye, freeing resources.");
+		servoBoard.setPWM(servoChannel, 0, 0);   // Stop the servo
 		MCPReader.shutdownMCP();
 	}
 }
