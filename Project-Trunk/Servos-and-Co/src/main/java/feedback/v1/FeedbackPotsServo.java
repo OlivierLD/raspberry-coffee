@@ -194,7 +194,7 @@ public class FeedbackPotsServo {
 				} else if (prm.startsWith(SERVO_BACKWARD_PWM_PREFIX)) {
 					String strValue = prm.substring(SERVO_BACKWARD_PWM_PREFIX.length());
 					try {
-						servoForwardPWM = Integer.parseInt(strValue);
+						servoBackwardPWM = Integer.parseInt(strValue);
 						if (servoBackwardPWM > 4_095 || servoBackwardPWM < 0) {
 							throw new RuntimeException("Servo PWM in [0..4095] please");
 						}
@@ -272,6 +272,20 @@ public class FeedbackPotsServo {
 
 		PinUtil.print(map);
 
+		System.out.println(String.format("Actual values:\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d",
+				MISO_PRM_PREFIX,  PinUtil.findByPin(miso).gpio(),
+				MOSI_PRM_PREFIX,  PinUtil.findByPin(mosi).gpio(),
+				CLK_PRM_PREFIX,   PinUtil.findByPin(clk).gpio(),
+				CS_PRM_PREFIX,    PinUtil.findByPin(cs).gpio(),
+				KNOB_CHANNEL_PREFIX, knobChannel, //
+				FEEDBACK_CHANNEL_PREFIX, feedbackChannel,
+				SERVO_CHANNEL_PREFIX, servoChannel,
+				SERVO_FREQ_PREFIX, servoFreq,
+				SERVO_STOP_PWM_PREFIX, servoStopPWM,
+				SERVO_FORWARD_PWM_PREFIX, servoForwardPWM,
+				SERVO_BACKWARD_PWM_PREFIX, servoBackwardPWM,
+				MIN_DIFF_PREFIX, minDiff));
+		
 		MCPReader.initMCP(MCPReader.MCPFlavor.MCP3008, miso, mosi, clk, cs);
 
 		PCA9685 servoBoard = null;
