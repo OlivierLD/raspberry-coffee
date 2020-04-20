@@ -267,6 +267,7 @@ public class FeedbackPotsServo {
 
 		// Reading loop
 		System.out.println("Starting reading the ADC");
+		int minDiff = 3;
 		while (go) {
 			int knob = MCPReader.readMCP(knobChannel);
 			int feedback = MCPReader.readMCP(feedbackChannel);
@@ -274,7 +275,7 @@ public class FeedbackPotsServo {
 			if (DEBUG) {
 				System.out.println(String.format("Read ADC: knob=%d, feedback=%d", knob, feedback));
 			}
-			if (knob != feedback) {  // Now we're talking!
+			if (Math.abs(knob - feedback) > minDiff) {  // Now we're talking!
 				if (DEBUG) {
 					System.out.println(String.format("Difference detected: knob=%d, feedback=%d, moving %s", knob, feedback, (knob > feedback) ? "forward" : "backward"));
 				}
