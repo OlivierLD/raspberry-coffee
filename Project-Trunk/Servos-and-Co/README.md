@@ -21,6 +21,8 @@ We can also use some 3D-printed hardware, described in some other projects and r
 #### ADC, MCP3008
 We have 2 `B10K` linear potentiometers, one for the knob (channel 0) and one for the feedback (channel 1).
 
+Resistors are 220 &Omega;.
+
 ```
 Wiring of the MCP3008-SPI (without power supply):
  +---------++-----------------------------------------------+
@@ -74,15 +76,15 @@ Wiring of the MCP3008-SPI (without power supply):
 ```
 
 #### Servo driver, Adafruit's `PCA9685`
-- Board 3.3V to sensor VCC
-- Board GND to sensor GND
-- Board SCL to sensor SCL
-- Board SDA to sensor SDA
+- Board `3.3V` to sensor `VCC`
+- Board `GND` to sensor `GND`
+- Board `SCL` to sensor `SCL`
+- Board `SDA` to sensor `SDA`
 
 A 5v power supply is required to feed the servos.
 
-the Female DC power adapter works fine
-I was also able to power it from the Raspberry Header (pins #2 and #39) for 2 servos without problem.
+- A Female DC power adapter works fine
+- I was also able to power it from the Raspberry Header (pins #2 (or #4) and #39) for 2 servos without problem.
 
 
 --- 
