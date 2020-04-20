@@ -272,7 +272,7 @@ public class FeedbackPotsServo {
 
 		PinUtil.print(map);
 
-		System.out.println(String.format("Actual values:\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d",
+		System.out.println(String.format("Actual values:\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d\n\t%s%d",
 				MISO_PRM_PREFIX,  PinUtil.findByPin(miso).gpio(),
 				MOSI_PRM_PREFIX,  PinUtil.findByPin(mosi).gpio(),
 				CLK_PRM_PREFIX,   PinUtil.findByPin(clk).gpio(),
@@ -285,17 +285,16 @@ public class FeedbackPotsServo {
 				SERVO_FORWARD_PWM_PREFIX, servoForwardPWM,
 				SERVO_BACKWARD_PWM_PREFIX, servoBackwardPWM,
 				MIN_DIFF_PREFIX, minDiff));
-		
+
 		MCPReader.initMCP(MCPReader.MCPFlavor.MCP3008, miso, mosi, clk, cs);
 
 		PCA9685 servoBoard = null;
-		boolean simulating = false;
 
 		try {
 			servoBoard = new PCA9685();
 			servoBoard.setPWMFreq(servoFreq); // Set frequency in Hz
 		} catch (I2CFactory.UnsupportedBusNumberException ubne) {
-			simulating = true;
+			throw ubne;
 		}
 
 		// Display default theoretical values
