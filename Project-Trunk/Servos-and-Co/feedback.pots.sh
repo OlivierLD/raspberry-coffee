@@ -7,6 +7,6 @@ JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Ddisplay.digit=false"
 JAVA_OPTS="$JAVA_OPTS -Ddebug=true"
 #
-sudo java -cp ${CP} feedback.v1.FeedbackPotsServo $*
+sudo java -cp ${CP} ${JAVA_OPTS} feedback.v1.FeedbackPotsServo $*
 #
 echo Done.

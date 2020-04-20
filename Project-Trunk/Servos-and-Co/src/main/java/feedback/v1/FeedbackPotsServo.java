@@ -201,7 +201,7 @@ public class FeedbackPotsServo {
 			}
 		}
 
-		System.out.println(String.format("Reading MCP3008 on channel %d and %d", knobChannel, feedbackChannel));
+		System.out.println(String.format("Reading MCP3008 on channels %d and %d", knobChannel, feedbackChannel));
 		System.out.println(
 				" Wiring of the MCP3008-SPI (without power supply):\n" +
 						" +---------++-----------------------------------------------+\n" +
@@ -271,12 +271,36 @@ public class FeedbackPotsServo {
 			int knob = MCPReader.readMCP(knobChannel);
 			int feedback = MCPReader.readMCP(feedbackChannel);
 
-			if (DEBUG || true) {
+			if (DEBUG) {
 				System.out.println(String.format("Read ADC: knob=%d, feedback=%d", knob, feedback));
 			}
 			if (knob != feedback) {  // Now we're talking!
 				if (DEBUG) {
-					System.out.println(String.format("Difference detected: knob=%d, feedback=%d", knob, feedback));
+					System.out.println(String.format("Difference detected: knob=%d, feedback=%d, moving %s", knob, feedback, (knob > feedback) ? "forward" : "backward"));
+				}
+				int direction = (knob > feedback) ? servoForwardPWM : servoBackwardPWM;
+				while (knob != feedback) {
+
+					// TODO Start moving
+
+					knob = MCPReader.readMCP(knobChannel);
+					feedback = MCPReader.readMCP(feedbackChannel);
+					if (DEBUG) {
+						System.out.println(String.format("\tWhile moving, read ADC: knob=%d, feedback=%d", knob, feedback));
+					}
+					try { // TODO See if the wait is really required...
+						synchronized (Thread.currentThread()) {
+							Thread.currentThread().wait(50L);
+						}
+					} catch (InterruptedException ie) {
+						Thread.currentThread().interrupt();
+					}
+
+				}
+				// TODO Stop moving
+
+				if (DEBUG) {
+					System.out.println("Resuming watch");
 				}
 			}
 
