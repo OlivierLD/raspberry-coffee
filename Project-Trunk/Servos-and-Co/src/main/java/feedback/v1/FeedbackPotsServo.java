@@ -72,7 +72,7 @@ public class FeedbackPotsServo {
 		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
 		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
-		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d /\n\t%s%d %s%d %s%d %s%d %s%d %s%d ",
+		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d \\\n\t%s%d %s%d %s%d %s%d %s%d %s%d ",
 				FeedbackPotsServo.class.getName(),       // <- WhoooAhhhaahahha!
 				MISO_PRM_PREFIX,  PinUtil.findByPin(miso).gpio(),
 				MOSI_PRM_PREFIX,  PinUtil.findByPin(mosi).gpio(),
@@ -271,7 +271,7 @@ public class FeedbackPotsServo {
 			int knob = MCPReader.readMCP(knobChannel);
 			int feedback = MCPReader.readMCP(feedbackChannel);
 
-			if (DEBUG) {
+			if (DEBUG || true) {
 				System.out.println(String.format("Read ADC: knob=%d, feedback=%d", knob, feedback));
 			}
 			if (knob != feedback) {  // Now we're talking!
