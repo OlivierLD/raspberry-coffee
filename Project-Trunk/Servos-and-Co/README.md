@@ -83,13 +83,36 @@ Wiring of the MCP3008-SPI (without power supply):
 
 A 5v power supply is required to feed the servos.
 
-- A Female DC power adapter works fine
+- A [Female DC power adapter](http://adafru.it/368) works fine
 - I was also able to power it from the Raspberry Header (pins #2 (or #4) and #39) for 2 servos without problem.
 
 ## Hardware
-To come
+
+| ![One](./images/01.jpg) | ![Two](./images/02.jpg) |
+|:-----------------------:|:-----------------------:|
 
 ## Software
-To come
+
+### First requirements
+Using the scripts `demo.interactive.servo.sh` and `feedback.mcp3008.sh`:
+- **For the servo**
+    - Choose a frequency (60 Hz is the default)
+    - Find the `pwmValue` for the middle position - where the servo is stopped
+    - Depending on the gear attached to the servo, determine the direction the servo has to rotate to go `forward` or `backeard`.
+- **For the potentiometers**
+    - Find the positions where the `adc` value is `512` (50% of `1024`).
+
+### Required arguments
+```
+--servo-channel:0 
+--knob-channel:0 
+--feedback-channel:1 
+--servo-freq:XX 
+--servo-stop-pwm:XX
+--servo-forward-pwm:XX 
+--servo-backward-pwm:XX 
+```
+ #### Scenario
+ 
 
 --- 
