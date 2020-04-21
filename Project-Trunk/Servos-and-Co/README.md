@@ -194,5 +194,10 @@ the potentiometer attached to it is the same.
 This way, the [big wheel](#hardware) position is set by the potentiometer attached to it. The servo
 does **_not_** know what its position is, it is told to start forward or backward, and then
 to stop.
+
+#### See it
+[At work](https://www.youtube.com/embed/wB4MzNCep1o)
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/wB4MzNCep1o" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
    
 --- 
