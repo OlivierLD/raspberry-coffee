@@ -121,8 +121,10 @@ Using the scripts `demo.interactive.servo.sh` and `feedback.mcp3008.sh`:
 #### Find the servo pwmValues
 Here we try with frequency `100 Hz`.
 - `603` seems to be the value where the servo stops
-- `640` seems a good speed forward
-- `560` sounds like a good one backward
+- `632` seems a good speed forward
+- `595` sounds like a good one backward
+
+You need to find the right speed, not too slow, not too fast.
 
 ```
  $ ./demo.interactive.servo.sh --channel:1 --freq:100
@@ -149,21 +151,10 @@ You say: > 590
 From value: 0590, pulse is 1.440
 You say: > 603
 From value: 0603, pulse is 1.472
-You say: > 650
-From value: 0650, pulse is 1.587
-You say: > s
-You say: > 550
-From value: 0550, pulse is 1.343
-You say: > s
-You say: > 620
-From value: 0620, pulse is 1.514
-You say: > 630
-From value: 0630, pulse is 1.538
-You say: > 640
-From value: 0640, pulse is 1.563
-You say: > s
-You say: > 560
-From value: 0560, pulse is 1.367
+You say: > 632
+From value: 0632, pulse is 1.543
+You say: > 595
+From value: 0595, pulse is 1.453
 You say: > s
 You say: > q
 Done, bye.
@@ -179,18 +170,19 @@ Done, bye.
         1. move servo with `servo-forward-pwm` until `knob` and `feedback` values are identical
         2. stop the servo 
     - if (`knob` < `feedback`)
-        1. move servo with `servo-backward-pwm` until `knob` and `feedback` values are identical
+        1. move servo with `servo-backward-pwm` until
+         `knob` and `feedback` values are identical
         2. stop the servo 
 
 #### Let's try
 With the values found above:
 ```
 $ ./feedback.pots.sh --servo-channel:1 --knob-channel:0 --feedback-channel:1 \ 
-                     --servo-freq:100 --servo-stop-pwm:603 --servo-forward-pwm:640 \ 
-                     --servo-backward-pwm:560 --min-diff:10
+                     --servo-freq:100 --servo-stop-pwm:603 --servo-forward-pwm:595 \ 
+                     --servo-backward-pwm:632 --min-diff:6
 ```
-> Note the `--servo-forward-pwm:560 ` and `--servo-backward-pwm:640`, values could be inverted, because of the hardware setting.
+> Note the `--servo-forward-pwm:XXX ` and `--servo-backward-pwm:YYY`, values could be inverted, because of the hardware setting.
 > 
 > ⚠️ Do make sure you set those values correctly !!  
-> This depends on the way the 2 potentiometers are set, the knob, and the feedback.   
+> This depends on the way the 2 potentiometers are set - the knob, and the feedback - and on the way the different wheels are turning.   
 --- 
