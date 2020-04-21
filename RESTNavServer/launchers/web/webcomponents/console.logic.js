@@ -473,7 +473,7 @@ function astroCallback(data) {
 			let tanAlpha =
 					((Math.cos(elevSun) * Math.tan(elevMoon)) - (Math.sin(elevMoon) * Math.cos(deltaZ))) / (Math.sin(deltaZ));
 			let alpha = Math.toDegrees(Math.atan(tanAlpha)); // Tilt from horizontal
-			let moonTilt = 90 + alpha;
+			let moonTilt = /*90 +*/ alpha;
 			moonPhase.tilt = moonTilt;                                 // Update tilt on graphic
 			moonPhase.title = `Tilt:${alpha.toFixed(1)}°`; // Update tooltip
 		}

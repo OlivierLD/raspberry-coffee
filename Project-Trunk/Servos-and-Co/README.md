@@ -184,5 +184,15 @@ $ ./feedback.pots.sh --servo-channel:1 --knob-channel:0 --feedback-channel:1 \
 > Note the `--servo-forward-pwm:XXX ` and `--servo-backward-pwm:YYY`, values could be inverted, because of the hardware setting.
 > 
 > ⚠️ Do make sure you set those values correctly !!  
-> This depends on the way the 2 potentiometers are set - the knob, and the feedback - and on the way the different wheels are turning.   
+> This depends on the way the 2 potentiometers are set - the knob, and the feedback - and on the way the different wheels are turning.
+
+You turn the knob one way or the other, and the big wheel follows.
+
+The programs reads the value of the potentiometer of the knob, and asks the servo to turn the wheel until the value of
+the potentiometer attached to it is the same.
+
+This way, the [big wheel](#hardware) position is set by the potentiometer attached to it. The servo
+does **_not_** know what its position is, it is told to start forward or backward, and then
+to stop.
+   
 --- 
