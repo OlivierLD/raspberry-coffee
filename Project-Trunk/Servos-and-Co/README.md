@@ -117,7 +117,6 @@ Using the scripts `demo.interactive.servo.sh` and `feedback.mcp3008.sh`:
 --min-diff:10
 ```
 
-
 #### Find the servo pwmValues
 Here we try with frequency `100 Hz`.
 - `603` seems to be the value where the servo stops

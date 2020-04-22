@@ -87,6 +87,7 @@ include "Project-Trunk:dAISy"
 // Scratch pad
 include "oliv-scratch-pad:some-tests"
 include "oliv-scratch-pad:http-test"
+include "oliv-scratch-pad:HLL"
 //include 'REST.clients'
 include 'springboot-sensors'
 include 'jersey-client-tests'
