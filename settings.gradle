@@ -1,6 +1,6 @@
 rootProject.name = 'raspberry-coffee'
 //
-include 'Adafruit-IO-REST'
+include 'Adafruit-IO'
 include 'ADC'
 include 'ADC-benchmark'
 include 'AlaMode.101'
