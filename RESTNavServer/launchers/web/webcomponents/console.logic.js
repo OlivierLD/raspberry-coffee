@@ -464,15 +464,27 @@ function astroCallback(data) {
 		let moonPhase = document.getElementById('moon-phase-01');
 		moonPhase.phase = data.moonPhase;
 		if (data.moon.decl !== undefined && data.from.latitude !== undefined) {
-			// Tilt calculation, http://master.grad.hr/hdgg/kog_stranica/kog18/06myers-KoG18.pdf
+			// Tilt calculation,
 			let zSun = Math.toRadians(data.sunObs.z);
 			let zMoon = Math.toRadians(data.moonObs.z);
 			let elevSun = Math.toRadians(data.sunObs.alt);
 			let elevMoon = Math.toRadians(data.moonObs.alt);
 			let deltaZ = zSun - zMoon;
-			let tanAlpha =
-					((Math.cos(elevSun) * Math.tan(elevMoon)) - (Math.sin(elevMoon) * Math.cos(deltaZ))) / (Math.sin(deltaZ));
-			let alpha = Math.toDegrees(Math.atan(tanAlpha)); // Tilt from horizontal
+			let deltaElev = elevSun - elevMoon;
+			let alpha = 0;
+			if (true) { // Much simpler
+				// console.log(`DeltaZ: ${deltaZ.toFixed(2)}, DeltaE: ${deltaElev.toFixed(2)}`);
+				if (deltaZ != 0) {
+					alpha = Math.toDegrees(Math.atan(deltaElev / -deltaZ));
+				} else {
+					alpha = 90;
+				}
+			} else {
+				// http://master.grad.hr/hdgg/kog_stranica/kog18/06myers-KoG18.pdf
+				let tanAlpha =
+						((Math.cos(elevSun) * Math.tan(elevMoon)) - (Math.sin(elevMoon) * Math.cos(deltaZ))) / (Math.sin(deltaZ));
+				alpha = Math.toDegrees(Math.atan(tanAlpha)); // Tilt from horizontal
+			}
 			let moonTilt = /*90 +*/ alpha;
 			moonPhase.tilt = moonTilt;                                 // Update tilt on graphic
 			moonPhase.title = `Tilt:${alpha.toFixed(1)}°`; // Update tooltip
