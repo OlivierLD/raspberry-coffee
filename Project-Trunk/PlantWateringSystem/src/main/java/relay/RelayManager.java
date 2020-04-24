@@ -125,7 +125,7 @@ public class RelayManager {
 		// Relay map
 		String mapStr = "1:11";
 		//               | |
-		//               | Physical pin #11 (GPIO_0)
+		//               | Physical pin #11 (GPIO_0), BCM #17
 		//               Relay num for this app
 		Map<Integer, Pin> relayMap = null;
 		try {

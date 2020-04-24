@@ -1,5 +1,5 @@
 #!/bin/bash
-CP=./build/libs/small.server.extended-1.0-all.jar
+CP=./build/libs/small-server-extended-1.0-all.jar
 #
 # Try ./ssd1306i2cDisplay.sh "Lorem ipsum dolor sit|amet, tellus tempus|vitae tempor|pellentesque. Lobortis|condimentum tortor|volutpat ipsum augue,..."
 #

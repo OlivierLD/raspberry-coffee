@@ -65,6 +65,17 @@ From [Adafruit](https://www.adafruit.com/product/815)
 
 About servo calibration, read [this](./PWM.md).
 
+##### Wiring
+- Board 3.3V to sensor VCC
+- Board GND to sensor GND
+- Board SCL to sensor SCL
+- Board SDA to sensor SDA
+
+A `5v` power supply is required to feed the servos. 
+- the [Female DC power adapter](http://adafru.it/368) works fine
+- I was also able to power it from the Raspberry Header (pins #2 and #39) for 2 servos without problem.
+
+
 #### Adafruit Motor HAT
 I<sup>2</sup>C, DC and Stepper Motors.
 

@@ -130,4 +130,54 @@ setServoPulse(1, 2.5)
 Once you have determined the appropriate min and max values, you also have the `int` values
 to feed the `setPWM` with.
 
+#### Interactive demo/calibration
+Use `demo.interactive.continuous.sh` with a `PCA9685`;
+```
+$ ./demo.interactive.continuous.sh --channel:1 --freq:100
+Supported program arguments: --channel:14 --freq:60
+Values above are default values.
+Theoretical values: Min: 0410, Center: 0614, Max: 0819
+System data:
+	Core Voltage volt=1.3438V
+	CPU Temp CPU Temp: 43.5 C
+	CPU Load CPU Load: 23.00%
+----------------------------
+Servo #1, frequency 100 Hz.
+----------------------------
+Let's go. Enter 'S' to stop the servo, 'Q' to quit.
+Commands are:
+	S to Stop
+	Q to Quit
+	TH to Display theoretical values
+	XXX to set the pwmValue on the servo
+	[XXX:YYY] to go with pwmValues from XXX to YYY
+	Pulse XXX to get the pulse corresponding to XXX
+You say: > 615
+From value: 0615, pulse is 1.501
+You say: > [600:650]
+Range detected in [600:650]
+Value 0600, pulse 1.465
+Value 0601, pulse 1.467
+Value 0602, pulse 1.470
+Value 0603, pulse 1.472
+Value 0604, pulse 1.475
+Value 0605, pulse 1.477
+Value 0606, pulse 1.479
+Value 0607, pulse 1.482
+Value 0608, pulse 1.484
+Value 0609, pulse 1.487
+Value 0610, pulse 1.489
+Value 0611, pulse 1.492
+Value 0612, pulse 1.494
+Value 0613, pulse 1.497
+Value 0614, pulse 1.499
+Value 0615, pulse 1.501
+Value 0616, pulse 1.504
+Value 0617, pulse 1.506
+Value 0618, pulse 1.509
+Value 0619, pulse 1.511
+Value 0620, pulse 1.514
+. . .
+```
+
 ---

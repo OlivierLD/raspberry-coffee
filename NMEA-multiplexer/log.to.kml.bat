@@ -10,7 +10,7 @@ if %argCount% neq 3 (
   echo example: %0 sample.data\estero.drake.2018-09-29.nmea "Kayak Drake Estero" "28-Sep-2018"
   exit /b 1
 )
-set CP=.\build\libs\NMEA.multiplexer-1.0-all.jar
+set CP=.\build\libs\NMEA-multiplexer-1.0-all.jar
 set JAVA_OPTIONS=
 ::
 :: set JAVA_OPTIONS=%JAVA_OPTIONS% -Drmc.date.offset=7168

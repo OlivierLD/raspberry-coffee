@@ -73,6 +73,8 @@ Sample setup, with the same device hooked-up to a Raspberry Pi Zero connected to
 
 ![Wiring](./RPi-MCP3008-Pot_2_bb.png)
 
+> _Note_: Resistor 220 to 330 &Omega; works OK.
+
 First step, **calibration**, follow instructions at the prompt:
 ```
 $ ./feedback.mcp3008.sh --miso:23 --mosi:24 --clk:18 --cs:25 --channel:0

@@ -1,6 +1,6 @@
 rootProject.name = 'raspberry-coffee'
 //
-include 'Adafruit-IO-REST'
+include 'Adafruit-IO'
 include 'ADC'
 include 'ADC-benchmark'
 include 'AlaMode.101'
@@ -63,11 +63,12 @@ include(':NMEA-mux-WebUI:head-up')
 // Project-Trunk sub-projects
 include "Project-Trunk:RasPiRadar"
 include "Project-Trunk:PurePWM"
-include "Project-Trunk:Button-Relex"
+include "Project-Trunk:Button-Reflex"
 include "Project-Trunk:System-Languages"
 include "Project-Trunk:Weather-Station-Implementation"
 include "Project-Trunk:Led-PWM-etc"
 include "Project-Trunk:Motors"
+include "Project-Trunk:Servos-and-Co"
 include "Project-Trunk:SteppersPlayground"
 include "Project-Trunk:LSM303"
 include "Project-Trunk:SunFlower"
@@ -86,6 +87,7 @@ include "Project-Trunk:dAISy"
 // Scratch pad
 include "oliv-scratch-pad:some-tests"
 include "oliv-scratch-pad:http-test"
+include "oliv-scratch-pad:HLL"
 //include 'REST.clients'
 include 'springboot-sensors'
 include 'jersey-client-tests'

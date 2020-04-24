@@ -26,19 +26,6 @@ compileJava {
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
-//sourceSets {
-//    main {
-//        java {
-//            srcDirs = ['src/java']
-//        }
-//    }
-//    test {
-//        java {
-//            srcDir 'tests/java'
-//        }
-//    }
-//}
-
 repositories {
     mavenCentral()
     mavenLocal()
@@ -47,7 +34,7 @@ repositories {
 
 dependencies {
 ////compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
-  compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT'  // -SNAPSHOT'
+//  compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT'  // -SNAPSHOT'
     compile 'org.rxtx:rxtx:2.1.7'
     compile project(':common-utils')
     compile project(':Serial-IO')

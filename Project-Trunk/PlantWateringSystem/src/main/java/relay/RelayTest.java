@@ -14,7 +14,7 @@ import com.pi4j.io.gpio.RaspiPin;
  */
 public class RelayTest {
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String... args) throws InterruptedException {
 
 		System.out.println("<--Pi4J--> GPIO Control Example ... started.");
 

@@ -3,7 +3,7 @@ plugins {
   id 'scala'
   id 'idea'
   id 'maven'
-  id 'com.github.johnrengelman.shadow' version '5.0.0'
+  id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 compileJava.options.encoding = 'ISO-8859-1'
@@ -29,67 +29,6 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-//  compile project(':common-utils')
-//  compile project(':common-utils-swing')
-//  compile project(':http-tiny-server')
-//  compile project(':Adafruit.IO.REST')
-//  compile project(':SevenSegDisplay')
-//  compile project(':AlaMode.101')
-//  compile project(':I2C-SPI')
-//  compile project(':WeatherStation')
-//  compile project(':ADC')
-//  compile project(':ADC-benchmark')
-//  compile project(':Arduino.RaspberryPI')
-//  compile project(':DAC')
-//  compile project(':GPIO.01')
-//  compile project(':PhoneKeyboard3x4')
-//  compile project(':HC-SR04')
-//  compile project(':PIR')
-//  compile project(':PI4J.email')
-//  compile project(':Relay')
-//  compile project(':RESTRelay')
-//  compile project(':FONA')
-//  compile project(':RasPISamples')
-//  compile project(':LelandOilDetector')
-//  compile project(':OtherJVM.languages')
-//  compile project(':Serial.IO')
-//  compile project(':SerialRxTx')
-//  compile project(':Serial.PI4J.reader')
-//  compile project(':MindWave')
-//  compile project(':RMI.sample')
-//  compile project(':NMEA-multiplexer')
-//  compile project(':NMEA-mux-extensions')
-////  compile project(':NMEA.mux.WebUI')
-//  compile project(':NMEA.mux.WebUI:full.server')
-//  compile project(':NMEA.mux.WebUI:minimal.mux')
-//  compile project(':NMEA.mux.WebUI:full.server.extended')
-//  compile project(':NMEA.mux.WebUI:full.server.extended.v2')
-//  compile project(':NMEA.mux.WebUI:head.up')
-//  compile project(':RESTCam')
-//  compile project(':RESTNavServer')
-//  compile project(':RESTTideEngine')
-//  compile project(':RESTNauticalAlmanac')
-//  compile project(':RESTImageProcessor')
-//  compile project(':JavaSoundDemo')
-//  compile project(':HanoiTower')
-//  compile project(':jsonQL')
-//  compile project(':Project-Trunk:PlantWateringSystem')
-//  compile project(':Project-Trunk:ADCs-Servos-JoySticks')
-//  compile project(':Project-Trunk:Motors')
-//  compile project(':Project-Trunk:SteppersPlayground')
-//  compile project(':Project-Trunk:Weather.Station.Implementation')
-//  compile project(':Project-Trunk:RasPiRadar')
-//  compile project(':Project-Trunk:REST.clients:TCP.Watch.01')
-//  compile project(':Project-Trunk:REST.clients:REST.assembler')
-//  compile project(':Project-Trunk:REST.clients:REST.assembler:springboot-sensors')
-//  compile project(':Project-Trunk:PolarSmoother')
-//  compile project(':Project-Trunk:Deviation.Tool')
-//  compile project(':Project-Trunk:dAISy')
-//  compile project(':TensorFlow')
-//  compile project(':Processing')
-//  compile project(':Bluetooth')
-//  compile project(':Joystick')
-//  compile project(':JupyterNotebooks:deep.learning.crash.course')
 }
 
 repositories {

@@ -47,7 +47,7 @@ The Web interface main page is `robot.pilot.html`, served by `node.js` as well.
 ![Architecture](./img/Architecture.jpg)
 
 The [Adafruit Motor Hat](https://www.adafruit.com/products/2348) drives the servos, attached on the [Chassis](https://www.adafruit.com/product/2939).
-The code for the Java Motor HAT is in the [I2C.SPI project](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/I2C.SPI/src/i2c/servo/adafruitmotorhat).
+The code for the Java Motor HAT is in the [I2C-SPI project](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/I2C-SPI/src/i2c/motor/adafruitmotorhat).
 
 The `node` server is also an HTTP server, that serves the web pages used by the clients at the left of the diagram.
 

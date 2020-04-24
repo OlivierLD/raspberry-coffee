@@ -2,7 +2,7 @@
 #
 # Triple axis compass
 #
-CP=./build/libs/I2C.SPI-1.0-all.jar
+CP=./build/libs/I2C-SPI-1.0-all.jar
 #
 # Comment/Uncomment as needed
 #

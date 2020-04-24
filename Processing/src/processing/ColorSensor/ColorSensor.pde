@@ -1,6 +1,6 @@
 import i2c.sensor.TCS34725;
 /**
- * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar 
+ * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C-SPI-1.0-all.jar
  */
 
 boolean withSensor = true;

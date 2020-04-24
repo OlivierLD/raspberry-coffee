@@ -226,6 +226,7 @@ public class TCPUtils {
 					hardwareData[PCB_REV_IDX],
 					hardwareData[MEMORY_IDX],
 					hardwareData[NOTES_IDX]));
+			System.out.println();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

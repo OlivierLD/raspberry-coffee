@@ -62,7 +62,7 @@ Make sure you have built all the required parts:
 The last line creates a duplicate of the script that runs the multiplexer, edit it, and add the required resources in the `classpath`:
 ```bash
 #
-CP=./build/libs/NMEA.multiplexer-1.0-all.jar
+CP=./build/libs/NMEA-multiplexer-1.0-all.jar
 CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0-all.jar
 # CP=$CP:./libs/RXTXcomm.jar          # for Mac
 CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry Pi

@@ -11,7 +11,7 @@ BREAK_AT=RMC
 # DATA=RMC,HDG,HDM,VHW,MWV,MTW,DBT,VWR
 DATA=RMC,HDM,VHW,DBT,VWR,MTW
 #
-CP=./build/libs/NMEA.multiplexer-1.0-all.jar
+CP=./build/libs/NMEA-multiplexer-1.0-all.jar
 JAVA_OPTIONS=
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"

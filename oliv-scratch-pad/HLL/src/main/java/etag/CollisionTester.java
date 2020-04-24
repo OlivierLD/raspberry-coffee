@@ -35,6 +35,9 @@ public class CollisionTester {
 		final HLL hll = new HLL(LOG_2_M, REG_WIDTH); // (13/*log2m*/, 5/*registerWidth*/);
 
 		for (long i=0; i<NB_ETAG_GEN; i++) {
+			if (i % 10_000 == 0) {
+				System.out.println(String.format("... Iteration #%s", NF.format(i)));
+			}
 			int strLen = MIN_STR_LENGTH + (int)Math.round(Math.ceil(Math.random() * (MAX_STR_LENGTH - MIN_STR_LENGTH)));
 			StringBuffer sb = new StringBuffer();
 			for (int idx=0; idx<strLen; idx++) {

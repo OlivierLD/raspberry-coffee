@@ -121,13 +121,13 @@ public class PCA9685 {
 	 */
 	public void setPWM(int channel, int on, int off) throws IllegalArgumentException {
 		if (channel < 0 || channel > 15) {
-			throw new IllegalArgumentException("Channel must be in [0, 15]");
+			throw new IllegalArgumentException(String.format("Channel must be in [0..15], was %d", channel));
 		}
 		if (on < 0 || on > 4_095) {
-			throw new IllegalArgumentException("On must be in [0, 4095]");
+			throw new IllegalArgumentException(String.format("On must be in [0..4095], was %d", on));
 		}
 		if (off < 0 || off > 4_095) {
-			throw new IllegalArgumentException("Off must be in [0, 4095]");
+			throw new IllegalArgumentException(String.format("Off must be in [0..4095], was %d", off));
 		}
 		if (on > off) {
 			throw new IllegalArgumentException("OFF must be greater than ON");

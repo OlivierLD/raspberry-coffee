@@ -220,7 +220,7 @@ This would read 2 serial ports, `COM3` and `COM4`, and merge the output into a s
 This step will start the Multiplexer. As instructed by the `yaml` file above, it will read 2 serial ports and produce a log file. 
 <pre>
  C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>windows.test.bat</b>
- Running java -cp .\build\libs\NMEA.multiplexer-1.0-all.jar;C:\Users\olivier\rxtx-2.2pre2-bins\RXTXcomm.jar  -DdeltaT=69.2201 -Xms64M -Xmx1G -Djava.library.path=C:\Users\olivier\rxtx-2.2pre2-bins\win32 -Dmux.properties=nmea.mux.2.serial.yaml nmea.mux.GenericNMEAMultiplexer
+ Running java -cp .\build\libs\NMEA-multiplexer-1.0-all.jar;C:\Users\olivier\rxtx-2.2pre2-bins\RXTXcomm.jar  -DdeltaT=69.2201 -Xms64M -Xmx1G -Djava.library.path=C:\Users\olivier\rxtx-2.2pre2-bins\win32 -Dmux.properties=nmea.mux.2.serial.yaml nmea.mux.GenericNMEAMultiplexer
  Definition Name: Read 2 serial ports, generate one log file, for Windows.
  {with.http.server=false, init.cache=false}
  - Start writing to nmea.forwarders.DataFileWriter, data.nmea

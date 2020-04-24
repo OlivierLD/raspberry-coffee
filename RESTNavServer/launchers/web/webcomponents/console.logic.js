@@ -464,15 +464,30 @@ function astroCallback(data) {
 		let moonPhase = document.getElementById('moon-phase-01');
 		moonPhase.phase = data.moonPhase;
 		if (data.moon.decl !== undefined && data.from.latitude !== undefined) {
-			let moonTilt = (data.from.latitude - data.moon.decl) - 90;
-			moonPhase.tilt = moonTilt;
-			if (moonTilt > 90) {
-				moonTilt -= 180;
-			} else if (moonTilt < -90) {
-				moonTilt += 180;
+			// Tilt calculation,
+			let zSun = Math.toRadians(data.sunObs.z);
+			let zMoon = Math.toRadians(data.moonObs.z);
+			let elevSun = Math.toRadians(data.sunObs.alt);
+			let elevMoon = Math.toRadians(data.moonObs.alt);
+			let deltaZ = zSun - zMoon;
+			let deltaElev = elevSun - elevMoon;
+			let alpha = 0;
+			if (true) { // Much simpler
+				// console.log(`DeltaZ: ${deltaZ.toFixed(2)}, DeltaE: ${deltaElev.toFixed(2)}`);
+				if (deltaZ != 0) {
+					alpha = Math.toDegrees(Math.atan(deltaElev / -deltaZ));
+				} else {
+					alpha = 90;
+				}
+			} else {
+				// http://master.grad.hr/hdgg/kog_stranica/kog18/06myers-KoG18.pdf
+				let tanAlpha =
+						((Math.cos(elevSun) * Math.tan(elevMoon)) - (Math.sin(elevMoon) * Math.cos(deltaZ))) / (Math.sin(deltaZ));
+				alpha = Math.toDegrees(Math.atan(tanAlpha)); // Tilt from horizontal
 			}
-			moonPhase.title = `Tilt:${moonTilt>=0?"R":"L"}${Math.abs(moonTilt).toFixed(0)}°`;
-			// moonPhase.title = `Tilt:${(90 - Math.abs(moonTilt + 90)).toFixed(1)}°`; // TODO To Verify...
+			let moonTilt = /*90 +*/ alpha;
+			moonPhase.tilt = moonTilt;                                 // Update tilt on graphic
+			moonPhase.title = `Tilt:${alpha.toFixed(1)}°`; // Update tooltip
 		}
 		//moonPhase.repaint();
 	}
@@ -623,12 +638,15 @@ function astroCallback(data) {
 	if (data.moonPhase !== undefined) {
 		document.getElementById("moon-phase-rd").innerHTML = 'Moon Phase: ' + data.moonPhase + "°";
 		if (data.moon.decl !== undefined && data.from.latitude !== undefined) {
-			let moonTilt = (data.from.latitude - data.moon.decl) - 90;
-			if (moonTilt > 90) {
-				moonTilt -= 180;
-			} else if (moonTilt < -90) {
-				moonTilt += 180;
-			}
+			let zSun = Math.toRadians(data.sunObs.z);
+			let zMoon = Math.toRadians(data.moonObs.z);
+			let elevSun = Math.toRadians(data.sunObs.alt);
+			let elevMoon = Math.toRadians(data.moonObs.alt);
+			let deltaZ = zSun - zMoon;
+			let tanAlpha =
+					((Math.cos(elevSun) * Math.tan(elevMoon)) - (Math.sin(elevMoon) * Math.cos(deltaZ))) / (Math.sin(deltaZ));
+			let alpha = Math.toDegrees(Math.atan(tanAlpha)); // Tilt from horizontal
+			let moonTilt = 90 + alpha;
 			// document.getElementById("moon-tilt-rd").innerHTML = `Moon Tilt: ${(90 - Math.abs(moonTilt + 90))}°`; // TODO To Verify...
 			document.getElementById("moon-tilt-rd").innerHTML = `Moon Tilt: ${Math.abs(moonTilt)}°, ${moonTilt>=0?"Right ":"Left "}`;
 		}

@@ -6,16 +6,26 @@ import i2c.servo.PCA9685;
 import static utils.TimeUtil.delay;
 
 /*
+ * For PCA9685
  * Standard, all the way, clockwise, counterclockwise
  */
 public class DemoStandard {
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
+		int argChannel = -1;
+		if (args.length > 0) {
+			// First arg is channel #
+			argChannel = Integer.parseInt(args[0]);
+			if (argChannel > 15 || argChannel < 0) {
+				throw new IllegalArgumentException("Channel in [0..15] please!");
+			}
+		}
+
 		PCA9685 servoBoard = new PCA9685();
 		int freq = 60;
 		servoBoard.setPWMFreq(freq); // Set frequency in Hz
 
 //  final int CONTINUOUS_SERVO_CHANNEL = 14;
-		final int STANDARD_SERVO_CHANNEL = 13; // 15
+		final int STANDARD_SERVO_CHANNEL = (argChannel != -1) ? argChannel : 15;
 
 		int servo = STANDARD_SERVO_CHANNEL;
 		int servoMin = 122;
