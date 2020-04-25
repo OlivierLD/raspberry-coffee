@@ -278,7 +278,7 @@ class MoonPhaseDisplay extends HTMLElement {
 
 		// Phase Value
 		context.font = "bold " + Math.round(scale * 24) + "px " + this.moonPhaseColorConfig.valueFont;
-		let strVal = this.phase.toFixed(this.moonPhaseColorConfig.valueNbDecimal) + "°";
+		let strVal = Math.abs(this.phase).toFixed(this.moonPhaseColorConfig.valueNbDecimal) + "°" + (this.phase < 0 ? "." : " ");
 		let metrics = context.measureText(strVal);
 		let len = metrics.width;
 
@@ -325,22 +325,28 @@ class MoonPhaseDisplay extends HTMLElement {
 		// context.moveTo(center.x, center.y - radius);
 		context.moveTo(radius * Math.sin(Math.toRadians(this.tilt)),
 				- (radius * Math.cos(Math.toRadians(this.tilt))));
+
+		let correctedPhase = this.phase;
+		while (correctedPhase < 0) {
+			correctedPhase += 360;
+		}
 		// Draw disc rim
 		// Phase > 180, phase < 180, see in lineTo below
 		// let tilt = -this.tilt;
 
+
 		for (let i=180; i>=0; i-=10) { // Bottom to top
 			let x = radius * Math.sin(Math.toRadians(i));
 			let y = radius * Math.cos(Math.toRadians(i));
-			context.lineTo(((this.phase > 180 ? 1 : -1) * x), - y);
+			context.lineTo(((correctedPhase > 180 ? 1 : -1) * x), - y);
 		}
-		let phaseRimOrientation = Math.cos(Math.toRadians(this.phase));
+		let phaseRimOrientation = Math.cos(Math.toRadians(correctedPhase));
 		for (let i=0; i<=180; i+=10) { // Top to bottom
 			let x = radius * Math.sin(Math.toRadians(i)) * phaseRimOrientation;
 			let y = radius * Math.cos(Math.toRadians(i));
-			context.lineTo(((this.phase > 180 ? -1 : 1) * x), - y);
+			context.lineTo(((correctedPhase > 180 ? -1 : 1) * x), - y);
 			if (moonPhaseVerbose) {
-				console.log('Ph: ', this.phase,  '=> i=', i, 'X:', x, 'Y:', y);
+				console.log('Ph: ', correctedPhase,  '=> i=', i, 'X:', x, 'Y:', y);
 			}
 		}
 		context.restore();

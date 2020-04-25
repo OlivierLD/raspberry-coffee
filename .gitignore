@@ -64,6 +64,7 @@ Processing/**/*.jar
 .gitignore
 oliv-components/minified/
 RESTNavServer/launchers/web/20*
+NMEA-mux-WebUI/**/web/20*
 **/target
 **/.ipynb_checkpoints
 **/logged
