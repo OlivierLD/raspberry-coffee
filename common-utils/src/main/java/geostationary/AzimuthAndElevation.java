@@ -28,6 +28,7 @@ public class AzimuthAndElevation {
 		public String satName() { return this.satName; }
 		public double longitude() { return this.longitude; }
 	}
+
 	private static double azimuth(double satLong, double earthStationLat, double earthStationLong) {
 		double deltaG = Math.toRadians(earthStationLong - satLong);
 		double earthStationAzimuth = 180 + Math.toDegrees(Math.atan(Math.tan(deltaG) / Math.sin((Math.toRadians(earthStationLat)))));

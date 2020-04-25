@@ -471,6 +471,14 @@ function astroCallback(data) {
 			let elevMoon = Math.toRadians(data.moonObs.alt);
 			let deltaZ = zSun - zMoon;
 			let deltaElev = elevSun - elevMoon;
+			// console.log(`Z Sun  ${data.sunObs.z.toFixed(2)}`);
+			// console.log(`Z Moon ${data.moonObs.z.toFixed(2)}`);
+			// Compare L obs with D moon:
+			// data.from.lat and data.moon.decl
+			moonPhase.phase = ((data.from.latitude < data.moon.decl) ? -1 : 1) * data.moonPhase;
+			// if (data.from.latitude < data.moon.decl) {
+			// 	console.log(`Obs Lower than Moon`);
+			// }
 			let alpha = 0;
 			if (true) { // Much simpler
 				// console.log(`DeltaZ: ${deltaZ.toFixed(2)}, DeltaE: ${deltaElev.toFixed(2)}`);
@@ -488,6 +496,8 @@ function astroCallback(data) {
 			let moonTilt = /*90 +*/ alpha;
 			moonPhase.tilt = moonTilt;                                 // Update tilt on graphic
 			moonPhase.title = `Tilt:${alpha.toFixed(1)}°`; // Update tooltip
+		} else {
+			moonPhase.phase = data.moonPhase;
 		}
 		//moonPhase.repaint();
 	}
