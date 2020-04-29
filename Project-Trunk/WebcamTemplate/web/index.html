@@ -25,13 +25,13 @@
 
 		let interval = undefined;
 		function loop(cb) {
-			console.log("Loop function:", cb, cb.checked);
+			// console.log("Loop function:", cb, cb.checked);
 			if (cb.checked) {
-				window.clearInterval(interval);
-			} else {
 				interval = window.setInterval(() => {
 					updateImage();
 				}, 2000);
+			} else {
+				window.clearInterval(interval);
 			}
 		}
 	</script>
