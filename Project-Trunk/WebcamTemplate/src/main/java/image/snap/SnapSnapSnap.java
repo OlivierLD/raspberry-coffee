@@ -77,14 +77,17 @@ public class SnapSnapSnap extends Thread {
 		String snapshotName = name; // String.format("web/%s.jpg", name);
 		try {
 			String command = String.format(SNAPSHOT_COMMAND_1, rot, width, height, snapshotName);
-			if ("true".equals(System.getProperty("snap.verbose", "false"))) {
-				System.out.println("Snapshot name will be " + snapshotName);
-				System.out.println(String.format("HTTPLogger Executing [%s]", command));
-			}
 			long before = System.currentTimeMillis();
 			Process snap = rt.exec(command);
 			snap.waitFor(); // Sync
 			long after = System.currentTimeMillis();
+			if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+				System.out.println(String.format("%s Executing [%s], snapshot is in %s, (%d ms)",
+						SnapSnapSnap.class.getName(),
+						command,
+						snapshotName,
+						(after - before)));
+			}
 		} catch (InterruptedException ie) {
 			throw ie;
 		} catch (IOException ioe) {
