@@ -1,4 +1,4 @@
-package snap;
+package image.snap;
 
 import utils.TimeUtil;
 
@@ -14,6 +14,14 @@ public class SnapSnapSnap extends Thread {
 	private int height = 480;
 	private long wait = 1_000L;
 	private String snapName = "snap.jpg";
+
+	public String getSnapName() {
+		return snapName;
+	}
+
+	public void setSnapName(String snapName) {
+		this.snapName = snapName;
+	}
 
 	public int getRot() {
 		return rot;
@@ -85,9 +93,12 @@ public class SnapSnapSnap extends Thread {
 		return snapshotName;
 	}
 
+	// TODO rot, width, height, wait
 	public SnapSnapSnap() {
-		// TODO rot, width, height, wait
 		super();
+	}
+	public SnapSnapSnap(String threadName) {
+		super(threadName);
 	}
 
 	private boolean keepSnapping = true;
