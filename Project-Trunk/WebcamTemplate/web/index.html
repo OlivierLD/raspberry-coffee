@@ -14,7 +14,6 @@
 		let oneOrTwo = 1;
 
 		function updateImage() {
-			window.setTimeout(
 			fetchPix(json => {
 				console.log("Got this:", json);
 				let imgUrl = location.protocol + '//' + location.host + '/' + json.snapUrl +
@@ -26,7 +25,7 @@
 				visibleDiv.style.display = 'block';
 				hiddenDiv.style.display = 'none';
 				oneOrTwo = (oneOrTwo === 1 ? 2 : 1);
-			}), 1000);
+			});
 		}
 
 		function buttonClicked() {
