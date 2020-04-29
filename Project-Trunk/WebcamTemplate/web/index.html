@@ -12,7 +12,7 @@
 
 	<script type="text/javascript">
 
-		let oneOrTwo = 1;
+		let oneOrTwo = 1; // flip-flap
 
 		function updateImage() {
 			fetchPix(json => {
@@ -50,9 +50,13 @@
 </head>
 <body style="color: white; background: black;">
 
+	<h1>Raspberry Snap</h1>
+
 	<button onclick="buttonClicked();">Refresh</button> &nbsp; <input type="checkbox" onchange="loop(this);"> Loop.
 	<div id="the-picture-1" style="display: none;"></div>
 	<div id="the-picture-2" style="display: none;"></div>
 
+	<hr/>
+	<address>&copy; OlivSoft, 2020</address>
 </body>
 </html>
