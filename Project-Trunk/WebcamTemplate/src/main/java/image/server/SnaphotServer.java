@@ -11,7 +11,7 @@ public class SnaphotServer {
 	private int httpPort = 1234;
 
 	protected static SnapSnapSnap snap = null;
-	public final static String SNAP_NAME = "web/snap.jpg";
+	public final static String SNAP_NAME = "web/snap.jpg"; // TODO Get directory from -Dstatic.docs
 
 	public SnaphotServer() {
 

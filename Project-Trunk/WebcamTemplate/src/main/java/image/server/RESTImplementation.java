@@ -1,22 +1,15 @@
 package image.server;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import http.HTTPServer;
 import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 
-import java.io.StringReader;
-import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -128,7 +121,7 @@ public class RESTImplementation {
 	private Response getLastSnapshot(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
-		// TODO Get header parameters for the OpenCV transformations
+		// TODO Get header parameters for the OpenCV transformations, and apply transformation
 
 		SnapPayload payload = new SnapPayload()
 				.status("Ok")
