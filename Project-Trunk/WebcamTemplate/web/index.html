@@ -12,9 +12,9 @@
 		function buttonClicked() {
 			fetchPix(json => {
 				console.log("Got this:", json);
-				let imgPath = json.snapUrl;
+				let imgUrl = location.protocol + location.host + '/' + json.snapUrl;
 				document.getElementById("the-picture").innerHTML =
-						`<img src="${imgPath}" title="Snap!"/>`;
+						`<img src="${imgUrl}" title="Snap!"/>`;
 			});
 		}
 	</script>
