@@ -6,6 +6,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Snapshot</title>
+	<link rel="icon" type="image/png" href="./camera.png">
 	<link rel="stylesheet" href="./stylesheet.css" type="text/css"/>
 	<script type="text/javascript" src="./ajax.manager.js"></script> <!-- Contains REST calls -->
 
@@ -22,7 +23,7 @@
 				let hiddenDiv = (oneOrTwo === 1) ? document.getElementById("the-picture-2") : document.getElementById("the-picture-1");
 				visibleDiv.innerHTML =
 						`<img src="${imgUrl}" title="Snap!"/>`;
-				window.setTimeout(() => {
+				window.setTimeout(() => { // To avoid flickering...
 					visibleDiv.style.display = 'block';
 					hiddenDiv.style.display = 'none';
 					oneOrTwo = (oneOrTwo === 1 ? 2 : 1);
