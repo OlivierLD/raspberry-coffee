@@ -9,9 +9,47 @@ import java.io.IOException;
  */
 public class SnapSnapSnap extends Thread {
 
-	private int rot = 0, width = 640, height = 480;
+	private int rot = 0;
+	private int width = 640;
+	private int height = 480;
 	private long wait = 1_000L;
 	private String snapName = "snap.jpg";
+
+	public int getRot() {
+		return rot;
+	}
+
+	public void setRot(int rot) {
+		this.rot = rot;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public long getWait() {
+		return wait;
+	}
+
+	public void setWait(long wait) {
+		this.wait = wait;
+	}
+
+	public void setKeepSnapping(boolean keepSnapping) {
+		this.keepSnapping = keepSnapping;
+	}
 
 	// The --timeout seem to degrade the quality of the picture, specially outside...
 	private final static String SNAPSHOT_COMMAND_1 = "raspistill -rot %d --width %d --height %d --output %s --nopreview"; // --timeout 1
