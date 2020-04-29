@@ -3,6 +3,7 @@ package image.snap;
 import utils.TimeUtil;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 
 /**
  * -Dsnap.verbose
@@ -14,6 +15,8 @@ public class SnapSnapSnap extends Thread {
 	private int height = 480;
 	private long wait = 1_000L;
 	private String snapName = "snap.jpg";
+
+	private static NumberFormat nf = NumberFormat.getInstance();
 
 	public String getSnapName() {
 		return snapName;
@@ -82,11 +85,11 @@ public class SnapSnapSnap extends Thread {
 			snap.waitFor(); // Sync
 			long after = System.currentTimeMillis();
 			if ("true".equals(System.getProperty("snap.verbose", "false"))) {
-				System.out.println(String.format("%s Executing [%s], snapshot is in %s, (%d ms)",
+				System.out.println(String.format("%s Executing [%s], snapshot is in %s, (%s ms)",
 						SnapSnapSnap.class.getName(),
 						command,
 						snapshotName,
-						(after - before)));
+						nf.format(after - before)));
 			}
 		} catch (InterruptedException ie) {
 			throw ie;
