@@ -22,9 +22,11 @@
 				let hiddenDiv = (oneOrTwo === 1) ? document.getElementById("the-picture-2") : document.getElementById("the-picture-1");
 				visibleDiv.innerHTML =
 						`<img src="${imgUrl}" title="Snap!"/>`;
-				visibleDiv.style.display = 'block';
-				hiddenDiv.style.display = 'none';
-				oneOrTwo = (oneOrTwo === 1 ? 2 : 1);
+				window.setTimeout(() => {
+					visibleDiv.style.display = 'block';
+					hiddenDiv.style.display = 'none';
+					oneOrTwo = (oneOrTwo === 1 ? 2 : 1);
+				}, 500);
 			});
 		}
 
