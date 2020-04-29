@@ -9,7 +9,8 @@
 	<script type="text/javascript" src="./ajax.manager.js"></script> <!-- Contains REST calls -->
 
 	<script type="text/javascript">
-		function buttonClicked() {
+
+		function updateImage() {
 			fetchPix(json => {
 				console.log("Got this:", json);
 				let imgUrl = location.protocol + '//' + location.host + '/' + json.snapUrl;
@@ -17,13 +18,27 @@
 						`<img src="${imgUrl}" title="Snap!"/>`;
 			});
 		}
+
+		function buttonClicked() {
+			updateImage();
+		}
+
+		let interval = undefined;
+		function loop(cb) {
+			if (cb.checked) {
+				window.clearInterval(interval);
+			} else {
+				interval = window.setInterval(() => {
+					updateImage();
+				}, 2000);
+			}
+		}
 	</script>
 </head>
 <body>
-	<button onclick="buttonClicked();">Refresh</button>
-	<div id="the-picture">
 
-	</div>
+	<button onclick="buttonClicked();">Refresh</button> &nbsp; <input type="checkbox" onchange="loop(this);"> Loop.
+	<div id="the-picture"></div>
 
 </body>
 </html>
