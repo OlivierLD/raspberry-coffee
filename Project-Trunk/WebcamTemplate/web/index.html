@@ -14,7 +14,8 @@
 		function updateImage() {
 			fetchPix(json => {
 				console.log("Got this:", json);
-				let imgUrl = location.protocol + '//' + location.host + '/' + json.snapUrl;
+				let imgUrl = location.protocol + '//' + location.host + '/' + json.snapUrl +
+				  `?${Math.random()}`; // To force a refresh...
 				document.getElementById("the-picture").innerHTML =
 						`<img src="${imgUrl}" title="Snap!"/>`;
 			});
