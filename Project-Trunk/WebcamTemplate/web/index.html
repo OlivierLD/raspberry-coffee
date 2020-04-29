@@ -11,13 +11,20 @@
 
 	<script type="text/javascript">
 
+		let oneOrTwo = 1;
+
 		function updateImage() {
 			fetchPix(json => {
 				console.log("Got this:", json);
 				let imgUrl = location.protocol + '//' + location.host + '/' + json.snapUrl +
 				  `?${Math.random()}`; // To force a refresh...
-				document.getElementById("the-picture").innerHTML =
+				let visibleDiv = (oneOrTwo === 1) ? document.getElementById("the-picture-1") : document.getElementById("the-picture-2");
+				let hiddenDiv = (oneOrTwo === 1) ? document.getElementById("the-picture-2") : document.getElementById("the-picture-1");
+				visibleDiv.innerHTML =
 						`<img src="${imgUrl}" title="Snap!"/>`;
+				visibleDiv.style.display = 'block';
+				hiddenDiv.style.display = 'none';
+				oneOrTwo = (oneOrTwo === 1 ? 2 : 1);
 			});
 		}
 
@@ -41,7 +48,8 @@
 <body style="color: white; background: black;">
 
 	<button onclick="buttonClicked();">Refresh</button> &nbsp; <input type="checkbox" onchange="loop(this);"> Loop.
-	<div id="the-picture"></div>
+	<div id="the-picture-1" style="display: none;"></div>
+	<div id="the-picture-2" style="display: none;"></div>
 
 </body>
 </html>
