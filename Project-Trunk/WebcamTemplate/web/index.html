@@ -25,6 +25,7 @@
 
 		let interval = undefined;
 		function loop(cb) {
+			console.log("Loop function:", cb, cb.checked);
 			if (cb.checked) {
 				window.clearInterval(interval);
 			} else {
