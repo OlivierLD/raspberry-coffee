@@ -20,6 +20,7 @@ function getPromise(
 		url,                          // full api path
 		timeout,                      // After that, fail.
 		verb,                         // GET, PUT, DELETE, POST, etc
+		headers,                      // Request Headers, or null.
 		happyCode,                    // if met, resolve, otherwise fail.
 		data = null,                  // payload, when needed (PUT, POST...)
 		show = true) {                // Show the traffic [true]|false
@@ -42,7 +43,12 @@ function getPromise(
 		}
 
 		xhr.open(verb, url, true);
-		xhr.setRequestHeader("Content-type", "application/json");
+		// xhr.setRequestHeader("Content-type", "application/json");
+		if (headers !== undefined && headers !== null) {
+			headers.forEach(header => {
+				xhr.setRequestHeader(header.name, header.value);
+			});
+		}
 		try {
 			if (data === undefined || data === null) {
 				xhr.send();
@@ -72,7 +78,14 @@ function getPromise(
 }
 
 function getLastSnapshot() {
-	return getPromise('/snap/last-snapshot', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+	return getPromise('/snap/last-snapshot',
+			DEFAULT_TIMEOUT,
+			'GET',
+			[ {name: "Accept", value: "application/json"},
+				        {name: "Pragma", value: "no-cache"} ],
+			200,
+			null,
+			false);
 }
 
 function fetchPix(callback) {
