@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+ ! Uses ES6 Promises to get to Ajax
+ +-->
+<head>
+	<meta charset="UTF-8">
+	<title>Snapshot</title>
+	<script type="text/javascript" src="./ajax.manager.js"></script> <!-- Contains REST calls -->
+
+	<script type="text/javascript">
+		function buttonClicked() {
+			fetchPix(json => {
+				console.log("Got this:", json);
+				
+			});
+		}
+	</script>
+</head>
+<body>
+	<button onclick="buttonClicked();">Refresh</button>
+	<div id="the-picture">
+
+	</div>
+
+</body>
+</html>
