@@ -6,10 +6,22 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -19,7 +31,7 @@ import java.util.Optional;
  */
 public class RESTImplementation {
 
-	private boolean verbose = "true".equals(System.getProperty("math.rest.verbose"));
+	private boolean verbose = "true".equals(System.getProperty("image.rest.verbose"));
 
 	private SnapRequestManager snapRequestManager;
 	private final static String SNAP_PREFIX = "/snap";
@@ -113,20 +125,102 @@ public class RESTImplementation {
 	/**
 	 * Verb is GET
 	 *
-	 * TODO Flesh it
-	 *
-	 * @param request
-	 * @return
+	 * @param request May contain QS params (see below in the code)
+	 * @return the Response
 	 */
 	private Response getLastSnapshot(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		Map<String, String> prms = request.getQueryStringParameters();
 
-		// TODO Get header parameters for the OpenCV transformations, and apply transformation
+		String fileName = SnaphotServer.SNAP_NAME;
+		String urlFullPath = SnaphotServer.SNAP_NAME;
+
+		final List<String> supported = Arrays.asList(
+			"gray", "blur", "threshold", "canny", "contours"
+		);
+		/* Managed parameters
+		 * - gray, blur, threshold, canny, contours
+		 * - like in ?gray=1&blur=5&canny=3
+		 *
+		 * If value < 1, ignored.
+		 * All values > 0 are sorted, and executed in this order.
+		 *
+		 */
+		final Map<Integer, String> transformations = new TreeMap<>((o1, o2) -> o1.compareTo(o2)); // smaller to greater
+		if (prms != null && prms.size() > 0) {
+			prms.keySet().forEach(k -> {
+				if (supported.contains(k)) {
+					try {
+						int idx = Integer.parseInt(prms.get(k));
+						if (idx > 0) {
+							transformations.put(idx, k);
+						}
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				} else {
+					System.err.println(String.format("Un-supported QS parameter [%s]", k));
+				}
+			});
+		}
+
+		if (transformations.size() > 0) {
+			if (verbose) {
+				transformations.keySet().forEach(rank -> {
+					System.out.println(String.format("%d -> %s", rank, transformations.get(rank)));
+				});
+			}
+			// Apply transformations here
+			if ("true".equals(System.getProperty("with.opencv", "true"))) {
+				Mat image = Imgcodecs.imread(SnaphotServer.SNAP_NAME);
+				System.out.println(String.format("Original image: w %d, h %d, channels %d", image.width(), image.height(), image.channels()));
+				Mat finalMat = image;
+
+				for (int rank : transformations.keySet()) {
+					System.out.println(String.format("%d -> %s", rank, transformations.get(rank)));
+					String tx = transformations.get(rank);
+					switch (tx) {
+						case "gray":
+							Mat gray = new Mat();
+							Imgproc.cvtColor(finalMat, gray, Imgproc.COLOR_BGR2GRAY);
+							finalMat = gray;
+							break;
+						case "blur":
+							double sigmaX = 0d;
+							final Size kSize = new Size(31, 31);
+							Mat blurred = new Mat();
+							Imgproc.GaussianBlur(finalMat, blurred, kSize, sigmaX);
+							finalMat = blurred;
+							break;
+						case "threshold":
+							Mat threshed = new Mat();
+							Imgproc.threshold(finalMat, threshed, 127, 255, 0);
+							finalMat = threshed;
+							break;
+						case "canny":
+							Mat canny = new Mat();
+							Imgproc.Canny(finalMat, canny, 10, 100);
+							finalMat = canny;
+							break;
+						case "contours":
+							List<MatOfPoint> contours = new ArrayList<>();
+							Imgproc.findContours(finalMat, contours, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+							Imgproc.drawContours(finalMat, contours, -1, new Scalar(0, 255, 0), 2);
+							break;
+						default:
+							break;
+					}
+				}
+				fileName = SnaphotServer.TX_SNAP_NAME;
+				urlFullPath = SnaphotServer.TX_SNAP_NAME;
+				Imgcodecs.imwrite(fileName, finalMat);
+			}
+		}
 
 		SnapPayload payload = new SnapPayload()
 				.status("Ok")
-				.fullPath(SnaphotServer.SNAP_NAME)
-				.snapUrl(String.format("%s", SnaphotServer.SNAP_NAME));
+				.fullPath(fileName)
+				.snapUrl(String.format("%s", urlFullPath));
 
 		String content = new Gson().toJson(payload);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());

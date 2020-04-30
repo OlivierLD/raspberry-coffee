@@ -68,3 +68,10 @@ total 20M
 1075459 640K -rw-r--r-- 1 root root 639K Apr 30 10:09 opencv-430.jar
 pi@rpi-buster:~/opencv-4.3.0/build $ 
 ``` 
+
+## Some first tests
+- Update the `build.gradle` with the right paths
+- Do the same for `opencv.101.sh`
+- Then run `../gradlew clean shadowJar run` or `./opencv.101.sh`.
+
+This uses the images in the `images` folder.
