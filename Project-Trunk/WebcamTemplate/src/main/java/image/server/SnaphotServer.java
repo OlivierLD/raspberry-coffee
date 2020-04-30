@@ -2,6 +2,7 @@ package image.server;
 
 import http.HTTPServer;
 import image.snap.SnapSnapSnap;
+import org.opencv.core.Core;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +15,11 @@ public class SnaphotServer {
 	public final static String SNAP_NAME = "web/snap.jpg"; // TODO Get directory from -Dstatic.docs
 
 	public SnaphotServer() {
+
+		if ("true".equals(System.getProperty("with.opencv", "true"))) {
+			System.out.println("Loading " + Core.NATIVE_LIBRARY_NAME);
+			System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		}
 
 		String port = System.getProperty("http.port");
 		if (port != null) {
