@@ -211,7 +211,9 @@ public class RESTImplementation {
 							break;
 					}
 				}
-				Imgcodecs.imwrite(fileName, finalMat); // TODO Another file name?
+				fileName = SnaphotServer.TX_SNAP_NAME;
+				urlFullPath = SnaphotServer.TX_SNAP_NAME;
+				Imgcodecs.imwrite(fileName, finalMat); 
 			}
 		}
 

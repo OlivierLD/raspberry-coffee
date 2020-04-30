@@ -13,6 +13,7 @@ public class SnaphotServer {
 
 	protected static SnapSnapSnap snap = null;
 	public final static String SNAP_NAME = "web/snap.jpg"; // TODO Get directory from -Dstatic.docs
+	public final static String TX_SNAP_NAME = "web/snap_tx.jpg"; // TODO Get directory from -Dstatic.docs
 
 	public SnaphotServer() {
 
