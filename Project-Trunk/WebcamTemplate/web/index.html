@@ -23,9 +23,10 @@
 
 		function updateImage() {
 			fetchPix(json => {
-				console.log("Got this:", json);
+				// console.log("Got this:", json);
 				let imgUrl = location.protocol + '//' + location.host + '/' + json.snapUrl +
 				  `?${Math.random()}`; // To force a refresh...
+
 				let visibleDiv = (oneOrTwo === 1) ? document.getElementById("the-picture-1") : document.getElementById("the-picture-2");
 				let hiddenDiv = (oneOrTwo === 1) ? document.getElementById("the-picture-2") : document.getElementById("the-picture-1");
 				visibleDiv.innerHTML =
