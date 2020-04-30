@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' // version '5.2.0'
+    id "application"
+}
+
+group 'oliv.raspi.coffee'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    // The one below depends on where you have installed OpenCV
+    compile fileTree(dir: '/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4', include: ['*.jar'])
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+tasks.withType(JavaExec) {
+    systemProperty "java.library.path", "/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4:/usr/local/Cellar/openssl/1.0.2s/lib/" // For Mac
+    if (System.getProperty('DEBUG', 'false') == 'true') {
+        jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9099'
+    }
+}
+
+task runOliv101(type:JavaExec) {
+    main = olivopencv.OpenCV101
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+mainClassName = "olivopencv.OpenCV101"
+
+shadowJar {
+    zip64 true
+    // to create an executable jar-file. Requires mainClassName.
+    mergeServiceFiles()
+}
