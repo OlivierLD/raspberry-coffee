@@ -213,7 +213,7 @@ public class RESTImplementation {
 				}
 				fileName = SnaphotServer.TX_SNAP_NAME;
 				urlFullPath = SnaphotServer.TX_SNAP_NAME;
-				Imgcodecs.imwrite(fileName, finalMat); 
+				Imgcodecs.imwrite(fileName, finalMat);
 			}
 		}
 

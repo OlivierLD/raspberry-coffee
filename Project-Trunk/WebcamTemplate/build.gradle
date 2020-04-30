@@ -22,15 +22,15 @@ dependencies {
     compile project(':http-tiny-server')
 
     // The one below depends on where you have installed OpenCV
-    compile fileTree(dir: '/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4', include: ['*.jar']) // Mac
-//    compile fileTree(dir: '/usr/local/share/java/opencv4', include: ['*.jar']) // RPi
+//    compile fileTree(dir: '/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4', include: ['*.jar']) // Mac
+    compile fileTree(dir: '/usr/local/share/java/opencv4', include: ['*.jar']) // RPi
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
 tasks.withType(JavaExec) {
-    systemProperty "java.library.path", "/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4:/usr/local/Cellar/openssl/1.0.2s/lib/" // For Mac
-//    systemProperty "java.library.path", "/usr/local/share/java/opencv4" // Raspberry Pi
+//    systemProperty "java.library.path", "/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4:/usr/local/Cellar/openssl/1.0.2s/lib/" // For Mac
+    systemProperty "java.library.path", "/usr/local/share/java/opencv4" // Raspberry Pi
     if (System.getProperty('DEBUG', 'false') == 'true') {
         jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9099'
     }
