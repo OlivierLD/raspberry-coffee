@@ -135,13 +135,21 @@ public class OpenCV101 {
 
 		System.out.println("Image 1...");
 		long before = System.currentTimeMillis();
-		process(IMAGE_01, "01");
+		try {
+			process(IMAGE_01, "01");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		long after = System.currentTimeMillis();
 		System.out.println(String.format("Done in %d ms", (after - before)));
 
 		before = after;
 		System.out.println("Image 2...");
-		process(IMAGE_02, "02");
+		try {
+			process(IMAGE_02, "02");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		after = System.currentTimeMillis();
 		System.out.println(String.format("Done in %d ms", (after - before)));
 
