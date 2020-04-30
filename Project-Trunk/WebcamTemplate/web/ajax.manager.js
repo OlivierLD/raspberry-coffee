@@ -77,8 +77,14 @@ function getPromise(
 	return promise;
 }
 
-function getLastSnapshot() {
-	return getPromise('/snap/last-snapshot',
+function getLastSnapshot(prms) {
+	let qs = '';
+	if (prms !== undefined && prms.length > 0) {
+		prms.forEach(prm => {
+			qs += `${qs.length > 0 ? '&' : ''}${prm}`;
+		});
+	}
+	return getPromise(`/snap/last-snapshot${qs.length > 0 ? `?${qs}` : ""}`,
 			DEFAULT_TIMEOUT,
 			'GET',
 			[ {name: "Accept", value: "application/json"},
@@ -88,8 +94,8 @@ function getLastSnapshot() {
 			false);
 }
 
-function fetchPix(callback) {
-	let getData = getLastSnapshot();
+function fetchPix(prms, callback) {
+	let getData = getLastSnapshot(prms);
 	getData.then((value) => { // Resolve
 //  console.log("Done:", value);
 		try {
