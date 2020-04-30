@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Video</title>
+</head>
+<body  onload='player("http://192.168.42.15:8160");'>
+
+<div id="player">
+	<object type="application/x-vlc-plugin"
+					id="vlcplayer"
+					width="864px"
+					height="540px"
+					classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921">
+		<param name="Volume" value="100" />
+		<param name="AutoPlay" value="true" />
+		<param name="AutoLoop" value="false" />
+	</object>
+</div>
+
+<div id="controls">
+	<input type="button" onclick="play();" value="Play" />
+	<input type="button" onclick="pause();" value="Pause" />
+	<input type="button" onclick="stop();" value="Stop" />
+	<input type="button" onclick="mute();" value="Mute" />
+</div>
+
+<script type="text/javascript" language="javascript">
+
+	let vlc = document.getElementById("vlcplayer");
+
+	function player(vid) {
+		try {
+			let options = [":aspect-ratio=16:10", "--rtsp-tcp", ":no-video-title-show"];
+			let id = vlc.playlist.add(vid, 'Video', options);
+			vlc.playlist.playItem(id);
+			vlc.video.fullscreen = true;
+			//vlc.video.toggleFullscreen();
+		} catch (ex) {
+			alert(ex);
+		}
+	}
+
+	function mute() {
+		vlc.audio.toggleMute();
+	}
+
+	function play() {
+		vlc.playlist.play();
+	}
+
+	function stop() {
+		vlc.playlist.stop();
+	}
+
+	function pause() {
+		vlc.playlist.togglePause();
+	}
+
+	function fullscreen() {
+		vlc.video.toggleFullscreen();
+	}
+
+</script>
+
+</body>
+</html>

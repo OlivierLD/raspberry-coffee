@@ -47,7 +47,7 @@ sudo apt-get install build-essential cmake ant
 - `cd opencv-4.3.0`
 - `mkdir build`
 - `cd build`
-Make it (this takes ome time...):
+Make it (this one takes time, hours...):
 ```
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D WITH_LIBV4L=ON \
@@ -61,6 +61,32 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 ```
 - `sudo make`
 - `sudo make install`
+
+Quick test, from python
+```
+$ python3
+
+>>> import cv2
+>>> print(cv2.__version__)
+4.3.0
+>>>
+```
+Some location(s) to keep track of:
+```
+$ find /usr/local -name '*opencv*.jar' -exec ls -lisah {} \;
+1075459 640K -rw-r--r-- 1 root root 639K Apr 30 10:09 /usr/local/share/java/opencv4/opencv-430.jar
+```
+- `/usr/local/share/java/opencv4/opencv-430.jar` will be used for the Java Classpath 
+- `/usr/local/share/java/opencv4` will be used for the Java `-Djava.library.path`, as it contains a required system lib.
+```
+ll /usr/local/share/java/opencv4/
+total 20M
+1075457 4.0K drwxr-xr-x 2 root root 4.0K Apr 30 10:21 .
+1075456 4.0K drwxr-xr-x 3 root root 4.0K Apr 30 10:21 ..
+1075458  20M -rw-r--r-- 1 root root  20M Apr 30 10:11 libopencv_java430.so
+1075459 640K -rw-r--r-- 1 root root 639K Apr 30 10:09 opencv-430.jar
+pi@rpi-buster:~/opencv-4.3.0/build $ 
+``` 
 
 For JavaFX, see [this](https://stackoverflow.com/questions/38359076/how-can-i-get-javafx-working-on-raspberry-pi-3).
  
