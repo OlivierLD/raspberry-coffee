@@ -19,14 +19,15 @@ dependencies {
 }
 
 tasks.withType(JavaExec) {
-    systemProperty "java.library.path", "/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4:/usr/local/Cellar/openssl/1.0.2s/lib/" // For Mac
+//    systemProperty "java.library.path", "/usr/local/Cellar/opencv/4.1.0_2/share/java/opencv4:/usr/local/Cellar/openssl/1.0.2s/lib/" // For Mac
+    systemProperty "java.library.path", "/usr/local/share/java/opencv4" // Raspberry Pi
     if (System.getProperty('DEBUG', 'false') == 'true') {
         jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9099'
     }
 }
 
 task runOliv101(type:JavaExec) {
-    main = olivopencv.OpenCV101
+    main = "olivopencv.OpenCV101"
     classpath = sourceSets.main.runtimeClasspath
 }
 
