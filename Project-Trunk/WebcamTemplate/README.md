@@ -121,6 +121,11 @@ We have added some support for some query-string parameters to the REST resource
 to get to the image.
 It can be reworked _on the server_ before being reached from the client (browser) through its URL, just like before.
 
+Those parameters can be driven from the web page displayed above, with the fields labeled 
+`Gray`, `Blur`, `Threshold`, `Canny`, and `Contours`. The numbers the fields contain
+refers to the order in which the corresponding transformation is applied to the image.
+`0` means no transformation, values greater than 0 must be unique (do not give the same number to several transformations). 
+
 Here are a couple of examples:
 
 | Raw                             | Grayed                               |
