@@ -31,6 +31,8 @@ REST/HTTP server, and as such reachable through its URL.
 OpenCV can pave the way for Artificial Intelligence and Image recognition. 
 We could certainly use its features here.
 
+Installing OpenCV is not snappy, but it is not too difficult.
+
 - Instructions are available at <https://opencv-java-tutorials.readthedocs.io/en/latest/01-installing-opencv-for-java.html#introduction-to-opencv-for-java>
 - Also, worth a look: <https://www.learnopencv.com/install-opencv-4-on-raspberry-pi/>
 - And <https://gist.github.com/ivanursul/146b3474a7f3449ec70729f5c7f946ee>
