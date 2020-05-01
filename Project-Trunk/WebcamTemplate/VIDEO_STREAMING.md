@@ -1,4 +1,5 @@
 ## Video Streaming from the Raspberry Pi
+Inspired from [this video](https://www.youtube.com/watch?v=JjPsW-7FUng).
 
 - `sudo apt-get-install vlc`
 - `sudo raspi-config` to enable the camera module
@@ -7,3 +8,4 @@
 - From another machine, use `vlc player`, and open (`File > Open > Network`) the stream `http://192.168.42.15:8160` (or whatever the Raspberry Pi's IP address is).
 - Done!
     
+---
