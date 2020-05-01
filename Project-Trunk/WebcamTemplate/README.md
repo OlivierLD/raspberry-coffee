@@ -12,14 +12,25 @@
 On the Pi:
 ```
  $ ../../gradlew clean shadowJar
+ $ ../../gradlew clean shadowJar run
+```
+or
+```
  $ ./server.sh
 ``` 
 From any browser, an any machine on the same network as the Pi: 
 ```
  http://[the-pi-address]:1234/web/index.html
 ``` 
+The snapshot is updated on a regular base, and stored in a directory known by the 
+REST/HTTP server, and as such reachable through its URL.
+
+![Default Web Page](./docimages/web.page.png)
 
 ### OpenCV on the Raspberry Pi?
+OpenCV can pave the way for Artificial Intelligence and Image recognition. 
+We could certainly use its features here.
+
 - Instructions are available at <https://opencv-java-tutorials.readthedocs.io/en/latest/01-installing-opencv-for-java.html#introduction-to-opencv-for-java>
 - Also, worth a look: <https://www.learnopencv.com/install-opencv-4-on-raspberry-pi/>
 - And <https://gist.github.com/ivanursul/146b3474a7f3449ec70729f5c7f946ee>
@@ -27,7 +38,7 @@ From any browser, an any machine on the same network as the Pi:
 Some differences below with the scripts provided above...
 
 #### April-30, 2020.
-Raspian Buster comes with a JDK 11.
+Raspbian Buster comes with a JDK 11.
 ```
 $ export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-armhf/
 ```
@@ -91,6 +102,18 @@ pi@rpi-buster:~/opencv-4.3.0/build $
 For JavaFX, see [this](https://stackoverflow.com/questions/38359076/how-can-i-get-javafx-working-on-raspberry-pi-3).
  
 ### Next 
-- OpenCV processing of the snapshots (Java 9...)
+We have added some support for some query-string parameters to the REST resource we use 
+to get to the image.
+It can be reworked _on the server_ before being reached from the client (browser) through its URL, just like before.
+
+Here are a couple of examples:
+
+| Raw                             | Grayed                               |
+|:-------------------------------:|:------------------------------------:|
+| ![raw](./docimages/snap.01.jpg) | ![raw](./docimages/snap_tx_gray.jpg) |
+| Grayed and Blurred              | Grayed & Threshold                   |
+| ![raw](./docimages/snap_tx_gray_blur.jpg) | ![raw](./docimages/snap_tx_gray_threshold.jpg) |
+| Threshold and Canny             | Color & Threshold                   |
+| ![raw](./docimages/snap_tx_threshold_canny.jpg) | ![raw](./docimages/snap_tx_color_threshold.jpg) |
 
 ---
