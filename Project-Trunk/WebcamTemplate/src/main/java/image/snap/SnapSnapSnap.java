@@ -119,7 +119,11 @@ public class SnapSnapSnap extends Thread {
 			try {
 				SnapSnapSnap.snap(this.snapName, this.rot, this.width, this.height);
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+					ex.printStackTrace();
+				} else {
+					System.err.println(ex.getMessage());
+				}
 			}
 			// Wait...
 			TimeUtil.delay(this.wait);
