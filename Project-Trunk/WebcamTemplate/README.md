@@ -1,4 +1,6 @@
 # Foundation for a WebCam Web Application
+We'll be using the regular Raspberry Pi Camera Module.
+
 We are talking about snapshots here, _not_ videos.
 
 It _**is**_ possible to stream video from a Raspberry Pi, and it is easy.
