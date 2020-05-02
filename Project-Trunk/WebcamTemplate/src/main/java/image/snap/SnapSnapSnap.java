@@ -18,6 +18,66 @@ public class SnapSnapSnap extends Thread {
 
 	private static NumberFormat nf = NumberFormat.getInstance();
 
+	public static class SnapStatus {
+		private int rot = 0;
+		private int width = 640;
+		private int height = 480;
+		private long wait = 1_000L;
+		private String snapName = "snap.jpg";
+		private boolean threadRunning = false;
+
+		public SnapStatus() {
+		}
+
+		public int getRot() {
+			return rot;
+		}
+
+		public void setRot(int rot) {
+			this.rot = rot;
+		}
+
+		public int getWidth() {
+			return width;
+		}
+
+		public void setWidth(int width) {
+			this.width = width;
+		}
+
+		public int getHeight() {
+			return height;
+		}
+
+		public void setHeight(int height) {
+			this.height = height;
+		}
+
+		public long getWait() {
+			return wait;
+		}
+
+		public void setWait(long wait) {
+			this.wait = wait;
+		}
+
+		public String getSnapName() {
+			return snapName;
+		}
+
+		public void setSnapName(String snapName) {
+			this.snapName = snapName;
+		}
+
+		public boolean isThreadRunning() {
+			return threadRunning;
+		}
+
+		public void setThreadRunning(boolean threadRunning) {
+			this.threadRunning = threadRunning;
+		}
+	}
+
 	public String getSnapName() {
 		return snapName;
 	}
@@ -73,6 +133,17 @@ public class SnapSnapSnap extends Thread {
 	// Slow motion:
 	private final static String SNAPSHOT_COMMAND_3 = "raspivid -w 640 -h 480 -fps 90 -t 30000 -o vid.h264";
 
+	public SnapStatus getSnapStatus() {
+		SnapStatus snapStatus = new SnapStatus();
+		snapStatus.setHeight(this.height);
+		snapStatus.setWidth(this.width);
+		snapStatus.setRot(this.rot);
+		snapStatus.setSnapName(this.snapName);
+		snapStatus.setWait(this.wait);
+		snapStatus.setThreadRunning(this.isAlive());
+		return snapStatus;
+	}
+
 	public static String snap(String name, int rot, int width, int height)
 			throws Exception {
 		Runtime rt = Runtime.getRuntime();
@@ -119,7 +190,11 @@ public class SnapSnapSnap extends Thread {
 			try {
 				SnapSnapSnap.snap(this.snapName, this.rot, this.width, this.height);
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+					ex.printStackTrace();
+				} else {
+					System.err.println(ex.getMessage());
+				}
 			}
 			// Wait...
 			TimeUtil.delay(this.wait);

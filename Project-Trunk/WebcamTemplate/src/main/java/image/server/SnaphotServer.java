@@ -4,7 +4,9 @@ import http.HTTPServer;
 import image.snap.SnapSnapSnap;
 import org.opencv.core.Core;
 
+import java.io.File;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class SnaphotServer {
@@ -12,14 +14,32 @@ public class SnaphotServer {
 	private int httpPort = 1234;
 
 	protected static SnapSnapSnap snap = null;
-	public final static String SNAP_NAME = "web/snap.jpg"; // TODO Get directory from -Dstatic.docs
-	public final static String TX_SNAP_NAME = "web/snap_tx.jpg"; // TODO Get directory from -Dstatic.docs
+	private final static String SNAP_NAME    = "./%s/snap.jpg";    // Get directory from -Dstatic.docs, first element
+	private final static String TX_SNAP_NAME = "./%s/snap_tx.jpg"; // Get directory from -Dstatic.docs, first element
+
+	public static String snapshotName;
+	public static String txSnapshotName;
+
+	private String stripSeparators(String str) { // Remove first and last File.separator
+		String stripped = str;
+		while (stripped.startsWith(File.separator)) {
+			stripped = stripped.substring(1);
+		}
+		while (stripped.endsWith(File.separator)) {
+			stripped = stripped.substring(0, stripped.length() - 1);
+		}
+		return stripped;
+	}
 
 	public SnaphotServer() {
 
 		if ("true".equals(System.getProperty("with.opencv", "true"))) {
-			System.out.println("Loading " + Core.NATIVE_LIBRARY_NAME);
-			System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+			try {
+				System.out.println("Loading " + Core.NATIVE_LIBRARY_NAME);
+				System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+			} catch (UnsatisfiedLinkError ule) {
+				ule.printStackTrace();
+			}
 		}
 
 		String port = System.getProperty("http.port");
@@ -36,11 +56,44 @@ public class SnaphotServer {
 		// Add other features here if needed...
 //	this.httpServer.addRequestManager(new AstroRequestManager());
 
+		snapshotName = String.format(SNAP_NAME, stripSeparators(this.httpServer.getStaticDocumentsLocation().get(0)));
+		txSnapshotName = String.format(TX_SNAP_NAME, stripSeparators(this.httpServer.getStaticDocumentsLocation().get(0)));
+
+		if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+			System.out.println(String.format("Snapshots will be stored in %s", snapshotName));
+			System.out.println(String.format("Transformed snapshots will be stored in %s", txSnapshotName));
+		}
+
 		snap = new SnapSnapSnap("SnapThread");
-		snap.setSnapName(SNAP_NAME);
+		// TODO Start and stop from a service
+		snap.setSnapName(snapshotName);
 		snap.setRot(180);
 		snap.start();
 
+	}
+
+	protected void startSnapThread() {
+
+	}
+
+	protected void stopSnapThread() {
+
+	}
+
+	protected void takeOneSnap() {
+
+	}
+
+	protected void startStopMotion() {
+
+	}
+
+	protected SnapSnapSnap.SnapStatus getSnapThreadStatus() {
+		if (this.snap != null) {
+			return this.snap.getSnapStatus();
+		} else {
+			return null;
+		}
 	}
 
 	protected List<HTTPServer.Operation> getAllOperationList() {
@@ -57,7 +110,12 @@ public class SnaphotServer {
 	public HTTPServer startHttpServer(int port, SnapRequestManager requestManager) {
 		HTTPServer newHttpServer = null;
 		try {
-			newHttpServer = new HTTPServer(port, requestManager) {
+			Properties props = new Properties();
+			String staticDocPaths = System.getProperty("static.docs");
+			if (staticDocPaths != null) {
+				props.put("static.docs", staticDocPaths);
+			}
+			newHttpServer = new HTTPServer(port, requestManager, props) {
 				public void onExit() {
 					// Reset the servos to zero before closing.
 					System.out.println(">> Stopping snap before shutting down.");

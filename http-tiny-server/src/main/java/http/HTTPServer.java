@@ -69,8 +69,8 @@ import java.util.zip.ZipInputStream;
  * - http.verbose
  * - http.verbose.dump
  * - http.port
- * - static.docs      Path element of the static documents (like "/web/")
- * - static.zip.docs  Path element of the documents to find in `web.archive` (like "/zip/")
+ * - static.docs      Path elements of the static documents (like "/web/,/some/where/else/")
+ * - static.zip.docs  Path elements of the documents to find in `web.archive` (like "/zip/")
  * - autobind
  * - web.archive default web.zip
  *
@@ -390,6 +390,10 @@ public class HTTPServer {
 	private List<String> staticZippedDocumentsLocation = null;
 	private static final String DEFAULT_RESOURCE = "index.html";
 
+	public List<String> getStaticDocumentsLocation() {
+		return staticDocumentsLocation;
+	}
+
 	// This is an array, so several apps can subscribe to the same HTTPServer.
 	// A REST operation list belongs to each application.
 	// In this case, the HTTPServer should probably live in a singleton.
@@ -490,6 +494,9 @@ public class HTTPServer {
 
 	public HTTPServer(RESTRequestManager requestManager, boolean startImmediately) throws Exception {
 		this(defaultPort, requestManager, new Properties(), startImmediately);
+	}
+	public HTTPServer(int port, RESTRequestManager requestManager, Properties properties) throws Exception {
+		this(port, requestManager, properties, false);
 	}
 
 	/**

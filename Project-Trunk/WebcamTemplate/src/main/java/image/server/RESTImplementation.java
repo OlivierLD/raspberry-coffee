@@ -6,6 +6,7 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
+import image.snap.SnapSnapSnap;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Scalar;
@@ -63,9 +64,14 @@ public class RESTImplementation {
 			 */
 			new Operation(
 					"GET",
-					SNAP_PREFIX + "/last-snapshot", // TODO Prm form OpenCV
+					SNAP_PREFIX + "/last-snapshot",
 					this::getLastSnapshot,
-					"Return the last snapshot.")
+					"Return the last snapshot."),
+			new Operation(
+					"GET",
+					SNAP_PREFIX + "/snap-status",
+					this::getSnapThreadStatus,
+					"Return the snapshot thread status.")
 	);
 
 	protected List<Operation> getOperations() {
@@ -122,6 +128,50 @@ public class RESTImplementation {
 		}
 	}
 
+	private Response getSnapThreadStatus(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			SnapSnapSnap.SnapStatus snapThreadStatus = this.snapRequestManager.getSnapshotServer().getSnapThreadStatus();
+			String content = new Gson().toJson(snapThreadStatus);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		} catch (Exception ex) {
+			String content = new Gson().toJson(ex);
+			response.setStatus(Response.BAD_REQUEST);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		}
+	}
+
+	private Response startSnapThread(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		try {
+			this.snapRequestManager.getSnapshotServer().startSnapThread(); // TODO Implement ! With parameters
+		} catch (Exception ex) {
+			String content = new Gson().toJson(ex);
+			response.setStatus(Response.BAD_REQUEST);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		}
+		try {
+			SnapSnapSnap.SnapStatus snapThreadStatus = this.snapRequestManager.getSnapshotServer().getSnapThreadStatus();
+			String content = new Gson().toJson(snapThreadStatus);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		} catch (Exception ex) {
+			String content = new Gson().toJson(ex);
+			response.setStatus(Response.BAD_REQUEST);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		}
+	}
+
 	/**
 	 * Verb is GET
 	 *
@@ -132,8 +182,8 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		Map<String, String> prms = request.getQueryStringParameters();
 
-		String fileName = SnaphotServer.SNAP_NAME;
-		String urlFullPath = SnaphotServer.SNAP_NAME;
+		String fileName = SnaphotServer.snapshotName;
+		String urlFullPath = SnaphotServer.snapshotName;
 
 		final List<String> supported = Arrays.asList(
 			"gray", "blur", "threshold", "canny", "contours"
@@ -172,48 +222,52 @@ public class RESTImplementation {
 			}
 			// Apply transformations here
 			if ("true".equals(System.getProperty("with.opencv", "true"))) {
-				Mat image = Imgcodecs.imread(SnaphotServer.SNAP_NAME);
-				System.out.println(String.format("Original image: w %d, h %d, channels %d", image.width(), image.height(), image.channels()));
-				Mat finalMat = image;
+				try {
+					Mat image = Imgcodecs.imread(SnaphotServer.snapshotName);
+					System.out.println(String.format("Original image: w %d, h %d, channels %d", image.width(), image.height(), image.channels()));
+					Mat finalMat = image;
 
-				for (int rank : transformations.keySet()) {
-					System.out.println(String.format("%d -> %s", rank, transformations.get(rank)));
-					String tx = transformations.get(rank);
-					switch (tx) {
-						case "gray":
-							Mat gray = new Mat();
-							Imgproc.cvtColor(finalMat, gray, Imgproc.COLOR_BGR2GRAY);
-							finalMat = gray;
-							break;
-						case "blur":
-							double sigmaX = 0d;
-							final Size kSize = new Size(31, 31);
-							Mat blurred = new Mat();
-							Imgproc.GaussianBlur(finalMat, blurred, kSize, sigmaX);
-							finalMat = blurred;
-							break;
-						case "threshold":
-							Mat threshed = new Mat();
-							Imgproc.threshold(finalMat, threshed, 127, 255, 0);
-							finalMat = threshed;
-							break;
-						case "canny":
-							Mat canny = new Mat();
-							Imgproc.Canny(finalMat, canny, 10, 100);
-							finalMat = canny;
-							break;
-						case "contours":
-							List<MatOfPoint> contours = new ArrayList<>();
-							Imgproc.findContours(finalMat, contours, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-							Imgproc.drawContours(finalMat, contours, -1, new Scalar(0, 255, 0), 2);
-							break;
-						default:
-							break;
+					for (int rank : transformations.keySet()) {
+						System.out.println(String.format("%d -> %s", rank, transformations.get(rank)));
+						String tx = transformations.get(rank);
+						switch (tx) {
+							case "gray":
+								Mat gray = new Mat();
+								Imgproc.cvtColor(finalMat, gray, Imgproc.COLOR_BGR2GRAY);
+								finalMat = gray;
+								break;
+							case "blur":
+								double sigmaX = 0d;
+								final Size kSize = new Size(31, 31);
+								Mat blurred = new Mat();
+								Imgproc.GaussianBlur(finalMat, blurred, kSize, sigmaX);
+								finalMat = blurred;
+								break;
+							case "threshold":
+								Mat threshed = new Mat();
+								Imgproc.threshold(finalMat, threshed, 127, 255, 0);
+								finalMat = threshed;
+								break;
+							case "canny":
+								Mat canny = new Mat();
+								Imgproc.Canny(finalMat, canny, 10, 100);
+								finalMat = canny;
+								break;
+							case "contours": // That one needs some love...
+								List<MatOfPoint> contours = new ArrayList<>();
+								Imgproc.findContours(finalMat, contours, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+								Imgproc.drawContours(finalMat, contours, -1, new Scalar(0, 255, 0), 2);
+								break;
+							default:
+								break;
+						}
 					}
+					fileName = SnaphotServer.txSnapshotName;
+					urlFullPath = SnaphotServer.txSnapshotName;
+					Imgcodecs.imwrite(fileName, finalMat);
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
-				fileName = SnaphotServer.TX_SNAP_NAME;
-				urlFullPath = SnaphotServer.TX_SNAP_NAME;
-				Imgcodecs.imwrite(fileName, finalMat);
 			}
 		}
 
