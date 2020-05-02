@@ -70,9 +70,7 @@ public class SnaphotServer {
 
 	}
 
-	// TODO SnapConfig as parameter
 	protected void startSnapThread(SnapSnapSnap.SnapStatus config) throws Exception {
-		// TODO Already started?
 
 		SnapSnapSnap.SnapConfig snapConfig = snap.getConfig();
 		snapConfig.setHeight(config.getHeight());
@@ -84,6 +82,10 @@ public class SnaphotServer {
 			System.out.println("(re)starting SnapThread");
 		}
 		// New one?
+		if ("TERMINATED".equals(config.getState())) {
+			System.out.println("\tCreating new Snap Thread.");
+			snap = new SnapSnapSnap("SnapThread");
+		}
 		snap.setConfig(snapConfig);
 		snap.start();
 	}
