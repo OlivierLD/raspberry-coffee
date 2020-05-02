@@ -65,13 +65,25 @@ public class SnaphotServer {
 		}
 
 		snap = new SnapSnapSnap("SnapThread");
-		// TODO Start and stop from a service, prms too.
 		snap.setSnapName(snapshotName);
 		snap.setRot(180);
 
 	}
 
-	protected void startSnapThread() throws Exception {
+	// TODO SnapConfig as parameter
+	protected void startSnapThread(SnapSnapSnap.SnapStatus config) throws Exception {
+		// TODO Already started?
+
+		SnapSnapSnap.SnapConfig snapConfig = snap.getConfig();
+		snapConfig.setHeight(config.getHeight());
+		snapConfig.setWidth(config.getWidth());
+		snapConfig.setRot(config.getRot());
+		snapConfig.setWait(config.getWait());
+		snapConfig.setSnapName(config.getSnapName());
+		if (true) { // verbose!
+			System.out.println("(re)starting SnapThread");
+		}
+		snap.setConfig(snapConfig);
 		snap.start();
 	}
 

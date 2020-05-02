@@ -191,7 +191,49 @@ public class RESTImplementation {
 			}
 		} else if (start) {
 			try {
-				this.snapRequestManager.getSnapshotServer().startSnapThread(); // TODO Add parameters!
+				SnapSnapSnap.SnapStatus snapThreadStatus = null;
+				try {
+					snapThreadStatus = this.snapRequestManager.getSnapshotServer().getSnapThreadStatus();
+				} catch (Exception ex) {
+					String content = new Gson().toJson(ex);
+					response.setStatus(Response.BAD_REQUEST);
+					RESTProcessorUtil.generateResponseHeaders(response, content.length());
+					response.setPayload(content.getBytes());
+					return response;
+				}
+				Map<String, String> requestHeaders = request.getHeaders();
+				if (snapThreadStatus != null) {
+					if (requestHeaders != null) {
+						String cameraRotStr = requestHeaders.get("camera-rot");
+						String cameraWidthStr = requestHeaders.get("camera-width");
+						String cameraHeightStr = requestHeaders.get("camera-height");
+						String cameraWaitStr = requestHeaders.get("camera-wait");
+						String cameraSnapName = requestHeaders.get("camera-snap-name");
+						if (cameraRotStr != null) {
+							snapThreadStatus.setRot(Integer.parseInt(cameraRotStr));
+						}
+						if (cameraWidthStr != null) {
+							snapThreadStatus.setWidth(Integer.parseInt(cameraWidthStr));
+						}
+						if (cameraHeightStr != null) {
+							snapThreadStatus.setHeight(Integer.parseInt(cameraHeightStr));
+						}
+						if (cameraWaitStr != null) {
+							snapThreadStatus.setWait(Long.parseLong(cameraWaitStr));
+						}
+						if (cameraSnapName != null) {
+							snapThreadStatus.setSnapName(cameraSnapName);
+						}
+					}
+				} else {
+					String errMess = String.format("SNAP-0003: No Snap Status found.");
+					String content = new Gson().toJson(errMess);
+					response.setStatus(Response.BAD_REQUEST);
+					RESTProcessorUtil.generateResponseHeaders(response, content.length());
+					response.setPayload(content.getBytes());
+					return response;
+				}
+				this.snapRequestManager.getSnapshotServer().startSnapThread(snapThreadStatus);
 			} catch (Exception ex) {
 				String content = new Gson().toJson(ex);
 				response.setStatus(Response.BAD_REQUEST);

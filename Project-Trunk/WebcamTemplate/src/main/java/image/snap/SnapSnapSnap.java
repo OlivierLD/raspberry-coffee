@@ -10,11 +10,57 @@ import java.text.NumberFormat;
  */
 public class SnapSnapSnap extends Thread {
 
-	private int rot = 0;
-	private int width = 640;
-	private int height = 480;
-	private long wait = 1_000L;
-	private String snapName = "snap.jpg";
+	public static class SnapConfig {
+		private int rot = 0;
+		private int width = 640;
+		private int height = 480;
+		private long wait = 1_000L;
+		private String snapName = "snap.jpg";
+
+		public SnapConfig() {
+		}
+
+		public int getRot() {
+			return rot;
+		}
+
+		public void setRot(int rot) {
+			this.rot = rot;
+		}
+
+		public int getWidth() {
+			return width;
+		}
+
+		public void setWidth(int width) {
+			this.width = width;
+		}
+
+		public int getHeight() {
+			return height;
+		}
+
+		public void setHeight(int height) {
+			this.height = height;
+		}
+
+		public long getWait() {
+			return wait;
+		}
+
+		public void setWait(long wait) {
+			this.wait = wait;
+		}
+
+		public String getSnapName() {
+			return snapName;
+		}
+
+		public void setSnapName(String snapName) {
+			this.snapName = snapName;
+		}
+	}
+	private SnapConfig config = new SnapConfig();
 
 	private static NumberFormat nf = NumberFormat.getInstance();
 
@@ -78,44 +124,52 @@ public class SnapSnapSnap extends Thread {
 		}
 	}
 
+	public SnapConfig getConfig() {
+		return config;
+	}
+
+	public void setConfig(SnapConfig config) {
+		this.config = config;
+	}
+
 	public String getSnapName() {
-		return snapName;
+		return config.snapName;
 	}
 
 	public void setSnapName(String snapName) {
-		this.snapName = snapName;
+		this.config.snapName = snapName;
 	}
 
 	public int getRot() {
-		return rot;
+		return config.rot;
 	}
 
 	public void setRot(int rot) {
-		this.rot = rot;
+		this.config.rot = rot;
 	}
 
 	public int getWidth() {
-		return width;
+		return config.width;
 	}
 
 	public void setWidth(int width) {
-		this.width = width;
+		this.config.width = width;
 	}
 
 	public int getHeight() {
-		return height;
+		return config.height;
 	}
 
 	public void setHeight(int height) {
-		this.height = height;
+		this.config.height = height;
 	}
 
 	public long getWait() {
-		return wait;
+		return config.wait;
 	}
 
 	public void setWait(long wait) {
-		this.wait = wait;
+		this.config.wait = wait;
 	}
 
 	public void setKeepSnapping(boolean keepSnapping) {
@@ -135,11 +189,11 @@ public class SnapSnapSnap extends Thread {
 
 	public SnapStatus getSnapStatus() {
 		SnapStatus snapStatus = new SnapStatus();
-		snapStatus.setHeight(this.height);
-		snapStatus.setWidth(this.width);
-		snapStatus.setRot(this.rot);
-		snapStatus.setSnapName(this.snapName);
-		snapStatus.setWait(this.wait);
+		snapStatus.setHeight(this.config.height);
+		snapStatus.setWidth(this.config.width);
+		snapStatus.setRot(this.config.rot);
+		snapStatus.setSnapName(this.config.snapName);
+		snapStatus.setWait(this.config.wait);
 		snapStatus.setThreadRunning(this.isAlive());
 		return snapStatus;
 	}
@@ -188,7 +242,7 @@ public class SnapSnapSnap extends Thread {
 	public void run() {
 		while (this.keepSnapping) {
 			try {
-				SnapSnapSnap.snap(this.snapName, this.rot, this.width, this.height);
+				SnapSnapSnap.snap(this.config.snapName, this.config.rot, this.config.width, this.config.height);
 			} catch (Exception ex) {
 				if ("true".equals(System.getProperty("snap.verbose", "false"))) {
 					ex.printStackTrace();
@@ -197,7 +251,7 @@ public class SnapSnapSnap extends Thread {
 				}
 			}
 			// Wait...
-			TimeUtil.delay(this.wait);
+			TimeUtil.delay(this.config.wait);
 		}
 	}
 
