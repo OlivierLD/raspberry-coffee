@@ -71,7 +71,12 @@ public class RESTImplementation {
 					"GET",
 					SNAP_PREFIX + "/snap-status",
 					this::getSnapThreadStatus,
-					"Return the snapshot thread status.")
+					"Return the snapshot thread status."),
+			new Operation(
+					"POST",
+					SNAP_PREFIX + "/commands/{cmd}",
+					this::snapThreadCommand,
+					"Stop or start the snap thread.")
 	);
 
 	protected List<Operation> getOperations() {
@@ -145,17 +150,55 @@ public class RESTImplementation {
 		}
 	}
 
-	private Response startSnapThread(Request request) {
+	/**
+	 * Start or Stop the thread
+	 * @param request
+	 * @return
+	 */
+	private Response snapThreadCommand(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
-		try {
-			this.snapRequestManager.getSnapshotServer().startSnapThread(); // TODO Implement ! With parameters
-		} catch (Exception ex) {
-			String content = new Gson().toJson(ex);
+		List<String> pathPrms = request.getPathParameters();
+		if (pathPrms.size() != 1) { // Barf
+			String errMess = "SNAP-0001: Expected 1 path parameter.";
+			String content = new Gson().toJson(errMess);
 			response.setStatus(Response.BAD_REQUEST);
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 			return response;
+		}
+		boolean start = "start".equals(pathPrms.get(0));
+		boolean stop = "stop".equals(pathPrms.get(0));
+
+		if (!start && !stop) {
+			String errMess = String.format("SNAP-0002: path parameter must be 'start' or 'stop', not [%s]", pathPrms.get(0));
+			String content = new Gson().toJson(errMess);
+			response.setStatus(Response.BAD_REQUEST);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		}
+
+		if (stop) {
+			try {
+				this.snapRequestManager.getSnapshotServer().stopSnapThread();
+			} catch (Exception ex) {
+				String content = new Gson().toJson(ex);
+				response.setStatus(Response.BAD_REQUEST);
+				RESTProcessorUtil.generateResponseHeaders(response, content.length());
+				response.setPayload(content.getBytes());
+				return response;
+			}
+		} else if (start) {
+			try {
+				this.snapRequestManager.getSnapshotServer().startSnapThread(); // TODO Add parameters!
+			} catch (Exception ex) {
+				String content = new Gson().toJson(ex);
+				response.setStatus(Response.BAD_REQUEST);
+				RESTProcessorUtil.generateResponseHeaders(response, content.length());
+				response.setPayload(content.getBytes());
+				return response;
+			}
 		}
 		try {
 			SnapSnapSnap.SnapStatus snapThreadStatus = this.snapRequestManager.getSnapshotServer().getSnapThreadStatus();
