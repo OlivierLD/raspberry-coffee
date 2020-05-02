@@ -21,6 +21,10 @@ public class SnapRequestManager implements RESTRequestManager {
 		restImplementation = new RESTImplementation(this);
 	}
 
+	public SnaphotServer getSnapshotServer() {
+		return this.snaphotServer;
+	}
+
 	/**
 	 * Manage the REST requests.
 	 *

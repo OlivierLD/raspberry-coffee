@@ -6,6 +6,7 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
+import image.snap.SnapSnapSnap;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Scalar;
@@ -63,9 +64,14 @@ public class RESTImplementation {
 			 */
 			new Operation(
 					"GET",
-					SNAP_PREFIX + "/last-snapshot", // TODO Prm form OpenCV
+					SNAP_PREFIX + "/last-snapshot",
 					this::getLastSnapshot,
-					"Return the last snapshot.")
+					"Return the last snapshot."),
+			new Operation(
+					"GET",
+					SNAP_PREFIX + "/snap-status",
+					this::getSnapThreadStatus,
+					"Return the snapshot thread status.")
 	);
 
 	protected List<Operation> getOperations() {
@@ -119,6 +125,50 @@ public class RESTImplementation {
 		public SnapPayload fullPath(String fullPath) {
 			this.fullPath = fullPath;
 			return this;
+		}
+	}
+
+	private Response getSnapThreadStatus(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			SnapSnapSnap.SnapStatus snapThreadStatus = this.snapRequestManager.getSnapshotServer().getSnapThreadStatus();
+			String content = new Gson().toJson(snapThreadStatus);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		} catch (Exception ex) {
+			String content = new Gson().toJson(ex);
+			response.setStatus(Response.BAD_REQUEST);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		}
+	}
+
+	private Response startSnapThread(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		try {
+			this.snapRequestManager.getSnapshotServer().startSnapThread(); // TODO Implement ! With parameters
+		} catch (Exception ex) {
+			String content = new Gson().toJson(ex);
+			response.setStatus(Response.BAD_REQUEST);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		}
+		try {
+			SnapSnapSnap.SnapStatus snapThreadStatus = this.snapRequestManager.getSnapshotServer().getSnapThreadStatus();
+			String content = new Gson().toJson(snapThreadStatus);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		} catch (Exception ex) {
+			String content = new Gson().toJson(ex);
+			response.setStatus(Response.BAD_REQUEST);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
 		}
 	}
 
