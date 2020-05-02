@@ -71,6 +71,15 @@ public class SnapSnapSnap extends Thread {
 		private long wait = 1_000L;
 		private String snapName = "snap.jpg";
 		private boolean threadRunning = false;
+		private String state = "";
+
+		public String getState() {
+			return state;
+		}
+
+		public void setState(String state) {
+			this.state = state;
+		}
 
 		public SnapStatus() {
 		}
@@ -195,6 +204,7 @@ public class SnapSnapSnap extends Thread {
 		snapStatus.setSnapName(this.config.snapName);
 		snapStatus.setWait(this.config.wait);
 		snapStatus.setThreadRunning(this.isAlive());
+		snapStatus.setState(this.getState().toString());
 		return snapStatus;
 	}
 

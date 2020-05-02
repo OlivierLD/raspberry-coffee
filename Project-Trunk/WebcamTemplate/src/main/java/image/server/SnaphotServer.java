@@ -83,6 +83,7 @@ public class SnaphotServer {
 		if (true) { // verbose!
 			System.out.println("(re)starting SnapThread");
 		}
+		// New one?
 		snap.setConfig(snapConfig);
 		snap.start();
 	}
