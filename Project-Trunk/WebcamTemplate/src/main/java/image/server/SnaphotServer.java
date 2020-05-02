@@ -65,19 +65,18 @@ public class SnaphotServer {
 		}
 
 		snap = new SnapSnapSnap("SnapThread");
-		// TODO Start and stop from a service
+		// TODO Start and stop from a service, prms too.
 		snap.setSnapName(snapshotName);
 		snap.setRot(180);
+
+	}
+
+	protected void startSnapThread() throws Exception {
 		snap.start();
-
 	}
 
-	protected void startSnapThread() {
-
-	}
-
-	protected void stopSnapThread() {
-
+	protected void stopSnapThread() throws Exception {
+		snap.stopSnapping();
 	}
 
 	protected void takeOneSnap() {
@@ -88,7 +87,7 @@ public class SnaphotServer {
 
 	}
 
-	protected SnapSnapSnap.SnapStatus getSnapThreadStatus() {
+	protected SnapSnapSnap.SnapStatus getSnapThreadStatus() throws Exception {
 		if (this.snap != null) {
 			return this.snap.getSnapStatus();
 		} else {
