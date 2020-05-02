@@ -210,19 +210,19 @@ public class RESTImplementation {
 						String cameraWaitStr = requestHeaders.get("camera-wait");
 						String cameraSnapName = requestHeaders.get("camera-snap-name");
 						if (cameraRotStr != null) {
-							snapThreadStatus.setRot(Integer.parseInt(cameraRotStr));
+							snapThreadStatus.setRot(Integer.parseInt(cameraRotStr.trim()));
 						}
 						if (cameraWidthStr != null) {
-							snapThreadStatus.setWidth(Integer.parseInt(cameraWidthStr));
+							snapThreadStatus.setWidth(Integer.parseInt(cameraWidthStr.trim()));
 						}
 						if (cameraHeightStr != null) {
-							snapThreadStatus.setHeight(Integer.parseInt(cameraHeightStr));
+							snapThreadStatus.setHeight(Integer.parseInt(cameraHeightStr.trim()));
 						}
 						if (cameraWaitStr != null) {
-							snapThreadStatus.setWait(Long.parseLong(cameraWaitStr));
+							snapThreadStatus.setWait(Long.parseLong(cameraWaitStr.trim()));
 						}
 						if (cameraSnapName != null) {
-							snapThreadStatus.setSnapName(cameraSnapName);
+							snapThreadStatus.setSnapName(cameraSnapName.trim());
 						}
 					}
 				} else {
@@ -235,6 +235,9 @@ public class RESTImplementation {
 				}
 				this.snapRequestManager.getSnapshotServer().startSnapThread(snapThreadStatus);
 			} catch (Exception ex) {
+
+				ex.printStackTrace();
+
 				String content = new Gson().toJson(ex);
 				response.setStatus(Response.BAD_REQUEST);
 				RESTProcessorUtil.generateResponseHeaders(response, content.length());
