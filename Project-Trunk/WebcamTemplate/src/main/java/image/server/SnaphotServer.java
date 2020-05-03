@@ -67,10 +67,9 @@ public class SnaphotServer {
 		snap = new SnapSnapSnap("SnapThread");
 		snap.setSnapName(snapshotName);
 		snap.setRot(180);
-
 	}
 
-	protected void startSnapThread(SnapSnapSnap.SnapStatus config) throws Exception {
+	protected void setSnapThreadConfig(SnapSnapSnap.SnapStatus config) throws Exception {
 
 		SnapSnapSnap.SnapConfig snapConfig = snap.getConfig();
 		snapConfig.setHeight(config.getHeight());
@@ -78,12 +77,28 @@ public class SnaphotServer {
 		snapConfig.setRot(config.getRot());
 		snapConfig.setWait(config.getWait());
 		snapConfig.setSnapName(config.getSnapName());
-		if (true) { // verbose!
+		if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+			System.out.println("Setting SnapThread config");
+		}
+		snap.setConfig(snapConfig);
+	}
+
+	protected void startSnapThread(SnapSnapSnap.SnapStatus config) throws Exception {
+		// TODO See if setSnapThreadConfig can be reused
+		SnapSnapSnap.SnapConfig snapConfig = snap.getConfig();
+		snapConfig.setHeight(config.getHeight());
+		snapConfig.setWidth(config.getWidth());
+		snapConfig.setRot(config.getRot());
+		snapConfig.setWait(config.getWait());
+		snapConfig.setSnapName(config.getSnapName());
+		if ("true".equals(System.getProperty("snap.verbose", "false"))) {
 			System.out.println("(re)starting SnapThread");
 		}
-		// New one?
-		if ("TERMINATED".equals(config.getState())) {
-			System.out.println("\tCreating new Snap Thread.");
+		// New one? If TERMINATED, yes.
+		if (Thread.State.TERMINATED.toString().equals(config.getState())) {
+			if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+				System.out.println("\tCreating new Snap Thread.");
+			}
 			snap = new SnapSnapSnap("SnapThread");
 		}
 		snap.setConfig(snapConfig);

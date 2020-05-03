@@ -234,7 +234,7 @@ public class SnapSnapSnap extends Thread {
 		return snapshotName;
 	}
 
-	// TODO rot, width, height, wait
+	// Config in the setConfig and such.
 	public SnapSnapSnap() {
 		super();
 	}
