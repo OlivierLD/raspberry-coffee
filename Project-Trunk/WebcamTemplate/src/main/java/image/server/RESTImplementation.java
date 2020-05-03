@@ -14,11 +14,8 @@ import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -76,7 +73,7 @@ public class RESTImplementation {
 					"POST",
 					SNAP_PREFIX + "/commands/{cmd}",
 					this::snapThreadCommand,
-					"Stop or start the snap thread.")
+					"Stop, start, or configure the snap thread.")
 	);
 
 	protected List<Operation> getOperations() {
@@ -133,6 +130,12 @@ public class RESTImplementation {
 		}
 	}
 
+	/**
+	 * Verb is GET
+	 *
+	 * @param request
+	 * @return
+	 */
 	private Response getSnapThreadStatus(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
@@ -152,6 +155,8 @@ public class RESTImplementation {
 
 	/**
 	 * Start or Stop the thread
+	 * Verb is POST
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -167,11 +172,12 @@ public class RESTImplementation {
 			response.setPayload(content.getBytes());
 			return response;
 		}
-		boolean start = "start".equals(pathPrms.get(0));
 		boolean stop = "stop".equals(pathPrms.get(0));
+		boolean start = "start".equals(pathPrms.get(0));
+		boolean config = "config".equals(pathPrms.get(0));
 
-		if (!start && !stop) {
-			String errMess = String.format("SNAP-0002: path parameter must be 'start' or 'stop', not [%s]", pathPrms.get(0));
+		if (!start && !stop && !config) {
+			String errMess = String.format("SNAP-0002: path parameter must be 'config', 'start' or 'stop', not [%s]", pathPrms.get(0));
 			String content = new Gson().toJson(errMess);
 			response.setStatus(Response.BAD_REQUEST);
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
@@ -234,6 +240,61 @@ public class RESTImplementation {
 					return response;
 				}
 				this.snapRequestManager.getSnapshotServer().startSnapThread(snapThreadStatus);
+			} catch (Exception ex) {
+
+				ex.printStackTrace();
+
+				String content = new Gson().toJson(ex);
+				response.setStatus(Response.BAD_REQUEST);
+				RESTProcessorUtil.generateResponseHeaders(response, content.length());
+				response.setPayload(content.getBytes());
+				return response;
+			}
+		} else if (config) {
+			try {
+				SnapSnapSnap.SnapStatus snapThreadStatus = null;
+				try {
+					snapThreadStatus = this.snapRequestManager.getSnapshotServer().getSnapThreadStatus();
+				} catch (Exception ex) {
+					String content = new Gson().toJson(ex);
+					response.setStatus(Response.BAD_REQUEST);
+					RESTProcessorUtil.generateResponseHeaders(response, content.length());
+					response.setPayload(content.getBytes());
+					return response;
+				}
+				Map<String, String> requestHeaders = request.getHeaders();
+				if (snapThreadStatus != null) {
+					if (requestHeaders != null) {
+						String cameraRotStr = requestHeaders.get("camera-rot");
+						String cameraWidthStr = requestHeaders.get("camera-width");
+						String cameraHeightStr = requestHeaders.get("camera-height");
+						String cameraWaitStr = requestHeaders.get("camera-wait");
+						String cameraSnapName = requestHeaders.get("camera-snap-name");
+						if (cameraRotStr != null) {
+							snapThreadStatus.setRot(Integer.parseInt(cameraRotStr.trim()));
+						}
+						if (cameraWidthStr != null) {
+							snapThreadStatus.setWidth(Integer.parseInt(cameraWidthStr.trim()));
+						}
+						if (cameraHeightStr != null) {
+							snapThreadStatus.setHeight(Integer.parseInt(cameraHeightStr.trim()));
+						}
+						if (cameraWaitStr != null) {
+							snapThreadStatus.setWait(Long.parseLong(cameraWaitStr.trim()));
+						}
+						if (cameraSnapName != null) {
+							snapThreadStatus.setSnapName(cameraSnapName.trim());
+						}
+					}
+				} else {
+					String errMess = String.format("SNAP-0003: No Snap Status found.");
+					String content = new Gson().toJson(errMess);
+					response.setStatus(Response.BAD_REQUEST);
+					RESTProcessorUtil.generateResponseHeaders(response, content.length());
+					response.setPayload(content.getBytes());
+					return response;
+				}
+				this.snapRequestManager.getSnapshotServer().setSnapThreadConfig(snapThreadStatus);
 			} catch (Exception ex) {
 
 				ex.printStackTrace();
