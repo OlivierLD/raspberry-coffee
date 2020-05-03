@@ -18,6 +18,8 @@ And optionally
 - OpenCV
 
 ### Compile and run
+> Requires OpenCV to be available where compilation happens (see below).
+
 On the Pi:
 ```
  $ ../../gradlew clean shadowJar
@@ -25,6 +27,7 @@ On the Pi:
 ```
 or
 ```
+ $ ../../gradlew clean shadowJar
  $ ./server.sh
 ``` 
 From any browser, on any machine on the same network as the Pi: 
@@ -120,7 +123,7 @@ For JavaFX, see [this](https://stackoverflow.com/questions/38359076/how-can-i-ge
 When the server starts, no snap-thread (the one taking snapshots) is running.
 It needs to be explicitly started.
 
-Here are some available REST end-points, reachable from any REST client (`curl`, PostMan, etc):
+Here are some available REST end-points, reachable from any REST client (`curl`, PostMan, an XMLHttpRequest in you browser, etc):
 - Get current config and status
 ```
 $ curl -X GET http://192.168.42.15:1234/snap/snap-status | jq
