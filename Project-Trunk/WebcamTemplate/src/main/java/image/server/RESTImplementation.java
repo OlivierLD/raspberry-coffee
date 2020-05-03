@@ -73,7 +73,7 @@ public class RESTImplementation {
 					"POST",
 					SNAP_PREFIX + "/commands/{cmd}",
 					this::snapThreadCommand,
-					"Stop, start, or configure the snap thread.")
+					"Stop, start, or configure the snap thread. See headers for 'start' and 'config'.")
 	);
 
 	protected List<Operation> getOperations() {
