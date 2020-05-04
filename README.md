@@ -1,6 +1,8 @@
 # Maven repo in GitHub for RaspberryCoffee
 See good article at <https://gist.github.com/fernandezpablo85/03cf8b0cd2e7d8527063>
 
+> Another possibility: <https://repsy.io/>
+
 ### Sample command:
 
 From `raspberry-coffee/common-utils`, install (generating the jar is good enough, actually):
