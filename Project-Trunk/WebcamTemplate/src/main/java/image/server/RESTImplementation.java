@@ -155,6 +155,9 @@ public class RESTImplementation {
 
 	/**
 	 * Start or Stop the thread
+	 *
+	 * TODO Add parameters for stop motion (filename pattern)
+	 *
 	 * Verb is POST
 	 *
 	 * @param request

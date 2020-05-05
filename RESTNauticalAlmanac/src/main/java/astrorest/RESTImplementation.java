@@ -1,6 +1,9 @@
 package astrorest;
 
 import calc.GeoPoint;
+import calc.GreatCircle;
+import calc.GreatCirclePoint;
+import calc.GreatCircleWayPoint;
 import calc.calculation.AstroComputer;
 import calc.calculation.SightReductionUtil;
 import com.google.gson.Gson;
@@ -39,6 +42,7 @@ import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import java.util.Vector;
 import java.util.stream.Collectors;
 
 /**
@@ -619,6 +623,16 @@ public class RESTImplementation {
 					data = data.ariesObs(new OBS()
 							.alt(sru.getHe())
 							.z(sru.getZ()));
+
+					// Sky route from Moon to Sun (will help calculate Moon's tilt)
+					double moonLongitude = AstroComputer.ghaToLongitude(AstroComputer.getMoonGHA());
+					double sunLongitude = AstroComputer.ghaToLongitude(AstroComputer.getSunGHA());
+					GreatCircle gc = new GreatCircle();
+					gc.setStartInDegrees(new GreatCirclePoint(new GeoPoint(AstroComputer.getMoonDecl(), moonLongitude)));
+					gc.setArrivalInDegrees(new GreatCirclePoint(new GeoPoint(AstroComputer.getSunDecl(), sunLongitude)));
+					gc.calculateGreatCircle(20);
+					Vector<GreatCircleWayPoint> greatCircleWayPoints = gc.getRoute();
+					data = data.moonToSunSkyRoute(greatCircleWayPoints);
 				}
 				// Wandering bodies
 				if (wandering) {
@@ -1811,6 +1825,7 @@ public class RESTImplementation {
 		GP moon;
 		double moonPhase; // Moon only, obviously
 		double ghaAries;
+		Vector<GreatCircleWayPoint> moonToSunSkyRoute;
 		List<GP> wanderingBodies;
 		List<GP> stars;
 		double eclipticObliquity; // Mean
@@ -1844,6 +1859,10 @@ public class RESTImplementation {
 		}
 		public PositionsInTheSky moonPhase(double phase) {
 			this.moonPhase = phase;
+			return this;
+		}
+		public PositionsInTheSky moonToSunSkyRoute(Vector<GreatCircleWayPoint> moonToSunSkyRoute) {
+			this.moonToSunSkyRoute = moonToSunSkyRoute;
 			return this;
 		}
 
