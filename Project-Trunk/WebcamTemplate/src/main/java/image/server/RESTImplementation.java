@@ -73,7 +73,7 @@ public class RESTImplementation {
 					"POST",
 					SNAP_PREFIX + "/commands/{cmd}",
 					this::snapThreadCommand,
-					"Stop, start, or configure the snap thread.")
+					"Stop, start, or configure the snap thread. See headers for 'start' and 'config'.")
 	);
 
 	protected List<Operation> getOperations() {
@@ -155,6 +155,9 @@ public class RESTImplementation {
 
 	/**
 	 * Start or Stop the thread
+	 *
+	 * TODO Add parameters for stop motion (filename pattern)
+	 *
 	 * Verb is POST
 	 *
 	 * @param request

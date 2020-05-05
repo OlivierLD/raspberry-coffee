@@ -18,6 +18,8 @@ And optionally
 - OpenCV
 
 ### Compile and run
+> Requires OpenCV to be available where compilation happens (see below).
+
 On the Pi:
 ```
  $ ../../gradlew clean shadowJar
@@ -25,6 +27,7 @@ On the Pi:
 ```
 or
 ```
+ $ ../../gradlew clean shadowJar
  $ ./server.sh
 ``` 
 From any browser, on any machine on the same network as the Pi: 
@@ -116,7 +119,84 @@ In order not to introduce un-necessary complexity, we will not be using it here.
 
 For JavaFX, see [this](https://stackoverflow.com/questions/38359076/how-can-i-get-javafx-working-on-raspberry-pi-3).
  
-### Next 
+### REST
+When the server starts, no snap-thread (the one taking snapshots) is running.
+It needs to be explicitly started.
+
+Here are some available REST end-points, reachable from any REST client (`curl`, PostMan, an XMLHttpRequest in you browser, etc):
+- Get current config and status
+```
+$ curl -X GET http://192.168.42.15:1234/snap/snap-status | jq
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   115  100   115    0     0    737      0 --:--:-- --:--:-- --:--:--   737
+{
+  "rot": 180,
+  "width": 640,
+  "height": 480,
+  "wait": 1000,
+  "snapName": "./web/snap.jpg",
+  "threadRunning": true,
+  "state": "WAITING"
+}
+```
+- Set config
+```
+$ curl -X POST http://192.168.42.15:1234/snap/commands/config \
+        -H "camera-rot: 180" \
+        -H "camera-width: 480" \
+        -H "camera-height: 320" | jq 
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                   Dload  Upload   Total   Spent    Left  Speed
+  100   115  100   115    0     0    912      0 --:--:-- --:--:-- --:--:--   920
+  {
+    "rot": 180,
+    "width": 480,
+    "height": 320,
+    "wait": 1000,
+    "snapName": "./web/snap.jpg",
+    "threadRunning": true,
+    "state": "WAITING"
+  }
+```
+- Start (with config)
+```
+$ curl -X POST http://192.168.42.15:1234/snap/commands/start \
+        -H "camera-rot: 180" \
+        -H "camera-width: 480" \
+        -H "camera-height: 320" | jq 
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                   Dload  Upload   Total   Spent    Left  Speed
+  100   115  100   115    0     0    912      0 --:--:-- --:--:-- --:--:--   920
+  {
+    "rot": 180,
+    "width": 480,
+    "height": 320,
+    "wait": 1000,
+    "snapName": "./web/snap.jpg",
+    "threadRunning": true,
+    "state": "WAITING"
+  }
+```
+- Stop snap thread
+```
+$ curl -X POST http://192.168.42.15:1234/snap/commands/stop | jq 
+    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                   Dload  Upload   Total   Spent    Left  Speed
+  100   115  100   115    0     0    864      0 --:--:-- --:--:-- --:--:--   864
+  {
+    "rot": 180,
+    "width": 640,
+    "height": 320,
+    "wait": 1000,
+    "snapName": "./web/snap.jpg",
+    "threadRunning": true,
+    "state": "TERMINATED"
+  }
+
+```
+
+#### OpenCV 
 We have added some support for some query-string parameters to the REST resource we use 
 to get to the image.
 It can be reworked _on the server_ before being reached from the client (browser) through its URL, just like before.
