@@ -130,20 +130,22 @@ public final class GreatCircle {
 				_ewDir = TO_WEST;
 			}
 			double _start = 0.0D;
-			if (_nsDir == 1) {
+			if (_nsDir == TO_SOUTH) {
 				_start = 180D;
-				if (_ewDir == 2) {
+				if (_ewDir == TO_EAST) {
 					ari = _start - ari;
 				} else {
 					ari = _start + ari;
 				}
-			} else if (_ewDir == 2) {
+			} else if (_ewDir == TO_EAST) {
 				ari = _start + ari;
 			} else {
 				ari = _start - ari;
 			}
-			for (; ari < 0.0D; ari += 360) ;
-			route.addElement(new GreatCircleWayPoint(smallStart, arrival.equals(smallStart) ? null : new Double(ari)));
+			while (ari < 0.0D) {
+				ari += 360;
+			}
+			route.addElement(new GreatCircleWayPoint(smallStart, arrival.equals(smallStart) ? null : (Double.isNaN(ari) ? -1d : ari)));
 			smallStart = routePoint;
 		}
 	}

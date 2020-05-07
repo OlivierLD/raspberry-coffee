@@ -7,7 +7,7 @@ It _**is**_ possible to stream video from a Raspberry Pi, and it is easy.
 See [Here](./VIDEO_STREAMING.md). 
 
 ### Tags and Keywords
-`camera`, `images`, `raspistill`, `REST Server`, `no flickering`, `opencv`.
+`camera`, `images`, `raspistill`, `java`, `REST Server`, `no flickering`, `opencv`.
 
 ### Several components
 - A Java thread (`image.snap.SnapSnapSnap`) that uses a camera (WebCam, PiCam, whatever, see the code to get the right one) to take pictures at a given time interval
@@ -50,6 +50,8 @@ Installing OpenCV is not snappy, but it is not too difficult.
 - And <https://gist.github.com/ivanursul/146b3474a7f3449ec70729f5c7f946ee>
 
 Some differences below with the scripts provided above...
+
+Also see [this project](https://github.com/OlivierLD/oliv-ai/tree/master/opencv).
 
 #### April-30, 2020.
 Raspbian Buster comes with a JDK 11.
