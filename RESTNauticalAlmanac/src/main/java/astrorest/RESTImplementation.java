@@ -1,6 +1,7 @@
 package astrorest;
 
 import calc.GeoPoint;
+import calc.GeomUtil;
 import calc.GreatCircle;
 import calc.GreatCirclePoint;
 import calc.GreatCircleWayPoint;
@@ -536,6 +537,7 @@ public class RESTImplementation {
 			}
 
 			DURATION_FMT.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+			PositionsInTheSky data = null;
 			try {
 				Date at = DURATION_FMT.parse(atPrm);
 				Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
@@ -552,7 +554,7 @@ public class RESTImplementation {
 						date.get(Calendar.MINUTE),
 						date.get(Calendar.SECOND));
 
-				PositionsInTheSky data = new PositionsInTheSky()
+				data = new PositionsInTheSky()
 						.epoch(date.getTimeInMillis())
 						.deltaT(AstroComputer.getDeltaT())
 						.ghaAries(AstroComputer.getAriesGHA())
@@ -700,9 +702,9 @@ public class RESTImplementation {
 							.forEach(star -> {
 								Core.starPos(star.getStarName());
 								starPositions.add(new GP()
-								.name(star.getStarName()) // Also available star.getConstellation()
-								.gha(Context.GHAstar)
-								.decl(Context.DECstar));
+									.name(star.getStarName()) // Also available star.getConstellation()
+									.gha(Context.GHAstar)
+									.decl(Context.DECstar));
 							});
 					data = data.stars(starPositions);
 				}
@@ -712,11 +714,23 @@ public class RESTImplementation {
 				response.setPayload(content.getBytes());
 
 			} catch (Exception ex) {
+
+				System.err.println("Error converting to Json:\n" + data.toString());
+
 				response = HTTPServer.buildErrorResponse(response,
 						Response.BAD_REQUEST,
 						new HTTPServer.ErrorPayload()
 								.errorCode("ASTRO-0401")
-								.errorMessage(ex.toString()));
+								.errorMessage(ex.toString())
+								.errorStack(Arrays.asList(ex.getStackTrace())
+																		.stream()
+																		.map(te -> te.toString())
+																		.collect(Collectors.toList())));
+				// More details
+//				String stackTrace = new Gson().toJson(ex.getStackTrace());
+//				RESTProcessorUtil.generateResponseHeaders(response, stackTrace.length());
+//				response.setPayload(stackTrace.getBytes());
+
 				return response;
 			}
 		}
@@ -833,7 +847,7 @@ public class RESTImplementation {
 					response = HTTPServer.buildErrorResponse(response,
 							Response.BAD_REQUEST,
 							new HTTPServer.ErrorPayload()
-									.errorCode("ASTRO-0401")
+									.errorCode("ASTRO-0401-1")
 									.errorMessage(ex.toString()));
 					return response;
 				}
@@ -842,7 +856,7 @@ public class RESTImplementation {
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
-							.errorCode("ASTRO-0400")
+							.errorCode("ASTRO-0400-1")
 							.errorMessage("Empty payload. Cannot proceed."));
 			return response;
 		}
@@ -1709,6 +1723,11 @@ public class RESTImplementation {
 		double gha;
 		BodyFromPos fromPos;
 
+		@Override
+		public String toString() {
+			return String.format("Name:%s, decl:%f, gha:%f, From:%s", name, decl, gha, (fromPos != null ? fromPos.toString() : "null"));
+		}
+
 		public GP name(String body) {
 			this.name = body;
 			return this;
@@ -1734,6 +1753,14 @@ public class RESTImplementation {
 		double alt;
 		double z;
 
+		@Override
+		public String toString() {
+			return "OBS{" +
+					"alt=" + alt +
+					", z=" + z +
+					'}';
+		}
+
 		public OBS alt(double alt) {
 			this.alt = alt;
 			return this;
@@ -1749,6 +1776,11 @@ public class RESTImplementation {
 		double latitude;
 		double longitude;
 
+		@Override
+		public String toString() {
+			return String.format("%s/%s", GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS), GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW));
+		}
+
 		public Pos latitude(double lat) {
 			this.latitude = lat;
 			return this;
@@ -1763,6 +1795,14 @@ public class RESTImplementation {
 	public static class BodyFromPos {
 		Pos observer;
 		OBS observed;
+
+		@Override
+		public String toString() {
+			return "BodyFromPos{" +
+					"observer=" + observer +
+					", observed=" + observed +
+					'}';
+		}
 
 		public BodyFromPos observer(Pos from) {
 			this.observer = from;
@@ -1783,6 +1823,20 @@ public class RESTImplementation {
 		int min;
 		int sec;
 		String tz;
+
+		@Override
+		public String toString() {
+			return "FmtDate{" +
+					"epoch=" + epoch +
+					", year=" + year +
+					", month=" + month +
+					", day=" + day +
+					", hour=" + hour +
+					", min=" + min +
+					", sec=" + sec +
+					", tz='" + tz + '\'' +
+					'}';
+		}
 
 		public FmtDate epoch(long epoch) {
 			this.epoch = epoch;
@@ -1836,6 +1890,13 @@ public class RESTImplementation {
 		FmtDate tPass;
 		FmtDate solarDate;
 
+		@Override
+		public String toString() {
+			return String.format("Epoch: %d\nDeltaT: %f\nSun:%s\nMoon:%s\nMoonPhase:%f\nGHAAries:%f\nRoute to Sun:%s\nWand.Bodies:%s\nStars:%s\n" +
+							"Ecl.Obl:%f\nFrom:%s\nSun Obs:%s\nMoon Obs:%s\nAries Obs:%s\nTPass:%s\nSolar Date:%s",
+					epoch, deltaT, sun, moon, moonPhase, ghaAries, moonToSunSkyRoute,
+					wanderingBodies, stars, eclipticObliquity, from, sunObs, moonObs, ariesObs, tPass, solarDate);
+		}
 
 		public PositionsInTheSky epoch(long epoch) {
 			this.epoch = epoch;

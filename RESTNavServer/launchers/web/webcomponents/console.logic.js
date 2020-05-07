@@ -633,7 +633,8 @@ function astroCallback(data) {
 			let alpha = 0; // Tilt from horizontal
 			if (data.moonToSunSkyRoute !== undefined) {
 				try {
-					alpha = data.moonToSunSkyRoute[0].z; // z=90: horizontal, toward right, alpha=0
+					alpha = data.moonToSunSkyRoute[0].z; // z=90: horizontal, toward right, alpha=0. z=0, facing up, alpha=-90.
+					// console.log(`Moon to Sun sky route: ${alpha.toFixed(4)}°`);
 					alpha -= 90;
 				} catch(error) {
 					console.debug(error);
