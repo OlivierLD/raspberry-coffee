@@ -13,8 +13,8 @@ import java.text.NumberFormat;
  * Implements the nuts and bolts of the push button interaction.
  * No need to worry about that in the main class.
  * From the main:
- * Invoke the initCtx method
- * Invoke the freeResources method
+ * Start with invoking the initCtx method
+ * Finish with invoking the freeResources method
  *
  * Need to manage
  * - Click
@@ -24,8 +24,10 @@ import java.text.NumberFormat;
  *
  * Note: System.currentTimeMillis returns values like
  *   1,536,096,764,842
- *               |
- *               seconds
+ *           |   |   |
+ *           |   |   milliseconds
+ *           |   seconds
+ *           seconds * 1000
  *
  * System properties:
  * - button.verbose, default false

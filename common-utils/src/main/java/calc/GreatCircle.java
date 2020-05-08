@@ -145,7 +145,7 @@ public final class GreatCircle {
 			while (ari < 0.0D) {
 				ari += 360;
 			}
-			route.addElement(new GreatCircleWayPoint(smallStart, arrival.equals(smallStart) ? null : (Double.isNaN(ari) ? -1d : ari)));
+			route.addElement(new GreatCircleWayPoint(smallStart, arrival.equals(smallStart) ? null : (Double.isNaN(ari) ? null : ari)));
 			smallStart = routePoint;
 		}
 	}
