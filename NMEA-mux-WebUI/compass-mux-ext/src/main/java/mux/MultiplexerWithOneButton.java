@@ -52,6 +52,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 
 	/* ----- Buttons Runnables (actions) ----- */
 	private Runnable onClick = () -> {
+		System.out.println("Do a double click to kill the box.");
 		if (oledForwarder != null) {
 			oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
 			try {
