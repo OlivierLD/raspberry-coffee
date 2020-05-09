@@ -78,7 +78,7 @@ public class PushButtonControllerSample {
 		try {
 			synchronized (me) {
 				me.wait();
-				System.out.println("Ooch!");
+				System.out.println("\nOoch!");
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
