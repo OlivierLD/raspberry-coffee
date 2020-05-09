@@ -31,7 +31,7 @@ import java.util.Properties;
  * The REST api is not aware of it.
  *
  */
-public class SSD1306_HDMDisplay implements Forwarder {
+public class SSD1306_HDMDisplay extends SSD1306Processor implements Forwarder {
 	private double declination = 0d;
 
 	private double heading = 0;
@@ -128,9 +128,14 @@ public class SSD1306_HDMDisplay implements Forwarder {
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 		sb.text("Starting Forwarder...", 2, 10);
-		oled.setBuffer(sb.getScreenBuffer());
 		try {
-			oled.display();
+			if (oled != null) {
+				oled.setBuffer(sb.getScreenBuffer());
+				oled.display();
+			} else {
+				substitute.setBuffer(sb.getScreenBuffer());
+				substitute.display();
+			}
 		} catch (Throwable error) {
 			error.printStackTrace();
 		}
@@ -262,8 +267,13 @@ public class SSD1306_HDMDisplay implements Forwarder {
 			sb.line(needleTipX, needleTipY, needleLeftTipX, needleLeftTipY);           // N to left
 			sb.line(needleLeftTipX, needleLeftTipY, needleBackTipX, needleBackTipY);   // left to S
 
-			oled.setBuffer(sb.getScreenBuffer());
-			oled.display();
+			if (oled != null) {
+				oled.setBuffer(sb.getScreenBuffer());
+				oled.display();
+			} else {
+				substitute.setBuffer(sb.getScreenBuffer());
+				substitute.display();
+			}
 
 			if (verbose) {
 				System.out.println(String.format("Heading: %06.02f, Pitch: %05.02f, Roll: %05.02f",

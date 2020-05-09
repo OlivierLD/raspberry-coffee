@@ -57,6 +57,7 @@ include "Celestial-Almanac"
 include(':NMEA-mux-WebUI:full-server')
 include(':NMEA-mux-WebUI:minimal-mux')
 include(':NMEA-mux-WebUI:compass-mux')
+include(':NMEA-mux-WebUI:compass-mux-ext')
 include(':NMEA-mux-WebUI:full-server-extended')
 include(':NMEA-mux-WebUI:full-server-extended-v2')
 include(':NMEA-mux-WebUI:small-server-extended')

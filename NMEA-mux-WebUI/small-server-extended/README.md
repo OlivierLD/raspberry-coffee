@@ -7,7 +7,7 @@ This example shows how to _**extend**_  the `GenericNMEAMultiplexer`.
 
 It shows how to add features like **TWO** push-buttons, and take ownership of a screen (Nokia, SSD1306...)
 
-It comes with a class named `mux.MultiplexerWithTwoButtons`, that extends the `nmea.mux.GenericNMEAMultiplexer`.
+It comes with a class named `mux.MultiplexerWithOneButton`, that extends the `nmea.mux.GenericNMEAMultiplexer`.
 As a result, it's driven by the exact same `properties` file.
 
 To see how to interact with the buttons (to start and stop the logging for example, or

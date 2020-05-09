@@ -632,7 +632,6 @@ public class SSD1306Processor implements Forwarder {
 		}
 	}
 
-
 	private void displaySpeed(String label, double value) {
 		String unit = " kts";
 		double speedFactor = 1D;
