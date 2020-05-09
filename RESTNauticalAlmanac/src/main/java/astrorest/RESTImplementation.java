@@ -633,8 +633,26 @@ public class RESTImplementation {
 					gc.setStartInDegrees(new GreatCirclePoint(new GeoPoint(AstroComputer.getMoonDecl(), moonLongitude)));
 					gc.setArrivalInDegrees(new GreatCirclePoint(new GeoPoint(AstroComputer.getSunDecl(), sunLongitude)));
 					gc.calculateGreatCircle(20);
-					Vector<GreatCircleWayPoint> greatCircleWayPoints = gc.getRoute();
-					data = data.moonToSunSkyRoute(greatCircleWayPoints);
+					double finalLat = lat;
+					double finalLng = lng;
+					// TODO All in one operation
+					Vector<GreatCircleWayPoint> greatCircleWayPoints = GreatCircle.inDegrees(gc.getRoute()); // In Degrees
+					List<GreatCircleWayPointWithBodyFromPos> route = greatCircleWayPoints.stream()
+							.map(rwp -> {
+								GreatCircleWayPointWithBodyFromPos gcwpwbfp = new GreatCircleWayPointWithBodyFromPos(rwp.getPoint(), rwp.getZ());
+									if (rwp.getPoint() != null) {
+										sru.calculate(finalLat, finalLng, AstroComputer.longitudeToGHA(rwp.getPoint().getG()), rwp.getPoint().getL());
+										gcwpwbfp.setWpFromPos(new BodyFromPos()
+												.observer(new Pos()
+														.latitude(finalLat)
+														.longitude(finalLng))
+												.observed(new OBS()
+														.alt(sru.getHe())
+														.z(sru.getZ())));
+									}
+									return gcwpwbfp;
+								}).collect(Collectors.toList());
+					data = data.moonToSunSkyRoute(route);
 				}
 				// Wandering bodies
 				if (wandering) {
@@ -1814,6 +1832,29 @@ public class RESTImplementation {
 		}
 	}
 
+	public static class GreatCircleWayPointWithBodyFromPos extends GreatCircleWayPoint {
+			private BodyFromPos wpFromPos;
+
+		public GreatCircleWayPointWithBodyFromPos(GreatCirclePoint p, Double z) {
+			super(p, z);
+		}
+
+		public BodyFromPos getWpFromPos() {
+			return wpFromPos;
+		}
+
+		public void setWpFromPos(BodyFromPos wpFromPos) {
+			this.wpFromPos = wpFromPos;
+		}
+
+		@Override
+		public String toString() {
+			return "GreatCircleWayPointWithBodyFromPos{" +
+					"wpFromPos=" + wpFromPos +
+					'}';
+		}
+	}
+
 	public static class FmtDate {
 		long epoch;
 		int year;
@@ -1879,7 +1920,7 @@ public class RESTImplementation {
 		GP moon;
 		double moonPhase; // Moon only, obviously
 		double ghaAries;
-		Vector<GreatCircleWayPoint> moonToSunSkyRoute;
+		List<GreatCircleWayPointWithBodyFromPos> moonToSunSkyRoute;
 		List<GP> wanderingBodies;
 		List<GP> stars;
 		double eclipticObliquity; // Mean
@@ -1922,7 +1963,7 @@ public class RESTImplementation {
 			this.moonPhase = phase;
 			return this;
 		}
-		public PositionsInTheSky moonToSunSkyRoute(Vector<GreatCircleWayPoint> moonToSunSkyRoute) {
+		public PositionsInTheSky moonToSunSkyRoute(List<GreatCircleWayPointWithBodyFromPos> moonToSunSkyRoute) {
 			this.moonToSunSkyRoute = moonToSunSkyRoute;
 			return this;
 		}

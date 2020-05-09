@@ -426,6 +426,14 @@ public final class GreatCircle {
 		return route;
 	}
 
+	public static Vector<GreatCircleWayPoint> inDegrees(Vector<GreatCircleWayPoint> inRads) {
+		inRads.forEach(rad -> {
+			rad.getPoint().latitude = Math.toDegrees(rad.getPoint().latitude);
+			rad.getPoint().longitude = Math.toDegrees(rad.getPoint().longitude);
+		});
+		return inRads;
+	}
+
 	/**
 	 * @param from  GeopPoint, L &amp; G in Radians
 	 * @param dist  distance in nm
