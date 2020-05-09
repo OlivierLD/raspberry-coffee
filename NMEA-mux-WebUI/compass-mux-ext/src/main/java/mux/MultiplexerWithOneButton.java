@@ -54,7 +54,11 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 	private Runnable onClick = () -> {
 		if (oledForwarder != null) {
 			oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
-			oledForwarder.displayLines(new String[]{"Doudble-click", "to shut down."});
+			try {
+				oledForwarder.displayLines(new String[]{"Doudble-click", "to shut down."});
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 			oledForwarder.setExternallyOwned(false);
 		}
 	};
@@ -64,8 +68,12 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 		try {
 			System.out.println("Shutting down");
 			if (oledForwarder != null) {
-				oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
-				oledForwarder.displayLines(new String[]{"Shutting down!"});
+				try {
+					oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
+					oledForwarder.displayLines(new String[]{"Shutting down!"});
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
 			try {
 				System.out.println("Shutting down the MUX");
