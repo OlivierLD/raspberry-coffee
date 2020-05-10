@@ -129,9 +129,9 @@ public class SSD1306Processor implements Forwarder {
 		public int h() { return this.h; }
 	}
 
-	private SCREEN_SIZE screenDimension = SCREEN_SIZE._128x32;
-	private int width = screenDimension.w();
-	private int height = screenDimension.h();
+	protected SCREEN_SIZE screenDimension = SCREEN_SIZE._128x32;
+	protected int width = screenDimension.w();
+	protected int height = screenDimension.h();
 
 	// Default SSD1306 pins:
 	/*              | function                     | Wiring/PI4J    |Cobbler | Name      |GPIO/BCM
@@ -150,19 +150,19 @@ public class SSD1306Processor implements Forwarder {
 	int ssd1306DC   = 4;   // Physical #16
 
 	private static SSD1306Processor instance = null;
-	private boolean externallyOwned = false;
+	protected boolean externallyOwned = false;
 
 	private enum OLED_INTERFACE {
 		SPI, I2C
 	};
 	private OLED_INTERFACE oledInterface = OLED_INTERFACE.I2C; // Default
 
-	private SSD1306 oled;
-	private ScreenBuffer sb;
-	private SwingLedPanel substitute;
+	protected SSD1306 oled;
+	protected ScreenBuffer sb;
+	protected SwingLedPanel substitute;
 
-	private boolean mirror = false; // Screen is to be seen in a mirror. (left-right mirror, not up-down, for now)
-	private boolean verbose = false;
+	protected boolean mirror = false; // Screen is to be seen in a mirror. (left-right mirror, not up-down, for now)
+	protected boolean verbose = false;
 
 	private final static int TWD_OPTION =  0;
 	private final static int BSP_OPTION =  1;
@@ -317,8 +317,7 @@ public class SSD1306Processor implements Forwarder {
 		});
 	}
 
-	@Override
-	public void init() {
+	protected void initPartOne() {
 		try {
 			// I2C Config
 			if (oledInterface == OLED_INTERFACE.I2C) {
@@ -345,7 +344,9 @@ public class SSD1306Processor implements Forwarder {
 		}
 		sb = new ScreenBuffer(width, height);
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+	}
 
+	protected void initPartTwo() {
 		Thread scrollThread = new Thread("ScrollThread") { // if scrollWait > 0
 			public void run() {
 				while (keepWorking && scrollWait > 0) {
@@ -591,6 +592,12 @@ public class SSD1306Processor implements Forwarder {
 		cacheThread.start();
 	}
 
+	@Override
+	public void init() {
+		initPartOne();
+		initPartTwo();
+	}
+
 	private void displayAngleAndValue(String label, int value) {
 		int centerX = 80, centerY = 16, radius = 15;
 		try {
@@ -631,7 +638,6 @@ public class SSD1306Processor implements Forwarder {
 			throw new RuntimeException(ex);
 		}
 	}
-
 
 	private void displaySpeed(String label, double value) {
 		String unit = " kts";
@@ -774,7 +780,7 @@ public class SSD1306Processor implements Forwarder {
 
 	@Override
 	public void write(byte[] message) {
-		// Nothing is done here. It is replaced by the Thread in the constructor.
+		// Nothing is done here. It is replaced by the Thread in the constructor, in init -> initPartTwo
 	}
 
 	@Override
@@ -784,6 +790,7 @@ public class SSD1306Processor implements Forwarder {
 			// Stop Cache thread
 			keepWorking = false;
 			try { Thread.sleep(2_000L); } catch (Exception ex) {}
+
 			sb.clear();
 			if (oled != null) {
 				oled.clear(); // Blank screen
@@ -839,7 +846,7 @@ public class SSD1306Processor implements Forwarder {
 	}
 
 	public static class OLEDI2CBean {
-		private String cls;
+		private String cls; // Class
 		private String type = "oled-i2c";
 
 		public OLEDI2CBean(SSD1306Processor instance) {

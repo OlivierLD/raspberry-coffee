@@ -3,7 +3,7 @@ package calc;
 // Referenced classes of package astro.calc:
 //      Point
 
-public final class GreatCircleWayPoint {
+public class GreatCircleWayPoint {
 	private GreatCirclePoint p;
 	private Double z;
 

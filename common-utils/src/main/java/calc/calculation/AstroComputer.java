@@ -712,6 +712,17 @@ public class AstroComputer {
 		return longitude;
 	}
 
+	public static synchronized double longitudeToGHA(double longitude) {
+		double gha = 0;
+		if (longitude < 0) { // W
+			gha = -longitude;
+		}
+		if (longitude > 0) { // E
+			gha = 360 - longitude;
+		}
+		return gha;
+	}
+
 	// This is for tests
 	public static void main(String... args) {
 

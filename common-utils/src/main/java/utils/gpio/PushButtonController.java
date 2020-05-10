@@ -1,4 +1,4 @@
-package mux.button;
+package utils.gpio;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
@@ -13,8 +13,8 @@ import java.text.NumberFormat;
  * Implements the nuts and bolts of the push button interaction.
  * No need to worry about that in the main class.
  * From the main:
- * Start with invoking the initCtx method
- * Finish with invoking the freeResources method
+ * - Start with invoking the initCtx method
+ * - Finish with invoking the freeResources method
  *
  * Need to manage
  * - Click

@@ -145,7 +145,7 @@ public final class GreatCircle {
 			while (ari < 0.0D) {
 				ari += 360;
 			}
-			route.addElement(new GreatCircleWayPoint(smallStart, arrival.equals(smallStart) ? null : (Double.isNaN(ari) ? -1d : ari)));
+			route.addElement(new GreatCircleWayPoint(smallStart, arrival.equals(smallStart) ? null : (Double.isNaN(ari) ? null : ari)));
 			smallStart = routePoint;
 		}
 	}
@@ -424,6 +424,14 @@ public final class GreatCircle {
 
 	public Vector<GreatCircleWayPoint> getRoute() {
 		return route;
+	}
+
+	public static Vector<GreatCircleWayPoint> inDegrees(Vector<GreatCircleWayPoint> inRads) {
+		inRads.forEach(rad -> {
+			rad.getPoint().latitude = Math.toDegrees(rad.getPoint().latitude);
+			rad.getPoint().longitude = Math.toDegrees(rad.getPoint().longitude);
+		});
+		return inRads;
 	}
 
 	/**
