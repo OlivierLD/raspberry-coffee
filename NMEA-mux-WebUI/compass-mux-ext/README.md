@@ -15,7 +15,7 @@ There is one push-button, that can be used to shutdown the multiplexer, and the 
 See in the code of `mux.MultiplexerWithOneButton.java` how the button's `Runnable`s are implemented.
 > _Note:_ the `nmea.forwarders.SSD1306Processor` provides a`substitue` mechanism for the `oled` screen, in Swing. If the `ssd1306` screen is not found, a Swing UI is displayed instead (you have to be on a graphical desktop to see it), that can also deal with the button clicks.
 
-It is all scripted:
+The rest is all scripted:
 - in `gradle` to build it
 - in the `yaml` properties file used to start the `mux` at runtime.
 
