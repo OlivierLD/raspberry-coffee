@@ -46,30 +46,17 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 	private String turnLoggingOffURL = "";
 	private String terminateMuxURL = "";
 
+	private Thread shutdownThread = null;
+	private boolean shutdownPending = false;
+
 	// Action to take depending on the type of click.
 	// Propagate the button events to the SSD1306Processor (simple clicks, up and down)
 	// DoubleClick on button: shutdown the system
 
-	/* ----- Buttons Runnables (actions) ----- */
-	private Runnable onClick = () -> {
-		System.out.println("Simple click detected");
-		System.out.println("Do a double click to kill the box.");
-		if (oledForwarder != null) {
-			oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
-			try {
-				oledForwarder.displayLines(new String[]{"Do a double-click", "to shut down."});
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-			TimeUtil.delay(1_500L);
-			oledForwarder.setExternallyOwned(false); // Release ownership on the screen
-		}
-	};
-
-	private Runnable onDoubleClick = () -> {
+	private void doShutdown() {
 		// Shutting down the server AND the machine.
 		try {
-			System.out.println("Double-Click => Shutting down");
+			System.out.println("Shutting down!!!");
 			if (oledForwarder != null) {
 				try {
 					oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
@@ -91,7 +78,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 				System.err.println("Shutdown failed:");
 				ex.printStackTrace();
 			}
-			if (false && oledForwarder != null && !oledForwarder.isSimulating()) {
+			if (oledForwarder != null && !oledForwarder.isSimulating()) {
 				StaticUtil.shutdown();
 			} else {
 				System.out.println("...Actually not killing the box.");
@@ -103,6 +90,51 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 				oledForwarder.setExternallyOwned(false);
 			}
 		}
+	}
+
+	/* ----- Buttons Runnables (actions) ----- */
+	private Runnable onClick = () -> {
+		System.out.println("Simple click detected");
+		if (shutdownPending) {
+			// Actual shutdown here
+			doShutdown();
+		} else {
+			System.out.println("Do a double click to kill the box.");
+			if (oledForwarder != null) {
+				oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
+				try {
+					oledForwarder.displayLines(new String[]{"Do a double-click", "to shut down."});
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				TimeUtil.delay(1_500L);
+				oledForwarder.setExternallyOwned(false); // Release ownership on the screen
+			}
+		}
+	};
+
+	private Runnable onDoubleClick = () -> {
+
+		shutdownThread = new Thread(() -> {
+			shutdownPending = true;
+			if (oledForwarder != null) {
+				try {
+					oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
+					oledForwarder.displayLines(new String[]{"Confirm with one click", "within 3s"});
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+			try {
+				Thread.sleep(3_000L);
+				shutdownPending = false;
+				oledForwarder.setExternallyOwned(false); // Release ownership on the screen
+			} catch (InterruptedException ie) {
+				// WTF?
+			}
+		});
+		shutdownThread.start();
+		// Wait for confirmation
 	};
 	/* ---- End of Buttons Runnables ---- */
 
