@@ -1,4 +1,4 @@
-## Extending `NMEA.multiplexer`: A Standalone Compass. 
+## Extending `NMEA.multiplexer`: A Standalone Compass, and a push-button. 
 Same as [Compass Mux](../compas-mux), with some small part of code to implement user's interactions with a push button (click, double-click, long-click).
 
 This is an _extension_ of the module `compass-mux`.
