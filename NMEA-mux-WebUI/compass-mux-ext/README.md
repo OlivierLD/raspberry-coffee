@@ -1,5 +1,5 @@
 ## Extending `NMEA.multiplexer`: A Standalone Compass, and a push-button. 
-Same as [Compass Mux](../compas-mux), with some small part of code to implement user's interactions with a push button (click, double-click, long-click).
+Same as [Compass Mux](../compass-mux), with some small part of code to implement user's interactions with a push button (click, double-click, long-click).
 
 This is an _extension_ of the module `compass-mux`.
 
@@ -46,8 +46,8 @@ The setup is the one mentioned above, and the Raspberry Pi Zero is powered by a 
 - I start the Raspberry Pi connected to the magnetometer and powered by the battery
 - From a laptop, I `ssh` on the Raspberry Pi to start the multiplexer
   - `./mux.sh nmea.mux.hcm5883l.oled.yaml`
-- Then I can take the device outside, and see how it behaves in a zone whwre there are less magnetic disturbance than on my desk.
-- After a while - when done - I can shut down the system, with a double-click on the button.
+- Then I can take the device outside, and see how it behaves in a zone whwre there are less magnetic disturbances than at my desk.
+- After a while - when done - I can shut down the system, with a double-click on the button, and take it back home!
 
 ---
 
