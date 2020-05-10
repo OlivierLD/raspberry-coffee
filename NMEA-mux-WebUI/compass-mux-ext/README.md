@@ -1,7 +1,20 @@
 ## Extending `NMEA.multiplexer`: A Standalone Compass. 
+Same as [Compass Mux](../compas-mux), with some small part of code to implement user's interactions with a push button (click, double-click, long-click).
+
+This is an _extension_ of the module `compass-mux`.
 
 ### Small Coding involved
-This bundle involves absolutely **_no_** coding.
+The code is all in one file, `mux.MultiplexerWithOneButton.java`, it is extending the `nmea.mux.GenericNMEAMultiplexer`, using the 
+`nmea.forwarders.SSD1306_HDMDisplay`, itself extending the `nmea.forwarders.SSD1306Processor`.
+
+There is one push-button, that can be used to shutdown the multiplexer, and the system.
+- You double-click to request the shutdown
+- A single click for confirmation is expected within 3 seconds
+- If provided, the system goes down.
+
+See in the code of `mux.MultiplexerWithOneButton.java` how the button's `Runnable`s are implemented.
+> _Note:_ the `nmea.forwarders.SSD1306Processor` provides a`substitue` mechanism for the `oled` screen, in Swing. If the `ssd1306` screen is not found, a Swing UI is displayed instead (you have to be on a graphical desktop to see it), that can also deal with the button clicks.
+
 It is all scripted:
 - in `gradle` to build it
 - in the `yaml` properties file used to start the `mux` at runtime.
