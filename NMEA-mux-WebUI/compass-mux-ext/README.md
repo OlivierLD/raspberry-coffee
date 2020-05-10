@@ -37,7 +37,7 @@ It has no Web User Interface for now.
 The `stl` files to build the gimbal are [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Gimbal).
 
 ## Rationale
-See the parent module, [compass-mux](../compass-mux/README.md)
+See the parent module, [compass-mux](../compass-mux/README.md#rationale)
 
 ## Sample Use-Case
 I have a magnetometer, and I want to test it.
@@ -46,7 +46,7 @@ The setup is the one mentioned above, and the Raspberry Pi Zero is powered by a 
 - I start the Raspberry Pi connected to the magnetometer and powered by the battery
 - From a laptop, I `ssh` on the Raspberry Pi to start the multiplexer
   - `./mux.sh nmea.mux.hcm5883l.oled.yaml`
-- Then I can take the device outside, and see how it behaves in a zone whwre there are less magnetic disturbances than at my desk.
+- Then I can take the device outside, and see how it behaves in a zone where there are less magnetic disturbances than at my desk.
 - After a while - when done - I can shut down the system, with a double-click on the button, and take it back home!
 
 ---
