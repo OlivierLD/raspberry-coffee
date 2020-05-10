@@ -52,6 +52,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 
 	/* ----- Buttons Runnables (actions) ----- */
 	private Runnable onClick = () -> {
+		System.out.println("Simple click detected");
 		System.out.println("Do a double click to kill the box.");
 		if (oledForwarder != null) {
 			oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
@@ -68,7 +69,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 	private Runnable onDoubleClick = () -> {
 		// Shutting down the server AND the machine.
 		try {
-			System.out.println("Shutting down");
+			System.out.println("Double-Click => Shutting down");
 			if (oledForwarder != null) {
 				try {
 					oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
@@ -90,7 +91,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 				System.err.println("Shutdown failed:");
 				ex.printStackTrace();
 			}
-			if (oledForwarder != null && !oledForwarder.isSimulating()) {
+			if (false && oledForwarder != null && !oledForwarder.isSimulating()) {
 				StaticUtil.shutdown();
 			} else {
 				System.out.println("...Actually not killing the box.");

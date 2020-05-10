@@ -780,7 +780,7 @@ public class SSD1306Processor implements Forwarder {
 
 	@Override
 	public void write(byte[] message) {
-		// Nothing is done here. It is replaced by the Thread in the constructor.
+		// Nothing is done here. It is replaced by the Thread in the constructor, in init -> initPartTwo
 	}
 
 	@Override
