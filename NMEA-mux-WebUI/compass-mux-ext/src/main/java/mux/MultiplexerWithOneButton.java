@@ -56,11 +56,12 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 		if (oledForwarder != null) {
 			oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
 			try {
-				oledForwarder.displayLines(new String[]{"Doudble-click", "to shut down."});
+				oledForwarder.displayLines(new String[]{"Do a double-click", "to shut down."});
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-			oledForwarder.setExternallyOwned(false);
+			TimeUtil.delay(1_500L);
+			oledForwarder.setExternallyOwned(false); // Release ownership on the screen
 		}
 	};
 
@@ -71,7 +72,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 			if (oledForwarder != null) {
 				try {
 					oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
-					oledForwarder.displayLines(new String[]{"Shutting down!"});
+					oledForwarder.displayLines(new String[]{"Shutting down now!"});
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -83,13 +84,13 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 				} catch (Exception wasDownAlready) {
 					// I know...
 				}
-				System.out.println("Killing the box");
+				System.out.println("Killing the MUX");
 				TimeUtil.delay(2_000L);
 			} catch (Exception ex) {
 				System.err.println("Shutdown failed:");
 				ex.printStackTrace();
 			}
-			if (oledForwarder != null) {
+			if (oledForwarder != null && !oledForwarder.isSimulating()) {
 				StaticUtil.shutdown();
 			} else {
 				System.out.println("...Actually not killing the box.");
