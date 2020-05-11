@@ -97,14 +97,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 		System.out.println("Simple click detected");
 		if (shutdownPending) {
 			// Actual shutdown here
-			System.out.println("Simple click detected, shutting down!");
-			oledForwarder.setExternallyOwned(true); // Taking ownership on the screen
-			try {
-				oledForwarder.displayLines(new String[]{"Bye!"});
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-//		oledForwarder.setExternallyOwned(false); // Release ownership on the screen
+			System.out.println("Going to shut down!");
 			doShutdown();
 		} else {
 			System.out.println("Do a double click to kill the box.");
