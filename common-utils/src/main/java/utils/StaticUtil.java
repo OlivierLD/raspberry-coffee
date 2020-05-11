@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 public class StaticUtil {
 
 	// TODO Replace with System.console().readLine()
+	// See this: https://www.javatpoint.com/java-console-readline-method
 	private static final InputStreamReader inputStream = new InputStreamReader(System.in);
 	private static final BufferedReader stdin = new BufferedReader(inputStream);
 

@@ -38,7 +38,7 @@ public class PushButtonControllerSample {
 	public PushButtonControllerSample() {
 		try {
 			// Provision buttons here
-			buttonOnePin = RaspiPin.GPIO_28; // Physical #38.
+			buttonOnePin = RaspiPin.GPIO_28; // BCM 20, Physical #38.
 
 			// Button-1 provisioning, with its operations
 			buttonOne.update(
