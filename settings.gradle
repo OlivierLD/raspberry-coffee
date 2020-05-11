@@ -96,4 +96,6 @@ include 'springboot-sensors'
 include 'jersey-client-tests'
 include 'oliv-scratch-pad:jersey-client-tests'
 findProject(':oliv-scratch-pad:jersey-client-tests')?.name = 'jersey-client-tests'
+include 'Project-Trunk:RESTFileUpload'
+findProject(':Project-Trunk:RESTFileUpload')?.name = 'RESTFileUpload'
 

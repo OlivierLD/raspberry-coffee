@@ -237,22 +237,22 @@ public class LCD1in3 {
 	public LCD1in3(int direction, int color) {
 
 		if (VERBOSE) {
-			String[] map = new String[14];
-			map[0] = "23:CLK";
-			map[1] = "19:MOSI";
-			map[2] = "24:CS";
-			map[3] = "13:RST";
-			map[4] = "22:DC";
-			map[5] = "18:BL";
-			map[6] = "40:K-1";
-			map[7] = "38:K-2";
-			map[8] = "36:K-3";
-			map[9] = "31:J-UP";
-			map[10] = "35:J-DWN";
-			map[11] = "29:J-LFT";
-			map[12] = "37:J-RGT";
-			map[13] = "33:J-PR";
-
+			String[] map = new String[]{
+					"23:CLK",
+					"19:MOSI",
+					"24:CS",
+					"13:RST",
+					"22:DC",
+					"18:BL",
+					"40:K-1",
+					"38:K-2",
+					"36:K-3",
+					"31:J-UP",
+					"35:J-DWN",
+					"29:J-LFT",
+					"37:J-RGT",
+					"33:J-PR"
+			};
 			PinUtil.print(map);
 		}
 		try {

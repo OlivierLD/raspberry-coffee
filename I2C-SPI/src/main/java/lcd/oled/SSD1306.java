@@ -172,9 +172,10 @@ public class  SSD1306 {
 		this.width = w;
 		this.height = h;
 		if (verbose) {
-			String[] map = new String[2];
-			map[0] = String.valueOf(PinUtil.findEnumName("SDA1").pinNumber()) + ":" + "SDA";
-			map[1] = String.valueOf(PinUtil.findEnumName("SCL1").pinNumber()) + ":" + "SCL";
+			String[] map = new String[]{
+					String.valueOf(PinUtil.findEnumName("SDA1").pinNumber()) + ":" + "SDA",
+					String.valueOf(PinUtil.findEnumName("SCL1").pinNumber()) + ":" + "SCL"
+			};
 			PinUtil.print(map);
 		}
 		// Get i2c bus
@@ -223,12 +224,13 @@ public class  SSD1306 {
 			dcOutput = gpio.provisionDigitalOutputPin(spiDc, "DC", PinState.LOW);
 
 			if (verbose) {
-				String[] map = new String[5];
-				map[0] = String.valueOf(PinUtil.findByPin(spiMosi).pinNumber()) + ":" + "MOSI";
-				map[1] = String.valueOf(PinUtil.findByPin(spiClk).pinNumber()) + ":" + "CLK";
-				map[2] = String.valueOf(PinUtil.findByPin(spiCs).pinNumber()) + ":" + "CS";
-				map[3] = String.valueOf(PinUtil.findByPin(spiRst).pinNumber()) + ":" + "RST";
-				map[4] = String.valueOf(PinUtil.findByPin(spiDc).pinNumber()) + ":" + "DC";
+				String[] map = new String[]{
+						String.valueOf(PinUtil.findByPin(spiMosi).pinNumber()) + ":" + "MOSI",
+						String.valueOf(PinUtil.findByPin(spiClk).pinNumber()) + ":" + "CLK",
+						String.valueOf(PinUtil.findByPin(spiCs).pinNumber()) + ":" + "CS",
+						String.valueOf(PinUtil.findByPin(spiRst).pinNumber()) + ":" + "RST",
+						String.valueOf(PinUtil.findByPin(spiDc).pinNumber()) + ":" + "DC"
+				};
 				PinUtil.print(map);
 			}
 		}
