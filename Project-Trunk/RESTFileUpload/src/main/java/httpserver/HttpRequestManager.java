@@ -3,10 +3,7 @@ package httpserver;
 import http.HTTPServer;
 import http.RESTRequestManager;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HttpRequestManager implements RESTRequestManager {
 

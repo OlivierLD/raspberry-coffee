@@ -11,6 +11,7 @@ import http.RESTProcessorUtil;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -50,6 +51,11 @@ public class RESTImplementation {
 					"List of all available operations on this service."),
 			new Operation(
 					"POST",
+					SERVER_PREFIX + "/upload",
+					this::fileUpload,
+					"File Upload, WiP."),
+			new Operation(
+					"POST",
 					SERVER_PREFIX + "/duh",
 					this::emptyOperation,
 					"PlaceHolder.")
@@ -87,6 +93,35 @@ public class RESTImplementation {
 		String content = new Gson().toJson(opList);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
+		return response;
+	}
+
+	/**
+	 * WIP
+	 *
+	 * @param request
+	 * @return
+	 */
+	private Response fileUpload(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		Map<String, String> requestHeaders = request.getHeaders();
+		System.out.println(">>> ---- Headers ----");
+		requestHeaders.keySet().forEach(headerKey -> System.out.println(String.format("%s: [%s]", headerKey, requestHeaders.get(headerKey))));
+		System.out.println("<<< -----------------");
+		// Will require MultiPart payload?...
+
+		// Manage the Expect: 100-continue
+		if (requestHeaders.keySet().contains("Expect")) {
+			String whatToExpect = requestHeaders.get("Expect").trim();
+			if ("100-continue".equals(whatToExpect)) {
+				response = new Response(request.getProtocol(), Response.CONTINUE); // TODO Not good enough
+				return response;
+			}
+		}
+		byte[] content = request.getContent();
+		System.out.println(String.format("Content: len:%d byte(s), %s", content.length, new String(content)));
+
 		return response;
 	}
 

@@ -9,6 +9,7 @@ Can be used
 
 - No security (SSL) available. 
 - ~~_Not even multi-threaded_~~. Nov 2019: Now multi-threaded
+- Some restrictions exist (`100-continue`, Multipart, binary data, ...)
 - Not compliant with any coding standard, like JAX-RS, MicroProfile, JEE, etc
 
 > May 2019: The archive containing the core classes is just above _**2M**_ big. Compare it to micro servers like Helidon or SpringBoot...
@@ -16,6 +17,7 @@ Can be used
 > the goal here is to be HTTP and REST compliant (any REST or HTTP client would work), and remain as small as possible. 
 
 Logging available.
+
 Some special requests are reserved, like `/exit`, `/test`, feel free to comment them.
 
 The constructor of the `HTTPServer` class can take a `Properties` object as parameter.
