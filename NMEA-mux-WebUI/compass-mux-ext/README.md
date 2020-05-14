@@ -32,9 +32,12 @@ $ ./mux.sh nmea.mux.hmc5883l.oled.yaml
 
 It has no Web User Interface for now.
 
-![With a gimbal](./pictures/hmc5883l.gimbal.jpg) <!-- TODO More pictures (more accurate), and Fritzing schemas? -->
+![With a gimbal](./pictures/01.compass-mux.jpg) 
 
 The `stl` files to build the gimbal are [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Gimbal).
+
+#### Diagram
+![Wiring](compass-mux-ext_bb.png)
 
 ## Rationale
 See the parent module, [compass-mux](../compass-mux/README.md#rationale)

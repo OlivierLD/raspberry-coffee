@@ -56,16 +56,16 @@ public class Nokia5110Sample {
 		System.out.println("       LED");
 		System.out.println();
 
-		String[] map = new String[7];
-		map[0] = String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "VCC";
-		map[1] = String.valueOf(PinUtil.GPIOPin.GRND_1.pinNumber()) + ":" + "GND";
-		map[2] = String.valueOf(PinUtil.GPIOPin.GPIO_4.pinNumber()) + ":" + "D/C";
-		map[3] = String.valueOf(PinUtil.GPIOPin.GPIO_5.pinNumber()) + ":" + "RST";
-		map[4] = String.valueOf(PinUtil.GPIOPin.GPIO_10.pinNumber()) + ":" + "CS";
-		map[5] = String.valueOf(PinUtil.GPIOPin.GPIO_14.pinNumber()) + ":" + "CLK";
-		map[6] = String.valueOf(PinUtil.GPIOPin.GPIO_12.pinNumber()) + ":" + "DIN";
-//	map[7] = String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "LED and VCC";
-
+		String[] map = new String[]{
+				String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "VCC",
+				String.valueOf(PinUtil.GPIOPin.GRND_1.pinNumber()) + ":" + "GND",
+				String.valueOf(PinUtil.GPIOPin.GPIO_4.pinNumber()) + ":" + "D/C",
+				String.valueOf(PinUtil.GPIOPin.GPIO_5.pinNumber()) + ":" + "RST",
+				String.valueOf(PinUtil.GPIOPin.GPIO_10.pinNumber()) + ":" + "CS",
+				String.valueOf(PinUtil.GPIOPin.GPIO_14.pinNumber()) + ":" + "CLK",
+				String.valueOf(PinUtil.GPIOPin.GPIO_12.pinNumber()) + ":" + "DIN" // ,
+//	    String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "LED and VCC"
+		};
 		PinUtil.print(map);
 		System.out.println("VCC and LED are connected. This is also where a pot would go.");
 		// For the pot: See https://learn.adafruit.com/nokia-5110-3310-monochrome-lcd?view=all#dimmable-backlight-option-3-12

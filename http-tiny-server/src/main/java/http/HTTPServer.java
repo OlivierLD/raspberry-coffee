@@ -219,6 +219,7 @@ public class HTTPServer {
 
 	public static class Response {
 
+		public final static int CONTINUE        = 100;
 		public final static int STATUS_OK       = 200;
 		public final static int CREATED         = 201;
 		public final static int NO_CONTENT      = 204;
@@ -540,7 +541,7 @@ public class HTTPServer {
 				boolean cr = false, lf = false;
 				boolean lineAvailable = false;
 				boolean inPayload = false;
-				StringBuffer sb = new StringBuffer();
+				StringBuffer sb = new StringBuffer(); // TODO Binary!!!
 				boolean keepReading = true;
 //					System.out.println(">>> Top of the Loop <<<");
 				if (verbose) {
@@ -585,7 +586,10 @@ public class HTTPServer {
 								cr = lf = false;
 							}
 						} else {
-							sb.append((char) read);
+							if ("true".equals(System.getProperty("http.super.verbose", "false"))) {
+								System.out.println(String.format("\tPayload data: 0x%02X", read));
+							}
+							sb.append((char) read); // TODO Binary content!!
 						}
 						// Super-DEBUG
 //								System.out.println("======================");

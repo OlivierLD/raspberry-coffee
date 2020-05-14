@@ -97,6 +97,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 		System.out.println("Simple click detected");
 		if (shutdownPending) {
 			// Actual shutdown here
+			System.out.println("Going to shut down!");
 			doShutdown();
 		} else {
 			System.out.println("Do a double click to kill the box.");
@@ -180,39 +181,37 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 
 		try {
 			// Provision buttons here
-			buttonOnePin = RaspiPin.GPIO_28; // Physical #38.
+			buttonOnePin = RaspiPin.GPIO_28; // BCM 20, Physical #38.
 
 			// Change pins, based on system properties.
 			// Use physical pin numbers.
 			try {
 				// Identified by the PHYSICAL pin numbers
 				String buttonOnePinStr = System.getProperty("buttonOne", String.valueOf(PinUtil.getPhysicalByWiringPiNumber(buttonOnePin))); // GPIO_28
-
 				buttonOnePin = PinUtil.getPinByPhysicalNumber(Integer.parseInt(buttonOnePinStr));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
 
 			// Pin mapping display for info
-			String[] map = new String[12];
-			int i = 0;
-			map[i++] = String.valueOf(PinUtil.findByPin(buttonOnePin).pinNumber()) + ":Button Hot Wire";
+			String[] map = new String[]{
+					String.valueOf(PinUtil.findByPin(buttonOnePin).pinNumber()) + ":Button Hot Wire",
 
-			map[i++] = String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber())   + ":3v3";
-			map[i++] = String.valueOf(PinUtil.GPIOPin.PWR_2.pinNumber())   + ":5v0";
+					String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":3v3",
+					String.valueOf(PinUtil.GPIOPin.PWR_2.pinNumber()) + ":5v0",
 
-			map[i++] = String.valueOf(PinUtil.GPIOPin.GPIO_15.pinNumber()) + ":Tx";
-			map[i++] = String.valueOf(PinUtil.GPIOPin.GPIO_16.pinNumber()) + ":Rx";
+					String.valueOf(PinUtil.GPIOPin.GPIO_15.pinNumber()) + ":Tx",
+					String.valueOf(PinUtil.GPIOPin.GPIO_16.pinNumber()) + ":Rx",
 
-			map[i++] = String.valueOf(PinUtil.GPIOPin.GPIO_14.pinNumber()) + ":Clock";
-			map[i++] = String.valueOf(PinUtil.GPIOPin.GPIO_12.pinNumber()) + ":Data"; // Aka MOSI. Slave is the Screen, Master the RPi
-			map[i++] = String.valueOf(PinUtil.GPIOPin.GPIO_10.pinNumber()) + ":CS";
-			map[i++] = String.valueOf(PinUtil.GPIOPin.GPIO_5.pinNumber())  + ":Rst";
-			map[i++] = String.valueOf(PinUtil.GPIOPin.GPIO_4.pinNumber())  + ":DC";
+					String.valueOf(PinUtil.GPIOPin.GPIO_14.pinNumber()) + ":Clock",
+					String.valueOf(PinUtil.GPIOPin.GPIO_12.pinNumber()) + ":Data", // Aka MOSI. Slave is the Screen, Master the RPi
+					String.valueOf(PinUtil.GPIOPin.GPIO_10.pinNumber()) + ":CS",
+					String.valueOf(PinUtil.GPIOPin.GPIO_5.pinNumber()) + ":Rst",
+					String.valueOf(PinUtil.GPIOPin.GPIO_4.pinNumber()) + ":DC",
 
-			map[i++] = String.valueOf(PinUtil.GPIOPin.GPIO_8.pinNumber())  + ":SDA";
-			map[i++] = String.valueOf(PinUtil.GPIOPin.GPIO_9.pinNumber())  + ":SLC";
-
+					String.valueOf(PinUtil.GPIOPin.GPIO_8.pinNumber()) + ":SDA",
+					String.valueOf(PinUtil.GPIOPin.GPIO_9.pinNumber()) + ":SLC"
+			};
 			System.out.println("---------------------------- P I N   M A P P I N G ------------------------------------------");
 			PinUtil.print(map);
 			System.out.println("> Screen is powered with 5V, button by 3v3 or 5V, 3v3 is used by the Compass.");

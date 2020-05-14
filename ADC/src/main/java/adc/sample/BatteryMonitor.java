@@ -3,22 +3,19 @@ package adc.sample;
 import adc.ADCContext;
 import adc.ADCListener;
 import adc.ADCObserver;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
-import java.util.function.Consumer;
-
 import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
 import utils.StringUtils;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+import java.util.function.Consumer;
 
 public class BatteryMonitor {
 	private static boolean debug = false;
@@ -372,12 +369,12 @@ public class BatteryMonitor {
 		System.out.println("       +--------+ ");
 
 		// Compose mapping for PinUtil
-		String[] map = new String[4];
-		map[0] = String.valueOf(PinUtil.findByPin(clk).pinNumber()) + ":" + "CLK";
-		map[1] = String.valueOf(PinUtil.findByPin(miso).pinNumber()) + ":" + "Dout";
-		map[2] = String.valueOf(PinUtil.findByPin(mosi).pinNumber()) + ":" + "Din";
-		map[3] = String.valueOf(PinUtil.findByPin(cs).pinNumber()) + ":" + "CS";
-
+		String[] map = new String[]{
+				String.valueOf(PinUtil.findByPin(clk).pinNumber()) + ":" + "CLK",
+				String.valueOf(PinUtil.findByPin(miso).pinNumber()) + ":" + "Dout",
+				String.valueOf(PinUtil.findByPin(mosi).pinNumber()) + ":" + "Din",
+				String.valueOf(PinUtil.findByPin(cs).pinNumber()) + ":" + "CS"
+		};
 		PinUtil.print(map);
 
 		Thread me = Thread.currentThread();

@@ -298,6 +298,29 @@ function plotSatellite(context, worldMap, userPos, satColor, name, satellite) {
 	}
 }
 
+function plotSunMoonRoute(context, worldMap, routeData) {
+	let lastPointToPlot = null;
+	routeData.forEach(routePt => {
+		let panelPoint = worldMap.getPanelPoint(routePt.p.latitude, routePt.p.longitude);
+		let thisPointIsBehind = worldMap.isBehind(worldMap.toRadians(routePt.p.latitude), worldMap.toRadians(routePt.p.longitude - worldMap.globeViewLngOffset));
+		if (!thisPointIsBehind || worldMap.transparentGlobe) {
+			// Draw segment
+			if (lastPointToPlot !== null) {
+//					console.log("Plotting from ", lastPointToPlot, " to ", panelPoint);
+				context.strokeStyle = 'lime';
+				context.beginPath();
+				context.moveTo(lastPointToPlot.x, lastPointToPlot.y);
+				context.lineTo(panelPoint.x, panelPoint.y);
+				context.stroke();
+				context.closePath();
+			}
+			lastPointToPlot = panelPoint;
+		} else {
+			lastPointToPlot = null;
+		}
+	});
+}
+
 // More colors at https://www.w3schools.com/colors/colors_picker.asp
 function getSNRColor(snr) {
 	let c = 'lightGray';
@@ -321,9 +344,9 @@ function getSNRColor(snr) {
 	return c;
 }
 
-// Example of callback on WorldMap
+// AFTER callback on WorldMap
 function callAfter(id) {
-	document.getElementById(id).setDoAfter(function(worldMap, context) {
+	document.getElementById(id).setDoAfter((worldMap, context) => {
 		if (Object.keys(worldMap.userPosition).length > 0) {
 			let userPos = worldMap.getPanelPoint(worldMap.userPosition.latitude, worldMap.userPosition.longitude);
 			/*
@@ -355,14 +378,21 @@ function callAfter(id) {
 					});
 				}
 			}
+			// Moon to Sun route
+			if (document.getElementById('moon-sun-path-01').checked) {
+				if (moonSunData !== undefined && moonSunData.length > 0) {
+					// console.log("Plotting moon to sun route", moonSunData);
+					plotSunMoonRoute(context, worldMap, moonSunData);
+				}
+			}
 		}
 	});
 	document.getElementById(id).repaint();
 }
 
-// Example of callback on WorldMap
+// BEFORE callback on WorldMap
 function callFirst(id) {
-	document.getElementById(id).setDoFirst(function(worldMap, context) {
+	document.getElementById(id).setDoFirst((worldMap, context) => {
 //	console.log("Sun elevation:", sunAltitude);
 		if (sunAltitude > -5 && sunAltitude < 5) { // Then change bg color
 			let gradientRadius = 120 + ((5 - Math.abs(sunAltitude)) / 5) * ((Math.min(worldMap.height, worldMap.width) / 2) - 120);
@@ -443,6 +473,7 @@ function getLHA(gha, longitude) {
 }
 
 let sunAltitude = -90;
+let moonSunData = [];
 
 function astroCallback(data) {
 //console.log("Astro Data:", data);
@@ -467,15 +498,21 @@ function astroCallback(data) {
 			// Tilt calculation,
 			moonPhase.phase = ((data.from.latitude < data.moon.decl) ? -1 : 1) * data.moonPhase;
 			let alpha = 0;
-			if (data.moonToSunSkyRoute !== undefined) {
+			moonSunData = data.moonToSunSkyRoute;
+			if (moonSunData !== undefined) {
 				try {
-					alpha = data.moonToSunSkyRoute[0].z; // z=90: horizontal, toward right, alpha=0
-					alpha -= 90;
+					// alpha = moonSunData[0].z; // z=90: horizontal, toward right, alpha=0
+					// alpha -= 90;
+					// Take the first triangle
+					let deltaZ = moonSunData[1].wpFromPos.observed.z - moonSunData[0].wpFromPos.observed.z;
+					let deltaElev = moonSunData[1].wpFromPos.observed.alt - moonSunData[0].wpFromPos.observed.alt;
+					alpha = Math.toDegrees(Math.atan2(deltaZ, deltaElev));
+					alpha += 90;
 				} catch(error) {
 					console.debug(error);
 				}
 			}
-			let moonTilt = /*90 +*/ alpha;
+			let moonTilt = /*90 +*/ alpha; // 0: vertical. +: clockwise, -: counter-clockwise
 			moonPhase.tilt = moonTilt;                                 // Update tilt on graphic
 			moonPhase.title = `Tilt:${alpha.toFixed(1)}°`; // Update tooltip
 		} else {

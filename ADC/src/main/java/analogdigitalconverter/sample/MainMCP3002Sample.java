@@ -147,12 +147,12 @@ public class MainMCP3002Sample {
 		System.out.println(               "       +------+ ");
 
 		// Compose mapping for PinUtil
-		String[] map = new String[4];
-		map[0] = String.valueOf(PinUtil.findByPin(clk).pinNumber()) + ":" + "CLK";
-		map[1] = String.valueOf(PinUtil.findByPin(miso).pinNumber()) + ":" + "Dout";
-		map[2] = String.valueOf(PinUtil.findByPin(mosi).pinNumber()) + ":" + "Din";
-		map[3] = String.valueOf(PinUtil.findByPin(cs).pinNumber()) + ":" + "CS";
-
+		String[] map = new String[]{
+				String.valueOf(PinUtil.findByPin(clk).pinNumber()) + ":" + "CLK",
+				String.valueOf(PinUtil.findByPin(miso).pinNumber()) + ":" + "Dout",
+				String.valueOf(PinUtil.findByPin(mosi).pinNumber()) + ":" + "Din",
+				String.valueOf(PinUtil.findByPin(cs).pinNumber()) + ":" + "CS"
+		};
 		PinUtil.print(map);
 
 		MCPReader.initMCP(MCPReader.MCPFlavor.MCP3002, miso, mosi, clk, cs);
