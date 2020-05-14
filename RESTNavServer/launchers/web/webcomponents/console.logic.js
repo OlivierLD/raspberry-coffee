@@ -499,15 +499,20 @@ function astroCallback(data) {
 			moonPhase.phase = ((data.from.latitude < data.moon.decl) ? -1 : 1) * data.moonPhase;
 			let alpha = 0;
 			moonSunData = data.moonToSunSkyRoute;
-			if (data.moonToSunSkyRoute !== undefined) {
+			if (moonSunData !== undefined) {
 				try {
-					alpha = data.moonToSunSkyRoute[0].z; // z=90: horizontal, toward right, alpha=0
-					alpha -= 90;
+					// alpha = moonSunData[0].z; // z=90: horizontal, toward right, alpha=0
+					// alpha -= 90;
+					// Take the first triangle
+					let deltaZ = moonSunData[1].wpFromPos.observed.z - moonSunData[0].wpFromPos.observed.z;
+					let deltaElev = moonSunData[1].wpFromPos.observed.alt - moonSunData[0].wpFromPos.observed.alt;
+					alpha = Math.toDegrees(Math.atan2(deltaZ, deltaElev));
+					alpha += 90;
 				} catch(error) {
 					console.debug(error);
 				}
 			}
-			let moonTilt = /*90 +*/ alpha; // This is the tilt from the NORTH!! Use the ecliptic...
+			let moonTilt = /*90 +*/ alpha; // 0: vertical. +: clockwise, -: counter-clockwise
 			moonPhase.tilt = moonTilt;                                 // Update tilt on graphic
 			moonPhase.title = `Tilt:${alpha.toFixed(1)}°`; // Update tooltip
 		} else {
