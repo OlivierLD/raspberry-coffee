@@ -1,6 +1,5 @@
 /**
  * MoonPhase
- * TODO Invert visual if observed from South hemisphere
  */
 
 const moonPhaseVerbose = false;
@@ -28,7 +27,8 @@ class MoonPhaseDisplay extends HTMLElement {
 			"height", // Integer. Canvas height
 			"phase",  // Float. Phase value to display
 			"tilt",   // Float. (ObsLat - MoonD) - 90. Default 0
-			"label"   // String, like Phase, etc
+			"label",  // String, like Phase, etc
+			"small-label" // String, like for the tilt (optional)
 		];
 	}
 
@@ -58,6 +58,7 @@ class MoonPhaseDisplay extends HTMLElement {
 		this._width = 200;
 		this._height = 200;
 		this._label = "Moon Phase";
+		this._small_label = "";
 
 		this._previousClassName = "";
 		this.moonPhaseColorConfig = moonPhaseDefaultColorConfig;
@@ -104,6 +105,9 @@ class MoonPhaseDisplay extends HTMLElement {
 			case "label":
 				this._label = newVal;
 				break;
+			case "small-label":
+				this._small_label = newVal;
+				break;
 			default:
 				break;
 		}
@@ -141,6 +145,10 @@ class MoonPhaseDisplay extends HTMLElement {
 		this.setAttribute("label", val);
 	}
 
+	set smallLabel(val) {
+		this.setAttribute("small-label", val);
+	}
+
 	set shadowRoot(val) {
 		this._shadowRoot = val;
 	}
@@ -163,6 +171,10 @@ class MoonPhaseDisplay extends HTMLElement {
 
 	get label() {
 		return this._label;
+	}
+
+	get smallLabel() {
+		return this._small_label;
 	}
 
 	get shadowRoot() {
@@ -283,6 +295,13 @@ class MoonPhaseDisplay extends HTMLElement {
 		let len = metrics.width;
 
 		context.fillText(strVal, this.canvas.width - len - 5, this.canvas.height - 5);
+
+		// Small Label
+		if (this.smallLabel !== undefined && this._small_label.length > 0) {
+			context.fillStyle = 'orange'; // this.moonPhaseColorConfig.displayColor; // TODO Style this
+			context.font = "bold " + Math.round(scale * 16) + "px " + this.moonPhaseColorConfig.labelFont;
+			context.fillText(this.smallLabel, 5, this.canvas.height - 5);
+		}
 
 		// Draw the moon here
 		let radius = Math.min(this.width, this.height) / 3;
