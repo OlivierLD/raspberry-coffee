@@ -503,7 +503,7 @@ function astroCallback(data) {
 				try {
 					// alpha = moonSunData[0].z; // z=90: horizontal, toward right, alpha=0
 					// alpha -= 90;
-					// Take the first triangle
+					// Take the first triangle, from the Moon.
 					let deltaZ = moonSunData[1].wpFromPos.observed.z - moonSunData[0].wpFromPos.observed.z;
 					let deltaElev = moonSunData[1].wpFromPos.observed.alt - moonSunData[0].wpFromPos.observed.alt;
 					alpha = Math.toDegrees(Math.atan2(deltaZ, deltaElev));
@@ -515,6 +515,8 @@ function astroCallback(data) {
 			let moonTilt = /*90 +*/ alpha; // 0: vertical. +: clockwise, -: counter-clockwise
 			moonPhase.tilt = moonTilt;                                 // Update tilt on graphic
 			moonPhase.title = `Tilt:${alpha.toFixed(1)}°`; // Update tooltip
+			// Update small label
+			moonPhase.smallLabel = `Tilt:${alpha.toFixed(1)}°`;
 		} else {
 			moonPhase.phase = data.moonPhase;
 		}
