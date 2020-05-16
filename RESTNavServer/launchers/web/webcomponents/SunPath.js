@@ -82,6 +82,7 @@ class SunPath extends HTMLElement {
 
 		this.ghaAries = undefined;
 		this.eclObliquity = undefined;
+		this.moonToSunRoute = undefined;
 
 		this.userPosition = undefined;
 		this._sunRise = undefined;
@@ -263,6 +264,14 @@ class SunPath extends HTMLElement {
 			this.eclObliquity = val;
 		} else {
 			this.eclObliquity = undefined;
+		}
+	}
+
+	set moonToSunSkyRoute(val) {
+		if (val !== undefined) {
+			this.moonToSunRoute = val;
+		} else {
+			this.moonToSunRoute = undefined;
 		}
 	}
 
@@ -859,6 +868,11 @@ class SunPath extends HTMLElement {
 		if (this.ghaAries !== undefined && this.eclObliquity !== undefined) {
 			this.drawEcliptic(context, this.ghaAries, this.eclObliquity, center, radius);
 		}
+
+		// Moon to Sun
+		if (this.moonToSunRoute !== undefined) {
+			this.drawMoonToSunRoute(context, this.moonToSunRoute, center, radius);
+		}
 		// Planets here
 		if (this.venusHe !== undefined && this.venusZ !== undefined) {
 			this.plotPlanet(context, center, radius, 'orange', 'orange', this.venusHe, this.venusZ, "Venus");
@@ -980,7 +994,7 @@ class SunPath extends HTMLElement {
 			}
 			inTheSky = this.sightReduction({ latitude: lat, longitude: lng }, this.userPosition);
 			h = inTheSky.elev;
-			z = inTheSky.z
+			z = inTheSky.z;
 			// console.log("Ecliptic point ", lat, lng);
 
 			pp = this.rotateBothWays(h + this.rotation, z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
@@ -989,6 +1003,29 @@ class SunPath extends HTMLElement {
 		context.stroke();
 		context.closePath();
 		context.restore();
+	}
+
+	drawMoonToSunRoute(context, routeData, center, radius) {
+		//debugger;
+		context.strokeStyle = 'silver'; // this.worldmapColorConfig.tropicColor;
+		context.lineWidth = 1;
+		context.save();
+		context.setLineDash([2, 2]);
+		let h = routeData[0].wpFromPos.observed.alt;
+		let z = routeData[0].wpFromPos.observed.z;
+		let pp = this.rotateBothWays(h + this.rotation, z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+		context.beginPath();
+		context.moveTo(center.x + (pp.x * radius * this.invertX), center.y - (pp.y * radius));
+		for (let i=1; i<routeData.length; i++) {
+			h = routeData[i].wpFromPos.observed.alt;
+			z = routeData[i].wpFromPos.observed.z;
+			pp = this.rotateBothWays(h + this.rotation, z, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset));
+			context.lineTo(center.x + (pp.x * radius * this.invertX), center.y - (pp.y * radius));
+		}
+		context.stroke();
+		context.closePath();
+		context.restore();
+
 	}
 
 	plotPlanet(context, center, radius, stroke, fill, he, z, name) {
