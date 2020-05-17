@@ -31,7 +31,7 @@ fi
 function openBrowser() {
   if [[ `uname -a` == *Linux* ]]
   then
-    sensible-browser "$1"thunder
+    sensible-browser "$1"
   else
     open "$1"
   fi
