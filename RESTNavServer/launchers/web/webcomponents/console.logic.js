@@ -713,7 +713,7 @@ function astroCallback(data) {
 	}
 
 	document.getElementById('sun-path-01').moonToSunSkyRoute = withMoonToSunRoute ? data.moonToSunSkyRoute : undefined;
-	
+
 	if (venusPos !== {} && withWanderingBodies) {
 		document.getElementById('sun-path-01').venusPos = venusPos;
 	} else {
