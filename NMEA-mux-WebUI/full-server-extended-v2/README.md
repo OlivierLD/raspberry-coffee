@@ -1,4 +1,4 @@
-# Case study (WIP) Full NavServer running on a Raspberry Pi Zero W, and others
+# Case study (WIP) Full NavServer running on a Raspberry Pi Zero W, A+, and others...
 This is a case study, using different hardware configurations to run the same software configuration (the full RESTNavServer).
 
 The hardware configuration will be made out of two parts:
@@ -151,6 +151,8 @@ Suitable for Raspberry Pi A and B. The GPS is external, using a USB port.
 | ![Perma-Hat 01](./docimg/perma-hat/perma-hat.01.jpg) | ![Perma-Hat 02](./docimg/perma-hat/perma-hat.02.jpg) |
 | ![Consumption](./docimg/perma-hat/consumption.jpg) | |
 In this configuration, the consumption is between 0.25 and 0.30 Amps.
+
+> Bonus: [3D printed](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/RPiA%2BLogger) enclosure.
 
 ##### Raspberry Pi 4 B, with 4Gb of RAM
 Easy: Perfect! 
