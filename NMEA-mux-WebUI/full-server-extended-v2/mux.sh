@@ -97,7 +97,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -DdeltaT=69.2201" # 01-Jan-2019
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
 # CP=$(ls ./build/libs/*.jar)
-CP=./build/libs/small-server-extended-1.0-all.jar
+CP=./build/libs/full-server-extended-v2-1.0-all.jar
 SUDO=
 if [[ "$OS" == "Darwin" ]]
 then
