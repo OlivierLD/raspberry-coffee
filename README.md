@@ -26,4 +26,6 @@ Repo URL: <https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/reposito
 
 Example: <https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository/oliv/raspi/coffee/common-utils/1.0/common-utils-1.0.pom>
 
+> Note: When adding the files (`git add`), you might want to use the `-f` flag to force the jars in.
+
 ---
