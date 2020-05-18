@@ -7,15 +7,15 @@ context:
   http.port: 5678
   init.cache: true
 channels:
-  - type: "serial"
+  - type: serial
     # Adafruit Ultimate GPS (UART)
     # port: /dev/ttyS0
     # baudrate: 9600
     port: /dev/ttyS80
     baudrate: 4800
     verbose: false
-  - type: "bme280"
-    prefix: "BM"
+  - type: bme280
+    prefix: BM
     verbose: false
 forwarders:
   - type: file

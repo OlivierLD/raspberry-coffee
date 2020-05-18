@@ -31,6 +31,7 @@ import java.util.Properties;
  */
 public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer  {
 	private HTTPServer adminServer = null;
+	protected Properties muxProperties = null;
 
 	private final List<NMEAClient> nmeaDataClients = new ArrayList<>();
 	private final List<Forwarder> nmeaDataForwarders = new ArrayList<>();
@@ -160,8 +161,9 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 	 * Constructor.
 	 * @param muxProps Initial config. See {@link #main(String...)} method.
 	 */
-	public GenericNMEAMultiplexer(Properties muxProps) { // TODO A Constructor with yaml
+	public GenericNMEAMultiplexer(Properties muxProps) { // TODO A Constructor with yaml?
 
+		this.muxProperties = muxProps;
 		Context.getInstance().setStartTime(System.currentTimeMillis());
 
 		if (infraVerbose) {
@@ -195,6 +197,11 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 		if (infraVerbose) {
 			System.out.println(String.format("\t>> %s - %s constructor completed.", NumberFormat.getInstance().format(System.currentTimeMillis()), this.getClass().getName()));
 		}
+	}
+
+//	@Override
+	public Properties getMuxProperties() {
+		return this.muxProperties;
 	}
 
 	public void startAdminServer(int port) {
