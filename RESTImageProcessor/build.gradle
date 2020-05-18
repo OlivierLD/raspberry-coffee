@@ -16,16 +16,17 @@ version = '1.0'
 //    resources {
 //      srcDir 'src/resources'
 //    }
-//  }  
+//  }
 //  test {
 //    java {
 //      srcDir 'tests/java'
 //    }
-//  }  
+//  }
 //}
 
 repositories {
   mavenCentral()
+  maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
   maven { url "http://lediouris.net/maven2" }
   maven { url "https://oss.sonatype.org/content/groups/public" }
   mavenLocal()
@@ -33,8 +34,8 @@ repositories {
 
 dependencies {
   compile 'com.google.code.gson:gson:2.8.0'
-  compile 'javax:jai_codec:1.1.3'
-  compile 'javax:jai_core:1.1.3'
+//  compile 'javax:jai_codec:1.1.3'
+//  compile 'javax:jai_core:1.1.3'
   compile project(':http-tiny-server')
   compile project (':common-image-utils')
 }

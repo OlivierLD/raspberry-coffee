@@ -64,18 +64,28 @@ public class ServerWithKewlButtons extends NavServer {
 		Properties muxProperties = (this.getMultiplexer() instanceof GenericNMEAMultiplexer) ?
 				((GenericNMEAMultiplexer)this.getMultiplexer()).getMuxProperties() :
 				null;
+		List<String> config = new ArrayList<>();
 		if (muxProperties == null) {
 			// TODO http://localhost:port/mux/mux-config,
 		} else {
-			System.out.println(muxProperties.stringPropertyNames() // TODO On the screen
-					.stream()
-					.map(prop -> String.format("%s=%s", prop, muxProperties.getProperty(prop)))
-					.collect(Collectors.joining(",\n")));
+//			System.out.println(muxProperties.stringPropertyNames()
+//					.stream()
+//					.map(prop -> String.format("%s=%s", prop, muxProperties.getProperty(prop)))
+//					.collect(Collectors.joining(",\n")));
+			muxProperties.stringPropertyNames().stream()
+					.filter(prop -> prop.endsWith(".type") || prop.endsWith(".class"))
+					.forEach(prop -> {
+						String dir = prop.startsWith("mux") ? "IN" : "OUT";
+						String data = prop.endsWith(".class") ?
+								muxProperties.getProperty(prop).substring(muxProperties.getProperty(prop).lastIndexOf('.') + 1) :
+						    muxProperties.getProperty(prop);
+						config.add(String.format("%s %s", dir, data));
+					});
 		}
 
 		try {
 			if (oledForwarder != null) {
-				oledForwarder.displayLines(new String[]{ "PlaceHolder, for dev" });
+				oledForwarder.displayLines(config.toArray(new String[config.size()])); // TODO Scroll if needed
 				TimeUtil.delay(4_000L);
 			}
 		} catch (Exception ex) {
@@ -133,6 +143,17 @@ public class ServerWithKewlButtons extends NavServer {
 				userDir = "..." + userDir.substring(userDir.lastIndexOf(File.separatorChar));
 			}
 			if (oledForwarder != null) {
+//				System.out.println(String.format("%s, len: %d", userDir, oledForwarder.strWidth(userDir)));
+				int SCREEN_WIDTH = 128; // Hard-coded?
+				String prefix = "...";
+				if (oledForwarder.strWidth(userDir) > SCREEN_WIDTH) {
+					while (userDir.length() > 0 && oledForwarder.strWidth(prefix + userDir) > (SCREEN_WIDTH - 1)) { // -1, nicer.
+//						System.out.println(String.format("%s, len: %d", userDir, oledForwarder.strWidth(userDir)));
+						userDir = userDir.substring(1);
+					}
+					userDir = prefix + userDir;
+//					System.out.println(String.format("Finally %s, len: %d", userDir, oledForwarder.strWidth(userDir)));
+				}
 				oledForwarder.displayLines(new String[]{ String.format("Port %d", serverPort), "Running from", userDir });
 				TimeUtil.delay(4_000L);
 			}
