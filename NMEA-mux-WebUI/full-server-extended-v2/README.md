@@ -152,7 +152,9 @@ Suitable for Raspberry Pi A and B. The GPS is external, using a USB port.
 | ![Consumption](./docimg/perma-hat/consumption.jpg) | |
 In this configuration, the consumption is between 0.25 and 0.30 Amps.
 
-> Bonus: [3D printed](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/RPiA%2BLogger) enclosure.
+> Bonus: [3D printed](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/RPiA%2BLogger) enclosure (with poictures!).
+
+
 
 ##### Raspberry Pi 4 B, with 4Gb of RAM
 Easy: Perfect! 
