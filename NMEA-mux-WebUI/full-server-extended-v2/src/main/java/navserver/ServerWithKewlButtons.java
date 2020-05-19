@@ -5,7 +5,9 @@ import com.pi4j.io.gpio.RaspiPin;
 import http.client.HTTPClient;
 import navrest.NavServer;
 import navserver.button.PushButtonController;
+import nmea.api.Multiplexer;
 import nmea.forwarders.SSD1306Processor;
+import nmea.mux.GenericNMEAMultiplexer;
 import utils.PinUtil;
 import utils.StaticUtil;
 import utils.TCPUtils;
@@ -13,11 +15,14 @@ import utils.TimeUtil;
 
 import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Shows how to add two push buttons to interact with the NavServer
@@ -40,6 +45,55 @@ public class ServerWithKewlButtons extends NavServer {
 	private SSD1306Processor oledForwarder = null;
 
 	// ----- Local Menu Operations, one Runnable for each operation -----
+	private Runnable dummyOp = () -> {
+		try {
+			if (oledForwarder != null) {
+				oledForwarder.displayLines(new String[]{ "PlaceHolder, for dev" });
+				TimeUtil.delay(4_000L);
+			}
+		} catch (Exception ex) {
+			System.err.println("Dummy Op:");
+			ex.printStackTrace();
+		}
+	};
+
+	private Runnable muxConfig = () -> {
+
+		Multiplexer multiplexer = this.getMultiplexer();
+		System.out.println(String.format("Mux is a %s", (multiplexer != null ? multiplexer.getClass().getName() : "null")));
+		Properties muxProperties = (this.getMultiplexer() instanceof GenericNMEAMultiplexer) ?
+				((GenericNMEAMultiplexer)this.getMultiplexer()).getMuxProperties() :
+				null;
+		List<String> config = new ArrayList<>();
+		if (muxProperties == null) {
+			// TODO http://localhost:port/mux/mux-config,
+		} else {
+//			System.out.println(muxProperties.stringPropertyNames()
+//					.stream()
+//					.map(prop -> String.format("%s=%s", prop, muxProperties.getProperty(prop)))
+//					.collect(Collectors.joining(",\n")));
+			muxProperties.stringPropertyNames().stream()
+					.filter(prop -> prop.endsWith(".type") || prop.endsWith(".class"))
+					.forEach(prop -> {
+						String dir = prop.startsWith("mux") ? "IN" : "OUT";
+						String data = prop.endsWith(".class") ?
+								muxProperties.getProperty(prop).substring(muxProperties.getProperty(prop).lastIndexOf('.') + 1) :
+						    muxProperties.getProperty(prop);
+						config.add(String.format("%s %s", dir, data));
+					});
+		}
+
+		try {
+			if (oledForwarder != null) {
+				oledForwarder.displayLines(config.toArray(new String[config.size()])); // TODO Scroll if needed
+				TimeUtil.delay(4_000L);
+			}
+		} catch (Exception ex) {
+			System.err.println("Dummy Op:");
+			ex.printStackTrace();
+		}
+	};
+
 	private Runnable pauseLogging = () -> {
 		try {
 			HTTPClient.doPut(this.turnLoggingOffURL, new HashMap<>(), null);
@@ -77,6 +131,34 @@ public class ServerWithKewlButtons extends NavServer {
 			}
 		} catch (Exception ex) {
 			System.err.println("Say Hello:");
+			ex.printStackTrace();
+		}
+	};
+
+	private Runnable getUserDir = () -> {
+		try {
+			String userDir = System.getProperty("user.dir");
+			System.out.println(String.format("UserDir: %s", userDir));
+			if (userDir.indexOf(File.separator) > -1) {
+				userDir = "..." + userDir.substring(userDir.lastIndexOf(File.separatorChar));
+			}
+			if (oledForwarder != null) {
+//				System.out.println(String.format("%s, len: %d", userDir, oledForwarder.strWidth(userDir)));
+				int SCREEN_WIDTH = 128; // Hard-coded?
+				String prefix = "...";
+				if (oledForwarder.strWidth(userDir) > SCREEN_WIDTH) {
+					while (userDir.length() > 0 && oledForwarder.strWidth(prefix + userDir) > (SCREEN_WIDTH - 1)) { // -1, nicer.
+//						System.out.println(String.format("%s, len: %d", userDir, oledForwarder.strWidth(userDir)));
+						userDir = userDir.substring(1);
+					}
+					userDir = prefix + userDir;
+//					System.out.println(String.format("Finally %s, len: %d", userDir, oledForwarder.strWidth(userDir)));
+				}
+				oledForwarder.displayLines(new String[]{ String.format("Port %d", serverPort), "Running from", userDir });
+				TimeUtil.delay(4_000L);
+			}
+		} catch (Exception ex) {
+			System.err.println("Current Dir:");
 			ex.printStackTrace();
 		}
 	};
@@ -200,6 +282,8 @@ public class ServerWithKewlButtons extends NavServer {
 			new MenuItem().title("! Shutdown").action(shutdown),
 			new MenuItem().title("! Reboot").action(reboot),
 			new MenuItem().title("Network Config").action(displayNetworkParameters),
+			new MenuItem().title("Mux Config").action(muxConfig),
+			new MenuItem().title("Running from").action(getUserDir),
 			new MenuItem().title("Say Hello").action(sayHello)                       // As an example...
 	};
 	private int localMenuItemIndex = 0;
@@ -457,6 +541,22 @@ public class ServerWithKewlButtons extends NavServer {
 	public ServerWithKewlButtons() {
 
 		super(); // NavServer
+
+		Multiplexer multiplexer = this.getMultiplexer();
+		System.out.println(String.format("Mux is a %s", (multiplexer != null ? multiplexer.getClass().getName() : "null")));
+		Properties muxProperties = (this.getMultiplexer() instanceof GenericNMEAMultiplexer) ?
+				((GenericNMEAMultiplexer)this.getMultiplexer()).getMuxProperties() :
+				null;
+
+		try {
+			serverPort = Integer.parseInt(System.getProperty("http.port", String.valueOf(serverPort)));
+		} catch (NumberFormatException nfe) {
+			System.err.println("Ooops");
+			nfe.printStackTrace();
+		}
+		System.out.println(String.format(">>> Server port is %d", serverPort));
+
+
 		System.out.println(">> Starting extension (after super())...");
 
 		this.turnLoggingOnURL = String.format("http://localhost:%d/mux/mux-process/on", serverPort);
@@ -663,18 +763,11 @@ public class ServerWithKewlButtons extends NavServer {
 
 	public static void main(String... args) {
 
-		try {
-			serverPort = Integer.parseInt(System.getProperty("http.port", String.valueOf(serverPort)));
-		} catch (NumberFormatException nfe) {
-			System.err.println("Ooops");
-			nfe.printStackTrace();
-		}
-		System.out.println(String.format(">>> Server port is %d", serverPort));
-
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			freeResources();
 		}, "Shutdown Hook"));
-		new ServerWithKewlButtons();
+		NavServer server = new ServerWithKewlButtons();
+
 	}
 
 }

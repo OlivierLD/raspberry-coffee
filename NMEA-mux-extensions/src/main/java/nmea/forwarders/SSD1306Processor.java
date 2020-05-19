@@ -598,6 +598,14 @@ public class SSD1306Processor implements Forwarder {
 		initPartTwo();
 	}
 
+	public int strWidth(String str) {
+		int len = -1;
+		if (this.sb != null) {
+			len = sb.strlen(str); // TODO Font Factor...
+		}
+		return len;
+	}
+
 	private void displayAngleAndValue(String label, int value) {
 		int centerX = 80, centerY = 16, radius = 15;
 		try {
