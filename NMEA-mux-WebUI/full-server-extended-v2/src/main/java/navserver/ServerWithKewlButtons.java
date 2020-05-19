@@ -4,7 +4,7 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import http.client.HTTPClient;
 import navrest.NavServer;
-import navserver.button.PushButtonController;
+import utils.gpio.PushButtonController;
 import nmea.api.Multiplexer;
 import nmea.forwarders.SSD1306Processor;
 import nmea.mux.GenericNMEAMultiplexer;
@@ -94,6 +94,34 @@ public class ServerWithKewlButtons extends NavServer {
 		}
 	};
 
+	private Runnable getUserDir = () -> {
+		try {
+			String userDir = System.getProperty("user.dir");
+			System.out.println(String.format("UserDir: %s", userDir));
+			if (userDir.indexOf(File.separator) > -1) {
+				userDir = "..." + userDir.substring(userDir.lastIndexOf(File.separatorChar));
+			}
+			if (oledForwarder != null) {
+//				System.out.println(String.format("%s, len: %d", userDir, oledForwarder.strWidth(userDir)));
+				int SCREEN_WIDTH = 128; // Hard-coded?
+				String prefix = "...";
+				if (oledForwarder.strWidth(userDir) > SCREEN_WIDTH) {
+					while (userDir.length() > 0 && oledForwarder.strWidth(prefix + userDir) > (SCREEN_WIDTH - 1)) { // -1, nicer.
+//						System.out.println(String.format("%s, len: %d", userDir, oledForwarder.strWidth(userDir)));
+						userDir = userDir.substring(1);
+					}
+					userDir = prefix + userDir;
+//					System.out.println(String.format("Finally %s, len: %d", userDir, oledForwarder.strWidth(userDir)));
+				}
+				oledForwarder.displayLines(new String[]{ String.format("Port %d", serverPort), "Running from", userDir });
+				TimeUtil.delay(4_000L);
+			}
+		} catch (Exception ex) {
+			System.err.println("Current Dir:");
+			ex.printStackTrace();
+		}
+	};
+
 	private Runnable pauseLogging = () -> {
 		try {
 			HTTPClient.doPut(this.turnLoggingOffURL, new HashMap<>(), null);
@@ -131,34 +159,6 @@ public class ServerWithKewlButtons extends NavServer {
 			}
 		} catch (Exception ex) {
 			System.err.println("Say Hello:");
-			ex.printStackTrace();
-		}
-	};
-
-	private Runnable getUserDir = () -> {
-		try {
-			String userDir = System.getProperty("user.dir");
-			System.out.println(String.format("UserDir: %s", userDir));
-			if (userDir.indexOf(File.separator) > -1) {
-				userDir = "..." + userDir.substring(userDir.lastIndexOf(File.separatorChar));
-			}
-			if (oledForwarder != null) {
-//				System.out.println(String.format("%s, len: %d", userDir, oledForwarder.strWidth(userDir)));
-				int SCREEN_WIDTH = 128; // Hard-coded?
-				String prefix = "...";
-				if (oledForwarder.strWidth(userDir) > SCREEN_WIDTH) {
-					while (userDir.length() > 0 && oledForwarder.strWidth(prefix + userDir) > (SCREEN_WIDTH - 1)) { // -1, nicer.
-//						System.out.println(String.format("%s, len: %d", userDir, oledForwarder.strWidth(userDir)));
-						userDir = userDir.substring(1);
-					}
-					userDir = prefix + userDir;
-//					System.out.println(String.format("Finally %s, len: %d", userDir, oledForwarder.strWidth(userDir)));
-				}
-				oledForwarder.displayLines(new String[]{ String.format("Port %d", serverPort), "Running from", userDir });
-				TimeUtil.delay(4_000L);
-			}
-		} catch (Exception ex) {
-			System.err.println("Current Dir:");
 			ex.printStackTrace();
 		}
 	};
@@ -279,8 +279,8 @@ public class ServerWithKewlButtons extends NavServer {
 			new MenuItem().title("Pause logging").action(pauseLogging),
 			new MenuItem().title("Resume logging").action(resumeLogging),
 			new MenuItem().title("Terminate Multiplexer").action(terminateMux),
-			new MenuItem().title("! Shutdown").action(shutdown),
-			new MenuItem().title("! Reboot").action(reboot),
+			new MenuItem().title("-> Shutdown !").action(shutdown),
+			new MenuItem().title("-> Reboot !").action(reboot),
 			new MenuItem().title("Network Config").action(displayNetworkParameters),
 			new MenuItem().title("Mux Config").action(muxConfig),
 			new MenuItem().title("Running from").action(getUserDir),
@@ -666,6 +666,8 @@ public class ServerWithKewlButtons extends NavServer {
 			System.out.println("SSD1306 was NOT loaded");
 		} else {
 			boolean simulating = oledForwarder.isSimulating();
+
+			oledForwarder.setSimulatorTitle("Simulating SSD1306 - Button 1: Ctrl, Button 2: Shift");
 
 			final int SHFT_KEY = 16,
 								CTRL_KEY = 17;

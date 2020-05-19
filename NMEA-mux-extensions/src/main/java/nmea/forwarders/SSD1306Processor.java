@@ -592,6 +592,10 @@ public class SSD1306Processor implements Forwarder {
 		cacheThread.start();
 	}
 
+	public void setSimulatorTitle(String title) {
+		this.substitute.setTitle(title);
+	}
+
 	@Override
 	public void init() {
 		initPartOne();
