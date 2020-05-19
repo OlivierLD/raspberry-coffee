@@ -67,7 +67,7 @@ Good for all terrain logging!
 
 ![Small config](../docimg/small.logger.jpg)
 
-With a 3D-printed enclosure, Solar power supply. 
+Raspberry Pi A+, with a 3D-printed enclosure, Solar power supply. 
 - See [here](https://learn.adafruit.com/solar-boost-bag).
 
 ![3D printed stuff](./img/01.full.setting.jpg)
