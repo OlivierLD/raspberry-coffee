@@ -1,4 +1,4 @@
-# Case study (WIP) NMEA Multiplexer running on a Raspberry Pi Zero W, and others
+# Case Study (WIP) NMEA Multiplexer running on a Raspberry Pi Zero W, and others
 This is a case study, using different hardware configurations to run the same software configuration (the NMEA Multiplexer).
 
 For the hardware details, see [here](../full.server.extended.v2/README.md), as it is the exact same one as in this project.
@@ -65,9 +65,15 @@ Raspberry Pi Zero W, 1 bonnet with a 128x64 oled screen and 2 push-buttons and o
 all in a small waterproof case. The GPS is a `U-blox7`, small USB dongle.
 Good for all terrain logging!
 
-Next we will do a 3D-printed enclosure, with a possibility to supply the power from a small solar panel. See [here](https://learn.adafruit.com/solar-boost-bag).
-
 ![Small config](../docimg/small.logger.jpg)
+
+With a 3D-printed enclosure, Solar power supply. 
+- See [here](https://learn.adafruit.com/solar-boost-bag).
+
+![3D printed stuff](./img/01.full.setting.jpg)
+
+- 3D files [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/RPiA%2BLogger) and [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Battery.Cases).
+
 
 > _Note_: As this configuration provides a way for the user to interact with the system, the logging is not starting as the machine starts.
 > In the script `mux.sh`, the system variable `process.on.start` is set to false:
