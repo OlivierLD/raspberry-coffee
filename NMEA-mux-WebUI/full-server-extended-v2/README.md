@@ -154,7 +154,7 @@ In this configuration, the consumption is between 0.25 and 0.30 Amps.
 
 > Bonus: [3D printed](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/RPiA%2BLogger) enclosure (with pictures!).
 
-
+> Note: When the Raspberry emits its own network, the file to look into to flip this feature on and off (when you need an update or upgrade, for example) is `/etc/network/interfaces`.
 
 ##### Raspberry Pi 4 B, with 4Gb of RAM
 Easy: Perfect! 
