@@ -17,7 +17,7 @@ then
 	echo -e "+-------------------------------+"
 	echo -e "| Giving Multiplexer some slack |"
 	echo -e "+-------------------------------+"
-	sleep 10
+	sleep 10  # Wait 10 sec.
 	echo -e ""
 	echo -e "+--------------------------+"
 	echo -e "| Now starting Multiplexer |"

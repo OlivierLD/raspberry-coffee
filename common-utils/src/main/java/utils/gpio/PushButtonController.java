@@ -29,7 +29,7 @@ import java.text.NumberFormat;
  *           |   seconds
  *           seconds * 1000
  *
- * System properties:
+ * System property(ies):
  * - button.verbose, default false
  *
  * Also works in simulator mode, the simulator calls the manageButtonState method.

@@ -475,6 +475,15 @@ function getLHA(gha, longitude) {
 let sunAltitude = -90;
 let moonSunData = [];
 
+function calculateMoonTilt(moonSunData) {
+	// Take the first triangle, from the Moon.
+	let deltaZ = moonSunData[1].wpFromPos.observed.z - moonSunData[0].wpFromPos.observed.z;
+	let deltaElev = moonSunData[1].wpFromPos.observed.alt - moonSunData[0].wpFromPos.observed.alt;
+	alpha = Math.toDegrees(Math.atan2(deltaZ, deltaElev));
+	alpha += 90;
+	return alpha;
+}
+
 function astroCallback(data) {
 //console.log("Astro Data:", data);
 
@@ -501,13 +510,7 @@ function astroCallback(data) {
 			moonSunData = data.moonToSunSkyRoute;
 			if (moonSunData !== undefined) {
 				try {
-					// alpha = moonSunData[0].z; // z=90: horizontal, toward right, alpha=0
-					// alpha -= 90;
-					// Take the first triangle, from the Moon.
-					let deltaZ = moonSunData[1].wpFromPos.observed.z - moonSunData[0].wpFromPos.observed.z;
-					let deltaElev = moonSunData[1].wpFromPos.observed.alt - moonSunData[0].wpFromPos.observed.alt;
-					alpha = Math.toDegrees(Math.atan2(deltaZ, deltaElev));
-					alpha += 90;
+					alpha = calculateMoonTilt(moonSunData);
 				} catch(error) {
 					console.debug(error);
 				}
@@ -672,9 +675,7 @@ function astroCallback(data) {
 			let alpha = 0; // Tilt from horizontal
 			if (data.moonToSunSkyRoute !== undefined) {
 				try {
-					alpha = data.moonToSunSkyRoute[0].z; // z=90: horizontal, toward right, alpha=0. z=0, facing up, alpha=-90.
-					// console.log(`Moon to Sun sky route: ${alpha.toFixed(4)}°`);
-					alpha -= 90;
+					alpha = calculateMoonTilt(moonSunData);
 				} catch(error) {
 					console.debug(error);
 				}

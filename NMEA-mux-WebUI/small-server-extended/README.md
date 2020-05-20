@@ -1,23 +1,27 @@
-# Case study (WIP) NMEA Multiplexer running on a Raspberry Pi Zero W, and others
+# Case Study (WIP) NMEA Multiplexer running on a Raspberry Pi Zero W, and others
 This is a case study, using different hardware configurations to run the same software configuration (the NMEA Multiplexer).
 
 For the hardware details, see [here](../full.server.extended.v2/README.md), as it is the exact same one as in this project.
 
 This example shows how to _**extend**_  the `GenericNMEAMultiplexer`.
 
-It shows how to add features like **TWO** push-buttons, and take ownership of a screen (Nokia, SSD1306...)
+Other examples in this project will also show how to extend the `NavServer`, with more features (like Tide Computations, Astronomical Computing, and so).
+Here we _only_ extends the `GenericNMEAMultiplexer`, we read NMEA Data from a Serial port and some small breakout boards, display them
+on a small screen, log them, forward them on TCP, etc.
 
-It comes with a class named `mux.MultiplexerWithOneButton`, that extends the `nmea.mux.GenericNMEAMultiplexer`.
-As a result, it's driven by the exact same `properties` file.
+It also shows how to add features like **TWO** push-buttons, and take ownership of a screen (Nokia, SSD1306...)
+
+It comes with a class named `mux.MultiplexerWithTwoButtons`, that extends the `nmea.mux.GenericNMEAMultiplexer`.
+As a result, it's driven by the exact same `properties` or `yaml` file.
 
 To see how to interact with the buttons (to start and stop the logging for example, or
-to shutdown the whole server), look for the variables named `pbmOne` and `pbmShift`.
+to shutdown the whole server), look for the variables named `buttonOne` and `buttonTwo`.
 
 Implements `simple-click`, `double-click`, and `long-click`.
 
 ```java
-final static PushButtonMaster pbmOne = new PushButtonMaster();
-final static PushButtonMaster pbmTwo = new PushButtonMaster();
+	final static PushButtonController buttonOne = new PushButtonController();
+	final static PushButtonController buttonTwo = new PushButtonController();
 ```
 
 > Note: the code to add here is just there for the buttons management. There is _absolutely no code_
@@ -30,7 +34,7 @@ This is built just like the other examples in this module, just run
 ```
  $ ./builder.sh
  ```
- and follow the instructions in the console.
+and follow the instructions in the console.
 
 ---
 
@@ -61,9 +65,15 @@ Raspberry Pi Zero W, 1 bonnet with a 128x64 oled screen and 2 push-buttons and o
 all in a small waterproof case. The GPS is a `U-blox7`, small USB dongle.
 Good for all terrain logging!
 
-Next we will do a 3D-printed enclosure, with a possibility to supply the power from a small solar panel. See [here](https://learn.adafruit.com/solar-boost-bag).
-
 ![Small config](../docimg/small.logger.jpg)
+
+Raspberry Pi A+, with a 3D-printed enclosure, Solar power supply. 
+- See [here](https://learn.adafruit.com/solar-boost-bag).
+
+![3D printed stuff](./img/01.full.setting.jpg)
+
+- 3D files [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/RPiA%2BLogger) and [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Battery.Cases).
+
 
 > _Note_: As this configuration provides a way for the user to interact with the system, the logging is not starting as the machine starts.
 > In the script `mux.sh`, the system variable `process.on.start` is set to false:
