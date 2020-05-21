@@ -1,5 +1,7 @@
 package navserver;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import http.client.HTTPClient;
@@ -53,6 +55,27 @@ public class ServerWithKewlButtons extends NavServer {
 			}
 		} catch (Exception ex) {
 			System.err.println("Dummy Op:");
+			ex.printStackTrace();
+		}
+	};
+
+	private Runnable loggingStatus = () -> {
+		try {
+			String loggingStatus = HTTPClient.doGet(this.getLoggingStatusURL, new HashMap<>());
+			/*
+{
+    "processing": true,
+    "started": 1570376199022
+}
+			 */
+			JsonObject json = new JsonParser().parse(loggingStatus).getAsJsonObject();
+			boolean status = json.get("processing").getAsBoolean();
+			if (oledForwarder != null) {
+				oledForwarder.displayLines(new String[]{ String.format("Logging is %s.", (status ? "ON" : "OFF")) });
+				TimeUtil.delay(4_000L);
+			}
+		} catch (Exception ex) {
+			System.err.println("Logging Status:");
 			ex.printStackTrace();
 		}
 	};
@@ -276,6 +299,7 @@ public class ServerWithKewlButtons extends NavServer {
 	}
 
 	private MenuItem[] localMenuItems = new MenuItem[] {
+			new MenuItem().title("Logging status").action(loggingStatus),
 			new MenuItem().title("Pause logging").action(pauseLogging),
 			new MenuItem().title("Resume logging").action(resumeLogging),
 			new MenuItem().title("Terminate Multiplexer").action(terminateMux),
@@ -298,6 +322,7 @@ public class ServerWithKewlButtons extends NavServer {
 	private String turnLoggingOnURL = "";
 	private String turnLoggingOffURL = "";
 	private String terminateMuxURL = "";
+	private String getLoggingStatusURL = "";
 
 	// Action to take depending on the type of click.
 	// Propagate the button events to the SSD1306Processor (simple clicks, up and down)
@@ -562,6 +587,7 @@ public class ServerWithKewlButtons extends NavServer {
 		this.turnLoggingOnURL = String.format("http://localhost:%d/mux/mux-process/on", serverPort);
 		this.turnLoggingOffURL = String.format("http://localhost:%d/mux/mux-process/off", serverPort);
 		this.terminateMuxURL = String.format("http://localhost:%d/mux/terminate", serverPort);
+		this.getLoggingStatusURL = String.format("http://localhost:%d/mux/mux-process", serverPort);
 
 		System.out.println(String.format("To turn logging ON, use PUT %s", this.turnLoggingOnURL));
 		System.out.println(String.format("To turn logging OFF, use PUT %s", this.turnLoggingOffURL));
