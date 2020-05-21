@@ -311,7 +311,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 	}
 
 	private MenuItem[] localMenuItems = new MenuItem[] {
-			new MenuItem().title("Logging status").action(loggingStatus),
+//			new MenuItem().title("Logging status").action(loggingStatus),
 			new MenuItem().title("Pause logging").action(pauseLogging),
 			new MenuItem().title("Resume logging").action(resumeLogging),
 			new MenuItem().title("Terminate Multiplexer").action(terminateMux),
@@ -694,10 +694,9 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 			final int SHFT_KEY = 16,
 								CTRL_KEY = 17;
 
-			oledForwarder.setSimulatorTitle("Simulating SSD1306 - Button 1: Ctrl, Button 2: Shift");
-
 			System.out.println(String.format("SSD1306 was loaded! (%s)", simulating ? "simulating" : "for real"));
 			if (simulating) {
+				oledForwarder.setSimulatorTitle("Simulating SSD1306 - Button 1: Ctrl, Button 2: Shift");
 				// Simulator led color
 				oledForwarder.setSimutatorLedColor(Color.WHITE);
 				// Seems not to be possible to have left shift and right shift. When one is on, the other is ignored.

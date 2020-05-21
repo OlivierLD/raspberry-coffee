@@ -691,10 +691,10 @@ public class SSD1306Processor implements Forwarder {
 			} else {
 				sb.text("POSITION:", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
 				if (height == 32) {
-					sb.text("RMC not ready yet", 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+					sb.text("RMC not ready yet!", 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
 				} else {
 					sb.text("RMC not", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
-					sb.text("ready yet", 2, 39, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+					sb.text("ready yet!", 2, 39, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 //					String test = GeomUtil.decToSex(122.5013, GeomUtil.NO_DEG, GeomUtil.EW, GeomUtil.TRAILING_SIGN).replaceFirst(" ", "\u00b0");
 //					sb.text(test, 2, 39, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 				}

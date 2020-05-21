@@ -79,8 +79,8 @@ echo -e "+----------------------------------------------------------------------
 NO_DATE=false
 RMC_TIME_OK=true
 SUN_FLOWER=false
-# PROP_FILE="nmea.mux.gps.log.properties"
-PROP_FILE="multiplexer.yaml"
+PROP_FILE="nmea.mux.gps.log.properties"
+# PROP_FILE="multiplexer.yaml"
 JAVA_OPTIONS=
 #
 for ARG in "$@"

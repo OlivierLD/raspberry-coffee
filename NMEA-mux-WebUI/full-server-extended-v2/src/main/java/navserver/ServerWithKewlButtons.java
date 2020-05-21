@@ -17,7 +17,10 @@ import utils.TimeUtil;
 
 import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -186,6 +189,34 @@ public class ServerWithKewlButtons extends NavServer {
 		}
 	};
 
+	private Runnable showImage = () -> {
+		try {
+			if (oledForwarder != null) {
+				// Read ./img/image.dat
+				try (DataInputStream imageStream = new DataInputStream(new FileInputStream("./img/image.dat"))) {
+					int width = imageStream.readInt();
+					int height = imageStream.readInt();
+					if (width != 128 || height != 64) {
+						System.out.println(String.format("Bad size %dx%d, expecting 128x64", width, height));
+					} else {
+						long[][] bitmap = new long[64][2];
+						for (int line = 0; line < bitmap.length; line++) {
+							bitmap[line][0] = imageStream.readLong();
+							bitmap[line][1] = imageStream.readLong();
+						}
+						oledForwarder.displayBitmap(bitmap);
+						TimeUtil.delay(5_000L);
+					}
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+		} catch (Exception ex) {
+			System.err.println("Show image:");
+			ex.printStackTrace();
+		}
+	};
+
 	private Runnable displayNetworkParameters = () -> {
 		List<String> display = new ArrayList<>();
 		try {
@@ -308,7 +339,8 @@ public class ServerWithKewlButtons extends NavServer {
 			new MenuItem().title("Network Config").action(displayNetworkParameters),
 			new MenuItem().title("Mux Config").action(muxConfig),
 			new MenuItem().title("Running from").action(getUserDir),
-			new MenuItem().title("Say Hello").action(sayHello)                       // As an example...
+			new MenuItem().title("Say Hello").action(sayHello),                      // As an example...
+			new MenuItem().title("Say Hello").action(showImage)
 	};
 	private int localMenuItemIndex = 0;
 
