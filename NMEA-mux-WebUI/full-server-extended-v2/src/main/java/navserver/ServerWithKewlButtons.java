@@ -340,7 +340,7 @@ public class ServerWithKewlButtons extends NavServer {
 			new MenuItem().title("Mux Config").action(muxConfig),
 			new MenuItem().title("Running from").action(getUserDir),
 			new MenuItem().title("Say Hello").action(sayHello),                      // As an example...
-			new MenuItem().title("Say Hello").action(showImage)
+			new MenuItem().title("Show image").action(showImage)                     // Example too
 	};
 	private int localMenuItemIndex = 0;
 
