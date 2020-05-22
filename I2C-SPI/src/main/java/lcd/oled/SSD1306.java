@@ -191,7 +191,7 @@ public class  SSD1306 {
 			System.out.println("Connected to devices. OK.");
 		}
 
-		initSSD1306(this.width, this.height); // 128x32, hard coded for now.
+		initSSD1306(this.width, this.height);
 	}
 
 	private void initSSD1306(int w, int h) {
