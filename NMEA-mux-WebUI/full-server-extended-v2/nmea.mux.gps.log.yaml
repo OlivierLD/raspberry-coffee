@@ -23,7 +23,7 @@ forwarders:
     filename.suffix: "_LOG"
     log.dir: "logged"
     split: "hour"
-  - class: "nmea.forwarder.SSD1306Processor"
+  - class: "nmea.forwarders.SSD1306Processor"
     properties: "ssd1306.properties"
   - type: "tcp"
     port: 7001

@@ -15,6 +15,9 @@ import utils.TimeUtil;
 
 import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.File;
 import java.util.ArrayList;
@@ -72,7 +75,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 				TimeUtil.delay(4_000L);
 			}
 		} catch (Exception ex) {
-			System.err.println("Dummy Op:");
+			System.err.println("MuxConfig:");
 			ex.printStackTrace();
 		}
 	};
@@ -163,6 +166,34 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 			}
 		} catch (Exception ex) {
 			System.err.println("Say Hello:");
+			ex.printStackTrace();
+		}
+	};
+
+	private Runnable showImage = () -> {
+		try {
+			if (oledForwarder != null) {
+				// Read ./img/image.dat
+				try (DataInputStream imageStream = new DataInputStream(new FileInputStream("./img/image.dat"))) {
+					int width = imageStream.readInt();
+					int height = imageStream.readInt();
+					if (width != 128 || height != 64) {
+						System.out.println(String.format("Bad size %dx%d, expecting 128x64", width, height));
+					} else {
+						long[][] bitmap = new long[64][2];
+						for (int line = 0; line < bitmap.length; line++) {
+							bitmap[line][0] = imageStream.readLong();
+							bitmap[line][1] = imageStream.readLong();
+						}
+						oledForwarder.displayBitmap(bitmap);
+						TimeUtil.delay(5_000L);
+					}
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+		} catch (Exception ex) {
+			System.err.println("Show image:");
 			ex.printStackTrace();
 		}
 	};
@@ -280,7 +311,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 	}
 
 	private MenuItem[] localMenuItems = new MenuItem[] {
-			new MenuItem().title("Logging status").action(loggingStatus),
+//			new MenuItem().title("Logging status").action(loggingStatus),
 			new MenuItem().title("Pause logging").action(pauseLogging),
 			new MenuItem().title("Resume logging").action(resumeLogging),
 			new MenuItem().title("Terminate Multiplexer").action(terminateMux),
@@ -289,7 +320,8 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 			new MenuItem().title("Network Config").action(displayNetworkParameters),
 			new MenuItem().title("Mux Config").action(muxConfig),
 			new MenuItem().title("Running from").action(getUserDir),
-			new MenuItem().title("Say Hello").action(sayHello)                       // As an example...
+			new MenuItem().title("Say Hello").action(sayHello),                       // As an example...
+			new MenuItem().title("Show image").action(showImage)                      // As an example...
 	};
 	private int localMenuItemIndex = 0;
 
@@ -662,10 +694,9 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 			final int SHFT_KEY = 16,
 								CTRL_KEY = 17;
 
-			oledForwarder.setSimulatorTitle("Simulating SSD1306 - Button 1: Ctrl, Button 2: Shift");
-
 			System.out.println(String.format("SSD1306 was loaded! (%s)", simulating ? "simulating" : "for real"));
 			if (simulating) {
+				oledForwarder.setSimulatorTitle("Simulating SSD1306 - Button 1: Ctrl, Button 2: Shift");
 				// Simulator led color
 				oledForwarder.setSimutatorLedColor(Color.WHITE);
 				// Seems not to be possible to have left shift and right shift. When one is on, the other is ignored.
@@ -691,6 +722,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 					}
 				});
 			}
+
 			// Following block just for tests and dev.
 			if (false) {
 				// Now let's write in the screen...

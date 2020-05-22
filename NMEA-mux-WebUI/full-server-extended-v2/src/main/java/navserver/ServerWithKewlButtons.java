@@ -1,5 +1,7 @@
 package navserver;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import http.client.HTTPClient;
@@ -15,7 +17,10 @@ import utils.TimeUtil;
 
 import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +58,27 @@ public class ServerWithKewlButtons extends NavServer {
 			}
 		} catch (Exception ex) {
 			System.err.println("Dummy Op:");
+			ex.printStackTrace();
+		}
+	};
+
+	private Runnable loggingStatus = () -> {
+		try {
+			String loggingStatus = HTTPClient.doGet(this.getLoggingStatusURL, new HashMap<>());
+			/*
+					{
+					    "processing": true,
+					    "started": 1570376199022
+					}
+			 */
+			JsonObject json = new JsonParser().parse(loggingStatus).getAsJsonObject();
+			boolean status = json.get("processing").getAsBoolean();
+			if (oledForwarder != null) {
+				oledForwarder.displayLines(new String[]{ String.format("Logging is %s.", (status ? "ON" : "OFF")) });
+				TimeUtil.delay(4_000L);
+			}
+		} catch (Exception ex) {
+			System.err.println("Logging Status:");
 			ex.printStackTrace();
 		}
 	};
@@ -159,6 +185,34 @@ public class ServerWithKewlButtons extends NavServer {
 			}
 		} catch (Exception ex) {
 			System.err.println("Say Hello:");
+			ex.printStackTrace();
+		}
+	};
+
+	private Runnable showImage = () -> {
+		try {
+			if (oledForwarder != null) {
+				// Read ./img/image.dat
+				try (DataInputStream imageStream = new DataInputStream(new FileInputStream("./img/image.dat"))) {
+					int width = imageStream.readInt();
+					int height = imageStream.readInt();
+					if (width != 128 || height != 64) {
+						System.out.println(String.format("Bad size %dx%d, expecting 128x64", width, height));
+					} else {
+						long[][] bitmap = new long[64][2];
+						for (int line = 0; line < bitmap.length; line++) {
+							bitmap[line][0] = imageStream.readLong();
+							bitmap[line][1] = imageStream.readLong();
+						}
+						oledForwarder.displayBitmap(bitmap);
+						TimeUtil.delay(5_000L);
+					}
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+		} catch (Exception ex) {
+			System.err.println("Show image:");
 			ex.printStackTrace();
 		}
 	};
@@ -276,6 +330,7 @@ public class ServerWithKewlButtons extends NavServer {
 	}
 
 	private MenuItem[] localMenuItems = new MenuItem[] {
+			new MenuItem().title("Logging status").action(loggingStatus),
 			new MenuItem().title("Pause logging").action(pauseLogging),
 			new MenuItem().title("Resume logging").action(resumeLogging),
 			new MenuItem().title("Terminate Multiplexer").action(terminateMux),
@@ -284,7 +339,8 @@ public class ServerWithKewlButtons extends NavServer {
 			new MenuItem().title("Network Config").action(displayNetworkParameters),
 			new MenuItem().title("Mux Config").action(muxConfig),
 			new MenuItem().title("Running from").action(getUserDir),
-			new MenuItem().title("Say Hello").action(sayHello)                       // As an example...
+			new MenuItem().title("Say Hello").action(sayHello),                      // As an example...
+			new MenuItem().title("Show image").action(showImage)                     // Example too
 	};
 	private int localMenuItemIndex = 0;
 
@@ -298,6 +354,7 @@ public class ServerWithKewlButtons extends NavServer {
 	private String turnLoggingOnURL = "";
 	private String turnLoggingOffURL = "";
 	private String terminateMuxURL = "";
+	private String getLoggingStatusURL = "";
 
 	// Action to take depending on the type of click.
 	// Propagate the button events to the SSD1306Processor (simple clicks, up and down)
@@ -562,6 +619,7 @@ public class ServerWithKewlButtons extends NavServer {
 		this.turnLoggingOnURL = String.format("http://localhost:%d/mux/mux-process/on", serverPort);
 		this.turnLoggingOffURL = String.format("http://localhost:%d/mux/mux-process/off", serverPort);
 		this.terminateMuxURL = String.format("http://localhost:%d/mux/terminate", serverPort);
+		this.getLoggingStatusURL = String.format("http://localhost:%d/mux/mux-process", serverPort);
 
 		System.out.println(String.format("To turn logging ON, use PUT %s", this.turnLoggingOnURL));
 		System.out.println(String.format("To turn logging OFF, use PUT %s", this.turnLoggingOffURL));

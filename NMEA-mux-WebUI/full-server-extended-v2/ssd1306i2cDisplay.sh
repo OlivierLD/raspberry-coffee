@@ -1,5 +1,5 @@
 #!/bin/bash
-CP=./build/libs/NMEA.mux.WebUI-1.0-all.jar
+CP=./build/libs/full-server-extended-v2-1.0-all.jar
 #
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false "

@@ -686,11 +686,18 @@ public class SSD1306Processor implements Forwarder {
 
 			if (rmcStatus) {
 				sb.text("POSITION", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-				sb.text(latitude, 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-				sb.text(longitude, 2, 29, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				sb.text(latitude, 2, 19, height == 32 ? 1 : 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				sb.text(longitude, 2, height == 32 ? 29 : 39, height == 32 ? 1 : 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			} else {
 				sb.text("POSITION:", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-				sb.text("RMC not ready yet", 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				if (height == 32) {
+					sb.text("RMC not ready yet!", 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				} else {
+					sb.text("RMC not", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+					sb.text("ready yet!", 2, 39, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+//					String test = GeomUtil.decToSex(122.5013, GeomUtil.NO_DEG, GeomUtil.EW, GeomUtil.TRAILING_SIGN).replaceFirst(" ", "\u00b0");
+//					sb.text(test, 2, 39, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				}
 			}
 			// Display
 			display();
@@ -785,6 +792,49 @@ public class SSD1306Processor implements Forwarder {
 			// Display
 			display();
 
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	/*
+	 * This is a test.
+	 * Bitmap is done with OpenCV, see https://github.com/OlivierLD/oliv-ai/blob/master/opencv/src/main/java/oliv/opencv/OpenCVSwingColor2BW.java
+	 */
+	public void displayBitmap(long[][] bitmap) {
+		try {
+			// TODO Check the size
+			if (bitmap.length != 64 && bitmap[0].length != 2) {
+				throw new RuntimeException(String.format("Expects 64x2, not %dx%d", bitmap.length, bitmap[0].length));
+			}
+			// Display the bitmap?
+			if (false) {
+				System.out.println("---- From digit matrix ----");
+				for (int line=0; line<bitmap.length; line++) {
+					StringBuffer printLine = new StringBuffer();
+					// 2 longs per line
+					for (int w=0; w<128; w++) {
+						long pixel = ((bitmap[line][w<64?0:1] & (1L << (w%64))));
+						printLine.append(pixel==0?' ':'X');
+					}
+					System.out.println(printLine.toString());
+				}
+				System.out.println("-------------------------------");
+			}
+
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			for (int line=0; line<bitmap.length; line++) {
+				// 2 longs per line, 2x64=128
+				for (int w=0; w<128; w++) {
+					long pixel = ((bitmap[line][w<64?0:1] & (1L << (w%64))));
+					if (pixel != 0) { // Not necessary 1 !!
+						sb.plot(w, line);
+					}
+				}
+			}
+
+			display();
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
