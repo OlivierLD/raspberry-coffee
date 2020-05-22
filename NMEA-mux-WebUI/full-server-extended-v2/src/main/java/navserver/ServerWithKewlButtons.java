@@ -66,10 +66,10 @@ public class ServerWithKewlButtons extends NavServer {
 		try {
 			String loggingStatus = HTTPClient.doGet(this.getLoggingStatusURL, new HashMap<>());
 			/*
-{
-    "processing": true,
-    "started": 1570376199022
-}
+					{
+					    "processing": true,
+					    "started": 1570376199022
+					}
 			 */
 			JsonObject json = new JsonParser().parse(loggingStatus).getAsJsonObject();
 			boolean status = json.get("processing").getAsBoolean();
