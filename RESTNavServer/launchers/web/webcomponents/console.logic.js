@@ -477,7 +477,10 @@ let moonSunData = [];
 
 function calculateMoonTilt(moonSunData) {
 	// Take the first triangle, from the Moon.
-	let deltaZ = moonSunData[1].wpFromPos.observed.z - moonSunData[0].wpFromPos.observed.z; // TODO 358 - 2...
+	let deltaZ = moonSunData[1].wpFromPos.observed.z - moonSunData[0].wpFromPos.observed.z;
+	if (deltaZ > 180) { // like 358 - 2, should be 358 - 362.
+		deltaZ -= 360;
+	}
 	let deltaElev = moonSunData[1].wpFromPos.observed.alt - moonSunData[0].wpFromPos.observed.alt;
 	alpha = Math.toDegrees(Math.atan2(deltaZ, deltaElev)); // atan2 from -Pi to Pi
 	if (deltaZ > 0) {
