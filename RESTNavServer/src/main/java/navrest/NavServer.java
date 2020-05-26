@@ -6,7 +6,6 @@ import http.HTTPServer;
 import imageprocessing.ImgRequestManager;
 import nmea.api.Multiplexer;
 import nmea.mux.GenericNMEAMultiplexer;
-import orientation.SunFlower;
 import orientation.SunFlowerRequestManager;
 import tiderest.TideRequestManager;
 

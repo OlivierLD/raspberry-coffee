@@ -478,9 +478,24 @@ let moonSunData = [];
 function calculateMoonTilt(moonSunData) {
 	// Take the first triangle, from the Moon.
 	let deltaZ = moonSunData[1].wpFromPos.observed.z - moonSunData[0].wpFromPos.observed.z;
+	if (deltaZ > 180) { // like 358 - 2, should be 358 - 362.
+		deltaZ -= 360;
+	}
 	let deltaElev = moonSunData[1].wpFromPos.observed.alt - moonSunData[0].wpFromPos.observed.alt;
-	alpha = Math.toDegrees(Math.atan2(deltaZ, deltaElev));
-	alpha += 90;
+	alpha = Math.toDegrees(Math.atan2(deltaZ, deltaElev)); // atan2 from -Pi to Pi
+	if (deltaZ > 0) {
+		if (deltaElev > 0) { // positive angle, like 52
+			alpha *= -1;
+		} else { // Angle > 90, like 116
+			alpha -= 90;
+		}
+	} else {
+		if (deltaElev < 0) { // negative angle, like -52
+			alpha *= -1;
+		} else { // Negative, < -90, like -116
+			alpha += 90;
+		}
+	}
 	return alpha;
 }
 
@@ -509,6 +524,17 @@ function astroCallback(data) {
 			let alpha = 0;
 			moonSunData = data.moonToSunSkyRoute;
 			if (moonSunData !== undefined) {
+				// Verbose here
+				if (false) {
+					let deltaZ = moonSunData[1].wpFromPos.observed.z - moonSunData[0].wpFromPos.observed.z;
+					let deltaElev = moonSunData[1].wpFromPos.observed.alt - moonSunData[0].wpFromPos.observed.alt;
+					console.log(`Tilt calculation:`);
+					console.log(`Moon-Sun Route - Pt 0: Z=${moonSunData[0].wpFromPos.observed.z}, Elev=${moonSunData[0].wpFromPos.observed.alt}`);
+					console.log(`               - Pt 1: Z=${moonSunData[1].wpFromPos.observed.z}, Elev=${moonSunData[1].wpFromPos.observed.alt}`);
+					console.log(`  DeltaZ    = ${deltaZ}`);
+					console.log(`  DeltaElev = ${deltaElev}`);
+					console.log(`  ARI: ${Math.toDegrees(Math.atan2(deltaZ, deltaElev))} `);
+				}
 				try {
 					alpha = calculateMoonTilt(moonSunData);
 				} catch(error) {
