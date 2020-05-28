@@ -248,19 +248,20 @@ public class SystemUtils {
 			ex.printStackTrace();
 		}
 
+		System.out.println("All IP Addresses:");
 		List<String[]> addresses = getIPAddresses();
 		addresses.stream().forEach(pair -> {
 			System.out.println(String.format("%s -> %s", pair[0], pair[1]));
 		});
 
 		// Filtered
-		System.out.println("\nFiltered:");
+		System.out.println("\nFiltered (en0):");
 		addresses = getIPAddresses("en0");
 		addresses.stream().forEach(pair -> {
 			System.out.println(String.format("%s -> %s", pair[0], pair[1]));
 		});
 		// IPv4 only
-		System.out.println("\nFiltered:");
+		System.out.println("\nFiltered (IPv4):");
 		addresses = getIPAddresses(true);
 		addresses.stream().forEach(pair -> {
 			System.out.println(String.format("%s -> %s", pair[0], pair[1]));
