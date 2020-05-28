@@ -171,12 +171,14 @@ public class SystemUtils {
 	// /opt/vc/bin/vcgencmd measure_volts [core | sdram_c | sdram_i | sdram_p]
 
 	public static String getCPUTemperature2() throws Exception {
-		String command = "/opt/vc/bin/vcgencmd measure_temp";
+//		String command = "/opt/vc/bin/vcgencmd measure_temp";
+		String command = "vcgencmd measure_temp";
 		return getCommandResult(command).get(0);
 	}
 
 	public static String getCoreVoltage() throws Exception {
-		String command = "/opt/vc/bin/vcgencmd measure_volts core";
+//		String command = "/opt/vc/bin/vcgencmd measure_volts core";
+		String command = "vcgencmd measure_volts core";
 		return getCommandResult(command).get(0);
 	}
 
