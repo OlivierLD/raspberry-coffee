@@ -3,7 +3,7 @@ package feedback.one0one;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.PCA9685;
 import utils.StaticUtil;
-import utils.TCPUtils;
+import utils.SystemUtils;
 import utils.TimeUtil;
 
 import java.util.regex.Matcher;
@@ -89,9 +89,9 @@ public class DemoInteractiveContinuous {
 
 		System.out.println("System data:");
 		try {
-			System.out.println(String.format("\tCore Voltage %s", TCPUtils.getCoreVoltage()));
-			System.out.println(String.format("\tCPU Temp %s", TCPUtils.getCPUTemperature()));
-			System.out.println(String.format("\tCPU Load %s", TCPUtils.getCPULoad()));
+			System.out.println(String.format("\tCore Voltage %s", SystemUtils.getCoreVoltage()));
+			System.out.println(String.format("\tCPU Temp %s", SystemUtils.getCPUTemperature()));
+			System.out.println(String.format("\tCPU Load %s", SystemUtils.getCPULoad()));
 		} catch (Exception ex) {
 			throw ex;
 		}

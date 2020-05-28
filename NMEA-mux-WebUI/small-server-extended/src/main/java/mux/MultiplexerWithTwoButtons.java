@@ -10,7 +10,7 @@ import nmea.forwarders.SSD1306Processor;
 import nmea.mux.GenericNMEAMultiplexer;
 import utils.PinUtil;
 import utils.StaticUtil;
-import utils.TCPUtils;
+import utils.SystemUtils;
 import utils.TimeUtil;
 
 import java.awt.Color;
@@ -238,8 +238,8 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		try {
 			String line = "IP Addr.:";
 			display.add(line);
-//		List<String> addresses = TCPUtils.getIPAddresses("wlan0", true);
-			List<String[]> addresses = TCPUtils.getIPAddresses(true);
+//		List<String> addresses = SystemUtils.getIPAddresses("wlan0", true);
+			List<String[]> addresses = SystemUtils.getIPAddresses(true);
 			for (String[] addr : addresses) {
 //				line += (addr[1] + " ");
 				display.add(addr[1]);
@@ -254,7 +254,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 			}
 		}
 		try {
-			String hostName = TCPUtils.getHostName();
+			String hostName = SystemUtils.getHostName();
 			if (hostName != null) {
 				display.add(hostName);
 			}
@@ -592,7 +592,7 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 
 		System.out.println(String.format("\nREST Operations: GET http://localhost:%d/mux/oplist\n", serverPort));
 
-		List<String[]> addresses = TCPUtils.getIPAddresses(true);
+		List<String[]> addresses = SystemUtils.getIPAddresses(true);
 		String machineName = "localhost";
 		if (addresses.size() == 1) {
 			machineName = addresses.get(0)[1];

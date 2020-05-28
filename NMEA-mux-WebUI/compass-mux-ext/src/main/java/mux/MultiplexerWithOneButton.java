@@ -8,7 +8,7 @@ import nmea.forwarders.SSD1306_HDMDisplay;
 import nmea.mux.GenericNMEAMultiplexer;
 import utils.PinUtil;
 import utils.StaticUtil;
-import utils.TCPUtils;
+import utils.SystemUtils;
 import utils.TimeUtil;
 import utils.gpio.PushButtonController;
 
@@ -160,7 +160,7 @@ public class MultiplexerWithOneButton extends GenericNMEAMultiplexer {
 
 		System.out.println(String.format("\nREST Operations: GET http://localhost:%d/mux/oplist\n", serverPort));
 
-		List<String[]> addresses = TCPUtils.getIPAddresses(true);
+		List<String[]> addresses = SystemUtils.getIPAddresses(true);
 		String machineName = "localhost";
 		if (addresses.size() == 1) {
 			machineName = addresses.get(0)[1];

@@ -1,8 +1,7 @@
 package sunflower.httpserver;
 
 import http.HTTPServer;
-import utils.StaticUtil;
-import utils.TCPUtils;
+import utils.SystemUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +33,7 @@ public class SunFlowerServer {
 		}
 		String ipAddress = "localhost";
 		try {
-			ipAddress = TCPUtils.getIPAddress();
+			ipAddress = SystemUtils.getIPAddress();
 		} catch (Exception ex) {
 			// Duh
 			ex.printStackTrace();
