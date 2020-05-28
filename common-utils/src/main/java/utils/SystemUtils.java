@@ -267,9 +267,11 @@ public class SystemUtils {
 			System.out.println(String.format("%s -> %s", pair[0], pair[1]));
 		});
 
+		System.out.println();
 		System.out.println(String.format("DiskUsage: %s", getDiskUsage()));
 		System.out.println(String.format("uname: %s", getUname()));
-		System.out.println(String.format("ls:\n%s", getDirectoryListing().stream().collect(Collectors.joining("\n"))));
+		System.out.println();
+		System.out.println(String.format("Directory listing:\n%s", getDirectoryListing().stream().collect(Collectors.joining("\n"))));
 
 		// Temperature & voltage
 		System.out.println();
