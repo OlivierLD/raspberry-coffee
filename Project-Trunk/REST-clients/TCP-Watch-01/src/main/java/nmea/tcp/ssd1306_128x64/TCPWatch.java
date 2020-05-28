@@ -17,7 +17,7 @@ import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
 import lcd.substitute.SwingLedPanel;
 import utils.PinUtil;
-import utils.TCPUtils;
+import utils.SystemUtils;
 import utils.TimeUtil;
 
 import java.awt.Color;
@@ -267,8 +267,8 @@ public class TCPWatch {
 //			sb.text("IP Address:", 2, y);
 			String line = "IP ";
 //			y += 8;
-//		List<String> addresses = TCPUtils.getIPAddresses("wlan0", true);
-			List<String[]> addresses = TCPUtils.getIPAddresses(true);
+//		List<String> addresses = SystemUtils.getIPAddresses("wlan0", true);
+			List<String[]> addresses = SystemUtils.getIPAddresses(true);
 			for (String[] addr : addresses) {
 				line += (addr[1] + " ");
 				if (SCREEN_00_VERBOSE) {

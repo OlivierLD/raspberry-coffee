@@ -12,7 +12,7 @@ import nmea.forwarders.SSD1306Processor;
 import nmea.mux.GenericNMEAMultiplexer;
 import utils.PinUtil;
 import utils.StaticUtil;
-import utils.TCPUtils;
+import utils.SystemUtils;
 import utils.TimeUtil;
 
 import java.awt.Color;
@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * Shows how to add two push buttons to interact with the NavServer
@@ -257,8 +256,8 @@ public class ServerWithKewlButtons extends NavServer {
 		try {
 			String line = "IP Addr.:";
 			display.add(line);
-//		List<String> addresses = TCPUtils.getIPAddresses("wlan0", true);
-			List<String[]> addresses = TCPUtils.getIPAddresses(true);
+//		List<String> addresses = SystemUtils.getIPAddresses("wlan0", true);
+			List<String[]> addresses = SystemUtils.getIPAddresses(true);
 			for (String[] addr : addresses) {
 //				line += (addr[1] + " ");
 				display.add(addr[1]);
@@ -273,7 +272,7 @@ public class ServerWithKewlButtons extends NavServer {
 			}
 		}
 		try {
-			String hostName = TCPUtils.getHostName();
+			String hostName = SystemUtils.getHostName();
 			if (hostName != null) {
 				display.add(hostName);
 			}
@@ -625,7 +624,7 @@ public class ServerWithKewlButtons extends NavServer {
 		System.out.println(String.format("To turn logging OFF, use PUT %s", this.turnLoggingOffURL));
 		System.out.println(String.format("To terminate the multiplexer, use POST %s", this.terminateMuxURL));
 
-		List<String[]> addresses = TCPUtils.getIPAddresses(true);
+		List<String[]> addresses = SystemUtils.getIPAddresses(true);
 		String machineName = "localhost";
 		if (addresses.size() == 1) {
 			machineName = addresses.get(0)[1];

@@ -6,7 +6,7 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
-import utils.TCPUtils;
+import utils.SystemUtils;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -247,7 +247,7 @@ public class RESTImplementation {
 	private Response getNetworks(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			List<String> networkName = TCPUtils.getNetworkName();
+			List<String> networkName = SystemUtils.getNetworkName();
 			String content = new Gson().toJson(networkName);
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
@@ -269,7 +269,7 @@ public class RESTImplementation {
 		boolean v4Only = qs != null && "true".equals(qs.get("v4Only"));
 		String iFace = qs != null ? qs.get("iface") : null;
 		try {
-			List<String[]> ipAddresses = TCPUtils.getIPAddresses(iFace, v4Only);
+			List<String[]> ipAddresses = SystemUtils.getIPAddresses(iFace, v4Only);
 			String content = new Gson().toJson(ipAddresses);
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
@@ -288,7 +288,7 @@ public class RESTImplementation {
 	private Response getIpAddress(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			String ipAddress = TCPUtils.getIPAddress();
+			String ipAddress = SystemUtils.getIPAddress();
 			String content = ipAddress; // new Gson().toJson(ipAddress);
 
 			if (VERBOSE) {
@@ -312,7 +312,7 @@ public class RESTImplementation {
 	private Response getCPUTemperature(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			String cpuTemperature = TCPUtils.getCPUTemperature();
+			String cpuTemperature = SystemUtils.getCPUTemperature();
 			String content = cpuTemperature; // new Gson().toJson(cpuTemperature);
 
 			if (VERBOSE) {
@@ -336,7 +336,7 @@ public class RESTImplementation {
 	private Response getDiskUsage(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			String diskUsage = TCPUtils.getDiskUsage();
+			String diskUsage = SystemUtils.getDiskUsage();
 			String content = diskUsage; // new Gson().toJson(diskUsage);
 
 			if (VERBOSE) {
@@ -360,7 +360,7 @@ public class RESTImplementation {
 	private Response getMemoryUsage(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			String memoryUsage = TCPUtils.getMemoryUsage();
+			String memoryUsage = SystemUtils.getMemoryUsage();
 			String content = memoryUsage; // new Gson().toJson(memoryUsage);
 
 			if (VERBOSE) {
@@ -384,7 +384,7 @@ public class RESTImplementation {
 	private Response getCPULoad(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			String cpuLoad = TCPUtils.getCPULoad();
+			String cpuLoad = SystemUtils.getCPULoad();
 			String content = cpuLoad; // new Gson().toJson(cpuLoad);
 
 			if (VERBOSE) {
@@ -456,11 +456,11 @@ public class RESTImplementation {
 	private Response getSystemData(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			String ipAddress = TCPUtils.getIPAddress();
-			String cpuLoad = TCPUtils.getCPULoad();
-			String cpuTemperature = TCPUtils.getCPUTemperature();
-			String memoryUsage = TCPUtils.getMemoryUsage();
-			String diskUsage = TCPUtils.getDiskUsage();
+			String ipAddress = SystemUtils.getIPAddress();
+			String cpuLoad = SystemUtils.getCPULoad();
+			String cpuTemperature = SystemUtils.getCPUTemperature();
+			String memoryUsage = SystemUtils.getMemoryUsage();
+			String diskUsage = SystemUtils.getDiskUsage();
 			SystemData systemData = new SystemData();
 			systemData.ipAddress = ipAddress;
 			systemData.cpuTemperature = cpuTemperature;

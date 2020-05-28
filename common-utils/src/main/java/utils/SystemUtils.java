@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class TCPUtils {
+public class SystemUtils {
 
 	public static List<String[]> getIPAddresses() {
 		return getIPAddresses(null, false);
@@ -144,6 +144,22 @@ public class TCPUtils {
 		return getCommandResult(command);
 	}
 
+	public final static int MEM_TOTAL = 0;
+	public final static int MEM_FREE = 1;
+	public final static int MEM_AVAILABLE = 2;
+	public static List<String> getMemoryStatus() throws Exception {
+		String[] commands = { // In MB
+				"grep MemTotal /proc/meminfo | awk '{print $2 / 1024}'",
+				"grep MemFree /proc/meminfo | awk '{print $2 / 1024}'",
+				"grep MemAvailable /proc/meminfo | awk '{print $2 / 1024}'"
+		};
+		return Arrays.asList(new String[] {
+				getCommandResult(commands[0]),
+				getCommandResult(commands[1]),
+				getCommandResult(commands[2])
+		});
+	}
+
 	public static String getDiskUsage() throws Exception {
 		String command = "df -h | awk '$NF==\"/\"{printf \"Disk: %d/%d GB %s\", $3, $2, $5}'";
 		return getCommandResult(command);
@@ -257,5 +273,16 @@ public class TCPUtils {
 		System.out.println();
 		System.out.println(String.format("CPU Temperature %s", getCPUTemperature2()));
 		System.out.println(String.format("Cove Voltage %s", getCoreVoltage()));
+
+		// Memory
+		System.out.println();
+		List<String> memStatus = getMemoryStatus();
+		System.out.println(String.format("Total:     %s MB", memStatus.get(MEM_TOTAL)));
+		System.out.println(String.format("Free:      %s MB", memStatus.get(MEM_FREE)));
+		System.out.println(String.format("Available: %s MB", memStatus.get(MEM_AVAILABLE)));
+
+		String memoryUsage = getMemoryUsage();
+		System.out.println(String.format("Usage: %s", memoryUsage));
+
 	}
 }

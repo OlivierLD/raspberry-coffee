@@ -6,11 +6,7 @@ import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.PCA9685;
 import utils.PinUtil;
 import utils.StringUtils;
-import utils.TCPUtils;
-
-import java.util.Arrays;
-import java.util.OptionalInt;
-import java.util.function.Function;
+import utils.SystemUtils;
 
 import static utils.StringUtils.lpad;
 
@@ -305,9 +301,9 @@ public class FeedbackPotsServo {
 
 		System.out.println("System data:");
 		try {
-			System.out.println(String.format("\tCore Voltage %s", TCPUtils.getCoreVoltage()));
-			System.out.println(String.format("\tCPU Temp %s", TCPUtils.getCPUTemperature()));
-			System.out.println(String.format("\tCPU Load %s", TCPUtils.getCPULoad()));
+			System.out.println(String.format("\tCore Voltage %s", SystemUtils.getCoreVoltage()));
+			System.out.println(String.format("\tCPU Temp %s", SystemUtils.getCPUTemperature()));
+			System.out.println(String.format("\tCPU Load %s", SystemUtils.getCPULoad()));
 		} catch (Exception ex) {
 			throw ex;
 		}
