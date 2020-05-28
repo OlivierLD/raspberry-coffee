@@ -281,6 +281,7 @@ public class SystemUtils {
 		System.out.println(String.format("Free:      %s MB", memStatus.get(MEM_FREE)));
 		System.out.println(String.format("Available: %s MB", memStatus.get(MEM_AVAILABLE)));
 
+		System.out.println();
 		String memoryUsage = getMemoryUsage();
 		System.out.println(String.format("Usage: %s", memoryUsage));
 
