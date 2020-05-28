@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class SystemUtils {
 
@@ -94,31 +95,31 @@ public class SystemUtils {
 		}
 	}
 
-	private static String getCommandResult(String command) throws Exception {
+	private static List<String> getCommandResult(String command) throws Exception {
 		List<String> commands = Arrays.asList("/bin/bash", "-c", command);
+		List<String> result = new ArrayList<>();
 		Process p = Runtime.getRuntime().exec(commands.toArray(new String[commands.size()]));
 		p.waitFor();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		String line = "";
-		String result = "";
 		while (line != null) {
 			line = reader.readLine();
 			if (line != null) {
 //				System.out.println(line);
-				result = line;
+				result.add(line);
 			}
 		}
 		return result;
 	}
 
-	public static String getDirectoryListing() throws Exception {
+	public static List<String> getDirectoryListing() throws Exception {
 		String command = "ls -lisah";
 		return getCommandResult(command);
 	}
 
 	public static String getUname() throws Exception {
 		String command = "uname -a | awk '{print $2}'";
-		return getCommandResult(command);
+		return getCommandResult(command).get(0);
 	}
 
 	/*
@@ -126,22 +127,22 @@ public class SystemUtils {
 	 */
 	public static String getIPAddress() throws Exception {
 		String command = "hostname -I | cut -d' ' -f1";
-		return getCommandResult(command);
+		return getCommandResult(command).get(0);
 	}
 
 	public static String getCPUTemperature() throws Exception {
 		String command = "cat /sys/class/thermal/thermal_zone0/temp |  awk '{printf \"CPU Temp: %.1f C\", $(NF-0) / 1000}'";
-		return getCommandResult(command);
+		return getCommandResult(command).get(0);
 	}
 
 	public static String getCPULoad() throws Exception {
 		String command = "top -bn1 | grep load | awk '{printf \"CPU Load: %.2f%%\", $(NF-2)*100}'";
-		return getCommandResult(command);
+		return getCommandResult(command).get(0);
 	}
 
 	public static String getMemoryUsage() throws Exception {
 		String command = "free -m | awk 'NR==2{printf \"Mem: %s/%s MB %.2f%%\", $3, $2, $3*100/$2 }'";
-		return getCommandResult(command);
+		return getCommandResult(command).get(0);
 	}
 
 	public final static int MEM_TOTAL = 0;
@@ -153,16 +154,16 @@ public class SystemUtils {
 				"grep MemFree /proc/meminfo | awk '{print $2 / 1024}'",
 				"grep MemAvailable /proc/meminfo | awk '{print $2 / 1024}'"
 		};
-		return Arrays.asList(new String[] {
-				getCommandResult(commands[0]),
-				getCommandResult(commands[1]),
-				getCommandResult(commands[2])
-		});
+		return Arrays.asList(
+				getCommandResult(commands[0]).get(0),
+				getCommandResult(commands[1]).get(0),
+				getCommandResult(commands[2]).get(0)
+		);
 	}
 
 	public static String getDiskUsage() throws Exception {
 		String command = "df -h | awk '$NF==\"/\"{printf \"Disk: %d/%d GB %s\", $3, $2, $5}'";
-		return getCommandResult(command);
+		return getCommandResult(command).get(0);
 	}
 
 	// Raspberry Pi temperature, voltage
@@ -171,12 +172,12 @@ public class SystemUtils {
 
 	public static String getCPUTemperature2() throws Exception {
 		String command = "/opt/vc/bin/vcgencmd measure_temp";
-		return getCommandResult(command);
+		return getCommandResult(command).get(0);
 	}
 
 	public static String getCoreVoltage() throws Exception {
 		String command = "/opt/vc/bin/vcgencmd measure_volts core";
-		return getCommandResult(command);
+		return getCommandResult(command).get(0);
 	}
 
 	private final static Map<String, String[]> matrix = new HashMap<>();
@@ -228,7 +229,7 @@ public class SystemUtils {
 	public final static int NOTES_IDX = 4;
 	public static String[] getRPiHardwareRevision() throws Exception {
 		String command = "cat /proc/cpuinfo | grep 'Revision' | awk '{print $3}' | sed 's/^1000//'";
-		String result = getCommandResult(command);
+		String result = getCommandResult(command).get(0);
 		return matrix.get(result);
 	}
 
@@ -267,7 +268,7 @@ public class SystemUtils {
 
 		System.out.println(String.format("DiskUsage: %s", getDiskUsage()));
 		System.out.println(String.format("uname: %s", getUname()));
-		System.out.println(String.format("ls: %s", getDirectoryListing()));
+		System.out.println(String.format("ls:\n%s", getDirectoryListing().stream().collect(Collectors.joining("\n"))));
 
 		// Temperature & voltage
 		System.out.println();
