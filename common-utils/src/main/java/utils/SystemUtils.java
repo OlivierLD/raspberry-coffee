@@ -237,7 +237,7 @@ public class SystemUtils {
 
 		try {
 			String[] hardwareData = getRPiHardwareRevision();
-			System.out.println(String.format("Running on\nModel %s\nReleased %s\nPCB Rev %s\nMemory %s\nNotes %s",
+			System.out.println(String.format("Running on:\nModel: %s\nReleased: %s\nPCB Rev: %s\nMemory: %s\nNotes: %s",
 					hardwareData[MODEL_IDX],
 					hardwareData[RELEASE_IDX],
 					hardwareData[PCB_REV_IDX],
