@@ -112,6 +112,11 @@ public class SystemUtils {
 		return result;
 	}
 
+	public static List<String> getOSDetails() throws Exception {
+		String command = "hostnamectl";
+		return getCommandResult(command);
+	}
+
 	public static List<String> getDirectoryListing() throws Exception {
 		String command = "ls -lisah";
 		return getCommandResult(command);
@@ -248,6 +253,12 @@ public class SystemUtils {
 			System.out.println();
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+
+		try {
+			System.out.println(String.format("OS Details:\n%s", getOSDetails().stream().collect(Collectors.joining("\n"))));
+		} catch (Exception ex) {
+			System.err.println(ex.toString());
 		}
 
 		System.out.println("All IP Addresses:");
