@@ -112,6 +112,11 @@ public class SystemUtils {
 		return result;
 	}
 
+	public static List<String> getOSDetails() throws Exception {
+		String command = "hostnamectl";
+		return getCommandResult(command);
+	}
+
 	public static List<String> getDirectoryListing() throws Exception {
 		String command = "ls -lisah";
 		return getCommandResult(command);
@@ -171,12 +176,14 @@ public class SystemUtils {
 	// /opt/vc/bin/vcgencmd measure_volts [core | sdram_c | sdram_i | sdram_p]
 
 	public static String getCPUTemperature2() throws Exception {
-		String command = "/opt/vc/bin/vcgencmd measure_temp";
+//		String command = "/opt/vc/bin/vcgencmd measure_temp";
+		String command = "vcgencmd measure_temp";
 		return getCommandResult(command).get(0);
 	}
 
 	public static String getCoreVoltage() throws Exception {
-		String command = "/opt/vc/bin/vcgencmd measure_volts core";
+//		String command = "/opt/vc/bin/vcgencmd measure_volts core";
+		String command = "vcgencmd measure_volts core";
 		return getCommandResult(command).get(0);
 	}
 
@@ -246,6 +253,12 @@ public class SystemUtils {
 			System.out.println();
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+
+		try {
+			System.out.println(String.format("OS Details:\n%s", getOSDetails().stream().collect(Collectors.joining("\n"))));
+		} catch (Exception ex) {
+			System.err.println(ex.toString());
 		}
 
 		System.out.println("All IP Addresses:");
