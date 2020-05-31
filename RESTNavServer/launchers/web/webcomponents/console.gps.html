@@ -126,9 +126,11 @@
 			let time = document.getElementById('watch-value-01').value.split(':');
 			let date = new Date();
 			date.setUTCFullYear(year);
-			date.setUTCMonth(month - 1);
+
 			date.setUTCDate(day);
 			date.setUTCHours(time[0], time[1], time[2]);
+
+			date.setUTCMonth(month - 1);
 			let epoch = date.getTime();
 			setUTCTime(epoch); // There is also room for a callback (2nd prm).
 		}
@@ -169,24 +171,25 @@
 					let time = document.getElementById('watch-value-01').value.split(':');
 					let date = new Date();
 					date.setUTCFullYear(year);
-					date.setUTCMonth(month - 1);
 					date.setUTCDate(day);
 					date.setUTCHours(time[0], time[1], time[2]);
+					// Month after, to avoid dates like June 31 (would be Jul 1)
+					date.setUTCMonth(month - 1);
 					let epoch = date.getTime();
 
 					epoch += increment;
 					let newDate = new Date(epoch);
 
-					year = newDate.getUTCFullYear();
-					month = newDate.getUTCMonth() + 1;
-					day = newDate.getUTCDate();
+					let newYear = newDate.getUTCFullYear();
+					let newMonth = newDate.getUTCMonth() + 1;
+					let newDay = newDate.getUTCDate();
 					let hours = newDate.getUTCHours();
 					let minutes = newDate.getUTCMinutes();
 					let seconds = newDate.getUTCSeconds();
 
-					document.getElementById('calendar-year-01').value = year;
-					document.getElementById('calendar-month-01').value = (month < 10 ? '0' + month : month);
-					document.getElementById('calendar-day-01').value = day;
+					document.getElementById('calendar-year-01').value = newYear;
+					document.getElementById('calendar-month-01').value = (newMonth < 10 ? '0' + newMonth : newMonth);
+					document.getElementById('calendar-day-01').value = newDay;
 					document.getElementById('watch-value-01').value =
 							(hours < 10 ? '0' + hours : hours) + ':' +
 							(minutes < 10 ? '0' + minutes : minutes) + ':' +
@@ -784,6 +787,7 @@
 				<option value="30000">30 seconds</option>
 				<option value="60000">1 minute</option>
 				<option value="600000">10 minutes</option>
+				<option value="1800000">30 minutes</option>
 				<option value="3600000">1 hour</option>
 				<option value="21600000">6 hours</option>
 				<option value="43200000">12 hours</option>

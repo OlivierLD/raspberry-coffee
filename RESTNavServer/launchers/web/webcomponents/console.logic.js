@@ -482,15 +482,15 @@ function calculateMoonTilt(moonSunData) {
 		deltaZ -= 360;
 	}
 	let deltaElev = moonSunData[1].wpFromPos.observed.alt - moonSunData[0].wpFromPos.observed.alt;
-	alpha = Math.toDegrees(Math.atan2(deltaZ, deltaElev)); // atan2 from -Pi to Pi
-	if (deltaZ > 0) {
-		if (deltaElev > 0) { // positive angle, like 52
+	alpha = Math.toDegrees(Math.atan2(deltaElev, deltaZ)); // atan2 from -Pi to Pi
+	if (deltaElev > 0) {
+		if (deltaZ > 0) { // positive angle, like 52
 			alpha *= -1;
 		} else { // Angle > 90, like 116
 			alpha -= 90;
 		}
 	} else {
-		if (deltaElev < 0) { // negative angle, like -52
+		if (deltaZ > 0) { // negative angle, like -52
 			alpha *= -1;
 		} else { // Negative, < -90, like -116
 			alpha += 90;
