@@ -19,6 +19,7 @@ import java.util.Properties;
 /*
  * 3 Axis compass
  * TODO Q: Reuse the code of LSM303? Or use this one in the LSM303 code?
+ * TODO: Same interface for all magnetometers calibration, x, y, z offset, x, y, z coeff.
  */
 public class HMC5883L {
 	private final static int HMC5883L_ADDRESS = 0x1E;
@@ -92,6 +93,7 @@ public class HMC5883L {
 	private void publish(Map<MagValues, Double> magData) {
 		listeners.forEach(listener -> listener.onNewData(magData));
 	}
+
 	public HMC5883L() throws I2CFactory.UnsupportedBusNumberException, IOException {
 		if (verbose) {
 			System.out.println("Starting sensors reading:");
