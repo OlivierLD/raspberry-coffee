@@ -3,7 +3,7 @@
 # Actual Program, orient the panel for real.
 # ANSI Console UI.
 #
-CP=./build/libs/SunFlower.v2-1.0-all.jar
+CP=./build/libs/SunFlower-v2-1.0-all.jar
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Ddevice.lat=37.7489 -Ddevice.lng=-122.5070"
 JAVA_OPTS="$JAVA_OPTS -Dazimuth.ratio=20:40"  # V3
