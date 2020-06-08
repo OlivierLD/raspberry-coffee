@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Tooltip Styling test</title>
+	<style type="text/css">
+		a.tip {
+			border-bottom: 1px dashed;
+			text-decoration: none
+		}
+		a.tip:hover {
+			cursor: help;
+			position: relative
+		}
+		a.tip div {
+			display: none
+		}
+		a.tip:hover div {
+			border: #c0c0c0 1px dotted;
+			padding: 5px 20px 5px 5px;
+			display: block;
+			z-index: 100;
+			/*background: url(../images/status-info.png) #f0f0f0 no-repeat 100% 5%;*/
+			background: #f0f0f0;
+			left: 0px;
+			margin: 10px;
+			width: 250px;
+			position: absolute;
+			top: -10px;
+			text-decoration: none
+		}
+
+		td.tip:hover {
+			cursor: help;
+			position: relative
+		}
+		td.tip div.tt {
+			display: none
+		}
+		td.tip:hover div.tt {
+			border: #c0c0c0 1px dotted;
+			padding: 5px 20px 5px 5px;
+			display: block;
+			z-index: 100;
+			/*background: url(../images/status-info.png) #f0f0f0 no-repeat 100% 5%;*/
+			background: #f0f0f0;
+			left: 0px;
+			margin: 10px;
+			width: 250px;
+			position: absolute;
+			top: -10px;
+			text-decoration: none
+		}
+	</style>
+</head>
+<body>
+
+  <table border="1">
+	<tr>
+		<td class="tip">Line 1<div class="tt"><ul><li>This is the CSS tooltip showing</li><li>up when you mouse over the table data</li></ul></div></td>
+	</tr>
+		<tr></div>
+			<td class="tip">Line 2<div class="tt"><ul><li>This is the CSS tooltip showing</li><li>up when you mouse over the 2nd table data</li></ul></div></td>
+		</tr>
+	</table>
+
+	<a href="#" class="tip">Link:<div><ul><li>This is the CSS tooltip showing</li><li>up when you mouse over the link</li></ul></div></a>
+
+</body>
+</html>

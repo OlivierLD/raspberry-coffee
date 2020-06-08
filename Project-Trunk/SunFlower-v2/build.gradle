@@ -1,9 +1,12 @@
 plugins {
   id 'java'
-//id 'scala'
   id 'maven'
   id 'idea'
   id 'com.github.johnrengelman.shadow' // version '4.0.2'
+}
+
+shadowJar {
+  zip64 true
 }
 
 group = 'oliv.raspi.coffee'
@@ -21,10 +24,7 @@ dependencies {
 //  compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT' // -SNAPSHOT'
   compile 'com.google.code.gson:gson:2.8.0'
   compile 'org.fusesource.jansi:jansi:1.11'
-  compile project(':I2C-SPI')               // For the Motor Hat
   compile project(':http-tiny-server')
+  compile project(':I2C-SPI')                 // For the Motor Hat
 }
 
-shadowJar {
-  zip64 true
-}
