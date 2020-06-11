@@ -26,6 +26,7 @@ public class ConsoleMain {
 	 * min.diff.for.move like 0.5 (default)
 	 * azimuth.inverted, default false.
 	 * elevation.inverted, default false
+	 * first.move.slack, default 30
 	 *
 	 * date.simulation (default false)
 	 * start.date.simulation, to provide if date.simulation=true, like "2020-06-08T15:00:00"

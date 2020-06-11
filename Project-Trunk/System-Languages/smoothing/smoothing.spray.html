@@ -4,7 +4,7 @@
  +-->
 <html>
   <head>
-    <title>Smoothing ...</title>
+    <title>Smoothing, Linear Regression</title>
     <script type="text/javascript" src="js/Graph.js"></script>
     <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
     <style>
@@ -26,7 +26,7 @@
         --with-bg-gradient: false;
         --bg-gradient-from: rgba(0,0,0,0);
         --bg-gradient-to: cyan;
-        --bg-color: white; /* used if --with-bg-gradient: false */
+        --bg-color: rgb(250, 250, 210); /* used if --with-bg-gradient: false */
         --horizontal-grid-color: gray;
         --horizontal-grid-text-color: black;
         --vertical-grid-color: gray;
@@ -66,75 +66,78 @@
     <script type="text/javascript" src="js/matrix.js"></script>
     <script type="text/javascript">
 
-        var dataGraph; // The graph itself.
-        var graphData = [];
-//      var GRAPH_MAX_LEN = 300; // 60 = 1 minute
+        let dataGraph; // The graph itself.
+        let graphData = [];
+//      let GRAPH_MAX_LEN = 300; // 60 = 1 minute
 
-        window.onload = function() {
+        window.onload = () => {
           dataGraph = new Graph("dataCanvas", graphData, null, null);
           dataGraph.setSprayPoints(true);
           dataGraph.setBoundaries(-10, 10, -10, 10);
           dataGraph.drawPoints("dataCanvas", graphData);
         };
 
-        var goDrawing = function() {
-                var degreeStr = document.getElementById("degree").value;
-                if (degreeStr.trim().length === 0) {
-                   alert("Please provide the degree of the polynomial to find (as a positive integer)");
-                } else {
-                    try {
-                        var degree = parseInt(degreeStr);
-                        if (degree < 1) {
-                            alert("Degree must be a positive integer");
+        function goDrawing() {
+          let degreeStr = document.getElementById("degree").value;
+          if (degreeStr.trim().length === 0) {
+            alert("Please provide the degree of the polynomial to find (as a positive integer)");
+          } else {
+            try {
+              let degree = parseInt(degreeStr);
+              if (degree < 1) {
+                alert("Degree must be a positive integer");
 
-                        } else {
-                            var graphData = dataGraph.getData();
-                            var coeffData = leastSquares(degree, graphData);
-                            dataGraph.drawPoints("dataCanvas", graphData, coeffData);
-                        }
-                    } catch (err) {
-                        alert(err);
-                    }
-                }
-        };
+              } else {
+                let graphData = dataGraph.getData();
+                let coeffData = leastSquares(degree, graphData);
+                dataGraph.drawPoints("dataCanvas", graphData, coeffData);
+              }
+            } catch (err) {
+              alert(err);
+            }
+          }
+        }
 
-        var zoomIn = function() {
+        function zoomIn() {
           let minX, maxX, minY, maxY;
           [minX, maxX, minY, maxY] = dataGraph.getBoundaries();
           dataGraph.setBoundaries(minX * 0.75, maxX * 0.75, minY * 0.75, maxY * 0.75);
           dataGraph.drawPoints("dataCanvas", graphData);
-        };
-        var zoomOut = function() {
+        }
+
+        function zoomOut() {
           let minX, maxX, minY, maxY;
           [minX, maxX, minY, maxY] = dataGraph.getBoundaries();
           dataGraph.setBoundaries(minX / 0.75, maxX / 0.75, minY / 0.75, maxY / 0.75);
           dataGraph.drawPoints("dataCanvas", graphData);
-        };
+        }
 
-        var setSpray = function(cb) {
-            dataGraph.setSprayPoints(cb.checked);
-        };
+        function setSpray(cb) {
+          dataGraph.setSprayPoints(cb.checked);
+        }
 
-        var setTooltip = function(cb) {
-            dataGraph.setTooltip(cb.checked);
-        };
+        function setTooltip(cb) {
+          dataGraph.setTooltip(cb.checked);
+        }
 
     </script>
   </head>
   <body>
     <table width="100%" border="1">
       <tr>
-        <td colspan="2">
-          <h2>Polynomial Smoothing</h2>
+        <td colspan="1">
+          <h2>Polynomial Smoothing, Linear Regression</h2>
+        </td>
+        <td>
           Standalone. Does not require a server to be running. Can be used as a static page.
         </td>
       </tr>
       <tr>
         <td valign="top" align="left" valign="top" colspan="2">
-          Required Degree : <input id="degree" type="number" style="text-align: right; width: 40px;" placeholder="Degree" size="3" value="3">
-          <br>
+          Required Degree : <input id="degree" type="number" style="text-align: right; width: 40px;" min="1" placeholder="Degree" size="3" value="3">
+          <br/>
           <input type="checkbox" id="with-spray" onchange="setSpray(this);" checked>Spray points
-          <!--br>
+          <!--br/>
           <input type="checkbox" id="with-tooltip" onchange="setTooltip(this);">With tooltip -->
         </td>
       </tr>

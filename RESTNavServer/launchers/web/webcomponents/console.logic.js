@@ -487,13 +487,17 @@ function calculateMoonTilt(moonSunData) {
 		if (deltaZ > 0) { // positive angle, like 52
 			alpha *= -1;
 		} else { // Angle > 90, like 116
-			alpha -= 90;
+			if (alpha < 90) {
+				alpha -= 90;
+			} else {
+				alpha = 180 - alpha;
+			}
 		}
 	} else {
 		if (deltaZ > 0) { // negative angle, like -52
 			alpha *= -1;
 		} else { // Negative, < -90, like -116
-			alpha += 90;
+			alpha += 90; // TODO Tweak that like above too
 		}
 	}
 	return alpha;
