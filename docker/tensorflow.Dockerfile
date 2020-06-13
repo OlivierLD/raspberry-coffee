@@ -12,6 +12,8 @@ FROM debian:buster
 # Demoes Python and TensorFlow.
 # With VNC, and jupyter
 #
+# Updated June 2020
+#
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 #
 # Uncomment if running behind a firewall (also set the proxies at the Docker level to the values below)
@@ -37,12 +39,14 @@ RUN apt-get install -y chromium
 RUN echo "deb http://qgis.org/debian jessie main" >> /etc/apt/sources.list
 #
 RUN apt-get install -y python-pip python-dev
-RUN apt-get install -y python3-pip python3-dev
+RUN apt-get install -y python3-pip python3-dev python3-venv
 #
-RUN pip3 install tensorflow-gpu
-RUN pip3 install tensorflow
+# RUN pip3 install tensorflow-gpu
+# RUN pip3 install tensorflow
+RUN pip3 install tensorflow==2.0.0b1
 #
-RUN pip3 install tensorflowjs
+# Uncomment if a suitable version exists...
+# RUN pip3 install tensorflowjs
 #
 RUN pip3 install pandas numpy scipy scikit-learn
 #
@@ -67,8 +71,9 @@ EXPOSE 8888
 # RUN pip install keras
 #
 # Install PyCharm community edition. Comment the 2 following lines if not needed.
-RUN wget --quiet https://download.jetbrains.com/python/pycharm-community-2018.2.4.tar.gz
-RUN tar xfz pycharm-community-2018.2.4.tar.gz -C /opt/
+# RUN wget --quiet https://download.jetbrains.com/python/pycharm-community-2018.2.4.tar.gz
+RUN wget --quiet https://download.jetbrains.com/python/pycharm-community-2020.1.2.tar.gz -O pycharm.tar.gz
+RUN tar xzf pycharm.tar.gz -C /opt/
 # On Ubuntu, use ~/.bash_aliases, on Debian, use ~/.bashrc
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 #
@@ -88,10 +93,10 @@ RUN echo "echo 'To start VNCserver, type: vncserver :1 -geometry 1280x800 -depth
 RUN echo "echo '                       or vncserver :1 -geometry 1440x900 -depth 24'" >> $HOME/.bashrc
 RUN echo "echo '                       or vncserver :1 -geometry 1680x1050 -depth 24 , ...etc.'" >> $HOME/.bashrc
 RUN echo "echo '---------------------------------------------------------------------'" >> $HOME/.bashrc
-RUN echo "echo 'To start Jupyter, type: jupyter notebook --allow-root --ip 0.0.0.0 --no-browser'" >> $HOME/.bashrc
+RUN echo "echo 'To start Jupyter, type: jupyter-notebook --allow-root --ip 0.0.0.0 --no-browser'" >> $HOME/.bashrc
 RUN echo "echo '  - Default port 8888 is exposed, you can use from the host http://localhost:8888/?token=6c95d878c045212bxxxxxx'" >> $HOME/.bashrc
 RUN echo "echo '---------------------------------------------------------------------'" >> $HOME/.bashrc
-RUN echo "echo 'To run PyCharm: cd /opt/pycharm-community-2018.2.4/bin and run ./pycharm.sh'"  >> $HOME/.bashrc
+RUN echo "echo 'To run PyCharm: cd /opt/pycharm-community-20.../bin and run ./pycharm.sh'"  >> $HOME/.bashrc
 RUN echo "echo '---------------------------------------------------------------------'" >> $HOME/.bashrc
 RUN echo "echo '>> Warning: To run Chrome: $ chromium --no-sandbox '"  >> $HOME/.bashrc
 RUN echo "echo '---------------------------------------------------------------------'" >> $HOME/.bashrc
@@ -119,9 +124,9 @@ COPY ./tensorflow ./examples/oliv
 #
 #
 WORKDIR /root/workdir
-RUN git clone https://github.com/OlivierLD/raspberry-coffee.git
+RUN git clone https://github.com/OlivierLD/oliv-ai.git
 #
-WORKDIR /root/workdir/raspberry-coffee/JupyterNotebooks/deep.learning.crash.course
+WORKDIR /root/workdir/oliv-ai/JupyterNotebooks/deep.learning.crash.course
 #
 ENV http_proxy ""
 ENV https_proxy ""
