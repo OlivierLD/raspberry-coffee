@@ -22,7 +22,7 @@ The goal of this project is to _**automatically**_ orient a solar panel so it fa
 - Some code to look at is in [this folder](../SteppersPlayground), to play with the different options
 of the stepper motors...
 
-> Note: The position of the Sun is _**not** observed_ (from a photocell or any sensor), it is _calculated_, from the 
+> Note: The position of the Sun is _**not** observed_ (from a photocell or any such sensor), it is _calculated_, from the 
 > current position and time. See the `AstroComputer` class for details.
 > As a result, even with an overcast sky, the device _will_ still face the Sun, and _yes_, it **does** make a difference.  
 
