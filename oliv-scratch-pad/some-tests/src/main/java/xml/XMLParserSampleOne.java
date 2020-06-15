@@ -12,10 +12,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 
-public class parsingSampleOne {
+public class XMLParserSampleOne {
+	// Generate an XML Doc from scratch, and transform it into HTL, using XSL
 
-	private static String title = "This is the Title";
-	private static String provider = "Provider";
+	private static String title = "De l'ile d'Ouessant a la Pointe de Penmarc'h";
+	private static String provider = "SHOM";
 	private static Integer chartNo = 5316;
 	private static Integer year = 1976;
 
@@ -40,7 +41,6 @@ public class parsingSampleOne {
 	}
 
 	public static void main(String... args) {
-		// Generate an XML Doc from scratch, and transform it into html
 		XMLDocument doc = new XMLDocument();
 		XMLElement root = (XMLElement) doc.createElement("selection-root");
 		doc.appendChild(root);
@@ -60,7 +60,7 @@ public class parsingSampleOne {
 
 		try {
 			// in HTML
-			URL xslURL = new File("charthtml.xsl").toURI().toURL();
+			URL xslURL = new File("xml" + File.separator + "charthtml.xsl").toURI().toURL();
 			//  System.out.println("Transforming using " + xslURL.toString());
 			DOMParser parser = new DOMParser();
 			parser.parse(xslURL);
@@ -75,11 +75,11 @@ public class parsingSampleOne {
 			processor.setErrorStream(System.err);
 
 			// Process XSL
-			PrintWriter pw = new PrintWriter(new File("selection.html"));
+			PrintWriter pw = new PrintWriter(new File("xml" + File.separator + "selection.html"));
 			//  processor.setParam("xmlnx:url", "prm1", "value1");
 			processor.processXSL(xslss, doc, pw);
 			pw.close();
-			openInBrowser("selection.html");
+			openInBrowser("xml" + File.separator + "selection.html");
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

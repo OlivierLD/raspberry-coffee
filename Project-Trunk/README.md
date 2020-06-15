@@ -1,6 +1,6 @@
 ## Project Trunk
 #### a.k.a. "la caisse &agrave; glingues". <!-- 🔧. -->
-> _Tags_: Mad Scientist, SteamPunk, James Bond villain, etc...
+> _Tags_: Mad Scientist, SteamPunk, Evil Genius, James Bond villain, etc...
 
 ![ToolBox](./toolbox-icon-30.png)
 ---

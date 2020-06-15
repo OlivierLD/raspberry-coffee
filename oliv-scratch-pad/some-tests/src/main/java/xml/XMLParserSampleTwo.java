@@ -13,17 +13,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 
-public class parsingSampleTwo {
+public class XMLParserSampleTwo {
 
 	// XML to JSON using XSLT
 	public static void main(String... args) {
 		try {
 			XMLDocument doc;
 			DOMParser parser = new DOMParser();
-			parser.parse(new FileReader("sampledata.xml"));
+			parser.parse(new FileReader("xml" + File.separator + "sampledata.xml"));
 			doc = parser.getDocument();
 
-			URL xslURL = new File("xmltojson.xsl").toURI().toURL();
+			URL xslURL = new File("xml" + File.separator + "xmltojson.xsl").toURI().toURL();
 			parser.parse(xslURL);
 			XMLDocument xsldoc = parser.getDocument();
 			// instantiate a stylesheet
