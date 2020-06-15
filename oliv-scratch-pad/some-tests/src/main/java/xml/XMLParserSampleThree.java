@@ -41,7 +41,6 @@ public class XMLParserSampleThree {
 		}
 	}
 
-
 	public static int generate(String fName) {
 		return generate(fName,
 				null,
@@ -139,7 +138,7 @@ public class XMLParserSampleThree {
 					if (childs != null) {
 						for (int j = 0; j < childs.getLength(); j++) {
 							Node kid = childs.item(j);
-							if (kid.getNodeType() == 1) {
+							if (kid.getNodeType() == Node.ELEMENT_NODE) {
 								z = Double.parseDouble(kid.getFirstChild().getNodeValue());
 							}
 						}
@@ -161,31 +160,30 @@ public class XMLParserSampleThree {
 			if (nl != null) {
 				for (int i = 0; i < nl.getLength(); i++) {
 					NodeList pl = ((Element) nl.item(i)).getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "plot");
-					if (pl == null) {
-						continue;
-					}
-					for (int j = 0; j < pl.getLength(); j++) {
-						Node node = pl.item(j);
-						double x = Double.parseDouble(((Element) node).getAttribute("x"));
-						NodeList childs = node.getChildNodes();
-						double z = 0.0D;
-						if (childs != null) {
-							for (int k = 0; k < childs.getLength(); k++) {
-								Node kid = childs.item(k);
-								if (kid.getNodeType() == 1) {
-									z = Double.parseDouble(kid.getFirstChild().getNodeValue());
-									nbElements++;
+					if (pl != null) {
+						for (int j = 0; j < pl.getLength(); j++) {
+							Node node = pl.item(j);
+							double x = Double.parseDouble(((Element) node).getAttribute("x"));
+							NodeList childs = node.getChildNodes();
+							double z = 0.0D;
+							if (childs != null) {
+								for (int k = 0; k < childs.getLength(); k++) {
+									Node kid = childs.item(k);
+									if (kid.getNodeType() == Node.ELEMENT_NODE) {
+										z = Double.parseDouble(kid.getFirstChild().getNodeValue());
+										nbElements++;
+									}
 								}
 							}
+							fw.write("v " + (x * affX + addX) + " " + addY + " " + (z * affZ + addZ) + "\n");
 						}
-						fw.write("v " + (x * affX + addX) + " " + addY + " " + (z * affZ + addZ) + "\n");
-					}
 
-					for (int j = 0; j < nbElements - 1; j++) {
-						fw.write("f " + ++startFrom + " " + (startFrom + 1) + "\n");
-					}
-					if (nbElements > 0) {
-						startFrom++;
+						for (int j = 0; j < nbElements - 1; j++) {
+							fw.write("f " + ++startFrom + " " + (startFrom + 1) + "\n");
+						}
+						if (nbElements > 0) {
+							startFrom++;
+						}
 					}
 				}
 			}
@@ -195,7 +193,7 @@ public class XMLParserSampleThree {
 				fw.write("# Sheer One\n");
 				for (int i = 0; i < nl.getLength(); i++) {
 					Node node = nl.item(i);
-					if (node.getNodeType() == 1 && node.getNodeName() == "plot") {
+					if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName() == "plot") {
 						double x = Double.parseDouble(((Element) node).getAttribute("x"));
 						double y = Double.parseDouble(((Element) node).getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "y").item(0).getFirstChild().getNodeValue());
 						double z = Double.parseDouble(((Element) node).getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "z").item(0).getFirstChild().getNodeValue());
@@ -214,7 +212,7 @@ public class XMLParserSampleThree {
 				nbElements = 0;
 				for (int i = 0; i < nl.getLength(); i++) {
 					Node node = nl.item(i);
-					if (node.getNodeType() == 1 && node.getNodeName() == "plot") {
+					if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName() == "plot") {
 						double x = Double.parseDouble(((Element) node).getAttribute("x"));
 						double y = Double.parseDouble(((Element) node).getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "y").item(0).getFirstChild().getNodeValue());
 						double z = Double.parseDouble(((Element) node).getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "z").item(0).getFirstChild().getNodeValue());
@@ -240,45 +238,43 @@ public class XMLParserSampleThree {
 					NodeList plots = node.getChildNodes();
 					nbElements = 0;
 					for (int j = 0; j < plots.getLength(); j++) {
-						if (plots.item(j).getNodeType() != 1) {
-							continue;
-						}
-						NodeList yz = plots.item(j).getChildNodes();
-						double y = Double.MIN_VALUE;
-						double z = Double.MIN_VALUE;
-						label0:
-						for (int k = 0; k < yz.getLength(); k++) {
-							if (yz.item(k).getNodeType() != 1) {
-								continue;
-							}
-							NodeList yzKids;
-							if (yz.item(k).getNodeName().equals("y")) {
-								yzKids = yz.item(k).getChildNodes();
-								int l = 0;
-								do {
-									if (l >= yzKids.getLength()) {
-										continue label0;
+						if (plots.item(j).getNodeType() == Node.ELEMENT_NODE) {
+							NodeList yz = plots.item(j).getChildNodes();
+							double y = Double.MIN_VALUE;
+							double z = Double.MIN_VALUE;
+							for (int k = 0; k < yz.getLength(); k++) {
+								if (yz.item(k).getNodeType() == Node.ELEMENT_NODE) {
+									NodeList yzKids;
+									if (yz.item(k).getNodeName().equals("y")) {
+										yzKids = yz.item(k).getChildNodes();
+										int l = 0;
+										boolean keepGoing = true;
+										do {
+											if (l >= yzKids.getLength()) {
+												keepGoing = false;
+											} else {
+												if (yzKids.item(l).getNodeType() == Node.TEXT_NODE) {
+													y = Double.parseDouble(yzKids.item(l).getNodeValue());
+												}
+												l++;
+											}
+										} while (keepGoing);
 									}
-									if (yzKids.item(l).getNodeType() == 3) {
-										y = Double.parseDouble(yzKids.item(l).getNodeValue());
+									if (!yz.item(k).getNodeName().equals("z")) {
+										yzKids = yz.item(k).getChildNodes();
+										for (int l = 0; l < yzKids.getLength(); l++) {
+											if (yzKids.item(l).getNodeType() == Node.TEXT_NODE) {
+												z = Double.parseDouble(yzKids.item(l).getNodeValue());
+											}
+										}
 									}
-									l++;
-								} while (true);
-							}
-							if (!yz.item(k).getNodeName().equals("z")) {
-								continue;
-							}
-							yzKids = yz.item(k).getChildNodes();
-							for (int l = 0; l < yzKids.getLength(); l++) {
-								if (yzKids.item(l).getNodeType() == 3) {
-									z = Double.parseDouble(yzKids.item(l).getNodeValue());
 								}
 							}
-						}
 
-						if (y != Double.MIN_VALUE && z != Double.MIN_VALUE) {
-							fw.write("v " + (x * affX + addX) + " " + (y * affY + addY) + " " + (z * affZ + addZ) + "\n");
-							nbElements++;
+							if (y != Double.MIN_VALUE && z != Double.MIN_VALUE) {
+								fw.write("v " + (x * affX + addX) + " " + (y * affY + addY) + " " + (z * affZ + addZ) + "\n");
+								nbElements++;
+							}
 						}
 					}
 
@@ -293,32 +289,31 @@ public class XMLParserSampleThree {
 						NodeList yz = plots.item(j).getChildNodes();
 						double y = Double.MIN_VALUE;
 						double z = Double.MIN_VALUE;
-						label1:
 						for (int k = 0; k < yz.getLength(); k++) {
-							if (yz.item(k).getNodeType() != 1) {
-								continue;
-							}
-							NodeList yzKids;
-							if (yz.item(k).getNodeName().equals("y")) {
-								yzKids = yz.item(k).getChildNodes();
-								int l = 0;
-								do {
-									if (l >= yzKids.getLength()) {
-										continue label1;
+							if (yz.item(k).getNodeType() == Node.ELEMENT_NODE) {
+								NodeList yzKids;
+								if (yz.item(k).getNodeName().equals("y")) {
+									yzKids = yz.item(k).getChildNodes();
+									int l = 0;
+									boolean keepGoing = true;
+									do {
+										if (l >= yzKids.getLength()) {
+											keepGoing = false;
+										} else {
+											if (yzKids.item(l).getNodeType() == Node.TEXT_NODE) {
+												y = Double.parseDouble(yzKids.item(l).getNodeValue());
+											}
+											l++;
+										}
+									} while (keepGoing);
+								}
+								if (yz.item(k).getNodeName().equals("z")) {
+									yzKids = yz.item(k).getChildNodes();
+									for (int l = 0; l < yzKids.getLength(); l++) {
+										if (yzKids.item(l).getNodeType() == Node.TEXT_NODE) {
+											z = Double.parseDouble(yzKids.item(l).getNodeValue());
+										}
 									}
-									if (yzKids.item(l).getNodeType() == 3) {
-										y = Double.parseDouble(yzKids.item(l).getNodeValue());
-									}
-									l++;
-								} while (true);
-							}
-							if (!yz.item(k).getNodeName().equals("z")) {
-								continue;
-							}
-							yzKids = yz.item(k).getChildNodes();
-							for (int l = 0; l < yzKids.getLength(); l++) {
-								if (yzKids.item(l).getNodeType() == 3) {
-									z = Double.parseDouble(yzKids.item(l).getNodeValue());
 								}
 							}
 						}
@@ -341,105 +336,102 @@ public class XMLParserSampleThree {
 			if (nl != null) {
 				for (int i = 0; i < nl.getLength(); i++) {
 					Node node = nl.item(i);
-					if (node.getNodeType() != 1 || !node.getNodeName().equals("wl")) {
-						continue;
-					}
-					double z = Double.parseDouble(((Element) node).getAttribute("z"));
-					fw.write("# WaterLine " + (addZ + z) + "\n");
-					NodeList plots = node.getChildNodes();
-					nbElements = 0;
-					for (int j = 0; j < plots.getLength(); j++) {
-						NodeList xy = plots.item(j).getChildNodes();
-						double x = Double.MIN_VALUE;
-						double y = Double.MIN_VALUE;
-						label2:
-						for (int k = 0; k < xy.getLength(); k++) {
-							if (xy.item(k).getNodeType() != 1) {
-								continue;
-							}
-							NodeList xyKids;
-							if (xy.item(k).getNodeName().equals("x")) {
-								xyKids = xy.item(k).getChildNodes();
-								int l = 0;
-								do {
-									if (l >= xyKids.getLength()) {
-										continue label2;
+					if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("wl")) {
+						double z = Double.parseDouble(((Element) node).getAttribute("z"));
+						fw.write("# WaterLine " + (addZ + z) + "\n");
+						NodeList plots = node.getChildNodes();
+						nbElements = 0;
+						for (int j = 0; j < plots.getLength(); j++) {
+							NodeList xy = plots.item(j).getChildNodes();
+							double x = Double.MIN_VALUE;
+							double y = Double.MIN_VALUE;
+							for (int k = 0; k < xy.getLength(); k++) {
+								if (xy.item(k).getNodeType() == Node.ELEMENT_NODE) {
+									NodeList xyKids;
+									if (xy.item(k).getNodeName().equals("x")) {
+										xyKids = xy.item(k).getChildNodes();
+										int l = 0;
+										boolean keepGoing = true;
+										do {
+											if (l >= xyKids.getLength()) {
+												keepGoing = false;
+											} else {
+												if (xyKids.item(l).getNodeType() == Node.TEXT_NODE) {
+													x = Double.parseDouble(xyKids.item(l).getNodeValue());
+												}
+												l++;
+											}
+										} while (keepGoing);
 									}
-									if (xyKids.item(l).getNodeType() == 3) {
-										x = Double.parseDouble(xyKids.item(l).getNodeValue());
+									if (xy.item(k).getNodeName().equals("y")) {
+										xyKids = xy.item(k).getChildNodes();
+										for (int l = 0; l < xyKids.getLength(); l++) {
+											if (xyKids.item(l).getNodeType() == Node.TEXT_NODE) {
+												y = Double.parseDouble(xyKids.item(l).getNodeValue());
+											}
+										}
 									}
-									l++;
-								} while (true);
-							}
-							if (!xy.item(k).getNodeName().equals("y")) {
-								continue;
-							}
-							xyKids = xy.item(k).getChildNodes();
-							for (int l = 0; l < xyKids.getLength(); l++) {
-								if (xyKids.item(l).getNodeType() == 3) {
-									y = Double.parseDouble(xyKids.item(l).getNodeValue());
 								}
 							}
+
+							if (x != Double.MIN_VALUE && y != Double.MIN_VALUE) {
+								fw.write("v " + (x * affX + addX) + " " + (y * affY + addY) + " " + (z * affZ + addZ) + "\n");
+								nbElements++;
+							}
 						}
 
-						if (x != Double.MIN_VALUE && y != Double.MIN_VALUE) {
-							fw.write("v " + (x * affX + addX) + " " + (y * affY + addY) + " " + (z * affZ + addZ) + "\n");
-							nbElements++;
+						for (int j = 0; j < nbElements - 1; j++) {
+							fw.write("f " + ++startFrom + " " + (startFrom + 1) + "\n");
 						}
-					}
-
-					for (int j = 0; j < nbElements - 1; j++) {
-						fw.write("f " + ++startFrom + " " + (startFrom + 1) + "\n");
-					}
-					if (nbElements > 0) {
-						startFrom++;
-					}
-					nbElements = 0;
-					for (int j = 0; j < plots.getLength(); j++) {
-						NodeList xy = plots.item(j).getChildNodes();
-						double x = Double.MIN_VALUE;
-						double y = Double.MIN_VALUE;
-						label3:
-						for (int k = 0; k < xy.getLength(); k++) {
-							if (xy.item(k).getNodeType() != 1) {
-								continue;
-							}
-							NodeList xyKids;
-							if (xy.item(k).getNodeName().equals("x")) {
-								xyKids = xy.item(k).getChildNodes();
-								int l = 0;
-								do {
-									if (l >= xyKids.getLength()) {
-										continue label3;
+						if (nbElements > 0) {
+							startFrom++;
+						}
+						nbElements = 0;
+						for (int j = 0; j < plots.getLength(); j++) {
+							NodeList xy = plots.item(j).getChildNodes();
+							double x = Double.MIN_VALUE;
+							double y = Double.MIN_VALUE;
+							for (int k = 0; k < xy.getLength(); k++) {
+								if (xy.item(k).getNodeType() == Node.ELEMENT_NODE) {
+									NodeList xyKids;
+									if (xy.item(k).getNodeName().equals("x")) {
+										xyKids = xy.item(k).getChildNodes();
+										int l = 0;
+										boolean keepGoing = true;
+										do {
+											if (l >= xyKids.getLength()) {
+												keepGoing = false;
+											} else {
+												if (xyKids.item(l).getNodeType() == Node.TEXT_NODE) {
+													x = Double.parseDouble(xyKids.item(l).getNodeValue());
+												}
+												l++;
+											}
+										} while (keepGoing);
 									}
-									if (xyKids.item(l).getNodeType() == 3) {
-										x = Double.parseDouble(xyKids.item(l).getNodeValue());
+									if (xy.item(k).getNodeName().equals("y")) {
+										xyKids = xy.item(k).getChildNodes();
+										for (int l = 0; l < xyKids.getLength(); l++) {
+											if (xyKids.item(l).getNodeType() == Node.TEXT_NODE) {
+												y = Double.parseDouble(xyKids.item(l).getNodeValue());
+											}
+										}
 									}
-									l++;
-								} while (true);
-							}
-							if (!xy.item(k).getNodeName().equals("y")) {
-								continue;
-							}
-							xyKids = xy.item(k).getChildNodes();
-							for (int l = 0; l < xyKids.getLength(); l++) {
-								if (xyKids.item(l).getNodeType() == 3) {
-									y = Double.parseDouble(xyKids.item(l).getNodeValue());
 								}
 							}
+
+							if (x != Double.MIN_VALUE && y != Double.MIN_VALUE) {
+								fw.write("v " + (x * affX + addX) + " " + (addY - y * affY) + " " + (addZ + z * affZ) + "\n");
+								nbElements++;
+							}
 						}
 
-						if (x != Double.MIN_VALUE && y != Double.MIN_VALUE) {
-							fw.write("v " + (x * affX + addX) + " " + (addY - y * affY) + " " + (addZ + z * affZ) + "\n");
-							nbElements++;
+						for (int j = 0; j < nbElements - 1; j++) {
+							fw.write("f " + ++startFrom + " " + (startFrom + 1) + "\n");
 						}
-					}
-
-					for (int j = 0; j < nbElements - 1; j++) {
-						fw.write("f " + ++startFrom + " " + (startFrom + 1) + "\n");
-					}
-					if (nbElements > 0) {
-						startFrom++;
+						if (nbElements > 0) {
+							startFrom++;
+						}
 					}
 				}
 			}
@@ -452,128 +444,126 @@ public class XMLParserSampleThree {
 					fw.write("# Buttock " + (addY + y) + "\n");
 					NodeList parts = node.getChildNodes();
 					for (int j = 0; j < parts.getLength(); j++) {
-						if (parts.item(j).getNodeType() != 1) {
-							continue;
-						}
-						nbElements = 0;
-						NodeList plots = parts.item(j).getChildNodes();
-						for (int k = 0; k < plots.getLength(); k++) {
-							if (plots.item(k).getNodeType() != 1) {
-								continue;
-							}
-							NodeList xz = plots.item(k).getChildNodes();
-							double x = 0.0D;
-							double z = 0.0D;
-							label4:
-							for (int l = 0; l < xz.getLength(); l++) {
-								if (xz.item(l).getNodeType() != 1) {
-									continue;
-								}
-								NodeList lastOne;
-								int m;
-								if (xz.item(l).getNodeName().equals("x")) {
-									lastOne = xz.item(l).getChildNodes();
-									m = 0;
-									do {
-										if (m >= lastOne.getLength())
-											continue label4;
-										if (lastOne.item(m).getNodeType() == 3) {
-											x = Double.parseDouble(lastOne.item(m).getNodeValue());
-											continue label4;
+						if (parts.item(j).getNodeType() == Node.ELEMENT_NODE) {
+							nbElements = 0;
+							NodeList plots = parts.item(j).getChildNodes();
+							for (int k = 0; k < plots.getLength(); k++) {
+								if (plots.item(k).getNodeType() == Node.ELEMENT_NODE) {
+									NodeList xz = plots.item(k).getChildNodes();
+									double x = 0.0D;
+									double z = 0.0D;
+									for (int l = 0; l < xz.getLength(); l++) {
+										if (xz.item(l).getNodeType() == Node.ELEMENT_NODE) {
+											NodeList lastOne;
+											int m;
+											if (xz.item(l).getNodeName().equals("x")) {
+												lastOne = xz.item(l).getChildNodes();
+												m = 0;
+												boolean keepGoing = true;
+												do {
+													if (m >= lastOne.getLength()) {
+														keepGoing = false;
+													} else {
+														if (lastOne.item(m).getNodeType() == Node.TEXT_NODE) {
+															x = Double.parseDouble(lastOne.item(m).getNodeValue());
+															keepGoing = false;
+														}
+														m++;
+													}
+												} while (keepGoing);
+											}
+											if (xz.item(l).getNodeName().equals("z")) {
+												lastOne = xz.item(l).getChildNodes();
+												m = 0;
+												boolean keepGoing = true;
+												do {
+													if (m >= lastOne.getLength()) {
+														keepGoing = false;
+													} else {
+														if (lastOne.item(m).getNodeType() == Node.TEXT_NODE) {
+															z = Double.parseDouble(lastOne.item(m).getNodeValue());
+															keepGoing = false;
+														}
+													}
+													m++;
+												} while (keepGoing);
+											}
 										}
-										m++;
-									} while (true);
-								}
-								if (!xz.item(l).getNodeName().equals("z")) {
-									continue;
-								}
-								lastOne = xz.item(l).getChildNodes();
-								m = 0;
-								do {
-									if (m >= lastOne.getLength()) {
-										continue label4;
 									}
-									if (lastOne.item(m).getNodeType() == 3) {
-										z = Double.parseDouble(lastOne.item(m).getNodeValue());
-										continue label4;
-									}
-									m++;
-								} while (true);
+
+									fw.write("v " + (addX + x * affX) + " " + (addY + y * affY) + " " + (addZ + z * affZ) + "\n");
+									nbElements++;
+								}
 							}
 
-							fw.write("v " + (addX + x * affX) + " " + (addY + y * affY) + " " + (addZ + z * affZ) + "\n");
-							nbElements++;
-						}
-
-						for (int k = 0; k < nbElements - 1; k++) {
-							fw.write("f " + ++startFrom + " " + (startFrom + 1) + "\n");
-						}
-						if (nbElements > 0) {
-							startFrom++;
+							for (int k = 0; k < nbElements - 1; k++) {
+								fw.write("f " + ++startFrom + " " + (startFrom + 1) + "\n");
+							}
+							if (nbElements > 0) {
+								startFrom++;
+							}
 						}
 					}
 
 					nbElements = 0;
 					for (int j = 0; j < parts.getLength(); j++) {
-						if (parts.item(j).getNodeType() != 1) {
-							continue;
-						}
-						nbElements = 0;
-						NodeList plots = parts.item(j).getChildNodes();
-						for (int k = 0; k < plots.getLength(); k++) {
-							if (plots.item(k).getNodeType() != 1) {
-								continue;
-							}
-							NodeList xz = plots.item(k).getChildNodes();
-							double x = 0.0D;
-							double z = 0.0D;
-							label5:
-							for (int l = 0; l < xz.getLength(); l++) {
-								if (xz.item(l).getNodeType() != 1) {
-									continue;
-								}
-								NodeList lastOne;
-								int m;
-								if (xz.item(l).getNodeName().equals("x")) {
-									lastOne = xz.item(l).getChildNodes();
-									m = 0;
-									do {
-										if (m >= lastOne.getLength()) {
-											continue label5;
+						if (parts.item(j).getNodeType() == Node.ELEMENT_NODE) {
+							nbElements = 0;
+							NodeList plots = parts.item(j).getChildNodes();
+							for (int k = 0; k < plots.getLength(); k++) {
+								if (plots.item(k).getNodeType() == Node.ELEMENT_NODE) {
+									NodeList xz = plots.item(k).getChildNodes();
+									double x = 0.0D;
+									double z = 0.0D;
+									for (int l = 0; l < xz.getLength(); l++) {
+										if (xz.item(l).getNodeType() == Node.ELEMENT_NODE) {
+											NodeList lastOne;
+											int m;
+											if (xz.item(l).getNodeName().equals("x")) {
+												lastOne = xz.item(l).getChildNodes();
+												m = 0;
+												boolean keepGoing = true;
+												do {
+													if (m >= lastOne.getLength()) {
+														keepGoing = false;
+													} else {
+														if (lastOne.item(m).getNodeType() == Node.TEXT_NODE) {
+															x = Double.parseDouble(lastOne.item(m).getNodeValue());
+															keepGoing = false;
+														}
+														m++;
+													}
+												} while (keepGoing);
+											}
+											if (xz.item(l).getNodeName().equals("z")) {
+												lastOne = xz.item(l).getChildNodes();
+												m = 0;
+												boolean keepGoing = true;
+												do {
+													if (m >= lastOne.getLength()) {
+														keepGoing = false;
+													}
+													if (lastOne.item(m).getNodeType() == Node.TEXT_NODE) {
+														z = Double.parseDouble(lastOne.item(m).getNodeValue());
+														keepGoing = false;
+													}
+													m++;
+												} while (keepGoing);
+											}
 										}
-										if (lastOne.item(m).getNodeType() == 3) {
-											x = Double.parseDouble(lastOne.item(m).getNodeValue());
-											continue label5;
-										}
-										m++;
-									} while (true);
-								}
-								if (!xz.item(l).getNodeName().equals("z")) {
-									continue;
-								}
-								lastOne = xz.item(l).getChildNodes();
-								m = 0;
-								do {
-									if (m >= lastOne.getLength()) {
-										continue label5;
 									}
-									if (lastOne.item(m).getNodeType() == 3) {
-										z = Double.parseDouble(lastOne.item(m).getNodeValue());
-										continue label5;
-									}
-									m++;
-								} while (true);
+
+									fw.write("v " + (addX + x * affX) + " " + (addY - y * affY) + " " + (addZ + z * affZ) + "\n");
+									nbElements++;
+								}
 							}
 
-							fw.write("v " + (addX + x * affX) + " " + (addY - y * affY) + " " + (addZ + z * affZ) + "\n");
-							nbElements++;
-						}
-
-						for (int k = 0; k < nbElements - 1; k++) {
-							fw.write("f " + ++startFrom + " " + (startFrom + 1) + "\n");
-						}
-						if (nbElements > 0) {
-							startFrom++;
+							for (int k = 0; k < nbElements - 1; k++) {
+								fw.write("f " + ++startFrom + " " + (startFrom + 1) + "\n");
+							}
+							if (nbElements > 0) {
+								startFrom++;
+							}
 						}
 					}
 				}
@@ -587,42 +577,40 @@ public class XMLParserSampleThree {
 					boolean sym = ((Element) node).getAttribute("symetric").equals("yes");
 					fw.write("# Module " + name + "\n");
 					NodeList plots = ((Element) node).getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "plot");
-					if (plots == null) {
-						continue;
-					}
-					for (int j = 0; j < plots.getLength(); j++) {
-						Element plot = (Element) plots.item(j);
-						double x = Double.parseDouble(plot.getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "x").item(0).getFirstChild().getNodeValue());
-						double y = Double.parseDouble(plot.getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "y").item(0).getFirstChild().getNodeValue());
-						double z = Double.parseDouble(plot.getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "z").item(0).getFirstChild().getNodeValue());
-						fw.write("v " + (addX + x * affX) + " " + (addY + y * affY) + " " + (addZ + z * affZ) + "\n");
-						nbElements++;
-					}
+					if (plots != null) {
+						for (int j = 0; j < plots.getLength(); j++) {
+							Element plot = (Element) plots.item(j);
+							double x = Double.parseDouble(plot.getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "x").item(0).getFirstChild().getNodeValue());
+							double y = Double.parseDouble(plot.getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "y").item(0).getFirstChild().getNodeValue());
+							double z = Double.parseDouble(plot.getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "z").item(0).getFirstChild().getNodeValue());
+							fw.write("v " + (addX + x * affX) + " " + (addY + y * affY) + " " + (addZ + z * affZ) + "\n");
+							nbElements++;
+						}
 
-					for (int j = 0; j < nbElements - 1; j++) {
-						fw.write("f " + ++startFrom + " " + (startFrom + 1) + "\n");
-					}
-					if (nbElements > 0) {
-						startFrom++;
-					}
-					nbElements = 0;
-					if (!sym) {
-						continue;
-					}
-					for (int j = 0; j < plots.getLength(); j++) {
-						Element plot = (Element) plots.item(j);
-						double x = Double.parseDouble(plot.getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "x").item(0).getFirstChild().getNodeValue());
-						double y = Double.parseDouble(plot.getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "y").item(0).getFirstChild().getNodeValue());
-						double z = Double.parseDouble(plot.getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "z").item(0).getFirstChild().getNodeValue());
-						fw.write("v " + (addX + x * affX) + " " + (addY - y * affY) + " " + (addZ + z * affZ) + "\n");
-						nbElements++;
-					}
+						for (int j = 0; j < nbElements - 1; j++) {
+							fw.write("f " + ++startFrom + " " + (startFrom + 1) + "\n");
+						}
+						if (nbElements > 0) {
+							startFrom++;
+						}
+						nbElements = 0;
+						if (sym) {
+							for (int j = 0; j < plots.getLength(); j++) {
+								Element plot = (Element) plots.item(j);
+								double x = Double.parseDouble(plot.getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "x").item(0).getFirstChild().getNodeValue());
+								double y = Double.parseDouble(plot.getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "y").item(0).getFirstChild().getNodeValue());
+								double z = Double.parseDouble(plot.getElementsByTagNameNS("http://donpedro.lediouris.net/wireframe", "z").item(0).getFirstChild().getNodeValue());
+								fw.write("v " + (addX + x * affX) + " " + (addY - y * affY) + " " + (addZ + z * affZ) + "\n");
+								nbElements++;
+							}
 
-					for (int j = 0; j < nbElements - 1; j++) {
-						fw.write("f " + ++startFrom + " " + (startFrom + 1) + "\n");
-					}
-					if (nbElements > 0) {
-						startFrom++;
+							for (int j = 0; j < nbElements - 1; j++) {
+								fw.write("f " + ++startFrom + " " + (startFrom + 1) + "\n");
+							}
+							if (nbElements > 0) {
+								startFrom++;
+							}
+						}
 					}
 				}
 			}
@@ -641,54 +629,53 @@ public class XMLParserSampleThree {
 					if (affineTramsform != null) {
 						for (int j = 0; j < affineTramsform.getLength(); j++) {
 							Node affineNode = affineTramsform.item(j);
-							if (affineNode.getNodeType() != 1) {
-								continue;
-							}
-							NodeList coords = affineNode.getChildNodes();
-							for (int k = 0; k < coords.getLength(); k++) {
-								Node n = coords.item(k);
-								if (n.getNodeType() == 1 && n.getNodeName().equals("x")) {
-									affineX = Double.parseDouble(n.getFirstChild().getNodeValue());
-								}
-								if (n.getNodeType() == 1 && n.getNodeName().equals("y")) {
-									affineY = Double.parseDouble(n.getFirstChild().getNodeValue());
-								}
-								if (n.getNodeType() == 1 && n.getNodeName().equals("z")) {
-									affineZ = Double.parseDouble(n.getFirstChild().getNodeValue());
+							if (affineNode.getNodeType() == Node.ELEMENT_NODE) {
+								NodeList coords = affineNode.getChildNodes();
+								for (int k = 0; k < coords.getLength(); k++) {
+									Node n = coords.item(k);
+									if (n.getNodeType() == Node.ELEMENT_NODE && n.getNodeName().equals("x")) {
+										affineX = Double.parseDouble(n.getFirstChild().getNodeValue());
+									}
+									if (n.getNodeType() == Node.ELEMENT_NODE && n.getNodeName().equals("y")) {
+										affineY = Double.parseDouble(n.getFirstChild().getNodeValue());
+									}
+									if (n.getNodeType() == Node.ELEMENT_NODE && n.getNodeName().equals("z")) {
+										affineZ = Double.parseDouble(n.getFirstChild().getNodeValue());
+									}
 								}
 							}
 						}
 					}
-					if (origin == null) {
-						continue;
-					}
-					for (int j = 0; j < origin.getLength(); j++) {
-						Node originNode = origin.item(j);
-						if (originNode.getNodeType() != 1) {
-							continue;
+					if (origin != null) {
+						for (int j = 0; j < origin.getLength(); j++) {
+							Node originNode = origin.item(j);
+							if (originNode.getNodeType() == Node.ELEMENT_NODE) {
+								double x = Double.MIN_VALUE;
+								double y = Double.MIN_VALUE;
+								double z = Double.MIN_VALUE;
+								NodeList coords = originNode.getChildNodes();
+								for (int k = 0; k < coords.getLength(); k++) {
+									Node n = coords.item(k);
+									if (n.getNodeType() == Node.ELEMENT_NODE && n.getNodeName().equals("x")) {
+										x = affineX * Double.parseDouble(n.getFirstChild().getNodeValue());
+									}
+									if (n.getNodeType() == Node.ELEMENT_NODE && n.getNodeName().equals("y")) {
+										y = affineY * Double.parseDouble(n.getFirstChild().getNodeValue());
+									}
+									if (n.getNodeType() == Node.ELEMENT_NODE && n.getNodeName().equals("z")) {
+										z = affineZ * Double.parseDouble(n.getFirstChild().getNodeValue());
+									}
+								}
+								int managed = generate(name, fw, x, y, z, affineX, affineY, affineZ, startFrom);
+								startFrom = managed;
+							}
 						}
-						double x = Double.MIN_VALUE;
-						double y = Double.MIN_VALUE;
-						double z = Double.MIN_VALUE;
-						NodeList coords = originNode.getChildNodes();
-						for (int k = 0; k < coords.getLength(); k++) {
-							Node n = coords.item(k);
-							if (n.getNodeType() == 1 && n.getNodeName().equals("x")) {
-								x = affineX * Double.parseDouble(n.getFirstChild().getNodeValue());
-							}
-							if (n.getNodeType() == 1 && n.getNodeName().equals("y")) {
-								y = affineY * Double.parseDouble(n.getFirstChild().getNodeValue());
-							}
-							if (n.getNodeType() == 1 && n.getNodeName().equals("z")) {
-								z = affineZ * Double.parseDouble(n.getFirstChild().getNodeValue());
-							}
-						}
-						int managed = generate(name, fw, x, y, z, affineX, affineY, affineZ, startFrom);
-						startFrom = managed;
 					}
 				}
 			}
 			fw.flush();
+			fw.close();
+			System.out.println("Done!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -704,7 +691,7 @@ public class XMLParserSampleThree {
 		if (args.length > 0) {
 			fileName = args[0];
 		}
-		System.out.println(String.format("Transforming %s", fileName));
+		System.out.println(String.format("Transforming %s in Java", fileName));
 		String version = DOMParser.getReleaseVersion();
 		System.out.println("Using " + version);
 		generate(fileName);

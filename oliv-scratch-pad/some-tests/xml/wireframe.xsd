@@ -2,6 +2,9 @@
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://donpedro.lediouris.net/wireframe"
             targetNamespace="http://donpedro.lediouris.net/wireframe" elementFormDefault="qualified">
+	<xsd:annotation>
+		<xsd:documentation>This schema is to be used by the class called ObjectMaker</xsd:documentation>
+	</xsd:annotation>
 	<xsd:element name="data">
 		<xsd:annotation>
 			<xsd:documentation>A sample element</xsd:documentation>
@@ -207,10 +210,6 @@
 		</xsd:restriction>
 	</xsd:simpleType>
 	<xsd:element name="x" type="xsd:decimal"/>
-	<xsd:annotation>
-		<xsd:documentation>This schema is to be used by the class called ObjectMaker
-		</xsd:documentation>
-	</xsd:annotation>
 	<xsd:element name="y" type="xsd:decimal"/>
 	<xsd:element name="z" type="xsd:decimal"/>
 </xsd:schema>
