@@ -1,5 +1,5 @@
 # REST Tx (transformer)
-A platground for an XML/XSD/XSL experiment...
+A playground for an XML/XSD/XSL experiment...
 
 Here is a first scenario:
 1. From a Web UI, paste an XML Schema Definition in a text area
