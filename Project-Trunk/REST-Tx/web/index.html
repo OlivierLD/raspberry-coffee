@@ -3,8 +3,64 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Evil Genius Experiment</title>
+	<link rel="stylesheet" href="css/stylesheet.css"/>
+	<script src="js/script.js"></script>
+	<style type="text/css">
+		.wrapper {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			grid-gap: 5px;
+			/*grid-auto-rows: 100px;*/
+			grid-template-areas: "a b c";
+			align-items: start;
+		}
+		.item1 {
+			grid-area: a;
+			align-self: start;
+		}
+		.item2 {
+			grid-area: b;
+			align-self: start;
+		}
+		.item3 {
+			grid-area: c;
+			align-self: start;
+		}
+	</style>
 </head>
-<body>
-<h1>How dare you!?</h1>
+<body background="img/minions.jpg">
+
+	<table style="min-width: 600px;">
+		<tr>
+			<td><h1>XML to CSV, with JSON, XPath, and XSL</h1></td>
+		</tr>
+		<tr>
+			<td><h2>Generate your mapping</h2></td>
+		</tr>
+	</table>
+
+	<table>
+		<tr>
+			<td>
+				<textarea style="width: 500px; height: 160px;" id="xml-content" placeholder="Paste your XML here" spellcheck="false"></textarea>
+			</td>
+			<td>
+				<textarea style="width: 500px; height: 160px;" id="xsl-content" placeholder="Copy what will show up here" spellcheck="false"></textarea>
+			</td>
+		</tr>
+	</table>
+	<br/>
+	<button onclick="loadJSONData('xml-content', 'result-content', 'dynamic-form', 'form-submit');" >Do it.</button>
+	<button id="form-submit" onclick="generateMapping('dynamic-form', 'result-doc', 'xsl-content');" disabled>Submit</button>
+	<div class="wrapper">
+		<div class="item1">
+			<textarea style="width: 400px; height: 200px;" id="result-content" placeholder="Output..." spellcheck="false"></textarea>
+		</div>
+		<div class="item2" id="dynamic-form" style="background-color: antiquewhite; max-width: 600px; width: 500px; height: 200px; overflow: auto; "></div>
+		<div class="item3" id="result-doc" style="background-color: antiquewhite; max-width: 600px; width: 500px; height: 200px; overflow: auto; display: none;" title="Selected XPaths"></div>
+	</div>
+
+  <hr/>
+  <address>Oliv did it</address>
 </body>
 </html>

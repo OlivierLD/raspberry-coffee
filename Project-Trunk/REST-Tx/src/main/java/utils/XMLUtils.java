@@ -201,6 +201,7 @@ public class XMLUtils {
 	}
 
 	public static byte[] applyStylesheet(byte[] xmlContent) throws XSLException, IOException, SAXException {
+		// The XSL Stylesheet
 		URL xslURL = XMLUtils.class.getResource("xml2json.xsl");
 		parser.parse(xslURL);
 		XMLDocument xsldoc = parser.getDocument();
@@ -213,13 +214,27 @@ public class XMLUtils {
 		processor.showWarnings(true);
 		processor.setErrorStream(System.err);
 
-		parser.parse(new StringReader(new String(xmlContent)));
+		String contentToParse = new String(xmlContent);
+		if (contentToParse.startsWith("\"") && contentToParse.endsWith("\"")) { // Should be unescaped!!
+
+//			System.out.println("Parsing, before:\n" + contentToParse);
+
+			contentToParse = contentToParse.substring(1);
+			contentToParse = contentToParse.substring(0, contentToParse.length() - 1);
+			contentToParse = contentToParse.replace("\\n", ""); // TODO There must be a better way...
+			contentToParse = contentToParse.replace("\\t", "");
+			contentToParse = contentToParse.replace("\\", "");
+		}
+
+//		System.out.println("Parsing:\n" + contentToParse);
+		// The document to apply the stylesheet on
+		parser.parse(new StringReader(contentToParse));
 		XMLDocument doc = parser.getDocument();
 
 		// Process XSL
-		//  processor.setParam("xmlnx:url", "prm1", "value1");
+		// processor.setParam("xmlnx:url", "prm1", "value1");
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		processor.processXSL(xslss, doc, baos);
+		processor.processXSL(xslss, doc, baos); // Actual processing here
 		byte[] result = baos.toByteArray();
 		return result;
 	}

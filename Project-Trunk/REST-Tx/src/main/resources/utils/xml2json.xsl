@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output method="text" encoding="utf-8"/>
-	
+
 	<xsl:template match="/node()">
 		<xsl:text>{</xsl:text>
 		<xsl:apply-templates select="." mode="detect" />
@@ -21,7 +21,7 @@
 			</xsl:when>
 			<xsl:when test="following-sibling::*[1][name() = name(current())]">
 				<xsl:text>"</xsl:text><xsl:value-of select="name()"/><xsl:text>" : [</xsl:text>
-					<xsl:apply-templates select="." mode="obj-content" /><xsl:text>, </xsl:text> 
+					<xsl:apply-templates select="." mode="obj-content" /><xsl:text>, </xsl:text>
 			</xsl:when>
 			<xsl:when test="count(./child::*) > 0 or count(@*) > 0">
 				<xsl:text>"</xsl:text><xsl:value-of select="name()"/>" : <xsl:apply-templates select="." mode="obj-content" />
@@ -43,14 +43,15 @@
 				<xsl:text>"</xsl:text><xsl:value-of select="name()"/>" : "<xsl:value-of select="text()"/><xsl:text>"</xsl:text>
 			</xsl:if>
 			<xsl:if test="count(child::*) = 0 and text() and @*">
-				<xsl:text>"text" : "</xsl:text><xsl:value-of select="text()"/><xsl:text>"</xsl:text>
+				<xsl:text>"text()" : "</xsl:text><xsl:value-of select="text()"/><xsl:text>"</xsl:text>
 			</xsl:if>
 		<xsl:text>}</xsl:text>
 		<xsl:if test="position() &lt; last()">, </xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="@*" mode="attr">
-		<xsl:text>"</xsl:text><xsl:value-of select="name()"/>" : "<xsl:value-of select="."/><xsl:text>"</xsl:text>
+		<!-- Add a '@' in front of the attribute name -->
+		<xsl:text>"@</xsl:text><xsl:value-of select="name()"/>" : "<xsl:value-of select="."/><xsl:text>"</xsl:text>
 		<xsl:if test="position() &lt; last()">,</xsl:if>
 	</xsl:template>
 
@@ -66,5 +67,5 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 </xsl:stylesheet>

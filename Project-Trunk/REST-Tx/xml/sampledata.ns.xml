@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE ns:customers [
+		<!ENTITY Egrave  "&#200;">
+		<!ENTITY Eacute  "&#201;">
+		<!ENTITY Ecirc   "&#202;">
+		<!ENTITY Euml    "&#203;">
+		<!ENTITY egrave  "&#232;">
+		<!ENTITY eacute  "&#233;">
+		<!ENTITY ecirc   "&#234;">
+		<!ENTITY euml    "&#235;">
+		]>
+<ns:customers xmlns:ns="urn://what.ever">
+	<ns:customer id="99">
+		<ns:name>Bruce Wayne</ns:name>
+		<ns:age>39</ns:age>
+		<ns:address>
+			<ns:street>1 Wayne Avenue</ns:street>
+			<ns:city>Gotham City</ns:city>
+			<ns:zipcode>54321</ns:zipcode>
+		</ns:address>
+	</ns:customer>
+	<ns:customer id="101">
+		<ns:name>Eustrabirb&eacute;onne</ns:name>
+		<ns:age>29</ns:age>
+		<ns:address>
+			<ns:street>10 Bat Cave Street</ns:street>
+			<ns:city>Gotham City</ns:city>
+			<ns:zipcode>12345</ns:zipcode>
+		</ns:address>
+	</ns:customer>
+</ns:customers>
