@@ -257,18 +257,18 @@ function generateMapping(formId, resultId, xslId) {
 		let xslDoc = generateXSL(finalDoc);
 		console.log("Generated XSL:\n", xslDoc);
 		let final = document.getElementById(xslId);
-		final.innerText = xslDoc;
+		final.value = /*'<pre>' +*/ xslDoc /*+ '</pre>'*/;
 	}
 }
 
 function generateXSL(xpaths) {
 
-  let doc = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" +
+  let doc = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n" +
 		  "<xsl:stylesheet version=\"1.0\"\n" +
 		  "                xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\"\n" +
-		  "								 xmlns:" + targetNameSpace.alias + "=\"" + targetNameSpace.value + "\">\n";
-  doc += "	<xsl:output method=\"text\" indent=\"no\"/>\n" +
-		  "	<xsl:template match=\"/\">\n";
+		  "								 xmlns:" + targetNameSpace.alias + "=\"" + targetNameSpace.value + "\">\r\n";
+  doc += "	<xsl:output method=\"text\" indent=\"no\"/>\r\n" +
+		  "	<xsl:template match=\"/\">\r\n";
 
   let idx = 0;
   while (idx < xpaths.length) {
@@ -279,9 +279,9 @@ function generateXSL(xpaths) {
   		let prefix = xpath.substring(0, arrayIndex);
   		let suffix = xpath.substring(arrayIndex + '[]'.length);
   		console.log(prefix, ", ", suffix);
-  		doc += "<xsl:for-each select=\"" + prefix + "\">\n";
+  		doc += "<xsl:for-each select=\"" + prefix + "\">\r\n";
   		while (xpath.startsWith(prefix) && idx < xpaths.length && arrayIndex > -1) {
-			  doc += "<xsl:value-of select=\"." + suffix + "\"></xsl:value-of><xsl:text>;</xsl:text>\n";
+			  doc += "<xsl:value-of select=\"." + suffix + "\"></xsl:value-of><xsl:text>;</xsl:text>\r\n";
 			  idx++;
 			  if (idx < xpaths.length) {
 				  xpath = xpaths[idx];
@@ -294,15 +294,16 @@ function generateXSL(xpaths) {
 				  }
 			  }
 		  }
-  		doc += "</xsl:for-each>\n";
+  		doc += "</xsl:for-each>\r\n";
 	  } else {
-		  doc += "<xsl:value-of select=\"" + xpath + "\"></xsl:value-of><xsl:text>;</xsl:text>\n";
+		  doc += "<xsl:value-of select=\"" + xpath + "\"></xsl:value-of><xsl:text>;</xsl:text>\r\n";
 	  }
   	idx++;
   }
+  doc += "<xsl:text>\n</xsl:text>\r\n"; // New Line at the end?
 
-  doc += "	</xsl:template>\n" +
-		  "</xsl:stylesheet>";
+  doc += "	</xsl:template>\r\n" +
+		  "</xsl:stylesheet>\r\n";
 
   return doc;
 }
