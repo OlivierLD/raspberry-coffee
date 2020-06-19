@@ -28,4 +28,25 @@ Example: <https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repositor
 
 > Note: When adding the files (`git add`), you might want to use the `-f` flag to force the jars in.
 
+### Examples
+- From Maven
+```xml
+<!-- https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository -->
+<dependency>
+    <groupId>oliv.raspi.coffee</groupId>
+    <artifactId>common-utils</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+
+- From Gradle
+```groovy
+dependencies {
+    . . .
+    implementation 'oliv.raspi.coffee:common-utils:1.0'
+    . . .
+}    
+```
+
+
 ---
