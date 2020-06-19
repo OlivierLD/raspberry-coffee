@@ -30,14 +30,8 @@
 </head>
 <body background="img/minions.jpg">
 
-	<table style="min-width: 600px;">
-		<tr>
-			<td><h1>XML to CSV, with JSON, XPath, and XSL</h1></td>
-		</tr>
-		<tr>
-			<td><h2>Generate your mapping</h2></td>
-		</tr>
-	</table>
+	<h1>XML to CSV, with JSON, XPath, and XSL</h1>
+	<!--h2>Generate your mapping</h2-->
 
 	<table>
 		<tr>
@@ -51,7 +45,7 @@
 	</table>
 	<br/>
 	<button onclick="loadJSONData('xml-content', 'result-content', 'dynamic-form', 'form-submit');" >Do it.</button>
-	<button id="form-submit" onclick="generateMapping('dynamic-form', 'result-doc', 'xsl-content');" disabled>Submit</button>
+	<button id="form-submit" onclick="generateMapping('dynamic-form', 'result-doc', 'xsl-content', 'try-xsl');" disabled>Submit</button>
 	<div class="wrapper">
 		<div class="item1">
 			<textarea style="width: 400px; height: 200px;" id="result-content" placeholder="Output..." spellcheck="false"></textarea>
@@ -59,6 +53,9 @@
 		<div class="item2" id="dynamic-form" style="background-color: antiquewhite; max-width: 600px; width: 500px; height: 200px; overflow: auto; "></div>
 		<div class="item3" id="result-doc" style="background-color: antiquewhite; max-width: 600px; width: 500px; height: 200px; overflow: auto; display: none;" title="Selected XPaths"></div>
 	</div>
+
+	<button id="try-xsl" onclick="applyXSL('xml-content', 'xsl-content', 'xsl-out');" disabled>Try XSL</button>
+	<div id="xsl-out" style="background-color: antiquewhite;"></div>
 
   <hr/>
   <address>Oliv did it</address>

@@ -126,6 +126,27 @@ function loadJSONData(fieldId, resultId, formId, buttonId) {
 	});
 }
 
+function processXSL(xml, xsl) {
+	return getPromise('/server/xml-xsl', DEFAULT_TIMEOUT, 'POST', [{name:"Content-type", value:"application/json"}], 201, {"xml": xml, "xsl": xsl});
+}
+
+function applyXSL(xmlId, xslId, outputId) {
+	let xmlPayload = unescape(document.getElementById(xmlId).value);
+	let xslPayload = unescape(document.getElementById(xslId).value);
+	// debugger;
+	let getData = processXSL(xmlPayload, xslPayload);
+	getData.then((value) => { // Resolve
+//  		console.log("Done:", value);
+		try {
+			document.getElementById(outputId).innerText = value.response;
+		} catch (err) {
+			console.log("Error:", err, ("\nfor value [" + JSON.stringify(value, null, 2) + "]"));
+		}
+	}, (error) => { // Reject
+		console.log("Failed to get JSON Data..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
+	});
+}
+
 /**
  * Generate the form for the user to select the fields
  * @param parentNode
@@ -240,7 +261,7 @@ function drillDownList(finalList, currentPath, element) {
 	}
 }
 
-function generateMapping(formId, resultId, xslId) {
+function generateMapping(formId, resultId, xslId, tryId) {
 	let form = document.getElementById(formId);
 	let finalDoc = [];
 	let ul = form.firstChild;
@@ -258,6 +279,10 @@ function generateMapping(formId, resultId, xslId) {
 		console.log("Generated XSL:\n", xslDoc);
 		let final = document.getElementById(xslId);
 		final.value = /*'<pre>' +*/ xslDoc /*+ '</pre>'*/;
+
+		if (tryId !== undefined) {
+			document.getElementById(tryId).disabled = false;
+		}
 	}
 }
 

@@ -69,6 +69,11 @@ public class RESTImplementation {
 					"XML to JSON WiP."),
 			new Operation(
 					"POST",
+					SERVER_PREFIX + "/xml-xsl",
+					this::xslt,
+					"XML and XSL WiP."),
+			new Operation(
+					"POST",
 					SERVER_PREFIX + "/duh",
 					this::emptyOperation,
 					"PlaceHolder.")
@@ -211,6 +216,62 @@ public class RESTImplementation {
 			String jsonContent = jsonObject.toString();
 			response.getHeaders().put("Content-Length", Integer.toString(jsonContent.getBytes().length));
 			response.setPayload(jsonContent.getBytes());
+		} catch (IOException e) {
+			response.setStatus(Response.BAD_REQUEST);
+			response.getHeaders().put("Content-type", "text/plain");
+			response.setPayload(e.toString().getBytes());
+			return response;
+		} catch (XMLException e) {
+			response.setStatus(Response.BAD_REQUEST);
+			response.getHeaders().put("Content-type", "text/plain");
+			response.setPayload(e.toString().getBytes());
+			return response;
+		} catch (SAXException e) {
+			response.setStatus(Response.BAD_REQUEST);
+			response.getHeaders().put("Content-type", "text/plain");
+			response.setPayload(e.toString().getBytes());
+			return response;
+		}
+		return response;
+	}
+
+	private Response xslt(Request request) {
+		Response response = new Response(request.getProtocol(), Response.CREATED);
+		response.setHeaders(new HashMap<>());
+
+		Map<String, String> requestHeaders = request.getHeaders();
+		System.out.println(">>> ---- Headers ----");
+		requestHeaders.keySet()
+				.forEach(headerKey -> System.out.println(String.format("%s: [%s]", headerKey, requestHeaders.get(headerKey))));
+		System.out.println("<<< -----------------");
+
+		String contentType = requestHeaders.get("Content-type");
+		if (contentType == null) {
+			response.setStatus(Response.BAD_REQUEST);
+			response.getHeaders().put("Content-type", "text/plain");
+			response.setPayload("Content-type header MUST be provided".getBytes());
+			return response;
+		}
+		contentType = contentType.trim();
+		switch (contentType) {
+			case "application/json":
+				break;
+			default:
+				response.setStatus(Response.NOT_IMPLEMENTED);
+				response.getHeaders().put("Content-type", "plain/text");
+				response.setPayload(String.format("Content-type [%s] not supported (yet)", contentType).getBytes());
+				return response;
+		}
+		// Now proceed
+		byte[] content = request.getContent();
+		// System.out.println(String.format("Content: len:%d byte(s), %s", content.length, new String(content)));
+		JsonObject inputJsonObject = new JsonParser().parse(new String(content)).getAsJsonObject();
+
+		try {
+			byte[] transformed = XMLUtils.processStylesheet(inputJsonObject.get("xml").getAsString().getBytes(), inputJsonObject.get("xsl").getAsString().getBytes());
+			response.getHeaders().put("Content-type", "plain/text");
+			response.getHeaders().put("Content-Length", Integer.toString(transformed.length));
+			response.setPayload(transformed);
 		} catch (IOException e) {
 			response.setStatus(Response.BAD_REQUEST);
 			response.getHeaders().put("Content-type", "text/plain");
