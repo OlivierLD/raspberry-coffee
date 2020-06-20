@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Evil Genius Experiment</title>
+	<link rel="stylesheet" href="css/stylesheet.css"/>
+	<script src="js/script.js"></script>
+	<style type="text/css">
+		.wrapper {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			grid-gap: 5px;
+			/*grid-auto-rows: 100px;*/
+			grid-template-areas: "a b c";
+			align-items: start;
+		}
+		.item1 {
+			grid-area: a;
+			align-self: start;
+		}
+		.item2 {
+			grid-area: b;
+			align-self: start;
+		}
+		.item3 {
+			grid-area: c;
+			align-self: start;
+		}
+	</style>
+	<style type="text/css">
+		.top-text-area {
+			width: 500px;
+			height: 160px;
+			white-space: nowrap;
+			overflow: auto;
+		}
+
+		.bottom-text-area {
+			width: 500px;
+			height: 200px;
+			white-space: nowrap;
+			overflow: auto;
+		}
+
+		.the-div {
+			background-color: antiquewhite;
+			overflow: auto;
+		}
+	</style>
+</head>
+<body background="img/minions.jpg">
+
+<h1>XML to CSV, with JSON, XPath, and XSL</h1>
+<!--h2>Generate your mapping</h2-->
+
+<table>
+	<tr>
+		<td>
+			<button id="parse-xml" onclick="loadJSONData('xml-content', 'result-content', 'dynamic-form', 'form-submit');" disabled>Parse XML</button>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<textarea class="top-text-area" id="xml-content" onchange="enableParseButton(this, 'parse-xml');" placeholder="Paste your XML here, and click [Parse XML]" spellcheck="false" wrap="soft"></textarea>
+		</td>
+		<td>
+			<textarea class="top-text-area" id="result-content" placeholder="JSON Output..." spellcheck="false"></textarea>
+		</td>
+	</tr>
+</table>
+
+<table>
+	<tr>
+		<td>
+			<button id="form-submit" onclick="generateMapping('dynamic-form', 'result-doc', 'xsl-content', 'try-xsl');" disabled>Submit Mapping</button>
+		</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>
+			<div id="dynamic-form" class="the-div" style="max-width: 600px; width: 500px; height: 200px;"></div>
+		</td>
+		<td>
+			<textarea class="bottom-text-area" id="xsl-content" placeholder="Generated XSL will show up here" spellcheck="false"></textarea>
+		</td>
+		<td>
+			<div id="result-doc" class="the-div" style="max-width: 400px; width: 400px; height: 200px; display: none;" title="Selected XPaths"></div>
+		</td>
+	</tr>
+</table>
+
+<button id="try-xsl" onclick="applyXSL('xml-content', 'xsl-content', 'xsl-out');" disabled>Try XSL</button>
+<div id="xsl-out" style="background-color: antiquewhite; padding: 10px; margin: 10px;"></div>
+
+<hr/>
+<address>Oliv did it</address>
+</body>
+</html>

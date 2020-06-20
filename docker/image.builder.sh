@@ -23,7 +23,7 @@ do
   # Menu
   echo -e "+-------------- D O C K E R   I M A G E   B U I L D E R ---------------+"
   echo -e "+----------------- Build 🏗️  and run 🏃 a docker image. ----------------+"
-  echo -e "|  1. Nav Server, OpenJDK or Debian                                    |"
+  echo -e "|  1. Nav Server, OpenJDK on Debian                                    |"
   echo -e "| 1p. Nav Server, Debian, through a proxy (as an example)              |"
   echo -e "|  2. Web Components, Debian                                           |"
   echo -e "|  3. To run on a Raspberry Pi, Java, Raspberry Coffee, Web Components |"
@@ -230,7 +230,7 @@ do
       OK=true
       DOCKER_FILE=spark-debian.Dockerfile
       IMAGE_NAME=oliv-spark
-      RUN_CMD="docker run -d --name spark-raspian $IMAGE_NAME:latest"
+      RUN_CMD="docker run -d --name spark-debian $IMAGE_NAME:latest"
       #
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Log in using: docker run -it --rm -e USER=root $IMAGE_NAME:latest /bin/bash\n"
@@ -318,7 +318,7 @@ then
   echo -e "Generating $IMAGE_NAME from $DOCKER_FILE $EXTRA"
   echo -e "---------------------------------------------------"
   # Possibly use --quiet
-  docker build -f $DOCKER_FILE -t $IMAGE_NAME $EXTRA_PRM .
+  docker build -f ${DOCKER_FILE} -t ${IMAGE_NAME} ${EXTRA_PRM} .
   #
   # Now run
   echo -e "To create a container, run $RUN_CMD..."

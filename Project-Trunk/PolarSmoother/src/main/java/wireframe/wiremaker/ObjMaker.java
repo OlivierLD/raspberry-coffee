@@ -141,7 +141,6 @@ public class ObjMaker {
 								z = Double.parseDouble(kid.getFirstChild().getNodeValue());
 							}
 						}
-
 					}
 					fw.write("v " + (affX * x + addX) + " " + addY + " " + (affZ * z + addZ) + "\n");
 					nbElements++;

@@ -23,7 +23,15 @@ public class ConsoleMain {
 	 * azimuth.ratio for the azimuth (vertical axis) gear ratio, like "X:Y", ex: "1:40"
 	 * elevation.ratio for the elevation (horizontal axis) gear ratio, like "X:Y", ex: "18:128"
 	 * ansi.boxes set to true for nicer ANSI tables.
-	 * min.diff.for.move like 0.5 (defvault)
+	 * min.diff.for.move like 0.5 (default)
+	 * azimuth.inverted, default false.
+	 * elevation.inverted, default false
+	 * first.move.slack, default 30
+	 *
+	 * date.simulation (default false)
+	 * start.date.simulation, to provide if date.simulation=true, like "2020-06-08T15:00:00"
+	 * increment.per.second , in seconds, to provide if date.simulation=true, like 600
+	 * between.astro.loops, in seconds, can be provided if date.simulation=true, like 10 (one calculation every 10 seconds)
 	 *
 	 * @param args Not used
 	 */

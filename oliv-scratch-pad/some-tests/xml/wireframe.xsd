@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://donpedro.lediouris.net/wireframe"
+            targetNamespace="http://donpedro.lediouris.net/wireframe" elementFormDefault="qualified">
+	<xsd:annotation>
+		<xsd:documentation>This schema is to be used by the class called ObjectMaker</xsd:documentation>
+	</xsd:annotation>
+	<xsd:element name="data">
+		<xsd:annotation>
+			<xsd:documentation>A sample element</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:all>
+				<xsd:element name="keel" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="plot" maxOccurs="unbounded" type="plot-keel"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="sheer" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="plot" type="plot-sheer" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="deck" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="part" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="plot" type="plot-keel" maxOccurs="unbounded"/>
+									</xsd:sequence>
+									<xsd:attribute name="id" type="xsd:string"/>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="forms" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="form" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="plot" maxOccurs="unbounded" type="plot-form"/>
+									</xsd:sequence>
+									<xsd:attribute name="x" type="xsd:decimal"/>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="buttocks" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="buttock" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="part" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:sequence>
+													<xsd:element name="plot" maxOccurs="unbounded" type="plot-buttock"/>
+												</xsd:sequence>
+												<xsd:attribute name="id" use="required" type="xsd:string"/>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+									<xsd:attribute name="y" type="xsd:decimal"/>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="waterlines" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="wl" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="plot" type="plot-wl" maxOccurs="unbounded"/>
+									</xsd:sequence>
+									<xsd:attribute name="z" type="xsd:decimal"/>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="modules" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="module" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="plot" type="plot-module" maxOccurs="unbounded"/>
+									</xsd:sequence>
+									<xsd:attribute name="name" type="xsd:string" use="required"/>
+									<xsd:attribute name="symetric" use="required" type="yes-no"/>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="imports" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="import" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:sequence>
+										<xsd:element name="origin">
+											<xsd:complexType>
+												<xsd:all>
+													<xsd:element ref="x"/>
+													<xsd:element ref="y"/>
+													<xsd:element ref="z"/>
+												</xsd:all>
+											</xsd:complexType>
+										</xsd:element>
+										<xsd:element name="affine-transform" minOccurs="0">
+											<xsd:complexType>
+												<xsd:all>
+													<xsd:element ref="x" minOccurs="0"/>
+													<xsd:element ref="y" minOccurs="0"/>
+													<xsd:element ref="z" minOccurs="0"/>
+												</xsd:all>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:sequence>
+									<xsd:attribute name="source" use="required" type="xsd:string"/>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:all>
+			<xsd:attribute name="name" type="xsd:string" use="required"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="plot-form">
+		<xsd:sequence>
+			<xsd:group ref="plotDataYZ"/>
+		</xsd:sequence>
+		<xsd:attributeGroup ref="plotAttributes"/>
+	</xsd:complexType>
+	<xsd:complexType name="plot-buttock">
+		<xsd:sequence>
+			<xsd:group ref="plotDataXZ"/>
+		</xsd:sequence>
+		<xsd:attributeGroup ref="plotAttributes"/>
+	</xsd:complexType>
+	<xsd:complexType name="plot-wl">
+		<xsd:sequence>
+			<xsd:group ref="plotDataXY"/>
+		</xsd:sequence>
+		<xsd:attributeGroup ref="plotAttributes"/>
+	</xsd:complexType>
+	<xsd:complexType name="plot-module">
+		<xsd:sequence>
+			<xsd:group ref="plotDataXYZ"/>
+		</xsd:sequence>
+		<xsd:attributeGroup ref="plotAttributes"/>
+	</xsd:complexType>
+	<xsd:complexType name="plot-keel">
+		<xsd:all>
+			<xsd:element name="z" type="xsd:decimal"/>
+		</xsd:all>
+		<xsd:attribute name="x" type="xsd:decimal"/>
+	</xsd:complexType>
+	<xsd:complexType name="plot-sheer">
+		<xsd:all>
+			<xsd:element name="y" type="xsd:decimal"/>
+			<xsd:element name="z" type="xsd:decimal"/>
+		</xsd:all>
+		<xsd:attribute name="x" type="xsd:decimal"/>
+	</xsd:complexType>
+	<xsd:group name="plotDataYZ">
+		<xsd:all>
+			<xsd:element ref="y"/>
+			<xsd:element ref="z"/>
+		</xsd:all>
+	</xsd:group>
+	<xsd:group name="plotDataXZ">
+		<xsd:all>
+			<xsd:element ref="x"/>
+			<xsd:element ref="z"/>
+		</xsd:all>
+	</xsd:group>
+	<xsd:group name="plotDataXY">
+		<xsd:all>
+			<xsd:element ref="x"/>
+			<xsd:element ref="y"/>
+		</xsd:all>
+	</xsd:group>
+	<xsd:group name="plotDataXYZ">
+		<xsd:all>
+			<xsd:element ref="x"/>
+			<xsd:element ref="y"/>
+			<xsd:element ref="z"/>
+		</xsd:all>
+	</xsd:group>
+	<xsd:attributeGroup name="plotAttributes">
+		<xsd:attribute name="id" type="xsd:string" use="required"/>
+	</xsd:attributeGroup>
+	<xsd:simpleType name="yes-no">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="yes"/>
+			<xsd:enumeration value="no"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:element name="x" type="xsd:decimal"/>
+	<xsd:element name="y" type="xsd:decimal"/>
+	<xsd:element name="z" type="xsd:decimal"/>
+</xsd:schema>

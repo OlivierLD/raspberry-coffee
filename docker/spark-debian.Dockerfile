@@ -1,7 +1,8 @@
 FROM debian
 
 #
-# Java 8, Scala 2.12.6, and Spark 2.3.0, on Debian
+# Java 8, Scala 2.12.6, and Spark 2.3.0 (or more recent), on Debian
+# Updated June 2020
 #
 
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
@@ -17,7 +18,10 @@ LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 ENV SCALA_VERSION 2.12.6
 ENV SCALA_TARBALL http://www.scala-lang.org/files/archive/scala-$SCALA_VERSION.deb
 
-ENV SPARK_TARBALL http://apache.claz.org/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz
+# See https://spark.apache.org/downloads.html
+ENV APACHE_MIRROR https://mirrors.gigenet.com/apache/spark/spark-3.0.0-preview2/
+# ENV SPARK_TARBALL http://apache.claz.org/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz
+ENV SPARK_TARBALL $APACHE_MIRROR/spark-3.0.0-preview2-bin-hadoop3.2.tgz
 
 RUN apt-get update
 RUN apt-get install -y sysvbanner
@@ -40,7 +44,7 @@ RUN echo "+-----------------------+" && \
 		echo "+-----------------------+" && \
 		DEBIAN_FRONTEND=noninteractive \
 		curl -sSL $SPARK_TARBALL -o spark.tgz && \
-		tar xfvz spark.tgz && \
+		tar xvf spark.tgz && \
 		echo "===> Cleamning up..." && \
 		rm spark.tgz
 

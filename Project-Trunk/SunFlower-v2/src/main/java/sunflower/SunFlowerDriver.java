@@ -59,6 +59,7 @@ public class SunFlowerDriver {
 		}
 	}
 
+	// Depends on the kind of gear you are using, worm gear, pinion, etc...
 	private static boolean elevationInverted = "true".equals(System.getProperty("elevation.inverted"));
 	private static boolean azimuthInverted = "true".equals(System.getProperty("azimuth.inverted"));
 

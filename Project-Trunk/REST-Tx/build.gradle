@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'maven'
+    id 'idea'
+    id 'com.github.johnrengelman.shadow'
+    id "application"
+}
+
+shadowJar {
+    zip64 true
+    // to create an executable jar-file. Requires mainClassName.
+    mergeServiceFiles()
+}
+
+group 'oliv.raspi.coffee'
+version '1.0'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url "http://www.datanucleus.org/downloads/maven2" }
+}
+
+application {
+    applicationDefaultJvmArgs = ['-Dhttp.port=9876']
+}
+mainClassName = "httpserver.HttpRequestServer"
+
+dependencies {
+    compile 'oracle:xmlparser:2.0'
+    compile project(':http-tiny-server')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

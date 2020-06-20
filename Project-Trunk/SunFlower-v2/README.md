@@ -1,4 +1,4 @@
-# SunFlower Versions 2.0 a and b
+# SunFlower Versions 2.0 a and b, and more
 ![Work In Progress](./wip.jpg) 
 
 The goal of this project is to _**automatically**_ orient a solar panel so it faces the sun as long as it is in the sky.
@@ -22,6 +22,10 @@ The goal of this project is to _**automatically**_ orient a solar panel so it fa
 - Some code to look at is in [this folder](../SteppersPlayground), to play with the different options
 of the stepper motors...
 
+> Note: The position of the Sun is _**not** observed_ (from a photocell or any such sensor), it is _calculated_, from the 
+> current position and time. See the `AstroComputer` class for details.
+> As a result, even with an overcast sky, the device _will_ still face the Sun, and _yes_, it **does** make a difference.  
+
 ### Wiring
 ![Wiring](./MotorHatWiring.png)
 
@@ -32,7 +36,7 @@ of the stepper motors...
 Simple standard output, just run `run.sh`.
 
 #### With the `calibration` option
-Takes its input from the CLI, not from the Astro Thread. Use it to calibrate the device,
+Takes its input from the Command Line Interface (CLI), not from the Astro Thread. Use it to calibrate the device,
 to make sure it is working as expected.
 ```
 $ ./run.sh 
@@ -205,7 +209,7 @@ The `NMEA.multiplexer` can also serve as a REST server, storing NMEA data in a c
 
 > `STL` files for the gimbal can be found [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Gimbal).
 
-#### Pulling
+#### Pulling Heading data
 And this is what we do here, we've added two System properties:
 ```bash
 JAVA_OPTS="$JAVA_OPTS -Dping.nmea.server=true"
@@ -248,13 +252,19 @@ Instead of pulling the heading from wherever it is available, we could also use 
 
 In the `NMEA.multiplexer` project (part of this repo), there is this notion of `forwarder` that could be used here.
 This project could be implement the `forwarder` interface, and the `NMEA.multiplexer` could push
-the required data to the `SunFlowerDriver` (Position & Heading).
+the required data to the `SunFlowerDriver` (Position & Heading), from the server, to the SunFlower.
 > For inspiration, see the existing forwarder `nmea.forwarders.SolarPanelOrienter`, designed to work
-> with the `SunFlower.v1`, then one working with micro-servos.
+> with the `SunFlower.v1`, the one working with micro-servos.
 
 ### The Device
-The soft of this project is designed to drive [this device](https://github.com/OlivierLD/3DPrinting/blob/master/OpenSCAD/SolarPanelStand/stl/the.full.stand.stuck.stl).
-Its 3D printing construction is detailed in [its repo](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand).
+The software of this project is designed to drive [this sort of device](https://github.com/OlivierLD/3DPrinting/blob/master/OpenSCAD/SolarPanelStand.v2/stl/the.full.stand.stuck.stl).
+Its 3D printing construction is detailed in [its repo](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand.v2).
+
+> Note: This project keeps track of several versions of the project, with external worm gear, with internal bevel gears,
+> internal worm gear..., along with the lessons learned in each step.
+> All versions are available here, with the appropriate comments.
+> 
+> This document will provide (some time soon) a list of all that.
 
 #### The _real_ device
 Here is a animation - stop motion - of the real device (first prototype), on 231 minutes, starting before noon, ending after. Event if the sky was obviously not clear, 
@@ -272,6 +282,9 @@ In this animation - just to validate the concept, the Raspberry Pi driving the d
 |:-----------------------------------:|:---------------------------------:|
 | ![Three](./pictures/testing.03.jpg) |                                   |
 
+### Notes
+- For the Motor HAT power supply, 5V is enough. Not need for 12V, and the motors seem to heat up with 12V.
+
 ### Bonus
 The two versions, working together:
 
@@ -282,6 +295,9 @@ The two versions, working together:
 - A Web Console. WiP.
     - REST and/or WebSockets?
 - A utility, to manually/interactively orient the panel from user's inputs. &#9989; Done.
-- A `forwarder` for the `NMEA.multiplexer`, as in `SolarPanelOrienter`.    
+- A `forwarder` for the `NMEA.multiplexer`, as in `SolarPanelOrienter`.
+    - This would allow Heading input, position input.
+
+    
 
 ---

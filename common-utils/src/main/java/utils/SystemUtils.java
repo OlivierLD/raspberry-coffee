@@ -261,6 +261,7 @@ public class SystemUtils {
 			System.err.println(ex.toString());
 		}
 
+		System.out.println();
 		System.out.println("All IP Addresses:");
 		List<String[]> addresses = getIPAddresses();
 		addresses.stream().forEach(pair -> {

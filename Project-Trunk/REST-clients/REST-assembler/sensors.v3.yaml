@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: RPi Environment Sensors Reader
-  termsOfService: 'urn://Use-and-Reuse-at-will'
+  termsOfService: 'urn://use-and-reuse-at-will'
   description: |
     Simple example. Automatically turns a light on or off based on the ambient light.
     From this [Repo](https://github.com/OlivierLD/raspberry-coffee/tree/master/polo-shirt).

@@ -34,9 +34,9 @@ dependencies {
 repositories {
     mavenLocal()
     mavenCentral()
-    maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
+//    maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
     maven { url "http://lediouris.net/maven2" }
 //    maven { url "https://plugins.gradle.org/m2/" }
-    maven { url "http://www.datanucleus.org/downloads/maven2" }
+    maven { url "http://www.datanucleus.org/downloads/maven2" } // Contains xmlparserv2 from Oracle
     maven { url "https://oss.sonatype.org/content/groups/public" }
 }

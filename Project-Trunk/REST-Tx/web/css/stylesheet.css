@@ -1,0 +1,131 @@
+body {
+	color: blue;
+	font-weight: normal;
+	font-size: 10pt;
+	font-family: Verdana, Helvetica, Geneva;
+	background-position: top left;
+	background-repeat: repeat
+}
+
+h1 {
+	color: magenta;
+	font-style: italic;
+	font-size: 36pt;
+	font-family: Verdana, Arial, Helvetica, Geneva;
+	padding-left: 5pt;
+	text-shadow: 2px 2px 4px black, 0 0 25px white, 0 0 7px cyan;
+}
+
+h2 {
+	color: cyan;
+	font-size: 12pt;
+	font-family: Verdana, Arial, Helvetica, Geneva;
+	text-shadow: 2px 2px 4px black, 0 0 25px white, 0 0 7px cyan;
+}
+
+h3 {
+	color: cyan;
+	font-style: italic;
+	font-weight: bold;
+	font-size: 11pt;
+	font-family: Verdana, Arial, Helvetica, Geneva;
+	text-shadow: 2px 2px 4px black, 0 0 25px white, 0 0 7px cyan;
+}
+
+h4 {
+	color: cyan;
+	font-style: italic;
+	font-weight: bold;
+	font-size: 10pt;
+	font-family: Verdana, Arial, Helvetica, Geneva;
+}
+
+h5 {
+	color: cyan;
+	font-style: normal;
+	font-weight: bold;
+	font-size: 10pt;
+	font-family: Arial, Helvetica, Geneva;
+}
+
+h6 {
+	font-style: italic;
+	font-weight: normal;
+	font-size: 10pt;
+	font-family: Verdana, Arial, Helvetica, Geneva;
+}
+
+li {
+	font-weight: normal;
+	font-size: 10pt;
+	font-family: Verdana, Helvetica, Geneva;
+}
+
+dt {
+	font-size: 10pt;
+	font-weight: bold;
+	font-family: Verdana, Arial, Helvetica, Geneva;
+}
+
+dd {
+	font-size: 10pt;
+	font-weight: normal;
+	font-family: Verdana, Arial, Helvetica, Geneva;
+}
+
+p {
+	font-size: 10pt;
+	font-weight: normal;
+	font-family: Verdana, Helvetica, Geneva;
+}
+
+td {
+	font-size: 10pt;
+	font-family: Arial, Helvetica, Geneva;
+}
+
+small {
+	font-size: 8pt;
+	font-family: Verdana, Arial, Helvetica, Geneva;
+}
+
+blockquote {
+	font-style: italic;
+	font-size: 10pt;
+	font-family: Verdana, Arial, Helvetica, Geneva;
+}
+
+em {
+	font-size: 10pt;
+	font-style: italic;
+	font-weight: bold;
+	font-family: Verdana, Arial, Helvetica, Geneva
+}
+
+pre {
+	font-size: 12pt;
+	font-weight: bold;
+	font-family: "Source Code Pro", "Courier New", Helvetica, Geneva;
+	background-color: #d3d3d3;
+}
+
+address {
+	font-size: 8pt;
+	font-family: Verdana, Arial, Helvetica, Geneva;
+}
+
+.red {
+	color: red;
+}
+
+a:link {
+	color: #0000a0
+}
+
+a:active {
+	color: #8080ff
+}
+
+a:visited {
+	color: #8080ff
+}

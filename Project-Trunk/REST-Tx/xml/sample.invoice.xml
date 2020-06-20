@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ins:invoice xmlns:ins="urn://some.stuff">
+
+	<ins:customer id="CUST-001">
+		<ins:name>
+			<ins:first-name>Bruce</ins:first-name>
+			<ins:last-name>Wayne</ins:last-name>
+		</ins:name>
+		<ins:address>
+			<ins:number>1</ins:number>
+			<ins:street>Joker Avenue</ins:street>
+			<ins:city>Gotham City</ins:city>
+			<ins:zip-code>12345</ins:zip-code>
+		</ins:address>
+	</ins:customer>
+
+	<ins:items>
+		<ins:item>
+			<ins:sku>SKU-XXX</ins:sku>
+			<ins:description>Bat Mobile</ins:description>
+			<ins:price ins:currency="USD">9000.00</ins:price>
+		</ins:item>
+		<ins:item>
+			<ins:sku>SKU-YYY</ins:sku>
+			<ins:description>Bat Suit</ins:description>
+			<ins:price ins:currency="USD">250.00</ins:price>
+		</ins:item>
+		<ins:item>
+			<ins:sku>SKU-ZZZ</ins:sku>
+			<ins:description>Bat Hood</ins:description>
+			<ins:price ins:currency="USD">100.00</ins:price>
+		</ins:item>
+	</ins:items>
+
+	<ins:total ins:currency="USD">9350.00</ins:total>
+
+</ins:invoice>
