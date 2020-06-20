@@ -99,6 +99,16 @@ function getPromise(
 	return promise;
 }
 
+function enableParseButton(textarea, buttonId) {
+
+	if (textarea.value.length > 0) {
+		document.getElementById(buttonId).disabled = false;
+	} else {
+		document.getElementById(buttonId).disabled = true;
+	}
+
+}
+
 function getJSONData(data) {
 	return getPromise('/server/xml-to-json', DEFAULT_TIMEOUT, 'POST', [{name:"Content-type", value:"text/xml"}], 201, data);
 }

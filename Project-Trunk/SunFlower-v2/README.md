@@ -282,6 +282,9 @@ In this animation - just to validate the concept, the Raspberry Pi driving the d
 |:-----------------------------------:|:---------------------------------:|
 | ![Three](./pictures/testing.03.jpg) |                                   |
 
+### Notes
+- For the Motor HAT power supply, 5V is enough. Not need for 12V, and the motors seem to heat up with 12V.
+
 ### Bonus
 The two versions, working together:
 
@@ -292,6 +295,9 @@ The two versions, working together:
 - A Web Console. WiP.
     - REST and/or WebSockets?
 - A utility, to manually/interactively orient the panel from user's inputs. &#9989; Done.
-- A `forwarder` for the `NMEA.multiplexer`, as in `SolarPanelOrienter`.    
+- A `forwarder` for the `NMEA.multiplexer`, as in `SolarPanelOrienter`.
+    - This would allow Heading input, position input.
+
+    
 
 ---
