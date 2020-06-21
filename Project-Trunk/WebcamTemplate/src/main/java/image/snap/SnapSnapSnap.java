@@ -2,7 +2,9 @@ package image.snap;
 
 import utils.TimeUtil;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.NumberFormat;
 
 /**
@@ -217,8 +219,19 @@ public class SnapSnapSnap extends Thread {
 			String command = String.format(SNAPSHOT_COMMAND_1, rot, width, height, snapshotName);
 			long before = System.currentTimeMillis();
 			Process snap = rt.exec(command);
-			snap.waitFor(); // Sync
+			final int exitValue = snap.waitFor(); // Sync
 			long after = System.currentTimeMillis();
+			if (exitValue != 0) {
+				System.err.println("Failed to execute the following command: " + command + " due to the following error(s):");
+				try (final BufferedReader b = new BufferedReader(new InputStreamReader(snap.getErrorStream()))) {
+					String line;
+					if ((line = b.readLine()) != null) {
+						System.err.println(line);
+					}
+				} catch (final IOException e) {
+					e.printStackTrace();
+				}
+			}
 			if ("true".equals(System.getProperty("snap.verbose", "false"))) {
 				System.out.println(String.format("%s Executing [%s], snapshot is in %s, (%s ms)",
 						SnapSnapSnap.class.getName(),
