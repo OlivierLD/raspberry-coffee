@@ -36,6 +36,14 @@ tasks.withType(JavaExec) {
     }
 }
 
+application {
+    applicationDefaultJvmArgs = [
+            '-Dhttp.port=1234',
+            '-Dsnap.verbose=false',
+            '-Dimage.rest.verbose=false',
+            '-Dwith.opencv=true'
+    ]
+}
 //mainClassName = "test.Main"
 mainClassName = "image.server.SnaphotServer"
 
