@@ -338,7 +338,7 @@ public class RESTImplementation {
 		String urlFullPath = SnaphotServer.snapshotName;
 
 		final List<String> supported = Arrays.asList(
-			"gray", "blur", "threshold", "canny", "contours"
+			"gray", "blur", "threshold", "canny", "contours", "invert"
 		);
 		/* Managed parameters
 		 * - gray, blur, threshold, canny, contours
@@ -409,6 +409,11 @@ public class RESTImplementation {
 								List<MatOfPoint> contours = new ArrayList<>();
 								Imgproc.findContours(finalMat, contours, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
 								Imgproc.drawContours(finalMat, contours, -1, new Scalar(0, 255, 0), 2);
+								break;
+							case "invert":
+								Mat inverted = new Mat();
+								Core.bitwise_not(finalMat, inverted);
+								finalMat = inverted;
 								break;
 							default:
 								break;

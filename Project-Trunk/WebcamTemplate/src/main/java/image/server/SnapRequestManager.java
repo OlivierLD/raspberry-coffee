@@ -34,7 +34,7 @@ public class SnapRequestManager implements RESTRequestManager {
 	 */
 	@Override
 	public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
-		HTTPServer.Response response = restImplementation.processRequest(request); // All the skill is here.
+		HTTPServer.Response response = restImplementation.processRequest(request); // All the REST skill is here.
 		if (this.httpVerbose) {
 			System.out.println("======================================");
 			System.out.println("Request :\n" + request.toString());

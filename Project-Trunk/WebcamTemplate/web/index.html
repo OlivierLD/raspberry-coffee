@@ -28,6 +28,7 @@
 			let threshold = document.getElementById("threshold").value;
 			let canny = document.getElementById("canny").value;
 			let contours = document.getElementById("contours").value;
+			let invert = document.getElementById("invert").value;
 			if (parseInt(gray) > 0) {
 				prms.push(`gray=${gray}`);
 			}
@@ -42,6 +43,9 @@
 			}
 			if (parseInt(contours) > 0) {
 				prms.push(`contours=${contours}`);
+			}
+			if (parseInt(invert) > 0) {
+				prms.push(`invert=${invert}`);
 			}
 
 			fetchPix(prms, json => {
@@ -92,6 +96,7 @@
 	Threshold:<input type="number" id="threshold" min="0" step="1" placeholder="Threshold" value="0" style="width: 50px; text-align: right;"/>
 	Canny:<input type="number" id="canny" min="0" step="1" placeholder="Canny" value="0" style="width: 50px; text-align: right;"/>
 	Contours:<input type="number" id="contours" min="0" step="1" placeholder="Contours" value="0" style="width: 50px; text-align: right;"/>
+	Invert:<input type="number" id="invert" min="0" step="1" placeholder="Invert" value="0" style="width: 50px; text-align: right;"/>
 	<hr/>
 	<address>&copy; OlivSoft, 2020</address>
 </body>

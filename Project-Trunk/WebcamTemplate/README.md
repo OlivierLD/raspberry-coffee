@@ -142,6 +142,7 @@ $ curl -X GET http://192.168.42.15:1234/snap/snap-status | jq
   "state": "WAITING"
 }
 ```
+- `rot`, `width`, `height` follow the specs of `raspistill` (WxH ratio does not need to be constant). 
 - Set config
 ```
 $ curl -X POST http://192.168.42.15:1234/snap/commands/config \

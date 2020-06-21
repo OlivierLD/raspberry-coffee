@@ -10,7 +10,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class SnaphotServer {
-	private HTTPServer httpServer = null;
+	private HTTPServer httpServer;
 	private int httpPort = 1234;
 
 	protected static SnapSnapSnap snap = null;
