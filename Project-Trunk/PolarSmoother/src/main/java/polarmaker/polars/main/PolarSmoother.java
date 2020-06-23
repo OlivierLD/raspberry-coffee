@@ -231,7 +231,7 @@ public class PolarSmoother {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println("-------------------------------------");
 		System.out.println("Starting: " + PRODUCT_ID);
 		System.out.println("-------------------------------------");

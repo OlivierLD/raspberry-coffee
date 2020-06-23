@@ -106,7 +106,7 @@ public class World {
 		return pg;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		Polygon poly = new Polygon(new int[]{-10, -10, 10, 10},
 				new int[]{-10, 10, 10, -10},
 				4);

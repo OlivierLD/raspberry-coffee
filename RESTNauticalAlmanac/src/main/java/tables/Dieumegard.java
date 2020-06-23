@@ -132,7 +132,7 @@ public class Dieumegard {
 		System.out.println("</dieumegard>");
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 //  System.out.println("Tables de Dieumegard");
 		allTheTables();
 

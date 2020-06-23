@@ -334,7 +334,7 @@ public class PolynomUtil {
 		return display;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		double[] polynomial = new double[] { -1, -1, 12.34, 6 };
 		System.out.println(String.format("Roots of %s:", display(polynomial)));
 		List<Double> roots = getPolynomRoots(reduce(polynomial));

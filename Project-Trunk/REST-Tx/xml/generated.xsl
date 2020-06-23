@@ -4,11 +4,11 @@
                 xmlns:ns0="http://www.oracle.com/pcbpel/Invoice">
 	<xsl:output method="text" indent="no"/>
 	<xsl:template match="/">
-		<xsl:variable name="var1" select="concat(/InvoiceType/CustomerID, ';',
+		<xsl:variable name="var1" select="concat(/InvoiceType/InvoiceDate, ';',
+/InvoiceType/Comment, ';',
+/InvoiceType/CustomerID, ';',
 /InvoiceType/ShippedTo/Name, ';',
-/InvoiceType/ShippedTo/Address/country, ';',
 /InvoiceType/ShippedTo/Address/Address1, ';',
-/InvoiceType/ShippedTo/Address/Address2, ';',
 /InvoiceType/ShippedTo/Address/City, ';',
 /InvoiceType/ShippedTo/Address/Zip, ';')"/>
 		<xsl:for-each select="/InvoiceType/ShippedItems/Item">

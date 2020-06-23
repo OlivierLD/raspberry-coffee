@@ -14,7 +14,7 @@ public class TestOne {
 	protected String PROTECTED = "protected";
 	private String PRIVATE = "private";
 
-	public static void main(String[] argbs) {
+	public static void main(String... argbs) {
 		Converter<String, Integer> converter = (from) -> Integer.valueOf(from);
 		Integer converted = converter.convert("123");
 		System.out.println(converted);    // 123

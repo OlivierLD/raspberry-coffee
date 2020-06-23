@@ -53,6 +53,9 @@ Some differences below with the scripts provided above...
 
 Also see [this project](https://github.com/OlivierLD/oliv-ai/tree/master/opencv).
 
+### Other Systems
+See <https://opencv-java-tutorials.readthedocs.io/en/latest/01-installing-opencv-for-java.html>.
+
 #### April-30, 2020.
 Raspbian Buster comes with a JDK 11.
 ```
@@ -220,5 +223,15 @@ Here are a couple of examples:
 | ![raw](./docimages/snap_tx_threshold_canny.jpg) | ![raw](./docimages/snap_tx_color_threshold.jpg) |
 
 ... More to come!
+
+#### TODO Next
+- a zoom
+- fix the `contours` option...
+
+## Summary
+To run this small app:
+- Start the server (`./server.sh` on the Raspberry Pi)
+- Start the Snap Thread
+- Reach the app page in the browser, and choose the options.
 
 ---

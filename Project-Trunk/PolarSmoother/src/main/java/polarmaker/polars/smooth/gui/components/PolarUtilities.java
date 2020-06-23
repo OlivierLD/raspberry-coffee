@@ -149,7 +149,7 @@ public class PolarUtilities {
 		return filename;
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		String fName = "test.polar-coeff";
 		if (args.length > 0) {
 			fName = args[0];
