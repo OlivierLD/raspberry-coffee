@@ -26,7 +26,7 @@ public class TCPServer {
 		} else {
 			out.println("unrecognized greeting");
 		}
-		System.out.println("Server is done");
+		System.out.println("One time greeting delivered, Server is done.");
 	}
 
 	public void stop() throws Exception {

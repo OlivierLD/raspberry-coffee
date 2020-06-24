@@ -5,6 +5,8 @@ import utils.WeatherUtil
 import weatherstation.logger.LoggerInterface
 import weatherstation.ws.HomeWeatherStation
 
+import scala.language.postfixOps
+
 object ScalaSimulator {
 
   private var go = true

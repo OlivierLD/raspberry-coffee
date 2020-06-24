@@ -126,7 +126,7 @@ public class PinUtil {
 	public static GPIOPin findEnumName(String pinName) {
 		GPIOPin gpio = null;
 		for (GPIOPin gpioPin : GPIOPin.values()) {
-			if (pinName != null && pinName.equals(gpioPin.pinName())) {
+			if (pinName != null && (pinName.equals(gpioPin.pinName()) || pinName.equals(gpioPin.toString()))) {
 				gpio = gpioPin;
 				break;
 			}
