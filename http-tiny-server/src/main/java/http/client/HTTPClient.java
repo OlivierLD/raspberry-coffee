@@ -284,10 +284,13 @@ public class HTTPClient {
 				}
 			}
 		} catch (IOException e) {
-			System.err.println("ReadURL for " + url.toString() + "\nnewURLConn failed :\n" + e);
+			if (DEBUG) {
+				System.err.println("ReadURL for " + url.toString() + ", newURLConn failed :\n" + e.toString());
+			}
 			throw e;
 		} catch (Exception e) {
 			System.err.println("Exception for: " + url.toString());
+			throw e;
 		}
 		return content;
 	}

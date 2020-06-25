@@ -382,6 +382,20 @@ public class HTTPServer {
 			HTTPContext.getInstance().getLogger().info("Stop nicely (HTTP) requested");
 		}
 		this.keepRunning = false;
+		// Kill the httpListenerThread, waiting on the ServerSocket.accept().
+		if (this.httpListenerThread.isAlive()) {
+			// Bam!
+			System.out.println(String.format("Killing httpListenerThread (%s)", sendCleanStopSignal ? "true" : "false"));
+			this.sendCleanStopSignal = false; // The trick!
+			try {
+				// Release the ss.accept()
+				String returned = HTTPClient.getContent(String.format("http://localhost:%d/exit", this.getPort()));
+				System.out.println("On exit (stopRunning) -> " + returned);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			System.out.println("Done.");
+		}
 	}
 
 	private boolean keepRunning = true;
@@ -866,7 +880,7 @@ public class HTTPServer {
 			if (httpServerInstance.sendCleanStopSignal) {
 				try {
 					String returned = HTTPClient.getContent(String.format("http://localhost:%d/exit", httpServerInstance.getPort()));
-					System.out.println("Exiting -> " + returned);
+					System.out.println("On exit -> " + returned);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -919,6 +933,7 @@ public class HTTPServer {
 						// Socket client = ss.accept(); // Blocking read
 						new RequestHandler(ss.accept()).start();
 					} // while (isRunning())
+					System.out.println("Exit requested.");
 					ss.close();
 				} catch (BindException be) {
 					HTTPContext.getInstance().getLogger().severe(String.format(">>> BindException: Port %d, %s >>>", httpServerInstance.getPort(), be.toString()));
