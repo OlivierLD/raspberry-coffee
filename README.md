@@ -15,7 +15,7 @@ $ mvn install:install-file \
       -DgroupId=oliv.raspi.coffee \
       -DartifactId=common-utils \
       -Dversion=1.0 \
-      -Dfile=/Users/olediour/.m2/repository/oliv/raspi/coffee/common-utils/1.0/common-utils-1.0.jar \
+      -Dfile=~/.m2/repository/oliv/raspi/coffee/common-utils/1.0/common-utils-1.0.jar \
       -Dpackaging=jar \
       -DgeneratePom=true \
       -DlocalRepositoryPath=.  \
