@@ -15,12 +15,20 @@ $ mvn install:install-file \
       -DgroupId=oliv.raspi.coffee \
       -DartifactId=common-utils \
       -Dversion=1.0 \
-      -Dfile=~/.m2/repository/oliv/raspi/coffee/common-utils/1.0/common-utils-1.0.jar \
+      -Dfile=${HOME}/.m2/repository/oliv/raspi/coffee/common-utils/1.0/common-utils-1.0.jar \
       -Dpackaging=jar \
       -DgeneratePom=true \
       -DlocalRepositoryPath=.  \
       -DcreateChecksum=true
 ```
+or also
+```
+GROUP=oliv.raspi.coffee
+ARTIFACT=http-tiny-server
+VERSION=1.0
+$ mvn install:install-file -DgroupId=${GROUP} -DartifactId=${ARTIFACT} -Dversion=${VERSION} -Dfile=${HOME}/.m2/repository/oliv/raspi/coffee/${ARTIFACT}/${VERSION}/${ARTIFACT}-${VERSION}.jar -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=. -DcreateChecksum=true
+```
+
 
 Repo URL: <https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository>
 
