@@ -9,29 +9,13 @@ plugins {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests'
-//    }
-//  }
-//}
-
 repositories {
   mavenCentral()
   mavenLocal()
-  maven { url "https://oss.sonatype.org/content/groups/public" }
+//  maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
 dependencies {
-//compile 'com.pi4j:pi4j-core:1.1'
-//compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
-//  compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT'  // -SNAPSHOT'
   compile project(':I2C-SPI')
 }
 
