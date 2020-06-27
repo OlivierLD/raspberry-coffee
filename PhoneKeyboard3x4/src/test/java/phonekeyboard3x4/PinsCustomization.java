@@ -20,6 +20,7 @@ public class PinsCustomization {
 		try {
 			if (controller != null) {
 				controller.shutdown();
+				controller = null;
 			}
 			controller = new KeyboardController();
 		} catch (Exception ex) {
@@ -39,6 +40,7 @@ public class PinsCustomization {
 		try {
 			if (controller != null) {
 				controller.shutdown();
+				controller = null;
 			}
 			controller = new KeyboardController();
 		} catch (Exception ex) {
@@ -58,6 +60,7 @@ public class PinsCustomization {
 		try {
 			if (controller != null) {
 				controller.shutdown();
+				controller = null;
 			}
 			controller = new KeyboardController();
 		} catch (Exception ex) {
@@ -77,6 +80,7 @@ public class PinsCustomization {
 		try {
 			if (controller != null) {
 				controller.shutdown();
+				controller = null;
 			}
 			controller = new KeyboardController();
 		} catch (Exception ex) {
@@ -97,6 +101,7 @@ public class PinsCustomization {
 		try {
 			if (controller != null) {
 				controller.shutdown();
+				controller = null;
 			}
 			controller = new KeyboardController(true);
 		} catch (Exception ex) {
@@ -111,6 +116,7 @@ public class PinsCustomization {
 		try {
 			if (controller != null) {
 				controller.shutdown();
+				controller = null;
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

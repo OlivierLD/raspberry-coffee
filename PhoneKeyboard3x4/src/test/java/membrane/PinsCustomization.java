@@ -1,6 +1,7 @@
 package membrane;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.security.InvalidParameterException;
@@ -12,6 +13,11 @@ public class PinsCustomization {
 
 	MembraneKeyPad1x4 controller;
 
+	@Before
+	public void getStarted() {
+		System.out.println(String.format("Getting started on ", this.getClass().getName()));
+	}
+
 	@Test
 	public void badOne() {
 
@@ -19,6 +25,7 @@ public class PinsCustomization {
 		try {
 			if (controller != null) {
 				controller.shutdown();
+				controller = null;
 			}
 			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
@@ -39,6 +46,7 @@ public class PinsCustomization {
 		try {
 			if (controller != null) {
 				controller.shutdown();
+				controller = null;
 			}
 			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
@@ -59,6 +67,7 @@ public class PinsCustomization {
 		try {
 			if (controller != null) {
 				controller.shutdown();
+				controller = null;
 			}
 			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
@@ -79,6 +88,7 @@ public class PinsCustomization {
 		try {
 			if (controller != null) {
 				controller.shutdown();
+				controller = null;
 			}
 			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
@@ -100,6 +110,7 @@ public class PinsCustomization {
 		try {
 			if (controller != null) {
 				controller.shutdown();
+				controller = null;
 			}
 			controller = new MembraneKeyPad1x4();
 			System.out.println("Good config");
@@ -115,6 +126,7 @@ public class PinsCustomization {
 		try {
 			if (controller != null) {
 				controller.shutdown();
+				controller = null;
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
