@@ -75,7 +75,7 @@ public class PinsCustomization {
 	@Test
 	public void goodFive() {
 
-		System.setProperty("keypad.cols", "GPIO_1,GPIO_4,GPIO_5,GPIO_6");
+		System.setProperty("keypad.cols", "GPIO_1,GPIO_4,GPIO_21,GPIO_22");
 		System.setProperty("common.lead", "GPIO_7");
 		try {
 			new MembraneKeyPad1x4();
