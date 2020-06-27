@@ -7,6 +7,7 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.PinPullResistance;
 import utils.PinUtil;
+import utils.TimeUtil;
 
 import java.security.InvalidParameterException;
 
@@ -118,6 +119,7 @@ public class MembraneKeyPad1x4 {
 			for (int i = 0; i < kpCol.length; i++) {
 				if (this.verbose) {
 					System.out.println(String.format("Provisioning %s", kpCol[i].toString()));
+					TimeUtil.delay(1_000L); // This is a test...
 				}
 				if (this.gpio != null) {
 					try {
