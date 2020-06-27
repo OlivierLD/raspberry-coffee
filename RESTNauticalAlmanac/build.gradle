@@ -32,12 +32,11 @@ version = '1.0'
 repositories {
   mavenCentral()
   mavenLocal()
-  maven { url "https://oss.sonatype.org/content/groups/public" }
+//  maven { url "https://oss.sonatype.org/content/groups/public" }
   maven { url "http://www.datanucleus.org/downloads/maven2" }
 }
 
 dependencies {
-//compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
   compile 'com.google.code.gson:gson:2.8.0'
   compile 'oracle:xmlparser:2.0'
 //  compile project(':common-utils')

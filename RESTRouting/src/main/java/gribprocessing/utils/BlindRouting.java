@@ -59,7 +59,7 @@ public class BlindRouting {
 	private static final String VERBOSE = "--verbose";
 	private static final String HELP = "--help";
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		double fromL = 0, fromG = 0, toL = 0, toG = 0;
 		String startTime = "";
 		String gribName = "";

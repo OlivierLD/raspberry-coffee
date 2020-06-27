@@ -3,7 +3,7 @@ plugins {
   id 'maven'
   id 'idea'
   id 'com.github.johnrengelman.shadow' // version '4.0.2'
-  id "com.eriwen.gradle.js" version "2.14.1"
+  id "com.eriwen.gradle.js" version "2.14.1"  // TODO Fix that, for Gradle 6.x
 }
 
 group = 'oliv.raspi.coffee'

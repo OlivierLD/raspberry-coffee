@@ -382,6 +382,20 @@ public class HTTPServer {
 			HTTPContext.getInstance().getLogger().info("Stop nicely (HTTP) requested");
 		}
 		this.keepRunning = false;
+		// Kill the httpListenerThread, waiting on the ServerSocket.accept().
+		if (this.httpListenerThread.isAlive()) {
+			// Bam!
+			System.out.println(String.format("Killing httpListenerThread (%s)", sendCleanStopSignal ? "true" : "false"));
+			this.sendCleanStopSignal = false; // The trick!
+			try {
+				// Release the ss.accept()
+				String returned = HTTPClient.getContent(String.format("http://localhost:%d/exit", this.getPort()));
+				System.out.println("On exit (stopRunning) -> " + returned);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			System.out.println("Done.");
+		}
 	}
 
 	private boolean keepRunning = true;
@@ -541,7 +555,7 @@ public class HTTPServer {
 				boolean cr = false, lf = false;
 				boolean lineAvailable = false;
 				boolean inPayload = false;
-				StringBuffer sb = new StringBuffer(); // TODO Binary!!!
+				StringBuffer sb = new StringBuffer(); // TODO Binary, multipart, form-data, etc!!!
 				boolean keepReading = true;
 //					System.out.println(">>> Top of the Loop <<<");
 				if (verbose) {
@@ -839,6 +853,9 @@ public class HTTPServer {
 	 * Port can be overridden by -Dhttp.port. Takes precedence on anything else.
 	 */
 	public HTTPServer(int port, RESTRequestManager requestManager, Properties properties, boolean startImmediately) throws Exception {
+
+		System.out.println(String.format("Starting new %s (verbose %s)", this.getClass().getName(), verbose));
+
 		this.port = port;
 //		String httpPort = System.getProperty("http.port", String.valueOf(port));
 //		try {
@@ -866,7 +883,7 @@ public class HTTPServer {
 			if (httpServerInstance.sendCleanStopSignal) {
 				try {
 					String returned = HTTPClient.getContent(String.format("http://localhost:%d/exit", httpServerInstance.getPort()));
-					System.out.println("Exiting -> " + returned);
+					System.out.println("On exit -> " + returned);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -919,6 +936,7 @@ public class HTTPServer {
 						// Socket client = ss.accept(); // Blocking read
 						new RequestHandler(ss.accept()).start();
 					} // while (isRunning())
+					System.out.println("Exit requested.");
 					ss.close();
 				} catch (BindException be) {
 					HTTPContext.getInstance().getLogger().severe(String.format(">>> BindException: Port %d, %s >>>", httpServerInstance.getPort(), be.toString()));
@@ -1161,6 +1179,7 @@ public class HTTPServer {
 	 * For dev tests, example, default proxy.
  	 */
 	public static void main(String... args) throws Exception {
+
 		int port = 9999;
 		try {
 			port = Integer.parseInt(System.setProperty("http.port", String.valueOf(port)));
@@ -1184,13 +1203,19 @@ public class HTTPServer {
 							"GET",
 							"/oplist",
 							request -> new Response(request.getProtocol(), Response.STATUS_OK),
+							"Dummy list"),
+					new HTTPServer.Operation(
+							"POST",
+							"/oplist",
+							request -> new Response(request.getProtocol(), Response.STATUS_OK),
 							"Dummy list"));
 
 			RESTRequestManager testRequestManager = new RESTRequestManager() {
 
 				@Override
 				public Response onRequest(Request request) throws UnsupportedOperationException {
-					// This is just an example, hard coded.
+					// Warning!! This is just an example, hard coded for basic tests.
+					// See other implementations for the right way to do this.
 					Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
 					List<Operation> opList = opList1; // Above
@@ -1205,7 +1230,7 @@ public class HTTPServer {
 					return opList1;
 				}
 			};
-
+			// The RequestManager has the supported operations list.
 			httpServer.addRequestManager(testRequestManager);
 		}
 

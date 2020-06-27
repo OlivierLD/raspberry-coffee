@@ -21,6 +21,7 @@ apply plugin: 'io.spring.dependency-management'
 bootJar {
     baseName = 'sensors-spring-boot'
     version =  '0.1.0'
+    mainClassName = 'rpi.Application'
 }
 
 repositories {
@@ -34,7 +35,7 @@ repositories {
 // targetCompatibility = 1.8
 
 dependencies {
-    compile 'oliv.raspi.coffee:I2C.SPI:1.0'
+    compile 'oliv.raspi.coffee:I2C-SPI:1.0' // Might require a gradle install from those 2
     compile 'oliv.raspi.coffee:ADC:1.0'
 
     compile("org.springframework.boot:spring-boot-starter-web")

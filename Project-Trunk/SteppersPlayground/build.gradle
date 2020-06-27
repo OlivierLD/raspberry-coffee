@@ -30,14 +30,10 @@ version = '1.0'
 repositories {
   mavenCentral()
   mavenLocal()
-  maven { url "https://oss.sonatype.org/content/groups/public" }
+//  maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
 dependencies {
-//compile 'com.pi4j:pi4j-core:1.1'
-//compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
-//  compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT'
-//compile 'com.pi4j:pi4j-core:1.4-SNAPSHOT'
   compile project(':common-utils')
   compile project(':I2C-SPI')
 }

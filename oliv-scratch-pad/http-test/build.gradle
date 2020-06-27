@@ -12,6 +12,7 @@ mainClassName = "rest.cli.CLI"
 repositories {
     mavenLocal()
     mavenCentral()
+    maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
 dependencies {

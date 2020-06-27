@@ -19,16 +19,19 @@
 			<ins:sku>SKU-XXX</ins:sku>
 			<ins:description>Bat Mobile</ins:description>
 			<ins:price ins:currency="USD">9000.00</ins:price>
+			<ins:cool>true</ins:cool>
 		</ins:item>
 		<ins:item>
 			<ins:sku>SKU-YYY</ins:sku>
 			<ins:description>Bat Suit</ins:description>
 			<ins:price ins:currency="USD">250.00</ins:price>
+			<ins:cool>true</ins:cool>
 		</ins:item>
 		<ins:item>
 			<ins:sku>SKU-ZZZ</ins:sku>
 			<ins:description>Bat Hood</ins:description>
 			<ins:price ins:currency="USD">100.00</ins:price>
+			<ins:cool>false</ins:cool>
 		</ins:item>
 	</ins:items>
 

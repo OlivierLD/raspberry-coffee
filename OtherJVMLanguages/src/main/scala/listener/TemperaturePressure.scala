@@ -79,8 +79,8 @@ object Main {
           })
           context.shutdown
           println("If needed, free resources here.") // Free resources here
-        }
-    "Shutdown Hook")
+        }) // ,
+    // "Shutdown Hook")
 
     sensorReaderActor ! new StartProducing
   }

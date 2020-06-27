@@ -12,28 +12,20 @@ repositories {
     mavenCentral()
     mavenLocal()
 //  maven { url "http://lediouris.net/maven2" }
-    maven { url "https://oss.sonatype.org/content/groups/public" }
+//    maven { url "https://oss.sonatype.org/content/groups/public" }
+    maven { url "https://mvnrepository.com/artifact/com.pi4j/pi4j-core" }
 }
 
 // sourceCompatibility = 1.8
 
-//sourceSets {
-//    main {
-//        java {
-//            srcDirs = ['src/main/java']
-//        }
-//    }
-//    test {
-//        java {
-//            srcDirs = ['src/test/java']
-//        }
-//    }
-//}
 
 dependencies {
     // TODO Make version without PI4J (used in PinUtils)
-    //compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
-    compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT'  // -SNAPSHOT'
+//    compile 'com.pi4j:pi4j-core:1.2'  // -SNAPSHOT'
+//    compile 'com.pi4j:pi4j-core:1.3-SNAPSHOT'  // -SNAPSHOT'
+//    compile 'com.pi4j:pi4j-parent:1.2'
+// https://mvnrepository.com/artifact/com.pi4j/pi4j-core
+    compile group: 'com.pi4j', name: 'pi4j-core', version: '1.2'
     compile 'com.google.code.gson:gson:2.8.5'
 //    compile 'javax.mail:mail:1.4.4' // Important! Later versions might not work (2015...)
     compile 'javax.mail:mail:1.5.0-b01'

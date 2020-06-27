@@ -126,7 +126,7 @@ public class OpenCV101 {
 		System.out.println("Done!");
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		// load the OpenCV native library
 		System.out.println("Loading " + Core.NATIVE_LIBRARY_NAME);
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);

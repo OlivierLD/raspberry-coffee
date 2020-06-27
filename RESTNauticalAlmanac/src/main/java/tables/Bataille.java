@@ -58,7 +58,7 @@ public class Bataille {
 		System.out.println("</bataille>");
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		allTheTables();
 	}
 }
