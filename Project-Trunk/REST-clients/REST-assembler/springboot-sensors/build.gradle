@@ -19,6 +19,7 @@ apply plugin: 'io.spring.dependency-management'
 
 bootJar.doFirst {
     println ">>> Make sure you've run gradle install from common-utils, RMI-sample, I2C-SPI and ADC"
+    println ">>> You'd see a bootJar failure otherwise"
 }
 
 // This bootJar comes with SpringBoot. Sounds like shadowJar
