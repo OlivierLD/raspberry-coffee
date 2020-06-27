@@ -1,6 +1,6 @@
 Moved to <https://github.com/OlivierLD/oliv-ai>
 
-### OpenCV on the Raspberry Pi?
+### OpenCV (for Java) on the Raspberry Pi?
 - Instructions are available at <https://opencv-java-tutorials.readthedocs.io/en/latest/01-installing-opencv-for-java.html#introduction-to-opencv-for-java>
 - Also, worth a look: <https://www.learnopencv.com/install-opencv-4-on-raspberry-pi/>
 - And <https://gist.github.com/ivanursul/146b3474a7f3449ec70729f5c7f946ee>
@@ -12,6 +12,11 @@ Raspian Buster comes with a JDK 11.
 ```
 $ export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-armhf/
 ```
+Or on the new 64-bit OS
+```
+$ export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-arm64/
+```
+
 We will need `cmake`, make sure you have it available:
 ```
 $ which cmake

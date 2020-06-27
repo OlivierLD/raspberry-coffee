@@ -23,6 +23,7 @@ public class PinsCustomization {
 			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
 			assertTrue(ex.getMessage().startsWith("Please provide both "));
@@ -42,6 +43,7 @@ public class PinsCustomization {
 			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
 			assertTrue(ex.getMessage().equals("keypad.cols should contain 4 elements, comma-separated."));
@@ -61,6 +63,7 @@ public class PinsCustomization {
 			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
 			assertTrue(ex.getMessage().contains("cannot appear more than once"));
@@ -80,6 +83,7 @@ public class PinsCustomization {
 			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
 			assertTrue(ex.getMessage().startsWith("Unknown row pin name "));

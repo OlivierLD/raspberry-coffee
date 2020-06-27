@@ -23,6 +23,7 @@ public class PinsCustomization {
 			}
 			controller = new KeyboardController();
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
 			assertTrue(ex.getMessage().startsWith("Please provide both "));
@@ -41,6 +42,7 @@ public class PinsCustomization {
 			}
 			controller = new KeyboardController();
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
 			assertTrue(ex.getMessage().equals("keypad.rows should contain 4 elements, comma-separated."));
@@ -59,6 +61,7 @@ public class PinsCustomization {
 			}
 			controller = new KeyboardController();
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
 			assertTrue(ex.getMessage().contains("cannot appear more than once"));
@@ -77,6 +80,7 @@ public class PinsCustomization {
 			}
 			controller = new KeyboardController();
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
 			assertTrue(ex.getMessage().startsWith("Unknown row pin name "));
