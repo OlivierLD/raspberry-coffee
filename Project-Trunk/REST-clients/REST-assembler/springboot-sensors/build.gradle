@@ -17,8 +17,8 @@ apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
-build.doFirst {
-    println ">>> Make sure you've run 'gradle install from I2C-SPI and ADC"
+bootJar.doFirst {
+    println ">>> Make sure you've run gradle install from common-utils, RMI-sample, I2C-SPI and ADC"
 }
 
 // This bootJar comes with SpringBoot. Sounds like shadowJar
