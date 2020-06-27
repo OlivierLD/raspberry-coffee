@@ -17,6 +17,9 @@ public class PinsCustomization {
 
 		System.setProperty("keypad.cols", "");
 		try {
+			if (controller != null) {
+				controller.shutdown();
+			}
 			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
 		} catch (Exception ex) {
@@ -33,6 +36,9 @@ public class PinsCustomization {
 		System.setProperty("keypad.cols", "");
 		System.setProperty("common.lead", "");
 		try {
+			if (controller != null) {
+				controller.shutdown();
+			}
 			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
 		} catch (Exception ex) {
@@ -49,6 +55,9 @@ public class PinsCustomization {
 		System.setProperty("keypad.cols", "A,B,C,D");
 		System.setProperty("common.lead", "A");
 		try {
+			if (controller != null) {
+				controller.shutdown();
+			}
 			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
 		} catch (Exception ex) {
@@ -65,6 +74,9 @@ public class PinsCustomization {
 		System.setProperty("keypad.cols", "A,B,C,D");
 		System.setProperty("common.lead", "E");
 		try {
+			if (controller != null) {
+				controller.shutdown();
+			}
 			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
 		} catch (Exception ex) {
@@ -82,9 +94,11 @@ public class PinsCustomization {
 		System.setProperty("common.lead", "GPIO_7");
 		System.setProperty("keypad.verbose", "true");
 		try {
+			if (controller != null) {
+				controller.shutdown();
+			}
 			controller = new MembraneKeyPad1x4();
 			System.out.println("Good config");
-			controller.shutdown();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			fail(String.format("This should have worked [%s]", ex.toString()));
@@ -93,6 +107,7 @@ public class PinsCustomization {
 
 	@After
 	public void tearDown() {
+		System.out.println("Tearing down");
 		try {
 			if (controller != null) {
 				controller.shutdown();

@@ -18,6 +18,9 @@ public class PinsCustomization {
 
 		System.setProperty("keypad.rows", "");
 		try {
+			if (controller != null) {
+				controller.shutdown();
+			}
 			controller = new KeyboardController();
 		} catch (Exception ex) {
 			assertTrue(ex instanceof InvalidParameterException);
@@ -33,6 +36,9 @@ public class PinsCustomization {
 		System.setProperty("keypad.rows", "");
 		System.setProperty("keypad.cols", "");
 		try {
+			if (controller != null) {
+				controller.shutdown();
+			}
 			controller = new KeyboardController();
 		} catch (Exception ex) {
 			assertTrue(ex instanceof InvalidParameterException);
@@ -48,6 +54,9 @@ public class PinsCustomization {
 		System.setProperty("keypad.rows", "A,B,C,D");
 		System.setProperty("keypad.cols", "A,E,F");
 		try {
+			if (controller != null) {
+				controller.shutdown();
+			}
 			controller = new KeyboardController();
 		} catch (Exception ex) {
 			assertTrue(ex instanceof InvalidParameterException);
@@ -63,6 +72,9 @@ public class PinsCustomization {
 		System.setProperty("keypad.rows", "A,B,C,D");
 		System.setProperty("keypad.cols", "E,F,G");
 		try {
+			if (controller != null) {
+				controller.shutdown();
+			}
 			controller = new KeyboardController();
 		} catch (Exception ex) {
 			assertTrue(ex instanceof InvalidParameterException);
@@ -79,6 +91,9 @@ public class PinsCustomization {
 		System.setProperty("keypad.cols", "GPIO_7,GPIO_23, GPIO_3");
 		System.setProperty("keypad.verbose", "true");
 		try {
+			if (controller != null) {
+				controller.shutdown();
+			}
 			controller = new KeyboardController(true);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -88,6 +103,7 @@ public class PinsCustomization {
 
 	@After
 	public void tearDown() {
+		System.out.println("Tearing down");
 		try {
 			if (controller != null) {
 				controller.shutdown();
