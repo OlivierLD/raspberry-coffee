@@ -9,6 +9,8 @@ import com.pi4j.io.gpio.PinPullResistance;
 import utils.PinUtil;
 
 import java.security.InvalidParameterException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Good explanation here: https://www.youtube.com/watch?v=yYnX5QodqQ4
@@ -143,7 +145,18 @@ public class KeyboardController {
 			System.out.println("        |  Row [7,8,9] " + PinUtil.findByPin(kpRow[1]).toString() + ", " + PinUtil.findByPin(kpRow[1]).pinName());
 			System.out.println("        Row [*,0,#] " + PinUtil.findByPin(kpRow[0]).toString() + ", " + PinUtil.findByPin(kpRow[0]).pinName());
 			System.out.println();
-			PinUtil.print();
+
+			String[] map = new String[]{
+					String.valueOf(PinUtil.findByPin(kpRow[0]).pinNumber()) + ":" + "R1",
+					String.valueOf(PinUtil.findByPin(kpRow[1]).pinNumber()) + ":" + "R2",
+					String.valueOf(PinUtil.findByPin(kpRow[2]).pinNumber()) + ":" + "R3",
+					String.valueOf(PinUtil.findByPin(kpRow[3]).pinNumber()) + ":" + "R4",
+					String.valueOf(PinUtil.findByPin(kpCol[0]).pinNumber()) + ":" + "C1",
+					String.valueOf(PinUtil.findByPin(kpCol[1]).pinNumber()) + ":" + "C2",
+					String.valueOf(PinUtil.findByPin(kpCol[2]).pinNumber()) + ":" + "C3"
+			};
+
+			PinUtil.print(map);
 		}
 
 		try {
