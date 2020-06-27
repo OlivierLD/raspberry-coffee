@@ -1,5 +1,6 @@
 package membrane;
 
+import org.junit.After;
 import org.junit.Test;
 
 import java.security.InvalidParameterException;
@@ -9,12 +10,14 @@ import static org.junit.Assert.assertTrue;
 
 public class PinsCustomization {
 
+	MembraneKeyPad1x4 controller;
+
 	@Test
 	public void badOne() {
 
 		System.setProperty("keypad.cols", "");
 		try {
-			new MembraneKeyPad1x4();
+			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
 		} catch (Exception ex) {
 			assertTrue(ex instanceof InvalidParameterException);
@@ -30,7 +33,7 @@ public class PinsCustomization {
 		System.setProperty("keypad.cols", "");
 		System.setProperty("common.lead", "");
 		try {
-			new MembraneKeyPad1x4();
+			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
 		} catch (Exception ex) {
 			assertTrue(ex instanceof InvalidParameterException);
@@ -46,7 +49,7 @@ public class PinsCustomization {
 		System.setProperty("keypad.cols", "A,B,C,D");
 		System.setProperty("common.lead", "A");
 		try {
-			new MembraneKeyPad1x4();
+			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
 		} catch (Exception ex) {
 			assertTrue(ex instanceof InvalidParameterException);
@@ -62,7 +65,7 @@ public class PinsCustomization {
 		System.setProperty("keypad.cols", "A,B,C,D");
 		System.setProperty("common.lead", "E");
 		try {
-			new MembraneKeyPad1x4();
+			controller = new MembraneKeyPad1x4();
 			fail("Should have caught an exception");
 		} catch (Exception ex) {
 			assertTrue(ex instanceof InvalidParameterException);
@@ -79,11 +82,23 @@ public class PinsCustomization {
 		System.setProperty("common.lead", "GPIO_7");
 		System.setProperty("keypad.verbose", "true");
 		try {
-			new MembraneKeyPad1x4();
+			controller = new MembraneKeyPad1x4();
 			System.out.println("Good config");
+			controller.shutdown();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			fail(String.format("This should have worked [%s]", ex.toString()));
+		}
+	}
+
+	@After
+	public void tearDown() {
+		try {
+			if (controller != null) {
+				controller.shutdown();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 }

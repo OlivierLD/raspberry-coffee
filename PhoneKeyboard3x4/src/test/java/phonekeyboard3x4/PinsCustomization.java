@@ -1,5 +1,7 @@
 package phonekeyboard3x4;
 
+import membrane.MembraneKeyPad1x4;
+import org.junit.After;
 import org.junit.Test;
 
 import java.security.InvalidParameterException;
@@ -9,12 +11,14 @@ import static org.junit.Assert.assertTrue;
 
 public class PinsCustomization {
 
+	KeyboardController controller;
+
 	@Test
 	public void badOne() {
 
 		System.setProperty("keypad.rows", "");
 		try {
-			new KeyboardController();
+			controller = new KeyboardController();
 		} catch (Exception ex) {
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
@@ -29,7 +33,7 @@ public class PinsCustomization {
 		System.setProperty("keypad.rows", "");
 		System.setProperty("keypad.cols", "");
 		try {
-			new KeyboardController();
+			controller = new KeyboardController();
 		} catch (Exception ex) {
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
@@ -44,7 +48,7 @@ public class PinsCustomization {
 		System.setProperty("keypad.rows", "A,B,C,D");
 		System.setProperty("keypad.cols", "A,E,F");
 		try {
-			new KeyboardController();
+			controller = new KeyboardController();
 		} catch (Exception ex) {
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
@@ -59,7 +63,7 @@ public class PinsCustomization {
 		System.setProperty("keypad.rows", "A,B,C,D");
 		System.setProperty("keypad.cols", "E,F,G");
 		try {
-			new KeyboardController();
+			controller = new KeyboardController();
 		} catch (Exception ex) {
 			assertTrue(ex instanceof InvalidParameterException);
 			System.out.println(ex.getMessage());
@@ -75,10 +79,22 @@ public class PinsCustomization {
 		System.setProperty("keypad.cols", "GPIO_7,GPIO_23, GPIO_3");
 		System.setProperty("keypad.verbose", "true");
 		try {
-			new KeyboardController(true);
+			controller = new KeyboardController(true);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			fail(String.format("This should have worked [%s]", ex.toString()));
 		}
 	}
+
+	@After
+	public void tearDown() {
+		try {
+			if (controller != null) {
+				controller.shutdown();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
 }

@@ -114,7 +114,11 @@ public class MembraneKeyPad1x4 {
 			System.err.println("Not an a Pi, hey? You must be testing...");
 		}
 		if (this.gpio != null) {
-			commonLead = this.gpio.provisionDigitalMultipurposePin(common, PinMode.DIGITAL_INPUT);
+			try {
+				commonLead = this.gpio.provisionDigitalMultipurposePin(common, PinMode.DIGITAL_INPUT);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 			colButton = new GpioPinDigitalMultipurpose[kpCol.length];
 			for (int i = 0; i < kpCol.length; i++) {
 				if (this.verbose) {
