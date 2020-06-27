@@ -41,3 +41,7 @@ shadowJar {
     // to create an executable jar-file. Requires mainClassName.
     mergeServiceFiles()
 }
+
+build.doFirst {
+    println ">>> This requires OpenCV to be installed."
+}
