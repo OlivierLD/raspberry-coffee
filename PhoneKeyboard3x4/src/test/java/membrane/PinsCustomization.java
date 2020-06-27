@@ -81,6 +81,7 @@ public class PinsCustomization {
 			new MembraneKeyPad1x4();
 			System.out.println("Good config");
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			fail(String.format("This should have worked [%s]", ex.toString()));
 		}
 	}

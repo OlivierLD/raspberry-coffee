@@ -74,8 +74,9 @@ public class PinsCustomization {
 		System.setProperty("keypad.rows", "GPIO_1,GPIO_4,GPIO_5,GPIO_6");
 		System.setProperty("keypad.cols", "GPIO_7,GPIO_0, GPIO_3");
 		try {
-			new KeyboardController();
+			new KeyboardController(true);
 		} catch (Exception ex) {
+			ex.printStackTrace();
 			fail(String.format("This should have worked [%s]", ex.toString()));
 		}
 	}
