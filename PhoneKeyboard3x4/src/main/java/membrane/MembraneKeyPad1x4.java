@@ -120,7 +120,11 @@ public class MembraneKeyPad1x4 {
 					System.out.println(String.format("Provisioning %s", kpCol[i].toString()));
 				}
 				if (this.gpio != null) {
-					colButton[i] = this.gpio.provisionDigitalMultipurposePin(kpCol[i], PinMode.DIGITAL_INPUT);
+					try {
+						colButton[i] = this.gpio.provisionDigitalMultipurposePin(kpCol[i], PinMode.DIGITAL_INPUT);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 				} // else testing
 			}
 		}

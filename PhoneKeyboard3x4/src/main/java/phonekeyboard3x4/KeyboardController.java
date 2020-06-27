@@ -175,7 +175,11 @@ public class KeyboardController {
 				System.out.println(String.format("Provisioning %s", kpRow[i].toString()));
 			}
 			if (this.gpio != null) {
-				rowButton[i] = this.gpio.provisionDigitalMultipurposePin(kpRow[i], PinMode.DIGITAL_INPUT);
+				try {
+					rowButton[i] = this.gpio.provisionDigitalMultipurposePin(kpRow[i], PinMode.DIGITAL_INPUT);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			} // else testing...
 		}
 		colButton = new GpioPinDigitalMultipurpose[kpCol.length];
@@ -184,7 +188,11 @@ public class KeyboardController {
 				System.out.println(String.format("Provisioning %s", kpCol[i].toString()));
 			}
 			if (this.gpio != null) {
-				colButton[i] = this.gpio.provisionDigitalMultipurposePin(kpCol[i], PinMode.DIGITAL_INPUT);
+				try {
+					colButton[i] = this.gpio.provisionDigitalMultipurposePin(kpCol[i], PinMode.DIGITAL_INPUT);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			} // else testing
 		}
 		if (this.verbose) {
