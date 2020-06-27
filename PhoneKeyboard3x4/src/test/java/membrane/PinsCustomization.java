@@ -77,6 +77,7 @@ public class PinsCustomization {
 
 		System.setProperty("keypad.cols", "GPIO_1,GPIO_4,GPIO_21,GPIO_22");
 		System.setProperty("common.lead", "GPIO_7");
+		System.setProperty("keypad.verbose", "true");
 		try {
 			new MembraneKeyPad1x4();
 			System.out.println("Good config");

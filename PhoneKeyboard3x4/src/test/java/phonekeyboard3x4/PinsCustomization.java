@@ -73,6 +73,7 @@ public class PinsCustomization {
 
 		System.setProperty("keypad.rows", "GPIO_1,GPIO_4,GPIO_21,GPIO_22");
 		System.setProperty("keypad.cols", "GPIO_7,GPIO_23, GPIO_3");
+		System.setProperty("keypad.verbose", "true");
 		try {
 			new KeyboardController(true);
 		} catch (Exception ex) {
