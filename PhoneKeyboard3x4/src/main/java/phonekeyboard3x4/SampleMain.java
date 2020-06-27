@@ -4,9 +4,6 @@ import java.text.NumberFormat;
 
 public class SampleMain {
 	public static void main(String... args) {
-		// For Tests
-		System.setProperty("keypad.rows", "GPIO_1,GPIO_4,GPIO_5,GPIO_6");
-		System.setProperty("keypad.cols", "GPIO_7,GPIO_0, GPIO_3");
 
 		KeyboardController kbc = new KeyboardController(true);
 

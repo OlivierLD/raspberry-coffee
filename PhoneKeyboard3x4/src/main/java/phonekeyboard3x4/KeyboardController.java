@@ -174,7 +174,6 @@ public class KeyboardController {
 		for (int i = 0; i < kpRow.length; i++) {
 			if (this.verbose) {
 				System.out.println(String.format("Provisioning %s", kpRow[i].toString()));
-				TimeUtil.delay(1_000L); // This is a test...
 			}
 			if (this.gpio != null) {
 				try {
@@ -188,7 +187,6 @@ public class KeyboardController {
 		for (int i = 0; i < kpCol.length; i++) {
 			if (this.verbose) {
 				System.out.println(String.format("Provisioning %s", kpCol[i].toString()));
-				TimeUtil.delay(1_000L); // This is a test...
 			}
 			if (this.gpio != null) {
 				try {
