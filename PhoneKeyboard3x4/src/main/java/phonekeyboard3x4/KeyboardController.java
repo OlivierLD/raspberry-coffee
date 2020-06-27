@@ -17,6 +17,9 @@ import java.util.List;
  *
  */
 public class KeyboardController {
+
+	private boolean verbose = false;
+
 	private GpioController gpio = null;
 	private GpioPinDigitalMultipurpose[] rowButton = null;
 	private GpioPinDigitalMultipurpose[] colButton = null;
@@ -68,6 +71,8 @@ public class KeyboardController {
 		this(false);
 	}
 	public KeyboardController(boolean print) {
+
+		this.verbose = "true".equals(System.getProperty("keypad.verbose"));
 
 		// Default -Dkeypad.rows=GPIO_1,GPIO_4,GPIO_5,GPIO_6
 		String userProvidedRows = System.getProperty("keypad.rows");
@@ -166,17 +171,23 @@ public class KeyboardController {
 		}
 		rowButton = new GpioPinDigitalMultipurpose[kpRow.length];
 		for (int i = 0; i < kpRow.length; i++) {
+			if (this.verbose) {
+				System.out.println(String.format("Provisioning %s", kpRow[i].toString()));
+			}
 			if (this.gpio != null) {
 				rowButton[i] = this.gpio.provisionDigitalMultipurposePin(kpRow[i], PinMode.DIGITAL_INPUT);
 			} // else testing...
 		}
 		colButton = new GpioPinDigitalMultipurpose[kpCol.length];
 		for (int i = 0; i < kpCol.length; i++) {
+			if (this.verbose) {
+				System.out.println(String.format("Provisioning %s", kpCol[i].toString()));
+			}
 			if (this.gpio != null) {
 				colButton[i] = this.gpio.provisionDigitalMultipurposePin(kpCol[i], PinMode.DIGITAL_INPUT);
 			} // else testing
 		}
-		if ("true".equals(System.getProperty("keypad.verbose", "false"))) {
+		if (this.verbose) {
 			System.out.println("All pins provisioned, keypad ready.");
 		}
 	}
@@ -250,6 +261,7 @@ public class KeyboardController {
 
 	public void shutdown() {
 		if (this.gpio != null) {
+			this.gpio.setShutdownOptions(true);
 			this.gpio.shutdown();
 		}
 	}

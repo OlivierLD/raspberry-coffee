@@ -14,6 +14,9 @@ import java.security.InvalidParameterException;
  * Good explanation here: https://www.youtube.com/watch?v=yYnX5QodqQ4
  */
 public class MembraneKeyPad1x4 {
+
+	private boolean verbose = false;
+
 	private GpioController gpio = null;
 	private GpioPinDigitalMultipurpose commonLead = null;
 	private GpioPinDigitalMultipurpose[] colButton = null;
@@ -36,6 +39,8 @@ public class MembraneKeyPad1x4 {
 	}
 
 	public MembraneKeyPad1x4(boolean print) {
+
+		this.verbose = "true".equals(System.getProperty("keypad.verbose"));
 
 		// Default -Dkeypad.cols=GPIO_1,GPIO_4,GPIO_5,GPIO_6
 		// Default -Dcommon.lead=GPIO_7
@@ -111,12 +116,15 @@ public class MembraneKeyPad1x4 {
 			commonLead = this.gpio.provisionDigitalMultipurposePin(common, PinMode.DIGITAL_INPUT);
 			colButton = new GpioPinDigitalMultipurpose[kpCol.length];
 			for (int i = 0; i < kpCol.length; i++) {
+				if (this.verbose) {
+					System.out.println(String.format("Provisioning %s", kpCol[i].toString()));
+				}
 				if (this.gpio != null) {
 					colButton[i] = this.gpio.provisionDigitalMultipurposePin(kpCol[i], PinMode.DIGITAL_INPUT);
 				} // else testing
 			}
 		}
-		if ("true".equals(System.getProperty("keypad.verbose", "false"))) {
+		if (this.verbose) {
 			System.out.println("All pins provisioned, keypad ready.");
 		}
 	}
