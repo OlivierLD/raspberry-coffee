@@ -93,7 +93,13 @@ public class MembraneKeyPad1x4 {
 			System.out.println(" | +---++---++---++---+ |");
 			System.out.println(" +----------------------+");
 			System.out.println();
-			PinUtil.print();
+			String[] map = new String[]{
+					String.valueOf(PinUtil.findByPin(kpCol[0]).pinNumber()) + ":" + "C1",
+					String.valueOf(PinUtil.findByPin(kpCol[1]).pinNumber()) + ":" + "C2",
+					String.valueOf(PinUtil.findByPin(kpCol[2]).pinNumber()) + ":" + "C3",
+					String.valueOf(PinUtil.findByPin(kpCol[3]).pinNumber()) + ":" + "C4"
+			};
+			PinUtil.print(map);
 		}
 
 		try {
