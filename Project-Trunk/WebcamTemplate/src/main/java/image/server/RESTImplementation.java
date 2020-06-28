@@ -342,6 +342,13 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		Map<String, String> prms = request.getQueryStringParameters();
 
+		if (verbose) {
+			System.out.println("getLastSnapshot, Query String");
+			prms.keySet().forEach(key -> {
+				System.out.println(String.format("%s=%s", key, prms.get(key)));
+			});
+		}
+
 		String fileName = SnaphotServer.snapshotName;
 		String urlFullPath = SnaphotServer.snapshotName;
 
@@ -384,7 +391,9 @@ public class RESTImplementation {
 			if ("true".equals(System.getProperty("with.opencv", "true"))) {
 				try {
 					Mat image = Imgcodecs.imread(SnaphotServer.snapshotName);
-					System.out.println(String.format("Original image: w %d, h %d, %d channel(s)", image.width(), image.height(), image.channels()));
+					if (verbose) {
+						System.out.println(String.format("Original image: w %d, h %d, %d channel(s)", image.width(), image.height(), image.channels()));
+					}
 					if (image.width() > 0 && image.height() > 0) {
 						Mat finalMat = image;
 
@@ -433,7 +442,9 @@ public class RESTImplementation {
 						Imgcodecs.imwrite(fileName, finalMat);
 					} else {
 						// Empty!
-						System.out.println("Image is empty.");
+						if (verbose) {
+							System.out.println("Image is empty.");
+						}
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
