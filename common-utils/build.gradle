@@ -3,6 +3,7 @@ plugins {
     id 'idea'
     id 'maven'
     id 'com.github.johnrengelman.shadow' // version '4.0.2'
+    id "application"
 }
 
 group = 'oliv.raspi.coffee'
@@ -33,6 +34,16 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
+mainClassName = "utils.SystemUtils"
+
 shadowJar {
     zip64 true
+    // to create an executable jar-file. Requires mainClassName.
+    mergeServiceFiles()
+}
+
+build.doFirst {
+    println "+-------------------------------------------------------------"
+    println "| >>> Try gradlew run in common-utils to see some system info."
+    println "+-------------------------------------------------------------"
 }
