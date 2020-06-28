@@ -5,6 +5,8 @@ PROPS=
 # PROPS="${PROPS} -Dimage.rest.verbose=true"
 # PROPS="${PROPS} -Dhttp.port=1234"
 PROPS="${PROPS} -Dwith.opencv=true"
+# PROPS="${PROPS} -Dhttp.verbose=true"
+# PROPS="${PROPS} -Dhttp.verbose.dump=true"
 #
 OPENCV_HOME=/usr/local/share/java/opencv4
 #
