@@ -17,7 +17,9 @@ repositories {
 
 dependencies {
     compile group: 'org.json', name: 'json', version: '20190722'
-    compile 'oliv.raspi.coffee:http-tiny-server:1.0'  // Must have been 'install'ed (in mavenLocal)
+//    compile 'oliv.raspi.coffee:http-tiny-server:1.0'  // Must have been 'install'ed (in mavenLocal)
+    compile project (':http-tiny-server')
+
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
