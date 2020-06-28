@@ -191,6 +191,9 @@ public class RESTImplementation {
 		}
 
 		if (stop) {
+			if (verbose) {
+				System.out.println("Stopping the Snap Thread");
+			}
 			try {
 				this.snapRequestManager.getSnapshotServer().stopSnapThread();
 			} catch (Exception ex) {
@@ -201,6 +204,9 @@ public class RESTImplementation {
 				return response;
 			}
 		} else if (start) {
+			if (verbose) {
+				System.out.println("Starting the Snap Thread");
+			}
 			try {
 				SnapSnapSnap.SnapStatus snapThreadStatus = null;
 				try {

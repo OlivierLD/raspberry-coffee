@@ -217,6 +217,9 @@ public class SnapSnapSnap extends Thread {
 		String snapshotName = name; // String.format("web/%s.jpg", name);
 		try {
 			String command = String.format(SNAPSHOT_COMMAND_1, rot, width, height, snapshotName);
+			if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+				System.out.println("Running command:" + command);
+			}
 			long before = System.currentTimeMillis();
 			Process snap = rt.exec(command);
 			final int exitValue = snap.waitFor(); // Sync
@@ -263,6 +266,9 @@ public class SnapSnapSnap extends Thread {
 
 	@Override
 	public void run() {
+		if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+			System.out.println(String.format(">>> In %s, starting thread (run)", this.getClass().getName()));
+		}
 		while (this.keepSnapping) {
 			try {
 				SnapSnapSnap.snap(this.config.snapName, this.config.rot, this.config.width, this.config.height);
