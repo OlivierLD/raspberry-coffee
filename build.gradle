@@ -42,9 +42,13 @@ repositories {
 }
 
 build.doFirst {
-    println "--------------------------------------------------------------------------------------"
-    println ">>> You may want to comment or uncomment several modules in 'settings.gradle':"
-    println "- opencv"
-    println "- Project-Trunk:REST-clients:REST-assembler:springboot-sensors"
-    println "--------------------------------------------------------------------------------------"
+    println "+---------------------------------------------------------------------------------------"
+    println "| >>> You may want to comment or uncomment several modules in 'settings.gradle':"
+    println "|     - opencv"
+    println "|     - Project-Trunk:REST-clients:REST-assembler:springboot-sensors"
+    println "| Also, depending on your environment, scala steps might be too demanding..."
+    println "| If needed, you can exclude them, like in ./gradlew clean build -x :<module-name>:compileScala "
+    println "+---------------------------------------------------------------------------------------"
+    println " ... and the --continue flag is still available."
+    println "+---------------------------------------------------------------------------------------"
 }
