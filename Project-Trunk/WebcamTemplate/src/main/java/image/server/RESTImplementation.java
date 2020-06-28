@@ -343,10 +343,14 @@ public class RESTImplementation {
 		Map<String, String> prms = request.getQueryStringParameters();
 
 		if (verbose) {
-			System.out.println("getLastSnapshot, Query String");
-			prms.keySet().forEach(key -> {
-				System.out.println(String.format("%s=%s", key, prms.get(key)));
-			});
+			System.out.println("getLastSnapshot, Query String:");
+			if (prms != null) {
+				prms.keySet().forEach(key -> {
+					System.out.println(String.format("%s=%s", key, prms.get(key)));
+				});
+			} else {
+				System.out.println("getLastSnapshot, No QueryString");
+			}
 		}
 
 		String fileName = SnaphotServer.snapshotName;
@@ -366,6 +370,9 @@ public class RESTImplementation {
 		final Map<Integer, String> transformations = new TreeMap<>((o1, o2) -> o1.compareTo(o2)); // smaller to greater
 		if (prms != null && prms.size() > 0) {
 			prms.keySet().forEach(k -> {
+				if (verbose) {
+					System.out.println(String.format("Managing SQ prm %s : %s", k, prms.get(k)));
+				}
 				if (supported.contains(k)) {
 					try {
 						int idx = Integer.parseInt(prms.get(k));
