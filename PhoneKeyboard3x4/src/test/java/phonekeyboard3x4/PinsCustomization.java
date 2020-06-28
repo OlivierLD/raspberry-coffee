@@ -2,6 +2,7 @@ package phonekeyboard3x4;
 
 import membrane.MembraneKeyPad1x4;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.security.InvalidParameterException;
@@ -12,6 +13,11 @@ import static org.junit.Assert.assertTrue;
 public class PinsCustomization {
 
 	KeyboardController controller;
+
+	@Before
+	public void getStarted() {
+		System.out.println(String.format("Getting started on ", this.getClass().getName()));
+	}
 
 	@Test
 	public void badOne() {
