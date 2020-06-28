@@ -283,6 +283,16 @@ _Note:_
 This project uses `gradle` and `git`. `Gradle` will be installed automatically if it is not present on your system,
 it uses the gradle wrapper (`gradlew`).
 
+> To have a first idea of the structure of the project, use
+```
+ $ ./gradlew projects
+```
+> Sub-projects may have dependencies.
+```
+ $ cd Project-Trunk/REST-clients/REST-assembler
+ $ ../../../gradlew dependencies
+```
+
 `Git` is usually installed on Linux and Mac, but not on all versions of Windows. On Windows, you need to install the [`git bash shell`](http://lmgtfy.com/?q=install+git+bash+shell+on+windows), and run _in it_ the commands mentioned in this document.
 Recent versions of Windows (like Windows 10) seem to come with a git command available in  a Terminal. But this forward-slash/back-slash story
 remains in your way, I have not tested it.
