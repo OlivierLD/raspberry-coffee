@@ -74,5 +74,7 @@ task runSamples(type: JavaExec, dependsOn: classes, description: 'Runs the sampl
 }
 
 runSamples.doFirst {
+    println "--------------------------------------------------------------------------------------"
     println ">>> Run like this: gradlew runSamples --console plain --no-daemon"
+    println "--------------------------------------------------------------------------------------"
 }

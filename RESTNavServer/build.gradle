@@ -45,7 +45,6 @@ dependencies {
   compile project (':RESTRouting')
   compile project (':NMEA-multiplexer')
   compile project (':NMEA-mux-extensions')
-  compile project (':Project-Trunk:SunFlower')
 }
 
 import com.eriwen.gradle.js.tasks.MinifyJsTask

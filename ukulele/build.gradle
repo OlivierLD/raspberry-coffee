@@ -57,7 +57,9 @@ task chordFinder(type: JavaExec, dependsOn: classes, description: 'Runs the samp
 }
 
 chordFinder.doFirst {
+    println "--------------------------------------------------------------------------------------"
     println ">>> Run like this: gradlew chordFinder --console plain --no-daemon"
+    println "--------------------------------------------------------------------------------------"
 }
 
 task keyChordFinder(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
@@ -67,7 +69,9 @@ task keyChordFinder(type: JavaExec, dependsOn: classes, description: 'Runs the s
 }
 
 keyChordFinder.doFirst {
+    println "--------------------------------------------------------------------------------------"
     println ">>> Run like this: gradlew keyChordFinder --console plain --no-daemon"
+    println "--------------------------------------------------------------------------------------"
 }
 
 shadowJar {

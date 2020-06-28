@@ -42,7 +42,9 @@ repositories {
 }
 
 build.doFirst {
+    println "--------------------------------------------------------------------------------------"
     println ">>> You may want to comment or uncomment several modules in 'settings.gradle':"
     println "- opencv"
     println "- Project-Trunk:REST-clients:REST-assembler:springboot-sensors"
+    println "--------------------------------------------------------------------------------------"
 }

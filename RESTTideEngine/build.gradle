@@ -87,6 +87,8 @@ task harmonicsXML(type: JavaExec, dependsOn: build, description: "Generate the X
 }
 
 harmonicsXML.doFirst {
+  println "--------------------------------------------------------------------------------------"
   println ">>> Run like this: gradlew harmonicsXML [--console plain] --no-daemon"
+  println "--------------------------------------------------------------------------------------"
 }
 

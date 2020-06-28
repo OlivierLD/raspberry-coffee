@@ -18,8 +18,10 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 bootJar.doFirst {
+    println "--------------------------------------------------------------------------------------"
     println ">>> Make sure you've run gradle install from common-utils, RMI-sample, I2C-SPI and ADC"
     println ">>> You'd see a bootJar failure otherwise"
+    println "--------------------------------------------------------------------------------------"
 }
 
 // This bootJar comes with SpringBoot. Sounds like shadowJar
@@ -40,8 +42,11 @@ repositories {
 // targetCompatibility = 1.8
 
 dependencies {
-    compile 'oliv.raspi.coffee:I2C-SPI:1.0' // Might require a gradle install from those 2
-    compile 'oliv.raspi.coffee:ADC:1.0'
+//    compile 'oliv.raspi.coffee:I2C-SPI:1.0' // Might require a gradle install from those 2
+//    compile 'oliv.raspi.coffee:ADC:1.0'
+
+    compile project (':I2C-SPI')
+    compile project (':ADC')
 
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-actuator")

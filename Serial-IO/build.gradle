@@ -36,9 +36,11 @@ task runArduinoSample(type: JavaExec, dependsOn: classes, description: 'Runs the
 }
 
 runArduinoSample.doFirst {
+    println "--------------------------------------------------------------------------------------"
     println ">>> Make sure you have uploaded the right sketch on the Arduino, and connected it through its USB cable."
     println ">>> Also make sure you've installed RXTX, and modified the java.library.path accordingly (in this script)"
     println ">>> If no port is found, try to run the task as root (sudo). The script 'runArduinoSample' can help you with that."
+    println "--------------------------------------------------------------------------------------"
 }
 
 task runGPSSample(type: JavaExec, dependsOn: classes, description: 'Runs the GPS Serial.IO sample') {

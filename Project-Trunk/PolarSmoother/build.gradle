@@ -48,5 +48,7 @@ task runSmoother(type: JavaExec, dependsOn: classes, description: 'Runs the Pola
 }
 
 runSmoother.doFirst {
+  println "--------------------------------------------------------------------------------------"
   println ">>> Run like this: gradlew runSample --console plain --no-daemon"
+  println "--------------------------------------------------------------------------------------"
 }
