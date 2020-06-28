@@ -32,7 +32,7 @@ dependencies {
     compile 'javax.interceptor:javax.interceptor-api:1.2.2'
     compile 'org.yaml:snakeyaml:1.21'
     compile 'oracle:xmlparser:2.0'
-    // Require tools.jar, from the JDK
+    // Require tools.jar, from the JDK (Doclet and Co)
 //    compile files(org.gradle.internal.jvm.Jvm.current().toolsJar)
     compile files("${System.getProperty('java.home')}/../lib/tools.jar")
     testCompile group: 'junit', name: 'junit', version: '4.11'
