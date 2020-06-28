@@ -44,6 +44,6 @@ shadowJar {
 
 build.doFirst {
     println "--------------------------------------------------------------------------------------"
-    println ">>> This requires OpenCV to be installed, and possibly some modification in build.gradle."
+    println ">>> This requires OpenCV to be installed, and possibly some path modifications in build.gradle."
     println "--------------------------------------------------------------------------------------"
 }
