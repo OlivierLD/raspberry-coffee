@@ -378,52 +378,57 @@ public class RESTImplementation {
 			if ("true".equals(System.getProperty("with.opencv", "true"))) {
 				try {
 					Mat image = Imgcodecs.imread(SnaphotServer.snapshotName);
-					System.out.println(String.format("Original image: w %d, h %d, channels %d", image.width(), image.height(), image.channels()));
-					Mat finalMat = image;
+					System.out.println(String.format("Original image: w %d, h %d, %d channel(s)", image.width(), image.height(), image.channels()));
+					if (image.width() > 0 && image.height() > 0) {
+						Mat finalMat = image;
 
-					for (int rank : transformations.keySet()) {
-						System.out.println(String.format("%d -> %s", rank, transformations.get(rank)));
-						String tx = transformations.get(rank);
-						switch (tx) {
-							case "gray":
-								Mat gray = new Mat();
-								Imgproc.cvtColor(finalMat, gray, Imgproc.COLOR_BGR2GRAY);
-								finalMat = gray;
-								break;
-							case "blur":
-								double sigmaX = 0d;
-								final Size kSize = new Size(31, 31);
-								Mat blurred = new Mat();
-								Imgproc.GaussianBlur(finalMat, blurred, kSize, sigmaX);
-								finalMat = blurred;
-								break;
-							case "threshold":
-								Mat threshed = new Mat();
-								Imgproc.threshold(finalMat, threshed, 127, 255, 0);
-								finalMat = threshed;
-								break;
-							case "canny":
-								Mat canny = new Mat();
-								Imgproc.Canny(finalMat, canny, 10, 100);
-								finalMat = canny;
-								break;
-							case "contours": // That one needs some love...
-								List<MatOfPoint> contours = new ArrayList<>();
-								Imgproc.findContours(finalMat, contours, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-								Imgproc.drawContours(finalMat, contours, -1, new Scalar(0, 255, 0), 2);
-								break;
-							case "invert":
-								Mat inverted = new Mat();
-								Core.bitwise_not(finalMat, inverted);
-								finalMat = inverted;
-								break;
-							default:
-								break;
+						for (int rank : transformations.keySet()) {
+							System.out.println(String.format("%d -> %s", rank, transformations.get(rank)));
+							String tx = transformations.get(rank);
+							switch (tx) {
+								case "gray":
+									Mat gray = new Mat();
+									Imgproc.cvtColor(finalMat, gray, Imgproc.COLOR_BGR2GRAY);
+									finalMat = gray;
+									break;
+								case "blur":
+									double sigmaX = 0d;
+									final Size kSize = new Size(31, 31);
+									Mat blurred = new Mat();
+									Imgproc.GaussianBlur(finalMat, blurred, kSize, sigmaX);
+									finalMat = blurred;
+									break;
+								case "threshold":
+									Mat threshed = new Mat();
+									Imgproc.threshold(finalMat, threshed, 127, 255, 0);
+									finalMat = threshed;
+									break;
+								case "canny":
+									Mat canny = new Mat();
+									Imgproc.Canny(finalMat, canny, 10, 100);
+									finalMat = canny;
+									break;
+								case "contours": // That one needs some love...
+									List<MatOfPoint> contours = new ArrayList<>();
+									Imgproc.findContours(finalMat, contours, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+									Imgproc.drawContours(finalMat, contours, -1, new Scalar(0, 255, 0), 2);
+									break;
+								case "invert":
+									Mat inverted = new Mat();
+									Core.bitwise_not(finalMat, inverted);
+									finalMat = inverted;
+									break;
+								default:
+									break;
+							}
 						}
+						fileName = SnaphotServer.txSnapshotName;
+						urlFullPath = SnaphotServer.txSnapshotName;
+						Imgcodecs.imwrite(fileName, finalMat);
+					} else {
+						// Empty!
+						System.out.println("Image is empty.");
 					}
-					fileName = SnaphotServer.txSnapshotName;
-					urlFullPath = SnaphotServer.txSnapshotName;
-					Imgcodecs.imwrite(fileName, finalMat);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
