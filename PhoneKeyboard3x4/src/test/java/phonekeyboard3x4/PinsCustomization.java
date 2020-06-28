@@ -16,7 +16,7 @@ public class PinsCustomization {
 
 	@Before
 	public void getStarted() {
-		System.out.println(String.format("Getting started on ", this.getClass().getName()));
+		System.out.println(String.format("Getting started on %s", this.getClass().getName()));
 	}
 
 	@Test
