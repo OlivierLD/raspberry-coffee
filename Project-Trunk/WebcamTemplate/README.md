@@ -224,6 +224,9 @@ Here are a couple of examples:
 
 ... More to come!
 
+### A warning
+It seems that `raspistill` can have some problems with the 64-bit OS on the Raspberry Pi...
+
 #### TODO Next
 - a zoom
 - fix the `contours` option...
