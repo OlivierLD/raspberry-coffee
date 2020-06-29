@@ -238,8 +238,11 @@ There are some samples in `server.sh` as well.
 
 ## Summary
 To run this small app:
+- Make sure you have a camera connected (and enabled) on the Raspberry Pi
 - Start the server (`./server.sh` on the Raspberry Pi)
 - Start the Snap Thread (through REST - `curl -X POST http://raspi-addr:1234/snap/commands/start -H "camera-rot: 0" -H "camera-width: 1280" -H "camera-height: 720"` )
-- Reach the app page in the browser, and choose the options.
+- Reach the app page in the browser, and choose the options. Default address is `http://raspi-addr:1234/web/index.html`.
+
+That's it!
 
 ---
