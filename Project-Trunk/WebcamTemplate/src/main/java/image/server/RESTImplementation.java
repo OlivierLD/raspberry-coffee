@@ -405,7 +405,7 @@ public class RESTImplementation {
 						Mat finalMat = image;
 
 						for (int rank : transformations.keySet()) {
-							System.out.println(String.format("%d -> %s", rank, transformations.get(rank)));
+//							System.out.println(String.format("%d -> %s", rank, transformations.get(rank)));
 							String tx = transformations.get(rank);
 							switch (tx) {
 								case "gray":
