@@ -198,7 +198,7 @@ public class SnapSnapSnap extends Thread {
 		// Requires sudo apt-get install fswebcam
 		// See http://www.raspberrypi.org/documentation/usage/webcams/ for some doc.
 		// and fswebcam --help
-		FSWEBCAM("fswebcam --rotate %d --resolution %dx%d %s --no-banner");
+		FSWEBCAM("fswebcam --rotate %d --resolution %dx%d --no-banner %s"); // 1280x720 works good
 
 		private final String command;
 

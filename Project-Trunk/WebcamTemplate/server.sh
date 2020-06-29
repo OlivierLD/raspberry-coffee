@@ -13,7 +13,7 @@ OPENCV_HOME=/usr/local/share/java/opencv4
 #
 IP=$(hostname -I | awk '{ print $1 }')
 echo -e "Make sure you've started the snap thread (in the REST server)! Port: default is 1234, override with -Dhttp.port"
-echo -e "like curl -X POST http://${IP}:1234/snap/commands/start -H \"camera-rot: 0\" -H \"camera-width: 480\" -H \"camera-height: 320\""
+echo -e "like curl -X POST http://${IP}:1234/snap/commands/start -H \"camera-rot: 0\" -H \"camera-width: 1280\" -H \"camera-height: 720\""
 echo -e "Full operation list available from curl -X GET http://${IP}:1234/oplist"
 #
 echo -en "Hit return to move on "
