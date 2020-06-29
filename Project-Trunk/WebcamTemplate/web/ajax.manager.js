@@ -5,13 +5,6 @@
 
 const DEBUG = false;
 
-function initAjax() {
-	let interval = setInterval(() => {
-		fetch();
-		loadSunData(lastKnownPos);
-	}, 1000);
-}
-
 const DEFAULT_TIMEOUT = 60000; // 1 minute
 /* global events */
 
@@ -20,9 +13,9 @@ function getPromise(
 		url,                          // full api path
 		timeout,                      // After that, fail.
 		verb,                         // GET, PUT, DELETE, POST, etc
-		headers,                      // Request Headers, or null.
+		headers,                      // Request Headers, or null. Array of { 'name': 'header-name', 'value: 'Value' }
 		happyCode,                    // if met, resolve, otherwise fail.
-		data = null,                  // payload, when needed (PUT, POST...)
+		data = null,                  // json payload, when needed (PUT, POST...)
 		show = true) {                // Show the traffic [true]|false
 
 	if (show === true) {
@@ -50,7 +43,7 @@ function getPromise(
 			});
 		}
 		try {
-			if (data === undefined || data === null) {
+			if (/*data === undefined || */ data === null) {
 				xhr.send();
 			} else {
 				xhr.send(JSON.stringify(data));
@@ -80,23 +73,23 @@ function getPromise(
 function getLastSnapshot(prms) {
 	let qs = '';
 	if (prms !== undefined && prms.length > 0) {
-		prms.forEach(prm => {
+		prms.forEach(prm => { // Compose Query String
 			qs += `${qs.length > 0 ? '&' : ''}${prm}`;
 		});
 	}
 	return getPromise(`/snap/last-snapshot${qs.length > 0 ? `?${qs}` : ""}`,
-			DEFAULT_TIMEOUT,
-			'GET',
-			[ {name: "Accept", value: "application/json"},
-				        {name: "Pragma", value: "no-cache"} ],
-			200,
-			null,
-			false);
+		DEFAULT_TIMEOUT,
+		'GET',
+		[{name: "Accept", value: "application/json"},
+			{name: "Pragma", value: "no-cache"}],
+		200,
+		null,
+		false);
 }
 
 function fetchPix(prms, callback) {
 	let getData = getLastSnapshot(prms);
-	getData.then((value) => { // Resolve
+	getData.then(value => { // Resolve
 //  console.log("Done:", value);
 		try {
 			let json = JSON.parse(value);
@@ -106,10 +99,12 @@ function fetchPix(prms, callback) {
 				console.log(json); // Do something smart here.
 			}
 		} catch (err) {
-			console.log("Error:", err, ("\nfor value [" + value + "]"));
+			console.log(`Error:${err} \nfor value [${value}]`);
 		}
-	}, (error) => { // Reject
-		console.log("Failed to get the last snapshot..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
+	}, error => { // Reject
+		console.log("Failed to get the last snapshot..." +
+			(error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' +
+			(error !== undefined && error.message !== undefined ? error.message : ' - '));
 	});
 }
 

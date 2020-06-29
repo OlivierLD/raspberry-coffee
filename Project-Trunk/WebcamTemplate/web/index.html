@@ -48,7 +48,7 @@
 				prms.push(`invert=${invert}`);
 			}
 
-			fetchPix(prms, json => {
+			fetchPix(prms, json => { // Callback
 				// console.log("Got this:", json);
 				let imgUrl = location.protocol + '//' + location.host + '/' + json.snapUrl +
 				  `?${Math.random()}`; // To force a refresh, un-cached URL...
@@ -86,17 +86,19 @@
 
 	<h1>Raspberry Snap</h1>
 
-	<button onclick="buttonClicked();">Refresh</button> &nbsp; <input type="checkbox" onchange="loop(this);"> Loop.
+	<div><button onclick="buttonClicked();">Refresh</button> &nbsp; <input type="checkbox" onchange="loop(this);"> Loop.</div>
 	<div id="the-picture-1" style="display: none;"></div>
 	<div id="the-picture-2" style="display: none;"></div>
 	<hr/>
-	<i>Processing order:</i><br/>
-	Gray:<input type="number" id="gray" min="0" step="1" placeholder="Gray" value="0" style="width: 50px; text-align: right;"/>
-	Blur:<input type="number" id="blur" min="0" step="1" placeholder="Blur" value="0" style="width: 50px; text-align: right;"/>
-	Threshold:<input type="number" id="threshold" min="0" step="1" placeholder="Threshold" value="0" style="width: 50px; text-align: right;"/>
-	Canny:<input type="number" id="canny" min="0" step="1" placeholder="Canny" value="0" style="width: 50px; text-align: right;"/>
-	Contours:<input type="number" id="contours" min="0" step="1" placeholder="Contours" value="0" style="width: 50px; text-align: right;"/>
-	Invert:<input type="number" id="invert" min="0" step="1" placeholder="Invert" value="0" style="width: 50px; text-align: right;"/>
+	<div>
+		<div style="margin-bottom: 5px;"><i>Processing order:</i></div>
+		Gray:<input type="number" id="gray" min="0" step="1" placeholder="Gray" value="0" style="width: 50px; text-align: right;"/>
+		Blur:<input type="number" id="blur" min="0" step="1" placeholder="Blur" value="0" style="width: 50px; text-align: right;"/>
+		Threshold:<input type="number" id="threshold" min="0" step="1" placeholder="Threshold" value="0" style="width: 50px; text-align: right;"/>
+		Canny:<input type="number" id="canny" min="0" step="1" placeholder="Canny" value="0" style="width: 50px; text-align: right;"/>
+		Contours:<input type="number" id="contours" min="0" step="1" placeholder="Contours" value="0" style="width: 50px; text-align: right;"/>
+		Invert:<input type="number" id="invert" min="0" step="1" placeholder="Invert" value="0" style="width: 50px; text-align: right;"/>
+	</div>
 	<hr/>
 	<address>&copy; OlivSoft, 2020</address>
 </body>
