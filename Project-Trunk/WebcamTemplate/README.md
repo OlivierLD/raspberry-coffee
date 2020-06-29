@@ -234,7 +234,7 @@ There are some sample in `server.sh` as well.
 #### TODO Next
 - a zoom
 - fix the `contours` option...
-- code fpr a stop-motion app
+- code for a stop-motion app
 
 ## Summary
 To run this small app:
