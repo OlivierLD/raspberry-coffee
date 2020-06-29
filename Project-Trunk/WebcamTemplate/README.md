@@ -239,7 +239,7 @@ There are some sample in `server.sh` as well.
 ## Summary
 To run this small app:
 - Start the server (`./server.sh` on the Raspberry Pi)
-- Start the Snap Thread
+- Start the Snap Thread (through REST - `curl -X POST http://raspi-addr:1234/snap/commands/start -H "camera-rot: 0" -H "camera-width: 1280" -H "camera-height: 720"` )
 - Reach the app page in the browser, and choose the options.
 
 ---
