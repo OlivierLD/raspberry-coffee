@@ -193,12 +193,13 @@ public class SnapSnapSnap extends Thread {
 
 	public enum SnapshotOptions {
 		// The --timeout seem to degrade the quality of the picture, specially outside...
-		RASPISTILL("raspistill -rot %d --width %d --height %d --output %s --nopreview"), // --timeout 1
+		RASPISTILL("raspistill --rotation %d --width %d --height %d --output %s --nopreview"), // --timeout 1
 		// For a webcam (and also for the RPi Camera)
 		// Requires sudo apt-get install fswebcam
 		// See http://www.raspberrypi.org/documentation/usage/webcams/ for some doc.
 		// and fswebcam --help
-		FSWEBCAM("fswebcam --rotate %d --resolution %dx%d --no-banner %s"); // 1280x720 works good
+		// Default device is /dev/video0
+		FSWEBCAM("fswebcam --rotate %d --resolution %dx%d --no-banner --device /dev/video1 %s"); // 1280x720 works good.
 
 		private final String command;
 
