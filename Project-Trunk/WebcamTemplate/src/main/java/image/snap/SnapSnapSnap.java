@@ -288,7 +288,21 @@ public class SnapSnapSnap extends Thread {
 		} else {
 			snapshotCommandOption = snapOpt.get();
 		}
-		additionalArguments = System.getProperty("additional.arguments", "");
+		String radix = "additional.arguments.%d";
+//      Expect variables like
+//		-Dadditional.arguments.1=--device"
+//		-Dadditional.arguments.2=/dev/video1"
+//        etc...
+		int aaRnk = 0;
+		while (true) {
+			aaRnk++;
+			String oneAdditionalArguments = System.getProperty(String.format(radix, aaRnk));
+			if (oneAdditionalArguments != null) {
+				additionalArguments += String.format("%s ", oneAdditionalArguments);
+			} else {
+				break;
+			}
+		}
 	}
 
 	private boolean keepSnapping = true;

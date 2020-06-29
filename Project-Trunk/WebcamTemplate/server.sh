@@ -8,7 +8,8 @@ PROPS="${PROPS} -Dwith.opencv=true"
 # PROPS="${PROPS} -Dhttp.verbose=true"
 # PROPS="${PROPS} -Dhttp.verbose.dump=true"
 PROPS="${PROPS} -Dsnapshot.command=FSWEBCAM"
-PROPS="${PROPS} -Dadditional.arguments=\"--device /dev/video1\""
+PROPS="${PROPS} -Dadditional.arguments.1=--device"
+PROPS="${PROPS} -Dadditional.arguments.2=/dev/video1"
 #
 OPENCV_HOME=/usr/local/share/java/opencv4
 #
