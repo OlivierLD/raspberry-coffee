@@ -7,6 +7,7 @@ PROPS=
 PROPS="${PROPS} -Dwith.opencv=true"
 # PROPS="${PROPS} -Dhttp.verbose=true"
 # PROPS="${PROPS} -Dhttp.verbose.dump=true"
+PROPS="${PROPS} -Dsnapshot.command=FSWEBCAM"
 #
 OPENCV_HOME=/usr/local/share/java/opencv4
 #
