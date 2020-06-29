@@ -193,13 +193,13 @@ public class SnapSnapSnap extends Thread {
 
 	public enum SnapshotOptions {
 		// The --timeout seem to degrade the quality of the picture, specially outside...
-		RASPISTILL("raspistill --rotation %d --width %d --height %d --output %s --nopreview"), // --timeout 1
+		RASPISTILL("raspistill --rotation %d --width %d --height %d  %s --output %s --nopreview"), // --timeout 1
 		// For a webcam (and also for the RPi Camera)
 		// Requires sudo apt-get install fswebcam
 		// See http://www.raspberrypi.org/documentation/usage/webcams/ for some doc.
 		// and fswebcam --help
-		// Default device is /dev/video0
-		FSWEBCAM("fswebcam --rotate %d --resolution %dx%d --no-banner --device /dev/video1 %s"); // 1280x720 works good.
+		// Default device is /dev/video0. Use `additionalArguments` to modify it, with a content like '--device /dev/video1'
+		FSWEBCAM("fswebcam --rotate %d --resolution %dx%d --no-banner %s %s"); // 1280x720 works good.
 
 		private final String command;
 
@@ -212,6 +212,7 @@ public class SnapSnapSnap extends Thread {
 		}
 	}
 	private static SnapshotOptions snapshotCommandOption = SnapshotOptions.RASPISTILL; // Default
+	private static String additionalArguments = "";
 
 
 	// Slow motion (fswebcam also has the feature)
@@ -235,7 +236,7 @@ public class SnapSnapSnap extends Thread {
 		// NOTE: The web directory has to exist on the Raspberry Pi
 		String snapshotName = name; // String.format("web/%s.jpg", name);
 		try {
-			String command = String.format(snapshotCommandOption.command(), rot, width, height, snapshotName);
+			String command = String.format(snapshotCommandOption.command(), rot, width, height, additionalArguments, snapshotName);
 			if ("true".equals(System.getProperty("snap.verbose", "false"))) {
 				System.out.println("Running command:" + command);
 			}
@@ -287,6 +288,7 @@ public class SnapSnapSnap extends Thread {
 		} else {
 			snapshotCommandOption = snapOpt.get();
 		}
+		additionalArguments = System.getProperty("additional.arguments", "");
 	}
 
 	private boolean keepSnapping = true;
