@@ -1,5 +1,5 @@
 # Foundation for a WebCam Web Application
-We'll be using the regular Raspberry Pi Camera Module.
+We'll be using the regular Raspberry Pi Camera Module (or a regular WebCam, with `fswebcam`).
 
 We are talking about snapshots here, _not_ videos.
 
