@@ -229,7 +229,7 @@ It seems that `raspistill` can have some problems with the 64-bit OS on the Rasp
 But `fswebcam` works good. This is why there are several "snapshot command" options, `raspistill` being the default.
 
 See in the code how system variables `-Dsnapshot.command=FSWEBCAM` and related are managed.
-There are some sample in `server.sh` as well. 
+There are some samples in `server.sh` as well. 
 
 #### TODO Next
 - a zoom
