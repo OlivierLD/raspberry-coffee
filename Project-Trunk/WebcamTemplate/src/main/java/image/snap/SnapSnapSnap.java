@@ -6,9 +6,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * -Dsnap.verbose
+ * -Dsnapshot.command=RASPISTILL|FSWEBCAM
  */
 public class SnapSnapSnap extends Thread {
 
@@ -187,15 +191,29 @@ public class SnapSnapSnap extends Thread {
 		this.keepSnapping = keepSnapping;
 	}
 
-	// The --timeout seem to degrade the quality of the picture, specially outside...
-	private final static String SNAPSHOT_COMMAND_1 = "raspistill -rot %d --width %d --height %d --output %s --nopreview"; // --timeout 1
+	public enum SnapshotOptions {
+		// The --timeout seem to degrade the quality of the picture, specially outside...
+		RASPISTILL("raspistill -rot %d --width %d --height %d --output %s --nopreview"), // --timeout 1
+		// For a webcam (and also for the RPi Camera)
+		// Requires sudo apt-get install fswebcam
+		// See http://www.raspberrypi.org/documentation/usage/webcams/ for some doc.
+		// and fswebcam --help
+		FSWEBCAM("fswebcam --rotate %d --resolution %dx%d %s --no-banner");
 
-	// For a webcam
-	// Requires sudo apt-get install fswebcam
-	// See http://www.raspberrypi.org/documentation/usage/webcams/ for some doc.
-	private final static String SNAPSHOT_COMMAND_2 = "fswebcam snap%s.jpg";
+		private final String command;
 
-	// Slow motion:
+		SnapshotOptions(String command) {
+			this.command = command;
+		}
+
+		public String command() {
+			return this.command;
+		}
+	}
+	private static SnapshotOptions snapshotCommandOption = SnapshotOptions.RASPISTILL; // Default
+
+
+	// Slow motion (fswebcam also has the feature)
 	private final static String SNAPSHOT_COMMAND_3 = "raspivid -w 640 -h 480 -fps 90 -t 30000 -o vid.h264";
 
 	public SnapStatus getSnapStatus() {
@@ -216,7 +234,7 @@ public class SnapSnapSnap extends Thread {
 		// NOTE: The web directory has to exist on the Raspberry Pi
 		String snapshotName = name; // String.format("web/%s.jpg", name);
 		try {
-			String command = String.format(SNAPSHOT_COMMAND_1, rot, width, height, snapshotName);
+			String command = String.format(snapshotCommandOption.command(), rot, width, height, snapshotName);
 			if ("true".equals(System.getProperty("snap.verbose", "false"))) {
 				System.out.println("Running command:" + command);
 			}
@@ -256,6 +274,18 @@ public class SnapSnapSnap extends Thread {
 	}
 	public SnapSnapSnap(String threadName) {
 		super(threadName);
+		String snapshotCommand = System.getProperty("snapshot.command", "RASPISTILL");
+		Optional<SnapshotOptions> snapOpt = Arrays.asList(SnapshotOptions.values())
+				.stream()
+				.filter(snap -> snap.toString().equals(snapshotCommand))
+				.findFirst();
+		if (snapshotCommand.isEmpty()) {
+			System.out.println(String.format("WARNING: Invalid snapshot option %s", snapshotCommand));
+			System.out.println(String.format("Can only be one of:\n%s",
+					Arrays.asList(SnapshotOptions.values()).stream().map(Object::toString).collect(Collectors.joining("\n"))));
+		} else {
+			snapshotCommandOption = snapOpt.get();
+		}
 	}
 
 	private boolean keepSnapping = true;

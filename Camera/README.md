@@ -1,5 +1,6 @@
 # Image manipulation utilities
 ### Can be used on the server side, or in standalone
+> Note: This is very lightweight. For real image manipulation, have a look at OpenCV.
 
 ## Examples
 
