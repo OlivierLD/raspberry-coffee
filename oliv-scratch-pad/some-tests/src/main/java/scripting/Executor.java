@@ -48,6 +48,8 @@ public class Executor {
 			reader.close();
 		}
 		// Another approach
+		System.out.println("Approach two:");
+		engine = factory.getEngineByName("nashorn"); // Reset the context.
 		try {
 			String command = String.format("load('%s');", script);
 			System.out.println(String.format("Executing [%s]", command));
