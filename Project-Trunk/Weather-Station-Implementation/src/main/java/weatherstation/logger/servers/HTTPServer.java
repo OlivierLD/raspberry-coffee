@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 /**
  * Very basic HTTP Server, just an example.
- * Could eventually be replaced by the http.HTTPServer in common-utils.
+ * Could/Should eventually be replaced by the http.HTTPServer in common-utils.
  */
 public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
@@ -26,6 +26,17 @@ public class HTTPServer {
 
 	private long started = 0L;
 	private List<Consumer<Request>> callbacks = null;
+
+	private final static class HttpHeaders {
+		public final static String CONTENT_TYPE = "Content-Type";
+		public final static String CONTENT_LENGTH = "Content-Length";
+		public final static String USER_AGENT = "User-Agent";
+		public final static String ACCEPT = "Accept";
+
+		public final static String TEXT_PLAIN = "text/plain";
+		public final static String TEXT_XML = "text/xml";
+		public final static String APPLICATION_JSON = "application/json";
+	}
 
 	public HTTPServer() throws Exception {
 		// Bind the server
@@ -118,11 +129,11 @@ public class HTTPServer {
 							});
 						}
 
-						String contentType = "text/plain";
+						String contentType = HttpHeaders.TEXT_PLAIN;
 						String content = "exit";
 						if (go) {
 							if (("/all".equals(request.getPath()) || "/".equals(request.getPath())) && "GET".equals(request.getVerb())) {
-								contentType = "application/json";
+								contentType = HttpHeaders.APPLICATION_JSON;
 								content = (generateContent());
 							} else {
 								content = ""; // Duh...

@@ -38,6 +38,17 @@ public class EmailSender {
 
 	private static boolean verbose = "true".equals(System.getProperty("email.verbose", "false"));
 
+	private static final class HttpHeaders {
+		public final static String CONTENT_TYPE = "Content-Type";
+		public final static String CONTENT_LENGTH = "Content-Length";
+		public final static String USER_AGENT = "User-Agent";
+		public final static String ACCEPT = "Accept";
+
+		public final static String TEXT_PLAIN = "text/plain";
+		public final static String TEXT_XML = "text/xml";
+		public final static String APPLICATION_JSON = "application/json";
+	}
+
 	public EmailSender(String provider) throws RuntimeException {
 		EmailSender.protocol = "";
 		EmailSender.outgoingPort = 0;
@@ -172,14 +183,14 @@ public class EmailSender {
 			// 1 - Text Content
 			BodyPart messageBodyPart = new MimeBodyPart();
 			messageBodyPart.setText(content);
-			messageBodyPart.setHeader("Content-Type", (mimeType == null ? "text/plain" : mimeType));
+			messageBodyPart.setHeader(HttpHeaders.CONTENT_TYPE, (mimeType == null ? HttpHeaders.TEXT_PLAIN : mimeType));
 			Multipart multipart = new MimeMultipart();
 			// Set text message part
 			multipart.addBodyPart(messageBodyPart);
 
 			// Part two is attachment
 			messageBodyPart = new MimeBodyPart();
-			messageBodyPart.setHeader("Content-Type", (attachmentMimeType == null ? "text/plain" : attachmentMimeType));
+			messageBodyPart.setHeader(HttpHeaders.CONTENT_TYPE, (attachmentMimeType == null ? HttpHeaders.TEXT_PLAIN : attachmentMimeType));
 			String filename = attachment;
 			DataSource source = new FileDataSource(filename);
 			messageBodyPart.setDataHandler(new DataHandler(source));
@@ -189,7 +200,7 @@ public class EmailSender {
 			msg.setContent(multipart);
 		} else {
 			msg.setText(content != null ? content : "");
-			msg.setContent(content, (mimeType == null ? "text/plain" : mimeType));
+			msg.setContent(content, (mimeType == null ? HttpHeaders.TEXT_PLAIN : mimeType));
 		}
 		msg.saveChanges();
 		if (verbose) {

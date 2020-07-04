@@ -1,6 +1,7 @@
 package nmea.forwarders;
 
 import http.client.HTTPClient;
+import http.HttpHeaders;
 import nmea.parser.RMC;
 import nmea.parser.StringGenerator;
 import nmea.parser.StringParsers;
@@ -101,7 +102,7 @@ public class RESTPublisher implements Forwarder {
 					feed);
 			Map<String, String> headers = new HashMap<>(1);
 			headers.put("X-AIO-Key", key);
-			headers.put("content-type", "application/json");
+			headers.put(HttpHeaders.CONTENT_TYPE, HttpHeaders.APPLICATION_JSON);
 			JSONObject json = new JSONObject();
 			json.put("value", new Double(value));
 			if ("true".equals(this.properties.getProperty("aio.verbose.1"))) {

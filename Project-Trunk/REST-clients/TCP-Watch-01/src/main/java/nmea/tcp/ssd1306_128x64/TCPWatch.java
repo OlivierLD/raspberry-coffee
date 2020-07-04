@@ -12,6 +12,7 @@ import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import http.HTTPServer;
+import http.HttpHeaders;
 import http.client.HTTPClient;
 import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
@@ -183,7 +184,7 @@ public class TCPWatch {
 		String url =  baseUrl + "/mux/cache";
 
 		Map<String, String> headers = new HashMap<>(1);
-		headers.put("Accept", "application/json"); //, text/javascript, */*; q=0.01");
+		headers.put(HttpHeaders.ACCEPT, HttpHeaders.APPLICATION_JSON); //, text/javascript, */*; q=0.01");
 
 		HTTPServer.Request request = new HTTPServer.Request("GET", url, "HTTP/1.1");
 		request.setHeaders(headers);

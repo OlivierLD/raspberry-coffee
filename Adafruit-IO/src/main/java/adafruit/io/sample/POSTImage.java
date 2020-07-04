@@ -1,6 +1,7 @@
 package adafruit.io.sample;
 
 import adafruit.io.rest.HttpClient;
+import http.HttpHeaders;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -14,7 +15,7 @@ public class POSTImage {
 		String url = "https://io.adafruit.com/api/feeds/" + FEED_NAME + "/data";
 		Map<String, String> headers = new HashMap<>(2);
 		headers.put("X-AIO-Key", key);
-		headers.put("Content-Type", "application/json");
+		headers.put(HttpHeaders.CONTENT_TYPE, HttpHeaders.APPLICATION_JSON);
 		JSONObject json = new JSONObject();
 		json.put("value", base64);
 		String imgPayload = json.toString();

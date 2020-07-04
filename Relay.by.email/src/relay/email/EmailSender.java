@@ -191,7 +191,7 @@ public class EmailSender
     else
     {
       msg.setText(content != null ? content : "");
-      msg.setContent(content, "text/plain");
+      msg.setContent(content, HttpHeaders.TEXT_PLAIN);
     } 
     msg.saveChanges();
     if (verbose) System.out.println("sending:[" + content + "], " + Integer.toString(content.length()) + " characters");

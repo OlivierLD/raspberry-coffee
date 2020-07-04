@@ -13,6 +13,8 @@ object XMLParserSample03 {
   private val SCHEMA_LOCATION: String = "xml" + File.separator + "wireframe.xsd"
   private val NAMESPACE: String = "http://donpedro.lediouris.net/wireframe"
 
+  private[xml] var nsHash: Hashtable[String, String] = null
+
   private[xml] class CustomResolver private[xml]() extends NSResolver {
     nsHash = new Hashtable[String, String]
 
@@ -23,8 +25,6 @@ object XMLParserSample03 {
     def addNamespacePrefix(prefix: String, ns: String): Unit = {
       nsHash.put(prefix, ns)
     }
-
-    private[xml] var nsHash: Hashtable[String, String] = null
   }
 
 

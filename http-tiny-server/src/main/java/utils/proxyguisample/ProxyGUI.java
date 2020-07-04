@@ -1,6 +1,7 @@
 package utils.proxyguisample;
 
 import http.HTTPServer;
+import http.HttpHeaders;
 import http.client.HTTPClient;
 
 import java.awt.BorderLayout;
@@ -80,7 +81,7 @@ public class ProxyGUI extends JFrame {
 
 		// content?
 		if (request.getContent() != null && request.getContent().length > 0) {
-			if (request.getHeaders() != null && request.getHeaders().get("Content-Type") != null && HTTPServer.isText(request.getHeaders().get("Content-Type"))) {
+			if (request.getHeaders() != null && request.getHeaders().get(HttpHeaders.CONTENT_TYPE) != null && HTTPServer.isText(request.getHeaders().get(HttpHeaders.CONTENT_TYPE))) {
 				String requestPayload = new String(request.getContent());
 				requestPanel.addData(String.format("%s", requestPayload));
 			}
@@ -101,7 +102,7 @@ public class ProxyGUI extends JFrame {
 			respHeaders.keySet().forEach(k -> responsePanel.addData(String.format("%s: %s", k, respHeaders.get(k))));
 		}
 		if (response != null && response.getPayload() != null) {
-			if (response.getHeaders() != null && response.getHeaders().get("Content-Type") != null && HTTPServer.isText(response.getHeaders().get("Content-Type"))) {
+			if (response.getHeaders() != null && response.getHeaders().get(HttpHeaders.CONTENT_TYPE) != null && HTTPServer.isText(response.getHeaders().get(HttpHeaders.CONTENT_TYPE))) {
 				String responsePayload = new String(response.getPayload());
 				responsePanel.addData(String.format("%s", responsePayload));
 			}

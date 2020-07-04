@@ -1,5 +1,6 @@
 package stress;
 
+import http.HttpHeaders;
 import http.client.HTTPClient;
 
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class StressTest {
 
 				public void run() {
 					Map<String, String> headers = new HashMap<>();
-					headers.put("Content-Type", "application/json");
+					headers.put(HttpHeaders.CONTENT_TYPE, HttpHeaders.APPLICATION_JSON);
 					while (go) {
 						try {
 							System.out.println(String.format("%s >> %s", this.getName(), HTTPClient.doPost(url, headers, payload).getPayload()));

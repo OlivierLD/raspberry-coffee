@@ -19,4 +19,5 @@ repositories {
 
 dependencies {
     compile 'org.json:json:20141113'
+    compile project(':http-tiny-server')
 }

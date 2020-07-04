@@ -360,7 +360,7 @@ public class EmailReceiver
               if (line != null)
               {
                 if (verbose) System.out.println("[" + line + "]");
-                if (messagePart.getContentType().toUpperCase().startsWith("TEXT/PLAIN"))
+                if (messagePart.getContentType().toUpperCase().startsWith(HttpHeaders.TEXT_PLAIN))
                   ret += line;
               }
             }

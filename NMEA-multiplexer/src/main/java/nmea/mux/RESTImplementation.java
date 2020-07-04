@@ -9,6 +9,7 @@ import context.ApplicationContext;
 import context.NMEADataCache;
 import gnu.io.CommPortIdentifier;
 import http.HTTPServer;
+import http.HttpHeaders;
 import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
@@ -1960,7 +1961,7 @@ public class RESTImplementation {
 			System.out.println(String.format("Find script completed, status %d, found %d files", exitStatus, list.size()));
 
 			String content = new Gson().toJson(list);
-			RESTProcessorUtil.generateResponseHeaders(response, "text/plain", content.length());
+			RESTProcessorUtil.generateResponseHeaders(response, HttpHeaders.TEXT_PLAIN, content.length());
 			response.setPayload(content.getBytes());
 		} catch (IOException | InterruptedException ex) {
 			ex.printStackTrace();
@@ -1992,7 +1993,7 @@ public class RESTImplementation {
 			} else if (fmt.equals("duration")) {
 				content = DURATION_FMT.format(new Date());
 			}
-			RESTProcessorUtil.generateResponseHeaders(response, "text/plain", content.length());
+			RESTProcessorUtil.generateResponseHeaders(response, HttpHeaders.TEXT_PLAIN, content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -2269,7 +2270,7 @@ public class RESTImplementation {
 		String content = "";
 		String specialContentType = null;
 		if (txt) { // Transformation into text
-			specialContentType = "text/plain";
+			specialContentType = HttpHeaders.TEXT_PLAIN;
 			double bsp = 0;
 			try {
 				bsp = ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.BSP).get("speed").getAsDouble();

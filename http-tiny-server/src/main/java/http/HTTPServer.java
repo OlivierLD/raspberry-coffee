@@ -357,7 +357,7 @@ public class HTTPServer {
 	public static Response buildErrorResponse(Response response, int httpStatus, ErrorPayload payload) {
 		response.setStatus(httpStatus);
 		String content = new Gson().toJson(payload);
-		RESTProcessorUtil.generateResponseHeaders(response, "application/json", content.length());
+		RESTProcessorUtil.generateResponseHeaders(response, HttpHeaders.APPLICATION_JSON, content.length());
 		response.setPayload(content.getBytes());
 		return response;
 	}
@@ -1030,7 +1030,7 @@ public class HTTPServer {
 	 * @return
 	 */
 	private static String getContentType(String f) { // TODO add more types, as/when required
-		String contentType = "text/plain";
+		String contentType = HttpHeaders.TEXT_PLAIN;
 		if (f.endsWith(".html")) {
 			contentType = "text/html";
 		} else if (f.endsWith(".js")) {
@@ -1038,7 +1038,7 @@ public class HTTPServer {
 		} else if (f.endsWith(".css")) {
 			contentType = "text/css";
 		} else if (f.endsWith(".xml")) {
-			contentType = "text/xml";
+			contentType = HttpHeaders.TEXT_XML;
 		} else if (f.endsWith(".ico")) {
 			contentType = "image/x-icon";
 		} else if (f.endsWith(".png")) {
@@ -1056,7 +1056,7 @@ public class HTTPServer {
 		} else if (f.endsWith(".pdf")) {
 			contentType = "application/pdf";
 		} else if (f.endsWith(".json")) {
-			contentType = "application/json";
+			contentType = HttpHeaders.APPLICATION_JSON;
 		} else if (f.endsWith(".ttf")) {
 			contentType = "application/x-font-ttf";
 		} else {
@@ -1144,7 +1144,7 @@ public class HTTPServer {
 				}
 			}
 			if (response.getPayload() != null) {
-				if (response.getHeaders() != null && response.getHeaders().get("Content-Type") != null && isText(response.getHeaders().get("Content-Type"))) {
+				if (response.getHeaders() != null && response.getHeaders().get(HttpHeaders.CONTENT_TYPE) != null && isText(response.getHeaders().get(HttpHeaders.CONTENT_TYPE))) {
 					String responsePayload = new String(response.getPayload());
 					if (verboseDump) {
 						DumpUtil.displayDualDump(responsePayload, PAD);
@@ -1155,8 +1155,8 @@ public class HTTPServer {
 					}
 				} else {
 					String mimeType = "-none-";
-					if (response.getHeaders() != null && response.getHeaders().get("Content-Type") != null) {
-						mimeType = response.getHeaders().get("Content-Type");
+					if (response.getHeaders() != null && response.getHeaders().get(HttpHeaders.CONTENT_TYPE) != null) {
+						mimeType = response.getHeaders().get(HttpHeaders.CONTENT_TYPE);
 					}
 					System.out.println(String.format("... No Content-Type, or not text? [%s]", mimeType));
 				}

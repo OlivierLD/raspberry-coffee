@@ -125,13 +125,13 @@ public class RESTProcessorUtil {
 	/* Utility(ies) */
 
 	public static void generateResponseHeaders(HTTPServer.Response response, int contentLength) {
-		generateResponseHeaders(response, "application/json", contentLength);
+		generateResponseHeaders(response, HttpHeaders.APPLICATION_JSON, contentLength);
 	}
 
 	public static void generateResponseHeaders(HTTPServer.Response response, String contentType, int contentLength) {
 		Map<String, String> responseHeaders = new HashMap<>();
-		responseHeaders.put("Content-Type", (contentType != null ? contentType : "application/json"));
-		responseHeaders.put("Content-Length", String.valueOf(contentLength));
+		responseHeaders.put(HttpHeaders.CONTENT_TYPE, (contentType != null ? contentType : HttpHeaders.APPLICATION_JSON));
+		responseHeaders.put(HttpHeaders.CONTENT_LENGTH, String.valueOf(contentLength));
 		responseHeaders.put("Access-Control-Allow-Origin", "*");
 		response.setHeaders(responseHeaders);
 	}

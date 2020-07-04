@@ -1,6 +1,7 @@
 package http.client;
 
 import http.HTTPServer;
+import http.HttpHeaders;
 import utils.StaticUtil;
 
 import java.io.BufferedReader;
@@ -133,9 +134,9 @@ public class HTTPClient {
 		for (String h : headers.keySet()) {
 			conn.setRequestProperty(h, headers.get(h));
 		}
-		conn.setRequestProperty("Content-Type", "application/json"); // Uhu ?
+		conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, HttpHeaders.APPLICATION_JSON); // Uhu ?
 		if (payload != null) {
-			conn.setRequestProperty("Content-Length", String.valueOf(payload.getBytes().length));
+			conn.setRequestProperty(HttpHeaders.CONTENT_LENGTH, String.valueOf(payload.getBytes().length));
 		}
 		// conn.setRequestProperty("Content-Language", "en-US");
 		conn.setUseCaches(false);
@@ -181,12 +182,10 @@ public class HTTPClient {
 //  String basicAuth = "Basic " + new String(new Base64().encode(userCredentials.getBytes()));
 //  conn.setRequestProperty ("Authorization", basicAuth);
 		conn.setRequestMethod("PUT");
-		for (String h : headers.keySet()) {
-			conn.setRequestProperty(h, headers.get(h));
-		}
-		conn.setRequestProperty("Content-Type", "application/json"); // Uhu ?
+		headers.keySet().forEach(k -> conn.setRequestProperty(k, headers.get(k)));
+		conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, HttpHeaders.APPLICATION_JSON); // Uhu ?
 		if (payload != null) {
-			conn.setRequestProperty("Content-Length", String.valueOf(payload.getBytes().length));
+			conn.setRequestProperty(HttpHeaders.CONTENT_LENGTH, String.valueOf(payload.getBytes().length));
 		}
 		// conn.setRequestProperty("Content-Language", "en-US");
 		conn.setUseCaches(false);
@@ -237,8 +236,8 @@ public class HTTPClient {
 			conn.setRequestProperty(h, headers.get(h));
 		}
 		if (payload != null) {
-			conn.setRequestProperty("Content-Type", "application/json");
-			conn.setRequestProperty("Content-Length", String.valueOf(payload.getBytes().length));
+			conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, HttpHeaders.APPLICATION_JSON);
+			conn.setRequestProperty(HttpHeaders.CONTENT_LENGTH, String.valueOf(payload.getBytes().length));
 			// conn.setRequestProperty("Content-Language", "en-US");
 			conn.setUseCaches(false);
 

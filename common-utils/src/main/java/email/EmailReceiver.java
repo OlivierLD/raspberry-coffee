@@ -46,6 +46,17 @@ public class EmailReceiver {
 	private static boolean verbose = "true".equals(System.getProperty("email.verbose", "false"));
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 
+	private static final class HttpHeaders {
+		public final static String CONTENT_TYPE = "Content-Type";
+		public final static String CONTENT_LENGTH = "Content-Length";
+		public final static String USER_AGENT = "User-Agent";
+		public final static String ACCEPT = "Accept";
+
+		public final static String TEXT_PLAIN = "text/plain";
+		public final static String TEXT_XML = "text/xml";
+		public final static String APPLICATION_JSON = "application/json";
+	}
+
 	private EmailSender emailSender = null; // For Ack
 	private String provider = null;
 
@@ -427,7 +438,7 @@ public class EmailReceiver {
 					if (!storageDir.exists()) {
 						storageDir.mkdirs();
 					}
-					if (i == 0 && messagePart.getContentType() != null && (messagePart.getContentType().startsWith("text/plain") || messagePart.getContentType().startsWith("text/html")) && messagePart.getFileName() == null) { // Content?
+					if (i == 0 && messagePart.getContentType() != null && (messagePart.getContentType().startsWith(HttpHeaders.TEXT_PLAIN) || messagePart.getContentType().startsWith("text/html")) && messagePart.getFileName() == null) { // Content?
 						if (verbose) {
 							System.out.println("-- Part #" + i + " --, " + messagePart.getContentType().replace('\n', ' ').replace('\r', ' ').replace("\b", "").trim());
 						}

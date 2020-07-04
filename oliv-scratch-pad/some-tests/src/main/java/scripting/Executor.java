@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Executor {
-	private final static String SCRIPT_TO_RUN = "es6" + File.separator + "out" + File.separator + "modules.consume.js"; // Transpiled
-//private final static String SCRIPT_TO_RUN = "es6" + File.separator + "modules.consume.js"; // Not transpiled
+	private final static String SCRIPT_TO_RUN = "es6" + File.separator + "es.six.js";
+//	private final static String SCRIPT_TO_RUN = "es6" + File.separator + "out" + File.separator + "modules.consume.js"; // Transpiled
+//  private final static String SCRIPT_TO_RUN = "es6" + File.separator + "modules.consume.js"; // Not transpiled
 
 	private final static String NASHORN_ARGS = "nashorn.args";
 	private final static String ES_6 = "--language=es6";
@@ -39,7 +40,8 @@ public class Executor {
 		ScriptEngine engine = factory.getEngineByName("nashorn");
 		FileReader reader = new FileReader(script);
 		try {
-			engine.eval(reader);
+			Object result = engine.eval(reader);
+			System.out.println(result != null ? result.toString() : "");
 		} catch (Exception ex) {
 			System.err.println("Ooops:" + ex.toString());
 		} finally {
@@ -49,7 +51,8 @@ public class Executor {
 		try {
 			String command = String.format("load('%s');", script);
 			System.out.println(String.format("Executing [%s]", command));
-			engine.eval(command);
+			Object result = engine.eval(command);
+			System.out.println(result != null ? result.toString() : "");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

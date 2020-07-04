@@ -6,7 +6,6 @@
 const DEBUG = false;
 
 const DEFAULT_TIMEOUT = 60000; // 1 minute
-/* global events */
 
 /* Uses ES6 Promises */
 function getPromise(
@@ -16,7 +15,7 @@ function getPromise(
 		headers,                      // Request Headers, or null. Array of { 'name': 'header-name', 'value: 'Value' }
 		happyCode,                    // if met, resolve, otherwise fail.
 		data = null,                  // json payload, when needed (PUT, POST...)
-		show = true) {                // Show the traffic [true]|false
+		show = false) {                // Show the traffic true|[false]
 
 	if (show === true) {
 		document.body.style.cursor = 'wait';
@@ -26,13 +25,16 @@ function getPromise(
 		console.log(">>> Promise", verb, url);
 	}
 
-	let promise = new Promise((resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		let xhr = new XMLHttpRequest();
 		let TIMEOUT = timeout;
 
-		let req = verb + " " + url;
-		if (data !== undefined && data !== null) {
-			req += ("\n" + JSON.stringify(data, null, 2));
+		if (DEBUG) {
+			let req = verb + " " + url;
+			if (data !== undefined && data !== null) {
+				req += ("\n" + JSON.stringify(data, null, 2));
+			}
+			console.log(req);
 		}
 
 		xhr.open(verb, url, true);
@@ -54,7 +56,7 @@ function getPromise(
 
 		let requestTimer = setTimeout(() => {
 			xhr.abort();
-			let mess = { code: 408, message: 'Timeout' };
+			let mess = {code: 408, message: 'Timeout'};
 			reject(mess);
 		}, TIMEOUT);
 
@@ -63,11 +65,10 @@ function getPromise(
 			if (xhr.status === happyCode) {
 				resolve(xhr.response);
 			} else {
-				reject({ code: xhr.status, message: xhr.response });
+				reject({code: xhr.status, message: xhr.response});
 			}
 		};
 	});
-	return promise;
 }
 
 function getLastSnapshot(prms) {
@@ -96,7 +97,7 @@ function fetchPix(prms, callback) {
 			if (callback !== undefined) {
 				callback(json);
 			} else {
-				console.log(json); // Do something smart here.
+				console.log(json); // Do something smarter here?
 			}
 		} catch (err) {
 			console.log(`Error:${err} \nfor value [${value}]`);
@@ -107,4 +108,3 @@ function fetchPix(prms, callback) {
 			(error !== undefined && error.message !== undefined ? error.message : ' - '));
 	});
 }
-

@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import http.HTTPServer;
+import http.HttpHeaders;
 import http.client.HTTPClient;
 import spi.lcd.waveshare.LCD1in3;
 import spi.lcd.waveshare.fonts.Font;
@@ -86,7 +87,7 @@ public class TCPWatch {
 		String url =  baseUrl + "/mux/cache";
 
 		Map<String, String> headers = new HashMap<>(1);
-		headers.put("Accept", "application/json"); //, text/javascript, */*; q=0.01");
+		headers.put(HttpHeaders.ACCEPT, HttpHeaders.APPLICATION_JSON); //, text/javascript, */*; q=0.01");
 
 		HTTPServer.Request request = new HTTPServer.Request("GET", url, "HTTP/1.1");
 		request.setHeaders(headers);

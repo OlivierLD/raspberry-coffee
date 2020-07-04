@@ -19,6 +19,17 @@ public class EmailWatcher {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
 	private static boolean verbose = "true".equals(System.getProperty("email.watcher.verbose", "false"));
 
+	private static final class HttpHeaders {
+		public final static String CONTENT_TYPE = "Content-Type";
+		public final static String CONTENT_LENGTH = "Content-Length";
+		public final static String USER_AGENT = "User-Agent";
+		public final static String ACCEPT = "Accept";
+
+		public final static String TEXT_PLAIN = "text/plain";
+		public final static String TEXT_XML = "text/xml";
+		public final static String APPLICATION_JSON = "application/json";
+	}
+
 	// Assume the keys are unique in the list
 	static final List<EmailProcessor> processors = Arrays.asList(
 		new EmailProcessor("exit", null),
@@ -53,6 +64,8 @@ public class EmailWatcher {
 	 * This will send emails using google, and receive using yahoo.
 	 * Do check the file email.properties for the different values associated with email servers.
 	 * <p>
+	 *
+	 *
 	 * NO GPIO INTERACTION in this one (no sudo access needed).
 	 * <p>
 	 *   The program stops when the 'exit' email is received by the EmailReceiver.
@@ -226,7 +239,7 @@ public class EmailWatcher {
 			messContext.sender.send(dest,
 					"Command execution",
 					String.format("cmd [%s] returned: \n%s", script, output.toString()),
-					"text/plain");
+					HttpHeaders.TEXT_PLAIN);
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
@@ -243,7 +256,7 @@ public class EmailWatcher {
 			attachments.stream()
 					.forEach(attachment -> {
 						String cmd = null;
-						if ("text/x-sh".equals(attachment.getMimeType()) || "text/plain".equals(attachment.getMimeType())) {
+						if ("text/x-sh".equals(attachment.getMimeType()) || HttpHeaders.TEXT_PLAIN.equals(attachment.getMimeType())) {
 							cmd = "sh ./" + attachment.getFullPath();
 						} else {
 							System.err.println(String.format("Mime-type %s not supported", attachment.getMimeType()));
@@ -279,7 +292,7 @@ public class EmailWatcher {
 			messContext.sender.send(dest,
 					"Command execution",
 					String.format("Scripts execution returned: \n%s", output.toString()),
-					"text/plain");
+					HttpHeaders.TEXT_PLAIN);
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);

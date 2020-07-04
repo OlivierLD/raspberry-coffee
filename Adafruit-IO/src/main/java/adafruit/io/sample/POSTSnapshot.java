@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import http.HttpHeaders;
+
 import static adafruit.io.Base64Util.encodeToString;
 
 /**
@@ -32,7 +34,7 @@ public class POSTSnapshot {
 		String url = "https://io.adafruit.com/api/feeds/" + FEED_NAME + "/data";
 		Map<String, String> headers = new HashMap<>(2);
 		headers.put("X-AIO-Key", key);
-		headers.put("Content-Type", "application/json");
+		headers.put(HttpHeaders.CONTENT_TYPE, HttpHeaders.APPLICATION_JSON);
 		JSONObject json = new JSONObject();
 		json.put("value", base64);
 		String imgPayload = json.toString();

@@ -17,6 +17,8 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import http.HttpHeaders;
+
 /**
  * Shows how to interact with Adafruit-IO using a REST interface.
  * See doc at https://io.adafruit.com/api/docs/#!/Feeds/all
@@ -84,8 +86,8 @@ public class HttpClient {
 		for (String h : headers.keySet()) {
 			conn.setRequestProperty(h, headers.get(h));
 		}
-		conn.setRequestProperty("Content-Type", "application/json");
-		conn.setRequestProperty("Content-Length", "" + Integer.toString(payload.getBytes().length));
+		conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, HttpHeaders.APPLICATION_JSON);
+		conn.setRequestProperty(HttpHeaders.CONTENT_LENGTH, "" + Integer.toString(payload.getBytes().length));
 		// conn.setRequestProperty("Content-Language", "en-US");
 		conn.setUseCaches(false);
 

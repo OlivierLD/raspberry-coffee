@@ -51,7 +51,7 @@ class SensorsController {
 	}
 
 	@Get("/ambient-light")
-  @Produces(MediaType.APPLICATION_JSON)
+  	@Produces(MediaType.APPLICATION_JSON)
 	fun getLuminosity(): String {
 		val light = this.adcChannel!!.readChannelVolume()
 		return "{ \"light\": $light }"

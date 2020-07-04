@@ -6,6 +6,7 @@ import gribprocessing.utils.BlindRouting;
 import gribprocessing.utils.GRIBUtils;
 import gribprocessing.utils.RoutingUtil;
 import http.HTTPServer;
+import http.HttpHeaders;
 import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
@@ -389,10 +390,10 @@ public class RESTImplementation {
 						br.close();
 					}
 					String content = routing.bestRoute(); //  new Gson().toJson(routing); - The full object is way too big !!
-					String contentType = "application/json";
+					String contentType = HttpHeaders.APPLICATION_JSON;
 					switch (routingRequest.outputType) {
 						case "TXT":
-							contentType = "text/plain";
+							contentType = HttpHeaders.TEXT_PLAIN;
 							break;
 						case "CSV":
 							contentType = "text/csv";

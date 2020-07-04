@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import http.HttpHeaders;
 import http.HTTPServer;
 import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
@@ -130,22 +131,19 @@ public class RESTImplementation {
 				.forEach(headerKey -> System.out.println(String.format("%s: [%s]", headerKey, requestHeaders.get(headerKey))));
 		System.out.println("<<< -----------------");
 
-		String contentType = requestHeaders.get("Content-type");
+		String contentType = requestHeaders.get(HttpHeaders.CONTENT_TYPE);
 		if (contentType == null) {
 			response.setStatus(Response.BAD_REQUEST);
-			response.getHeaders().put("Content-type", "text/plain");
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
 			response.setPayload("Content-type header MUST be provided".getBytes());
 			return response;
 		}
 		contentType = contentType.trim();
-		switch (contentType) {
-			case "text/xml":
-				break;
-			default:
-				response.setStatus(Response.NOT_IMPLEMENTED);
-				response.getHeaders().put("Content-type", "text/plain");
-				response.setPayload(String.format("Content-type [%s] not supported (yet)", contentType).getBytes());
-				return response;
+		if (!HttpHeaders.TEXT_XML.equals(contentType)) {
+			response.setStatus(Response.NOT_IMPLEMENTED);
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
+			response.setPayload(String.format("Content-type [%s] not supported (yet)", contentType).getBytes());
+			return response;
 		}
 		// Now proceed
 		byte[] content = request.getContent();
@@ -153,24 +151,24 @@ public class RESTImplementation {
 
 		try {
 			Map<String, Object> map = XMLUtils.processSchema(content);
-			response.getHeaders().put("Content-type", "application/json");
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.APPLICATION_JSON);
 			JsonElement jsonElement = new Gson().toJsonTree(map);
 			String jsonContent = jsonElement.toString();
-			response.getHeaders().put("Content-Length", Integer.toString(jsonContent.getBytes().length));
+			response.getHeaders().put(HttpHeaders.CONTENT_LENGTH, Integer.toString(jsonContent.getBytes().length));
 			response.setPayload(jsonContent.getBytes());
 		} catch (IOException e) {
 			response.setStatus(Response.BAD_REQUEST);
-			response.getHeaders().put("Content-type", "text/plain");
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
 			response.setPayload(e.toString().getBytes());
 			return response;
 		} catch (XMLException e) {
 			response.setStatus(Response.BAD_REQUEST);
-			response.getHeaders().put("Content-type", "text/plain");
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
 			response.setPayload(e.toString().getBytes());
 			return response;
 		} catch (SAXException e) {
 			response.setStatus(Response.BAD_REQUEST);
-			response.getHeaders().put("Content-type", "text/plain");
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
 			response.setPayload(e.toString().getBytes());
 			return response;
 		}
@@ -187,22 +185,19 @@ public class RESTImplementation {
 				.forEach(headerKey -> System.out.println(String.format("%s: [%s]", headerKey, requestHeaders.get(headerKey))));
 		System.out.println("<<< -----------------");
 
-		String contentType = requestHeaders.get("Content-type");
+		String contentType = requestHeaders.get(HttpHeaders.CONTENT_TYPE);
 		if (contentType == null) {
 			response.setStatus(Response.BAD_REQUEST);
-			response.getHeaders().put("Content-type", "text/plain");
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
 			response.setPayload("Content-type header MUST be provided".getBytes());
 			return response;
 		}
 		contentType = contentType.trim();
-		switch (contentType) {
-			case "text/xml":
-				break;
-			default:
-				response.setStatus(Response.NOT_IMPLEMENTED);
-				response.getHeaders().put("Content-type", "text/plain");
-				response.setPayload(String.format("Content-type [%s] not supported (yet)", contentType).getBytes());
-				return response;
+		if (!HttpHeaders.TEXT_XML.equals(contentType)) {
+			response.setStatus(Response.NOT_IMPLEMENTED);
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
+			response.setPayload(String.format("Content-type [%s] not supported (yet)", contentType).getBytes());
+			return response;
 		}
 		// Now proceed
 		byte[] content = request.getContent();
@@ -210,25 +205,25 @@ public class RESTImplementation {
 
 		try {
 			byte[] transformed = XMLUtils.applyStylesheet(content);
-			response.getHeaders().put("Content-type", "application/json");
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.APPLICATION_JSON);
 
 			JsonObject jsonObject = new JsonParser().parse(new String(transformed)).getAsJsonObject();
 			String jsonContent = jsonObject.toString();
-			response.getHeaders().put("Content-Length", Integer.toString(jsonContent.getBytes().length));
+			response.getHeaders().put(HttpHeaders.CONTENT_LENGTH, Integer.toString(jsonContent.getBytes().length));
 			response.setPayload(jsonContent.getBytes());
 		} catch (IOException e) {
 			response.setStatus(Response.BAD_REQUEST);
-			response.getHeaders().put("Content-type", "text/plain");
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
 			response.setPayload(e.toString().getBytes());
 			return response;
 		} catch (XMLException e) {
 			response.setStatus(Response.BAD_REQUEST);
-			response.getHeaders().put("Content-type", "text/plain");
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
 			response.setPayload(e.toString().getBytes());
 			return response;
 		} catch (SAXException e) {
 			response.setStatus(Response.BAD_REQUEST);
-			response.getHeaders().put("Content-type", "text/plain");
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
 			response.setPayload(e.toString().getBytes());
 			return response;
 		}
@@ -245,22 +240,19 @@ public class RESTImplementation {
 				.forEach(headerKey -> System.out.println(String.format("%s: [%s]", headerKey, requestHeaders.get(headerKey))));
 		System.out.println("<<< -----------------");
 
-		String contentType = requestHeaders.get("Content-type");
+		String contentType = requestHeaders.get(HttpHeaders.CONTENT_TYPE);
 		if (contentType == null) {
 			response.setStatus(Response.BAD_REQUEST);
-			response.getHeaders().put("Content-type", "text/plain");
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
 			response.setPayload("Content-type header MUST be provided".getBytes());
 			return response;
 		}
 		contentType = contentType.trim();
-		switch (contentType) {
-			case "application/json":
-				break;
-			default:
-				response.setStatus(Response.NOT_IMPLEMENTED);
-				response.getHeaders().put("Content-type", "plain/text");
-				response.setPayload(String.format("Content-type [%s] not supported (yet)", contentType).getBytes());
-				return response;
+		if (!HttpHeaders.TEXT_XML.equals(contentType)) {
+			response.setStatus(Response.NOT_IMPLEMENTED);
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
+			response.setPayload(String.format("Content-type [%s] not supported (yet)", contentType).getBytes());
+			return response;
 		}
 		// Now proceed
 		byte[] content = request.getContent();
@@ -269,22 +261,22 @@ public class RESTImplementation {
 
 		try {
 			byte[] transformed = XMLUtils.processStylesheet(inputJsonObject.get("xml").getAsString().getBytes(), inputJsonObject.get("xsl").getAsString().getBytes());
-			response.getHeaders().put("Content-type", "plain/text");
-			response.getHeaders().put("Content-Length", Integer.toString(transformed.length));
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, "plain/text");
+			response.getHeaders().put(HttpHeaders.CONTENT_LENGTH, Integer.toString(transformed.length));
 			response.setPayload(transformed);
 		} catch (IOException e) {
 			response.setStatus(Response.BAD_REQUEST);
-			response.getHeaders().put("Content-type", "text/plain");
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
 			response.setPayload(e.toString().getBytes());
 			return response;
 		} catch (XMLException e) {
 			response.setStatus(Response.BAD_REQUEST);
-			response.getHeaders().put("Content-type", "text/plain");
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
 			response.setPayload(e.toString().getBytes());
 			return response;
 		} catch (SAXException e) {
 			response.setStatus(Response.BAD_REQUEST);
-			response.getHeaders().put("Content-type", "text/plain");
+			response.getHeaders().put(HttpHeaders.CONTENT_TYPE, HttpHeaders.TEXT_PLAIN);
 			response.setPayload(e.toString().getBytes());
 			return response;
 		}

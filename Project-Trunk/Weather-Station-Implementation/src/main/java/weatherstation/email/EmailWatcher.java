@@ -21,6 +21,17 @@ public class EmailWatcher {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
 	private static boolean verbose = "true".equals(System.getProperty("mail.watcher.verbose", "false"));
 
+	private static final class HttpHeaders {
+		public final static String CONTENT_TYPE = "Content-Type";
+		public final static String CONTENT_LENGTH = "Content-Length";
+		public final static String USER_AGENT = "User-Agent";
+		public final static String ACCEPT = "Accept";
+
+		public final static String TEXT_PLAIN = "text/plain";
+		public final static String TEXT_XML = "text/xml";
+		public final static String APPLICATION_JSON = "application/json";
+	}
+
 	// Assume the keys are unique in the list
 	static final List<EmailProcessor> processors = Arrays.asList(
 			new EmailProcessor("exit", null),
@@ -240,14 +251,14 @@ public class EmailWatcher {
 					messContext.sender.send(dest,
 							"Weather Snapshot",            // Email topic/subject
 							String.format("You snapshot request returned status %d.\n%s", exitStatus, output.toString()),
-							"text/plain",                      // Email content mime type
+							HttpHeaders.TEXT_PLAIN,                      // Email content mime type
 							String.format("web/%s.jpg", snapName),  // Attachment.
 							"image/jpg");                // Attachment mime type.
 				} else { // Not Ok
 					messContext.sender.send(dest,
 							"Weather Snapshot",
 							String.format("You snapshot request returned status %d, a problem might have occurred.\n%s", exitStatus, output.toString()),
-							"text/plain");
+							HttpHeaders.TEXT_PLAIN);
 				}
 			}
 		} catch (JSONException je) {
@@ -293,7 +304,7 @@ public class EmailWatcher {
 			messContext.sender.send(dest,
 					"Command execution",
 					String.format("cmd [%s] returned: \n%s", script, output.toString()),
-					"text/plain");
+					HttpHeaders.TEXT_PLAIN);
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
@@ -335,7 +346,7 @@ public class EmailWatcher {
 			messContext.sender.send(dest,
 					"Command execution",
 					String.format("cmd [%s] returned: \n%s", script, output.toString()),
-					"text/plain");
+					HttpHeaders.TEXT_PLAIN);
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
@@ -352,7 +363,7 @@ public class EmailWatcher {
 			attachments.stream()
 					.forEach(attachment -> {
 						String cmd = null;
-						if ("text/x-sh".equals(attachment.getMimeType()) || "text/plain".equals(attachment.getMimeType())) {
+						if ("text/x-sh".equals(attachment.getMimeType()) || HttpHeaders.TEXT_PLAIN.equals(attachment.getMimeType())) {
 							cmd = "sh ./" + attachment.getFullPath();
 						} else {
 							System.err.println(String.format("Mime-type %s not supported", attachment.getMimeType()));
@@ -388,7 +399,7 @@ public class EmailWatcher {
 			messContext.sender.send(dest,
 					"Command execution",
 					String.format("Scripts execution returned: \n%s", output.toString()),
-					"text/plain");
+					HttpHeaders.TEXT_PLAIN);
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
