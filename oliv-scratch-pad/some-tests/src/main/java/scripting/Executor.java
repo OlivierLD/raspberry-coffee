@@ -16,7 +16,6 @@ public class Executor {
 	private final static String NASHORN_ARGS = "nashorn.args";
 	private final static String ES_6 = "--language=es6";
 
-
 	public static void main(String... args) throws Exception {
 
 		System.out.println(String.format("Running from [%s]", System.getProperty("user.dir")));
@@ -30,13 +29,16 @@ public class Executor {
 
 		ScriptEngineManager factory = new ScriptEngineManager();
 		List<ScriptEngineFactory> engineFactories = factory.getEngineFactories();
-		System.out.println(String.format("%s factory(ies).", engineFactories.size()));
+		System.out.println(String.format("--- %s factory(ies). ---", engineFactories.size()));
 		engineFactories.stream().forEach(ef -> {
 			System.out.println(String.format("%s (%s)",
 					ef.getEngineName(),
 					ef.getNames().stream().collect(Collectors.joining(", "))));
 		});
+		System.out.println("-----------------------");
 
+		System.out.println("--- Approach one ---");
+		System.out.println(String.format("Loading the content of %s and executing it.", script));
 		ScriptEngine engine = factory.getEngineByName("nashorn");
 		FileReader reader = new FileReader(script);
 		try {
@@ -48,7 +50,7 @@ public class Executor {
 			reader.close();
 		}
 		// Another approach
-		System.out.println("Approach two:");
+		System.out.println("--- Approach two ---");
 		engine = factory.getEngineByName("nashorn"); // Reset the context.
 		try {
 			String command = String.format("load('%s');", script);
@@ -58,6 +60,7 @@ public class Executor {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		System.out.println("-------------------");
 
 		engine.eval("print('Bye now.');");
 	}

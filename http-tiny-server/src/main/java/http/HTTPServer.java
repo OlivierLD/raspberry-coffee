@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -84,6 +85,7 @@ public class HTTPServer {
 	private Thread httpListenerThread;
 
 	private Function<HTTPServer.Request, HTTPServer.Response> proxyFunction = null;
+	private Consumer<Integer> portOpenCallback = null;
 
 	/*
 	  For CORS, to be returned in the Response:
@@ -473,6 +475,9 @@ public class HTTPServer {
 
 	private void incPort() {
 		this.port += 1;
+		if (verbose) {
+			System.out.println(String.format("...Trying port %d", this.port));
+		}
 	}
 
 	public HTTPServer() throws Exception {
@@ -906,7 +911,9 @@ public class HTTPServer {
 						try {
 							ss = new ServerSocket(httpServerInstance.getPort());
 							keepTrying = false;
-							System.out.println(String.format("%s - Port open: %d", NumberFormat.getInstance().format(System.currentTimeMillis()), httpServerInstance.getPort()));
+							System.out.println(String.format("%s - Port open: %d",
+									NumberFormat.getInstance().format(System.currentTimeMillis()),
+									httpServerInstance.getPort()));
 							if (verbose) {
 								System.out.println("-- Dumping: --");
 								List<String> st = DumpUtil.whoCalledMe();
@@ -931,6 +938,11 @@ public class HTTPServer {
 					if (verbose) {
 						HTTPContext.getInstance().getLogger().info("Port " + httpServerInstance.getPort() + " opened successfully.");
 					}
+					// port opened callback
+					if (httpServerInstance.portOpenCallback != null) {
+						httpServerInstance.portOpenCallback.accept(httpServerInstance.getPort());
+					}
+
 					System.out.println(String.format("%s - %s now accepting requests", NumberFormat.getInstance().format(System.currentTimeMillis()), httpServerInstance.getClass().getName()));
 					while (isRunning()) {
 						// Socket client = ss.accept(); // Blocking read
@@ -996,6 +1008,10 @@ public class HTTPServer {
 
 	public Thread getHttpListenerThread() {
 		return this.httpListenerThread;
+	}
+
+	public void setPortOpenCallback(Consumer<Integer> portCallback) {
+		this.portOpenCallback = portCallback;
 	}
 
 	public void setProxyFunction(Function<HTTPServer.Request, HTTPServer.Response> proxyFunction) {
@@ -1193,6 +1209,8 @@ public class HTTPServer {
 		}
 		Properties props = new Properties();
 		props.setProperty("autobind", "true"); // AutoBind test
+
+		System.out.println("For the test, autobind is set to true.");
 
 		HTTPServer httpServer = new HTTPServer(port, props);
 //		httpServer.setProxyFunction(HTTPServer::defaultProxy);

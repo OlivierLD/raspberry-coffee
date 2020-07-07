@@ -3,12 +3,14 @@ package utils.proxyguisample;
 import http.HTTPServer;
 import http.HttpHeaders;
 import http.client.HTTPClient;
+// import utils.TimeUtil;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.util.Map;
+import java.util.Properties;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -17,26 +19,37 @@ import javax.swing.JPanel;
  */
 public class ProxyGUI extends JFrame {
 
-	private TrafficRawPanel requestPanel;
-	private TrafficRawPanel responsePanel;
+	final private TrafficRawPanel requestPanel;
+	final private TrafficRawPanel responsePanel;
 
 	private static int port = 9999; // Default
+	private static HTTPServer httpServer;
 
 	public static void main(String... args) throws Exception {
 		port = Integer.parseInt(System.getProperty("http.port", String.valueOf(port)));
-		ProxyGUI proxyGui = new ProxyGUI();
-		HTTPServer httpServer = new HTTPServer(port);
 
+		Properties props = new Properties();
+		props.setProperty("autobind", "true"); // AutoBind test
+
+		System.out.println("For the test, autobind is set to true.");
+
+		httpServer = new HTTPServer(port, props);
+		port = httpServer.getPort(); // may have been updated by the autobind
+
+		ProxyGUI proxyGui = new ProxyGUI();
 		httpServer.setProxyFunction(proxyGui::proxyImpl);
+
+		httpServer.setPortOpenCallback(proxyGui::portUpdater);
 
 		httpServer.startServer();
 		System.out.println("Proxy Started");
+
 	}
 
 	public ProxyGUI(){
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(600, 500);
-		this.setTitle(String.format("HTTP Proxy, port %d", port));
+		this.setTitle(String.format("HTTP Proxy, port %d", httpServer.getPort()));
 		this.setLayout(new BorderLayout());
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -109,5 +122,10 @@ public class ProxyGUI extends JFrame {
 		}
 		responsePanel.addData("");
 		return response;
+	}
+
+	private void portUpdater(Integer newPort) {
+		System.out.println("...... New port is now " + newPort);
+		this.setTitle(String.format("HTTP Proxy, port %d", httpServer.getPort()));
 	}
 }
