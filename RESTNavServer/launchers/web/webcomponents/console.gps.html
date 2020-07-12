@@ -339,7 +339,7 @@
 				// console.log("TimeOffset:", now.getTimezoneOffset());
 				now.setTime(now.getTime() + (now.getTimezoneOffset() * 60000)); // timeOffset returned in minutes.
 			}
-			console.log(`Calculating declination for date ${now.format(DURATION_FMT)}`);
+			// console.log(`Calculating declination for date ${now.format(DURATION_FMT)}`);
 			let dateOffset = 5 * DAY; // 5 days
 			let from = new Date();
 			from.setTime(now.getTime() - dateOffset);
@@ -378,7 +378,7 @@
 								maxTime = key;
 							}
 						});
-						console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
+						// console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
 						// console.log(JSON.stringify(declMap));
 						// Use GPS Date if present
 						let graphData = dataToGraph(now.format(DURATION_FMT), declMap, 'orange', null, 'rgba(255, 165, 0, 0.35)');
@@ -425,7 +425,7 @@
 								maxTime = key;
 							}
 						});
-						console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
+						// console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
 						// console.log(JSON.stringify(declMap));
 						// Use GPS Date if present
 						let graphData = dataToGraph(now.format(DURATION_FMT), declMap, 'white', null, 'rgba(255, 255, 255, 0.35)');
