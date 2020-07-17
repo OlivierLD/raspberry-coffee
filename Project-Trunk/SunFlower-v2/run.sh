@@ -13,7 +13,7 @@ JAVA_OPTS="$JAVA_OPTS -Dmotor.hat.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dmoves.verbose=true"
 JAVA_OPTS="$JAVA_OPTS -Dtoo.long.exception.verbose=false"
 #
-JAVA_OPTS="$JAVA_OPTS -Dazimuth.inverted=true"  # For V5
+JAVA_OPTS="$JAVA_OPTS -Dazimuth.inverted=false"  # For V5
 # JAVA_OPTS="$JAVA_OPTS -Dazimuth.inverted=true"
 #
 JAVA_OPTS="$JAVA_OPTS -Dcalibration=true"
