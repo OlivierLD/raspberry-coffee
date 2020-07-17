@@ -9,6 +9,8 @@ With `motorhat.NonLinearStepperDemo`, launched by the script `one.stepper.sh`.
 
 Using a [Stepper Motor (NEMA-17)](https://www.adafruit.com/product/324), a [Stepper Motor Mount](https://www.adafruit.com/product/1297), and some gears, from a [Gear Set](https://www.allelectronics.com/item/gr-86/4-gear-set/1.html).
 
+![Wiring](./docimg/MotorHat_bb.png)
+
 ![Config 01](./docimg/01.jpg)
 
 The gears:
