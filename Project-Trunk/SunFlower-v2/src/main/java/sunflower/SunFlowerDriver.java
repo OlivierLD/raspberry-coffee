@@ -77,6 +77,7 @@ public class SunFlowerDriver {
 	}
 
 	private SunFlowerDriver instance = this;
+	private List<String> commandHistory = new ArrayList<>();
 
 	private static class Position {
 		double latitude;
@@ -972,6 +973,7 @@ public class SunFlowerDriver {
 		System.out.println("------------------------------ C A L I B R A T I O N ----------------------------");
 		System.out.println("To change the Azimuth (Z) value, enter 'Z=12.34', the value goes from 0 to 360.");
 		System.out.println("To change the Elevation (E) value, enter 'E=23.45', the values goes from 0 to 90.");
+		System.out.println("Enter 'HIST' to see what you've done so far.");
 		System.out.println("Enter 'PARK' to park the device.");
 		System.out.println("Enter 'Q' to quit.");
 		System.out.println("---------------------------------------------------------------------------------");
@@ -981,8 +983,13 @@ public class SunFlowerDriver {
 			String userInput = StaticUtil.userInput("> ");
 			if (!userInput.isEmpty()) {
 				lastCommand = userInput;
+				if (!userInput.trim().equalsIgnoreCase("HIST")) {
+					commandHistory.add(lastCommand);
+				}
 				if (userInput.trim().equalsIgnoreCase("Q") || userInput.trim().equalsIgnoreCase("QUIT")) {
 					keepAsking = false;
+				} else if (userInput.trim().equalsIgnoreCase("HIST")) {
+					commandHistory.stream().forEach(System.out::println);
 				} else if (userInput.trim().equalsIgnoreCase("PARK")) {
 					this.parkDevice();
 				} else {
