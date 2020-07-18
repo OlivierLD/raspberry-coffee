@@ -305,7 +305,7 @@ The two versions, working together:
 - Small OLED screen for position and orientation data.    
 
 ## Subsequent versions
-> Mostly Hardware versions.   
+> Mostly Hardware evolutions.   
 
 ### Challenges
 - With V2 (details [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand.v2))
