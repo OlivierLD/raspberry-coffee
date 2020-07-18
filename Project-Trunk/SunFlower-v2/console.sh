@@ -15,12 +15,12 @@ JAVA_OPTS="$JAVA_OPTS -Dansi.boxes=false"
 JAVA_OPTS="$JAVA_OPTS -Dazimuth.inverted=false"  # For V5
 # JAVA_OPTS="$JAVA_OPTS -Dazimuth.inverted=true"
 #
-# For Date simulation:
-JAVA_OPTS="$JAVA_OPTS -Ddate.simulation=true"
-# JAVA_OPTS="$JAVA_OPTS -Dstart.date.simulation=2020-03-06T20:00:00"
-JAVA_OPTS="$JAVA_OPTS -Dstart.date.simulation=2020-06-08T15:00:00"
-JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"
-JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10"
+# For Date simulation, uncomment the lines below
+#JAVA_OPTS="$JAVA_OPTS -Ddate.simulation=true"
+## JAVA_OPTS="$JAVA_OPTS -Dstart.date.simulation=2020-03-06T20:00:00"
+#JAVA_OPTS="$JAVA_OPTS -Dstart.date.simulation=2020-06-08T15:00:00"
+#JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"
+#JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10"
 #
 java -cp ${CP} ${JAVA_OPTS} sunflower.main.ConsoleMain
 #
