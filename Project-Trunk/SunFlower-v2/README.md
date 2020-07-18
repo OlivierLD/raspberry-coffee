@@ -302,6 +302,7 @@ The two versions, working together:
 - A utility, to manually/interactively orient the panel from user's inputs. &#9989; &nbsp;Done.
 - A `forwarder` for the `NMEA.multiplexer`, as in `SolarPanelOrienter`.
     - This would allow Heading input, position input.
+- Small OLED screen for position and orientation data.    
 
 ## Subsequent versions
 > Mostly Hardware versions.   
