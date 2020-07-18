@@ -90,7 +90,8 @@ Hit Ctrl-C to stop the program
 
 ```
 ### HTTP Server (WiP) <img src="./cone.png" alt="WIP" width="48" height="48" align="middle">
-Same as above, but no UI in the console. Data are accessible through REST requests.
+Same as above, but no UI in the console. Designed to run in background mode.
+Data previously displayed on the terminal are accessible through REST requests.
 See `server.sh` for details.
 ```
 $ ./server.sh 
@@ -301,6 +302,7 @@ The two versions, working together:
 - A `forwarder` for the `NMEA.multiplexer`, as in `SolarPanelOrienter`.
     - This would allow Heading input, position input.
 
-    
+## Subsequent versions
+> Mostly Hardware versions.    
 
 ---

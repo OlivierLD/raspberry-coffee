@@ -1100,7 +1100,7 @@ public class SunFlowerDriver {
 
 	public void init() {
 		if (!"true".equals(System.getProperty("calibration"))) {
-			System.out.println("Hit Ctrl-C to stop the SunFlowerDriver program");
+			System.out.println("Hit Ctrl-C to stop the SunFlowerDriver program and park the device");
 		}
 
 		if (SUN_FLOWER_VERBOSE) {
