@@ -39,6 +39,8 @@ import sunflower.utils.ANSIUtil;
  * -Dno.motor.movement=true will NOT move the motors.
  * Use it with -Dmotor.hat.verbose=true
  *
+ * -Dspecial.debug.verbose=true, as you may expect.
+ *
  * -Delevation.inverted=true|false
  * -Dazimuth.inverted=true|false
  */
@@ -724,7 +726,7 @@ public class SunFlowerDriver {
 		return getMotorPayload(Double.NaN, 0, from, to, ratio, inverted);
 	}
 
-	private final static boolean SPECIAL_DEBUG_VERBOSE = true;
+	private final static boolean SPECIAL_DEBUG_VERBOSE = "true".equals(System.getProperty("special.debug.verbose"));
 	// Recalculate from origin and get the diff with the currentStepOffset if origin != NaN
 	// We start from the origin - and considering the current step offset, to avoid accumulating rounding errors.
 	private static MotorPayload getMotorPayload(double origin, int currentStepOffset, double from, double to, double ratio, boolean inverted) {
