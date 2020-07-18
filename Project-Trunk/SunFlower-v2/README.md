@@ -312,7 +312,7 @@ The two versions, working together:
     - Aligning the worm gear axis with its pinion was not obvious. 
     - Moved to V3, with a beveled gear
 - With V3 (See [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v3) and [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v3/stl))
-    - The beveled gear pinion (3D printed, in PLA) was hard to lock in place. Some skatting happens on the axis from time to time.
+    - The beveled gear pinion (3D printed, in PLA) was hard to lock in place. Some skating happens on the axis from time to time.
     - ![pinion](./pictures/bevel.pinion.jpg)
     - Moved to V4, with a short worm gear
 - With V4 (See [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v4) and [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v4/stl))
