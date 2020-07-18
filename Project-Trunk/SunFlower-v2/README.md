@@ -296,7 +296,7 @@ The two versions, working together:
 ![2 versions](./pictures/Two.Sun.Flower.jpg)
 
 ## TODO
-- An ANSI Console. &#99.89; &nbsp;Done (...ish).
+- An ANSI Console. &#9989; &nbsp;Done (...ish).
 - A Web Console. WiP.
     - REST and/or WebSockets?
 - A utility, to manually/interactively orient the panel from user's inputs. &#9989; &nbsp;Done.
@@ -315,14 +315,16 @@ The two versions, working together:
     - ![pinion](./pictures/bevel.pinion.jpg)
     - Moved to V4, with a short worm gear
 - With V4 (See [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v4) and [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v4/stl))
-    - Like above, gear to align correctly
+    - Like above, gear hard to align correctly
     - Moved to V5 ([here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v5))
 - V5 (current version, see [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v5/stl)) 
     - All metallic gears (16 teeth for th pinion, 76 for the wheel gear)
-    - Vertical axis for the Azimuth
+    - Vertical axis for the Azimuth motor
     - Good results so far (July-2020)
     - ![One](./pictures/v5.01.jpg)
     - ![Two](./pictures/v5.02.jpg)
     - ![Three](./pictures/v5.03.jpg)
+    - ![Four](./pictures/v5.04.jpg)
+    - ![Five](./pictures/v5.05.jpg)
             
 ---
