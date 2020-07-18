@@ -23,7 +23,8 @@ JAVA_OPTS="$JAVA_OPTS -Dazimuth.inverted=false"  # For V5
 #
 JAVA_OPTS="$JAVA_OPTS -Dminimum.elevation=10"
 #
-JAVA_OPTS="$JAVA_OPTS -Dhttp.port=8989"
+PORT=8989
+JAVA_OPTS="$JAVA_OPTS -Dhttp.port=${PORT}"
 JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=false"
 #
 # For Date simulation:
@@ -39,6 +40,9 @@ JAVA_OPTS="$JAVA_OPTS -Dno.motor.movement=false"
 # NMEA Data server, position and heading
 JAVA_OPTS="$JAVA_OPTS -Dping.nmea.server=true"
 JAVA_OPTS="$JAVA_OPTS -Dnmea.server.base.url=http://192.168.42.20:9991"
+#
+MY_IP=$(hostname -I | awk '{ print $1 }')
+echo -e "Try curl -X GET http://${MY_IP}:${PORT}/sf/status"
 #
 echo -e "Try 'nohup $0 > sf.log &'"
 java -cp ${CP} ${JAVA_OPTS} sunflower.httpserver.SunFlowerServer
