@@ -291,18 +291,38 @@ In this animation - just to validate the concept, the Raspberry Pi driving the d
 
 ### Bonus
 The two versions, working together:
+> Note: Below is the version 3, with a bevel gear instead of the worm gear.
 
 ![2 versions](./pictures/Two.Sun.Flower.jpg)
 
 ## TODO
-- An ANSI Console. &#9989; Done (...ish).
+- An ANSI Console. &#99.89; &nbsp;Done (...ish).
 - A Web Console. WiP.
     - REST and/or WebSockets?
-- A utility, to manually/interactively orient the panel from user's inputs. &#9989; Done.
+- A utility, to manually/interactively orient the panel from user's inputs. &#9989; &nbsp;Done.
 - A `forwarder` for the `NMEA.multiplexer`, as in `SolarPanelOrienter`.
     - This would allow Heading input, position input.
 
 ## Subsequent versions
-> Mostly Hardware versions.    
+> Mostly Hardware versions.   
 
+### Challenges
+- With V2 (details [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand.v2))
+    - Aligning the worm gear axis with its pinion was not obvious. 
+    - Moved to V3, with a beveled gear
+- With V3 (See [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v3) and [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v3/stl))
+    - The beveled gear pinion (3D printed, in PLA) was hard to lock in place. Some skatting happens on the axis from time to time.
+    - ![pinion](./pictures/bevel.pinion.jpg)
+    - Moved to V4, with a short worm gear
+- With V4 (See [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v4) and [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v4/stl))
+    - Like above, gear to align correctly
+    - Moved to V5 ([here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v5))
+- V5 (current version, see [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v5/stl)) 
+    - All metallic gears (16 teeth for th pinion, 76 for the wheel gear)
+    - Vertical axis for the Azimuth
+    - Good results so far (July-2020)
+    - ![One](./pictures/v5.01.jpg)
+    - ![Two](./pictures/v5.02.jpg)
+    - ![Three](./pictures/v5.03.jpg)
+            
 ---
