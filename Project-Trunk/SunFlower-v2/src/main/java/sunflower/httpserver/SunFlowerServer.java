@@ -26,6 +26,7 @@ public class SunFlowerServer {
 
 		System.out.println(String.format(">>> Running on port %d", httpPort));
 		try {
+			// The FeatureRequestManager starts the SunFlowerDriver
 			this.httpServer = startHttpServer(httpPort, new FeatureRequestManager(this));
 		} catch (Exception ex) {
 			ex.printStackTrace();

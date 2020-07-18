@@ -55,6 +55,9 @@ Current status: Z=213.00, Elev.=90.00
 ``` 
  
 ### ANSI Console output
+This console is designed not to run in background mode (see `SunFlowerServer` for that), it orients the panel, as it displays the
+orientation parameters.
+
 Run `sunflower.main.ConsoleMain`, from the script `console.sh`.
 ```
 - Positions -
