@@ -308,6 +308,7 @@ function plotSunMoonRoute(context, worldMap, routeData) {
 			if (lastPointToPlot !== null) {
 //					console.log("Plotting from ", lastPointToPlot, " to ", panelPoint);
 				context.strokeStyle = 'lime';
+				context.lineWidth = 3;
 				context.beginPath();
 				context.moveTo(lastPointToPlot.x, lastPointToPlot.y);
 				context.lineTo(panelPoint.x, panelPoint.y);

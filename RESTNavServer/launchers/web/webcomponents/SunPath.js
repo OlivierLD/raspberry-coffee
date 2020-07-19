@@ -1007,8 +1007,8 @@ class SunPath extends HTMLElement {
 
 	drawMoonToSunRoute(context, routeData, center, radius) {
 		//debugger;
-		context.strokeStyle = 'silver'; // this.worldmapColorConfig.tropicColor;
-		context.lineWidth = 1;
+		context.strokeStyle = 'lime'; // this.worldmapColorConfig.tropicColor;
+		context.lineWidth = 3;
 		context.save();
 		context.setLineDash([2, 2]);
 		let h = routeData[0].wpFromPos.observed.alt;

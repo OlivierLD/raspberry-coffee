@@ -58,7 +58,7 @@ public class SunFlowerServer {
 		try {
 			newHttpServer = new HTTPServer(port, requestManager);
 			newHttpServer.startServer();
-//		newHttpServer.stopRunning();
+	//		newHttpServer.stopRunning();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
