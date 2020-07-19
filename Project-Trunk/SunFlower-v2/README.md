@@ -287,7 +287,7 @@ In this animation - just to validate the concept, the Raspberry Pi driving the d
 | ![Three](./pictures/testing.03.jpg) |                                   |
 
 ### Notes
-- For the Motor HAT power supply, 5V is enough. Not need for 12V, and the motors seem to heat up with 12V.
+- For the Motor HAT power supply, 5V is enough. No need for 12V, and the motors seem to heat up with 12V.
 
 ### Bonus
 The two versions, working together:
