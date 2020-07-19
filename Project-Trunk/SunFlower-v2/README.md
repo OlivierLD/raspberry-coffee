@@ -261,7 +261,7 @@ the required data to the `SunFlowerDriver` (Position & Heading), from the server
 > with the `SunFlower.v1`, the one working with micro-servos.
 
 ### The Device
-> <u>_Important note_</u>: Those devices involve some ball bearings, specially for the azimuth motor.
+> <u><i>Important note</i></u>: Those devices involve some ball bearings, specially for the azimuth motor.
 > When delivered, the balls in the groove may be sticky. It's a good idea to clean them, and to keep them lubricated, as 
 > they may block the rotation of the device if not, instead of facilitating it!
 
@@ -323,7 +323,7 @@ The two versions, working together:
     - Like above, gear hard to align correctly
     - Moved to V5 ([here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v5))
 - V5 (current version, see [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SunFlower/SolarPanelStand.v5/stl)) 
-    - All metallic gears (16 teeth for the pinion, 76 for the wheel gear)
+    - **All metallic** gears (16 teeth for the pinion, 76 for the wheel gear)
     - Vertical axis for the Azimuth motor
     - Good results so far (July-2020)
     - ![One](./pictures/v5.01.jpg)
