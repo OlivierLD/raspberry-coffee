@@ -261,9 +261,9 @@ the required data to the `SunFlowerDriver` (Position & Heading), from the server
 > with the `SunFlower.v1`, the one working with micro-servos.
 
 ### The Device
-> Important note: Those devices involve some ball bearings, specially for the azimuth motor.
+> <u>_Important note_</u>: Those devices involve some ball bearings, specially for the azimuth motor.
 > When delivered, the balls in the groove may be sticky. It's a good idea to clean them, and to keep them lubricated, as 
-> they may block the rotation of the device if not.
+> they may block the rotation of the device if not, instead of facilitating it!
 
 The software of this project is designed to drive [this sort of device](https://github.com/OlivierLD/3DPrinting/blob/master/OpenSCAD/SolarPanelStand.v2/stl/the.full.stand.stuck.stl).
 Its 3D printing construction is detailed in [its repo](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/SolarPanelStand.v2).
