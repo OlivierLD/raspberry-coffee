@@ -875,7 +875,7 @@ public class SunFlowerDriver {
 			this.publish(EventType.CELESTIAL_DATA, sunData);
 
 			if (ASTRO_VERBOSE) {
-				System.out.println(String.format("Device : %s\n" + "Sun : %s",
+				System.out.println(String.format("Device : %s\nSun : %s",
 						deviceData, sunData));
 			}
 

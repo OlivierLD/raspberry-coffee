@@ -11,7 +11,7 @@ JAVA_OPTS="$JAVA_OPTS -Ddevice.lat=37.7489 -Ddevice.lng=-122.5070"
 JAVA_OPTS="$JAVA_OPTS -Dazimuth.ratio=16:76"  # For V5
 # JAVA_OPTS="$JAVA_OPTS -Dazimuth.ratio=20:40"  # For V3
 JAVA_OPTS="$JAVA_OPTS -Delevation.ratio=18:128"
-JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
+JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dmoves.verbose=true"
 JAVA_OPTS="$JAVA_OPTS -Dmotor.hat.verbose=true"
 JAVA_OPTS="$JAVA_OPTS -Dtoo.long.exception.verbose=false"
