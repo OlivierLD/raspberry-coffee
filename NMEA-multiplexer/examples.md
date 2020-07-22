@@ -411,7 +411,7 @@ Do the test: the Sun crosses the meridian at _exactly_ 12:00:00 noon Solar (SLR)
     - a [touchpad](https://www.adafruit.com/product/1332)?
     - A Smart Watch App?
 
-See more implementation examples [here](https://github.com/OlivierLD/raspberry-coffee/tree/master/NMEA.mux.WebUI/README.md).
+See more implementation examples [here](https://github.com/OlivierLD/raspberry-coffee/tree/master/NMEA-mux-WebUI/README.md).
 
 <!--
 ### TODO...
