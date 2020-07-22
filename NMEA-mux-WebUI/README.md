@@ -601,5 +601,6 @@ Hard waterproof case, with customizable (pre-cut) foam, like [that one](https://
 - the small OLED screen uses SPI interface
 - there is no BME280
 - the GPS is external (and cheaper than the other `Ultimate` one above).
+- See [here](https://github.com/OlivierLD/raspberry-coffee/tree/master/NMEA-mux-WebUI/small-server-extended), something similar with a 3D-printed enclosure, and solar panel power supply.
 
 ---
