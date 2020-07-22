@@ -19,7 +19,8 @@ apply plugin: 'io.spring.dependency-management'
 
 bootJar.doFirst {
     println "--------------------------------------------------------------------------------------"
-    println ">>> Make sure you've run gradle install from common-utils, RMI-sample, I2C-SPI and ADC"
+    println ">>> Make sure you've run gradle install from common-utils, RMI-sample, I2C-SPI,"
+    println ">>> REST-assembler, and ADC"
     println ">>> You'd see a bootJar failure otherwise"
     println "--------------------------------------------------------------------------------------"
 }

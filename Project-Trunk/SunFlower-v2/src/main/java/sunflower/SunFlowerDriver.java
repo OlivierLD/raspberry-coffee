@@ -799,8 +799,8 @@ public class SunFlowerDriver {
 			// Parking from currentDeviceElevation to PARKED_ELEVATION
 			System.out.println(String.format("\t - Parking elevation %.02f -> %.02f", currentDeviceElevation, PARKED_ELEVATION));
 			MotorPayload parkElev = getMotorPayload(PARKED_ELEVATION,
-					currentDeviceElevationStepOffset,
-					currentDeviceElevation,
+					currentDeviceElevationStepOffset,  // TODO Look into this one
+					currentDeviceElevation,            // TODO and this one too
 					PARKED_ELEVATION,
 					elevationMotorRatio,
 					elevationInverted);

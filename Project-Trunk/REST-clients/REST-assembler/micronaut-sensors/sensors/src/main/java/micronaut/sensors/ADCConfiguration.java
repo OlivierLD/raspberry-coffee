@@ -1,7 +1,7 @@
 package micronaut.sensors;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
-import rpi.sensors.ADCChannel;
+import sensors.ADCChannel;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -71,7 +71,7 @@ public class ADCConfiguration {
 		System.out.println("PreDestroy in ADCConfiguration");
 		System.out.println("---------------------------------");
 		if (this.adcChannel != null) {
-			ADCChannel.close();
+//			ADCChannel.close();
 		}
 	}
 

@@ -4,7 +4,7 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Produces;
-import rpi.sensors.ADCChannel;
+import sensors.ADCChannel;
 import utils.PinUtil;
 
 import javax.annotation.Nullable;

@@ -4,8 +4,6 @@ plugins {
     id "application"
 }
 
-
-
 version "0.1"
 group "micronaut.sensors"
 
@@ -39,7 +37,10 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "io.micronaut.test:micronaut-test-junit5"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-    compile 'oliv.raspi.coffee:ADC:1.0'   // mavenLocal
+
+    // mavenLocal
+    compile 'oliv.raspi.coffee:ADC:1.0'
+    compile 'oliv.raspi.coffee:REST-assembler:1.0'
 }
 
 test.classpath += configurations.developmentOnly
