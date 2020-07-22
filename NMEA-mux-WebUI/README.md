@@ -6,9 +6,9 @@ We want to have a Nav Server:
 - Able to run even if no WiFi network is available
 - Able to provide a Web Graphical User Interface, accessing server side REST Services
 
-The [`NMEA.multiplexer`](../NMEA.multiplexer/README.md) is able to read, compute, and broadcast data, also accessible from a REST client.
+The [`NMEA-multiplexer`](../NMEA-multiplexer/README.md) is able to read, compute, and broadcast data, also accessible from a REST client.
 
-> _Note_: We will also demonstrate projects involving and extending the [`RESTNavServer`](../RESTNavServer/README.md), which is itself extending the `NMEA.multiplexer`, adding to it 
+> _Note_: We will also demonstrate projects involving and extending the [`RESTNavServer`](../RESTNavServer/README.md), which is itself extending the `NMEA-multiplexer`, adding to it 
 > extra features like almanac publication, tide computation, extra REST services and Web Components, etc. See below for more details. 
 
 To work even if no WiFi network is available, the best is probably to have the Raspberry Pi emit its own.
@@ -67,7 +67,7 @@ Assuming that you've found (or defined for yourself) the configuration of your d
     - `cd NMEADist`
     - `./start-mux.sh`
 
-That's it, your server is up and running! (you might have modified the `properties` file, like `nmea.mux.gps.log.properties`, though. See the [technical manual](../NMEA.multiplexer/manual.md) for details)
+That's it, your server is up and running! (you might have modified the `properties` file, like `nmea.mux.gps.log.properties`, though. See the [technical manual](../NMEA-multiplexer/manual.md) for details)
 
 Now, from any browser on any machine connected on the server (Raspberry Pi)'s network,
 you can reach <http://destination.pi:[port]/zip/index.html>.
@@ -95,7 +95,7 @@ The "_pick and choose_" part could be scripted as well, as seen in the provided 
 
 This project is not supposed to contain any source file except web resources (archived).
 
-It pulls the `NMEA.multiplexer`, `RESTNavServer`, and the `NMEA.mux.extensions` projects (or whatever you want or need).
+It pulls the `NMEA-multiplexer`, `RESTNavServer`, and the `NMEA.mux.extensions` projects (or whatever you want or need).
 This is what you would tweak to fit your requirements.
 
 When available, the file `rc.local` is to give you some inspiration, so you can modify the one in `/etc/rc.local`
@@ -171,7 +171,7 @@ All features: NMEA multiplexer, Web Interface, Celestial Computer, Tides, Almana
 ```
 See in the `builder.sh` how web resources are copied, and from where.
 Then look into `to.prod.sh` how it launches a Gradle build, and in the corresponding `build.gradle`
-that it only depends on `NMEA.multiplexer`.
+that it only depends on `NMEA-multiplexer`.
 
 ### Full Nav Server, extended 
 all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
@@ -451,7 +451,7 @@ Distortion of the reflected screen can be controlled in the CSS Stylesheet, by a
 > Note: Try on a Raspberry Pi 3B+, the client part (running in the browser) is a bit demanding...
 
 ### For logged data
-See in the `NMEA.multiplexer` project
+See in the `NMEA-multiplexer` project
 - `log.analyzer.sh`
 - `log.shrinker.sh`
 - `log.to.kml.sh`

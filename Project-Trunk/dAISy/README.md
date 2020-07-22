@@ -291,8 +291,8 @@ Disconnecting.
 $  
 ```
 
-## NMEA.multiplexer integration
-From the `NMEA.multiplexer`, with a yaml like this on the Raspberry PI:
+## NMEA-multiplexer integration
+From the `NMEA-multiplexer`, with a yaml like this on the Raspberry PI:
 ```yaml
 #
 # MUX definition.

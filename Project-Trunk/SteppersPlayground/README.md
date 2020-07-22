@@ -147,7 +147,7 @@ some required speed/RPM might be too high.
 Following up to the previous micro-servo prototype:
 
 - Using two stepper motors
-- Using the `NMEA.multiplexer` to get the GPS Position and the Heading
+- Using the `NMEA-multiplexer` to get the GPS Position and the Heading
     - Provide defaults...
 - Determine the Sun's location in the sky
 - Orient a solar panel accordingly

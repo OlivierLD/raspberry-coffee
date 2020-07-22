@@ -6,6 +6,6 @@ Adapted from the Python code from [here](https://github.com/switchdoclabs/Raspbe
 
 Also see in `Project.Trunk:Weather.Station.Implementation`, for a real world (full) implementation.
 
-There is also a channel in the `NMEA.multiplexer`, with an IoT forwarder.
+There is also a channel in the `NMEA-multiplexer`, with an IoT forwarder.
 
 ---

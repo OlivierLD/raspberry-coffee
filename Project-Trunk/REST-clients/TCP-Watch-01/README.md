@@ -2,7 +2,7 @@
 No need for a cell phone, no BlueTooth required.
 
 ### Context
-We have a `NMEA.multiplexer` (or a `RESTNavServer`) running on a network we can see, doing some logging, calculations, rebroadcasting or what not,
+We have a `NMEA-multiplexer` (or a `RESTNavServer`) running on a network we can see, doing some logging, calculations, rebroadcasting or what not,
 that also gives access to the data it manages, though HTTP.
 
 It can serve some Web pages, and host some REST services.

@@ -47,14 +47,14 @@ gen/*
 gradle-app.setting
 *.zip
 *.tgz
-NMEA.multiplexer/libs
+NMEA-multiplexer/libs
 SerialRxTx/libs
 C/SatelliteFinder
 C/fork
 C/tools
 snap.jpg
-NMEA.multiplexer/web/leaflet
-NMEA.multiplexer/sample.data/
+NMEA-multiplexer/web/leaflet
+NMEA-multiplexer/sample.data/
 RESTTideEngine/*.xml
 RESTRouting/out
 RESTRouting/*.json

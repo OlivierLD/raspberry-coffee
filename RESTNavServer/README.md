@@ -1,13 +1,13 @@
 # Navigation Server
-#### Prolongation/Extension of the NMEA.Multiplexer
+#### Prolongation/Extension of the NMEA-multiplexer
 
 An illustration of the way to gather or aggregate several REST Services all in one place.
-This project is an extension/prolongation of the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/NMEA.multiplexer/README.md).
+This project is an extension/prolongation of the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/NMEA-multiplexer/README.md).
 
 It uses:
 - [Tide](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/RESTTideEngine/README.md) REST Service
 - [Astro](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RESTNauticalAlmanac) REST Service
-- [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/NMEA.multiplexer/README.md) REST Service
+- [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/NMEA-multiplexer/README.md) REST Service
 - ... and the list keeps growing (see in `navrest.NavServer.java` how to add a `RequestManager`).
 
 In addition, I'll be attempting to implement the features of the Weather Wizard (another project I own, in Java and Swing, that can superimpose different heterogeneous documents on the same chart, like Faxes, GRIBS, routing results, etc.). This part involves the
@@ -81,12 +81,12 @@ Also, the emergence of container techniques like `Docker` opens the door to othe
 
 Anyway! For now and until further notice, the back-end is running on a JVM.
 
-## NMEA.multiplexer, plus REST
+## NMEA-multiplexer, plus REST
 ### Flexibility and modularity
 
-_To summarize_, this project runs the `NMEA.multiplexer`.
+_To summarize_, this project runs the `NMEA-multiplexer`.
 
-The `NMEA.multiplexer` can
+The `NMEA-multiplexer` can
 - get its input from a variety of channels
     - Serial ports
     - TCP ports
@@ -114,13 +114,13 @@ But the actual UI rendering will **always** be done on a REST or HTTP client, in
 ![The big picture](./docimg/NavServer.png)
 
 You can see the `RequestManager`s as components handling extra REST requests. For example:
-- a request `GET /mux/cache` will be handled by the `NMEA.multiplexer`
+- a request `GET /mux/cache` will be handled by the `NMEA-multiplexer`
 - a request like `POST /tide/tide-stations/Ocean%20Beach/wh` will be handled by the `Tide REST Request Manager`
 - a request like `POST /astro/sun-moon-dec-alt` will be managed by the `Astro REST Request Manager`
 - other requests could be considered (see the HTTP server's code to understand how) as static HTTP requests, and render the resources of the `web` (or any other name you can choose) folder for that.
   > Note: a `static` web document can very well perform `dynamic` REST requests, bringing live data to the web interface.
 
-The `NMEA.multiplexer` embedded in the `REST/HTTP Server` gathers data from NMEA station(s), sensors, other channels, possibly logs them, computes and process other data, and can feed other programs (`OpenCPN`, `SeaWi`, etc) through the channel(s) of your choice.
+The `NMEA-multiplexer` embedded in the `REST/HTTP Server` gathers data from NMEA station(s), sensors, other channels, possibly logs them, computes and process other data, and can feed other programs (`OpenCPN`, `SeaWi`, etc) through the channel(s) of your choice.
 
 For now (Dec 2018), the Web pages we use here are using HTML5, CSS3, JavaScript (ES5 & 6), WebComponents...
 Later, we might as well provide some WebGL examples.
@@ -312,7 +312,7 @@ Works for Sun, Moon, Venus, Mars, Jupiter, Saturn, and 58 stars.
 > Note: The `DeltaT` used for the celestial calculations is provided when starting the server.
 
 ## Server Remote access
-> See [this document](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/NMEA.multiplexer#remote-access).
+> See [this document](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/NMEA-multiplexer#remote-access).
 
 ### More resources
 - [Happy Nav Server](https://github.com/OlivierLD/raspberry-coffee/blob/master/Papers/happy.navserver/HappyNavserver.md)

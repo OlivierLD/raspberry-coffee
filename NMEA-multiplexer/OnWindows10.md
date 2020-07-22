@@ -47,8 +47,8 @@ We will be using `gradlew`.
 First (and only once), let's make sure all is in place:
 <pre>
  C:\Users\olivier><b>cd raspberry-coffee</b>
- C:\Users\olivier\raspberry-coffee><b>cd NMEA.multiplexer</b>
- C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>..\gradlew tasks</b>
+ C:\Users\olivier\raspberry-coffee><b>cd NMEA-multiplexer</b>
+ C:\Users\olivier\raspberry-coffee\NMEA-multiplexer><b>..\gradlew tasks</b>
  Downloading https://services.gradle.org/distributions/gradle-5.4.1-all.zip
  ......................................................................................
  . . .
@@ -70,10 +70,10 @@ First (and only once), let's make sure all is in place:
  >> From task compileJava (in raspberry-coffee), using java version 1.8
  >> From task compileTestJava (in raspberry-coffee), using java version 1.8
  
- > Task :NMEA.multiplexer:tasks
+ > Task :NMEA-multiplexer:tasks
  
  ------------------------------------------------------------
- Tasks runnable from project :NMEA.multiplexer
+ Tasks runnable from project :NMEA-multiplexer
  ------------------------------------------------------------
  
  Build tasks
@@ -94,16 +94,16 @@ First (and only once), let's make sure all is in place:
  
  Help tasks
  ----------
- buildEnvironment - Displays all buildscript dependencies declared in project ':NMEA.multiplexer'.
- components - Displays the components produced by project ':NMEA.multiplexer'. [incubating]
- dependencies - Displays all dependencies declared in project ':NMEA.multiplexer'.
- dependencyInsight - Displays the insight into a specific dependency in project ':NMEA.multiplexer'.
- dependentComponents - Displays the dependent components of components in project ':NMEA.multiplexer'. [incubating]
+ buildEnvironment - Displays all buildscript dependencies declared in project ':NMEA-multiplexer'.
+ components - Displays the components produced by project ':NMEA-multiplexer'. [incubating]
+ dependencies - Displays all dependencies declared in project ':NMEA-multiplexer'.
+ dependencyInsight - Displays the insight into a specific dependency in project ':NMEA-multiplexer'.
+ dependentComponents - Displays the dependent components of components in project ':NMEA-multiplexer'. [incubating]
  help - Displays a help message.
- model - Displays the configuration model of project ':NMEA.multiplexer'. [incubating]
- projects - Displays the sub-projects of project ':NMEA.multiplexer'.
- properties - Displays the properties of project ':NMEA.multiplexer'.
- tasks - Displays the tasks runnable from project ':NMEA.multiplexer'.
+ model - Displays the configuration model of project ':NMEA-multiplexer'. [incubating]
+ projects - Displays the sub-projects of project ':NMEA-multiplexer'.
+ properties - Displays the properties of project ':NMEA-multiplexer'.
+ tasks - Displays the tasks runnable from project ':NMEA-multiplexer'.
  
  IDE tasks
  ---------
@@ -121,7 +121,7 @@ First (and only once), let's make sure all is in place:
  test - Runs the unit tests.
  
  <=============> 100% CONFIGURING [22m 35s]
- > Resolve dependencies of :NMEA.multiplexer:runtimeClasspath
+ > Resolve dependencies of :NMEA-multiplexer:runtimeClasspath
  <=============> 100% CONFIGURING [20m 25s]t files of a task.
  <=============> 100% CONFIGURING [20m 22s]es the artifacts of a configuration.
  Pattern: upload<ConfigurationName>: Assembles and uploads the artifacts belonging to a configuration.
@@ -136,16 +136,16 @@ First (and only once), let's make sure all is in place:
  <=============> 100% CONFIGURING [20m 11s]
  BUILD SUCCESSFUL in 12m 11s
  <=============> 100% CONFIGURING [20m 10s]
- C:\Users\olivier\raspberry-coffee\NMEA.multiplexer>
+ C:\Users\olivier\raspberry-coffee\NMEA-multiplexer>
 </pre>
 
 Now, we can start the actual build:
 <pre>
- C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>..\gradlew shadowJar -x :NMEA.multiplexer:compileScala</b>
+ C:\Users\olivier\raspberry-coffee\NMEA-multiplexer><b>..\gradlew shadowJar -x :NMEA-multiplexer:compileScala</b>
  > Configure project :
  >> From task compileJava (in raspberry-coffee), using java version 1.8
  >> From task compileTestJava (in raspberry-coffee), using java version 1.8
- > Task :NMEA.multiplexer:compileJava
+ > Task :NMEA-multiplexer:compileJava
  Note: Some input files use unchecked or unsafe operations.
  Note: Recompile with -Xlint:unchecked for details.
  Deprecated Gradle features were used in this build, making it incompatible with Gradle 6.0.
@@ -153,7 +153,7 @@ Now, we can start the actual build:
  See https://docs.gradle.org/5.4.1/userguide/command_line_interface.html#sec:command_line_warnings
  <span style="color: green;">BUILD SUCCESSFUL</span> in 43s
  15 actionable tasks: 3 executed, 12 up-to-date
- C:\Users\olivier\raspberry-coffee\NMEA.multiplexer>
+ C:\Users\olivier\raspberry-coffee\NMEA-multiplexer>
 </pre>
 
 ### 3 - Install `java-librxtx`
@@ -164,7 +164,7 @@ Notice where this has been installed, we will need this location.
 ### 4 - Modify the `windows.test.bat`
 In a text editor (`Notepad`, `Atom`, ...), open `windows.test.bat`.
 <pre>
- C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>atom windows.test.bat</b>
+ C:\Users\olivier\raspberry-coffee\NMEA-multiplexer><b>atom windows.test.bat</b>
 </pre>
 You need to modify this line (`#13`), so it matches your settings:
 <pre>
@@ -188,7 +188,7 @@ As you would see, there are more instructions in the script itself.
 This step will tell the multiplexer what to read, and what to write.
 In a text editor, open `nmea.mux.2.serial.yaml`:
 <pre>
- C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>atom nmea.mux.2.serial.yaml</b>
+ C:\Users\olivier\raspberry-coffee\NMEA-multiplexer><b>atom nmea.mux.2.serial.yaml</b>
 </pre>
 #### Example:
 See this file:
@@ -219,7 +219,7 @@ This would read 2 serial ports, `COM3` and `COM4`, and merge the output into a s
 ### 6 - Run the program
 This step will start the Multiplexer. As instructed by the `yaml` file above, it will read 2 serial ports and produce a log file. 
 <pre>
- C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>windows.test.bat</b>
+ C:\Users\olivier\raspberry-coffee\NMEA-multiplexer><b>windows.test.bat</b>
  Running java -cp .\build\libs\NMEA-multiplexer-1.0-all.jar;C:\Users\olivier\rxtx-2.2pre2-bins\RXTXcomm.jar  -DdeltaT=69.2201 -Xms64M -Xmx1G -Djava.library.path=C:\Users\olivier\rxtx-2.2pre2-bins\win32 -Dmux.properties=nmea.mux.2.serial.yaml nmea.mux.GenericNMEAMultiplexer
  Definition Name: Read 2 serial ports, generate one log file, for Windows.
  {with.http.server=false, init.cache=false}
@@ -241,7 +241,7 @@ a Comma Separated Value (csv) file, so it can be opened as a spreadsheet,
 we have a utility for that.
 
 <pre>
- C:\Users\olivier\raspberry-coffee\NMEA.multiplexer><b>log.to.csv data.nmea 2019Dec06.csv</b>
+ C:\Users\olivier\raspberry-coffee\NMEA-multiplexer><b>log.to.csv data.nmea 2019Dec06.csv</b>
 </pre>
 
 ---

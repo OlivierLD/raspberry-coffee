@@ -6,7 +6,7 @@ import nmea.parser.StringGenerator;
 import weatherstation.logger.servers.TCPServer;
 
 /**
- * Compatible with OpenCPN, NodeRED, NMEA.multiplexer, etc...
+ * Compatible with OpenCPN, NodeRED, NMEA-multiplexer, etc...
  *
  * Expect -Dtcp.port to override default 7001.
  * See also station.lat, station.lng

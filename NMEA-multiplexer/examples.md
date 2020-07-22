@@ -387,7 +387,7 @@ The `nmea.forwarders.SolarPanelOrienter` class is part of the `GPS.sun.servo` pr
  $ cd ../GPS.sun.servo
  $ ../gradlew shadowJar
  $ .......
- $ cd ../NMEA.multiplexer
+ $ cd ../NMEA-multiplexer
  $ ../gradlew shadowJar
  $ .......
 ```

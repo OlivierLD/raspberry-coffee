@@ -299,7 +299,7 @@ Another possibility is to start it remotely from `ssh`:
 
 ### Next
 - NODE-Red Integration ?
-- Integration with the NMEA.Multiplexer ?
+- Integration with the NMEA-multiplexer ?
 - Read the `STH10` as an I<small><sup>2</sup></small>C device ?
 
 

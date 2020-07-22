@@ -54,7 +54,7 @@ This implementation - just an example - uses:
   - A WebSocket client pushing the last available data as a `json` object
   - A TCP server that also converts the data in `NMEA` sentences before streaming them on a given TCP port
 
-The TCP channel, conveying NMEA Data, is compatible with the `NMEA.multiplexer` project and `Node-RED`.
+The TCP channel, conveying NMEA Data, is compatible with the `NMEA-multiplexer` project and `Node-RED`.
 
 ![WebSocket Interface](./img/WebSocket.png)
 
@@ -62,7 +62,7 @@ Web Socket Interface
 
 ![Web-Components Interface](./img/WebComponents.png)
 
-Web Component Interface, pinging the NMEA Cache (`NMEA.multiplexer`) through REST services.
+Web Component Interface, pinging the NMEA Cache (`NMEA-multiplexer`) through REST services.
 
 ![Web Interface](./img/MySQL.png)
 
@@ -89,7 +89,7 @@ You Choose >
 - An old laptop inside the house, running a `Raspberry Pi desktop` (Debian Stretch) image,
 where I run the following script:
 ```
-$ NMEA.multiplexer> ./mux.sh nmea.mux.weather.station.tcp.properties
+$ NMEA-multiplexer> ./mux.sh nmea.mux.weather.station.tcp.properties
 ```
 If the Raspberry Pi's machine name is `weather-station` and the laptop's name is `home-station`,
 then from anywhere is the house (house LAN), I can reach
@@ -113,7 +113,7 @@ Execute this one on the laptop:
 #
 cd raspberry-pi4j-samples
 echo Starting multiplexer
-cd NMEA.multiplexer
+cd NMEA-multiplexer
 nohup ./mux.sh nmea.mux.weather.station.tcp.properties &
 echo Starting Snap loop
 cd ../RasPISamples

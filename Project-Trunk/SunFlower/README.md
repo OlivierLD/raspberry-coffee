@@ -257,7 +257,7 @@ All is good with the 1000.
 ![All in one](./sunflower.autonomous_bb.png)
 
 ## NMEA Feed
-From the project `NMEA.multiplexer`, wrap the `SunFlower` class into a `forwarder`.
+From the project `NMEA-multiplexer`, wrap the `SunFlower` class into a `forwarder`.
 This way, position and heading come from an NMEA channel (log file, NMEA Station, TCP Channel, etc), and
 _forwarded_ to the `SunFlower`.
 

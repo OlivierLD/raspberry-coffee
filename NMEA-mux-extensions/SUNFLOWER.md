@@ -2,7 +2,7 @@
 
 This is an illustration of 2 things:
 - The [`SunFlower`](../Project.Trunk/SunFlower/README.md) project, that orients a panel (like a Solar Panel) so it faces the Sun
-- The [`NMEA.multiplexer`](../NMEA.multiplexer/README.md) project, that can deal with an NMEA feed.
+- The [`NMEA-multiplexer`](../NMEA-multiplexer/README.md) project, that can deal with an NMEA feed.
 
 The goal is to have a small device (featured later), carried by some vehicle on the go (a car, RV, boat...), constantly facing the Sun (during the day... of course!)
 
@@ -54,10 +54,10 @@ Make sure you have built all the required parts:
 ```bash
  SunFlower $> cd ../GPS.sun.servo
  GPS.sun.servo $> ../gradlew [--no-daemon] clean shadowJar
- GPS.sun.servo $> cd ../NMEA.multiplexer
- NMEA.multiplexer $> ../gradlew [--no-daemon] clean shadowJar
- NMEA.multiplexer $> cp ../GPS.sun.servo/sunflower.propeties .
- NMEA.multiplexer $> cp mux.sh mux.sunflower.sh
+ GPS.sun.servo $> cd ../NMEA-multiplexer
+ NMEA-multiplexer $> ../gradlew [--no-daemon] clean shadowJar
+ NMEA-multiplexer $> cp ../GPS.sun.servo/sunflower.propeties .
+ NMEA-multiplexer $> cp mux.sh mux.sunflower.sh
 ```
 The last line creates a duplicate of the script that runs the multiplexer, edit it, and add the required resources in the `classpath`:
 ```bash
@@ -70,7 +70,7 @@ CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
 ```
 You can use the file `nmea.mux.sun.flower.properties` to start the multiplexer, is uses a log file as input, and drives the solar panel according to the Position and Heading, provided as NMEA Srings.
 ```bash
- NMEA.multiplexer $> ./mux.sunflower.sh nmea.mux.sun.flower.properties
+ NMEA-multiplexer $> ./mux.sunflower.sh nmea.mux.sun.flower.properties
 ```
 > If you want to read a GPS from a serial port, use `nmea.mux.sun.flower.properties`.
 >

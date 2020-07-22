@@ -3,7 +3,7 @@
         "id": "2de39f46.caf55",
         "type": "log-replay",
         "z": "f29139a8.882258",
-        "path": "/home/pi/raspberry-pi4j-samples/NMEA.multiplexer/sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea",
+        "path": "/home/pi/raspberry-pi4j-samples/NMEA-multiplexer/sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea",
         "freq": 1,
         "loop": false,
         "verbose": false,

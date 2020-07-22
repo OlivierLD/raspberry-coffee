@@ -37,7 +37,7 @@ WORKDIR /workdir/raspberry-coffee
 RUN ./gradlew tasks
 # RUN ./gradlew tasks -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80
 #
-WORKDIR /workdir/raspberry-coffee/NMEA.multiplexer
+WORKDIR /workdir/raspberry-coffee/NMEA-multiplexer
 #
 RUN ../gradlew shadowJar
 # RUN ../gradlew shadowJar -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80
@@ -46,7 +46,7 @@ RUN ../gradlew shadowJar
 # ENV https_proxy ""
 
 EXPOSE 9999
-# We are located in /workdir/raspberry-coffee/NMEA.multiplexer
+# We are located in /workdir/raspberry-coffee/NMEA-multiplexer
 #
 # With I2C SSD1306
 # CMD ["./mux.sh", "nmea.mux.gps.log.properties"]

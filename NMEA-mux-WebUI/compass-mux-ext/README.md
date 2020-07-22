@@ -1,4 +1,4 @@
-## Extending `NMEA.multiplexer`: A Standalone Compass, and a push-button. 
+## Extending `NMEA-multiplexer`: A Standalone Compass, and a push-button. 
 Same as [Compass Mux](../compass-mux), with some small part of code to implement user's interactions with a push button (click, double-click, long-click).
 
 This is an _extension_ of the module `compass-mux`.
@@ -20,7 +20,7 @@ The rest is all scripted:
 - in the `yaml` properties file used to start the `mux` at runtime.
 
 See in the `build.gradle`, this project involves others: 
-- the `NMEA.multiplexer`
+- the `NMEA-multiplexer`
 - the `NMEA.mux.extensions`
 
 It's all driven by `nmea.mux.hmc5883l.oled.yaml`.

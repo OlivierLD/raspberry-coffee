@@ -1,4 +1,4 @@
-## Extending `NMEA.multiplexer`: A Standalone Compass. 
+## Extending `NMEA-multiplexer`: A Standalone Compass. 
 
 ### No Coding!
 This bundle involves absolutely **_no_** coding.
@@ -7,7 +7,7 @@ It is all scripted:
 - in the `yaml` properties file used to start the `mux` at runtime.
 
 See in the `build.gradle`, this project involves others: 
-- the `NMEA.multiplexer`
+- the `NMEA-multiplexer`
 - the `NMEA.mux.extensions`
 
 It's all driven by `nmea.mux.hmc5883l.oled.yaml`.
@@ -56,7 +56,7 @@ forwarders:
     port: 8001
 ```
 
-The `tcp` data can then be used in input by another instance the `NMEA.multiplexer` (or anything understanding NMEA over TCP, like OpenCPN, on the same network.
+The `tcp` data can then be used in input by another instance the `NMEA-multiplexer` (or anything understanding NMEA over TCP, like OpenCPN, on the same network.
  
 - On the machine running the magnetometer instance:
 ```bash
@@ -65,7 +65,7 @@ compass.mux $ ./mux.sh nmea.mux.hmc5883l.oled.yaml
 - In OpenCPN (consuming the `tcp` feed):
   ![OpenCPN](./pictures/01.OpenCPN.HDM.png)
   
-- From another `NMEA.multiplexer` (here a `RESTNavServer`, consuming the `tcp` feed):
+- From another `NMEA-multiplexer` (here a `RESTNavServer`, consuming the `tcp` feed):
 With a `yaml` file like that:
 ```yaml
 channels:
@@ -75,7 +75,7 @@ channels:
     verbose: true
   - type: . . .
 ```
-See output from the first `NMEA.multiplexer` at the bottom of the console below.
+See output from the first `NMEA-multiplexer` at the bottom of the console below.
 ```
 RESTNavServer/launchers $ ./runNavServer.sh --mux:nmea.mux.gps.hdm.yaml 
 ----------------------------
@@ -146,7 +146,7 @@ Bye now ✋
 
 > Note:
 > In case you are only interested in the heading - for example, you also have the possibility
-> to have the first `NMEA.multiplexer` feeding a cache, that can then be accessed by some REST requests, like
+> to have the first `NMEA-multiplexer` feeding a cache, that can then be accessed by some REST requests, like
 ```
  GET http://192.168.42.20:9999/mux/cache
 ```

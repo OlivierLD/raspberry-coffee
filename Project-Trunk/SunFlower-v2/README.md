@@ -203,9 +203,9 @@ But the magnetometers can go crazy if they're too close to a magnet, and stepper
 
 Having the magnetometer too close to the stepper motors is **not** a good idea.
 
-This is where we use the `NMEA.multiplexer` project (part of this repo). We have another Raspberry Pi (a Raspberry Pi Zero does the job)
-with a magnetometer attached to it, running the `NMEA.multiplexer`.
-The `NMEA.multiplexer` can also serve as a REST server, storing NMEA data in a cache, queryable from a REST client.
+This is where we use the `NMEA-multiplexer` project (part of this repo). We have another Raspberry Pi (a Raspberry Pi Zero does the job)
+with a magnetometer attached to it, running the `NMEA-multiplexer`.
+The `NMEA-multiplexer` can also serve as a REST server, storing NMEA data in a cache, queryable from a REST client.
 
 |       HMC5883L                 |     HMC5883L                   |
 |:------------------------------:|:------------------------------:|
@@ -254,8 +254,8 @@ from which the heading is obtained, and used to calculate the azimuthal orientat
 #### Pushing
 Instead of pulling the heading from wherever it is available, we could also use a push architecture.
 
-In the `NMEA.multiplexer` project (part of this repo), there is this notion of `forwarder` that could be used here.
-This project could be implement the `forwarder` interface, and the `NMEA.multiplexer` could push
+In the `NMEA-multiplexer` project (part of this repo), there is this notion of `forwarder` that could be used here.
+This project could be implement the `forwarder` interface, and the `NMEA-multiplexer` could push
 the required data to the `SunFlowerDriver` (Position & Heading), from the server, to the SunFlower.
 > For inspiration, see the existing forwarder `nmea.forwarders.SolarPanelOrienter`, designed to work
 > with the `SunFlower.v1`, the one working with micro-servos.
@@ -304,7 +304,7 @@ The two versions, working together:
 - A Web Console. WiP.
     - REST and/or WebSockets?
 - A utility, to manually/interactively orient the panel from user's inputs. &#9989; &nbsp;Done.
-- A `forwarder` for the `NMEA.multiplexer`, as in `SolarPanelOrienter`.
+- A `forwarder` for the `NMEA-multiplexer`, as in `SolarPanelOrienter`.
     - This would allow Heading input, position input.
 - Small OLED screen for position and orientation data.    
 

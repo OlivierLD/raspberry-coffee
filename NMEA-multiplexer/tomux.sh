@@ -12,7 +12,7 @@ then
   YES=0
 fi
 # Change directory below as needed.
-cd raspberry-coffee/NMEA.multiplexer
+cd raspberry-coffee/NMEA-multiplexer
 #
 echo -e "Working from $PWD"
 #

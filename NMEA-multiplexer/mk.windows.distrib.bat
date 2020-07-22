@@ -7,7 +7,7 @@
 :: Need 7z to be installed
 set PATH=%PATH%;"C:\Program Files\7-Zip"
 ::
-echo Make sure you've run a build, ..\gradlew clean shadowJar [-x :NMEA.multiplexer:compileScala]
+echo Make sure you've run a build, ..\gradlew clean shadowJar [-x :NMEA-multiplexer:compileScala]
 ::
 :: Check is a distrib folder in %HOMEPATH%
 if not exist %HOMEPATH%\distrib (

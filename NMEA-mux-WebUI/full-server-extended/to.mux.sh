@@ -13,7 +13,7 @@ then
   YES=0
 fi
 # >>> Change directory below as needed. <<<
-# cd raspberry-coffee/NMEA.multiplexer
+# cd raspberry-coffee/NMEA-multiplexer
 a=
 if [[ "$YES" == "1" ]]
 then

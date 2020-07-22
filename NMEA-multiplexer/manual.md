@@ -496,7 +496,7 @@ _Note_: Two system variables can be used to set the default position (in case no
 JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-122.5070" # SF.
 java -cp $CP $JAVA_OPTS navrest.NavServer
 ```
-> `navrest.NavServer` is an example - part of this project - involving the `NMEA.Multiplexer`.
+> `navrest.NavServer` is an example - part of this project - involving the `NMEA-Multiplexer`.
 
 A ZDA Sentence can be generated from the system time. A multiplexer driven by
 this minimal properties file:
@@ -544,7 +544,7 @@ supplied as above. This allows you to see what the celestial configuration looks
 at any point in time.
 
 ### And then...
-An example of an implementation of the `NMEA.Multiplexer` along with several chunks of REST Services can be found
+An example of an implementation of the `NMEA-Multiplexer` along with several chunks of REST Services can be found
 in the module `RESTNavServer`, part of this project.
 
 This is typically what makes a Web page like the above available.
@@ -565,7 +565,7 @@ _local_ as well as _remote_ access from laptops, tablets, smartphones, character
 The _only_ requirement for a client is a network access (with obvious fluency with protocols like HTTP or TCP).
 
 #### To summarize
-The NMEA.Multiplexer pulls data from `channels`, possibly computes some using `computers`, and forwards (broadcasts) them through `forwarders`.
+The NMEA-Multiplexer pulls data from `channels`, possibly computes some using `computers`, and forwards (broadcasts) them through `forwarders`.
 
 All those data are represented using the NMEA format.
 
