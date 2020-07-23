@@ -819,8 +819,9 @@ public class SunFlowerDriver {
 
 			// Parking from currentDeviceAzimuth to PARKED_AZIMUTH
 			System.out.println(String.format("\t - Parking azimuth %.02f -> %.02f", currentDeviceAzimuth, PARKED_AZIMUTH));
-			MotorPayload parkZ = getMotorPayload(PARKED_AZIMUTH,
-					currentDeviceAzimuthStepOffset,
+			MotorPayload parkZ = getMotorPayload(
+				/*  PARKED_AZIMUTH,
+					currentDeviceAzimuthStepOffset, */
 					currentDeviceAzimuth,
 					PARKED_AZIMUTH,
 					azimuthMotorRatio,
