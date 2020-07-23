@@ -607,16 +607,16 @@ public class SunFlowerDriver {
 				}
 				// TODO Make it non-static, and synchronized ?
 				AstroComputer.calculate(date.get(Calendar.YEAR),
-																date.get(Calendar.MONTH) + 1,
-																date.get(Calendar.DAY_OF_MONTH),
-																date.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
-																date.get(Calendar.MINUTE),
-																date.get(Calendar.SECOND));
+										date.get(Calendar.MONTH) + 1,
+										date.get(Calendar.DAY_OF_MONTH),
+										date.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
+										date.get(Calendar.MINUTE),
+										date.get(Calendar.SECOND));
 				if (devicePosition != null) {
 					DeadReckoning dr = new DeadReckoning(AstroComputer.getSunGHA(),
-																							 AstroComputer.getSunDecl(),
-																							 devicePosition.getLatitude(),
-																							 devicePosition.getLongitude())
+														 AstroComputer.getSunDecl(),
+														 devicePosition.getLatitude(),
+														 devicePosition.getLongitude())
 														 .calculate();
 					sunAzimuth = dr.getZ();
 					sunElevation = dr.getHe();
@@ -798,7 +798,7 @@ public class SunFlowerDriver {
 
 			// Parking from currentDeviceElevation to PARKED_ELEVATION
 			System.out.println(String.format("\t - Parking elevation %.02f -> %.02f", currentDeviceElevation, PARKED_ELEVATION));
-			MotorPayload parkElev = getMotorPayload(
+			MotorPayload parkElev = getMotorPayload( // The 2 first parameters use the accumulated number of steps
 				/*  PARKED_ELEVATION,
 					currentDeviceElevationStepOffset, */
 					currentDeviceElevation,
@@ -819,7 +819,7 @@ public class SunFlowerDriver {
 
 			// Parking from currentDeviceAzimuth to PARKED_AZIMUTH
 			System.out.println(String.format("\t - Parking azimuth %.02f -> %.02f", currentDeviceAzimuth, PARKED_AZIMUTH));
-			MotorPayload parkZ = getMotorPayload(
+			MotorPayload parkZ = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
 				/*  PARKED_AZIMUTH,
 					currentDeviceAzimuthStepOffset, */
 					currentDeviceAzimuth,
@@ -891,8 +891,9 @@ public class SunFlowerDriver {
 				if (Math.abs(currentDeviceAzimuth - adjustedAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
 					hasMoved = true;
 					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, adjustedAzimuth));
-					MotorPayload data = getMotorPayload(PARKED_AZIMUTH,
-							currentDeviceAzimuthStepOffset,
+					MotorPayload data = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
+						/*  PARKED_AZIMUTH,
+							currentDeviceAzimuthStepOffset, */
 							currentDeviceAzimuth,
 							adjustedAzimuth,
 							azimuthMotorRatio,
@@ -921,8 +922,9 @@ public class SunFlowerDriver {
 				if (Math.abs(currentDeviceElevation - adjustedElevation) >= minDiffForMove) {
 					hasMoved = true;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, adjustedElevation));
-					MotorPayload data = getMotorPayload(PARKED_ELEVATION,
-							currentDeviceElevationStepOffset,
+					MotorPayload data = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
+						/*  PARKED_ELEVATION,
+							currentDeviceElevationStepOffset, */
 							currentDeviceElevation,
 							adjustedElevation,
 							elevationMotorRatio,
@@ -1016,8 +1018,9 @@ public class SunFlowerDriver {
 									if (value < 0 || value > 360) {
 										System.out.println(String.format("Bad Azimuth value: %f, should be in [0..360]", value));
 									} else {
-										MotorPayload data = getMotorPayload(PARKED_AZIMUTH,
-												currentDeviceAzimuthStepOffset,
+										MotorPayload data = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
+											/*  PARKED_AZIMUTH,
+												currentDeviceAzimuthStepOffset, */
 												currentDeviceAzimuth,
 												value,
 												azimuthMotorRatio,
@@ -1042,8 +1045,9 @@ public class SunFlowerDriver {
 									if (value < 0 || value > 90) {
 										System.out.println(String.format("Bad Elevation value: %f, should be in [0..90]", value));
 									} else {
-										MotorPayload data = getMotorPayload(PARKED_ELEVATION,
-												currentDeviceElevationStepOffset,
+										MotorPayload data = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
+											/*  PARKED_ELEVATION,
+												currentDeviceElevationStepOffset, */
 												currentDeviceElevation,
 												value,
 												elevationMotorRatio,
