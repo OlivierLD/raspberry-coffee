@@ -501,7 +501,7 @@ public class ANSIUtil {
 				ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						SOLID_VERTICAL_BOLD +
 						//	TOP_LEFT_ROUND_CORNER +
-						rpad(" Date", INFO_COL_1) +
+						rpad(" Event Date", INFO_COL_1) +
 						SOLID_VERTICAL_BOLD +
 						rpad(" Info", INFO_COL_2) +
 						SOLID_VERTICAL_BOLD +
