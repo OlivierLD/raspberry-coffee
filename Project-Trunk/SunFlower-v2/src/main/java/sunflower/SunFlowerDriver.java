@@ -965,7 +965,7 @@ public class SunFlowerDriver {
 			// Bottom of the loop
 			delay(loopDelay);
 		}
-		System.out.println("... Done with the SunFlowerDriver program ...");
+		System.out.println("\n\n\n... Done with the SunFlowerDriver program ...");
 //	try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
 	}
 
