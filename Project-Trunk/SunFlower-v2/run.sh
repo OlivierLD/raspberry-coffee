@@ -32,4 +32,6 @@ JAVA_OPTS="$JAVA_OPTS -Dstepper.style=MICROSTEP"
 # JAVA_OPTS="$JAVA_OPTS -Dstepper.style=DOUBLE"
 # JAVA_OPTS="$JAVA_OPTS -Dstepper.style=INTERLEAVE"
 #
+JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=false"
+#
 java -cp ${CP} ${JAVA_OPTS} sunflower.SunFlowerDriver

@@ -22,6 +22,8 @@ JAVA_OPTS="$JAVA_OPTS -Dazimuth.inverted=false"  # For V5
 #JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"
 #JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10"
 #
+JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=false"
+#
 java -cp ${CP} ${JAVA_OPTS} sunflower.main.ConsoleMain
 #
 # java -cp ${CP} ${JAVA_OPTS} sunflower.utils.EscapeSeq
