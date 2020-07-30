@@ -96,19 +96,59 @@ public class XMLtoJSON {
             bw.write("]\n");
 
             // Places
+            List<String> placeList = new ArrayList<>();
             String placesPath = "kml:kml/kml:Document/kml:Folder/kml:Placemark";
             nodeList = parsedGPX.selectNodes(placesPath, resolver);
             System.out.println(String.format("Selected %d Placemark node(s)", nodeList.getLength()));
             for (int i=0; i<nodeList.getLength(); i++) {
                 Node node = nodeList.item(i);
                 String name = ((XMLElement) node).selectSingleNode("kml:name/text()", resolver).getNodeValue();
-                String description = ((XMLElement) node).selectSingleNode("kml:description/text()", resolver).getNodeValue();
+                Node descNode = ((XMLElement) node).selectSingleNode("kml:description/text()", resolver);
+                String description = (descNode != null) ? descNode.getNodeValue() : null;
+                if (description != null) {
+                    description = description.trim();
+                    while (description.indexOf("\n ") > -1) {
+                        description = description.replace("\n ", "\n");
+                    }
+//                    description = description.replace("<\\\\//", "<//");
+                }
+                String latitude = null;
+                String longitude = null;
+                if (((XMLElement) node).selectSingleNode("kml:LookAt", resolver) != null) {
+                    try {
+                        latitude = ((XMLElement) node).selectSingleNode("kml:LookAt/kml:latitude/text()", resolver).getNodeValue();
+                    } catch (NullPointerException oops) {
+                        // Absorb
+                    }
+                    try {
+                        longitude = ((XMLElement) node).selectSingleNode("kml:LookAt/kml:longitude/text()", resolver).getNodeValue();
+                    } catch (NullPointerException oops) {
+                        // Absorb
+                    }
+                } else {
+                    try {
+                        latitude = ((XMLElement) node).selectSingleNode("kml:Camera/kml:latitude/text()", resolver).getNodeValue();
+                    } catch (NullPointerException oops) {
+                        // Absorb
+                    }
+                    try {
+                        longitude = ((XMLElement) node).selectSingleNode("kml:Camera/kml:longitude/text()", resolver).getNodeValue();
+                    } catch (NullPointerException oops) {
+                        // Absorb
+                    }
+                }
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("name", name);
                 jsonObject.put("description", description);
+                jsonObject.put("latitude", latitude);
+                jsonObject.put("longitude", longitude);
                 //
-                System.out.println(jsonObject.toString(2));
+                placeList.add(jsonObject.toString());
+//                System.out.println(jsonObject.toString(2));
             }
+            bw.write("\n[");
+            bw.write(placeList.stream().collect(Collectors.joining(", ")));
+            bw.write("]\n");
 
             bw.close();
 

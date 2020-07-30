@@ -313,12 +313,14 @@
 				redraw();
 			};
 			// Assume that returned and originalRequest have the same cardinality
-			if (returned[idx].returned.startsWith("file:")) { // && returned[idx].returned.indexOf("/web/") > -1) {
-				// TODO Something better, relative to /web
-				var loc = returned[idx].returned.substring(returned[idx].returned.indexOf("/web/") + 1);
-				fax.src = '../../' + loc;
-			} else {
-				fax.src = '../../' + returned[idx].returned;
+			if (returned[idx].returned !== undefined) {
+				if (returned[idx].returned.startsWith("file:")) { // && returned[idx].returned.indexOf("/web/") > -1) {
+					// TODO Something better, relative to /web
+					var loc = returned[idx].returned.substring(returned[idx].returned.indexOf("/web/") + 1);
+					fax.src = '../../' + loc;
+				} else {
+					fax.src = '../../' + returned[idx].returned;
+				}
 			}
 			speakUp(idx + 1);
 			console.log(fax.src);
@@ -844,16 +846,16 @@
 		  worldMap.drawWorldMap(false);
 	  }
 
-		for (var sh=0; sh<show.length; sh++) {
-	    if (show[sh] === true) {
-		    context.drawImage(
-		    		faxObj[sh],
-						topLeft[sh][0] * thisZoomFactor,
-						topLeft[sh][1] * thisZoomFactor,
-						(parseInt(faxObj[sh].width) * zoom[sh]) * thisZoomFactor,
-						(parseInt(faxObj[sh].height) * zoom[sh] * thisZoomFactor)
-				);
-	    }
+		for (let sh=0; sh<show.length; sh++) {
+			if (show[sh] === true && faxObj[sh] !== undefined) {
+				context.drawImage(
+						faxObj[sh],
+							topLeft[sh][0] * thisZoomFactor,
+							topLeft[sh][1] * thisZoomFactor,
+							(parseInt(faxObj[sh].width) * zoom[sh]) * thisZoomFactor,
+							(parseInt(faxObj[sh].height) * zoom[sh] * thisZoomFactor)
+					);
+			}
 		}
 //		if (withChart) { // GRIB over the faxes
 //			worldMap.drawWorldMap(false);
