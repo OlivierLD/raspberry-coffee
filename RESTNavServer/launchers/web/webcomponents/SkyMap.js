@@ -831,7 +831,7 @@ class SkyMap extends HTMLElement {
 					}
 					let p = this.plotCoordinates(centerDec, lng, radius);
 					context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
-					context.fillStyle = 'blue';
+					context.fillStyle = 'black';
 					let str = constellations[i].name;
 					let len = context.measureText(str).width;
 					context.fillText(str, (this.canvas.width / 2) - p.x - (len / 2), (this.canvas.height / 2) + p.y - 2);

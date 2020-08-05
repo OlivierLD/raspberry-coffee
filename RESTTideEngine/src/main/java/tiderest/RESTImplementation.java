@@ -563,9 +563,11 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		List<String> prmValues = request.getPathParameters(); // RESTProcessorUtil.getPathPrmValues(request.getRequestPattern(), request.getPath());
 		final Pattern pattern;
+
 		if (prmValues.size() == 1) {
 			String nameRegex = prmValues.get(0);
-			pattern = Pattern.compile(String.format(".*%s.*", nameRegex)); // decode/unescape
+			pattern = Pattern.compile(String.format("(?i).*%s.*", nameRegex)); // decode/unescape, ignorecase
+//			System.out.println("Pattern:" + pattern.toString());
 		} else {
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,

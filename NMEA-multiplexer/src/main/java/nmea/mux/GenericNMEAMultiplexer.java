@@ -183,17 +183,16 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 			}
 		}, "Multiplexer shutdown hook"));
 
-		nmeaDataClients
-						.forEach(client -> {
-							if (infraVerbose) {
-								System.out.println(String.format("\t>> %s - NMEADataClient: Starting %s...", NumberFormat.getInstance().format(System.currentTimeMillis()), client.getClass().getName()));
-							}
-							try {
-								client.startWorking();
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
-						});
+		nmeaDataClients.forEach(client -> {
+			if (infraVerbose) {
+				System.out.println(String.format("\t>> %s - NMEADataClient: Starting %s...", NumberFormat.getInstance().format(System.currentTimeMillis()), client.getClass().getName()));
+			}
+			try {
+				client.startWorking();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		});
 		if (infraVerbose) {
 			System.out.println(String.format("\t>> %s - %s constructor completed.", NumberFormat.getInstance().format(System.currentTimeMillis()), this.getClass().getName()));
 		}

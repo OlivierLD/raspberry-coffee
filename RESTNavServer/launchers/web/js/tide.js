@@ -1,5 +1,7 @@
 "use strict";
 
+// TODO Move to ES6
+
 var DEFAULT_TIMEOUT = 60000;
 
 // var errManager = console.log;
@@ -53,7 +55,7 @@ var getDeferred = function(
 
 	xhr.open(verb, url, true);
 	xhr.setRequestHeader("Content-type", "application/json");
-	if (data === undefined) {
+	if (data === undefined || data === null) {
 		xhr.send();
 	} else {
 		xhr.send(JSON.stringify(data));
@@ -83,14 +85,14 @@ var getCurrentTime = function() {
 
 var getTideStations = function(offset, limit, filter) {
 	var url = "/tide/tide-stations";
+	if (filter !== undefined) {
+		url += ('/' + encodeURIComponent(filter)); // Was filter=XXX
+	}
 	if (! isNaN(parseInt(offset))) {
 		url += ("?offset=" + offset);
 	}
 	if (! isNaN(parseInt(limit))) {
 		url += ((url.indexOf("?") > -1 ? "&" : "?") + "limit=" + limit);
-	}
-	if (filter !== undefined) {
-		url += ((url.indexOf("?") > -1 ? "&" : "?") + "filter=" + encodeURIComponent(filter));
 	}
 	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };

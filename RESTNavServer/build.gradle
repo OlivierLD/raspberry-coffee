@@ -12,22 +12,6 @@ version = '1.0'
 // sourceCompatibility = 1.8
 // targetCompatibility = 1.8
 
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src/java'
-//    }
-//    resources {
-//      srcDir 'src/resources'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests/java'
-//    }
-//  }
-//}
-
 repositories {
   mavenCentral()
   mavenLocal()
