@@ -301,7 +301,7 @@ public class SystemUtils {
         try {
             System.out.println();
             System.out.println(String.format("CPU Temperature %s", getCPUTemperature2()));
-            System.out.println(String.format("Cove Voltage %s", getCoreVoltage()));
+            System.out.println(String.format("Core Voltage %s", getCoreVoltage()));
         } catch (Exception ex) {
             System.err.println(ex.toString());
         }
