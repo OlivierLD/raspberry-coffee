@@ -90,8 +90,8 @@ public class SunFlowerDriver {
 		this.deviceHeading = hdg;
 	}
 
-	private SunFlowerDriver instance = this;
-	private List<String> commandHistory = new ArrayList<>();
+	private final SunFlowerDriver instance = this;
+	private final List<String> commandHistory = new ArrayList<>();
 
 	private static class Position {
 		double latitude;
@@ -167,7 +167,7 @@ public class SunFlowerDriver {
 		return DEFAULT_MOTOR_STYLE;
 	}
 
-	private AdafruitMotorHAT.Style motorStyle = findStyle(System.getProperty("stepper.style", DEFAULT_MOTOR_STYLE.toString()));
+	private final AdafruitMotorHAT.Style motorStyle = findStyle(System.getProperty("stepper.style", DEFAULT_MOTOR_STYLE.toString()));
 
 	// Default values. SHOULD be overridden.
 	private static double azimuthMotorRatio   = 1d / 40d; // Set with System variable "azimuth.ratio"
@@ -194,10 +194,10 @@ public class SunFlowerDriver {
 	}
 
 	public static class MoveCompleted {
-		private Date date;
-		private long epoch;
-	  	private int nbSteps;
-		private long elapsed;
+		private final Date date;
+		private final long epoch;
+	  	private final int nbSteps;
+		private final long elapsed;
 
 		public MoveCompleted(Date date, int nbSteps, long elapsed) {
 			this.date = date;
@@ -232,14 +232,14 @@ public class SunFlowerDriver {
 	}
 
 	public static class DeviceData {
-		private Date date;
-		private Position devicePosition;
-		private long epoch;
-		private double azimuth;
-		private double elevation;
-		private double azimuthOffset;
-		private double elevationOffset;
-		private double deviceHeading;
+		private final Date date;
+		private final Position devicePosition;
+		private final long epoch;
+		private final double azimuth;
+		private final double elevation;
+		private final double azimuthOffset;
+		private final double elevationOffset;
+		private final double deviceHeading;
 
 		public DeviceData(Date date, Position devicePosition, double azimuth, double elevation, double azimuthOffset, double elevationOffset, double deviceHeading) {
 			this.date = date;
@@ -298,10 +298,10 @@ public class SunFlowerDriver {
 	}
 
 	public static class SunData {
-		private Date date;
-		private long epoch;
-		private double azimuth;
-		private double elevation;
+		private final Date date;
+		private final long epoch;
+		private final double azimuth;
+		private final double elevation;
 
 		public SunData(Date date, double azimuth, double elevation) {
 			this.date = date;
@@ -336,10 +336,10 @@ public class SunFlowerDriver {
 	}
 
 	public static class DeviceAzimuthStart {
-		private Date date;
-		private long epoch;
-		private double deviceAzimuth;
-		private double sunAzimuth;
+		private final Date date;
+		private final long epoch;
+		private final double deviceAzimuth;
+		private final double sunAzimuth;
 
 		public DeviceAzimuthStart(Date date, double deviceAzimuth, double sunAzimuth) {
 			this.date = date;
@@ -377,10 +377,10 @@ public class SunFlowerDriver {
 
 	public static class DeviceElevationStart {
 
-		private Date date;
-		private long epoch;
-		private double deviceElevation;
-		private double sunElevation;
+		private final Date date;
+		private final long epoch;
+		private final double deviceElevation;
+		private final double sunElevation;
 
 		public DeviceElevationStart(Date date, double deviceElevation, double sunElevation) {
 			this.date = date;
@@ -417,11 +417,11 @@ public class SunFlowerDriver {
 	}
 
 	public static class MoveDetails {
-		private Date date;
-		private long epoch;
-		private int nbSteps;
-		private AdafruitMotorHAT.MotorCommand motorCommand;
-		private int motorNum;
+		private final Date date;
+		private final long epoch;
+		private final int nbSteps;
+		private final AdafruitMotorHAT.MotorCommand motorCommand;
+		private final int motorNum;
 
 		public MoveDetails(Date date, int nbSteps, AdafruitMotorHAT.MotorCommand motorCommand, int motorNum) {
 			this.date = date;
@@ -458,9 +458,9 @@ public class SunFlowerDriver {
 	}
 
 	public static class DeviceInfo {
-		private Date date;
-		private long epoch;
-		private String message;
+		private final Date date;
+		private final long epoch;
+		private final String message;
 
 		public DeviceInfo(Date date, String message) {
 			this.date = date;
@@ -499,10 +499,10 @@ public class SunFlowerDriver {
 	}
 
 	private class MotorThread extends Thread {
-		private AdafruitMotorHAT.AdafruitStepperMotor stepper;
-		private int nbSteps;
-		private AdafruitMotorHAT.MotorCommand motorCommand;
-		private AdafruitMotorHAT.Style motorStyle;
+		private final AdafruitMotorHAT.AdafruitStepperMotor stepper;
+		private final int nbSteps;
+		private final AdafruitMotorHAT.MotorCommand motorCommand;
+		private final AdafruitMotorHAT.Style motorStyle;
 
 		MotorThread(AdafruitMotorHAT.AdafruitStepperMotor stepper,
 		            int nbSteps,
@@ -695,7 +695,7 @@ public class SunFlowerDriver {
 		public abstract void onNewMessage(EventType messageType, Object messageContent);
 	}
 
-	private List<SunFlowerEventListener> listeners = new ArrayList<>();
+	private final List<SunFlowerEventListener> listeners = new ArrayList<>();
 
 	public void subscribe(SunFlowerEventListener listener) {
 		listeners.add(listener);
@@ -1034,7 +1034,7 @@ public class SunFlowerDriver {
 								currentDeviceAzimuth,
 								currentDeviceAzimuthStepOffset));
 					}
-					// Oled Screen?
+					// OLED Screen?
 					if (withSSD1306) {
 						displayOled();
 					}
@@ -1085,7 +1085,7 @@ public class SunFlowerDriver {
 				if (userInput.trim().equalsIgnoreCase("Q") || userInput.trim().equalsIgnoreCase("QUIT")) {
 					keepAsking = false;
 				} else if (userInput.trim().equalsIgnoreCase("HIST")) {
-					commandHistory.stream().forEach(System.out::println);
+					commandHistory.forEach(System.out::println);
 				} else if (userInput.trim().equalsIgnoreCase("PARK")) {
 					this.parkDevice();
 				} else {
