@@ -3,7 +3,6 @@ plugins {
   id 'maven'
   id 'idea'
   id 'com.github.johnrengelman.shadow' // version '4.0.2'
-  id "com.eriwen.gradle.js" version "2.14.1"  // TODO Fix that, for Gradle 6.x
 }
 
 group = 'oliv.raspi.coffee'
@@ -31,37 +30,6 @@ dependencies {
   compile project (':NMEA-mux-extensions')
 }
 
-import com.eriwen.gradle.js.tasks.MinifyJsTask
-
-task minifyJS
-
-minifyJS.doLast {
-  fileTree(dir: 'web', include: ['js/*.js', 'widgets/*.js'], exclude: ['minjs/*']).eachWithIndex { file, index ->
-    println ">>> Processing " + file.absoluteFile
-    def dynamicTask = "minify$index"
-    task "${dynamicTask}" (type: MinifyJsTask) {
-      source = file.absolutePath;
-//    dest = "${buildDir}/min.${file.name}"
-      dest = "web/minjs/${file.name}"
-      closure.compilationLevel='SIMPLE_OPTIMIZATIONS'
-      closure {
-        warningLevel = "QUIET"
-        compilerOptions.languageIn = "ECMASCRIPT6"
-        compilerOptions.languageOut = "ECMASCRIPT5"
-      }
-    }
-    tasks."$dynamicTask".execute()
-  }
-}
-
 shadowJar {
   zip64 true
 }
-
-task finalize
-finalize.doLast {
-  println('Minifying JS')
-  minifyJS.execute()
-}
-
-// shadowJar.finalizedBy(finalize)

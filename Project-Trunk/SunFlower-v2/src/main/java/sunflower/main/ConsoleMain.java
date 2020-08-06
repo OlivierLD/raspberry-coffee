@@ -33,6 +33,8 @@ public class ConsoleMain {
 	 * increment.per.second , in seconds, to provide if date.simulation=true, like 600
 	 * between.astro.loops, in seconds, can be provided if date.simulation=true, like 10 (one calculation every 10 seconds)
 	 *
+	 * with.ssd1306=true|false (default false)
+	 *
 	 * @param args Not used
 	 */
 	public static void main(String... args) {

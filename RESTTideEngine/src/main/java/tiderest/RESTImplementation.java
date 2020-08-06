@@ -566,7 +566,7 @@ public class RESTImplementation {
 
 		if (prmValues.size() == 1) {
 			String nameRegex = prmValues.get(0);
-			pattern = Pattern.compile(String.format("(?i).*%s.*", nameRegex)); // decode/unescape, ignorecase
+			pattern = Pattern.compile(String.format("(?i).*%s.*", nameRegex)); // decode/unescape, ignore-case
 //			System.out.println("Pattern:" + pattern.toString());
 		} else {
 			response = HTTPServer.buildErrorResponse(response,
@@ -579,7 +579,7 @@ public class RESTImplementation {
 		try {
 			List<TideStation> ts = this.tideRequestManager.getStationList()
 					.stream()
-					.filter(station -> pattern.matcher(station.getFullName()).matches()) // TODO IgnoreCase?
+					.filter(station -> pattern.matcher(station.getFullName()).matches())
 					.collect(Collectors.toList());
 			String content = new Gson().toJson(ts);
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());

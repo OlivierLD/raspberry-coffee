@@ -43,6 +43,8 @@ JAVA_OPTS="$JAVA_OPTS -Dno.motor.movement=false"
 JAVA_OPTS="$JAVA_OPTS -Dping.nmea.server=true"
 JAVA_OPTS="$JAVA_OPTS -Dnmea.server.base.url=http://192.168.42.20:9991"
 #
+JAVA_OPTS="$JAVA_OPTS -Dwith.ssd1306=true" # OLED!
+#
 MY_IP=$(hostname -I | awk '{ print $1 }')
 echo -e "Try curl -X GET http://${MY_IP}:${PORT}/sf/status"
 #

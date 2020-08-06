@@ -24,6 +24,8 @@ JAVA_OPTS="$JAVA_OPTS -Dazimuth.inverted=false"  # For V5
 #
 JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=false"
 #
+JAVA_OPTS="$JAVA_OPTS -Dwith.ssd1306=true"
+#
 java -cp ${CP} ${JAVA_OPTS} sunflower.main.ConsoleMain
 #
 # java -cp ${CP} ${JAVA_OPTS} sunflower.utils.EscapeSeq

@@ -1,6 +1,7 @@
 package lcd.substitute;
 
 import java.awt.Color;
+import java.awt.Frame;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
@@ -20,7 +21,7 @@ import lcd.utils.LEDPanel;
 import utils.StringUtils;
 
 public class SwingLedPanel
-				extends java.awt.Frame {
+				extends Frame {
 	private SwingLedPanel instance = this;
 	private LEDPanel ledPanel;
 	private JPanel bottomPanel;

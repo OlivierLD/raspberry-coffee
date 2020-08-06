@@ -5,9 +5,13 @@ import calc.GeomUtil;
 import calc.calculation.AstroComputer;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.motor.adafruitmotorhat.AdafruitMotorHAT;
+import lcd.ScreenBuffer;
+import lcd.oled.SSD1306;
+import lcd.substitute.SwingLedPanel;
 import utils.StaticUtil;
 import utils.TimeUtil;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,6 +50,8 @@ import sunflower.utils.ANSIUtil;
  *
  * -Delevation.inverted=true|false
  * -Dazimuth.inverted=true|false
+ *
+ * -Dwith.ssd1306=true|false (default false)
  */
 public class SunFlowerDriver {
 
@@ -53,6 +59,7 @@ public class SunFlowerDriver {
 
 	private static long loopDelay = 1_000L;
 	private static boolean useStepsAccumulation = "true".equals(System.getProperty("use.step.accumulation", "true")); // Set to false NOT to use it
+	private static boolean withSSD1306 = "true".equals(System.getProperty("with.ssd1306"));
 
 	static {
 		if ("true".equals(System.getProperty("date.simulation"))) {
@@ -118,6 +125,10 @@ public class SunFlowerDriver {
 	private boolean simulating = false;
 
 	private AdafruitMotorHAT mh;
+	private SSD1306 oled;
+	private static SwingLedPanel substitute;
+	private ScreenBuffer sb;
+
 
 	private AdafruitMotorHAT.AdafruitStepperMotor azimuthMotor;
 	private AdafruitMotorHAT.AdafruitStepperMotor elevationMotor;
@@ -724,6 +735,26 @@ public class SunFlowerDriver {
 		} catch (I2CFactory.UnsupportedBusNumberException ubne) {
 			simulating = true;
 		}
+
+		if (withSSD1306) {
+			int width = 128;
+			int height = 32;
+			sb = new ScreenBuffer(width, height);
+			try {
+				oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS, width, height); // I2C interface
+				oled.begin();
+				oled.clear();
+				//  oled.display();
+			} catch (Throwable error) {
+				// Not on a RPi? Try JPanel.
+				oled = null;
+				System.out.println("Displaying substitute Swing Led Panel");
+				SwingLedPanel.ScreenDefinition screenDef = SwingLedPanel.ScreenDefinition.SSD1306_128x32;
+				substitute = new SwingLedPanel(screenDef);
+				substitute.setLedColor(Color.red);
+				substitute.setVisible(true);
+			}
+		}
 	}
 
 	private final static class MotorPayload {
@@ -875,11 +906,38 @@ public class SunFlowerDriver {
 		return adjusted;
 	}
 
+	private void displayOled() {
+		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+		String lineOne = String.format(
+				"Dev. Elevation %.02f",
+				currentDeviceElevation);
+		String lineTwo = String.format(
+				"Dev. Azimuth %.02f",
+				currentDeviceAzimuth);
+		sb.text(lineOne, 2, 10 + (0 * 10), ScreenBuffer.Mode.WHITE_ON_BLACK);
+		sb.text(lineTwo, 2, 10 + (1 * 10), ScreenBuffer.Mode.WHITE_ON_BLACK);
+		if (oled != null) {
+			oled.setBuffer(sb.getScreenBuffer());
+			try {
+				oled.display();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		} else if (substitute != null) {
+			substitute.setBuffer(sb.getScreenBuffer());
+			substitute.display();
+		}
+	}
+
 	public void start() {
 		keepGoing = true;
 
 		astroThread = new CelestialComputerThread();
 		astroThread.start(); // Start calculating
+
+		if (withSSD1306) {
+			displayOled();
+		}
 
 		while (keepGoing) {
 			Date date = new Date();
@@ -976,12 +1034,24 @@ public class SunFlowerDriver {
 								currentDeviceAzimuth,
 								currentDeviceAzimuthStepOffset));
 					}
+					// Oled Screen?
+					if (withSSD1306) {
+						displayOled();
+					}
 				}
 			} else { // Park device
 				parkDevice();
 			}
 			// Bottom of the loop
 			delay(loopDelay);
+		}
+		// End
+		if (withSSD1306) {
+			if (oled != null) {
+				oled.shutdown();
+			} else if (substitute != null) {
+				substitute.dispose();
+			}
 		}
 		System.out.println("\n\n\n... Done with the SunFlowerDriver program ...");
 //	try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
@@ -1002,6 +1072,10 @@ public class SunFlowerDriver {
 		boolean keepAsking = true;
 		while (keepAsking) {
 			System.out.println(String.format("Current status: Z=%.02f, Elev.=%.02f", currentDeviceAzimuth, currentDeviceElevation));
+			if (withSSD1306) {
+				displayOled();
+			}
+
 			String userInput = StaticUtil.userInput("> ");
 			if (!userInput.isEmpty()) {
 				lastCommand = userInput;
@@ -1090,6 +1164,13 @@ public class SunFlowerDriver {
 				}
 			} else {
 				System.out.println(String.format("Last command was [%s]", lastCommand));
+			}
+		}
+		if (withSSD1306) {
+			if (oled != null) {
+				oled.shutdown();
+			} else if (substitute != null) {
+				substitute.dispose();
 			}
 		}
 	}
