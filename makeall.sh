@@ -6,7 +6,7 @@ echo -e "---------------------------------------------------------------------"
 #
 buildProject() {
   WORK_DIR=$1
-  cd ${WORK_DIR}
+  cd ${WORK_DIR} || exit
   echo Building ${WORK_DIR}
   ../gradlew clean build install
   cd ..

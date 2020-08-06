@@ -36,7 +36,7 @@ dependencies {
     compile 'org.scala-lang:scala-library:2.12.3'
     compile "org.scala-lang:scala-compiler:2.12.3"
     compile 'com.typesafe.akka:akka-actor_2.11:2.3.11'
-//    compile 'org.clojure:clojure:1.5.1'
+//    compile.sh 'org.clojure:clojure:1.5.1'
     compile project(':I2C-SPI')
     compile project(':MindWave')
     compile project(':SevenSegDisplay')

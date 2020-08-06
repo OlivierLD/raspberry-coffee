@@ -11,7 +11,7 @@ import lcd.substitute.SwingLedPanel;
 import utils.StaticUtil;
 import utils.TimeUtil;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,8 +58,8 @@ public class SunFlowerDriver {
 	private final static int STEPS_PER_CIRCLE = 200;
 
 	private static long loopDelay = 1_000L;
-	private static boolean useStepsAccumulation = "true".equals(System.getProperty("use.step.accumulation", "true")); // Set to false NOT to use it
-	private static boolean withSSD1306 = "true".equals(System.getProperty("with.ssd1306"));
+	private static final boolean useStepsAccumulation = "true".equals(System.getProperty("use.step.accumulation", "true")); // Set to false NOT to use it
+	private static final boolean withSSD1306 = "true".equals(System.getProperty("with.ssd1306"));
 
 	static {
 		if ("true".equals(System.getProperty("date.simulation"))) {
@@ -74,8 +74,8 @@ public class SunFlowerDriver {
 	}
 
 	// Depends on the kind of gear you are using, worm gear, pinion, etc...
-	private static boolean elevationInverted = "true".equals(System.getProperty("elevation.inverted"));
-	private static boolean azimuthInverted = "true".equals(System.getProperty("azimuth.inverted"));
+	private static final boolean elevationInverted = "true".equals(System.getProperty("elevation.inverted"));
+	private static final boolean azimuthInverted = "true".equals(System.getProperty("azimuth.inverted"));
 
 	private double elevationOffset = 0D;
 	private double azimuthOffset = 0D;

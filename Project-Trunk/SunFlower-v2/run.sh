@@ -36,4 +36,4 @@ JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=false"
 #
 JAVA_OPTS="$JAVA_OPTS -Dwith.ssd1306=true"
 #
-java -cp ${CP} ${JAVA_OPTS} sunflower.SunFlowerDriver
+java -cp ${CP} "${JAVA_OPTS}" sunflower.SunFlowerDriver

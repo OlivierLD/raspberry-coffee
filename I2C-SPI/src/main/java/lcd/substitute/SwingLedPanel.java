@@ -57,7 +57,7 @@ public class SwingLedPanel
 	Consumer<KeyEvent> onKeyTyped = (keyEvent) -> {};     // Empty, NoOp
 
 	private ScreenDefinition config;
-	// Default SSD1306
+	// Default for SSD1306
 	private int nbLines = 32;
 	private int nbCols = 128;
 
