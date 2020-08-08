@@ -183,6 +183,12 @@ would produce
     }
 }
 ```
+As the REST server we use here is also an HTTP server, it is very easy to implement a Web UI,
+using ES6 Promises to get to the REST data.
+
+![Raw Data](./pictures/web.screen.shot.01.png)
+
+
 ### Date Simulation
 The default date used for Celestial Computation is the current system date.
 
