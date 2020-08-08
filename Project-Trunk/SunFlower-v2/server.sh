@@ -47,7 +47,7 @@ JAVA_OPTS="$JAVA_OPTS -Dwith.ssd1306=true" # OLED!
 #
 MY_IP=$(hostname -I | awk '{ print $1 }')
 echo -e "Try curl -X GET http://${MY_IP}:${PORT}/sf/status"
-echo -e "Or browse http://${MY_IP}:${PORT}/web"
+echo -e "Or browse http://${MY_IP}:${PORT}/web/index.html"
 #
 echo -e "Try 'nohup $0 > sf.log &'"
 java -cp ${CP} ${JAVA_OPTS} sunflower.httpserver.SunFlowerServer

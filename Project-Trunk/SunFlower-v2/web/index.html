@@ -6,12 +6,32 @@
     <script src="js/ajax.manager.js"></script>
 </head>
 <body>
-
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Sun Z</th>
+            <th>Sun El.</th>
+            <th>Device Z</th>
+            <th>Device El.</th>
+        </tr>
+        <tr>
+            <td><span id="date"></span></td>
+            <td><span id="sun-z"></span></td>
+            <td><span id="sun-el"></span></td>
+            <td><span id="dev-z"></span></td>
+            <td><span id="dev-el"></span></td>
+        </tr>
+    </table>
 </body>
 <script type="text/javascript">
 
     function dataCallback(json) {
         console.log('Got this:', json);
+        document.getElementById('date').innerText = json.CELESTIAL_DATA.date;
+        document.getElementById('sun-z').innerText = json.CELESTIAL_DATA.azimuth.toFixed(2) + '&deg;';
+        document.getElementById('sun-el').innerText  = json.CELESTIAL_DATA.elevation.toFixed(2) + '&deg;';
+        document.getElementById('dev-z').innerText = json.DEVICE_DATA.azimuth.toFixed(2) + '&deg;';
+        document.getElementById('dev-el').innerText = json.DEVICE_DATA.elevation.toFixed(2) + '&deg;';
     }
 
     window.onload = () => {
