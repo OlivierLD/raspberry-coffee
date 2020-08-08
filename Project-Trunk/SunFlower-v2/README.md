@@ -184,7 +184,7 @@ would produce
 }
 ```
 As the REST server we use here is also an HTTP server, it is very easy to implement a Web UI,
-using ES6 Promises to get to the REST data.
+using ES6 Promises to get to the REST data (WiP, there's a lot to do here).
 
 ![Raw Data](./pictures/web.screen.shot.01.png)
 
