@@ -23,7 +23,7 @@ JAVA_OPTS="$JAVA_OPTS -Dazimuth.inverted=false"  # For V5
 #
 JAVA_OPTS="$JAVA_OPTS -Dminimum.elevation=10"
 #
-JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=false"
+JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=true"
 #
 PORT=8989
 JAVA_OPTS="$JAVA_OPTS -Dhttp.port=${PORT}"

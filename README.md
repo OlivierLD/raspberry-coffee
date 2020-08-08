@@ -285,12 +285,12 @@ it uses the gradle wrapper (`gradlew`).
 
 > To have a first idea of the structure of the project, use
 ```
- $ ./gradlew projects
+ $ ./gradlew projects [--info]
 ```
 > Sub-projects may have dependencies.
 ```
  $ cd Project-Trunk/REST-clients/REST-assembler
- $ ../../../gradlew dependencies
+ $ ../../../gradlew dependencies [--info]
 ```
 
 `Git` is usually installed on Linux and Mac, but not on all versions of Windows. On Windows, you need to install the [`git bash shell`](http://lmgtfy.com/?q=install+git+bash+shell+on+windows), and run _in it_ the commands mentioned in this document.
@@ -303,7 +303,7 @@ To build it, clone this project (this repo), make sure the script named `gradlew
  Prompt> git clone https://github.com/OlivierLD/raspberry-coffee.git
  Prompt> cd raspberry-coffee
  Prompt> chmod +x gradlew
- Prompt> ./gradlew [--daemon] build
+ Prompt> ./gradlew [--daemon] build [--info]
 ```
 You are expecting an end like that one:
 ```
@@ -321,7 +321,7 @@ Typically, this operation will be run like this:
 ```
  Prompt> cd RESTNavServer
  Prompt> ../gradlew build --info
- Prompt> ../gradlew clean shadowJar
+ Prompt> ../gradlew clean shadowJar [--info]
 ```
 The expected archive will be produced in the local `build/libs` directory.
 

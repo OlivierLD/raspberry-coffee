@@ -22,7 +22,7 @@ JAVA_OPTS="$JAVA_OPTS -Dazimuth.inverted=false"  # For V5
 #JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"
 #JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10"
 #
-JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=false"
+JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=true"
 #
 JAVA_OPTS="$JAVA_OPTS -Dwith.ssd1306=true"
 #

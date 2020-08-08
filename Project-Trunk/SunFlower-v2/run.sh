@@ -32,7 +32,7 @@ JAVA_OPTS="$JAVA_OPTS -Dstepper.style=MICROSTEP"
 # JAVA_OPTS="$JAVA_OPTS -Dstepper.style=DOUBLE"
 # JAVA_OPTS="$JAVA_OPTS -Dstepper.style=INTERLEAVE"
 #
-JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=false"
+JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=true"
 #
 JAVA_OPTS="$JAVA_OPTS -Dwith.ssd1306=true"
 #
