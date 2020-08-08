@@ -2,8 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Web UI</title>
+    <title>SunFlower Web UI</title>
+    <link rel="icon" type="image/jpeg" href="img/sf.jpeg">
     <script src="js/ajax.manager.js"></script>
+    <style type="text/css">
+        body {
+            color: blue;
+            font-family: "Courier New";
+        }
+    </style>
 </head>
 <body>
     <table border="1">
@@ -35,11 +42,9 @@
     }
 
     window.onload = () => {
-      window.setInterval(
-          () => {
+      window.setInterval(() => {
             fetchData(dataCallback);
-          }, 1000
-      );
+          }, 1000);
     };
 </script>
 </html>
