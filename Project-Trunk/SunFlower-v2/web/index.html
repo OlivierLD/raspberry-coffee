@@ -26,7 +26,7 @@
 <script type="text/javascript">
 
     function dataCallback(json) {
-        console.log('Got this:', json);
+        // console.log('Got this:', json);
         document.getElementById('date').innerHTML = json.CELESTIAL_DATA.date;
         document.getElementById('sun-z').innerHTML = json.CELESTIAL_DATA.azimuth.toFixed(2) + '&deg;';
         document.getElementById('sun-el').innerHTML  = json.CELESTIAL_DATA.elevation.toFixed(2) + '&deg;';
