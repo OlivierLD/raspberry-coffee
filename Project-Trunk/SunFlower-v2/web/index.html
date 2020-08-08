@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web UI</title>
+    <script src="js/ajax.manager.js"></script>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+
+    function dataCallback(json) {
+        console.log('Got this:', json);
+    }
+
+    window.onload = () => {
+      window.setInterval(
+          () => {
+            fetchData(dataCallback());
+          }, 1000
+      );
+    };
+</script>
+</html>
