@@ -27,11 +27,11 @@
 
     function dataCallback(json) {
         console.log('Got this:', json);
-        document.getElementById('date').innerText = json.CELESTIAL_DATA.date;
-        document.getElementById('sun-z').innerText = json.CELESTIAL_DATA.azimuth.toFixed(2) + '&deg;';
-        document.getElementById('sun-el').innerText  = json.CELESTIAL_DATA.elevation.toFixed(2) + '&deg;';
-        document.getElementById('dev-z').innerText = json.DEVICE_DATA.azimuth.toFixed(2) + '&deg;';
-        document.getElementById('dev-el').innerText = json.DEVICE_DATA.elevation.toFixed(2) + '&deg;';
+        document.getElementById('date').innerHTML = json.CELESTIAL_DATA.date;
+        document.getElementById('sun-z').innerHTML = json.CELESTIAL_DATA.azimuth.toFixed(2) + '&deg;';
+        document.getElementById('sun-el').innerHTML  = json.CELESTIAL_DATA.elevation.toFixed(2) + '&deg;';
+        document.getElementById('dev-z').innerHTML = json.DEVICE_DATA.azimuth.toFixed(2) + '&deg;';
+        document.getElementById('dev-el').innerHTML = json.DEVICE_DATA.elevation.toFixed(2) + '&deg;';
     }
 
     window.onload = () => {
