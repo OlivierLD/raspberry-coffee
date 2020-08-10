@@ -1,7 +1,7 @@
 #
 # MUX definition.
 #
-name: "Read a HMC5883L, forward on TCP."
+name: "Read a HMC5883L, feeds a cache, optional forward on TCP."
 context:
   with.http.server: true
   http.port: 9991
@@ -10,13 +10,13 @@ context:
 channels:
   - type: hmc5883l
     device.prefix: II
-    verbose: true
+    verbose: false
     sentence.filters: HDM,XDR
     heading.offset: 0
     damping.size: 5
     read.frequency: 1000
     hmc5883l.cal.prop.file: hmc5883l.cal.properties
-forwarders:
+forwarders:                # Optional.
   - type: tcp
     port: 8001
     # verbose: false

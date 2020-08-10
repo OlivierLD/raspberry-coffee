@@ -157,6 +157,8 @@ public class FeatureRequestManager implements RESTRequestManager {
 		featureThread.start();
 
 		if ("true".equals(System.getProperty("ping.nmea.server", "false"))) {
+			// Will get data from /mux/cache (See RESTNavServer and NMEAMultiplexer).
+			// Examples: nmea.mux.hmc5883l.properties and nmea.mux.hmc5883l.yaml
 			nmeaDataThread = new NMEADataThread("nmea-thread", System.getProperty("nmea.server.base.url", "http://localhost:9999"));
 			nmeaDataThread.start();
 		}

@@ -359,6 +359,11 @@ public class NMEAUtils {
 				fr.close();
 			} catch (FileNotFoundException fnfe2) {
 				System.err.println("Installation problem: file [zero-deviation.csv] not found.");
+				System.err.println("Initializing the deviation map to all zeros");
+				data = new HashMap<>();
+				for (int i=0; i<=360; i+=10) {
+					data.put((double)i, 0d);
+				}
 			} catch (Exception ex2) {
 				ex2.printStackTrace();
 			}
@@ -390,7 +395,7 @@ public class NMEAUtils {
 
 		try {
 			Set<Double> set = data.keySet();
-			List<Double> list = new ArrayList<Double>(set.size());
+			List<Double> list = new ArrayList<>(set.size());
 			for (Double d : set)
 				list.add(d);
 			Collections.sort(list);
