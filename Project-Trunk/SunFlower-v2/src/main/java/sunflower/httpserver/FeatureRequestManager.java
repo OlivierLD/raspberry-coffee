@@ -78,6 +78,10 @@ public class FeatureRequestManager implements RESTRequestManager {
 //					System.out.println("Cache > " + cache.toString());
 					try {
 						latitude = ((Double) ((Map<String, Object>) cache.get("Position")).get("lat")).doubleValue();
+					} catch (NullPointerException npe) {
+						if (httpVerbose) {
+							System.out.println("No Latitude in the cache");
+						}
 					} catch (Exception ex) {
 						if (httpVerbose) {
 							ex.printStackTrace();
@@ -85,6 +89,10 @@ public class FeatureRequestManager implements RESTRequestManager {
 					}
 					try {
 						longitude = ((Double) ((Map<String, Object>) cache.get("Position")).get("lng")).doubleValue();
+					} catch (NullPointerException npe) {
+						if (httpVerbose) {
+							System.out.println("No Longitude in the cache");
+						}
 					} catch (Exception ex) {
 						if (httpVerbose) {
 							ex.printStackTrace();
@@ -92,6 +100,10 @@ public class FeatureRequestManager implements RESTRequestManager {
 					}
 					try {
 						heading = ((Double) ((Map<String, Object>) cache.get("HDG mag.")).get("angle")).doubleValue();
+					} catch (NullPointerException npe) {
+						if (httpVerbose) {
+							System.out.println("No heading in the cache");
+						}
 					} catch (Exception ex) {
 						if (httpVerbose) {
 							ex.printStackTrace();
@@ -107,11 +119,11 @@ public class FeatureRequestManager implements RESTRequestManager {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
+				featureManager.setDevicePosition(latitude, longitude);
+				featureManager.setDeviceHeading(heading);
 				if (httpVerbose) {
 					System.out.println(String.format(">> From the cache: lat: %.02f, lng: %.02f, hdg: %.02f", latitude, longitude, heading));
 				}
-				featureManager.setDevicePosition(latitude, longitude);
-				featureManager.setDeviceHeading(heading);
 
 				try {
 					Thread.sleep(1_000L); //
@@ -157,9 +169,13 @@ public class FeatureRequestManager implements RESTRequestManager {
 		featureThread.start();
 
 		if ("true".equals(System.getProperty("ping.nmea.server", "false"))) {
+			String serverUrl = System.getProperty("nmea.server.base.url", "http://localhost:9999");
+			if (httpVerbose) {
+				System.out.println(String.format(">>> Starting NMEA thread on %s", serverUrl));
+			}
 			// Will get data from /mux/cache (See RESTNavServer and NMEAMultiplexer).
 			// Examples: nmea.mux.hmc5883l.properties and nmea.mux.hmc5883l.yaml
-			nmeaDataThread = new NMEADataThread("nmea-thread", System.getProperty("nmea.server.base.url", "http://localhost:9999"));
+			nmeaDataThread = new NMEADataThread("nmea-thread", serverUrl);
 			nmeaDataThread.start();
 		}
 
