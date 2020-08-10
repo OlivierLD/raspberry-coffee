@@ -13,10 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.BindException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
+import java.net.*;
 import java.nio.file.Files;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -889,6 +886,9 @@ public class HTTPServer {
 				try {
 					String returned = HTTPClient.getContent(String.format("http://localhost:%d/exit", httpServerInstance.getPort()));
 					System.out.println("On exit -> " + returned);
+				} catch (ConnectException ce) {
+					// Absorb
+					System.err.println(String.format("Already down: %s", ce.toString()));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
