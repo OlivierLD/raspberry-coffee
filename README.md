@@ -444,7 +444,7 @@ All languages - or almost - understand HTTP and related technologies like REST (
 
 Docker and similar technologies provide this _container_ abstraction.
 
-Nothing is preventing you to use as many languages, frameworks and techniques you want, all you need is to
+Nothing is preventing you from using as many languages, frameworks and techniques you want, all you need is to
 package your applications as HTTP/REST servers that can communicate with each others.
 Bundling those servers into Docker images gives you even more flexibility.
 
