@@ -421,7 +421,7 @@ Yes, this is possible!
 See [this](https://github.com/OlivierLD/raspberry-coffee/tree/repository).
 
 ## Why Java, why not something else?
-Tricky question...
+Tricky question... Thanks for scrolling down that far.
 
 The languages you use depend a lot on what you expect from your computer.
 
