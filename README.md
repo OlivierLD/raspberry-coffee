@@ -425,17 +425,17 @@ Tricky question... Thanks for scrolling down that far.
 
 The languages you use depend a lot on what you expect from your computer.
 
-If you live on the hardware/sensor side of the world, you might prefer Python, as it is a simple language, close to scripting. 
+If you live on the hardware/sensors side of the world, you might prefer Python, as it is a simple language, close to scripting. 
 The programs you will write will not be bigger than a couple of thousand lines.
 
-If you are a mathematician, developing AI models, again Python might be your friend, it is well structured (I know, it's not 100% true),
+If you are a mathematician, developing AI models, again Python might be your friend, it is well structured (I know, it's not 100% true... Ping me for details),
 and close enough to your mind set. You don't need to learn what will give extra value to - say - the JVM languages.
 
 Now, if you need _to scale_, if you need to run on small single board computers as well as on clouds of big machines,
 then this is where JVM-based languages come on stage.
 They also provide some remote-debugging features, you only have to see them once to love them.
-Their consistency is also an asset, and you do not have to wait for the runtime to detect the problems and errors (IDEs have made tremendous progresses in this area,
-leveraging the potential of the JVM).
+Their consistency is also an asset, and you do not have to wait for the runtime to detect problems and errors (IDEs have made tremendous progresses in this area,
+leveraging the potential of the JVM). Their structure allow you to write multi-million line programs (`C` does it too, by the way).
 
 #### This being said...
 This being said, choosing your favorite language does not necessary isolate you from the rest of the world.
