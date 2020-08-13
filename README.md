@@ -435,7 +435,7 @@ Now, if you need _to scale_, if you need to run on small single board computers 
 then this is where JVM-based languages come on stage.
 They also provide some remote-debugging features, you only have to see them once to love them.
 Their consistency is also an asset, and you do not have to wait for the runtime to detect problems and errors (IDEs have made tremendous progresses in this area,
-leveraging the potential of the JVM). Their structure allow you to write multi-million line programs (`C` does it too, by the way).
+leveraging the potential of the JVM). Their structure allows you to write multi-million line programs (`C` does it too, by the way).
 
 #### This being said...
 This being said, choosing your favorite language does not necessary isolate you from the rest of the world.
