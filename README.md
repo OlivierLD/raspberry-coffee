@@ -457,9 +457,9 @@ Same works also for Scala (JVM based language), NodeJS, ... whatever understands
 
 It does indeed open **a lot** of possibilities.
 
-The common protocol is REST over HTTP (JSON - or XML - is also nice to have).
+The common protocol is REST over HTTP (JSON - or XML - is also nice to have, to format the conveyed data).
 
-Then it becomes what latin was in Europe in the middle-age: a common communication media.
+Then it becomes what latin was in Europe in the middle-age: a _common communication media_.
 
 > The same must have happened in Arabic, Asian, and more communities, please don't get me wrong.
 
