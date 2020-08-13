@@ -445,14 +445,27 @@ All languages - or almost - understand HTTP and related technologies like REST (
 Docker and similar technologies provide this _container_ abstraction.
 
 Nothing is preventing you to use as many languages, frameworks and techniques you want, all you need is to
-package your application as HTTP/REST servers that can communicate with each others.
+package your applications as HTTP/REST servers that can communicate with each others.
 Bundling those servers into Docker images gives you even more flexibility.
 
-It is very easy to invoke Python from Java, but the overhead of invoking it as a script is not negligible.
+It is very easy to invoke Python from Java, but the overhead of invoking it as a script is not negligible,
+and there is no in-memory status or transient state, in this case.
 
 HTTP/REST sounds much nicer. We **will** provide examples, Java pinging a Python server, and vice-versa.
 
-Soon.
+Same works also for Scala (JVM based language), NodeJS, ... whatever understands HTTP.
+
+It does indeed open **a lot** of possibilities.
+
+The common protocol is REST over HTTP (JSON - or XML - is also nice to have).
+
+Then it becomes what latin was in Europe in the middle-age: a common communication media.
+
+> The same must have happened in Arabic, Asian, and more communities, please don't get me wrong.
+
+I like Java and related technologies.
+
+You're welcome here, even if you don't!
 
 --- 
  
