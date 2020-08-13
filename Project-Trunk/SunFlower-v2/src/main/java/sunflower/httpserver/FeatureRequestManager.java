@@ -174,7 +174,7 @@ public class FeatureRequestManager implements RESTRequestManager {
 				System.out.println(String.format(">>> Starting NMEA thread on %s", serverUrl));
 			}
 			// Will get data from /mux/cache (See RESTNavServer and NMEAMultiplexer).
-			// Examples: nmea.mux.hmc5883l.properties and nmea.mux.hmc5883l.yaml
+			// Examples: nmea.mux.hmc5883l.properties and nmea.mux.hmc5883l.yaml, nmea.mux.hmc5883l.oled.yaml,
 			nmeaDataThread = new NMEADataThread("nmea-thread", serverUrl);
 			nmeaDataThread.start();
 		}

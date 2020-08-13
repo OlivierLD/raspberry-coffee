@@ -29,13 +29,13 @@ import java.util.stream.Collectors;
  */
 public class PoloRESTRequestManager implements RESTRequestManager {
 
-	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose"));
-	private boolean restVerbose = "true".equals(System.getProperty("server.rest.verbose"));
+	private final boolean httpVerbose = "true".equals(System.getProperty("http.verbose"));
+	private final boolean restVerbose = "true".equals(System.getProperty("server.rest.verbose"));
 
-	private AnnotatedRESTImplementation restImplementation;
+	private final AnnotatedRESTImplementation restImplementation;
 
-	private PoloServer poloServer;
-	private List<RESTOperation> operations;
+	private final PoloServer poloServer;
+	private final List<RESTOperation> operations;
 
 	public enum PrmType {
 		QUERY, PATH, BODY
@@ -117,7 +117,7 @@ public class PoloRESTRequestManager implements RESTRequestManager {
 		 *
 		 * @param verb GET, PUT, POST, or DELETE
 		 * @param path can include {parameters}
-		 * @param description
+		 * @param description guess what!
 		 */
 		public RESTOperation(String verb, String path, String description) {
 			this.verb = verb;
@@ -324,7 +324,7 @@ public class PoloRESTRequestManager implements RESTRequestManager {
 		}
 		if (restVerbose) {
 			System.out.println(String.format(">> Operation list created, server ready to take requests, %d operation(s).", operations.size()));
-			operations.stream().forEach(op -> {
+			operations.forEach(op -> {
 				System.out.println(String.format("%s %s", op.verb, op.path));
 			});
 		}
@@ -411,10 +411,10 @@ public class PoloRESTRequestManager implements RESTRequestManager {
 						HTTPServer.Response.BAD_REQUEST,
 						new HTTPServer.ErrorPayload()
 								.errorCode("REST-0001")
-								.errorMessage(errors.stream().collect(Collectors.joining("\n"))));
+								.errorMessage(String.join("\n", errors)));
 				return response;
 			}
-			Object[] methodPrms = prms.toArray(new Object[prms.size()]);
+			Object[] methodPrms = prms.toArray(new Object[0]); // prms.size()]);
 			try {
 				processed = op.method.invoke(op.isStatic ? op.serverClass : op.serverImpl, methodPrms);
 				if (restVerbose) {
@@ -460,6 +460,7 @@ public class PoloRESTRequestManager implements RESTRequestManager {
 				.findFirst()
 				.isPresent();
 	}
+
 	/**
 	 * Manage the REST requests.
 	 *
