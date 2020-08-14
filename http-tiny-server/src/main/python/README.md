@@ -9,7 +9,7 @@ It is a triple axis magnetometer. And you have not translated the driver in Java
 Well, the idea here is to run it in the `http_server_skeleton.py`, feed a cache with the
 data read from the board, and access those cached data from an HTTP client - possibly written in Java.
 
-The integration between the board anf the server is to be done in the 
+The integration between the board and the server is to be done in the 
 `do_stuff` method, provided here as a dummy placeholder:
 ```python
 def do_stuff():
