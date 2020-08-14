@@ -6,7 +6,7 @@ Mostly for tests...
 See the [documentation](https://learn.adafruit.com/lis3mdl-triple-axis-magnetometer?view=all)
   
 ## LIS3MDL
-- Connect the `LIS3MDL` on the Raspberry Pi as explained in then documentation above.
+- Connect the `LIS3MDL` on the Raspberry Pi as explained in the [documentation](https://learn.adafruit.com/lis3mdl-triple-axis-magnetometer?view=all#python-computer-wiring-3052085-3).
 - Try a `sudo i2cdetect -y 1`, you should see a `1c` device:
 ```
 pi@rpi-buster:~/adafruit/lis3mdl $ sudo i2cdetect -y 1
@@ -31,19 +31,19 @@ X:    -50.69, Y:     24.01, Z:    -23.31 uT
 . . .
 ```
 - To run it as an HTTP Server
-    - Edit `lis3mdl_server.py`, and change the machine name to the right IP
+    - Edit `lis3mdl_server.py`, and change the machine name to the right IP address (127.0.0.1 works, but you would not be able to reach it from another machine)
     in `machine_name = "192.168.42.9"`.
     - Then you can run `$ python3 lis3mdl_server.py`
     - From any machine on the same network, you can now run
     ```
-  curl -X GET http://192.168.42.9:8080/lis3mdl/cache | jq
+  $ curl -X GET http://192.168.42.9:8080/lis3mdl/cache | jq
     % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                    Dload  Upload   Total   Spent    Left  Speed
   100    77    0    77    0     0   2655      0 --:--:-- --:--:-- --:--:--  2655
   {
-    "x": -50.014615609470916,
-    "y": 23.531131248173047,
-    "z": -21.674948845366853
+      "x": -50.014615609470916,
+      "y": 23.531131248173047,
+      "z": -21.674948845366853
   }
     ```
   

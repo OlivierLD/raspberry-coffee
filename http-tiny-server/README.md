@@ -9,7 +9,7 @@ Can be used
 
 - No security (SSL) available. 
 - ~~_Not even multi-threaded_~~. Nov 2019: Now multi-threaded
-- Some restrictions exist (`100-continue`, Multipart, binary data, ...)
+- Some restrictions exist (`100-continue`, Multipart, binary data, CORS, ...)
 - Not compliant with _any_ coding standard, like JAX-RS, MicroProfile, JEE, etc
 
 > May 2019: The archive containing the core classes is just above _**2M**_ big. Compare it to micro servers like Helidon or SpringBoot...
