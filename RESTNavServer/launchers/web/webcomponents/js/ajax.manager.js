@@ -10,6 +10,18 @@ function initAjax() {
 		fetch();
 		loadSunData(lastKnownPos);
 	}, 1000);
+
+	// Example: ISS Position http://api.open-notify.org/iss-now.json
+	if (false) {
+		let issInterval = setInterval(() => {
+			let issPromise = getISSData();
+			issPromise.then( issData => {
+				console.log('ISSData:', issData);
+			}, (error, message) => {
+				console.debug('ISSData error', error, message);
+			})
+		}, 5000);
+	}
 }
 
 const DEFAULT_TIMEOUT = 60000; // 1 minute
@@ -21,8 +33,9 @@ function getPromise(
 		timeout,                      // After that, fail.
 		verb,                         // GET, PUT, DELETE, POST, etc
 		happyCode,                    // if met, resolve, otherwise fail.
-		data = null,                  // payload, when needed (PUT, POST...)
-		show = true) {                // Show the traffic [true]|false
+		data = null,             // payload, when needed (PUT, POST...)
+		show = true,          // Show the traffic [true]|false
+		headers = null) {        // Array of { name: '', value: '' }
 
 	if (show === true) {
 		document.body.style.cursor = 'wait';
@@ -42,7 +55,11 @@ function getPromise(
 		}
 
 		xhr.open(verb, url, true);
-		xhr.setRequestHeader("Content-type", "application/json");
+		if (headers === null) {
+			xhr.setRequestHeader("Content-type", "application/json");
+		} else {
+			headers.forEach(header => xhr.setRequestHeader(header.name, header.value));
+		}
 		try {
 			if (data === undefined || data === null) {
 				xhr.send();
@@ -73,6 +90,25 @@ function getPromise(
 
 function getNMEAData() {
 	return getPromise('/mux/cache', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+}
+
+function getISSData() {
+	return getPromise('http://api.open-notify.org/iss-now.json',
+		DEFAULT_TIMEOUT,
+		'GET',
+		200,
+		null,
+		false,
+		[{
+			name:'Access-Control-Allow-Origin',
+			value: '*'
+		}, {
+			name: 'Access-Control-Allow-Methods',
+			value: 'GET, POST, PUT, OPTIONS, HEAD'
+		}, {
+			name: 'Access-Control-Allow-Headers',
+			value: 'Content-Type'
+		}]);
 }
 
 function fetch() {

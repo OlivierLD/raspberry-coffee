@@ -452,6 +452,8 @@ It is very easy to invoke Python from Java, but the overhead of invoking it as a
 and there is no in-memory status or transient state, in this case.
 
 HTTP/REST sounds much nicer. We **will** provide examples, Java pinging a Python server, and vice-versa.
+> For now: there is a skeleton/template for a Python HTTP REST Server in 
+> `http-tiny-server/src/main/python/http_server_skeleton.py`
 
 Same works also for Scala (JVM based language), NodeJS, ... whatever understands HTTP.
 
