@@ -46,4 +46,11 @@ X:    -50.69, Y:     24.01, Z:    -23.31 uT
       "z": -21.674948845366853
   }
     ```
-  
+- From an HTTP Client
+    - See `frompython.http.MagnetometerReader` (there is no calibration, it is just an example)
+```
+{"x": -48.64074831920491, "y": 36.45133002046185, "z": -23.107278573516517}
+Heading: 143.152146 Pitch: 122.371485, Roll: -115.410527
+```  
+
+> Note: For magnetometers' calibration, see [here](../../../lsm303.calibration/README.md).

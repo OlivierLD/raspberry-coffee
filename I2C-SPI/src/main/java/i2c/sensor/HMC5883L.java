@@ -222,7 +222,7 @@ public class HMC5883L {
 				}
 				// Mag raw data. !!! Warning !!! Order here is X, Z, Y
 				magX = mag16(magData, 0) * SCALE; // X
-				magZ = mag16(magData, 2) * SCALE; // Yes, Z, not Y
+				magZ = mag16(magData, 2) * SCALE; // Yes, Z, not Y !!!
 				magY = mag16(magData, 4) * SCALE; // And then Y
 
 				if (!logForCalibration) {
