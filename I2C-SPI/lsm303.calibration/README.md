@@ -103,6 +103,6 @@ Here is another example, for a `HMC5883L`:
 ![HMC5883L Calibration](hmc5883l.png)
 
 ## TODO
-Try on X-Y only, put the device in a gimbal.
+Try on X-Y only, put the device in a [gimbal](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Gimbal).
 
 ---
