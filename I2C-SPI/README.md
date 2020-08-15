@@ -21,6 +21,7 @@ I<sup>2</sup>C Triple axis Gyroscope
 I<sup>2</sup>C Accelerometer + Magnetometer
 
 There is this [good paper](https://github.com/praneshkmr/node-lsm303/wiki/Understanding-the-calibration-of-the-LSM303-magnetometer-(compass)) about the LSM303 calibration.
+See also [that one](./lsm303.calibration/README.md), in this module.
 Run the `i2c.sensor.LSM303` with `-Dlsm303.log.for.calibration=true` (see in the script `lsm303.sh`), this will generate a CSV log file you can use in a spreadsheet (like in the document above),
 to get the calibration offsets and coefficients.
 
