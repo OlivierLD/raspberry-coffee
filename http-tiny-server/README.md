@@ -285,7 +285,7 @@ Even simpler, you can use `curl`:
 $> curl -x http://localhost:9999/ http://192.168.42.17:8088/pws/oplist
  [{"verb":"GET","path":"/pws/oplist","description":"List of all available operations.","fn":{}},{"verb":"GET","path":"/pws/sth10-data","description":"Get device Data. Temperature, humidity","fn":{}},{"verb":"GET","path":"/pws/relay-state","description":"Get relay state - ON of OFF.","fn":{}},{"verb":"GET","path":"/pws/last-watering-time","description":"Get last watering time as a long.","fn":{}},{"verb":"GET","path":"/pws/pws-status","description":"Get device\u0027s status.","fn":{}},{"verb":"GET","path":"/pws/pws-parameters","description":"Get program\u0027s parameters.","fn":{}},{"verb":"POST","path":"/pws/sth10-data","description":"Set device Data. Temperature, humidity, for simulation","fn":{}},{"verb":"PUT","path":"/pws/relay-state","description":"Flip the relay - ON of OFF.","fn":{}},{"verb":"PUT","path":"/pws/pws-parameters","description":"Set the Program\u0027s parameters","fn":{}}]
 ```
-This produces the same ouput as above in the proxy's console.
+This produces the same output as above in the proxy's console.
 
 With a Graphical UI, run the class `utils.proxyguisample.ProxyGUI`:
 
