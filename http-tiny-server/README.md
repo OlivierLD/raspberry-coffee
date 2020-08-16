@@ -18,7 +18,7 @@ Can be used
 
 Logging available.
 
-Some special requests are reserved, like `/exit`, `/test`, feel free to comment them.
+Some special resources are reserved, like `/exit`, `/test`, feel free to comment them if needed.
 
 The constructor of the `HTTPServer` class can take a `Properties` object as parameter.
 Some of its members will be detailed below.
@@ -290,6 +290,10 @@ This produces the same ouput as above in the proxy's console.
 With a Graphical UI, run the class `utils.proxyguisample.ProxyGUI`:
 
 ![Proxy GUI](./ProxyGUI.png)
+
+## Bonus
+Not 100% related, but could be useful, there is the skeleton of a 
+Python HTTP/REST server, along with some use-cases and scenarios, [here](./src/main/python/README.md).
 
 ---
 

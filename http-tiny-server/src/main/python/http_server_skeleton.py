@@ -5,6 +5,7 @@
 # pip3 install http (already in python3.7, no need to install it)
 #
 # Provides REST access to the cache, try GET http://localhost:8080/sample/cache
+# Implement your own features in the do_stuff method and the resources in the ServiceHandler class...
 #
 import json
 import sys
