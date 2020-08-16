@@ -76,6 +76,6 @@ $ curl -X GET http://localhost:8080/sample/cache | jq
 
 > The http port, the VERBs, the names of all the resources can obviously be customized according to your needs.
 
-- See a real example [here](../../../../I2C-SPI/src/main/python/README.md).
+- See a real example [here](../../../../I2C-SPI/src/main/python/README.md#lis3mdl).
 
 ---
