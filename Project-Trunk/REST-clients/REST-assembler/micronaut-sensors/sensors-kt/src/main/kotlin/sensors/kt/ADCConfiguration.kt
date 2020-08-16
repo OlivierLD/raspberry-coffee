@@ -3,7 +3,7 @@ package sensors.kt
 import io.micronaut.context.annotation.ConfigurationProperties
 import javax.annotation.PostConstruct
 import javax.annotation.PreDestroy
-import rpi.sensors.ADCChannel
+import sensors.ADCChannel
 
 @ConfigurationProperties("adc")
 class ADCConfiguration {
@@ -68,7 +68,7 @@ class ADCConfiguration {
 		println("PreDestroy in ADCConfiguration")
 		println("---------------------------------")
 		if (this.adcChannel != null) {
-			ADCChannel.close()
+			this.adcChannel!!.close()
 		}
 	}
 
