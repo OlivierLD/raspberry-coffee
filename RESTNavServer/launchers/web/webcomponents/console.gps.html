@@ -260,6 +260,8 @@
 			setHdgOnDevCurve('compass-deviation', val);
 		});
 		// TODO ISS Position http://api.open-notify.org/iss-now.json
+		//      ISS Passage time http://api.open-notify.org/iss-pass.json?lat=37.7&lon=-122.5 [ &alt=20&n=5 ]
+		//      ISS Crew members: http://api.open-notify.org/astros.json
 
 		function dataToGraph(pivotDate, declMap, lineColor, fillColor1, fillColor2) {
 			if (lineColor === undefined) {
