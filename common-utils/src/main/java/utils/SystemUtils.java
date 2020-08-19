@@ -239,7 +239,8 @@ public class SystemUtils {
 
     public static String[] getRPiHardwareRevision() throws Exception {
         String command = "cat /proc/cpuinfo | grep 'Revision' | awk '{print $3}' | sed 's/^1000//'";
-        String result = getCommandResult(command).get(0);
+        String result;
+        result = getCommandResult(command).get(0);
         return matrix.get(result);
     }
 
@@ -254,7 +255,10 @@ public class SystemUtils {
                     hardwareData[MEMORY_IDX],
                     hardwareData[NOTES_IDX]));
             System.out.println();
+        } catch (IndexOutOfBoundsException iobe) {
+            System.out.println("- Unknown - Is that a Raspberry ?");
         } catch (Exception ex) {
+            System.err.println("Not on a Raspberry?");
             ex.printStackTrace();
         }
 
@@ -303,7 +307,7 @@ public class SystemUtils {
             System.out.println(String.format("CPU Temperature %s", getCPUTemperature2()));
             System.out.println(String.format("Core Voltage %s", getCoreVoltage()));
         } catch (Exception ex) {
-            System.err.println(ex.toString());
+            System.err.println(String.format("T&V %s", ex.toString()));
         }
 
         // Memory
@@ -318,7 +322,7 @@ public class SystemUtils {
             String memoryUsage = getMemoryUsage();
             System.out.println(String.format("Usage: %s", memoryUsage));
         } catch (Exception ex) {
-            System.err.println(ex.toString());
+            System.err.println(String.format("MemStat: %s", ex.toString()));
         }
     }
 }

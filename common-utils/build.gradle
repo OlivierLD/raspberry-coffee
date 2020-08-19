@@ -47,3 +47,17 @@ build.doFirst {
     println "| >>> Try gradlew run in common-utils to see some system info."
     println "+-------------------------------------------------------------"
 }
+
+task sysInfo(type: JavaExec, dependsOn: build, description: "Display System Info.") {
+    main = 'utils.SystemUtils'
+//  jvmArgs "-verbose"
+//  classpath project.configurations.default
+    classpath sourceSets.main.runtimeClasspath
+//  classpath sourceSets.main.output.classesDir
+}
+
+sysInfo.doFirst {
+    println "+-------------------------------------------------------------"
+    println " This task is deprecated. Use gradle run instead."
+    println "+-------------------------------------------------------------"
+}
