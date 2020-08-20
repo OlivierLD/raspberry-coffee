@@ -20,3 +20,5 @@ On the pi, from <https://github.com/PiSupply/PaPiRus>:
 ```
 $ curl -sSL https://pisupp.ly/papiruscode | sudo bash
 ```
+
+There is *a lot* of examples in the repo at <https://github.com/PiSupply/PaPiRus>.

@@ -14,6 +14,10 @@ import traceback
 import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from time import sleep
+from papirus import PapirusText
+
+rot = 00
+papirus_display = PapirusText(rotation=rot)
 
 sample_data = {  # Used for non-implemented operations. Fallback.
     "1": "First",
@@ -31,6 +35,9 @@ class CoreFeatures:
     """
 
     cache = {}
+
+    def display_papirus(self, text, font_size=10):
+        papirus_display.write(text, size=font_size)
 
     def update_cache(self, key, value):
         try:
@@ -79,7 +86,7 @@ except OSError as ose:
     print(ose)
     sys.exit(1)  # Bam!
 
-PATH_PREFIX = "/sample"
+PATH_PREFIX = "/papirus"
 
 
 # Defining a HTTP request Handler class
@@ -98,7 +105,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
     # GET Method Definition
     def do_GET(self):
-        print("GET methods")
+        print("GET methods") # Not used here
         # defining all the headers
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
@@ -153,7 +160,12 @@ class ServiceHandler(BaseHTTPRequestHandler):
     # POST method definition
     def do_POST(self):
         print("POST request, {}".format(self.path))
-        if self.path.startswith("/whatever/"):
+
+        if self.path == PATH_PREFIX + "/display":
+            # Get data to display here, in the body, as plain/text
+            data_to_display = "Akeu Coucou"
+            core.display_papirus(data_to_display)
+
             self.send_response(201)
             response = {"status": "OK"}
             self.wfile.write(json.dumps(response).encode())
