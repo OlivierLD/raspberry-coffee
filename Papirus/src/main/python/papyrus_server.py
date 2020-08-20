@@ -36,7 +36,7 @@ class CoreFeatures:
 
     cache = {}
 
-    def display_papirus(self, text, font_size=10):
+    def display_papirus(self, text, font_size=24):
         papirus_display.write(text, size=font_size)
 
     def update_cache(self, key, value):
