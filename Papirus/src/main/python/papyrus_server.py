@@ -170,13 +170,35 @@ class ServiceHandler(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('Content-Length'))
         post_body = self.rfile.read(content_len).decode("utf-8")
 
+        full_path = self.path
+        split = full_path.split('?')
+        path = split[0]
+        qs = None
+        if len(split) > 1:
+            qs = split[1]
+        # The parameters into a map
+        prm_map = {}
+        if qs is not None:
+            qs_prms = qs.split('&')
+            for qs_prm in qs_prms:
+                nv_pair = qs_prm.split('=')
+                if len(nv_pair) == 2:
+                    prm_map[nv_pair[0]] = nv_pair[1]
+                else:
+                    print("oops, no equal sign in {}".format(qs_prm))
+
         print("Type: {}, len: {}".format(content_type, content_len))
         print("Content: {}".format(post_body))
 
-        if self.path == PATH_PREFIX + "/display":
+        if path == PATH_PREFIX + "/display":
             # Get data to display here, in the body, as plain/text
+            # TODO Check on Content-type "plain/text" ?
+            font_size = prm_map.get("font_size")
             data_to_display = post_body   # "Akeu Coucou"
-            core.display_papirus(data_to_display)
+            if font_size is not None:
+                core.display_papirus(data_to_display, font_size=font_size)
+            else:
+                core.display_papirus(data_to_display)
 
             self.send_response(201)
             response = {"status": "OK"}
