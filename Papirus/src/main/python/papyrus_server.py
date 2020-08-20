@@ -7,6 +7,9 @@
 # Provides REST access to the cache, try GET http://localhost:8080/sample/cache
 # Implement your own features in the do_stuff method and the resources in the ServiceHandler class...
 #
+# Run like this:
+#   python3 papyrus_server.py --machine-name:$(hostname -I)
+#
 import json
 import sys
 import threading
@@ -77,14 +80,16 @@ def do_stuff():
     print("Bye.")
 
 
-# Start doing the core job (read GPS, etc)
-try:
-    print("Starting!")
-    x = threading.Thread(target=do_stuff)
-    x.start()
-except OSError as ose:
-    print(ose)
-    sys.exit(1)  # Bam!
+# Start doing the core job (reading button clicks, etc)
+if False:
+    try:
+        print("Starting!")
+        x = threading.Thread(target=do_stuff)
+        x.start()
+    except OSError as ose:
+        print(ose)
+        sys.exit(1)  # Bam!
+
 
 PATH_PREFIX = "/papirus"
 
@@ -161,9 +166,13 @@ class ServiceHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         print("POST request, {}".format(self.path))
 
+        content_type = self.headers.get('Content-Type')
+        content_len = int(self.headers.get('Content-Length'))
+        post_body = self.rfile.read(content_len)
+
         if self.path == PATH_PREFIX + "/display":
             # Get data to display here, in the body, as plain/text
-            data_to_display = "Akeu Coucou"
+            data_to_display = post_body   # "Akeu Coucou"
             core.display_papirus(data_to_display)
 
             self.send_response(201)
