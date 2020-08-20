@@ -168,7 +168,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
         content_type = self.headers.get('Content-Type')
         content_len = int(self.headers.get('Content-Length'))
-        post_body = self.rfile.read(content_len)
+        post_body = self.rfile.read(content_len).decode("utf-8")
 
         print("Type: {}, len: {}".format(content_type, content_len))
         print("Content: {}".format(post_body))
