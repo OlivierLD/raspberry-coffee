@@ -193,7 +193,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
         if path == PATH_PREFIX + "/display":
             # Get data to display here, in the body, as plain/text
             # TODO Check on Content-type "plain/text" ?
-            font_size = prm_map.get("font_size")
+            font_size = int(prm_map.get("font_size"))
             data_to_display = post_body   # "Akeu Coucou"
             if font_size is not None:
                 core.display_papirus(data_to_display, font_size=font_size)
