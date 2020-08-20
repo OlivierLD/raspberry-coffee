@@ -170,6 +170,9 @@ class ServiceHandler(BaseHTTPRequestHandler):
         content_len = int(self.headers.get('Content-Length'))
         post_body = self.rfile.read(content_len)
 
+        print("Type: {}, len: {}".format(content_type, content_len))
+        print("Content: {}".format(post_body))
+
         if self.path == PATH_PREFIX + "/display":
             # Get data to display here, in the body, as plain/text
             data_to_display = post_body   # "Akeu Coucou"
