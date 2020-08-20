@@ -11,5 +11,12 @@ Communicating with the screen can be done from the System command line, using th
 
 Listening to the buttons... could be a bit more tricky. Working on it.
 
+### TODO (soon)
+Communication through HTTP and REST.
 
- 
+
+### Tentative
+On the pi, from <https://github.com/PiSupply/PaPiRus>:
+```
+$ curl -sSL https://pisupp.ly/papiruscode | sudo bash
+```

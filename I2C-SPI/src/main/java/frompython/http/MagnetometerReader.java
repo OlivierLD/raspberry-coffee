@@ -22,8 +22,8 @@ public class MagnetometerReader {
     }
 
     public static MagData calculate(double magX, double magY, double magZ) {
-//        var magData = new MagData();
-        MagData magData = new MagData();
+//        var magData = new MagData(); // Java 10+
+        MagData magData = new MagData(); // Java 10-
         magData.heading = Math.toDegrees(Math.atan2(magY, magX));
         while (magData.heading < 0) {
             magData.heading += 360f;
@@ -60,8 +60,8 @@ public class MagnetometerReader {
                 double magX = magData.getDouble("x");
                 double magY = magData.getDouble("y");
                 double magZ = magData.getDouble("z");
-//                var data = MagnetometerReader.calculate(magX, magY, magZ);
-                MagData data = MagnetometerReader.calculate(magX, magY, magZ);
+//                var data = MagnetometerReader.calculate(magX, magY, magZ); // Java 10+
+                MagData data = MagnetometerReader.calculate(magX, magY, magZ); // Java 10-
                 System.out.println(String.format("Heading: %f Pitch: %f, Roll: %f", data.heading, data.pitch, data.roll));
             } catch (Exception ex) {
                 ex.printStackTrace();
