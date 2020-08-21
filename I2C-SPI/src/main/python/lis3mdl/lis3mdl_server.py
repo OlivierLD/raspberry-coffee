@@ -57,10 +57,11 @@ core = CoreFeatures()
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_lis3mdl.LIS3MDL(i2c)
 
+keep_looping = True
 
 def read_lis3mdl():
     print("Let's go. Hit Ctrl+C to stop")
-    while True:
+    while keep_looping:
         try:
             try:
                 mag_x, mag_y, mag_z = sensor.magnetic
@@ -71,6 +72,7 @@ def read_lis3mdl():
                 print("AttributeError : {}".format(ae))
         except KeyboardInterrupt:
             print("\n\t\tUser interrupted, exiting.")
+            keep_looping = False
             break
         except:
             # print("\t\tOoops! {}: {}".format(type(ex), ex))
