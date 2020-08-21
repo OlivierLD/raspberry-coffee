@@ -37,3 +37,7 @@ $ curl --location --request POST 'http://192.168.42.36:8080/papirus/display?font
 ```
 ... where `192.168.42.36` is the IP of the Raspberry Pi.
 
+### TODO
+- Button management
+
+---
