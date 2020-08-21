@@ -193,7 +193,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
             # print the keys required from the json file
             self.wfile.write(json.dumps(display).encode())
         else:
-            error = "{} Not found in sample_data".format(temp)
+            error = "{} Not found in sample_data\n".format(temp)
             self.send_response(404)
             self.send_header('Content-type', 'plain/text')
             content_len = len(error)
@@ -274,8 +274,8 @@ port_number = server_port
 print("Starting server on port {}".format(port_number))
 server = HTTPServer((machine_name, port_number), ServiceHandler)
 #
-print("Try curl -X GET http://{}:{}/{}/oplist".format(machine_name, port_number, PATH_PREFIX))
-print("or  curl -v -X VIEW http://{}:{}/{} -H \"Content-Length: 1\" -d \"1\"".format(machine_name, port_number, PATH_PREFIX))
+print("Try curl -X GET http://{}:{}{}/oplist".format(machine_name, port_number, PATH_PREFIX))
+print("or  curl -v -X VIEW http://{}:{}{} -H \"Content-Length: 1\" -d \"1\"".format(machine_name, port_number, PATH_PREFIX))
 #
 try:
     server.serve_forever()
