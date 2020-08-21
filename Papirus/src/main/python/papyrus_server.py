@@ -211,9 +211,15 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(response_content)
         else:
-            # prints all the keys and values of the json file
-            self.wfile.write(json.dumps("Not managed (yet)").encode())
+            if REST_DEBUG:
+                print("GET on {} not managed".format(self.path))
+            error = "NOT FOUND!"
             self.send_response(400)
+            self.send_header('Content-type', 'plain/text')
+            content_len = len(error)
+            self.send_header('Content-Length', content_len)
+            self.end_headers()
+            self.wfile.write(bytes(error, 'utf-8'))
 
     # VIEW method definition. WTF ? (What the French)
     def do_VIEW(self):
@@ -305,9 +311,15 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(response_content)
         else:
+            if REST_DEBUG:
+                print("POST on {} not managed".format(self.path))
             error = "NOT FOUND!"
-            self.wfile.write(bytes(error, 'utf-8'))
             self.send_response(404)
+            self.send_header('Content-type', 'plain/text')
+            content_len = len(error)
+            self.send_header('Content-Length', content_len)
+            self.end_headers()
+            self.wfile.write(bytes(error, 'utf-8'))
 
     # self.wfile.write(json.dumps(data[str(index)]).encode())
 
@@ -320,15 +332,27 @@ class ServiceHandler(BaseHTTPRequestHandler):
             response = {"status": "OK"}
             self.wfile.write(json.dumps(response).encode())
         else:
+            if REST_DEBUG:
+                print("PUT on {} not managed".format(self.path))
             error = "NOT FOUND!"
-            self.wfile.write(bytes(error, 'utf-8'))
             self.send_response(404)
+            self.send_header('Content-type', 'plain/text')
+            content_len = len(error)
+            self.send_header('Content-Length', content_len)
+            self.end_headers()
+            self.wfile.write(bytes(error, 'utf-8'))
 
     # DELETE method definition - Not used
     def do_DELETE(self):
-        error = "NOT FOUND!"
-        self.wfile.write(bytes(error, 'utf-8'))
-        self.send_response(404)
+            if REST_DEBUG:
+                print("DELETE on {} not managed".format(self.path))
+            error = "NOT FOUND!"
+            self.send_response(404)
+            self.send_header('Content-type', 'plain/text')
+            content_len = len(error)
+            self.send_header('Content-Length', content_len)
+            self.end_headers()
+            self.wfile.write(bytes(error, 'utf-8'))
 
 
 machine_name = "127.0.0.1"  # Should be overridden with actual IP address...
