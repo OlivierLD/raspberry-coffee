@@ -12,9 +12,9 @@ Communicating with the screen can be done from the System command line, using th
 Listening to the buttons... could be a bit more tricky. Working on it.
 
 ### WiP
-Communication through HTTP and REST.
+As long as the Java drivers are not implemented, communication can be established through HTTP and REST.
 
-Install and setup the Papirus as explained above.
+Install and setup the Papirus as explained [above](https://github.com/PiSupply/PaPiRus).
  
 Then do this:
 - On the Raspberry Pi with the Papirus hooked-up on it:
