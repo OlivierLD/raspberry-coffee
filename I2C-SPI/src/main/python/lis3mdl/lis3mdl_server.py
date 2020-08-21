@@ -188,6 +188,8 @@ class ServiceHandler(BaseHTTPRequestHandler):
         display = {}
         temp = self._set_headers()
         # check if the key is present in the dictionary
+        print(">>> Temp: {}".format(temp))
+
         if temp in sample_data:
             display[temp] = sample_data[temp]
             # print the keys required from the json file
@@ -277,6 +279,7 @@ print("Starting server on port {}".format(port_number))
 server = HTTPServer((machine_name, port_number), ServiceHandler)
 #
 print("Try curl -X GET http://{}:{}/{}/oplist".format(machine_name, port_number, PATH_PREFIX))
+print("or  curl -v -X VIEW http://{}:{}/{}/oplist -H \"Content-Length: 0\"".format(machine_name, port_number, PATH_PREFIX))
 #
 try:
     server.serve_forever()
