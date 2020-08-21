@@ -80,7 +80,7 @@ def read_lis3mdl():
             # print("\t\tOoops! {}: {}".format(type(ex), ex))
             traceback.print_exc(file=sys.stdout)
         sleep(1.0)  # one sec between loops
-    print("Bye.")
+    print("Bye (thread).")
 
 
 # Start doing the core job (read GPS, etc)
@@ -111,7 +111,8 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
     # GET Method Definition
     def do_GET(self):
-        print("GET methods")
+        if REST_DEBUG:
+            print("GET methods")
         # defining all the headers
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
@@ -198,7 +199,8 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
     # POST method definition
     def do_POST(self):
-        print("POST request, {}".format(self.path))
+        if REST_DEBUG:
+            print("POST request, {}".format(self.path))
         if self.path.startswith("/whatever/"):
             self.send_response(201)
             response = {"status": "OK"}
@@ -218,7 +220,8 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
     # PUT method Definition
     def do_PUT(self):
-        print("PUT request, {}".format(self.path))
+        if REST_DEBUG:
+            print("PUT request, {}".format(self.path))
         if self.path.startswith("/whatever/"):
             self.send_response(201)
             response = {"status": "OK"}
