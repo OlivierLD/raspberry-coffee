@@ -74,6 +74,7 @@ def read_lis3mdl():
         except KeyboardInterrupt:
             print("\n\t\tUser interrupted, exiting.")
             keep_looping = False
+            x.join()
             break
         except:
             # print("\t\tOoops! {}: {}".format(type(ex), ex))
@@ -268,4 +269,9 @@ server = HTTPServer((machine_name, port_number), ServiceHandler)
 #
 print("Try curl -X GET http://{}:{}/{}/oplist".format(machine_name, port_number, PATH_PREFIX))
 #
-server.serve_forever()
+try:
+    server.serve_forever()
+except KeyboardInterrupt:
+    print("\n\t\tUser interrupted (server.serve), exiting.")
+    keep_looping = False
+    x.join()
