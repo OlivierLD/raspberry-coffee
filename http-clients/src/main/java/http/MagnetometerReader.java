@@ -50,9 +50,10 @@ public class MagnetometerReader {
             keepLooping.set(false);
         }));
 
+        String restUrl = System.getProperty("rest.url", "http://192.168.42.9:8080/lis3mdl/cache");
         while (keepLooping.get()) {
             try {
-                String str = HTTPClient.doGet( System.getProperty("rest.url", "http://192.168.42.9:8080/lis3mdl/cache"), null);
+                String str = HTTPClient.doGet( restUrl, null);
                 if ("true".equals(System.getProperty("verbose"))) {
                     System.out.println(str);
                 }
