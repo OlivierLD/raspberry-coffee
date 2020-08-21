@@ -45,7 +45,8 @@ class CoreFeatures:
         papirus_display.write(text, size=font_size)
 
     def clear_papirus(self):
-        papirus_display.clear()
+        # papirus_display.clear()  # clear works only on PapirusTextPos
+        papirus_display.write("")
 
     def image_papirus(self, img_location="./pelican.bw.png"):
         papirus_image.write(img_location)
@@ -172,7 +173,8 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
     # POST method definition - Only one for now
     def do_POST(self):
-        print("POST request, {}".format(self.path))
+        if REST_DEBUG:
+            print("POST request, {}".format(self.path))
 
         content_type = self.headers.get('Content-Type')
         content_len = int(self.headers.get('Content-Length'))
@@ -184,7 +186,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
         qs = None
         if len(split) > 1:
             qs = split[1]
-        # The parameters into a map
+        # The QS parameters into a map
         prm_map = {}
         if qs is not None:
             qs_prms = qs.split('&')
@@ -195,8 +197,9 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 else:
                     print("oops, no equal sign in {}".format(qs_prm))
 
-        print("Type: {}, len: {}".format(content_type, content_len))
-        print("Content: {}".format(post_body))
+        if REST_DEBUG:
+            print("Type: {}, len: {}".format(content_type, content_len))
+            print("Content: {}".format(post_body))
 
         if path == PATH_PREFIX + "/display":
             # Get data to display here, in the body, as plain/text
@@ -207,7 +210,6 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 core.display_papirus(data_to_display, font_size=font_size)
             else:
                 core.display_papirus(data_to_display)
-
             self.send_response(201)
             response = {"status": "OK"}
             response_content = json.dumps(response).encode()
@@ -221,7 +223,28 @@ class ServiceHandler(BaseHTTPRequestHandler):
             core.clear_papirus()
             self.send_response(201)
             response = {"status": "OK"}
-            self.wfile.write(json.dumps(response).encode())
+            response_content = json.dumps(response).encode()
+            # defining the response headers
+            self.send_header('Content-type', 'application/json')
+            content_len = len(response_content)
+            self.send_header('Content-Length', content_len)
+            self.end_headers()
+            self.wfile.write(response_content)
+        elif path == PATH_PREFIX + "/image":
+            img_loc = prm_map.get("image_path")
+            if img_loc is None:
+                core.image_papirus()
+            else:
+                core.image_papirus(img_location=img_loc)
+            self.send_response(201)
+            response = {"status": "OK"}
+            response_content = json.dumps(response).encode()
+            # defining the response headers
+            self.send_header('Content-type', 'application/json')
+            content_len = len(response_content)
+            self.send_header('Content-Length', content_len)
+            self.end_headers()
+            self.wfile.write(response_content)
         else:
             error = "NOT FOUND!"
             self.wfile.write(bytes(error, 'utf-8'))
@@ -251,6 +274,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
 machine_name = "127.0.0.1"  # Should be overridden with actual IP address...
 MACHINE_NAME_PRM_PREFIX = "--machine-name:"
 PORT_PRM_PREFIX = "--port:"
+VERBOSE_PREFIX = "--verbose:"
 
 
 if len(sys.argv) > 0:  # Script name + X args
@@ -259,6 +283,8 @@ if len(sys.argv) > 0:  # Script name + X args
             machine_name = arg[len(MACHINE_NAME_PRM_PREFIX):]
         if arg[:len(PORT_PRM_PREFIX)] == PORT_PRM_PREFIX:
             server_port = int(arg[len(PORT_PRM_PREFIX):])
+        if arg[:len(VERBOSE_PREFIX)] == VERBOSE_PREFIX:
+            REST_DEBUG = (arg[len(VERBOSE_PREFIX):] == "true")
 
 # Server Initialization
 port_number = server_port
