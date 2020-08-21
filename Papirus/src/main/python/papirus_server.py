@@ -225,7 +225,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(bytes(error, 'utf-8'))
 
-    # VIEW method definition. WTF ? (What the French)
+    # VIEW method definition.
     def do_VIEW(self):
         # dict var. for pretty print
         display = {}
@@ -236,9 +236,13 @@ class ServiceHandler(BaseHTTPRequestHandler):
             # print the keys required from the json file
             self.wfile.write(json.dumps(display).encode())
         else:
-            error = "NOT FOUND!"
-            self.wfile.write(bytes(error, 'utf-8'))
+            error = "{} Not found in sample_data\n".format(temp)
             self.send_response(404)
+            self.send_header('Content-Type', 'plain/text')
+            content_len = len(error)
+            self.send_header('Content-Length', content_len)
+            self.end_headers()
+            self.wfile.write(bytes(error, 'utf-8'))
 
     # POST method definition - Only one for now
     def do_POST(self):
