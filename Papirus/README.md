@@ -11,6 +11,14 @@ Communicating with the screen can be done from the System command line, using th
 
 Listening to the buttons... could be a bit more tricky. Working on it.
 
+### Get it up and running
+On the pi, from <https://github.com/PiSupply/PaPiRus>:
+```
+$ curl -sSL https://pisupp.ly/papiruscode | sudo bash
+```
+
+There is *a lot* of examples in the repo at <https://github.com/PiSupply/PaPiRus>.
+
 ### WiP
 As long as the Java drivers are not implemented, communication can be established through HTTP and REST.
 
@@ -29,10 +37,3 @@ $ curl --location --request POST 'http://192.168.42.36:8080/papirus/display?font
 ```
 ... where `192.168.42.36` is the IP of the Raspberry Pi.
 
-### Get it up and running
-On the pi, from <https://github.com/PiSupply/PaPiRus>:
-```
-$ curl -sSL https://pisupp.ly/papiruscode | sudo bash
-```
-
-There is *a lot* of examples in the repo at <https://github.com/PiSupply/PaPiRus>.
