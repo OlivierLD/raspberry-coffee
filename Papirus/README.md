@@ -32,8 +32,8 @@ $ python3 papyrus_server.py --machine-name:$(hostname -I)
 - On any machine on the same network, including the Raspberry Pi hosting the Papirus:
 ```
 $ curl --location --request POST 'http://192.168.42.36:8080/papirus/display?font_size=40' \
-  --header 'Content-Type: text/plain' \
-  --data-raw 'Display something!'
+       --header 'Content-Type: text/plain' \
+       --data-raw 'Display something!'
 ```
 ... where `192.168.42.36` is the IP of the Raspberry Pi.
 
