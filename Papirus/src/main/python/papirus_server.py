@@ -117,6 +117,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
         self.end_headers()
         return temp
 
+    # To silence the HTTP logger
+    def log_message(self, format, *args):
+        return
+
     # GET Method Definition
     def do_GET(self):
         if REST_DEBUG:

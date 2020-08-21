@@ -51,9 +51,12 @@ class CoreFeatures:
 
 core = CoreFeatures()
 
+keep_looping = True
+
 def do_stuff():
     print("Let's go. Hit Ctrl+C to stop")
-    while True:
+    global keep_looping
+    while keep_looping:
         try:
             try:
                 core.update_cache('position', 'data goes here')
@@ -62,6 +65,8 @@ def do_stuff():
                 print("AttributeError : {}".format(ae))
         except KeyboardInterrupt:
             print("\n\t\tUser interrupted, exiting.")
+            keep_looping = False
+            x.join()
             break
         except:
             # print("\t\tOoops! {}: {}".format(type(ex), ex))
@@ -95,6 +100,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
         temp = str(content).strip('b\'')
         self.end_headers()
         return temp
+
+    # To silence the HTTP logger
+    def log_message(self, format, *args):
+        return
 
     # GET Method Definition
     def do_GET(self):
@@ -257,4 +266,9 @@ server = HTTPServer((machine_name, port_number), ServiceHandler)
 #
 print("Try curl -X GET http://{}:{}/{}/cache".format(machine_name, port_number, PATH_PREFIX))
 #
-server.serve_forever()
+try:
+    server.serve_forever()
+except KeyboardInterrupt:
+    print("\n\t\tUser interrupted (server.serve), exiting.")
+    keep_looping = False
+    x.join()
