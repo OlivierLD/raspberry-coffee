@@ -130,8 +130,9 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 else:
                     print("oops, no equal sign in {}".format(qs_prm))
 
-        if path == PATH_PREFIX + "/cache":  # GET /sample/cache
-            print("Cache request")
+        if path == PATH_PREFIX + "/cache":
+            if REST_DEBUG:
+                print("Cache request")
             try:
                 gps_cache = core.get_cache()
                 self.wfile.write(json.dumps(gps_cache).encode())
@@ -139,10 +140,36 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 error = {"message": "{}".format(exception)}
                 self.wfile.write(json.dumps(error).encode())
                 self.send_response(500)
+        elif path == PATH_PREFIX + "/oplist":
+            response = {
+                "oplist": [{
+                        "path": PATH_PREFIX + "/oplist",
+                        "verb": "GET",
+                        "description": "Get the available operation list."
+                    }, {
+                        "path": PATH_PREFIX + "/cache",
+                        "verb": "GET",
+                        "description": "Get the LIS3MDL cache."
+                    }]
+            }
+            response_content = json.dumps(response).encode()
+            self.send_response(200)
+            # defining the response headers
+            self.send_header('Content-type', 'application/json')
+            content_len = len(response_content)
+            self.send_header('Content-Length', content_len)
+            self.end_headers()
+            self.wfile.write(response_content)
         else:
-            # prints all the keys and values of the json file
-            self.wfile.write(json.dumps("Not managed (yet)").encode())
+            if REST_DEBUG:
+                print("GET on {} not managed".format(self.path))
+            error = "NOT FOUND!"
             self.send_response(400)
+            self.send_header('Content-type', 'plain/text')
+            content_len = len(error)
+            self.send_header('Content-Length', content_len)
+            self.end_headers()
+            self.wfile.write(bytes(error, 'utf-8'))
 
     # VIEW method definition. WTF ? (What the French)
     def do_VIEW(self):
@@ -155,9 +182,15 @@ class ServiceHandler(BaseHTTPRequestHandler):
             # print the keys required from the json file
             self.wfile.write(json.dumps(display).encode())
         else:
+            if REST_DEBUG:
+                print("VIEW on {} not managed".format(self.path))
             error = "NOT FOUND!"
-            self.wfile.write(bytes(error, 'utf-8'))
             self.send_response(404)
+            self.send_header('Content-type', 'plain/text')
+            content_len = len(error)
+            self.send_header('Content-Length', content_len)
+            self.end_headers()
+            self.wfile.write(bytes(error, 'utf-8'))
 
     # POST method definition
     def do_POST(self):
@@ -167,9 +200,15 @@ class ServiceHandler(BaseHTTPRequestHandler):
             response = {"status": "OK"}
             self.wfile.write(json.dumps(response).encode())
         else:
+            if REST_DEBUG:
+                print("POST on {} not managed".format(self.path))
             error = "NOT FOUND!"
-            self.wfile.write(bytes(error, 'utf-8'))
             self.send_response(404)
+            self.send_header('Content-type', 'plain/text')
+            content_len = len(error)
+            self.send_header('Content-Length', content_len)
+            self.end_headers()
+            self.wfile.write(bytes(error, 'utf-8'))
 
     # self.wfile.write(json.dumps(data[str(index)]).encode())
 
@@ -181,20 +220,33 @@ class ServiceHandler(BaseHTTPRequestHandler):
             response = {"status": "OK"}
             self.wfile.write(json.dumps(response).encode())
         else:
+            if REST_DEBUG:
+                print("PUT on {} not managed".format(self.path))
             error = "NOT FOUND!"
-            self.wfile.write(bytes(error, 'utf-8'))
             self.send_response(404)
+            self.send_header('Content-type', 'plain/text')
+            content_len = len(error)
+            self.send_header('Content-Length', content_len)
+            self.end_headers()
+            self.wfile.write(bytes(error, 'utf-8'))
 
     # DELETE method definition
     def do_DELETE(self):
+        if REST_DEBUG:
+            print("DELETE on {} not managed".format(self.path))
         error = "NOT FOUND!"
+        self.send_response(400)
+        self.send_header('Content-type', 'plain/text')
+        content_len = len(error)
+        self.send_header('Content-Length', content_len)
+        self.end_headers()
         self.wfile.write(bytes(error, 'utf-8'))
-        self.send_response(404)
 
 
 machine_name = "127.0.0.1"
 MACHINE_NAME_PRM_PREFIX = "--machine-name:"
 PORT_PRM_PREFIX = "--port:"
+VERBOSE_PREFIX = "--verbose:"
 
 
 if len(sys.argv) > 0:  # Script name + X args
@@ -203,12 +255,14 @@ if len(sys.argv) > 0:  # Script name + X args
             machine_name = arg[len(MACHINE_NAME_PRM_PREFIX):]
         if arg[:len(PORT_PRM_PREFIX)] == PORT_PRM_PREFIX:
             server_port = int(arg[len(PORT_PRM_PREFIX):])
+        if arg[:len(VERBOSE_PREFIX)] == VERBOSE_PREFIX:
+            REST_DEBUG = (arg[len(VERBOSE_PREFIX):] == "true")
 
 # Server Initialization
 port_number = server_port
 print("Starting server on port {}".format(port_number))
 server = HTTPServer((machine_name, port_number), ServiceHandler)
 #
-print("Try curl -X GET http://{}:{}/{}/cache".format(machine_name, port_number, PATH_PREFIX))
+print("Try curl -X GET http://{}:{}/{}/oplist".format(machine_name, port_number, PATH_PREFIX))
 #
 server.serve_forever()

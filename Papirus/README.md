@@ -1,6 +1,6 @@
 # PaPiRus
 
-Instructions:
+Setup instructions:
  - Hardware [here](https://www.pi-supply.com/make/papirus-assembly-tips-and-gotchas/).
  - Software [here](https://github.com/repaper/gratis) and [here](https://github.com/PiSupply/PaPiRus).
  
@@ -28,6 +28,9 @@ Then do this:
 - On the Raspberry Pi with the Papirus hooked-up on it:
 ```
 $ python3 papyrus_server.py --machine-name:$(hostname -I) [ --port:8888 --verbose:true ]
+Starting server on port 8080
+Try curl -X GET http://192.168.42.36:8080//papirus/oplist
+
 ```
 - On any machine on the same network, including the Raspberry Pi hosting the Papirus:
 ```
@@ -36,6 +39,8 @@ $ curl --location --request POST 'http://192.168.42.36:8080/papirus/display?font
        --data-raw 'Display something!'
 ```
 ... where `192.168.42.36` is the IP of the Raspberry Pi.
+
+Hit `Ctrl-C` in the Raspberry Pi's console to stop the server.
 
 ### TODO
 - Button management

@@ -33,7 +33,7 @@ X:    -50.69, Y:     24.01, Z:    -23.31 uT
 - To run it as an HTTP Server
     - Edit `lis3mdl_server.py`, and change the machine name to the right IP address (127.0.0.1 works, but you would not be able to reach it from another machine)
     in `machine_name = "192.168.42.9"`.
-    - Then you can run `$ python3 lis3mdl_server.py`
+    - Then you can run `$ python3 lis3mdl_server.py --machine-name:$(hostname -I) [ --port:8888 --verbose:true ]`
     - From any machine on the same network, you can now run
     ```
   $ curl -X GET http://192.168.42.9:8080/lis3mdl/cache | jq
