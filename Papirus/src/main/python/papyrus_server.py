@@ -17,7 +17,7 @@ import traceback
 import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from time import sleep
-from papirus import PapirusText
+from papirus import PapirusText   # See the README.md
 
 rot = 00
 papirus_display = PapirusText(rotation=rot)
@@ -108,7 +108,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
         self.end_headers()
         return temp
 
-    # GET Method Definition
+    # GET Method Definition - Noy used
     def do_GET(self):
         print("GET methods") # Not used here
         # defining all the headers
@@ -162,13 +162,13 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.wfile.write(bytes(error, 'utf-8'))
             self.send_response(404)
 
-    # POST method definition
+    # POST method definition - Only one for now
     def do_POST(self):
         print("POST request, {}".format(self.path))
 
         content_type = self.headers.get('Content-Type')
         content_len = int(self.headers.get('Content-Length'))
-        post_body = self.rfile.read(content_len).decode("utf-8")
+        post_body = self.rfile.read(content_len).decode("utf-8")  # byte[] to string
 
         full_path = self.path
         split = full_path.split('?')
@@ -210,7 +210,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
     # self.wfile.write(json.dumps(data[str(index)]).encode())
 
-    # PUT method Definition
+    # PUT method Definition - Not used
     def do_PUT(self):
         print("PUT request, {}".format(self.path))
         if self.path.startswith("/whatever/"):
@@ -222,14 +222,14 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.wfile.write(bytes(error, 'utf-8'))
             self.send_response(404)
 
-    # DELETE method definition
+    # DELETE method definition - Not used
     def do_DELETE(self):
         error = "NOT FOUND!"
         self.wfile.write(bytes(error, 'utf-8'))
         self.send_response(404)
 
 
-machine_name = "127.0.0.1"
+machine_name = "127.0.0.1"  # Should be overridden with actual IP address...
 MACHINE_NAME_PRM_PREFIX = "--machine-name:"
 PORT_PRM_PREFIX = "--port:"
 
@@ -248,4 +248,4 @@ server = HTTPServer((machine_name, port_number), ServiceHandler)
 #
 print("Try curl -X GET http://{}:{}/{}/cache".format(machine_name, port_number, PATH_PREFIX))
 #
-server.serve_forever()
+server.serve_forever()  # There we go!

@@ -11,11 +11,25 @@ Communicating with the screen can be done from the System command line, using th
 
 Listening to the buttons... could be a bit more tricky. Working on it.
 
-### TODO (soon)
+### WiP
 Communication through HTTP and REST.
 
+Install and setup the Papirus as explained above.
+ 
+Then do this:
+- On the Raspberry Pi with the Papirus hooked-up on it:
+```
+$ python3 papyrus_server.py --machine-name:$(hostname -I)
+```
+- On any machine on the same network, including the Raspberry Pi hosting the Papirus:
+```
+$ curl --location --request POST 'http://192.168.42.36:8080/papirus/display?font_size=40' \
+  --header 'Content-Type: text/plain' \
+  --data-raw 'Display something!'
+```
+... where `192.168.42.36` is the IP of the Raspberry Pi.
 
-### Tentative
+### Get it up and running
 On the pi, from <https://github.com/PiSupply/PaPiRus>:
 ```
 $ curl -sSL https://pisupp.ly/papiruscode | sudo bash
