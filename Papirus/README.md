@@ -27,7 +27,7 @@ Install and setup the Papirus as explained [above](https://github.com/PiSupply/P
 Then do this:
 - On the Raspberry Pi with the Papirus hooked-up on it:
 ```
-$ python3 papyrus_server.py --machine-name:$(hostname -I) [ --port:8888 --verbose:true ]
+$ python3 papirus_server.py --machine-name:$(hostname -I) [ --port:8888 --verbose:true ]
 Starting server on port 8080
 Try curl -X GET http://192.168.42.36:8080//papirus/oplist
 

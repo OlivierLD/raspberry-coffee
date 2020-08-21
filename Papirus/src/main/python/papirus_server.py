@@ -8,7 +8,7 @@
 # Implement your own features in the do_stuff method and the resources in the ServiceHandler class...
 #
 # Run like this:
-#   python3 papyrus_server.py --machine-name:$(hostname -I)
+#   python3 papirus_server.py --machine-name:$(hostname -I)
 #
 import json
 import sys
