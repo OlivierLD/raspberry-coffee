@@ -18,7 +18,7 @@ import board
 import busio
 import adafruit_lis3mdl
 
-sample_data = {  # Used for non-implemented operations. Fallback.
+sample_data = {  # Used for VIEW, and non-implemented operations. Fallback.
     "1": "First",
     "2": "Second",
     "3": "Third",
@@ -182,22 +182,18 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(bytes(error, 'utf-8'))
 
-    # VIEW method definition. WTF ? (What the French)
+    # VIEW method definition. Uncommon...
     def do_VIEW(self):
         # dict var. for pretty print
         display = {}
         temp = self._set_headers()
-        # check if the key is present in the dictionary
-        print(">>> Temp: {}".format(temp))
-
+        # check if the key is present in the sample_data dictionary
         if temp in sample_data:
             display[temp] = sample_data[temp]
             # print the keys required from the json file
             self.wfile.write(json.dumps(display).encode())
         else:
-            if REST_DEBUG:
-                print("VIEW on {} not managed".format(self.path))
-            error = "NOT FOUND!"
+            error = "{} Not found in sample_data".format(temp)
             self.send_response(404)
             self.send_header('Content-type', 'plain/text')
             content_len = len(error)
@@ -279,7 +275,7 @@ print("Starting server on port {}".format(port_number))
 server = HTTPServer((machine_name, port_number), ServiceHandler)
 #
 print("Try curl -X GET http://{}:{}/{}/oplist".format(machine_name, port_number, PATH_PREFIX))
-print("or  curl -v -X VIEW http://{}:{}/{}/oplist -H \"Content-Length: 0\"".format(machine_name, port_number, PATH_PREFIX))
+print("or  curl -v -X VIEW http://{}:{}/{} -H \"Content-Length: 1\" -d \"1\"".format(machine_name, port_number, PATH_PREFIX))
 #
 try:
     server.serve_forever()
