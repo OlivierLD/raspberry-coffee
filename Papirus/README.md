@@ -20,7 +20,7 @@ $ curl -sSL https://pisupp.ly/papiruscode | sudo bash
 There is *a lot* of examples in the repo at <https://github.com/PiSupply/PaPiRus>.
 
 ### WiP
-As long as the Java drivers are not implemented, communication can be established through HTTP and REST.
+As long as the Java drivers are not implemented yet, communication can be established through HTTP and REST.
 
 Install and setup the Papirus as explained [above](https://github.com/PiSupply/PaPiRus).
  

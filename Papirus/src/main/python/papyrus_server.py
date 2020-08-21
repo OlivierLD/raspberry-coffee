@@ -18,9 +18,11 @@ import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from time import sleep
 from papirus import PapirusText   # See the README.md
+from papirus import PapirusImage
 
 rot = 00
 papirus_display = PapirusText(rotation=rot)
+papirus_image   = PapirusImage(rotation=rot)
 
 sample_data = {  # Used for non-implemented operations. Fallback.
     "1": "First",
@@ -41,6 +43,12 @@ class CoreFeatures:
 
     def display_papirus(self, text, font_size=24):
         papirus_display.write(text, size=font_size)
+
+    def clear_papirus(self):
+        papirus_display.clear()
+
+    def image_papirus(self, img_location="./pelican.bw.png"):
+        papirus_image.write(img_location)
 
     def update_cache(self, key, value):
         try:
@@ -97,8 +105,8 @@ PATH_PREFIX = "/papirus"
 # Defining a HTTP request Handler class
 class ServiceHandler(BaseHTTPRequestHandler):
     # sets basic headers for the server
-    def _set_headers(self):
-        self.send_response(200)
+    def _set_headers(self, status=200):
+        self.send_response(status)
         self.send_header('Content-type', 'application/json')
         # reads the length of the Headers
         length = int(self.headers['Content-Length'])
@@ -200,6 +208,17 @@ class ServiceHandler(BaseHTTPRequestHandler):
             else:
                 core.display_papirus(data_to_display)
 
+            self.send_response(201)
+            response = {"status": "OK"}
+            response_content = json.dumps(response).encode()
+            # defining the response headers
+            self.send_header('Content-type', 'application/json')
+            content_len = len(response_content)
+            self.send_header('Content-Length', content_len)
+            self.end_headers()
+            self.wfile.write(response_content)
+        elif path == PATH_PREFIX + "/clear":
+            core.clear_papirus()
             self.send_response(201)
             response = {"status": "OK"}
             self.wfile.write(json.dumps(response).encode())
