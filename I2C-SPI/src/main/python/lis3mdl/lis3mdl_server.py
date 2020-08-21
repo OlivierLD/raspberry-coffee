@@ -111,7 +111,8 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
     # To silence the HTTP logger
     def log_message(self, format, *args):
-        print("Log: {} {}".format(format, args))
+        self.log_message(format, args)
+        # print("Log: {} {}".format(format, args))
         return
 
     # GET Method Definition
