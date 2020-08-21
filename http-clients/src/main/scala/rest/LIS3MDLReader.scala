@@ -8,8 +8,6 @@ import org.json.JSONObject
   * That one happens to be in Python, polling an LIS3MDL breakout board
   *
   * TODO Introduce calibration
-  *
-  * Warning: uses some Java 10 syntax (var)
   */
 object LIS3MDLReader {
 
@@ -30,7 +28,7 @@ object LIS3MDLReader {
     * @param args Unused
     */
   def main(args: Array[String]): Unit = {
-    var keepLooping = true  // new AtomicBoolean(true)
+    var keepLooping = true
     println("Ctrl+C to stop")
     sys addShutdownHook {
       println("Stopping")
