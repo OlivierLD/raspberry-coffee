@@ -29,6 +29,7 @@ object LIS3MDLReader {
     */
   def main(args: Array[String]): Unit = {
     var keepLooping = true
+
     println("Ctrl+C to stop")
     sys addShutdownHook {
       println("Stopping")

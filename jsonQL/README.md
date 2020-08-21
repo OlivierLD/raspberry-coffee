@@ -1,17 +1,17 @@
 # A JSON Utility, WiP
 
 To use like 
-```bash
-curl [--silent]  -X GET http://192.168.42.19:8989/sf/status | java -cp ./build/libs/jsonQL-1.0-all.jar oliv.json.JsonQL --query:<Query>
+```text
+curl [--silent] -X GET http://192.168.42.19:8989/sf/status | java -cp ./build/libs/jsonQL-1.0-all.jar oliv.json.JsonQL --query:<Query>
 ```
 also try
-```bash
+```text
 curl [--silent]  -X GET http://192.168.42.19:8989/sf/status | java -Djson.debug=true -cp ./build/libs/jsonQL-1.0-all.jar oliv.json.JsonQL "--query:.*/(elevation|azimuth)"
 ```
 
 ### RegEx support (WiP)
 Use `regex` syntax.
-```bash
+```text
 curl [--silent] -X GET http://192.168.42.19:8989/sf/status | java -cp ./build/libs/jsonQL-1.0-all.jar oliv.json.JsonQL --query:.*_DATA/elevation
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
