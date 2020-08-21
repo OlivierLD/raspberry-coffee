@@ -27,7 +27,7 @@ Install and setup the Papirus as explained [above](https://github.com/PiSupply/P
 Then do this:
 - On the Raspberry Pi with the Papirus hooked-up on it:
 ```
-$ python3 papyrus_server.py --machine-name:$(hostname -I)
+$ python3 papyrus_server.py --machine-name:$(hostname -I) [ --port:8888 --verbose:true ]
 ```
 - On any machine on the same network, including the Raspberry Pi hosting the Papirus:
 ```

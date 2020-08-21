@@ -117,13 +117,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
         self.end_headers()
         return temp
 
-    # GET Method Definition - Noy used
+    # GET Method Definition
     def do_GET(self):
-        print("GET methods") # Not used here
-        # defining all the headers
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json')
-        self.end_headers()
+        if REST_DEBUG:
+            print("GET methods")
         #
         full_path = self.path
         split = full_path.split('?')
@@ -142,8 +139,13 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 else:
                     print("oops, no equal sign in {}".format(qs_prm))
 
-        if path == PATH_PREFIX + "/cache":  # GET /sample/cache
-            print("Cache request")
+        if path == PATH_PREFIX + "/cache":
+            if REST_DEBUG:
+                print("Cache request")
+            # defining all the headers
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
             try:
                 gps_cache = core.get_cache()
                 self.wfile.write(json.dumps(gps_cache).encode())
@@ -151,6 +153,63 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 error = {"message": "{}".format(exception)}
                 self.wfile.write(json.dumps(error).encode())
                 self.send_response(500)
+        if path == PATH_PREFIX + "/oplist":  # Just an example ;)
+            response = {
+                "oplist": [
+                    {
+                        "path": PATH_PREFIX + "/oplist",
+                        "verb": "GET",
+                        "description": "Get the available operation list."
+                    },
+                    {
+                        "path": PATH_PREFIX + "/cache",
+                        "verb": "GET",
+                        "description": "Dummy example, meaningless here."
+                    },
+                    {
+                        "path": PATH_PREFIX + "/display",
+                        "verb": "POST",
+                        "parameters" : [
+                            {
+                                "type": "query",
+                                "name": "font_size",
+                                "mandatory": False
+                            },
+                            {
+                                "type": "body",
+                                "content-type": "plain/text",
+                                "mandatory": True
+                            }
+                        ],
+                        "description": "Display text on the screen."
+                    },
+                    {
+                        "path": PATH_PREFIX + "/clear",
+                        "verb": "POST",
+                        "description": "Clear the screen."
+                    },
+                    {
+                        "path": PATH_PREFIX + "/image",
+                        "verb": "POST",
+                        "parameters" : [
+                            {
+                                "type": "query",
+                                "name": "image_path",
+                                "mandatory": False
+                            }
+                        ],
+                        "description": "Display an image on the screen."
+                    }
+                ]
+            }
+            response_content = json.dumps(response).encode()
+            self.send_response(200)
+            # defining the response headers
+            self.send_header('Content-type', 'application/json')
+            content_len = len(response_content)
+            self.send_header('Content-Length', content_len)
+            self.end_headers()
+            self.wfile.write(response_content)
         else:
             # prints all the keys and values of the json file
             self.wfile.write(json.dumps("Not managed (yet)").encode())
@@ -254,7 +313,8 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
     # PUT method Definition - Not used
     def do_PUT(self):
-        print("PUT request, {}".format(self.path))
+        if REST_DEBUG:
+            print("PUT request, {}".format(self.path))
         if self.path.startswith("/whatever/"):
             self.send_response(201)
             response = {"status": "OK"}
@@ -291,6 +351,6 @@ port_number = server_port
 print("Starting server on port {}".format(port_number))
 server = HTTPServer((machine_name, port_number), ServiceHandler)
 #
-print("Try curl -X GET http://{}:{}/{}/cache".format(machine_name, port_number, PATH_PREFIX))
+print("Try curl -X GET http://{}:{}/{}/oplist".format(machine_name, port_number, PATH_PREFIX))
 #
 server.serve_forever()  # There we go!
