@@ -98,7 +98,8 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
     # GET Method Definition
     def do_GET(self):
-        print("GET methods")
+        if REST_DEBUG:
+            print("GET methods")
         # defining all the headers
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
@@ -171,7 +172,8 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
     # POST method definition
     def do_POST(self):
-        print("POST request, {}".format(self.path))
+        if REST_DEBUG:
+            print("POST request, {}".format(self.path))
         if self.path.startswith("/whatever/"):
             response = {"status": "OK"}
             response_content = json.dumps(response).encode()
@@ -197,7 +199,8 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
     # PUT method Definition
     def do_PUT(self):
-        print("PUT request, {}".format(self.path))
+        if REST_DEBUG:
+            print("PUT request, {}".format(self.path))
         if self.path.startswith("/whatever/"):
             response = {"status": "OK"}
             response_content = json.dumps(response).encode()
@@ -235,6 +238,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
 machine_name = "127.0.0.1"
 MACHINE_NAME_PRM_PREFIX = "--machine-name:"
 PORT_PRM_PREFIX = "--port:"
+VERBOSE_PREFIX = "--verbose:"
 
 
 if len(sys.argv) > 0:  # Script name + X args
@@ -243,6 +247,8 @@ if len(sys.argv) > 0:  # Script name + X args
             machine_name = arg[len(MACHINE_NAME_PRM_PREFIX):]
         if arg[:len(PORT_PRM_PREFIX)] == PORT_PRM_PREFIX:
             server_port = int(arg[len(PORT_PRM_PREFIX):])
+        if arg[:len(VERBOSE_PREFIX)] == VERBOSE_PREFIX:
+            REST_DEBUG = (arg[len(VERBOSE_PREFIX):] == "true")
 
 # Server Initialization
 port_number = server_port

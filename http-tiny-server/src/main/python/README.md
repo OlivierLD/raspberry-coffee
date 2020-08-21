@@ -62,6 +62,11 @@ def do_stuff():
             traceback.print_exc(file=sys.stdout)
         time.sleep(1.0)
 ```
+To start the python server:
+```
+$ python3 http_server_skeleton.py --machine-name:$(hostname -I) [ --port:8888 --verbose:true ]
+```
+
 
 Then, from any HTTP client, you can get to the data emitted by the magnetometer,
 by reaching `GET http://localhost:8080/sample/cache`:
