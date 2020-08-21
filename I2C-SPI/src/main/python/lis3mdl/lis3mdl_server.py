@@ -27,7 +27,6 @@ sample_data = {  # Used for non-implemented operations. Fallback.
 server_port = 8080
 REST_DEBUG = False
 
-
 class CoreFeatures:
     """
     Implements the methods used in the REST operations below
@@ -59,8 +58,10 @@ sensor = adafruit_lis3mdl.LIS3MDL(i2c)
 
 keep_looping = True
 
+
 def read_lis3mdl():
     print("Let's go. Hit Ctrl+C to stop")
+    global keep_looping
     while keep_looping:
         try:
             try:
