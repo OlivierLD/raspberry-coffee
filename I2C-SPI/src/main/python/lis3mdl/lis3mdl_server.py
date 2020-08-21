@@ -267,7 +267,7 @@ if len(sys.argv) > 0:  # Script name + X args
         if arg[:len(PORT_PRM_PREFIX)] == PORT_PRM_PREFIX:
             server_port = int(arg[len(PORT_PRM_PREFIX):])
         if arg[:len(VERBOSE_PREFIX)] == VERBOSE_PREFIX:
-            REST_DEBUG = (arg[len(VERBOSE_PREFIX):] == "true")
+            REST_DEBUG = (arg[len(VERBOSE_PREFIX):].lower() == "true")
 
 # Server Initialization
 port_number = server_port
