@@ -6,7 +6,11 @@ Typically, this would concern drivers written in Python, see in the `Papirus`
 (look for `papirus_server.py`) and `I2C-SPI` (look for `lis3mdl_server.py`) modules.
 
 
-Features Java, Scala, Kotlin.
+Features: 
+- Java
+- Scala
+- Kotlin
+- Groovy
 
 ---
  
