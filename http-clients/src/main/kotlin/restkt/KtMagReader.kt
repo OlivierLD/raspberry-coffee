@@ -39,7 +39,7 @@ fun main(args: Array<String>) {
             val magY = magData.getDouble("y")
             val magZ = magData.getDouble("z")
             val data = KtMagReader.calculate(magX, magY, magZ)
-            println("Heading:${data.heading}, Pitch:${data.pitch}, Roll:${data.roll}")
+            println("Heading:${data.heading} \u00b0, Pitch:${data.pitch} \u00b0, Roll:${data.roll} \u00b0")
         } catch (ex: Exception) {
             println(ex.toString())
         }
