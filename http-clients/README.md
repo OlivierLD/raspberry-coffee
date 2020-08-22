@@ -1,4 +1,34 @@
 # HTTP Clients
+This comes from the following observation:
+
+Many breakout boards and sensors manufacturers provide - for their items -
+drivers very often written in Python.
+
+Python is an OK language, but has some limitations (ping me for details)...
+
+This project the document you are reading is part of intends to provide drivers
+written in Java, so they can run on any Java Virtual Machine (JVM).
+ 
+Compiled into Java byte code, such classes can be accessed by a variety of languages,
+also running on a JVM, like Java, Scala, Kotlin, Clojure, Groovy, JRuby...
+Find a list at <https://en.wikipedia.org/wiki/List_of_JVM_languages>.
+
+Beside the elegance of their syntax and grammar, JVM-based languages come with the JVM features for free,
+like distributed implementation, inter-JVMs communication, remote debugging, and way more.
+
+_But_ writing those drivers take time, and sometimes too long...
+
+The thing is that it is quite easy to expose the features of the manufacturer-provided-Python-driver through
+protocols like HTTP and TCP (we will show how). HTTP supports REST, that indeed
+became an industry standard.
+
+And this is not only applicable to JVM-based languages, we will also show how to do this from NodeJS (through Node-RED).
+> Note: There is actually now a JVM implementation of NodeJS, see [GraalVM](https://www.graalvm.org/).
+
+All this would fit perfectly in an Internet-Of-Things (IoT) environment. It can also be virtualized, with techniques like
+Docker and Kubernetes.
+
+---
 We are showing here how to get data from HTTP servers reading breakout boards, 
 using drivers we do not need to care about.
 
@@ -120,8 +150,9 @@ $ node-red
 ```
 The default port is `1880`.
 - Open <http://localhost:1880/> in a browser.
-- Copy the content of `node.json`, in `src/main/node-red`.
+- Copy the content of `node.json`, in `src/main/node-red`, into the clipboard.
 - In Node-RED's Web Interface, use the hamburger at the top-right to `Import` the content of the clipboard.
+- You might want to modify the address of the server in the `magdata` node.
 - Then use the `Deploy` button
 - You should see the data in the `Debug` window.
 
