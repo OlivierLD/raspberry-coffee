@@ -12,11 +12,9 @@ Features:
 - Kotlin (install [Kotlin](https://sdkman.io/sdks#kotlin))
 - Groovy (install [groovy](https://sdkman.io/sdks#groovy), or [here](https://groovy-lang.org/install.html))
 - [Processing](https://pi.processing.org/get-started/)
+- [Node-RED](https://nodered.org/docs/getting-started/)
 
 > Note: To install extra languages, [SDKMAN](https://sdkman.io/install) is the easiest, whatever your system is.
-
-### TODO
-- [NodeRED](https://nodered.org/docs/getting-started/)
 
 ### To run the samples
 
@@ -115,5 +113,19 @@ $ ../gradlew clean shadowJar -x test -x :http-clients:compileGroovy -x :http-cli
 
 ![Processing](./Processing.png)
 
+#### For Node-RED
+- Start Node-RED from a terminal
+```text
+$ node-red
+```
+The default port is `1880`.
+- Open <http://localhost:1880/> in a browser.
+- Copy the content of `node.json`, in `src/main/node-red`.
+- In Node-RED's Web Interface, use the hamburger at the top-right to `Import` the content of the clipboard.
+- Then use the `Deploy` button
+- You should see the data in the `Debug` window.
+
+![Node-RED](./Node-RED.png)
+  
 ---
  

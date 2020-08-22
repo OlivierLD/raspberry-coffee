@@ -1,0 +1,84 @@
+[
+  {
+    "id": "f4024e6d.ae6ab",
+    "type": "tab",
+    "label": "Mag Data",
+    "disabled": false,
+    "info": "Requests the LIM3MDL Server"
+  },
+  {
+    "id": "c27def7a.9d4b5",
+    "type": "http request",
+    "z": "f4024e6d.ae6ab",
+    "name": "magdata",
+    "method": "GET",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "http://192.168.42.9:8080/lis3mdl/cache",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 220,
+    "y": 180,
+    "wires": [
+      [
+        "ca847afe.9748e8"
+      ]
+    ]
+  },
+  {
+    "id": "ca847afe.9748e8",
+    "type": "function",
+    "z": "f4024e6d.ae6ab",
+    "name": "calculate",
+    "func": "let magData = msg.payload;\n\nlet magX = magData.x;\nlet magY = magData.y;\nlet magZ = magData.z;\n\nlet heading = Math.toDegrees(Math.atan2(magY, magX));\nwhile (heading < 0) {\n    heading += 360;\n}\nlet pitch = Math.toDegrees(Math.atan2(magY, magZ));\nlet roll = Math.toDegrees(Math.atan2(magX, magZ));\n\n// console.log(`Heading ${heading}`);\n// console.log(`Pich    ${pitch}`);\n// console.log(`Roll    ${roll}`);\n\nreturn { heading: heading, pitch: pitch, roll: roll };",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "// Code added here will be run once\n// whenever the node is deployed.\nif (Math.toDegrees === undefined) {\n    Math.toDegrees = rad => {\n        return rad * 180 / Math.PI;\n    }\n}",
+    "finalize": "",
+    "x": 320,
+    "y": 280,
+    "wires": [
+      [
+        "67148908.851628"
+      ]
+    ]
+  },
+  {
+    "id": "1de40831.f7cff8",
+    "type": "inject",
+    "z": "f4024e6d.ae6ab",
+    "name": "Ping",
+    "props": [],
+    "repeat": "1",
+    "crontab": "",
+    "once": true,
+    "onceDelay": 0.1,
+    "topic": "",
+    "x": 150,
+    "y": 80,
+    "wires": [
+      [
+        "c27def7a.9d4b5"
+      ]
+    ]
+  },
+  {
+    "id": "67148908.851628",
+    "type": "debug",
+    "z": "f4024e6d.ae6ab",
+    "name": "Display data",
+    "active": true,
+    "tosidebar": true,
+    "console": true,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 440,
+    "y": 380,
+    "wires": []
+  }
+]
