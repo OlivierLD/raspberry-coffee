@@ -12,6 +12,8 @@ Features:
 - Kotlin (install [Kotlin](https://sdkman.io/sdks#kotlin))
 - Groovy (install [groovy](https://sdkman.io/sdks#groovy), or [here](https://groovy-lang.org/install.html))
 
+> Note: To install extra languages, [SDKMAN](https://sdkman.io/install) is the easiest, whatever your system is.
+
 ### To run the samples
 
 First, compile
