@@ -15,10 +15,11 @@ repositories {
 //    maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
-// sourceCompatibility = 1.8
-// targetCompatibility = 1.8
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 dependencies {
+    compile 'org.json:json:20141113'
     compile 'com.google.code.gson:gson:2.8.5'
     compile project(':common-utils')
     testCompile group: 'junit', name: 'junit', version: '4.11'

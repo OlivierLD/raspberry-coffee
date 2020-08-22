@@ -11,8 +11,12 @@ Features:
 - Scala (install [Scala](https://sdkman.io/sdks#scala))
 - Kotlin (install [Kotlin](https://sdkman.io/sdks#kotlin))
 - Groovy (install [groovy](https://sdkman.io/sdks#groovy), or [here](https://groovy-lang.org/install.html))
+- [Processing](https://pi.processing.org/get-started/)
 
 > Note: To install extra languages, [SDKMAN](https://sdkman.io/install) is the easiest, whatever your system is.
+
+### TODO
+- [NodeRED](https://nodered.org/docs/getting-started/)
 
 ### To run the samples
 
@@ -97,6 +101,19 @@ Heading: 143.737568 Pitch: 123.377093, Roll: -115.793348
 Heading: 143.737568 Pitch: 123.377093, Roll: -115.793348
 Heading: 143.737568 Pitch: 123.377093, Roll: -115.793348
 ```
+
+#### For Processing
+> Important Note: You must have compiled the required classes with Java 8, *not* Java 11!
+> Prepare the jar with a 
+```text
+$ ../gradlew clean shadowJar -x test -x :http-clients:compileGroovy -x :http-clients:compileScala
+```
+
+- Open the sketch `ProcessingClient` in the Processing IDE
+- Use the menu `Sketch` > `Add File...` to add `./build/libs/http-clients-1.0-all.jar` (compiled with Java 8). 
+- Then you can run the sketch
+
+![Processing](./Processing.png)
 
 ---
  
