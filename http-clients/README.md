@@ -16,10 +16,10 @@
 > Beside the elegance of their syntax and grammar, JVM-based languages come with the JVM features for free,
 > like distributed implementation, inter-JVMs communication, remote debugging, and way more.
 > 
-> _But_ writing those drivers take time, and sometimes too long...
+> _But_ writing those drivers takes time, and sometimes too long...
 > 
-> The thing is that it is quite easy to expose the features of the manufacturer-provided-Python-driver through
-> protocols like HTTP and TCP (we will show how). HTTP supports REST, that indeed
+> The thing is that it is quite easy to expose the features of the manufacturer-provided-Python-drivers through
+> protocols like HTTP and TCP (we will show how, look into `src/main/python-skeletons`). HTTP supports REST, that indeed
 > became an industry standard.
 > 
 > And this is not only applicable to JVM-based languages, we will also show how to do this from NodeJS (through Node-RED).
@@ -27,6 +27,9 @@
 > 
 > All this would fit perfectly in an Internet-Of-Things (IoT) environment. It can also be virtualized, with techniques like
 > Docker and Kubernetes.
+>
+> HTTP and its related technologies can be seen as what latin was in the medieval Europe:
+> A mean of communication for people speaking different languages.
 
 ---
 We are showing here how to get data from HTTP servers reading breakout boards, 
