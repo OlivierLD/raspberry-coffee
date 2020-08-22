@@ -15,7 +15,7 @@ import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from time import sleep
 
-sample_data = {  # Used for non-implemented operations. Fallback.
+sample_data = {  # Used for VIEW, and non-implemented operations. Fallback.
     "1": "First",
     "2": "Second",
     "3": "Third",
