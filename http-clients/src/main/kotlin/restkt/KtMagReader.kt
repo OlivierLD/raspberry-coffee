@@ -2,22 +2,23 @@ package restkt
 
 import http.client.HTTPClient
 import org.json.JSONObject
+import kotlin.math.atan2
 
 object KtMagReader {
 
     data class MagData(val heading: Double, val pitch: Double, val roll: Double)
 
     fun calculate(magX: Double, magY: Double, magZ: Double): MagData {
-        var heading = Math.toDegrees(Math.atan2(magY, magX))
+        var heading = Math.toDegrees(atan2(magY, magX))
         while (heading < 0)
             heading += 360f
-        val pitch = Math.toDegrees(Math.atan2(magY, magZ))
-        val roll = Math.toDegrees(Math.atan2(magX, magZ))
+        val pitch = Math.toDegrees(atan2(magY, magZ))
+        val roll = Math.toDegrees(atan2(magX, magZ))
         return MagData(heading, pitch, roll)
     }
 }
 
-fun main(args: Array<String>) {
+fun main() {
     var keepLooping = true
     val restUrl = System.getProperty("rest.url", "http://192.168.42.9:8080/lis3mdl/cache")
 
