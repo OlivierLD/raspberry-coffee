@@ -6,7 +6,7 @@ The idea is to use it for sensor drivers written in Python.
 For example, you have a breakout board [LIS3MDL](https://learn.adafruit.com/lis3mdl-triple-axis-magnetometer?view=all).
 It is a triple axis magnetometer. And you have not translated the driver in Java yet.
 
-Well, the idea here is to run it in the `http_server_skeleton.py`, feed a cache with the
+Well, the idea here is to run it in the `server/http_server_skeleton.py`, feed a cache with the
 data read from the board, and access those cached data from an HTTP client - possibly written in Java.
 
 The integration between the board and the server is to be done in the 
@@ -82,5 +82,8 @@ $ curl -X GET http://localhost:8080/sample/cache | jq
 > The http port, the VERBs, the names of all the resources can obviously be customized according to your needs.
 
 - See a real example [here](../../../../I2C-SPI/src/main/python/README.md#lis3mdl).
+
+# TCP Client and Server
+- See <https://pymotw.com/2/socket/tcp.html>.
 
 ---

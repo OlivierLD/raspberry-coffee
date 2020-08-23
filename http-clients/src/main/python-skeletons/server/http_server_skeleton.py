@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
-# Requires:
-# ---------
+# May requires (if below python 3.7):
+# -----------------------------------
 # pip3 install http (already in python3.7, no need to install it)
 #
 # Provides REST access to the cache, try GET http://localhost:8080/sample/cache
@@ -262,7 +262,8 @@ port_number = server_port
 print("Starting server on port {}".format(port_number))
 server = HTTPServer((machine_name, port_number), ServiceHandler)
 #
-print("Try curl -X GET http://{}:{}/{}/cache".format(machine_name, port_number, PATH_PREFIX))
+print("Try curl -v -X GET http://{}:{}/{}/cache".format(machine_name, port_number, PATH_PREFIX))
+print("or  curl -v -X VIEW http://{}:{}{} -H \"Content-Length: 1\" -d \"1\"".format(machine_name, port_number, PATH_PREFIX))
 #
 try:
     server.serve_forever()
