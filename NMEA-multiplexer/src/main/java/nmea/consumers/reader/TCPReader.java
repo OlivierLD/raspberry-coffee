@@ -152,6 +152,10 @@ public class TCPReader extends NMEAReader {
 
 	public void setTimeout(long timeout) { /* Not used for TCP */ }
 
+	/**
+	 * For tests
+	 * @param args Unused
+	 */
 	public static void main(String... args) {
 		/*
 		-Dtcp.data.verbose=true

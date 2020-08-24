@@ -11,7 +11,10 @@ function initAjax() {
 		loadSunData(lastKnownPos);
 	}, 1000);
 
-	// Example: ISS Position http://api.open-notify.org/iss-now.json
+	// Example:
+	// ISS Position http://api.open-notify.org/iss-now.json
+	// ISS Passage time http://api.open-notify.org/iss-pass.json?lat=37.7&lon=-122.5 [ &alt=20&n=5 ]
+	// ISS Crew members: http://api.open-notify.org/astros.json
 	if (false) {
 		let issInterval = setInterval(() => {
 			let issPromise = getISSData();
@@ -19,7 +22,26 @@ function initAjax() {
 				console.log('ISSData:', issData);
 			}, (error, message) => {
 				console.debug('ISSData error', error, message);
-			})
+			});
+		}, 5000);
+	}
+	if (true) {
+		let issInterval = setInterval(() => {
+			let issCB = document.getElementById('iss-01');
+			if (issCB !== undefined && issCB !== null && issCB.checked) {
+				let issPromise = getISSDataFromServer();
+				issPromise.then(issData => {
+					// console.log('ISSData:', issData);
+					// like {"timestamp": 1598281185, "iss_position": {"longitude": "19.4043", "latitude": "-30.5893"}, "message": "success"}
+					try {
+						setISSData(JSON.parse(issData));
+					} catch (error) {
+						console.log('Error setting ISS data', error);
+					}
+				}, (error, message) => {
+					console.debug('ISSData error', error, message);
+				});
+			}
 		}, 5000);
 	}
 }
@@ -90,6 +112,10 @@ function getPromise(
 
 function getNMEAData() {
 	return getPromise('/mux/cache', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+}
+
+function getISSDataFromServer() {
+	return getPromise('/server/generic-get', DEFAULT_TIMEOUT, 'GET', 200, null, false, [{ name: 'get-url', value: 'http://api.open-notify.org/iss-now.json'}]);
 }
 
 function getISSData() {

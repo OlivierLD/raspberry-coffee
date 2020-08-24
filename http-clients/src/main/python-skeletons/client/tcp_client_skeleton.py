@@ -1,5 +1,6 @@
 import socket
 import sys
+import traceback
 
 machine_name = "127.0.0.1"
 tcp_port = 7002
@@ -27,22 +28,27 @@ print('connecting to %s port %s' % server_address)
 sock.connect(server_address)
 print('...Connected')
 
-try:
-    # Send data
-    message = 'This is the message.  It will be repeated.'
-    print('sending "%s"' % message)
-    sock.sendall(message.encode('utf-8'))
+keep_looping = True
+# Interactive loop
+while keep_looping:
+    user_input = input("You say> ")
+    if user_input.upper() == 'Q' or user_input.upper() == 'QUIT' or user_input.upper() == 'EXIT':
+        keep_looping = False
+    else:
+        try:
+            # Send data
+            message = user_input  # 'This is the message.  It will be repeated.'
+            # print('sending "%s"' % message)
+            sock.sendall(message.encode('utf-8'))
+            # Look for the response
+            data = sock.recv(1024)
+            print('received "%s"' % data.decode("utf-8"))
+        except Exception as ex:
+            print("Exception: {}".format(ex))
+            traceback.print_exc(file=sys.stdout)
+        # finally:
+        #     print('closing socket')
+        #     sock.close()
 
-    # Look for the response
-    amount_received = 0
-    amount_expected = len(message)
-
-    while amount_received < amount_expected:
-        data = sock.recv(16)
-        amount_received += len(data)
-        print('received "%s"' % data.decode("utf-8"))
-except Exception as ex:
-    print("Exception: {}".format(ex))
-finally:
-    print('closing socket')
-    sock.close()
+print('closing socket')
+sock.close()

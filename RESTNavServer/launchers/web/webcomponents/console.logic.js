@@ -345,7 +345,12 @@ function getSNRColor(snr) {
 	return c;
 }
 
-// AFTER callback on WorldMap
+let issData = null;
+function setISSData(data) {
+	issData = data;
+}
+
+// AFTER callback on WorldMap (in Globe mode)
 function callAfter(id) {
 	document.getElementById(id).setDoAfter((worldMap, context) => {
 		if (Object.keys(worldMap.userPosition).length > 0) {
@@ -363,6 +368,20 @@ function callAfter(id) {
 				sats.forEach(gs => {
 					plotSatellite(context, worldMap, userPos, satColor, gs.name, {lat: 0, lng: gs.lng});
 				});
+			}
+			if (document.getElementById('iss-01').checked) {
+				// Display ISS pos?
+				// console.log("Will display ISS position");
+				if (issData !== null) {
+					try {
+						let issLat = issData.iss_position.latitude;
+						let issLng = issData.iss_position.longitude;
+						// console.log(`Plotting ISS pos ${worldMap.decToSex(issLat, "NS")} / ${worldMap.decToSex(issLng, "EW")}`)
+						plotSatellite(context, worldMap, userPos, 'red', 'ISS', {lat: issLat, lng: issLng});
+					} catch (error) {
+
+					}
+				}
 			}
 
 			// GPS Satellites in view
@@ -897,7 +916,7 @@ function devCurveCallback(elmt, context) {
 
 window.onload = () => {
 	/* global initAjax */
-	initAjax(); // Default. See later for a WebSocket option
+	initAjax(); // Default. See later for a WebSocket option. Contains the loops on REST requests
 
 	callFirst("world-map-01"); // Will change the background, based on the Sun's altitude
 	callAfter('world-map-01'); // Adding Satellites plot.

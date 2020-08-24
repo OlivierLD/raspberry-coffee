@@ -85,5 +85,17 @@ $ curl -X GET http://localhost:8080/sample/cache | jq
 
 # TCP Client and Server
 - See <https://pymotw.com/2/socket/tcp.html>.
+- See <https://realpython.com/python-sockets/>.
+
+Try that:
+- from `src/main/python-skeletons/server`:
+```text
+$ python3 tcp_server_skeleton.py --machine-name:$(hostname -I) [ --port:7002 --verbose:true ]
+```
+- from `src/main/python-skeletons/client` (even from another machine on the same network):
+```text
+$ python3 tcp_client_skeleton.py --machine-name:$(hostname -I) [ --port:7002 --verbose:true ]
+```
+- Also works from Java (lucky me), see `utils.samples.tcp.clients.TCPEchoClient` in `common-utils`.
 
 ---

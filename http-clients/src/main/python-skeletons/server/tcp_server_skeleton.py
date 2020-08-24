@@ -1,5 +1,6 @@
 import socket
 import sys
+import traceback
 
 machine_name = "127.0.0.1"
 tcp_port = 7002
@@ -31,9 +32,11 @@ sock.bind(server_address)
 # Listen for incoming connections
 sock.listen(1)
 
+nb_messages = 0
+
 while True:
     # Wait for a connection
-    print('waiting for a connection')
+    print('waiting for a connection (one at a time)')
     connection, client_address = sock.accept()
 
     try:
@@ -41,15 +44,20 @@ while True:
 
         # Receive the data in small chunks and retransmit it
         while True:
-            data = connection.recv(16)
-            print('received "%s"' % data)
+            data = connection.recv(1024) # Must be in sync with the client (same buffer size)
+            print('received "%s"' % data.decode('utf-8'))
             if data:
-                print('sending data back to the client')
-                connection.sendall(data)
+                print('Replying to the client')
+                nb_messages += 1
+                response = "#{}: {}".format(str(nb_messages), data.decode('utf-8'))
+                connection.sendall(response.encode('utf-8'))
             else:
                 print('no more data from', client_address)
                 break
-
+    except:
+        print("Exception!")
+        traceback.print_exc(file=sys.stdout)
     finally:
         # Clean up the connection
+        print("\tClosing client connection for ", client_address)
         connection.close()

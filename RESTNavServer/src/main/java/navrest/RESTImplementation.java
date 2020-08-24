@@ -7,6 +7,7 @@ import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.HttpHeaders;
 import http.RESTProcessorUtil;
+import http.client.HTTPClient;
 import utils.SystemUtils;
 
 import javax.annotation.Nonnull;
@@ -87,6 +88,11 @@ public class RESTImplementation {
 					FEATHER_PREFIX + "/lifespan",
 					this::getFeatherLifespan,
 					"Get the last value set by the above."),
+			new Operation(
+					"GET",
+					SERVER_PREFIX + "/generic-get",
+					this::genericGet,
+					"GET on a specific resource, from the server (no CORS). Provide the URL in the headers (get-url), and expected Content-Type."),
 			new Operation(
 					"GET",
 					SERVER_PREFIX + "/networks",
@@ -244,6 +250,25 @@ public class RESTImplementation {
 		return response;
 	}
 
+	private Response genericGet(@Nonnull Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			String getUrl = request.getHeaders().get("get-url");
+			String getResponse = HTTPClient.doGet(getUrl, null); // TODO Headers!
+//			String content = new Gson().toJson(networkName);
+			RESTProcessorUtil.generateResponseHeaders(response, getResponse.length());
+			response.setPayload(getResponse.getBytes());
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SERVER-1000")
+							.errorMessage(ex.toString())
+							.errorStack(HTTPServer.dumpException(ex)));
+			return response;
+		}
+		return response;
+	}
 
 	private Response getNetworks(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
