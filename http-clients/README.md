@@ -131,6 +131,7 @@ Heading: 143.737568 Pitch: 123.377093, Roll: -115.793348
 Heading: 143.737568 Pitch: 123.377093, Roll: -115.793348
 Heading: 143.737568 Pitch: 123.377093, Roll: -115.793348
 Heading: 143.737568 Pitch: 123.377093, Roll: -115.793348
+. . .
 ```
 
 #### For Processing
