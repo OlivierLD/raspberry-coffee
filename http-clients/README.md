@@ -165,6 +165,7 @@ The default port is `1880`.
   
   
 #### For Python
+> Note: Python does _not_ require the compilation step mentioned above.
 ```js
 $ cd src/main/python
 $ python3 mag_client.py [ --url:http://192.168.42.9:8080/lis3mdl/cache ]
