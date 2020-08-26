@@ -7,6 +7,7 @@
 import sys
 import requests
 import json
+import math
 import traceback
 
 URL_ARG_PREFIX = '--url:'
@@ -18,15 +19,23 @@ for arg in sys.argv:
 
 
 def fetch_data(uri):
-    print("Using {}".format(uri))
+    # print("Using {}".format(uri))
     resp = requests.get(uri)
     if resp.status_code != 200:
         raise Exception('GET {} {}'.format(uri, resp.status_code))
     else:
         json_obj = json.loads(resp.content)
-        # print(json.dumps(json_obj, indent=2))
-        print('Status {}\nReceived {}'.format(resp.status_code, json.dumps(json_obj, indent=2)))
+        # print('Status {}\nReceived {}'.format(resp.status_code, json.dumps(json_obj, indent=2)))
         return json_obj
+
+
+def calculate(magX, magY, magZ):
+        heading = math.degrees(math.atan2(magY, magX))
+        while (heading < 0):
+            heading += 360
+        pitch = math.degrees(math.atan2(magY, magZ))
+        roll = math.degrees(math.atan2(magX, magZ))
+        return heading, pitch, roll
 
 
 keep_looping = True
@@ -34,7 +43,9 @@ keep_looping = True
 while keep_looping:
     try:
         response = fetch_data(rest_url)
-        print("MagData: {}".format(json.dumps(response, indent=2)))
+        # print("MagData: {}".format(json.dumps(response, indent=2)))
+        calculated = calculate(response["x"], response["y"], response["z"])
+        print("Heading: {}, Pitch: {}, Roll: {}".format(calculated[0], calculated[1], calculated[2]))
     except KeyboardInterrupt:
         print("\n\t\tUser interrupted, exiting.")
         keep_looping = False

@@ -46,6 +46,7 @@ Features:
 - Groovy (install [groovy](https://sdkman.io/sdks#groovy), or [here](https://groovy-lang.org/install.html))
 - [Processing](https://pi.processing.org/get-started/)
 - [Node-RED](https://nodered.org/docs/getting-started/)
+- Python. A REST Client written for Python3, to close the loop.
 
 > Note: To install extra languages, [SDKMAN](https://sdkman.io/install) is the easiest, whatever your system is.
 
@@ -162,5 +163,25 @@ The default port is `1880`.
 
 ![Node-RED](./Node-RED.png)
   
+  
+#### For Python
+```js
+$ cd src/main/python
+$ python3 mag_client.py 
+Heading: 172.7909888358546, Pitch: 158.23350567051648, Roll: -107.57729577102337
+Heading: 172.7909888358546, Pitch: 158.23350567051648, Roll: -107.57729577102337
+Heading: 172.7909888358546, Pitch: 158.23350567051648, Roll: -107.57729577102337
+Heading: 172.7909888358546, Pitch: 158.23350567051648, Roll: -107.57729577102337
+Heading: 172.7909888358546, Pitch: 158.23350567051648, Roll: -107.57729577102337
+Heading: 172.7909888358546, Pitch: 158.23350567051648, Roll: -107.57729577102337
+Heading: 172.76965650411475, Pitch: 157.92666672529035, Roll: -107.37252799399292
+Heading: 172.76965650411475, Pitch: 157.92666672529035, Roll: -107.37252799399292
+Heading: 172.76965650411475, Pitch: 157.92666672529035, Roll: -107.37252799399292
+Heading: 172.76965650411475, Pitch: 157.92666672529035, Roll: -107.37252799399292
+Heading: 172.76965650411475, Pitch: 157.92666672529035, Roll: -107.37252799399292
+Heading: 172.76965650411475, Pitch: 157.92666672529035, Roll: -107.37252799399292
+. . .
+```  
+
 ---
  
