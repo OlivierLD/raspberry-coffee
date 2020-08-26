@@ -62,7 +62,7 @@ def do_stuff():
             traceback.print_exc(file=sys.stdout)
         time.sleep(1.0)
 ```
-To start the python server:
+To start the python server (reading the magnetometer as explained above):
 ```
 $ python3 http_server_skeleton.py --machine-name:$(hostname -I) [ --port:8888 --verbose:true ]
 ```

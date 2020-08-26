@@ -246,6 +246,7 @@ public class SystemUtils {
 
     public static void main(String... args) throws Exception {
 
+        boolean minimal = args.length == 1 && "--minimal".equals(args[0]);
         try {
             String[] hardwareData = getRPiHardwareRevision();
             System.out.println(String.format("Running on:\nModel: %s\nReleased: %s\nPCB Rev: %s\nMemory: %s\nNotes: %s",
@@ -295,8 +296,10 @@ public class SystemUtils {
             System.out.println();
             System.out.println(String.format("DiskUsage: %s", getDiskUsage()));
             System.out.println(String.format("uname: %s", getUname()));
-            System.out.println();
-            System.out.println(String.format("Directory listing:\n%s", getDirectoryListing().stream().collect(Collectors.joining("\n"))));
+            if (!minimal) {
+                System.out.println();
+                System.out.println(String.format("Directory listing:\n%s", getDirectoryListing().stream().collect(Collectors.joining("\n"))));
+            }
         } catch (Exception ex) {
             System.err.println(ex.toString());
         }

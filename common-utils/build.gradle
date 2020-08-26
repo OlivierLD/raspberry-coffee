@@ -54,10 +54,21 @@ task sysInfo(type: JavaExec, dependsOn: build, description: "Display System Info
 //  classpath project.configurations.default
     classpath sourceSets.main.runtimeClasspath
 //  classpath sourceSets.main.output.classesDir
+    // Use like ../gradlew sysInfo -P--minimal
+    if (project.hasProperty("--minimal")) {
+        args = ["--minimal"]
+    }
 }
 
 sysInfo.doFirst {
     println "+-------------------------------------------------------------"
     println " This task is deprecated. Use gradle run instead."
     println "+-------------------------------------------------------------"
+}
+
+run {
+    // Use like ../gradlew sysInfo -P--minimal
+    if (project.hasProperty("--minimal")) {
+        args = ["--minimal"]
+    }
 }

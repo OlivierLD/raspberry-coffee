@@ -4,5 +4,5 @@
 # Compare to rpi.status.sh ;)
 #
 pushd raspberry-coffee/common-utils
-  ../gradlew run
+  ../gradlew run -P--minimal
 popd
