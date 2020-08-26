@@ -12,6 +12,11 @@
 > Compiled into Java byte code, such classes can be accessed by a variety of languages,
 > also running on a JVM, like Java, Scala, Kotlin, Clojure, Groovy, JRuby...
 > Find a list at <https://en.wikipedia.org/wiki/List_of_JVM_languages>.
+>
+> > This very interesting to see how the JVM gave birth to so many languages.
+> > Implementing those languages comes down to implementing a compiler, that turns the
+> > specific code _into JVM byte code_ (for that, see [ASM](https://asm.ow2.io/), for example). 
+> > **Running** the code is the job of the JVM. 
 > 
 > Beside the elegance of their syntax and grammar, JVM-based languages come with the JVM features for free,
 > like distributed implementation, inter-JVMs communication, remote debugging, and way more.
@@ -32,20 +37,23 @@
 > A mean of communication for people speaking different languages.
 
 ---
-We are showing here how to get data from HTTP servers reading breakout boards, 
-using drivers we do not need to care about.
+
+**We are showing here how to get data from HTTP servers reading breakout boards, 
+using drivers written in a language we do not need to care about.**
+
+---
 
 Typically, this would concern drivers written in Python, see in the `Papirus` 
 (look for `papirus_server.py`) and `I2C-SPI` (look for `lis3mdl_server.py`) modules.
 
-
-Features: 
+As a proof-of-concept, we will showcase clients (http clients) written in a variety of languages, 
+such as: 
 - Java
 - Scala (install [Scala](https://sdkman.io/sdks#scala))
 - Kotlin (install [Kotlin](https://sdkman.io/sdks#kotlin))
 - Groovy (install [groovy](https://sdkman.io/sdks#groovy), or [here](https://groovy-lang.org/install.html))
-- [Processing](https://pi.processing.org/get-started/)
-- [Node-RED](https://nodered.org/docs/getting-started/)
+- [Processing](https://pi.processing.org/get-started/), Java 8 based.
+- [Node-RED](https://nodered.org/docs/getting-started/), NodeJS based (JavaScript, ES6)
 - Python. A REST Client written for Python3, to close the loop.
 
 > Note: To install extra languages, [SDKMAN](https://sdkman.io/install) is the easiest, whatever your system is.
@@ -57,8 +65,9 @@ First, compile
 $ ../gradlew clean shadowJar
 $ export CP=./build/libs/http-clients-1.0-all.jar
 ```
-Then start the Python HTTP Server on a machine it is available with the board it reads:
+Then start the Python HTTP Server on a machine where it is available, along with the board it reads:
 ```text
+$ cd I2C-SPI/src/main/python/lis3mdl
 $ python3 lis3mdl_server.py --machine-name:$(hostname -I) --verbose:false
   Starting!
   Let's go. Hit Ctrl+C to stop
@@ -67,7 +76,7 @@ $ python3 lis3mdl_server.py --machine-name:$(hostname -I) --verbose:false
   or  curl -v -X VIEW http://192.168.42.9:8080/lis3mdl -H "Content-Length: 1" -d "1"
 ```
 
-#### For Java
+#### Java client
 ```text
 $ java -cp ${CP} http.MagnetometerReader
 Ctrl+C to stop
@@ -80,7 +89,7 @@ Heading: 143.892676 Pitch: 122.770906, Roll: -115.152288
 . . .
 ```
 
-#### For Scala
+#### Scala client
 ```text
 $ scala -cp ${CP} rest.LIS3MDLReader 
 Ctrl+C to stop
@@ -99,7 +108,7 @@ $ java -cp ${CP} rest.LIS3MDLReader
 . . .
 ```
 
-#### For Kotlin
+#### Kotlin client
 ```text
 $ kotlin -cp ${CP} restkt.KtMagReader
 Heading:143.34438513662025 °, Pitch:122.7128245452906 °, Roll:-115.54712852747782 °
@@ -118,7 +127,7 @@ $ java -cp ${CP} restkt.KtMagReader
 . . .
 ```
 
-#### For Groovy
+#### Groovy client
 ```text
 $ groovy -cp ${CP} src/main/groovy/magreader.groovy 
 WARNING: An illegal reflective access operation has occurred
@@ -135,7 +144,7 @@ Heading: 143.737568 Pitch: 123.377093, Roll: -115.793348
 . . .
 ```
 
-#### For Processing
+#### Processing client
 > Important Note: You must have compiled the required classes with Java 8, *not* Java 11!
 > Prepare the jar with a 
 ```text
@@ -148,7 +157,7 @@ $ ../gradlew clean shadowJar -x test -x :http-clients:compileGroovy -x :http-cli
 
 ![Processing](./Processing.png)
 
-#### For Node-RED
+#### Node-RED client
 - Start Node-RED from a terminal
 ```text
 $ node-red
@@ -164,7 +173,7 @@ The default port is `1880`.
 ![Node-RED](./Node-RED.png)
   
   
-#### For Python
+#### Python client 
 > Note: Python does _not_ require the compilation step mentioned above.
 ```js
 $ cd src/main/python
@@ -185,4 +194,3 @@ Heading: 172.76965650411475, Pitch: 157.92666672529035, Roll: -107.3725279939929
 ```  
 
 ---
- 
