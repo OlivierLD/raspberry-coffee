@@ -13,11 +13,7 @@ import utils.TimeUtil;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1205,6 +1201,12 @@ public class SunFlowerDriver {
 	}
 
 	public void init() {
+		// Display all system variables
+		if (false) {
+			Properties properties = System.getProperties();
+			properties.forEach((k, v) -> System.out.println(k + ":" + v));
+		}
+
 		if (!"true".equals(System.getProperty("calibration"))) {
 			if (SUN_FLOWER_VERBOSE) {
 				System.out.println("Hit Ctrl-C to stop the SunFlowerDriver program and park the device");
