@@ -201,7 +201,8 @@ do
 	    PROP_FILE=nmea.mux.kayak.cc.yaml
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    export INFRA_VERBOSE=false
-	    ./runNavServer.sh --mux:${PROP_FILE} --no-rmc-time --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    # Get date and time from the file
+	    ./runNavServer.sh --mux:${PROP_FILE} ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then
 		    echo -e ">>> Waiting for the server to start..."

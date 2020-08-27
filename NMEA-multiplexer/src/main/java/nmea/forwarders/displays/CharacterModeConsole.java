@@ -181,7 +181,7 @@ public class CharacterModeConsole {
 			synchronized (ndc) {
 				if (nonNumericData.containsKey(s)) {
 					switch (s) {
-						case "POS": // POSition
+						case "POS": // PoSition
 							try {
 								value = StringUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lat, GeomUtil.NO_DEG, GeomUtil.NS), 12, " ") +
 												StringUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lng, GeomUtil.NO_DEG, GeomUtil.EW), 12, " ");
@@ -502,17 +502,17 @@ public class CharacterModeConsole {
 		for (CharData cd : lineData) {
 			//  int rpad = cd.getCellLen() - (cd.getKey().length() + cd.formattedValue().length() + cd.getSuffix().length() + 3);
 			String s = EscapeSeq.ansiSetTextAndBackgroundColor(cd.getTitleColor(), cd.getTitleBackground()) +
-							EscapeSeq.ANSI_BOLD +
-							cd.getKey() +
-							EscapeSeq.ansiSetTextAndBackgroundColor(cd.getValueColor(), cd.getValueBackground()) +
-							EscapeSeq.ANSI_BOLD +
-							" " + cd.formattedValue() + " " +
-							EscapeSeq.ansiSetTextAndBackgroundColor(cd.getTitleColor(), cd.getTitleBackground()) +
-							EscapeSeq.ANSI_BOLD +
-							StringUtils.rpad(cd.getSuffix(), suffixSize, " ") +  // "(" + Integer.toString(rpad) + ")" +
-							// DesktopUtilities.rpad("", " ", rpad) +
-							EscapeSeq.ANSI_NORMAL +
-							EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT;
+					   EscapeSeq.ANSI_BOLD +
+					   cd.getKey() +
+					   EscapeSeq.ansiSetTextAndBackgroundColor(cd.getValueColor(), cd.getValueBackground()) +
+					   EscapeSeq.ANSI_BOLD +
+					   " " + cd.formattedValue() + " " +
+					   EscapeSeq.ansiSetTextAndBackgroundColor(cd.getTitleColor(), cd.getTitleBackground()) +
+					   EscapeSeq.ANSI_BOLD +
+					   StringUtils.rpad(cd.getSuffix(), suffixSize, " ") +  // "(" + Integer.toString(rpad) + ")" +
+					   // DesktopUtilities.rpad("", " ", rpad) +
+					   EscapeSeq.ANSI_NORMAL +
+					   EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT;
 			line += s;
 		}
 
