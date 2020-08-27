@@ -66,7 +66,7 @@ $ ../gradlew clean shadowJar
 $ export CP=./build/libs/http-clients-1.0-all.jar
 ```
 
-> Next. we need to have some http server running somewhere. Here we choosed to 
+> Next, we need to have some http server running somewhere. Here we choosed to 
 > have one reading an **lis3mdl** board (magnetometer). This is just an example.
 > That pne happens to live in the `I2C-SPI` module, in this project (look for `lis3mdl_server.py`).
 
