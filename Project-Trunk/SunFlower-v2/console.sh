@@ -26,6 +26,6 @@ JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=true"
 #
 JAVA_OPTS="$JAVA_OPTS -Dwith.ssd1306=false"
 #
-java -cp ${CP} ${JAVA_OPTS} sunflower.main.ConsoleMain > log.txt 2>&1
+java -cp ${CP} ${JAVA_OPTS} sunflower.main.ConsoleMain 2>error.txt
 #
 # java -cp ${CP} ${JAVA_OPTS} sunflower.utils.EscapeSeq
