@@ -33,8 +33,8 @@
 > All this would fit perfectly in an Internet-Of-Things (IoT) environment. It can also be virtualized, with techniques like
 > Docker and Kubernetes.
 >
-> HTTP and its related technologies can be seen as what latin was in the medieval Europe:
-> A mean of communication for people speaking different languages.
+> _HTTP and its related technologies can be seen as what latin was in the medieval Europe:
+> A mean of communication for people speaking different languages._
 
 ---
 
