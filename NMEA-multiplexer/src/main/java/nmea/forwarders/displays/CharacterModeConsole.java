@@ -50,6 +50,7 @@ public class CharacterModeConsole {
 
 	static {
 		SOLAR_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+		SDF.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
 	}
 
 	private Date loggingStarted = null;
