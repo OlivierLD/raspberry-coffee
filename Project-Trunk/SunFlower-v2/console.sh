@@ -11,6 +11,7 @@ JAVA_OPTS="$JAVA_OPTS -Dazimuth.ratio=16:76"  # For V5
 JAVA_OPTS="$JAVA_OPTS -Delevation.ratio=18:128"
 JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dmotor.hat.verbose=false"
+JAVA_OPTS="$JAVA_OPTS -Dsun.flower.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dansi.boxes=true"
 JAVA_OPTS="$JAVA_OPTS -Dazimuth.inverted=false"  # For V5
 # JAVA_OPTS="$JAVA_OPTS -Dazimuth.inverted=true"
