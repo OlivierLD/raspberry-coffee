@@ -1,6 +1,6 @@
 # HTTP Clients
-> This comes from the following observation:
->
+This comes from the following observation:
+
 > Many breakout boards and sensors manufacturers provide - for their items -
 > drivers very often written in Python.
 > 
