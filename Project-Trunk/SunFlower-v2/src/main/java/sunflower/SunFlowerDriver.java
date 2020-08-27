@@ -60,6 +60,7 @@ public class SunFlowerDriver {
 	private static long loopDelay = 1_000L;
 	private static final boolean useStepsAccumulation = "true".equals(System.getProperty("use.step.accumulation", "true")); // Set to false NOT to use it
 	private static final boolean withSSD1306 = "true".equals(System.getProperty("with.ssd1306"));
+	private static final boolean sunFlowerVerbose = "true".equals(System.getProperty("sun.flower.verbose", "true"));
 
 	static {
 		if ("true".equals(System.getProperty("date.simulation"))) {
@@ -712,7 +713,9 @@ public class SunFlowerDriver {
 
 	public SunFlowerDriver() {
 
-		System.out.println("Starting SunFlowerDriver");
+		if (sunFlowerVerbose) {
+			System.out.println("Starting SunFlowerDriver");
+		}
 
 		String initialHeading = System.getProperty("initial.heading", String.valueOf(this.deviceHeading));
 		try {
