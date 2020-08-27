@@ -202,7 +202,7 @@ do
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    export INFRA_VERBOSE=false
 	    # Get date and time from the file
-	    ./runNavServer.sh --mux:${PROP_FILE} ${NAV_SERVER_EXTRA_OPTIONS} &
+	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then
 		    echo -e ">>> Waiting for the server to start..."
