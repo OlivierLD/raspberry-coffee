@@ -66,6 +66,7 @@ do
 	echo -e "|  5. Like option '1', but with 'Sun Flower' option                                       |"
 	echo -e "|  6. Replay logged kayak data                                                            |"
 	echo -e "|  7. Replay logged driving data (in Google Maps)                                         |"
+	echo -e "|  8. Replay logged kayak data, ANSI console display                                      |"
 	echo -e "|  ... TODO: more.                                                                        |"
 	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc. Data replay. |"
 	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
@@ -193,6 +194,19 @@ do
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    openBrowser "http://localhost:9999/web/nmea/googlemaps.driving.html"
+	    fi
+	    GO=false
+	    ;;
+	  "8")
+	    PROP_FILE=nmea.mux.kayak.cc.yaml
+	    echo -e "Launching Nav Server with $PROP_FILE"
+	    export INFRA_VERBOSE=false
+	    ./runNavServer.sh --mux:${PROP_FILE} --no-rmc-time --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
+	    then
+		    echo -e ">>> Waiting for the server to start..."
+		    sleep 5 # Wait for the server to be operational
+		    openBrowser "http://localhost:9999/web/index.html"
 	    fi
 	    GO=false
 	    ;;

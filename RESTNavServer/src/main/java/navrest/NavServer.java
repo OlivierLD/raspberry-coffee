@@ -30,6 +30,8 @@ public class NavServer {
 
 	public NavServer() {
 
+		boolean infraVerbose = "true".equals(System.getProperty("mux.infra.verbose", "true"));
+
 		String port = System.getProperty("http.port");
 		if (port != null) {
 			try {
@@ -43,28 +45,42 @@ public class NavServer {
 		System.out.println(String.format("From %s, running on port %d", this.getClass().getName(), httpPort));
 		this.httpServer = startHttpServer(httpPort, new NavRequestManager(this));
 		// Add astronomical features...
-		System.out.println(String.format("\t>> %s - adding AstroRequestManager", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		if (infraVerbose) {
+			System.out.println(String.format("\t>> %s - adding AstroRequestManager", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		}
 		this.httpServer.addRequestManager(new AstroRequestManager());
 		// Add tide features...
-		System.out.println(String.format("\t>> %s - adding TideRequestManager", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		if (infraVerbose) {
+			System.out.println(String.format("\t>> %s - adding TideRequestManager", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		}
 		this.httpServer.addRequestManager(new TideRequestManager());
 		// Add Nav features: Dead Reckoning, logging, re-broadcasting, from the NMEA Multiplexer
 		Properties definitions = GenericNMEAMultiplexer.getDefinitions();
 		multiplexer = new GenericNMEAMultiplexer(definitions);
-		System.out.println(String.format("\t>> %s - adding GenericNMEAMultiplexer", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		if (infraVerbose) {
+			System.out.println(String.format("\t>> %s - adding GenericNMEAMultiplexer", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		}
 		this.httpServer.addRequestManager((GenericNMEAMultiplexer)multiplexer); // refers to nmea.mux.properties, unless -Dmux.properties is set
 		// Add image processing service...
-		System.out.println(String.format("\t>> %s - adding ImgRequestManager", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		if (infraVerbose) {
+			System.out.println(String.format("\t>> %s - adding ImgRequestManager", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		}
 		this.httpServer.addRequestManager(new ImgRequestManager());
 		// Add GRIB features
-		System.out.println(String.format("\t>> %s - adding GRIBRequestManager", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		if (infraVerbose) {
+			System.out.println(String.format("\t>> %s - adding GRIBRequestManager", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		}
 		this.httpServer.addRequestManager(new GRIBRequestManager());
 		// Add SunFlower, for sun data, if needed
 		if ("true".equals(System.getProperty("with.sun.flower", "false"))) {
-			System.out.println(String.format("\t>> %s - adding SunFlowerRequestManager", NumberFormat.getInstance().format(System.currentTimeMillis())));
+			if (infraVerbose) {
+				System.out.println(String.format("\t>> %s - adding SunFlowerRequestManager", NumberFormat.getInstance().format(System.currentTimeMillis())));
+			}
 			this.httpServer.addRequestManager(new SunFlowerRequestManager());
 		}
-		System.out.println(String.format("\t>> %s - End of NavServer constructor", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		if (infraVerbose) {
+			System.out.println(String.format("\t>> %s - End of NavServer constructor", NumberFormat.getInstance().format(System.currentTimeMillis())));
+		}
 	}
 
 	public Multiplexer getMultiplexer() {

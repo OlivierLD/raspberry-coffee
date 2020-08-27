@@ -44,6 +44,10 @@ do
   fi
 done
 #
+if [[ "$INFRA_VERBOSE" == "" ]]
+then
+  INFRA_VERBOSE=true
+fi
 HTTP_VERBOSE=false
 TIDE_VERBOSE=false
 ASTRO_VERBOSE=false
@@ -83,7 +87,7 @@ JAVA_OPTS="$JAVA_OPTS -DdeltaT=69.2201" # 01-Jan-2019
 #JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose.dump=true"
 #JAVA_OPTS="$JAVA_OPTS -Dhttp.client.verbose=true"
 #
-JAVA_OPTS="$JAVA_OPTS -Dmux.infra.verbose=true"
+JAVA_OPTS="$JAVA_OPTS -Dmux.infra.verbose=$INFRA_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dtide.verbose=$TIDE_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=$ASTRO_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dimage.verbose=$IMAGE_VERBOSE"
@@ -152,7 +156,7 @@ JAVA_OPTS="$JAVA_OPTS -Dcalculate.solar.with.eot=true"
 JAVA_OPTS="$JAVA_OPTS -Drmc.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dzda.verbose=false"
 #
-# For the small USB GPS
+# For the small USB GPS (bug!)
 GPS_OFFSET=false
 if [[ "$GPS_OFFSET" == "true" ]]
 then
@@ -196,6 +200,7 @@ fi
 #
 COMMAND="${SUDO}java -cp $CP $JAVA_OPTS navrest.NavServer"
 echo -e "Running $COMMAND"
+#
 ${COMMAND}
 #
 echo -e "Bye now ✋"
