@@ -4,7 +4,7 @@ This comes from the following observation:
 > Many breakout boards and sensors manufacturers provide - for their items -
 > drivers very often written in Python.
 > 
-> Python is an OK language, but has some limitations (ping me for details)...
+> Python is an OK scripting language, but has some limitations (ping me for details)...
 > 
 > This project the document you are reading is part of intends to provide drivers
 > written in Java, so they can run on any Java Virtual Machine (JVM).
