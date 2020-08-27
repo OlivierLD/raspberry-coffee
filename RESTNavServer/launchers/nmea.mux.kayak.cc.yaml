@@ -1,0 +1,17 @@
+#
+# MUX definition.
+# Astronomical data can be rendered at http://localhost:9999/web/webcomponents/console.gps.html?style=orange&bg=black&border=n&boat-data=n
+#
+name: "Replaying logged data"
+context:
+  with.http.server: true
+  http.port: 9999
+  init.cache: true
+channels:
+  - type: file
+    filename: ../../NMEA-multiplexer/sample.data/2018-11-24.Drakes.Estero.nmea
+    verbose: false
+forwarders:
+  - class: nmea.forwarders.CharacterConsoleWriter
+    properties: char.console.2.properties
+
