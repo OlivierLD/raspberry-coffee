@@ -26,14 +26,14 @@ Beside Java, we (will) have
 - [C & C++, (Arduino?)](./Arduino.Cpp/README.md)
     > Note: This is **_way too demanding_** for an Arduino (mostly because of the _volume_ of the code, mentioned above), but it works OK for C & C++. 
 - [Python](./Python/README.md)
-- and more when possible (Go, Kotlin,...)
+- and more when possible (Go, Scala, Kotlin,...)
 
 ### Integrated Development Environment (IDE)
 Here is a quick list of some IDEs I use. They _all_ have a free version.
 - For Java and all JVM-aware languages: IntelliJ, period.
 - For Python: PyCharm.
 - For C & C++: Visual Studio.
-- For JavaScript: IntelliJ, WebStorm.
+- For JavaScript: IntelliJ, WebStorm, Visual Studio.
 
 ### Run it
 #### From Java 

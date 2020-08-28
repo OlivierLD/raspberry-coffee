@@ -1,6 +1,8 @@
 #!/bin/bash
 # Describes the different scenarios
 # Uses runNavServer.sh
+# 
+# Parameters --no-rmc-time --no-date : see in runNavServer.sh
 #
 LAUNCH_BROWSER=N
 WITH_PROXY=N
@@ -67,7 +69,7 @@ do
 	echo -e "|  6. Replay logged kayak data                                                            |"
 	echo -e "|  7. Replay logged driving data (in Google Maps)                                         |"
 	echo -e "|  8. Replay logged kayak data, ANSI console display                                      |"
-	echo -e "|  ... TODO: more.                                                                        |"
+	echo -e "|  9. Replay logged sailing data (Bora-Bora - Tongareva), ANSI console display            |"
 	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc. Data replay. |"
 	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
 	echo -e "| 11. Same as 10, with proxy.                                                             |"
@@ -201,6 +203,20 @@ do
 	    export INFRA_VERBOSE=false
 	    # Get date and time from the file
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
+	    then
+		    echo -e ">>> Waiting for the server to start..."
+		    sleep 5 # Wait for the server to be operational
+		    openBrowser "http://localhost:9999/web/index.html"
+	    fi
+	    GO=false
+	    ;;
+	  "9")
+	    PROP_FILE=nmea.mux.bora.cc.yaml
+	    echo -e "Launching Nav Server with $PROP_FILE"
+	    export INFRA_VERBOSE=false
+	    # Get date and time from the file
+	    ./runNavServer.sh --mux:${PROP_FILE} ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then
 		    echo -e ">>> Waiting for the server to start..."
