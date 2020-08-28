@@ -311,6 +311,10 @@ Works for Sun, Moon, Venus, Mars, Jupiter, Saturn, and 58 stars.
 
 > Note: The `DeltaT` used for the celestial calculations is provided when starting the server.
 
+**ANSI Character Console**
+
+![ANSO Console](./docimg/console.png)
+
 ## Server Remote access
 > See [this document](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/NMEA-multiplexer#remote-access).
 
