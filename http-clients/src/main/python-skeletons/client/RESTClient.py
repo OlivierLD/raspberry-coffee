@@ -1,4 +1,6 @@
-# Requires a
+# Taken from a real world example.
+#
+# May requires:
 # $ pip install requests
 # $ pip install json
 # $ pip install pyyaml
@@ -93,7 +95,7 @@ def config_agent():
                              "threadPoolSize": agent_thread_pool_size,
                              "credentialConfigFilePath": agent_security_config_path,
                              "credentialProfile": agent_security_profile})
-    if resp.status_code != 201:
+    if resp.status_code != 201:  # 201: Happy Code
         raise Exception('POST /config/ {}'.format(resp.status_code))
     print('Status {}, Content {}'.format(resp.status_code, json.dumps(json.loads(resp.content), indent=2)))
 

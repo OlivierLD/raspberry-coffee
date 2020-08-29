@@ -11,7 +11,7 @@ import math
 import traceback
 
 URL_ARG_PREFIX = '--url:'
-rest_url = "http://192.168.42.9:8080/lis3mdl/cache"
+rest_url = "http://192.168.42.9:8080/lis3mdl/cache"  # Default value
 
 for arg in sys.argv:
     if arg[:len(URL_ARG_PREFIX)] == URL_ARG_PREFIX:
@@ -29,13 +29,13 @@ def fetch_data(uri):
         return json_obj
 
 
-def calculate(magX, magY, magZ):
-        heading = math.degrees(math.atan2(magY, magX))
-        while (heading < 0):
-            heading += 360
-        pitch = math.degrees(math.atan2(magY, magZ))
-        roll = math.degrees(math.atan2(magX, magZ))
-        return heading, pitch, roll
+def calculate(mag_x, mag_y, mag_z):
+    heading = math.degrees(math.atan2(mag_y, mag_x))
+    while heading < 0:
+        heading += 360
+    pitch = math.degrees(math.atan2(mag_y, mag_z))
+    roll = math.degrees(math.atan2(mag_x, mag_z))
+    return heading, pitch, roll
 
 
 keep_looping = True
@@ -52,6 +52,5 @@ while keep_looping:
         break
     except:
         traceback.print_exc(file=sys.stdout)
-
 
 print("Bye!")

@@ -9,6 +9,7 @@ public final class GeomUtil {
 	public static final int SHELL = 1;
 	public static final int SWING = 2;
 	public static final int NO_DEG = 3;
+	public static final int UNICODE = 5;
 	public static final int DEFAULT_DEG = 4;
 
 	public static final int NONE = 0;
@@ -262,6 +263,8 @@ public final class GeomUtil {
 			s = Integer.toString(i) + "&deg;" + df.format(dec) + "'";
 		} else if (output == GeomUtil.SWING) {
 			s = Integer.toString(i) + '\260' + df.format(dec) + "'";
+		} else if (output == GeomUtil.UNICODE) {
+			s = Integer.toString(i) + '\u00b0' + df.format(dec) + "'";
 		} else if (output == GeomUtil.NO_DEG) {
 			s = Integer.toString(i) + ' ' + df.format(dec) + "'";
 		} else {

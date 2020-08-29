@@ -53,6 +53,7 @@ core = CoreFeatures()
 
 keep_looping = True
 
+
 def do_stuff():
     print("Let's go. Hit Ctrl+C to stop")
     global keep_looping
@@ -102,7 +103,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
         return temp
 
     # To silence the HTTP logger
-    def log_message(self, format, *args):
+    def log_message(self, fmt, *args):
         return
 
     # GET Method Definition
@@ -140,7 +141,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 # defining the response headers
                 self.send_header('Content-Type', 'application/json')
                 content_len = len(response_content)
-                self.send_header('Content-Length', content_len)
+                self.send_header('Content-Length', str(content_len))
                 self.end_headers()
                 self.wfile.write(response_content)
             except Exception as exception:
@@ -154,7 +155,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.send_response(400)
             self.send_header('Content-Type', 'plain/text')
             content_len = len(error)
-            self.send_header('Content-Length', content_len)
+            self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(bytes(error, 'utf-8'))
 
@@ -173,7 +174,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.send_response(404)
             self.send_header('Content-Type', 'plain/text')
             content_len = len(error)
-            self.send_header('Content-Length', content_len)
+            self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(bytes(error, 'utf-8'))
 
@@ -188,7 +189,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
             # defining the response headers
             self.send_header('Content-Type', 'application/json')
             content_len = len(response_content)
-            self.send_header('Content-Length', content_len)
+            self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(response_content)
         else:
@@ -198,7 +199,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.send_response(404)
             self.send_header('Content-Type', 'plain/text')
             content_len = len(error)
-            self.send_header('Content-Length', content_len)
+            self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(bytes(error, 'utf-8'))
 
@@ -215,7 +216,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
             # defining the response headers
             self.send_header('Content-Type', 'application/json')
             content_len = len(response_content)
-            self.send_header('Content-Length', content_len)
+            self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(response_content)
         else:
@@ -225,28 +226,27 @@ class ServiceHandler(BaseHTTPRequestHandler):
             self.send_response(404)
             self.send_header('Content-Type', 'plain/text')
             content_len = len(error)
-            self.send_header('Content-Length', content_len)
+            self.send_header('Content-Length', str(content_len))
             self.end_headers()
             self.wfile.write(bytes(error, 'utf-8'))
 
     # DELETE method definition
     def do_DELETE(self):
-            if REST_DEBUG:
-                print("DELETE on {} not managed".format(self.path))
-            error = "NOT FOUND!"
-            self.send_response(404)
-            self.send_header('Content-Type', 'plain/text')
-            content_len = len(error)
-            self.send_header('Content-Length', content_len)
-            self.end_headers()
-            self.wfile.write(bytes(error, 'utf-8'))
+        if REST_DEBUG:
+            print("DELETE on {} not managed".format(self.path))
+        error = "NOT FOUND!"
+        self.send_response(404)
+        self.send_header('Content-Type', 'plain/text')
+        content_len = len(error)
+        self.send_header('Content-Length', str(content_len))
+        self.end_headers()
+        self.wfile.write(bytes(error, 'utf-8'))
 
 
 machine_name = "127.0.0.1"
 MACHINE_NAME_PRM_PREFIX = "--machine-name:"
 PORT_PRM_PREFIX = "--port:"
 VERBOSE_PREFIX = "--verbose:"
-
 
 if len(sys.argv) > 0:  # Script name + X args
     for arg in sys.argv:
@@ -263,7 +263,8 @@ print("Starting server on port {}".format(port_number))
 server = HTTPServer((machine_name, port_number), ServiceHandler)
 #
 print("Try curl -v -X GET http://{}:{}/{}/cache".format(machine_name, port_number, PATH_PREFIX))
-print("or  curl -v -X VIEW http://{}:{}{} -H \"Content-Length: 1\" -d \"1\"".format(machine_name, port_number, PATH_PREFIX))
+print("or  curl -v -X VIEW http://{}:{}{} -H \"Content-Length: 1\" -d \"1\"".format(machine_name, port_number,
+                                                                                    PATH_PREFIX))
 #
 try:
     server.serve_forever()

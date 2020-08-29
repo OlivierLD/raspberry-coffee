@@ -78,8 +78,8 @@ do
 	echo -e "|     - See or modify nmea.mux.2.serial.yaml for details.                                 |"
 	echo -e "| 13. AIS Tests.                                                                          |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
-	echo -e "|  S. Show NavServer process(es) ⚙️   |                                                    |"
-	echo -e "| SP. Show proxy process(es) ⚙️       | Q. Quit ❎                                         |"
+	echo -e "|  S. Show NavServer process(es) ⚙️   | SP. Show proxy process(es) ⚙️                       |"
+	echo -e "|  Q. Quit ❎                        |                                                    |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
 	echo -en " ==> You choose: "
 	read option

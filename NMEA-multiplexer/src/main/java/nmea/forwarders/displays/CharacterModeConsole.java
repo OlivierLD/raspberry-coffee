@@ -33,6 +33,11 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * System variables:
+ * cc.verbose, default false
+ * console.refresh, default yes
+ */
 public class CharacterModeConsole {
 	private final static boolean DEBUG = "true".equals(System.getProperty("cc.verbose", "false"));
 
@@ -60,7 +65,7 @@ public class CharacterModeConsole {
 	private static Map<String, AssociatedData> suffixes = new HashMap<String, AssociatedData>();
 
 	/**
-	 * Associate the data mentioned in char.console.proterirs with a unit and an edit mask (Format).
+	 * Associate the data mentioned in char.console.properties with a unit and an edit mask (Format).
 	 * If new values are to be displayed, they should be added here, and in {@link #getValueFromCache(String, NMEADataCache)}
 	 */
 	static {
@@ -184,8 +189,8 @@ public class CharacterModeConsole {
 					switch (s) {
 						case "POS": // PoSition
 							try {
-								value = StringUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lat, GeomUtil.NO_DEG, GeomUtil.NS), 12, " ") +
-												StringUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lng, GeomUtil.NO_DEG, GeomUtil.EW), 12, " ");
+								value = StringUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lat, GeomUtil.UNICODE, GeomUtil.NS), 12, " ") +
+										StringUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lng, GeomUtil.UNICODE, GeomUtil.EW), 12, " ");
 							} catch (Exception ex) {
 								value = "-";
 								//  ex.printStackTrace();
