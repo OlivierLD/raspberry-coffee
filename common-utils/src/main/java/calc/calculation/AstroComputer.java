@@ -12,10 +12,7 @@ import calc.calculation.nauticalalmanac.Venus;
 import utils.TimeUtil;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * Static utilities
@@ -721,6 +718,88 @@ public class AstroComputer {
 			gha = 360 - longitude;
 		}
 		return gha;
+	}
+
+	public static synchronized Map<String, Object> getAllCalculatedData() {
+		Map<String, Object> fullMap = new HashMap<>();
+
+		Map<String, Object> contextMap = new HashMap<>();
+		contextMap.put("year", year);
+		contextMap.put("month", month);
+		contextMap.put("day", day);
+		contextMap.put("hour", hour);
+		contextMap.put("minute", minute);
+		contextMap.put("second", second);
+		contextMap.put("delta-t", deltaT);
+
+		Map<String, Object> sunMap = new HashMap<>();
+		sunMap.put("dec", Context.DECsun);
+		sunMap.put("gha", Context.GHAsun);
+		sunMap.put("ra", Context.RAsun);
+		sunMap.put("sd", Context.SDsun);
+		sunMap.put("hp", Context.HPsun);
+
+		Map<String, Object> moonMap = new HashMap<>();
+		moonMap.put("dec", Context.DECmoon);
+		moonMap.put("gha", Context.GHAmoon);
+		moonMap.put("ra", Context.RAmoon);
+		moonMap.put("sd", Context.SDmoon);
+		moonMap.put("hp", Context.HPmoon);
+
+		Map<String, Object> venusMap = new HashMap<>();
+		venusMap.put("dec",  Context.DECvenus);
+		venusMap.put("gha",  Context.GHAvenus);
+		venusMap.put("ra",  Context.RAvenus);
+		venusMap.put("sd",  Context.SDvenus);
+		venusMap.put("hp",  Context.HPvenus);
+
+		Map<String, Object> marsMap = new HashMap<>();
+		marsMap.put("dec",  Context.DECmars);
+		marsMap.put("gha",  Context.GHAmars);
+		marsMap.put("ra",  Context.RAmars);
+		marsMap.put("sd",  Context.SDmars);
+		marsMap.put("hp",  Context.HPmars);
+
+		Map<String, Object> jupiterMap = new HashMap<>();
+		jupiterMap.put("dec",  Context.DECjupiter);
+		jupiterMap.put("gha",  Context.GHAjupiter);
+		jupiterMap.put("ra",  Context.RAjupiter);
+		jupiterMap.put("sd",  Context.SDjupiter);
+		jupiterMap.put("hp",  Context.HPjupiter);
+
+		Map<String, Object> saturnMap = new HashMap<>();
+		saturnMap.put("dec",  Context.DECsaturn);
+		saturnMap.put("gha",  Context.GHAsaturn);
+		saturnMap.put("ra",  Context.RAsaturn);
+		saturnMap.put("sd",  Context.SDsaturn);
+		saturnMap.put("hp",  Context.HPsaturn);
+
+		Map<String, Object> polarisMap = new HashMap<>();
+		polarisMap.put("dec", Context.DECpol);
+		polarisMap.put("gha", Context.GHApol);
+		polarisMap.put("ra", Context.RApol);
+
+		fullMap.put("context", contextMap);
+
+		fullMap.put("sun", sunMap);
+		fullMap.put("moon", moonMap);
+		fullMap.put("venus", venusMap);
+		fullMap.put("mars", marsMap);
+		fullMap.put("jupiter", jupiterMap);
+		fullMap.put("saturn", saturnMap);
+		fullMap.put("polaris", polarisMap);
+
+		fullMap.put("aries-gha", Context.GHAAtrue);
+
+		fullMap.put("eot", Context.EoT);
+		fullMap.put("lunar-dist", Context.LDist);
+		fullMap.put("day-of-week", dow);
+		fullMap.put("moon-phase", Context.moonPhase);
+		fullMap.put("mean-obliquity-of-ecliptic", Context.eps0);
+
+		// More if needed!
+
+		return fullMap;
 	}
 
 	// This is for tests
