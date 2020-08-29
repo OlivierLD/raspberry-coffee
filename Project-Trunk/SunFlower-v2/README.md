@@ -337,5 +337,13 @@ The two versions, working together:
     - ![Three](./pictures/v5.03.jpg)
     - ![Four](./pictures/v5.04.jpg)
     - ![Five](./pictures/v5.05.jpg)
+   
+### Still progressing!
+Here is an interesting setting, with a Raspberry Pi Zero:
+![Stacked](./pictures/new.setting.jpg)
+
+- There is a [Stepper Motor bonnet](https://www.adafruit.com/product/4280)
+- With a [GPIO Stacking Header](https://www.adafruit.com/product/2223)
+- A small [OLED I2C Screen](https://www.adafruit.com/product/3527)
             
 ---
