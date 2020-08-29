@@ -1,3 +1,5 @@
+import traceback
+import sys
 import digitalio
 import board
 from time import sleep
