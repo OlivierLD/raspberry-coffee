@@ -14,8 +14,6 @@ import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from time import sleep
 
-import board
-import busio
 import digitalio
 import busio
 import board
@@ -216,8 +214,11 @@ class ServiceHandler(BaseHTTPRequestHandler):
         if REST_DEBUG:
             print("POST request, {}".format(self.path))
         if self.path == PATH_PREFIX + "/display":
+            # Get text to display from body (text/plain)
+            content_len = int(self.headers.get('Content-Length'))
+            post_body = self.rfile.read(content_len)
             try:
-                write_on_eink_2_13("Akeu Coucou!")
+                write_on_eink_2_13(post_body)
                 self.send_response(201)
                 response = {"status": "OK"}
                 self.wfile.write(json.dumps(response).encode())

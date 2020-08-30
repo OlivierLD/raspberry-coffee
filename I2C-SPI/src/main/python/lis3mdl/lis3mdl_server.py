@@ -206,6 +206,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
         if REST_DEBUG:
             print("POST request, {}".format(self.path))
         if self.path.startswith("/whatever/"):
+            se
             self.send_response(201)
             response = {"status": "OK"}
             self.wfile.write(json.dumps(response).encode())
