@@ -45,7 +45,7 @@ disp = ssd1351.SSD1351(spi, rotation=180,                         # 1.5" SSD1351
     cs=cs_pin,
     dc=dc_pin,
     rst=reset_pin,
-    baudrate=BAUDRATE,
+    baudrate=BAUDRATE
 )
 # pylint: enable=line-too-long
 
