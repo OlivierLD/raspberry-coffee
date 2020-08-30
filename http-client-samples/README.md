@@ -9,9 +9,10 @@ so they can be reached from any HTTP Client, written in Java in our case.
 - [LIS3MDL](https://www.adafruit.com/product/4479), tutorial [here](https://learn.adafruit.com/lis3mdl-triple-axis-magnetometer).
 - [Monochrome 2.42" oled screen](https://learn.adafruit.com/1-5-and-2-4-monochrome-128x64-oled-display-module?view=all), Raspberry Pi, `I2C` and `SPI`.
 - [240x240 TFT](https://www.adafruit.com/product/3787), [tutorial](https://learn.adafruit.com/adafruit-1-3-and-1-54-240-x-240-wide-angle-tft-lcd-displays?view=all), look for `ST7789 and ST7735-based Displays, 1.3", 1.54", and 2.0" IPS TFT Display`.
+- [2.13 E-INK]()
 
 ### LIS3MDL
-Install the required python packages
+On the Raspberry Pi, install the required python packages:
 ```
 $ sudo pip3 install adafruit-circuitpython-lis3mdl
 ```
@@ -33,6 +34,18 @@ $  ./read_mag.sh
 . . .
 ```
 The URL of the server can be modified in the `read_mag.sh` script. 
+
+### Monochrome Screen 2.42"
+
+
+### 240x240 TFT
+On the Raspberry pi, install the required Python artifacts:
+```
+$ sudo pip3 install adafruit-circuitpython-rgb-display
+$ sudo apt-get install ttf-dejavu
+$ sudo apt-get install python3-pil
+```
+
 
 ---
  
