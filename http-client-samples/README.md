@@ -20,7 +20,19 @@ Then, on the Raspberry Pi with the `LIS3MDL` connected to it:
 $ cd src/main/python/lis3mdl/server
 $ python3 lis3mdl_server.py --machine-name:$(hostname -I) [ --port:8888 --verbose:true ]
 ```
-
+After that, from anywhere on the same network:
+```
+$  ./read_mag.sh 
+  Ctrl+C to stop
+  Heading: 148.411910 Pitch: 125.781553, Roll: -113.902522
+  Heading: 148.411910 Pitch: 125.781553, Roll: -113.902522
+  Heading: 148.411910 Pitch: 125.781553, Roll: -113.902522
+  Heading: 148.411910 Pitch: 125.781553, Roll: -113.902522
+  Heading: 148.411910 Pitch: 125.781553, Roll: -113.902522
+  Heading: 148.411910 Pitch: 125.781553, Roll: -113.902522
+. . .
+```
+The URL of the server can be modified in the `read_mag.sh` script. 
 
 ---
  
