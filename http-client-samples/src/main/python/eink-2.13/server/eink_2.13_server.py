@@ -216,7 +216,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
         if self.path == PATH_PREFIX + "/display":
             # Get text to display from body (text/plain)
             content_len = int(self.headers.get('Content-Length'))
-            post_body = self.rfile.read(content_len)
+            post_body = self.rfile.read(content_len).decode('utf-8')
             print("Content: {}".format(post_body))
             try:
                 write_on_eink_2_13(post_body)

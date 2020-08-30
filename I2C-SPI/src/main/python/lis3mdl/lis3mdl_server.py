@@ -97,7 +97,7 @@ PATH_PREFIX = "/lis3mdl"
 
 # Defining a HTTP request Handler class
 class ServiceHandler(BaseHTTPRequestHandler):
-    # sets basic headers for the server
+    # sets basic headedecoders for the server
     def _set_headers(self):
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
