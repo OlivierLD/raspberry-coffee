@@ -36,14 +36,12 @@ busy = digitalio.DigitalInOut(board.D17)
 
 # give them all to our driver
 # display = Adafruit_SSD1608(200, 200,        # 1.54" HD mono display
-# display = Adafruit_SSD1675(122, 250,        # 2.13" HD mono display
+display = Adafruit_SSD1675(122, 250,        # 2.13" HD mono display
 # display = Adafruit_IL91874(176, 264,        # 2.7" Tri-color display
 # display = Adafruit_IL0373(152, 152,         # 1.54" Tri-color display
 # display = Adafruit_IL0373(128, 296,         # 2.9" Tri-color display
 # display = Adafruit_IL0398(400, 300,         # 4.2" Tri-color display
-display = Adafruit_IL0373(
-    104,
-    212,  # 2.13" Tri-color display
+# display = Adafruit_IL0373(104, 212,         # 2.13" Tri-color display
     spi,
     cs_pin=ecs,
     dc_pin=dc,
