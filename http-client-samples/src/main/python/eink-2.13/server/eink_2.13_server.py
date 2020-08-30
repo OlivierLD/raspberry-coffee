@@ -215,7 +215,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         if REST_DEBUG:
             print("POST request, {}".format(self.path))
-        if self.path.startswith("/display"):
+        if self.path == PATH_PREFIX + "/display":
             try:
                 write_on_eink_2_13("Akeu Coucou!")
                 self.send_response(201)
