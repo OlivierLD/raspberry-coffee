@@ -220,9 +220,15 @@ class ServiceHandler(BaseHTTPRequestHandler):
             print("Content: {}".format(post_body))
             try:
                 write_on_eink_2_13(post_body)
+                # Response
                 self.send_response(201)
+                self.send_header('Content-Type', 'application/json')
                 response = {"status": "OK"}
-                self.wfile.write(json.dumps(response).encode())
+                response_content = json.dumps(response).encode()
+                content_len = len(response_content)
+                self.send_header('Content-Length', content_len)
+                self.end_headers()
+                self.wfile.write(response_content)
             except:
                 self.send_response(500)
                 response = {"status": "Barf"}
