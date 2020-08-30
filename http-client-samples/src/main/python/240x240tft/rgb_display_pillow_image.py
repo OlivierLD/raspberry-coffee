@@ -45,8 +45,7 @@ disp = st7789.ST7789(spi, height=240, y_offset=80, rotation=180,  # 1.3", 1.54" 
     cs=cs_pin,
     dc=dc_pin,
     rst=reset_pin,
-    baudrate=BAUDRATE
-)
+    baudrate=BAUDRATE)
 # pylint: enable=line-too-long
 
 # Create blank image for drawing.

@@ -47,8 +47,7 @@ display = Adafruit_SSD1675(122, 250,        # 2.13" HD mono display
     dc_pin=dc,
     sramcs_pin=srcs,
     rst_pin=rst,
-    busy_pin=busy,
-)
+    busy_pin=busy)
 
 # IF YOU HAVE A FLEXIBLE DISPLAY (2.13" or 2.9") uncomment these lines!
 # display.set_black_buffer(1, False)
