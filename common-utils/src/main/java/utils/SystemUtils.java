@@ -79,7 +79,7 @@ public class SystemUtils {
             line = reader.readLine();
             if (line != null) {
                 if (line.indexOf("ESSID:") > -1) {
-                    networkList.add(line.substring(line.indexOf("ESSID:")));
+                    networkList.add(line.substring(line.indexOf("ESSID:") + "ESSID:".length()));
                 }
             }
         }
