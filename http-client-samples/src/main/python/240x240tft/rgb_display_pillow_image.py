@@ -57,15 +57,15 @@ if disp.rotation % 180 == 90:
 else:
     width = disp.width  # we swap height/width to rotate it to landscape!
     height = disp.height
-image = Image.new("RGB", (width, height))
-
-# Get drawing object to draw on image.
-draw = ImageDraw.Draw(image)
-
-# Draw a black filled box to clear the image.
-draw.rectangle((0, 0, width, height), outline=0, fill=(0, 0, 0))
-disp.image(image)
-
+# image = Image.new("RGB", (width, height))
+#
+# # Get drawing object to draw on image.
+# draw = ImageDraw.Draw(image)
+#
+# # Draw a black filled box to clear the image.
+# draw.rectangle((0, 0, width, height), outline=0, fill=(0, 0, 0))
+# disp.image(image)
+#
 image = Image.open("blinka.jpg")
 
 # Scale the image to the smaller screen dimension
