@@ -70,6 +70,8 @@ You're all set! Let's flesh it out.
 > Important: See the `values.deltaT` value in `application.yml`
 >  
 
+See in the sources of `AstroController` how the code is implemented to return the expected data.
+
 ## For real
 Start the service as above:
 ```
@@ -143,3 +145,17 @@ $ curl -X GET http://localhost:8080/astro/data | jq
   "aries-gha": 240.73538283606433
 }
 ```
+
+## Docker
+Very easy, just a few clicks away:
+
+From the `mn` directory (make sure proxies are off in Docker's settings):
+```
+ $ ./gradlew clean shadowJar
+ $ docker build . -t almanac
+```
+then
+```
+$ docker run --rm -p 8080:8080 almanac
+```
+... And the same `curl` as before should work!
