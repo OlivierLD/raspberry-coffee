@@ -270,6 +270,12 @@ public class SystemUtils {
         }
 
         try {
+            List<String> networkName = getNetworkName();
+            try {
+                networkName.forEach(network -> System.out.println(String.format("Network: %s", network)));
+            } catch (Exception ex) {
+
+            }
             System.out.println();
             System.out.println("All IP Addresses:");
             List<String[]> addresses = getIPAddresses();
