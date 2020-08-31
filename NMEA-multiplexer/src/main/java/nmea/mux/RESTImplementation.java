@@ -2177,9 +2177,9 @@ public class RESTImplementation {
 			NMEADataCache.LOG,
 			NMEADataCache.DAILY_LOG,
 			NMEADataCache.WATER_TEMP,
-			NMEADataCache.AIR_TEMP,
-			NMEADataCache.BARO_PRESS,
-			NMEADataCache.RELATIVE_HUMIDITY,
+			// NMEADataCache.AIR_TEMP,
+			// NMEADataCache.BARO_PRESS,
+			// NMEADataCache.RELATIVE_HUMIDITY,
 			NMEADataCache.AWA,
 			NMEADataCache.AWS,
 			NMEADataCache.HDG_COMPASS,
@@ -2331,9 +2331,24 @@ public class RESTImplementation {
 			} catch (Exception absorb) {
 			}
 
+			// Hum, Press, AirTemp
+			double hum = 0, press = 0, airTemp = 0;
+			try {
+				hum = ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.RELATIVE_HUMIDITY).getAsDouble();
+			} catch (Exception aborb) {
+			}
+			try {
+				press = ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.BARO_PRESS).get("pressure").getAsDouble();
+			} catch (Exception aborb) {
+			}
+			try {
+				airTemp = ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.AIR_TEMP).get("temperature").getAsDouble();
+			} catch (Exception aborb) {
+			}
+
 			content = String.format(
-					"BSP=%.2f\nLAT=%f\nLNG=%f\nSOG=%.2f\nCOG=%d\nDATE=%s\nYEAR=%d\nMONTH=%d\nDAY=%d\nHOUR=%d\nMIN=%d\nSEC=%d\nS_HOUR=%d\nS_MIN=%d\nS_SEC=%d\nRMC_OK=%s",
-					bsp, latitude, longitude, sog, cog, date, year, month, day, hours, mins, secs, solHours, solMins, solSecs, (rmcStatus ? "OK" : "KO"));
+					"BSP=%.2f\nLAT=%f\nLNG=%f\nSOG=%.2f\nCOG=%d\nDATE=%s\nYEAR=%d\nMONTH=%d\nDAY=%d\nHOUR=%d\nMIN=%d\nSEC=%d\nS_HOUR=%d\nS_MIN=%d\nS_SEC=%d\nRMC_OK=%s\nBARO=%.2f\nTEMP=%.2f\nHUM=%.2f",
+					bsp, latitude, longitude, sog, cog, date, year, month, day, hours, mins, secs, solHours, solMins, solSecs, (rmcStatus ? "OK" : "KO"), press, airTemp, hum);
 		} else {
 			content = jsonElement != null ? jsonElement.toString() : "";
 		}
