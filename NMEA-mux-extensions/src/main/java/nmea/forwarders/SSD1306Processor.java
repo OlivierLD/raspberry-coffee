@@ -593,7 +593,9 @@ public class SSD1306Processor implements Forwarder {
 	}
 
 	public void setSimulatorTitle(String title) {
-		this.substitute.setTitle(title);
+		if (this.substitute != null) {
+			this.substitute.setTitle(title);
+		}
 	}
 
 	@Override
