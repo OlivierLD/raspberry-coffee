@@ -1,4 +1,4 @@
-# Case study (WIP) Full NavServer running on a Raspberry Pi Zero W, A+, and others...
+# Case study (WiP) Full NavServer running on a Raspberry Pi Zero W, A+, and others...
 This is a case study, using different hardware configurations to run the same software configuration (the full RESTNavServer).
 
 The hardware configuration will be made out of two parts:
@@ -67,6 +67,7 @@ This is built just like the other examples in this module, just run
 ---
 
 ### A first prototype
+
 | Pressure (BME280) | Position (GPS) | Side view |
 |:--:|:--:|:--:|
 | ![PRMSL](./docimg/06.jpg) | ![POS](./docimg/07.jpg) | ![All the layers](./docimg/08.jpg) |
@@ -152,9 +153,17 @@ Suitable for Raspberry Pi **A** and **B**. The GPS is external, using a USB port
 | ![Consumption](./docimg/perma-hat/consumption.jpg) | |
 In this configuration, the consumption is between 0.25 and 0.30 Amps.
 
+#### Do check this out!
 > Bonus: [3D printed](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/RPiA%2BLogger) enclosure (with pictures!).
 
+#### Networking...
+By default, the Raspberry Pi emits its own network, but it is some times convenient (to say the least) to hook uyop to the Internet.
+
 > Note: When the Raspberry emits its own network, the file to look into to flip this feature on and off (when you need an update or upgrade, for example) is `/etc/network/interfaces`.
+>
+> I use a Raspberry Pi with wireless capabilities for the usual logging,
+> and I add a WiFi dongle when I need to update the config aor the code (so I can reach `github`).
+>  
 
 ##### Raspberry Pi 4 B, with 4Gb of RAM
 Easy: Perfect! 

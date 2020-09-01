@@ -2334,7 +2334,7 @@ public class RESTImplementation {
 			// Hum, Press, AirTemp
 			double hum = 0, press = 0, airTemp = 0;
 			try {
-				hum = ((JsonObject) jsonElement).getAsJsonObject(NMEADataCache.RELATIVE_HUMIDITY).getAsDouble();
+				hum = ((JsonObject) jsonElement).get(NMEADataCache.RELATIVE_HUMIDITY).getAsDouble();
 			} catch (Exception aborb) {
 			}
 			try {
