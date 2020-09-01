@@ -163,7 +163,62 @@ By default, the Raspberry Pi emits its own network, but it is some times conveni
 >
 > I use a Raspberry Pi with wireless capabilities for the usual logging,
 > and I add a WiFi dongle when I need to update the config aor the code (so I can reach `github`).
->  
+  
+`/etc/network/interfaces`, to work in standalone (no WiFi dongle):
+```
+# interfaces(5) file used by ifup(8) and ifdown(8)
+
+# Please note that this file is written to be used with dhcpcd
+# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
+
+# Include files from /etc/network/interfaces.d:
+source-directory /etc/network/interfaces.d
+
+# allow-hotplug wlan1
+# iface wlan1 inet dhcp
+# wpa-ssid "Sonic-00e0_EXT"
+# wpa-psk "your-pass-word"
+```
+`/etc/network/interfaces`, to reach the network (with WiFi dongle):
+```
+# interfaces(5) file used by ifup(8) and ifdown(8)
+
+# Please note that this file is written to be used with dhcpcd
+# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
+
+# Include files from /etc/network/interfaces.d:
+source-directory /etc/network/interfaces.d
+
+allow-hotplug wlan1
+iface wlan1 inet dhcp
+wpa-ssid "Sonic-00e0_EXT"
+wpa-psk "your-pass-word"
+```
+
+In both cases, `/etc/hostapd/hostapd.conf` remains the same:
+```
+cat /etc/hostapd/hostapd.conf
+# 2.4 GHz setup wifi 80211 b,g,n
+interface=wlan0
+driver=nl80211
+ssid=RPi-Gateway
+hw_mode=g
+channel=6
+wmm_enabled=0
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=raspberrypi
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=CCMP TKIP
+rsn_pairwise=CCMP
+
+country_code=US
+ieee80211n=1
+ieee80211d=1
+```
+It defines the network endpoint **created** by the Raspberry Pi.
 
 ##### Raspberry Pi 4 B, with 4Gb of RAM
 Easy: Perfect! 

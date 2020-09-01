@@ -261,7 +261,7 @@ you have only **one** WiFi interface `wlan0`, and the Raspberry Pi is a hotspot 
 
 Now you're ready to rock!
 
-##### Bonus: Mount a USB drive on teh Raspberry Pi
+##### Bonus: Mount a USB drive on the Raspberry Pi
 - <https://www.raspberrypi-spy.co.uk/2014/05/how-to-mount-a-usb-flash-disk-on-the-raspberry-pi/>
 
 ---
