@@ -16,4 +16,5 @@ while keep_looping:
         keep_looping = False
         sense.show_message("Bye!")
 
+sense.clear()
 print("Bye!")
