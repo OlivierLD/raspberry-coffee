@@ -55,8 +55,8 @@ def execute(hat, selection):
 
 def move(selection, direction):
     return {
-        ('T', DIRECTION_RIGHT): 'P',
-        ('T', DIRECTION_DOWN):  'H',
+        ('T', DIRECTION_RIGHT): 'P',  # Read it as RIGHT from T means P
+        ('T', DIRECTION_DOWN):  'H',  # etc...
         ('P', DIRECTION_LEFT):  'T',
         ('P', DIRECTION_DOWN):  'Q',
         ('Q', DIRECTION_UP):    'P',
@@ -66,9 +66,14 @@ def move(selection, direction):
         }.get((selection, direction), selection)
 
 
-print("Use the joystick to choose the data to display. Click the burron to select.")
+print("Use the joystick to choose the data to display. Click the button to select. Q (or Ctrl-C) to quit")
 
 hat = SenseHat()
+
+hat.set_rotation(180)
+# # alternatives
+# hat.rotation = 180
+
 selection = 'T'
 keep_looping = True
 while keep_looping:
