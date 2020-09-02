@@ -65,16 +65,25 @@ def move(selection, direction):
         ('H', DIRECTION_UP):    'T',
         }.get((selection, direction), selection)
 
+
+print("Use the joystick to choose the data to display. Click the burron to select.")
+
 hat = SenseHat()
 selection = 'T'
-while True:
-    display(hat, selection)
-    event = hat.stick.wait_for_event()
-    if event.action == ACTION_PRESSED:
-        if event.direction == DIRECTION_MIDDLE:
-            if execute(hat, selection):
-                break
-        else:
-            selection = move(selection, event.direction)
+keep_looping = True
+while keep_looping:
+    try:
+        display(hat, selection)
+        event = hat.stick.wait_for_event()
+        if event.action == ACTION_PRESSED:
+            if event.direction == DIRECTION_MIDDLE:
+                if execute(hat, selection):
+                    break
+            else:
+                selection = move(selection, event.direction)
+    except KeyboardInterrupt:
+        keep_looping = False
+        hat.show_message("Bye!")
+
 hat.clear()
 
