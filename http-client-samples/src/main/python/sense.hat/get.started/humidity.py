@@ -14,5 +14,6 @@ while keep_looping:
         sense.set_pixels(pixels)
     except KeyboardInterrupt:
         keep_looping = False
+        sense.show_message("Bye!")
 
 print("Bye!")
