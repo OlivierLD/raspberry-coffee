@@ -53,6 +53,7 @@ def execute(hat, selection):
         return True
     return False
 
+# TODO: Does NOT take the rotation in account
 def move(selection, direction):
     return {
         ('T', DIRECTION_RIGHT): 'P',  # Read it as RIGHT from T means P
@@ -70,7 +71,7 @@ print("Use the joystick to choose the data to display. Click the button to selec
 
 hat = SenseHat()
 
-hat.set_rotation(180)
+# hat.set_rotation(180)
 # # alternatives
 # hat.rotation = 180
 
