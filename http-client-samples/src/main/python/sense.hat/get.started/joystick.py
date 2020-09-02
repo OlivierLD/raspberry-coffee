@@ -29,4 +29,3 @@ sense.stick.direction_middle = sense.clear    # Press the enter key
 
 while True:
   pass  # This keeps the program running to receive joystick events
-
