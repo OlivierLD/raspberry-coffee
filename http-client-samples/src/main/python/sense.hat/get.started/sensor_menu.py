@@ -3,11 +3,11 @@ from sense_hat import *
 import numpy as np
 
 # Draw the foreground (fg) into a numpy array
-Rd = (255, 0, 0)
-Gn = (0, 255, 0)
-Bl = (0, 0, 255)
+Rd = (255,   0,   0)
+Gn = (  0, 255,   0)
+Bl = (  0,   0, 255)
 Gy = (128, 128, 128)
-__ = (0, 0, 0)
+__ = (  0,   0,   0)
 fg = np.array([
     [Rd, Rd, Rd, __, Gn, Gn, __, __],
     [__, Rd, __, __, Gn, __, Gn, __],
@@ -20,6 +20,7 @@ fg = np.array([
     ], dtype=np.uint8)
 # Mask is a boolean array of which pixels are transparent
 mask = np.all(fg == __, axis=2)
+
 
 def display(hat, selection):
     # Draw the background (bg) selection box into another numpy array
@@ -42,6 +43,7 @@ def display(hat, selection):
             )
         ])
 
+
 def execute(hat, selection):
     if selection == 'T':
         hat.show_message('Temperature: %.1fC' % hat.temp, 0.05, Rd)
@@ -52,6 +54,7 @@ def execute(hat, selection):
     else:
         return True
     return False
+
 
 # TODO: Does NOT take the rotation in account
 def move(selection, direction):
