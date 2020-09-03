@@ -83,8 +83,16 @@ def read_sense_hat():
                 core.update_cache('mag', orientation_deg)
             except AttributeError as ae:
                 print("AttributeError : {}".format(ae))
-
-            # TODO gyroscope, accelerometer
+            try:
+                gyro = sense.get_gyroscope()
+                core.update_cache('gyro', gyro)
+            except AttributeError as ae:
+                print("AttributeError : {}".format(ae))
+            try:
+                accel = sense.get_accelerometer()
+                core.update_cache('acc', accel)
+            except AttributeError as ae:
+                print("AttributeError : {}".format(ae))
 
         except KeyboardInterrupt:
             print("\n\t\tUser interrupted, exiting.")
@@ -161,7 +169,14 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 print("Cache request")
             try:
                 gps_cache = core.get_cache()
-                self.wfile.write(json.dumps(gps_cache).encode())
+                response_content = json.dumps(gps_cache).encode()
+                self.send_response(200)
+                # defining the response headers
+                self.send_header('Content-Type', 'application/json')
+                content_len = len(response_content)
+                self.send_header('Content-Length', content_len)
+                self.end_headers()
+                self.wfile.write(response_content)
             except Exception as exception:
                 error = {"message": "{}".format(exception)}
                 self.wfile.write(json.dumps(error).encode())
@@ -175,7 +190,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
                     }, {
                         "path": PATH_PREFIX + "/cache",
                         "verb": "GET",
-                        "description": "Get the LIS3MDL cache."
+                        "description": "Get the cache."
                     }]
             }
             response_content = json.dumps(response).encode()
