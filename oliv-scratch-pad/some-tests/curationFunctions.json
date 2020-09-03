@@ -1,0 +1,1990 @@
+{
+  "version" : 1.0,
+  "count" : 118,
+  "curationFunctions" : [ {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Abs1",
+    "title" : "abs",
+    "description" : "Returns the absolute value of a integer value",
+    "categories" : [ "Math" ],
+    "columnFunction" : true,
+    "stuff": 10
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Acos",
+    "title" : "acos",
+    "description" : "Returns the arc cosine of a value; the returned angle is in the range 0.0 through pi",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.AddExact1",
+    "title" : "addExact",
+    "description" : "Returns the sum of its arguments, throwing an exception if the result overflows a int.",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "x", "y" ],
+        "properties" : {
+          "x" : {
+            "title" : "x",
+            "$ref" : "#/definitions/column"
+          },
+          "y" : {
+            "title" : "y",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Asin",
+    "title" : "asin",
+    "description" : "Returns the arc sine of a value; the returned angle is in the range -pi/2 through pi/2.",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Atan",
+    "title" : "atan",
+    "description" : "Returns the arc tangent of a value; the returned angle is in the range -pi/2 through pi/2",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Atan2",
+    "title" : "atan2",
+    "description" : "Returns the angle theta from the conversion of rectangular coordinates (x, y) to polar coordinates (r, theta).",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "x", "y" ],
+        "properties" : {
+          "x" : {
+            "title" : "x",
+            "$ref" : "#/definitions/column"
+          },
+          "y" : {
+            "title" : "y",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Beta",
+    "title" : "beta",
+    "description" : "Returns the beta function of the arguments",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "a", "b" ],
+        "properties" : {
+          "a" : {
+            "title" : "a",
+            "$ref" : "#/definitions/column"
+          },
+          "b" : {
+            "title" : "b",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.BetaComplemented",
+    "title" : "betaComplemented",
+    "description" : "Returns the area under the right hand tail (from x to infinity) of the beta density function",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "a", "b", "x" ],
+        "properties" : {
+          "a" : {
+            "title" : "a",
+            "$ref" : "#/definitions/column"
+          },
+          "b" : {
+            "title" : "b",
+            "$ref" : "#/definitions/column"
+          },
+          "x" : {
+            "title" : "x",
+            "$ref" : "#/definitions/columnOrText"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          },
+          "columnOrText" : {
+            "type" : "string",
+            "format" : "columnOrText"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Binomial1",
+    "title" : "binomial",
+    "description" : "Returns the binomial coefficient, often also referred to as 'n over k' or 'n choose k'",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "n", "k" ],
+        "properties" : {
+          "k" : {
+            "title" : "k",
+            "$ref" : "#/definitions/column"
+          },
+          "n" : {
+            "title" : "n",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.BinomialComplemented",
+    "title" : "binomialComplemented",
+    "description" : "Returns the sum of the terms k+1 through n of the Binomial probability density",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "k", "n", "p" ],
+        "properties" : {
+          "p" : {
+            "title" : "p",
+            "$ref" : "#/definitions/column"
+          },
+          "k" : {
+            "title" : "k",
+            "$ref" : "#/definitions/column"
+          },
+          "n" : {
+            "title" : "n",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.BitMaskWithBitsSetFromTo",
+    "title" : "bitMaskWithBitsSetFromTo",
+    "description" : "Returns a bit mask with bits in the specified range set to 1, all the rest set to 0",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "from", "to" ],
+        "properties" : {
+          "from" : {
+            "title" : "from",
+            "$ref" : "#/definitions/column"
+          },
+          "to" : {
+            "title" : "to",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.Capitalize",
+    "title" : "Capitalize",
+    "description" : "Capitalize",
+    "categories" : [ "String" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Cbrt",
+    "title" : "cbrt",
+    "description" : "Returns the cube root of a double value",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Ceil",
+    "title" : "ceil",
+    "description" : "Returns the smallest long >= value. This method is safer than using (long) Math.ceil(value), because of possible rounding error",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.ChiSquare",
+    "title" : "chiSquare",
+    "description" : "Returns the area under the left hand tail (from 0 to x) of the Chi square probability density function with",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "v", "x" ],
+        "properties" : {
+          "v" : {
+            "title" : "v",
+            "$ref" : "#/definitions/columnOrText"
+          },
+          "x" : {
+            "title" : "x",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          },
+          "columnOrText" : {
+            "type" : "string",
+            "format" : "columnOrText"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.ChiSquareComplemented",
+    "title" : "chiSquareComplemented",
+    "description" : "Returns the area under the right hand tail (from x to infinity) of the Chi square probability density function with v degrees of freedom",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "v", "x" ],
+        "properties" : {
+          "v" : {
+            "title" : "v",
+            "$ref" : "#/definitions/column"
+          },
+          "x" : {
+            "title" : "x",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.CopySign",
+    "title" : "copySign",
+    "description" : "Returns the first floating-point argument with the sign of the second floating-point argument.",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "magnitude", "sign" ],
+        "properties" : {
+          "sign" : {
+            "title" : "sign",
+            "$ref" : "#/definitions/column"
+          },
+          "magnitude" : {
+            "title" : "magnitude",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Cos",
+    "title" : "cos",
+    "description" : "Returns the trigonometric cosine of an angle",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Cosh",
+    "title" : "cosh",
+    "description" : "Returns the hyperbolic cosine of a double value",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.DecrementExact",
+    "title" : "decrementExact",
+    "description" : "Returns the argument decremented by one, throwing an exception if the result overflows a long",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.spark.transforms.Distinct",
+    "title" : "distinct",
+    "description" : "distinct by columns",
+    "categories" : [ "Columns" ],
+    "columnFunction" : false
+  }, {
+    "name" : "oracle.cloud.cdl.spark.transforms.DropDuplicates",
+    "title" : "dropDuplicates",
+    "description" : "Drop duplicates",
+    "categories" : [ "Columns" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "columns" ],
+        "properties" : {
+          "columns" : {
+            "description" : "Columns to choose",
+            "title" : "Column",
+            "$ref" : "#/definitions/columns"
+          }
+        },
+        "definitions" : {
+          "columns" : {
+            "type" : "array",
+            "format" : "columns",
+            "uniqueItems" : true,
+            "items" : {
+              "$ref" : "#/definitions/column"
+            }
+          },
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : false
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.DurbinWatson",
+    "title" : "DurbinWatson",
+    "description" : "Durbin-Watson computation",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.ErrorFunction",
+    "title" : "errorFunction",
+    "description" : "Returns the error function of the normal distribution",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.ErrorFunctionComplemented",
+    "title" : "errorFunctionComplemented",
+    "description" : "Returns the complementary Error function of the normal distribution",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Exp",
+    "title" : "exp",
+    "description" : "Returns Euler's number e raised to the power of a double value",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Expm1",
+    "title" : "expm1",
+    "description" : "Returns ex -1",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Factorial",
+    "title" : "factorial",
+    "description" : "Returns the factorial k!",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.spark.transforms.Filter",
+    "title" : "filter",
+    "description" : "filter by columns",
+    "categories" : [ "Columns" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "expression" ],
+        "properties" : {
+          "expression" : {
+            "description" : "Filter rows that match any of the specified expression",
+            "title" : "Filter Expression",
+            "$ref" : "#/definitions/logicalExpression"
+          }
+        },
+        "definitions" : {
+          "logicalExpression" : {
+            "type" : "string",
+            "format" : "logicalExpression"
+          }
+        }
+      }
+    },
+    "columnFunction" : false
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Floor",
+    "title" : "floor",
+    "description" : "Returns the largest long <= value. This method is safer than using (long) Math.floor(value), because of possible rounding error",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.FloorDiv2",
+    "title" : "floorDiv",
+    "description" : "Returns the largest (closest to positive infinity) int value that is less than or equal to the algebraic quotient",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "x", "y" ],
+        "properties" : {
+          "x" : {
+            "title" : "x",
+            "$ref" : "#/definitions/column"
+          },
+          "y" : {
+            "title" : "y",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.FloorMod1",
+    "title" : "floorMod",
+    "description" : "Returns the floor modulus of the long arguments",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "x", "y" ],
+        "properties" : {
+          "x" : {
+            "title" : "x",
+            "$ref" : "#/definitions/column"
+          },
+          "y" : {
+            "title" : "y",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Fma",
+    "title" : "fma",
+    "description" : "Returns the fused multiply add of the three arguments; that is, returns the exact product of the first two arguments summed with the third argument and then rounded once to the nearest double",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "a", "b", "c" ],
+        "properties" : {
+          "a" : {
+            "title" : "a",
+            "$ref" : "#/definitions/column"
+          },
+          "b" : {
+            "title" : "b",
+            "$ref" : "#/definitions/column"
+          },
+          "c" : {
+            "title" : "c",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Gamma",
+    "title" : "gamma",
+    "description" : "Returns the Gamma function of the argument",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.GammaComplemented",
+    "title" : "gammaComplemented",
+    "description" : "Returns the integral from x to infinity of the gamma probability density function",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "a", "b", "x" ],
+        "properties" : {
+          "a" : {
+            "title" : "a",
+            "$ref" : "#/definitions/column"
+          },
+          "b" : {
+            "title" : "b",
+            "$ref" : "#/definitions/column"
+          },
+          "x" : {
+            "title" : "x",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.GeometricMean",
+    "title" : "GeometricMean",
+    "description" : "Returns the geometric mean of a data sequence",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.GeometricMean1",
+    "title" : "GeometricMean1",
+    "description" : "Returns the geometric mean of a data sequence",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.GetExponent1",
+    "title" : "getExponent",
+    "description" : "Returns the unbiased exponent used in the representation of a double",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.spark.transforms.GroupByAggr",
+    "title" : "GroupBy",
+    "description" : "group by columns",
+    "categories" : [ "Columns" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "groupByColumns", "aggrs" ],
+        "properties" : {
+          "aggrs" : {
+            "description" : "Aggr description",
+            "title" : "Aggrs",
+            "$ref" : "#/definitions/aggrMap"
+          },
+          "groupByColumns" : {
+            "description" : "Columns to groupby",
+            "title" : "Group by Columns",
+            "$ref" : "#/definitions/columns"
+          }
+        },
+        "definitions" : {
+          "columns" : {
+            "type" : "array",
+            "format" : "columns",
+            "uniqueItems" : true,
+            "items" : {
+              "$ref" : "#/definitions/column"
+            }
+          },
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          },
+          "aggrMap" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "required" : [ "targetColumn", "aggrType", "column" ],
+              "properties" : {
+                "targetColumn" : {
+                  "type" : "string"
+                },
+                "aggrType" : {
+                  "type" : "string",
+                  "$ref" : "#/definitions/aggrType"
+                },
+                "column" : {
+                  "type" : "string",
+                  "$ref" : "#/definitions/column"
+                },
+                "column2" : {
+                  "type" : "string",
+                  "$ref" : "#/definitions/column"
+                },
+                "ignoreNull" : {
+                  "type" : "boolean"
+                }
+              }
+            }
+          },
+          "aggrType" : {
+            "title" : "Aggregation type",
+            "description" : "Select aggregation type",
+            "type" : "string",
+            "enum" : [ "count", "mean", "sum", "min", "max", "avg", "variance", "var_samp", "var_pop", "stddev", "stddev_samp", "stddev_pop", "sumDistance", "kurtosis", "skewness", "corr", "covar_samp", "covar_pop" ]
+          }
+        }
+      }
+    },
+    "columnFunction" : false
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.HarmonicMean",
+    "title" : "HarmonicMean",
+    "description" : "Returns the harmonic mean of a data sequence",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Hypot",
+    "title" : "hypot",
+    "description" : "Returns sqrt(x2 +y2) without intermediate overflow or underflow",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "x", "y" ],
+        "properties" : {
+          "x" : {
+            "title" : "x",
+            "$ref" : "#/definitions/column"
+          },
+          "y" : {
+            "title" : "y",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.IEEEremainder",
+    "title" : "IEEEremainder",
+    "description" : "Computes the remainder operation on two arguments as prescribed by the IEEE 754 standard.",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "divident", "divisor" ],
+        "properties" : {
+          "divisor" : {
+            "title" : "divisor",
+            "$ref" : "#/definitions/column"
+          },
+          "divident" : {
+            "title" : "divident",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.IncompleteBeta",
+    "title" : "incompleteBeta",
+    "description" : "Returns the Incomplete Beta Function evaluated from zero to xx",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "aa", "bb", "xx" ],
+        "properties" : {
+          "aa" : {
+            "title" : "aa",
+            "$ref" : "#/definitions/column"
+          },
+          "bb" : {
+            "title" : "bb",
+            "$ref" : "#/definitions/column"
+          },
+          "xx" : {
+            "title" : "xx",
+            "$ref" : "#/definitions/columnOrText"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          },
+          "columnOrText" : {
+            "type" : "string",
+            "format" : "columnOrText"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.IncompleteGamma",
+    "title" : "incompleteGamma",
+    "description" : "Returns the Incomplete Gamma function",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.IncompleteGammaComplement",
+    "title" : "incompleteGammaComplement",
+    "description" : "Returns the Complemented Incomplete Gamma function",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "a", "x" ],
+        "properties" : {
+          "a" : {
+            "title" : "a",
+            "$ref" : "#/definitions/column"
+          },
+          "x" : {
+            "title" : "x",
+            "$ref" : "#/definitions/columnOrText"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          },
+          "columnOrText" : {
+            "type" : "string",
+            "format" : "columnOrText"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.IncrementExact",
+    "title" : "incrementExact",
+    "description" : "Returns the argument incremented by one, throwing an exception if the result overflows an int.",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.Lag1",
+    "title" : "Lag1",
+    "description" : "Returns the lag-1 autocorrelation of a dataset",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.LeastSignificantBit",
+    "title" : "leastSignificantBit",
+    "description" : "Returns the index of the least significant bit in state 'true'",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Log1",
+    "title" : "log",
+    "description" : "Returns the natural logarithm (base e) of a double value",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Log101",
+    "title" : "log10",
+    "description" : "Returns the base 10 logarithm of a double value",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Log1p",
+    "title" : "log1p",
+    "description" : "Returns the natural logarithm of the sum of the argument and 1",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Log2",
+    "title" : "log2",
+    "description" : "Returns log2 value",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.LogFactorial",
+    "title" : "logFactorial",
+    "description" : "Returns log(k!)",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.LogGamma",
+    "title" : "logGamma",
+    "description" : "Returns the natural logarithm of the gamma function",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.LongFactorial",
+    "title" : "longFactorial",
+    "description" : "Returns the factorial k!",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.MeanDeviation",
+    "title" : "MeanDeviation",
+    "description" : "Returns the mean deviation of a dataset",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.Moment",
+    "title" : "Moment",
+    "description" : "Returns the moment of k-th order with constant c of a data sequence",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "data", "k", "c" ],
+        "properties" : {
+          "c" : {
+            "description" : "moment of c",
+            "type" : "number",
+            "title" : "c"
+          },
+          "data" : {
+            "title" : "data",
+            "$ref" : "#/definitions/column"
+          },
+          "k" : {
+            "description" : "moment of k",
+            "type" : "integer",
+            "title" : "k"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.MostSignificantBit",
+    "title" : "mostSignificantBit",
+    "description" : "Returns the index of the most significant bit in state 'true'",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.MultiplyExact2",
+    "title" : "multiplyExact",
+    "description" : "Returns the product of the arguments, throwing an exception if the result overflows an int",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "x", "y" ],
+        "properties" : {
+          "x" : {
+            "title" : "x",
+            "$ref" : "#/definitions/column"
+          },
+          "y" : {
+            "title" : "y",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.MultiplyFull",
+    "title" : "multiplyFull",
+    "description" : "Returns the exact mathematical product of the arguments",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.MultiplyHigh",
+    "title" : "multiplyHigh",
+    "description" : "Returns as a long the most significant 64 bits of the 128-bit product of two 64-bit factors",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "x", "y" ],
+        "properties" : {
+          "x" : {
+            "title" : "x",
+            "$ref" : "#/definitions/column"
+          },
+          "y" : {
+            "title" : "y",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.NegateExact1",
+    "title" : "negateExact",
+    "description" : "Returns the negation of the argument, throwing an exception if the result overflows a long",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.NegativeBinomial",
+    "title" : "negativeBinomial",
+    "description" : "Returns the sum of the terms 0 through k of the Negative Binomial Distribution",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "k", "n", "p" ],
+        "properties" : {
+          "p" : {
+            "title" : "p",
+            "$ref" : "#/definitions/column"
+          },
+          "k" : {
+            "title" : "k",
+            "$ref" : "#/definitions/column"
+          },
+          "n" : {
+            "title" : "n",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.NegativeBinomialComplemented",
+    "title" : "negativeBinomialComplemented",
+    "description" : "Returns the sum of the terms k+1 to infinity of the Negative Binomial distribution",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "k", "n", "p" ],
+        "properties" : {
+          "p" : {
+            "title" : "p",
+            "$ref" : "#/definitions/column"
+          },
+          "k" : {
+            "title" : "k",
+            "$ref" : "#/definitions/column"
+          },
+          "n" : {
+            "title" : "n",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.NextAfter1",
+    "title" : "nextAfter",
+    "description" : "Returns the float number adjacent to the first argument in the direction of the second argument",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "start", "direction" ],
+        "properties" : {
+          "start" : {
+            "title" : "start",
+            "$ref" : "#/definitions/column"
+          },
+          "direction" : {
+            "title" : "direction",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.NextDown",
+    "title" : "nextDown",
+    "description" : "Returns the float value adjacent to d in the direction of negative infinity",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.NextUp",
+    "title" : "nextUp",
+    "description" : "Returns the double value adjacent to d in the direction of positive infinity",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Normal",
+    "title" : "normal",
+    "description" : "",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "mean", "variance", "x" ],
+        "properties" : {
+          "variance" : {
+            "title" : "variance",
+            "$ref" : "#/definitions/columnOrText"
+          },
+          "mean" : {
+            "title" : "mean",
+            "$ref" : "#/definitions/column"
+          },
+          "x" : {
+            "title" : "x",
+            "$ref" : "#/definitions/columnOrText"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          },
+          "columnOrText" : {
+            "type" : "string",
+            "format" : "columnOrText"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.NormalInverse",
+    "title" : "normalInverse",
+    "description" : " Returns the value, x, for which the area under the Normal (Gaussian) probability density function (integrated from minus infinity to x) is equal to the argument y (assumes mean is zero, variance is one)",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.spark.transforms.Pivot",
+    "title" : "Pivot",
+    "description" : "Pivots a column of the current DataFrame and performs the specified aggregation",
+    "categories" : [ "Columns" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "groupByColumns", "pivotColumn", "aggrType", "aggrColumns", "outputSchema" ],
+        "properties" : {
+          "outputSchema" : {
+            "description" : "Output Schema",
+            "title" : "Output Schema",
+            "$ref" : "#/definitions/schemaMap"
+          },
+          "pivotColumn" : {
+            "description" : "Columns to pivot",
+            "title" : "Pivot Column",
+            "$ref" : "#/definitions/column"
+          },
+          "aggrColumns" : {
+            "description" : "Columns to aggr",
+            "title" : "Columns to Aggregate",
+            "$ref" : "#/definitions/columns"
+          },
+          "groupByColumns" : {
+            "description" : "Columns to groupby",
+            "title" : "Columns to groupby",
+            "$ref" : "#/definitions/columns"
+          },
+          "aggrType" : {
+            "description" : "Aggr Type to aggr",
+            "type" : "string",
+            "title" : "AggrType"
+          }
+        },
+        "definitions" : {
+          "columns" : {
+            "type" : "array",
+            "format" : "columns",
+            "uniqueItems" : true,
+            "items" : {
+              "$ref" : "#/definitions/column"
+            }
+          },
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          },
+          "schemaMap" : {
+            "type" : "object",
+            "required" : [ "fields" ],
+            "properties" : {
+              "fields" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "object",
+                  "required" : [ "name", "type" ],
+                  "properties" : {
+                    "name" : {
+                      "type" : "string"
+                    },
+                    "type" : {
+                      "type" : "string",
+                      "enum" : [ "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTES", "STRING", "BOOLEAN", "DATE", "TIMESTAMP", "BIGDECIMAL", "OBJECT" ]
+                    },
+                    "length" : {
+                      "type" : "number"
+                    },
+                    "precision" : {
+                      "type" : "number"
+                    },
+                    "scale" : {
+                      "type" : "number"
+                    },
+                    "roundingMode" : {
+                      "type" : "string",
+                      "enum" : [ "UP", "DOWN", "CEILING", "FLOOR", "HALF_UP", "HALF_DOWN", "HALF_EVEN", "UNNECESSARY" ]
+                    },
+                    "timestampFormat" : {
+                      "type" : "string"
+                    },
+                    "timzeZone" : {
+                      "type" : "string"
+                    },
+                    "className" : {
+                      "type" : "string"
+                    },
+                    "nullable" : {
+                      "type" : "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "columnFunction" : false
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Poisson",
+    "title" : "poisson",
+    "description" : "Returns the sum of the first k terms of the Poisson distribution",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "k", "mean" ],
+        "properties" : {
+          "mean" : {
+            "title" : "mean",
+            "$ref" : "#/definitions/column"
+          },
+          "k" : {
+            "title" : "k",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.PoissonComplemented",
+    "title" : "poissonComplemented",
+    "description" : "Returns the sum of the terms k+1 to Infinity of the Poisson distribution",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "k", "mean" ],
+        "properties" : {
+          "mean" : {
+            "title" : "mean",
+            "$ref" : "#/definitions/column"
+          },
+          "k" : {
+            "title" : "k",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.PooledMean",
+    "title" : "PooledMean",
+    "description" : "Returns the pooled mean of two data sequences",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.PooledVariance",
+    "title" : "PooledVariance",
+    "description" : "Returns the pooled variance of two data sequences",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Pow",
+    "title" : "pow",
+    "description" : "Returns the value of the first argument raised to the power of the second argument",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "a", "b" ],
+        "properties" : {
+          "a" : {
+            "title" : "a",
+            "$ref" : "#/definitions/column"
+          },
+          "b" : {
+            "title" : "b",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.Product",
+    "title" : "Product",
+    "description" : "Returns the product, which is Prod( data[i] ) In other words: data[0]*data[1]*...*data[data.size()-1]",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.QuantileInverse",
+    "title" : "QuantileInverse",
+    "description" : "Returns how many percent of the elements contained in the receiver are <= element",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "data", "element" ],
+        "properties" : {
+          "data" : {
+            "title" : "data",
+            "$ref" : "#/definitions/column"
+          },
+          "element" : {
+            "description" : "element",
+            "type" : "number",
+            "title" : "element"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.RankInterpolated",
+    "title" : "RankInterpolated",
+    "description" : "Returns the linearly interpolated number of elements in a list less or equal to a given element",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "data", "element" ],
+        "properties" : {
+          "data" : {
+            "title" : "data",
+            "$ref" : "#/definitions/column"
+          },
+          "element" : {
+            "description" : "element",
+            "type" : "number",
+            "title" : "element"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.RemoveAccents",
+    "title" : "Remove accents",
+    "description" : "Remove accents",
+    "categories" : [ "String" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.RemoveWhitespaces",
+    "title" : "Remove whitespaces",
+    "description" : "Remove whitespaces",
+    "categories" : [ "String" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Rint",
+    "title" : "rint",
+    "description" : "Returns the double value that is closest in value to the argument and is equal to a mathematical integer",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.Rms",
+    "title" : "Rms",
+    "description" : "Returns the RMS (Root-Mean-Square) of a data sequence.",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Round1",
+    "title" : "round",
+    "description" : "Returns the closest int to the argument, with ties rounding to positive infinity",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.SampleKurtosis",
+    "title" : "SampleKurtosis",
+    "description" : "Returns the sample kurtosis (aka excess) of a data sequence",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.SampleKurtosisStandardError",
+    "title" : "SampleKurtosisStandardError",
+    "description" : "Return the standard error of the sample kurtosis",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.SampleSkew",
+    "title" : "SampleSkew",
+    "description" : "Returns the sample skew of a data sequence",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.SampleSkewStandardError",
+    "title" : "SampleSkewStandardError",
+    "description" : "Return the standard error of the sample skew",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Scalb",
+    "title" : "scalb",
+    "description" : "Returns d × 2^scaleFactor rounded as if performed by a single correctly rounded floating-point multiply to a member of the double value set.",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "d", "scalefactor" ],
+        "properties" : {
+          "scalefactor" : {
+            "title" : "scalefactor",
+            "$ref" : "#/definitions/column"
+          },
+          "d" : {
+            "title" : "d",
+            "$ref" : "#/definitions/columnOrText"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          },
+          "columnOrText" : {
+            "type" : "string",
+            "format" : "columnOrText"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.spark.transforms.Select",
+    "title" : "Select",
+    "description" : "Derive a new table with an arbitrary schema from columns, formulas, and constants",
+    "categories" : [ "Columns" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "columns" ],
+        "properties" : {
+          "columns" : {
+            "description" : "Columns to choose",
+            "title" : "Selected Columns",
+            "$ref" : "#/definitions/selectMap"
+          }
+        },
+        "definitions" : {
+          "selectMap" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "required" : [ "expression", "alias" ],
+              "properties" : {
+                "expression" : {
+                  "$ref" : "#/definitions/arithmeticExpression"
+                },
+                "alias" : {
+                  "type" : "string"
+                }
+              }
+            }
+          },
+          "arithmeticExpression" : {
+            "type" : "string",
+            "format" : "arithmeticExpression"
+          }
+        }
+      }
+    },
+    "columnFunction" : false
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Signum",
+    "title" : "signum",
+    "description" : "Returns the signum function of the argument; zero if the argument is zero, 1.0f if the argument is greater than zero, -1.0f if the argument is less than zero",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Sin",
+    "title" : "sin",
+    "description" : "Returns the trigonometric sine of an angle",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Sinh",
+    "title" : "sinh",
+    "description" : "Returns the hyperbolic sine of a double value",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.spark.transforms.Sort",
+    "title" : "Sort",
+    "description" : "Sort rows based on values in one or more columns",
+    "categories" : [ "Columns" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "descs" ],
+        "properties" : {
+          "descs" : {
+            "description" : "Sort Descriptors",
+            "title" : "Sort Descriptors",
+            "$ref" : "#/definitions/sortMap"
+          }
+        },
+        "definitions" : {
+          "sortMap" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "required" : [ "column", "asc" ],
+              "properties" : {
+                "column" : {
+                  "type" : "string"
+                },
+                "asc" : {
+                  "type" : "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "columnFunction" : false
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Sqrt",
+    "title" : "sqrt",
+    "description" : "Returns the correctly rounded positive square root of a double value",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.StandardError",
+    "title" : "StandardError",
+    "description" : "Returns the standard error of a data sequence",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.StirlingCorrection",
+    "title" : "stirlingCorrection",
+    "description" : "Correction term of the Stirling approximation for log(k!) (series in 1/k, or table values for small k) with int parameter k",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.StudentT",
+    "title" : "studentT",
+    "description" : "Returns the integral from minus infinity to t of the Student-t  distribution with k > 0 degrees of freedom",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "k", "t" ],
+        "properties" : {
+          "t" : {
+            "title" : "t",
+            "$ref" : "#/definitions/column"
+          },
+          "k" : {
+            "title" : "k",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.StudentTInverse",
+    "title" : "studentTInverse",
+    "description" : "Returns the value, t, for which the area under the Student-t probability density function (integrated from minus infinity to t) is equal to 1-alpha/2",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "alpha", "size" ],
+        "properties" : {
+          "size" : {
+            "title" : "size",
+            "$ref" : "#/definitions/column"
+          },
+          "alpha" : {
+            "title" : "alpha",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.SubtractExact1",
+    "title" : "subtractExact",
+    "description" : "Returns the difference of the arguments, throwing an exception if the result overflows a long",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "x", "y" ],
+        "properties" : {
+          "x" : {
+            "title" : "x",
+            "$ref" : "#/definitions/column"
+          },
+          "y" : {
+            "title" : "y",
+            "$ref" : "#/definitions/column"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.SumOfInversions",
+    "title" : "SumOfInversions",
+    "description" : "Returns the sum of inversions of a data sequence",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.SumOfLogarithms",
+    "title" : "SumOfLogarithms",
+    "description" : "Returns the sum of logarithms of a data sequence, which is Sum( Log(data[i])",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.SumOfPowerDeviations",
+    "title" : "SumOfPowerDeviations",
+    "description" : "Returns Sum( (data[i]-c)k ) for all i = from .. to",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "data", "k", "c" ],
+        "properties" : {
+          "c" : {
+            "description" : "c",
+            "type" : "number",
+            "title" : "c"
+          },
+          "data" : {
+            "title" : "data",
+            "$ref" : "#/definitions/column"
+          },
+          "k" : {
+            "description" : "k",
+            "type" : "integer",
+            "title" : "k"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.SumOfPowers",
+    "title" : "SumOfPowers",
+    "description" : "Returns the sum of powers of a data sequence, which is Sum ( data[i]k )",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "data", "k" ],
+        "properties" : {
+          "data" : {
+            "title" : "data",
+            "$ref" : "#/definitions/column"
+          },
+          "k" : {
+            "description" : "k",
+            "type" : "integer",
+            "title" : "k"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.SumOfSquaredDeviations",
+    "title" : "SumOfSquaredDeviations",
+    "description" : "Returns the sum of squared mean deviation of of a data sequence",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.SumOfSquares",
+    "title" : "SumOfSquares",
+    "description" : "Returns the sum of squares of a data sequence",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Tan",
+    "title" : "tan",
+    "description" : "Returns the trigonometric tangent of an angle",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Tanh",
+    "title" : "tanh",
+    "description" : "Returns the hyperbolic tangent of a double value",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.ToLowerCase",
+    "title" : "To Lower Case",
+    "description" : "Converts a string to lower case",
+    "categories" : [ "String" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.ToUpperCase",
+    "title" : "To Upper Case",
+    "description" : "Converts a string to upper case",
+    "categories" : [ "String" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.ToDegrees",
+    "title" : "toDegrees",
+    "description" : "Converts an angle measured in radians to an approximately equivalent angle measured in degrees",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.ToIntExact",
+    "title" : "toIntExact",
+    "description" : "Returns the value of the long argument; throwing an exception if the value overflows an int",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.ToRadians",
+    "title" : "toRadians",
+    "description" : "Converts an angle measured in degrees to an approximately equivalent angle measured in radians",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.TrimQuotes",
+    "title" : "Trim Quotes",
+    "description" : "Trim quotes",
+    "categories" : [ "String" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.TrimWhitespaces",
+    "title" : "Trim whitespaces",
+    "description" : "Trim whitespaces",
+    "categories" : [ "String" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.TrimmedMean",
+    "title" : "TrimmedMean",
+    "description" : "Returns the trimmed mean of a sorted data sequence",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "data", "left", "right" ],
+        "properties" : {
+          "data" : {
+            "title" : "data",
+            "$ref" : "#/definitions/column"
+          },
+          "left" : {
+            "description" : "smallest index to remove",
+            "type" : "integer",
+            "title" : "left"
+          },
+          "right" : {
+            "description" : "largest index to remove",
+            "type" : "integer",
+            "title" : "right"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.colt.functions.Ulp1",
+    "title" : "ulp",
+    "description" : "Returns the size of an ulp of the argument",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.WeightedMean",
+    "title" : "WeightedMean",
+    "description" : "Returns the weighted mean of a data sequence",
+    "categories" : [ "Math" ],
+    "columnFunction" : true
+  }, {
+    "name" : "oracle.cloud.cdl.engine.functions.math.aggrs.WinsorizedMean",
+    "title" : "WinsorizedMean",
+    "description" : "Returns the winsorized mean of a sorted data sequence",
+    "categories" : [ "Math" ],
+    "parameters" : {
+      "schema" : {
+        "$schema" : "http://json-schema.org/draft-07/schema#",
+        "additionalProperties" : false,
+        "type" : "object",
+        "required" : [ "data", "left", "right" ],
+        "properties" : {
+          "data" : {
+            "title" : "data",
+            "$ref" : "#/definitions/column"
+          },
+          "left" : {
+            "description" : "left",
+            "type" : "integer",
+            "title" : "left"
+          },
+          "right" : {
+            "description" : "right",
+            "type" : "integer",
+            "title" : "right"
+          }
+        },
+        "definitions" : {
+          "column" : {
+            "type" : "string",
+            "format" : "column"
+          }
+        }
+      }
+    },
+    "columnFunction" : true
+  } ]
+}

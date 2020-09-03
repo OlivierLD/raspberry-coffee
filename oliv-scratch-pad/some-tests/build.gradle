@@ -32,6 +32,9 @@ dependencies {
     compile 'javax.interceptor:javax.interceptor-api:1.2.2'
     compile 'org.yaml:snakeyaml:1.21'
     compile 'oracle:xmlparser:2.0'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.11.2'
+
     // Require tools.jar, from the JDK (Doclet and Co)
 //    compile files(org.gradle.internal.jvm.Jvm.current().toolsJar)
     compile files("${System.getProperty('java.home')}/../lib/tools.jar")

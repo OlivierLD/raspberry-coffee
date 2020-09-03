@@ -5,3 +5,5 @@ Start with a
 ```
 $ suso apt-get install sense-hat
 ```
+And then...
+    more to come.
