@@ -30,12 +30,12 @@
         </tr>
         <tr>
             <td><span id="date"></span></td>
-            <td style="text-align: right;"><span id="sun-z"></span></td>
-            <td style="text-align: right;"><span id="sun-el"></span></td>
-            <td style="text-align: right;"><span id="dev-z"></span></td>
-            <td style="text-align: right;"><span id="last-dev-z-move"></span></td>
-            <td style="text-align: right;"><span id="dev-el"></span></td>
-            <td style="text-align: right;"><span id="last-dev-el-move"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="sun-z"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="sun-el"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="dev-z"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="last-dev-z-move"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="dev-el"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="last-dev-el-move"></span></td>
         </tr>
     </table>
 </body>
@@ -50,9 +50,9 @@
         document.getElementById('dev-el').innerHTML = json.DEVICE_DATA.elevation.toFixed(2) + '&deg;';
 
         document.getElementById('last-dev-z-move').innerHTML = json.MOVING_AZIMUTH_END.date + '<br/>' +
-            '(' + json.MOVING_AZIMUTH_END.nbSteps + ' in ' + json.MOVING_AZIMUTH_END.elapsed + ' ms)';
+            '(' + json.MOVING_AZIMUTH_END.nbSteps + ' move(s) in ' + json.MOVING_AZIMUTH_END.elapsed + ' ms)';
         document.getElementById('last-dev-el-move').innerHTML = json.MOVING_ELEVATION_END.date + '<br/>' +
-            '(' + json.MOVING_ELEVATION_END.nbSteps + ' in ' + json.MOVING_ELEVATION_END.elapsed + ' ms)';
+            '(' + json.MOVING_ELEVATION_END.nbSteps + ' move(s) in ' + json.MOVING_ELEVATION_END.elapsed + ' ms)';
     }
 
     window.onload = () => {
