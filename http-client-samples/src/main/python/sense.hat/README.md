@@ -7,3 +7,8 @@ $ suso apt-get install sense-hat
 ```
 And then...
     more to come.
+    
+## Server
+```
+$ python3 sense_hat_server.py --machine-name:$(hostname -I)
+```    

@@ -1,0 +1,40 @@
+{
+  "version" : 1.0,
+  "bagnoles" : [
+    {
+      "make": "VolksWagen",
+      "model": "One",
+      "power": 100,
+      "categories": [ "RV", "SUV" ],
+      "second-hand": true,
+      "price": 1000
+    }, {
+      "make": "VolksWagen",
+      "model": "Two",
+      "power": 100,
+      "categories": [ "RV", "SUV" ],
+      "second-hand": false,
+      "price": 1100
+    }, {
+      "make": "VolksWagen",
+      "model": "Three",
+      "power": 100,
+      "categories": [ "RV", "SUV" ],
+      "second-hand": true,
+      "price": 1200
+    }, {
+      "make": "Nissan",
+      "model": "Micra",
+      "power": 100,
+      "categories": [ "LEMON" ],
+      "second-hand": false,
+      "price": 900
+    }, {
+      "make": "Citroen",
+      "model": "2CV",
+      "power": 2,
+      "categories": [ "COLLECTIBLE" ],
+      "second-hand": true,
+      "price": 9000
+    } ]
+}
