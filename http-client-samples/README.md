@@ -108,7 +108,7 @@ See the script named `rgb_display_minipitfttest.py` and execute it
 ```
 $ sudo python3 rgb_display_minipitfttest.py
 ```
-
+Same for `rgb_display_minipitftstats.py`
 
 ---
  

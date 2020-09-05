@@ -1,3 +1,6 @@
+#
+# Display several backlight colors, based on button push.
+#
 import digitalio
 import board
 
