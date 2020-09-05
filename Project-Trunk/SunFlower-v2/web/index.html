@@ -37,6 +37,11 @@
             <td style="text-align: right; vertical-align: top;"><span id="dev-el"></span></td>
             <td style="text-align: right; vertical-align: top;"><span id="last-dev-el-move"></span></td>
         </tr>
+        <tr>
+            <td colspan="7">
+                <div id="raw-json" style="height: 200px; overflow: auto;"></div>
+            </td>
+        </tr>
     </table>
 </body>
 <script type="text/javascript">
@@ -53,6 +58,7 @@
             '(' + json.MOVING_AZIMUTH_END.nbSteps + ' move(s) in ' + json.MOVING_AZIMUTH_END.elapsed + ' ms)';
         document.getElementById('last-dev-el-move').innerHTML = json.MOVING_ELEVATION_END.date + '<br/>' +
             '(' + json.MOVING_ELEVATION_END.nbSteps + ' move(s) in ' + json.MOVING_ELEVATION_END.elapsed + ' ms)';
+        document.getElementById('raw-json').innerText = JSON.stringify(json, null, 2);
     }
 
     window.onload = () => {
