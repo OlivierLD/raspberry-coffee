@@ -33,15 +33,20 @@ buttonB = digitalio.DigitalInOut(board.D24)
 buttonA.switch_to_input()
 buttonB.switch_to_input()
 
+keep_looping = True
 # Main loop:
-while True:
-    if buttonA.value and buttonB.value:
-        backlight.value = False  # turn off backlight
-    else:
-        backlight.value = True  # turn on backlight
-    if buttonB.value and not buttonA.value:  # just button A pressed
-        display.fill(color565(255, 0, 0))  # red
-    if buttonA.value and not buttonB.value:  # just button B pressed
-        display.fill(color565(0, 0, 255))  # blue
-    if not buttonA.value and not buttonB.value:  # none pressed
-        display.fill(color565(0, 255, 0))  # green
+while keep_looping:
+    try:
+        if buttonA.value and buttonB.value:
+            backlight.value = False  # turn off backlight
+        else:
+            backlight.value = True  # turn on backlight
+        if buttonB.value and not buttonA.value:  # just button A pressed
+            display.fill(color565(255, 0, 0))  # red
+        if buttonA.value and not buttonB.value:  # just button B pressed
+            display.fill(color565(0, 0, 255))  # blue
+        if not buttonA.value and not buttonB.value:  # none pressed
+            display.fill(color565(0, 255, 0))  # green
+    except KeyboardInterrupt:
+        print("\n\t\tUser interrupted, exiting.")
+        keep_looping = False
