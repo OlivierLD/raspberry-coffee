@@ -10,6 +10,7 @@ so they can be reached from any HTTP Client, written in Java in our case.
 - [Monochrome 2.42" oled screen](https://learn.adafruit.com/1-5-and-2-4-monochrome-128x64-oled-display-module?view=all), Raspberry Pi, `I2C` and `SPI`.
 - [240x240 TFT](https://www.adafruit.com/product/3787), [tutorial](https://learn.adafruit.com/adafruit-1-3-and-1-54-240-x-240-wide-angle-tft-lcd-displays?view=all), look for `ST7789 and ST7735-based Displays, 1.3", 1.54", and 2.0" IPS TFT Display`.
 - [2.13" E-INK](https://learn.adafruit.com/2-13-in-e-ink-bonnet?view=all).
+- [240x351 mini color TFT](https://www.adafruit.com/product/4393), setup doc [here](https://learn.adafruit.com/adafruit-mini-pitft-135x240-color-tft-add-on-for-raspberry-pi?view=all#attaching-3044215-2).
 
 ### LIS3MDL
 On the Raspberry Pi, install the required python packages:
@@ -93,6 +94,21 @@ $ ./eink.sh
   You say ? ('Q' to quit) > Q
   Bye!
 ```
+
+## 240x135 mini color TFT
+Install the required libs and artifacts:
+```
+$ sudo pip3 install adafruit-circuitpython-rgb-display
+$ sudo pip3 install --upgrade --force-reinstall spidev
+$ sudo apt-get install ttf-dejavu 
+$ sudo apt-get install python3-pil
+$ sudo apt-get install python3-numpy
+```
+See the script named `rgb_display_minipitfttest.py` and execute it
+```
+$ sudo python3 rgb_display_minipitfttest.py
+```
+
 
 ---
  
