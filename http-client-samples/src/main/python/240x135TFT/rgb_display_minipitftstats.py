@@ -53,7 +53,6 @@ bottom = height - padding
 # Move left to right keeping track of the current x position for drawing shapes.
 x = 0
 
-
 # Alternatively load a TTF font.  Make sure the .ttf font file is in the
 # same directory as the python script!
 # Some other nice fonts to try: http://www.dafont.com/bitmap.php
@@ -84,15 +83,15 @@ while keep_looping:
 
         # Write four lines of text.
         y = top
-        draw.text((x, y), IP, font=font, fill="#FFFFFF")
+        draw.text((x, y), IP, font=font, fill="#FFFFFF")        # White
         y += font.getsize(IP)[1]
-        draw.text((x, y), CPU, font=font, fill="#FFFF00")
+        draw.text((x, y), CPU, font=font, fill="#FFFF00")       # Yellow
         y += font.getsize(CPU)[1]
-        draw.text((x, y), MemUsage, font=font, fill="#00FF00")
+        draw.text((x, y), MemUsage, font=font, fill="#00FF00")  # Green
         y += font.getsize(MemUsage)[1]
-        draw.text((x, y), Disk, font=font, fill="#0000FF")
+        draw.text((x, y), Disk, font=font, fill="#0000FF")      # Blue
         y += font.getsize(Disk)[1]
-        draw.text((x, y), Temp, font=font, fill="#FF00FF")
+        draw.text((x, y), Temp, font=font, fill="#FF00FF")      # Purple
 
         # Display image.
         disp.image(image, rotation)
