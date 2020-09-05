@@ -100,3 +100,5 @@ while keep_looping:
     except KeyboardInterrupt:
         print("\n\t\tUser interrupted, exiting.")
         keep_looping = False
+        # clean the e=screen
+        draw.rectangle((0, 0, width, height), outline=0, fill=0)
