@@ -9,14 +9,36 @@
     <title>SunFlower Web UI</title>
     <link rel="icon" type="image/png" href="img/sf.png">
     <script src="js/ajax.manager.js"></script>
+    <script src="js/date.proto.js"></script>
     <style type="text/css">
         body {
             color: blue;
             font-family: "Courier New";
         }
+        .background {
+            /*color: #999999;*/
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -100;
+        }
+        .bg-data {
+            font-size: 128px;
+            font-family: "Andale Mono";
+            font-weight: 600;
+            color: silver;
+            text-align: center;
+            margin-top: 125px;
+            margin-left: 20px;
+        }
     </style>
 </head>
 <body>
+    <div class="background">
+        <div class="bg-data" id="bg-data">. . .</div>
+        <!--img src="http://nuclearpixel.com/content/icons/2010-02-09_stellar_icons_from_space_from_2005/earth_128.png" alt="background" /-->
+
+    </div>
     <h2>Sun Flower - Raw Data</h2>
     <table border="1">
         <tr>
@@ -65,6 +87,10 @@
       window.setInterval(() => {
             fetchData(dataCallback);
           }, 1000);
+      window.setInterval(() => {
+        let date = new Date();
+        document.getElementById('bg-data').innerText = date.format('H:i:s Z');
+      }, 1000);
     };
 </script>
 </html>

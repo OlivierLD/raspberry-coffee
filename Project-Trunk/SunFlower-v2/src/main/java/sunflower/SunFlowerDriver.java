@@ -495,6 +495,8 @@ public class SunFlowerDriver {
 		this.devicePosition = new Position(lat, lng);
 	}
 
+	// TODO a queue to separate the MotorThreads?
+
 	private class MotorThread extends Thread {
 		private final AdafruitMotorHAT.AdafruitStepperMotor stepper;
 		private final int nbSteps;
@@ -545,6 +547,9 @@ public class SunFlowerDriver {
 				}
 			} catch (IOException ie) {
 				ie.printStackTrace();
+			}
+			if (MOTOR_HAT_VERBOSE) {
+				System.out.println("MotorThread run completed.");
 			}
 		}
 	}
@@ -990,7 +995,7 @@ public class SunFlowerDriver {
 					}
 					currentDeviceAzimuth = adjustedAzimuth;
 				}
-				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset);
+				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset); // FIXME that one might have a problem?..
 				if (Math.abs(currentDeviceElevation - adjustedElevation) >= minDiffForMove) {
 					hasMoved = true;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, adjustedElevation));
