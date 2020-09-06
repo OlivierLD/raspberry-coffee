@@ -118,6 +118,9 @@ public class SunFlowerDriver {
 	private static Position devicePosition = null; // Can be fed from a GPS, or manually (System variable).
 	private static double sunAzimuth   = 180d;
 	private static double sunElevation =  -1d;
+	private static double sunDecl =  Double.NaN;
+	private static double sunGHA =  Double.NaN;
+
 
 	private boolean simulating = false;
 
@@ -299,12 +302,16 @@ public class SunFlowerDriver {
 		private final long epoch;
 		private final double azimuth;
 		private final double elevation;
+		private final double decl;
+		private final double gha;
 
-		public SunData(Date date, double azimuth, double elevation) {
+		public SunData(Date date, double azimuth, double elevation, double decl, double gha) {
 			this.date = date;
 			this.epoch = date.getTime();
 			this.azimuth = azimuth;
 			this.elevation = elevation;
+			this.decl = decl;
+			this.gha = gha;
 		}
 
 		public Date getDate() {
@@ -321,6 +328,14 @@ public class SunFlowerDriver {
 
 		public long getEpoch() {
 			return epoch;
+		}
+
+		public double getDecl() {
+			return decl;
+		}
+
+		public double getGha() {
+			return gha;
 		}
 
 		public String toString() {
@@ -631,6 +646,8 @@ public class SunFlowerDriver {
 				if (ASTRO_VERBOSE) {
 					System.out.println("Starting Sun data calculation at " + date.getTime());
 				}
+				sunDecl = AstroComputer.getSunDecl();
+				sunGHA = AstroComputer.getSunGHA();
 				// TODO Make it non-static, and synchronized ?..
 				AstroComputer.calculate(date.get(Calendar.YEAR),
 										date.get(Calendar.MONTH) + 1,
@@ -946,7 +963,7 @@ public class SunFlowerDriver {
 		while (keepGoing) {
 			Date date = new Date();
 			DeviceData deviceData = new DeviceData(date, devicePosition, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
-			SunData sunData = new SunData(date, sunAzimuth, sunElevation);
+			SunData sunData = new SunData(date, sunAzimuth, sunElevation, sunDecl, sunGHA);
 			this.publish(EventType.DEVICE_DATA, deviceData);
 			this.publish(EventType.CELESTIAL_DATA, sunData);
 
