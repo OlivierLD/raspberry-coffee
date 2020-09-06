@@ -10,6 +10,34 @@
     <link rel="icon" type="image/png" href="img/sf.png">
     <script src="js/ajax.manager.js"></script>
     <script src="js/date.proto.js"></script>
+    <script type="text/javascript">
+        function decToSex(val, ns_ew, withDeg) {
+            let absVal = Math.abs(val);
+            let intValue = Math.floor(absVal);
+            let dec = absVal - intValue;
+            let i = intValue;
+            dec *= 60;
+//    let s = i + "°" + dec.toFixed(2) + "'";
+//    let s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+            let s = "";
+            if (ns_ew !== null) {
+                if (val < 0) {
+                    s += (ns_ew === 'NS' ? 'S' : 'W');
+                } else {
+                    s += (ns_ew === 'NS' ? 'N' : 'E');
+                }
+            }
+            s += " ";
+            let sep = " ";
+            if (withDeg === true) {
+                sep = "°";
+            }
+//    s += i + "\"" + dec.toFixed(2) + "'";
+            s += i + sep + dec.toFixed(2) + "'";
+            return s;
+        }
+
+    </script>
     <style type="text/css">
         body {
             color: blue;
@@ -82,7 +110,7 @@
         document.getElementById('raw-json').innerHTML = '<pre>' + JSON.stringify(json, null, 2) + '</pre>';
         // Background data display
         document.getElementById('bg-data').innerHTML =
-            ` Sun D: ${json.CELESTIAL_DATA.decl}<br/>Sun GHA: ${json.CELESTIAL_DATA.gha}`
+            `Sun D: ${ decToSex(json.CELESTIAL_DATA.decl, 'NS', true) }<br/>Sun GHA: ${ decToSex(json.CELESTIAL_DATA.gha, null, true) }`
     }
 
     window.onload = () => {
