@@ -951,17 +951,18 @@ public class SunFlowerDriver {
 	 * @param sunValue the value to adjust, Azimuth or Elevation.
 	 * @return the adjusted value
 	 */
-	private double adjustDeviceValue(double sunValue) {
-		return adjustDeviceValue(sunValue, 0D, 180D);
+	private double adjustDeviceValue(double sunValue, double ratio) {
+		return adjustDeviceValue(sunValue, 0D, ratio, 180D);
 	}
-	private double adjustDeviceValue(double sunValue, double offset) {
-		return adjustDeviceValue(sunValue, offset, 180D);
+	private double adjustDeviceValue(double sunValue, double offset, double ratio) {
+		return adjustDeviceValue(sunValue, offset, ratio, 180D);
 	}
-	private double adjustDeviceValue(double sunValue, double offset, double heading) {
+	private double adjustDeviceValue(double sunValue, double offset, double ratio, double heading) {
 		double adjusted = sunValue + offset + (180 - heading); // if heading goes right, device must go left.
 		if (adjusted % minDiffForMove != 0D) {
 			adjusted = Math.round(adjusted * (1 / minDiffForMove)) / (1 / minDiffForMove);
 		}
+//		System.out.println(String.format("", sunValue, offset, heading, ratio, adjusted));
 		return adjusted;
 	}
 
@@ -1015,7 +1016,7 @@ public class SunFlowerDriver {
 			// Important: Re-frame the values of SunData with minDiffForMove, @see adjustDeviceValue
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				boolean hasMoved = false;
-				double adjustedAzimuth = adjustDeviceValue(sunAzimuth, azimuthOffset, this.deviceHeading);  // Use deviceHeading here
+				double adjustedAzimuth = adjustDeviceValue(sunAzimuth, azimuthOffset, this.deviceHeading, azimuthMotorRatio);  // Use deviceHeading here
 
 //				System.out.println(String.format("\tAzimuth adjusted from %.02f, with %.02f, to %.02f", sunAzimuth, azimuthOffset, adjustedAzimuth));
 
@@ -1036,6 +1037,8 @@ public class SunFlowerDriver {
 								currentDeviceAzimuthStepOffset,
 								data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? "Frwd" : "Bkwd",
 								azimuthInverted ? "true" : "false"));
+						System.out.println(String.format("NbSteps: %d => %.02f\272, ratio: %f, current Z: %.02f, Adj Z: %.02f",
+								data.nbSteps, (data.nbSteps * (360d / 200d)), azimuthMotorRatio, currentDeviceAzimuth, adjustedAzimuth));
 					}
 
 					if (!simulating) {
@@ -1050,7 +1053,7 @@ public class SunFlowerDriver {
 					}
 					currentDeviceAzimuth = adjustedAzimuth;
 				}
-				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset); // FIXME that one might have a problem?..
+				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset, elevationMotorRatio); // FIXME that one might have a problem?..
 				if (Math.abs(currentDeviceElevation - adjustedElevation) >= minDiffForMove) {
 					hasMoved = true;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, adjustedElevation));
