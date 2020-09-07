@@ -1016,11 +1016,11 @@ public class SunFlowerDriver {
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				boolean hasMoved = false;
 				double adjustedAzimuth = adjustDeviceValue(sunAzimuth, azimuthOffset, this.deviceHeading);  // Use deviceHeading here
-				double effectiveAfterMove = adjustedAzimuth;
 //				System.out.println(String.format("\tAzimuth adjusted from %.02f, with %.02f, to %.02f", sunAzimuth, azimuthOffset, adjustedAzimuth));
 
 				if (Math.abs(currentDeviceAzimuth - adjustedAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
 					hasMoved = true;
+					double effectiveAfterMove = adjustedAzimuth;
 					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, adjustedAzimuth));
 					MotorPayload data = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
 						    PARKED_AZIMUTH,
@@ -1036,8 +1036,6 @@ public class SunFlowerDriver {
 								currentDeviceAzimuthStepOffset,
 								data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? "Frwd" : "Bkwd",
 								azimuthInverted ? "true" : "false"));
-						System.out.println(String.format("Z. NbSteps: %d => %.02f\u00b0, ratio: %f, current Z: %.02f, Adj Z: %.02f",
-								data.nbSteps, (data.nbSteps * (360d / 200d)), azimuthMotorRatio, currentDeviceAzimuth, adjustedAzimuth));
 					}
 					effectiveAfterMove = currentDeviceAzimuth - ((data.nbSteps * (360d / 200d)) / azimuthMotorRatio); //
 
@@ -1051,11 +1049,16 @@ public class SunFlowerDriver {
 							this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
+					if (true || SPECIAL_DEBUG_VERBOSE) {
+						System.out.println(String.format("Z. NbSteps: %d => %.02f deg, ratio: %f, current Z: %.02f, Adj Z: %.02f, effective: %.03f",
+								data.nbSteps, (data.nbSteps * (360d / 200d)), azimuthMotorRatio, currentDeviceAzimuth, adjustedAzimuth, effectiveAfterMove));
+					}
 					currentDeviceAzimuth = effectiveAfterMove;
 				}
 				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset); // FIXME that one might have a problem?..
 				if (Math.abs(currentDeviceElevation - adjustedElevation) >= minDiffForMove) {
 					hasMoved = true;
+					double effectiveAfterMove = adjustedAzimuth;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, adjustedElevation));
 					MotorPayload data = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
 							PARKED_ELEVATION,
@@ -1067,9 +1070,8 @@ public class SunFlowerDriver {
 					currentDeviceElevationStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (elevationInverted ? -1 : 1));
 					if (SPECIAL_DEBUG_VERBOSE) {
 						System.out.println(String.format("\tElevationStepOffset now %d", currentDeviceElevationStepOffset));
-						System.out.println(String.format("Elev. NbSteps: %d => %.02f\u00b0, ratio: %f, current Z: %.02f, Adj Z: %.02f",
-								data.nbSteps, (data.nbSteps * (360d / 200d)), elevationMotorRatio, currentDeviceElevation, adjustedElevation));
 					}
+					effectiveAfterMove = currentDeviceElevation - ((data.nbSteps * (360d / 200d)) / elevationMotorRatio); //
 
 					if (!simulating) {
 						this.publish(EventType.MOVING_ELEVATION_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
@@ -1083,7 +1085,9 @@ public class SunFlowerDriver {
 							this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
-					currentDeviceElevation = adjustedElevation;
+					System.out.println(String.format("Elev. NbSteps: %d => %.02f\u00b0, ratio: %f, current Elev: %.02f, Adj Elev: %.02f, Effecive: %.03f",
+							data.nbSteps, (data.nbSteps * (360d / 200d)), elevationMotorRatio, currentDeviceElevation, adjustedElevation, effectiveAfterMove));
+					currentDeviceElevation = effectiveAfterMove;
 				}
 				if (hasMoved) {
 					if (ASTRO_VERBOSE) {
