@@ -1036,7 +1036,7 @@ public class SunFlowerDriver {
 								data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? "Frwd" : "Bkwd",
 								azimuthInverted ? "true" : "false"));
 					}
-					double effectiveMove = ((data.motorCommand.equals(AdafruitMotorHAT.MotorCommand.FORWARD) ? 1 : -1) * ((data.nbSteps * (360d / 200d)) / azimuthMotorRatio));
+					double effectiveMove = ((data.motorCommand.equals(AdafruitMotorHAT.MotorCommand.FORWARD) ? 1 : -1) * ((data.nbSteps * (360d / 200d)) * azimuthMotorRatio));
 
 					if (!simulating) {
 						this.publish(EventType.MOVING_AZIMUTH_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
@@ -1049,8 +1049,8 @@ public class SunFlowerDriver {
 						}
 					}
 					if (true || SPECIAL_DEBUG_VERBOSE) {
-						System.out.println(String.format("Z. NbSteps: %d => %.02f deg, ratio: %f, current Z: %.02f, Adj Z: %.02f, effective: %.03f",
-								data.nbSteps, (data.nbSteps * (360d / 200d)), azimuthMotorRatio, currentDeviceAzimuth, adjustedAzimuth, effectiveMove));
+						System.out.println(String.format("Z. NbSteps(%s): %d => %.02f deg, ratio: %f, current Z: %.02f, Adj Z: %.02f, effective: %.03f",
+								data.motorCommand, data.nbSteps, (data.nbSteps * (360d / 200d)), azimuthMotorRatio, currentDeviceAzimuth, adjustedAzimuth, effectiveMove));
 					}
 					currentDeviceAzimuth = adjustedAzimuth;
 				}
@@ -1069,7 +1069,7 @@ public class SunFlowerDriver {
 					if (SPECIAL_DEBUG_VERBOSE) {
 						System.out.println(String.format("\tElevationStepOffset now %d", currentDeviceElevationStepOffset));
 					}
-					double effectiveMove = ((data.motorCommand.equals(AdafruitMotorHAT.MotorCommand.FORWARD) ? 1 : -1) * ((data.nbSteps * (360d / 200d)) / elevationMotorRatio));
+					double effectiveMove = ((data.motorCommand.equals(AdafruitMotorHAT.MotorCommand.FORWARD) ? 1 : -1) * ((data.nbSteps * (360d / 200d)) * elevationMotorRatio));
 
 					if (!simulating) {
 						this.publish(EventType.MOVING_ELEVATION_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
@@ -1083,8 +1083,8 @@ public class SunFlowerDriver {
 							this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
-					System.out.println(String.format("Elev. NbSteps: %d => %.02f deg, ratio: %f, current Elev: %.02f, Adj Elev: %.02f, Effecive: %.03f",
-							data.nbSteps, (data.nbSteps * (360d / 200d)), elevationMotorRatio, currentDeviceElevation, adjustedElevation, effectiveMove));
+					System.out.println(String.format("Elev. NbSteps(%s): %d => %.02f deg, ratio: %f, current Elev: %.02f, Adj Elev: %.02f, Effecive: %.03f",
+							data.motorCommand, data.nbSteps, (data.nbSteps * (360d / 200d)), elevationMotorRatio, currentDeviceElevation, adjustedElevation, effectiveMove));
 					currentDeviceElevation = adjustedElevation;
 				}
 				if (hasMoved) {
