@@ -84,7 +84,7 @@
             // svg.setAttribute('xmlns', xmlns);
             svg.setAttributeNS(null, 'width', FRAME_WIDTH.toString());
             svg.setAttributeNS(null, 'height', FRAME_HEIGHT.toString());
-            svg.setAttribute('style', 'background-color: rgba(255, 255, 255, 0); border-radius: 10px; border: 1px solid rgba(0, 0, 0, 0.15);');
+            svg.setAttribute('style', 'background-color: transparent; border-radius: 10px; border: 2px solid rgba(0, 0, 0, 0.25);');
 
             if (parent !== null) {
                 parent.appendChild(svg);
@@ -96,11 +96,11 @@
             circle.setAttributeNS(null, 'r', '40');
             circle.setAttributeNS(null, 'stroke', 'rgba(0, 0, 0, 0.15);');
             circle.setAttributeNS(null, 'stroke-width', '4');
-            circle.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0.15);');
+            circle.setAttributeNS(null, 'fill', 'transparent');
             svg.appendChild(circle);
 
             let polygon = document.createElementNS(XMLNS, 'polygon');
-            polygon.setAttribute('style', `fill: ${fillColor}; stroke: rgba(0, 0, 0, 0.15);; stroke-width: 2;`);
+            polygon.setAttribute('style', `fill: ${fillColor}; stroke: rgba(0, 0, 0, 0.35); stroke-width: 2;`);
 
             let headX = (FRAME_WIDTH / 2) + (60 * Math.sin(Math.toRadians(direction)));
             let headY = (FRAME_HEIGHT / 2) + (60 * Math.cos(Math.toRadians(direction)));
@@ -135,7 +135,7 @@
             text.setAttributeNS(null, 'y', '25');
             text.setAttributeNS(null, 'font-size', '16');
             text.setAttributeNS(null, 'font-family', "'Helvetica Neue', 'Lato', Verdana, Helvetica, Geneva, sans-serif;");
-            text.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0.15);');
+            text.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0.35);');
             text.appendChild(document.createTextNode(`${label}`));
             svg.appendChild(text);
 
