@@ -56,7 +56,7 @@
             let direction;  // = dir; //  + 180;
             if (typeof(dir) === 'number') {
                 direction = dir;
-                label += `${dir}°`
+                label += `${dir.toFixed(0)}°`
             } else {
                 try {
                     direction = dir.value;
@@ -71,7 +71,7 @@
                 title = `Wind ${force} Beaufort\x0A${dir.label}`;
             }
 
-            direction = -direction;
+            // direction = -direction;
             // XMLNS Required.
             const XMLNS = "http://www.w3.org/2000/svg";
 
@@ -143,7 +143,12 @@
                 console.log(parent.innerHTML);
             }
             //debugger;
-            return { x: headX, y: headY, svgContent: svg };
+            let svgContent = {x: headX, y: headY, svgContent: svg};
+            if (divId !== undefined) {
+                document.getElementById(divId).innerHTML = svgContent;
+            } else {
+                return svgContent;
+            }
         }
     </script>
     <style type="text/css">
