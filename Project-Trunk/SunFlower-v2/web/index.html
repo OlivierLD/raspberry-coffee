@@ -94,9 +94,9 @@
             circle.setAttributeNS(null, 'cx', (FRAME_WIDTH / 2).toString());
             circle.setAttributeNS(null, 'cy', (FRAME_HEIGHT / 2).toString());
             circle.setAttributeNS(null, 'r', '40');
-            circle.setAttributeNS(null, 'stroke', 'rgba(0, 0, 0, 0.35);');
+            circle.setAttributeNS(null, 'stroke', 'rgba(0, 0, 0, 0.35)');
             circle.setAttributeNS(null, 'stroke-width', '4');
-            circle.setAttributeNS(null, 'fill', 'rgba(0, 0, 128, 0.15);');
+            circle.setAttributeNS(null, 'fill', 'rgba(0, 0, 128, 0.15)');
             svg.appendChild(circle);
 
             let polygon = document.createElementNS(XMLNS, 'polygon');
@@ -136,7 +136,7 @@
             text.setAttributeNS(null, 'font-size', '16');
             text.setAttributeNS(null, 'font-weight', 'bold');
             text.setAttributeNS(null, 'font-family', "'Helvetica Neue', 'Lato', Verdana, Helvetica, Geneva, sans-serif;");
-            text.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0.35);');
+            text.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0.35)');
             text.appendChild(document.createTextNode(`${label}`));
             svg.appendChild(text);
 
