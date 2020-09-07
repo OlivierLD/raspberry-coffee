@@ -305,7 +305,7 @@ public class SunFlowerDriver {
 		private final double elevation;
 		private final double decl;
 		private final double gha;
-		private final Date solarDate;
+		private final Date solarDate; // Warning: UTC! Add UTC your system Offset.
 		private final long solarEpoch;
 
 		public SunData(Date date, double azimuth, double elevation, double decl, double gha, Date solarDate, long solarEpoch) {

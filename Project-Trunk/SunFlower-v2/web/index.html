@@ -52,7 +52,7 @@
             z-index: -100;
         }
         .bg-data {
-            font-size: 111px;
+            font-size: 64px;
             font-weight: bold;
             color: rgba(0, 0, 0, 0.15);
             text-align: left;
@@ -109,8 +109,18 @@
             '(' + json.MOVING_ELEVATION_END.nbSteps + ' move(s) in ' + json.MOVING_ELEVATION_END.elapsed + ' ms)';
         document.getElementById('raw-json').innerHTML = '<pre>' + JSON.stringify(json, null, 2) + '</pre>';
         // Background data display
-        document.getElementById('bg-data').innerHTML =
-            `Sun D: ${ decToSex(json.CELESTIAL_DATA.decl, 'NS', true) }<br/>Sun GHA: ${ decToSex(json.CELESTIAL_DATA.gha, null, true) }`
+        let solarTime = null;
+        if (json.CELESTIAL_DATA.solarEpoch !== undefined) {
+            let utcOffsetInMinutes = new Date().getTimezoneOffset();
+            let solarDate = new Date(json.CELESTIAL_DATA.solarEpoch + (utcOffsetInMinutes * 60 * 1000));
+            solarTime = solarDate.format('H:i:s');
+        }
+        let bgData = `Sun D: ${ decToSex(json.CELESTIAL_DATA.decl, 'NS', true) }`;
+        bgData += `<br/>Sun GHA: ${ decToSex(json.CELESTIAL_DATA.gha, null, true) }`;
+        if (solarTime !== null) {
+            bgData += `<br/>Solar Time: ${solarTime}`;
+        }
+        document.getElementById('bg-data').innerHTML = bgData;
     }
 
     window.onload = () => {
