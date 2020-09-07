@@ -94,7 +94,7 @@
             circle.setAttributeNS(null, 'cx', (FRAME_WIDTH / 2).toString());
             circle.setAttributeNS(null, 'cy', (FRAME_HEIGHT / 2).toString());
             circle.setAttributeNS(null, 'r', '40');
-            circle.setAttributeNS(null, 'stroke', 'rgba(0, 0, 0, 0.15);');
+            circle.setAttributeNS(null, 'stroke', 'rgba(0, 0, 0, 0.35);');
             circle.setAttributeNS(null, 'stroke-width', '4');
             circle.setAttributeNS(null, 'fill', 'transparent');
             svg.appendChild(circle);
@@ -134,6 +134,7 @@
             text.setAttributeNS(null, 'x', '10');
             text.setAttributeNS(null, 'y', '25');
             text.setAttributeNS(null, 'font-size', '16');
+            text.setAttributeNS(null, 'font-weight', 'bold');
             text.setAttributeNS(null, 'font-family', "'Helvetica Neue', 'Lato', Verdana, Helvetica, Geneva, sans-serif;");
             text.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0.35);');
             text.appendChild(document.createTextNode(`${label}`));
@@ -228,7 +229,7 @@
             '(' + json.MOVING_ELEVATION_END.nbSteps + ' move(s) in ' + json.MOVING_ELEVATION_END.elapsed + ' ms)';
         document.getElementById('raw-json').innerHTML = '<pre>' + JSON.stringify(json, null, 2) + '</pre>';
         // Background data display
-        drawArrow('sun-azimuth', json.CELESTIAL_DATA.azimuth);
+        drawArrow('sun-azimuth', 0); // json.CELESTIAL_DATA.azimuth);
 
         let solarTime = null;
         if (json.CELESTIAL_DATA.solarEpoch !== undefined) {
