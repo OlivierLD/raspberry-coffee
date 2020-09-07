@@ -1049,10 +1049,10 @@ public class SunFlowerDriver {
 						}
 					}
 					if (true || SPECIAL_DEBUG_VERBOSE) {
-						System.out.println(String.format("Z. NbSteps(%s): %d => %.02f deg, ratio: %f, current Z: %.02f, Adj Z: %.02f, effective: %.03f",
+						System.out.println(String.format("Z. NbSteps(%s): %d => %.02f deg, ratio: %f, current Z: %.02f, Adj Z: %.02f, Effective: %.03f",
 								data.motorCommand, data.nbSteps, (data.nbSteps * (360d / 200d)), azimuthMotorRatio, currentDeviceAzimuth, adjustedAzimuth, effectiveMove));
 					}
-					currentDeviceAzimuth = adjustedAzimuth;
+					currentDeviceAzimuth += effectiveMove; // = adjustedAzimuth;
 				}
 				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset); // FIXME that one might have a problem?..
 				if (Math.abs(currentDeviceElevation - adjustedElevation) >= minDiffForMove) {
@@ -1083,9 +1083,9 @@ public class SunFlowerDriver {
 							this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
-					System.out.println(String.format("Elev. NbSteps(%s): %d => %.02f deg, ratio: %f, current Elev: %.02f, Adj Elev: %.02f, Effecive: %.03f",
+					System.out.println(String.format("Elev. NbSteps(%s): %d => %.02f deg, ratio: %f, current Elev: %.02f, Adj Elev: %.02f, Effective: %.03f",
 							data.motorCommand, data.nbSteps, (data.nbSteps * (360d / 200d)), elevationMotorRatio, currentDeviceElevation, adjustedElevation, effectiveMove));
-					currentDeviceElevation = adjustedElevation;
+					currentDeviceElevation += effectiveMove; // = adjustedElevation;
 				}
 				if (hasMoved) {
 					if (ASTRO_VERBOSE) {
