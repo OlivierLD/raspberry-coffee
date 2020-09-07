@@ -41,6 +41,11 @@
         const FRAME_HEIGHT = 160;
         let DEBUG = false;
 
+        if (Math.toRadians === undefined) {
+            Math.toRadians = deg => {
+                return (deg / 180) * Math.PI;
+            };
+        }
         function drawArrow(divId, dir, force) {
             let label = '';
             let fillColor = 'white';
