@@ -1048,7 +1048,7 @@ public class SunFlowerDriver {
 							this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
-					if (true || SPECIAL_DEBUG_VERBOSE) {
+					if (SPECIAL_DEBUG_VERBOSE) {
 						System.out.println(String.format("Z. NbSteps(%s): %d => %.02f deg, ratio: %f, current Z: %.02f, Adj Z: %.02f, Effective: %.03f",
 								data.motorCommand, data.nbSteps, (data.nbSteps * (360d / 200d)), azimuthMotorRatio, currentDeviceAzimuth, adjustedAzimuth, effectiveMove));
 					}
@@ -1083,8 +1083,10 @@ public class SunFlowerDriver {
 							this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
-					System.out.println(String.format("Elev. NbSteps(%s): %d => %.02f deg, ratio: %f, current Elev: %.02f, Adj Elev: %.02f, Effective: %.03f",
-							data.motorCommand, data.nbSteps, (data.nbSteps * (360d / 200d)), elevationMotorRatio, currentDeviceElevation, adjustedElevation, effectiveMove));
+					if (SPECIAL_DEBUG_VERBOSE) {
+						System.out.println(String.format("Elev. NbSteps(%s): %d => %.02f deg, ratio: %f, current Elev: %.02f, Adj Elev: %.02f, Effective: %.03f",
+								data.motorCommand, data.nbSteps, (data.nbSteps * (360d / 200d)), elevationMotorRatio, currentDeviceElevation, adjustedElevation, effectiveMove));
+					}
 					currentDeviceElevation += effectiveMove; // = adjustedElevation;
 				}
 				if (hasMoved) {
