@@ -1016,7 +1016,7 @@ public class SunFlowerDriver {
 			if (astroThread.isAlive() && sunElevation >= 0) {
 				boolean hasMoved = false;
 				double adjustedAzimuth = adjustDeviceValue(sunAzimuth, azimuthOffset, this.deviceHeading);  // Use deviceHeading here
-
+				double effectiveAfterMove = adjustedAzimuth;
 //				System.out.println(String.format("\tAzimuth adjusted from %.02f, with %.02f, to %.02f", sunAzimuth, azimuthOffset, adjustedAzimuth));
 
 				if (Math.abs(currentDeviceAzimuth - adjustedAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
@@ -1036,9 +1036,10 @@ public class SunFlowerDriver {
 								currentDeviceAzimuthStepOffset,
 								data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? "Frwd" : "Bkwd",
 								azimuthInverted ? "true" : "false"));
-						System.out.println(String.format("NbSteps: %d => %.02f\272, ratio: %f, current Z: %.02f, Adj Z: %.02f",
+						System.out.println(String.format("Z. NbSteps: %d => %.02f\u00b0, ratio: %f, current Z: %.02f, Adj Z: %.02f",
 								data.nbSteps, (data.nbSteps * (360d / 200d)), azimuthMotorRatio, currentDeviceAzimuth, adjustedAzimuth));
 					}
+					effectiveAfterMove = currentDeviceAzimuth - ((data.nbSteps * (360d / 200d)) / azimuthMotorRatio); //
 
 					if (!simulating) {
 						this.publish(EventType.MOVING_AZIMUTH_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
@@ -1050,7 +1051,7 @@ public class SunFlowerDriver {
 							this.publish(EventType.MOVING_AZIMUTH_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
-					currentDeviceAzimuth = adjustedAzimuth;
+					currentDeviceAzimuth = effectiveAfterMove;
 				}
 				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset); // FIXME that one might have a problem?..
 				if (Math.abs(currentDeviceElevation - adjustedElevation) >= minDiffForMove) {
@@ -1066,6 +1067,8 @@ public class SunFlowerDriver {
 					currentDeviceElevationStepOffset += (data.nbSteps * (data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? 1 : -1) * (elevationInverted ? -1 : 1));
 					if (SPECIAL_DEBUG_VERBOSE) {
 						System.out.println(String.format("\tElevationStepOffset now %d", currentDeviceElevationStepOffset));
+						System.out.println(String.format("Elev. NbSteps: %d => %.02f\u00b0, ratio: %f, current Z: %.02f, Adj Z: %.02f",
+								data.nbSteps, (data.nbSteps * (360d / 200d)), elevationMotorRatio, currentDeviceElevation, adjustedElevation));
 					}
 
 					if (!simulating) {
