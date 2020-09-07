@@ -1020,7 +1020,6 @@ public class SunFlowerDriver {
 
 				if (Math.abs(currentDeviceAzimuth - adjustedAzimuth) >= minDiffForMove) { // Start a new thread each time a move is requested
 					hasMoved = true;
-					double effectiveAfterMove = adjustedAzimuth;
 					this.publish(EventType.MOVING_AZIMUTH_START, new DeviceAzimuthStart(new Date(), currentDeviceAzimuth, adjustedAzimuth));
 					MotorPayload data = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
 						    PARKED_AZIMUTH,
@@ -1037,8 +1036,7 @@ public class SunFlowerDriver {
 								data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? "Frwd" : "Bkwd",
 								azimuthInverted ? "true" : "false"));
 					}
-					effectiveAfterMove = currentDeviceAzimuth +
-							((data.motorCommand.equals(AdafruitMotorHAT.MotorCommand.FORWARD) ? 1 : -1) * ((data.nbSteps * (360d / 200d)) / azimuthMotorRatio)); //
+					double effectiveMove = ((data.motorCommand.equals(AdafruitMotorHAT.MotorCommand.FORWARD) ? 1 : -1) * ((data.nbSteps * (360d / 200d)) / azimuthMotorRatio));
 
 					if (!simulating) {
 						this.publish(EventType.MOVING_AZIMUTH_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
@@ -1052,14 +1050,13 @@ public class SunFlowerDriver {
 					}
 					if (true || SPECIAL_DEBUG_VERBOSE) {
 						System.out.println(String.format("Z. NbSteps: %d => %.02f deg, ratio: %f, current Z: %.02f, Adj Z: %.02f, effective: %.03f",
-								data.nbSteps, (data.nbSteps * (360d / 200d)), azimuthMotorRatio, currentDeviceAzimuth, adjustedAzimuth, effectiveAfterMove));
+								data.nbSteps, (data.nbSteps * (360d / 200d)), azimuthMotorRatio, currentDeviceAzimuth, adjustedAzimuth, effectiveMove));
 					}
-					currentDeviceAzimuth = effectiveAfterMove;
+					currentDeviceAzimuth = adjustedAzimuth;
 				}
 				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset); // FIXME that one might have a problem?..
 				if (Math.abs(currentDeviceElevation - adjustedElevation) >= minDiffForMove) {
 					hasMoved = true;
-					double effectiveAfterMove = adjustedAzimuth;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, adjustedElevation));
 					MotorPayload data = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
 							PARKED_ELEVATION,
@@ -1072,7 +1069,7 @@ public class SunFlowerDriver {
 					if (SPECIAL_DEBUG_VERBOSE) {
 						System.out.println(String.format("\tElevationStepOffset now %d", currentDeviceElevationStepOffset));
 					}
-					effectiveAfterMove = currentDeviceElevation + ((data.motorCommand.equals(AdafruitMotorHAT.MotorCommand.FORWARD) ? 1 : -1) * ((data.nbSteps * (360d / 200d)) / elevationMotorRatio));
+					double effectiveMove = ((data.motorCommand.equals(AdafruitMotorHAT.MotorCommand.FORWARD) ? 1 : -1) * ((data.nbSteps * (360d / 200d)) / elevationMotorRatio));
 
 					if (!simulating) {
 						this.publish(EventType.MOVING_ELEVATION_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
@@ -1086,9 +1083,9 @@ public class SunFlowerDriver {
 							this.publish(EventType.MOVING_ELEVATION_INFO, new DeviceInfo(new Date(), mess3));
 						}
 					}
-					System.out.println(String.format("Elev. NbSteps: %d => %.02f\u00b0, ratio: %f, current Elev: %.02f, Adj Elev: %.02f, Effecive: %.03f",
-							data.nbSteps, (data.nbSteps * (360d / 200d)), elevationMotorRatio, currentDeviceElevation, adjustedElevation, effectiveAfterMove));
-					currentDeviceElevation = effectiveAfterMove;
+					System.out.println(String.format("Elev. NbSteps: %d => %.02f deg, ratio: %f, current Elev: %.02f, Adj Elev: %.02f, Effecive: %.03f",
+							data.nbSteps, (data.nbSteps * (360d / 200d)), elevationMotorRatio, currentDeviceElevation, adjustedElevation, effectiveMove));
+					currentDeviceElevation = adjustedElevation;
 				}
 				if (hasMoved) {
 					if (ASTRO_VERBOSE) {
