@@ -71,7 +71,7 @@
                 title = `Wind ${force} Beaufort\x0A${dir.label}`;
             }
 
-            // direction = -direction;
+            direction = -direction;
             // XMLNS Required.
             const XMLNS = "http://www.w3.org/2000/svg";
 
@@ -96,7 +96,7 @@
             circle.setAttributeNS(null, 'r', '40');
             circle.setAttributeNS(null, 'stroke', 'rgba(0, 0, 0, 0.35);');
             circle.setAttributeNS(null, 'stroke-width', '4');
-            circle.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0.15);');
+            circle.setAttributeNS(null, 'fill', 'rgba(0, 0, 128, 0.15);');
             svg.appendChild(circle);
 
             let polygon = document.createElementNS(XMLNS, 'polygon');
