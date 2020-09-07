@@ -192,7 +192,11 @@ $
 
 ### Micronaut
 There is also a Micronaut service.
-See in the [`Micronaut`](./Micronaut/README.md) folder.
+See in the [`Micronaut`](./Micronaut/README.md) (Serverless MicroService) folder.
+Very trending.
+
+It is based on the Java implementation of the Celestial Almanac, and
+it exposes all the computed data through HTTP REST requests.
 
 ---
 

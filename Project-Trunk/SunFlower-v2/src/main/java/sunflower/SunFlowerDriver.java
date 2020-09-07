@@ -3,6 +3,7 @@ package sunflower;
 import calc.DeadReckoning;
 import calc.GeomUtil;
 import calc.calculation.AstroComputer;
+import calc.calculation.SightReductionUtil;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.motor.adafruitmotorhat.AdafruitMotorHAT;
 import lcd.ScreenBuffer;
@@ -120,7 +121,7 @@ public class SunFlowerDriver {
 	private static double sunElevation =  -1d;
 	private static double sunDecl =  Double.NaN;
 	private static double sunGHA =  Double.NaN;
-
+	private static Date solarDate = null;
 
 	private boolean simulating = false;
 
@@ -304,14 +305,18 @@ public class SunFlowerDriver {
 		private final double elevation;
 		private final double decl;
 		private final double gha;
+		private final Date solarDate;
+		private final long solarEpoch;
 
-		public SunData(Date date, double azimuth, double elevation, double decl, double gha) {
+		public SunData(Date date, double azimuth, double elevation, double decl, double gha, Date solarDate, long solarEpoch) {
 			this.date = date;
 			this.epoch = date.getTime();
 			this.azimuth = azimuth;
 			this.elevation = elevation;
 			this.decl = decl;
 			this.gha = gha;
+			this.solarDate = solarDate;
+			this.solarEpoch = solarEpoch;
 		}
 
 		public Date getDate() {
@@ -336,6 +341,14 @@ public class SunFlowerDriver {
 
 		public double getGha() {
 			return gha;
+		}
+
+		public Date getSolarDate() {
+			return solarDate;
+		}
+
+		public long getSolarEpoch() {
+			return solarEpoch;
 		}
 
 		public String toString() {
@@ -569,6 +582,29 @@ public class SunFlowerDriver {
 		}
 	}
 
+	private static Date getSolarDateFromEOT(Date utc, double latitude, double longitude) {
+//		Calendar current = GregorianCalendar.getInstance();
+//		current.setTime(utc);
+//		AstroComputer.setDateTime(current.get(Calendar.YEAR),
+//				current.get(Calendar.MONTH) + 1,
+//				current.get(Calendar.DAY_OF_MONTH),
+//				current.get(Calendar.HOUR_OF_DAY),
+//				current.get(Calendar.MINUTE),
+//				current.get(Calendar.SECOND));
+//		AstroComputer.calculate();
+//		SightReductionUtil sru = new SightReductionUtil(AstroComputer.getSunGHA(),
+//				AstroComputer.getSunDecl(),
+//				latitude,
+//				longitude);
+//		sru.calculate();
+		// Get Equation of time, used to calculate solar time.
+		double eot = AstroComputer.getSunMeridianPassageTime(latitude, longitude); // in decimal hours
+
+		long ms = utc.getTime();
+		Date solar = new Date(ms + Math.round((12 - eot) * 3_600_000));
+		return solar;
+	}
+
 	private static class CelestialComputerThread extends Thread {
 		private boolean keepCalculating = true;
 		private Calendar previousDate = null; // Used for simulation, when required
@@ -646,8 +682,6 @@ public class SunFlowerDriver {
 				if (ASTRO_VERBOSE) {
 					System.out.println("Starting Sun data calculation at " + date.getTime());
 				}
-				sunDecl = AstroComputer.getSunDecl();
-				sunGHA = AstroComputer.getSunGHA();
 				// TODO Make it non-static, and synchronized ?..
 				AstroComputer.calculate(date.get(Calendar.YEAR),
 										date.get(Calendar.MONTH) + 1,
@@ -655,6 +689,8 @@ public class SunFlowerDriver {
 										date.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
 										date.get(Calendar.MINUTE),
 										date.get(Calendar.SECOND));
+				sunDecl = AstroComputer.getSunDecl();
+				sunGHA = AstroComputer.getSunGHA();
 				if (devicePosition != null) {
 					DeadReckoning dr = new DeadReckoning(AstroComputer.getSunGHA(),
 														 AstroComputer.getSunDecl(),
@@ -663,6 +699,8 @@ public class SunFlowerDriver {
 														 .calculate();
 					sunAzimuth = dr.getZ();
 					sunElevation = dr.getHe();
+					// Calculate Solar Date and TIme
+					solarDate = getSolarDateFromEOT(date.getTime(), devicePosition.getLatitude(), devicePosition.getLongitude());
 					if (ASTRO_VERBOSE) {
 						System.out.println(String.format("At %s, from %s, Z: %.02f, Elev: %.02f ", date.getTime(), devicePosition, sunAzimuth, sunElevation));
 					}
@@ -963,7 +1001,7 @@ public class SunFlowerDriver {
 		while (keepGoing) {
 			Date date = new Date();
 			DeviceData deviceData = new DeviceData(date, devicePosition, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
-			SunData sunData = new SunData(date, sunAzimuth, sunElevation, sunDecl, sunGHA);
+			SunData sunData = new SunData(date, sunAzimuth, sunElevation, sunDecl, sunGHA, solarDate, (solarDate != null ? solarDate.getTime() : 0L));
 			this.publish(EventType.DEVICE_DATA, deviceData);
 			this.publish(EventType.CELESTIAL_DATA, sunData);
 
