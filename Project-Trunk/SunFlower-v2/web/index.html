@@ -37,6 +37,109 @@
             return s;
         }
 
+        const FRAME_WIDTH  = 160;
+        const FRAME_HEIGHT = 160;
+        let DEBUG = false;
+
+        function drawArrow(divId, dir, force) {
+            let label = '';
+            let fillColor = 'white';
+            if (force !== undefined) {
+                label = `F${force}, `;
+                // fillColor = getWindColor(force);
+            }
+            let direction;  // = dir; //  + 180;
+            if (typeof(dir) === 'number') {
+                direction = dir;
+                label += `${dir}°`
+            } else {
+                try {
+                    direction = dir.value;
+                    label += dir.label;
+                } catch (oops) {
+                    console.log('Akeu what?')
+                    direction = 0;
+                }
+            }
+            let title = null;
+            if (force !== undefined && typeof(dir) !== 'number') {
+                title = `Wind ${force} Beaufort\x0A${dir.label}`;
+            }
+
+            direction = -direction;
+            // XMLNS Required.
+            const XMLNS = "http://www.w3.org/2000/svg";
+
+            let parent = (divId !== null) ? document.getElementById(divId) : null;
+            if (title !== null && parent !== null) {
+                parent.setAttribute('title', title);
+
+            }
+            let svg = document.createElementNS(XMLNS, 'svg');
+            // svg.setAttribute('xmlns', xmlns);
+            svg.setAttributeNS(null, 'width', FRAME_WIDTH.toString());
+            svg.setAttributeNS(null, 'height', FRAME_HEIGHT.toString());
+            svg.setAttribute('style', 'background-color: rgba(255, 255, 255, 0); border-radius: 10px; border: 1px solid blue;');
+
+            if (parent !== null) {
+                parent.appendChild(svg);
+            }
+
+            let circle = document.createElementNS(XMLNS, 'circle');
+            circle.setAttributeNS(null, 'cx', (FRAME_WIDTH / 2).toString());
+            circle.setAttributeNS(null, 'cy', (FRAME_HEIGHT / 2).toString());
+            circle.setAttributeNS(null, 'r', '40');
+            circle.setAttributeNS(null, 'stroke', 'rgba(0, 255, 0, 1)');
+            circle.setAttributeNS(null, 'stroke-width', '4');
+            circle.setAttributeNS(null, 'fill', 'rgba(0, 255, 255, 0.25)');
+            svg.appendChild(circle);
+
+            let polygon = document.createElementNS(XMLNS, 'polygon');
+            polygon.setAttribute('style', `fill: ${fillColor}; stroke: blue; stroke-width: 2;`);
+
+            let headX = (FRAME_WIDTH / 2) + (60 * Math.sin(Math.toRadians(direction)));
+            let headY = (FRAME_HEIGHT / 2) + (60 * Math.cos(Math.toRadians(direction)));
+            let arrow = [{
+                // head
+                x: headX,
+                y: headY
+            }, {
+                // tail - left
+                x: (FRAME_WIDTH / 2) - (60 * Math.sin(Math.toRadians(direction + 10))),
+                y: (FRAME_HEIGHT / 2) - (60 * Math.cos(Math.toRadians(direction + 10)))
+            }, {
+                // tail - center
+                x: (FRAME_WIDTH / 2) - (55 * Math.sin(Math.toRadians(direction))),
+                y: (FRAME_HEIGHT / 2) - (55 * Math.cos(Math.toRadians(direction)))
+            }, {
+                // tail - right
+                x: (FRAME_WIDTH / 2) - (60 * Math.sin(Math.toRadians(direction - 10))),
+                y: (FRAME_HEIGHT / 2) - (60 * Math.cos(Math.toRadians(direction - 10)))
+            }];
+            // Draw polygon points here
+            let points = ""; // `${head.x.toFixed(0)},${head.y.toFixed(0)} ${tailRight.x.toFixed(0)},${tailRight.y.toFixed(0)} ${tail.x.toFixed(0)},${tail.y.toFixed(0)} ${tailLeft.x.toFixed(0)},${tailLeft.y.toFixed(0)}`;
+            arrow.forEach(pt => {
+                points += `${pt.x.toFixed(0)},${pt.y.toFixed(0)} `;
+            });
+            // console.log('Points:' + points.trim());
+            polygon.setAttributeNS(null, 'points', points.trim());
+            svg.appendChild(polygon);
+
+            let text = document.createElementNS(XMLNS, 'text');
+            text.setAttributeNS(null, 'x', '10');
+            text.setAttributeNS(null, 'y', '25');
+            text.setAttributeNS(null, 'font-size', '16');
+            text.setAttributeNS(null, 'font-family', "'Helvetica Neue', 'Lato', Verdana, Helvetica, Geneva, sans-serif;");
+            text.setAttributeNS(null, 'fill', 'blue');
+            text.appendChild(document.createTextNode(`${label}`));
+            svg.appendChild(text);
+
+            if (parent !== null && DEBUG) {
+                console.log(parent.innerHTML);
+            }
+            //debugger;
+            return { x: headX, y: headY, svgContent: svg };
+        }
     </script>
     <style type="text/css">
         body {
@@ -64,6 +167,7 @@
 <body>
     <div class="background">
         <div class="bg-data" id="bg-data">. . .</div>
+        <div id="sun-azimuth"></div>
         <img src="./img/sun.flower.jpg" alt="background" />
     </div>
     <h2>Sun Flower - Raw Data</h2>
@@ -109,6 +213,8 @@
             '(' + json.MOVING_ELEVATION_END.nbSteps + ' move(s) in ' + json.MOVING_ELEVATION_END.elapsed + ' ms)';
         document.getElementById('raw-json').innerHTML = '<pre>' + JSON.stringify(json, null, 2) + '</pre>';
         // Background data display
+        drawArrow('sun-azimuth', json.CELESTIAL_DATA.azimuth);
+
         let solarTime = null;
         if (json.CELESTIAL_DATA.solarEpoch !== undefined) {
             let utcOffsetInMinutes = new Date().getTimezoneOffset();
