@@ -148,9 +148,13 @@
             if (divId !== undefined) {
                 let svgDiv = document.getElementById(divId);
                 // It's a replace, remove first.
-                for (let n=0; n<svgDiv.childNodes.length; n++) {
-                    svgDiv.removeChild(svgDiv.childNodes[n]);
+                let content = svgDiv.firstElementChild;
+                if (content !== null && content !== undefined) {
+                    svgDiv.removeChild(content);
                 }
+                // for (let n=0; n<svgDiv.childNodes.length; n++) {
+                //     svgDiv.removeChild(svgDiv.childNodes[n]);
+                // }
                 svgDiv.appendChild(svg);
             } else {
                 return svgContent;
