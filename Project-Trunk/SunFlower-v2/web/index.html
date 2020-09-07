@@ -55,7 +55,7 @@
             }
             let direction;  // = dir; //  + 180;
             if (typeof(dir) === 'number') {
-                direction = dir + 180;
+                direction = dir - 180;
                 label += `Sun Z: ${dir.toFixed(0)}°`
             } else {
                 try {
@@ -96,7 +96,7 @@
             circle.setAttributeNS(null, 'r', '40');
             circle.setAttributeNS(null, 'stroke', 'rgba(0, 0, 0, 0.35);');
             circle.setAttributeNS(null, 'stroke-width', '4');
-            // circle.setAttributeNS(null, 'fill', 'transparent');
+            circle.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0.15);');
             svg.appendChild(circle);
 
             let polygon = document.createElementNS(XMLNS, 'polygon');
