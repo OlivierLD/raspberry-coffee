@@ -145,7 +145,7 @@
             //debugger;
             let svgContent = {x: headX, y: headY, svgContent: svg};
             if (divId !== undefined) {
-                document.getElementById(divId).outerHTML = svg;
+                document.getElementById(divId).appendChild(svg);
             } else {
                 return svgContent;
             }
