@@ -1037,7 +1037,8 @@ public class SunFlowerDriver {
 								data.motorCommand == AdafruitMotorHAT.MotorCommand.FORWARD ? "Frwd" : "Bkwd",
 								azimuthInverted ? "true" : "false"));
 					}
-					effectiveAfterMove = currentDeviceAzimuth - ((data.nbSteps * (360d / 200d)) / azimuthMotorRatio); //
+					effectiveAfterMove = currentDeviceAzimuth +
+							((data.motorCommand.equals(AdafruitMotorHAT.MotorCommand.FORWARD) ? 1 : -1) * ((data.nbSteps * (360d / 200d)) / azimuthMotorRatio)); //
 
 					if (!simulating) {
 						this.publish(EventType.MOVING_AZIMUTH_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.azimuthMotor.getMotorNum()));
@@ -1071,7 +1072,7 @@ public class SunFlowerDriver {
 					if (SPECIAL_DEBUG_VERBOSE) {
 						System.out.println(String.format("\tElevationStepOffset now %d", currentDeviceElevationStepOffset));
 					}
-					effectiveAfterMove = currentDeviceElevation - ((data.nbSteps * (360d / 200d)) / elevationMotorRatio); //
+					effectiveAfterMove = currentDeviceElevation + ((data.motorCommand.equals(AdafruitMotorHAT.MotorCommand.FORWARD) ? 1 : -1) * ((data.nbSteps * (360d / 200d)) / elevationMotorRatio));
 
 					if (!simulating) {
 						this.publish(EventType.MOVING_ELEVATION_START_2, new MoveDetails(new Date(), data.nbSteps, data.motorCommand, this.elevationMotor.getMotorNum()));
