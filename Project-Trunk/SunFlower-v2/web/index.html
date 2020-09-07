@@ -48,7 +48,7 @@
         }
         function drawArrow(divId, dir, force) {
             let label = '';
-            let fillColor = 'transparent';
+            let fillColor = 'white';
             if (force !== undefined) {
                 label = `F${force}, `;
                 // fillColor = getWindColor(force);
@@ -136,7 +136,7 @@
             text.setAttributeNS(null, 'font-size', '16');
             text.setAttributeNS(null, 'font-weight', 'bold');
             text.setAttributeNS(null, 'font-family', "'Helvetica Neue', 'Lato', Verdana, Helvetica, Geneva, sans-serif;");
-            text.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0.35)');
+            text.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0.75)');
             text.appendChild(document.createTextNode(`${label}`));
             svg.appendChild(text);
 
