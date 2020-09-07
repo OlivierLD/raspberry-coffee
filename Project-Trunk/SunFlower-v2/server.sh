@@ -15,6 +15,7 @@ JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dmoves.verbose=true"
 JAVA_OPTS="$JAVA_OPTS -Dmotor.hat.verbose=true"
 JAVA_OPTS="$JAVA_OPTS -Dtoo.long.exception.verbose=false"
+JAVA_OPTS="$JAVA_OPTS -Dspecial.debug.verbose=false"
 # JAVA_OPTS="$JAVA_OPTS -Dmin.diff.for.move=0.5"
 JAVA_OPTS="$JAVA_OPTS -DdeltaT=69.2201"
 #
