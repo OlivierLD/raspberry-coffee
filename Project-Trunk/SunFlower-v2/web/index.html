@@ -56,7 +56,7 @@
             let direction;  // = dir; //  + 180;
             if (typeof(dir) === 'number') {
                 direction = dir;
-                label += `${dir.toFixed(0)}°`
+                label += `Sun Z: ${dir.toFixed(0)}°`
             } else {
                 try {
                     direction = dir.value;
@@ -183,7 +183,7 @@
     <div class="background">
         <div class="bg-data" id="bg-data">. . .</div>
         <div id="sun-azimuth"></div>
-        <img src="./img/sun.flower.jpg" alt="background" />
+        <!--img src="./img/sun.flower.jpg" alt="background" /-->
     </div>
     <h2>Sun Flower - Raw Data</h2>
     <table border="1">
