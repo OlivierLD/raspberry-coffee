@@ -14,6 +14,7 @@ import utils.TimeUtil;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,6 +52,8 @@ import sunflower.utils.ANSIUtil;
  * -Dwith.ssd1306=true|false (default false)
  */
 public class SunFlowerDriver {
+
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss Z");
 
 	private final static int STEPS_PER_CIRCLE = 200;
 
@@ -509,6 +512,10 @@ public class SunFlowerDriver {
 		public String toString() {
 			return String.format("%s %s", this.date.toString(), this.message);
 		}
+	}
+
+	private void logWithTime(String message) {
+		System.out.println(String.format("%d - %s", SDF.format(new Date()), message));
 	}
 
 	public void setElevationOffset(double elevationOffset) {
@@ -1055,14 +1062,14 @@ public class SunFlowerDriver {
 					currentDeviceAzimuth += effectiveMove; // = adjustedAzimuth;
 				}
 				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset); // FIXME that one might have a problem?..
-				System.out.println(String.format("Elev: sun:%f, min:%d, currentDev:%f, adjusted:%f, minForMove:%f",
+				logWithTime(String.format("Elev: sun:%f, min:%d, currentDev:%f, adjusted:%f, minForMove:%f",
 						sunElevation,
 						minimumAltitude,
 						currentDeviceElevation,
 						adjustedElevation,
 						minDiffForMove));
 				if (Math.abs(currentDeviceElevation - adjustedElevation) >= minDiffForMove) {
-					System.out.println("\tMoving!");
+					logWithTime("\tMoving!");
 					hasMoved = true;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, adjustedElevation));
 					MotorPayload data = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
@@ -1096,7 +1103,7 @@ public class SunFlowerDriver {
 					}
 					currentDeviceElevation += effectiveMove; // = adjustedElevation;
 				} else {
-					System.out.println("\t...NOT moving.");
+					logWithTime("\t...NOT moving.");
 				}
 				if (hasMoved) {
 					if (ASTRO_VERBOSE) {
