@@ -105,6 +105,40 @@ oled.show()
 image = Image.new("1", (oled.width, oled.height))
 draw = ImageDraw.Draw(image)
 
+text = "Position:"
+#(font_width, font_height) = font.getsize(text)
+draw.text(
+    (BORDER + 2, BORDER + (0 * font_size)),
+    text,
+    font=font,
+    fill=255,
+)
+text = "N  37\27244.93'"
+# (font_width, font_height) = font.getsize(text)
+draw.text(
+    (BORDER + 2, BORDER + (1 * font_size)),
+    text,
+    font=font,
+    fill=255,
+)
+text = "W 122\27230.42'"
+# (font_width, font_height) = font.getsize(text)
+draw.text(
+    (BORDER + 2, BORDER + (2 * font_size)),
+    text,
+    font=font,
+    fill=255,
+)
+
+sleep(2)
+
+# CLS
+oled.fill(0)
+oled.show()
+image = Image.new("1", (oled.width, oled.height))
+draw = ImageDraw.Draw(image)
+
+# Reload Default Font
 font = ImageFont.load_default()
 
 text = "Hit Ctrl-C"
