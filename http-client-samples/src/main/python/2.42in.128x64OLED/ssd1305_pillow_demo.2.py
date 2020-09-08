@@ -123,7 +123,7 @@ draw.text(
     font=font,
     fill=255,
 )
-text = "W 122\27230.42'"
+text = "W 122\u00b030.42'"
 # (font_width, font_height) = font.getsize(text)
 draw.text(
     (BORDER + 2, BORDER + (2 * font_size)),
