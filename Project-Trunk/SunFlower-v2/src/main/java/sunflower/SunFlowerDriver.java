@@ -1055,7 +1055,14 @@ public class SunFlowerDriver {
 					currentDeviceAzimuth += effectiveMove; // = adjustedAzimuth;
 				}
 				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset); // FIXME that one might have a problem?..
+				System.out.println(String.format("Elev: sun:%f, min:%f, currentDev:%f, adjusted:%f, minForMove:%f",
+						sunElevation,
+						minimumAltitude,
+						currentDeviceElevation,
+						adjustedElevation,
+						minDiffForMove));
 				if (Math.abs(currentDeviceElevation - adjustedElevation) >= minDiffForMove) {
+					System.out.println("\tMoving!");
 					hasMoved = true;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, adjustedElevation));
 					MotorPayload data = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
@@ -1088,6 +1095,8 @@ public class SunFlowerDriver {
 								data.motorCommand, data.nbSteps, (data.nbSteps * (360d / 200d)), elevationMotorRatio, currentDeviceElevation, adjustedElevation, effectiveMove));
 					}
 					currentDeviceElevation += effectiveMove; // = adjustedElevation;
+				} else {
+					System.out.println("\t...NOT moving.");
 				}
 				if (hasMoved) {
 					if (ASTRO_VERBOSE) {
