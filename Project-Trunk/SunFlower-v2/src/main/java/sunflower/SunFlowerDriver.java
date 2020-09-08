@@ -1055,7 +1055,7 @@ public class SunFlowerDriver {
 					currentDeviceAzimuth += effectiveMove; // = adjustedAzimuth;
 				}
 				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset); // FIXME that one might have a problem?..
-				System.out.println(String.format("Elev: sun:%f, min:%f, currentDev:%f, adjusted:%f, minForMove:%f",
+				System.out.println(String.format("Elev: sun:%f, min:%d, currentDev:%f, adjusted:%f, minForMove:%f",
 						sunElevation,
 						minimumAltitude,
 						currentDeviceElevation,
