@@ -70,7 +70,7 @@ draw.text(
     font=font,
     fill=255,
 )
-text = "message displayed on"
+text = "message displayed"
 (font_width, font_height) = font.getsize(text)
 #
 print("For [{}], font width: {}, height: {}".format(text, font_width, font_height))
@@ -81,7 +81,7 @@ draw.text(
     font=font,
     fill=255,
 )
-text = "several lines!"
+text = "on several lines!"
 (font_width, font_height) = font.getsize(text)
 #
 print("For [{}], font width: {}, height: {}".format(text, font_width, font_height))
