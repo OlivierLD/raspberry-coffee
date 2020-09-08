@@ -20,7 +20,7 @@ oled_reset = digitalio.DigitalInOut(board.D4)
 # to the right size for your display!
 WIDTH = 128
 HEIGHT = 64  # Change to 32 if needed
-BORDER = 8
+BORDER = 4
 
 # Use for SPI
 spi = board.SPI()
@@ -55,10 +55,12 @@ draw.rectangle(
 )
 
 # Load default font.
-font = ImageFont.load_default()
+# font = ImageFont.load_default()
+font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 12)
+
 
 # Draw Some Text
-text = "Hello SSD1305 OLED"
+text = "This will be a\nmessage displayed\non several lines"
 (font_width, font_height) = font.getsize(text)
 draw.text(
     (oled.width // 2 - font_width // 2, oled.height // 2 - font_height // 2),
