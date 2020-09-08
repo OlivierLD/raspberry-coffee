@@ -66,7 +66,7 @@ text = "This will be a"
 # print("For [{}], font width: {}, height: {}".format(text, font_width, font_height))
 #
 draw.text(
-    (BORDER + 2, BORDER + (1 * font_size)),
+    (BORDER + 2, BORDER + (0 * font_size)),
     text,
     font=font,
     fill=255,
@@ -77,7 +77,7 @@ text = "message displayed"
 # print("For [{}], font width: {}, height: {}".format(text, font_width, font_height))
 #
 draw.text(
-    (BORDER + 2, BORDER + (2 * font_size)),
+    (BORDER + 2, BORDER + (1 * font_size)),
     text,
     font=font,
     fill=255,
@@ -88,7 +88,7 @@ text = "on several lines!"
 # print("For [{}], font width: {}, height: {}".format(text, font_width, font_height))
 #
 draw.text(
-    (BORDER + 2, BORDER + (3 * font_size)),
+    (BORDER + 2, BORDER + (2 * font_size)),
     text,
     font=font,
     fill=255,
