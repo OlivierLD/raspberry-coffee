@@ -20,7 +20,7 @@ oled_reset = digitalio.DigitalInOut(board.D4)
 # to the right size for your display!
 WIDTH = 128
 HEIGHT = 64  # Change to 32 if needed
-BORDER = 4
+BORDER = 2
 
 # Use for SPI
 spi = board.SPI()
@@ -56,7 +56,7 @@ draw.rectangle(
 
 # Load default font.
 # font = ImageFont.load_default()
-font_size = 10
+font_size = 8
 font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", font_size)
 
 # Draw Some Text
