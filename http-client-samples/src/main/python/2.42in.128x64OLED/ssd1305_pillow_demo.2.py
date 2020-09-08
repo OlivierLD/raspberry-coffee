@@ -99,6 +99,10 @@ oled.show()
 
 sleep(10)
 
+# CLS
+oled.fill(0)
+oled.show()
+
 font = ImageFont.load_default()
 
 text = "Hit Ctrl-C"
