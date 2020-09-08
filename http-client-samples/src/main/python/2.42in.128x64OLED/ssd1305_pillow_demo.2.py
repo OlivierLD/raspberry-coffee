@@ -58,10 +58,12 @@ draw.rectangle(
 # font = ImageFont.load_default()
 font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 12)
 
-
 # Draw Some Text
 text = "This will be a"
 (font_width, font_height) = font.getsize(text)
+#
+print("For [{}], font width: {}, height: {}".format(text, font_width, font_height))
+#
 draw.text(
     (BORDER + 2, (1 * font_height)),
     text,
@@ -70,6 +72,9 @@ draw.text(
 )
 text = "message displayed on"
 (font_width, font_height) = font.getsize(text)
+#
+print("For [{}], font width: {}, height: {}".format(text, font_width, font_height))
+#
 draw.text(
     (BORDER + 2, (2 * font_height)),
     text,
@@ -78,6 +83,9 @@ draw.text(
 )
 text = "several lines!"
 (font_width, font_height) = font.getsize(text)
+#
+print("For [{}], font width: {}, height: {}".format(text, font_width, font_height))
+#
 draw.text(
     (BORDER + 2, (3 * font_height)),
     text,
