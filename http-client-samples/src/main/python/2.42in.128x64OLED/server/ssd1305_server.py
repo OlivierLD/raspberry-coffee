@@ -149,10 +149,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
             response_content = json.dumps(response).encode()
             self.send_response(200)
             # defining the response headers
-            self.send_header('Content-Type', 'application/json')
-            content_len = len(response_content)
-            self.send_header('Content-Length', content_len)
-            self.end_headers()
+            # self.send_header('Content-Type', 'application/json')
+            # content_len = len(response_content)
+            # self.send_header('Content-Length', content_len)
+            # self.end_headers()
             self.wfile.write(response_content)
         else:
             if REST_DEBUG:
