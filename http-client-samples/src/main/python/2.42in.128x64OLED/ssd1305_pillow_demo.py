@@ -11,6 +11,7 @@ import board
 import digitalio
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_ssd1305
+from time import sleep
 
 # Define the Reset Pin
 oled_reset = digitalio.DigitalInOut(board.D4)
@@ -68,3 +69,16 @@ draw.text(
 # Display image
 oled.image(image)
 oled.show()
+
+keep_looping = True
+
+while keep_looping:
+    try:
+        sleep(0.1)
+    except KeyboardInterrupt:
+        print("\n\t\tUser interrupted, exiting.")
+        keep_looping = False
+
+oled.fill(0)
+oled.show()
+print("Bye!")
