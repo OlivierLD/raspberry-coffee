@@ -515,7 +515,7 @@ public class SunFlowerDriver {
 	}
 
 	private void logWithTime(String message) {
-		System.out.println(String.format("%d - %s", SDF.format(new Date()), message));
+		System.out.println(String.format("%s - %s", SDF.format(new Date()), message));
 	}
 
 	public void setElevationOffset(double elevationOffset) {
