@@ -32,6 +32,7 @@ oled = adafruit_ssd1305.SSD1305_SPI(WIDTH, HEIGHT, spi, oled_dc, oled_reset, ole
 # i2c = board.I2C()
 # oled = adafruit_ssd1305.SSD1305_I2C(WIDTH, HEIGHT, i2c, addr=0x3c, reset=oled_reset)
 
+print("Hit Ctrl-C to stop")
 # Clear display.
 oled.fill(0)
 oled.show()
@@ -57,7 +58,7 @@ draw.rectangle(
 font = ImageFont.load_default()
 
 # Draw Some Text
-text = "Hello World!"
+text = "Hello World!\Welcome OLED"
 (font_width, font_height) = font.getsize(text)
 draw.text(
     (oled.width // 2 - font_width // 2, oled.height // 2 - font_height // 2),
