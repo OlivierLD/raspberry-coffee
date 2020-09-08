@@ -5,6 +5,12 @@ We will show here how to use several sensors and screens, managed from Python,
 having their features exposed through an HTTP server - written in Python as well -
 so they can be reached from any HTTP Client, written in Java in our case.
 
+`curl`, `PostMan`, and others, behave exacty the same.
+
+In each `python` directory of this module you will find:
+- Some examples (based on python code provided by the manufacturer)
+- A `server` directory, containing a sample REST server communicating with the device.
+
 ## Featuring...
 - [LIS3MDL](https://www.adafruit.com/product/4479), tutorial [here](https://learn.adafruit.com/lis3mdl-triple-axis-magnetometer).
 - [Monochrome 2.42" oled screen](https://learn.adafruit.com/1-5-and-2-4-monochrome-128x64-oled-display-module?view=all), Raspberry Pi, `I2C` and `SPI`.
