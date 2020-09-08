@@ -102,6 +102,7 @@ sleep(5)
 # CLS
 oled.fill(0)
 oled.show()
+image = Image.new("1", (oled.width, oled.height))
 draw = ImageDraw.Draw(image)
 
 font = ImageFont.load_default()
