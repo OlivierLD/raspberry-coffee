@@ -56,7 +56,7 @@ draw.rectangle(
 
 # Load default font.
 # font = ImageFont.load_default()
-font_size = 8
+font_size = 10
 font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", font_size)
 
 # Draw Some Text
