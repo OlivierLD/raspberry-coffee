@@ -140,6 +140,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
                         "path": PATH_PREFIX + "/display",
                         "verb": "POST",
                         "description": "Display some text on screen."
+                    }, {
+                        "path": PATH_PREFIX + "/clean",
+                        "verb": "POST",
+                        "description": "Clear the screen."
                     }]
             }
             response_content = json.dumps(response).encode()
@@ -194,6 +198,24 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 cls()
                 (image, draw) = new_display()
                 write_on_ssd1305(draw, text, 2, font_size, font)
+                display(image)
+                # Response
+                self.send_response(201)
+                self.send_header('Content-Type', 'application/json')
+                response = {"status": "OK"}
+                response_content = json.dumps(response).encode()
+                content_len = len(response_content)
+                self.send_header('Content-Length', content_len)
+                self.end_headers()
+                self.wfile.write(response_content)
+            except:
+                self.send_response(500)
+                response = {"status": "Barf"}
+                self.wfile.write(json.dumps(response).encode())
+        elif self.path == PATH_PREFIX + "/clean":
+            try:
+                cls()
+                (image, draw) = new_display()
                 display(image)
                 # Response
                 self.send_response(201)
@@ -280,3 +302,6 @@ try:
     server.serve_forever()
 except KeyboardInterrupt:
     print("\n\t\tUser interrupted (server.serve), exiting.")
+
+cls()
+print("Done")
