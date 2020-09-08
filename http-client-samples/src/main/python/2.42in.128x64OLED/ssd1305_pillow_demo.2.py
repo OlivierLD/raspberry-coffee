@@ -33,16 +33,26 @@ oled = adafruit_ssd1305.SSD1305_SPI(WIDTH, HEIGHT, spi, oled_dc, oled_reset, ole
 # oled = adafruit_ssd1305.SSD1305_I2C(WIDTH, HEIGHT, i2c, addr=0x3c, reset=oled_reset)
 
 print("Hit Ctrl-C to stop")
-# Clear display.
-oled.fill(0)
-oled.show()
 
-# Create blank image for drawing.
-# Make sure to create image with mode '1' for 1-bit color.
-image = Image.new("1", (oled.width, oled.height))
 
-# Get drawing object to draw on image.
-draw = ImageDraw.Draw(image)
+def cls():
+    # Clear display.
+    oled.fill(0)
+    oled.show()
+
+
+def new_display():
+    # Create blank image for drawing.
+    # Make sure to create image with mode '1' for 1-bit color.
+    image = Image.new("1", (oled.width, oled.height))
+
+    # Get drawing object to draw on image.
+    draw = ImageDraw.Draw(image)
+    return image, draw
+
+
+cls()
+(image, draw) = new_display()
 
 # Draw a white background
 draw.rectangle((0, 0, oled.width, oled.height), outline=255, fill=255)
@@ -101,11 +111,8 @@ print("First display")
 
 sleep(5)
 
-# CLS
-oled.fill(0)
-oled.show()
-image = Image.new("1", (oled.width, oled.height))
-draw = ImageDraw.Draw(image)
+cls()
+(image, draw) = new_display()
 
 text = "Position:"
 #(font_width, font_height) = font.getsize(text)
@@ -140,11 +147,8 @@ print("Second display")
 
 sleep(2)
 
-# CLS
-oled.fill(0)
-oled.show()
-image = Image.new("1", (oled.width, oled.height))
-draw = ImageDraw.Draw(image)
+cls()
+(image, draw) = new_display()
 
 # Reload Default Font
 font = ImageFont.load_default()
@@ -173,6 +177,5 @@ while keep_looping:
         print("\n\t\tUser interrupted, exiting.")
         keep_looping = False
 
-oled.fill(0)
-oled.show()
+cls()
 print("Bye!")
