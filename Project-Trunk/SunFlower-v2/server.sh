@@ -36,11 +36,12 @@ JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=false"
 #JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"                   # In seconds
 JAVA_OPTS="$JAVA_OPTS -Ddate.simulation=true"
 JAVA_OPTS="$JAVA_OPTS -Dstart.date.simulation=2020-09-08T13:45:00"  # UTC
-JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"                   # In seconds
+JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=1"                     # In seconds
 #
 JAVA_OPTS="$JAVA_OPTS -Dfirst.move.slack=35"
 #
-JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10" # Give some time to the motor...
+#JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10" # Give some time to the motor...
+JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=1" # Give some time to the motor...
 JAVA_OPTS="$JAVA_OPTS -Dno.motor.movement=false"
 #
 # NMEA Data server (NMEA-multiplexer), position and heading
