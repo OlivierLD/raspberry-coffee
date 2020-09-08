@@ -97,11 +97,12 @@ draw.text(
 oled.image(image)
 oled.show()
 
-sleep(10)
+sleep(5)
 
 # CLS
 oled.fill(0)
 oled.show()
+draw = ImageDraw.Draw(image)
 
 font = ImageFont.load_default()
 
