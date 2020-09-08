@@ -60,10 +60,26 @@ font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 12)
 
 
 # Draw Some Text
-text = "This will be a\nmessage displayed\non several lines"
+text = "This will be a"
 (font_width, font_height) = font.getsize(text)
 draw.text(
-    (oled.width // 2 - font_width // 2, oled.height // 2 - font_height // 2),
+    (BORDER + 2, (1 * font_height)),
+    text,
+    font=font,
+    fill=255,
+)
+text = "message displayed on"
+(font_width, font_height) = font.getsize(text)
+draw.text(
+    (BORDER + 2, (2 * font_height)),
+    text,
+    font=font,
+    fill=255,
+)
+text = "several lines!"
+(font_width, font_height) = font.getsize(text)
+draw.text(
+    (BORDER + 2, (3 * font_height)),
     text,
     font=font,
     fill=255,
