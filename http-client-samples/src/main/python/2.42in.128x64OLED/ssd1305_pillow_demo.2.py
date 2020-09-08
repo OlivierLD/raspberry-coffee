@@ -62,9 +62,6 @@ font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fon
 # Draw Some Text
 text = "This will be a"
 #(font_width, font_height) = font.getsize(text)
-#
-# print("For [{}], font width: {}, height: {}".format(text, font_width, font_height))
-#
 draw.text(
     (BORDER + 2, BORDER + (0 * font_size)),
     text,
@@ -73,9 +70,6 @@ draw.text(
 )
 text = "message displayed"
 # (font_width, font_height) = font.getsize(text)
-#
-# print("For [{}], font width: {}, height: {}".format(text, font_width, font_height))
-#
 draw.text(
     (BORDER + 2, BORDER + (1 * font_size)),
     text,
@@ -84,11 +78,16 @@ draw.text(
 )
 text = "on several lines!"
 # (font_width, font_height) = font.getsize(text)
-#
-# print("For [{}], font width: {}, height: {}".format(text, font_width, font_height))
-#
 draw.text(
     (BORDER + 2, BORDER + (2 * font_size)),
+    text,
+    font=font,
+    fill=255,
+)
+text = "Font sixe {}, border {}.".format(font_size, BORDER)
+# (font_width, font_height) = font.getsize(text)
+draw.text(
+    (BORDER + 2, BORDER + (3 * font_size)),
     text,
     font=font,
     fill=255,
