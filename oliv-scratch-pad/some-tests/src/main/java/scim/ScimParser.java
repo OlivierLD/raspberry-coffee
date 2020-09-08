@@ -36,6 +36,7 @@ public class ScimParser {
     public enum SCIMOperators {
         CO("co"), // Contains
         EQ("eq"), // Equals
+        NE("ne"), // Not Equals
         SW("sw"), // Starts With
         PR("pr"), // Present (exists)
         GT("gt"), // Greater than
@@ -199,6 +200,8 @@ public class ScimParser {
             return String.valueOf(drillToValue(obj, expr.field)).contains(expr.value);
         } else if (expr.op.equals(SCIMOperators.EQ)) {
             return String.valueOf(drillToValue(obj, expr.field)).equals(expr.value);
+        } else if (expr.op.equals(SCIMOperators.NE)) {
+            return !String.valueOf(drillToValue(obj, expr.field)).equals(expr.value);
         } else if (expr.op.equals(SCIMOperators.SW)) {
             return String.valueOf(drillToValue(obj, expr.field)).startsWith(expr.value);
         } else if (expr.op.equals(SCIMOperators.PR)) {
@@ -392,10 +395,10 @@ public class ScimParser {
     private final static String ARRAY_FOR_FUNCTIONS = "curationFunctions";
     private final static String FILE_NAME_2 = "./bagnoles.json";
     private final static String ARRAY_FOR_BAGNOLES = "bagnoles";
-    private static boolean USE_SCIM = false;
+    private static boolean USE_SCIM = true;
 
-    private static String dataFileName = FILE_NAME_1 /* FILE_NAME_2 */;
-    private static String arrayName = ARRAY_FOR_FUNCTIONS /* ARRAY_FOR_BAGNOLES */;
+    private static String dataFileName = /* FILE_NAME_1 */ FILE_NAME_2;
+    private static String arrayName = /* ARRAY_FOR_FUNCTIONS */ ARRAY_FOR_BAGNOLES;
 
 
     /**
@@ -417,14 +420,16 @@ public class ScimParser {
             List<Map<String, Object>> filtered = null;
             if (USE_SCIM) {
                 // A - SCIM-like filters
-//            String filter = "title co \"W\"";
-//            String filter = "columnFunction eq true";
-//            String filter = "parameters pr";
-//            String filter = "name co .math";
-//            String filter = "name co .math and title co \"W\"";
-//            String filter = "name co .math and title sw \"W\" and description co \"eturns the\" and parameters.schema.additionalProperties eq false ";
-//            String filter = "parameters.schema.properties.left pr ";
-                String filter = "stuff pr and stuff ge 9";
+//                String filter = "title co \"W\"";
+//                String filter = "columnFunction eq true";
+//                String filter = "parameters pr";
+//                String filter = "name co .math";
+//                String filter = "name co .math and title co \"W\"";
+//                String filter = "name co .math and title sw \"W\" and description co \"eturns the\" and parameters.schema.additionalProperties eq false ";
+//                String filter = "parameters.schema.properties.left pr ";
+//                String filter = "stuff pr and stuff ge 9";
+                String filter = "make ne VolksWagen and extra-data.nb-seats ge 4";
+
                 filtered = filter(listToFilter, filter);
             } else {
                 // B - OCI-like filters, parameters.
