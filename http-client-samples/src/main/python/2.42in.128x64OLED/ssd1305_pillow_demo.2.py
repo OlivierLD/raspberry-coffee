@@ -97,6 +97,23 @@ draw.text(
 oled.image(image)
 oled.show()
 
+sleep(10)
+
+font = ImageFont.load_default()
+
+text = "Hit Ctrl-C"
+(font_width, font_height) = font.getsize(text)
+draw.text(
+    (oled.width // 2 - font_width // 2, oled.height // 2 - font_height // 2),
+    text,
+    font=font,
+    fill=255,
+)
+
+# Display image
+oled.image(image)
+oled.show()
+
 keep_looping = True
 
 while keep_looping:
