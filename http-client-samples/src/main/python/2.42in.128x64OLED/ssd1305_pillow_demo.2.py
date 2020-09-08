@@ -97,6 +97,8 @@ draw.text(
 oled.image(image)
 oled.show()
 
+print("First display")
+
 sleep(5)
 
 # CLS
@@ -130,6 +132,12 @@ draw.text(
     fill=255,
 )
 
+# Display image
+oled.image(image)
+oled.show()
+
+print("Second display")
+
 sleep(2)
 
 # CLS
@@ -153,6 +161,8 @@ draw.text(
 # Display image
 oled.image(image)
 oled.show()
+
+print("Third display")
 
 keep_looping = True
 
