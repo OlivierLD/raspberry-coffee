@@ -69,7 +69,7 @@ keep_looping = True
 while keep_looping:
     try:
         # Draw a black filled box to clear the image.
-        cls()
+        cls(width, height, rotation)
 
         # Write four lines of text.
         y = top
@@ -91,4 +91,4 @@ while keep_looping:
         print("\n\t\tUser interrupted, exiting.")
         keep_looping = False
         # clean the screen
-        cls()
+        cls(width, height, rotation)
