@@ -192,10 +192,11 @@ class ServiceHandler(BaseHTTPRequestHandler):
             # Get text to display from body (text/plain)
             content_len = int(self.headers.get('Content-Length'))
             post_body = self.rfile.read(content_len).decode('utf-8')
-            print("Content: {}".format(post_body))
+            print("POST /display Content: {}".format(post_body))
             # x and y coordinates, multiline text
             # [ { x: x, y: y, text: "Text" } ]
             payload = json.loads(post_body)
+            print("POST /display JSON Content: {}".format(payload))
             try:
                 # Do the job
                 cls()
@@ -204,7 +205,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 for line in payload:
                     write_on_ssd1305(draw, line['text'], line['x'], line['y'], font)
                 display(image)
-                
+
                 # Response
                 self.send_response(201)
                 self.send_header('Content-Type', 'application/json')
