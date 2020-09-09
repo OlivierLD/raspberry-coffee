@@ -18,7 +18,7 @@ import digitalio
 import busio
 import board
 from PIL import Image, ImageDraw, ImageFont
-import adafruit_ssd1305
+import adafruit_rgb_display.st7789 as st7789
 
 # Define the Reset Pin
 oled_reset = digitalio.DigitalInOut(board.D4)
@@ -32,22 +32,29 @@ sample_data = {  # Used for VIEW, and non-implemented operations. Fallback.
 server_port = 8080
 REST_DEBUG = False
 
-# Change these
-# to the right size for your display!
-WIDTH = 128
-HEIGHT = 64  # Change to 32 if needed
-BORDER = 0  # 2
+# Configuration for CS and DC pins (these are FeatherWing defaults on M0/M4):
+cs_pin = digitalio.DigitalInOut(board.CE0)
+dc_pin = digitalio.DigitalInOut(board.D25)
+reset_pin = None
 
+# Config for display baudrate (default max is 24mhz):
+BAUDRATE = 64000000
+
+# Setup SPI bus using hardware SPI:
 spi = board.SPI()
-oled_cs = digitalio.DigitalInOut(board.D5)
-oled_dc = digitalio.DigitalInOut(board.D6)
-oled = adafruit_ssd1305.SSD1305_SPI(WIDTH, HEIGHT, spi, oled_dc, oled_reset, oled_cs)
 
-# Use for I2C.
-# i2c = board.I2C()
-# oled = adafruit_ssd1305.SSD1305_I2C(WIDTH, HEIGHT, i2c, addr=0x3c, reset=oled_reset)
+# Configuration for CS and DC pins (these are FeatherWing defaults on M0/M4):
+cs_pin = digitalio.DigitalInOut(board.CE0)
+dc_pin = digitalio.DigitalInOut(board.D25)
+reset_pin = None
 
-font_size = 10  # TODO Make this a payload prm
+# Config for display baudrate (default max is 24mhz):
+BAUDRATE = 64000000
+
+# Setup SPI bus using hardware SPI:
+spi = board.SPI()
+
+font_size = 10
 font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", font_size)
 
 
