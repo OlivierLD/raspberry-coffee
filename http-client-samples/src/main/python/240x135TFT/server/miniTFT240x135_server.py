@@ -103,7 +103,7 @@ PATH_PREFIX = "/miniTFT"
 class ServiceHandler(BaseHTTPRequestHandler):
     global font_size
     global font
-    
+
     # sets basic headers for the server
     def _set_headers(self):
         self.send_response(200)
@@ -226,13 +226,16 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 for line in payload["text"]:
                     print("\tLine: {}".format(line))
                     line_font_size = line["size"]
+                    print("Line font size: {}".format(line_font_size))
                     if line_font_size is not None:
                         if font_size != line_font_size:
                             font = load_font(line_font_size)
                             font_size = line_font_size
                     fg_color = line["color"]
+                    print("Line font color: {}".format(fg_color))
                     color = fg_color if fg_color is not None else "#FFFFFF"
                     write_on_screen(draw, line['text'], line['x'], line['y'], font, color)
+                    print("Line was written on screen")
 
                 json_rotation = payload["rotation"]
                 rotation = json_rotation if json_rotation is not None else 90
