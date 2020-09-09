@@ -221,6 +221,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 color = bg_color if bg_color is not None else "#000000"
                 cls(width, height, color)
                 for line in payload["text"]:
+                    print("\tLine: {}".format(line))
                     global font_size
                     global font
                     line_font_size = line["size"]
@@ -234,6 +235,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 json_rotation = payload["rotation"]
                 rotation = json_rotation if json_rotation is not None else 90
                 display(rotation)
+                print("Display finished")
 
                 # Response
                 self.send_response(201)
