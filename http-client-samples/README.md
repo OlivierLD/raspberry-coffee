@@ -13,11 +13,11 @@ In each `python` directory of this module you will find:
 
 ## Featuring...
 - Magnetometer [LIS3MDL](https://www.adafruit.com/product/4479), tutorial [here](https://learn.adafruit.com/lis3mdl-triple-axis-magnetometer).
-- [Monochrome 2.42" oled screen](https://learn.adafruit.com/1-5-and-2-4-monochrome-128x64-oled-display-module?view=all), Raspberry Pi, `I2C` and `SPI`.
 - [240x240 TFT](https://www.adafruit.com/product/3787), [tutorial](https://learn.adafruit.com/adafruit-1-3-and-1-54-240-x-240-wide-angle-tft-lcd-displays?view=all), look for `ST7789 and ST7735-based Displays, 1.3", 1.54", and 2.0" IPS TFT Display`.
 - [2.13" E-INK](https://learn.adafruit.com/2-13-in-e-ink-bonnet?view=all).
 - [240x351 mini color TFT](https://www.adafruit.com/product/4393), setup doc [here](https://learn.adafruit.com/adafruit-mini-pitft-135x240-color-tft-add-on-for-raspberry-pi?view=all#attaching-3044215-2).
-- [2.42", 128x64 OLED](http://adafu.it/2719), doc and wiring [here](https://learn.adafruit.com/1-5-and-2-4-monochrome-128x64-oled-display-module?view=all#adafruit-oled-display-spi-wiring-3046037-6)
+- [2.42", 128x64 OLED]
+- [Monochrome 2.42" oled screen](https://learn.adafruit.com/1-5-and-2-4-monochrome-128x64-oled-display-module?view=all), Raspberry Pi, `I2C` and `SPI`, from [here](http://adafu.it/2719), doc and wiring [here](https://learn.adafruit.com/1-5-and-2-4-monochrome-128x64-oled-display-module?view=all#adafruit-oled-display-spi-wiring-3046037-6)
   
 ### Magnetometer LIS3MDL
 On the Raspberry Pi, install the required python packages:
@@ -42,9 +42,6 @@ $  ./read_mag.sh
 . . .
 ```
 The URL of the server can be modified in the `read_mag.sh` script. 
-
-### Monochrome Screen 2.42"
-
 
 ### 240x240 TFT
 > Note: Could NOT get it to work...
@@ -178,6 +175,8 @@ curl --location --request POST 'http://192.168.42.6:8080/miniTFT/display' \
     ]
 }'
 ```
+![mniTFT](./images/miniTFT.jpg)
+
 
 ## 2.42", 128x64 OLED, SPI version for now
 - Install required libraries and artifacts
@@ -188,5 +187,6 @@ $ sudo apt-get install python3-pil
 Details in [its folder](./src/main/python/2.42in.128x64OLED/README.md)
 
 ![ssd1305](./images/ssd1305.jpg)
+
 ---
  
