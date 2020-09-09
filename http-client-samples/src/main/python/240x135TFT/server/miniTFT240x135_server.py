@@ -101,6 +101,9 @@ PATH_PREFIX = "/miniTFT"
 
 # Defining a HTTP request Handler class
 class ServiceHandler(BaseHTTPRequestHandler):
+    global font_size
+    global font
+    
     # sets basic headers for the server
     def _set_headers(self):
         self.send_response(200)
@@ -222,12 +225,11 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 cls(width, height, color)
                 for line in payload["text"]:
                     print("\tLine: {}".format(line))
-                    global font_size
-                    global font
                     line_font_size = line["size"]
                     if line_font_size is not None:
-                        font = load_font(line_font_size)
-                        font_size = line_font_size
+                        if font_size != line_font_size:
+                            font = load_font(line_font_size)
+                            font_size = line_font_size
                     fg_color = line["color"]
                     color = fg_color if fg_color is not None else "#FFFFFF"
                     write_on_screen(draw, line['text'], line['x'], line['y'], font, color)
