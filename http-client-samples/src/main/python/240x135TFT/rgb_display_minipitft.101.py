@@ -45,9 +45,12 @@ font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fon
 draw = ImageDraw.Draw(image)
 
 
-def cls(width, height, rotation):
+def cls(width, height):
     # Draw a black filled box to clear the image.
     draw.rectangle((0, 0, width, height), outline=0, fill="#000000")  # fill=(0, 0, 0))
+
+
+def display(rotation):
     disp.image(image, rotation)
 
 
@@ -69,7 +72,7 @@ keep_looping = True
 while keep_looping:
     try:
         # Draw a black filled box to clear the image.
-        cls(width, height, rotation)
+        cls(width, height)
 
         # Write four lines of text.
         y = top
@@ -85,10 +88,11 @@ while keep_looping:
         draw.text((x, y), "Line number five", font=font, fill="#FF00FF")     # Purple
 
         # Display image.
-        disp.image(image, rotation)
+        display(rotation)
         time.sleep(0.1)  # Wait for Ctrl-C
     except KeyboardInterrupt:
         print("\n\t\tUser interrupted, exiting.")
         keep_looping = False
         # clean the screen
-        cls(width, height, rotation)
+        cls(width, height)
+        display(rotation)
