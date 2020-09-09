@@ -241,16 +241,21 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 cls(width, height, color)
                 for line in payload["text"]:
                     print("\tLine: {}".format(line))
-                    line_font_size = line["size"]
-                    print("Line font size: {} ({})".format(line_font_size if line_font_size is not None else -1, get_font_size()))
-                    if line_font_size is not None:
+                    try:
+                        line_font_size = line["size"]
                         if get_font_size() != line_font_size:
                             font = load_font(line_font_size)
                             set_font(font)
                             set_font_size(line_font_size)
-                    fg_color = line["color"]
-                    print("Line font color: {}".format(fg_color if fg_color is not None else "null"))
-                    color = fg_color if fg_color is not None else "#FFFFFF"
+                    except KeyError:
+                        line_font_size = get_font_size()
+                    print("Line font size: {} ({})".format(line_font_size, get_font_size()))
+                    try:
+                        fg_color = line["color"]
+                    except KeyError:
+                        fg_color = "#FFFFFF"
+                    print("Line font color: {}".format(fg_color))
+                    color = fg_color
                     write_on_screen(draw, line['text'], line['x'], line['y'], get_font(), color)
                     print("Line was written on screen")
 
@@ -269,8 +274,9 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(response_content)
             except:
+                stack = traceback.format_exc()
                 self.send_response(500)
-                response = {"status": "Barf"}
+                response = {"status": "Barf", "error": stack }
                 self.wfile.write(json.dumps(response).encode())
         elif self.path == PATH_PREFIX + "/clean":
             # Get text to display from body (application/json)
@@ -284,11 +290,16 @@ class ServiceHandler(BaseHTTPRequestHandler):
             payload = json.loads(post_body)
             print("POST /display JSON Content: {}".format(payload))
             try:
-                bg_color = payload["bg-color"]
-                color = bg_color if bg_color is not None else "#000000"
+                try:
+                    bg_color = payload["bg-color"]
+                except KeyError:
+                    bg_color = "#000000"
+                color = bg_color
                 cls(width, height, color)
-                json_rotation = payload["rotation"]
-                rotation = json_rotation if json_rotation is not None else 90
+                try:
+                    rotation = payload["rotation"]
+                except KeyError:
+                    rotation = 90
                 display(rotation)
                 # Response
                 self.send_response(201)
