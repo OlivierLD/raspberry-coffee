@@ -139,7 +139,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
                     }, {
                         "path": PATH_PREFIX + "/display",
                         "verb": "POST",
-                        "description": "Display some text on screen."
+                        "description": "Display some text on screen. Body application/json, like [ { x: x, y: y, text: 'Text' } ]"
                     }, {
                         "path": PATH_PREFIX + "/clean",
                         "verb": "POST",
@@ -193,13 +193,18 @@ class ServiceHandler(BaseHTTPRequestHandler):
             content_len = int(self.headers.get('Content-Length'))
             post_body = self.rfile.read(content_len).decode('utf-8')
             print("Content: {}".format(post_body))
-            # TODO X and y coordinates, multiline text
+            # x and y coordinates, multiline text
+            # [ { x: x, y: y, text: "Text" } ]
+            payload = json.loads(post_body)
             try:
-                text = post_body
+                # Do the job
                 cls()
                 (image, draw) = new_display()
-                write_on_ssd1305(draw, text, 2, font_size, font)
+                # write_on_ssd1305(draw, text, 2, font_size, font)
+                for line in payload:
+                    write_on_ssd1305(draw, line['text'], line['x'], line['y'], font)
                 display(image)
+                
                 # Response
                 self.send_response(201)
                 self.send_header('Content-Type', 'application/json')
