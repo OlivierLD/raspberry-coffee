@@ -260,8 +260,8 @@
             '(' + json.MOVING_ELEVATION_END.nbSteps + ' move(s) in ' + json.MOVING_ELEVATION_END.elapsed + ' ms)';
         document.getElementById('raw-json').innerHTML = '<pre>' + JSON.stringify(json, null, 2) + '</pre>';
 
-        document.getElementById('z-offset').innerHTML = json.DEVICE_DATA.azimuthOffset;
-        document.getElementById('el-offset').innerHTML = json.DEVICE_DATA.elevationOffset;
+        document.getElementById('z-offset').innerHTML = json.DEVICE_DATA.currentDeviceAzimuthStepOffset;
+        document.getElementById('el-offset').innerHTML = json.DEVICE_DATA.currentDeviceElevationStepOffset;
 
         // Background data display
         drawArrow('sun-azimuth', json.CELESTIAL_DATA.azimuth);

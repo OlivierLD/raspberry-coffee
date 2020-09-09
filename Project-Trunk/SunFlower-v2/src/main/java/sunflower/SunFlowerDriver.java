@@ -244,8 +244,18 @@ public class SunFlowerDriver {
 		private final double azimuthOffset;
 		private final double elevationOffset;
 		private final double deviceHeading;
+		private final int azimuthStepOffset;
+		private final int elevationStepOffset;
 
-		public DeviceData(Date date, Position devicePosition, double azimuth, double elevation, double azimuthOffset, double elevationOffset, double deviceHeading) {
+		public DeviceData(Date date,
+						  Position devicePosition,
+						  double azimuth,
+						  double elevation,
+						  double azimuthOffset,
+						  double elevationOffset,
+						  double deviceHeading,
+						  int azimuthStepOffset,
+						  int elevationStepOffset) {
 			this.date = date;
 			this.devicePosition = devicePosition;
 			this.epoch = date.getTime();
@@ -254,6 +264,8 @@ public class SunFlowerDriver {
 			this.azimuthOffset = azimuthOffset;
 			this.elevationOffset = elevationOffset;
 			this.deviceHeading = deviceHeading;
+			this.azimuthStepOffset = azimuthStepOffset;
+			this.elevationStepOffset = elevationStepOffset;
 		}
 
 		public Date getDate() {
@@ -286,6 +298,14 @@ public class SunFlowerDriver {
 
 		public Position getDevicePosition() {
 			return devicePosition;
+		}
+
+		public int getAzimuthStepOffset() {
+			return azimuthStepOffset;
+		}
+
+		public int getElevationStepOffset() {
+			return elevationStepOffset;
 		}
 
 		@Override
@@ -1007,7 +1027,9 @@ public class SunFlowerDriver {
 
 		while (keepGoing) {
 			Date date = new Date();
-			DeviceData deviceData = new DeviceData(date, devicePosition, currentDeviceAzimuth, currentDeviceElevation, azimuthOffset, elevationOffset, deviceHeading);
+			DeviceData deviceData = new DeviceData(date,
+					devicePosition, currentDeviceAzimuth, currentDeviceElevation,
+					azimuthOffset, elevationOffset, deviceHeading, currentDeviceAzimuthStepOffset, currentDeviceElevationStepOffset);
 			SunData sunData = new SunData(date, sunAzimuth, sunElevation, sunDecl, sunGHA, solarDate, (solarDate != null ? solarDate.getTime() : 0L));
 			this.publish(EventType.DEVICE_DATA, deviceData);
 			this.publish(EventType.CELESTIAL_DATA, sunData);
