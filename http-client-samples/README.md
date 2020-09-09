@@ -176,6 +176,38 @@ curl --location --request POST 'http://192.168.42.6:8080/miniTFT/display' \
 ```
 ![mniTFT](./images/miniTFT.jpg)
 
+Try this too (special characters 😜) :
+```
+curl --location --request POST 'http://192.168.42.6:8080/miniTFT/display' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "rotation": 270,
+    "bg-color": "#000000",
+    "text": [
+        {
+            "x": 2,
+            "y": 0,
+            "text": "This is line #1",
+            "size": 18,
+            "color": "#ffffff"
+        },
+        {
+            "x": 2,
+            "y": 18,
+            "text": "N 38\u00b0",
+            "size": 48,
+            "color": "#0000ff"
+        },
+        {
+            "x": 2,
+            "y": 66,
+            "text": "W 122\u00b0",
+            "size": 48,
+            "color": "#ff00ff"
+        }
+    ]
+}'
+```
 
 ## 2.42", 128x64 OLED, SPI version for now
 - Install required libraries and artifacts
