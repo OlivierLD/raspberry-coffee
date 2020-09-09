@@ -282,13 +282,13 @@ class ServiceHandler(BaseHTTPRequestHandler):
             # Get text to display from body (application/json)
             content_len = int(self.headers.get('Content-Length'))
             post_body = self.rfile.read(content_len).decode('utf-8')
-            print("POST /display Content: {}".format(post_body))
+            # print("POST /display Content: {}".format(post_body))
             # {
             #   "rotation": 90,
             #   "bg-color": "#000000"   // default black
             # }
             payload = json.loads(post_body)
-            print("POST /display JSON Content: {}".format(payload))
+            # print("POST /display JSON Content: {}".format(payload))
             try:
                 try:
                     bg_color = payload["bg-color"]
