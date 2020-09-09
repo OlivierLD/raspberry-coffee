@@ -226,11 +226,11 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 for line in payload["text"]:
                     print("\tLine: {}".format(line))
                     line_font_size = line["size"]
-                    print("Line font size: {} ({})".format(line_font_size, font_size))
-                    if line_font_size is not None:
-                        if font_size != line_font_size:
-                            font = load_font(line_font_size)
-                            font_size = line_font_size
+                    # print("Line font size: {} ({})".format(line_font_size, font_size))
+                    # if line_font_size is not None:
+                    #     if font_size != line_font_size:
+                    #         font = load_font(line_font_size)
+                    #         font_size = line_font_size
                     fg_color = line["color"]
                     print("Line font color: {}".format(fg_color))
                     color = fg_color if fg_color is not None else "#FFFFFF"
