@@ -907,7 +907,7 @@ public class SunFlowerDriver {
 			this.publish(EventType.DEVICE_INFO, new DeviceInfo(new Date(), "Parking the device"));
 			// Put Z to 0 or 180, Elev. to 90.
 
-			// Parking from currentDeviceElevation to PARKED_ELEVATION
+			// Parking from currentDeviceElevation to PARKED_ELEVA            response_content = json.dumps(response).encode()NOTION
 			System.out.println(String.format("\t - Parking elevation %.02f -> %.02f", currentDeviceElevation, PARKED_ELEVATION));
 			MotorPayload parkElev = getMotorPayload( // The 2 first parameters use the accumulated number of steps
 				    PARKED_ELEVATION,
@@ -1062,14 +1062,14 @@ public class SunFlowerDriver {
 					currentDeviceAzimuth += effectiveMove; // = adjustedAzimuth;
 				}
 				double adjustedElevation = adjustDeviceValue(Math.max(sunElevation, minimumAltitude), elevationOffset); // FIXME that one might have a problem?..
-				logWithTime(String.format("Elev: sun:%f, min:%d, currentDev:%f, adjusted:%f, minForMove:%f",
-						sunElevation,
-						minimumAltitude,
-						currentDeviceElevation,
-						adjustedElevation,
-						minDiffForMove));
+//				logWithTime(String.format("Elev: sun:%f, min:%d, currentDev:%f, adjusted:%f, minForMove:%f",
+//						sunElevation,
+//						minimumAltitude,
+//						currentDeviceElevation,
+//						adjustedElevation,
+//						minDiffForMove));
 				if (Math.abs(currentDeviceElevation - adjustedElevation) >= minDiffForMove) {
-					logWithTime("\tMoving!");
+//					logWithTime("\tMoving!");
 					hasMoved = true;
 					this.publish(EventType.MOVING_ELEVATION_START, new DeviceElevationStart(new Date(), currentDeviceElevation, adjustedElevation));
 					MotorPayload data = getMotorPayload(  // The 2 first parameters use the accumulated number of steps
@@ -1102,8 +1102,8 @@ public class SunFlowerDriver {
 								data.motorCommand, data.nbSteps, (data.nbSteps * (360d / 200d)), elevationMotorRatio, currentDeviceElevation, adjustedElevation, effectiveMove));
 					}
 					currentDeviceElevation += effectiveMove; // = adjustedElevation;
-				} else {
-					logWithTime("\t...NOT moving.");
+//				} else {
+//					logWithTime("\t...NOT moving.");
 				}
 				if (hasMoved) {
 					if (ASTRO_VERBOSE) {

@@ -193,6 +193,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
             content_len = int(self.headers.get('Content-Length'))
             post_body = self.rfile.read(content_len).decode('utf-8')
             print("Content: {}".format(post_body))
+            # TODO X and y coordinates, multiline text
             try:
                 text = post_body
                 cls()
