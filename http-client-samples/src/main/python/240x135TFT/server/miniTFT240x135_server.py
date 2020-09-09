@@ -67,6 +67,24 @@ font_size = 24
 font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", font_size)
 
 
+def get_font_size():
+    return font_size
+
+
+def set_font_size(size):
+    global font_size
+    font_size = size
+
+
+def set_font(f):
+    global font
+    font = f
+
+
+def get_font():
+    return font
+
+
 def load_font(size):
     return ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", size)
 
@@ -101,8 +119,6 @@ PATH_PREFIX = "/miniTFT"
 
 # Defining a HTTP request Handler class
 class ServiceHandler(BaseHTTPRequestHandler):
-    global font_size
-    global font
 
     # sets basic headers for the server
     def _set_headers(self):
@@ -226,15 +242,16 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 for line in payload["text"]:
                     print("\tLine: {}".format(line))
                     line_font_size = line["size"]
-                    # print("Line font size: {} ({})".format(line_font_size, font_size))
-                    # if line_font_size is not None:
-                    #     if font_size != line_font_size:
-                    #         font = load_font(line_font_size)
-                    #         font_size = line_font_size
+                    print("Line font size: {} ({})".format(line_font_size, get_font_size()))
+                    if line_font_size is not None:
+                        if get_font_size() != line_font_size:
+                            font = load_font(line_font_size)
+                            set_font(font)
+                            set_font_size(line_font_size)
                     fg_color = line["color"]
-                    print("Line font color: {}".format(fg_color))
+                    print("Line font color: {}".format(fg_color if fg_color is not None else "null"))
                     color = fg_color if fg_color is not None else "#FFFFFF"
-                    write_on_screen(draw, line['text'], line['x'], line['y'], font, color)
+                    write_on_screen(draw, line['text'], line['x'], line['y'], get_font(), color)
                     print("Line was written on screen")
 
                 json_rotation = payload["rotation"]
