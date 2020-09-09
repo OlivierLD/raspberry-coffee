@@ -74,14 +74,14 @@ while keep_looping:
         # Write four lines of text.
         y = top
         draw.text((x, y), "Line number one", font=font, fill="#FFFFFF")      # White
-        y += font.getsize("-")[1]
-        print("Font Height: {}".format(font.getsize("-")[1]))
+        y += font_size  # font.getsize("-")[1]
+        # print("Font Height: {}".format(font.getsize("-")[1]))
         draw.text((x, y), "Line number two", font=font, fill="#FFFF00")      # Yellow
-        y += font.getsize("-")[1]
+        y += font_size  # font.getsize("-")[1]
         draw.text((x, y), "Line number three", font=font, fill="#00FF00")    # Green
-        y += font.getsize("-")[1]
+        y += font_size  # font.getsize("-")[1]
         draw.text((x, y), "Line number four", font=font, fill="#0000FF")     # Blue
-        y += font.getsize("-")[1]
+        y += font_size  # font.getsize("-")[1]
         draw.text((x, y), "Line number five", font=font, fill="#FF00FF")     # Purple
 
         # Display image.
