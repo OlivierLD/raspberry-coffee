@@ -117,6 +117,68 @@ $ sudo python3 rgb_display_minipitfttest.py
 ```
 Same for `rgb_display_minipitftstats.py`
 
+
+#### The server
+Run
+```
+$ python3 miniTFT240x135_server.py --machine-name:$(hostname -I)
+```
+
+Then, anywhere on the same network:
+```
+curl --location --request POST 'http://192.168.42.6:8080/miniTFT/display' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "rotation": 270,
+    "bg-color": "#000000",
+    "text": [
+        {
+            "x": 2,
+            "y": 0,
+            "text": "This is line #1",
+            "size": 18,
+            "color": "#ffffff"
+        },
+        {
+            "x": 2,
+            "y": 18,
+            "text": "This is line #2",
+            "color": "#0000ff"
+        },
+        {
+            "x": 2,
+            "y": 36,
+            "text": "This is line #3",
+            "color": "#ff0000"
+        },
+        {
+            "x": 2,
+            "y": 54,
+            "text": "And that would be line #4",
+            "color": "#0000ff"
+        },
+        {
+            "x": 2,
+            "y": 72,
+            "text": "Goingon, line #6",
+            "color": "#ffff00"
+        },
+        {
+            "x": 2,
+            "y": 90,
+            "text": "Even more, line #7",
+            "color": "#ffffff"
+        },
+        {
+            "x": 2,
+            "y": 108,
+            "text": "up to line #8",
+            "color": "#00ff00"
+        }
+    ]
+}'
+```
+
 ## 2.42", 128x64 OLED, SPI version for now
 - Install required libraries and artifacts
 ```

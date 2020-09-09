@@ -8,14 +8,14 @@
 #
 import json
 import sys
-import threading
+# import threading
 import traceback
-import time
+# import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from time import sleep
 
 import digitalio
-import busio
+# import busio
 import board
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_rgb_display.st7789 as st7789
@@ -226,21 +226,21 @@ class ServiceHandler(BaseHTTPRequestHandler):
             # Get text to display from body (application/json)
             content_len = int(self.headers.get('Content-Length'))
             post_body = self.rfile.read(content_len).decode('utf-8')
-            print("POST /display Content: {}".format(post_body))
+            # print("POST /display Content: {}".format(post_body))
             # {
             #   "rotation": 90,
             #   "bg-color": "#000000",  // default black
             #   "text": [ { x: x, y: y, text: "Text", size: 24, color: "#FFFFFF" } ]
             # }
             payload = json.loads(post_body)
-            print("POST /display JSON Content: {}".format(payload))
+            # print("POST /display JSON Content: {}".format(payload))
             try:
                 # Do the job
                 bg_color = payload["bg-color"]
                 color = bg_color if bg_color is not None else "#000000"
                 cls(width, height, color)
                 for line in payload["text"]:
-                    print("\tLine: {}".format(line))
+                    # print("\tLine: {}".format(line))
                     try:
                         line_font_size = line["size"]
                         if get_font_size() != line_font_size:
@@ -249,20 +249,20 @@ class ServiceHandler(BaseHTTPRequestHandler):
                             set_font_size(line_font_size)
                     except KeyError:
                         line_font_size = get_font_size()
-                    print("Line font size: {} ({})".format(line_font_size, get_font_size()))
+                    # print("Line font size: {} ({})".format(line_font_size, get_font_size()))
                     try:
                         fg_color = line["color"]
                     except KeyError:
                         fg_color = "#FFFFFF"
-                    print("Line font color: {}".format(fg_color))
+                    # print("Line font color: {}".format(fg_color))
                     color = fg_color
                     write_on_screen(draw, line['text'], line['x'], line['y'], get_font(), color)
-                    print("Line was written on screen")
+                    # print("Line was written on screen")
 
                 json_rotation = payload["rotation"]
                 rotation = json_rotation if json_rotation is not None else 90
                 display(rotation)
-                print("Display finished")
+                # print("Display finished")
 
                 # Response
                 self.send_response(201)
@@ -388,4 +388,5 @@ except KeyboardInterrupt:
     print("\n\t\tUser interrupted (server.serve), exiting.")
 
 cls(width, height)
+display(rotation)
 print("Done")
