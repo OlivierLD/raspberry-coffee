@@ -45,9 +45,9 @@ font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", fon
 draw = ImageDraw.Draw(image)
 
 
-def cls(width, height):
+def cls(width, height, color="#000000"):
     # Draw a black filled box to clear the image.
-    draw.rectangle((0, 0, width, height), outline=0, fill="#000000")  # fill=(0, 0, 0))
+    draw.rectangle((0, 0, width, height), outline=0, fill=color)  # fill=(0, 0, 0))
 
 
 def display(rotation):

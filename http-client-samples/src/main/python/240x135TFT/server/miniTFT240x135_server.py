@@ -43,52 +43,60 @@ BAUDRATE = 64000000
 # Setup SPI bus using hardware SPI:
 spi = board.SPI()
 
-# Configuration for CS and DC pins (these are FeatherWing defaults on M0/M4):
-cs_pin = digitalio.DigitalInOut(board.CE0)
-dc_pin = digitalio.DigitalInOut(board.D25)
-reset_pin = None
 
-# Config for display baudrate (default max is 24mhz):
-BAUDRATE = 64000000
+# Create the ST7789 display:
+disp = st7789.ST7789(
+    spi,
+    cs=cs_pin,
+    dc=dc_pin,
+    rst=reset_pin,
+    baudrate=BAUDRATE,
+    width=135,
+    height=240,
+    x_offset=53,
+    y_offset=40,
+)
 
-# Setup SPI bus using hardware SPI:
-spi = board.SPI()
-
-font_size = 10
+# Create blank image for drawing.
+# Make sure to create image with mode 'RGB' for full color.
+height = disp.width  # we swap height/width to rotate it to landscape!
+width = disp.height
+image = Image.new("RGB", (width, height))
+rotation = 90
+font_size = 24
 font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", font_size)
 
 
-def cls():
-    # Clear display.
-    oled.fill(0)
-    oled.show()
+def load_font(size):
+    return ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", size)
 
 
-def new_display():
-    # Create blank image for drawing.
-    # Make sure to create image with mode '1' for 1-bit color.
-    image = Image.new("1", (oled.width, oled.height))
+# Turn on the backlight
+backlight = digitalio.DigitalInOut(board.D22)
+backlight.switch_to_output()
+backlight.value = True
 
-    # Get drawing object to draw on image.
-    draw = ImageDraw.Draw(image)
-    return image, draw
-
-
-def write_on_ssd1305(draw, text, x, y, font):
-    draw.text(
-    (x, y),
-    text,
-    font=font,
-    fill=255)
+# Get drawing object to draw on image.
+draw = ImageDraw.Draw(image)
 
 
-def display(image):
-    # Display image
-    oled.image(image)
-    oled.show()
+def cls(width, height, color="#000000"):
+    # Draw a black filled box to clear the image.
+    draw.rectangle((0, 0, width, height), outline=0, fill=color)
 
 
-PATH_PREFIX = "/ssd1305"
+def display(rotation):
+    disp.image(image, rotation)
+
+
+def write_on_screen(draw, text, x, y, font, color):
+    draw.text((x, y),
+              text,
+              font=font,
+              fill=color)
+
+
+PATH_PREFIX = "/miniTFT"
 
 
 # Defining a HTTP request Handler class
@@ -196,22 +204,36 @@ class ServiceHandler(BaseHTTPRequestHandler):
         if REST_DEBUG:
             print("POST request, {}".format(self.path))
         if self.path == PATH_PREFIX + "/display":
-            # Get text to display from body (text/plain)
+            # Get text to display from body (application/json)
             content_len = int(self.headers.get('Content-Length'))
             post_body = self.rfile.read(content_len).decode('utf-8')
             print("POST /display Content: {}".format(post_body))
-            # x and y coordinates, multiline text
-            # [ { x: x, y: y, text: "Text" } ]
+            # {
+            #   "rotation": 90,
+            #   "bg-color": "#000000",  // default black
+            #   "text": [ { x: x, y: y, text: "Text", size: 24, color: "#FFFFFF" } ]
+            # }
             payload = json.loads(post_body)
             print("POST /display JSON Content: {}".format(payload))
             try:
                 # Do the job
-                cls()
-                (image, draw) = new_display()
-                # write_on_ssd1305(draw, text, 2, font_size, font)
-                for line in payload:
-                    write_on_ssd1305(draw, line['text'], line['x'], line['y'], font)
-                display(image)
+                bg_color = payload["bg-color"]
+                color = bg_color if bg_color is not None else "#000000"
+                cls(width, height, color)
+                for line in payload["text"]:
+                    global font_size
+                    global font
+                    line_font_size = line["size"]
+                    if line_font_size is not None:
+                        font = load_font(line_font_size)
+                        font_size = line_font_size
+                    fg_color = line["color"]
+                    color = fg_color if fg_color is not None else "#FFFFFF"
+                    write_on_screen(draw, line['text'], line['x'], line['y'], font, color)
+
+                json_rotation = payload["rotation"]
+                rotation = json_rotation if json_rotation is not None else 90
+                display(rotation)
 
                 # Response
                 self.send_response(201)
@@ -227,10 +249,23 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 response = {"status": "Barf"}
                 self.wfile.write(json.dumps(response).encode())
         elif self.path == PATH_PREFIX + "/clean":
+            # Get text to display from body (application/json)
+            content_len = int(self.headers.get('Content-Length'))
+            post_body = self.rfile.read(content_len).decode('utf-8')
+            print("POST /display Content: {}".format(post_body))
+            # {
+            #   "rotation": 90,
+            #   "bg-color": "#000000"   // default black
+            # }
+            payload = json.loads(post_body)
+            print("POST /display JSON Content: {}".format(payload))
             try:
-                cls()
-                (image, draw) = new_display()
-                display(image)
+                bg_color = payload["bg-color"]
+                color = bg_color if bg_color is not None else "#000000"
+                cls(width, height, color)
+                json_rotation = payload["rotation"]
+                rotation = json_rotation if json_rotation is not None else 90
+                display(rotation)
                 # Response
                 self.send_response(201)
                 self.send_header('Content-Type', 'application/json')
