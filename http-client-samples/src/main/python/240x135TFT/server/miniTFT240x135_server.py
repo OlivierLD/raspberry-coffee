@@ -354,5 +354,5 @@ try:
 except KeyboardInterrupt:
     print("\n\t\tUser interrupted (server.serve), exiting.")
 
-cls()
+cls(width, height)
 print("Done")
