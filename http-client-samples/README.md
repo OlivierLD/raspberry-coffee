@@ -218,6 +218,7 @@ $ curl --location --request POST 'http://192.168.42.6:8080/miniTFT/image' \
 }'
 ```
 The image's path is the path _on the server_.
+![Image](./images/display.image.jpg)
 
 ## 2.42", 128x64 OLED, SPI version for now
 - Install required libraries and artifacts
