@@ -80,3 +80,9 @@ pi@rpi-buster:~/opencv-4.3.0/build $
 - Then run `../gradlew clean shadowJar run` or `./opencv.101.sh`.
 
 This uses the images in the `images` folder.
+
+## See also
+- Some more OpenCV examples (Java & Python, Web, Swing, etc) are also available in [oliv.ai](https://github.com/OlivierLD/oliv-ai/tree/master/opencv)
+- In this project, the module `Project-Trunk/WebcamTemplate`.
+
+---
