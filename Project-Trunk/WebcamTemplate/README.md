@@ -245,4 +245,7 @@ To run this small app:
 
 That's it!
 
+## Also
+Some more OpenCV examples (Java & Python, Web, Swing, etc) are also available in [oliv.ai](https://github.com/OlivierLD/oliv-ai/tree/master/opencv)
+
 ---
