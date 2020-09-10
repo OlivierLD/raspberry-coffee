@@ -175,6 +175,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
                         "verb": "POST",
                         "description": "Display some text on screen. Body application/json, like [ { x: x, y: y, text: 'Text' } ]"
                     }, {
+                        "path": PATH_PREFIX + "/image",
+                        "verb": "POST",
+                        "description": "Display an image on screen. Body application/json, like [ { image-path: 'Text', rotation: 90 } ]"
+                    }, {
                         "path": PATH_PREFIX + "/clean",
                         "verb": "POST",
                         "description": "Clear the screen."
@@ -288,14 +292,14 @@ class ServiceHandler(BaseHTTPRequestHandler):
             #   "image-path": "../blinka.jpg"
             # }
             payload = json.loads(post_body)
-            # print("POST /display JSON Content: {}".format(payload))
+            print("POST /image JSON Content: {}".format(payload))
             try:
                 image_path = payload['image-path']  # Path on the server
             except KeyError:
                 image_path = None
 
             try:
-                rotation = payload['rotation'] 
+                rotation = payload['rotation']
             except KeyError:
                 rotation = 90
 
