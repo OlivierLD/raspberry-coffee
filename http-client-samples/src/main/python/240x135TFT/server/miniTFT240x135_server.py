@@ -89,6 +89,11 @@ def load_font(size):
     return ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", size)
 
 
+def set_image(img):
+    global image
+    image = img
+
+
 # Turn on the backlight
 backlight = digitalio.DigitalInOut(board.D22)
 backlight.switch_to_output()
@@ -305,6 +310,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
             if image_path is None:
                 self.send_response(400)
+                self.send_header('Content-Type', 'application/json')
                 response = {"status": "No image_path in the payload"}
                 response_content = json.dumps(response).encode()
                 content_len = len(response_content)
@@ -330,9 +336,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
                     y = scaled_height // 2 - height // 2
                     image = image.crop((x, y, x + width, y + height))
                     print("Displaying the image")
+                    set_image(image)
                     # Display image.
-                    disp.image(image)  # , rotation)
-
+                    # disp.image(image)  # , rotation)
+                    display(rotation)
                     # Response
                     self.send_response(201)
                     self.send_header('Content-Type', 'application/json')
