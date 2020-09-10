@@ -96,7 +96,9 @@ def set_image(img):
 
 def reset_image():
     global image
+    global draw
     image = Image.new("RGB", (width, height))
+    draw = ImageDraw.Draw(image)
 
 
 # Turn on the backlight
