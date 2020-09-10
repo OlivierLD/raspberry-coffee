@@ -122,7 +122,7 @@ $ python3 miniTFT240x135_server.py --machine-name:$(hostname -I)
 
 Then, anywhere on the same network:
 ```
-curl --location --request POST 'http://192.168.42.6:8080/miniTFT/display' \
+$ curl --location --request POST 'http://192.168.42.6:8080/miniTFT/display' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "rotation": 270,
@@ -178,7 +178,7 @@ curl --location --request POST 'http://192.168.42.6:8080/miniTFT/display' \
 
 Try this too (special characters 😜) :
 ```
-curl --location --request POST 'http://192.168.42.6:8080/miniTFT/display' \
+$ curl --location --request POST 'http://192.168.42.6:8080/miniTFT/display' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "rotation": 270,
@@ -208,6 +208,16 @@ curl --location --request POST 'http://192.168.42.6:8080/miniTFT/display' \
     ]
 }'
 ```
+Display an image:
+```
+$ curl --location --request POST 'http://192.168.42.6:8080/miniTFT/image' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "rotation": 270,
+    "image-path": "../blinka.jpg"
+}'
+```
+The image's path is the path _on the server_.
 
 ## 2.42", 128x64 OLED, SPI version for now
 - Install required libraries and artifacts
