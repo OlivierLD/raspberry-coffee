@@ -306,9 +306,13 @@ class ServiceHandler(BaseHTTPRequestHandler):
             if image_path is None:
                 self.send_response(400)
                 response = {"status": "No image_path in the payload"}
-                self.wfile.write(json.dumps(response).encode())
-
+                response_content = json.dumps(response).encode()
+                content_len = len(response_content)
+                self.send_header('Content-Length', content_len)
+                self.end_headers()
+                self.wfile.write(response_content)
             else:
+                print("Processing {}, rotation {}".format(image_path, rotation))
                 cls(width, height)
                 try:
                     image = Image.open(image_path)
@@ -325,6 +329,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
                     x = scaled_width // 2 - width // 2
                     y = scaled_height // 2 - height // 2
                     image = image.crop((x, y, x + width, y + height))
+                    print("Displaying the image")
                     # Display image.
                     disp.image(image)  # , rotation)
 
@@ -337,6 +342,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
                     self.send_header('Content-Length', content_len)
                     self.end_headers()
                     self.wfile.write(response_content)
+                    print("Response was sent.")
                 except:
                     stack = traceback.format_exc()
                     self.send_response(500)
