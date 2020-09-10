@@ -279,40 +279,65 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 response = {"status": "Barf", "error": stack }
                 self.wfile.write(json.dumps(response).encode())
         elif self.path == PATH_PREFIX + "/image":
-            image_path = str(self.headers.get('image-path'))  # Path on the server
-            cls(width, height)
+            # Get text to display from body (application/json)
+            content_len = int(self.headers.get('Content-Length'))
+            post_body = self.rfile.read(content_len).decode('utf-8')
+            # print("POST /display Content: {}".format(post_body))
+            # {
+            #   "rotation": 90,
+            #   "image-path": "../blinka.jpg"
+            # }
+            payload = json.loads(post_body)
+            # print("POST /display JSON Content: {}".format(payload))
             try:
-                image = Image.open(image_path)
-                image_ratio = image.width / image.height
-                screen_ratio = width / height
-                if screen_ratio < image_ratio:
-                    scaled_width = image.width * height // image.height
-                    scaled_height = height
-                else:
-                    scaled_width = width
-                    scaled_height = image.height * width // image.width
-                image = image.resize((scaled_width, scaled_height), Image.BICUBIC)
-                # Crop and center the image
-                x = scaled_width // 2 - width // 2
-                y = scaled_height // 2 - height // 2
-                image = image.crop((x, y, x + width, y + height))
-                # Display image.
-                disp.image(image)  # , rotation)
+                image_path = payload['image-path']  # Path on the server
+            except KeyError:
+                image_path = None
 
-                # Response
-                self.send_response(201)
-                self.send_header('Content-Type', 'application/json')
-                response = {"status": "OK"}
-                response_content = json.dumps(response).encode()
-                content_len = len(response_content)
-                self.send_header('Content-Length', content_len)
-                self.end_headers()
-                self.wfile.write(response_content)
-            except:
-                stack = traceback.format_exc()
-                self.send_response(500)
-                response = {"status": "Barf", "error": stack }
+            try:
+                rotation = payload['rotation'] 
+            except KeyError:
+                rotation = 90
+
+            if image_path is None:
+                self.send_response(400)
+                response = {"status": "No image_path in the payload"}
                 self.wfile.write(json.dumps(response).encode())
+
+            else:
+                cls(width, height)
+                try:
+                    image = Image.open(image_path)
+                    image_ratio = image.width / image.height
+                    screen_ratio = width / height
+                    if screen_ratio < image_ratio:
+                        scaled_width = image.width * height // image.height
+                        scaled_height = height
+                    else:
+                        scaled_width = width
+                        scaled_height = image.height * width // image.width
+                    image = image.resize((scaled_width, scaled_height), Image.BICUBIC)
+                    # Crop and center the image
+                    x = scaled_width // 2 - width // 2
+                    y = scaled_height // 2 - height // 2
+                    image = image.crop((x, y, x + width, y + height))
+                    # Display image.
+                    disp.image(image)  # , rotation)
+
+                    # Response
+                    self.send_response(201)
+                    self.send_header('Content-Type', 'application/json')
+                    response = {"status": "OK"}
+                    response_content = json.dumps(response).encode()
+                    content_len = len(response_content)
+                    self.send_header('Content-Length', content_len)
+                    self.end_headers()
+                    self.wfile.write(response_content)
+                except:
+                    stack = traceback.format_exc()
+                    self.send_response(500)
+                    response = {"status": "Barf", "error": stack }
+                    self.wfile.write(json.dumps(response).encode())
         elif self.path == PATH_PREFIX + "/clean":
             # Get text to display from body (application/json)
             content_len = int(self.headers.get('Content-Length'))

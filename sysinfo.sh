@@ -4,7 +4,7 @@
 # Compare to rpi.status.sh ;)
 #
 FOLDER_NAME=./raspberry-coffee/common-utils
-ARCHIVE_NAME=${FOLDER_NAME}/build/libs/common-utils-1.0.jar
+ARCHIVE_NAME=${FOLDER_NAME}/build/libs/common-utils-1.0-all.jar
 if [[ -f ${ARCHIVE_NAME} ]]
 then
   java -cp ${ARCHIVE_NAME} utils.SystemUtils --minimal
