@@ -198,6 +198,12 @@ Heading: 172.76965650411475, Pitch: 157.92666672529035, Roll: -107.3725279939929
 . . .
 ```  
 
+#### Arduino client
+The Arduino IDE uses a language close to C & C++ (_very_ close).
+
+Some Arduino-like boards come with WiFi, like the [M5Stick-C](https://github.com/OlivierLD/small-boards/tree/master/M5StickC).
+See how to use REST in the code you'll reach with the link before.
+
 #### C client
 ... later!
 
