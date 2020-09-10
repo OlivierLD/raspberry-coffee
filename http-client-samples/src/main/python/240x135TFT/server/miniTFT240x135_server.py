@@ -94,6 +94,11 @@ def set_image(img):
     image = img
 
 
+def reset_image():
+    global image
+    image = Image.new("RGB", (width, height))
+
+
 # Turn on the backlight
 backlight = digitalio.DigitalInOut(board.D22)
 backlight.switch_to_output()
@@ -338,8 +343,8 @@ class ServiceHandler(BaseHTTPRequestHandler):
                     print("Displaying the image")
                     set_image(image)
                     # Display image.
-                    # disp.image(image)  # , rotation)
                     display(rotation)
+                    reset_image()
                     # Response
                     self.send_response(201)
                     self.send_header('Content-Type', 'application/json')
