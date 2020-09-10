@@ -185,7 +185,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
                     }, {
                         "path": PATH_PREFIX + "/display",
                         "verb": "POST",
-                        "description": "Display some text on screen. Body application/json, like [ { x: x, y: y, text: 'Text' } ]"
+                        "description": "Display some text on screen. Body application/json, like { rotation: 270, bg-color: '#000000', text: [ { x: x, y: y, text: 'Text', size: 18, color: '#ffffff' } ]"
                     }, {
                         "path": PATH_PREFIX + "/image",
                         "verb": "POST",
@@ -304,7 +304,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
             #   "image-path": "../blinka.jpg"
             # }
             payload = json.loads(post_body)
-            print("POST /image JSON Content: {}".format(payload))
+            # print("POST /image JSON Content: {}".format(payload))
             try:
                 image_path = payload['image-path']  # Path on the server
             except KeyError:
@@ -325,7 +325,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(response_content)
             else:
-                print("Processing {}, rotation {}".format(image_path, rotation))
+                # print("Processing {}, rotation {}".format(image_path, rotation))
                 cls(width, height)
                 try:
                     image = Image.open(image_path)
@@ -342,7 +342,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
                     x = scaled_width // 2 - width // 2
                     y = scaled_height // 2 - height // 2
                     image = image.crop((x, y, x + width, y + height))
-                    print("Displaying the image")
+                    # print("Displaying the image")
                     set_image(image)
                     # Display image.
                     display(rotation)
@@ -356,7 +356,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
                     self.send_header('Content-Length', content_len)
                     self.end_headers()
                     self.wfile.write(response_content)
-                    print("Response was sent.")
+                    # print("Response was sent.")
                 except:
                     stack = traceback.format_exc()
                     self.send_response(500)
