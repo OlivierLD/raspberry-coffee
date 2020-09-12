@@ -1,5 +1,6 @@
 ## HTTP Server (WiP, never finished...)
-> A Java alternative to `python -m SimpleHTTPServer`
+> A Java alternative to `python -m SimpleHTTPServer`. Can also serve REST requests.
+> Can serve static documents from an archive.
 
 
 Can be used
@@ -12,10 +13,10 @@ Can be used
 
 - No security (SSL) available. 
 - ~~_Not even multi-threaded_~~. Nov 2019: Now multi-threaded
-- Some restrictions exist (`100-continue`, Multipart, binary data, CORS, ...)
+- **Some restrictions exist (`100-continue`, Multipart, binary data, CORS, ...)**
 - Not compliant with _any_ coding standard, like JAX-RS, MicroProfile, JEE, etc
 
-> May 2019: The archive containing the core classes is just above _**2M**_ big. Compare it to micro servers like Helidon or SpringBoot...
+> _May 2019_: The archive containing the core classes is just above _**2M**_ big. Compare it to micro servers like Helidon or SpringBoot...
 > Helidon or SpringBoot would definitely run on a Raspberry Pi, I've tested them. But again,
 > the goal here is to be HTTP and REST compliant (any REST or HTTP client would work), and remain as small as possible. 
 
@@ -72,7 +73,6 @@ A given `HTTPServer` can register several `RESTRequestManager`s, like in `navres
  this.httpServer.addRequestManager(new GRIBRequestManager());
  // Add SunFlower, for sun data
  this.httpServer.addRequestManager(new SunFlowerRequestManager());
-
 ```
 
 ##### Proxy
@@ -98,7 +98,7 @@ It's very easy to implement your own.
 ##### Example
 After building the project:
 ```
- $> ../gradlew shadowJar
+ $ ../gradlew shadowJar
 ````
 Run the `HTTPServer` as it is (it comes with a `main`, for illustration):
 ```
@@ -285,7 +285,7 @@ Connection: keep-alive
 
 Even simpler, you can use `curl`:
 ```
-$> curl -x http://localhost:9999/ http://192.168.42.17:8088/pws/oplist
+$ curl -x http://localhost:9999/ http://192.168.42.17:8088/pws/oplist
  [{"verb":"GET","path":"/pws/oplist","description":"List of all available operations.","fn":{}},{"verb":"GET","path":"/pws/sth10-data","description":"Get device Data. Temperature, humidity","fn":{}},{"verb":"GET","path":"/pws/relay-state","description":"Get relay state - ON of OFF.","fn":{}},{"verb":"GET","path":"/pws/last-watering-time","description":"Get last watering time as a long.","fn":{}},{"verb":"GET","path":"/pws/pws-status","description":"Get device\u0027s status.","fn":{}},{"verb":"GET","path":"/pws/pws-parameters","description":"Get program\u0027s parameters.","fn":{}},{"verb":"POST","path":"/pws/sth10-data","description":"Set device Data. Temperature, humidity, for simulation","fn":{}},{"verb":"PUT","path":"/pws/relay-state","description":"Flip the relay - ON of OFF.","fn":{}},{"verb":"PUT","path":"/pws/pws-parameters","description":"Set the Program\u0027s parameters","fn":{}}]
 ```
 This produces the same output as above in the proxy's console.
