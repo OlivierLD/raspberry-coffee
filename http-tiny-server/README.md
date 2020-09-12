@@ -1,4 +1,7 @@
 ## HTTP Server (WiP, never finished...)
+> A Java alternative to `python -m SimpleHTTPServer`
+
+
 Can be used
 - to serve
     - static HTML (and related) documents (from the file system, or archived in a zip)
