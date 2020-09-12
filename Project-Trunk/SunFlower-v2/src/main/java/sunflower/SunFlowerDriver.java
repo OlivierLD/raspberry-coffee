@@ -5,6 +5,7 @@ import calc.GeomUtil;
 import calc.calculation.AstroComputer;
 import calc.calculation.SightReductionUtil;
 import com.pi4j.io.i2c.I2CFactory;
+import http.HTTPContext;
 import i2c.motor.adafruitmotorhat.AdafruitMotorHAT;
 import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
@@ -16,6 +17,8 @@ import java.awt.Color;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,6 +55,11 @@ import sunflower.utils.ANSIUtil;
  * -Dwith.ssd1306=true|false (default false)
  */
 public class SunFlowerDriver {
+
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // HTTPServer.class.getName());
+	static {
+		LOGGER.setLevel(Level.INFO);
+	}
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss Z");
 
@@ -535,7 +543,8 @@ public class SunFlowerDriver {
 	}
 
 	private void logWithTime(String message) {
-		System.out.println(String.format("%s - %s", SDF.format(new Date()), message));
+//		System.out.println(String.format("%s - %s", SDF.format(new Date()), message));
+		getInstance().getLogger().info(String.format("%s - %s", SDF.format(new Date()), message));
 	}
 
 	public void setElevationOffset(double elevationOffset) {
@@ -1383,6 +1392,15 @@ public class SunFlowerDriver {
 			}
 		}
 	}
+
+	Logger getLogger() {
+		return SunFlowerDriver.LOGGER;
+	}
+
+	synchronized SunFlowerDriver getInstance() {
+		return instance;
+	}
+
 	/**
 	 * System properties:
 	 * rpm, default 30
@@ -1394,7 +1412,6 @@ public class SunFlowerDriver {
 	 */
 	public static void main(String... args) {
 		SunFlowerDriver sunFlowerDriver = new SunFlowerDriver();
-
 		sunFlowerDriver.subscribe(new SunFlowerEventListener() {
 
 			private EventType lastMessageType = null;
@@ -1412,8 +1429,8 @@ public class SunFlowerDriver {
 				}
 			}
 		});
-
 		sunFlowerDriver.init();
+
 		if ("true".equals(System.getProperty("calibration"))) {
 			sunFlowerDriver.startManualCalibration();
 		} else {

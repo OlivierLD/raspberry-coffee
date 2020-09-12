@@ -61,7 +61,6 @@ public class AnalogDisplayPanel
 		MPH("mph"),
 		MS("m/s");
 
-		@SuppressWarnings("compatibility:-2776162247172094666")
 		public final static long serialVersionUID = 1L;
 
 		private final String label;
