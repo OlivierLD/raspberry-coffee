@@ -77,8 +77,8 @@ display.rotation = 1
 keep_looping = True
 
 
-# TODO FontSize as a prm, x and y location for the text
-def write_on_eink_2_13(text, bg=BACKGROUND_COLOR, fg=FOREGROUND_COLOR):
+# TODO x and y location for the text
+def write_on_eink_2_13(text, bg=BACKGROUND_COLOR, fg=FOREGROUND_COLOR, font_size=FONTSIZE):
 
     # print("Displaying text, bg:{}, fg:{}".format(bg, fg))
     image = Image.new("RGB", (display.width, display.height))
@@ -96,7 +96,7 @@ def write_on_eink_2_13(text, bg=BACKGROUND_COLOR, fg=FOREGROUND_COLOR):
     )
 
     # Load a TTF Font
-    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", FONTSIZE)
+    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", font_size)
 
     # Draw Some Text
     # text = "Hello E-World!"
