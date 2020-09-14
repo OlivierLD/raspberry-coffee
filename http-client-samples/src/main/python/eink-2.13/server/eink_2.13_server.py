@@ -240,9 +240,9 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps(response).encode())
         elif self.path == PATH_PREFIX + "/clean":
             # Get text to display from body (text/plain)
-            content_len = int(self.headers.get('Content-Length'))
-            post_body = self.rfile.read(content_len).decode('utf-8')
-            print("Content: {}".format(post_body))
+            # content_len = int(self.headers.get('Content-Length'))
+            # post_body = self.rfile.read(content_len).decode('utf-8')
+            # print("Content: {}".format(post_body))
             try:
                 write_on_eink_2_13("", bg=WHITE, fg=WHITE)
                 # Response
