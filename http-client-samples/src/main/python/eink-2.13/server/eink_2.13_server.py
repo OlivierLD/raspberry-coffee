@@ -77,7 +77,7 @@ display.rotation = 1
 keep_looping = True
 
 
-def write_on_eink_2_13(text):
+def write_on_eink_2_13(text, bg=BACKGROUND_COLOR, fg=FOREGROUND_COLOR):
     image = Image.new("RGB", (display.width, display.height))
 
     # Get drawing object to draw on image.
@@ -169,6 +169,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
                         "path": PATH_PREFIX + "/display",
                         "verb": "POST",
                         "description": "Display some text on screen."
+                    }, {
+                        "path": PATH_PREFIX + "/clean",
+                        "verb": "POST",
+                        "description": "Clear the screen."
                     }]
             }
             response_content = json.dumps(response).encode()
@@ -230,8 +234,30 @@ class ServiceHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(response_content)
             except:
+                stack = traceback.format_exc()
                 self.send_response(500)
-                response = {"status": "Barf"}
+                response = {"status": "Barf", "error": stack }
+                self.wfile.write(json.dumps(response).encode())
+        elif self.path == PATH_PREFIX + "/clean":
+            # Get text to display from body (text/plain)
+            content_len = int(self.headers.get('Content-Length'))
+            post_body = self.rfile.read(content_len).decode('utf-8')
+            print("Content: {}".format(post_body))
+            try:
+                write_on_eink_2_13("", bg=WHITE, fg=WHITE)
+                # Response
+                self.send_response(201)
+                self.send_header('Content-Type', 'application/json')
+                response = {"status": "OK"}
+                response_content = json.dumps(response).encode()
+                content_len = len(response_content)
+                self.send_header('Content-Length', content_len)
+                self.end_headers()
+                self.wfile.write(response_content)
+            except:
+                stack = traceback.format_exc()
+                self.send_response(500)
+                response = {"status": "Barf", "error": stack }
                 self.wfile.write(json.dumps(response).encode())
         else:
             if REST_DEBUG:
