@@ -80,7 +80,7 @@ keep_looping = True
 # TODO FontSize as a prm, x and y location for the text
 def write_on_eink_2_13(text, bg=BACKGROUND_COLOR, fg=FOREGROUND_COLOR):
 
-    print("Displaying text, bg:{}, fg:{}".format(bg, fg))
+    # print("Displaying text, bg:{}, fg:{}".format(bg, fg))
     image = Image.new("RGB", (display.width, display.height))
 
     # Get drawing object to draw on image.
