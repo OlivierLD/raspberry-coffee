@@ -77,19 +77,22 @@ display.rotation = 1
 keep_looping = True
 
 
+# TODO FontSize as a prm, x and y location for the text
 def write_on_eink_2_13(text, bg=BACKGROUND_COLOR, fg=FOREGROUND_COLOR):
+
+    print("Displaying text, bg:{}, fg:{}".format(bg, fg))
     image = Image.new("RGB", (display.width, display.height))
 
     # Get drawing object to draw on image.
     draw = ImageDraw.Draw(image)
 
     # Draw a filled box as the background
-    draw.rectangle((0, 0, display.width, display.height), fill=BACKGROUND_COLOR)
+    draw.rectangle((0, 0, display.width, display.height), fill=bg)
 
     # Draw a smaller inner foreground rectangle
     draw.rectangle(
         (BORDER, BORDER, display.width - BORDER - 1, display.height - BORDER - 1),
-        fill=FOREGROUND_COLOR,
+        fill=fg,
     )
 
     # Load a TTF Font
