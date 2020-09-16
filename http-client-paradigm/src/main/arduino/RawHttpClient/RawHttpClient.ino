@@ -110,7 +110,8 @@ void getData() {
   DynamicJsonDocument doc(1024);
   DeserializationError error = deserializeJson(doc, payload);
   if (error) {
-    Serial.print(F("deserializeJson() failed: "));
+    Serial.print(F("deserializeJson() failed for "));
+    Serial.println(payload);
 //    Serial.println(error);
     return;
   }
