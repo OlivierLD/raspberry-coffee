@@ -84,9 +84,23 @@ void getData() {
   if (DEBUG) {
     Serial.println(cache);
   }
+  /*
+   * The json object looks like: 
+   * {
+      "x": -21.221864951768488,
+      "y": 62.087109032446655,
+      "z": -50.570008769365685
+     }
+   */
   DynamicJsonDocument doc(1024); // Size could be tuned...
   deserializeJson(doc, cache);
   JsonObject obj = doc.as<JsonObject>();
+  double x = obj["x"];
+  double y = obj["y"];
+  double z = obj["z"];
+  Serial.print("X:"); Serial.println(x);
+  Serial.print("Y:"); Serial.println(y);
+  Serial.print("Z:"); Serial.println(z);
 }
 
 String makeRequest(String verb, String request) {

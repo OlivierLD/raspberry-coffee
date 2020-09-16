@@ -13,6 +13,7 @@ In each `python` directory of this module you will find:
 
 ## Featuring...
 - Magnetometer [LIS3MDL](https://www.adafruit.com/product/4479), tutorial [here](https://learn.adafruit.com/lis3mdl-triple-axis-magnetometer).
+    - `sudo pip3 install adafruit-circuitpython-lis3mdl`
 - [240x240 TFT](https://www.adafruit.com/product/3787), [tutorial](https://learn.adafruit.com/adafruit-1-3-and-1-54-240-x-240-wide-angle-tft-lcd-displays?view=all), look for `ST7789 and ST7735-based Displays, 1.3", 1.54", and 2.0" IPS TFT Display`.
 - [2.13" E-INK](https://learn.adafruit.com/2-13-in-e-ink-bonnet?view=all).
 - [240x135 mini color TFT](https://www.adafruit.com/product/4393), setup doc [here](https://learn.adafruit.com/adafruit-mini-pitft-135x240-color-tft-add-on-for-raspberry-pi?view=all#attaching-3044215-2).
