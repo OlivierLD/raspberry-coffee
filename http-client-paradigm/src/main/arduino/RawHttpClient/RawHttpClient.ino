@@ -10,7 +10,7 @@
    Basic REST mechanism. NO GUI.
    Output go on the Serial Console.
 
-   Requests are like GET http://19.168.42.6:8080/lis3mdl/cache
+   Requests are like GET http://192.168.42.6:8080/lis3mdl/cache
    ------------------
    RST Button: top right
    HOME Button: the big one with M5 written on it.
