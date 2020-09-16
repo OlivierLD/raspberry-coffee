@@ -146,6 +146,8 @@ $ which wget
   go compiler : gc
   platform : linux/arm
 ```    
+- Fing CLI, nice to have.
+    - Make sure you use the [`Fing CLI`](https://www.fing.com/products/development-toolkit) for your system, `dpkg --print-architecture` will tell you what to choose.
 
 ##### Connect to the Raspberry Pi from your laptop, using a USB cable
 It's easy, and convenient. See [here](https://www.thepolyglotdeveloper.com/2016/06/connect-raspberry-pi-zero-usb-cable-ssh/),

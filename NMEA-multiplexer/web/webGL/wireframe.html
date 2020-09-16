@@ -1,85 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <!--
   Adapted from https://blogoben.wordpress.com/2011/04/16/webgl-basics-4-wireframe-3d-object/
  -->
 <head>
-    <title>WebGL Basics part 4</title>
+    <title>Wireframe Boat - WebGL</title>
+
+    <style type="text/css">
+        body {
+            font-family: "Courier New",serif;
+            color: #000066;
+        }
+    </style>
 
     <script type='text/javascript'>
 
         // GLSL ES code to be compiled as fragment shader
-        fragmentShaderCode=
-            'void main(void) {'+
-            '  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);'+
+        let fragmentShaderCode =
+            'void main(void) {' +
+            '  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);' +
             '}';
 
         // GLSL ES code to be compiled as vertex shader
-        vertexShaderCode=
-            'attribute vec3 ppos;'+
-            'uniform mat4 mvp;'+
-            'void main(void) {'+
-            '  gl_Position = mvp * vec4(ppos.x, ppos.y, ppos.z, 1.0);'+
+        let vertexShaderCode =
+            'attribute vec3 ppos;' +
+            'uniform mat4 mvp;' +
+            'void main(void) {' +
+            '  gl_Position = mvp * vec4(ppos.x, ppos.y, ppos.z, 1.0);' +
             '}';
 
-        // Vertices of the object
-//        var vertices = new Float32Array([
-//            /* X Axis */
-//            -1.0,  0.0,  0.0,
-//            0.9,  0.0,  0.0,
-//            0.9, -0.1,  0.0,
-//            1.0,  0.0,  0.0,
-//            0.9,  0.1,  0.0,
-//            0.9,  0.0,  0.0,
-//            0.0,  0.0,  0.0,
-//
-//            /* Y Axis */
-//            0.0, -1.0,  0.0,
-//            0.0,  0.9,  0.0,
-//            -0.1,  0.9,  0.0,
-//            0.0,  1.0,  0.0,
-//            0.1,  0.9,  0.0,
-//            0.0,  0.9,  0.0,
-//            0.0,  0.0,  0.0,
-//
-//            /* Z Axis */
-//            0.0,  0.0, -1.0,
-//            0.0,  0.0,  0.9,
-//            -0.1, -0.1,  0.9,
-//            0.0,  0.0,  1.0,
-//            0.1,  0.1,  0.9,
-//            0.0,  0.0,  0.9,
-//            0.0,  0.0,  0.0,
-//
-//            /* House Front*/
-//            0.6,  0.0,  0.0,
-//            0.6,  0.6,  0.0,
-//            0.0,  0.6,  0.0,
-//            0.3,  0.9,  0.0,
-//            0.6,  0.6,  0.0,
-//            0.6,  0.0,  0.0,
-//
-//            /* House Back */
-//            0.6,  0.0,  0.8,
-//            0.6,  0.6,  0.8,
-//            0.0,  0.6,  0.8,
-//            0.3,  0.9,  0.8,
-//            0.6,  0.6,  0.8,
-//
-//            /* Additional lines */
-//            0.6,  0.6,  0.0,
-//            0.3,  0.9,  0.0,
-//            0.3,  0.9,  0.8,
-//            0.0,  0.6,  0.8,
-//            0.0,  0.6,  0.0,
-//            0.6,  0.6,  0.0,
-//            0.6,  0.6,  0.8,
-//            0.0,  0.6,  0.8,
-//            0.0,  0.0,  0.8,
-//            0.6,  0.0,  0.8
-//        ]);
-
-        var vertices = new Float32Array([-1, 0, 0.3333333333333333
+        // Vertices of the object. Obtained by running boat.js (in NodeJS)
+        let vertices = new Float32Array([
+            -1, 0, 0.3333333333333333
             , -0.6666666666666666, 0, 0
             , -1, 0, 0.3333333333333333
             , -0.6666666666666666, 0.19999999999999998, 0.13333333333333333
@@ -176,90 +128,104 @@
             , 0.6666666666666666, -0.3666666666666667, -0.03333333333333333
             , 1, -0.26666666666666666, 0.06666666666666667]);
 
-
         // Global variables
         //-----------------------
-        var gl = null; // GL context
-        var program; // The program object used in the GL context
-        var running = true; // True when the canvas is periodically refreshed
+        let gl = null;      // GL context
+        let program;        // The program object used in the GL context
+        let running = true; // True when the canvas is periodically refreshed
 
         // Function called by onload handler
-        function start()
-        {
+        function start() {
             // Gets canvas from the HTML page
-            var canvas = document.getElementById('glcanvas');
+            let canvas = document.getElementById('glcanvas');
 
             // Creates GL context
-            try {gl = canvas.getContext('experimental-webgl');}
-            catch(e) {alert('Exception catched in getContext: '+e.toString());return;}
+            try {
+                gl = canvas.getContext('experimental-webgl');
+            } catch (e) {
+                alert('Exception catched in getContext: ' + e.toString());
+                return;
+            }
 
             // If no exception but context creation failed, alerts user
-            if(!gl) {alert('Unable to create Web GL context');return;}
+            if (!gl) {
+                alert('Unable to create Web GL context');
+                return;
+            }
 
 
-            //---------------- end of part 1 -----------------
+            /*---------------- end of part 1 -----------------*/
 
             // Creates fragment shader (returns white color for any position)
-            var fshader = gl.createShader(gl.FRAGMENT_SHADER);
-            gl.shaderSource(fshader, fragmentShaderCode);
-            gl.compileShader(fshader);
-            if (!gl.getShaderParameter(fshader, gl.COMPILE_STATUS))
-            {alert('Error during fragment shader compilation:\n' + gl.getShaderInfoLog(fshader)); return;}
+            let fShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fShader, fragmentShaderCode);
+            gl.compileShader(fShader);
+            if (!gl.getShaderParameter(fShader, gl.COMPILE_STATUS)) {
+                alert('Error during fragment shader compilation:\n' + gl.getShaderInfoLog(fShader));
+                return;
+            }
 
             // Creates vertex shader (converts 2D point position to coordinates)
-            var vshader = gl.createShader(gl.VERTEX_SHADER);
-            gl.shaderSource(vshader, vertexShaderCode);
-            gl.compileShader(vshader);
-            if (!gl.getShaderParameter(vshader, gl.COMPILE_STATUS))
-            {alert('Error during vertex shader compilation:\n' + gl.getShaderInfoLog(vshader)); return;}
+            let vShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vShader, vertexShaderCode);
+            gl.compileShader(vShader);
+            if (!gl.getShaderParameter(vShader, gl.COMPILE_STATUS)) {
+                alert('Error during vertex shader compilation:\n' + gl.getShaderInfoLog(vShader));
+                return;
+            }
 
             // Creates program and links shaders to it
             program = gl.createProgram();
-            gl.attachShader(program, fshader);
-            gl.attachShader(program, vshader);
+            gl.attachShader(program, fShader);
+            gl.attachShader(program, vShader);
             gl.linkProgram(program);
-            if (!gl.getProgramParameter(program, gl.LINK_STATUS))
-            {alert('Error during program linking:\n' + gl.getProgramInfoLog(program));return;}
-
             // Validates and uses program in the GL context
             gl.validateProgram(program);
-            if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS))
-            {alert('Error during program validation:\n' + gl.getProgramInfoLog(program));return;}
+
+            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                alert('Error during program linking:\n' + gl.getProgramInfoLog(program));
+                return;
+            }
+            if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS)) {
+                alert('Error during program validation:\n' + gl.getProgramInfoLog(program));
+                return;
+            }
             gl.useProgram(program);
 
             // Gets address of the input 'attribute' of the vertex shader
-            var vattrib = gl.getAttribLocation(program, 'ppos');
-            if(vattrib == -1)
-            {alert('Error during attribute address retrieval');return;}
+            let vattrib = gl.getAttribLocation(program, 'ppos');
+            if (vattrib === -1) {
+                alert('Error during attribute address retrieval');
+                return;
+            }
             gl.enableVertexAttribArray(vattrib);
 
             // Initializes the vertex buffer and sets it as current one
-            var vbuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, vbuffer);
+            let vBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
 
             // Puts vertices to buffer and links it to attribute variable 'ppos'
             gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
             gl.vertexAttribPointer(vattrib, 3, gl.FLOAT, false, 0, 0);
 
-            //------------------ end of part 2 -------------------------------
+            /*------------------ end of part 2 -------------------------------*/
 
             // Creation of function draw and code moved there
-
             // The function draw() will be called every 40 ms
             setInterval("draw();", 40);
         }
 
         // Function called periodically to draw the scene
-        function draw()
-        {
+        function draw() {
             // Tests if canvas should be refreshed
-            if(!running || !gl)
+            if (!running || !gl) {
                 return;
+            }
 
             // Gets control value angles from HTML page via DOM
-            var ax = parseInt(document.getElementById('ax').innerHTML, 10);
-            var ay = parseInt(document.getElementById('ay').innerHTML, 10);
-            var az = parseInt(document.getElementById('az').innerHTML, 10);
+            let ax = parseInt(document.getElementById('ax').innerHTML, 10);
+            let ay = parseInt(document.getElementById('ay').innerHTML, 10);
+            let az = parseInt(document.getElementById('az').innerHTML, 10);
 
             // Use increments via DOM to update angles (still in degrees)
             ax = (ax + parseInt(document.getElementById('dx').value, 10) + 360) % 360; // Pitch
@@ -272,20 +238,23 @@
             document.getElementById('az').innerHTML = az.toString();
 
             // Convert values to radians
-            ax *= 2*Math.PI/360;
-            ay *= 2*Math.PI/360;
-            az *= 2*Math.PI/360;
+            ax *= 2 * Math.PI / 360;
+            ay *= 2 * Math.PI / 360;
+            az *= 2 * Math.PI / 360;
 
             // Gets reference on the "uniform" 4x4 matrix transforming coordinates
-            var amvp = gl.getUniformLocation(program, "mvp");
-            if(amvp == -1)
-            {alert('Error during uniform address retrieval');running=false;return;}
+            let amVp = gl.getUniformLocation(program, "mvp");
+            if (amVp === -1) {
+                alert('Error during uniform address retrieval');
+                running = false;
+                return;
+            }
 
             // Creates matrix using rotation angles
-            var mat = getTransformationMatrix(ax, ay, az);
+            let mat = getTransformationMatrix(ax, ay, az);
 
             // Sets the model-view-projections matrix in the shader
-            gl.uniformMatrix4fv(amvp, false, mat);
+            gl.uniformMatrix4fv(amVp, false, mat);
 
             // Sets clear color to non-transparent dark blue and clears context
             gl.clearColor(0.0, 0.0, 0.5, 1.0);
@@ -297,18 +266,17 @@
         }
 
         // Gets a transformation matrix given the rotation angles
-        function getTransformationMatrix(rx, ry, rz)
-        {
+        function getTransformationMatrix(rx, ry, rz) {
             // Pre-computes trigonometric values (mainly for better readability)
-            var cx = Math.cos(rx), sx = Math.sin(rx);
-            var cy = Math.cos(ry), sy = Math.sin(ry);
-            var cz = Math.cos(rz), sz = Math.sin(rz);
+            let cx = Math.cos(rx), sx = Math.sin(rx);
+            let cy = Math.cos(ry), sy = Math.sin(ry);
+            let cz = Math.cos(rz), sz = Math.sin(rz);
 
             // Returns matrix
             return new Float32Array([cy*cz, (sx*sy*cz-cx*sz), (sx*sz+cx*sy*cz), 0,
-                cy*sz, (sx*sy*sz+cx*cz), (cx*sy*sz-sx*cz), 0,
-                -sy,   sx*cy,            cx*cy,            0,
-                0,     0,                0,                1]);
+                                     cy*sz, (sx*sy*sz+cx*cz), (cx*sy*sz-sx*cz), 0,
+                                       -sy,            sx*cy,            cx*cy, 0,
+                                         0,                0,                0, 1]);
         }
 
     </script>
@@ -317,37 +285,37 @@
 <body onload='start();'>
 
 <h1>WebGL wireframe object</h1>
+<hr/>
 
-<canvas id='glcanvas' width=640 height=480 onclick='running = !running;'>
+<canvas id='glcanvas' width="640" height="480" onclick='running = !running;'>
     Your browser may not support HTML5
 </canvas>
 
 <p>
-<div style='display:inline-block;'>RX:</div>
-<div style='display:inline-block; width:1.5em;'id='ax'>0</div>
+<div style='display:inline-block;'><label for="dx">RX:</label></div>
+<div style='display:inline-block; width:1.5em;' id='ax'>0</div>
 <div style='display:inline-block;'>
     <select id='dx'>
         <option>-2<option>-1<option>0<option selected="selected">+1<option>+2
     </select>
 </div>
-<div style='display:inline-block;padding-left:0.3em;'>RY:</div>
-<div style='display:inline-block; width:1.5em;'id='ay'>0</div>
+<div style='display:inline-block;padding-left:0.3em;'><label for="dy">RY:</label></div>
+<div style='display:inline-block; width:1.5em;' id='ay'>0</div>
 <div style='display:inline-block;'>
     <select id='dy'>
         <option>-2<option>-1<option>0<option>+1<option selected="selected">+2
     </select>
 </div>
-<div style='display:inline-block;padding-left:0.3em;'>RZ:</div>
-<div style='display:inline-block; width:1.5em;'id='az'>0</div>
+<div style='display:inline-block;padding-left:0.3em;'><label for="dz">RZ:</label></div>
+<div style='display:inline-block; width:1.5em;' id='az'>0</div>
 <div style='display:inline-block;'>
     <select id='dz'>
         <option>-2<option>-1<option selected="selected">0<option>+1<option>+2
     </select>
 </div>
-</p>
 
 <p>Click on the animation to start and stop it.</p>
-
+<hr/>
 
 </body>
 </html>

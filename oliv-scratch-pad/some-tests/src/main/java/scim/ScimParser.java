@@ -33,7 +33,7 @@ public class ScimParser {
         return value;
     }
 
-    public enum SCIMOperators {
+    public enum SCIMOperators { // TODO Add IgnoreCase for String ops?
         CO("co"), // Contains
         EQ("eq"), // Equals
         NE("ne"), // Not Equals
@@ -400,7 +400,6 @@ public class ScimParser {
     private static String dataFileName = /* FILE_NAME_1 */ FILE_NAME_2;
     private static String arrayName = /* ARRAY_FOR_FUNCTIONS */ ARRAY_FOR_BAGNOLES;
 
-
     /**
      * For tests
      * @param args Unused.
@@ -428,7 +427,8 @@ public class ScimParser {
 //                String filter = "name co .math and title sw \"W\" and description co \"eturns the\" and parameters.schema.additionalProperties eq false ";
 //                String filter = "parameters.schema.properties.left pr ";
 //                String filter = "stuff pr and stuff ge 9";
-                String filter = "make ne VolksWagen and extra-data.nb-seats ge 4";
+//                String filter = "make ne VolksWagen and extra-data.nb-seats ge 4";
+                String filter = "make pr";
 
                 filtered = filter(listToFilter, filter);
             } else {
@@ -489,6 +489,13 @@ public class ScimParser {
 //                                modelFilterNon2 }),
 //                        OIC_COL_TO_PATH);
             }
+            // Sorted ?
+            if (true) {
+                 filtered.sort(Comparator.comparing(
+                         oneMap -> (int)oneMap.get("price"),
+                         Comparator.nullsLast(Comparator.reverseOrder()))); // naturalOrder() for ASC sort.
+            }
+
             String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(filtered);
             if (true) {
                 System.out.println(json);
