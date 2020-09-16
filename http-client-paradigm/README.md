@@ -204,6 +204,9 @@ The Arduino IDE uses a language close to C & C++ (_very_ close).
 Some Arduino-like boards come with WiFi, like the [M5Stick-C](https://github.com/OlivierLD/small-boards/tree/master/M5StickC).
 See how to use REST in the code you'll reach with the link before.
 
+There is a simple example of such a client in `src/main/arduino/RawHttpClient/RawHttpClient.ino`. It reads the 
+Python Server for the `LIS3MDL` magnetometer.
+
 #### C client
 ... later!
 
