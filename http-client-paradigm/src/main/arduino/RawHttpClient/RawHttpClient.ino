@@ -7,8 +7,9 @@
 /*
    Make REST requests - It's a REST client
    Basic REST mechanism. NO GUI.
-   OUtput go on the Serial Console.
+   Output go on the Serial Console.
 
+   Requests are like GET http://19.168.42.6:8080/lis3mdl/cache
    ------------------
    RST Button: top right
    HOME Button: the big one with M5 written on it.
@@ -34,7 +35,7 @@ const char* SERVER_NAME = "192.168.42.6";   // For REST requests, Server IP
 //const char* SERVER_NAME = "192.168.50.10";  // For REST requests, Server IP
 
 // IPAddress server(192, 168, 42, 13);
-const int SERVER_PORT = 5678;               // Server port, for REST requests
+const int SERVER_PORT = 8080;               // Server port, for REST requests
 
 const boolean DEBUG = true;
 
@@ -54,7 +55,7 @@ void setup() {
     Serial.print(".");
   }
 
-  M5.Lcd.printf("Connected to wifi");
+  M5.Lcd.printf(" Connected to wifi");
   Serial.println("\nConnected to wifi");
 
   // for the example. Not used.
@@ -85,19 +86,24 @@ void getData() {
     Serial.println(cache);
   }
   /*
-   * The json object looks like: 
+   * The cache/json object looks like: 
    * {
       "x": -21.221864951768488,
       "y": 62.087109032446655,
       "z": -50.570008769365685
      }
    */
-  DynamicJsonDocument doc(1024); // Size could be tuned...
-  deserializeJson(doc, cache);
-  JsonObject obj = doc.as<JsonObject>();
-  double x = obj["x"];
-  double y = obj["y"];
-  double z = obj["z"];
+  StaticJsonDocument<1024> doc; // Size could be tuned...
+  DeserializationError error = deserializeJson(doc, cache);
+  if (error) {
+    Serial.print(F("deserializeJson() failed: "));
+//    Serial.println(error);
+    return;
+  }
+
+  double x = doc["x"];
+  double y = doc["y"];
+  double z = doc["z"];
   Serial.print("X:"); Serial.println(x);
   Serial.print("Y:"); Serial.println(y);
   Serial.print("Z:"); Serial.println(z);
