@@ -22,7 +22,7 @@
 
    Some doc for M5.lcd at http://forum.m5stack.com/topic/41/lesson-1-1-lcd-graphics
 
-   JSON Objects management: https://github.com/bblanchon/ArduinoJson
+   JSON Objects management: https://github.com/bblanchon/ArduinoJson, and https://arduinojson.org/
 */
 
 // change values below to fit your settings
@@ -82,8 +82,21 @@ void getData() {
   Serial.println("-----------");
   Serial.println(cache);
   Serial.println("-----------");
+  // Extract payload from response
+  const String endOfHeaders = "\r\n\r\n";
+  cache.trim();
+  int eoh = cache.indexOf(endOfHeaders);
+  String payload = "";
+  if (eoh == -1) {
+    Serial.println("No EndOfHeaders found");
+    return;
+  } else {
+    payload = cache.substring(eoh + endOfHeaders.length());
+  }
+  
+  
   if (DEBUG) {
-    Serial.println(cache);
+    Serial.println(payload);
   }
   /*
    * The cache/json object looks like: 
@@ -93,8 +106,9 @@ void getData() {
       "z": -50.570008769365685
      }
    */
-  StaticJsonDocument<1024> doc; // Size could be tuned...
-  DeserializationError error = deserializeJson(doc, cache);
+//  StaticJsonDocument<1024> doc; // Size could be tuned...
+  DynamicJsonDocument doc(1024);
+  DeserializationError error = deserializeJson(doc, payload);
   if (error) {
     Serial.print(F("deserializeJson() failed: "));
 //    Serial.println(error);
