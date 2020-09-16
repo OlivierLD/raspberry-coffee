@@ -3,6 +3,7 @@
 #include <M5StickC.h>
 
 #include <ArduinoJson.h>
+#include <math.h>
 
 /*
    Make REST requests - It's a REST client
@@ -74,6 +75,13 @@ void loop() {
   delay(200); // Was 1000
 }
 
+double toDegrees(double rad) {
+  return rad * 57296 / 1000;  
+}
+
+double toRadians(double deg) {
+  return deg * 1000 / 57296;
+}
 
 void getData() {
   Serial.println("\nMaking request...");
@@ -99,11 +107,11 @@ void getData() {
     Serial.println(payload);
   }
   /*
-   * The cache/json object looks like: 
-   * {
-      "x": -21.221864951768488,
-      "y": 62.087109032446655,
-      "z": -50.570008769365685
+     The payload/json object looks like: 
+     {
+       "x": -21.221864951768488,
+       "y": 62.087109032446655,
+       "z": -50.570008769365685
      }
    */
 //  StaticJsonDocument<1024> doc; // Size could be tuned...
@@ -119,9 +127,14 @@ void getData() {
   double x = doc["x"];
   double y = doc["y"];
   double z = doc["z"];
-  Serial.print("X:"); Serial.println(x);
-  Serial.print("Y:"); Serial.println(y);
-  Serial.print("Z:"); Serial.println(z);
+
+  double heading = toDegrees(atan2(y, x));
+  double pitch = toDegrees(atan2(y, z));
+  double roll = toDegrees(atan2(x, z));
+  
+  Serial.print("Heading:"); Serial.println(heading);
+  Serial.print("Pitch  :"); Serial.println(pitch);
+  Serial.print("Roll   :"); Serial.println(roll);
 }
 
 String makeRequest(String verb, String request) {
