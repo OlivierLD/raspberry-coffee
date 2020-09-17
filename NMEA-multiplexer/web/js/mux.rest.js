@@ -502,6 +502,15 @@ function forwarderList() {
 				case 'tcp':
 					html += ("<tr><td><b>tcp</b></td><td>Port " + json[i].port + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td><td><small>" + json[i].nbClients + " Client(s)</small></td></tr>");
 					break;
+				case 'rest':
+					/*
+					 "port": 8080,
+    				 "serverName": "192.168.42.6",
+    				 "verb": "POST",
+    				 "resource": "/whatever",
+					 */
+					html += ("<tr><td><b>rest</b></td><td>Port " + json[i].port + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td><td><small>ServerName:" + json[i].serverName + " (More parameters)</small></td></tr>");
+					break;
 				case 'gpsd':
 					html += ("<tr><td><b>gpsd</b></td><td>Port " + json[i].port + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td><td><small>" + json[i].nbClients + " Client(s)</small></td></tr>");
 					break;
@@ -739,6 +748,9 @@ function generateDiagram() {
 					break;
 				case 'tcp':
 					html += ("<tr><td><b>tcp</b></td><td>Port " + json[i].port + "</td><td><small>" + json[i].nbClients + " Client(s)</small></td></tr>");
+					break;
+				case 'rest':
+					html += ("<tr><td><b>rest</b></td><td>Port " + json[i].port + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td><td><small>ServerName:" + json[i].serverName + " (More parameters)</small></td></tr>");
 					break;
 				case 'gpsd':
 					html += ("<tr><td><b>gpsd</b></td><td>Port " + json[i].port + "</td><td><small>" + json[i].nbClients + " Client(s)</small></td></tr>");

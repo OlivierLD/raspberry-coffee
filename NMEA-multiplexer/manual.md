@@ -228,6 +228,8 @@ channels:
     mux.01.device.prefix=01
     mux.01.verbose=false
     ```
+- TODO
+    - `rest` input channel
 
 You can also define your own channels (extending `NMEAClient` and with a `reader` attribute).
 
@@ -303,11 +305,11 @@ The lines above means that:
   > parsed AIS data to end up in the NMEA Cache. 
   >
 - `rest`
-    - Forward the NMEA data to a REST resource
+    - Forward the NMEA data (string by string) to a REST endpoint (WiP)
     ```properties
     forward.02.server.name=192.168.42.6
     forward.02.server.port=8080
-    forward.02.rest.resource=/whatever
+    forward.02.rest.resource=/whatever?qs=prm
     forward.02.rest.verb=POST
     forward.02.http.headers=Content-Type:plain/text,Whatever:whateverYouLike
     ```                                                                                                      
