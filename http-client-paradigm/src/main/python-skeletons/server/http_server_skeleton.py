@@ -22,7 +22,7 @@ sample_data = {  # Used for VIEW, and non-implemented operations. Fallback.
     "4": "Fourth"
 }
 server_port = 8080
-REST_DEBUG = True
+REST_DEBUG = False
 
 
 class CoreFeatures:
@@ -182,7 +182,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         if REST_DEBUG:
             print("POST request, {}".format(self.path))
-        if self.path.startswith("/whatever/"):
+        if self.path.startswith("/whatever"):
             content_len = int(self.headers.get('Content-Length'))
             post_body = self.rfile.read(content_len).decode('utf-8')
             print("Content: {}".format(post_body))
