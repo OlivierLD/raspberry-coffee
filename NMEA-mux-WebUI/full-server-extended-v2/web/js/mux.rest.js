@@ -283,7 +283,7 @@ function getLastNMEASentence() {
 	let getData = getLastSentence();
 	getData.then((value) => {
 		let json = JSON.parse(value); // Like { "nmea-bytes": 13469, "started": 1489004962194 }
-		let lastString = json["last-data"];
+		let lastString = json["last-data"].trim();
 		let timestamp = json["timestamp"];
 		if (timestamp > lastTimeStamp) {
 			stackNMEAData(lastString);
