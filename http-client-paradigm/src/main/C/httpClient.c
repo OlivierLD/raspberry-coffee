@@ -17,22 +17,24 @@ int main(int argc, char *argv[]) {
     char * host = "192.168.42.6";
     char * rest_request = "GET /lis3mdl/cache HTTP/1.0\r\n\r\n";
 
-    struct hostent *server;
+    struct hostent * server;
     struct sockaddr_in serv_addr;
     int sockfd, bytes, sent, received, total;
     char message[1024], response[4096];
 
     strcpy(message, rest_request);
-    printf("Request:\n%s\n", message);
+    fprintf(stdout, "Request:\n%s\n", message);
 
     /* create the socket */
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0) error("ERROR opening socket");
-
+    if (sockfd < 0) {
+        error("ERROR opening socket");
+    }
     /* lookup the ip address */
     server = gethostbyname(host);
-    if (server == NULL) error("ERROR, no such host");
-
+    if (server == NULL) {
+        error("ERROR, no such host");
+    }
     /* fill in the structure */
     memset(&serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
@@ -80,7 +82,7 @@ int main(int argc, char *argv[]) {
     close(sockfd);
 
     /* process response */
-    printf("Response:\n%s\n",response);
+    fprintf(stdout, "Response:\n%s\n", response);
 
     return 0;
 }
