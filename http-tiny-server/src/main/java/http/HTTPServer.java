@@ -93,7 +93,7 @@ public class HTTPServer {
 		cres.getHeaders().add("Access-Control-Expose-Headers", "Access-Token"); // Header(s) to expose, CSV
 		cres.getHeaders().add("Access-Control-Allow-Credentials", "true");
 		cres.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
-//  cres.getHeaders().add("Access-Control-Max-Age", "1209600");
+    //  cres.getHeaders().add("Access-Control-Max-Age", "1209600");
 	 */
 
 	public static class Request {

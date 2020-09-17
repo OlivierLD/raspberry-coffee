@@ -22,7 +22,7 @@ sample_data = {  # Used for VIEW, and non-implemented operations. Fallback.
     "4": "Fourth"
 }
 server_port = 8080
-REST_DEBUG = False
+REST_DEBUG = True
 
 
 class CoreFeatures:
@@ -183,6 +183,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
         if REST_DEBUG:
             print("POST request, {}".format(self.path))
         if self.path.startswith("/whatever/"):
+            content_len = int(self.headers.get('Content-Length'))
+            post_body = self.rfile.read(content_len).decode('utf-8')
+            print("Content: {}".format(post_body))
+
             response = {"status": "OK"}
             response_content = json.dumps(response).encode()
             self.send_response(201)

@@ -205,7 +205,11 @@ class ServiceHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         if REST_DEBUG:
             print("POST request, {}".format(self.path))
-        if self.path.startswith("/whatever/"):
+        if self.path.startswith("/whatever/"):  # Dummy POST
+            content_len = int(self.headers.get('Content-Length'))
+            post_body = self.rfile.read(content_len).decode('utf-8')
+            print("Content: {}".format(post_body))
+
             self.send_response(201)
             response = {"status": "OK"}
             self.wfile.write(json.dumps(response).encode())

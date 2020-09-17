@@ -359,7 +359,7 @@ The lines above means that:
 
 You can also implement your own forwarder (implementing the `Forwarder` interface).
 
-Look for `forward.02.class=nmea.forwarders.RESTPublisher`
+Look for `forward.02.class=nmea.forwarders.RESTIoTPublisher`
 
 #### Pre-defined computer type(s)
 

@@ -2,7 +2,6 @@ package nmea.forwarders;
 
 import http.client.HTTPClient;
 import http.HttpHeaders;
-import nmea.parser.RMC;
 import nmea.parser.StringGenerator;
 import nmea.parser.StringParsers;
 import org.json.JSONObject;
@@ -34,12 +33,12 @@ import java.util.regex.Pattern;
  * <br>
  * To load it, use the properties file at startup:
  * <pre>
- *   forward.XX.cls=nmea.forwarders.RESTPublisher
+ *   forward.XX.cls=nmea.forwarders.RESTIoTPublisher
  *   forward.XX.properties=rest.server.properties
  * </pre>
  * A jar containing this class and its dependencies must be available in the classpath.
  */
-public class RESTPublisher implements Forwarder {
+public class RESTIoTPublisher implements Forwarder {
 
 	private static String AIR_TEMP   = "air-temperature";
 	private static String ATM_PRESS  = "atm-press";
@@ -70,7 +69,7 @@ public class RESTPublisher implements Forwarder {
 	/*
 	 * @throws Exception
 	 */
-	public RESTPublisher() throws Exception {
+	public RESTIoTPublisher() throws Exception {
 //		System.out.println(String.format(">> Instantiating %s", this.getClass().getName()));
 	}
 
@@ -325,7 +324,7 @@ public class RESTPublisher implements Forwarder {
 		private String cls;
 		private String type = "REST-forwarder";
 
-		public RESTBean(RESTPublisher instance) {
+		public RESTBean(RESTIoTPublisher instance) {
 			cls = instance.getClass().getName();
 		}
 	}

@@ -28,14 +28,7 @@ import nmea.consumers.reader.SerialReader;
 import nmea.consumers.reader.TCPReader;
 import nmea.consumers.reader.WebSocketReader;
 import nmea.consumers.reader.ZDAReader;
-import nmea.forwarders.ConsoleWriter;
-import nmea.forwarders.DataFileWriter;
-import nmea.forwarders.Forwarder;
-import nmea.forwarders.GPSdServer;
-import nmea.forwarders.SerialWriter;
-import nmea.forwarders.TCPServer;
-import nmea.forwarders.WebSocketProcessor;
-import nmea.forwarders.WebSocketWriter;
+import nmea.forwarders.*;
 import nmea.forwarders.rmi.RMIServer;
 
 import java.io.FileOutputStream;
@@ -649,6 +642,45 @@ public class MuxInitializer {
 								}
 								tcpForwarder.init();
 								nmeaDataForwarders.add(tcpForwarder);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+							break;
+						case "rest":
+							String restPropFile = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
+							String restSubClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx)));
+
+							List<String> properties = Arrays.asList(
+									"server.name", "server.port", "rest.resource", "rest.verb", "http.headers"
+							);
+							final int idx = fwdIdx;
+							Properties configProps = new Properties();
+							properties.forEach(prop -> {
+								String propVal = muxProps.getProperty(String.format("forward.%s.%s", MUX_IDX_FMT.format(idx), prop));
+								if (propVal != null) {
+									configProps.put(prop, propVal);
+								}
+							});
+//							props.put("server.name", "192.168.42.6");
+//							props.put("server.port", "8080");
+//							props.put("rest.resource", "/rest/endpoint?qs=prm");
+//							props.put("rest.verb", "POST");
+//							props.put("http.headers", "Content-Type:plain/text");
+							try {
+								Forwarder restForwarder;
+								if (restSubClass == null) {
+									restForwarder = new RESTPublisher();
+								} else {
+									restForwarder = (RESTPublisher)Class.forName(restSubClass.trim()).getConstructor(Integer.class).newInstance();
+								}
+								if (restPropFile != null) {
+									Properties forwarderProps = new Properties();
+									forwarderProps.load(new FileReader(restPropFile));
+									restForwarder.setProperties(forwarderProps);
+								}
+								restForwarder.setProperties(configProps);
+								restForwarder.init();
+								nmeaDataForwarders.add(restForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
 							}

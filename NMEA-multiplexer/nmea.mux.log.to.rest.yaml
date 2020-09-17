@@ -1,0 +1,21 @@
+#
+# MUX definition.
+#
+name: "Read a log file, feeds a cache, forward on REST."
+context:
+  with.http.server: true
+  http.port: 9991
+  init.cache: true
+  default.declination: 14
+channels:
+  - type: file
+    filename: ./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea
+    verbose: false
+forwarders:
+  - type: rest
+    server.name: 192.168.42.6
+    server.port: 8080
+    rest.resource: /rest/resource?qs=value
+    rest.verb: POST
+    http.headers: Content-Type:plain/text
+
