@@ -301,6 +301,16 @@ The lines above means that:
   >
   > Along the same lines, there is a `put.ais.in.cache` property defaulted to `true`. Set it to `false` if you do not need the 
   > parsed AIS data to end up in the NMEA Cache. 
+  >
+- `rest`
+    - Forward the NMEA data to a REST resource
+    ```properties
+    forward.02.server.name=192.168.42.6
+    forward.02.server.port=8080
+    forward.02.rest.resource=/whatever
+    forward.02.rest.verb=POST
+    forward.02.http.headers=Content-Type:plain/text,Whatever:whateverYouLike
+    ```                                                                                                      
 - `gpsd`
     - GPSD Server
     ```properties

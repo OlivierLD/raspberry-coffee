@@ -213,7 +213,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
     def do_PUT(self):
         if REST_DEBUG:
             print("PUT request, {}".format(self.path))
-        if self.path.startswith("/whatever/"):
+        if self.path.startswith("/whatever"):
             response = {"status": "OK"}
             response_content = json.dumps(response).encode()
             self.send_response(201)

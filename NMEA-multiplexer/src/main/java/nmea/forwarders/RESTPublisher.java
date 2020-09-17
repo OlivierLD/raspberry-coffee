@@ -22,6 +22,11 @@ public class RESTPublisher implements Forwarder {
 	public RESTPublisher() {
 	}
 
+	/**
+	 * Note: This can be sub-classed to filter the sentences,
+	 *       and send a formatted message to a Screen Server (for example)...
+	 * @param message The NMEA sentence
+	 */
 	@Override
 	public void write(byte[] message) {
 		if (restClient == null) {

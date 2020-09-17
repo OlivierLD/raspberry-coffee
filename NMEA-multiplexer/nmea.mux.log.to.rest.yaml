@@ -15,7 +15,7 @@ forwarders:
   - type: rest
     server.name: 192.168.42.6
     server.port: 8080
-    rest.resource: /rest/resource?qs=value
+    rest.resource: /whatever
     rest.verb: POST
     http.headers: Content-Type:plain/text
 
