@@ -54,6 +54,8 @@ such as:
 - Groovy (install [groovy](https://sdkman.io/sdks#groovy), or [here](https://groovy-lang.org/install.html))
 - [Processing](https://pi.processing.org/get-started/), Java 8 based.
 - [Node-RED](https://nodered.org/docs/getting-started/), NodeJS based (JavaScript, ES6)
+- Arduino (running - in this example - on an M5Stick-C)
+- C - Make a simple HTTP Request ib C
 - Python. A REST Client written for Python3, to close the loop.
 
 > Note: To install extra languages, [SDKMAN](https://sdkman.io/install) is the easiest, whatever your system is.
@@ -210,7 +212,26 @@ Python Server for the `LIS3MDL` magnetometer.
 ![Arduino](./ArduinoIDE.png)
 
 #### C client
-... later!
+In this example, hostname, port, and request are hard-coded.
+ 
+Compile and run:
+```
+src/main/C> gcc *.c -o httpClient
+src/main/C> ./httpClient 
+Request:
+GET /lis3mdl/cache HTTP/1.0
+
+
+Response:
+HTTP/1.0 200 OK
+Server: BaseHTTP/0.6 Python/3.7.3
+Date: Thu, 17 Sep 2020 15:18:25 GMT
+Content-Type: application/json
+
+{"x": 2.616194095293774, "y": 60.21631102016954, "z": -54.54545454545454}
+
+src/main/C> 
+```
 
 # WiP
 There is a TCP server and client cooking...
