@@ -6,11 +6,11 @@
 #include <math.h>
 
 /*
-   Make REST requests - It's a REST client
+   Make REST requests - It's a REST client, running on M5Stick-C
    Basic REST mechanism. NO GUI.
    Output go on the Serial Console.
 
-   Requests are like GET http://192.168.42.6:8080/lis3mdl/cache
+   Requests are like GET http://19.168.42.6:8080/lis3mdl/cache
    ------------------
    RST Button: top right
    HOME Button: the big one with M5 written on it.
@@ -38,7 +38,7 @@ const char* SERVER_NAME = "192.168.42.6";   // For REST requests, Server IP
 // IPAddress server(192, 168, 42, 13);
 const int SERVER_PORT = 8080;               // Server port, for REST requests
 
-const boolean DEBUG = true;
+const boolean DEBUG = false;
 
 int status = WL_IDLE_STATUS;
 
@@ -76,7 +76,7 @@ void loop() {
 }
 
 double toDegrees(double rad) {
-  return rad * 57296 / 1000;  
+  return rad * 57296 / 1000;
 }
 
 double toRadians(double deg) {
@@ -84,12 +84,16 @@ double toRadians(double deg) {
 }
 
 void getData() {
-  Serial.println("\nMaking request...");
+  if (DEBUG) {
+    Serial.println("\nMaking request...");
+  }
   String cache = makeRequest("GET", "/lis3mdl/cache");
-  Serial.println("Request came back:");
-  Serial.println("-----------");
-  Serial.println(cache);
-  Serial.println("-----------");
+  if (DEBUG) {
+    Serial.println("Request came back:");
+    Serial.println("-----------");
+    Serial.println(cache);
+    Serial.println("-----------");
+  }
   // Extract payload from response
   const String endOfHeaders = "\r\n\r\n";
   cache.trim();
@@ -101,26 +105,25 @@ void getData() {
   } else {
     payload = cache.substring(eoh + endOfHeaders.length());
   }
-  
-  
+
   if (DEBUG) {
     Serial.println(payload);
   }
   /*
-     The payload/json object looks like: 
+     The payload/json object looks like:
      {
        "x": -21.221864951768488,
        "y": 62.087109032446655,
        "z": -50.570008769365685
      }
-   */
-//  StaticJsonDocument<1024> doc; // Size could be tuned...
+  */
+  //  StaticJsonDocument<1024> doc; // Size could be tuned...
   DynamicJsonDocument doc(1024);
   DeserializationError error = deserializeJson(doc, payload);
   if (error) {
     Serial.print(F("deserializeJson() failed for "));
     Serial.println(payload);
-//    Serial.println(error);
+    //    Serial.println(error);
     return;
   }
 
@@ -131,7 +134,7 @@ void getData() {
   double heading = toDegrees(atan2(y, x));
   double pitch = toDegrees(atan2(y, z));
   double roll = toDegrees(atan2(x, z));
-  
+
   Serial.print("Heading:"); Serial.println(heading);
   Serial.print("Pitch  :"); Serial.println(pitch);
   Serial.print("Roll   :"); Serial.println(roll);
