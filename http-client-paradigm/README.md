@@ -207,6 +207,8 @@ See how to use REST in the code you'll reach with the link before.
 There is a simple example of such a client in `src/main/arduino/RawHttpClient/RawHttpClient.ino`. It reads the 
 Python Server for the `LIS3MDL` magnetometer.
 
+![Arduino](./ArduinoIDE.png)
+
 #### C client
 ... later!
 
