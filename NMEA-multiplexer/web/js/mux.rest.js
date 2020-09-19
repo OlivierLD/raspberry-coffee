@@ -509,7 +509,7 @@ function forwarderList() {
     				 "verb": "POST",
     				 "resource": "/whatever",
 					 */
-					html += ("<tr><td><b>rest</b></td><td>Port " + json[i].port + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td><td><small>ServerName:" + json[i].serverName + " (More parameters)</small></td></tr>");
+					html += ("<tr><td><b>rest</b></td><td>" + json[i].verb +  " http://" + json[i].serverName + ":" + json[i].port + json[i].resource + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td>");
 					break;
 				case 'gpsd':
 					html += ("<tr><td><b>gpsd</b></td><td>Port " + json[i].port + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td><td><small>" + json[i].nbClients + " Client(s)</small></td></tr>");
@@ -750,7 +750,13 @@ function generateDiagram() {
 					html += ("<tr><td><b>tcp</b></td><td>Port " + json[i].port + "</td><td><small>" + json[i].nbClients + " Client(s)</small></td></tr>");
 					break;
 				case 'rest':
-					html += ("<tr><td><b>rest</b></td><td>Port " + json[i].port + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td><td><small>ServerName:" + json[i].serverName + " (More parameters)</small></td></tr>");
+					/*
+					 "port": 8080,
+    				 "serverName": "192.168.42.6",
+    				 "verb": "POST",
+    				 "resource": "/whatever",
+					 */
+					html += ("<tr><td><b>rest</b></td><td>" + json[i].verb +  " http://" + json[i].serverName + ":" + json[i].port + json[i].resource + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td>");
 					break;
 				case 'gpsd':
 					html += ("<tr><td><b>gpsd</b></td><td>Port " + json[i].port + "</td><td><small>" + json[i].nbClients + " Client(s)</small></td></tr>");
@@ -893,7 +899,7 @@ function createForwarder(forwarder) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to create forwarder..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to create forwarder..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 

@@ -25,7 +25,7 @@ function getPromise(
 		console.log(">>> Promise", verb, url);
 	}
 
-	let promise = new Promise(function (resolve, reject) {
+	let promise = new Promise((resolve, reject) => {
 		let xhr = new XMLHttpRequest();
 		let TIMEOUT = timeout;
 
@@ -49,13 +49,13 @@ function getPromise(
 			console.log("Send Error ", err);
 		}
 
-		let requestTimer = setTimeout(function () {
+		let requestTimer = setTimeout(() => {
 			xhr.abort();
 			let mess = {code: 408, message: 'Timeout'};
 			reject(mess);
 		}, TIMEOUT);
 
-		xhr.onload = function () {
+		xhr.onload = () => {
 			clearTimeout(requestTimer);
 			if (xhr.status === happyCode) {
 				resolve(xhr.response);
@@ -318,7 +318,7 @@ function serialPortList() {
 		let html = "<h5>Available Serial Ports</h5>";
 		if (json.length > 0) {
 			html += "<table>";
-			json.forEach(function (line, idx) {
+			json.forEach((line, idx) => {
 				html += ("<tr><td>" + line + "</td></tr>");
 			});
 			html += "</table>";
@@ -501,6 +501,15 @@ function forwarderList() {
 					break;
 				case 'tcp':
 					html += ("<tr><td><b>tcp</b></td><td>Port " + json[i].port + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td><td><small>" + json[i].nbClients + " Client(s)</small></td></tr>");
+					break;
+				case 'rest':
+					/*
+					 "port": 8080,
+    				 "serverName": "192.168.42.6",
+    				 "verb": "POST",
+    				 "resource": "/whatever",
+					 */
+					html += ("<tr><td><b>rest</b></td><td>" + json[i].verb +  " http://" + json[i].serverName + ":" + json[i].port + json[i].resource + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td>");
 					break;
 				case 'gpsd':
 					html += ("<tr><td><b>gpsd</b></td><td>Port " + json[i].port + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td><td><small>" + json[i].nbClients + " Client(s)</small></td></tr>");
@@ -740,6 +749,15 @@ function generateDiagram() {
 				case 'tcp':
 					html += ("<tr><td><b>tcp</b></td><td>Port " + json[i].port + "</td><td><small>" + json[i].nbClients + " Client(s)</small></td></tr>");
 					break;
+				case 'rest':
+					/*
+					 "port": 8080,
+    				 "serverName": "192.168.42.6",
+    				 "verb": "POST",
+    				 "resource": "/whatever",
+					 */
+					html += ("<tr><td><b>rest</b></td><td>" + json[i].verb +  " http://" + json[i].serverName + ":" + json[i].port + json[i].resource + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td>");
+					break;
 				case 'gpsd':
 					html += ("<tr><td><b>gpsd</b></td><td>Port " + json[i].port + "</td><td><small>" + json[i].nbClients + " Client(s)</small></td></tr>");
 					break;
@@ -881,7 +899,7 @@ function createForwarder(forwarder) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to create forwarder..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to create forwarder..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 

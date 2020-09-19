@@ -9,7 +9,7 @@
  |
  | Also see mux.rest.js. It contains some logic associated with this dashboard.
  +-->
-<html>
+<html lang="en">
   <head>
     <title>NMEA Multiplexer Admin</title>
 
@@ -17,10 +17,10 @@
     <link rel="icon" type="image/jpg" href="icons/palm.04.jpg">
 
     <!--script type="text/javascript" src="js/jquery-2.1.3.js"></script-->
-    <script type="text/javascript" src="js/pub.sub.js"></script>
-    <script type="text/javascript" src="js/mux.rest.js"></script>
-    <script type="text/javascript" src="widgets/Graph.js"></script>
-    <link id="page-ux" rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
+    <script type="text/javascript" src="./js/pub.sub.js"></script>
+    <script type="text/javascript" src="./js/mux.rest.js"></script>
+    <script type="text/javascript" src="./widgets/Graph.js"></script>
+    <link id="page-ux" rel="stylesheet" href="./css/stylesheet.css" type="text/css"/>
     <style>
       .selectedButton {
         padding:5px;
@@ -301,88 +301,107 @@
 
         function manageForwardSelection(selected) {
             switch (selected) {
-                case 'serial':
-                    document.getElementById("forward-serial").style.display = 'inline';
-                    document.getElementById("forward-tcp").style.display = 'none';
-                    document.getElementById("forward-gpsd").style.display = 'none';
-                    document.getElementById("forward-rmi").style.display = 'none';
-                    document.getElementById("forward-file").style.display = 'none';
-                    document.getElementById("forward-ws").style.display = 'none';
-                    document.getElementById("forward-console").style.display = 'none';
-                    document.getElementById("forward-custom").style.display = 'none';
-                    break;
-                case 'tcp':
-                    document.getElementById("forward-serial").style.display = 'none';
-                    document.getElementById("forward-tcp").style.display = 'inline';
-                    document.getElementById("forward-gpsd").style.display = 'none';
-                    document.getElementById("forward-rmi").style.display = 'none';
-                    document.getElementById("forward-file").style.display = 'none';
-                    document.getElementById("forward-ws").style.display = 'none';
-                    document.getElementById("forward-console").style.display = 'none';
-                    document.getElementById("forward-custom").style.display = 'none';
-                    break;
-                case 'gpsd':
-                    document.getElementById("forward-serial").style.display = 'none';
-                    document.getElementById("forward-tcp").style.display = 'none';
-                    document.getElementById("forward-gpsd").style.display = 'inline';
-                    document.getElementById("forward-rmi").style.display = 'none';
-                    document.getElementById("forward-file").style.display = 'none';
-                    document.getElementById("forward-ws").style.display = 'none';
-                    document.getElementById("forward-console").style.display = 'none';
-                    document.getElementById("forward-custom").style.display = 'none';
-                    break;
-                case 'rmi':
-                    document.getElementById("forward-serial").style.display = 'none';
-                    document.getElementById("forward-tcp").style.display = 'none';
-                    document.getElementById("forward-gpsd").style.display = 'none';
-                    document.getElementById("forward-rmi").style.display = 'inline';
-                    document.getElementById("forward-file").style.display = 'none';
-                    document.getElementById("forward-ws").style.display = 'none';
-                    document.getElementById("forward-console").style.display = 'none';
-                    document.getElementById("forward-custom").style.display = 'none';
-                    break;
-                case 'file':
-                    document.getElementById("forward-serial").style.display = 'none';
-                    document.getElementById("forward-tcp").style.display = 'none';
-                    document.getElementById("forward-gpsd").style.display = 'none';
-                    document.getElementById("forward-rmi").style.display = 'none';
-                    document.getElementById("forward-file").style.display = 'inline';
-                    document.getElementById("forward-ws").style.display = 'none';
-                    document.getElementById("forward-console").style.display = 'none';
-                    document.getElementById("forward-custom").style.display = 'none';
-                    break;
-                case 'ws':
-                    document.getElementById("forward-serial").style.display = 'none';
-                    document.getElementById("forward-tcp").style.display = 'none';
-                    document.getElementById("forward-gpsd").style.display = 'none';
-                    document.getElementById("forward-rmi").style.display = 'none';
-                    document.getElementById("forward-file").style.display = 'none';
-                    document.getElementById("forward-ws").style.display = 'inline';
-                    document.getElementById("forward-console").style.display = 'none';
-                    document.getElementById("forward-custom").style.display = 'none';
-                    break;
-                case 'console':
-                    document.getElementById("forward-serial").style.display = 'none';
-                    document.getElementById("forward-tcp").style.display = 'none';
-                    document.getElementById("forward-gpsd").style.display = 'none';
-                    document.getElementById("forward-rmi").style.display = 'none';
-                    document.getElementById("forward-file").style.display = 'none';
-                    document.getElementById("forward-ws").style.display = 'none';
-                    document.getElementById("forward-console").style.display = 'inline';
-                    document.getElementById("forward-custom").style.display = 'none';
-                    break;
-                case 'custom':
-                    document.getElementById("forward-serial").style.display = 'none';
-                    document.getElementById("forward-tcp").style.display = 'none';
-                    document.getElementById("forward-gpsd").style.display = 'none';
-                    document.getElementById("forward-rmi").style.display = 'none';
-                    document.getElementById("forward-file").style.display = 'none';
-                    document.getElementById("forward-ws").style.display = 'none';
-                    document.getElementById("forward-console").style.display = 'none';
-                    document.getElementById("forward-custom").style.display = 'inline';
-                    break;
-                default:
-                    break;
+              case 'serial':
+                document.getElementById("forward-serial").style.display = 'inline';
+                document.getElementById("forward-tcp").style.display = 'none';
+                document.getElementById("forward-rest").style.display = 'none';
+                document.getElementById("forward-gpsd").style.display = 'none';
+                document.getElementById("forward-rmi").style.display = 'none';
+                document.getElementById("forward-file").style.display = 'none';
+                document.getElementById("forward-ws").style.display = 'none';
+                document.getElementById("forward-console").style.display = 'none';
+                document.getElementById("forward-custom").style.display = 'none';
+                break;
+              case 'tcp':
+                document.getElementById("forward-serial").style.display = 'none';
+                document.getElementById("forward-tcp").style.display = 'inline';
+                document.getElementById("forward-rest").style.display = 'none';
+                document.getElementById("forward-gpsd").style.display = 'none';
+                document.getElementById("forward-rmi").style.display = 'none';
+                document.getElementById("forward-file").style.display = 'none';
+                document.getElementById("forward-ws").style.display = 'none';
+                document.getElementById("forward-console").style.display = 'none';
+                document.getElementById("forward-custom").style.display = 'none';
+                break;
+              case 'rest':
+                document.getElementById("forward-serial").style.display = 'none';
+                document.getElementById("forward-tcp").style.display = 'none';
+                document.getElementById("forward-rest").style.display = 'inline';
+                document.getElementById("forward-gpsd").style.display = 'none';
+                document.getElementById("forward-rmi").style.display = 'none';
+                document.getElementById("forward-file").style.display = 'none';
+                document.getElementById("forward-ws").style.display = 'none';
+                document.getElementById("forward-console").style.display = 'none';
+                document.getElementById("forward-custom").style.display = 'none';
+                break;
+              case 'gpsd':
+                document.getElementById("forward-serial").style.display = 'none';
+                document.getElementById("forward-tcp").style.display = 'none';
+                document.getElementById("forward-rest").style.display = 'none';
+                document.getElementById("forward-gpsd").style.display = 'inline';
+                document.getElementById("forward-rmi").style.display = 'none';
+                document.getElementById("forward-file").style.display = 'none';
+                document.getElementById("forward-ws").style.display = 'none';
+                document.getElementById("forward-console").style.display = 'none';
+                document.getElementById("forward-custom").style.display = 'none';
+                break;
+              case 'rmi':
+                document.getElementById("forward-serial").style.display = 'none';
+                document.getElementById("forward-tcp").style.display = 'none';
+                document.getElementById("forward-rest").style.display = 'none';
+                document.getElementById("forward-gpsd").style.display = 'none';
+                document.getElementById("forward-rmi").style.display = 'inline';
+                document.getElementById("forward-file").style.display = 'none';
+                document.getElementById("forward-ws").style.display = 'none';
+                document.getElementById("forward-console").style.display = 'none';
+                document.getElementById("forward-custom").style.display = 'none';
+                break;
+              case 'file':
+                document.getElementById("forward-serial").style.display = 'none';
+                document.getElementById("forward-tcp").style.display = 'none';
+                document.getElementById("forward-rest").style.display = 'none';
+                document.getElementById("forward-gpsd").style.display = 'none';
+                document.getElementById("forward-rmi").style.display = 'none';
+                document.getElementById("forward-file").style.display = 'inline';
+                document.getElementById("forward-ws").style.display = 'none';
+                document.getElementById("forward-console").style.display = 'none';
+                document.getElementById("forward-custom").style.display = 'none';
+                break;
+              case 'ws':
+                document.getElementById("forward-serial").style.display = 'none';
+                document.getElementById("forward-tcp").style.display = 'none';
+                document.getElementById("forward-rest").style.display = 'none';
+                document.getElementById("forward-gpsd").style.display = 'none';
+                document.getElementById("forward-rmi").style.display = 'none';
+                document.getElementById("forward-file").style.display = 'none';
+                document.getElementById("forward-ws").style.display = 'inline';
+                document.getElementById("forward-console").style.display = 'none';
+                document.getElementById("forward-custom").style.display = 'none';
+                break;
+              case 'console':
+                document.getElementById("forward-serial").style.display = 'none';
+                document.getElementById("forward-tcp").style.display = 'none';
+                document.getElementById("forward-rest").style.display = 'none';
+                document.getElementById("forward-gpsd").style.display = 'none';
+                document.getElementById("forward-rmi").style.display = 'none';
+                document.getElementById("forward-file").style.display = 'none';
+                document.getElementById("forward-ws").style.display = 'none';
+                document.getElementById("forward-console").style.display = 'inline';
+                document.getElementById("forward-custom").style.display = 'none';
+                break;
+              case 'custom':
+                document.getElementById("forward-serial").style.display = 'none';
+                document.getElementById("forward-tcp").style.display = 'none';
+                document.getElementById("forward-rest").style.display = 'none';
+                document.getElementById("forward-gpsd").style.display = 'none';
+                document.getElementById("forward-rmi").style.display = 'none';
+                document.getElementById("forward-file").style.display = 'none';
+                document.getElementById("forward-ws").style.display = 'none';
+                document.getElementById("forward-console").style.display = 'none';
+                document.getElementById("forward-custom").style.display = 'inline';
+                break;
+              default:
+                break;
             }
         }
 
@@ -570,100 +589,119 @@
         function requestForwardCreation() {
             let x = document.getElementById("forwarder-select").value;
             let port;
-            switch (x) {
-                case 'serial':
-                    let portName = document.getElementById("serial-port-fwd").value;
-                    let br = document.getElementById("baud-rate-fwd").value;
-                    if (portName.trim().length === 0 || br.trim().length === 0) {
-                        alert('Both port name and baud rate are required');
-                        return;
-                    }
-                    createForwarder({
-                        type: 'serial',
-                        port: portName,
-                        br: br
-                    });
-                    break;
-                case 'tcp':
-                    port = document.getElementById("fwd-tcp-port").value;
-                    if (port.trim().length === 0) {
-                        alert('Port is required');
-                        return;
-                    }
-                    createForwarder({
-                        type: 'tcp',
-                        port: port
-                    });
-                    break;
-                case 'gpsd':
-                    port = document.getElementById("fwd-gpsd-port").value;
-                    if (port.trim().length === 0) {
-                        alert('Port is required');
-                        return;
-                    }
-                    createForwarder({
-                        type: 'gpsd',
-                        port: port
-                    });
-                    break;
-                case 'rmi':
-                    port = document.getElementById("fwd-rmi-port").value;
-                    if (port.trim().length === 0) {
-                        alert('Port is required');
-                        return;
-                    }
-                    let name = document.getElementById("fwd-rmi-binding-name").value;
-                    if (name.trim().length === 0) {
-                        alert('Name is required');
-                        return;
-                    }
-                    createForwarder({
-                        type: 'rmi',
-                        port: port,
-                        bindingName: name
-                    });
-                    break;
-                case 'file':
-                    let logfile = document.getElementById("fwd-data-file").value;
-                    if (logfile.trim().length === 0) {
-                        alert('Log file name is required');
-                        return;
-                    }
-                    let append = document.getElementById("fwd-data-file-app").is(':checked');
-                    createForwarder({
-                        type: 'file',
-                        log: logfile,
-                        append: append
-                    });
-                    break;
-                case 'ws':
-                    let uri = document.getElementById("fwd-wsuri").value;
-                    if (uri.trim().length === 0) {
-                        alert('WebSocket URI is required');
-                        return;
-                    }
-                    createForwarder({
-                        type: 'ws',
-                        wsUri: uri
-                    });
-                    break;
-                case 'console':
-                    createForwarder({
-                        type: 'console'
-                    });
-                    break;
-                case 'custom':
-                    let forwarderClass = document.getElementById("fwd-custom-class").value;
-                    let propfile = document.getElementById('fwd-custom-prop-file').value;
-                    createForwarder({
-                        type: 'custom',
-                        forwarderClass: forwarderClass,
-                        propFile: propfile
-                    });
-                    break;
-                default:
-                    break;
-            }
+          switch (x) {
+            case 'serial':
+              let portName = document.getElementById("serial-port-fwd").value;
+              let br = document.getElementById("baud-rate-fwd").value;
+              if (portName.trim().length === 0 || br.trim().length === 0) {
+                alert('Both port name and baud rate are required');
+                return;
+              }
+              createForwarder({
+                type: 'serial',
+                port: portName,
+                br: br
+              });
+              break;
+            case 'tcp':
+              port = document.getElementById("fwd-tcp-port").value;
+              if (port.trim().length === 0) {
+                alert('Port is required');
+                return;
+              }
+              createForwarder({
+                type: 'tcp',
+                port: port
+              });
+              break;
+            case 'rest':
+              let verb = document.getElementById("fwd-rest-verb").value;
+              let server = document.getElementById("fwd-rest-server").value;
+              if (server.trim().length === 0) {
+                server = "127.0.0.1";
+              }
+              port = document.getElementById("fwd-rest-port").value;
+              if (port.trim().length === 0) {
+                port = 80;
+              }
+              let resource = document.getElementById("fwd-rest-resource").value;
+              createForwarder({
+                type: 'rest',
+                verb: verb,
+                serverName: server,
+                port: port,
+                resource: resource
+              });
+              break;
+            case 'gpsd':
+              port = document.getElementById("fwd-gpsd-port").value;
+              if (port.trim().length === 0) {
+                alert('Port is required');
+                return;
+              }
+              createForwarder({
+                type: 'gpsd',
+                port: port
+              });
+              break;
+            case 'rmi':
+              port = document.getElementById("fwd-rmi-port").value;
+              if (port.trim().length === 0) {
+                alert('Port is required');
+                return;
+              }
+              let name = document.getElementById("fwd-rmi-binding-name").value;
+              if (name.trim().length === 0) {
+                alert('Name is required');
+                return;
+              }
+              createForwarder({
+                type: 'rmi',
+                port: port,
+                bindingName: name
+              });
+              break;
+            case 'file':
+              let logfile = document.getElementById("fwd-data-file").value;
+              if (logfile.trim().length === 0) {
+                alert('Log file name is required');
+                return;
+              }
+              let append = document.getElementById("fwd-data-file-app").is(':checked');
+              createForwarder({
+                type: 'file',
+                log: logfile,
+                append: append
+              });
+              break;
+            case 'ws':
+              let uri = document.getElementById("fwd-wsuri").value;
+              if (uri.trim().length === 0) {
+                alert('WebSocket URI is required');
+                return;
+              }
+              createForwarder({
+                type: 'ws',
+                wsUri: uri
+              });
+              break;
+            case 'console':
+              createForwarder({
+                type: 'console'
+              });
+              break;
+            case 'custom':
+              let forwarderClass = document.getElementById("fwd-custom-class").value;
+              let propfile = document.getElementById('fwd-custom-prop-file').value;
+              createForwarder({
+                type: 'custom',
+                forwarderClass: forwarderClass,
+                propFile: propfile
+              });
+              break;
+            default:
+              break;
+          }
         }
 
         function requestComputerCreation() {
@@ -1162,6 +1200,7 @@
               <select id="forwarder-select" onchange="forwardSelectManager();">
                 <option value="serial">Serial</option>
                 <option value="tcp">TCP</option>
+                <option value="rest">REST</option>
                 <option value="gpsd">GPSd</option>
                 <option value="rmi">RMI</option>
                 <option value="file">Data File</option>
@@ -1196,6 +1235,26 @@
                   <tr>
                     <td>Port</td>
                     <td><input id="fwd-tcp-port" type="text" placeholder="Port" size="10"></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-rest" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Verb</td>
+                    <td><input id="fwd-rest-verb" type="text" placeholder="POST" size="10"></td>
+                  </tr>
+                  <tr>
+                    <td>Server Name or IP</td>
+                    <td><input id="fwd-rest-server" type="text" placeholder="Server Name" size="10"></td>
+                  </tr>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="fwd-rest-port" type="text" placeholder="Port" size="10"></td>
+                  </tr>
+                  <tr>
+                    <td>Resource</td>
+                    <td><input id="fwd-rest-resource" type="text" placeholder="/resource" size="30"></td>
                   </tr>
                 </table>
               </div>

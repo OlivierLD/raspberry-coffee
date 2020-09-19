@@ -39,14 +39,7 @@ import nmea.consumers.reader.SerialReader;
 import nmea.consumers.reader.TCPReader;
 import nmea.consumers.reader.WebSocketReader;
 import nmea.consumers.reader.ZDAReader;
-import nmea.forwarders.ConsoleWriter;
-import nmea.forwarders.DataFileWriter;
-import nmea.forwarders.Forwarder;
-import nmea.forwarders.GPSdServer;
-import nmea.forwarders.SerialWriter;
-import nmea.forwarders.TCPServer;
-import nmea.forwarders.WebSocketProcessor;
-import nmea.forwarders.WebSocketWriter;
+import nmea.forwarders.*;
 import nmea.forwarders.rmi.RMIServer;
 import nmea.mux.context.Context;
 import nmea.mux.context.Context.StringAndTimeStamp;
@@ -492,6 +485,24 @@ public class RESTImplementation {
 						RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 					}
 					break;
+				case "rest":
+					gson = new GsonBuilder().create();
+					if (request.getContent() != null) {
+						StringReader stringReader = new StringReader(new String(request.getContent()));
+						RESTPublisher.RESTBean restBean = gson.fromJson(stringReader, RESTPublisher.RESTBean.class);
+						opFwd = nmeaDataForwarders.stream()
+								.filter(fwd -> fwd instanceof RESTPublisher &&
+										((RESTPublisher) fwd).getVerb().equals(restBean.getVerb()) &&
+										((RESTPublisher) fwd).getServerName().equals(restBean.getServerName()) &&
+										((RESTPublisher) fwd).getHttpPort() == restBean.getPort() &&
+										((RESTPublisher) fwd).getRestResource().equals(restBean.getResource()))
+								.findFirst();
+						response = removeForwarderIfPresent(request, opFwd);
+					} else {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
+					}
+					break;
 				case "gpsd":
 					gson = new GsonBuilder().create();
 					if (request.getContent() != null) {
@@ -829,6 +840,35 @@ public class RESTImplementation {
 					// Already there
 					response.setStatus(HTTPServer.Response.BAD_REQUEST);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'tcp' already exists");
+				}
+				break;
+			case "rest":
+				RESTPublisher.RESTBean restJson = new Gson().fromJson(new String(request.getContent()), RESTPublisher.RESTBean.class);
+				// Check if not there yet.
+				// Check if already exists.
+				opFwd = nmeaDataForwarders.stream()
+						.filter(fwd -> fwd instanceof RESTPublisher &&
+								((RESTPublisher) fwd).getVerb().equals(restJson.getVerb()) &&
+								((RESTPublisher) fwd).getServerName().equals(restJson.getServerName()) &&
+								((RESTPublisher) fwd).getHttpPort() == restJson.getPort() &&
+								((RESTPublisher) fwd).getRestResource().equals(restJson.getResource()))
+						.findFirst();
+				if (!opFwd.isPresent()) {
+					try {
+						Forwarder restForwarder = new RESTPublisher(restJson.getVerb(), restJson.getServerName(), restJson.getPort(), restJson.getResource());
+						nmeaDataForwarders.add(restForwarder);
+						String content = new Gson().toJson(restForwarder.getBean());
+						RESTProcessorUtil.generateResponseHeaders(response, content.length());
+						response.setPayload(content.getBytes());
+					} catch (Exception ex) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
+						ex.printStackTrace();
+					}
+				} else {
+					// Already there
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'rest' already exists");
 				}
 				break;
 			case "gpsd":

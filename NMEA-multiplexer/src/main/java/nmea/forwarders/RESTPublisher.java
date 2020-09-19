@@ -11,20 +11,46 @@ public class RESTPublisher implements Forwarder {
 
 	private Properties props = null;
 
-	private int httpPort = 80; // Default
-	private String serverName = "localhost"; // Default
-	private String restResource = null;
-	private String verb = "POST"; // default
-	private Map<String, String> headers = null;
+	private int httpPort = 80;                  // Default
+	private String serverName = "localhost";    // Default
+	private String restResource = null;         // Required. No default.
+	private String verb = "POST";               // default
+	private Map<String, String> headers = null; // Optional
 
 	private HTTPClient restClient = null;
 
 	public RESTPublisher() {
 	}
+	public RESTPublisher(String verb,
+						 String serverName,
+						 int port,
+						 String resource) {
+		this.verb = verb;
+		this.serverName = serverName;
+		this.httpPort = port;
+		this.restResource = resource;
+	}
+
+	public int getHttpPort() {
+		return httpPort;
+	}
+
+	public String getServerName() {
+		return serverName;
+	}
+
+	public String getRestResource() {
+		return restResource;
+	}
+
+	public String getVerb() {
+		return verb;
+	}
 
 	/**
 	 * Note: This can be sub-classed to filter the sentences,
 	 *       and send a formatted message to a Screen Server (for example)...
+	 *       See https://github.com/OlivierLD/raspberry-coffee/tree/master/http-client-samples
 	 * @param message The NMEA sentence
 	 */
 	@Override
@@ -58,8 +84,17 @@ public class RESTPublisher implements Forwarder {
 		private String resource;
 		private String type = "rest";
 
+		public String getVerb() {
+			return verb;
+		}
+		public String getServerName() {
+			return serverName;
+		}
 		public int getPort() {
 			return port;
+		}
+		public String getResource() {
+			return resource;
 		}
 
 		public RESTBean(RESTPublisher instance) {
@@ -91,7 +126,7 @@ public class RESTPublisher implements Forwarder {
 				for (String h : headerArray) {
 					String[] nv = h.split(":");
 					if (nv.length != 2) {
-						// Oops!
+						// Oops! TODO Honk!
 					} else {
 						if (this.headers == null) {
 							this.headers = new HashMap<>();
