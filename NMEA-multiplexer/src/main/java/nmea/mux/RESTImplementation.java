@@ -43,10 +43,7 @@ import nmea.forwarders.*;
 import nmea.forwarders.rmi.RMIServer;
 import nmea.mux.context.Context;
 import nmea.mux.context.Context.StringAndTimeStamp;
-import nmea.parser.Angle360;
-import nmea.parser.GeoPos;
-import nmea.parser.Speed;
-import nmea.parser.UTCDate;
+import nmea.parser.*;
 import nmea.utils.NMEAUtils;
 
 import java.io.BufferedReader;
@@ -300,7 +297,12 @@ public class RESTImplementation {
 					"GET",
 					REST_PREFIX + "/last-sentence",
 					this::getLastNMEASentence,
-					"Get the last available inbound sentence"));
+					"Get the last available inbound sentence"),
+			new Operation(
+					"POST",                               // Feed the cache from REST
+					REST_PREFIX + "/nmea-sentence",
+					this::feedNMEASentence,
+					"Push NMEA or AIS Sentence to cache, after parsing it."));
 
 	protected List<Operation> getOperations() {
 		if (restVerbose()) {
@@ -2646,6 +2648,40 @@ public class RESTImplementation {
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
+		return response;
+	}
+
+	private HTTPServer.Response feedNMEASentence(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+
+		if (request.getContent() != null && request.getContent().length > 0) {
+			String payload = new String(request.getContent()); // NMEA Sentence. Assume type is text/plain
+			if (!"null".equals(payload)) {
+				try {
+					// Parse NMEA/AIS Data. See System variable put.ais.in.cache
+					// Push UTC Date in the cache
+					NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
+					if (cache == null) {
+						// Error!
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("MUX-0005")
+										.errorMessage("Cache not initialized!"));
+					} else {
+						// Push here
+						cache.parseAndFeed(payload.trim());
+					}
+				} catch (Exception ex) {
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("MUX-1000")
+									.errorMessage(ex.toString()));
+					return response;
+				}
+			}
+		}
 		return response;
 	}
 
