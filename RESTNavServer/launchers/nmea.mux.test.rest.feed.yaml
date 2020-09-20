@@ -6,10 +6,6 @@ context:
   with.http.server: true
   http.port: 9999
   init.cache: true
-#channels:
-#  - type: file
-#    filename: ../../NMEA-multiplexer/sample.data/2011-01-29.strait.to.tongareva.for.DR.small.nmea
-#    verbose: false
 forwarders:
   - class: nmea.forwarders.CharacterConsoleWriter
     properties: char.console.properties
