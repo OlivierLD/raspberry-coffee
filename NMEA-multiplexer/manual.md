@@ -143,6 +143,7 @@ channels:
 > makes it a bit more convenient and flexible to use.
 
 #### Pre-defined channel types
+> Note: There is a default REST channel type available when `with.http.server` is set to `true`.
 
 - `serial`
     - Serial port input.
@@ -417,6 +418,10 @@ damping=30
 some `REST` services, for admin and other purposes.
 
 If `with.http.server` is set to `yes`, the default http port is `9999`. It can be overridden by `http.port` if needed.
+
+> _Note_: with `with.http.server` set to `true` comes a REST channel: `POST /mux/nmea-sentence -d '$GPRMC,165007.445,A,3806.5201,N,12251.7777,W,001.7,192.6,200818,,,A*7B'`
+> 
+> This allows you to insert NMEA or IAS Data in the cache through a REST endpoint. 
 
 `init.cache` is set to `false` by default. A cache - accessible by `Computers` will be initialized if
 `init.cache` is set to `true`.
