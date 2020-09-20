@@ -1,6 +1,5 @@
 #
 # MUX definition.
-# Astronomical data can be rendered at http://localhost:9999/web/webcomponents/console.gps.html?style=orange&bg=black&border=n&boat-data=n
 #
 name: "Replaying logged data"
 context:

@@ -1,0 +1,16 @@
+#
+# MUX definition.
+#
+name: "Send a request to POST http://machine:9999/mux/nmea-sentence -d '$GPRMC,165007.445,A,3806.5201,N,12251.7777,W,001.7,192.6,200818,,,A*7B' and see the result"
+context:
+  with.http.server: true
+  http.port: 9999
+  init.cache: true
+#channels:
+#  - type: file
+#    filename: ../../NMEA-multiplexer/sample.data/2011-01-29.strait.to.tongareva.for.DR.small.nmea
+#    verbose: false
+forwarders:
+  - class: nmea.forwarders.CharacterConsoleWriter
+    properties: char.console.properties
+
