@@ -58,6 +58,9 @@ task sysInfo(type: JavaExec, dependsOn: build, description: "Display System Info
     if (project.hasProperty("--minimal")) {
         args = ["--minimal"]
     }
+    if (project.hasProperty("--free-mem")) {
+        args = ["--free-mem"]
+    }
 }
 
 sysInfo.doFirst {
@@ -70,5 +73,8 @@ run {
     // Use like ../gradlew sysInfo -P--minimal
     if (project.hasProperty("--minimal")) {
         args = ["--minimal"]
+    }
+    if (project.hasProperty("--free-mem")) {
+        args = ["--free-mem"]
     }
 }

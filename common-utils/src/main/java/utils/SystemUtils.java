@@ -12,6 +12,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -246,7 +247,16 @@ public class SystemUtils {
 
     public static void main(String... args) throws Exception {
 
-        boolean minimal = args.length == 1 && "--minimal".equals(args[0]);
+        AtomicBoolean minimal = new AtomicBoolean(false);
+        AtomicBoolean freeMem = new AtomicBoolean(false);
+        Arrays.asList(args).forEach(arg -> {
+            if ("--minimal".equals(arg)) {
+                minimal.set(true);
+            } else if ("--free-mem".equals(arg)) {
+                freeMem.set(true);
+            }
+        });
+
         try {
             String[] hardwareData = getRPiHardwareRevision();
             System.out.println(String.format("Running on:\nModel: %s\nReleased: %s\nPCB Rev: %s\nMemory: %s\nNotes: %s",
@@ -257,9 +267,9 @@ public class SystemUtils {
                     hardwareData[NOTES_IDX]));
             System.out.println();
         } catch (IndexOutOfBoundsException iobe) {
-            System.out.println("- Unknown - Is that a Raspberry ?");
+            System.out.println("- Unknown - Is that a Raspberry Pi?");
         } catch (Exception ex) {
-            System.err.println("Not on a Raspberry?");
+            System.err.println("Not on a Raspberry Pi?");
             ex.printStackTrace();
         }
 
@@ -302,7 +312,7 @@ public class SystemUtils {
             System.out.println();
             System.out.println(String.format("DiskUsage: %s", getDiskUsage()));
             System.out.println(String.format("uname: %s", getUname()));
-            if (!minimal) {
+            if (!minimal.get()) {
                 System.out.println();
                 System.out.println(String.format("Directory listing:\n%s", getDirectoryListing().stream().collect(Collectors.joining("\n"))));
             }
@@ -320,18 +330,20 @@ public class SystemUtils {
         }
 
         // Memory
-        try {
-            System.out.println();
-            List<String> memStatus = getMemoryStatus();
-            System.out.println(String.format("Total:     %s MB", memStatus.get(MEM_TOTAL)));
-            System.out.println(String.format("Free:      %s MB", memStatus.get(MEM_FREE)));
-            System.out.println(String.format("Available: %s MB", memStatus.get(MEM_AVAILABLE)));
+        if (freeMem.get()) {
+            try {
+                System.out.println();
+                List<String> memStatus = getMemoryStatus();
+                System.out.println(String.format("Total:     %s MB", memStatus.get(MEM_TOTAL)));
+                System.out.println(String.format("Free:      %s MB", memStatus.get(MEM_FREE)));
+                System.out.println(String.format("Available: %s MB", memStatus.get(MEM_AVAILABLE)));
 
-            System.out.println();
-            String memoryUsage = getMemoryUsage();
-            System.out.println(String.format("Usage: %s", memoryUsage));
-        } catch (Exception ex) {
-            System.err.println(String.format("MemStat: %s", ex.toString()));
+                System.out.println();
+                String memoryUsage = getMemoryUsage();
+                System.out.println(String.format("Usage: %s", memoryUsage));
+            } catch (Exception ex) {
+                System.err.println(String.format("MemStat: %s", ex.toString()));
+            }
         }
     }
 }

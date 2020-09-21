@@ -7,9 +7,9 @@ FOLDER_NAME=./raspberry-coffee/common-utils
 ARCHIVE_NAME=${FOLDER_NAME}/build/libs/common-utils-1.0-all.jar
 if [[ -f ${ARCHIVE_NAME} ]]
 then
-  java -cp ${ARCHIVE_NAME} utils.SystemUtils --minimal
+  java -cp ${ARCHIVE_NAME} utils.SystemUtils --minimal --free-mem
 else
   pushd ${FOLDER_NAME}
-    ../gradlew run -P--minimal
+    ../gradlew run -P--minimal -P--free-mem
   popd
 fi
