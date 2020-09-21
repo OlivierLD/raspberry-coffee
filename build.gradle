@@ -48,6 +48,7 @@ build.doFirst {
     println "|     - Project-Trunk:REST-clients:REST-assembler:springboot-sensors"
     println "| Also, depending on your environment, scala steps might be too demanding..."
     println "| If needed, you can exclude them, like in ./gradlew clean build -x :<module-name>:compileScala "
+    println "| On low-RAM boards, use --no-daemon, like in ./gradlew --no-daemon clean build "
     println "+---------------------------------------------------------------------------------------"
     println " ... and the --continue flag is still available."
     println "+---------------------------------------------------------------------------------------"

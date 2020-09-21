@@ -165,7 +165,7 @@ Received from Serial (/dev/ttyS80): $GNGLL,3744.93536,N,12230.42034,W,101754.00,
 
 ## AIS & REST
 - Connect an AIS receiver to a Raspberry
-- Push AIS data to another Mux using REST
+- Push AIS data to another Mux using REST Publisher (to `POST /mux/nmea-sentence`)
 - See <https://github.com/OlivierLD/raspberry-coffee/tree/master/Project-Trunk/dAISy>
 
 ## Push to a Screen Server

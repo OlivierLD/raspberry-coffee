@@ -5,4 +5,3 @@ CP="${CP}:${OPENCV_LOC}/opencv-410.jar"
 JAVA_LIB_PATH=${OPENCV_LOC}
 #
 java -Djava.library.path=${OPENCV_LOC} -jar ./build/libs/opencv-1.0-all.jar
-

@@ -302,7 +302,7 @@ public class RESTImplementation {
 					"POST",                               // Feed the cache from REST
 					REST_PREFIX + "/nmea-sentence",
 					this::feedNMEASentence,
-					"Push NMEA or AIS Sentence to cache, after parsing it."));
+					"Push NMEA or AIS Sentence to cache, after parsing it. NMEA Sentence as text/plain in the body."));
 
 	protected List<Operation> getOperations() {
 		if (restVerbose()) {

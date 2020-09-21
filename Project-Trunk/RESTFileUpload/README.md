@@ -26,12 +26,12 @@ function AjaxFileUpload() {
     fd.append("imageFileData", file);
     var xhr = new XMLHttpRequest();
     xhr.open("POST", '/server/upload');
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4) {
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
              alert('success');
-        }
-        else if (uploadResult == 'success')
+        } else if (uploadResult === 'success') { // TODO Really?
              alert('error');
+        }
     };
     xhr.send(fd);
 }
