@@ -307,6 +307,8 @@ To build it, clone this project (this repo), make sure the script named `gradlew
  Prompt> chmod +x gradlew
  Prompt> ./gradlew [--daemon | --no-daemon] build [--info]
 ```
+> _Note_: On small-memory boards, use `--no-daemon`.
+
 You are expecting an end like that one:
 ```
 
