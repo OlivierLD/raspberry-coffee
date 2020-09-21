@@ -58,8 +58,8 @@ task sysInfo(type: JavaExec, dependsOn: build, description: "Display System Info
     if (project.hasProperty("--minimal")) {
         args = ["--minimal"]
     }
-    if (project.hasProperty("--free-mem")) {
-        args = ["--free-mem"]
+    if (project.hasProperty("--no-free-mem")) {
+        args = ["--no-free-mem"]
     }
 }
 
@@ -74,7 +74,7 @@ run {
     if (project.hasProperty("--minimal")) {
         args = ["--minimal"]
     }
-    if (project.hasProperty("--free-mem")) {
-        args = ["--free-mem"]
+    if (project.hasProperty("--no-free-mem")) {
+        args = ["--no-free-mem"]
     }
 }

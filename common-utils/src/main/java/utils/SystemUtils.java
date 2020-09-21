@@ -248,12 +248,12 @@ public class SystemUtils {
     public static void main(String... args) throws Exception {
 
         AtomicBoolean minimal = new AtomicBoolean(false);
-        AtomicBoolean freeMem = new AtomicBoolean(false);
+        AtomicBoolean freeMem = new AtomicBoolean(true);
         Arrays.asList(args).forEach(arg -> {
             if ("--minimal".equals(arg)) {
                 minimal.set(true);
-            } else if ("--free-mem".equals(arg)) {
-                freeMem.set(true);
+            } else if ("--no-free-mem".equals(arg)) {
+                freeMem.set(false);
             }
         });
 
