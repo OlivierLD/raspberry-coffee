@@ -1,5 +1,7 @@
 Big upgrade to ES6 and its Promises (like in RESTNavServer)
 
+# FIXED Stuff
+
 ### Reading 2 Serial ports
 No problem, with a `yaml` like this:
 ```yaml
@@ -158,3 +160,15 @@ Received from Serial (/dev/ttyS80): $GLGSV,3,2,09,74,12,330,,80,05,206,09,82,29,
 Received from Serial (/dev/ttyS80): $GLGSV,3,3,09,84,23,302,*50
 Received from Serial (/dev/ttyS80): $GNGLL,3744.93536,N,12230.42034,W,101754.00,A,A*6E
 ```
+
+# TODO Stuff
+
+## AIS & REST
+- Connect an AIS receiver to a Raspberry
+- Push AIS data to another Mux using REST
+- See <https://github.com/OlivierLD/raspberry-coffee/tree/master/Project-Trunk/dAISy>
+
+## Push to a Screen Server
+- Using REST Forwarder, display some selected data on a TFT, OLED, or E-Ink
+
+---

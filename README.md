@@ -101,7 +101,7 @@ $ which wget
 - You can use VNC (if enabled in the config above)
     - Run `vncserver` from a terminal, and use `VNC Viewer` from another machine to connect.
 
-- You may also remove unwanted softwares, just in case you don't need them:
+- You may also remove unwanted software, just in case you don't need them:
     - `$ sudo apt-get purge wolfram-engine`
     - `$ sudo apt-get purge minecraft-pi`
     - `$ sudo apt-get purge sonic-pi`
@@ -305,7 +305,7 @@ To build it, clone this project (this repo), make sure the script named `gradlew
  Prompt> git clone https://github.com/OlivierLD/raspberry-coffee.git
  Prompt> cd raspberry-coffee
  Prompt> chmod +x gradlew
- Prompt> ./gradlew [--daemon] build [--info]
+ Prompt> ./gradlew [--daemon | --no-daemon] build [--info]
 ```
 You are expecting an end like that one:
 ```
@@ -314,7 +314,7 @@ BUILD SUCCESSFUL in 55s
 97 actionable tasks: 17 executed, 80 up-to-date
 Prompt>
 ```
-See the `gradle` web site for info about Gradle.
+See the `gradle` web-site for info about Gradle.
 
 We will also be using the `shadowJar` gradle plugin is several projects.
 This plugin is aggregating the required classes _and all their dependencies_ into a single archive, called a `fat Jar`. This simplifies the syntax of the `classpath`.
@@ -350,7 +350,7 @@ To write code, the simplest editor is enough. I have used `vi` for ages, mostly 
 `vi` (and `vim`) is (are) available on the Raspberry Pi, `nano` too, graphical editors like `gedit`, `geany` are even easier to use, on a grahical desktop.
 
 All the code provided here can be built from Gradle (all gradle scripts are provided), _**on the Raspberry Pi**_ itself.
-The Raspberry Pi is self sufficient, if this is all you have, nothing is preventing you from accessing **_all_** the features presented here.
+The Raspberry Pi is self-sufficient, if this is all you have, nothing is preventing you from accessing **_all_** the features presented here.
 
 But let us be honest, Integrated Development Environments (IDE) are quite cool.
 In my opinion, IntelliJ leads the pack, and Eclipse, JDeveloper, NetBeans follow. Cloud9 provides amazing features, on line.

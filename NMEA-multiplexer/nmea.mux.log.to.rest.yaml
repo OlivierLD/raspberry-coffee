@@ -1,5 +1,6 @@
 #
 # MUX definition.
+# Could also be used for AIS to REST
 #
 name: "Read a log file, feeds a cache, forward on REST."
 context:
