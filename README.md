@@ -317,6 +317,9 @@ To build it, clone this project (this repo), make sure the script named `gradlew
 > ./gradlew --no-daemon clean build --info
 > ```
 
+>If you see a message like `VM is only supported on ARMv7+ VFP`, you probably need to downgrade your JDK (and JRE)
+> from 11 to 8.
+
 You are expecting an end like that one:
 ```
 
