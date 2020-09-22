@@ -143,7 +143,7 @@ channels:
 > makes it a bit more convenient and flexible to use.
 
 #### Pre-defined channel types
-> Note: There is a default REST channel type available when `with.http.server` is set to `true`.
+> Note: There is a default REST channel type available when `with.http.server` is set to `true`. See below.
 
 - `serial`
     - Serial port input.
@@ -165,8 +165,15 @@ channels:
     - Log file replay
     ```properties
     mux.01.type=file
-    mux.01.filename=./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea
+    mux.01.filename=./sample.data/archived.logged.data.zip
+    mux.01.zip=true
+    mux.01.path.in.zip=2010-11-08.Nuku-Hiva-Tuamotu.nmea
     ```
+    > If the `filename` can be an archive (zip) or a text file (containing NMEA sentences)
+    >
+    > If the file is a zip, you set the `zip` property to `true` (default is `false`), and possibly 
+    > the `path.in.zip`. If `path.in.zip` is null or invalid, the first entry in the archive will be used.
+    > This can be usefull, as the archive may very well contain several log files.
 - `ws`
     - WebSocket input
     ```properties
@@ -229,8 +236,13 @@ channels:
     mux.01.device.prefix=01
     mux.01.verbose=false
     ```
-- TODO
+- Implicit REST input 
     - `rest` input channel
+    - If the `with.http.server` is on, then there is REST resource
+    ```
+    POST /mux/nmea-sentence -h "Content-Type: plain/text" -d "$GPRMC,....."
+    ```
+    - This can be used to feed the cache.
 
 You can also define your own channels (extending `NMEAClient` and with a `reader` attribute).
 
