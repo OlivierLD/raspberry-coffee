@@ -6,33 +6,44 @@ import nmea.api.NMEAReader;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * Taking its inputs from a file
  */
 public class DataFileReader extends NMEAReader {
 	private String dataFileName = null;
-	private FileInputStream fis;
+	private InputStream fis;
 	private long betweenRecords = 500L;
 	private boolean loop = true;
+	private boolean zip = false;
+	private String pathInArchive = "";
 
 	public DataFileReader(List<NMEAListener> al, String fName) {
-		this(null, al, fName, 500);
-	}
-	public DataFileReader(String threadName, List<NMEAListener> al, String fName) {
-		this(threadName, al, fName, 500);
-	}
-	public DataFileReader(List<NMEAListener> al, String fName, long pause) {
-		this(null, al, fName, pause);
+		this(null, al, fName, 500, false, null);
 	}
 	public DataFileReader(String threadName, List<NMEAListener> al, String fName, long pause) {
+		this(threadName, al, fName, pause, false, null);
+	}
+	public DataFileReader(String threadName, List<NMEAListener> al, String fName) {
+		this(threadName, al, fName, 500, false, null);
+	}
+	public DataFileReader(List<NMEAListener> al, String fName, long pause) {
+		this(null, al, fName, pause, false, null);
+	}
+	public DataFileReader(String threadName, List<NMEAListener> al, String fName, long pause, boolean isZip, String pathInZip) {
 		super(threadName, al);
 		if (verbose) {
 			System.out.println(this.getClass().getName() + ": There are " + al.size() + " listener(s)");
 		}
 		this.dataFileName = fName;
 		this.betweenRecords = pause;
+		this.zip = isZip;
+		this.pathInArchive = pathInZip;
 	}
 
 	public String getFileNme() {
@@ -45,12 +56,36 @@ public class DataFileReader extends NMEAReader {
 	public void setLoop(boolean loop) {
 		this.loop = loop;
 	}
+	public boolean getZip() {
+		return zip;
+	}
+	public String getPathInArchive() {
+		return pathInArchive;
+	}
 
 	@Override
 	public void startReader() {
 		super.enableReading();
 		try {
-			this.fis = new FileInputStream(this.dataFileName);
+			if (this.getZip()) {
+				ZipFile zipFile = new ZipFile(this.dataFileName);
+//				Enumeration<? extends ZipEntry> entries = zipFile.entries();
+//				while (entries.hasMoreElements()) {
+//					ZipEntry entry = entries.nextElement();
+//					if (entry.isDirectory()) {
+//						System.out.println(String.format(">> In archive: dir  : %s", entry.getName()));
+//					} else {
+//						System.out.println(String.format(">> In archive: file : %s", entry.getName()));
+//					}
+//				}
+				ZipEntry zipEntry = zipFile.getEntry(this.pathInArchive); // Used if zip=true
+				if (zipEntry == null) { // Path not found in the zip, take first entry.
+					zipEntry = zipFile.entries().nextElement();
+				}
+				this.fis = zipFile.getInputStream(zipEntry);
+			} else {
+				this.fis = new FileInputStream(this.dataFileName);
+			}
 			while (this.canRead()) {
 				double size = Math.random();
 				int dim = 1 + ((int) (750 * size)); // At least 1, no zero. Random size of the data chunk to read.
@@ -77,7 +112,16 @@ public class DataFileReader extends NMEAReader {
 								System.out.println(String.format("Read:%d, Dim:%d (size: %f)", l, dim, size));
 								System.out.println("===== Reseting Reader =====");
 							}
-							this.fis = new FileInputStream(this.dataFileName); // reopen
+							if (this.getZip()) {
+								ZipFile zipFile = new ZipFile(this.dataFileName);
+								ZipEntry zipEntry = zipFile.getEntry(this.pathInArchive); // Mandatory if zip=true
+								if (zipEntry == null) { // Path not found in the zip, take first entry.
+									zipEntry = zipFile.entries().nextElement();
+								}
+								this.fis = zipFile.getInputStream(zipEntry);
+							} else {
+								this.fis = new FileInputStream(this.dataFileName);
+							}
 						} else {
 							if (true || verbose) {
 								System.out.println(">> End of stream. Not looping. <<");

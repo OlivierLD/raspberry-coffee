@@ -10,6 +10,8 @@ import nmea.consumers.reader.DataFileReader;
  */
 public class DataFileClient extends NMEAClient {
 	private boolean loop = true;
+	private boolean zip = false;
+	private String pathInArchive = "";
 
 	public DataFileClient() {
 		this(null, null, null);
@@ -28,11 +30,23 @@ public class DataFileClient extends NMEAClient {
 		this.verbose = "true".equals(System.getProperty("file.data.verbose", "false"));
 	}
 
-	public boolean getLoop() {
+	public boolean isLoop() {
 		return this.loop;
 	}
 	public void setLoop(boolean loop) {
 		this.loop = loop;
+	}
+	public boolean isZip() {
+		return zip;
+	}
+	public void setZip(boolean zip) {
+		this.zip = zip;
+	}
+	public String getPathInArchive() {
+		return pathInArchive;
+	}
+	public void setPathInArchive(String pathInArchive) {
+		this.pathInArchive = pathInArchive;
 	}
 
 	@Override
@@ -56,6 +70,8 @@ public class DataFileClient extends NMEAClient {
 		private String[] sentenceFilters;
 		private boolean verbose;
 		private boolean loop = true;
+		private boolean zip = false;
+		private String pathInArchive = "";
 
 		public DataFileBean(DataFileClient instance) {
 			cls = instance.getClass().getName();
@@ -64,7 +80,7 @@ public class DataFileClient extends NMEAClient {
 			verbose = instance.isVerbose();
 			deviceFilters = instance.getDevicePrefix();
 			sentenceFilters = instance.getSentenceArray();
-			loop = instance.getLoop();
+			loop = instance.isLoop();
 		}
 
 		@Override
@@ -79,6 +95,10 @@ public class DataFileClient extends NMEAClient {
 			return pause;
 		}
 		public boolean getLoop() { return loop; }
+		public boolean getZip() { return zip; }
+		public String getPathInArchive() {
+			return pathInArchive;
+		}
 
 		@Override
 		public boolean getVerbose() {
@@ -105,7 +125,10 @@ public class DataFileClient extends NMEAClient {
 
 		System.setProperty("file.data.verbose", "true");
 
-		String dataFile = "./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea";
+		String dataFile = // "./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea";
+						  "./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea.zip";
+		boolean zip = true;
+		String pathInArchive = "./2010-11-08.Nuku-Hiva-Tuamotu.nmea";
 		if (args.length > 0) {
 			dataFile = args[0];
 		}
@@ -121,7 +144,14 @@ public class DataFileClient extends NMEAClient {
 		});
 
 		nmeaClient.initClient();
-		nmeaClient.setReader(new DataFileReader("DataFileReader", nmeaClient.getListeners(), dataFile, 10L)); // 10 overrides the default (500)
+//		nmeaClient.setReader(new DataFileReader("DataFileReader", nmeaClient.getListeners(), dataFile, 10L)); // 10 overrides the default (500)
+		nmeaClient.setReader(
+				new DataFileReader("DataFileReader",
+					nmeaClient.getListeners(),
+					dataFile,
+					10L, // 10 overrides the default (500)
+					zip,
+					pathInArchive));
 		nmeaClient.getReader().setVerbose("true".equals(System.getProperty("file.data.verbose", "false")));
 		((DataFileReader)nmeaClient.getReader()).setLoop(false);
 		nmeaClient.startWorking();

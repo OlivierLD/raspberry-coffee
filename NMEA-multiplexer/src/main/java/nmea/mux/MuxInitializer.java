@@ -198,10 +198,22 @@ public class MuxInitializer {
 							try {
 								String filename = muxProps.getProperty(String.format("mux.%s.filename", MUX_IDX_FMT.format(muxIdx)));
 								long betweenRec = 500;
+								boolean zip = false;
+								String pathInArchive = null;
 								try {
 									betweenRec = Long.parseLong(muxProps.getProperty(String.format("mux.%s.between-records", MUX_IDX_FMT.format(muxIdx)), "500"));
 								} catch (NumberFormatException nfe) {
 									betweenRec = 500; // Default value
+								}
+								try {
+									zip = "true".equals(muxProps.getProperty(String.format("mux.%s.zip", MUX_IDX_FMT.format(muxIdx)), "false"));
+								} catch (NumberFormatException nfe) {
+									zip = false; // Default value
+								}
+								try {
+									pathInArchive = muxProps.getProperty(String.format("mux.%s.path.in.zip", MUX_IDX_FMT.format(muxIdx)));
+								} catch (NumberFormatException nfe) {
+									pathInArchive = null; // Default value
 								}
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
@@ -213,8 +225,10 @@ public class MuxInitializer {
 												mux);
 								fileClient.setLoop(loop);
 								fileClient.initClient();
-								fileClient.setReader(new DataFileReader("MUX-FileReader", fileClient.getListeners(), filename, betweenRec));
+								fileClient.setReader(new DataFileReader("MUX-FileReader", fileClient.getListeners(), filename, betweenRec, zip, pathInArchive));
 								fileClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
+								fileClient.setZip(zip);
+								fileClient.setPathInArchive(pathInArchive);
 								nmeaDataClients.add(fileClient);
 							} catch (Exception e) {
 								e.printStackTrace();

@@ -9,11 +9,15 @@ context:
 channels:
   # GPS replay
   - type: file
-    filename: ./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea
+    filename: ./sample.data/logged.data.archive.zip
+    path.in.zip: 2010-11-08.Nuku-Hiva-Tuamotu.nmea
+    zip: true
     verbose: false
   # AIS Data
   - type: file
-    filename: ./sample.data/ais.nmea
+    filename: ./sample.data/logged.data.archive.zip
+    zip: true
+    path.in.zip: ais.nmea
     verbose: false
   - type: tcp
     server: ais.exploratorium.edu
