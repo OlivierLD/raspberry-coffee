@@ -96,7 +96,7 @@ java.io.IOException: Failed to close serial file descriptor. (Error #9)
 	at com.pi4j.io.serial.impl.SerialImpl.close(SerialImpl.java:359)
 	at readserialport.SerialDataReader.lambda$main$1(SerialDataReader.java:81)
 	at java.base/java.lang.Thread.run(Thread.java:834)
-pi@rpi-buster:~/raspberry-coffee/Serial.PI4J.reader $ 
+pi@rpi-buster:~/raspberry-coffee/Serial-PI4J-reader $ 
 ```
 
 #### Reading `/dev/ttyS0` with Module `Serial-IO`:
@@ -104,7 +104,7 @@ pi@rpi-buster:~/raspberry-coffee/Serial.PI4J.reader $
 pi@rpi-buster:~/raspberry-coffee/Serial-IO $ ./serial.dump.sh 
 Make sure the device is connected through its USB socket.
 Assuming Linux/Raspberry Pi
-Executing sudo java -Dserial.port=/dev/ttyS0 -Dbaud.rate=38400 -Dserial.verbose=true -Djava.library.path=/usr/lib/jni -cp ./build/libs/Serial.IO-1.0-all.jar:/usr/share/java/RXTXcomm.jar sample.SerialReaderSample ...
+Executing sudo java -Dserial.port=/dev/ttyS0 -Dbaud.rate=38400 -Dserial.verbose=true -Djava.library.path=/usr/lib/jni -cp ./build/libs/Serial-IO-1.0-all.jar:/usr/share/java/RXTXcomm.jar sample.SerialReaderSample ...
 Enter [Return]
 
 Stable Library
