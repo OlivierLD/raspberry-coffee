@@ -301,6 +301,11 @@ remains in your way, I have not tested it.
 
 ---
 To build it, clone this project (this repo), make sure the script named `gradlew` is executable, and execute `gradlew`.
+> _Note_: If you wish to access serial ports, a good library (beside PI4J) is `librxtx`:
+>  ```bash
+>  sudo apt-get install librxtx-java
+> ```
+
 ```
  Prompt> git clone https://github.com/OlivierLD/raspberry-coffee.git
  Prompt> cd raspberry-coffee
