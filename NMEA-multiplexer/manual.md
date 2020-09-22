@@ -169,7 +169,7 @@ channels:
     mux.01.zip=true
     mux.01.path.in.zip=2010-11-08.Nuku-Hiva-Tuamotu.nmea
     ```
-    > The filename` can be an archive (zip) or a text file (containing NMEA sentences)
+    > The `filename` can be an archive (zip) or a text file (containing NMEA sentences)
     >
     > If the file is a zip, you set the `zip` property to `true` (default is `false`), and possibly 
     > the `path.in.zip`. If `path.in.zip` is null or invalid, the first entry in the archive will be used.
