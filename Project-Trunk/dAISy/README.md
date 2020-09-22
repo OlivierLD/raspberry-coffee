@@ -17,9 +17,9 @@ $ ll /dev/ser*
  $ 
 ```
 
-#### Reading `/dev/serial0` with PI4J (Module `Serial.PI4J.reader`):
+#### Reading `/dev/serial0` with PI4J (Module `Serial-PI4J-reader`):
 ```
-pi@rpi-buster:~/raspberry-coffee/Serial.PI4J.reader $ ./run.sh
+pi@rpi-buster:~/raspberry-coffee/Serial-PI4J-reader $ ./run.sh
 Read serial port, raw data
 Serial Communication.
  ... connect using settings: 38400, N, 8, 1, N.
@@ -99,9 +99,9 @@ java.io.IOException: Failed to close serial file descriptor. (Error #9)
 pi@rpi-buster:~/raspberry-coffee/Serial.PI4J.reader $ 
 ```
 
-#### Reading `/dev/ttyS0` with Module `Serial.IO`:
+#### Reading `/dev/ttyS0` with Module `Serial-IO`:
 ```
-pi@rpi-buster:~/raspberry-coffee/Serial.IO $ ./serial.dump.sh 
+pi@rpi-buster:~/raspberry-coffee/Serial-IO $ ./serial.dump.sh 
 Make sure the device is connected through its USB socket.
 Assuming Linux/Raspberry Pi
 Executing sudo java -Dserial.port=/dev/ttyS0 -Dbaud.rate=38400 -Dserial.verbose=true -Djava.library.path=/usr/lib/jni -cp ./build/libs/Serial.IO-1.0-all.jar:/usr/share/java/RXTXcomm.jar sample.SerialReaderSample ...
@@ -159,7 +159,7 @@ Exiting monitor
 
 Notified (Main).
 Disconnecting.
-pi@rpi-buster:~/raspberry-coffee/Serial.IO $ 
+pi@rpi-buster:~/raspberry-coffee/Serial-IO $ 
 ```
 
 ## More dAISy specific

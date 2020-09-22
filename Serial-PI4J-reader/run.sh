@@ -1,7 +1,7 @@
 #!/bin/bash
 echo Read serial port, raw data
 #
-CP=./build/libs/Serial.PI4J.reader-1.0-all.jar
+CP=./build/libs/Serial-PI4J-reader-1.0-all.jar
 JAVA_OPTIONS=
 #
 # For USB, use /dev/ttyUSB0 at 4800,
