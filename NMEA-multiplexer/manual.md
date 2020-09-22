@@ -243,6 +243,7 @@ channels:
     POST /mux/nmea-sentence -h "Content-Type: plain/text" -d "$GPRMC,....."
     ```
     - This can be used to feed the cache.
+    - Use system variable `-Drest.feeder.verbose=true` to see the output.
 
 You can also define your own channels (extending `NMEAClient` and with a `reader` attribute).
 

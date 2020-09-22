@@ -1,0 +1,22 @@
+#
+# MUX definition.
+# Astronomical data can be rendered at http://localhost:9999/web/webcomponents/console.gps.html?style=orange&bg=black&border=n&boat-data=n
+#
+name: "With AIS, and a REST forwarder"
+context:
+  with.http.server: true
+  http.port: 9999
+  init.cache: true
+channels:
+  - type: serial
+    # AIS
+    port: /dev/ttyS80
+    baudrate: 38400
+    verbose: false
+forwarders:
+  - type: rest
+    server.name: 192.168.42.6
+    server.port: 9999
+    rest.resource: /mux/nmea-sentence
+    rest.verb: POST
+    http.headers: Content-Type:plain/text

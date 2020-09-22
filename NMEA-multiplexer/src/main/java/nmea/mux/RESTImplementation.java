@@ -2657,6 +2657,10 @@ public class RESTImplementation {
 			String payload = new String(request.getContent()); // NMEA Sentence. Assume type is text/plain
 			if (!"null".equals(payload)) {
 				try {
+					// Verbose
+					if ("true".equals(System.getProperty("rest.feeder.verbose"))) {
+						System.out.println(String.format("REST Feed: %s", payload));
+					}
 					// Parse NMEA/AIS Data. See System variable put.ais.in.cache
 					// Push UTC Date in the cache
 					NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
@@ -2668,7 +2672,7 @@ public class RESTImplementation {
 										.errorCode("MUX-0005")
 										.errorMessage("Cache not initialized!"));
 					} else {
-						// Push here
+						// Push here, auto-parse
 						cache.parseAndFeed(payload.trim());
 					}
 				} catch (Exception ex) {

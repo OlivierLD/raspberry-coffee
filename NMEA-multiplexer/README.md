@@ -162,7 +162,7 @@ The properties file used by the `nmea.mux.GenericNMEAMultiplexer` can be overrid
 -Dmux.properties=nmea.mux.gps.log.small.properties
 ```
 
-Those settings can be modified once the mux is started, throught the REST API.
+Those settings can be modified once the mux is started, through the REST API.
 
 To compile and build:
 ```
@@ -324,7 +324,7 @@ Once everything runs, you can reach [http://localhost:9876/data/web/wsconsole.ht
 to see the data as they come through.
 
 ## REST Admin Interface
-The properties files like `nmea.mux.proeprties` defines the configuration at startup.
+The properties files like `nmea.mux.properties` defines the configuration at startup.
 
 You can remotely manage the input channels and the re-broadcasting ones through a REST interface.
 The soft includes a dedicated HTTP Server. The http port is driven by a property (in `nmea.mux.properties`).

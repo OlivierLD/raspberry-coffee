@@ -330,4 +330,5 @@ Works for Sun, Moon, Venus, Mars, Jupiter, Saturn, and 58 stars.
 - Routing features
 - Use the GRIBs available through [Outernet](https://outernet.is/) (Need more thoughts...) ?
 - Implement visual widgets as `web-components` (see [here](https://olivierld.github.io/webcomponents/gallery.html))...
+- AIS REST forwarder (on its own board). &#9989; See `nmea.mux.ais.frwd.yaml`.
 
