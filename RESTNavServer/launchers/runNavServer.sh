@@ -95,6 +95,7 @@ JAVA_OPTS="$JAVA_OPTS -Dgrib.verbose=$GRIB_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dais.cache.verbose=$AIS_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dais.verbose=$AIS_VERBOSE"
 # JAVA_OPTS="$JAVA_OPTS -Drest.verbose=true"
+JAVA_OPTS="$JAVA_OPTS -Drest.feeder.verbose=true"
 #
 if [[ "$USE_PROXY" == "true" ]]
 then
