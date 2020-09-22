@@ -1,6 +1,5 @@
 package nmea.mux;
 
-import calc.GeomUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -78,10 +77,10 @@ import java.util.stream.Collectors;
  */
 public class RESTImplementation {
 
-	private List<NMEAClient> nmeaDataClients;
-	private List<Forwarder> nmeaDataForwarders;
-	private List<Computer> nmeaDataComputers;
-	private Multiplexer mux;
+	private final List<NMEAClient> nmeaDataClients;
+	private final List<Forwarder> nmeaDataForwarders;
+	private final List<Computer> nmeaDataComputers;
+	private final Multiplexer mux;
 
 	private final static String REST_PREFIX = "/mux";
 	private final static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -112,7 +111,7 @@ public class RESTImplementation {
 	 * See {@link #processRequest(HTTPServer.Request)}
 	 * See {@link HTTPServer}
 	 */
-	private List<Operation> operations = Arrays.asList(
+	private final List<Operation> operations = Arrays.asList(
 			new Operation(
 					"GET",
 					REST_PREFIX + "/oplist",
@@ -341,7 +340,7 @@ public class RESTImplementation {
 
 		try {
 			List<String> portList = getSerialPortList();
-			Object[] portArray = portList.toArray(new Object[portList.size()]);
+			Object[] portArray = portList.toArray(new Object[0]);
 			String content = new Gson().toJson(portArray).toString();
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
