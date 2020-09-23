@@ -663,12 +663,16 @@ public class MuxInitializer {
 						case "rest":
 							String restPropFile = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
 							String restSubClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx)));
+							String verboseStr = muxProps.getProperty(String.format("forward.%s.verbose", MUX_IDX_FMT.format(fwdIdx)));
 
 							List<String> properties = Arrays.asList(
-									"server.name", "server.port", "rest.resource", "rest.verb", "http.headers"
+									"server.name", "server.port", "rest.resource", "rest.verb", "http.headers" // , "verbose"
 							);
 							final int idx = fwdIdx;
 							Properties configProps = new Properties();
+							if (verboseStr != null) {
+								configProps.put("verbose", Boolean.valueOf(verboseStr));
+							}
 							properties.forEach(prop -> {
 								String propVal = muxProps.getProperty(String.format("forward.%s.%s", MUX_IDX_FMT.format(idx), prop));
 								if (propVal != null) {
