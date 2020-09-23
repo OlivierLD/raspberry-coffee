@@ -11,11 +11,11 @@ read choice
 case "$choice" in
 	  "1")
       sudo ln -s /dev/ttyACM0 /dev/ttyS80
-      ll /dev/ttyS80
+      ls -lisa /dev/ttyS80
 	    ;;
 	  "2")
       sudo ln -s /dev/ttyAMA0 /dev/ttyS80
-      ll /dev/ttyS80
+      ls -lisa /dev/ttyS80
 	    ;;
 	  "Q"|"q")
 	    ;;
