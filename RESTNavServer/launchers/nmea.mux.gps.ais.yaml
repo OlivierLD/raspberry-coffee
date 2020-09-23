@@ -15,9 +15,9 @@ channels:
     #    verbose: false
   - type: serial
     # AIS
-    port: /dev/ttyS0
+    port: /dev/ttyS80
     baudrate: 38400
-    verbose: false
+    verbose: true
 forwarders:
         #  - type: tcp
         #    port: 7002
