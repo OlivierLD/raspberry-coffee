@@ -3,7 +3,7 @@
 #
 echo -e "----------------------------"
 echo -e "Usage is $0 [-p|--proxy] [-m:propertiesfile|--mux:propertiesfile] [--no-date] [--sun-flower]"
-echo -e "     -p or --proxy means with a proxy"
+echo -e "     -p or --proxy means with a proxy (proxy definition in the script $0)"
 echo -e "     -m or --mux points to the properties file to use for the Multiplexer, default is nmea.mux.properties"
 echo -e "     -sf or --sun-flower means with Sun Flower option (extra Request Manager)"
 echo -e "     --no-date does not put any GPS date or time (replayed or live) in the cache (allows you to use a ZDA generator)"

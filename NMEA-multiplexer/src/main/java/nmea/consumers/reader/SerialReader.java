@@ -188,7 +188,7 @@ public class SerialReader
 			}
 		}
 		// Reading on Serial Port
-		System.out.println(String.format("%s:Port is open...", comPort));
+		System.out.println(String.format("%s:%d  > Port is open...", comPort, br));
 	}
 
 	@Override
