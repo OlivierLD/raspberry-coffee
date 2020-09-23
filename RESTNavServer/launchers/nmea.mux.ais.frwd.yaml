@@ -4,9 +4,9 @@
 #
 name: "With AIS, and a REST forwarder"
 context:
-  with.http.server: true
-  http.port: 9999
-  init.cache: true
+  #with.http.server: true
+  #http.port: 9999
+  #init.cache: true
 channels:
   - type: serial
     # AIS
@@ -20,3 +20,4 @@ forwarders:
     rest.resource: /mux/nmea-sentence
     rest.verb: POST
     http.headers: Content-Type:plain/text
+    verbose: true

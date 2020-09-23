@@ -332,7 +332,7 @@ Same if you want the HTTP server to be started or not.
 ```properties
 with.http.server=yes
 http.port=9999
-```
+````
 > This HTTP Server is designed and written to run on small computers (like the Raspberry Pi Zero).
 > It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one. Think of it as a **_Micro server_**.
 

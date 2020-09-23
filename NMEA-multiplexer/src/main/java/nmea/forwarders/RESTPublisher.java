@@ -61,7 +61,11 @@ public class RESTPublisher implements Forwarder {
 		try {
 			switch(this.verb) {
 				case "POST":
-					HTTPClient.HTTPResponse httpResponse = HTTPClient.doPost(String.format("http://%s:%d%s", serverName, httpPort, restResource), headers, new String(message));
+					String postRequest = String.format("http://%s:%d%s", serverName, httpPort, restResource);
+					if (this.props != null && "true".equals(this.props.getProperty("verbose"))) {
+						System.out.println(String.format("%s\n%s", postRequest, new String(message)));
+					}
+					HTTPClient.HTTPResponse httpResponse = HTTPClient.doPost(postRequest, headers, new String(message));
 					break;
 				default:
 					break;

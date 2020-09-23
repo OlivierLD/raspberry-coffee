@@ -8,7 +8,7 @@ context:
   http.port: 9999
   init.cache: true
 channels:
-        #  - type: serial
+    #  - type: serial
     # GPS
     #    port: /dev/ttyUSB0
     #    baudrate: 4800
