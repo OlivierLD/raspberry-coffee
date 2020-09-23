@@ -68,6 +68,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dcalculate.solar.with.eot=true"
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
 CP=./build/libs/NMEA-multiplexer-1.0-all.jar
+SUDO=
 if [[ "$OS" == "Darwin" ]]
 then
   CP=${CP}:./libs/RXTXcomm.jar          # for Mac
@@ -75,6 +76,7 @@ fi
 if [[ "$OS" == "Linux" ]]
 then
   CP=${CP}:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
+  SUDO="sudo "
 fi
 #
 # For JFR
@@ -88,9 +90,9 @@ LOGGING_FLAG=
 LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
-# use sudo on Raspberry Pi
+# use sudo on Raspberry Pi, specially if reading serial port(s)
 # sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
-COMMAND="java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer"
+COMMAND="${SUDO}java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer"
 echo -e "Running $COMMAND"
 ${COMMAND}
 #
