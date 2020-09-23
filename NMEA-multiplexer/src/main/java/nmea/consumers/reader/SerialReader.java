@@ -120,7 +120,7 @@ public class SerialReader
 				}
 			}
 		}
-		CommPort thePort = null;
+		CommPort thePort;
 		try {
 			com.addPortOwnershipListener(this);
 			thePort = com.open(String.format("NMEAPort-%s", this.comPort), TIMEOUT);

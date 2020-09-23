@@ -696,6 +696,12 @@ public class MuxInitializer {
 									forwarderProps.load(new FileReader(restPropFile));
 									restForwarder.setProperties(forwarderProps);
 								}
+								if ("true".equals(System.getProperty("mux.props.verbose"))) {
+									System.out.println(String.format("Props for forwarder %s", restForwarder.getClass().getName()));
+									configProps.forEach((name, value) -> {
+										System.out.println(String.format("%s : %s", name, value));
+									});
+								}
 								restForwarder.setProperties(configProps);
 								restForwarder.init();
 								nmeaDataForwarders.add(restForwarder);

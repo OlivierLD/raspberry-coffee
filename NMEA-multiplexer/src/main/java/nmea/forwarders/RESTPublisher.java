@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Properties;
 
 public class RESTPublisher implements Forwarder {
-	private RESTPublisher instance = this;
-
 	private Properties props = null;
 
 	private int httpPort = 80;                  // Default
