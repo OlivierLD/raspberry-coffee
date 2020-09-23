@@ -1,6 +1,7 @@
 package nmea.forwarders;
 
 import http.client.HTTPClient;
+import nmea.ais.AISParser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,8 @@ public class RESTPublisher implements Forwarder {
 	private Map<String, String> headers = null; // Optional
 
 	private HTTPClient restClient = null;
+
+	private AISParser aisParser;
 
 	public RESTPublisher() {
 	}
@@ -62,10 +65,26 @@ public class RESTPublisher implements Forwarder {
 			switch(this.verb) {
 				case "POST":
 					String postRequest = String.format("http://%s:%d%s", serverName, httpPort, restResource);
+					String strContent = new String(message);
 					if (this.props != null && "true".equals(this.props.getProperty("verbose"))) {
-						System.out.println(String.format("%s\n%s", postRequest, new String(message)));
+						System.out.println(String.format("%s\n%s", postRequest, strContent));
+						if ("true".equals(System.getProperty("parse.ais"))) {
+							if (strContent.startsWith(AISParser.AIS_PREFIX)) {
+								if (aisParser == null) {
+									aisParser = new AISParser();
+								}
+								try {
+									System.out.println(aisParser.parseAIS(strContent));
+								} catch (AISParser.AISException t) {
+									System.err.println(t.toString());
+								}
+							}
+						}
 					}
-					HTTPClient.HTTPResponse httpResponse = HTTPClient.doPost(postRequest, headers, new String(message));
+					HTTPClient.HTTPResponse httpResponse = HTTPClient.doPost(postRequest, headers, strContent);
+					if (this.props != null && "true".equals(this.props.getProperty("verbose"))) {
+						System.out.println(String.format("%s with %s: Response code %d", postRequest, strContent, httpResponse.getCode()));
+					}
 					break;
 				default:
 					break;

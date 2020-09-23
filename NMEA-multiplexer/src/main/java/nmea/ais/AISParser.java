@@ -4,6 +4,7 @@ import nmea.parser.StringParsers;
 import utils.StringUtils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Arrays;
@@ -2658,36 +2659,41 @@ public class AISParser {
 				if (args.length > 0) {
 					dataFileName = args[0];
 				}
-				try {
-					BufferedReader br = new BufferedReader(new FileReader(dataFileName));
-					System.out.println(String.format("---- From data file %s ----", dataFileName));
-					String line = "";
-					while (line != null) {
-						line = br.readLine();
-						if (line != null) {
-							if (!line.startsWith("#") && line.startsWith(AIS_PREFIX)) {
-								try {
-									AISRecord aisRecord = aisParser.parseAIS(line);
-									if (aisRecord != null) {
-										System.out.println(aisRecord);
-									} else {
-										System.out.println(String.format(">> null AIS Record for %s", line));
+				File file = new File(dataFileName);
+				if (file.exists()) {
+					try {
+						BufferedReader br = new BufferedReader(new FileReader(dataFileName));
+						System.out.println(String.format("---- From data file %s ----", dataFileName));
+						String line = "";
+						while (line != null) {
+							line = br.readLine();
+							if (line != null) {
+								if (!line.startsWith("#") && line.startsWith(AIS_PREFIX)) {
+									try {
+										AISRecord aisRecord = aisParser.parseAIS(line);
+										if (aisRecord != null) {
+											System.out.println(aisRecord);
+										} else {
+											System.out.println(String.format(">> null AIS Record for %s", line));
+										}
+									} catch (AISException ex) {
+										System.err.println("For [" + line + "]: " + ex.toString());
+									} catch (Exception ex) {
+										System.err.println("For [" + line + "]: ");
+										ex.printStackTrace();
 									}
-								} catch (AISException ex) {
-									System.err.println("For [" + line + "]: " + ex.toString());
-								} catch (Exception ex) {
-									System.err.println("For [" + line + "]: ");
-									ex.printStackTrace();
+								} else if (!line.startsWith("#")) {
+									// TODO else parse NMEA?
+									System.out.println(String.format("\tNon AIS String... %s", line));
 								}
-							} else if (!line.startsWith("#")) {
-								// TODO else parse NMEA?
-								System.out.println(String.format("\tNon AIS String... %s", line));
 							}
 						}
+						br.close();
+					} catch (FileNotFoundException fnfe) {
+						fnfe.printStackTrace();
 					}
-					br.close();
-				} catch (FileNotFoundException fnfe) {
-					fnfe.printStackTrace();
+				} else {
+					System.out.println(String.format(" >> File %s not found", dataFileName));
 				}
 			}
 		}
