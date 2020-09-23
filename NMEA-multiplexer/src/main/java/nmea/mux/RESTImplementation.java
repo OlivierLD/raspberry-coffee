@@ -429,7 +429,7 @@ public class RESTImplementation {
 	private HTTPServer.Response deleteForwarder(HTTPServer.Request request) {
 		Optional<Forwarder> opFwd = null;
 		Gson gson = null;
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 204);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.ACCEPTED);
 //	List<String> prmValues = RESTProcessorUtil.getPathPrmValues(request.getRequestPattern(), request.getPath());
 		List<String> prmValues = request.getPathParameters();
 		if (prmValues.size() == 1) {
@@ -755,7 +755,7 @@ public class RESTImplementation {
 	}
 
 	private HTTPServer.Response postForwarder(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		Optional<Forwarder> opFwd = null;
 		String type = "";
 		if (request.getContent() == null || request.getContent().length == 0) {
@@ -1065,7 +1065,7 @@ public class RESTImplementation {
 	}
 
 	private HTTPServer.Response postChannel(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		Optional<NMEAClient> opClient = null;
 		String type = "";
 		if (request.getContent() == null || request.getContent().length == 0) {
@@ -1511,7 +1511,7 @@ public class RESTImplementation {
 	}
 
 	private HTTPServer.Response postComputer(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		Optional<Computer> opComputer = null;
 		String type = "";
 		if (request.getContent() == null || request.getContent().length == 0) {
@@ -1627,7 +1627,7 @@ public class RESTImplementation {
 	}
 
 	private HTTPServer.Response putChannel(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		Optional<NMEAClient> opClient = null;
 		String type = "";
 		if (request.getContent() == null || request.getContent().length == 0) {
@@ -1844,7 +1844,7 @@ public class RESTImplementation {
 	}
 
 	private HTTPServer.Response putForwarder(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		Optional<NMEAClient> opClient = null;
 		String type = "";
 		if (request.getContent() == null || request.getContent().length == 0) {
@@ -1879,7 +1879,7 @@ public class RESTImplementation {
 	}
 
 	private HTTPServer.Response putComputer(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		Optional<Computer> opComputer = null;
 		String type = "";
 		if (request.getContent() == null || request.getContent().length == 0) {
@@ -1947,7 +1947,7 @@ public class RESTImplementation {
 	}
 
 	private HTTPServer.Response putMuxVerbose(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		List<String> prmValues = request.getPathParameters();
 		if (prmValues.size() != 1) {
 			response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -1965,7 +1965,7 @@ public class RESTImplementation {
 	}
 
 	private HTTPServer.Response putMuxProcess(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		List<String> prmValues = request.getPathParameters();
 		if (prmValues.size() != 1) {
 			response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -2104,7 +2104,7 @@ public class RESTImplementation {
 	 * @return
 	 */
 	private HTTPServer.Response deleteLogFile(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.ACCEPTED);
 		List<String> prmValues = request.getPathParameters();
 		if (prmValues.size() != 1) {
 			response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -2176,7 +2176,7 @@ public class RESTImplementation {
 	 * Hence the thread, see the code.
 	 */
 	private HTTPServer.Response stopAll(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		boolean ok = true;
 		// Needs to be in its own thread, as it will send a GET /exit request, it is a recursive call.
 		Thread stopThread = new Thread(() -> mux.stopAll());
@@ -2437,7 +2437,7 @@ public class RESTImplementation {
 
 	private HTTPServer.Response setPosition(HTTPServer.Request request) {
 
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		String payload = new String(request.getContent());
 		if (!"null".equals(payload)) {
 			Gson gson = new GsonBuilder().create();
@@ -2596,7 +2596,7 @@ public class RESTImplementation {
 	}
 
 	private HTTPServer.Response resetCache(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NO_CONTENT);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.ACCEPTED);
 
 		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
 		cache.reset();
@@ -2651,7 +2651,7 @@ public class RESTImplementation {
 	}
 
 	private HTTPServer.Response feedNMEASentence(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 
 		if (request.getContent() != null && request.getContent().length > 0) {
 			String payload = new String(request.getContent()); // NMEA Sentence. Assume type is text/plain
@@ -2689,7 +2689,7 @@ public class RESTImplementation {
 	}
 
 	private Response setCurrentTime(Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		Response response = new Response(request.getProtocol(), Response.CREATED);
 
 		EpochHolder epoch = null;
 		if (request.getContent() != null && request.getContent().length > 0) {
@@ -2767,7 +2767,7 @@ public class RESTImplementation {
 	 * @return the REST/HTTP Response.
 	 */
 	private HTTPServer.Response broadcastOnTopic(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 		List<String> prmValues = request.getPathParameters(); // Path parameters, in the request's url
 		if (prmValues.size() != 1) {
 			response.setStatus(HTTPServer.Response.BAD_REQUEST);

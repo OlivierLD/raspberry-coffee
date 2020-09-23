@@ -221,6 +221,7 @@ public class HTTPServer {
 		public final static int CONTINUE        = 100;
 		public final static int STATUS_OK       = 200;
 		public final static int CREATED         = 201;
+		public final static int ACCEPTED        = 202;
 		public final static int NO_CONTENT      = 204;
 		public final static int BAD_REQUEST     = 400;
 		public final static int NOT_FOUND       = 404;
