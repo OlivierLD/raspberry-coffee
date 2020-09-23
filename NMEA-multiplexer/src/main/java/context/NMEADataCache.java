@@ -232,7 +232,7 @@ public class NMEADataCache
 										Integer type = typeIterator.next();
 										AISParser.AISRecord aisRecord = typesMap.get(type);
 										if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
-											System.out.println(String.format("=== Cleanup: Removing AIS Record %d from %d ===", type, mmsi));
+											System.out.println(String.format("=== Cleanup: Removing AIS Record type %d from %d ===", type, mmsi));
 											typesMap.remove(type);
 										}
 									}

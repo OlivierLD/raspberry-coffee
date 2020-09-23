@@ -5,10 +5,14 @@ import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
 import nmea.consumers.reader.SerialReader;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Read NMEA Data from a Serial port
  */
 public class SerialClient extends NMEAClient {
+	private final static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	private String clientName; // TODO Put this in the supertype?
 
 	public SerialClient() {
@@ -35,7 +39,7 @@ public class SerialClient extends NMEAClient {
 			if (this.getReader() != null) {
 				this.clientName = ((SerialReader) this.getReader()).getPort();
 			}
-			System.out.println(String.format("Received from Serial (%s): %s", this.clientName, e.getContent()));
+			System.out.println(String.format("[%s] Received from Serial (%s:%d): %s", DURATION_FMT.format(new Date()), this.clientName, ((SerialReader) this.getReader()).getBr(), e.getContent()));
 		}
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
