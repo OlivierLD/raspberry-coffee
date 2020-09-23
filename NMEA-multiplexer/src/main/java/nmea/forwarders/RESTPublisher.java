@@ -64,6 +64,9 @@ public class RESTPublisher implements Forwarder {
 				case "POST":
 					String postRequest = String.format("http://%s:%d%s", serverName, httpPort, restResource);
 					String strContent = new String(message);
+
+					System.out.println("Verbose: [" + this.props.getProperty("verbose") + "]");
+
 					if (this.props != null && "true".equals(this.props.getProperty("verbose"))) {
 						System.out.println(String.format("%s\n%s", postRequest, strContent));
 						if ("true".equals(System.getProperty("parse.ais"))) {

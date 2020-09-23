@@ -671,7 +671,8 @@ public class MuxInitializer {
 							final int idx = fwdIdx;
 							Properties configProps = new Properties();
 							if (verboseStr != null) {
-								configProps.put("verbose", Boolean.valueOf(verboseStr));
+								System.out.println(String.format("Setting verbose to %s (%s)", verboseStr, verboseStr.trim()));
+								configProps.put("verbose", verboseStr.trim());
 							}
 							properties.forEach(prop -> {
 								String propVal = muxProps.getProperty(String.format("forward.%s.%s", MUX_IDX_FMT.format(idx), prop));
