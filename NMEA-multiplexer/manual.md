@@ -237,7 +237,7 @@ channels:
     mux.01.verbose=false
     ```
 - Implicit REST input 
-    - `rest` input channel
+    - `rest` input channel (consumer)
     - If the `with.http.server` is on, then there is REST resource
     ```
     POST /mux/nmea-sentence -h "Content-Type: plain/text" -d "$GPRMC,....."
@@ -325,6 +325,7 @@ The lines above means that:
     forward.02.server.port=8080
     forward.02.rest.resource=/whatever?qs=prm
     forward.02.rest.verb=POST
+    forward.02.rest.protocol=http
     forward.02.http.headers=Content-Type:plain/text,Whatever:whateverYouLike
     ```                                                                                                      
 - `gpsd`

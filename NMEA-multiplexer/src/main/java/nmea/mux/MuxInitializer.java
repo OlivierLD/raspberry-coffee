@@ -666,7 +666,7 @@ public class MuxInitializer {
 							String verboseStr = muxProps.getProperty(String.format("forward.%s.verbose", MUX_IDX_FMT.format(fwdIdx)));
 
 							List<String> properties = Arrays.asList(
-									"server.name", "server.port", "rest.resource", "rest.verb", "http.headers" // , "verbose"
+									"server.name", "server.port", "rest.resource", "rest.verb", "http.headers", "rest.protocol"
 							);
 							final int idx = fwdIdx;
 							Properties configProps = new Properties();
@@ -684,6 +684,7 @@ public class MuxInitializer {
 //							props.put("server.port", "8080");
 //							props.put("rest.resource", "/rest/endpoint?qs=prm");
 //							props.put("rest.verb", "POST");
+//							props.put("rest.protocol", "http[s]");
 //							props.put("http.headers", "Content-Type:plain/text");
 							try {
 								Forwarder restForwarder;

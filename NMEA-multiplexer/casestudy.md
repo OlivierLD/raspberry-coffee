@@ -281,6 +281,36 @@ Note that even if it is happy with `json`, Node-RED has no problem dealing with 
 
 Another cool thing is that the Java NMEA Multiplexer and Node-RED can seamlessly co-exist.
 
+## AIS
+See [this document](https://github.com/OlivierLD/raspberry-coffee/tree/master/Project-Trunk/dAISy).
+
+It is also easy to setup the `dAISy HAT` on a Raspberry Pi. I've used a Raspberry Pi A+, it has the same size as a HAT.
+I run an `NMEA-Multiplexer` with a configuration file like this:
+```yaml
+name: "With AIS, and a REST forwarder"
+context:
+  with.http.server: false
+  #http.port: 9999
+  #init.cache: true
+channels:
+  - type: serial
+    # AIS
+    port: /dev/ttyS80
+    baudrate: 38400
+    verbose: true
+forwarders:
+  - type: rest
+    server.name: 192.168.42.6
+    server.port: 9999
+    rest.resource: /mux/nmea-sentence
+    rest.verb: POST
+    http.headers: Content-Type:plain/text
+    verbose: true
+``` 
+This one is reading the AIS Hat, and uses a `rest` forwarder to send those
+AIS sentences on another Multiplexer, using the implicit REST consumer to receive those data.
+This is just an example, in case the AIS and NMEA channels are read on distinct machines.
+ 
 ---
 _March, April 2017, January 2020_
 

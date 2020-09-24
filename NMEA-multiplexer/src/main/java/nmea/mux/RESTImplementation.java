@@ -2650,12 +2650,35 @@ public class RESTImplementation {
 		return response;
 	}
 
+	/**
+	 * "Implicit" REST Channel (Consumer)
+	 *
+	 * @param request
+	 * @return
+	 */
 	private HTTPServer.Response feedNMEASentence(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
 
 		if (request.getContent() != null && request.getContent().length > 0) {
 			String payload = new String(request.getContent()); // NMEA Sentence. Assume type is text/plain
 			if (!"null".equals(payload)) {
+				final StringBuilder sb = new StringBuilder();
+				request.getHeaders().forEach((name, value) -> {
+					if (name.equalsIgnoreCase("Content-Type")) {
+						sb.append(value);
+					}
+				});
+				if (sb.length() > 0) {
+					String contentType = sb.toString();
+					if (!contentType.equals("text/plain")) {
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("MUX-1005")
+										.errorMessage(String.format("Unexpected Content-Type [%s]. Should be text/plain", contentType)));
+						return response;
+					}
+				}
 				try {
 					// Verbose
 					if ("true".equals(System.getProperty("rest.feeder.verbose"))) {
@@ -2672,8 +2695,12 @@ public class RESTImplementation {
 										.errorCode("MUX-0005")
 										.errorMessage("Cache not initialized!"));
 					} else {
-						// Push here, auto-parse
-						cache.parseAndFeed(payload.trim());
+						if (this.mux != null) {
+							this.mux.onData(payload.trim());
+						} else {
+							// Push here, auto-parse
+							cache.parseAndFeed(payload.trim());
+						}
 					}
 				} catch (Exception ex) {
 					response = HTTPServer.buildErrorResponse(response,
@@ -2683,6 +2710,12 @@ public class RESTImplementation {
 									.errorMessage(ex.toString()));
 					return response;
 				}
+			} else {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("MUX-1001")
+								.errorMessage("Required body payload not found."));
 			}
 		}
 		return response;

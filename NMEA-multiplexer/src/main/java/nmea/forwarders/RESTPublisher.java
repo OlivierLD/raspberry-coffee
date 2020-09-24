@@ -13,6 +13,7 @@ public class RESTPublisher implements Forwarder {
 	private int httpPort = 80;                  // Default
 	private String serverName = "localhost";    // Default
 	private String restResource = null;         // Required. No default.
+	private String protocol = "http";           // default
 	private String verb = "POST";               // default
 	private Map<String, String> headers = null; // Optional
 
@@ -30,6 +31,10 @@ public class RESTPublisher implements Forwarder {
 		this.serverName = serverName;
 		this.httpPort = port;
 		this.restResource = resource;
+	}
+
+	public String getProtocol() {
+		return protocol;
 	}
 
 	public int getHttpPort() {
@@ -62,7 +67,7 @@ public class RESTPublisher implements Forwarder {
 		try {
 			switch(this.verb) {
 				case "POST":
-					String postRequest = String.format("http://%s:%d%s", serverName, httpPort, restResource);
+					String postRequest = String.format("%s://%s:%d%s", protocol, serverName, httpPort, restResource);
 					String strContent = new String(message).trim();
 //					System.out.println("Verbose: [" + this.props.getProperty("verbose") + "]");
 					if (this.props != null && "true".equals(this.props.getProperty("verbose"))) {
@@ -100,12 +105,16 @@ public class RESTPublisher implements Forwarder {
 
 	public static class RESTBean {
 		private String cls;
+		private String protocol;
 		private int port;
 		private String serverName;
 		private String verb;
 		private String resource;
 		private String type = "rest";
 
+		public String getProtocol() {
+			return protocol;
+		}
 		public String getVerb() {
 			return verb;
 		}
@@ -121,6 +130,7 @@ public class RESTPublisher implements Forwarder {
 
 		public RESTBean(RESTPublisher instance) {
 			cls = instance.getClass().getName();
+			protocol = instance.protocol;
 			port = instance.httpPort;
 			serverName = instance.serverName;
 			verb = instance.verb;
@@ -142,6 +152,10 @@ public class RESTPublisher implements Forwarder {
 			this.httpPort = Integer.parseInt(props.getProperty("server.port", String.valueOf(this.httpPort)));
 			this.restResource = props.getProperty("rest.resource");
 			this.verb = props.getProperty("rest.verb", this.verb);
+			String propProtocol = props.getProperty("rest.protocol");
+			if (propProtocol != null) {
+				this.protocol = propProtocol; // http or https
+			}
 			String headers = props.getProperty("http.headers");
 			if (headers != null) {
 				String[] headerArray = headers.split(",");
