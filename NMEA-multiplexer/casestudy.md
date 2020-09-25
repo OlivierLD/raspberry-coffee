@@ -316,6 +316,18 @@ The Implicit REST consumer is reached like this:
 POST /mux/nmea-sentence -h "Content-Type: plain/text" -d "$GPRMC,....."
 ```
 
+### 3D Printed enclosure
+See <https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/RPiA%2BdAISyHAT> for `stl `files and pictures.
+
+We have:
+- A Raspberry Pi (whatever model) running a `RESTNavServer` (address `192.168.42.6`), it has an implicit REST consumer, on port `9999`.
+- The `dAISy HAT` attached to a Raspberry Pi A+ (address `192.168.42.33`), reading the HAT and POSTing the AIS sentences to `http://192.168.42.6:9999/mux/nmea-sentence` (see the config file above).
+- The Raspberry Pi running a `RESTNavServer` also has a `TCP` forwarder, on port `7002`, used by OpenCPN (wherever it runs)
+
+![AIS Data](../Project-Trunk/dAISy/AIS.png)
+
+Again, this is just a configuration example. Nothing is preventing the `dAISy HAT` from being attached to the
+Raspberry Pi at `192.168.42.6`.  
  
 ---
 _March, April 2017, January 2020_
