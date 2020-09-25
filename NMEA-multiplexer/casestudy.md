@@ -284,7 +284,7 @@ Another cool thing is that the Java NMEA Multiplexer and Node-RED can seamlessly
 ## AIS
 See [this document](https://github.com/OlivierLD/raspberry-coffee/tree/master/Project-Trunk/dAISy).
 
-It is also easy to setup the `dAISy HAT` on a Raspberry Pi. I've used a Raspberry Pi A+, it has the same size as a HAT.
+It is also easy to setup the `dAISy HAT` on a Raspberry Pi. I've used a Raspberry Pi A+, it has the same size as the HAT.
 I run an `NMEA-Multiplexer` with a configuration file like this:
 ```yaml
 name: "With AIS, and a REST forwarder"
@@ -310,6 +310,12 @@ forwarders:
 This one is reading the AIS Hat, and uses a `rest` forwarder to send those
 AIS sentences on another Multiplexer, using the implicit REST consumer to receive those data.
 This is just an example, in case the AIS and NMEA channels are read on distinct machines.
+
+The Implicit REST consumer is reached like this:
+```
+POST /mux/nmea-sentence -h "Content-Type: plain/text" -d "$GPRMC,....."
+```
+
  
 ---
 _March, April 2017, January 2020_
