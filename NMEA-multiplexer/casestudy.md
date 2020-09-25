@@ -317,7 +317,7 @@ POST /mux/nmea-sentence -h "Content-Type: plain/text" -d "$GPRMC,....."
 ```
 
 ### 3D Printed enclosure
-See <https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/RPiA%2BdAISyHAT> for `stl `files and pictures.
+See <https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/RPiA%2BdAISyHAT> for `stl` files and pictures.
 
 We have:
 - A Raspberry Pi (whatever model) running a `RESTNavServer` (address `192.168.42.6`), it has an implicit REST consumer, on port `9999`.
