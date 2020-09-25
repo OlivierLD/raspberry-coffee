@@ -1,0 +1,21 @@
+#
+# MUX definition.
+#
+name: "With a GPS and AIS, for tests"
+context:
+  with.http.server: true
+  http.port: 9999
+  init.cache: true
+# channels:
+# No channels.
+# Will get AIS data from the implicit REST channel
+forwarders:
+  # - type: console
+  - type: tcp
+    port: 7002
+    properties: no.ais.properties
+  - type: tcp
+    subclass: nmea.forwarders.AISTCPServer
+    port: 7003
+    verbose: false
+

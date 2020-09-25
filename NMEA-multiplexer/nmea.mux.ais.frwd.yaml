@@ -18,5 +18,5 @@ forwarders:
     server.port: 9999
     rest.resource: /mux/nmea-sentence
     rest.verb: POST
-    http.headers: Content-Type:plain/text
+    http.headers: Content-Type:text/plain
     verbose: true

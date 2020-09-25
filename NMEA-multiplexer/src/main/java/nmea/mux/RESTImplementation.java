@@ -2669,7 +2669,7 @@ public class RESTImplementation {
 					}
 				});
 				if (sb.length() > 0) {
-					String contentType = sb.toString();
+					String contentType = sb.toString().trim();
 					if (!contentType.equals("text/plain")) {
 						response = HTTPServer.buildErrorResponse(response,
 								Response.BAD_REQUEST,
