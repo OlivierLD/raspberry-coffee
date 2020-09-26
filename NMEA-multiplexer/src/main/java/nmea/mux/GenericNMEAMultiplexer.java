@@ -229,13 +229,13 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
                 Map<String, Object> map = yaml.load(inputStream);
                 properties = MuxInitializer.yamlToProperties(map);
             } catch (IOException ioe) {
-                throw new RuntimeException(String.format("File [%s] not found", propertiesFile));
+                throw new RuntimeException(String.format("File [%s] not found in %s", propertiesFile, System.getProperty("user.dir")));
             }
         } else if (propertiesFile.endsWith(".properties")) {
             Properties definitions = new Properties();
             File propFile = new File(propertiesFile);
             if (!propFile.exists()) {
-                throw new RuntimeException(String.format("File [%s] not found", propertiesFile));
+                throw new RuntimeException(String.format("File [%s] not found in %s", propertiesFile, System.getProperty("user.dir")));
             } else {
                 try {
                     definitions.load(new FileReader(propFile));
