@@ -98,6 +98,10 @@ public class RESTPublisher implements Forwarder {
 					break;
 			}
 		} catch (Exception ex) {
+			if (this.props != null && "true".equals(this.props.getProperty("verbose"))) {
+				System.err.println(">> Error!");
+				ex.printStackTrace();
+			}
 			throw new RuntimeException(ex);
 		}
 	}
