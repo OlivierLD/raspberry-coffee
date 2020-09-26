@@ -87,7 +87,11 @@ public class RESTPublisher implements Forwarder {
 					}
 					HTTPClient.HTTPResponse httpResponse = HTTPClient.doPost(postRequest, headers, strContent);
 					if (this.props != null && "true".equals(this.props.getProperty("verbose"))) {
-						System.out.println(String.format("POST %s with %s: Response code %d, message: %s", postRequest, strContent, httpResponse.getCode(), httpResponse.getPayload()));
+						System.out.println(String.format("POST %s with %s: Response code %d, message: %s",
+								postRequest,
+								strContent,
+								httpResponse.getCode(),
+								httpResponse.getPayload()));
 					}
 					break;
 				default:

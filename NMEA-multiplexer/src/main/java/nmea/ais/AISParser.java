@@ -21,6 +21,8 @@ import java.util.Map;
  * https://www.navcen.uscg.gov/?pageName=AISFAQ
  * On-line decoder at https://www.aggsoft.com/ais-decoder.htm
  *
+ * Nice AIS git repo: https://github.com/tbsalling/aismessages
+ *
  * The main method is here for tests, look at it.
  */
 public class AISParser {

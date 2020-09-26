@@ -20,3 +20,11 @@ forwarders:
     rest.verb: POST
     http.headers: Content-Type:text/plain
     verbose: true
+  - type: file
+    timebase.filename: true
+    filename.suffix: _LOG
+    log.dir: logged
+    split: hour
+    # |hour|day|week|month|year
+    flush: true
+
