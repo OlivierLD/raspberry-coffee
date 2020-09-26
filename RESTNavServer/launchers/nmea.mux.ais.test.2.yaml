@@ -17,5 +17,5 @@ forwarders:
   - type: tcp
     subclass: nmea.forwarders.AISTCPServer
     port: 7003
-    verbose: false
+    verbose: true
 
