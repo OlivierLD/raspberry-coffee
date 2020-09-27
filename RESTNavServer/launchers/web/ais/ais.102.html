@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AIS with Leaflet</title>
+    <style type="text/css">
+        * {
+            font-family: "Source Code Pro", "Courier New", "Helvetica Neue", "Lato", Verdana, Helvetica, Geneva, sans-serif;
+            color: navy;
+        }
+
+        h1 {
+            font-size: x-large;
+            font-weight: bold;
+        }
+        .gps-text {
+            /*font-size: x-large;*/
+            font-weight: bold;
+        }
+        td, th {
+            border: 1px solid silver;
+            border-radius: 5px;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+
+</head>
+<body>
+<h1>Geolocation & AIS &nbsp;<span id="working" title="Traffic">&#11044;</span></h1>
+<hr/>
+<div style="width: 98%; overflow-x: scroll;">
+    <div style="white-space: nowrap; width: fit-content; display: inline-block;">
+        <small>
+            Some devices have both a browser and a GPS, like your cell phone for example. You will be prompted to allow the browser to get to your position (once).
+            <br/>
+            <i>Note</i>: If you have an Android phone (or tablet) with a GPS, and if you are using a Chrome browser on your laptop (that probably has no GPS), logged in with the same user as on your phone, this will work too. Chrome and Android are Google products, they can communicate... Same with another browser, but logged in your Google account.
+            <br/>
+            Good to know, specially if you want to prevent it.
+        </small>
+    </div>
+</div>
+<hr/>
+<div id="textbox" class="gps-text">. . .</div>
+<hr/>
+
+<table>
+    <tr>
+        <td valign="top">
+            <!--div id="mapid" style="width: 1200px; height: 800px;"></div-->
+            <div id="mapid" style="width: 1200px; height: 600px;"></div>
+        </td>
+        <td valign="top" align="left">
+            <input type="checkbox" id="keep-centered"/> Keep map centered on current GPS position
+            <hr/>
+            <i><b>Mouse position:</b></i>
+            <hr/>
+            <div id="curr-pos"></div>
+            <hr/>
+            <small><i>Decimal:</i></small>
+            <div id="curr-pos-dec"></div>
+            <hr/>
+            <i><b>Last click position:</b></i>
+            <hr/>
+            <div id="curr-pos-click"></div>
+            <hr/>
+            <small><i>Decimal:</i></small>
+            <div id="curr-pos-click-dec"></div>
+            <hr/>
+        </td>
+    </tr>
+</table>
+<hr/>
+<span style="font-style: italic;">&copy 2020, Oliv did it.</span>
+
+</body>
+
+<script type="text/javascript">
+
+    let status = 'tick';
+    // Activity witness
+    function flipLight() {
+        let element = document.getElementById('working');
+        if (status === 'tick') {
+            status = 'tock';
+            element.style.color = 'red';
+        } else {
+            status = 'tick';
+            element.style.color = 'green';
+        }
+        element.title = new Date().toString();
+    }
+
+    let options = {
+        enableHighAccuracy: true,
+        maximumAge: 0,
+        timeout: 5000
+    };
+
+    let positionNotSet = true;
+
+    let userPos = {};
+
+    function onPosSuccess(pos) {
+        // Doc at https://w3c.github.io/geolocation-api/
+        // Position object at https://w3c.github.io/geolocation-api/#position_interface
+        //
+        // Check privileges in config.xml
+        //
+        console.log('lat= ' + pos.coords.latitude + ' lon= ' + pos.coords.longitude);
+        console.log('hdg= ' + pos.coords.heading + ' spd= ' + pos.coords.speed + ' m/s');
+        //  console.log("Pos data:" + pos.coords);
+        let centerCB = document.getElementById('keep-centered');
+        if (positionNotSet || centerCB.checked) {
+            userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+
+            let hdg = 0;
+            let speed = 0.0;
+            let acc = -1;
+            try {
+                acc = pos.coords.accuracy;
+                hdg = pos.coords.heading.toFixed(0);
+                speed = pos.coords.speed.toFixed(2);
+            } catch (err) {
+            }
+            let newContent =
+                `<table><tr><th>LAT</th><th>LNG</th><th>HDG</th><th>SPD</th><th>Accuracy</th></tr>` +
+                `<tr><td>${decToSex(pos.coords.latitude, 'NS')}</td><td>${decToSex(pos.coords.longitude, 'EW')}</td><td>${hdg}&deg;</td><td>${speed} m/s</td><td>${acc} meters</td></tr></table>`;
+            // 'LAT = ' + decToSex(pos.coords.latitude, 'NS') + "<br/>" +
+            // 'LNG = ' + decToSex(pos.coords.longitude, 'EW') + "<br/>" +
+            // 'HDG = ' + hdg + '<br/>' +
+            // 'SPD = ' + speed + ' m/s' + '<br/>' +
+            // 'accuracy: ' + acc + ' meters';
+            let box = document.querySelector('#textbox');
+            box.innerHTML = newContent;
+            flipLight();
+            // Update map
+            L.marker([pos.coords.latitude, pos.coords.longitude])
+                .addTo(map)
+                .bindPopup(`<b>You (or your proxy) are here!<br/><span style="color: red;">${decToSex(pos.coords.latitude, "NS")}<br/>${decToSex(pos.coords.longitude, "EW")}</span></b>`);
+            map.panTo(new L.LatLng(pos.coords.latitude, pos.coords.longitude));
+
+            positionNotSet = false;
+        } else {
+            // Do it only once
+        }
+    }
+
+    // Called from navigator.geolocation.getCurrentPosition
+    function onPosError(err) {
+        let errMess;
+        if (err.code === err.PERMISSION_DENIED) {
+            errMess = 'Location access was denied by the user.';
+        } else {
+            errMess = 'location error (' + err.code + '): ' + err.message;
+        }
+        let box = document.querySelector('#textbox');
+        box.innerHTML = errMess;
+    }
+
+    function decToSex(val, ns_ew) {
+        let absVal = Math.abs(val);
+        let intValue = Math.floor(absVal);
+        let dec = absVal - intValue;
+        let i = intValue;
+        dec *= 60;
+        let s = i + "°" + dec.toFixed(2) + "'";
+
+        if (val < 0) {
+            s += (ns_ew === 'NS' ? 'S' : 'W');
+        } else {
+            s += (ns_ew === 'NS' ? 'N' : 'E');
+        }
+        return s;
+    }
+
+    let map = L.map('mapid'); // .setView([currentLatitude, currentLongitude], 13);
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 28,
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        id: 'mapbox.streets'
+    }).addTo(map);
+
+    map.fitBounds([
+        [40.712, -74.227],
+        [40.774, -74.125]
+    ]);
+
+    let currentBound = [];
+
+    map.addEventListener('mousemove', (event) => {
+        // let lat = Math.round(event.latlng.lat * 100000) / 100000;
+        // let lng = Math.round(event.latlng.lng * 100000) / 100000;
+        document.getElementById('curr-pos').innerHTML = `${decToSex(event.latlng.lat, "NS")}<br/>${decToSex(event.latlng.lng, "EW")}`;
+        document.getElementById('curr-pos-dec').innerHTML = `${event.latlng.lat}<br/>${event.latlng.lng}`;
+    });
+    map.addEventListener('click', (event) => {
+        // let lat = Math.round(event.latlng.lat * 100000) / 100000;
+        // let lng = Math.round(event.latlng.lng * 100000) / 100000;
+        document.getElementById('curr-pos-click').innerHTML = `${decToSex(event.latlng.lat, "NS")}<br/>${decToSex(event.latlng.lng, "EW")}`;
+        document.getElementById('curr-pos-click-dec').innerHTML = `${event.latlng.lat}<br/>${event.latlng.lng}`;
+    });
+
+    let onMessage = json => {
+        if (userPos !== {}) {
+            currentBound = []; // Reset
+            currentBound.push([userPos.lat, userPos.lng]);
+            // TODO Remove all markers from the map
+        }
+        if (json.ais !== null && json.ais !== undefined) {
+            let ais = json.ais;
+            let keys = Object.keys(ais);
+            for (let i=0; i<keys.length; i++) {
+                let k = keys[i];
+                let aisRecord = ais[k];
+                let MMSI = k;
+                let aisKeys = Object.keys(aisRecord);
+                for (let j=0; j<aisKeys.length; j++) {
+                    let aisKey = aisKeys[j];
+                    // console.log("Key:" + aisKey);
+                    let oneRecordType = aisRecord[aisKey].recordContent;
+                    if (oneRecordType !== undefined) {
+                        if (oneRecordType.latitude !== null && oneRecordType.latitude !== undefined &&
+                            oneRecordType.longitude !== null && oneRecordType.longitude !== undefined) {
+                            console.log(`MMSI: ${MMSI}\nRecord Type ${aisKey}\nAt ${oneRecordType.latitude} / ${oneRecordType.longitude}`);
+                            // Put in array for Leaflet
+                            userPos.push([oneRecordType.latitude, oneRecordType.longitude]);
+                            L.marker([oneRecordType.latitude, oneRecordType.longitude])
+                                .addTo(map)
+                                .bindPopup(`<b>MMSI ${MMSI}<br/><span style="color: red;">${decToSex(oneRecordType.latitude, "NS")}<br/>${decToSex(oneRecordType.longitude, "EW")}</span></b>`);
+                        }
+                    }
+                }
+            }
+            if (currentBound.length > 0) {
+                map.fitBounds(currentBound);
+            }
+        } else {
+            console.info("No AIS");
+        }
+    };
+    let betweenPing = 1000;
+
+    function getNMEAData() {
+
+        let url = /*'http://192.168.42.6:9999' + */ '/mux/cache',
+            // xhr = new XMLHttpRequest(),
+            verb = 'GET',
+            TIMEOUT = 10000,
+            happyCode = 200,
+            data = null;
+
+        let promise = new Promise(function (resolve, reject) {
+            let xhr = new XMLHttpRequest();
+
+            // let req = verb + " " + url;
+            // if (data !== undefined && data !== null) {
+            //     req += ("\n" + JSON.stringify(data, null, 2));
+            // }
+            xhr.open(verb, url, true);
+            xhr.setRequestHeader("Content-type", "application/json");
+            try {
+                if (data === undefined || data === null) {
+                    xhr.send();
+                } else {
+                    xhr.send(JSON.stringify(data));
+                }
+            } catch (err) {
+                console.log("Send Error ", err);
+            }
+
+            let requestTimer = setTimeout(() => {
+                xhr.abort();
+                let mess = {code: 408, message: 'Timeout'};
+                reject(mess);
+            }, TIMEOUT);
+
+            xhr.onload = () => {
+                clearTimeout(requestTimer);
+                if (xhr.status === happyCode) {
+                    resolve(xhr.response);
+                } else {
+                    reject({code: xhr.status, message: xhr.response});
+                }
+            };
+        });
+        return promise;
+    }
+
+    function fetch() {
+        let getData = getNMEAData();
+        getData.then((value) => {
+            //  console.log("Done:", value);
+            let json = JSON.parse(value);
+            onMessage(json);
+        }, (error, errmess) => {
+            let message;
+            if (errmess !== undefined) {
+                try {
+                    let mess = JSON.parse(errmess);
+                    if (mess.message !== undefined) {
+                        message = mess.message;
+                    }
+                } catch (err) {
+                    //  console.log(errmess);
+                }
+            }
+            console.log("Failed to get nmea data..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        });
+
+    }
+
+    (() => {
+        // Refreshed Geolocation every second. Or not.
+        setInterval(() => {
+            /* let watchId = */ navigator.geolocation.getCurrentPosition(onPosSuccess, onPosError, options);
+        }, 1000);
+
+        // Long poll for NMEA/AIS
+        setInterval(() => {
+            fetch();
+        }, betweenPing);
+
+    })();
+</script>
+</html>
