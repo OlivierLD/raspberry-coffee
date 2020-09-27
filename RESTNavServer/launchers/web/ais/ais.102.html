@@ -98,66 +98,7 @@
         timeout: 5000
     };
 
-    let positionNotSet = true;
-
-    let userPos = null;
-
-    function onPosSuccess(pos) {
-        // Doc at https://w3c.github.io/geolocation-api/
-        // Position object at https://w3c.github.io/geolocation-api/#position_interface
-        //
-        // Check privileges in config.xml
-        //
-        console.log('lat= ' + pos.coords.latitude + ' lon= ' + pos.coords.longitude);
-        console.log('hdg= ' + pos.coords.heading + ' spd= ' + pos.coords.speed + ' m/s');
-        //  console.log("Pos data:" + pos.coords);
-        let centerCB = document.getElementById('keep-centered');
-        if (positionNotSet || centerCB.checked) {
-            userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-
-            let hdg = 0;
-            let speed = 0.0;
-            let acc = -1;
-            try {
-                acc = pos.coords.accuracy;
-                hdg = pos.coords.heading.toFixed(0);
-                speed = pos.coords.speed.toFixed(2);
-            } catch (err) {
-            }
-            let newContent =
-                `<table><tr><th>LAT</th><th>LNG</th><th>HDG</th><th>SPD</th><th>Accuracy</th></tr>` +
-                `<tr><td>${decToSex(pos.coords.latitude, 'NS')}</td><td>${decToSex(pos.coords.longitude, 'EW')}</td><td>${hdg}&deg;</td><td>${speed} m/s</td><td>${acc} meters</td></tr></table>`;
-            // 'LAT = ' + decToSex(pos.coords.latitude, 'NS') + "<br/>" +
-            // 'LNG = ' + decToSex(pos.coords.longitude, 'EW') + "<br/>" +
-            // 'HDG = ' + hdg + '<br/>' +
-            // 'SPD = ' + speed + ' m/s' + '<br/>' +
-            // 'accuracy: ' + acc + ' meters';
-            let box = document.querySelector('#textbox');
-            box.innerHTML = newContent;
-            flipLight();
-            // Update map
-            L.marker([pos.coords.latitude, pos.coords.longitude])
-                .addTo(map)
-                .bindPopup(`<b>You (or your proxy) are here!<br/><span style="color: red;">${decToSex(pos.coords.latitude, "NS")}<br/>${decToSex(pos.coords.longitude, "EW")}</span></b>`);
-            map.panTo(new L.LatLng(pos.coords.latitude, pos.coords.longitude));
-
-            positionNotSet = false;
-        } else {
-            // Do it only once
-        }
-    }
-
-    // Called from navigator.geolocation.getCurrentPosition
-    function onPosError(err) {
-        let errMess;
-        if (err.code === err.PERMISSION_DENIED) {
-            errMess = 'Location access was denied by the user.';
-        } else {
-            errMess = 'location error (' + err.code + '): ' + err.message;
-        }
-        let box = document.querySelector('#textbox');
-        box.innerHTML = errMess;
-    }
+    let userPos = {lat: 37.75, lng: -122.5 }; // TODO Get his from NMEA Pos
 
     function decToSex(val, ns_ew) {
         let absVal = Math.abs(val);
@@ -315,11 +256,6 @@
     }
 
     (() => {
-        // Refreshed Geolocation every second. Or not.
-        setInterval(() => {
-            /* let watchId = */ navigator.geolocation.getCurrentPosition(onPosSuccess, onPosError, options);
-        }, 1000);
-
         // Long poll for NMEA/AIS
         setInterval(() => {
             fetch();
