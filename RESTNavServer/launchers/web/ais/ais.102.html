@@ -163,12 +163,12 @@
 
                             if (isBoat) { // It's a boat
                                 // Draw a boat, use oneRecord.hdg, oneRecord.cog
-                                let boatLen = 1;
+                                let boatLen = 0.01;
                                 let boatAxis = L.polyline([
-                                    [oneRecord.latitude + ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.cog))),
-                                     oneRecord.longitude - ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.cog)))], // Bow
                                     [oneRecord.latitude - ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.cog))),
-                                        oneRecord.longitude + ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.cog)))]                                ]);
+                                     oneRecord.longitude + ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.cog)))], // Bow
+                                    [oneRecord.latitude + ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.cog))),
+                                        oneRecord.longitude - ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.cog)))]                                ]);
                                 let boatDrawing = L.circle([oneRecord.latitude, oneRecord.longitude], {
                                     color: 'red',
                                     fillColor: '#f03',
