@@ -201,6 +201,10 @@ public class SerialReader
 
 	@Override
 	public void serialEvent(SerialPortEvent serialPortEvent) {
+		if (verbose) {
+			System.out.println(String.format("serialEvent: %d (%s)", serialPortEvent.getEventType(),
+					(serialPortEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE ? "Data Available" : "Other Event")));
+		}
 		switch (serialPortEvent.getEventType()) {
 			case SerialPortEvent.DATA_AVAILABLE:
 				if (canRead()) {

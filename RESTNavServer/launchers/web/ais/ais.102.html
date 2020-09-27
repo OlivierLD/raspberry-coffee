@@ -172,70 +172,72 @@
                         if (oneRecord.latitude !== null && oneRecord.latitude !== undefined &&
                             oneRecord.longitude !== null && oneRecord.longitude !== undefined) {
                             console.log(`MMSI: ${MMSI}\nRecord Type ${recordType}\nAt ${oneRecord.latitude} / ${oneRecord.longitude}`);
-                            // Put in array for Leaflet
-                            currentBound.push([oneRecord.latitude, oneRecord.longitude]);
-                            if (oneRecord.hdg !== undefined && oneRecord.cog !== undefined && oneRecord.sog !== undefined) {
-                                isBoat = true;
-                            }
-
-                            if (isBoat) { // It's a boat
-                                // HDG=511 => n/a
-                                // Draw a boat, use oneRecord.hdg, oneRecord.cog
-                                let boatLen = 0.02;
-                                let hdg = oneRecord.hdg;
-                                let cog = oneRecord.cog;
-                                if (hdg === 511) {
-                                    hdg = cog;
-                                    cog = null;
+                            if (oneRecord.longitude < 180 && oneRecord.longitude > -180) {
+                                // Put in array for Leaflet
+                                currentBound.push([oneRecord.latitude, oneRecord.longitude]);
+                                if (oneRecord.hdg !== undefined && oneRecord.cog !== undefined && oneRecord.sog !== undefined) {
+                                    isBoat = true;
                                 }
-                                let boatTriangle = L.polygon([ // HDG
-                                    [oneRecord.latitude + ((boatLen / 2) * Math.cos(Math.toRadians(hdg))),
-                                        oneRecord.longitude + ((boatLen / 2) * Math.sin(Math.toRadians(hdg)))], // Bow
-                                    [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(hdg - 10))),
-                                        oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(hdg - 10)))],
-                                    [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(hdg - 0))),
-                                        oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(hdg - 0)))],
-                                    [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(hdg + 10))),
-                                        oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(hdg + 10)))]
-                                ], {
-                                    color: 'yellow',
-                                    fillColor: '#ff3',
-                                    fillOpacity: 0.5
-                                });
-                                mapMarkers.push(boatTriangle);
-                                boatTriangle.addTo(map);
 
-                                if (cog !== null) {
-                                    let boatCog = L.polyline([ // COG
-                                        [oneRecord.latitude + ((boatLen * 1.1 / 2) * Math.cos(Math.toRadians(cog))),
-                                            oneRecord.longitude + ((boatLen * 1.1 / 2) * Math.sin(Math.toRadians(cog)))], // Bow
-                                        [oneRecord.latitude - ((boatLen * 1.1 / 2) * Math.cos(Math.toRadians(cog))),
-                                            oneRecord.longitude - ((boatLen * 1.1 / 2) * Math.sin(Math.toRadians(cog)))]
+                                if (isBoat) { // It's a boat
+                                    // HDG=511 => n/a
+                                    // Draw a boat, use oneRecord.hdg, oneRecord.cog
+                                    let boatLen = 0.02;
+                                    let hdg = oneRecord.hdg;
+                                    let cog = oneRecord.cog;
+                                    if (hdg === 511) {
+                                        hdg = cog;
+                                        cog = null;
+                                    }
+                                    let boatTriangle = L.polygon([ // HDG
+                                        [oneRecord.latitude + ((boatLen / 2) * Math.cos(Math.toRadians(hdg))),
+                                            oneRecord.longitude + ((boatLen / 2) * Math.sin(Math.toRadians(hdg)))], // Bow
+                                        [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(hdg - 10))),
+                                            oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(hdg - 10)))],
+                                        [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(hdg - 0))),
+                                            oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(hdg - 0)))],
+                                        [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(hdg + 10))),
+                                            oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(hdg + 10)))]
                                     ], {
-                                        color: 'blue'
+                                        color: 'yellow',
+                                        fillColor: '#ff3',
+                                        fillOpacity: 0.5
                                     });
-                                    mapMarkers.push(boatCog);
-                                    boatCog.addTo(map);
-                                }
+                                    mapMarkers.push(boatTriangle);
+                                    boatTriangle.addTo(map);
 
-                                let boatSpot = L.circle([oneRecord.latitude, oneRecord.longitude], {
-                                    color: 'red',
-                                    fillColor: '#f03',
-                                    fillOpacity: 0.5,
-                                    radius: 500
-                                });
-                                mapMarkers.push(boatSpot);
-                                boatSpot.addTo(map);
+                                    if (cog !== null) {
+                                        let boatCog = L.polyline([ // COG
+                                            [oneRecord.latitude + ((boatLen * 1.1 / 2) * Math.cos(Math.toRadians(cog))),
+                                                oneRecord.longitude + ((boatLen * 1.1 / 2) * Math.sin(Math.toRadians(cog)))], // Bow
+                                            [oneRecord.latitude - ((boatLen * 1.1 / 2) * Math.cos(Math.toRadians(cog))),
+                                                oneRecord.longitude - ((boatLen * 1.1 / 2) * Math.sin(Math.toRadians(cog)))]
+                                        ], {
+                                            color: 'blue'
+                                        });
+                                        mapMarkers.push(boatCog);
+                                        boatCog.addTo(map);
+                                    }
+
+                                    let boatSpot = L.circle([oneRecord.latitude, oneRecord.longitude], {
+                                        color: 'red',
+                                        fillColor: '#f03',
+                                        fillOpacity: 0.5,
+                                        radius: 500
+                                    });
+                                    mapMarkers.push(boatSpot);
+                                    boatSpot.addTo(map);
+                                }
+                                // Popup
+                                let marker = L.marker([oneRecord.latitude, oneRecord.longitude]);
+                                mapMarkers.push(marker);
+                                let popupText = `<b>MMSI ${MMSI}<br/><span style="color: red;">${decToSex(oneRecord.latitude, "NS")}<br/>${decToSex(oneRecord.longitude, "EW")}</span></b>`;
+                                if (isBoat) {
+                                    popupText += `<br/>SOG: ${oneRecord.sog}<br/>COG: ${oneRecord.cog}<br/>HDG: ${oneRecord.hdg}`;
+                                }
+                                marker.addTo(map)
+                                    .bindPopup(popupText);
                             }
-                            // Popup
-                            let marker = L.marker([oneRecord.latitude, oneRecord.longitude]);
-                            mapMarkers.push(marker);
-                            let popupText = `<b>MMSI ${MMSI}<br/><span style="color: red;">${decToSex(oneRecord.latitude, "NS")}<br/>${decToSex(oneRecord.longitude, "EW")}</span></b>`;
-                            if (isBoat) {
-                                popupText += `<br/>SOG: ${oneRecord.sog}<br/>COG: ${oneRecord.cog}<br/>HDG: ${oneRecord.hdg}`;
-                            }
-                            marker.addTo(map)
-                                .bindPopup(popupText);
                         }
                     }
                 }
