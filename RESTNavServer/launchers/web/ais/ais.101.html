@@ -17,10 +17,32 @@ body {
 </head>
 <body>
 <h1>AIS 101</h1>
-<small>See console</small>
+<div>
+    Use query parameter <code>test=true</code> for hard-coded NMEA cache value.
+</div>
+<hr/>
+<small>See console for results</small>
+<hr/>
 </body>
 <script type="text/javascript">
     "use strict";
+
+    function getQSPrm(prm) {
+        let loc = document.location.toString();
+        if (loc.indexOf("?") > -1) {
+            let qs = loc.substring(loc.indexOf("?") + 1);
+            let prms = qs.split('&');
+            for (let i=0; i<prms.length; i++) {
+                let nv = prms[i].split('=');
+                if (nv.length === 2) {
+                    if (nv[0] === prm) {
+                        return nv[1];
+                    }
+                }
+            }
+        }
+        return null;
+    }
 
     let onMessage = json => {
         if (json.ais !== null && json.ais !== undefined) {
@@ -118,7 +140,7 @@ body {
 
     }
 
-    let FOR_TEST = false;
+    let FOR_TEST = (getQSPrm("test") === 'true');
 
     if (!FOR_TEST) {
         // Executed at startup
