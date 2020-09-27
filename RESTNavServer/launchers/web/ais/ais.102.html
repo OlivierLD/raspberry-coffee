@@ -164,21 +164,23 @@
                             if (isBoat) { // It's a boat
                                 // Draw a boat, use oneRecord.hdg, oneRecord.cog
                                 let boatLen = 0.02;
-                                let boatAxis = L.polyline([
+                                let boatTriangle = L.polygon([
                                     [oneRecord.latitude + ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.cog))),
                                      oneRecord.longitude + ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.cog)))], // Bow
-                                    [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.cog))),
-                                        oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.cog)))]                                ]);
-                                let boatDrawing = L.circle([oneRecord.latitude, oneRecord.longitude], {
+                                    [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.cog - 5))),
+                                        oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.cog - 5)))],
+                                    [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.cog + 5))),
+                                        oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.cog + 5)))]                                ]);
+                                let boatSpot = L.circle([oneRecord.latitude, oneRecord.longitude], {
                                     color: 'red',
                                     fillColor: '#f03',
                                     fillOpacity: 0.5,
                                     radius: 500
                                 });
-                                mapMarkers.push(boatDrawing);
-                                boatDrawing.addTo(map);
-                                mapMarkers.push(boatAxis);
-                                boatAxis.addTo(map);
+                                mapMarkers.push(boatSpot);
+                                boatSpot.addTo(map);
+                                mapMarkers.push(boatTriangle);
+                                boatTriangle.addTo(map);
                             }
 
                             let marker = L.marker([oneRecord.latitude, oneRecord.longitude])
