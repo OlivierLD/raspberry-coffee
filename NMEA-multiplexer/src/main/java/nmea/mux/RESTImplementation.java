@@ -2696,9 +2696,17 @@ public class RESTImplementation {
 										.errorMessage("Cache not initialized!"));
 					} else {
 						if (this.mux != null) {
-							this.mux.onData(payload.trim());
+							if ("true".equals(System.getProperty("rest.feeder.verbose"))) {
+								System.out.println("REST Feeder: There IS a mux, using regular onData method.");
+							}
+							synchronized (this.mux) {
+								this.mux.onData(payload.trim());
+							}
 						} else {
 							// Push here, auto-parse
+							if ("true".equals(System.getProperty("rest.feeder.verbose"))) {
+								System.out.println("REST Feeder: There is NO mux, just feeding the cache");
+							}
 							cache.parseAndFeed(payload.trim());
 						}
 					}
