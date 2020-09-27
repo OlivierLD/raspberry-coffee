@@ -11,6 +11,7 @@ import nmea.api.NMEAClient;
 import nmea.api.NMEAParser;
 import nmea.forwarders.Forwarder;
 import nmea.mux.context.Context;
+import utils.StaticUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,10 +19,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <b>NMEA Multiplexer.</b><br>
@@ -222,7 +221,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
     public static Properties getDefinitions() {
         Properties properties = null;
         String propertiesFile = System.getProperty("mux.properties", "nmea.mux.properties");
-        if (propertiesFile.endsWith(".yaml")) {
+        if (propertiesFile.endsWith(".yaml") || propertiesFile.endsWith(".yml")) {
             Yaml yaml = new Yaml();
             try {
                 InputStream inputStream = new FileInputStream(propertiesFile);
@@ -249,12 +248,102 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
     }
 
     /**
+     * WiP
+     *
+     * @return
+     */
+    private static Properties interactiveConfig() {
+        Properties props;
+        System.out.println("-- Enter Mux config interactively --");
+        Yaml yaml = new Yaml();
+        Map<String, Object> topMap = new HashMap<>();
+
+        String input = StaticUtil.userInput("> Enter a name for this MUX > ");
+        topMap.put("name", input);
+
+        Map<String, Object> contextMap = new HashMap<>();
+        input = StaticUtil.userInput("> With HTTP server y|n ? > ");
+        boolean withHttpServer = input.equalsIgnoreCase("Y");
+        contextMap.put("with.http.server", withHttpServer);
+        if (withHttpServer) {
+            // http port
+            input = StaticUtil.userInput("> HTTP port ? > ");
+            int port = Integer.parseInt(input);
+            contextMap.put("http.port", port);
+            // init.cache
+            input = StaticUtil.userInput("> Init cache y|n ? > ");
+            boolean initCache = input.equalsIgnoreCase("Y");
+            contextMap.put("init.cache", initCache);
+        }
+        topMap.put("context", contextMap);
+
+        // Channels (List)
+        List<Map<String, Object>> channels = new ArrayList<>();
+
+        Map<String, Object> oneChannel = new HashMap<>();
+
+        oneChannel.put("type", "file");
+        oneChannel.put("filename", "./sample.data/logged.data.archive.zip");
+        oneChannel.put("path.in.zip", "2010-11-08.Nuku-Hiva-Tuamotu.nmea");
+        oneChannel.put("zip", true);
+        oneChannel.put("verbose", false);
+
+        channels.add(oneChannel);
+
+        topMap.put("channels", channels);
+
+        // Forwarder (List)
+        List<Map<String, Object>> forwarders = new ArrayList<>();
+        Map<String, Object> oneForwarder = new HashMap<>();
+        oneForwarder.put("type", "rest");
+        oneForwarder.put("server.name", "192.168.42.6");
+        oneForwarder.put("server.port", 9999);
+        oneForwarder.put("rest.resource", "/mux/nmea-sentence");
+        oneForwarder.put("rest.verb", "POST");
+        oneForwarder.put("http.headers", "Content-Type:text/plain");
+        oneForwarder.put("verbose", true);
+        forwarders.add(oneForwarder);
+
+        oneForwarder = new HashMap<>();
+        oneForwarder.put("type", "tcp");
+        oneForwarder.put("port", 7002);
+        oneForwarder.put("properties", "no.ais.properties");
+        forwarders.add(oneForwarder);
+
+        oneForwarder = new HashMap<>();
+        oneForwarder.put("type", "tcp");
+        oneForwarder.put("subclass", "nmea.forwarders.AISTCPServer");
+        oneForwarder.put("port", 7003);
+        oneForwarder.put("verbose", false);
+        forwarders.add(oneForwarder);
+
+        topMap.put("forwarders", forwarders);
+
+        // Computers (List)
+
+        // Others (dev curve, and so)
+
+        String output = yaml.dump(topMap);
+        System.out.println(output);
+
+        props = MuxInitializer.yamlToProperties(topMap);
+        return props;
+    }
+
+    /**
      * Start the Multiplexer from here.
      *
      * @param args unused.
      */
     public static void main(String... args) {
-        Properties definitions = GenericNMEAMultiplexer.getDefinitions();
+        AtomicBoolean interactiveConfig = new AtomicBoolean(false);
+        Arrays.asList(args).forEach(prm -> {
+            if ("--interactive-config".equals(prm)) {
+                interactiveConfig.set(true);
+            }
+        });
+
+        Properties definitions = interactiveConfig.get() ? GenericNMEAMultiplexer.interactiveConfig() :  GenericNMEAMultiplexer.getDefinitions();
 
         if (infraVerbose) {
             System.out.println("MUX Definitions:");

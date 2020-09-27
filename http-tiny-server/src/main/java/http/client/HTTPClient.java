@@ -134,7 +134,7 @@ public class HTTPClient {
 		for (String h : headers.keySet()) {
 			conn.setRequestProperty(h, headers.get(h));
 		}
-		if (!headers.containsKey(HttpHeaders.CONTENT_TYPE)) {
+		if (headers == null || (headers != null && !headers.containsKey(HttpHeaders.CONTENT_TYPE))) {
 			conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, HttpHeaders.APPLICATION_JSON); // Uhu ?
 		}
 		if (payload != null) {

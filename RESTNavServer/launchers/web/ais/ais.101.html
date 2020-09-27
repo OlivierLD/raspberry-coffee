@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<!--
+ | Vanilla AIS Data from the cache.
+ | No plotting, no nothing (will come later)
+ | THis is just the basic plumbing.
+ +-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AIS 101</title>
+</head>
+<body>
+<h1>AIS 101</h1>
+<small>See console</small>
+</body>
+<script type="text/javascript">
+    "use strict";
+
+    let onMessage = json => {
+        if (json.ais !== null && json.ais !== undefined) {
+            let ais = json.ais;
+            let keys = Object.keys(ais);
+            for (let i=0; i<keys.length; i++) {
+                let k = keys[i];
+                let aisRecord = ais[k];
+                let MMSI = k;
+                let aisKeys = Object.keys(aisRecord);
+                for (let j=0; j<aisKeys.length; j++) {
+                    let aisKey = aisKeys[j];
+                    // console.log("Key:" + aisKey);
+                    let oneRecordType = aisRecord[aisKey].recordContent;
+                    if (oneRecordType !== undefined) {
+                        if (oneRecordType.latitude !== null && oneRecordType.latitude !== undefined &&
+                            oneRecordType.longitude !== null && oneRecordType.longitude !== undefined) {
+                            console.log(`MMSI: ${MMSI}\nRecord Type ${aisKey}\nAt ${oneRecordType.latitude} / ${oneRecordType.longitude}`);
+                        }
+                    }
+                }
+            }
+        } else {
+            console.info("No AIS");
+        }
+    };
+    let betweenPing = 1000;
+
+    function getNMEAData() {
+
+        let url = /*'http://192.168.42.6:9999' + */ '/mux/cache',
+            // xhr = new XMLHttpRequest(),
+            verb = 'GET',
+            TIMEOUT = 10000,
+            happyCode = 200,
+            data = null;
+
+        let promise = new Promise(function (resolve, reject) {
+            let xhr = new XMLHttpRequest();
+
+            // let req = verb + " " + url;
+            // if (data !== undefined && data !== null) {
+            //     req += ("\n" + JSON.stringify(data, null, 2));
+            // }
+            xhr.open(verb, url, true);
+            xhr.setRequestHeader("Content-type", "application/json");
+            try {
+                if (data === undefined || data === null) {
+                    xhr.send();
+                } else {
+                    xhr.send(JSON.stringify(data));
+                }
+            } catch (err) {
+                console.log("Send Error ", err);
+            }
+
+            let requestTimer = setTimeout(() => {
+                xhr.abort();
+                let mess = {code: 408, message: 'Timeout'};
+                reject(mess);
+            }, TIMEOUT);
+
+            xhr.onload = () => {
+                clearTimeout(requestTimer);
+                if (xhr.status === happyCode) {
+                    resolve(xhr.response);
+                } else {
+                    reject({code: xhr.status, message: xhr.response});
+                }
+            };
+        });
+        return promise;
+    }
+
+    function fetch() {
+        let getData = getNMEAData();
+        getData.then((value) => {
+            //  console.log("Done:", value);
+            let json = JSON.parse(value);
+            onMessage(json);
+        }, (error, errmess) => {
+            let message;
+            if (errmess !== undefined) {
+                try {
+                    let mess = JSON.parse(errmess);
+                    if (mess.message !== undefined) {
+                        message = mess.message;
+                    }
+                } catch (err) {
+                    //  console.log(errmess);
+                }
+            }
+            console.log("Failed to get nmea data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        });
+
+    }
+
+    let FOR_TEST = true;
+
+    if (!FOR_TEST) {
+        // Executed at startup
+        window.onload = () => {
+            // Long poll
+            setInterval(() => {
+                fetch();
+            }, betweenPing);
+        };
+    } else {
+        // For tests
+        let json = {
+            "NMEA_AS_IS": {
+                "AIS": "!AIVDM,1,1,,B,403Ovk1vBLgF`o>jO6EdjIO028GT,0*6E"
+            },
+            "Damping": 1,
+            "Current calculated with damping": {},
+            "HDG Offset": 0.0,
+            "Position": {
+                "lat": 37.7489,
+                "lng": -122.507,
+                "gridSquare": "CM87rr"
+            },
+            "Default Declination": {
+                "angle": 0.0
+            },
+            "Deviation file name": "zero-deviation.csv",
+            "ais": {
+                "3669708": {
+                    "4": {
+                        "messageType": 4,
+                        "repeatIndicator": 0,
+                        "MMSI": 3669708,
+                        "recordTimeStamp": 1601219551269,
+                        "recordContent": {
+                            "UtcYear": 2020,
+                            "UtcHour": 15,
+                            "UtcMinute": 22,
+                            "UtcSecond": 40,
+                            "latitude": 37.923153,
+                            "PosAcc": 1,
+                            "UtcMonth": 9,
+                            "UtDay": 25,
+                            "longitude": -122.59845
+                        }
+                    }
+                }
+            },
+            "BSP Factor": 1.0,
+            "Max Leeway": 0.0,
+            "AWS Factor": 1.0,
+            "AWA Offset": 0.0,
+            "NMEA": "!AIVDM,1,1,,B,403Ovk1vBLgF`o>jO6EdjIO028GT,0*6E"
+        };
+        onMessage(json);
+    }
+
+</script>
+</html>

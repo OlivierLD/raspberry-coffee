@@ -85,4 +85,4 @@ function cacheClient(dataManager, bp) {
 		});
 	}
 
-};
+}
