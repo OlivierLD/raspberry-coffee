@@ -169,7 +169,7 @@
                             oneRecordType.longitude !== null && oneRecordType.longitude !== undefined) {
                             console.log(`MMSI: ${MMSI}\nRecord Type ${aisKey}\nAt ${oneRecordType.latitude} / ${oneRecordType.longitude}`);
                             // Put in array for Leaflet
-                            userPos.push([oneRecordType.latitude, oneRecordType.longitude]);
+                            currentBound.push([oneRecordType.latitude, oneRecordType.longitude]);
                             L.marker([oneRecordType.latitude, oneRecordType.longitude])
                                 .addTo(map)
                                 .bindPopup(`<b>MMSI ${MMSI}<br/><span style="color: red;">${decToSex(oneRecordType.latitude, "NS")}<br/>${decToSex(oneRecordType.longitude, "EW")}</span></b>`);
