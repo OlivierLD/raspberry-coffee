@@ -59,6 +59,12 @@
 
 <script type="text/javascript">
 
+    if (Math.toRadians == undefined) {
+        Math.toRadians = deg => {
+            return (deg / 180) * Math.PI;
+        };
+    }
+
     let options = {
         enableHighAccuracy: true,
         maximumAge: 0,
@@ -142,17 +148,40 @@
                 for (let j=0; j<aisKeys.length; j++) {
                     let aisKey = aisKeys[j];
                     // console.log("Key:" + aisKey);
-                    let oneRecordType = aisRecord[aisKey].recordContent;
-                    if (oneRecordType !== undefined) {
-                        if (oneRecordType.latitude !== null && oneRecordType.latitude !== undefined &&
-                            oneRecordType.longitude !== null && oneRecordType.longitude !== undefined) {
-                            console.log(`MMSI: ${MMSI}\nRecord Type ${aisKey}\nAt ${oneRecordType.latitude} / ${oneRecordType.longitude}`);
+                    let recordType = aisRecord[aisKey].messageType; // Same as str(aisKey)
+                    let oneRecord = aisRecord[aisKey].recordContent;
+                    if (oneRecord !== undefined) {
+                        if (oneRecord.latitude !== null && oneRecord.latitude !== undefined &&
+                            oneRecord.longitude !== null && oneRecord.longitude !== undefined) {
+                            console.log(`MMSI: ${MMSI}\nRecord Type ${recordType}\nAt ${oneRecord.latitude} / ${oneRecord.longitude}`);
                             // Put in array for Leaflet
-                            currentBound.push([oneRecordType.latitude, oneRecordType.longitude]);
-                            let marker = L.marker([oneRecordType.latitude, oneRecordType.longitude])
+                            currentBound.push([oneRecord.latitude, oneRecord.longitude]);
+                            if (recordType === 4) { // It's a boat
+                                // Draw a boat, use oneRecord.hdg, oneRecord.cog
+                                let boatLen = 1,
+                                    boatWidth = 0.5;
+                                // let boatDrawing = L.polygon([
+                                //     [oneRecord.latitude + ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.cog))),
+                                //      oneRecord.longitude - ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.cog)))], // Bow
+                                // ]);
+                                let boatDrawing = L.circle([oneRecord.latitude, oneRecord.longitude], {
+                                    color: 'red',
+                                    fillColor: '#f03',
+                                    fillOpacity: 0.5,
+                                    radius: 500
+                                });
+                                mapMarkers.push(boatDrawing);
+                                boatDrawing.addTo(map);
+                            }
+
+                            let marker = L.marker([oneRecord.latitude, oneRecord.longitude])
                             mapMarkers.push(marker);
+                            let popupText = `<b>MMSI ${MMSI}<br/><span style="color: red;">${decToSex(oneRecord.latitude, "NS")}<br/>${decToSex(oneRecord.longitude, "EW")}</span></b>`;
+                            if (recordType === 4) {
+                                popupText += `<br/>SOG: ${oneRecord.sog}<br/>COG: ${oneRecord.cog}<br/>HDG: ${oneRecord.hdg}`;
+                            }
                             marker.addTo(map)
-                                .bindPopup(`<b>MMSI ${MMSI}<br/><span style="color: red;">${decToSex(oneRecordType.latitude, "NS")}<br/>${decToSex(oneRecordType.longitude, "EW")}</span></b>`);
+                                .bindPopup(popupText);
                         }
                     }
                 }
