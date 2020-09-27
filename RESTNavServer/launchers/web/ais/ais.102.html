@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>AIS with Leaflet</title>
+    <link rel="icon" type="image/jpg" href="../icons/jellyfish.ico">
     <style type="text/css">
         * {
             font-family: "Source Code Pro", "Courier New", "Helvetica Neue", "Lato", Verdana, Helvetica, Geneva, sans-serif;
@@ -84,7 +85,7 @@
         timeout: 5000
     };
 
-    let userPos = {lat: 37.75, lng: -122.5 }; // TODO Get his from NMEA Pos
+    let userPos = {lat: 37.75, lng: -122.5 }; // TODO Get this from NMEA Pos
 
     function decToSex(val, ns_ew) {
         let absVal = Math.abs(val);
