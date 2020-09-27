@@ -100,7 +100,7 @@
 
     let positionNotSet = true;
 
-    let userPos = {};
+    let userPos = null;
 
     function onPosSuccess(pos) {
         // Doc at https://w3c.github.io/geolocation-api/
@@ -206,8 +206,8 @@
     });
 
     let onMessage = json => {
-        if (userPos !== {}) {
-            currentBound = []; // Reset
+        currentBound = []; // Reset
+        if (userPos !== null) {
             currentBound.push([userPos.lat, userPos.lng]);
             // TODO Remove all markers from the map
         }
