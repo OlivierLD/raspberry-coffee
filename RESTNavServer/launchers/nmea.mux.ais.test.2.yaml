@@ -13,9 +13,9 @@ forwarders:
   # - type: console
   - type: tcp
     port: 7002
-    properties: no.ais.properties
-  - type: tcp
-    subclass: nmea.forwarders.AISTCPServer
-    port: 7003
-    verbose: true
+#    properties: no.ais.properties
+#  - type: tcp
+#    subclass: nmea.forwarders.AISTCPServer
+#    port: 7003
+#    verbose: true
 
