@@ -113,7 +113,7 @@ body {
                     //  console.log(errmess);
                 }
             }
-            console.log("Failed to get nmea data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+            console.log("Failed to get nmea data..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
         });
 
     }
