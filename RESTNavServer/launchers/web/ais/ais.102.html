@@ -65,6 +65,23 @@
         };
     }
 
+    function getQSPrm(prm) {
+        let loc = document.location.toString();
+        if (loc.indexOf("?") > -1) {
+            let qs = loc.substring(loc.indexOf("?") + 1);
+            let prms = qs.split('&');
+            for (let i=0; i<prms.length; i++) {
+                let nv = prms[i].split('=');
+                if (nv.length === 2) {
+                    if (nv[0] === prm) {
+                        return nv[1];
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     let options = {
         enableHighAccuracy: true,
         maximumAge: 0,
@@ -173,11 +190,13 @@
                                 }
                                 let boatTriangle = L.polygon([ // HDG
                                     [oneRecord.latitude + ((boatLen / 2) * Math.cos(Math.toRadians(hdg))),
-                                     oneRecord.longitude + ((boatLen / 2) * Math.sin(Math.toRadians(hdg)))], // Bow
+                                        oneRecord.longitude + ((boatLen / 2) * Math.sin(Math.toRadians(hdg)))], // Bow
                                     [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(hdg - 10))),
-                                     oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(hdg - 10)))],
+                                        oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(hdg - 10)))],
+                                    [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(hdg - 0))),
+                                        oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(hdg - 0)))],
                                     [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(hdg + 10))),
-                                     oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(hdg + 10)))]
+                                        oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(hdg + 10)))]
                                 ], {
                                     color: 'yellow',
                                     fillColor: '#ff3',
@@ -188,10 +207,10 @@
 
                                 if (cog !== null) {
                                     let boatCog = L.polyline([ // COG
-                                        [oneRecord.latitude + ((boatLen / 2) * Math.cos(Math.toRadians(cog))),
-                                            oneRecord.longitude + ((boatLen / 2) * Math.sin(Math.toRadians(cog)))], // Bow
-                                        [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(cog))),
-                                            oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(cog)))]
+                                        [oneRecord.latitude + ((boatLen * 1.1 / 2) * Math.cos(Math.toRadians(cog))),
+                                            oneRecord.longitude + ((boatLen * 1.1 / 2) * Math.sin(Math.toRadians(cog)))], // Bow
+                                        [oneRecord.latitude - ((boatLen * 1.1 / 2) * Math.cos(Math.toRadians(cog))),
+                                            oneRecord.longitude - ((boatLen * 1.1 / 2) * Math.sin(Math.toRadians(cog)))]
                                     ], {
                                         color: 'blue'
                                     });
@@ -299,12 +318,80 @@
     }
 
     let betweenPing = 5000;
-    (() => {
-        // Long poll for NMEA/AIS
-        setInterval(() => {
-            fetch();
-        }, betweenPing);
+    let FOR_TEST = (getQSPrm("test") === 'true');
 
-    })();
+    if (!FOR_TEST) {
+        (() => {
+            // Long poll for NMEA/AIS
+            setInterval(() => {
+                fetch();
+            }, betweenPing);
+        })();
+    } else {
+        // For tests
+        let json = {
+            "NMEA_AS_IS": {
+                "AIS": "!AIVDM,1,1,,B,36=;8>01i4o>MdPEVFhj2AlP20qQ,0*6E"
+            },
+            "Damping": 1,
+            "Current calculated with damping": {},
+            "HDG Offset": 0.0,
+            "Position": {
+                "lat": 37.7489,
+                "lng": -122.507,
+                "gridSquare": "CM87rr"
+            },
+            "Default Declination": {
+                "angle": 0.0
+            },
+            "Deviation file name": "zero-deviation.csv",
+            "ais": {
+                "416467000": {
+                    "3": {
+                        "messageType": 3,
+                        "repeatIndicator": 0,
+                        "MMSI": 416467000,
+                        "recordTimeStamp": 1601232797854,
+                        "recordContent": {
+                            "utc": 16,
+                            "rot": 7,
+                            "latitude": 37.747528,
+                            "NavStatus": 0,
+                            "PosAcc": 1,
+                            "sog": 6.8,
+                            "cog": 52.1,
+                            "hdg": 58,
+                            "longitude": -122.66941
+                        }
+                    }
+                },
+                "3669708": {
+                    "4": {
+                        "messageType": 4,
+                        "repeatIndicator": 0,
+                        "MMSI": 3669708,
+                        "recordTimeStamp": 1601232528494,
+                        "recordContent": {
+                            "UtcYear": 2020,
+                            "UtcHour": 15,
+                            "UtcMinute": 22,
+                            "UtcSecond": 40,
+                            "latitude": 37.923153,
+                            "PosAcc": 1,
+                            "UtcMonth": 9,
+                            "UtDay": 25,
+                            "longitude": -122.59845
+                        }
+                    }
+                }
+            },
+            "BSP Factor": 1.0,
+            "Max Leeway": 0.0,
+            "AWS Factor": 1.0,
+            "AWA Offset": 0.0,
+            "NMEA": "!AIVDM,1,1,,B,36=;8>01i4o>MdPEVFhj2AlP20qQ,0*6E"
+        };
+        onMessage(json);
+    }
 </script>
 </html>
