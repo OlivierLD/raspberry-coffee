@@ -150,13 +150,18 @@
                     // console.log("Key:" + aisKey);
                     let recordType = aisRecord[aisKey].messageType; // Same as str(aisKey)
                     let oneRecord = aisRecord[aisKey].recordContent;
+                    let isBoat = false;
                     if (oneRecord !== undefined) {
                         if (oneRecord.latitude !== null && oneRecord.latitude !== undefined &&
                             oneRecord.longitude !== null && oneRecord.longitude !== undefined) {
                             console.log(`MMSI: ${MMSI}\nRecord Type ${recordType}\nAt ${oneRecord.latitude} / ${oneRecord.longitude}`);
                             // Put in array for Leaflet
                             currentBound.push([oneRecord.latitude, oneRecord.longitude]);
-                            if (recordType === 4) { // It's a boat
+                            if (oneRecord.hdg !== undefined && oneRecord.cog !== undefined && oneRecord.sog !== undefined) {
+                                isBoat = true;
+                            }
+
+                            if (isBoat) { // It's a boat
                                 // Draw a boat, use oneRecord.hdg, oneRecord.cog
                                 let boatLen = 1,
                                     boatWidth = 0.5;
@@ -177,7 +182,7 @@
                             let marker = L.marker([oneRecord.latitude, oneRecord.longitude])
                             mapMarkers.push(marker);
                             let popupText = `<b>MMSI ${MMSI}<br/><span style="color: red;">${decToSex(oneRecord.latitude, "NS")}<br/>${decToSex(oneRecord.longitude, "EW")}</span></b>`;
-                            if (recordType === 4) {
+                            if (isBoat) {
                                 popupText += `<br/>SOG: ${oneRecord.sog}<br/>COG: ${oneRecord.cog}<br/>HDG: ${oneRecord.hdg}`;
                             }
                             marker.addTo(map)
