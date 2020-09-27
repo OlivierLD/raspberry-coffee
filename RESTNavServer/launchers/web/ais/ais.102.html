@@ -28,7 +28,7 @@
 
 </head>
 <body>
-<h1>Geolocation & AIS &nbsp;<span id="working" title="Traffic">&#11044;</span></h1>
+<h1>Geolocation & AIS</h1>
 <hr/>
 <div style="width: 98%; overflow-x: scroll;">
     <div style="white-space: nowrap; width: fit-content; display: inline-block;">
@@ -77,20 +77,6 @@
 </body>
 
 <script type="text/javascript">
-
-    let status = 'tick';
-    // Activity witness
-    function flipLight() {
-        let element = document.getElementById('working');
-        if (status === 'tick') {
-            status = 'tock';
-            element.style.color = 'red';
-        } else {
-            status = 'tick';
-            element.style.color = 'green';
-        }
-        element.title = new Date().toString();
-    }
 
     let options = {
         enableHighAccuracy: true,
