@@ -99,6 +99,7 @@
     ]);
 
     let currentBound = [];
+    let mapMarkers = [];
 
     map.addEventListener('mousemove', (event) => {
         // let lat = Math.round(event.latlng.lat * 100000) / 100000;
@@ -117,7 +118,15 @@
         currentBound = []; // Reset
         if (userPos !== null) {
             currentBound.push([userPos.lat, userPos.lng]);
-            // TODO Remove all markers from the map
+            // Remove all markers from the map
+            mapMarkers.forEach(mark => {
+               map.removeLayer(mark);
+            });
+
+            let marker =  L.marker([userPos.lat, userPos.lng]);
+            mapMarkers.push(marker);
+            marker.addTo(map)
+                .bindPopup(`<b>You are here<br/><span style="color: red;">${decToSex(userPos.lat, "NS")}<br/>${decToSex(userPos.lng, "EW")}</span></b>`);
         }
         if (json.ais !== null && json.ais !== undefined) {
             let ais = json.ais;
@@ -137,8 +146,9 @@
                             console.log(`MMSI: ${MMSI}\nRecord Type ${aisKey}\nAt ${oneRecordType.latitude} / ${oneRecordType.longitude}`);
                             // Put in array for Leaflet
                             currentBound.push([oneRecordType.latitude, oneRecordType.longitude]);
-                            L.marker([oneRecordType.latitude, oneRecordType.longitude])
-                                .addTo(map)
+                            let marker = L.marker([oneRecordType.latitude, oneRecordType.longitude])
+                            mapMarkers.push(marker);
+                            marker.addTo(map)
                                 .bindPopup(`<b>MMSI ${MMSI}<br/><span style="color: red;">${decToSex(oneRecordType.latitude, "NS")}<br/>${decToSex(oneRecordType.longitude, "EW")}</span></b>`);
                         }
                     }
