@@ -65,7 +65,10 @@
         timeout: 5000
     };
 
-    let userPos = {lat: 37.75, lng: -122.5 }; // TODO Get this from NMEA Pos
+    let userPos = {
+        lat: 37.75,
+        lng: -122.5
+    }; // TODO Get this from NMEA Pos
 
     function decToSex(val, ns_ew) {
         let absVal = Math.abs(val);
@@ -161,7 +164,6 @@
             console.info("No AIS");
         }
     };
-    let betweenPing = 1000;
 
     function getNMEAData() {
 
@@ -232,6 +234,7 @@
 
     }
 
+    let betweenPing = 5000;
     (() => {
         // Long poll for NMEA/AIS
         setInterval(() => {
