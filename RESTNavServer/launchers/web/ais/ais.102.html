@@ -164,17 +164,25 @@
                             if (isBoat) { // It's a boat
                                 // Draw a boat, use oneRecord.hdg, oneRecord.cog
                                 let boatLen = 0.02;
-                                let boatTriangle = L.polygon([
-                                    [oneRecord.latitude + ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.cog))),
-                                     oneRecord.longitude + ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.cog)))], // Bow
-                                    [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.cog - 10))),
-                                        oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.cog - 10)))],
-                                    [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.cog + 10))),
-                                        oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.cog + 10)))]
+                                let boatTriangle = L.polygon([ // HDG
+                                    [oneRecord.latitude + ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.hdg))),
+                                     oneRecord.longitude + ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.hdg)))], // Bow
+                                    [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.hdg - 10))),
+                                        oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.hdg - 10)))],
+                                    [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.hdg + 10))),
+                                        oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.hdg + 10)))]
                                 ], {
                                     color: 'yellow',
                                     fillColor: '#ff3',
                                     fillOpacity: 0.5
+                                });
+                                let boatCog = L.polyline([ // COG
+                                    [oneRecord.latitude + ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.cog))),
+                                        oneRecord.longitude + ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.cog)))], // Bow
+                                    [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(oneRecord.cog))),
+                                        oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(oneRecord.cog)))]
+                                ], {
+                                    color: 'blue'
                                 });
                                 let boatSpot = L.circle([oneRecord.latitude, oneRecord.longitude], {
                                     color: 'red',
@@ -186,6 +194,8 @@
                                 boatSpot.addTo(map);
                                 mapMarkers.push(boatTriangle);
                                 boatTriangle.addTo(map);
+                                mapMarkers.push(boatCog);
+                                boatCog.addTo(map);
                             }
 
                             let marker = L.marker([oneRecord.latitude, oneRecord.longitude])
