@@ -175,10 +175,21 @@
                     // console.log("Key:" + aisKey);
                     let recordType = aisRecord[aisKey].messageType; // Same as str(aisKey)
                     let recordDescription = aisRecord[aisKey].messageDescription;
-                    let navStatus = (recordType === 1 || recordType === 2 || recordType === 3 ? aisRecord[aisKey].navStatusDesc : null);
+                    let navStatus = null;
+                    let vesselName = null;
+                    let vesselType = null;
+                    if (recordType === 1 || recordType === 2 || recordType === 3) {
+                      navStatus = aisRecord[aisKey].navStatusDesc;
+                      let voyageRelatedData = aisRecord["5"];
+                      if (voyageRelatedData !== undefined) {
+                          vesselName = voyageRelatedData.vesselNameStr;
+                          vesselType = voyageRelatedData.shipTypeStr;
+                      }
+                    }
+
                     let aidType = (recordType === 21 ? aisRecord[aisKey].aidTypeDesc : null);
                     let oneRecord = aisRecord[aisKey].recordContent;
-                    let isBoat = false;
+                    let isBoat = false; // Should be types 1, 2, or 3
                     if (oneRecord !== undefined) {
                         // console.log(`AIS for MMSI ${MMSI}, type ${recordType}`);
                         if (oneRecord.latitude !== null && oneRecord.latitude !== undefined &&
@@ -246,6 +257,12 @@
                                 let popupText = `Record #${i}/${j}, type ${recordType}<br/>${recordDescription !== null ? recordDescription + "<br/>" : ""}<b>MMSI ${MMSI}<br/><span style="color: red;">${decToSex(oneRecord.latitude, "NS")}<br/>${decToSex(oneRecord.longitude, "EW")}</span></b>${aidType !== null ? '<br/>' + aidType : ''}`;
                                 if (isBoat) {
                                     popupText += `<br/>SOG: ${oneRecord.sog}<br/>COG: ${oneRecord.cog}<br/>HDG: ${oneRecord.hdg}<br/>${navStatus !== undefined && navStatus !== null ? navStatus : ''}`;
+                                    if (vesselName !== null && vesselName !== undefined) {
+                                        popupText += `<br/>${vesselName}`;
+                                    }
+                                    if (vesselType !== null && vesselType !== undefined) {
+                                        popupText += `<br/>${vesselType}`;
+                                    }
                                 }
                                 marker.addTo(map)
                                     .bindPopup(popupText);
