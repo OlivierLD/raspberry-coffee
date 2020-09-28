@@ -12,7 +12,7 @@ channels:
     port: /dev/ttyS80
     baudrate: 38400
     verbose: true
-forwarders:
+    reset.interval: 60000
   - type: rest
     server.name: 192.168.42.6
     server.port: 9999
