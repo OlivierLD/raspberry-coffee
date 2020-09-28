@@ -6,16 +6,20 @@ context:
   with.http.server: true
   http.port: 9999
   init.cache: true
-# channels:
-# No channels.
-# Will get AIS data from the implicit REST channel
+channels:
+  # GPS
+  - type: serial
+    port: /dev/ttyS80
+    baudrate: 4800
+    verbose: true
+  # Will get AIS data from the implicit REST channel
 forwarders:
   # - type: console
   - type: tcp
     port: 7002
-#    properties: no.ais.properties
-#  - type: tcp
-#    subclass: nmea.forwarders.AISTCPServer
-#    port: 7003
-#    verbose: true
+    properties: no.ais.properties
+  - type: tcp
+    subclass: nmea.forwarders.AISTCPServer
+    port: 7003
+    verbose: true
 
