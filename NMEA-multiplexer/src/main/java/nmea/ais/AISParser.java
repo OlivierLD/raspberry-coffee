@@ -2103,6 +2103,7 @@ public class AISParser {
 		}
 
 		static String decodeStatus(int stat) {
+			// See https://www.navcen.uscg.gov/?pageName=AISMessagesA
 			String status = "";
 			switch (stat) {
 				case 0:
@@ -2155,10 +2156,11 @@ public class AISParser {
 		}
 
 		static String decodeType(int type) {
+			// See https://api.vtexplorer.com/docs/ref-aistypes.html
 			String strType = "";
 			switch (type) {
 				case 20:
-					strType = "WIG";
+					strType = "WIG"; // Wing in ground
 					break;
 				case 21:
 					strType = "WIG - Cat A";
@@ -2171,6 +2173,13 @@ public class AISParser {
 					break;
 				case 24:
 					strType = "WIG - Cat D";
+					break;
+				case 25:
+				case 26:
+				case 27:
+				case 28:
+				case 29:
+					strType = "WIG - Reserved for future use";
 					break;
 				case 30:
 					strType = "Fishing";
@@ -2196,6 +2205,10 @@ public class AISParser {
 				case 37:
 					strType = "Pleasure Craft";
 					break;
+				case 38:
+				case 39:
+					strType = "Reserved";
+					break;
 				case 40:
 					strType = "High Speed Craft";
 					break;
@@ -2210,6 +2223,15 @@ public class AISParser {
 					break;
 				case 44:
 					strType = "High Speed Craft - Cat D";
+					break;
+				case 45:
+				case 46:
+				case 47:
+				case 48:
+					strType = "High Speed Craft - Reserved for future use";
+					break;
+				case 49:
+					strType = "High Speed Craft - No additional info";
 					break;
 				case 50:
 					strType = "Pilot";
@@ -2228,6 +2250,10 @@ public class AISParser {
 					break;
 				case 55:
 					strType = "Law Enforcement";
+					break;
+				case 56:
+				case 57:
+					strType = "Spare - Local Vessel";
 					break;
 				case 58:
 					strType = "Medical Transport";
@@ -2250,6 +2276,15 @@ public class AISParser {
 				case 64:
 					strType = "Passenger Ship - Cat D";
 					break;
+				case 65:
+				case 66:
+				case 67:
+				case 68:
+					strType = "Passenger Ship - Reserved for future use";
+					break;
+				case 69:
+					strType = "Passenger Ship - No additional Info";
+					break;
 				case 70:
 				case 79:
 					strType = "Cargo Ship";
@@ -2266,8 +2301,13 @@ public class AISParser {
 				case 74:
 					strType = "Cargo Ship - Cat D";
 					break;
+				case 75:
+				case 76:
+				case 77:
+				case 78:
+					strType = "Cargo Ship - Reserved for future use";
+					break;
 				case 80:
-				case 89:
 					strType = "Tanker";
 					break;
 				case 81:
@@ -2282,10 +2322,16 @@ public class AISParser {
 				case 84:
 					strType = "Tanker - Cat D";
 					break;
-				case 90:
-				case 99:
-					strType = "Other";
+				case 85:
+				case 86:
+				case 87:
+				case 88:
+					strType = "Tanker - Reserved for future use";
 					break;
+				case 89:
+					strType = "Tanker - No additional info";
+					break;
+				case 90:
 				case 91:
 					strType = "Other - Cat A";
 					break;
@@ -2298,12 +2344,20 @@ public class AISParser {
 				case 94:
 					strType = "Other - Cat D";
 					break;
+				case 95:
+				case 96:
+				case 97:
+				case 98:
+					strType = "Other - Reserved for future use";
+					break;
+				case 99:
+					strType = "Other";
+					break;
 				case 0:
 				default:
 					strType = "Not available";
 					break;
 			}
-
 			return strType;
 		}
 
