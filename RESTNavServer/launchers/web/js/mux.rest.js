@@ -215,7 +215,7 @@ function protocolTest() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get protocol test status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get protocol test status..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -235,7 +235,7 @@ function forwarderStatus() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get the forwarders status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get the forwarders status..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 		document.getElementById("forwarders-status").innerText = ('-');
 	});
 }
@@ -261,7 +261,7 @@ function dataVolume() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get the flow status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get the flow status..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 		pushData(0);
 		document.getElementById('flow').style.cursor = 'auto';
 	});
@@ -302,7 +302,7 @@ function getLastNMEASentence() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get the last NMEA Data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get the last NMEA Data..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -338,7 +338,7 @@ function serialPortList() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get serial ports list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get serial ports list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -474,7 +474,7 @@ function channelList() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get channels list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get channels list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -546,7 +546,7 @@ function forwarderList() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get forwarders list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get forwarders list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -587,7 +587,7 @@ function computerList() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get nmea.computers list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get nmea.computers list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -726,7 +726,7 @@ function generateDiagram() {
 			document.getElementById("diagram").style.display = 'block';
 			document.getElementById("lists").style.display = 'none';
 		}
-		errManager.display("Failed to get channels list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get channels list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 
 	let getForwarderPromise = getForwarders();
@@ -806,7 +806,7 @@ function generateDiagram() {
 			document.getElementById("diagram").style.display = 'block';
 			document.getElementById("lists").style.display = 'none';
 		}
-		errManager.display("Failed to get forwarders list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get forwarders list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 
 	let getComputerPromise = getComputers();
@@ -853,7 +853,7 @@ function generateDiagram() {
 			document.getElementById("diagram").style.display = 'block';
 			document.getElementById("lists").style.display = 'none';
 		}
-		errManager.display("Failed to get nmea.computers list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get nmea.computers list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -876,7 +876,7 @@ function createChannel(channel) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to create channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to create channel..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -922,7 +922,7 @@ function createComputer(computer) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to create computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to create computer..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -945,7 +945,7 @@ function removeChannel(channel) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to delete channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to delete channel..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -968,7 +968,7 @@ function removeForwarder(channel) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to delete forwarder..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to delete forwarder..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -991,7 +991,7 @@ function removeComputer(computer) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to delete computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to delete computer..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -1037,7 +1037,7 @@ function changeComputer(computer) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to update computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to update computer..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -1074,7 +1074,7 @@ function manageMuxVerbose(cb) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to update multiplexer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to update multiplexer..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -1097,7 +1097,7 @@ function resetCache() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to reset data cache..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to reset data cache..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
