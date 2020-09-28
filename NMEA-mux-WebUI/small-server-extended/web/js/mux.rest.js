@@ -25,7 +25,7 @@ function getPromise(
 		console.log(">>> Promise", verb, url);
 	}
 
-	let promise = new Promise(function (resolve, reject) {
+	let promise = new Promise((resolve, reject) => {
 		let xhr = new XMLHttpRequest();
 		let TIMEOUT = timeout;
 
@@ -49,13 +49,13 @@ function getPromise(
 			console.log("Send Error ", err);
 		}
 
-		let requestTimer = setTimeout(function () {
+		let requestTimer = setTimeout(() => {
 			xhr.abort();
 			let mess = {code: 408, message: 'Timeout'};
 			reject(mess);
 		}, TIMEOUT);
 
-		xhr.onload = function () {
+		xhr.onload = () => {
 			clearTimeout(requestTimer);
 			if (xhr.status === happyCode) {
 				resolve(xhr.response);
@@ -156,11 +156,11 @@ function addComputer(computer) {
 }
 
 function updateChannel(channel) {
-	return getPromise('/mux/channels/' + channel.type, DEFAULT_TIMEOUT, 'PUT', 200, channel);
+	return getPromise('/mux/channels/' + channel.type, DEFAULT_TIMEOUT, 'PUT', 201, channel);
 }
 
 function updateComputer(computer) {
-	return getPromise('/mux/computers/' + computer.type, DEFAULT_TIMEOUT, 'PUT', 200, computer);
+	return getPromise('/mux/computers/' + computer.type, DEFAULT_TIMEOUT, 'PUT', 201, computer);
 }
 
 function updateMuxVerbose(value) {
@@ -596,7 +596,7 @@ function buildTable(channels, forwarders, computers) {
 			"<tr><th width='45%'>Pulled in from</th><th width='10%'></th><th width='45%'>Pushed out to</th></tr>" +
 			"<tr><td valign='middle' align='center' rowspan='2' title='Channels'>" + channels + "</td>" +
 			//      "<td valign='middle' align='center' rowspan='2'><b><i>MUX</i></b></td>" +
-			"<td valign='middle' align='center' rowspan='2'><img style='border-radius: 5px; border: 1px sold cyan;' src='img/antenna.png' width='32' height='32' alt='MUX' title='MUX'></td>" +
+			"<td valign='middle' align='center' rowspan='2'><img src='images/antenna.png' width='32' height='32' alt='MUX' title='MUX'></td>" +
 			"<td valign='middle' align='center' title='Forwarders'>" + forwarders + "</td></tr>" +
 			"<tr><td valign='middle' align='center' title='Computers'>" + computers + "</td></tr>" +
 			"</table>";
@@ -1014,7 +1014,7 @@ function changeChannel(channel) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to update channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to update channel..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 

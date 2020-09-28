@@ -67,7 +67,7 @@ function getPromise(
 	return promise;
 }
 
-const DEFAULT_TIMEOUT = 50000;
+const DEFAULT_TIMEOUT = 10000;
 
 function protocolTestFunc() {
 	let url = document.location.origin.replace('http', 'mux') + '/this-is-a-test';
@@ -156,11 +156,11 @@ function addComputer(computer) {
 }
 
 function updateChannel(channel) {
-	return getPromise('/mux/channels/' + channel.type, DEFAULT_TIMEOUT, 'PUT', 200, channel);
+	return getPromise('/mux/channels/' + channel.type, DEFAULT_TIMEOUT, 'PUT', 201, channel);
 }
 
 function updateComputer(computer) {
-	return getPromise('/mux/computers/' + computer.type, DEFAULT_TIMEOUT, 'PUT', 200, computer);
+	return getPromise('/mux/computers/' + computer.type, DEFAULT_TIMEOUT, 'PUT', 201, computer);
 }
 
 function updateMuxVerbose(value) {
@@ -281,7 +281,7 @@ let lastTimeStamp = 0;
 function getLastNMEASentence() {
 	// No REST traffic for this one.
 	let getData = getLastSentence();
-	getData.then(value => {
+	getData.then((value) => {
 		let json = JSON.parse(value); // Like { "nmea-bytes": 13469, "started": 1489004962194 }
 		let lastString = json["last-data"];
 		if (lastString !== null && lastString !== undefined) {
@@ -1014,7 +1014,7 @@ function changeChannel(channel) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to update channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to update channel..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 

@@ -156,11 +156,11 @@ function addComputer(computer) {
 }
 
 function updateChannel(channel) {
-	return getPromise('/mux/channels/' + channel.type, DEFAULT_TIMEOUT, 'PUT', 200, channel);
+	return getPromise('/mux/channels/' + channel.type, DEFAULT_TIMEOUT, 'PUT', 201, channel);
 }
 
 function updateComputer(computer) {
-	return getPromise('/mux/computers/' + computer.type, DEFAULT_TIMEOUT, 'PUT', 200, computer);
+	return getPromise('/mux/computers/' + computer.type, DEFAULT_TIMEOUT, 'PUT', 201, computer);
 }
 
 function updateMuxVerbose(value) {
@@ -1014,7 +1014,7 @@ function changeChannel(channel) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to update channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to update channel..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
