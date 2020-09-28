@@ -2132,12 +2132,18 @@ public class AISParser {
 				case 8:
 					status = "Under way sailing";
 					break;
+				case 11:
+					status = "Power-driven vessel towing astern";
+					break;
+				case 12:
+					status = "Power-driven vessel pushing ahead or towing alongside";
+					break;
+				case 14:
+					status = "AIS-SART (active), MOB-AIS, EPIRB-AIS";
+					break;
 				case 9:
 				case 10:
-				case 11:
-				case 12:
 				case 13:
-				case 14:
 					status = "Reserved for future...";
 					break;
 				case 15:
