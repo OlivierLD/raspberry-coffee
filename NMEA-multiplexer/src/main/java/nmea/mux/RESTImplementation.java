@@ -1117,6 +1117,7 @@ public class RESTImplementation {
 					try {
 						NMEAClient serialClient = new SerialClient(serialJson.getDeviceFilters(), serialJson.getSentenceFilters(), this.mux);
 						serialClient.initClient();
+						// TODO Reset Interval
 						serialClient.setReader(new SerialReader("MUX-SerialReader", serialClient.getListeners(), serialJson.getPort(), serialJson.getBr()));
 						nmeaDataClients.add(serialClient);
 						serialClient.startWorking();

@@ -136,7 +136,7 @@ public class NMEADataCache
 
 	public static final String AIS = "ais";
 	private Map<Integer, Map<Integer, AISParser.AISRecord>> aisMap = new ConcurrentHashMap<>();
-	private final static long AIS_MAX_AGE = 600_000L; // Ten minutes
+	private final static long AIS_MAX_AGE = 600_000L; // Ten minutes. TODO A parameter
 	private final static long AIS_CLEANUP_FREQ = 60_000L; // One minute
 
 	private Thread aisCleaner = null;

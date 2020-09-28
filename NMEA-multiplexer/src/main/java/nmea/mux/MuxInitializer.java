@@ -164,12 +164,21 @@ public class MuxInitializer {
 								String br = muxProps.getProperty(String.format("mux.%s.baudrate", MUX_IDX_FMT.format(muxIdx)));
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								String resetIntervalStr = muxProps.getProperty(String.format("mux.%s.reset.interval", MUX_IDX_FMT.format(muxIdx)));
+								Long resetInterval = null;
+								if (resetIntervalStr != null) {
+									try {
+										resetInterval = Long.parseLong(resetIntervalStr);
+									} catch (NumberFormatException nfe) {
+										nfe.printStackTrace();
+									}
+								}
 								SerialClient serialClient = new SerialClient(
 												!deviceFilters.trim().isEmpty() ? deviceFilters.split(",") : null,
 												!sentenceFilters.trim().isEmpty() ? sentenceFilters.split(",") : null,
 												mux);
 								serialClient.initClient();
-								serialClient.setReader(new SerialReader("MUX-SerialReader", serialClient.getListeners(), serialPort, Integer.parseInt(br)));
+								serialClient.setReader(new SerialReader("MUX-SerialReader", serialClient.getListeners(), serialPort, Integer.parseInt(br), resetInterval));
 								serialClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								nmeaDataClients.add(serialClient);
 							} catch (Exception e) {

@@ -16,7 +16,10 @@ echo Using properties file ${MUX_PROP_FILE}
 JAVA_OPTIONS=
 if [[ "$OS" == "Darwin" ]]
 then
+  # COpy the jnilib file where it belongs, if it is not there.
   JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"       # for Mac
+  # JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=../Serial.IO/libs" # for Mac
+
 fi
 if [[ "$OS" == "Linux" ]]
 then
@@ -73,7 +76,8 @@ CP=./build/libs/NMEA-multiplexer-1.0-all.jar
 SUDO=
 if [[ "$OS" == "Darwin" ]]
 then
-  CP=${CP}:./libs/RXTXcomm.jar          # for Mac
+  # CP=${CP}:./libs/RXTXcomm.jar          # for Mac
+  CP=$CP:../Serial.IO/libs/RXTXcomm.jar # for Mac
 fi
 if [[ "$OS" == "Linux" ]]
 then

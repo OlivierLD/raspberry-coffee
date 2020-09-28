@@ -33,6 +33,41 @@ public class SerialReader
 	private final static int DEFAULT_MAX_OPEN_TRIES = 5;
 	private final static long BETWEEN_TRIES = 1_000L;
 
+	private final SerialReader instance = this;
+
+	private class ResetThread extends Thread {
+		private long interval = 0L;
+		public ResetThread(long interval) {
+			super("Serial-Rest-Thread");
+			this.interval = interval;
+		}
+		public void run() {
+			while (true) {
+				TimeUtil.delay(this.interval);
+				if (instance.verbose) {
+					System.out.println(">> Resetting the SerialReader");
+				}
+				if (instance.canRead()) {
+					if (instance.verbose) {
+						System.out.println(">> Stopping the SerialReader");
+					}
+					instance.goRead = false;
+
+					try {
+						instance.closeReader();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+				if (instance.verbose) {
+					System.out.println(">> Re-starting the SerialReader");
+				}
+				instance.startReader();
+			}
+		}
+	}
+	private ResetThread resetThread;
+
 	public SerialReader() {
 	}
 	public SerialReader(String com, int br) {
@@ -46,9 +81,16 @@ public class SerialReader
 		this(null, al, com, br);
 	}
 	public SerialReader(String threadName, List<NMEAListener> al, String com, int br) {
+		this(threadName, al, com, br, null);
+	}
+	public SerialReader(String threadName, List<NMEAListener> al, String com, int br, Long resetInterval) {
 		super(threadName, al);
 		this.comPort = com;
 		this.br = br;
+		if (resetInterval != null) {
+			this.resetThread = new ResetThread(resetInterval);
+			this.resetThread.start();
+		}
 	}
 
 	public int getBr() {
@@ -194,8 +236,16 @@ public class SerialReader
 	@Override
 	public void closeReader() throws Exception {
 		if (this.serialPort != null) {
-			theInput.close();
-			this.serialPort.close();
+			try {
+				theInput.close();
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
+			try {
+				this.serialPort.close();
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
 		}
 	}
 
