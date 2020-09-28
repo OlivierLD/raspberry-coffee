@@ -185,7 +185,7 @@
                                 if (oneRecord.hdg !== undefined && oneRecord.cog !== undefined && oneRecord.sog !== undefined) {
                                     isBoat = true;
                                 }
-
+                                console.log(`MMSI: ${MMSI}\nRecord Type ${recordType}\nAt ${oneRecord.latitude} / ${oneRecord.longitude}, boat:${isBoat}`);
                                 if (isBoat) { // It's a boat
                                     // HDG=511 => n/a
                                     // Draw a boat, use oneRecord.hdg, oneRecord.cog
