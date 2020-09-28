@@ -172,6 +172,7 @@
                     let aisKey = aisKeys[j];
                     // console.log("Key:" + aisKey);
                     let recordType = aisRecord[aisKey].messageType; // Same as str(aisKey)
+                    let recordDescription = aisRecord[aisKey].messageDescription;
                     let oneRecord = aisRecord[aisKey].recordContent;
                     let isBoat = false;
                     if (oneRecord !== undefined) {
@@ -238,7 +239,7 @@
                                 // Popup
                                 let marker = L.marker([oneRecord.latitude, oneRecord.longitude]);
                                 mapMarkers.push(marker);
-                                let popupText = `Record #${i}/${j}, type ${recordType}<br/><b>MMSI ${MMSI}<br/><span style="color: red;">${decToSex(oneRecord.latitude, "NS")}<br/>${decToSex(oneRecord.longitude, "EW")}</span></b>`;
+                                let popupText = `Record #${i}/${j}, type ${recordType}<br/>${recordDescription !== null ? recordDescription + "<br/>" : ""}<b>MMSI ${MMSI}<br/><span style="color: red;">${decToSex(oneRecord.latitude, "NS")}<br/>${decToSex(oneRecord.longitude, "EW")}</span></b>`;
                                 if (isBoat) {
                                     popupText += `<br/>SOG: ${oneRecord.sog}<br/>COG: ${oneRecord.cog}<br/>HDG: ${oneRecord.hdg}`;
                                 }
