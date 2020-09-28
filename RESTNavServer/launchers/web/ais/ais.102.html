@@ -348,6 +348,7 @@
 
     if (!FOR_TEST) {
         (() => {
+            fetch();
             // Long poll for NMEA/AIS
             setInterval(() => {
                 fetch();
