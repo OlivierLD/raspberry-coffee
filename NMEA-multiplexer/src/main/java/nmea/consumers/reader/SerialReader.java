@@ -237,7 +237,7 @@ public class SerialReader
 	public void closeReader() throws Exception {
 		if (this.serialPort != null) {
 			try {
-				theInput.close();
+				theInput.close(); // Note: The Mac does NOT like this (crash)
 			} catch (Throwable t) {
 				t.printStackTrace();
 			}

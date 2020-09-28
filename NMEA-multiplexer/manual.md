@@ -152,7 +152,10 @@ channels:
     mux.01.port=/dev/ttyUSB0
     mux.01.baudrate=4800
     mux.01.verbose=false
+    mux.01.reset.interval=60000
     ```
+    > The optional `reset.interval` is in milliseconds. It closes and re-opens the Serial port as mentionned.
+    > It happens to be useful on some devices...
 - `tcp`
     - TCP input
     ```properties
@@ -236,8 +239,8 @@ channels:
     mux.01.device.prefix=01
     mux.01.verbose=false
     ```
-- Implicit REST input 
-    - `rest` input channel (consumer)
+- "Implicit" REST input 
+    - Like a `rest` input channel (consumer)
     - If the `with.http.server` is on, then there is REST resource
     ```
     POST /mux/nmea-sentence -h "Content-Type: plain/text" -d "$GPRMC,....."
