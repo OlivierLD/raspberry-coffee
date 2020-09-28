@@ -1263,6 +1263,8 @@ public class AISParser {
 		private int MMSI;             // Mandatory
 		private long recordTimeStamp; // Mandatory
 		private String messageDescription;
+		private String navStatusDesc;
+		private String aidTypeDesc;
 
 		Map<String, Object> recordContent = new HashMap<>();
 
@@ -1409,6 +1411,7 @@ public class AISParser {
 
 		public void setAidType(int aid_type) {
 			recordContent.put(AID_TYPE, aid_type);
+			this.aidTypeDesc = decodeNavAidType(aid_type);
 		}
 
 		public int getDesignatedAreaCode() {
@@ -1918,6 +1921,7 @@ public class AISParser {
 
 		public void setNavStatus(int navStatus) {
 			recordContent.put(NAV_STATUS, navStatus);
+			this.navStatusDesc = decodeStatus(navStatus);
 		}
 
 		public int getNavStatus() {
@@ -2311,7 +2315,7 @@ public class AISParser {
 					str = "Light, with sectors";
 					break;
 				case 7:
-					str = "Lesding Light Front";
+					str = "Leading Light Front";
 					break;
 				case 8:
 					str = "Leading Light Rear";
@@ -2400,11 +2404,12 @@ public class AISParser {
 				case 1:
 				case 2:
 				case 3:
-					str = String.format("Type:%d, Repeat:%d, MMSI:%d, status: %s, rot:%d, Pos:%f/%f (Acc:%d), COG:%.02f, SOG:%.02f, HDG:%s, TimeStamp: %d (s).",
+					str = String.format("Type:%d, Repeat:%d, MMSI:%d, status: %s, name: %s, rot:%d, Pos:%f/%f (Acc:%d), COG:%.02f, SOG:%.02f, HDG:%s, TimeStamp: %d (s).",
 							messageType,
 							repeatIndicator,
 							MMSI,
 							decodeStatus(getNavStatus()),
+							getName(),
 							getRot(),
 							getLatitude(),
 							getLongitude(),
