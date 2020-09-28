@@ -40,6 +40,21 @@ public class AISParser {
    * NMEA Message type, for AIS
    */
 
+	public static Map<Integer, String> messageTypeDescription = new HashMap<>();
+	static {
+		messageTypeDescription.put(1, "Position Report (A)");
+		messageTypeDescription.put(2, "Position Report (A)");
+		messageTypeDescription.put(3, "Position Report (A)");
+		messageTypeDescription.put(4, "Base Station");
+		messageTypeDescription.put(5, "Voyage Related Data");
+		messageTypeDescription.put(8, "Broadcast Message");
+		messageTypeDescription.put(15, "Interrogation");
+		messageTypeDescription.put(18, "Position Report (B)");
+		messageTypeDescription.put(20, "Data Link Mgmt");
+		messageTypeDescription.put(21, "Aid to Navigation");
+		messageTypeDescription.put(24, "Static Data Report");
+	}
+
 	public enum AISData { // Generic, first 3 fields.
 		MESSAGE_TYPE(0, 6, "Message Type"),
 		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
@@ -1247,6 +1262,7 @@ public class AISParser {
 		private int repeatIndicator;  // Mandatory
 		private int MMSI;             // Mandatory
 		private long recordTimeStamp; // Mandatory
+		private String messageDescription;
 
 		Map<String, Object> recordContent = new HashMap<>();
 
@@ -1873,10 +1889,15 @@ public class AISParser {
 
 		public void setMessageType(int messageType) {
 			this.messageType = messageType;
+			this.messageDescription = messageTypeDescription.get(messageType);
 		}
 
 		public int getMessageType() {
 			return messageType;
+		}
+
+		public String getMessageDescription() {
+			return this.messageDescription;
 		}
 
 		public void setRepeatIndicator(int repeatIndicator) {
