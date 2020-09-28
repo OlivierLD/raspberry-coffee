@@ -339,6 +339,11 @@
     }
 
     let betweenPing = 5000;
+    let interval = getQSPrm("interval");
+    if (interval !== null) {
+        betweenPing = parseInt(interval);
+    }
+
     let FOR_TEST = (getQSPrm("test") === 'true');
 
     if (!FOR_TEST) {
