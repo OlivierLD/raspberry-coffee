@@ -1014,7 +1014,7 @@ function changeChannel(channel) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to update channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to update channel..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
