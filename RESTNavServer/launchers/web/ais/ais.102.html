@@ -47,6 +47,7 @@
             <small><i>Decimal:</i></small>
             <div id="curr-pos-click-dec"></div>
             <hr/>
+            <span id="ais-status"></span>
         </td>
     </tr>
 </table>
@@ -159,6 +160,7 @@
         if (json.ais !== null && json.ais !== undefined) {
             let ais = json.ais;
             let keys = Object.keys(ais);
+            document.getElementById("ais-status").innerHTML = `${keys.length} AIS record(s)`;
             for (let i=0; i<keys.length; i++) {
                 let k = keys[i];
                 let aisRecord = ais[k];
@@ -248,7 +250,8 @@
                 map.fitBounds(currentBound);
             }
         } else {
-            console.info("No AIS");
+            // console.info("No AIS");
+            document.getElementById("ais-status").innerHTML = "No AIS";
             map.panTo(new L.LatLng(userPos.lat, userPos.lng));
         }
     };
