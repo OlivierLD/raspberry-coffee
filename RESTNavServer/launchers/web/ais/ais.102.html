@@ -163,18 +163,19 @@
             let ais = json.ais;
             let keys = Object.keys(ais);
             document.getElementById("ais-status").innerHTML = `${keys.length} AIS record(s)`;
-            for (let i=0; i<keys.length; i++) {
+            for (let i=0; i<keys.length; i++) { // MMSI
                 let k = keys[i];
                 let aisRecord = ais[k];
                 let MMSI = k;
                 let aisKeys = Object.keys(aisRecord);
-                for (let j=0; j<aisKeys.length; j++) {
+                for (let j=0; j<aisKeys.length; j++) { // Record types
                     let aisKey = aisKeys[j];
                     // console.log("Key:" + aisKey);
                     let recordType = aisRecord[aisKey].messageType; // Same as str(aisKey)
                     let oneRecord = aisRecord[aisKey].recordContent;
                     let isBoat = false;
                     if (oneRecord !== undefined) {
+                        console.log(`AIS for MMSI ${MMSI}, type ${recordType}`);
                         if (oneRecord.latitude !== null && oneRecord.latitude !== undefined &&
                             oneRecord.longitude !== null && oneRecord.longitude !== undefined) {
                             console.log(`MMSI: ${MMSI}\nRecord Type ${recordType}\nAt ${oneRecord.latitude} / ${oneRecord.longitude}`);
@@ -237,7 +238,7 @@
                                 // Popup
                                 let marker = L.marker([oneRecord.latitude, oneRecord.longitude]);
                                 mapMarkers.push(marker);
-                                let popupText = `Record #${j}<br/><b>MMSI ${MMSI}<br/><span style="color: red;">${decToSex(oneRecord.latitude, "NS")}<br/>${decToSex(oneRecord.longitude, "EW")}</span></b>`;
+                                let popupText = `Record #${i}/${j}<br/><b>MMSI ${MMSI}<br/><span style="color: red;">${decToSex(oneRecord.latitude, "NS")}<br/>${decToSex(oneRecord.longitude, "EW")}</span></b>`;
                                 if (isBoat) {
                                     popupText += `<br/>SOG: ${oneRecord.sog}<br/>COG: ${oneRecord.cog}<br/>HDG: ${oneRecord.hdg}`;
                                 }
