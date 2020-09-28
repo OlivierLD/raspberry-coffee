@@ -1265,6 +1265,9 @@ public class AISParser {
 		private String messageDescription;
 		private String navStatusDesc;
 		private String aidTypeDesc;
+		private String vesselNameStr;
+		private String nameStr;
+		private String shipTypeStr;
 
 		Map<String, Object> recordContent = new HashMap<>();
 
@@ -1484,6 +1487,7 @@ public class AISParser {
 
 		public void setName(String name) {
 			recordContent.put(NAME, name);
+			this.nameStr = name;
 		}
 
 		public String getNameExtension() {
@@ -1520,6 +1524,7 @@ public class AISParser {
 
 		public void setVesselName(String vesselName) {
 			recordContent.put(VESSEL_NAME, vesselName);
+			this.vesselNameStr = vesselName;
 		}
 
 		public int getShipType() {
@@ -1532,6 +1537,7 @@ public class AISParser {
 
 		public void setShipType(int ship_type) {
 			recordContent.put(SHIP_TYPE, ship_type);
+			this.shipTypeStr = decodeType(ship_type);
 		}
 
 		public int getDimToBow() {
