@@ -178,10 +178,10 @@
                     let oneRecord = aisRecord[aisKey].recordContent;
                     let isBoat = false;
                     if (oneRecord !== undefined) {
-                        console.log(`AIS for MMSI ${MMSI}, type ${recordType}`);
+                        // console.log(`AIS for MMSI ${MMSI}, type ${recordType}`);
                         if (oneRecord.latitude !== null && oneRecord.latitude !== undefined &&
                             oneRecord.longitude !== null && oneRecord.longitude !== undefined) {
-                            console.log(`MMSI: ${MMSI}\nRecord Type ${recordType}\nAt ${oneRecord.latitude} / ${oneRecord.longitude}`);
+                            // console.log(`MMSI: ${MMSI}\nRecord Type ${recordType}\nAt ${oneRecord.latitude} / ${oneRecord.longitude}`);
                             if (oneRecord.longitude < 180 && oneRecord.longitude > -180) {
                                 // Put in array for Leaflet
                                 currentBound.push([oneRecord.latitude, oneRecord.longitude]);
