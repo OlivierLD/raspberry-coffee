@@ -230,10 +230,12 @@ public class NMEADataCache
 								synchronized (typesMap) {
 									while (typeIterator.hasNext()) {
 										Integer type = typeIterator.next();
-										AISParser.AISRecord aisRecord = typesMap.get(type);
-										if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
-											System.out.println(String.format("=== Cleanup: Removing AIS Record type %d from %d ===", type, mmsi));
-											typesMap.remove(type);
+										if (type != 21 && type != 4) {
+											AISParser.AISRecord aisRecord = typesMap.get(type);
+											if (System.currentTimeMillis() - aisRecord.getRecordTimeStamp() > AIS_MAX_AGE) {
+												System.out.println(String.format("=== Cleanup: Removing AIS Record type %d from %d ===", type, mmsi));
+												typesMap.remove(type);
+											}
 										}
 									}
 									if (typesMap.size() == 0) {
