@@ -332,3 +332,21 @@ Works for Sun, Moon, Venus, Mars, Jupiter, Saturn, and 58 stars.
 - Implement visual widgets as `web-components` (see [here](https://olivierld.github.io/webcomponents/gallery.html))...
 - AIS REST forwarder (on its own board). &#9989; See `nmea.mux.ais.frwd.yaml`.
 
+### Bonus
+#### AIS plotter
+- See [here](../Project-Trunk/dAISy/README.md) and [here](../NMEA-multiplexer/casestudy.md#ais)
+- Requires an Internet connection (for LeafLet)
+- Start your `RESTNavServer`, reading an AIS HAT (like `dAISy`)
+- Reach <http://your-server-address:9999/web/ais/ais.102.html>
+
+![01](./docimg/ais.01.png)
+
+![02](./docimg/ais.02.png)
+
+![03](./docimg/ais.03.png)
+
+![04](./docimg/ais.04.png)
+
+![05](./docimg/ais.05.png)
+
+---
