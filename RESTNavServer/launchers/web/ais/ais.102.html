@@ -251,6 +251,7 @@
             }
         } else {
             console.info("No AIS");
+            map.panTo(new L.LatLng(userPos.lat, userPos.lng));
         }
     };
 
