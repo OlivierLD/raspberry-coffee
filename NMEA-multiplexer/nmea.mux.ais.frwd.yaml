@@ -13,6 +13,7 @@ channels:
     baudrate: 38400
     verbose: true
     reset.interval: 60000
+forwarders:
   - type: rest
     server.name: 192.168.42.6
     server.port: 9999
