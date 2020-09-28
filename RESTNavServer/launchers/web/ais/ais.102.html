@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<!--
+ | QS Parameters:
+ |     interval=5000   in ms, default 5000
+ |     test=true|false default false
+ +-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -374,38 +379,464 @@
     } else {
         // For tests
         let json = {
-            "NMEA_AS_IS": {
-                "AIS": "!AIVDM,1,1,,B,36=;8>01i4o>MdPEVFhj2AlP20qQ,0*6E"
-            },
             "Damping": 1,
-            "Current calculated with damping": {},
+            "NMEA_AS_IS": {
+                "GGA": "$GNGGA,191542.00,3744.93640,N,12230.42279,W,1,06,2.19,-11.2,M,-29.9,M,,*62\r",
+                "TXT": "$GNTXT,01,01,02,PF=3FF*4B\r",
+                "GSA": "$GNGSA,A,3,81,,,,,,,,,,,,3.64,2.19,2.91*14\r",
+                "GLL": "$GNGLL,3744.93640,N,12230.42279,W,191542.00,A,A*6B\r",
+                "VTG": "$GNVTG,,T,,M,0.188,N,0.349,K,A*32\r",
+                "RMC": "$GNRMC,191542.00,A,3744.93640,N,12230.42279,W,0.188,,280920,,,A*72\r",
+                "GSV": [
+                    "$GLGSV,2,1,08,66,02,037,11,67,52,028,11,68,69,240,,69,17,222,*68",
+                    "$GLGSV,2,2,08,81,11,140,21,82,60,128,17,83,63,342,,84,07,325,*67"
+                ],
+                "AIS": "!AIVDM,1,1,,B,403Ovk1vBNC?Do>jO8EdjGO026Ht,0*34"
+            },
             "HDG Offset": 0.0,
-            "Position": {
-                "lat": 37.7489,
-                "lng": -122.507,
-                "gridSquare": "CM87rr"
-            },
-            "Default Declination": {
-                "angle": 0.0
-            },
-            "Deviation file name": "zero-deviation.csv",
+            "Delta Altitude": 76.2,
             "ais": {
-                "416467000": {
+                "993692026": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 1,
+                        "MMSI": 993692026,
+                        "recordTimeStamp": 1601319816621,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Beacon, Special mark",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.798183,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 19,
+                            "Dim2Port": 0,
+                            "longitude": -122.37784
+                        }
+                    }
+                },
+                "993692027": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 1,
+                        "MMSI": 993692027,
+                        "recordTimeStamp": 1601317535615,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Beacon, Special mark",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.800785,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 19,
+                            "Dim2Port": 0,
+                            "longitude": -122.37504
+                        }
+                    }
+                },
+                "993692024": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 1,
+                        "MMSI": 993692024,
+                        "recordTimeStamp": 1601316315668,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Beacon, Special mark",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.790745,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 19,
+                            "Dim2Port": 0,
+                            "longitude": -122.3858
+                        }
+                    }
+                },
+                "993692344": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 1,
+                        "MMSI": 993692344,
+                        "recordTimeStamp": 1601316103634,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Light, no sector",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.815586,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 5,
+                            "Dim2Port": 0,
+                            "longitude": -122.52952
+                        }
+                    }
+                },
+                "993692028": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 1,
+                        "MMSI": 993692028,
+                        "recordTimeStamp": 1601317539612,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Beacon, Special mark",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.80562,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 19,
+                            "Dim2Port": 0,
+                            "longitude": -122.369865
+                        }
+                    }
+                },
+                "993692018": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 0,
+                        "MMSI": 993692018,
+                        "recordTimeStamp": 1601316883634,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Reference point",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.5,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 1,
+                            "Dim2Port": 0,
+                            "longitude": -122.72721
+                        }
+                    }
+                },
+                "993692019": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 1,
+                        "MMSI": 993692019,
+                        "recordTimeStamp": 1601319162749,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Reference point",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.65445,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 1,
+                            "Dim2Port": 0,
+                            "longitude": -122.72721
+                        }
+                    }
+                },
+                "993692016": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 1,
+                        "MMSI": 993692016,
+                        "recordTimeStamp": 1601319591631,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Reference point",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.705833,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 1,
+                            "Dim2Port": 0,
+                            "longitude": -122.80445
+                        }
+                    }
+                },
+                "993692278": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 1,
+                        "MMSI": 993692278,
+                        "recordTimeStamp": 1601318623620,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Starboard hand Mark",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.763332,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 25,
+                            "Dim2Port": 0,
+                            "longitude": -122.62903
+                        }
+                    }
+                },
+                "993692009": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 1,
+                        "MMSI": 993692009,
+                        "recordTimeStamp": 1601316771626,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Reference point",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.65305,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 1,
+                            "Dim2Port": 0,
+                            "longitude": -122.66312
+                        }
+                    }
+                },
+                "993692014": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 1,
+                        "MMSI": 993692014,
+                        "recordTimeStamp": 1601318220214,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Reference point",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.815,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 1,
+                            "Dim2Port": 0,
+                            "longitude": -122.78695
+                        }
+                    }
+                },
+                "993692013": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 0,
+                        "MMSI": 993692013,
+                        "recordTimeStamp": 1601319367640,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Beacon, Safe water",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.98055,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 18,
+                            "Dim2Port": 0,
+                            "longitude": -123.15139
+                        }
+                    }
+                },
+                "993692001": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 1,
+                        "MMSI": 993692001,
+                        "recordTimeStamp": 1601317295621,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Beacon, Safe water",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.74993,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 18,
+                            "Dim2Port": 0,
+                            "longitude": -122.69276
+                        }
+                    }
+                },
+                "993692006": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 1,
+                        "MMSI": 993692006,
+                        "recordTimeStamp": 1601318875626,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Reference point",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.678883,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 1,
+                            "Dim2Port": 0,
+                            "longitude": -122.77972
+                        }
+                    }
+                },
+                "993692007": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 0,
+                        "MMSI": 993692007,
+                        "recordTimeStamp": 1601318255134,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Beacon, Safe water",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.53945,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 18,
+                            "Dim2Port": 0,
+                            "longitude": -123.04639
+                        }
+                    }
+                },
+                "993692005": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 0,
+                        "MMSI": 993692005,
+                        "recordTimeStamp": 1601319747624,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Beacon, Safe water",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 38.124718,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 18,
+                            "Dim2Port": 0,
+                            "longitude": -123.35972
+                        }
+                    }
+                },
+                "368084240": {
                     "3": {
                         "messageType": 3,
                         "repeatIndicator": 0,
-                        "MMSI": 416467000,
-                        "recordTimeStamp": 1601232797854,
+                        "MMSI": 368084240,
+                        "recordTimeStamp": 1601320178459,
+                        "messageDescription": "Position Report (A)",
+                        "navStatusDesc": "Under way using engine",
                         "recordContent": {
-                            "utc": 16,
-                            "rot": 7,
-                            "latitude": 37.747528,
+                            "utc": 37,
+                            "rot": -127,
+                            "latitude": 37.785652,
                             "NavStatus": 0,
                             "PosAcc": 1,
-                            "sog": 6.8,
-                            "cog": 52.1,
-                            "hdg": 58,
-                            "longitude": -122.66941
+                            "sog": 8.3,
+                            "cog": 64.4,
+                            "hdg": 64,
+                            "longitude": -122.54868
+                        }
+                    },
+                    "5": {
+                        "messageType": 5,
+                        "repeatIndicator": 0,
+                        "MMSI": 368084240,
+                        "recordTimeStamp": 1601319961694,
+                        "messageDescription": "Voyage Related Data",
+                        "vesselNameStr": "SEA HAWK            ",
+                        "shipTypeStr": "Tug",
+                        "recordContent": {
+                            "AisVersion": 2,
+                            "ImoNumber": 7729526,
+                            "Destination": "US^0V7R>05YG        ",
+                            "EtaDay": 0,
+                            "Dim2Stbd": 5,
+                            "Dim2Bow": 15,
+                            "Draught": 51,
+                            "VesselName": "SEA HAWK            ",
+                            "Dim2Port": 5,
+                            "EtaHour": 24,
+                            "EtaMinute": 60,
+                            "CallSign": "WDK7414",
+                            "EtaMonth": 0,
+                            "Dim2Stern": 19,
+                            "ShipType": 52
+                        }
+                    }
+                },
+                "371885000": {
+                    "1": {
+                        "messageType": 1,
+                        "repeatIndicator": 0,
+                        "MMSI": 371885000,
+                        "recordTimeStamp": 1601320061312,
+                        "messageDescription": "Position Report (A)",
+                        "navStatusDesc": "Under way using engine",
+                        "recordContent": {
+                            "utc": 39,
+                            "rot": 0,
+                            "latitude": 38.289066,
+                            "NavStatus": 0,
+                            "PosAcc": 0,
+                            "sog": 9.1,
+                            "cog": 142.0,
+                            "hdg": 143,
+                            "longitude": -123.509895
+                        }
+                    }
+                },
+                "3669145": {
+                    "4": {
+                        "messageType": 4,
+                        "repeatIndicator": 0,
+                        "MMSI": 3669145,
+                        "recordTimeStamp": 1601319481816,
+                        "messageDescription": "Base Station",
+                        "recordContent": {
+                            "UtcYear": 2020,
+                            "UtcHour": 18,
+                            "UtcMinute": 58,
+                            "UtcSecond": 1,
+                            "latitude": 37.794308,
+                            "PosAcc": 1,
+                            "UtcMonth": 9,
+                            "UtDay": 28,
+                            "longitude": -122.4648
+                        }
+                    }
+                },
+                "3669709": {
+                    "4": {
+                        "messageType": 4,
+                        "repeatIndicator": 0,
+                        "MMSI": 3669709,
+                        "recordTimeStamp": 1601317480759,
+                        "messageDescription": "Base Station",
+                        "recordContent": {
+                            "UtcYear": 2020,
+                            "UtcHour": 18,
+                            "UtcMinute": 24,
+                            "UtcSecond": 40,
+                            "latitude": 37.82039,
+                            "PosAcc": 1,
+                            "UtcMonth": 9,
+                            "UtDay": 28,
+                            "longitude": -122.53075
                         }
                     }
                 },
@@ -414,26 +845,184 @@
                         "messageType": 4,
                         "repeatIndicator": 0,
                         "MMSI": 3669708,
-                        "recordTimeStamp": 1601232528494,
+                        "recordTimeStamp": 1601320520437,
+                        "messageDescription": "Base Station",
                         "recordContent": {
                             "UtcYear": 2020,
-                            "UtcHour": 15,
-                            "UtcMinute": 22,
-                            "UtcSecond": 40,
-                            "latitude": 37.923153,
+                            "UtcHour": 19,
+                            "UtcMinute": 15,
+                            "UtcSecond": 20,
+                            "latitude": 37.92314,
                             "PosAcc": 1,
                             "UtcMonth": 9,
-                            "UtDay": 25,
+                            "UtDay": 28,
                             "longitude": -122.59845
+                        }
+                    },
+                    "20": {
+                        "messageType": 20,
+                        "repeatIndicator": 0,
+                        "MMSI": 3669708,
+                        "recordTimeStamp": 1601320380345,
+                        "messageDescription": "Data Link Mgmt",
+                        "recordContent": {
+                            "offset3": 0,
+                            "increment1": 225,
+                            "timeout3": 7,
+                            "increment2": 750,
+                            "timeout1": 7,
+                            "offset2": 6,
+                            "offset1": 100,
+                            "timeout2": 7,
+                            "increment3": 750
+                        }
+                    },
+                    "15": {
+                        "messageType": 15,
+                        "repeatIndicator": 0,
+                        "MMSI": 3669708,
+                        "recordTimeStamp": 1601320268901,
+                        "messageDescription": "Interrogation",
+                        "recordContent": {
+                            "InterrogatedMMSI": 338232047,
+                            "FirstMessageType": 5,
+                            "FirstSlotOffset": 0
+                        }
+                    }
+                },
+                "993692039": {
+                    "21": {
+                        "messageType": 21,
+                        "repeatIndicator": 1,
+                        "MMSI": 993692039,
+                        "recordTimeStamp": 1601319099622,
+                        "messageDescription": "Aid to Navigation",
+                        "aidTypeDesc": "Light, no sector",
+                        "recordContent": {
+                            "utc": 61,
+                            "latitude": 37.79282,
+                            "PosAcc": 0,
+                            "Dim2Stbd": 0,
+                            "Dim2Bow": 0,
+                            "Dim2Stern": 0,
+                            "AidType": 5,
+                            "Dim2Port": 0,
+                            "longitude": -122.510376
                         }
                     }
                 }
             },
-            "BSP Factor": 1.0,
             "Max Leeway": 0.0,
-            "AWS Factor": 1.0,
+            "COG": {
+                "angle": 0.0
+            },
             "AWA Offset": 0.0,
-            "NMEA": "!AIVDM,1,1,,B,36=;8>01i4o>MdPEVFhj2AlP20qQ,0*6E"
+            "RMCStatus": true,
+            "Current calculated with damping": {},
+            "Position": {
+                "lat": 37.748940000000005,
+                "lng": -122.5070465,
+                "gridSquare": "CM87rr"
+            },
+            "Solar Time": {
+                "date": "Sep 28, 2020, 4:15:11 AM",
+                "fmtDate": {
+                    "epoch": 1601291711568,
+                    "year": 2020,
+                    "month": 9,
+                    "day": 28,
+                    "hour": 11,
+                    "min": 15,
+                    "sec": 11
+                }
+            },
+            "Default Declination": {
+                "angle": 0.0
+            },
+            "SOG": {
+                "speed": 0.188
+            },
+            "Deviation file name": "zero-deviation.csv",
+            "GPS Date & Time": {
+                "date": "Sep 28, 2020, 12:15:42 PM",
+                "epoch": 1601320542000,
+                "fmtDate": {
+                    "epoch": 1601320542000,
+                    "year": 2020,
+                    "month": 9,
+                    "day": 28,
+                    "hour": 19,
+                    "min": 15,
+                    "sec": 42
+                }
+            },
+            "BSP Factor": 1.0,
+            "GPS Time": {
+                "date": "Sep 28, 2020, 12:15:42 PM",
+                "fmtDate": {
+                    "epoch": 1601320542000,
+                    "year": 2020,
+                    "month": 9,
+                    "day": 28,
+                    "hour": 19,
+                    "min": 15,
+                    "sec": 42
+                }
+            },
+            "AWS Factor": 1.0,
+            "Satellites in view": {
+                "81": {
+                    "svID": 81,
+                    "elevation": 11,
+                    "azimuth": 140,
+                    "snr": 21
+                },
+                "66": {
+                    "svID": 66,
+                    "elevation": 2,
+                    "azimuth": 37,
+                    "snr": 11
+                },
+                "82": {
+                    "svID": 82,
+                    "elevation": 60,
+                    "azimuth": 128,
+                    "snr": 17
+                },
+                "67": {
+                    "svID": 67,
+                    "elevation": 52,
+                    "azimuth": 28,
+                    "snr": 11
+                },
+                "83": {
+                    "svID": 83,
+                    "elevation": 63,
+                    "azimuth": 342,
+                    "snr": 0
+                },
+                "68": {
+                    "svID": 68,
+                    "elevation": 69,
+                    "azimuth": 240,
+                    "snr": 0
+                },
+                "84": {
+                    "svID": 84,
+                    "elevation": 7,
+                    "azimuth": 325,
+                    "snr": 0
+                },
+                "69": {
+                    "svID": 69,
+                    "elevation": 17,
+                    "azimuth": 222,
+                    "snr": 0
+                }
+            },
+            "Small Distance": 13844.33813884775,
+            "NMEA": "$GNGLL,3744.93640,N,12230.42279,W,191542.00,A,A*6B\r",
+            "Altitude": -11.2
         };
         onMessage(json);
     }
