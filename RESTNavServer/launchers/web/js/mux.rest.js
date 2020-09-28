@@ -156,11 +156,11 @@ function addComputer(computer) {
 }
 
 function updateChannel(channel) {
-	return getPromise('/mux/channels/' + channel.type, DEFAULT_TIMEOUT, 'PUT', 200, channel);
+	return getPromise('/mux/channels/' + channel.type, DEFAULT_TIMEOUT, 'PUT', 201, channel);
 }
 
 function updateComputer(computer) {
-	return getPromise('/mux/computers/' + computer.type, DEFAULT_TIMEOUT, 'PUT', 200, computer);
+	return getPromise('/mux/computers/' + computer.type, DEFAULT_TIMEOUT, 'PUT', 201, computer);
 }
 
 function updateMuxVerbose(value) {
