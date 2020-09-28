@@ -15,10 +15,12 @@ import java.util.Map;
 /**
  * AIS: Automatic Identification System
  *
- * Work in Progress, not all message types are implemented (yet).
+ * !! Work in Progress, not all message types are implemented (yet).
  *
  * Good doc at https://gpsd.gitlab.io/gpsd/AIVDM.html
  * https://www.navcen.uscg.gov/?pageName=AISFAQ
+ * https://www.navcen.uscg.gov/?pageName=AISmain
+ *
  * On-line decoder at https://www.aggsoft.com/ais-decoder.htm
  *
  * Nice AIS git repo: https://github.com/tbsalling/aismessages
@@ -386,7 +388,7 @@ public class AISParser {
 		MESSAGE_TYPE(0, 6, "Message Type"),
 		REPEAT_INDICATOR(6, 8, "Repeat Indicator"),
 		MMSI(8, 38, "userID (MMSI)"),
-		AID_TYPE(38, 43, "Aid Type"),  // TODO Decoder
+		AID_TYPE(38, 43, "Aid Type"),  // There is a decoder available in the code
 		NAME(43, 163, "Name"),
 		POS_ACC(163, 164, "Position Accuracy"),
 		LONGITUDE(164, 192, "Longitude"),
