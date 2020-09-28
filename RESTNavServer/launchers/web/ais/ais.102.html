@@ -91,7 +91,7 @@
     let userPos = {
         lat: 37.75,
         lng: -122.5
-    }; // TODO Get this from NMEA Pos
+    }; // Default. Will get this from NMEA Pos
 
     function decToSex(val, ns_ew) {
         let absVal = Math.abs(val);
@@ -149,6 +149,10 @@
                map.removeLayer(mark);
             });
 
+            if (json["Position"] !== undefined) {
+                userPos.lat = json["Position"].lat;
+                userPos.lng = json["Position"].lng;
+            }
             let marker =  L.marker([userPos.lat, userPos.lng]);
             mapMarkers.push(marker);
             marker.addTo(map)
