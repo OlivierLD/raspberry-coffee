@@ -190,7 +190,7 @@
             let minMax = getTimeExtrema(ais);
 
             let keys = Object.keys(ais);
-            document.getElementById("ais-status").innerHTML = `${keys.length} AIS record(s)<br/><small>Between<br/>${new Date(minMax.mini)}<br/>and<br/>${new Date(minMax.maxi)}</small>`;
+            document.getElementById("ais-status").innerHTML = `${keys.length} AIS record(s)<br/><small><i><b>Between</b></i><br/>${new Date(minMax.mini)}<br/><i><b>and</b></i><br/>${new Date(minMax.maxi)}</small>`;
             for (let i=0; i<keys.length; i++) { // MMSI
                 let k = keys[i];
                 let aisRecord = ais[k];
