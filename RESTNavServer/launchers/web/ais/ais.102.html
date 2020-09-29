@@ -38,7 +38,7 @@
             <div id="mapid" style="width: 1200px; height: 600px; resize: both; overflow: auto;"></div>
         </td>
         <td valign="top" align="left" style="padding: 5px;">
-            <input type="checkbox" id="keep-centered" checked/> Keep map centered
+            <input type="checkbox" id="keep-centered" checked/><small>Keep map centered</small>
             <hr/>
             <i><b>Mouse position:</b></i>
             <hr/>
@@ -148,6 +148,25 @@
         document.getElementById('curr-pos-click-dec').innerHTML = `${event.latlng.lat}<br/>${event.latlng.lng}`;
     });
 
+    function getTimeExtrema(ais) {
+        let mini = Number.MAX_VALUE;
+        let maxi = -Number.MAX_VALUE;
+        let keys = Object.keys(ais); // MMSIs
+        for (let i=0; i<keys.length; i++) { // MMSI
+            let aisRecord = ais[keys[i]];
+            let aisKeys = Object.keys(aisRecord);
+            for (let j=0; j<aisKeys.length; j++) { // Record types
+                let aisKey = aisKeys[j];
+                let timestamp = aisRecord[aisKey].recordTimeStamp;
+                if (timestamp !== undefined) {
+                    mini = Math.min(mini, timestamp);
+                    maxi = Math.max(maxi, timestamp);
+                }
+            }
+        }
+        return {mini: mini, maxi: maxi};
+    }
+
     let onMessage = json => {
         currentBound = []; // Reset
         if (userPos !== null) {
@@ -167,9 +186,11 @@
                 .bindPopup(`<b>You are here<br/><span style="color: red;">${decToSex(userPos.lat, "NS")}<br/>${decToSex(userPos.lng, "EW")}</span></b>`);
         }
         if (json.ais !== null && json.ais !== undefined) {
-            let ais = json.ais;
+            let ais = json.ais; // Full AIS object
+            let minMax = getTimeExtrema(ais);
+
             let keys = Object.keys(ais);
-            document.getElementById("ais-status").innerHTML = `${keys.length} AIS record(s)`;
+            document.getElementById("ais-status").innerHTML = `${keys.length} AIS record(s)<br/><small>Between<br/>${new Date(minMax.mini)}<br/>and<br/>${new Date(minMax.maxi)}</small>`;
             for (let i=0; i<keys.length; i++) { // MMSI
                 let k = keys[i];
                 let aisRecord = ais[k];
