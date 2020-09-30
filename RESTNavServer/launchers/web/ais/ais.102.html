@@ -289,11 +289,14 @@
                                     `${decToSex(oneRecord.longitude, "EW")}</span></b>${aidType !== null ? '<br/>' + aidType : ''}`;
                                 if (isBoat) {
                                     popupText += `<br/>SOG: ${oneRecord.sog}<br/>COG: ${oneRecord.cog}<br/>HDG: ${oneRecord.hdg === 511 ? 'n/a' : oneRecord.hdg}<br/>${navStatus !== undefined && navStatus !== null ? navStatus : ''}`;
-                                    if (vesselName !== null && vesselName !== undefined) {
-                                        popupText += `<br/>${vesselName}`;
+                                    if ((vesselType !== null && vesselType !== undefined) || (vesselName !== null && vesselName !== undefined)) {
+                                        popupText += "<br/>";
                                     }
                                     if (vesselType !== null && vesselType !== undefined) {
-                                        popupText += `<br/>${vesselType}`;
+                                        popupText += `${vesselType} `;
+                                    }
+                                    if (vesselName !== null && vesselName !== undefined) {
+                                        popupText += `"${vesselName.trim()}"`;
                                     }
                                 }
                                 marker.addTo(map)
