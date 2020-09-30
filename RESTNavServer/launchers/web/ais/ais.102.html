@@ -190,7 +190,11 @@
             let minMax = getTimeExtrema(ais);
 
             let keys = Object.keys(ais);
-            document.getElementById("ais-status").innerHTML = `${keys.length} AIS record(s)<br/><small><i><b>Between</b></i><br/>${new Date(minMax.mini)}<br/><i><b>and</b></i><br/>${new Date(minMax.maxi)}</small>`;
+            document.getElementById("ais-status").innerHTML =
+                `<small>At ${new Date()}</small>` +
+                `<br/>${keys.length} AIS record(s)` +
+                `<br/><small><i><b>Between</b></i><br/>${new Date(minMax.mini)}<br/>` +
+                `<i><b>and</b></i><br/>${new Date(minMax.maxi)}</small>`;
             for (let i=0; i<keys.length; i++) { // MMSI
                 let k = keys[i];
                 let aisRecord = ais[k];
@@ -240,11 +244,11 @@
                                     }
                                     let boatTriangle = L.polygon([ // HDG
                                         [oneRecord.latitude + ((boatLen / 2) * Math.cos(Math.toRadians(hdg))),
-                                            oneRecord.longitude + ((boatLen / 2) * Math.sin(Math.toRadians(hdg)))], // Bow
+                                            oneRecord.longitude + ((boatLen / 2) * Math.sin(Math.toRadians(hdg)))],           // Bow
                                         [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(hdg - 10))),
                                             oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(hdg - 10)))],
                                         [oneRecord.latitude - ((boatLen * 0.9 / 2) * Math.cos(Math.toRadians(hdg - 0))),
-                                            oneRecord.longitude - ((boatLen * 0.9 / 2) * Math.sin(Math.toRadians(hdg - 0)))],
+                                            oneRecord.longitude - ((boatLen * 0.9 / 2) * Math.sin(Math.toRadians(hdg - 0)))], // Transom center
                                         [oneRecord.latitude - ((boatLen / 2) * Math.cos(Math.toRadians(hdg + 10))),
                                             oneRecord.longitude - ((boatLen / 2) * Math.sin(Math.toRadians(hdg + 10)))]
                                     ], {
