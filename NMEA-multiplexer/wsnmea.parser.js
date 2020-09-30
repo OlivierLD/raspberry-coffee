@@ -1,12 +1,13 @@
 "use strict";  // http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
 /**
  * WebSocket server for NMEA
- * This one recxeives NMEA Stgrings, and parses them
+ * This one receives NMEA Strings, and parses them
  *
  * Static requests must be prefixed with /data/, like in http://machine:9876/data/console.html
  *
  * When a string is received, it is re-broadcasted to all the connected WS clients.
  *
+ * TODO Move to ES6
  */
 
 // Optional. You will see this name in eg. 'ps' or 'top' command

@@ -5,6 +5,7 @@
  *
  * When a string is received, it is re-broadcasted to all the connected WS clients.
  *
+ * TODO Move to ES6
  */
 
 // Optional. You will see this name in eg. 'ps' or 'top' command
