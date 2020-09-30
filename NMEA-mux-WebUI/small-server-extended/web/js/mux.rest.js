@@ -10,12 +10,12 @@ const DEBUG = false;
 
 /* Uses ES6 Promises */
 function getPromise(
-		url,                          // full api path
-		timeout,                      // After that, fail.
-		verb,                         // GET, PUT, DELETE, POST, etc
-		happyCode,                    // if met, resolve, otherwise fail.
-		data = null,                  // payload, when needed (PUT, POST...)
-		show = false) {               // Show the traffic [true]|false
+	url,                          // full api path
+	timeout,                      // After that, fail.
+	verb,                         // GET, PUT, DELETE, POST, etc
+	happyCode,                    // if met, resolve, otherwise fail.
+	data = null,                  // payload, when needed (PUT, POST...)
+	show = false) {               // Show the traffic [true]|false
 
 	if (show === true) {
 		document.body.style.cursor = 'wait';
@@ -34,8 +34,8 @@ function getPromise(
 			req += ("\n" + JSON.stringify(data, null, 2));
 		}
 		if (DEBUG) {
-		    console.log("Request:", req);
-    }
+			console.log("Request:", req);
+		}
 
 		xhr.open(verb, url, true);
 		xhr.setRequestHeader("Content-type", "application/json");
@@ -215,7 +215,7 @@ function protocolTest() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get protocol test status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get protocol test status..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -235,7 +235,7 @@ function forwarderStatus() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get the forwarders status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get the forwarders status..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 		document.getElementById("forwarders-status").innerText = ('-');
 	});
 }
@@ -261,7 +261,7 @@ function dataVolume() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get the flow status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get the flow status..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 		pushData(0);
 		document.getElementById('flow').style.cursor = 'auto';
 	});
@@ -302,7 +302,7 @@ function getLastNMEASentence() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get the last NMEA Data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get the last NMEA Data..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -338,7 +338,7 @@ function serialPortList() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get serial ports list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get serial ports list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -410,7 +410,7 @@ function channelList() {
 		let json = JSON.parse(value);
 		setRESTPayload(json, (after - before));
 		let html = "<h5>Reads from</h5>" +
-				"<table>";
+			"<table>";
 		html += "<tr><th>Type</th><th>Parameters</th><th>Device filters</th><th>Sentence filters</th><th>verb.</th></tr>"
 		for (let i = 0; i < json.length; i++) {
 			let type = json[i].type;
@@ -474,7 +474,7 @@ function channelList() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get channels list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get channels list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -488,7 +488,7 @@ function forwarderList() {
 		let json = JSON.parse(value);
 		setRESTPayload(json, (after - before));
 		let html = "<h5>Writes to</h5>" +
-				"<table>";
+			"<table>";
 		html += "<tr><th>Type</th><th>Parameters</th></th></tr>";
 		for (let i = 0; i < json.length; i++) {
 			let type = json[i].type;
@@ -519,10 +519,10 @@ function forwarderList() {
 					break;
 				case 'rmi':
 					html += ("<tr><td valign='top'><b>rmi</b></td><td valign='top'>" +
-							"Port: " + json[i].port + "<br>" +
-							"Name: " + json[i].bindingName + "<br>" +
-							"Address: " + json[i].serverAddress +
-							"</td><td valign='top'><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+						"Port: " + json[i].port + "<br>" +
+						"Name: " + json[i].bindingName + "<br>" +
+						"Address: " + json[i].serverAddress +
+						"</td><td valign='top'><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
 					break;
 				case 'console':
 					html += ("<tr><td><b>console</b></td><td></td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
@@ -546,7 +546,7 @@ function forwarderList() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get forwarders list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get forwarders list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -560,7 +560,7 @@ function computerList() {
 		let json = JSON.parse(value);
 		setRESTPayload(json, (after - before));
 		let html = "<h5>Computes and writes</h5>" +
-				"<table>";
+			"<table>";
 		html += "<tr><th>Type</th><th>Parameters</th><th>verb.</th></tr>";
 		for (let i = 0; i < json.length; i++) {
 			let type = json[i].type;
@@ -587,19 +587,19 @@ function computerList() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to get nmea.computers list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get nmea.computers list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
 function buildTable(channels, forwarders, computers) {
 	let html = "<table width='100%'>" +
-			"<tr><th width='45%'>Pulled in from</th><th width='10%'></th><th width='45%'>Pushed out to</th></tr>" +
-			"<tr><td valign='middle' align='center' rowspan='2' title='Channels'>" + channels + "</td>" +
-			//      "<td valign='middle' align='center' rowspan='2'><b><i>MUX</i></b></td>" +
-			"<td valign='middle' align='center' rowspan='2'><img src='images/antenna.png' width='32' height='32' alt='MUX' title='MUX'></td>" +
-			"<td valign='middle' align='center' title='Forwarders'>" + forwarders + "</td></tr>" +
-			"<tr><td valign='middle' align='center' title='Computers'>" + computers + "</td></tr>" +
-			"</table>";
+		"<tr><th width='45%'>Pulled in from</th><th width='10%'></th><th width='45%'>Pushed out to</th></tr>" +
+		"<tr><td valign='middle' align='center' rowspan='2' title='Channels'>" + channels + "</td>" +
+		//      "<td valign='middle' align='center' rowspan='2'><b><i>MUX</i></b></td>" +
+		"<td valign='middle' align='center' rowspan='2'><img src='images/antenna.png' width='32' height='32' alt='MUX' title='MUX'></td>" +
+		"<td valign='middle' align='center' title='Forwarders'>" + forwarders + "</td></tr>" +
+		"<tr><td valign='middle' align='center' title='Computers'>" + computers + "</td></tr>" +
+		"</table>";
 	return html;
 };
 
@@ -631,71 +631,71 @@ function generateDiagram() {
 			switch (type) {
 				case 'file':
 					html += ("<tr><td valign='top'><b>file</b></td><td valign='top'>File: " + json[i].file + "<br>Between reads: " + json[i].pause + " ms" + "<br>Loop: " + json[i].loop +
-							"</td><td valign='top'>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
-							"</td><td valign='top'>" + valueOrText(buildList(json[i].sentenceFilters), 'No Sentence Filter') +
-							"</td></tr>");
+						"</td><td valign='top'>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+						"</td><td valign='top'>" + valueOrText(buildList(json[i].sentenceFilters), 'No Sentence Filter') +
+						"</td></tr>");
 					break;
 				case 'serial':
 					html += ("<tr><td><b>serial</b></td><td>" + json[i].port + ":" + json[i].br +
-							"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
-							"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-							"</td></tr>");
+						"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+						"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+						"</td></tr>");
 					break;
 				case 'tcp':
 					html += ("<tr><td><b>tcp</b></td><td>" + json[i].hostname + ":" + json[i].port +
-							"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
-							"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-							"</td></tr>");
+						"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+						"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+						"</td></tr>");
 					break;
 				case 'ws':
 					html += ("<tr><td><b>ws</b></td><td> " + json[i].wsUri +
-							"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
-							"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-							"</td></tr>");
+						"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+						"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+						"</td></tr>");
 					break;
 				case 'rnd':
 					html += ("<tr><td><b>rnd</b></td><td></td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
-							"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-							"</td></tr>");
+						"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+						"</td></tr>");
 					break;
 				case 'bmp180':
 					html += ("<tr><td><b>bmp180</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") +
-							"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
-							"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-							"</td></tr>");
+						"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+						"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+						"</td></tr>");
 					break;
 				case 'bme280':
 					html += ("<tr><td><b>bme280</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") +
-							"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
-							"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-							"</td></tr>");
+						"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+						"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+						"</td></tr>");
 					break;
 				case 'lsm303':
 					html += ("<tr><td><b>lsm303</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") +
-							"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
-							"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-							((json[i].headingOffset !== undefined && json[i].headingOffset !== 0) ? ("<td>Heading Offset: " + json[i].headingOffset + "</td>") : "") +
-							((json[i].readFrequency !== undefined && json[i].readFrequency !== 0) ? ("<td>Read Frequency: " + json[i].readFrequency + " ms</td>") : "") +
-							((json[i].dampingSize !== undefined && json[i].dampingSize !== 0) ? ("<td>Damping Size: " + json[i].dampingSize + " elmts</td>") : "") +
-							"</td></tr>");
+						"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+						"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+						((json[i].headingOffset !== undefined && json[i].headingOffset !== 0) ? ("<td>Heading Offset: " + json[i].headingOffset + "</td>") : "") +
+						((json[i].readFrequency !== undefined && json[i].readFrequency !== 0) ? ("<td>Read Frequency: " + json[i].readFrequency + " ms</td>") : "") +
+						((json[i].dampingSize !== undefined && json[i].dampingSize !== 0) ? ("<td>Damping Size: " + json[i].dampingSize + " elmts</td>") : "") +
+						"</td></tr>");
 					break;
 				case 'zda':
 					html += ("<tr><td><b>zda</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") +
-							"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
-							"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-							"</td></tr>");
+						"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+						"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+						"</td></tr>");
 					break;
 				case 'htu21df':
 					html += ("<tr><td><b>htu21df</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") +
-							"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
-							"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-							"</td></tr>");
+						"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+						"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+						"</td></tr>");
 					break;
 				default:
 					html += ("<tr><td><b><i>" + type + "</i></b></td><td>" + json[i].cls +
-							"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
-							"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-							"</td></tr>");
+						"</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+						"</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+						"</td></tr>");
 					break;
 			}
 		}
@@ -726,7 +726,7 @@ function generateDiagram() {
 			document.getElementById("diagram").style.display = 'block';
 			document.getElementById("lists").style.display = 'none';
 		}
-		errManager.display("Failed to get channels list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get channels list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 
 	let getForwarderPromise = getForwarders();
@@ -766,10 +766,10 @@ function generateDiagram() {
 					break;
 				case 'rmi':
 					html += ("<tr><td valign='top'><b>rmi</b></td><td valign='top'>" +
-							"Port: " + json[i].port + "<br>" +
-							"Name: " + json[i].bindingName + "<br>" +
-							"Address: " + json[i].serverAddress +
-							"</td></tr>");
+						"Port: " + json[i].port + "<br>" +
+						"Name: " + json[i].bindingName + "<br>" +
+						"Address: " + json[i].serverAddress +
+						"</td></tr>");
 					break;
 				case 'console':
 					html += ("<tr><td><b>console</b></td><td>" + valueOrText('', 'No parameter') + "</td></tr>");
@@ -806,7 +806,7 @@ function generateDiagram() {
 			document.getElementById("diagram").style.display = 'block';
 			document.getElementById("lists").style.display = 'none';
 		}
-		errManager.display("Failed to get forwarders list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get forwarders list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 
 	let getComputerPromise = getComputers();
@@ -853,7 +853,7 @@ function generateDiagram() {
 			document.getElementById("diagram").style.display = 'block';
 			document.getElementById("lists").style.display = 'none';
 		}
-		errManager.display("Failed to get nmea.computers list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get nmea.computers list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -876,7 +876,7 @@ function createChannel(channel) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to create channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to create channel..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -922,7 +922,7 @@ function createComputer(computer) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to create computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to create computer..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -945,7 +945,7 @@ function removeChannel(channel) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to delete channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to delete channel..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -968,7 +968,7 @@ function removeForwarder(channel) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to delete forwarder..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to delete forwarder..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -991,7 +991,7 @@ function removeComputer(computer) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to delete computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to delete computer..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -1037,7 +1037,7 @@ function changeComputer(computer) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to update computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to update computer..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -1074,7 +1074,7 @@ function manageMuxVerbose(cb) {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to update multiplexer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to update multiplexer..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 
@@ -1097,7 +1097,7 @@ function resetCache() {
 				message = errmess;
 			}
 		}
-		errManager.display("Failed to reset data cache..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to reset data cache..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 }
 

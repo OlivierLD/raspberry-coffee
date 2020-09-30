@@ -3,11 +3,11 @@
 <head>
 	<title>Log my Track</title>
 	<meta charset="utf-8">
-	<link rel="icon" type="image/jpg" href="icons/palm.04.jpg">
+	<link rel="icon" type="image/jpg" href="./icons/palm.04.jpg">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
-	<script type="text/javascript" src="js/ajax.manager.js"></script>
-	<script type="text/javascript" src="js/mux.rest.js"></script>
+	<link rel="stylesheet" href="./css/stylesheet.css" type="text/css"/>
+	<script type="text/javascript" src="./js/ajax.manager.js"></script>
+	<script type="text/javascript" src="./js/mux.rest.js"></script>
 	<style>
 		button {
 			padding: 4px 20px;
@@ -351,150 +351,150 @@
 	</script>
 </head>
 <body>
-		<h1>Run &amp; Log</h1>
+<h1>Run &amp; Log</h1>
 
-		<table style="margin: auto;">
-			<tr>
-				<th>Logging</th>
-				<th>Units</th>
-			</tr>
-			<tr>
-				<td>
-					<label class="rocker rocker-small"> <!-- One way widget. Will NOT be notified of a change on the server. -->
-						<input type="checkbox" id="flip-1" onchange="logEnabled(this);" checked>
-						<span class="switch-left">On</span>
-						<span class="switch-right">Off</span>
-					</label>
-				</td>
-				<td>
-					<select name="speed-unit" id="speed-unit" onchange="speedUnit(this);">
-						<option value=""></option>
-						<option value="kmh">km/h, km and meters</option>
-						<option value="mph">mph, statute miles and feet</option>
-						<option value="ms">m/s and meters</option>
-						<option value="kts">knots, nautical miles and meters</option>
-					</select>
-				</td>
-			</tr>
-		</table>
+<table style="margin: auto;">
+	<tr>
+		<th>Logging</th>
+		<th>Units</th>
+	</tr>
+	<tr>
+		<td>
+			<label class="rocker rocker-small"> <!-- One way widget. Will NOT be notified of a change on the server. -->
+				<input type="checkbox" id="flip-1" onchange="logEnabled(this);" checked>
+				<span class="switch-left">On</span>
+				<span class="switch-right">Off</span>
+			</label>
+		</td>
+		<td>
+			<select name="speed-unit" id="speed-unit" onchange="speedUnit(this);">
+				<option value=""></option>
+				<option value="kmh">km/h, km and meters</option>
+				<option value="mph">mph, statute miles and feet</option>
+				<option value="ms">m/s and meters</option>
+				<option value="kts">knots, nautical miles and meters</option>
+			</select>
+		</td>
+	</tr>
+</table>
 
-	<table width="100%">
-		<tr>
-			<th style="height:40px; text-align: left;">Distance<br><span id="dist-val"></span></th>
-			<th style="height:40px; text-align: left;">Delta Alt<br><span id="delta-alt-val"></span></th>
-		</tr>
-		<tr>
-			<td><span id="sog" style="font-weight: bold; font-size: 30px;">0.0</span></td>
-			<td><span id="cog" style="font-weight: bold; font-size: 30px;">000</span></td>
-		</tr>
-	</table>
+<table width="100%">
+	<tr>
+		<th style="height:40px; text-align: left;">Distance<br><span id="dist-val"></span></th>
+		<th style="height:40px; text-align: left;">Delta Alt<br><span id="delta-alt-val"></span></th>
+	</tr>
+	<tr>
+		<td><span id="sog" style="font-weight: bold; font-size: 30px;">0.0</span></td>
+		<td><span id="cog" style="font-weight: bold; font-size: 30px;">000</span></td>
+	</tr>
+</table>
 
-	<div style="width: 100%; text-align: center; padding: 10px;">
-		<button id="b-reset" title="Reset Dist & Alt" onclick="reset();">Reset</button>
-		<button id="b-log-mgmt" title="Log Management" onclick="goLogMgmt();">Log</button>
-		<button id="b-terminate" title="Stop the server" onclick="kill();">Kill</button>
-	</div>
+<div style="width: 100%; text-align: center; padding: 10px;">
+	<button id="b-reset" title="Reset Dist & Alt" onclick="reset();">Reset</button>
+	<button id="b-log-mgmt" title="Log Management" onclick="goLogMgmt();">Log</button>
+	<button id="b-terminate" title="Stop the server" onclick="kill();">Kill</button>
+</div>
 
-	<table width="100%">
-		<tr>
-			<td style="text-align: left;">
-				<span style="font-weight: bold; font-size: 20px;">Latitude</span>
-			</td>
-			<td style="text-align: right;">
-				<span id="lat" style="font-weight: bold; font-size: 24px;">N 00&deg;00.00'</span>
-			</td>
-		</tr>
-		<tr>
-			<td style="text-align: left;">
-				<span style="font-weight: bold; font-size: 20px;">Longitude</span>
-			</td>
-			<td style="text-align: right;">
-				<span id="lng" style="font-weight: bold; font-size: 24px;">W 000&deg;00.00'</span>
-			</td>
-		</tr>
-	</table>
+<table width="100%">
+	<tr>
+		<td style="text-align: left;">
+			<span style="font-weight: bold; font-size: 20px;">Latitude</span>
+		</td>
+		<td style="text-align: right;">
+			<span id="lat" style="font-weight: bold; font-size: 24px;">N 00&deg;00.00'</span>
+		</td>
+	</tr>
+	<tr>
+		<td style="text-align: left;">
+			<span style="font-weight: bold; font-size: 20px;">Longitude</span>
+		</td>
+		<td style="text-align: right;">
+			<span id="lng" style="font-weight: bold; font-size: 24px;">W 000&deg;00.00'</span>
+		</td>
+	</tr>
+</table>
 
-	</div>
-	<div style="display: none"> <!-- turn display to block or inline for debugging -->
-		<textarea id="message" style="width: 98%; height: 150px;"></textarea>
-	</div>
+</div>
+<div style="display: none"> <!-- turn display to block or inline for debugging -->
+	<textarea id="message" style="width: 98%; height: 150px;"></textarea>
+</div>
 
-	<div id="dialog-message" style="display: none;" title="Confirm Shutdown">
-		<p>
-			Please confirm server shutdown.
-		</p>
-	</div>
+<div id="dialog-message" style="display: none;" title="Confirm Shutdown">
+	<p>
+		Please confirm server shutdown.
+	</p>
+</div>
 
-	</div>
-	<script>
+</div>
+<script>
 
-		function getTravelData() {
-			getDistanceTraveled();
-			getDeltaAltitude();
-			speedAndCourse();
-		}
+	function getTravelData() {
+		getDistanceTraveled();
+		getDeltaAltitude();
+		speedAndCourse();
+	}
 
-		function appendMess(txt) {
-			let content = document.getElementById("message").text;
-			content += ((content.length > 0 ? '\n' : '') + txt);
-			document.getElementById("message").text = content;
-		}
+	function appendMess(txt) {
+		let content = document.getElementById("message").text;
+		content += ((content.length > 0 ? '\n' : '') + txt);
+		document.getElementById("message").text = content;
+	}
 
-		function terminateOK() {
-			terminate();
-			document.getElementById("b-terminate").disabled = true;
-			// Say bye-bye...
-			document.body.innerHTML =
-					'<h1 style="color: blue; font-family: Verdana, Helvetica, Geneva;">&nbsp;Bye-bye...</h1>' +
-					'<h2 style="color: navy; font-family: Verdana, Helvetica, Geneva;">&nbsp;🏴‍☠️&nbsp;Server is going down upon your request.</h2>' +
-					'<p style="color: gray; font-family: Verdana, Helvetica, Geneva;">&nbsp;Restart the server from a terminal to continue.</p>' +
-					'<hr/>' +
-					'<i style="font-family: Verdana, Helvetica, Geneva;">&nbsp;&copy; OlivSoft, 2017</i>';
-		}
+	function terminateOK() {
+		terminate();
+		document.getElementById("b-terminate").disabled = true;
+		// Say bye-bye...
+		document.body.innerHTML =
+				'<h1 style="color: blue; font-family: Verdana, Helvetica, Geneva;">&nbsp;Bye-bye...</h1>' +
+				'<h2 style="color: navy; font-family: Verdana, Helvetica, Geneva;">&nbsp;🏴‍☠️&nbsp;Server is going down upon your request.</h2>' +
+				'<p style="color: gray; font-family: Verdana, Helvetica, Geneva;">&nbsp;Restart the server from a terminal to continue.</p>' +
+				'<hr/>' +
+				'<i style="font-family: Verdana, Helvetica, Geneva;">&nbsp;&copy; OlivSoft, 2017</i>';
+	}
 
-		function kill() {
-			console.log('Terminate was clicked');
+	function kill() {
+		console.log('Terminate was clicked');
 
-			document.body.innerHTML =
-					'<style>button {\n' +
-					'padding: 4px 20px;\n' +
-					'/* give the background a gradient */\n' +
-					'background: darkorange; /*linear-gradient(top, #ffae00, #d67600);*/\n' +
-					'border:2px outset #dad9d8;\n' +
-					'/* style the text */\n' +
-					'font-family:Lato, Verdana, Arial, sans-serif;\n' +
-					'font-size:1.1em;\n' +
-					'letter-spacing:0.05em;\n' +
-					'text-transform:uppercase;\n' +
-					'color:#fff;\n' +
-					'text-shadow: 0px 1px 10px #000;\n' +
-					'/* add to small curve to the corners of the button */\n' +
-					'border-radius: 15px;\n' +
-					'/* give the button a drop shadow */\n' +
-					'box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;\n' +
-					'}</style>' +
-					'<h1 style="color: blue; font-family: Verdana, Helvetica, Geneva;">Confirm server shutdown</h1>' +
-					'<p align="center">' +
-					'<button onclick="terminateOK();">OK</button> &nbsp;' +
-					'<button onclick="document.location.reload();">Cancel</button></p>';
-		}
+		document.body.innerHTML =
+				'<style>button {\n' +
+				'padding: 4px 20px;\n' +
+				'/* give the background a gradient */\n' +
+				'background: darkorange; /*linear-gradient(top, #ffae00, #d67600);*/\n' +
+				'border:2px outset #dad9d8;\n' +
+				'/* style the text */\n' +
+				'font-family:Lato, Verdana, Arial, sans-serif;\n' +
+				'font-size:1.1em;\n' +
+				'letter-spacing:0.05em;\n' +
+				'text-transform:uppercase;\n' +
+				'color:#fff;\n' +
+				'text-shadow: 0px 1px 10px #000;\n' +
+				'/* add to small curve to the corners of the button */\n' +
+				'border-radius: 15px;\n' +
+				'/* give the button a drop shadow */\n' +
+				'box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;\n' +
+				'}</style>' +
+				'<h1 style="color: blue; font-family: Verdana, Helvetica, Geneva;">Confirm server shutdown</h1>' +
+				'<p align="center">' +
+				'<button onclick="terminateOK();">OK</button> &nbsp;' +
+				'<button onclick="document.location.reload();">Cancel</button></p>';
+	}
 
-		function reset() {
-			console.log("reset");
-			resetDataCache();
-		}
+	function reset() {
+		console.log("reset");
+		resetDataCache();
+	}
 
-		function goLogMgmt() {
-			console.log("Log Management");
-			document.location = "logMgmt.html";
-		}
+	function goLogMgmt() {
+		console.log("Log Management");
+		document.location = "logMgmt.html";
+	}
 
-		(() => {
+	(() => {
 
-			forwarderStatus();
+		forwarderStatus();
 
-			setInterval(getTravelData, 1000); // Distance and delta-alt
-		})();
-	</script>
+		setInterval(getTravelData, 1000); // Distance and delta-alt
+	})();
+</script>
 </body>
 </html>

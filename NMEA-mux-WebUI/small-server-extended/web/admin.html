@@ -14,7 +14,7 @@
     <title>NMEA Multiplexer Admin</title>
 
     <!--link rel="icon" type="image/ico" href="icons/ajax.ico"-->
-    <link rel="icon" type="image/jpg" href="../icons/palm.04.jpg">
+    <link rel="icon" type="image/jpg" href="icons/palm.04.jpg">
 
     <!--script type="text/javascript" src="js/jquery-2.1.3.js"></script-->
     <script type="text/javascript" src="./js/pub.sub.js"></script>
@@ -87,7 +87,7 @@
       }
 
     </style>
-    <link id="graph-ux" rel="stylesheet" href="./css/graph.ux.01.css" type="text/css"/>
+    <link id="graph-ux" rel="stylesheet" href="css/graph.ux.01.css" type="text/css"/>
     <script type="text/javascript">
 
         function cssSelectManager() {
@@ -146,7 +146,7 @@
               hideDiv("raw-data-div");
             }
 
-            document.getElementById("show-hide-raw-data").innerHTML = (showRESTData ? "<small>&nbsp;<img src='img/pandown.gif'> Hide REST Traffic</small>" : "<small>&nbsp;<img src='img/panright.gif'> Show REST Traffic</small>");
+            document.getElementById("show-hide-raw-data").innerHTML = (showRESTData ? "<small>&nbsp;<img src='pandown.gif'> Hide REST Traffic</small>" : "<small>&nbsp;<img src='panright.gif'> Show REST Traffic</small>");
         }
 
         function manageChannelSelection(selected) {
@@ -889,17 +889,17 @@
     <small>Ajax, REST, JSON..., Multiplexer Admin.</small>
     <p>
     <div style="margin-bottom: 0px;">
-      <span id="showPorts"  onclick="manageClick(this);"  class="selectedButton" style="margin-left: 5px; cursor: pointer;">Fetch Serial Ports list <img src="img/refresh_icon.png" width="10" height="12"/></span>
-      <span id="showChannels" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Channels list <img src="img/refresh_icon.png" width="10" height="12"/></span>
-      <span id="showForwarders" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Forwarders list <img src="img/refresh_icon.png" width="10" height="12"/></span>
-      <span id="showComputers" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Computers list <img src="img/refresh_icon.png" width="10" height="12"/></span>
-      <span id="showDiagram" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Full view <img src="img/refresh_icon.png" width="10" height="12"/></span>
+      <span id="showPorts"  onclick="manageClick(this);"  class="selectedButton" style="margin-left: 5px; cursor: pointer;">Fetch Serial Ports list <img src="refresh_icon.png" width="10" height="12"/></span>
+      <span id="showChannels" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Channels list <img src="refresh_icon.png" width="10" height="12"/></span>
+      <span id="showForwarders" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Forwarders list <img src="refresh_icon.png" width="10" height="12"/></span>
+      <span id="showComputers" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Computers list <img src="refresh_icon.png" width="10" height="12"/></span>
+      <span id="showDiagram" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Full view <img src="refresh_icon.png" width="10" height="12"/></span>
       <button onclick="resetCache();" style="margin-bottom: 3px;">Reset Cache</button>
       <input type='checkbox' onchange='manageMuxVerbose(this);'> Multiplexer verbose
     </div>
     <div id="lists" style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
     <div id="diagram" style="display: none; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px;"></div>
-    <div id="show-hide-raw-data" onclick="showHideRESTData();" style="cursor: pointer; margin-top: 5px;"><small>&nbsp;<img src='img/panright.gif'> Show REST Traffic</small></div>
+    <div id="show-hide-raw-data" onclick="showHideRESTData();" style="cursor: pointer; margin-top: 5px;"><small>&nbsp;<img src='panright.gif'> Show REST Traffic</small></div>
     <div id="raw-data-div" class="smooth">
       <table width="100%" border="0">
         <tr>

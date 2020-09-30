@@ -84,7 +84,7 @@
 						message = errmess;
 					}
 				}
-				console.log("GetSystemTime failed..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+				console.log("GetSystemTime failed..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
 		}
 
@@ -199,6 +199,7 @@
 <div id="main">
 	<div>
 		<h1 style="margin-left: 10px;"><span onclick="window.history.back();" title="Go back">&#8678;&nbsp;</span> Log Manager <img src="icons/reload.png" title="reload page" width="36" height="36" style="vertical-align: middle; margin-left: 20px;" onclick="location.reload();"></h1>
+		<span>TODO: Terminal help, how to get to the log files from a CLI.</span>
 	</div>
 	<div id="syst-date" style="margin: 10px;"></div>
 	<div id="file-table">

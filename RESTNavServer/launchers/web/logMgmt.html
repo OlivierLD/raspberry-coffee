@@ -84,7 +84,7 @@
 						message = errmess;
 					}
 				}
-				console.log("GetSystemTime failed..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+				console.log("GetSystemTime failed..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 			});
 		}
 
