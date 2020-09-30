@@ -336,13 +336,13 @@ Works for Sun, Moon, Venus, Mars, Jupiter, Saturn, and 58 stars.
 #### Computer: AISManager
 This is a work in progress, it computes possible collision threats.
 
-See `nmea.computers.AISManager` for the code, use it like this (in yaml):
+See `nmea.computers.AISManager` for the code, use it like this (in `yaml`):
 ```yaml
 computers:
   - class: nmea.computers.AISManager
     properties: ais.mgr.properties
 ```
-Where ais.mgr.properties looks like
+Where `ais.mgr.properties` looks like
 ```properties
 # Properties of the AISManager Computer
 minimum.distance=5
