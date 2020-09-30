@@ -333,6 +333,23 @@ Works for Sun, Moon, Venus, Mars, Jupiter, Saturn, and 58 stars.
 - AIS REST forwarder (on its own board). &#9989; See `nmea.mux.ais.frwd.yaml`.
 
 ### Bonus
+#### Computer: AISManager
+This is a work in progress, it computes possible collision threats.
+
+See `nmea.computers.AISManager` for the code, use it like this (in yaml):
+```yaml
+computers:
+  - class: nmea.computers.AISManager
+    properties: ais.mgr.properties
+```
+Where ais.mgr.properties looks like
+```properties
+# Properties of the AISManager Computer
+minimum.distance=5
+heading.fork.width=10
+```
+
+
 #### AIS plotter
 - See [here](../Project-Trunk/dAISy/README.md) and [here](../NMEA-multiplexer/casestudy.md#ais)
 - Requires an Internet connection (for LeafLet)

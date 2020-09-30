@@ -59,7 +59,7 @@ public class AISManager extends Computer {
 									double diffHeading = GeomUtil.bearingDiff(bearingFromTarget, aisRecord.getCog());
 									System.out.println(String.format("(%s) AISManager >> In range (%.02f/%.02f nm), diff heading: %.02f", TimeUtil.getTimeStamp(), distToTarget, this.minimumDistance, diffHeading));
 									if (diffHeading < this.headingFork) { // Possible collision route (if you don't move)
-										// TODO Honk!
+										// TODO Honk! Define a callback Consumer
 										System.out.println(String.format("!!! Possible collision with %s, at %s / %s\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f",
 												aisRecord.getMMSI(),
 												GeomUtil.decToSex(aisRecord.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
