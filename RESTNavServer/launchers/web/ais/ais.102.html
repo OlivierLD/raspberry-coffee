@@ -242,6 +242,7 @@
                                         hdg = cog;
                                         cog = null;
                                     }
+                                    // Yellow arrow
                                     let boatTriangle = L.polygon([ // HDG
                                         [oneRecord.latitude + ((boatLen / 2) * Math.cos(Math.toRadians(hdg))),
                                             oneRecord.longitude + ((boatLen / 2) * Math.sin(Math.toRadians(hdg)))],           // Bow
@@ -260,6 +261,7 @@
                                     boatTriangle.addTo(map);
 
                                     if (cog !== null) {
+                                        // Blue line
                                         let boatCog = L.polyline([ // COG
                                             [oneRecord.latitude + ((boatLen * 1.1 / 2) * Math.cos(Math.toRadians(cog))),
                                                 oneRecord.longitude + ((boatLen * 1.1 / 2) * Math.sin(Math.toRadians(cog)))], // Bow
