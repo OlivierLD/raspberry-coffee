@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# To put in rc.local when needed:
+#   See script raspberry-coffee/I2C-SPI/waveshare.sh
+#
 CP=./build/libs/I2C-SPI-1.0-all.jar
 JAVA_OPTS="-Dwaveshare.1in3.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Drotation=180"
