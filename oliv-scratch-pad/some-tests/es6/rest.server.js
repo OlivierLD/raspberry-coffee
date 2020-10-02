@@ -149,12 +149,12 @@ let handler = (req, res) => {
 				res.end(`${req.method} ${req.url} : Not Implemented`);
 			}
 		} else {
-			// TODO Implement other methods here
+			// TODO Implement other methods (verb and paths) here
 			res.writeHead(404, {'Content-Type': 'text/plain'});
 			res.end(`${req.method} ${req.url} : Not Implemented`);
 		}
 
-	} else if (req.url.startsWith("/")) { // Assuming static resource
+	} else if (req.url.startsWith("/")) { // All the rest, assuming static resource
 		if (req.method === "GET") {
 			let resource = req.url.substring("/".length);
 			if (resource.length === 0) {

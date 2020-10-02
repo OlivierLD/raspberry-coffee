@@ -2,7 +2,7 @@
 
 function test() {
 
-	var num = 100;
+	let num = 100;
 
 	console.log("Value: " + num);
 	{
