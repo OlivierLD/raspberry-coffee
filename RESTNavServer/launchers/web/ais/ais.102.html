@@ -138,14 +138,30 @@
     map.addEventListener('mousemove', (event) => {
         // let lat = Math.round(event.latlng.lat * 100000) / 100000;
         // let lng = Math.round(event.latlng.lng * 100000) / 100000;
-        document.getElementById('curr-pos').innerHTML = `${decToSex(event.latlng.lat, "NS")}<br/>${decToSex(event.latlng.lng, "EW")}`;
-        document.getElementById('curr-pos-dec').innerHTML = `${event.latlng.lat}<br/>${event.latlng.lng}`;
+        let lat = event.latlng.lat;
+        let lng = event.latlng.lng;
+        while (lng > 180) {
+            lng -= 360;
+        }
+        while (lng < -180) {
+            lng += 360;
+        }
+        document.getElementById('curr-pos').innerHTML = `${decToSex(lat, "NS")}<br/>${decToSex(lng, "EW")}`;
+        document.getElementById('curr-pos-dec').innerHTML = `${lat}<br/>${lng}`;
     });
     map.addEventListener('click', (event) => {
         // let lat = Math.round(event.latlng.lat * 100000) / 100000;
         // let lng = Math.round(event.latlng.lng * 100000) / 100000;
-        document.getElementById('curr-pos-click').innerHTML = `${decToSex(event.latlng.lat, "NS")}<br/>${decToSex(event.latlng.lng, "EW")}`;
-        document.getElementById('curr-pos-click-dec').innerHTML = `${event.latlng.lat}<br/>${event.latlng.lng}`;
+        let lat = event.latlng.lat;
+        let lng = event.latlng.lng;
+        while (lng > 180) {
+            lng -= 360;
+        }
+        while (lng < -180) {
+            lng += 360;
+        }
+        document.getElementById('curr-pos-click').innerHTML = `${decToSex(lat, "NS")}<br/>${decToSex(lng, "EW")}`;
+        document.getElementById('curr-pos-click-dec').innerHTML = `${lat}<br/>${lng}`;
     });
 
     function getTimeExtrema(ais) {

@@ -1,7 +1,7 @@
 // Bad
-for (var i = 1; i < 10; i++) {
+for (let i = 1; i < 10; i++) {
 	setTimeout(function () {
-		console.log("Bam!");
+		console.log(`Bam! (${i})`);
 	}, 1000);
 }
 console.log("End of the story");
@@ -9,8 +9,8 @@ console.log("End of the story");
 
 // Ok
 (function theLoop (i) {
-	setTimeout(function () {
-		console.log("Bam!");
+	setTimeout(() => {
+		console.log("Bam!!");
 		if (--i) {          // If i > 0, keep going
 			theLoop(i);       // Call the loop again, and pass it the current value of i
 		}
@@ -38,7 +38,7 @@ function sleep(ms) {
 
 let bool = false;
 
-setTimeout(function() {
+setTimeout(() => {
 	console.log(">> Setting bool to true");
 	bool = true;
 }, 10000);
@@ -52,17 +52,17 @@ async function waitForBool(ms) {
 	console.log('Bool now true');
 }
 
-async function demo() {
+async function demo2() {
 	await waitForBool(1000);
-	console.log('Done waiting');
-	return 'Done!';
+	console.log('- Done waiting');
+	return 'From demo2: Done!';
 }
 
 async function showMe() {
-	let val = await demo();
+	let val = await demo2();
 	// Display below appears only once the condition is fulfilled
 	console.log('----------------------');
-	console.log('Finally got this:', val);
+	console.log(`Finally got this: [${val}]`);
 	console.log('----------------------');
 }
 

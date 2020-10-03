@@ -82,7 +82,7 @@ console.log("----------------------------------------------------");
 console.log("Your working directory:", workDir);
 console.log("----------------------------------------------------");
 
-function decToSex(val, ns_ew, withDeg) {
+let decToSex = (val, ns_ew, withDeg) => {
 	let absVal = Math.abs(val);
 	let intValue = Math.floor(absVal);
 	let dec = absVal - intValue;
@@ -104,11 +104,17 @@ function decToSex(val, ns_ew, withDeg) {
 //    s += i + "\"" + dec.toFixed(2) + "'";
 	s += i + sep + dec.toFixed(2) + "'";
 	return s;
-}
+};
+
+const REST_PREFIX = "/rest";
+const OPLIST_RESOURCE = "/oplist";
+const GEOPOS_RESOURCE = "/geopos/";
 
 /**
  * Small Simple and Stupid little web server.
  * Very basic. Lighter than Express.
+ *
+ * prms are req (Request) and res (Response)
  */
 let handler = (req, res) => {
 	let respContent = "";
@@ -122,15 +128,15 @@ let handler = (req, res) => {
 		console.log("Search: [" + prms.search + "]");
 		console.log("-------------------------------");
 	}
-	if (req.url.startsWith("/verbose=")) {
+	if (req.url.startsWith("/verbose=")) { // Not very usual syntax, I know...
 		if (req.method === "GET") {
 			verbose = (req.url.substring("/verbose=".length) === 'on');
 			res.end(JSON.stringify({verbose: verbose ? 'on' : 'off'}));
 		}
-	} else if (req.url.startsWith("/rest/")) { // REST Operations!
-		if (req.url.startsWith("/rest/geopos/")) {
+	} else if (req.url.startsWith(REST_PREFIX)) { // REST Operations!
+		if (req.url.startsWith(REST_PREFIX + GEOPOS_RESOURCE)) {
 			if (req.method === "GET") {
-				let pathPrm = req.url.substring("/rest/geopos/".length); // Expects like 37.75,-122.50
+				let pathPrm = req.url.substring((REST_PREFIX + GEOPOS_RESOURCE).length); // Expects Path prm like "37.75,-122.50"
 				console.log(`Received ${pathPrm}`);
 				try {
 					let latLong = pathPrm.split(",");
@@ -139,7 +145,7 @@ let handler = (req, res) => {
 					let latDeg = decToSex(lat, "NS", true);
 					let lngDeg = decToSex(lng, "EW", true);
 					res.writeHead(200, {'Content-Type': 'application/json'});
-					res.end(JSON.stringify({ from: { lat: lat, lng: lng }, to: { lat: latDeg, lng: lngDeg } }));
+					res.end(JSON.stringify({from: {lat: lat, lng: lng}, to: {lat: latDeg, lng: lngDeg}}));
 				} catch (error) {
 					res.writeHead(404, {'Content-Type': 'application/json'});
 					res.end(JSON.stringify(error));
@@ -148,13 +154,36 @@ let handler = (req, res) => {
 				res.writeHead(404, {'Content-Type': 'text/plain'});
 				res.end(`${req.method} ${req.url} : Not Implemented`);
 			}
+		} else if (req.url.startsWith(REST_PREFIX + OPLIST_RESOURCE)) {
+			if (req.method === "GET") {
+				res.writeHead(200, {'Content-Type': 'application/json'});
+				res.end(JSON.stringify([
+					{
+						name: REST_PREFIX + GEOPOS_RESOURCE,
+						verb: "GET",
+						description: "Transform decimal coordinates into 'X Deg Min.mm' format.",
+						prms: {
+							path: {
+								name: "{coordinates}",
+								description: "Like '37.75,-122.50"
+							}
+						}
+					},
+					{
+						name: REST_PREFIX + OPLIST_RESOURCE,
+						verb: "GET",
+						description: "Returns REST operations list.",
+						prms: null
+					}
+				]));
+			}
 		} else {
-			// TODO Implement other methods (verb and paths) here
+			// TODO Implement other methods (verb and resources) here
 			res.writeHead(404, {'Content-Type': 'text/plain'});
 			res.end(`${req.method} ${req.url} : Not Implemented`);
 		}
 
-	} else if (req.url.startsWith("/")) { // All the rest, assuming static resource
+	} else if (req.url.startsWith("/")) { // All the rest, assuming static resource, GET only for now.
 		if (req.method === "GET") {
 			let resource = req.url.substring("/".length);
 			if (resource.length === 0) {
