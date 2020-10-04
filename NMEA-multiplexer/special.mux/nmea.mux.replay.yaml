@@ -8,7 +8,9 @@ context:
   init.cache: false
 channels:
   - type: file
-    filename: ./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea
+    filename: ./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea.zip
+    zip: true
+    path.in.zip: 2010-11-08.Nuku-Hiva-Tuamotu.nmea
     sentence.filters: MWV,VHW,VLW,VWR,DPT,HDG,MTW
     verbose: true
 forwarders:

@@ -63,7 +63,7 @@ public class GeoPos implements Serializable {
 			ret = deg + min / 100D;
 		}
 		catch(NumberFormatException nfe) {
-			throw new RuntimeException("Bad number [" + degrees + "] [" + minutes + "]");
+			throw new RuntimeException(String.format("Bad number [%s] [%s]", degrees, minutes));
 		}
 		return ret;
 	}
@@ -84,7 +84,7 @@ public class GeoPos implements Serializable {
 			ret = deg + (min / 100D);
 		}
 		catch(NumberFormatException nfe) {
-			throw new RuntimeException("Bad number");
+			throw new RuntimeException(String.format("Bad number [%s] [%s] [%s]", degrees, minutes, seconds));
 		}
 		return ret;
 	}
@@ -114,6 +114,9 @@ public class GeoPos implements Serializable {
 	 * @param args not used.
 	 */
 	public static void main(String... args) {
+
+		double test = sexToDec("140", "15.162");
+
 		double lat = sexToDec("24", "03.76");
 		double lng = sexToDec("109", "59.50") * -1; // West
 		System.out.println(String.format("Grid Square La Ventana: %s", new GeoPos(lat, lng).gridSquare()));

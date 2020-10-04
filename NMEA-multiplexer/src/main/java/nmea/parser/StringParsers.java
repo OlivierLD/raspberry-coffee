@@ -1306,7 +1306,7 @@ public class StringParsers {
 					Date rmcTime = local.getTime();
 					rmc = rmc.setRmcTime(rmcTime);
 					if ("true".equals(System.getProperty("RMC.verbose"))) {
-            System.out.println(String.format("RMC: From [%s], GPS date: %s, GPS Time: %s", str, SDF_UTC.format(rmc.getRmcDate()), SDF_UTC.format(rmcTime)));
+						System.out.println(String.format("RMC: From [%s], GPS date: %s, GPS Time: %s", str, SDF_UTC.format(rmc.getRmcDate()), SDF_UTC.format(rmcTime)));
 					}
 				}
 				if (data[3].length() > 0 && data[5].length() > 0) {
