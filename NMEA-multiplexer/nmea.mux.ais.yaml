@@ -4,6 +4,7 @@
 name: "AIS Manager. Computes possible threats from GPS and AIS."
 context:
   with.http.server: true
+  http.port: 1234
   init.cache: true
 channels:
 #  - type: serial
@@ -27,9 +28,12 @@ channels:
     path.in.zip: ais.nmea
     verbose: false
 forwarders:
-  - type: file
-    filename: sample.data/data.nmea
-    flush: true
+#  - type: file
+#    filename: sample.data/data.nmea
+#    flush: true
+  - type: tcp
+    port: 7002
+    verbose: false
 computers:
   - class: nmea.computers.AISManager
     verbose: false
