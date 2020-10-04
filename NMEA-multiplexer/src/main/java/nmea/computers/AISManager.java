@@ -8,6 +8,7 @@ import nmea.api.Multiplexer;
 import nmea.api.NMEAParser;
 import nmea.parser.GeoPos;
 import nmea.parser.StringParsers;
+import util.TextToSpeech;
 import utils.StringUtils;
 import utils.TimeUtil;
 
@@ -58,10 +59,15 @@ public class AISManager extends Computer {
 								// TODO Use the two speeds and headings (here and target). First degree equation solving.
 								if (distToTarget <= this.minimumDistance) {
 									double diffHeading = GeomUtil.bearingDiff(bearingFromTarget, aisRecord.getCog());
-									System.out.println(String.format("(%s) AISManager >> In range (%.02f/%.02f nm), diff heading: %.02f", TimeUtil.getTimeStamp(), distToTarget, this.minimumDistance, diffHeading));
+									String inRangeMessage = String.format("(%s) AISManager >> In range (%.02f/%.02f nm), diff heading: %.02f", TimeUtil.getTimeStamp(), distToTarget, this.minimumDistance, diffHeading);
+									System.out.println(inRangeMessage);
+									// A test
+									if (false) {
+										String messToSpeak = String.format("Boat in range %.02f miles! %s", distToTarget, (aisRecord.getVesselName() != null ? aisRecord.getVesselName() : ""));
+										TextToSpeech.speak(messToSpeak);
+									}
 									if (diffHeading < this.headingFork) { // Possible collision route (if you don't move)
-										// TODO Honk! Define a callback Consumer
-										System.out.println(String.format("!!! Possible collision threat with %s (%s), at %s / %s\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f",
+										String warningText = String.format("!!! Possible collision threat with %s (%s), at %s / %s\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f",
 												aisRecord.getMMSI(),
 												aisRecord.getVesselName(),
 												GeomUtil.decToSex(aisRecord.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
@@ -69,16 +75,29 @@ public class AISManager extends Computer {
 												distToTarget,
 												this.minimumDistance,
 												bearingFromTarget,
-												aisRecord.getCog()));
+												aisRecord.getCog());
+										System.out.println(warningText);
+										// TODO Honk! Define a callback Consumer
+										if ("true".equals(System.getProperty("try.to.speak"))) {
+											// A test
+											int bearingToTarget = (int)(180 + Math.round(bearingFromTarget));
+											bearingToTarget %= 360;
+											String messageToSpeak = String.format("Possible collision threat, %.02f miles in the %d.",
+													distToTarget,
+													bearingToTarget);
+											TextToSpeech.speak(messageToSpeak);
+										}
 									}
 								} else {
 									if (this.verbose) {
-										System.out.println(String.format("For %s (%s): Comparing %s with %s / %s\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f\n\t-> No threat found",
+										System.out.println(String.format("For %s (%s): Comparing %s with %s / %s (%.04f / %.04f)\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f\n\t-> No threat found",
 												aisRecord.getMMSI(),
 												aisRecord.getVesselName(),
 												position.toString(),
 												GeomUtil.decToSex(aisRecord.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
 												GeomUtil.decToSex(aisRecord.getLongitude(), GeomUtil.SWING, GeomUtil.EW),
+												aisRecord.getLatitude(),
+												aisRecord.getLongitude(),
 												distToTarget,
 												this.minimumDistance,
 												bearingFromTarget,

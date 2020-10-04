@@ -7,20 +7,10 @@ context:
   http.port: 1234
   init.cache: true
 channels:
-#  - type: serial
-#    port: /dev/ttyS0
-#    baudrate: 38400
-#    verbose: true
-#  - type: serial
-#    port: /dev/ttyS80
-#    baudrate: 4800
-#    verbose: true
   # GPS + NMEA
-  - type: file
-    filename: ./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea.zip
-    zip: true
-    path.in.zip: 2010-11-08.Nuku-Hiva-Tuamotu.nmea
-    verbose: false
+  # No GPS, use -Ddefault.mux.latitude=37.8218 and -Ddefault.mux.longitude=-122.3112
+  # 37.8218 / -122.3112 should trigger a collision warning
+  #
   # AIS Data
   - type: file
     filename: ./sample.data/logged.data.archive.zip
@@ -36,5 +26,5 @@ forwarders:
     verbose: false
 computers:
   - class: nmea.computers.AISManager
-    verbose: true
+    verbose: false
     properties: ais.mgr.properties
