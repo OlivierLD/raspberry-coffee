@@ -22,7 +22,8 @@ import java.util.Properties;
  */
 public class AISManager extends Computer {
 
-	private double minimumDistance = 20D;
+	private final static double DEFAULT_MINIMUM_DISTANCE = 20D;
+	private double minimumDistance = DEFAULT_MINIMUM_DISTANCE;
 	private final static double DEFAULT_HEADING_FORK = 10;
 	private double headingFork = DEFAULT_HEADING_FORK;
 
@@ -54,14 +55,28 @@ public class AISManager extends Computer {
 							if (position != null) {
 								double distToTarget = GeomUtil.haversineNm(position.lat, position.lng, aisRecord.getLatitude(), aisRecord.getLongitude());
 								double bearingFromTarget = GeomUtil.bearingFromTo(aisRecord.getLatitude(), aisRecord.getLongitude(), position.lat, position.lng);
-								// TODO Use the two speeds and headings (here and target)
+								// TODO Use the two speeds and headings (here and target). First degree equation solving.
 								if (distToTarget <= this.minimumDistance) {
 									double diffHeading = GeomUtil.bearingDiff(bearingFromTarget, aisRecord.getCog());
 									System.out.println(String.format("(%s) AISManager >> In range (%.02f/%.02f nm), diff heading: %.02f", TimeUtil.getTimeStamp(), distToTarget, this.minimumDistance, diffHeading));
 									if (diffHeading < this.headingFork) { // Possible collision route (if you don't move)
 										// TODO Honk! Define a callback Consumer
-										System.out.println(String.format("!!! Possible collision with %s, at %s / %s\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f",
+										System.out.println(String.format("!!! Possible collision threat with %s (%s), at %s / %s\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f",
 												aisRecord.getMMSI(),
+												aisRecord.getVesselName(),
+												GeomUtil.decToSex(aisRecord.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
+												GeomUtil.decToSex(aisRecord.getLongitude(), GeomUtil.SWING, GeomUtil.EW),
+												distToTarget,
+												this.minimumDistance,
+												bearingFromTarget,
+												aisRecord.getCog()));
+									}
+								} else {
+									if (this.verbose) {
+										System.out.println(String.format("For %s (%s): Comparing %s with %s / %s\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f\n\t-> No threat found",
+												aisRecord.getMMSI(),
+												aisRecord.getVesselName(),
+												position.toString(),
 												GeomUtil.decToSex(aisRecord.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
 												GeomUtil.decToSex(aisRecord.getLongitude(), GeomUtil.SWING, GeomUtil.EW),
 												distToTarget,
@@ -70,14 +85,6 @@ public class AISManager extends Computer {
 												aisRecord.getCog()));
 									}
 								}
-//							System.out.println(String.format("Comparing %s with %s / %s\n\tdistance %.02f nm (min is %.02f)\n\tBearing from target to current pos. %.02f\272\n\tCOG Target: %.02f",
-//									position.toString(),
-//									GeomUtil.decToSex(aisRecord.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
-//									GeomUtil.decToSex(aisRecord.getLongitude(), GeomUtil.SWING, GeomUtil.EW),
-//									distToTarget,
-//									this.minimumDistance,
-//									bearingFromTarget,
-//									aisRecord.getCog()));
 							}
 						}
 					}
@@ -96,8 +103,16 @@ public class AISManager extends Computer {
 	@Override
 	public void setProperties(Properties props) {
 		this.props = props;
-		this.minimumDistance = Double.parseDouble(props.getProperty("minimum.distance", String.valueOf(this.minimumDistance)));
+		this.minimumDistance = Double.parseDouble(props.getProperty("minimum.distance", String.valueOf(DEFAULT_MINIMUM_DISTANCE)));
 		this.headingFork = Double.parseDouble(props.getProperty("heading.fork.width", String.valueOf(DEFAULT_HEADING_FORK)));
+		this.verbose = "true".equals(props.getProperty("verbose"));
+		if (this.verbose) {
+			System.out.println(String.format("Computer %s:\nVerbose: %s\nMinimum Distance: %.02f\nHeading Fork: %.01f",
+					this.getClass().getName(),
+					this.verbose,
+					this.minimumDistance,
+					this.headingFork));
+		}
 	}
 
 	public static class AISComputerBean {

@@ -168,8 +168,7 @@ let handler = (req, res) => {
 								description: "Like '37.75,-122.50"
 							}
 						}
-					},
-					{
+					}, {
 						name: REST_PREFIX + OPLIST_RESOURCE,
 						verb: "GET",
 						description: "Returns REST operations list.",

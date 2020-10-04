@@ -895,16 +895,17 @@ public class MuxInitializer {
 							if (dynamic instanceof Computer) {
 								Computer computer = (Computer)dynamic;
 								String propProp = String.format("computer.%s.properties", MUX_IDX_FMT.format(cptrIdx));
+								Properties properties = new Properties();
+								properties.put("verbose", String.valueOf("true".equals(muxProps.getProperty(String.format("computer.%s.verbose", MUX_IDX_FMT.format(cptrIdx))))));
 								String propFileName = muxProps.getProperty(propProp);
 								if (propFileName != null) {
 									try {
-										Properties properties = new Properties();
 										properties.load(new FileReader(propFileName));
-										computer.setProperties(properties);
 									} catch (Exception ex) {
 										ex.printStackTrace();
 									}
 								}
+								computer.setProperties(properties);
 								nmeaDataComputers.add(computer);
 							} else {
 								throw new RuntimeException(String.format("Expected a Computer, found a [%s]", dynamic.getClass().getName()));
