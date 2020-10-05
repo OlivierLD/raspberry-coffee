@@ -13,23 +13,17 @@ public class TextToSpeech {
 
 	public static void speak(String text) {
 		String osName = System.getProperty("os.name");
-		String speechTool = speechTools.get(osName);
-		if (speechTool == null) {
-			throw new RuntimeException("No speech tool found in this os [" + System.getProperty("os.name") + "]");
-		}
 		try {
-			String command = String.format(speechTool, text);
-//			Runtime.getRuntime().exec(new String[] { speechTool, "\"" + text + "\"" });
-//			Runtime.getRuntime().exec(new String[] { command });
 			switch (osName) {
 				case "Mac OS X":
 					Runtime.getRuntime().exec(new String[] { "say", "\"" + text + "\"" });
 					break;
 				case "Linux":
-					Runtime.getRuntime().exec(new String[] { "espeak", "-a 200", "\"" + text + "\"", "--stdout", "|", "aplay" });
+					Runtime.getRuntime().exec(new String[] { "/bin/bash", "-c", "espeak -a 200 \"" + text + "\" --stdout | aplay" });
 					break;
 				default:
-					break;
+					throw new RuntimeException("No speech tool found in this os [" + osName + "]");
+//					break;
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
