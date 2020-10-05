@@ -5,18 +5,32 @@ import java.util.Map;
 
 public class TextToSpeech {
 	private static Map<String, String> speechTools = new HashMap<>();
+	// See this: https://howtoraspberrypi.com/make-talk-raspberry-pi-espeak/
 	static{
-		speechTools.put("Mac OS X", "say");
-		speechTools.put("Linux", "espeak");
+		speechTools.put("Mac OS X", "say \"%s\"");
+		speechTools.put("Linux", "espeak -a 200 \"%s\" --stdout | aplay");
 	}
 
 	public static void speak(String text) {
-		String speechTool = speechTools.get(System.getProperty("os.name"));
+		String osName = System.getProperty("os.name");
+		String speechTool = speechTools.get(osName);
 		if (speechTool == null) {
 			throw new RuntimeException("No speech tool found in this os [" + System.getProperty("os.name") + "]");
 		}
 		try {
-			Runtime.getRuntime().exec(new String[] { speechTool, "\"" + text + "\"" });
+			String command = String.format(speechTool, text);
+//			Runtime.getRuntime().exec(new String[] { speechTool, "\"" + text + "\"" });
+//			Runtime.getRuntime().exec(new String[] { command });
+			switch (osName) {
+				case "Mac OS X":
+					Runtime.getRuntime().exec(new String[] { "say", "\"" + text + "\"" });
+					break;
+				case "Linux":
+					Runtime.getRuntime().exec(new String[] { "espeak", "-a 200", "\"" + text + "\"", "--stdout", "|", "aplay" });
+					break;
+				default:
+					break;
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

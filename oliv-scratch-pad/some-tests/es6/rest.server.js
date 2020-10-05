@@ -1,5 +1,5 @@
 /**
- * This is a small and tiny Web server. Mostly serves static pages and files.
+ * This is a small and tiny Web server running on NodeJS. Mostly serves static pages and files.
  *
  * To debug:
  *   To install node-inspector, to do once:
@@ -109,6 +109,9 @@ let decToSex = (val, ns_ew, withDeg) => {
 const REST_PREFIX = "/rest";
 const OPLIST_RESOURCE = "/oplist";
 const GEOPOS_RESOURCE = "/geopos/";
+const POINTS_RESOURCE = "/points/";
+// Match "/rest/gridpoints/MTR/85,126/forecast";
+const FORECAST_RESOURCE = new RegExp("\\/gridpoints\\/[A-Z]{3}\\/[0-9]*,[0-9]*\\/forecast");
 
 /**
  * Small Simple and Stupid little web server.
@@ -153,6 +156,336 @@ let handler = (req, res) => {
 			} else {
 				res.writeHead(404, {'Content-Type': 'text/plain'});
 				res.end(`${req.method} ${req.url} : Not Implemented`);
+			}
+		} else if (req.url.startsWith(REST_PREFIX + POINTS_RESOURCE)) {
+			// console.log("HOST: [" + req.headers.host + "]");
+			if (req.method === "GET") {
+				let pathPrm = req.url.substring((REST_PREFIX + POINTS_RESOURCE).length); // Expects Path prm like "37.75,-122.50"
+				try {
+					let latLong = pathPrm.split(",");
+					let lat = parseFloat(latLong[0]);
+					let lng = parseFloat(latLong[1]);
+					res.writeHead(200, {'Content-Type': 'application/json'});
+					let rootUrl = `${req.protocol}${req.host}:${req.port}/rest`; // Requires node 14.5.+. See https://nodejs.org/api/http.html#http_request_host
+					if (req.host === undefined) {
+						rootUrl = `http://${req.headers.host}/rest`;
+					}
+					let responsePayload = { // Partly hard-coded
+						"properties": {
+							"@id": `${rootUrl}/points/${pathPrm}`,
+							"@type": "wx:Point",
+							"cwa": "MTR",
+							"forecastOffice": "http://api.weather.gov/offices/MTR",
+							"gridId": "MTR",
+							"gridX": 85,
+							"gridY": 126,
+							"forecast": `${rootUrl}/gridpoints/MTR/85,126/forecast`,
+							"forecastHourly": `${rootUrl}/gridpoints/MTR/85,126/forecast/hourly`,
+							"forecastGridData": `${rootUrl}/gridpoints/MTR/85,126`,
+							"observationStations": `${rootUrl}/gridpoints/MTR/85,126/stations`,
+							"relativeLocation": {
+								"type": "Feature",
+								"geometry": {
+									"type": "Point",
+									"coordinates": [
+										lng,
+										lat
+									]
+								},
+								"properties": {
+									"city": "Daly City",
+									"state": "CA",
+									"distance": {
+										"value": 6264.6077562384999,
+										"unitCode": "unit:m"
+									},
+									"bearing": {
+										"value": 330,
+										"unitCode": "unit:degrees_true"
+									}
+								}
+							},
+							"forecastZone": "https://api.weather.gov/zones/forecast/CAZ006",
+							"county": "https://api.weather.gov/zones/county/CAC075",
+							"fireWeatherZone": "https://api.weather.gov/zones/fire/CAZ006",
+							"timeZone": "America/Los_Angeles",
+							"radarStation": "KMUX"
+						}
+					};
+					res.end(JSON.stringify(responsePayload));
+				} catch (error) {
+					res.writeHead(404, {'Content-Type': 'application/json'});
+					res.end(JSON.stringify(error));
+				}
+			}
+		} else if (FORECAST_RESOURCE.test(req.url)) { // RegExp
+			if (req.method === "GET") {
+				let responsePayload = { // All hard-coded for this test.
+					"@context": [
+						"https://geojson.org/geojson-ld/geojson-context.jsonld",
+						{
+							"@version": "1.1",
+							"wx": "https://api.weather.gov/ontology#",
+							"geo": "http://www.opengis.net/ont/geosparql#",
+							"unit": "http://codes.wmo.int/common/unit/",
+							"@vocab": "https://api.weather.gov/ontology#"
+						}
+					],
+					"type": "Feature",
+					"geometry": {
+						"type": "Polygon",
+						"coordinates": [
+							[
+								[
+									-122.5090833,
+									37.767808899999999
+								],
+								[
+									-122.50340989999999,
+									37.746005099999998
+								],
+								[
+									-122.47585049999999,
+									37.750485300000001
+								],
+								[
+									-122.48151849999999,
+									37.772289499999999
+								],
+								[
+									-122.5090833,
+									37.767808899999999
+								]
+							]
+						]
+					},
+					"properties": {
+						"updated": "2020-09-21T19:56:34+00:00",
+						"units": "us",
+						"forecastGenerator": "BaselineForecastGenerator",
+						"generatedAt": "2020-09-21T20:03:33+00:00",
+						"updateTime": "2020-09-21T19:56:34+00:00",
+						"validTimes": "2020-09-21T13:00:00+00:00/P7DT12H",
+						"elevation": {
+							"value": 45.110399999999998,
+							"unitCode": "unit:m"
+						},
+						"periods": [
+							{
+								"number": 1,
+								"name": "This Afternoon",
+								"startTime": "2020-09-21T13:00:00-07:00",
+								"endTime": "2020-09-21T18:00:00-07:00",
+								"isDaytime": true,
+								"temperature": 63,
+								"temperatureUnit": "F",
+								"temperatureTrend": null,
+								"windSpeed": "9 to 13 mph",
+								"windDirection": "WSW",
+								"icon": "https://api.weather.gov/icons/land/day/sct?size=medium",
+								"shortForecast": "Mostly Sunny",
+								"detailedForecast": "Mostly sunny, with a high near 63. West southwest wind 9 to 13 mph."
+							},
+							{
+								"number": 2,
+								"name": "Tonight",
+								"startTime": "2020-09-21T18:00:00-07:00",
+								"endTime": "2020-09-22T06:00:00-07:00",
+								"isDaytime": false,
+								"temperature": 57,
+								"temperatureUnit": "F",
+								"temperatureTrend": null,
+								"windSpeed": "9 to 14 mph",
+								"windDirection": "WSW",
+								"icon": "https://api.weather.gov/icons/land/night/bkn?size=medium",
+								"shortForecast": "Mostly Cloudy",
+								"detailedForecast": "Mostly cloudy, with a low around 57. West southwest wind 9 to 14 mph."
+							},
+							{
+								"number": 3,
+								"name": "Tuesday",
+								"startTime": "2020-09-22T06:00:00-07:00",
+								"endTime": "2020-09-22T18:00:00-07:00",
+								"isDaytime": true,
+								"temperature": 62,
+								"temperatureUnit": "F",
+								"temperatureTrend": null,
+								"windSpeed": "13 mph",
+								"windDirection": "WSW",
+								"icon": "https://api.weather.gov/icons/land/day/bkn?size=medium",
+								"shortForecast": "Partly Sunny",
+								"detailedForecast": "Partly sunny, with a high near 62. West southwest wind around 13 mph."
+							},
+							{
+								"number": 4,
+								"name": "Tuesday Night",
+								"startTime": "2020-09-22T18:00:00-07:00",
+								"endTime": "2020-09-23T06:00:00-07:00",
+								"isDaytime": false,
+								"temperature": 56,
+								"temperatureUnit": "F",
+								"temperatureTrend": null,
+								"windSpeed": "8 to 13 mph",
+								"windDirection": "W",
+								"icon": "https://api.weather.gov/icons/land/night/bkn?size=medium",
+								"shortForecast": "Mostly Cloudy",
+								"detailedForecast": "Mostly cloudy, with a low around 56. West wind 8 to 13 mph."
+							},
+							{
+								"number": 5,
+								"name": "Wednesday",
+								"startTime": "2020-09-23T06:00:00-07:00",
+								"endTime": "2020-09-23T18:00:00-07:00",
+								"isDaytime": true,
+								"temperature": 63,
+								"temperatureUnit": "F",
+								"temperatureTrend": null,
+								"windSpeed": "8 to 12 mph",
+								"windDirection": "W",
+								"icon": "https://api.weather.gov/icons/land/day/sct?size=medium",
+								"shortForecast": "Mostly Sunny",
+								"detailedForecast": "Mostly sunny, with a high near 63. West wind 8 to 12 mph."
+							},
+							{
+								"number": 6,
+								"name": "Wednesday Night",
+								"startTime": "2020-09-23T18:00:00-07:00",
+								"endTime": "2020-09-24T06:00:00-07:00",
+								"isDaytime": false,
+								"temperature": 58,
+								"temperatureUnit": "F",
+								"temperatureTrend": null,
+								"windSpeed": "6 to 12 mph",
+								"windDirection": "W",
+								"icon": "https://api.weather.gov/icons/land/night/sct?size=medium",
+								"shortForecast": "Partly Cloudy",
+								"detailedForecast": "Partly cloudy, with a low around 58."
+							},
+							{
+								"number": 7,
+								"name": "Thursday",
+								"startTime": "2020-09-24T06:00:00-07:00",
+								"endTime": "2020-09-24T18:00:00-07:00",
+								"isDaytime": true,
+								"temperature": 63,
+								"temperatureUnit": "F",
+								"temperatureTrend": null,
+								"windSpeed": "6 to 16 mph",
+								"windDirection": "W",
+								"icon": "https://api.weather.gov/icons/land/day/sct?size=medium",
+								"shortForecast": "Mostly Sunny",
+								"detailedForecast": "Mostly sunny, with a high near 63."
+							},
+							{
+								"number": 8,
+								"name": "Thursday Night",
+								"startTime": "2020-09-24T18:00:00-07:00",
+								"endTime": "2020-09-25T06:00:00-07:00",
+								"isDaytime": false,
+								"temperature": 56,
+								"temperatureUnit": "F",
+								"temperatureTrend": null,
+								"windSpeed": "9 to 18 mph",
+								"windDirection": "WNW",
+								"icon": "https://api.weather.gov/icons/land/night/few?size=medium",
+								"shortForecast": "Mostly Clear",
+								"detailedForecast": "Mostly clear, with a low around 56."
+							},
+							{
+								"number": 9,
+								"name": "Friday",
+								"startTime": "2020-09-25T06:00:00-07:00",
+								"endTime": "2020-09-25T18:00:00-07:00",
+								"isDaytime": true,
+								"temperature": 64,
+								"temperatureUnit": "F",
+								"temperatureTrend": null,
+								"windSpeed": "8 to 16 mph",
+								"windDirection": "NW",
+								"icon": "https://api.weather.gov/icons/land/day/few?size=medium",
+								"shortForecast": "Sunny",
+								"detailedForecast": "Sunny, with a high near 64."
+							},
+							{
+								"number": 10,
+								"name": "Friday Night",
+								"startTime": "2020-09-25T18:00:00-07:00",
+								"endTime": "2020-09-26T06:00:00-07:00",
+								"isDaytime": false,
+								"temperature": 56,
+								"temperatureUnit": "F",
+								"temperatureTrend": null,
+								"windSpeed": "8 to 16 mph",
+								"windDirection": "NW",
+								"icon": "https://api.weather.gov/icons/land/night/few?size=medium",
+								"shortForecast": "Mostly Clear",
+								"detailedForecast": "Mostly clear, with a low around 56."
+							},
+							{
+								"number": 11,
+								"name": "Saturday",
+								"startTime": "2020-09-26T06:00:00-07:00",
+								"endTime": "2020-09-26T18:00:00-07:00",
+								"isDaytime": true,
+								"temperature": 67,
+								"temperatureUnit": "F",
+								"temperatureTrend": null,
+								"windSpeed": "9 mph",
+								"windDirection": "NW",
+								"icon": "https://api.weather.gov/icons/land/day/few?size=medium",
+								"shortForecast": "Sunny",
+								"detailedForecast": "Sunny, with a high near 67."
+							},
+							{
+								"number": 12,
+								"name": "Saturday Night",
+								"startTime": "2020-09-26T18:00:00-07:00",
+								"endTime": "2020-09-27T06:00:00-07:00",
+								"isDaytime": false,
+								"temperature": 58,
+								"temperatureUnit": "F",
+								"temperatureTrend": null,
+								"windSpeed": "5 to 9 mph",
+								"windDirection": "WNW",
+								"icon": "https://api.weather.gov/icons/land/night/few?size=medium",
+								"shortForecast": "Mostly Clear",
+								"detailedForecast": "Mostly clear, with a low around 58."
+							},
+							{
+								"number": 13,
+								"name": "Sunday",
+								"startTime": "2020-09-27T06:00:00-07:00",
+								"endTime": "2020-09-27T18:00:00-07:00",
+								"isDaytime": true,
+								"temperature": 84,
+								"temperatureUnit": "F",
+								"temperatureTrend": null,
+								"windSpeed": "5 to 9 mph",
+								"windDirection": "N",
+								"icon": "https://api.weather.gov/icons/land/day/skc?size=medium",
+								"shortForecast": "Sunny",
+								"detailedForecast": "Sunny, with a high near 84."
+							},
+							{
+								"number": 14,
+								"name": "Sunday Night",
+								"startTime": "2020-09-27T18:00:00-07:00",
+								"endTime": "2020-09-28T06:00:00-07:00",
+								"isDaytime": false,
+								"temperature": 60,
+								"temperatureUnit": "F",
+								"temperatureTrend": null,
+								"windSpeed": "5 to 8 mph",
+								"windDirection": "WNW",
+								"icon": "https://api.weather.gov/icons/land/night/skc?size=medium",
+								"shortForecast": "Clear",
+								"detailedForecast": "Clear, with a low around 60."
+							}
+						]
+					}
+				};
+				res.writeHead(200, {'Content-Type': 'application/json'});
+				res.end(JSON.stringify(responsePayload));
 			}
 		} else if (req.url.startsWith(REST_PREFIX + OPLIST_RESOURCE)) {
 			if (req.method === "GET") {

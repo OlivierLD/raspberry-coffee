@@ -22,7 +22,7 @@ object ScalaSimulator {
         if (loggerClassName.trim.length > 0) {
           try {
             val logClass = Class.forName(loggerClassName).asSubclass(classOf[LoggerInterface])
-            loggers :+= logClass.newInstance
+            loggers :+= logClass.getDeclaredConstructor().newInstance()
           } catch {
             case ex: Exception =>
               ex printStackTrace
