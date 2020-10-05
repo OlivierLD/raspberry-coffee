@@ -28,7 +28,7 @@ public class TextToSpeech {
 				case "Linux":
 					commands.add("/bin/bash");
 					commands.add("-c");
-					commands.add("espeak -a 200 '" + text + "' --stdout | aplay");
+					commands.add("\"espeak -a 200 '" + text + "' --stdout | aplay\""); // No single quote in the message!!
 					commands.forEach(System.out::println); // Verbose
 					Process process = Runtime.getRuntime().exec(commands.toArray(new String[0]));
 					BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -50,6 +50,6 @@ public class TextToSpeech {
 	public static void main(String... args) {
 		System.out.println("OS is [" + System.getProperty("os.name") + "]");
 //	speak("You got a message from 415-745-5209. Do you wan to read it?");
-		speak("Oh hello Pussycat, what's you doing up there?");
+		speak("Oh hello Pussycat, whats you doing up there?");
 	}
 }
