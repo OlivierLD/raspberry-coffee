@@ -26,7 +26,7 @@ public class TextToSpeech {
 				case "Linux":
 					commands.add("/bin/bash");
 					commands.add("-c");
-					commands.add("espeak -a 200 \"" + text + "\" --stdout | aplay");
+					commands.add("\"espeak -a 200 '" + text + "' --stdout | aplay\"");
 					commands.forEach(System.out::println); // Verbose
 					Runtime.getRuntime().exec(commands.toArray(new String[0]));
 					break;
