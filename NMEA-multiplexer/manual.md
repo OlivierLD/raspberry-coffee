@@ -409,8 +409,20 @@ See also the computer `nmea.computers.AISManager`. It is a computer to load as i
 computers:
   - class: nmea.computers.AISManager
     properties: ais.mgr.properties
+    verbose: false
 ```
 It's an example/WiP of the way to use AIS data to detect collision threats.
+> The properties file (`properties` member in the `yaml` above) can also include a `collision.threat.callback` property.
+> - If it is missing, nothing will be done when a collision threat is detected.
+> - If it is set to `default`, the warning message will be displayed in the console
+> - If it is set to a class name, like in:  
+> ```
+> collision.threat.callback=nmea.computers.SpeakingCallback
+> ```
+> the class name _must_ implement a `Consumer<String>`.
+> - If the class is not found, then nothing happens.
+> - Same if the class is not a `Consumer<String>`.
+> - See a valid _example_ in `nmea.computers.SpeakingCallback.java`, that will <u>speak out loud</u> the warning message.
 
 #### Other properties
 
