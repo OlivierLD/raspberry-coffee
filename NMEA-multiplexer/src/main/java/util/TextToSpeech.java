@@ -1,6 +1,8 @@
 package util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TextToSpeech {
@@ -13,13 +15,20 @@ public class TextToSpeech {
 
 	public static void speak(String text) {
 		String osName = System.getProperty("os.name");
+		List<String> commands = new ArrayList<>();
 		try {
 			switch (osName) {
 				case "Mac OS X":
-					Runtime.getRuntime().exec(new String[] { "say", "\"" + text + "\"" });
+					commands.add("say");
+					commands.add("\"" + text + "\"");
+					Runtime.getRuntime().exec(commands.toArray(new String[0]));
 					break;
 				case "Linux":
-					Runtime.getRuntime().exec(new String[] { "/bin/bash", "-c", "espeak -a 200 \"" + text + "\" --stdout | aplay" });
+					commands.add("/bin/bash");
+					commands.add("-c");
+					commands.add("espeak -a 200 \"" + text + "\" --stdout | aplay");
+					commands.forEach(System.out::println); // Verbose
+					Runtime.getRuntime().exec(commands.toArray(new String[0]));
 					break;
 				default:
 					throw new RuntimeException("No speech tool found in this os [" + osName + "]");
