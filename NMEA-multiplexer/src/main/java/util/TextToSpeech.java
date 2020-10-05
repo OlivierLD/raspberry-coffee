@@ -1,5 +1,7 @@
 package util;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +30,13 @@ public class TextToSpeech {
 					commands.add("-c");
 					commands.add("espeak -a 200 '" + text + "' --stdout | aplay");
 					commands.forEach(System.out::println); // Verbose
-					Runtime.getRuntime().exec(commands.toArray(new String[0]));
+					Process process = Runtime.getRuntime().exec(commands.toArray(new String[0]));
+					BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+					String line;
+					while ((line = in.readLine()) != null) {
+						System.out.println(line);
+					}
+					in.close();
 					break;
 				default:
 					throw new RuntimeException("No speech tool found in this os [" + osName + "]");
