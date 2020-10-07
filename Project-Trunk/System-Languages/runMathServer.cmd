@@ -1,7 +1,7 @@
 @setLocal
 :: EnableDelayedExpansion
 @echo off
-set CP=.\build\libs\System.Languages-1.0-all.jar
+set CP=.\build\libs\System-Languages-1.0-all.jar
 ::
 :: No column (:) in the arguments, they make a mess, confused with substrings
 echo ---------------------------------

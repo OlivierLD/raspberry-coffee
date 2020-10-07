@@ -164,7 +164,7 @@ Java, Scala and Kotlin require a compilation. C too, but not from Gradle.
 
 Run
 ```
- $ ../../gradlew shadowJar [ -x:Project.Trunk:System.Languages:compileClojure ]
+ $ ../../gradlew shadowJar [ -x:Project.Trunk:System-Languages:compileClojure ]
 ```
 
 #### A quick note
