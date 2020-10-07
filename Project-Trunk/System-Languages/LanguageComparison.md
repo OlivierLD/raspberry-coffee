@@ -178,7 +178,7 @@ The sources are in [`src/main/java/matrix`](./src/main/java/matrix).
 
 To run it:
 ```
- $ java -cp ./build/libs/System.Languages-1.0.jar matrix.SystemUtil
+ $ java -cp ./build/libs/System-Languages-1.0-all.jarr matrix.SystemUtil
 ```
 
 #### Scala
@@ -186,18 +186,18 @@ The sources are in [`src/main/scala/systems`](./src/main/scala/systems).
 
 To run it:
 ```
- $ scala -cp ./build/libs/System.Languages-1.0.jar systems.SystemUtils
+ $ scala -cp ./build/libs/System-Languages-1.0-all.jar systems.SystemUtils
 ```
 
 #### Kotlin
 The sources are in [`src/main/kotlin/KtSystemSolver.kt`](./src/main/kotlin).
 
 ```
- $ java -cp ./build/libs/System.Languages-1.0.jar systemsKt.KtSystemSolverKt
+ $ java -cp ./build/libs/System-Languages-1.0-all.jar systemsKt.KtSystemSolverKt
 ```
 or
 ```
- $ kotlin -classpath ./build/libs/System.Languages-1.0.jar systemsKt.KtSystemSolverKt
+ $ kotlin -classpath ./build/libs/System-Languages-1.0-all.jar systemsKt.KtSystemSolverKt
 ```
 
 
