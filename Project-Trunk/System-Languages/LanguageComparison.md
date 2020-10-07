@@ -139,8 +139,11 @@ We will use the following programming languages:
     - The system above can be resolved very quickly in just a couple of lines:
 
     ![Mathematica](./img/Mathematica.png)
-    
+
     <!--iframe width='800' height='400' src='https://www.wolframcloud.com/obj/olivier3/Published/system.nb?_view=EMBED' frameborder='0'></iframe-->
+ - [R](#R)
+    - Definitely designed for Statisticians (see [here](https://en.wikipedia.org/wiki/R_(programming_language)))
+    - The system above can be resolved very quickly in just a couple of lines of code.
 
 #### Output
 All versions of the program pretty much return the same output, like
@@ -341,6 +344,47 @@ Out[24]= {6.48822, -0.137817, 11.2809}
 ```
 Again, Mathematica is not a programming language. But as it is able to provide the answer to our problem
 in so few lines..., it had to be mentioned here.
+
+#### R
+Sources are in [`src/main/R`](./src/main/R).
+- Install R: <https://courses.edx.org/courses/UTAustinX/UT.7.01x/3T2014/56c5437b88fa43cf828bff5371c6a924/>
+- R-Studio: <https://rstudio.com/products/rstudio/download/#download>
+- Good resource to get started at <https://www.geeksforgeeks.org/matrix-multiplication-in-r/?ref=lbp>
+
+To start the R REPL:
+```
+$ R
+
+R version 4.0.2 (2020-06-22) -- "Taking Off Again"
+Copyright (C) 2020 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin17.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+>
+```
+
+To run the system resolution, use `Rscript`:
+```
+src/main/R $ Rscript system.R
+     [,1]   [,2]    [,3]
+l1 12.000   13.0  14.000
+l2  1.345 -654.0   0.001
+l3 23.090    5.3 -12.340
+[1]  6.4882219 -0.1378166 11.2809252
+```
 
 ### A bit of history, to predict the future
 In the scope we are considering here, the first to emerge was `C`. It is the `native` language of Unix,

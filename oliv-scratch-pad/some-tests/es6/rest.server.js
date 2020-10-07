@@ -492,14 +492,38 @@ let handler = (req, res) => {
 				res.writeHead(200, {'Content-Type': 'application/json'});
 				res.end(JSON.stringify([
 					{
-						name: REST_PREFIX + GEOPOS_RESOURCE,
+						name: REST_PREFIX + GEOPOS_RESOURCE + "{coordinates}",
 						verb: "GET",
 						description: "Transform decimal coordinates into 'X Deg Min.mm' format.",
 						prms: {
-							path: {
+							path: [{
 								name: "{coordinates}",
-								description: "Like '37.75,-122.50"
-							}
+								description: "Like '37.75,-122.50'"
+							}]
+						}
+					}, {
+						name: REST_PREFIX + POINTS_RESOURCE + "{coordinates}",
+						verb: "GET",
+						description: "Mimicks the weather.gov service.",
+						prms: {
+							path: [{
+								name: "{coordinates}",
+								description: "Like '37.75,-122.50'"
+							}]
+						}
+					}, {
+						// "/rest/gridpoints/MTR/85,126/forecast"
+						name: REST_PREFIX + "/gridpoints/{station}/{grid-coordinates}/forecast",
+						verb: "GET",
+						description: "Mimicks the weather.gov service.",
+						prms: {
+							path: [{
+								name: "{station}",
+								description: "Like 'MTR'"
+							}, {
+								name: "{grid-coordinates}",
+								description: "Like '85,126'"
+							}]
 						}
 					}, {
 						name: REST_PREFIX + OPLIST_RESOURCE,
