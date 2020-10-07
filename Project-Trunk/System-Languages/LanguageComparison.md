@@ -142,7 +142,8 @@ We will use the following programming languages:
 
     <!--iframe width='800' height='400' src='https://www.wolframcloud.com/obj/olivier3/Published/system.nb?_view=EMBED' frameborder='0'></iframe-->
  - [R](#R)
-    - Definitely designed for Statisticians (see [here](https://en.wikipedia.org/wiki/R_(programming_language)))
+    - More like a scripting than programming language, but has good reasons to exist! See the code...
+    - Definitely designed for mathematicians and statisticians (see [here](https://en.wikipedia.org/wiki/R_(programming_language)))
     - The system above can be resolved very quickly in just a couple of lines of code.
 
 #### Output
