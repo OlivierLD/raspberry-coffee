@@ -60,10 +60,9 @@ RUN echo "+-----------------------+" && \
 		echo "+-----------------------+" && \
 		DEBIAN_FRONTEND=noninteractive \
 		curl -sSL $SPARK_TARBALL -o spark.tgz && \
-		tar xvf spark.tgz
-#		&& \
-#		echo "===> Cleamning up..." && \
-#		rm spark.tgz
+		tar xvf spark.tgz && \
+		echo "===> Cleamning up..." && \
+		rm spark.tgz
 
 # TODO Hive, Haddop, etc. Jupyter Notebooks, IJava?
 
