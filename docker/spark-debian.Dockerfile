@@ -64,7 +64,7 @@ RUN echo "+-----------------------+" && \
 		echo "===> Cleamning up..." && \
 		rm spark.tgz
 
-# TODO Hive, Haddop, etc. Jupyter Notebooks, IJava?
+# TODO Hive, Hadoop, etc. Jupyter Notebooks, IJava?
 
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 RUN echo "banner Spark" >> $HOME/.bashrc
