@@ -1,8 +1,8 @@
-FROM debian
+FROM debian:latest
 
 #
-# Java 8, Scala 2.12.6, and Spark 2.3.0 (or more recent), on Debian
-# Updated June 2020
+# Java 11, Scala 2.12.12, and Spark 3.0.1 (or more recent), on Debian
+# Updated Oct 2020
 #
 
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
@@ -15,17 +15,33 @@ LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 # ENV ftp_proxy http://etc...
 # ENV no_proxy "*.oracle.com,.home.net"
 
-ENV SCALA_VERSION 2.12.6
+ENV SCALA_VERSION 2.12.12
+# ENV SCALA_VERSION 2.12.6
 ENV SCALA_TARBALL http://www.scala-lang.org/files/archive/scala-$SCALA_VERSION.deb
 
 # See https://spark.apache.org/downloads.html
-ENV APACHE_MIRROR https://mirrors.gigenet.com/apache/spark/spark-3.0.0-preview2/
+# ENV APACHE_MIRROR https://mirrors.gigenet.com/apache/spark/spark-3.0.1/
+ENV APACHE_MIRROR https://mirrors.ocf.berkeley.edu/apache/spark/spark-3.0.1/
+# ENV APACHE_MIRROR https://mirrors.gigenet.com/apache/spark/spark-3.0.0-preview2/
 # ENV SPARK_TARBALL http://apache.claz.org/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz
-ENV SPARK_TARBALL $APACHE_MIRROR/spark-3.0.0-preview2-bin-hadoop3.2.tgz
+# ENV SPARK_TARBALL $APACHE_MIRROR/spark-3.0.0-preview2-bin-hadoop3.2.tgz
+ENV SPARK_TARBALL $APACHE_MIRROR/spark-3.0.1-bin-hadoop2.7-hive1.2.tgz
 
 RUN apt-get update
 RUN apt-get install -y sysvbanner
-RUN apt-get install -y curl git build-essential default-jdk libssl-dev libffi-dev python-dev
+RUN apt-get install -y curl git build-essential default-jdk libssl-dev libffi-dev python-dev vim
+RUN apt-get install -y python-pip python-dev
+RUN apt-get install -y python3-pip python3-dev python3-venv
+RUN pip3 install pandas numpy scipy scikit-learn
+#
+RUN apt-get install -y cmake unzip pkg-config libopenblas-dev liblapack-dev
+RUN apt-get install -y python-numpy python-scipy python-matplotlib python-yaml
+RUN python3 -mpip install matplotlib
+#
+RUN pip3 install jupyter
+#
+RUN apt-get install -y python-opencv
+RUN apt-get install -y python3-tk
 
 RUN echo "+-----------------------+"  && \
 		echo "| ===> installing Scala |"  && \
@@ -44,9 +60,12 @@ RUN echo "+-----------------------+" && \
 		echo "+-----------------------+" && \
 		DEBIAN_FRONTEND=noninteractive \
 		curl -sSL $SPARK_TARBALL -o spark.tgz && \
-		tar xvf spark.tgz && \
-		echo "===> Cleamning up..." && \
-		rm spark.tgz
+		tar xvf spark.tgz
+#		&& \
+#		echo "===> Cleamning up..." && \
+#		rm spark.tgz
+
+# TODO Hive, Haddop, etc. Jupyter Notebooks, IJava?
 
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 RUN echo "banner Spark" >> $HOME/.bashrc
@@ -59,6 +78,8 @@ RUN echo "echo Then ./bin/spark-shell " >> $HOME/.bashrc
 RUN echo "echo as well as ./bin/pyspark " >> $HOME/.bashrc
 RUN echo "echo or ./bin/run-example org.apache.spark.examples.SparkPi" >> $HOME/.bashrc
 RUN echo "echo -------------------------" >> $HOME/.bashrc
+
+RUN echo "To run it, use 'docker run -it --rm -e USER=root oliv-spark:latest /bin/bash'"
 
 # RUN git clone https://github.com/OlivierLD/node.pi.git
 # WORKDIR /workdir/node.pi

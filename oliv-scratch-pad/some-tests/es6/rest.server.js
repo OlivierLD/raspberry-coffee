@@ -110,14 +110,16 @@ const REST_PREFIX = "/rest";
 const OPLIST_RESOURCE = "/oplist";
 const GEOPOS_RESOURCE = "/geopos/";
 const POINTS_RESOURCE = "/points/";
-// Match "/rest/gridpoints/MTR/85,126/forecast";
+// Match "/rest/gridpoints/MTR/85,126/forecast"; 3 Digits: \d{3}
 const FORECAST_RESOURCE = new RegExp("\\/gridpoints\\/[A-Z]{3}\\/[0-9]*,[0-9]*\\/forecast");
 
 /**
  * Small Simple and Stupid little web server.
  * Very basic. Lighter than Express.
  *
- * prms are req (Request) and res (Response)
+ * handler function takes 2 parameters:
+ * - req (Request)
+ * - res (Response)
  */
 let handler = (req, res) => {
 	let respContent = "";

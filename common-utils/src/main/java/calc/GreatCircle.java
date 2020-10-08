@@ -453,6 +453,10 @@ public final class GreatCircle {
 	}
 
 	public static void main(String... args) {
+
+		double gcDistInNM = getGCDistanceInDegrees(new GreatCirclePoint(37.73, -122.50), new GreatCirclePoint(38.73, -122.50));
+		System.out.println("Dist:" + gcDistInNM);
+
 		GreatCirclePoint dr = dr(new GreatCirclePoint(Math.toRadians(45D), Math.toRadians(-130D)), 55, 270);
 		System.out.println("Reaching " + new GreatCirclePoint(Math.toDegrees(dr.getL()), Math.toDegrees(dr.getG())).toString());
 		System.out.println("Done.");
