@@ -130,5 +130,12 @@ CONTAINER ID        IMAGE                       COMMAND                  CREATED
 $ docker run --name myxedb -d -p 51521:1521 -p 55500:5500 -e ORACLE_PWD=mysecurepassword -e ORACLE_CHARACTERSET=AL32UT apex:2020-09-20
 ```
 
+#### Send a file to a docker container
+```
+$ docker cp some.zip myxedb:/path/to-file/some.zip
+```             
+where `myxedb` is the name of the container.
+
+---
 
 ... More here soon.
