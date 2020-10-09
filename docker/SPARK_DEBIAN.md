@@ -135,7 +135,7 @@ $ docker run --name myxedb -d -p 51521:1521 -p 55500:5500 -e ORACLE_PWD=mysecure
 ```
 $ docker cp some.zip myxedb:/path/to-file/some.zip
 ```             
-where `myxedb` is the name of the container.
+where `myxedb` is the name or the `ID` of the container.
 
 ---
 
