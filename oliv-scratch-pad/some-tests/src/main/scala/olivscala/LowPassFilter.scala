@@ -6,7 +6,7 @@ import scala.util.Random
 object LowPassFilter {
 
   private val ALPHA = 0.15f // For the low pass filter (smoothing)
-  private var accumulator:Double = 0
+  private var accumulator:Double = _
 
   private def lowPass(alpha: Double, value: Double, acc: Double) = (value * alpha) + (acc * (1d - alpha))
 
@@ -19,9 +19,14 @@ object LowPassFilter {
     for (x  <- 1 to 1000) {
       doubleData += (100 * random.nextDouble());
     }
+    println(s"Raw Data: $doubleData")
 
-    doubleData.foreach(d => accumulator = lowPass(ALPHA, d, accumulator))
-    println(s"Filtered: $accumulator")
+    var filteredData = new mutable.MutableList[Double]()
+    doubleData.foreach(d => {
+      accumulator = lowPass(ALPHA, d, accumulator)
+      filteredData+= accumulator
+    })
+    println(s"Filtered: $filteredData")
   }
 
 }
