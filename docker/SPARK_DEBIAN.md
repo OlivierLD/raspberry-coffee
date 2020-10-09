@@ -1,5 +1,6 @@
 # Spark on Debian, Ideas, hints and comments
-- Doc at <http://spark.apache.org>, then `Documentation` > `Latest` > `Programming Guides` > ... `ML Libs` 
+- Doc at <http://spark.apache.org>, then `Documentation` > `Latest` > `Programming Guides` > ... `ML Libs`
+- Spark repo <https://github.com/apache/spark/tree/7deb67c28f948cca4e768317ade6d68d2534408f> 
 - Connect to the Docker image:
 ```
 $ docker run -it --rm -e USER=root oliv-spark:latest /bin/bash
