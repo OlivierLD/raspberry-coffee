@@ -128,10 +128,10 @@ CONTAINER ID        IMAGE                       COMMAND                  CREATED
 ```
 - To reuse the image, as it was when archived by the `commit`
 ```
-$ docker run --name myxedb -d -p 51521:1521 -p 55500:5500 -e ORACLE_PWD=mysecurepassword -e ORACLE_CHARACTERSET=AL32UT apex:2020-09-20
+$ docker run --name myxedb -d [ ...prms ] apex:2020-09-20
 ```
 
-#### Send a file to a docker container
+#### Send a file to a running docker container
 ```
 $ docker cp some.zip myxedb:/path/to-file/some.zip
 ```             
