@@ -1,4 +1,6 @@
-# Comments
+# Spark on Debian, Ideas, hints and comments
+
+
 - Connect to the Docker image:
 ```
 $ docker run -it --rm -e USER=root oliv-spark:latest /bin/bash
@@ -67,5 +69,67 @@ Then try this:
 >>> . . .
 >>> spark.stop()
 ```
+
+## Scala
+Run ` ./bin/spark-shell `
+```
+. . .
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+Spark context Web UI available at http://4e268c648d07:4040
+Spark context available as 'sc' (master = local[*], app id = local-1602275094801).
+Spark session available as 'spark'.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 3.0.1
+      /_/
+         
+Using Scala version 2.12.10 (OpenJDK 64-Bit Server VM, Java 11.0.8)
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala>
+```
+
+The `spark-shell` creates a session named spark,but you can create your own.
+
+Then
+```scala
+import org.apache.spark.{SparkConf, SparkContext, SparkException}
+import org.apache.spark.sql.SparkSession
+
+val session = SparkSession.builder().appName("oliv-test").getOrCreate()
+// . . . 
+session.stop()
+
+```
+
+
+### Docker reminder
+To be able to save the state of a docker container, and then reuse it, you need to do the following:
+- Let's say you've run the commands above, to build the APEX instance
+- From the host, run a 
+```
+ $ docker ps -a
+CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS                  PORTS                                              NAMES
+20b372c88eb6        oracle/database:18.4.0-xe   "/bin/sh -c 'exec $O…"   23 hours ago        Up 23 hours (healthy)   0.0.0.0:51521->1521/tcp, 0.0.0.0:55500->5500/tcp   myxedb
+ $
+```
+- Then you can save the container state into a new image
+```
+ $ docker commit 20b372c88eb6 apex:2020-09-20
+```
+- You can exit the docker session.
+```
+[oracle@73018a29f867 /]$ exit
+```
+- To reuse the image, as it was when archived by the `commit`
+```
+$ docker run --name myxedb -d -p 51521:1521 -p 55500:5500 -e ORACLE_PWD=mysecurepassword -e ORACLE_CHARACTERSET=AL32UT apex:2020-09-20
+```
+
 
 ... More here soon.
