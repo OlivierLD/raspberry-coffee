@@ -15,7 +15,8 @@ LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 # ENV ftp_proxy http://etc...
 # ENV no_proxy "*.oracle.com,.home.net"
 
-ENV SCALA_VERSION 2.12.12
+ENV SCALA_VERSION 2.13.3
+# ENV SCALA_VERSION 2.12.12
 # ENV SCALA_VERSION 2.12.6
 ENV SCALA_TARBALL http://www.scala-lang.org/files/archive/scala-$SCALA_VERSION.deb
 
@@ -44,8 +45,8 @@ RUN apt-get install -y python-opencv
 RUN apt-get install -y python3-tk
 
 RUN echo "+-----------------------+"  && \
-		echo "| ===> installing Scala |"  && \
-		echo "+-----------------------+"  && \
+	echo "| ===> installing Scala |"  && \
+	echo "+-----------------------+"  && \
     DEBIAN_FRONTEND=noninteractive \
             apt-get install -y --force-yes libjansi-java && \
     curl -sSL $SCALA_TARBALL -o scala.deb && \
@@ -56,16 +57,33 @@ RUN echo "+-----------------------+"  && \
 RUN mkdir /workdir
 WORKDIR /workdir
 RUN echo "+-----------------------+" && \
-		echo "| ===> installing Spark |" && \
-		echo "+-----------------------+" && \
-		DEBIAN_FRONTEND=noninteractive \
-		curl -sSL $SPARK_TARBALL -o spark.tgz && \
-		tar xvf spark.tgz && \
-		echo "===> Cleamning up..." && \
-		rm spark.tgz
+    echo "| ===> installing Spark |" && \
+    echo "+-----------------------+" && \
+    DEBIAN_FRONTEND=noninteractive \
+    curl -sSL $SPARK_TARBALL -o spark.tgz && \
+    tar xvf spark.tgz && \
+    echo "===> Cleaning up..." && \
+    rm spark.tgz
 
-# TODO Hive, Hadoop, etc. Jupyter Notebooks, IJava?
-
+# TODO Hive, Hadoop, etc?
+#
+# Jupyter Notebooks kernels: IJava, Almond?
+# See https://github.com/SpencerPark/IJava, https://github.com/SpencerPark/IJava#install-from-source
+#
+WORKDIR /workdir
+RUN git clone https://github.com/SpencerPark/IJava.git
+WORKDIR /workdir/IJava
+RUN pwd
+RUN ./gradlew installKernel
+#
+WORKDIR /workdir
+RUN curl -Lo coursier https://git.io/coursier-cli
+RUN chmod +x coursier
+RUN ./coursier launch --fork almond -- --install
+RUN rm -f coursier
+#
+# To start: jupyter notebook --ip=0.0.0.0 --port=8080 --allow-root --no-browser
+#
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 RUN echo "banner Spark" >> $HOME/.bashrc
 RUN echo "git --version" >> $HOME/.bashrc
@@ -77,8 +95,11 @@ RUN echo "echo Then ./bin/spark-shell " >> $HOME/.bashrc
 RUN echo "echo as well as ./bin/pyspark " >> $HOME/.bashrc
 RUN echo "echo or ./bin/run-example org.apache.spark.examples.SparkPi" >> $HOME/.bashrc
 RUN echo "echo -------------------------" >> $HOME/.bashrc
-
-RUN echo "To run it, use 'docker run -it --rm -e USER=root oliv-spark:latest /bin/bash'"
+RUN echo "echo To start Jupyter Notebooks:" >> $HOME/.bashrc
+RUN echo "echo jupyter notebook --ip=0.0.0.0 --port=8080 --allow-root --no-browser" >> $HOME/.bashrc
+RUN echo "echo -------------------------" >> $HOME/.bashrc
+#
+RUN echo "To run it, use 'docker run -it --rm -e USER=root -p 8080:8080 oliv-spark:latest /bin/bash'"
 
 # RUN git clone https://github.com/OlivierLD/node.pi.git
 # WORKDIR /workdir/node.pi

@@ -9,6 +9,16 @@ Good article [here](https://howchoo.com/g/nmrlzmq1ymn/how-to-install-docker-on-y
 - For a Raspberry Pi, also see [here](https://medium.com/free-code-camp/the-easy-way-to-set-up-docker-on-a-raspberry-pi-7d24ced073ef),
 and [here](https://phoenixnap.com/kb/docker-on-raspberry-pi).
 
+> #### To install Docker on Raspbian OS
+> - `sudo apt-get update && sudo apt-get upgrade`
+> - `curl -fsSL https://get.docker.com -o get-docker.sh`
+> - `sudo sh get-docker.sh`
+> - `sudo usermod -aG docker [user_name, like pi]`
+
+Then
+> - `docker version`
+> - ` docker info`
+
 #### To get started...
 After installing Docker, try this:
 ```

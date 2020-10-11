@@ -19,8 +19,11 @@ version '0.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    mavenLocal();
+    mavenLocal()
     maven { url "http://www.datanucleus.org/downloads/maven2" }
+    // maven { url "https://nexus.corp.com/content/repositories/releases" }
+    maven { url "https://mvnrepository.com/artifact" }
+    maven { url "https://dl.bintray.com/cibotech/public" }
 }
 
 dependencies {
@@ -34,6 +37,12 @@ dependencies {
     compile 'oracle:xmlparser:2.0'
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
     compile 'com.fasterxml.jackson.core:jackson-databind:2.11.2'
+    // ScalaJS
+    compile 'org.scala-js:scalajs-dom_sjs1_2.13:1.1.0'
+    compile 'org.scala-js:scalajs-library_2.13:1.2.0'
+    // EvilPlot
+    compile 'com.cibo:evilplot-repl_2.12:0.7.0'
+//    compile 'com.cibo:evilplot-repl_2.13:0.8.0'
 
     // Require tools.jar, from the JDK (Doclet and Co)
 //    compile files(org.gradle.internal.jvm.Jvm.current().toolsJar)

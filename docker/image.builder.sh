@@ -34,7 +34,7 @@ do
   echo -e "|  7. Golang, basics                                                   |"
   echo -e "|  8. Raspberry Pi Desktop, MATE, with java, node, web comps, VNC,     |"
   echo -e "|                                                inkscape, gtk samples |"
-  echo -e "|  9. Debian 10, Java, Scala, Spark                                    |"
+  echo -e "|  9. Debian 10, Java, Scala, Spark, Jupyter Notebook                  |"
 #  echo -e "| 10. Ubuntu MATE, TensorFlow, Keras, Python3, Jupyter, PyCharm, VNC   |"
   echo -e "| 10. Debian 10, TensorFlow, Keras, Python3, Jupyter, PyCharm,         |"
   echo -e "|                                                 VNC, nodejs, npm,... |"
@@ -233,7 +233,7 @@ do
       RUN_CMD="docker run -d --name spark-debian $IMAGE_NAME:latest"
       #
       MESSAGE="---------------------------------------------------\n"
-      MESSAGE="${MESSAGE}Log in using: docker run -it --rm -e USER=root $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}Log in using: docker run -it --rm -e USER=root -p 8080:8080 $IMAGE_NAME:latest /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "10")

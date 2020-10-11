@@ -10,7 +10,7 @@ object LowPassFilter {
 
   private def lowPass(alpha: Double, value: Double, acc: Double) = (value * alpha) + (acc * (1d - alpha))
 
-  var doubleData = new mutable.MutableList[Double]()
+  var doubleData = new mutable.ListBuffer[Double]()
 
   def main(args: Array[String]): Unit = {
 
@@ -21,7 +21,7 @@ object LowPassFilter {
     }
     println(s"Raw Data: $doubleData")
 
-    var filteredData = new mutable.MutableList[Double]()
+    var filteredData = new mutable.ListBuffer[Double]()
     doubleData.foreach(d => {
       accumulator = lowPass(ALPHA, d, accumulator)
       filteredData+= accumulator
