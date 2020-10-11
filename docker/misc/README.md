@@ -26,7 +26,7 @@
   +----------------------------------------------------------------------+
   == You choose => 9
   ```
-- We want to send some files to this image, say the zip `lowpass.zip.
+- We want to send some files to this image, say the zip `lowpass.zip`.
     - Start the image from your host machine:
     ```
     $ docker run -it --rm -e USER=root -p 8080:8080 oliv-spark:latest /bin/bash
@@ -101,7 +101,7 @@
     ![01](./Jupyter.01.png)
     - Click `lowpass.filter.java.ipynb` (or any other)
     ![02](./Jupyter.02.png)
-    - Execute the cell (Shift + Return), ply with it, it's all yours!
+    - Execute the cells (Shift + Return), ply with it, it's all yours!
 
 ---
     
