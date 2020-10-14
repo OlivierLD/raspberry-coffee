@@ -3,7 +3,7 @@
 - Spark repo <https://github.com/apache/spark/tree/7deb67c28f948cca4e768317ade6d68d2534408f> 
 - Connect to the Docker image:
 ```
-$ docker run -it --rm -e USER=root oliv-spark:latest /bin/bash
+$ docker run -it --rm -e USER=root -p 8080:8080 oliv-spark:latest /bin/bash
  #####
 #     #  #####     ##    #####   #    #
 #        #    #   #  #   #    #  #   #
@@ -110,7 +110,7 @@ session.stop()
 
 ### Docker reminder
 To be able to save the state of a docker container, and then reuse it, you need to do the following:
-- Let's say you've run the commands above, to build the APEX instance
+- Let's say you've built an APEX instance
 - From the host, run a 
 ```
  $ docker ps -a
@@ -138,5 +138,6 @@ $ docker cp some.zip myxedb:/path/to-file/some.zip
 where `myxedb` is the name or the `ID` of the container.
 
 ---
+Also see [this](./misc/README.md)
 
 ... More here soon.

@@ -17,7 +17,7 @@ and [here](https://phoenixnap.com/kb/docker-on-raspberry-pi).
 
 Then
 > - `docker version`
-> - ` docker info`
+> - `docker info`
 
 #### To get started...
 After installing Docker, try this:

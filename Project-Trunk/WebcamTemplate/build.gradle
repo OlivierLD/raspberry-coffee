@@ -25,7 +25,7 @@ dependencies {
 //    compile fileTree(dir: '/usr/local/Cellar/opencv/4.3.0_5/share/java/opencv4', include: ['*.jar']) // Mac
     compile fileTree(dir: '/usr/local/share/java/opencv4', include: ['*.jar']) // RPi
 
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'junit', name: 'junit', version: '4.13'
 }
 
 tasks.withType(JavaExec) {

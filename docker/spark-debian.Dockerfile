@@ -40,6 +40,7 @@ RUN apt-get install -y python-numpy python-scipy python-matplotlib python-yaml
 RUN python3 -mpip install matplotlib
 #
 RUN pip3 install jupyter
+RUN pip3 install pyspark
 #
 RUN apt-get install -y python-opencv
 RUN apt-get install -y python3-tk
@@ -83,6 +84,8 @@ RUN ./coursier launch --fork almond -- --install
 RUN rm -f coursier
 #
 # To start: jupyter notebook --ip=0.0.0.0 --port=8080 --allow-root --no-browser
+#
+# TODO Copy projects, classes, notebooks and resources?
 #
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 RUN echo "banner Spark" >> $HOME/.bashrc
