@@ -4,7 +4,7 @@
 
 const DEFAULT_TIMEOUT = 60000;
 
-// var errManager = console.log;
+// let errManager = console.log;
 let errManager = (mess) => {
     let content = $("#error").html();
     $("#error").html((content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess);
@@ -12,7 +12,7 @@ let errManager = (mess) => {
     div.scrollTop = div.scrollHeight;
 };
 
-// var messManager = console.log;
+// let messManager = console.log;
 let messManager = (mess) => {
     let content = $("#messages").html();
     $("#messages").html((content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess);
@@ -304,7 +304,7 @@ let getSunMoonCurves = (from, to, tz, pos, callback) => {
 let showTime = () => {
     let getData = getCurrentTime();
     getData.then((value) => {
-        var json = JSON.parse(value);
+        let json = JSON.parse(value);
         // Do something smart
         $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
     }, (error, errmess) => {

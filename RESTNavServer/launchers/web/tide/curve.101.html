@@ -175,8 +175,8 @@
 				tideData.timeZone = tzName;
 				tideData.position = position;
 				// Invoke daylight service
-//				var from = new Date(parseInt(fromDate));
-//				var to = new Date(parseInt(toDate));
+//				let from = new Date(parseInt(fromDate));
+//				let to = new Date(parseInt(toDate));
 //				// DURATION_FMT is defined in tide.js
 				// TODO Which one to call???
 //				getSunData(position.latitude, position.longitude, daylightReceiver); // TODO The right callback
@@ -230,7 +230,7 @@
 			let dateObj = new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
 			let millis = dateObj.getTime();
 			millis += (24 * 3600 * 1000);
-			var added = new Date(millis);
+			let added = new Date(millis);
 			return {
 				year: added.getFullYear(),
 				month: added.getMonth() + 1,
