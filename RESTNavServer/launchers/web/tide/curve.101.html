@@ -31,91 +31,94 @@
 		}
 	</style>
 	<script type="text/javascript">
-		var tideGraph; // The graph itself.
-		var tideData = {};
-		var graphCallback = undefined;
+		let tideGraph; // The graph itself.
+		let tideData = {};
+		let graphCallback = undefined;
 
-		var isLeapYear = function (yr) {
+		let isLeapYear = (yr) => {
 			if ((parseInt(yr) % 4) === 0) {
 				if (parseInt(yr) % 100 === 0) {
-					if (parseInt(yr) % 400 !== 0)
+					if (parseInt(yr) % 400 !== 0) {
 						return false;
-					if (parseInt(yr) % 400 === 0)
+					}
+					if (parseInt(yr) % 400 === 0) {
 						return true;
+					}
 				}
-				if (parseInt(yr) % 100 !== 0)
+				if (parseInt(yr) % 100 !== 0) {
 					return true;
+				}
 			}
-			if ((parseInt(yr) % 4) !== 0)
+			if ((parseInt(yr) % 4) !== 0) {
 				return false;
+			}
 		};
 
-		window.onload = function() {
+		window.onload = () => {
 			tideGraph = new TideGraph("tideCanvas", tideData, graphCallback, "feet");
 			// Load the date dropdown lists
-			var year = new Date().getFullYear();
+			let year = new Date().getFullYear();
 			$("#year").empty();
-			for (var i=0; i<20; i++) {
-				var option = "<option value='" + (year - 10 + i) + "'>" + (year - 10 + i) + "</option>";
+			for (let i=0; i<20; i++) {
+				let option = "<option value='" + (year - 10 + i) + "'>" + (year - 10 + i) + "</option>";
 				$('#year').append(option);
 			}
 			$('#year').val(year);
-			var month = new Date().getMonth();
-			var mNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+			let month = new Date().getMonth();
+			let mNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 			$("#month").empty();
-			for (var i=0; i<mNames.length; i++) {
-				var option = "<option value='" + (i + 1) + "'>" + mNames[i] + "</option>";
+			for (let i=0; i<mNames.length; i++) {
+				let option = "<option value='" + (i + 1) + "'>" + mNames[i] + "</option>";
 				$('#month').append(option);
 			}
 			$('#month').val(month + 1);
-			var day = new Date().getDate();
+			let day = new Date().getDate();
 			populateDays();
 			$('#day').val(day);
 
 			// Query parameters?
-			var station = getQueryParameterByName("station");
+			let station = getQueryParameterByName("station");
 			if (station !== undefined && station !== null) {
 				// alert("Station " + station);
 				// Do it, for now, 1 day
 				$('#with-table').prop('checked', true);
-				tideTable(station,
-					{ year: year, month: month + 1, day: day }, '', '', '', false, 1, dataManager);
+				tideTable(station, { year: year, month: month + 1, day: day }, '', '', '', false, 1, dataManager);
 			}
 		};
 
-		var getNbDayInMonth = function(yr, mo) { // mo in [1..12]
-			var leap = isLeapYear(yr);
-			var nb = (mo === 1 || mo === 3 || mo === 5 || mo === 7 || mo === 8 || mo === 10 || mo === 12 ? 31 : (mo === 2 ? (leap ? 29 : 28) : 30));
+		let getNbDayInMonth = (yr, mo) => { // mo in [1..12]
+			let leap = isLeapYear(yr);
+			let nb = (mo === 1 || mo === 3 || mo === 5 || mo === 7 || mo === 8 || mo === 10 || mo === 12 ? 31 : (mo === 2 ? (leap ? 29 : 28) : 30));
 			return nb;
 		};
 
-		var populateDays = function() {
-			var nbDays = getNbDayInMonth(parseInt($('#year').val()), parseInt($('#month').val()));
+		let populateDays = () => {
+			let nbDays = getNbDayInMonth(parseInt($('#year').val()), parseInt($('#month').val()));
 			$("#day").empty();
-			for (var i=0; i<nbDays; i++) {
-				var option = "<option value='" + (i + 1) + "'>" + (i + 1) + "</option>";
+			for (let i=0; i<nbDays; i++) {
+				let option = "<option value='" + (i + 1) + "'>" + (i + 1) + "</option>";
 				$('#day').append(option);
 			}
 		};
 
-		var populateList = function(stationList) {
+		let populateList = (stationList) => {
 			$("#station-list").empty();
 			$("#draw-curve").prop('disabled', true);
-			stationList.forEach(function(station, idx) {
-				var option = "<option value='" + decodeURIComponent(station.fullName) + "'>" + decodeURIComponent(station.fullName) + "</option>";
+			stationList.forEach((station, idx) => {
+				let option = "<option value='" + decodeURIComponent(station.fullName) + "'>" + decodeURIComponent(station.fullName) + "</option>";
 				$('#station-list').append(option);
 			});
 			$("#draw-curve").prop('disabled', stationList.length === 0);
 		};
 
-		var daylightReceiver = function(value) {
-//		console.log("Received daylight ", value);
+		let daylightReceiver = (value) => {
+//		    console.log("Received daylight ", value);
 			// Manage Sun data here
-			tideGraph.setSunData(value);
+			tideGraph.setSunData(value); // TODO Check what this does...
 		};
 
-		var sunMoonReceiver = function(value) {
-//		console.log("Received sunMooon ", value);
+		let sunMoonReceiver = (value) => {
+//		    console.log("Received sunMooon ", value);
 			// Manage Sun data here
 			tideGraph.setAltitudes(value);
 		};
@@ -128,7 +131,7 @@
 		 * POST /astro/sun-moon-dec-alt?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
 		 * 		payload { latitude: 37.76661945, longitude: -122.5166988 }
 		 */
-		var dataManager = function(value) { // Callback when tide data are ready
+		let dataManager = (value) => { // Callback when tide data are ready
 			tideGraph.unsetSunData();
 			tideGraph.unsetAltitudes();
 			tideGraph.unsetTable();
@@ -137,18 +140,18 @@
 			$("#previous").prop('disabled', false);
 			$("#next").prop('disabled', false);
 
-//		console.log(value);
+//		    console.log(value);
 			try {
-				var json = JSON.parse(value);
-				var data = json.heights;
-				var base = json.baseHeight;
+				let json = JSON.parse(value);
+				let data = json.heights;
+				let base = json.baseHeight;
 				// Detect min & max
-				var min = base, max = base;
-				var size = 0;
+				let min = base, max = base;
+				let size = 0;
 				tideData = {};
 				tideCurve = [];
-				var fromDate, toDate;
-				for (var tDate in data) {
+				let fromDate, toDate;
+				for (let tDate in data) {
 					if (fromDate === undefined) {
 						fromDate = tDate;
 					}
@@ -164,8 +167,8 @@
 				tideData.base = base;
 				tideData.station = decodeURIComponent(json.stationName);
 				// Get position and timezone, for the daylight
-				var tzName = json.timeZone;
-				var position = {
+				let tzName = json.timeZone;
+				let position = {
 					latitude: parseFloat(json.position.latitude),
 					longitude: parseFloat(json.position.longitude)
 				};
@@ -175,35 +178,37 @@
 //				var from = new Date(parseInt(fromDate));
 //				var to = new Date(parseInt(toDate));
 //				// DURATION_FMT is defined in tide.js
-//				getSunData(from.format(DURATION_FMT), to.format(DURATION_FMT), tzName, position, daylightReceiver);
-				getSunData(json.fromPrm, json.toPrm, tzName, position, daylightReceiver);
+				// TODO Which one to call???
+//				getSunData(position.latitude, position.longitude, daylightReceiver); // TODO The right callback
+    			getDayLightData(json.fromPrm, json.toPrm, tzName, position, daylightReceiver);
 
-				getSunMoonCurves(json.fromPrm, json.toPrm, tzName, position, sunMoonReceiver);
+    			getSunMoonCurves(json.fromPrm, json.toPrm, tzName, position, sunMoonReceiver);
 
-				var harmonics;
+				let harmonics;
 				if (json.harmonicCurves !== undefined) {
 					harmonics = [];
-					for (var coeff in json.harmonicCurves) {
-						var dataArray = json.harmonicCurves[coeff];
+					for (let coeff in json.harmonicCurves) {
+						let dataArray = json.harmonicCurves[coeff];
 //					console.log(coeff + " ; " + dataArray.length + " element(s)");
-						var curve = [];
-						dataArray.forEach(function(pt, idx) {
+						let curve = [];
+						dataArray.forEach((pt, idx) => {
 							curve.push(new Tuple(pt.x, pt.y));
 						});
 						harmonics.push({ name: coeff, data: curve });
 					}
 					tideData.harmonics = harmonics;
 				}
-				var idx2plot = new Date().getTime(); // Current date/time
+				let idx2plot = new Date().getTime(); // Current date/time
+				console.log("DrawGraph invocation!");
 				tideGraph.drawGraph("tideCanvas", tideData, idx2plot, $('#with-table').prop('checked') === true ? json.table : undefined);
 			} catch (err) {
 				console.log(err);
 			}
 		};
 
-		var manageClick = function(div) {
+		let manageClick = (div) => {
 			// Set the right class to the clicked tab
-			[ 'error-tab', 'message-tab' ].forEach(function(tab, idx) {
+			[ 'error-tab', 'message-tab' ].forEach((tab, idx) => {
 				document.getElementById(tab).className = (div.id === tab ? 'selectedButton' : 'unselectedButton');
 			});
 			// Show the right div
@@ -222,9 +227,9 @@
 		};
 
 
-		var addOneDay = function(date) {
-			var dateObj = new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
-			var millis = dateObj.getTime();
+		let addOneDay = (date) => {
+			let dateObj = new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
+			let millis = dateObj.getTime();
 			millis += (24 * 3600 * 1000);
 			var added = new Date(millis);
 			return {
@@ -234,11 +239,11 @@
 			};
 		};
 
-		var substractOneDay = function(date) {
-			var dateObj = new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
-			var millis = dateObj.getTime();
+		let substractOneDay = (date) => {
+			let dateObj = new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
+			let millis = dateObj.getTime();
 			millis -= (24 * 3600 * 1000);
-			var added = new Date(millis);
+			let added = new Date(millis);
 			return {
 				year: added.getFullYear(),
 				month: added.getMonth() + 1,
@@ -246,11 +251,11 @@
 			};
 		};
 
-		var nextDay = function() {
+		let nextDay = () => {
 			tideTable(lastRequiredStation, addOneDay(lastRequiredDate), '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);
 		};
 
-		var previousDay = function() {
+		let previousDay = () => {
 			tideTable(lastRequiredStation, substractOneDay(lastRequiredDate), '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);
 		};
 

@@ -42,19 +42,19 @@
 	</style>
 	<script type="text/javascript">
 
-		var populateList = function(stationList) {
+		let populateList = (stationList) => {
 			$("#station-list").empty();
 			$("#draw-curve").prop('disabled', true);
-			stationList.forEach(function(station, idx) {
-				var option = "<option value='" + decodeURIComponent(station.fullName) + "'>" + decodeURIComponent(station.fullName) + "</option>";
+			stationList.forEach((station, idx) => {
+				let option = "<option value='" + decodeURIComponent(station.fullName) + "'>" + decodeURIComponent(station.fullName) + "</option>";
 				$('#station-list').append(option);
 			});
 			$("#draw-curve").prop('disabled', stationList.length === 0);
 		};
 
-		var manageClick = function(div) {
+		let manageClick = (div) => {
 			// Set the right class to the clicked tab
-			[ 'error-tab', 'message-tab' ].forEach(function(tab, idx) {
+			[ 'error-tab', 'message-tab' ].forEach((tab, idx) => {
 				document.getElementById(tab).className = (div.id === tab ? 'selectedButton' : 'unselectedButton');
 			});
 			// Show the right div
@@ -72,8 +72,8 @@
 			}
 		};
 
-		var drawCurve = function() {
-			var station = $("#station-list").val();
+		let drawCurve = () => {
+			let station = $("#station-list").val();
 			document.location = "./curve.101.html?station=" + encodeURIComponent(station);
 		};
 

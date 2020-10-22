@@ -2,125 +2,135 @@
 
 // TODO Move to ES6
 
-var DEFAULT_TIMEOUT = 60000;
+const DEFAULT_TIMEOUT = 60000;
 
 // var errManager = console.log;
-var errManager = function(mess) {
-	var content = $("#error").html();
-	$("#error").html((content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess);
-	var div = document.getElementById("error");
-	div.scrollTop = div.scrollHeight;
+let errManager = (mess) => {
+    let content = $("#error").html();
+    $("#error").html((content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess);
+    let div = document.getElementById("error");
+    div.scrollTop = div.scrollHeight;
 };
 
 // var messManager = console.log;
-var messManager = function(mess) {
-	var content = $("#messages").html();
-	$("#messages").html((content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess);
-	var div = document.getElementById("messages");
-	div.scrollTop = div.scrollHeight;
+let messManager = (mess) => {
+    let content = $("#messages").html();
+    $("#messages").html((content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess);
+    let div = document.getElementById("messages");
+    div.scrollTop = div.scrollHeight;
 };
 
-var getQueryParameterByName = function(name, url) {
-	if (!url) url = window.location.href;
-	name = name.replace(/[\[\]]/g, "\\$&");
-	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-			results = regex.exec(url);
-	if (!results) return null;
-	if (!results[2]) return '';
-	return decodeURIComponent(results[2].replace(/\+/g, " "));
+let getQueryParameterByName = (name, url) => {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) {
+        return null;
+    }
+    if (!results[2]) {
+        return '';
+    }
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 };
 
-var getDeferred = function(
-		url,                          // full api path
-		timeout,                      // After that, fail.
-		verb,                         // GET, PUT, DELETE, POST, etc
-		happyCode,                    // if met, resolve, otherwise fail.
-		data,                         // payload, when needed (PUT, POST...)
-		show) {                       // Show the traffic [true]|false
-	if (show === undefined) {
-		show = true;
-	}
-	if (show === true) {
-		document.body.style.cursor = 'wait';
-	}
-	var deferred = $.Deferred(),  // a jQuery deferred
-			url = url,
-			xhr = new XMLHttpRequest(),
-			TIMEOUT = timeout;
+let getDeferred = (
+    url,                          // full api path
+    timeout,                      // After that, fail.
+    verb,                         // GET, PUT, DELETE, POST, etc
+    happyCode,                    // if met, resolve, otherwise fail.
+    data,                         // payload, when needed (PUT, POST...)
+    show) => {                    // Show the traffic [true]|false
+    if (show === undefined) {
+        show = true;
+    }
+    if (show === true) {
+        document.body.style.cursor = 'wait';
+    }
+    let deferred = $.Deferred(),  // a jQuery deferred
+//			url = url,
+        xhr = new XMLHttpRequest(),
+        TIMEOUT = timeout;
 
-	var req = verb + " " + url;
-	if (data !== undefined && data !== null) {
-		req += ("\n" + JSON.stringify(data, null, 2));
-	}
+    let req = verb + " " + url;
+    if (data !== undefined && data !== null) {
+        req += ("\n" + JSON.stringify(data, null, 2));
+    }
 
-	xhr.open(verb, url, true);
-	xhr.setRequestHeader("Content-type", "application/json");
-	if (data === undefined || data === null) {
-		xhr.send();
-	} else {
-		xhr.send(JSON.stringify(data));
-	}
+    xhr.open(verb, url, true);
+    xhr.setRequestHeader("Content-type", "application/json");
+    if (data === undefined || data === null) {
+        xhr.send();
+    } else {
+        try {
+            console.debug(`URL: ${url}, verb ${verb}, Payload ${JSON.stringify(data)}`);
+            xhr.send(JSON.stringify(data));
+        } catch (err) {
+            console.debug(`URL: ${url}, verb ${verb}, Payload ${JSON.stringify(data)}, error: ${JSON.stringify(error)}`);
+        }
+    }
 
-	var requestTimer = setTimeout(function() {
-		xhr.abort();
-		var mess = { message: 'Timeout' };
-		deferred.reject(408, mess);
-	}, TIMEOUT);
+    let requestTimer = setTimeout(() => {
+        xhr.abort();
+        let mess = {message: 'Timeout'};
+        deferred.reject(408, mess);
+    }, TIMEOUT);
 
-	xhr.onload = function() {
-		clearTimeout(requestTimer);
-		if (xhr.status === happyCode) {
-			deferred.resolve(xhr.response);
-		} else {
-			deferred.reject(xhr.status, xhr.response);
-		}
-	};
-	return deferred.promise();
+    xhr.onload = () => {
+        clearTimeout(requestTimer);
+        if (xhr.status === happyCode) {
+            deferred.resolve(xhr.response);
+        } else {
+            console.debug(`Rejecting ${url}, code ${xhr.status}`);
+            deferred.reject(xhr.status, xhr.response);
+        }
+    };
+    return deferred.promise();
 };
 
-var getCurrentTime = function() {
-	var url = "/astro/utc";
-	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+let getCurrentTime = () => {
+    let url = "/astro/utc";
+    return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
-var getTideStations = function(offset, limit, filter) {
-	var url = "/tide/tide-stations";
-	if (filter !== undefined) {
-		url += ('/' + encodeURIComponent(filter)); // Was filter=XXX
-	}
-	if (! isNaN(parseInt(offset))) {
-		url += ("?offset=" + offset);
-	}
-	if (! isNaN(parseInt(limit))) {
-		url += ((url.indexOf("?") > -1 ? "&" : "?") + "limit=" + limit);
-	}
-	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+let getTideStations = (offset, limit, filter) => {
+    var url = "/tide/tide-stations";
+    if (filter !== undefined) {
+        url += ('/' + encodeURIComponent(filter)); // Was filter=XXX
+    }
+    if (!isNaN(parseInt(offset))) {
+        url += ("?offset=" + offset);
+    }
+    if (!isNaN(parseInt(limit))) {
+        url += ((url.indexOf("?") > -1 ? "&" : "?") + "limit=" + limit);
+    }
+    return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
-var getTideStationsFiltered = function(filter) {
-	var url = "/tide/tide-stations/" + encodeURIComponent(filter);
-	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+let getTideStationsFiltered = (filter) => {
+    let url = "/tide/tide-stations/" + encodeURIComponent(filter);
+    return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 /**
  * POST /astro/sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
- * 		payload { latitude: 37.76661945, longitude: -122.5166988 }
+ *        payload { latitude: 37.76661945, longitude: -122.5166988 }
  * @param from
  * @param to
  * @param tz
  * @param pos
  */
-var requestDaylightData = function(from, to, tz, pos) {
-	var url = "/astro/sun-between-dates?from=" + from + "&to=" + to + "&tz=" + encodeURIComponent(tz);
-	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
+let requestDaylightData = (from, to, tz, pos) => {
+    let url = "/astro/sun-between-dates?from=" + from + "&to=" + to + "&tz=" + encodeURIComponent(tz);
+    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
 };
 
-var requestSunMoontData= function(from, to, tz, pos) {
-	var url = "/astro/sun-moon-dec-alt?from=" + from + "&to=" + to + "&tz=" + encodeURIComponent(tz);
-	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
+let requestSunMoonData = (from, to, tz, pos) => {
+    let url = "/astro/sun-moon-dec-alt?from=" + from + "&to=" + to + "&tz=" + encodeURIComponent(tz);
+    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
 };
 
-var DURATION_FMT = "Y-m-dTH:i:s";
+let DURATION_FMT = "Y-m-dTH:i:s";
 /**
  *
  * @param station
@@ -131,360 +141,360 @@ var DURATION_FMT = "Y-m-dTH:i:s";
  * @param withDetails
  * @param nbDays
  */
-var getTideTable = function(station, at, tz, step, unit, withDetails, nbDays) {
-	if (nbDays === undefined) {
-		nbDays = 1;
-	}
-	var url = "/tide/tide-stations/" + encodeURIComponent(station) + "/wh";
-	if (withDetails === true) {
-		url += "/details";
-	}
-	// From and To parameters
-	var now = new Date();
-	var year = (at !== undefined && at.year !== undefined ? at.year : now.getFullYear());
-	var month = (at !== undefined && at.month !== undefined ? at.month - 1 : now.getMonth());
-	var day = (at !== undefined && at.day !== undefined ? at.day : now.getDate());
-	var from = new Date(year, month, day, 0, 0, 0, 0);
-	var to = new Date(from.getTime() + (nbDays * 3600 * 24 * 1000) + 1000); // + (x * 24h) and 1s
-	var fromPrm = from.format(DURATION_FMT);
-	var toPrm = to.format(DURATION_FMT);
-	url += ("?from=" + fromPrm + "&to=" + toPrm);
+let getTideTable = (station, at, tz, step, unit, withDetails, nbDays) => {
+    if (nbDays === undefined) {
+        nbDays = 1;
+    }
+    let url = "/tide/tide-stations/" + encodeURIComponent(station) + "/wh";
+    if (withDetails === true) {
+        url += "/details";
+    }
+    // From and To parameters
+    let now = new Date();
+    let year = (at !== undefined && at.year !== undefined ? at.year : now.getFullYear());
+    let month = (at !== undefined && at.month !== undefined ? at.month - 1 : now.getMonth());
+    let day = (at !== undefined && at.day !== undefined ? at.day : now.getDate());
+    let from = new Date(year, month, day, 0, 0, 0, 0);
+    let to = new Date(from.getTime() + (nbDays * 3600 * 24 * 1000) + 1000); // + (x * 24h) and 1s
+    let fromPrm = from.format(DURATION_FMT);
+    let toPrm = to.format(DURATION_FMT);
+    url += ("?from=" + fromPrm + "&to=" + toPrm);
 
-	var data = null; // Payload
-	if (tz.length > 0 || step.length > 0 || unit.length > 0) {
-		data = {};
-		if (tz.length > 0) {
-			data.timezone = tz;
-		}
-		if (step.length > 0) {
-			data.step = parseInt(step);
-		}
-		if (unit.length > 0) {
-			data.unit = unit;
-		}
-	}
-	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, data, false);
+    let data = null; // Payload
+    if (tz.length > 0 || step.length > 0 || unit.length > 0) {
+        data = {};
+        if (tz.length > 0) {
+            data.timezone = tz;
+        }
+        if (step.length > 0) {
+            data.step = parseInt(step);
+        }
+        if (unit.length > 0) {
+            data.unit = unit;
+        }
+    }
+    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, data, false);
 };
 
-var getPublishedDoc = function(station, options) {
-	var url = "/tide/publish/" + encodeURIComponent(station);
-	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
+let getPublishedDoc = (station, options) => {
+    let url = "/tide/publish/" + encodeURIComponent(station);
+    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
 };
 
-var getPublishedAgendaDoc = function(station, options) {
-	var url = "/tide/publish/" + encodeURIComponent(station) + "?agenda=y";
-	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
+let getPublishedAgendaDoc = (station, options) => {
+    let url = "/tide/publish/" + encodeURIComponent(station) + "?agenda=y";
+    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
 };
 
-var getPublishedMoonCal = function(station, options) {
-	var url = "/tide/publish/" + encodeURIComponent(station) + "/moon-cal";
-	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
+let getPublishedMoonCal = (station, options) => {
+    let url = "/tide/publish/" + encodeURIComponent(station) + "/moon-cal";
+    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
 };
 
-var getSunData = function(lat, lng) {
-	var url = "/astro/sun-now";
-	var data = {}; // Payload
-	data.latitude = lat;
-	data.longitude = lng;
-	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, data, false);
+let getSunData = (lat, lng) => {
+    let url = "/astro/sun-now";
+    let data = {}; // Payload
+    data.latitude = lat;
+    data.longitude = lng;
+    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, data, false);
 };
 
-var tideStations = function(offset, limit, filter, callback) {
-	var getData = getTideStations(offset, limit, filter);
-	getData.done(function(value) {
-		var json = JSON.parse(value);
-		// Do something smart
-		messManager("Got " + json.length + " stations.");
-		if (callback === undefined) {
-			json.forEach(function (ts, idx) {
-				try {
-					json[idx] = decodeURI(decodeURIComponent(ts));
-				} catch (err) {
-					console.log("Oops:" + ts);
-				}
-			});
-			$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
-		} else {
-			callback(json);
-		}
-	});
-	getData.fail(function(error, errmess) {
-		var message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-	});
+let tideStations = (offset, limit, filter, callback) => {
+    let getData = getTideStations(offset, limit, filter);
+    getData.done((value) => {
+        let json = JSON.parse(value);
+        // Do something smart
+        messManager("Got " + json.length + " stations.");
+        if (callback === undefined) {
+            json.forEach((ts, idx) => {
+                try {
+                    json[idx] = decodeURI(decodeURIComponent(ts));
+                } catch (err) {
+                    console.log("Oops:" + ts);
+                }
+            });
+            $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+        } else {
+            callback(json);
+        }
+    });
+    getData.fail((error, errmess) => {
+        let message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
 };
 
-var tideStationsFiltered = function(filter) {
-	var getData = getTideStationsFiltered(filter);
-	getData.done(function(value) {
-		var json = JSON.parse(value);
-		// Do something smart
-		messManager("Got " + json.length + " station(s)");
-		json.forEach(function(ts, idx) {
-			try {
-				ts.fullName = decodeURIComponent(decodeURIComponent(ts.fullName));
-				ts.nameParts.forEach(function(np, i) {
-					ts.nameParts[i] = decodeURIComponent(decodeURIComponent(np));
-				});
-			} catch (err) {
-				console.log("Oops:" + ts);
-			}
-		});
-		$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
-	});
-	getData.fail(function(error, errmess) {
-		var message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-	});
+let tideStationsFiltered = (filter) => {
+    let getData = getTideStationsFiltered(filter);
+    getData.done((value) => {
+        let json = JSON.parse(value);
+        // Do something smart
+        messManager("Got " + json.length + " station(s)");
+        json.forEach((ts, idx) => {
+            try {
+                ts.fullName = decodeURIComponent(decodeURIComponent(ts.fullName));
+                ts.nameParts.forEach((np, i) => {
+                    ts.nameParts[i] = decodeURIComponent(decodeURIComponent(np));
+                });
+            } catch (err) {
+                console.log("Oops:" + ts);
+            }
+        });
+        $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+    });
+    getData.fail((error, errmess) => {
+        let message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
 };
 
-var getSunData = function(from, to, tz, pos, callback) {
-	var getData = requestDaylightData(from, to, tz, pos);
-	getData.done(function(value) {
-		var json = JSON.parse(value);
-		if (callback === undefined) {
-			// Do something smart
-			messManager("Got " + json);
-			$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
-		} else {
-			callback(json);
-		}
-	});
-	getData.fail(function(error, errmess) {
-		var message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager("Failed to get Sun data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-	});
+let getDayLightData = (from, to, tz, pos, callback) => {
+    let getData = requestDaylightData(from, to, tz, pos);
+    getData.done((value) => {
+        let json = JSON.parse(value);
+        if (callback === undefined) {
+            // Do something smart
+            messManager("Got " + json);
+            $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+        } else {
+            callback(json);
+        }
+    });
+    getData.fail((error, errmess) => {
+        let message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager("Failed to get Sun data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
 };
 
-var getSunMoonCurves = function(from, to, tz, pos, callback) {
-	var getData = requestSunMoontData(from, to, tz, pos);
-	getData.done(function(value) {
-		var json = JSON.parse(value);
-		if (callback === undefined) {
-			// Do something smart
-			messManager("Got " + json);
-			$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
-		} else {
-			callback(json);
-		}
-	});
-	getData.fail(function(error, errmess) {
-		var message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager("Failed to get Sun & Moon data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-	});
+let getSunMoonCurves = (from, to, tz, pos, callback) => {
+    let getData = requestSunMoonData(from, to, tz, pos);
+    getData.done((value) => {
+        let json = JSON.parse(value);
+        if (callback === undefined) {
+            // Do something smart
+            messManager("Got " + json);
+            $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+        } else {
+            callback(json);
+        }
+    });
+    getData.fail((error, errmess) => {
+        let message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager("Failed to get Sun & Moon data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
 };
 
-var showTime = function() {
-	var getData = getCurrentTime();
-	getData.done(function(value) {
-		var json = JSON.parse(value);
-		// Do something smart
-		$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
-	});
-	getData.fail(function(error, errmess) {
-		var message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-	});
+let showTime = () => {
+    let getData = getCurrentTime();
+    getData.done((value) => {
+        var json = JSON.parse(value);
+        // Do something smart
+        $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+    });
+    getData.fail((error, errmess) => {
+        let message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
 };
 
-var lastRequiredDate;
-var lastRequiredStation;
+let lastRequiredDate;
+let lastRequiredStation;
 
-var tideTable = function(station, at, tz, step, unit, withDetails, nbDays, callback) {
-	lastRequiredStation = station;
-	lastRequiredDate = at;
-	var getData = getTideTable(station, at, tz, step, unit, withDetails, nbDays);
-	getData.done(function(value) {
-		if (callback === undefined) {
-			try {
-				var json = JSON.parse(value);
-				// Do something smart
-				json.stationName = decodeURIComponent(decodeURIComponent(json.stationName));
-				$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
-			} catch (err) {
-				errManager(err + '\nFor\n' + value);
-			}
-		} else {
-			callback(value);
-		}
-	});
-	getData.fail(function(error, errmess) {
-		var message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager("Failed to get the station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-	});
+let tideTable = (station, at, tz, step, unit, withDetails, nbDays, callback) => {
+    lastRequiredStation = station;
+    lastRequiredDate = at;
+    let getData = getTideTable(station, at, tz, step, unit, withDetails, nbDays);
+    getData.done((value) => {
+        if (callback === undefined) {
+            try {
+                let json = JSON.parse(value);
+                // Do something smart
+                json.stationName = decodeURIComponent(decodeURIComponent(json.stationName));
+                $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+            } catch (err) {
+                errManager(err + '\nFor\n' + value);
+            }
+        } else {
+            callback(value);
+        }
+    });
+    getData.fail((error, errmess) => {
+        let message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager("Failed to get the station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
 };
 
-var publishTable = function(station, options, callback) {
-	var getData = getPublishedDoc(station, options);
-	getData.done(function(value) {
-		if (callback === undefined) {
-			try {
-				// Do something smart
-				$("#result").html("<pre>" + value + "</pre>");
-			} catch (err) {
-				errManager(err + '\nFor\n' + value);
-			}
-		} else {
-			callback(value);
-		}
-	});
-	getData.fail(function(error, errmess) {
-		var message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager("Failed publish station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
-				? message : ' - '));
-	});
+let publishTable = (station, options, callback) => {
+    let getData = getPublishedDoc(station, options);
+    getData.done((value) => {
+        if (callback === undefined) {
+            try {
+                // Do something smart
+                $("#result").html("<pre>" + value + "</pre>");
+            } catch (err) {
+                errManager(err + '\nFor\n' + value);
+            }
+        } else {
+            callback(value);
+        }
+    });
+    getData.fail((error, errmess) => {
+        let message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager("Failed publish station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
+            ? message : ' - '));
+    });
 };
 
-var publishAgenda = function(station, options, callback) {
-	var getData = getPublishedAgendaDoc(station, options);
-	getData.done(function(value) {
-		if (callback === undefined) {
-			try {
-				// Do something smart
-				$("#result").html("<pre>" + value + "</pre>");
-			} catch (err) {
-				errManager(err + '\nFor\n' + value);
-			}
-		} else {
-			callback(value);
-		}
-	});
-	getData.fail(function(error, errmess) {
-		var message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager("Failed publish station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
-				? message : ' - '));
-	});
+let publishAgenda = (station, options, callback) => {
+    let getData = getPublishedAgendaDoc(station, options);
+    getData.done((value) => {
+        if (callback === undefined) {
+            try {
+                // Do something smart
+                $("#result").html("<pre>" + value + "</pre>");
+            } catch (err) {
+                errManager(err + '\nFor\n' + value);
+            }
+        } else {
+            callback(value);
+        }
+    });
+    getData.fail((error, errmess) => {
+        let message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager(`Failed publish station data...${(error !== undefined ? error : ' - ') + ', ' + (message !== undefined
+            ? message : ' - ')}`);
+    });
 };
 
-var publishMoonCal = function(station, options, callback) {
-	var getData = getPublishedMoonCal(station, options);
-	getData.done(function(value) {
-		if (callback === undefined) {
-			try {
-				// Do something smart
-				$("#result").html("<pre>" + value + "</pre>");
-			} catch (err) {
-				errManager(err + '\nFor\n' + value);
-			}
-		} else {
-			callback(value);
-		}
-	});
-	getData.fail(function(error, errmess) {
-		var message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager("Failed publish station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
-		? message : ' - '));
-	});
+let publishMoonCal = (station, options, callback) => {
+    let getData = getPublishedMoonCal(station, options);
+    getData.done((value) => {
+        if (callback === undefined) {
+            try {
+                // Do something smart
+                $("#result").html("<pre>" + value + "</pre>");
+            } catch (err) {
+                errManager(err + '\nFor\n' + value);
+            }
+        } else {
+            callback(value);
+        }
+    });
+    getData.fail((error, errmess) => {
+        let message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager("Failed publish station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
+            ? message : ' - '));
+    });
 };
 
-var sunData = function(lat, lng, callback) {
-	var getData = getSunData(lat, lng);
-	getData.done(function(value) {
-		if (callback === undefined) {
-			try {
-				var json = JSON.parse(value);
-				// Do something smart
-				var strLat = decToSex(json.lat, "NS");
-				var strLng = decToSex(json.lng, "EW");
-				var strDecl = decToSex(json.decl, "NS");
-				var strGHA = decToSex(json.gha);
+let sunData = (from, to, tz, position, callback) => {
+    let getData = getDayLightData(from, to, tz, position, callback); // getSunData(lat, lng);
+    getData.done((value) => {
+        if (callback === undefined) {
+            try {
+                let json = JSON.parse(value);
+                // Do something smart
+                let strLat = decToSex(json.lat, "NS");
+                let strLng = decToSex(json.lng, "EW");
+                let strDecl = decToSex(json.decl, "NS");
+                let strGHA = decToSex(json.gha);
 
-				$("#result").html("<pre>" +
-						JSON.stringify(json, null, 2) +
-						"<br/>" +
-						( strLat + " / " + strLng) +
-						"<br/>" +
-						new Date(json.epoch) +
-						"<br/>" +
-						("Dec: " + strDecl) +
-						"<br/>" +
-						("GHA: " + strGHA) +
-						"<br/>" +
-						("Meridian Pass. Time: " + hoursDecimalToHMS(json.eot) + " UTC") +
-						"<br/>" +
-						("Rise: " + hoursDecimalToHMS(json.riseTime) + " UTC") +
-						"<br/>" +
-						("Set: " + hoursDecimalToHMS(json.setTime) + " UTC") +
-						"</pre>");
-			} catch (err) {
-				errManager(err + '\nFor\n' + value);
-			}
-		} else {
-			callback(value);
-		}
-	});
-	getData.fail(function(error, errmess) {
-		var message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager("Failed to get the station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-	});
+                $("#result").html("<pre>" +
+                    JSON.stringify(json, null, 2) +
+                    "<br/>" +
+                    (strLat + " / " + strLng) +
+                    "<br/>" +
+                    new Date(json.epoch) +
+                    "<br/>" +
+                    ("Dec: " + strDecl) +
+                    "<br/>" +
+                    ("GHA: " + strGHA) +
+                    "<br/>" +
+                    ("Meridian Pass. Time: " + hoursDecimalToHMS(json.eot) + " UTC") +
+                    "<br/>" +
+                    ("Rise: " + hoursDecimalToHMS(json.riseTime) + " UTC") +
+                    "<br/>" +
+                    ("Set: " + hoursDecimalToHMS(json.setTime) + " UTC") +
+                    "</pre>");
+            } catch (err) {
+                errManager(err + '\nFor\n' + value);
+            }
+        } else {
+            callback(value);
+        }
+    });
+    getData.fail((error, errmess) => {
+        let message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager("Failed to get the station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
 };
