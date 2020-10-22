@@ -1,6 +1,6 @@
 "use strict";
 
-// TODO Move to ES6
+// TODO Move to ES6, remove JQuery
 
 const DEFAULT_TIMEOUT = 60000;
 
@@ -34,67 +34,60 @@ let getQueryParameterByName = (name, url) => {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 };
 
-let getDeferred = (
+/* Uses ES6 Promises */
+let getPromise = (
     url,                          // full api path
     timeout,                      // After that, fail.
     verb,                         // GET, PUT, DELETE, POST, etc
-    happyCode,                    // if met, resolve, otherwise fail.
-    data,                         // payload, when needed (PUT, POST...)
-    show) => {                    // Show the traffic [true]|false
-    if (show === undefined) {
-        show = true;
-    }
-    if (show === true) {
-        document.body.style.cursor = 'wait';
-    }
-    let deferred = $.Deferred(),  // a jQuery deferred
-//			url = url,
-        xhr = new XMLHttpRequest(),
-        TIMEOUT = timeout;
+    happyCode,                    // if met, resolve, otherwise fail. TODO Make it an array
+    data = null) => {        // payload, when needed (PUT, POST...)
 
-    let req = verb + " " + url;
-    if (data !== undefined && data !== null) {
-        req += ("\n" + JSON.stringify(data, null, 2));
-    }
+    let promise = new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        let TIMEOUT = timeout;
 
-    xhr.open(verb, url, true);
-    xhr.setRequestHeader("Content-type", "application/json");
-    if (data === undefined || data === null) {
-        xhr.send();
-    } else {
+        // let req = verb + " " + url;
+        // if (data !== undefined && data !== null) {
+        //     req += ("\n" + JSON.stringify(data, null, 2));
+        // }
+
+        xhr.open(verb, url, true);
+        xhr.setRequestHeader("Content-type", "application/json"); // TODO If not provided
         try {
-            console.debug(`URL: ${url}, verb ${verb}, Payload ${JSON.stringify(data)}`);
-            xhr.send(JSON.stringify(data));
+            if (data === undefined || data === null) {
+                xhr.send();
+            } else {
+                xhr.send(JSON.stringify(data));
+            }
         } catch (err) {
-            console.debug(`URL: ${url}, verb ${verb}, Payload ${JSON.stringify(data)}, error: ${JSON.stringify(error)}`);
+            console.log("Send Error ", err);
         }
-    }
 
-    let requestTimer = setTimeout(() => {
-        xhr.abort();
-        let mess = {message: 'Timeout'};
-        deferred.reject(408, mess);
-    }, TIMEOUT);
+        let requestTimer = setTimeout(() => {
+            xhr.abort();
+            let mess = {code: 408, message: 'Timeout'};
+            reject(mess);
+        }, TIMEOUT);
 
-    xhr.onload = () => {
-        clearTimeout(requestTimer);
-        if (xhr.status === happyCode) {
-            deferred.resolve(xhr.response);
-        } else {
-            console.debug(`Rejecting ${url}, code ${xhr.status}`);
-            deferred.reject(xhr.status, xhr.response);
-        }
-    };
-    return deferred.promise();
-};
+        xhr.onload = () => {
+            clearTimeout(requestTimer);
+            if (xhr.status === happyCode) {
+                resolve(xhr.response);
+            } else {
+                reject({code: xhr.status, message: xhr.response});
+            }
+        };
+    });
+    return promise;
+}
 
 let getCurrentTime = () => {
     let url = "/astro/utc";
-    return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+    return getPromise(url, DEFAULT_TIMEOUT, 'GET', 200);
 };
 
 let getTideStations = (offset, limit, filter) => {
-    var url = "/tide/tide-stations";
+    let url = "/tide/tide-stations";
     if (filter !== undefined) {
         url += ('/' + encodeURIComponent(filter)); // Was filter=XXX
     }
@@ -104,12 +97,12 @@ let getTideStations = (offset, limit, filter) => {
     if (!isNaN(parseInt(limit))) {
         url += ((url.indexOf("?") > -1 ? "&" : "?") + "limit=" + limit);
     }
-    return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+    return getPromise(url, DEFAULT_TIMEOUT, 'GET', 200);
 };
 
 let getTideStationsFiltered = (filter) => {
     let url = "/tide/tide-stations/" + encodeURIComponent(filter);
-    return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+    return getPromise(url, DEFAULT_TIMEOUT, 'GET', 200);
 };
 
 /**
@@ -122,15 +115,15 @@ let getTideStationsFiltered = (filter) => {
  */
 let requestDaylightData = (from, to, tz, pos) => {
     let url = "/astro/sun-between-dates?from=" + from + "&to=" + to + "&tz=" + encodeURIComponent(tz);
-    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, pos);
 };
 
 let requestSunMoonData = (from, to, tz, pos) => {
     let url = "/astro/sun-moon-dec-alt?from=" + from + "&to=" + to + "&tz=" + encodeURIComponent(tz);
-    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, pos);
 };
 
-let DURATION_FMT = "Y-m-dTH:i:s";
+const DURATION_FMT = "Y-m-dTH:i:s";
 /**
  *
  * @param station
@@ -173,22 +166,22 @@ let getTideTable = (station, at, tz, step, unit, withDetails, nbDays) => {
             data.unit = unit;
         }
     }
-    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, data, false);
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, data);
 };
 
 let getPublishedDoc = (station, options) => {
     let url = "/tide/publish/" + encodeURIComponent(station);
-    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, options);
 };
 
 let getPublishedAgendaDoc = (station, options) => {
     let url = "/tide/publish/" + encodeURIComponent(station) + "?agenda=y";
-    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, options);
 };
 
 let getPublishedMoonCal = (station, options) => {
     let url = "/tide/publish/" + encodeURIComponent(station) + "/moon-cal";
-    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, options);
 };
 
 let getSunData = (lat, lng) => {
@@ -196,12 +189,12 @@ let getSunData = (lat, lng) => {
     let data = {}; // Payload
     data.latitude = lat;
     data.longitude = lng;
-    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, data, false);
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, data);
 };
 
 let tideStations = (offset, limit, filter, callback) => {
     let getData = getTideStations(offset, limit, filter);
-    getData.done((value) => {
+    getData.then((value) => {
         let json = JSON.parse(value);
         // Do something smart
         messManager("Got " + json.length + " stations.");
@@ -217,8 +210,7 @@ let tideStations = (offset, limit, filter, callback) => {
         } else {
             callback(json);
         }
-    });
-    getData.fail((error, errmess) => {
+    }, (error, errmess) => {
         let message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -233,7 +225,7 @@ let tideStations = (offset, limit, filter, callback) => {
 
 let tideStationsFiltered = (filter) => {
     let getData = getTideStationsFiltered(filter);
-    getData.done((value) => {
+    getData.then((value) => {
         let json = JSON.parse(value);
         // Do something smart
         messManager("Got " + json.length + " station(s)");
@@ -248,8 +240,7 @@ let tideStationsFiltered = (filter) => {
             }
         });
         $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
-    });
-    getData.fail((error, errmess) => {
+    }, (error, errmess) => {
         let message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -264,7 +255,7 @@ let tideStationsFiltered = (filter) => {
 
 let getDayLightData = (from, to, tz, pos, callback) => {
     let getData = requestDaylightData(from, to, tz, pos);
-    getData.done((value) => {
+    getData.then((value) => {
         let json = JSON.parse(value);
         if (callback === undefined) {
             // Do something smart
@@ -273,8 +264,7 @@ let getDayLightData = (from, to, tz, pos, callback) => {
         } else {
             callback(json);
         }
-    });
-    getData.fail((error, errmess) => {
+    }, (error, errmess) => {
         let message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -289,7 +279,7 @@ let getDayLightData = (from, to, tz, pos, callback) => {
 
 let getSunMoonCurves = (from, to, tz, pos, callback) => {
     let getData = requestSunMoonData(from, to, tz, pos);
-    getData.done((value) => {
+    getData.then((value) => {
         let json = JSON.parse(value);
         if (callback === undefined) {
             // Do something smart
@@ -298,8 +288,7 @@ let getSunMoonCurves = (from, to, tz, pos, callback) => {
         } else {
             callback(json);
         }
-    });
-    getData.fail((error, errmess) => {
+    }, (error, errmess) => {
         let message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -314,12 +303,11 @@ let getSunMoonCurves = (from, to, tz, pos, callback) => {
 
 let showTime = () => {
     let getData = getCurrentTime();
-    getData.done((value) => {
+    getData.then((value) => {
         var json = JSON.parse(value);
         // Do something smart
         $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
-    });
-    getData.fail((error, errmess) => {
+    }, (error, errmess) => {
         let message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -339,7 +327,7 @@ let tideTable = (station, at, tz, step, unit, withDetails, nbDays, callback) => 
     lastRequiredStation = station;
     lastRequiredDate = at;
     let getData = getTideTable(station, at, tz, step, unit, withDetails, nbDays);
-    getData.done((value) => {
+    getData.then((value) => {
         if (callback === undefined) {
             try {
                 let json = JSON.parse(value);
@@ -352,8 +340,7 @@ let tideTable = (station, at, tz, step, unit, withDetails, nbDays, callback) => 
         } else {
             callback(value);
         }
-    });
-    getData.fail((error, errmess) => {
+    }, (error, errmess) => {
         let message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -368,7 +355,7 @@ let tideTable = (station, at, tz, step, unit, withDetails, nbDays, callback) => 
 
 let publishTable = (station, options, callback) => {
     let getData = getPublishedDoc(station, options);
-    getData.done((value) => {
+    getData.then((value) => {
         if (callback === undefined) {
             try {
                 // Do something smart
@@ -379,8 +366,7 @@ let publishTable = (station, options, callback) => {
         } else {
             callback(value);
         }
-    });
-    getData.fail((error, errmess) => {
+    }, (error, errmess) => {
         let message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -396,7 +382,7 @@ let publishTable = (station, options, callback) => {
 
 let publishAgenda = (station, options, callback) => {
     let getData = getPublishedAgendaDoc(station, options);
-    getData.done((value) => {
+    getData.then((value) => {
         if (callback === undefined) {
             try {
                 // Do something smart
@@ -407,8 +393,7 @@ let publishAgenda = (station, options, callback) => {
         } else {
             callback(value);
         }
-    });
-    getData.fail((error, errmess) => {
+    }, (error, errmess) => {
         let message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -424,7 +409,7 @@ let publishAgenda = (station, options, callback) => {
 
 let publishMoonCal = (station, options, callback) => {
     let getData = getPublishedMoonCal(station, options);
-    getData.done((value) => {
+    getData.then((value) => {
         if (callback === undefined) {
             try {
                 // Do something smart
@@ -435,8 +420,7 @@ let publishMoonCal = (station, options, callback) => {
         } else {
             callback(value);
         }
-    });
-    getData.fail((error, errmess) => {
+    }, (error, errmess) => {
         let message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -452,7 +436,7 @@ let publishMoonCal = (station, options, callback) => {
 
 let sunData = (from, to, tz, position, callback) => {
     let getData = getDayLightData(from, to, tz, position, callback); // getSunData(lat, lng);
-    getData.done((value) => {
+    getData.then((value) => {
         if (callback === undefined) {
             try {
                 let json = JSON.parse(value);
@@ -485,8 +469,7 @@ let sunData = (from, to, tz, position, callback) => {
         } else {
             callback(value);
         }
-    });
-    getData.fail((error, errmess) => {
+    }, (error, errmess) => {
         let message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {

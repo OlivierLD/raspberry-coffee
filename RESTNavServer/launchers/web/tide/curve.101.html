@@ -181,7 +181,6 @@
 				// TODO Which one to call???
 //				getSunData(position.latitude, position.longitude, daylightReceiver); // TODO The right callback
     			getDayLightData(json.fromPrm, json.toPrm, tzName, position, daylightReceiver);
-
     			getSunMoonCurves(json.fromPrm, json.toPrm, tzName, position, sunMoonReceiver);
 
 				let harmonics;
@@ -189,7 +188,7 @@
 					harmonics = [];
 					for (let coeff in json.harmonicCurves) {
 						let dataArray = json.harmonicCurves[coeff];
-//					console.log(coeff + " ; " + dataArray.length + " element(s)");
+//					    console.log(coeff + " ; " + dataArray.length + " element(s)");
 						let curve = [];
 						dataArray.forEach((pt, idx) => {
 							curve.push(new Tuple(pt.x, pt.y));
