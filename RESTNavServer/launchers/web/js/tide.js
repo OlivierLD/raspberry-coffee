@@ -438,10 +438,10 @@ let sunData = (from, to, tz, position, callback) => {
             try {
                 let json = JSON.parse(value);
                 // Do something smart
-                let strLat = decToSex(json.lat, "NS");
-                let strLng = decToSex(json.lng, "EW");
+                let strLat  = decToSex(json.lat,  "NS");
+                let strLng  = decToSex(json.lng,  "EW");
                 let strDecl = decToSex(json.decl, "NS");
-                let strGHA = decToSex(json.gha);
+                let strGHA  = decToSex(json.gha);
 
                 document.getElementById("result").innerHTML = ("<pre>" +
                     JSON.stringify(json, null, 2) +

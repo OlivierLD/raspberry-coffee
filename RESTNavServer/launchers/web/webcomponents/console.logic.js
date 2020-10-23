@@ -947,6 +947,45 @@ window.onload = () => {
 	let border = getQSPrm('border');
 	let bg = getQSPrm('bg');
 	let boatData = getQSPrm('boat-data');
+	let withNavApi = ('yes' === getQSPrm('with-nav-api')); // Browser's Nav API
+
+	let onPosSuccess = (pos) => {
+		// Doc at https://w3c.github.io/geolocation-api/
+		// Position object at https://w3c.github.io/geolocation-api/#position_interface
+		//
+		// Check privileges in config.xml
+		//
+		console.log('lat= ' + pos.coords.latitude + ' lon= ' + pos.coords.longitude);
+		console.log('hdg= ' + pos.coords.heading + ' spd= ' + pos.coords.speed + ' m/s');
+		// Invoke set pos on the server
+		let promise = setPosition(pos.coords.latitude, pos.coords.longitude);
+		promise.then(value => {
+			console.log("setPosition Done!");
+		}, (err, errMess) => {
+			console.log("setPosition Bam!");
+		});
+	};
+
+	let onPosError= (err) => {
+		let errMess;
+		if (err.code === err.PERMISSION_DENIED) {
+			errMess = 'Location access was denied by the user.';
+		} else {
+			errMess = 'location error (' + err.code + '): ' + err.message;
+		}
+		console.log(errMess);
+	};
+
+	if (withNavApi) {
+		let options = {
+			enableHighAccuracy: true,
+			maximumAge: 0,
+			timeout: 5000
+		};
+		setInterval(() => {
+			/* let watchId = */ navigator.geolocation.getCurrentPosition(onPosSuccess, onPosError, options);
+		}, 1000);
+	}
 
 	if (style !== undefined) {
 		if (style === 'day' || style === 'night' || style === 'cyan' || style === 'black' || style === 'white' || style === 'orange' || style === 'yellow' || style === 'flat-gray' || style === 'flat-black') {
