@@ -63,7 +63,7 @@
 				let option = "<option value='" + (year - 10 + i) + "'>" + (year - 10 + i) + "</option>";
 				$('#year').append(option);
 			}
-			$('#year').val(year);
+			document.getElementById('year').value = year;
 			let month = new Date().getMonth();
 			let mNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 			$("#month").empty();
@@ -71,10 +71,10 @@
 				let option = "<option value='" + (i + 1) + "'>" + mNames[i] + "</option>";
 				$('#month').append(option);
 			}
-			$('#month').val(month + 1);
+			document.getElementById('month').value = (month + 1);
 			let day = new Date().getDate();
 			populateDays();
-			$('#day').val(day);
+			document.getElementById('day').value = day;
 
 			// Query parameters?
 			let station = getQueryParameterByName("station");
@@ -149,7 +149,7 @@
 				let min = base, max = base;
 				let size = 0;
 				tideData = {};
-				tideCurve = [];
+				let tideCurve = [];
 				let fromDate, toDate;
 				for (let tDate in data) {
 					if (fromDate === undefined) {
@@ -158,7 +158,7 @@
 					toDate = tDate;
 					tideCurve.push(new Tuple(tDate, data[tDate]));
 					size++;
-//				console.log(tDate + ': ' + data[tDate]);
+//				    console.log(tDate + ': ' + data[tDate]);
 					min = Math.min(min, data[tDate]);
 					max = Math.max(max, data[tDate]);
 				}
@@ -213,18 +213,17 @@
 			// Show the right div
 			switch (div.id) {
 				case 'error-tab':
-					$("#error-div").css('display', 'block');
-					$("#message-div").css('display', 'none');
+					document.getElementById("error-div").style.display = 'block';
+					document.getElementById("message-div").style.display = 'none';
 					break;
 				case 'message-tab':
-					$("#error-div").css('display', 'none');
-					$("#message-div").css('display', 'block');
+					document.getElementById("error-div").style.display = 'none';
+					document.getElementById("message-div").style.display = 'block';
 					break;
 				default:
 					break;
 			}
 		};
-
 
 		let addOneDay = (date) => {
 			let dateObj = new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
@@ -251,11 +250,25 @@
 		};
 
 		let nextDay = () => {
-			tideTable(lastRequiredStation, addOneDay(lastRequiredDate), '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);
+			tideTable(lastRequiredStation,
+					  addOneDay(lastRequiredDate),
+					  '',
+					  '',
+					  '',
+					  document.getElementById("with-details").checked,
+					  document.getElementById("nb-days").value,
+					  dataManager);
 		};
 
 		let previousDay = () => {
-			tideTable(lastRequiredStation, substractOneDay(lastRequiredDate), '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);
+			tideTable(lastRequiredStation,
+					substractOneDay(lastRequiredDate),
+					'',
+					'',
+					'',
+					document.getElementById("with-details").checked,
+					document.getElementById("nb-days").value,
+					dataManager);
 		};
 
 	</script>
@@ -265,7 +278,7 @@
 	<hr/>
   Tide curve. Choose your station (filter first), and hit [Draw Curve].
 	<hr/>
-	<input type="search" size="30" placeholder="Filter" id="filter">&nbsp;<button onclick="tideStations(0, 500, $('#filter').val(), populateList);">Search</button>
+	<input type="search" size="30" placeholder="Filter" id="filter">&nbsp;<button onclick="tideStations(0, 500, document.getElementById('filter').value, populateList);">Search</button>
 	<select id="station-list" style="width: 300px;"></select>, <select id="nb-days"><option value="1">1 Day</option><option value="7">1 Week</option><option value="14">2 Weeks</option><option value="31">1 Month</option></select>
 	<div style="width: 100%;">
 		<!-- Graph here -->
@@ -310,7 +323,7 @@
 		<tr>
 		<td style="text-align: left;">
 			Starting <select id="year" onchange="populateDays();"></select> <select id="month" onchange="populateDays();"></select> <select id="day"></select>
-			<button id="draw-curve" disabled onclick="tideTable($('#station-list').val(), { year: parseInt($('#year').val()), month: parseInt($('#month').val()), day: parseInt($('#day').val()) }, '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);">Draw Curve</button>
+			<button id="draw-curve" disabled onclick="tideTable(document.getElementById('station-list').value, { year: parseInt(document.getElementById('year').value), month: parseInt(document.getElementById('month').value), day: parseInt(document.getElementById('day').value) }, '', '', '', document.getElementById('with-details').checked, document.getElementById('nb-days').value, dataManager);">Draw Curve</button>
 			&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With harmonic details,
 			&nbsp;<input type="checkbox" id="with-table" title="Include Time Table"> With time table.
 		</td>
@@ -328,11 +341,11 @@
 	</div>
 	<div id="message-div" style="display: block;">
 		<div id="messages" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 75px; max-height: 75px; overflow-y: scroll;"></div>
-		<button onclick="$('#messages').html('');">Clear log</button>
+		<button onclick="document.getElementById('messages').innerHTML = '';">Clear log</button>
 	</div>
 	<div id="error-div" style="display: none;">
 		<div id="error" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; color: red; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 75px; max-height: 75px; overflow-y: scroll;"></div>
-		<button onclick="$('#error').html('');">Clear log</button>
+		<button onclick="document.getElementById('error').innerHTML = '';">Clear log</button>
 	</div>
 </body>
 </html>

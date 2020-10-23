@@ -1,28 +1,26 @@
 "use strict";
 
-// TODO Move to ES6, remove JQuery
-
 const DEFAULT_TIMEOUT = 60000;
 
 // let errManager = console.log;
 let errManager = (mess) => {
-    let content = $("#error").html();
-    $("#error").html((content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess);
-    let div = document.getElementById("error");
-    div.scrollTop = div.scrollHeight;
+    let errDiv = document.getElementById("error");
+    let content =  errDiv.innerHTML;
+    errDiv.innerHTML = (content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess;
+    errDiv.scrollTop = errDiv.scrollHeight;
 };
 
 // let messManager = console.log;
 let messManager = (mess) => {
-    let content = $("#messages").html();
-    $("#messages").html((content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess);
     let div = document.getElementById("messages");
+    let content = div.innerHTML;
+    div.innerHTML = (content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess;
     div.scrollTop = div.scrollHeight;
 };
 
 let getQueryParameterByName = (name, url) => {
     if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
+    name = name.replace(/[\[\]]/g, "\\$&");   // Nice ;)
     let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
         results = regex.exec(url);
     if (!results) {
@@ -39,10 +37,10 @@ let getPromise = (
     url,                          // full api path
     timeout,                      // After that, fail.
     verb,                         // GET, PUT, DELETE, POST, etc
-    happyCode,                    // if met, resolve, otherwise fail. TODO Make it an array
+    happyCodes,                   // An array of int. If met, resolve, otherwise fail.
     data = null) => {        // payload, when needed (PUT, POST...)
 
-    let promise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         let TIMEOUT = timeout;
 
@@ -71,19 +69,18 @@ let getPromise = (
 
         xhr.onload = () => {
             clearTimeout(requestTimer);
-            if (xhr.status === happyCode) {
+            if (happyCodes.includes(xhr.status)) { // happyCodes is an array
                 resolve(xhr.response);
             } else {
                 reject({code: xhr.status, message: xhr.response});
             }
         };
     });
-    return promise;
 }
 
 let getCurrentTime = () => {
     let url = "/astro/utc";
-    return getPromise(url, DEFAULT_TIMEOUT, 'GET', 200);
+    return getPromise(url, DEFAULT_TIMEOUT, 'GET', [200]);
 };
 
 let getTideStations = (offset, limit, filter) => {
@@ -97,12 +94,12 @@ let getTideStations = (offset, limit, filter) => {
     if (!isNaN(parseInt(limit))) {
         url += ((url.indexOf("?") > -1 ? "&" : "?") + "limit=" + limit);
     }
-    return getPromise(url, DEFAULT_TIMEOUT, 'GET', 200);
+    return getPromise(url, DEFAULT_TIMEOUT, 'GET', [200]);
 };
 
 let getTideStationsFiltered = (filter) => {
     let url = "/tide/tide-stations/" + encodeURIComponent(filter);
-    return getPromise(url, DEFAULT_TIMEOUT, 'GET', 200);
+    return getPromise(url, DEFAULT_TIMEOUT, 'GET', [200]);
 };
 
 /**
@@ -115,12 +112,12 @@ let getTideStationsFiltered = (filter) => {
  */
 let requestDaylightData = (from, to, tz, pos) => {
     let url = "/astro/sun-between-dates?from=" + from + "&to=" + to + "&tz=" + encodeURIComponent(tz);
-    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, pos);
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', [200, 201], pos);
 };
 
 let requestSunMoonData = (from, to, tz, pos) => {
     let url = "/astro/sun-moon-dec-alt?from=" + from + "&to=" + to + "&tz=" + encodeURIComponent(tz);
-    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, pos);
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', [200, 201], pos);
 };
 
 const DURATION_FMT = "Y-m-dTH:i:s";
@@ -166,22 +163,22 @@ let getTideTable = (station, at, tz, step, unit, withDetails, nbDays) => {
             data.unit = unit;
         }
     }
-    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, data);
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', [200, 201], data);
 };
 
 let getPublishedDoc = (station, options) => {
     let url = "/tide/publish/" + encodeURIComponent(station);
-    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, options);
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', [200, 201], options);
 };
 
 let getPublishedAgendaDoc = (station, options) => {
     let url = "/tide/publish/" + encodeURIComponent(station) + "?agenda=y";
-    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, options);
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', [200, 201], options);
 };
 
 let getPublishedMoonCal = (station, options) => {
     let url = "/tide/publish/" + encodeURIComponent(station) + "/moon-cal";
-    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, options);
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', [200, 201], options);
 };
 
 let getSunData = (lat, lng) => {
@@ -189,7 +186,7 @@ let getSunData = (lat, lng) => {
     let data = {}; // Payload
     data.latitude = lat;
     data.longitude = lng;
-    return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, data);
+    return getPromise(url, DEFAULT_TIMEOUT, 'POST', [200, 201], data);
 };
 
 let tideStations = (offset, limit, filter, callback) => {
@@ -206,17 +203,17 @@ let tideStations = (offset, limit, filter, callback) => {
                     console.log("Oops:" + ts);
                 }
             });
-            $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+            document.getElementById("result").innerHTML = ("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
         } else {
             callback(json);
         }
-    }, (error, errmess) => {
+    }, (error, errMess) => {
         let message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
+        if (errMess !== undefined) {
+            if (errMess.message !== undefined) {
+                message = errMess.message;
             } else {
-                message = errmess;
+                message = errMess;
             }
         }
         errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -229,7 +226,7 @@ let tideStationsFiltered = (filter) => {
         let json = JSON.parse(value);
         // Do something smart
         messManager("Got " + json.length + " station(s)");
-        json.forEach((ts, idx) => {
+        json.forEach((ts /*, idx */) => {
             try {
                 ts.fullName = decodeURIComponent(decodeURIComponent(ts.fullName));
                 ts.nameParts.forEach((np, i) => {
@@ -239,14 +236,14 @@ let tideStationsFiltered = (filter) => {
                 console.log("Oops:" + ts);
             }
         });
-        $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
-    }, (error, errmess) => {
+        document.getElementById("result").innerHTML = ("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+    }, (error, errMess) => {
         let message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
+        if (errMess !== undefined) {
+            if (errMess.message !== undefined) {
+                message = errMess.message;
             } else {
-                message = errmess;
+                message = errMess;
             }
         }
         errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -260,17 +257,17 @@ let getDayLightData = (from, to, tz, pos, callback) => {
         if (callback === undefined) {
             // Do something smart
             messManager("Got " + json);
-            $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+            document.getElementById("result").innerHTML = ("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
         } else {
             callback(json);
         }
-    }, (error, errmess) => {
+    }, (error, errMess) => {
         let message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
+        if (errMess !== undefined) {
+            if (errMess.message !== undefined) {
+                message = errMess.message;
             } else {
-                message = errmess;
+                message = errMess;
             }
         }
         errManager("Failed to get Sun data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -284,17 +281,17 @@ let getSunMoonCurves = (from, to, tz, pos, callback) => {
         if (callback === undefined) {
             // Do something smart
             messManager("Got " + json);
-            $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+            document.getElementById("result").innerHTML = ("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
         } else {
             callback(json);
         }
-    }, (error, errmess) => {
+    }, (error, errMess) => {
         let message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
+        if (errMess !== undefined) {
+            if (errMess.message !== undefined) {
+                message = errMess.message;
             } else {
-                message = errmess;
+                message = errMess;
             }
         }
         errManager("Failed to get Sun & Moon data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -306,14 +303,14 @@ let showTime = () => {
     getData.then((value) => {
         let json = JSON.parse(value);
         // Do something smart
-        $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
-    }, (error, errmess) => {
+        document.getElementById("result").innerHTML = ("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+    }, (error, errMess) => {
         let message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
+        if (errMess !== undefined) {
+            if (errMess.message !== undefined) {
+                message = errMess.message;
             } else {
-                message = errmess;
+                message = errMess;
             }
         }
         errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -333,20 +330,20 @@ let tideTable = (station, at, tz, step, unit, withDetails, nbDays, callback) => 
                 let json = JSON.parse(value);
                 // Do something smart
                 json.stationName = decodeURIComponent(decodeURIComponent(json.stationName));
-                $("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+                document.getElementById("result").innerHTML = ("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
             } catch (err) {
                 errManager(err + '\nFor\n' + value);
             }
         } else {
             callback(value);
         }
-    }, (error, errmess) => {
+    }, (error, errMess) => {
         let message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
+        if (errMess !== undefined) {
+            if (errMess.message !== undefined) {
+                message = errMess.message;
             } else {
-                message = errmess;
+                message = errMess;
             }
         }
         errManager("Failed to get the station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -359,20 +356,20 @@ let publishTable = (station, options, callback) => {
         if (callback === undefined) {
             try {
                 // Do something smart
-                $("#result").html("<pre>" + value + "</pre>");
+                document.getElementById("result").innerHTML = ("<pre>" + value + "</pre>");
             } catch (err) {
                 errManager(err + '\nFor\n' + value);
             }
         } else {
             callback(value);
         }
-    }, (error, errmess) => {
+    }, (error, errMess) => {
         let message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
+        if (errMess !== undefined) {
+            if (errMess.message !== undefined) {
+                message = errMess.message;
             } else {
-                message = errmess;
+                message = errMess;
             }
         }
         errManager("Failed publish station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
@@ -386,20 +383,20 @@ let publishAgenda = (station, options, callback) => {
         if (callback === undefined) {
             try {
                 // Do something smart
-                $("#result").html("<pre>" + value + "</pre>");
+                document.getElementById("result").innerHTML = ("<pre>" + value + "</pre>");
             } catch (err) {
                 errManager(err + '\nFor\n' + value);
             }
         } else {
             callback(value);
         }
-    }, (error, errmess) => {
+    }, (error, errMess) => {
         let message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
+        if (errMess !== undefined) {
+            if (errMess.message !== undefined) {
+                message = errMess.message;
             } else {
-                message = errmess;
+                message = errMess;
             }
         }
         errManager(`Failed publish station data...${(error !== undefined ? error : ' - ') + ', ' + (message !== undefined
@@ -413,20 +410,20 @@ let publishMoonCal = (station, options, callback) => {
         if (callback === undefined) {
             try {
                 // Do something smart
-                $("#result").html("<pre>" + value + "</pre>");
+                document.getElementById("result").innerHTML = ("<pre>" + value + "</pre>");
             } catch (err) {
                 errManager(err + '\nFor\n' + value);
             }
         } else {
             callback(value);
         }
-    }, (error, errmess) => {
+    }, (error, errMess) => {
         let message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
+        if (errMess !== undefined) {
+            if (errMess.message !== undefined) {
+                message = errMess.message;
             } else {
-                message = errmess;
+                message = errMess;
             }
         }
         errManager("Failed publish station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
@@ -446,7 +443,7 @@ let sunData = (from, to, tz, position, callback) => {
                 let strDecl = decToSex(json.decl, "NS");
                 let strGHA = decToSex(json.gha);
 
-                $("#result").html("<pre>" +
+                document.getElementById("result").innerHTML = ("<pre>" +
                     JSON.stringify(json, null, 2) +
                     "<br/>" +
                     (strLat + " / " + strLng) +
@@ -469,13 +466,13 @@ let sunData = (from, to, tz, position, callback) => {
         } else {
             callback(value);
         }
-    }, (error, errmess) => {
+    }, (error, errMess) => {
         let message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
+        if (errMess !== undefined) {
+            if (errMess.message !== undefined) {
+                message = errMess.message;
             } else {
-                message = errmess;
+                message = errMess;
             }
         }
         errManager("Failed to get the station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
