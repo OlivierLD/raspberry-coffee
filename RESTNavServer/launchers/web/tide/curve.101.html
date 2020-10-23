@@ -5,7 +5,7 @@
 	<link rel="icon" type="image/jpg" href="../icons/palm.04.jpg">
 	<!--meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /-->
 	<link id="page-ux" rel="stylesheet" href="../css/stylesheet.css" type="text/css"/>
-	<script type="text/javascript" src="../js/jquery-2.1.3.js"></script> <!-- TODO Remove this, in tides.js too -->
+	<!-- script type="text/javascript" src="../js/jquery-2.1.3.js"></script --> <!-- TODO Remove this, in tides.js too -->
 	<script type="text/javascript" src="../js/date.proto.js"></script>
 	<script type="text/javascript" src="../js/tide.js"></script>
 	<script type="text/javascript" src="../js/pub.sub.js"></script>
@@ -35,6 +35,22 @@
 		let tideData = {};
 		let graphCallback = undefined;
 
+		let cleanSelectList = (elementId) => {
+			let selectList = document.getElementById(elementId);
+			let len = selectList.options.length;
+			for (let i = len - 1; i >= 0; i--) {
+				selectList.remove(i);
+			}
+		};
+
+		let addOptionToSelect = (elementId, value, text) => {
+			let selectList = document.getElementById(elementId);
+			let option = document.createElement("option");
+			option.value = value;
+			option.text = text;
+			selectList.appendChild(option);
+		};
+
 		let isLeapYear = (yr) => {
 			if ((parseInt(yr) % 4) === 0) {
 				if (parseInt(yr) % 100 === 0) {
@@ -58,18 +74,16 @@
 			tideGraph = new TideGraph("tideCanvas", tideData, graphCallback, "feet");
 			// Load the date dropdown lists
 			let year = new Date().getFullYear();
-			$("#year").empty();
+			cleanSelectList("year");
 			for (let i=0; i<20; i++) {
-				let option = "<option value='" + (year - 10 + i) + "'>" + (year - 10 + i) + "</option>";
-				$('#year').append(option);
+				addOptionToSelect("year", (year - 10 + i), (year - 10 + i));
 			}
 			document.getElementById('year').value = year;
 			let month = new Date().getMonth();
 			let mNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
-			$("#month").empty();
+			cleanSelectList("month");
 			for (let i=0; i<mNames.length; i++) {
-				let option = "<option value='" + (i + 1) + "'>" + mNames[i] + "</option>";
-				$('#month').append(option);
+				addOptionToSelect("month", (i + 1), mNames[i]);
 			}
 			document.getElementById('month').value = (month + 1);
 			let day = new Date().getDate();
@@ -81,7 +95,7 @@
 			if (station !== undefined && station !== null) {
 				// alert("Station " + station);
 				// Do it, for now, 1 day
-				$('#with-table').prop('checked', true);
+				document.getElementById('with-table').checked = true;
 				tideTable(station, { year: year, month: month + 1, day: day }, '', '', '', false, 1, dataManager);
 			}
 		};
@@ -93,22 +107,20 @@
 		};
 
 		let populateDays = () => {
-			let nbDays = getNbDayInMonth(parseInt($('#year').val()), parseInt($('#month').val()));
-			$("#day").empty();
+			let nbDays = getNbDayInMonth(parseInt(document.getElementById('year').value), parseInt(document.getElementById('month').value));
+			cleanSelectList("day");
 			for (let i=0; i<nbDays; i++) {
-				let option = "<option value='" + (i + 1) + "'>" + (i + 1) + "</option>";
-				$('#day').append(option);
+				addOptionToSelect("day", (i+1), (i+1))
 			}
 		};
 
 		let populateList = (stationList) => {
-			$("#station-list").empty();
-			$("#draw-curve").prop('disabled', true);
+			cleanSelectList("station-list");
+			document.getElementById("draw-curve").disabled = true;
 			stationList.forEach((station, idx) => {
-				let option = "<option value='" + decodeURIComponent(station.fullName) + "'>" + decodeURIComponent(station.fullName) + "</option>";
-				$('#station-list').append(option);
+				addOptionToSelect("station-list", decodeURIComponent(station.fullName), decodeURIComponent(station.fullName));
 			});
-			$("#draw-curve").prop('disabled', stationList.length === 0);
+			document.getElementById("draw-curve").disabled = (stationList.length === 0);
 		};
 
 		let daylightReceiver = (value) => {
@@ -137,8 +149,8 @@
 			tideGraph.unsetTable();
 
 			// Enable Prev and Next buttons
-			$("#previous").prop('disabled', false);
-			$("#next").prop('disabled', false);
+			document.getElementById("previous").disabled = false;
+			document.getElementById("next").disabled = false;
 
 //		    console.log(value);
 			try {
@@ -199,7 +211,7 @@
 				}
 				let idx2plot = new Date().getTime(); // Current date/time
 				console.log("DrawGraph invocation!");
-				tideGraph.drawGraph("tideCanvas", tideData, idx2plot, $('#with-table').prop('checked') === true ? json.table : undefined);
+				tideGraph.drawGraph("tideCanvas", tideData, idx2plot, document.getElementById('with-table').checked === true ? json.table : undefined);
 			} catch (err) {
 				console.log(err);
 			}
