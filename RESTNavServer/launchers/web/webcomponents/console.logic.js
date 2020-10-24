@@ -949,20 +949,34 @@ window.onload = () => {
 	let boatData = getQSPrm('boat-data');
 	let withNavApi = ('yes' === getQSPrm('with-nav-api')); // Browser's Nav API
 
+	let status = 'tick';
+	// Activity witness
+	let flipLight = () => {
+		let element = document.getElementById('working');
+		if (status === 'tick') {
+			status = 'tock';
+			element.style.color = 'red';
+		} else {
+			status = 'tick';
+			element.style.color = 'green';
+		}
+		element.title = new Date().toString();
+	};
+
 	let onPosSuccess = (pos) => {
+		// TODO a flag for the navigation browser's APIs?
 		// Doc at https://w3c.github.io/geolocation-api/
 		// Position object at https://w3c.github.io/geolocation-api/#position_interface
-		//
-		// Check privileges in config.xml
-		//
 		console.log('lat= ' + pos.coords.latitude + ' lon= ' + pos.coords.longitude);
 		console.log('hdg= ' + pos.coords.heading + ' spd= ' + pos.coords.speed + ' m/s');
+		console.log(`Accuracy: ${pos.coords.accuracy} m`);
 		// Invoke set pos on the server
 		let promise = setPosition(pos.coords.latitude, pos.coords.longitude);
 		promise.then(value => {
-			console.log("setPosition Done!");
+			// console.log("setPosition Done!");
+			flipLight();
 		}, (err, errMess) => {
-			console.log("setPosition Bam!");
+			console.log("setPosition, Bam!");
 		});
 	};
 
@@ -983,6 +997,7 @@ window.onload = () => {
 			timeout: 5000
 		};
 		setInterval(() => {
+			console.log('>> navigator.geolocation, getting current position');
 			/* let watchId = */ navigator.geolocation.getCurrentPosition(onPosSuccess, onPosError, options);
 		}, 1000);
 	}
