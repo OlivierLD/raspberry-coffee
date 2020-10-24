@@ -964,16 +964,18 @@ window.onload = () => {
 	};
 
 	let onPosSuccess = (pos) => {
-		// TODO a flag for the navigation browser's APIs?
 		// Doc at https://w3c.github.io/geolocation-api/
 		// Position object at https://w3c.github.io/geolocation-api/#position_interface
-		console.log('lat= ' + pos.coords.latitude + ' lon= ' + pos.coords.longitude);
-		console.log('hdg= ' + pos.coords.heading + ' spd= ' + pos.coords.speed + ' m/s');
-		console.log(`Accuracy: ${pos.coords.accuracy} m`);
+		if (false) {
+			console.log('lat= ' + pos.coords.latitude + ' lon= ' + pos.coords.longitude);
+			console.log('hdg= ' + pos.coords.heading + ' spd= ' + pos.coords.speed + ' m/s');
+			console.log(`Accuracy: ${pos.coords.accuracy} m`);
+		}
 		// Invoke set pos on the server
 		let promise = setPosition(pos.coords.latitude, pos.coords.longitude);
 		promise.then(value => {
 			// console.log("setPosition Done!");
+			document.getElementById("accuracy").innerHTML= `<small>Acc: ${pos.coords.accuracy} m</small>`;
 			flipLight();
 		}, (err, errMess) => {
 			console.log("setPosition, Bam!");
@@ -987,23 +989,25 @@ window.onload = () => {
 		} else {
 			errMess = 'location error (' + err.code + '): ' + err.message;
 		}
+		document.getElementById("accuracy").innerHTML= `<small>${errMess}</small>`;
 		console.log(errMess);
 	};
 
-	if (withNavApi) {
+	if (withNavApi) { // QS prm with-nav-api=yes
 		let options = {
 			enableHighAccuracy: true,
 			maximumAge: 0,
 			timeout: 5000
 		};
 		setInterval(() => {
-			console.log('>> navigator.geolocation, getting current position');
+			// console.log('>> navigator.geolocation, getting current position');
 			/* let watchId = */ navigator.geolocation.getCurrentPosition(onPosSuccess, onPosError, options);
 		}, 1000);
 	}
 
 	if (style !== undefined) {
-		if (style === 'day' || style === 'night' || style === 'cyan' || style === 'black' || style === 'white' || style === 'orange' || style === 'yellow' || style === 'flat-gray' || style === 'flat-black') {
+		if (['day', 'night', 'cyan', 'black', 'white', 'orange', 'yellow', 'flat-gray', 'flat-black'].includes(style)) {
+		// if (style === 'day' || style === 'night' || style === 'cyan' || style === 'black' || style === 'white' || style === 'orange' || style === 'yellow' || style === 'flat-gray' || style === 'flat-black') {
 			setTheme(THEMES[style]);
 			// Set selected value
 			document.getElementById("widgets-style").value = THEMES[style];
@@ -1013,7 +1017,8 @@ window.onload = () => {
 	}
 
 	if (bg !== undefined) {
-		if (bg === 'black' || bg === 'dark' || bg === 'light' || bg === 'white') {
+		if (['black', 'dark', 'light', 'white'].includes(bg)) {
+		// if (bg === 'black' || bg === 'dark' || bg === 'light' || bg === 'white') {
 			changeBG(bg.toUpperCase());
 			document.getElementById(bg).checked = true;
 		} else {
