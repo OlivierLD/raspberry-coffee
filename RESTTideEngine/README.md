@@ -222,4 +222,9 @@ Use the filename above, the `-o` switch gives the name of the file you want to s
 ````
 The expected file is on your machine, named `tide.pdf`.
 
+
+### TODO
+- Swing Implementation
+- Android Implementation
+
 ---

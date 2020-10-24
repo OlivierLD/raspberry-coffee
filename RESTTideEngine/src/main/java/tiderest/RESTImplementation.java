@@ -69,7 +69,7 @@ public class RESTImplementation {
 					"GET",
 					TIDE_PREFIX + "/tide-stations",
 					this::getStationsList,
-					"Get Tide Stations list. Returns an array of Strings containing the Station full names. Paginable, supports 'filter', 'limit' and 'offset' optional query string parameters. Default offset is 0, default limit is 500."),
+					"Get Tide Stations list. Returns an array of Strings containing the Station full names. Paginable, supports 'filter', 'limit' and 'offset' optional query string parameters. Default offset is 0, default limit is none."),
 			new Operation(
 					"GET",
 					TIDE_PREFIX + "/coeff-definitions",
@@ -206,7 +206,7 @@ public class RESTImplementation {
 	private Response getStationsList(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		long offset = 0;
-		long limit = 500;
+		long limit = -1;
 		final Pattern pattern;
 		Map<String, String> qsPrms = request.getQueryStringParameters();
 		if (qsPrms != null && qsPrms.containsKey("offset")) {
@@ -225,7 +225,8 @@ public class RESTImplementation {
 		}
 		if (qsPrms != null && qsPrms.containsKey("filter")) {
 			String filter = qsPrms.get("filter");
-			pattern = Pattern.compile(String.format(".*%s.*", filter)); // decode/unescape
+			// Make it case-insensitive
+			pattern = Pattern.compile(String.format("(?i).*%s.*", filter)); // decode/unescape
 		} else {
 			pattern = null;
 		}
@@ -235,7 +236,7 @@ public class RESTImplementation {
 					.filter(ts -> (pattern == null ? true : pattern.matcher(ts.getFullName()).matches()))
 					.map(ts -> ts.getFullName())
 					.skip(offset)
-					.limit(limit)
+					.limit(limit > 0 ? limit : this.tideRequestManager.getStationList().size())
 					.collect(Collectors.toList());
 			String content = new Gson().toJson(stationNames);
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());

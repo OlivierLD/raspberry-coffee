@@ -98,10 +98,11 @@ public class TideStation implements Serializable {
 	}
 
 	public String getDisplayUnit() {
-		if (unit.equals(SQUARE_KNOTS))
+		if (unit.equals(SQUARE_KNOTS)) {
 			return KNOTS;
-		else
+		} else {
 			return unit;
+		}
 	}
 
 	public void setHarmonicsFixedForYear(int y) {

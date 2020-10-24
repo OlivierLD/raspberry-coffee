@@ -1,4 +1,4 @@
-# Android, Android Things, etc, WIP
+# Android, Android Things, etc, WiP
 ## Hints, tips, ideas, stuff...
 
 Android (Android Things) can run on the Raspberry pi.
