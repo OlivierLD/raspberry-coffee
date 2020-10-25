@@ -228,14 +228,21 @@ public class AstroComputer {
 		double zSet = (360D - Z);
 
 //		return new double[]{utRise, utSet, Z, 360d - Z};
-
 		Calendar rise = GregorianCalendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
 		Calendar set  = (Calendar)rise.clone();
 
 		TimeUtil.DMS dms = TimeUtil.decimalToDMS(utRise);
+
+		rise.set(Calendar.YEAR, year);
+		rise.set(Calendar.MONTH, month - 1);
+		rise.set(Calendar.DAY_OF_MONTH, day);
+
 		rise.set(Calendar.HOUR_OF_DAY, dms.getHours());
 		rise.set(Calendar.MINUTE, dms.getMinutes());
 		rise.set(Calendar.SECOND, (int)Math.floor(dms.getSeconds()));
+
+//		System.out.println("Rise:" + new Date(rise.getTimeInMillis()));
+
 		// Fine tuning
 		double[] riseTest = testSun(rise, latitude, longitude);
 		if ("true".equals(System.getProperty("astro.verbose"))) {
@@ -259,6 +266,11 @@ public class AstroComputer {
 		long epochRise = rise.getTimeInMillis();
 
 		dms = TimeUtil.decimalToDMS(utSet);
+
+		set.set(Calendar.YEAR, year);
+		set.set(Calendar.MONTH, month - 1);
+		set.set(Calendar.DAY_OF_MONTH, day);
+
 		set.set(Calendar.HOUR_OF_DAY, dms.getHours());
 		set.set(Calendar.MINUTE, dms.getMinutes());
 		set.set(Calendar.SECOND, (int)Math.floor(dms.getSeconds()));

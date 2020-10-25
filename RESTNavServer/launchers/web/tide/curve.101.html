@@ -127,7 +127,7 @@
 		let daylightReceiver = (value) => {
 //		    console.log("Received daylight ", value);
 			// Manage Sun data here
-			tideGraph.setSunData(value); // TODO Check what this does...
+			tideGraph.setSunData(value);
 		};
 
 		let sunMoonReceiver = (value) => {
@@ -211,7 +211,7 @@
 					tideData.harmonics = harmonics;
 				}
 				let idx2plot = new Date().getTime(); // Current date/time
-				console.log("DrawGraph invocation!");
+				// console.log("DrawGraph invocation!");
 				tideGraph.drawGraph("tideCanvas", tideData, idx2plot, document.getElementById('with-table').checked === true ? json.table : undefined);
 			} catch (err) {
 				console.log(err);

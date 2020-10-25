@@ -260,7 +260,13 @@ function setUTC(epoch) {
 function setPosition(lat, lng) {
 	let url = "/mux/position";
 	let obj = { lat: lat, lng: lng };
-	return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, obj, false);
+	return getPromise(url, DEFAULT_TIMEOUT, 'POST', 201, obj, false);
+}
+
+function setSOGCOG(sog, cog) {
+	let url = "/mux/sog-cog";
+	let obj = { sog: { unit: 'kt', sog: sog }, cog: { unit: 'deg', cog: cog } };
+	return getPromise(url, DEFAULT_TIMEOUT, 'POST', 201, obj, false);
 }
 
 function setUTCTime(epoch, callback) {

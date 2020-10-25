@@ -966,7 +966,7 @@ window.onload = () => {
 	let onPosSuccess = (pos) => {
 		// Doc at https://w3c.github.io/geolocation-api/
 		// Position object at https://w3c.github.io/geolocation-api/#position_interface
-		if (false) {
+		if (true) {
 			console.log('lat= ' + pos.coords.latitude + ' lon= ' + pos.coords.longitude);
 			console.log('hdg= ' + pos.coords.heading + ' spd= ' + pos.coords.speed + ' m/s');
 			console.log(`Accuracy: ${pos.coords.accuracy} m`);
@@ -978,8 +978,20 @@ window.onload = () => {
 			document.getElementById("accuracy").innerHTML= `<small>Acc: ${pos.coords.accuracy} m</small>`;
 			flipLight();
 		}, (err, errMess) => {
-			console.log("setPosition, Bam!");
+			console.log("setPosition, Bam!", err, errMess);
 		});
+		// Set COG, SOG (in knots)
+		let speed = pos.coords.speed;
+		let hdg = pos.coords.heading;
+		if (speed !== null && hdg !== null) {
+			const MS_TO_KNOT = 1.94384;
+			let promise2 = setSOGCOG(speed * MS_TO_KNOT, hdg);
+			promise2.then(value => {
+				// console.log("setSOGCOG Done!");
+			}, (err, errMess) => {
+				console.log("setSOGCOG, Bam!");
+			});
+		}
 	};
 
 	let onPosError= (err) => {
@@ -993,15 +1005,20 @@ window.onload = () => {
 		console.log(errMess);
 	};
 
+	let watchId;
 	if (withNavApi) { // QS prm with-nav-api=yes
 		let options = {
 			enableHighAccuracy: true,
-			maximumAge: 0,
+			maximumAge: 0, // ms
 			timeout: 5000
 		};
 		setInterval(() => {
 			// console.log('>> navigator.geolocation, getting current position');
-			/* let watchId = */ navigator.geolocation.getCurrentPosition(onPosSuccess, onPosError, options);
+			if (watchId !== undefined) {
+				navigator.geolocation.clearWatch(watchId);
+			}
+			watchId = navigator.geolocation.watchPosition( onPosSuccess, onPosError, options );
+			// watchId = navigator.geolocation.getCurrentPosition(onPosSuccess, onPosError, options);
 		}, 1000);
 	}
 

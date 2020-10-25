@@ -460,7 +460,7 @@ public class RESTImplementation {
 			do {
 				BodyDataForPos data = getSunDataForDate(pos.getL(), pos.getG(), current);
 				map.put(current.getTimeInMillis(), data);
-				current.add(Calendar.DATE , 1);
+				current.add(Calendar.DATE , 1); // Add one day
 			} while (current.before(toCal));
 			String content = new Gson().toJson(map);
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());

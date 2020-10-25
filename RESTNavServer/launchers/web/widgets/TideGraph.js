@@ -377,7 +377,7 @@ function TideGraph(cName,       // Canvas Name
      * @param table
      */
     this.drawGraph = (displayCanvasName, data, idx, table) => {
-        console.log("In DrawGraph");
+        // console.log("In DrawGraph");
         gData = data;
         plotX = idx;
         instance.setTable(table);
@@ -564,31 +564,44 @@ function TideGraph(cName,       // Canvas Name
         /*
          * Daylight?
          */
+        const VERBOSE_1 = false;
+        const VERBOSE_2 = false;
         if (sunRiseSet !== undefined) {
 //          console.log("Drawing daylight.");
             let previousX = 0;
             let lastOne = 0;
             console.log(`>> ${Object.keys(sunRiseSet).length} key(s)`);
-            for (key in sunRiseSet) { // Loop, useful when more than one day
-                console.log("At " + key + ", ", new Date(parseInt(key)));
-                let riseTime = sunRiseSet[key].riseTime;
-                let setTime = sunRiseSet[key].setTime;
+            let keyNum = 0;
+            for (let key in sunRiseSet) { // Loop, useful when more than one day
+                let oneDay = sunRiseSet[key];
 
-                if (true) {
-                    console.log("Rise %s (%d), Set %s (%d)", new Date(riseTime), riseTime, new Date(setTime), setTime);
-                    console.log("Curve data from %s (%d) to %s (%d)",
-                        new Date(parseInt(data.curve[0].getX())),
+                let sunRiseTime = oneDay.riseTime;
+                let sunSetTime  = oneDay.setTime;
+                if (VERBOSE_1) {
+                    console.log(`One Day ${new Date(parseInt(key)).format('d-m-Y Z')}, SRise ${sunRiseTime} => ${new Date(sunRiseTime).format('d-m-Y H:i:s')}, SSet ${sunSetTime} => ${new Date(sunSetTime).format('d-m-Y H:i:s')}`);
+                    console.log(`---- ${new Date(parseInt(key)).format('d-m-Y Z')}, key #${keyNum} ----`);
+                    keyNum++;
+                    // console.log("-- Sun Rise: %s (%d)\n-- Sun Set:  %s (%d)", new Date(riseTime), riseTime, new Date(setTime), setTime);
+                    console.log(`-- Sun Rise: ${new Date(sunRiseTime).format('d-m-Y H:i:s')}\n-- Sun Set : ${new Date(sunSetTime).format('d-m-Y H:i:s')}`);
+
+                    console.log(" (Curve data %d points) from %s (%d) to %s (%d))",
+                        data.curve.length,
+                        new Date(parseInt(data.curve[0].getX())).format('d-m-Y H:i:s'),
                         parseInt(data.curve[0].getX()),
-                        new Date(parseInt(data.curve[data.curve.length - 1].getX())),
+                        new Date(parseInt(data.curve[data.curve.length - 1].getX())).format('d-m-Y H:i:s'),
                         parseInt(data.curve[data.curve.length - 1].getX()));
+                    // console.log(`Curve starts on ${ new Date(parseInt(data.curve[0].getX())) }`);
+                    console.log("-------------------------------------------");
                 }
-                if (riseTime !== undefined) {
+                if (sunRiseTime !== undefined) {
                     // Find the corresponding time
                     for (let x = lastOne; x < data.curve.length; x++) {
-                        if (data.curve[x].getX() > riseTime) {
-                            console.log(`Found sun rise at label ${x} (${new Date(riseTime)}), looking for ${riseTime}, found at ${data.curve[x].getX()} (delta ${data.curve[x].getX() - riseTime})`);
-                            lastOne = x;
-                            riseX = x * xScale;
+                        if (parseInt(data.curve[x].getX()) > sunRiseTime) {
+                            if (VERBOSE_2) {
+                                console.log(`   Found sun rise at label ${x} (${new Date(sunRiseTime)}), looking for ${sunRiseTime}, found at ${data.curve[x].getX()} (delta ${data.curve[x].getX() - sunRiseTime})`);
+                            }
+                            // lastOne = x;
+                            let riseX = x * xScale;
 
                             context.beginPath();
                             context.lineWidth = 1;
@@ -603,10 +616,16 @@ function TideGraph(cName,       // Canvas Name
                             grV.addColorStop(1, 'rgba(211, 211, 211, 0.5)');  // graphColorConfig.bgGradientTo);
 
                             context.fillStyle = grV;
-                            console.log(`1 - Daylight: filling rect from ${previousX} to ${riseX - previousX}`);
-                            if (true || (riseX - previousX) > previousX) {
-                                context.fillRect(previousX, 0, (riseX - previousX), height); // FIXME, (riseX - previousX) can be negative...
+                            if (VERBOSE_2) {
+                                console.log(`  ==> 1 (before rise), riseX ${riseX} - Daylight: filling rect from ${previousX} to ${riseX - previousX}`);
                             }
+                            // if (true || (riseX - previousX) > previousX) {
+                                context.fillRect(previousX, 0, (riseX - previousX), height);
+                            // } else {
+                            //     if (VERBOSE_2) {
+                            //         console.log("  --> No fillRect...");
+                            //     }
+                            // }
                             context.closePath();
                             previousX = -1;
                             break;
@@ -614,12 +633,14 @@ function TideGraph(cName,       // Canvas Name
                     }
                 }
 
-                if (setTime !== undefined) {
+                if (sunSetTime !== undefined) {
                     // Find the corresponding time
                     for (let x = lastOne; x < data.curve.length; x++) {
-                        if (data.curve[x].getX() > setTime) {
-                            console.log(`Found sun set at label ${x} (${new Date(setTime)})`);
-                            lastOne = x;
+                        if (parseInt(data.curve[x].getX()) > sunSetTime) {
+                            if (VERBOSE_2) {
+                                console.log(`   Found sun set at label ${x} (${new Date(sunSetTime)})`);
+                            }
+                            // lastOne = x;
                             let setX = x * xScale;
                             context.beginPath();
                             context.lineWidth = 1;
@@ -642,7 +663,9 @@ function TideGraph(cName,       // Canvas Name
 
                 context.beginPath();
                 context.fillStyle = grV;
-                console.log(`2- Daylight: filling rect from ${previousX} to ${width}`);
+                if (VERBOSE_2) {
+                    console.log(`==> 2 (last part) - Daylight: filling rect from ${previousX} to ${width}`);
+                }
                 // if () ...
                 context.fillRect(previousX, 0, width, height);
                 context.closePath();

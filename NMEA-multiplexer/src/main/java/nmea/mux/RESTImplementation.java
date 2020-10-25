@@ -253,6 +253,11 @@ public class RESTImplementation {
 					this::getSCOG,
 					"Get Speed and Course Over Ground"),
 			new Operation(
+					"POST",
+					REST_PREFIX + "/sog-cog",
+					this::setSCOG,
+					"Set Speed and Course Over Ground"),
+			new Operation(
 					"GET",
 					REST_PREFIX + "/run-data",
 					this::getRunData,
@@ -2499,6 +2504,54 @@ public class RESTImplementation {
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
+		return response;
+	}
+
+	/**
+	 * Expects (in payload) a map like
+	 * {
+	 *     "sog": {
+	 *         "unit": "kt",
+	 *         "sog": 12.34
+	 *     },
+	 *     "cog": {
+	 *         "unit": "deg",
+	 *         "cog": 123
+	 *     }
+	 * }
+	 * @param request
+	 * @return
+	 */
+	private HTTPServer.Response setSCOG(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.CREATED);
+		String payload = new String(request.getContent());
+		if (!"null".equals(payload)) {
+			Gson gson = new GsonBuilder().create();
+			StringReader stringReader = new StringReader(payload);
+			try {
+				Map data = gson.fromJson(stringReader, Map.class);
+				Double cog = (Double)((Map)data.get("cog")).get("cog");
+				Double sog = (Double)((Map)data.get("sog")).get("sog");
+//				System.out.println(String.format(">> Setting COG: %f, SOG: %f", cog, sog));
+				ApplicationContext.getInstance().getDataCache().put(NMEADataCache.COG, new Angle360(cog));
+				ApplicationContext.getInstance().getDataCache().put(NMEADataCache.SOG, new Speed(sog));
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("MUX-1013")
+								.errorMessage(ex.toString()));
+				return response;
+			}
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("MUX-1012")
+							.errorMessage("Request payload not found"));
+			return response;
+		}
 		return response;
 	}
 
