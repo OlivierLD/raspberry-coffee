@@ -979,8 +979,8 @@ let onPosSuccess = (pos) => {
 	let speed = pos.coords.speed;
 	let hdg = pos.coords.heading;
 	if (speed !== null && hdg !== null) {
-		const MS_TO_KNOT = 1.94384;
-		let promise2 = setSOGCOG(speed * MS_TO_KNOT, hdg);
+		const MS_TO_KNOTS = 1.94384;
+		let promise2 = setSOGCOG(speed * MS_TO_KNOTS, hdg);
 		promise2.then(value => {
 			// console.log("setSOGCOG Done!");
 		}, (err, errMess) => {
