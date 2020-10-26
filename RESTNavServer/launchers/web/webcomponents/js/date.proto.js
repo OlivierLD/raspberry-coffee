@@ -1,11 +1,12 @@
-/*
+/**
+ * Date formatting
+ *
  * @author Olivier Le Diouris
+ * Warning: No arrow functions in the prototype!
  */
 
-// Date formatting
-
 // Provide month names
-Date.prototype.getMonthName = () => {
+Date.prototype.getMonthName = function() {
 	const month_names = [
 		'January',
 		'February',
@@ -24,8 +25,8 @@ Date.prototype.getMonthName = () => {
 };
 
 // Provide month abbreviation
-Date.prototype.getMonthAbbr = () => {
-	const MONTH_ABBRS = [
+Date.prototype.getMonthAbbr = function() {
+	const MONTHS_ABBR = [
 		'Jan',
 		'Feb',
 		'Mar',
@@ -39,11 +40,11 @@ Date.prototype.getMonthAbbr = () => {
 		'Nov',
 		'Dec'
 	];
-	return MONTH_ABBRS[this.getMonth()];
+	return MONTHS_ABBR[this.getMonth()];
 };
 
 // Provide full day of week name
-Date.prototype.getDayFull = () => {
+Date.prototype.getDayFull = function() {
 	const DAYS_FULL = [
 		'Sunday',
 		'Monday',
@@ -57,7 +58,7 @@ Date.prototype.getDayFull = () => {
 };
 
 // Provide full day of week name
-Date.prototype.getDayAbbr = () => {
+Date.prototype.getDayAbbr = function() {
 	const DAYS_ABBR = [
 		'Sun',
 		'Mon',
@@ -71,13 +72,13 @@ Date.prototype.getDayAbbr = () => {
 };
 
 // Provide the day of year 1-365
-Date.prototype.getDayOfYear = () => {
+Date.prototype.getDayOfYear = function() {
 	let janFirst = new Date(this.getFullYear(), 0, 1);
 	return Math.ceil((this - janFirst) / 86400000);
 };
 
 // Provide the day suffix (st,nd,rd,th)
-Date.prototype.getDaySuffix = () => {
+Date.prototype.getDaySuffix = function() {
 	let d = this.getDate();
 	const sfx = ["th", "st", "nd", "rd"];
 	let val = d % 100;
@@ -85,30 +86,30 @@ Date.prototype.getDaySuffix = () => {
 };
 
 // Provide Week of Year
-Date.prototype.getWeekOfYear = () => {
+Date.prototype.getWeekOfYear = function() {
 	let janFirst = new Date(this.getFullYear(), 0, 1);
 	return Math.ceil((((this - janFirst) / 86400000) + janFirst.getDay() + 1) / 7);
 };
 
 // Provide if it is a leap year or not
-Date.prototype.isLeapYear = () => {
-	let yr = this.getFullYear();
-	if ((parseInt(yr) % 4) === 0) {
-		if (parseInt(yr) % 100 === 0) {
-			if (parseInt(yr) % 400 !== 0)
+Date.prototype.isLeapYear = function() {
+	let year = this.getFullYear();
+	if ((year % 4) === 0) {
+		if (year % 100 === 0) {
+			if (year % 400 !== 0)
 				return false;
-			if (parseInt(yr) % 400 === 0)
+			if (year % 400 === 0)
 				return true;
 		}
-		if (parseInt(yr) % 100 !== 0)
+		if (year % 100 !== 0)
 			return true;
 	}
-	if ((parseInt(yr) % 4) !== 0)
+	if ((year % 4) !== 0)
 		return false;
 };
 
 // Provide Number of Days in a given month
-Date.prototype.getMonthDayCount = () => {
+Date.prototype.getMonthDayCount = function() {
 	const MONTH_DAY_COUNTS = [
 		31,
 		this.isLeapYear() ? 29 : 28,
@@ -127,7 +128,7 @@ Date.prototype.getMonthDayCount = () => {
 };
 
 // format provided date into this.format format
-Date.prototype.format = (dateFormat) => {
+Date.prototype.format = function(dateFormat) {
 	// break apart format string into array of characters
 	dateFormat = dateFormat.split("");
 
