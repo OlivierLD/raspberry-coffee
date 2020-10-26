@@ -963,7 +963,9 @@ let onPosSuccess = (pos) => {
 	// Position object at https://w3c.github.io/geolocation-api/#position_interface
 	if (true) {
 		console.log('lat= ' + pos.coords.latitude + ' lon= ' + pos.coords.longitude);
-		console.log('hdg= ' + pos.coords.heading + ' spd= ' + pos.coords.speed + ' m/s');
+		if (pos.coords.heading !== null || pos.coords.speed !== null) {
+			console.log('hdg= ' + pos.coords.heading + ' spd= ' + pos.coords.speed + ' m/s');
+		}
 		console.log(`Accuracy: ${pos.coords.accuracy} m`);
 	}
 	// Invoke set pos on the server
@@ -984,7 +986,7 @@ let onPosSuccess = (pos) => {
 		promise2.then(value => {
 			// console.log("setSOGCOG Done!");
 		}, (err, errMess) => {
-			console.log("setSOGCOG, Bam!");
+			console.log("setSOGCOG, Bam! ");
 		});
 	}
 };
