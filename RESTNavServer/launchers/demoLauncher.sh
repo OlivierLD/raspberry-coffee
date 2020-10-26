@@ -41,6 +41,11 @@ function openBrowser() {
 #
 GO=true
 #
+# Banner done with https://manytools.org/hacker-tools/ascii-banner/, 'Slant Relief'
+#
+cat banner.txt
+sleep 10
+#
 while [[ "$GO" == "true" ]]
 do
 	clear
