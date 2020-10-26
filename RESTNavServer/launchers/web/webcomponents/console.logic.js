@@ -1014,6 +1014,8 @@ let startGeoLocation = () => {
 let stopGeoLocation = () => {
 	if (watchId !== undefined) {
 		navigator.geolocation.clearWatch(watchId);
+		document.getElementById("accuracy").innerHTML= '';
+		document.getElementById("working").style.color = 'transparent';
 	}
 };
 
