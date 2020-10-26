@@ -863,9 +863,24 @@
 
 	<!-- The NMEA widgets. The 50px columns are here for the perspective, they are pads on the left and right -->
 	<div id="one" style="display: block;">
+		<div style="margin: 5px;">
 		<span id="boat-data-switch" onclick="expandCollapseBoatData();" style="cursor: pointer; padding-left: 40px;">- Boat Data</span>
-		<!-- Geolocation API activity, when QS param: with-nav-api=yes -->
-		<span id="working" title="Navigator Geolocation" style="margin-left: 20px; color: transparent;">&#11044;</span><span id="accuracy" style="margin-left: 15px;"></span>
+		<!-- Geolocation API activity -->
+		<span style="margin-left: 50px; vertical-align: center;">
+			GeoLocation Web API
+			<span style="position: absolute; margin-top: -14px;">
+				<label class="rocker rocker-tiny">
+					<input type="checkbox" onchange="geoLocationManager(this);">
+					<span class="switch-left">On</span>
+					<span class="switch-right">Off</span>
+				</label>
+			</span>
+			<span style="margin-left: 50px;">
+				<span id="working" title="Navigator Geolocation" style="margin-left: 20px; color: transparent;">&#11044;</span>
+				<span id="accuracy" style="margin-left: 15px;"></span>
+			</span>
+		</span>
+		</div>
 		<div id="nmea-widgets-1" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 0px 10px 10px 10px; text-align: center;">
 			<div id="boat-data" class="boat-data" style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 2; grid-template-columns: auto;">
 				<div id="row-1" style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto auto auto; padding: 10px;">

@@ -935,6 +935,96 @@ function devCurveCallback(elmt, context) {
 	context.closePath();
 }
 
+let geoLocationManager = (cb) => {
+	// See https://web.dev/geolocation-on-start/
+	if (cb.checked) {
+		startGeoLocation();
+	} else {
+		stopGeoLocation();
+	}
+};
+
+let status = 'tick';
+// Activity witness
+let flipLight = () => {
+	let element = document.getElementById('working');
+	if (status === 'tick') {
+		status = 'tock';
+		element.style.color = 'red';
+	} else {
+		status = 'tick';
+		element.style.color = 'green';
+	}
+	element.title = new Date().toString();
+};
+
+let onPosSuccess = (pos) => {
+	// Doc at https://w3c.github.io/geolocation-api/
+	// Position object at https://w3c.github.io/geolocation-api/#position_interface
+	if (true) {
+		console.log('lat= ' + pos.coords.latitude + ' lon= ' + pos.coords.longitude);
+		console.log('hdg= ' + pos.coords.heading + ' spd= ' + pos.coords.speed + ' m/s');
+		console.log(`Accuracy: ${pos.coords.accuracy} m`);
+	}
+	// Invoke set pos on the server
+	let promise = setPosition(pos.coords.latitude, pos.coords.longitude);
+	promise.then(value => {
+		// console.log("setPosition Done!");
+		document.getElementById("accuracy").innerHTML= `<small>Acc: ${pos.coords.accuracy} m (updated ${new Date().format('d-M-Y H:i:s Z')})</small>`;
+		flipLight();
+	}, (err, errMess) => {
+		console.log("setPosition, Bam!", err, errMess);
+	});
+	// Set COG, SOG (in knots)
+	let speed = pos.coords.speed;
+	let hdg = pos.coords.heading;
+	if (speed !== null && hdg !== null) {
+		const MS_TO_KNOT = 1.94384;
+		let promise2 = setSOGCOG(speed * MS_TO_KNOT, hdg);
+		promise2.then(value => {
+			// console.log("setSOGCOG Done!");
+		}, (err, errMess) => {
+			console.log("setSOGCOG, Bam!");
+		});
+	}
+};
+
+let onPosError= (err) => {
+	let errMess;
+	if (err.code === err.PERMISSION_DENIED) {
+		errMess = 'Location access was denied by the user.';
+	} else {
+		errMess = 'location error (' + err.code + '): ' + err.message;
+	}
+	document.getElementById("accuracy").innerHTML= `<small>${errMess}</small>`;
+	console.log(errMess);
+};
+
+let watchId;
+let geoLocOptions = {
+	enableHighAccuracy: true,
+	maximumAge: 0, // ms
+	timeout: 5000
+};
+
+let startGeoLocation = () => {
+	watchId = navigator.geolocation.watchPosition( onPosSuccess, onPosError, geoLocOptions );
+};
+
+let stopGeoLocation = () => {
+	if (watchId !== undefined) {
+		navigator.geolocation.clearWatch(watchId);
+	}
+};
+
+function geoLocationStart() { // Deprecated
+	setInterval(() => {
+		// console.log('>> navigator.geolocation, getting current position');
+		// watchId = navigator.geolocation.watchPosition( onPosSuccess, onPosError, geoLocOptions );
+		watchId = navigator.geolocation.getCurrentPosition(onPosSuccess, onPosError, geoLocOptions);
+	}, 1000);
+}
+
 window.onload = () => {
 	/* global initAjax */
 	initAjax(); // Default. See later for a WebSocket option. Contains the loops on REST requests
@@ -947,7 +1037,6 @@ window.onload = () => {
 	let border = getQSPrm('border');
 	let bg = getQSPrm('bg');
 	let boatData = getQSPrm('boat-data');
-	let withNavApi = ('yes' === getQSPrm('with-nav-api')); // Browser's Nav API
 
 	let status = 'tick';
 	// Activity witness
@@ -962,65 +1051,6 @@ window.onload = () => {
 		}
 		element.title = new Date().toString();
 	};
-
-	let onPosSuccess = (pos) => {
-		// Doc at https://w3c.github.io/geolocation-api/
-		// Position object at https://w3c.github.io/geolocation-api/#position_interface
-		if (true) {
-			console.log('lat= ' + pos.coords.latitude + ' lon= ' + pos.coords.longitude);
-			console.log('hdg= ' + pos.coords.heading + ' spd= ' + pos.coords.speed + ' m/s');
-			console.log(`Accuracy: ${pos.coords.accuracy} m`);
-		}
-		// Invoke set pos on the server
-		let promise = setPosition(pos.coords.latitude, pos.coords.longitude);
-		promise.then(value => {
-			// console.log("setPosition Done!");
-			document.getElementById("accuracy").innerHTML= `<small>Acc: ${pos.coords.accuracy} m</small>`;
-			flipLight();
-		}, (err, errMess) => {
-			console.log("setPosition, Bam!", err, errMess);
-		});
-		// Set COG, SOG (in knots)
-		let speed = pos.coords.speed;
-		let hdg = pos.coords.heading;
-		if (speed !== null && hdg !== null) {
-			const MS_TO_KNOT = 1.94384;
-			let promise2 = setSOGCOG(speed * MS_TO_KNOT, hdg);
-			promise2.then(value => {
-				// console.log("setSOGCOG Done!");
-			}, (err, errMess) => {
-				console.log("setSOGCOG, Bam!");
-			});
-		}
-	};
-
-	let onPosError= (err) => {
-		let errMess;
-		if (err.code === err.PERMISSION_DENIED) {
-			errMess = 'Location access was denied by the user.';
-		} else {
-			errMess = 'location error (' + err.code + '): ' + err.message;
-		}
-		document.getElementById("accuracy").innerHTML= `<small>${errMess}</small>`;
-		console.log(errMess);
-	};
-
-	let watchId;
-	if (withNavApi) { // QS prm with-nav-api=yes
-		let options = {
-			enableHighAccuracy: true,
-			maximumAge: 0, // ms
-			timeout: 5000
-		};
-		setInterval(() => {
-			// console.log('>> navigator.geolocation, getting current position');
-			if (watchId !== undefined) {
-				navigator.geolocation.clearWatch(watchId);
-			}
-			watchId = navigator.geolocation.watchPosition( onPosSuccess, onPosError, options );
-			// watchId = navigator.geolocation.getCurrentPosition(onPosSuccess, onPosError, options);
-		}, 1000);
-	}
 
 	if (style !== undefined) {
 		if (['day', 'night', 'cyan', 'black', 'white', 'orange', 'yellow', 'flat-gray', 'flat-black'].includes(style)) {
