@@ -4,6 +4,8 @@
  * Shows how to use the WorldMap object
  * and the REST APIs of the img service.
  * Displays faxes.
+ *
+ * TODO Move to ES6 Promise and Co.
  */
 "use strict";
 

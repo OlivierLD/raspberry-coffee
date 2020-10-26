@@ -1,34 +1,35 @@
 "use strict";
 
-var SunFlowerClient = function (dataManager, bp) {
+// TODO Use ES6 promises
 
-	var onMessage = dataManager; // Client function
-	var betweenPing = 1000;
+let SunFlowerClient = function (dataManager, bp) {
+
+	let onMessage = dataManager; // Client function
+	let betweenPing = 1000;
 	if (bp !== undefined) {
 		betweenPing = bp;
 	}
 
-	var DEFAULT_TIMEOUT = 10000;
+	const DEFAULT_TIMEOUT = 10000;
 
-	var getDeferred = function (
+	let getDeferred = (
 			url,                          // full api path
 			timeout,                      // After that, fail.
 			verb,                         // GET, PUT, DELETE, POST, etc
 			happyCode,                    // if met, resolve, otherwise fail.
 			data,                         // payload, when needed (PUT, POST...)
-			show) {                       // Show the traffic [true]|false
+			show) => {                       // Show the traffic [true]|false
 		if (show === undefined) {
 			show = true;
 		}
 		if (show === true) {
 			document.body.style.cursor = 'wait';
 		}
-		var deferred = $.Deferred(),  // a jQuery deferred
-				url = url,
+		let deferred = $.Deferred(),  // a jQuery deferred
 				xhr = new XMLHttpRequest(),
 				TIMEOUT = timeout;
 
-		var req = verb + " " + url;
+		let req = verb + " " + url;
 		if (data !== undefined && data !== null) {
 			req += ("\n" + JSON.stringify(data, null, 2));
 		}
@@ -41,13 +42,13 @@ var SunFlowerClient = function (dataManager, bp) {
 			xhr.send(JSON.stringify(data));
 		}
 
-		var requestTimer = setTimeout(function () {
+		let requestTimer = setTimeout(() => {
 			xhr.abort();
 			var mess = {message: 'Timeout'};
 			deferred.reject(408, mess);
 		}, TIMEOUT);
 
-		xhr.onload = function () {
+		xhr.onload = () => {
 			clearTimeout(requestTimer);
 			if (xhr.status === happyCode) {
 				deferred.resolve(xhr.response);
@@ -58,8 +59,8 @@ var SunFlowerClient = function (dataManager, bp) {
 		return deferred.promise();
 	};
 
-	var getSunFlowerData = function () {
-		var deferred = $.Deferred(),  // a jQuery deferred
+	let getSunFlowerData = () => {
+		let deferred = $.Deferred(),  // a jQuery deferred
 				url = '/sun-flower/all',
 				xhr = new XMLHttpRequest(),
 				TIMEOUT = 10000;
@@ -72,12 +73,12 @@ var SunFlowerClient = function (dataManager, bp) {
 			throw err;
 		}
 
-		var requestTimer = setTimeout(function () {
+		let requestTimer = setTimeout(() => {
 			xhr.abort();
 			deferred.reject(408, {message: 'Timeout'});
 		}, TIMEOUT);
 
-		xhr.onload = function () {
+		xhr.onload = () => {
 			clearTimeout(requestTimer);
 			if (xhr.status === 200) {
 				deferred.resolve(xhr.response);
@@ -88,13 +89,13 @@ var SunFlowerClient = function (dataManager, bp) {
 		return deferred.promise();
 	};
 
-	this.requestSunPath = function (pos) {
-		var url = "/astro/sun-path-today";
+	this.requestSunPath = (pos) => {
+		let url = "/astro/sun-path-today";
 		return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
 	};
 
-	this.requestSunData= function (pos) {
-		var url = "/astro/sun-now";
+	this.requestSunData = (pos) => {
+		let url = "/astro/sun-now";
 		return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
 	};
 
@@ -107,18 +108,18 @@ var SunFlowerClient = function (dataManager, bp) {
 		}, betweenPing);
 	})();
 
-	var fetch = function () {
-		var getData = getSunFlowerData();
+	let fetch = () => {
+		let getData = getSunFlowerData();
 		getData.done(function (value) {
 			//  console.log("Done:", value);
-			var json = JSON.parse(value);
+			let json = JSON.parse(value);
 			onMessage(json);
 		});
 		getData.fail(function (error, errmess) {
-			var message;
+			let message;
 			if (errmess !== undefined) {
 				try {
-					var mess = JSON.parse(errmess);
+					let mess = JSON.parse(errmess);
 					if (mess.message !== undefined) {
 						message = mess.message;
 					}
@@ -141,7 +142,5 @@ var SunFlowerClient = function (dataManager, bp) {
 					pathAndDataOK = true;
 				}
 		}
-
 	};
-
 };

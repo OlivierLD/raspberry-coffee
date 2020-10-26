@@ -3,6 +3,8 @@
 /*
  For debugging,
  set DEBUG to true.
+
+ TODO Move to ES6
  */
 var DEBUG = false;
 var VERBOSE = false;

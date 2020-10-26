@@ -19,7 +19,9 @@ let messManager = (mess) => {
 };
 
 let getQueryParameterByName = (name, url) => {
-    if (!url) url = window.location.href;
+    if (!url) {
+        url = window.location.href;
+    }
     name = name.replace(/[\[\]]/g, "\\$&");   // Nice ;)
     let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
         results = regex.exec(url);

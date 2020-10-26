@@ -11,13 +11,12 @@ function cacheClient(dataManager, bp) {
 	function getNMEAData() {
 
 		let url = '/mux/cache',
-				xhr = new XMLHttpRequest(),
 				verb = 'GET',
 				TIMEOUT = 10000,
         happyCode = 200,
         data = null;
 
-		let promise = new Promise(function (resolve, reject) {
+		return new Promise(function (resolve, reject) {
 			let xhr = new XMLHttpRequest();
 
 			let req = verb + " " + url;
@@ -52,7 +51,6 @@ function cacheClient(dataManager, bp) {
 				}
 			};
 		});
-		return promise;
 	}
 
 // Executed at startup

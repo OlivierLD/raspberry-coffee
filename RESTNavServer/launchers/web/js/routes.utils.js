@@ -1,30 +1,30 @@
 /**
  * @author Olivier LeDiouris
  */
-var GreatCircle = function (from, to) {
+let GreatCircle = function (from, to) {
 
-	var dirs = {
+	let dirs = {
 		TO_NORTH: 0,
 		TO_SOUTH: 1,
 		TO_EAST:  2,
 		TO_WEST:  3
 	};
 
-	var ewDir, nsDir;
+	let ewDir, nsDir;
 
 	this.start = from;
 	this.arrival = to;
 
-	var route = [];
+	let route = [];
 
 	/**
 	 *
 	 * @param pt { let: L, lng: G } angles in radians.
 	 */
-	this.setStart = function (pt) {
+	this.setStart = (pt) => {
 		this.start = pt;
 	};
-	this.setStartInDegrees = function (pt) {
+	this.setStartInDegrees = (pt) => {
 		this.setStart({lat: toRadians(pt.lat), lng: toRadians(pt.lng)});
 	};
 
@@ -32,14 +32,14 @@ var GreatCircle = function (from, to) {
 	 *
 	 * @param pt { let: L, lng: G } angles in radians.
 	 */
-	this.setArrival = function (pt) {
+	this.setArrival = (pt) => {
 		this.arrival = pt;
 	};
-	this.setArrivalInDegrees = function (pt) {
+	this.setArrivalInDegrees = (pt) => {
 		this.setArrival({lat: toRadians(pt.lat), lng: toRadians(pt.lng)});
 	};
 
-	this.calculateGreatCircle = function (nbPts) {
+	this.calculateGreatCircle = (nbPts) => {
 		// Make sure start and arrival are set.
 		if (this.start === undefined || this.arrival === undefined) {
 			throw ({err: "Start and Arrival are required"});
@@ -56,26 +56,26 @@ var GreatCircle = function (from, to) {
 				this.arrival.lng += (2 * Math.PI);
 			}
 		}
-		var deltaG = this.arrival.lng - this.start.lng;
+		let deltaG = this.arrival.lng - this.start.lng;
 		route = [];
-		var pt = this.start;
-		var interval = deltaG / nbPts; // TODO Make sure deltaG > 0
-		for (var g = this.start.lng; route.length <= nbPts; g += interval) {
-			var deltag = this.arrival.lng - g;
-			var tgStartAngle = Math.sin(deltag) / (Math.cos(pt.lat) * Math.tan(this.arrival.lat) - Math.sin(pt.lat) * Math.cos(deltag));
-			var ptL = Math.atan(Math.tan(pt.lat) * Math.cos(interval) + Math.sin(interval) / (tgStartAngle * Math.cos(pt.lat)));
-			var ptG = g + interval;
+		let pt = this.start;
+		let interval = deltaG / nbPts; // TODO Make sure deltaG > 0
+		for (let g = this.start.lng; route.length <= nbPts; g += interval) {
+			let deltag = this.arrival.lng - g;
+			let tgStartAngle = Math.sin(deltag) / (Math.cos(pt.lat) * Math.tan(this.arrival.lat) - Math.sin(pt.lat) * Math.cos(deltag));
+			let ptL = Math.atan(Math.tan(pt.lat) * Math.cos(interval) + Math.sin(interval) / (tgStartAngle * Math.cos(pt.lat)));
+			let ptG = g + interval;
 			if (ptG > Math.PI) {
 				ptG -= (2 * Math.PI);
 			}
 			if (ptG < -Math.PI) {
 				ptG += (2 * Math.PI);
 			}
-			var routePt = {lat: ptL, lng: ptG};
-			var ari = Math.abs(toDegrees(Math.atan(tgStartAngle)));
-			var _nsDir = (routePt.lat > pt.lat) ? dirs.TO_NORTH : dirs.TO_SOUTH;
-			var arrG = routePt.lng;
-			var staG = pt.lng;
+			let routePt = {lat: ptL, lng: ptG};
+			let ari = Math.abs(toDegrees(Math.atan(tgStartAngle)));
+			let _nsDir = (routePt.lat > pt.lat) ? dirs.TO_NORTH : dirs.TO_SOUTH;
+			let arrG = routePt.lng;
+			let staG = pt.lng;
 			if (sign(arrG) !== sign(staG)) {
 				if (sign(arrG) > 0) {
 					arrG -= (2 * Math.PI);
@@ -83,8 +83,8 @@ var GreatCircle = function (from, to) {
 					arrG = Math.PI - arrG;
 				}
 			}
-			var _ewDir = (arrG > staG) ? dirs.TO_EAST : dirs.TO_WEST;
-			var _start = 0;
+			let _ewDir = (arrG > staG) ? dirs.TO_EAST : dirs.TO_WEST;
+			let _start = 0;
 			if (_nsDir === dirs.TO_SOUTH) {
 				_start = 180;
 				if (_ewDir === dirs.TO_EAST) {
@@ -111,34 +111,34 @@ var GreatCircle = function (from, to) {
 	 * GreatCircle (orthodromic) distance
 	 * @return in radians
 	 */
-	this.getDistance = function () {
-		if (start === undefined || arrival === undefined) {
+	this.getDistance = () => {
+		if (this.start === undefined || this.arrival === undefined) {
 			throw ({err: "Start and Arrival are required"});
 		}
 		return getGCDistance(this.start, this.arrival);
 	};
 
-	this.getDistanceInDegrees = function () {
+	this.getDistanceInDegrees = () => {
 		return getGCDistanceInDegrees(this.start, this.arrival);
 	};
 
-	this.getDistanceInNM = function () {
+	this.getDistanceInNM = () => {
 		return getGCDistanceInNM(this.start, this.arrival);
 	};
 
 };
 
 /* Static Utils */
-var toRadians = function (deg) {
+let toRadians = (deg) => {
 	return deg * (Math.PI / 180);
 };
 
-var toDegrees = function (rad) {
+let toDegrees = (rad) => {
 	return rad * (180 / Math.PI);
 };
 
-var sign = function (d) {
-	var s = 0;
+let sign = (d) => {
+	let s = 0;
 	if (d > 0.0) {
 		s = 1;
 	}
@@ -148,19 +148,19 @@ var sign = function (d) {
 	return s;
 };
 
-var getGCDistance = function (from, to) {
+let getGCDistance = (from, to) => {
 	if (from === undefined || to === undefined) {
 		throw ({err: "From and To are required"});
 	}
-	var cos = Math.sin(from.lat) * Math.sin(to.lat) + Math.cos(from.lat) * Math.cos(to.lat) * Math.cos(to.lng - from.lng);
+	let cos = Math.sin(from.lat) * Math.sin(to.lat) + Math.cos(from.lat) * Math.cos(to.lat) * Math.cos(to.lng - from.lng);
 	return Math.acos(cos);
 };
 
-var getGCDistanceInDegrees = function (from, to) {
+let getGCDistanceInDegrees = (from, to) => {
 	return toDegrees(getGCDistance(from, to));
 };
 
-var getGCDistanceInNM = function (from, to) {
+let getGCDistanceInNM = (from, to) => {
 	return (getGCDistanceInDegrees(from, to) * 60);
 };
 
@@ -170,10 +170,10 @@ var getGCDistanceInNM = function (from, to) {
  * Points coordinates in Radians
  * returned value in radians
  */
-var calculateRhumLine = function (from, to) {
-	var nsDir = (to.lat > from.lat) ? dirs.TO_NORTH : dirs.TO_SOUTH;
-	var arrG = to.lng;
-	var staG = from.lng;
+let calculateRhumLine = (from, to) => {
+	let nsDir = (to.lat > from.lat) ? dirs.TO_NORTH : dirs.TO_SOUTH;
+	let arrG = to.lng;
+	let staG = from.lng;
 	if (sign(arrG) !== sign(staG) && Math.abs(arrG - staG) > Math.PI) {
 		if (sign(arrG) > 0) {
 			arrG -= (2 * Math.PI);
@@ -181,17 +181,17 @@ var calculateRhumLine = function (from, to) {
 			arrG = Math.PI - arrG;
 		}
 	}
-	var ewDir = (arrG - staG > 0.0) ? dirs.TO_EAST : dirs.TO_WEST;
-	var deltaL = toDegrees((to.lat - from.lat)) * 60;
-	var radianDeltaG = to.lng - from.lng;
+	let ewDir = (arrG - staG > 0.0) ? dirs.TO_EAST : dirs.TO_WEST;
+	let deltaL = toDegrees((to.lat - from.lat)) * 60;
+	let radianDeltaG = to.lng - from.lng;
 	if (Math.abs(radianDeltaG) > Math.PI) {
 		radianDeltaG = (2 * Math.PI) - Math.abs(radianDeltaG);
 	}
-	var deltaG = Math.abs(toDegrees(radianDeltaG) * 60);
-	var startLC = Math.log(Math.tan((Math.PI / 4) + from.lat / 2));
-	var arrLC = Math.log(Math.tan((Math.PI / 4) + to.lat / 2));
-	var deltaLC = 3437.7467707849396 * (arrLC - startLC);
-	var rv;
+	let deltaG = Math.abs(toDegrees(radianDeltaG) * 60);
+	let startLC = Math.log(Math.tan((Math.PI / 4) + from.lat / 2));
+	let arrLC = Math.log(Math.tan((Math.PI / 4) + to.lat / 2));
+	let deltaLC = 3437.7467707849396 * (arrLC - startLC);
+	let rv;
 	if (deltaLC !== 0) {
 		rv = Math.atan(deltaG / deltaLC);
 	} else if (radianDeltaG > 0) {
@@ -199,7 +199,7 @@ var calculateRhumLine = function (from, to) {
 	} else {
 		rv = (3 * Math.PI / 2);
 	}
-	var dLoxo;
+	let dLoxo;
 	if (deltaL !== 0) {
 		dLoxo = deltaL / Math.cos(rv);
 	} else {
@@ -218,8 +218,10 @@ var calculateRhumLine = function (from, to) {
 			rv = Math.PI + rv;
 		}
 	}
-	while (rv >= (2 * Math.PI)) rv -= (2 * Math.PI);
-	return ({heading: rv, dist: dLoxo});
+	while (rv >= (2 * Math.PI)) {
+		rv -= (2 * Math.PI);
+	}
+	return ({ heading: rv, dist: dLoxo });
 };
 
 /**
@@ -229,28 +231,28 @@ var calculateRhumLine = function (from, to) {
  * @param route route in degrees
  * @return DR Position, L & G in Radians
  */
-var deadReckoning = function (from, dist, route) {
-	var radianDistance = toRadians(dist / 60);
-	var finalLat = (Math.asin((Math.sin(from.lat) * Math.cos(radianDistance)) +
+let deadReckoning = (from, dist, route) => {
+	let radianDistance = toRadians(dist / 60);
+	let finalLat = (Math.asin((Math.sin(from.lat) * Math.cos(radianDistance)) +
 								            (Math.cos(from.lat) * Math.sin(radianDistance) * Math.cos(toRadians(route)))));
-	var finalLng = from.lng + Math.atan2(Math.sin(toRadians(route)) * Math.sin(radianDistance) * Math.cos(from.lat),
+	let finalLng = from.lng + Math.atan2(Math.sin(toRadians(route)) * Math.sin(radianDistance) * Math.cos(from.lat),
 																			 Math.cos(radianDistance) - Math.sin(from.lat) * Math.sin(finalLat));
 	return ({lat: finalLat, lng: finalLng});
 };
 
-var toDegreePt = function(pt) {
+let toDegreePt = (pt) => {
 	return { lat: toDegrees(pt.lat), lng: toDegrees(pt.lng) };
 };
 
-var decToSex = function (val, ns_ew) {
-	var absVal = Math.abs(val);
-	var intValue = Math.floor(absVal);
-	var dec = absVal - intValue;
-	var i = intValue;
+let decToSex = (val, ns_ew) => {
+	let absVal = Math.abs(val);
+	let intValue = Math.floor(absVal);
+	let dec = absVal - intValue;
+	let i = intValue;
 	dec *= 60;
-//    var s = i + "°" + dec.toFixed(2) + "'";
-//    var s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
-	var s = "";
+//    let s = i + "°" + dec.toFixed(2) + "'";
+//    let s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+	let s = "";
 	if (ns_ew !== undefined) {
 		if (val < 0) {
 			s += (ns_ew === 'NS' ? 'S' : 'W');
@@ -271,12 +273,14 @@ var decToSex = function (val, ns_ew) {
 /**
  * Get the direction
  *
+ * TODO Use atan2
+ *
  * @param x horizontal displacement
  * @param y vertical displacement
  * @return the angle, in degrees
  */
-var getDir = function(x, y) {
-	var dir = 0.0;
+let getDir = (x, y) => {
+	let dir = 0.0;
 	if (y !== 0) {
 		dir = toDegrees(Math.atan(x / y));
 	}
@@ -307,10 +311,10 @@ var getDir = function(x, y) {
 
 if (false) {
 // Main for tests
-	var from = {lat: toRadians(45), lng: toRadians(-130)};
-	var dist = 55;
-	var heading = 270;
-	var dr = deadReckoning(from, dist, heading);
+	let from = {lat: toRadians(45), lng: toRadians(-130)};
+	let dist = 55;
+	let heading = 270;
+	let dr = deadReckoning(from, dist, heading);
 	console.log("Starting from ", decToSex(toDegrees(from.lat), 'NS'), decToSex(toDegrees(from.lng), 'EW'), "heading", heading + "\272", "for", dist, "miles");
 	console.log('Reaching ', decToSex(toDegrees(dr.lat), 'NS'), decToSex(toDegrees(dr.lng), 'EW'));
 
@@ -321,14 +325,14 @@ if (false) {
 	console.log("Starting from ", decToSex(toDegrees(from.lat), 'NS'), decToSex(toDegrees(from.lng), 'EW'));
 	console.log("Going to      ", decToSex(toDegrees(to.lat), 'NS'), decToSex(toDegrees(to.lng), 'EW'));
 
-	var gc = new GreatCircle(from, to);
-	var route = gc.calculateGreatCircle(20);
+	let gc = new GreatCircle(from, to);
+	let route = gc.calculateGreatCircle(20);
 	route.forEach(function (pt) {
 		console.log("Z", pt.ari.toFixed(1), ", ", decToSex(toDegrees(pt.pt.lat), "NS"), decToSex(toDegrees(pt.pt.lng), "EW"));
 	});
 	console.log("GC distance", gc.getDistanceInNM().toFixed(0), "nm");
 
 	console.log("\nRhumbline test");
-	var loxo = calculateRhumLine(from, to);
+	let loxo = calculateRhumLine(from, to);
 	console.log("Heading", toDegrees(loxo.heading).toFixed(0) + '\272', "Dist:", loxo.dist.toFixed(1), "nm");
 }

@@ -33,16 +33,15 @@ function initWS() {
 
 	connection.onmessage = function (message) {
 //  console.log('onmessage:' + JSON.stringify(message.data));
-		var data = JSON.parse(message.data);
+		let data = JSON.parse(message.data);
 		setValues(data);
 	};
 }
 
-function setValues(doc) {
+let setValues = (doc) => {
 	try {
-		var errMess = "";
-
-		var json = doc;
+		let errMess = "";
+		let json = doc;
 
 		// TODO Implement event publication like below...
 
@@ -73,9 +72,10 @@ function setValues(doc) {
 		}
 		*/
 
-		if (errMess !== undefined)
+		if (errMess !== undefined) {
 			displayErr(errMess);
+		}
 	} catch (err) {
 		displayErr(err);
 	}
-}
+};

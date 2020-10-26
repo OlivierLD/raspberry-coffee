@@ -21,7 +21,7 @@ function getNMEAData() {
 			happyCode = 200,
 			TIMEOUT = 10000;
 
-	let promise = new Promise(function (resolve, reject) {
+	return new Promise(function (resolve, reject) {
 		let xhr = new XMLHttpRequest();
 
 		let req = verb + " " + url;
@@ -56,7 +56,6 @@ function getNMEAData() {
 			}
 		};
 	});
-	return promise;
 }
 
 function fetch() {

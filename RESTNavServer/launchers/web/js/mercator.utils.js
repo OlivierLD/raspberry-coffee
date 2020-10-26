@@ -1,10 +1,10 @@
 
 // Math has no prototype.
-Math.toRadians = function(deg) {
+Math.toRadians = (deg) => {
 	return Math.PI * deg / 180;
 };
 
-Math.toDegrees = function(rad) {
+Math.toDegrees = (rad) => {
 	return rad * 180 / Math.PI;
 };
 
@@ -13,13 +13,13 @@ Math.toDegrees = function(rad) {
  * @param lat in degrees
  * @return Increasing Latitude, in degrees.
  */
-var getIncLat = function(lat) {
-	var il = Math.log(Math.tan((Math.PI / 4) + (Math.toRadians(lat) / 2)));
+let getIncLat = (lat) => {
+	let il = Math.log(Math.tan((Math.PI / 4) + (Math.toRadians(lat) / 2)));
 	return Math.toDegrees(il);
 };
 
-var getInvIncLat = function(il) {
-	var ret = Math.toRadians(il);
+let getInvIncLat = (il) => {
+	let ret = Math.toRadians(il);
 	ret = Math.exp(ret);
 	ret = Math.atan(ret);
 	ret -= (Math.PI / 4); // 0.78539816339744828D;
@@ -36,23 +36,23 @@ var getInvIncLat = function(il) {
  * @param dist distance in nm
  * @returns { lat: L, lng: G }
  */
-var deadReckoning = function(fromL, fromG, heading, dist) {
-	var deltaL = (dist / 60) * Math.cos(Math.toRadians(heading));
-	var l2 = fromL + deltaL;
-	var lc1 = getIncLat(fromL);
-	var lc2 = getIncLat(l2);
-	var deltaLc = lc2 - lc1;
-	var deltaG = deltaLc * Math.tan(Math.toRadians(heading));
-	var g2 = fromG + deltaG;
+let deadReckoning = (fromL, fromG, heading, dist) => {
+	let deltaL = (dist / 60) * Math.cos(Math.toRadians(heading));
+	let l2 = fromL + deltaL;
+	let lc1 = getIncLat(fromL);
+	let lc2 = getIncLat(l2);
+	let deltaLc = lc2 - lc1;
+	let deltaG = deltaLc * Math.tan(Math.toRadians(heading));
+	let g2 = fromG + deltaG;
 	return { lat: l2, lng: g2 };
 };
 
 // Ratio on *one* degree, that is the trick.
-var getIncLatRatio = function(lat) {
+let getIncLatRatio = (lat) => {
 	if (lat === 0) {
 		return 1;
 	} else {
-		var bottom = lat - 1;
+		let bottom = lat - 1;
 		if (bottom < 0) {
 			bottom = 0;
 		}
@@ -60,12 +60,12 @@ var getIncLatRatio = function(lat) {
 	}
 };
 
-var calculateEastG = function(nLat, sLat, wLong, canvasW, canvasH) {
-	var deltaIncLat =  getIncLat(nLat) - getIncLat(sLat);
+let calculateEastG = (nLat, sLat, wLong, canvasW, canvasH) => {
+	let deltaIncLat =  getIncLat(nLat) - getIncLat(sLat);
 
-	var graphicRatio = canvasW / canvasH;
-	var deltaG = Math.min(deltaIncLat * graphicRatio, 359);
-	var eLong = wLong + deltaG;
+	let graphicRatio = canvasW / canvasH;
+	let deltaG = Math.min(deltaIncLat * graphicRatio, 359);
+	let eLong = wLong + deltaG;
 
 	while (eLong > 180) {
 		eLong -= 360;
@@ -75,7 +75,7 @@ var calculateEastG = function(nLat, sLat, wLong, canvasW, canvasH) {
 
 // Main for tests
 if (false) {
-	var d = getIncLat(45);
+	let d = getIncLat(45);
 	console.log("IncLat(45)=" + d);
 	console.log("Rad(45)=" + Math.toRadians(45));
 
@@ -83,7 +83,7 @@ if (false) {
 	console.log("Ratio at L=60:" + getIncLatRatio(60));
 
 	console.log("-----------------------");
-	for (var i = 0; i <= 90; i += 10) {
+	for (let i = 0; i <= 90; i += 10) {
 		console.log("Ratio at " + i + "=" + getIncLatRatio(i));
 	}
 
