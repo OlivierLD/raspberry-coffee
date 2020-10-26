@@ -1,12 +1,15 @@
-
 // Math has no prototype.
-Math.toRadians = (deg) => {
-	return Math.PI * deg / 180;
-};
+if (Math.toRadians === undefined) {
+	Math.toRadians = (deg) => {
+		return Math.PI * deg / 180;
+	};
+}
 
-Math.toDegrees = (rad) => {
-	return rad * 180 / Math.PI;
-};
+if (Math.toDegrees === undefined) {
+	Math.toDegrees = (rad) => {
+		return rad * 180 / Math.PI;
+	};
+}
 
 /**
  * Computes the Increasing Latitude. Mercator formula.
