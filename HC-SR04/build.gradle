@@ -14,19 +14,6 @@ shadowJar {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests'
-//    }
-//  }
-//}
-
 repositories {
   mavenCentral()
   mavenLocal()

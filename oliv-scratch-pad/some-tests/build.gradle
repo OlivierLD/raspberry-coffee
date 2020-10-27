@@ -47,7 +47,7 @@ dependencies {
     // Require tools.jar, from the JDK (Doclet and Co)
 //    compile files(org.gradle.internal.jvm.Jvm.current().toolsJar)
     compile files("${System.getProperty('java.home')}/../lib/tools.jar")
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'junit', name: 'junit', version: '4.13'
 }
 
 build.doFirst {

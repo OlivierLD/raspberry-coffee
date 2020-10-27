@@ -958,11 +958,11 @@ let flipLight = () => {
 	element.title = new Date().toString();
 };
 
-let onPosSuccess = (pos) => {
+const onPosSuccess = (pos) => {
 	// Doc at https://w3c.github.io/geolocation-api/
 	// Position object at https://w3c.github.io/geolocation-api/#position_interface
 	if (true) {
-		console.log('lat= ' + pos.coords.latitude + ' lon= ' + pos.coords.longitude);
+		console.log(`lat=${pos.coords.latitude} lon=${pos.coords.longitude} alt=${pos.coords.altitude}`);
 		if (pos.coords.heading !== null || pos.coords.speed !== null) {
 			console.log('hdg= ' + pos.coords.heading + ' spd= ' + pos.coords.speed + ' m/s');
 		}
@@ -991,12 +991,12 @@ let onPosSuccess = (pos) => {
 	}
 };
 
-let onPosError= (err) => {
+const onPosError= (err) => {
 	let errMess;
 	if (err.code === err.PERMISSION_DENIED) {
 		errMess = 'Location access was denied by the user.';
 	} else {
-		errMess = 'location error (' + err.code + '): ' + err.message;
+		errMess = `location error (${err.code}): ${err.message}`;
 	}
 	document.getElementById("accuracy").innerHTML= `<small>${errMess}</small>`;
 	console.log(errMess);

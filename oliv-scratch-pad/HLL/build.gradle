@@ -32,7 +32,7 @@ dependencies {
     compile group: 'it.unimi.dsi', name: 'fastutil', version: '7.0.12'
     compile group: 'com.google.guava', name: 'guava', version: 'r05'
 //  compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'junit', name: 'junit', version: '4.13'
 }
 
 mainClassName = "etag.CollisionTester"
