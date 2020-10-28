@@ -74,87 +74,91 @@ function AnalogDisplay(cName,                     // Canvas Name
 		var colorConfig = defaultAnalogColorConfig;
 		for (var s=0; s<document.styleSheets.length; s++) {
 //		console.log("Walking though ", document.styleSheets[s]);
-			for (var r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
+			try {
+				for (var r = 0; document.styleSheets[s].cssRules !== null && r < document.styleSheets[s].cssRules.length; r++) {
 //			console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
-				if (document.styleSheets[s].cssRules[r].selectorText === '.analogdisplay') {
+					if (document.styleSheets[s].cssRules[r].selectorText === '.analogdisplay') {
 //				console.log("  >>> Found it!");
-					var cssText = document.styleSheets[s].cssRules[r].style.cssText;
-					var cssTextElems = cssText.split(";");
-					cssTextElems.forEach(function(elem) {
-						if (elem.trim().length > 0) {
-							var keyValPair = elem.split(":");
-							var key = keyValPair[0].trim();
-							var value = keyValPair[1].trim();
-							switch (key) {
-								case '--bg-color':
-									colorConfig.bgColor = value;
-									break;
-								case '--digit-color':
-									colorConfig.digitColor = value;
-									break;
-								case '--with-gradient':
-									colorConfig.withGradient = (value === 'true');
-									break;
-								case '--display-background-gradient-from':
-									colorConfig.displayBackgroundGradientFrom = value;
-									break;
-								case '--display-background-gradient-to':
-									colorConfig.displayBackgroundGradientTo = value;
-									break;
-								case '--display-line-color':
-									colorConfig.displayLineColor = value;
-									break;
-								case '--label-fill-color':
-									colorConfig.labelFillColor = value;
-									break;
-								case '--with-display-shadow':
-									colorConfig.withDisplayShadow = (value === 'true');
-									break;
-								case '--shadow-color':
-									colorConfig.shadowColor = value;
-									break;
-								case '--outline-color':
-									colorConfig.outlineColor = value;
-									break;
-								case '--major-tick-color':
-									colorConfig.majorTickColor = value;
-									break;
-								case '--minor-tick-color':
-									colorConfig.minorTickColor = value;
-									break;
-								case '--value-color':
-									colorConfig.valueColor = value;
-									break;
-								case '--value-outline-color':
-									colorConfig.valueOutlineColor = value;
-									break;
-								case '--value-nb-decimal':
-									colorConfig.valueNbDecimal = value;
-									break;
-								case '--hand-color':
-									colorConfig.handColor = value;
-									break;
-								case '--hand-outline-color':
-									colorConfig.handOutlineColor = value;
-									break;
-								case '--with-hand-shadow':
-									colorConfig.withHandShadow = (value === 'true');
-									break;
-								case '--knob-color':
-									colorConfig.knobColor = value;
-									break;
-								case '--knob-outline-color':
-									colorConfig.knobOutlineColor = value;
-									break;
-								case '--font':
-									colorConfig.font = value;
-									break;
-								default:
-									break;
+						var cssText = document.styleSheets[s].cssRules[r].style.cssText;
+						var cssTextElems = cssText.split(";");
+						cssTextElems.forEach(function (elem) {
+							if (elem.trim().length > 0) {
+								var keyValPair = elem.split(":");
+								var key = keyValPair[0].trim();
+								var value = keyValPair[1].trim();
+								switch (key) {
+									case '--bg-color':
+										colorConfig.bgColor = value;
+										break;
+									case '--digit-color':
+										colorConfig.digitColor = value;
+										break;
+									case '--with-gradient':
+										colorConfig.withGradient = (value === 'true');
+										break;
+									case '--display-background-gradient-from':
+										colorConfig.displayBackgroundGradientFrom = value;
+										break;
+									case '--display-background-gradient-to':
+										colorConfig.displayBackgroundGradientTo = value;
+										break;
+									case '--display-line-color':
+										colorConfig.displayLineColor = value;
+										break;
+									case '--label-fill-color':
+										colorConfig.labelFillColor = value;
+										break;
+									case '--with-display-shadow':
+										colorConfig.withDisplayShadow = (value === 'true');
+										break;
+									case '--shadow-color':
+										colorConfig.shadowColor = value;
+										break;
+									case '--outline-color':
+										colorConfig.outlineColor = value;
+										break;
+									case '--major-tick-color':
+										colorConfig.majorTickColor = value;
+										break;
+									case '--minor-tick-color':
+										colorConfig.minorTickColor = value;
+										break;
+									case '--value-color':
+										colorConfig.valueColor = value;
+										break;
+									case '--value-outline-color':
+										colorConfig.valueOutlineColor = value;
+										break;
+									case '--value-nb-decimal':
+										colorConfig.valueNbDecimal = value;
+										break;
+									case '--hand-color':
+										colorConfig.handColor = value;
+										break;
+									case '--hand-outline-color':
+										colorConfig.handOutlineColor = value;
+										break;
+									case '--with-hand-shadow':
+										colorConfig.withHandShadow = (value === 'true');
+										break;
+									case '--knob-color':
+										colorConfig.knobColor = value;
+										break;
+									case '--knob-outline-color':
+										colorConfig.knobOutlineColor = value;
+										break;
+									case '--font':
+										colorConfig.font = value;
+										break;
+									default:
+										break;
+								}
 							}
-						}
-					});
+						});
+					}
 				}
+			} catch (error) {
+				// absorb, cssRules
 			}
 		}
 		return colorConfig;
@@ -190,11 +194,15 @@ function AnalogDisplay(cName,                     // Canvas Name
 		nbDecimal = analogDisplayColorConfig.valueNbDecimal;
 	}
 
-	if (events !== undefined) {
-		events.subscribe('color-scheme-changed', (val) => {
+	try {
+		if (events !== undefined) {
+			events.subscribe('color-scheme-changed', (val) => {
 //    console.log('Color scheme changed:', val);
-			reloadColorConfig();
-		});
+				reloadColorConfig();
+			});
+		}
+	} catch (error) {
+		// Absorb
 	}
 	analogDisplayColorConfig = getColorConfig();
 

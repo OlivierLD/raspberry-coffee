@@ -1,5 +1,7 @@
 "use strict";
 
+const VERBOSE = false;
+
 function cacheClient(dataManager, bp) {
 
 	let onMessage = dataManager; // Client function
@@ -55,6 +57,9 @@ function cacheClient(dataManager, bp) {
 
 // Executed at startup
 	(() => {
+		if (VERBOSE) {
+			console.log(">> Starting Cache Client");
+		}
 		// Long poll
 		setInterval(() => {
 			fetch();
@@ -64,7 +69,9 @@ function cacheClient(dataManager, bp) {
 	function fetch() {
 		let getData = getNMEAData();
 		getData.then((value) => {
-			//  console.log("Done:", value);
+			if (VERBOSE) {
+				console.log("Done:", value);
+			}
 			let json = JSON.parse(value);
 			onMessage(json);
 		}, (error, errmess) => {

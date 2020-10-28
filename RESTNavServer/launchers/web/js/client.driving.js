@@ -12,13 +12,38 @@ if (Math.toRadians === undefined) {
 	}
 }
 
+function lpad(str, len, pad) {
+	let padded = str;
+	while (padded.length < len) {
+		padded = (pad !== undefined ? pad : ' ') + padded;
+	}
+	return padded;
+}
+
+function decToSex(val, ns_ew) {
+	let absVal = Math.abs(val);
+	let intValue = Math.floor(absVal);
+	let dec = absVal - intValue;
+	dec *= 60;
+	let s = "";
+	if (val < 0) {
+		s += (ns_ew === 'NS' ? 'S' : 'W');
+	} else {
+		s += (ns_ew === 'NS' ? 'N' : 'E');
+	}
+	s += " ";
+	s += intValue + /*"°"*/ "&deg;" + lpad(dec.toFixed(2), 5, '0') + "'";
+//  s = intValue + String.fromCharCode(176) + dec.toFixed(2) + "'";
+	return s;
+}
+
 function onMessage(json) {
 	document.getElementById("raw-json").innerText = JSON.stringify(json, null, 2);
 
 	if (json.Position !== undefined) {
 		try {
-			clear("mapCanvas");
-			drawWorldMap("mapCanvas");
+			// clear("mapCanvas");
+			// drawWorldMap("mapCanvas");
 		} catch (absorb) {
 		}
 		plotPositionOnChart({lat: json.Position.lat, lng: json.Position.lng});
@@ -116,6 +141,7 @@ function getSNRColor(snr) {
 	return c;
 }
 
+/*
 function decToSex(val, ns_ew) {
 	let absVal = Math.abs(val);
 	let intValue = Math.floor(absVal);
@@ -131,6 +157,7 @@ function decToSex(val, ns_ew) {
 	}
 	return s;
 }
+*/
 
 function displayMessage(mess) {
 	let messList = statusFld.innerHTML;

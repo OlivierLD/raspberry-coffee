@@ -30,20 +30,20 @@
     <script type="text/javascript" src="widgets/SatellitesPlotter.js"></script>
     <script type="text/javascript" src="widgets/AnalogDisplay.js"></script>
     <script type="text/javascript">
-      var statusFld;
-      var satData;
-      var nmeaID;
-      var rose;
-      var displayBSP;
-      var satellitesPlotter;
+      let statusFld;
+      let satData;
+      let nmeaID;
+      let rose;
+      let displayBSP;
+      let satellitesPlotter;
 
-      var leafletMap;
-      var posMarker;
-      var track = [];
-      var polyline;
-      var lastLatlng;
+      let leafletMap;
+      let posMarker;
+      let track = [];
+      let polyline;
+      let lastLatlng;
 
-      window.onload = function() {
+      window.onload = () => {
         statusFld = document.getElementById("status");
         satData = document.getElementById("satData");
         nmeaID = document.getElementById("id");
@@ -64,8 +64,8 @@
       };
 
       // Plot position on the chart
-      var plotPositionOnChart = function(val) {
-        var pos = [val.lat, val.lng];
+      let plotPositionOnChart = (val) => {
+        let pos = [val.lat, val.lng];
         lastLatlng = L.latLng(val.lat, val.lng);
 
         if (posMarker === undefined) {
@@ -82,20 +82,20 @@
         }
       };
 
-      var plotSatelliteOnChart = function(position, label, color) { // Don't plot.
+      let plotSatelliteOnChart = function(position, label, color) { // Don't plot.
       };
 
-      var onMarkerClick = function(event) {
-          var mess = '<b>GPS Position</b><br>' +
+      let onMarkerClick = function(event) {
+          let mess = '<b>GPS Position</b><br>' +
                      'L: ' + decToSex(event.latlng.lat, 'NS') + "<br>" +
                      'G: ' + decToSex(event.latlng.lng, 'EW');
-          var popup = L.popup()
+          let popup = L.popup()
               .setLatLng(event.latlng)
               .setContent(mess)
               .openOn(leafletMap);
       };
 
-      var recenter = function() {
+      let recenter = function() {
           if (lastLatlng !== undefined) {
               leafletMap.setView(lastLatlng);
           }

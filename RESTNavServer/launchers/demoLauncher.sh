@@ -198,7 +198,8 @@ do
 	    then
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/nmea/googlemaps.driving.html"
+		    # openBrowser "http://localhost:9999/web/googlemaps.driving.html"
+		    openBrowser "http://localhost:9999/web/leaflet.driving.html"
 	    fi
 	    GO=false
 	    ;;

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--meta charset="windows-1252"></meta-->
+    <meta charset="iso-8859-1"></meta>
+    <title>GPS/Leaflet Demo</title>
+    <link rel="icon" type="image/jpg" href="icons/palm.04.jpg">
+    <style>
+      * { font-family:tahoma; font-size:12px; padding:0px; margin:0px; }
+      p { line-height:18px; }
+    </style>
+
+    <link rel="icon" type="image/ico" href="icons/palm.01.ico">
+
+    <!--
+     | Requires the leafletjs resources to be in a "leaflet" directory under "web" if you want them locally
+     | Available from http://leafletjs.com/
+     -->
+    <!--link rel="stylesheet" href="leaflet/leaflet.css" />
+    <script src="leaflet/leaflet.js"></script-->
+
+    <!--link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></scrip-->
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+
+    <script type="text/javascript" src="js/jquery-2.1.3.js"></script>
+    <script type="text/javascript" src="widgets/CompassRose.js"></script>
+    <script type="text/javascript" src="widgets/SatellitesPlotter.js"></script>
+    <script type="text/javascript" src="widgets/AnalogDisplay.js"></script>
+  </head>
+  <body>
+    <table cellspacing="10" border="0">
+      <tr>
+        <td valign="top" colspan="3"><h2><div id="title">GPS Data</div></h2></td>
+      </tr>
+      <tr>
+        <td valign="top" style="vertical-align: top;"><img src="images/crosshair.png" width="30" height="30" onclick="recenter();" title="Re-center" alt="Re-center"></td>
+        <td style="vertical-align: top;"><div id="fixdate"></div></td>
+        <td style="vertical-align: top;">Sentence <span id="id"></span></td>
+      </tr>
+    </table>
+    <table cellspacing="10" border="0">
+      <tr>
+        <td valign="top"><div id="mapid" style="width: 800px; height: 400px;"></div></td>
+        <td valign="top">
+          <canvas id="satCanvas" width="240" height="240" title="Satellites in sight"></canvas>
+          <br>
+          <textarea id="raw-json" placeholder="Raw Data" style="width: 100%; font-family: Courier" rows="10"></textarea>
+        </td>
+        <td rowspan="4" valign="top">
+          <div id="satData"></div>
+        </td>
+      </tr>
+      <tr>
+        <td align="center" colspan="2">
+          <table>
+            <tr>
+              <td><canvas id="roseCanvas" width="500" height="50" title="True Heading (COG)"></canvas></td>
+              <td><canvas id="bspCanvas" width="240" height="120" title="Speed (SOG) in knots"></canvas></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" colspan="2">
+          <div id="status" style="padding:5px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height: 80px;"></div>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top" align="right" colspan="2"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
+      </tr>
+    </table>
+    <hr>
+    <address>&copy; Oliv did it.</address>
+    <script src="js/cache.client.js"></script>
+    <script type="text/javascript">
+      let statusFld;
+      let satData;
+      let nmeaID;
+      let rose;
+      let displayBSP;
+      let satellitesPlotter;
+
+      let leafletMap;
+      let posMarker;
+      let track = [];
+      let polyline;
+      let lastLatlng;
+
+      (() => {
+        statusFld = document.getElementById("status");
+        satData = document.getElementById("satData");
+        nmeaID = document.getElementById("id");
+
+        leafletMap = L.map('mapid').setView([37.7491332457, -122.5069999], 8);
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+          maxZoom: 20,
+          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                  '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                  'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+          id: 'mapbox.streets'
+        }).addTo(leafletMap);
+
+        rose = new CompassRose('roseCanvas', 400, 50);
+        displayBSP = new AnalogDisplay('bspCanvas', 100,   15,  5,  1);
+        satellitesPlotter = new SatellitesPlotter("satCanvas", 100); // 100 is the radius.
+        //  plotPositionOnChart({ lat: 0, lng: 0 }); // Default
+      })();
+
+      // Plot position on the chart
+      let plotPositionOnChart = (val) => {
+        let pos = [val.lat, val.lng];
+        lastLatlng = L.latLng(val.lat, val.lng);
+
+        if (posMarker === undefined) {
+          posMarker = L.marker(lastLatlng).addTo(leafletMap);
+          posMarker.on('click', onMarkerClick);
+        } else {
+          posMarker.setLatLng(lastLatlng);
+        }
+        track.push(pos);
+        if (polyline === undefined) {
+          polyline = L.polyline(track, {color: 'red'}).addTo(leafletMap);
+        } else {
+          polyline.setLatLngs(track);
+        }
+      };
+
+      let plotSatelliteOnChart = function(position, label, color) { // Don't plot.
+      };
+
+      let onMarkerClick = function(event) {
+        let mess = '<b>GPS Position</b><br>' +
+                'L: ' + decToSex(event.latlng.lat, 'NS') + "<br>" +
+                'G: ' + decToSex(event.latlng.lng, 'EW');
+        let popup = L.popup()
+                .setLatLng(event.latlng)
+                .setContent(mess)
+                .openOn(leafletMap);
+      };
+
+      let recenter = function() {
+        if (lastLatlng !== undefined) {
+          leafletMap.setView(lastLatlng);
+        }
+      };
+    </script>
+    <script src="js/client.driving.js"></script>
+    <script type="text/javascript">
+      window.onload = () => {
+        let dataCacheClient = new cacheClient(onMessage);
+      }
+    </script>
+  </body>
+</html>
