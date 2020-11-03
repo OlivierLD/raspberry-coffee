@@ -1,6 +1,7 @@
 Moved to <https://github.com/OlivierLD/oliv-ai>
 
 ### OpenCV (for Java) on the Raspberry Pi?
+- [OpenCV with Java(FX)](https://github.com/opencv-java/)
 - Instructions are available at <https://opencv-java-tutorials.readthedocs.io/en/latest/01-installing-opencv-for-java.html#introduction-to-opencv-for-java>
 - Also, worth a look: <https://www.learnopencv.com/install-opencv-4-on-raspberry-pi/>
 - And <https://gist.github.com/ivanursul/146b3474a7f3449ec70729f5c7f946ee>
@@ -8,7 +9,7 @@ Moved to <https://github.com/OlivierLD/oliv-ai>
 Some differences below with the scripts provided above...
 
 #### April-30, 2020.
-Raspian Buster comes with a JDK 11.
+Raspbian Buster comes with a JDK 11.
 ```
 $ export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-armhf/
 ```
@@ -33,7 +34,8 @@ sudo apt-get install build-essential cmake ant
 - `cd opencv-4.3.0`
 - `mkdir build`
 - `cd build`
-Make it (this one takes time, hours...):
+- Make sure your `$JAVA_HOME` is set
+- Make it (this one takes time, like hours...):
 ```
 cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D WITH_LIBV4L=ON \
@@ -48,7 +50,7 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 - `sudo make`
 - `sudo make install`
 
-Quick test, from python
+After that, quick test, from Python
 ```
 $ python3
 
@@ -73,6 +75,8 @@ total 20M
 1075459 640K -rw-r--r-- 1 root root 639K Apr 30 10:09 opencv-430.jar
 pi@rpi-buster:~/opencv-4.3.0/build $ 
 ``` 
+> Note the paths above may change if you are not on Debian on Raspi OS.
+> The `gradle` script(s) would be impacted.
 
 ## Some first tests
 - Update the `build.gradle` with the right paths

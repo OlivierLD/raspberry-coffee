@@ -494,7 +494,6 @@ This is where other JVM-compatible languages emerged.
         637: invokevirtual #23                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
         640: return
 }
-
 ```
 
 Scala for example, "only" had to create a compiler that turns Scala code into a `class` (containing `byte code`) - just like the `javac` compiler does for Java code.

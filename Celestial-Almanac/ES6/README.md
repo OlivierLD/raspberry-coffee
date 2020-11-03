@@ -1,5 +1,5 @@
 # JS Celestial Almanac
-- Ported in ES6 from [Henning Umland](https://www.celnav.de/)'s code.
+- Ported in ES6 from [Henning Umland](https://www.celnav.de/) 's code.
 - See the original web page [here](https://www.celnav.de/longterm.htm), for reference.
 - Henning Umland's "[A Short Guide to Celestial Navigation](http://www.titulosnauticos.net/astro/)"
 

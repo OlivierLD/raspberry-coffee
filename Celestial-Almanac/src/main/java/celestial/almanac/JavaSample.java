@@ -75,7 +75,7 @@ public class JavaSample {
 		// All calculations here
 		AstroComputer.calculate(
 				date.get(Calendar.YEAR),
-				date.get(Calendar.MONTH) + 1,
+				date.get(Calendar.MONTH) + 1, // Jan: 1, Dec: 12.
 				date.get(Calendar.DAY_OF_MONTH),
 				date.get(Calendar.HOUR_OF_DAY), // and not just HOUR !!!!
 				date.get(Calendar.MINUTE),
