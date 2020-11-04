@@ -44,7 +44,7 @@ GO=true
 # Banner done with https://manytools.org/hacker-tools/ascii-banner/, 'Slant Relief'
 #
 cat banner.txt
-sleep 5
+sleep 2
 #
 while [[ "$GO" == "true" ]]
 do

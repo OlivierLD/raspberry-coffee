@@ -251,9 +251,9 @@
 
         try {
             document.getElementById('last-dev-z-move').innerHTML = json.MOVING_AZIMUTH_END.date + '<br/>' +
-                '(' + json.MOVING_AZIMUTH_END.nbSteps + ' move(s) in ' + json.MOVING_AZIMUTH_END.elapsed + ' ms)';
+                '(' + json.MOVING_AZIMUTH_END.nbSteps.toLocaleString() + ' move(s) in ' + json.MOVING_AZIMUTH_END.elapsed.toLocaleString() + ' ms)';
             document.getElementById('last-dev-el-move').innerHTML = json.MOVING_ELEVATION_END.date + '<br/>' +
-                '(' + json.MOVING_ELEVATION_END.nbSteps + ' move(s) in ' + json.MOVING_ELEVATION_END.elapsed + ' ms)';
+                '(' + json.MOVING_ELEVATION_END.nbSteps.toLocaleString() + ' move(s) in ' + json.MOVING_ELEVATION_END.elapsed.toLocaleString() + ' ms)';
             document.getElementById('raw-json').innerHTML = '<pre>' + JSON.stringify(json, null, 2) + '</pre>';
         } catch (error) {} // No date yet?
 
