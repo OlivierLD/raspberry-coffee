@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <!--
- | Very basic UI for SunFlower
+ | Very basic UI for SunFlower.
  | Mostly illustrates how to get to the REST services.
+ | But all data are available this way.
+ | Features a dynamic background, to display Sun's data.
  +-->
 <html lang="en">
 <head>
@@ -11,7 +13,7 @@
     <script src="js/ajax.manager.js"></script>
     <script src="js/date.proto.js"></script>
     <script type="text/javascript">
-        function decToSex(val, ns_ew, withDeg) {
+        let decToSex = (val, ns_ew, withDeg) => {
             let absVal = Math.abs(val);
             let intValue = Math.floor(absVal);
             let dec = absVal - intValue;
@@ -35,7 +37,7 @@
 //    s += i + "\"" + dec.toFixed(2) + "'";
             s += i + sep + dec.toFixed(2) + "'";
             return s;
-        }
+        };
 
         const FRAME_WIDTH  = 160;
         const FRAME_HEIGHT = 160;
@@ -46,7 +48,16 @@
                 return (deg / 180) * Math.PI;
             };
         }
-        function drawArrow(divId, dir, force) {
+
+        /**
+         * Draw a direction arrow, using SVG
+         *
+         * @param divId ID of the div to draw the arrow in
+         * @param dir Direction to represent in degrees, number [0..360], or object { value: number, label: 'string' }
+         * @param force Optional. Used for wind (Beaufort)
+         * @returns {{svgContent: SVGSVGElement, x: number, y: number}}
+         */
+        let drawArrow = (divId, dir, force) => {
             let label = '';
             let fillColor = 'white';
             if (force !== undefined) {
@@ -156,7 +167,7 @@
             } else {
                 return svgContent;
             }
-        }
+        };
     </script>
     <style type="text/css">
         body {
