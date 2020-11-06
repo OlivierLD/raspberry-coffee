@@ -53,7 +53,8 @@
          * Draw a direction arrow, using SVG
          *
          * @param divId ID of the div to draw the arrow in
-         * @param dir Direction to represent in degrees, number [0..360], or object { value: number, label: 'string' }
+         * @param dir Direction to represent in degrees, number [0..360], or object { value: number, label: 'string' }.
+         *            label would be like "ENE" when dir is 67.5, for example.
          * @param force Optional. Used for wind (Beaufort)
          * @returns {{svgContent: SVGSVGElement, x: number, y: number}}
          */
