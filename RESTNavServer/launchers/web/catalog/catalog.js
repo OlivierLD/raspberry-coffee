@@ -25,7 +25,8 @@ const faxEffects = {
 
 const mapProjections = {
 	globe: "GLOBE",
-	mercator: "MERCATOR" // TODO LAMBERT and others
+	mercator: "MERCATOR"
+	// TODO LAMBERT and others
 };
 
 const compositeCatalog = [

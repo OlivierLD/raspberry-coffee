@@ -30,10 +30,12 @@ import static oliv.android.astrocomputer.GPSTracker.LOG_TAG;
 /*
  * There is commented code in this class.
  * This is still a work in progress, mostly at the life cycle level.
+ *
+ * Click on the button to star/stop the log must be a double-click.
  */
 public class MainActivity extends AppCompatActivity {
 
-    private final static long BW_LOOPS = 250L;
+    private final static long BETWEEN_LOOPS = 250L;
     private final static int SPEED_THRESHOLD = 40; // Ignore if speed is above this limit (im m/s)
 
     private TextView dateTimeHolder = null;
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         lastClick = thisClick;
         isLogging = !isLogging;
         firstTimeLogging = "Log GPS Data".equals(logButton.getText()); // Compare to original button label
-        logButton.setText(isLogging ? "Pause Logging" : "Resume Logging");
+        logButton.setText(isLogging ? "Pause Logging (dbl-clk)" : "Resume Logging (dbl-clk)");
         if (isLogging) {
             try {
                 File logFile = new File(getExternalFilesDir(null), logFileName);
@@ -332,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 try {
-                    Thread.sleep(BW_LOOPS);
+                    Thread.sleep(BETWEEN_LOOPS);
                 } catch (InterruptedException ie) {
                     Log.d(LOG_TAG, ie.toString());
                 }

@@ -1,7 +1,7 @@
 package oliv.android.graphicsample;
 
 /*
- * Tutorial at
+ * Tutorials at
  * - https://stackoverflow.com/questions/17954596/how-to-draw-circle-by-canvas-in-android
  * - https://mkyong.com/android/android-imageview-example/
  */

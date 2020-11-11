@@ -57,4 +57,8 @@ The GUI is defined by the `xml` files in the `res` section.
 
 Android Studio comes with a graphical editor for those files.
 
+#### TODO
+- Upgrade the `HomeRemoteControl`
+- Tide Computer, based on the `Raspberry-Coffee` `RestTideEngine`.
+- AstroComputer GUI
 ---

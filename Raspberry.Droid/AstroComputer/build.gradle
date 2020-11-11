@@ -13,6 +13,12 @@ buildscript {
     }
 }
 
+//compileJava.options.compilerArgs += ["-Xlint:none"]
+//compileJava {
+//    options.encoding = 'UTF-8'
+//    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+//}
+
 allprojects {
     repositories {
         google()

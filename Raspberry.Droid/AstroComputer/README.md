@@ -44,7 +44,7 @@ To get the connected devices ID's:
    e2df64a3               device usb:337641472X product:heroqlteuc model:SAMSUNG_SM_G930A device:heroqlteatt transport_id:58
 ```
 
-To get the log file:
+To get the log file (in Android File Transfer, see it in `/Android/data/oliv.android.astrocomputer/files`), see screenshot below:
 ```
  $ adb pull sdcard/Android/data/oliv.android.astrocomputer/files/GPS_DATA_23_Nov_2019_13_37_19.csv ./GPS_DATA.csv
  sdcard/Android/data/oliv.android.astrocomputer/files/GPS_DATA_23_Nov_2019_13_37_19.csv: 1 file pulled. 0.6 MB/s (2342 bytes in 0.004s)
@@ -120,4 +120,4 @@ Then its content can be referred to as in:
 - See <https://developer.android.com/training/basics/firstapp/building-ui>
 
 ## TODO
-Do it with the Maven coordinates of the `AstroComputer`.  
+Do it with the Maven coordinates of the `AstroComputer`, without the duplicated code in the Android App itself.  
