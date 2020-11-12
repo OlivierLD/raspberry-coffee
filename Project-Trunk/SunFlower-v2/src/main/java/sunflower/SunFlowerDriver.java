@@ -1004,11 +1004,11 @@ public class SunFlowerDriver {
 	private void displayOled() {
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 		boolean oneLine = false;
-		int fontFact = 2;
+		int fontFactor = 2;
 		if (oneLine) {
-			fontFact = 2;
+			fontFactor = 3;
 			String display = String.format("%.01f/%.01f", currentDeviceElevation, currentDeviceAzimuth);
-			sb.text(display, 2, (2 * fontFact) + 1 /*(fontFact * 8)*/, fontFact, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(display, 2, (2 * fontFactor) + 1 /*(fontFact * 8)*/, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 		} else {
 			String lineOne = String.format(
 					"El: %.02f", // "Dev. Elevation %.02f",
@@ -1016,8 +1016,8 @@ public class SunFlowerDriver {
 			String lineTwo = String.format(
 					"Z:  %.02f", // "Dev. Azimuth %.02f",
 					currentDeviceAzimuth);
-			sb.text(lineOne, 2, 1 + (fontFact * 3) + (0 * (fontFact * 8)), fontFact, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(lineTwo, 2, 1 + (fontFact * 3) + (1 * (fontFact * 8)), fontFact, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(lineOne, 2, 1 + (fontFactor * 3) + (0 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(lineTwo, 2, 1 + (fontFactor * 3) + (1 * (fontFactor * 8)), fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 		}
 		if (oled != null) {
 			oled.setBuffer(sb.getScreenBuffer());

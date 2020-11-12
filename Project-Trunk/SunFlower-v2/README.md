@@ -350,6 +350,8 @@ Here is an interesting setting, with a Raspberry Pi Zero:
 3D-Printed stand
 - There is a [3D-printed stand](./STL/ProjectBoxRPiZero.with.feet.stl) for the Raspberry Pi Zero.
             
-<!-- TODO Picture of the new setting -->
+![RPi Zero](./pictures/RPi.zero.jpg)
             
+![RPi Zero](./pictures/RPi.zero.display.jpg)
+
 ---
