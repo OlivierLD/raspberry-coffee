@@ -1162,9 +1162,19 @@ public class SunFlowerDriver {
 		}
 		// End
 		if (withSSD1306) {
+			// Clear the screen before shutting down.
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 			if (oled != null) {
+				oled.setBuffer(sb.getScreenBuffer());
+				try {
+					oled.display();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 				oled.shutdown();
 			} else if (substitute != null) {
+				substitute.setBuffer(sb.getScreenBuffer());
+				substitute.display();
 				substitute.dispose();
 			}
 		}
