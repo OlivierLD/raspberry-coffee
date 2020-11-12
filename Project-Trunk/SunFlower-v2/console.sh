@@ -25,7 +25,7 @@ JAVA_OPTS="$JAVA_OPTS -Dazimuth.inverted=false"  # For V5
 #
 JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=true"
 #
-JAVA_OPTS="$JAVA_OPTS -Dwith.ssd1306=false"
+JAVA_OPTS="$JAVA_OPTS -Dwith.ssd1306=true"
 #
 # echo -e "Using JAVA_OPTS: ${JAVA_OPTS}"
 #
