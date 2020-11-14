@@ -68,7 +68,7 @@
             let direction;  // = dir; //  + 180;
             if (typeof(dir) === 'number') {
                 direction = dir - 180;
-                label += `Sun Z: ${dir.toFixed(0)}°`
+                label += `Sun Z: ${dir.toFixed(1)}°`
             } else {
                 try {
                     direction = dir.value;
