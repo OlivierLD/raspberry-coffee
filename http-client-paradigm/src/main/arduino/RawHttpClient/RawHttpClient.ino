@@ -7,6 +7,7 @@
 
 /*
    Make REST requests - It's a REST client, running on M5Stick-C
+   -------------------------------------------------------------
    Basic REST mechanism. NO GUI.
    Output go on the Serial Console.
 
