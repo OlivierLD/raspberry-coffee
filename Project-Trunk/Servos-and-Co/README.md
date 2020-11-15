@@ -411,6 +411,10 @@ Volume: 042.7% (0437) => 1.410 V, -22.75 degree(s)
 . . .
 ```
 
+##### WebSockets
+- Requires a WS server, `NodeJs` can do it: <https://www.w3schools.com/nodejs/nodejs_raspberrypi.asp>
+
+
 #### Let's try
 With the values found above:
 ```

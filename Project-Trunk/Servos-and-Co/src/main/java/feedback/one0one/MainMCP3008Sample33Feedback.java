@@ -49,7 +49,7 @@ public class MainMCP3008Sample33Feedback {
 
 	private static void initWSConnection(String serverURI) {
 		try {
-			webSocketClient = new WebSocketClient(new URI(serverURI), (Draft) null) {
+			webSocketClient = new WebSocketClient(new URI(serverURI)) { // }, (Draft) null) {
 				@Override
 				public void onOpen(ServerHandshake serverHandshake) {
 					// TODO Implement this method
@@ -212,6 +212,9 @@ public class MainMCP3008Sample33Feedback {
 			go = false;
 			synchronized (Thread.currentThread()) {
 				Thread.currentThread().notify();
+			}
+			if (webSocketClient != null) {
+				webSocketClient.close();
 			}
 		}, "Shutdown Hook"));
 		int lastRead = 0;
