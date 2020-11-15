@@ -173,7 +173,7 @@ wsServer.on('request', (request) => {
     console.log((new Date()) + ' Connection accepted.');
 
     // user sent some message
-    connection.on('message', function (message) {
+    connection.on('message', (message) => {
         if (message.type === 'utf8') { // accept only text
             console.log((new Date()) + ' Received Message: ' + message.utf8Data);
 
