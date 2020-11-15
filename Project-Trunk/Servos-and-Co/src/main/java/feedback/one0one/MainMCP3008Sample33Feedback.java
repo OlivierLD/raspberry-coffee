@@ -3,7 +3,7 @@ package feedback.one0one;
 import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft;
+//import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
 import utils.PinUtil;
 import utils.StringUtils;
@@ -71,7 +71,8 @@ public class MainMCP3008Sample33Feedback {
 					// TODO Implement this method
 				}
 			};
-			System.out.println(String.format("WS Connection on %s OK.", serverURI));
+			boolean b = webSocketClient.connectBlocking();
+			System.out.println(String.format("WS Connection on %s OK %s.", serverURI, b));
 		} catch (Exception ex) {
 			System.err.println("WebSocket connection:");
 			ex.printStackTrace();
@@ -314,10 +315,10 @@ public class MainMCP3008Sample33Feedback {
 								volume,
 								adc,
 								(vRef * (adc / 1023.0)),  // Volts
-								deviceAngle));           // Angle, centered (default on 300 degrees range)
-						// TODO If WebSocket Server exists
+								deviceAngle));            // Angle, centered (default on 300 degrees range)
+						// If WebSocket Server exists
 						if (webSocketClient != null) {
-							webSocketClient.send(Double.toString(deviceAngle));
+							webSocketClient.send(Double.toString(deviceAngle)); // Push message
 						}
 
 					} catch (Exception whatever) {
