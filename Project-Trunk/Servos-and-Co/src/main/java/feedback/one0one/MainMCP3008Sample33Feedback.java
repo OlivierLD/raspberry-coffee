@@ -48,8 +48,9 @@ public class MainMCP3008Sample33Feedback {
 	private static WebSocketClient webSocketClient = null;
 
 	private static void initWSConnection(String serverURI) {
+		System.out.println(String.format("Try to connect on %s", serverURI));
 		try {
-			webSocketClient = new WebSocketClient(new URI(serverURI)) { // }, (Draft) null) {
+			webSocketClient = new WebSocketClient(new URI(serverURI)) { // , (Draft) null) {
 				@Override
 				public void onOpen(ServerHandshake serverHandshake) {
 					// TODO Implement this method
@@ -70,6 +71,7 @@ public class MainMCP3008Sample33Feedback {
 					// TODO Implement this method
 				}
 			};
+			System.out.println(String.format("WS Connection on %s OK.", serverURI));
 		} catch (Exception ex) {
 			System.err.println("WebSocket connection:");
 			ex.printStackTrace();
