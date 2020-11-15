@@ -104,9 +104,9 @@ Using the scripts `demo.interactive.servo.sh` and `feedback.mcp3008.sh`:
 
 ### Required arguments
 ```
---servo-channel:0 
---knob-channel:0 
---feedback-channel:1 
+--servo-channel:0     # On the PCA9685
+--knob-channel:0      # On the MCP3008
+--feedback-channel:1  # On the MCP3008
 --servo-freq:XX 
 --servo-stop-pwm:XX
 --servo-forward-pwm:XX 
@@ -388,11 +388,11 @@ Function coefficients for f(x) = a.x + b:
 	b:-133.230337
 
 Parameter validation:
-ADC=0512 -> -3.792135?
-ADC=0171 -> -90.000000?
-ADC=0883 -> 90.000000?
-ADC=0000 -> -133.230337?
-ADC=1023 -> 125.393258?
+ADC=0512 -> -3.792135°
+ADC=0171 -> -90.000000°
+ADC=0883 -> 90.000000°
+ADC=0000 -> -133.230337°
+ADC=1023 -> 125.393258°
 Volume: 050.2% (0514) => 1.658 V, -03.29 degree(s)
 Volume: 050.4% (0516) => 1.665 V, -02.78 degree(s)
 Volume: 050.2% (0514) => 1.658 V, -03.29 degree(s)

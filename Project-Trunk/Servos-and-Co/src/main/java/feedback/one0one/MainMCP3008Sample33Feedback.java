@@ -2,9 +2,13 @@ package feedback.one0one;
 
 import analogdigitalconverter.mcp.MCPReader;
 import com.pi4j.io.gpio.Pin;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.drafts.Draft;
+import org.java_websocket.handshake.ServerHandshake;
 import utils.PinUtil;
 import utils.StringUtils;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.OptionalInt;
 import java.util.function.Function;
@@ -40,6 +44,36 @@ public class MainMCP3008Sample33Feedback {
 	private static final String PLUS_90_PREFIX = "--plus90:";
 
 	private static Function<Integer, Double> adcToDegTransformer = x -> (((x / 1023.0) * 300d) - (300d / 2)); // Default behavior
+
+	private static WebSocketClient webSocketClient = null;
+
+	private static void initWSConnection(String serverURI) {
+		try {
+			webSocketClient = new WebSocketClient(new URI(serverURI), (Draft) null) {
+				@Override
+				public void onOpen(ServerHandshake serverHandshake) {
+					// TODO Implement this method
+				}
+
+				@Override
+				public void onMessage(String string) {
+					// TODO Implement this method
+				}
+
+				@Override
+				public void onClose(int i, String string, boolean b) {
+					// TODO Implement this method
+				}
+
+				@Override
+				public void onError(Exception exception) {
+					// TODO Implement this method
+				}
+			};
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 
 	public static void main(String... args) {
 
@@ -241,6 +275,12 @@ public class MainMCP3008Sample33Feedback {
 			System.out.println(String.format("ADC=%04d -> %f\272", 1023, adcToDegrees.apply(1023)));
 			// Done!
 			adcToDegTransformer = adcToDegrees;
+
+			// WebSockets?
+			String wsURI = System.getProperty("ws.uri");
+			if (wsURI != null) {
+				initWSConnection(wsURI);
+			}
 		}
 
 		// Reading loop
@@ -269,6 +309,11 @@ public class MainMCP3008Sample33Feedback {
 								adc,
 								(vRef * (adc / 1023.0)),  // Volts
 								deviceAngle));           // Angle, centered (default on 300 degrees range)
+						// TODO If WebSocket Server exists
+						if (webSocketClient != null) {
+							webSocketClient.send(Double.toString(deviceAngle));
+						}
+
 					} catch (Exception whatever) {
 						whatever.printStackTrace();
 						System.out.println("Volume :" + volume +

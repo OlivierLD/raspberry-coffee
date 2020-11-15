@@ -19,18 +19,18 @@
 process.title = 'node-chat';
 
 // Port where we'll run the websocket server
-var port = 9876;
+let port = 9876;
 
 // websocket and http servers
-var webSocketServer = require('websocket').server;
-var http = require('http');
-var fs = require('fs');
+let webSocketServer = require('websocket').server;
+let http = require('http');
+let fs = require('fs');
 
-var verbose = false;
+let verbose = false;
 
 if (typeof String.prototype.startsWith != 'function') {
     String.prototype.startsWith = function (str) {
-        return this.indexOf(str) == 0;
+        return this.indexOf(str) === 0;
     };
 }
 
@@ -41,7 +41,7 @@ if (typeof String.prototype.endsWith != 'function') {
 }
 
 function handler(req, res) {
-    var respContent = "";
+    let respContent = "";
     if (verbose) {
         console.log("Speaking HTTP from " + __dirname);
         console.log("Server received an HTTP Request:\n" + req.method + "\n" + req.url + "\n-------------");
@@ -52,69 +52,70 @@ function handler(req, res) {
         console.log("Search: [" + prms.search + "]");
         console.log("-------------------------------");
     }
-    if (req.url.startsWith("/data/")) // Static resource
-    {
-        var resource = req.url.substring("/data/".length);
+    if (req.url.startsWith("/data/")) { // Static resource
+        let resource = req.url.substring("/data/".length);
         console.log('Loading static ' + req.url + " (" + resource + ")");
-        fs.readFile(__dirname + '/' + resource,
-            function (err, data) {
-                if (err) {
-                    res.writeHead(500);
-                    return res.end('Error loading ' + resource);
-                }
-                if (verbose)
-                    console.log("Read resource content:\n---------------\n" + data + "\n--------------");
-                var contentType = "text/html";
-                if (resource.endsWith(".css"))
-                    contentType = "text/css";
-                else if (resource.endsWith(".html"))
-                    contentType = "text/html";
-                else if (resource.endsWith(".xml"))
-                    contentType = "text/xml";
-                else if (resource.endsWith(".js"))
-                    contentType = "text/javascript";
-                else if (resource.endsWith(".jpg"))
-                    contentType = "image/jpg";
-                else if (resource.endsWith(".gif"))
-                    contentType = "image/gif";
-                else if (resource.endsWith(".png"))
-                    contentType = "image/png";
-
-                res.writeHead(200, {'Content-Type': contentType});
-                //  console.log('Data is ' + typeof(data));
-                if (resource.endsWith(".jpg") ||
-                    resource.endsWith(".gif") ||
-                    resource.endsWith(".png")) {
-                    //  res.writeHead(200, {'Content-Type': 'image/gif' });
-                    res.end(data, 'binary');
-                } else
-                    res.end(data.toString().replace('$PORT$', port.toString())); // Replace $PORT$ with the actual port value.
-            });
+        fs.readFile(__dirname + '/' + resource, (err, data) => {
+            if (err) {
+                res.writeHead(500);
+                return res.end('Error loading ' + resource);
+            }
+            if (verbose) {
+                console.log("Read resource content:\n---------------\n" + data + "\n--------------");
+            }
+            let contentType = "text/html";
+            if (resource.endsWith(".css")) {
+                contentType = "text/css";
+            } else if (resource.endsWith(".html")) {
+                contentType = "text/html";
+            } else if (resource.endsWith(".xml")) {
+                contentType = "text/xml";
+            } else if (resource.endsWith(".js")) {
+                contentType = "text/javascript";
+            } else if (resource.endsWith(".jpg")) {
+                contentType = "image/jpg";
+            } else if (resource.endsWith(".gif")) {
+                contentType = "image/gif";
+            } else if (resource.endsWith(".png")) {
+                contentType = "image/png";
+            }
+            res.writeHead(200, {'Content-Type': contentType});
+            //  console.log('Data is ' + typeof(data));
+            if (resource.endsWith(".jpg") ||
+                resource.endsWith(".gif") ||
+                resource.endsWith(".png")) {
+                //  res.writeHead(200, {'Content-Type': 'image/gif' });
+                res.end(data, 'binary');
+            } else {
+                res.end(data.toString().replace('$PORT$', port.toString())); // Replace $PORT$ with the actual port value.
+            }
+        });
     } else if (req.url == "/") {
         if (req.method === "POST") {
-            var data = "";
+            let data = "";
             console.log("---- Headers ----");
-            for (var item in req.headers)
+            for (let item in req.headers) {
                 console.log(item + ": " + req.headers[item]);
+            }
             console.log("-----------------");
 
-            req.on("data", function (chunk) {
+            req.on("data", (chunk) => {
                 data += chunk;
             });
 
-            req.on("end", function () {
+            req.on("end", () => {
                 console.log("POST request: [" + data + "]");
-                if (req.headers["tyrus-ws-attempt"] !== "undefined" && req.headers["tyrus-ws-attempt"] === "Hand-Shake") // List of the supoprted protocols
-                {
+                if (req.headers["tyrus-ws-attempt"] !== "undefined" && req.headers["tyrus-ws-attempt"] === "Hand-Shake") { // List of the supoprted protocols
                     console.log("    ... writing headers...");
                     res.writeHead(200, {
                         'Content-Type': 'application/json',
                         'tyrus-fallback-transports': 'WebSocket,MozWebSocket,XMLHttpRequest,FedEx,UPS',
                         'tyrus-connection-id': guid()
                     });
-                } else
+                } else {
                     res.writeHead(200, {'Content-Type': 'application/json'});
-                var status = {'status': 'OK'};
+                }
+                let status = {'status': 'OK'};
                 res.end(JSON.stringify(status));
             });
         }
@@ -131,7 +132,7 @@ function handler(req, res) {
  * Global variables
  */
 // list of currently connected clients (users)
-var clients = [];
+let clients = [];
 
 /**
  * Helper function for escaping input strings
@@ -144,16 +145,16 @@ function htmlEntities(str) {
 /**
  * HTTP server
  */
-var server = http.createServer(handler);
+let server = http.createServer(handler);
 
-server.listen(port, function () {
+server.listen(port, () => {
     console.log((new Date()) + " Server is listening on port " + port);
 });
 
 /**
  * WebSocket server
  */
-var wsServer = new webSocketServer({
+let wsServer = new webSocketServer({
     // WebSocket server is tied to a HTTP server. WebSocket request is just
     // an enhanced HTTP request. For more info http://tools.ietf.org/html/rfc6455#page-6
     httpServer: server
@@ -161,13 +162,13 @@ var wsServer = new webSocketServer({
 
 // This callback function is called every time someone
 // tries to connect to the WebSocket server
-wsServer.on('request', function (request) {
+wsServer.on('request', (request) => {
     console.log((new Date()) + ' Connection from origin ' + request.origin + '.');
 
     // accept connection - you should check 'request.origin' to make sure that
     // client is connecting from your website
     // (http://en.wikipedia.org/wiki/Same_origin_policy)
-    var connection = request.accept(null, request.origin);
+    let connection = request.accept(null, request.origin);
     clients.push(connection);
     console.log((new Date()) + ' Connection accepted.');
 
@@ -176,31 +177,29 @@ wsServer.on('request', function (request) {
         if (message.type === 'utf8') { // accept only text
             console.log((new Date()) + ' Received Message: ' + message.utf8Data);
 
-            var obj =
-                {
-                    time: (new Date()).getTime(),
-                    text: htmlEntities(message.utf8Data)
-                };
+            let obj = {
+                time: (new Date()).getTime(),
+                text: htmlEntities(message.utf8Data)
+            };
             // broadcast message to all connected clients. That's what this app is doing.
-            var json = JSON.stringify({type: 'message', data: obj});
-            for (var i = 0; i < clients.length; i++) {
+            let json = JSON.stringify({type: 'message', data: obj});
+            for (let i = 0; i < clients.length; i++) {
                 clients[i].sendUTF(json);
             }
         }
     });
 
     // user disconnected
-    connection.on('close', function (connection) {
+    connection.on('close', (connection) => {
         // Close
     });
-
 });
 
 function s4() {
     return (Math.floor((1 + Math.random()) * 0x10000) & 0xffff)
         .toString(16);
 //           .substring(1);
-};
+}
 
 function guid() {
     return s4() + "." + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + "." + s4() + "." + s4();
