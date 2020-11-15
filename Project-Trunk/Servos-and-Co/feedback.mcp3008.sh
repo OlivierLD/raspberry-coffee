@@ -43,7 +43,10 @@ case "$a" in
 		echo -e "Usage is $0 --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"
 		echo -e " ! IMPORTANT: For miso, mosi, clk & cs, use BCM pin numbers"
 		#
+		# Comment/uncomment at will
+		#
 		JAVA_OPTS="$JAVA_OPTS -Dws.uri=ws://localhost:9876/"
+		echo -e "Make sure you've started the WS Server, in src/main/node/, 'npm install', and 'node server.js'"
 		#
 		sudo java -cp ${CP} ${JAVA_OPTS} feedback.one0one.MainMCP3008Sample33Feedback --minus90:${adcMinus90} --plus90:${adcPlus90} $*
     ;;

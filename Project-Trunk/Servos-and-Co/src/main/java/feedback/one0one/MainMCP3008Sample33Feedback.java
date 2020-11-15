@@ -71,6 +71,7 @@ public class MainMCP3008Sample33Feedback {
 				}
 			};
 		} catch (Exception ex) {
+			System.err.println("WebSocket connection:");
 			ex.printStackTrace();
 		}
 	}
