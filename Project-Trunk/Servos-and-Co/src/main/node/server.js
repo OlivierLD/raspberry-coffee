@@ -57,6 +57,7 @@ function handler(req, res) {
         console.log('Loading static ' + req.url + " (" + resource + ")");
         fs.readFile(__dirname + '/' + resource, (err, data) => {
             if (err) {
+                console.log('Error:', err);
                 res.writeHead(500);
                 return res.end('Error loading ' + resource + ' (' + __dirname + '/' + resource + ')');
             }
