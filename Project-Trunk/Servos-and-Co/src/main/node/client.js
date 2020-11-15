@@ -34,8 +34,9 @@ let connection;
 	connection.onmessage = (message) => {
 		// console.log('onmessage:' + message);
 		// try to parse JSON message.
+		let json;
 		try {
-			let json = JSON.parse(message.data);
+			json = JSON.parse(message.data);
 		} catch (e) {
 			displayMessage('This doesn\'t look like a valid JSON: ' + message.data);
 			return;

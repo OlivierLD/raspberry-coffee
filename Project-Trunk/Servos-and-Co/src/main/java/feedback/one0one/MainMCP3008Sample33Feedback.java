@@ -72,7 +72,7 @@ public class MainMCP3008Sample33Feedback {
 				}
 			};
 			boolean b = webSocketClient.connectBlocking();
-			System.out.println(String.format("WS Connection on %s OK %s.", serverURI, b));
+			System.out.println(String.format("WS Connection on %s OK: %s.", serverURI, b));
 		} catch (Exception ex) {
 			System.err.println("WebSocket connection:");
 			ex.printStackTrace();
