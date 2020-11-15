@@ -216,7 +216,7 @@ public class MainMCP3008Sample33Feedback {
 			synchronized (Thread.currentThread()) {
 				Thread.currentThread().notify();
 			}
-			if (webSocketClient != null) {
+			if (webSocketClient != null && webSocketClient.isOpen()) {
 				webSocketClient.close();
 			}
 		}, "Shutdown Hook"));
@@ -318,6 +318,10 @@ public class MainMCP3008Sample33Feedback {
 								deviceAngle));            // Angle, centered (default on 300 degrees range)
 						// If WebSocket Server exists
 						if (webSocketClient != null) {
+							if (!webSocketClient.isOpen()) {
+								System.out.println("WS, Connecting before send...");
+								webSocketClient.connectBlocking();
+							}
 							webSocketClient.send(Double.toString(deviceAngle)); // Push message
 						}
 
