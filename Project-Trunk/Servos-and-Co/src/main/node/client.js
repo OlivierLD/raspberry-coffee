@@ -76,9 +76,13 @@ function sendMessage(msg) {
 }
 
 function displayMessage(mess) {
-	let messList = statusFld.innerHTML;
-	messList = (((messList !== undefined && messList.length) > 0 ? messList + '<br>' : '') + mess);
-	statusFld.innerHTML = messList;
+	if (statusFld !== undefined) {
+		let messList = statusFld.innerHTML;
+		messList = (((messList !== undefined && messList.length) > 0 ? messList + '<br>' : '') + mess);
+		statusFld.innerHTML = messList;
+	} else {
+		console.log("Displaying " + mess);
+	}
 }
 
 function resetStatus() {
