@@ -58,7 +58,7 @@ function handler(req, res) {
         fs.readFile(__dirname + '/' + resource, (err, data) => {
             if (err) {
                 res.writeHead(500);
-                return res.end('Error loading ' + resource);
+                return res.end('Error loading ' + resource + ' (' + __dirname + '/' + resource + ')');
             }
             if (verbose) {
                 console.log("Read resource content:\n---------------\n" + data + "\n--------------");
