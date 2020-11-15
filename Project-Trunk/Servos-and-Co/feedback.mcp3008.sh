@@ -1,5 +1,6 @@
 #!/bin/bash
 echo -e "Read an MCP3008 ADC, for orientation (angle) feedback"
+echo -e "Use it to calibrate the button driving the wheel (option 1)"
 #
 CP=./build/libs/Servos-and-Co-1.0-all.jar
 #
@@ -29,6 +30,7 @@ case "$a" in
 		sudo java -cp ${CP} ${JAVA_OPTS} feedback.one0one.MainMCP3008Sample33Feedback $*
     ;;
   "2")
+    echo -e "Enter limit values (-90 and 90 degrees)"
     echo -en "ADC value for -90 degrees > "
     read adcMinus90
     echo -en "ADC value for +90 degrees > "
