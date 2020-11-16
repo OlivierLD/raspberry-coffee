@@ -321,7 +321,7 @@ Enter the values found above:
 ADC value for -90 degrees > 171   
 ADC value for +90 degrees > 883
 ```
-Start playing with the knob, and see the corresponding angle value.
+Start playing with the knob, and see the corresponding angle values.
 ```
 Usage is ./feedback.mcp3008.sh --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
  ! IMPORTANT: For miso, mosi, clk & cs, use BCM pin numbers
@@ -411,13 +411,13 @@ Volume: 042.7% (0437) => 1.410 V, -22.75 degree(s)
 . . .
 ```
 
-##### WebSockets
+##### Bonus: WebSockets
 The setup can be splitted over 3 machines:
 - One to host the button and its software
 - One to host the WebSocket server
 - One to run the browser
 
-
+Run it
 - Requires a WS server, we will use `NodeJs` here: <https://www.w3schools.com/nodejs/nodejs_raspberrypi.asp>
 - On one machine, setup and start the WebSocket/HTTP server, from the `src/main/node` folder
     - Do once: `$ npm install`
@@ -446,7 +446,7 @@ ADC value for +90 degrees > 883
 - The HTML display changes when you move the button, in real time.        
 
 
-#### Let's try
+#### Let's try, drive the wheel from the button
 With the values found above:
 ```
 $ ./feedback.pots.sh --servo-channel:1 --knob-channel:0 --feedback-channel:1 \ 
