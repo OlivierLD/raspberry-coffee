@@ -412,7 +412,38 @@ Volume: 042.7% (0437) => 1.410 V, -22.75 degree(s)
 ```
 
 ##### WebSockets
-- Requires a WS server, `NodeJs` can do it: <https://www.w3schools.com/nodejs/nodejs_raspberrypi.asp>
+The setup can be splitted over 3 machines:
+- One to host the button and its software
+- One to host the WebSocket server
+- One to run the browser
+
+
+- Requires a WS server, we will use `NodeJs` here: <https://www.w3schools.com/nodejs/nodejs_raspberrypi.asp>
+- On one machine, setup and start the WebSocket/HTTP server, from the `src/main/node` folder
+    - Do once: `$ npm install`
+    - Then to start the server `$ node server.js`
+- In the script `feedback.mcp3008.sh`, make sure you've set the `ws.uri` variable
+    - Example `JAVA_OPTS="$JAVA_OPTS -Dws.uri=ws://192.168.42.6:9876/"`, where `192.168.42.6` is the IP of the machine hosting the WebSocket server
+- Then start the `feedback.mcp3008.sh`, using option `2`:
+```
+$ ./feedback.mcp3008.sh 
+Read an MCP3008 ADC, for orientation (angle) feedback
+Use it to calibrate the button driving the wheel (option 1)
++----------------+
+| 1: Calibration |
+| 2: For real    |
++------------+---+
+| Q: Bye     |
++------------+
+ You choose > 2
+Enter limit values (-90 and 90 degrees)
+ADC value for -90 degrees > 171
+ADC value for +90 degrees > 883
+. . .
+```
+- And from a browser, somewhere on the same network, reach `http://192.168.42.6:9876/data/display.html`
+![WS Display](./images/ws.display.png)     
+- The HTML display changes when you move the button, in real time.        
 
 
 #### Let's try
