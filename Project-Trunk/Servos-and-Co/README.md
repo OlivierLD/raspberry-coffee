@@ -413,7 +413,7 @@ Volume: 042.7% (0437) => 1.410 V, -22.75 degree(s)
 
 ##### Bonus: WebSockets
 The setup can be splitted over 3 machines:
-- One to host the button and its software
+- One to host the button and its ADC software
 - One to host the WebSocket server
 - One to run the browser
 
