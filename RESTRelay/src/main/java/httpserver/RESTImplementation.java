@@ -57,7 +57,7 @@ public class RESTImplementation {
 					"POST",
 					RELAY_PREFIX + "/status/{relay-id}",
 					this::setRelayStatus,
-					"Set the repay status, and return its json representation."),
+					"Set the relay status, and return its json representation."),
 			new Operation(
 					"GET",
 					RELAY_PREFIX + "/status/{relay-id}",
@@ -101,11 +101,11 @@ public class RESTImplementation {
 	}
 
 	/**
-	 * The payload is a requests like this
-	 *
+	 * The JSON payload is a requests like this
 	 * {
 	 *     "status": false
 	 * }
+	 * or form-data: status: on|off
 	 *
 	 * @param request
 	 * @return
@@ -121,16 +121,60 @@ public class RESTImplementation {
 			}
 		}
 
+		String contentType = request.getHeaders().get("Content-Type");
+
 		if (request.getContent() != null && request.getContent().length > 0) {
 			String payload = new String(request.getContent());
 			if (!"null".equals(payload)) {
 				if (verbose) {
 					System.out.println(String.format("Tx Request: %s", payload));
 				}
-				Gson gson = new GsonBuilder().create();
-				StringReader stringReader = new StringReader(payload);
+				RelayStatus relayStatus = null;
+				if (contentType.trim().startsWith("multipart/form-data;")) {
+/*
+ formData would look like this:
+----------------------------690508146199201755172091
+Content-Disposition: form-data; name="status"
+
+on
+----------------------------690508146199201755172091--
+*/
+					String separator = contentType.substring("multipart/form-data;".length()).split("=")[1]; // The part after 'boundary='
+					String[] formPayloadElements = payload.split(separator + "\r\n");
+					for (String oneFormParam : formPayloadElements) {
+						String[] paramElements = oneFormParam.split("\r\n");
+						if (paramElements.length > 1) {
+							if (paramElements[0].contains("form-data; name=\"status\"")) {
+								String value = paramElements[2];
+								relayStatus = new RelayStatus();
+								relayStatus.status = value.equals("on");
+							}
+						}
+					}
+				} else { // assume application/json
+					Gson gson = new GsonBuilder().create();
+					StringReader stringReader = new StringReader(payload);
+					try {
+						relayStatus = gson.fromJson(stringReader, RelayStatus.class);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("RELAY-0004")
+										.errorMessage(ex.toString()));
+						return response;
+					}
+				}
+				if (relayStatus == null) {
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("RELAY-0005")
+									.errorMessage("No status found, no json payload, no form-data..."));
+					return response;
+				}
 				try {
-					RelayStatus relayStatus = gson.fromJson(stringReader, RelayStatus.class);
 					int relayNum = Integer.parseInt(pathParameters.get(0));
 					// Set Relay status here
 			//	System.out.println(String.format("Setting relay #%d %s", relayNum, (relayStatus.status ? "ON" : "OFF")));

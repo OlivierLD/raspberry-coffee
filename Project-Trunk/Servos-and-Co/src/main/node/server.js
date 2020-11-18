@@ -28,13 +28,13 @@ let fs = require('fs');
 
 let verbose = true;
 
-if (typeof String.prototype.startsWith != 'function') {
+if (typeof String.prototype.startsWith !== 'function') {
     String.prototype.startsWith = function (str) {
         return this.indexOf(str) === 0;
     };
 }
 
-if (typeof String.prototype.endsWith != 'function') {
+if (typeof String.prototype.endsWith !== 'function') {
     String.prototype.endsWith = function (suffix) {
         return this.indexOf(suffix, this.length - suffix.length) !== -1;
     };
@@ -47,7 +47,7 @@ function handler(req, res) {
         console.log("Server received an HTTP Request:\n" + req.method + "\n" + req.url + "\n-------------");
         console.log("ReqHeaders:" + JSON.stringify(req.headers, null, '\t'));
         console.log('Request:' + req.url);
-        var prms = require('url').parse(req.url, true);
+        let prms = require('url').parse(req.url, true);
         console.log(prms);
         console.log("Search: [" + prms.search + "]");
         console.log("-------------------------------");
@@ -177,7 +177,6 @@ wsServer.on('request', (request) => {
     connection.on('message', (message) => {
         if (message.type === 'utf8') { // accept only text
             console.log((new Date()) + ' Received Message: ' + message.utf8Data);
-
             let obj = {
                 time: (new Date()).getTime(),
                 text: htmlEntities(message.utf8Data)
