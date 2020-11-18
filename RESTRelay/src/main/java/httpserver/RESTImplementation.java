@@ -10,8 +10,10 @@ import http.RESTProcessorUtil;
 import relay.RelayManager;
 
 import java.io.StringReader;
+import java.security.InvalidParameterException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -111,7 +113,7 @@ public class RESTImplementation {
 	 * @return
 	 */
 	private Response setRelayStatus(Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		Response response = new Response(request.getProtocol(), Response.CREATED);
 
 		List<String> pathParameters = request.getPathParameters();
 		if (verbose) {
@@ -131,25 +133,21 @@ public class RESTImplementation {
 				}
 				RelayStatus relayStatus = null;
 				if (contentType.trim().startsWith("multipart/form-data;")) {
-/*
- formData would look like this:
-----------------------------690508146199201755172091
-Content-Disposition: form-data; name="status"
-
-on
-----------------------------690508146199201755172091--
-*/
-					String separator = contentType.substring("multipart/form-data;".length()).split("=")[1]; // The part after 'boundary='
-					String[] formPayloadElements = payload.split(separator + "\r\n");
-					for (String oneFormParam : formPayloadElements) {
-						String[] paramElements = oneFormParam.split("\r\n");
-						if (paramElements.length > 1) {
-							if (paramElements[0].contains("form-data; name=\"status\"")) {
-								String value = paramElements[2];
-								relayStatus = new RelayStatus();
-								relayStatus.status = value.equals("on");
-							}
+					try {
+						Map<String, Object> formDataParameters = RESTProcessorUtil.getFormDataParameters(contentType.trim(), request.getContent());
+						String status = (String)formDataParameters.get("status");
+						if (status != null) {
+							relayStatus = new RelayStatus();
+							relayStatus.status = status.equals("on");
 						}
+					} catch (InvalidParameterException ipe) {
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("RELAY-0006")
+										.errorMessage(ipe.getMessage()));
+						return response;
+
 					}
 				} else { // assume application/json
 					Gson gson = new GsonBuilder().create();

@@ -2,6 +2,7 @@ package http;
 
 import com.google.gson.Gson;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -120,6 +121,53 @@ public class RESTProcessorUtil {
 			}
 		}
 		return returned;
+	}
+
+	/**
+	 * WiP
+	 *
+	 * @param contentType
+	 * @param bytePayload
+	 * @return
+	 */
+	public static Map<String, Object> getFormDataParameters(String contentType, byte[] bytePayload) throws InvalidParameterException {
+		Map<String, Object> parameterMap = new HashMap<>();
+		/*
+		Content-Type:
+		multipart/form-data; boundary=------------------ABCDEF...XYZ
+		 */
+		if (contentType.startsWith("multipart/form-data; boundary=")) { // Good
+			/*
+formData would look like this:
+----------------------------690508146199201755172091
+Content-Disposition: form-data; name="status"
+
+on
+----------------------------690508146199201755172091--
+*/
+			final String FULL_PRM_PREFIX = "Content-Disposition: form-data; name=";
+			String payload = new String(bytePayload); // Only Strings for now.
+			String separator = contentType.substring("multipart/form-data;".length()).split("=")[1]; // The part after 'boundary='
+			String[] formPayloadElements = payload.split(separator + "\r\n");
+			for (String oneFormParam : formPayloadElements) {
+				String[] paramElements = oneFormParam.split("\r\n");
+				if (paramElements.length > 1) {
+					if (paramElements[0].startsWith(FULL_PRM_PREFIX)) {
+						String prmName = paramElements[0].substring(FULL_PRM_PREFIX.length());
+						if (prmName.startsWith("\"") && prmName.endsWith("\"")) {
+							prmName = prmName.substring(1, prmName.length() - 1);
+						} else if (prmName.startsWith("'") && prmName.endsWith("'")) {
+							prmName = prmName.substring(1, prmName.length() - 1);
+						}
+						String value = paramElements[2];
+						parameterMap.put(prmName, value);
+					}
+				}
+			}
+		} else {
+			throw new InvalidParameterException(String.format("Content-Type prm should begin with [multipart/form-data; boundary=], found [%s]", contentType));
+		}
+		return parameterMap;
 	}
 
 	/* Utility(ies) */
