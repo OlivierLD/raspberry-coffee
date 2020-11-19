@@ -14,11 +14,10 @@ repositories {
     mavenLocal()
 //  maven { url "http://lediouris.net/maven2" }
     maven { url "https://oss.sonatype.org/content/groups/public" }
-//    maven { url "https://mvnrepository.com/artifact/com.pi4j/pi4j-core" }
+    maven { url "https://mvnrepository.com/artifact/com.pi4j/pi4j-core" }
 }
 
 // sourceCompatibility = 1.8
-
 
 dependencies {
     // TODO Make version without PI4J (used in PinUtils)
