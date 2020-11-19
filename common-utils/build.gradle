@@ -13,7 +13,7 @@ repositories {
     mavenCentral()
     mavenLocal()
 //  maven { url "http://lediouris.net/maven2" }
-//    maven { url "https://oss.sonatype.org/content/groups/public" }
+    maven { url "https://oss.sonatype.org/content/groups/public" }
 //    maven { url "https://mvnrepository.com/artifact/com.pi4j/pi4j-core" }
 }
 
