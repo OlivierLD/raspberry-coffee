@@ -43,7 +43,7 @@ shadowJar {
 
 build.doFirst {
     println "+-------------------------------------------------------------"
-    println "| >>> Try gradlew run in common-utils to see some system info."
+    println "| >>> Try 'gradlew run' in common-utils to see some system info."
     println "+-------------------------------------------------------------"
 }
 

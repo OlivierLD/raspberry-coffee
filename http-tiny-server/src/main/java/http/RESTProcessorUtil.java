@@ -173,14 +173,29 @@ on
 	/* Utility(ies) */
 
 	public static void generateResponseHeaders(HTTPServer.Response response, int contentLength) {
-		generateResponseHeaders(response, HttpHeaders.APPLICATION_JSON, contentLength);
+		generateResponseHeaders(response, null, contentLength);
 	}
 
 	public static void generateResponseHeaders(HTTPServer.Response response, String contentType, int contentLength) {
 		Map<String, String> responseHeaders = new HashMap<>();
 		responseHeaders.put(HttpHeaders.CONTENT_TYPE, (contentType != null ? contentType : HttpHeaders.APPLICATION_JSON));
 		responseHeaders.put(HttpHeaders.CONTENT_LENGTH, String.valueOf(contentLength));
+		responseHeaders.put("Access-Control-Allow-Origin", "*");  // TODO Check if that's the right place to do this...
+		response.setHeaders(responseHeaders);
+	}
+
+	// That one's pretty much useless...
+	public static void generateResponseHeaders(HTTPServer.Response response, Map<String, String> responseHeaders) {
+		response.setHeaders(responseHeaders);
+	}
+
+	public static void addCORSResponseHeaders(HTTPServer.Response response) {
+		Map<String, String> responseHeaders = response.getHeaders();
+		if (responseHeaders == null) {
+			responseHeaders = new HashMap<>();
+		}
 		responseHeaders.put("Access-Control-Allow-Origin", "*");
+		// TODO ? 'Access-Control-Allow-Methods', 'Access-Control-Allow-Headers'
 		response.setHeaders(responseHeaders);
 	}
 
@@ -194,10 +209,16 @@ on
 	 * Used along with HTTP Error codes to contain a more significant message.
 	 */
 	public static class ErrorMessage {
-		private final String message;
+		private String message = null;
 
+		public ErrorMessage() {
+		}
 		public ErrorMessage(String mess) {
 			this.message = mess;
+		}
+		public ErrorMessage message(String message) {
+			this.message = message;
+			return this;
 		}
 	}
 }
