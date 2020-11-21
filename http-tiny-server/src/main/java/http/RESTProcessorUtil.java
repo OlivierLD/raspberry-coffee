@@ -139,19 +139,43 @@ public class RESTProcessorUtil {
 		if (contentType.startsWith("multipart/form-data; boundary=")) { // Good
 			/*
 formData would look like this:
-----------------------------690508146199201755172091
+----------------------------613162882239560987581747
 Content-Disposition: form-data; name="status"
 
 on
-----------------------------690508146199201755172091--
+----------------------------613162882239560987581747
+Content-Disposition: form-data; name="akeu"
+
+coucou
+----------------------------613162882239560987581747
+Content-Disposition: form-data; name="importData"; filename="sample.csv"
+Content-Type: text/csv
+
+testSuite,utterance,expectedIntent,enabled,languageTag,expectedLanguageTag,initialContext,expectedSkill
+CancelPizzaTestSuite,I'd like to cancel my order please,CancelPizza,true,en,en,,
+,Can i cancel my order?,CancelPizza,true,en,en,,
+,Please don't deliver my Pizza,CancelPizza,true,en,en,CbPizzaBot,CbPizzaBot
+,How do I cancel my order?,CancelPizza,true,en,en,,
+CancelPizzaTestSuite,I don't want my Pizza anymore,CancelPizza,true,en,en,,
+
+----------------------------613162882239560987581747--
 */
 			final String FULL_PRM_PREFIX = "Content-Disposition: form-data; name=";
 			String payload = new String(bytePayload); // Only Strings for now.
-			String separator = contentType.substring("multipart/form-data;".length()).split("=")[1]; // The part after 'boundary='
+			String separator = "--" + contentType.substring("multipart/form-data;".length()).split("=")[1]; // The part after 'boundary='
+//			if (payload.startsWith("--" + separator)) {
+//				payload = payload.substring(2);
+//			}
+			if (payload.endsWith("--\r\n")) {
+				payload = payload.substring(0, payload.length() - 4) + "\r\n"; // Maybe a better way...
+			}
+			// Debug
+			System.out.println(payload);
+			//
 			String[] formPayloadElements = payload.split(separator + "\r\n");
 			for (String oneFormParam : formPayloadElements) {
 				String[] paramElements = oneFormParam.split("\r\n");
-				if (paramElements.length > 1) {
+				if (paramElements.length > 1) { // First element is empty.
 					if (paramElements[0].startsWith(FULL_PRM_PREFIX)) {
 						String prmName = paramElements[0].substring(FULL_PRM_PREFIX.length());
 						if (prmName.startsWith("\"") && prmName.endsWith("\"")) {
@@ -159,8 +183,30 @@ on
 						} else if (prmName.startsWith("'") && prmName.endsWith("'")) {
 							prmName = prmName.substring(1, prmName.length() - 1);
 						}
-						String value = paramElements[2];
-						parameterMap.put(prmName, value);
+						if (paramElements[1].trim().length() == 0) {
+							String value = paramElements[2];
+							parameterMap.put(prmName, value);
+						} else if (paramElements[1].startsWith("Content-Type:")) { // That might be a file. TODO More here
+							String prmContentType = paramElements[1].substring("Content-Type:".length()).trim();
+							if (paramElements[2].trim().length() == 0) {
+								// prmName importData"; filename="sample.csv
+								if (prmName.contains(";")) {
+									prmName = prmName.split(";")[0];
+									if (prmName.startsWith("\"") || prmName.startsWith("'")) {
+										prmName = prmName.substring(1);
+									}
+									if (prmName.endsWith("\"") || prmName.endsWith("'")) {
+										prmName = prmName.substring(0, prmName.length() - 1);
+									}
+								}
+								String value = paramElements[3];
+								if (prmContentType.startsWith("text/")) {
+									parameterMap.put(prmName, value);
+								} else {
+									parameterMap.put(prmName, value.getBytes());
+								}
+							}
+						}
 					}
 				}
 			}

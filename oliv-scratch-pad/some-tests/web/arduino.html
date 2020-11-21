@@ -1,0 +1,2730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Arduino!</title>
+</head>
+<style type="text/css">
+    /*
+
+Original at https://codepen.io/shadow-scientist/pen/pobqepZ
+
+"No DIV" Arduino UNO with LCD Display and Animation
+Responsive CSS Art for #nodivember
+
+Best viewed in Full Mode. (Tested on Chrome, Firefox and Edge)
+Best rendering observed in FireFox (80.0.1)
+
+ */
+
+    @import "https://fonts.googleapis.com/css?family=VT323";
+
+    :root{
+        --size: 15;
+        --upp: 1vmin;
+        --unit: calc((var(--size) / 100) * var(--upp));
+        --message:"Stay happy, stay creative. :)";
+        --msg-transform:uppercase;
+        --msg-indent-start:110%;
+        --msg-indent-end:-110%;
+        --msg-duration:10s;
+        --msg-steps:80;
+        --blink-duration:0.5s;
+        --blink-steps:2;
+        --msg-font-size:calc(27 * var(--unit));
+        --msg-padding:calc(28 * var(--unit));
+        --insertion-indicator:linear-gradient(90deg,var(--color42) calc(11 * var(--unit)),transparent 1px);
+        --insertion-height:24;
+        --iwidth: 475;
+        --iheight: 491;
+        --main-width: 474;
+        --main-height: 491;
+        --main-top: 0;
+        --main-left: 0;
+        --lcd-backlight: 0.3;
+        --lcd-width: 298;
+        --lcd-height: 64;
+        --lcd-top: -193;
+        --lcd-shiftY:0;
+        --lcd-left: 59;
+        --circle-radius:9.6;
+        --circ:55%;
+        --circ2:41%;
+        --circ3:29%;
+        --shiftX:13;
+        --shiftY:14;
+        --stripe-1:calc(457 * var(--unit));
+        --stripe-1-1-start:177;
+        --stripe-1-2-start:316;
+        --stripe-2:calc(176 * var(--unit));
+        --stripe-2-1-start:169;
+        --stripe-2-2-start:314;
+        --stripe-s:calc(16 * var(--unit));
+        --stripe-n:linear-gradient(-45deg, var(--color38) 45%, var(--color39) 45%);
+        --stripe-i:20;
+        --hole-1:calc(181 * var(--unit));
+        --hole-1-1-start:173;
+        --hole-1-2-start:318;
+        --hole-2:calc(461 * var(--unit));
+        --hole-2-1-start:181;
+        --hole-2-2-start:321;
+        --hole-i:20;
+        --hole-s:calc(7.8 * var(--unit));
+        --hole-s2:calc(8 * var(--unit));
+        --hole-n:linear-gradient(var(--color07), var(--color07));
+        --circle-leg-1:71%; /*71%, 66%*/
+        --circle-leg-2:88%; /*88%, 80%*/
+        --circuit-leg-gap:15.63; /*15.63, 15.53*/
+        --circuit-leg-gap2:15.63;
+        --circuit-leg:radial-gradient(circle at 50%, var(--color06) var(--circle-leg-1), var(--color02) var(--circle-leg-2));
+        --circuit-leg2:radial-gradient(circle at 50%, var(--color06) var(--circle-leg-1), var(--color01) var(--circle-leg-2));
+        --circuit-leg3:radial-gradient(circle at 50%, var(--color02) var(--circle-leg-1), var(--color01) var(--circle-leg-2));
+        --circuit-leg3-angle:linear-gradient(45deg, transparent 50%, var(--color02) 50%);
+        --circuit-leg-size:calc(12 * var(--unit)); /*12,13*/
+        --circuit-leg-top:341;
+        --circuit-leg-bottom:396;
+        --circuit-leg-bottom-shadow:415;
+        --circuit-leg-bottom-shadow-start:237;
+        --circuit-leg-bottom-angle-shadow:415;
+        --circuit-leg-bottom-angle-shadow-start:227;
+        --pass-1:213;
+        --pass-2:434.6;
+        --round-rect:68.9%;
+        --circle-shift:14;
+        --circle-outline-radius:38%;
+        --cmt-circle1: 86%;
+        --cmt-circle2: 50%;
+        --cmt-circle3: 32%;
+        --cmt-circle4: 34%;
+        --cmt-circle5: 21%;
+        --cmt-circle6: 23%;
+        --cmt-1: calc(253 * var(--unit));
+        --cmt-2: calc(243 * var(--unit));
+        --cmt-left: 50%;
+        --cmt-top: 72%;
+        --cmt-w: 64;
+        --cmt-h: 28.8;
+        --cmt-over-top: calc(233 * var(--unit));
+        --cmt-over-left: calc(250 * var(--unit));
+        --cmt-over-right: calc(224.68 * var(--unit));
+        --hallmark-circ-1: 66%;
+        --hallmark-circ-2: 65%;
+        --hallmark-circ-3: 70%;
+        --hallmark-circ-4: 73%;
+        --hallmark-circ-5: 53%;
+        --hallmark-circ-6: 47%;
+        --lettering-1-left:304;
+        --lettering-2-left:326;
+        --lettering-3-left:334;
+        --lettering-covr-top:247.8;
+        --text-0n:linear-gradient(var(--color06), var(--color06));
+        --text-1n:linear-gradient(var(--color41), var(--color41));
+        --text-2n:linear-gradient(var(--color25), var(--color25));
+        --text-3n:linear-gradient(var(--color25), var(--color02));
+        --text-4n:linear-gradient(var(--color20), var(--color20));
+        --letter-array-1-start: 170;
+        --letter-array-1-increment: 15.3;
+        --letter-array-1-top: calc(205 * var(--unit));
+        --letter-array-1-top-1: calc(204 * var(--unit));
+        --letter-array-1-width: calc(3 * var(--unit));
+        --letter-array-1-width-1: calc(2 * var(--unit));
+
+        --letter-array-2-start: 316;
+        --letter-array-2-increment: 15.3;
+        --letter-array-2-width: calc(3 * var(--unit));
+        --letter-array-2-width-1: calc(2 * var(--unit));
+        --letter-array-2-width-2: calc(2 * var(--unit));
+
+        --letter-array-3-start: 195;
+        --letter-array-3-increment: 18.5;
+        --letter-array-3-top: calc(435 * var(--unit));
+        --letter-array-3-top-1: calc(434 * var(--unit));
+
+        --letter-array-4-start: 333;
+        --letter-array-4-increment: 18.4;
+        --letter-array-4-top: calc(435 * var(--unit));
+        --letter-array-4-top-1: calc(434 * var(--unit));
+
+        --plug-1-x:147;
+        --plug-1-y:111;
+        --plug-2-x:169;
+        --plug-2-y:173;
+        --plug-wire-height:22;
+        --plug-size:calc(100 * var(--unit)) calc(18 * var(--unit));
+        --plug-wire:calc(80 * var(--unit)) calc(var(--plug-wire-height) * var(--unit));
+
+        --transparent: rgba(0,0,0,0);
+        --background: #151027;
+        --shadow:#052758;
+        --shadow2:#05582d;
+        --color00: rgba(0,0,0,0.2);
+        --color01: #2B70D7;
+        --color02: #2159AC;
+        --color03: #2F2F2F;
+        --color04: #2D2C31;
+        --color05: #F4F6FB;
+        --color06: #FFFFFF;
+        --color07: #101010;
+        --color08: #CBCBCF;
+        --color09: #FE6155;
+        --color10: #D14C49;
+        --color11: #CCCDCF;
+        --color12: #1B1A1B;
+        --color13: #1F1F1F;
+        --color14: #444444; /*#3C3C3C*/
+        --color15: #0F0F0F;
+        --color16: #3b9a40;
+        --color17: #90C93D;
+        --color18: #000;
+        --color19: #CDC7C2;
+        --color20: #BCBCBA;
+        --color21: rgba(0,0,0,0.07);
+        --color22: #88ADE7;
+        --color23: #E0E0E7;
+        --color24: #FEFEFE;
+        --color25: rgba(255,255,255,0.22);
+        --color26: rgba(0,0,0,0.13);
+        --color27: #3D3E3E;
+        --color28: #2B2F37;
+        --color29: rgba(255,255,255,0.3); /*0.38,0.53*/
+        --color30: #22477E;
+        --color31: #302E30;
+        --color32: #D1A94E;
+        --color33: #FDDB80;
+        --color34: #FED97B;
+        --color35: #F9E5AC;
+        --color36: #7597B2;
+        --color37: #2868C8;
+        --color38: #3C3C3C;
+        --color39: #1D1C1C;
+        --color40: #6799E3;
+        --color41: rgba(255,255,255,0.2);
+        --color42: rgba(0,0,0,0.07);
+        --color43: rgba(0,0,0,var(--lcd-backlight, 0.2)); /*0.2*/
+        --color44: #424242;
+        --color45: #1E7B34;
+        --color46: rgba(0,0,0,0.3);
+        --color47: #3B3F48;
+    }
+
+    /*
+     Q: Why, why you did this?
+     A: I just wanna play a test match.
+     */
+
+    body::before{
+        background-image:
+            /* left side - 12 */
+                linear-gradient(-145deg, var(--color00) 50%, transparent 50%),
+                linear-gradient(25deg, var(--color00) 50%, transparent 50%),
+
+                linear-gradient(90deg, transparent 32%, var(--color00) 30%, transparent 90%), /* linear-gradient(90deg, transparent 32%, var(--color00) 30%, transparent 90%) */
+                linear-gradient(90deg, transparent 20%, var(--color00) 60%, transparent 50%), /* linear-gradient(90deg, transparent 20%, var(--color00) 60%, transparent 50%) */
+
+                linear-gradient(var(--color47), var(--color47)),
+                linear-gradient(var(--color28), var(--color28)),
+
+                linear-gradient(0deg, transparent calc(13 * var(--unit)), var(--color00) 1px),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color46), var(--color46)),
+
+                linear-gradient(180deg, transparent calc(13 * var(--unit)), var(--color00) 1px),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color46), var(--color46)),
+
+                    /* left side - 11 */
+                linear-gradient(-45deg, transparent 50%, var(--background) 50%),
+                linear-gradient(45deg, transparent 50%, var(--background) 50%),
+
+                linear-gradient(-135deg, transparent 50%, var(--background) 50%),
+                linear-gradient(135deg, transparent 50%, var(--background) 50%),
+
+                linear-gradient(var(--color45),var(--color45)),
+                linear-gradient(var(--color45),var(--color45)),
+                linear-gradient(var(--background),var(--background)),
+                radial-gradient(ellipse at 50% 50%, var(--color00) 24%, transparent 22%),
+                linear-gradient(var(--color44),var(--color44)),
+                linear-gradient(var(--color16),var(--color16)),
+                linear-gradient(var(--color16),var(--color16)),
+                linear-gradient(var(--color16),var(--color16)),
+                linear-gradient(var(--color45),var(--color45)),
+                linear-gradient(var(--shadow2),var(--shadow2)),
+
+                    /* left side - 10 */
+                linear-gradient(var(--color01),var(--color01)),
+                linear-gradient(var(--color01),var(--color01)),
+                linear-gradient(var(--color01),var(--color01)),
+
+                    /* left side - 9 */
+                    /* group text nodes */
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+
+                    /* group text nodes */
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+
+                    /* some other group */
+                var(--text-4n),
+                var(--text-4n),
+                var(--text-4n),
+
+                var(--text-4n),
+                var(--text-4n),
+                var(--text-4n),
+
+                var(--text-0n),
+                var(--text-3n),
+
+                var(--text-0n),
+                var(--text-3n),
+
+                var(--text-0n),
+                var(--text-3n),
+
+                    /* group text nodes */
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+
+                    /* group text nodes */
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+                var(--text-1n),
+                var(--text-2n),
+
+                    /* single text nodes */
+                var(--text-0n),
+                var(--text-2n),
+
+                var(--text-0n),
+                var(--text-2n),
+
+                var(--text-0n),
+                var(--text-2n),
+
+                var(--text-0n),
+                var(--text-2n),
+
+                var(--text-0n),
+                var(--text-2n),
+
+                var(--text-0n),
+                var(--text-2n),
+
+                var(--text-0n),
+                var(--text-2n),
+
+                var(--text-0n),
+                var(--text-2n),
+
+                var(--text-0n),
+                var(--text-2n),
+
+                var(--text-0n),
+                var(--text-2n),
+
+                    /* left side - 8 */
+                linear-gradient(var(--color01) 50%,transparent 50%),
+                linear-gradient(var(--color40) 50%,transparent 50%),
+                linear-gradient(var(--color01) 50%,transparent 50%),
+                radial-gradient(ellipse at 50%, var(--color01) 29%, transparent 31%),
+                radial-gradient(ellipse at 50%, var(--color06) 30%, transparent 0%),
+
+                linear-gradient(transparent 50%,var(--color01) 50%),
+                linear-gradient(45deg, transparent 50%,var(--color01) 50%),
+                linear-gradient(45deg, var(--color01) 50%,transparent 50%),
+                linear-gradient(var(--color40),var(--color40)),
+
+                radial-gradient(ellipse at 50%, var(--color01) 29%, transparent 0%),
+                radial-gradient(ellipse at 50%, var(--color06) 30%, transparent 0%),
+
+                    /* left side - 7 */
+                linear-gradient(var(--color01), var(--color01)),
+                linear-gradient(var(--color06), var(--color06)),
+
+                linear-gradient(var(--color01), var(--color01)),
+                linear-gradient(var(--color06), var(--color06)),
+
+                linear-gradient(var(--color01), var(--color01)),
+                radial-gradient(circle at var(--hallmark-circ-5) 50%, var(--color01) var(--hallmark-circ-1), transparent var(--hallmark-circ-2)),
+                radial-gradient(circle at var(--hallmark-circ-5) 50%, var(--color06) var(--hallmark-circ-3), transparent var(--hallmark-circ-4)),
+                radial-gradient(circle at var(--hallmark-circ-6) 50%, var(--color01) var(--hallmark-circ-1), transparent var(--hallmark-circ-2)),
+                radial-gradient(circle at var(--hallmark-circ-6) 50%, var(--color06) var(--hallmark-circ-3), transparent var(--hallmark-circ-4)),
+                linear-gradient(var(--color06), var(--color06)),
+
+                radial-gradient(circle at 50%, var(--color06) 90%, transparent 50%),
+                linear-gradient(var(--color21), var(--color21)),
+
+                radial-gradient(circle at 50%, var(--color06) 90%, transparent 50%),
+                linear-gradient(var(--color21), var(--color21)),
+                radial-gradient(circle at 50%, var(--color06) 90%, transparent 50%), /*linear-gradient(var(--color06), var(--color06))*/
+                linear-gradient(var(--color21), var(--color21)),
+
+                radial-gradient(ellipse at var(--cmt-left) var(--cmt-top), var(--color01) var(--cmt-circle5), transparent var(--cmt-circle6)),
+                radial-gradient(ellipse at var(--cmt-left) var(--cmt-top), var(--color01) var(--cmt-circle5), transparent var(--cmt-circle6)),
+                linear-gradient(-46deg, transparent 50%, var(--color06) 0%),
+                linear-gradient(46deg, transparent 50%, var(--color06) 0%),
+                linear-gradient(-44deg, var(--color06) 50%, transparent 0%),
+                linear-gradient(44deg, var(--color06) 50%, transparent 0%),
+                radial-gradient(circle at 50%, var(--color01) var(--cmt-circle5), transparent var(--cmt-circle6)),
+                radial-gradient(circle at 50%, var(--color01) var(--cmt-circle5), transparent var(--cmt-circle6)),
+                radial-gradient(circle at 50%, var(--color06) var(--cmt-circle3), transparent var(--cmt-circle4)),
+                radial-gradient(circle at 50%, var(--color06) var(--cmt-circle3), transparent var(--cmt-circle4)),
+                linear-gradient(-143deg, var(--color06) 49%, transparent 0%),
+                linear-gradient(36deg, var(--color06) 49%, transparent 0%),
+                linear-gradient(transparent 0%, var(--color01) 65%),
+                linear-gradient(transparent 0%, var(--color01) 65%),
+                linear-gradient(transparent 0%, var(--color01) 65%),
+                radial-gradient(circle at 49.6% 50%, transparent var(--cmt-circle1), var(--color01) var(--cmt-circle2)),
+                linear-gradient(var(--color29), var(--color29)),
+                linear-gradient(var(--color06), var(--color06)),
+
+                    /* left side - 6 */
+                linear-gradient(var(--color02), var(--color02)), /* 02 */
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color25), var(--color25)),
+                linear-gradient(var(--color21), var(--color21)),
+
+                radial-gradient(circle at center, var(--background) calc(var(--circle-radius) * var(--unit)), transparent var(--main-body-smooth-radius, 1px)),
+
+                radial-gradient(circle at 50%, var(--color03) var(--circle-outline-radius), transparent var(--ss-r-19, 1px)),
+                radial-gradient(circle at 50%, var(--color15) 53%, transparent var(--ss-r-21, 50%)),
+
+                radial-gradient(circle at 50%, var(--color03) var(--circle-outline-radius), transparent var(--ss-r-19, 1px)),
+                radial-gradient(circle at 50%, var(--color15) 53%, transparent var(--ss-r-21, 50%)),
+
+                linear-gradient(var(--color03), var(--color03)),
+                linear-gradient(var(--color03), var(--color03)),
+
+                radial-gradient(circle at 50%, var(--color03) var(--round-rect), var(--color02) var(--ss-r-20, 50%)),
+                radial-gradient(circle at 50%, var(--color03) var(--round-rect), var(--color01) var(--ss-r-20, 50%)),
+                radial-gradient(circle at 50%, var(--color03) var(--round-rect), var(--color02) var(--ss-r-20, 50%)),
+                radial-gradient(circle at 50%, var(--color03) var(--round-rect), var(--color01) var(--ss-r-20, 50%)),
+
+                linear-gradient(var(--color03), var(--color03)),
+                linear-gradient(var(--color03), var(--color03)),
+
+                    /* left side - 5 */
+                var(--circuit-leg3-angle),
+                var(--circuit-leg3-angle),
+                var(--circuit-leg3-angle),
+                var(--circuit-leg3-angle),
+                var(--circuit-leg3-angle),
+                var(--circuit-leg3-angle),
+                var(--circuit-leg3-angle),
+                var(--circuit-leg3-angle),
+                var(--circuit-leg3-angle),
+                var(--circuit-leg3-angle),
+                var(--circuit-leg3-angle),
+                var(--circuit-leg3-angle),
+                var(--circuit-leg3-angle),
+                var(--circuit-leg3-angle),
+
+                    /* main legs */
+                var(--circuit-leg),
+                var(--circuit-leg2),
+
+                var(--circuit-leg),
+                var(--circuit-leg2),
+
+                var(--circuit-leg),
+                var(--circuit-leg2),
+
+                var(--circuit-leg),
+                var(--circuit-leg2),
+
+                var(--circuit-leg),
+                var(--circuit-leg2),
+
+                var(--circuit-leg),
+                var(--circuit-leg2),
+
+                var(--circuit-leg),
+                var(--circuit-leg2),
+
+                var(--circuit-leg),
+                var(--circuit-leg2),
+
+                var(--circuit-leg),
+                var(--circuit-leg2),
+
+                var(--circuit-leg),
+                var(--circuit-leg2),
+
+                var(--circuit-leg),
+                var(--circuit-leg2),
+
+                var(--circuit-leg),
+                var(--circuit-leg2),
+
+                var(--circuit-leg),
+                var(--circuit-leg2),
+
+                var(--circuit-leg),
+                var(--circuit-leg2),
+
+                linear-gradient(43deg, transparent 50%, var(--color02) 50%),
+                linear-gradient(45deg, var(--color02) 50%, transparent 50%),
+                linear-gradient(var(--color02), var(--color02)),
+
+                    /* shadow legs */
+                var(--circuit-leg3),
+                var(--circuit-leg3),
+                var(--circuit-leg3),
+                var(--circuit-leg3),
+                var(--circuit-leg3),
+                var(--circuit-leg3),
+                var(--circuit-leg3),
+                var(--circuit-leg3),
+                var(--circuit-leg3),
+                var(--circuit-leg3),
+                var(--circuit-leg3),
+                var(--circuit-leg3),
+                var(--circuit-leg3),
+                var(--circuit-leg3),
+
+                    /* left side - 4 */
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+                var(--hole-n),
+
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+                var(--stripe-n),
+
+                linear-gradient(var(--color32), var(--color32)),
+                linear-gradient(90deg, var(--color35), var(--color33), var(--color35)),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color25), var(--color29)),
+                linear-gradient(90deg, transparent, var(--color36), transparent),
+
+                linear-gradient(var(--color32), var(--color32)),
+                linear-gradient(90deg, var(--color35), var(--color33), var(--color35)),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color25), var(--color29)),
+                linear-gradient(90deg, transparent, var(--color36), transparent),
+
+                linear-gradient(var(--color32), var(--color32)),
+                linear-gradient(90deg, var(--color35), var(--color33), var(--color35)),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color25), var(--color29)),
+                linear-gradient(90deg, transparent, var(--color36), transparent),
+
+                linear-gradient(var(--color32), var(--color32)),
+                linear-gradient(90deg, var(--color35), var(--color33), var(--color35)),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color25), var(--color29)),
+                linear-gradient(90deg, transparent, var(--color36), transparent),
+
+                linear-gradient(var(--color21), var(--color21)),
+                linear-gradient(var(--color21), var(--color21)),
+                linear-gradient(var(--color21), var(--color21)),
+                linear-gradient(var(--color21), var(--color21)),
+
+                    /* left side - 3 */
+                radial-gradient(circle at 50%, var(--color06) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color18) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color06) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color18) var(--circ3), transparent var(--ss-r-18, 0%)),
+
+                radial-gradient(circle at 50%, var(--color06) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color18) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color06) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color18) var(--circ3), transparent var(--ss-r-18, 0%)),
+
+                radial-gradient(circle at 50%, var(--color06) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color18) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color06) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color18) var(--circ3), transparent var(--ss-r-18, 0%)),
+
+                linear-gradient(var(--color13), var(--color13)),
+                linear-gradient(var(--color00), var(--color00)),
+                linear-gradient(var(--color02), var(--color02)),
+                linear-gradient(var(--color13), var(--color13)),
+                linear-gradient(var(--color00), var(--color00)),
+                linear-gradient(var(--color02), var(--color02)),
+                linear-gradient(var(--color13), var(--color13)),
+                linear-gradient(var(--color00), var(--color00)),
+                linear-gradient(var(--color02), var(--color02)),
+
+                linear-gradient(var(--color13), var(--color31)),
+                linear-gradient(var(--color00), var(--color30)),
+                linear-gradient(var(--color02), var(--color02)),
+                linear-gradient(var(--color13), var(--color31)),
+                linear-gradient(var(--color00), var(--color30)),
+                linear-gradient(var(--color02), var(--color02)),
+                linear-gradient(var(--color13), var(--color31)),
+                linear-gradient(var(--color00), var(--color30)),
+                linear-gradient(var(--color02), var(--color02)),
+                linear-gradient(var(--color13), var(--color31)),
+                linear-gradient(var(--color00), var(--color30)),
+                linear-gradient(var(--color02), var(--color02)),
+
+                radial-gradient(circle at 50%, var(--color06) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color18) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color06) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color18) var(--circ3), transparent var(--ss-r-18, 0%)),
+                linear-gradient(var(--color13), var(--color13)),
+                linear-gradient(var(--color00), var(--color00)),
+                linear-gradient(var(--color02), var(--color02)),
+
+                radial-gradient(circle at 50%, var(--color06) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color18) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color06) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color18) var(--circ3), transparent var(--ss-r-18, 0%)),
+                linear-gradient(var(--color13), var(--color13)),
+                linear-gradient(var(--color00), var(--color00)),
+                linear-gradient(var(--color02), var(--color02)),
+
+                radial-gradient(circle at 50%, var(--color06) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color18) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color06) var(--circ3), transparent var(--ss-r-18, 0%)),
+                radial-gradient(circle at 50%, var(--color18) var(--circ3), transparent var(--ss-r-18, 0%)),
+                linear-gradient(var(--color13), var(--color13)),
+                linear-gradient(var(--color00), var(--color00)),
+                linear-gradient(var(--color02), var(--color02)),
+
+                    /* left side - 2 */
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color25), var(--color25)),
+                linear-gradient(var(--color21), var(--color21)),
+
+                linear-gradient(var(--color27), var(--color27)),
+                linear-gradient(var(--color28), var(--color28)),
+                linear-gradient(var(--color00), var(--color00)),
+                linear-gradient(var(--color02), var(--color02)),
+
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color06), var(--color06)),
+
+                linear-gradient(var(--color29), var(--color29)),
+                linear-gradient(var(--color29), var(--color29)),
+                linear-gradient(var(--color29), var(--color29)),
+                linear-gradient(var(--color29), var(--color29)),
+                linear-gradient(var(--color29), var(--color29)),
+
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color06), var(--color06)),
+
+                linear-gradient(var(--color29), var(--color29)),
+                linear-gradient(var(--color29), var(--color29)),
+                linear-gradient(var(--color29), var(--color29)),
+                linear-gradient(var(--color29), var(--color29)),
+                linear-gradient(var(--color29), var(--color29)),
+
+                linear-gradient(var(--color08), var(--color08)),
+                linear-gradient(var(--color26), var(--color26)),
+                radial-gradient(circle at 50%, var(--color08) var(--circ2), transparent var(--ss-r-13, 0%)),
+                radial-gradient(circle at 50%, var(--color08) var(--circ2), transparent var(--ss-r-13, 0%)),
+
+                linear-gradient(var(--color25), var(--color25)),
+                linear-gradient(var(--color06), var(--color06)),
+                radial-gradient(circle at 50%, var(--color06) var(--circ), transparent var(--ss-r-12, 0%)),
+                radial-gradient(circle at 50%, var(--color06) var(--circ), transparent var(--ss-r-12, 0%)),
+
+                linear-gradient(45deg, transparent 50%, var(--color02) 50%),
+                linear-gradient(45deg, var(--color02) 50%, transparent 50%),
+                radial-gradient(circle at 50%, var(--color02) var(--circ), transparent 0%),
+                radial-gradient(circle at 50%, var(--color02) var(--circ), transparent 0%),
+                linear-gradient(var(--color02), var(--color02)),
+
+                linear-gradient(var(--color24), var(--color24)),
+                radial-gradient(ellipse at 50% 65%, var(--color04) 28%, transparent var(--ss-r-14, 0%)),
+                radial-gradient(circle at 50%, var(--color24) 58%, transparent var(--ss-r-15, 50%)),
+                radial-gradient(circle at 50%, var(--color11) 65%, transparent var(--ss-r-16, 50%)),
+                radial-gradient(circle at 50%, var(--color02) 65%, transparent var(--ss-r-17, 50%)),
+
+                linear-gradient(var(--color24), var(--color24)),
+                radial-gradient(ellipse at 50% 65%, var(--color04) 28%, transparent var(--ss-r-14, 0%)),
+                radial-gradient(circle at 50%, var(--color24) 58%, transparent var(--ss-r-15, 50%)),
+                radial-gradient(circle at 50%, var(--color11) 65%, transparent var(--ss-r-16, 50%)),
+                radial-gradient(circle at 50%, var(--color02) 65%, transparent var(--ss-r-17, 50%)),
+
+                    /* left side 1 */
+                linear-gradient(var(--color37), var(--color37)),
+
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color22), var(--color22)),
+
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color22), var(--color22)),
+
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color22), var(--color22)),
+                linear-gradient(var(--color11), var(--color11)),
+                linear-gradient(var(--color23), var(--color23)),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color22), var(--color22)),
+                linear-gradient(var(--color04), var(--color03)),
+                linear-gradient(var(--color00), var(--color00)),
+                linear-gradient(var(--color02), var(--color02)),
+
+                linear-gradient(45deg, transparent 50%, var(--color02) 50%),
+                linear-gradient(var(--color08), var(--color08)),
+                radial-gradient(circle at 50%, var(--color02) 60%, transparent var(--ss-r-7, 1px)),
+                radial-gradient(circle at 46.4% 49.6%, transparent 91%, var(--color02) var(--ss-r-10, 1px)),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color20), var(--color20)),
+                linear-gradient(var(--color21), var(--color21)),
+                radial-gradient(circle at 50% 49%, var(--color06) var(--ss-rp-8, 70.1%), transparent var(--ss-r-9, 0.1px)),
+                radial-gradient(circle at 50% 54%, var(--color06) var(--ss-rp-8, 70.1%), transparent var(--ss-r-9, 0.1px)), /*radial-gradient(circle at 50%, var(--color06) 69.4%, transparent 1px)*/
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(48deg, var(--color02) 50%, transparent 50%),
+                linear-gradient(var(--color02), var(--color02)),
+                radial-gradient(circle at 33% 50.4%, transparent 76%, var(--color01) var(--ss-r-11, 1px)),
+                linear-gradient(var(--color06), var(--color06)),
+                radial-gradient(circle at 33% 50.4%, transparent 76%, var(--color01) var(--ss-r-11, 1px)),
+                linear-gradient(var(--color06), var(--color06)),
+                radial-gradient(circle at 50.4% 50.4%, transparent 82%, var(--color01) var(--ss-r-11, 1px)),
+                linear-gradient(var(--color06), var(--color06)),
+                radial-gradient(circle at 50.4% 50.4%, transparent 82%, var(--color01) var(--ss-r-11, 1px)),
+                linear-gradient(var(--color06), var(--color06)),
+                radial-gradient(circle at 50.4% 50.4%, transparent 82%, var(--color01) var(--ss-r-11, 1px)),
+                linear-gradient(var(--color06), var(--color06)),
+                radial-gradient(circle at 49% 47%, var(--color09) 27.6%, transparent var(--ss-r-4, 1px)),
+                radial-gradient(circle at 49% 47%, var(--color10) 46%, transparent var(--ss-r-5, 1px)),  /*42%*/
+                radial-gradient(circle at 56% 56%, var(--color08) 38%, transparent var(--ss-r-6, 1px)),
+                radial-gradient(circle at 50.4% 50.4%, transparent 97.6%, var(--color02) 1px),
+                linear-gradient(var(--color06), var(--color06)),
+                linear-gradient(var(--color21), var(--color21)),
+                radial-gradient(circle at 270% -70%, transparent 82%, var(--color00) 80%),
+                linear-gradient(var(--color00), var(--color00)),
+                radial-gradient(var(--color12) 40%, transparent 45%),
+                linear-gradient(var(--color14), var(--color14)),
+                linear-gradient(var(--color14), var(--color14)),
+                linear-gradient(var(--color03), var(--color04)),
+                linear-gradient(var(--color03), var(--color04)),
+                linear-gradient(var(--color02), var(--color02)),
+                linear-gradient(var(--color02), var(--color02)),
+                radial-gradient(var(--color02) 45%, transparent 45%),
+
+                    /* base */
+                radial-gradient(circle at center, var(--background) calc(var(--circle-radius) * var(--unit)), transparent var(--main-body-smooth-radius, 1px)),
+                radial-gradient(circle at center, var(--transparent) calc(var(--circle-radius) * var(--unit)), transparent var(--main-body-smooth-radius, 1px)),
+                radial-gradient(circle at center, var(--background) calc(var(--circle-radius) * var(--unit)), transparent var(--main-body-smooth-radius, 1px)),
+                radial-gradient(circle at center, var(--background) calc(var(--circle-radius) * var(--unit)), transparent var(--main-body-smooth-radius, 1px)),
+                radial-gradient(circle at var(--ss-r-23, center), var(--color01) calc(5.8 * var(--unit)), transparent var(--ss-r-1, 1px)),
+                radial-gradient(circle at center, var(--color01) calc(5.8 * var(--unit)), transparent var(--ss-r-2, 1px)),
+                radial-gradient(circle at center, var(--color01) calc(5.8 * var(--unit)), transparent var(--ss-r-3, 1px)),
+                linear-gradient(45deg, var(--color01) 49%, transparent 51%),
+                linear-gradient(var(--color01), var(--color01)),
+                linear-gradient(var(--color01), var(--color01)),
+                linear-gradient(var(--color01), var(--color01)),
+                linear-gradient(40deg, var(--color01) 49.5%, transparent 51.1%),
+                linear-gradient(140deg, var(--color01) 49.5%, transparent 51.1%),
+                linear-gradient(140deg, var(--shadow) 49.5%, transparent 51.1%),
+                linear-gradient(var(--shadow), var(--shadow)),
+                linear-gradient(var(--color01), var(--color01)),
+                linear-gradient(var(--color01), var(--color01)),
+                linear-gradient(var(--color01), var(--color01));
+
+        background-position:
+            /* left side - 12 */
+                calc((var(--plug-1-x) + 10) * var(--unit)) calc((var(--plug-1-y) + 40) * var(--unit)),
+                calc((var(--plug-2-x) + 68) * var(--unit)) calc((var(--plug-2-y) - 36) * var(--unit)),
+
+                calc((var(--plug-2-x) + 10) * var(--unit)) calc((var(--plug-2-y) - var(--plug-wire-height)) * var(--unit)),
+                calc((var(--plug-1-x) + 10) * var(--unit)) calc((var(--plug-1-y) + 18) * var(--unit)),
+
+                calc((var(--plug-2-x) + 10) * var(--unit)) calc((var(--plug-2-y) - var(--plug-wire-height)) * var(--unit)),
+                calc((var(--plug-1-x) + 10) * var(--unit)) calc((var(--plug-1-y) + 18) * var(--unit)),
+
+                calc(var(--plug-2-x) * var(--unit)) calc(var(--plug-2-y) * var(--unit)),
+                calc(var(--plug-2-x) * var(--unit)) calc(var(--plug-2-y) * var(--unit)),
+                calc((var(--plug-2-x) + 3) * var(--unit)) calc((var(--plug-2-y) + 3) * var(--unit)),
+
+                calc(var(--plug-1-x) * var(--unit)) calc(var(--plug-1-y) * var(--unit)),
+                calc(var(--plug-1-x) * var(--unit)) calc(var(--plug-1-y) * var(--unit)),
+                calc((var(--plug-1-x) + 3) * var(--unit)) calc((var(--plug-1-y) + 3) * var(--unit)),
+
+                    /* left side - 11 */
+                calc(118 * var(--unit)) calc((var(--lcd-shiftY) - 1) * var(--unit)),
+                calc((118 + 348) * var(--unit)) calc((var(--lcd-shiftY) - 1) * var(--unit)),
+
+                calc(118 * var(--unit)) calc((var(--lcd-shiftY) + 120) * var(--unit)),
+                calc((118 + 348) * var(--unit)) calc((var(--lcd-shiftY) + 120) * var(--unit)),
+
+                calc(123 * var(--unit)) calc((102 + var(--lcd-shiftY)) * var(--unit)),
+                calc(355 * var(--unit)) calc((102 + var(--lcd-shiftY)) * var(--unit)),
+                calc(0 * var(--unit)) calc(var(--lcd-shiftY) * var(--unit)),
+                calc(23 * var(--unit)) calc((108 + var(--lcd-shiftY)) * var(--unit)),
+                calc(136 * var(--unit)) calc((11 + var(--lcd-shiftY)) * var(--unit)),
+                calc(151 * var(--unit)) calc((8 + var(--lcd-shiftY)) * var(--unit)),
+                calc(280 * var(--unit)) calc((9 + var(--lcd-shiftY)) * var(--unit)),
+                calc(411 * var(--unit)) calc((8 + var(--lcd-shiftY)) * var(--unit)),
+                calc(118 * var(--unit)) calc(var(--lcd-shiftY) * var(--unit)),
+                calc(118 * var(--unit)) calc((3 + var(--lcd-shiftY)) * var(--unit)),
+
+                    /* left side - 10 */
+                calc(327 * var(--unit)) calc(432 * var(--unit)),
+                calc(227 * var(--unit)) calc(432 * var(--unit)),
+                calc(248 * var(--unit)) calc(432 * var(--unit)),
+
+                    /* left side - 9 */
+                    /* group text nodes */
+                calc((var(--letter-array-4-start) + var(--letter-array-4-increment) * 5) * var(--unit)) var(--letter-array-3-top),
+                calc((var(--letter-array-4-start) - 1  + var(--letter-array-4-increment) * 5) * var(--unit)) var(--letter-array-3-top-1),
+                calc((var(--letter-array-4-start) + var(--letter-array-4-increment) * 4) * var(--unit)) var(--letter-array-3-top),
+                calc((var(--letter-array-4-start) - 1  + var(--letter-array-4-increment) * 4) * var(--unit)) var(--letter-array-3-top-1),
+                calc((var(--letter-array-4-start) + var(--letter-array-4-increment) * 3) * var(--unit)) var(--letter-array-3-top),
+                calc((var(--letter-array-4-start) - 1  + var(--letter-array-4-increment) * 3) * var(--unit)) var(--letter-array-3-top-1),
+                calc((var(--letter-array-4-start) + var(--letter-array-4-increment) * 2) * var(--unit)) var(--letter-array-3-top),
+                calc((var(--letter-array-4-start) - 1  + var(--letter-array-4-increment) * 2) * var(--unit)) var(--letter-array-3-top-1),
+                calc((var(--letter-array-4-start) + var(--letter-array-4-increment) * 1) * var(--unit)) var(--letter-array-3-top),
+                calc((var(--letter-array-4-start) - 1  + var(--letter-array-4-increment) * 1) * var(--unit)) var(--letter-array-3-top-1),
+                calc(var(--letter-array-4-start) * var(--unit)) var(--letter-array-3-top),
+                calc((var(--letter-array-4-start) - 1) * var(--unit)) var(--letter-array-3-top-1),
+
+                    /* group text nodes */
+                calc((var(--letter-array-3-start) + var(--letter-array-3-increment) * 5) * var(--unit)) var(--letter-array-3-top),
+                calc((var(--letter-array-3-start) - 1  + var(--letter-array-3-increment) * 5) * var(--unit)) var(--letter-array-3-top-1),
+                calc((var(--letter-array-3-start) + var(--letter-array-3-increment) * 4) * var(--unit)) var(--letter-array-3-top),
+                calc((var(--letter-array-3-start) - 1  + var(--letter-array-3-increment) * 4) * var(--unit)) var(--letter-array-3-top-1),
+                calc((var(--letter-array-3-start) + var(--letter-array-3-increment) * 3) * var(--unit)) var(--letter-array-3-top),
+                calc((var(--letter-array-3-start) - 1  + var(--letter-array-3-increment) * 3) * var(--unit)) var(--letter-array-3-top-1),
+                calc((var(--letter-array-3-start) + var(--letter-array-3-increment) * 2) * var(--unit)) var(--letter-array-3-top),
+                calc((var(--letter-array-3-start) - 1  + var(--letter-array-3-increment) * 2) * var(--unit)) var(--letter-array-3-top-1),
+                calc((var(--letter-array-3-start) + var(--letter-array-3-increment) * 1) * var(--unit)) var(--letter-array-3-top),
+                calc((var(--letter-array-3-start) - 1  + var(--letter-array-3-increment) * 1) * var(--unit)) var(--letter-array-3-top-1),
+                calc(var(--letter-array-3-start) * var(--unit)) var(--letter-array-3-top),
+                calc((var(--letter-array-3-start) - 1) * var(--unit)) var(--letter-array-3-top-1),
+
+                    /* some other group */
+                calc(156 * var(--unit)) calc(424 * var(--unit)),
+                calc(163 * var(--unit)) calc(422 * var(--unit)),
+                calc(170 * var(--unit)) calc(426 * var(--unit)),
+
+                calc(111 * var(--unit)) calc(424 * var(--unit)),
+                calc(118 * var(--unit)) calc(422 * var(--unit)),
+                calc(126 * var(--unit)) calc(426 * var(--unit)),
+
+                calc(423 * var(--unit)) calc(424 * var(--unit)),
+                calc(422 * var(--unit)) calc(423 * var(--unit)),
+
+                calc(385 * var(--unit)) calc(424 * var(--unit)),
+                calc(384 * var(--unit)) calc(423 * var(--unit)),
+
+                calc(269 * var(--unit)) calc(424 * var(--unit)),
+                calc(268 * var(--unit)) calc(423 * var(--unit)),
+
+                    /* group text nodes */
+                calc((var(--letter-array-2-start) + var(--letter-array-2-increment) * 7) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-2-start) - 1  + var(--letter-array-2-increment) * 7) * var(--unit)) var(--letter-array-1-top-1),
+                calc((var(--letter-array-2-start) + var(--letter-array-2-increment) * 6) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-2-start) - 1  + var(--letter-array-2-increment) * 6) * var(--unit)) var(--letter-array-1-top-1),
+                calc((var(--letter-array-2-start) + var(--letter-array-2-increment) * 5) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-2-start) - 1  + var(--letter-array-2-increment) * 5) * var(--unit)) var(--letter-array-1-top-1),
+                calc((var(--letter-array-2-start) + var(--letter-array-2-increment) * 4) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-2-start) - 1  + var(--letter-array-2-increment) * 4) * var(--unit)) var(--letter-array-1-top-1),
+                calc((var(--letter-array-2-start) + var(--letter-array-2-increment) * 3) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-2-start) - 1  + var(--letter-array-2-increment) * 3) * var(--unit)) var(--letter-array-1-top-1),
+                calc((var(--letter-array-2-start) + var(--letter-array-2-increment) * 2) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-2-start) - 1  + var(--letter-array-2-increment) * 2) * var(--unit)) var(--letter-array-1-top-1),
+                calc((var(--letter-array-2-start) + var(--letter-array-2-increment) * 1) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-2-start) - 1  + var(--letter-array-2-increment) * 1) * var(--unit)) var(--letter-array-1-top-1),
+                calc(var(--letter-array-2-start) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-2-start) - 1) * var(--unit)) var(--letter-array-1-top-1),
+
+                    /* group text nodes */
+                calc((var(--letter-array-1-start) + var(--letter-array-1-increment) * 7) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-1-start) - 1  + var(--letter-array-1-increment) * 7) * var(--unit)) var(--letter-array-1-top-1),
+                calc((var(--letter-array-1-start) + var(--letter-array-1-increment) * 6) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-1-start) - 1  + var(--letter-array-1-increment) * 6) * var(--unit)) var(--letter-array-1-top-1),
+                calc((var(--letter-array-1-start) + var(--letter-array-1-increment) * 5) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-1-start) - 1  + var(--letter-array-1-increment) * 5) * var(--unit)) var(--letter-array-1-top-1),
+                calc((var(--letter-array-1-start) + var(--letter-array-1-increment) * 4) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-1-start) - 1  + var(--letter-array-1-increment) * 4) * var(--unit)) var(--letter-array-1-top-1),
+                calc((var(--letter-array-1-start) + var(--letter-array-1-increment) * 3) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-1-start) - 1  + var(--letter-array-1-increment) * 3) * var(--unit)) var(--letter-array-1-top-1),
+                calc((var(--letter-array-1-start) + var(--letter-array-1-increment) * 2) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-1-start) - 1  + var(--letter-array-1-increment) * 2) * var(--unit)) var(--letter-array-1-top-1),
+                calc((var(--letter-array-1-start) + var(--letter-array-1-increment) * 1) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-1-start) - 1  + var(--letter-array-1-increment) * 1) * var(--unit)) var(--letter-array-1-top-1),
+                calc(var(--letter-array-1-start) * var(--unit)) var(--letter-array-1-top),
+                calc((var(--letter-array-1-start) - 1) * var(--unit)) var(--letter-array-1-top-1),
+
+                    /* single text nodes */
+                calc(323 * var(--unit)) calc(328 * var(--unit)),
+                calc(322 * var(--unit)) calc(327 * var(--unit)),
+
+                calc(313 * var(--unit)) calc(328 * var(--unit)),
+                calc(312 * var(--unit)) calc(327 * var(--unit)),
+
+                calc(234 * var(--unit)) calc(328 * var(--unit)),
+                calc(233 * var(--unit)) calc(327 * var(--unit)),
+
+                calc(391 * var(--unit)) calc(270 * var(--unit)),
+                calc(390 * var(--unit)) calc(269 * var(--unit)),
+
+                calc(373 * var(--unit)) calc(221 * var(--unit)),
+                calc(372 * var(--unit)) calc(220 * var(--unit)),
+
+                calc(330 * var(--unit)) calc(221 * var(--unit)),
+                calc(329 * var(--unit)) calc(220 * var(--unit)),
+
+                calc(200 * var(--unit)) calc(246 * var(--unit)),
+                calc(199 * var(--unit)) calc(245.4 * var(--unit)),
+
+                calc(198 * var(--unit)) calc(293 * var(--unit)),
+                calc(197 * var(--unit)) calc(292 * var(--unit)),
+
+                calc(198 * var(--unit)) calc(279 * var(--unit)),
+                calc(197 * var(--unit)) calc(278 * var(--unit)),
+
+                calc(244 * var(--unit)) calc(275 * var(--unit)),
+                calc(243 * var(--unit)) calc(274 * var(--unit)),
+
+                    /* left side - 8 */
+                calc((var(--lettering-1-left) + 8) * var(--unit)) calc(var(--lettering-covr-top) * var(--unit)),
+                calc((var(--lettering-1-left) + 7) * var(--unit)) calc(var(--lettering-covr-top) * var(--unit)),
+                calc((var(--lettering-1-left) + 8) * var(--unit)) calc(245 * var(--unit)),
+                calc(var(--lettering-1-left) * var(--unit)) calc(240 * var(--unit)),
+                calc(var(--lettering-1-left) * var(--unit)) calc(240 * var(--unit)),
+
+                calc(var(--lettering-2-left) * var(--unit)) calc(252 * var(--unit)),
+                calc(var(--lettering-2-left) * var(--unit)) calc(245 * var(--unit)),
+                calc((var(--lettering-2-left) + 2) * var(--unit)) calc(248 * var(--unit)),
+                calc((var(--lettering-2-left) + 1) * var(--unit)) calc(247 * var(--unit)),
+
+                calc(var(--lettering-3-left) * var(--unit)) calc(240 * var(--unit)),
+                calc(var(--lettering-3-left) * var(--unit)) calc(240 * var(--unit)),
+
+                    /* left side - 7 */
+                calc(313 * var(--unit)) calc(243 * var(--unit)),
+                calc(313 * var(--unit)) calc(242 * var(--unit)),
+
+                calc(313 * var(--unit)) calc(267 * var(--unit)),
+                calc(313 * var(--unit)) calc(266 * var(--unit)),
+
+                calc(318 * var(--unit)) calc(243 * var(--unit)),
+                calc(303 * var(--unit)) calc(242 * var(--unit)),
+                calc(303 * var(--unit)) calc(242 * var(--unit)),
+                calc(336 * var(--unit)) calc(242 * var(--unit)),
+                calc(336 * var(--unit)) calc(242 * var(--unit)),
+                calc(314 * var(--unit)) calc(242 * var(--unit)),
+
+                calc(281 * var(--unit)) calc(249 * var(--unit)),
+                calc(281 * var(--unit)) calc(250 * var(--unit)),
+
+                calc(278 * var(--unit)) calc(252 * var(--unit)),
+                calc(278 * var(--unit)) calc(253 * var(--unit)),
+
+                calc(251 * var(--unit)) calc(252 * var(--unit)),
+                calc(251 * var(--unit)) calc(253 * var(--unit)),
+
+                var(--cmt-over-right) var(--cmt-over-top),
+                var(--cmt-over-left) var(--cmt-over-top),
+
+                calc(263 * var(--unit)) var(--cmt-1),
+                calc(263 * var(--unit)) var(--cmt-1),
+                calc(263 * var(--unit)) var(--cmt-2),
+                calc(263 * var(--unit)) var(--cmt-2),
+
+                calc(254 * var(--unit)) calc(224.4 * var(--unit)),
+                calc(225 * var(--unit)) calc(224.4 * var(--unit)),
+                calc(254 * var(--unit)) calc(224.4 * var(--unit)),
+                calc(225 * var(--unit)) calc(224.4 * var(--unit)),
+                calc(260 * var(--unit)) calc(311.1 * var(--unit)),
+                calc(247 * var(--unit)) calc(289 * var(--unit)),
+                calc(249.3 * var(--unit)) calc(300 * var(--unit)),
+                calc(249.3 * var(--unit)) calc(304 * var(--unit)),
+                calc(249.3 * var(--unit)) calc(308 * var(--unit)),
+                calc(242 * var(--unit)) calc(295 * var(--unit)),
+                calc(242 * var(--unit)) calc(295 * var(--unit)),
+                calc(243 * var(--unit)) calc(296 * var(--unit)),
+
+                    /* left side - 6 */
+                calc(295 * var(--unit)) calc(415 * var(--unit)),
+                calc(229 * var(--unit)) calc(417 * var(--unit)),
+                calc(229 * var(--unit)) calc(416 * var(--unit)),
+                calc(228 * var(--unit)) calc(415 * var(--unit)),
+
+                98.2% 88.9%,
+
+                calc((426 - var(--circle-shift)) * var(--unit)) calc(364 * var(--unit)),
+                calc((426 - var(--circle-shift)) * var(--unit)) calc(364 * var(--unit)),
+
+                calc((212 + var(--circle-shift)) * var(--unit)) calc(364 * var(--unit)),
+                calc((212 + var(--circle-shift)) * var(--unit)) calc(364 * var(--unit)),
+
+                calc(219 * var(--unit)) calc(345 * var(--unit)),
+                calc(213 * var(--unit)) calc(351 * var(--unit)),
+
+                calc(var(--pass-2) * var(--unit)) calc(394 * var(--unit)),
+                calc(var(--pass-2) * var(--unit)) calc(345 * var(--unit)),
+                calc(var(--pass-1) * var(--unit)) calc(394 * var(--unit)),
+                calc(var(--pass-1) * var(--unit)) calc(345 * var(--unit)),
+
+                calc(213 * var(--unit)) calc(346 * var(--unit)),
+                calc(213 * var(--unit)) calc(345 * var(--unit)),
+
+                    /* left side - 5 */
+                calc(var(--circuit-leg-bottom-angle-shadow-start) * var(--unit)) calc(var(--circuit-leg-bottom-angle-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-angle-shadow-start) + var(--circuit-leg-gap2) * 1) * var(--unit)) calc(var(--circuit-leg-bottom-angle-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-angle-shadow-start) + var(--circuit-leg-gap2) * 2) * var(--unit)) calc(var(--circuit-leg-bottom-angle-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-angle-shadow-start) + var(--circuit-leg-gap2) * 3) * var(--unit)) calc(var(--circuit-leg-bottom-angle-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-angle-shadow-start) + var(--circuit-leg-gap2) * 4) * var(--unit)) calc(var(--circuit-leg-bottom-angle-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-angle-shadow-start) + var(--circuit-leg-gap2) * 5) * var(--unit)) calc(var(--circuit-leg-bottom-angle-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-angle-shadow-start) + var(--circuit-leg-gap2) * 6) * var(--unit)) calc(var(--circuit-leg-bottom-angle-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-angle-shadow-start) + var(--circuit-leg-gap2) * 7) * var(--unit)) calc(var(--circuit-leg-bottom-angle-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-angle-shadow-start) + var(--circuit-leg-gap2) * 8) * var(--unit)) calc(var(--circuit-leg-bottom-angle-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-angle-shadow-start) + var(--circuit-leg-gap2) * 9) * var(--unit)) calc(var(--circuit-leg-bottom-angle-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-angle-shadow-start) + var(--circuit-leg-gap2) * 10) * var(--unit)) calc(var(--circuit-leg-bottom-angle-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-angle-shadow-start) + var(--circuit-leg-gap2) * 11) * var(--unit)) calc(var(--circuit-leg-bottom-angle-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-angle-shadow-start) + var(--circuit-leg-gap2) * 12) * var(--unit)) calc(var(--circuit-leg-bottom-angle-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-angle-shadow-start) + var(--circuit-leg-gap2) * 13) * var(--unit)) calc(var(--circuit-leg-bottom-angle-shadow) * var(--unit)),
+
+                    /* main legs */
+                calc((221 + var(--circuit-leg-gap) * 13) * var(--unit)) calc(var(--circuit-leg-bottom) * var(--unit)),
+                calc((221 + var(--circuit-leg-gap) * 13) * var(--unit)) calc(var(--circuit-leg-top) * var(--unit)),
+
+                calc((221 + var(--circuit-leg-gap) * 12) * var(--unit)) calc(var(--circuit-leg-bottom) * var(--unit)),
+                calc((221 + var(--circuit-leg-gap) * 12) * var(--unit)) calc(var(--circuit-leg-top) * var(--unit)),
+
+                calc((221 + var(--circuit-leg-gap) * 11) * var(--unit)) calc(var(--circuit-leg-bottom) * var(--unit)),
+                calc((221 + var(--circuit-leg-gap) * 11) * var(--unit)) calc(var(--circuit-leg-top) * var(--unit)),
+
+                calc((221 + var(--circuit-leg-gap) * 10) * var(--unit)) calc(var(--circuit-leg-bottom) * var(--unit)),
+                calc((221 + var(--circuit-leg-gap) * 10) * var(--unit)) calc(var(--circuit-leg-top) * var(--unit)),
+
+                calc((221 + var(--circuit-leg-gap) * 9) * var(--unit)) calc(var(--circuit-leg-bottom) * var(--unit)),
+                calc((221 + var(--circuit-leg-gap) * 9) * var(--unit)) calc(var(--circuit-leg-top) * var(--unit)),
+
+                calc((221 + var(--circuit-leg-gap) * 8) * var(--unit)) calc(var(--circuit-leg-bottom) * var(--unit)),
+                calc((221 + var(--circuit-leg-gap) * 8) * var(--unit)) calc(var(--circuit-leg-top) * var(--unit)),
+
+                calc((221 + var(--circuit-leg-gap) * 7) * var(--unit)) calc(var(--circuit-leg-bottom) * var(--unit)),
+                calc((221 + var(--circuit-leg-gap) * 7) * var(--unit)) calc(var(--circuit-leg-top) * var(--unit)),
+
+                calc((221 + var(--circuit-leg-gap) * 6) * var(--unit)) calc(var(--circuit-leg-bottom) * var(--unit)),
+                calc((221 + var(--circuit-leg-gap) * 6) * var(--unit)) calc(var(--circuit-leg-top) * var(--unit)),
+
+                calc((221 + var(--circuit-leg-gap) * 5) * var(--unit)) calc(var(--circuit-leg-bottom) * var(--unit)),
+                calc((221 + var(--circuit-leg-gap) * 5) * var(--unit)) calc(var(--circuit-leg-top) * var(--unit)),
+
+                calc((221 + var(--circuit-leg-gap) * 4) * var(--unit)) calc(var(--circuit-leg-bottom) * var(--unit)),
+                calc((221 + var(--circuit-leg-gap) * 4) * var(--unit)) calc(var(--circuit-leg-top) * var(--unit)),
+
+                calc((221 + var(--circuit-leg-gap) * 3) * var(--unit)) calc(var(--circuit-leg-bottom) * var(--unit)),
+                calc((221 + var(--circuit-leg-gap) * 3) * var(--unit)) calc(var(--circuit-leg-top) * var(--unit)),
+
+                calc((221 + var(--circuit-leg-gap) * 2) * var(--unit)) calc(var(--circuit-leg-bottom) * var(--unit)),
+                calc((221 + var(--circuit-leg-gap) * 2) * var(--unit)) calc(var(--circuit-leg-top) * var(--unit)),
+
+                calc((221 + var(--circuit-leg-gap) * 1) * var(--unit)) calc(var(--circuit-leg-bottom) * var(--unit)),
+                calc((221 + var(--circuit-leg-gap) * 1) * var(--unit)) calc(var(--circuit-leg-top) * var(--unit)),
+
+                calc(221 * var(--unit)) calc(var(--circuit-leg-bottom) * var(--unit)),
+                calc(221 * var(--unit)) calc(var(--circuit-leg-top) * var(--unit)),
+
+                calc(214 * var(--unit)) calc(403 * var(--unit)),
+                calc(445 * var(--unit)) calc(347 * var(--unit)),
+                calc(233 * var(--unit)) calc(366 * var(--unit)),
+
+                    /* shadow legs */
+                calc(var(--circuit-leg-bottom-shadow-start) * var(--unit)) calc(var(--circuit-leg-bottom-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-shadow-start) + var(--circuit-leg-gap2) * 1) * var(--unit)) calc(var(--circuit-leg-bottom-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-shadow-start) + var(--circuit-leg-gap2) * 2) * var(--unit)) calc(var(--circuit-leg-bottom-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-shadow-start) + var(--circuit-leg-gap2) * 3) * var(--unit)) calc(var(--circuit-leg-bottom-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-shadow-start) + var(--circuit-leg-gap2) * 4) * var(--unit)) calc(var(--circuit-leg-bottom-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-shadow-start) + var(--circuit-leg-gap2) * 5) * var(--unit)) calc(var(--circuit-leg-bottom-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-shadow-start) + var(--circuit-leg-gap2) * 6) * var(--unit)) calc(var(--circuit-leg-bottom-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-shadow-start) + var(--circuit-leg-gap2) * 7) * var(--unit)) calc(var(--circuit-leg-bottom-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-shadow-start) + var(--circuit-leg-gap2) * 8) * var(--unit)) calc(var(--circuit-leg-bottom-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-shadow-start) + var(--circuit-leg-gap2) * 9) * var(--unit)) calc(var(--circuit-leg-bottom-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-shadow-start) + var(--circuit-leg-gap2) * 10) * var(--unit)) calc(var(--circuit-leg-bottom-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-shadow-start) + var(--circuit-leg-gap2) * 11) * var(--unit)) calc(var(--circuit-leg-bottom-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-shadow-start) + var(--circuit-leg-gap2) * 12) * var(--unit)) calc(var(--circuit-leg-bottom-shadow) * var(--unit)),
+                calc((var(--circuit-leg-bottom-shadow-start) + var(--circuit-leg-gap2) * 13) * var(--unit)) calc(var(--circuit-leg-bottom-shadow) * var(--unit)),
+
+                    /* left side - 4 */
+                calc((var(--hole-2-2-start) + var(--hole-i) * 5) * var(--unit)) var(--hole-2),
+                calc((var(--hole-2-2-start) + var(--hole-i) * 4) * var(--unit)) var(--hole-2),
+                calc((var(--hole-2-2-start) + var(--hole-i) * 3) * var(--unit)) var(--hole-2),
+                calc((var(--hole-2-2-start) + var(--hole-i) * 2) * var(--unit)) var(--hole-2),
+                calc((var(--hole-2-2-start) + var(--hole-i) * 1) * var(--unit)) var(--hole-2),
+                calc(var(--hole-2-2-start) * var(--unit)) var(--hole-2),
+
+                calc((var(--hole-2-1-start) + var(--hole-i) * 5) * var(--unit)) var(--hole-2),
+                calc((var(--hole-2-1-start) + var(--hole-i) * 4) * var(--unit)) var(--hole-2),
+                calc((var(--hole-2-1-start) + var(--hole-i) * 3) * var(--unit)) var(--hole-2),
+                calc((var(--hole-2-1-start) + var(--hole-i) * 2) * var(--unit)) var(--hole-2),
+                calc((var(--hole-2-1-start) + var(--hole-i) * 1) * var(--unit)) var(--hole-2),
+                calc(var(--hole-2-1-start) * var(--unit)) var(--hole-2),
+
+                calc((var(--hole-1-2-start) + var(--hole-i) * 5) * var(--unit)) var(--hole-1),
+                calc((var(--hole-1-2-start) + var(--hole-i) * 4) * var(--unit)) var(--hole-1),
+                calc((var(--hole-1-2-start) + var(--hole-i) * 3) * var(--unit)) var(--hole-1),
+                calc((var(--hole-1-2-start) + var(--hole-i) * 2) * var(--unit)) var(--hole-1),
+                calc((var(--hole-1-2-start) + var(--hole-i) * 1) * var(--unit)) var(--hole-1),
+                calc(var(--hole-1-2-start) * var(--unit)) var(--hole-1),
+
+                calc((var(--hole-1-1-start) + var(--hole-i) * 5) * var(--unit)) var(--hole-1),
+                calc((var(--hole-1-1-start) + var(--hole-i) * 4) * var(--unit)) var(--hole-1),
+                calc((var(--hole-1-1-start) + var(--hole-i) * 3) * var(--unit)) var(--hole-1),
+                calc((var(--hole-1-1-start) + var(--hole-i) * 2) * var(--unit)) var(--hole-1),
+                calc((var(--hole-1-1-start) + var(--hole-i) * 1) * var(--unit)) var(--hole-1),
+                calc(var(--hole-1-1-start) * var(--unit)) var(--hole-1),
+
+                calc((var(--stripe-2-2-start) + var(--stripe-i) * 5) * var(--unit)) var(--stripe-2),
+                calc((var(--stripe-2-2-start) + var(--stripe-i) * 4) * var(--unit)) var(--stripe-2),
+                calc((var(--stripe-2-2-start) + var(--stripe-i) * 3) * var(--unit)) var(--stripe-2),
+                calc((var(--stripe-2-2-start) + var(--stripe-i) * 2) * var(--unit)) var(--stripe-2),
+                calc((var(--stripe-2-2-start) + var(--stripe-i) * 1) * var(--unit)) var(--stripe-2),
+                calc(var(--stripe-2-2-start) * var(--unit)) var(--stripe-2),
+
+                calc((var(--stripe-2-1-start) + var(--stripe-i) * 5) * var(--unit)) var(--stripe-2),
+                calc((var(--stripe-2-1-start) + var(--stripe-i) * 4) * var(--unit)) var(--stripe-2),
+                calc((var(--stripe-2-1-start) + var(--stripe-i) * 3) * var(--unit)) var(--stripe-2),
+                calc((var(--stripe-2-1-start) + var(--stripe-i) * 2) * var(--unit)) var(--stripe-2),
+                calc((var(--stripe-2-1-start) + var(--stripe-i) * 1) * var(--unit)) var(--stripe-2),
+                calc(var(--stripe-2-1-start) * var(--unit)) var(--stripe-2),
+
+                calc((var(--stripe-1-2-start) + var(--stripe-i) * 5) * var(--unit)) var(--stripe-1),
+                calc((var(--stripe-1-2-start) + var(--stripe-i) * 4) * var(--unit)) var(--stripe-1),
+                calc((var(--stripe-1-2-start) + var(--stripe-i) * 3) * var(--unit)) var(--stripe-1),
+                calc((var(--stripe-1-2-start) + var(--stripe-i) * 2) * var(--unit)) var(--stripe-1),
+                calc((var(--stripe-1-2-start) + var(--stripe-i) * 1) * var(--unit)) var(--stripe-1),
+                calc(var(--stripe-1-2-start) * var(--unit)) var(--stripe-1),
+
+                calc((var(--stripe-1-1-start) + var(--stripe-i) * 5) * var(--unit)) var(--stripe-1),
+                calc((var(--stripe-1-1-start) + var(--stripe-i) * 4) * var(--unit)) var(--stripe-1),
+                calc((var(--stripe-1-1-start) + var(--stripe-i) * 3) * var(--unit)) var(--stripe-1),
+                calc((var(--stripe-1-1-start) + var(--stripe-i) * 2) * var(--unit)) var(--stripe-1),
+                calc((var(--stripe-1-1-start) + var(--stripe-i) * 1) * var(--unit)) var(--stripe-1),
+                calc(var(--stripe-1-1-start) * var(--unit)) var(--stripe-1),
+
+                calc(373 * var(--unit)) calc(268 * var(--unit)),
+                calc(368 * var(--unit)) calc(269 * var(--unit)),
+                calc(364 * var(--unit)) calc(269 * var(--unit)),
+                calc(364 * var(--unit)) calc(268 * var(--unit)),
+                calc(365 * var(--unit)) calc(267 * var(--unit)),
+
+                calc(219 * var(--unit)) calc(291 * var(--unit)),
+                calc(214 * var(--unit)) calc(292 * var(--unit)),
+                calc(210 * var(--unit)) calc(292 * var(--unit)),
+                calc(210 * var(--unit)) calc(291 * var(--unit)),
+                calc(211 * var(--unit)) calc(290 * var(--unit)),
+
+                calc(219 * var(--unit)) calc(277 * var(--unit)),
+                calc(214 * var(--unit)) calc(278 * var(--unit)),
+                calc(210 * var(--unit)) calc(278 * var(--unit)),
+                calc(210 * var(--unit)) calc(277 * var(--unit)),
+                calc(211 * var(--unit)) calc(276 * var(--unit)),
+
+                calc(219 * var(--unit)) calc(244 * var(--unit)),
+                calc(214 * var(--unit)) calc(245 * var(--unit)),
+                calc(210 * var(--unit)) calc(245 * var(--unit)),
+                calc(210 * var(--unit)) calc(244 * var(--unit)),
+                calc(211 * var(--unit)) calc(243 * var(--unit)),
+
+                calc((365 + 2) * var(--unit)) calc((267 + 2) * var(--unit)),
+                calc((211 + 2) * var(--unit)) calc((290 + 2) * var(--unit)),
+                calc((211 + 2) * var(--unit)) calc((276 + 2) * var(--unit)),
+                calc((211 + 2) * var(--unit)) calc((243 + 2) * var(--unit)),
+
+                    /* left side - 3 */
+                calc((410 + 15) * var(--unit)) calc((267 + 40) * var(--unit)),
+                calc((410 + 15) * var(--unit)) calc((268 + 40) * var(--unit)),
+                calc(410 * var(--unit)) calc((267 + 40) * var(--unit)),
+                calc(410 * var(--unit)) calc((268 + 40) * var(--unit)),
+
+                calc((410 + 15) * var(--unit)) calc((267 + 20) * var(--unit)),
+                calc((410 + 15) * var(--unit)) calc((268 + 20) * var(--unit)),
+                calc(410 * var(--unit)) calc((267 + 20) * var(--unit)),
+                calc(410 * var(--unit)) calc((268 + 20) * var(--unit)),
+
+                calc((410 + 15) * var(--unit)) calc(267 * var(--unit)),
+                calc((410 + 15) * var(--unit)) calc(268 * var(--unit)),
+                calc(410 * var(--unit)) calc(267 * var(--unit)),
+                calc(410 * var(--unit)) calc(268 * var(--unit)),
+
+                calc(408 * var(--unit)) calc((266 + 40) * var(--unit)),
+                calc(407 * var(--unit)) calc((265 + 40) * var(--unit)),
+                calc(408 * var(--unit)) calc((266 + 40) * var(--unit)),
+                calc(408 * var(--unit)) calc((266 + 20) * var(--unit)),
+                calc(407 * var(--unit)) calc((265 + 20) * var(--unit)),
+                calc(408 * var(--unit)) calc((266 + 20) * var(--unit)),
+                calc(408 * var(--unit)) calc(266 * var(--unit)),
+                calc(407 * var(--unit)) calc(265 * var(--unit)),
+                calc(408 * var(--unit)) calc(266 * var(--unit)),
+
+                calc(173 * var(--unit)) calc(455 * var(--unit)),
+                calc(172 * var(--unit)) calc(454.5 * var(--unit)),
+                calc(177 * var(--unit)) calc(459 * var(--unit)),
+                calc(312 * var(--unit)) calc(455 * var(--unit)),
+                calc(311 * var(--unit)) calc(454.5 * var(--unit)),
+                calc(316 * var(--unit)) calc(459 * var(--unit)),
+                calc(310 * var(--unit)) calc(174 * var(--unit)),
+                calc(309 * var(--unit)) calc(173.5 * var(--unit)),
+                calc(314 * var(--unit)) calc(178 * var(--unit)),
+                calc(165 * var(--unit)) calc(174 * var(--unit)),
+                calc(164 * var(--unit)) calc(173.5 * var(--unit)),
+                calc(169 * var(--unit)) calc(178 * var(--unit)),
+
+                calc(163 * var(--unit)) calc(246 * var(--unit)),
+                calc(163 * var(--unit)) calc(247 * var(--unit)),
+                calc(163 * var(--unit)) calc(232 * var(--unit)),
+                calc(163 * var(--unit)) calc(233 * var(--unit)),
+                calc(162 * var(--unit)) calc(231 * var(--unit)),
+                calc(161 * var(--unit)) calc(230 * var(--unit)),
+                calc(162 * var(--unit)) calc(231 * var(--unit)),
+
+                calc(144 * var(--unit)) calc(246 * var(--unit)),
+                calc(144 * var(--unit)) calc(247 * var(--unit)),
+                calc(144 * var(--unit)) calc(232 * var(--unit)),
+                calc(144 * var(--unit)) calc(233 * var(--unit)),
+                calc(143 * var(--unit)) calc(231 * var(--unit)),
+                calc(142 * var(--unit)) calc(230 * var(--unit)),
+                calc(143 * var(--unit)) calc(231 * var(--unit)),
+
+                calc(125 * var(--unit)) calc(246 * var(--unit)),
+                calc(125 * var(--unit)) calc(247 * var(--unit)),
+                calc(125 * var(--unit)) calc(232 * var(--unit)),
+                calc(125 * var(--unit)) calc(233 * var(--unit)),
+                calc(124 * var(--unit)) calc(231 * var(--unit)),
+                calc(123 * var(--unit)) calc(230 * var(--unit)),
+                calc(124 * var(--unit)) calc(231 * var(--unit)),
+
+                    /* left side - 2 */
+                calc(198 * var(--unit)) calc(231 * var(--unit)),
+                calc(198 * var(--unit)) calc(230 * var(--unit)),
+                calc(197 * var(--unit)) calc(229 * var(--unit)),
+
+                calc(150 * var(--unit)) calc(277 * var(--unit)),
+                calc(147 * var(--unit)) calc(274 * var(--unit)),
+                calc(146 * var(--unit)) calc(273 * var(--unit)),
+                calc(149 * var(--unit)) calc(276 * var(--unit)),
+
+                calc(144 * var(--unit)) calc((278 + 28) * var(--unit)),
+                calc(144 * var(--unit)) calc((278 + 21) * var(--unit)),
+                calc(144 * var(--unit)) calc((278 + 14) * var(--unit)),
+                calc(144 * var(--unit)) calc((278 + 7) * var(--unit)),
+                calc(144 * var(--unit)) calc(278 * var(--unit)),
+
+                calc(143 * var(--unit)) calc((277 + 28) * var(--unit)),
+                calc(143 * var(--unit)) calc((277 + 21) * var(--unit)),
+                calc(143 * var(--unit)) calc((277 + 14) * var(--unit)),
+                calc(143 * var(--unit)) calc((277 + 7) * var(--unit)),
+                calc(143 * var(--unit)) calc(277 * var(--unit)),
+
+                calc((150 + 28) * var(--unit)) calc(271 * var(--unit)),
+                calc((150 + 21) * var(--unit)) calc(271 * var(--unit)),
+                calc((150 + 14) * var(--unit)) calc(271 * var(--unit)),
+                calc((150 + 7) * var(--unit)) calc(271 * var(--unit)),
+                calc(150 * var(--unit)) calc(271 * var(--unit)),
+
+                calc((149 + 28) * var(--unit)) calc(270 * var(--unit)),
+                calc((149 + 21) * var(--unit)) calc(270 * var(--unit)),
+                calc((149 + 14) * var(--unit)) calc(270 * var(--unit)),
+                calc((149 + 7) * var(--unit)) calc(270 * var(--unit)),
+                calc(149 * var(--unit)) calc(270 * var(--unit)),
+
+                calc(131 * var(--unit)) calc(336 * var(--unit)),
+                calc(132 * var(--unit)) calc(336 * var(--unit)),
+                calc(154 * var(--unit)) calc(328 * var(--unit)),
+                calc(112 * var(--unit)) calc(328 * var(--unit)),
+
+                calc(131 * var(--unit)) calc(332 * var(--unit)),
+                calc(131 * var(--unit)) calc(332 * var(--unit)),
+                calc(154 * var(--unit)) calc(328 * var(--unit)),
+                calc(112 * var(--unit)) calc(328 * var(--unit)),
+
+                calc(124 * var(--unit)) calc(362 * var(--unit)),
+                calc(187 * var(--unit)) calc(340 * var(--unit)),
+                calc((154 + var(--shiftX)) * var(--unit)) calc((328 + var(--shiftY)) * var(--unit)),
+                calc((112 + var(--shiftX)) * var(--unit)) calc((328 + var(--shiftY)) * var(--unit)),
+                calc(143 * var(--unit)) calc(349 * var(--unit)),
+
+                calc(150 * var(--unit)) calc(422 * var(--unit)), /* 145 + 5 */
+                calc(131 * var(--unit)) calc(408 * var(--unit)),  /* 145 - 14 */
+                calc(145 * var(--unit)) calc(407 * var(--unit)),
+                calc(145 * var(--unit)) calc(407 * var(--unit)),
+                calc(145 * var(--unit)) calc(414 * var(--unit)),
+
+                calc(105 * var(--unit)) calc(422 * var(--unit)), /* 100 + 5 */
+                calc(86 * var(--unit)) calc(408 * var(--unit)),  /* 100 - 14 */
+                calc(100 * var(--unit)) calc(407 * var(--unit)),
+                calc(100 * var(--unit)) calc(407 * var(--unit)),
+                calc(100 * var(--unit)) calc(414 * var(--unit)),
+
+                    /* left side - 1 */
+                calc(50 * var(--unit)) calc(245 * var(--unit)),
+
+                calc(89 * var(--unit)) calc(380 * var(--unit)),
+                calc(88 * var(--unit)) calc(379 * var(--unit)),
+
+                calc(89 * var(--unit)) calc(367 * var(--unit)),
+                calc(88 * var(--unit)) calc(366 * var(--unit)),
+
+                calc(89 * var(--unit)) calc(353 * var(--unit)),
+                calc(88 * var(--unit)) calc(352 * var(--unit)),
+                calc(58 * var(--unit)) calc(363 * var(--unit)),
+                calc(58 * var(--unit)) calc(362 * var(--unit)),
+                calc(56 * var(--unit)) calc(360 * var(--unit)),
+                calc(55 * var(--unit)) calc(359 * var(--unit)),
+
+                calc(66 * var(--unit)) calc(349 * var(--unit)),
+                calc(65 * var(--unit)) calc(348 * var(--unit)),
+                calc(68 * var(--unit)) calc(351 * var(--unit)),
+                calc(74 * var(--unit)) calc(321 * var(--unit)),
+                calc(78 * var(--unit)) calc(263 * var(--unit)),
+                calc(75 * var(--unit)) calc(311 * var(--unit)),
+                calc(0 * var(--unit)) calc(245 * var(--unit)),
+                calc(11 * var(--unit)) calc(248 * var(--unit)),
+                calc(0 * var(--unit)) calc(246 * var(--unit)),
+                calc(0 * var(--unit)) calc(245 * var(--unit)),
+                calc(53 * var(--unit)) calc(299 * var(--unit)),
+                calc(53 * var(--unit)) calc(234 * var(--unit)),
+                calc(53 * var(--unit)) calc(242 * var(--unit)),
+                calc(88 * var(--unit)) calc(245 * var(--unit)),
+                calc(26 * var(--unit)) calc(265 * var(--unit)),
+                calc(88 * var(--unit)) calc(183 * var(--unit)),
+                calc(88 * var(--unit)) calc(183 * var(--unit)),
+                calc(88 * var(--unit)) calc(208 * var(--unit)),
+                calc(88 * var(--unit)) calc(208 * var(--unit)),
+                calc(32 * var(--unit)) calc(195 * var(--unit)),
+                calc(32 * var(--unit)) calc(195 * var(--unit)),
+                calc(32 * var(--unit)) calc(209 * var(--unit)),
+                calc(32 * var(--unit)) calc(209 * var(--unit)),
+                calc(32 * var(--unit)) calc(182 * var(--unit)),
+                calc(32 * var(--unit)) calc(182 * var(--unit)),
+                calc(44 * var(--unit)) calc(177 * var(--unit)),
+                calc(44 * var(--unit)) calc(177 * var(--unit)),
+                calc(44 * var(--unit)) calc(177 * var(--unit)),
+                calc(44 * var(--unit)) calc(177 * var(--unit)),
+                calc(44 * var(--unit)) calc(177 * var(--unit)),
+                calc(47 * var(--unit)) calc(180 * var(--unit)),
+                calc(32 * var(--unit)) calc(438 * var(--unit)),
+                calc(26 * var(--unit)) calc(415 * var(--unit)),
+                calc(68 * var(--unit)) calc(399 * var(--unit)),
+                calc(26 * var(--unit)) calc(452 * var(--unit)),
+                calc(26 * var(--unit)) calc(422 * var(--unit)),
+                calc(10 * var(--unit)) calc(411 * var(--unit)),
+                calc(26 * var(--unit)) calc(414 * var(--unit)),
+                calc(26 * var(--unit)) calc(460 * var(--unit)),
+                calc(28 * var(--unit)) calc(430 * var(--unit)),
+                calc(68 * var(--unit)) calc(408 * var(--unit)),
+
+                    /* base */
+                98.2% 60.9%,
+                98.2% 88.9%,
+                22.2% 97.6%,
+                27.6% 37.2%,
+                5.019% 34.29%,
+                5.019% 100.14%,
+                95.65% 100.14%,
+                95.33% 34.2%,
+                calc(30 * var(--unit)) calc(168 * var(--unit)),
+                calc(42 * var(--unit)) calc(178 * var(--unit)),
+                calc(65 * var(--unit)) calc(286 * var(--unit)),
+                calc(451 * var(--unit)) calc(263 * var(--unit)),
+                calc(451 * var(--unit)) calc(439 * var(--unit)),
+                calc(451 * var(--unit)) calc(446 * var(--unit)),
+                calc(451 * var(--unit)) calc(423 * var(--unit)),
+                calc(26 * var(--unit)) calc(171 * var(--unit)),
+                calc(33 * var(--unit)) calc(165 * var(--unit)),
+                calc(33 * var(--unit)) calc(482 * var(--unit));
+
+        background-size:
+            /* left side - 12 */
+                calc(22 * var(--unit)) calc(14 * var(--unit)),
+                calc(22 * var(--unit)) calc(14 * var(--unit)),
+
+                var(--plug-wire),
+                var(--plug-wire),
+
+                var(--plug-wire),
+                var(--plug-wire),
+
+                var(--plug-size),
+                var(--plug-size),
+                var(--plug-size),
+
+                var(--plug-size),
+                var(--plug-size),
+                var(--plug-size),
+
+                    /* left side - 11 */
+                calc(8 * var(--unit)) calc(8 * var(--unit)),
+                calc(8 * var(--unit)) calc(8 * var(--unit)),
+
+                calc(8 * var(--unit)) calc(8 * var(--unit)),
+                calc(8 * var(--unit)) calc(8 * var(--unit)),
+
+                calc(30 * var(--unit)) calc(20 * var(--unit)),
+                calc(116 * var(--unit)) calc(20 * var(--unit)),
+                calc(116 * var(--unit)) calc(126 * var(--unit)),
+                calc(16 * var(--unit)) calc(16 * var(--unit)),
+                calc(320 * var(--unit)) calc(83 * var(--unit)),
+                calc(30 * var(--unit)) calc(89 * var(--unit)),
+                calc(30 * var(--unit)) calc(87 * var(--unit)),
+                calc(30 * var(--unit)) calc(89 * var(--unit)),
+                calc(360 * var(--unit)) calc(123 * var(--unit)),
+                calc(360 * var(--unit)) calc(123 * var(--unit)),
+
+                    /* left side - 10 (at 457) */
+                calc(110 * var(--unit)) calc(12 * var(--unit)), /*=3*/
+                calc(10 * var(--unit)) calc(14 * var(--unit)),
+                calc(48 * var(--unit)) calc(10 * var(--unit)),
+
+                    /* left side - 9 */
+                    /* group text nodes */
+                var(--letter-array-2-width-1) calc(16 * var(--unit)), /*=88*/
+                var(--letter-array-2-width) calc(18 * var(--unit)),
+                var(--letter-array-2-width-1) calc(16 * var(--unit)),
+                var(--letter-array-2-width) calc(18 * var(--unit)),
+                var(--letter-array-2-width-1) calc(16 * var(--unit)),
+                var(--letter-array-2-width) calc(18 * var(--unit)),
+                var(--letter-array-2-width-1) calc(16 * var(--unit)),
+                var(--letter-array-2-width) calc(18 * var(--unit)),
+                var(--letter-array-2-width-1) calc(16 * var(--unit)),
+                var(--letter-array-2-width) calc(18 * var(--unit)),
+                var(--letter-array-2-width-1) calc(16 * var(--unit)),
+                var(--letter-array-2-width) calc(18 * var(--unit)),
+
+                    /* group text nodes */
+                var(--letter-array-1-width-1) calc(16 * var(--unit)),
+                var(--letter-array-1-width) calc(18 * var(--unit)),
+                var(--letter-array-1-width-1) calc(16 * var(--unit)),
+                var(--letter-array-1-width) calc(18 * var(--unit)),
+                var(--letter-array-1-width-1) calc(16 * var(--unit)),
+                var(--letter-array-1-width) calc(18 * var(--unit)),
+                var(--letter-array-1-width-1) calc(16 * var(--unit)),
+                var(--letter-array-1-width) calc(18 * var(--unit)),
+                var(--letter-array-1-width-1) calc(16 * var(--unit)),
+                var(--letter-array-1-width) calc(18 * var(--unit)),
+                var(--letter-array-1-width-1) calc(16 * var(--unit)),
+                var(--letter-array-1-width) calc(18 * var(--unit)),
+
+                    /* some other group */
+                calc(3 * var(--unit)) calc(6 * var(--unit)),
+                calc(3 * var(--unit)) calc(8 * var(--unit)),
+                calc(3 * var(--unit)) calc(4 * var(--unit)),
+
+                calc(3 * var(--unit)) calc(6 * var(--unit)),
+                calc(3 * var(--unit)) calc(8 * var(--unit)),
+                calc(3 * var(--unit)) calc(4 * var(--unit)),
+
+                calc(8 * var(--unit)) calc(2 * var(--unit)),
+                calc(10 * var(--unit)) calc(4 * var(--unit)),
+
+                calc(33 * var(--unit)) calc(2 * var(--unit)),
+                calc(35 * var(--unit)) calc(4 * var(--unit)),
+
+                calc(25 * var(--unit)) calc(2 * var(--unit)),
+                calc(27 * var(--unit)) calc(4 * var(--unit)),
+
+                    /* group text nodes */
+                var(--letter-array-2-width-2) calc(8 * var(--unit)),
+                var(--letter-array-2-width) calc(10 * var(--unit)),
+                var(--letter-array-2-width-2) calc(8 * var(--unit)),
+                var(--letter-array-2-width) calc(10 * var(--unit)),
+                var(--letter-array-2-width-2) calc(4 * var(--unit)),
+                var(--letter-array-2-width) calc(6 * var(--unit)),
+                var(--letter-array-2-width-2) calc(6 * var(--unit)),
+                var(--letter-array-2-width) calc(8 * var(--unit)),
+                var(--letter-array-2-width-2) calc(4 * var(--unit)),
+                var(--letter-array-2-width) calc(6 * var(--unit)),
+                var(--letter-array-2-width-2) calc(6 * var(--unit)),
+                var(--letter-array-2-width) calc(8 * var(--unit)),
+                var(--letter-array-2-width-2) calc(6 * var(--unit)),
+                var(--letter-array-2-width) calc(8 * var(--unit)),
+                var(--letter-array-2-width-2) calc(4 * var(--unit)),
+                var(--letter-array-2-width) calc(6 * var(--unit)),
+
+                    /* group text nodes */
+                var(--letter-array-1-width-1) calc(4 * var(--unit)),
+                var(--letter-array-1-width) calc(6 * var(--unit)),
+                var(--letter-array-1-width-1) calc(6 * var(--unit)),
+                var(--letter-array-1-width) calc(8 * var(--unit)),
+                var(--letter-array-1-width-1) calc(8 * var(--unit)),
+                var(--letter-array-1-width) calc(10 * var(--unit)),
+                var(--letter-array-1-width-1) calc(8 * var(--unit)),
+                var(--letter-array-1-width) calc(10 * var(--unit)),
+                var(--letter-array-1-width-1) calc(6 * var(--unit)),
+                var(--letter-array-1-width) calc(8 * var(--unit)),
+                var(--letter-array-1-width-1) calc(6 * var(--unit)),
+                var(--letter-array-1-width) calc(8 * var(--unit)),
+                var(--letter-array-1-width-1) calc(12 * var(--unit)),
+                var(--letter-array-1-width) calc(14 * var(--unit)),
+                var(--letter-array-1-width-1) calc(16 * var(--unit)),
+                var(--letter-array-1-width) calc(18 * var(--unit)),
+
+                    /* single text nodes */
+                calc(60 * var(--unit)) calc(2 * var(--unit)),
+                calc(62 * var(--unit)) calc(4 * var(--unit)),
+
+                calc(4 * var(--unit)) calc(2 * var(--unit)),
+                calc(6 * var(--unit)) calc(4 * var(--unit)),
+
+                calc(72 * var(--unit)) calc(2 * var(--unit)),
+                calc(74 * var(--unit)) calc(4 * var(--unit)),
+
+                calc(6 * var(--unit)) calc(4 * var(--unit)),
+                calc(8 * var(--unit)) calc(6 * var(--unit)),
+
+                calc(27 * var(--unit)) calc(3 * var(--unit)),
+                calc(29 * var(--unit)) calc(5 * var(--unit)),
+
+                calc(36 * var(--unit)) calc(3 * var(--unit)),
+                calc(38 * var(--unit)) calc(5 * var(--unit)),
+
+                calc(4 * var(--unit)) calc(4 * var(--unit)),
+                calc(6 * var(--unit)) calc(6 * var(--unit)),
+
+                calc(6 * var(--unit)) calc(4 * var(--unit)),
+                calc(8 * var(--unit)) calc(6 * var(--unit)),
+
+                calc(6 * var(--unit)) calc(4 * var(--unit)),
+                calc(8 * var(--unit)) calc(6 * var(--unit)),
+
+                calc(51 * var(--unit)) calc(4 * var(--unit)),
+                calc(53 * var(--unit)) calc(6 * var(--unit)),
+
+                    /* left side - 8 */
+                calc(10 * var(--unit)) calc(15 * var(--unit)), /*=11*/
+                calc(12 * var(--unit)) calc(14 * var(--unit)),
+                calc(11 * var(--unit)) calc(14 * var(--unit)),
+                calc(26 * var(--unit)) calc(27 * var(--unit)),
+                calc(26 * var(--unit)) calc(27 * var(--unit)),
+
+                calc(11 * var(--unit)) calc(14 * var(--unit)),
+                calc(11 * var(--unit)) calc(14 * var(--unit)),
+                calc(11 * var(--unit)) calc(14 * var(--unit)),
+                calc(11 * var(--unit)) calc(14 * var(--unit)),
+
+                calc(27 * var(--unit)) calc(27 * var(--unit)),
+                calc(27 * var(--unit)) calc(27 * var(--unit)),
+
+                    /* left side - 7 */
+                calc(38 * var(--unit)) calc(15 * var(--unit)), /*=34*/
+                calc(38 * var(--unit)) calc(15 * var(--unit)),
+
+                calc(38 * var(--unit)) calc(15 * var(--unit)),
+                calc(38 * var(--unit)) calc(15 * var(--unit)),
+
+                calc(33 * var(--unit)) calc(23 * var(--unit)),
+                calc(25 * var(--unit)) calc(25 * var(--unit)),
+                calc(25 * var(--unit)) calc(25 * var(--unit)),
+                calc(25 * var(--unit)) calc(25 * var(--unit)),
+                calc(25 * var(--unit)) calc(25 * var(--unit)),
+                calc(33 * var(--unit)) calc(25 * var(--unit)),
+
+                calc(3 * var(--unit)) calc(9 * var(--unit)),
+                calc(3 * var(--unit)) calc(9 * var(--unit)),
+
+                calc(9 * var(--unit)) calc(3 * var(--unit)),
+                calc(9 * var(--unit)) calc(3 * var(--unit)),
+                calc(9 * var(--unit)) calc(3 * var(--unit)),
+                calc(9 * var(--unit)) calc(3 * var(--unit)),
+
+                calc(var(--cmt-w) * var(--unit)) calc(var(--cmt-h) * var(--unit)),
+                calc(var(--cmt-w) * var(--unit)) calc(var(--cmt-h) * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(60 * var(--unit)) calc(60 * var(--unit)),
+                calc(60 * var(--unit)) calc(60 * var(--unit)),
+                calc(60 * var(--unit)) calc(60 * var(--unit)),
+                calc(60 * var(--unit)) calc(60 * var(--unit)),
+                calc(10 * var(--unit)) calc(10 * var(--unit)),
+                calc(10 * var(--unit)) calc(10 * var(--unit)),
+                calc(17 * var(--unit)) calc(3 * var(--unit)),
+                calc(17 * var(--unit)) calc(3 * var(--unit)),
+                calc(17 * var(--unit)) calc(3 * var(--unit)),
+                calc(31 * var(--unit)) calc(21 * var(--unit)),
+                calc(31 * var(--unit)) calc(21 * var(--unit)),
+                calc(29.4 * var(--unit)) calc(19 * var(--unit)),
+
+                    /* left side - 6 */
+                calc(25 * var(--unit)) calc(5 * var(--unit)), /*=17*/
+                calc(204 * var(--unit)) calc(1 * var(--unit)),
+                calc(204 * var(--unit)) calc(3 * var(--unit)),
+                calc(206 * var(--unit)) calc(5 * var(--unit)),
+
+                calc(20 * var(--unit)) calc(20 * var(--unit)),
+
+                calc(20 * var(--unit)) calc(20 * var(--unit)),
+                calc(20 * var(--unit)) calc(20 * var(--unit)),
+
+                calc(20 * var(--unit)) calc(20 * var(--unit)),
+                calc(20 * var(--unit)) calc(20 * var(--unit)),
+
+                calc(223 * var(--unit)) calc(59 * var(--unit)),
+                calc(232 * var(--unit)) calc(47 * var(--unit)),
+
+                calc(10 * var(--unit)) calc(10 * var(--unit)),
+                calc(10 * var(--unit)) calc(10 * var(--unit)),
+                calc(10 * var(--unit)) calc(10 * var(--unit)),
+                calc(10 * var(--unit)) calc(10 * var(--unit)),
+
+                calc(230 * var(--unit)) calc(57 * var(--unit)),
+                calc(232 * var(--unit)) calc(59 * var(--unit)),
+
+                    /* left side - 5 */
+                var(--circuit-leg-size) var(--circuit-leg-size), /*=59*/
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                    /* main legs */
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                calc(20 * var(--unit)) calc(20 * var(--unit)),
+                calc(19 * var(--unit)) calc(19 * var(--unit)),
+                calc(231 * var(--unit)) calc(56 * var(--unit)),
+
+                    /* shadow legs */
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+                var(--circuit-leg-size) var(--circuit-leg-size),
+
+                    /* left side - 4 */
+                var(--hole-s) var(--hole-s2), /*=24*/
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+                var(--hole-s) var(--hole-s2),
+
+                var(--stripe-s) var(--stripe-s), /*=24*/
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+                var(--stripe-s) var(--stripe-s),
+
+                calc(4 * var(--unit)) calc(8 * var(--unit)), /*=24*/
+                calc(14 * var(--unit)) calc(6 * var(--unit)),
+                calc(22 * var(--unit)) calc(6 * var(--unit)),
+                calc(22 * var(--unit)) calc(8 * var(--unit)),
+                calc(20 * var(--unit)) calc(10 * var(--unit)),
+
+                calc(4 * var(--unit)) calc(8 * var(--unit)),
+                calc(14 * var(--unit)) calc(6 * var(--unit)),
+                calc(22 * var(--unit)) calc(6 * var(--unit)),
+                calc(22 * var(--unit)) calc(8 * var(--unit)),
+                calc(20 * var(--unit)) calc(10 * var(--unit)),
+
+                calc(4 * var(--unit)) calc(8 * var(--unit)),
+                calc(14 * var(--unit)) calc(6 * var(--unit)),
+                calc(22 * var(--unit)) calc(6 * var(--unit)),
+                calc(22 * var(--unit)) calc(8 * var(--unit)),
+                calc(20 * var(--unit)) calc(10 * var(--unit)),
+
+                calc(4 * var(--unit)) calc(8 * var(--unit)),
+                calc(14 * var(--unit)) calc(6 * var(--unit)),
+                calc(22 * var(--unit)) calc(6 * var(--unit)),
+                calc(22 * var(--unit)) calc(8 * var(--unit)),
+                calc(20 * var(--unit)) calc(10 * var(--unit)),
+
+                calc(20 * var(--unit)) calc(10 * var(--unit)),
+                calc(20 * var(--unit)) calc(10 * var(--unit)),
+                calc(20 * var(--unit)) calc(10 * var(--unit)),
+                calc(20 * var(--unit)) calc(10 * var(--unit)),
+
+                    /* left side - 3 */
+                calc(12 * var(--unit)) calc(12 * var(--unit)), /*=33*/
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+
+                calc(31 * var(--unit)) calc(14 * var(--unit)),
+                calc(32 * var(--unit)) calc(16 * var(--unit)),
+                calc(32 * var(--unit)) calc(16 * var(--unit)),
+                calc(31 * var(--unit)) calc(14 * var(--unit)),
+                calc(32 * var(--unit)) calc(16 * var(--unit)),
+                calc(32 * var(--unit)) calc(16 * var(--unit)),
+                calc(31 * var(--unit)) calc(14 * var(--unit)),
+                calc(32 * var(--unit)) calc(16 * var(--unit)),
+                calc(32 * var(--unit)) calc(16 * var(--unit)),
+
+                calc(123 * var(--unit)) calc(22 * var(--unit)),
+                calc(125 * var(--unit)) calc(24 * var(--unit)),
+                calc(123 * var(--unit)) calc(22 * var(--unit)),
+                calc(123 * var(--unit)) calc(22 * var(--unit)),
+                calc(125 * var(--unit)) calc(24 * var(--unit)),
+                calc(123 * var(--unit)) calc(22 * var(--unit)),
+                calc(123 * var(--unit)) calc(22 * var(--unit)),
+                calc(125 * var(--unit)) calc(24 * var(--unit)),
+                calc(123 * var(--unit)) calc(22 * var(--unit)),
+                calc(123 * var(--unit)) calc(22 * var(--unit)),
+                calc(125 * var(--unit)) calc(24 * var(--unit)),
+                calc(123 * var(--unit)) calc(22 * var(--unit)),
+
+                calc(12 * var(--unit)) calc(12 * var(--unit)), /*21*/
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(14 * var(--unit)) calc(29 * var(--unit)),
+                calc(16 * var(--unit)) calc(30 * var(--unit)),
+                calc(16 * var(--unit)) calc(30 * var(--unit)),
+
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(14 * var(--unit)) calc(29 * var(--unit)),
+                calc(16 * var(--unit)) calc(30 * var(--unit)),
+                calc(16 * var(--unit)) calc(30 * var(--unit)),
+
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(12 * var(--unit)) calc(12 * var(--unit)),
+                calc(14 * var(--unit)) calc(29 * var(--unit)),
+                calc(16 * var(--unit)) calc(30 * var(--unit)),
+                calc(16 * var(--unit)) calc(30 * var(--unit)),
+
+                    /* left side - 2 */
+                calc(244 * var(--unit)) calc(1 * var(--unit)), /*=50*/
+                calc(244 * var(--unit)) calc(3 * var(--unit)),
+                calc(246 * var(--unit)) calc(5 * var(--unit)),
+
+                calc(31 * var(--unit)) calc(30 * var(--unit)),
+                calc(37 * var(--unit)) calc(36 * var(--unit)),
+                calc(39 * var(--unit)) calc(38 * var(--unit)),
+                calc(37 * var(--unit)) calc(36 * var(--unit)),
+
+                calc(45 * var(--unit)) calc(2 * var(--unit)),
+                calc(45 * var(--unit)) calc(2 * var(--unit)),
+                calc(45 * var(--unit)) calc(2 * var(--unit)),
+                calc(45 * var(--unit)) calc(2 * var(--unit)),
+                calc(45 * var(--unit)) calc(2 * var(--unit)),
+
+                calc(47 * var(--unit)) calc(4 * var(--unit)),
+                calc(47 * var(--unit)) calc(4 * var(--unit)),
+                calc(47 * var(--unit)) calc(4 * var(--unit)),
+                calc(47 * var(--unit)) calc(4 * var(--unit)),
+                calc(47 * var(--unit)) calc(4 * var(--unit)),
+
+                calc(2 * var(--unit)) calc(44 * var(--unit)),
+                calc(2 * var(--unit)) calc(44 * var(--unit)),
+                calc(2 * var(--unit)) calc(44 * var(--unit)),
+                calc(2 * var(--unit)) calc(44 * var(--unit)),
+                calc(2 * var(--unit)) calc(44 * var(--unit)),
+
+                calc(4 * var(--unit)) calc(46 * var(--unit)),
+                calc(4 * var(--unit)) calc(46 * var(--unit)),
+                calc(4 * var(--unit)) calc(46 * var(--unit)),
+                calc(4 * var(--unit)) calc(46 * var(--unit)),
+                calc(4 * var(--unit)) calc(46 * var(--unit)),
+
+                calc(41 * var(--unit)) calc(22 * var(--unit)),
+                calc(39 * var(--unit)) calc(23 * var(--unit)),
+                calc(39 * var(--unit)) calc(39 * var(--unit)),
+                calc(39 * var(--unit)) calc(39 * var(--unit)),
+
+                calc(41 * var(--unit)) calc(31 * var(--unit)),
+                calc(41 * var(--unit)) calc(30 * var(--unit)),
+                calc(39 * var(--unit)) calc(39 * var(--unit)),
+                calc(39 * var(--unit)) calc(39 * var(--unit)),
+
+                calc(11 * var(--unit)) calc(11 * var(--unit)),
+                calc(11 * var(--unit)) calc(11 * var(--unit)),
+                calc(39 * var(--unit)) calc(39 * var(--unit)),
+                calc(39 * var(--unit)) calc(39 * var(--unit)),
+                calc(48 * var(--unit)) calc(27 * var(--unit)),
+
+                calc(30 * var(--unit)) calc(11 * var(--unit)),
+                calc(68 * var(--unit)) calc(38 * var(--unit)),
+                calc(40 * var(--unit)) calc(40 * var(--unit)),
+                calc(40 * var(--unit)) calc(40 * var(--unit)),
+                calc(40 * var(--unit)) calc(40 * var(--unit)),
+
+                calc(30 * var(--unit)) calc(11 * var(--unit)),
+                calc(68 * var(--unit)) calc(38 * var(--unit)),
+                calc(40 * var(--unit)) calc(40 * var(--unit)),
+                calc(40 * var(--unit)) calc(40 * var(--unit)),
+                calc(40 * var(--unit)) calc(40 * var(--unit)),
+
+                    /* left side - 1 */
+                calc(19 * var(--unit)) calc(1.2 * var(--unit)), /*=51*/
+
+                calc(8 * var(--unit)) calc(6 * var(--unit)),
+                calc(10 * var(--unit)) calc(8 * var(--unit)),
+
+                calc(8 * var(--unit)) calc(6 * var(--unit)),
+                calc(10 * var(--unit)) calc(8 * var(--unit)),
+
+                calc(8 * var(--unit)) calc(6 * var(--unit)),
+                calc(10 * var(--unit)) calc(8 * var(--unit)),
+                calc(8 * var(--unit)) calc(13 * var(--unit)),
+                calc(8 * var(--unit)) calc(15 * var(--unit)),
+                calc(10 * var(--unit)) calc(19 * var(--unit)),
+                calc(11 * var(--unit)) calc(21 * var(--unit)),
+
+                calc(20 * var(--unit)) calc(40 * var(--unit)),
+                calc(22 * var(--unit)) calc(42 * var(--unit)),
+                calc(20 * var(--unit)) calc(40 * var(--unit)),
+                calc(9 * var(--unit)) calc(9 * var(--unit)),
+                calc(3 * var(--unit)) calc(23 * var(--unit)),
+                calc(20 * var(--unit)) calc(20 * var(--unit)),
+                calc(89 * var(--unit)) calc(60 * var(--unit)),
+                calc(76 * var(--unit)) calc(53 * var(--unit)),
+                calc(87 * var(--unit)) calc(57 * var(--unit)),
+                calc(89 * var(--unit)) calc(60 * var(--unit)),
+                calc(16 * var(--unit)) calc(16 * var(--unit)),
+                calc(16 * var(--unit)) calc(16 * var(--unit)),
+                calc(16 * var(--unit)) calc(65 * var(--unit)),
+                calc(19 * var(--unit)) calc(20 * var(--unit)),
+                calc(80 * var(--unit)) calc(56 * var(--unit)),
+                calc(10 * var(--unit)) calc(6 * var(--unit)),
+                calc(9 * var(--unit)) calc(6 * var(--unit)),
+                calc(10 * var(--unit)) calc(6 * var(--unit)),
+                calc(9 * var(--unit)) calc(6 * var(--unit)),
+                calc(10 * var(--unit)) calc(6 * var(--unit)),
+                calc(9 * var(--unit)) calc(6 * var(--unit)),
+                calc(10 * var(--unit)) calc(6 * var(--unit)),
+                calc(9 * var(--unit)) calc(6 * var(--unit)),
+                calc(10 * var(--unit)) calc(6 * var(--unit)),
+                calc(9 * var(--unit)) calc(6 * var(--unit)),
+                calc(41 * var(--unit)) calc(42 * var(--unit)),
+                calc(41 * var(--unit)) calc(42 * var(--unit)),
+                calc(41 * var(--unit)) calc(42 * var(--unit)),
+                calc(41 * var(--unit)) calc(42 * var(--unit)),
+                calc(41 * var(--unit)) calc(42 * var(--unit)),
+                calc(41 * var(--unit)) calc(42 * var(--unit)),
+                calc(16 * var(--unit)) calc(25 * var(--unit)),
+                calc(6 * var(--unit)) calc(48 * var(--unit)),
+                calc(20 * var(--unit)) calc(79.2 * var(--unit)),
+                calc(51 * var(--unit)) calc(7 * var(--unit)),
+                calc(49 * var(--unit)) calc(11 * var(--unit)),
+                calc(16 * var(--unit)) calc(54 * var(--unit)),
+                calc(52 * var(--unit)) calc(49 * var(--unit)),
+                calc(14 * var(--unit)) calc(19 * var(--unit)),
+                calc(62 * var(--unit)) calc(46 * var(--unit)),
+                calc(36 * var(--unit)) calc(84 * var(--unit)),
+
+                    /* base */
+                calc(20 * var(--unit)) calc(20 * var(--unit)),  /*=18*/
+                calc(20 * var(--unit)) calc(20 * var(--unit)),
+                calc(20 * var(--unit)) calc(20 * var(--unit)),
+                calc(20 * var(--unit)) calc(20 * var(--unit)),
+                3.706% 2.7%,
+                3.706% 2.7%,
+                3.64% 2.7%,
+                2.4% 4.23%,
+                calc(410 * var(--unit)) calc(320 * var(--unit)),
+                calc(410 * var(--unit)) calc(306 * var(--unit)),
+                calc(412 * var(--unit)) calc(156 * var(--unit)),
+                calc(24 * var(--unit)) calc(25 * var(--unit)),
+                calc(24 * var(--unit)) calc(25 * var(--unit)),
+                calc(24 * var(--unit)) calc(25 * var(--unit)),
+                calc(24 * var(--unit)) calc(25 * var(--unit)),
+                calc(7 * var(--unit)) calc(312 * var(--unit)),
+                calc(408 * var(--unit)) calc(14 * var(--unit)),
+                calc(410 * var(--unit)) calc(10 * var(--unit));
+
+        background-repeat:
+                no-repeat, /*=12*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*n*/
+                no-repeat,
+
+                no-repeat,
+                no-repeat,
+
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                repeat-x,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat, /*=10*/
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat,
+                no-repeat;
+    }
+
+
+
+    /* making things tidy :D */
+    html, body{
+        padding:0;
+        margin:0;
+        position:relative;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background-color:var(--background);
+    }
+
+    body::before, body::after{
+        content:"";
+        position:absolute;
+        transform:translate(-50%,-50%);
+    }
+
+    html, body, body::before, body::after{
+        display:block;
+    }
+
+    /* layer - background */
+    body::before{
+        width:calc(var(--main-width) * var(--unit));
+        height:calc(var(--main-height) * var(--unit));
+        left:calc(50% + var(--main-left) * var(--unit));
+        top:calc(50% + var(--main-top) * var(--unit));
+
+        box-shadow: 2px 31px 0px -26px var(--shadow);
+        border-radius: 0% 0% 7% 7%;
+    }
+
+    /* layer - foreground (LCD Display) */
+    body::after{
+        content: var(--message);
+        width:calc(var(--lcd-width) * var(--unit));
+        height:calc(var(--lcd-height) * var(--unit));
+        left:calc(50% + var(--lcd-left) * var(--unit));
+        top:calc(50% + var(--lcd-top) * var(--unit));
+        padding-top:var(--msg-padding);
+        box-sizing:border-box;
+        background-color:var(--color17);
+        background-image:
+                linear-gradient(90deg,transparent calc(11 * var(--unit)),transparent 1px),
+                var(--insertion-indicator),
+                var(--insertion-indicator),
+                var(--insertion-indicator),
+                var(--insertion-indicator);
+
+        background-position:
+                calc(0 * var(--unit)) calc(8 * var(--unit)),
+                calc(0 * var(--unit)) calc(8 * var(--unit)),
+                calc(12 * var(--unit)) calc(8 * var(--unit)),
+                calc(0 * var(--unit)) calc((var(--insertion-height) + 9) * var(--unit)),
+                calc(12 * var(--unit)) calc((var(--insertion-height) + 9) * var(--unit));
+
+        background-size:
+                calc(24 * var(--unit)) calc(var(--insertion-height) * var(--unit));
+
+        box-shadow:
+                0 calc(1 * var(--unit)) 0 0 var(--color17),
+                0 0 0 calc(6 * var(--unit)) var(--color00),
+                0 0 0 calc(3 * var(--unit)) var(--color00);
+
+        background-repeat:
+                no-repeat,
+                repeat-x,
+                repeat-x,
+                repeat-x,
+                repeat-x,
+                repeat-x;
+
+        font-family:
+                "VT323",
+                "Courier New",
+                "Consolas",
+                system-ui,
+                -apple-system-ui,
+                monospace;
+
+        border-radius:calc(4 * var(--unit));
+        font-size: var(--msg-font-size);
+        font-weight: normal;
+        white-space: nowrap;
+        overflow: hidden;
+        text-transform:var(--msg-transform);
+        text-indent: var(--msg-indent-start);
+        color:var(--color43);
+        animation:msg var(--msg-duration) steps(var(--msg-steps)) infinite, blink var(--blink-duration) steps(var(--blink-steps)) infinite;
+        border-left:calc(11 * var(--unit)) solid var(--color17);
+        border-right:calc(12 * var(--unit)) solid var(--color17);
+    }
+
+    /* Cheesy animation ;P */
+
+    @keyframes msg{
+        to{
+            text-indent: var(--msg-indent-end);
+        }
+    }
+
+    @keyframes blink{
+        to{
+            background-image:
+                    linear-gradient(90deg,var(--color43) calc(11 * var(--unit)),transparent 1px),
+                    var(--insertion-indicator),
+                    var(--insertion-indicator),
+                    var(--insertion-indicator),
+                    var(--insertion-indicator);
+        }
+    }
+
+    /* Chromium Specific CSS against bad rendering */
+
+    @supports (backdrop-filter: blur(5px)) {
+        :root{
+            --main-body-smooth-radius:calc(10 * var(--unit));
+            --circle-radius:9;
+            --ss-r-1:calc(7 * var(--unit));
+            --ss-r-2:calc(6.4 * var(--unit));
+            --ss-r-3:calc(7 * var(--unit));
+
+            --ss-r-4:calc(9 * var(--unit));
+            --ss-r-5:calc(15 * var(--unit));
+            --ss-r-6:calc(13 * var(--unit));
+            --ss-r-7:calc(9 * var(--unit));
+            --ss-rp-8:65.1%;
+            --ss-r-9:calc(9 * var(--unit));
+            --ss-r-10:calc(52 * var(--unit));
+            --ss-r-11:calc(9 * var(--unit));
+            --ss-r-12:calc(16 * var(--unit));
+            --ss-r-13:calc(12 * var(--unit));
+            --circ:52%;
+            --circ2:37%;
+
+            --ss-r-14:calc(15 * var(--unit));
+            --ss-r-15:calc(10 * var(--unit));
+            --ss-r-16:calc(20 * var(--unit));
+            --ss-r-17:calc(19 * var(--unit));
+            --ss-r-18:calc(3.3 * var(--unit));
+            --circ3:27%;
+
+            --ss-r-19:calc(6 * var(--unit));
+            --circle-outline-radius:38%;
+
+            --ss-r-20:calc(7 * var(--unit));
+            --round-rect:68.9%;
+
+            --ss-r-21:calc(8 * var(--unit));
+            --ss-r-23:54% 65%;
+        }
+    }
+
+    /* That's all ;) */
+</style>
+<body>
+  <h1 style='font-family: "Helvetica Neue", "Lato", Verdana, Helvetica, Geneva, sans-serif; color: white;'>Amazing CSS!</h1>
+</body>
+</html>

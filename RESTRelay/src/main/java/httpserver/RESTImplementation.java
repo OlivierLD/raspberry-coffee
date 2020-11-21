@@ -9,6 +9,10 @@ import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 import relay.RelayManager;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.StringReader;
 import java.security.InvalidParameterException;
 import java.util.Arrays;
@@ -139,6 +143,22 @@ public class RESTImplementation {
 						if (status != null) {
 							relayStatus = new RelayStatus();
 							relayStatus.status = status.equals("on");
+						}
+						// For tests
+						byte[] imageData = (byte[])formDataParameters.get("importData");
+						if (imageData != null) {
+							try {
+								ByteArrayInputStream bis = new ByteArrayInputStream(imageData);
+								BufferedImage bImage2 = ImageIO.read(bis);
+								if (bImage2 != null) {
+									ImageIO.write(bImage2, "jpg", new File("output.jpg"));
+									System.out.println("image created");
+								} else {
+									System.out.println("Something went wrong with the image...");
+								}
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
 						}
 					} catch (InvalidParameterException ipe) {
 						response = HTTPServer.buildErrorResponse(response,
