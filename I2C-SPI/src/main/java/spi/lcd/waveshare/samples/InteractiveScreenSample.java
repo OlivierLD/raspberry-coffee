@@ -32,7 +32,12 @@ public class InteractiveScreenSample {
 			currentIndex++;
 		}
 	};
-	private static Consumer<GpioPinDigitalStateChangeEvent> key2Consumer = (event) -> k2 = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> key2Consumer = (event) -> {
+		k2 = event.getState().isLow();
+		if (k2) {  // K2, terminate program.
+			keepLooping = false;
+		}
+	};
 	private static Consumer<GpioPinDigitalStateChangeEvent> key3Consumer = (event) -> {
 		k3 = event.getState().isLow();
 		if (k3) { // K3 is pushed down
@@ -135,6 +140,9 @@ public class InteractiveScreenSample {
 		date2 = y;
 		y += fontSize;
 		lcd.GUIDrawString(8, y, String.format("Index : %d ", currentIndex), font, LCD1in3.BLACK, LCD1in3.YELLOW);
+
+		y += (2 * fontSize);
+		lcd.GUIDrawString(8, y, "K2 to quit.", font, LCD1in3.BLACK, LCD1in3.BLUE);
 		indexPos = y;
 		// y += fontSize;
 
