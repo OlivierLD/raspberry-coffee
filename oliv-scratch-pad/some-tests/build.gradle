@@ -20,7 +20,7 @@ version '0.0.1-SNAPSHOT'
 repositories {
     mavenCentral()
     mavenLocal()
-    maven { url "http://www.datanucleus.org/downloads/maven2" }
+    maven { url "https://www.datanucleus.org/downloads/maven2" }
     // maven { url "https://nexus.corp.com/content/repositories/releases" }
     maven { url "https://mvnrepository.com/artifact" }
     maven { url "https://dl.bintray.com/cibotech/public" }

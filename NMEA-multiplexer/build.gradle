@@ -12,7 +12,7 @@ version = '1.0'
 repositories {
     mavenLocal()
 //    maven { url "https://oss.sonatype.org/content/groups/public" }
-    maven { url "http://www.datanucleus.org/downloads/maven2" }
+    maven { url "https://www.datanucleus.org/downloads/maven2" }
 //    maven { url "http://lediouris.net/maven2" }
     maven { url "https://mvnrepository.com/artifact" }
     mavenCentral()
