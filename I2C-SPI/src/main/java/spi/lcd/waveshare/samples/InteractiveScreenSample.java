@@ -133,7 +133,7 @@ public class InteractiveScreenSample {
 		lcd.GUIDrawString(8, y, "W 122 30.42'", font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		y += fontSize;
 
-		int date1 = 0, date2 = 0, indexPos = 0; // For refresh
+		int date1 = 0, date2 = 0, indexPos = 0; // For refresh, variable data.
 		Date date = new Date();
 		lcd.GUIDrawString(8, y, SDF_1.format(date), font, LCD1in3.BLACK, LCD1in3.YELLOW);
 		date1 = y;
