@@ -142,10 +142,10 @@ public class InteractiveScreenSample {
 		date2 = y;
 		y += fontSize;
 		lcd.GUIDrawString(8, y, String.format("Index : %d ", currentIndex), font, LCD1in3.BLACK, LCD1in3.YELLOW);
+		indexPos = y;
 
 		y += (2 * fontSize);
 		lcd.GUIDrawString(8, y, "K2 to quit.", font, LCD1in3.BLACK, LCD1in3.BLUE);
-		indexPos = y;
 		// y += fontSize;
 
 		if (!lcd.isSimulating()) {
