@@ -210,5 +210,6 @@ public class InteractiveScreenSample {
 		synchronized (closingThread) {
 			closingThread.notify(); // Un-block the closingThread
 		}
+		System.out.println("Done for good");
 	}
 }
