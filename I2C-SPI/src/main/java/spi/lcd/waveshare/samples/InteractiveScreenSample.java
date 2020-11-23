@@ -26,6 +26,7 @@ public class InteractiveScreenSample {
 	private static int defaultFontSize = 16;
 
 	private static boolean k1 = false, k2 = false, k3 = false, jUp = false, jDown = false, jRight = false, jLeft = false, jPressed = false;
+	private static boolean ctrlC = true;
 	private static Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> {
 		k1 = event.getState().isLow();
 		if (k1) { // K1 is pushed down
@@ -36,6 +37,7 @@ public class InteractiveScreenSample {
 		k2 = event.getState().isLow();
 		if (k2) {  // K2, terminate program.
 			keepLooping = false;
+			ctrlC = false;
 		}
 	};
 	private static Consumer<GpioPinDigitalStateChangeEvent> key3Consumer = (event) -> {
@@ -155,11 +157,13 @@ public class InteractiveScreenSample {
 				System.out.println("Ctrl+C !");
 				keepLooping = false;
 				// TimeUtil.delay(10_000);// Wait for the screen to shut off
-				synchronized (this) {
-					try {
-						this.wait();
-					} catch(InterruptedException ie) {
-						ie.printStackTrace();
+				if (ctrlC) {
+					synchronized (this) {
+						try {
+							this.wait();
+						} catch (InterruptedException ie) {
+							ie.printStackTrace();
+						}
 					}
 				}
 			}
@@ -207,7 +211,7 @@ public class InteractiveScreenSample {
 		}
 		System.out.println("End of Sample");
 		System.out.println("Bye.");
-		if (!k2) { // ie that was a Ctrl+C
+		if (ctrlC) { // ie that was a Ctrl+C, not a K2
 			synchronized (closingThread) {
 				closingThread.notify(); // Un-block the closingThread
 			}
