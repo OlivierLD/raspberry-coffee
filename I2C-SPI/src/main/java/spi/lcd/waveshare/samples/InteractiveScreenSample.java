@@ -207,8 +207,10 @@ public class InteractiveScreenSample {
 		}
 		System.out.println("End of Sample");
 		System.out.println("Bye.");
-		synchronized (closingThread) {
-			closingThread.notify(); // Un-block the closingThread
+		if (!k2) { // ie that was a Ctrl+C
+			synchronized (closingThread) {
+				closingThread.notify(); // Un-block the closingThread
+			}
 		}
 		System.out.println("Done for good");
 	}
