@@ -13,24 +13,11 @@ shadowJar {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-
-//sourceSets {
-//  main {
-//    java {
-//      srcDir 'src/java'
-//    }
-//  }
-//  test {
-//    java {
-//      srcDir 'tests/java'
-//    }
-//  }
-//}
-
 repositories {
   mavenCentral()
   mavenLocal()
   maven { url "https://oss.sonatype.org/content/groups/public" }
+  maven { url "https://www.datanucleus.org/downloads/maven2" }
 }
 
 dependencies {
