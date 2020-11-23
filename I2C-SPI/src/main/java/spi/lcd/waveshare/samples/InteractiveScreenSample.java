@@ -153,6 +153,10 @@ public class InteractiveScreenSample {
 		}
 
 		Thread closingThread = new Thread("Shutdown Hook") {
+			/*
+			 * Warning!! Also called when the program
+			 * exits without Ctrl-C (like System.exit()).
+			 */
 			public void run() {
 				System.out.println("Ctrl+C !");
 				keepLooping = false;
@@ -164,6 +168,7 @@ public class InteractiveScreenSample {
 						} catch (InterruptedException ie) {
 							ie.printStackTrace();
 						}
+						System.out.println("Shutdown Hook released");
 					}
 				}
 			}
