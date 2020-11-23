@@ -20,6 +20,7 @@ repositories {
     mavenLocal()
     maven { url "http://www.datanucleus.org/downloads/maven2" }
 //    maven { url "https://oss.sonatype.org/content/groups/public" }
+    maven { url "https://mvnrepository.com/artifact" }
 }
 
 application {
