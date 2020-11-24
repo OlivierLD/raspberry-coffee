@@ -558,7 +558,12 @@ public class HTTPServer {
 				boolean cr = false, lf = false;
 				boolean lineAvailable = false;
 				boolean inPayload = false;
-				StringBuffer sb = new StringBuffer(); // TODO Binary, multipart, form-data, etc!!!
+				StringBuffer sb = new StringBuffer();
+				// TODO This is a WiP. Not good for an image...
+				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(); // For Binary, multipart, form-data, etc!!!
+				boolean payloadIsBinary = false;
+				boolean payloadTypeHasBeenSet = false;
+
 				boolean keepReading = true;
 //					System.out.println(">>> Top of the Loop <<<");
 				if (verbose) {
@@ -603,15 +608,30 @@ public class HTTPServer {
 								cr = lf = false;
 							}
 						} else {
+							// Test header here
+							if (!payloadTypeHasBeenSet) {
+								String contentType = headers.get("Content-Type").trim();
+								payloadIsBinary = (contentType.startsWith("image") || contentType.equals("application/octet-stream"));
+								payloadTypeHasBeenSet = true;
+							}
 							if ("true".equals(System.getProperty("http.super.verbose", "false"))) {
 								System.out.println(String.format("\tPayload data: 0x%02X", read));
 							}
-							sb.append((char) read); // TODO Binary content!!
+							if (payloadIsBinary) {
+								byteArrayOutputStream.write(read); // Binary content!!
+							} else {
+								sb.append((char) read);
+							}
 						}
 						// Super-DEBUG
-//								System.out.println("======================");
-//								DumpUtil.displayDualDump(sb.toString());
-//								System.out.println("======================");
+//						System.out.println("======================");
+//						if (payloadIsBinary) {
+//							DumpUtil.displayDualDump(byteArrayOutputStream.toByteArray());
+//						} else {
+//							DumpUtil.displayDualDump(sb.toString());
+//						}
+//						System.out.println("======================");
+						//
 						if (!inPayload) {
 							if (lineAvailable) {
 								if (verboseDump) {
@@ -653,9 +673,16 @@ public class HTTPServer {
 						}
 					}
 				}
-				String payload = sb.toString();
-				if (payload != null && request != null) {
-					request.setContent(payload.getBytes());
+				String payload = null;
+				if (payloadIsBinary) {
+					byte[] binaryPayload = byteArrayOutputStream.toByteArray();
+					System.out.println(String.format(">> Payload is %d bytes big", binaryPayload.length));
+					request.setContent(binaryPayload);
+				} else {
+					payload = sb.toString();
+					if (payload != null && request != null) {
+						request.setContent(payload.getBytes());
+					}
 				}
 				if (verbose) {
 					HTTPContext.getInstance().getLogger().info(">>> End of HTTP Request <<<");

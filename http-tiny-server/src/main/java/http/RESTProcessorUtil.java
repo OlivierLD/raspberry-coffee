@@ -203,7 +203,7 @@ CancelPizzaTestSuite,I don't want my Pizza anymore,CancelPizza,true,en,en,,
 								if (prmContentType.startsWith("text/")) {
 									parameterMap.put(prmName, value);
 								} else {
-									parameterMap.put(prmName, value.getBytes());
+									parameterMap.put(prmName, value.getBytes()); // Wow! Might need some love...
 								}
 							}
 						}

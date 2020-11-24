@@ -10,7 +10,9 @@ import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 
-import java.io.StringReader;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -60,6 +62,11 @@ public class RESTImplementation {
 					"Request the download and transform of images (faxes) from the web."),
 			new Operation(
 					"POST",
+					IMG_PREFIX + "/upload",
+					this::uploadImage,
+					"Request the upload of an image. Image in the body, image name in the header, and Content-Type."),
+			new Operation(
+					"POST",
 					IMG_PREFIX + "/get-from-file-system",
 					this::requestTransformation,
 					"Same result as for download-and-transform, but will pick already transformed faxes from the file system.")
@@ -97,6 +104,74 @@ public class RESTImplementation {
 		String content = new Gson().toJson(opList);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
+		return response;
+	}
+
+	// Experimental
+	private Response uploadImage(Request request) {
+		Response response = new Response(request.getProtocol(), Response.CREATED);
+		if (request.getContent() != null && request.getContent().length > 0) {
+			byte[] imageData = request.getContent();
+			// Content-Type
+			String contentType = request.getHeaders().get("Content-Type").trim();
+			if (contentType == null) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("IMG-0011")
+								.errorMessage("Request header Content-Type not found"));
+				return response;
+			}
+			String imageFileName = request.getHeaders().get("Image-File-Name");
+			if (imageFileName == null) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("IMG-0012")
+								.errorMessage("Request header Image-File-Name not found"));
+				return response;
+			}
+
+			if (imageData != null) {
+				System.out.println(String.format("Image: %d bytes.", imageData.length));
+				System.out.println(String.format("Content-Length: %s", request.getHeaders().get("Content-Length")));
+				// Temp
+				try {
+					OutputStream os = new FileOutputStream("tempImageFile.jpg");
+					// Starts writing the bytes in it
+					os.write(imageData);
+					System.out.println("Successfully created image file");
+					// Close the file
+					os.close();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				//
+				try {
+					ByteArrayInputStream bis = new ByteArrayInputStream(imageData);
+					BufferedImage bImage2 = ImageIO.read(bis);
+					if (bImage2 != null) {
+						// Image format from Content-Type
+						String imageFormat = "jpg"; // TODO A function to get that one.
+						ImageIO.write(bImage2, imageFormat, new File(imageFileName));
+						System.out.println("image created");
+					} else {
+						System.out.println("Something went wrong with the image..., it's null.");
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("IMG-0010")
+							.errorMessage("Request required payload (image) not found"));
+			return response;
+		}
+
 		return response;
 	}
 
