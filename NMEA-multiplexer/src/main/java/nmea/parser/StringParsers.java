@@ -2290,6 +2290,21 @@ public class StringParsers {
 			}
 		}
 
+		str = "$IIXDR,A,180,D,PTCH,A,-154,D,ROLL*78";
+		System.out.println("[" + str + "] is " + (validCheckSum(str) ? "" : "not ") + "valid.");
+		xdr = parseXDR(str);
+		for (StringGenerator.XDRElement x : xdr) {
+			System.out.println(" => " + x.toString());
+			if (x.getTypeNunit().equals(StringGenerator.XDRTypes.ANGULAR_DISPLACEMENT) &&
+					x.getTransducerName().equals(StringGenerator.XDR_PTCH)) {
+				System.out.println("Pitch:" + x.getValue() + "\272");
+			}
+			if (x.getTypeNunit().equals(StringGenerator.XDRTypes.ANGULAR_DISPLACEMENT) &&
+					x.getTransducerName().equals(StringGenerator.XDR_ROLL)) {
+				System.out.println("Roll:" + x.getValue() + "\272");
+			}
+		}
+
 		str = "$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A";
 		rmc = parseRMC(str);
 		try {

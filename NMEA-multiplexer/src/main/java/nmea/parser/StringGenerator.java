@@ -150,6 +150,10 @@ public class StringGenerator {
 		}
 	}
 
+	// Not sure it's 100% standard... OpenCPN recognizes those, though.
+	public final static String XDR_PTCH = "PTCH"; // No, it's not a typo, there is no 'I' in 'PTCH'.
+	public final static String XDR_ROLL = "ROLL";
+
 	public static String generateXDR(String devicePrefix, XDRElement first, XDRElement... next) {
 		int nbDevice = 0;
 		String xdr = devicePrefix + "XDR,";

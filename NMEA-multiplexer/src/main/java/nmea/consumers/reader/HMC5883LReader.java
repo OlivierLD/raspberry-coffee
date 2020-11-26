@@ -173,10 +173,10 @@ public class HMC5883LReader extends NMEAReader {
 				String nmeaXDR = StringGenerator.generateXDR(devicePrefix,
 								new StringGenerator.XDRElement(XDRTypes.ANGULAR_DISPLACEMENT,
 												pitch,
-												"PTCH"), // No, it's not a typo, there is no 'I' in 'PTCH'.
+												StringGenerator.XDR_PTCH),
 								new StringGenerator.XDRElement(XDRTypes.ANGULAR_DISPLACEMENT,
 												roll,
-												"ROLL"));
+										StringGenerator.XDR_ROLL));
 				nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 				fireDataRead(new NMEAEvent(this, nmeaXDR));
 

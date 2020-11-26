@@ -85,6 +85,10 @@ public class NMEADataCache
 	public static final String HDG_TRUE = "HDG true";
 	public static final String DEVIATION = "d";
 	public static final String VARIATION = "W";
+
+	public static final String PITCH = "Pitch";
+	public static final String ROLL = "Roll";
+
 	public static final String TWA = "TWA";
 	public static final String TWS = "TWS";
 	public static final String TWD = "TWD";
@@ -688,6 +692,12 @@ public class NMEADataCache
 									this.put(BATTERY, new Float(val));
 								} else if (type.equals(StringGenerator.XDRTypes.GENERIC)) { // Consider it as prate.
 									this.put(PRATE, new Float(val));
+								} else if (type.equals(StringGenerator.XDRTypes.ANGULAR_DISPLACEMENT) &&
+										xe.getTransducerName().equals(StringGenerator.XDR_PTCH)) {
+									this.put(PITCH, val);
+								} else if (type.equals(StringGenerator.XDRTypes.ANGULAR_DISPLACEMENT) &&
+										xe.getTransducerName().equals(StringGenerator.XDR_ROLL)) {
+									this.put(ROLL, val);
 								} else {
 									if ("true".equals(System.getProperty("verbose", "false"))) {
 										System.out.println("Un-managed XDR Type:" + type.toString());

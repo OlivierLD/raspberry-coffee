@@ -65,7 +65,7 @@ compass.mux $ ./mux.sh nmea.mux.hmc5883l.oled.yaml
 - In OpenCPN (consuming the `tcp` feed):
   ![OpenCPN](./pictures/01.OpenCPN.HDM.png)
   
-- From another `NMEA-multiplexer` (here a `RESTNavServer`, consuming the `tcp` feed):
+- From **_another_** `NMEA-multiplexer` (here a `RESTNavServer`, consuming the `tcp` feed):
 With a `yaml` file like that:
 ```yaml
 channels:
