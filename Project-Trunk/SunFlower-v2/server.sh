@@ -28,7 +28,7 @@ JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=true"
 #
 PORT=8989
 JAVA_OPTS="$JAVA_OPTS -Dhttp.port=${PORT}"
-JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=true"
+JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=false"
 #
 # For Date simulation:
 JAVA_OPTS="$JAVA_OPTS -Ddate.simulation=false"
