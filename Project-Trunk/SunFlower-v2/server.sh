@@ -45,7 +45,7 @@ JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10" # Give some time to the motor...
 JAVA_OPTS="$JAVA_OPTS -Dno.motor.movement=false"
 #
 # NMEA Data server (NMEA-multiplexer), position and heading
-JAVA_OPTS="$JAVA_OPTS -Dping.nmea.server=true"
+JAVA_OPTS="$JAVA_OPTS -Dping.nmea.server=false"
 JAVA_OPTS="$JAVA_OPTS -Dnmea.server.base.url=http://192.168.42.30:9991"
 #
 JAVA_OPTS="$JAVA_OPTS -Dwith.ssd1306=true" # OLED!
