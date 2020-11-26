@@ -171,12 +171,12 @@ public class HMC5883LReader extends NMEAReader {
 
 				// Generate NMEA String(s). OpenCPN recognizes those ones (Needs a 'II' prefix though).
 				String nmeaXDR = StringGenerator.generateXDR(devicePrefix,
-								new StringGenerator.XDRElement(XDRTypes.ANGULAR_DISPLACEMENT,
-												pitch,
-												StringGenerator.XDR_PTCH),
-								new StringGenerator.XDRElement(XDRTypes.ANGULAR_DISPLACEMENT,
-												roll,
-										StringGenerator.XDR_ROLL));
+						new StringGenerator.XDRElement(XDRTypes.ANGULAR_DISPLACEMENT,
+								pitch,
+								StringGenerator.XDR_PTCH),
+						new StringGenerator.XDRElement(XDRTypes.ANGULAR_DISPLACEMENT,
+								roll,
+								StringGenerator.XDR_ROLL));
 				nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 				fireDataRead(new NMEAEvent(this, nmeaXDR));
 
