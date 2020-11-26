@@ -28,7 +28,7 @@ JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=true"
 #
 PORT=8989
 JAVA_OPTS="$JAVA_OPTS -Dhttp.port=${PORT}"
-JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=false"
+JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=true"
 #
 # For Date simulation:
 JAVA_OPTS="$JAVA_OPTS -Ddate.simulation=false"
@@ -46,7 +46,7 @@ JAVA_OPTS="$JAVA_OPTS -Dno.motor.movement=false"
 #
 # NMEA Data server (NMEA-multiplexer), position and heading
 JAVA_OPTS="$JAVA_OPTS -Dping.nmea.server=true"
-JAVA_OPTS="$JAVA_OPTS -Dnmea.server.base.url=http://192.168.42.31:9991"
+JAVA_OPTS="$JAVA_OPTS -Dnmea.server.base.url=http://192.168.42.30:9991"
 #
 JAVA_OPTS="$JAVA_OPTS -Dwith.ssd1306=true" # OLED!
 #
