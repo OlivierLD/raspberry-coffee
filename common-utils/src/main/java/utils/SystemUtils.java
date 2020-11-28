@@ -190,7 +190,7 @@ public class SystemUtils {
     }
 
     private final static Map<String, String[]> matrix = new HashMap<>();
-
+    // Find official info at https://www.raspberrypi.org/documentation/hardware/raspberrypi/revision-codes/README.md
     static { // Revision, Release Date, Model, PCB Revision, Memory, Notes
         matrix.put("Beta", new String[]{"Q1 2012", "B (Beta)", "?", "256 MB", "Beta Board"});
         matrix.put("0002", new String[]{"Q1 2012", "B", "1.0", "256 MB", ""});
@@ -230,6 +230,9 @@ public class SystemUtils {
         matrix.put("a03111", new String[]{"Q2 2019", "4 Model B", "1.1", "1 GB", "(Mfg by Sony)"});
         matrix.put("b03111", new String[]{"Q2 2019", "4 Model B", "1.1", "2 GB", "(Mfg by Sony)"});
         matrix.put("c03111", new String[]{"Q2 2019", "4 Model B", "1.1", "4 GB", "(Mfg by Sony)"});
+        matrix.put("c03112", new String[]{"-------", "4 Model B", "1.2", "4 GB", "(Mfg by Sony)"});
+        matrix.put("d03114", new String[]{"-------", "4 Model B", "1.4", "8 GB", "(Mfg by Sony)"});
+        matrix.put("c03130", new String[]{"-------", "Pi 400", "1.0", "4 GB", "(Mfg by Sony)"});
     }
 
     public final static int RELEASE_IDX = 0;
@@ -240,12 +243,18 @@ public class SystemUtils {
 
     public static String[] getRPiHardwareRevision() throws Exception {
         String command = "cat /proc/cpuinfo | grep 'Revision' | awk '{print $3}' | sed 's/^1000//'";
-        String result;
-        result = getCommandResult(command).get(0);
-        return matrix.get(result);
+        List<String> commandResult = getCommandResult(command);
+        if (commandResult.size() > 0) {
+            String result = getCommandResult(command).get(0);
+            return matrix.get(result);
+        } else {
+            return null;
+        }
     }
 
     public static void main(String... args) throws Exception {
+
+        System.out.println(String.format(">> (This is class %s)", SystemUtils.class.getName()));
 
         AtomicBoolean minimal = new AtomicBoolean(false);
         AtomicBoolean freeMem = new AtomicBoolean(true);
@@ -259,13 +268,17 @@ public class SystemUtils {
 
         try {
             String[] hardwareData = getRPiHardwareRevision();
-            System.out.println(String.format("Running on:\nModel: %s\nReleased: %s\nPCB Rev: %s\nMemory: %s\nNotes: %s",
-                    hardwareData[MODEL_IDX],
-                    hardwareData[RELEASE_IDX],
-                    hardwareData[PCB_REV_IDX],
-                    hardwareData[MEMORY_IDX],
-                    hardwareData[NOTES_IDX]));
-            System.out.println();
+            if (hardwareData != null) {
+                System.out.println(String.format("Running on:\nModel: %s\nReleased: %s\nPCB Rev: %s\nMemory: %s\nNotes: %s",
+                        hardwareData[MODEL_IDX],
+                        hardwareData[RELEASE_IDX],
+                        hardwareData[PCB_REV_IDX],
+                        hardwareData[MEMORY_IDX],
+                        hardwareData[NOTES_IDX]));
+                System.out.println();
+            } else {
+                System.out.println(String.format(">> No data for this platform. See source of %s", SystemUtils.class.getName()));
+            }
         } catch (IndexOutOfBoundsException iobe) {
             System.out.println("- Unknown - Is that a Raspberry Pi?");
         } catch (Exception ex) {

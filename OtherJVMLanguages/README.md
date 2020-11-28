@@ -377,7 +377,7 @@ Yeah!
 
 > May 2018: current release is `1.9`, jar file is named `clojure-tools-1.9.0.381.jar`.
 
-### [JSR223](https://jcp.org/en/jsr/detail?id=223)
+### [JSR-223](https://jcp.org/en/jsr/detail?id=223)
 > Now withdrawn, unfortunately...
 
 This JSR 223 specifies how to run scripts from Java.

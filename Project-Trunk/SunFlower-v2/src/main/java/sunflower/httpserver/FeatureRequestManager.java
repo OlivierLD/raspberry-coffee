@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Dedicated to heading, latitude, and longitude.
+ */
 public class FeatureRequestManager implements RESTRequestManager {
 
 	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
