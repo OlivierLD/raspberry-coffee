@@ -15,6 +15,8 @@ and [here](https://phoenixnap.com/kb/docker-on-raspberry-pi).
 > - `sudo sh get-docker.sh`
 > - `sudo usermod -aG docker [user_name, like pi]`
 
+If problem on Buster, see <https://www.raspberrypi.org/forums/viewtopic.php?t=273388>
+
 Then
 > - `docker version`
 > - `docker info`
