@@ -610,11 +610,8 @@ public class HTTPServer {
 						} else {
 							// Test header here
 							if (!payloadTypeHasBeenSet) {
-								String contentType = headers.get("Content-Type");
-								if (contentType == null) {
-									contentType = "";
-								}
-								contentType = contentType.trim();
+								String contentType = Optional.ofNullable(headers.get("Content-Type")).orElse("").trim(); // ;)
+//								contentType = contentType.trim();
 								payloadIsBinary = (contentType.startsWith("image") || contentType.equals("application/octet-stream"));
 								payloadTypeHasBeenSet = true;
 							}
