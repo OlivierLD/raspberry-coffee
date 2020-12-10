@@ -289,6 +289,141 @@ public class TimeUtil {
 		return timeStamp;
 	}
 
+	/**
+	 *
+	 * @param year
+	 * @param month in [1..12]
+	 * @return
+	 */
+	private static double getY(int year, int month) {
+		if (year < -1_999 || year > 3_000) {
+			throw new RuntimeException("Year must be in [-1999, 3000]");
+		} else {
+			return (year + ((month - 0.5) / 12d));
+		}
+	}
+
+	/**
+	 * See https://astronomy.stackexchange.com/questions/19172/obtaining-deltat-for-use-in-software
+	 *
+	 * @param year
+	 * @param month in [1..12]
+	 * @return
+	 */
+	public static double getDeltaT(int year, int month) {
+		if (year < -1_999 || year > 3_000) {
+			throw new RuntimeException("Year must be in [-1999, 3000]");
+		}
+		if (month < 1 || month > 12) {
+			throw new RuntimeException("Month must be in [1, 12]");
+		}
+		double deltaT = 0d;
+
+		double y = getY(year, month);
+
+		if (year < -500) {
+			double u = (y - 1_820d) / 100d;
+			deltaT = -20d + (32d * (u * u));
+		} else if (year < 500) {
+			double u = y / 100d;
+			deltaT = 10_583.6
+					+ (-1_014.41 * u)
+					+ (33.78311 * Math.pow(u, 2))
+					+ (-5.952053 * Math.pow(u, 3))
+					+ (-0.1798452 * Math.pow(u, 4))
+					+ (0.022174192 * Math.pow(u, 5))
+					+ (0.0090316521 * Math.pow(u, 6));
+		} else if (year < 1_600) {
+			double u = (y - 1_000d) / 100d;
+			deltaT = 1_574.2
+					+ (-556.01 * u)
+					+ (71.23472 * Math.pow(u, 2))
+					+ (0.319781 * Math.pow(u, 3))
+					+ (-0.8503463 * Math.pow(u, 4))
+					+ (-0.005050998 * Math.pow(u, 5))
+					+ (0.0083572073 * Math.pow(u, 6));
+		} else if (year < 1_700) {
+			double t = y - 1_600d;
+			deltaT = 120
+					+ (-0.9808 * t)
+					+ (-0.01532 * Math.pow(t, 2))
+					+ (Math.pow(t, 3) / 7_129);
+		} else if (year < 1_800) {
+			double t = y - 1_700d;
+			deltaT = 8.83
+					+ 0.1603 * t
+					+ (-0.0059285 * Math.pow(t, 2))
+					+ (0.00013336 * Math.pow(t, 3))
+					+ (Math.pow(t, 4) / -1_174_000);
+		} else if (year < 1_860) {
+			double t = y - 1_800d;
+			deltaT = 13.72
+					+ (-0.332447 * t)
+					+ (0.0068612 * Math.pow(t, 2))
+					+ (0.0041116 * Math.pow(t, 3))
+					+ (-0.00037436 * Math.pow(t, 4))
+					+ (0.0000121272 * Math.pow(t, 5))
+					+ (-0.0000001699 * Math.pow(t, 6))
+					+ (0.000000000875 * Math.pow(t, 7));
+		} else if (year < 1_900) {
+			double t = y - 1_860d;
+			deltaT = 7.62 +
+					(0.5737 * t)
+					+ (-0.251754 * Math.pow(t, 2))
+					+ (0.01680668 * Math.pow(t, 3))
+					+ (-0.0004473624 * Math.pow(t, 4))
+					+ (Math.pow(t, 5) / 233_174);
+		} else if (year < 1_920) {
+			double t = y - 1_900;
+			deltaT = -2.79
+					+ (1.494119 * t)
+					+ (-0.0598939 * Math.pow(t, 2))
+					+ (0.0061966 * Math.pow(t, 3))
+					+ (-0.000197 * Math.pow(t, 4));
+		} else if (year < 1_941) {
+			double t = y - 1_920;
+			deltaT = 21.20
+					+ (0.84493 * t)
+					+ (-0.076100 * Math.pow(t, 2))
+					+ (0.0020936 * Math.pow(t, 3));
+		} else if (year < 1_961) {
+			double t = y - 1_950;
+			deltaT = 29.07
+					+ (0.407 * t)
+					+ (Math.pow(t, 2) / -233)
+					+ (Math.pow(t, 3) / 2_547);
+		} else if (year < 1_986) {
+			double t = y - 1_975;
+			deltaT = 45.45
+					+ (1.067 * t)
+					+ (Math.pow(t, 2) / -260)
+					+ (Math.pow(t, 3) / -718);
+		} else if (year < 2_005) {
+			double t = y - 2_000;
+			deltaT = 63.86
+					+ (0.3345 * t)
+					+ (-0.060374 * Math.pow(t, 2))
+					+ (0.0017275 * Math.pow(t, 3))
+					+ (0.000651814 * Math.pow(t, 4))
+					+ (0.00002373599 * Math.pow(t, 5));
+ 	  	} else if (year < 2_050) {
+			double t = y - 2_000;
+			deltaT = 62.92
+					+ (0.32217 * t)
+					+ (0.005589 * Math.pow(t, 2));
+		} else if (year < 2_150) {
+			deltaT = -20
+					+ (32 * Math.pow((y - 1_820) / 100, 2))
+					+ (-0.5628 * (2_150 - y));
+		} else {
+			double u = (y - 1_820) / 100;
+			deltaT = -20
+					+ (32 * Math.pow(u, 2));
+		}
+
+		return deltaT;
+	}
+
 	public static void main(String... args) {
 
 		System.setProperty("time.verbose", "true");
@@ -394,7 +529,19 @@ public class TimeUtil {
 			System.out.println(String.format("Now: %s", fmtDHMS(msToHMS(_now))));
 
 			long elapsed = 231_234_567_890L; // 123456L; //
-			System.out.println("Readable time (" + elapsed + ") : " + readableTime(elapsed));
+			System.out.println("R" +
+					"eadable time (" + elapsed + ") : " + readableTime(elapsed));
+		}
+		double deltaT = getDeltaT(2020, 1);
+		System.out.println(String.format("DeltaT Jan 2020: %f", deltaT));
+		deltaT = getDeltaT(2020, 12);
+		System.out.println(String.format("DeltaT Dec 2020: %f", deltaT));
+		if (true) {
+			StringBuffer duh = new StringBuffer();
+			for (int i = -1_999; i < 2_020; i++) {
+				duh.append(String.format("%d;%f;\n", i, getDeltaT(i, 1)));
+			}
+			System.out.println(duh.toString());
 		}
 	}
 }
