@@ -305,6 +305,8 @@ public class TimeUtil {
 
 	/**
 	 * See https://astronomy.stackexchange.com/questions/19172/obtaining-deltat-for-use-in-software
+	 * See values at https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html#tab1 and
+	 *               https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html#tab2
 	 *
 	 * @param year
 	 * @param month in [1..12]
@@ -531,11 +533,24 @@ public class TimeUtil {
 			long elapsed = 231_234_567_890L; // 123456L; //
 			System.out.println("Readable time (" + elapsed + ") : " + readableTime(elapsed));
 		}
-		double deltaT = getDeltaT(2020, 1);
-		System.out.println(String.format("DeltaT Jan 2020: %f", deltaT));
-		deltaT = getDeltaT(2020, 12);
-		System.out.println(String.format("DeltaT Dec 2020: %f", deltaT));
-		if (true) {
+		String[] months = new String[] {"Jan", "Feb", "Mar","Apr", "May", "Jun",
+		                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+		int year = 2020, month = 1;
+		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		month = 12;
+		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		year = 1955; month = 1;
+		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		year = 1960; month = 1;
+		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		year = 1965; month = 1;
+		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		year = 2000; month = 1;
+		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		year = 2005; month = 1;
+		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+
+		if (false) {
 			StringBuffer duh = new StringBuffer();
 			for (int i = -1_999; i < 2_020; i++) {
 				duh.append(String.format("%d;%f;\n", i, getDeltaT(i, 1)));
