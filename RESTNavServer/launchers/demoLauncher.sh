@@ -160,7 +160,7 @@ do
 	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then
 		    echo -e ">>> Waiting for the server to start..."
-		    sleep 5 # Wait for the server to be operational
+		    sleep 5   # Wait for the server to be operational
 		    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y"
 	    fi
 	    GO=false

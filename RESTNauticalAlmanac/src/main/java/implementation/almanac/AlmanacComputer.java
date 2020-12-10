@@ -5,6 +5,7 @@ import java.io.PrintStream;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import calc.calculation.nauticalalmanac.Anomalies;
 import calc.calculation.nauticalalmanac.Context;
@@ -17,12 +18,14 @@ import calc.calculation.nauticalalmanac.Star;
 import calc.calculation.nauticalalmanac.Venus;
 
 import calc.GeomUtil;
+import utils.TimeUtil;
 
 public class AlmanacComputer {
 	private final static boolean verbose = true;
 
 	private static int year = 0, month = 0, day = 0, hour = 0, minute = 0;
-	private static float second = 0f, deltaT = 0f;
+	private static float second = 0f;
+	private static double deltaT = 0d;
 
 	public final static int JANUARY = 1;
 	public final static int FEBRUARY = 2;
@@ -67,6 +70,9 @@ public class AlmanacComputer {
 	}
 
 	private static PrintStream out = null;
+
+	private final static String AUTO = "AUTO";
+	private final static String AUTO_PREFIX = "AUTO:"; // Used in AUTO:2020-06
 
 	/*
 	 * An example of a main.
@@ -116,7 +122,21 @@ public class AlmanacComputer {
 		 *     http://maia.usno.navy.mil/
 		 *     http://maia.usno.navy.mil/ser7/deltat.data
 		 */
-		deltaT = Float.parseFloat(System.getProperty("deltaT", "68.8033"));
+		String deltaTStr = System.getProperty("deltaT", String.valueOf(deltaT));
+		if (deltaTStr.equals(AUTO)) {
+			Calendar now = GregorianCalendar.getInstance();
+			deltaT = TimeUtil.getDeltaT(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1);
+		} else if (deltaTStr.startsWith(AUTO_PREFIX)) {
+			String value = deltaTStr.substring(AUTO_PREFIX.length());
+			String[] splitted = value.split("-");
+			int intYear = Integer.parseInt(splitted[0]);
+			int intMonth = Integer.parseInt(splitted[1]);
+			deltaT = TimeUtil.getDeltaT(intYear, intMonth);
+		} else if (deltaTStr != null) {
+			deltaT = Double.parseDouble(deltaTStr);
+		}
+
+
 //  out.println("DeltaT:" + deltaT);
 		if (yearPrm == null && "continuous".equals(type)) {
 			displayHelp();

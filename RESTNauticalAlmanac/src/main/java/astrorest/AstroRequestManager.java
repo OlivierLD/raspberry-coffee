@@ -13,12 +13,11 @@ public class AstroRequestManager implements RESTRequestManager {
 	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
 	private RESTImplementation restImplementation;
 
-
 	private final static String AUTO = "AUTO";
 	private final static String AUTO_PREFIX = "AUTO:"; // Used in AUTO:2020-06
 
-	// See http://maia.usno.navy.mil/ser7/deltat.data
-	private static double deltaT = 68.8033;// June 2017
+	// See http://maia.usno.navy.mil/ser7/deltat.data (if it's not dead)
+	private static double deltaT = 68.8033;     // June 2017, from site above.
 	static {
 		String deltaTStr = System.getProperty("deltaT", String.valueOf(deltaT));
 		if (deltaTStr.equals(AUTO)) {

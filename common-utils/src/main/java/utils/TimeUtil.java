@@ -244,7 +244,7 @@ public class TimeUtil {
 	public static String readableTime(long elapsed, boolean small) {
 		long amount = elapsed;
 		String str = "";
-		final long SECOND = 1_000L;
+		final long SECOND = 1_000L; // 1000 ms
 		final long MINUTE = 60 * SECOND;
 		final long HOUR = 60 * MINUTE;
 		final long DAY = 24 * HOUR;
@@ -559,6 +559,8 @@ public class TimeUtil {
 		year = 2000; month = 1;
 		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
 		year = 2005; month = 1;
+		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
+		year = 2017; month = 6;
 		System.out.println(String.format("DeltaT %s %d: %f", months[month - 1], year, getDeltaT(year, month)));
 
 		if (false) {
