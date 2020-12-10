@@ -86,7 +86,14 @@ public class AstroComputer {
 	}
 
 	public static synchronized void calculate() {
-		deltaT = Double.parseDouble(System.getProperty("deltaT", Double.toString(deltaT)));
+		String deltaTStr = System.getProperty("deltaT", String.valueOf(deltaT));
+		if (deltaTStr.equals("AUTO")) {
+			Calendar now = GregorianCalendar.getInstance();
+			deltaT = TimeUtil.getDeltaT(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1);
+		} else if (deltaTStr != null) {
+			deltaT = Double.parseDouble(deltaTStr);
+		}
+//		deltaT = Double.parseDouble(System.getProperty("deltaT", Double.toString(deltaT)));
 		Core.julianDate(year, month, day, hour, minute, second, deltaT);
 		Anomalies.nutation();
 		Anomalies.aberration();

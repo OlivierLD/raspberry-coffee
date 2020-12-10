@@ -96,7 +96,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dcalculate.solar.with.eot=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GGA.date.time=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GLL.date.time=true"
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -DdeltaT=69.2201" # 01-Jan-2019
+JAVA_OPTIONS="$JAVA_OPTIONS -DdeltaT=AUTO" # 01-Jan-2019
 # For the small USB GPS
 # JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.date.offset=7168"
 #

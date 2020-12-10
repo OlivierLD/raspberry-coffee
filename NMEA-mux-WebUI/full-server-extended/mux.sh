@@ -69,7 +69,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dno.ais=false" # Accept AIS Strings
 JAVA_OPTIONS="$JAVA_OPTIONS -Dcalculate.solar.with.eot=true"
 #
-JAVA_OPTS="$JAVA_OPTS -DdeltaT=69.2201" # 01-Jan-2019
+JAVA_OPTS="$JAVA_OPTS -DdeltaT=AUTO" # 01-Jan-2019
 # For the small USB GPS
 JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.date.offset=7168"
 #

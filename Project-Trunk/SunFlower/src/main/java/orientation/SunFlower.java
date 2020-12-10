@@ -12,6 +12,7 @@ import i2c.servo.PCA9685;
 import org.fusesource.jansi.AnsiConsole;
 import utils.PinUtil;
 import utils.StringUtils;
+import utils.TimeUtil;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -364,7 +365,9 @@ public class SunFlower implements RESTRequestManager {
 //		properties.list(System.out);
 
 		// For celestial calculations:
-		System.setProperty("deltaT", System.getProperty("deltaT", "68.8033")); // 2017-Jun-01
+//		System.setProperty("deltaT", System.getProperty("deltaT", "68.8033")); // 2017-Jun-01
+		Calendar now = GregorianCalendar.getInstance();
+		System.setProperty("deltaT", String.valueOf(TimeUtil.getDeltaT(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1)));
 
 		headingServoID = headinServoNumber;
 		tiltServoID = tiltServoNumber;

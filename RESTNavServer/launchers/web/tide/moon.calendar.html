@@ -48,7 +48,13 @@
 			$("#station-list").empty();
 			$("#draw-curve").prop('disabled', true);
 			stationList.forEach(function(station, idx) {
-				var option = "<option value='" + decodeURIComponent(station) + "'>" + decodeURIComponent(station) + "</option>";
+				let valStr = "";
+				if (typeof(station) === 'object') {
+					valStr = station.fullName;
+				} else {
+					valStr = station;
+				}
+				var option = "<option value='" + decodeURIComponent(valStr) + "'>" + decodeURIComponent(valStr) + "</option>";
 				$('#station-list').append(option);
 			});
 			$("#publish").prop('disabled', stationList.length === 0);

@@ -103,7 +103,17 @@ public class AstroComputer {
 	}
 
 	public static synchronized void calculate() {
-		deltaT = Double.parseDouble(System.getProperty("deltaT", Double.toString(deltaT)));
+		// deltaT="AUTO"
+		String deltaTStr = System.getProperty("deltaT", String.valueOf(deltaT));
+		if (deltaTStr.equals("AUTO")) {
+			Calendar now = GregorianCalendar.getInstance();
+			deltaT = TimeUtil.getDeltaT(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1);
+		} else if (deltaTStr != null) {
+			deltaT = Double.parseDouble(deltaTStr);
+		}
+
+//		System.out.println(String.format("Using DeltaT: %f", deltaT));
+
 		Core.julianDate(year, month, day, hour, minute, second, deltaT);
 		Anomalies.nutation();
 		Anomalies.aberration();
@@ -816,6 +826,8 @@ public class AstroComputer {
 
 	// This is for tests
 	public static void main(String... args) {
+
+		System.setProperty("deltaT", "AUTO");
 
 		System.out.println(String.format("Moon phase for date %d-%d-%d %d:%d:%d: ", 2011, 8, 22, 12, 00, 00) + getMoonPhase(2011, 8, 22, 12, 00, 00));
 		System.out.println("TimeOffset:" + getTimeOffsetInHours("-09:30"));

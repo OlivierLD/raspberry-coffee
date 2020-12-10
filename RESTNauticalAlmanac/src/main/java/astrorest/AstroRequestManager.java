@@ -2,7 +2,10 @@ package astrorest;
 
 import http.HTTPServer;
 import http.RESTRequestManager;
+import utils.TimeUtil;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class AstroRequestManager implements RESTRequestManager {
@@ -12,7 +15,16 @@ public class AstroRequestManager implements RESTRequestManager {
 
 
 	// See http://maia.usno.navy.mil/ser7/deltat.data
-	private double deltaT = Double.parseDouble(System.getProperty("deltaT", Double.toString(68.8033))); // June 2017
+	private static double deltaT = 68.8033;// June 2017
+	static {
+		String deltaTStr = System.getProperty("deltaT", String.valueOf(deltaT));
+		if (deltaTStr.equals("AUTO")) {
+			Calendar now = GregorianCalendar.getInstance();
+			deltaT = TimeUtil.getDeltaT(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1);
+		} else if (deltaTStr != null) {
+			deltaT = Double.parseDouble(deltaTStr);
+		}
+	}
 
 	public AstroRequestManager() {
 		System.out.println(String.format("Using Delta-T:%f", deltaT));
