@@ -102,12 +102,21 @@ public class AstroComputer {
 		calculate();
 	}
 
+	private final static String AUTO = "AUTO";
+	private final static String AUTO_PREFIX = "AUTO:"; // Used in AUTO:2020-06
+
 	public static synchronized void calculate() {
-		// deltaT="AUTO"
+		// deltaT="AUTO" or "AUTO:2020-06"
 		String deltaTStr = System.getProperty("deltaT", String.valueOf(deltaT));
-		if (deltaTStr.equals("AUTO")) {
+		if (deltaTStr.equals(AUTO)) {
 			Calendar now = GregorianCalendar.getInstance();
 			deltaT = TimeUtil.getDeltaT(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1);
+		} else if (deltaTStr.startsWith(AUTO_PREFIX)) {
+			String value = deltaTStr.substring(AUTO_PREFIX.length());
+			String[] splitted = value.split("-");
+			int intYear = Integer.parseInt(splitted[0]);
+			int intMonth = Integer.parseInt(splitted[1]);
+			deltaT = TimeUtil.getDeltaT(intYear, intMonth);
 		} else if (deltaTStr != null) {
 			deltaT = Double.parseDouble(deltaTStr);
 		}

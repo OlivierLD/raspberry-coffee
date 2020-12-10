@@ -14,20 +14,34 @@ public class AstroRequestManager implements RESTRequestManager {
 	private RESTImplementation restImplementation;
 
 
+	private final static String AUTO = "AUTO";
+	private final static String AUTO_PREFIX = "AUTO:"; // Used in AUTO:2020-06
+
 	// See http://maia.usno.navy.mil/ser7/deltat.data
 	private static double deltaT = 68.8033;// June 2017
 	static {
 		String deltaTStr = System.getProperty("deltaT", String.valueOf(deltaT));
-		if (deltaTStr.equals("AUTO")) {
+		if (deltaTStr.equals(AUTO)) {
 			Calendar now = GregorianCalendar.getInstance();
 			deltaT = TimeUtil.getDeltaT(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1);
+		} else if (deltaTStr.startsWith(AUTO_PREFIX)) {
+			String value = deltaTStr.substring(AUTO_PREFIX.length());
+			String[] splitted = value.split("-");
+			int intYear = Integer.parseInt(splitted[0]);
+			int intMonth = Integer.parseInt(splitted[1]);
+			deltaT = TimeUtil.getDeltaT(intYear, intMonth);
 		} else if (deltaTStr != null) {
 			deltaT = Double.parseDouble(deltaTStr);
 		}
+		System.out.println("-------------------------------------");
+		System.out.println(String.format(">> Will use DeltaT: %f", deltaT));
+		System.out.println("-------------------------------------");
 	}
 
 	public AstroRequestManager() {
+		System.out.println("-------------------------------------");
 		System.out.println(String.format("Using Delta-T:%f", deltaT));
+		System.out.println("-------------------------------------");
 		restImplementation = new RESTImplementation(this);
 	}
 
