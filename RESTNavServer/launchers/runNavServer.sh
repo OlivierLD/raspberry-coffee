@@ -80,7 +80,7 @@ fi
 # - http://maia.usno.navy.mil/
 # Delta T predictions: http://maia.usno.navy.mil/ser7/deltat.preds
 # JAVA_OPTS="$JAVA_OPTS -DdeltaT=68.9677" # 01-Jan-2018
-JAVA_OPTS="$JAVA_OPTS -DdeltaT=AUTO" # 01-Jan-2019
+JAVA_OPTS="$JAVA_OPTS -DdeltaT=AUTO" # can also use -DdeltaT=AUTO:2025-10, if needed
 # JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=$HTTP_VERBOSE"
 #
 #JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=true"

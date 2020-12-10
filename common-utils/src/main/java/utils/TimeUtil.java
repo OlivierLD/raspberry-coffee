@@ -290,6 +290,7 @@ public class TimeUtil {
 	}
 
 	/**
+	 * Y parameter (not year) for deltaT computing.
 	 *
 	 * @param year
 	 * @param month in [1..12]
@@ -319,8 +320,8 @@ public class TimeUtil {
 		if (month < 1 || month > 12) {
 			throw new RuntimeException("Month must be in [1, 12]");
 		}
-		double deltaT = 0d;
 
+		double deltaT;
 		double y = getY(year, month);
 
 		if (year < -500) {
@@ -426,6 +427,11 @@ public class TimeUtil {
 		return deltaT;
 	}
 
+	/**
+	 * This is for tests
+	 *
+	 * @param args
+	 */
 	public static void main(String... args) {
 
 		System.setProperty("time.verbose", "true");
@@ -466,6 +472,7 @@ public class TimeUtil {
 			try {
 				year = Integer.parseInt(retString);
 			} catch (NumberFormatException numberFormatException) {
+				numberFormatException.printStackTrace();
 			}
 			prompt = "Please enter a month (1-12) [99] > ";
 			System.err.print(prompt);
@@ -477,6 +484,7 @@ public class TimeUtil {
 			try {
 				month = Integer.parseInt(retString);
 			} catch (NumberFormatException numberFormatException1) {
+				numberFormatException1.printStackTrace();
 			}
 			prompt = "Please enter a day (1-31) [99]   > ";
 			System.err.print(prompt);
@@ -488,6 +496,7 @@ public class TimeUtil {
 			try {
 				day = Integer.parseInt(retString);
 			} catch (NumberFormatException numberFormatException2) {
+				numberFormatException2.printStackTrace();
 			}
 			prompt = "Please enter an hour (0-23) [99] > ";
 			System.err.print(prompt);
@@ -499,6 +508,7 @@ public class TimeUtil {
 			try {
 				h = Integer.parseInt(retString);
 			} catch (NumberFormatException numberFormatException3) {
+				numberFormatException3.printStackTrace();
 			}
 			Calendar cal = Calendar.getInstance();
 			cal.set(year, month - 1, day, h, 0, 0);
@@ -514,6 +524,7 @@ public class TimeUtil {
 			try {
 				gmtOffset = Integer.parseInt(retString);
 			} catch (NumberFormatException numberFormatException4) {
+				numberFormatException4.printStackTrace();
 			}
 			Date d = cal.getTime();
 			long lTime = d.getTime();

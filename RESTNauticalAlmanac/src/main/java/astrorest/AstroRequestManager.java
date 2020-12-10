@@ -34,7 +34,7 @@ public class AstroRequestManager implements RESTRequestManager {
 			deltaT = Double.parseDouble(deltaTStr);
 		}
 		System.out.println("-------------------------------------");
-		System.out.println(String.format(">> Will use DeltaT: %f", deltaT));
+		System.out.println(String.format(">> Will use DeltaT: %f (from SysVar %s)", deltaT, deltaTStr));
 		System.out.println("-------------------------------------");
 	}
 
