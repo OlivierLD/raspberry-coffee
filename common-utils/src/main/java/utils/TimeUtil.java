@@ -529,8 +529,7 @@ public class TimeUtil {
 			System.out.println(String.format("Now: %s", fmtDHMS(msToHMS(_now))));
 
 			long elapsed = 231_234_567_890L; // 123456L; //
-			System.out.println("R" +
-					"eadable time (" + elapsed + ") : " + readableTime(elapsed));
+			System.out.println("Readable time (" + elapsed + ") : " + readableTime(elapsed));
 		}
 		double deltaT = getDeltaT(2020, 1);
 		System.out.println(String.format("DeltaT Jan 2020: %f", deltaT));
