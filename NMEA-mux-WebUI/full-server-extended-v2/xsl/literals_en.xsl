@@ -111,10 +111,10 @@
   <xsl:variable name="aries">Aries</xsl:variable>
 
   <xsl:variable name="hp">hp</xsl:variable>
-  <xsl:variable name="eot12">Eq. of Time at 12:00 : </xsl:variable>
+  <xsl:variable name="eot12">EoT at 12:00 UTC : </xsl:variable>
   <xsl:variable name="mp">Meridian Pass. Time : </xsl:variable>
   <xsl:variable name="age">Age : </xsl:variable>
-  <xsl:variable name="phase">Phase at 12:00 : </xsl:variable>
+  <xsl:variable name="phase">Phase at 12:00 UTC : </xsl:variable>
 
   <xsl:variable name="venus">Venus</xsl:variable>
   <xsl:variable name="mars">Mars</xsl:variable>
