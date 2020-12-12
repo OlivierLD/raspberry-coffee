@@ -36,7 +36,7 @@ Such a program runs fine on a bigger device, with several gigabytes of RAM avail
 I observed that at sea, I spend only a couple hours a day in front of the laptop, but it is often running by itself, doing some logging or calculations.
 
 This is where it comes together, you could have a Raspberry Pi Zero doing logging, multiplexing and what not,
-broadcasting require data on its own network (see the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/NMEA-multiplexer) about that),
+broadcasting require data on its own network (see the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-coffee/tree/master/NMEA-multiplexer) about that),
 then you would use a laptop whenever necessary, connecting on the Raspberry Pi's network to get NMEA Data and more.
 
 **In addition**, you can also use tablets and smart-phones, those devices know how to connect to a network, and have great

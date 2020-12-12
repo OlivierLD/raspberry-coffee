@@ -15,23 +15,23 @@ Compile the C code:
 ##### From your dev machine (your laptop)
 Bring the executable on board (`192.168.1.172` is the address of the Raspberry Pi):
 ```bash
-[raspberry-pi4j-samples/C]scp pi@192.168.1.172:raspberry-pi4j-samples/C/SatelliteFinder .
+[raspberry-coffee/C]scp pi@192.168.1.172:raspberry-coffee/C/SatelliteFinder .
 pi@192.168.1.172's password:
 SatelliteFinder                                                                                                 100% 8780     8.6KB/s   00:00
-[raspberry-pi4j-samples/C]
+[raspberry-coffee/C]
 ```
 ##### Push it to the C.H.I.P.
 Connect to the C.H.I.P. network, then:
 
 ```bash
-[raspberry-pi4j-samples/C]scp SatelliteFinder outernet@10.0.0.1:~
+[raspberry-coffee/C]scp SatelliteFinder outernet@10.0.0.1:~
 outernet@10.0.0.1's password:
 SatelliteFinder                                                                                                 100% 8780     8.6KB/s   00:00
 ```
 
 ##### Connect to the C.H.I.P. and run the program
 ```bash
-[raspberry-pi4j-samples/C]ssh outernet@10.0.0.1
+[raspberry-coffee/C]ssh outernet@10.0.0.1
 outernet@10.0.0.1's password:
 ============================================
 Skylark v4.4 / chip (8ed427f)

@@ -62,7 +62,7 @@ Works OK (~so-so) if there is only one component, it's a mess otherwise.
 
 ### Good to go
 
-[Oliv's Components](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/oliv.scratch.pad/some.tests/web-components-playground/oliv-components)
+[Oliv's Components](https://github.com/OlivierLD/raspberry-coffee/tree/master/oliv.scratch.pad/some.tests/web-components-playground/oliv-components)
 
 --- 
 

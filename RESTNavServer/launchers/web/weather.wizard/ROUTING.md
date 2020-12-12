@@ -18,22 +18,22 @@ This will be integrated in teh Weather Wizard GUI.
                         {
                             "type": "FAX",
                             "name": "_PAC-0001_0.png",
-                            "resource": "file:/Users/olediour/repos/raspberry-pi4j-samples/RESTNavServer/launchers/web/2018/11/12/PAC-0001_081150/_PAC-0001_0.png"
+                            "resource": "file:/Users/olediour/repos/raspberry-coffee/RESTNavServer/launchers/web/2018/11/12/PAC-0001_081150/_PAC-0001_0.png"
                         },
                         {
                             "type": "FAX",
                             "name": "_PAC-0001_1.png",
-                            "resource": "file:/Users/olediour/repos/raspberry-pi4j-samples/RESTNavServer/launchers/web/2018/11/12/PAC-0001_081150/_PAC-0001_1.png"
+                            "resource": "file:/Users/olediour/repos/raspberry-coffee/RESTNavServer/launchers/web/2018/11/12/PAC-0001_081150/_PAC-0001_1.png"
                         },
                         {
                             "type": "FAX",
                             "name": "_PAC-0001_2.png",
-                            "resource": "file:/Users/olediour/repos/raspberry-pi4j-samples/RESTNavServer/launchers/web/2018/11/12/PAC-0001_081150/_PAC-0001_2.png"
+                            "resource": "file:/Users/olediour/repos/raspberry-coffee/RESTNavServer/launchers/web/2018/11/12/PAC-0001_081150/_PAC-0001_2.png"
                         },
                         {
                             "type": "GRIB",
                             "name": "grib.grb",
-                            "resource": "file:/Users/olediour/repos/raspberry-pi4j-samples/RESTNavServer/launchers/web/2018/11/12/PAC-0001_081150/grib.grb"
+                            "resource": "file:/Users/olediour/repos/raspberry-coffee/RESTNavServer/launchers/web/2018/11/12/PAC-0001_081150/grib.grb"
                         }
                     ]
                 }
@@ -45,17 +45,17 @@ This will be integrated in teh Weather Wizard GUI.
                         {
                             "type": "FAX",
                             "name": "_ATL-0001_0.png",
-                            "resource": "file:/Users/olediour/repos/raspberry-pi4j-samples/RESTNavServer/launchers/web/2018/11/08/ATL-0001_112153/_ATL-0001_0.png"
+                            "resource": "file:/Users/olediour/repos/raspberry-coffee/RESTNavServer/launchers/web/2018/11/08/ATL-0001_112153/_ATL-0001_0.png"
                         },
                         {
                             "type": "FAX",
                             "name": "_ATL-0001_1.png",
-                            "resource": "file:/Users/olediour/repos/raspberry-pi4j-samples/RESTNavServer/launchers/web/2018/11/08/ATL-0001_112153/_ATL-0001_1.png"
+                            "resource": "file:/Users/olediour/repos/raspberry-coffee/RESTNavServer/launchers/web/2018/11/08/ATL-0001_112153/_ATL-0001_1.png"
                         },
                         {
                             "type": "GRIB",
                             "name": "grib.grb",
-                            "resource": "file:/Users/olediour/repos/raspberry-pi4j-samples/RESTNavServer/launchers/web/2018/11/08/ATL-0001_112153/grib.grb"
+                            "resource": "file:/Users/olediour/repos/raspberry-coffee/RESTNavServer/launchers/web/2018/11/08/ATL-0001_112153/grib.grb"
                         }
                     ]
                 },
@@ -65,22 +65,22 @@ This will be integrated in teh Weather Wizard GUI.
                         {
                             "type": "FAX",
                             "name": "_PAC-0001_0.png",
-                            "resource": "file:/Users/olediour/repos/raspberry-pi4j-samples/RESTNavServer/launchers/web/2018/11/08/PAC-0001_112054/_PAC-0001_0.png"
+                            "resource": "file:/Users/olediour/repos/raspberry-coffee/RESTNavServer/launchers/web/2018/11/08/PAC-0001_112054/_PAC-0001_0.png"
                         },
                         {
                             "type": "FAX",
                             "name": "_PAC-0001_1.png",
-                            "resource": "file:/Users/olediour/repos/raspberry-pi4j-samples/RESTNavServer/launchers/web/2018/11/08/PAC-0001_112054/_PAC-0001_1.png"
+                            "resource": "file:/Users/olediour/repos/raspberry-coffee/RESTNavServer/launchers/web/2018/11/08/PAC-0001_112054/_PAC-0001_1.png"
                         },
                         {
                             "type": "FAX",
                             "name": "_PAC-0001_2.png",
-                            "resource": "file:/Users/olediour/repos/raspberry-pi4j-samples/RESTNavServer/launchers/web/2018/11/08/PAC-0001_112054/_PAC-0001_2.png"
+                            "resource": "file:/Users/olediour/repos/raspberry-coffee/RESTNavServer/launchers/web/2018/11/08/PAC-0001_112054/_PAC-0001_2.png"
                         },
                         {
                             "type": "GRIB",
                             "name": "grib.grb",
-                            "resource": "file:/Users/olediour/repos/raspberry-pi4j-samples/RESTNavServer/launchers/web/2018/11/08/PAC-0001_112054/grib.grb"
+                            "resource": "file:/Users/olediour/repos/raspberry-coffee/RESTNavServer/launchers/web/2018/11/08/PAC-0001_112054/grib.grb"
                         }
                     ]
                 }

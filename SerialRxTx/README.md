@@ -118,7 +118,7 @@ $> ./run.mac
      2297     4 -rw-r--r--  1 pi   pi        675 Nov 21  2015 .profile
     81454     4 drwxr-xr-x  2 pi   pi       4096 Nov 21  2015 Public
      1893     4 drwxr-xr-x  2 pi   pi       4096 Nov 21  2015 python_games
-   265890     4 drwxr-xr-x 41 pi   pi       4096 Oct 21 18:36 raspberry-pi4j-samples
+   265890     4 drwxr-xr-x 41 pi   pi       4096 Oct 21 18:36 raspberry-coffee
     81020     8 -rw-r--r--  1 pi   pi       5576 Oct 21 16:43 README.test.md
     74553  1024 -rw-r--r--  1 root root  1048204 Sep 13  2014 sbt-0.13.6.deb
     74509 96444 -rw-r--r--  1 root root 98756608 Oct 23  2014 scala-2.11.4.deb

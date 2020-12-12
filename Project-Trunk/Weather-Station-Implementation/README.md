@@ -48,7 +48,7 @@ See [here](http://raspberrypi.lediouris.net/WeatherStation/readme.html).
 This implementation - just an example - uses:
 - A Raspberry Pi A+ connected to the weather rack (wind vane, anemometer, rain meter, temperature, pressure)
 - It runs the scripts and classes mentioned above, along with a `nodejs` WebSocket server
-- It uses several [`Loggers`](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/RasPISamples/src/java/weatherstation/logger/LoggerInterface.java) to feed:
+- It uses several [`Loggers`](https://github.com/OlivierLD/raspberry-coffee/blob/master/RasPISamples/src/java/weatherstation/logger/LoggerInterface.java) to feed:
   - A MySQL database through REST Services developed in `php`
   - An HTTP tiny server that contains the last available data as a `json` object
   - A WebSocket client pushing the last available data as a `json` object
@@ -111,7 +111,7 @@ Execute this one on the laptop:
 ```bash
 #!/bin/bash
 #
-cd raspberry-pi4j-samples
+cd raspberry-coffee
 echo Starting multiplexer
 cd NMEA-multiplexer
 nohup ./mux.sh nmea.mux.weather.station.tcp.properties &

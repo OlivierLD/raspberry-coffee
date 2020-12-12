@@ -117,9 +117,14 @@ Package `i2c.comm`.
 ### MeArm
 Requires a `PCA9685`, and 4 servos.
 
-See `i2c.samples.MeArmScriptDemo` and the script `mearm.script`, along with the file `script.01.mearm`.
+- Basic test, hard-coded in `mearm.sh`
+- Scripted demo, see `i2c.samples.MeArmScriptDemo` and the script `mearm.script.sh`, along with the file [`script.01.mearm`](./script.01.mearm).
+- Interactive demo (drive the MeArm from your keyboard)
+```
+$ ./mearm.pilot.inter.sh -left:0 -right:4 -bottom:2 -claw:1
+```
 
-See [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/Processing#mearm-gui) for wiring and more details.
+See [here](https://github.com/OlivierLD/raspberry-coffee/tree/master/Processing#mearm-gui) for wiring and more details.
 
 ... More details to come.
 

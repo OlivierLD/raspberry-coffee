@@ -107,7 +107,7 @@ public class PolarHelper {
 	}
 
 	public static void main(String args[]) throws Exception {
-		String fName = "/Users/olediour/repos/raspberry-pi4j-samples/Project.Trunk/PolarSmoother/sample-files/CheoyLee42.polar-coeff"; // ((ParamPanel.DataFile) ParamPanel.data[ParamData.POLAR_FILE_LOC][ParamData.VALUE_INDEX]).toString();
+		String fName = "/Users/olediour/repos/raspberry-coffee/Project.Trunk/PolarSmoother/sample-files/CheoyLee42.polar-coeff"; // ((ParamPanel.DataFile) ParamPanel.data[ParamData.POLAR_FILE_LOC][ParamData.VALUE_INDEX]).toString();
 
 		PolarHelper ph = new PolarHelper(fName);
 

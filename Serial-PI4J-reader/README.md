@@ -4,7 +4,7 @@
 
 See script named `run`
 ```
-pi@raspberrypi3:~/raspberry-pi4j-samples/GPS.read $ ./run
+pi@raspberrypi3:~/raspberry-coffee/GPS.read $ ./run
 Read serial port, raw data
 Serial Communication.
  ... connect using settings: 4800, N, 8, 1.

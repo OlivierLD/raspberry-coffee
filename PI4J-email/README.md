@@ -46,9 +46,9 @@ connection access though.
 
 You need a small device like the one below:
 ![Battery PCB](./BatteryMonitor.jpg "The battery monitor")
-Fritzing diagram available [here](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/ADC/12-volts.monitor.fzz).
+Fritzing diagram available [here](https://github.com/OlivierLD/raspberry-coffee/blob/master/ADC/12-volts.monitor.fzz).
 
-Look in the file [ADCReader.java](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/PI4J.email/src/samples/ADCReader.java), you can run it from
+Look in the file [ADCReader.java](https://github.com/OlivierLD/raspberry-coffee/blob/master/PI4J.email/src/samples/ADCReader.java), you can run it from
 the script named `runvolt`:
 ```bash
  ./runvolt -send:google -sendto:me@home.org -loop:24h

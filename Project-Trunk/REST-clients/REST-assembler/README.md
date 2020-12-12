@@ -247,7 +247,7 @@ At this point, it's ready to run:
  2019.02.16 08:06:03 INFO org.jboss.weld.Event !thread!: WELD-000411: Observer method [BackedAnnotatedMethod] private org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider.processAnnotatedType(@Observes ProcessAnnotatedType) receives events for all annotated types. Consider restricting events using @WithAnnotations or a generic type with bounds.
  2019.02.16 08:06:03 WARN org.jboss.weld.Bootstrap !thread!: WELD-000146: BeforeBeanDiscovery.addAnnotatedType(AnnotatedType<?>) used for class org.glassfish.jersey.ext.cdi1x.internal.CdiComponentProvider$JaxRsParamProducer is deprecated from CDI 1.1!
  WARNING: An illegal reflective access operation has occurred
- WARNING: Illegal reflective access by org.jboss.classfilewriter.ClassFile$1 (file:/Users/olediour/repos/raspberry-pi4j-samples/Project.Trunk/REST.clients/REST.assembler/helidon-sensors/target/libs/jboss-classfilewriter-1.2.1.Final.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int)
+ WARNING: Illegal reflective access by org.jboss.classfilewriter.ClassFile$1 (file:/Users/olediour/repos/raspberry-coffee/Project.Trunk/REST.clients/REST.assembler/helidon-sensors/target/libs/jboss-classfilewriter-1.2.1.Final.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int)
  WARNING: Please consider reporting this to the maintainers of org.jboss.classfilewriter.ClassFile$1
  WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
  WARNING: All illegal access operations will be denied in a future release

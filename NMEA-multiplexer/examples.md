@@ -249,8 +249,8 @@ Notice the small potentiometer to dim the display's light.
 
 #### Weather Station
 Feed the NMEA Multiplexer with the Weather Station from SwitchDoc labs.
-The code of the project is [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WeatherStation),
-and an implementation is available [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RasPISamples#weatherstation).
+The code of the project is [here](https://github.com/OlivierLD/raspberry-coffee/tree/master/WeatherStation),
+and an implementation is available [here](https://github.com/OlivierLD/raspberry-coffee/tree/master/RasPISamples#weatherstation).
 
 There is a  `custom channel` (aka `consumers`) made out of
 - `WeatherStationWSClient`
@@ -314,7 +314,7 @@ This renders the data inserted in MySQL.
 
 See those documents for more details:
 - [http://raspberrypi.lediouris.net/WeatherStation/readme.html](http://raspberrypi.lediouris.net/WeatherStation/readme.html)
-- [https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RasPISamples#home-weather-station](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RasPISamples#home-weather-station)
+- [https://github.com/OlivierLD/raspberry-coffee/tree/master/RasPISamples#home-weather-station](https://github.com/OlivierLD/raspberry-coffee/tree/master/RasPISamples#home-weather-station)
 
 ###### More on IoT
 I've tried two options:
@@ -326,7 +326,7 @@ Both can provide some free access to an IoT server.
 Adafruit-IO supports `MQTT` and `REST` protocols.
 
 #### Solar Data
-That one is a variation of the [`SunFlower`](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/Project.Trunk/SunFlower/README.md) project.
+That one is a variation of the [`SunFlower`](https://github.com/OlivierLD/raspberry-coffee/tree/master/Project.Trunk/SunFlower/README.md) project.
 
 The `SunFlower` project is originally designed to orient a solar panel toward the Sun, to maximize its efficiency.
 The solar panel is driven by two servos or motors, one for the heading (vertical axis), and one for the tilt (horizontal axis).

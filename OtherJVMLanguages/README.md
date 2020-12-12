@@ -141,7 +141,7 @@ scala> :require /opt/pi4j/lib/pi4j-core.jar
 Added '/opt/pi4j/lib/pi4j-core.jar' to classpath.
 
 scala> :require ../../I2C.SPI/build/libs/I2C.SPI-1.0.jar
-Added '/home/pi/raspberry-pi4j-samples/OtherJVM.languages/scala.worksheets/../../I2C.SPI/build/libs/I2C.SPI-1.0.jar' to classpath.
+Added '/home/pi/raspberry-coffee/OtherJVM.languages/scala.worksheets/../../I2C.SPI/build/libs/I2C.SPI-1.0.jar' to classpath.
 
 scala> import com.pi4j.system.SystemInfo
 import com.pi4j.system.SystemInfo
@@ -386,7 +386,7 @@ Those script can be written using JavaScript, Groovy.
 A simple example is provided in `jsr223.ScriptEngineFactories.java`, which can be run:
 ```
 Your Java version:1.8.0_92
-Running from /.../raspberry-pi4j-samples/OtherJVM.languages/.
+Running from /.../raspberry-coffee/OtherJVM.languages/.
 =======================
 Lang name  :Groovy
 Engine name:Groovy Scripting Engine

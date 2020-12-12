@@ -2,16 +2,16 @@
 #### Prolongation/Extension of the NMEA-multiplexer
 
 An illustration of the way to gather or aggregate several REST Services all in one place.
-This project is an extension/prolongation of the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/NMEA-multiplexer/README.md).
+This project is an extension/prolongation of the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-coffee/blob/master/NMEA-multiplexer/README.md).
 
 It uses:
-- [Tide](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/RESTTideEngine/README.md) REST Service
-- [Astro](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RESTNauticalAlmanac) REST Service
-- [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/NMEA-multiplexer/README.md) REST Service
+- [Tide](https://github.com/OlivierLD/raspberry-coffee/blob/master/RESTTideEngine/README.md) REST Service
+- [Astro](https://github.com/OlivierLD/raspberry-coffee/tree/master/RESTNauticalAlmanac) REST Service
+- [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-coffee/blob/master/NMEA-multiplexer/README.md) REST Service
 - ... and the list keeps growing (see in `navrest.NavServer.java` how to add a `RequestManager`).
 
 In addition, I'll be attempting to implement the features of the Weather Wizard (another project I own, in Java and Swing, that can superimpose different heterogeneous documents on the same chart, like Faxes, GRIBS, routing results, etc.). This part involves the
-`Img` REST Service, found in the [`RESTImageProcessor`](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RESTImageProcessor) project, and the routing features, found in the [`RESTRouting`](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/RESTRouting/README.md) project.
+`Img` REST Service, found in the [`RESTImageProcessor`](https://github.com/OlivierLD/raspberry-coffee/tree/master/RESTImageProcessor) project, and the routing features, found in the [`RESTRouting`](https://github.com/OlivierLD/raspberry-coffee/blob/master/RESTRouting/README.md) project.
 
 ### Rationale
 
@@ -316,7 +316,7 @@ Works for Sun, Moon, Venus, Mars, Jupiter, Saturn, and 58 stars.
 ![ANSO Console](./docimg/console.png)
 
 ## Server Remote access
-> See [this document](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/NMEA-multiplexer#remote-access).
+> See [this document](https://github.com/OlivierLD/raspberry-coffee/tree/master/NMEA-multiplexer#remote-access).
 
 ### More resources
 - [Happy Nav Server](https://github.com/OlivierLD/raspberry-coffee/blob/master/Papers/happy.navserver/HappyNavserver.md)

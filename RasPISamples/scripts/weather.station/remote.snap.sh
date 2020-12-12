@@ -43,6 +43,6 @@ echo "http request is $REQUEST"
 #
 curl $REQUEST
 #
-sshpass -p 'pi' scp pi@192.168.42.2:~/raspberry-pi4j-samples/RasPISamples/web/$NAME.jpg ./web
+sshpass -p 'pi' scp pi@192.168.42.2:~/raspberry-coffee/RasPISamples/web/$NAME.jpg ./web
 # open web
 #

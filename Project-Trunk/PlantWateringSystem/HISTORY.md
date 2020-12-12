@@ -241,7 +241,7 @@ $ curl -X GET http://localhost:1234/pws/sth10-data
 ```
 
 The REST Server is part of this project, it's a very tiny one that runs fine even on the Raspberry Pi Zero.
-Details [here](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/common-utils/src/java/http/HTTPServer.java), also
+Details [here](https://github.com/OlivierLD/raspberry-coffee/blob/master/common-utils/src/java/http/HTTPServer.java), also
 see the method `addRequestManager`.
 
 ### External access
@@ -278,8 +278,8 @@ In the `loggers` package, there are several examples of loggers. One is feeding 
 ```
 - Clone the repo and build the application:
 ```
- $ git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
- $ cd raspberry-pi4j-samples/Project.Trunk/PlantWateringSystem
+ $ git clone https://github.com/OlivierLD/raspberry-coffee.git
+ $ cd raspberry-coffee/Project.Trunk/PlantWateringSystem
  $ ../../gradlew shadowJar
 ```
 - Copy the `rc.local` into the `/etc` directory (careful with that, hey?)
@@ -292,7 +292,7 @@ Another possibility is to start it remotely from `ssh`:
 ```
  $ ssh pi@192.168.42.17
  ...
- $ cd raspberry-pi4j-samples/Project.Trunk/PlantWateringSystem
+ $ cd raspberry-coffee/Project.Trunk/PlantWateringSystem
  $ sudo -H -u pi nohup ./read.probe.sh &
  $
 ```

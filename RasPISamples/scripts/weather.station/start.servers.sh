@@ -5,7 +5,7 @@
 STARTED=`ps -ef | grep EmailWatcher | grep -v grep | awk '{ print $2 }'`
 if [ "$STARTED" == "" ]
 then
-  cd raspberry-pi4j-samples
+  cd raspberry-coffee
   echo Starting multiplexer
   cd NMEA-multiplexer
   nohup ./mux.sh nmea.mux.weather.station.tcp.properties &

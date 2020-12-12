@@ -31,7 +31,7 @@ if [[ "$_OLED" ]]; then
   printf "+---------------+\n"
   printf "| OLED Detected |\n"
   printf "+---------------+\n"
-  cd /home/pi/raspberry-pi4j-samples/I2C.SPI
+  cd /home/pi/raspberry-coffee/I2C.SPI
   MESS=""
   if [[ "$_IP" ]]; then
     MESS="$_IP|"

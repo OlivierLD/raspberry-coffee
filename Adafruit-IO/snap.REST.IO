@@ -5,7 +5,7 @@
 # This script refers to 'all' archives, like Adafruit.IO.REST-1.0-all.jar, containing
 # all dependencies like json.jar.
 # Those archives are built from the root like that:
-#  raspberry-pi4j-samples $ ./gradlew shadowJar
+#  raspberry-coffee $ ./gradlew shadowJar
 #
 CP=./build/libs/Adafruit.IO.REST-1.0-all.jar
 #

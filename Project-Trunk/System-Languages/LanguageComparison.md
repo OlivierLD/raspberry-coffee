@@ -316,7 +316,7 @@ If needed, change the degree of the result polynomial using the slider at the bo
 
 See the calculated coefficients in the console output.
 
-Find [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/Processing) a bit more about Processing on the Raspberry Pi.
+Find [here](https://github.com/OlivierLD/raspberry-coffee/tree/master/Processing) a bit more about Processing on the Raspberry Pi.
 
 You can generate an executable from your Processing sketch.
 Open your sketch in Processing (here `System.pde`), then go to `File` > `Export Application`.
@@ -502,7 +502,7 @@ originally written in.
 
 There are many such languages, `Scala`, `Kotlin`, `Groovy`, `Clojure` being only a few of them.
 
-More technical details are available from the module [Other JVM languages](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/OtherJVM.languages), in this project.
+More technical details are available from the module [Other JVM languages](https://github.com/OlivierLD/raspberry-coffee/tree/master/OtherJVM.languages), in this project.
 
 Then, an un-anticipated shift happened: the emergence of the Containers, like `Docker`.
 Docker is generating system images. It provides an environment - an operating system - onto
