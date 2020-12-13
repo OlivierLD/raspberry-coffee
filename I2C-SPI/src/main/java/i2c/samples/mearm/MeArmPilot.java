@@ -189,13 +189,18 @@ public class MeArmPilot {
 		System.out.println("Available commands with their syntax:");
 		System.out.println("-------------------------------------");
 		for (Commands command : Commands.values()) {
-			System.out.println(String.format("Command '%s', %d parameters.\nUsage is:\n%s", command.command(), command.nbPrm(), command.help()));
+			System.out.println(String.format("Command '%s', %s.\nUsage is:\n%s",
+					command.command(),
+					(command.nbPrm() < 0 ?
+							String.format("n sets of %d parameter%s", -command.nbPrm(), command.nbPrm() < 1 ? "s" : "") :
+							String.format("%d parameter%s", command.nbPrm(), command.nbPrm() > 1 ? "s" : "")),
+					command.help()));
 			System.out.println("-------------------------------------");
 		}
 	}
 
 	/**
-	 * Warning No comma ",", to columns ":" in the message!!
+	 * Warning No comma ",", no columns ":" in the message!!
 	 * Encode comma with %2C, column with %3A
 	 *
 	 * @param cmd
@@ -416,6 +421,7 @@ public class MeArmPilot {
 	}
 
 	/**
+	 * Each slide in its own thread
 	 * Syntax FORK_SLIDE:BOTTOM, 0, LEFT, 50, etc
 	 *                   |       |  |     |
 	 *                   |       |  |     Value [-100..+100]
@@ -426,7 +432,7 @@ public class MeArmPilot {
 	 */
 	private static void servoForkSlide(CommandWithArgs cmd) {
 		if (!cmd.command.equals("FORK_SLIDE")) {
-			System.err.println(String.format("Unexpected command [%s] in servoSlide.", cmd.command));
+			System.err.println(String.format("Unexpected command [%s] in servoForkSlide.", cmd.command));
 		} else {
 			if (cmd.args.length % 2 != 0) {
 				System.err.println(String.format("Unexpected number of args [%d] in servoSlide. Expected n sets of 2.", cmd.args.length));

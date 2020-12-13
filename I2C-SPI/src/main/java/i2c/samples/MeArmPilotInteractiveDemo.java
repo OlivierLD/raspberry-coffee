@@ -97,6 +97,22 @@ public class MeArmPilotInteractiveDemo {
 			}
 		}
 
+		// Summary
+		System.out.println(String.format(
+				"Left on channel   %d\n" +
+				"Right on channel  %d\n" +
+				"Bottom on channel %d\n" +
+				"Claw on channel   %d",
+				left, right, bottom, claw));
+		String userInput = userInput("Is that all right Y|n ? > ");
+		if (!userInput.trim().isEmpty() && !userInput.trim().equalsIgnoreCase("Y")) {
+			System.out.println("Exiting.");
+			System.exit(1);
+		} else {
+			System.out.println("Ok, moving on.");
+		}
+
+
 		try {
 			MeArmPilot.initContext(left, claw, bottom, right);
 		} catch (I2CFactory.UnsupportedBusNumberException oops) {
