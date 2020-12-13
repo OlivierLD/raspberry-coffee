@@ -71,7 +71,7 @@ PRINT: "Closing"
 MOVE: CLAW, 130, 400, 10, 25
 WAIT:500
 #
-PRINT: "Erroring -> TOP does not exist."
+PRINT: "Expected Error-> TOP does not exist."
 MOVE: TOP, 130, 400, 10, 25
 WAIT:500
 #
