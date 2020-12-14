@@ -1,4 +1,7 @@
 #
+# Use this script in conjunction with mearm.script.sh
+# ---------------------------------------------------
+#
 # Init
 #
 SET_PWM:LEFT,   0, 0
