@@ -192,9 +192,9 @@ public class ScimParser {
 
         Arrays.asList(expression).forEach(exp -> filters.add(parseOne(exp)));
         if (true) { // Verbose
-            System.out.println("-- [Filter parsed expressions] --");
+            System.out.println("---- [Filter parsed expressions] ----");
             filters.forEach(exp -> System.out.println(String.format("[%s]", exp.toString())));
-            System.out.println("---------------------------------");
+            System.out.println("-------------------------------------");
         }
 
         return list.stream().filter(oneItem -> {
@@ -209,7 +209,7 @@ public class ScimParser {
     private final static Map<String, String> OIC_COL_TO_PATH = new HashMap<>();
 
     static {
-        //                                  name,         path
+        //                   name,  path
         // For the OCI option, curationFunctions.json
         OIC_COL_TO_PATH.put("category", "categories");
         OIC_COL_TO_PATH.put("title", "title");
@@ -379,8 +379,8 @@ public class ScimParser {
 //                String filter = "name co .math and title sw \"W\" and description co \"eturns the\" and parameters.schema.additionalProperties eq false ";
 //                String filter = "parameters.schema.properties.left pr ";
 //                String filter = "stuff pr and stuff ge 9";
-//                String filter = "make ne VolksWagen and extra-data.nb-seats ge 4";
-                String filter = "make pr";
+                String filter = "make ne VolksWagen and extra-data.nb-seats ge 4";
+//                String filter = "make pr";
 
                 filtered = filter(listToFilter, filter);
             } else {

@@ -1,5 +1,8 @@
 package scim;
 
+/**
+ * Builder pattern available, for immutability
+ */
 public class OneExpression {
 
     public enum SCIMOperators { // TODO Add IgnoreCase for String ops?
