@@ -78,14 +78,13 @@ public class ScimParser {
     /**
      * @param op the lowercase operator
      * @return the corresponding member of the {@link OneExpression.SCIMOperators} enum.
-     * @Deprecated Use {@link }SCIMOperators.getFromOp}
+     * @Deprecated Use {@link OneExpression.SCIMOperators#getFromOp(String)}
      */
     private static OneExpression.SCIMOperators findOp(String op) {
         return Arrays.stream(OneExpression.SCIMOperators.values())
                 .filter(scimOp -> scimOp.op().equals(op))
                 .findFirst().orElse(null);
     }
-
 
     /**
      * @param expression like 'field co value' for field contains value
