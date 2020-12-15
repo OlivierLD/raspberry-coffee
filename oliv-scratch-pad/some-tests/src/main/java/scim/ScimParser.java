@@ -10,18 +10,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Using SCIM syntax on a JSON file (curationFunctions.json)
  * As it is now, just an exercise...
- *
+ * <p>
  * SCIM "spec": https://ldapwiki.com/wiki/SCIM%20Filtering
- *
+ * <p>
  * Parsing an expression: https://unnikked.ga/how-to-build-a-boolean-expression-evaluator-518e9e068a65,
- *        and https://github.com/unnikkedga/BooleanExpressionEvaluator
+ * and https://github.com/unnikkedga/BooleanExpressionEvaluator
  */
 public class ScimParser {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
     /**
-     *
      * @param value quoted - or un-quoted - string. With simple or double quote, or none.
      * @return The string without the quotes, whatever they were.
      */
@@ -33,35 +32,6 @@ public class ScimParser {
         return value;
     }
 
-    public enum SCIMOperators { // TODO Add IgnoreCase for String ops?
-        CO("co"), // Contains
-        EQ("eq"), // Equals
-        NE("ne"), // Not Equals
-        SW("sw"), // Starts With
-        PR("pr"), // Present (exists)
-        GT("gt"), // Greater than
-        GE("ge"), // Greater or equal
-        LT("lt"), // Lower than
-        LE("le"); // Lower or equal
-
-        private final String op;
-
-        SCIMOperators(String op) {
-            this.op = op;
-        }
-        public String op() {
-            return this.op;
-        }
-
-        public static SCIMOperators getFromOp(String op) {
-            for (SCIMOperators scimOp : SCIMOperators.values()) {
-                if (scimOp.op().equals(op)) {
-                    return scimOp;
-                }
-            }
-            return null;
-        }
-    }
 
     public enum SupportedSuffix {
         NOT_EQUAL_TO("NotEqualTo", "string"),
@@ -81,6 +51,7 @@ public class ScimParser {
         public String suffix() {
             return this.suffix;
         }
+
         public String applyToType() {
             return this.applyToType;
         }
@@ -93,6 +64,7 @@ public class ScimParser {
             }
             return null;
         }
+
         public static SupportedSuffix getSuffix(String colName) {
             for (SupportedSuffix suffix : SupportedSuffix.values()) {
                 if (colName.endsWith(suffix.suffix())) {
@@ -104,43 +76,18 @@ public class ScimParser {
     }
 
     /**
-     *
      * @param op the lowercase operator
-     * @return the corresponding member of the {@link SCIMOperators} enum.
+     * @return the corresponding member of the {@link OneExpression.SCIMOperators} enum.
      * @Deprecated Use {@link }SCIMOperators.getFromOp}
      */
-    private static SCIMOperators findOp(String op) {
-        return Arrays.stream(SCIMOperators.values())
+    private static OneExpression.SCIMOperators findOp(String op) {
+        return Arrays.stream(OneExpression.SCIMOperators.values())
                 .filter(scimOp -> scimOp.op().equals(op))
                 .findFirst().orElse(null);
     }
 
-    private static class OneExpression {
-        String field;
-        SCIMOperators op;
-        String value;
-
-        public OneExpression field(String field) {
-            this.field = field;
-            return this;
-        }
-        public OneExpression op(String op) {
-            this.op = SCIMOperators.getFromOp(op); //  findOp(op);
-            return this;
-        }
-        public OneExpression value(String value) {
-            this.value = value;
-            return this;
-        }
-
-        @Override
-        public String toString() {
-            return String.format("%s %s%s", field, op.op(), (value == null ? "" : (" " + String.format("'%s'", value))));
-        }
-    }
 
     /**
-     *
      * @param expression like 'field co value' for field contains value
      * @return the expected bean, populated.
      */
@@ -153,20 +100,21 @@ public class ScimParser {
             StringBuilder sb = new StringBuilder();
             sb.append(fieldOpValue[2]);
             // case of 'field co "This is a String"'
-            for (int i=3; i<fieldOpValue.length; i++) {
+            for (int i = 3; i < fieldOpValue.length; i++) {
                 sb.append(String.format(" %s", fieldOpValue[i]));
             }
             value = dropQuotes(sb.toString().trim());
         }
-        return new OneExpression()
+        return OneExpression
+                .builder()
                 .field(field)
                 .op(operator)
-                .value(value);
+                .value(value)
+                .build();
     }
 
     /**
-     *
-     * @param origin the json object, represented as a Map
+     * @param origin    the json object, represented as a Map
      * @param fieldPath dot-separated path, like levelOne.levelTwo.levelThree
      * @return the target, if found. null otherwise.
      */
@@ -190,36 +138,35 @@ public class ScimParser {
     }
 
     /**
-     *
-     * @param obj the object to evaluate the expression on
+     * @param obj  the object to evaluate the expression on
      * @param expr the expression to use, as parsed
      * @return true or false, if the condition expressed by the 'expr' is met or not.
      */
     private static boolean evaluate(Map<String, Object> obj, OneExpression expr) {
-        if (expr.op.equals(SCIMOperators.CO)) {
-            return String.valueOf(drillToValue(obj, expr.field)).contains(expr.value);
-        } else if (expr.op.equals(SCIMOperators.EQ)) {
-            return String.valueOf(drillToValue(obj, expr.field)).equals(expr.value);
-        } else if (expr.op.equals(SCIMOperators.NE)) {
-            return !String.valueOf(drillToValue(obj, expr.field)).equals(expr.value);
-        } else if (expr.op.equals(SCIMOperators.SW)) {
-            return String.valueOf(drillToValue(obj, expr.field)).startsWith(expr.value);
-        } else if (expr.op.equals(SCIMOperators.PR)) {
-            return drillToValue(obj, expr.field) != null;
+        if (expr.getOp().equals(OneExpression.SCIMOperators.CO)) {
+            return String.valueOf(drillToValue(obj, expr.getField())).contains(expr.getValue());
+        } else if (expr.getOp().equals(OneExpression.SCIMOperators.EQ)) {
+            return String.valueOf(drillToValue(obj, expr.getField())).equals(expr.getValue());
+        } else if (expr.getOp().equals(OneExpression.SCIMOperators.NE)) {
+            return !String.valueOf(drillToValue(obj, expr.getField())).equals(expr.getValue());
+        } else if (expr.getOp().equals(OneExpression.SCIMOperators.SW)) {
+            return String.valueOf(drillToValue(obj, expr.getField())).startsWith(expr.getValue());
+        } else if (expr.getOp().equals(OneExpression.SCIMOperators.PR)) {
+            return drillToValue(obj, expr.getField()) != null;
         } else { // Other operators... on Dates or Numbers
-            Object object = drillToValue(obj, expr.field);
+            Object object = drillToValue(obj, expr.getField());
             if (object != null) {
                 String field = String.valueOf(object);
                 try {
                     double fieldValue = Double.parseDouble(field);
-                    double refValue = Double.parseDouble(expr.value);
-                    if (expr.op.equals(SCIMOperators.LT)) {
+                    double refValue = Double.parseDouble(expr.getValue());
+                    if (expr.getOp().equals(OneExpression.SCIMOperators.LT)) {
                         return fieldValue < refValue;
-                    } else if (expr.op.equals(SCIMOperators.LE)) {
+                    } else if (expr.getOp().equals(OneExpression.SCIMOperators.LE)) {
                         return fieldValue <= refValue;
-                    } else if (expr.op.equals(SCIMOperators.GT)) {
+                    } else if (expr.getOp().equals(OneExpression.SCIMOperators.GT)) {
                         return fieldValue > refValue;
-                    } else if (expr.op.equals(SCIMOperators.GE)) {
+                    } else if (expr.getOp().equals(OneExpression.SCIMOperators.GE)) {
                         return fieldValue >= refValue;
                     }
                 } catch (Exception ex) {
@@ -234,13 +181,15 @@ public class ScimParser {
 
     /**
      * The high level method, the one to call.
-     * @param list the list to filter
+     *
+     * @param list   the list to filter
      * @param filter the list of expression to apply to filter.
      * @return The filtered list.
      */
     private static List<Map<String, Object>> filter(List<Map<String, Object>> list, String filter) {
         String[] expression = filter.split(" and "); // Only AND for now...
         List<OneExpression> filters = new ArrayList<>();
+
         Arrays.asList(expression).forEach(exp -> filters.add(parseOne(exp)));
         if (true) { // Verbose
             System.out.println("-- [Filter parsed expressions] --");
@@ -258,27 +207,29 @@ public class ScimParser {
     }
 
     private final static Map<String, String> OIC_COL_TO_PATH = new HashMap<>();
+
     static {
         //                                  name,         path
         // For the OCI option, curationFunctions.json
-        OIC_COL_TO_PATH.put("category",             "categories");
-        OIC_COL_TO_PATH.put("title",                "title");
-        OIC_COL_TO_PATH.put("columnFunction",       "columnFunction");
-        OIC_COL_TO_PATH.put("left",                 "parameters.properties.left.type");
-        OIC_COL_TO_PATH.put("right",                "parameters.properties.right.type");
+        OIC_COL_TO_PATH.put("category", "categories");
+        OIC_COL_TO_PATH.put("title", "title");
+        OIC_COL_TO_PATH.put("columnFunction", "columnFunction");
+        OIC_COL_TO_PATH.put("left", "parameters.properties.left.type");
+        OIC_COL_TO_PATH.put("right", "parameters.properties.right.type");
         OIC_COL_TO_PATH.put("additionalProperties", "parameters.schema.additionalProperties");
         // For the OCI Option, bagnoles.json. That one is a flat structure. TODO See the categories (Array)
-        OIC_COL_TO_PATH.put("make",                 "make");
-        OIC_COL_TO_PATH.put("model",                "model");
-        OIC_COL_TO_PATH.put("power",                "power");
-        OIC_COL_TO_PATH.put("categories",           "categories");
-        OIC_COL_TO_PATH.put("second-hand",          "second-hand");
-        OIC_COL_TO_PATH.put("price",                "price");
+        OIC_COL_TO_PATH.put("make", "make");
+        OIC_COL_TO_PATH.put("model", "model");
+        OIC_COL_TO_PATH.put("power", "power");
+        OIC_COL_TO_PATH.put("categories", "categories");
+        OIC_COL_TO_PATH.put("second-hand", "second-hand");
+        OIC_COL_TO_PATH.put("price", "price");
     }
 
     private static List<Map<String, Object>> filter(List<Map<String, Object>> list, List<String> filters, Map<String, String> colToPath) {
 
-        List<String> yesFilters = new ArrayList<>(); List<String> noFilters = new ArrayList<>();
+        List<String> yesFilters = new ArrayList<>();
+        List<String> noFilters = new ArrayList<>();
         if (filters != null) {
             filters.forEach(filter -> {
                 String[] nv = filter.split("=");
@@ -302,7 +253,7 @@ public class ScimParser {
                 if (colMap == null) {
                     colMap = new ArrayList<>();
                 }
-                colMap.add( nv[1]);
+                colMap.add(nv[1]);
                 yesFilterAndLists.put(nv[0], colMap);
             });
         }
@@ -322,7 +273,7 @@ public class ScimParser {
                 if (colMap == null) {
                     colMap = new ArrayList<>();
                 }
-                colMap.add( nv[1]);
+                colMap.add(nv[1]);
                 noFilterAndLists.put(colName, colMap);
             });
         }
@@ -402,6 +353,7 @@ public class ScimParser {
 
     /**
      * For tests
+     *
      * @param args Unused.
      */
     public static void main(String... args) {
@@ -444,14 +396,14 @@ public class ScimParser {
                  * Example: cars?makeNotEqualTo=toyota&makeNotEqualTo=honda
                  *              matches all cars where make is not "toyota" AND make is not "honda" (i.e. the make is neither "toyota" nor "honda").
                  */
-                String makeFilter1     = "make=VolksWagen";
-                String makeFilter2     = "make=Nissan";
-                String makeFilter3     = "make=Citroen";
-                String makeFilterNon1  = "makeNotEqualTo=VolksWagen";
-                String makeFilterNon2  = "makeNotEqualTo=Nissan";
-                String modelFilter1    = "model=One";
-                String modelFilter2    = "model=Two";
-                String priceFilter3    = "priceGreaterThanOrEqualTo=900";
+                String makeFilter1 = "make=VolksWagen";
+                String makeFilter2 = "make=Nissan";
+                String makeFilter3 = "make=Citroen";
+                String makeFilterNon1 = "makeNotEqualTo=VolksWagen";
+                String makeFilterNon2 = "makeNotEqualTo=Nissan";
+                String modelFilter1 = "model=One";
+                String modelFilter2 = "model=Two";
+                String priceFilter3 = "priceGreaterThanOrEqualTo=900";
                 String modelFilterNon1 = "modelNotEqualTo=Two";
                 String modelFilterNon2 = "modelNotEqualTo=Three";
 
@@ -472,12 +424,12 @@ public class ScimParser {
 //                                modelFilter1 }),
 //                        OIC_COL_TO_PATH);
                 filtered = filter(listToFilter,
-                        Arrays.asList(new String[] {
+                        Arrays.asList(new String[]{
                                 columnFunctionFilter,
                                 // additionalPropertiesFilter,
                                 // titleFilter,
                                 titleFilterNon1,
-                                titleFilterNon2 }),
+                                titleFilterNon2}),
                         OIC_COL_TO_PATH);
 //                filtered = filter(listToFilter,
 //                        Arrays.asList(new String[] {
@@ -491,9 +443,9 @@ public class ScimParser {
             }
             // Sorted ?
             if (true) {
-                 filtered.sort(Comparator.comparing(
-                         oneMap -> (int)oneMap.get("price"),
-                         Comparator.nullsLast(Comparator.reverseOrder()))); // naturalOrder() for ASC sort.
+                filtered.sort(Comparator.comparing(
+                        oneMap -> (int) oneMap.get("price"),
+                        Comparator.nullsLast(Comparator.reverseOrder()))); // naturalOrder() for ASC sort.
             }
 
             String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(filtered);
