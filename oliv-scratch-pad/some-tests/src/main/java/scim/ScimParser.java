@@ -170,8 +170,7 @@ public class ScimParser {
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    // TODO Is that a date?
-
+                    // TODO Is that a date...?
                 }
             }
             return false;
