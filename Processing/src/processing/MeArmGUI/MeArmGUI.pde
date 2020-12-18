@@ -35,11 +35,19 @@ void setup() {
     MeArmPilot.initContext(left, claw, bottom, right);
   } catch (I2CFactory.UnsupportedBusNumberException oops) {
     println(">> Ooops!, wrong bus... Moving on anyway, but without the board.");
+  } catch (RuntimeException rtEx) {
+    println("Servo not found?");
+  } catch (Exception ex) {
+    ex.printStackTrace();
   }
 
   // Initializing MeArm pos
-  MeArmPilot.runMacro(MeArmPilot.initStop());
-  MeArmPilot.runMacro(MeArmPilot.initialPosition());
+  try {
+    MeArmPilot.runMacro(MeArmPilot.initStop());
+    MeArmPilot.runMacro(MeArmPilot.initialPosition());
+  } catch (RuntimeException rtEx) {
+    println("Servo not found?");
+  }
 }
 
 void draw() {
@@ -97,20 +105,28 @@ void draw() {
   int bottomSliderValue = (int)Math.round(leftRightPos / 3.09);
   int rightSliderValue = (int)Math.round(backForthPos / 3.09);
   // The SLIDE command is defined in MeArmPilot
-  MeArmPilot.runMacro(String.format("SLIDE: %s, %d", MeArmPilot.LEFT, leftSliderValue));
-  MeArmPilot.runMacro(String.format("SLIDE: %s, %d", MeArmPilot.RIGHT, rightSliderValue));
-  MeArmPilot.runMacro(String.format("SLIDE: %s, %d", MeArmPilot.CLAW, clawSliderValue));
-  MeArmPilot.runMacro(String.format("SLIDE: %s, %d", MeArmPilot.BOTTOM, bottomSliderValue));
+  try {
+    MeArmPilot.runMacro(String.format("SLIDE: %s, %d", MeArmPilot.LEFT, leftSliderValue));
+    MeArmPilot.runMacro(String.format("SLIDE: %s, %d", MeArmPilot.RIGHT, rightSliderValue));
+    MeArmPilot.runMacro(String.format("SLIDE: %s, %d", MeArmPilot.CLAW, clawSliderValue));
+    MeArmPilot.runMacro(String.format("SLIDE: %s, %d", MeArmPilot.BOTTOM, bottomSliderValue));
+  } catch (RuntimeException rtEx) {
+    println("Servo not found?");
+  }
 }
 
 void dispose() {
   println("Parking the MeArm");
 
-  MeArmPilot.runMacro(MeArmPilot.initialPosition());
-  MeArmPilot.runMacro("WAIT:1000");
-  MeArmPilot.runMacro(MeArmPilot.closeClaw());
-  MeArmPilot.runMacro("WAIT:500");
-  MeArmPilot.runMacro(MeArmPilot.initStop());
+  try {
+    MeArmPilot.runMacro(MeArmPilot.initialPosition());
+    MeArmPilot.runMacro("WAIT:1000");
+    MeArmPilot.runMacro(MeArmPilot.closeClaw());
+    MeArmPilot.runMacro("WAIT:500");
+    MeArmPilot.runMacro(MeArmPilot.initStop());
+  } catch (RuntimeException rtEx) {
+    println("Servo not found?");
+  }
 
   println("Bye.");
 }
