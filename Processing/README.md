@@ -32,15 +32,17 @@ void draw() { // Draw the value of the ADC (MCP3008) at each repaint
 About 20 lines...
 
 ### To run the Sketch
-- From the project root (Processing), to produce the required jar files, run
+- From the project root, to produce the required jar files, run
 ```bash
  $> ./gradlew clean shadowJar
 ```
+  > Processing might not like a JDK more recent than 1.8. Make sure you set 
+  > your Java alternative correctly.
 - Open the sketch [MCP3008_Pie.pde](./src/processing/MCP3008_Pie/MCP3008_Pie.pde) in `Processing` (no need to copy it anywhere else)
 
   ![Open in Processing](./sketch.png)
 
-- If instructed in the comment at the top of the sketch, use the menu `Sketch > Add File...` to select the appropriate archive, like here:
+- If instructed **_in the comment at the top of the sketch_**, use the menu `Sketch > Add File...` to select the appropriate archive, like here:
 ```java
 /*
  * Using Sketch > Add File..., select ADC/build/libs/ADC-1.0-all.jar
