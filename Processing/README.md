@@ -38,6 +38,10 @@ About 20 lines...
 ```
   > Processing might not like a JDK more recent than 1.8. Make sure you set 
   > your Java alternative correctly.
+```
+$ sudo update-alternatives — config java
+$ sudo update-alternatives — config javac
+```
 - Open the sketch [MCP3008_Pie.pde](./src/processing/MCP3008_Pie/MCP3008_Pie.pde) in `Processing` (no need to copy it anywhere else)
 
   ![Open in Processing](./sketch.png)
