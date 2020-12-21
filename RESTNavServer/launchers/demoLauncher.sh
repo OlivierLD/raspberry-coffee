@@ -6,6 +6,7 @@
 #
 LAUNCH_BROWSER=N
 WITH_PROXY=N
+USER_OPTION=
 #
 NAV_SERVER_EXTRA_OPTIONS=
 #
@@ -24,6 +25,9 @@ then
 	    then
 	      NAV_SERVER_EXTRA_OPTIONS="$NAV_SERVER_EXTRA_OPTIONS --proxy"
 	    fi
+	  elif [[ ${prm} == "--option:"* ]]
+	  then
+	    USER_OPTION=${prm#*:}
 	  else
 	    echo "Unsupported parameter $prm"
 	  fi
@@ -50,7 +54,7 @@ while [[ "$GO" == "true" ]]
 do
 	clear
 	echo -e ">> Note ⚠️ : Optional Script Parameters : "
-	echo -e "            starting the server, like $0 --browser:[N]|Y --proxy:[N]|Y"
+	echo -e "            starting the server, like $0 --browser:[N]|Y --proxy:[N]|Y --option:1"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|               N A V   S E R V E R   -   D E M O   L A U N C H E R  🚀                   |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
@@ -86,8 +90,16 @@ do
 	echo -e "|  S. Show NavServer process(es) ⚙️   | SP. Show proxy process(es) ⚙️                       |"
 	echo -e "|  Q. Quit ❎                        |                                                    |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
-	echo -en " ==> You choose: "
-	read option
+	if [[ "${USER_OPTION}" != "" ]]
+	then
+	  echo -e "------------------------------"
+	  echo -e ">> Using option ${USER_OPTION}"
+	  echo -e "------------------------------"
+	  option=${USER_OPTION}
+	else
+  	echo -en " ==> You choose: "
+	  read option
+	fi
 	case "$option" in
 	  "PG" | "pg")
 	    export HTTP_PROXY_PORT=9876
