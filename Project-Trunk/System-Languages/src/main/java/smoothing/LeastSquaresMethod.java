@@ -155,7 +155,7 @@ public class LeastSquaresMethod {
 		}
 		out += " ]";
 		System.out.println(out);
-		// Nicer (Java 8)
+		// Nicer (Java 8 and after)
 		System.out.println();
 		AtomicInteger integer = new AtomicInteger(0);
 		Arrays.stream(result)
