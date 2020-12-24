@@ -13,7 +13,7 @@ public class StatFunctions {
      * @return
      */
     public static double mean(double[] dataset) {
-        int size = dataset.length;
+        int size = dataset.length; // Arrays.stream(dataset).count();
         double sum = Arrays.stream(dataset).sum();
         return (sum / size);
     }
@@ -38,7 +38,7 @@ public class StatFunctions {
      * @param dataset
      * @return
      */
-    public static double stdDev(double[] dataset) {
+    public static double standardDeviation(double[] dataset) {
         return Math.sqrt(variance(dataset));
     }
 
@@ -63,7 +63,7 @@ public class StatFunctions {
             System.out.printf("Variance: %f%n", variance);
             System.out.printf("StdDev: %f%n", Math.sqrt(variance));
         }
-        System.out.printf("Direct StdDev: %f%n", stdDev(dataset));
+        System.out.printf("Direct Std-Dev: %f%n", standardDeviation(dataset));
 
     }
 }
