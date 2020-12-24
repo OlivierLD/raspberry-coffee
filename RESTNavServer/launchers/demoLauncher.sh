@@ -54,7 +54,8 @@ while [[ "$GO" == "true" ]]
 do
 	clear
 	echo -e ">> Note ⚠️ : Optional Script Parameters : "
-	echo -e "            starting the server, like $0 --browser:[N]|Y --proxy:[N]|Y --option:1"
+	echo -e "    starting the server, like $0 --browser:[N]|Y --proxy:[N]|Y --option:1"
+	echo -e "    --option:X will not prompt the user for his choice, it will go directly for it."
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|               N A V   S E R V E R   -   D E M O   L A U N C H E R  🚀                   |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
@@ -66,8 +67,8 @@ do
 	echo -e "|                                    |         running on the remote machine.             |"
 	echo -e "|                                    |     Enter 'JVH' for some help.                     |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
-	echo -e "| >> Hint: use 'killns.sh' to stop any running NavServer 💣                               |"
-	echo -e "| >> Hint: use 'killproxy.sh' to stop any running Proxy Server 💣                         |"
+	echo -e "| >> Hint: use './killns.sh' to stop any running NavServer 💣                             |"
+	echo -e "| >> Hint: use './killproxy.sh' to stop any running Proxy Server 💣                       |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  1. Time simulated by a ZDA generator; HTTP Server, rich Web UI. Does not require a GPS |"
 	echo -e "|  2. Interactive Time (user-set), HTTP Server, rich Web UI. Does not require a GPS       |"
@@ -96,6 +97,7 @@ do
 	  echo -e ">> Using option ${USER_OPTION}"
 	  echo -e "------------------------------"
 	  option=${USER_OPTION}
+	  USER_OPTION=
 	else
   	echo -en " ==> You choose: "
 	  read option
