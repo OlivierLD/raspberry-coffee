@@ -2,12 +2,11 @@ package matrix;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
-public class PolynomUtil {
+public class PolynomialUtil {
 
-	private final static double precision = 1E-15; // Ca ira...
+	private final static double PRECISION = 1E-15; // Ca ira...
 
 	public static class Point {
 		double x;
@@ -60,19 +59,14 @@ public class PolynomUtil {
 		}
 
 		// Get derivative
-		double[] newcoef = Arrays.copyOfRange(coef, 0, coef.length - 1);
+		double[] newCoef = Arrays.copyOfRange(coef, 0, coef.length - 1);
 		for (int i = 0; i < coef.length - 1; i++) {
-			newcoef[i] *= (coef.length - 1 - i) / (double) coef.length;
+			newCoef[i] *= (coef.length - 1 - i) / (double) coef.length;
 		}
 
 		// Get root of derivative
-		List<Double> rootsA = getRoots(newcoef);
-		rootsA.sort(new Comparator<Double>() {
-			@Override
-			public int compare(Double o1, Double o2) {
-				return o1.compareTo(o2);
-			}
-		});
+		List<Double> rootsA = getRoots(newCoef);
+		rootsA.sort((o1, o2) -> o1.compareTo(o2));
 
 		// Get extreme points
 		int n = rootsA.size();
@@ -149,7 +143,7 @@ public class PolynomUtil {
 
 			double xn1 = fx / fpx;
 			xn1 = xn - xn1;
-			if (Math.abs(xn1 - xn) < precision) {
+			if (Math.abs(xn1 - xn) < PRECISION) {
 				return xn1;
 			}
 			return approximate(xn1, coef);
@@ -183,7 +177,7 @@ public class PolynomUtil {
 	 * @param coeff highest degree first
 	 * @return
 	 */
-	public static List<Double> getPolynomRoots(double[] coeff) {
+	public static List<Double> getPolynomialRoots(double[] coeff) {
 		double[] pCoeff = new double[coeff.length - 1];
 		assert(coeff.length > 0 && coeff[0] != 0);
 		for (int i=1; i<coeff.length; i++) {
@@ -337,7 +331,7 @@ public class PolynomUtil {
 	public static void main(String... args) {
 		double[] polynomial = new double[] { -1, -1, 12.34, 6 };
 		System.out.println(String.format("Roots of %s:", display(polynomial)));
-		List<Double> roots = getPolynomRoots(reduce(polynomial));
+		List<Double> roots = getPolynomialRoots(reduce(polynomial));
 		if (roots.size() == 0) {
 			System.out.println("no root");
 		} else {

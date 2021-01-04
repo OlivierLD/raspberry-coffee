@@ -94,7 +94,7 @@ public class SystemUtil {
 	 * @param pt
 	 * @return
 	 */
-	public static double minDistanceToCurve(double curve[], PolynomUtil.Point pt) {
+	public static double minDistanceToCurve(double curve[], PolynomialUtil.Point pt) {
 		double dist = Double.MAX_VALUE;
 
 		// distance pt = curve = distance between (x, f(x)) and (0, 3)
@@ -112,31 +112,31 @@ public class SystemUtil {
 		// Minimal distance is the smallest of the roots of the derivative above.
 
 		// 2*(x-ptX)
-		double[] part1 = PolynomUtil.multiply(new double[] { 1, -pt.x }, new double[] { 2 });
+		double[] part1 = PolynomialUtil.multiply(new double[] { 1, -pt.x }, new double[] { 2 });
 
 		// (f(x) - ptY)
-		double[] part21 = PolynomUtil.add(curve, new double[] { -pt.y });
+		double[] part21 = PolynomialUtil.add(curve, new double[] { -pt.y });
 		// f'(x)
-		double[] part22 = PolynomUtil.derivative(curve);
+		double[] part22 = PolynomialUtil.derivative(curve);
 		// 2 * (f(x) - ptY) * (f'(x))
-		double[] part2 = PolynomUtil.multiply(PolynomUtil.multiply(part21, part22), new double[] { 2 });
+		double[] part2 = PolynomialUtil.multiply(PolynomialUtil.multiply(part21, part22), new double[] { 2 });
 		// [2 * (x-ptX)] + [2 * (f(x) - ptY) * (f'(x))]
-		double[] full = PolynomUtil.reduce(PolynomUtil.add(part1, part2));
+		double[] full = PolynomialUtil.reduce(PolynomialUtil.add(part1, part2));
 		if ("true".equals(System.getProperty("system.verbose"))) {
-			System.out.println(String.format(">> minDistanceToCurve, resolving %s", PolynomUtil.display(full)));
+			System.out.println(String.format(">> minDistanceToCurve, resolving %s", PolynomialUtil.display(full)));
 		}
-		List<Double> polynomRoots = PolynomUtil.getPolynomRoots(full);
-		if (polynomRoots.size() == 0) {
+		List<Double> polynomialRoots = PolynomialUtil.getPolynomialRoots(full);
+		if (polynomialRoots.size() == 0) {
 			throw new RuntimeException("no root");
 		} else {
-			for (double r : polynomRoots) {
-				dist = Math.min(dist, PolynomUtil.dist(curve, r, pt));
+			for (double r : polynomialRoots) {
+				dist = Math.min(dist, PolynomialUtil.dist(curve, r, pt));
 			}
 		}
 		return dist;
 	}
 
-	public static double[] smooth(List<PolynomUtil.Point> data, int requiredDegree) {
+	public static double[] smooth(List<PolynomialUtil.Point> data, int requiredDegree) {
 		int dimension = requiredDegree + 1;
 		double[] sumXArray = new double[(requiredDegree * 2) + 1]; // Will fill the matrix
 		double[] sumY      = new double[requiredDegree + 1];
@@ -238,7 +238,7 @@ public class SystemUtil {
 		System.out.println(String.format("C = %f", result[2]));
 
 		// Test derivative
-		double[] der = PolynomUtil.derivative(new double[] { 3d, 2d, 1d, 6d});
+		double[] der = PolynomialUtil.derivative(new double[] { 3d, 2d, 1d, 6d});
 		Arrays.stream(der).forEach(c -> System.out.print(String.format("%f ", c)));
 		System.out.println();
 
@@ -247,21 +247,21 @@ public class SystemUtil {
 		double[] coeff = new double[] {-6, 4, 3};
 		System.out.println(funcToString("y", coeff));
 		double x = 3.4;
-		System.out.println(String.format("for %s, x=%f, f(x)=%f", funcToString("f(x)", coeff).trim(), x, PolynomUtil.f(coeff, x)));
-		List<Double> roots = PolynomUtil.getPolynomRoots(PolynomUtil.reduce(coeff));
+		System.out.println(String.format("for %s, x=%f, f(x)=%f", funcToString("f(x)", coeff).trim(), x, PolynomialUtil.f(coeff, x)));
+		List<Double> roots = PolynomialUtil.getPolynomialRoots(PolynomialUtil.reduce(coeff));
 		if (roots.size() == 0) {
 			System.out.println("no root");
 		} else {
 			System.out.println("roots:");
 			for (double r : roots) {
-				System.out.println(String.format("\t%+f, f(x) = %f", r, PolynomUtil.f(coeff, r)));
+				System.out.println(String.format("\t%+f, f(x) = %f", r, PolynomialUtil.f(coeff, r)));
 			}
 		}
 
 		// Minimal distance between point and curve
 		System.out.println("Minimal distance:");
 		double[] curve = new double[] { -1, 0, 6, 10 };
-		PolynomUtil.Point pt = new PolynomUtil.Point().x(0).y(3);
+		PolynomialUtil.Point pt = new PolynomialUtil.Point().x(0).y(3);
 		// distance pt - curve = distance between (x, f(x)) and (0, 3)
 		// = (deltaX^2 + deltaY^2)^(1/2)
 		//<=> distance^2 = (deltaX^2 + deltaY^2)
@@ -275,32 +275,32 @@ public class SystemUtil {
 		// Minimal distance is the smallest of the roots of the derivative above.
 		// Needed: polynomial addition, multiplication
 
-		double[] part1 = PolynomUtil.multiply(new double[] { 1, -pt.x }, new double[] { 2 });
+		double[] part1 = PolynomialUtil.multiply(new double[] { 1, -pt.x }, new double[] { 2 });
 
-		double[] part21 = PolynomUtil.add(curve, new double[] { -pt.y });
-		double[] part22 = PolynomUtil.derivative(curve);
-		double[] part2  = PolynomUtil.multiply(PolynomUtil.multiply(part21, part22), new double[] { 2 });
-		double[] full   = PolynomUtil.add(part1, part2);
+		double[] part21 = PolynomialUtil.add(curve, new double[] { -pt.y });
+		double[] part22 = PolynomialUtil.derivative(curve);
+		double[] part2  = PolynomialUtil.multiply(PolynomialUtil.multiply(part21, part22), new double[] { 2 });
+		double[] full   = PolynomialUtil.add(part1, part2);
 
-		System.out.println("For curve: " + PolynomUtil.display(curve));
-		System.out.println("Resolving: " + PolynomUtil.display(full));
-		List<Double> polynomRoots = PolynomUtil.getPolynomRoots(PolynomUtil.reduce(full));
-		if (polynomRoots.size() == 0) {
+		System.out.println("For curve: " + PolynomialUtil.display(curve));
+		System.out.println("Resolving: " + PolynomialUtil.display(full));
+		List<Double> polynomialRoots = PolynomialUtil.getPolynomialRoots(PolynomialUtil.reduce(full));
+		if (polynomialRoots.size() == 0) {
 			System.out.println("no root");
 		} else {
 			System.out.println("roots:");
-			for (double r : polynomRoots) {
-				System.out.println(String.format("\t%+f, f(x) = %f, dist=%f", r, PolynomUtil.f(curve, r), PolynomUtil.dist(curve, r, pt)));
+			for (double r : polynomialRoots) {
+				System.out.println(String.format("\t%+f, f(x) = %f, dist=%f", r, PolynomialUtil.f(curve, r), PolynomialUtil.dist(curve, r, pt)));
 			}
 		}
 		// Min dist from one pt to curve
 		System.out.println();
 		System.setProperty("system.verbose", "true");
 		double minDist = minDistanceToCurve(curve, pt);
-		System.out.println(String.format("Minimal distance from %s to curve %s is %f", formatPoint(pt), PolynomUtil.display(curve), minDist));
+		System.out.println(String.format("Minimal distance from %s to curve %s is %f", formatPoint(pt), PolynomialUtil.display(curve), minDist));
 	}
 
-	private static String formatPoint(PolynomUtil.Point pt) {
+	private static String formatPoint(PolynomialUtil.Point pt) {
 		String formatted = "";
 		if (pt.x == (long)pt.x) {
 			formatted += String.format("(%d, ", (long)pt.x);

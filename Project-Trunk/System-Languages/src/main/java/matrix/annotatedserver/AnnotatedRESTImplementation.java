@@ -7,7 +7,7 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
-import matrix.PolynomUtil;
+import matrix.PolynomialUtil;
 import matrix.SquareMatrix;
 import matrix.SystemUtil;
 
@@ -183,10 +183,10 @@ public class AnnotatedRESTImplementation {
 	}
 
 	private static class SmoothRequest {
-		List<PolynomUtil.Point> points;
+		List<PolynomialUtil.Point> points;
 		int degree;
 
-		public SmoothRequest points(List<PolynomUtil.Point> points) {
+		public SmoothRequest points(List<PolynomialUtil.Point> points) {
 			this.points = points;
 			return this;
 		}
@@ -197,11 +197,11 @@ public class AnnotatedRESTImplementation {
 	}
 
 	private static class BestSmoothRequest {
-		List<PolynomUtil.Point> points;
+		List<PolynomialUtil.Point> points;
 		int degreeMin;
 		int degreeMax;
 
-		public BestSmoothRequest points(List<PolynomUtil.Point> points) {
+		public BestSmoothRequest points(List<PolynomialUtil.Point> points) {
 			this.points = points;
 			return this;
 		}
@@ -264,10 +264,10 @@ public class AnnotatedRESTImplementation {
 				if (options.step != 0) { // TODO Check if positive
 					step = options.step;
 				}
-				List<PolynomUtil.Point> curve = new ArrayList<>();
+				List<PolynomialUtil.Point> curve = new ArrayList<>();
 				for (double x=from; x<=to; x+=step) {
-					double y = PolynomUtil.f(coeff, x);
-					curve.add(new PolynomUtil.Point(x, y));
+					double y = PolynomialUtil.f(coeff, x);
+					curve.add(new PolynomialUtil.Point(x, y));
 				}
 
 				String content = new Gson().toJson(curve);
