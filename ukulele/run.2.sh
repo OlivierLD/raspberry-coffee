@@ -11,4 +11,3 @@ fi
 OPT=-Dlang=$LANG
 echo -e "Key Chord Finder"
 java -cp $CP $OPT section.one.KeyChordFinder
-
