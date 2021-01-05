@@ -1,5 +1,5 @@
 ## Smoothing, rendering.
-The class in this package `raspisamples.smoothing.LeastSquaresMethod.java` is using the Least Squares method to find the coefficients of a polynomial, so the difference between
+The class in this package `smoothing.LeastSquaresMethod.java` is using the Least Squares method to find the coefficients of a polynomial, so the difference between
 the point of the curve (at a given abscissa) and the points of the cloud is as small as possible.
 
 There is a Scala equivalent of this class, in `smoothing.LeastSquaresMethod.scala`.
