@@ -19,7 +19,7 @@ import matrix.SystemUtil;
  */
 public class LeastSquaresMethod {
 
-	private static double f(double x, double... coeffs) {
+	public static double f(double x, double... coeffs) {
 		double result = 0.0;
 		for (int deg=0; deg<coeffs.length; deg++) {
 			result += (coeffs[deg] * Math.pow(x, coeffs.length - (deg + 1)));
@@ -70,11 +70,17 @@ public class LeastSquaresMethod {
 
 	}
 
-	static class Tuple {
+	public static class Tuple {
 		double x, y;
 		public Tuple(double x, double y) {
 			this.x = x;
 			this.y = y;
+		}
+		public double getX() {
+			return this.x;
+		}
+		public double getY() {
+			return this.y;
 		}
 	}
 
@@ -164,12 +170,19 @@ public class LeastSquaresMethod {
 						.forEach(ic -> System.out.println(String.format("Deg %d -> %f", (dimension - ic.idx), ic.coef)));
 	}
 
-	private static class IndexedCoeff {
+	public static class IndexedCoeff {
 		int idx;
 		double coef;
 		public IndexedCoeff(int idx, double coef) {
 			this.idx = idx;
 			this.coef = coef;
+		}
+
+		public int getIdx() {
+			return idx;
+		}
+		public double getCoef() {
+			return coef;
 		}
 	}
 }
