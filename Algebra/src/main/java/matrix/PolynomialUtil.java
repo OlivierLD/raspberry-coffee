@@ -320,9 +320,9 @@ public class PolynomialUtil {
 		String display = "";
 		for (int i=0; i<p.length; i++) {
 			if (p[i] == (long)p[i]) {
-				display += (String.format("%+d%s ", (long)p[i], (i == (p.length - 1) ? "" : (i == (p.length - 2) ? " * x" : String.format(" * x^%d", (p.length - 1 - i))))));
+				display += (String.format("(%+d%s) %s", (long)p[i], (i == (p.length - 1) ? "" : (i == (p.length - 2) ? " * x" : String.format(" * x^%d", (p.length - 1 - i)))), ((i == (p.length - 1) ? "" : "+ "))));
 			} else {
-				display += (String.format("%+f%s ", p[i], (i == (p.length - 1) ? "" : (i == (p.length - 2) ? " * x" : String.format(" * x^%d", (p.length - 1 - i))))));
+				display += (String.format("(%+f%s) %s", p[i], (i == (p.length - 1) ? "" : (i == (p.length - 2) ? " * x" : String.format(" * x^%d", (p.length - 1 - i)))), ((i == (p.length - 1) ? "" : "+ "))));
 			}
 		}
 		return display;
@@ -362,6 +362,7 @@ public class PolynomialUtil {
 		try {
 			System.out.println("Reduced: " + display(reduce(new double[] { 0, 0, 0, 0 }))); // Throws Exception
 		} catch (Exception ex) {
+			System.err.println("As expected:");
 			ex.printStackTrace();
 		}
 	}

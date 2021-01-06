@@ -302,7 +302,7 @@ public class SystemUtil {
         System.out.println(String.format("Minimal distance from %s to curve %s is %f", formatPoint(pt), PolynomialUtil.display(curve), minDist));
     }
 
-    private static String formatPoint(PolynomialUtil.Point pt) {
+    public static String formatPoint(PolynomialUtil.Point pt) {
         String formatted = "";
         if (pt.x == (long) pt.x) {
             formatted += String.format("(%d, ", (long) pt.x);

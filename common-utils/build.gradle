@@ -56,10 +56,10 @@ task sysInfo(type: JavaExec, dependsOn: build, description: "Display System Info
 //  classpath sourceSets.main.output.classesDir
     // Use like ../gradlew sysInfo -P--minimal
     if (project.hasProperty("--minimal")) {
-        args = ["--minimal"]
+        args += ["--minimal"]
     }
     if (project.hasProperty("--no-free-mem")) {
-        args = ["--no-free-mem"]
+        args += ["--no-free-mem"]
     }
 }
 
@@ -72,9 +72,9 @@ sysInfo.doFirst {
 run {
     // Use like ../gradlew sysInfo -P--minimal
     if (project.hasProperty("--minimal")) {
-        args = ["--minimal"]
+        args += ["--minimal"]
     }
     if (project.hasProperty("--no-free-mem")) {
-        args = ["--no-free-mem"]
+        args += ["--no-free-mem"]
     }
 }
