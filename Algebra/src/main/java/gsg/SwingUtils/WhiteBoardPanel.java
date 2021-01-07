@@ -100,7 +100,7 @@ public class WhiteBoardPanel extends JPanel {
     private Color axisColor = Color.BLACK;
     private Color textColor = Color.GRAY;
     private Color bgColor = Color.LIGHT_GRAY;
-    private String graphicTitle = "Graphic Title";
+    private String graphicTitle = "Graphic Title"; // Set to null to remove
     private Font titleFont = null;
     private boolean withGrid = false;
 
@@ -180,8 +180,13 @@ public class WhiteBoardPanel extends JPanel {
         int maxX = findCanvasXCoord.apply(graphicRange.getMaxX());
         int minY = findCanvasYCoord.apply(graphicRange.getMinY());
         int maxY = findCanvasYCoord.apply(graphicRange.getMaxY());
-        System.out.println(String.format("Working Rectangle: x:%d, y:%d, w:%d, h:%d", minX, HEIGHT - maxY, (maxX - minX), (maxY - minY)));
-        g2d.drawRect(minX, HEIGHT - maxY, (maxX - minX), (maxY - minY));
+        System.out.println("-----------------------------------------------------");
+        int height = this.getSize().height;
+        int width  = this.getSize().width;
+        System.out.println(String.format("HxW: %d x %d", height, width));
+        System.out.println(String.format(">> Working Rectangle: x:%d, y:%d, w:%d, h:%d", minX, height - maxY, (maxX - minX), (maxY - minY)));
+        System.out.println("-----------------------------------------------------");
+        g2d.drawRect(minX, height - maxY, (maxX - minX), (maxY - minY));
 
         // Label font
         int labelFontSize = 10;
@@ -191,7 +196,7 @@ public class WhiteBoardPanel extends JPanel {
         // Vertical X (left) Arrow
         g2d.setStroke(new BasicStroke(2));             // Line Thickness
         WhiteBoardPanel.drawArrow(g2d,
-                new Point((int)Math.round(x0), HEIGHT),
+                new Point((int)Math.round(x0), height),
                 new Point((int)Math.round(x0), 0),
                 axisColor);
         g2d.setStroke(new BasicStroke(1));             // Line Thickness
@@ -200,38 +205,36 @@ public class WhiteBoardPanel extends JPanel {
         g2d.setColor(axisColor);
         int xTick = 0;
         int canvasX = 0;
-        while (canvasX <= WIDTH) {
+        while (canvasX <= width) {
             canvasX = findCanvasXCoord.apply((double)xTick);
-            if (canvasX <= WIDTH) {
+            if (canvasX <= width) {
                 if (withGrid) {
-                    g2d.drawLine(canvasX, HEIGHT,
-                            canvasX, 0);
+                    g2d.drawLine(canvasX, height, canvasX, 0);
                 } else {
-                    g2d.drawLine(canvasX, HEIGHT - (int) Math.round(y0 - 5),
-                            canvasX, HEIGHT - (int) Math.round(y0 + 5));
+                    g2d.drawLine(canvasX, height - (int) Math.round(y0 - 5),
+                            canvasX, height - (int) Math.round(y0 + 5));
                 }
                 String label = String.valueOf(xTick);
                 int strWidth = g2d.getFontMetrics(labelFont).stringWidth(label);
-                g2d.drawString(label, canvasX - (strWidth / 2),HEIGHT - (int) Math.round(y0 - 5 - (labelFont.getSize())));
+                g2d.drawString(label, canvasX - (strWidth / 2),height - (int) Math.round(y0 - 5 - (labelFont.getSize())));
             }
             xTick += tickIncrement;
         }
         // X Notches, negative
         xTick = 0;
-        canvasX = WIDTH;
+        canvasX = width;
         while (canvasX >= 0) {
             canvasX = findCanvasXCoord.apply((double)xTick);
             if (canvasX >= 0) {
                 if (withGrid) {
-                    g2d.drawLine(canvasX, HEIGHT,
-                            canvasX, 0);
+                    g2d.drawLine(canvasX, height, canvasX, 0);
                 } else {
-                    g2d.drawLine(canvasX, HEIGHT - (int) Math.round(y0 - 5),
-                            canvasX, HEIGHT - (int) Math.round(y0 + 5));
+                    g2d.drawLine(canvasX, height - (int) Math.round(y0 - 5),
+                            canvasX, height - (int) Math.round(y0 + 5));
                 }
                 String label = String.valueOf(xTick);
                 int strWidth = g2d.getFontMetrics(labelFont).stringWidth(label);
-                g2d.drawString(label, canvasX - (strWidth / 2),HEIGHT - (int) Math.round(y0 - 5 - (labelFont.getSize())));
+                g2d.drawString(label, canvasX - (strWidth / 2),height - (int) Math.round(y0 - 5 - (labelFont.getSize())));
             }
             xTick -= tickIncrement;
         }
@@ -239,8 +242,8 @@ public class WhiteBoardPanel extends JPanel {
         // Horizontal Y (bottom) Arrow
         g2d.setStroke(new BasicStroke(2));             // Line Thickness
         WhiteBoardPanel.drawArrow(g2d,
-                new Point(0, HEIGHT - (int)Math.round(y0)),
-                new Point(WIDTH, HEIGHT - (int)Math.round(y0)),
+                new Point(0, height - (int)Math.round(y0)),
+                new Point(width, height - (int)Math.round(y0)),
                 axisColor);
 
         g2d.setStroke(new BasicStroke(1));             // Line Thickness
@@ -248,38 +251,38 @@ public class WhiteBoardPanel extends JPanel {
         g2d.setColor(axisColor);
         int yTick = 0;
         int canvasY = 0;
-        while (canvasY <= HEIGHT) {
+        while (canvasY <= height) {
             canvasY = findCanvasYCoord.apply((double)yTick);
-            if (canvasY <= HEIGHT) {
+            if (canvasY <= height) {
                 if (withGrid) {
-                    g2d.drawLine(0, HEIGHT - canvasY,
-                            WIDTH, HEIGHT - canvasY);
+                    g2d.drawLine(0, height - canvasY,
+                            width, height - canvasY);
                 } else {
-                    g2d.drawLine((int) Math.round(x0 - 5), HEIGHT - canvasY,
-                            (int) Math.round(x0 + 5), HEIGHT - canvasY);
+                    g2d.drawLine((int) Math.round(x0 - 5), height - canvasY,
+                            (int) Math.round(x0 + 5), height - canvasY);
                 }
                 String label = String.valueOf(yTick);
                 int strWidth = g2d.getFontMetrics(labelFont).stringWidth(label);
-                g2d.drawString(label, (int) Math.round(x0 - 5) - strWidth - 2, HEIGHT - canvasY + (int)(labelFont.getSize() * 0.9 / 2));
+                g2d.drawString(label, (int) Math.round(x0 - 5) - strWidth - 2, height - canvasY + (int)(labelFont.getSize() * 0.9 / 2));
             }
             yTick += tickIncrement;
         }
         // Y Notches, negative
         yTick = 0;
-        canvasY = HEIGHT;
+        canvasY = height;
         while (canvasY >= 0) {
             canvasY = findCanvasYCoord.apply((double)yTick);
             if (canvasY >= 0) {
                 if (withGrid) {
-                    g2d.drawLine(0, HEIGHT - canvasY,
-                            WIDTH, HEIGHT - canvasY);
+                    g2d.drawLine(0, height - canvasY,
+                            width, height - canvasY);
                 } else {
-                    g2d.drawLine((int) Math.round(x0 - 5), HEIGHT - canvasY,
-                            (int) Math.round(x0 + 5), HEIGHT - canvasY);
+                    g2d.drawLine((int) Math.round(x0 - 5), height - canvasY,
+                            (int) Math.round(x0 + 5), height - canvasY);
                 }
                 String label = String.valueOf(yTick);
                 int strWidth = g2d.getFontMetrics(labelFont).stringWidth(label);
-                g2d.drawString(label, (int) Math.round(x0 - 5) - strWidth - 2, HEIGHT - canvasY + (int)(labelFont.getSize() * 0.9 / 2));
+                g2d.drawString(label, (int) Math.round(x0 - 5) - strWidth - 2, height - canvasY + (int)(labelFont.getSize() * 0.9 / 2));
             }
             yTick -= tickIncrement;
         }
@@ -310,11 +313,11 @@ public class WhiteBoardPanel extends JPanel {
                     Point here = new Point(pointX, pointY);
                     if (withPoints) {
                         g2d.fillOval(pointX - (serie.circleDiam / 2),
-                                HEIGHT - pointY - (serie.circleDiam / 2),
+                                height - pointY - (serie.circleDiam / 2),
                                 serie.circleDiam, serie.circleDiam);
                     }
                     if (previous != null) {
-                        g2d.drawLine(previous.x, HEIGHT - previous.y, here.x, HEIGHT - here.y);
+                        g2d.drawLine(previous.x, height - previous.y, here.x, height - here.y);
                     }
                     previous = here;
                 }
@@ -322,9 +325,9 @@ public class WhiteBoardPanel extends JPanel {
                     if (previous != null) { // Close the loop
                         g2d.drawLine(
                                 previous.x,
-                                HEIGHT - previous.y,
+                                height - previous.y,
                                 findCanvasXCoord.apply(serie.getData().get(0).getX()),
-                                HEIGHT - findCanvasYCoord.apply(serie.getData().get(0).getY()));
+                                height - findCanvasYCoord.apply(serie.getData().get(0).getY()));
                     }
                 }
             } else if (serie.getGraphicType().equals(GraphicType.POINTS)) {
@@ -335,7 +338,7 @@ public class WhiteBoardPanel extends JPanel {
                     int pointY = findCanvasYCoord.apply(v.getY());
 //              System.out.println(String.format("x:%f, y:%f => X:%d, Y:%d", x[i], y[i], pointX, pointY));
                     g2d.fillOval(pointX - (circleDiam / 2),
-                            HEIGHT - pointY - (circleDiam / 2),
+                            height - pointY - (circleDiam / 2),
                             circleDiam, circleDiam);
 
                 });

@@ -104,7 +104,8 @@ public class SwingSample5 {
         whiteBoard.setWithGrid(true);
         whiteBoard.setBgColor(new Color(250, 250, 250, 255));
         whiteBoard.setGraphicTitle(dino121 ? "121 Dinos" : "A full test");
-        whiteBoard.setDimension(new Dimension(/*1024*/ 800, /*760*/ 590)); // TODO Check dimensions. 1024x760 is no correct
+//        whiteBoard.setDimension(new Dimension(800, 600));
+        whiteBoard.setDimension(new Dimension(1024,760));
         whiteBoard.setTextColor(Color.RED);
         whiteBoard.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 48));
         whiteBoard.setGraphicMargins(30);

@@ -24,6 +24,7 @@ public class SwingSample4 {
     private JMenu menuHelp = new JMenu();
     private JMenuItem menuHelpAbout = new JMenuItem();
 
+    // Default size
     private final static int WIDTH = 860;
     private final static int HEIGHT = 600;
 
