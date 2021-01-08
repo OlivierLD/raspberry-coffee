@@ -34,6 +34,7 @@ public class WhiteBoardPanel extends JPanel {
         AREA,
         PIE // More to come
     }
+
     public static class DataSerie {
         List<Vector2D> data;
         GraphicType graphicType = GraphicType.LINE;

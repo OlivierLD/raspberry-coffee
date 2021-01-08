@@ -1,6 +1,6 @@
 ## Linear Algebra
 
-Basic algebra, and statistical functions. Work in progress.
+Basic linear algebra ([الجبر](https://en.wikipedia.org/wiki/Algebra)), and statistical functions. Work in progress.
 - Square matrix
 - System resolution
 - Least squares method (regression)

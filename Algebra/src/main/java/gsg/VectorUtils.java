@@ -120,7 +120,7 @@ public class VectorUtils {
     //        return (sum([v[0] for v in vectors]), sum([v[1] for v in vectors]))
     public static Vector2D add(List<Vector2D> vectors) {
         return new Vector2D(vectors.stream().mapToDouble(Vector2D::getX).sum(),
-                vectors.stream().mapToDouble(Vector2D::getY).sum());
+                            vectors.stream().mapToDouble(Vector2D::getY).sum());
     }
 
     //    def length(v):
@@ -158,7 +158,7 @@ public class VectorUtils {
     //        return (length*cos(angle), length*sin(angle))
     /**
      * @param length as you can guess
-     * @param angle  in <u><i>Radians</i></u>
+     * @param angle in <u><i>Radians</i></u>, thank you.
      * @return the cartesian equivalent of the polar coordinates
      */
     public static Vector2D toCartesian(double length, double angle) {
