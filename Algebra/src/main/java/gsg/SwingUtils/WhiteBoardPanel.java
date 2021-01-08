@@ -20,6 +20,8 @@ import static gsg.VectorUtils.Vector2D;
 /**
  * A Reusable WhiteBoard
  * Suitable for Swing application, as Jupyter Notebooks (with iJava)
+ *
+ * TODO An option to have two different scales, for X and Y.
  */
 public class WhiteBoardPanel extends JPanel {
 
@@ -28,10 +30,11 @@ public class WhiteBoardPanel extends JPanel {
     public enum GraphicType {
         LINE,
         LINE_WITH_DOTS,
-        CLOSED_LINE,            // aka Polygon
+        CLOSED_LINE,            // aka Polygon...
         CLOSED_LINE_WITH_DOTS,
         POINTS,
         AREA,
+        DONUT,
         PIE // More to come
     }
 
@@ -104,6 +107,7 @@ public class WhiteBoardPanel extends JPanel {
     private String graphicTitle = "Graphic Title"; // Set to null to remove
     private Font titleFont = null;
     private boolean withGrid = false;
+    private boolean xEqualsY = true;
 
     public void setDimension(Dimension dimension) {
         this.dimension = dimension;
@@ -138,22 +142,29 @@ public class WhiteBoardPanel extends JPanel {
         this.withGrid = withGrid;
     }
 
+    public void setXEqualsY(boolean xEqualsY) {
+        this.xEqualsY = xEqualsY;
+    }
+
     private Consumer<Graphics2D> DEFAULT_DASHBOARD_WRITER = g2d -> {
         List<List<Vector2D>> allData = new ArrayList<>();
         allSeries.forEach(serie -> allData.add(serie.getData()));
+
         VectorUtils.GraphicRange graphicRange = VectorUtils.findGraphicRanges(allData);
         double xAmplitude = graphicRange.getMaxX() - graphicRange.getMinX();
         double yAmplitude = graphicRange.getMaxY() - graphicRange.getMinY();
 
         int margins = graphicMargins;
 
-        double oneUnit = Math.min((dimension.width - (2 * margins)) / xAmplitude, (dimension.height - (2 * margins)) / yAmplitude);
-        System.out.println(String.format("One Unit: %f", oneUnit));
+        double oneUnitX = (dimension.width - (2 * margins)) / xAmplitude;
+        double oneUnitY = (dimension.height - (2 * margins)) / yAmplitude;
+        double oneUnit = Math.min(oneUnitX, oneUnitY);
+        System.out.println(String.format("One Unit: %f (X:%f, Y:%f)", oneUnit, oneUnitX, oneUnitY));
 
         // Find best tick amount for the grid
         // How Many units, in height, and width
-        int horizontalTicks = (int)Math.round((double)dimension.width / (double)oneUnit);
-        int verticalTicks = (int)Math.round((double)dimension.height / (double)oneUnit);
+        int horizontalTicks = (int)Math.round((double)dimension.width / (xEqualsY ? oneUnit : oneUnitX));
+        int verticalTicks = (int)Math.round((double)dimension.height / (xEqualsY ? oneUnit : oneUnitY));
         System.out.println(String.format("%d vertical ticks, %d horizontal ticks.", verticalTicks, horizontalTicks));
         int biggestTick = Math.max(horizontalTicks, verticalTicks);
 
@@ -162,8 +173,8 @@ public class WhiteBoardPanel extends JPanel {
         System.out.println("tickIncrement: " + tickIncrement);
 
         // Transformers
-        Function<Double, Integer> findCanvasXCoord = spaceXCoord -> (int)(margins + (Math.round((spaceXCoord - graphicRange.getMinX()) * oneUnit)));
-        Function<Double, Integer> findCanvasYCoord = spaceYCoord -> (int)(margins + (Math.round((spaceYCoord - graphicRange.getMinY()) * oneUnit)));
+        Function<Double, Integer> findCanvasXCoord = spaceXCoord -> (int)(margins + (Math.round((spaceXCoord - graphicRange.getMinX()) * (xEqualsY ? oneUnit : oneUnitX))));
+        Function<Double, Integer> findCanvasYCoord = spaceYCoord -> (int)(margins + (Math.round((spaceYCoord - graphicRange.getMinY()) * (xEqualsY ? oneUnit : oneUnitY))));
 
         double x0 = findCanvasXCoord.apply(0d); // Math.round(0 - graphicRange.getMinX()) * oneUnit;
         double y0 = findCanvasYCoord.apply(0d); // Math.round(0 - graphicRange.getMinY()) * oneUnit;
