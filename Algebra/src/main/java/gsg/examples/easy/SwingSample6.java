@@ -25,6 +25,7 @@ public class SwingSample6 {
     private JMenuItem menuFileExit = new JMenuItem();
     private JMenu menuHelp = new JMenu();
     private JMenuItem menuHelpAbout = new JMenuItem();
+    private JLabel topLabel;
 
     private final static int WIDTH = 800;
     private final static int HEIGHT = 600;
@@ -73,7 +74,9 @@ public class SwingSample6 {
         menuHelp.add(menuHelpAbout);
         menuBar.add(menuHelp);
 
-        frame.getContentPane().add(new JLabel("This is a full sample"), BorderLayout.NORTH);
+        topLabel = new JLabel("This is a full sample");
+        topLabel.setFont(new Font("Courier New", Font.ITALIC | Font.BOLD, 16));
+        frame.getContentPane().add(topLabel, BorderLayout.NORTH);
 
         // >> HERE: Add the WitheBoard to the JFrame
         frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
@@ -100,12 +103,12 @@ public class SwingSample6 {
 
         // Override defaults (not mandatory)
         whiteBoard.setAxisColor(new Color(125, 0, 255, 255));
-        whiteBoard.setWithGrid(true);
+        whiteBoard.setWithGrid(false);
         whiteBoard.setBgColor(new Color(250, 250, 250, 255));
         whiteBoard.setGraphicTitle("X not equals Y");
         whiteBoard.setDimension(new Dimension(800, 600));
         whiteBoard.setTextColor(Color.RED);
-        whiteBoard.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 48));
+        whiteBoard.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
         whiteBoard.setGraphicMargins(30);
         whiteBoard.setXEqualsY(false);
 

@@ -63,7 +63,7 @@ public class SwingSample {
         JOptionPane.showMessageDialog(whiteBoard, "Help would go here", "Help", JOptionPane.PLAIN_MESSAGE);
     }
 
-    private void jbInit() throws Exception {
+    private void jbInit() {
         frame.setJMenuBar(menuBar);
         frame.getContentPane().setLayout(new BorderLayout());
         menuFile.setText("File");

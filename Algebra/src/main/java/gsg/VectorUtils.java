@@ -328,7 +328,11 @@ public class VectorUtils {
     }
 
     public static GraphicRange findGraphicRange(Vector2D v, Vector2D... more) {
-        GraphicRange graphicRange = new GraphicRange().minX(0).maxX(0).minY(0).maxY(0);
+        GraphicRange graphicRange = new GraphicRange()
+                .minX(Double.MAX_VALUE)
+                .maxX(-Double.MAX_VALUE)
+                .minY(Double.MAX_VALUE)
+                .maxY(-Double.MAX_VALUE);
         graphicRange.setMinX(Math.min(graphicRange.getMinX(), v.getX()));
         graphicRange.setMaxX(Math.max(graphicRange.getMaxX(), v.getX()));
         graphicRange.setMinY(Math.min(graphicRange.getMinY(), v.getY()));
@@ -346,7 +350,11 @@ public class VectorUtils {
 
     public static GraphicRange findGraphicRange(double[] x, double[] y) {
         assert (x.length == y.length);
-        GraphicRange graphicRange = new GraphicRange().minX(0).maxX(0).minY(0).maxY(0);
+        GraphicRange graphicRange = new GraphicRange()
+                .minX(Double.MAX_VALUE)
+                .maxX(-Double.MAX_VALUE)
+                .minY(Double.MAX_VALUE)
+                .maxY(-Double.MAX_VALUE);
         for (int i = 0; i < x.length; i++) {
             graphicRange.setMinX(Math.min(graphicRange.getMinX(), x[i]));
             graphicRange.setMaxX(Math.max(graphicRange.getMaxX(), x[i]));
@@ -358,7 +366,11 @@ public class VectorUtils {
 
     public static GraphicRange findGraphicRange(List<Double> x, List<Double> y) {
         assert (x.size() == y.size());
-        GraphicRange graphicRange = new GraphicRange().minX(0).maxX(0).minY(0).maxY(0);
+        GraphicRange graphicRange = new GraphicRange()
+                .minX(Double.MAX_VALUE)
+                .maxX(-Double.MAX_VALUE)
+                .minY(Double.MAX_VALUE)
+                .maxY(-Double.MAX_VALUE);
         for (int i = 0; i < x.size(); i++) {
             graphicRange.setMinX(Math.min(graphicRange.getMinX(), x.get(i)));
             graphicRange.setMaxX(Math.max(graphicRange.getMaxX(), x.get(i)));
@@ -369,7 +381,11 @@ public class VectorUtils {
     }
 
     public static GraphicRange findGraphicRange(List<Vector2D> data) {
-        GraphicRange graphicRange = new GraphicRange().minX(0).maxX(0).minY(0).maxY(0);
+        GraphicRange graphicRange = new GraphicRange()
+                .minX(Double.MAX_VALUE)
+                .maxX(-Double.MAX_VALUE)
+                .minY(Double.MAX_VALUE)
+                .maxY(-Double.MAX_VALUE);
         data.forEach(v -> {
             graphicRange.setMinX(Math.min(graphicRange.getMinX(), v.getX()));
             graphicRange.setMaxX(Math.max(graphicRange.getMaxX(), v.getX()));
@@ -380,7 +396,11 @@ public class VectorUtils {
     }
 
     public static GraphicRange findGraphicRanges(List<List<Vector2D>> data) {
-        GraphicRange graphicRange = new GraphicRange().minX(0).maxX(0).minY(0).maxY(0);
+        GraphicRange graphicRange = new GraphicRange()
+                .minX(Double.MAX_VALUE)
+                .maxX(-Double.MAX_VALUE)
+                .minY(Double.MAX_VALUE)
+                .maxY(-Double.MAX_VALUE);
         data.forEach(vList -> {
                     vList.forEach(v -> {
                         graphicRange.setMinX(Math.min(graphicRange.getMinX(), v.getX()));

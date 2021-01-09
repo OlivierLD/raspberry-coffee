@@ -25,6 +25,8 @@ import static gsg.VectorUtils.Vector2D;
  */
 public class WhiteBoardPanel extends JPanel {
 
+    private static boolean verbose = "true".equals(System.getProperty("swing.verbose"));
+
     private List<DataSerie> allSeries = new ArrayList<>();
 
     public enum GraphicType {
@@ -159,27 +161,40 @@ public class WhiteBoardPanel extends JPanel {
         double oneUnitX = (dimension.width - (2 * margins)) / xAmplitude;
         double oneUnitY = (dimension.height - (2 * margins)) / yAmplitude;
         double oneUnit = Math.min(oneUnitX, oneUnitY);
-        System.out.println(String.format("One Unit: %f (X:%f, Y:%f)", oneUnit, oneUnitX, oneUnitY));
+        if (verbose) {
+            System.out.println(String.format("One Unit: %f (from X:%f, Y:%f)", oneUnit, oneUnitX, oneUnitY));
+        }
 
         // Find best tick amount for the grid
         // How Many units, in height, and width
         int horizontalTicks = (int)Math.round((double)dimension.width / (xEqualsY ? oneUnit : oneUnitX));
         int verticalTicks = (int)Math.round((double)dimension.height / (xEqualsY ? oneUnit : oneUnitY));
-        System.out.println(String.format("%d vertical ticks, %d horizontal ticks.", verticalTicks, horizontalTicks));
+        if (verbose) {
+            System.out.println(String.format("%d vertical ticks, %d horizontal ticks.", verticalTicks, horizontalTicks));
+        }
         int biggestTick = Math.max(horizontalTicks, verticalTicks);
+
+        double ratioX = (double)horizontalTicks / (double)MAX_TICK_PER_DIM;
+        double ratioY = (double)verticalTicks / (double)MAX_TICK_PER_DIM;
+        int tickIncrementX = Math.max((int)Math.round(ratioX), 1);
+        int tickIncrementY = Math.max((int)Math.round(ratioY), 1);
 
         double ratio = (double)biggestTick / (double)MAX_TICK_PER_DIM;
         int tickIncrement = Math.max((int)Math.round(ratio), 1);
-        System.out.println("tickIncrement: " + tickIncrement);
+        if (verbose) {
+            System.out.printf("tickIncrement: %d (from %d, %d)%n", tickIncrement, tickIncrementX, tickIncrementY);
+        }
 
         // Transformers
         Function<Double, Integer> findCanvasXCoord = spaceXCoord -> (int)(margins + (Math.round((spaceXCoord - graphicRange.getMinX()) * (xEqualsY ? oneUnit : oneUnitX))));
         Function<Double, Integer> findCanvasYCoord = spaceYCoord -> (int)(margins + (Math.round((spaceYCoord - graphicRange.getMinY()) * (xEqualsY ? oneUnit : oneUnitY))));
 
-        double x0 = findCanvasXCoord.apply(0d); // Math.round(0 - graphicRange.getMinX()) * oneUnit;
-        double y0 = findCanvasYCoord.apply(0d); // Math.round(0 - graphicRange.getMinY()) * oneUnit;
+        double x0 = Math.floor(findCanvasXCoord.apply(graphicRange.getMinX() /*0d*/)); // Math.round(0 - graphicRange.getMinX()) * oneUnit;
+        double y0 = Math.floor(findCanvasYCoord.apply(graphicRange.getMinY() /*0d*/)); // Math.round(0 - graphicRange.getMinY()) * oneUnit;
 
-//        System.out.println(String.format("y0: %f (minY: %f)", y0, graphicRange.getMinY()));
+        if (verbose) {
+            System.out.println(String.format("x0: %f (minX: %f), y0: %f (minY: %f)", x0, graphicRange.getMinY(), y0, graphicRange.getMinY()));
+        }
 
         // Graphic scaffolding
         g2d.setColor(bgColor);
@@ -192,12 +207,16 @@ public class WhiteBoardPanel extends JPanel {
         int maxX = findCanvasXCoord.apply(graphicRange.getMaxX());
         int minY = findCanvasYCoord.apply(graphicRange.getMinY());
         int maxY = findCanvasYCoord.apply(graphicRange.getMaxY());
-        System.out.println("-----------------------------------------------------");
+        if (verbose) {
+            System.out.println("-----------------------------------------------------");
+        }
         int height = this.getSize().height;
         int width  = this.getSize().width;
-        System.out.println(String.format("HxW: %d x %d", height, width));
-        System.out.println(String.format(">> Working Rectangle: x:%d, y:%d, w:%d, h:%d", minX, height - maxY, (maxX - minX), (maxY - minY)));
-        System.out.println("-----------------------------------------------------");
+        if (verbose) {
+            System.out.println(String.format("HxW: %d x %d", height, width));
+            System.out.println(String.format(">> Working Rectangle: x:%d, y:%d, w:%d, h:%d", minX, height - maxY, (maxX - minX), (maxY - minY)));
+            System.out.println("-----------------------------------------------------");
+        }
         g2d.drawRect(minX, height - maxY, (maxX - minX), (maxY - minY));
 
         // Label font
@@ -213,12 +232,14 @@ public class WhiteBoardPanel extends JPanel {
                 axisColor);
         g2d.setStroke(new BasicStroke(1));             // Line Thickness
 
-        // X Notches or grid, positive
+        // X Notches or grid
         g2d.setColor(axisColor);
-        int xTick = 0;
+        int xTick = (int)Math.floor(graphicRange.getMinX()); // 0;
         int canvasX = 0;
         while (canvasX <= width) {
             canvasX = findCanvasXCoord.apply((double)xTick);
+//            System.out.printf("X notch %d%n", xTick);
+            g2d.setStroke(new BasicStroke(xTick == 0 ? 2 : 1));
             if (canvasX <= width) {
                 if (withGrid) {
                     g2d.drawLine(canvasX, height, canvasX, 0);
@@ -230,25 +251,7 @@ public class WhiteBoardPanel extends JPanel {
                 int strWidth = g2d.getFontMetrics(labelFont).stringWidth(label);
                 g2d.drawString(label, canvasX - (strWidth / 2),height - (int) Math.round(y0 - 5 - (labelFont.getSize())));
             }
-            xTick += tickIncrement;
-        }
-        // X Notches, negative
-        xTick = 0;
-        canvasX = width;
-        while (canvasX >= 0) {
-            canvasX = findCanvasXCoord.apply((double)xTick);
-            if (canvasX >= 0) {
-                if (withGrid) {
-                    g2d.drawLine(canvasX, height, canvasX, 0);
-                } else {
-                    g2d.drawLine(canvasX, height - (int) Math.round(y0 - 5),
-                            canvasX, height - (int) Math.round(y0 + 5));
-                }
-                String label = String.valueOf(xTick);
-                int strWidth = g2d.getFontMetrics(labelFont).stringWidth(label);
-                g2d.drawString(label, canvasX - (strWidth / 2),height - (int) Math.round(y0 - 5 - (labelFont.getSize())));
-            }
-            xTick -= tickIncrement;
+            xTick += (xEqualsY ? tickIncrement : tickIncrementX);
         }
 
         // Horizontal Y (bottom) Arrow
@@ -259,12 +262,14 @@ public class WhiteBoardPanel extends JPanel {
                 axisColor);
 
         g2d.setStroke(new BasicStroke(1));             // Line Thickness
-        // Y Notches, positive
+        // Y Notches
         g2d.setColor(axisColor);
-        int yTick = 0;
+        int yTick = (int)Math.floor(graphicRange.getMinY()); // 0;
         int canvasY = 0;
         while (canvasY <= height) {
             canvasY = findCanvasYCoord.apply((double)yTick);
+//            System.out.printf("Y notch %d%n", yTick);
+            g2d.setStroke(new BasicStroke(yTick == 0 ? 2 : 1));
             if (canvasY <= height) {
                 if (withGrid) {
                     g2d.drawLine(0, height - canvasY,
@@ -277,26 +282,7 @@ public class WhiteBoardPanel extends JPanel {
                 int strWidth = g2d.getFontMetrics(labelFont).stringWidth(label);
                 g2d.drawString(label, (int) Math.round(x0 - 5) - strWidth - 2, height - canvasY + (int)(labelFont.getSize() * 0.9 / 2));
             }
-            yTick += tickIncrement;
-        }
-        // Y Notches, negative
-        yTick = 0;
-        canvasY = height;
-        while (canvasY >= 0) {
-            canvasY = findCanvasYCoord.apply((double)yTick);
-            if (canvasY >= 0) {
-                if (withGrid) {
-                    g2d.drawLine(0, height - canvasY,
-                            width, height - canvasY);
-                } else {
-                    g2d.drawLine((int) Math.round(x0 - 5), height - canvasY,
-                            (int) Math.round(x0 + 5), height - canvasY);
-                }
-                String label = String.valueOf(yTick);
-                int strWidth = g2d.getFontMetrics(labelFont).stringWidth(label);
-                g2d.drawString(label, (int) Math.round(x0 - 5) - strWidth - 2, height - canvasY + (int)(labelFont.getSize() * 0.9 / 2));
-            }
-            yTick -= tickIncrement;
+            yTick += (xEqualsY ? tickIncrement : tickIncrementY);
         }
 
         // For the text
