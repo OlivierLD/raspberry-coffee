@@ -1,4 +1,4 @@
-package gsg.examples.override;
+package gsg.examples.wb.override;
 
 import gsg.SwingUtils.WhiteBoardPanel;
 import gsg.VectorUtils;
@@ -6,16 +6,13 @@ import gsg.VectorUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.function.Function;
 
-import static gsg.VectorUtils.Vector2D;
-
 /**
- * Points, perimeter. Dino !
+ * One polynomial curve
  */
-public class SwingSample4 {
+public class SwingSample3 {
 
     private JFrame frame;
     private JMenuBar menuBar = new JMenuBar();
@@ -24,7 +21,6 @@ public class SwingSample4 {
     private JMenu menuHelp = new JMenu();
     private JMenuItem menuHelpAbout = new JMenuItem();
 
-    // Default size
     private final static int WIDTH = 860;
     private final static int HEIGHT = 600;
 
@@ -40,9 +36,9 @@ public class SwingSample4 {
         JOptionPane.showMessageDialog(whiteBoard, "Help would go here", "Help", JOptionPane.PLAIN_MESSAGE);
     }
 
-    public SwingSample4() {
+    public SwingSample3() {
         // The JFrame
-        frame = new JFrame("This is example #4");
+        frame = new JFrame("This is example #3");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
         System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
@@ -88,33 +84,35 @@ public class SwingSample4 {
             e.printStackTrace();
         }
 
-        new SwingSample4();
+        new SwingSample3();
 
         // Now, the Data
-        List<Vector2D> dinoVectors = Arrays.asList(
-                new Vector2D(6, 4),
-                new Vector2D(3, 1),
-                new Vector2D(1, 2),
-                new Vector2D(-1, 5),
-                new Vector2D(-2, 5),
-                new Vector2D(-3, 4),
-                new Vector2D(-4, 4),
-                new Vector2D(-5, 3),
-                new Vector2D(-5, 2),
-                new Vector2D(-2, 2),
-                new Vector2D(-5, 1),
-                new Vector2D(-4, 0),
-                new Vector2D(-2, 1),
-                new Vector2D(-1, 0),
-                new Vector2D(0, -3),
-                new Vector2D(-1, -4),
-                new Vector2D(1, -4),
-                new Vector2D(2, -3),
-                new Vector2D(1, -2),
-                new Vector2D(3, -1),
-                new Vector2D(5, 1));
+        java.util.List<Double> xOrig = new ArrayList<>();
+        java.util.List<Double> yOrig = new ArrayList<>();
+        // The function points
+//        for (double i=-10; i<=10; i+=0.5) {
+//            xOrig.add(i);
+//            yOrig.add((0.2 * Math.pow(i, 2)) - 3);
+//        }
+        // The function points
+        for (double i=-6; i<=15; i+=0.25) {
+            xOrig.add(i);
+            yOrig.add((0.01 * Math.pow(i, 3)) - (0.1 * Math.pow(i, 2)) - (0.2 * i) + 3);
+        }
+        double[] x = xOrig.stream().mapToDouble(Double::doubleValue).toArray();
+        double[] y = yOrig.stream().mapToDouble(Double::doubleValue).toArray();
 
-        VectorUtils.GraphicRange graphicRange = VectorUtils.findGraphicRange(dinoVectors);
+        // The points to spray x in [-6, 15], y in [-1.5, 11.25]
+        xOrig.clear();
+        xOrig.clear();
+        for (int i=0; i<100; i++) {
+            xOrig.add((Math.random() * 21) - 6);
+            yOrig.add((Math.random() * 12.75) - 1.5);
+        }
+        double[] xPlot = xOrig.stream().mapToDouble(Double::doubleValue).toArray();
+        double[] yPlot = yOrig.stream().mapToDouble(Double::doubleValue).toArray();
+
+        VectorUtils.GraphicRange graphicRange = VectorUtils.findGraphicRange(x, y); // TODO Also integrate xPlot, yPlot
         double xAmplitude = graphicRange.getMaxX() - graphicRange.getMinX();
         double yAmplitude = graphicRange.getMaxY() - graphicRange.getMinY();
 
@@ -229,18 +227,19 @@ public class SwingSample4 {
             // For the text
             g2d.setColor(Color.GRAY);
             g2d.setFont(g2d.getFont().deriveFont(Font.BOLD | Font.ITALIC).deriveFont(24f));
-            g2d.drawString("Dinos!", 10, 60);
+            // (0.01 * Math.pow(i, 3)) - (0.1 * Math.pow(i, 2)) - (0.2 * i) + 3
+            g2d.drawString("y = (0.01 * x^3) + (-0.1 * x^2) - (0.2 * x) + 3", 10, 60);
 
             /*
-             *  THE DATA
+             *  THE DATA - The curve.
              */
             g2d.setColor(new Color(0, 0, 255, 255)); // Line Color
             g2d.setStroke(new BasicStroke(3));             // Line Thickness
-            boolean withPoints = true;
+            boolean withPoints = false;
             Point previous = null;
-            for (Vector2D v : dinoVectors) {
-                int pointX = findCanvasXCoord.apply(v.getX());
-                int pointY = findCanvasYCoord.apply(v.getY());
+            for (int i=0; i<x.length; i++) {
+                int pointX = findCanvasXCoord.apply(x[i]);
+                int pointY = findCanvasYCoord.apply(y[i]);
 //              System.out.println(String.format("x:%f, y:%f => X:%d, Y:%d", x[i], y[i], pointX, pointY));
                 Point here = new Point(pointX, pointY);
                 if (withPoints) {
@@ -253,64 +252,17 @@ public class SwingSample4 {
                 }
                 previous = here;
             }
-            if (previous != null) { // Close the loop
-                g2d.drawLine(
-                        previous.x,
-                        HEIGHT - previous.y,
-                        findCanvasXCoord.apply(dinoVectors.get(0).getX()),
-                        HEIGHT - findCanvasYCoord.apply(dinoVectors.get(0).getY()));
-            }
-            // Rotated ?
-            g2d.setColor(new Color(255, 0, 255, 255)); // Line Color
-            double rotation = -30d;
-            previous = null;
-            for (Vector2D v : dinoVectors) {
-                int pointX = findCanvasXCoord.apply(VectorUtils.rotate(Math.toRadians(rotation) ,v).getX());
-                int pointY = findCanvasYCoord.apply(VectorUtils.rotate(Math.toRadians(rotation) ,v).getY());
+
+            // Plot data
+            g2d.setColor(new Color(255, 0, 0, 125)); // Plot Color
+            int circleDiam = 10;
+            for (int i=0; i<xPlot.length; i++) {
+                int pointX = findCanvasXCoord.apply(xPlot[i]);
+                int pointY = findCanvasYCoord.apply(yPlot[i]);
 //              System.out.println(String.format("x:%f, y:%f => X:%d, Y:%d", x[i], y[i], pointX, pointY));
-                Point here = new Point(pointX, pointY);
-                if (withPoints) {
-                    g2d.fillOval(pointX - (CIRCLE_DIAM / 2),
-                            HEIGHT - pointY - (CIRCLE_DIAM / 2),
-                            CIRCLE_DIAM, CIRCLE_DIAM);
-                }
-                if (previous != null) {
-                    g2d.drawLine(previous.x, HEIGHT - previous.y, here.x, HEIGHT - here.y);
-                }
-                previous = here;
-            }
-            if (previous != null) { // Close the loop
-                g2d.drawLine(
-                        previous.x,
-                        HEIGHT - previous.y,
-                        findCanvasXCoord.apply(VectorUtils.rotate(Math.toRadians(rotation), dinoVectors.get(0)).getX()),
-                        HEIGHT - findCanvasYCoord.apply(VectorUtils.rotate(Math.toRadians(rotation), dinoVectors.get(0)).getY()));
-            }
-            // Scaled ?
-            g2d.setColor(new Color(0, 255, 0, 255)); // Line Color
-            double scale = 0.25;
-            previous = null;
-            for (Vector2D v : dinoVectors) {
-                int pointX = findCanvasXCoord.apply(VectorUtils.scale(scale ,v).getX());
-                int pointY = findCanvasYCoord.apply(VectorUtils.scale(scale ,v).getY());
-//              System.out.println(String.format("x:%f, y:%f => X:%d, Y:%d", x[i], y[i], pointX, pointY));
-                Point here = new Point(pointX, pointY);
-                if (withPoints) {
-                    g2d.fillOval(pointX - (CIRCLE_DIAM / 2),
-                            HEIGHT - pointY - (CIRCLE_DIAM / 2),
-                            CIRCLE_DIAM, CIRCLE_DIAM);
-                }
-                if (previous != null) {
-                    g2d.drawLine(previous.x, HEIGHT - previous.y, here.x, HEIGHT - here.y);
-                }
-                previous = here;
-            }
-            if (previous != null) { // Close the loop
-                g2d.drawLine(
-                        previous.x,
-                        HEIGHT - previous.y,
-                        findCanvasXCoord.apply(VectorUtils.scale(scale, dinoVectors.get(0)).getX()),
-                        HEIGHT - findCanvasYCoord.apply(VectorUtils.scale(scale, dinoVectors.get(0)).getY()));
+                g2d.fillOval(pointX - (circleDiam / 2),
+                        HEIGHT - pointY - (circleDiam / 2),
+                        circleDiam, circleDiam);
             }
         });
 //      whiteBoard.getImage(); // This is for the Notebook

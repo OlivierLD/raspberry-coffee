@@ -1,4 +1,4 @@
-package gsg.examples.easy;
+package gsg.examples.wb.easy;
 
 import gsg.SwingUtils.WhiteBoardPanel;
 import gsg.VectorUtils;
@@ -7,11 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static gsg.VectorUtils.Vector2D;
 
 /**
  * More Abstraction, using default WhiteBoard Writer

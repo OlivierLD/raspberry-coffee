@@ -205,6 +205,53 @@ public class VectorUtils {
         return rotated;
     }
 
+    /**
+     * See https://stackoverflow.com/questions/14607640/rotating-a-vector-in-3d-space
+     *
+     * @param original
+     * @param onX in radians, trigonometric way (counter-clockwise)
+     * @param onY in radians, trigonometric way (counter-clockwise)
+     * @param onZ in radians, trigonometric way (counter-clockwise)
+     * @return the rotated vector.
+     */
+    public static Vector3D rotate(Vector3D original, double onX, double onY, double onZ) {
+        double x = original.getX();
+        double y = original.getY();
+        double z = original.getZ();
+
+        /*
+        Around Z-axis:
+    |cos θ   −sin θ   0| |x|   |x cos θ − y sin θ|   |x'|
+    |sin θ    cos θ   0| |y| = |x sin θ + y cos θ| = |y'|
+    |  0       0      1| |z|   |        z        |   |z'|
+         */
+
+        double newX1 = (x * Math.cos(onZ)) - (y * Math.sin(onZ));
+        double newY1 = (x * Math.sin(onZ)) + (y * Math.cos(onZ));
+        double newZ1 = z;
+
+        /*
+        Around Y-axis:
+    | cos θ    0   sin θ| |x|   | x cos θ + z sin θ|   |x'|
+    |   0      1       0| |y| = |         y        | = |y'|
+    |−sin θ    0   cos θ| |z|   |−x sin θ + z cos θ|   |z'|
+         */
+        double newX2 = (newX1 * Math.cos(onY)) + (newZ1 * Math.sin(onY));
+        double newY2 = newY1;
+        double newZ2 = (-newX1 * Math.sin(onY)) + (newZ1 * Math.cos(onY));
+
+        /*
+        Around X-axis:
+    |1     0           0| |x|   |        x        |   |x'|
+    |0   cos θ    −sin θ| |y| = |y cos θ − z sin θ| = |y'|
+    |0   sin θ     cos θ| |z|   |y sin θ + z cos θ|   |z'|
+         */
+        double newX3 = newX2;
+        double newY3 = (newY2 * Math.cos(onX)) - (newZ2 * Math.sin(onX));
+        double newZ3 = (newY2 * Math.sin(onX)) + (newZ2 * Math.cos(onX));
+
+        return new Vector3D(newX3, newY3, newZ3);
+    }
     /*
     def dot(u,v):
         return sum([coord1 * coord2 for coord1, coord2 in zip(u,v)])
@@ -465,5 +512,9 @@ public class VectorUtils {
 
         double comp = component(one, two);
         System.out.println(String.format("component %s \u00d7 %s: %f", one, two, comp));
+
+        Vector3D v3 = new Vector3D(0, -10, 0);
+        Vector3D rotatedV3 = rotate(v3, 0, 0, Math.toRadians(45));
+        System.out.printf("V3 %s Rotated on 45Z : %s%n", v3.toString(), rotatedV3.toString());
     }
 }

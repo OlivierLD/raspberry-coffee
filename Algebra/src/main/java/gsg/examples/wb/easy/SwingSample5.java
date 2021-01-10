@@ -1,4 +1,4 @@
-package gsg.examples.easy;
+package gsg.examples.wb.easy;
 
 import gsg.SwingUtils.WhiteBoardPanel;
 import gsg.VectorUtils;

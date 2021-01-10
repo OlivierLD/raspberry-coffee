@@ -1,4 +1,4 @@
-package gsg.examples.override;
+package gsg.examples.wb.override;
 
 import gsg.SwingUtils.WhiteBoardPanel;
 

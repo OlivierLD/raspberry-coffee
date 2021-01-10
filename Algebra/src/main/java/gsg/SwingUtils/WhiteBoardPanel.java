@@ -20,8 +20,6 @@ import static gsg.VectorUtils.Vector2D;
 /**
  * A Reusable WhiteBoard
  * Suitable for Swing application, as Jupyter Notebooks (with iJava)
- *
- * TODO An option to have two different scales, for X and Y.
  */
 public class WhiteBoardPanel extends JPanel {
 
