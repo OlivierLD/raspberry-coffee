@@ -118,9 +118,15 @@ public class Box3D extends JPanel {
     private Dimension dimension = new Dimension(WIDTH, HEIGHT);  // TODO Redundant with getSize() ?
 
     private double ratio = 1d;
-    // A Function<Vector3D, Point>. Not finalized yet...
-    // Externalized to be reached from the beforeDrawer and afterDrawer.
-    // See https://math.stackexchange.com/questions/164700/how-to-transform-a-set-of-3d-vectors-into-a-2d-plane-from-a-view-point-of-anoth
+    /**
+     * A Function<Vector3D, Point>.
+     * Externalized to be reached from the beforeDrawer and afterDrawer.
+     * See https://math.stackexchange.com/questions/164700/how-to-transform-a-set-of-3d-vectors-into-a-2d-plane-from-a-view-point-of-anoth
+     *
+     * This is the function that takes a space point into the point to display in the canvas.
+     * It takes in account the position of the eye/camera, managed during the VectorUtils.rotate invocation,
+     * which has to happen before.
+     */
     private Function<VectorUtils.Vector3D, Point> transformer = v3 -> {
         int xOnScreen = (this.dimension.width / 2) + (int)Math.round((v3.getX()) / (ratio / zoom));
         int yOnScreen = (this.dimension.height / 2) - (int)Math.round((v3.getZ()) / (ratio / zoom));
@@ -424,6 +430,7 @@ public class Box3D extends JPanel {
 
     };
 
+    // This can be overridden. Voids the warranty!
     private Consumer<Graphics2D> drawer = DEFAULT_DRAWER;
 
     public void setDrawer(Consumer<Graphics2D> drawer) {
@@ -520,7 +527,6 @@ public class Box3D extends JPanel {
             g.setColor(orig);
         }
     }
-
 
     /**
      * Call this from a Jupyter Notebook (iJava) !
