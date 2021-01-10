@@ -12,10 +12,10 @@ Basic linear algebra ([الجبر](https://en.wikipedia.org/wiki/Algebra)), and 
 
 ## Java Graphics (Generic Swing Graphics, GSG)
 
-This module also includes a _Swing based Java_ library for graphics, that can be used in pure Swing applications,
+This module also includes a _Swing based Java_ library for graphics (2 & 3D), that can be used in pure Swing applications,
 as well as in Jupyter Notebooks (IJava). 
 
 - Jupyter examples provided in the `jupyter` folder.
-- Swing examples provided in the `gsg.examples` package. 
+- Swing examples provided in the `gsg.examples` package, in the `test` folder. 
 
 ---
