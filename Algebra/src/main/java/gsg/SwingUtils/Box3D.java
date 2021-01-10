@@ -32,6 +32,28 @@ public class Box3D extends JPanel {
     private Color boxFacesColor = new Color(230, 230, 230, 125);
     private Color axisColor = Color.LIGHT_GRAY;
 
+    private Stroke axisStroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
+
+    public void setPerimeterColor(Color perimeterColor) {
+        this.perimeterColor = perimeterColor;
+    }
+
+    public void setGridColor(Color gridColor) {
+        this.gridColor = gridColor;
+    }
+
+    public void setBoxFacesColor(Color boxFacesColor) {
+        this.boxFacesColor = boxFacesColor;
+    }
+
+    public void setAxisColor(Color axisColor) {
+        this.axisColor = axisColor;
+    }
+
+    public void setAxisStroke(Stroke axisStroke) {
+        this.axisStroke = axisStroke;
+    }
+
     public double getxMin() {
         return xMin;
     }
@@ -378,8 +400,7 @@ public class Box3D extends JPanel {
                 circleDiam, circleDiam);
 
         // Stroke for arrows
-        Stroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
-        g2d.setStroke(dashed);
+        g2d.setStroke(axisStroke);
 
         // Y axis
         VectorUtils.Vector3D minYVector = new VectorUtils.Vector3D(0, yMin, 0);
@@ -391,8 +412,12 @@ public class Box3D extends JPanel {
                 transformer.apply(rotatedYMinVector),
                 transformer.apply(rotatedYMaxVector),
                 axisColor);
-        g2d.setColor(Color.CYAN);
-        g2d.drawString("Y", transformer.apply(rotatedYMaxVector).x, transformer.apply(rotatedYMaxVector).y);
+        g2d.setColor(Color.DARK_GRAY);
+        String label = "Y";
+        int strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
+        int fontSize = g2d.getFont().getSize();
+        g2d.drawString(label, transformer.apply(rotatedYMaxVector).x - (strWidth / 2), transformer.apply(rotatedYMaxVector).y + ((fontSize - 2) / 2));
+//        g2d.drawString("Y", transformer.apply(rotatedYMaxVector).x, transformer.apply(rotatedYMaxVector).y);
 
         // X axis
         VectorUtils.Vector3D minXVector = new VectorUtils.Vector3D(xMin, 0, 0);
@@ -403,8 +428,11 @@ public class Box3D extends JPanel {
                 transformer.apply(rotatedXMinVector),
                 transformer.apply(rotatedXMaxVector),
                 axisColor);
-        g2d.setColor(Color.CYAN);
-        g2d.drawString("X", transformer.apply(rotatedXMaxVector).x, transformer.apply(rotatedXMaxVector).y);
+        g2d.setColor(Color.DARK_GRAY);
+        label = "X";
+        strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
+        fontSize = g2d.getFont().getSize();
+        g2d.drawString(label, transformer.apply(rotatedXMaxVector).x - (strWidth / 2), transformer.apply(rotatedXMaxVector).y + ((fontSize - 2) / 2));
 
         // Z axis
         VectorUtils.Vector3D minZVector = new VectorUtils.Vector3D(0, 0, zMin);
@@ -415,8 +443,12 @@ public class Box3D extends JPanel {
                 transformer.apply(rotatedZMinVector),
                 transformer.apply(rotatedZMaxVector),
                 axisColor);
-        g2d.setColor(Color.CYAN);
-        g2d.drawString("Z", transformer.apply(rotatedZMaxVector).x, transformer.apply(rotatedZMaxVector).y);
+        g2d.setColor(Color.DARK_GRAY);
+        label = "Z";
+        strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
+        fontSize = g2d.getFont().getSize();
+        g2d.drawString(label, transformer.apply(rotatedZMaxVector).x - (strWidth / 2), transformer.apply(rotatedZMaxVector).y + ((fontSize - 2) / 2));
+//        g2d.drawString(label, transformer.apply(rotatedZMaxVector).x, transformer.apply(rotatedZMaxVector).y);
 
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Courier New", Font.BOLD, 16));
