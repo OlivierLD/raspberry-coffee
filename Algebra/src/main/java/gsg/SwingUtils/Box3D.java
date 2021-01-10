@@ -12,7 +12,6 @@ import java.util.function.Function;
 
 public class Box3D extends JPanel {
 
-    // TODO Getters and setters
     private double xMin = -3d;
     private double xMax =  3d;
     private double yMin = -3d;
@@ -24,13 +23,124 @@ public class Box3D extends JPanel {
     private double rotOnZ =  40d;
     private double rotOnY =   0d; // LEAVE IT TO 0 !!! (for now)
     private double rotOnX = -10d;
+    
+    // Zoom
+    private double zoom = 1.0;
+
+    private Color perimeterColor = Color.GRAY;
+    private Color gridColor = new Color(0, 125, 125, 80); // Color.GRAY;
+    private Color boxFacesColor = new Color(230, 230, 230, 125);
+    private Color axisColor = Color.LIGHT_GRAY;
+
+    public double getxMin() {
+        return xMin;
+    }
+
+    public void setxMin(double xMin) {
+        this.xMin = xMin;
+    }
+
+    public double getxMax() {
+        return xMax;
+    }
+
+    public void setxMax(double xMax) {
+        this.xMax = xMax;
+    }
+
+    public double getyMin() {
+        return yMin;
+    }
+
+    public void setyMin(double yMin) {
+        this.yMin = yMin;
+    }
+
+    public double getyMax() {
+        return yMax;
+    }
+
+    public void setyMax(double yMax) {
+        this.yMax = yMax;
+    }
+
+    public double getzMin() {
+        return zMin;
+    }
+
+    public void setzMin(double zMin) {
+        this.zMin = zMin;
+    }
+
+    public double getzMax() {
+        return zMax;
+    }
+
+    public void setzMax(double zMax) {
+        this.zMax = zMax;
+    }
+
+    public double getRotOnZ() {
+        return rotOnZ;
+    }
+
+    public void setRotOnZ(double rotOnZ) {
+        this.rotOnZ = rotOnZ;
+    }
+
+    public double getRotOnY() {
+        return rotOnY;
+    }
+
+    public void setRotOnY(double rotOnY) {
+        this.rotOnY = rotOnY;
+    }
+
+    public double getRotOnX() {
+        return rotOnX;
+    }
+
+    public void setRotOnX(double rotOnX) {
+        this.rotOnX = rotOnX;
+    }
+
+    public double getZoom() {
+        return zoom;
+    }
+
+    public void setZoom(double zoom) {
+        this.zoom = zoom;
+    }
 
     // Default values
     private final static int WIDTH = 860;
     private final static int HEIGHT = 600;
     private Dimension dimension = new Dimension(WIDTH, HEIGHT);  // TODO Redundant with getSize() ?
 
+    private double ratio = 1d;
+    // A Function<Vector3D, Point>. Not finalized yet...
+    // Externalized to be reached from the beforeDrawer and afterDrawer.
+    // See https://math.stackexchange.com/questions/164700/how-to-transform-a-set-of-3d-vectors-into-a-2d-plane-from-a-view-point-of-anoth
+    private Function<VectorUtils.Vector3D, Point> transformer = v3 -> {
+        int xOnScreen = (this.dimension.width / 2) + (int)Math.round((v3.getX()) / (ratio / zoom));
+        int yOnScreen = (this.dimension.height / 2) - (int)Math.round((v3.getZ()) / (ratio / zoom));
+        return new Point(xOnScreen, yOnScreen);
+    };
+
+    public Function<VectorUtils.Vector3D, Point> getTransformer() {
+        return transformer;
+    }
+
+    private Consumer<Graphics2D> beforeDrawer = null;
+    private Consumer<Graphics2D> afterDrawer = null;
+
     private Consumer<Graphics2D> DEFAULT_DRAWER = g2d -> {
+
+        // Call before
+        if (beforeDrawer != null) {
+            beforeDrawer.accept(g2d);
+        }
+
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, dimension.width, dimension.height);
 
@@ -38,26 +148,18 @@ public class Box3D extends JPanel {
         double ratioY = (yMax - yMin) / this.dimension.width;
         double ratioZ = (zMax - zMin) / this.dimension.height;
 
-        double ratio = Collections.max(Arrays.asList(ratioX, ratioY, ratioZ)) * 1.5;
+        ratio = Collections.max(Arrays.asList(ratioX, ratioY, ratioZ)) * 1.5;
 
-        // A Function<Vector3D, Point>. Not finalized yet...
-        // See https://math.stackexchange.com/questions/164700/how-to-transform-a-set-of-3d-vectors-into-a-2d-plane-from-a-view-point-of-anoth
-        Function<VectorUtils.Vector3D, Point> transformer = v3 -> {
-            int xOnScreen = (this.dimension.width / 2) + (int)Math.round((v3.getX()) / ratio);
-            int yOnScreen = (this.dimension.height / 2) - (int)Math.round((v3.getZ()) / ratio);
-            return new Point(xOnScreen, yOnScreen);
-        };
-
-        // Find the center
+        // Find the center, point (0, 0, 0)
         double centerX = this.xMin + ((this.xMax - this.xMin) / 2d);
         double centerY = this.yMin + ((this.yMax - this.yMin) / 2d);
         double centerZ = this.zMin + ((this.zMax - this.zMin) / 2d);
         VectorUtils.Vector3D center = new VectorUtils.Vector3D(centerX, centerY, centerZ);
-        System.out.printf("Center: %s, ratio: %f%n", center.toString(), ratio);
+//        System.out.printf("Center: %s, ratio: %f%n", center.toString(), ratio);
 
         /*
-         * Print back(s) of the box.
-         * TODO the grid
+         * Print the "back sides" of the box.
+         * And the grid
          */
 
         // Centered on X
@@ -90,14 +192,48 @@ public class Box3D extends JPanel {
         Polygon polygonX = new Polygon(new int[] {xBottomRight.x, xTopRight.x, xTopLeft.x, xBottomLeft.x},
                 new int[] {xBottomRight.y, xTopRight.y, xTopLeft.y, xBottomLeft.y},
                 4);
-        g2d.setColor(new Color(230, 230, 230, 125));
+        g2d.setColor(boxFacesColor);
         g2d.fillPolygon(polygonX);
         // Perimeter
-        g2d.setColor(Color.GRAY);
+        g2d.setColor(perimeterColor);
         g2d.drawLine(xBottomRight.x, xBottomRight.y, xTopRight.x, xTopRight.y);
         g2d.drawLine(xTopRight.x, xTopRight.y, xTopLeft.x, xTopLeft.y);
         g2d.drawLine(xTopLeft.x, xTopLeft.y, xBottomLeft.x, xBottomLeft.y);
         g2d.drawLine(xBottomLeft.x, xBottomLeft.y, xBottomRight.x, xBottomRight.y);
+        // Grid on the panel centered on X axis, y as abscissa, z as ordinate
+        g2d.setColor(gridColor);
+        Stroke originalStroke = g2d.getStroke();
+        // Leave Stroke as it is (for now)
+        g2d.setStroke(new BasicStroke(1));
+        // Parallel to Z, vertical grid
+        int startY = (int)Math.round(Math.ceil(this.getyMin()));
+        for (int y=startY; y<=this.getyMax(); y+=1) {
+            // Define space points
+            VectorUtils.Vector3D bottomSpacePoint = new VectorUtils.Vector3D(this.getxMin(), y, this.getzMin());
+            VectorUtils.Vector3D topSpacePoint = new VectorUtils.Vector3D(this.getxMin(), y, this.getzMax());
+            // Rotate them
+            VectorUtils.Vector3D rotatedBottomSpacePoint = VectorUtils.rotate(bottomSpacePoint, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            VectorUtils.Vector3D rotatedTopSpacePoint = VectorUtils.rotate(topSpacePoint, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            // Draw line between them
+            Point bottom = transformer.apply(rotatedBottomSpacePoint);
+            Point top = transformer.apply(rotatedTopSpacePoint);
+            g2d.drawLine(bottom.x, bottom.y, top.x, top.y);
+        }
+        // Parallel to Y, horizontal grid
+        int startZ = (int)Math.round(Math.ceil(this.getzMin()));
+        for (int z=startZ; z<=this.getzMax(); z+=1) {
+            // Define space points
+            VectorUtils.Vector3D leftSpacePoint = new VectorUtils.Vector3D(this.getxMin(), this.getyMax(), z);
+            VectorUtils.Vector3D rightSpacePoint = new VectorUtils.Vector3D(this.getxMin(), this.getyMin(), z);
+            // Rotate them
+            VectorUtils.Vector3D rotatedLeftSpacePoint = VectorUtils.rotate(leftSpacePoint, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            VectorUtils.Vector3D rotatedRightSpacePoint = VectorUtils.rotate(rightSpacePoint, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            // Draw line between them
+            Point left = transformer.apply(rotatedLeftSpacePoint);
+            Point right = transformer.apply(rotatedRightSpacePoint);
+            g2d.drawLine(left.x, left.y, right.x, right.y);
+        }
+        g2d.setStroke(originalStroke);
 
         // Panel centered on Y
         VectorUtils.Vector3D rotatedYBottomLeft = VectorUtils.rotate(yBottomLeftV3, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
@@ -113,14 +249,52 @@ public class Box3D extends JPanel {
         Polygon polygonY = new Polygon(new int[] {yBottomRight.x, yTopRight.x, yTopLeft.x, yBottomLeft.x},
                 new int[] {yBottomRight.y, yTopRight.y, yTopLeft.y, yBottomLeft.y},
                 4);
-        g2d.setColor(new Color(230, 230, 230, 125));
+        g2d.setColor(boxFacesColor);
         g2d.fillPolygon(polygonY);
         // Perimeter
-        g2d.setColor(Color.GRAY);
+        g2d.setColor(perimeterColor);
         g2d.drawLine(yBottomRight.x, yBottomRight.y, yTopRight.x, yTopRight.y);
         g2d.drawLine(yTopRight.x, yTopRight.y, yTopLeft.x, yTopLeft.y);
         g2d.drawLine(yTopLeft.x, yTopLeft.y, yBottomLeft.x, yBottomLeft.y);
         g2d.drawLine(yBottomLeft.x, yBottomLeft.y, yBottomRight.x, yBottomRight.y);
+        // Grid on the panel centered on Y axis, x as abscissa, z as ordinate
+        g2d.setColor(gridColor);
+        originalStroke = g2d.getStroke();
+        // Leave Stroke as it is (for now)
+        g2d.setStroke(new BasicStroke(1));
+        // Parallel to Z, vertical grid
+        int startX = (int)Math.round(Math.ceil(this.getxMin()));
+        for (int x=startX; x<=this.getxMax(); x+=1) {
+            // Define space points
+            VectorUtils.Vector3D bottomSpacePoint = new VectorUtils.Vector3D(x, this.getyMin(), this.getzMin());
+            VectorUtils.Vector3D topSpacePoint = new VectorUtils.Vector3D(x, this.getyMin(), this.getzMax());
+            // Rotate them
+            VectorUtils.Vector3D rotatedBottomSpacePoint = VectorUtils.rotate(bottomSpacePoint, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            VectorUtils.Vector3D rotatedTopSpacePoint = VectorUtils.rotate(topSpacePoint, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            // Draw line between them
+            Point bottom = transformer.apply(rotatedBottomSpacePoint);
+            Point top = transformer.apply(rotatedTopSpacePoint);
+            g2d.drawLine(bottom.x, bottom.y, top.x, top.y);
+        }
+        // Parallel to Y, horizontal grid
+        startZ = (int)Math.round(Math.ceil(this.getzMin()));
+        for (int z=startZ; z<=this.getzMax(); z+=1) {
+            // Define space points
+            VectorUtils.Vector3D leftSpacePoint = new VectorUtils.Vector3D(this.getxMin(), this.getyMin(), z);
+            VectorUtils.Vector3D rightSpacePoint = new VectorUtils.Vector3D(this.getxMax(), this.getyMin(), z);
+            // Rotate them
+            VectorUtils.Vector3D rotatedLeftSpacePoint = VectorUtils.rotate(leftSpacePoint, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            VectorUtils.Vector3D rotatedRightSpacePoint = VectorUtils.rotate(rightSpacePoint, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            // Draw line between them
+            Point left = transformer.apply(rotatedLeftSpacePoint);
+            Point right = transformer.apply(rotatedRightSpacePoint);
+            g2d.drawLine(left.x, left.y, right.x, right.y);
+            // Label on the right
+            String label = String.valueOf(z);
+//            int strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
+            g2d.drawString(label, right.x + 2, right.y + 5); // 5: half font size
+        }
+        g2d.setStroke(originalStroke);
 
         // Panel centered on Z
         VectorUtils.Vector3D rotatedZBottomLeft = VectorUtils.rotate(zBottomLeftV3, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
@@ -136,14 +310,56 @@ public class Box3D extends JPanel {
         Polygon polygonZ = new Polygon(new int[] {zBottomRight.x, zTopRight.x, zTopLeft.x, zBottomLeft.x},
                 new int[] {zBottomRight.y, zTopRight.y, zTopLeft.y, zBottomLeft.y},
                 4);
-        g2d.setColor(new Color(230, 230, 230, 125));
+        g2d.setColor(boxFacesColor);
         g2d.fillPolygon(polygonZ);
         // Perimeter
-        g2d.setColor(Color.GRAY);
+        g2d.setColor(perimeterColor);
         g2d.drawLine(zBottomRight.x, zBottomRight.y, zTopRight.x, zTopRight.y);
         g2d.drawLine(zTopRight.x, zTopRight.y, zTopLeft.x, zTopLeft.y);
         g2d.drawLine(zTopLeft.x, zTopLeft.y, zBottomLeft.x, zBottomLeft.y);
         g2d.drawLine(zBottomLeft.x, zBottomLeft.y, zBottomRight.x, zBottomRight.y);
+        // Grid on the panel centered on Z axis, x as abscissa, y as ordinate
+        g2d.setColor(gridColor);
+        originalStroke = g2d.getStroke();
+        // Leave Stroke as it is (for now)
+        g2d.setStroke(new BasicStroke(1));
+        // Parallel to X, left to right
+        startY = (int)Math.round(Math.ceil(this.getyMin()));
+        for (int y=startY; y<=this.getyMax(); y+=1) {
+            // Define space points
+            VectorUtils.Vector3D leftSpacePoint = new VectorUtils.Vector3D(this.getxMin(), y, this.getzMin());
+            VectorUtils.Vector3D rightSpacePoint = new VectorUtils.Vector3D(this.getxMax(), y, this.getzMin());
+            // Rotate them
+            VectorUtils.Vector3D rotatedLeftSpacePoint = VectorUtils.rotate(leftSpacePoint, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            VectorUtils.Vector3D rotatedRightSpacePoint = VectorUtils.rotate(rightSpacePoint, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            // Draw line between them
+            Point left = transformer.apply(rotatedLeftSpacePoint);
+            Point right = transformer.apply(rotatedRightSpacePoint);
+            g2d.drawLine(left.x, left.y, right.x, right.y);
+            // Label on the right
+            String label = String.valueOf(y);
+            int strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
+            g2d.drawString(label, right.x - (strWidth / 2), right.y + 10);
+        }
+        // Parallel to Y, back to forth
+        startX = (int)Math.round(Math.ceil(this.getxMin()));
+        for (int x=startX; x<=this.getxMax(); x+=1) {
+            // Define space points
+            VectorUtils.Vector3D backSpacePoint = new VectorUtils.Vector3D(x, this.getyMin(), this.getzMin());
+            VectorUtils.Vector3D frontSpacePoint = new VectorUtils.Vector3D(x, this.getyMax(), this.getzMin());
+            // Rotate them
+            VectorUtils.Vector3D rotatedBackSpacePoint = VectorUtils.rotate(backSpacePoint, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            VectorUtils.Vector3D rotatedFrontSpacePoint = VectorUtils.rotate(frontSpacePoint, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            // Draw line between them
+            Point back = transformer.apply(rotatedBackSpacePoint);
+            Point front = transformer.apply(rotatedFrontSpacePoint);
+            g2d.drawLine(back.x, back.y, front.x, front.y);
+            // Label in Front
+            String label = String.valueOf(x);
+            int strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
+            g2d.drawString(label, front.x - (strWidth / 2), front.y + 10);
+        }
+        g2d.setStroke(originalStroke);
 
         // Plot center in the middle, (0, 0, 0)
         g2d.setColor(Color.BLACK);
@@ -168,7 +384,7 @@ public class Box3D extends JPanel {
         drawArrow(g2d,
                 transformer.apply(rotatedYMinVector),
                 transformer.apply(rotatedYMaxVector),
-                Color.LIGHT_GRAY);
+                axisColor);
         g2d.setColor(Color.CYAN);
         g2d.drawString("Y", transformer.apply(rotatedYMaxVector).x, transformer.apply(rotatedYMaxVector).y);
 
@@ -180,7 +396,7 @@ public class Box3D extends JPanel {
         drawArrow(g2d,
                 transformer.apply(rotatedXMinVector),
                 transformer.apply(rotatedXMaxVector),
-                Color.LIGHT_GRAY);
+                axisColor);
         g2d.setColor(Color.CYAN);
         g2d.drawString("X", transformer.apply(rotatedXMaxVector).x, transformer.apply(rotatedXMaxVector).y);
 
@@ -192,15 +408,35 @@ public class Box3D extends JPanel {
         drawArrow(g2d,
                 transformer.apply(rotatedZMinVector),
                 transformer.apply(rotatedZMaxVector),
-                Color.LIGHT_GRAY);
+                axisColor);
         g2d.setColor(Color.CYAN);
         g2d.drawString("Z", transformer.apply(rotatedZMaxVector).x, transformer.apply(rotatedZMaxVector).y);
 
         g2d.setColor(Color.BLACK);
-        g2d.drawString("More soon, ça rigole!", 10, 30);
+        g2d.setFont(new Font("Courier New", Font.BOLD, 16));
+        g2d.drawString(String.format("Rotations on Z:%.02f\272, on X:%.02f\272, on Y:%.02f\272",
+                this.rotOnZ, this.rotOnX, this.rotOnY), 10, 10);
+
+        // Call after
+        if (afterDrawer != null) {
+            afterDrawer.accept(g2d);
+        }
+
     };
 
     private Consumer<Graphics2D> drawer = DEFAULT_DRAWER;
+
+    public void setDrawer(Consumer<Graphics2D> drawer) {
+        this.drawer = drawer;
+    }
+
+    public void setBeforeDrawer(Consumer<Graphics2D> beforeDrawer) {
+        this.beforeDrawer = beforeDrawer;
+    }
+
+    public void setAfterDrawer(Consumer<Graphics2D> afterDrawer) {
+        this.afterDrawer = afterDrawer;
+    }
 
     public Box3D() {
         super();

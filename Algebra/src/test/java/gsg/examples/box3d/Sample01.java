@@ -1,10 +1,13 @@
 package gsg.examples.box3d;
 
 import gsg.SwingUtils.Box3D;
+import gsg.VectorUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Sample01 {
     private JFrame frame;
@@ -85,8 +88,44 @@ public class Sample01 {
         System.out.println(String.format("Java Version %s", System.getProperty("java.version")));
         System.out.println("----------------------------------------------");
 
-        new Sample01(); // This one has instantiated the white board
+        new Sample01(); // This one has instantiated the box
 
+        // Do something specific here.
+        Consumer<Graphics2D> afterDrawer = g2d -> {
+            g2d.setColor(Color.RED);
+            g2d.setFont(g2d.getFont().deriveFont(Font.BOLD | Font.ITALIC, 48f));
+            g2d.drawString("AFTER DRAWING!", 10, 300);
+            // Draw a 3D triangle
+            // 1 - Define its vertex
+            VectorUtils.Vector3D topV3 = new VectorUtils.Vector3D(1, -1.5, 2);
+            VectorUtils.Vector3D bottomLeftV3 = new VectorUtils.Vector3D(-2, 2, -2);
+            VectorUtils.Vector3D bottomRightV3 = new VectorUtils.Vector3D(2, 2.3, -2.1);
+            // Rotate them
+            VectorUtils.Vector3D rotatedTop = VectorUtils.rotate(topV3,
+                    Math.toRadians(box3D.getRotOnX()),
+                    Math.toRadians(box3D.getRotOnY()),
+                    Math.toRadians(box3D.getRotOnZ()));
+            VectorUtils.Vector3D rotatedLeft = VectorUtils.rotate(bottomLeftV3,
+                    Math.toRadians(box3D.getRotOnX()),
+                    Math.toRadians(box3D.getRotOnY()),
+                    Math.toRadians(box3D.getRotOnZ()));
+            VectorUtils.Vector3D rotatedRight = VectorUtils.rotate(bottomRightV3,
+                    Math.toRadians(box3D.getRotOnX()),
+                    Math.toRadians(box3D.getRotOnY()),
+                    Math.toRadians(box3D.getRotOnZ()));
+            // Plot!
+            Function<VectorUtils.Vector3D, Point> transformer = box3D.getTransformer();
+            Point topPoint = transformer.apply(rotatedTop);
+            Point leftPoint = transformer.apply(rotatedLeft);
+            Point rightPoint = transformer.apply(rotatedRight);
+
+            Polygon triangle = new Polygon(new int[] {topPoint.x, leftPoint.x, rightPoint.x},
+                    new int[] {topPoint.y, leftPoint.y, rightPoint.y},
+                    3);
+            g2d.setColor(new Color(0, 255, 0, 125));
+            g2d.fillPolygon(triangle);
+        };
+        box3D.setAfterDrawer(afterDrawer);
 
         // Finally, display it.
 //      whiteBoard.getImage(); // This is for a Notebook
