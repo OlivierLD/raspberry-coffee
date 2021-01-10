@@ -18,4 +18,8 @@ as well as in Jupyter Notebooks (IJava).
 - Jupyter examples provided in the `jupyter` folder.
 - Swing examples provided in the `gsg.examples` package, in the `test` folder. 
 
+Try this:
+```
+$ ../gradlew runSample
+```
 ---

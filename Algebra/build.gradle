@@ -32,3 +32,12 @@ dependencies {
 //  compile project(':http-tiny-server')
   testCompile group: 'junit', name: 'junit', version: '4.13'
 }
+
+task runSample(type: JavaExec, dependsOn: build, description: "Simple sample, Swing UI") {
+//  classpath = configurations.runtime
+//  classpath project.configurations.default
+//  classpath sourceSets.main.output.classesDir
+  classpath sourceSets.test.runtimeClasspath
+  main = 'gsg.examples.box3d.Sample01'
+  workingDir "."
+}
