@@ -22,4 +22,42 @@ Try this:
 ```
 $ ../gradlew runSample
 ```
+
+#### Some utility methods
+##### `drawBox`, `drawArrow`
+Just provide the (spatial) vertex of the box to draw, same for the arrow.
+Rotation and space-to-screen operations are taken care of.
+```java
+Consumer<Graphics2D> afterDrawer = g2d -> {
+    // Draw a box
+    g2d.setColor(Color.BLUE);
+    // Dotted lines for the cube
+    g2d.setStroke(new BasicStroke(1,
+            BasicStroke.CAP_BUTT,
+            BasicStroke.JOIN_ROUND,
+            1.0f,
+            new float[] { 2f, 0f, 2f },
+            2f));
+    double[][] boxVertex = {
+            {0.0, 0.0, 1.5},
+            {0.0, 2.0, 1.5},
+            {2.0, 2.0, 1.5},
+            {2.0, 0.0, 1.5},
+            {0.0, 0.0, 0.0},
+            {0.0, 2.0, 0.0},
+            {2.0, 2.0, 0.0},
+            {2.0, 0.0, 0.0}
+    };
+    box3D.drawBox.accept(g2d, boxVertex);
+    // An arrow
+    g2d.setColor(Color.RED);
+    g2d.setStroke(new BasicStroke(2));
+    box3D.drawArrow(g2d,
+            new double[] {0.0, 0.0, 0.0},
+            new double[] {2.0, 2.0, 1.5});
+};
+box3D.setAfterDrawer(afterDrawer);
+```
+![Drawing Box](./docimg/box.101.png)
+
 ---

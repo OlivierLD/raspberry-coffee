@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -467,7 +468,7 @@ public class Box3D extends JPanel {
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Courier New", Font.BOLD, 16));
         g2d.drawString(String.format("Rotations on Z:%.02f\272, on X:%.02f\272, on Y:%.02f\272",
-                this.rotOnZ, this.rotOnX, this.rotOnY), 10, 10);
+                this.rotOnZ, this.rotOnX, this.rotOnY), 10, 18);
 
         // Call after
         if (afterDrawer != null) {
@@ -573,6 +574,125 @@ public class Box3D extends JPanel {
             g.setColor(orig);
         }
     }
+
+    public void drawArrow(Graphics2D g2d, VectorUtils.Vector3D from, VectorUtils.Vector3D to) {
+        VectorUtils.Vector3D rotatedFrom = VectorUtils.rotate(from,
+                Math.toRadians(this.getRotOnX()),
+                Math.toRadians(this.getRotOnY()),
+                Math.toRadians(this.getRotOnZ()));
+        VectorUtils.Vector3D rotatedTo = VectorUtils.rotate(to,
+                Math.toRadians(this.getRotOnX()),
+                Math.toRadians(this.getRotOnY()),
+                Math.toRadians(this.getRotOnZ()));
+        Point fromPt = transformer.apply(rotatedFrom);
+        Point toPt = transformer.apply(rotatedTo);
+        drawArrow(g2d, fromPt, toPt, g2d.getColor());
+    }
+
+    public void drawArrow(Graphics2D g2d, double[] from, double[] to) {
+        drawArrow(g2d,
+                new VectorUtils.Vector3D(from[0], from[1], from[2]),
+                new VectorUtils.Vector3D(to[0], to[1], to[2]));
+    }
+
+    /**
+     * Set Stroke and Color before calling.
+     *
+     * Points (vectors) order is important:
+     *      1 +-----------+ 2
+     *      / |          /|
+     *     /  |        /  |
+     * 0 +-----------+ 3  |
+     *   |    |      |    |
+     *   |  5 +------|----+ 6
+     *   |  /        |  /
+     *   |/          |/
+     * 4 +-----------+ 7
+     */
+    public final BiConsumer<Graphics2D, double[][]> drawBox = (g2d, tuples) -> {
+        // Requires 8 vertex
+        assert(tuples.length == 8);
+        // 3 coordinates per vertex
+        assert(tuples[0].length == 3);
+        assert(tuples[1].length == 3);
+        assert(tuples[2].length == 3);
+        assert(tuples[3].length == 3);
+        assert(tuples[4].length == 3);
+        assert(tuples[5].length == 3);
+        assert(tuples[6].length == 3);
+        assert(tuples[7].length == 3);
+
+        // Define vertex as Vector3D
+        VectorUtils.Vector3D topFrontLeft3D = new VectorUtils.Vector3D(tuples[0][0], tuples[0][1], tuples[0][2]);
+        VectorUtils.Vector3D topBackLeft3D = new VectorUtils.Vector3D(tuples[1][0], tuples[1][1], tuples[1][2]);
+        VectorUtils.Vector3D topBackRight3D = new VectorUtils.Vector3D(tuples[2][0], tuples[2][1], tuples[2][2]);
+        VectorUtils.Vector3D topFrontRight3D = new VectorUtils.Vector3D(tuples[3][0], tuples[3][1], tuples[3][2]);
+        VectorUtils.Vector3D bottomFrontLeft3D = new VectorUtils.Vector3D(tuples[4][0], tuples[4][1], tuples[4][2]);
+        VectorUtils.Vector3D bottomBackLeft3D = new VectorUtils.Vector3D(tuples[5][0], tuples[5][1], tuples[5][2]);
+        VectorUtils.Vector3D bottomBackRight3D = new VectorUtils.Vector3D(tuples[6][0], tuples[6][1], tuples[6][2]);
+        VectorUtils.Vector3D bottomFrontRight3D = new VectorUtils.Vector3D(tuples[7][0], tuples[7][1], tuples[7][2]);
+
+        // Rotate vertex
+        VectorUtils.Vector3D rotatedTopFrontLeft = VectorUtils.rotate(topFrontLeft3D,
+                Math.toRadians(this.getRotOnX()),
+                Math.toRadians(this.getRotOnY()),
+                Math.toRadians(this.getRotOnZ()));
+        VectorUtils.Vector3D rotatedTopBackLeft = VectorUtils.rotate(topBackLeft3D,
+                Math.toRadians(this.getRotOnX()),
+                Math.toRadians(this.getRotOnY()),
+                Math.toRadians(this.getRotOnZ()));
+        VectorUtils.Vector3D rotatedTopBackRight = VectorUtils.rotate(topBackRight3D,
+                Math.toRadians(this.getRotOnX()),
+                Math.toRadians(this.getRotOnY()),
+                Math.toRadians(this.getRotOnZ()));
+        VectorUtils.Vector3D rotatedTopFrontRight = VectorUtils.rotate(topFrontRight3D,
+                Math.toRadians(this.getRotOnX()),
+                Math.toRadians(this.getRotOnY()),
+                Math.toRadians(this.getRotOnZ()));
+        VectorUtils.Vector3D rotatedBottomFrontLeft = VectorUtils.rotate(bottomFrontLeft3D,
+                Math.toRadians(this.getRotOnX()),
+                Math.toRadians(this.getRotOnY()),
+                Math.toRadians(this.getRotOnZ()));
+        VectorUtils.Vector3D rotatedBottomBackLeft = VectorUtils.rotate(bottomBackLeft3D,
+                Math.toRadians(this.getRotOnX()),
+                Math.toRadians(this.getRotOnY()),
+                Math.toRadians(this.getRotOnZ()));
+        VectorUtils.Vector3D rotatedBottomBackRight = VectorUtils.rotate(bottomBackRight3D,
+                Math.toRadians(this.getRotOnX()),
+                Math.toRadians(this.getRotOnY()),
+                Math.toRadians(this.getRotOnZ()));
+        VectorUtils.Vector3D rotatedBottomFrontRight = VectorUtils.rotate(bottomFrontRight3D,
+                Math.toRadians(this.getRotOnX()),
+                Math.toRadians(this.getRotOnY()),
+                Math.toRadians(this.getRotOnZ()));
+        // Plot
+//        ctx.g2d.setColor(Color.RED);
+        Point topFrontLeft = this.getTransformer().apply(rotatedTopFrontLeft);
+        Point topBackLeft = this.getTransformer().apply(rotatedTopBackLeft);
+        Point topBackRight = this.getTransformer().apply(rotatedTopBackRight);
+        Point topFrontRight = this.getTransformer().apply(rotatedTopFrontRight);
+
+        Point bottomFrontLeft = this.getTransformer().apply(rotatedBottomFrontLeft);
+        Point bottomBackLeft = this.getTransformer().apply(rotatedBottomBackLeft);
+        Point bottomBackRight = this.getTransformer().apply(rotatedBottomBackRight);
+        Point bottomFrontRight = this.getTransformer().apply(rotatedBottomFrontRight);
+
+        // Upper face
+        g2d.drawLine(topFrontLeft.x, topFrontLeft.y, topBackLeft.x, topBackLeft.y);
+        g2d.drawLine(topBackLeft.x, topBackLeft.y, topBackRight.x, topBackRight.y);
+        g2d.drawLine(topBackRight.x, topBackRight.y, topFrontRight.x, topFrontRight.y);
+        g2d.drawLine(topFrontRight.x, topFrontRight.y, topFrontLeft.x, topFrontLeft.y);
+        // Bottom face
+        g2d.drawLine(bottomFrontLeft.x, bottomFrontLeft.y, bottomBackLeft.x, bottomBackLeft.y);
+        g2d.drawLine(bottomBackLeft.x, bottomBackLeft.y, bottomBackRight.x, bottomBackRight.y);
+        g2d.drawLine(bottomBackRight.x, bottomBackRight.y, bottomFrontRight.x, bottomFrontRight.y);
+        g2d.drawLine(bottomFrontRight.x, bottomFrontRight.y, bottomFrontLeft.x, bottomFrontLeft.y);
+        // Vertical edges
+        g2d.drawLine(topFrontLeft.x, topFrontLeft.y, bottomFrontLeft.x, bottomFrontLeft.y);
+        g2d.drawLine(topBackLeft.x, topBackLeft.y, bottomBackLeft.x, bottomBackLeft.y);
+        g2d.drawLine(topBackRight.x, topBackRight.y, bottomBackRight.x, bottomBackRight.y);
+        g2d.drawLine(topFrontRight.x, topFrontRight.y, bottomFrontRight.x, bottomFrontRight.y);
+    };
 
     /**
      * Call this from a Jupyter Notebook (iJava) !
