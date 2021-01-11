@@ -12,7 +12,6 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-
 shadowJar {
   zip64 true
 }
