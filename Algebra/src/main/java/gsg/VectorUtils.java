@@ -6,8 +6,10 @@ import java.util.List;
 
 /**
  * Basic vector manipulation, translated from Python.
- * <p>
- * <i>C'est MOI qui l'ai fait.</i>
+ * <br/>
+ * Static methods.
+ * <br/>
+ * <i>C'est <b>MOI</b> qui l'ai fait.</i>
  */
 public class VectorUtils {
 
@@ -116,17 +118,31 @@ public class VectorUtils {
         return new Vector2D(one.getX() - two.getX(), one.getY() - two.getY());
     }
 
+    public static Vector3D subtract(Vector3D one, Vector3D two) {
+        return new Vector3D(one.getX() - two.getX(), one.getY() - two.getY(), one.getZ() - two.getZ());
+    }
+
     //    def add(*vectors):
     //        return (sum([v[0] for v in vectors]), sum([v[1] for v in vectors]))
-    public static Vector2D add(List<Vector2D> vectors) {
+    public static Vector2D add2D(List<Vector2D> vectors) {
         return new Vector2D(vectors.stream().mapToDouble(Vector2D::getX).sum(),
                             vectors.stream().mapToDouble(Vector2D::getY).sum());
+    }
+
+    public static Vector3D add3D(List<Vector3D> vectors) {
+        return new Vector3D(vectors.stream().mapToDouble(Vector3D::getX).sum(),
+                vectors.stream().mapToDouble(Vector3D::getY).sum(),
+                vectors.stream().mapToDouble(Vector3D::getZ).sum());
     }
 
     //    def length(v):
     //        return sqrt(v[0]**2 + v[1]**2)
     public static double length(Vector2D v) {
         return Math.sqrt(Math.pow(v.getX(), 2) + Math.pow(v.getY(), 2));
+    }
+
+    public static double length(Vector3D v) {
+        return Math.sqrt(Math.pow(v.getX(), 2) + Math.pow(v.getY(), 2) + Math.pow(v.getZ(), 2));
     }
 
     //    def distance(v1,v2):
@@ -153,6 +169,10 @@ public class VectorUtils {
         return new Vector2D(scalar * v.getX(), scalar * v.getY());
     }
 
+    public static Vector3D scale(double scalar, Vector3D v) {
+        return new Vector3D(scalar * v.getX(), scalar * v.getY(), scalar * v.getZ());
+    }
+
     //    def to_cartesian(polar_vector):
     //        length, angle = polar_vector[0], polar_vector[1]
     //        return (length*cos(angle), length*sin(angle))
@@ -174,9 +194,19 @@ public class VectorUtils {
         return translate(translation, Arrays.asList(vector)).stream().findFirst().get();
     }
 
+    public static Vector3D translate(Vector3D translation, Vector3D vector) {
+        return translate(translation, Arrays.asList(vector)).stream().findFirst().get();
+    }
+
     public static List<Vector2D> translate(Vector2D translation, List<Vector2D> vectors) {
         List<Vector2D> translated = new ArrayList<>();
-        vectors.forEach(v -> translated.add(add(Arrays.asList(translation, v))));
+        vectors.forEach(v -> translated.add(add2D(Arrays.asList(translation, v))));
+        return translated;
+    }
+
+    public static List<Vector3D> translate(Vector3D translation, List<Vector3D> vectors) {
+        List<Vector3D> translated = new ArrayList<>();
+        vectors.forEach(v -> translated.add(add3D(Arrays.asList(translation, v))));
         return translated;
     }
 
@@ -304,6 +334,10 @@ public class VectorUtils {
      * @return the vector, of norm 1
      */
     public static Vector2D unit(Vector2D v) {
+        return scale(1. / length(v), v);
+    }
+
+    public static Vector3D unit(Vector3D v) {
         return scale(1. / length(v), v);
     }
 
@@ -457,64 +491,5 @@ public class VectorUtils {
                     });
         });
         return graphicRange;
-    }
-
-    /**
-     * This is for tests.
-     *
-     * @param args Not used.
-     */
-    public static void main(String... args) {
-        Vector2D one = new Vector2D(1, 2);
-        Vector2D two = new Vector2D(3, 4);
-
-        double perimeter = perimeter(Arrays.asList(one, two));
-        System.out.println("Perimeter: " + perimeter);
-        Vector2D vector = toPolar(one);
-        System.out.println("To Polar:" + vector.toString());
-
-        Vector2D translation = new Vector2D(5, 6);
-        List<Vector2D> translated = translate(translation, Arrays.asList(one, two));
-        translated.forEach(System.out::println);
-
-        Vector2D backToBase = translate(new Vector2D().x(-5).y(-6), translated.get(0));
-        System.out.println("Back to One: " + backToBase);
-
-        System.out.println(String.format("Rotating 90 degrees %s and %s", one, two));
-        List<Vector2D> rotated = rotate(Math.toRadians(90), Arrays.asList(one, two));
-        rotated.forEach(v -> System.out.printf("Rotated: %s%n", v));
-
-        Vector2D rotateOne = rotate(Math.PI * 2, one);
-        System.out.println("Rotated one: " + rotateOne);
-
-        Vector2D scaled = scale(4.56, one);
-        System.out.println("Scaled: " + scaled);
-
-        GraphicRange graphicRange = findGraphicRange(one, two, translation, scaled, rotateOne);
-        System.out.println(String.format("X in [%.03f, %.03f], Y in [%.03f, %.03f]",
-                graphicRange.getMinX(), graphicRange.getMaxX(),
-                graphicRange.getMinY(), graphicRange.getMaxY()));
-
-        System.out.println(String.format("Dot product %s \u00d7 %s: %f", one, two, dot(one, two)));
-
-        double angle = angleBetween(one, two);
-        System.out.println(String.format("Angle between %s & %s: %f", one, two, angle));
-        System.out.println(String.format("In degrees: %f\272", Math.toDegrees(angle)));
-
-        double cross = cross(one, two);
-        System.out.println(String.format("Cross product(2) %s \u00d7 %s: %f", one, two, cross));
-
-        Vector3D one3 = new Vector3D(1, 2, 3);
-        Vector3D two3 = new Vector3D(4, 5, 6);
-        System.out.println(String.format("Cross product(3) %s \u00d7 %s >> %s", one3, two3, cross(one3, two3)));
-
-        System.out.println(String.format("Unit(one): %s", unit(one)));
-
-        double comp = component(one, two);
-        System.out.println(String.format("component %s \u00d7 %s: %f", one, two, comp));
-
-        Vector3D v3 = new Vector3D(0, -10, 0);
-        Vector3D rotatedV3 = rotate(v3, 0, 0, Math.toRadians(45));
-        System.out.printf("V3 %s Rotated on 45Z : %s%n", v3.toString(), rotatedV3.toString());
     }
 }

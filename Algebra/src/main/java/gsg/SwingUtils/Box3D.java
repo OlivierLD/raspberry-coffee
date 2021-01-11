@@ -416,8 +416,13 @@ public class Box3D extends JPanel {
         String label = "Y";
         int strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
         int fontSize = g2d.getFont().getSize();
-        g2d.drawString(label, transformer.apply(rotatedYMaxVector).x - (strWidth / 2), transformer.apply(rotatedYMaxVector).y + ((fontSize - 2) / 2));
-//        g2d.drawString("Y", transformer.apply(rotatedYMaxVector).x, transformer.apply(rotatedYMaxVector).y);
+        // Push it a bit further
+        Point labelLocation = transformer.apply(VectorUtils.rotate(VectorUtils.translate(
+                new VectorUtils.Vector3D(0, 0.2, 0), maxYVector),
+                Math.toRadians(rotOnX),
+                Math.toRadians(rotOnY),
+                Math.toRadians(rotOnZ)));
+        g2d.drawString(label, labelLocation.x - (strWidth / 2), labelLocation.y + ((fontSize - 2) / 2));
 
         // X axis
         VectorUtils.Vector3D minXVector = new VectorUtils.Vector3D(xMin, 0, 0);
@@ -432,7 +437,12 @@ public class Box3D extends JPanel {
         label = "X";
         strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
         fontSize = g2d.getFont().getSize();
-        g2d.drawString(label, transformer.apply(rotatedXMaxVector).x - (strWidth / 2), transformer.apply(rotatedXMaxVector).y + ((fontSize - 2) / 2));
+        labelLocation = transformer.apply(VectorUtils.rotate(VectorUtils.translate(
+                new VectorUtils.Vector3D(0.2, 0, 0), maxXVector),
+                Math.toRadians(rotOnX),
+                Math.toRadians(rotOnY),
+                Math.toRadians(rotOnZ)));
+        g2d.drawString(label, labelLocation.x - (strWidth / 2), labelLocation.y + ((fontSize - 2) / 2));
 
         // Z axis
         VectorUtils.Vector3D minZVector = new VectorUtils.Vector3D(0, 0, zMin);
@@ -447,8 +457,12 @@ public class Box3D extends JPanel {
         label = "Z";
         strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
         fontSize = g2d.getFont().getSize();
-        g2d.drawString(label, transformer.apply(rotatedZMaxVector).x - (strWidth / 2), transformer.apply(rotatedZMaxVector).y + ((fontSize - 2) / 2));
-//        g2d.drawString(label, transformer.apply(rotatedZMaxVector).x, transformer.apply(rotatedZMaxVector).y);
+        labelLocation = transformer.apply(VectorUtils.rotate(VectorUtils.translate(
+                new VectorUtils.Vector3D(0, 0, 0.2), maxZVector),
+                Math.toRadians(rotOnX),
+                Math.toRadians(rotOnY),
+                Math.toRadians(rotOnZ)));
+        g2d.drawString(label, labelLocation.x - (strWidth / 2), labelLocation.y + ((fontSize - 2) / 2));
 
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Courier New", Font.BOLD, 16));
