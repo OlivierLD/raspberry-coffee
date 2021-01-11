@@ -575,6 +575,14 @@ public class Box3D extends JPanel {
         }
     }
 
+    /**
+     * Uses ABSOLUTE Spatial coordinates. Rotation and
+     * transformation space-to-screen are taken care of.
+     *
+     * @param g2d the graphic env
+     * @param from The Spatial ABSOLUTE coordinate of the from vector
+     * @param to The Spatial ABSOLUTE coordinate of the to vector
+     */
     public void drawArrow(Graphics2D g2d, VectorUtils.Vector3D from, VectorUtils.Vector3D to) {
         VectorUtils.Vector3D rotatedFrom = VectorUtils.rotate(from,
                 Math.toRadians(this.getRotOnX()),
@@ -589,8 +597,98 @@ public class Box3D extends JPanel {
         drawArrow(g2d, fromPt, toPt, g2d.getColor());
     }
 
+    /**
+     * Use triplets (double[] of 3 elements) to describe the ABSOLUTE
+     * coordinates of the from and to space points.
+     *
+     * @param g2d Graphical env
+     * @param from 3 doubles (x, y, z)
+     * @param to 3 doubles (x, y, z)
+     */
     public void drawArrow(Graphics2D g2d, double[] from, double[] to) {
         drawArrow(g2d,
+                new VectorUtils.Vector3D(from[0], from[1], from[2]),
+                new VectorUtils.Vector3D(to[0], to[1], to[2]));
+    }
+
+    public void drawSegment(Graphics2D g2d, VectorUtils.Vector3D from, VectorUtils.Vector3D to) {
+        VectorUtils.Vector3D rotatedFrom = VectorUtils.rotate(from,
+                Math.toRadians(this.getRotOnX()),
+                Math.toRadians(this.getRotOnY()),
+                Math.toRadians(this.getRotOnZ()));
+        VectorUtils.Vector3D rotatedTo = VectorUtils.rotate(to,
+                Math.toRadians(this.getRotOnX()),
+                Math.toRadians(this.getRotOnY()),
+                Math.toRadians(this.getRotOnZ()));
+        Point fromPt = transformer.apply(rotatedFrom);
+        Point toPt = transformer.apply(rotatedTo);
+        g2d.drawLine(fromPt.x, fromPt.y, toPt.x, toPt.y);
+    }
+
+    public void drawSegment(Graphics2D g2d, double[] from, double[] to) {
+        drawSegment(g2d,
+                new VectorUtils.Vector3D(from[0], from[1], from[2]),
+                new VectorUtils.Vector3D(to[0], to[1], to[2]));
+    }
+
+    public void drawSurroundingBox(Graphics2D g2d, VectorUtils.Vector3D from, VectorUtils.Vector3D to) {
+        double[] topFrontLeft = new double[3];
+        double[] topFrontRight = new double[3];
+        double[] topBackLeft = new double[3];
+        double[] topBackRight = new double[3];
+        double[] bottomFrontLeft = new double[3];
+        double[] bottomFrontRight = new double[3];
+        double[] bottomBackLeft = new double[3];
+        double[] bottomBackRight = new double[3];
+
+        // Top face
+        topFrontLeft[0] = Math.min(from.getX(), to.getX());
+        topFrontLeft[1] = Math.min(from.getY(), to.getY());
+        topFrontLeft[2] = Math.max(from.getZ(), to.getZ());
+
+        topFrontRight[0] = Math.max(from.getX(), to.getX());
+        topFrontRight[1] = Math.min(from.getY(), to.getY());
+        topFrontRight[2] = Math.max(from.getZ(), to.getZ());
+
+        topBackLeft[0] = Math.min(from.getX(), to.getX());
+        topBackLeft[1] = Math.max(from.getY(), to.getY());
+        topBackLeft[2] = Math.max(from.getZ(), to.getZ());
+
+        topBackRight[0] = Math.max(from.getX(), to.getX());
+        topBackRight[1] = Math.max(from.getY(), to.getY());
+        topBackRight[2] = Math.max(from.getZ(), to.getZ());
+
+        // Bottom face
+        bottomFrontLeft[0] = Math.min(from.getX(), to.getX());
+        bottomFrontLeft[1] = Math.min(from.getY(), to.getY());
+        bottomFrontLeft[2] = Math.min(from.getZ(), to.getZ());
+
+        bottomFrontRight[0] = Math.max(from.getX(), to.getX());
+        bottomFrontRight[1] = Math.min(from.getY(), to.getY());
+        bottomFrontRight[2] = Math.min(from.getZ(), to.getZ());
+
+        bottomBackLeft[0] = Math.min(from.getX(), to.getX());
+        bottomBackLeft[1] = Math.max(from.getY(), to.getY());
+        bottomBackLeft[2] = Math.min(from.getZ(), to.getZ());
+
+        bottomBackRight[0] = Math.max(from.getX(), to.getX());
+        bottomBackRight[1] = Math.max(from.getY(), to.getY());
+        bottomBackRight[2] = Math.min(from.getZ(), to.getZ());
+
+        this.drawBox.accept(g2d, new double[][] {
+                topFrontLeft,
+                topBackLeft,
+                topBackRight,
+                topFrontRight,
+                bottomFrontLeft,
+                bottomBackLeft,
+                bottomBackRight,
+                bottomFrontRight
+        });
+    }
+
+    public void drawSurroundingBox(Graphics2D g2d, double[] from, double[] to) {
+        drawSurroundingBox(g2d,
                 new VectorUtils.Vector3D(from[0], from[1], from[2]),
                 new VectorUtils.Vector3D(to[0], to[1], to[2]));
     }
@@ -598,7 +696,7 @@ public class Box3D extends JPanel {
     /**
      * Set Stroke and Color before calling.
      *
-     * Points (vectors) order is important:
+     * Warning: Points (vectors) order is important:
      *      1 +-----------+ 2
      *      / |          /|
      *     /  |        /  |
@@ -610,7 +708,7 @@ public class Box3D extends JPanel {
      * 4 +-----------+ 7
      */
     public final BiConsumer<Graphics2D, double[][]> drawBox = (g2d, tuples) -> {
-        // Requires 8 vertex
+        // Requires 8 vertices
         assert(tuples.length == 8);
         // 3 coordinates per vertex
         assert(tuples[0].length == 3);
@@ -622,7 +720,7 @@ public class Box3D extends JPanel {
         assert(tuples[6].length == 3);
         assert(tuples[7].length == 3);
 
-        // Define vertex as Vector3D
+        // Define vertices as Vector3D
         VectorUtils.Vector3D topFrontLeft3D = new VectorUtils.Vector3D(tuples[0][0], tuples[0][1], tuples[0][2]);
         VectorUtils.Vector3D topBackLeft3D = new VectorUtils.Vector3D(tuples[1][0], tuples[1][1], tuples[1][2]);
         VectorUtils.Vector3D topBackRight3D = new VectorUtils.Vector3D(tuples[2][0], tuples[2][1], tuples[2][2]);
@@ -632,7 +730,7 @@ public class Box3D extends JPanel {
         VectorUtils.Vector3D bottomBackRight3D = new VectorUtils.Vector3D(tuples[6][0], tuples[6][1], tuples[6][2]);
         VectorUtils.Vector3D bottomFrontRight3D = new VectorUtils.Vector3D(tuples[7][0], tuples[7][1], tuples[7][2]);
 
-        // Rotate vertex
+        // Rotate vertices
         VectorUtils.Vector3D rotatedTopFrontLeft = VectorUtils.rotate(topFrontLeft3D,
                 Math.toRadians(this.getRotOnX()),
                 Math.toRadians(this.getRotOnY()),
@@ -666,7 +764,6 @@ public class Box3D extends JPanel {
                 Math.toRadians(this.getRotOnY()),
                 Math.toRadians(this.getRotOnZ()));
         // Plot
-//        ctx.g2d.setColor(Color.RED);
         Point topFrontLeft = this.getTransformer().apply(rotatedTopFrontLeft);
         Point topBackLeft = this.getTransformer().apply(rotatedTopBackLeft);
         Point topBackRight = this.getTransformer().apply(rotatedTopBackRight);

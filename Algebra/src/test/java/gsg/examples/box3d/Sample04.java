@@ -8,9 +8,9 @@ import java.awt.event.ActionEvent;
 import java.util.function.Consumer;
 
 /**
- * Demonstrates the drawBox utility.
+ * Demonstrates the drawSurroundingBox, drawSegment utilities.
  */
-public class Sample03 {
+public class Sample04 {
     private JFrame frame;
     private JMenuBar menuBar = new JMenuBar();
     private JMenu menuFile = new JMenu();
@@ -31,12 +31,12 @@ public class Sample03 {
 
     private void helpAbout_ActionPerformed(ActionEvent ae) {
         System.out.println("Help requested");
-        JOptionPane.showMessageDialog(box3D, "This box is sample #3", "GSG Help", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(box3D, "This box is sample #4", "GSG Help", JOptionPane.PLAIN_MESSAGE);
     }
 
-    public Sample03() {
+    public Sample04() {
         // The JFrame
-        frame = new JFrame("This is example #3");
+        frame = new JFrame("This is example #4");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
         System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
@@ -89,12 +89,16 @@ public class Sample03 {
         System.out.println(String.format("Java Version %s", System.getProperty("java.version")));
         System.out.println("----------------------------------------------");
 
-        new Sample03(); // This one has instantiated the box
+        new Sample04(); // This one has instantiated the box
 
         // Do something specific here.
         Consumer<Graphics2D> afterDrawer = g2d -> {
 
-            // Draw a box
+            double[] spatialPointOne = new double[] { 1d, 1d, 1d};
+            double[] spatialPointTwo = new double[] { 2d, 3d, -1.5d};
+            double[] spatialPointThree = new double[] { -2.5d, -2d, -1d};
+
+            // Draw surrounding boxes
             g2d.setColor(Color.BLUE);
             // Dotted lines for the cube
             g2d.setStroke(new BasicStroke(1,
@@ -103,23 +107,23 @@ public class Sample03 {
                     1.0f,
                     new float[] { 2f, 0f, 2f },
                     2f));
-            double[][] boxVertex = {
-                    {0.0, 0.0, 1.5},
-                    {0.0, 2.0, 1.5},
-                    {2.0, 2.0, 1.5},
-                    {2.0, 0.0, 1.5},
-                    {0.0, 0.0, 0.0},
-                    {0.0, 2.0, 0.0},
-                    {2.0, 2.0, 0.0},
-                    {2.0, 0.0, 0.0}
-            };
-            box3D.drawBox.accept(g2d, boxVertex);
-            // An arrow
-            g2d.setColor(Color.RED);
+            box3D.drawSurroundingBox(g2d, spatialPointOne, spatialPointTwo);
+            // A segment
             g2d.setStroke(new BasicStroke(2));
-            box3D.drawArrow(g2d,
-                    new double[] {0.0, 0.0, 0.0},
-                    new double[] {2.0, 2.0, 1.5});
+            box3D.drawSegment(g2d, spatialPointOne, spatialPointTwo);
+
+            g2d.setColor(Color.RED);
+            // Dotted lines for the cube
+            g2d.setStroke(new BasicStroke(1,
+                    BasicStroke.CAP_BUTT,
+                    BasicStroke.JOIN_ROUND,
+                    1.0f,
+                    new float[] { 2f, 0f, 2f },
+                    2f));
+            box3D.drawSurroundingBox(g2d, spatialPointTwo, spatialPointThree);
+            // A segment
+            g2d.setStroke(new BasicStroke(2));
+            box3D.drawSegment(g2d, spatialPointTwo, spatialPointThree);
         };
         box3D.setAfterDrawer(afterDrawer);
 
