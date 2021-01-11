@@ -24,9 +24,10 @@ $ ../gradlew runSample
 ```
 
 #### Some utility methods
+In those utilities, just provide the (spatial, absolute) vertices of the points, segments, arrows and boxes to draw.
+Rotations and space-to-screen operations are taken care of, from the context.
+
 ##### `drawBox`, `drawArrow`
-Just provide the (spatial, absolute) vertices of the box to draw, same for the arrow.
-Rotation and space-to-screen operations are taken care of.
 ```java
 Consumer<Graphics2D> afterDrawer = g2d -> {
     // Draw a box
