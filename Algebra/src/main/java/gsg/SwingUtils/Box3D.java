@@ -532,38 +532,19 @@ public class Box3D extends JPanel {
         drawer.accept(g2d);     // Invoke the drawer
     }
 
-    // TODO Change that to atan2
-    public static double getDir(float x, float y) {
-        double dir = 0.0D;
-        if (y != 0) {
-            dir = Math.toDegrees(Math.atan((double) x / (double) y));
+    /**
+     * Warning: this one is adding 180 to the direction.
+     * @param x
+     * @param y
+     * @return direction, [0..360[
+     */
+    private static double getDir(double x, double y) {
+        double direction = 180 + Math.toDegrees(Math.atan2(x, y));
+        while (direction < 0) {
+            direction += 360;
         }
-        if (x <= 0 || y <= 0) {
-            if (x > 0 && y < 0) {
-                dir += 180D;
-            } else if (x < 0 && y > 0) {
-                dir += 360D;
-            } else if (x < 0 && y < 0) {
-                dir += 180D;
-            } else if (x == 0) {
-                if (y > 0) {
-                    dir = 0.0D;
-                } else {
-                    dir = 180D;
-                }
-            } else if (y == 0) {
-                if (x > 0) {
-                    dir = 90D;
-                } else {
-                    dir = 270D;
-                }
-            }
-        }
-        dir += 180D;
-        while (dir >= 360D) {
-            dir -= 360D;
-        }
-        return dir;
+        direction %= 360;
+        return direction;
     }
 
     public static void drawArrow(Graphics2D g, Point from, Point to, Color c) {
@@ -578,7 +559,7 @@ public class Box3D extends JPanel {
         int headLength = hl;
         double headHalfAngle = 15D;
 
-        double dir = getDir((float) (from.x - to.x), (float) (to.y - from.y));
+        double dir = getDir((from.x - to.x), (to.y - from.y));
 //      System.out.println("Dir:" + dir);
 
         g.setColor(c);

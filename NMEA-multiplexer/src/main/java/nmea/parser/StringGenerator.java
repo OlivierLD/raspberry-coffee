@@ -87,7 +87,7 @@ public class StringGenerator {
       salinity               L           S = ppt                ppt = parts per thousand
    */
 
-	public enum XDRTypes { // Se above for more details
+	public enum XDRTypes { // See above for more details
 		TEMPERATURE("C", "C"), // in Celcius
 		ANGULAR_DISPLACEMENT("A", "D"), // In degrees
 		LINEAR_DISPLACEMENT("D", "M"), // In meters
