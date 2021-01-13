@@ -69,6 +69,7 @@ public class Sample04 {
         frame.getContentPane().add(new JLabel("Draw boxes"), BorderLayout.NORTH);
 
         // >> HERE: Add the box to the JFrame
+        box3D.setWithBoxFaces(true);
         frame.getContentPane().add(box3D, BorderLayout.CENTER);
 
         frame.setVisible(true); // Display

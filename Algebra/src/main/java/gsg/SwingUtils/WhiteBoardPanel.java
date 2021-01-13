@@ -18,7 +18,8 @@ import java.util.function.Function;
 import static gsg.VectorUtils.Vector2D;
 
 /**
- * A Reusable WhiteBoard
+ * A Reusable 2D WhiteBoard.
+ * Designed to draw figures in a 2D coordinate system.
  * Suitable for Swing application, as Jupyter Notebooks (with iJava)
  */
 public class WhiteBoardPanel extends JPanel {
@@ -94,7 +95,7 @@ public class WhiteBoardPanel extends JPanel {
         }
     }
 
-    private final static int MAX_TICK_PER_DIM = 30;
+    private final static int MAX_TICK_PER_AXIS = 30;
 
     // Default values
     private final static int WIDTH = 860;
@@ -172,12 +173,12 @@ public class WhiteBoardPanel extends JPanel {
         }
         int biggestTick = Math.max(horizontalTicks, verticalTicks);
 
-        double ratioX = (double)horizontalTicks / (double)MAX_TICK_PER_DIM;
-        double ratioY = (double)verticalTicks / (double)MAX_TICK_PER_DIM;
+        double ratioX = (double)horizontalTicks / (double) MAX_TICK_PER_AXIS;
+        double ratioY = (double)verticalTicks / (double) MAX_TICK_PER_AXIS;
         int tickIncrementX = Math.max((int)Math.round(ratioX), 1);
         int tickIncrementY = Math.max((int)Math.round(ratioY), 1);
 
-        double ratio = (double)biggestTick / (double)MAX_TICK_PER_DIM;
+        double ratio = (double)biggestTick / (double) MAX_TICK_PER_AXIS;
         int tickIncrement = Math.max((int)Math.round(ratio), 1);
         if (verbose) {
             System.out.printf("tickIncrement: %d (from %d, %d)%n", tickIncrement, tickIncrementX, tickIncrementY);

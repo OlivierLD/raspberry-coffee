@@ -79,6 +79,13 @@ public class VectorUtils {
             this.z = z;
         }
 
+        public Vector3D(double[] coord) {
+            assert(coord.length == 3);
+            this.x = coord[0];
+            this.y = coord[1];
+            this.z = coord[2];
+        }
+
         public Vector3D x(double x) {
             this.x = x;
             return this;
@@ -282,6 +289,14 @@ public class VectorUtils {
 
         return new Vector3D(newX3, newY3, newZ3);
     }
+
+    public static Vector3D findMiddle(Vector3D one, Vector3D two) {
+        Vector3D midVector = new Vector3D((two.getX() - one.getX()) / 2,
+                (two.getY() - one.getY()) / 2,
+                (two.getZ() - one.getZ()) / 2);
+        return add3D(Arrays.asList(one, midVector));
+    }
+
     /*
     def dot(u,v):
         return sum([coord1 * coord2 for coord1, coord2 in zip(u,v)])
