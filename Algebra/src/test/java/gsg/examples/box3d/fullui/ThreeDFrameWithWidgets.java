@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.text.DecimalFormat;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -52,15 +53,50 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 	private JLabel rotOnYValue = new JLabel("0\u00b0");
 	private JLabel rotOnXValue = new JLabel("0\u00b0");
 
+	private final static int COLOR_PANEL_DIMENSION = 20;
 	private JLabel colorsLabel = new JLabel("Colors");
 	private JButton perimeterButton = new JButton("Perimeter");
-	private JLabel perimeterColorLabel = new JLabel("    ");
+	BiConsumer<Graphics2D, Color> colorSampler = (g2d, color) -> {
+		g2d.setColor(color);
+		g2d.fillOval(0, 0, COLOR_PANEL_DIMENSION / 2, COLOR_PANEL_DIMENSION / 2);
+		g2d.setColor(Color.BLACK);
+		g2d.drawOval(0, 0, COLOR_PANEL_DIMENSION / 2, COLOR_PANEL_DIMENSION / 2);
+	};
+	private JPanel perimeterColorPanel = new JPanel() {
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			Graphics2D g2d = (Graphics2D) g;
+			colorSampler.accept(g2d, box3D.getPerimeterColor());
+		}
+	};
 	private JButton boxFacesButton = new JButton("Box Faces");
-	private JLabel boxFacesColorLabel = new JLabel("    ");
+	private JPanel boxFacesColorPanel = new JPanel() {
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			Graphics2D g2d = (Graphics2D) g;
+			colorSampler.accept(g2d, box3D.getBoxFacesColor());
+		}
+	};
 	private JButton gridButton = new JButton("Grid");
-	private JLabel gridColorLabel = new JLabel("    ");
+	private JPanel gridColorPanel = new JPanel() {
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			Graphics2D g2d = (Graphics2D) g;
+			colorSampler.accept(g2d, box3D.getGridColor());
+		}
+	};
 	private JButton axisButton = new JButton("Axis");
-	private JLabel axisColorLabel = new JLabel("    ");
+	private JPanel axisColorPanel = new JPanel() {
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			Graphics2D g2d = (Graphics2D) g;
+			colorSampler.accept(g2d, box3D.getAxisColor());
+		}
+	};
 
 	private final static int DEFAULT_WIDTH = 800;
 	private final static int DEFAULT_HEIGHT = 800;
@@ -90,14 +126,10 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 	}
 
 	public ThreeDFrameWithWidgets(int origW, int origH) {
-		this(origW, origH, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+		this(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
 
 	public ThreeDFrameWithWidgets(int origW, int origH, int imageWidth, int imageHeight) {
-    this(origW, origH, imageWidth, imageHeight, null, null);
-	}
-
-	public ThreeDFrameWithWidgets(int origW, int origH, int imageWidth, int imageHeight, String userButtonLabel, Runnable userButtonAction) {
 
 		initComponents(imageWidth, imageHeight);
 		this.setSize(new Dimension(origW, origH));
@@ -115,6 +147,7 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 			frameSize.width = screenSize.width;
 		}
 		this.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
 
@@ -671,10 +704,9 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 			Color color = JColorChooser.showDialog(perimeterButton,
 					"Perimeter Color", Color.CYAN);
 			if (color != null) {
-//					System.out.println("Color:" + background.toString());
-				perimeterColorLabel.setBackground(color);
 				box3D.setPerimeterColor(color);
 				box3D.repaint();
+				perimeterColorPanel.repaint();
 			} else {
 				System.out.println("No color chosen.");
 			}
@@ -688,9 +720,8 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 				GridBagConstraints.WEST,
 				GridBagConstraints.NONE,
 				new Insets(0, 0, 0, 1), 0, 0));
-		perimeterColorLabel.setOpaque(true);
-		perimeterColorLabel.setBackground(box3D.getPerimeterColor());
-		colorsPanel.add(perimeterColorLabel, new GridBagConstraints(2,
+		perimeterColorPanel.setSize(COLOR_PANEL_DIMENSION, COLOR_PANEL_DIMENSION);
+		colorsPanel.add(perimeterColorPanel, new GridBagConstraints(2,
 				0,
 				1,
 				1,
@@ -704,10 +735,9 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 			Color color = JColorChooser.showDialog(boxFacesButton,
 					"Box Faces Color", box3D.getBoxFacesColor());
 			if (color != null) {
-//					System.out.println("Color:" + background.toString());
-				boxFacesColorLabel.setBackground(color);
 				box3D.setBoxFacesColor(color);
 				box3D.repaint();
+				boxFacesColorPanel.repaint();
 			} else {
 				System.out.println("No color chosen.");
 			}
@@ -721,9 +751,8 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 				GridBagConstraints.WEST,
 				GridBagConstraints.NONE,
 				new Insets(0, 0, 0, 1), 0, 0));
-		boxFacesColorLabel.setOpaque(true);
-		boxFacesColorLabel.setBackground(box3D.getBoxFacesColor());
-		colorsPanel.add(boxFacesColorLabel, new GridBagConstraints(4,
+		boxFacesColorPanel.setSize(COLOR_PANEL_DIMENSION, COLOR_PANEL_DIMENSION);
+		colorsPanel.add(boxFacesColorPanel, new GridBagConstraints(4,
 				0,
 				1,
 				1,
@@ -737,10 +766,9 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 			Color color = JColorChooser.showDialog(gridButton,
 					"Grid Color", box3D.getGridColor());
 			if (color != null) {
-//					System.out.println("Color:" + background.toString());
-				gridColorLabel.setBackground(color);
 				box3D.setGridColor(color);
 				box3D.repaint();
+				gridColorPanel.repaint();
 			} else {
 				System.out.println("No color chosen.");
 			}
@@ -754,9 +782,8 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 				GridBagConstraints.WEST,
 				GridBagConstraints.NONE,
 				new Insets(0, 0, 0, 1), 0, 0));
-		gridColorLabel.setOpaque(true);
-		gridColorLabel.setBackground(box3D.getGridColor());
-		colorsPanel.add(gridColorLabel, new GridBagConstraints(6,
+		gridColorPanel.setSize(COLOR_PANEL_DIMENSION, COLOR_PANEL_DIMENSION);
+		colorsPanel.add(gridColorPanel, new GridBagConstraints(6,
 				0,
 				1,
 				1,
@@ -768,12 +795,11 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 		// Axis
 		axisButton.addActionListener(e -> {
 			Color color = JColorChooser.showDialog(axisButton,
-					"Perimeter Color", box3D.getAxisColor());
+					"Axis Color", box3D.getAxisColor());
 			if (color != null) {
-//					System.out.println("Color:" + background.toString());
-				axisColorLabel.setBackground(color);
 				box3D.setAxisColor(color);
 				box3D.repaint();
+				axisColorPanel.repaint();
 			} else {
 				System.out.println("No color chosen.");
 			}
@@ -787,9 +813,8 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 				GridBagConstraints.WEST,
 				GridBagConstraints.NONE,
 				new Insets(0, 0, 0, 1), 0, 0));
-		axisColorLabel.setOpaque(true);
-		axisColorLabel.setBackground(box3D.getAxisColor());
-		colorsPanel.add(axisColorLabel, new GridBagConstraints(8,
+		axisColorPanel.setSize(COLOR_PANEL_DIMENSION, COLOR_PANEL_DIMENSION);
+		colorsPanel.add(axisColorPanel, new GridBagConstraints(8,
 				0,
 				1,
 				1,

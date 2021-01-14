@@ -38,7 +38,7 @@ public class Box3D extends JPanel {
     private Color boxFacesColor = new Color(230, 230, 230, 125);
     private Color axisColor = Color.LIGHT_GRAY;
 
-    private final static int MAX_TICK_PER_AXIS = 30;
+    private final static int MAX_TICK_PER_AXIS = 16;
 
     private Stroke axisStroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
 
@@ -181,7 +181,7 @@ public class Box3D extends JPanel {
      * It takes in account the position of the eye/camera, managed during the VectorUtils.rotate invocation,
      * which has to happen before.
      */
-    private Function<VectorUtils.Vector3D, Point> transformer = v3 -> {
+    private final Function<VectorUtils.Vector3D, Point> transformer = v3 -> {
         int xOnScreen = (this.dimension.width / 2) + (int) Math.round((v3.getX()) / (ratio / zoom));
         int yOnScreen = (this.dimension.height / 2) - (int) Math.round((v3.getZ()) / (ratio / zoom));
         return new Point(xOnScreen, yOnScreen);
@@ -194,14 +194,14 @@ public class Box3D extends JPanel {
     private Consumer<Graphics2D> beforeDrawer = null;
     private Consumer<Graphics2D> afterDrawer = null;
 
-    private Consumer<Graphics2D> DEFAULT_DRAWER = g2d -> {
+    private final Consumer<Graphics2D> DEFAULT_DRAWER = g2d -> {
 
         // Call before
         if (beforeDrawer != null) {
             beforeDrawer.accept(g2d);
         }
 
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(Color.WHITE); // Background
         g2d.fillRect(0, 0, dimension.width, dimension.height);
 
         double ratioX = (xMax - xMin) / this.dimension.width;
@@ -261,16 +261,22 @@ public class Box3D extends JPanel {
             g2d.drawLine(xTopRight.x, xTopRight.y, xTopLeft.x, xTopLeft.y);
             g2d.drawLine(xTopLeft.x, xTopLeft.y, xBottomLeft.x, xBottomLeft.y);
             g2d.drawLine(xBottomLeft.x, xBottomLeft.y, xBottomRight.x, xBottomRight.y);
+
             // Grid on the panel centered on X axis, y as abscissa, z as ordinate
             g2d.setColor(gridColor);
             Stroke originalStroke = g2d.getStroke();
             // Leave Stroke as it is (for now)
             g2d.setStroke(new BasicStroke(1));
-            // TODO Manage the MAX_TICK_PER_AXIS
             // TODO Ticks on axis (option)
             // Parallel to Z, vertical grid
+            double yWidth = this.getyMax() - this.getyMin();
+            int yUnit = (int)Math.round(Math.max(yWidth / MAX_TICK_PER_AXIS, 1));
             int startY = (int) Math.round(Math.ceil(this.getyMin()));
-            for (int y = startY; y <= this.getyMax(); y += 1) {
+            while (startY % yUnit != 0) {
+                startY += 1;
+            }
+//            System.out.println("yUnit " + yUnit + ", Y Starts at " + this.getyMin() +", start graph at " + startY);
+            for (int y = startY; y <= this.getyMax(); y += yUnit) {
                 // Define space points
                 VectorUtils.Vector3D bottomSpacePoint = new VectorUtils.Vector3D(this.getxMin(), y, this.getzMin());
                 VectorUtils.Vector3D topSpacePoint = new VectorUtils.Vector3D(this.getxMin(), y, this.getzMax());
@@ -283,8 +289,14 @@ public class Box3D extends JPanel {
                 g2d.drawLine(bottom.x, bottom.y, top.x, top.y);
             }
             // Parallel to Y, horizontal grid
+            double zWidth = this.getzMax() - this.getzMin();
+            int zUnit = (int)Math.round(Math.max(zWidth / MAX_TICK_PER_AXIS, 1));
             int startZ = (int) Math.round(Math.ceil(this.getzMin()));
-            for (int z = startZ; z <= this.getzMax(); z += 1) {
+            while (startZ % zUnit != 0) {
+                startZ += 1;
+            }
+//            System.out.println("zUnit " + zUnit + ", Z Starts at " + this.getzMin() +", start graph at " + startZ);
+            for (int z = startZ; z <= this.getzMax(); z += zUnit) {
                 // Define space points
                 VectorUtils.Vector3D leftSpacePoint = new VectorUtils.Vector3D(this.getxMin(), this.getyMax(), z);
                 VectorUtils.Vector3D rightSpacePoint = new VectorUtils.Vector3D(this.getxMin(), this.getyMin(), z);
@@ -326,8 +338,14 @@ public class Box3D extends JPanel {
             // Leave Stroke as it is (for now)
             g2d.setStroke(new BasicStroke(1));
             // Parallel to Z, vertical grid
+            double xWidth = this.getxMax() - this.getxMin();
+            int xUnit = (int)Math.round(Math.max(xWidth / MAX_TICK_PER_AXIS, 1));
             int startX = (int) Math.round(Math.ceil(this.getxMin()));
-            for (int x = startX; x <= this.getxMax(); x += 1) {
+            while (startX % xUnit != 0) {
+                startX += 1;
+            }
+//            System.out.println("xUnit " + xUnit + ", X Starts at " + this.getxMin() +", start graph at " + startX);
+            for (int x = startX; x <= this.getxMax(); x += xUnit) {
                 // Define space points
                 VectorUtils.Vector3D bottomSpacePoint = new VectorUtils.Vector3D(x, this.getyMin(), this.getzMin());
                 VectorUtils.Vector3D topSpacePoint = new VectorUtils.Vector3D(x, this.getyMin(), this.getzMax());
@@ -340,8 +358,8 @@ public class Box3D extends JPanel {
                 g2d.drawLine(bottom.x, bottom.y, top.x, top.y);
             }
             // Parallel to Y, horizontal grid
-            startZ = (int) Math.round(Math.ceil(this.getzMin()));
-            for (int z = startZ; z <= this.getzMax(); z += 1) {
+//            startZ = (int) Math.round(Math.ceil(this.getzMin()));
+            for (int z = startZ; z <= this.getzMax(); z += zUnit) {
                 // Define space points
                 VectorUtils.Vector3D leftSpacePoint = new VectorUtils.Vector3D(this.getxMin(), this.getyMin(), z);
                 VectorUtils.Vector3D rightSpacePoint = new VectorUtils.Vector3D(this.getxMax(), this.getyMin(), z);
@@ -387,8 +405,8 @@ public class Box3D extends JPanel {
             // Leave Stroke as it is (for now)
             g2d.setStroke(new BasicStroke(1));
             // Parallel to X, left to right
-            startY = (int) Math.round(Math.ceil(this.getyMin()));
-            for (int y = startY; y <= this.getyMax(); y += 1) {
+//            startY = (int) Math.round(Math.ceil(this.getyMin()));
+            for (int y = startY; y <= this.getyMax(); y += yUnit) {
                 // Define space points
                 VectorUtils.Vector3D leftSpacePoint = new VectorUtils.Vector3D(this.getxMin(), y, this.getzMin());
                 VectorUtils.Vector3D rightSpacePoint = new VectorUtils.Vector3D(this.getxMax(), y, this.getzMin());
@@ -405,8 +423,8 @@ public class Box3D extends JPanel {
                 g2d.drawString(label, right.x - (strWidth / 2), right.y + 10);
             }
             // Parallel to Y, back to forth
-            startX = (int) Math.round(Math.ceil(this.getxMin()));
-            for (int x = startX; x <= this.getxMax(); x += 1) {
+//            startX = (int) Math.round(Math.ceil(this.getxMin()));
+            for (int x = startX; x <= this.getxMax(); x += xUnit) {
                 // Define space points
                 VectorUtils.Vector3D backSpacePoint = new VectorUtils.Vector3D(x, this.getyMin(), this.getzMin());
                 VectorUtils.Vector3D frontSpacePoint = new VectorUtils.Vector3D(x, this.getyMax(), this.getzMin());
@@ -440,7 +458,7 @@ public class Box3D extends JPanel {
         g2d.setStroke(axisStroke);
 
         // Y axis
-        // TODO Switch yMin and yMax to match the book
+        // TODO Switch yMin and yMax to match the book ?
         VectorUtils.Vector3D minYVector = new VectorUtils.Vector3D(0, yMin, 0);
         VectorUtils.Vector3D rotatedYMinVector = VectorUtils.rotate(minYVector, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
         VectorUtils.Vector3D maxYVector = new VectorUtils.Vector3D(0, yMax, 0);
