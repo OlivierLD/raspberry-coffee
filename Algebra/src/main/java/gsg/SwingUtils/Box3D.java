@@ -62,6 +62,22 @@ public class Box3D extends JPanel {
         this.axisStroke = axisStroke;
     }
 
+    public Color getPerimeterColor() {
+        return perimeterColor;
+    }
+
+    public Color getGridColor() {
+        return gridColor;
+    }
+
+    public Color getBoxFacesColor() {
+        return boxFacesColor;
+    }
+
+    public Color getAxisColor() {
+        return axisColor;
+    }
+
     public double getxMin() {
         return xMin;
     }
@@ -518,6 +534,11 @@ public class Box3D extends JPanel {
         this.setSize(this.dimension);
     }
 
+    public Box3D(int width, int height) {
+        super();
+        this.setSize(width, height);
+    }
+
     @Override
     public void setSize(Dimension dimension) {
         super.setSize(dimension);
@@ -715,15 +736,17 @@ public class Box3D extends JPanel {
      * Set Stroke and Color before calling.
      * <p>
      * Warning: Points (vectors) order is important:
-     * 1 +-----------+ 2
-     * / |          /|
-     * /  |        /  |
-     * 0 +----+------+ 3  |
-     * |    |      |    |
-     * |  5 +------|----+ 6
-     * |  /        |  /
-     * |/          |/
-     * 4 +-----------+ 7
+     * <pre>
+     *    1 +----------+ 2
+     *     /|         /|
+     *    / |        / |
+     * 0 +--+-------+ 3|
+     *   |  |       |  |
+     *   |5 +-------|--+ 6
+     *   | /        | /
+     *   |/         |/
+     * 4 +----------+ 7
+     * </pre>
      */
     public final BiConsumer<Graphics2D, double[][]> drawBox = (g2d, tuples) -> {
         // Requires 8 vertices
