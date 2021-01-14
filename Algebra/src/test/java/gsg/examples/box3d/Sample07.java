@@ -4,7 +4,9 @@ import gsg.SwingUtils.Box3D;
 import gsg.VectorUtils;
 import gsg.examples.box3d.fullui.ThreeDFrameWithWidgets;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -44,9 +46,7 @@ public class Sample07 {
         for (int i=0; i<=nbPoints; i++) {
             double z = MIN_Z + (i * deltaZ / nbPoints);
             double theta = (i % (nbPoints / nbLoops)) * (360d / (nbPoints / nbLoops));
-
-            System.out.printf("i: %d, theta: %.02f\n", i, theta);
-
+//            System.out.printf("i: %d, theta: %.02f\n", i, theta);
             double x = SPRING_RADIUS * Math.sin(Math.toRadians(theta));
             double y = SPRING_RADIUS * Math.cos(Math.toRadians(theta));
             spring.add(new VectorUtils.Vector3D(x, y, z));
