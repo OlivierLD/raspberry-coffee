@@ -477,7 +477,7 @@ public class Box3D extends JPanel {
                 transformer.apply(rotatedYMinVector),
                 transformer.apply(rotatedYMaxVector),
                 axisColor);
-        g2d.setColor(Color.DARK_GRAY);
+        g2d.setColor(this.axisColor);
         String label = "Y";
         int strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
         int fontSize = g2d.getFont().getSize();
@@ -498,7 +498,7 @@ public class Box3D extends JPanel {
                 transformer.apply(rotatedXMinVector),
                 transformer.apply(rotatedXMaxVector),
                 axisColor);
-        g2d.setColor(Color.DARK_GRAY);
+        g2d.setColor(this.axisColor);
         label = "X";
         strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
         fontSize = g2d.getFont().getSize();
@@ -518,7 +518,7 @@ public class Box3D extends JPanel {
                 transformer.apply(rotatedZMinVector),
                 transformer.apply(rotatedZMaxVector),
                 axisColor);
-        g2d.setColor(Color.DARK_GRAY);
+        g2d.setColor(this.axisColor);
         label = "Z";
         strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
         fontSize = g2d.getFont().getSize();
@@ -529,6 +529,7 @@ public class Box3D extends JPanel {
                 Math.toRadians(rotOnZ)));
         g2d.drawString(label, labelLocation.x - (strWidth / 2), labelLocation.y + ((fontSize - 2) / 2));
 
+        // TODO Maybe remove this...
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Courier New", Font.BOLD, 16));
         g2d.drawString(String.format("Rotations on Z:%.02f\272, on X:%.02f\272, on Y:%.02f\272",
