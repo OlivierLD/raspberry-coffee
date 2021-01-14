@@ -21,48 +21,48 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 
 	private Box3D box3D;
 
-	private JLabel xLabel = new JLabel("X");
-	private JLabel yLabel = new JLabel("Y");
-	private JLabel zLabel = new JLabel("Z");
+	private final JLabel xLabel = new JLabel("X");
+	private final JLabel yLabel = new JLabel("Y");
+	private final JLabel zLabel = new JLabel("Z");
 
-	private JLabel minX = new JLabel("min");
-	private JLabel maxX = new JLabel("max");
-	private JLabel minY = new JLabel("min");
-	private JLabel maxY = new JLabel("max");
-	private JLabel minZ = new JLabel("min");
-	private JLabel maxZ = new JLabel("max");
+	private final JLabel minX = new JLabel("min");
+	private final JLabel maxX = new JLabel("max");
+	private final JLabel minY = new JLabel("min");
+	private final JLabel maxY = new JLabel("max");
+	private final JLabel minZ = new JLabel("min");
+	private final JLabel maxZ = new JLabel("max");
 
-	private JFormattedTextField minXValue = new JFormattedTextField(new DecimalFormat("#0.0"));
-	private JFormattedTextField maxXValue = new JFormattedTextField(new DecimalFormat("#0.0"));
-	private JFormattedTextField minYValue = new JFormattedTextField(new DecimalFormat("#0.0"));
-	private JFormattedTextField maxYValue = new JFormattedTextField(new DecimalFormat("#0.0"));
-	private JFormattedTextField minZValue = new JFormattedTextField(new DecimalFormat("#0.0"));
-	private JFormattedTextField maxZValue = new JFormattedTextField(new DecimalFormat("#0.0"));
+	private final JFormattedTextField minXValue = new JFormattedTextField(new DecimalFormat("#0.0"));
+	private final JFormattedTextField maxXValue = new JFormattedTextField(new DecimalFormat("#0.0"));
+	private final JFormattedTextField minYValue = new JFormattedTextField(new DecimalFormat("#0.0"));
+	private final JFormattedTextField maxYValue = new JFormattedTextField(new DecimalFormat("#0.0"));
+	private final JFormattedTextField minZValue = new JFormattedTextField(new DecimalFormat("#0.0"));
+	private final JFormattedTextField maxZValue = new JFormattedTextField(new DecimalFormat("#0.0"));
 
 	private JCheckBox withBoxFaces = null;
 
-	private JLabel rotXLabel = new JLabel("Rotation on X");
-	private JLabel rotYLabel = new JLabel("Rotation on Y");
-	private JLabel rotZLabel = new JLabel("Rotation on Z");
+	private final JLabel rotXLabel = new JLabel("Rotation on X");
+	private final JLabel rotYLabel = new JLabel("Rotation on Y");
+	private final JLabel rotZLabel = new JLabel("Rotation on Z");
 
 	private JSlider rotOnZSlider = null;
 	private JSlider rotOnYSlider = null;
 	private JSlider rotOnXSlider = null;
 
-	private JLabel rotOnZValue = new JLabel("0\u00b0");
-	private JLabel rotOnYValue = new JLabel("0\u00b0");
-	private JLabel rotOnXValue = new JLabel("0\u00b0");
+	private final JLabel rotOnZValue = new JLabel("0\u00b0");
+	private final JLabel rotOnYValue = new JLabel("0\u00b0");
+	private final JLabel rotOnXValue = new JLabel("0\u00b0");
 
 	private final static int COLOR_PANEL_DIMENSION = 20;
-	private JLabel colorsLabel = new JLabel("Colors");
-	private JButton perimeterButton = new JButton("Perimeter");
+	private final JLabel colorsLabel = new JLabel("Colors");
+	private final JButton perimeterButton = new JButton("Perimeter");
 	BiConsumer<Graphics2D, Color> colorSampler = (g2d, color) -> {
 		g2d.setColor(color);
 		g2d.fillOval(0, 0, COLOR_PANEL_DIMENSION / 2, COLOR_PANEL_DIMENSION / 2);
 		g2d.setColor(Color.BLACK);
 		g2d.drawOval(0, 0, COLOR_PANEL_DIMENSION / 2, COLOR_PANEL_DIMENSION / 2);
 	};
-	private JPanel perimeterColorPanel = new JPanel() {
+	private final JPanel perimeterColorPanel = new JPanel() {
 		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
@@ -70,8 +70,8 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 			colorSampler.accept(g2d, box3D.getPerimeterColor());
 		}
 	};
-	private JButton boxFacesButton = new JButton("Box Faces");
-	private JPanel boxFacesColorPanel = new JPanel() {
+	private final JButton boxFacesButton = new JButton("Box Faces");
+	private final JPanel boxFacesColorPanel = new JPanel() {
 		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
@@ -79,8 +79,8 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 			colorSampler.accept(g2d, box3D.getBoxFacesColor());
 		}
 	};
-	private JButton gridButton = new JButton("Grid");
-	private JPanel gridColorPanel = new JPanel() {
+	private final JButton gridButton = new JButton("Grid");
+	private final JPanel gridColorPanel = new JPanel() {
 		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
@@ -88,13 +88,22 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 			colorSampler.accept(g2d, box3D.getGridColor());
 		}
 	};
-	private JButton axisButton = new JButton("Axis");
-	private JPanel axisColorPanel = new JPanel() {
+	private final JButton axisButton = new JButton("Axis");
+	private final JPanel axisColorPanel = new JPanel() {
 		@Override
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			Graphics2D g2d = (Graphics2D) g;
 			colorSampler.accept(g2d, box3D.getAxisColor());
+		}
+	};
+	private final JButton backgroundButton = new JButton("Background");
+	private final JPanel backgroundColorPanel = new JPanel() {
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			Graphics2D g2d = (Graphics2D) g;
+			colorSampler.accept(g2d, box3D.getBackgroundColor());
 		}
 	};
 
@@ -106,7 +115,7 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		System.out.println(String.format("Frame size is now %d x %d", this.getWidth(), this.getHeight()));
+//		System.out.printf("Frame size is now %d x %d\n", this.getWidth(), this.getHeight());
 	}
 
 	@Override
@@ -125,15 +134,11 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 		this(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
 
-	public ThreeDFrameWithWidgets(int origW, int origH) {
-		this(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	}
+	public ThreeDFrameWithWidgets(int width, int height) {
 
-	public ThreeDFrameWithWidgets(int origW, int origH, int imageWidth, int imageHeight) {
-
-		initComponents(imageWidth, imageHeight);
-		this.setSize(new Dimension(origW, origH));
-		this.setPreferredSize(new Dimension(origW, origH));
+		initComponents(width, height);
+		this.setSize(new Dimension(width, height));
+		this.setPreferredSize(new Dimension(width, height));
 		this.setTitle("Box3D demo");
 
 		this.getContentPane().addComponentListener(this);
@@ -223,7 +228,7 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 		scrollPane.addComponentListener(new ComponentListener() {
 			@Override
 			public void componentResized(ComponentEvent e) {
-				System.out.println(String.format("\tScrollPane size is now %d x %d", scrollPane.getWidth(), scrollPane.getHeight()));
+//				System.out.printf("\tScrollPane size is now %d x %d\n", scrollPane.getWidth(), scrollPane.getHeight());
 			}
 
 			@Override
@@ -823,6 +828,37 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 				GridBagConstraints.WEST,
 				GridBagConstraints.NONE,
 				new Insets(0, 0, 0, 1), 0, 0));
+		// Background
+		backgroundButton.addActionListener(e -> {
+			Color color = JColorChooser.showDialog(backgroundButton,
+					"Background Color", box3D.getAxisColor());
+			if (color != null) {
+				box3D.setBackgroundColor(color);
+				box3D.repaint();
+				backgroundColorPanel.repaint();
+			} else {
+				System.out.println("No color chosen.");
+			}
+		});
+		colorsPanel.add(backgroundButton, new GridBagConstraints(9,
+				0,
+				1,
+				1,
+				1.0,
+				0.0,
+				GridBagConstraints.WEST,
+				GridBagConstraints.NONE,
+				new Insets(0, 0, 0, 1), 0, 0));
+		backgroundColorPanel.setSize(COLOR_PANEL_DIMENSION, COLOR_PANEL_DIMENSION);
+		colorsPanel.add(backgroundColorPanel, new GridBagConstraints(10,
+				0,
+				1,
+				1,
+				1.0,
+				0.0,
+				GridBagConstraints.WEST,
+				GridBagConstraints.NONE,
+				new Insets(0, 0, 0, 1), 0, 0));
 
 		bottomPanel.add(colorsPanel, new GridBagConstraints(0,
 				nbLinesInBottomPanel++,
@@ -970,14 +1006,6 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 	public static void main(String... args) {
 		ThreeDFrameWithWidgets frame = new ThreeDFrameWithWidgets();
 		frame.setVisible(true);
-	}
-
-	private static String lpad(String s, String with, int len) {
-		String str = s;
-		while (str.length() < len) {
-			str = with + str;
-		}
-		return str;
 	}
 
 }

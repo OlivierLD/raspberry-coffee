@@ -33,6 +33,7 @@ public class Box3D extends JPanel {
     private double zoom = 1.0;
     private boolean withBoxFaces = true;
 
+    private Color backgroundColor = Color.WHITE;
     private Color perimeterColor = Color.GRAY;
     private Color gridColor = new Color(0, 125, 125, 80); // Color.GRAY;
     private Color boxFacesColor = new Color(230, 230, 230, 125);
@@ -60,6 +61,14 @@ public class Box3D extends JPanel {
 
     public void setAxisStroke(Stroke axisStroke) {
         this.axisStroke = axisStroke;
+    }
+
+    public Color getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 
     public Color getPerimeterColor() {
@@ -201,7 +210,7 @@ public class Box3D extends JPanel {
             beforeDrawer.accept(g2d);
         }
 
-        g2d.setColor(Color.WHITE); // Background
+        g2d.setColor(backgroundColor);
         g2d.fillRect(0, 0, dimension.width, dimension.height);
 
         double ratioX = (xMax - xMin) / this.dimension.width;
