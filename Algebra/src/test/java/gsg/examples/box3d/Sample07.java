@@ -40,6 +40,7 @@ public class Sample07 {
 
         double deltaZ = MAX_Z - MIN_Z;
 
+        // Generate the data, the spring.
         List<VectorUtils.Vector3D> spring = new ArrayList<>();
         int nbPoints = 1_000;
         int nbLoops = 5;
@@ -54,7 +55,6 @@ public class Sample07 {
 
         // Do something specific here, after the box drawing. What's drawn.
         Consumer<Graphics2D> afterDrawer = g2d -> {
-
             g2d.setColor(Color.BLUE);
             g2d.setStroke(new BasicStroke(5));
             VectorUtils.Vector3D from = null;
