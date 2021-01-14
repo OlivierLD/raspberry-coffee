@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 /**
- * Draw a spring
+ * Draw a 3D spring
  */
 public class Sample07 {
 
@@ -41,7 +41,7 @@ public class Sample07 {
         List<VectorUtils.Vector3D> spring = new ArrayList<>();
         int nbPoints = 1_000;
         int nbLoops = 5;
-        for (int i=0; i<nbPoints; i++) {
+        for (int i=0; i<=nbPoints; i++) {
             double z = MIN_Z + (i * deltaZ / nbPoints);
             double theta = (i % (nbPoints / nbLoops)) * (360d / (nbPoints / nbLoops));
 
