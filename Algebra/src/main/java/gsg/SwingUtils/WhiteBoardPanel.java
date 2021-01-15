@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -24,7 +25,7 @@ import static gsg.VectorUtils.Vector2D;
  */
 public class WhiteBoardPanel extends JPanel {
 
-    private static boolean verbose = "true".equals(System.getProperty("swing.verbose"));
+    private final static boolean VERBOSE = "true".equals(System.getProperty("swing.verbose"));
 
     private List<DataSerie> allSeries = new ArrayList<>();
 
@@ -98,9 +99,8 @@ public class WhiteBoardPanel extends JPanel {
     private final static int MAX_TICK_PER_AXIS = 30;
 
     // Default values
-    private final static int WIDTH = 860;
-    private final static int HEIGHT = 600;
-    private Dimension dimension = new Dimension(WIDTH, HEIGHT); // TODO Redundant with getSize() ?
+    private final static int DEFAULT_WIDTH = 860;
+    private final static int DEFAULT_HEIGHT = 600;
     private int graphicMargins = 20;
     private Color axisColor = Color.BLACK;
     private Color textColor = Color.GRAY;
@@ -110,10 +110,8 @@ public class WhiteBoardPanel extends JPanel {
     private boolean withGrid = false;
     private boolean xEqualsY = true;
 
-    public void setDimension(Dimension dimension) {
-        this.dimension = dimension;
-        this.setSize(dimension);
-    }
+    private Double forcedMinY = null;
+    private Double forcedMaxY = null;
 
     public void setGraphicMargins(int graphicMargins) {
         this.graphicMargins = graphicMargins;
@@ -147,29 +145,49 @@ public class WhiteBoardPanel extends JPanel {
         this.xEqualsY = xEqualsY;
     }
 
-    private Consumer<Graphics2D> DEFAULT_DASHBOARD_WRITER = g2d -> {
+    public Double getForcedMinY() {
+        return forcedMinY;
+    }
+
+    public void setForcedMinY(Double forcedMinY) {
+        this.forcedMinY = forcedMinY;
+    }
+
+    public Double getForcedMaxY() {
+        return forcedMaxY;
+    }
+
+    public void setForcedMaxY(Double forcedMaxY) {
+        this.forcedMaxY = forcedMaxY;
+    }
+
+    private final Consumer<Graphics2D> DEFAULT_DASHBOARD_WRITER = g2d -> {
         List<List<Vector2D>> allData = new ArrayList<>();
         allSeries.forEach(serie -> allData.add(serie.getData()));
 
         VectorUtils.GraphicRange graphicRange = VectorUtils.findGraphicRanges(allData);
         double xAmplitude = graphicRange.getMaxX() - graphicRange.getMinX();
-        double yAmplitude = graphicRange.getMaxY() - graphicRange.getMinY();
+        double minDblY = Objects.requireNonNullElseGet(forcedMinY,
+                () -> graphicRange.getMinY());
+        double maxDblY = Objects.requireNonNullElseGet(forcedMaxY,
+                () -> graphicRange.getMaxY());
+        double yAmplitude = maxDblY - minDblY;
 
         int margins = graphicMargins;
 
-        double oneUnitX = (dimension.width - (2 * margins)) / xAmplitude;
-        double oneUnitY = (dimension.height - (2 * margins)) / yAmplitude;
+        double oneUnitX = (this.getSize().width - (2 * margins)) / xAmplitude;
+        double oneUnitY = (this.getSize().height - (2 * margins)) / yAmplitude;
         double oneUnit = Math.min(oneUnitX, oneUnitY);
-        if (verbose) {
-            System.out.println(String.format("One Unit: %f (from X:%f, Y:%f)", oneUnit, oneUnitX, oneUnitY));
+        if (VERBOSE) {
+            System.out.printf("One Unit: %f (from X:%f, Y:%f)%n", oneUnit, oneUnitX, oneUnitY);
         }
 
         // Find best tick amount for the grid
         // How Many units, in height, and width
-        int horizontalTicks = (int)Math.round((double)dimension.width / (xEqualsY ? oneUnit : oneUnitX));
-        int verticalTicks = (int)Math.round((double)dimension.height / (xEqualsY ? oneUnit : oneUnitY));
-        if (verbose) {
-            System.out.println(String.format("%d vertical ticks, %d horizontal ticks.", verticalTicks, horizontalTicks));
+        int horizontalTicks = (int)Math.round((double)this.getSize().width / (xEqualsY ? oneUnit : oneUnitX));
+        int verticalTicks = (int)Math.round((double)this.getSize().height / (xEqualsY ? oneUnit : oneUnitY));
+        if (VERBOSE) {
+            System.out.printf("%d vertical ticks, %d horizontal ticks.%n", verticalTicks, horizontalTicks);
         }
         int biggestTick = Math.max(horizontalTicks, verticalTicks);
 
@@ -180,40 +198,40 @@ public class WhiteBoardPanel extends JPanel {
 
         double ratio = (double)biggestTick / (double) MAX_TICK_PER_AXIS;
         int tickIncrement = Math.max((int)Math.round(ratio), 1);
-        if (verbose) {
+        if (VERBOSE) {
             System.out.printf("tickIncrement: %d (from %d, %d)%n", tickIncrement, tickIncrementX, tickIncrementY);
         }
 
         // Transformers
         Function<Double, Integer> findCanvasXCoord = spaceXCoord -> (int)(margins + (Math.round((spaceXCoord - graphicRange.getMinX()) * (xEqualsY ? oneUnit : oneUnitX))));
-        Function<Double, Integer> findCanvasYCoord = spaceYCoord -> (int)(margins + (Math.round((spaceYCoord - graphicRange.getMinY()) * (xEqualsY ? oneUnit : oneUnitY))));
+        Function<Double, Integer> findCanvasYCoord = spaceYCoord -> (int)(margins + (Math.round((spaceYCoord - minDblY) * (xEqualsY ? oneUnit : oneUnitY))));
 
         double x0 = Math.floor(findCanvasXCoord.apply(graphicRange.getMinX() /*0d*/)); // Math.round(0 - graphicRange.getMinX()) * oneUnit;
-        double y0 = Math.floor(findCanvasYCoord.apply(graphicRange.getMinY() /*0d*/)); // Math.round(0 - graphicRange.getMinY()) * oneUnit;
+        double y0 = Math.floor(findCanvasYCoord.apply(minDblY /*0d*/)); // Math.round(0 - graphicRange.getMinY()) * oneUnit;
 
-        if (verbose) {
-            System.out.println(String.format("x0: %f (minX: %f), y0: %f (minY: %f)", x0, graphicRange.getMinY(), y0, graphicRange.getMinY()));
+        if (VERBOSE) {
+            System.out.printf("x0: %f (minX: %f), y0: %f (minY: %f)%n", x0, graphicRange.getMinX(), y0, minDblY);
         }
 
         // Graphic scaffolding
         g2d.setColor(bgColor);
-        g2d.fillRect(0, 0, dimension.width, dimension.height);
+        g2d.fillRect(0, 0, this.getSize().width, this.getSize().height);
 
         // Actual working zone, from graphicRange
         g2d.setColor(Color.PINK); // GRAY);
         // graphicRange.getMaxX() graphicRange.getMinX() graphicRange.getMaxY() graphicRange.getMinY()
         int minX = findCanvasXCoord.apply(graphicRange.getMinX());
         int maxX = findCanvasXCoord.apply(graphicRange.getMaxX());
-        int minY = findCanvasYCoord.apply(graphicRange.getMinY());
-        int maxY = findCanvasYCoord.apply(graphicRange.getMaxY());
-        if (verbose) {
+        int minY = findCanvasYCoord.apply(minDblY);
+        int maxY = findCanvasYCoord.apply(maxDblY);
+        if (VERBOSE) {
             System.out.println("-----------------------------------------------------");
         }
         int height = this.getSize().height;
         int width  = this.getSize().width;
-        if (verbose) {
-            System.out.println(String.format("HxW: %d x %d", height, width));
-            System.out.println(String.format(">> Working Rectangle: x:%d, y:%d, w:%d, h:%d", minX, height - maxY, (maxX - minX), (maxY - minY)));
+        if (VERBOSE) {
+            System.out.printf("HxW: %d x %d%n", height, width);
+            System.out.printf(">> Working Rectangle: x:%d, y:%d, w:%d, h:%d%n", minX, height - maxY, (maxX - minX), (maxY - minY));
             System.out.println("-----------------------------------------------------");
         }
         g2d.drawRect(minX, height - maxY, (maxX - minX), (maxY - minY));
@@ -263,7 +281,7 @@ public class WhiteBoardPanel extends JPanel {
         g2d.setStroke(new BasicStroke(1));             // Line Thickness
         // Y Notches
         g2d.setColor(axisColor);
-        int yTick = (int)Math.floor(graphicRange.getMinY()); // 0;
+        int yTick = (int)Math.floor(minDblY); // 0;
         int canvasY = 0;
         while (canvasY <= height) {
             canvasY = findCanvasYCoord.apply((double)yTick);
@@ -287,11 +305,8 @@ public class WhiteBoardPanel extends JPanel {
         // For the text
         if (graphicTitle != null) {
             g2d.setColor(textColor);
-            if (titleFont == null) {
-                g2d.setFont(g2d.getFont().deriveFont(Font.BOLD | Font.ITALIC).deriveFont(24f));
-            } else {
-                g2d.setFont(titleFont);
-            }
+            g2d.setFont(Objects.requireNonNullElseGet(titleFont,
+                    () -> g2d.getFont().deriveFont(Font.BOLD | Font.ITALIC).deriveFont(24f)));
             g2d.drawString(graphicTitle, 10, 60);
         }
 
@@ -342,7 +357,7 @@ public class WhiteBoardPanel extends JPanel {
             } else {
 //                case GraphicType.AREA:
 //                case GraphicType.PIE:
-                System.out.println(String.format("Type %s not managed yet", serie.getGraphicType()));
+                System.out.printf("Type %s not managed yet%n", serie.getGraphicType());
             }
         });
     };
@@ -356,6 +371,7 @@ public class WhiteBoardPanel extends JPanel {
 
     public WhiteBoardPanel(Consumer<Graphics2D> whiteBoardWriter) {
         this();
+        this.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         this.whiteBoardWriter = whiteBoardWriter;
     }
 
@@ -379,12 +395,10 @@ public class WhiteBoardPanel extends JPanel {
      * Save the current view to a file
      * @param f the file to create
      * @param ext the iage extension (jpg, png, etc)
-     * @param w image width
-     * @param h image height
+     * @param width image width
+     * @param height image height
      */
-    public void createImage(File f, String ext, int w, int h) {
-        int width = w;
-        int height = h;
+    public void createImage(File f, String ext, int width, int height) {
 
         // Create a buffered image in which to draw
         final BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -394,7 +408,7 @@ public class WhiteBoardPanel extends JPanel {
                 SwingUtilities.invokeAndWait(() -> {
                     // Create a graphics contents on the buffered image
                     Graphics2D g2d = bufferedImage.createGraphics();
-                    instance.paintComponent((Graphics) g2d);
+                    instance.paintComponent(g2d);
                     // Write generated image to a file
                     try {
                         OutputStream os = new FileOutputStream(f);
@@ -414,40 +428,40 @@ public class WhiteBoardPanel extends JPanel {
         refreshThread.start();
     }
 
-    public static void drawArrow(Graphics2D g, Point from, Point to, Color c) {
-        drawArrow(g, from, to, c, 30);
+    public static void drawArrow(Graphics2D g2d, Point from, Point to, Color c) {
+        drawArrow(g2d, from, to, c, 30);
     }
 
-    public static void drawArrow(Graphics2D g, Point from, Point to, Color c, int hl) {
+    public static void drawArrow(Graphics2D g2d, Point from, Point to, Color c, int headLength) {
         Color orig = null;
-        if (g != null) {
-            orig = g.getColor();
+        if (g2d != null) {
+            orig = g2d.getColor();
         }
-        int headLength = hl;
         double headHalfAngle = 15D;
 
         double dir = getDir((from.x - to.x), (to.y - from.y));
 //      System.out.println("Dir:" + dir);
 
-        g.setColor(c);
+        g2d.setColor(c);
         Point left = new Point((int) (to.x - (headLength * Math.cos(Math.toRadians(dir - 90 + headHalfAngle)))),
                 (int) (to.y - (headLength * Math.sin(Math.toRadians(dir - 90 + headHalfAngle)))));
         Point right = new Point((int) (to.x - (headLength * Math.cos(Math.toRadians(dir - 90 - headHalfAngle)))),
                 (int) (to.y - (headLength * Math.sin(Math.toRadians(dir - 90 - headHalfAngle)))));
 
-        g.drawLine(from.x, from.y, to.x, to.y);
+        g2d.drawLine(from.x, from.y, to.x, to.y);
         Polygon head = new Polygon(new int[]{to.x, left.x, right.x}, new int[]{to.y, left.y, right.y}, 3);
-        g.fillPolygon(head);
+        g2d.fillPolygon(head);
 
-        if (g != null) {
-            g.setColor(orig);
+        if (g2d != null) {
+            g2d.setColor(orig);
         }
     }
 
     /**
      * Warning: this one is adding 180 to the direction.
-     * @param x
-     * @param y
+     *
+     * @param x deltaX
+     * @param y deltaY
      * @return direction, [0..360[
      */
     private static double getDir(double x, double y) {

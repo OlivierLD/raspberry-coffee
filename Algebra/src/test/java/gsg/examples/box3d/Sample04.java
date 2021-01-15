@@ -39,7 +39,7 @@ public class Sample04 {
         frame = new JFrame("This is example #4");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
-        System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
+//        System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
         if (frameSize.height > screenSize.height) {
             frameSize.height = screenSize.height;
         }

@@ -46,7 +46,7 @@ public class SwingSample5 {
         frame = new JFrame("This is example #5");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
-        System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
+//        System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
         if (frameSize.height > screenSize.height) {
             frameSize.height = screenSize.height;
         }
@@ -105,7 +105,7 @@ public class SwingSample5 {
         whiteBoard.setBgColor(new Color(250, 250, 250, 255));
         whiteBoard.setGraphicTitle(dino121 ? "121 Dinos" : "A full test");
 //        whiteBoard.setDimension(new Dimension(800, 600));
-        whiteBoard.setDimension(new Dimension(1024,760));
+        whiteBoard.setSize(new Dimension(1024,760));
         whiteBoard.setTextColor(Color.RED);
         whiteBoard.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 48));
         whiteBoard.setGraphicMargins(30);

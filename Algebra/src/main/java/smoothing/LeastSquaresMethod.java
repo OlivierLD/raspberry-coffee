@@ -30,6 +30,17 @@ public class LeastSquaresMethod {
 	public static void cloudGenerator(BufferedWriter bw, double fromX, double toX, double step, double yTolerance, double... coeffs) {
 		cloudGenerator(bw, fromX, toX, step, new double[] { yTolerance }, coeffs);
 	}
+
+	/**
+	 * Cloud of points generator, in a CSV format
+	 *
+	 * @param bw Where to write
+	 * @param fromX Start X
+	 * @param toX To X
+	 * @param step X increment
+	 * @param yTolerance max Y diff with previous point
+	 * @param coeffs Polynomial coefficients, used with random data
+	 */
 	public static void cloudGenerator(BufferedWriter bw, double fromX, double toX, double step, double[] yTolerance, double... coeffs) {
 		double miny = Double.MAX_VALUE, maxy = -Double.MAX_VALUE;
 		for (int i=0; i<yTolerance.length; i++) {
