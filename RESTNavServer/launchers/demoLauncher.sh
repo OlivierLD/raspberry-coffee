@@ -7,6 +7,7 @@
 LAUNCH_BROWSER=N
 WITH_PROXY=N
 USER_OPTION=
+WITH_NOHUP=
 #
 NAV_SERVER_EXTRA_OPTIONS=
 #
@@ -18,6 +19,9 @@ then
 	  if [[ ${prm} == "--browser:"* ]]
 	  then
 	    LAUNCH_BROWSER=${prm#*:}
+	  elif [[ ${prm} == "--nohup:"* ]]
+	  then
+	    WITH_NOHUP=${prm#*:}
 	  elif [[ ${prm} == "--proxy:"* ]]
 	  then
 	    WITH_PROXY=${prm#*:}
@@ -54,8 +58,9 @@ while [[ "$GO" == "true" ]]
 do
 	clear
 	echo -e ">> Note ⚠️ : Optional Script Parameters : "
-	echo -e "    starting the server, like $0 --browser:[N]|Y --proxy:[N]|Y --option:1"
+	echo -e "    starting the server, like $0 --browser:[N]|Y --proxy:[N]|Y --option:1 --nohup:[N]|Y"
 	echo -e "    --option:X will not prompt the user for his choice, it will go directly for it."
+	echo -e "    --nohup:Y will launch some commands with nohup (see the script for details)"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|               N A V   S E R V E R   -   D E M O   L A U N C H E R  🚀                   |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
@@ -137,8 +142,14 @@ do
 	    ;;
 	  "1")
   	  PROP_FILE=nmea.mux.no.gps.yaml
+  	  NOHUP=""
+  	  if [[ "${WITH_NOHUP}" == "Y" ]]
+  	  then
+  	    NOHUP="nohup "
+  	    echo -e ">> Will use nohup"
+  	  fi
 	    echo -e "Launching Nav Server with $PROP_FILE"
-	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
+	    ${NOHUP}./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then
 		    echo -e ">>> Waiting for the server to start..."
