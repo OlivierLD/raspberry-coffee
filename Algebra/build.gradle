@@ -44,8 +44,9 @@ task runSample(type: JavaExec, dependsOn: build, description: "Simple sample, Sw
 }
 
 task runSpringSample(type: JavaExec, dependsOn: build, description: "Simple sample, Swing UI") {
+  println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
 //  environment "DISPLAY", ":0.0"
-  environment "DISPLAY", "192.168.42.31:0.0"
+//  environment "DISPLAY", "192.168.42.31:0.0"
 //  classpath = configurations.runtime
 //  classpath project.configurations.default
 //  classpath sourceSets.main.output.classesDir
