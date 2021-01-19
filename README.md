@@ -64,5 +64,7 @@ dependencies {
 }    
 ```
 
+> Note, for Java
+> - Make sure the artifacts are compiled with the right Java version before pushing them
 
 ---
