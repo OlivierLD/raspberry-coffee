@@ -5,7 +5,7 @@ See good article at <https://gist.github.com/fernandezpablo85/03cf8b0cd2e7d85270
 
 ### Sample command:
 
-From `raspberry-coffee/common-utils`, install (generating the jar is good enough, actually):
+From `raspberry-coffee/common-utils` (`master` branch, or whatever branch you work on), install (generating the jar is good enough, actually):
 ```
 $ ../gradlew install
 ```
@@ -26,9 +26,17 @@ or also
 GROUP=oliv.raspi.coffee
 ARTIFACT=http-tiny-server
 VERSION=1.0
-$ mvn install:install-file -DgroupId=${GROUP} -DartifactId=${ARTIFACT} -Dversion=${VERSION} -Dfile=${HOME}/.m2/repository/oliv/raspi/coffee/${ARTIFACT}/${VERSION}/${ARTIFACT}-${VERSION}.jar -Dpackaging=jar -DgeneratePom=true -DlocalRepositoryPath=. -DcreateChecksum=true
+$ mvn install:install-file \
+      -DgroupId=${GROUP} \
+      -DartifactId=${ARTIFACT} \
+      -Dversion=${VERSION} \
+      -Dfile=${HOME}/.m2/repository/oliv/raspi/coffee/${ARTIFACT}/${VERSION}/${ARTIFACT}-${VERSION}.jar \
+      -Dpackaging=jar \
+      -DgeneratePom=true \
+      -DlocalRepositoryPath=. \
+      -DcreateChecksum=true
 ```
-
+then `git add <whatever-you-added>`, `git commit`, and `git push` on the `repository` branch.
 
 Repo URL: <https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository>
 
