@@ -100,4 +100,20 @@ box3D.setAfterDrawer(afterDrawer);
 ```
 ![Drawing Box](./docimg/box.102.png)
 
+
+### Bonus: LaTex in Markdown
+Works fine in a Jupyter Notebook, not always on a standalone markdown document.
+
+There is a good document about all that [here](https://towardsdatascience.com/write-markdown-latex-in-the-jupyter-notebook-10985edb91fd), and [here](https://colab.research.google.com/drive/18_2yFdH8G-6NXY_7fTcshMoScgJ-SYac#scrollTo=VFaCoSXvS-_H).
+
+Euler's identity: $ e^{i \pi} + 1 = 0 $
+
+Given : $\pi = 3.14$ , $\alpha = \frac{3\pi}{4}\, rad$
+$$
+\omega = 2\pi f \\
+f = \frac{c}{\lambda}\\
+\lambda_0=\theta^2+\delta\\
+\Delta\lambda = \frac{1}{\lambda^2}
+$$
+
 ---

@@ -6,8 +6,10 @@ import matrix.MatrixUtil;
 import matrix.SquareMatrix;
 import matrix.SystemUtil;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import java.io.*;
+import java.net.URL;
+
+import static junit.framework.TestCase.*;
 
 public class MatrixTests {
 
@@ -57,4 +59,5 @@ public class MatrixTests {
 		assertEquals("Coeff B", -0.13781660635627724, result[1]);
 		assertEquals("Coeff C", 11.280925180476313, result[2]);
 	}
+
 }
