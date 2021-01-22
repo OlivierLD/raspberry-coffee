@@ -42,7 +42,14 @@ public class VectorUtilsTests {
                 graphicRange.getMinX(), graphicRange.getMaxX(),
                 graphicRange.getMinY(), graphicRange.getMaxY()));
 
-        System.out.println(String.format("Dot product %s \u00d7 %s: %f", one, two, dot(one, two)));
+        System.out.println(String.format("Dot (2D) product (%s).(%s) : %f", one, two, dot(one, two)));
+
+        VectorUtils.Vector2D oneV2 = new Vector2D(-1, 3);
+        VectorUtils.Vector2D twoV2 = new Vector2D(3, 1);
+        System.out.println(String.format("Dot (2D) product of 2 square ones (%s).(%s) = %f",
+                oneV2,
+                multiply(twoV2, 3.3),
+                dot(oneV2, multiply(twoV2, 3.3))));
 
         double angle = angleBetween(one, two);
         System.out.println(String.format("Angle between %s & %s: %f", one, two, angle));
@@ -54,6 +61,8 @@ public class VectorUtilsTests {
         VectorUtils.Vector3D one3 = new VectorUtils.Vector3D(1, 2, 3);
         VectorUtils.Vector3D two3 = new VectorUtils.Vector3D(4, 5, 6);
         System.out.println(String.format("Cross product(3) %s \u00d7 %s >> %s", one3, two3, cross(one3, two3)));
+
+        System.out.println(String.format("Dot (3D) product %s \u00d7 %s: %f", one3, two3, dot(one3, two3)));
 
         System.out.println(String.format("Unit(one): %s", unit(one)));
 

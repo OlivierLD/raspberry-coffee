@@ -6,9 +6,6 @@ import matrix.MatrixUtil;
 import matrix.SquareMatrix;
 import matrix.SystemUtil;
 
-import java.io.*;
-import java.net.URL;
-
 import static junit.framework.TestCase.*;
 
 public class MatrixTests {

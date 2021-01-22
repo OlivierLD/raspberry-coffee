@@ -142,6 +142,14 @@ public class VectorUtils {
                 vectors.stream().mapToDouble(Vector3D::getZ).sum());
     }
 
+    public static Vector2D multiply(Vector2D v, double mul) {
+        return new Vector2D(v.getX() * mul, v.getY() * mul);
+    }
+
+    public static Vector3D multiply(Vector3D v, double mul) {
+        return new Vector3D(v.getX() * mul, v.getY() * mul, v.getZ() * mul);
+    }
+
     //    def length(v):
     //        return sqrt(v[0]**2 + v[1]**2)
     public static double length(Vector2D v) {
@@ -309,6 +317,13 @@ public class VectorUtils {
     print(tuple(x))
     >>> (('John', 'Jenny'), ('Charles', 'Christy'), ('Mike', 'Monica'))
 
+     */
+
+    /*
+     * Dot product (produit scalaire):
+     * - if positive: vectors are convergent
+     * - if negative: vectors are divergent
+     * - if null: vectors are perpendicular
      */
     public static double dot(Vector2D v1, Vector2D v2) {
         return (v1.getX() * v2.getX()) + (v1.getY() * v2.getY());
