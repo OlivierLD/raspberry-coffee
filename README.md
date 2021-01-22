@@ -34,7 +34,7 @@ Raspberry Pi's [Mechanical drawings](https://www.raspberrypi.org/documentation/h
 - [Raspberry Pi, a possible thing of the Internet of Things...](#raspberry-pi-a-possible-thing-of-the-internet-of-things)
 - [Project list, growing](#project-list-growing)
 
-#### Setup a brand new Raspberry Pi
+#### Setup a brand-new Raspberry Pi
 To get started as quickly as possible, and not only for this project, from scratch.
 
 ##### Foundation Software

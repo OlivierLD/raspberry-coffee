@@ -163,10 +163,11 @@ public class WhiteBoardPanel extends JPanel {
 
     private final Consumer<Graphics2D> DEFAULT_DASHBOARD_WRITER = g2d -> {
         List<List<Vector2D>> allData = new ArrayList<>();
-        allSeries.forEach(serie -> allData.add(serie.getData()));
+        allSeries.forEach(serie -> { synchronized(serie) { allData.add(serie.getData()); } });
 
         VectorUtils.GraphicRange graphicRange = VectorUtils.findGraphicRanges(allData);
         double xAmplitude = graphicRange.getMaxX() - graphicRange.getMinX();
+        // Warning: Not supported by Java 8
         double minDblY = Objects.requireNonNullElseGet(forcedMinY,
                 () -> graphicRange.getMinY());
         double maxDblY = Objects.requireNonNullElseGet(forcedMaxY,
@@ -394,7 +395,7 @@ public class WhiteBoardPanel extends JPanel {
     /**
      * Save the current view to a file
      * @param f the file to create
-     * @param ext the iage extension (jpg, png, etc)
+     * @param ext the image extension (jpg, png, etc), used by ImageIO
      * @param width image width
      * @param height image height
      */
