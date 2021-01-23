@@ -7,7 +7,7 @@ import static gsg.VectorUtils.*;
 
 public class VectorUtilsTests {
     /**
-     * This is for tests, not UnitTest
+     * This is just for tests, not unit-tests
      *
      * @param args Not used.
      */
@@ -61,8 +61,8 @@ public class VectorUtilsTests {
         VectorUtils.Vector3D one3 = new VectorUtils.Vector3D(1, 2, 3);
         VectorUtils.Vector3D two3 = new VectorUtils.Vector3D(4, 5, 6);
         System.out.println(String.format("Cross product(3) %s \u00d7 %s >> %s", one3, two3, cross(one3, two3)));
-
         System.out.println(String.format("Dot (3D) product %s \u00d7 %s: %f", one3, two3, dot(one3, two3)));
+        System.out.println(String.format("Angle (3D) between %s and %s: %f rad (%f\272)", one3, two3, angleBetween(one3, two3), Math.toDegrees(angleBetween(one3, two3))));
 
         System.out.println(String.format("Unit(one): %s", unit(one)));
 

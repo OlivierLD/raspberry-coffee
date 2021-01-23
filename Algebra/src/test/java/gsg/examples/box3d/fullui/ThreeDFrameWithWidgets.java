@@ -3,11 +3,11 @@ package gsg.examples.box3d.fullui;
 import gsg.SwingUtils.Box3D;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.util.function.BiConsumer;
 
@@ -15,9 +15,12 @@ import java.util.function.BiConsumer;
  * A Box3D in a Frame, in Swing.
  * With all kinds of widgets to interact with the Box3D.
  */
-public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener {
+public class ThreeDFrameWithWidgets
+		extends JFrame {
 
-	private Box3D box3D;
+	private int prevX, prevY;
+
+	private final Box3D box3D;
 
 	private final JLabel xLabel = new JLabel("X");
 	private final JLabel yLabel = new JLabel("Y");
@@ -115,23 +118,6 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 	private final static int MIN_SLIDER_VALUE = -180;
 	private final static int MAX_SLIDER_VALUE = 180;
 
-	@Override
-	public void componentResized(ComponentEvent e) {
-//		System.out.printf("Frame size is now %d x %d\n", this.getWidth(), this.getHeight());
-	}
-
-	@Override
-	public void componentMoved(ComponentEvent e) {
-	}
-
-	@Override
-	public void componentShown(ComponentEvent e) {
-	}
-
-	@Override
-	public void componentHidden(ComponentEvent e) {
-	}
-
 	public ThreeDFrameWithWidgets(Box3D box3D) {
 		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
@@ -140,11 +126,9 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 
 		this.box3D = box3D;
 		initComponents(width, height);
-		this.setSize(new Dimension(width, height));
+		this.setSize(new Dimension(width, height));  // Maybe conflicting...
 		this.setPreferredSize(new Dimension(width, height));
-		this.setTitle("Box3D demo");
-
-		this.getContentPane().addComponentListener(this);
+		this.setTitle("Box3D demo - Figure is draggable");
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = this.getSize();
@@ -163,34 +147,74 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 	 * This method is called from within the constructor to
 	 * initialize the form.
 	 */
-	private void initComponents(int imageWidth, int imageHeight) {
+	private void initComponents(int width, int height) {
 
 		this.getContentPane().setLayout(new BorderLayout());
 
 		JScrollPane scrollPane = new JScrollPane(box3D, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPane.addComponentListener(new ComponentListener() {
+		scrollPane.setPreferredSize(new Dimension(width, height));
+		scrollPane.addMouseListener(new MouseListener() {
 			@Override
-			public void componentResized(ComponentEvent e) {
-//				System.out.printf("\tScrollPane size is now %d x %d\n", scrollPane.getWidth(), scrollPane.getHeight());
+			public void mouseClicked(MouseEvent e) {
 			}
 
 			@Override
-			public void componentMoved(ComponentEvent e) {
+			public void mousePressed(MouseEvent e) {
+//				System.out.println("Mouse pressed.");
+				scrollPane.setCursor(new Cursor(Cursor.MOVE_CURSOR));
+				prevX = e.getX();
+				prevY = e.getY();
+				e.consume();
 			}
 
 			@Override
-			public void componentShown(ComponentEvent e) {
+			public void mouseReleased(MouseEvent e) {
+//				System.out.println("Mouse released.");
+				scrollPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 
 			@Override
-			public void componentHidden(ComponentEvent e) {
+			public void mouseEntered(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
 			}
 		});
+		scrollPane.addMouseMotionListener(new MouseMotionListener() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+//				System.out.println("Mouse being dragged.");
+				int x = e.getX();
+				int y = e.getY();
+
+				double xTheta = (prevY - y) * 360.0 / getSize().width;
+				double yTheta = (x - prevX) * 360.0 / getSize().height;
+
+				double newX = box3D.getRotOnX() - xTheta;
+				double newZ = box3D.getRotOnZ() + yTheta;
+				box3D.setRotOnX(newX);
+				box3D.setRotOnZ(newZ);
+
+				prevX = x;
+				prevY = y;
+				e.consume();
+//				System.out.println("rotOnX:" + newX + ", rotOnZ:" + newZ);
+				box3D.repaint();
+				rotOnXSlider.setValue((int)Math.round(newX));
+				rotOnZSlider.setValue((int)Math.round(newZ));
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+			}
+		});
+
 		this.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new GridBagLayout());
-		bottomPanel.setBorder(BorderFactory.createTitledBorder("3D Box config"));
+		bottomPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED), "3D Box config"));
 
 		JPanel xMinMaxPanel = new JPanel();
 		xMinMaxPanel.setLayout(new GridBagLayout());
@@ -206,8 +230,6 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 
 		JPanel colorsPanel = new JPanel();
 		colorsPanel.setLayout(new GridBagLayout());
-
-
 
 		JPanel rotXPanel = new JPanel();
 		rotXPanel.setLayout(new GridBagLayout());
@@ -1006,5 +1028,4 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 	public boolean isWithFacesChecked() {
 		return this.withBoxFaces.isSelected();
 	}
-
 }

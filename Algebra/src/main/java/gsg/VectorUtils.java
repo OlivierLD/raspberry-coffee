@@ -337,6 +337,10 @@ public class VectorUtils {
         return Math.acos(dot(v1, v2) / (length(v1) * length(v2)));
     }
 
+    public static double angleBetween(Vector3D v1, Vector3D v2) {
+        return Math.acos(dot(v1, v2) / (length(v1) * length(v2)));
+    }
+
     // Dim 2 vectors
     // See https://pythonexamples.org/numpy-cross-product/
     public static double cross(Vector2D v1, Vector2D v2) {

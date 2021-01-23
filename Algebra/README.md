@@ -114,13 +114,17 @@ box3D.setAfterDrawer(afterDrawer);
 ```
 ![Drawing Box](./docimg/box.102.png)
 
+### WaveFront format (`obj`) support
+![WaveFront](./docimg/wavefront.png)
+
 ### See the `src/test/java` folder
 This directory contains demos.
 
 ### Bonus: LaTex in Markdown
-Works fine in a Jupyter Notebook, not always on a standalone markdown document.
+> Works fine in a Jupyter Notebook, not always on a standalone markdown document...
 
-There is a good document about all that [here](https://towardsdatascience.com/write-markdown-latex-in-the-jupyter-notebook-10985edb91fd), and [here](https://colab.research.google.com/drive/18_2yFdH8G-6NXY_7fTcshMoScgJ-SYac#scrollTo=VFaCoSXvS-_H).
+There are good documents about all that [here](https://towardsdatascience.com/write-markdown-latex-in-the-jupyter-notebook-10985edb91fd), 
+and [here](https://colab.research.google.com/drive/18_2yFdH8G-6NXY_7fTcshMoScgJ-SYac#scrollTo=VFaCoSXvS-_H).
 
 ```
 Euler's identity: $ e^{i \pi} + 1 = 0 $
