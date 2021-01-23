@@ -22,9 +22,10 @@ public class Sample08 {
 
         Box3D box3D = new Box3D(ThreeDFrameWithWidgets.DEFAULT_WIDTH, ThreeDFrameWithWidgets.DEFAULT_HEIGHT);
 
-        // Do something specific here, after the box drawing. What's drawn.
+        // Do something specific here, after the box drawing.
         Consumer<Graphics2D> afterDrawer = g2d -> {
 
+            // A Cube. 4 x 4 x 4, centered on [0,0,0]
             VectorUtils.Vector3D topFrontLeft = new VectorUtils.Vector3D(-2.0, -2.0, 2.0);
             VectorUtils.Vector3D topFrontRight = new VectorUtils.Vector3D(2.0, -2.0, 2.0);
             VectorUtils.Vector3D topBackLeft = new VectorUtils.Vector3D(-2.0, -2.0, -2.0);
