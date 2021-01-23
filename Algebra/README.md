@@ -13,12 +13,16 @@ Basic linear algebra ([الجبر](https://en.wikipedia.org/wiki/Algebra)), and 
 Two different aspects are presented in this module.
 
 - Some algebra implementation functions
-- Some ways to render graphics, in 2 and 3D.
+- Some ways to render graphics, in 2D and 3D.
+    - For an IJava Jupyter Notebook
+    - For a Swing application
 
 Several Python libraries already provide this kind of features, and they can be consumed
 by Jupyter Notebooks.
 
-This might not be the only way. That's what we want to show here.
+**_But_** this might not be the only way. That's what we want to show here.
+Why should I learn a scripting language like Python if I already know a programming language like Java?
+
 There is no reason why Java should lag behind.
 And `HTML5/CSS3/ES6` should also be able to implement the same kind of features as well. 
 
