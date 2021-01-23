@@ -10,6 +10,20 @@ Basic linear algebra ([الجبر](https://en.wikipedia.org/wiki/Algebra)), and 
 
 ---
 
+Two different aspects are presented in this module.
+
+- Some algebra implementation functions
+- Some ways to render graphics, in 2 and 3D.
+
+Several Python libraries already provide this kind of features, and they can be consumed
+by Jupyter Notebooks.
+
+This might not be the only way. That's what we want to show here.
+There is no reason why Java should lag behind.
+And `HTML5/CSS3/ES6` should also be able to implement the same kind of features as well. 
+
+We'll see.
+
 ## Java Graphics (Generic Swing Graphics, GSG)
 
 This module also includes a _Swing based Java_ library for graphics (2 & 3D), that can be used in pure Swing applications,
@@ -100,6 +114,8 @@ box3D.setAfterDrawer(afterDrawer);
 ```
 ![Drawing Box](./docimg/box.102.png)
 
+### See the `src/test/java` folder
+This directory contains demos.
 
 ### Bonus: LaTex in Markdown
 Works fine in a Jupyter Notebook, not always on a standalone markdown document.
@@ -121,5 +137,8 @@ $$
 ```
 
 To see the result, look [here](./jupyter/LeastSquare.ipynb).
+
+### TODO: A JavaScript (HTML5 canvas) equivalent version
+- WebComponent?
 
 ---

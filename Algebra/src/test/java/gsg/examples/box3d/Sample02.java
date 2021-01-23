@@ -9,6 +9,10 @@ import java.awt.event.ActionEvent;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * Spinning pyramid, in 3D.
+ * Spins in a thread.
+ */
 public class Sample02 {
     private JFrame frame;
     private JMenuBar menuBar = new JMenuBar();

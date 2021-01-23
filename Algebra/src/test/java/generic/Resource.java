@@ -17,6 +17,7 @@ public class Resource {
     public void testResource() {
         /*
          * See how to reach to a resource located under the resource folder.
+         * Even from a test.
          */
         try {
             String name = this.getClass().getName();

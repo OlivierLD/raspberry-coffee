@@ -1,14 +1,19 @@
 package gsg.examples.box3d;
 
 import gsg.SwingUtils.Box3D;
+import gsg.VectorUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 /**
  * Demonstrates the drawBox utility.
+ * A 3D Box, around a vector, represented as an arrow.
+ * The box is drawn explicitly.
+ * Static.
  */
 public class Sample03 {
     private JFrame frame;
@@ -103,6 +108,7 @@ public class Sample03 {
                     1.0f,
                     new float[] { 2f, 0f, 2f },
                     2f));
+            // Point order is important!
             double[][] boxVertex = {
                     {0.0, 0.0, 1.5},
                     {0.0, 2.0, 1.5},
@@ -113,13 +119,26 @@ public class Sample03 {
                     {2.0, 2.0, 0.0},
                     {2.0, 0.0, 0.0}
             };
-            box3D.drawBox.accept(g2d, boxVertex);
+            box3D.drawBox(g2d, boxVertex);
             // An arrow
             g2d.setColor(Color.RED);
             g2d.setStroke(new BasicStroke(2));
             box3D.drawArrow(g2d,
                     new double[] {0.0, 0.0, 0.0},
                     new double[] {2.0, 2.0, 1.5});
+
+            // A box, with faces
+            g2d.setStroke(new BasicStroke(2));
+            java.util.List<VectorUtils.Vector3D> vertices = Arrays.asList(
+                    new VectorUtils.Vector3D(0.0, 0.0, -0.5),
+                    new VectorUtils.Vector3D(0.0, 2.0, -0.5),
+                    new VectorUtils.Vector3D(2.0, 2.0, -0.5),
+                    new VectorUtils.Vector3D(2.0, 0.0, -0.5),
+                    new VectorUtils.Vector3D(0.0, 0.0, -2.5),
+                    new VectorUtils.Vector3D(0.0, 2.0, -2.5),
+                    new VectorUtils.Vector3D(2.0, 2.0, -2.5),
+                    new VectorUtils.Vector3D(2.0, 0.0, -2.5));
+            box3D.drawBox(g2d, vertices, Color.GREEN, new Color(0, 125, 0, 60));
         };
         box3D.setAfterDrawer(afterDrawer);
 

@@ -9,6 +9,11 @@ import java.awt.event.ActionEvent;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * Basic.
+ * Drawing a 3D flat triangle.
+ * 'After' callback
+ */
 public class Sample01 {
     private JFrame frame;
     private JMenuBar menuBar = new JMenuBar();

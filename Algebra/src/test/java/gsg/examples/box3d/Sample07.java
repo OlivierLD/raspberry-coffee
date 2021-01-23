@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 
 /**
  * Draw a 3D spring
+ * With interactive Swing widgets.
  */
 public class Sample07 {
 

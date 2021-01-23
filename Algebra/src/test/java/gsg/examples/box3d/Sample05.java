@@ -11,6 +11,12 @@ import java.awt.event.MouseListener;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
+/**
+ * Spinning figure. Click to stop, click to start.
+ * Draws box around vectors.
+ * Box3D::drawSurroundingBox
+ * Adding 2 vectors tip-to-tail.
+ */
 public class Sample05 {
     private JFrame frame;
     private JMenuBar menuBar = new JMenuBar();

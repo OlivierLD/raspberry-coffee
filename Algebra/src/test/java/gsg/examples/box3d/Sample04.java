@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 /**
  * Demonstrates the drawSurroundingBox, drawSegment utilities.
+ * Draws a box around a vector, with Box3D::drawSurroundingBox
  */
 public class Sample04 {
     private JFrame frame;

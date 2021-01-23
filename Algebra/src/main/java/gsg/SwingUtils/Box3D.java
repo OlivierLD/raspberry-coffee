@@ -726,7 +726,7 @@ public class Box3D extends JPanel {
         bottomBackRight[1] = Math.max(from.getY(), to.getY());
         bottomBackRight[2] = Math.min(from.getZ(), to.getZ());
 
-        this.drawBox.accept(g2d, new double[][]{
+        this.drawBox(g2d, new double[][]{
                 topFrontLeft,
                 topBackLeft,
                 topBackRight,
@@ -776,7 +776,8 @@ public class Box3D extends JPanel {
      * 4 +----------+ 7
      * </pre>
      */
-    public final BiConsumer<Graphics2D, double[][]> drawBox = (g2d, tuples) -> {
+//    public final BiConsumer<Graphics2D, double[][]> drawBox = (g2d, tuples) -> {
+     public void drawBox(Graphics2D g2d, double[][] tuples) {
         // Requires 8 vertices
         assert (tuples.length == 8);
         // 3 coordinates per vertex
@@ -798,6 +799,45 @@ public class Box3D extends JPanel {
         VectorUtils.Vector3D bottomBackLeft3D = new VectorUtils.Vector3D(tuples[5][0], tuples[5][1], tuples[5][2]);
         VectorUtils.Vector3D bottomBackRight3D = new VectorUtils.Vector3D(tuples[6][0], tuples[6][1], tuples[6][2]);
         VectorUtils.Vector3D bottomFrontRight3D = new VectorUtils.Vector3D(tuples[7][0], tuples[7][1], tuples[7][2]);
+
+        drawBox(g2d, Arrays.asList(topFrontLeft3D,
+                topBackLeft3D,
+                topBackRight3D,
+                topFrontRight3D,
+                bottomFrontLeft3D,
+                bottomBackLeft3D,
+                bottomBackRight3D,
+                bottomFrontRight3D), null, null);
+    } // ;
+
+    /**
+     * Set Stroke before calling.
+     * <p>
+     * Warning: Points (vectors) order is important:
+     * <pre>
+     *    1 +----------+ 2
+     *     /|         /|
+     *    / |        / |
+     * 0 +--+-------+ 3|
+     *   |  |       |  |
+     *   |5 +-------|--+ 6
+     *   | /        | /
+     *   |/         |/
+     * 4 +----------+ 7
+     * </pre>
+     */
+    public void drawBox(Graphics2D g2d, java.util.List<VectorUtils.Vector3D> vertices, Color edgeColor, Color faceColor) {
+        assert(vertices.size() == 8);
+
+        // Define vertices as Vector3D
+        VectorUtils.Vector3D topFrontLeft3D = vertices.get(0);
+        VectorUtils.Vector3D topBackLeft3D = vertices.get(1);
+        VectorUtils.Vector3D topBackRight3D = vertices.get(2);
+        VectorUtils.Vector3D topFrontRight3D = vertices.get(3);
+        VectorUtils.Vector3D bottomFrontLeft3D = vertices.get(4);
+        VectorUtils.Vector3D bottomBackLeft3D = vertices.get(5);
+        VectorUtils.Vector3D bottomBackRight3D = vertices.get(6);
+        VectorUtils.Vector3D bottomFrontRight3D = vertices.get(7);
 
         // Rotate vertices
         VectorUtils.Vector3D rotatedTopFrontLeft = VectorUtils.rotate(topFrontLeft3D,
@@ -832,7 +872,7 @@ public class Box3D extends JPanel {
                 Math.toRadians(this.getRotOnX()),
                 Math.toRadians(this.getRotOnY()),
                 Math.toRadians(this.getRotOnZ()));
-        // Plot
+        // Prepare plotting
         Point topFrontLeft = this.getTransformer().apply(rotatedTopFrontLeft);
         Point topBackLeft = this.getTransformer().apply(rotatedTopBackLeft);
         Point topBackRight = this.getTransformer().apply(rotatedTopBackRight);
@@ -843,6 +883,10 @@ public class Box3D extends JPanel {
         Point bottomBackRight = this.getTransformer().apply(rotatedBottomBackRight);
         Point bottomFrontRight = this.getTransformer().apply(rotatedBottomFrontRight);
 
+        Color originalColor = g2d.getColor();
+        if (edgeColor != null) {
+            g2d.setColor(edgeColor);
+        }
         // Upper face
         g2d.drawLine(topFrontLeft.x, topFrontLeft.y, topBackLeft.x, topBackLeft.y);
         g2d.drawLine(topBackLeft.x, topBackLeft.y, topBackRight.x, topBackRight.y);
@@ -858,7 +902,37 @@ public class Box3D extends JPanel {
         g2d.drawLine(topBackLeft.x, topBackLeft.y, bottomBackLeft.x, bottomBackLeft.y);
         g2d.drawLine(topBackRight.x, topBackRight.y, bottomBackRight.x, bottomBackRight.y);
         g2d.drawLine(topFrontRight.x, topFrontRight.y, bottomFrontRight.x, bottomFrontRight.y);
-    };
+
+        if (faceColor != null) { // Set color, and draw the faces
+            g2d.setColor(faceColor);
+            // Top
+            g2d.fillPolygon(new int[] {topFrontLeft.x, topBackLeft.x, topBackRight.x, topFrontRight.x},
+                    new int[] {topFrontLeft.y, topBackLeft.y, topBackRight.y, topFrontRight.y},
+                    4);
+            // Bottom
+            g2d.fillPolygon(new int[] {bottomFrontLeft.x, bottomBackLeft.x, bottomBackRight.x, bottomFrontRight.x},
+                    new int[] {bottomFrontLeft.y, bottomBackLeft.y, bottomBackRight.y, bottomFrontRight.y},
+                    4);
+            // Left
+            g2d.fillPolygon(new int[] {topFrontLeft.x, topBackLeft.x, bottomBackLeft.x, bottomFrontLeft.x},
+                    new int[] {topFrontLeft.y, topBackLeft.y, bottomBackLeft.y, bottomFrontLeft.y},
+                    4);
+            // Back
+            g2d.fillPolygon(new int[] {topBackLeft.x, topBackRight.x, bottomBackRight.x, bottomBackLeft.x},
+                    new int[] {topBackLeft.y, topBackRight.y, bottomBackRight.y, bottomBackLeft.y},
+                    4);
+            // Right
+            g2d.fillPolygon(new int[] {topFrontRight.x, topBackRight.x, bottomBackRight.x, bottomFrontRight.x},
+                    new int[] {topFrontRight.y, topBackRight.y, bottomBackRight.y, bottomFrontRight.y},
+                    4);
+            // Front
+            g2d.fillPolygon(new int[] {topFrontLeft.x, topFrontRight.x, bottomFrontRight.x, bottomFrontLeft.x},
+                    new int[] {topFrontLeft.y, topFrontRight.y, bottomFrontRight.y, bottomFrontLeft.y},
+                    4);
+        }
+        // Reset to where it was
+        g2d.setColor(originalColor);
+    }
 
     /**
      * Call this from a Jupyter Notebook (iJava) !

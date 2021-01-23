@@ -7,6 +7,11 @@ import gsg.examples.box3d.fullui.ThreeDFrameWithWidgets;
 import java.awt.*;
 import java.util.function.Consumer;
 
+/**
+ * SurroundingBox'es
+ * With all Swing widget to interact with the figure.
+ * Adding 2 vectors tip-to-tail.
+ */
 public class Sample06 {
 
     /**
