@@ -32,6 +32,7 @@ public class Box3D extends JPanel {
     // Zoom
     private double zoom = 1.0;
     private boolean withBoxFaces = true;
+    private boolean withAxis = true;
 
     private Color backgroundColor = Color.WHITE;
     private Color perimeterColor = Color.GRAY;
@@ -173,6 +174,14 @@ public class Box3D extends JPanel {
 
     public void setWithBoxFaces(boolean withBoxFaces) {
         this.withBoxFaces = withBoxFaces;
+    }
+
+    public boolean isWithAxis() {
+        return withAxis;
+    }
+
+    public void setWithAxis(boolean withAxis) {
+        this.withAxis = withAxis;
     }
 
     // Default values
@@ -452,7 +461,7 @@ public class Box3D extends JPanel {
             g2d.setStroke(originalStroke);
         }
 
-        // Plot center in the middle, (0, 0, 0)
+        // Plot center in the middle, (0, 0, 0). TODO An option
         g2d.setColor(Color.BLACK);
         int circleDiam = 6;
 //        VectorUtils.Vector3D centerV3 = new VectorUtils.Vector3D(0, 0, 0);
@@ -463,72 +472,73 @@ public class Box3D extends JPanel {
                 screenCenter.y - (circleDiam / 2),
                 circleDiam, circleDiam);
 
-        // Stroke for arrows
-        g2d.setStroke(axisStroke);
+        if (withAxis) {
+            // Stroke for arrows
+            g2d.setStroke(axisStroke);
 
-        // Y axis
-        // TODO Switch yMin and yMax to match the book ?
-        VectorUtils.Vector3D minYVector = new VectorUtils.Vector3D(0, yMin, 0);
-        VectorUtils.Vector3D rotatedYMinVector = VectorUtils.rotate(minYVector, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
-        VectorUtils.Vector3D maxYVector = new VectorUtils.Vector3D(0, yMax, 0);
-        VectorUtils.Vector3D rotatedYMaxVector = VectorUtils.rotate(maxYVector, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            // Y axis
+            // TODO Switch yMin and yMax to match the book ?
+            VectorUtils.Vector3D minYVector = new VectorUtils.Vector3D(0, yMin, 0);
+            VectorUtils.Vector3D rotatedYMinVector = VectorUtils.rotate(minYVector, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            VectorUtils.Vector3D maxYVector = new VectorUtils.Vector3D(0, yMax, 0);
+            VectorUtils.Vector3D rotatedYMaxVector = VectorUtils.rotate(maxYVector, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
 //        System.out.printf("Rotated (%s) onX: %f, onY: %f, onZ: %f => (%s)%n", minYVector, rotOnX, rotOnY, rotOnZ, rotatedYMinVector);
-        drawArrow(g2d,
-                transformer.apply(rotatedYMinVector),
-                transformer.apply(rotatedYMaxVector),
-                axisColor);
-        g2d.setColor(this.axisColor);
-        String label = "Y";
-        int strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
-        int fontSize = g2d.getFont().getSize();
-        // Push it a bit further
-        Point labelLocation = transformer.apply(VectorUtils.rotate(VectorUtils.translate(
-                new VectorUtils.Vector3D(0, 0.2, 0), maxYVector),
-                Math.toRadians(rotOnX),
-                Math.toRadians(rotOnY),
-                Math.toRadians(rotOnZ)));
-        g2d.drawString(label, labelLocation.x - (strWidth / 2), labelLocation.y + ((fontSize - 2) / 2));
+            drawArrow(g2d,
+                    transformer.apply(rotatedYMinVector),
+                    transformer.apply(rotatedYMaxVector),
+                    axisColor);
+            g2d.setColor(this.axisColor);
+            String label = "Y";
+            int strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
+            int fontSize = g2d.getFont().getSize();
+            // Push it a bit further
+            Point labelLocation = transformer.apply(VectorUtils.rotate(VectorUtils.translate(
+                    new VectorUtils.Vector3D(0, 0.2, 0), maxYVector),
+                    Math.toRadians(rotOnX),
+                    Math.toRadians(rotOnY),
+                    Math.toRadians(rotOnZ)));
+            g2d.drawString(label, labelLocation.x - (strWidth / 2), labelLocation.y + ((fontSize - 2) / 2));
 
-        // X axis
-        VectorUtils.Vector3D minXVector = new VectorUtils.Vector3D(xMin, 0, 0);
-        VectorUtils.Vector3D rotatedXMinVector = VectorUtils.rotate(minXVector, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
-        VectorUtils.Vector3D maxXVector = new VectorUtils.Vector3D(xMax, 0, 0);
-        VectorUtils.Vector3D rotatedXMaxVector = VectorUtils.rotate(maxXVector, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
-        drawArrow(g2d,
-                transformer.apply(rotatedXMinVector),
-                transformer.apply(rotatedXMaxVector),
-                axisColor);
-        g2d.setColor(this.axisColor);
-        label = "X";
-        strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
-        fontSize = g2d.getFont().getSize();
-        labelLocation = transformer.apply(VectorUtils.rotate(VectorUtils.translate(
-                new VectorUtils.Vector3D(0.2, 0, 0), maxXVector),
-                Math.toRadians(rotOnX),
-                Math.toRadians(rotOnY),
-                Math.toRadians(rotOnZ)));
-        g2d.drawString(label, labelLocation.x - (strWidth / 2), labelLocation.y + ((fontSize - 2) / 2));
+            // X axis
+            VectorUtils.Vector3D minXVector = new VectorUtils.Vector3D(xMin, 0, 0);
+            VectorUtils.Vector3D rotatedXMinVector = VectorUtils.rotate(minXVector, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            VectorUtils.Vector3D maxXVector = new VectorUtils.Vector3D(xMax, 0, 0);
+            VectorUtils.Vector3D rotatedXMaxVector = VectorUtils.rotate(maxXVector, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            drawArrow(g2d,
+                    transformer.apply(rotatedXMinVector),
+                    transformer.apply(rotatedXMaxVector),
+                    axisColor);
+            g2d.setColor(this.axisColor);
+            label = "X";
+            strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
+            fontSize = g2d.getFont().getSize();
+            labelLocation = transformer.apply(VectorUtils.rotate(VectorUtils.translate(
+                    new VectorUtils.Vector3D(0.2, 0, 0), maxXVector),
+                    Math.toRadians(rotOnX),
+                    Math.toRadians(rotOnY),
+                    Math.toRadians(rotOnZ)));
+            g2d.drawString(label, labelLocation.x - (strWidth / 2), labelLocation.y + ((fontSize - 2) / 2));
 
-        // Z axis
-        VectorUtils.Vector3D minZVector = new VectorUtils.Vector3D(0, 0, zMin);
-        VectorUtils.Vector3D rotatedZMinVector = VectorUtils.rotate(minZVector, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
-        VectorUtils.Vector3D maxZVector = new VectorUtils.Vector3D(0, 0, zMax);
-        VectorUtils.Vector3D rotatedZMaxVector = VectorUtils.rotate(maxZVector, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
-        drawArrow(g2d,
-                transformer.apply(rotatedZMinVector),
-                transformer.apply(rotatedZMaxVector),
-                axisColor);
-        g2d.setColor(this.axisColor);
-        label = "Z";
-        strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
-        fontSize = g2d.getFont().getSize();
-        labelLocation = transformer.apply(VectorUtils.rotate(VectorUtils.translate(
-                new VectorUtils.Vector3D(0, 0, 0.2), maxZVector),
-                Math.toRadians(rotOnX),
-                Math.toRadians(rotOnY),
-                Math.toRadians(rotOnZ)));
-        g2d.drawString(label, labelLocation.x - (strWidth / 2), labelLocation.y + ((fontSize - 2) / 2));
-
+            // Z axis
+            VectorUtils.Vector3D minZVector = new VectorUtils.Vector3D(0, 0, zMin);
+            VectorUtils.Vector3D rotatedZMinVector = VectorUtils.rotate(minZVector, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            VectorUtils.Vector3D maxZVector = new VectorUtils.Vector3D(0, 0, zMax);
+            VectorUtils.Vector3D rotatedZMaxVector = VectorUtils.rotate(maxZVector, Math.toRadians(rotOnX), Math.toRadians(rotOnY), Math.toRadians(rotOnZ));
+            drawArrow(g2d,
+                    transformer.apply(rotatedZMinVector),
+                    transformer.apply(rotatedZMaxVector),
+                    axisColor);
+            g2d.setColor(this.axisColor);
+            label = "Z";
+            strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
+            fontSize = g2d.getFont().getSize();
+            labelLocation = transformer.apply(VectorUtils.rotate(VectorUtils.translate(
+                    new VectorUtils.Vector3D(0, 0, 0.2), maxZVector),
+                    Math.toRadians(rotOnX),
+                    Math.toRadians(rotOnY),
+                    Math.toRadians(rotOnZ)));
+            g2d.drawString(label, labelLocation.x - (strWidth / 2), labelLocation.y + ((fontSize - 2) / 2));
+        }
         // TODO Maybe remove this...
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Courier New", Font.BOLD, 16));

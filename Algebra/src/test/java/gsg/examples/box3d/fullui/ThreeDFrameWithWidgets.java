@@ -1,7 +1,6 @@
 package gsg.examples.box3d.fullui;
 
 import gsg.SwingUtils.Box3D;
-import gsg.VectorUtils;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -11,7 +10,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.text.DecimalFormat;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * A Box3D in a Frame, in Swing.
@@ -39,7 +37,11 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 	private final JFormattedTextField minZValue = new JFormattedTextField(new DecimalFormat("#0.0"));
 	private final JFormattedTextField maxZValue = new JFormattedTextField(new DecimalFormat("#0.0"));
 
+	private final JLabel zoomLabel = new JLabel("Zoom:");
+	private final JFormattedTextField zoomValue = new JFormattedTextField(new DecimalFormat("#0.0"));
+
 	private JCheckBox withBoxFaces = null;
+	private JCheckBox withAxis = null;
 
 	private final JLabel rotXLabel = new JLabel("Rotation on X");
 	private final JLabel rotYLabel = new JLabel("Rotation on Y");
@@ -221,8 +223,17 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 			box3D.repaint();
 		});
 
+		withAxis = new JCheckBox("With axis");
+		withAxis.setSelected(box3D.isWithAxis());
+		withAxis.addChangeListener(e -> {
+			box3D.setWithAxis(withAxis.isSelected());
+			box3D.repaint();
+		});
+
 		rotOnZSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER_VALUE, MAX_SLIDER_VALUE, (int)Math.round(box3D.getRotOnZ()));
+		rotOnZSlider.setPreferredSize(new Dimension(300, 30));
 		rotOnZSlider.setEnabled(true);
+
 		rotOnZSlider.addChangeListener(changeEvent -> {
 			int sliderValue = rotOnZSlider.getValue();
 //			System.out.println(String.format("Zoom: %d => %.02f", zoomSliderValue, sliderToZoom(zoomSliderValue)));
@@ -233,6 +244,7 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 		rotOnZSlider.setToolTipText("Rotation on Z");
 
 		rotOnYSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER_VALUE, MAX_SLIDER_VALUE, (int)Math.round(box3D.getRotOnY()));
+		rotOnYSlider.setPreferredSize(new Dimension(300, 30));
 		rotOnYSlider.setEnabled(true);
 		rotOnYSlider.addChangeListener(changeEvent -> {
 			int sliderValue = rotOnYSlider.getValue();
@@ -243,6 +255,7 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 		rotOnYSlider.setToolTipText("Rotation on Y");
 
 		rotOnXSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER_VALUE, MAX_SLIDER_VALUE, (int)Math.round(box3D.getRotOnX()));
+		rotOnXSlider.setPreferredSize(new Dimension(300, 30));
 		rotOnXSlider.setEnabled(true);
 		rotOnXSlider.addChangeListener(changeEvent -> {
 			int sliderValue = rotOnXSlider.getValue();
@@ -614,7 +627,7 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 				GridBagConstraints.NONE,
 				new Insets(0, 0, 0, 0), 0, 0));
 
-		// Check box
+		// Check boxes
 		cBPanel.add(withBoxFaces, new GridBagConstraints(0,
 				0,
 				1,
@@ -624,6 +637,59 @@ public class ThreeDFrameWithWidgets extends JFrame implements ComponentListener 
 				GridBagConstraints.WEST,
 				GridBagConstraints.NONE,
 				new Insets(0, 0, 0, 0), 0, 0));
+		cBPanel.add(withAxis, new GridBagConstraints(1,
+				0,
+				1,
+				1,
+				1.0,
+				0.0,
+				GridBagConstraints.WEST,
+				GridBagConstraints.NONE,
+				new Insets(0, 0, 0, 0), 0, 0));
+		cBPanel.add(zoomLabel, new GridBagConstraints(2,
+				0,
+				1,
+				1,
+				1.0,
+				0.0,
+				GridBagConstraints.WEST,
+				GridBagConstraints.NONE,
+				new Insets(0, 10, 0, 0), 0, 0));
+		zoomValue.setHorizontalAlignment(SwingConstants.RIGHT);
+		zoomValue.setPreferredSize(new Dimension(80, 20));
+		zoomValue.setText(String.valueOf(box3D.getZoom()));
+		zoomValue.getDocument().addDocumentListener(new DocumentListener() {
+			public void changedUpdate(DocumentEvent e) {
+				checkValue();
+			}
+			public void removeUpdate(DocumentEvent e) {
+				checkValue();
+			}
+			public void insertUpdate(DocumentEvent e) {
+				checkValue();
+			}
+			public void checkValue() {
+				if (!zoomValue.getText().trim().isEmpty()) {
+					try {
+						double val = Double.parseDouble(zoomValue.getText());
+						box3D.setZoom(val);
+						box3D.repaint();
+					} catch (NumberFormatException nfe) {
+						System.err.println(nfe.toString());
+					}
+				}
+			}
+		});
+		cBPanel.add(zoomValue, new GridBagConstraints(3,
+				0,
+				1,
+				1,
+				1.0,
+				0.0,
+				GridBagConstraints.WEST,
+				GridBagConstraints.NONE,
+				new Insets(0, 0, 0, 0), 0, 0));
+
 		bottomPanel.add(cBPanel, new GridBagConstraints(0,
 				nbLinesInBottomPanel++,
 				1,

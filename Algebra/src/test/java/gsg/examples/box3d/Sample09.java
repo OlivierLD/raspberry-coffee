@@ -5,7 +5,11 @@ import gsg.VectorUtils;
 import gsg.WaveFrontUtils;
 import gsg.examples.box3d.fullui.ThreeDFrameWithWidgets;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -23,10 +27,10 @@ public class Sample09 {
 //            "./wavefront/CheoyLee42.obj";
 //            "./wavefront/CheoyLee42Rig.obj";
 //            "./wavefront/CheoyLee42Sails.obj";
-//            "./wavefront/MerryDream.obj";
+            "./wavefront/MerryDream.obj";
 //            "./wavefront/Mehari.obj";
 //            "./wavefront/kayak.obj";
-            "./wavefront/Trimaran.obj";
+//            "./wavefront/Trimaran.obj";
     /**
      * @param args the command line arguments
      */
