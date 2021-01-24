@@ -191,8 +191,8 @@ public class ThreeDFrameWithWidgets
 				double xTheta = (prevY - y) * 360.0 / getSize().width;
 				double yTheta = (x - prevX) * 360.0 / getSize().height;
 
-				double newX = box3D.getRotOnX() - xTheta;
-				double newZ = box3D.getRotOnZ() + yTheta;
+				double newX = box3D.getRotOnX() + xTheta;
+				double newZ = box3D.getRotOnZ() - yTheta;
 				box3D.setRotOnX(newX);
 				box3D.setRotOnZ(newZ);
 
