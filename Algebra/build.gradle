@@ -32,14 +32,22 @@ dependencies {
   testCompile group: 'junit', name: 'junit', version: '4.13'
 }
 
+def testNum = '01'
+
 task runSample(type: JavaExec, dependsOn: build, description: "Simple sample, Swing UI") {
+  println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
 //  environment "DISPLAY", ":0.0"
 //  environment "DISPLAY", "192.168.42.31:0.0"
 //  classpath = configurations.runtime
 //  classpath project.configurations.default
 //  classpath sourceSets.main.output.classesDir
   classpath sourceSets.test.runtimeClasspath
-  main = 'gsg.examples.box3d.Sample01'
+  main = 'gsg.examples.box3d.Sample' + testNum  // Default 01
+  if (project.hasProperty('num')) { // gradlew -Pnum=XXXXX runSample
+    testNum =  project.getProperty('num')
+    println ">>> Running test " + testNum
+    main = 'gsg.examples.box3d.Sample' + testNum
+  }
   workingDir "."
 }
 
