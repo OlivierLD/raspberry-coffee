@@ -23,18 +23,36 @@ import java.util.function.Function;
  */
 public class Sample09 {
 
-    private final static String OBJ_FILE_NAME = // "./wavefront/paperboat.obj";
-//            "./wavefront/CheoyLee42.obj";
-//            "./wavefront/CheoyLee42Rig.obj";
-//            "./wavefront/CheoyLee42Sails.obj";
-            "./wavefront/MerryDream.obj";
-//            "./wavefront/Mehari.obj";
-//            "./wavefront/kayak.obj";
-//            "./wavefront/Trimaran.obj";
+    private final static String[] OBJ_FILE_NAME = new String[] {
+            "./wavefront/paperboat.obj",
+            "./wavefront/CheoyLee42.obj",
+            "./wavefront/CheoyLee42Rig.obj",
+            "./wavefront/CheoyLee42Sails.obj",
+            "./wavefront/MerryDream.obj",
+            "./wavefront/Mehari.obj",
+            "./wavefront/kayak.obj",
+            "./wavefront/Trimaran.obj"
+    };
+    private static int fileIndex = 0;
+    private final static String IDX_PRM_PREFIX = "--idx:"; // Command line prm, use it like --idx:0 to --idx:7 to choose the file to process.
+
     /**
      * @param args the command line arguments
      */
     public static void main(String... args) throws Exception {
+
+        for (int i=0; i<args.length; i++) {
+            if (args[i].startsWith(IDX_PRM_PREFIX)) {
+                String prmValue = args[i].substring(IDX_PRM_PREFIX.length());
+                fileIndex = Integer.parseInt(prmValue);
+                if (fileIndex < 0 || fileIndex > (OBJ_FILE_NAME.length - 1)) {
+                    System.err.printf("File Index must be in [0 .. %d], resetting to 0.\n", (OBJ_FILE_NAME.length - 1));
+                    fileIndex = 0;
+                } else {
+                    System.out.printf(">> Will use file %s\n", OBJ_FILE_NAME[fileIndex]);
+                }
+            }
+        }
 
         System.out.println("----------------------------------------------");
         System.out.println(String.format("Running from folder %s", System.getProperty("user.dir")));
@@ -42,7 +60,7 @@ public class Sample09 {
         System.out.println("----------------------------------------------");
 
         Box3D box3D = new Box3D(ThreeDFrameWithWidgets.DEFAULT_WIDTH, ThreeDFrameWithWidgets.DEFAULT_HEIGHT);
-        File file = new File(OBJ_FILE_NAME);
+        File file = new File(OBJ_FILE_NAME[fileIndex]);
         WaveFrontUtils.WaveFrontObj obj;
         if (!file.exists()) {
             System.out.println("File not found, Oops...");
@@ -107,7 +125,7 @@ public class Sample09 {
 
             g2d.setFont(g2d.getFont().deriveFont(Font.BOLD | Font.ITALIC, 24f));
             g2d.setColor(new Color(106, 86, 205));
-            g2d.drawString(OBJ_FILE_NAME,10, 18 + 32);
+            g2d.drawString(OBJ_FILE_NAME[fileIndex],10, 18 + 32);
 
         };
         box3D.setAfterDrawer(afterDrawer);

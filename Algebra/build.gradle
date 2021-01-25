@@ -48,5 +48,8 @@ task runSample(type: JavaExec, dependsOn: build, description: "Swing UI sample. 
     println ">>> Running test " + testNum
     main = 'gsg.examples.box3d.Sample' + testNum
   }
+  if (project.hasProperty("idx")) { // For Sample09, file index parameter: ../gradlew runSample -Pnum=09 -Pidx=4
+    args += [ "--idx:" + project.getProperty("idx") ]
+  }
   workingDir "."
 }

@@ -1,6 +1,7 @@
 ## Linear Algebra
 
-Basic linear algebra ([الجبر](https://en.wikipedia.org/wiki/Algebra)), and statistical functions. Work in progress.
+Basic linear algebra ([الجبر](https://en.wikipedia.org/wiki/Algebra)), and statistical functions, in Java. 
+> Work in progress.
 - Square matrix
 - System resolution
 - Least squares method (regression)
@@ -21,10 +22,12 @@ Several Python libraries already provide this kind of features, and they can be 
 by Jupyter Notebooks.
 
 **_But_** this might not be the only way. That's what we want to show here.
-Why should I learn a scripting language like Python if I already know a programming language like Java?
+_Why should I learn a scripting language like Python if I already know a programming language like Java?_
 
 There is no reason why Java should lag behind.
 And `HTML5/CSS3/ES6` should also be able to implement the same kind of features as well. 
+
+I'm not looking down on Python, it is popular for good reasons.
 
 We'll see.
 
@@ -36,10 +39,21 @@ as well as in Jupyter Notebooks (IJava).
 - Jupyter examples provided in the `jupyter` folder.
 - Swing examples provided in the `gsg.examples` package, in the `test` folder. 
 
+### See the `src/test/java` folder
+This directory contains demos.
+> Those demos have been placed in the `test` folder, in order for them _not_ to
+> be packaged with the build. They are actually not unit-tests, but just tests. 
+
 Try this:
 ```
 $ ../gradlew runSample
 ```
+This task can take parameters:
+```
+$ ../gradlew runSample -Pnum=[01..09]
+```
+This will run the Swing examples in the `test` directory, from `gsg.examples.box3d.Sample01`
+to `gsg.examples.box3d.Sample09`.
 
 #### Some utility methods
 In those utilities, just provide the (spatial, absolute) vertices of the points, segments, arrows and boxes to draw.
@@ -119,10 +133,12 @@ box3D.setAfterDrawer(afterDrawer);
 ![Drawing Box](./docimg/box.102.png)
 
 ### WaveFront format (`obj`) support
-![WaveFront](./docimg/wavefront.png)
+If you remember (if you can), Java 2 used to come with some demos (`ThreeD.java`), that used to use
+those files with an `.obj` extension... It also used to be used by Applets - now deprecated.
+Here is a quick way to restore some of those features.
 
-### See the `src/test/java` folder
-This directory contains demos.
+![WaveFront](./docimg/wavefront.png)
+Use `../gradlew runSample -Pnum=09 -Pidx=4` to see the screen above.
 
 ### Bonus: LaTex in Markdown
 > Works fine in a Jupyter Notebook, not always on a standalone markdown document...
