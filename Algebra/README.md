@@ -138,7 +138,8 @@ those files with an `.obj` extension... It also used to be used by Applets - now
 Here is a quick way to restore some of those features.
 
 ![WaveFront](./docimg/wavefront.png)
-Use `../gradlew runSample -Pnum=09 -Pidx=4` to see the screen above.
+Use `../gradlew runSample -Pnum=09 -Pidx=4` to see the screen above.  
+Figure can be rotated with the sliders at the bottom, or by dragging the mouse on the figure itself.
 
 ### Bonus: LaTex in Markdown
 > Works fine in a Jupyter Notebook, not always on a standalone markdown document...
