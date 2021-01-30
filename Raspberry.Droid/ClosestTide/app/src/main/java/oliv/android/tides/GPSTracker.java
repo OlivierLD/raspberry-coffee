@@ -1,4 +1,4 @@
-package oliv.android.astrocomputer;
+package oliv.android.tides;
 
 import android.app.AlertDialog;
 import android.app.Service;

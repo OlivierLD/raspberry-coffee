@@ -1,4 +1,4 @@
-package oliv.android.astrocomputer;
+package oliv.android.tides;
 
 import android.content.pm.ActivityInfo;
 import android.location.Location;
@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import static oliv.android.astrocomputer.GPSTracker.LOG_TAG;
+import static oliv.android.tides.GPSTracker.LOG_TAG;
 
 /*
  * There is commented code in this class.

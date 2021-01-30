@@ -838,6 +838,27 @@
 	  redraw();
   };
 
+  let scrollGribInterval = -1;
+  function scrollGribs(cb) {
+  	console.log("Yes! %s", cb.checked);
+  	let gribDatesList = document.getElementById("grib-dates");
+  	if (cb.checked) {
+  		scrollGribInterval = window.setInterval(() => {
+  			// Move to next grib date
+			let selectedIndex = gribDatesList.options.selectedIndex;
+			selectedIndex += 1;
+			if (selectedIndex > gribDatesList.options.length - 1) {
+				selectedIndex = 0;
+			}
+			gribDatesList.options.selectedIndex = selectedIndex;
+			// Redraw
+			redraw();
+		}, 2000);
+	} else {
+  		window.clearInterval(scrollGribInterval);
+	}
+  }
+
   var redraw = function() {
 	  worldMap.clear();
 //  worldMap.setPositionLabel("");
@@ -1127,6 +1148,9 @@
 									<td>
 										<select id="grib-types" onchange="redraw()"></select>
 									</td>
+								</tr>
+								<tr>
+									<td colspan="2"><input type="checkbox" onchange="scrollGribs(this);">Scroll through dates</td>
 								</tr>
 							</table>
 						</div>

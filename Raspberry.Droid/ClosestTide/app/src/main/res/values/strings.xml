@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Astronomical Computer</string>
+    <string name="app_name">Tide Computer</string>
 
     <string name="body_prompt">Choose a body</string>
     <string-array name="bodies_array">

@@ -1,4 +1,4 @@
-package oliv.android.astrocomputer;
+package oliv.android.tides;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("oliv.android.astrocomputer", appContext.getPackageName());
+        assertEquals("oliv.android.tides", appContext.getPackageName());
     }
 }

@@ -21,4 +21,11 @@ $ [sudo] update-alternatives --config java
 $ [sudo] update-alternatives --config javac
 ```
 
+### Playing Audio on the Raspberry Pi...
+- <https://www.raspberrypi.org/documentation/usage/audio/>
+- Stream music on BlueTooth: <https://www.raspberrypi.org/forums/viewtopic.php?t=247892>
+```
+$ systemctl list-units | grep ALSA
+```
+
 ---
