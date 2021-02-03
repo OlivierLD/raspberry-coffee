@@ -6,10 +6,9 @@ import java.util.Map;
 
 
 public class Stations implements Serializable {
-	@SuppressWarnings("compatibility:8783605059833839037")
 	private final static long serialVersionUID = 1L;
 
-	private Map<String, TideStation> stations = new HashMap<String, TideStation>();
+	private Map<String, TideStation> stations = new HashMap<>();
 
 	public Stations() {
 	}

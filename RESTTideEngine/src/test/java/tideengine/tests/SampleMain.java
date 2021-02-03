@@ -10,6 +10,9 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * This is just a test, not a unit-test
+ */
 public class SampleMain {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyy-MMM-dd HH:mm z (Z)");
 

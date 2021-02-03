@@ -21,6 +21,9 @@ Rahiroa (Rangiroa) Island => Apia, Samoa Islands
 
  */
 
+/**
+ * This is just a test, not a unit-test
+ */
 public class SecondaryStationsTest {
 	private final static NumberFormat NF = new DecimalFormat("###0");
 

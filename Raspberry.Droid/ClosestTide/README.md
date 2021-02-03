@@ -1,6 +1,4 @@
-I'm learning Android...
-
-## Android Astronomical Computer
+## Based on Android Astronomical Computer
 This is a basic Android application.
 
 What it does:
