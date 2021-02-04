@@ -12,12 +12,13 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import calc.calculation.AstroComputer;
+import utils.TimeUtil;
 
 
 @Controller("/astro")
 public class AstroController {
 
-    @Value("${values.deltaT}")
+    @Value("${values.deltaT}")     // From application.yml
     private double defaultDeltaT;
 
     @Get("/data")
@@ -34,6 +35,13 @@ public class AstroController {
             AstroComputer.setDeltaT(Double.parseDouble(deltaT));
         } else {
             AstroComputer.setDeltaT(defaultDeltaT);
+        }
+
+        // Recalculate deltaT
+        if (!year.isEmpty() && !month.isEmpty()) {
+            double calculatedDeltaT = TimeUtil.getDeltaT(Integer.parseInt(year), Integer.parseInt(month));
+            System.out.printf("Overriding Delta T with %f\n", calculatedDeltaT);
+            AstroComputer.setDeltaT(calculatedDeltaT);
         }
 
         Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // Now
