@@ -11,7 +11,13 @@ const double DELTA_T = 69.2201;
 int main () {
   std::cout << "Sample main, calculating for 2020-Mar-28 16:50:20\n";
   // 2020-MAR-28 16:50:20 UTC
-  ComputedData * data = calculate(2020, 3, 28, 16, 50, 20, DELTA_T);
+  
+  double deltaT = DELTA_T;
+  // Recalculate deltaT
+  deltaT = calculateDeltaT(2020, 3);
+  fprintf(stdout, "Setting DeltaT to %f\n", deltaT);
+
+  ComputedData * data = calculate(2020, 3, 28, 16, 50, 20, deltaT);
   fprintf(stdout, "--- Calculated 2020-Mar-28 16:50:20 ---\n");
   fprintf(stdout, "Julian Dates %f %f %f\n", data->JD0h, data->JD, data->JDE);
   fprintf(stdout, "Sideral Time %s\n", data->SidTm);

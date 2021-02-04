@@ -90,12 +90,12 @@ public class AstroComputer {
 
 	/**
 	 *
-	 * @param y Year, on 4 digits, like 2019
-	 * @param m Month, [1..12] <- Unlike Java's Calendar, which is zero-based
+	 * @param y Year, like 2019
+	 * @param m Month, [1..12]                   <- !!! Unlike Java's Calendar, which is zero-based
 	 * @param d Day of month [1..28, 29, 30, 31]
 	 * @param h Hour of the day [0..23]
 	 * @param mi Minutes [0..59]
-	 * @param s Seconds [0..59]
+	 * @param s Seconds [0..59], no milli-sec.
 	 */
 	public static synchronized void calculate(int y, int m, int d, int h, int mi, int s) {
 		setDateTime(y, m, d, h, mi, s);
@@ -106,8 +106,8 @@ public class AstroComputer {
 	private final static String AUTO_PREFIX = "AUTO:"; // Used in AUTO:2020-06
 
 	public static synchronized void calculate() {
-		// deltaT="AUTO" or "AUTO:2020-06"
-		String deltaTStr = System.getProperty("deltaT", String.valueOf(deltaT));
+		// deltaT="AUTO" or "AUTO:2020-06", for other almanac than the current (aka now) one.
+		String deltaTStr = System.getProperty("deltaT", String.valueOf(deltaT)); // Default, see above... Careful.
 		if (deltaTStr.equals(AUTO)) {
 			Calendar now = GregorianCalendar.getInstance();
 			deltaT = TimeUtil.getDeltaT(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1);
@@ -117,7 +117,7 @@ public class AstroComputer {
 			int intYear = Integer.parseInt(splitted[0]);
 			int intMonth = Integer.parseInt(splitted[1]);
 			deltaT = TimeUtil.getDeltaT(intYear, intMonth);
-		} else if (deltaTStr != null) {
+		} else if (deltaTStr != null && !deltaTStr.isEmpty()) {
 			deltaT = Double.parseDouble(deltaTStr);
 		}
 

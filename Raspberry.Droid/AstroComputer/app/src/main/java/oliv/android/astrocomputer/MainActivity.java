@@ -11,9 +11,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 //import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import oliv.android.AstroComputer;
-import oliv.android.GeomUtil;
-import oliv.android.SightReductionUtil;
+import calc.calculation.AstroComputer;
+import calc.GeomUtil;
+import calc.calculation.SightReductionUtil;
 
 import java.io.BufferedWriter;
 import java.io.File;

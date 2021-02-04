@@ -305,12 +305,15 @@ public class TimeUtil {
 	}
 
 	/**
+	 * Since the usual (the ones I used to used) on-line resources are not always available, obsolete,
+	 * or expecting some serious revamping, here is a method to calculate deltaT out of thin air.
+	 *
 	 * See https://astronomy.stackexchange.com/questions/19172/obtaining-deltat-for-use-in-software
 	 * See values at https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html#tab1 and
 	 *               https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html#tab2
 	 *
-	 * @param year
-	 * @param month in [1..12]
+	 * @param year from -1999 to +3000
+	 * @param month in [1..12], NOT in [0..11]
 	 * @return
 	 */
 	public static double getDeltaT(int year, int month) {

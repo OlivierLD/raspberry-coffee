@@ -1286,3 +1286,138 @@ class LongTermAlmanac:
         LongTermAlmanac.JD0h += 1.5
         res = LongTermAlmanac.JD0h - 7 * math.floor(LongTermAlmanac.JD0h / 7)
         LongTermAlmanac.DoW = LongTermAlmanac.DAYS[int(res)]
+
+    # Y parameter (not year) for deltaT computing.
+    #
+    # @param year
+    # @param month in [1..12]
+    #
+    @staticmethod
+    def getY(year, month):
+        if year < -1999 or year > 3000:
+            raise ValueError("Year must be in [-1999, 3000]")
+        else:
+            return (year + ((month - 0.5) / 12))
+
+    #
+    # Since the usual (the ones I used to used) on-line resources are not always available, obsolete,
+    # or expecting some serious revamping, here is a method to calculate deltaT out of thin air.
+    #
+    # See https://astronomy.stackexchange.com/questions/19172/obtaining-deltat-for-use-in-software
+    # See values at https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html#tab1 and
+    #               https://eclipse.gsfc.nasa.gov/SEcat5/deltat.html#tab2
+    #
+    # @param year from -1999 to +3000
+    # @param month in [1..12], NOT in [0..11]
+    # @return
+    #
+    @staticmethod
+    def calculateDeltaT(year, month):
+        if year < -1999 or year > 3000:
+            raise ValueError("Year must be in [-1999, 3000]")
+        if month < 1 or month > 12:
+            raise ValueError("Month must be in [1, 12]")
+
+        deltaT = 0
+        y = LongTermAlmanac.getY(year, month)
+
+        if year < -500:
+            u = (y - 1820.0) / 100.0
+            deltaT = -20.0 + (32.0 * (u * u))
+        elif year < 500:
+            u = y / 100.0
+            deltaT = 10583.6 \
+                    + (-1014.41 * u) \
+                    + (33.78311 * math.pow(u, 2)) \
+                    + (-5.952053 * math.pow(u, 3)) \
+                    + (-0.1798452 * math.pow(u, 4)) \
+                    + (0.022174192 * math.pow(u, 5)) \
+                    + (0.0090316521 * math.pow(u, 6))
+        elif year < 1600:
+            u = (y - 1000.0) / 100.0
+            deltaT = 1574.2 \
+                    + (-556.01 * u) \
+                    + (71.23472 * math.pow(u, 2)) \
+                    + (0.319781 * math.pow(u, 3)) \
+                    + (-0.8503463 * math.pow(u, 4)) \
+                    + (-0.005050998 * math.pow(u, 5)) \
+                    + (0.0083572073 * math.pow(u, 6))
+        elif year < 1700:
+            t = y - 1600.0
+            deltaT = 120 \
+                    + (-0.9808 * t) \
+                    + (-0.01532 * math.pow(t, 2)) \
+                    + (math.pow(t, 3) / 7129)
+        elif year < 1800:
+            t = y - 1700.0
+            deltaT = 8.83 \
+                    + 0.1603 * t \
+                    + (-0.0059285 * math.pow(t, 2)) \
+                    + (0.00013336 * math.pow(t, 3)) \
+                    + (math.pow(t, 4) / -1174000)
+        elif year < 1860:
+            t = y - 1800.0
+            deltaT = 13.72 \
+                    + (-0.332447 * t) \
+                    + (0.0068612 * math.pow(t, 2)) \
+                    + (0.0041116 * math.pow(t, 3)) \
+                    + (-0.00037436 * math.pow(t, 4)) \
+                    + (0.0000121272 * math.pow(t, 5)) \
+                    + (-0.0000001699 * math.pow(t, 6)) \
+                    + (0.000000000875 * math.pow(t, 7))
+        elif year < 1900:
+            t = y - 1860.0
+            deltaT = 7.62  \
+                    + (0.5737 * t) \
+                    + (-0.251754 * math.pow(t, 2)) \
+                    + (0.01680668 * math.pow(t, 3)) \
+                    + (-0.0004473624 * math.pow(t, 4)) \
+                    + (math.pow(t, 5) / 233174)
+        elif year < 1920:
+            t = y - 1900
+            deltaT = -2.79 \
+                    + (1.494119 * t) \
+                    + (-0.0598939 * math.pow(t, 2)) \
+                    + (0.0061966 * math.pow(t, 3)) \
+                    + (-0.000197 * math.pow(t, 4))
+        elif year < 1941:
+            t = y - 1920
+            deltaT = 21.20 \
+                    + (0.84493 * t) \
+                    + (-0.076100 * math.pow(t, 2)) \
+                    + (0.0020936 * math.pow(t, 3))
+        elif year < 1961:
+            t = y - 1950
+            deltaT = 29.07 \
+                    + (0.407 * t) \
+                    + (math.pow(t, 2) / -233) \
+                    + (math.pow(t, 3) / 2547)
+        elif year < 1986:
+            t = y - 1975
+            deltaT = 45.45 \
+                    + (1.067 * t) \
+                    + (math.pow(t, 2) / -260) \
+                    + (math.pow(t, 3) / -718)
+        elif year < 2005:
+            t = y - 2000
+            deltaT = 63.86 \
+                    + (0.3345 * t) \
+                    + (-0.060374 * math.pow(t, 2)) \
+                    + (0.0017275 * math.pow(t, 3)) \
+                    + (0.000651814 * math.pow(t, 4)) \
+                    + (0.00002373599 * math.pow(t, 5))
+        elif year < 2050:
+            t = y - 2000
+            deltaT = 62.92 \
+                    + (0.32217 * t) \
+                    + (0.005589 * math.pow(t, 2))
+        elif year < 2150:
+            deltaT = -20 \
+                    + (32 * math.pow((y - 1820) / 100, 2)) \
+                    + (-0.5628 * (2150 - y))
+        else:
+            u = (y - 1820) / 100
+            deltaT = -20 \
+                    + (32 * math.pow(u, 2))
+
+        return deltaT

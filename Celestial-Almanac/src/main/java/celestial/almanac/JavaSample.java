@@ -2,6 +2,7 @@ package celestial.almanac;
 
 import calc.GeomUtil;
 import calc.calculation.AstroComputer;
+import utils.TimeUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -71,6 +72,13 @@ public class JavaSample {
 			date.set(Calendar.MINUTE, 50);
 			date.set(Calendar.SECOND, 20);
 		}
+
+		double defaultDeltaT = AstroComputer.getDeltaT();
+		System.out.printf("Using deltaT: %f\n", defaultDeltaT);
+		// Recalculate
+		double deltaT = TimeUtil.getDeltaT(date.get(Calendar.YEAR), date.get(Calendar.MONTH) + 1);
+		System.out.printf("New deltaT: %f\n", deltaT);
+		AstroComputer.setDeltaT(deltaT);
 
 		// All calculations here
 		AstroComputer.calculate(

@@ -3,8 +3,13 @@
 from long_term_almanac import LongTermAlmanac as lta
 
 DELTA_T = 69.2201
+deltaT = DELTA_T
+# Recalculate DeltaT 
+deltaT = lta.calculateDeltaT(2020, 3)
+print("DeltaT is now {}".format(deltaT))
+
 # 2020-MAR-28 16:50:20 UTC
-lta.calculate(2020, 3, 28, 16, 50, 20, DELTA_T)
+lta.calculate(2020, 3, 28, 16, 50, 20, deltaT)
 
 # Display results
 print("----------------------------------------------")

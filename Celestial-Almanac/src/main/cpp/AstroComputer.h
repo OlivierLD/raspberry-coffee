@@ -11,4 +11,6 @@ char * outDec(double x, char * data);
 char * outSdHp(double x, char * data);
 char * outECL(double x, char * data);
 
+double calculateDeltaT(int year, int month);
+
 #endif
