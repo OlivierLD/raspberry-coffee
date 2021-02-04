@@ -1410,6 +1410,8 @@ function gatherOutput(noPlanets=false) {
 
 	let outForm = {};
 
+	outForm.deltaT = deltaT;
+
 	let sun = {};
 	sun.GHA = {
 		raw: GHASun,
