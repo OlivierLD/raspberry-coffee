@@ -3,6 +3,7 @@ plugins {
     id 'idea'
     id 'maven'
     id 'com.github.johnrengelman.shadow' // version '4.0.2'
+    id "application"
 }
 
 group = 'oliv.raspi.coffee'
@@ -24,6 +25,9 @@ dependencies {
 //    compile 'oliv.raspi.coffee:common-utils:1.0' // Java Celestial Almanac, from the git/maven repo
 }
 
+mainClassName = "celestial.almanac.JavaSample"
+
 shadowJar {
     zip64 true
+    mergeServiceFiles()
 }
