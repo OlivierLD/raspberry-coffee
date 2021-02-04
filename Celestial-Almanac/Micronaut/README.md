@@ -163,4 +163,25 @@ $ docker run --rm -p 8080:8080 almanac
 ```
 ... And the exact same `curl` command as before should work!
 
+> Note (Feb-2021): To run this on the Raspberry Pi, you need to tweak the `Dockerfile`:  
+> replace
+> ```
+> FROM openjdk:14-alpine
+> ```
+> with  
+> ```
+> FROM debian:buster
+> RUN apt-get update
+> RUN apt-get install -y openjdk-11-jdk
+> ```
+
+To reach a Micronaut server running a Raspberry Pi, try
+```
+curl -X GET http://192.168.42.42:8080/astro/data \
+       -H "year: 2020" \
+       -H "month: 3" \
+       -H "day: 6" | jq
+```
+where `192.168.42.42` is the IP address of the Raspberry Pi. 
+
 ---
