@@ -25,14 +25,14 @@ then
 fi
 #
 COMMAND="mvn install:install-file \
-      -DgroupId=${GROUP} \
-      -DartifactId=${ARTIFACT} \
-      -Dversion=${VERSION} \
-      -Dfile=${HOME}/.m2/repository/oliv/raspi/coffee/${ARTIFACT}/${VERSION}/${ARTIFACT}-${VERSION}.jar \
-      -Dpackaging=jar \
-      -DgeneratePom=true \
-      -DlocalRepositoryPath=. \
-      -DcreateChecksum=true"
+-DgroupId=${GROUP} \
+-DartifactId=${ARTIFACT} \
+-Dversion=${VERSION} \
+-Dfile=${HOME}/.m2/repository/oliv/raspi/coffee/${ARTIFACT}/${VERSION}/${ARTIFACT}-${VERSION}.jar \
+-Dpackaging=jar \
+-DgeneratePom=true \
+-DlocalRepositoryPath=. \
+-DcreateChecksum=true"
 #
 echo -e "Command is:"
 echo -e "${COMMAND}"
