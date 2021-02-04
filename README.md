@@ -36,6 +36,8 @@ $ mvn install:install-file \
       -DlocalRepositoryPath=. \
       -DcreateChecksum=true
 ```
+> The script `push.sh` will help you with that.
+
 then `git add <whatever-you-added>`, `git commit`, and `git push` on the `repository` branch.
 
 Repo URL: <https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository>
