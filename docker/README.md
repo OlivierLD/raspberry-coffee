@@ -333,6 +333,14 @@ CONTAINER ID        IMAGE                       COMMAND                  CREATED
 $ docker run --name myxedb -d -p 51521:1521 -p 55500:5500 -e ORACLE_PWD=mysecurepassword -e ORACLE_CHARACTERSET=AL32UT apex:2020-09-20
 ```
 
+- Send a file to a running container
+```
+$ docker ps
+CONTAINER ID   IMAGE                       COMMAND       CREATED         STATUS         PORTS                    NAMES
+5ca873ab5074   oliv-devenv-ubuntu:latest   "/bin/bash"   5 minutes ago   Up 5 minutes   0.0.0.0:5901->5901/tcp   adoring_nobel
+$ docker cp tides.zip 5ca873ab5074:~/tides.zip
+```
+
 ### Docker Registry
 At <https://hub.docker.com/>
 

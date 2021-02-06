@@ -39,6 +39,7 @@ do
   echo -e "| 10. Debian 10, TensorFlow, Keras, Python3, Jupyter, PyCharm,         |"
   echo -e "|                                 VNC, nodejs, npm,... it's a big one. |"
   echo -e "| 11. Debian dev env, git, java, maven, node, npm, yarn, VNC...        |"
+  echo -e "| 11b. Ubuntu dev env, git, java, maven, node, npm, yarn, VNC...       |"
   echo -e "| 12. nav-server, prod (small) to run on a Raspberry Pi (WIP)          |"
   echo -e "+----------------------------------------------------------------------+"
   echo -e "| Q. Oops, nothing, thanks, let me out.                                |"
@@ -266,6 +267,21 @@ do
       MESSAGE="${MESSAGE}Log in using: docker run -it -e USER=root $IMAGE_NAME:latest /bin/bash\n"
       MESSAGE="${MESSAGE}          or: docker start dev-env\n"
       MESSAGE="${MESSAGE}              docker exec -it dev-env /bin/bash\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
+      ;;
+    "11b")
+      OK=true
+      DOCKER_FILE=devenv.2.Dockerfile
+      IMAGE_NAME=oliv-devenv-ubuntu
+      RUN_CMD="docker run -d --name dev-env-2 $IMAGE_NAME:latest /bin/bash"
+      #
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Log in using: docker run -p 5901:5901 -it -e USER=root $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}          or: docker run -it $IMAGE_NAME /bin/bash\n"
+      MESSAGE="${MESSAGE}          or: docker start dev-env-2\n"
+      MESSAGE="${MESSAGE}              docker exec -it dev-env-2 /bin/bash\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Start VNC server as instructed, and reach localhost:1 in your viewer (password was given to you in the docker image)\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "12")
