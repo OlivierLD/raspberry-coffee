@@ -160,7 +160,7 @@ Then reach `http://localhost:8081/oliv-components/index.html`
 etc, etc...
 
 ### Case Study
-You have a `nodejs` project you want to share with others.
+- **The case**: You have a `nodejs` project you want to share with others.
 
 The application reads GPS data through a Serial port, and feeds a `WebSocket` server.
 The data can then be visualized through a Web interface using Web Component(s).
@@ -168,19 +168,19 @@ The data can then be visualized through a Web interface using Web Component(s).
 To enable everything, you need to:
 1. Have a Raspberry Pi
 1. Flash its SD card and connect it to a network
-1. Install build tools
+1. Install the required build tools
 1. Install `git`
 1. Install `Node.js` and `npm`
-1. Clone the right `git` repository
+1. Clone the _right_ `git` repository, and its _right_ branch
 1. Install *_all_* the required `node` modules
 1. Drill down into the right directory
-1. Start the `node` server with the right script
+1. Start the right `node` server with the right script
 1. Access the Raspberry Pi from another machine on the same network, and reach the right HTML page.
 
-This is certainly not difficult, but there are many ways to do several mistakes at each step
+This is certainly not difficult, but there are indeed **many** ways to do _several_ mistakes at <u>each step</u>
 of the process.
 
-`Docker` can take care of the steps `3` to `9`.
+In the list above, `Docker` can take care of the steps `3` to `9`.
 It will build the image, and then run it.
 The image can also be pushed to a repository, so users would not have to build it.
 Just to run it after downloading it.
@@ -228,7 +228,7 @@ Successfully tagged oliv-nodepi:latest
 ed9a7d9042dddd3939b1788cf0e89d16f5273192a6456266507f072f90ce91bc
  $
 ```
-Once the step above is completed, plug in your GPS, and run
+Once the step above is completed, plug in your GPS, and run (on the Raspberry Pi where `docker` is running, the one where the image built above is available)
 ```bash
  $ docker run -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d oliv-nodepi:latest
 ```
@@ -259,7 +259,7 @@ root@b9679d0d65a7:/workdir/node.pi#
 ```
 ... and do whatever you like.
 
-The build operation needs to be done once. There is no need to do it again as long as no
+The build operation needs to be done only **_once_**. There is no need to do it again as long as no
 change in the image is required.
 
 ### Stuff...
@@ -284,7 +284,7 @@ root@b9679d0d65a7:/workdir/docker#
 ```
 And you make your modifications.
 
-Still connected to the container above (you've not exited), _from another terminal_:
+Still connected to the container above (you've not exited), _from another terminal_ (on the machine where `docker` runs):
 ```
 Terminal-2$ docker export --output myarchive.tar [CONTAINER-ID]
 ```
