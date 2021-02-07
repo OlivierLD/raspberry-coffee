@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from long_term_almanac import LongTermAlmanac as lta
+from celestial_amlanac.long_term_almanac import LongTermAlmanac as lta
 
 DELTA_T = 69.2201
 deltaT = DELTA_T
