@@ -25,6 +25,7 @@ dependencies {
 //    compile 'oliv.raspi.coffee:common-utils:1.0' // Java Celestial Almanac, from the git/maven repo
 }
 
+// Try using ../gradlew run --args="--now"
 mainClassName = "celestial.almanac.JavaSample"
 
 shadowJar {

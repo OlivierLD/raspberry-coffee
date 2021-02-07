@@ -5,6 +5,7 @@ import calc.calculation.AstroComputer;
 import utils.TimeUtil;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.TimeZone;
 import static utils.StringUtils.lpad;
@@ -63,8 +64,10 @@ public class JavaSample {
 
 	public static void main(String... args) {
 
+		boolean now = Arrays.stream(args).filter(arg -> arg.equals("--now")).findFirst().isPresent();
+
 		Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // Now
-		if (true) { // Set to false to have current date
+		if (!now) { // Hard coded date
 			date.set(Calendar.YEAR, 2020);
 			date.set(Calendar.MONTH, Calendar.MARCH); // March!
 			date.set(Calendar.DAY_OF_MONTH, 28);
@@ -72,6 +75,7 @@ public class JavaSample {
 			date.set(Calendar.MINUTE, 50);
 			date.set(Calendar.SECOND, 20);
 		}
+		System.out.println(String.format("Calculations for %s (%s)", SDF_UTC.format(date.getTime()), now ? "now" : "not now"));
 
 		double defaultDeltaT = AstroComputer.getDeltaT();
 		System.out.printf("Using deltaT: %f\n", defaultDeltaT);
