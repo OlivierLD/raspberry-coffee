@@ -2,14 +2,14 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-static void display_ps(s, pid)
-char * s;
-pid_t pid;
-{
+static void display_ps(char * s, pid_t pid) {
+//char * s;
+//pid_t pid;
+// {
   (void) printf("Process %ld %s\n", pid, s);
 }
 
-main () {
+int main (int argc, char ** argv) {
   pid_t procid;
   pid_t id;
   char * var = "Common data ";

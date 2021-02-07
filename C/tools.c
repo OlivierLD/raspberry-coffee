@@ -12,21 +12,22 @@ typedef struct SMALL {
   struct SMALL * Next;
 } StrPt;
 
-void chainAppend (Head, Pt)
-  StrPt * Head;
-  StrPt * Pt;
-{
+void chainAppend (StrPt * Head, StrPt * Pt) {
+//  StrPt * Head;
+//  StrPt * Pt;
+//{
   StrPt * StructPt = Head;
 
-  while (StructPt->Next)
+  while (StructPt->Next) {
     StructPt = StructPt->Next;
+  }
 
   StructPt->Next = Pt;
 }
 
-void freeChain (Head)
-  StrPt * Head;
-{
+void freeChain (StrPt * Head) {
+//  StrPt * Head;
+//{
   StrPt * NextOne;
   StrPt * ThisOne;
 
@@ -39,10 +40,10 @@ void freeChain (Head)
 }
 #define walkList(a,b) for (b=a;b;b=b->Next)
 
-void chainRemove (Head, Pt)
-  StrPt * Head;
-  StrPt * Pt;
-{
+void chainRemove (StrPt * Head, StrPt * Pt) {
+//  StrPt * Head;
+//  StrPt * Pt;
+//{
   StrPt * LocPt;
 
   walkList(Head, LocPt) {
@@ -53,9 +54,9 @@ void chainRemove (Head, Pt)
   }
 }
 
-StrPt * dropHead (Head)
-  StrPt * Head;
-{
+StrPt * dropHead (StrPt * Head) {
+//  StrPt * Head;
+//{
 	if (Head != NULL) {
 		if (Head->Next != NULL) {
 			StrPt * newHead = Head->Next;
@@ -66,9 +67,9 @@ StrPt * dropHead (Head)
 	return NULL;
 }
 
-int listLength(Head)
-  StrPt * Head;
-{
+int listLength(StrPt * Head) {
+//  StrPt * Head;
+//{
 	int len = 0;
 	StrPt * LocPt;
 
@@ -79,7 +80,7 @@ int listLength(Head)
 	return len;
 }
 
-int main () {
+int main (int argc, char ** argv) {
   typedef struct LOC {
     struct LOC * Next; // Match the SMALL one (StrPt)
     int a;

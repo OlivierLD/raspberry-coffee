@@ -20,7 +20,7 @@ int nativeDebugEnabled() {
   return debug;
 }
 
-int main () {
+int main (int argc, char ** argv) {
   char * user  = "USER";
   char * shell = "SHELL";
 

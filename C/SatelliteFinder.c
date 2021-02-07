@@ -136,6 +136,6 @@ int main(int argc, char **argv) {
     }
   }
   fprintf(stdout, "\nuse %s: El %.02f°, Z %.02f° (true), Tilt %.02f°\n", toUse.name, finalResult.elevDegrees, finalResult.zDegrees, finalResult.tilt);
-  return 0;
+  return 0; // All good!
 }
 

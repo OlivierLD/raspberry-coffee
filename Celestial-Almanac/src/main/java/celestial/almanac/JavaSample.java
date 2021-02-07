@@ -54,7 +54,7 @@ public class JavaSample {
 		double dEoT = Math.abs(eot);
 		int eotMin = (int)Math.floor(dEoT);
 		double eotSec = Math.round(600 * (dEoT - eotMin)) / 10d;
-		if (eotMin == 0) {
+		if (eotMin == 0) { // Less than 1 minute
 			formatted = String.format("%s %04.01fs", eot > 0 ? "+" : "-", eotSec);
 		} else {
 			formatted = String.format("%s %02dm %04.01fs", eot > 0 ? "+" : "-", eotMin, eotSec);
@@ -69,9 +69,9 @@ public class JavaSample {
 		Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // Now
 		if (!now) { // Hard coded date
 			date.set(Calendar.YEAR, 2020);
-			date.set(Calendar.MONTH, Calendar.MARCH); // March!
+			date.set(Calendar.MONTH, Calendar.MARCH);
 			date.set(Calendar.DAY_OF_MONTH, 28);
-			date.set(Calendar.HOUR_OF_DAY, 16); // and not just HOUR !!!!
+			date.set(Calendar.HOUR_OF_DAY, 16); // and not just Calendar.HOUR !!!!
 			date.set(Calendar.MINUTE, 50);
 			date.set(Calendar.SECOND, 20);
 		}
@@ -89,7 +89,7 @@ public class JavaSample {
 				date.get(Calendar.YEAR),
 				date.get(Calendar.MONTH) + 1, // Jan: 1, Dec: 12.
 				date.get(Calendar.DAY_OF_MONTH),
-				date.get(Calendar.HOUR_OF_DAY), // and not just HOUR !!!!
+				date.get(Calendar.HOUR_OF_DAY), // and not just Calendar.HOUR !!!!
 				date.get(Calendar.MINUTE),
 				date.get(Calendar.SECOND));
 
