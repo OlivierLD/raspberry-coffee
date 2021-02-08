@@ -225,6 +225,7 @@ The expected file is on your machine, named `tide.pdf`.
 
 ### TODO
 - Swing Implementation
+    - See project `olivsoft-swing`
 - Android Implementation
 
 ---

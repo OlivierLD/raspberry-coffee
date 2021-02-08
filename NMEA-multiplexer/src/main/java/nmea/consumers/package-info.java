@@ -4,7 +4,7 @@
  * <p>
  * <ul>
  * <li>
- *   Client classes ( ^ ) must extends {@link nmea.api.NMEAClient}, the {@link nmea.api.NMEAClient#dataDetectedEvent(nmea.api.NMEAEvent)} method talks to the Multiplexer.
+ *   Client classes <b>must</b> extends {@link nmea.api.NMEAClient}, the {@link nmea.api.NMEAClient#dataDetectedEvent(nmea.api.NMEAEvent)} method talks to the Multiplexer.
  *   <ul>
  *     <li>Client can actually come with a main.</li>
  *   </ul>

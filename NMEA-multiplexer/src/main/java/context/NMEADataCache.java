@@ -61,6 +61,8 @@ public class NMEADataCache
 		extends ConcurrentHashMap<String, Object> // TODO Make it a ConcurrentHashMap instead of just HashMap ? Check.
 		implements Serializable {
 
+
+	// Keys. TODO, make this an enum
 	public static final String LAST_NMEA_SENTENCE = "NMEA";
 
 	public static final String SOG = "SOG";
@@ -139,8 +141,11 @@ public class NMEADataCache
 	public static final String USER_DEFINED = "UserDefined"; // Free, whatever you like! At your own risk!
 
 	public static final String AIS = "ais";
+
+	// End of keys
+
 	private Map<Integer, Map<Integer, AISParser.AISRecord>> aisMap = new ConcurrentHashMap<>();
-	private final static long AIS_MAX_AGE = 600_000L; // Ten minutes. TODO A parameter
+	private final static long AIS_MAX_AGE =     600_000L; // Ten minutes. TODO A parameter
 	private final static long AIS_CLEANUP_FREQ = 60_000L; // One minute
 
 	private Thread aisCleaner = null;
@@ -883,6 +888,8 @@ public class NMEADataCache
 		NMEADataCache cache = new NMEADataCache();
 		try {
 			cache.parseAndFeed("$IIRMC,224044,A,0909.226,S,14015.162,W,06.7,222,211110,10,E,A*05");
+			// Here, look at the cache
+			System.out.println("Cache was fed.");
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

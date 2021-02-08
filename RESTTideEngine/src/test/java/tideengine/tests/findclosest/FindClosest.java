@@ -1,4 +1,4 @@
-package tideengine.tests;
+package tideengine.tests.findclosest;
 
 import tideengine.BackEndTideComputer;
 import tideengine.Coefficient;
@@ -7,7 +7,12 @@ import tideengine.TideUtilities;
 
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Optional;
+import java.util.TimeZone;
 
 /**
  * This is just a test, not a unit-test
@@ -33,7 +38,12 @@ public class FindClosest {
 //		double distNM = 60.0 * Math.toDegrees(getDistance(Math.toRadians(37.73), Math.toRadians(-122.50), Math.toRadians(38.73), Math.toRadians(-122.50)));
 //		System.out.println("Dist:" + distNM);
 
-        System.out.println("XML Tests");
+        try {
+            System.out.println(FindClosestResourceBundle.buildMessage("title"));
+        } catch (NullPointerException npe) {
+            System.out.println("Look at that!");
+        }
+
         BackEndTideComputer.connect();
         BackEndTideComputer.setVerbose(false);
 
@@ -73,6 +83,20 @@ public class FindClosest {
 			System.out.println("At " + location + " in " + now.get(Calendar.YEAR) + ", min : " + TideUtilities.DF22PLUS.format(mm[TideUtilities.MIN_POS]) + " " + ts.getUnit() + ", max : " + TideUtilities.DF22PLUS.format(mm[TideUtilities.MAX_POS]) + " " + ts.getDisplayUnit());
 			double wh = TideUtilities.getWaterHeight(ts, constSpeed, now);
 			System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + location + " at " + now.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
+
+			// Low and high water for current date/time
+            List<TideUtilities.TimedValue> table = TideUtilities.getTideTableForOneDay(
+                    ts,
+                    constSpeed, now.get(Calendar.YEAR),
+                    now.get(Calendar.MONTH),
+                    now.get(Calendar.DAY_OF_MONTH), null);
+
+            table.forEach(tv -> System.out.printf("%s %s : %s %s%n",
+                    tv.getType(),
+                    tv.getCalendar().getTime(),
+                    TideUtilities.DF22PLUS.format(tv.getValue()),
+                    ts.getDisplayUnit()));
+
         } else {
             System.out.println("Not found :(");
         }

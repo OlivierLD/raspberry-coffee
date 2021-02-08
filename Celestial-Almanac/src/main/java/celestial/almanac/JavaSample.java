@@ -62,9 +62,13 @@ public class JavaSample {
 		return formatted;
 	}
 
+	/**
+	 *
+	 * @param args use --now to get current data. Otherwise, 2020-Mar-28 16:50:20 UTC will be used.
+	 */
 	public static void main(String... args) {
 
-		boolean now = Arrays.stream(args).filter(arg -> arg.equals("--now")).findFirst().isPresent();
+		boolean now = Arrays.stream(args).filter(arg -> "--now".equals(arg)).findFirst().isPresent();
 
 		Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // Now
 		if (!now) { // Hard coded date
