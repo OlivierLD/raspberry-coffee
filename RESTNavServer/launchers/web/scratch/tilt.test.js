@@ -10,10 +10,10 @@ if (Math.toRadians === undefined) {
 	};
 }
 
-let zSun = 121;
-let zMoon = 161;
-let altSun = 14;
-let altMoon = 25;
+let zSun = 173.70;
+let zMoon = 171.666;
+let altSun = 27.036;
+let altMoon = 27.09;
 
 let alpha = 0;
 

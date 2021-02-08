@@ -498,7 +498,7 @@ let moonSunData = [];
 function calculateMoonTilt(moonSunData) {
 
     // Verbose here
-    if (true) {
+    if (false) {
         let zMoon = moonSunData[1].wpFromPos.observed.z;
         let zSun = moonSunData[0].wpFromPos.observed.z;
         let deltaZ = zMoon - zSun;
