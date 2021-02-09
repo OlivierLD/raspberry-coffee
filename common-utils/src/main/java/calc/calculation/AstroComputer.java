@@ -1,6 +1,6 @@
 package calc.calculation;
 
-import calc.GeomUtil;
+import calc.*;
 import calc.calculation.nauticalalmanac.Anomalies;
 import calc.calculation.nauticalalmanac.Context;
 import calc.calculation.nauticalalmanac.Core;
@@ -13,6 +13,7 @@ import utils.TimeUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Static utilities
@@ -27,6 +28,135 @@ import java.util.*;
  *
  */
 public class AstroComputer {
+
+	public static class GP {
+		String name;
+		double decl;
+		double gha;
+		BodyFromPos fromPos;
+
+		@Override
+		public String toString() {
+			return String.format("Name:%s, decl:%f, gha:%f, From:%s", name, decl, gha, (fromPos != null ? fromPos.toString() : "null"));
+		}
+
+		public GP name(String body) {
+			this.name = body;
+			return this;
+		}
+
+		public GP decl(double d) {
+			this.decl = d;
+			return this;
+		}
+
+		public GP gha(double d) {
+			this.gha = d;
+			return this;
+		}
+
+		public GP bodyFromPos(BodyFromPos fromPos) {
+			this.fromPos = fromPos;
+			return this;
+		}
+	}
+
+	public static class OBS {
+		double alt;
+		double z;
+
+		@Override
+		public String toString() {
+			return "OBS{" +
+					"alt=" + alt +
+					", z=" + z +
+					'}';
+		}
+
+		public OBS alt(double alt) {
+			this.alt = alt;
+			return this;
+		}
+
+		public OBS z(double z) {
+			this.z = z;
+			return this;
+		}
+	}
+
+	public static class Pos {
+		double latitude;
+		double longitude;
+
+		@Override
+		public String toString() {
+			return String.format("%s/%s", GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS), GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW));
+		}
+
+		public Pos latitude(double lat) {
+			this.latitude = lat;
+			return this;
+		}
+
+		public Pos longitude(double lng) {
+			this.longitude = lng;
+			return this;
+		}
+
+		public double getLatitude() {
+			return latitude;
+		}
+
+		public double getLongitude() {
+			return longitude;
+		}
+	}
+
+	public static class BodyFromPos {
+		Pos observer;
+		OBS observed;
+
+		@Override
+		public String toString() {
+			return "BodyFromPos{" +
+					"observer=" + observer +
+					", observed=" + observed +
+					'}';
+		}
+
+		public BodyFromPos observer(Pos from) {
+			this.observer = from;
+			return this;
+		}
+		public BodyFromPos observed(OBS asSeen) {
+			this.observed = asSeen;
+			return this;
+		}
+	}
+
+	public static class GreatCircleWayPointWithBodyFromPos extends GreatCircleWayPoint {
+		private BodyFromPos wpFromPos;
+
+		public GreatCircleWayPointWithBodyFromPos(GreatCirclePoint p, Double z) {
+			super(p, z);
+		}
+
+		public BodyFromPos getWpFromPos() {
+			return wpFromPos;
+		}
+
+		public void setWpFromPos(BodyFromPos wpFromPos) {
+			this.wpFromPos = wpFromPos;
+		}
+
+		@Override
+		public String toString() {
+			return "GreatCircleWayPointWithBodyFromPos{" +
+					"wpFromPos=" + wpFromPos +
+					'}';
+		}
+	}
+
 	private static int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
 	private static double deltaT = 66.4749d; // 2011. Overridden by deltaT system variable.
 
@@ -48,6 +178,19 @@ public class AstroComputer {
 		hour = h;
 		minute = mi;
 		second = s;
+	}
+
+	public static synchronized Calendar getCalculationDateTime() {
+		Calendar calcDate = GregorianCalendar.getInstance();
+		calcDate.set(Calendar.YEAR, year);
+		calcDate.set(Calendar.MONTH, month - 1);
+		calcDate.set(Calendar.DAY_OF_MONTH, day);
+
+		calcDate.set(Calendar.HOUR_OF_DAY, hour);
+		calcDate.set(Calendar.MINUTE, minute);
+		calcDate.set(Calendar.SECOND, second);
+
+		return calcDate;
 	}
 
 	/**
@@ -86,6 +229,85 @@ public class AstroComputer {
 			phase += 360d;
 		}
 		return phase;
+	}
+
+	/**
+	 * Get the moon tilt
+	 *
+	 * @param obsLatitude Observer's latitude in degrees
+	 * @param obsLongitude Observer's longitude in degrees
+	 * @return Moon tilt, in degrees
+	 */
+	public static synchronized double getMoonTilt(double obsLatitude, double obsLongitude) {
+		final SightReductionUtil sru = new SightReductionUtil();
+
+		double moonLongitude = AstroComputer.ghaToLongitude(AstroComputer.getMoonGHA());
+		double sunLongitude = AstroComputer.ghaToLongitude(AstroComputer.getSunGHA());
+		GreatCircle gc = new GreatCircle();
+		gc.setStartInDegrees(new GreatCirclePoint(new GeoPoint(AstroComputer.getMoonDecl(), moonLongitude)));
+		gc.setArrivalInDegrees(new GreatCirclePoint(new GeoPoint(AstroComputer.getSunDecl(), sunLongitude)));
+		gc.calculateGreatCircle(20); // 20 points in the GC...
+		double finalLat = obsLatitude;
+		double finalLng = obsLongitude;
+		// TODO All in one operation
+		Vector<GreatCircleWayPoint> greatCircleWayPoints = GreatCircle.inDegrees(gc.getRoute()); // In Degrees
+		List<GreatCircleWayPointWithBodyFromPos> route = greatCircleWayPoints.stream()
+				.map(rwp -> {
+					GreatCircleWayPointWithBodyFromPos gcwpwbfp = new GreatCircleWayPointWithBodyFromPos(rwp.getPoint(), rwp.getZ());
+					if (rwp.getPoint() != null) {
+						sru.calculate(finalLat, finalLng, AstroComputer.longitudeToGHA(rwp.getPoint().getG()), rwp.getPoint().getL());
+						gcwpwbfp.setWpFromPos(new BodyFromPos()
+								.observer(new Pos()
+										.latitude(finalLat)
+										.longitude(finalLng))
+								.observed(new OBS()
+										.alt(sru.getHe())
+										.z(sru.getZ())));
+					}
+					return gcwpwbfp;
+				}).collect(Collectors.toList());
+
+		System.out.println(String.format("At %d %02d %02d - %02d:%02d:%02d UTC:", year, month, day, hour, minute, second));
+		System.out.println("Astro Data:");
+
+		// Take the first triangle, from the Moon.
+		double z0 = route.get(0).getWpFromPos().observed.z;
+		double z1 = route.get(1).getWpFromPos().observed.z;
+
+		double alt0 = route.get(0).getWpFromPos().observed.alt;
+		double alt1 = route.get(1).getWpFromPos().observed.alt;
+
+		double deltaZ = z1 - z0;
+		if (deltaZ > 180) { // like 358 - 2, should be 358 - 362.
+			deltaZ -= 360;
+		}
+		double deltaElev = alt1 - alt0;
+		double alpha = Math.toDegrees(Math.atan2(deltaElev, deltaZ)); // atan2 from -Pi to Pi
+		if (deltaElev > 0) {
+			if (deltaZ > 0) { // positive angle, like 52
+				alpha *= -1;
+			} else { // Angle > 90, like 116
+				if (alpha < 90) {
+					alpha -= 90;
+				} else {
+					alpha = 180 - alpha;
+				}
+			}
+		} else {
+			if (deltaZ > 0) { // negative angle, like -52
+				alpha *= -1;
+			} else { // Negative, < -90, like -116
+				if (alpha > -90) {
+					alpha += 90;
+				} else {
+					alpha = - 180 - alpha;
+				}
+			}
+		}
+
+		System.out.println(String.format("Tilt: %f", alpha));
+
+		return alpha;
 	}
 
 	/**
@@ -836,6 +1058,9 @@ public class AstroComputer {
 	// This is for tests
 	public static void main(String... args) {
 
+		SimpleDateFormat SDF_UTC = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 'UTC'");
+//		SDF_UTC.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+
 		System.setProperty("deltaT", "AUTO");
 
 		System.out.println(String.format("Moon phase for date %d-%d-%d %d:%d:%d: ", 2011, 8, 22, 12, 00, 00) + getMoonPhase(2011, 8, 22, 12, 00, 00));
@@ -909,5 +1134,26 @@ public class AstroComputer {
 				epochAndZs[0].getZ(),
 				new Date(epochAndZs[1].getEpoch()).toString(),
 				epochAndZs[1].getZ()));
+
+		// Moon tilt
+		Calendar date2 = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // Now
+		System.out.println(String.format("Setting Cal Date to %d-%02d-%02d %02d:%02d:%02d",
+				date2.get(Calendar.YEAR),
+				date2.get(Calendar.MONTH) + 1,
+				date2.get(Calendar.DAY_OF_MONTH),
+				date2.get(Calendar.HOUR_OF_DAY), // and not just HOUR !!!!
+				date2.get(Calendar.MINUTE),
+				date2.get(Calendar.SECOND)));
+		AstroComputer.setDateTime(date2.get(Calendar.YEAR),
+				date2.get(Calendar.MONTH) + 1,
+				date2.get(Calendar.DAY_OF_MONTH),
+				date2.get(Calendar.HOUR_OF_DAY), // and not just HOUR !!!!
+				date2.get(Calendar.MINUTE),
+				date2.get(Calendar.SECOND));
+
+		AstroComputer.calculate();
+		double moonTilt = AstroComputer.getMoonTilt(lat, lng);
+		Calendar calculationDateTime = getCalculationDateTime();
+		System.out.println(String.format("At %s, Moon Tilt: %.03f", SDF_UTC.format(calculationDateTime.getTime()), moonTilt));
 	}
 }

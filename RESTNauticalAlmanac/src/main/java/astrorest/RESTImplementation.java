@@ -1,12 +1,11 @@
 package astrorest;
 
-import calc.GeoPoint;
-import calc.GeomUtil;
-import calc.GreatCircle;
-import calc.GreatCirclePoint;
-import calc.GreatCircleWayPoint;
+import calc.*;
 import calc.calculation.AstroComputer;
 import calc.calculation.SightReductionUtil;
+import calc.calculation.nauticalalmanac.Context;
+import calc.calculation.nauticalalmanac.Core;
+import calc.calculation.nauticalalmanac.Star;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import http.HTTPServer;
@@ -16,34 +15,14 @@ import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 import implementation.almanac.AlmanacComputer;
 import implementation.perpetualalmanac.Publisher;
-import calc.calculation.nauticalalmanac.Context;
-import calc.calculation.nauticalalmanac.Core;
-import calc.calculation.nauticalalmanac.Star;
 import utils.TimeUtil;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.SortedMap;
-import java.util.TimeZone;
-import java.util.TreeMap;
-import java.util.Vector;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -60,11 +39,11 @@ import java.util.stream.Collectors;
 public class RESTImplementation {
 
 	private AstroRequestManager astroRequestManager;
-	private static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	private final static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	private static DecimalFormat DF22 = new DecimalFormat("#0.00"); // ("##0'�'00'\''");
 
 	private final static String UTC_TZ = "etc/UTC";
-	private static SimpleDateFormat UTC_FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private final static SimpleDateFormat UTC_FMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	static {
 		UTC_FMT.setTimeZone(TimeZone.getTimeZone(UTC_TZ));
 	}
@@ -558,9 +537,9 @@ public class RESTImplementation {
 						.epoch(date.getTimeInMillis())
 						.deltaT(AstroComputer.getDeltaT())
 						.ghaAries(AstroComputer.getAriesGHA())
-						.sun(new GP().gha(AstroComputer.getSunGHA())
+						.sun(new AstroComputer.GP().gha(AstroComputer.getSunGHA())
 								.decl(AstroComputer.getSunDecl()))
-						.moon(new GP().gha(AstroComputer.getMoonGHA())
+						.moon(new AstroComputer.GP().gha(AstroComputer.getMoonGHA())
 								.decl(AstroComputer.getMoonDecl()))
 						.moonPhase(AstroComputer.getMoonPhase());
 
@@ -577,7 +556,7 @@ public class RESTImplementation {
 										.errorMessage(String.format("Invalid Query parameters 'fromL' and 'fromG' [%s], [%s]", prms.get("fromL"), prms.get("fromG"))));
 						return response;
 					}
-					data = data.from(new Pos()
+					data = data.from(new AstroComputer.Pos()
 							.latitude(lat)
 							.longitude(lng));
 					double tPass = AstroComputer.getSunMeridianPassageTime(lat, lng); // In decimal hours
@@ -593,10 +572,10 @@ public class RESTImplementation {
 					int sTPass = (int)Math.floor(dms.getSeconds());
 
 					data = data.tPass(new FmtDate()
-															.hour(hTPass)
-															.min(mTPass)
-															.sec(sTPass)
-															.tz("UTC"));
+							.hour(hTPass)
+							.min(mTPass)
+							.sec(sTPass)
+							.tz("UTC"));
 
 					Date solar = getSolarDate(at, tPass);
 //				System.out.println(SDF_SOLAR.format(solar));
@@ -613,16 +592,16 @@ public class RESTImplementation {
 
 					SightReductionUtil sru = new SightReductionUtil();
 					sru.calculate(lat, lng, AstroComputer.getSunGHA(), AstroComputer.getSunDecl());
-					data = data.sunObs(new OBS()
+					data = data.sunObs(new AstroComputer.OBS()
 							.alt(sru.getHe())
 							.z(sru.getZ()));
 					sru.calculate(lat, lng, AstroComputer.getMoonGHA(), AstroComputer.getMoonDecl());
-					data = data.moonObs(new OBS()
+					data = data.moonObs(new AstroComputer.OBS()
 							.alt(sru.getHe())
 							.z(sru.getZ()));
 
 					sru.calculate(lat, lng, AstroComputer.getAriesGHA(), 0d);
-					data = data.ariesObs(new OBS()
+					data = data.ariesObs(new AstroComputer.OBS()
 							.alt(sru.getHe())
 							.z(sru.getZ()));
 
@@ -637,16 +616,16 @@ public class RESTImplementation {
 					double finalLng = lng;
 					// TODO All in one operation
 					Vector<GreatCircleWayPoint> greatCircleWayPoints = GreatCircle.inDegrees(gc.getRoute()); // In Degrees
-					List<GreatCircleWayPointWithBodyFromPos> route = greatCircleWayPoints.stream()
+					List<AstroComputer.GreatCircleWayPointWithBodyFromPos> route = greatCircleWayPoints.stream()
 							.map(rwp -> {
-								GreatCircleWayPointWithBodyFromPos gcwpwbfp = new GreatCircleWayPointWithBodyFromPos(rwp.getPoint(), rwp.getZ());
+								AstroComputer.GreatCircleWayPointWithBodyFromPos gcwpwbfp = new AstroComputer.GreatCircleWayPointWithBodyFromPos(rwp.getPoint(), rwp.getZ());
 									if (rwp.getPoint() != null) {
 										sru.calculate(finalLat, finalLng, AstroComputer.longitudeToGHA(rwp.getPoint().getG()), rwp.getPoint().getL());
-										gcwpwbfp.setWpFromPos(new BodyFromPos()
-												.observer(new Pos()
+										gcwpwbfp.setWpFromPos(new AstroComputer.BodyFromPos()
+												.observer(new AstroComputer.Pos()
 														.latitude(finalLat)
 														.longitude(finalLng))
-												.observed(new OBS()
+												.observed(new AstroComputer.OBS()
 														.alt(sru.getHe())
 														.z(sru.getZ())));
 									}
@@ -656,58 +635,58 @@ public class RESTImplementation {
 				}
 				// Wandering bodies
 				if (wandering) {
-					List<GP> wanderingBodies = new ArrayList<>();
-					wanderingBodies.add(new GP()
+					List<AstroComputer.GP> wanderingBodies = new ArrayList<>();
+					wanderingBodies.add(new AstroComputer.GP()
 							.name("aries")
 							.gha(AstroComputer.getAriesGHA()));
 					SightReductionUtil sru = new SightReductionUtil();
 					// Calculate Venus observed prms
 					sru.calculate(lat, lng, AstroComputer.getVenusGHA(), AstroComputer.getVenusDecl());
-					wanderingBodies.add(new GP()
+					wanderingBodies.add(new AstroComputer.GP()
 						.name("venus")
 						.decl(AstroComputer.getVenusDecl())
 						.gha(AstroComputer.getVenusGHA())
-					  .bodyFromPos(new BodyFromPos()
-							  .observer(new Pos()
+					  .bodyFromPos(new AstroComputer.BodyFromPos()
+							  .observer(new AstroComputer.Pos()
 									  .latitude(lat)
 									  .longitude(lng))
-							  .observed(new OBS()
+							  .observed(new AstroComputer.OBS()
 									  .alt(sru.getHe())
 									  .z(sru.getZ()))));
 					// Calculate Mars observed prms
 					sru.calculate(lat, lng, AstroComputer.getMarsGHA(), AstroComputer.getMarsDecl());
-					wanderingBodies.add(new GP()
+					wanderingBodies.add(new AstroComputer.GP()
 							.name("mars")
 							.decl(AstroComputer.getMarsDecl())
-							.gha(AstroComputer.getMarsGHA()).bodyFromPos(new BodyFromPos()
-									.observer(new Pos()
+							.gha(AstroComputer.getMarsGHA()).bodyFromPos(new AstroComputer.BodyFromPos()
+									.observer(new AstroComputer.Pos()
 											.latitude(lat)
 											.longitude(lng))
-									.observed(new OBS()
+									.observed(new AstroComputer.OBS()
 											.alt(sru.getHe())
 											.z(sru.getZ()))));
 					// Calculate Jupiter observed prms
 					sru.calculate(lat, lng, AstroComputer.getJupiterGHA(), AstroComputer.getJupiterDecl());
-					wanderingBodies.add(new GP()
+					wanderingBodies.add(new AstroComputer.GP()
 							.name("jupiter")
 							.decl(AstroComputer.getJupiterDecl())
-							.gha(AstroComputer.getJupiterGHA()).bodyFromPos(new BodyFromPos()
-									.observer(new Pos()
+							.gha(AstroComputer.getJupiterGHA()).bodyFromPos(new AstroComputer.BodyFromPos()
+									.observer(new AstroComputer.Pos()
 											.latitude(lat)
 											.longitude(lng))
-									.observed(new OBS()
+									.observed(new AstroComputer.OBS()
 											.alt(sru.getHe())
 											.z(sru.getZ()))));
 					// Calculate Saturn observed prms
 					sru.calculate(lat, lng, AstroComputer.getSaturnGHA(), AstroComputer.getSaturnDecl());
-					wanderingBodies.add(new GP()
+					wanderingBodies.add(new AstroComputer.GP()
 							.name("saturn")
 							.decl(AstroComputer.getSaturnDecl())
-							.gha(AstroComputer.getSaturnGHA()).bodyFromPos(new BodyFromPos()
-									.observer(new Pos()
+							.gha(AstroComputer.getSaturnGHA()).bodyFromPos(new AstroComputer.BodyFromPos()
+									.observer(new AstroComputer.Pos()
 											.latitude(lat)
 											.longitude(lng))
-									.observed(new OBS()
+									.observed(new AstroComputer.OBS()
 											.alt(sru.getHe())
 											.z(sru.getZ()))));
 					data = data.wandering(wanderingBodies)
@@ -715,11 +694,11 @@ public class RESTImplementation {
 				}
 
 				if (stars) {
-					List<GP> starPositions = new ArrayList<>();
+					List<AstroComputer.GP> starPositions = new ArrayList<>();
 					Arrays.asList(Star.getCatalog()).stream()
 							.forEach(star -> {
 								Core.starPos(star.getStarName());
-								starPositions.add(new GP()
+								starPositions.add(new AstroComputer.GP()
 									.name(star.getStarName()) // Also available star.getConstellation()
 									.gha(Context.GHAstar)
 									.decl(Context.DECstar));
@@ -1367,11 +1346,11 @@ public class RESTImplementation {
 		}
 	}
 	public static class SightReductionData {
-		Pos estimatedPosition;
+		AstroComputer.Pos estimatedPosition;
 		String utcDate; // Duration Format
 		CelestialBodyData cbd;
 
-		public SightReductionData estimatedPosition(Pos position) {
+		public SightReductionData estimatedPosition(AstroComputer.Pos position) {
 			this.estimatedPosition = position;
 			return this;
 		}
@@ -1397,7 +1376,7 @@ public class RESTImplementation {
 
 		SightReductionData userData = new SightReductionData()
 				.utcDate("2018-11-05T20:50:52")
-				.estimatedPosition(new Pos().latitude(37.4090).longitude(-122.7654))
+				.estimatedPosition(new AstroComputer.Pos().latitude(37.4090).longitude(-122.7654))
 				.celestialBodyData(new CelestialBodyData()
 																.name("Sun")
 																.eyeHeight(1.8)
@@ -1568,8 +1547,8 @@ public class RESTImplementation {
 
 						SightReductionUtil sru = new SightReductionUtil();
 
-						sru.setL(userData.estimatedPosition.latitude);
-						sru.setG(userData.estimatedPosition.longitude);
+						sru.setL(userData.estimatedPosition.getLatitude());
+						sru.setG(userData.estimatedPosition.getLongitude());
 
 						sru.setAHG(gha);
 						sru.setD(decl);
@@ -1598,7 +1577,7 @@ public class RESTImplementation {
 							}
 							totalCorrection += sd;
 
-							sru.calculate(userData.estimatedPosition.latitude, userData.estimatedPosition.longitude, gha, decl);
+							sru.calculate(userData.estimatedPosition.getLatitude(), userData.estimatedPosition.getLongitude(), gha, decl);
 
 							double estimatedAltitude = sru.getHe();
 							double z = sru.getZ();
@@ -1735,126 +1714,6 @@ public class RESTImplementation {
 		}
 	}
 
-	public static class GP {
-		String name;
-		double decl;
-		double gha;
-		BodyFromPos fromPos;
-
-		@Override
-		public String toString() {
-			return String.format("Name:%s, decl:%f, gha:%f, From:%s", name, decl, gha, (fromPos != null ? fromPos.toString() : "null"));
-		}
-
-		public GP name(String body) {
-			this.name = body;
-			return this;
-		}
-
-		public GP decl(double d) {
-			this.decl = d;
-			return this;
-		}
-
-		public GP gha(double d) {
-			this.gha = d;
-			return this;
-		}
-
-		public GP bodyFromPos(BodyFromPos fromPos) {
-			this.fromPos = fromPos;
-			return this;
-		}
-	}
-
-	public static class OBS {
-		double alt;
-		double z;
-
-		@Override
-		public String toString() {
-			return "OBS{" +
-					"alt=" + alt +
-					", z=" + z +
-					'}';
-		}
-
-		public OBS alt(double alt) {
-			this.alt = alt;
-			return this;
-		}
-
-		public OBS z(double z) {
-			this.z = z;
-			return this;
-		}
-	}
-
-	public static class Pos {
-		double latitude;
-		double longitude;
-
-		@Override
-		public String toString() {
-			return String.format("%s/%s", GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS), GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW));
-		}
-
-		public Pos latitude(double lat) {
-			this.latitude = lat;
-			return this;
-		}
-
-		public Pos longitude(double lng) {
-			this.longitude = lng;
-			return this;
-		}
-	}
-
-	public static class BodyFromPos {
-		Pos observer;
-		OBS observed;
-
-		@Override
-		public String toString() {
-			return "BodyFromPos{" +
-					"observer=" + observer +
-					", observed=" + observed +
-					'}';
-		}
-
-		public BodyFromPos observer(Pos from) {
-			this.observer = from;
-			return this;
-		}
-		public BodyFromPos observed(OBS asSeen) {
-			this.observed = asSeen;
-			return this;
-		}
-	}
-
-	public static class GreatCircleWayPointWithBodyFromPos extends GreatCircleWayPoint {
-			private BodyFromPos wpFromPos;
-
-		public GreatCircleWayPointWithBodyFromPos(GreatCirclePoint p, Double z) {
-			super(p, z);
-		}
-
-		public BodyFromPos getWpFromPos() {
-			return wpFromPos;
-		}
-
-		public void setWpFromPos(BodyFromPos wpFromPos) {
-			this.wpFromPos = wpFromPos;
-		}
-
-		@Override
-		public String toString() {
-			return "GreatCircleWayPointWithBodyFromPos{" +
-					"wpFromPos=" + wpFromPos +
-					'}';
-		}
-	}
-
 	public static class FmtDate {
 		long epoch;
 		int year;
@@ -1916,18 +1775,18 @@ public class RESTImplementation {
 	public static class PositionsInTheSky {
 		long epoch;
 		double deltaT;
-		GP sun;
-		GP moon;
+		AstroComputer.GP sun;
+		AstroComputer.GP moon;
 		double moonPhase; // Moon only, obviously
 		double ghaAries;
-		List<GreatCircleWayPointWithBodyFromPos> moonToSunSkyRoute;
-		List<GP> wanderingBodies;
-		List<GP> stars;
+		List<AstroComputer.GreatCircleWayPointWithBodyFromPos> moonToSunSkyRoute;
+		List<AstroComputer.GP> wanderingBodies;
+		List<AstroComputer.GP> stars;
 		double eclipticObliquity; // Mean
-		Pos from;
-		OBS sunObs;
-		OBS moonObs;
-		OBS ariesObs;
+		AstroComputer.Pos from;
+		AstroComputer.OBS sunObs;
+		AstroComputer.OBS moonObs;
+		AstroComputer.OBS ariesObs;
 		FmtDate tPass;
 		FmtDate solarDate;
 
@@ -1951,11 +1810,11 @@ public class RESTImplementation {
 			this.ghaAries = gha;
 			return this;
 		}
-		public PositionsInTheSky sun(GP sun) {
+		public PositionsInTheSky sun(AstroComputer.GP sun) {
 			this.sun = sun;
 			return this;
 		}
-		public PositionsInTheSky moon(GP moon) {
+		public PositionsInTheSky moon(AstroComputer.GP moon) {
 			this.moon = moon;
 			return this;
 		}
@@ -1963,27 +1822,27 @@ public class RESTImplementation {
 			this.moonPhase = phase;
 			return this;
 		}
-		public PositionsInTheSky moonToSunSkyRoute(List<GreatCircleWayPointWithBodyFromPos> moonToSunSkyRoute) {
+		public PositionsInTheSky moonToSunSkyRoute(List<AstroComputer.GreatCircleWayPointWithBodyFromPos> moonToSunSkyRoute) {
 			this.moonToSunSkyRoute = moonToSunSkyRoute;
 			return this;
 		}
 
-		public PositionsInTheSky from(Pos pos) {
+		public PositionsInTheSky from(AstroComputer.Pos pos) {
 			this.from = pos;
 			return this;
 		}
 
-		public PositionsInTheSky sunObs(OBS sun) {
+		public PositionsInTheSky sunObs(AstroComputer.OBS sun) {
 			this.sunObs = sun;
 			return this;
 		}
 
-		public PositionsInTheSky moonObs(OBS moon) {
+		public PositionsInTheSky moonObs(AstroComputer.OBS moon) {
 			this.moonObs = moon;
 			return this;
 		}
 
-		public PositionsInTheSky ariesObs(OBS aries) {
+		public PositionsInTheSky ariesObs(AstroComputer.OBS aries) {
 			this.ariesObs = aries;
 			return this;
 		}
@@ -2003,12 +1862,12 @@ public class RESTImplementation {
 			return this;
 		}
 
-		public PositionsInTheSky wandering(List<GP> bodies) {
+		public PositionsInTheSky wandering(List<AstroComputer.GP> bodies) {
 			this.wanderingBodies = bodies;
 			return this;
 		}
 
-		public PositionsInTheSky stars(List<GP> stars) {
+		public PositionsInTheSky stars(List<AstroComputer.GP> stars) {
 			this.stars = stars;
 			return this;
 		}

@@ -499,17 +499,17 @@ function calculateMoonTilt(moonSunData) {
 
     // Verbose here
     if (false) {
-        let zMoon = moonSunData[1].wpFromPos.observed.z;
-        let zSun = moonSunData[0].wpFromPos.observed.z;
-        let deltaZ = zMoon - zSun;
+        let z1 = moonSunData[1].wpFromPos.observed.z;
+        let z0 = moonSunData[0].wpFromPos.observed.z;
+        let deltaZ = z1 - z0;
 
-        let altMoon = moonSunData[1].wpFromPos.observed.alt;
-        let altSun = moonSunData[0].wpFromPos.observed.alt;
-        let deltaElev = altMoon - altSun;
+        let alt1 = moonSunData[1].wpFromPos.observed.alt;
+        let alt0 = moonSunData[0].wpFromPos.observed.alt;
+        let deltaElev = alt1 - alt0;
 
         console.log(`Tilt calculation:`);
-        console.log(`Moon-Sun Route - Pt 0: Z=${zSun}, Elev=${altSun}`);
-        console.log(`               - Pt 1: Z=${zMoon}, Elev=${altMoon}`);
+        console.log(`Moon-Sun Route - Pt 0: Z=${z0}, Elev=${alt0}`);
+        console.log(`               - Pt 1: Z=${z1}, Elev=${alt1}`);
         console.log(`  DeltaZ    = ${deltaZ}`);
         console.log(`  DeltaElev = ${deltaElev}`);
         console.log(`  ARI: ${Math.toDegrees(Math.atan2(deltaElev, deltaZ))} `);

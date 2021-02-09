@@ -9,8 +9,8 @@ public final class GreatCircle {
 	public static final int TO_WEST = 3;
 	private static int ewDir;
 	private static int nsDir;
-	private static GreatCirclePoint start;
-	private static GreatCirclePoint arrival;
+	private static GreatCirclePoint start;   // Angles in radians
+	private static GreatCirclePoint arrival; // Angles in radians
 	private Vector<GreatCircleWayPoint> route;
 	private static double rv;
 	private static double dLoxo;
@@ -21,6 +21,18 @@ public final class GreatCircle {
 		arrival = null;
 		rv = 0.0D;
 		dLoxo = 0.0D;
+	}
+
+	/**
+	 *
+	 * @param startingPoint angle values in radians
+	 * @param arrivalPoint  angle values in radians
+	 */
+	public GreatCircle(GreatCirclePoint startingPoint, GreatCirclePoint arrivalPoint) {
+		start = startingPoint;
+		arrival = arrivalPoint;
+		rv = 0.0;
+		dLoxo = 0.0;
 	}
 
 	/**
@@ -67,6 +79,42 @@ public final class GreatCircle {
 		return ewDir;
 	}
 
+	/**
+	 *
+	 * @return Initial Route Angle, in radians
+	 */
+	public static double getInitialRouteAngle() {
+		return getInitialRouteAngle(start, arrival);
+	}
+
+	/**
+	 *
+	 * @param from angle values in radians
+	 * @param to angle values in radians
+	 * @return Initial Route Angle, in radians
+	 */
+	public static double getInitialRouteAngle(GreatCirclePoint from, GreatCirclePoint to) {
+		double g = (to.getG()) - from.getG();
+		double lA = to.getL();
+		double lD = from.getL();
+		double gcArc = Math.acos((Math.sin(lD) * Math.sin(lA)) + (Math.cos(lD) * Math.cos(lA) * Math.cos(g)));
+		// System.out.println(String.format("M: %.03f nm", 60 * Math.toDegrees(gcArc)));
+		double ira = Math.asin((Math.sin(g) * Math.cos(lA)) / Math.sin(gcArc));
+		if (ira > 0) { // From the north
+			if (g < 0) { // to West
+				ira = (2 * Math.PI) - ira;
+			}
+		} else { // From the south
+			ira = Math.abs(ira);
+			if (g > 0) { // to East
+				ira = Math.PI - ira;
+			} else { // To West
+				ira = Math.PI + ira;
+			}
+		}
+		return ira;
+	}
+
 	public void calculateGreatCircle(int nbPoints) {
 		if (arrival.getL() > start.getL()) {
 			nsDir = TO_NORTH;
@@ -88,7 +136,7 @@ public final class GreatCircle {
 			}
 		}
 		double deltaG = arrival.getG() - start.getG();
-		route = new Vector<GreatCircleWayPoint>(nbPoints);
+		route = new Vector<>(nbPoints);
 		double interval = deltaG / (double) nbPoints;
 		GreatCirclePoint smallStart = start;
 		boolean go = true;
@@ -450,59 +498,5 @@ public final class GreatCircle {
 		double deltaG = Math.toRadians(dist / (60D * Math.cos((from.getL() + l2) / 2D))) * Math.sin(Math.toRadians(route)); // 2009-mar-10
 		double g2 = from.getG() + deltaG;
 		return new GreatCirclePoint(l2, g2);
-	}
-
-	public static void main(String... args) {
-
-		double gcDistInNM = getGCDistanceInDegrees(new GreatCirclePoint(37.73, -122.50), new GreatCirclePoint(38.73, -122.50));
-		System.out.println("Dist:" + gcDistInNM);
-
-		GreatCirclePoint dr = dr(new GreatCirclePoint(Math.toRadians(45D), Math.toRadians(-130D)), 55, 270);
-		System.out.println("Reaching " + new GreatCirclePoint(Math.toDegrees(dr.getL()), Math.toDegrees(dr.getG())).toString());
-		System.out.println("Done.");
-
-		System.out.println("----------------------");
-
-		GreatCirclePoint p1 = new GreatCirclePoint(Math.toRadians(20.02), Math.toRadians(-155.85));
-		GreatCirclePoint p2 = new GreatCirclePoint(Math.toRadians(19.98), Math.toRadians(-155.89));
-
-		String from = GeomUtil.decToSex(Math.toDegrees(p1.getL()), GeomUtil.SWING, GeomUtil.NS) + ", " + GeomUtil.decToSex(Math.toDegrees(p1.getG()), GeomUtil.SWING, GeomUtil.EW);
-		String to = GeomUtil.decToSex(Math.toDegrees(p2.getL()), GeomUtil.SWING, GeomUtil.NS) + ", " + GeomUtil.decToSex(Math.toDegrees(p2.getG()), GeomUtil.SWING, GeomUtil.EW);
-
-		System.out.println(String.format("Distance between %s and %s = %.04f nm, %.04f km", from, to, (p1.gcDistanceBetween(p2) * 60), (p1.gcDistanceBetween(p2) * 60 * 1.852)));
-
-		// Step: 0.010 km between N  37 20.13' / W 121 42.96' and N  37 20.13' / W 121 42.96' (17-Jun-2017 11:42:37)
-		p1 = new GreatCirclePoint(Math.toRadians(GeomUtil.sexToDec("37", "20.13")), Math.toRadians(GeomUtil.sexToDec("-121", "42.96")));
-		p2 = new GreatCirclePoint(Math.toRadians(GeomUtil.sexToDec("37", "20.13")), Math.toRadians(GeomUtil.sexToDec("-121", "42.96")));
-
-		from = GeomUtil.decToSex(Math.toDegrees(p1.getL()), GeomUtil.SWING, GeomUtil.NS) + ", " + GeomUtil.decToSex(Math.toDegrees(p1.getG()), GeomUtil.SWING, GeomUtil.EW);
-		to = GeomUtil.decToSex(Math.toDegrees(p2.getL()), GeomUtil.SWING, GeomUtil.NS) + ", " + GeomUtil.decToSex(Math.toDegrees(p2.getG()), GeomUtil.SWING, GeomUtil.EW);
-
-		System.out.println(String.format("Distance between %s and %s = %.04f nm, %.04f km", from, to, (p1.gcDistanceBetween(p2) * 60), (p1.gcDistanceBetween(p2) * 60 * 1.852)));
-	}
-
-	public static void main2(String... args) {
-		GreatCirclePoint start = new GreatCirclePoint(Math.toRadians(GeomUtil.sexToDec("37", "38")), Math.toRadians(-GeomUtil.sexToDec("122", "46")));
-//  GeoPoint p = dr(start, 30D, 230D);
-		GreatCirclePoint p = new GreatCirclePoint(Math.toRadians(GeomUtil.sexToDec("20", "00")), Math.toRadians(-GeomUtil.sexToDec("150", "00")));
-		System.out.println("Arriving:" + GeomUtil.decToSex(Math.toDegrees(p.getL()), GeomUtil.SWING, GeomUtil.NS) + ", " + GeomUtil.decToSex(Math.toDegrees(p.getG()), GeomUtil.SWING, GeomUtil.EW));
-		GreatCircle test = new GreatCircle();
-		test.setStart(start);
-		test.setArrival(p);
-		test.calculateGreatCircle(20);
-		double gcDist = Math.toDegrees(test.getDistance()) * 60.0;
-		test.calculateRhumbLine();
-		double dist = test.getRhumbLineDistance();
-		double route = test.getRhumbLineRoute();
-		System.out.println("Dist:" + dist + " (" + gcDist + "), route:" + Math.toDegrees(route));
-
-		System.out.println("-------------");
-		test = new GreatCircle();
-		test.setStart(new GreatCirclePoint(Math.toRadians(47.67941), Math.toRadians(-3.368855)));
-		test.setArrival(new GreatCirclePoint(Math.toRadians(47.666931), Math.toRadians(-3.39822)));
-		test.calculateRhumbLine();
-		dist = test.getRhumbLineDistance();
-		route = test.getRhumbLineRoute();
-		System.out.println("Dist:" + dist + " (" + gcDist + "), route:" + Math.toDegrees(route));
 	}
 }

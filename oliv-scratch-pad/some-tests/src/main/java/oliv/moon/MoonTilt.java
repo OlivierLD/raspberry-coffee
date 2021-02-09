@@ -3,10 +3,17 @@ package oliv.moon;
 // http://master.grad.hr/hdgg/kog_stranica/kog18/06myers-KoG18.pdf
 public class MoonTilt {
 
-	static double zSunDeg = 121.96;
-	static double zMoonDeg = 161.82;
-	static double altSunDeg = 14.3;
-	static double altMoonDeg = 25.033;
+//	let zSun = 173.70;
+//	let zMoon = 171.666;
+//	let altSun = 27.036;
+//	let altMoon = 27.09;
+
+	static double zSunDeg = 208.318764;
+	static double zMoonDeg = 232.899508;
+	static double altSunDeg = 32.783581;
+	static double altMoonDeg = 5.074876;
+
+	// Expect 48.423
 
 	// All angles in Radians
 	static double zSun = Math.toRadians(zSunDeg);     //  94d);
@@ -16,17 +23,20 @@ public class MoonTilt {
 
 	public static void main(String... args) {
 
-		// V1, like a test...
+		double deltaZ, alpha;
+		if (false) {
+			// V1, like a test...
 
-		double deltaZ = zSun - zMoon;
+			deltaZ = zSun - zMoon;
 
-		double tanAlpha =
-				((Math.cos(elevSun) * Math.tan(elevMoon)) - (Math.sin(elevMoon) * Math.cos(deltaZ))) / (Math.sin(deltaZ));
-		double alpha = Math.atan(tanAlpha);
-		System.out.println(String.format("V1 - Tilt: %.03f\272 (from horizontal)", Math.toDegrees(alpha)));
-
+			double tanAlpha =
+					((Math.cos(elevSun) * Math.tan(elevMoon)) - (Math.sin(elevMoon) * Math.cos(deltaZ))) / (Math.sin(deltaZ));
+			alpha = Math.atan(tanAlpha);
+			System.out.println(String.format("V1 - Tilt: %.03f\272 (from horizontal)", Math.toDegrees(alpha)));
+		}
 		// V2 (From JS implementation)
-		// Take the first triangle, from the Moon.
+		// Take the first triangle of the moon-to-sun great circle, from the Moon.
+		// TODO Fix that shit!
 		deltaZ = zMoonDeg - zSunDeg; // - zMoonDeg;
 		if (deltaZ > 180) { // like 358 - 2, should be 358 - 362.
 			deltaZ -= 360;
