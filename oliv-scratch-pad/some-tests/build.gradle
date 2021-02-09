@@ -44,6 +44,8 @@ dependencies {
     compile 'com.cibo:evilplot-repl_2.12:0.7.0'
 //    compile 'com.cibo:evilplot-repl_2.13:0.8.0'
 
+    compile project(':common-utils')
+
     // Require tools.jar, from the JDK (Doclet and Co)
 //    compile files(org.gradle.internal.jvm.Jvm.current().toolsJar)
     compile files("${System.getProperty('java.home')}/../lib/tools.jar")

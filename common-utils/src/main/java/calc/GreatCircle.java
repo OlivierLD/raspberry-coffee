@@ -94,7 +94,15 @@ public final class GreatCircle {
 	 * @return Initial Route Angle, in radians
 	 */
 	public static double getInitialRouteAngle(GreatCirclePoint from, GreatCirclePoint to) {
-		double g = (to.getG()) - from.getG();
+//		double g = to.getG() - from.getG();
+		double g = from.getG() - to.getG();
+		if (g > Math.PI) {
+			g = (2 * Math.PI) - g;
+		}
+		if (g < -Math.PI) {
+			g += (2 * Math.PI);
+		}
+
 		double lA = to.getL();
 		double lD = from.getL();
 		double gcArc = Math.acos((Math.sin(lD) * Math.sin(lA)) + (Math.cos(lD) * Math.cos(lA) * Math.cos(g)));
@@ -113,6 +121,80 @@ public final class GreatCircle {
 			}
 		}
 		return ira;
+	}
+
+	/**
+	 * Prefer this one, rather than getInitialRouteAngleInDegreesV2
+	 *
+	 * @param from all values in degrees
+	 * @param to all values in degrees
+	 * @return Initial Route Angle in degrees
+	 */
+	public static double getInitialRouteAngleInDegrees(GreatCirclePoint from, GreatCirclePoint to) {
+//		double g = to.getG() - from.getG();
+		double g = from.getG() - to.getG();
+		if (g > 180) {
+			g = 360 - g;
+		}
+		if (g < -180) {
+			g += 360;
+		}
+		double lA = to.getL();
+		double lD = from.getL();
+		double gcArc = Math.acos((Math.sin(Math.toRadians(lD)) * Math.sin(Math.toRadians(lA))) +
+				(Math.cos(Math.toRadians(lD)) * Math.cos(Math.toRadians(lA)) * Math.cos(Math.toRadians(g))));
+		// System.out.println(String.format("M: %.03f nm", 60 * Math.toDegrees(gcArc)));
+		double V = Math.asin((Math.sin(Math.toRadians(g)) * Math.cos(Math.toRadians(lA))) / Math.sin(gcArc));
+		if (V > 0) { // From the north
+			if (g < 0) { // to West
+				V = (2 * Math.PI) - V;
+			}
+		} else { // From the south
+//			V = Math.abs(V);
+			if (g > 0) { // to East
+				V = Math.PI - V;
+			} else { // To West
+				V = Math.PI + V;
+			}
+		}
+		return Math.toDegrees(V);
+	}
+
+	/**
+	 * Prefer getInitialRouteAngleInDegrees
+	 *
+	 * @param from all values in degrees
+	 * @param to all values in degrees
+	 * @return Initial Route Angle in degrees
+	 */
+	public static double getInitialRouteAngleInDegreesV2(GreatCirclePoint from, GreatCirclePoint to) {
+//		double g = to.getG() - from.getG();
+		double g = from.getG() - to.getG();
+		if (g > 180) {
+			g = 360 - g;
+		}
+		if (g < -180) {
+			g += 360;
+		}
+		double lA = to.getL();
+		double lD = from.getL();
+
+		double V = Math.atan(Math.sin(Math.toRadians(g)) /
+				((Math.cos(Math.toRadians(lD)) * Math.tan(Math.toRadians(lA))) - (Math.sin(Math.toRadians(lD)) * Math.cos(Math.toRadians(g)))));
+
+		if (V > 0) { // From the north
+			if (g < 0) { // to West
+				V = (2 * Math.PI) - V;
+			}
+		} else { // From the south
+//			V = Math.abs(V);
+			if (g > 0) { // to East
+				V = Math.PI - V;
+			} else { // To West
+				V = Math.PI + V;
+			}
+		}
+		return Math.toDegrees(V);
 	}
 
 	public void calculateGreatCircle(int nbPoints) {
