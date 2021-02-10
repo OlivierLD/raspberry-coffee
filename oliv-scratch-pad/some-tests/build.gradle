@@ -24,6 +24,7 @@ repositories {
     // maven { url "https://nexus.corp.com/content/repositories/releases" }
     maven { url "https://mvnrepository.com/artifact" }
     maven { url "https://dl.bintray.com/cibotech/public" }
+    maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
 }
 
 dependencies {
@@ -44,7 +45,9 @@ dependencies {
     compile 'com.cibo:evilplot-repl_2.12:0.7.0'
 //    compile 'com.cibo:evilplot-repl_2.13:0.8.0'
 
-    compile project(':common-utils')
+//    compile project(':common-utils')
+    implementation 'oliv.raspi.coffee:common-utils:1.0' // Java Celestial Almanac
+
 
     // Require tools.jar, from the JDK (Doclet and Co)
 //    compile files(org.gradle.internal.jvm.Jvm.current().toolsJar)

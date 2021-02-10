@@ -1,5 +1,6 @@
 package tideengine.tests.findclosest;
 
+import calc.calculation.AstroComputer;
 import tideengine.BackEndTideComputer;
 import tideengine.Coefficient;
 import tideengine.TideStation;
@@ -16,6 +17,8 @@ import java.util.TimeZone;
 
 /**
  * This is just a test, not a unit-test
+ *
+ * From a given position, find the closest tide station.
  */
 public class FindClosest {
     private final static SimpleDateFormat SDF = new SimpleDateFormat("yyy-MMM-dd HH:mm z (Z)");
@@ -35,6 +38,8 @@ public class FindClosest {
     public static void main(String... args) throws Exception {
         System.out.println(args.length + " Argument(s)...");
 
+        Calendar now = GregorianCalendar.getInstance();
+
 //		double distNM = 60.0 * Math.toDegrees(getDistance(Math.toRadians(37.73), Math.toRadians(-122.50), Math.toRadians(38.73), Math.toRadians(-122.50)));
 //		System.out.println("Dist:" + distNM);
 
@@ -47,9 +52,7 @@ public class FindClosest {
         BackEndTideComputer.connect();
         BackEndTideComputer.setVerbose(false);
 
-        // Some tests
         List<Coefficient> constSpeed = BackEndTideComputer.buildSiteConstSpeed();
-        Calendar now = GregorianCalendar.getInstance();
 
         List<TideStation> stationData = BackEndTideComputer.getStationData();
         System.out.printf("%d stations\n", stationData.size());
@@ -97,6 +100,12 @@ public class FindClosest {
                     TideUtilities.DF22PLUS.format(tv.getValue()),
                     ts.getDisplayUnit()));
 
+            // Astronomical Data
+            System.setProperty("astro.verbose", "false");
+            AstroComputer.calculate(); // Default: now
+            double moonPhase = AstroComputer.getMoonPhase();
+            double moonTilt = AstroComputer.getMoonTilt(USER_POS_LATITUDE, USER_POS_LONGITUDE);
+            System.out.printf("Moon Phase: %.01f\272, Tilt: %.01f\272", moonPhase, moonTilt);
         } else {
             System.out.println("Not found :(");
         }

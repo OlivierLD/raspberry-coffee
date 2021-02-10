@@ -1,19 +1,18 @@
-package tideengine.tests.findclosest;
+package oliv.resource;
 
-import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-public class FindClosestResourceBundle {
-    // Resource Bundle lives in the 'resources' directory.
-    //                                Package                          File Base name
-    private static String baseName = "tideengine.tests.findclosest." + "fc"; // Optional suffix
+public class ResourceBundleHelper {
+    // properties files live in the 'resources' folder.
+    //                                Package            File Base name
+    private static String baseName = "oliv.resource." + "rb"; // Optional suffix
     private static ResourceBundle resourceBundle;
 
-    private FindClosestResourceBundle() {
+    private ResourceBundleHelper() {
     }
 
-    public static synchronized ResourceBundle getFindClosestResourceBundle() {
+    public static synchronized ResourceBundle getResourceBundleHelper() {
         if (resourceBundle == null) {
             try {
                 resourceBundle = ResourceBundle.getBundle(baseName);
@@ -34,7 +33,7 @@ public class FindClosestResourceBundle {
     }
 
     public static String buildMessage(String id, String[] data) {
-        String mess = FindClosestResourceBundle.getFindClosestResourceBundle().getString(id);
+        String mess = ResourceBundleHelper.getResourceBundleHelper().getString(id);
         for (int i = 0; data != null && i < data.length; i++) {
             String toReplace = String.format("{$%d}", (i + 1));
 //            System.out.println("Replacing " + toReplace + " with " + data[i] + " in " + mess);
