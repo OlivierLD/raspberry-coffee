@@ -77,8 +77,8 @@ public final class GreatCirclePoint
 		GreatCircle gc = new GreatCircle();
 		gc.setStart(new GreatCirclePoint(Math.toRadians(this.getL()), Math.toRadians(this.getG())));
 		gc.setArrival(new GreatCirclePoint(Math.toRadians(target.getL()), Math.toRadians(target.getG())));
-		gc.calculateRhumbLine();
-		double d = gc.getRhumbLineDistance();
+		GreatCircle.RLData rlData = gc.calculateRhumbLine();
+		double d = rlData.getdLoxo();
 
 		return d;
 	}

@@ -21,9 +21,7 @@ public class GCTest01 {
         double gcDist = Math.toDegrees(test.getDistance()) * 60.0;
         System.out.println("GC Dist (nm):" + gcDist);
         Vector<GreatCircleWayPoint> gcRoute = test.getRoute();
-        gcRoute.forEach(gcwp -> {
-            System.out.println(String.format("Z:%.03f to %s", gcwp.getZ(), gcwp.getPoint().toString()));
-        });
+        gcRoute.forEach(gcwp -> System.out.printf("Z:%.03f to %s%n", gcwp.getZ(), gcwp.getPoint().toString()));
 
         double ari = GreatCircle.getInitialRouteAngle(start, p);
 //        if (ari < 0) {
@@ -31,18 +29,18 @@ public class GCTest01 {
 //        }
         System.out.println("Initial Route Angle = " + Math.toDegrees(ari));
 
-        test.calculateRhumbLine();
-        double dist = test.getRhumbLineDistance();
-        double route = test.getRhumbLineRoute();
+        GreatCircle.RLData rlData = test.calculateRhumbLine();
+        double dist = rlData.getdLoxo();
+        double route = rlData.getRv();
         System.out.println("Dist Loxo:" + dist + " (GC:" + gcDist + "), route (loxo):" + Math.toDegrees(route));
 
         System.out.println("-------------");
         test = new GreatCircle();
         test.setStart(new GreatCirclePoint(Math.toRadians(47.67941), Math.toRadians(-3.368855)));
         test.setArrival(new GreatCirclePoint(Math.toRadians(47.666931), Math.toRadians(-3.39822)));
-        test.calculateRhumbLine();
-        dist = test.getRhumbLineDistance();
-        route = test.getRhumbLineRoute();
+        rlData = test.calculateRhumbLine();
+        dist = rlData.getdLoxo();
+        route = rlData.getRv();
         gcDist = Math.toDegrees(test.getDistance()) * 60.0;
         System.out.println("Dist (loxo):" + dist + " (GC:" + gcDist + "), route (loxo):" + Math.toDegrees(route));
     }
