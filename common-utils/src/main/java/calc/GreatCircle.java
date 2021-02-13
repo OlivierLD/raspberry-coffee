@@ -13,16 +13,12 @@ public final class GreatCircle {
 	private GreatCirclePoint start;   // Angles in radians
 	private GreatCirclePoint arrival; // Angles in radians
 	private Vector<GreatCircleWayPoint> route;
-//	private double rv;
-//	private double dLoxo;
-	
+
 	private static final double TOLERANCE = 1D;
 
 	public GreatCircle() {
 		this.start = null;
 		this.arrival = null;
-//		this.rv = 0.0D;
-//		this.dLoxo = 0.0D;
 	}
 
 	/**
@@ -33,8 +29,6 @@ public final class GreatCircle {
 	public GreatCircle(GreatCirclePoint startingPoint, GreatCirclePoint arrivalPoint) {
 		this.start = startingPoint;
 		this.arrival = arrivalPoint;
-//		this.rv = 0.0;
-//		this.dLoxo = 0.0;
 	}
 
 	/**
@@ -46,9 +40,31 @@ public final class GreatCircle {
 		this.start = p;
 	}
 
+	public GreatCircle start(GreatCirclePoint p) {
+		this.start = p;
+		return this;
+	}
+
+	public GreatCircle startInDegrees(GreatCirclePoint p) {
+		this.start = new GreatCirclePoint(Math.toRadians(p.getL()),
+				Math.toRadians(p.getG()));
+		return this;
+	}
+
+	public GreatCircle arrival(GreatCirclePoint p) {
+		this.arrival = p;
+		return this;
+	}
+
+	public GreatCircle arrivalInDegrees(GreatCirclePoint p) {
+		this.arrival = new GreatCirclePoint(Math.toRadians(p.getL()),
+				Math.toRadians(p.getG()));
+		return this;
+	}
+
 	public void setStartInDegrees(GreatCirclePoint p) {
 		this.start = new GreatCirclePoint(Math.toRadians(p.getL()),
-						Math.toRadians(p.getG()));
+						 Math.toRadians(p.getG()));
 	}
 
 	/**
@@ -87,7 +103,7 @@ public final class GreatCircle {
 	 * @return Initial Route Angle, in radians
 	 */
 	public double getInitialRouteAngle() {
-		return this.getInitialRouteAngle(this.start, this.arrival);
+		return GreatCircle.getInitialRouteAngle(this.start, this.arrival);
 	}
 
 	/**
@@ -288,10 +304,10 @@ public final class GreatCircle {
 	 * @return in radians
 	 */
 	public double getDistance() {
-		double cos = Math.sin(this.start.getL()) * Math.sin(this.arrival.getL()) + Math.cos(this.start.getL()) * 
-				Math.cos(this.arrival.getL()) * Math.cos(this.arrival.getG() - this.start.getG());
-		double dist = Math.acos(cos);
-		return dist;
+//		double cos = Math.sin(this.start.getL()) * Math.sin(this.arrival.getL()) + Math.cos(this.start.getL()) *
+//				Math.cos(this.arrival.getL()) * Math.cos(this.arrival.getG() - this.start.getG());
+//		return Math.acos(cos);
+		return GreatCircle.getDistance(this.start, this.arrival);
 	}
 	
 	public static double getDistance(GreatCirclePoint from, GreatCirclePoint to) {
@@ -319,11 +335,12 @@ public final class GreatCircle {
 	 * @return in nautical miles
 	 */
 	public static double getDistanceInNM(GreatCirclePoint from, GreatCirclePoint to) {
-		return (60.0 * getDistanceInDegrees(from, to));
+		return (GreatCircle.getDistanceInDegrees(from, to) * 60D);
 	}
 
-
 	/**
+	 * Input in radians, output in nautical miles.
+	 * 
 	 * @param from in Radians
 	 * @param to   in Radians
 	 * @return in miles
@@ -335,6 +352,8 @@ public final class GreatCircle {
 	}
 
 	/**
+	 * Input in degrees, output in nautical miles.
+	 *
 	 * @param from in Degrees
 	 * @param to   in Degrees
 	 * @return in miles
@@ -345,6 +364,9 @@ public final class GreatCircle {
 		return Math.toDegrees(dist) * 60D;
 	}
 
+	/**
+	 * RhumbLine data holder
+	 */
 	public static class RLData {
 		double rv;
 		double dLoxo;
@@ -364,7 +386,7 @@ public final class GreatCircle {
 	}
 
 	public RLData calculateRhumbLine() {
-		return calculateRhumbLine(this.start, this.arrival);
+		return GreatCircle.calculateRhumbLine(this.start, this.arrival);
 	}
 
 	public static RLData calculateRhumbLine(GreatCirclePoint from, GreatCirclePoint to) {
@@ -433,7 +455,6 @@ public final class GreatCircle {
 		while (rv >= (2 * Math.PI)) {
 			rv -= (2 * Math.PI);
 		}
-
 		return new RLData(rv, dLoxo);
 	}
 
@@ -547,7 +568,7 @@ public final class GreatCircle {
 		}
 		double startLC = Math.log(Math.tan((Math.PI / 4D) + f.getL() / 2D));
 		double arrLC = Math.log(Math.tan((Math.PI / 4D) + t.getL() / 2D));
-		double deltaLC = 3437.7467707849396D * (arrLC - startLC);
+		double deltaLC = 3_437.7467707849396D * (arrLC - startLC);
 		double _rv = 0.0D;
 		if (deltaLC != 0d) {
 			_rv = Math.atan(deltaG / deltaLC);
@@ -606,6 +627,8 @@ public final class GreatCircle {
 	}
 
 	/**
+	 * Dead Reckoning
+	 *
 	 * @param from  GeopPoint, L &amp; G in Radians
 	 * @param dist  distance in nm
 	 * @param route route in degrees

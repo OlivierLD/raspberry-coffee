@@ -38,7 +38,7 @@ public class FindClosest {
     public static void main(String... args) throws Exception {
         System.out.println(args.length + " Argument(s)...");
 
-        Calendar now = GregorianCalendar.getInstance();
+        Calendar now = GregorianCalendar.getInstance(); // Now. Current DateTime
 
 //		double distNM = 60.0 * Math.toDegrees(getDistance(Math.toRadians(37.73), Math.toRadians(-122.50), Math.toRadians(38.73), Math.toRadians(-122.50)));
 //		System.out.println("Dist:" + distNM);
@@ -100,7 +100,7 @@ public class FindClosest {
                     TideUtilities.DF22PLUS.format(tv.getValue()),
                     ts.getDisplayUnit()));
 
-            // Astronomical Data
+            // Bonus: Astronomical Data
             System.setProperty("astro.verbose", "false");
             AstroComputer.calculate(); // Default: now
             double moonPhase = AstroComputer.getMoonPhase();
