@@ -47,4 +47,4 @@ else
 fi
 #
 echo -e "Done"
-
+echo -e "Do not forget to push the changes in this branch"
