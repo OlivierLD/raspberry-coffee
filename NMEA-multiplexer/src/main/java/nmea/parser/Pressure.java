@@ -37,9 +37,4 @@ public class Pressure implements Serializable {
 						FMT.format(d / HPA_TO_PSI) + PSI + ", " +
 						FMT.format(d / HPA_TO_ATM) + ATM;
 	}
-
-	public static void main(String... args) {
-		Pressure p = new Pressure(1013.25);
-		System.out.println(p.toString());
-	}
 }

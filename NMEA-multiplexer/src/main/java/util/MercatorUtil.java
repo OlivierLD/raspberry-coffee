@@ -55,19 +55,4 @@ public final class MercatorUtil {
 			return ((lat - bottom) / (getIncLat(lat) - getIncLat(bottom)));
 		}
 	}
-
-	public static void main(String... args) {
-		double d = getIncLat(45D);
-		System.out.println("IncLat(45)=" + d);
-		System.out.println("Rad(45)=" + Math.toRadians(45D));
-
-		System.out.println("IncLat(60)=" + getIncLat(60D));
-		System.out.println("Ratio at L=60:" + getIncLatRatio(60D));
-
-		System.out.println("-----------------------");
-		for (int i = 0; i <= 90; i += 10) {
-			System.out.println("Ratio at " + i + "=" + getIncLatRatio(i));
-		}
-		System.out.println("IncLat(90)=" + getIncLat(90D));
-	}
 }

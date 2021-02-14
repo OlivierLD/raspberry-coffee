@@ -274,7 +274,7 @@ public class ExtraDataComputer extends Computer {
 				}
 				//  System.out.println("From TrueWindSentenceInsertion, TWS:" + tws);
 
-				String nmeaVWT = StringGenerator.gerenateVWT(generatedStringsPrefix, tws, twa);
+				String nmeaVWT = StringGenerator.generateVWT(generatedStringsPrefix, tws, twa);
 				String nmeaMWV = StringGenerator.generateMWV(generatedStringsPrefix, tws,
 								(int) Math.round(twa),
 								StringParsers.TRUE_WIND);
