@@ -185,6 +185,24 @@ function onMessage(json) {
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CDR");
 		}
+		try {
+		    let cdr = json["Current calculated with damping"]["30000"].direction.angle;
+			events.publish('cdr-30000', cdr);
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CDR-30000");
+		}
+		try {
+		    let cdr = json["Current calculated with damping"]["60000"].direction.angle;
+			events.publish('cdr-60000', cdr);
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CDR-60000");
+		}
+		try {
+		    let cdr = json["Current calculated with damping"]["600000"].direction.angle;
+			events.publish('cdr-600000', cdr);
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CDR-600000");
+		}
 
 		try {
 			let cog = json.COG.angle;
@@ -209,6 +227,24 @@ function onMessage(json) {
 			events.publish('csp', csp);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CSP");
+		}
+		try {
+		    let csp = json["Current calculated with damping"]["30000"].speed.speed;
+			events.publish('csp-30000', csp);
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CSP-30000");
+		}
+		try {
+		    let csp = json["Current calculated with damping"]["60000"].speed.speed;
+			events.publish('csp-60000', csp);
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CSP-60000");
+		}
+		try {
+		    let csp = json["Current calculated with damping"]["600000"].speed.speed;
+			events.publish('csp-600000', csp);
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CSP-600000");
 		}
 		try {
 			let sog = json.SOG.speed;

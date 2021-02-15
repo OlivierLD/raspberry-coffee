@@ -138,6 +138,19 @@ public class ExtraDataComputer extends Computer {
 								ex.printStackTrace();
 							}
 							try {
+								// Warning: No null in a ConcurrentHashMap::putAll!!
+								Set<String> keys = rmcMap.keySet();
+								List<String> toRemove = new ArrayList<>();
+								keys.forEach(k -> {
+									if (rmcMap.get(k) == null) { // One level only for this map.
+										toRemove.add(k);
+									}
+								});
+								if (toRemove.size() > 0) {
+									synchronized (rmcMap) {
+										toRemove.forEach(k -> rmcMap.remove(k));
+									}
+								}
 								cache.putAll(rmcMap);
 							} catch (Exception ex) {
 								System.err.printf("--- Managed: putAll for %s ---%n", rmcMap);

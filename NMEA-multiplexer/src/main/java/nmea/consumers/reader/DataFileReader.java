@@ -3,11 +3,11 @@ package nmea.consumers.reader;
 import nmea.api.NMEAEvent;
 import nmea.api.NMEAListener;
 import nmea.api.NMEAReader;
+import utils.StringUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -95,6 +95,9 @@ public class DataFileReader extends NMEAReader {
 //      System.out.println("Read " + l);
 					if (l != -1 && dim > 0) { // dim should be always greater than 0
 						String nmeaContent = new String(ba);
+						if (this.getZip()) { // Workaround. From a zip, some NULs have been seen sneaking in the string...
+							nmeaContent = StringUtils.removeNullsFromString(nmeaContent);
+						}
 						if (verbose) {
 							System.out.println("Spitting out [" + nmeaContent + "]");
 						}
@@ -110,7 +113,7 @@ public class DataFileReader extends NMEAReader {
 						if (this.loop) {
 							if (this.verbose || true) {
 								System.out.println(String.format("Read:%d, Dim:%d (size: %f)", l, dim, size));
-								System.out.println("===== Reseting Reader =====");
+								System.out.println("===== Resetting Reader =====");
 							}
 							if (this.getZip()) {
 								ZipFile zipFile = new ZipFile(this.dataFileName);

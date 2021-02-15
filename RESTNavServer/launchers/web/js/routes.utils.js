@@ -129,13 +129,17 @@ let GreatCircle = function (from, to) {
 };
 
 /* Static Utils */
-let toRadians = (deg) => {
-	return deg * (Math.PI / 180);
-};
+if (toRadians === undefined) {
+    let toRadians = (deg) => {
+        return deg * (Math.PI / 180);
+    };
+}
 
-let toDegrees = (rad) => {
-	return rad * (180 / Math.PI);
-};
+if (toDegrees === undefined) {
+    let toDegrees = (rad) => {
+        return rad * (180 / Math.PI);
+    };
+}
 
 let sign = (d) => {
 	let s = 0;

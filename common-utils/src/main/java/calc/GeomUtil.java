@@ -198,42 +198,12 @@ public final class GeomUtil {
 		}
 	}
 
-	// Workaround: in some cases (RMC NMEA String from a zip?), some NULs sneak in the strings...
-	// Streaming Bytes is not really done with Java8 Streams...
-	public static String removeNullsFromString(String str) {
-		List<Byte> strBytes = new ArrayList<>();
-		byte[] bytesFromDegrees = str.getBytes();
-		boolean foundNull = false;
-		for (int i = 0; i < bytesFromDegrees.length; i++) {
-			if (bytesFromDegrees[i] != (byte) 0) {
-				strBytes.add(bytesFromDegrees[i]);
-			} else {
-				foundNull = true;
-			}
-		}
-		// Verbose?
-		if (foundNull) {
-			System.err.println("Found Null(s) in String:");
-			DumpUtil.displayDualDump(str, System.err);
-		}
-		byte[] newStrBA = new byte[strBytes.size()];
-		for (int i = 0; i < strBytes.size(); i++) {
-			newStrBA[i] = strBytes.get(i).byteValue();
-		}
-		String cleanString = new String(newStrBA);
-		if (foundNull) {
-			System.err.println(">>> Turned into:");
-			DumpUtil.displayDualDump(cleanString, System.err);
-		}
-		return cleanString;
-	}
-
 	public static double sexToDec(String degrees, String minutes)
 			throws RuntimeException {
 		double ret;
-		try {
-			double deg = Double.parseDouble(removeNullsFromString(degrees));
-			double min = Double.parseDouble(removeNullsFromString(minutes));
+		try { // TODO removeNullsFromString should have been done before.
+			double deg = Double.parseDouble(degrees);
+			double min = Double.parseDouble(minutes);
 			min *= (10.0 / 6.0);
 			ret = deg + (min / 100D);
 		} catch (NumberFormatException nfe) {

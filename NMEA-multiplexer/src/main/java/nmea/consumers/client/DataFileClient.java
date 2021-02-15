@@ -69,9 +69,9 @@ public class DataFileClient extends NMEAClient {
 		private String[] deviceFilters;
 		private String[] sentenceFilters;
 		private boolean verbose;
-		private boolean loop = true;
-		private boolean zip = false;
-		private String pathInArchive = "";
+		private boolean loop;
+		private boolean zip;
+		private String pathInArchive;
 
 		public DataFileBean(DataFileClient instance) {
 			cls = instance.getClass().getName();
@@ -81,6 +81,8 @@ public class DataFileClient extends NMEAClient {
 			deviceFilters = instance.getDevicePrefix();
 			sentenceFilters = instance.getSentenceArray();
 			loop = instance.isLoop();
+			zip = instance.isZip();
+			pathInArchive = instance.getPathInArchive();
 		}
 
 		@Override

@@ -183,6 +183,9 @@ function onMessage(json) {
 		try {
 			let cdr = json.CDR.angle;
 			events.publish('cdr', cdr);
+			events.publish('cdr-30000', cdr);
+			events.publish('cdr-60000', cdr);
+			events.publish('cdr-600000', cdr);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CDR");
 		}
@@ -208,6 +211,9 @@ function onMessage(json) {
 		try {
 			let csp = json.CSP.speed;
 			events.publish('csp', csp);
+			events.publish('csp-30000', csp);
+			events.publish('csp-60000', csp);
+			events.publish('csp-600000', csp);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CSP");
 		}

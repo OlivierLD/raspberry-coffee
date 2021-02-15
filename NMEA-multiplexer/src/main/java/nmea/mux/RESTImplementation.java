@@ -2301,7 +2301,8 @@ public class RESTImplementation {
 			if (cache != null) {
 				synchronized (cache) {
 					NMEAUtils.calculateVMGs(cache);
-					final JsonElement _jsonElement = new Gson().toJsonTree(cache); // I know, ah shit!
+					Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create(); // To avoid NaN/Double issues
+					final JsonElement _jsonElement = gson.toJsonTree(cache); // I know, ah shit!
 					//	String str = new Gson().toJson(cache);
 					((JsonObject) _jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Usually useless for the client, drop it.
 					if (tiny || txt) {
@@ -2312,7 +2313,9 @@ public class RESTImplementation {
 				}
 			}
 		} catch (Exception ex) {
-			Context.getInstance().getLogger().log(Level.INFO, "With cache:", cache);
+			Context.getInstance().getLogger().log(Level.INFO, String.format("With cache: %s", (cache == null ? "null" : cache.toString())));
+			// Also try Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//			Context.getInstance().getLogger().log(Level.INFO, "With cache (JSON):", (cache == null ? "null" : new Gson().toJson(cache)));
 			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getCache", ex);
 		}
 		String content = "";

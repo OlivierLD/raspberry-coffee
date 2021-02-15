@@ -18,6 +18,8 @@ import java.util.TimeZone;
 import java.util.function.Function;
 
 import calc.GeomUtil;
+import utils.StringUtils;
+
 /**
  * Generic form is
  * $<talker ID><sentence ID,>[parameter 1],[parameter 2],...[<*checksum>]<CR><LF> (\r\n)
@@ -1206,9 +1208,9 @@ public class StringParsers {
 	}
 
 	// RMC Recommended minimum specific GPS/Transit data
-	public static RMC parseRMC(String strOne) {
+	public static RMC parseRMC(String str) {
 		RMC rmc = null;
-		String str = GeomUtil.removeNullsFromString(strOne.trim());
+//		String str = StringUtils.removeNullsFromString(strOne.trim()); // TODO Do it at the consumer level
 		if (str.length() < 6 || str.indexOf("*") < 0) {
 			return null;
 		}
