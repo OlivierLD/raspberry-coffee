@@ -1206,16 +1206,16 @@ public class StringParsers {
 	}
 
 	// RMC Recommended minimum specific GPS/Transit data
-	public static RMC parseRMC(String str) {
+	public static RMC parseRMC(String strOne) {
 		RMC rmc = null;
-		String s = str.trim();
-		if (s.length() < 6 || s.indexOf("*") < 0) {
+		String str = GeomUtil.removeNullsFromString(strOne.trim());
+		if (str.length() < 6 || str.indexOf("*") < 0) {
 			return null;
 		}
 		if (!validCheckSum(str)) {
 			return null;
 		}
-		s = s.substring(0, s.indexOf("*"));
+		String s = str.substring(0, str.indexOf("*"));
     /* RMC Structure is
      *                                                                    12
      *         1      2 3        4 5         6 7     8     9      10    11
@@ -1237,7 +1237,7 @@ public class StringParsers {
 		try {
 			if (s.indexOf("RMC,") > -1) {
 				rmc = new RMC();
-				String[] data = str.substring(0, str.indexOf("*")).split(",");
+				String[] data = s.split(",");
 				rmc = rmc.setValid(data[2].equals("A")); // Active
 				if (data[1].length() > 0) { // Time and Date
 					double utc = 0D;

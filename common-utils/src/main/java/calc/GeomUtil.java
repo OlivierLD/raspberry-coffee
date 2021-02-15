@@ -200,7 +200,7 @@ public final class GeomUtil {
 
 	// Workaround: in some cases (RMC NMEA String from a zip?), some NULs sneak in the strings...
 	// Streaming Bytes is not really done with Java8 Streams...
-	private static String removeNullsFromString(String str) {
+	public static String removeNullsFromString(String str) {
 		List<Byte> strBytes = new ArrayList<>();
 		byte[] bytesFromDegrees = str.getBytes();
 		boolean foundNull = false;
