@@ -1,8 +1,11 @@
 package calc;
 
+import utils.DumpUtil;
 import utils.StringUtils;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class GeomUtil {
 	public static final int HTML = 0;
@@ -195,17 +198,50 @@ public final class GeomUtil {
 		}
 	}
 
+	// Workaround: in some cases (RMC NMEA String from a zip?) NUL sneak in the strings...
+	// Streaming Bytes is not really done with Java8 Streams...
+	private static String removeNullsFromString(String str) {
+		List<Byte> strBytes = new ArrayList<>();
+		byte[] bytesFromDegrees = str.getBytes();
+		boolean foundNull = false;
+		for (int i = 0; i < bytesFromDegrees.length; i++) {
+			if (bytesFromDegrees[i] != (byte) 0) {
+				strBytes.add(bytesFromDegrees[i]);
+			} else {
+				foundNull = true;
+			}
+		}
+		// Verbose?
+		if (foundNull) {
+			System.err.println("Found Null(s) in String:");
+			DumpUtil.displayDualDump(str, System.err);
+		}
+		byte[] newStrBA = new byte[strBytes.size()];
+		for (int i = 0; i < strBytes.size(); i++) {
+			newStrBA[i] = strBytes.get(i).byteValue();
+		}
+		String cleanString = new String(newStrBA);
+		if (foundNull) {
+			System.err.println(">>> Turned into:");
+			DumpUtil.displayDualDump(cleanString, System.err);
+		}
+		return cleanString;
+	}
+
 	public static double sexToDec(String degrees, String minutes)
 			throws RuntimeException {
-		double deg = 0.0D;
-		double min = 0.0D;
-		double ret = 0.0D;
+		double ret;
 		try {
-			deg = Double.parseDouble(degrees);
-			min = Double.parseDouble(minutes);
+			double deg = Double.parseDouble(removeNullsFromString(degrees));
+			double min = Double.parseDouble(removeNullsFromString(minutes));
 			min *= (10.0 / 6.0);
-			ret = deg + min / 100D;
+			ret = deg + (min / 100D);
 		} catch (NumberFormatException nfe) {
+			nfe.printStackTrace();
+			System.err.println("Degrees:");
+			DumpUtil.displayDualDump(degrees, System.err);
+			System.err.println("Minutes:");
+			DumpUtil.displayDualDump(minutes, System.err);
 			throw new RuntimeException("Bad number [" + degrees + "] [" + minutes + "]");
 		}
 		return ret;

@@ -2312,6 +2312,7 @@ public class RESTImplementation {
 				}
 			}
 		} catch (Exception ex) {
+			Context.getInstance().getLogger().log(Level.INFO, "With cache:", cache);
 			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getCache", ex);
 		}
 		String content = "";

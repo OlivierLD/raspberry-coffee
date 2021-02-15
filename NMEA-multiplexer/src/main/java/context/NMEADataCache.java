@@ -290,7 +290,12 @@ public class NMEADataCache
 	public /*synchronized*/ Object put(String key, Object value) {
 		Object o = null;
 		synchronized (this) {
-			o = super.put(key, value);
+			try {
+				o = super.put(key, value);
+			} catch (Exception ex) {
+				System.err.printf("Caught Exception for key [%s], value [%s]:", key, value);
+				ex.printStackTrace();
+			}
 		}
 		if (dampingSize > 1 && dampingMap.containsKey(key)) {
 			List<Object> ald = dampingMap.get(key);
@@ -431,7 +436,13 @@ public class NMEADataCache
 //						System.out.println(String.format("Alt: Min %.02f, Max %.02f, Diff %.02f", this.minAlt, this.maxAlt, (this.maxAlt - this.minAlt)));
 						break;
 					case "RMC":
-						RMC rmc = StringParsers.parseRMC(nmeaSentence);
+						RMC rmc = null;
+						try {
+							rmc = StringParsers.parseRMC(nmeaSentence);
+						} catch (Exception ex) { // Some NULL happen to sneak in some strings... TBD.
+							System.err.println("Managed >>");
+							ex.printStackTrace();
+						}
 						if (rmc != null) {
 							if (rmc.isValid()) {
 								this.put(RMC_STATUS, true);

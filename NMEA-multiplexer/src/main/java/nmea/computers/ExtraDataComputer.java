@@ -137,7 +137,13 @@ public class ExtraDataComputer extends Computer {
 							} catch (Exception ex) {
 								ex.printStackTrace();
 							}
-							cache.putAll(rmcMap);
+							try {
+								cache.putAll(rmcMap);
+							} catch (Exception ex) {
+								System.err.printf("--- Managed: putAll for %s ---%n", rmcMap);
+								ex.printStackTrace();
+								System.err.println("----------------------------");
+							}
 						}
 						break;
 					case "VTG":

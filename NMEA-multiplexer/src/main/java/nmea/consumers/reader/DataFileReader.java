@@ -46,7 +46,7 @@ public class DataFileReader extends NMEAReader {
 		this.pathInArchive = pathInZip;
 	}
 
-	public String getFileNme() {
+	public String getFileName() {
 		return this.dataFileName;
 	}
 	public long getBetweenRecord() { return this.betweenRecords; }
@@ -107,8 +107,8 @@ public class DataFileReader extends NMEAReader {
 						}
 					} else {
 						this.fis.close();
-						if (loop) {
-							if (verbose) {
+						if (this.loop) {
+							if (this.verbose || true) {
 								System.out.println(String.format("Read:%d, Dim:%d (size: %f)", l, dim, size));
 								System.out.println("===== Reseting Reader =====");
 							}
@@ -123,17 +123,17 @@ public class DataFileReader extends NMEAReader {
 								this.fis = new FileInputStream(this.dataFileName);
 							}
 						} else {
-							if (true || verbose) {
+							if (true || this.verbose) {
 								System.out.println(">> End of stream. Not looping. <<");
 							}
 							break;
 						}
 					}
-				} catch (IOException ioe) { // stream may hve been closed (loop = false)
+				} catch (IOException ioe) { // stream may have been closed (loop = false)
 					ioe.printStackTrace();
 				}
 			}
-			if (loop) {
+			if (this.loop) {
 				try {
 					this.fis.close();
 				} catch (IOException ioe) {

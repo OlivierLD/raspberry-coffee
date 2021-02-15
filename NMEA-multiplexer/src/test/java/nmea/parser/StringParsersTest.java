@@ -468,9 +468,10 @@ public class StringParsersTest {
                 "$GPTXT,01,01,02,ANTSTATUS=OK*3B",
                 "$GPTXT,01,01,02,LLC FFFFFFFF-FFFFFFFF-FFFFFFFF-FFFFFFFF-FFFFFFFD*2C"
         };
-        for (String s : txt) {
-            System.out.println(String.format("%s => %s", s, StringParsers.parseTXT(s)));
-        }
+        Arrays.stream(txt).map(s -> String.format("%s => %s", s, StringParsers.parseTXT(s))).forEach(System.out::println);
+
+        str = "$IIRMC,224044,A,0909.226,S,14015.162,W,06.7,222,211110,10,E,A*05";
+        System.out.println(StringParsers.parseRMCtoString(str));
 
         System.out.println("\nDone!");
     }

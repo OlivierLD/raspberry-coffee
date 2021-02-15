@@ -1374,8 +1374,8 @@ public class StringParsers {
 				}
 			}
 		} catch (Exception e) {
-			System.err.println("parseRMC for " + s + ", " + e.toString());
-			// e.printStackTrace();
+			System.err.println("In parseRMC for " + str.trim() + ", " + e.toString());
+			e.printStackTrace();
 		}
 		return rmc;
 	}

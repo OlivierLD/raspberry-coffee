@@ -75,7 +75,7 @@ public class DataFileClient extends NMEAClient {
 
 		public DataFileBean(DataFileClient instance) {
 			cls = instance.getClass().getName();
-			file = ((DataFileReader) instance.getReader()).getFileNme();
+			file = ((DataFileReader) instance.getReader()).getFileName();
 			pause = ((DataFileReader) instance.getReader()).getBetweenRecord();
 			verbose = instance.isVerbose();
 			deviceFilters = instance.getDevicePrefix();

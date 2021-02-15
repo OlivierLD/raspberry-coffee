@@ -1,4 +1,4 @@
-package calc.calculation.nauticalalmanac.sample;
+package astro.sample;
 
 import calc.calculation.nauticalalmanac.Anomalies;
 import calc.calculation.nauticalalmanac.Context;
