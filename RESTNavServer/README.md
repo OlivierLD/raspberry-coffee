@@ -104,6 +104,7 @@ As a REST interface is available, pretty much any component with WiFi capabiliti
 This include
 - Web pages (potentially hosted by the REST/HTTP server itself)
     - accessed by laptops, tablets, smart-phones
+    - those Web pages consume the REST Services exposed by the Server
 - Smart watches (REST enabled, as they all are)
 - `ESP8266` devices
 - etc...
@@ -148,7 +149,7 @@ Finally, use `Postman`, any `REST` client, or your browser, and reach
 
 You will see it displays operations from three services.
 
-Another option is to start this script:
+### Another (even easier) option is to start this script:
 ```
  $ cd launchers
  $ ./demoLauncher.sh
@@ -175,6 +176,18 @@ This latter one will start the server and open the appropriate Web UI, from a co
 +-----------------------------------------------------------------------------------------+
  ==> You choose:
 ```
+#### Get started, as quickly as possible
+- In the menu above, choose option `10`
+- Then, in your browser, go to 
+    - `http://localhost:9999/web/index.html`
+    - `http://localhost:9999/web/admin.html`
+    - `http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=y`
+    - `http://localhost:9999/web/console.html`
+- And from the command line, enter
+    - `curl -XGET localhost:9999/oplist [ | jq ]`
+    - `curl -XGET localhost:9999/mux/cache [ | jq ]`    
+    
+Details below...
 
 > About the proxies, see the note [here](../common-utils/README.md#http-server-wip).
 
