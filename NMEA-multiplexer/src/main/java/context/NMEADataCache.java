@@ -270,7 +270,7 @@ public class NMEADataCache
 			this.keySet()
 							.stream()
 							.filter(k -> !NOT_TO_RESET.contains(k))
-							.forEach(k -> this.put(k, null));
+							.forEach(k -> this.remove(k));
 			Map<Long, NMEADataCache.CurrentDefinition> currentMap = (Map<Long, NMEADataCache.CurrentDefinition>)this.get(NMEADataCache.CALCULATED_CURRENT);
 			if (currentMap != null) {
 				synchronized (currentMap) {

@@ -70,29 +70,37 @@ public abstract class NMEAReader extends Thread {
 	 * @see nmea.api.NMEAParser
 	 */
 	protected void fireDataRead(NMEAEvent e) {
-		this.NMEAListeners.stream().forEach(listener -> {
-			synchronized(listener) {
-				listener.dataRead(e);
-			}
-		});
+		synchronized(this.NMEAListeners) {
+			this.NMEAListeners.stream().forEach(listener -> {
+				synchronized (listener) {
+					listener.dataRead(e);
+				}
+			});
+		}
 	}
 
 	protected void fireStopReading(NMEAEvent e) {
-		this.NMEAListeners.stream().forEach(listener -> {
-			synchronized (listener) {
-				listener.stopReading(e);
-			}
-		});
+		synchronized(this.NMEAListeners) {
+			this.NMEAListeners.stream().forEach(listener -> {
+				synchronized (listener) {
+					listener.stopReading(e);
+				}
+			});
+		}
 	}
 
 	public synchronized void addNMEAListener(NMEAListener l) {
-		if (!NMEAListeners.contains(l)) {
-			NMEAListeners.add(l);
+		if (!this.NMEAListeners.contains(l)) {
+			synchronized(this.NMEAListeners) {
+				this.NMEAListeners.add(l);
+			}
 		}
 	}
 
 	public synchronized void removeNMEAListener(NMEAListener l) {
-		NMEAListeners.remove(l);
+		synchronized(this.NMEAListeners) {
+			NMEAListeners.remove(l);
+		}
 	}
 
 	public boolean canRead() {
