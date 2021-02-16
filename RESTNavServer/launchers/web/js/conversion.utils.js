@@ -1,4 +1,4 @@
-if (decToSex === undefined) {
+//if (decToSex === undefined) {
     let decToSex = (val, ns_ew) => {
         let absVal = Math.abs(val);
         let intValue = Math.floor(absVal);
@@ -24,7 +24,7 @@ if (decToSex === undefined) {
 
         return s;
     };
-}
+//}
 
 let hoursDecimalToHMS = (decHour) => {
 	let h = Math.floor(decHour);
