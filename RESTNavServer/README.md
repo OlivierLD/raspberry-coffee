@@ -178,6 +178,8 @@ This latter one will start the server and open the appropriate Web UI, from a co
 ```
 #### Get started, as quickly as possible
 - In the menu above, choose option `10`
+    - Or just run `./demoLauncher.sh --option:10`
+    - This will replay recorded data, from a zip file.
 - Then, in your browser, go to 
     - `http://localhost:9999/web/index.html`
     - `http://localhost:9999/web/admin.html`
