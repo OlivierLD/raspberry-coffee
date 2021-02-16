@@ -58,7 +58,7 @@ import static nmea.utils.NMEAUtils.longitudeToTime;
  * TODO synchronize all this.put
  */
 public class NMEADataCache
-		extends ConcurrentHashMap<String, Object> // TODO Make it a ConcurrentHashMap instead of just HashMap ? Check.
+		extends ConcurrentHashMap<String, Object>
 		implements Serializable {
 
 
