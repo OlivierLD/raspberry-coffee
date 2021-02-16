@@ -273,7 +273,9 @@ public class NMEADataCache
 							.forEach(k -> this.put(k, null));
 			Map<Long, NMEADataCache.CurrentDefinition> currentMap = (Map<Long, NMEADataCache.CurrentDefinition>)this.get(NMEADataCache.CALCULATED_CURRENT);
 			if (currentMap != null) {
-				currentMap.keySet().stream().forEach(tbl -> currentMap.remove(tbl));
+				synchronized (currentMap) {
+					currentMap.keySet().stream().forEach(tbl -> currentMap.remove(tbl));
+				}
 			}
 //		this.started = 0L;
 			this.started = System.currentTimeMillis();
