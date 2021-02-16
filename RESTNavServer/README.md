@@ -185,9 +185,9 @@ This latter one will start the server and open the appropriate Web UI, from a co
     - `http://localhost:9999/web/admin.html`
     - `http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=y`
     - `http://localhost:9999/web/console.html`
-- And from the command line, enter
+- And from the command line, enter (`jq` might not be available on your system)
     - `curl -XGET localhost:9999/oplist [ | jq ]`
-    - `curl -XGET localhost:9999/mux/cache [ | jq ]`    
+    - `curl -XGET localhost:9999/mux/cache [ | jq ]`
     
 Details below...
 
