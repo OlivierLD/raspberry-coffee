@@ -95,6 +95,10 @@ public class BMP180Client extends NMEAClient {
 		return new BMP180Bean(this);
 	}
 
+	/**
+	 * For tests (TODO isolate?)
+	 * @param args
+	 */
 	public static void main(String... args) {
 		System.out.println("BMP180Client invoked with " + args.length + " Parameter(s).");
 		for (String s : args) {

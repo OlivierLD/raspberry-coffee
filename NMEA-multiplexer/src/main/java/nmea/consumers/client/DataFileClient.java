@@ -119,6 +119,10 @@ public class DataFileClient extends NMEAClient {
 		return new DataFileBean(this);
 	}
 
+	/**
+	 * For tests (TODO isolate?)
+	 * @param args
+	 */
 	public static void main(String... args) {
 		System.out.println("DataFileClient invoked with " + args.length + " Parameter(s).");
 		for (String s : args) {

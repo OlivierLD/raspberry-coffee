@@ -1,6 +1,6 @@
 package nmea.mux.context;
 
-import http.HTTPServer;
+//import http.HTTPServer;
 
 import java.util.ArrayList;
 import java.util.EventListener;
@@ -22,6 +22,8 @@ public class Context {
 	private long startTime = 0L;
 	private long managedBytes = 0L;
 
+	private long nbMessReceived = 0L;
+
 	private String lastDataSentence = "";
 	private long lastSentenceTimestamp = 0L;
 
@@ -38,7 +40,7 @@ public class Context {
 	 * Those topic listeners can be used like regular event listeners.
 	 * They've be designed to be used in conjunction with the POST /events/{topic} service, though.
 	 * <br/>
-	 * See {@link nmea.mux.RESTImplementation#broadcastOnTopic(HTTPServer.Request)} for more details about that.
+	 * See {@_link nmea.mux.RESTImplementation#broadcastOnTopic(HTTPServer.Request)} for more details about that.
 	 */
 	private List<TopicListener> topicListeners = new ArrayList<>();
 	public void addTopicListener(TopicListener topicListener) {
@@ -97,11 +99,19 @@ public class Context {
 	}
 
 	public void setLastDataSentence(String sentence) {
+		try {
+			this.nbMessReceived++;
+		} catch (Exception ex) { // Overflow? TODO trap it for real
+			ex.printStackTrace();
+		}
 		this.lastDataSentence = sentence;
 		this.lastSentenceTimestamp = System.currentTimeMillis();
 	}
 	public StringAndTimeStamp getLastDataSentence() {
 		return new StringAndTimeStamp(this.lastDataSentence, this.lastSentenceTimestamp);
+	}
+	public long getNbMessReceived() {
+		return this.nbMessReceived;
 	}
 
 	public static class StringAndTimeStamp {

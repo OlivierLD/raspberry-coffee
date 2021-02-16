@@ -63,6 +63,7 @@ public class NMEADataCache
 
 
 	// Keys. TODO, make this an enum
+	public static final String NB_MESS_PROCESSED = "NbMess"; // Retrieved when pulling the whole cache.
 	public static final String LAST_NMEA_SENTENCE = "NMEA";
 
 	public static final String SOG = "SOG";
@@ -351,6 +352,15 @@ public class NMEADataCache
 	 */
 	public void parseAndFeed(String nmeaSentence) {
 		if (StringParsers.validCheckSum(nmeaSentence)) {
+			// Increment # of messages processed
+			Long nbMess = (Long)this.get(NB_MESS_PROCESSED);
+			if (nbMess == null) {
+				nbMess = 1L;
+			} else {
+				nbMess++;
+			}
+			this.put(NB_MESS_PROCESSED, nbMess);
+
 			// Feed pure NMEA cache (NMEA sentences, as they are)
 			String sentenceId = StringParsers.getSentenceID(nmeaSentence);
 			Map<String, Object> asIsMap = (Map<String, Object>)this.get(NMEA_AS_IS);

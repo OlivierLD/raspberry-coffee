@@ -70,7 +70,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
         Context.getInstance().addManagedBytes(mess.length());
 
         // Last sentence (inbound)
-        Context.getInstance().setLastDataSentence(mess);
+        Context.getInstance().setLastDataSentence(mess); // That one also increments the nb of messages processed.
 
         if (this.verbose) {
             System.out.println("==== From MUX: " + mess);
