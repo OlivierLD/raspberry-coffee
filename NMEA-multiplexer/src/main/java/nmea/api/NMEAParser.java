@@ -239,7 +239,9 @@ public final class NMEAParser extends Thread {
 			synchronized (this.NMEAListeners) {
 				this.NMEAListeners.stream().forEach(listener -> {
 					if (listener != null) {
-						listener.dataDetected(e);
+						synchronized (listener) {
+							listener.dataDetected(e);
+						}
 					}
 				});
 			}
