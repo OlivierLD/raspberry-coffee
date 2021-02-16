@@ -1,7 +1,9 @@
 package utils;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.stream.Collectors;
 
 /**
  * To run in standalone from the command line
@@ -23,12 +25,12 @@ public class DeltaTComputer {
         if (args.length == 0) {
             System.out.println("Usage is: java utils.DeltaTComputer --year:XXXX --month:YY");
             System.out.println("      or: java utils.DeltaTComputer --now");
-            System.out.println("- year between 1999 and 3000");
+            System.out.println("- year between -1999 and 3000");
             System.out.println("- month between 01 (jan) and 12 (dec)");
             System.exit(0);
         }
         boolean now = false;
-        int year = -2_000;
+        int year = Integer.MIN_VALUE;
         int month = -1;
 
         for (String arg : args) {
@@ -45,6 +47,12 @@ public class DeltaTComputer {
             Calendar timeNow = GregorianCalendar.getInstance();
             year = timeNow.get(Calendar.YEAR);
             month = timeNow.get(Calendar.MONTH) + 1;
+        } else {
+            if (year == Integer.MIN_VALUE || month == -1) {
+                System.out.println("If --now is not there, you need to provide both --year: and --month:");
+                System.out.printf("\tYou provided: %s%n", Arrays.asList(args).stream().collect(Collectors.joining(" ")));
+                System.exit(1);
+            }
         }
         double deltaT = TimeUtil.getDeltaT(year, month);
         System.out.println(String.format("For %s %d => \u0394T %f s", MONTHS[month - 1], year, deltaT));
