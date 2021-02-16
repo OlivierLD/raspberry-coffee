@@ -13,7 +13,7 @@ let getPromise = (
     url,                          // full api path
     timeout,                      // After that, fail.
     verb,                         // GET, PUT, DELETE, POST, etc
-    happyCode,                    // if met, resolve, otherwise fail.
+    happyCode,                    // A function (callback) returning a boolean. if met, resolve, otherwise fail.
     data = null,                  // payload, when needed (PUT, POST...)
     show = false) => {               // Show the traffic [true]|false
 
@@ -57,7 +57,7 @@ let getPromise = (
 
         xhr.onload = () => {
             clearTimeout(requestTimer);
-            if (xhr.status === happyCode) {
+            if ((typeof(happyCode) === 'function' && happyCode(xhr.status)) || (typeof(happyCode) === 'number' && xhr.status === happyCode)) {
                 resolve(xhr.response);
             } else {
                 reject({code: xhr.status, message: xhr.response});
@@ -163,11 +163,15 @@ let updateComputer = (computer) => {
 };
 
 let updateMuxVerbose = (value) => {
-    return getPromise('/mux/mux-verbose/' + value, DEFAULT_TIMEOUT, 'PUT', 201);
+    return getPromise('/mux/mux-verbose/' + value, DEFAULT_TIMEOUT, 'PUT', (code) => {
+        return code === 200 || code === 201;
+    });
 };
 
 let resetDataCache = () => {
-    return getPromise('/mux/cache', DEFAULT_TIMEOUT, 'DELETE', 202);
+    return getPromise('/mux/cache', DEFAULT_TIMEOUT, 'DELETE', (code) => {
+        return code === 202 || code === 200 ||  code === 204;
+    });
 };
 
 let deleteForwarder = (forwarder) => {
