@@ -160,8 +160,8 @@ public class NMEADataCache
 					DEFAULT_DECLINATION,
 					DEVIATION_FILE,
 					DEVIATION_DATA,
-					DAMPING,
-					CALCULATED_CURRENT);
+					DAMPING); /*,
+					CALCULATED_CURRENT); */
 
 	private transient HashMap<String, List<Object>> dampingMap = new HashMap<>();
 
@@ -271,22 +271,23 @@ public class NMEADataCache
 							.stream()
 							.filter(k -> !NOT_TO_RESET.contains(k))
 							.forEach(k -> this.remove(k));
-			Map<Long, NMEADataCache.CurrentDefinition> currentMap = (Map<Long, NMEADataCache.CurrentDefinition>)this.get(NMEADataCache.CALCULATED_CURRENT);
-			if (currentMap != null) {
-				synchronized (currentMap) {
-					currentMap.keySet().stream().forEach(tbl -> {
-						synchronized (currentMap) {
-							currentMap.remove(tbl);
-						}
-					});
-				}
-			}
+//			Map<Long, NMEADataCache.CurrentDefinition> currentMap = (Map<Long, NMEADataCache.CurrentDefinition>)this.get(NMEADataCache.CALCULATED_CURRENT);
+//			if (currentMap != null) {
+//				synchronized (currentMap) {
+//					currentMap.keySet().stream().forEach(tbl -> {
+//						synchronized (currentMap) {
+//							currentMap.remove(tbl);
+//						}
+//					});
+//				}
+//			}
 //		this.started = 0L;
 			this.started = System.currentTimeMillis();
 			this.maxAlt = -Double.MAX_VALUE;
 			this.minAlt =  Double.MAX_VALUE;
 			this.previousPosition = null;
-			init();
+		    System.out.println(">>> In Reset: invoking init() on the NMEADataCache.");
+			this.init();
 //	}
 	}
 
@@ -374,7 +375,11 @@ public class NMEADataCache
 				case "VDM": // AIS
 					sentenceId = "AIS";
 				default:
-					asIsMap.put(sentenceId, nmeaSentence);
+					if (asIsMap != null) {
+						asIsMap.put(sentenceId, nmeaSentence);
+					} else {
+						System.out.println(">>> Oops! asIsMap is null!");
+					}
 					break;
 			}
 			synchronized (this) {
