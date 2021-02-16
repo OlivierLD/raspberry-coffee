@@ -164,7 +164,7 @@ function updateComputer(computer) {
 }
 
 function updateMuxVerbose(value) {
-	return getPromise('/mux/mux-verbose/' + value, DEFAULT_TIMEOUT, 'PUT', 200);
+	return getPromise('/mux/mux-verbose/' + value, DEFAULT_TIMEOUT, 'PUT', 201);
 }
 
 function resetDataCache() {
