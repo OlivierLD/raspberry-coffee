@@ -13,9 +13,9 @@ let getPromise = (
     url,                          // full api path
     timeout,                      // After that, fail.
     verb,                         // GET, PUT, DELETE, POST, etc
-    happyCode,                    // A function (callback) returning a boolean. if met, resolve, otherwise fail.
+    happyCode,                    // A code, or a function (callback) returning a boolean. if met, resolve, otherwise fail.
     data = null,                  // payload, when needed (PUT, POST...)
-    show = false) => {               // Show the traffic [true]|false
+    show = false) => {            // Show the traffic [true]|false
 
     if (show === true) {
         document.body.style.cursor = 'wait';

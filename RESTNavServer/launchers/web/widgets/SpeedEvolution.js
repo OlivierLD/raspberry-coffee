@@ -1,8 +1,7 @@
 /*
  * @author Olivier Le Diouris
  */
-function SpeedEvolution(cName, maxSpeed, withBeaufortScale, label, scaleInc)  // Canvas name
-{
+function SpeedEvolution(cName, maxSpeed, withBeaufortScale, label, scaleInc) { // Canvas name
 	var instance = this;
 	var cWidth, cHeight;
 
@@ -259,7 +258,7 @@ function SpeedEvolution(cName, maxSpeed, withBeaufortScale, label, scaleInc)  //
 			y = coords.y;
 			var yInBuffer = Math.floor(speedBuffer.length * ((canvas.height - y) / canvas.height));
 
-			var str1 = label + " " + Math.round(maxSpeed * x / canvas.width) + "kts";
+			var str1 = label + " " + (maxSpeed * x / canvas.width).toFixed(2) + "kts";
 			var str2 = ((speedBuffer[yInBuffer] !== undefined) ? new Date(speedBuffer[yInBuffer].time).format("H:i:s") : "");
 			instance.drawGraph();
 			context.fillStyle = "rgba(250, 250, 210, .6)";

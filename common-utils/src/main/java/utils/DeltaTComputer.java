@@ -22,6 +22,8 @@ public class DeltaTComputer {
      */
     public static void main(String... args) {
 
+        System.out.printf("This is class %s%n", DeltaTComputer.class.getName());
+
         if (args.length == 0) {
             System.out.println("Usage is: java utils.DeltaTComputer --year:XXXX --month:YY");
             System.out.println("      or: java utils.DeltaTComputer --now");
