@@ -274,7 +274,11 @@ public class NMEADataCache
 			Map<Long, NMEADataCache.CurrentDefinition> currentMap = (Map<Long, NMEADataCache.CurrentDefinition>)this.get(NMEADataCache.CALCULATED_CURRENT);
 			if (currentMap != null) {
 				synchronized (currentMap) {
-					currentMap.keySet().stream().forEach(tbl -> currentMap.remove(tbl));
+					currentMap.keySet().stream().forEach(tbl -> {
+						synchronized (currentMap) {
+							currentMap.remove(tbl);
+						}
+					});
 				}
 			}
 //		this.started = 0L;
