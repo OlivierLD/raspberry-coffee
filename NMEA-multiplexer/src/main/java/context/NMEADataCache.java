@@ -54,15 +54,12 @@ import static nmea.utils.NMEAUtils.longitudeToTime;
 
 /**
  * For AIS, see system property "put.ais.in.cache"
- *
- * TODO synchronize all this.put
  */
 public class NMEADataCache
 		extends ConcurrentHashMap<String, Object>
 		implements Serializable {
 
-
-	// Keys. TODO, make this an enum
+	// Keys. TODO, make this an enum?
 	public static final String NB_MESS_PROCESSED = "NbMess"; // Retrieved when pulling the whole cache.
 	public static final String LAST_NMEA_SENTENCE = "NMEA";
 
@@ -276,7 +273,7 @@ public class NMEADataCache
 							.forEach(k -> this.put(k, null));
 			Map<Long, NMEADataCache.CurrentDefinition> currentMap = (Map<Long, NMEADataCache.CurrentDefinition>)this.get(NMEADataCache.CALCULATED_CURRENT);
 			if (currentMap != null) {
-				currentMap.keySet().stream().forEach(tbl -> currentMap.put(tbl, null));
+				currentMap.keySet().stream().forEach(tbl -> currentMap.remove(tbl));
 			}
 //		this.started = 0L;
 			this.started = System.currentTimeMillis();
