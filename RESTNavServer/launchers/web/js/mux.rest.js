@@ -167,7 +167,7 @@ let updateMuxVerbose = (value) => {
 };
 
 let resetDataCache = () => {
-    return getPromise('/mux/cache', DEFAULT_TIMEOUT, 'DELETE', 204);
+    return getPromise('/mux/cache', DEFAULT_TIMEOUT, 'DELETE', 202);
 };
 
 let deleteForwarder = (forwarder) => {
