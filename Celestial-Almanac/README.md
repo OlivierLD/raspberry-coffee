@@ -20,7 +20,9 @@ in several other languages than Java.
 > from the [US Naval Oceanography Portal](https://www.usno.navy.mil/USNO/earth-orientation/eo-products/long-term).
 > This (official) web site is undergoing some upgrade..., if it is down, it will
 > come back to life soon. Last known value of `DeltaT` is `69.2201` sec.
-> > Aug 2020, it's back up! <http://maia.usno.navy.mil/ser7/deltat.preds>
+> > Aug 2020, it's back up! <http://maia.usno.navy.mil/ser7/deltat.preds>  
+> > ...and down.  
+> > So we now have a way to _calculate_ the DeltaT value, in all languages.
 
 Beside Java, we (will) have
 - [ES6](./ES6/README.md)
