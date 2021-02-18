@@ -632,6 +632,16 @@ public class RESTImplementation {
 									return gcwpwbfp;
 								}).collect(Collectors.toList());
 					data = data.moonToSunSkyRoute(route);
+					// Add Moon Tilt
+//					double moonTilt = AstroComputer.getMoonTiltV2(finalLat, finalLng); // Experimental
+					double moonTilt = AstroComputer.getMoonTilt(finalLat, finalLng);
+					if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+						System.out.println(String.format(">> From %s / %s, moon tilt= %.03f\272",
+								GeomUtil.decToSex(finalLat, GeomUtil.SWING, GeomUtil.NS),
+								GeomUtil.decToSex(finalLng,  GeomUtil.SWING, GeomUtil.EW),
+								moonTilt));
+					}
+					data = data.moonTilt(moonTilt);
 				}
 				// Wandering bodies
 				if (wandering) {
@@ -1780,6 +1790,7 @@ public class RESTImplementation {
 		double moonPhase; // Moon only, obviously
 		double ghaAries;
 		List<AstroComputer.GreatCircleWayPointWithBodyFromPos> moonToSunSkyRoute;
+		double moonTilt;
 		List<AstroComputer.GP> wanderingBodies;
 		List<AstroComputer.GP> stars;
 		double eclipticObliquity; // Mean
@@ -1824,6 +1835,10 @@ public class RESTImplementation {
 		}
 		public PositionsInTheSky moonToSunSkyRoute(List<AstroComputer.GreatCircleWayPointWithBodyFromPos> moonToSunSkyRoute) {
 			this.moonToSunSkyRoute = moonToSunSkyRoute;
+			return this;
+		}
+		public PositionsInTheSky moonTilt(double moonTilt) {
+			this.moonTilt = moonTilt;
 			return this;
 		}
 

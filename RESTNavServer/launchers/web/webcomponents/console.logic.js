@@ -497,8 +497,7 @@ let moonSunData = [];
 
 function calculateMoonTilt(moonSunData) {
 
-    // Verbose here
-    if (false) {
+    if (false) { // Verbose here
         let z1 = moonSunData[1].wpFromPos.observed.z;
         let z0 = moonSunData[0].wpFromPos.observed.z;
         let deltaZ = z1 - z0;
@@ -516,7 +515,7 @@ function calculateMoonTilt(moonSunData) {
     }
 
 
-	// Take the first triangle, from the Moon.
+	// Take the first triangle, from the Moon. TODO Use an IRA, like in AstroComputer::getMoonTilt(V2)
 	let deltaZ = moonSunData[1].wpFromPos.observed.z - moonSunData[0].wpFromPos.observed.z;
 	if (deltaZ > 180) { // like 358 - 2, should be 358 - 362.
 		deltaZ -= 360;
@@ -568,17 +567,17 @@ function astroCallback(data) {
 		let moonPhase = document.getElementById('moon-phase-01');
 		moonPhase.phase = data.moonPhase;
 		if (data.moon.decl !== undefined && data.from.latitude !== undefined) {
-			// Tilt calculation,
+			// Tilt calculation, TODO use data.moonTilt
 			moonPhase.phase = ((data.from.latitude < data.moon.decl) ? -1 : 1) * data.moonPhase;
-			let alpha = 0;
-			moonSunData = data.moonToSunSkyRoute;
-			if (moonSunData !== undefined) {
-				try {
-					alpha = calculateMoonTilt(moonSunData);
-				} catch(error) {
-					console.debug(error);
-				}
-			}
+			let alpha = data.moonTilt; // 0;
+//			moonSunData = data.moonToSunSkyRoute;
+//			if (moonSunData !== undefined) {
+//				try {
+//					alpha = calculateMoonTilt(moonSunData);
+//				} catch(error) {
+//					console.debug(error);
+//				}
+//			}
 			let moonTilt = /*90 +*/ alpha; // 0: vertical. +: clockwise, -: counter-clockwise
 			moonPhase.tilt = moonTilt;                                 // Update tilt on graphic
 			moonPhase.title = `Tilt:${alpha.toFixed(1)}°`; // Update tooltip
@@ -736,14 +735,15 @@ function astroCallback(data) {
 	if (data.moonPhase !== undefined) {
 		document.getElementById("moon-phase-rd").innerHTML = 'Moon Phase: ' + data.moonPhase + "°";
 		if (data.moon.decl !== undefined && data.from.latitude !== undefined) {
-			let alpha = 0; // Tilt from horizontal
-			if (data.moonToSunSkyRoute !== undefined) {
-				try {
-					alpha = calculateMoonTilt(moonSunData);
-				} catch(error) {
-					console.debug(error);
-				}
-			}
+			let alpha = data.moonTilt; // 0;
+//			let alpha = 0; // Tilt from horizontal
+//			if (data.moonToSunSkyRoute !== undefined) {
+//				try {
+//					alpha = calculateMoonTilt(moonSunData);
+//				} catch(error) {
+//					console.debug(error);
+//				}
+//			}
 			let moonTilt = alpha;
 			//document.getElementById("moon-tilt-rd").innerHTML = `Moon Tilt: ${Math.abs(moonTilt)}°, ${moonTilt>=0?"Right ":"Left "}`;
 			document.getElementById("moon-tilt-rd").innerHTML = `Moon Tilt: ${moonTilt}°`;

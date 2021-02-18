@@ -365,14 +365,14 @@ public class AstroComputer {
             System.out.println(String.format("V2 - Moon Z: %.03f, El: %.03f", moonZ, moonAlt));
             System.out.println(String.format("V2 - Sun  Z: %.03f, El: %.03f", sunZ, sunAlt));
         }
-        if (false) {
+        if (false) { // Radians
             double alpha = GreatCircle.getInitialRouteAngle(
                     new GreatCirclePoint(Math.toRadians(moonAlt), Math.toRadians(moonZ)),
                     new GreatCirclePoint(Math.toRadians(sunAlt), Math.toRadians(sunZ)));
 
 //		System.out.println(String.format("ARI: %f", Math.toDegrees(alpha)));
             return Math.toDegrees(alpha);
-        } else {
+        } else {    // Degrees
             double alpha = GreatCircle.getInitialRouteAngleInDegrees( // alpha is returned in degrees
                     new GreatCirclePoint(moonAlt, moonZ),
                     new GreatCirclePoint(sunAlt, sunZ));
@@ -395,7 +395,7 @@ public class AstroComputer {
     }
 
     private final static String AUTO = "AUTO";
-    private final static String AUTO_PREFIX = "AUTO:"; // Used in AUTO:2020-06
+    private final static String AUTO_PREFIX = "AUTO:"; // Used in AUTO:2020-06, like -DdeltaT=AUTO:2020-06
 
     public static synchronized void calculate() {
 
