@@ -79,7 +79,7 @@ do
 	echo -e "|  2. Interactive Time (user-set), HTTP Server, rich Web UI. Does not require a GPS       |"
 	echo -e "|  3. Home Weather Station data                                                           |"
 	echo -e "|  4. With GPS and NMEA data, waits for the RMC sentence to be active to begin logging    |"
-	echo -e "|                                  (Check your GPS connection setting in properties file) |"
+	echo -e "|                     (Check your GPS connection setting in nmea.mux.gps.properties file) |"
 	echo -e "|  5. Like option '1', but with 'Sun Flower' option                                       |"
 	echo -e "|  6. Replay logged kayak data                                                            |"
 	echo -e "|  7. Replay logged driving data (in Google Maps)                                         |"
