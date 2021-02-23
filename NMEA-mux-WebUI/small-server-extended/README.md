@@ -53,7 +53,7 @@ RAM: 512 Mb
 #### [Raspberry Pi 3 B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/)
 RAM: 1Gb
 #### [Raspberry Pi 4 B](https://www.raspberrypi.org/products/raspberry-pi-4-model-b/)
-With 4Gb of RAM
+With 4Gb or 8Gb of RAM
 
 Emits its own network. Reachable from other devices (laptops, tablets, smart-phones, smart-watches)
 through all available channels (ssh, vnc, tcp, http, etc).
