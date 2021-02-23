@@ -79,7 +79,7 @@ def valid_check_sum(sentence):
         print("Invalid Hex CS Key {}".format(cs_key))
         return False
 
-    string_to_validate = sentence[1:-3]  # no $, no *CS
+    string_to_validate = sentence[1:-3]  # drop both ends, no $, no *CS
     # print("Key in HEX is {}, validating {}".format(csk, string_to_validate))
     calculated = calculate_check_sum(string_to_validate)
     if calculated != csk:
@@ -133,10 +133,16 @@ port_name = "/dev/tty.usbmodem14101"
 baud_rate = 4800
 port = serial.Serial(port_name, baudrate=baud_rate, timeout=3.0)
 print("Let's go. Hit Ctrl+C to stop")
-while True:
+keep_looping = True
+while keep_looping:
     rcv = read_nmea_sentence(port)
     print("\tReceived:" + repr(rcv))  # repr: displays also non printable characters between quotes.
     try:
         nmea_obj = parse_nmea_sentence(rcv)
+    except KeyboardInterrupt:
+        keep_looping = False
+        print("Exiting at user's request")
     except Exception as ex:
         print("Ooops! {}".format(ex))
+
+print("\nBye!")
