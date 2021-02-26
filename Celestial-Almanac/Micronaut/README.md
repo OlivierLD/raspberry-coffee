@@ -18,7 +18,7 @@ $ mn create-app celestial.almanach.mn
 > right-click on it, choose `Mark Directory as` > `. . .`. 
 -->
 
-- In the package `celestial.lamamanc`, add a controller, `AstroController`:
+- In the package `celestial.almamanc`, add a controller, `AstroController`:
 ```java
 package celestial.almanach;
 
