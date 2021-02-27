@@ -14,7 +14,7 @@ Then we will get some NMEA Data - from a USB GPS for example. If we can read tha
 - `libxrtx`, to be installed (just once)
     - from a terminal, just do a `sudo apt-get install librxtx-java`
 #### Get the code
-We will clone the git repository. From a place of you choice (like your home directory), 
+We will clone the git repository. From a place of your choice (like your home directory), 
 in a terminal, do a 
 ```
 $ git clone https://github.com/OlivierLD/raspberry-coffee.git
