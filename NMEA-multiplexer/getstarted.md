@@ -30,7 +30,7 @@ If the previous command goes well, we are ready for the first tests.
 
 ## Serial ?
 Let us do a test with a Serial (USB) GPS, like [this one](https://www.amazon.com/Onyehn-Navigation-External-Receiver-Raspberry/dp/B07GJGSZB9/ref=sr_1_5?crid=AXIK022XF9XZ&dchild=1&keywords=usb+gps+dongle&qid=1614448258&sprefix=USB+GPS%2Caps%2C217&sr=8-5).  
-The first thing to do is to know what serial port to read.  
+The first thing to do is to find what serial port to read.  
 To do so, unplug the GPS from its USB port, and in a terminal, type
 ```
 $ ls -l /dev/tty* > before.txt
