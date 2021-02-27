@@ -93,7 +93,7 @@ to be accessed as SuperUser (`su`), which is OK.
 > It might be a good idea to put it in your `/etc/rc.local` file...
 
 ## First tests
-So, we know that the port we want to read is `/dev/ttyS80`. We now need to know the **baud rate** (data speed)
+So, now we know that the port we want to read is `/dev/ttyS80`. We now need to know the **baud rate** (data speed)
 we need to use. You will find this info in the documentation of your GPS. It is likely to 
 be something like `4800`.
 
