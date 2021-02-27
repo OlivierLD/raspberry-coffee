@@ -205,7 +205,7 @@ $GLGSV,2,2,08,74,64,001,,75,43,254,30,82,01,011,,83,05,053,*6B
 $GNGLL,3744.92748,N,12230.43212,W,180327.00,A,D*6F
 . . .
 ```
-To stop the program, just type [Ctrl-C] in the console.
+To stop the program, just type `[Ctrl-C]` in the console.
 ```
 ^CShutting down multiplexer nicely.
 - Stop reading nmea.consumers.reader.SerialReader
