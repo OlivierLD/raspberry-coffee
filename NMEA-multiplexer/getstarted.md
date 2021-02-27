@@ -5,7 +5,7 @@ Then we will get some NMEA Data - from a USB GPS for example. If we can read tha
 
 ## Get the code, compile it
 #### Pre-requisites
-- A Raspberry Pi, with a recent `RasPi OS` installed one it
+- A Raspberry Pi, with a recent `RasPi OS` installed on it
     - The Raspberry Pi Zero and A might be a bit weak to compile all the code (possible though, but you'd need to go under the hood). Models B would be preferred.
     - A network access is required to download and compile the code. Not necessary after that step. 
 - `git`, already installed on your Raspberry Pi
