@@ -85,7 +85,9 @@ Port: /dev/ttyS80, SERIAL, free.
 Found 1 port(s)
 ----------------------------
 ```
-The port to read will now be `/dev/ttyS80`
+The port to read will now be `/dev/ttyS80`  
+You can also try to run `sudo ./serial.util.sh`... If the result is not the same (more ports), then some ports will have
+to be accessed as SuperUser (`su`), which is OK.
 
 > Note: you will have to do this link (`ln` command) every time the system re-starts.  
 > It might be a good idea to put it in your `/etc/rc.local` file...
