@@ -94,3 +94,28 @@ we need to use. You will find this info in the documentation of your GPS. It is 
 be something like `4800`.
 
 ## Good to go
+We will start the `NMEA-multiplexer`, driven by the file `nmea.mux.1st.test.yaml`:
+```yaml
+#
+# MUX definition.
+#
+name: "First test"
+context:
+  with.http.server: false
+  init.cache: false
+channels:
+  - type: serial
+    port: /dev/ttyS80
+    baudrate: 4800
+    verbose: false
+forwarders:
+  - type: console
+```
+It cannot be any simpler, it tells the Multiplexer (aka mux) to
+- Read the serial port `/dev/ttyS80`
+- Spit out whatever is read in a console
+
+From the `NMEA-multiplexer` directory, let's do it:
+```
+$ ./mux.sh nmea.mux.1st.test.yaml 
+```

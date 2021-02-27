@@ -9,6 +9,6 @@ channels:
   - type: serial
     port: /dev/ttyS80
     baudrate: 4800
-    verbose: true
+    verbose: false
 forwarders:
   - type: console
