@@ -1,5 +1,7 @@
 # NMEA Multiplexer
 
+> For the impatient: [Get started fast](./getstarted.md). 
+
 NMEA channels management, in and out.
 
 This is - obviously - a _software_ multiplexer (**no** hardware required), that can read data from
