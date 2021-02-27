@@ -11,7 +11,7 @@ Then we will get some NMEA Data - from a USB GPS for example. If we can read tha
 - `git`, already installed on your Raspberry Pi
 - `java`, already installed on your Raspberry Pi
     - You will need at least `Java 8`, verify your java version with typing `java -version` in a terminal.
-- `libxrtx`, to be installed
+- `libxrtx`, to be installed (just once)
     - from a terminal, just do a `sudo apt-get install librxtx-java`
 #### Get the code
 We will clone the git repository, from a place of you choice (like your home directory), 
@@ -29,13 +29,13 @@ If `gradle` has not yet been used on your system, this last command will downloa
 If the previous command goes well, we are ready for the first tests. 
 
 ## Serial ?
-Let us do  test with a Serial (USB) GPS, like [this one](https://www.amazon.com/Onyehn-Navigation-External-Receiver-Raspberry/dp/B07GJGSZB9/ref=sr_1_5?crid=AXIK022XF9XZ&dchild=1&keywords=usb+gps+dongle&qid=1614448258&sprefix=USB+GPS%2Caps%2C217&sr=8-5).  
+Let us do a test with a Serial (USB) GPS, like [this one](https://www.amazon.com/Onyehn-Navigation-External-Receiver-Raspberry/dp/B07GJGSZB9/ref=sr_1_5?crid=AXIK022XF9XZ&dchild=1&keywords=usb+gps+dongle&qid=1614448258&sprefix=USB+GPS%2Caps%2C217&sr=8-5).  
 The first thing to do is to know what serial port to read.  
 To do so, unplug the GPS from its USB port, and in a terminal, type
 ```
 $ ls -l /dev/tty* > before.txt
 ```
-Then plug your GPS in its USB port on the Raspberry Pi, give it a couple of seconds to get recognized, and type
+Now plug your GPS in its USB port on the Raspberry Pi, give it a couple of seconds to get recognized, and type
 ```
 $ ls -l /dev/tty* > after.txt
 ```
@@ -50,7 +50,6 @@ $ diff before.txt after.txt
 ### Another option
 In a terminal, type
 ```
-$ ./serial.util.sh
 $ ./serial.util.sh 
 Stable Library
 =========================================
@@ -88,7 +87,7 @@ Found 1 port(s)
 ```
 The port to read will now be `/dev/ttyS80`
 
-> Note: you will have to do this link (`ln` command) everytime the system re-starts.  
+> Note: you will have to do this link (`ln` command) every time the system re-starts.  
 > It might be a good idea to put it in your `/etc/rc.local` file...
 
 ## First tests
@@ -115,7 +114,7 @@ forwarders:
   - type: console
 ```
 It cannot be any simpler, it tells the Multiplexer (aka `mux`) to:
-- Read the serial port `/dev/ttyS80`
+- Read the serial port `/dev/ttyS80` at `4800` bits per second
 - Spit out whatever is read on the terminal (the console)
 
 > Note: Change the port name to fit your settings, if needed.
