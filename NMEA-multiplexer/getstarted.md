@@ -121,6 +121,19 @@ It cannot be any simpler, it tells the Multiplexer (aka `mux`) to:
 
 > Note: Change the port name to fit your settings, if needed.
 
+Actually, it **_could be_** simpler 😊 :
+```yaml
+name: "First test"
+context:
+  with.http.server: false
+  init.cache: false
+channels:
+  - type: serial
+    port: /dev/ttyS80
+    baudrate: 4800
+    verbose: true
+```
+
 From the `NMEA-multiplexer` directory, let's do it:
 ```
 $ ./mux.sh nmea.mux.1st.test.yaml 
