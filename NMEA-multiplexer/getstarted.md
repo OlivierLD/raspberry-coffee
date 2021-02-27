@@ -5,6 +5,8 @@ Then we will get some NMEA Data - from a USB GPS for example. If we can read tha
 
 ## Get the code, compile it
 #### Pre-requisites
+- A Raspberry Pi, with the latest `RasPi OS` installed one it
+    - A network access is required to download and compile the code. Not necessary after that step. 
 - `git`, already installed on your Raspberry Pi
 - `java`, already installed on your Raspberry Pi
     - You will need at least `Java 8`, verify your java version with typing `java -version` in a terminal.
