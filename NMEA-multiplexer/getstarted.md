@@ -96,7 +96,7 @@ we need to use. You will find this info in the documentation of your GPS. It is 
 be something like `4800`.
 
 #### Good to start
-We will execute the `NMEA-multiplexer`, driven by the file `nmea.mux.1st.test.yaml`:
+We will execute the `NMEA-multiplexer`, driven by the config file `nmea.mux.1st.test.yaml`:
 ```yaml
 #
 # MUX definition.
