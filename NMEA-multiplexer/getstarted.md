@@ -1,7 +1,7 @@
 # Get started, from scratch, fast.
 
 The first thing to do is to get the code and compile it, so it can be executed.  
-Then we will get some NMEA Data - from a USB GPS for example. If we can read that stream, this is good.
+Then we will get some NMEA Data - from a USB GPS for example. If we can read that stream, then we're good to move on.
 
 ## Get the code, compile it
 #### Pre-requisites
