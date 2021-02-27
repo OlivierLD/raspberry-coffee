@@ -1,11 +1,9 @@
-body
-{
+body {
   background-color: black;
   color: red;
   font-family: Arial, Helvetica, sans-serif;
 }
-.display-scheme
-{
+.display-scheme {
   color: black;
 }
 
