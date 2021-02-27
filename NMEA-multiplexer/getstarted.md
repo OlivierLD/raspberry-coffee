@@ -1,4 +1,4 @@
-# Get Started, from scratch, fast.
+# Get started, from scratch, fast.
 
 The first thing to do is to get the code and compile it, so it can be executed.  
 Then we will get some NMEA Data - from a USB GPS for example. If we can read that stream, this is good.
@@ -198,5 +198,8 @@ $
 ```
 
 You're good!
+
+## Next steps
+You can now dive into the [manual](./manual.md).
 
 ---
