@@ -7,7 +7,7 @@ Then we will get some NMEA Data - from a USB GPS for example. If we can read tha
 #### Pre-requisites
 - A Raspberry Pi, with a recent `RasPi OS` installed on it
     - The Raspberry Pi Zero and A might be a bit weak to compile all the code (possible though, but you'd need to go under the hood). Models B would be preferred.
-    - A network access is required to download and compile the code. Not necessary after that step. 
+    - An Internet access is required to download and compile the code. Not necessary after that step. 
 - `git`, already installed on your Raspberry Pi
 - `java`, already installed on your Raspberry Pi
     - You will need at least `Java 8`, verify your java version with typing `java -version` in a terminal.
@@ -91,6 +91,13 @@ to be accessed as SuperUser (`su`), which is OK.
 
 > Note: you will have to do this link (`ln` command) every time the system re-starts.  
 > It might be a good idea to put it in your `/etc/rc.local` file...
+
+You can also directly dump the content of a serial port from the command line:
+```
+$ stty -F /dev/ttyS80 raw 4800 cs8 clocal
+$ cat /dev/ttyS80
+```
+`[Ctrl-C]` to stop.
 
 ## First tests
 So, now we know that the port we want to read is `/dev/ttyS80`. We now need to know the **baud rate** (data speed)
