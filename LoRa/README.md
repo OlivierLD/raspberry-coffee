@@ -33,7 +33,7 @@ Just use a USB A-B cable. The Serial port would usually be seen as `/dev/ttyACM0
 > ```
 
 To use this pattern, see the classes in the package `arduino`, and the sketches `ArduinoRF95_RX` and `ArduinoRF95_TX`.
-The scripts `runArduinoComm` and `runArduinoServer` go along with those classes.
+The scripts `runArduinoComm.sh` and `runArduinoServer.sh` go along with those classes.
 
 #### Next
 Tests on the range of the LoRa.
