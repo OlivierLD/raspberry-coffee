@@ -61,7 +61,7 @@ named `ruArduinoServer` (this script invokes the java class `arduino.ArduinoLoRa
 On one machine (**2**, Raspberry Pi or not), connected to an Arduino UNO with the
 sketch `ArduinoRF95_RX` running on it, start the Arduino Server:
 ```
- $ ./runArduinoServer
+ $ ./runArduinoServer.sh
  Make sure you have uploaded the right sketch on the Arduino, and connected it through its USB cable.
  Stable Library
  =========================================
