@@ -181,14 +181,14 @@ See the [Manual](./manual.md) for more technical details.
 The Channels - aka Consumers - support sentence filtering.
 Filtering can be applied on Device ID, and on Sentence ID. Filters can be positive or negative.
 
-Positive filters are linked with and <b>or</b>, Negative ones with an <b>and</b>.
+Positive filters are linked with an <b>or</b>, Negative ones with an <b>and</b>.
 
 A (sentence) filter like `"HDM", "GLL", "~RMC", "~XDR"` would mean
 ```
 (HDM or GLL) and (not RMC and not XDR)
 ```
 > Note: the filter above is meaningless, this is just an example.
-> If the sentence has to start with `HDM` or `GLL`, there is no point in excluding `RMC` or `XDR`... 🙄.  
+> If the sentence has to start with `HDM` or `GLL`, there is no point in excluding `RMC` or `XDR`... 🙄. They are already implicitly excluded.   
 > - `"HDM", "GLL"` would mean "Only HDM or GLL"  
 > - `"~RMC", "~XDR"` would mean "Everything, but RMC and XDR"
 
