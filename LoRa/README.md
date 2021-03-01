@@ -3,7 +3,7 @@ Shows how to use an RFM95W Lora Radio module
 
 This  board has a SPI interface, the code in this directory could belong to the `I2C.SPI` project, but the intention was to also provide the code for the Arduino Uno.
 
-I found the code I started from on the [Adafruit](https://www.adafruit.com/product/3072) web site.
+I found the code I started from on the [Adafruit](https://www.adafruit.com/product/3072) website.
 
 The two sketches require the same wiring:
 
@@ -47,7 +47,7 @@ Tests on the range of the LoRa.
  $ ../gradlew [--no-daemon] shadowJar
 ```
 
-#### Broadcast NMEA Data
+#### UseCase: Broadcast NMEA Data
 Using the NMEA Multiplexer, based on its structure, we've written a `LoRaPublisher`.
 
 On one Raspberry Pi (emitter, **1**), where the NMEAMultiplexer reads NMEA Data (from a GPS, a log file, etc),

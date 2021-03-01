@@ -10,7 +10,6 @@ include 'DAC'
 include 'FONA'
 include 'GPIO.01'
 include 'I2C-SPI'
-include 'LelandOilDetector'
 include 'MindWave'
 include 'PhoneKeyboard3x4'
 include 'PI4J-email'
@@ -70,6 +69,7 @@ include "Project-Trunk:RasPiRadar"
 include "Project-Trunk:PurePWM"
 include "Project-Trunk:Button-Reflex"
 include "Project-Trunk:System-Languages"
+include "Project-Trunk:LelandOilDetector"
 include "Project-Trunk:Weather-Station-Implementation"
 include "Project-Trunk:Led-PWM-etc"
 include "Project-Trunk:Motors"
