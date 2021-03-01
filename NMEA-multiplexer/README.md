@@ -193,7 +193,7 @@ A (sentence) filter like `"HDM", "GLL", "~RMC", "~XDR"` would mean
 > - `"~RMC", "~XDR"` would mean "Everything, but RMC and XDR"
 
 It is the user's responsibility not to have contradiction in the filters, like `[ "GLL", "~GLL" ]`,
-no verification is done in this area.
+no verification is done in this area. Such a filter would just return nothing.
 
 > _Note_:
 > This is just providing the possibility to negate an expression. Convenient, but limited. The best would probably be to use regular expressions (RegExp).
