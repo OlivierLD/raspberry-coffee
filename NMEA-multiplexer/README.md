@@ -188,7 +188,9 @@ A (sentence) filter like `"HDM", "GLL", "~RMC", "~XDR"` would mean
 (HDM or GLL) and (not RMC and not XDR)
 ```
 > Note: the filter above is meaningless, this is just an example.
-> If the sentence has to start with `HDM` or `GLL`, there is no point in excluding `RMC` or `XDR`... 🙄.
+> If the sentence has to start with `HDM` or `GLL`, there is no point in excluding `RMC` or `XDR`... 🙄.  
+> - `"HDM", "GLL"` would mean "Only HDM or GLL"  
+> - `"~RMC", "~XDR"` would mean "Everything, but RMC and XDR"
 
 It is the user's responsibility not to have contradiction in the filters, like `[ "GLL", "~GLL" ]`,
 no verification is done in this area.
