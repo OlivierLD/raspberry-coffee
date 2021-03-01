@@ -67,14 +67,14 @@ public class SevenADCChannelsManager {
 
 	/* Uses 7 channels among the 8 available */
 	public SevenADCChannelsManager(final AirWaterInterface client) throws Exception {
-		for (int i = 0; i < smoothedChannel.length; i++)
+		for (int i = 0; i < smoothedChannel.length; i++) {
 			smoothedChannel[i] = new ArrayList<Integer>(WINDOW_WIDTH);
-
-		if ("true".equals(LelandPrototype.getAppProperties().getProperty("simulate.adc", "false")))
+		}
+		if ("true".equals(LelandPrototype.getAppProperties().getProperty("simulate.adc", "false"))) {
 			obs = new ADCObserverSimulator(channel); // Simulator
-		else
+		} else {
 			obs = new ADCObserver(channel);
-
+		}
 
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
@@ -99,19 +99,22 @@ public class SevenADCChannelsManager {
 					channelVolumes[ch] = volume;
 
 					smoothedChannel[ch].add(volume);
-					while (smoothedChannel[ch].size() > WINDOW_WIDTH) smoothedChannel[ch].remove(0);
+					while (smoothedChannel[ch].size() > WINDOW_WIDTH) {
+						smoothedChannel[ch].remove(0);
+					}
 					// smoothedChannel[ch] = LowPassFilter.lowPass2(smoothedChannel[ch], 0.5);
 					smoothedChannelVolumes[ch] = smooth(ch);
 
 					Material material = Material.UNKNOWN;
 					float val = smoothedChannelVolumes[ch];
 					// Material set with the SMOOTHED value
-					if (val > WATER_THRESHOLD)
+					if (val > WATER_THRESHOLD) {
 						material = Material.WATER;
 						//    else if (val > OIL_THRESHOLD)
 						//      material = Material.OIL;
-					else
+					} else {
 						material = Material.AIR;
+					}
 					//    System.out.println("Channel " + ch + ", Material:" + material + ", volume:" + volume + " (smmoth:" + val + ")");
 					// Start after a while
 					long now = System.currentTimeMillis();
@@ -137,24 +140,23 @@ public class SevenADCChannelsManager {
 								", " + StringUtils.lpad(Integer.toString(volume), 3) + " (inst)" +
 								", " + StringUtils.lpad(DF32.format(val), 6) + " (avg)" +
 								", " + smoothedChannel[ch].size() + " val. : ");
-						for (int vol : smoothedChannel[ch])
+						for (int vol : smoothedChannel[ch]) {
 							AnsiConsole.out.print(DF4.format(vol) + " ");
+						}
 						AnsiConsole.out.println("    ");
 					}
 				}
 			}
 		});
 		System.out.println("Start observing.");
-		Thread observer = new Thread() {
-			public void run() {
-				started = System.currentTimeMillis();
-				try {
-					obs.start(-1, BETWEEN_LOOPS); // Tolerance -1: all values, pause
-				} catch (ADCObserver.NotOnARaspberryException nore) {
-					nore.printStackTrace();
-				}
+		Thread observer = new Thread(() -> {
+			started = System.currentTimeMillis();
+			try {
+				obs.start(-1, BETWEEN_LOOPS); // Tolerance -1: all values, pause
+			} catch (ADCObserver.NotOnARaspberryException nore) {
+				nore.printStackTrace();
 			}
-		};
+		});
 		observer.start();
 	}
 
@@ -169,8 +171,9 @@ public class SevenADCChannelsManager {
 
 	public void quit() {
 		System.out.println("Stop observing.");
-		if (obs != null)
+		if (obs != null) {
 			obs.stop();
+		}
 	}
 
 
@@ -178,12 +181,14 @@ public class SevenADCChannelsManager {
 		float size = smoothedChannel[ch].size();
 		float sigma = 0;
 		if (false) { // Average
-			for (int v : smoothedChannel[ch])
+			for (int v : smoothedChannel[ch]) {
 				sigma += v;
+			}
 		} else {
 			List<Integer> lpf = LowPassFilter.lowPass2(smoothedChannel[ch], ALFA);
-			for (int v : lpf)
+			for (int v : lpf) {
 				sigma += v;
+			}
 		}
 		return sigma / size;
 	}

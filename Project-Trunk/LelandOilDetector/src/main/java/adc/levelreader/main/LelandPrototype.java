@@ -160,8 +160,9 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 		resetButton.addListener(new GpioPinListenerDigital() {
 			@Override
 			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-				if (event.getState().isHigh())
+				if (event.getState().isHigh()) {
 					onButtonPressed();
+				}
 			}
 		});
 	}
@@ -170,9 +171,9 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 		double size = oilThicknessValues.size();
 		double sigma = 0;
 		List<Double> lpf = LowPassFilter.lowPass(oilThicknessValues, alfa);
-		for (double v : lpf)
+		for (double v : lpf) {
 			sigma += v;
-
+		}
 		return sigma / size;
 	}
 
@@ -277,10 +278,11 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 
 	private static String materialToString(SevenADCChannelsManager.Material material) {
 		String s = "UNKNOWN";
-		if (material == SevenADCChannelsManager.Material.AIR)
+		if (material == SevenADCChannelsManager.Material.AIR) {
 			s = "Air";
-		else if (material == SevenADCChannelsManager.Material.WATER)
+		} else if (material == SevenADCChannelsManager.Material.WATER) {
 			s = "Water";
+		}
 //  else if (material == SevenADCChannelsManager.Material.OIL)
 //    s = "Oil";
 		return s;
@@ -304,8 +306,9 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 	                            String content) {
 		if (smsProvider != null) {
 			String mess = content;
-			if (mess.length() > 140)
+			if (mess.length() > 140) {
 				mess = mess.substring(0, 140);
+			}
 			log(">>> Sending SMS :" + mess);
 			try {
 				smsProvider.sendMess(to, mess);
@@ -352,19 +355,20 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 		}
 		for (int chan = data.length - 1; chan >= 0; chan--) // Top to bottom
 		{
-			if (previousMaterial[chan] != null && previousMaterial[chan] == data[chan].getMaterial())
+			if (previousMaterial[chan] != null && previousMaterial[chan] == data[chan].getMaterial()) {
 				nbSameMaterialInARow[chan] += 1;
-			else
+			} else {
 				nbSameMaterialInARow[chan] = 0;
-
+			}
 			String color = EscapeSeq.ANSI_BLACK; // ANSI_DEFAULT_BACKGROUND;
 
 			if (nbSameMaterialInARow[chan] > nbSeenInARow) {
 //        if (data[chan].getMaterial().equals(SevenADCChannelsManager.Material.OIL))
 //          color = EscapeSeq.ANSI_RED;
 //        else
-				if (data[chan].getMaterial().equals(SevenADCChannelsManager.Material.WATER))
+				if (data[chan].getMaterial().equals(SevenADCChannelsManager.Material.WATER)) {
 					color = EscapeSeq.ANSI_BLUE;
+				}
 			}
 
 			String prefix = EscapeSeq.ansiLocate(0, y++) +
@@ -376,11 +380,12 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 			str += (" " + nbSameMaterialInARow[chan] + "   ");
 			// if (maxOilLevel == -1 && data[chan].getMaterial().equals(SevenADCChannelsManager.Material.OIL))
 			//   maxOilLevel = chan;
-			if (maxWaterLevel == -1 && data[chan].getMaterial().equals(SevenADCChannelsManager.Material.WATER))
+			if (maxWaterLevel == -1 && data[chan].getMaterial().equals(SevenADCChannelsManager.Material.WATER)) {
 				maxWaterLevel = chan;
-			if (ansiConsole)
+			}
+			if (ansiConsole) {
 				AnsiConsole.out.println(prefix + str + suffix);
-
+			}
 			previousMaterial[chan] = data[chan].getMaterial();
 		}
 		if (ansiConsole) {
@@ -407,8 +412,9 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 		}
 //  log(">>> To BusinessLogic (" + maxWaterLevel + ", " + maxOilLevel + ")");
 //  businessLogic(maxWaterLevel, maxOilLevel); // Before
-		if (deviceStarted)
+		if (deviceStarted) {
 			businessLogic(maxWaterLevel, oilThickness);
+		}
 	}
 
 	/**
@@ -435,8 +441,9 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 
 //  System.out.println("Business Logic - Water:" + waterLevel + ", oil:" + oilLevel);
 		if (oilThicknessValues.size() >= windowWidth) {
-			while (oilThicknessValues.size() > windowWidth)
+			while (oilThicknessValues.size() > windowWidth) {
 				oilThicknessValues.remove(0);
+			}
 			currentOilThickness = smoothOilThickness();
 		}
 		if (oilThicknessValues.size() >= windowWidth && currentOilThickness > 0) {
@@ -538,10 +545,11 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 	@Override
 	public void setSurfaceDistance(double dist) {
 		distanceToSurface = dist;
-		if (calibration)
+		if (calibration) {
 			System.out.println(TF.format(new Date()) + ": " + DF23.format(distanceToSurface * 100) + " cm");
-		else
+		} else {
 			manageData();
+		}
 	}
 
 	@Override
@@ -662,16 +670,18 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 		if (false && ansiConsole) {
 			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 50));
 			AnsiConsole.out.println(StringUtils.rpad(mess, 80));
-		} else
+		} else {
 			log("AppMess>> " + mess);
+		}
 	}
 
 	public final static void displayAppErr(Exception ex) {
 		if (ansiConsole) {
 			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 60));
 			AnsiConsole.out.println(StringUtils.rpad(ex.toString(), 80));
-		} else
+		} else {
 			ex.printStackTrace();
+		}
 	}
 
 	private abstract static class Tuple<X, Y> {
@@ -894,8 +904,9 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 			}
 
 			// CLS
-			if (ansiConsole)
+			if (ansiConsole) {
 				AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
+			}
 		}
 		synchronized (me) {
 			System.out.println("Main thread waiting...");
@@ -929,8 +940,7 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
 			while (keepWaiting && !currentStatus.equals(ProcessStatus.ALL_OK)) {
 				delay(10); // in seconds
 				if (!currentStatus.equals(ProcessStatus.ALL_OK) &&
-						(System.currentTimeMillis() - started) > (cleaningDelay * 1_000)) // Expired
-				{
+						(System.currentTimeMillis() - started) > (cleaningDelay * 1_000)) { // Expired
 					// Next status level.
 					log("Your cleaning delay (" + cleaningDelay + ") has expired. Going to the next level");
 					log(" >>>>>>>>>> Level is " + currentStatus + ", GOING TO THE NEXT LEVEL >>>>>> ");

@@ -1,6 +1,5 @@
 package adc.levelreader.manager;
 
-public interface PushButtonObserver
-{
-  void onButtonPressed();
+public interface PushButtonObserver {
+    void onButtonPressed();
 }
