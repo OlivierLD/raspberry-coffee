@@ -9,7 +9,9 @@ The two sketches require the same wiring:
 
 ![RX TX](./RFM95_Arduino_bb.png)
 
-You need two Arduinos: one to transmit, one to receive.
+You need two Arduinos: 
+- one to transmit 
+- one to receive.
 
 ## Next
 The same, on a Raspberry Pi, in Java. _That_ is a project...
