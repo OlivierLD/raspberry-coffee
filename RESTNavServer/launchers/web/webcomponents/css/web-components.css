@@ -397,6 +397,15 @@ analog-display .analog-for-prmsl {
 	--value-font-size-factor: 0.75
 }
 
+scroll-digit-display .scroll-digit-01 {
+	--bg-color: transparent;
+	--display-background-gradient-from: black;
+	--display-background-gradient-to: gray;
+	--display-color: white;
+	--frame-color: silver;
+	--value-font: Arial;
+}
+
 compass-rose .day {
   --bg-color: white;
   --digit-color: #404040;

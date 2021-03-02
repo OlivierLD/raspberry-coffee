@@ -349,7 +349,15 @@ function onMessage(json) {
 		}
 		try {
 			let log = json.Log.distance;
+			// console.log(`Publishing LOG ${log}`);
 			events.publish('log', log);
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "log (" + err + ")");
+		}
+		try {
+			let log = json.Daily.distance;
+			// console.log(`Publishing DAILY-LOG ${log}`);
+			events.publish('daily-log', log);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "log (" + err + ")");
 		}

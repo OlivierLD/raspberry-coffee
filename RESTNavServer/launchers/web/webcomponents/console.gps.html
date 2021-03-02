@@ -35,6 +35,7 @@
 	<script type="module" src="./SunPath.js"></script>
 	<script type="module" src="./GraphDisplay.js"></script>
 	<script type="module" src="./MoonPhase.js"></script>
+	<script type="module" src="./ScrollDigit.js"></script>
 
 	<!-- Scripts -->
 	<script type="text/javascript" src="js/date.proto.js"></script>
@@ -46,6 +47,21 @@
 		console.log('Start!');
 
 		// For this Console.
+		function lpad(str, len, pad) {
+			let s = str;
+			while (s.length < len) {
+				s = (pad === undefined ? ' ' : pad) + s;
+			}
+			return s;
+		}
+
+		function rpad(str, len, pad) {
+			let s = str;
+			while (s.length < len) {
+				s += (pad === undefined ? ' ' : pad);
+			}
+			return s;
+		}
 
 		let userTimeDataExpanded = false;
 		function expandCollapseSetTimeData() {
@@ -258,6 +274,18 @@
 			hdg = val;
 			setData('compass-display-01', val);
 			setHdgOnDevCurve('compass-deviation', val);
+		});
+		events.subscribe('log', (val) => {
+			log = val;
+			let sdElem = document.getElementById('scroll-digit-display-01');
+			let strValue = lpad(val.toFixed(sdElem.nbDec), sdElem.nbChar, '0');
+			setScrollDigitValue('scroll-digit-display-01', strValue);
+		});
+		events.subscribe('daily-log', (val) => {
+			dailyLog = val;
+			let sdElem = document.getElementById('scroll-digit-display-02');
+			let strValue = lpad(val.toFixed(sdElem.nbDec), sdElem.nbChar, '0');
+			setScrollDigitValue('scroll-digit-display-02', strValue);
 		});
 
 		function dataToGraph(pivotDate, declMap, lineColor, fillColor1, fillColor2) {
@@ -890,14 +918,14 @@
 					<div id="boussole">
 						<div class="black-frame centered">
 							<compass-display id="compass-display-01"
-															 class="green"
-															 title="Heading"
-															 value="0"
-															 width="250"
-															 height="250"
-															 major-ticks="45"
-															 minor-ticks="5"
-															 label="HDG"></compass-display>
+											 class="green"
+											 title="True Heading"
+											 value="0"
+											 width="250"
+											 height="250"
+											 major-ticks="45"
+											 minor-ticks="5"
+											 label="HDG"></compass-display>
 						</div>
 						<div class="black-frame centered mid">
 							<!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-display-01');" checked -->
@@ -922,13 +950,13 @@
 					 +-->
 					<div id="deviation" class="black-frame centered">
 						<graph-display id="compass-deviation"
-													 width="150"
-													 height="300"
-													 padding="5"
-													 value="null"
-													 orientation="vertical"
-													 label="Deviation"
-													 title="Deviation"></graph-display>
+									   width="150"
+									   height="300"
+									   padding="5"
+									   value="null"
+									   orientation="vertical"
+									   label="Deviation"
+									   title="Deviation"></graph-display>
 					</div>
 					<!--
 							COG
@@ -936,16 +964,16 @@
 					<div id="direction">
 						<div class="black-frame centered">
 							<direction-display class="analogdisplay-day"
-																 title="Course Over Ground"
-																 id="compass-01"
-																 value="0"
-																 major-ticks="45"
-																 minor-ticks="5"
-																 with-rose="true"
-																 with-border="true"
-																 label="COG"
-																 width="250"
-																 height="250"></direction-display>
+											   title="Course Over Ground"
+											   id="compass-01"
+											   value="0"
+											   major-ticks="45"
+											   minor-ticks="5"
+											   with-rose="true"
+											   with-border="true"
+											   label="COG"
+											   width="250"
+											   height="250"></direction-display>
 						</div>
 						<div class="black-frame centered mid">
 							<!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-01');" checked -->
@@ -972,26 +1000,26 @@
 						<div class="black-frame centered">
 							<!-- Note: No initial value="0" attribute, it would be considered as the miniVal. -->
 							<analog-display class="analogdisplay-day"
-															title="Speed Over Ground&#13;in knots and m/s"
-															id="bsp-01"
-															min-value="0"
-															max-value="15"
-															value="0.0"
-															value-2="0.0"
-															major-ticks="1"
-															minor-ticks="0.1"
-															with-border="true"
-															with-min-max="true"
-															overlap="40"
-															label="SOG"
-															max-value-2="7.71667"
-															major-ticks-2="1"
-															minor-ticks-2="0.1"
-															unit="kn"
-															unit-2="m/s"
-															rotate-digits="false"
-															width="250"
-															height="250"></analog-display>
+											title="Speed Over Ground&#13;in knots and m/s"
+											id="bsp-01"
+											min-value="0"
+											max-value="15"
+											value="0.0"
+											value-2="0.0"
+											major-ticks="1"
+											minor-ticks="0.1"
+											with-border="true"
+											with-min-max="false"
+											overlap="40"
+											label="SOG"
+											max-value-2="7.71667"
+											major-ticks-2="1"
+											minor-ticks-2="0.1"
+											unit="kn"
+											unit-2="m/s"
+											rotate-digits="false"
+											width="250"
+											height="250"></analog-display>
 						</div>
 						<div class="black-frame centered mid">
 							<!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked -->
@@ -1037,20 +1065,49 @@
 					</div>
 
 				</div>
-				<div id="row-2" style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 1; grid-template-columns: auto; padding: 10px; text-align: center;">
+				<div id="row-2" style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 1; grid-template-columns: auto auto auto; padding: 10px; text-align: center;">
+					<!--
+					    LOGS
+					+-->
+					<div id="log">
+						<small>Boat Log</small>
+						<div class="black-frame centered" style="height: 60px;">
+							<scroll-digit-display id="scroll-digit-display-01"
+												  class="scroll-digit-01"
+												  nb-char="5"
+												  font-size="42"
+												  justified="RIGHT"
+												  value="00000"
+												  nb-dec="0"
+												  title="Boat Log"></scroll-digit-display>
+						</div>
+					</div>
+					<div id="daily-log">
+						<small>Daily Log</small>
+						<div class="black-frame centered" style="height: 60px;">
+							<scroll-digit-display id="scroll-digit-display-02"
+												  class="scroll-digit-01"
+												  nb-char="6"
+												  font-size="42"
+												  justified="RIGHT"
+												  value="0000.0"
+												  nb-dec="1"
+												  title="Daily"></scroll-digit-display>
+						</div>
+					</div>
 					<!--
 						COMPASS ROSE. CONCAVE.
 					+-->
 					<div id="compass-rose">
 						<small>Warning: The rose in <i>concave</i>. This means that it has to be seen as if the user was sitting at the center of the rose.</small>
-							<div class="black-frame centered">
-								<compass-rose id="compass-rose-01"
-															class="day"
-															title="Course Over Ground"
-															value="0"
-															width="500"
-															height="50"></compass-rose>
-							</div>
+						<div class="black-frame centered">
+							<compass-rose id="compass-rose-01"
+										  class="day"
+										  title="Course Over Ground"
+										  value="0"
+										  width="500"
+										  height="50"></compass-rose>
+						</div>
 					</div>
 				</div>
 			</div>

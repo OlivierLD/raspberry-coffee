@@ -125,6 +125,54 @@ function setData(id, value) {
 
 let deviationCurve = null;
 
+function setScrollDigitValue(id, value) {
+	let elem = document.getElementById(id);
+	// Character by character
+	let original = elem.paddedValue.trim();
+	let newPaddedValue = elem.getPaddedValue(elem.cleanString(value));
+	//	console.log("Old [%s], new [%s]", original, newPaddedValue);
+	//	assert(old.length === new.length);
+	let floatFrom = parseFloat(original);
+	let floatTo = parseFloat(newPaddedValue);
+	let sign = 0;
+	let scroll = true;
+	if (isNaN(floatFrom) || isNaN(floatTo)) {
+		scroll = false;
+		debugger;
+	}
+	if (floatFrom !== floatTo) {
+		sign = (floatTo > floatFrom) ? +1 : -1;
+		if (!isNaN(floatFrom) && !isNaN(floatTo)) {
+			scroll = Math.abs(floatFrom - floatTo) <= 1;
+		}
+	}
+
+	function updateValue(idx) { // THIS is balaise.
+		if (original.charAt(idx).toUpperCase() !== newPaddedValue.charAt(idx).toUpperCase()) {
+			setTimeout(() => {
+				let next = elem.getNextChar(original.charAt(idx), sign);
+//					console.log("Updating %s with %s", original, next);
+				elem.setCharAt(idx, next, sign);
+				original = elem.paddedValue;
+				updateValue(idx);
+			}, 50);
+		}
+	}
+
+	if (scroll) {
+		if (sign !== 0) {
+			// console.log(`Scrolling from ${original} to ${newPaddedValue}`);
+			for (let idx = 0; idx < original.length; idx++) {
+				updateValue(idx);
+			}
+		}
+	} else {
+		// console.log(`No scroll from ${floatFrom} to ${floatTo} (value ${value})`);
+		elem.value = value;
+		elem.repaint();
+	}
+}
+
 function devFromHdg(hdg) {
 	let dev = 0;
 	if (deviationCurve != null) {
@@ -903,6 +951,8 @@ let awa = 0;
 let tws = 0;
 let twa = 0;
 let hdg = 0;
+let log = 0;
+let dailyLog = 0;
 let gpsTime = undefined;
 
 let gpsPosition = undefined;
