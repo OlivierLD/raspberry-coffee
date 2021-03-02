@@ -47,6 +47,8 @@ $ diff before.txt after.txt
 ```
 `/dev/ttyACM0` is your serial port.
 
+> Even simpler: run `./find.port.sh`
+
 ### Another option
 In a terminal, type
 ```
