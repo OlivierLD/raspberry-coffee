@@ -10,891 +10,915 @@
  ! HTML graphical entities, good doc at https://www.toptal.com/designers/htmlarrows/symbols/
  +-->
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>WebComponents NMEA/GPS Console</title>
-	<link rel="icon" type="image/png" href="./logo-192x192.png">
-	<!--link rel="icon" type="image/jpg" href="../icons/sailboat.jpg"-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WebComponents NMEA/GPS Console</title>
+    <link rel="icon" type="image/png" href="./logo-192x192.png">
+    <!--link rel="icon" type="image/jpg" href="../icons/sailboat.jpg"-->
 
-	<link rel="stylesheet" href="css/stylesheet.css">
-	<link rel="stylesheet" href="css/web-components.css">
-	<link rel="stylesheet" href="css/rocker.css">
+    <link rel="stylesheet" href="css/stylesheet.css">
+    <link rel="stylesheet" href="css/web-components.css">
+    <link rel="stylesheet" href="css/rocker.css">
 
-	<!-- Web Components -->
-	<script type="module" src="./DirectionDisplay.js"></script>
-	<script type="module" src="./AnalogDisplay.js"></script>
-	<script type="module" src="./WindAngleDisplay.js"></script>
-	<script type="module" src="./SatellitePlotter.js"></script>
-	<script type="module" src="./AnalogWatch.js"></script>
-	<script type="module" src="./CalendarDisplay.js"></script>
-	<script type="module" src="./CompassRose.js"></script>
-	<script type="module" src="./CompassDisplay.js"></script>
-	<script type="module" src="./WorldMap.js"></script>
-	<script type="module" src="./SkyMap.js"></script>
-	<script type="module" src="./SplitFlapDisplay.js"></script>
-	<script type="module" src="./SunPath.js"></script>
-	<script type="module" src="./GraphDisplay.js"></script>
-	<script type="module" src="./MoonPhase.js"></script>
-	<script type="module" src="./ScrollDigit.js"></script>
+    <!-- Web Components -->
+    <script type="module" src="./DirectionDisplay.js"></script>
+    <script type="module" src="./AnalogDisplay.js"></script>
+    <script type="module" src="./WindAngleDisplay.js"></script>
+    <script type="module" src="./SatellitePlotter.js"></script>
+    <script type="module" src="./AnalogWatch.js"></script>
+    <script type="module" src="./CalendarDisplay.js"></script>
+    <script type="module" src="./CompassRose.js"></script>
+    <script type="module" src="./CompassDisplay.js"></script>
+    <script type="module" src="./WorldMap.js"></script>
+    <script type="module" src="./SkyMap.js"></script>
+    <script type="module" src="./SplitFlapDisplay.js"></script>
+    <script type="module" src="./SunPath.js"></script>
+    <script type="module" src="./GraphDisplay.js"></script>
+    <script type="module" src="./MoonPhase.js"></script>
+    <script type="module" src="./ScrollDigit.js"></script>
 
-	<!-- Scripts -->
-	<script type="text/javascript" src="js/date.proto.js"></script>
-	<script type="text/javascript" src="js/pub.sub.js"></script>
-	<script type="text/javascript" src="js/ajax.manager.js"></script> <!-- Contains REST calls -->
+    <!-- Scripts -->
+    <script type="text/javascript" src="js/date.proto.js"></script>
+    <script type="text/javascript" src="js/pub.sub.js"></script>
+    <script type="text/javascript" src="js/ajax.manager.js"></script> <!-- Contains REST calls -->
 
-	<script type="text/javascript">
+    <script type="text/javascript">
 
-		console.log('Start!');
+        console.log('Start!');
 
-		// For this Console.
-		function lpad(str, len, pad) {
-			let s = str;
-			while (s.length < len) {
-				s = (pad === undefined ? ' ' : pad) + s;
-			}
-			return s;
-		}
+        // For this Console.
+        function lpad(str, len, pad) {
+            let s = str;
+            while (s.length < len) {
+                s = (pad === undefined ? ' ' : pad) + s;
+            }
+            return s;
+        }
 
-		function rpad(str, len, pad) {
-			let s = str;
-			while (s.length < len) {
-				s += (pad === undefined ? ' ' : pad);
-			}
-			return s;
-		}
+        function rpad(str, len, pad) {
+            let s = str;
+            while (s.length < len) {
+                s += (pad === undefined ? ' ' : pad);
+            }
+            return s;
+        }
 
-		let userTimeDataExpanded = false;
-		function expandCollapseSetTimeData() {
-			let messZone = document.getElementById('message-zone');
-			if (userTimeDataExpanded) {
-				document.getElementById('user-time-widgets').style.display = 'none';
-				document.getElementById('user-time-switch').innerText = '+ Set Time';
-				messZone.style.visibility = "hidden";
-				messZone.style.height = '0';
-				messZone.style.opacity = '0';
-			} else {
-				document.getElementById('user-time-widgets').style.display = 'block';
-				document.getElementById('user-time-switch').innerText = '- Set Time';
-				// Make sure nothing is feeding the cache with time.
-				messZone.innerText = 'Make sure nothing is feeding the cache with time.';
-				messZone.style.visibility = "visible";
-				messZone.style.height = '30px';
-				messZone.style.opacity = '1';
-				window.setTimeout(() => {
-					console.log("Hiding message");
-					messZone.style.visibility = "hidden";
-					messZone.style.height = '0';
-					messZone.style.opacity = '0';
-				}, 5000);
-			}
-			userTimeDataExpanded = !userTimeDataExpanded;
-		}
+        let userTimeDataExpanded = false;
 
-		// expandCollapseSetPosData
-		let userPosDataExpanded = false;
-		function expandCollapseSetPosData() {
-			let messZone = document.getElementById('message-zone');
-			if (userPosDataExpanded) {
-				document.getElementById('user-pos-widgets').style.display = 'none';
-				document.getElementById('user-pos-switch').innerText = '+ Set Pos';
-				messZone.style.visibility = "hidden";
-				messZone.style.height = '0';
-				messZone.style.opacity = '0';
-			} else {
-				document.getElementById('user-pos-widgets').style.display = 'block';
-				document.getElementById('user-pos-switch').innerText = '- Set Pos';
-				// Make sure nothing is feeding the cache with time.
-				messZone.innerText = 'Make sure nothing is feeding the cache with position.';
-				messZone.style.visibility = "visible";
-				messZone.style.height = '30px';
-				messZone.style.opacity = '1';
-				window.setTimeout(() => {
-					console.log("Hiding message");
-					messZone.style.visibility = "hidden";
-					messZone.style.height = '0';
-					messZone.style.opacity = '0';
-				}, 5000);
-			}
-			userPosDataExpanded = !userPosDataExpanded;
-		}
+        function expandCollapseSetTimeData() {
+            let messZone = document.getElementById('message-zone');
+            if (userTimeDataExpanded) {
+                document.getElementById('user-time-widgets').style.display = 'none';
+                document.getElementById('user-time-switch').innerText = '+ Set Time';
+                messZone.style.visibility = "hidden";
+                messZone.style.height = '0';
+                messZone.style.opacity = '0';
+            } else {
+                document.getElementById('user-time-widgets').style.display = 'block';
+                document.getElementById('user-time-switch').innerText = '- Set Time';
+                // Make sure nothing is feeding the cache with time.
+                messZone.innerText = 'Make sure nothing is feeding the cache with time.';
+                messZone.style.visibility = "visible";
+                messZone.style.height = '30px';
+                messZone.style.opacity = '1';
+                window.setTimeout(() => {
+                    console.log("Hiding message");
+                    messZone.style.visibility = "hidden";
+                    messZone.style.height = '0';
+                    messZone.style.opacity = '0';
+                }, 5000);
+            }
+            userTimeDataExpanded = !userTimeDataExpanded;
+        }
 
-		function updateFieldToNow() {
-			let now = new Date();
-			let year = now.getUTCFullYear();
-			let month = now.getUTCMonth() + 1;
-			let day = now.getUTCDate();
-			let hours = now.getUTCHours();
-			let minutes = now.getUTCMinutes();
-			let seconds = now.getUTCSeconds();
+        // expandCollapseSetPosData
+        let userPosDataExpanded = false;
 
-			document.getElementById('calendar-year-01').value = year;
-			document.getElementById('calendar-month-01').value = (month < 10 ? '0' + month : month);
-			document.getElementById('calendar-day-01').value = day;
-			document.getElementById('watch-value-01').value =
-					(hours < 10 ? '0' + hours : hours) + ':' +
-					(minutes < 10 ? '0' + minutes : minutes) + ':' +
-					(seconds < 10 ? '0' + seconds : seconds);
-		}
+        function expandCollapseSetPosData() {
+            let messZone = document.getElementById('message-zone');
+            if (userPosDataExpanded) {
+                document.getElementById('user-pos-widgets').style.display = 'none';
+                document.getElementById('user-pos-switch').innerText = '+ Set Pos';
+                messZone.style.visibility = "hidden";
+                messZone.style.height = '0';
+                messZone.style.opacity = '0';
+            } else {
+                document.getElementById('user-pos-widgets').style.display = 'block';
+                document.getElementById('user-pos-switch').innerText = '- Set Pos';
+                // Make sure nothing is feeding the cache with time.
+                messZone.innerText = 'Make sure nothing is feeding the cache with position.';
+                messZone.style.visibility = "visible";
+                messZone.style.height = '30px';
+                messZone.style.opacity = '1';
+                window.setTimeout(() => {
+                    console.log("Hiding message");
+                    messZone.style.visibility = "hidden";
+                    messZone.style.height = '0';
+                    messZone.style.opacity = '0';
+                }, 5000);
+            }
+            userPosDataExpanded = !userPosDataExpanded;
+        }
 
-		function updateCalendar() {
-			let year = document.getElementById('calendar-year-01').value;
-			let month = parseInt(document.getElementById('calendar-month-01').value);
-			let day = document.getElementById('calendar-day-01').value;
-			let time = document.getElementById('watch-value-01').value.split(':');
-			let date = new Date();
-			date.setUTCFullYear(year);
+        function updateFieldToNow() {
+            let now = new Date();
+            let year = now.getUTCFullYear();
+            let month = now.getUTCMonth() + 1;
+            let day = now.getUTCDate();
+            let hours = now.getUTCHours();
+            let minutes = now.getUTCMinutes();
+            let seconds = now.getUTCSeconds();
 
-			date.setUTCDate(day);
-			date.setUTCHours(time[0], time[1], time[2]);
+            document.getElementById('calendar-year-01').value = year;
+            document.getElementById('calendar-month-01').value = (month < 10 ? '0' + month : month);
+            document.getElementById('calendar-day-01').value = day;
+            document.getElementById('watch-value-01').value =
+                (hours < 10 ? '0' + hours : hours) + ':' +
+                (minutes < 10 ? '0' + minutes : minutes) + ':' +
+                (seconds < 10 ? '0' + seconds : seconds);
+        }
 
-			date.setUTCMonth(month - 1);
-			let epoch = date.getTime();
-			setUTCTime(epoch); // There is also room for a callback (2nd prm).
-		}
+        function updateCalendar() {
+            let year = document.getElementById('calendar-year-01').value;
+            let month = parseInt(document.getElementById('calendar-month-01').value);
+            let day = document.getElementById('calendar-day-01').value;
+            let time = document.getElementById('watch-value-01').value.split(':');
+            let date = new Date();
+            date.setUTCFullYear(year);
 
-		function updatePosition() {
-			let sgnLat = document.getElementById("pos-lat-sign-01").value;
-			let degLat = parseInt(document.getElementById("pos-lat-deg-01").value);
-			let minLat = parseFloat(document.getElementById("pos-lat-min-01").value);
-			let lat = (degLat + (minLat / 60.0)) * (sgnLat === 'N' ? 1 : -1);
+            date.setUTCDate(day);
+            date.setUTCHours(time[0], time[1], time[2]);
 
-			let sgnLng = document.getElementById("pos-lng-sign-01").value;
-			let degLng = parseInt(document.getElementById("pos-lng-deg-01").value);
-			let minLng = parseFloat(document.getElementById("pos-lng-min-01").value);
-			let lng = (degLng + (minLng / 60.0)) * (sgnLng === 'E' ? 1 : -1);
+            date.setUTCMonth(month - 1);
+            let epoch = date.getTime();
+            setUTCTime(epoch); // There is also room for a callback (2nd prm).
+        }
+
+        function updatePosition() {
+            let sgnLat = document.getElementById("pos-lat-sign-01").value;
+            let degLat = parseInt(document.getElementById("pos-lat-deg-01").value);
+            let minLat = parseFloat(document.getElementById("pos-lat-min-01").value);
+            let lat = (degLat + (minLat / 60.0)) * (sgnLat === 'N' ? 1 : -1);
+
+            let sgnLng = document.getElementById("pos-lng-sign-01").value;
+            let degLng = parseInt(document.getElementById("pos-lng-deg-01").value);
+            let minLng = parseFloat(document.getElementById("pos-lng-min-01").value);
+            let lng = (degLng + (minLng / 60.0)) * (sgnLng === 'E' ? 1 : -1);
 
 //		console.log("Setting pos to " + lat + "/" + lng);
-			setUserPos(lat, lng);
-		}
+            setUserPos(lat, lng);
+        }
 
-		let vrooming = undefined;
-		function vroom() {
-			if (vrooming !== undefined) {
-				window.clearInterval(vrooming);
-				vrooming = undefined;
-				document.getElementById('button-now').disabled = false;
-				document.getElementById('update-calendar').disabled = false;
-				document.getElementById('calendar-increment-01').disabled = false;
-			} else {
-				let increment = parseInt(document.getElementById('calendar-increment-01').value);
-				vrooming = window.setInterval(() => {
-					document.getElementById('button-now').disabled = true;
-					document.getElementById('update-calendar').disabled = true;
-					document.getElementById('calendar-increment-01').disabled = true;
+        let vrooming = undefined;
 
-					let year = document.getElementById('calendar-year-01').value;
-					let month = parseInt(document.getElementById('calendar-month-01').value);
-					let day = document.getElementById('calendar-day-01').value;
-					let time = document.getElementById('watch-value-01').value.split(':');
-					let date = new Date();
-					date.setUTCFullYear(year);
-					date.setUTCDate(day);
-					date.setUTCHours(time[0], time[1], time[2]);
-					// Month after, to avoid dates like June 31 (would be Jul 1)
-					date.setUTCMonth(month - 1);
-					let epoch = date.getTime();
+        function vroom() {
+            if (vrooming !== undefined) {
+                window.clearInterval(vrooming);
+                vrooming = undefined;
+                document.getElementById('button-now').disabled = false;
+                document.getElementById('update-calendar').disabled = false;
+                document.getElementById('calendar-increment-01').disabled = false;
+            } else {
+                let increment = parseInt(document.getElementById('calendar-increment-01').value);
+                vrooming = window.setInterval(() => {
+                    document.getElementById('button-now').disabled = true;
+                    document.getElementById('update-calendar').disabled = true;
+                    document.getElementById('calendar-increment-01').disabled = true;
 
-					epoch += increment;
-					let newDate = new Date(epoch);
+                    let year = document.getElementById('calendar-year-01').value;
+                    let month = parseInt(document.getElementById('calendar-month-01').value);
+                    let day = document.getElementById('calendar-day-01').value;
+                    let time = document.getElementById('watch-value-01').value.split(':');
+                    let date = new Date();
+                    date.setUTCFullYear(year);
+                    date.setUTCDate(day);
+                    date.setUTCHours(time[0], time[1], time[2]);
+                    // Month after, to avoid dates like June 31 (would be Jul 1)
+                    date.setUTCMonth(month - 1);
+                    let epoch = date.getTime();
 
-					let newYear = newDate.getUTCFullYear();
-					let newMonth = newDate.getUTCMonth() + 1;
-					let newDay = newDate.getUTCDate();
-					let hours = newDate.getUTCHours();
-					let minutes = newDate.getUTCMinutes();
-					let seconds = newDate.getUTCSeconds();
+                    epoch += increment;
+                    let newDate = new Date(epoch);
 
-					document.getElementById('calendar-year-01').value = newYear;
-					document.getElementById('calendar-month-01').value = (newMonth < 10 ? '0' + newMonth : newMonth);
-					document.getElementById('calendar-day-01').value = newDay;
-					document.getElementById('watch-value-01').value =
-							(hours < 10 ? '0' + hours : hours) + ':' +
-							(minutes < 10 ? '0' + minutes : minutes) + ':' +
-							(seconds < 10 ? '0' + seconds : seconds);
+                    let newYear = newDate.getUTCFullYear();
+                    let newMonth = newDate.getUTCMonth() + 1;
+                    let newDay = newDate.getUTCDate();
+                    let hours = newDate.getUTCHours();
+                    let minutes = newDate.getUTCMinutes();
+                    let seconds = newDate.getUTCSeconds();
 
-					updateCalendar();
+                    document.getElementById('calendar-year-01').value = newYear;
+                    document.getElementById('calendar-month-01').value = (newMonth < 10 ? '0' + newMonth : newMonth);
+                    document.getElementById('calendar-day-01').value = newDay;
+                    document.getElementById('watch-value-01').value =
+                        (hours < 10 ? '0' + hours : hours) + ':' +
+                        (minutes < 10 ? '0' + minutes : minutes) + ':' +
+                        (seconds < 10 ? '0' + seconds : seconds);
 
-				}, 1000); // Each second
-			}
-		}
+                    updateCalendar();
 
-		/**
-		 *  SUBSCRIBERS HERE.
-		 *
-		 * The following subscriptions make the distinction between Ajax & WebSockets
-		 * (See the initAjax & initWS methods)
-		 *
-		 * Event's definition (topic's name) is in ajax.manager.js, method onMessage
-		 */
-		/* global events gpsPosition setData gpsSatelliteData */
-		events.subscribe('pos', (val) => {
-			gpsPosition = val;
-			document.getElementById('world-map-01').setUserPosition({ latitude: val.lat, longitude: val.lng, gridSquare: val.gridSquare });
-			lastKnownPos = { // TODO Something nicer (it's in ajax.manager)...
-				latitude: val.lat,
-				longitude: val.lng
-			};
-			document.getElementById('world-map-01').positionLabel = "GPS";
-			document.getElementById('world-map-01').repaint();
-		});
-		events.subscribe('sog', (val) => {
-			setData('bsp-01', val);
-			document.getElementById('bsp-01').value2 = val * 0.514444;
-		});
-		events.subscribe('nmea', (val) => {
-			setRawNMEA(val.data);
-		});
-		events.subscribe('gps-time', (val) => {
-			// console.log(">> GPS-Time: ", val);
-			// val.format("Y-M-d H:i:s")
-			gpsTime = new Date(val);
-			let time = gpsTime.format("H:i:s");
-			setData('analog-watch-01', time);
-			let date = new Date(val).format("d-m-Y-l");
-			setData('calendar-01', date);
-			if (gpsPosition !== undefined) {
-				let gpsDate = new Date(val);
-				/* global getAstroData DURATION_FMT withWanderingBodies withStars astroCallback */
-				getAstroData(gpsDate.format(DURATION_FMT), gpsPosition, withWanderingBodies, withStars, astroCallback);
-			}
-		});
-		events.subscribe('gps-sat', (val) => {
+                }, 1000); // Each second
+            }
+        }
+
+        /**
+         *  SUBSCRIBERS HERE.
+         *
+         * The following subscriptions make the distinction between Ajax & WebSockets
+         * (See the initAjax & initWS methods)
+         *
+         * Event's definition (topic's name) is in ajax.manager.js, method onMessage
+         */
+        /* global events gpsPosition setData gpsSatelliteData */
+        events.subscribe('pos', (val) => {
+            gpsPosition = val;
+            document.getElementById('world-map-01').setUserPosition({
+                latitude: val.lat,
+                longitude: val.lng,
+                gridSquare: val.gridSquare
+            });
+            lastKnownPos = { // TODO Something nicer (it's in ajax.manager)...
+                latitude: val.lat,
+                longitude: val.lng
+            };
+            document.getElementById('world-map-01').positionLabel = "GPS";
+            document.getElementById('world-map-01').repaint();
+        });
+        events.subscribe('sog', (val) => {
+            setData('bsp-01', val);
+            document.getElementById('bsp-01').value2 = val * 0.514444;
+        });
+        events.subscribe('nmea', (val) => {
+            setRawNMEA(val.data);
+        });
+        events.subscribe('gps-time', (val) => {
+            // console.log(">> GPS-Time: ", val);
+            // val.format("Y-M-d H:i:s")
+            gpsTime = new Date(val);
+            let time = gpsTime.format("H:i:s");
+            setData('analog-watch-01', time);
+            let date = new Date(val).format("d-m-Y-l");
+            setData('calendar-01', date);
+            if (gpsPosition !== undefined) {
+                let gpsDate = new Date(val);
+                /* global getAstroData DURATION_FMT withWanderingBodies withStars astroCallback */
+                getAstroData(gpsDate.format(DURATION_FMT), gpsPosition, withWanderingBodies, withStars, astroCallback);
+            }
+        });
+        events.subscribe('gps-sat', (val) => {
 //		console.log("Satellite data:", val);
-			gpsSatelliteData = val;
-			let plotter = document.getElementById('sp-01');
-			plotter.setSatellites(val);
-			plotter.repaint();
-		});
-		events.subscribe('cog', (val) => {
-			setData('compass-rose-01', val);
-			setData('compass-01', val);
-			// setData('compass-display-01', val);
-		});
-		events.subscribe('hdg', (val) => {
-			hdg = val;
-			setData('compass-display-01', val);
-			setHdgOnDevCurve('compass-deviation', val);
-		});
-		events.subscribe('log', (val) => {
-			log = val;
-			let sdElem = document.getElementById('scroll-digit-display-01');
-			let strValue = lpad(val.toFixed(sdElem.nbDec), sdElem.nbChar, '0');
-			setScrollDigitValue('scroll-digit-display-01', strValue);
-		});
-		events.subscribe('daily-log', (val) => {
-			dailyLog = val;
-			let sdElem = document.getElementById('scroll-digit-display-02');
-			let strValue = lpad(val.toFixed(sdElem.nbDec), sdElem.nbChar, '0');
-			setScrollDigitValue('scroll-digit-display-02', strValue);
-		});
+            gpsSatelliteData = val;
+            let plotter = document.getElementById('sp-01');
+            plotter.setSatellites(val);
+            plotter.repaint();
+        });
+        events.subscribe('cog', (val) => {
+            setData('compass-rose-01', val);
+            setData('compass-01', val);
+            // setData('compass-display-01', val);
+        });
+        events.subscribe('hdg', (val) => {
+            hdg = val;
+            setData('compass-display-01', val);
+            setHdgOnDevCurve('compass-deviation', val);
+        });
+        events.subscribe('log', (val) => {
+            log = val;
+            let sdElem = document.getElementById('scroll-digit-display-01');
+            let strValue = lpad(val.toFixed(sdElem.nbDec), sdElem.nbChar, '0');
+            setScrollDigitValue('scroll-digit-display-01', strValue);
+        });
+        events.subscribe('daily-log', (val) => {
+            dailyLog = val;
+            let sdElem = document.getElementById('scroll-digit-display-02');
+            let strValue = lpad(val.toFixed(sdElem.nbDec), sdElem.nbChar, '0');
+            setScrollDigitValue('scroll-digit-display-02', strValue);
+        });
 
-		function dataToGraph(pivotDate, declMap, lineColor, fillColor1, fillColor2) {
-			if (lineColor === undefined) {
-				lineColor = 'orange';
-			}
-			let finalData = {
-				withGrid: true,
-				withXLabels: false,
-				withYLabels: true,
-				thickY: 0,
-				minX: 0,
-				maxX: 0,
-				minY: 0,
-				maxY: 0,
-				data: [
-					{
-						name: 'Declination, start',
-						lineColor: lineColor,
-						fillColor: fillColor1, // With gradient ?
-						thickness: 5,
-						x: [],
-						values: [] // Same cardinality as x
-					}, {
-						name: 'Declination, all',
-						lineColor: lineColor,
-						fillColor: fillColor2, // With gradient ?
-						thickness: 1,
-						x: [],
-						values: [] // Same cardinality as x
-					}
-				]
-			};
+        function dataToGraph(pivotDate, declMap, lineColor, fillColor1, fillColor2) {
+            if (lineColor === undefined) {
+                lineColor = 'orange';
+            }
+            let finalData = {
+                withGrid: true,
+                withXLabels: false,
+                withYLabels: true,
+                thickY: 0,
+                minX: 0,
+                maxX: 0,
+                minY: 0,
+                maxY: 0,
+                data: [
+                    {
+                        name: 'Declination, start',
+                        lineColor: lineColor,
+                        fillColor: fillColor1, // With gradient ?
+                        thickness: 5,
+                        x: [],
+                        values: [] // Same cardinality as x
+                    }, {
+                        name: 'Declination, all',
+                        lineColor: lineColor,
+                        fillColor: fillColor2, // With gradient ?
+                        thickness: 1,
+                        x: [],
+                        values: [] // Same cardinality as x
+                    }
+                ]
+            };
 
-			let mini = 90;
-			let maxi = -90;
-			let x = 0;
+            let mini = 90;
+            let maxi = -90;
+            let x = 0;
 
-			let thick = true;
+            let thick = true;
 
-			Object.keys(declMap).forEach(key => {
-				let decl = declMap[key];
-				if (decl < mini) {
-					mini = decl;
-					minTime = key;
-				}
-				if (decl > maxi) {
-					maxi = decl;
-					maxTime = key;
-				}
-				if (thick) {
-					finalData.data[0].x.push(x);
-					finalData.data[0].values.push(decl);
-				}
-				finalData.data[1].x.push(x);
-				finalData.data[1].values.push(decl);
-				x++;
-				if (key === pivotDate) {
-					thick = false;
-				}
-			});
+            Object.keys(declMap).forEach(key => {
+                let decl = declMap[key];
+                if (decl < mini) {
+                    mini = decl;
+                    minTime = key;
+                }
+                if (decl > maxi) {
+                    maxi = decl;
+                    maxTime = key;
+                }
+                if (thick) {
+                    finalData.data[0].x.push(x);
+                    finalData.data[0].values.push(decl);
+                }
+                finalData.data[1].x.push(x);
+                finalData.data[1].values.push(decl);
+                x++;
+                if (key === pivotDate) {
+                    thick = false;
+                }
+            });
 
-			finalData.minX = 0;
-			finalData.maxX = x;
-			finalData.minY = mini;
-			finalData.maxY = maxi;
+            finalData.minX = 0;
+            finalData.maxX = x;
+            finalData.minY = mini;
+            finalData.maxY = maxi;
 
 // console.log(JSON.stringify(finalData, null, 2));
-			return finalData;
-		}
+            return finalData;
+        }
 
-		const DAY = 24 * 3600 * 1000;
-		function loadDeclinations() {
-			// Payload: { bodies: [ "Sun", "Moon" ], from: '2019-12-15T00:00:00', to: '2019-12-25T00:00:00' }
-			let now = new Date(); // Get it in UTC
-			if (gpsTime !== undefined) {
-				now = gpsTime;
-			} else {
-				// console.log("TimeOffset:", now.getTimezoneOffset());
-				now.setTime(now.getTime() + (now.getTimezoneOffset() * 60000)); // timeOffset returned in minutes.
-			}
-			// console.log(`Calculating declination for date ${now.format(DURATION_FMT)}`);
-			let dateOffset = 5 * DAY; // 5 days
-			let from = new Date();
-			from.setTime(now.getTime() - dateOffset);
-			let to = new Date();
-			to.setTime(now.getTime() + dateOffset);
-			let payload = {
-				bodies: [ "Sun", "Moon" ],          // TODO More bodies?
-				from: from.format(DURATION_FMT),
-				to: to.format(DURATION_FMT)
-			};
-			// console.log("Payload:", payload);
+        const DAY = 24 * 3600 * 1000;
 
-			let getData = requestDeclinations(payload); // Empty obj, means use default
-			getData.then((value) => { // Resolve
+        function loadDeclinations() {
+            // Payload: { bodies: [ "Sun", "Moon" ], from: '2019-12-15T00:00:00', to: '2019-12-25T00:00:00' }
+            let now = new Date(); // Get it in UTC
+            if (gpsTime !== undefined) {
+                now = gpsTime;
+            } else {
+                // console.log("TimeOffset:", now.getTimezoneOffset());
+                now.setTime(now.getTime() + (now.getTimezoneOffset() * 60000)); // timeOffset returned in minutes.
+            }
+            // console.log(`Calculating declination for date ${now.format(DURATION_FMT)}`);
+            let dateOffset = 5 * DAY; // 5 days
+            let from = new Date();
+            from.setTime(now.getTime() - dateOffset);
+            let to = new Date();
+            to.setTime(now.getTime() + dateOffset);
+            let payload = {
+                bodies: ["Sun", "Moon"],          // TODO More bodies?
+                from: from.format(DURATION_FMT),
+                to: to.format(DURATION_FMT)
+            };
+            // console.log("Payload:", payload);
+
+            let getData = requestDeclinations(payload); // Empty obj, means use default
+            getData.then((value) => { // Resolve
 //  		console.log("Done:", value);
-				try {
-					let json = JSON.parse(value);
-					// console.log('Declinations', json);
+                try {
+                    let json = JSON.parse(value);
+                    // console.log('Declinations', json);
 
-					// Display (need a new WebComponent)
-					let declMap = json['Sun'];
-					if (declMap !== undefined) {
-						let mini = 90;
-						let maxi = -90;
-						let maxTime = '', minTime = '';
-						let labels = [];
-						Object.keys(declMap).forEach(key => {
-							labels.push(key);
-							let decl = declMap[key];
-							if (decl < mini) {
-								mini = decl;
-								minTime = key;
-							}
-							if (decl > maxi) {
-								maxi = decl;
-								maxTime = key;
-							}
-						});
-						// console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
-						// console.log(JSON.stringify(declMap));
-						// Use GPS Date if present
-						let graphData = dataToGraph(now.format(DURATION_FMT), declMap, 'orange', null, 'rgba(255, 165, 0, 0.35)');
-						let graph = document.getElementById('decl-graph-01');
-						// Grid parameters. Make sure graphData.withGrid = true
-						let minX = graphData.minX;
-						let maxX = graphData.maxX;
-						let minY = graphData.minY;
-						let maxY = graphData.maxY;
-						graph.vgrid = minX + ":" + ((maxX - minX) / 10);
-						graph.hgrid = minY + ":" + ((maxY - minY) / 10);
-						//
-						graph.data = graphData;
-						graph.setVGridLabelsCallback(function(idx) {
-							let label = labels[idx.toFixed(0)];
-							if (label !== undefined) {
-								label =  label.substring(0, label.lastIndexOf(':')).replace('T', ' ');
-							} else {
-								label = ""; // ` -- ${idx.toFixed(0)} --`;
-							}
-							// console.log(`For ${idx.toFixed(0)}, label ${label}`);
-							return label;
-						});
+                    // Display (need a new WebComponent)
+                    let declMap = json['Sun'];
+                    if (declMap !== undefined) {
+                        let mini = 90;
+                        let maxi = -90;
+                        let maxTime = '', minTime = '';
+                        let labels = [];
+                        Object.keys(declMap).forEach(key => {
+                            labels.push(key);
+                            let decl = declMap[key];
+                            if (decl < mini) {
+                                mini = decl;
+                                minTime = key;
+                            }
+                            if (decl > maxi) {
+                                maxi = decl;
+                                maxTime = key;
+                            }
+                        });
+                        // console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
+                        // console.log(JSON.stringify(declMap));
+                        // Use GPS Date if present
+                        let graphData = dataToGraph(now.format(DURATION_FMT), declMap, 'orange', null, 'rgba(255, 165, 0, 0.35)');
+                        let graph = document.getElementById('decl-graph-01');
+                        // Grid parameters. Make sure graphData.withGrid = true
+                        let minX = graphData.minX;
+                        let maxX = graphData.maxX;
+                        let minY = graphData.minY;
+                        let maxY = graphData.maxY;
+                        graph.vgrid = minX + ":" + ((maxX - minX) / 10);
+                        graph.hgrid = minY + ":" + ((maxY - minY) / 10);
+                        //
+                        graph.data = graphData;
+                        graph.setVGridLabelsCallback(function (idx) {
+                            let label = labels[idx.toFixed(0)];
+                            if (label !== undefined) {
+                                label = label.substring(0, label.lastIndexOf(':')).replace('T', ' ');
+                            } else {
+                                label = ""; // ` -- ${idx.toFixed(0)} --`;
+                            }
+                            // console.log(`For ${idx.toFixed(0)}, label ${label}`);
+                            return label;
+                        });
 
-						graph.repaint();
-					} else {
-						console.log("Oops, Sun Decl data not found...");
-					}
-					declMap = json['Moon'];
-					if (declMap !== undefined) {
-						let mini = 90;
-						let maxi = -90;
-						let maxTime = '', minTime = '';
-						let labels = [];
-						Object.keys(declMap).forEach(key => {
-							labels.push(key);
-							let decl = declMap[key];
-							if (decl < mini) {
-								mini = decl;
-								minTime = key;
-							}
-							if (decl > maxi) {
-								maxi = decl;
-								maxTime = key;
-							}
-						});
-						// console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
-						// console.log(JSON.stringify(declMap));
-						// Use GPS Date if present
-						let graphData = dataToGraph(now.format(DURATION_FMT), declMap, 'white', null, 'rgba(255, 255, 255, 0.35)');
-						let graph = document.getElementById('decl-graph-02');
-						graph.data = graphData;
-						// Grid parameters. Make sure graphData.withGrid = true
-						let minX = graphData.minX;
-						let maxX = graphData.maxX;
-						let minY = graphData.minY;
-						let maxY = graphData.maxY;
-						graph.vgrid = minX + ":" + ((maxX - minX) / 10);
-						graph.hgrid = minY + ":" + ((maxY - minY) / 10);
-						//
-						graph.setVGridLabelsCallback((idx) => {
-							let label = labels[idx.toFixed(0)];
-							if (label !== undefined) {
-								label =  label.substring(0, label.lastIndexOf(':')).replace('T', ' ');
-							} else {
-								label = ""; // ` -- ${idx.toFixed(0)} --`;
-							}
-							// console.log(`For ${idx.toFixed(0)}, label ${label}`);
-							return label;
-						});
-						graph.repaint();
-					} else {
-						console.log("Oops, Sun Decl data not found...");
-					}
-				} catch (err) {
-					console.log("Error:", err, ("\nfor value [" + value + "]"));
-				}
-			}, (error) => { // Reject
-				console.log("Failed to get Declinations..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
-			});
-		}
+                        graph.repaint();
+                    } else {
+                        console.log("Oops, Sun Decl data not found...");
+                    }
+                    declMap = json['Moon'];
+                    if (declMap !== undefined) {
+                        let mini = 90;
+                        let maxi = -90;
+                        let maxTime = '', minTime = '';
+                        let labels = [];
+                        Object.keys(declMap).forEach(key => {
+                            labels.push(key);
+                            let decl = declMap[key];
+                            if (decl < mini) {
+                                mini = decl;
+                                minTime = key;
+                            }
+                            if (decl > maxi) {
+                                maxi = decl;
+                                maxTime = key;
+                            }
+                        });
+                        // console.log(`Sun Decl from ${mini} at ${minTime},\nto ${maxi} at ${maxTime}\nAmplitude ${Math.abs(mini - maxi)}`);
+                        // console.log(JSON.stringify(declMap));
+                        // Use GPS Date if present
+                        let graphData = dataToGraph(now.format(DURATION_FMT), declMap, 'white', null, 'rgba(255, 255, 255, 0.35)');
+                        let graph = document.getElementById('decl-graph-02');
+                        graph.data = graphData;
+                        // Grid parameters. Make sure graphData.withGrid = true
+                        let minX = graphData.minX;
+                        let maxX = graphData.maxX;
+                        let minY = graphData.minY;
+                        let maxY = graphData.maxY;
+                        graph.vgrid = minX + ":" + ((maxX - minX) / 10);
+                        graph.hgrid = minY + ":" + ((maxY - minY) / 10);
+                        //
+                        graph.setVGridLabelsCallback((idx) => {
+                            let label = labels[idx.toFixed(0)];
+                            if (label !== undefined) {
+                                label = label.substring(0, label.lastIndexOf(':')).replace('T', ' ');
+                            } else {
+                                label = ""; // ` -- ${idx.toFixed(0)} --`;
+                            }
+                            // console.log(`For ${idx.toFixed(0)}, label ${label}`);
+                            return label;
+                        });
+                        graph.repaint();
+                    } else {
+                        console.log("Oops, Sun Decl data not found...");
+                    }
+                } catch (err) {
+                    console.log("Error:", err, ("\nfor value [" + value + "]"));
+                }
+            }, (error) => { // Reject
+                console.log("Failed to get Declinations..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
+            });
+        }
 
-		function loadSunPath() {
+        function loadSunPath() {
 
-			let worldMap = document.getElementById('world-map-01');
-			let graphElement01 = document.getElementById('decl-graph-01');
-			let graphElement02 = document.getElementById('decl-graph-02');
+            let worldMap = document.getElementById('world-map-01');
+            let graphElement01 = document.getElementById('decl-graph-01');
+            let graphElement02 = document.getElementById('decl-graph-02');
 
-			let fmtFunction = (value) => {
-				return worldMap.decToSex(value, "NS");
-			};
+            let fmtFunction = (value) => {
+                return worldMap.decToSex(value, "NS");
+            };
 
-			graphElement01.setHGridLabelsCallback(fmtFunction);
-			graphElement02.setHGridLabelsCallback(fmtFunction);
+            graphElement01.setHGridLabelsCallback(fmtFunction);
+            graphElement02.setHGridLabelsCallback(fmtFunction);
 
-			// Payload: { position: { latitude: 37.76661945, longitude: -122.5166988 }, step: 10 }
-			let payload = {};
-			if (lastKnownPos != null) {
-				payload = { position: lastKnownPos, step: 10 };
-			}
-			let getData = requestSunPath(payload); // Empty obj, means use default
-			getData.then((value) => { // Resolve
+            // Payload: { position: { latitude: 37.76661945, longitude: -122.5166988 }, step: 10 }
+            let payload = {};
+            if (lastKnownPos != null) {
+                payload = {position: lastKnownPos, step: 10};
+            }
+            let getData = requestSunPath(payload); // Empty obj, means use default
+            getData.then((value) => { // Resolve
 //  		console.log("Done:", value);
-				try {
-					let json = JSON.parse(value);
-					// console.log('SunPath', json);
-					// Max alt
-					let maxAlt = -Number.MAX_VALUE;
-					json.forEach(elem => {
-						maxAlt = Math.max(maxAlt, elem.alt);
-					});
+                try {
+                    let json = JSON.parse(value);
+                    // console.log('SunPath', json);
+                    // Max alt
+                    let maxAlt = -Number.MAX_VALUE;
+                    json.forEach(elem => {
+                        maxAlt = Math.max(maxAlt, elem.alt);
+                    });
 
-					// Specific
-					let sunPathElement = document.getElementById('sun-path-01');
-					if (sunPathElement !== null && sunPathElement !== undefined) {
-						sunPathElement.sunPath = json;
-						sunPathElement.repaint();
-						document.getElementById('sun-path-loaded').innerHTML = 'Sun path loaded ' + new Date() + '<br/>Max elevation: ' + sunPathElement.decToSex(maxAlt);
-					}
-				} catch (err) {
-					console.log("Error:", err, ("\nfor value [" + value + "]"));
-				}
-			}, (error) => { // Reject
-				console.log("Failed to get Sun Path..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
-			});
-		}
+                    // Specific
+                    let sunPathElement = document.getElementById('sun-path-01');
+                    if (sunPathElement !== null && sunPathElement !== undefined) {
+                        sunPathElement.sunPath = json;
+                        sunPathElement.repaint();
+                        document.getElementById('sun-path-loaded').innerHTML = 'Sun path loaded ' + new Date() + '<br/>Max elevation: ' + sunPathElement.decToSex(maxAlt);
+                    }
+                } catch (err) {
+                    console.log("Error:", err, ("\nfor value [" + value + "]"));
+                }
+            }, (error) => { // Reject
+                console.log("Failed to get Sun Path..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
+            });
+        }
 
-		function setNewTilt(value, id) {
-			let elem = document.getElementById(id);
-			let val = value.value;
-			if (elem !== undefined) {
-				elem.tilt = val;
-				elem.repaint();
-			}
-		}
+        function setNewTilt(value, id) {
+            let elem = document.getElementById(id);
+            let val = value.value;
+            if (elem !== undefined) {
+                elem.tilt = val;
+                elem.repaint();
+            }
+        }
 
-		function setNewZOffset(range, id) {
-			let elem = document.getElementById(id);
-			let val = range.value;
-			if (elem !== undefined) {
-				elem.zOffset = val;
-				elem.repaint();
-			}
-		}
+        function setNewZOffset(range, id) {
+            let elem = document.getElementById(id);
+            let val = range.value;
+            if (elem !== undefined) {
+                elem.zOffset = val;
+                elem.repaint();
+            }
+        }
 
-	</script>
+    </script>
 
-	<style>
-		:root {
-			--padding: 50px;
-			--perspective: 100em;
-			--rotateX: -15deg;
-			--scaleY: 1.0;
-		}
+    <style>
+        :root {
+            --padding: 50px;
+            --perspective: 100em;
+            --rotateX: -15deg;
+            --scaleY: 1.0;
+        }
 
-		html {
-			height: 100%;
-			width: 100%;
-			background-color: black;
-		}
+        html {
+            height: 100%;
+            width: 100%;
+            background-color: black;
+        }
 
-		body {
-			background-color: black;
-			color: gray;
-			font-family: "Helvetica Neue", Verdana, Arial, Helvetica, sans-serif;
-			/* background-image: linear-gradient(to bottom right, #4d4d4d, black); */
-			background: radial-gradient(at top, DarkGrey -8%, black 55%);
-			background-repeat: no-repeat;
-			background-size: 100% 100%;
-		}
+        body {
+            background-color: black;
+            color: gray;
+            font-family: "Helvetica Neue", Verdana, Arial, Helvetica, sans-serif;
+            /* background-image: linear-gradient(to bottom right, #4d4d4d, black); */
+            background: radial-gradient(at top, DarkGrey -8%, black 55%);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
 
-		.black-frame {
-			padding: 3px;
-			margin: 1px;
-			border-radius: 5px;
-			border: 1px solid silver;
-			box-shadow: 0 2px 2px #ccc;
-		}
+        .black-frame {
+            padding: 3px;
+            margin: 1px;
+            border-radius: 5px;
+            border: 1px solid silver;
+            box-shadow: 0 2px 2px #ccc;
+        }
 
-		.centered {
-			text-align: center;
-		}
+        .centered {
+            text-align: center;
+        }
 
-		.mirror {
-			display: block;
-			-webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
-			-moz-transform: matrix(-1, 0, 0, 1, 0, 0);
-			-o-transform: matrix(-1, 0, 0, 1, 0, 0);
-			transform: matrix(-1, 0, 0, 1, 0, 0);
-		}
+        .mirror {
+            display: block;
+            -webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
+            -moz-transform: matrix(-1, 0, 0, 1, 0, 0);
+            -o-transform: matrix(-1, 0, 0, 1, 0, 0);
+            transform: matrix(-1, 0, 0, 1, 0, 0);
+        }
 
-		.mirror-upside-down {
-			display: block;
-			-webkit-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
-			-moz-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
-			-o-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
-			transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX)) scaleY(var(--scaleY));
-		}
+        .mirror-upside-down {
+            display: block;
+            -webkit-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+            -moz-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+            -o-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+            transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX)) scaleY(var(--scaleY));
+        }
 
-		.tab {
-			overflow: hidden;
-			border: 1px solid #ccc;
-			border-radius: 5px;
-			background-color: rgba(241, 241, 241, 0.5);
-		}
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: rgba(241, 241, 241, 0.5);
+        }
 
-		/* Style the buttons inside the tab */
-		.tab button {
-			background-color: inherit;
-			float: left;
-			border: none;
-			outline: none;
-			cursor: pointer;
-			padding: 14px 16px;
-			transition: 0.3s;
-			font-size: 17px;
-			text-shadow: 1px 1px 2px rgba(0, 255, 255, 0.5), 0 0 25px white, 0 0 5px silver;
-		}
+        /* Style the buttons inside the tab */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+            text-shadow: 1px 1px 2px rgba(0, 255, 255, 0.5), 0 0 25px white, 0 0 5px silver;
+        }
 
-		/* Change background color of buttons on hover */
-		.tab button:hover {
-			background-color: #ddd;
-		}
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
 
-		/* Create an active/current tablink class */
-		.tab button.active {
-			background-color: #ccc;
-		}
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #ccc;
+        }
 
-		.tab .mess {
-			padding: 14px 16px;
-			transition: 0.3s;
-			font-size: 17px;
-			text-shadow: 1px 1px 2px rgba(0, 255, 255, 0.5), 0 0 25px white, 0 0 5px orange;
-			color: black;
-			text-align: right;
-		}
+        .tab .mess {
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+            text-shadow: 1px 1px 2px rgba(0, 255, 255, 0.5), 0 0 25px white, 0 0 5px orange;
+            color: black;
+            text-align: right;
+        }
 
-		.raw-table {
-			border-color: cyan;
-			font-family: "Helvetica Neue", "Lato", Verdana, Helvetica, Geneva, sans-serif;
-			font-size: 20px;
-		}
+        .raw-table {
+            border-color: cyan;
+            font-family: "Helvetica Neue", "Lato", Verdana, Helvetica, Geneva, sans-serif;
+            font-size: 20px;
+        }
 
-		th {
-			font-family: inherit;
-			font-size: inherit;
-		}
+        th {
+            font-family: inherit;
+            font-size: inherit;
+        }
 
-		td {
-			font-family: inherit;
-			font-size: inherit;
-			padding: 5px;
-		}
+        td {
+            font-family: inherit;
+            font-size: inherit;
+            padding: 5px;
+        }
 
-		.smooth {
-			height: 0;
-			visibility: hidden;
-			opacity: 0;
-			transition: height 0.5s, visibility 0.5s, opacity 0.5s linear;
-		}
+        .smooth {
+            height: 0;
+            visibility: hidden;
+            opacity: 0;
+            transition: height 0.5s, visibility 0.5s, opacity 0.5s linear;
+        }
 
-		.boat-data {
-			/*border: 2px solid cyan;*/
-			/*max-width: inherit;*/
-			/* Order is important */
-			transition: visibility 0.5s, opacity 0.5s linear, height 0.5s;
-			overflow: hidden;
-			overflow-x: scroll;
-		}
+        .boat-data {
+            /*border: 2px solid cyan;*/
+            /*max-width: inherit;*/
+            /* Order is important */
+            transition: visibility 0.5s, opacity 0.5s linear, height 0.5s;
+            overflow: hidden;
+            overflow-x: scroll;
+        }
 
-	</style>
+    </style>
 
-	<!-- All logic in the script below -->
-	<script type="text/javascript" src="./console.logic.js"></script>
+    <!-- All logic in the script below -->
+    <script type="text/javascript" src="./console.logic.js"></script>
 </head>
 <body>
 
-	<table width="100%">
-		<tr>
-			<td><h2 style="text-shadow: 1px 1px 2px black, 0 0 25px white, 0 0 5px silver;">Web Components NMEA/GPS Console</h2></td>
-		</tr>
-	</table>
-	<hr/>
-	<table width="100%">
-		<tr>
-			<td style="color: cyan;">
-				Padding (Left &amp; Right)
-				<input type="range" value="50" min="0" max="200" style="width: 80%;" oninput="setPadding(this); padding01.value = (this.value + 'px');" />
-				<output name="padding" id="padding01" style="color: cyan;">50px</output>
-			</td>
-		</tr>
-	</table>
-		<!-- Perspective sliders -->
-	<span id="head-up-command" onclick="collapseExpandHeadsup(); toggleHeadsUp();" style="border: 1px solid silver; border-radius: 5px; padding-left: 5px; padding-right: 5px; cursor: pointer; margin: 0 0 10px 10px;" title="Click to expand and collapse">+ Head up</span>
-	<div id="heads-up-sliders" style="display: none;">
-		<!--button onclick="toggleHeadsUp();" style="border-radius: 5px;">Head Up</button-->
-		<table width="100%">
-			<tr>
-				<td width="33%">
-					<h5 style="color: cyan;">Perspective</h5>
-					<input type="range" value="100" min="0" max="100" style="width: 80%;" oninput="setPerspective(this); perspective01.value = this.value;" />
-					<output name="perspective" id="perspective01" style="color: cyan;">100</output>
-				</td>
-				<td width="33%">
-					<h5 style="color: cyan;">Rotate X</h5>
-					<input type="range" value="-15" min="-100" max="100" style="width: 80%;" oninput="setRotateX(this); perspective02.value = this.value;" />
-					<output name="perspective" id="perspective02" style="color: cyan;">-15</output>
-				</td>
-				<td width="33%">
-					<h5 style="color: cyan;">Scale Y</h5>
-					<input type="range" value="1" min="0" max="5" step="0.01" style="width: 80%;" oninput="setScaleY(this); scaleY02.value = this.value;" />
-					<output name="scaleY" id="scaleY02" style="color: cyan;">1</output>
-				</td>
-			</tr>
-		</table>
-	</div>
-	<hr style="margin: 5px;"/>
-	<!-- Page BG -->
-	<table width="60%">
-		<tr>
-			<td>
-				Widget's Style:
-				<select id="widgets-style" onchange="setTheme(this.value);">
-					<option value="analogdisplay-day" selected>Day</option>
-					<option value="analogdisplay-night">Night</option>
-					<option value="analogdisplay-monochrome-black">Black</option>
-					<option value="analogdisplay-monochrome-white">White</option>
-					<option value="analogdisplay-monochrome-cyan">Cyan</option>
-					<option value="analogdisplay-monochrome-orange">Orange</option>
-					<option value="analogdisplay-monochrome-yellow">Yellow</option>
-					<option value="analogdisplay-flat-gray">Flat Gray</option>
-					<option value="analogdisplay-flat-black">Flat Black</option>
-				</select>
-				Page Background
-				<input type="radio" id="black" name="page-bg" value="BLACK" onchange="changeBG(this.value);">Black
-				<input type="radio" id="dark" name="page-bg" value="DARK" onchange="changeBG(this.value);" checked>Dark
-				<input type="radio" id="light" name="page-bg" value="LIGHT" onchange="changeBG(this.value);">Light
-				<input type="radio" id="white" name="page-bg" value="WHITE" onchange="changeBG(this.value);">White
-			</td>
-			<td align="left">
-				<span id="user-time-switch" onclick="expandCollapseSetTimeData();" style="border: 1px solid silver; border-radius: 5px; padding-left: 5px; padding-right: 5px; cursor: pointer; margin-left: 40px;">+ Set Time</span>
-				<br/>
-				<span id="user-pos-switch" onclick="expandCollapseSetPosData();" style="border: 1px solid silver; border-radius: 5px; padding-left: 5px; padding-right: 5px; cursor: pointer; margin-left: 40px;">+ Set Pos</span>
-			</td>
-		</tr>
-	</table>
-	<hr/>
+<table width="100%">
+    <tr>
+        <td><h2 style="text-shadow: 1px 1px 2px black, 0 0 25px white, 0 0 5px silver;">Web Components NMEA/GPS
+            Console</h2></td>
+    </tr>
+</table>
+<hr/>
+<table width="100%">
+    <tr>
+        <td style="color: cyan;">
+            Padding (Left &amp; Right)
+            <input type="range" value="50" min="0" max="200" style="width: 80%;"
+                   oninput="setPadding(this); padding01.value = (this.value + 'px');"/>
+            <output name="padding" id="padding01" style="color: cyan;">50px</output>
+        </td>
+    </tr>
+</table>
+<!-- Perspective sliders -->
+<span id="head-up-command" onclick="collapseExpandHeadsup(); toggleHeadsUp();"
+      style="border: 1px solid silver; border-radius: 5px; padding-left: 5px; padding-right: 5px; cursor: pointer; margin: 0 0 10px 10px;"
+      title="Click to expand and collapse">+ Head up</span>
+<div id="heads-up-sliders" style="display: none;">
+    <!--button onclick="toggleHeadsUp();" style="border-radius: 5px;">Head Up</button-->
+    <table width="100%">
+        <tr>
+            <td width="33%">
+                <h5 style="color: cyan;">Perspective</h5>
+                <input type="range" value="100" min="0" max="100" style="width: 80%;"
+                       oninput="setPerspective(this); perspective01.value = this.value;"/>
+                <output name="perspective" id="perspective01" style="color: cyan;">100</output>
+            </td>
+            <td width="33%">
+                <h5 style="color: cyan;">Rotate X</h5>
+                <input type="range" value="-15" min="-100" max="100" style="width: 80%;"
+                       oninput="setRotateX(this); perspective02.value = this.value;"/>
+                <output name="perspective" id="perspective02" style="color: cyan;">-15</output>
+            </td>
+            <td width="33%">
+                <h5 style="color: cyan;">Scale Y</h5>
+                <input type="range" value="1" min="0" max="5" step="0.01" style="width: 80%;"
+                       oninput="setScaleY(this); scaleY02.value = this.value;"/>
+                <output name="scaleY" id="scaleY02" style="color: cyan;">1</output>
+            </td>
+        </tr>
+    </table>
+</div>
+<hr style="margin: 5px;"/>
+<!-- Page BG -->
+<table width="60%">
+    <tr>
+        <td>
+            Widget's Style:
+            <select id="widgets-style" onchange="setTheme(this.value);">
+                <option value="analogdisplay-day" selected>Day</option>
+                <option value="analogdisplay-night">Night</option>
+                <option value="analogdisplay-monochrome-black">Black</option>
+                <option value="analogdisplay-monochrome-white">White</option>
+                <option value="analogdisplay-monochrome-cyan">Cyan</option>
+                <option value="analogdisplay-monochrome-orange">Orange</option>
+                <option value="analogdisplay-monochrome-yellow">Yellow</option>
+                <option value="analogdisplay-flat-gray">Flat Gray</option>
+                <option value="analogdisplay-flat-black">Flat Black</option>
+            </select>
+            Page Background
+            <input type="radio" id="black" name="page-bg" value="BLACK" onchange="changeBG(this.value);">Black
+            <input type="radio" id="dark" name="page-bg" value="DARK" onchange="changeBG(this.value);" checked>Dark
+            <input type="radio" id="light" name="page-bg" value="LIGHT" onchange="changeBG(this.value);">Light
+            <input type="radio" id="white" name="page-bg" value="WHITE" onchange="changeBG(this.value);">White
+        </td>
+        <td align="left">
+            <span id="user-time-switch" onclick="expandCollapseSetTimeData();"
+                  style="border: 1px solid silver; border-radius: 5px; padding-left: 5px; padding-right: 5px; cursor: pointer; margin-left: 40px;">+ Set Time</span>
+            <br/>
+            <span id="user-pos-switch" onclick="expandCollapseSetPosData();"
+                  style="border: 1px solid silver; border-radius: 5px; padding-left: 5px; padding-right: 5px; cursor: pointer; margin-left: 40px;">+ Set Pos</span>
+        </td>
+    </tr>
+</table>
+<hr/>
 
-	<!--
-	  Good grid resource at:
-	  https://css-tricks.com/snippets/css/complete-guide-grid/
-	  https://www.w3schools.com/css/css_grid.asp
-	 -->
-	<!-- A div for the user to set the UTC time -->
-	<div id="user-time-set">
-		<div id="message-zone" style="visibility: hidden; color: blue; background-color: silver; border-radius: 5px; padding: 5px; font-size: 24px;" class="smooth"></div>
-		<div id="user-time-widgets" style="display: none; padding: 10px;">
-			<button id="button-now"
-							onclick="updateFieldToNow()"
-							title="Set date value"
-							style="margin-top: 3px;">Now</button>
-			UTC Date to set:
-			<input type="number"
-						 id="calendar-day-01"
-						 placeholder="DD"
-						 title="Day to set"
-						 style="width: 40px; text-align: center;"
-						 value="01"/>
-			<select id="calendar-month-01">
-				<option value="01" selected>Jan</option>
-				<option value="02">Feb</option>
-				<option value="03">Mar</option>
-				<option value="04">Apr</option>
-				<option value="05">May</option>
-				<option value="06">Jun</option>
-				<option value="07">Jul</option>
-				<option value="08">Aug</option>
-				<option value="09">Sep</option>
-				<option value="10">Oct</option>
-				<option value="11">Nov</option>
-				<option value="12">Dec</option>
-			</select>
-			<input type="number"
-						 id="calendar-year-01"
-						 placeholder="YYYY"
-						 title="Year to set"
-						 style="width: 80px; text-align: center;"
-						 value="1970"/>
-			<input type="text"
-						 id="watch-value-01"
-						 placeholder="00:00:00"
-						 title="Time to set"
-						 style="width: 80px; text-align: center;"
-						 value="00:00:00"/>
-			<button id="update-calendar"
-							onclick="updateCalendar()"
-							title="Set date value"
-							style="margin-top: 3px;">Set UTC</button>
-			&nbsp;&nbsp;
-			<button onclick="vroom()"
-							title="Simulate"
-							style="margin-top: 3px;">Vroom!</button>
-			Each second, increment by
-			<select id="calendar-increment-01">
-				<option value="1000" selected>1 second</option>
-				<option value="10000" selected>10 seconds</option>
-				<option value="30000">30 seconds</option>
-				<option value="60000">1 minute</option>
-				<option value="600000">10 minutes</option>
-				<option value="1800000">30 minutes</option>
-				<option value="3600000">1 hour</option>
-				<option value="21600000">6 hours</option>
-				<option value="43200000">12 hours</option>
-				<option value="86400000">1 day</option>
-			</select>
-		</div>
-		<div id="user-pos-widgets" style="display: none; padding: 10px;">
-			Latitude:
-			<select id="pos-lat-sign-01">
-				<option value="N" selected>N</option>
-				<option value="S">S</option>
-			</select>
-			<input type="number"
-						 id="pos-lat-deg-01"
-						 placeholder="Deg"
-						 title="Lat degrees to set"
-						 style="width: 40px; text-align: center;"
-						 min="0"
-						 max="90"
-						 step="1"
-						 value="0"/>
-			<input type="number"
-						 id="pos-lat-min-01"
-						 placeholder="Minutes"
-						 title="Lat minutes to set"
-						 style="width: 60px; text-align: center;"
-						 min="0"
-						 max="59.99"
-						 step="0.01"
-						 value="00.00"/>
-			&nbsp;&nbsp;Longitude:
-			<select id="pos-lng-sign-01">
-				<option value="E" selected>E</option>
-				<option value="W">W</option>
-			</select>
-			<input type="number"
-						 id="pos-lng-deg-01"
-						 placeholder="Deg"
-						 title="Lng degrees to set"
-						 style="width: 40px; text-align: center;"
-						 min="0"
-						 max="180"
-						 step="1"
-						 value="0"/>
-			<input type="number"
-						 id="pos-lng-min-01"
-						 placeholder="Minutes"
-						 title="Lng minutes to set"
-						 style="width: 60px; text-align: center;"
-						 min="0"
-						 max="59.99"
-						 step="0.01"
-						 value="00.00"/>
-			&nbsp;&nbsp;
-			<button id="update-position"
-							onclick="updatePosition()"
-							title="Set position value"
-							style="margin-top: 3px;">Set Position</button>
-		</div>
-	</div>
+<!--
+  Good grid resource at:
+  https://css-tricks.com/snippets/css/complete-guide-grid/
+  https://www.w3schools.com/css/css_grid.asp
+ -->
+<!-- A div for the user to set the UTC time -->
+<div id="user-time-set">
+    <div id="message-zone"
+         style="visibility: hidden; color: blue; background-color: silver; border-radius: 5px; padding: 5px; font-size: 24px;"
+         class="smooth"></div>
+    <div id="user-time-widgets" style="display: none; padding: 10px;">
+        <button id="button-now"
+                onclick="updateFieldToNow()"
+                title="Set date value"
+                style="margin-top: 3px;">Now
+        </button>
+        UTC Date to set:
+        <input type="number"
+               id="calendar-day-01"
+               placeholder="DD"
+               title="Day to set"
+               style="width: 40px; text-align: center;"
+               value="01"/>
+        <select id="calendar-month-01">
+            <option value="01" selected>Jan</option>
+            <option value="02">Feb</option>
+            <option value="03">Mar</option>
+            <option value="04">Apr</option>
+            <option value="05">May</option>
+            <option value="06">Jun</option>
+            <option value="07">Jul</option>
+            <option value="08">Aug</option>
+            <option value="09">Sep</option>
+            <option value="10">Oct</option>
+            <option value="11">Nov</option>
+            <option value="12">Dec</option>
+        </select>
+        <input type="number"
+               id="calendar-year-01"
+               placeholder="YYYY"
+               title="Year to set"
+               style="width: 80px; text-align: center;"
+               value="1970"/>
+        <input type="text"
+               id="watch-value-01"
+               placeholder="00:00:00"
+               title="Time to set"
+               style="width: 80px; text-align: center;"
+               value="00:00:00"/>
+        <button id="update-calendar"
+                onclick="updateCalendar()"
+                title="Set date value"
+                style="margin-top: 3px;">Set UTC
+        </button>
+        &nbsp;&nbsp;
+        <button onclick="vroom()"
+                title="Simulate"
+                style="margin-top: 3px;">Vroom!
+        </button>
+        Each second, increment by
+        <select id="calendar-increment-01">
+            <option value="1000" selected>1 second</option>
+            <option value="10000" selected>10 seconds</option>
+            <option value="30000">30 seconds</option>
+            <option value="60000">1 minute</option>
+            <option value="600000">10 minutes</option>
+            <option value="1800000">30 minutes</option>
+            <option value="3600000">1 hour</option>
+            <option value="21600000">6 hours</option>
+            <option value="43200000">12 hours</option>
+            <option value="86400000">1 day</option>
+        </select>
+    </div>
+    <div id="user-pos-widgets" style="display: none; padding: 10px;">
+        Latitude:
+        <select id="pos-lat-sign-01">
+            <option value="N" selected>N</option>
+            <option value="S">S</option>
+        </select>
+        <input type="number"
+               id="pos-lat-deg-01"
+               placeholder="Deg"
+               title="Lat degrees to set"
+               style="width: 40px; text-align: center;"
+               min="0"
+               max="90"
+               step="1"
+               value="0"/>
+        <input type="number"
+               id="pos-lat-min-01"
+               placeholder="Minutes"
+               title="Lat minutes to set"
+               style="width: 60px; text-align: center;"
+               min="0"
+               max="59.99"
+               step="0.01"
+               value="00.00"/>
+        &nbsp;&nbsp;Longitude:
+        <select id="pos-lng-sign-01">
+            <option value="E" selected>E</option>
+            <option value="W">W</option>
+        </select>
+        <input type="number"
+               id="pos-lng-deg-01"
+               placeholder="Deg"
+               title="Lng degrees to set"
+               style="width: 40px; text-align: center;"
+               min="0"
+               max="180"
+               step="1"
+               value="0"/>
+        <input type="number"
+               id="pos-lng-min-01"
+               placeholder="Minutes"
+               title="Lng minutes to set"
+               style="width: 60px; text-align: center;"
+               min="0"
+               max="59.99"
+               step="0.01"
+               value="00.00"/>
+        &nbsp;&nbsp;
+        <button id="update-position"
+                onclick="updatePosition()"
+                title="Set position value"
+                style="margin-top: 3px;">Set Position
+        </button>
+    </div>
+</div>
 
-	<!-- the tabs -->
-	<div class="tab">
-		<button class="tablinks active" onclick="openTab(event, 0)">Overview</button>
-		<button class="tablinks" onclick="openTab(event, 1)">Raw Data</button>
-		<button class="tablinks" onclick="openTab(event, 2)">Visible Sky</button>
-		<button class="tablinks" onclick="openTab(event, 3)">Sun Path</button>
-		<button class="tablinks" onclick="openTab(event, 4)">Raw NMEA</button>
-		<div class="mess">Garanteed 0% external libraries.</div>
-	</div>
+<!-- the tabs -->
+<div class="tab">
+    <button class="tablinks active" onclick="openTab(event, 0)">Overview</button>
+    <button class="tablinks" onclick="openTab(event, 1)">Raw Data</button>
+    <button class="tablinks" onclick="openTab(event, 2)">Visible Sky</button>
+    <button class="tablinks" onclick="openTab(event, 3)">Sun Path</button>
+    <button class="tablinks" onclick="openTab(event, 4)">Raw NMEA</button>
+    <div class="mess">Garanteed 0% external libraries.</div>
+</div>
 
-	<!-- The NMEA widgets. The 50px columns are here for the perspective, they are pads on the left and right -->
-	<div id="one" style="display: block;">
-		<div style="margin: 5px;">
-		<span id="boat-data-switch" onclick="expandCollapseBoatData();" style="border: 1px solid silver; border-radius: 5px; padding-left: 5px; padding-right: 5px; cursor: pointer; margin-left: 40px; padding-left: 5px; padding-right: 5px;">- Boat Data</span>
-		<!-- Geolocation API activity -->
-		<span style="margin-left: 50px; vertical-align: center;">
+<!-- The NMEA widgets. The 50px columns are here for the perspective, they are pads on the left and right -->
+<div id="one" style="display: block;">
+    <div style="margin: 5px;">
+        <span id="boat-data-switch" onclick="expandCollapseBoatData();"
+              style="border: 1px solid silver; border-radius: 5px; padding-left: 5px; padding-right: 5px; cursor: pointer; margin-left: 40px; padding-left: 5px; padding-right: 5px;">- Boat Data</span>
+        <!-- Geolocation API activity -->
+        <span style="margin-left: 50px; vertical-align: center;">
 			GeoLocation Web API
 			<span style="position: absolute; margin-top: -14px;">
 				<label class="rocker rocker-tiny">
@@ -904,546 +928,571 @@
 				</label>
 			</span>
 			<span style="margin-left: 50px;">
-				<span id="working" title="Navigator Geolocation" style="margin-left: 20px; color: transparent;">&#11044;</span>
+				<span id="working" title="Navigator Geolocation"
+                      style="margin-left: 20px; color: transparent;">&#11044;</span>
 				<span id="accuracy" style="margin-left: 15px;"></span>
 			</span>
 		</span>
-		</div>
-		<div id="nmea-widgets-1" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 0px 10px 10px 10px; text-align: center;">
-			<div id="boat-data" class="boat-data" style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 2; grid-template-columns: auto;">
-				<div id="row-1" style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto auto auto; padding: 10px;">
-					<!--
-					   BOUSSOLE... HDG
-					 +-->
-					<div id="boussole">
-						<div class="black-frame centered">
-							<compass-display id="compass-display-01"
-											 class="green"
-											 title="True Heading"
-											 value="0"
-											 width="250"
-											 height="250"
-											 major-ticks="45"
-											 minor-ticks="5"
-											 label="HDG"></compass-display>
-						</div>
-						<div class="black-frame centered mid">
-							<!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-display-01');" checked -->
-							With Border
-							<label class="rocker rocker-tiny">
-								<input type="checkbox" onchange="setBorder(this, 'compass-display-01');" checked>
-								<span class="switch-left">Yes</span>
-								<span class="switch-right">No</span>
-							</label>
+    </div>
+    <div id="nmea-widgets-1"
+         style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 0px 10px 10px 10px; text-align: center;">
+        <div id="boat-data" class="boat-data"
+             style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 2; grid-template-columns: auto;">
+            <div id="row-1"
+                 style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto auto auto; padding: 10px;">
+                <!--
+                   BOUSSOLE... HDG
+                 +-->
+                <div id="boussole">
+                    <div class="black-frame centered">
+                        <compass-display id="compass-display-01"
+                                         class="green"
+                                         title="True Heading"
+                                         value="0"
+                                         width="250"
+                                         height="250"
+                                         major-ticks="45"
+                                         minor-ticks="5"
+                                         label="HDG"></compass-display>
+                    </div>
+                    <div class="black-frame centered mid">
+                        <!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-display-01');" checked -->
+                        With Border
+                        <label class="rocker rocker-tiny">
+                            <input type="checkbox" onchange="setBorder(this, 'compass-display-01');" checked>
+                            <span class="switch-left">Yes</span>
+                            <span class="switch-right">No</span>
+                        </label>
 
-							<!-- input type="checkbox" onchange="setRose(this, 'compass-display-01');" checked -->
-							With Rose
-							<label class="rocker rocker-tiny">
-								<input type="checkbox" onchange="setRose(this, 'compass-display-01');" checked>
-								<span class="switch-left">Yes</span>
-								<span class="switch-right">No</span>
-							</label>
-						</div>
-					</div>
-					<!--
-					    DEVIATION Curve(s).
-					 +-->
-					<div id="deviation" class="black-frame centered">
-						<graph-display id="compass-deviation"
-									   width="150"
-									   height="300"
-									   padding="5"
-									   value="null"
-									   orientation="vertical"
-									   label="Deviation"
-									   title="Deviation"></graph-display>
-					</div>
-					<!--
-							COG
-					+-->
-					<div id="direction">
-						<div class="black-frame centered">
-							<direction-display class="analogdisplay-day"
-											   title="Course Over Ground"
-											   id="compass-01"
-											   value="0"
-											   major-ticks="45"
-											   minor-ticks="5"
-											   with-rose="true"
-											   with-border="true"
-											   label="COG"
-											   width="250"
-											   height="250"></direction-display>
-						</div>
-						<div class="black-frame centered mid">
-							<!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-01');" checked -->
-							With Border
-							<label class="rocker rocker-tiny">
-								<input type="checkbox" onchange="setBorder(this, 'compass-01');" checked>
-								<span class="switch-left">Yes</span>
-								<span class="switch-right">No</span>
-							</label>
+                        <!-- input type="checkbox" onchange="setRose(this, 'compass-display-01');" checked -->
+                        With Rose
+                        <label class="rocker rocker-tiny">
+                            <input type="checkbox" onchange="setRose(this, 'compass-display-01');" checked>
+                            <span class="switch-left">Yes</span>
+                            <span class="switch-right">No</span>
+                        </label>
+                    </div>
+                </div>
+                <!--
+                    DEVIATION Curve(s).
+                 +-->
+                <div id="deviation" class="black-frame centered">
+                    <graph-display id="compass-deviation"
+                                   width="150"
+                                   height="300"
+                                   padding="5"
+                                   value="null"
+                                   orientation="vertical"
+                                   label="Deviation"
+                                   title="Deviation"></graph-display>
+                </div>
+                <!--
+                        COG
+                +-->
+                <div id="direction">
+                    <div class="black-frame centered">
+                        <direction-display class="analogdisplay-day"
+                                           title="Course Over Ground"
+                                           id="compass-01"
+                                           value="0"
+                                           major-ticks="45"
+                                           minor-ticks="5"
+                                           with-rose="true"
+                                           with-border="true"
+                                           label="COG"
+                                           width="250"
+                                           height="250"></direction-display>
+                    </div>
+                    <div class="black-frame centered mid">
+                        <!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-01');" checked -->
+                        With Border
+                        <label class="rocker rocker-tiny">
+                            <input type="checkbox" onchange="setBorder(this, 'compass-01');" checked>
+                            <span class="switch-left">Yes</span>
+                            <span class="switch-right">No</span>
+                        </label>
 
-							<!-- input type="checkbox" onchange="setRose(this, 'compass-01');" checked -->
-							With Rose
-							<label class="rocker rocker-tiny">
-								<input type="checkbox" onchange="setRose(this, 'compass-01');" checked>
-								<span class="switch-left">Yes</span>
-								<span class="switch-right">No</span>
-							</label>
-						</div>
-					</div>
-					<!--
-							SOG
-					+-->
-					<div id="analog-2">
-						<div class="black-frame centered">
-							<!-- Note: No initial value="0" attribute, it would be considered as the miniVal. -->
-							<analog-display class="analogdisplay-day"
-											title="Speed Over Ground&#13;in knots and m/s"
-											id="bsp-01"
-											min-value="0"
-											max-value="15"
-											value="0.0"
-											value-2="0.0"
-											major-ticks="1"
-											minor-ticks="0.1"
-											with-border="true"
-											with-min-max="false"
-											overlap="40"
-											label="SOG"
-											max-value-2="7.71667"
-											major-ticks-2="1"
-											minor-ticks-2="0.1"
-											unit="kn"
-											unit-2="m/s"
-											rotate-digits="false"
-											width="250"
-											height="250"></analog-display>
-						</div>
-						<div class="black-frame centered mid">
-							<!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked -->
-							With Border
-							<label class="rocker rocker-tiny">
-								<input type="checkbox" onchange="setBorder(this, 'bsp-01');" checked>
-								<span class="switch-left">Yes</span>
-								<span class="switch-right">No</span>
-							</label>
+                        <!-- input type="checkbox" onchange="setRose(this, 'compass-01');" checked -->
+                        With Rose
+                        <label class="rocker rocker-tiny">
+                            <input type="checkbox" onchange="setRose(this, 'compass-01');" checked>
+                            <span class="switch-left">Yes</span>
+                            <span class="switch-right">No</span>
+                        </label>
+                    </div>
+                </div>
+                <!--
+                        SOG
+                +-->
+                <div id="analog-2">
+                    <div class="black-frame centered">
+                        <!-- Note: No initial value="0" attribute, it would be considered as the miniVal. -->
+                        <analog-display class="analogdisplay-day"
+                                        title="Speed Over Ground&#13;in knots and m/s"
+                                        id="bsp-01"
+                                        min-value="0"
+                                        max-value="15"
+                                        value="0.0"
+                                        value-2="0.0"
+                                        major-ticks="1"
+                                        minor-ticks="0.1"
+                                        with-border="true"
+                                        with-min-max="false"
+                                        overlap="40"
+                                        label="SOG"
+                                        max-value-2="7.71667"
+                                        major-ticks-2="1"
+                                        minor-ticks-2="0.1"
+                                        unit="kn"
+                                        unit-2="m/s"
+                                        rotate-digits="false"
+                                        width="250"
+                                        height="250"></analog-display>
+                    </div>
+                    <div class="black-frame centered mid">
+                        <!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked -->
+                        With Border
+                        <label class="rocker rocker-tiny">
+                            <input type="checkbox" onchange="setBorder(this, 'bsp-01');" checked>
+                            <span class="switch-left">Yes</span>
+                            <span class="switch-right">No</span>
+                        </label>
 
-							<!-- input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked -->
-							With Min &amp; Max
-							<label class="rocker rocker-tiny">
-								<input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked>
-								<span class="switch-left">Yes</span>
-								<span class="switch-right">No</span>
-							</label>
-						</div>
-					</div>
+                        <!-- input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked -->
+                        With Min &amp; Max
+                        <label class="rocker rocker-tiny">
+                            <input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked>
+                            <span class="switch-left">Yes</span>
+                            <span class="switch-right">No</span>
+                        </label>
+                    </div>
+                </div>
 
-					<!--
-							GPS Satellites
-					+-->
-					<div id="satellites">
-						<div class="black-frame centered">
-							<satellite-plotter class="sat-plot-02"
-																 title="Satellites in view"
-																 id="sp-01"
-																 width="250"
-																 height="250"
-																 sat-in-view='{}'></satellite-plotter>
-						</div>
-						<div class="black-frame centered mid">
-							<!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked -->
-							With Border
-							<label class="rocker rocker-tiny">
-								<input type="checkbox" onchange="setBorder(this, 'sp-01');" checked>
-								<span class="switch-left">Yes</span>
-								<span class="switch-right">No</span>
-							</label>
+                <!--
+                        GPS Satellites
+                +-->
+                <div id="satellites">
+                    <div class="black-frame centered">
+                        <satellite-plotter class="sat-plot-02"
+                                           title="Satellites in view"
+                                           id="sp-01"
+                                           width="250"
+                                           height="250"
+                                           sat-in-view='{}'></satellite-plotter>
+                    </div>
+                    <div class="black-frame centered mid">
+                        <!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked -->
+                        With Border
+                        <label class="rocker rocker-tiny">
+                            <input type="checkbox" onchange="setBorder(this, 'sp-01');" checked>
+                            <span class="switch-left">Yes</span>
+                            <span class="switch-right">No</span>
+                        </label>
 
-						</div>
-					</div>
+                    </div>
+                </div>
 
-				</div>
-				<div id="row-2" style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 1; grid-template-columns: auto auto auto; padding: 10px; text-align: center;">
-					<!--
-					    LOGS
-					+-->
-					<div id="log">
-						<small>Boat Log</small>
-						<div class="black-frame centered" style="height: 60px;">
-							<scroll-digit-display id="scroll-digit-display-01"
-												  class="scroll-digit-01"
-												  nb-char="5"
-												  font-size="42"
-												  justified="RIGHT"
-												  value="00000"
-												  nb-dec="0"
-												  title="Boat Log"></scroll-digit-display>
-						</div>
-					</div>
-					<div id="daily-log">
-						<small>Daily Log</small>
-						<div class="black-frame centered" style="height: 60px;">
-							<scroll-digit-display id="scroll-digit-display-02"
-												  class="scroll-digit-01"
-												  nb-char="6"
-												  font-size="42"
-												  justified="RIGHT"
-												  value="0000.0"
-												  nb-dec="1"
-												  title="Daily"></scroll-digit-display>
-						</div>
-					</div>
-					<!--
-						COMPASS ROSE. CONCAVE.
-					+-->
-					<div id="compass-rose">
-						<small>Warning: The rose in <i>concave</i>. This means that it has to be seen as if the user was sitting at the center of the rose.</small>
-						<div class="black-frame centered">
-							<compass-rose id="compass-rose-01"
-										  class="day"
-										  title="Course Over Ground"
-										  value="0"
-										  width="500"
-										  height="50"></compass-rose>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div id="row-X" style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding-left: 10px; max-width: inherit;">
-				<div style="display: grid; justify-self: start; grid-template-columns: auto; padding: 0px;">
-					<!--
-						SYSTEM TIME
-					+-->
-					<div>
-						<split-flap-display id="split-flap-display-00"
-																class="split-flap-night"
-																nb-char="18"
-																font-size="20"
-																justified="LEFT"
-																value="Server Time"></split-flap-display>
-						<split-flap-display id="split-flap-display-01"
-																class="split-flap-night"
-																nb-char="31"
-																font-size="20"
-																justified="RIGHT"
-																value="Tue 01-Jan-1970 00:00:00 UTC+00"></split-flap-display>
-					</div>
-				</div>
-			</div>
+            </div>
+            <div id="row-2"
+                 style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 1; grid-template-columns: auto auto auto; padding: 10px; text-align: center;">
+                <!--
+                    LOGS
+                +-->
+                <div id="log">
+                    <small>Boat Log</small>
+                    <div class="black-frame centered" style="height: 60px;">
+                        <scroll-digit-display id="scroll-digit-display-01"
+                                              class="scroll-digit-01"
+                                              nb-char="5"
+                                              font-size="42"
+                                              justified="RIGHT"
+                                              value="00000"
+                                              nb-dec="0"
+                                              title="Boat Log"></scroll-digit-display>
+                    </div>
+                </div>
+                <div id="daily-log">
+                    <small>Daily Log</small>
+                    <div class="black-frame centered" style="height: 60px;">
+                        <scroll-digit-display id="scroll-digit-display-02"
+                                              class="scroll-digit-01"
+                                              nb-char="6"
+                                              font-size="42"
+                                              justified="RIGHT"
+                                              value="0000.0"
+                                              nb-dec="1"
+                                              title="Daily"></scroll-digit-display>
+                    </div>
+                </div>
+                <!--
+                    COMPASS ROSE. CONCAVE.
+                +-->
+                <div id="compass-rose">
+                    <small>Warning: The rose in <i>concave</i>. This means that it has to be seen as if the user was
+                        sitting at the center of the rose.</small>
+                    <div class="black-frame centered">
+                        <compass-rose id="compass-rose-01"
+                                      class="day"
+                                      title="Course Over Ground"
+                                      value="0"
+                                      width="500"
+                                      height="50"></compass-rose>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="row-X"
+             style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding-left: 10px; max-width: inherit;">
+            <div style="display: grid; justify-self: start; grid-template-columns: auto; padding: 0px;">
+                <!--
+                    SYSTEM TIME
+                +-->
+                <div>
+                    <split-flap-display id="split-flap-display-00"
+                                        class="split-flap-night"
+                                        nb-char="18"
+                                        font-size="20"
+                                        justified="LEFT"
+                                        value="Server Time"></split-flap-display>
+                    <split-flap-display id="split-flap-display-01"
+                                        class="split-flap-night"
+                                        nb-char="31"
+                                        font-size="20"
+                                        justified="RIGHT"
+                                        value="Tue 01-Jan-1970 00:00:00 UTC+00"></split-flap-display>
+                </div>
+            </div>
+        </div>
 
-			<div style="display: grid; grid-column-start: 2; grid-template-columns: auto auto; align-items: start; padding: 10px;">
-				<!--
-					WORLD MAP
-				+-->
-				<div id="world-map">
-					<div class="black-frame centered">
-						<world-map id="world-map-01"
-											 class="worldmap-display"
-											 title="World Map"
-											 width="700"
-											 height="500"></world-map>
-					</div>
-					<div class="black-frame centered">
-						<input type="checkbox" onchange="setTransparency('world-map-01', this);"/>Transparent
-						<input type="checkbox" onchange="setGrid('world-map-01', this);" checked/>Grid
-						<input type="checkbox" onchange="setSun('world-map-01', this);" checked/>Sun
-						<input type="checkbox" onchange="setMoon('world-map-01', this);" checked/>Moon
-						<input type="checkbox" onchange="setSunlight('world-map-01', this);"/>Sunlight
-						<input type="checkbox" onchange="setMoonlight('world-map-01', this);"/>Moonlight
-						<input type="checkbox" onchange="withWanderingBodies = this.checked; setWanderingBodies('world-map-01', this);"/>Wandering bodies
-						<input type="checkbox" onchange="withStars = this.checked; setStars('world-map-01', this);"/>Stars
-						<input type="checkbox" onchange="setTropics('world-map-01', this);"/>Tropics
-						<br/>
-						<input type="checkbox" id="geo-sat-01"/>GeoStationary Satellites
-						<input type="checkbox" id="iss-01" title="Requires Internet connection"/>ISS
-						<input type="checkbox" id="gps-sat-01"/>GPS Satellites in view
-						<input type="checkbox" id="moon-sun-path-01"/>Moon to Sun
-						<br/>
-						<input type="radio" name="proj-01" value="GLOBE" onchange="setProjection('world-map-01', this);" checked>Globe
-						<input type="radio" name="proj-01" value="MERCATOR" onchange="setProjection('world-map-01', this);">Mercator
-						<input type="radio" name="proj-01" value="ANAXIMANDRE" onchange="setProjection('world-map-01', this);">Square
-					</div>
-				</div>
+        <div style="display: grid; grid-column-start: 2; grid-template-columns: auto auto; align-items: start; padding: 10px;">
+            <!--
+                WORLD MAP
+            +-->
+            <div id="world-map">
+                <div class="black-frame centered">
+                    <world-map id="world-map-01"
+                               class="worldmap-display"
+                               title="World Map"
+                               width="700"
+                               height="500"></world-map>
+                </div>
+                <div class="black-frame centered">
+                    <input type="checkbox" onchange="setTransparency('world-map-01', this);"/>Transparent
+                    <input type="checkbox" onchange="setGrid('world-map-01', this);" checked/>Grid
+                    <input type="checkbox" onchange="setSun('world-map-01', this);" checked/>Sun
+                    <input type="checkbox" onchange="setMoon('world-map-01', this);" checked/>Moon
+                    <input type="checkbox" onchange="setSunlight('world-map-01', this);"/>Sunlight
+                    <input type="checkbox" onchange="setMoonlight('world-map-01', this);"/>Moonlight
+                    <input type="checkbox"
+                           onchange="withWanderingBodies = this.checked; setWanderingBodies('world-map-01', this);"/>Wandering
+                    bodies
+                    <input type="checkbox" onchange="withStars = this.checked; setStars('world-map-01', this);"/>Stars
+                    <input type="checkbox" onchange="setTropics('world-map-01', this);"/>Tropics
+                    <br/>
+                    <input type="checkbox" id="geo-sat-01"/>GeoStationary Satellites
+                    <input type="checkbox" id="iss-01" title="Requires Internet connection"/>ISS
+                    <input type="checkbox" id="gps-sat-01"/>GPS Satellites in view
+                    <input type="checkbox" id="moon-sun-path-01"/>Moon to Sun
+                    <br/>
+                    <input type="radio" name="proj-01" value="GLOBE" onchange="setProjection('world-map-01', this);"
+                           checked>Globe
+                    <input type="radio" name="proj-01" value="MERCATOR" onchange="setProjection('world-map-01', this);">Mercator
+                    <input type="radio" name="proj-01" value="ANAXIMANDRE"
+                           onchange="setProjection('world-map-01', this);">Square
+                </div>
+            </div>
 
-				<div style="display: grid; grid-template-columns: auto auto; padding: 0px;">
-					<!-- Headers -->
-					<div class="black-frame centered"><split-flap-display id="split-flap-display-02"
-																																class="split-flap-night"
-																																nb-char="7"
-																																font-size="20"
-																																justified="LEFT"
-																																value="GPS/UTC"></split-flap-display></div>
-					<div class="black-frame centered"><split-flap-display id="split-flap-display-03"
-																																class="split-flap-night"
-																																nb-char="5"
-																																font-size="20"
-																																justified="LEFT"
-																																value="Solar"></split-flap-display></div>
-					<!--
-						ANALOG WATCH
-					+-->
-					<div id="analog-watch-gps">
-						<div class="black-frame centered">
-							<analog-watch id="analog-watch-01"
-														class="analogdisplay-day"
-														title="GPS Time"
-														width="150"
-														height="150"
-														hours-ticks="1"
-														minutes-ticks="1"
-														digital-value="6"
-														with-second-hand="true"
-														hours-flavor="arabic"
-														label="GPS Time"
-														value="00:00:00"></analog-watch>
-						</div>
-						<div class="black-frame centered mid">
-							<!-- <input type="checkbox" class="border-cb" onchange="setBorder(this, 'analog-watch-01');" checked>With Border -->
-							With Border:
-							<label class="rocker rocker-tiny">
-								<input type="checkbox" onchange="setBorder(this, 'analog-watch-01');" checked>
-								<span class="switch-left">Yes</span>
-								<span class="switch-right">No</span>
-							</label>
-						</div>
-					</div>
+            <div style="display: grid; grid-template-columns: auto auto; padding: 0px;">
+                <!-- Headers -->
+                <div class="black-frame centered">
+                    <split-flap-display id="split-flap-display-02"
+                                        class="split-flap-night"
+                                        nb-char="7"
+                                        font-size="20"
+                                        justified="LEFT"
+                                        value="GPS/UTC"></split-flap-display>
+                </div>
+                <div class="black-frame centered">
+                    <split-flap-display id="split-flap-display-03"
+                                        class="split-flap-night"
+                                        nb-char="5"
+                                        font-size="20"
+                                        justified="LEFT"
+                                        value="Solar"></split-flap-display>
+                </div>
+                <!--
+                    ANALOG WATCH
+                +-->
+                <div id="analog-watch-gps">
+                    <div class="black-frame centered">
+                        <analog-watch id="analog-watch-01"
+                                      class="analogdisplay-day"
+                                      title="GPS Time"
+                                      width="150"
+                                      height="150"
+                                      hours-ticks="1"
+                                      minutes-ticks="1"
+                                      digital-value="6"
+                                      with-second-hand="true"
+                                      hours-flavor="arabic"
+                                      label="GPS Time"
+                                      value="00:00:00"></analog-watch>
+                    </div>
+                    <div class="black-frame centered mid">
+                        <!-- <input type="checkbox" class="border-cb" onchange="setBorder(this, 'analog-watch-01');" checked>With Border -->
+                        With Border:
+                        <label class="rocker rocker-tiny">
+                            <input type="checkbox" onchange="setBorder(this, 'analog-watch-01');" checked>
+                            <span class="switch-left">Yes</span>
+                            <span class="switch-right">No</span>
+                        </label>
+                    </div>
+                </div>
 
-					<div id="analog-watch-solar">
-						<div class="black-frame centered">
-							<analog-watch id="analog-watch-02"
-														class="analogdisplay-day"
-														title="Solar Time"
-														width="150"
-														height="150"
-														hours-ticks="1"
-														minutes-ticks="1"
-														digital-value="6"
-														with-second-hand="true"
-														hours-flavor="arabic"
-														label="Solar Time"
-														value="00:00:00"></analog-watch>
-						</div>
-						<div class="black-frame centered mid">
-							<!-- <input type="checkbox" class="border-cb" onchange="setBorder(this, 'analog-watch-02');" checked>With Border -->
-							With Border:
-							<label class="rocker rocker-tiny">
-								<input type="checkbox" onchange="setBorder(this, 'analog-watch-02');" checked>
-								<span class="switch-left">Yes</span>
-								<span class="switch-right">No</span>
-							</label>
-						</div>
-					</div>
-					<!--
-					  CALENDARS
-					+-->
-					<div class="black-frame centered">
-						<calendar-display id="calendar-01"
-															class="calendar-01"
-															title="GPS Date"
-															width="140"
-															height="168"
-															value="01-01-1970"></calendar-display>
-					</div>
+                <div id="analog-watch-solar">
+                    <div class="black-frame centered">
+                        <analog-watch id="analog-watch-02"
+                                      class="analogdisplay-day"
+                                      title="Solar Time"
+                                      width="150"
+                                      height="150"
+                                      hours-ticks="1"
+                                      minutes-ticks="1"
+                                      digital-value="6"
+                                      with-second-hand="true"
+                                      hours-flavor="arabic"
+                                      label="Solar Time"
+                                      value="00:00:00"></analog-watch>
+                    </div>
+                    <div class="black-frame centered mid">
+                        <!-- <input type="checkbox" class="border-cb" onchange="setBorder(this, 'analog-watch-02');" checked>With Border -->
+                        With Border:
+                        <label class="rocker rocker-tiny">
+                            <input type="checkbox" onchange="setBorder(this, 'analog-watch-02');" checked>
+                            <span class="switch-left">Yes</span>
+                            <span class="switch-right">No</span>
+                        </label>
+                    </div>
+                </div>
+                <!--
+                  CALENDARS
+                +-->
+                <div class="black-frame centered">
+                    <calendar-display id="calendar-01"
+                                      class="calendar-01"
+                                      title="GPS Date"
+                                      width="140"
+                                      height="168"
+                                      value="01-01-1970"></calendar-display>
+                </div>
 
-					<div class="black-frame centered">
-						<calendar-display id="calendar-02"
-															class="calendar-02"
-															title="Solar Date"
-															width="140"
-															height="168"
-															value="01-01-1970"></calendar-display>
-					</div>
+                <div class="black-frame centered">
+                    <calendar-display id="calendar-02"
+                                      class="calendar-02"
+                                      title="Solar Date"
+                                      width="140"
+                                      height="168"
+                                      value="01-01-1970"></calendar-display>
+                </div>
 
-					<div class="black-frame centered">
-						<moon-phase id="moon-phase-01"
-												title="Moon Phase"
-												width="130"
-												height="130"
-												phase="0"
-												tilt="0"/>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div> <!-- End of Tab 1 -->
+                <div class="black-frame centered">
+                    <moon-phase id="moon-phase-01"
+                                title="Moon Phase"
+                                width="130"
+                                height="130"
+                                phase="0"
+                                tilt="0"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> <!-- End of Tab 1 -->
 
-	<div id="two" style="display: none;">
-		<div id="nmea-widgets-2" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
-			<div style="display: grid; grid-column-start: 2; grid-template-columns: auto; justify-items: start; align-items: start; padding: 10px;">
-				<!--
-					MISC TEXT DATA
-				+-->
-				<div id="sun-moon-data" style="margin-bottom: 20px;"></div>
-				<div id="utc-date" style="font-size: 20px;"></div>
-				<div id="solar-date" style="font-size: 20px;"></div>
-				<div id="sun-transit" style="font-size: 20px;"></div>
-				<div id="moon-phase-rd" style="font-size: 20px;"></div>
-				<div id="moon-tilt-rd" style="font-size: 20px;"></div>
-				<div id="lunar-dist-rd" style="font-size: 20px;"></div>
-				<div id="iss-rd" style="font-size: 20px;"></div>
-			</div>
-		</div>
-	</div> <!-- End of Tab 2 -->
+<div id="two" style="display: none;">
+    <div id="nmea-widgets-2"
+         style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
+        <div style="display: grid; grid-column-start: 2; grid-template-columns: auto; justify-items: start; align-items: start; padding: 10px;">
+            <!--
+                MISC TEXT DATA
+            +-->
+            <div id="sun-moon-data" style="margin-bottom: 20px;"></div>
+            <div id="utc-date" style="font-size: 20px;"></div>
+            <div id="solar-date" style="font-size: 20px;"></div>
+            <div id="sun-transit" style="font-size: 20px;"></div>
+            <div id="moon-phase-rd" style="font-size: 20px;"></div>
+            <div id="moon-tilt-rd" style="font-size: 20px;"></div>
+            <div id="lunar-dist-rd" style="font-size: 20px;"></div>
+            <div id="iss-rd" style="font-size: 20px;"></div>
+        </div>
+    </div>
+</div> <!-- End of Tab 2 -->
 
-	<div id="three" style="display: none;">
-		<div id="sky-maps-1" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
-			<div style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px;">
-				<div style="align: left;">
-					Type:
-					<select onchange="setMapType('sky-map-01', this);">
-						<option value="STARFINDER" selected>Star Finder</option>
-						<option value="SKYMAP">Sky Map</option>
-					</select>
-					<input type="checkbox" onchange="setStarNames('sky-map-01', this);" checked>Star Names.
-					<input type="checkbox" onchange="setConstNames('sky-map-01', this);">Constellation Names.
-					<input type="checkbox" onchange="setVisibleSky('sky-map-01', this);" checked>Visible sky.
-					<input type="checkbox" onchange="setSkyGrid('sky-map-01', this);" checked>Sky grid.
-				</div>
-				<!--
-				SKY MAP
-				+-->
-				<div class="black-frame centered">
-					<sky-map id="sky-map-01"
-									 width="800"
-									 height="800"
-									 latitude="35"/>
-				</div>
-			</div>
-		</div>
-	</div> <!-- End of Tab 3 -->
+<div id="three" style="display: none;">
+    <div id="sky-maps-1"
+         style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
+        <div style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px;">
+            <div style="align: left;">
+                Type:
+                <select onchange="setMapType('sky-map-01', this);">
+                    <option value="STARFINDER" selected>Star Finder</option>
+                    <option value="SKYMAP">Sky Map</option>
+                </select>
+                <input type="checkbox" onchange="setStarNames('sky-map-01', this);" checked>Star Names.
+                <input type="checkbox" onchange="setConstNames('sky-map-01', this);">Constellation Names.
+                <input type="checkbox" onchange="setVisibleSky('sky-map-01', this);" checked>Visible sky.
+                <input type="checkbox" onchange="setSkyGrid('sky-map-01', this);" checked>Sky grid.
+            </div>
+            <!--
+            SKY MAP
+            +-->
+            <div class="black-frame centered">
+                <sky-map id="sky-map-01"
+                         width="800"
+                         height="800"
+                         latitude="35"/>
+            </div>
+        </div>
+    </div>
+</div> <!-- End of Tab 3 -->
 
-	<div id="four" style="display: none;">
-		<div id="sun-path-1" style="padding: 10px; text-align: left;">
-			<div style="padding: 10px;">
-				<div style="align: left;">
-					<table>
-						<tr>
-							<td>
-								<button onclick="loadSunPath(); loadDeclinations();" style="border-radius: 3px; padding: 3px; margin-left: 10px;">Load Sun Path</button>
-								<br/>
-								<input style="margin: 10px;" type="checkbox" id="with-wb" checked>Planets
-								<br/>
-								<input style="margin: 10px; margin-top: 0;" type="checkbox" id="ecliptic" checked>Ecliptic
-								<br/>
-								<input style="margin: 10px; margin-top: 0;" type="checkbox" id="moon-sun-route">Moon to Sun route
-							</td>
-							<td style="padding: 10px; vertical-align: top;">
-								<span id="sun-path-loaded">Sun path was not loaded.</span>
-							</td>
-						</tr>
-					</table>
-				</div>
-				<table border="0">
-					<tr>
-						<td>
-							<!--
-							SUN PATH
-							+-->
-							<div class="black-frame centered">
-								<sun-path id="sun-path-01"
-													tabindex="0"
-													class="sun-path-01"
-													width="600"
-													height="520"
-													tilt="-10"/>
-							</div>
-						</td>
-						<td align="left">
-							<input type="range" id="sun-path-tilt-slide" style="-webkit-appearance: slider-vertical; width: 8px; height: 520px; margin-left: 0;" min="-90" max="90" value="-10" onchange="setNewTilt(this, 'sun-path-01');">
-						</td>
-						<td rowspan="2" valign="top" align="center">
-							<span style="color: white;">Solar Time</span>
-							<br/>
-							<split-flap-display id="split-flap-solar-display-00"
-																	class="split-flap-night"
-																	nb-char="8"
-																	font-size="20"
-																	justified="LEFT"
-																	title="Solar Time"
-																	value="00:00:00"></split-flap-display>
+<div id="four" style="display: none;">
+    <div id="sun-path-1" style="padding: 10px; text-align: left;">
+        <div style="padding: 10px;">
+            <div style="align: left;">
+                <table>
+                    <tr>
+                        <td>
+                            <button onclick="loadSunPath(); loadDeclinations();"
+                                    style="border-radius: 3px; padding: 3px; margin-left: 10px;">Load Sun Path
+                            </button>
+                            <br/>
+                            <input style="margin: 10px;" type="checkbox" id="with-wb" checked>Planets
+                            <br/>
+                            <input style="margin: 10px; margin-top: 0;" type="checkbox" id="ecliptic" checked>Ecliptic
+                            <br/>
+                            <input style="margin: 10px; margin-top: 0;" type="checkbox" id="moon-sun-route">Moon to Sun
+                            route
+                        </td>
+                        <td style="padding: 10px; vertical-align: top;">
+                            <span id="sun-path-loaded">Sun path was not loaded.</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <table border="0">
+                <tr>
+                    <td>
+                        <!--
+                        SUN PATH
+                        +-->
+                        <div class="black-frame centered">
+                            <sun-path id="sun-path-01"
+                                      tabindex="0"
+                                      class="sun-path-01"
+                                      width="600"
+                                      height="520"
+                                      tilt="-10"/>
+                        </div>
+                    </td>
+                    <td align="left">
+                        <input type="range" id="sun-path-tilt-slide"
+                               style="-webkit-appearance: slider-vertical; width: 8px; height: 520px; margin-left: 0;"
+                               min="-90" max="90" value="-10" onchange="setNewTilt(this, 'sun-path-01');">
+                    </td>
+                    <td rowspan="2" valign="top" align="center">
+                        <span style="color: white;">Solar Time</span>
+                        <br/>
+                        <split-flap-display id="split-flap-solar-display-00"
+                                            class="split-flap-night"
+                                            nb-char="8"
+                                            font-size="20"
+                                            justified="LEFT"
+                                            title="Solar Time"
+                                            value="00:00:00"></split-flap-display>
 
-							<div class="black-frame centered">
-								<calendar-display id="calendar-03"
-																	class="calendar-02"
-																	title="Solar Date"
-																	width="140"
-																	height="168"
-																	value="01-01-1970"></calendar-display>
-							</div>
-							<br/>
-							<span style="color: white;">System Time</span>
-							<br/>
-							<split-flap-display id="split-flap-system-display-00"
-																	class="split-flap-night"
-																	nb-char="8"
-																	font-size="20"
-																	justified="LEFT"
-																	title="System Time"
-																	value="00:00:00"></split-flap-display>
-							<br/>
-							<split-flap-display id="split-flap-system-display-01"
-																	class="split-flap-night"
-																	nb-char="6"
-																	font-size="20"
-																	justified="LEFT"
-																	title="UTC Offset"
-																	value="UTC-00"></split-flap-display>
+                        <div class="black-frame centered">
+                            <calendar-display id="calendar-03"
+                                              class="calendar-02"
+                                              title="Solar Date"
+                                              width="140"
+                                              height="168"
+                                              value="01-01-1970"></calendar-display>
+                        </div>
+                        <br/>
+                        <span style="color: white;">System Time</span>
+                        <br/>
+                        <split-flap-display id="split-flap-system-display-00"
+                                            class="split-flap-night"
+                                            nb-char="8"
+                                            font-size="20"
+                                            justified="LEFT"
+                                            title="System Time"
+                                            value="00:00:00"></split-flap-display>
+                        <br/>
+                        <split-flap-display id="split-flap-system-display-01"
+                                            class="split-flap-night"
+                                            nb-char="6"
+                                            font-size="20"
+                                            justified="LEFT"
+                                            title="UTC Offset"
+                                            value="UTC-00"></split-flap-display>
 
-							<div class="black-frame centered">
-								<calendar-display id="calendar-04"
-																	class="calendar-02"
-																	title="System Date"
-																	width="140"
-																	height="168"
-																	value="01-01-1970"></calendar-display>
-							</div>
-						</td>
-						<td rowspan="2" valign="top">
-							<graph-display id="decl-graph-01"
-														 tabindex="-1"
-														 class=""
-														 width="450"
-														 height="200"
-														 padding="5"
-														 value="null"
-														 label="Sun Declination"
-														 title="Sun Declination&#13;10 days wide"></graph-display>
+                        <div class="black-frame centered">
+                            <calendar-display id="calendar-04"
+                                              class="calendar-02"
+                                              title="System Date"
+                                              width="140"
+                                              height="168"
+                                              value="01-01-1970"></calendar-display>
+                        </div>
+                    </td>
+                    <td rowspan="2" valign="top">
+                        <graph-display id="decl-graph-01"
+                                       tabindex="-1"
+                                       class=""
+                                       width="450"
+                                       height="200"
+                                       padding="5"
+                                       value="null"
+                                       label="Sun Declination"
+                                       title="Sun Declination&#13;10 days wide"></graph-display>
 
-							<graph-display id="decl-graph-02"
-														 tabindex="-1"
-														 class=""
-														 width="450"
-														 height="200"
-														 padding="5"
-														 value="null"
-														 label="Moon Declination"
-														 title="Moon Declination&#13;10 days wide"></graph-display>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<input type="range" id="sun-path-z-slide" style="width: 100%; height: 8px; margin-left: 0;" min="-90" max="90" value="0" onchange="setNewZOffset(this, 'sun-path-01');">
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-	</div> <!-- End of Tab 4 -->
+                        <graph-display id="decl-graph-02"
+                                       tabindex="-1"
+                                       class=""
+                                       width="450"
+                                       height="200"
+                                       padding="5"
+                                       value="null"
+                                       label="Moon Declination"
+                                       title="Moon Declination&#13;10 days wide"></graph-display>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="range" id="sun-path-z-slide" style="width: 100%; height: 8px; margin-left: 0;"
+                               min="-90" max="90" value="0" onchange="setNewZOffset(this, 'sun-path-01');">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div> <!-- End of Tab 4 -->
 
-	<div id="five" style="display: none;">
-		<div id="raw-gps-data" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
-			<div style="display: grid; grid-column-start: 2; grid-template-columns: auto; justify-items: start; align-items: start; padding: 10px;">
-				<div id="nmea-content" style="font-family: Courier; font-weight: bold; text-align: left; overflow-y: auto; min-height: 300px; height: 300px; width: 100%; border: 1px solid silver; border-radius: 5px; padding: 10px; background-color: black; color: green;">
-					<!--
-						RAW GPS DATA
-					+-->
-					None
+<div id="five" style="display: none;">
+    <div id="raw-gps-data"
+         style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
+        <div style="display: grid; grid-column-start: 2; grid-template-columns: auto; justify-items: start; align-items: start; padding: 10px;">
+            <div id="nmea-content"
+                 style="font-family: Courier; font-weight: bold; text-align: left; overflow-y: auto; min-height: 300px; height: 300px; width: 100%; border: 1px solid silver; border-radius: 5px; padding: 10px; background-color: black; color: green;">
+                <!--
+                    RAW GPS DATA
+                +-->
+                None
 
-				</div>
-			</div>
-		</div>
-	</div> <!-- End of Tab 5 -->
+            </div>
+        </div>
+    </div>
+</div> <!-- End of Tab 5 -->
 </body>
 </html>
