@@ -118,7 +118,7 @@ class AnalogDisplay extends HTMLElement {
 		this.shadowRoot.appendChild(this.canvas);
 
 		// Default values
-		this._value            =   0;
+		this._value            = undefined; // Was 0, sucks for min/max
 		this._value_2          = undefined;
 		this._width            = 150;
 		this._height           = 150;
@@ -262,7 +262,7 @@ class AnalogDisplay extends HTMLElement {
 			console.log(">> Value option:", option);
 		}
 		let delta = Math.abs(this._value - option);
-		if (delta > 0.1 && delta < 2.0) {
+		if (this._value !== undefined && (delta > 0.1 && delta < 2.0)) {
 			// Smooth? This is a test.
 			// console.log(`Smooth Move!`);
 			let incr = (this._value > option) ? -0.1 : 0.1; // TODO Make those values parameters
@@ -598,7 +598,11 @@ class AnalogDisplay extends HTMLElement {
 		context.closePath();
 
 		// Min-max?
-		if (this.withMinMax && this.miniVal < this.maxiVal) {
+		// if (this.withMinMax) {
+		// 	console.log(`Min: ${this.miniVal}, Max: ${this.maxiVal}, currval: ${this._value}`);
+		// }	
+
+		if (this._value !== undefined && this.withMinMax && this.miniVal < this.maxiVal) {
 			context.beginPath();
 
 			let ___minAngle = (totalAngle * ((this.miniVal - this.minValue) / (this.maxValue - this.minValue))) - Math.toRadians(this.overlap) - (Math.PI);
@@ -765,8 +769,8 @@ class AnalogDisplay extends HTMLElement {
 		}
 
 		// Value
-		let text = analogValue.toFixed(this.analogDisplayColorConfig.valueNbDecimal);
-//  text = displayValue.toFixed(nbDecimal); // analogDisplayColorConfig.valueNbDecimal);
+		let text = (analogValue === undefined) ? "" : analogValue.toFixed(this.analogDisplayColorConfig.valueNbDecimal);
+    //  text = displayValue.toFixed(nbDecimal); // analogDisplayColorConfig.valueNbDecimal);
 		let len = 0;
 		let fontCoeff = 40;
 		if (this.majorTicks2 !== undefined && this.maxValue2 !== undefined) { // Display value smaller if there is a second scale.
