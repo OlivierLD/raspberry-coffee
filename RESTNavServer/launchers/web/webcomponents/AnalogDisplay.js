@@ -623,7 +623,7 @@ class AnalogDisplay extends HTMLElement {
 //    context.arc(288, 75, 70, 0, Math.PI, false);
 			context.closePath();
 			context.lineWidth = 1;
-			context.fillStyle = 'gray';
+			context.fillStyle = 'rgba(128, 128, 128, 0.35)'; // 'lightgray', 'gray';
 			context.fill();
 //    context.strokeStyle = '#550000';
 //    context.stroke();
