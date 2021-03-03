@@ -257,12 +257,36 @@ class AnalogDisplay extends HTMLElement {
 	}
 
 	set value(option) {
-		this.setAttribute("value", option);
+		// this.setAttribute("value", option);
 		if (analogVerbose) {
 			console.log(">> Value option:", option);
 		}
+		let delta = Math.abs(this._value - option);
+		if (delta > 0.1 && delta < 2.0) {
+			// Smooth? This is a test.
+			// console.log(`Smooth Move!`);
+			let incr = (this._value > option) ? -0.1 : 0.1; // TODO Make those values parameters
+			let currVal = this._value;
+			let instance = this;
+			function smoothMove() {
+				currVal += incr;
+				instance.updateValue(currVal);
+				// instance.setAttribute("value", option);
+				if (Math.abs(currVal - option) > 0.1) {
+					setTimeout(smoothMove, 50);
+				}
+			}
+			smoothMove();
+		} else {
+			this.setAttribute("value", option);
+		}
 //	this.repaint();
 	}
+
+	updateValue = function(val) {
+		this.setAttribute("value", val);
+	}
+
 	set value2(option) {
 		this.setAttribute("value-2", option);
 		if (analogVerbose) {

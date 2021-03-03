@@ -92,12 +92,36 @@ class CompassRose extends HTMLElement {
 	}
 
 	set value(option) {
-		this.setAttribute("value", option);
+		// this.setAttribute("value", option);
 		if (compassRoseVerbose) {
 			console.log(">> Value option:", option);
 		}
+		let delta = Math.abs(this._value - option);
+		if (delta > 1 && delta < 20) {
+			// Smooth? This is a test.
+			// console.log(`Smooth Move!`);
+			let sign = (this._value > option) ? -1 : 1;
+			let currVal = this._value;
+			let instance = this;
+			function smoothMove() {
+				currVal += sign;
+				instance.updateValue(currVal);
+				// instance.setAttribute("value", option);
+				if (Math.abs(currVal - option) > 1) {
+					setTimeout(smoothMove, 50);
+				}
+			}
+			smoothMove();
+		} else {
+			this.setAttribute("value", option);
+		}
 //	this.repaint();
 	}
+
+	updateValue = function(val) {
+		this.setAttribute("value", val);
+	}
+
 	set width(val) {
 		this.setAttribute("width", val);
 	}
