@@ -40,7 +40,7 @@ class ScrollDigitDisplay extends HTMLElement {
 		let fallbackElemt = document.createElement("h1");
 		let content = document.createTextNode("This is a Scroll-Digit Display, on an HTML5 canvas");
 		fallbackElemt.appendChild(content);
-		this.canvas.appendChild(fallbackElemt);
+		this.canvas.appendChild(fallbackElemt);``
 		this.shadowRoot.appendChild(this.canvas);
 
 		this._connected = false;

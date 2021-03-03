@@ -143,7 +143,7 @@ function setScrollDigitValue(id, value) {
 	if (floatFrom !== floatTo) {
 		sign = (floatTo > floatFrom) ? +1 : -1;
 		if (!isNaN(floatFrom) && !isNaN(floatTo)) {
-			scroll = Math.abs(floatFrom - floatTo) <= 1;
+			scroll = Math.abs(floatFrom - floatTo) <= Math.pow(10, -elem.nbDec);
 		}
 	}
 
