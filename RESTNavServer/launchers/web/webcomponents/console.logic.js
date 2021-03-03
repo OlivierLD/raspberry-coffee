@@ -239,6 +239,10 @@ function setMinMax(cb, id) {
 	document.getElementById(id).withMinMax = cb.checked;
 }
 
+function resetMinMax(id) {
+	document.getElementById(id).resetMinMax();
+}
+
 function setTransparency(wcId, cb) {
 	document.getElementById(wcId).transparentGlobe = (cb.checked ? 'true' : 'false');
 	document.getElementById(wcId).repaint();

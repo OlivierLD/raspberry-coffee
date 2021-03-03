@@ -429,6 +429,11 @@ class AnalogDisplay extends HTMLElement {
 	}
 
 	// Component methods
+	resetMinMax() {
+		this.miniVal =  10000000;
+		this.maxiVal = -10000000;
+	}
+
 	repaint() {
 		this.drawDisplay(this._value, this._value_2);
 	}
