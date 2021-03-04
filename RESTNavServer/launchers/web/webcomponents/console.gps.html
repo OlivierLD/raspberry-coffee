@@ -762,7 +762,7 @@
             <input type="radio" id="light" name="page-bg" value="LIGHT" onchange="changeBG(this.value);">Light
             <input type="radio" id="white" name="page-bg" value="WHITE" onchange="changeBG(this.value);">White
         </td>
-        <td align="left">
+        <td style="text-align: left;">
             <span id="user-time-switch" onclick="expandCollapseSetTimeData();"
                   style="border: 1px solid silver; border-radius: 5px; padding-left: 5px; padding-right: 5px; cursor: pointer; margin-left: 40px;">+ Set Time</span>
             <br/>
@@ -785,7 +785,7 @@
          class="smooth"></div>
     <div id="user-time-widgets" style="display: none; padding: 10px;">
         <button id="button-now"
-                onclick="updateFieldToNow()"
+                onclick="updateFieldToNow();"
                 title="Set date value"
                 style="margin-top: 3px;">Now
         </button>
@@ -823,12 +823,12 @@
                style="width: 80px; text-align: center;"
                value="00:00:00"/>
         <button id="update-calendar"
-                onclick="updateCalendar()"
+                onclick="updateCalendar();"
                 title="Set date value"
                 style="margin-top: 3px;">Set UTC
         </button>
         &nbsp;&nbsp;
-        <button onclick="vroom()"
+        <button onclick="vroom();"
                 title="Simulate"
                 style="margin-top: 3px;">Vroom!
         </button>
@@ -895,7 +895,7 @@
                value="00.00"/>
         &nbsp;&nbsp;
         <button id="update-position"
-                onclick="updatePosition()"
+                onclick="updatePosition();"
                 title="Set position value"
                 style="margin-top: 3px;">Set Position
         </button>
@@ -904,11 +904,11 @@
 
 <!-- the tabs -->
 <div class="tab">
-    <button class="tablinks active" onclick="openTab(event, 0)">Overview</button>
-    <button class="tablinks" onclick="openTab(event, 1)">Raw Data</button>
-    <button class="tablinks" onclick="openTab(event, 2)">Visible Sky</button>
-    <button class="tablinks" onclick="openTab(event, 3)">Sun Path</button>
-    <button class="tablinks" onclick="openTab(event, 4)">Raw NMEA</button>
+    <button class="tablinks active" onclick="openTab(event, 0);">Overview</button>
+    <button class="tablinks" onclick="openTab(event, 1);">Raw Data</button>
+    <button class="tablinks" onclick="openTab(event, 2);">Visible Sky</button>
+    <button class="tablinks" onclick="openTab(event, 3);">Sun Path</button>
+    <button class="tablinks" onclick="openTab(event, 4);">Raw NMEA</button>
     <div class="mess">Garanteed 0% external libraries.</div>
 </div>
 
@@ -1359,7 +1359,7 @@
 <div id="four" style="display: none;">
     <div id="sun-path-1" style="padding: 10px; text-align: left;">
         <div style="padding: 10px;">
-            <div style="align: left;">
+            <div style="text-align: left;">
                 <table>
                     <tr>
                         <td>
@@ -1380,7 +1380,7 @@
                     </tr>
                 </table>
             </div>
-            <table border="0">
+            <table style="border-width: 0px;">
                 <tr>
                     <td>
                         <!--
@@ -1395,12 +1395,12 @@
                                       tilt="-10"/>
                         </div>
                     </td>
-                    <td align="left">
+                    <td style="text-align: left;">
                         <input type="range" id="sun-path-tilt-slide"
                                style="-webkit-appearance: slider-vertical; width: 8px; height: 520px; margin-left: 0;"
                                min="-90" max="90" value="-10" onchange="setNewTilt(this, 'sun-path-01');">
                     </td>
-                    <td rowspan="2" valign="top" align="center">
+                    <td rowspan="2" valign="top" style="text-align: center;">
                         <span style="color: white;">Solar Time</span>
                         <br/>
                         <split-flap-display id="split-flap-solar-display-00"
