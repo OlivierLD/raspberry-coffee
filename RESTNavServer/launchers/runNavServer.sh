@@ -2,7 +2,7 @@
 # Navigation REST server
 #
 echo -e "----------------------------"
-echo -e "Usage is $0 [-p|--proxy] [-m:propertiesfile|--mux:propertiesfile] [--no-date] [--sun-flower]"
+echo -e "Usage is $0 [-p|--proxy] [-m:propertiesfile|--mux:propertiesfile] [--no-date] [--sun-flower] --delta-t:[value]"
 echo -e "     -p or --proxy means with a proxy (proxy definition in the script $0)"
 echo -e "     -m or --mux points to the properties file to use for the Multiplexer, default is nmea.mux.properties"
 echo -e "     -sf or --sun-flower means with Sun Flower option (extra Request Manager)"
@@ -20,11 +20,15 @@ NO_DATE=false
 RMC_TIME_OK=true
 SUN_FLOWER=false
 PROP_FILE=
+DELTA_T=
 #
 for ARG in "$@"
 do
 	echo -e "Managing prm $ARG"
-  if [[ "$ARG" == "-p" ]] || [[ "$ARG" == "--proxy" ]]
+  if [[ ${ARG} == "--delta-t:"* ]]
+	then
+	  DELTA_T=${ARG#*:}
+	elif [[ "$ARG" == "-p" ]] || [[ "$ARG" == "--proxy" ]]
   then
     USE_PROXY=true
   elif [[ "$ARG" == "--no-date" ]]
@@ -80,7 +84,14 @@ fi
 # - http://maia.usno.navy.mil/
 # Delta T predictions: http://maia.usno.navy.mil/ser7/deltat.preds
 # JAVA_OPTS="$JAVA_OPTS -DdeltaT=68.9677" # 01-Jan-2018
-JAVA_OPTS="$JAVA_OPTS -DdeltaT=AUTO" # can also use -DdeltaT=68.9677, -DdeltaT=AUTO:2025-10, if needed
+if [[ "$DELTA_T}" != "" ]]
+then
+  echo -e "Using DeltaT: [${DELTA_T}]"
+  JAVA_OPTS="$JAVA_OPTS -DdeltaT=${DELTA_T}"
+else
+  echo -e "Using default DeltaT"
+  JAVA_OPTS="$JAVA_OPTS -DdeltaT=AUTO" # can also use -DdeltaT=68.9677, -DdeltaT=AUTO:2025-10, if needed
+fi
 # JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=$HTTP_VERBOSE"
 #
 #JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=true"
