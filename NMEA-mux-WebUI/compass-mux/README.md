@@ -140,7 +140,7 @@ Received an exit signal (path)
 Exiting -> Exiting
 Bye from HTTP
 HTTP Thread, end of run.
-HTTPServer Dead.
+HTTPServer Down.
 Bye now ✋
 ```  
 

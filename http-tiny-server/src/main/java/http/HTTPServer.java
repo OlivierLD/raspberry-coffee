@@ -927,7 +927,7 @@ public class HTTPServer {
 					Thread.currentThread().interrupt();
 				}
 			}
-			System.out.println("HTTPServer Dead.");
+			System.out.println("HTTPServer Down.");
 		}, "Shutdown Hook"));
 
 		// Infinite loop, waiting for requests

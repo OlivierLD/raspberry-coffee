@@ -17,7 +17,7 @@ Expose the "Smooth-Move" parameters at the component level for
 - Compass Rose
 - Wind Angle Display (not there yet)
 
-Add current and tws evolution in `webcomponents/console.html`.  
+Add current and tws evolution in `webcomponents/console.html` (as in `web/console.html`).  
 Upgrade the check boxes to rocking toggles.  
 Move to arrow functions where possible.
 
