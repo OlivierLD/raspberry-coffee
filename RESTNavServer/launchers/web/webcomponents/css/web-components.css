@@ -649,3 +649,42 @@ compass-display .green {
 	--font: Arial;
 }
 
+.boat-overview-01 {
+	--grid-color: gray;
+	--display-background-gradient-from: darkgray;
+	--display-background-gradient-to: gray;
+	--tw-arrow-color: darkred;
+	--bsp-arrow-color: red;
+	--cmg-arrow-color: cyan;
+	--aw-arrow-color: black;
+	--gps-ws-arrow-color: darkorange;
+	--vmg-arrow-color: green;
+	--current-arrow-color: green;
+	--boat-fill-color: silver;
+	--boat-outline-color: lightblue;
+	--nmea-display-color: navy;
+	--calculated-color: blue;
+	--vmg-display-color: green;
+	--variation-display-color: black;
+	--variation-arrow-color: black;
+}
+
+.boat-overview-02 {
+	--grid-color: limegreen;
+	--display-background-gradient-from: black;
+	--display-background-gradient-to: darkgray;
+	--tw-arrow-color: darkred;
+	--bsp-arrow-color: red;
+	--cmg-arrow-color: cyan;
+	--aw-arrow-color: white;
+	--gps-ws-arrow-color: darkorange;
+	--vmg-arrow-color: lightyellow;
+	--current-arrow-color: yellow;
+	--boat-fill-color: rgba(128, 128, 128, 0.5);
+	--boat-outline-color: lightblue;
+	--nmea-display-color: cyan;
+	--calculated-color: yellow;
+	--vmg-display-color: lightyellow;
+	--variation-display-color: lightpink;
+	--variation-arrow-color: lightpink;
+}

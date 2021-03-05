@@ -2,9 +2,6 @@ package matrix;
 
 import org.junit.Before;
 import org.junit.Test;
-import matrix.MatrixUtil;
-import matrix.SquareMatrix;
-import matrix.SystemUtil;
 
 import static junit.framework.TestCase.*;
 

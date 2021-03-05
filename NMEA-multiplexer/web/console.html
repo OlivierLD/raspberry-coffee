@@ -109,8 +109,8 @@
 			setup(false, false, false, true);
 		}
 
-		let LATITUDE = 0;
-		let LONGITUDE = 1;
+		const LATITUDE = 0;
+		const LONGITUDE = 1;
 
 		function toDMS(val, flavor) {
 			let str = "";
@@ -446,90 +446,90 @@
 <hr>
 <div id="displays" style="display: inline;">
 	<!-- Analog Displays -->
-	<table align="center" border="0">
+	<table style="text-align: center; border-width: 0px;">
 		<tr>
-			<td align="center">Boat Speed and Log</td>
-			<td align="center">Heading in &deg;</td>
-			<td align="center">Wind Dir in &deg;</td>
-			<td align="center">Wind in knots</td>
-			<td align="center">
+			<td style="text-align: center;">Boat Speed and Log</td>
+			<td style="text-align: center;">Heading in &deg;</td>
+			<td style="text-align: center;">Wind Dir in &deg;</td>
+			<td style="text-align: center;">Wind in knots</td>
+			<td style="text-align: center;">
 				<div id="display-wt-title">Water&deg;C</div>
 			</td>
-			<td align="center">
+			<td style="text-align: center;">
 				<div id="display-at-title">Air&deg;C</div>
 			</td>
 		</tr>
 		<tr>
-			<td align="center" valign="top" rowspan="2">
+			<td style="text-align: center;" valign="top" rowspan="2">
 				<table>
 					<tr>
-						<td align="center" valign="top">
+						<td style="text-align: center;" valign="top">
 							<canvas id="bspCanvas" width="240" height="120" title="Boat Speed in knots"></canvas>
 						</td>
 					</tr>
 					<tr>
-						<td align="center" valign="top">
+						<td style="text-align: center;" valign="top">
 							<canvas id="logCanvas" width="120" height="40" title="Log"></canvas>
 						</td>
 					</tr>
 				</table>
 			</td>
-			<td align="center" valign="top" rowspan="1">
+			<td style="text-align: center;" valign="top" rowspan="1">
 				<canvas id="hdgCanvas" width="240" height="220" title="Heading in degrees"></canvas>
 			</td>
-			<td align="center" valign="top" rowspan="1">
+			<td style="text-align: center;" valign="top" rowspan="1">
 				<canvas id="twdCanvas" width="240" height="220" title="True Wind Direction in degrees"></canvas>
 			</td>
-			<td align="center" valign="top" rowspan="1">
+			<td style="text-align: center;" valign="top" rowspan="1">
 				<canvas id="twsCanvas" width="240" height="220" title="True Wind Speed in knots"></canvas>
 			</td>
-			<td align="center" valign="top" rowspan="1">
+			<td style="text-align: center;" valign="top" rowspan="1">
 				<div id="display-wt-div">
 					<canvas id="tmpCanvas" width="100" height="240" title="Water Temperature in Celcius"></canvas>
 				</div>
 			</td>
-			<td align="center" valign="top" rowspan="2">
+			<td style="text-align: center;" valign="top" rowspan="2">
 				<div id="display-at-div">
 					<canvas id="atmpCanvas" width="100" height="240" title="Air Temperature in Celcius"></canvas>
 				</div>
 			</td>
 		</tr>
 		<tr>
-			<td align="center" valign="top" colspan="3">
+			<td style="text-align: center;" valign="top" colspan="3">
 				<canvas id="roseCanvas" width="500" height="50" title="True Heading"></canvas>
 			</td>
 		</tr>
 		<tr>
-			<td align="center">
+			<td style="text-align: center;">
 				<div id="display-gdt-title" style="display: inline;">GPS Date / Time</div>
 			</td>
-			<td align="center" colspan="3"></td>
+			<td style="text-align: center;" colspan="3"></td>
 		</tr>
 		<tr>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<div id="display-gdt-div" style="display: none'">
 					<canvas id="dateCanvas" width="216" height="40" title="GPS Date"></canvas>
 					<br>
 					<canvas id="timeCanvas" width="192" height="40" title="GPS Time"></canvas>
 				</div>
 			</td>
-			<td align="center" valign="top" colspan="3">
-				<table border="0">
+			<td style="text-align: center;" valign="top" colspan="3">
+				<table style="border-width: 0px;">
 					<tr>
-						<td align="center">
+						<td style="text-align: center;">
 							<div id="display-prmsl-title" style="display: inline;">Barometer in hPa</div>
 						</td>
-						<td align="center">
+						<td style="text-align: center;">
 							<div id="display-hum-title" style="display: inline;">Rel. Humidity in %</div>
 						</td>
 					</tr>
 					<tr>
-						<td align="center">
+						<td style="text-align: center;">
 							<div id="display-prmsl-div" style="display: inline;">
 								<canvas id="baroCanvas" width="240" height="220" title="Atmospheric Pressure in hPa"></canvas>
 							</div>
 						</td>
-						<td align="center">
+						<td style="text-align: center;">
 							<div id="display-hum-div" style="display: inline;">
 								<canvas id="humCanvas" width="240" height="220" title="Relative Humidity in %"></canvas>
 							</div>
@@ -541,10 +541,10 @@
 	</table>
 </div>
 <div id="overview" style="display: none;">
-	<p align="center">
-	<table align="center">
+	<p style="text-align: center;">
+	<table style="text-align: center;">
 		<tr>
-			<td align="left" valign="top" rowspan="7">
+			<td style="text-align: left" valign="top" rowspan="7">
 				<!-- Check boxes -->
 				<input type="checkbox" checked="true" id="display.current">Display Current</input>
 				<br>
@@ -570,74 +570,74 @@
 				<canvas id="currentDisplayCanvas" height="180" width="180" title="Current, speed and direction">
 					<!-- class="displayCanvas" --></canvas>
 			</td>
-			<td align="center" valign="top" rowspan="7">
+			<td style="text-align: center;" valign="top" rowspan="7">
 				<canvas id="overviewCanvas" height="500" width="600" class="displayCanvas"></canvas>
 			</td>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<!-- Digital displays -->
 				<canvas id="jumboBSPCanvas" width="120" height="60" title="Boat Speed in knots"></canvas>
 			</td>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<!-- Digital displays -->
 				<canvas id="jumboTWDCanvas" width="120" height="60" title="True Wind Direction in degrees"></canvas>
 			</td>
 		</tr>
 		<tr>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<!-- Digital displays -->
 				<canvas id="jumboHDGCanvas" width="120" height="60" title="Boat True Heading in degrees"></canvas>
 			</td>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<!-- Digital displays -->
 				<canvas id="jumboLWYCanvas" width="120" height="60" title="Leeway in degrees"></canvas>
 			</td>
 		</tr>
 		<tr>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<!-- Digital displays -->
 				<canvas id="jumboAWACanvas" width="120" height="60" title="Apparent Wind Angle in degrees"></canvas>
 			</td>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<!-- Digital displays -->
 				<canvas id="jumboTWACanvas" width="120" height="60" title="True Wind Angle in degrees"></canvas>
 			</td>
 		</tr>
 		<tr>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<!-- Digital displays -->
 				<canvas id="jumboAWSCanvas" width="120" height="60" title="Apparent Wind Speed in knots"></canvas>
 			</td>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<!-- Digital displays -->
 				<canvas id="jumboTWSCanvas" width="120" height="60" title="True Wind Speed in knots"></canvas>
 			</td>
 		</tr>
 		<tr>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<!-- Digital displays -->
 				<canvas id="jumboCOGCanvas" width="120" height="60" title="Course Over Ground in degrees"></canvas>
 			</td>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<!-- Digital displays -->
 				<canvas id="jumboCDRCanvas" width="120" height="60" title="Direction of the Current in degrees"></canvas>
 			</td>
 		</tr>
 		<tr>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<!-- Digital displays -->
 				<canvas id="jumboSOGCanvas" width="120" height="60" title="Speed Over Ground in knots"></canvas>
 			</td>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<!-- Digital displays -->
 				<canvas id="jumboCSPCanvas" width="120" height="60" title="Speed of the Current in knots"></canvas>
 			</td>
 		</tr>
 		<tr>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<!-- Digital displays -->
 				<canvas id="jumboVMGCanvas" width="120" height="60" title="VMG in knots"></canvas>
 			</td>
-			<td align="center" valign="top">
+			<td style="text-align: center;" valign="top">
 				<!-- Digital displays -->
 				<!--canvas id="jumboCSPCanvas" width="120" height="60" title="Speed of the Current in knots"></canvas-->
 			</td>
@@ -646,15 +646,15 @@
 	</p>
 </div>
 <div id="map" style="display: none; height: 450px; width: 850px;">
-	<p align="center">
+	<p style="text-align: center;">
 		<canvas id="mapCanvas" width="800" height="400" style="border-radius:10px;"></canvas>
 	</p>
 </div>
 <div id="twd-evolution" style="display: none;">
-	<p align="center">
-	<table align="center" cellspacing="10">
+	<p style="text-align: center;">
+	<table style="text-align: center;" cellspacing="10">
 		<tr>
-			<td valign="top" align="right">
+			<td valign="top" style="text-align: right;">
 				<button onclick="resetTWBuffer();" style="margin-bottom: 10px;">Reset All</button>
 				<br>
 				<button onclick="resetTW2Buffer();" style="margin-bottom: 10px;">Drop Oldest Half</button>
@@ -662,10 +662,10 @@
 				<div id="life-span">
 				</div>
 			</td>
-			<td align="center" valign="top" rowspan="6">
+			<td style="text-align: center;" valign="top" rowspan="6">
 				<canvas id="twdEvolutionCanvas" height="500" width="400" class="displayCanvas"></canvas>
 			</td>
-			<td align="center" valign="top" rowspan="6">
+			<td style="text-align: center;" valign="top" rowspan="6">
 				<canvas id="twsEvolutionCanvas" height="500" width="400" class="displayCanvas"></canvas>
 			</td>
 		</tr>

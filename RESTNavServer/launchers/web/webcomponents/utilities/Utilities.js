@@ -71,3 +71,17 @@ export function decToSex(val, ns_ew) {
 	return s;
 }
 
+/**
+ * Warning: this one can add 180 to the direction. (Removed below)
+ * @param x
+ * @param y
+ * @return direction, [0..360[
+ */
+export function getDir(x, y) {
+	let direction = /*180 +*/ Math.toDegrees(Math.atan2(x, y));
+	while (direction < 0) {
+		direction += 360;
+	}
+	direction %= 360;
+	return direction;
+}

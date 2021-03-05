@@ -6,7 +6,7 @@ import java.util.List;
 
 public class PolynomialUtil {
 
-	private final static double PRECISION = 1E-15; // Ca ira...
+	public final static double PRECISION = 1E-15; // For Newton. Ca ira...
 
 	public static class Point {
 		double x;
@@ -36,7 +36,7 @@ public class PolynomialUtil {
 	}
 
 	// Equation solving method
-	private static List<Double> getRoots(double... coef) {
+	public static List<Double> getRoots(double... coef) {
 		List<Double> roots = new ArrayList<>();
 
 		// Constant function
@@ -136,7 +136,7 @@ public class PolynomialUtil {
 	}
 
 	// Returns one of approximated root
-	private static double approximate(double xn, double... coef) {
+	public static double approximate(double xn, double... coef) {
 		try {
 			double fx = fx(xn, coef);
 			double fpx = fpx(xn, coef);
