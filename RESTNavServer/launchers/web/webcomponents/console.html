@@ -45,7 +45,7 @@
 		 * Event's definition (topic's name) is in ajax.manager.js, method onMessage
 		 */
 		/* global events gpsPosition setData gpsSatelliteData */
-		events.subscribe('pos', function(val) {
+		events.subscribe('pos', (val) => {
 			gpsPosition = val;
 			document.getElementById('world-map-01').setUserPosition({ latitude: val.lat, longitude: val.lng });
 			document.getElementById('world-map-01').positionLabel = "GPS";
@@ -277,24 +277,24 @@
 		<span id="boat-data-switch" onclick="expandCollapseBoatData();" style="cursor: pointer; padding-left: 40px;">- Boat Data</span>
 		<div id="nmea-widgets-1" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
 			<div id="boat-data" class="boat-data" style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 2; grid-template-columns: auto;">
-				<div id="row-1" style="display: grid; grid-column-start: 2; grid-template-columns: auto auto auto auto; padding: 10px;">
+				<div id="row-1" style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto auto; padding: 10px;">
 					<!--
 							TWD
 					+-->
 					<div id="direction">
 						<div class="black-frame centered">
 							<direction-display class="analogdisplay-day"
-																 title="True Wind Direction"
-																 id="compass-01"
-																 value="0"
-																 major-ticks="45"
-																 minor-ticks="5"
-																 with-rose="true"
-																 with-border="true"
-																 label="TWD"
-																 hand="wind"
-																 width="200"
-																 height="200"></direction-display>
+												title="True Wind Direction"
+												id="compass-01"
+												value="0"
+												major-ticks="45"
+												minor-ticks="5"
+												with-rose="true"
+												with-border="true"
+												label="TWD"
+												hand="wind"
+												width="200"
+												height="200"></direction-display>
 						</div>
 						<div class="black-frame centered">
 							<input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-01');" checked>With Border
@@ -307,47 +307,20 @@
 					<div id="analog">
 						<div class="black-frame centered">
 							<wind-angle-display class="analogdisplay-day"
-																	title="True Wind Speed in Knots"
-																	id="tw-01"
-																	value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
-																	major-ticks="30"
-																	minor-ticks="5"
-																	with-border="true"
-																	with-digits="true"
-																	label="True Wind"
-																	hand="wind"
-																	width="200"
-																	height="200"></wind-angle-display>
+												title="True Wind Speed in Knots"
+												id="tw-01"
+												value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
+												major-ticks="30"
+												minor-ticks="5"
+												with-border="true"
+												with-digits="true"
+												label="True Wind"
+												hand="wind"
+												width="200"
+												height="200"></wind-angle-display>
 						</div>
 						<div class="black-frame centered">
 							<input type="checkbox" class="border-cb" onchange="setBorder(this, 'tw-01');" checked>With Border
-						</div>
-					</div>
-					<!--
-							BSP
-					+-->
-					<div id="analog-2">
-						<div class="black-frame centered">
-							<!-- Note: No initial value="0" attribute, it would be considered as the miniVal. -->
-							<analog-display class="analogdisplay-day"
-															title="Boat Speed in knots,&#13;Log in nm"
-															id="bsp-01"
-															min-value="0"
-															max-value="15"
-															major-ticks="1"
-															minor-ticks="0.1"
-															with-border="true"
-															with-min-max="true"
-															overlap="40"
-															digital-data-len="4"
-															digital-data-val="0"
-															label="BSP"
-															width="200"
-															height="200"></analog-display>
-						</div>
-						<div class="black-frame centered">
-							<input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked>With Border
-							<input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked>With Min &amp; Max
 						</div>
 					</div>
 					<!--
@@ -356,24 +329,51 @@
 					<div id="apparent-wind">
 						<div id="top-cell-aw" class="black-frame centered">
 							<wind-angle-display class="analogdisplay-day"
-																	title="Apparent Wind Speed in Knots"
-																	id="aw-01"
-																	value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
-																	major-ticks="30"
-																	minor-ticks="5"
-																	with-border="true"
-																	with-digits="true"
-																	label="App Wind"
-																	hand="wind"
-																	width="200"
-																	height="200"></wind-angle-display>
+												title="Apparent Wind Speed in Knots"
+												id="aw-01"
+												value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
+												major-ticks="30"
+												minor-ticks="5"
+												with-border="true"
+												with-digits="true"
+												label="App Wind"
+												hand="wind"
+												width="200"
+												height="200"></wind-angle-display>
 						</div>
 						<div class="black-frame centered">
 							<input type="checkbox" class="border-cb" onchange="setBorder(this, 'aw-01');" checked>With Border
 						</div>
 					</div>
+					<!--
+							BSP & LOG
+					+-->
+					<div id="analog-2">
+						<div class="black-frame centered">
+							<!-- Note: No initial value="0" attribute, it would be considered as the miniVal. -->
+							<analog-display class="analogdisplay-day"
+											title="Boat Speed in knots,&#13;Log in nm"
+											id="bsp-01"
+											min-value="0"
+											max-value="15"
+											major-ticks="1"
+											minor-ticks="0.1"
+											with-border="true"
+											with-min-max="true"
+											overlap="40"
+											digital-data-len="4"
+											digital-data-val="0"
+											label="BSP"
+											width="200"
+											height="200"></analog-display>
+						</div>
+						<div class="black-frame centered">
+							<input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked>With Border
+							<input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked>With Min &amp; Max
+						</div>
+					</div>
 				</div>
-				<div id="row-2" style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px; text-align: center;">
+				<div id="row-2" style="display: grid; grid-column-start: 1; grid-template-columns: auto; padding: 10px; text-align: center;">
 					<!--
 						COMPASS ROSE. CONCAVE.
 					+-->
@@ -381,11 +381,11 @@
 						<small>Warning: The rose in <i>concave</i>. This means that it has to be seen as if the user was sitting at the center of the rose.</small>
 							<div class="black-frame centered">
 								<compass-rose id="compass-rose-01"
-															class="day"
-															title="True Heading"
-															value="0"
-															width="500"
-															height="50"></compass-rose>
+												class="day"
+												title="True Heading"
+												value="0"
+												width="1000"
+												height="50"></compass-rose>
 							</div>
 					</div>
 				</div>
@@ -397,17 +397,17 @@
 					+-->
 					<div>
 						<split-flap-display id="split-flap-display-00"
-																class="split-flap-night"
-																nb-char="18"
-																font-size="20"
-																justified="LEFT"
-																value="System Time"></split-flap-display>
+											class="split-flap-night"
+											nb-char="18"
+											font-size="20"
+											justified="LEFT"
+											value="System Time"></split-flap-display>
 						<split-flap-display id="split-flap-display-01"
-																class="split-flap-night"
-																nb-char="31"
-																font-size="20"
-																justified="RIGHT"
-																value="Tue 01-Jan-1970 00:00:00 UTC+00"></split-flap-display>
+											class="split-flap-night"
+											nb-char="31"
+											font-size="20"
+											justified="RIGHT"
+											value="Tue 01-Jan-1970 00:00:00 UTC+00"></split-flap-display>
 					</div>
 				</div>
 			</div>
@@ -418,10 +418,10 @@
 				<div id="world-map">
 					<div class="black-frame centered">
 						<world-map id="world-map-01"
-											 class="worldmap-display"
-											 title="World Map"
-											 width="700"
-											 height="500"></world-map>
+									class="worldmap-display"
+									title="World Map"
+									width="700"
+									height="500"></world-map>
 					</div>
 					<div class="black-frame centered">
 						<input type="checkbox" onchange="setTransparency('world-map-01', this);"/>Transparent
@@ -450,17 +450,17 @@
 					<div id="analog-watch-gps">
 						<div class="black-frame centered">
 							<analog-watch id="analog-watch-01"
-														class="analogdisplay-day"
-														title="GPS Time"
-														width="150"
-														height="150"
-														hours-ticks="1"
-														minutes-ticks="1"
-														digital-value="6"
-														with-second-hand="true"
-														hours-flavor="arabic"
-														label="GPS Time"
-														value="00:00:00"></analog-watch>
+											class="analogdisplay-day"
+											title="GPS Time"
+											width="150"
+											height="150"
+											hours-ticks="1"
+											minutes-ticks="1"
+											digital-value="6"
+											with-second-hand="true"
+											hours-flavor="arabic"
+											label="GPS Time"
+											value="00:00:00"></analog-watch>
 						</div>
 						<div class="black-frame centered">
 							<input type="checkbox" class="border-cb" onchange="setBorder(this, 'analog-watch-01');" checked>With Border
@@ -470,17 +470,17 @@
 					<div id="analog-watch-solar">
 						<div class="black-frame centered">
 							<analog-watch id="analog-watch-02"
-														class="analogdisplay-day"
-														title="Solar Time"
-														width="150"
-														height="150"
-														hours-ticks="1"
-														minutes-ticks="1"
-														digital-value="6"
-														with-second-hand="true"
-														hours-flavor="arabic"
-														label="Solar Time"
-														value="00:00:00"></analog-watch>
+											class="analogdisplay-day"
+											title="Solar Time"
+											width="150"
+											height="150"
+											hours-ticks="1"
+											minutes-ticks="1"
+											digital-value="6"
+											with-second-hand="true"
+											hours-flavor="arabic"
+											label="Solar Time"
+											value="00:00:00"></analog-watch>
 						</div>
 						<div class="black-frame centered">
 							<input type="checkbox" class="border-cb" onchange="setBorder(this, 'analog-watch-02');" checked>With Border
@@ -489,20 +489,20 @@
 
 					<div class="black-frame centered">
 						<calendar-display id="calendar-01"
-															class="calendar-01"
-															title="GPS Date"
-															width="140"
-															height="168"
-															value="01-01-1970"></calendar-display>
+												class="calendar-01"
+												title="GPS Date"
+												width="140"
+												height="168"
+												value="01-01-1970"></calendar-display>
 					</div>
 
 					<div class="black-frame centered">
 						<calendar-display id="calendar-02"
-															class="calendar-02"
-															title="Solar Date"
-															width="140"
-															height="168"
-															value="01-01-1970"></calendar-display>
+											class="calendar-02"
+											title="Solar Date"
+											width="140"
+											height="168"
+											value="01-01-1970"></calendar-display>
 					</div>
 
 				</div>
@@ -527,7 +527,7 @@
 	<div id="three" style="display: none;">
 		<div id="sky-maps-1" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
 			<div style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px;">
-				<div style="align: left;">
+				<div style="text-align: left;">
 					Type:
 					<select onchange="setMapType('sky-map-01', this);">
 						<option value="STARFINDER" selected>Star Finder</option>
@@ -543,9 +543,9 @@
 				+-->
 				<div class="black-frame centered">
 					<sky-map id="sky-map-01"
-									 width="800"
-									 height="800"
-									 latitude="35"/>
+								width="800"
+								height="800"
+								latitude="35"/>
 				</div>
 			</div>
 		</div>

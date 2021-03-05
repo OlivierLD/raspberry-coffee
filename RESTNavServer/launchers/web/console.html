@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <!--
-  TODO: 
-  - Rewrite with Web Components, ES6, CSS3, HTML5
-  - Remove JQuery
-  - Cleanup
+  @Deprecated
+  - Use the WebComponents version (in the webcomponents directory)
 -->
 <html>
   <head>
@@ -144,11 +142,11 @@
 
   var flavor = 'Ajax'; // Default, WebSocket not implemented here (we run on a small http server).
 
-  window.onload = function() {
+  window.onload = () => {
     init(); // init UI
 
 	  worldMap.clear();
-    setTimeout(function() {
+    setTimeout(() => {
 	    worldMap.drawWorldMap();
     }, 1);
 
@@ -418,7 +416,7 @@
     });
   };
 
-  var months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  const months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 	  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 
   var onAstroData = function(data) {
