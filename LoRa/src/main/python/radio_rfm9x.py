@@ -51,7 +51,7 @@ rfm9x.tx_power = 23
 prev_packet = None
 
 keep_looping = True
-print("Ctrl+C] to stop.")
+print("[Ctrl+C] to stop.")
 while keep_looping:
     try:
         packet = None
