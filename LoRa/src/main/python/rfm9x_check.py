@@ -45,6 +45,7 @@ CS = DigitalInOut(board.CE1)
 RESET = DigitalInOut(board.D25)
 spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
 
+verbose = False
 keep_looping = True
 while keep_looping:
     # Clear the image
@@ -52,13 +53,14 @@ while keep_looping:
 
     try:
         # Button status:
-        print("Button A: {}, Button B: {}, Button C: {}".format(btnA.value, btnB.value, btnC.value)
-
+        if verbose:
+            print("Button A: {}, Button B: {}, Button C: {}".format(btnA.value, btnB.value, btnC.value))
         # Attempt to set up the RFM9x Module
         try:
             rfm9x = adafruit_rfm9x.RFM9x(spi, CS, RESET, 915.0)
             display.text('RFM9x: Detected', 0, 0, 1)
-            print("RFM9x Detected")
+            if verbose:
+                print("RFM9x Detected")
         except RuntimeError as error:
             # Thrown on version mismatch
             display.text('RFM9x: ERROR', 0, 0, 1)
@@ -86,8 +88,9 @@ while keep_looping:
     except KeyboardInterrupt:
         keep_looping = False
 
+print("\nBye!")
 # Clear the image
 display.fill(0)
 display.show()
 
-print("Done!")
+print("Done.")
