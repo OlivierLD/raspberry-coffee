@@ -78,18 +78,21 @@ while keep_looping:
             button_a_data = bytes("Button A!\r\n","utf-8")
             rfm9x.send(button_a_data)
             display.text('Sent Button A!', 25, 15, 1)
+            print("Sent (A) {}".format(button_a_data))
         elif not btnB.value:
             # Send Button B
             display.fill(0)
             button_b_data = bytes("Button B!\r\n","utf-8")
             rfm9x.send(button_b_data)
             display.text('Sent Button B!', 25, 15, 1)
+            print("Sent (B) {}".format(button_b_data))
         elif not btnC.value:
             # Send Button C
             display.fill(0)
             button_c_data = bytes("Button C!\r\n","utf-8")
             rfm9x.send(button_c_data)
             display.text('Sent Button C!', 25, 15, 1)
+            print("Sent (C) {}".format(button_c_data))
 
         display.show()
         time.sleep(0.1)
