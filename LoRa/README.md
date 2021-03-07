@@ -1,10 +1,12 @@
 # LoRa (Long Range)
 Shows how to use an RFM95W Lora Radio module
 
-This  board has a SPI interface, the code in this directory could belong to the `I2C.SPI` project, but the intention was to also provide the code for the Arduino Uno.
+This board has a SPI interface, the code in this directory could belong to the `I2C.SPI` project, but the intention was to also provide the code for the Arduino Uno.
 
 I found the code I started from on the [Adafruit](https://www.adafruit.com/product/3072) website.
 
+
+## Arduino to Arduino
 The two sketches require the same wiring:
 
 ![RX TX](./RFM95_Arduino_bb.png)
@@ -12,6 +14,11 @@ The two sketches require the same wiring:
 You need two Arduinos: 
 - one to transmit 
 - one to receive.
+
+
+
+## Raspberry Pi (Tx) and Arduino (Rx)
+TODO
 
 ## Next
 The same, on a Raspberry Pi, in Java. _That_ is a project...
@@ -52,15 +59,15 @@ Tests on the range of the LoRa.
 #### UseCase: Broadcast NMEA Data
 Using the NMEA Multiplexer, based on its structure, we've written a `LoRaPublisher`.
 
-On one Raspberry Pi (emitter, **1**), where the NMEAMultiplexer reads NMEA Data (from a GPS, a log file, etc),
+On one Raspberry Pi (emitter, #**1**), where the NMEAMultiplexer reads NMEA Data (from a GPS, a log file, etc),
 there is also an Arduino with a `LoRa` connected to it, with `ArduinoRF95_TX` running on it.
 
-On another machine (receiver, **2**), with an Arduino running `ArduinoRF95_RX` connected to it, run the script
-named `ruArduinoServer` (this script invokes the java class `arduino.ArduinoLoRaServer`).
+On another machine, Raspberry PI or not (receiver, #**2**), with an Arduino running `ArduinoRF95_RX` connected to it, run the script
+named `runArduinoServer.sh` (this script invokes the java class `arduino.ArduinoLoRaServer`).
 
 ---
 
-On one machine (**2**, Raspberry Pi or not), connected to an Arduino UNO with the
+On machine #**2** (Raspberry Pi or not), connected to an Arduino UNO with the
 sketch `ArduinoRF95_RX` running on it, start the Arduino Server:
 ```
  $ ./runArduinoServer.sh
@@ -83,7 +90,7 @@ sketch `ArduinoRF95_RX` running on it, start the Arduino Server:
  ?>
 ```
 
-Then from the Raspberry Pi (**1**) with the NMEA Multiplexer, connected to an Arduino UNO
+Then from the Raspberry Pi (#**1**) with the NMEA Multiplexer, connected to an Arduino UNO
 running the sketch `ArduinoRF95_TX` running on it, reading GPS data:
 
 ```

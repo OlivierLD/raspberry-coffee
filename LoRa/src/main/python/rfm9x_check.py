@@ -14,17 +14,17 @@ import adafruit_ssd1306
 import adafruit_rfm9x
 
 # Button A
-btnA = DigitalInOut(board.D5)
+btnA = DigitalInOut(board.D26)    # D5)
 btnA.direction = Direction.INPUT
 btnA.pull = Pull.UP
 
 # Button B
-btnB = DigitalInOut(board.D6)
+btnB = DigitalInOut(board.D19)   # D6)
 btnB.direction = Direction.INPUT
 btnB.pull = Pull.UP
 
 # Button C
-btnC = DigitalInOut(board.D12)
+btnC = DigitalInOut(board.D13)   # D12)
 btnC.direction = Direction.INPUT
 btnC.pull = Pull.UP
 
@@ -45,37 +45,49 @@ CS = DigitalInOut(board.CE1)
 RESET = DigitalInOut(board.D25)
 spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
 
-while True:
+keep_looping = True
+while keep_looping:
     # Clear the image
     display.fill(0)
 
-    # Attempt to set up the RFM9x Module
     try:
-        rfm9x = adafruit_rfm9x.RFM9x(spi, CS, RESET, 915.0)
-        display.text('RFM9x: Detected', 0, 0, 1)
-    except RuntimeError as error:
-        # Thrown on version mismatch
-        display.text('RFM9x: ERROR', 0, 0, 1)
-        print('RFM9x Error: ', error)
+        # Button status:
+        print("Button A: {}, Button B: {}, Button C: {}".format(btnA.value, btnB.value, btnC.value)
 
-    # Check buttons
-    if not btnA.value:
-        # Button A Pressed
-        display.text('Ada', width-85, height-7, 1)
-        display.show()
-        time.sleep(0.1)
-    if not btnB.value:
-        # Button B Pressed
-        display.text('Fruit', width-75, height-7, 1)
-        display.show()
-        time.sleep(0.1)
-    if not btnC.value:
-        # Button C Pressed
-        display.text('Radio', width-65, height-7, 1)
-        display.show()
-        time.sleep(0.1)
+        # Attempt to set up the RFM9x Module
+        try:
+            rfm9x = adafruit_rfm9x.RFM9x(spi, CS, RESET, 915.0)
+            display.text('RFM9x: Detected', 0, 0, 1)
+            print("RFM9x Detected")
+        except RuntimeError as error:
+            # Thrown on version mismatch
+            display.text('RFM9x: ERROR', 0, 0, 1)
+            print('RFM9x Error: ', error)
 
-    display.show()
-    time.sleep(0.1)
+        # Check buttons
+        if not btnA.value:
+            # Button A Pressed
+            display.text('Ada', width-85, height-7, 1)
+            display.show()
+            time.sleep(0.1)
+        if not btnB.value:
+            # Button B Pressed
+            display.text('Fruit', width-75, height-7, 1)
+            display.show()
+            time.sleep(0.1)
+        if not btnC.value:
+            # Button C Pressed
+            display.text('Radio', width-65, height-7, 1)
+            display.show()
+            time.sleep(0.1)
+
+        display.show()
+        time.sleep(0.1)
+    except KeyboardInterrupt:
+        keep_looping = False
+
+# Clear the image
+display.fill(0)
+display.show()
 
 print("Done!")
