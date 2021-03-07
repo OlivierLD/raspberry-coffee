@@ -1,0 +1,206 @@
+{
+  "Damping": 30,
+  "HDG Offset": 0.0,
+  "To Waypoint": "RANGI   ",
+  "CDR": {
+    "angle": 165.81453336638606
+  },
+  "Daily": {
+    "distance": 13.6
+  },
+  "Max Leeway": 10.0,
+  "VMG on Wind": -4.885185833617699,
+  "HDG c.": {
+    "angle": 224.0
+  },
+  "CMG": {
+    "angle": 233.01692220976113
+  },
+  "BSP": {
+    "speed": 6.6
+  },
+  "TWA": {
+    "angle": -143.8292260178892
+  },
+  "TWD": {
+    "angle": 89.0
+  },
+  "Current calculated with damping": {
+    "60000": {
+      "bufferLength": 60000,
+      "speed": {
+        "speed": 0.8496527123627801
+      },
+      "direction": {
+        "angle": 253.15350621091602
+      },
+      "nbPoints": 25,
+      "oldest": "Sun, 2010 Nov 21 22:20:19 UTC",
+      "latest": "Sun, 2010 Nov 21 22:21:15 UTC",
+      "len": 56000
+    },
+    "30000": {
+      "bufferLength": 30000,
+      "speed": {
+        "speed": 1.2901196455349244
+      },
+      "direction": {
+        "angle": 245.49711569347681
+      },
+      "nbPoints": 14,
+      "oldest": "Sun, 2010 Nov 21 22:20:46 UTC",
+      "latest": "Sun, 2010 Nov 21 22:21:15 UTC",
+      "len": 29000
+    },
+    "600000": {
+      "bufferLength": 600000,
+      "speed": {
+        "speed": 0.401265182764697
+      },
+      "direction": {
+        "angle": 268.01954043653296
+      },
+      "nbPoints": 216,
+      "oldest": "Sun, 2010 Nov 21 22:11:15 UTC",
+      "latest": "Sun, 2010 Nov 21 22:21:15 UTC",
+      "len": 600000
+    }
+  },
+  "Position": {
+    "lat": -9.126766666666667,
+    "lng": -140.2274,
+    "gridSquare": "BI90vu"
+  },
+  "Log": {
+    "distance": 3014.0
+  },
+  "Solar Time": {
+    "date": "Nov 21, 2010, 5:00:21 AM",
+    "fmtDate": {
+      "epoch": 1290344421425,
+      "year": 2010,
+      "month": 11,
+      "day": 21,
+      "hour": 13,
+      "min": 0,
+      "sec": 21
+    }
+  },
+  "BSP Factor": 1.0,
+  "Set and Drift": {
+    "speed": 0.4,
+    "angle": 268
+  },
+  "From Waypoint": "",
+  "TWS": {
+    "speed": 19.4
+  },
+  "GPS Time": {
+    "date": "Nov 21, 2010, 2:21:16 PM",
+    "fmtDate": {
+      "epoch": 1290378076000,
+      "year": 2010,
+      "month": 11,
+      "day": 21,
+      "hour": 22,
+      "min": 21,
+      "sec": 16
+    }
+  },
+  "Distance to WP": {
+    "distance": 560.2
+  },
+  "AWS Factor": 1.0,
+  "Water Temperature": {
+    "temperature": 26.5
+  },
+  "Small Distance": 1.6663523841490808,
+  "NMEA": "$IIVLW,03014,N,013.6,N*51\r",
+  "NMEA_AS_IS": {
+    "VLW": "$IIVLW,03014,N,013.6,N*51\r",
+    "VHW": "$IIVHW,,,224,M,06.6,N,,*60\r",
+    "VDR": "$CCVDR,268.0,T,258.0,M,0.40,N*0E\r\n",
+    "GLL": "$IIGLL,0907.605,S,14013.643,W,222115,A,A*53\r",
+    "RMB": "$IIRMB,A,3.00,R,,RANGI   ,,,,,560.20,230,07.4,V,A*04\r",
+    "RMC": "$IIRMC,222116,A,0907.606,S,14013.644,W,07.6,219,211110,10,E,A*00\r",
+    "DPT": "$IIDPT,000.9,+0.7,*49\r",
+    "HDG": "$IIHDG,221,,,10,E*12\r",
+    "MWV": "$CCMWV,216.0,T,019.4,N,A*32\r\n",
+    "VWR": "$IIVWR,122,L,15.7,N,,,,*7D\r",
+    "MTW": "$IIMTW,+26.5,C*39\r",
+    "VWT": "$CCVWT,143.8,L,19.4,N,10.0,M,36.0,K*67\r\n",
+    "MWD": "$CCMWD,089.0,T,079.0,M,19.4,N,10.0,M*46\r\n"
+  },
+  "D": {
+    "angle": 10.0
+  },
+  "XTE": {
+    "distance": 3.0
+  },
+  "AWA": {
+    "angle": -122.0
+  },
+  "Depth": {
+    "depthInMeters": 1.5999999046325684
+  },
+  "NbMess": 23937,
+  "Bearing to WP": {
+    "angle": 230.0
+  },
+  "W": {
+    "angle": 9.01692220976113
+  },
+  "Speed to WP": {
+    "speed": 7.4
+  },
+  "COG": {
+    "angle": 219.0
+  },
+  "AWS": {
+    "speed": 15.7
+  },
+  "HDG true": {
+    "angle": 233.01692220976113
+  },
+  "AWA Offset": 0.0,
+  "RMCStatus": true,
+  "CSP": {
+    "speed": 1.9967736404754421
+  },
+  "d": {
+    "angle": -0.9830777902388692
+  },
+  "Default Declination": {
+    "angle": 14.0
+  },
+  "Deviation file name": "dp_2011_04_15.csv",
+  "HDG mag.": {
+    "angle": 223.01692220976113
+  },
+  "SOG": {
+    "speed": 7.6
+  },
+  "Leeway": {
+    "angle": 0.0
+  },
+  "GPS Date & Time": {
+    "date": "Nov 21, 2010, 2:21:16 PM",
+    "epoch": 1290378076000,
+    "fmtDate": {
+      "epoch": 1290378076000,
+      "year": 2010,
+      "month": 11,
+      "day": 21,
+      "hour": 22,
+      "min": 21,
+      "sec": 16
+    }
+  },
+  "WayPoint pos": {
+    "lat": 0.0,
+    "lng": 0.0,
+    "gridSquare": "JJ00aa"
+  },
+  "VMG to Waypoint": 7.460366594202246,
+  "Steer": "R"
+}

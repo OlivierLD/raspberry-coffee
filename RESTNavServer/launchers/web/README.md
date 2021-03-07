@@ -10,7 +10,7 @@ Done. See in the WebComponents folder. &#9989;
 
 ----
 
-Expose the "Smooth-Move" parameters at the component level for
+Expose the "Smooth-Move" (Also see previous `animate`) parameters at the component level for
 - Analog Diplay
 - Direction Display
 - Compass Display
