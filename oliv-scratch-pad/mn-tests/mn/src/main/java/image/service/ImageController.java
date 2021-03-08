@@ -17,8 +17,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
+import org.json.XML;
+
 @Controller("/ocr")
 public class ImageController {
+
+    private static String generateJsonFromXML(String xml) {
+        return XML.toJSONObject(xml).toString();
+    }
+
 
     @Post(value = "/jpg", consumes = MediaType.MULTIPART_FORM_DATA, produces = MediaType.APPLICATION_JSON)
     public String processImage(HttpRequest request, @Part("file") CompletedFileUpload file) {
@@ -68,7 +75,7 @@ public class ImageController {
                 sb.append(line);
             }
             in.close();
-            finalOutput = sb.toString();
+            finalOutput = generateJsonFromXML(sb.toString());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -113,7 +120,7 @@ public class ImageController {
                 sb.append(line);
             }
             in.close();
-            finalOutput = sb.toString();
+            finalOutput = generateJsonFromXML(sb.toString());
         } catch (Exception ex) {
             ex.printStackTrace();
             return HttpResponse.badRequest(ex.toString());
