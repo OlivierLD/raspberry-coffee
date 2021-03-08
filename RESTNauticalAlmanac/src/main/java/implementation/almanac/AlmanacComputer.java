@@ -123,7 +123,7 @@ public class AlmanacComputer {
 		 *     http://maia.usno.navy.mil/ser7/deltat.data
 		 */
 		String deltaTStr = System.getProperty("deltaT", String.valueOf(deltaT));
-		if (deltaTStr.equals(AUTO)) {
+		if (deltaTStr.equals(AUTO) || deltaTStr == null || deltaTStr.trim().isEmpty() ) {
 			Calendar now = GregorianCalendar.getInstance();
 			deltaT = TimeUtil.getDeltaT(now.get(Calendar.YEAR), now.get(Calendar.MONTH) + 1);
 		} else if (deltaTStr.startsWith(AUTO_PREFIX)) {
