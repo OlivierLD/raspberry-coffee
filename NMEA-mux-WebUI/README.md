@@ -112,7 +112,7 @@ The script `to.prod.sh` (available in each directory) is not carved in stone. It
 ## Warning!
 This project directory is a play ground, again, it is here for **you** to _compose_ your own server.
 
-**You**.
+**_You_**.
 
 Means not **me**. 🤓
 
