@@ -1,10 +1,11 @@
 ## Celestial Almanac(s)
-This is not strictly related to java nor Raspberry Pi.
+> _Note_: This is not strictly related to Java nor Raspberry Pi.
 
 This is about reproducing the celestial almanac features (available in `common-utils/src/main/java/calc/calculation/nauticalalmanac`)
 in several other languages than Java.
 
-> _Note_: This is actually an interesting exercise. Those celestial calculations involve **_a lot_** of code (more than **20K** lines of code, for each language presented here).
+> _Note_:   
+> This is actually an interesting exercise. Those celestial calculations involve **_a lot_** of code (more than **20K** lines of code, for each language presented here).
 > It is always interesting to consider the following aspects:
 > - Productivity (once you know what you want, how long does it takes to write the _right_ code, with and without an IDE - when it exists)
 > - Readability (do you still understand what you wrote two weeks later 🤓)
@@ -16,13 +17,14 @@ in several other languages than Java.
 > with any other resources (on the net, in the cloud, wherever) to reach its goals, to do its job, to complete its work.
 > Do keep this important aspect in mind when you setup your mind about the best language ever. 😜   
 
-> _Note-2_: those calculations rely on a parameter called `DeltaT`, that can be obtained
+> _Note-2_:  
+> those calculations rely on a parameter called `DeltaT`, that can (could) be obtained
 > from the [US Naval Oceanography Portal](https://www.usno.navy.mil/USNO/earth-orientation/eo-products/long-term).
 > This (official) web site is undergoing some upgrade..., if it is down, it will
 > come back to life soon. Last known value of `DeltaT` is `69.2201` sec.
 > > Aug 2020, it's back up! <http://maia.usno.navy.mil/ser7/deltat.preds>  
 > > ...and down.  
-> > So we now have a way to _calculate_ the DeltaT value, in all languages.
+> > So we now have a way to _calculate_ the DeltaT value, in all languages (Java, Python, C++, ES6).
 
 Beside Java, we (will) have
 - [ES6](./ES6/README.md)
