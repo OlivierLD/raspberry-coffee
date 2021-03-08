@@ -35,7 +35,7 @@ be served from a _**single archive**_, as this feature is available from the HTT
 > the git repo on the destination machine, many of its components might not be required.
 
 ## Close to "production"
-It will not require the `git` repository to be cloned on the machine the server runs on.
+The idea here is **_not_** to have to clone the `git` repository on the machine the server runs on.
 
 We will:
 - Clone the repository on one machine, used to build the required components
