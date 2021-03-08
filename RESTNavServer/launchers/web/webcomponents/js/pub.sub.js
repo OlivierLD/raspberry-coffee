@@ -9,6 +9,39 @@
  */
 let events = {
 
+	// topic names
+	topicNames: {
+		POS: 'pos',
+		BSP: 'bsp',
+		LOG: 'log',
+		DAILY_LOG: 'daily-log',
+		GPS_DATE_TIME: 'gps-time',
+		GPS_SAT: 'gps-sat',
+		TRUE_HDG: 'hdg',
+		TWD: 'twd',
+		TWA: 'twa',
+		TWS: 'tws',
+		WATER_TEMP: 'wt',
+		AIR_TEMP: 'at',
+		PRMSL: "prmsl",
+		REL_HUM: 'hum',
+		AWS: 'AWS',
+		AWA: 'awa',
+		CURRENT_DIR: 'cdr',
+		CURRENT_SPEED: 'csp',
+		COG: 'cog',
+		SOG: 'sog',
+		CMG: 'cmg',
+		LEEWAY_ANGLE: 'leeway',
+		DAMP_CSP_PREFIX: 'csp-',
+		DAMP_CDR_PREFIX: 'cdr-',
+		TO_WP: 'wp',
+		VMG: 'vmg',
+		LAST_NMEA: 'nmea',
+		DECL: 'decl',
+		DEV: 'dev'
+	},
+
 	listener: [],
 
 	subscribe: function(topic, action) {
