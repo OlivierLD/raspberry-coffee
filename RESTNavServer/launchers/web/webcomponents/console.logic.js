@@ -195,10 +195,13 @@ function devFromHdg(hdg) {
 	return dev;
 }
 
-function setHdgOnDevCurve(id, hdg) { // Triggered when HDG is updated (event.subscribe)
+function setHdgOnDevCurve(id, hdg, cb) { // Triggered when HDG is updated (event.subscribe)
 	let elem = document.getElementById(id);
 	if (elem !== null && elem !== undefined && deviationCurve !== null) {
 		let value = devFromHdg(hdg); // Find dev value with hdg in dev curve
+		if (cb !== undefined) {
+			cb(value);
+		}
 		elem.value = (value < 0 ? "W " : "E ") + Math.abs(value).toFixed(1) + "°";
 		elem.repaint();
 	}
@@ -904,8 +907,11 @@ function setTheme(className) {
 function applyClass(id, className) {
 	let widget = document.getElementById(id);
 	if (widget !== null) {
+		console.log(`Setting class ${className} to ${id}`);
 		widget.className = className;
 		widget.repaint();
+	} else {
+		console.log(`${id} not found...`);
 	}
 }
 
@@ -955,6 +961,8 @@ let awa = 0;
 let tws = 0;
 let twa = 0;
 let hdg = 0;
+let maxLeeway = 0;
+let decl = 0;
 let log = 0;
 let dailyLog = 0;
 let gpsTime = undefined;

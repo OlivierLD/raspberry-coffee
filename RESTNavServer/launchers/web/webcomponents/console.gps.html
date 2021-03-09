@@ -36,11 +36,14 @@
     <script type="module" src="./GraphDisplay.js"></script>
     <script type="module" src="./MoonPhase.js"></script>
     <script type="module" src="./ScrollDigit.js"></script>
+    <script type="module" src="./BoatOverview.js"></script>
 
     <!-- Scripts -->
     <script type="text/javascript" src="js/date.proto.js"></script>
     <script type="text/javascript" src="js/pub.sub.js"></script>
     <script type="text/javascript" src="js/ajax.manager.js"></script> <!-- Contains REST calls -->
+
+    <script type="text/javascript" src="utilities/NavigationHelper.js"></script> <!-- Contains REST calls -->
 
     <script type="text/javascript">
 
@@ -230,7 +233,7 @@
          * Event's definition (topic's name) is in ajax.manager.js, method onMessage
          */
         /* global events gpsPosition setData gpsSatelliteData */
-        events.subscribe('pos', (val) => {
+        events.subscribe(events.topicNames.POS, (val) => {
             gpsPosition = val;
             document.getElementById('world-map-01').setUserPosition({
                 latitude: val.lat,
@@ -244,14 +247,16 @@
             document.getElementById('world-map-01').positionLabel = "GPS";
             document.getElementById('world-map-01').repaint();
         });
-        events.subscribe('sog', (val) => {
+        events.subscribe(events.topicNames.SOG, (val) => {
             setData('bsp-01', val);
             document.getElementById('bsp-01').value2 = val * 0.514444;
+            // Boat Overview
+            document.getElementById('boat-overview-01').sog = val;
         });
-        events.subscribe('nmea', (val) => {
+        events.subscribe(events.topicNames.LAST_NMEA, (val) => {
             setRawNMEA(val.data);
         });
-        events.subscribe('gps-time', (val) => {
+        events.subscribe(events.topicNames.GPS_DATE_TIME, (val) => {
             // console.log(">> GPS-Time: ", val);
             // val.format("Y-M-d H:i:s")
             gpsTime = new Date(val);
@@ -265,34 +270,103 @@
                 getAstroData(gpsDate.format(DURATION_FMT), gpsPosition, withWanderingBodies, withStars, astroCallback);
             }
         });
-        events.subscribe('gps-sat', (val) => {
+        events.subscribe(events.topicNames.GPS_SAT, (val) => {
 //		console.log("Satellite data:", val);
             gpsSatelliteData = val;
             let plotter = document.getElementById('sp-01');
             plotter.setSatellites(val);
             plotter.repaint();
         });
-        events.subscribe('cog', (val) => {
+        events.subscribe(events.topicNames.COG, (val) => {
             setData('compass-rose-01', val);
             setData('compass-01', val);
             // setData('compass-display-01', val);
+            // Boat Overview
+            document.getElementById('boat-overview-01').cog = val;
         });
-        events.subscribe('hdg', (val) => {
-            hdg = val;
+        events.subscribe(events.topicNames.TRUE_HDG, (val) => {
+            hdg = val; // hdg, in console.logic.js
             setData('compass-display-01', val);
-            setHdgOnDevCurve('compass-deviation', val);
+            let bo = document.getElementById('boat-overview-01');
+            setHdgOnDevCurve('compass-deviation', val, dev => {
+                bo.dev = dev;
+            });
+            // Boat Overview
+            // console.log(`BoatOverview: setting HDG to ${val}`);
+            bo.hdg = val;
+            let lwy = bo.lwy;
+            let cmg = (val + lwy) % 360;
+            while (cmg < 0) {
+                cmg += 360;
+            }
+            bo.cmg = cmg;
         });
-        events.subscribe('log', (val) => {
+        events.subscribe(events.topicNames.LOG, (val) => {
             log = val;
             let sdElem = document.getElementById('scroll-digit-display-01');
             let strValue = lpad(val.toFixed(sdElem.nbDec), sdElem.nbChar, '0');
             setScrollDigitValue('scroll-digit-display-01', strValue);
         });
-        events.subscribe('daily-log', (val) => {
+        events.subscribe(events.topicNames.DAILY_LOG, (val) => {
             dailyLog = val;
             let sdElem = document.getElementById('scroll-digit-display-02');
             let strValue = lpad(val.toFixed(sdElem.nbDec), sdElem.nbChar, '0');
             setScrollDigitValue('scroll-digit-display-02', strValue);
+        });
+
+        events.subscribe(events.topicNames.MAX_LEEWAY_ANGLE, (val) => {
+            maxLeeway = val; // In console.logic.js
+        });
+        events.subscribe(events.topicNames.DECL, val => {
+            decl = val;
+            document.getElementById('boat-overview-01').Decl = val;
+        });
+        events.subscribe(events.topicNames.TO_WP, val => {
+            let bo = document.getElementById('boat-overview-01');
+            if (val.to_wp !== undefined) {
+                bo.wpName = val.to_wp;
+            }
+            if (val.b2wp !== undefined) {
+                bo.b2wp = val.b2wp;
+            }
+            if (val.vmg2wp !== undefined) {
+                if (!bo.vmgOnWind) {
+                    bo.vmg = val.vmg2wp;
+                }
+            }
+        });
+        events.subscribe(events.topicNames.VMG, val => {
+           let onWind = val.onwind;
+           let onWp = val.onwp;
+           let bo = document.getElementById('boat-overview-01');
+           if (onWind !== undefined && bo.vmgOnWind) {
+               bo.vmg = onWind;
+           }
+           if (onWp !== undefined && !bo.vmgOnWind) {
+               bo.vmg = onWp;
+           }
+
+        });
+        events.subscribe(events.topicNames.BSP, (val) => {
+            document.getElementById('boat-overview-01').bsp = val;
+        });
+        events.subscribe(events.topicNames.TWS, (val) => {
+            document.getElementById('boat-overview-01').tws = val;
+        });
+        events.subscribe(events.topicNames.TWA, (val) => {
+            document.getElementById('boat-overview-01').twa = val;
+        });
+        events.subscribe(events.topicNames.TWD, (val) => {
+            document.getElementById('boat-overview-01').twd = val;
+        });
+        events.subscribe(events.topicNames.AWS, (val) => {
+            document.getElementById('boat-overview-01').aws = val;
+        });
+        events.subscribe(events.topicNames.AWA, (val) => {
+            document.getElementById('boat-overview-01').awa = val;
+            // Leeway
+            let lwy = NavigationHelper.leewayEvaluator(val, maxLeeway);
+            document.getElementById('boat-overview-01').lwy = lwy;
         });
 
         function dataToGraph(pivotDate, declMap, lineColor, fillColor1, fillColor2) {
@@ -1138,6 +1212,353 @@
                                       value="0"
                                       width="500"
                                       height="50"></compass-rose>
+                    </div>
+                </div>
+            </div>
+            <div id="row-3"
+                 style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto auto auto; padding: 10px;">
+                <!--
+                   BOAT OVERVIEW
+                 +-->
+                <div id="boat-overview">
+                    <script type="text/javascript">
+                        function updateBoatShape(id, shape) {
+                            console.log('Setting', id, 'to', shape);
+                            let elem = document.getElementById(id);
+                            elem.boatShape = shape;
+                        }
+
+                        function updateWithGPS(id, checked) {
+                            let elem = document.getElementById(id);
+                            elem.withGPS = checked;
+                        }
+
+                        function updateWithCurrent(id, checked) {
+                            let elem = document.getElementById(id);
+                            elem.withCurrent = checked;
+                        }
+
+                        function updateWithWind(id, checked) {
+                            let elem = document.getElementById(id);
+                            elem.withWind = checked;
+                        }
+
+                        function updateWithTrueWind(id, checked) {
+                            let elem = document.getElementById(id);
+                            elem.withTrueWind = checked;
+                        }
+
+                        function updateWithVMG(id, checked) {
+                            let elem = document.getElementById(id);
+                            elem.withVMG = checked;
+                            document.getElementById('vmg-option').style.display = (checked ? 'block' : 'none');
+                        }
+
+                        function updateWithW(id, checked) {
+                            let elem = document.getElementById(id);
+                            elem.withW = checked;
+                        }
+
+                        function updateWithLabels(id, checked) {
+                            let elem = document.getElementById(id);
+                            elem.withLabels = checked;
+                        }
+
+                        function updateZoom(id, value) {
+                            let elem = document.getElementById(id);
+                            elem.zoomOnBoat = value;
+                        }
+
+                        function setVMGOption(id, value) {
+                            let elem = document.getElementById(id);
+                            elem.vmgOnWind = (value === 'WIND');
+                            if (value === 'WAYPOINT') {
+                                elem.wpName = 'Way Point'; // A WP name would go here
+                            }
+                            // updateBoatContext();
+                        }
+
+                        const BSP_COEFF = 1;
+                        const HDG_OFFSET = 0;
+                        const AWS_COEFF = 1;
+                        const AWA_OFFSET = 0;
+
+                        function updateBoatContext() { // Should not be used here...
+                            let bsp = parseFloat(document.getElementById('bsp01').value);
+                            let sog = parseFloat(document.getElementById('sog01').value);
+                            let aws = parseFloat(document.getElementById('aws01').value);
+                            let awa = parseInt(document.getElementById('awa01').value);
+                            let cog = parseInt(document.getElementById('cog01').value);
+                            let hdc = parseInt(document.getElementById('hdc01').value);
+
+                            let maxLeeway = parseFloat(document.getElementById('mlwy01').value);
+
+                            let Decl =
+                                (parseInt(document.getElementById('Decl-deg-01').value) +
+                                    (parseFloat(document.getElementById('Decl-min-01').value) / 60)) * (document.getElementById('Decl-sign-01').value === 'E' ? 1 : -1);
+                            let dev =
+                                (parseInt(document.getElementById('dev-deg-01').value) +
+                                    (parseFloat(document.getElementById('dev-min-01').value) / 60)) * (document.getElementById('dev-sign-01').value === 'E' ? 1 : -1);
+                            // Calculation
+                            let lwy = NavigationHelper.leewayEvaluator(awa, maxLeeway);
+                            let hdg = NavigationHelper.hdgFromHdc(hdc, Decl, dev);
+                            let tw = NavigationHelper.twCalculator(
+                                aws, AWS_COEFF,
+                                awa, AWA_OFFSET,
+                                hdg, HDG_OFFSET,
+                                sog, cog);
+                            let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
+
+                            let b2wp = 0;
+                            let b2wpVal = document.getElementById('b2wp01').value;
+                            if (b2wpVal.length > 0) {
+                                b2wp = parseInt(b2wpVal);
+                            }
+                            let vmgs = NavigationHelper.vmgCalculator(sog, cog, tw.twd, tw.twa, bsp, hdg, b2wp);
+
+                            let resContent =
+                                'LWY:' + lwy.toFixed(1) + '\272 \n' +
+                                'True HDG:' + hdg.toFixed(1) + '\272 \n' +
+                                'TWS:' + tw.tws.toFixed(2) + ' kts\n' +
+                                'TWA:' + tw.twa.toFixed(1) + '\272 \n' +
+                                'TWD:' + tw.twd.toFixed(1) + '\272 \n' +
+                                'D:' + Decl.toFixed(1) + '\272 \n' +
+                                'd:' + dev.toFixed(1) + '\272 \n' +
+                                'Current Dir:' + current.cdr.toFixed(1) + '\272 \n' +
+                                'Current Speed:' + current.csp.toFixed(2) + ' kts';
+
+                            console.log(resContent);
+
+                            let wpName = document.getElementById('wpname01').value;
+
+                            // Update graph here
+                            let graph = document.getElementById('boat-overview-01');
+                            graph.bsp = bsp;
+                            graph.hdg = hdg;
+                            graph.aws = aws;
+                            graph.awa = awa;
+                            graph.tws = tw.tws;
+                            graph.twa = tw.twa;
+                            graph.twd = tw.twd;
+                            graph.cog = cog;
+                            graph.sog = sog;
+                            graph.csp = current.csp;
+                            graph.cdr = current.cdr;
+                            graph.Decl = Decl;
+                            graph.dev = dev;
+                            graph.lwy = lwy;
+
+                            let cmg = (hdg + lwy) % 360;
+                            while (cmg < 0) {
+                                cmg += 360;
+                            }
+                            graph.cmg = cmg;
+
+                            if (graph.vmgOnWind) {
+                                graph.vmg = vmgs.vmgWind;
+                            } else {
+                                graph.b2wp = b2wp;
+                                graph.wpName = wpName;
+                                graph.vmg = vmgs.vmgWayPoint;
+                            }
+                        }
+                    </script>
+                    <div class="black-frame centered">
+                        <table>
+                            <tr>
+                                <td valign="top">
+                                    <div class="black-frame">
+                                        <boat-overview id="boat-overview-01"
+                                                       class="boat-overview-01"
+                                                       width="800"
+                                                       height="600"
+                                                       boat-shape="MONO"
+                                                       zoom-on-boat="1"
+                                                       cog="215"
+                                                       sog="8.2"
+                                                       bsp="8.0"
+                                                       hdg="235"
+                                                       aws="15.8"
+                                                       awa="-112"
+                                                       tws="18.05"
+                                                       twa="-139"
+                                                       twd="96"
+                                                       cdr="139"
+                                                       csp="2.82"
+                                                       lwy="0"
+                                                       cmg="235"
+                                                       decl="14"
+                                                       dev="-5"
+                                                       b2wp="230"
+                                                       vmg="-3.97"
+                                                       with-current="true"
+                                                       with-w="false"
+                                                       with-vmg="false"/>
+                                    </div>
+                                </td>
+                                <td valign="top">
+                                    <table style="text-align: left;">
+                                        <tr>
+                                            <td>
+                                                <label for="hull-type">Hull type</label>
+                                                <select id="hull-type" onchange="updateBoatShape('boat-overview-01', this.value);">
+                                                    <option value="MONO">Monohull</option>
+                                                    <option value="CATA">Catamaran</option>
+                                                    <option value="TRI">Trimaran</option>
+                                                    <option value="PLANE">Plane</option>
+                                                </select>
+                                                <br/>
+                                                <input id="with-gps" type="checkbox"
+                                                       onchange="updateWithGPS('boat-overview-01', this.checked);" checked/>With GPS
+                                                <br/>
+                                                <input id="with-wind" type="checkbox"
+                                                       onchange="updateWithWind('boat-overview-01', this.checked);" checked/>With Wind
+                                                <br/>
+                                                <input id="with-true-wind" type="checkbox"
+                                                       onchange="updateWithTrueWind('boat-overview-01', this.checked);" checked/>With True
+                                                Wind
+                                                <br/>
+                                                <input id="with-current" type="checkbox"
+                                                       onchange="updateWithCurrent('boat-overview-01', this.checked);" checked/>With Current
+                                                <br/>
+                                                <input id="with-vmg" type="checkbox"
+                                                       onchange="updateWithVMG('boat-overview-01', this.checked);"/>With VMG
+                                                <br/>
+                                                <input id="with-w" type="checkbox"
+                                                       onchange="updateWithW('boat-overview-01', this.checked);"/>With Norths
+                                                <br/>
+                                                <input id="with-labels" type="checkbox"
+                                                       onchange="updateWithLabels('boat-overview-01', this.checked);" checked/>With Labels
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div id="vmg-option" style="display: none;">
+                                                    <input type="radio" name="vmg-option"
+                                                           onchange="setVMGOption('boat-overview-01', this.value);" value="WIND" checked>
+                                                    VMG on Wind <br/>
+                                                    <input type="radio" name="vmg-option"
+                                                           onchange="setVMGOption('boat-overview-01', this.value);" value="WAYPOINT"> VMG on
+                                                    Way Point
+                                                    <!--
+                                                    ,&nbsp;Bearing to Waypoint: <input type="number" id="b2wp01" min="0" max="360" step="1"
+                                                                                       placeholder="Bearing WP" value="230"
+                                                                                       style="width: 50px; text-align: right;"
+                                                                                       onchange="updateBoatContext();"/><br/>
+                                                    Optional, Way Point name: <input type="text" id="wpname01" placeholder="Name" size="8"
+                                                                                     value="WayPoint" onchange="updateBoatContext();"/>
+                                                    -->
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!-- BSP, SOG, COG, AWS, AWA, HDC -->
+                                        <!--tr>
+                                            <td>BSP:</td>
+                                            <td style="width: 500px;">
+                                                <input type="range" value="8.0" min="0" max="50" step="0.1" style="width: 90%;"
+                                                       oninput="updateBoatContext(); _bsp01.value = this.value;" id="bsp01"/>
+                                                <output name="bsp" id="_bsp01" style="color: cyan;">8.0</output>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>SOG:</td>
+                                            <td style="width: 500px;">
+                                                <input type="range" value="8.2" min="0" max="50" step="0.1" style="width: 90%;"
+                                                       oninput="updateBoatContext(); _sog01.value = this.value;" id="sog01"/>
+                                                <output name="sog" id="_sog01" style="color: cyan;">8.2</output>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>COG:</td>
+                                            <td style="width: 500px;">
+                                                <input type="range" value="215" min="0" max="360" step="1" style="width: 90%;"
+                                                       oninput="updateBoatContext(); _cog01.value = this.value;" id="cog01"/>
+                                                <output name="awa" id="_cog01" style="color: cyan;">215</output>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>AWS:</td>
+                                            <td style="width: 500px;">
+                                                <input type="range" value="15.8" min="0" max="60" step="0.1" style="width: 90%;"
+                                                       oninput="updateBoatContext(); _aws01.value = this.value;" id="aws01"/>
+                                                <output name="aws" id="_aws01" style="color: cyan;">15.8</output>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>AWA:</td>
+                                            <td style="width: 500px;">
+                                                <input type="range" value="-112" min="-180" max="180" step="1" style="width: 90%;"
+                                                       oninput="updateBoatContext(); _awa01.value = this.value;" id="awa01"/>
+                                                <output name="awa" id="_awa01" style="color: cyan;">-112</output>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span title="Compass Heading">HDC:</span></td>
+                                            <td style="width: 500px;">
+                                                <input type="range" value="222" min="0" max="360" step="1" style="width: 90%;"
+                                                       oninput="updateBoatContext(); _hdc01.value = this.value;" id="hdc01"
+                                                       title="From the compass"/>
+                                                <output name="hdc" id="_hdc01" style="color: cyan;">222</output>
+                                            </td>
+                                        </tr-->
+                                    </table>
+                                    <!-- Max leeway, Decl, dev -->
+                                    <table style="text-align: left;">
+                                        <!--tr>
+                                            <th style="border: 1px solid silver; border-radius: 3px;">Max Leeway</th>
+                                            <th style="border: 1px solid silver; border-radius: 3px;">D</th>
+                                            <th style="border: 1px solid silver; border-radius: 3px;">d (from dev curve)</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid silver; border-radius: 3px; text-align: center;"><input
+                                                    type="number" id="mlwy01" min="0" step="0.1" placeholder="Max Leeway" value="10.0"
+                                                    style="width: 50px; text-align: right;" onchange="updateBoatContext();"/></td>
+                                            <td style="border: 1px solid silver; border-radius: 3px;">
+                                                <select id="Decl-sign-01" onchange="updateBoatContext();">
+                                                    <option value="E" selected>E</option>
+                                                    <option value="W">W</option>
+                                                </select>
+                                                <input type="number" id="Decl-deg-01" min="0" step="1" title="degrees"
+                                                       placeholder="D degree" value="14" style="width: 50px; text-align: right;"
+                                                       onchange="updateBoatContext();"/>&deg;
+                                                <input type="number" id="Decl-min-01" min="0" max="59" step="0.1" title="minutes"
+                                                       placeholder="D min" value="0.0" style="width: 50px; text-align: right;"
+                                                       onchange="updateBoatContext();"/>'
+                                            </td>
+                                            <td style="border: 1px solid silver; border-radius: 3px;">
+                                                <select id="dev-sign-01" onchange="updateBoatContext();">
+                                                    <option value="E">E</option>
+                                                    <option value="W" selected>W</option>
+                                                </select>
+                                                <input type="number" id="dev-deg-01" min="0" step="1" title="degrees" placeholder="d degree"
+                                                       value="5" style="width: 50px; text-align: right;" onchange="updateBoatContext();"/>&deg;
+                                                <input type="number" id="dev-min-01" min="0" max="59" step="0.1" title="minutes"
+                                                       placeholder="d min" value="0" style="width: 50px; text-align: right;"
+                                                       onchange="updateBoatContext();"/>'
+                                            </td>
+                                        </tr-->
+                                        <tr>
+                                            <td colspan="3" style="padding: 10px;">
+                                                <label for="zoom">Graph Zoom:</label><input style="width: 40px;" type="number"
+                                                                                            onchange="updateZoom('boat-overview-01', this.value);"
+                                                                                            id="zoom" value="1.0" min="0.1" step="0.01"
+                                                                                            placeholder="Zoom value"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" style="padding: 10px;">
+                                                Style:
+                                                <select onchange="applyClass('boat-overview-01', this.value);">
+                                                    <option value="boat-overview-01" selected>One</option>
+                                                    <option value="boat-overview-02">Two</option>
+                                                </select>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>

@@ -403,6 +403,36 @@ function onMessage(json) {
         } catch (err) {
             errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "heading");
         }
+
+        // Max leeway
+        try {
+            let maxlwy = json["Max Leeway"];
+            if (maxlwy !== undefined) {
+                events.publish(events.topicNames.MAX_LEEWAY_ANGLE, maxlwy);
+            }
+        } catch (err) {
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Max Leeway");
+        }
+
+        // Declination "W": {
+        //     "angle": 9.01692220976113
+        //   },
+        try {
+            if (json.W !== undefined && json.W.angle !== undefined) {
+                let decl = json.W.angle;
+                if (decl !== undefined) {
+                    events.publish(events.topicNames.DECL, decl);
+                }
+            } else {
+                let decl = json["Default Declination"].angle;
+                events.publish(events.topicNames.DECL, decl);
+            }
+        } catch (err) {
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Declination");
+        }
+        // WP stuff
+
+
         try {
             let twd = json.TWD.angle;
             events.publish(events.topicNames.TWD, twd);
@@ -520,9 +550,13 @@ function onMessage(json) {
         try {
             let to_wp = json["To Waypoint"];
             let b2wp = json["Bearing to WP"].angle;
+            let d2wp = json["Distance to WP"].distance;
+            let vmg2wp = json["VMG to Waypoint"]
             events.publish(events.topicNames.TO_WP, {
                 'to_wp': to_wp,
-                'b2wp': b2wp
+                'b2wp': b2wp,
+                'd2wp': d2wp,
+                'vmg2wp': vmg2wp
             });
         } catch (err) {
 //		  console.log(err); // Absorb?

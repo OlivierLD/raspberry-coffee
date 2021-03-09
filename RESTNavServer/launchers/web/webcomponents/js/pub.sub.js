@@ -32,6 +32,7 @@ let events = {
 		COG: 'cog',
 		SOG: 'sog',
 		CMG: 'cmg',
+		MAX_LEEWAY_ANGLE: 'max-leeway',
 		LEEWAY_ANGLE: 'leeway',
 		DAMP_CSP_PREFIX: 'csp-',
 		DAMP_CDR_PREFIX: 'cdr-',
