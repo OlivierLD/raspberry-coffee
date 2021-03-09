@@ -37,6 +37,7 @@
     <script type="module" src="./MoonPhase.js"></script>
     <script type="module" src="./ScrollDigit.js"></script>
     <script type="module" src="./BoatOverview.js"></script>
+    <script type="module" src="./JumboDisplay.js"></script>
 
     <!-- Scripts -->
     <script type="text/javascript" src="js/date.proto.js"></script>
@@ -349,9 +350,11 @@
         });
         events.subscribe(events.topicNames.BSP, (val) => {
             document.getElementById('boat-overview-01').bsp = val;
+            setData('jumbo-bsp', val);
         });
         events.subscribe(events.topicNames.TWS, (val) => {
             document.getElementById('boat-overview-01').tws = val;
+            setData('jumbo-tws', val);
         });
         events.subscribe(events.topicNames.TWA, (val) => {
             document.getElementById('boat-overview-01').twa = val;
@@ -361,6 +364,7 @@
         });
         events.subscribe(events.topicNames.AWS, (val) => {
             document.getElementById('boat-overview-01').aws = val;
+            setData('jumbo-aws', val);
         });
         events.subscribe(events.topicNames.AWA, (val) => {
             document.getElementById('boat-overview-01').awa = val;
@@ -1216,9 +1220,10 @@
                 </div>
             </div>
             <div id="row-3"
-                 style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto auto auto; padding: 10px;">
+                 style="display: grid; grid-column-start: 1; grid-template-columns: auto; padding: 10px;">
                 <!--
-                   BOAT OVERVIEW
+                   BOAT OVERVIEW & JUMBOS
+                   TODO Add Jumbos, Wind Angles, TWS Evolution, Current Evolution
                  +-->
                 <div id="boat-overview">
                     <script type="text/javascript">
@@ -1363,203 +1368,218 @@
                             }
                         }
                     </script>
-                    <div class="black-frame centered">
-                        <table>
-                            <tr>
-                                <td valign="top">
-                                    <div class="black-frame">
-                                        <boat-overview id="boat-overview-01"
-                                                       class="boat-overview-01"
-                                                       width="800"
-                                                       height="600"
-                                                       boat-shape="MONO"
-                                                       zoom-on-boat="1"
-                                                       cog="215"
-                                                       sog="8.2"
-                                                       bsp="8.0"
-                                                       hdg="235"
-                                                       aws="15.8"
-                                                       awa="-112"
-                                                       tws="18.05"
-                                                       twa="-139"
-                                                       twd="96"
-                                                       cdr="139"
-                                                       csp="2.82"
-                                                       lwy="0"
-                                                       cmg="235"
-                                                       decl="14"
-                                                       dev="-5"
-                                                       b2wp="230"
-                                                       vmg="-3.97"
-                                                       with-current="true"
-                                                       with-w="false"
-                                                       with-vmg="false"/>
-                                    </div>
-                                </td>
-                                <td valign="top">
-                                    <table style="text-align: left;">
-                                        <tr>
-                                            <td>
-                                                <label for="hull-type">Hull type</label>
-                                                <select id="hull-type" onchange="updateBoatShape('boat-overview-01', this.value);">
-                                                    <option value="MONO">Monohull</option>
-                                                    <option value="CATA">Catamaran</option>
-                                                    <option value="TRI">Trimaran</option>
-                                                    <option value="PLANE">Plane</option>
-                                                </select>
-                                                <br/>
-                                                <input id="with-gps" type="checkbox"
-                                                       onchange="updateWithGPS('boat-overview-01', this.checked);" checked/>With GPS
-                                                <br/>
-                                                <input id="with-wind" type="checkbox"
-                                                       onchange="updateWithWind('boat-overview-01', this.checked);" checked/>With Wind
-                                                <br/>
-                                                <input id="with-true-wind" type="checkbox"
-                                                       onchange="updateWithTrueWind('boat-overview-01', this.checked);" checked/>With True
-                                                Wind
-                                                <br/>
-                                                <input id="with-current" type="checkbox"
-                                                       onchange="updateWithCurrent('boat-overview-01', this.checked);" checked/>With Current
-                                                <br/>
-                                                <input id="with-vmg" type="checkbox"
-                                                       onchange="updateWithVMG('boat-overview-01', this.checked);"/>With VMG
-                                                <br/>
-                                                <input id="with-w" type="checkbox"
-                                                       onchange="updateWithW('boat-overview-01', this.checked);"/>With Norths
-                                                <br/>
-                                                <input id="with-labels" type="checkbox"
-                                                       onchange="updateWithLabels('boat-overview-01', this.checked);" checked/>With Labels
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div id="vmg-option" style="display: none;">
-                                                    <input type="radio" name="vmg-option"
-                                                           onchange="setVMGOption('boat-overview-01', this.value);" value="WIND" checked>
-                                                    VMG on Wind <br/>
-                                                    <input type="radio" name="vmg-option"
-                                                           onchange="setVMGOption('boat-overview-01', this.value);" value="WAYPOINT"> VMG on
-                                                    Way Point
-                                                    <!--
-                                                    ,&nbsp;Bearing to Waypoint: <input type="number" id="b2wp01" min="0" max="360" step="1"
-                                                                                       placeholder="Bearing WP" value="230"
-                                                                                       style="width: 50px; text-align: right;"
-                                                                                       onchange="updateBoatContext();"/><br/>
-                                                    Optional, Way Point name: <input type="text" id="wpname01" placeholder="Name" size="8"
-                                                                                     value="WayPoint" onchange="updateBoatContext();"/>
-                                                    -->
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <!-- BSP, SOG, COG, AWS, AWA, HDC -->
-                                        <!--tr>
-                                            <td>BSP:</td>
-                                            <td style="width: 500px;">
-                                                <input type="range" value="8.0" min="0" max="50" step="0.1" style="width: 90%;"
-                                                       oninput="updateBoatContext(); _bsp01.value = this.value;" id="bsp01"/>
-                                                <output name="bsp" id="_bsp01" style="color: cyan;">8.0</output>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>SOG:</td>
-                                            <td style="width: 500px;">
-                                                <input type="range" value="8.2" min="0" max="50" step="0.1" style="width: 90%;"
-                                                       oninput="updateBoatContext(); _sog01.value = this.value;" id="sog01"/>
-                                                <output name="sog" id="_sog01" style="color: cyan;">8.2</output>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>COG:</td>
-                                            <td style="width: 500px;">
-                                                <input type="range" value="215" min="0" max="360" step="1" style="width: 90%;"
-                                                       oninput="updateBoatContext(); _cog01.value = this.value;" id="cog01"/>
-                                                <output name="awa" id="_cog01" style="color: cyan;">215</output>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>AWS:</td>
-                                            <td style="width: 500px;">
-                                                <input type="range" value="15.8" min="0" max="60" step="0.1" style="width: 90%;"
-                                                       oninput="updateBoatContext(); _aws01.value = this.value;" id="aws01"/>
-                                                <output name="aws" id="_aws01" style="color: cyan;">15.8</output>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>AWA:</td>
-                                            <td style="width: 500px;">
-                                                <input type="range" value="-112" min="-180" max="180" step="1" style="width: 90%;"
-                                                       oninput="updateBoatContext(); _awa01.value = this.value;" id="awa01"/>
-                                                <output name="awa" id="_awa01" style="color: cyan;">-112</output>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><span title="Compass Heading">HDC:</span></td>
-                                            <td style="width: 500px;">
-                                                <input type="range" value="222" min="0" max="360" step="1" style="width: 90%;"
-                                                       oninput="updateBoatContext(); _hdc01.value = this.value;" id="hdc01"
-                                                       title="From the compass"/>
-                                                <output name="hdc" id="_hdc01" style="color: cyan;">222</output>
-                                            </td>
-                                        </tr-->
-                                    </table>
-                                    <!-- Max leeway, Decl, dev -->
-                                    <table style="text-align: left;">
-                                        <!--tr>
-                                            <th style="border: 1px solid silver; border-radius: 3px;">Max Leeway</th>
-                                            <th style="border: 1px solid silver; border-radius: 3px;">D</th>
-                                            <th style="border: 1px solid silver; border-radius: 3px;">d (from dev curve)</th>
-                                        </tr>
-                                        <tr>
-                                            <td style="border: 1px solid silver; border-radius: 3px; text-align: center;"><input
-                                                    type="number" id="mlwy01" min="0" step="0.1" placeholder="Max Leeway" value="10.0"
-                                                    style="width: 50px; text-align: right;" onchange="updateBoatContext();"/></td>
-                                            <td style="border: 1px solid silver; border-radius: 3px;">
-                                                <select id="Decl-sign-01" onchange="updateBoatContext();">
-                                                    <option value="E" selected>E</option>
-                                                    <option value="W">W</option>
-                                                </select>
-                                                <input type="number" id="Decl-deg-01" min="0" step="1" title="degrees"
-                                                       placeholder="D degree" value="14" style="width: 50px; text-align: right;"
-                                                       onchange="updateBoatContext();"/>&deg;
-                                                <input type="number" id="Decl-min-01" min="0" max="59" step="0.1" title="minutes"
-                                                       placeholder="D min" value="0.0" style="width: 50px; text-align: right;"
-                                                       onchange="updateBoatContext();"/>'
-                                            </td>
-                                            <td style="border: 1px solid silver; border-radius: 3px;">
-                                                <select id="dev-sign-01" onchange="updateBoatContext();">
-                                                    <option value="E">E</option>
-                                                    <option value="W" selected>W</option>
-                                                </select>
-                                                <input type="number" id="dev-deg-01" min="0" step="1" title="degrees" placeholder="d degree"
-                                                       value="5" style="width: 50px; text-align: right;" onchange="updateBoatContext();"/>&deg;
-                                                <input type="number" id="dev-min-01" min="0" max="59" step="0.1" title="minutes"
-                                                       placeholder="d min" value="0" style="width: 50px; text-align: right;"
-                                                       onchange="updateBoatContext();"/>'
-                                            </td>
-                                        </tr-->
-                                        <tr>
-                                            <td colspan="3" style="padding: 10px;">
-                                                <label for="zoom">Graph Zoom:</label><input style="width: 40px;" type="number"
-                                                                                            onchange="updateZoom('boat-overview-01', this.value);"
-                                                                                            id="zoom" value="1.0" min="0.1" step="0.01"
-                                                                                            placeholder="Zoom value"/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="3" style="padding: 10px;">
-                                                Style:
-                                                <select onchange="applyClass('boat-overview-01', this.value);">
-                                                    <option value="boat-overview-01" selected>One</option>
-                                                    <option value="boat-overview-02">Two</option>
-                                                </select>
+                    <table class="black-frame centered">
+                        <tr>
+                            <td valign="top">
+                                <div class="black-frame">
+                                    <boat-overview id="boat-overview-01"
+                                                   class="boat-overview-01"
+                                                   width="800"
+                                                   height="600"
+                                                   boat-shape="MONO"
+                                                   zoom-on-boat="1"
+                                                   cog="215"
+                                                   sog="8.2"
+                                                   bsp="8.0"
+                                                   hdg="235"
+                                                   aws="15.8"
+                                                   awa="-112"
+                                                   tws="18.05"
+                                                   twa="-139"
+                                                   twd="96"
+                                                   cdr="139"
+                                                   csp="2.82"
+                                                   lwy="0"
+                                                   cmg="235"
+                                                   decl="14"
+                                                   dev="-5"
+                                                   b2wp="230"
+                                                   vmg="-3.97"
+                                                   with-current="true"
+                                                   with-w="false"
+                                                   with-vmg="false"/>
+                                </div>
+                            </td>
+                            <td valign="top">
+                                <table style="text-align: left;">
+                                    <tr>
+                                        <td>
+                                            <label for="hull-type">Hull type</label>
+                                            <select id="hull-type" onchange="updateBoatShape('boat-overview-01', this.value);">
+                                                <option value="MONO">Monohull</option>
+                                                <option value="CATA">Catamaran</option>
+                                                <option value="TRI">Trimaran</option>
+                                                <option value="PLANE">Plane</option>
+                                            </select>
+                                            <br/>
 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+                                            <table>
+                                                <tr>
+                                                    <td valign="middle" align="left">
+                                                        <label class="rocker rocker-tiny">
+                                                            <input type="checkbox" onchange="updateWithGPS('boat-overview-01', this.checked);" checked>
+                                                            <span class="switch-left">Yes</span>
+                                                            <span class="switch-right">No</span>
+                                                        </label>
+                                                    </td>
+                                                    <td valign="middle" align="left">
+                                                        With GPS
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left">
+                                                        <label class="rocker rocker-tiny">
+                                                            <input type="checkbox" onchange="updateWithWind('boat-overview-01', this.checked);" checked>
+                                                            <span class="switch-left">Yes</span>
+                                                            <span class="switch-right">No</span>
+                                                        </label>
+                                                    </td>
+                                                    <td valign="middle" align="left">
+                                                        With Wind
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left">
+                                                        <label class="rocker rocker-tiny">
+                                                            <input type="checkbox" onchange="updateWithTrueWind('boat-overview-01', this.checked);" checked>
+                                                            <span class="switch-left">Yes</span>
+                                                            <span class="switch-right">No</span>
+                                                        </label>
+                                                    </td>
+                                                    <td valign="middle" align="left">
+                                                        With True Wind
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left">
+                                                        <label class="rocker rocker-tiny">
+                                                            <input type="checkbox" onchange="updateWithCurrent('boat-overview-01', this.checked);" checked>
+                                                            <span class="switch-left">Yes</span>
+                                                            <span class="switch-right">No</span>
+                                                        </label>
+                                                    </td>
+                                                    <td valign="middle" align="left">
+                                                        With Current
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left">
+                                                        <label class="rocker rocker-tiny">
+                                                            <input type="checkbox" onchange="updateWithVMG('boat-overview-01', this.checked);">
+                                                            <span class="switch-left">Yes</span>
+                                                            <span class="switch-right">No</span>
+                                                        </label>
+                                                    </td>
+                                                    <td valign="middle" align="left">
+                                                        With VMGs
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left">
+                                                        <label class="rocker rocker-tiny">
+                                                            <input type="checkbox" onchange="updateWithW('boat-overview-01', this.checked);">
+                                                            <span class="switch-left">Yes</span>
+                                                            <span class="switch-right">No</span>
+                                                        </label>
+                                                    </td>
+                                                    <td valign="middle" align="left">
+                                                        With Norths
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="middle" align="left">
+                                                        <label class="rocker rocker-tiny">
+                                                            <input type="checkbox" onchange="updateWithLabels('boat-overview-01', this.checked);" checked>
+                                                            <span class="switch-left">Yes</span>
+                                                            <span class="switch-right">No</span>
+                                                        </label>
+                                                    </td>
+                                                    <td valign="middle" align="left">
+                                                        With Labels
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div id="vmg-option" style="display: none;">
+                                                <input type="radio" name="vmg-option"
+                                                       onchange="setVMGOption('boat-overview-01', this.value);" value="WIND" checked>
+                                                VMG on Wind <br/>
+                                                <input type="radio" name="vmg-option"
+                                                       onchange="setVMGOption('boat-overview-01', this.value);" value="WAYPOINT"> VMG on
+                                                Way Point
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table style="text-align: left;">
+                                    <tr>
+                                        <td style="padding: 10px;">
+                                            <label for="zoom">Graph Zoom:&nbsp;</label><input style="width: 40px;" type="number"
+                                                                                        onchange="updateZoom('boat-overview-01', this.value);"
+                                                                                        id="zoom" value="1.0" min="0.1" step="0.01"
+                                                                                        placeholder="Zoom value"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px;">
+                                            Style:&nbsp;
+                                            <select onchange="applyClass('boat-overview-01', this.value);">
+                                                <option value="boat-overview-01" selected>One</option>
+                                                <option value="boat-overview-02">Two</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td valign="top">
+                                <!-- TODO Add Jumbos -->
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <jumbo-display id="jumbo-bsp"
+                                                           class="jumbo-01 digital-font-green"
+                                                           value="00.00"
+                                                           label="BSP"
+                                                           width="180"
+                                                           height="80"></jumbo-display>
+                                        </td>
+                                        <td>
+                                            <jumbo-display id="jumbo-aws"
+                                                           class="jumbo-01 digital-font-green"
+                                                           value="00.00"
+                                                           label="AWS"
+                                                           width="180"
+                                                           height="80"></jumbo-display>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <jumbo-display id="jumbo-tws"
+                                                           class="jumbo-01 digital-font-orange"
+                                                           value="00.00"
+                                                           label="TWS"
+                                                           width="180"
+                                                           height="80"></jumbo-display>
+                                        </td>
+                                        <td>
+                                            <!--jumbo-display id="jumbo-aws"
+                                                           class="jumbo-01"
+                                                           value="00.00"
+                                                           label="AWS"
+                                                           width="180"
+                                                           height="80"></jumbo-display-->
+                                        </td>
+                                    </tr>
+                                </table>
+<!--                                    <div class="black-frame centered">-->
+<!--                                    </div>-->
+
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>

@@ -124,7 +124,7 @@
 	--display-color: cyan;
 	--value-nb-decimal: 2;
 	--label-font: 'Courier New';
-	--value-font: Arial;
+	--value-font: 'Courier New'; /*Arial;*/
 }
 
 .jumbo-02 {

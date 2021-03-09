@@ -1553,7 +1553,7 @@ class BoatOverview extends HTMLElement {
 			if (this._vmgOnWind) {
 				mess += "on wind";
 			} else {
-				mess += ("on WP [" + this._wpName + "]");
+				mess += ("on WP \"" + this._wpName.trim() + "\"");
 			}
 			context.fillStyle = this.boatOverviewColorConfig.vmgDataDisplayColor;
 			txtY += space;
