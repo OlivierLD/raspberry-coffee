@@ -354,10 +354,20 @@
         });
         events.subscribe(events.topicNames.TWS, (val) => {
             document.getElementById('boat-overview-01').tws = val;
-            setData('jumbo-tws', val);
+            //--- setData('jumbo-tws', val);
+            // TW Display
+            let analogTW = document.getElementById('tw-01');
+            let currentValue = analogTW.value; // { wa: 0, ws: 0 }
+            currentValue.ws = val;
+            analogTW.value = JSON.stringify(currentValue);
         });
         events.subscribe(events.topicNames.TWA, (val) => {
             document.getElementById('boat-overview-01').twa = val;
+            // TW Display
+            let analogTW = document.getElementById('tw-01');
+            let currentValue = analogTW.value; // { wa: 0, ws: 0 }
+            currentValue.wa = val;
+            analogTW.value = JSON.stringify(currentValue);
         });
         events.subscribe(events.topicNames.TWD, (val) => {
             document.getElementById('boat-overview-01').twd = val;
@@ -365,9 +375,18 @@
         events.subscribe(events.topicNames.AWS, (val) => {
             document.getElementById('boat-overview-01').aws = val;
             setData('jumbo-aws', val);
+            let analogAW = document.getElementById('aw-01');
+            let currentValue = analogAW.value; // { wa: 0, ws: 0 }
+            currentValue.ws = val;
+            analogAW.value = JSON.stringify(currentValue);
         });
         events.subscribe(events.topicNames.AWA, (val) => {
             document.getElementById('boat-overview-01').awa = val;
+            // AW Display
+            let analogAW = document.getElementById('aw-01');
+            let currentValue = analogAW.value; // { wa: 0, ws: 0 }
+            currentValue.wa = val;
+            analogAW.value = JSON.stringify(currentValue);
             // Leeway
             let lwy = NavigationHelper.leewayEvaluator(val, maxLeeway);
             document.getElementById('boat-overview-01').lwy = lwy;
@@ -1539,7 +1558,7 @@
                                                            height="80"></jumbo-display>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <!--tr>
                                         <td>
                                             <jumbo-display id="jumbo-tws"
                                                            class="jumbo-01 digital-font-orange"
@@ -1549,12 +1568,38 @@
                                                            height="80"></jumbo-display>
                                         </td>
                                         <td>
-                                            <!--jumbo-display id="jumbo-aws"
-                                                           class="jumbo-01"
-                                                           value="00.00"
-                                                           label="AWS"
-                                                           width="180"
-                                                           height="80"></jumbo-display-->
+                                        </td>
+                                    </tr-->
+                                    <tr>
+                                        <td>
+                                            <wind-angle-display class="analogdisplay-day"
+                                                                title="Apparent Wind Speed in Knots"
+                                                                id="aw-01"
+                                                                value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
+                                                                major-ticks="30"
+                                                                minor-ticks="5"
+                                                                with-border="true"
+                                                                with-digits="true"
+                                                                label="Apparent"
+                                                                hand="wind"
+                                                                width="200"
+                                                                height="200"></wind-angle-display>
+
+                                        </td>
+                                        <td>
+                                            <wind-angle-display class="analogdisplay-day"
+                                                                title="True Wind Speed in Knots"
+                                                                id="tw-01"
+                                                                value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
+                                                                major-ticks="30"
+                                                                minor-ticks="5"
+                                                                with-border="true"
+                                                                with-digits="true"
+                                                                label="True"
+                                                                hand="wind"
+                                                                width="200"
+                                                                height="200"></wind-angle-display>
+
                                         </td>
                                     </tr>
                                 </table>

@@ -907,7 +907,7 @@ function setTheme(className) {
 function applyClass(id, className) {
 	let widget = document.getElementById(id);
 	if (widget !== null) {
-		console.log(`Setting class ${className} to ${id}`);
+		// console.log(`Setting class ${className} to ${id}`);
 		widget.className = className;
 		widget.repaint();
 	} else {
