@@ -68,8 +68,8 @@ This is built just like the other examples in this module, just run
 
 ### A first prototype
 
-| Pressure (BME280) | Position (GPS) | Side view |
-|:--:|:--:|:--:|
+| Pressure (BME280) | Position (GPS) | Side view |  
+|:--:|:--:|:--:|  
 | ![PRMSL](./docimg/06.jpg) | ![POS](./docimg/07.jpg) | ![All the layers](./docimg/08.jpg) |
 | Position                  | Position                | The 2 layers, apart |
 | ![PRMSL](./docimg/09.jpg) | ![POS](./docimg/10.jpg) | ![apart](./docimg/apart.jpg) |
