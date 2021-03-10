@@ -63,6 +63,9 @@ This is built just like the other examples in this module, just run
  $ ./builder.sh
  ```
  and follow the instructions in the console.
+ 
+> _Note_:  
+> This will copy resources from another module (RESTNavServer) 
 
 ---
 

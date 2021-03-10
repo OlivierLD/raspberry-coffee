@@ -9,6 +9,7 @@ echo -e "| This is an example showing how to generate a 'production' version, wi
 echo -e "| just what is needed to run the NMEA Multiplexer - in several configurations - and its web clients. |"
 echo -e "+----------------------------------------------------------------------------------------------------+"
 echo -e "| Now starting a fresh build...                                                                      |"
+echo -e "| Look into the script if you need proxy settings...                                                 |"
 echo -e "| Make sure the java version is compatible with your target                                          |"
 java -version
 echo -e "+----------------------------------------------------------------------------------------------------+"

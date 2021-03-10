@@ -5,7 +5,8 @@
 cp -R ../../RESTNavServer/launchers/web .
 # TODO Other folders (xsl, ub, libs) ?
 cd web
-zip -r ../web.zip * -x 2019/**\*
+# web.zip is the default value for property "web.archive"
+zip -r ../web.zip * -x 20??/**\*
 cd ..
 rm -rf web
 #

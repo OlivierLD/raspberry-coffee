@@ -101,6 +101,9 @@ echo -e "JAVA_OPTIONS in to.mux.sh: $JAVA_OPTIONS"
 . ./mux.sh ${PROP_FILE} &
 #
 echo On its way!
+#
+# Using default properties web.archive (web.zip) and static.zip.docs (/zip/)
+#
 MY_IP=$(hostname -I | awk '{ print $1 }')
 echo "Reach http://${MY_IP}:9999/zip/index.html"
 echo "  or  http://${MY_IP}:9999/zip/small-screens/small.console.02.html"
