@@ -414,12 +414,12 @@ function onMessage(json) {
             errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Max Leeway");
         }
 
-        // Declination "W": {
+        // Declination "D": {
         //     "angle": 9.01692220976113
         //   },
         try {
-            if (json.W !== undefined && json.W.angle !== undefined) {
-                let decl = json.W.angle;
+            if (json.D !== undefined && json.D.angle !== undefined) {
+                let decl = json.D.angle;
                 if (decl !== undefined) {
                     events.publish(events.topicNames.DECL, decl);
                 }

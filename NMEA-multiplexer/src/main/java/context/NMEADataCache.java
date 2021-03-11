@@ -663,6 +663,8 @@ public class NMEADataCache
 							if (!"true".equals(System.getProperty("rmc.decl.only"))) {
 								System.out.printf("HDG: Decl in cache => %f %n", dec);
 								this.put(DECLINATION, new Angle180EW(dec));
+							} else {
+								System.out.printf("HDG: NOT in the cache: %f %n", dec);
 							}
 							this.put(HDG_COMPASS, new Angle360(heading /* - dec */));
 						}
