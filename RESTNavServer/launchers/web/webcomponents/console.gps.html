@@ -1255,6 +1255,17 @@
                         function updateWithGPS(id, checked) {
                             let elem = document.getElementById(id);
                             elem.withGPS = checked;
+                            document.getElementById("vmg-rocker").disabled = !checked;
+                            document.getElementById("current-rocker").disabled = !checked;
+                            if (!checked) {
+                                // Add class
+                                document.getElementById("vmg-rocker-label").classList.add('rocker-disabled');
+                                document.getElementById("current-rocker-label").classList.add('rocker-disabled');
+                            } else {
+                                // Remove class
+                                document.getElementById("vmg-rocker-label").classList.remove('rocker-disabled');
+                                document.getElementById("current-rocker-label").classList.remove('rocker-disabled');
+                            }                            
                         }
 
                         function updateWithCurrent(id, checked) {
@@ -1427,7 +1438,7 @@
                                             <table>
                                                 <tr>
                                                     <td valign="middle" align="left">
-                                                        <label class="rocker rocker-tiny">
+                                                        <label class="rocker rocker-tiny" title="Display GPS Data&#13;COG &amp; SOG">
                                                             <input type="checkbox" onchange="updateWithGPS('boat-overview-01', this.checked);" checked>
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
@@ -1439,7 +1450,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td valign="middle" align="left">
-                                                        <label class="rocker rocker-tiny">
+                                                        <label class="rocker rocker-tiny" title="Display Wind&#13;Apparent and true">
                                                             <input type="checkbox" onchange="updateWithWind('boat-overview-01', this.checked);" checked>
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
@@ -1451,7 +1462,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td valign="middle" align="left">
-                                                        <label class="rocker rocker-tiny" id="tw-rocker-label">
+                                                        <label class="rocker rocker-tiny" id="tw-rocker-label" title="Show/Hide True Wind">
                                                             <input type="checkbox" id="tw-rocker" onchange="updateWithTrueWind('boat-overview-01', this.checked);" checked>
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
@@ -1463,8 +1474,8 @@
                                                 </tr>
                                                 <tr>
                                                     <td valign="middle" align="left">
-                                                        <label class="rocker rocker-tiny">
-                                                            <input type="checkbox" onchange="updateWithCurrent('boat-overview-01', this.checked);" checked>
+                                                        <label class="rocker rocker-tiny" id="current-rocker-label" title="Display Current&#13;Speed and Direction">
+                                                            <input type="checkbox" id="current-rocker" onchange="updateWithCurrent('boat-overview-01', this.checked);" checked>
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
                                                         </label>
@@ -1475,8 +1486,8 @@
                                                 </tr>
                                                 <tr>
                                                     <td valign="middle" align="left">
-                                                        <label class="rocker rocker-tiny">
-                                                            <input type="checkbox" onchange="updateWithVMG('boat-overview-01', this.checked);">
+                                                        <label class="rocker rocker-tiny" id="vmg-rocker-label" title="VMGs&#13;On wind or waypoint">
+                                                            <input type="checkbox" id="vmg-rocker" onchange="updateWithVMG('boat-overview-01', this.checked);">
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
                                                         </label>
@@ -1487,7 +1498,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td valign="middle" align="left">
-                                                        <label class="rocker rocker-tiny">
+                                                        <label class="rocker rocker-tiny" title="Display Norths&#13;True, magnetic, compass">
                                                             <input type="checkbox" onchange="updateWithW('boat-overview-01', this.checked);">
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
@@ -1499,7 +1510,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td valign="middle" align="left">
-                                                        <label class="rocker rocker-tiny">
+                                                        <label class="rocker rocker-tiny" title="With labels on the graph">
                                                             <input type="checkbox" onchange="updateWithLabels('boat-overview-01', this.checked);">
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
