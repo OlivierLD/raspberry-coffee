@@ -217,7 +217,7 @@ function setRawNMEA(sentence) {
 
 	let content = '<pre>';
 	storedHistory.forEach(str => {
-		content += (str + '\n');
+		content += (str.trim() + '\n');
 	});
 	content += '</pre>';
 
