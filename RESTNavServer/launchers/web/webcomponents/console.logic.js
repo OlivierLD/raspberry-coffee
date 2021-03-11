@@ -230,6 +230,29 @@ function setRawNMEA(sentence) {
 
 }
 
+let storedEvents = [];
+
+function setRawEvents(sentence) {
+	storedEvents.push(sentence);
+	while (storedEvents.length > 50) {
+		storedEvents.shift();
+	}
+
+	let content = '<pre>';
+	storedEvents.forEach(str => {
+		content += (str + '\n');
+	});
+	content += '</pre>';
+
+	let events = document.getElementById('event-content');
+	events.innerHTML = content;
+	events.scrollTop = events.scrollHeight; // See last line
+
+	// $("#raw-data").html(content);
+	// $("#raw-data").scrollTop($("#raw-data")[0].scrollHeight);
+
+}
+
 function setBorder(cb, id) {
 	document.getElementById(id).withBorder = cb.checked;
 }

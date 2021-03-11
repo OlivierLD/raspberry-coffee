@@ -56,7 +56,12 @@ let events = {
 		});
 	},
 
+	commonPublish: function(topic, value) {
+		// Empty by default
+	},
+
 	publish: function(topic, value) {
+		this.commonPublish(topic, value);
 		this.listener.forEach((lsnr, idx) => {
 			if (lsnr.topic === topic) {
 				try {

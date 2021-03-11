@@ -233,6 +233,12 @@
          *
          * Event's definition (topic's name) is in ajax.manager.js, method onMessage
          */
+        events.commonPublish = (topic, value) => {
+            let line = `Event [${topic}] => ${typeof(value) === 'object' ? JSON.stringify(value) : value}`;
+            setRawEvents(line);
+            // console.log(line);
+        };
+
         events.subscribe(events.topicNames.AWA_OFFSET, val => { 
             AWA_OFFSET = val; // In console.logic.js
         });
@@ -1056,7 +1062,7 @@
     <button class="tablinks" onclick="openTab(event, 1);">Raw Data</button>
     <button class="tablinks" onclick="openTab(event, 2);">Visible Sky</button>
     <button class="tablinks" onclick="openTab(event, 3);">Sun Path</button>
-    <button class="tablinks" onclick="openTab(event, 4);">Raw NMEA</button>
+    <button class="tablinks" onclick="openTab(event, 4);">Raw NMEA/Events</button>
     <div class="mess">Garanteed 0% external libraries.</div>
 </div>
 
@@ -2023,14 +2029,26 @@
     <div id="raw-gps-data"
          style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
         <div style="display: grid; grid-column-start: 2; grid-template-columns: auto; justify-items: start; align-items: start; padding: 10px;">
+
+            NMEA
             <div id="nmea-content"
-                 style="font-family: Courier; font-weight: bold; text-align: left; overflow-y: auto; min-height: 300px; height: 300px; width: 100%; border: 1px solid silver; border-radius: 5px; padding: 10px; background-color: black; color: green;">
+                style="font-family: Courier; font-weight: bold; text-align: left; overflow-y: auto; min-height: 300px; height: 300px; width: 100%; border: 1px solid silver; border-radius: 5px; padding: 10px; background-color: black; color: green;">
                 <!--
                     RAW GPS DATA
                 +-->
                 None
 
             </div>
+            Events
+            <div id="event-content"
+                style="font-family: Courier; font-weight: bold; text-align: left; overflow-y: auto; min-height: 300px; height: 300px; width: 100%; border: 1px solid silver; border-radius: 5px; padding: 10px; background-color: black; color: green;">
+                <!--
+                    RAW EVENTS DATA
+                +-->
+                None
+
+            </div>
+
         </div>
     </div>
 </div> <!-- End of Tab 5 -->
