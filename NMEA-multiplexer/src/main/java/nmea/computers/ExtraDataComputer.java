@@ -5,31 +5,10 @@ import context.NMEADataCache;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAParser;
 import nmea.computers.current.LongTimeCurrentCalculator;
-import nmea.parser.Angle180;
-import nmea.parser.Angle180EW;
-import nmea.parser.Angle360;
-import nmea.parser.ApparentWind;
-import nmea.parser.HDG;
-import nmea.parser.OverGround;
-import nmea.parser.RMC;
-import nmea.parser.SolarDate;
-import nmea.parser.Speed;
-import nmea.parser.StringGenerator;
-import nmea.parser.StringParsers;
-import nmea.parser.TrueWindSpeed;
-import nmea.parser.UTCDate;
-import nmea.parser.UTCTime;
-import nmea.parser.VHW;
-import nmea.parser.Wind;
+import nmea.parser.*;
 import nmea.utils.NMEAUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -193,7 +172,9 @@ public class ExtraDataComputer extends Computer {
 							} else {
 								dec = var;
 							}
-							cache.put(NMEADataCache.DECLINATION, new Angle180EW(dec));
+							if (!"true".equals(System.getProperty("rmc.decl.only"))) {
+								cache.put(NMEADataCache.DECLINATION, new Angle180EW(dec));
+							}
 							cache.put(NMEADataCache.HDG_COMPASS, new Angle360(hdg /* - dec */));
 						}
 						break;
