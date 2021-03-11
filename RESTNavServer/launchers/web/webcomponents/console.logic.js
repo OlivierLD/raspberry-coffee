@@ -902,6 +902,36 @@ function setTheme(className) {
 	applyClass('compass-rose-01', className);
 	applyClass('analog-watch-01', className);
 	applyClass('analog-watch-02', className);
+
+	applyClass('aw-01', className);
+	applyClass('tw-01', className);
+
+	switch (className) {
+	    case "analogdisplay-day":
+			applyClass('boat-overview-01', 'boat-overview-01'); // light
+			break;
+		case "analogdisplay-night":
+			applyClass('boat-overview-01', 'boat-overview-02'); // dark
+			break;
+	    case "analogdisplay-monochrome-black":
+			applyClass('boat-overview-01', 'boat-overview-01'); // light
+			break;
+	    case "analogdisplay-monochrome-white":
+	    case "analogdisplay-monochrome-cyan":
+	    case "analogdisplay-monochrome-orange":
+	    case "analogdisplay-monochrome-yellow":
+			applyClass('boat-overview-01', 'boat-overview-02'); // dark
+			break;
+	    case "analogdisplay-flat-gray":
+			applyClass('boat-overview-01', 'boat-overview-02'); // dark
+			break;
+	    case "analogdisplay-flat-black":
+			applyClass('boat-overview-01', 'boat-overview-02'); // dark
+			break;
+		default:
+			// ???
+			break;
+	}
 }
 
 function applyClass(id, className) {
