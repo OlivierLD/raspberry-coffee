@@ -1140,8 +1140,8 @@ class BoatOverview extends HTMLElement {
 		context.strokeStyle = this.boatOverviewColorConfig.currentArrowColor;
 		context.fillStyle   = this.boatOverviewColorConfig.currentArrowColor;
 		// An Arrow
-		// context.lineWidth = 5;
-		// line.drawWithArrowhead(context);
+	/*  context.lineWidth = 5;
+		line.drawWithArrowhead(context); */
 		// A dotted line
 		context.lineWidth = 2;
 		context.setLineDash([1, 1]);
