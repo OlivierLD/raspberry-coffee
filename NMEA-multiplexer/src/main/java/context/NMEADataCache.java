@@ -473,7 +473,7 @@ public class NMEADataCache
 								this.put(COG, new Angle360(rmc.getCog()));
 								this.put(SOG, new Speed(rmc.getSog()));
 								if (rmc.getDeclination() != -Double.MAX_VALUE) {
-									System.out.printf("RMC: Decl in cache => %f %n", rmc.getDeclination());
+//									System.out.printf("RMC: Decl in cache => %f %n", rmc.getDeclination());
 									this.put(DECLINATION, new Angle180EW(rmc.getDeclination()));
 								}
 								if (rmc.getRmcDate() != null) {
@@ -661,10 +661,10 @@ public class NMEADataCache
 								dec = var;
 							}
 							if (!"true".equals(System.getProperty("rmc.decl.only"))) {
-								System.out.printf("HDG: Decl in cache => %f %n", dec);
+//								System.out.printf("HDG: Decl in cache => %f %n", dec);
 								this.put(DECLINATION, new Angle180EW(dec));
-							} else {
-								System.out.printf("HDG: NOT in the cache: %f %n", dec);
+//							} else {
+//								System.out.printf("HDG: NOT in the cache: %f %n", dec);
 							}
 							this.put(HDG_COMPASS, new Angle360(heading /* - dec */));
 						}
