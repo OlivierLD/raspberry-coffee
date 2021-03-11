@@ -659,7 +659,9 @@ public class NMEADataCache
 							} else {
 								dec = var;
 							}
-							this.put(DECLINATION, new Angle180EW(dec));
+							if (!"true".equals(System.getProperty("rmc.decl.only"))) {
+								this.put(DECLINATION, new Angle180EW(dec));
+							}
 							this.put(HDG_COMPASS, new Angle360(heading /* - dec */));
 						}
 						break;

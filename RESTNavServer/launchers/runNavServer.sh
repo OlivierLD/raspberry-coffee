@@ -71,6 +71,10 @@ then
 fi
 #
 JAVA_OPTS=
+#
+# No Declination from HDG...
+JAVA_OPTS="${JAVA_OPTS} -Drmc.decl.only=true"
+#
 if [[ "$OS" == "Darwin" ]]
 then
   JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"       # for Mac
