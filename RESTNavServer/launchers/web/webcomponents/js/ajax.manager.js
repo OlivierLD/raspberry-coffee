@@ -416,7 +416,7 @@ function onMessage(json) {
         }
         try {
             let gdt = json["GPS Date & Time"];
-            let gpsDate = new Date(gdt.fmtDate.year, gdt.fmtDate.month - 1, gdt.fmtDate.day, gdt.fmtDate.hour, gdt.fmtDate.min, gdt.fmtDate.sec, 0);
+            let gpsDate = new Date(Date.UTC(gdt.fmtDate.year, gdt.fmtDate.month - 1, gdt.fmtDate.day, gdt.fmtDate.hour, gdt.fmtDate.min, gdt.fmtDate.sec, 0));
             // UTC dates
             events.publish(events.topicNames.GPS_DATE_TIME, gpsDate);
         } catch (err) {

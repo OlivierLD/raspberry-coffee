@@ -2818,6 +2818,7 @@ public class RESTImplementation {
 							.errorCode("MUX-0005")
 							.errorMessage("Cache not initialized!"));
 		} else {
+//			System.out.printf("Setting GPS Time in setCurrentTime: %s%n", epoch.toString());
 			cache.put(NMEADataCache.GPS_DATE_TIME, new UTCDate(new Date(epoch.epoch)));
 		}
 		return response;
