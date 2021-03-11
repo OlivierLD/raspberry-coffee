@@ -40,7 +40,11 @@ let events = {
 		VMG: 'vmg',
 		LAST_NMEA: 'nmea',
 		DECL: 'decl',
-		DEV: 'dev'
+		DEV: 'dev',
+		BSP_COEFF: 'bsp-coeff',
+		AWS_COEFF: 'aws-coeff',
+		HDG_OFFSET: 'hdg-offset',
+		AWA_OFFSET: 'awa-offset'
 	},
 
 	listener: [],

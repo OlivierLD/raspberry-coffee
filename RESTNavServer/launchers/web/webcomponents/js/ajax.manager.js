@@ -337,6 +337,39 @@ function onMessage(json) {
     try {
         let errMess = "";
 
+        // Coeffs
+        try {
+            let bspCoeff = json["BSP Factor"];
+            if (bspCoeff !== undefined) {
+                events.publish(events.topicNames.BSP_COEFF, bspCoeff);
+            }
+        } catch (err) {
+            // ABSORB
+        }
+        try {
+            let awsCoeff = json["AWS Factor"];
+            if (awsCoeff !== undefined) {
+                events.publish(events.topicNames.AWS_COEFF, awsCoeff);
+            }
+        } catch (err) {
+            // ABSORB
+        }
+        try {
+            let hdgOffset = json["HDG Offset"];
+            if (hdgOffset !== undefined) {
+                events.publish(events.topicNames.HDG_OFFSET, hdgOffset);
+            }
+        } catch (err) {
+            // ABSORB
+        }
+        try {
+            let awaOffset = json["AWA Offset"];
+            if (awaOffset !== undefined) {
+                events.publish(events.topicNames.AWA_OFFSET, awaOffset);
+            }
+        } catch (err) {
+            // ABSORB
+        }
         // Position
         try {
             let latitude = json.Position.lat;

@@ -991,15 +991,23 @@ let awa = 0;
 let tws = 0;
 let twa = 0;
 let hdg = 0;
+let bsp;
+let lwy;
+let sog;
+let cog;
 let maxLeeway = 0;
 let decl = 0;
 let log = 0;
 let dailyLog = 0;
 let gpsTime = undefined;
-
 let gpsPosition = undefined;
 let withStars = false;
 let withWanderingBodies = false;
+
+let BSP_COEFF = 1.0;
+let AWS_COEFF = 1.0;
+let HDG_OFFSET = 0.0;
+let AWA_OFFSET = 0.0;
 
 const THEMES = {
 	"day":        "analogdisplay-day",

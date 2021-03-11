@@ -233,6 +233,19 @@
          *
          * Event's definition (topic's name) is in ajax.manager.js, method onMessage
          */
+        events.subscribe(events.topicNames.AWA_OFFSET, val => { 
+            AWA_OFFSET = val; // In console.logic.js
+        });
+        events.subscribe(events.topicNames.HDG_OFFSET, val => { 
+            HDG_OFFSET = val; // In console.logic.js
+        });
+        events.subscribe(events.topicNames.BSP_COEFF, val => { 
+            BSP_COEFF = val; // In console.logic.js
+        });
+        events.subscribe(events.topicNames.AWS_COEFF, val => { 
+            AWS_COEFF = val; // In console.logic.js
+        });
+
         /* global events gpsPosition setData gpsSatelliteData */
         events.subscribe(events.topicNames.POS, (val) => {
             gpsPosition = val;
@@ -249,10 +262,18 @@
             document.getElementById('world-map-01').repaint();
         });
         events.subscribe(events.topicNames.SOG, (val) => {
+            sog = val;
             setData('bsp-01', val);
             document.getElementById('bsp-01').value2 = val * 0.514444;
             // Boat Overview
-            document.getElementById('boat-overview-01').sog = val;
+            let bo = document.getElementById('boat-overview-01');
+            bo.sog = val;
+            //  current (instant)
+            if (bsp !== undefined && hdg !== undefined && lwy !== undefined && sog !== undefined && cog !== undefined) {
+                let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
+                bo.csp = current.csp;
+                bo.cdr = current.cdr;
+            }
         });
         events.subscribe(events.topicNames.LAST_NMEA, (val) => {
             setRawNMEA(val.data);
@@ -279,11 +300,19 @@
             plotter.repaint();
         });
         events.subscribe(events.topicNames.COG, (val) => {
+            cog = val;
             setData('compass-rose-01', val);
             setData('compass-01', val);
             // setData('compass-display-01', val);
             // Boat Overview
-            document.getElementById('boat-overview-01').cog = val;
+            let bo = document.getElementById('boat-overview-01');
+            bo.cog = val;
+            //  current (instant)
+            if (bsp !== undefined && hdg !== undefined && lwy !== undefined && sog !== undefined && cog !== undefined) {
+                let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
+                bo.csp = current.csp;
+                bo.cdr = current.cdr;
+            }
         });
         events.subscribe(events.topicNames.TRUE_HDG, (val) => {
             hdg = val; // hdg, in console.logic.js
@@ -295,12 +324,18 @@
             // Boat Overview
             // console.log(`BoatOverview: setting HDG to ${val}`);
             bo.hdg = val;
-            let lwy = bo.lwy;
+            lwy = bo.lwy;
             let cmg = (val + lwy) % 360;
             while (cmg < 0) {
                 cmg += 360;
             }
             bo.cmg = cmg;
+            //  current (instant)
+            if (bsp !== undefined && hdg !== undefined && lwy !== undefined && sog !== undefined && cog !== undefined) {
+                let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
+                bo.csp = current.csp;
+                bo.cdr = current.cdr;
+            }
         });
         events.subscribe(events.topicNames.LOG, (val) => {
             log = val;
@@ -349,8 +384,16 @@
 
         });
         events.subscribe(events.topicNames.BSP, (val) => {
-            document.getElementById('boat-overview-01').bsp = val;
+            bsp = val;
             setData('jumbo-bsp', val);
+            let bo = document.getElementById('boat-overview-01');
+            bo.bsp = val;
+            //  current (instant)
+            if (bsp !== undefined && hdg !== undefined && lwy !== undefined && sog !== undefined && cog !== undefined) {
+                let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
+                bo.csp = current.csp;
+                bo.cdr = current.cdr;
+            }
         });
         events.subscribe(events.topicNames.TWS, (val) => {
             document.getElementById('boat-overview-01').tws = val;
@@ -389,8 +432,16 @@
             analogAW.value = JSON.stringify(currentValue);
             // Leeway
             let lwy = NavigationHelper.leewayEvaluator(val, maxLeeway);
-            document.getElementById('boat-overview-01').lwy = lwy;
+            let bo = document.getElementById('boat-overview-01');
+            bo.lwy = lwy;
+            //  current (instant)
+            if (bsp !== undefined && hdg !== undefined && lwy !== undefined && sog !== undefined && cog !== undefined) {
+                let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
+                bo.csp = current.csp;
+                bo.cdr = current.cdr;
+            }
         });
+        // TODO Current, instant, 30s, 1m, 10m
 
         function dataToGraph(pivotDate, declMap, lineColor, fillColor1, fillColor2) {
             if (lineColor === undefined) {
@@ -1321,10 +1372,10 @@
                             // updateBoatContext();
                         }
 
-                        const BSP_COEFF = 1;
-                        const HDG_OFFSET = 0;
-                        const AWS_COEFF = 1;
-                        const AWA_OFFSET = 0;
+                        // const BSP_COEFF = 1;
+                        // const HDG_OFFSET = 0;
+                        // const AWS_COEFF = 1;
+                        // const AWA_OFFSET = 0;
 
                         function updateBoatContext() { // Should not be used here...
                             let bsp = parseFloat(document.getElementById('bsp01').value);
@@ -1437,86 +1488,86 @@
 
                                             <table>
                                                 <tr>
-                                                    <td valign="middle" align="left">
+                                                    <td valign="middle" style="text-align: left;">
                                                         <label class="rocker rocker-tiny" title="Display GPS Data&#13;COG &amp; SOG">
                                                             <input type="checkbox" onchange="updateWithGPS('boat-overview-01', this.checked);" checked>
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
                                                         </label>
                                                     </td>
-                                                    <td valign="middle" align="left">
+                                                    <td valign="middle" style="text-align: left;">
                                                         GPS
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td valign="middle" align="left">
+                                                    <td valign="middle" style="text-align: left;">
                                                         <label class="rocker rocker-tiny" title="Display Wind&#13;Apparent and true">
                                                             <input type="checkbox" onchange="updateWithWind('boat-overview-01', this.checked);" checked>
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
                                                         </label>
                                                     </td>
-                                                    <td valign="middle" align="left">
+                                                    <td valign="middle" style="text-align: left;">
                                                         Wind
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td valign="middle" align="left">
+                                                    <td valign="middle" style="text-align: left;">
                                                         <label class="rocker rocker-tiny" id="tw-rocker-label" title="Show/Hide True Wind">
                                                             <input type="checkbox" id="tw-rocker" onchange="updateWithTrueWind('boat-overview-01', this.checked);" checked>
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
                                                         </label>
                                                     </td>
-                                                    <td valign="middle" align="left">
+                                                    <td valign="middle" style="text-align: left;">
                                                         True Wind
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td valign="middle" align="left">
-                                                        <label class="rocker rocker-tiny" id="current-rocker-label" title="Display Current&#13;Speed and Direction">
+                                                    <td valign="middle" style="text-align: left;">
+                                                        <label class="rocker rocker-tiny" id="current-rocker-label" title="Display Instant Current&#13;Speed and Direction">
                                                             <input type="checkbox" id="current-rocker" onchange="updateWithCurrent('boat-overview-01', this.checked);" checked>
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
                                                         </label>
                                                     </td>
-                                                    <td valign="middle" align="left">
+                                                    <td valign="middle" style="text-align: left;">
                                                         Current
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td valign="middle" align="left">
+                                                    <td valign="middle" style="text-align: left;">
                                                         <label class="rocker rocker-tiny" id="vmg-rocker-label" title="VMGs&#13;On wind or waypoint">
                                                             <input type="checkbox" id="vmg-rocker" onchange="updateWithVMG('boat-overview-01', this.checked);">
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
                                                         </label>
                                                     </td>
-                                                    <td valign="middle" align="left">
+                                                    <td valign="middle" style="text-align: left;">
                                                         VMGs
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td valign="middle" align="left">
+                                                    <td valign="middle" style="text-align: left;">
                                                         <label class="rocker rocker-tiny" title="Display Norths&#13;True, magnetic, compass">
                                                             <input type="checkbox" onchange="updateWithW('boat-overview-01', this.checked);">
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
                                                         </label>
                                                     </td>
-                                                    <td valign="middle" align="left">
+                                                    <td valign="middle" style="text-align: left;">
                                                         Norths
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td valign="middle" align="left">
+                                                    <td valign="middle" style="text-align: left;">
                                                         <label class="rocker rocker-tiny" title="With labels on the graph">
                                                             <input type="checkbox" onchange="updateWithLabels('boat-overview-01', this.checked);">
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
                                                         </label>
                                                     </td>
-                                                    <td valign="middle" align="left">
+                                                    <td valign="middle" style="text-align: left;">
                                                         Labels
                                                     </td>
                                                 </tr>
