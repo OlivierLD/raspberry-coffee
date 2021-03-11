@@ -1265,6 +1265,14 @@
                         function updateWithWind(id, checked) {
                             let elem = document.getElementById(id);
                             elem.withWind = checked;
+                            document.getElementById("tw-rocker").disabled = !checked;
+                            if (!checked) {
+                                // Add class
+                                document.getElementById("tw-rocker-label").classList.add('rocker-disabled');
+                            } else {
+                                // Remove class
+                                document.getElementById("tw-rocker-label").classList.remove('rocker-disabled');
+                            }
                         }
 
                         function updateWithTrueWind(id, checked) {
@@ -1426,7 +1434,7 @@
                                                         </label>
                                                     </td>
                                                     <td valign="middle" align="left">
-                                                        With GPS
+                                                        GPS
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1438,19 +1446,19 @@
                                                         </label>
                                                     </td>
                                                     <td valign="middle" align="left">
-                                                        With Wind
+                                                        Wind
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td valign="middle" align="left">
-                                                        <label class="rocker rocker-tiny">
-                                                            <input type="checkbox" onchange="updateWithTrueWind('boat-overview-01', this.checked);" checked>
+                                                        <label class="rocker rocker-tiny" id="tw-rocker-label">
+                                                            <input type="checkbox" id="tw-rocker" onchange="updateWithTrueWind('boat-overview-01', this.checked);" checked>
                                                             <span class="switch-left">Yes</span>
                                                             <span class="switch-right">No</span>
                                                         </label>
                                                     </td>
                                                     <td valign="middle" align="left">
-                                                        With True Wind
+                                                        True Wind
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1462,7 +1470,7 @@
                                                         </label>
                                                     </td>
                                                     <td valign="middle" align="left">
-                                                        With Current
+                                                        Current
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1474,7 +1482,7 @@
                                                         </label>
                                                     </td>
                                                     <td valign="middle" align="left">
-                                                        With VMGs
+                                                        VMGs
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1486,7 +1494,7 @@
                                                         </label>
                                                     </td>
                                                     <td valign="middle" align="left">
-                                                        With Norths
+                                                        Norths
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -1498,7 +1506,7 @@
                                                         </label>
                                                     </td>
                                                     <td valign="middle" align="left">
-                                                        With Labels
+                                                        Labels
                                                     </td>
                                                 </tr>
                                             </table>
@@ -1520,7 +1528,7 @@
                                 <table style="text-align: left;">
                                     <tr>
                                         <td style="padding: 10px;">
-                                            <label for="zoom">Graph Zoom:&nbsp;</label><input style="width: 40px;" type="number"
+                                            <label for="zoom">Graph Zoom:&nbsp;</label><input style="width: 50px;" type="number"
                                                                                         onchange="updateZoom('boat-overview-01', this.value);"
                                                                                         id="zoom" value="1.0" min="0.1" step="0.01"
                                                                                         placeholder="Zoom value"/>
