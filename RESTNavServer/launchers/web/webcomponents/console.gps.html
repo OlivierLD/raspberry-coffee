@@ -1062,7 +1062,7 @@
     <button class="tablinks" onclick="openTab(event, 1);">Raw Data</button>
     <button class="tablinks" onclick="openTab(event, 2);">Visible Sky</button>
     <button class="tablinks" onclick="openTab(event, 3);">Sun Path</button>
-    <button class="tablinks" onclick="openTab(event, 4);">Raw NMEA/Events</button>
+    <button class="tablinks" onclick="openTab(event, 4);" title="Raw NMEA Data&#13;and subscribed events">NMEA/Events</button>
     <div class="mess">Garanteed 0% external libraries.</div>
 </div>
 
@@ -2026,30 +2026,35 @@
 </div> <!-- End of Tab 4 -->
 
 <div id="five" style="display: none;">
-    <div id="raw-gps-data"
+    <div id="raw-data"
          style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
-        <div style="display: grid; grid-column-start: 2; grid-template-columns: auto; justify-items: start; align-items: start; padding: 10px;">
 
-            NMEA
-            <div id="nmea-content"
-                style="font-family: Courier; font-weight: bold; text-align: left; overflow-y: auto; min-height: 300px; height: 300px; width: 100%; border: 1px solid silver; border-radius: 5px; padding: 10px; background-color: black; color: green;">
-                <!--
-                    RAW GPS DATA
-                +-->
-                None
+         <div id="row-o"
+              style="display: grid; grid-column-start: 2; grid-template-columns: 50% 50%; padding: 10px;">
 
-            </div>
-            Events
-            <div id="event-content"
-                style="font-family: Courier; font-weight: bold; text-align: left; overflow-y: auto; min-height: 300px; height: 300px; width: 100%; border: 1px solid silver; border-radius: 5px; padding: 10px; background-color: black; color: green;">
-                <!--
-                    RAW EVENTS DATA
-                +-->
-                None
-
+            <div style="text-align:left; padding: 10px;">
+                NMEA
+                <div id="nmea-content"
+                    style="font-family: Courier; font-weight: bold; text-align: left; overflow-y: auto; min-height: 300px; height: 500px; width: 100%; border: 1px solid silver; border-radius: 5px; padding: 10px; background-color: black; color: green;">
+                    <!--
+                        RAW GPS DATA
+                    +-->
+                    None
+                </div>
+            </div>    
+            <div style="text-align:left; padding: 10px;">
+                Events
+                <div id="event-content"
+                    style="font-family: Courier; font-weight: bold; text-align: left; overflow-y: auto; min-height: 300px; height: 500px; width: 100%; border: 1px solid silver; border-radius: 5px; padding: 10px; background-color: black; color: green;">
+                    <!--
+                        RAW EVENTS DATA
+                    +-->
+                    None
+                </div>
             </div>
 
         </div>
+
     </div>
 </div> <!-- End of Tab 5 -->
 </body>
