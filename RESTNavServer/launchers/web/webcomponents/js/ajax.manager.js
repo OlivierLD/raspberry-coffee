@@ -415,7 +415,7 @@ function onMessage(json) {
         }
 
         // Declination "D": {
-        //     "angle": 9.01692220976113
+        //     "angle": 10.0
         //   },
         try {
             if (json.D !== undefined && json.D.angle !== undefined) {
@@ -430,9 +430,6 @@ function onMessage(json) {
         } catch (err) {
             errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Declination");
         }
-        // WP stuff
-
-
         try {
             let twd = json.TWD.angle;
             events.publish(events.topicNames.TWD, twd);

@@ -93,6 +93,8 @@ do
 	echo -e "|     - See or modify nmea.mux.2.serial.yaml for details.                                 |"
 	echo -e "| 13. AIS Tests.                                                                          |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
+	echo -e "| 20. Get Data Cache (curl)                                                               |"
+	echo -e "+------------------------------------+----------------------------------------------------+"
 	echo -e "|  S. Show NavServer process(es) ⚙️   | SP. Show proxy process(es) ⚙️                       |"
 	echo -e "|  Q. Quit ❎                        |                                                    |"
 	echo -e "+------------------------------------+----------------------------------------------------+"
@@ -307,6 +309,11 @@ do
 	    fi
 	    GO=false
 	    ;;
+	  "20")
+	    curl -X GET localhost:9999/mux/cache 
+		echo -e "\nHit [Return]"
+		read resp
+	    ;;	
 	  "S" | "s")
 	    echo -e "Nav Server processes:"
 	    ps -ef | grep navrest.NavServer | grep -v grep

@@ -1101,6 +1101,14 @@ function geoLocationStart() { // Deprecated
 }
 
 window.onload = () => {
+
+	try {
+		document.getElementById("jumbo-bsp").repaint();
+		document.getElementById("jumbo-aws").repaint();
+	} catch (err) {
+		// Abosrb
+	}
+
 	/* global initAjax */
 	initAjax(); // Default. See later for a WebSocket option. Contains the loops on REST requests
 
