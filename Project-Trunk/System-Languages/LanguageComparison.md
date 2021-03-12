@@ -280,7 +280,7 @@ or without the REPL:
 #### Go
 Sources are in [`src/main/go/system.go`](./src/main/go).
 
-To run it - after you've installed Go on your machine:
+To run it - after you've [installed Go](https://golang.org/doc/install) on your machine:
 ```
  $ cd src/main/go
  $ go run system.go
