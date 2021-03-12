@@ -290,7 +290,7 @@
             // console.log(">> GPS-Time: ", val);
             // val.format("Y-M-d H:i:s")
             let dateFromCache = new Date(val);
-            gpsTime = new Date(dateFromCache.getTime() + dateFromCache.getTimezoneOffset() * 60000);
+            gpsTime = new Date(dateFromCache.getTime() + dateFromCache.getTimezoneOffset() * 60000); // For display...
             // gpsTime = new Date(val);
             let time = gpsTime.format("H:i:s");
             setData('analog-watch-01', time);
@@ -1602,10 +1602,12 @@
                                 <table style="text-align: left;">
                                     <tr>
                                         <td style="padding: 10px;">
-                                            <label for="zoom">Graph Zoom:&nbsp;</label><input style="width: 50px;" type="number"
-                                                                                        onchange="updateZoom('boat-overview-01', this.value);"
-                                                                                        id="zoom" value="1.0" min="0.1" step="0.01"
-                                                                                        placeholder="Zoom value"/>
+                                            <label for="zoom">Graph Zoom:&nbsp;</label>
+                                            <input style="height: 24px; width: 75px; font-family: 'Courier New', Courier, monospace; font-size: 20px; font-weight: bold;" 
+                                                   type="number"
+                                                   onchange="updateZoom('boat-overview-01', this.value);"
+                                                   id="zoom" value="1.0" min="0.1" step="0.01"
+                                                   placeholder="Zoom value"/>
                                         </td>
                                     </tr>
                                     <!--tr>
