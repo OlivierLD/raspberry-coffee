@@ -1,11 +1,12 @@
 # Get Started, quick
+From a new folder:
 ```
 $ mkdir greetings
 $ cd greetings
 $ go mod init oliv.tuto/greetings
 go: creating new go.mod: module oliv.tuto/greetings
 ```
-Then, in `greetings`, create a, `english.go`:
+Then, in `greetings`, create an `english.go`:
 ```go
 package greetings
 
