@@ -234,7 +234,9 @@
          * Event's definition (topic's name) is in ajax.manager.js, method onMessage
          */
         events.commonPublish = (topic, value) => {
-            let line = `Event [${topic}] => ${typeof(value) === 'object' ? JSON.stringify(value) : value}`;
+            // console.log(`${topic} Type ${typeof(value)}`);
+            // Warning: Dates the JSON.stringify can screw up UTC dates...
+            let line = `Event [${topic}] => ${typeof(value) === 'object' ? ((value instanceof Date) ? value.toISOString() : JSON.stringify(value)) : value}`;
             setRawEvents(line);
             // console.log(line);
         };
@@ -287,13 +289,17 @@
         events.subscribe(events.topicNames.GPS_DATE_TIME, (val) => {
             // console.log(">> GPS-Time: ", val);
             // val.format("Y-M-d H:i:s")
-            gpsTime = new Date(val);
+            let dateFromCache = new Date(val);
+            gpsTime = new Date(dateFromCache.getTime() + dateFromCache.getTimezoneOffset() * 60000);
+            // gpsTime = new Date(val);
             let time = gpsTime.format("H:i:s");
             setData('analog-watch-01', time);
-            let date = new Date(val).format("d-m-Y-l");
+            // let date = new Date(val).format("d-m-Y-l");
+            let date = gpsTime.format("d-m-Y-l");
             setData('calendar-01', date);
             if (gpsPosition !== undefined) {
-                let gpsDate = new Date(val);
+                // let gpsDate = new Date(val);
+                let gpsDate = gpsTime;
                 /* global getAstroData DURATION_FMT withWanderingBodies withStars astroCallback */
                 getAstroData(gpsDate.format(DURATION_FMT), gpsPosition, withWanderingBodies, withStars, astroCallback);
             }
