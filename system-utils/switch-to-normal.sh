@@ -1,3 +1,4 @@
+#!/bin/bash
 cp /etc/network/interfaces.backup /etc/network/interfaces
 ifdown --force wlan0
 ifup wlan0

@@ -55,7 +55,7 @@ public class RealPWMServo {
 		try {
 			gpio = GpioFactory.getInstance();
 		} catch (Throwable t) {
-			System.err.println("This work only on a Raspberry Pi...");
+			System.err.println("This works only on a Raspberry Pi...");
 			System.exit(1);
 		}
 

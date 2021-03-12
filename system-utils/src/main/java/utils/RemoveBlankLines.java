@@ -3,8 +3,8 @@ package utils;
 import java.io.*;
 
 public class RemoveBlankLines {
-  public static void main(String... args) throws FileNotFoundException, IOException
-  {
+  public static void main(String... args)
+          throws FileNotFoundException, IOException {
     if (args.length != 1) {
       System.out.println("Yo!"); // Argh!
     } else {

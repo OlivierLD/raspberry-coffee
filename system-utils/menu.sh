@@ -1,7 +1,6 @@
 #!/bin/bash
-function nocase()
-{
-  if [ "`echo $1 | tr [:lower:] [:upper:]`" = "`echo $2 | tr [:lower:] [:upper:]`" ]
+function nocase() {
+  if [[ "`echo $1 | tr [:lower:] [:upper:]`" = "`echo $2 | tr [:lower:] [:upper:]`" ]]
   then
     return 0  # true
   else
@@ -9,7 +8,7 @@ function nocase()
   fi
 }
 exit=FALSE
-while [ "$exit" = "FALSE" ]
+while [[ "$exit" = "FALSE" ]]
 do
   clear
   echo -------------------------------
@@ -24,7 +23,7 @@ do
   read opt
   if nocase "$opt" "S"
   then
-    ./network.status
+    ./network.status.sh
     echo -n Hit [return]
     read a
   elif nocase "$opt" "I"
@@ -36,7 +35,7 @@ do
     sudo ./switch
   elif nocase "$opt" "N"
   then
-    sudo ./change.network.name
+    sudo ./change.network.name.sh
   elif nocase "$opt" "Q"
   then
     exit=TRUE

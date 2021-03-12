@@ -12,7 +12,7 @@ public class StrTests {
 		payload = "Akeu | Coucou | Ta mere";
 		String[] sa = payload.split("\\|");
 		for (String s : sa) {
-			System.out.println(s);
+			System.out.println(s.trim());
 		}
 	}
 }
