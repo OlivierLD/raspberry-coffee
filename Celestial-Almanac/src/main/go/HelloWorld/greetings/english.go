@@ -1,4 +1,4 @@
-package celest
+package greetings
 
 import "fmt"
 
