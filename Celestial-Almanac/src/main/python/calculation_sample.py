@@ -98,3 +98,4 @@ fmtLDist = lta.outHA(lta.LDist)
 print("Lunar Distance: {}".format(fmtLDist))
 
 print("Day of Week: {}".format(lta.DoW))
+print("Done with Python!")

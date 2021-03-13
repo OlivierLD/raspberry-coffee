@@ -71,5 +71,5 @@ int main () {
   fprintf(stdout, "Lunar Distance %s\n", outHA(data->LDist, gha));
   fprintf(stdout, "Day of Week %s\n", data->DoW);
   fprintf(stdout, "---------------------------------------\n");
-  std::cout << "Done!\n";
+  std::cout << "Done with C!\n";
 }

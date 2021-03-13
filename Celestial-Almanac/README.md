@@ -63,6 +63,7 @@ Polaris data:	Decl.: 89°21.04'N, GHA:   35°17.04', RA: 02h 55m 26.30s
 Equation of time: - 04m 52.8s
 Lunar Distance:  47°10.03'
 Day of Week: SAT
+Done with Java!
 $
 ```
 
@@ -86,6 +87,7 @@ $ ./calculation_sample.py
   Equation of time - 4m 52.8s 
   Lunar Distance: 047° 10' 03"
   Day of Week: SAT
+  Done with Python!
 $
 ```
 
@@ -114,7 +116,7 @@ Ecliptic obliquity 23° 26' 11.973000", true 23° 26' 12.013000"
 Lunar Distance 47° 10' 3"
 Day of Week SAT
 ---------------------------------------
-Done!
+Done with C!
 $
 ```
 #### From Golang
@@ -157,7 +159,7 @@ Ecliptic obliquity 23° 26' 11.973000", true 23° 26' 12.013000"
 Lunar Distance 47° 10' 4"
 Day of Week SAT
 ---------------------------------------
-Done!
+Done with Golang!
 $
 ```
 
@@ -192,7 +194,7 @@ Ecliptic obliquity 23° 26' 11.973000", true 23° 26' 12.013000"
 Lunar Distance 47° 10' 3"
 Day of Week SAT
 ---------------------------------------
-Done!
+Done with C!
 
 real	0m0.019s
 user	0m0.016s
@@ -212,6 +214,7 @@ Polaris data:	Decl.: 89°21.04'N, GHA:   35°17.04', RA: 02h 55m 26.30s
 Equation of time: - 04m 52.8s
 Lunar Distance:  47°10.03'
 Day of Week: SAT
+Done with Java!
 
 real	0m0.375s
 user	0m0.368s
@@ -234,6 +237,7 @@ Ecliptic: obliquity 23° 26' 11.973", true 23° 26' 12.013"
 Equation of time - 4m 52.8s 
 Lunar Distance: 047° 10' 03"
 Day of Week: SAT
+Done with Python!
 
 real	0m0.678s
 user	0m0.660s
@@ -259,7 +263,7 @@ $ time src/main/go/Celest/main/main
   Lunar Distance 47° 10' 4"
   Day of Week SAT
   ---------------------------------------
-  Done!
+  Done with Golang!
   
   real	0m0.199s
   user	0m0.005s

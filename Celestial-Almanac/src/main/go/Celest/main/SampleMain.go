@@ -78,6 +78,6 @@ func main() {
   fmt.Printf("Lunar Distance %s\n", astro.OutHA(result.LDist))
   fmt.Printf("Day of Week %s\n", result.DoW)
   fmt.Println("---------------------------------------")
-  fmt.Println("Done!")
+  fmt.Println("Done with Golang!")
 
 }

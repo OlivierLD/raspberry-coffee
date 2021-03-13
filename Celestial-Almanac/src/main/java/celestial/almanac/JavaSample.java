@@ -146,5 +146,7 @@ public class JavaSample {
 		System.out.println(String.format("Equation of time: %s", renderEoT(AstroComputer.getEoT())));
 		System.out.println(String.format("Lunar Distance: %s", lpad(GeomUtil.decToSex(AstroComputer.getLDist(), GeomUtil.SWING, GeomUtil.NONE), 10, " ")));
 		System.out.println(String.format("Day of Week: %s", AstroComputer.getWeekDay()));
+
+		System.out.println("Done with Java!");
 	}
 }
