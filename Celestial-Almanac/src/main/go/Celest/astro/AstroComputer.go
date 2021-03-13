@@ -3,6 +3,7 @@ package astro
 import (
   "fmt"
   "math"
+  "os"
 )
 
 var (
@@ -1236,7 +1237,7 @@ func Calculate(year int, month int, day int, hour int, minute int, second int, d
  */
 func getY(year int, month int) float64 {
 	if year < -1999 || year > 3000 {
-		fmt.Println("Year must be in [-1999, 3000]")
+		fmt.Fprintln(os.Stderr, "Year must be in [-1999, 3000]")
 		return float64(0)
 	} else {
 		// fprintf(stdout, "Returning y=%f\n", (year + ((month - 0.5) / 12.0)));
@@ -1258,10 +1259,10 @@ func getY(year int, month int) float64 {
  */
 func CalculateDeltaT(year int, month int) float64 {
 	if year < -1999 || year > 3000 {
-		fmt.Println("Year must be in [-1999, 3000]")
+		fmt.Fprintln(os.Stderr, "Year must be in [-1999, 3000]")
 	}
 	if month < 1 || month > 12 {
-		fmt.Println("Month must be in [1, 12]")
+		fmt.Fprintln(os.Stderr, "Month must be in [1, 12]")
 	}
 
 	var deltaT float64
