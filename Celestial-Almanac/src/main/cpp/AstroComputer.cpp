@@ -463,11 +463,11 @@ void calculateAries() {
 
 // Calculations for the Sun
 void calculateSun() {
-	// Mean longitude of the Sun
+	// Mean longitude of the Sun. TODO Not used?
 	double Lsun_mean = MathUtils::norm360Deg(280.4664567 + 360007.6982779 * data->Tau + 0.03032028 * data->Tau2 + data->Tau3 / 49931 - data->Tau4 / 15299 - data->Tau5 / 1988000);
 
 	// Heliocentric longitude of the Earth
-  data->Le = Earth::lEarth(data->Tau);
+    data->Le = Earth::lEarth(data->Tau);
 
 	// Geocentric longitude of the Sun
 	data->Lsun_true = MathUtils::norm360Deg(data->Le + 180 - 0.000025);
