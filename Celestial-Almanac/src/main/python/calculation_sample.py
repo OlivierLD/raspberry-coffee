@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
+import os, sys
+current_path = os.path.dirname(os.path.abspath(__file__))
+print(f"Absolute current path ${current_path}")
+sys.path.append(current_path)
+sys.path.append(current_path + "/celestial_almanac")  # This is for long_term_almanac to find its dependencies...
 
-from celestial_amlanac.long_term_almanac import LongTermAlmanac as lta
+from celestial_almanac.long_term_almanac import LongTermAlmanac as lta
 
 DELTA_T = 69.2201
 deltaT = DELTA_T
