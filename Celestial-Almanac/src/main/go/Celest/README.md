@@ -50,7 +50,7 @@ Done!
 $ 
 ```
 
-## Good resource
+## Good resources
 - <https://tour.golang.org/>
 - Math package <https://golang.org/pkg/math/>
 - Fmt package <https://golang.org/pkg/fmt/>
