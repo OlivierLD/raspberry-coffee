@@ -26,6 +26,8 @@ in several other languages than Java.
 > > ...and down.  
 > > So we now have a way to _calculate_ the DeltaT value, in all languages (Java, Python, C++, ES6).
 
+**Hopefully, all those implementations will produce the _exact_ same result.**
+
 Beside Java, we (will) have
 - [ES6](./ES6/README.md)
 - [C & C++, (Arduino?)](./Arduino.Cpp/README.md)
