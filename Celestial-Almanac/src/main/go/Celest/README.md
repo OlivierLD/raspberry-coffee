@@ -46,7 +46,7 @@ Ecliptic obliquity 23° 26' 11.973000", true 23° 26' 12.013000"
 Lunar Distance 47° 10' 4"
 Day of Week SAT
 ---------------------------------------
-Done!
+Done with Golang!
 $ 
 ```
 
