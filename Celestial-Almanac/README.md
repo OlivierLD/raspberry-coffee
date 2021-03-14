@@ -8,7 +8,7 @@ in several other languages than Java.
 > This is actually an interesting exercise. Those celestial calculations involve **_a lot_** of code (more than **20K** lines of code, for each language presented here).
 > It is always interesting to consider the following aspects:
 > - Productivity (once you know what you want, how long does it takes to write the _right_ code, with and without an IDE - when it exists)
-> - Readability (do you still understand what you wrote two weeks later 🤓)
+> - Readability (do you still understand what you wrote two weeks before? 🤓 )
 > - Speed of execution (C is probably the fastest, but how far behind are the others?)
 > - Debugging (local, remote, ...)  
 > - Maintainability (can someone who did not write it add feature(s) or maintain the code)
