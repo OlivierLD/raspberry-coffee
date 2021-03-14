@@ -4,23 +4,23 @@ public class Anomalies {
 	// Astronomical functions
 	// Nutation, obliquity of the ecliptic
 	public static void nutation() {
-		//IAU 1980 nutation theory:
-		//Mean anomaly of the Moon
+		// IAU 1980 nutation theory:
+		// Mean anomaly of the Moon
 		double Mm = 134.962981389 + 198.867398056 * Context.TE + Utils.trunc(477000 * Context.TE) + 0.008697222222 * Context.TE2 + Context.TE3 / 56250D;
 
-		//Mean anomaly of the Sun
+		// Mean anomaly of the Sun
 		double M = 357.527723333 + 359.05034 * Context.TE + Utils.trunc(35640 * Context.TE) - 0.0001602777778 * Context.TE2 - Context.TE3 / 300000D;
 
-		//Mean distance of the Moon from ascending node
+		// Mean distance of the Moon from ascending node
 		double F = 93.271910277 + 82.017538055 * Context.TE + Utils.trunc(483120 * Context.TE) - 0.0036825 * Context.TE2 + Context.TE3 / 327272.7273;
 
-		//Mean elongation of the Moon
+		// Mean elongation of the Moon
 		double D = 297.850363055 + 307.11148 * Context.TE + Utils.trunc(444960 * Context.TE) - 0.001914166667 * Context.TE2 + Context.TE3 / 189473.6842;
 
-		//Longitude of the ascending node of the Moon
+		// Longitude of the ascending node of the Moon
 		double omega = 125.044522222 - 134.136260833 * Context.TE - Utils.trunc(1800 * Context.TE) + 0.002070833333 * Context.TE2 + Context.TE3 / 450000D;
 
-		//Periodic terms for nutation
+		// Periodic terms for nutation
 		double[][] nut =
 				{
 						{0, 0, 0, 0, 1, -171996, -174.2, 92025, 8.9},

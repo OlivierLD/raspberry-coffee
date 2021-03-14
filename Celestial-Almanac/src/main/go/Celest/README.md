@@ -55,5 +55,6 @@ $
 - Math package <https://golang.org/pkg/math/>
 - Fmt package <https://golang.org/pkg/fmt/>
 - Exported/Unexported <https://golangbyexample.com/exported-unexported-fields-struct-go/>
+- Jupyter Notebooks for Golang: <https://imti.co/golang-to-jupyter/>
 
 ---

@@ -2,7 +2,7 @@ package calc.calculation.nauticalalmanac;
 
 public class Context {
 	public final static double EPS0_2000 = 23.439291111; // Reference
-	//Global Variables
+	// Global Variables
 	public static double T, T2, T3, T4, T5, TE, TE2, TE3, TE4, TE5, Tau, Tau2, Tau3, Tau4, Tau5, deltaT;
 	public static double eps0, eps, delta_psi, delta_eps;
 	public static double Le, Be, Re;

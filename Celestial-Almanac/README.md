@@ -94,6 +94,11 @@ $ ./calculation_sample.py
   Done with Python!
 $
 ```
+> There is also a Jupyter Notebook, `CalculationSample.ipynb`:
+```
+$ cd src/main/python
+$ jupyter notebook
+```
 
 #### From C++
 > Note: The `compile.sh` script used below works for Mac & Linux (including Debian & Raspbian).
