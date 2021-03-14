@@ -15,10 +15,10 @@ in several other languages than Java.
 > 
 > _To keep in mind:_ An extra detail, the code presented here can run _**in standalone**_ on a single machine. It does not need to communicate
 > with any other resources (on the net, in the cloud, wherever) to reach its goals, to do its job, to complete its work.
-> Do keep this important aspect in mind when you setup your mind about the best language ever. 😜   
+> Do keep this important aspect in mind when you decide which is the best language ever. 😜   
 
 > _Note-2_:  
-> those calculations rely on a parameter called `DeltaT`, that can (could) be obtained
+> Those calculations rely on a parameter called `DeltaT`, that can (could) be obtained
 > from the [US Naval Oceanography Portal](https://www.usno.navy.mil/USNO/earth-orientation/eo-products/long-term).
 > This (official) web site is undergoing some upgrade..., if it is down, it will
 > come back to life soon. Last known value of `DeltaT` is `69.2201` sec.
@@ -30,7 +30,7 @@ in several other languages than Java.
 
 > The problem presented here is Astronomical Almanac computations.  
 > This is mostly arithmetic and algebra, but the code is substantially large (do a `(find . -name '*.java' -print0 | xargs -0 cat) |  wc -l` to know how many lines of Java it takes, same for `*.py`, `*.go`, `*.cpp`, `*.js`,
-> it is more than <u>20,000</u> lines of code each time). Interestingly, this is the kind of computation the training of an AI model requires...
+> it is more than **_20,000_** lines of code each time). Interestingly, this is the kind of computation the training of an AI model requires...
 
 Beside Java, we (will) have
 - [ES6](./ES6/README.md)
@@ -179,7 +179,12 @@ $ node server.js
 ```
 Then from a browser, load `http://localhost:8080/index.html` and follow the instructions on the page.
 
-You should get a JSON object, and some formatted output, like this:
+> Or, from a Mac, just run
+```
+$ ./start.sh
+```
+
+You should get a `JSON` object, and some formatted output, like this:
 ![WebUI](./ES6WebUI.png)
 
 ## Timing
