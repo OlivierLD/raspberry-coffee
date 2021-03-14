@@ -28,6 +28,10 @@ in several other languages than Java.
 
 **Hopefully, all those implementations will produce the _exact_ same result.**
 
+> The problem presented here is Astronomical Almanac computations.  
+> This is mostly arithmetic and algebra, but the code is substantially large (do a `(find . -name '*.java' -print0 | xargs -0 cat) |  wc -l` to know how many lines of Java it takes, same for `*.py`, `*.go`, `*.cpp`, `*.js`,
+> it is more than 20,000 lines of code each time). Interestingly, this is the kind of computation the training of an AI model requires...
+
 Beside Java, we (will) have
 - [ES6](./ES6/README.md)
 - [C & C++, (Arduino?)](./Arduino.Cpp/README.md)
