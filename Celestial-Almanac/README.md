@@ -24,13 +24,13 @@ in several other languages than Java.
 > come back to life soon. Last known value of `DeltaT` is `69.2201` sec.
 > > Aug 2020, it's back up! <http://maia.usno.navy.mil/ser7/deltat.preds>  
 > > ...and down.  
-> > So we now have a way to _calculate_ the DeltaT value, in all languages (Java, Python, C++, ES6).
+> > So we now have a way to _calculate_ the DeltaT value, in all languages (Java, Python, C++, ES6, Go).
 
 **Hopefully, all those implementations will produce the _exact_ same result.**
 
 > The problem presented here is Astronomical Almanac computations.  
 > This is mostly arithmetic and algebra, but the code is substantially large (do a `(find . -name '*.java' -print0 | xargs -0 cat) |  wc -l` to know how many lines of Java it takes, same for `*.py`, `*.go`, `*.cpp`, `*.js`,
-> it is more than 20,000 lines of code each time). Interestingly, this is the kind of computation the training of an AI model requires...
+> it is more than <u>20,000</u> lines of code each time). Interestingly, this is the kind of computation the training of an AI model requires...
 
 Beside Java, we (will) have
 - [ES6](./ES6/README.md)
