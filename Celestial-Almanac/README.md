@@ -43,13 +43,19 @@ Beside Java, we (will) have
 
 ### Integrated Development Environment (IDE)
 Here is a quick list of some IDEs I use. They _all_ have a free version.
-- For Java and all JVM-aware languages: IntelliJ, period.
+- For Java and all JVM-aware languages (Scala, Kotlin, Groovy, ...): IntelliJ, period ❗.
 - For Python: PyCharm.
 - For C & C++: Visual Studio.
 - For Golang: Visual Studio.
 - For JavaScript: IntelliJ (Pro), WebStorm, Visual Studio.
 
 ### Run it
+> _Note:_   
+> There is something to pay attention to in the different languages,
+> this is the way to use `floor`, `ceil`, `round` (or their equivalents) and such methods. This has an
+> important impact on the results, and can explain some differences
+> in the outputs...
+
 #### From Java 
 From this module's root
 ```
@@ -71,6 +77,18 @@ Day of Week: SAT
 Done with Java!
 $
 ```
+#### From Scala
+```
+. . .
+Calculations for 2020-03-28 16:50:20 UTC (not now)
+New deltaT: 71.71293632812495
+Calculations done for 2020-03-28 16:50:20 UTC
+Sun:	 Decl:  3°21.51'N, GHA:   71°21.81', RA: 00h 31m 07.00s, SD: 16'01.22", HP:    08.81"
+Moon:	 Decl: 16°11.40'N, GHA:   25°09.65', RA: 03h 35m 56.00s, SD: 14'54.36", HP: 54'42.28"
+. . . (Working on it)
+Done with Scala!
+```
+
 
 #### From Python
 ```
