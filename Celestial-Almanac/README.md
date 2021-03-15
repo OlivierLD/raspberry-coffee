@@ -38,7 +38,8 @@ Beside Java, we (will) have
     > Note: This is **_way too demanding_** for an Arduino (mostly because of the _volume_ of the code, mentioned above), but it works OK for C & C++. 
 - [Python](./Python/README.md)
 - [Golang](./src/main/go/Celest/README.md)
-- and more when possible (Scala, Kotlin,...)
+- Scala (WiP)  
+- and more when possible (Kotlin,...)
 
 ### Integrated Development Environment (IDE)
 Here is a quick list of some IDEs I use. They _all_ have a free version.

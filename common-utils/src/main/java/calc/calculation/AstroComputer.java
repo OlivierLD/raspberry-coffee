@@ -208,7 +208,9 @@ public class AstroComputer {
 
         calculate();
         phase = Context.lambdaMapp - Context.lambda_sun;
-        while (phase < 0d) phase += 360d;
+        while (phase < 0d) {
+            phase += 360d;
+        }
         return phase;
     }
 
