@@ -141,13 +141,22 @@ body {
     opacity: 0;
   }
 }
+
+
     </style>
+
+    <script type="text/javascript">
+function setStatus(cb) {
+    window.setTimeout(() => {
+        alert(cb.checked ? 'ON' : 'OFF');
+    }, 500);
+}
+    </script>
 </head>
 <body>
 
-
 <label class="switch">
-    <input type="checkbox" checked/>
+    <input type="checkbox" onchange="setStatus(this);" checked/>
     <div class="button">
         <div class="light"></div>
         <div class="dots"></div>
@@ -156,7 +165,6 @@ body {
         <div class="shadow"></div>
     </div>
 </label>
-
 
 </body>
 </html>
