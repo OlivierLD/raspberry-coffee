@@ -43,7 +43,7 @@ Beside Java, we (will) have
 
 ### Integrated Development Environment (IDE)
 Here is a quick list of some IDEs I use. They _all_ have a free version.
-- For Java and all JVM-aware languages (Scala, Kotlin, Groovy, ...): IntelliJ, period ❗.
+- For Java and all JVM-aware languages (Scala, Kotlin, Groovy, ...): IntelliJ, period❗.
 - For Python: PyCharm.
 - For C & C++: Visual Studio.
 - For Golang: Visual Studio.
