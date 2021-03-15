@@ -79,13 +79,22 @@ $
 ```
 #### From Scala
 ```
-. . .
+$ scala -cp ./build/libs/Celestial-Almanac-1.0-all.jar astro.SampleMain
 Calculations for 2020-03-28 16:50:20 UTC (not now)
 New deltaT: 71.71293632812495
 Calculations done for 2020-03-28 16:50:20 UTC
 Sun:	 Decl:  3°21.51'N, GHA:   71°21.81', RA: 00h 31m 07.00s, SD: 16'01.22", HP:    08.81"
 Moon:	 Decl: 16°11.40'N, GHA:   25°09.65', RA: 03h 35m 56.00s, SD: 14'54.36", HP: 54'42.28"
-. . . (Working on it)
+Venus:	 Decl: 22°06.81'N, GHA:   27°59.36', RA: 03h 24m 37.00s, SD:    12.38", HP:    12.94"
+Mars:	 Decl: 21°20.44'S, GHA:   27°59.36', RA: 20h 03m 22.00s, SD:    03.15", HP:    05.91"
+Jupiter:	 Decl: 21°22.04'S, GHA:  143°16.47', RA: 19h 43m 29.00s, SD:    18.32", HP:    01.64"
+Saturn:	 Decl: 20°06.29'S, GHA:  136°28.12', RA: 20h 10m 42.00s, SD:    07.99", HP:    00.85"
+
+Polaris:	 Decl: 89°21.04'N, GHA:   35°17.04', RA: 02h 55m 26.00s 
+Equation of Time: - 04m 60.0s
+Lunar Distance:  47°10.07'
+Moon Phase:  +cre
+Day of Week: SAT
 Done with Scala!
 ```
 

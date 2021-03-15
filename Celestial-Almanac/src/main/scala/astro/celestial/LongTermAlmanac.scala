@@ -13,12 +13,7 @@ object LongTermAlmanac {
   private var deltaT = 66.4749d // 2011. Overridden by deltaT system variable, or calculated on the fly.
 
 
-  private val WEEK_DAYS = Array("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")
-  private var dow = ""
-  private var moonPhase = ""
-
-  // Updated after the calculate invocation.
-  def getDeltaT: Double = deltaT
+  val WEEK_DAYS: Array[String] = Array("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")
 
   def setDateTime(y: Int, m: Int, d: Int, h: Int, mi: Int, s: Int): Unit = {
     year = y

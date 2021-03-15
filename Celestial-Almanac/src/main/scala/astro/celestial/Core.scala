@@ -4,13 +4,13 @@ import astro.utils.MathUtils
 
 object Core {
   /**
-    * @param year
+    * @param year year
     * @param month 1 - Jan, 2 - Feb, etc.
-    * @param day
-    * @param hour
-    * @param minute
-    * @param second
-    * @param deltaT
+    * @param day day of month
+    * @param hour hour of day [0..23]
+    * @param minute [0..59]
+    * @param second [0..59]
+    * @param deltaT As previously calculated
     * @return
     */
   def julianDate(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Float, deltaT: Double, context: AstroContext): Unit = { //var year, month, day, hour, minute, second, Context.dayfraction, ly=0;
@@ -162,8 +162,8 @@ object Core {
   def weekDay(context: AstroContext): Int = ((context.JD0h + 1.5) - 7 * Math.floor((context.JD0h + 1.5) / 7)).toInt
 
   // For tests
-  def main(args: String*): Unit = {
-    var context = new AstroContext
+  def main(args: Array[String]): Unit = {
+    val context = new AstroContext
     julianDate(2009, 4, 20, 0, 0, 0f, 65.5, context)
     System.out.println("DayFraction:" + context.dayfraction)
     julianDate(2009, 4, 20, 0, 10, 0f, 65.5, context)

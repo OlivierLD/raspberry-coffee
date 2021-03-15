@@ -1,11 +1,11 @@
 package astro
 
 import java.text.SimpleDateFormat
-import java.util
 import java.util.{Calendar, TimeZone}
 import astro.celestial.LongTermAlmanac
-import astro.utils.MiscUtils.{decToSex, lpad, renderRA, renderSdHp}
+import astro.utils.MiscUtils.{decToSex, lpad, renderEoT, renderRA, renderSdHp}
 import astro.utils.{MiscUtils, TimeUtils}
+import astro.celestial.Core.{moonPhase, weekDay}
 
 object SampleMain {
 
@@ -13,7 +13,7 @@ object SampleMain {
   SDF_UTC.setTimeZone(TimeZone.getTimeZone("Etc/UTC"))
 
   def main(args: Array[String]): Unit = {
-    val now = util.Arrays.stream(args).filter((arg: String) => "--now" == arg).findFirst.isPresent
+    val now = args.exists(arg => arg.equals("--now"))
     val date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")) // Now
     if (!now) { // Hard coded date
       date.set(Calendar.YEAR, 2020)
@@ -26,7 +26,7 @@ object SampleMain {
     System.out.println(String.format("Calculations for %s (%s)", SDF_UTC.format(date.getTime), if (now) "now" else "not now"))
     // Recalculate
     val deltaT = TimeUtils.getDeltaT(date.get(Calendar.YEAR), date.get(Calendar.MONTH) + 1)
-    println(s"New deltaT: ${deltaT}")
+    println(s"New deltaT: $deltaT")
     // All calculations here
     val result = LongTermAlmanac.calculate(
       date.get(Calendar.YEAR),
@@ -38,19 +38,44 @@ object SampleMain {
       deltaT)
     // Done with calculations, now display
     println(s"Calculations done for ${SDF_UTC.format(date.getTime)}")
-    println(s"Sun:\t Decl: ${lpad(decToSex(result.DECsun, MiscUtils.SWING, MiscUtils.NS), 10, " ")}, GHA: ${lpad(decToSex(result.GHAsun, MiscUtils.SWING, MiscUtils.NONE), 11, " ")}, RA: ${renderRA(result.RAsun)}, SD: ${lpad(renderSdHp(result.SDsun), 9, " ")}, HP: ${lpad(renderSdHp(result.HPsun), 9, " ")}")
-    println(s"Moon:\t Decl: ${lpad(decToSex(result.DECmoon, MiscUtils.SWING, MiscUtils.NS), 10, " ")}, GHA: ${lpad(decToSex(result.GHAmoon, MiscUtils.SWING, MiscUtils.NONE), 11, " ")}, RA: ${renderRA(result.RAmoon)}, SD: ${lpad(renderSdHp(result.SDmoon), 9, " ")}, HP: ${lpad(renderSdHp(result.HPmoon), 9, " ")}")
-//    System.out.println(String.format("\tMoon phase: %s, %s", decToSex(AstroComputer.getMoonPhase, SWING, NONE), AstroComputer.getMoonPhaseStr))
-//    System.out.println(String.format("Venus data:\tDecl.: %s, GHA: %s, RA: %s, sd: %s, hp: %s", lpad(decToSex(AstroComputer.getVenusDecl, SWING, NS), 10, " "), lpad(decToSex(AstroComputer.getVenusGHA, SWING, NONE), 11, " "), renderRA(AstroComputer.getVenusRA), lpad(renderSdHp(AstroComputer.getVenusSd), 9, " "), lpad(renderSdHp(AstroComputer.getVenusHp), 9, " ")))
-//    System.out.println(String.format("Mars data:\tDecl.: %s, GHA: %s, RA: %s, sd: %s, hp: %s", lpad(decToSex(AstroComputer.getMarsDecl, SWING, NS), 10, " "), lpad(decToSex(AstroComputer.getMarsGHA, SWING, NONE), 11, " "), renderRA(AstroComputer.getMarsRA), lpad(renderSdHp(AstroComputer.getMarsSd), 9, " "), lpad(renderSdHp(AstroComputer.getMarsHp), 9, " ")))
-//    System.out.println(String.format("Jupiter data:\tDecl.: %s, GHA: %s, RA: %s, sd: %s, hp: %s", lpad(decToSex(AstroComputer.getJupiterDecl, SWING, NS), 10, " "), lpad(decToSex(AstroComputer.getJupiterGHA, SWING, NONE), 11, " "), renderRA(AstroComputer.getJupiterRA), lpad(renderSdHp(AstroComputer.getJupiterSd), 9, " "), lpad(renderSdHp(AstroComputer.getJupiterHp), 9, " ")))
-//    System.out.println(String.format("Saturn data:\tDecl.: %s, GHA: %s, RA: %s, sd: %s, hp: %s", lpad(decToSex(AstroComputer.getSaturnDecl, SWING, NS), 10, " "), lpad(decToSex(AstroComputer.getSaturnGHA, SWING, NONE), 11, " "), renderRA(AstroComputer.getSaturnRA), lpad(renderSdHp(AstroComputer.getSaturnSd), 9, " "), lpad(renderSdHp(AstroComputer.getSaturnHp), 9, " ")))
-//    System.out.println()
-//    System.out.println(String.format("Polaris data:\tDecl.: %s, GHA: %s, RA: %s", lpad(decToSex(AstroComputer.getPolarisDecl, SWING, NS), 10, " "), lpad(decToSex(AstroComputer.getPolarisGHA, SWING, NONE), 11, " "), renderRA(AstroComputer.getPolarisRA)))
-//    System.out.println(String.format("Equation of time: %s", renderEoT(AstroComputer.getEoT)))
-//    System.out.println(String.format("Lunar Distance: %s", lpad(decToSex(AstroComputer.getLDist, SWING, NONE), 10, " ")))
-//    System.out.println(String.format("Day of Week: %s", AstroComputer.getWeekDay)) //     dow = WEEK_DAYS(Core.weekDay(context))
+    println(s"Sun:\t Decl: ${lpad(decToSex(result.DECsun, MiscUtils.SWING, MiscUtils.NS), 10, " ")}, " +
+      s"GHA: ${lpad(decToSex(result.GHAsun, MiscUtils.SWING, MiscUtils.NONE), 11, " ")}, " +
+      s"RA: ${renderRA(result.RAsun)}, " +
+      s"SD: ${lpad(renderSdHp(result.SDsun), 9, " ")}, " +
+      s"HP: ${lpad(renderSdHp(result.HPsun), 9, " ")}")
+    println(s"Moon:\t Decl: ${lpad(decToSex(result.DECmoon, MiscUtils.SWING, MiscUtils.NS), 10, " ")}, " +
+      s"GHA: ${lpad(decToSex(result.GHAmoon, MiscUtils.SWING, MiscUtils.NONE), 11, " ")}, " +
+      s"RA: ${renderRA(result.RAmoon)}, " +
+      s"SD: ${lpad(renderSdHp(result.SDmoon), 9, " ")}, " +
+      s"HP: ${lpad(renderSdHp(result.HPmoon), 9, " ")}")
+    println(s"Venus:\t Decl: ${lpad(decToSex(result.DECvenus, MiscUtils.SWING, MiscUtils.NS), 10, " ")}, " +
+      s"GHA: ${lpad(decToSex(result.GHAvenus, MiscUtils.SWING, MiscUtils.NONE), 11, " ")}, " +
+      s"RA: ${renderRA(result.RAvenus)}, " +
+      s"SD: ${lpad(renderSdHp(result.SDvenus), 9, " ")}, " +
+      s"HP: ${lpad(renderSdHp(result.HPvenus), 9, " ")}")
+    println(s"Mars:\t Decl: ${lpad(decToSex(result.DECmars, MiscUtils.SWING, MiscUtils.NS), 10, " ")}, " +
+      s"GHA: ${lpad(decToSex(result.GHAvenus, MiscUtils.SWING, MiscUtils.NONE), 11, " ")}, " +
+      s"RA: ${renderRA(result.RAmars)}, " +
+      s"SD: ${lpad(renderSdHp(result.SDmars), 9, " ")}, " +
+      s"HP: ${lpad(renderSdHp(result.HPmars), 9, " ")}")
+    println(s"Jupiter:\t Decl: ${lpad(decToSex(result.DECjupiter, MiscUtils.SWING, MiscUtils.NS), 10, " ")}, " +
+      s"GHA: ${lpad(decToSex(result.GHAjupiter, MiscUtils.SWING, MiscUtils.NONE), 11, " ")}, " +
+      s"RA: ${renderRA(result.RAjupiter)}, " +
+      s"SD: ${lpad(renderSdHp(result.SDjupiter), 9, " ")}, " +
+      s"HP: ${lpad(renderSdHp(result.HPjupiter), 9, " ")}")
+    println(s"Saturn:\t Decl: ${lpad(decToSex(result.DECsaturn, MiscUtils.SWING, MiscUtils.NS), 10, " ")}, " +
+      s"GHA: ${lpad(decToSex(result.GHAsaturn, MiscUtils.SWING, MiscUtils.NONE), 11, " ")}, " +
+      s"RA: ${renderRA(result.RAsaturn)}, " +
+      s"SD: ${lpad(renderSdHp(result.SDsaturn), 9, " ")}, " +
+      s"HP: ${lpad(renderSdHp(result.HPsaturn), 9, " ")}")
+    println("")
+    println(s"Polaris:\t Decl: ${lpad(decToSex(result.DECpol, MiscUtils.SWING, MiscUtils.NS), 10, " ")}, " +
+      s"GHA: ${lpad(decToSex(result.GHApol, MiscUtils.SWING, MiscUtils.NONE), 11, " ")}, " +
+      s"RA: ${renderRA(result.RApol)} ")
+    println(s"Equation of Time: ${renderEoT(result.EoT)}")
+    println(s"Lunar Distance: ${lpad(decToSex(result.LDist, MiscUtils.SWING, MiscUtils.NONE), 10, " ")}")
+    println(s"Moon Phase: ${moonPhase(result)}")
+    println(s"Day of Week: ${LongTermAlmanac.WEEK_DAYS(weekDay(result))}")
     System.out.println("Done with Scala!")
   }
-
 }
