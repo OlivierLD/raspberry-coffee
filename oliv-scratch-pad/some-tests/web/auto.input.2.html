@@ -20,7 +20,7 @@ body {
         <textarea style="width: 90%; height: 200px;" id="input-zone"></textarea>
     </div>
     <i>Last Executed Command:</i>
-    <div id="mess-zone" style="font-family: Courier; font-style: bold; color: red;">. . .</div>
+    <div id="mess-zone" style="font-family: Courier; font-weight: bold; color: red;">. . .</div>
 
     <hr/>
     <span style="font-style: italic;">Oliv did it!</span>
@@ -40,9 +40,52 @@ body {
             document.getElementById('input-zone').value = '';
             if (command.trim().length > 0) {
                 document.getElementById('mess-zone').innerText = message;
+                manageCommand(message);
             } else {
                 document.getElementById('mess-zone').innerText = '';
             }
+        }
+    }
+
+    function help() {
+        console.log(`Heeeeeeeeelp!`);
+        let text = '';
+        commands.forEach(cmd => {
+            text += (`[${cmd.name}]\n`);
+        });
+        alert('Commands are :\n' + text);
+    }
+
+    function goToMySite() {
+        window.open('https://olivierld.github.io/', '_blank');
+    }
+
+    function goToNOAA() {
+        window.open('https://www.noaa.gov/', '_blank');
+    }
+
+    function goToDarSky() {
+        window.open('https://darksky.net/forecast/37.7489,-122.5072/us12/en', '_blank');
+    }
+
+    const commands = [
+        { name: 'HELP', do: help },
+        { name: 'MY SITE', do: goToMySite },
+        { name: 'NOAA', do: goToNOAA },
+        { name: 'DARK SKY', do: goToDarSky }
+    ];
+
+    function manageCommand(command) {
+        let foundIt = false;
+        for (let i=0; i<commands.length; i++) {
+            if (command.trim().toUpperCase() === commands[i].name) {
+                commands[i].do();
+                foundIt = true;
+                break;
+            }
+        }
+        if (!foundIt) {
+            console.log(`${command} not found.`);
         }
     }
 
@@ -57,6 +100,7 @@ body {
       lastTimeout = window.setTimeout(triggerExec, 1000);
     }
 
+    // See https://www.w3schools.com/jsref/dom_obj_event.asp
     const events = [ 'keydown', 'change', 'drop', 'input' ];
 
     events.forEach(domEvent => {
