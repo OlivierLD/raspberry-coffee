@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, sys
+import os, sys, time
 current_path = os.path.dirname(os.path.abspath(__file__))
 print(f"Absolute current path ${current_path}")
 sys.path.append(current_path)
@@ -10,18 +10,20 @@ from celestial_almanac.long_term_almanac import LongTermAlmanac as lta
 DELTA_T = 69.2201
 deltaT = DELTA_T
 
-print("Default deltaT would be {} s.".format(deltaT))
+# print("Default deltaT would be {} s.".format(deltaT))
 
+before = int(round(time.time() * 1000))
 # Recalculate DeltaT 
 deltaT = lta.calculateDeltaT(2020, 3)
-print("Recalculated for [{} / {}], DeltaT is {} s".format(2020, 3, deltaT))
+# print("Recalculated for [{} / {}], DeltaT is {} s".format(2020, 3, deltaT))
 
 # 2020-MAR-28 16:50:20 UTC
 lta.calculate(2020, 3, 28, 16, 50, 20, deltaT)
-
+after = int(round(time.time() * 1000))
 # Display results
 print("----------------------------------------------")
 print("Calculations done for 2020-Mar-28 16:50:20 UTC")
+print("In {} ms".format(after - before))
 print("----------------------------------------------")
 
 print("Sideral Time: {}".format(lta.SidTm))

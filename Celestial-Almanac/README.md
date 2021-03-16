@@ -56,33 +56,39 @@ Here is a quick list of some IDEs I use. They _all_ have a free version.
 > important impact on the results, and can explain some differences
 > in the outputs...
 
+> The `time` command will also take the loading time of the VM (when needed) in account.
+> We've put some markers in the code, to see the time the actual calculation takes.
+
 #### From Java 
 From this module's root
 ```
 $ ../gradlew clean shadowJar
 $ java -cp build/libs/Celestial.Almanac-1.0-all.jar celestial.almanac.JavaSample
-Calculations done for 2020-03-28 16:50:20 UTC
-Sun data:	Decl.:  3°21.50'N, GHA:   71°21.81', RA: 00h 31m 07.20s, sd: 16'01.22", hp:    08.81"
-Moon data:	Decl.: 16°11.39'N, GHA:   25°09.69', RA: 03h 35m 55.70s, sd: 14'54.36", hp: 54'42.28"
-	Moon phase:  47°05.52',  +cre
-Venus data:	Decl.: 22°06.81'N, GHA:   27°59.37', RA: 03h 24m 37.00s, sd:    12.38", hp:    12.94"
-Mars data:	Decl.: 21°20.44'S, GHA:  138°18.16', RA: 20h 03m 21.80s, sd:    03.15", hp:    05.91"
+Calculations for 2020-03-28 16:50:20 UTC (not now)
+...DeltaT set to 71.71293632812495
+Calculations done for 2020-03-28 16:50:20 UTC, in 55 ms <<<
+Sun data:	Decl.:  3°21.51'N, GHA:   71°21.81', RA: 00h 31m 07.20s, sd: 16'01.22", hp:    08.81"
+Moon data:	Decl.: 16°11.40'N, GHA:   25°09.65', RA: 03h 35m 55.90s, sd: 14'54.36", hp: 54'42.28"
+	Moon phase:  47°05.56',  +cre
+Venus data:	Decl.: 22°06.81'N, GHA:   27°59.36', RA: 03h 24m 37.00s, sd:    12.38", hp:    12.94"
+Mars data:	Decl.: 21°20.44'S, GHA:  138°18.15', RA: 20h 03m 21.80s, sd:    03.15", hp:    05.91"
 Jupiter data:	Decl.: 21°22.04'S, GHA:  143°16.47', RA: 19h 43m 28.60s, sd:    18.32", hp:    01.64"
 Saturn data:	Decl.: 20°06.29'S, GHA:  136°28.12', RA: 20h 10m 42.00s, sd:    07.99", hp:    00.85"
 
 Polaris data:	Decl.: 89°21.04'N, GHA:   35°17.04', RA: 02h 55m 26.30s
 Equation of time: - 04m 52.8s
-Lunar Distance:  47°10.03'
+Lunar Distance:  47°10.07'
 Day of Week: SAT
 Done with Java!
 $
 ```
+Calculation took 55 ms.
 #### From Scala
 ```
 $ java -cp ./build/libs/Celestial-Almanac-1.0-all.jar astro.SampleMain
 Calculations for 2020-03-28 16:50:20 UTC (not now)
 New deltaT: 71.71293632812495
-Calculations done for 2020-03-28 16:50:20 UTC
+Calculations done for 2020-03-28 16:50:20 UTC, in 64 ms <<<
 Sun:	 Decl:  3°21.51'N, GHA:   71°21.81', RA: 00h 31m 07.00s, SD: 16'01.22", HP:    08.81"
 Moon:	 Decl: 16°11.40'N, GHA:   25°09.65', RA: 03h 35m 56.00s, SD: 14'54.36", HP: 54'42.28"
 Venus:	 Decl: 22°06.81'N, GHA:   27°59.36', RA: 03h 24m 37.00s, SD:    12.38", HP:    12.94"
@@ -97,31 +103,34 @@ Moon Phase:  +cre
 Day of Week: SAT
 Done with Scala!
 ```
-
+Calculation took 64 ms.
 
 #### From Python
 ```
 $ cd src/main/python
 $ ./calculation_sample.py 
-  ----------------------------------------------
-  Calculations done for 2020-Mar-28 16:50:20 UTC
-  ----------------------------------------------
-  Sideral Time: 5h 16m 35.526s
-  Sun: GHA 071° 21' 49", RA 00h 31m 07.2s, DEC N  03° 21' 30", sd 961.2", hp 8.8"
-  Venus: GHA 027° 59' 22", RA 03h 24m 37.0s, DEC N  22° 06' 49", sd 12.4", hp 12.9"
-  Mars: GHA 138° 18' 09", RA 20h 03m 21.8s, DEC S  21° 20' 27", sd 3.1", hp 5.9"
-  Jupiter: GHA 143° 16' 28", RA 19h 43m 28.6s, DEC S  21° 22' 02", sd 18.3", hp 1.6"
-  Saturn: GHA 136° 28' 07", RA 20h 10m 42.0s, DEC S  20° 06' 17", sd 8.0.0", hp 0.8"
-  Moon: GHA 025° 09' 40", RA 03h 35m 55.8s, DEC N  16° 11' 24", sd 894.4", hp 3282.3"
-  	Moon phase 47.1 ->  +cre
-  Polaris: GHA 035° 17' 02", RA 02h 55m 26.3s, DEC N  89° 21' 02"
-  Ecliptic: obliquity 23° 26' 11.973", true 23° 26' 12.013"
-  Equation of time - 4m 52.8s 
-  Lunar Distance: 047° 10' 03"
-  Day of Week: SAT
-  Done with Python!
+----------------------------------------------
+Calculations done for 2020-Mar-28 16:50:20 UTC
+In 142 ms
+----------------------------------------------
+Sideral Time: 5h 16m 35.526s
+Sun: GHA 071° 21' 49", RA 00h 31m 07.2s, DEC N  03° 21' 30", sd 961.2", hp 8.8"
+Venus: GHA 027° 59' 22", RA 03h 24m 37.0s, DEC N  22° 06' 49", sd 12.4", hp 12.9"
+Mars: GHA 138° 18' 09", RA 20h 03m 21.8s, DEC S  21° 20' 27", sd 3.1", hp 5.9"
+Jupiter: GHA 143° 16' 28", RA 19h 43m 28.6s, DEC S  21° 22' 02", sd 18.3", hp 1.6"
+Saturn: GHA 136° 28' 07", RA 20h 10m 42.0s, DEC S  20° 06' 17", sd 8.0.0", hp 0.8"
+Moon: GHA 025° 09' 39", RA 03h 35m 55.9s, DEC N  16° 11' 24", sd 894.4", hp 3282.3"
+	Moon phase 47.1 ->  +cre
+Polaris: GHA 035° 17' 02", RA 02h 55m 26.3s, DEC N  89° 21' 02"
+Ecliptic: obliquity 23° 26' 11.973", true 23° 26' 12.013"
+Equation of time - 4m 52.8s 
+Lunar Distance: 047° 10' 04"
+Day of Week: SAT
+Done with Python!
 $
 ```
+Calculation took 142 ms.
+
 > There is also a Jupyter Notebook, `CalculationSample.ipynb`:
 ```
 $ cd src/main/python
@@ -136,26 +145,30 @@ $ cd src/main/cpp
 $ ./compile.sh
 $ ./astro
 Sample main, calculating for 2020-Mar-28 16:50:20
+Setting DeltaT to 71.712936
 --- Calculated 2020-Mar-28 16:50:20 ---
-Julian Dates 2458938.000000 2458937.201620 2458937.202422
+Calculation took 4412 μs
+Julian Dates 2458938.000000 2458937.201620 2458937.202450
 Sideral Time 5h 16m 35s
-EoT: -4.879342 => - 4m 52s
+EoT: -4.879447 => - 4m 52s
 ---------------- Bodies ---------------
-Sun 	GHA: 71° 21' 49", RA: 0h 31m 7s, Dec: N 3°21'30", sd: 961.200000", hp: 8.800000"
+Sun 	GHA: 71° 21' 48", RA: 0h 31m 7s, Dec: N 3°21'30", sd: 961.200000", hp: 8.800000"
 Venus 	GHA: 27° 59' 22", RA: 3h 24m 37s, Dec: N 22°6'49", sd: 12.400000", hp: 12.900000"
 Mars 	GHA: 138° 18' 9", RA: 20h 3m 21s, Dec: S 21°20'27", sd: 3.100000", hp: 5.900000"
 Jupiter	GHA: 143° 16' 28", RA: 19h 43m 28s, Dec: S 21°22'2", sd: 18.300000", hp: 1.600000"
 Saturn 	GHA: 136° 28' 7", RA: 20h 10m 42s, Dec: S 20°6'17", sd: 8.000000", hp: 0.800000"
-Moon 	GHA: 25° 9' 40", RA: 3h 35m 55s, Dec: N 16°11'24", sd: 894.400000", hp: 3282.300000"
+Moon 	GHA: 25° 9' 39", RA: 3h 35m 55s, Dec: N 16°11'24", sd: 894.400000", hp: 3282.300000"
 	Moon phase: 47.100000,  +cre
 Polaris	GHA: 35° 17' 2", RA: 2h 55m 26s, Dec: N 89°21'2"
 Ecliptic obliquity 23° 26' 11.973000", true 23° 26' 12.013000"
-Lunar Distance 47° 10' 3"
+Lunar Distance 47° 10' 4"
 Day of Week SAT
 ---------------------------------------
 Done with C!
 $
 ```
+Calculation took 4412 μs
+
 #### From Golang
 ```
 $ cd src/main/go/Celest
@@ -178,8 +191,8 @@ Followed by a
 
 ```
 Let's get started!
-DeltaT for 2020-3: 71.71293632812495 s
 Calculating for 2020-3-28 16:50:20
+Calculation took : 3676 μs
 Julian Dates 2.458938e+06 2.45893720162037e+06 2.458937202450381e+06
 Sideral Time 5h 16m 35.526s
 EoT: -4.879415188586677 => - 4m 52.8s
@@ -199,6 +212,7 @@ Day of Week SAT
 Done with Golang!
 $
 ```
+Calculation took 3676 μs
 
 #### From ES6 (JavaScript, using NodeJS as a Web server)
 ```

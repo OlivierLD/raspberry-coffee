@@ -2,9 +2,14 @@ package main
 
 import (
 	"fmt"
+	"time"
 	"oliv.cc/astro"
 )
 
+func makeTimestamp() int64 {
+//     return time.Now().UnixNano() / int64(time.Millisecond)  // ms
+    return time.Now().UnixNano() / 1000  // micro-s
+}
 /**
  * This is an example 
  * showing how to use the AstroComputer
@@ -20,12 +25,14 @@ func main() {
     minute := 50
     second := 20
 
+    before := makeTimestamp()
 	deltaT := astro.CalculateDeltaT(year, month)
-	fmt.Printf("DeltaT for %v-%v: %v s\n", year, month, deltaT)
+// 	fmt.Printf("DeltaT for %v-%v: %v s\n", year, month, deltaT)
 
 	fmt.Printf("Calculating for %v-%v-%v %v:%v:%v\n", year, month, day, hour, minute, second)
 	result := astro.Calculate(year, month, day, hour, minute, second, deltaT)
-	// fmt.Printf("Result: %v\n", result)
+    after := makeTimestamp()
+	fmt.Printf("Calculation took : %v \u03bcs\n", (after - before))
 	fmt.Printf("Julian Dates %v %v %v\n", result.JD0h, result.JD, result.JDE)
 	fmt.Printf("Sideral Time %s\n", result.SidTm)
 	fmt.Printf("EoT: %v => %s\n", result.EoT, astro.OutEoT(result.EoT))

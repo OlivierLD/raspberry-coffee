@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
+#include <sys/time.h>
 
 #include "AstroComputer.h"
 
@@ -8,17 +9,24 @@
 
 const double DELTA_T = 69.2201;
 
+struct timeval before, after;
+
 int main () {
   std::cout << "Sample main, calculating for 2020-Mar-28 16:50:20\n";
   // 2020-MAR-28 16:50:20 UTC
   
   double deltaT = DELTA_T;
+
+  gettimeofday(&before, NULL);
   // Recalculate deltaT
   deltaT = calculateDeltaT(2020, 3);
   fprintf(stdout, "Setting DeltaT to %f\n", deltaT);
 
   ComputedData * data = calculate(2020, 3, 28, 16, 50, 20, deltaT);
+  gettimeofday(&after, NULL);
+
   fprintf(stdout, "--- Calculated 2020-Mar-28 16:50:20 ---\n");
+  fprintf(stdout, "Calculation took %lu \u03bcs\n", (after.tv_sec - before.tv_sec) * 1000000 + after.tv_usec - before.tv_usec);
   fprintf(stdout, "Julian Dates %f %f %f\n", data->JD0h, data->JD, data->JDE);
   fprintf(stdout, "Sideral Time %s\n", data->SidTm);
   char eot[32];

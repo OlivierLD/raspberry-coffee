@@ -24,6 +24,8 @@ object SampleMain {
       date.set(Calendar.SECOND, 20)
     }
     System.out.println(String.format("Calculations for %s (%s)", SDF_UTC.format(date.getTime), if (now) "now" else "not now"))
+    // Take time here, JVM is loaded, etc...
+    val before = System.currentTimeMillis
     // Recalculate
     val deltaT = TimeUtils.getDeltaT(date.get(Calendar.YEAR), date.get(Calendar.MONTH) + 1)
     println(s"New deltaT: $deltaT")
@@ -37,7 +39,8 @@ object SampleMain {
       date.get(Calendar.SECOND),
       deltaT)
     // Done with calculations, now display
-    println(s"Calculations done for ${SDF_UTC.format(date.getTime)}")
+    val after = System.currentTimeMillis
+    println(s"Calculations done for ${SDF_UTC.format(date.getTime)}, in ${after - before} ms <<<")
     println(s"Sun:\t Decl: ${lpad(decToSex(result.DECsun, MiscUtils.SWING, MiscUtils.NS), 10, " ")}, " +
       s"GHA: ${lpad(decToSex(result.GHAsun, MiscUtils.SWING, MiscUtils.NONE), 11, " ")}, " +
       s"RA: ${renderRA(result.RAsun)}, " +
