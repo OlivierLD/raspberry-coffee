@@ -167,7 +167,7 @@ Day of Week SAT
 Done with C!
 $
 ```
-Calculation took 4412 μs
+Calculation took 4412 μs (4.412 ms)
 
 #### From Golang
 ```
@@ -212,7 +212,17 @@ Day of Week SAT
 Done with Golang!
 $
 ```
-Calculation took 3676 μs
+Calculation took 3676 μs (3.676 ms)
+
+##### Quick execution time comparison
+| Language | Time in ms |
+|:-----|-----:|
+| Go | 3.676 |
+| C | 4.412 |
+| Java | 55 |
+| Scala | 64 |
+| Python | 142 |
+
 
 #### From ES6 (JavaScript, using NodeJS as a Web server)
 ```
