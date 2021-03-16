@@ -57,7 +57,7 @@ Here is a quick list of some IDEs I use. They _all_ have a free version.
 > in the outputs...
 
 > The `time` command will also take the loading time of the VM (when needed) in account.
-> We've put some markers in the code, to see the time the actual calculation takes.
+> We've put some timestamps in the code, to see the time the actual calculation takes.
 
 #### From Java 
 From this module's root
