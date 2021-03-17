@@ -57,7 +57,7 @@
                 if (existingContent.trim().length > 0) {
                     existingContent += "\n";
                 }
-                existingContent += mess;
+                existingContent += (typeof(mess) === 'object' ? JSON.stringify(mess) : mess);
                 messZone.innerText = existingContent;
             } else {
                 console.log(mess);
@@ -241,7 +241,7 @@
                                 displayValue = "xx";
                                 displayUnit = "-";
                                 // console.log(err);
-                                messageManager(err);
+                                messageManager(typeof(err) === 'object' ? JSON.stringify(err) : err);
                             }
                             break;
                         case 'htsgw':
@@ -258,7 +258,7 @@
                                 displayValue = "xx";
                                 displayUnit = "-";
                                 // console.log(err);
-                                messageManager(err);
+                                messageManager(typeof(err) === 'object' ? JSON.stringify(err) : err);
                             }
                             break;
                         default:
@@ -349,7 +349,6 @@
                 // console.log(fax.src);
                 messageManager(fax.src);
                 faxObj.push(fax);
-
             }
         };
 
@@ -662,8 +661,8 @@
                 }
                 document.getElementById('current-grib-location').innerText = ('GRIB in ' + gribFileLocation);
             }
-            // console.log("Loading", compositeData);
-            messageManager("Loading " + compositeData);
+            // console.log("Loading", (typeof(compositeData) === 'object' ? JSON.stringify(compositeData) : compositeData));
+            messageManager("Loading " + (typeof(compositeData) === 'object' ? JSON.stringify(compositeData) : compositeData));
             worldMap.setCanvasWidth(compositeData.canvas.w);
             worldMap.setCanvasHeight(compositeData.canvas.h);
             worldMap.setNorth(compositeData.map.north);
@@ -803,7 +802,7 @@
 
                 // Request ready
                 // console.log(requestData);
-                messageManager(requestData);
+                messageManager(typeof(requestData) === 'object' ? JSON.stringify(requestData) : requestData);
                 getCompositeFaxes(requestData, compositeData, faxRequestCallback);
             }
 
