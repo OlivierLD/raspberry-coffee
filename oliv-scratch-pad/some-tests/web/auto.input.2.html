@@ -11,7 +11,16 @@ body {
 </head>
 <body>
 
-    <h2>Auto input - pure Web</h2>
+    <table style="width: 100%;">
+        <tr>
+            <td>
+                <h2>Auto input - pure Web</h2>
+            </td>
+            <td style="text-align: right;">
+                <div id="bulb" style="height: 100px; width: 100px; border-radius: 50%; background-color: black;"></div>
+            </td>
+        </tr>
+    </table>
     No <code>[return]</code> or <code>[submit]</code> needed.
     <br/>
     <small>On Mac, use dictation (<code>fn-fn</code>)</small>
@@ -20,7 +29,8 @@ body {
         <textarea style="width: 90%; height: 200px;" id="input-zone"></textarea>
     </div>
     <i>Last Executed Command:</i>
-    <div id="mess-zone" style="font-family: Courier; font-weight: bold; color: red;">. . .</div>
+    <div id="mess-zone" style="font-family: Courier; font-weight: bold; color: green;">. . .</div>
+    <div id="err-zone" style="font-family: Courier; font-style: italic; font-weight: bold; color: red;"></div>
 
     <hr/>
     <span style="font-style: italic;">Oliv did it!</span>
@@ -68,15 +78,38 @@ body {
         window.open('https://darksky.net/forecast/37.7489,-122.5072/us12/en', '_blank');
     }
 
+    function setBulbColor(color) {
+        document.getElementById('bulb').style.backgroundColor = color;
+    }
+
+    function goBlack() {
+        setBulbColor('black');
+    }
+    function goRed() {
+        setBulbColor('red');
+    }
+    function goGreen() {
+        setBulbColor('green');
+    }
+    function goOrange() {
+        setBulbColor('orange');
+    }
+
     const commands = [
         { name: 'HELP', do: help },
         { name: 'MY SITE', do: goToMySite },
         { name: 'NOAA', do: goToNOAA },
-        { name: 'DARK SKY', do: goToDarSky }
+        { name: 'DARK SKY', do: goToDarSky },
+        { name: 'BLACK', do: goBlack },
+        { name: 'RED', do: goRed },
+        { name: 'READ', do: goRed },
+        { name: 'GREEN', do: goGreen },
+        { name: 'ORANGE', do: goOrange }
     ];
 
     function manageCommand(command) {
         let foundIt = false;
+        document.getElementById('err-zone').innerText = '';
         for (let i=0; i<commands.length; i++) {
             if (command.trim().toUpperCase() === commands[i].name) {
                 commands[i].do();
@@ -85,7 +118,8 @@ body {
             }
         }
         if (!foundIt) {
-            console.log(`${command} not found.`);
+            let errMess = `Command [${command}] not found.`;
+            document.getElementById('err-zone').innerText = errMess;
         }
     }
 

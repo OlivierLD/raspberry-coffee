@@ -239,7 +239,7 @@ channels:
     mux.01.device.prefix=01
     mux.01.verbose=false
     ```
-- Note: there is an "Implicit" REST input 
+- _Note_: there is an "Implicit" REST input 
     - Like a `rest` input channel (consumer)
     - If the `with.http.server` is running, then there is REST resource
     ```
