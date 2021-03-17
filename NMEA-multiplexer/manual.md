@@ -5,7 +5,7 @@
 The following sections will make references to several resources (Java classes, properties files, etc).
 They are all part of this project, so you can refer to them if needed for more details.
 
-The program to start is `nmea.mux.GenericNMEAMultiplexer`, it is driven by a `properties` file,
+The program to start is `nmea.mux.GenericNMEAMultiplexer`, it is driven by a `properties` or `yaml` file,
 describing the features required by an instance of the Multiplexer (channels, forwarders, computers, http server, etc).
 
 - [Properties](#properties)
@@ -239,17 +239,16 @@ channels:
     mux.01.device.prefix=01
     mux.01.verbose=false
     ```
-- "Implicit" REST input 
+- Note: there is an "Implicit" REST input 
     - Like a `rest` input channel (consumer)
-    - If the `with.http.server` is on, then there is REST resource
+    - If the `with.http.server` is running, then there is REST resource
     ```
     POST /mux/nmea-sentence -h "Content-Type: plain/text" -d "$GPRMC,....."
     ```
-    - This can be used to feed the cache.
+    - This can be used to feed the cache "by hand".
     - Use system variable `-Drest.feeder.verbose=true` to see the output.
 
-You can also define your own channels (extending `NMEAClient` and with a `reader` attribute).
-
+You can also define your own channels (extending `NMEAClient` and with a `reader` attribute).  
 Look for `mux.01.class=nmea.consumers.client.WeatherStationWSClient`.
 
 Channels can use those three attributes: `properties`, `device.filters`, `sentence.filters`:
@@ -265,16 +264,16 @@ A line like
 ```properties
 mux.01.sentence.filters=~MMB, ~GGA, ~GSV
 ```
-means everything, but no MMB, no GGA, no GSV.
+means "_everything, but no MMB, no GGA, no GSV_".
 
 A line like
 ```properties
 mux.01.sentence.filters=RMC, XDR, MDA
 ```
-means only RMC, XDR or MDA.
+means "_only RMC, XDR or MDA_".
 
 > _Note_: a line like `~RMC, MDA` does not mean much, as it would mean [`no RMC` and `just MDA`]. 
-> A line like `MDA` means the same thing.
+> A line like `MDA` would mean the same thing.
 
 #### Forwarders
 
