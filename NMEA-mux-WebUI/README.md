@@ -2,6 +2,8 @@
 
 #### How to customize, extend, enrich the base classes of the `NMEA-multiplexer`.
 
+---
+
 We want to have a Nav Server:
 - Able to read from different sources (NMEA Serial port, TCP, whatever)
 - Able to compute data
