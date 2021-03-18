@@ -149,6 +149,12 @@ The examples list contains
     - Based on the `Minimal Navigation server` above, shows how to add 2 push-buttons to the configuration, for the user to interact with the software, including shutting down the machine. Uses the same hardware as the `Extended Navigation Server, #2` above.
 - [Embarked Head Up display](#head-up-display)
     - Uses the Graphical Desktop to display a Web Interface in a browser. More demanding than the others, requires a more powerful config (Raspberry Pi 3B+). 
+- [Compass, small screen, TCP broadcast](./compass-mux/README.md)
+    - An `HMC5883L` magnetometer, a small `SSD1306` OLED Screen, broadcasting its data on TCP.
+- [Compass, small screen, push button, TCP broadcast](./compass-mux-ext/README.md)
+  - An `HMC5883L` magnetometer, a small `SSD1306` OLED Screen, broadcasting its data on TCP.  
+    With a push button for the user to interact with it.
+
 
 ### Full Nav Server 
 All features: NMEA multiplexer, Web Interface, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
