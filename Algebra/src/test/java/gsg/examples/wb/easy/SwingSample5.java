@@ -26,8 +26,8 @@ public class SwingSample5 {
     private JMenu menuHelp = new JMenu();
     private JMenuItem menuHelpAbout = new JMenuItem();
 
-    private final static int WIDTH = 1024; // 860;
-    private final static int HEIGHT = 760; // 600;
+    private final static int WIDTH = 1_024; // 860;
+    private final static int HEIGHT =  760; // 600;
 
     // The WhiteBoard instantiation
     private static WhiteBoardPanel whiteBoard = new WhiteBoardPanel();
