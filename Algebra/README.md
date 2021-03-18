@@ -1,4 +1,4 @@
-## Linear Algebra
+## Linear Algebra, and graphical utilities
 
 Basic linear algebra ([الجبر](https://en.wikipedia.org/wiki/Algebra)), and statistical functions, in Java. 
 > Work in progress.
@@ -7,6 +7,7 @@ Basic linear algebra ([الجبر](https://en.wikipedia.org/wiki/Algebra)), and 
 - Least squares method (regression)
 - Derivative
 - Standard deviation and others
+- Low pass filter  
 - etc.
 
 ---
@@ -30,6 +31,9 @@ And `HTML5/CSS3/ES6` should also be able to implement the same kind of features 
 I'm not looking down on Python, it is popular for good reasons.
 
 We'll see.
+
+> Look in the `jupyter` folder for notebooks.   
+> Look in the `test` folder for Swing and other examples.
 
 ## Java Graphics (Generic Swing Graphics, GSG)
 
