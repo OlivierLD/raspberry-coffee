@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MUX Builder</title>
+    <link rel="stylesheet" href="../web/css/stylesheet.css"/>
+    <style type="text/css">
+.smooth {
+    height: 0;
+    max-height: 0;
+    margin: auto;
+    /*transition: transform 0.5s, max-height 1s, height 1s;*/
+    transition: all 0.5s ease;
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    overflow: hidden;
+}
+.visible-div {
+    opacity: 1;
+    width: auto;
+    height: auto;
+    max-height: 1600px;
+    transform: scaleY(1);
+    margin-top: 5px;
+}
+.dialog-header {
+    font-size: 16px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+}
+
+.dialog-header-close {
+    margin-left: 10px;
+    float: right;
+}
+.dialog-header-close:hover {
+  color: cyan;
+  cursor: pointer;
+}
+
+td {
+    vertical-align: top;
+}
+dialog {
+    border-radius: 5px;
+    border: 2px solid navy;
+}
+    </style>
+
+    <script type="text/javascript">
+function showDiv(divId) {
+	let elmt = document.getElementById(divId);
+
+	elmt.classList.toggle('visible-div');
+
+	let newH = '100%';
+	let newV = 'visible';
+	let newO = '1';
+
+	elmt.style.height = newH;
+	elmt.style.visibility = newV;
+	elmt.style.opacity = newO;
+}
+
+function hideDiv(divId) {
+	let elmt = document.getElementById(divId);
+
+	elmt.classList.toggle('visible-div');
+
+	let newH = '0';
+	let newV = 'hidden';
+	let newO = '0';
+	elmt.style.height = newH;
+	elmt.style.visibility = newV;
+	elmt.style.opacity = newO;
+}
+
+let showHTTP = false;
+function expandCollapseHTTP(cb) {
+    let divId = 'http-specific';
+    showHTTP = !showHTTP;
+    if (showHTTP) {
+        showDiv(divId);
+    } else {
+        hideDiv(divId);
+    }
+}
+
+function addChannel() {
+    let channelList = document.getElementById('channel-list');
+    let oneChannelDefinition = document.getElementById('add-channel');
+    let channelLength = channelList.children.length;
+    console.log(`${channelLength} Children (channels)`);
+    let newChannel = oneChannelDefinition.cloneNode(true); // true: deep!
+    newChannel.id = `add-channel-${channelLength.toFixed(0)}`;
+    newChannel.style.display = 'block';
+    channelList.appendChild(newChannel);
+    // Set the channel parameters
+    setChannelParameters('serial', // TODO Get the value from the list
+                         newChannel.querySelector('table').querySelector('tr').querySelector('select'));
+}
+
+function addForwarder() {
+    console.log("Will add forwarder");
+}
+
+function addComputer() {
+    console.log("Will add computer");
+}
+
+function removeChannel(button) {
+    console.log("Removing channel...");
+    let channelList = document.getElementById('channel-list');
+    let channelDiv = button;
+    while (!(channelDiv instanceof HTMLDivElement)) {
+        channelDiv = channelDiv.parentElement;
+    }
+    channelList.removeChild(channelDiv);
+}
+
+/**
+ * channel: the value of the channel ('serial', 'file', etc)
+ * element: the <select> element
+ */
+function setChannelParameters(channel, element) {
+    console.log(`Setting parameters for ${channel}`);
+    let divId = null;
+    switch (channel) {
+      case 'serial':
+        divId = 'serial-channel-parameters';
+        break;
+      case 'file':
+        divId = 'file-channel-parameters';
+        break;
+      case 'tcp':
+        divId = 'tcp-channel-parameters';
+        break;
+      case 'rnd':  
+      case 'zda':  
+        // No parameter, just verbose
+        divId = 'no-prm-channel-parameters';
+        break;
+      case 'bme280':
+      case 'bmp180':
+          divId = 'device-prefix-channel-parameters';
+          break;
+      case 'ws':
+      case 'htu21df':
+      case 'hmc5883l':
+      case 'lsm303':
+      default:
+        divId = 'generic-channel-parameters';
+        break;
+    }
+    if (divId !== null) {
+        let prmElements = document.getElementById(divId);
+        let newPrmElement = prmElements.cloneNode(true);
+        newPrmElement.style.display = 'block';
+        let td = element.parentElement.parentElement.children[2];
+        while (td.firstChild) {
+            td.removeChild(td.firstChild)
+        }
+        td.appendChild(newPrmElement);
+    } else {
+        console.log(`No Div ID for ${channel}`);
+    }
+}
+
+function getSerialChannelCode(node) {
+    let code = "";
+    let portName = node.querySelector('.port-name').value;
+    code += `    port: ${portName}\n`;
+    let baudRate = node.querySelector('.baud-rate').value;
+    code += `    baud.rate: ${baudRate}\n`;
+    let verbose = node.querySelector('.verbose').checked;
+    code += `    verbose: ${verbose}\n`;
+    // filters
+    let deviceFilters = node.querySelector('.device-filter').value;
+    if (deviceFilters.trim().length > 0) {
+        code += `    device.filters: ${deviceFilters}\n`;
+    }
+    let sentenceFilters = node.querySelector('.sentence-filter').value;
+    if (sentenceFilters.trim().length > 0) {
+        code += `    sentence.filters: ${sentenceFilters}\n`;
+    }
+    let resetInterval = node.querySelector('.reset-interval').value;
+    if (resetInterval.trim().length > 0) {
+        code += `    reset.interval: ${resetInterval}\n`;
+    }
+    return code;
+}
+
+function getTCPChannelCode(node) {
+    let code = "";
+    let serverName = node.querySelector('.server-name').value;
+    code += `    server: ${serverName}\n`;
+    let baudRate = node.querySelector('.port-num').value;
+    code += `    port: ${baudRate}\n`;
+    let verbose = node.querySelector('.verbose').checked;
+    code += `    verbose: ${verbose}\n`;
+    // filters
+    let deviceFilters = node.querySelector('.device-filter').value;
+    if (deviceFilters.trim().length > 0) {
+        code += `    device.filters: ${deviceFilters}\n`;
+    }
+    let sentenceFilters = node.querySelector('.sentence-filter').value;
+    if (sentenceFilters.trim().length > 0) {
+        code += `    sentence.filters: ${sentenceFilters}\n`;
+    }
+    return code;
+}
+
+function getFileChannelCode(node) {
+    let code = "";
+    let fileName = node.querySelector('.file-name').value;
+    code += `    filename: ${fileName}\n`;
+    let zipOption = node.querySelector('.zip-option').checked;
+    code += `    zip: ${zipOption}\n`;
+
+    let zipPath = node.querySelector('.zip-path').value;
+    if (zipOption && zipPath.trim().length > 0) {
+        code += `    path.in.zip: ${zipPath}\n`;
+    }
+    let betweenRecords = node.querySelector('.between-records').value;
+    if (betweenRecords.trim().length > 0) {
+        code += `    between-records: ${betweenRecords}\n`;
+    }
+    let loopOption = node.querySelector('.loop').checked;
+    code += `    loop: ${loopOption}\n`;
+
+    let verbose = node.querySelector('.verbose').checked;
+    code += `    verbose: ${verbose}\n`;
+    // filters
+    let deviceFilters = node.querySelector('.device-filter').value;
+    if (deviceFilters.trim().length > 0) {
+        code += `    device.filters: ${deviceFilters}\n`;
+    }
+    let sentenceFilters = node.querySelector('.sentence-filter').value;
+    if (sentenceFilters.trim().length > 0) {
+        code += `    sentence.filters: ${sentenceFilters}\n`;
+    }
+    return code;
+}
+
+function getNoPrmChannelCode(node) {
+    let code = "";
+    let verbose = node.querySelector('.verbose').checked;
+    code += `    verbose: ${verbose}\n`;
+
+    return code;
+}
+
+function getCodeDevicePrefix(node) {
+    let code = "";
+
+    let devicePrefix = node.querySelector('.device-prefix').value;
+    code += `    device.prefix: ${devicePrefix}\n`;
+
+    let verbose = node.querySelector('.verbose').checked;
+    code += `    verbose: ${verbose}\n`;
+
+    return code;
+}
+
+function generateTheCode() {
+    let code = '';
+    let codeElement = document.getElementById('generated-yaml');
+    code += "#\n";
+    code += `# Generated on ${new Date()}\n`;
+    code += "#\n";
+    code += `name: \"${ document.getElementById('mux-title').value }\"\n`;
+    code += "context:\n";
+    code += `  with.http.server: ${ document.getElementById('with-http').checked }\n`;
+    if (document.getElementById('with-http').checked) {
+        code += `  http.port: ${ document.getElementById('http-port').value }\n`;
+        code += `  init.cache: ${ document.getElementById('init-cache').checked }\n`;
+    }
+    code += `  default.declination: ${ document.getElementById('default-decl').value }\n`;
+    let devFileName = document.getElementById('dev-file-name').value;
+    if (devFileName.trim().length > 0) {
+        code += `  deviation.file.name: ${ document.getElementById('dev-file-name').value }\n`;
+    }
+    code += `  max.leeway: ${ document.getElementById('max-leeway').value }\n`;
+    code += `  bsp.factor: ${ document.getElementById('bsp-factor').value }\n`;
+    code += `  aws.factor: ${ document.getElementById('aws-factor').value }\n`;
+    code += `  hdg.offset: ${ document.getElementById('hdg-offset').value }\n`;
+    code += `  awa.offset: ${ document.getElementById('awa-offset').value }\n`;
+    code += `  damping: ${ document.getElementById('damping').value }\n`;
+
+    // Input Channels
+    let channelList = document.getElementById('channel-list');
+    code += `# ${channelList.children.length} Channel${channelList.children.length > 1 ? 's' : ''}\n`;
+    if (channelList.children.length > 0) {
+        code += "channels:\n";
+        for (let i=0; i<channelList.childElementCount; i++) {
+            let channel = channelList.children[i];
+            let channelType = channel.querySelectorAll('select')[0].value;
+            // console.log(`Adding channel ${channelType}`);
+            code += `  - type: ${channelType}\n`;
+            switch (channelType) {
+                case 'serial':
+                    code += getSerialChannelCode(channel);
+                    break;
+                case 'tcp':
+                    code += getTCPChannelCode(channel);
+                    break;
+                case 'file':
+                    code += getFileChannelCode(channel);
+                    break;
+                case 'bme280':
+                case 'bmp180':
+                    code += getCodeDevicePrefix(channel);
+                    break;
+                case 'ws':
+                case 'htu21df':
+                case 'hmc5883l':
+                case 'lsm303':
+                    break;
+                case 'zda':
+                case 'rnd':
+                    code += getNoPrmChannelCode(channel);
+                    break;
+                default:
+                    code += "    # Not managed...\n";
+                    break;
+            }
+        }
+    }
+
+    // Forwarders
+    code += "# Forwarders\n";
+
+
+    // Computers
+    code += "# Computers\n";
+
+
+    // Good to go.
+    codeElement.innerText = code;
+    showGeneratedDialog();
+}
+
+function showGeneratedDialog() {
+    let codeDialog = document.getElementById("generated-code-dialog");
+    codeDialog.show();
+}
+function closeGeneratedDialog() {
+    let codeDialog = document.getElementById("generated-code-dialog");
+    codeDialog.close();    
+}
+    </script>
+</head>
+
+<!-- Out of the body. Designed to be cloned. -->
+<!-- Some CSS classes are here to be used by a querySelector -->
+
+<div id="serial-channel-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Port Name</td>
+            <td><input type="text" class="port-name" size="30" placeholder="Serial Port Name"></td>
+        </tr>
+        <tr>
+            <td>Baud Rate</td>
+            <td><input type="number" class="baud-rate" placeholder="Baud Rate"></td>
+        </tr>
+        <tr>
+            <td>Device Filters</td>
+            <td><input type="text" class="device-filter" placeholder="Device Filters" size="30" title="Comma separated list"></td>
+        </tr>
+        <tr>
+            <td>Sentence Filters</td>
+            <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
+        </tr>
+        <tr>
+            <td>Verbose</td>
+            <td><input type="checkbox" class="verbose"></td>
+        </tr>
+        <tr>
+            <td>Reset Interval</td>
+            <td><input type="number" class="reset-interval" placeholder="Reset Interval" value="60000"></td>
+        </tr>
+        <!--
+        device.filters: GP, GN, GL
+        sentence.filters: ~GSV, ~GSA, ~GGA
+        -->
+    </table>
+</div>
+
+<div id="tcp-channel-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Server name or IP</td>
+            <td><input type="text" class="server-name" size="30" placeholder="Server Name"></td>
+        </tr>
+        <tr>
+            <td>Port</td>
+            <td><input type="number" class="port-num" placeholder="TCP Port"></td>
+        </tr>
+        <tr>
+            <td>Device Filters</td>
+            <td><input type="text" class="device-filter" placeholder="Device Filters" size="30" title="Comma separated list"></td>
+        </tr>
+        <tr>
+            <td>Sentence Filters</td>
+            <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
+        </tr>
+        <tr>
+            <td>Verbose</td>
+            <td><input type="checkbox" class="verbose"></td>
+        </tr>
+    </table>
+</div>
+
+<div id="file-channel-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>File Name</td>
+            <td><input type="text" class="file-name" size="30" placeholder="Log File Name"></td>
+        </tr>
+        <tr>
+            <td>Zip</td>
+            <td><input type="checkbox" class="zip-option"></td>
+        </tr>
+        <tr>
+            <td>Path in Zip</td>
+            <td><input type="text" class="zip-path" size="30" placeholder="Path in Zip"></td>
+        </tr>
+        <tr>
+            <td>Device Filters</td>
+            <td><input type="text" class="device-filter" placeholder="Device Filters" size="30" title="Comma separated list"></td>
+        </tr>
+        <tr>
+            <td>Sentence Filters</td>
+            <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
+        </tr>
+        <tr>
+            <td>Verbose</td>
+            <td><input type="checkbox" class="verbose"></td>
+        </tr>
+        <tr>
+            <td>Between records</td>
+            <td><input type="number" class="between-records" placeholder="1000"></td>
+        </tr>
+        <tr>
+            <td>Loop</td>
+            <td><input type="checkbox" class="loop"></td>
+        </tr>
+        <!--
+        device.filters: GP, GN, GL
+        sentence.filters: ~GSV, ~GSA, ~GGA
+        between-records: 1000
+        loop: true
+        -->
+    </table>
+</div>
+
+<div id="device-prefix-channel-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Device Prefix</td>
+            <td><input type="text" class="device-prefix" placeholder="Device Prefix" size="30" title="Device Prefix, 2 characters"></td>
+        </tr>
+        <tr>
+            <td>Verbose</td>
+            <td><input type="checkbox" class="verbose"></td>
+        </tr>
+    </table>
+</div>
+
+<div id="no-prm-channel-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Verbose</td>
+            <td><input type="checkbox" class="verbose"></td>
+        </tr>
+    </table>
+</div>
+
+<div id="generic-channel-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <th colspan="2"><b><i>Generic</i></b></th>
+        </tr>
+        <tr>
+            <td>Device Filters</td>
+            <td><input type="text" class="device-filter" placeholder="Device Filters" size="30" title="Comma separated list"></td>
+        </tr>
+        <tr>
+            <td>Sentence Filters</td>
+            <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
+        </tr>
+        <tr>
+            <td>Verbose</td>
+            <td><input type="checkbox" class="verbose"></td>
+        </tr>
+        <tr>
+            <td>Read Frequency</td>
+            <td><input type="number" class="frequency" placeholder="Sentence Filters" value="1000"></td>
+        </tr>
+    </table>
+</div>
+
+
+<div id="add-channel" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Channel:</td>
+            <td>
+                <select onchange="setChannelParameters(this.value, this);">
+                    <option value="serial">Serial</option>
+                    <option value="tcp">TCP</option>
+                    <option value="file">File</option>
+                    <option value="ws">WebSocket</option>
+                    <option value="htu21df">HTU21DF</option>
+                    <option value="bme280">BME280</option>
+                    <option value="bmp180">BMP180</option>
+                    <option value="hmc5883l">HCM5883L</option>
+                    <option value="lsm303">LSM303</option>
+                    <option value="zda">ZDA</option>
+                    <option value="rnd">RND</option>
+                </select>
+            </td>
+            <td>
+                Specific parameters<br/>
+                . . .
+            </td>
+            <td>
+                <button onclick="removeChannel(this);" style="margin: 3px;">Remove</button>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+<body>
+
+<dialog id="generated-code-dialog">
+    <div class="dialog-header">
+        <span>Generated yaml</span>
+        <span class="dialog-header-close" onclick="closeGeneratedDialog();">&times</span>
+    </div>
+    <div style="text-align: left; max-height: 300px; overflow-y: scroll;">
+        <pre><span id="generated-yaml"></span></pre> <!-- This contains the final result -->
+    </div>
+</dialog>    
+
+<h2>Build a yaml properties file from a Web UI</h2>
+<div>
+    <label for="mux-title">MUX definition</label>
+    <input type="text" id="mux-title" placeholder="MUX Title" style="width: 200px;">
+</div>
+<div>
+    <h4>Context</h4>
+    <div>
+        <label for="with-http">With HTTP/REST Server</label>
+        <input type="checkbox" id="with-http" onchange="expandCollapseHTTP(this);">
+        <div id="http-specific" class="smooth">
+            <table>
+                <tr>
+                    <td>
+                        <label for="http-port">HTTP Port</label>
+                    </td>
+                    <td>
+                        <input type="number" min="80" step="1" placeholder="HTTP Port number" id="http-port" value="8080">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="init-cache">Init Cache</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" id="init-cache" checked>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td>Default Declination</td>
+                    <td><input type="number" class="declination" step="0.1" value="14.0" id="default-decl"></td>
+                </tr>
+                <tr>
+                    <td>Deviation file name</td>
+                    <td><input type="text" id="dev-file-name" placeholder="Declination csv file name"></td>
+                </tr>
+                <tr>
+                    <td>Max Leeway Angle</td>
+                    <td><input type="number" min="0" step="0.1" value="10.0" id="max-leeway"></td>
+                </tr>
+                <tr>
+                    <td>BSP Factor</td>
+                    <td><input type="number" min="0" step="0.1" value="1.0" id="bsp-factor"></td>
+                </tr>
+                <tr>
+                    <td>AWS Factor</td>
+                    <td><input type="number" min="0" step="0.1" value="1.0" id="aws-factor"></td>
+                </tr>
+                <tr>
+                    <td>AWA Offset</td>
+                    <td><input type="number" step="0.1" value="0.0" id="awa-offset"></td>
+                </tr>
+                <tr>
+                    <td>HDG Offset</td>
+                    <td><input type="number" step="0.1" value="0.0" id="hdg-offset"></td>
+                </tr>
+                <tr>
+                    <td>Damping</td>
+                    <td><input type="number" min="1" step="1" value="30" id="damping"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<hr/>
+<div>
+    <h4><button onclick="addChannel();">Add</button> Input Channels</h4>
+    <div id="channel-list"></div>
+</div>
+<hr/>
+<div>
+    <h4><button onclick="addForwarder();">Add</button> Output Channels</h4>
+
+</div>
+<hr/>
+<div>
+    <h4><button onclick="addComputer();">Add</button> Computers</h4>
+
+</div>
+<hr/>
+<div>
+    <button onclick="generateTheCode();">Generate</button>
+</div>
+<hr/>
+<span style="font-style: italic;">Oliv Did it!</span>
+</body>
+</html>
