@@ -143,12 +143,18 @@ function setChannelParameters(channel, element) {
         break;
       case 'bme280':
       case 'bmp180':
+      case 'htu21df':
           divId = 'device-prefix-channel-parameters';
           break;
       case 'ws':
-      case 'htu21df':
-      case 'hmc5883l':
+          divId = 'ws-channel-parameters';
+          break;
       case 'lsm303':
+          divId = 'lsm303-channel-parameters';
+          break;
+      case 'hmc5883l':
+          divId = 'hcm5883l-channel-parameters';
+          break;
       default:
         divId = 'generic-channel-parameters';
         break;
@@ -263,6 +269,62 @@ function getCodeDevicePrefix(node) {
     return code;
 }
 
+function getWSChannelCode(node) {
+    let code = "";
+    let wsUrl = node.querySelector('.ws-url').value;
+    code += `    wsuri: ${wsUrl}\n`;
+    let verbose = node.querySelector('.verbose').checked;
+    code += `    verbose: ${verbose}\n`;
+    // filters
+    let deviceFilters = node.querySelector('.device-filter').value;
+    if (deviceFilters.trim().length > 0) {
+        code += `    device.filters: ${deviceFilters}\n`;
+    }
+    let sentenceFilters = node.querySelector('.sentence-filter').value;
+    if (sentenceFilters.trim().length > 0) {
+        code += `    sentence.filters: ${sentenceFilters}\n`;
+    }
+    return code;
+}
+
+function getLSM303hannelCode(node) {
+    let code = "";
+    let devicePrefix = node.querySelector('.device-prefix').value;
+    code += `    device.prefix: ${devicePrefix}\n`;
+    let verbose = node.querySelector('.verbose').checked;
+    code += `    verbose: ${verbose}\n`;
+    let headingOffset = node.querySelector('.heading-offset').value;
+    code += `    heading.offset: ${headingOffset}\n`;
+    let dampingSize = node.querySelector('.damping-size').value;
+    code += `    damping.size: ${dampingSize}\n`;
+    let readFrequency = node.querySelector('.read-frequency').value;
+    code += `    read.frequency: ${readFrequency}\n`;
+    let feature = node.querySelector('.lsm-303-feature').value;
+    code += `    feature: ${feature}\n`;
+    let calProps = node.querySelector('.calibration-properties').value;
+    code += `    lsm303.cal.prop.file: ${calProps}\n`;
+
+    return code;
+}
+
+function getHCM5883LhannelCode(node) {
+    let code = "";
+    let devicePrefix = node.querySelector('.device-prefix').value;
+    code += `    device.prefix: ${devicePrefix}\n`;
+    let verbose = node.querySelector('.verbose').checked;
+    code += `    verbose: ${verbose}\n`;
+    let headingOffset = node.querySelector('.heading-offset').value;
+    code += `    heading.offset: ${headingOffset}\n`;
+    let dampingSize = node.querySelector('.damping-size').value;
+    code += `    damping.size: ${dampingSize}\n`;
+    let readFrequency = node.querySelector('.read-frequency').value;
+    code += `    read.frequency: ${readFrequency}\n`;
+    let calProps = node.querySelector('.calibration-properties').value;
+    code += `    hmc5883l.cal.prop.file: ${calProps}\n`;
+
+    return code;
+}
+
 function generateTheCode() {
     let code = '';
     let codeElement = document.getElementById('generated-yaml');
@@ -310,16 +372,21 @@ function generateTheCode() {
                     break;
                 case 'bme280':
                 case 'bmp180':
+                case 'htu21df':
                     code += getCodeDevicePrefix(channel);
                     break;
                 case 'ws':
-                case 'htu21df':
-                case 'hmc5883l':
+                    code += getWSChannelCode(channel);
+                    break;
                 case 'lsm303':
+                    code += getLSM303hannelCode(channel);
                     break;
                 case 'zda':
                 case 'rnd':
                     code += getNoPrmChannelCode(channel);
+                    break;
+                case 'hmc5883l':
+                    code += getHCM5883LhannelCode(channel);
                     break;
                 default:
                     code += "    # Not managed...\n";
@@ -461,6 +528,103 @@ function closeGeneratedDialog() {
         <tr>
             <td>Device Prefix</td>
             <td><input type="text" class="device-prefix" placeholder="Device Prefix" size="30" title="Device Prefix, 2 characters"></td>
+        </tr>
+        <tr>
+            <td>Verbose</td>
+            <td><input type="checkbox" class="verbose"></td>
+        </tr>
+    </table>
+</div>
+
+<div id="lsm303-channel-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Device Prefix</td>
+            <td><input type="text" class="device-prefix" placeholder="Device Prefix" size="30" title="Device Prefix, 2 characters"></td>
+        </tr>
+        <tr>
+            <td>Heading Offset</td>
+            <td><input type="number" class="heading-offset" step="1" placeholder="Heading Offset"></td>
+        </tr>
+        <tr>
+            <td>Damping size</td>
+            <td><input type="number" class="damping-size" step="1" placeholder="Damping Size" value="5"></td>
+        </tr>
+        <tr>
+            <td>Read Frequency</td>
+            <td><input type="number" class="read-frequency" step="1" placeholder="Read Frequency in ms" value="1000"></td>
+        </tr>
+        <tr>
+            <td>Feature</td>
+            <td>
+                <select class="lsm-303-feature">
+                    <option value="BOTH">Both</option>
+                    <option value="MAGNETOMETER">Magnetometer</option>
+                    <option value="ACCELEROMETER">Accelerometer</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Calibration properties file</td>
+            <td><input type="text" class="calibration-properties" placeholder="Calibration properties file" size="30"></td>
+        </tr>
+        <tr>
+            <td>Sentence Filters</td>
+            <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
+        </tr>
+        <tr>
+            <td>Verbose</td>
+            <td><input type="checkbox" class="verbose"></td>
+        </tr>
+    </table>
+</div>
+
+<div id="hcm5883l-channel-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Device Prefix</td>
+            <td><input type="text" class="device-prefix" placeholder="Device Prefix" size="30" title="Device Prefix, 2 characters"></td>
+        </tr>
+        <tr>
+            <td>Heading Offset</td>
+            <td><input type="number" class="heading-offset" step="1" placeholder="Heading Offset"></td>
+        </tr>
+        <tr>
+            <td>Damping size</td>
+            <td><input type="number" class="damping-size" step="1" placeholder="Damping Size" value="5"></td>
+        </tr>
+        <tr>
+            <td>Read Frequency</td>
+            <td><input type="number" class="read-frequency" step="1" placeholder="Read Frequency in ms" value="1000"></td>
+        </tr>
+        <tr>
+            <td>Calibration properties file</td>
+            <td><input type="text" class="calibration-properties" placeholder="Calibration properties file" size="30"></td>
+        </tr>
+        <tr>
+            <td>Sentence Filters</td>
+            <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
+        </tr>
+        <tr>
+            <td>Verbose</td>
+            <td><input type="checkbox" class="verbose"></td>
+        </tr>
+    </table>
+</div>
+
+<div id="ws-channel-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>WS URL</td>
+            <td><input type="text" class="ws-url" size="30" placeholder="ws://machine-address:port/path"></td>
+        </tr>
+        <tr>
+            <td>Device Filters</td>
+            <td><input type="text" class="device-filter" placeholder="Device Filters" size="30" title="Comma separated list"></td>
+        </tr>
+        <tr>
+            <td>Sentence Filters</td>
+            <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
         </tr>
         <tr>
             <td>Verbose</td>
@@ -631,7 +795,7 @@ function closeGeneratedDialog() {
 </div>
 <hr/>
 <div>
-    <button onclick="generateTheCode();">Generate</button>
+    <button onclick="generateTheCode();">Generate YAML</button>
 </div>
 <hr/>
 <span style="font-style: italic;">Oliv Did it!</span>
