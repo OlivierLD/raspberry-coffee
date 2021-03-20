@@ -1,0 +1,41 @@
+.smooth {
+    height: 0;
+    max-height: 0;
+    margin: auto;
+    /*transition: transform 0.5s, max-height 1s, height 1s;*/
+    transition: all 0.5s ease;
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    overflow: hidden;
+}
+.visible-div {
+    opacity: 1;
+    width: auto;
+    height: auto;
+    max-height: 1600px;
+    transform: scaleY(1);
+    margin-top: 5px;
+}
+.dialog-header {
+    font-size: 16px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+}
+
+.dialog-header-close {
+    margin-left: 10px;
+    float: right;
+}
+.dialog-header-close:hover {
+  color: cyan;
+  cursor: pointer;
+}
+
+td {
+    vertical-align: top;
+}
+dialog {
+    border-radius: 5px;
+    border: 2px solid navy;
+}
