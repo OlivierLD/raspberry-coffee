@@ -153,6 +153,8 @@ function setForwarderParameters(forwarder, element) {
           divId = 'tcp-fwd-parameters';
           break;
       case 'file':
+          divId = 'file-fwd-parameters';
+          break;
       case 'ws':
       case 'wsp':
       case 'rest':
@@ -168,10 +170,23 @@ function setForwarderParameters(forwarder, element) {
         let newPrmElement = prmElements.cloneNode(true);
         newPrmElement.style.display = 'block';
         let td = element.parentElement.parentElement.children[2];
-        while (td.firstChild) {
+        while (td.firstChild) { // Remove existing content
             td.removeChild(td.firstChild)
         }
         td.appendChild(newPrmElement);
+        if (forwarder === 'file') { // file specific option
+            let specificFileOptionOne = document.getElementById('file-fwd-option-one');
+            if (specificFileOptionOne !== null) {
+                let newOptionElement = specificFileOptionOne.cloneNode(true);
+                newOptionElement.style.display = 'block';
+                let optionLocation = newPrmElement.querySelector('.file-fwd-prms');
+                while (optionLocation.firstChild) { // Remove what's in there
+                    optionLocation.removeChild(optionLocation.firstChild)
+                }
+                optionLocation.appendChild(newOptionElement);
+                console.log('Done');
+            }
+        }
     } else {
         console.log(`No Div ID for ${forwarder}`);
     }
@@ -201,6 +216,15 @@ function getSerialChannelCode(node) {
     return code;
 }
 
+function getSerialFwdlCode(node) {
+    let code = "";
+    let portName = node.querySelector('.port-name').value;
+    code += `    port: ${portName}\n`;
+    let baudRate = node.querySelector('.baud-rate').value;
+    code += `    baud.rate: ${baudRate}\n`;
+    return code;
+}
+
 function getTCPChannelCode(node) {
     let code = "";
     let serverName = node.querySelector('.server-name').value;
@@ -218,6 +242,36 @@ function getTCPChannelCode(node) {
     if (sentenceFilters.trim().length > 0) {
         code += `    sentence.filters: ${sentenceFilters}\n`;
     }
+    return code;
+}
+
+function getTCPTwdCode(node) {
+    let code = "";
+    let baudRate = node.querySelector('.port-num').value;
+    code += `    port: ${baudRate}\n`;
+    return code;
+}
+
+function getFileFwdCode(node) {
+    let code = "";
+    let option = node.querySelector('.file-fwd-option').value;
+    if (option === 'one-file') {
+        code += "    timebase.filename: false\n";
+        let fName = node.querySelector('.logfile-name').value;
+        code += `    filename: ${fName}\n`;
+        let append = node.querySelector('.append').checked;
+        code += `    append: ${append}\n`;
+    } else if (option === 'time-based') {
+        code += "    timebase.filename: true\n";
+        let suffix = node.querySelector('.logfile-suffix').value;
+        code += `    filename.suffix: ${suffix}\n`;
+        let dir = node.querySelector('.logfile-dir').value;
+        code += `    log.dir: ${dir}\n`;
+        let split = node.querySelector('.log-file-split').value;
+        code += `    split: ${split}\n`;
+    }
+    let flush = node.querySelector('.flush').checked;
+    code += `    flush: ${flush}\n`;
     return code;
 }
 
@@ -418,10 +472,14 @@ function generateTheCode() {
                     code += getConsoleFwdCode(fwd);
                     break;
                 case 'serial':
-                    code += '    # coming\n'; // getSerialChannelCode(channel);
+                    code += getSerialFwdlCode(fwd);
                     break;
                 case 'tcp':
+                    code += getTCPTwdCode(fwd);
+                    break;
                 case 'file':
+                    code += getFileFwdCode(fwd);
+                    break;
                 case 'ws':
                 case 'wsp':
                 case 'rest':

@@ -286,6 +286,94 @@
     </table>
 </div>
 
+<script type="text/javascript">
+<!-- Utilities for the file-forwarder -->
+function fileFwdOption(sel) {
+    console.log(`Value changed to ${sel.value}`);
+    let optionId = null;
+    if (sel.value === 'one-file') {
+       optionId = 'file-fwd-option-one';
+    } else if (sel.value === 'time-based') {
+       optionId = 'file-fwd-option-two';
+    }
+    let specificFileOption = document.getElementById(optionId);
+    let newOptionElement = specificFileOption.cloneNode(true);
+    newOptionElement.style.display = 'block';
+    // Find parameter's table
+    let parentTable = sel;
+    while (!(parentTable instanceof HTMLTableElement)) {
+      parentTable = parentTable.parentElement;
+    }
+    let optionLocation = parentTable.querySelector('.file-fwd-prms');
+     while (optionLocation.firstChild) { // Remove what's in there
+        optionLocation.removeChild(optionLocation.firstChild)
+     }
+     optionLocation.appendChild(newOptionElement);
+}
+</script>
+
+<div id="file-fwd-option-one" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>File Name</td>
+            <td><input type="text" class="logfile-name" size="30" placeholder="Log File Name"></td>
+        </tr>
+        <tr>
+            <td>Append</td>
+            <td><input type="checkbox" class="append"></td>
+        </tr>
+    </table>
+</div>
+
+<div id="file-fwd-option-two" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Log files suffix</td>
+            <td><input type="text" class="logfile-suffix" size="30" placeholder="Log File Suffix"></td>
+        </tr>
+        <tr>
+            <td>Log files directory</td>
+            <td><input type="text" class="logfile-dir" size="30" placeholder="Log File Folder"></td>
+        </tr>
+        <tr>
+            <td>Log files Split</td>
+            <td>
+                <select class="log-file-split">
+                    <option value="min">Minute</option>
+                    <option value="hour">Hour</option>
+                    <option value="day">Day</option>
+                    <option value="week">Week</option>
+                    <option value="month">Month</option>
+                    <option value="year">Year</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="file-fwd-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Option</td>
+            <td>
+                <select onchange="fileFwdOption(this);" class="file-fwd-option">
+                    <option value="one-file">One log file</option>
+                    <option value="time-based">Time based file names</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="file-fwd-prms" colspan="2">
+                    Placeholder
+            </td>
+        </tr>
+        <tr>
+            <td>Flush</td>
+            <td><input type="checkbox" class="flush"></td>
+        </tr>
+    </table>
+</div>
+
 
 <div id="add-channel" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
     <table>
