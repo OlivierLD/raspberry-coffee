@@ -53,7 +53,16 @@ function addChannel() {
 }
 
 function addForwarder() {
-    console.log("Will add forwarder");
+    let forwarderList = document.getElementById('forwarder-list');
+    let oneForwarderDefinition = document.getElementById('add-forwarder');
+    let listLength = forwarderList.children.length;
+    let newForwarder = oneForwarderDefinition.cloneNode(true); // true: deep!
+    newForwarder.id = `add-forwarder-${listLength.toFixed(0)}`;
+    newForwarder.style.display = 'block';
+    forwarderList.appendChild(newForwarder);
+    // Set the forwarder parameters
+    setForwarderParameters('serial', // TODO Get the value from the list
+                           newForwarder.querySelector('table').querySelector('tr').querySelector('select'));
 }
 
 function addComputer() {
@@ -70,6 +79,15 @@ function removeChannel(button) {
     channelList.removeChild(channelDiv);
 }
 
+function removeForwarder(button) {
+    console.log("Removing forwarder...");
+    let forwarderList = document.getElementById('forwarder-list');
+    let forwarderDiv = button;
+    while (!(forwarderDiv instanceof HTMLDivElement)) {
+        forwarderDiv = forwarderDiv.parentElement;
+    }
+    forwarderList.removeChild(forwarderDiv);
+}
 /**
  * channel: the value of the channel ('serial', 'file', etc)
  * element: the <select> element
@@ -124,6 +142,41 @@ function setChannelParameters(channel, element) {
     }
 }
 
+function setForwarderParameters(forwarder, element) {
+    console.log(`Setting parameters for ${forwarder}`);
+    let divId = null;
+    switch (forwarder) {
+      case 'serial':
+          divId = 'serial-fwd-parameters';
+          break;
+      case 'tcp':
+          divId = 'tcp-fwd-parameters';
+          break;
+      case 'file':
+      case 'ws':
+      case 'wsp':
+      case 'rest':
+      case 'gpsd':
+      case 'rmi':
+      case 'console':
+      default:
+        divId = 'generic-forwarder-parameters';
+        break;
+    }
+    if (divId !== null) {
+        let prmElements = document.getElementById(divId);
+        let newPrmElement = prmElements.cloneNode(true);
+        newPrmElement.style.display = 'block';
+        let td = element.parentElement.parentElement.children[2];
+        while (td.firstChild) {
+            td.removeChild(td.firstChild)
+        }
+        td.appendChild(newPrmElement);
+    } else {
+        console.log(`No Div ID for ${forwarder}`);
+    }
+}
+
 function getSerialChannelCode(node) {
     let code = "";
     let portName = node.querySelector('.port-name').value;
@@ -139,7 +192,7 @@ function getSerialChannelCode(node) {
     }
     let sentenceFilters = node.querySelector('.sentence-filter').value;
     if (sentenceFilters.trim().length > 0) {
-        code += `    sentence.filters: ${sentenceFilters}\n`;
+        code += `    sentence.filters: ${senteminceFilters}\n`;
     }
     let resetInterval = node.querySelector('.reset-interval').value;
     if (resetInterval.trim().length > 0) {
@@ -276,6 +329,10 @@ function getHCM5883LhannelCode(node) {
     return code;
 }
 
+function getConsoleFwdCode(node) {
+    return "";
+}
+
 function generateTheCode() {
     let code = '';
     let codeElement = document.getElementById('generated-yaml');
@@ -303,7 +360,7 @@ function generateTheCode() {
 
     // Input Channels
     let channelList = document.getElementById('channel-list');
-    code += `# ${channelList.children.length} Channel${channelList.children.length > 1 ? 's' : ''}\n`;
+    code += `# ${channelList.children.length === 0 ? 'No' : channelList.children.length} Channel${channelList.children.length > 1 ? 's' : ''}\n`;
     if (channelList.children.length > 0) {
         code += "channels:\n";
         for (let i=0; i<channelList.childElementCount; i++) {
@@ -347,8 +404,35 @@ function generateTheCode() {
     }
 
     // Forwarders
-    code += "# Forwarders\n";
-
+    let fwdList = document.getElementById('forwarder-list');
+    code += `# ${fwdList.children.length === 0 ? 'No' : fwdList.children.length} Forwarder${fwdList.children.length > 1 ? 's' : ''}\n`;
+    if (fwdList.children.length > 0) {
+        code += "forwarders:\n";
+        for (let i=0; i<fwdList.childElementCount; i++) {
+            let fwd = fwdList.children[i];
+            let fwdType = fwd.querySelectorAll('select')[0].value;
+            // console.log(`Adding channel ${channelType}`);
+            code += `  - type: ${fwdType}\n`;
+            switch (fwdType) {
+                case 'console':
+                    code += getConsoleFwdCode(fwd);
+                    break;
+                case 'serial':
+                    code += '    # coming\n'; // getSerialChannelCode(channel);
+                    break;
+                case 'tcp':
+                case 'file':
+                case 'ws':
+                case 'wsp':
+                case 'rest':
+                case 'gpsd':
+                case 'rmi':
+                default:
+                    code += '    # coming\n'; 
+                    break;
+            }
+        }
+    }
 
     // Computers
     code += "# Computers\n";

@@ -10,7 +10,7 @@
 </head>
 
 <!-- Out of the body. Designed to be cloned. -->
-<!-- Some CSS classes are here to be used by a querySelector -->
+<!-- Some un-implemented CSS classes are here to be used by a querySelector -->
 
 <div id="serial-channel-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
     <table>
@@ -256,6 +256,36 @@
     </table>
 </div>
 
+<div id="generic-forwarder-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <th colspan="2"><b><i>Generic</i></b></th>
+        </tr>
+    </table>
+</div>
+
+<div id="serial-fwd-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Port Name</td>
+            <td><input type="text" class="port-name" size="30" placeholder="Serial Port Name"></td>
+        </tr>
+        <tr>
+            <td>Baud Rate</td>
+            <td><input type="number" class="baud-rate" placeholder="Baud Rate"></td>
+        </tr>
+    </table>
+</div>
+
+<div id="tcp-fwd-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Port</td>
+            <td><input type="number" class="port-num" placeholder="TCP Port"></td>
+        </tr>
+    </table>
+</div>
+
 
 <div id="add-channel" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
     <table>
@@ -285,7 +315,34 @@
             </td>
         </tr>
     </table>
+</div>
 
+<div id="add-forwarder" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Forwarder:</td>
+            <td>
+                <select onchange="setForwarderParameters(this.value, this);">
+                    <option value="serial">Serial</option>
+                    <option value="tcp">TCP</option>
+                    <option value="file">File</option>
+                    <option value="ws">WebSocket</option>
+                    <option value="rest">REST</option>
+                    <option value="gpsd">GPSD</option>
+                    <option value="wsp">WebSocket Processor</option>
+                    <option value="console">Console</option>
+                    <option value="rmi">RMI</option>
+                </select>
+            </td>
+            <td>
+                Specific parameters<br/>
+                . . .
+            </td>
+            <td>
+                <button onclick="removeForwarder(this);" style="margin: 3px;">Remove</button>
+            </td>
+        </tr>
+    </table>
 </div>
 
 <!-- Page Body starts here -->
@@ -293,7 +350,7 @@
 
 <dialog id="generated-code-dialog">
     <div class="dialog-header">
-        <span>Generated yaml</span>
+        <span>Generated yaml, to copy-paste</span>
         <span class="dialog-header-close" onclick="closeGeneratedDialog();">&times</span>
     </div>
     <div style="text-align: left; max-height: 300px; overflow-y: scroll;">
@@ -377,12 +434,12 @@
 <hr/>
 <div>
     <h4><button onclick="addForwarder();">Add</button> Output Channels</h4>
-
+    <div id="forwarder-list"></div>
 </div>
 <hr/>
 <div>
     <h4><button onclick="addComputer();">Add</button> Computers</h4>
-
+    <div id="computer-list"></div>
 </div>
 <hr/>
 <div>
