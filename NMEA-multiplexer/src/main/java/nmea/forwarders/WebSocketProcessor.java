@@ -29,6 +29,8 @@ import java.util.Properties;
  * To be used with other apps, like the pebble one.
  * The transformer turns the content of the NMEA Cache into the expected format.
  * <br>
+ * May require customization!!!
+ * <br>
  * See https://github.com/OlivierLD/pebble/tree/master/NMEA.app
  */
 public class WebSocketProcessor implements Forwarder {

@@ -1,5 +1,33 @@
 //
-//
+
+// Channels descriptions
+const CHANNEL_DESCRIPTION = {
+    'serial': "Read NMEA from a Serial port.\nProvide port name\nand baud rate.\nExtra parameters available.",
+    'file': "Replays NMEA Data\nfrom a log file.\nCan be an entry\nof a zip file.",
+    'tcp': "Reads NMEA Data\nfrom a TCP server.",
+    'rnd':   "Random number generation\n(for Debugging purpose).",
+    'zda':   "Generates a ZDA\nsentence from the server's\nsystem time.",
+    'bme280': "Temperature\nHumidity\nPressure sensor.",
+    'bmp180': "Temperature\nHumidity\nPressure sensor.",
+    'htu21df': "Temperature and\nHumidity sensor.",
+    'ws': "Read NMEA Data\nfrom a WebSocket\nserver.",
+    'lsm303': "Magnetometer and\naccelerometer sensor.",
+    'hmc5883l': "Magnetometer sensor."
+};
+
+const FORWARDER_DESCRIPTION = {
+    'serial': "Forward received NMEA Data\non a serial port.",
+    'tcp': "Act as a TCP server.\nAll received NMEA data\nare forwarded\non the given port\non the current machine.",
+    'file': "Log all NMEA data.\nIn a single file\nor in several files,\nwith their names based on UTC time,\nin a given folder,\nreset on a regural basis.",
+    'ws': "Web Socket",
+    'mqtt': "MQTT, Work in Progress",
+    'wsp': "Web Socket Processor",
+    'rest': "Will POST received data\nto the provided REST\nendpoint.",
+    'gpsd': "Spits all received\nNMEA Data\nin a GPSD format.",
+    'rmi': "RMI server",
+    'console': "Spits out all received\nNMEA Data\non STDOUT."
+};
+
 function showDiv(divId) {
 	let elmt = document.getElementById(divId);
 
@@ -137,6 +165,12 @@ function setChannelParameters(channel, element) {
             td.removeChild(td.firstChild)
         }
         td.appendChild(newPrmElement);
+        // Description ?
+        let descField = td.parentElement.querySelector('.channel-descr');
+        while (descField.firstChild) {
+            descField.removeChild(descField.firstChild);
+        }
+        descField.innerHTML = `<pre>${CHANNEL_DESCRIPTION[channel]}</pre>`;
     } else {
         console.log(`No Div ID for ${channel}`);
     }
@@ -150,14 +184,18 @@ function setForwarderParameters(forwarder, element) {
           divId = 'serial-fwd-parameters';
           break;
       case 'tcp':
+      // case 'udp':
           divId = 'tcp-fwd-parameters';
           break;
       case 'file':
           divId = 'file-fwd-parameters';
           break;
       case 'ws':
+      case 'mqtt':
       case 'wsp':
       case 'rest':
+          divId = 'rest-fwd-parameters';
+          break;
       case 'gpsd':
       case 'rmi':
       case 'console':
@@ -174,6 +212,13 @@ function setForwarderParameters(forwarder, element) {
             td.removeChild(td.firstChild)
         }
         td.appendChild(newPrmElement);
+        // Description ?
+        let descField = td.parentElement.querySelector('.forwarder-descr');
+        while (descField.firstChild) {
+            descField.removeChild(descField.firstChild);
+        }
+        descField.innerHTML = `<pre>${FORWARDER_DESCRIPTION[forwarder]}</pre>`;
+        // Specificities?
         if (forwarder === 'file') { // file specific option
             let specificFileOptionOne = document.getElementById('file-fwd-option-one');
             if (specificFileOptionOne !== null) {
@@ -272,6 +317,23 @@ function getFileFwdCode(node) {
     }
     let flush = node.querySelector('.flush').checked;
     code += `    flush: ${flush}\n`;
+    return code;
+}
+
+function getRESTFwdCode(node) {
+    let code = "";
+    let serverName = node.querySelector('.server-name').value;
+    code += `    server.name: ${serverName}\n`;
+    let serverPort = node.querySelector('.server-port').value;
+    code += `    server.port: ${serverPort}\n`;
+    let restResource = node.querySelector('.server-resource').value;
+    code += `    rest.resource: ${restResource}\n`;
+    let restVerb = node.querySelector('.rest-verb').value;
+    code += `    rest.verb: ${restVerb}\n`;
+    let restProtocol = node.querySelector('.rest-protocol').value;
+    code += `    rest.protocol: ${restProtocol}\n`;
+    let restHeaders = node.querySelector('.rest-headers').value;
+    code += `    http.headers: ${restHeaders}\n`;
     return code;
 }
 
@@ -483,6 +545,8 @@ function generateTheCode() {
                 case 'ws':
                 case 'wsp':
                 case 'rest':
+                    code += getRESTFwdCode(fwd);
+                    break;
                 case 'gpsd':
                 case 'rmi':
                 default:

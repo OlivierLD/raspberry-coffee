@@ -374,6 +374,45 @@ function fileFwdOption(sel) {
     </table>
 </div>
 
+<div id="rest-fwd-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Server</td>
+            <td><input type="text" class="server-name" size="30" placeholder="Server Name or IP"></td>
+        </tr>
+        <tr>
+            <td>Port</td>
+            <td><input type="number" class="server-port" placeholder="Server Port" value="8080"></td>
+        </tr>
+        <tr>
+            <td>Resource</td>
+            <td><input type="text" class="server-resource" size="30" placeholder="/mux/nmea-sentence"></td>
+        </tr>
+        <tr>
+            <td>Verb</td>
+            <td>
+                <select class="rest-verb">
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="PATCH">PATCH</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Protocol</td>
+            <td>
+                <select class="rest-protocol">
+                    <option value="http">http</option>
+                    <option value="https">https</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Header(s)</td>
+            <td><input type="text" class="rest-headers" size="30" placeholder="REST Headers" value="Content-Type:plain/text"></td>
+        </tr>
+    </table>
+</div>
 
 <div id="add-channel" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
     <table>
@@ -393,6 +432,7 @@ function fileFwdOption(sel) {
                     <option value="zda">ZDA</option>
                     <option value="rnd">RND</option>
                 </select>
+                <div class="channel-descr" style="max-height: 100px; overflow-y: scroll;"></div>
             </td>
             <td>
                 Specific parameters<br/>
@@ -413,14 +453,17 @@ function fileFwdOption(sel) {
                 <select onchange="setForwarderParameters(this.value, this);">
                     <option value="serial">Serial</option>
                     <option value="tcp">TCP</option>
+                    <!--option value="udp">UDP</option-->
                     <option value="file">File</option>
                     <option value="ws">WebSocket</option>
+                    <option value="mqtt">MQTT</option>
                     <option value="rest">REST</option>
                     <option value="gpsd">GPSD</option>
                     <option value="wsp">WebSocket Processor</option>
                     <option value="console">Console</option>
                     <option value="rmi">RMI</option>
                 </select>
+                <div class="forwarder-descr" style="max-height: 100px; overflow-y: scroll;"></div>
             </td>
             <td>
                 Specific parameters<br/>
@@ -433,7 +476,11 @@ function fileFwdOption(sel) {
     </table>
 </div>
 
-<!-- Page Body starts here -->
+<!--
+
+      Page Body starts here
+
+ +-->
 <body>
 
 <dialog id="generated-code-dialog">
