@@ -286,6 +286,45 @@
     </table>
 </div>
 
+<div id="gpsd-fwd-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Port</td>
+            <td><input type="number" class="port-num" placeholder="GPSD Port" value="2947"></td>
+        </tr>
+    </table>
+</div>
+
+<div id="ws-fwd-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>WebSocket URI</td>
+            <td><input type="text" class="ws-uri" placeholder="WS uri"></td>
+        </tr>
+    </table>
+</div>
+
+<div id="rmi-fwd-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>RMI port</td>
+            <td><input type="number" class="port-num" placeholder="RMI Port" value="1099"></td>
+        </tr>
+        <tr>
+            <td>RMI name</td>
+            <td><input type="text" class="rmi-name" placeholder="RMI Name" value="RMI-NMEA"></td>
+        </tr>
+    </table>
+</div>
+
+<div id="console-fwd-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>No parameter</td>
+        </tr>
+    </table>
+</div>
+
 <script type="text/javascript">
 <!-- Utilities for the file-forwarder -->
 function fileFwdOption(sel) {
@@ -456,7 +495,7 @@ function fileFwdOption(sel) {
                     <!--option value="udp">UDP</option-->
                     <option value="file">File</option>
                     <option value="ws">WebSocket</option>
-                    <option value="mqtt">MQTT</option>
+                    <!--option value="mqtt">MQTT</option-->
                     <option value="rest">REST</option>
                     <option value="gpsd">GPSD</option>
                     <option value="wsp">WebSocket Processor</option>

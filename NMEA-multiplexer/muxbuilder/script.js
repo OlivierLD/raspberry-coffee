@@ -21,7 +21,7 @@ const FORWARDER_DESCRIPTION = {
     'file': "Log all NMEA data.\nIn a single file\nor in several files,\nwith their names based on UTC time,\nin a given folder,\nreset on a regural basis.",
     'ws': "Web Socket",
     'mqtt': "MQTT, Work in Progress",
-    'wsp': "Web Socket Processor",
+    'wsp': "Web Socket Processor.\nDo look in the code!\nIt may require customization!",
     'rest': "Will POST received data\nto the provided REST\nendpoint.",
     'gpsd': "Spits all received\nNMEA Data\nin a GPSD format.",
     'rmi': "RMI server",
@@ -191,14 +191,23 @@ function setForwarderParameters(forwarder, element) {
           divId = 'file-fwd-parameters';
           break;
       case 'ws':
-      case 'mqtt':
-      case 'wsp':
+      case 'wsp': // May require customization!
+          divId = 'ws-fwd-parameters';
+          break;
+      // case 'mqtt':
       case 'rest':
           divId = 'rest-fwd-parameters';
           break;
       case 'gpsd':
-      case 'rmi':
+          divId = 'gpsd-fwd-parameters';
+          break;
       case 'console':
+          // No parameters
+          divId = 'console-fwd-parameters';
+          break;
+      case 'rmi':
+          divId = 'rmi-fwd-parameters';
+          break;
       default:
         divId = 'generic-forwarder-parameters';
         break;
@@ -334,6 +343,29 @@ function getRESTFwdCode(node) {
     code += `    rest.protocol: ${restProtocol}\n`;
     let restHeaders = node.querySelector('.rest-headers').value;
     code += `    http.headers: ${restHeaders}\n`;
+    return code;
+}
+
+function getWSFwdCode(node) {
+    let code = "";
+    let wsUri = node.querySelector('.ws-uri').value;
+    code += `    wsuri: ${wsUri}\n`;
+    return code;
+}
+
+function getGPSDFwdCode(node) {
+    let code = "";
+    let serverPort = node.querySelector('.port-num').value;
+    code += `    port: ${serverPort}\n`;
+    return code;
+}
+
+function getRMIFwdCode(node) {
+    let code = "";
+    let serverPort = node.querySelector('.port-num').value;
+    code += `    port: ${serverPort}\n`;
+    let serverName = node.querySelector('.rmi-name').value;
+    code += `    name: ${serverName}\n`;
     return code;
 }
 
@@ -544,11 +576,17 @@ function generateTheCode() {
                     break;
                 case 'ws':
                 case 'wsp':
+                    code += getWSFwdCode(fwd);
+                    break;
                 case 'rest':
                     code += getRESTFwdCode(fwd);
                     break;
                 case 'gpsd':
+                    code += getGPSDFwdCode(fwd);
+                    break;
                 case 'rmi':
+                    code += getRMIFwdCode(fwd);
+                    break;
                 default:
                     code += '    # coming\n'; 
                     break;
