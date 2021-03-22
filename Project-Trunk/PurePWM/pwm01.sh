@@ -43,6 +43,10 @@ echo -e "Using pin #$PIN"
 #
 $(gpio readall) || EXIT_CODE=$?
 echo -e "readall returned $EXIT_CODE"
+if [[ $EXIT_CODE ne 0 ]]
+then
+  echo -e "Moving on..."
+fi
 #
 gpio -g mode ${PIN} pwm
 gpio pwm-ms
