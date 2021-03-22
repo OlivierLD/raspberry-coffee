@@ -24,7 +24,7 @@ import random
 # Period.  This is how long between pulses on your spec sheet.  Ours is 20 milliseconds.
 # TimeHigh.  You can have your arm go quickly back down, or wait at the top.  I'll explain my time on instructables
 # TimeLow.  This is how long you think you'll want for reloading.
-ServoPin = 3
+ServoPin = 3         # Physical number?
 DutyCycleHigh = 1.4
 DutyCycleLow = .2
 Period = 20
