@@ -230,7 +230,7 @@ A snapshot of the (optional) ANSI console (look into the script named `run` for 
 
 Here is a prototype, made of plexiglass and adhesive tape:<br>
 <!-- ![Proto](./doc/prototype.jpg) -->
-<img src="./doc/prototype.jpg" width="512" height="853">
+<img src="./doc/prototype.jpeg" width="512" height="853">
 <br> Next comes the real stuff!
 
 Here is <a href="https://youtu.be/apTLJXE4vUk" target="UTube">a video</a>, one day simulation, featuring the inversion function at work.
