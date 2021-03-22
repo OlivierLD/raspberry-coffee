@@ -27,31 +27,44 @@ def set_angle(angle):
     pwm.ChangeDutyCycle(0)
 
 
-GPIO.setmode(GPIO.BOARD)          # <= i.e. Use physical numbers
+GPIO.setmode(GPIO.BOARD)          # <= i.e. Use physical pin numbers
 GPIO.setwarnings(False)
 GPIO.setup(servo_pin, GPIO.OUT)
+
+with_user_input = True   # Will use time delay otherwise
 
 pwm = GPIO.PWM(servo_pin, 50)
 pwm.start(0)
 
 print("Setting angle to 90")
 set_angle(90)
-sleep(1)
+if with_user_input:
+    user_input = input("Hit [return] to move on ")
+else:
+    sleep(1)
 
 print("Setting angle to 0")
 set_angle(0)
-sleep(1)
+if with_user_input:
+    user_input = input("Hit [return] to move on ")
+else:
+    sleep(1)
 
 print("Setting angle to 180")
 set_angle(180)
-sleep(1)
+if with_user_input:
+    user_input = input("Hit [return] to move on ")
+else:
+    sleep(1)
 
 print("Setting angle to 0")
 set_angle(0)
-# sleep(1)
+if with_user_input:
+    user_input = input("Hit [return] to move on ")
+#else:
+#    sleep(1)
 
 print("Done with demo")
 pwm.stop()
-
 
 GPIO.cleanup()

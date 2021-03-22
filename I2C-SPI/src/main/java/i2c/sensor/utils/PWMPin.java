@@ -8,7 +8,7 @@ import com.pi4j.io.gpio.PinState;
  * Suitable for an LED, not for a servo (cycle width...)
  */
 public class PWMPin extends GPIOPinAdapter {
-	// 30 seems to be the maximum value.
+	// 30 seems to be the maximum usable value.
 	// You can really see the led blinking beyond that.
 	private final static int CYCLE_WIDTH = 30; // ms
 

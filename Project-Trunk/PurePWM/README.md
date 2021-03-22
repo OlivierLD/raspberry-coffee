@@ -19,7 +19,7 @@ gpio -g pwm 18 200
 echo Done.
 ```
 
-It woks from C (with wiringPi):
+It works from C (with wiringPi):
 
 ```c
 #include <stdio.h>
@@ -45,6 +45,7 @@ int main (void) {
 
 But not from PI4J :(
 ```
+$ ./pwm01.bis.sh
 PWM Control - pin 01 ... started.
 Exception in thread "main" com.pi4j.io.gpio.exception.UnsupportedPinModeException: This GPIO pin [GPIO 1] does not support the pin mode specified [soft_pwm_output]
 	at com.pi4j.io.gpio.GpioProviderBase.export(GpioProviderBase.java:115)
@@ -59,6 +60,13 @@ Exception in thread "main" com.pi4j.io.gpio.exception.UnsupportedPinModeExceptio
 ```
 Seems that the Raspberry PI (which is _not_ the only platform `PI4J` runs on) does not like it.
 ... Working on it.
+
+Seems that pin #3 (physical) works.
+Try
+```
+$ ./pwm01.bis.sh 3
+```
+Still working on it...
 
 ### Four Glowing leds
 See example in `sample.FourPWMLeds.java`, run it with
