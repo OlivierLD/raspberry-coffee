@@ -1,12 +1,13 @@
 # Very cool one,
 # From https://www.instructables.com/Program-a-Servo-Build-a-Catapult-and-Solve-for-%ce%a0-w/?utm_source=newsletter&utm_medium=email
 #
-
+# TODO add some println, to know what's going on...
+#
 # Anything you see after '#' is not part of the code.  It's comments meant to help you understand the code
 
 # These are libraries.  They are code written by other people that we're re-using to make our life easier.
 # Importing them lets the computer know we're going to be using them.  Without them this code won't work.
-# The RPi.GPIO library controlls the pins we hooked up our servo to.
+# The RPi.GPIO library controls the pins we hooked up our servo to.
 # the time library us used to let us delay parts of the program from running.
 # the random library lets us launch different distances to solve for pi.
 import RPi.GPIO as GPIO

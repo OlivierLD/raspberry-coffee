@@ -15,6 +15,7 @@ const CHANNEL_DESCRIPTION = {
     'hmc5883l': "Magnetometer sensor."
 };
 
+// Forwarder descriptions
 const FORWARDER_DESCRIPTION = {
     'serial': "Forward received NMEA Data\non a serial port.",
     'tcp': "Act as a TCP server.\nAll received NMEA data\nare forwarded\non the given port\non the current machine.",
@@ -116,6 +117,7 @@ function removeForwarder(button) {
     }
     forwarderList.removeChild(forwarderDiv);
 }
+
 /**
  * channel: the value of the channel ('serial', 'file', etc)
  * element: the <select> element
@@ -245,6 +247,8 @@ function setForwarderParameters(forwarder, element) {
         console.log(`No Div ID for ${forwarder}`);
     }
 }
+
+// Code generators. Specific to each channel, forwarder, computer.
 
 function getSerialChannelCode(node) {
     let code = "";
@@ -478,9 +482,10 @@ function getHCM5883LhannelCode(node) {
 }
 
 function getConsoleFwdCode(node) {
-    return "";
+    return ""; // No parameter!
 }
 
+// Code generation, for all.
 function generateTheCode() {
     let code = '';
     let codeElement = document.getElementById('generated-yaml');
@@ -603,6 +608,7 @@ function generateTheCode() {
     showGeneratedDialog();
 }
 
+// Show/Hide generated yaml code
 function showGeneratedDialog() {
     let codeDialog = document.getElementById("generated-code-dialog");
     codeDialog.show();

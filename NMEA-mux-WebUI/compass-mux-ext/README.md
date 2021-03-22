@@ -32,7 +32,12 @@ $ ./mux.sh nmea.mux.hmc5883l.oled.yaml
 
 It has no Web User Interface for now.
 
-![With a gimbal](./pictures/01.compass-mux.jpg) 
+![With a gimbal](./pictures/01.compass-mux.jpg)
+With Lego &reg; compatibility:
+
+| Top                            | Side                           |
+|:-------------------------------|:-------------------------------|
+| ![top](./pictures/lego.01.jpg) | ![top](./pictures/lego.02.jpg) |
 
 The `stl` files to build the gimbal are [here](https://github.com/OlivierLD/3DPrinting/tree/master/OpenSCAD/Gimbal).
 
