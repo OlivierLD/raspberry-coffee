@@ -13,7 +13,7 @@ In the same light conditions, a panel with an incidence of 0 degrees (normal) pr
 ```
 
 <!-- ![Angles and cosinus](./doc/angles.png) -->
-<!--img src="./doc/angles.png" width="494" height="309" alt="Angles and cosinus"-->
+<img src="./doc/angles.png" width="494" height="309" alt="Angles and cosinus">
 
 And this applies to the two dimensions, tilt, and heading. Orienting the panel so
 it faces the Sun can definitely make a substantial difference in the output.
@@ -162,10 +162,9 @@ Here is an example of a REST request, that returns the list of available operati
      ...
 
 ```
-<!--
 And this is a snapshot of the sample page mentioned above, the "led" sections can be collapsed or expanded:
 <img src="./doc/web.ui.png" width="400" height="388">
- -->
+
 
 ### To run the real project
 You want to start the script above in a way it does not stop when you disconnect.
