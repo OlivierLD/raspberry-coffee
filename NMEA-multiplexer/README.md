@@ -689,7 +689,8 @@ And there is an integration with the [REST Nav Server](https://github.com/Olivie
 - [NMEA Multiplexer on a Raspberry Pi Zero W](./casestudy.md). Compared with Node-RED.
 
 ## Bonus
-- A Web UI to generate the `yaml` files defining the Multiplexer, open `muxbuilder/mux-builder.html` in a browser, no HTTP server needed.
+- A Web UI to generate the `yaml` files defining the Multiplexer, just open `muxbuilder/mux-builder.html` in a browser, no HTTP server needed.
+  ![Generated YAML](./docimages/generated.yaml.png)
 - A sample of a log file analyzer is in `util.LogAnalyzer`:
 ```bash
  $ java -cp ./build/libs/NMEA-multiplexer-1.0-all.jar util.LogAnalyzer ./sample.data/2017.06.17.nmea
