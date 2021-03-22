@@ -546,6 +546,7 @@ function getTWCurrentComputerCode(node) {
 
     return code;
 }
+
 function getConsoleFwdCode(node) {
     return ""; // No parameter!
 }

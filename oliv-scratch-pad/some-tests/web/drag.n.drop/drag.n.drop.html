@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drag n Drop</title>
+    <style>
+#div1 {
+  width: 350px;
+  height: 70px;
+  padding: 10px;
+  border: 1px solid red;
+  border-radius: 10px;
+}
+
+#drag1 {
+    font-size: 50px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: lightgreen;
+    width: 340px;
+    height: 60px;
+    padding: 5px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+    border: 1px solid blue;
+    border-radius: 5px;
+}
+
+p {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 28px;
+  font-weight: bold;
+}
+    </style>
+    <script>
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  let data = ev.dataTransfer.getData("text"); // Id of the dragged Node
+  // ev.target.appendChild(document.getElementById(data));              // Move
+  ev.target.appendChild(document.getElementById(data).cloneNode(true)); // Copy
+}
+    </script>
+</head>
+<body>
+
+
+<p>Drag the bottom on top</p>
+
+<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<br>
+<!--img id="drag1" src="img_logo.gif" draggable="true" ondragstart="drag(event)" width="336" height="69"-->
+
+<div id="drag1" draggable="true" ondragstart="drag(event)">Drag this!</div>
+
+</body>
+</html>

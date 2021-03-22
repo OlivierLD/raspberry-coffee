@@ -13,11 +13,10 @@ In the same light conditions, a panel with an incidence of 0 degrees (normal) pr
 ```
 
 <!-- ![Angles and cosinus](./doc/angles.png) -->
-<img src="./doc/angles.png" width="494" height="309" alt="Angles and cosinus">
+<!--img src="./doc/angles.png" width="494" height="309" alt="Angles and cosinus"-->
 
 And this applies to the two dimensions, tilt, and heading. Orienting the panel so
 it faces the Sun can definitely make a substantial difference in the output.
-
 
 In this version, the servos are driven by a `PCA9685` board.
 

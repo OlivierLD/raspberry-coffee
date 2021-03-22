@@ -16,7 +16,7 @@ import static utils.TimeUtil.delay;
  * PWM pins: GPIO_01, GPIO_23, GPIO_24, GPIO_26.
  *
  * >>> Warning: requires a bug fix in GpioProviderBase, available after 13-Jul-2019
- * Otherwise,, try to use the SDA pins.
+ *     Otherwise, try to use the SDA pins.
  */
 public class Pwm01 {
 	public static void main(String... args)
