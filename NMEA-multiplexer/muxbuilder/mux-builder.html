@@ -453,6 +453,19 @@ function fileFwdOption(sel) {
     </table>
 </div>
 
+<div id="tw-current-computer-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Prefix</td>
+            <td><input type="text" class="device-prefix" placeholder="Device Prefix" value="CC"></td>
+        </tr>
+        <tr>
+            <td>Time Buffer Length</td>
+            <td><input type="text" class="time-buffer-length" placeholder="Comma separated, in milliseconds" value="30, 60, 600"></td>
+        </tr>
+    </table>
+</div>
+
 <div id="add-channel" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
     <table>
         <tr>
@@ -508,6 +521,26 @@ function fileFwdOption(sel) {
             </td>
             <td>
                 <button onclick="removeForwarder(this);" style="margin: 3px;">Remove</button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="add-computer" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Computer:</td>
+            <td>
+                <select onchange="setComputerParameters(this.value, this);">
+                    <option value="tw-current">Current with True Wind</option>
+                </select>
+                <div class="computer-descr" style="max-height: 100px; overflow-y: scroll;"></div>
+            </td>
+            <td>
+                Specific parameters placeholder
+            </td>
+            <td>
+                <button onclick="removeComputer(this);" style="margin: 3px;">Remove</button>
             </td>
         </tr>
     </table>

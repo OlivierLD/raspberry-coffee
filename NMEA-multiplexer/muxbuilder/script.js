@@ -29,6 +29,11 @@ const FORWARDER_DESCRIPTION = {
     'console': "Spits out all received\nNMEA Data\non STDOUT."
 };
 
+// Computer descriptions
+const COMPUTER_DESCRIPTION = {
+    "tw-current": "Current calculation with\nTrue Wind and GPS data\nwhich have to be available.\nCalculation is possible\non different buffer lengths\nfor different damping."
+};
+
 function showDiv(divId) {
 	let elmt = document.getElementById(divId);
 
@@ -95,7 +100,16 @@ function addForwarder() {
 }
 
 function addComputer() {
-    console.log("Will add computer");
+    let computerList = document.getElementById('computer-list');
+    let oneComputerDefinition = document.getElementById('add-computer');
+    let listLength = computerList.children.length;
+    let newComputer = oneComputerDefinition.cloneNode(true); // true: deep!
+    newComputer.id = `add-computer-${listLength.toFixed(0)}`;
+    newComputer.style.display = 'block';
+    computerList.appendChild(newComputer);
+    // Set the computer parameters
+    setComputerParameters('tw-current', // TODO Get the value from the list
+                          newComputer.querySelector('table').querySelector('tr').querySelector('select'));
 }
 
 function removeChannel(button) {
@@ -116,6 +130,16 @@ function removeForwarder(button) {
         forwarderDiv = forwarderDiv.parentElement;
     }
     forwarderList.removeChild(forwarderDiv);
+}
+
+function removeComputer(button) {
+    console.log("Removing computer...");
+    let computerList = document.getElementById('computer-list');
+    let computerDiv = button;
+    while (!(computerDiv instanceof HTMLDivElement)) {
+        computerDiv = computerDiv.parentElement;
+    }
+    computerList.removeChild(computerDiv);
 }
 
 /**
@@ -245,6 +269,37 @@ function setForwarderParameters(forwarder, element) {
         }
     } else {
         console.log(`No Div ID for ${forwarder}`);
+    }
+}
+
+function setComputerParameters(computer, element) {
+    console.log(`Setting parameters for ${computer}`);
+    let divId = null;
+    switch (computer) {
+      case 'tw-current':
+          divId = 'tw-current-computer-parameters';
+          break;
+      default:
+        break;
+    }
+    if (divId !== null) {
+        let prmElements = document.getElementById(divId);
+        let newPrmElement = prmElements.cloneNode(true);
+        newPrmElement.style.display = 'block';
+        let td = element.parentElement.parentElement.children[2];
+        while (td.firstChild) { // Remove existing content
+            td.removeChild(td.firstChild)
+        }
+        td.appendChild(newPrmElement);
+        // Description ?
+        let descField = td.parentElement.querySelector('.computer-descr');
+        while (descField.firstChild) {
+            descField.removeChild(descField.firstChild);
+        }
+        descField.innerHTML = `<pre>${COMPUTER_DESCRIPTION[computer]}</pre>`;
+        // Specificities?
+    } else {
+        console.log(`No Div ID for ${computer}`);
     }
 }
 
@@ -443,7 +498,7 @@ function getWSChannelCode(node) {
     return code;
 }
 
-function getLSM303hannelCode(node) {
+function getLSM303ChannelCode(node) {
     let code = "";
     let devicePrefix = node.querySelector('.device-prefix').value;
     code += `    device.prefix: ${devicePrefix}\n`;
@@ -463,7 +518,7 @@ function getLSM303hannelCode(node) {
     return code;
 }
 
-function getHCM5883LhannelCode(node) {
+function getHCM5883LChannelCode(node) {
     let code = "";
     let devicePrefix = node.querySelector('.device-prefix').value;
     code += `    device.prefix: ${devicePrefix}\n`;
@@ -481,6 +536,16 @@ function getHCM5883LhannelCode(node) {
     return code;
 }
 
+function getTWCurrentComputerCode(node) {
+    let code = "";
+    let devicePrefix = node.querySelector('.device-prefix').value;
+    code += `    prefix: ${devicePrefix}\n`;
+    let bufferLengths = node.querySelector('.time-buffer-length').value;
+    code += `    time.buffer.length: ${bufferLengths}\n`;
+    // Other props? like verbose
+
+    return code;
+}
 function getConsoleFwdCode(node) {
     return ""; // No parameter!
 }
@@ -540,14 +605,14 @@ function generateTheCode() {
                     code += getWSChannelCode(channel);
                     break;
                 case 'lsm303':
-                    code += getLSM303hannelCode(channel);
+                    code += getLSM303ChannelCode(channel);
                     break;
                 case 'zda':
                 case 'rnd':
                     code += getNoPrmChannelCode(channel);
                     break;
                 case 'hmc5883l':
-                    code += getHCM5883LhannelCode(channel);
+                    code += getHCM5883LChannelCode(channel);
                     break;
                 default:
                     code += "    # Not managed...\n";
@@ -564,7 +629,6 @@ function generateTheCode() {
         for (let i=0; i<fwdList.childElementCount; i++) {
             let fwd = fwdList.children[i];
             let fwdType = fwd.querySelectorAll('select')[0].value;
-            // console.log(`Adding channel ${channelType}`);
             code += `  - type: ${fwdType}\n`;
             switch (fwdType) {
                 case 'console':
@@ -600,7 +664,23 @@ function generateTheCode() {
     }
 
     // Computers
-    code += "# Computers\n";
+    let computerList = document.getElementById('computer-list');
+    code += `# ${computerList.children.length === 0 ? 'No' : computerList.children.length} Computer${computerList.children.length > 1 ? 's' : ''}\n`;
+    if (computerList.children.length > 0) {
+        code += "computers:\n";
+        for (let i=0; i<computerList.childElementCount; i++) {
+            let computer = computerList.children[i];
+            let computerType = computer.querySelectorAll('select')[0].value;
+            code += `  - type: ${computerType}\n`;
+            switch (computerType) {
+                case 'tw-current':
+                    code += getTWCurrentComputerCode(computer);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
 
     // Good to go.
