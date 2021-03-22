@@ -162,10 +162,10 @@ Here is an example of a REST request, that returns the list of available operati
      ...
 
 ```
-
+<!--
 And this is a snapshot of the sample page mentioned above, the "led" sections can be collapsed or expanded:
-<!-- ![Web REST Sample](./doc/web.ui.png) -->
 <img src="./doc/web.ui.png" width="400" height="388">
+ -->
 
 ### To run the real project
 You want to start the script above in a way it does not stop when you disconnect.
