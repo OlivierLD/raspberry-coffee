@@ -38,10 +38,11 @@ GPIO.setup(ServoPin, GPIO.OUT)
 
 verbose = True
 if verbose:
-    print(f"ServoPin ${ServoPin}, DutyCycle: High ${DutyCycleHigh}, Low ${DutyCycleLow}, Period ${Period}")
-    print(f"Time: High ${TimeHigh}, Low ${TimeLow}")
+    print(f"ServoPin {ServoPin}, DutyCycle: High {DutyCycleHigh}, Low {DutyCycleLow}, Period {Period}")
+    print(f"Time: High {TimeHigh}, Low {TimeLow}")
 
 keep_looping = True
+print("Hit [Ctrl+C] to exit the loop")
 
 # This code after the 'while' will run forever until you select stop in thonny above, or you unplug it.
 while keep_looping:
