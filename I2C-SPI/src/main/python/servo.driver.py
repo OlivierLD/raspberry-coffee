@@ -5,20 +5,22 @@
 # Signal (white or yellow) on pin #3
 #
 # See also https://tutorials-raspberrypi.com/raspberry-pi-servo-motor-control/
-#          https://www.instructables.com/Program-a-Servo-Build-a-Catapult-and-Solve-for-%ce%a0-w/?utm_source=newsletter&utm_medium=email
+#          https://www.instructables.com/Program-a-Servo-Build-a-Catapult-and-Solve-for-%ce%a0-w
 #
-
+# Doc at https://pypi.org/project/RPi.GPIO/, and https://sourceforge.net/p/raspberry-gpio-python/wiki/Home/
+#
 import RPi.GPIO as GPIO
 from time import sleep
 
 servo_pin = 3  # Physical pin. (3: SDA)
 
+print(f"RPi.GPIO version {GPIO.VERSION}")
 
 def set_angle(angle):
     duty = angle / 18 + 2
-    print(f"For angle {angle}, duty is {duty}")
+    print(f"\tFor angle {angle}, duty is {duty}")
     GPIO.output(servo_pin, True)
-    pwm.ChangeDutyCycle(duty)
+    pwm.ChangeDutyCycle(duty)    # pwm defined below
     sleep(1)
     GPIO.output(servo_pin, False)
     pwm.ChangeDutyCycle(0)
@@ -47,7 +49,7 @@ print("Setting angle to 0")
 set_angle(0)
 # sleep(1)
 
-print("Deon with demo")
+print("Done with demo")
 pwm.stop()
 
 
