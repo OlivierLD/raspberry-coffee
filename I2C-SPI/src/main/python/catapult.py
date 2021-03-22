@@ -43,6 +43,7 @@ if verbose:
 
 keep_looping = True
 print("Hit [Ctrl+C] to exit the loop")
+print("Starting the loop...")
 
 # This code after the 'while' will run forever until you select stop in thonny above, or you unplug it.
 while keep_looping:
@@ -60,7 +61,7 @@ while keep_looping:
             GPIO.output(ServoPin, GPIO.LOW)
             time.sleep((Period - DutyCycleLow) / 1000)
     except KeyboardInterrupt:
-        print("\n\t\tUser interrupted, exiting.")
+        print("\n\tUser interrupted, exiting.")
         keep_looping = False
 
 print("Done")
