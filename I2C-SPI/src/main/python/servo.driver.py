@@ -5,6 +5,7 @@
 # Signal (white or yellow) on pin #3
 #
 # See also https://tutorials-raspberrypi.com/raspberry-pi-servo-motor-control/
+#          https://www.instructables.com/Program-a-Servo-Build-a-Catapult-and-Solve-for-%ce%a0-w/?utm_source=newsletter&utm_medium=email
 #
 
 import RPi.GPIO as GPIO

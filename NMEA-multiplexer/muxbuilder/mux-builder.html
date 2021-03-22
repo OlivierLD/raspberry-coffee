@@ -474,8 +474,7 @@ function fileFwdOption(sel) {
                 <div class="channel-descr" style="max-height: 100px; overflow-y: scroll;"></div>
             </td>
             <td>
-                Specific parameters<br/>
-                . . .
+                Specific parameters placeholder
             </td>
             <td>
                 <button onclick="removeChannel(this);" style="margin: 3px;">Remove</button>
@@ -495,7 +494,7 @@ function fileFwdOption(sel) {
                     <!--option value="udp">UDP</option-->
                     <option value="file">File</option>
                     <option value="ws">WebSocket</option>
-                    <!--option value="mqtt">MQTT</option-->
+                    <!--option value="mqtt">MQTT</option--> <!-- Use dynamic loading -->
                     <option value="rest">REST</option>
                     <option value="gpsd">GPSD</option>
                     <option value="wsp">WebSocket Processor</option>
@@ -505,8 +504,7 @@ function fileFwdOption(sel) {
                 <div class="forwarder-descr" style="max-height: 100px; overflow-y: scroll;"></div>
             </td>
             <td>
-                Specific parameters<br/>
-                . . .
+                Specific parameters placeholder
             </td>
             <td>
                 <button onclick="removeForwarder(this);" style="margin: 3px;">Remove</button>
@@ -621,5 +619,6 @@ function fileFwdOption(sel) {
 </div>
 <hr/>
 <span style="font-style: italic;">Oliv Did it!</span>
+
 </body>
 </html>

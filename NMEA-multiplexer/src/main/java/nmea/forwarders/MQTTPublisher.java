@@ -14,7 +14,8 @@ import java.text.NumberFormat;
 import java.util.Properties;
 
 /**
- * For dynamic loading
+ * <b>For dynamic loading</b> (non standard, as an example)
+ * --------------------------
  * Requires a file like mqtt.properties to provide the broker url.
  */
 public class MQTTPublisher implements Forwarder {
