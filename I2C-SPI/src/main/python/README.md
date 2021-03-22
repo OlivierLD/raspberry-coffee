@@ -2,6 +2,9 @@
 Mostly for tests...
 
 - `servo.driver.py` contains a simple servo driver.
+- `catapult.py` is a cool example, seen at <https://www.instructables.com/Program-a-Servo-Build-a-Catapult-and-Solve-for-%ce%a0-w>,
+  wired like this:
+  ![Catapult](./catapult_bb.png).
 - The `lis3mdl` folder contains a way to read a `LIS3MDL` breakout board from Adafruit.
 See the [documentation](https://learn.adafruit.com/lis3mdl-triple-axis-magnetometer?view=all)
   
