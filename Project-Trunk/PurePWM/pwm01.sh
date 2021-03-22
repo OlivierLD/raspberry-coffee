@@ -22,9 +22,12 @@ fi
 FOUND=false
 for pin in $PIN_VALUES
 do
+  echo -e "Testing pin $pin vs $PIN"
   if [[ "$PIN" == "$pin" ]]
   then
+    echo -e "Good!"
     FOUND=true
+    break
   fi
 done
 #
