@@ -7,7 +7,8 @@
 # See also https://tutorials-raspberrypi.com/raspberry-pi-servo-motor-control/
 #          https://www.instructables.com/Program-a-Servo-Build-a-Catapult-and-Solve-for-%ce%a0-w
 #
-# Doc at https://pypi.org/project/RPi.GPIO/, and https://sourceforge.net/p/raspberry-gpio-python/wiki/Home/
+# Doc at https://pypi.org/project/RPi.GPIO/,
+#    and https://sourceforge.net/p/raspberry-gpio-python/wiki/Home/
 #
 import RPi.GPIO as GPIO
 from time import sleep
