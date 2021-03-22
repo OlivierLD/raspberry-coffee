@@ -343,7 +343,7 @@ Here is an interesting setting, with a Raspberry Pi Zero:
 ![Stacked](./pictures/new.setting.jpg)
 
 - There is a [Stepper Motor bonnet](https://www.adafruit.com/product/4280)
-    - Works like the [Adafruit Motor Hat](https://www.adafruit.com/product/2348), used previously.
+    - Works like the [Adafruit Motor Hat](https://www.adafruit.com/product/2348), used previously (same code).
 - With a [GPIO Stacking Header](https://www.adafruit.com/product/2223)
 - A small [OLED I2C Screen](https://www.adafruit.com/product/3527)
 

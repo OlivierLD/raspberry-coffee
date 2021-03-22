@@ -31,7 +31,7 @@ import java.util.Properties;
  * <br>
  * May require customization!!!
  * <br>
- * See https://github.com/OlivierLD/pebble/tree/master/NMEA.app
+ * See https://github.com/OlivierLD/SmartWatches/tree/master/pebble/NMEA
  */
 public class WebSocketProcessor implements Forwarder {
 	private WebSocketClient wsClient = null;

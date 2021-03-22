@@ -36,17 +36,30 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 GPIO.setup(ServoPin, GPIO.OUT)
 
+verbose = True
+if verbose:
+    print(f"ServoPin ${ServoPin}, DutyCycle: High ${DutyCycleHigh}, Low ${DutyCycleLow}, Period ${Period}")
+    print(f"Time: High ${TimeHigh}, Low ${TimeLow}")
+
+keep_looping = True
+
 # This code after the 'while' will run forever until you select stop in thonny above, or you unplug it.
-while True:
-    # This loop controls both how long and how high to raise the arm.
-    for i in range(int(TimeHigh * random.randrange(1, 4) * 1000 / (Period * 2))):
-        GPIO.output(ServoPin, GPIO.HIGH)
-        time.sleep(DutyCycleHigh / 1000)
-        GPIO.output(ServoPin, GPIO.LOW)
-        time.sleep((Period - DutyCycleHigh) / 1000)
-    # This loop lowers the arm for the amount of time you've chosen.
-    for i in range(int(TimeLow * 1000 / Period)):
-        GPIO.output(ServoPin, GPIO.HIGH)
-        time.sleep(DutyCycleLow / 1000)
-        GPIO.output(ServoPin, GPIO.LOW)
-        time.sleep((Period - DutyCycleLow) / 1000)
+while keep_looping:
+    try:
+        # This loop controls both how long and how high to raise the arm.
+        for i in range(int(TimeHigh * random.randrange(1, 4) * 1000 / (Period * 2))):
+            GPIO.output(ServoPin, GPIO.HIGH)
+            time.sleep(DutyCycleHigh / 1000)
+            GPIO.output(ServoPin, GPIO.LOW)
+            time.sleep((Period - DutyCycleHigh) / 1000)
+        # This loop lowers the arm for the amount of time you've chosen.
+        for i in range(int(TimeLow * 1000 / Period)):
+            GPIO.output(ServoPin, GPIO.HIGH)
+            time.sleep(DutyCycleLow / 1000)
+            GPIO.output(ServoPin, GPIO.LOW)
+            time.sleep((Period - DutyCycleLow) / 1000)
+    except KeyboardInterrupt:
+        print("\n\t\tUser interrupted, exiting.")
+        keep_looping = False
+
+print("Done")
