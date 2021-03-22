@@ -25,7 +25,7 @@ do
   # echo -e "Testing pin $pin vs $PIN"
   if [[ "$PIN" == "$pin" ]]
   then
-    echo -e "Good!"
+    # echo -e "Good!"
     FOUND=true
     break
   fi
@@ -41,7 +41,8 @@ fi
 #
 echo -e "Using pin #$PIN"
 #
-gpio readall
+$(gpio readall) || EXIT_CODE=$?
+echo -e "readall returned $EXIT_CODE"
 #
 gpio -g mode ${PIN} pwm
 gpio pwm-ms
