@@ -24,6 +24,15 @@ public class Lambda101 {
 		return s.length();
 	}
 
+
+	private static String reverse(String s) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = s.length(); i > 0; i--) {
+			sb.append(s.charAt(i - 1));
+		}
+		return sb.toString();
+	}
+
 	public static void main(String... args) {
 		String str = genericStuff("Akeu", Lambda101::repeat);
 		System.out.println(str);
@@ -55,13 +64,5 @@ public class Lambda101 {
 			return sb.toString().trim();
 		});
 		System.out.println(str);
-	}
-
-	private static String reverse(String s) {
-		StringBuffer sb = new StringBuffer();
-		for (int i = s.length(); i > 0; i--) {
-			sb.append(s.charAt(i - 1));
-		}
-		return sb.toString();
 	}
 }
