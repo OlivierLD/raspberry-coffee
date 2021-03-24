@@ -8,16 +8,44 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ChatTCPServer implements ServerInterface {
 
     private final static boolean VERBOSE = true;
 
-    private List<Socket> clientSocketList = new ArrayList<>(1);
+    private static class ChatClient {
+        String name;
 
-    private int tcpPort = 7001; // Default
+        public ChatClient() {
+        }
+
+        public ChatClient name(String name) {
+            this.name = name;
+            return this;
+        }
+    }
+
+    // private List<Socket> clientSocketList = new ArrayList<>(1);
+    private Map<Socket, ChatClient> clientMap = new HashMap<>();
+
+    private final static int DEFAULT_PORT = 7001;
+
+    private int tcpPort;
     private ServerSocket serverSocket = null;
+
+    public enum SERVER_COMMANDS {
+        I_AM,
+        WHO_S_THERE,
+        I_M_OUT
+    };
+
+    public ChatTCPServer() throws Exception {
+        this(DEFAULT_PORT);
+    }
 
     public ChatTCPServer(int port) throws Exception {
         this.tcpPort = port;
@@ -35,18 +63,63 @@ public class ChatTCPServer implements ServerInterface {
     }
 
     protected void setSocket(Socket skt) {
-        this.clientSocketList.add(skt);
+        // this.clientSocketList.add(skt);
+        this.clientMap.put(skt, new ChatClient());
         ChatTCPServer instance = this;
         Thread clientThread = new Thread(() -> {
             try {
                 // out = new PrintWriter(clientSocket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(new InputStreamReader(skt.getInputStream()));
-                String clientMessage = in.readLine();
-                System.out.printf("\t>> Got a client message [%s] from %s\n", clientMessage, skt);
-                instance.onMessage((clientMessage + "\n").getBytes(), skt);
+                while (true) {
+                    String clientMessage = in.readLine();
+                    if (clientMessage != null) {
+                        System.out.printf("\t>> Got a client message [%s] from %s\n", clientMessage, skt);
+                        boolean processed = false;
+                        for (SERVER_COMMANDS serverCommand : SERVER_COMMANDS.values()) {
+                            if (clientMessage.startsWith(serverCommand.toString())) {
+                                processed = true;
+                                // Process it
+                                System.out.printf("Message starts with %s, processing it.\n", serverCommand);
+                                switch (serverCommand.toString()) { // TODO Something nicer
+                                    case "I_AM":
+                                        ChatClient chatClient = clientMap.get(skt);
+                                        if (chatClient != null) {
+                                            chatClient = chatClient.name(clientMessage.trim().substring(SERVER_COMMANDS.I_AM.toString().length() + 1)); // +1: ":"
+                                            clientMap.put(skt, chatClient);
+                                        } else {
+                                            // What the French !? Not Found??
+                                        }
+                                        break;
+                                    case "I_M_OUT":
+                                        clientMap.remove(skt);
+                                        break;
+                                    case "WHO_S_THERE":
+                                        String clients = clientMap.keySet().stream().map(k -> clientMap.get(k).name).collect(Collectors.joining(", "));
+                                        clients += "\n";
+                                        DataOutputStream out = new DataOutputStream(skt.getOutputStream());
+                                        out.write(clients.getBytes());
+                                        out.flush();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            }
+                        }
+                        if (!processed) {
+                            instance.onMessage((clientMessage + "\n").getBytes(), skt);
+                        }
+                    } else {
+                        System.out.println("Client Message is null???");
+                        this.clientMap.remove(skt);
+                        break;
+                    }
+                }
+                // in.close();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
+            System.out.println("End of client thread.");
         });
         clientThread.start();
     }
@@ -54,9 +127,9 @@ public class ChatTCPServer implements ServerInterface {
     @Override
     public void onMessage(byte[] message, Socket sender) {
         List<Socket> toRemove = new ArrayList<>();
-        synchronized (clientSocketList) {
-            // Broadcats to all connected clients
-            clientSocketList.stream().forEach(tcpSocket -> { // TODO Synchronize the stream?
+        synchronized (this.clientMap) {
+            // Broadcast to all connected clients
+            this.clientMap.keySet().forEach(tcpSocket -> { // TODO Synchronize the stream?
                 if (!tcpSocket.equals(sender)) { // Do not send message to sender.
                     synchronized (tcpSocket) {
                         try {
@@ -81,21 +154,21 @@ public class ChatTCPServer implements ServerInterface {
 
         if (toRemove.size() > 0) {
             // Removing disconnected clients
-            synchronized (clientSocketList) {
-                toRemove.stream().forEach(this.clientSocketList::remove);
+            synchronized (this.clientMap) {
+                toRemove.stream().forEach(this.clientMap::remove);
             }
         }
     }
 
     private int getNbClients() {
-        return clientSocketList.size();
+        return this.clientMap.size();
     }
 
     @Override
     public void close() {
         System.out.println("- Stop writing to " + this.getClass().getName());
         try {
-            for (Socket tcpSocket : clientSocketList) {
+            for (Socket tcpSocket : this.clientMap.keySet()) {
                 tcpSocket.close();
             }
         } catch (Exception ex) {
@@ -129,39 +202,5 @@ public class ChatTCPServer implements ServerInterface {
             }
             System.out.println("..... End of TCP SocketThread.");
         }
-    }
-
-    public static void main(String... args) {
-
-        ChatTCPServer chatTCPServer = null;
-        try {
-            chatTCPServer = new ChatTCPServer(7001);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-
-        final Thread itsMe = Thread.currentThread();
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("\nOops! Trapped exit signal...");
-            synchronized (itsMe) {
-                itsMe.notify();
-            }
-        }));
-        System.out.println("Chat server is starting.");
-        try {
-            synchronized (itsMe) {
-                itsMe.wait();
-            }
-            System.out.println("Ok, ok! I'm going!");
-            // TODO: Notify connected clients
-            if (chatTCPServer != null) {
-                chatTCPServer.close();
-            }
-        } catch (InterruptedException ie) {
-            ie.printStackTrace();
-        }
-        System.out.println("Bye!\n");
     }
 }
