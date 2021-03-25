@@ -9,9 +9,11 @@ public class client {
     private final static String SERVER_PORT_PREFIX = "--server-port:";
 
     public static void main(String... args) {
-        String clientName = "Its Me!";
+
+        String clientName = "It's Me!";
         String chatServerName = "localhost";
         int chatServerPort = 7001;
+
         for (int i=0; i<args.length; i++) {
             if (args[i].startsWith(CLIENT_NAME_PREFIX)) {
                 clientName = args[i].substring(CLIENT_NAME_PREFIX.length());
@@ -36,7 +38,7 @@ public class client {
             ie.printStackTrace();
         }
 
-        String idMess = String.format("%s:%s\n", ChatTCPServer.SERVER_COMMANDS.I_AM.toString(), _clientName);
+        String idMess = String.format("%s:%s", ChatTCPServer.SERVER_COMMANDS.I_AM.toString(), _clientName);
         System.out.printf(">>> Telling server who I am: %s\n", idMess);
         client.writeToServer(idMess);
 
@@ -56,7 +58,7 @@ public class client {
                     System.out.printf("Processing user input [%s]\n", userInput);
                     if ("Q".equalsIgnoreCase(userInput) || "QUIT".equalsIgnoreCase(userInput)) {
                         keepAsking = false;
-                        client.writeToServer(ChatTCPServer.SERVER_COMMANDS.I_M_OUT + "\n");
+                        client.writeToServer(ChatTCPServer.SERVER_COMMANDS.I_M_OUT.toString());
                     } else {
                         client.writeToServer(userInput);
                     }
@@ -73,5 +75,4 @@ public class client {
         }
         System.out.println("Bye!");
     }
-
 }
