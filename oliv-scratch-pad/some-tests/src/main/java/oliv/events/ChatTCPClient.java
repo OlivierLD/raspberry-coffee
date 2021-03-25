@@ -122,7 +122,11 @@ public class ChatTCPClient {
     }
 
     public void writeToServer(String message) {
-        out.println(message);
+        if (out != null) {
+            out.println(message);
+        } else {
+            throw new RuntimeException("No output stream to server!");
+        }
     }
 
     public void closeClient() throws Exception {

@@ -28,7 +28,7 @@
   - What do you see?
   - What's going to happen?
   - How can you fix that?
-    - Increase heap size?
+    - Increase heap size? `-Xms64M -Xmx1G`?
     - Rewrite the code?
   
 - See `oliv.fibonacci.Two.java`
@@ -91,3 +91,40 @@ From each client, whatever is entered in the console (terminated by `[Return]`) 
   ```
   How would you do something more elegant and efficient?
 
+##### Package client and server for distribution
+Server:
+```
+$ rm -rf classes
+$ rm -rf dist
+$ javac -d classes -s src/main/java \
+        src/main/java/oliv/events/ServerInterface.java \
+        src/main/java/oliv/events/ChatTCPServer.java \
+        src/main/java/oliv/events/server.java 
+$ mkdir dist
+$ echo "Main-Class: oliv.events.server" > manifest.txt
+$ cd classes
+$ jar -cfm ../dist/server.jar ../manifest.txt *
+$ cd ../dist
+$ java -jar server.jar --server-verbose:false --server-port:8000
+Use [Ctrl-C] to exit.
+Chat server started on port 8000.
+. . .
+```
+
+Client:
+```
+$ # rm -rf classes
+$ # rm -rf dist
+$ javac -cp ./dist/server.jar \
+        -d classes -s src/main/java \
+        src/main/java/oliv/events/ChatTCPClient.java \
+        src/main/java/oliv/events/client.java 
+$ # mkdir dist
+$ echo "Main-Class: oliv.events.client" > manifest.txt
+$ cd classes
+$ jar -cfm ../dist/client.jar ../manifest.txt *
+$ cd ../dist
+$ java -jar client.jar --client-name:XXX --server-port:8000 --server-name:localhost
+>>> Telling server who I am: I_AM:XXX
+. . .
+```
