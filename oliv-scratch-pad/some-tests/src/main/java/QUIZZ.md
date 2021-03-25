@@ -126,5 +126,9 @@ $ jar -cfm ../dist/client.jar ../manifest.txt *
 $ cd ../dist
 $ java -jar client.jar --client-name:XXX --server-port:8000 --server-name:localhost
 >>> Telling server who I am: I_AM:XXX
+Q or QUIT to quit
+WHO_S_THERE to know who's there
+Anything else will be broadcasted
+> 
 . . .
 ```
