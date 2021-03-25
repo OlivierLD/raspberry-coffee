@@ -1,4 +1,4 @@
-### To run the processor (generates new code at **_Compile_** Time)
+### To run the annotation processor (generates new code at **_Compile_** Time)
 > From <https://www.baeldung.com/java-annotation-processing-builder>
 
 From the folder where `oliv` is:
