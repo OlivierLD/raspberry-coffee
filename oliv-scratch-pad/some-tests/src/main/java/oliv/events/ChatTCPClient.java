@@ -61,13 +61,17 @@ public class ChatTCPClient {
         return this.hostName;
     }
 
-    public void startClient() {
+    public void startClient(Thread whoToTell) {
         try {
             InetAddress address = InetAddress.getByName(hostName);
             clientSocket = new Socket(address, tcpPort);
 
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+            synchronized(whoToTell) {
+                whoToTell.notify();
+            }
 
             while (this.stayConnected) {
                 try {

@@ -26,14 +26,19 @@ public class client {
 
         ChatTCPClient client = new ChatTCPClient(clientName, chatServerName, chatServerPort);
         final String _clientName = clientName;
+        final Thread me = Thread.currentThread();
         Thread listener = new Thread(() -> {
-            client.startClient();
+            client.startClient(me);
         });
         listener.start();
 
         // Wait for the stuff to start
         try {
-            Thread.sleep(1_000L); // TODO: Something nicer
+//            Thread.sleep(1_000L); // Bad approach: See below something nicer
+            synchronized (me) {
+                me.wait();
+                System.out.println("Done with client initialization.");
+            }
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }
