@@ -1,0 +1,19 @@
+#
+# MUX definition.
+#
+name: "Read 1 serial ports."
+context:
+  with.http.server: false
+  init.cache: false
+channels:
+  - type: serial
+    port: /dev/tty.usbmodem141101
+    baudrate: 4800
+    verbose: false
+forwarders:
+  - type: console
+    # verbose: false
+    # forward.01.timebase.filename=true
+    # forward.01.filename.suffix=_LOG
+    # forward.01.log.dir=logged
+    # forward.01.split=hour

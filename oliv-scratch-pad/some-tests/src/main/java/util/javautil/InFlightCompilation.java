@@ -157,6 +157,7 @@ public class InFlightCompilation {
 					long length = classFile.length();
 					InputStream cis = new FileInputStream(classFile);
 					if (length > Integer.MAX_VALUE) {
+						cis.close();
 						throw new RuntimeException("Class file too large...");
 					} else {
 						// Read bytes from the class

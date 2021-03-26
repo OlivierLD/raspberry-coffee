@@ -38,7 +38,7 @@ public class OnDiscCompilation {
 			compiler = ToolProvider.getSystemJavaCompiler();
 		}
 		if (diagnostics == null) {
-			diagnostics = new DiagnosticCollector<JavaFileObject>();
+			diagnostics = new DiagnosticCollector<>();
 		}
 		StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
 
