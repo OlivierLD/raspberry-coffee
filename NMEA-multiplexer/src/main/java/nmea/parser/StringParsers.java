@@ -147,23 +147,23 @@ public class StringParsers {
 
 	// MDA Meteorological Composite
 	public static MDA parseMDA(String data) {
-	  /*
-     * $--MDA,x.x,I,x.x,B,x.x,C,x.x,C,x.x,x.x,x.x,C,x.x,T,x.x,M,x.x,N,x.x,M*hh<CR><LF>
-     *        |     |     |     |     |   |   |     |     |     |     |
-     *        |     |     |     |     |   |   |     |     |     |     19-Wind speed, m/s
-     *        |     |     |     |     |   |   |     |     |     17-Wind speed, knots
-     *        |     |     |     |     |   |   |     |     15-Wind dir Mag
-     *        |     |     |     |     |   |   |     13-Wind dir, True
-     *        |     |     |     |     |   |   11-Dew Point C
-     *        |     |     |     |     |   10-Absolute hum %
-     *        |     |     |     |     9-Relative hum %
-     *        |     |     |     7-Water temp in Celcius
-     *        |     |     5-Air Temp in Celcius  |
-     *        |     3-Pressure in Bars
-     *        1-Pressure in inches
-     *
-     * Example: $WIMDA,29.4473,I,0.9972,B,17.2,C,,,,,,,,,,,,,,*3E
-     */
+	    /*
+		 * $--MDA,x.x,I,x.x,B,x.x,C,x.x,C,x.x,x.x,x.x,C,x.x,T,x.x,M,x.x,N,x.x,M*hh<CR><LF>
+		 *        |     |     |     |     |   |   |     |     |     |     |
+		 *        |     |     |     |     |   |   |     |     |     |     19-Wind speed, m/s
+		 *        |     |     |     |     |   |   |     |     |     17-Wind speed, knots
+		 *        |     |     |     |     |   |   |     |     15-Wind dir Mag
+		 *        |     |     |     |     |   |   |     13-Wind dir, True
+		 *        |     |     |     |     |   |   11-Dew Point C
+		 *        |     |     |     |     |   10-Absolute hum %
+		 *        |     |     |     |     9-Relative hum %
+		 *        |     |     |     7-Water temp in Celcius
+		 *        |     |     5-Air Temp in Celcius  |
+		 *        |     3-Pressure in Bars
+		 *        1-Pressure in inches
+		 *
+		 * Example: $WIMDA,29.4473,I,0.9972,B,17.2,C,,,,,,,,,,,,,,*3E
+		 */
 		String sa[] = data.substring(0, data.indexOf("*")).split(",");
 		MDA mda = new MDA();
 		for (int i = 0; i < sa.length; i++) {
@@ -223,14 +223,14 @@ public class StringParsers {
 	 * @return Pressure in Mb / hPa
 	 */
 	public static double parseMMB(String data) {
-    /*
-     * Structure is $IIMMB,29.9350,I,1.0136,B*7A
-     *                     |       | |      |
-     *                     |       | |      Bars
-     *                     |       | Pressure in Bars
-     *                     |       Inches of Hg
-     *                     Pressure in inches of Hg
-     */
+		/*
+		 * Structure is $IIMMB,29.9350,I,1.0136,B*7A
+		 *                     |       | |      |
+		 *                     |       | |      Bars
+		 *                     |       | Pressure in Bars
+		 *                     |       Inches of Hg
+		 *                     Pressure in inches of Hg
+		 */
 		double d = 0d;
 		String sa[] = data.substring(0, data.indexOf("*")).split(",");
 		try {
@@ -243,12 +243,12 @@ public class StringParsers {
 
 	// MTA Air Temperature
 	public static double parseMTA(String data) {
-    /*
-     * Structure is $IIMTA,020.5,C*30
-     *                     |     |
-     *                     |     Celcius
-     *                     Temperature in Celcius
-     */
+		/*
+		 * Structure is $IIMTA,020.5,C*30
+		 *                     |     |
+		 *                     |     Celcius
+		 *                     Temperature in Celcius
+		 */
 		double d = 0d;
 		String sa[] = data.substring(0, data.indexOf("*")).split(",");
 		try {
@@ -260,16 +260,16 @@ public class StringParsers {
 
 	// VDR Current Speed and Direction
 	public static Current parseVDR(String data) {
-    /*
-     * Structure is $IIVDR,00.0,T,00.0,M,00.0,N*XX
-     *                     |    | |    | |    |
-     *                     |    | |    | |    Knots
-     *                     |    | |    | Speed
-     *                     |    | |    Mag.
-     *                     |    | Magnetic Dir
-     *                     |    True
-     *                     True Dir
-     */
+		/*
+		 * Structure is $IIVDR,00.0,T,00.0,M,00.0,N*XX
+		 *                     |    | |    | |    |
+		 *                     |    | |    | |    Knots
+		 *                     |    | |    | Speed
+		 *                     |    | |    Mag.
+		 *                     |    | Magnetic Dir
+		 *                     |    True
+		 *                     True Dir
+		 */
 		Current current = null;
 		String sa[] = data.substring(0, data.indexOf("*")).split(",");
 		try {
@@ -282,15 +282,15 @@ public class StringParsers {
 	}
 
 	public static float parseBAT(String data) {
-    /*
-     * NOT STANDARD !!!
-     * Structure is $XXBAT,14.82,V,1011,98*20
-     *                     |     | |    |
-     *                     |     | |    Volume [0..100]
-     *                     |     | ADC [0..1023]
-     *                     |     Volts
-     *                     Voltage
-     */
+		/*
+		 * NOT STANDARD !!!
+		 * Structure is $XXBAT,14.82,V,1011,98*20
+		 *                     |     | |    |
+		 *                     |     | |    Volume [0..100]
+		 *                     |     | ADC [0..1023]
+		 *                     |     Volts
+		 *                     Voltage
+		 */
 		float v = -1f;
 		String sa[] = data.substring(0, data.indexOf("*")).split(",");
 		try {
@@ -301,12 +301,12 @@ public class StringParsers {
 	}
 
 	public static long parseSTD(String data) {
-    /*
-     * NOT STANDARD !!!
-     * Structure is $XXSTD,77672*5C
-     *                     |
-     *                     Cache Age in ms
-     */
+		/*
+		 * NOT STANDARD !!!
+		 * Structure is $XXSTD,77672*5C
+		 *                     |
+		 *                     Cache Age in ms
+		 */
 		long age = 0L;
 		String sa[] = data.substring(0, data.indexOf("*")).split(",");
 		try {
@@ -326,20 +326,20 @@ public class StringParsers {
 		if (s.length() < 6) {
 			return gsvMap;
 		}
-//  System.out.println("String [" + s + "]");
-    /* Structure is $GPGSV,3,1,11,03,03,111,00,04,15,270,00,06,01,010,00,13,06,292,00*74
-     *                     | | |  |  |  |   |  |            |            |
-     *                     | | |  |  |  |   |  |            |            Fourth SV...
-     *                     | | |  |  |  |   |  |            Third SV...
-     *                     | | |  |  |  |   |  Second SV...
-     *                     | | |  |  |  |   SNR (0-99 db)
-     *                     | | |  |  |  Azimuth in degrees (0-359)
-     *                     | | |  |  Elevation in degrees (0-90)
-     *                     | | |  First SV PRN Number
-     *                     | | Total number of SVs in view
-     *                     | Message Number
-     *                     Number of messages in this cycle
-     */
+//  	System.out.println("String [" + s + "]");
+		/* Structure is $GPGSV,3,1,11,03,03,111,00,04,15,270,00,06,01,010,00,13,06,292,00*74
+		 *                     | | |  |  |  |   |  |            |            |
+		 *                     | | |  |  |  |   |  |            |            Fourth SV...
+		 *                     | | |  |  |  |   |  |            Third SV...
+		 *                     | | |  |  |  |   |  Second SV...
+		 *                     | | |  |  |  |   SNR (0-99 db)
+		 *                     | | |  |  |  Azimuth in degrees (0-359)
+		 *                     | | |  |  Elevation in degrees (0-90)
+		 *                     | | |  First SV PRN Number
+		 *                     | | Total number of SVs in view
+		 *                     | Message Number
+		 *                     Number of messages in this cycle
+		 */
 		final int DATA_OFFSET = 3; // num of mess, mess num, Total num of SVs.
 		final int NB_DATA = 4; // SV num, elev, Z, SNR
 
@@ -384,7 +384,7 @@ public class StringParsers {
 					if (gsvMap != null) {
 						gsvMap.put(svNum, svd);
 					}
-//        System.out.println("SV #" + rnkInView + ", SV:" + svNum + " H:"+ elev + ", Z:" + z + ", snr:" + snr);
+//        			System.out.println("SV #" + rnkInView + ", SV:" + svNum + " H:"+ elev + ", Z:" + z + ", snr:" + snr);
 				}
 			}
 		} catch (Exception ex) {
@@ -430,23 +430,23 @@ public class StringParsers {
 		if (s.length() < 6) {
 			return al;
 		}
-    /* Structure is
-     *  $GPGGA,014457,3739.853,N,12222.821,W,1,03,5.4,1.1,M,-28.2,M,,*7E
-     *  $aaGGA,hhmmss.ss,llll.ll,a,gggg.gg,a,x,xx,x.x,x.x,M,x.x,M,x.x,xxxx*hh(CR)(LF)
-     *         |         |         |         | |  |   |   | |   | |   |
-     *         |         |         |         | |  |   |   | |   | |   Differential reference station ID
-     *         |         |         |         | |  |   |   | |   | Age of differential GPS data (seconds)
-     *         |         |         |         | |  |   |   | |   Unit of geodial separation, meters
-     *         |         |         |         | |  |   |   | Geodial separation
-     *         |         |         |         | |  |   |   Unit of antenna altitude, meters
-     *         |         |         |         | |  |   Antenna altitude above sea level
-     *         |         |         |         | |  Horizontal dilution of precision
-     *         |         |         |         | number of satellites in use 00-12 (in use, not in view!)
-     *         |         |         |         GPS quality indicator (0:invalid, 1:GPS fix, 2:DGPS fix)
-     *         |         |         Longitude
-     *         |         Latitude
-     *         UTC of position
-     */
+		/* Structure is
+		 *  $GPGGA,014457,3739.853,N,12222.821,W,1,03,5.4,1.1,M,-28.2,M,,*7E
+		 *  $aaGGA,hhmmss.ss,llll.ll,a,gggg.gg,a,x,xx,x.x,x.x,M,x.x,M,x.x,xxxx*hh(CR)(LF)
+		 *         |         |         |         | |  |   |   | |   | |   |
+		 *         |         |         |         | |  |   |   | |   | |   Differential reference station ID
+		 *         |         |         |         | |  |   |   | |   | Age of differential GPS data (seconds)
+		 *         |         |         |         | |  |   |   | |   Unit of geodial separation, meters
+		 *         |         |         |         | |  |   |   | Geodial separation
+		 *         |         |         |         | |  |   |   Unit of antenna altitude, meters
+		 *         |         |         |         | |  |   Antenna altitude above sea level
+		 *         |         |         |         | |  Horizontal dilution of precision
+		 *         |         |         |         | number of satellites in use 00-12 (in use, not in view!)
+		 *         |         |         |         GPS quality indicator (0:invalid, 1:GPS fix, 2:DGPS fix)
+		 *         |         |         Longitude
+		 *         |         Latitude
+		 *         UTC of position
+		 */
 		String sa[] = s.substring(0, s.indexOf("*")).split(",");
 		double utc = 0L, lat = 0L, lng = 0L;
 		int nbsat = 0;
@@ -508,17 +508,17 @@ public class StringParsers {
 
 	// GSA GPS DOP and active satellites
 	public static GSA parseGSA(String data) {
-    /*
-     * $GPGSA,A,3,19,28,14,18,27,22,31,39,,,,,1.7,1.0,1.3*35
-     *        | | |                           |   |   |
-     *        | | |                           |   |   VDOP
-     *        | | |                           |   HDOP
-     *        | | |                           PDOP (dilution of precision). No unit; the smaller the better.
-     *        | | IDs of the SVs used in fix (up to 12)
-     *        | Mode: 1=Fix not available, 2=2D, 3=3D
-     *        Mode: M=Manual, forced to operate in 2D or 3D
-     *              A=Automatic, 3D/2D
-     */
+		/*
+		 * $GPGSA,A,3,19,28,14,18,27,22,31,39,,,,,1.7,1.0,1.3*35
+		 *        | | |                           |   |   |
+		 *        | | |                           |   |   VDOP
+		 *        | | |                           |   HDOP
+		 *        | | |                           PDOP (dilution of precision). No unit; the smaller the better.
+		 *        | | IDs of the SVs used in fix (up to 12)
+		 *        | Mode: 1=Fix not available, 2=2D, 3=3D
+		 *        Mode: M=Manual, forced to operate in 2D or 3D
+		 *              A=Automatic, 3D/2D
+		 */
 		GSA gsa = new GSA();
 		String[] elements = data.substring(0, data.indexOf("*")).split(",");
 		if (elements.length >= 2) {
@@ -568,15 +568,15 @@ public class StringParsers {
 		if (s.length() < 6) {
 			return (VHW) null;
 		}
-    /* Structure is
-     *         1   2 3   4 5   6 7   8
-     *  $aaVHW,x.x,T,x.x,M,x.x,N,x.x,K*hh(CR)(LF)
-     *         |     |     |     |
-     *         |     |     |     Speed in km/h
-     *         |     |     Speed in knots
-     *         |     Heading in degrees, Magnetic
-     *         Heading in degrees, True
-     */
+		/* Structure is
+		 *         1   2 3   4 5   6 7   8
+		 *  $aaVHW,x.x,T,x.x,M,x.x,N,x.x,K*hh(CR)(LF)
+		 *         |     |     |     |
+		 *         |     |     |     Speed in km/h
+		 *         |     |     Speed in knots
+		 *         |     Heading in degrees, Magnetic
+		 *         Heading in degrees, True
+		 */
 		// We're interested only in Speed in knots.
 		double speed = defaultBSP;
 		double hdm = 0d;
@@ -613,14 +613,14 @@ public class StringParsers {
 
 		double cumulative = 0d;
 		double sinceReset = 0d;
-    /* Structure is
-     * $aaVLW,x.x,N,x.x,N*hh<CR><LF>
-     *        |   | |   |
-     *        |   | |   Nautical miles
-     *        |   | Distance since reset
-     *        |   Nautical miles
-     *        Total cumulative distance
-     */
+		/* Structure is
+		 * $aaVLW,x.x,N,x.x,N*hh<CR><LF>
+		 *        |   | |   |
+		 *        |   | |   Nautical miles
+		 *        |   | Distance since reset
+		 *        |   Nautical miles
+		 *        Total cumulative distance
+		 */
 		try {
 			String[] nmeaElements = data.substring(0, data.indexOf("*")).split(",");
 			cumulative = parseNMEADouble(nmeaElements[1]);
@@ -634,10 +634,10 @@ public class StringParsers {
 
 	// MTW Water Temperature
 	public static double parseMTW(String data) {
-    /* Structure
-     * $xxMTW,+18.0,C*hh
-     *
-     */
+		/* Structure
+		 * $xxMTW,+18.0,C*hh
+		 *
+		 */
 		String s = data.trim();
 		if (s.length() < 6) {
 			return 0d;
@@ -670,15 +670,15 @@ public class StringParsers {
 		if (s.length() < 6) {
 			return null;
 		}
-    /* Structure is
-     *  $aaMWV,x.x,a,x.x,a,A*hh
-     *         |   | |   | |
-     *         |   | |   | status : A=data valid
-     *         |   | |   Wind Speed unit (K/M/N)
-     *         |   | Wind Speed
-     *         |   reference R=relative, T=true
-     *         Wind angle 0 to 360 degrees
-     */
+		/* Structure is
+		 *  $aaMWV,x.x,a,x.x,a,A*hh
+		 *         |   | |   | |
+		 *         |   | |   | status : A=data valid
+		 *         |   | |   Wind Speed unit (K/M/N)
+		 *         |   | Wind Speed
+		 *         |   reference R=relative, T=true
+		 *         Wind angle 0 to 360 degrees
+		 */
 		// We're interested only in Speed in knots.
 		Wind aw = null;
 		try {
@@ -790,15 +790,15 @@ public class StringParsers {
 		if (s.length() < 6) {
 			return null;
 		}
-    /* Structure is
-     *  $aaVWR,x.x,a,x.x,N,x.x,M,x.x,K*hh
-     *         |   | |     |     |
-     *         |   | |     |     Wind Speed, in km/h
-     *         |   | |     Wind Speed, in m/s
-     *         |   | Wind Speed, in knots
-     *         |   L=port, R=starboard
-     *         Wind angle 0 to 180 degrees
-     */
+		/* Structure is
+		 *  $aaVWR,x.x,a,x.x,N,x.x,M,x.x,K*hh
+		 *         |   | |     |     |
+		 *         |   | |     |     Wind Speed, in km/h
+		 *         |   | |     Wind Speed, in m/s
+		 *         |   | Wind Speed, in knots
+		 *         |   L=port, R=starboard
+		 *         Wind angle 0 to 180 degrees
+		 */
 		// We're interested only in Speed in knots.
 		ApparentWind aw = null;
 		try {
@@ -851,21 +851,21 @@ public class StringParsers {
 		if (s.length() < 6) {
 			return null;
 		}
-    /* Structure is
-     * $IIVTG,x.x,T,x.x,M,x.x,N,x.x,K,A*hh
-              |   | |  |  |   | |___|SOG, km/h
-              |   | |  |  |___|SOG, knots
-              |   | |__|COG, mag
-              |___|COG, true
+		/* Structure is
+		 * $IIVTG,x.x,T,x.x,M,x.x,N,x.x,K,A*hh
+				  |   | |  |  |   | |___|SOG, km/h
+				  |   | |  |  |___|SOG, knots
+				  |   | |__|COG, mag
+				  |___|COG, true
 
-       $IIVTG,17.,T,M,7.9,N,,*36 // B&G does this...
-       $IIVTG,,T,338.,M,N,,*28   // or this...
-       $IIVTG,054.7,T,034.4,M,005.5,N,010.2,K,A*XX
-              054.7,T      True track made good
-              034.4,M      Magnetic track made good
-              005.5,N      Ground speed, knots
-              010.2,K      Ground speed, Kilometers per hour
-     */
+		   $IIVTG,17.,T,M,7.9,N,,*36 // B&G does this...
+		   $IIVTG,,T,338.,M,N,,*28   // or this...
+		   $IIVTG,054.7,T,034.4,M,005.5,N,010.2,K,A*XX
+				  054.7,T      True track made good
+				  034.4,M      Magnetic track made good
+				  005.5,N      Ground speed, knots
+				  010.2,K      Ground speed, Kilometers per hour
+		 */
 		// We're interested only in Speed in knots.
 		try {
 			if (false && s.indexOf("A*") == -1) { // Data invalid, only for NMEA 2.3 and later
@@ -918,16 +918,16 @@ public class StringParsers {
 			return (GLL) null;
 		}
 		/* Structure is
-     *  $aaGLL,llll.ll,a,gggg.gg,a,hhmmss.ss,A,D*hh
+		 *  $aaGLL,llll.ll,a,gggg.gg,a,hhmmss.ss,A,D*hh
 		 *         |       | |       | |         | |
- 		 *         |       | |       | |         | Type: A=autonomous, D=differential, E=Estimated, N=not valid, S=Simulator (not always there)
-     *         |       | |       | |         A:data valid (Active), V: void
-     *         |       | |       | UTC of position
-     *         |       | |       Long sign :E/W
-     *         |       | Longitude
-     *         |       Lat sign :N/S
-     *         Latitude
-     */
+		 *         |       | |       | |         | Type: A=autonomous, D=differential, E=Estimated, N=not valid, S=Simulator (not always there)
+		 *         |       | |       | |         A:data valid (Active), V: void
+		 *         |       | |       | UTC of position
+		 *         |       | |       Long sign :E/W
+		 *         |       | Longitude
+		 *         |       Lat sign :N/S
+		 *         Latitude
+		 */
 		GeoPos ll = null;
 		Date date = null;
 		try {
@@ -1039,12 +1039,12 @@ public class StringParsers {
 		if (s.length() < 6) {
 			return -1;
 		}
-    /* Structure is
-     *  $aaHDM,xxx,M*hh(CR)(LF)
-     *         |   |
-     *         |   Magnetic, True
-     *         Heading in degrees
-     */
+		/* Structure is
+		 *  $aaHDM,xxx,M*hh(CR)(LF)
+		 *         |   |
+		 *         |   Magnetic, True
+		 *         Heading in degrees
+		 */
 		int hdg = 0;
 
 		String[] elmts = data.substring(0, data.indexOf("*")).split(",");
@@ -1084,16 +1084,16 @@ public class StringParsers {
 		double hdg = 0d;
 		double dev = 0d; // -Double.MAX_VALUE;
 		double var = 0d; // -Double.MAX_VALUE;
-    /* Structure is
-     * $xxHDG,x.x,x.x,a,x.x,a*hh<CR><LF>
-     *        |   |   | |   | |
-     *        |   |   | |   | Checksum
-     *        |   |   | |   Magnetic Variation direction, E = Easterly, W = Westerly
-     *        |   |   | Magnetic Variation degrees
-     *        |   |   Magnetic Deviation direction, E = Easterly, W = Westerly
-     *        |   Magnetic Deviation, degrees
-     *        Magnetic Sensor heading in degrees
-     */
+		/* Structure is
+		 * $xxHDG,x.x,x.x,a,x.x,a*hh<CR><LF>
+		 *        |   |   | |   | |
+		 *        |   |   | |   | Checksum
+		 *        |   |   | |   Magnetic Variation direction, E = Easterly, W = Westerly
+		 *        |   |   | Magnetic Variation degrees
+		 *        |   |   Magnetic Deviation direction, E = Easterly, W = Westerly
+		 *        |   Magnetic Deviation, degrees
+		 *        Magnetic Sensor heading in degrees
+		 */
 		try {
 			String[] nmeaElements = data.substring(0, data.indexOf("*")).split(",");
 			try {
@@ -1123,23 +1123,23 @@ public class StringParsers {
 
 	// RMB Recommended Minimum Navigation Information
 	public static RMB parseRMB(String str) {
-    /*        1 2   3 4    5    6       7 8        9 10  11  12  13
-     * $GPRMB,A,x.x,a,c--c,d--d,llll.ll,e,yyyyy.yy,f,g.g,h.h,i.i,j*kk
-     *        | |   | |    |    |       | |        | |   |   |   |
-     *        | |   | |    |    |       | |        | |   |   |   A=Entered or perpendicular passed, V:not there yet
-     *        | |   | |    |    |       | |        | |   |   Destination closing velocity in knots
-     *        | |   | |    |    |       | |        | |   Bearing to destination, degrees, True
-     *        | |   | |    |    |       | |        | Range to destination, nm
-     *        | |   | |    |    |       | |        E or W
-     *        | |   | |    |    |       | Destination Waypoint longitude
-     *        | |   | |    |    |       N or S
-     *        | |   | |    |    Destination Waypoint latitude
-     *        | |   | |    Destination Waypoint ID
-     *        | |   | Origin Waypoint ID
-     *        | |   Direction to steer (L or R) to correct error
-     *        | Crosstrack error in nm
-     *        Data Status (Active or Void)
-     */
+		/*        1 2   3 4    5    6       7 8        9 10  11  12  13
+		 * $GPRMB,A,x.x,a,c--c,d--d,llll.ll,e,yyyyy.yy,f,g.g,h.h,i.i,j*kk
+		 *        | |   | |    |    |       | |        | |   |   |   |
+		 *        | |   | |    |    |       | |        | |   |   |   A=Entered or perpendicular passed, V:not there yet
+		 *        | |   | |    |    |       | |        | |   |   Destination closing velocity in knots
+		 *        | |   | |    |    |       | |        | |   Bearing to destination, degrees, True
+		 *        | |   | |    |    |       | |        | Range to destination, nm
+		 *        | |   | |    |    |       | |        E or W
+		 *        | |   | |    |    |       | Destination Waypoint longitude
+		 *        | |   | |    |    |       N or S
+		 *        | |   | |    |    Destination Waypoint latitude
+		 *        | |   | |    Destination Waypoint ID
+		 *        | |   | Origin Waypoint ID
+		 *        | |   Direction to steer (L or R) to correct error
+		 *        | Crosstrack error in nm
+		 *        Data Status (Active or Void)
+		 */
 		RMB rmb = null;
 		String s = str.trim();
 		if (s.length() < 6) {
@@ -1218,24 +1218,24 @@ public class StringParsers {
 			return null;
 		}
 		String s = str.substring(0, str.indexOf("*"));
-    /* RMC Structure is
-     *                                                                    12
-     *         1      2 3        4 5         6 7     8     9      10    11
-     *  $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W,T*6A
-     *         |      | |        | |         | |     |     |      |     | |
-     *         |      | |        | |         | |     |     |      |     | Type: A=autonomous, D=differential, E=Estimated, N=not valid, S=Simulator
-     *         |      | |        | |         | |     |     |      |     Variation sign
-     *         |      | |        | |         | |     |     |      Variation value
-     *         |      | |        | |         | |     |     Date DDMMYY (see rmc.date.offset property)
-     *         |      | |        | |         | |     COG
-     *         |      | |        | |         | SOG
-     *         |      | |        | |         Longitude Sign
-     *         |      | |        | Longitude Value
-     *         |      | |        Latitude Sign
-     *         |      | Latitude value
-     *         |      Active or Void
-     *         UTC
-     */
+		/* RMC Structure is
+		 *                                                                    12
+		 *         1      2 3        4 5         6 7     8     9      10    11
+		 *  $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W,T*6A
+		 *         |      | |        | |         | |     |     |      |     | |
+		 *         |      | |        | |         | |     |     |      |     | Type: A=autonomous, D=differential, E=Estimated, N=not valid, S=Simulator
+		 *         |      | |        | |         | |     |     |      |     Variation sign
+		 *         |      | |        | |         | |     |     |      Variation value
+		 *         |      | |        | |         | |     |     Date DDMMYY (see rmc.date.offset property)
+		 *         |      | |        | |         | |     COG
+		 *         |      | |        | |         | SOG
+		 *         |      | |        | |         Longitude Sign
+		 *         |      | |        | Longitude Value
+		 *         |      | |        Latitude Sign
+		 *         |      | Latitude value
+		 *         |      Active or Void
+		 *         UTC
+		 */
 		try {
 			if (s.indexOf("RMC,") > -1) {
 				rmc = new RMC();
@@ -1252,7 +1252,7 @@ public class StringParsers {
 					int m = (int) ((utc - (10_000 * h)) / 100);
 					float sec = (float) (utc % 100f);
 
-//        System.out.println("Data[1]:" + data[1] + ", h:" + h + ", m:" + m + ", s:" + sec);
+//        			System.out.println("Data[1]:" + data[1] + ", h:" + h + ", m:" + m + ", s:" + sec);
 
 					Calendar local = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // new GregorianCalendar();
 //					local.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));

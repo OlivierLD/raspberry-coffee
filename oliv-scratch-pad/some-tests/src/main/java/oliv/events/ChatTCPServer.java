@@ -40,7 +40,7 @@ public class ChatTCPServer implements ServerInterface {
         I_AM,
         WHO_S_THERE,
         I_M_OUT
-    };
+    }
 
     public ChatTCPServer() {
         this(DEFAULT_PORT);
@@ -91,7 +91,7 @@ public class ChatTCPServer implements ServerInterface {
                                     System.out.printf("Message starts with %s, processing it.\n", serverCommand);
                                 }
                                 switch (serverCommand.toString()) { // TODO Something nicer
-                                    case "I_AM":
+                                    case  "I_AM":
                                         ChatClient chatClient = clientMap.get(skt);
                                         if (chatClient != null) {
                                             chatClient = chatClient.name(clientMessage.trim().substring(SERVER_COMMANDS.I_AM.toString().length() + 1)); // +1: ":"

@@ -8,14 +8,14 @@ import java.util.Comparator;
 public class Java8Tester {
 	public static void main(String... args) {
 
-		List<String> names1 = new ArrayList<String>();
+		List<String> names1 = new ArrayList<>();
 		names1.add("Mahesh ");
 		names1.add("Suresh ");
 		names1.add("Ramesh ");
 		names1.add("Naresh ");
 		names1.add("Kalpesh ");
 
-		List<String> names2 = new ArrayList<String>();
+		List<String> names2 = new ArrayList<>();
 		names2.add("Mahesh ");
 		names2.add("Suresh ");
 		names2.add("Ramesh ");

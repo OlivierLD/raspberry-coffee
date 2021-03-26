@@ -79,7 +79,7 @@ From each client, whatever is entered in the console (terminated by `[Return]`) 
 
 #### What do you think?
 - In `ChatTCPClient`, what in the `messageConsumer` method, why is that implemented this way?
-- In `ChatTCPServer`, is the `clientMap` thread safe? Does is prevent `ConcurrrentAccessException`?
+- In `ChatTCPServer`, is the `clientMap` thread safe? Does it prevent `ConcurrrentAccessException`?
 - Is there any possible memory leak in the server code?
 - In the `client`, around line 34, the code says
   ```java
