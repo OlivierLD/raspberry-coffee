@@ -29,7 +29,9 @@ aplay -D hw:1,0 test.wav
 #
 sudo apt-get install espeak
 sudo pip3 install SpeechRecognition
-sudo pip3 install PyAudio
+sudo pip3 install PyAudio  # <- Not working on RasPiOS-64
+#
+sudo apt-get install flac
 #
 # and test:
 #

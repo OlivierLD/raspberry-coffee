@@ -1,10 +1,18 @@
+#
+# Resources:
+#    https://iotdesignpro.com/projects/speech-recognition-on-raspberry-pi-for-voice-controlled-home-automation
+#    https://pythonspot.com/speech-recognition-using-google-speech-api/
+#    https://pypi.org/project/SpeechRecognition/1.2.3/
+#
 from subprocess import call
 import speech_recognition as sr
 import serial
 # import RPi.GPIO as GPIO
 import os, time
 
-r = sr.Recognizer()
+print(f"SpeechRecognition version {sr.__version__}")
+
+r = sr.Recognizer("en_US")
 led = 27
 text = {}
 text1 = {}
