@@ -59,10 +59,13 @@ def command_processor(text):
         # GPIO.output(led, 0)
         call(["espeak", "-s140  -ven+18 -z", "okay  Sir, Switching off the Lights"])
         print("Lights Off")
+    elif 'exit' in text:
+        return 0
     else:
         mess = f"Let me know what to do with {text}."
         call(["espeak", "-s140  -ven+18 -z", f"{mess}"])
         print(mess)
+    return 1
 
 
 if __name__ == '__main__':
@@ -72,7 +75,10 @@ if __name__ == '__main__':
             audio = listen()     # Listen through the mic
             text = voice(audio)  # Translates into words
             if text != 0:
-                command_processor(text)
+                result = command_processor(text)
+                if result == 0:
+                    keep_asking = False
+                    print("Ok, I'm out")
         except KeyboardInterrupt as ctrl_c:
             keep_asking = False
     print("\nExiting, bye.")
