@@ -51,11 +51,11 @@ def voice(audio):
 
 
 def command_processor(text):
-    if 'light on' in text:
+    if 'lights on' in text:
         # GPIO.output(led, 1)
         call(["espeak", "-s140  -ven+18 -z", "okay  Sir, Switching ON the Lights"])
         print("Lights on")
-    elif 'light off' in text:
+    elif 'lights off' in text:
         # GPIO.output(led, 0)
         call(["espeak", "-s140  -ven+18 -z", "okay  Sir, Switching off the Lights"])
         print("Lights Off")
@@ -75,5 +75,5 @@ if __name__ == '__main__':
                 command_processor(text)
         except KeyboardInterrupt as ctrl_c:
             keep_asking = False
-    print("Exiting, bye.")
+    print("\nExiting, bye.")
 
