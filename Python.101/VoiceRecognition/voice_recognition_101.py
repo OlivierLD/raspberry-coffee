@@ -6,11 +6,12 @@
 #
 from subprocess import call
 import speech_recognition as sr
-import serial
+import pyaudio
+# import serial
 # import RPi.GPIO as GPIO
-import os, time
+# import os, time
 
-print(f"SpeechRecognition version {sr.__version__}")
+print(f"SpeechRecognition version {sr.__version__}, PyAudio version {pyaudio.__version__}")
 # for index, name in enumerate(sr.Microphone.list_microphone_names()):
 #     print(f"Microphone with name \"{name}\" found for `Microphone(device_index={index})`")
 print("-------------------------------------------")
@@ -24,8 +25,9 @@ text1 = {}
 # GPIO.setup(led, GPIO.OUT)
 
 
+# device_index may vary.
 def listen1():
-    with sr.Microphone(device_index=2) as source:
+    with sr.Microphone(device_index=0) as source:
         r.adjust_for_ambient_noise(source)
         print("Say Something")
         audio = r.listen(source)
