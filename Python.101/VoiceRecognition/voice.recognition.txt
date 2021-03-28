@@ -34,4 +34,8 @@ sudo pip3 install PyAudio
 # and test:
 #
 espeak "Hello world"
+#
+# Let's see some code
+#
+python3 voice_recognition_101.py
 
