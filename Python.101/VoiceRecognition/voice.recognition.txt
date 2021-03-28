@@ -1,7 +1,7 @@
 #
 # Sound & voice recognition on the Raspberry Pi
 #
-# We need alsamizer
+# We need alsamixer
 #
 alsamixer
 #
@@ -31,6 +31,8 @@ sudo apt-get install espeak
 sudo pip3 install SpeechRecognition
 sudo pip3 install PyAudio  # <- Not working on RasPiOS-64
 #
+# SpeechRecognition talk to Google, you need an internet connection... Bummer.
+#
 sudo apt-get install flac
 #
 # and test:
@@ -40,4 +42,3 @@ espeak "Hello world"
 # Let's see some code
 #
 python3 voice_recognition_101.py
-

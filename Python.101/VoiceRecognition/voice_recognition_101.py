@@ -7,28 +7,19 @@
 from subprocess import call
 import speech_recognition as sr
 import pyaudio
-# import serial
-# import RPi.GPIO as GPIO
-# import os, time
 
 print(f"SpeechRecognition version {sr.__version__}, PyAudio version {pyaudio.__version__}")
-# for index, name in enumerate(sr.Microphone.list_microphone_names()):
-#     print(f"Microphone with name \"{name}\" found for `Microphone(device_index={index})`")
 print("----------------------------------------------------------------------------------")
 
 r = sr.Recognizer()
-# led = 27
-# text = {}
-# text1 = {}
-# GPIO.setwarnings(False)
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setup(led, GPIO.OUT)
+
 
 def speak(mess):
     # call(["espeak", "-s140  -ven+18 -z", mess])
     call(["espeak", mess])
 
 
+# Records.
 # device_index may vary.
 def listen():
     with sr.Microphone(device_index=0) as source:
@@ -39,20 +30,23 @@ def listen():
     return audio
 
 
+# Speech to text part
 def voice(audio):
     try:
         text = r.recognize_google(audio)
         print("you said: " + text)
         return text
     except sr.UnknownValueError:
-        speak("Google Speech Recognition could not understand")
-        print("Google Speech Recognition could not understand")
+        mess = "Google Speech Recognition could not understand"
+        print(mess)
+        speak(mess)
         return 0
     except sr.RequestError as e:
         print("Could not request results from Google")
         return 0
 
 
+# Voice -> Text -> Processor
 def command_processor(text):
     if 'lights on' in text:
         # GPIO.output(led, 1)
@@ -71,6 +65,7 @@ def command_processor(text):
     return 1
 
 
+# Main loop
 if __name__ == '__main__':
     keep_asking = True
     while keep_asking:
@@ -87,4 +82,3 @@ if __name__ == '__main__':
         except KeyboardInterrupt as ctrl_c:
             keep_asking = False
     print("\nExiting, bye.")
-
