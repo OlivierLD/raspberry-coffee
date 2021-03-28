@@ -24,6 +24,10 @@ r = sr.Recognizer()
 # GPIO.setmode(GPIO.BCM)
 # GPIO.setup(led, GPIO.OUT)
 
+def speak(mess):
+    # call(["espeak", "-s140  -ven+18 -z", mess])
+    call(["espeak", mess])
+
 
 # device_index may vary.
 def listen():
@@ -38,11 +42,10 @@ def listen():
 def voice(audio):
     try:
         text = r.recognize_google(audio)
-        ##         call('espeak '+text, shell=True)
         print("you said: " + text)
         return text
     except sr.UnknownValueError:
-        call(["espeak", "-s140  -ven+18 -z", "Google Speech Recognition could not understand"])
+        speak("Google Speech Recognition could not understand")
         print("Google Speech Recognition could not understand")
         return 0
     except sr.RequestError as e:
@@ -53,17 +56,17 @@ def voice(audio):
 def command_processor(text):
     if 'lights on' in text:
         # GPIO.output(led, 1)
-        call(["espeak", "-s140  -ven+18 -z", "okay  Sir, Switching ON the Lights"])
+        speak("okay  Sir, Switching ON the Lights")
         print("Lights on")
     elif 'lights off' in text:
         # GPIO.output(led, 0)
-        call(["espeak", "-s140  -ven+18 -z", "okay  Sir, Switching off the Lights"])
+        speak("okay  Sir, Switching off the Lights")
         print("Lights Off")
-    elif 'exit' in text:
+    elif 'exit' in text or 'out' in text or 'you are fired' in text:
         return 0
     else:
         mess = f"Let me know what to do with {text}."
-        call(["espeak", "-s140  -ven+18 -z", f"{mess}"])
+        speak(mess)
         print(mess)
     return 1
 
@@ -80,7 +83,7 @@ if __name__ == '__main__':
                     keep_asking = False
                     mess = "Ok, I'm out."
                     print(mess)
-                    call(["espeak", "-s140  -ven+18 -z", f"{mess}"])
+                    speak(mess)
         except KeyboardInterrupt as ctrl_c:
             keep_asking = False
     print("\nExiting, bye.")
