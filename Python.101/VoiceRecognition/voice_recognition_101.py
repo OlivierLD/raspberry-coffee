@@ -71,7 +71,8 @@ if __name__ == '__main__':
         try:
             audio = listen()     # Listen through the mic
             text = voice(audio)  # Translates into words
-            command_processor(text)
+            if text != 0:
+                command_processor(text)
         except KeyboardInterrupt as ctrl_c:
             keep_asking = False
     print("Exiting, bye.")
