@@ -1,0 +1,37 @@
+#
+# Sound & voice recognition on the Raspberry Pi
+#
+# We need alsamizer
+#
+alsamixer
+#
+# Test the mic:
+#
+arecord -l
+**** List of CAPTURE Hardware Devices ****
+card 2: Device [USB PnP Audio Device], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+
+# The line above says that the mic is on card 2.
+# That number will be used below in hw:2,0
+
+arecord -D hw:2,0 -f S16_LE test.wav
+Recording WAVE 'test.wav' : Signed 16 bit Little Endian, Rate 8000 Hz, Mono
+Warning: rate is not accurate (requested = 8000Hz, got = 44100Hz)
+         please, try the plug plugin 
+#         
+# Assuming the loudspeakers are on device 1:
+#
+aplay -D hw:1,0 test.wav
+#
+# Install required soft
+#
+sudo apt-get install espeak
+sudo pip3 install SpeechRecognition
+sudo pip3 install PyAudio
+#
+# and test:
+#
+espeak "Hello world"
+
