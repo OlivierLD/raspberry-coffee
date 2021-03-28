@@ -78,7 +78,9 @@ if __name__ == '__main__':
                 result = command_processor(text)
                 if result == 0:
                     keep_asking = False
-                    print("Ok, I'm out")
+                    mess = "Ok, I'm out."
+                    print(mess)
+                    call(["espeak", "-s140  -ven+18 -z", f"{mess}"])
         except KeyboardInterrupt as ctrl_c:
             keep_asking = False
     print("\nExiting, bye.")
