@@ -3,6 +3,7 @@ package oliv.events;
 import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class client {
 
@@ -11,20 +12,39 @@ public class client {
     private final static String SERVER_PORT_PREFIX = "--server-port:";
 
     public static class TextToSpeech {
-        private static Map<String, String> speechTools = new HashMap<>();
+        private static Map<String, Consumer<String>> speechTools = new HashMap<>();
+
+        static Consumer<String> say = message -> {
+            try {
+                // User say -v ? for a list of voices.
+//			Runtime.getRuntime().exec(new String[] { "say", "-v", "Thomas", "\"" + message + "\"" }); // French
+                Runtime.getRuntime().exec(new String[] { "say", "-v", "Alex", "\"" + message + "\"" });  // English
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        };
+
+        static Consumer<String> espeak = message -> {
+            try {
+                Runtime.getRuntime().exec(new String[] { "espeak", "\"" + message + "\"" });
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        };
 
         static {
-            speechTools.put("Mac OS X", "say");
-            speechTools.put("Linux", "espeak");
+            speechTools.put("Mac OS X", say);
+            speechTools.put("Linux", espeak);
         }
 
         public static void speak(String text) {
-            String speechTool = speechTools.get(System.getProperty("os.name"));
+            Consumer<String> speechTool = speechTools.get(System.getProperty("os.name"));
             if (speechTool == null) {
                 throw new RuntimeException("No speech tool found in this os [" + System.getProperty("os.name") + "]");
             }
             try {
-                Runtime.getRuntime().exec(new String[]{speechTool, "\"" + text + "\""});
+                speechTool.accept(text);
+//			Runtime.getRuntime().exec(new String[] { speechTool, "\"" + text + "\"" });
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -79,6 +99,8 @@ public class client {
         System.out.println("Q or QUIT to quit");
         System.out.println("WHO_S_THERE to know who's there");
         System.out.println("Anything else will be broadcasted");
+
+        TextToSpeech.speak("Client is ready!");
 
         Console console = System.console();
         boolean keepAsking = true;

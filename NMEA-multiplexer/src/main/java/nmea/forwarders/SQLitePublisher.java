@@ -17,6 +17,8 @@ import java.util.Properties;
  *
  * Requires the following dep in gradle:<br/>
  * <code>implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'</code>
+ *
+ * SQLite doc at https://sqlite.org/lang_select.html
  */
 public class SQLitePublisher implements Forwarder {
 	private Connection dbConnection = null;
@@ -32,10 +34,10 @@ public class SQLitePublisher implements Forwarder {
 	 * dbURL like jdbc:sqlite:/path/to/db.db
 	 */
 	private void initConnection() throws Exception {
-		if (props == null) {
+		if (this.props == null) {
 			throw new RuntimeException("Need props!");
 		}
-		String dbUrl = props.getProperty("db.url");
+		String dbUrl = this.props.getProperty("db.url");
 		if (dbUrl == null) {
 			throw new RuntimeException("No db.url found in the props...");
 		}
@@ -43,7 +45,7 @@ public class SQLitePublisher implements Forwarder {
 
 		try {
 
-			dbConnection = DriverManager.getConnection(dbURL);
+			this.dbConnection = DriverManager.getConnection(dbURL);
 			if ("true".equals(props.getProperty("verbose"))) {
 				DatabaseMetaData dm = dbConnection.getMetaData();
 				System.out.println("Driver name: " + dm.getDriverName());
@@ -64,7 +66,7 @@ public class SQLitePublisher implements Forwarder {
 	@Override
 	public void write(byte[] message) {
 
-		if (dbConnection == null) {
+		if (this.dbConnection == null) {
 			try {
 				initConnection();
 			} catch (Exception ex) {
@@ -80,7 +82,7 @@ public class SQLitePublisher implements Forwarder {
 						"INSERT INTO NMEA_DATA (sentence_id, data, date) VALUES (\"%s\", \"%s\", datetime(\"now\"))",
 						sentenceId, mess);
 				// TODO More verbose?
-				Statement statement = dbConnection.createStatement();
+				Statement statement = this.dbConnection.createStatement();
 				statement.executeUpdate(SQLStatement);
 				statement.close();
 			}
