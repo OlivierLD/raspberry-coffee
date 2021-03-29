@@ -76,7 +76,8 @@ public class SQLitePublisher implements Forwarder {
 			String mess = new String(message);
 			if (!mess.isEmpty()) {
 				String sentenceId = StringParsers.getSentenceID(mess);
-				String SQLStatement = String.format("INSERT INTO NMEA_DATA (sentence_id, data, date) VALUES (\"%s\", \"%s\", datetime(\"now\"))",
+				String SQLStatement = String.format(
+						"INSERT INTO NMEA_DATA (sentence_id, data, date) VALUES (\"%s\", \"%s\", datetime(\"now\"))",
 						sentenceId, mess);
 				// TODO More verbose?
 				Statement statement = dbConnection.createStatement();
