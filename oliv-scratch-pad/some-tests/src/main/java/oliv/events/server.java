@@ -36,6 +36,7 @@ public class server {
                 itsMe.notify();
                 try {
                     itsMe.wait(); // Give time to finish...
+                    System.out.println("... Gone");
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
                 }
@@ -57,7 +58,7 @@ public class server {
         }
         System.out.println("Bye!\n");
         synchronized(itsMe) {
-            itsMe.notify();
+            itsMe.notify(); // Unlock the shutdown hook.
         }
     }
 }
