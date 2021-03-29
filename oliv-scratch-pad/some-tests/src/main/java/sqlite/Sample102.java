@@ -1,23 +1,26 @@
 package sqlite;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * This program demonstrates making JDBC connection to a SQLite database.
  * Requires the following dep in gradle:
- *    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
- *
- * @author www.codejava.net
+ * implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
+ * Requires a table to exist:
+ * ```
+ * sqlite> CREATE TABLE OLIV_TABLE(id INTEGER PRIMARY KEY AUTOINCREMENT, data VARCHAR2, date DATETIME);
+ * sqlite> INSERT INTO oliv_table (data, date) VALUES ("Hi there", datetime("now"));
+ * sqlite> select * from oliv_table;
+ * 1|Hi there|2021-03-29 01:51:51
+ * sqlite> .quit
+ * ```
  */
-public class sample101 {
+public class Sample102 {
 
     public static void main(String... args) {
         try {
             Class.forName("org.sqlite.JDBC");
-            String dbURL = "jdbc:sqlite:product.db"; // product.db: db file location.
+            String dbURL = "jdbc:sqlite:~/sqlite/oliv.db";
             Connection conn = DriverManager.getConnection(dbURL);
             if (conn != null) {
                 System.out.println("Connected to the database");
@@ -26,6 +29,13 @@ public class sample101 {
                 System.out.println("Driver version: " + dm.getDriverVersion());
                 System.out.println("Product name: " + dm.getDatabaseProductName());
                 System.out.println("Product version: " + dm.getDatabaseProductVersion());
+
+                Statement statement = conn.createStatement();
+                ResultSet rs = statement.executeQuery("select * from oliv_table");
+                while (rs.next()) {
+                    System.out.println("data = " + rs.getString("data"));
+                }
+
                 conn.close();
             }
         } catch (ClassNotFoundException ex) {

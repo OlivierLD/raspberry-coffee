@@ -56,6 +56,12 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.13'
 }
 
+task SQLiteTest(type: JavaExec, dependsOn: classes, description: 'Runs a SQLite sample') {
+    main = 'sqlite.sample102'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
 build.doFirst {
     println "-------------------------------------------------------"
     println ">>> Using JAVA_HOME: ${System.getProperty('java.home')}"
