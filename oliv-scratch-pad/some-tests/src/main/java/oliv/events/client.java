@@ -12,13 +12,13 @@ public class client {
     private final static String SERVER_PORT_PREFIX = "--server-port:";
 
     public static class TextToSpeech {
-        private static Map<String, Consumer<String>> speechTools = new HashMap<>();
+        private static final Map<String, Consumer<String>> speechTools = new HashMap<>();
 
         static Consumer<String> say = message -> {
             try {
                 // User say -v ? for a list of voices.
-//			Runtime.getRuntime().exec(new String[] { "say", "-v", "Thomas", "\"" + message + "\"" }); // French
-                Runtime.getRuntime().exec(new String[] { "say", "-v", "Alex", "\"" + message + "\"" });  // English
+//			    Runtime.getRuntime().exec(new String[] { "say", "-v", "Thomas", "\"" + message + "\"" }); // French
+                Runtime.getRuntime().exec(new String[] { "say", "-v", "Alex", "\"" + message + "\"" });   // English
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -44,7 +44,6 @@ public class client {
             }
             try {
                 speechTool.accept(text);
-//			Runtime.getRuntime().exec(new String[] { speechTool, "\"" + text + "\"" });
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -53,33 +52,33 @@ public class client {
 
     public static void main(String... args) {
 
+        // Default values
         String clientName = "It's Me!";
         String chatServerName = "localhost";
         int chatServerPort = 7001;
 
-        for (int i=0; i<args.length; i++) {
-            if (args[i].startsWith(CLIENT_NAME_PREFIX)) {
-                clientName = args[i].substring(CLIENT_NAME_PREFIX.length());
-            } else if (args[i].startsWith(SERVER_NAME_PREFIX)) {
-                chatServerName = args[i].substring(SERVER_NAME_PREFIX.length());
-            } else if (args[i].startsWith(SERVER_PORT_PREFIX)) {
-                chatServerPort = Integer.parseInt(args[i].substring(SERVER_PORT_PREFIX.length()));
+        for (String arg : args) {
+            if (arg.startsWith(CLIENT_NAME_PREFIX)) {
+                clientName = arg.substring(CLIENT_NAME_PREFIX.length());
+            } else if (arg.startsWith(SERVER_NAME_PREFIX)) {
+                chatServerName = arg.substring(SERVER_NAME_PREFIX.length());
+            } else if (arg.startsWith(SERVER_PORT_PREFIX)) {
+                chatServerPort = Integer.parseInt(arg.substring(SERVER_PORT_PREFIX.length()));
             }
         }
 
-        ChatTCPClient client = new ChatTCPClient(clientName, chatServerName, chatServerPort);
+        ChatTCPClient client = new ChatTCPClient(chatServerName, chatServerPort);
 
-        // Option: override, make it speak...
+        // Optional: overrides the default action, make it speak...
         client.setMessageConsumer(TextToSpeech::speak);
 
-        final String _clientName = clientName;
         final Thread me = Thread.currentThread();
         Thread listener = new Thread(() -> {
-            client.startClient(me);
+            client.startClient(me); // Initialize the socket, and waits in a loop.
         });
         listener.start();
 
-        // Wait for the stuff to start
+        // Wait for the socket stuff to start
         try {
 //          Thread.sleep(1_000L); // Bad approach: See below something nicer
             synchronized (me) {
@@ -90,7 +89,7 @@ public class client {
             ie.printStackTrace();
         }
 
-        String idMess = String.format("%s:%s", ChatTCPServer.SERVER_COMMANDS.I_AM.toString(), _clientName);
+        String idMess = String.format("%s:%s", ChatTCPServer.SERVER_COMMANDS.I_AM.toString(), clientName);
         System.out.printf(">>> Telling server who I am: %s\n", idMess);
         client.writeToServer(idMess);
 
@@ -118,7 +117,11 @@ public class client {
                     }
                 }
             } else {
-                try { Thread.sleep(1_000L); } catch (InterruptedException ie) {}
+                System.out.println("No System.console...?");
+                try { Thread.sleep(1_000L); }
+                catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
             }
         }
         System.out.println("Cleaning up...");

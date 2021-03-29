@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class ChatTCPServer implements ServerInterface {
 
-    private boolean verbose = true;
+    private final boolean verbose;
 
     private static class ChatClient {
         String name;
@@ -29,11 +29,11 @@ public class ChatTCPServer implements ServerInterface {
         }
     }
 
-    private Map<Socket, ChatClient> clientMap = new HashMap<>();
+    private final Map<Socket, ChatClient> clientMap = new HashMap<>();
 
     private final static int DEFAULT_PORT = 7001;
 
-    private int tcpPort;
+    private final int tcpPort;
     private ServerSocket serverSocket = null;
 
     public enum SERVER_COMMANDS {
@@ -62,6 +62,7 @@ public class ChatTCPServer implements ServerInterface {
             SocketThread socketThread = new SocketThread(this);
             socketThread.start();
         } catch (Exception ex) {
+            System.err.println("Creating the SocketThread:");
             throw ex;
         }
     }
@@ -91,13 +92,14 @@ public class ChatTCPServer implements ServerInterface {
                                     System.out.printf("Message starts with %s, processing it.\n", serverCommand);
                                 }
                                 switch (serverCommand.toString()) { // TODO Something nicer
-                                    case  "I_AM":
+                                    case "I_AM":
                                         ChatClient chatClient = clientMap.get(skt);
                                         if (chatClient != null) {
                                             chatClient = chatClient.name(clientMessage.trim().substring(SERVER_COMMANDS.I_AM.toString().length() + 1)); // +1: ":"
                                             clientMap.put(skt, chatClient);
                                         } else {
                                             // What the French !? Not Found??
+                                            System.err.println("ChatClient not found??");
                                         }
                                         break;
                                     case "I_M_OUT":
@@ -146,17 +148,14 @@ public class ChatTCPServer implements ServerInterface {
 
     @Override
     public void onMessage(byte[] message, Socket sender) {
-        List<Socket> toRemove = new ArrayList<>();
+        List<Socket> toRemove = new ArrayList<>(); // Will contain closed sockets.
         synchronized (this.clientMap) {
             // Broadcast to all connected clients
             this.clientMap.keySet().forEach(tcpSocket -> {
                 if (!tcpSocket.equals(sender)) { // Do not send message to its sender.
                     synchronized (tcpSocket) {
                         try {
-                            DataOutputStream out = null;
-                            if (out == null) {
-                                out = new DataOutputStream(tcpSocket.getOutputStream());
-                            }
+                            DataOutputStream out = new DataOutputStream(tcpSocket.getOutputStream());
                             if (verbose) {
                                 System.out.printf(" Server sending [%s]\n", new String(message).trim());
                             }
@@ -179,7 +178,7 @@ public class ChatTCPServer implements ServerInterface {
         if (toRemove.size() > 0) {
             // Removing disconnected clients
             synchronized (this.clientMap) {
-                toRemove.stream().forEach(this.clientMap::remove);
+                toRemove.forEach(this.clientMap::remove);
             }
         }
     }
@@ -201,7 +200,7 @@ public class ChatTCPServer implements ServerInterface {
     }
 
     private class SocketThread extends Thread {
-        private ChatTCPServer parent = null;
+        private final ChatTCPServer parent;
 
         public SocketThread(ChatTCPServer parent) {
             super("TCPServer");
@@ -211,18 +210,24 @@ public class ChatTCPServer implements ServerInterface {
         public void run() {
             try {
                 parent.serverSocket = new ServerSocket(tcpPort);
-                while (true) { // Wait for the clients to connect
-                    if (verbose) {
-                        System.out.println(".......... serverSocket waiting (TCP:" + tcpPort + ").");
+                boolean keepLooping = true;
+                while (keepLooping) { // Wait for the clients to connect
+                    try {
+                        if (verbose) {
+                            System.out.println(".......... serverSocket waiting (TCP:" + tcpPort + ").");
+                        }
+                        Socket clientSocket = serverSocket.accept();
+                        if (verbose) {
+                            System.out.println(".......... serverSocket accepted (TCP:" + tcpPort + ").");
+                        }
+                        parent.setSocket(clientSocket);
+                    } catch (Exception ex) {
+                        System.err.printf("SocketThread port %d: %s%n", tcpPort, ex.getLocalizedMessage());
+                        keepLooping = false;
                     }
-                    Socket clientSocket = serverSocket.accept();
-                    if (verbose) {
-                        System.out.println(".......... serverSocket accepted (TCP:" + tcpPort + ").");
-                    }
-                    parent.setSocket(clientSocket);
                 }
-            } catch (Exception ex) {
-                System.err.println(String.format("SocketThread port %d: %s", tcpPort, ex.getLocalizedMessage()));
+            } catch (IOException ex) {
+                System.err.printf("SocketThread port %d: %s%n", tcpPort, ex.getLocalizedMessage());
             }
             System.out.println("..... End of TCP SocketThread.");
         }

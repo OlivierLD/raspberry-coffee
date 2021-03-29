@@ -12,11 +12,11 @@ public class server {
         int serverPort = 7001;
         boolean verbose = false;
 
-        for (int i=0; i<args.length; i++) {
-            if (args[i].startsWith(SERVER_PORT_PREFIX)) {
-                serverPort = Integer.parseInt(args[i].substring(SERVER_PORT_PREFIX.length()));
-            } else if (args[i].startsWith(SERVER_VERBOSE)) {
-                verbose = "true".equals(args[i].substring(SERVER_VERBOSE.length()));
+        for (String arg : args) {
+            if (arg.startsWith(SERVER_PORT_PREFIX)) {
+                serverPort = Integer.parseInt(arg.substring(SERVER_PORT_PREFIX.length()));
+            } else if (arg.startsWith(SERVER_VERBOSE)) {
+                verbose = "true".equals(arg.substring(SERVER_VERBOSE.length()));
             }
         }
 
@@ -43,9 +43,7 @@ public class server {
             }
             System.out.println("Ok, ok! I'm going!");
             // TODO: Notify connected clients ?
-            if (chatTCPServer != null) {
-                chatTCPServer.close();
-            }
+            chatTCPServer.close();
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }

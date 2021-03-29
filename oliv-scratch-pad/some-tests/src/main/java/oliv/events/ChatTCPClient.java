@@ -14,9 +14,8 @@ import java.util.function.Consumer;
 public class ChatTCPClient {
     private final static String DEFAULT_HOST_NAME = "localhost";
     private final static int DEFAULT_TCP_PORT = 80;
-    private int tcpPort;  // = DEFAULT_TCP_PORT;
-    private String hostName; //  = DEFAULT_HOST_NAME;
-    private String clientName;
+    private final int tcpPort;  // = DEFAULT_TCP_PORT;
+    private final String hostName; //  = DEFAULT_HOST_NAME;
 
     private PrintWriter out;
     private BufferedReader in;
@@ -24,18 +23,14 @@ public class ChatTCPClient {
     private boolean stayConnected = true;
 
     public ChatTCPClient() {
-        this(null, DEFAULT_HOST_NAME, DEFAULT_TCP_PORT);
+        this(DEFAULT_HOST_NAME, DEFAULT_TCP_PORT);
     }
 
     public ChatTCPClient(int port) {
-        this(null, DEFAULT_HOST_NAME, port);
+        this(DEFAULT_HOST_NAME, port);
     }
 
     public ChatTCPClient(String host, int port) {
-        this(null, host, port);
-    }
-    public ChatTCPClient(String clientName, String host, int port) {
-        this.clientName = (clientName != null ? clientName : "tcp-client");
         hostName = host;
         tcpPort = port;
     }
@@ -57,9 +52,9 @@ public class ChatTCPClient {
         return this.tcpPort;
     }
 
-    public String getHostname() {
-        return this.hostName;
-    }
+//    public String getHostname() {
+//        return this.hostName;
+//    }
 
     public void startClient(Thread whoToTell) {
         try {
@@ -98,9 +93,9 @@ public class ChatTCPClient {
             be.printStackTrace();
             manageError(be);
         } catch (final SocketException se) {
-            if (se.getMessage().indexOf("Connection refused") > -1) {
+            if (se.getMessage().contains("Connection refused")) {
                 System.out.println("Refused (1)");
-            } else if (se.getMessage().indexOf("Connection reset") > -1) {
+            } else if (se.getMessage().contains("Connection reset")) {
                 System.out.println("Reset (2)");
             } else {
                 if (se instanceof ConnectException && "Connection timed out: connect".equals(se.getMessage())) {
@@ -142,6 +137,7 @@ public class ChatTCPClient {
                 clientSocket.close();
             }
         } catch (Exception ex) {
+            System.err.println("Exception when closing Client:");
             throw ex;
         }
     }
