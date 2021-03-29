@@ -57,7 +57,7 @@ dependencies {
 }
 
 task SQLiteTest(type: JavaExec, dependsOn: classes, description: 'Runs a SQLite sample') {
-    main = 'sqlite.sample102'
+    main = 'sqlite.Sample102'
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }
