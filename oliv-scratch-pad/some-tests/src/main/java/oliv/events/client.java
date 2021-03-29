@@ -9,6 +9,7 @@ public class client {
 
     private final static String CLIENT_NAME_PREFIX =    "--client-name:";
     private final static String CLIENT_VERBOSE_PREFIX = "--client-verbose:";
+    private final static String CLIENT_SPEECH_PREFIX =  "--client-speech:";
     private final static String SERVER_NAME_PREFIX =    "--server-name:";
     private final static String SERVER_PORT_PREFIX =    "--server-port:";
 
@@ -58,6 +59,7 @@ public class client {
         String chatServerName = "localhost";
         int chatServerPort = 7001;
         boolean verbose = false;
+        boolean speech = false;
 
         for (String arg : args) {
             if (arg.startsWith(CLIENT_NAME_PREFIX)) {
@@ -66,6 +68,8 @@ public class client {
                 chatServerName = arg.substring(SERVER_NAME_PREFIX.length());
             } else if (arg.startsWith(CLIENT_VERBOSE_PREFIX)) {
                 verbose = "true".equals(arg.substring(CLIENT_VERBOSE_PREFIX.length()));
+            } else if (arg.startsWith(CLIENT_SPEECH_PREFIX)) {
+                speech = "true".equals(arg.substring(CLIENT_SPEECH_PREFIX.length()));
             } else if (arg.startsWith(SERVER_PORT_PREFIX)) {
                 chatServerPort = Integer.parseInt(arg.substring(SERVER_PORT_PREFIX.length()));
             }
@@ -74,7 +78,9 @@ public class client {
         ChatTCPClient client = new ChatTCPClient(chatServerName, chatServerPort, verbose);
 
         // Optional: overrides the default action, make it speak...
-        client.setMessageConsumer(TextToSpeech::speak);
+        if (speech) {
+            client.setMessageConsumer(TextToSpeech::speak);
+        }
 
         final Thread me = Thread.currentThread();
         Thread listener = new Thread(() -> {
@@ -103,7 +109,7 @@ public class client {
         System.out.println("WHO_S_THERE to know who's there");
         System.out.println("Anything else will be broadcasted");
 
-        if (verbose) {
+        if (speech) {
             TextToSpeech.speak("Client is ready!");
         }
 
