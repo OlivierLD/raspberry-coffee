@@ -27,6 +27,11 @@ public class ChatTCPServer implements ServerInterface {
             this.name = name;
             return this;
         }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
     private final Map<Socket, ChatClient> clientMap = new HashMap<>();
@@ -46,12 +51,12 @@ public class ChatTCPServer implements ServerInterface {
         this(DEFAULT_PORT);
     }
 
-    public ChatTCPServer(boolean verbose) {
-        this(DEFAULT_PORT, verbose);
-    }
-
     public ChatTCPServer(int port) {
         this(port, false);
+    }
+
+    public ChatTCPServer(boolean verbose) {
+        this(DEFAULT_PORT, verbose);
     }
 
     public ChatTCPServer(int port, boolean verbose) {
@@ -96,6 +101,9 @@ public class ChatTCPServer implements ServerInterface {
                                         ChatClient chatClient = clientMap.get(skt);
                                         if (chatClient != null) {
                                             chatClient = chatClient.name(clientMessage.trim().substring(SERVER_COMMANDS.I_AM.toString().length() + 1)); // +1: ":"
+                                            if (verbose) {
+                                                System.out.printf("Naming client: %s%n", chatClient.toString());
+                                            }
                                             clientMap.put(skt, chatClient);
                                         } else {
                                             // What the French !? Not Found??
@@ -104,7 +112,7 @@ public class ChatTCPServer implements ServerInterface {
                                         break;
                                     case "I_M_OUT":
                                         if (verbose) {
-                                            System.out.printf("Removing %s from the client map.\n", skt);
+                                            System.out.printf("Removing %s (%s) from the client map.\n", skt, clientMap.get(skt));
                                         }
                                         clientMap.remove(skt);
                                         break;
@@ -116,6 +124,9 @@ public class ChatTCPServer implements ServerInterface {
                                         out.flush();
                                         break;
                                     default:
+                                        if (verbose) {
+                                            System.out.println("Received unknown command???");
+                                        }
                                         break;
                                 }
                                 break;
