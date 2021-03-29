@@ -56,7 +56,7 @@ public class server {
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }
-        System.out.println("Bye!\n");
+        System.out.println("Bye!");
         synchronized(itsMe) {
             itsMe.notify(); // Unlock the shutdown hook.
         }
