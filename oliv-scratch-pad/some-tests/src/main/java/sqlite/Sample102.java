@@ -20,7 +20,7 @@ public class Sample102 {
     public static void main(String... args) {
         try {
             Class.forName("org.sqlite.JDBC");
-            String dbURL = "jdbc:sqlite:~/sqlite/oliv.db";
+            String dbURL = "jdbc:sqlite:/home/pi/sqlite/oliv.db"; // <- Make sure that one exists...
             Connection conn = DriverManager.getConnection(dbURL);
             if (conn != null) {
                 System.out.println("Connected to the database");
@@ -32,6 +32,7 @@ public class Sample102 {
 
                 Statement statement = conn.createStatement();
                 ResultSet rs = statement.executeQuery("select * from oliv_table");
+                System.out.println("From the DB:");
                 while (rs.next()) {
                     System.out.println("data = " + rs.getString("data"));
                 }
