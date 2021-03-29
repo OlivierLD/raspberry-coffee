@@ -37,6 +37,7 @@ public class client {
         static {
             speechTools.put("Mac OS X", say);
             speechTools.put("Linux", espeak);
+//            speechTools.put("Windows", espeak); // Or https://github.com/p-groarke/wsay/releases
         }
 
         public static void speak(String text) {

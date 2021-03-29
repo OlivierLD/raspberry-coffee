@@ -3,7 +3,7 @@ package oliv.events;
 public class server {
 
     private final static String SERVER_PORT_PREFIX = "--server-port:";
-    private final static String SERVER_VERBOSE = "--server-verbose:";
+    private final static String SERVER_VERBOSE =     "--server-verbose:";
 
     public static void main(String... args) {
 
