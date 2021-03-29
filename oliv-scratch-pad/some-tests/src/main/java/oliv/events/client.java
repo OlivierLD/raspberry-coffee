@@ -7,9 +7,10 @@ import java.util.function.Consumer;
 
 public class client {
 
-    private final static String CLIENT_NAME_PREFIX = "--client-name:";
-    private final static String SERVER_NAME_PREFIX = "--server-name:";
-    private final static String SERVER_PORT_PREFIX = "--server-port:";
+    private final static String CLIENT_NAME_PREFIX =    "--client-name:";
+    private final static String CLIENT_VERBOSE_PREFIX = "--client-verbose:";
+    private final static String SERVER_NAME_PREFIX =    "--server-name:";
+    private final static String SERVER_PORT_PREFIX =    "--server-port:";
 
     public static class TextToSpeech {
         private static final Map<String, Consumer<String>> speechTools = new HashMap<>();
@@ -56,18 +57,21 @@ public class client {
         String clientName = "It's Me!";
         String chatServerName = "localhost";
         int chatServerPort = 7001;
+        boolean verbose = false;
 
         for (String arg : args) {
             if (arg.startsWith(CLIENT_NAME_PREFIX)) {
                 clientName = arg.substring(CLIENT_NAME_PREFIX.length());
             } else if (arg.startsWith(SERVER_NAME_PREFIX)) {
                 chatServerName = arg.substring(SERVER_NAME_PREFIX.length());
+            } else if (arg.startsWith(CLIENT_VERBOSE_PREFIX)) {
+                verbose = "true".equals(arg.substring(CLIENT_VERBOSE_PREFIX.length()));
             } else if (arg.startsWith(SERVER_PORT_PREFIX)) {
                 chatServerPort = Integer.parseInt(arg.substring(SERVER_PORT_PREFIX.length()));
             }
         }
 
-        ChatTCPClient client = new ChatTCPClient(chatServerName, chatServerPort);
+        ChatTCPClient client = new ChatTCPClient(chatServerName, chatServerPort, verbose);
 
         // Optional: overrides the default action, make it speak...
         client.setMessageConsumer(TextToSpeech::speak);
@@ -99,7 +103,9 @@ public class client {
         System.out.println("WHO_S_THERE to know who's there");
         System.out.println("Anything else will be broadcasted");
 
-        TextToSpeech.speak("Client is ready!");
+        if (verbose) {
+            TextToSpeech.speak("Client is ready!");
+        }
 
         Console console = System.console();
         boolean keepAsking = true;

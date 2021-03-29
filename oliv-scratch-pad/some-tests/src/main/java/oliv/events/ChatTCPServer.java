@@ -163,7 +163,10 @@ public class ChatTCPServer implements ServerInterface {
         synchronized (this.clientMap) {
             // Broadcast to all connected clients
             this.clientMap.keySet().forEach(tcpSocket -> {
-                if (!tcpSocket.equals(sender)) { // Do not send message to its sender.
+                if (sender == null || !tcpSocket.equals(sender)) { // Do not send message to its sender.
+                    if (verbose) {
+                        System.out.printf("Server sending %s to %s%n", new String(message), tcpSocket);
+                    }
                     synchronized (tcpSocket) {
                         try {
                             DataOutputStream out = new DataOutputStream(tcpSocket.getOutputStream());
@@ -200,7 +203,7 @@ public class ChatTCPServer implements ServerInterface {
 
     @Override
     public void close() {
-        System.out.println("- Stop writing to " + this.getClass().getName());
+        System.out.println("- Stopping " + this.getClass().getName());
         try {
             for (Socket tcpSocket : this.clientMap.keySet()) {
                 tcpSocket.close();

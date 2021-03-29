@@ -31,7 +31,7 @@ jar -cfm ../dist/client.jar ../manifest.txt *
 #
 echo -e "To run the client:"
 echo -e "cd ../dist"
-echo -e "java -jar client.jar --client-name:XXX --server-port:8000 --server-name:localhost"
+echo -e "java -jar client.jar --client-name:XXX --server-port:8000 --server-name:localhost --client-verbose:false"
 #
 cd ${FROM_DIR}
 rm manifest.txt

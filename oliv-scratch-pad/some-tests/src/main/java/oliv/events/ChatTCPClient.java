@@ -16,6 +16,7 @@ public class ChatTCPClient {
     private final static int DEFAULT_TCP_PORT = 80;
     private final int tcpPort;
     private final String hostName;
+    private boolean verbose;
 
     private PrintWriter out;
     private BufferedReader in;
@@ -23,16 +24,17 @@ public class ChatTCPClient {
     private boolean stayConnected = true;
 
     public ChatTCPClient() {
-        this(DEFAULT_HOST_NAME, DEFAULT_TCP_PORT);
+        this(DEFAULT_HOST_NAME, DEFAULT_TCP_PORT, false);
     }
 
     public ChatTCPClient(int port) {
-        this(DEFAULT_HOST_NAME, port);
+        this(DEFAULT_HOST_NAME, port, false);
     }
 
-    public ChatTCPClient(String host, int port) {
-        hostName = host;
-        tcpPort = port;
+    public ChatTCPClient(String host, int port, boolean verbose) {
+        this.hostName = host;
+        this.tcpPort = port;
+        this.verbose = verbose;
     }
 
     private Socket clientSocket = null;
@@ -45,6 +47,9 @@ public class ChatTCPClient {
     };
 
     public void setMessageConsumer(Consumer<String> messageConsumer) {
+        if (verbose) {
+            System.out.println("Overriding the MessageConsumer");
+        }
         this.messageConsumer = messageConsumer;
     }
 

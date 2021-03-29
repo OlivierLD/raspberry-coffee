@@ -34,6 +34,11 @@ public class server {
             System.out.println("\nOops! Trapped exit signal...");
             synchronized (itsMe) {
                 itsMe.notify();
+                try {
+                    itsMe.wait(); // Give time to finish...
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
             }
         }));
         System.out.printf("Chat server started on port %d.\n", chatTCPServer.getTcpPort());
@@ -41,12 +46,18 @@ public class server {
             synchronized (itsMe) {
                 itsMe.wait();
             }
-            System.out.println("Ok, ok! I'm going!");
-            // TODO: Notify connected clients ?
+            System.out.println("Ok, ok! I'm leaving!");
+            // Notify connected clients ?
+            System.out.println("Notifying clients...");
+            chatTCPServer.onMessage("Notice: Server is going down.".getBytes(), null);
+            System.out.println("Now shutting down the server.");
             chatTCPServer.close();
         } catch (InterruptedException ie) {
             ie.printStackTrace();
         }
         System.out.println("Bye!\n");
+        synchronized(itsMe) {
+            itsMe.notify();
+        }
     }
 }
