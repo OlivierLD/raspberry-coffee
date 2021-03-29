@@ -6,9 +6,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * This program demonstrates making JDBC connection to a SQLite database.
- * Requires the following dep in gradle:
- *    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
+ * This code shows how to make JDBC connection to a SQLite database.<br/>
+ * Requires the following dep in gradle:<br/>
+ * <code>implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'</code>
+ * <br/>
  *
  * @author www.codejava.net
  */
@@ -21,7 +22,7 @@ public class Sample101 {
             Connection conn = DriverManager.getConnection(dbURL);
             if (conn != null) {
                 System.out.println("Connected to the database");
-                DatabaseMetaData dm = (DatabaseMetaData) conn.getMetaData();
+                DatabaseMetaData dm = conn.getMetaData();
                 System.out.println("Driver name: " + dm.getDriverName());
                 System.out.println("Driver version: " + dm.getDriverVersion());
                 System.out.println("Product name: " + dm.getDatabaseProductName());
