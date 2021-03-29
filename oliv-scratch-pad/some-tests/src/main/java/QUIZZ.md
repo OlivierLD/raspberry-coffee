@@ -132,3 +132,8 @@ Anything else will be broadcasted
 > _
 . . .
 ```
+
+#### Bonus
+```
+$ ./package.chat.server.sh
+```

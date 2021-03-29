@@ -16,14 +16,15 @@ public class Lambda101 {
 		return fn.apply(id, stuff);
 	}
 
-	private static String repeat(String s) {
+	private static String echo(String s) {
 		return s;
 	}
+
+	private static Double echoDouble(Double d) { return d; }
 
 	private static Integer count(String s) {
 		return s.length();
 	}
-
 
 	private static String reverse(String s) {
 		StringBuffer sb = new StringBuffer();
@@ -33,9 +34,16 @@ public class Lambda101 {
 		return sb.toString();
 	}
 
+	private static String betterReverse(String s) {
+		return new StringBuilder(s).reverse().toString();
+	}
+
 	public static void main(String... args) {
-		String str = genericStuff("Akeu", Lambda101::repeat);
+		String str = genericStuff("Akeu", Lambda101::echo);
 		System.out.println(str);
+
+		Double pi = genericStuff(Math.PI, Lambda101::echoDouble);
+		System.out.printf("\u03c0: %.15f%n", pi);
 
 		int len = genericStuff("Akeu-coucou", Lambda101::count);
 		System.out.println("String has " + len + " character(s).");
@@ -54,6 +62,9 @@ public class Lambda101 {
 		System.out.println(str);
 
 		str = genericStuff("Pouet-pouet", Lambda101::reverse);
+		System.out.println(str);
+
+		str = genericStuff("This is so much better!", Lambda101::betterReverse);
 		System.out.println(str);
 
 		str = genericBiStuff(3, "Merde!", (a, b) -> {

@@ -47,7 +47,8 @@ dependencies {
 
 //    compile project(':common-utils')
     implementation 'oliv.raspi.coffee:common-utils:1.0' // Java Celestial Almanac
-
+    // compile project(':system-utils') // Speech Stuff
+    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
 
     // Require tools.jar, from the JDK (Doclet and Co)
 //    compile files(org.gradle.internal.jvm.Jvm.current().toolsJar)

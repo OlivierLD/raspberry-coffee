@@ -17,15 +17,21 @@ public class StreamWithIndex {
 		List<String> source = Arrays.asList(LOREM_IPSUM.split(" "));
 
 		final AtomicInteger idx = new AtomicInteger(0);
-		String mess = source.stream().map(w -> w.replace(".", "").replace(",", "")).filter(x -> { // The range evaluation happens in the filter
-			boolean ok = idx.get() > 10 && idx.get() < 20;
-			idx.set(idx.get() + 1);
-			return ok;
-		}).collect(Collectors.joining("\n"));
+		String mess = source.stream()
+				.map(w -> w.replace(".", "").replace(",", ""))
+				.filter(x -> { // The range evaluation happens in the filter
+					boolean ok = idx.get() > 10 && idx.get() < 20;
+					idx.set(idx.get() + 1);
+					return ok;
+				}).collect(Collectors.joining("\n"));
 		System.out.println(mess);
 
 		System.out.println("====================");
-		mess = source.stream().map(w -> w.replace(".", "").replace(",", "")).skip(10).limit(5).collect(Collectors.joining("\n"));
+		mess = source.stream()
+				.map(w -> w.replace(".", "").replace(",", ""))
+				.skip(10)
+				.limit(5)
+				.collect(Collectors.joining("\n"));
 		System.out.println(mess);
 
 		// Find index of a string in the list

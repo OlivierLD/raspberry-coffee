@@ -1,12 +1,35 @@
 package oliv.events;
 
 import java.io.Console;
+import java.util.HashMap;
+import java.util.Map;
 
 public class client {
 
     private final static String CLIENT_NAME_PREFIX = "--client-name:";
     private final static String SERVER_NAME_PREFIX = "--server-name:";
     private final static String SERVER_PORT_PREFIX = "--server-port:";
+
+    public static class TextToSpeech {
+        private static Map<String, String> speechTools = new HashMap<>();
+
+        static {
+            speechTools.put("Mac OS X", "say");
+            speechTools.put("Linux", "espeak");
+        }
+
+        public static void speak(String text) {
+            String speechTool = speechTools.get(System.getProperty("os.name"));
+            if (speechTool == null) {
+                throw new RuntimeException("No speech tool found in this os [" + System.getProperty("os.name") + "]");
+            }
+            try {
+                Runtime.getRuntime().exec(new String[]{speechTool, "\"" + text + "\""});
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 
     public static void main(String... args) {
 
@@ -25,6 +48,10 @@ public class client {
         }
 
         ChatTCPClient client = new ChatTCPClient(clientName, chatServerName, chatServerPort);
+
+        // Option: override, make it speak...
+        client.setMessageConsumer(TextToSpeech::speak);
+
         final String _clientName = clientName;
         final Thread me = Thread.currentThread();
         Thread listener = new Thread(() -> {
@@ -34,7 +61,7 @@ public class client {
 
         // Wait for the stuff to start
         try {
-//            Thread.sleep(1_000L); // Bad approach: See below something nicer
+//          Thread.sleep(1_000L); // Bad approach: See below something nicer
             synchronized (me) {
                 me.wait();
                 System.out.println("Done with client initialization.");
