@@ -14,8 +14,8 @@ import java.util.function.Consumer;
 public class ChatTCPClient {
     private final static String DEFAULT_HOST_NAME = "localhost";
     private final static int DEFAULT_TCP_PORT = 80;
-    private final int tcpPort;  // = DEFAULT_TCP_PORT;
-    private final String hostName; //  = DEFAULT_HOST_NAME;
+    private final int tcpPort;
+    private final String hostName;
 
     private PrintWriter out;
     private BufferedReader in;
