@@ -6,9 +6,15 @@
 OS=`uname -a | awk '{ print $1 }'`
 #
 MUX_PROP_FILE=nmea.mux.rpi.demo.properties
+CLI_PRMS=
 if [[ $# -gt 0 ]]
 then
-  MUX_PROP_FILE=$1
+  if [[ "$1" != "--interactive-config" ]]
+  then
+    MUX_PROP_FILE=$1
+  else
+    CLI_PRMS=$1      # "--interactive-config"
+  fi
 fi
 #
 echo Using properties file ${MUX_PROP_FILE}
@@ -102,7 +108,7 @@ LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
 # use sudo on Raspberry Pi, specially if reading serial port(s)
 # sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
-COMMAND="${SUDO}java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer"
+COMMAND="${SUDO}java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer ${CLI_PRMS}"
 echo -e "Running $COMMAND"
 ${COMMAND}
 #

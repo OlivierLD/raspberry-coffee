@@ -1,23 +1,19 @@
 package nmea.mux;
 
-import http.RESTRequestManager;
-import nmea.computers.Computer;
 import context.ApplicationContext;
 import http.HTTPServer;
-import org.yaml.snakeyaml.Yaml;
-import utils.DumpUtil;
+import http.RESTRequestManager;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAParser;
+import nmea.computers.Computer;
 import nmea.forwarders.Forwarder;
 import nmea.mux.context.Context;
+import org.yaml.snakeyaml.Yaml;
+import utils.DumpUtil;
 import utils.StaticUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -281,42 +277,67 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
         // Channels (List)
         List<Map<String, Object>> channels = new ArrayList<>();
 
-        Map<String, Object> oneChannel = new HashMap<>();
+        input = StaticUtil.userInput("Replay log file y|n ? > ");
+        if ("Y".equalsIgnoreCase(input)) {
+            Map<String, Object> oneChannel = new HashMap<>();
 
-        oneChannel.put("type", "file");
-        oneChannel.put("filename", "./sample.data/logged.data.archive.zip");
-        oneChannel.put("path.in.zip", "2010-11-08.Nuku-Hiva-Tuamotu.nmea");
-        oneChannel.put("zip", true);
-        oneChannel.put("verbose", false);
+            oneChannel.put("type", "file");
+            oneChannel.put("filename", "./sample.data/logged.data.archive.zip");
+            oneChannel.put("path.in.zip", "2010-11-08.Nuku-Hiva-Tuamotu.nmea");
+            oneChannel.put("zip", true);
+            oneChannel.put("verbose", false);
 
-        channels.add(oneChannel);
+            channels.add(oneChannel);
+        }
+        input = StaticUtil.userInput("Read Serial port y|n ? > ");
+        if ("Y".equalsIgnoreCase(input)) {
+            Map<String, Object> oneChannel = new HashMap<>();
+
+            oneChannel.put("type", "serial");
+            oneChannel.put("port", "/dev/ttyS80");
+            oneChannel.put("baudrate", 4800);
+            oneChannel.put("verbose", false);
+
+            channels.add(oneChannel);
+        }
 
         topMap.put("channels", channels);
 
         // Forwarder (List)
         List<Map<String, Object>> forwarders = new ArrayList<>();
-        Map<String, Object> oneForwarder = new HashMap<>();
-        oneForwarder.put("type", "rest");
-        oneForwarder.put("server.name", "192.168.42.6");
-        oneForwarder.put("server.port", 9999);
-        oneForwarder.put("rest.resource", "/mux/nmea-sentence");
-        oneForwarder.put("rest.verb", "POST");
-        oneForwarder.put("http.headers", "Content-Type:text/plain");
-        oneForwarder.put("verbose", true);
-        forwarders.add(oneForwarder);
+        Map<String, Object> oneForwarder;
 
-        oneForwarder = new HashMap<>();
-        oneForwarder.put("type", "tcp");
-        oneForwarder.put("port", 7002);
-        oneForwarder.put("properties", "no.ais.properties");
-        forwarders.add(oneForwarder);
+        input = StaticUtil.userInput("Forwarder. REST y|n ? > ");
+        if ("Y".equalsIgnoreCase(input)) {
+            oneForwarder = new HashMap<>();
+            oneForwarder.put("type", "rest");
+            oneForwarder.put("server.name", "192.168.42.6");
+            oneForwarder.put("server.port", 9999);
+            oneForwarder.put("rest.resource", "/mux/nmea-sentence");
+            oneForwarder.put("rest.verb", "POST");
+            oneForwarder.put("http.headers", "Content-Type:text/plain");
+            oneForwarder.put("verbose", true);
+            forwarders.add(oneForwarder);
+        }
 
-        oneForwarder = new HashMap<>();
-        oneForwarder.put("type", "tcp");
-        oneForwarder.put("subclass", "nmea.forwarders.AISTCPServer");
-        oneForwarder.put("port", 7003);
-        oneForwarder.put("verbose", false);
-        forwarders.add(oneForwarder);
+        input = StaticUtil.userInput("Forwarder. TCP (no AIS) y|n ? > ");
+        if ("Y".equalsIgnoreCase(input)) {
+            oneForwarder = new HashMap<>();
+            oneForwarder.put("type", "tcp");
+            oneForwarder.put("port", 7002);
+            oneForwarder.put("properties", "no.ais.properties");
+            forwarders.add(oneForwarder);
+        }
+
+        input = StaticUtil.userInput("Forwarder. TCP (AIS only) y|n ? > ");
+        if ("Y".equalsIgnoreCase(input)) {
+            oneForwarder = new HashMap<>();
+            oneForwarder.put("type", "tcp");
+            oneForwarder.put("subclass", "nmea.forwarders.AISTCPServer");
+            oneForwarder.put("port", 7003);
+            oneForwarder.put("verbose", false);
+            forwarders.add(oneForwarder);
+        }
 
         topMap.put("forwarders", forwarders);
 

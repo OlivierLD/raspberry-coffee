@@ -23,7 +23,7 @@ public class server {
                     continue;
                 }
                 Enumeration<InetAddress> addresses = iFace.getInetAddresses();
-                while(addresses.hasMoreElements()) {
+                while (addresses.hasMoreElements()) {
                     InetAddress address = addresses.nextElement();
                     ip = address.getHostAddress();
                     System.out.println(iFace.getDisplayName() + " " + ip);
