@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Drag n Drop</title>
+    <title>Drag n Drop 101</title>
     <style>
 #div1 {
   width: 350px;
@@ -27,10 +27,24 @@
     border-radius: 5px;
 }
 
+h1 {
+  font-family: 'Courier New', Courier, monospace;
+}
+
 p {
   font-family: 'Courier New', Courier, monospace;
   font-size: 28px;
   font-weight: bold;
+}
+
+label {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+input {
+  margin-left: 10px;
 }
     </style>
     <script>
@@ -39,19 +53,26 @@ function allowDrop(ev) {
 }
 
 function drag(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
+  ev.dataTransfer.setData("dragged-id", ev.target.id);
 }
 
 function drop(ev) {
   ev.preventDefault();
-  let data = ev.dataTransfer.getData("text"); // Id of the dragged Node
-  // ev.target.appendChild(document.getElementById(data));              // Move
-  ev.target.appendChild(document.getElementById(data).cloneNode(true)); // Copy
+  let data = ev.dataTransfer.getData("dragged-id"); // Id of the dragged Node
+  if (document.getElementById('move').checked) {
+     ev.target.appendChild(document.getElementById(data));                 // Move
+  } else {
+     ev.target.appendChild(document.getElementById(data).cloneNode(true)); // Copy
+  }
 }
     </script>
 </head>
 <body>
 
+<h1>Drag'n Drop 101</h1>
+
+<input type="radio" id="move" name="option" value="Move" checked><label for="move">Move</label>
+<input type="radio" id="copy" name="option" value="Copy"><label for="copy">Copy</label><br/>
 
 <p>Drag the bottom on top</p>
 

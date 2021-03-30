@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drag n Drop</title>
+    <style>
+
+#drop-div {
+  width: 350px;
+  min-height: 300px;
+  height: auto;
+  padding: 10px;
+  border: 1px solid red;
+  border-radius: 10px;
+}
+
+.draggable-container {
+    border: 1px solid blue;
+    border-radius: 5px;
+    margin: 3px;
+}
+
+.draggable-content {
+    font-size: 50px;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    width: 340px;
+    height: 60px;
+    padding: 5px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.close-icon {
+  /*position: absolute;*/
+  text-align: right;
+  right: 0;
+  top: 0;
+  margin-top: 2px;
+  margin-right: 7px;
+  cursor: pointer;
+}
+
+p {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+label {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+input {
+  margin-left: 10px;
+}
+
+td {
+  min-width: 350px;
+  height: 80px;
+}
+
+/*table, th, td {
+  border: 1px solid black;
+  border-radius: 4px;
+}*/
+    </style>
+</head>
+<script>
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+// When drag starts
+function drag(ev) {
+  ev.dataTransfer.setData("dragged-id", ev.target.id);
+}
+
+// When dropped
+function drop(ev) {
+  ev.preventDefault();
+  let data = ev.dataTransfer.getData("dragged-id"); // Id of the dragged Node
+  if (document.getElementById('move').checked) {
+     ev.target.appendChild(document.getElementById(data));                 // Move
+  } else {
+     ev.target.appendChild(document.getElementById(data).cloneNode(true)); // Copy
+  }
+}
+
+function remove(origin) {
+  let draggable = origin;
+  while (!draggable.classList.contains("draggable-container")) {
+    draggable = draggable.parentElement;
+  }
+  let dropContainer = draggable;
+  while (!dropContainer.classList.contains("drop-container")) {
+    dropContainer = dropContainer.parentElement;
+  }
+  dropContainer.removeChild(draggable);
+  console.log("Aha!");
+}
+    </script>
+<body>
+
+<input type="radio" id="move" name="option" value="Move"><label for="move">Move</label>
+<input type="radio" id="copy" name="option" value="Copy" checked><label for="copy">Copy</label><br/>
+
+<p>Drag from left to right</p>
+
+<table>
+    <tr>
+        <td>
+            <div id="drag1" draggable="true" class="draggable-container" style="background-color: lightgreen;" ondragstart="drag(event)">
+                <div class="close-icon" onclick="remove(this);">&times;</div>
+                <div class="draggable-content">
+                    Drag this.
+                </div>
+            </div>
+        </td>
+        <td rowspan="3">
+            <div id="drop-div" class="drop-container" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div id="drag2" draggable="true" class="draggable-container" style="background-color: pink;" ondragstart="drag(event)">
+                <div class="close-icon" onclick="remove(this);">&times;</div>
+                <div class="draggable-content">
+                    Drag that.
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div id="drag3" draggable="true" class="draggable-container" style="background-color: cyan;" ondragstart="drag(event)">
+                <div class="close-icon" onclick="remove(this);">&times;</div>
+                <div class="draggable-content">
+                    Drag it.
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
