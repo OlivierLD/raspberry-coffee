@@ -46,6 +46,10 @@ public class ChatTCPClient {
         System.out.print("> ");
     };
 
+    public Consumer<String> getMessageConsumer() {
+        return messageConsumer;
+    }
+
     public void setMessageConsumer(Consumer<String> messageConsumer) {
         if (verbose) {
             System.out.println("Overriding the MessageConsumer");

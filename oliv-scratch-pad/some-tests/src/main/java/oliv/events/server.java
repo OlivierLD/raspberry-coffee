@@ -1,11 +1,38 @@
 package oliv.events;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+
 public class server {
 
     private final static String SERVER_PORT_PREFIX = "--server-port:";
     private final static String SERVER_VERBOSE =     "--server-verbose:";
 
     public static void main(String... args) {
+
+        String ip;
+        System.out.println("----- N E T W O R K -----");
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface iface = interfaces.nextElement();
+                // filters out 127.0.0.1 and inactive interfaces
+                if (iface.isLoopback() || !iface.isUp()) {
+                    continue;
+                }
+                Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                while(addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+                    ip = addr.getHostAddress();
+                    System.out.println(iface.getDisplayName() + " " + ip);
+                }
+            }
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("-------------------------");
 
         System.out.println("Use [Ctrl-C] to exit.");
 
@@ -35,7 +62,7 @@ public class server {
             synchronized (itsMe) {
                 itsMe.notify();
                 try {
-                    itsMe.wait(); // Give time to finish...
+                    itsMe.join(); // Give time to finish...
                     System.out.println("... Gone");
                 } catch (InterruptedException ie) {
                     ie.printStackTrace();
@@ -57,8 +84,5 @@ public class server {
             ie.printStackTrace();
         }
         System.out.println("Bye!");
-        synchronized(itsMe) {
-            itsMe.notify(); // Unlock the shutdown hook.
-        }
     }
 }

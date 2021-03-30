@@ -1,5 +1,7 @@
 package oliv.generix;
 
+import java.util.Arrays;
+
 public class GenericHandler<X> {
 
 	private X storage;
@@ -14,9 +16,10 @@ public class GenericHandler<X> {
 
 	public static <T> GenericHandler<T> of(T... obj) {
 		GenericHandler gh = new GenericHandler<T>();
-		for (T o : obj) {
-			gh.put(o);
-		}
+		Arrays.asList(obj).forEach(gh::put);
+//		for (T o : obj) {
+//			gh.put(o);
+//		}
 		return gh;
 	}
 }

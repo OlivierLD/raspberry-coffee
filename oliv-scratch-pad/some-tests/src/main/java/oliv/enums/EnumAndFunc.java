@@ -12,7 +12,7 @@ public class EnumAndFunc {
 	}
 
 	private static String reverse(String str) {
-		String s = str.toString();
+		String s = str;
 		StringBuffer sb = new StringBuffer();
 		for (int i = s.length(); i > 0; i--) {
 			sb.append(s.charAt(i - 1));

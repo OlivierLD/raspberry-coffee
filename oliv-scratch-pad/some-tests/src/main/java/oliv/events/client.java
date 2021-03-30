@@ -47,11 +47,16 @@ public class client {
             }
             try {
                 speechTool.accept(text);
+                if (originalMessageConsumer != null) { // double up!
+                    originalMessageConsumer.accept(text);
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
     }
+
+    private static Consumer<String> originalMessageConsumer = null;
 
     public static void main(String... args) {
 
@@ -80,6 +85,7 @@ public class client {
 
         // Optional: overrides the default action, make it speak...
         if (speech) {
+            originalMessageConsumer = client.getMessageConsumer();
             client.setMessageConsumer(TextToSpeech::speak);
         }
 

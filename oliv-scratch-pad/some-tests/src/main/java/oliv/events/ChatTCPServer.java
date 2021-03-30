@@ -77,7 +77,9 @@ public class ChatTCPServer implements ServerInterface {
     }
 
     protected void setSocket(Socket skt) {
-        this.clientMap.put(skt, new ChatClient());
+        synchronized(this.clientMap) {
+            this.clientMap.put(skt, new ChatClient());
+        }
         ChatTCPServer instance = this;
         Thread clientThread = new Thread(() -> {
             try {
@@ -136,7 +138,9 @@ public class ChatTCPServer implements ServerInterface {
                             if (verbose) {
                                 System.out.printf("Message [%s] not processed, using default 'onMessage'.\n", clientMessage);
                             }
-                            instance.onMessage((clientMessage + "\n").getBytes(), skt);
+                            synchronized (instance) {
+                                instance.onMessage((clientMessage + "\n").getBytes(), skt);
+                            }
                         }
                     } else {
                         if (verbose) {
