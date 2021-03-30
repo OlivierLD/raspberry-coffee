@@ -17,16 +17,16 @@ public class server {
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
-                NetworkInterface iface = interfaces.nextElement();
+                NetworkInterface iFace = interfaces.nextElement();
                 // filters out 127.0.0.1 and inactive interfaces
-                if (iface.isLoopback() || !iface.isUp()) {
+                if (iFace.isLoopback() || !iFace.isUp()) {
                     continue;
                 }
-                Enumeration<InetAddress> addresses = iface.getInetAddresses();
+                Enumeration<InetAddress> addresses = iFace.getInetAddresses();
                 while(addresses.hasMoreElements()) {
-                    InetAddress addr = addresses.nextElement();
-                    ip = addr.getHostAddress();
-                    System.out.println(iface.getDisplayName() + " " + ip);
+                    InetAddress address = addresses.nextElement();
+                    ip = address.getHostAddress();
+                    System.out.println(iFace.getDisplayName() + " " + ip);
                 }
             }
         } catch (SocketException e) {

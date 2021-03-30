@@ -30,13 +30,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
     private HTTPServer adminServer = null;
-    protected Properties muxProperties = null;
+    protected Properties muxProperties;
 
     private final List<NMEAClient> nmeaDataClients = new ArrayList<>();
     private final List<Forwarder> nmeaDataForwarders = new ArrayList<>();
     private final List<Computer> nmeaDataComputers = new ArrayList<>();
 
-    private RESTImplementation restImplementation;
+    private final RESTImplementation restImplementation;
 
     /**
      * Implements the management of the REST requests (see {@link RESTImplementation})
@@ -50,7 +50,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
     public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
 //	HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NOT_IMPLEMENTED);
         HTTPServer.Response response = restImplementation.processRequest(request); // All the skill is here.
-        if (this.verbose) {
+        if (verbose) {
             System.out.println("======================================");
             System.out.println("Request :\n" + request.toString());
             System.out.println("Response :\n" + response.toString());
@@ -72,7 +72,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
         // Last sentence (inbound)
         Context.getInstance().setLastDataSentence(mess); // That one also increments the nb of messages processed.
 
-        if (this.verbose) {
+        if (verbose) {
             System.out.println("==== From MUX: " + mess);
             DumpUtil.displayDualDump(mess);
             System.out.println("==== End Mux =============");
@@ -105,7 +105,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
 
     @Override
     public void setVerbose(boolean b) {
-        this.verbose = b;
+        verbose = b;
     }
 
     @Override
@@ -130,7 +130,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
     }
 
     private static boolean verbose = "true".equals(System.getProperty("mux.data.verbose"));
-    private static boolean infraVerbose = "true".equals(System.getProperty("mux.infra.verbose"));
+    private final static boolean infraVerbose = "true".equals(System.getProperty("mux.infra.verbose"));
     private boolean process = true; // onData, forward to computers and forwarders
 
     private boolean softStop = false;
@@ -170,7 +170,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
         Context.getInstance().setStartTime(System.currentTimeMillis());
 
         if (infraVerbose) {
-            System.out.println(String.format("\t>> %s - Constructor %s, Initializing RESTImplementation...", NumberFormat.getInstance().format(System.currentTimeMillis()), this.getClass().getName()));
+            System.out.printf("\t>> %s - Constructor %s, Initializing RESTImplementation...\n", NumberFormat.getInstance().format(System.currentTimeMillis()), this.getClass().getName());
         }
         // Read initial config from the properties file. See the main method.
 //		verbose = "true".equals(System.getProperty("mux.data.verbose", "false")); // Initial verbose.
@@ -178,7 +178,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
         MuxInitializer.setup(muxProps, nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, this, verbose);
 
         if (infraVerbose) {
-            System.out.println(String.format("\t>> %s - RESTImplementation initialized.", NumberFormat.getInstance().format(System.currentTimeMillis())));
+            System.out.printf("\t>> %s - RESTImplementation initialized.\n", NumberFormat.getInstance().format(System.currentTimeMillis()));
         }
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (!softStop) {
@@ -188,7 +188,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
 
         nmeaDataClients.forEach(client -> {
             if (infraVerbose) {
-                System.out.println(String.format("\t>> %s - NMEADataClient: Starting %s...", NumberFormat.getInstance().format(System.currentTimeMillis()), client.getClass().getName()));
+                System.out.printf("\t>> %s - NMEADataClient: Starting %s...\n", NumberFormat.getInstance().format(System.currentTimeMillis()), client.getClass().getName());
             }
             try {
                 client.startWorking();
@@ -197,7 +197,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
             }
         });
         if (infraVerbose) {
-            System.out.println(String.format("\t>> %s - %s constructor completed.", NumberFormat.getInstance().format(System.currentTimeMillis()), this.getClass().getName()));
+            System.out.printf("\t>> %s - %s constructor completed.\n", NumberFormat.getInstance().format(System.currentTimeMillis()), this.getClass().getName());
         }
     }
 
@@ -211,7 +211,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
             this.adminServer = new HTTPServer(port, this);
             this.adminServer.startServer();
             if (infraVerbose) {
-                System.out.println(String.format("\t>> %s - Starting Admin server on port %dr", NumberFormat.getInstance().format(System.currentTimeMillis()), port));
+                System.out.printf("\t>> %s - Starting Admin server on port %d\n", NumberFormat.getInstance().format(System.currentTimeMillis()), port);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -248,9 +248,10 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
     }
 
     /**
-     * WiP
+     * WiP.
+     * Triggered from the main, if a CLI parameter ""--interactive-config" is present.
      *
-     * @return
+     * @return the generated Properties Object.
      */
     private static Properties interactiveConfig() {
         Properties props;
@@ -359,12 +360,12 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
         if ("yes".equals(withHttpServer) || "true".equals(withHttpServer)) {
             int httpPort = Integer.parseInt(definitions.getProperty("http.port", "9999"));
             if (infraVerbose) {
-                System.out.println(String.format("Starting Admin server on port %d", httpPort));
+                System.out.printf("Starting Admin server on port %d\n", httpPort);
             }
             mux.startAdminServer(httpPort);
         } else {
             if (infraVerbose) {
-                System.out.println(String.format("\t>> NO Admin server started"));
+                System.out.println("\t>> NO Admin server started");
             }
         }
     }
