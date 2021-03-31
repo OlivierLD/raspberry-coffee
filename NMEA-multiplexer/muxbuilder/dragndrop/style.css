@@ -64,7 +64,6 @@ body {
     margin-left: -18px;
     margin-top: -17px;
     vertical-align: middle;
-
 }
 
 .dialog-header-close {
@@ -101,6 +100,11 @@ body {
 .edit-icon:hover {
   text-shadow: 6px 6px 8px black, 0 0 25px white, 0 0 10px orange;
   cursor: pointer;
+}
+
+.channel-description {
+  margin-left: 10px;
+  font-style: italic;
 }
 
 .editable-zone {

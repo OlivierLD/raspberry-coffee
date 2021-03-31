@@ -35,7 +35,10 @@
 
   <div class="vertical-scrollable-zone side-div">
     <div id="drag1" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-        <div class="close-icon" onclick="remove(this);">&times;</div>
+        <div>
+          <span class="close-icon" onclick="remove(this);">&times;</span>
+          <span class="channel-description">Serial port input</span>
+        </div>
         <div class="draggable-content">
             <span>Serial </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
             <dialog class="editable-prm" style="min-height: 200px;">
@@ -77,7 +80,10 @@
         </div>
     </div>
     <div id="drag2" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-        <div class="close-icon" onclick="remove(this);">&times;</div>
+        <div>
+          <span class="close-icon" onclick="remove(this);">&times;</span>
+          <span class="channel-description">TCP server input</span>
+        </div>
         <div class="draggable-content">
           <span>TCP </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
           <dialog class="editable-prm" style="min-height: 200px;">
@@ -109,13 +115,16 @@
                     <td>Verbose</td>
                     <td><input type="checkbox" class="verbose"></td>
                 </tr>
-            </table>
-                    </div>
+              </table>
+            </div>
           </dialog>
       </div>
   </div>
     <div id="drag3" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-      <div class="close-icon" onclick="remove(this);">&times;</div>
+      <div>
+        <span class="close-icon" onclick="remove(this);">&times;</span>
+        <span class="channel-description">Log file replay</span>
+      </div>
       <div class="draggable-content">
         <span>File </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
         <dialog class="editable-prm" style="min-height: 200px;">
@@ -126,13 +135,16 @@
             </div>
           </div>
           <div class="editable-zone file-channel">
-
+            . . .
           </div>  
         </dialog>            
       </div>
     </div>
     <div id="drag4" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-      <div class="close-icon" onclick="remove(this);">&times;</div>
+      <div>
+        <span class="close-icon" onclick="remove(this);">&times;</span>
+        <span class="channel-description">WebSocket input</span>
+      </div>
       <div class="draggable-content">
         <span>WebSocket </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
         <dialog class="editable-prm" style="min-height: 200px;">
@@ -143,13 +155,16 @@
             </div>
           </div>
           <div class="editable-zone ws-channel">
-
+            . . .
           </div>  
         </dialog>            
       </div>
     </div>
     <div id="drag5" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-      <div class="close-icon" onclick="remove(this);">&times;</div>
+      <div>
+        <span class="close-icon" onclick="remove(this);">&times;</span>
+        <span class="channel-description">Temperature & Humidity Sensor input</span>
+      </div>
       <div class="draggable-content">
           <span>HTU21DF </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
           <dialog class="editable-prm" style="min-height: 200px;">
@@ -160,13 +175,16 @@
               </div>
             </div>
             <div class="editable-zone htu21df-channel">
-  
+              . . .
             </div>  
           </dialog>            
         </div>
     </div>
     <div id="drag6" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-      <div class="close-icon" onclick="remove(this);">&times;</div>
+      <div>
+        <span class="close-icon" onclick="remove(this);">&times;</span>
+        <span class="channel-description">Temperature, Humidity, Pressure Sensor input</span>
+      </div>
       <div class="draggable-content">
           <span>BME280 </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
           <dialog class="editable-prm" style="min-height: 200px;">
@@ -177,13 +195,16 @@
               </div>
             </div>
             <div class="editable-zone bme280-channel">
-  
+              . . .
             </div>  
           </dialog>            
         </div>
     </div>
     <div id="drag7" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-      <div class="close-icon" onclick="remove(this);">&times;</div>
+      <div>
+        <span class="close-icon" onclick="remove(this);">&times;</span>
+        <span class="channel-description">Temperature, Humidity, Pressure Sensor input</span>
+      </div>
       <div class="draggable-content">
           <span>BMP180 </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
           <dialog class="editable-prm" style="min-height: 200px;">
@@ -194,13 +215,16 @@
               </div>
             </div>
             <div class="editable-zone bmp180-channel">
-  
+              . . .
             </div>  
           </dialog>            
         </div>
     </div>
     <div id="drag8" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-      <div class="close-icon" onclick="remove(this);">&times;</div>
+      <div>
+        <span class="close-icon" onclick="remove(this);">&times;</span>
+        <span class="channel-description">Magnetometer Sensor input</span>
+      </div>
       <div class="draggable-content">
           <span>HCM5883L </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
           <dialog class="editable-prm" style="min-height: 200px;">
@@ -211,13 +235,16 @@
               </div>
             </div>
             <div class="editable-zone hcm5883l-channel">
-  
+              . . .
             </div>  
           </dialog>            
         </div>
     </div>
     <div id="drag9" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-      <div class="close-icon" onclick="remove(this);">&times;</div>
+      <div>
+        <span class="close-icon" onclick="remove(this);">&times;</span>
+        <span class="channel-description">Magnetometer Accelerometer Sensor input</span>
+      </div>
       <div class="draggable-content">
           <span>LSM303 </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
           <dialog class="editable-prm" style="min-height: 200px;">
@@ -228,13 +255,16 @@
               </div>
             </div>
             <div class="editable-zone lsm303-channel">
-  
+              . . .
             </div>  
           </dialog>            
         </div>
     </div>
     <div id="drag10" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-      <div class="close-icon" onclick="remove(this);">&times;</div>
+      <div>
+        <span class="close-icon" onclick="remove(this);">&times;</span>
+        <span class="channel-description">UTC Time NMEA input</span>
+      </div>
       <div class="draggable-content">
           <span>ZDA </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
           <dialog class="editable-prm" style="min-height: 200px;">
@@ -245,13 +275,16 @@
               </div>
             </div>
             <div class="editable-zone zda-channel">
-  
+                . . .
             </div>  
           </dialog>            
         </div>
     </div>
     <div id="drag11" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-      <div class="close-icon" onclick="remove(this);">&times;</div>
+      <div>
+        <span class="close-icon" onclick="remove(this);">&times;</span>
+        <span class="channel-description">Random input (for debug)</span>
+      </div>
       <div class="draggable-content">
           <span>RND </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
           <dialog class="editable-prm" style="min-height: 200px;">
@@ -262,7 +295,7 @@
               </div>
             </div>
             <div class="editable-zone rnd-channel">
-  
+              . . .
             </div>  
           </dialog>            
         </div>
