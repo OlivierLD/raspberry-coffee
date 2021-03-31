@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Drag n Drop - 2</title>
+    <title>Drag n Drop - 3</title>
     <style>
 
 #drop-div {
@@ -60,6 +60,13 @@
   cursor: pointer;
 }
 
+.vertical-scrollable-zone {
+    vertical-align: top;
+    height: auto;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
 p {
   font-family: 'Courier New', Courier, monospace;
   font-size: 28px;
@@ -85,6 +92,16 @@ td {
   border: 1px solid black;
   border-radius: 4px;
 }*/
+
+h1 {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+button > span {
+  font-size: 20px; 
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+}
     </style>
 </head>
 <script>
@@ -102,9 +119,9 @@ function drag(ev) {
 function drop(ev) {
   ev.preventDefault();
   let data = ev.dataTransfer.getData("dragged-id"); // Id of the dragged Node
-  if (data == 'drag4') {
+  if (data == 'no-drag-1') {
       // Prevent Element Four
-      console.log(`Preventing drop from drag4 to ${ev.target.id}`);
+      console.log(`Preventing drop from no-drag-1 to ${ev.target.id}`);
   } else {
       if (document.getElementById('move').checked) {
          ev.target.appendChild(document.getElementById(data));                 // Move
@@ -168,60 +185,65 @@ function dumpIt() {
     </div>
 </dialog>    
 
+<h1>Scrollable columns</h1>
 
 <input type="radio" id="move" name="option" value="Move"><label for="move">Move</label>
 <input type="radio" id="copy" name="option" value="Copy" checked><label for="copy">Copy</label><br/>
 
 <p>Drag from the sides, drop in the center</p>
 
+<!-- One row, 3 columns -->
 <table style="margin: auto;">
     <tr>
-        <td>
-            <div id="drag1" draggable="true" class="draggable-container" style="background-color: lightgreen;" ondragstart="drag(event)">
+        <td class="vertical-scrollable-zone">
+            <div class="vertical-scrollable-zone">
+              <div id="drag1" draggable="true" class="draggable-container" style="background-color: lightgreen;" ondragstart="drag(event)">
                 <div class="close-icon" onclick="remove(this);">&times;</div>
                 <div class="draggable-content">
                     Element One
                 </div>
-            </div>
-        </td>
-        <td rowspan="3">
-            <!-- This is where things are dropped -->
-            <div style="max-height: 300px; overflow-y: scroll; border: 1px solid red; border-radius: 4px;">
-                <div id="drop-div" class="drop-container drop-container-content" ondrop="drop(event)" ondragover="allowDrop(event)">
-                </div>
-            </div>
-        </td>
-        <td>
-            <div id="drag4" draggable="true" class="draggable-container" style="background-color: brown;" ondragstart="drag(event)">
-                <div class="close-icon" onclick="remove(this);">&times;</div>
-                <div class="draggable-content">
-                    Element Four
-                </div>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <div id="drag2" draggable="true" class="draggable-container" style="background-color: pink;" ondragstart="drag(event)">
+              </div>
+              <div id="drag2" draggable="true" class="draggable-container" style="background-color: pink;" ondragstart="drag(event)">
                 <div class="close-icon" onclick="remove(this);">&times;</div>
                 <div class="draggable-content">
                     Element Two
                 </div>
             </div>
-        </td>
-    </tr>
-    <tr>
-        <td>
             <div id="drag3" draggable="true" class="draggable-container" style="background-color: cyan;" ondragstart="drag(event)">
-                <div class="close-icon" onclick="remove(this);">&times;</div>
-                <div class="draggable-content">
-                    Element Three
-                </div>
+              <div class="close-icon" onclick="remove(this);">&times;</div>
+              <div class="draggable-content">
+                  Element Three
+              </div>
             </div>
+            <div id="drag4" draggable="true" class="draggable-container" style="background-color: orange;" ondragstart="drag(event)">
+              <div class="close-icon" onclick="remove(this);">&times;</div>
+              <div class="draggable-content">
+                  Element Four
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="vertical-scrollable-zone">
+            <!-- This is where things are dropped -->
+            <div style="max-height: 300px; overflow-y: scroll; border: 1px solid red; border-radius: 4px;">
+              <div id="drop-div" class="drop-container drop-container-content" ondrop="drop(event)" ondragover="allowDrop(event)">
+              </div>
+          </div>
+        </td>
+        <td class="vertical-scrollable-zone">
+          <div class="vertical-scrollable-zone">
+            <div id="no-drag-1" draggable="true" class="draggable-container" style="background-color: red;" ondragstart="drag(event)">
+              <div class="close-icon" onclick="remove(this);">&times;</div>
+              <div class="draggable-content">
+                  Foreign Element
+              </div>
+          </div>
+        </div>
         </td>
     </tr>
 </table>
-<button onclick="dumpIt();">Dump what's in</button>
+
+<button onclick="dumpIt();"><span style="margin: 20px;">Dump what's in</span></button>
 
 </body>
 </html>
