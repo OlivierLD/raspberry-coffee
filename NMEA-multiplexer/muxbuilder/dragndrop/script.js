@@ -119,6 +119,12 @@ function dumpIt() {
 
   let allText = '';
 
+  let title = document.getElementById('mux-title').value;
+
+  allText += (title + '\n');
+  // TODO Context
+
+
   let dropId = "drop-div-consumers";
   let dropBox = document.getElementById(dropId);
 
