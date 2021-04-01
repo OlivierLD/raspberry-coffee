@@ -6,17 +6,44 @@ body {
   background-color: whitesmoke;
 }
 
-#drop-div {
+/* #drop-div {
   width: 350px;
   min-height: var(--d-zone-height);
   height: 1500px;
   padding: 10px;
   margin: auto;
+} */
+
+.smooth {
+  height: 0;
+  max-height: 0;
+  margin: auto;
+  /*transition: transform 0.5s, max-height 1s, height 1s;*/
+  transition: all 0.5s ease;
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+  overflow: hidden;
+}
+
+.visible-div {
+  opacity: 1;
+  width: auto;
+  height: auto;
+  max-height: 1600px;
+  transform: scaleY(1);
+  margin-top: 5px;
+}
+
+input[type=text], input[type=number] {
+  font-size: 18px;
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .grid-container {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 1fr 2fr;
   padding: 10px;
   margin: auto;
 }
@@ -48,21 +75,37 @@ body {
 
 .drop-container-content {
     position: relative;
+    width: 350px;
+    min-height: var(--d-zone-height);
+    height: 1500px;
+    padding: 10px;
+    margin: auto;
 }
 
 .draggable-channel {
   background-color: rgba(255, 0, 0, 0.5);
+  background-image: radial-gradient(red, silver);
+}
+
+.draggable-forwarder {
+  background-color: rgba(0, 255, 0, 0.5);
+  background-image: radial-gradient(green, silver);
+}
+
+.draggable-computer {
+  background-color: silver;
+  background-image: radial-gradient(cyan, silver);
 }
 
 .dialog-header {
-    width: 110%;
+    /* width: 110%; */
     height: 40px;
     font-size: 16px;
     font-family: 'Courier New', Courier, monospace;
     font-weight: 700;
     background-color: silver;
-    margin-left: -18px;
-    margin-top: -17px;
+    /* margin-left: -18px;
+    margin-top: -17px; */
     vertical-align: middle;
 }
 
@@ -126,15 +169,61 @@ body {
     max-height: var(--d-zone-height);
     overflow-y: auto;
 
+    margin-left: 5px;
+    margin-right: 5px;
+
     border: 2px solid navy;
     border-radius: 5px;
 }
 
-p {
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: rgba(241, 241, 241, 0.5);
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+  text-shadow: 1px 1px 2px rgba(0, 255, 255, 0.5), 0 0 25px white, 0 0 5px silver;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+.tab .mess {
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+  text-shadow: 1px 1px 2px rgba(0, 255, 255, 0.5), 0 0 25px white, 0 0 5px orange;
+  color: black;
+  text-align: right;
+}
+
+.message {
   font-family: 'Courier New', Courier, monospace;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: bold;
   color: navy;
+}
+
+.smaller {
+  font-size: 14px;
 }
 
 label {

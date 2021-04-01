@@ -5,6 +5,7 @@ function allowDrop(ev) {
 
 // When drag starts
 function drag(ev) {
+  console.log(`Start dragging ${ev.target.id}`);
   ev.dataTransfer.setData("dragged-id", ev.target.id);
 }
 
@@ -13,7 +14,7 @@ function drop(ev) {
   ev.preventDefault();
   let data = ev.dataTransfer.getData("dragged-id"); // Id of the dragged Node
   if (data == 'no-drag-1') {
-      // Prevent Element Four
+      // Prevent a given Element...
       console.log(`Preventing drop from no-drag-1 to ${ev.target.id}`);
   } else {
       let newNode = document.getElementById(data).cloneNode(true); // Copy
@@ -38,7 +39,6 @@ function remove(origin) {
   } else {
     alert("Removable from the right pane only...");
   }
-  // console.log("Aha!");
 }
 
 function edit(origin) {
@@ -64,11 +64,64 @@ function closeGeneratedDialog() {
     codeDialog.close();
 }
 
+const TABS = ['one', 'two', 'three'];
+
+function switchTab(evt, tabNum) {
+	let tabLinks = document.getElementsByClassName("tablinks");
+	for (let i=0; i<tabLinks.length; i++) {
+		tabLinks[i].classList.remove("active"); // Reset all tabs
+	}
+	for (let i=0; i<TABS.length; i++) {
+		document.getElementById(TABS[i]).style.display = (i === tabNum) ? 'block' : 'none';
+	}
+	evt.currentTarget.classList.add("active");
+}
+
+function showDiv(divId) {
+	let elmt = document.getElementById(divId);
+
+	elmt.classList.toggle('visible-div');
+
+	let newH = '100%';
+	let newV = 'visible';
+	let newO = '1';
+
+	elmt.style.height = newH;
+	elmt.style.visibility = newV;
+	elmt.style.opacity = newO;
+}
+
+function hideDiv(divId) {
+	let elmt = document.getElementById(divId);
+
+	elmt.classList.toggle('visible-div');
+
+	let newH = '0';
+	let newV = 'hidden';
+	let newO = '0';
+	elmt.style.height = newH;
+	elmt.style.visibility = newV;
+	elmt.style.opacity = newO;
+}
+
+let showHTTP = false;
+function expandCollapseHTTP(cb) {
+    let divId = 'http-specific';
+    showHTTP = !showHTTP;
+    if (showHTTP) {
+        showDiv(divId);
+    } else {
+        hideDiv(divId);
+    }
+}
+
 function dumpIt() {
-  let dropId = "drop-div";
-  let dropBox = document.getElementById(dropId);
-  console.log('Here');
+
   let allText = '';
+
+  let dropId = "drop-div-consumers";
+  let dropBox = document.getElementById(dropId);
+
   for (let i=0; i<dropBox.childElementCount; i++) {
     // Look for the type and parameters
     let prms = dropBox.children[i].querySelector(".editable-zone");
@@ -89,6 +142,13 @@ function dumpIt() {
       console.log("Duh.");
     }
   }
+
+  dropId = "drop-div-forwarders";
+  dropBox = document.getElementById(dropId);
+
+  dropId = "drop-div-computers";
+  dropBox = document.getElementById(dropId);
+
   let textContent = document.getElementById('generated-list');
   textContent.innerHTML = `<pre>${allText}</pre>`;
   showGeneratedDialog();
