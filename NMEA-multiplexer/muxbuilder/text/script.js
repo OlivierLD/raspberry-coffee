@@ -358,7 +358,7 @@ function getTCPChannelCode(node) {
     return code;
 }
 
-function getTCPTwdCode(node) {
+function getTCPFwdCode(node) {
     let code = "";
     let baudRate = node.querySelector('.port-num').value;
     code += `    port: ${baudRate}\n`;
@@ -639,7 +639,7 @@ function generateTheCode() {
                     code += getSerialFwdlCode(fwd);
                     break;
                 case 'tcp':
-                    code += getTCPTwdCode(fwd);
+                    code += getTCPFwdCode(fwd);
                     break;
                 case 'file':
                     code += getFileFwdCode(fwd);

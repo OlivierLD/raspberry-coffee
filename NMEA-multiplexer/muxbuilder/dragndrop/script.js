@@ -115,47 +115,124 @@ function expandCollapseHTTP(cb) {
     }
 }
 
+function generateSerialComsumerCode(node) {
+  let code = "";
+  let portName = node.querySelector('.port-name').value;
+  code += `    port: ${portName}\n`;
+  let baudRate = node.querySelector('.baud-rate').value;
+  code += `    baud.rate: ${baudRate}\n`;
+  let verbose = node.querySelector('.verbose').checked;
+  code += `    verbose: ${verbose}\n`;
+  // filters
+  let deviceFilters = node.querySelector('.device-filter').value;
+  if (deviceFilters.trim().length > 0) {
+      code += `    device.filters: ${deviceFilters}\n`;
+  }
+  let sentenceFilters = node.querySelector('.sentence-filter').value;
+  if (sentenceFilters.trim().length > 0) {
+      code += `    sentence.filters: ${senteminceFilters}\n`;
+  }
+  let resetInterval = node.querySelector('.reset-interval').value;
+  if (resetInterval.trim().length > 0) {
+      code += `    reset.interval: ${resetInterval}\n`;
+  }
+  return code;
+}
+
+function generateTCPComsumerCode(node) {
+  let code = "";
+  let serverName = node.querySelector('.server-name').value;
+  code += `    server: ${serverName}\n`;
+  let baudRate = node.querySelector('.port-num').value;
+  code += `    port: ${baudRate}\n`;
+  let verbose = node.querySelector('.verbose').checked;
+  code += `    verbose: ${verbose}\n`;
+  // filters
+  let deviceFilters = node.querySelector('.device-filter').value;
+  if (deviceFilters.trim().length > 0) {
+      code += `    device.filters: ${deviceFilters}\n`;
+  }
+  let sentenceFilters = node.querySelector('.sentence-filter').value;
+  if (sentenceFilters.trim().length > 0) {
+      code += `    sentence.filters: ${sentenceFilters}\n`;
+  }
+  return code;
+}
+
 function dumpIt() {
 
-  let allText = '';
+  let code = '';
+  let codeElement = document.getElementById('generated-yaml');
+  code += "#\n";
+  code += `# Generated on ${new Date()}\n`;
+  code += "#\n";
+  code += `name: \"${ document.getElementById('mux-title').value }\"\n`;
+  code += "context:\n";
+  code += `  with.http.server: ${ document.getElementById('with-http').checked }\n`;
+  if (document.getElementById('with-http').checked) {
+      code += `  http.port: ${ document.getElementById('http-port').value }\n`;
+      code += `  init.cache: ${ document.getElementById('init-cache').checked }\n`;
+  }
+  code += `  default.declination: ${ document.getElementById('default-decl').value }\n`;
+  let devFileName = document.getElementById('dev-file-name').value;
+  if (devFileName.trim().length > 0) {
+      code += `  deviation.file.name: ${ document.getElementById('dev-file-name').value }\n`;
+  }
+  code += `  max.leeway: ${ document.getElementById('max-leeway').value }\n`;
+  code += `  bsp.factor: ${ document.getElementById('bsp-factor').value }\n`;
+  code += `  aws.factor: ${ document.getElementById('aws-factor').value }\n`;
+  code += `  hdg.offset: ${ document.getElementById('hdg-offset').value }\n`;
+  code += `  awa.offset: ${ document.getElementById('awa-offset').value }\n`;
+  code += `  damping: ${ document.getElementById('damping').value }\n`;
 
-  let title = document.getElementById('mux-title').value;
 
-  allText += (title + '\n');
-  // TODO Context
-
-
+  // Consumers
   let dropId = "drop-div-consumers";
   let dropBox = document.getElementById(dropId);
-
+  code += `# ${dropBox.childElementCount === 0 ? 'No' :dropBox.childElementCount} Channel${dropBox.childElementCount > 1 ? 's' : ''}\n`;
+  if (dropBox.childElementCount > 0) {
+    code += "channels:\n";
+  }
   for (let i=0; i<dropBox.childElementCount; i++) {
     // Look for the type and parameters
     let prms = dropBox.children[i].querySelector(".editable-zone");
     if (prms.classList.contains("serial-channel")) {
       console.log("It's a Serial Channel");
-      let portName = prms.querySelector(".port-name").value;
-      let baudRate = prms.querySelector(".baud-rate").value;
-      allText += `Serial : ${portName}:${baudRate}\n`;
-      // console.log(`Port : ${portName}:${baudRate}`);
+      code += "  - type: serial\n";
+      code += generateSerialComsumerCode(prms);
     } else if (prms.classList.contains("tcp-channel")) { 
       console.log("It's a TCP Channel");
-      let serverName = prms.querySelector(".server-name").value;
-      let portNum = prms.querySelector(".port-num").value;
-      allText += `TCP : ${serverName}:${portNum}\n`;
-      console.log(`TCP : ${serverName}:${portNum}`);
+      code += "  - type: tcp\n";
+      code += generateTCPComsumerCode(prms);
     } else {
       // TODO Others
       console.log("Duh.");
     }
   }
 
+  // Forwarders
   dropId = "drop-div-forwarders";
   dropBox = document.getElementById(dropId);
+  code += `# ${dropBox.childElementCount === 0 ? 'No' :dropBox.childElementCount} Forwarder${dropBox.childElementCount > 1 ? 's' : ''}\n`;
+  if (dropBox.childElementCount > 0) {
+    code += "forwarders:\n";
+  }
+  for (let i=0; i<dropBox.childElementCount; i++) {
+    // TODO Implement
+  }
 
+  // Computers
   dropId = "drop-div-computers";
   dropBox = document.getElementById(dropId);
+  code += `# ${dropBox.childElementCount === 0 ? 'No' :dropBox.childElementCount} Computer${dropBox.childElementCount > 1 ? 's' : ''}\n`;
+  if (dropBox.childElementCount > 0) {
+    code += "computers:\n";
+  }
+  for (let i=0; i<dropBox.childElementCount; i++) {
+    // TODO Implement
+  }
 
   let textContent = document.getElementById('generated-list');
-  textContent.innerHTML = `<pre>${allText}</pre>`;
+  textContent.innerHTML = `<pre>${code}</pre>`;
   showGeneratedDialog();
 }
