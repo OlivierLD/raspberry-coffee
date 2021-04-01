@@ -130,7 +130,7 @@ function generateSerialComsumerCode(node) {
   }
   let sentenceFilters = node.querySelector('.sentence-filter').value;
   if (sentenceFilters.trim().length > 0) {
-      code += `    sentence.filters: ${senteceFilters}\n`;
+      code += `    sentence.filters: ${sentenceFilters}\n`;
   }
   let resetInterval = node.querySelector('.reset-interval').value;
   if (resetInterval.trim().length > 0) {
