@@ -692,7 +692,9 @@ And there is an integration with the [REST Nav Server](https://github.com/Olivie
 - A Web UI to generate the `yaml` files defining the Multiplexer, just open `muxbuilder/text/mux-builder.html` in a browser, no HTTP server needed.
   ![Generated YAML](./docimages/generated.yaml.png)
   - A Web GUI, Drag-n-Drop based, is in the pine line.
-  > Note: This does not work correctly on Safari, which does not support correctly the `<dialog>` element of HTML5. 
+  > Note: This does not work correctly on Safari, which does not support correctly the `<dialog>` element of HTML5.  
+  > Looks like Firefox also has issues...   
+  > Brave, Chromium, and Chrome work OK.
 - A sample of a log file analyzer is in `util.LogAnalyzer`:
 ```bash
  $ java -cp ./build/libs/NMEA-multiplexer-1.0-all.jar util.LogAnalyzer ./sample.data/2017.06.17.nmea
