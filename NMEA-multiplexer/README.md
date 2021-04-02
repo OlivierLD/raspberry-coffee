@@ -556,7 +556,7 @@ Among the forwarders available in this project some are to be dynamically loaded
 
 ![Character Console](./docimages/char.console.png "Character Console")
 
-_Warning_: for now, you _cannot_ load more than one dynamically loaded forwarder, consumer or computer of the same class. They are identified by their class name, you cannot have more than one object
+_Warning_: for now, you _cannot_ load more than one dynamically loaded forwarder, consumer or computer <u>of the same class</u>. They are identified by their class name, you cannot have more than one object
 with a given class name in the lists. For example, if you have an `MQTTPublisher` that uses a broker URL like `tcp://192.168.1.136:1883`, you might very well want to
 have _another one_, using a broker URL like `tcp://io.adafruit.com:1883`. Currently, this is **not** possible.
 > This should not be too much of a problem though, specially if you use all this on a boat, you probably do not need in Internet connection. A small LAN would do the job in this case.
