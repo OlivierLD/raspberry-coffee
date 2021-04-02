@@ -551,6 +551,7 @@ Among the forwarders available in this project some are to be dynamically loaded
  - SSD1306Processor
  - MQTTPublisher (a cool one, for IoT)
  - Character Console
+ - SQLite (log data in a SQL database)  
  - etc... list keeps growing.
 
 ![Character Console](./docimages/char.console.png "Character Console")
