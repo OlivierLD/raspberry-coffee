@@ -83,17 +83,17 @@ input[type=text], input[type=number], select {
 }
 
 .draggable-channel {
-  background-color: rgba(255, 0, 0, 0.5);
+  /* background-color: rgba(255, 0, 0, 0.5); */
   background-image: radial-gradient(red, silver);
 }
 
 .draggable-forwarder {
-  background-color: rgba(0, 255, 0, 0.5);
+  /* background-color: rgba(0, 255, 0, 0.5); */
   background-image: radial-gradient(green, silver);
 }
 
 .draggable-computer {
-  background-color: silver;
+  /* background-color: silver; */
   background-image: radial-gradient(cyan, silver);
 }
 

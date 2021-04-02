@@ -691,7 +691,57 @@ And there is an integration with the [REST Nav Server](https://github.com/Olivie
 ## Bonus
 - A Web UI to generate the `yaml` files defining the Multiplexer, just open `muxbuilder/text/mux-builder.html` in a browser, no HTTP server needed.
   ![Generated YAML](./docimages/generated.yaml.png)
-  - A Web GUI, Drag-n-Drop based, is in the pine line.
+  - A Web GUI, Drag-n-Drop based, is also available, open `muxbuilder/dragndrop/mux-builder.html` in a browser.
+
+  | Drag the Consumers from the left  | Edit each component's properties  | Same for Forwarders               |   
+  |:----------------------------------|:----------------------------------|:----------------------------------|  
+  | ![01](./docimages/mux.gui.01.png) | ![02](./docimages/mux.gui.02.png) | ![03](./docimages/mux.gui.03.png) |
+  | And Computers                     | Edit general properties           | and you have your YAML            |   
+  | ![04](./docimages/mux.gui.04.png) | ![05](./docimages/mux.gui.05.png) | ![06](./docimages/mux.gui.06.png) |
+```yaml
+#
+# Generated on Fri Apr 02 2021 06:57:24 GMT-0700 (Pacific Daylight Time)
+#
+name: "GUI Mux Builder"
+context:
+with.http.server: true
+http.port: 8080
+init.cache: true
+default.declination: 14.0
+deviation.file.name: dev.csv
+max.leeway: 10.0
+bsp.factor: 1.0
+aws.factor: 1.0
+hdg.offset: 0.0
+awa.offset: 0.0
+damping: 30
+# 2 Channels
+channels:
+- type: serial
+  port: /dev/ttyS80
+  baud.rate: 4800
+  verbose: false
+  reset.interval: 60000
+- type: bme280
+  device.prefix: RP
+  verbose: false
+# 2 Forwarders
+forwarders:
+- type: file
+  timebase.filename: true
+  filename.suffix: _LOG
+  log.dir: logged
+  split: day
+  flush: true
+- type: tcp
+  port: 7001
+# 1 Computer
+computers:
+- type: tw-current
+  prefix: CC
+  time.buffer.length: 30, 60, 600
+```
+
   > Note: This does not work correctly on Safari, which does not support correctly the `<dialog>` element of HTML5.  
   > Looks like Firefox also has issues...   
   > Brave, Chromium, and Chrome work OK.
