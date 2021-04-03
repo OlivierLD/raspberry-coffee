@@ -22,6 +22,7 @@ function drop(ev) {
       newNode.querySelector(".edit-icon").style.display = 'inline-block';
       newNode.querySelector(".close-icon").style.display = 'block';
       ev.target.appendChild(newNode);
+      dumpIt();
   }
 }
 
@@ -36,6 +37,7 @@ function remove(origin) {
   }
   if (dropContainer !== null) {
     dropContainer.removeChild(draggable);
+    dumpIt();
   } else {
     alert("Removable from the right pane only...");
   }
@@ -60,6 +62,7 @@ function closeDialog(clicked) {
     dialog = dialog.parentElement;
   }
   dialog.close();
+  dumpIt();
 }
 
 // Show/Hide generated yaml code
@@ -370,7 +373,7 @@ function generateTWCurrentComputerCode(node) {
 }
 
 
-function dumpIt() { // YAML Generation
+function dumpIt(withDialog) { // YAML Generation
 
   let code = '';
   code += "#\n";
@@ -498,9 +501,14 @@ function dumpIt() { // YAML Generation
      } else {
        console.log('???');
      }
-   }
+  }
 
-  let textContent = document.getElementById('generated-yaml');
-  textContent.innerHTML = `${code}`; // Already framed with <pre>
-  showGeneratedDialog();
+  let yamlContent = document.getElementById('dynamic-yaml');
+  yamlContent.innerText = `${code}`; // Already framed with <pre>
+
+  if (withDialog) {
+    let textContent = document.getElementById('generated-yaml');
+    textContent.innerText = `${code}`; // Already framed with <pre>
+    showGeneratedDialog();
+  }
 }

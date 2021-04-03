@@ -96,7 +96,7 @@ function fileFwdOption(sel) {
 <div class="draggable-content" style="height: auto; width: auto;">
   <div>
     <label for="mux-title">MUX definition</label>
-    <input type="text" id="mux-title" placeholder="MUX Title" style="width: 200px;">
+    <input type="text" id="mux-title" placeholder="MUX Title" style="width: 200px;" onblur="dumpIt();">
     <span class="edit-icon" style="display: inline-block;" onclick="edit(this.parentElement.parentElement);" title="Edit Parameters">✏️ Context</span>
   </div>
   <dialog class="editable-prm" style="min-height: 200px;">
@@ -178,37 +178,130 @@ function fileFwdOption(sel) {
   <div class="mess">Guaranteed 0% external libraries.</div>
 </div>
 
-<div id="one" style="display: block; min-height: var(--d-zone-height);">
-  <!-- One row, 2 columns -->
-  <div class="grid-container">
+<div class="top-grid-container">
+  <div class="left-part">
 
-    <div class="message smaller">Available Consumers (aka Input Channels)</div>
-    <div class="message smaller">Drop Consumers below</div>
+    <div id="one" style="display: block; min-height: var(--d-zone-height);">
+      <!-- One row, 2 columns -->
+      <div class="grid-container">
 
-    <div class="vertical-scrollable-zone side-div">
-      <div id="consumer-1" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-          <div>
-            <span class="close-icon" onclick="remove(this);">&times;</span>
-            <span class="channel-description">Serial port input</span>
+        <div class="message smaller">Available Consumers (aka Input Channels)</div>
+        <div class="message smaller">Drop Consumers below</div>
+
+        <div class="vertical-scrollable-zone side-div">
+          <div id="consumer-1" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
+              <div>
+                <span class="close-icon" onclick="remove(this);">&times;</span>
+                <span class="channel-description">Serial port input</span>
+              </div>
+              <div class="draggable-content">
+                  <span>Serial </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                  <dialog class="editable-prm" style="min-height: 200px;">
+                    <div class="dialog-header">
+                      <div style="padding: 10px;">
+                        <span style="margin-left: 20px;">Edit Serial Channel Parameters</span>
+                        <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                      </div>
+                    </div>
+                    <div class="editable-zone serial-channel">
+                      <table>
+                        <tr>
+                            <td>Port Name</td>
+                            <td><input type="text" class="port-name" size="30" placeholder="Serial Port Name"></td>
+                        </tr>
+                        <tr>
+                            <td>Baud Rate</td>
+                            <td><input type="number" class="baud-rate" placeholder="Baud Rate"></td>
+                        </tr>
+                        <tr>
+                            <td>Device Filters</td>
+                            <td><input type="text" class="device-filter" placeholder="Device Filters" size="30" title="Comma separated list"></td>
+                        </tr>
+                        <tr>
+                            <td>Sentence Filters</td>
+                            <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
+                        </tr>
+                        <tr>
+                            <td>Verbose</td>
+                            <td><input type="checkbox" class="verbose"></td>
+                        </tr>
+                        <tr>
+                            <td>Reset Interval</td>
+                            <td><input type="number" class="reset-interval" placeholder="Reset Interval" value="60000"></td>
+                        </tr>
+                      </table>
+                    </div>
+                  </dialog>
+              </div>
           </div>
-          <div class="draggable-content">
-              <span>Serial </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+          <div id="consumer-2" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
+              <div>
+                <span class="close-icon" onclick="remove(this);">&times;</span>
+                <span class="channel-description">TCP server input</span>
+              </div>
+              <div class="draggable-content">
+                <span>TCP </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit TCP Channel Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone tcp-channel">
+                    <table>
+                      <tr>
+                          <td>Server name or IP</td>
+                          <td><input type="text" class="server-name" size="30" placeholder="Server Name"></td>
+                      </tr>
+                      <tr>
+                          <td>Port</td>
+                          <td><input type="number" class="port-num" placeholder="TCP Port"></td>
+                      </tr>
+                      <tr>
+                          <td>Device Filters</td>
+                          <td><input type="text" class="device-filter" placeholder="Device Filters" size="30" title="Comma separated list"></td>
+                      </tr>
+                      <tr>
+                          <td>Sentence Filters</td>
+                          <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
+                      </tr>
+                      <tr>
+                          <td>Verbose</td>
+                          <td><input type="checkbox" class="verbose"></td>
+                      </tr>
+                    </table>
+                  </div>
+                </dialog>
+            </div>
+        </div>
+          <div id="consumer-3" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="channel-description">Log file replay</span>
+            </div>
+            <div class="draggable-content">
+              <span>File </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
               <dialog class="editable-prm" style="min-height: 200px;">
                 <div class="dialog-header">
                   <div style="padding: 10px;">
-                    <span style="margin-left: 20px;">Edit Serial Channel Parameters</span>
+                    <span style="margin-left: 20px;">Edit File Channel Parameters</span>
                     <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
                   </div>
                 </div>
-                <div class="editable-zone serial-channel">
+                <div class="editable-zone file-channel">
                   <table>
                     <tr>
-                        <td>Port Name</td>
-                        <td><input type="text" class="port-name" size="30" placeholder="Serial Port Name"></td>
+                        <td>File Name</td>
+                        <td><input type="text" class="file-name" size="30" placeholder="Log File Name"></td>
                     </tr>
                     <tr>
-                        <td>Baud Rate</td>
-                        <td><input type="number" class="baud-rate" placeholder="Baud Rate"></td>
+                        <td>Zip</td>
+                        <td><input type="checkbox" class="zip-option"></td>
+                    </tr>
+                    <tr>
+                        <td>Path in Zip</td>
+                        <td><input type="text" class="zip-path" size="30" placeholder="Path in Zip"></td>
                     </tr>
                     <tr>
                         <td>Device Filters</td>
@@ -223,751 +316,670 @@ function fileFwdOption(sel) {
                         <td><input type="checkbox" class="verbose"></td>
                     </tr>
                     <tr>
-                        <td>Reset Interval</td>
-                        <td><input type="number" class="reset-interval" placeholder="Reset Interval" value="60000"></td>
+                        <td>Between records</td>
+                        <td><input type="number" class="between-records" placeholder="1000"></td>
+                    </tr>
+                    <tr>
+                        <td>Loop</td>
+                        <td><input type="checkbox" class="loop"></td>
                     </tr>
                   </table>
-                </div>
-              </dialog>
-          </div>
-      </div>
-      <div id="consumer-2" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-          <div>
-            <span class="close-icon" onclick="remove(this);">&times;</span>
-            <span class="channel-description">TCP server input</span>
-          </div>
-          <div class="draggable-content">
-            <span>TCP </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit TCP Channel Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone tcp-channel">
-                <table>
-                  <tr>
-                      <td>Server name or IP</td>
-                      <td><input type="text" class="server-name" size="30" placeholder="Server Name"></td>
-                  </tr>
-                  <tr>
-                      <td>Port</td>
-                      <td><input type="number" class="port-num" placeholder="TCP Port"></td>
-                  </tr>
-                  <tr>
-                      <td>Device Filters</td>
-                      <td><input type="text" class="device-filter" placeholder="Device Filters" size="30" title="Comma separated list"></td>
-                  </tr>
-                  <tr>
-                      <td>Sentence Filters</td>
-                      <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
-                  </tr>
-                  <tr>
-                      <td>Verbose</td>
-                      <td><input type="checkbox" class="verbose"></td>
-                  </tr>
-                </table>
-              </div>
-            </dialog>
-        </div>
-    </div>
-      <div id="consumer-3" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="channel-description">Log file replay</span>
-        </div>
-        <div class="draggable-content">
-          <span>File </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-          <dialog class="editable-prm" style="min-height: 200px;">
-            <div class="dialog-header">
-              <div style="padding: 10px;">
-                <span style="margin-left: 20px;">Edit File Channel Parameters</span>
-                <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-              </div>
+                </div>  
+              </dialog>            
             </div>
-            <div class="editable-zone file-channel">
-              <table>
-                <tr>
-                    <td>File Name</td>
-                    <td><input type="text" class="file-name" size="30" placeholder="Log File Name"></td>
-                </tr>
-                <tr>
-                    <td>Zip</td>
-                    <td><input type="checkbox" class="zip-option"></td>
-                </tr>
-                <tr>
-                    <td>Path in Zip</td>
-                    <td><input type="text" class="zip-path" size="30" placeholder="Path in Zip"></td>
-                </tr>
-                <tr>
-                    <td>Device Filters</td>
-                    <td><input type="text" class="device-filter" placeholder="Device Filters" size="30" title="Comma separated list"></td>
-                </tr>
-                <tr>
-                    <td>Sentence Filters</td>
-                    <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
-                </tr>
-                <tr>
-                    <td>Verbose</td>
-                    <td><input type="checkbox" class="verbose"></td>
-                </tr>
-                <tr>
-                    <td>Between records</td>
-                    <td><input type="number" class="between-records" placeholder="1000"></td>
-                </tr>
-                <tr>
-                    <td>Loop</td>
-                    <td><input type="checkbox" class="loop"></td>
-                </tr>
-              </table>
-            </div>  
-          </dialog>            
-        </div>
-      </div>
-      <div id="consumer-4" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="channel-description">WebSocket input</span>
-        </div>
-        <div class="draggable-content">
-          <span>WebSocket </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-          <dialog class="editable-prm" style="min-height: 200px;">
-            <div class="dialog-header">
-              <div style="padding: 10px;">
-                <span style="margin-left: 20px;">Edit WebSocket Channel Parameters</span>
-                <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-              </div>
+          </div>
+          <div id="consumer-4" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="channel-description">WebSocket input</span>
             </div>
-            <div class="editable-zone ws-channel">
-              <table>
-                <tr>
-                    <td>WS URL</td>
-                    <td><input type="text" class="ws-url" size="30" placeholder="ws://machine-address:port/path"></td>
-                </tr>
-                <tr>
-                    <td>Device Filters</td>
-                    <td><input type="text" class="device-filter" placeholder="Device Filters" size="30" title="Comma separated list"></td>
-                </tr>
-                <tr>
-                    <td>Sentence Filters</td>
-                    <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
-                </tr>
-                <tr>
-                    <td>Verbose</td>
-                    <td><input type="checkbox" class="verbose"></td>
-                </tr>
-              </table>
-            </div>  
-          </dialog>            
-        </div>
-      </div>
-      <div id="consumer-5" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="channel-description">Temperature & Humidity Sensor input</span>
-        </div>
-        <div class="draggable-content">
-            <span>HTU21DF </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit HTU21DF Channel Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+            <div class="draggable-content">
+              <span>WebSocket </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+              <dialog class="editable-prm" style="min-height: 200px;">
+                <div class="dialog-header">
+                  <div style="padding: 10px;">
+                    <span style="margin-left: 20px;">Edit WebSocket Channel Parameters</span>
+                    <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                  </div>
                 </div>
-              </div>
-              <div class="editable-zone htu21df-channel">
-                <table>
-                  <tr>
-                      <td>Device Prefix</td>
-                      <td><input type="text" class="device-prefix" placeholder="Device Prefix" size="30" title="Device Prefix, 2 characters"></td>
-                  </tr>
-                  <tr>
-                      <td>Verbose</td>
-                      <td><input type="checkbox" class="verbose"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>            
+                <div class="editable-zone ws-channel">
+                  <table>
+                    <tr>
+                        <td>WS URL</td>
+                        <td><input type="text" class="ws-url" size="30" placeholder="ws://machine-address:port/path"></td>
+                    </tr>
+                    <tr>
+                        <td>Device Filters</td>
+                        <td><input type="text" class="device-filter" placeholder="Device Filters" size="30" title="Comma separated list"></td>
+                    </tr>
+                    <tr>
+                        <td>Sentence Filters</td>
+                        <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
+                    </tr>
+                    <tr>
+                        <td>Verbose</td>
+                        <td><input type="checkbox" class="verbose"></td>
+                    </tr>
+                  </table>
+                </div>  
+              </dialog>            
+            </div>
           </div>
-      </div>
-      <div id="consumer-6" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="channel-description">Temperature, Humidity, Pressure Sensor input</span>
+          <div id="consumer-5" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="channel-description">Temperature & Humidity Sensor input</span>
+            </div>
+            <div class="draggable-content">
+                <span>HTU21DF </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit HTU21DF Channel Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone htu21df-channel">
+                    <table>
+                      <tr>
+                          <td>Device Prefix</td>
+                          <td><input type="text" class="device-prefix" placeholder="Device Prefix" size="30" title="Device Prefix, 2 characters"></td>
+                      </tr>
+                      <tr>
+                          <td>Verbose</td>
+                          <td><input type="checkbox" class="verbose"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>            
+              </div>
+          </div>
+          <div id="consumer-6" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="channel-description">Temperature, Humidity, Pressure Sensor input</span>
+            </div>
+            <div class="draggable-content">
+                <span>BME280 </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit BME280 Channel Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone bme280-channel">
+                    <table>
+                      <tr>
+                          <td>Device Prefix</td>
+                          <td><input type="text" class="device-prefix" placeholder="Device Prefix" size="30" title="Device Prefix, 2 characters"></td>
+                      </tr>
+                      <tr>
+                          <td>Verbose</td>
+                          <td><input type="checkbox" class="verbose"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>            
+              </div>
+          </div>
+          <div id="consumer-7" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="channel-description">Temperature, Humidity, Pressure Sensor input</span>
+            </div>
+            <div class="draggable-content">
+                <span>BMP180 </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit BMP180 Channel Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone bmp180-channel">
+                    <table>
+                      <tr>
+                          <td>Device Prefix</td>
+                          <td><input type="text" class="device-prefix" placeholder="Device Prefix" size="30" title="Device Prefix, 2 characters"></td>
+                      </tr>
+                      <tr>
+                          <td>Verbose</td>
+                          <td><input type="checkbox" class="verbose"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>            
+              </div>
+          </div>
+          <div id="consumer-8" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="channel-description">Magnetometer Sensor input</span>
+            </div>
+            <div class="draggable-content">
+                <span>HCM5883L </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit HCM5883L Channel Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone hcm5883l-channel">
+                    <table>
+                      <tr>
+                          <td>Device Prefix</td>
+                          <td><input type="text" class="device-prefix" placeholder="Device Prefix" size="30" title="Device Prefix, 2 characters"></td>
+                      </tr>
+                      <tr>
+                          <td>Heading Offset</td>
+                          <td><input type="number" class="heading-offset" step="1" placeholder="Heading Offset"></td>
+                      </tr>
+                      <tr>
+                          <td>Damping size</td>
+                          <td><input type="number" class="damping-size" step="1" placeholder="Damping Size" value="5"></td>
+                      </tr>
+                      <tr>
+                          <td>Read Frequency</td>
+                          <td><input type="number" class="read-frequency" step="1" placeholder="Read Frequency in ms" value="1000"></td>
+                      </tr>
+                      <tr>
+                          <td>Calibration properties file</td>
+                          <td><input type="text" class="calibration-properties" placeholder="Calibration properties file" size="30"></td>
+                      </tr>
+                      <tr>
+                          <td>Sentence Filters</td>
+                          <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
+                      </tr>
+                      <tr>
+                          <td>Verbose</td>
+                          <td><input type="checkbox" class="verbose"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>            
+              </div>
+          </div>
+          <div id="consumer-9" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="channel-description">Magnetometer Accelerometer Sensor input</span>
+            </div>
+            <div class="draggable-content">
+                <span>LSM303 </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit LSM303 Channel Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone lsm303-channel">
+                    <table>
+                      <tr>
+                          <td>Device Prefix</td>
+                          <td><input type="text" class="device-prefix" placeholder="Device Prefix" size="30" title="Device Prefix, 2 characters"></td>
+                      </tr>
+                      <tr>
+                          <td>Heading Offset</td>
+                          <td><input type="number" class="heading-offset" step="1" placeholder="Heading Offset"></td>
+                      </tr>
+                      <tr>
+                          <td>Damping size</td>
+                          <td><input type="number" class="damping-size" step="1" placeholder="Damping Size" value="5"></td>
+                      </tr>
+                      <tr>
+                          <td>Read Frequency</td>
+                          <td><input type="number" class="read-frequency" step="1" placeholder="Read Frequency in ms" value="1000"></td>
+                      </tr>
+                      <tr>
+                          <td>Feature</td>
+                          <td>
+                              <select class="lsm-303-feature">
+                                  <option value="BOTH">Both</option>
+                                  <option value="MAGNETOMETER">Magnetometer</option>
+                                  <option value="ACCELEROMETER">Accelerometer</option>
+                              </select>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Calibration properties file</td>
+                          <td><input type="text" class="calibration-properties" placeholder="Calibration properties file" size="30"></td>
+                      </tr>
+                      <tr>
+                          <td>Sentence Filters</td>
+                          <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
+                      </tr>
+                      <tr>
+                          <td>Verbose</td>
+                          <td><input type="checkbox" class="verbose"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>            
+              </div>
+          </div>
+          <div id="consumer-10" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="channel-description">UTC Time NMEA input</span>
+            </div>
+            <div class="draggable-content">
+                <span>ZDA </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit ZDA Channel Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone zda-channel">
+                    <table>
+                      <tr>
+                          <td>Verbose</td>
+                          <td><input type="checkbox" class="verbose"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>            
+              </div>
+          </div>
+          <div id="consumer-11" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="channel-description">Random input (for debug)</span>
+            </div>
+            <div class="draggable-content">
+                <span>RND </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit RND Channel Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone rnd-channel">
+                    <table>
+                      <tr>
+                          <td>Verbose</td>
+                          <td><input type="checkbox" class="verbose"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>            
+              </div>
+          </div>
+          <!-- End of Consumers List -->
         </div>
-        <div class="draggable-content">
-            <span>BME280 </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit BME280 Channel Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone bme280-channel">
-                <table>
-                  <tr>
-                      <td>Device Prefix</td>
-                      <td><input type="text" class="device-prefix" placeholder="Device Prefix" size="30" title="Device Prefix, 2 characters"></td>
-                  </tr>
-                  <tr>
-                      <td>Verbose</td>
-                      <td><input type="checkbox" class="verbose"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>            
-          </div>
-      </div>
-      <div id="consumer-7" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="channel-description">Temperature, Humidity, Pressure Sensor input</span>
+
+        <div class="vertical-scrollable-zone">
+            <!-- This is where things are dropped -->
+            <div id="drop-div-consumers" class="drop-container drop-container-content" ondrop="drop(event)" ondragover="allowDrop(event)">
+            </div>
         </div>
-        <div class="draggable-content">
-            <span>BMP180 </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit BMP180 Channel Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone bmp180-channel">
-                <table>
-                  <tr>
-                      <td>Device Prefix</td>
-                      <td><input type="text" class="device-prefix" placeholder="Device Prefix" size="30" title="Device Prefix, 2 characters"></td>
-                  </tr>
-                  <tr>
-                      <td>Verbose</td>
-                      <td><input type="checkbox" class="verbose"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>            
-          </div>
+
       </div>
-      <div id="consumer-8" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="channel-description">Magnetometer Sensor input</span>
-        </div>
-        <div class="draggable-content">
-            <span>HCM5883L </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit HCM5883L Channel Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone hcm5883l-channel">
-                <table>
-                  <tr>
-                      <td>Device Prefix</td>
-                      <td><input type="text" class="device-prefix" placeholder="Device Prefix" size="30" title="Device Prefix, 2 characters"></td>
-                  </tr>
-                  <tr>
-                      <td>Heading Offset</td>
-                      <td><input type="number" class="heading-offset" step="1" placeholder="Heading Offset"></td>
-                  </tr>
-                  <tr>
-                      <td>Damping size</td>
-                      <td><input type="number" class="damping-size" step="1" placeholder="Damping Size" value="5"></td>
-                  </tr>
-                  <tr>
-                      <td>Read Frequency</td>
-                      <td><input type="number" class="read-frequency" step="1" placeholder="Read Frequency in ms" value="1000"></td>
-                  </tr>
-                  <tr>
-                      <td>Calibration properties file</td>
-                      <td><input type="text" class="calibration-properties" placeholder="Calibration properties file" size="30"></td>
-                  </tr>
-                  <tr>
-                      <td>Sentence Filters</td>
-                      <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
-                  </tr>
-                  <tr>
-                      <td>Verbose</td>
-                      <td><input type="checkbox" class="verbose"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>            
-          </div>
-      </div>
-      <div id="consumer-9" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="channel-description">Magnetometer Accelerometer Sensor input</span>
-        </div>
-        <div class="draggable-content">
-            <span>LSM303 </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit LSM303 Channel Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone lsm303-channel">
-                <table>
-                  <tr>
-                      <td>Device Prefix</td>
-                      <td><input type="text" class="device-prefix" placeholder="Device Prefix" size="30" title="Device Prefix, 2 characters"></td>
-                  </tr>
-                  <tr>
-                      <td>Heading Offset</td>
-                      <td><input type="number" class="heading-offset" step="1" placeholder="Heading Offset"></td>
-                  </tr>
-                  <tr>
-                      <td>Damping size</td>
-                      <td><input type="number" class="damping-size" step="1" placeholder="Damping Size" value="5"></td>
-                  </tr>
-                  <tr>
-                      <td>Read Frequency</td>
-                      <td><input type="number" class="read-frequency" step="1" placeholder="Read Frequency in ms" value="1000"></td>
-                  </tr>
-                  <tr>
-                      <td>Feature</td>
-                      <td>
-                          <select class="lsm-303-feature">
-                              <option value="BOTH">Both</option>
-                              <option value="MAGNETOMETER">Magnetometer</option>
-                              <option value="ACCELEROMETER">Accelerometer</option>
-                          </select>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td>Calibration properties file</td>
-                      <td><input type="text" class="calibration-properties" placeholder="Calibration properties file" size="30"></td>
-                  </tr>
-                  <tr>
-                      <td>Sentence Filters</td>
-                      <td><input type="text" class="sentence-filter" placeholder="Sentence Filters" size="30" title="Like RMC, GLL,&#13;~GSV, ~GGA to negate the filter."></td>
-                  </tr>
-                  <tr>
-                      <td>Verbose</td>
-                      <td><input type="checkbox" class="verbose"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>            
-          </div>
-      </div>
-      <div id="consumer-10" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="channel-description">UTC Time NMEA input</span>
-        </div>
-        <div class="draggable-content">
-            <span>ZDA </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit ZDA Channel Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone zda-channel">
-                <table>
-                  <tr>
-                      <td>Verbose</td>
-                      <td><input type="checkbox" class="verbose"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>            
-          </div>
-      </div>
-      <div id="consumer-11" draggable="true" class="draggable-container draggable-channel" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="channel-description">Random input (for debug)</span>
-        </div>
-        <div class="draggable-content">
-            <span>RND </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit RND Channel Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone rnd-channel">
-                <table>
-                  <tr>
-                      <td>Verbose</td>
-                      <td><input type="checkbox" class="verbose"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>            
-          </div>
-      </div>
-      <!-- End of Consumers List -->
     </div>
 
-    <div class="vertical-scrollable-zone">
-        <!-- This is where things are dropped -->
-        <div id="drop-div-consumers" class="drop-container drop-container-content" ondrop="drop(event)" ondragover="allowDrop(event)">
-        </div>
-    </div>
+    <div id="two" style="display: none; min-height: var(--d-zone-height);">
+      <div class="grid-container" style="min-height: var(--d-zone-height);">
 
-  </div>
-</div>
-
-<div id="two" style="display: none; min-height: var(--d-zone-height);">
-  <div class="grid-container" style="min-height: var(--d-zone-height);">
-
-    <div class="message smaller">Available Forwarders</div>
-    <div class="message smaller">Drop Forwarders below</div>
-  
-    <div class="vertical-scrollable-zone side-div">
-      <div id="forwarder-1" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="forwarder-description">Serial port output</span>
-        </div>
-        <div class="draggable-content">
-            <span>Serial </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit Serial Forwarder Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone serial-forwarder">
-                <table>
-                  <tr>
-                      <td>Port Name</td>
-                      <td><input type="text" class="port-name" size="30" placeholder="Serial Port Name"></td>
-                  </tr>
-                  <tr>
-                      <td>Baud Rate</td>
-                      <td><input type="number" class="baud-rate" placeholder="Baud Rate"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>            
-        </div>
-      </div>
-
-      <div id="forwarder-2" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="forwarder-description">TCP Server output</span>
-        </div>
-        <div class="draggable-content">
-            <span>TCP </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit TCP Forwarder Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone tcp-forwarder">
-                <table>
-                  <tr>
-                      <td>Port</td>
-                      <td><input type="number" class="port-num" placeholder="TCP Port"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>    
-        </div>
-      </div>
-
-      <div id="forwarder-3" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="forwarder-description">GPSD Server</span>
-        </div>
-        <div class="draggable-content">
-            <span>GPSD </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit GPSD Forwarder Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone gpsd-forwarder">
-                <table>
-                  <tr>
-                      <td>Port</td>
-                      <td><input type="number" class="port-num" placeholder="GPSD Port" value="2947"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>    
-        </div>
-      </div>
-
-      <div id="forwarder-4" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="forwarder-description">WebSocket forwarder</span>
-        </div>
-        <div class="draggable-content">
-            <span>WebSocket </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit WebSocket Forwarder Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone ws-forwarder">
-                <table>
-                  <tr>
-                      <td>WebSocket URI</td>
-                      <td><input type="text" class="ws-uri" placeholder="WS uri"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>    
-        </div>
-      </div>
-
-      <div id="forwarder-5" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="forwarder-description">RMI Forwarder</span>
-        </div>
-        <div class="draggable-content">
-            <span>RMI Server </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit RMI Forwarder Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone rmi-forwarder">
-                <table>
-                  <tr>
-                      <td>RMI port</td>
-                      <td><input type="number" class="port-num" placeholder="RMI Port" value="1099"></td>
-                  </tr>
-                  <tr>
-                      <td>RMI name</td>
-                      <td><input type="text" class="rmi-name" placeholder="RMI Name" value="RMI-NMEA"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>    
-        </div>
-      </div>
-
-      <div id="forwarder-6" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="forwarder-description">Console Output</span>
-        </div>
-        <div class="draggable-content">
-            <span>Console </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit Console Forwarder Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone console-forwarder">
-                <table>
-                  <tr>
-                      <td>No parameter</td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>    
-        </div>
-      </div>
-
-      <div id="forwarder-7" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="forwarder-description">REST Forwarder</span>
-        </div>
-        <div class="draggable-content">
-            <span>REST </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit REST Forwarder Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone rest-forwarder">
-                <table>
-                  <tr>
-                      <td>Server</td>
-                      <td><input type="text" class="server-name" size="30" placeholder="Server Name or IP"></td>
-                  </tr>
-                  <tr>
-                      <td>Port</td>
-                      <td><input type="number" class="server-port" placeholder="Server Port" value="8080"></td>
-                  </tr>
-                  <tr>
-                      <td>Resource</td>
-                      <td><input type="text" class="server-resource" size="30" placeholder="/mux/nmea-sentence"></td>
-                  </tr>
-                  <tr>
-                      <td>Verb</td>
-                      <td>
-                          <select class="rest-verb">
-                              <option value="POST">POST</option>
-                              <option value="PUT">PUT</option>
-                              <option value="PATCH">PATCH</option>
-                          </select>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td>Protocol</td>
-                      <td>
-                          <select class="rest-protocol">
-                              <option value="http">http</option>
-                              <option value="https">https</option>
-                          </select>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td>Header(s)</td>
-                      <td><input type="text" class="rest-headers" size="30" placeholder="REST Headers" value="Content-Type:plain/text"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>    
-        </div>
-      </div>
-
-      <div id="forwarder-8" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="forwarder-description">Log File</span>
-        </div>
-        <div class="draggable-content">
-            <span>File </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit File Forwarder Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone file-forwarder">
-                <table>
-                  <tr>
-                      <td>Option</td>
-                      <td>
-                          <select onchange="fileFwdOption(this);" class="file-fwd-option">
-                              <option value="one-file">One log file</option>
-                              <option value="time-based">Time based file names</option>
-                          </select>
-                      </td>
-                  </tr>
-                  <tr>
-                      <td class="file-fwd-prms" colspan="2">
-                              Placeholder
-                      </td>
-                  </tr>
-                  <tr>
-                      <td>Flush</td>
-                      <td><input type="checkbox" class="flush"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>    
-        </div>
-      </div>
-
-      <!--div id="forwarder-X" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="forwarder-description">Sample output (for example)</span>
-        </div>
-        <div class="draggable-content">
-            <span>Sample </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit Sample Forwarder Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone sample-forwarder">
-                . . .
-              </div>  
-            </dialog>    
-        </div>
-      </div-->
-
-      <!-- End of Forwarders List -->
-    </div>  
-
-    <div class="vertical-scrollable-zone">
-      <!-- This is where things are dropped -->
-      <div id="drop-div-forwarders" class="drop-container drop-container-content" ondrop="drop(event)" ondragover="allowDrop(event)">
-      </div>
-    </div>  
-  </div>
-</div>
-
-<div id="three" style="display: none; min-height: var(--d-zone-height);">
-  <div class="grid-container" style="min-height: var(--d-zone-height);">
-
-    <div class="message smaller">Available Computers</div>
-    <div class="message smaller">Drop Computers below</div>
-  
-    <div class="vertical-scrollable-zone side-div">
-      <div id="computer-1" draggable="true" class="draggable-container draggable-computer" ondragstart="drag(event)">
-        <div>
-          <span class="close-icon" onclick="remove(this);">&times;</span>
-          <span class="computer-description">TW/GPS Current Computer</span>
-        </div>
-        <div class="draggable-content">
-            <span>TW Current  </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-            <dialog class="editable-prm" style="min-height: 200px;">
-              <div class="dialog-header">
-                <div style="padding: 10px;">
-                  <span style="margin-left: 20px;">Edit Current Computer Parameters</span>
-                  <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                </div>
-              </div>
-              <div class="editable-zone tw-cc-computer">
-                <table>
-                  <tr>
-                      <td>Prefix</td>
-                      <td><input type="text" class="device-prefix" placeholder="Device Prefix" value="CC"></td>
-                  </tr>
-                  <tr>
-                      <td>Time Buffer Length</td>
-                      <td><input type="text" class="time-buffer-length" placeholder="Comma separated, in milliseconds" value="30, 60, 600"></td>
-                  </tr>
-                </table>
-              </div>  
-            </dialog>            
-          </div>
-      </div>
-
-      <!-- End of Computers -->
+        <div class="message smaller">Available Forwarders</div>
+        <div class="message smaller">Drop Forwarders below</div>
       
-    </div>  
+        <div class="vertical-scrollable-zone side-div">
+          <div id="forwarder-1" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="forwarder-description">Serial port output</span>
+            </div>
+            <div class="draggable-content">
+                <span>Serial </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit Serial Forwarder Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone serial-forwarder">
+                    <table>
+                      <tr>
+                          <td>Port Name</td>
+                          <td><input type="text" class="port-name" size="30" placeholder="Serial Port Name"></td>
+                      </tr>
+                      <tr>
+                          <td>Baud Rate</td>
+                          <td><input type="number" class="baud-rate" placeholder="Baud Rate"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>            
+            </div>
+          </div>
 
-    <div class="vertical-scrollable-zone">
-      <!-- This is where things are dropped -->
-      <div id="drop-div-computers" class="drop-container drop-container-content" ondrop="drop(event)" ondragover="allowDrop(event)">
+          <div id="forwarder-2" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="forwarder-description">TCP Server output</span>
+            </div>
+            <div class="draggable-content">
+                <span>TCP </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit TCP Forwarder Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone tcp-forwarder">
+                    <table>
+                      <tr>
+                          <td>Port</td>
+                          <td><input type="number" class="port-num" placeholder="TCP Port"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>    
+            </div>
+          </div>
+
+          <div id="forwarder-3" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="forwarder-description">GPSD Server</span>
+            </div>
+            <div class="draggable-content">
+                <span>GPSD </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit GPSD Forwarder Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone gpsd-forwarder">
+                    <table>
+                      <tr>
+                          <td>Port</td>
+                          <td><input type="number" class="port-num" placeholder="GPSD Port" value="2947"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>    
+            </div>
+          </div>
+
+          <div id="forwarder-4" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="forwarder-description">WebSocket forwarder</span>
+            </div>
+            <div class="draggable-content">
+                <span>WebSocket </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit WebSocket Forwarder Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone ws-forwarder">
+                    <table>
+                      <tr>
+                          <td>WebSocket URI</td>
+                          <td><input type="text" class="ws-uri" placeholder="WS uri"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>    
+            </div>
+          </div>
+
+          <div id="forwarder-5" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="forwarder-description">RMI Forwarder</span>
+            </div>
+            <div class="draggable-content">
+                <span>RMI Server </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit RMI Forwarder Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone rmi-forwarder">
+                    <table>
+                      <tr>
+                          <td>RMI port</td>
+                          <td><input type="number" class="port-num" placeholder="RMI Port" value="1099"></td>
+                      </tr>
+                      <tr>
+                          <td>RMI name</td>
+                          <td><input type="text" class="rmi-name" placeholder="RMI Name" value="RMI-NMEA"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>    
+            </div>
+          </div>
+
+          <div id="forwarder-6" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="forwarder-description">Console Output</span>
+            </div>
+            <div class="draggable-content">
+                <span>Console </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit Console Forwarder Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone console-forwarder">
+                    <table>
+                      <tr>
+                          <td>No parameter</td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>    
+            </div>
+          </div>
+
+          <div id="forwarder-7" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="forwarder-description">REST Forwarder</span>
+            </div>
+            <div class="draggable-content">
+                <span>REST </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit REST Forwarder Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone rest-forwarder">
+                    <table>
+                      <tr>
+                          <td>Server</td>
+                          <td><input type="text" class="server-name" size="30" placeholder="Server Name or IP"></td>
+                      </tr>
+                      <tr>
+                          <td>Port</td>
+                          <td><input type="number" class="server-port" placeholder="Server Port" value="8080"></td>
+                      </tr>
+                      <tr>
+                          <td>Resource</td>
+                          <td><input type="text" class="server-resource" size="30" placeholder="/mux/nmea-sentence"></td>
+                      </tr>
+                      <tr>
+                          <td>Verb</td>
+                          <td>
+                              <select class="rest-verb">
+                                  <option value="POST">POST</option>
+                                  <option value="PUT">PUT</option>
+                                  <option value="PATCH">PATCH</option>
+                              </select>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Protocol</td>
+                          <td>
+                              <select class="rest-protocol">
+                                  <option value="http">http</option>
+                                  <option value="https">https</option>
+                              </select>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Header(s)</td>
+                          <td><input type="text" class="rest-headers" size="30" placeholder="REST Headers" value="Content-Type:plain/text"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>    
+            </div>
+          </div>
+
+          <div id="forwarder-8" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="forwarder-description">Log File</span>
+            </div>
+            <div class="draggable-content">
+                <span>File </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit File Forwarder Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone file-forwarder">
+                    <table>
+                      <tr>
+                          <td>Option</td>
+                          <td>
+                              <select onchange="fileFwdOption(this);" class="file-fwd-option">
+                                  <option value="one-file">One log file</option>
+                                  <option value="time-based">Time based file names</option>
+                              </select>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td class="file-fwd-prms" colspan="2">
+                                  Placeholder
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Flush</td>
+                          <td><input type="checkbox" class="flush"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>    
+            </div>
+          </div>
+
+          <!--div id="forwarder-X" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="forwarder-description">Sample output (for example)</span>
+            </div>
+            <div class="draggable-content">
+                <span>Sample </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit Sample Forwarder Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone sample-forwarder">
+                    . . .
+                  </div>  
+                </dialog>    
+            </div>
+          </div-->
+
+          <!-- End of Forwarders List -->
+        </div>  
+
+        <div class="vertical-scrollable-zone">
+          <!-- This is where things are dropped -->
+          <div id="drop-div-forwarders" class="drop-container drop-container-content" ondrop="drop(event)" ondragover="allowDrop(event)">
+          </div>
+        </div>  
       </div>
-    </div>  
+    </div>
+
+    <div id="three" style="display: none; min-height: var(--d-zone-height);">
+      <div class="grid-container" style="min-height: var(--d-zone-height);">
+
+        <div class="message smaller">Available Computers</div>
+        <div class="message smaller">Drop Computers below</div>
+      
+        <div class="vertical-scrollable-zone side-div">
+          <div id="computer-1" draggable="true" class="draggable-container draggable-computer" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="computer-description">TW/GPS Current Computer</span>
+            </div>
+            <div class="draggable-content">
+                <span>TW Current  </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit Current Computer Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone tw-cc-computer">
+                    <table>
+                      <tr>
+                          <td>Prefix</td>
+                          <td><input type="text" class="device-prefix" placeholder="Device Prefix" value="CC"></td>
+                      </tr>
+                      <tr>
+                          <td>Time Buffer Length</td>
+                          <td><input type="text" class="time-buffer-length" placeholder="Comma separated, in milliseconds" value="30, 60, 600"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>            
+              </div>
+          </div>
+
+          <!-- End of Computers -->
+          
+        </div>  
+
+        <div class="vertical-scrollable-zone">
+          <!-- This is where things are dropped -->
+          <div id="drop-div-computers" class="drop-container drop-container-content" ondrop="drop(event)" ondragover="allowDrop(event)">
+          </div>
+        </div>  
+      </div>
+    </div>
+
+  </div>
+  <div class="right-part" style="padding: 10px;">
+    <div class="message smaller">Generated YAML</div>
+    <div class="vertical-scrollable-zone drop-container-content" style="min-height: calc(var(--d-zone-height) - 20px); max-height: calc(var(--d-zone-height) - 20px);">
+      <pre><span id="dynamic-yaml" title="Generated Yaml">Generated YAML will go here</span></pre>
+    </div>
   </div>
 </div>
 
-<button onclick="dumpIt();"><span style="margin: 20px;">Generate YAML</span></button>
+<button onclick="dumpIt(true);"><span style="margin: 20px;">Generate YAML</span></button>
 
 </body>
 </html>
