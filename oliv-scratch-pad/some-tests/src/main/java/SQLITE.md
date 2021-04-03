@@ -18,7 +18,7 @@ Enter ".help" for usage hints.
 sqlite>
 . . . 
 ```
-Ok, ot works.  
+Ok, it works.  
 Now:
 ```
 sqlite> CREATE TABLE OLIV_TABLE(id INTEGER PRIMARY KEY AUTOINCREMENT, data VARCHAR2, date DATETIME);
