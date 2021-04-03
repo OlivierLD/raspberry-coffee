@@ -64,4 +64,5 @@ sqlite> .read oliv.sql
 ## A GUI
 
 - <https://sqlitebrowser.org/>
+    - Works on Linux, Mac, and Windows.
 
