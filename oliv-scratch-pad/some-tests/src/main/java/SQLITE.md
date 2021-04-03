@@ -3,6 +3,7 @@
 See:
 - <https://pimylifeup.com/raspberry-pi-sqlite/>
 - <https://sqlite.org/docs.html>
+- <https://www.sqlitetutorial.net/sqlite-java/>
 
 ```
 sudo apt update
@@ -59,3 +60,8 @@ Execute a script from the sqlite3:
 $ sqlite3 oliv.db
 sqlite> .read oliv.sql
 ```
+
+## A GUI
+
+- <https://sqlitebrowser.org/>
+

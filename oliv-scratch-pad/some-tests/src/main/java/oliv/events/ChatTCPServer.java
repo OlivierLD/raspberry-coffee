@@ -34,7 +34,7 @@ public class ChatTCPServer implements ServerInterface {
         }
     }
 
-    private final Map<Socket, ChatClient> clientMap = new HashMap<>();
+        private final Map<Socket, ChatClient> clientMap = new HashMap<>();
 
     private final static int DEFAULT_PORT = 7001;
 
@@ -167,7 +167,7 @@ public class ChatTCPServer implements ServerInterface {
         synchronized (this.clientMap) {
             // Broadcast to all connected clients
             this.clientMap.keySet().forEach(tcpSocket -> {
-                if (sender == null || !tcpSocket.equals(sender)) { // Do not send message to its sender.
+                if (!tcpSocket.equals(sender)) { // Do not send the message back to its sender.
                     if (verbose) {
                         System.out.printf("Server sending %s to %s%n", new String(message), tcpSocket);
                     }

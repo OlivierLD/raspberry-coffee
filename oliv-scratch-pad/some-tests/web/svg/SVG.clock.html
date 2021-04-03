@@ -13,8 +13,6 @@
 
 		<script>
 
-			<![CDATA[
-
 			/* Evolved from DHTML version
 			 @ http://www.dhteumeuleu.com */
 
@@ -68,10 +66,11 @@
 				mainloop();
 			}
 
-			/* Input for Cdigit
+			/**
+			 Input for Cdigit
 				 N = 0-7
-				 d = 0-9 or 10 */
-
+				 d = 0-9 or 10 
+			 */
 			function Cdigit(N, d) {
 				// digit prototype: 5 x 7 dots for each of digit from 0 to 9
 				this.O = [];
@@ -189,8 +188,6 @@
 						+ today.getDate() + ", " + today.getFullYear();
 			}
 
-			]]>
-
 		</script>
 
 
@@ -206,13 +203,14 @@
 			  x="70"
 			  y="240"
 			  font-size="20"
-			  font-family="'Helvetica Neue', 'Lato', Verdana, Helvetica, Geneva, sans-serif;"
 			  fill="white"
 			  aria-label="Current date and time"
-			  style='font-family: "text-align: center;'>
+			  style='font-weight: bold; font-family: "Courier New", Courier, monospace; text-align: center;'>
 			date
-			<animate attributeName="opacity" dur="5s"
-					 values="1;0;1" repeatCount="indefinite"/>
+			<animate attributeName="opacity" 
+			         dur="5s"
+					 values="1;0;1" 
+					 repeatCount="indefinite"/>
 		</text>
 
 	</svg>

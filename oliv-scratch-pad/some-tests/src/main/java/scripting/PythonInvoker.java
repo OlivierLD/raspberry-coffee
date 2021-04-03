@@ -14,7 +14,7 @@ public class PythonInvoker {
 		ProcessBuilder processBuilder = new ProcessBuilder("python", "./src/main/python/hello.py");
 		processBuilder.redirectErrorStream(true);
 		Process process = processBuilder.start();
-		InputStream inputStream = process.getInputStream();
+		InputStream inputStream = process.getInputStream(); // Process output
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 		boolean keepReading = true;
