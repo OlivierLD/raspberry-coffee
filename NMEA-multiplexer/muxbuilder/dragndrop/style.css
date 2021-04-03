@@ -271,3 +271,11 @@ button > span {
   font-weight: bold;
   font-family: 'Courier New', Courier, monospace;
 }
+
+[withPlaceholder=true]:empty:not(:focus):before {
+  content: attr(placeholder-text);
+  font-size: 20px;
+  font-style: italic;
+  color: silver;
+  margin: auto;
+}

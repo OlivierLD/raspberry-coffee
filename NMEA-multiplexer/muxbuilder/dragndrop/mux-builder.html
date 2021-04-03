@@ -615,7 +615,10 @@ function fileFwdOption(sel) {
 
         <div class="vertical-scrollable-zone">
             <!-- This is where things are dropped -->
-            <div id="drop-div-consumers" class="drop-container drop-container-content" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div id="drop-div-consumers" 
+                 class="drop-container drop-container-content" 
+                 ondrop="drop(event)" 
+                 ondragover="allowDrop(event)">
             </div>
         </div>
 
@@ -915,7 +918,10 @@ function fileFwdOption(sel) {
 
         <div class="vertical-scrollable-zone">
           <!-- This is where things are dropped -->
-          <div id="drop-div-forwarders" class="drop-container drop-container-content" ondrop="drop(event)" ondragover="allowDrop(event)">
+          <div id="drop-div-forwarders" 
+               class="drop-container drop-container-content" 
+               ondrop="drop(event)" 
+               ondragover="allowDrop(event)">
           </div>
         </div>  
       </div>
@@ -964,7 +970,10 @@ function fileFwdOption(sel) {
 
         <div class="vertical-scrollable-zone">
           <!-- This is where things are dropped -->
-          <div id="drop-div-computers" class="drop-container drop-container-content" ondrop="drop(event)" ondragover="allowDrop(event)">
+          <div id="drop-div-computers" 
+               class="drop-container drop-container-content" 
+               ondrop="drop(event)" 
+               ondragover="allowDrop(event)">
           </div>
         </div>  
       </div>
@@ -974,7 +983,7 @@ function fileFwdOption(sel) {
   <div class="right-part" style="padding: 10px;">
     <div class="message smaller">Generated YAML</div>
     <div class="vertical-scrollable-zone drop-container-content" style="min-height: calc(var(--d-zone-height) - 20px); max-height: calc(var(--d-zone-height) - 20px);">
-      <pre><span id="dynamic-yaml" title="Generated Yaml">Generated YAML will go here</span></pre>
+      <pre><span id="dynamic-yaml" title="Generated Yaml" withPlaceholder="true" placeholder-text="Generated YAML will go here..."></span></pre>
     </div>
   </div>
 </div>
