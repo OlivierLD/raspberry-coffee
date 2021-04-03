@@ -61,7 +61,7 @@ $ sqlite3 oliv.db
 sqlite> .read oliv.sql
 ```
 
-## A GUI
+## A GUI for SQLite
 
 - <https://sqlitebrowser.org/>
     - Works on Linux, Mac, and Windows.
