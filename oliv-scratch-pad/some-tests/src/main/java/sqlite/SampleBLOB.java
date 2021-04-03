@@ -21,9 +21,10 @@ public class SampleBLOB {
         try {
             File f = new File(file);
             FileInputStream fis = new FileInputStream(f);
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[1_024];
             bos = new ByteArrayOutputStream();
-            for (int len; (len = fis.read(buffer)) != -1;) {
+            int len;
+            while ((len = fis.read(buffer)) != -1) {
                 bos.write(buffer, 0, len);
             }
         } catch (IOException ioe) {
@@ -76,7 +77,7 @@ public class SampleBLOB {
                     String description = resultSet.getString("description");
                     InputStream inputStream = resultSet.getBinaryStream("picture");
                     FileOutputStream fileOutputStream = new FileOutputStream(dbFileName);
-                    byte[] buffer = new byte[1024];
+                    byte[] buffer = new byte[1_024];
                     while (inputStream.read(buffer) > 0) {
                         fileOutputStream.write(buffer);
                     }
@@ -95,6 +96,5 @@ public class SampleBLOB {
         } catch (SQLException | IOException ex) {
             ex.printStackTrace();
         }
-
     }
 }
