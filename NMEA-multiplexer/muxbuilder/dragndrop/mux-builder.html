@@ -632,6 +632,46 @@ function fileFwdOption(sel) {
         <div class="message smaller">Drop Forwarders below</div>
       
         <div class="vertical-scrollable-zone side-div">
+          <div id="forwarder-8" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
+            <div>
+              <span class="close-icon" onclick="remove(this);">&times;</span>
+              <span class="forwarder-description">Log File</span>
+            </div>
+            <div class="draggable-content">
+                <span>File </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                <dialog class="editable-prm" style="min-height: 200px;">
+                  <div class="dialog-header">
+                    <div style="padding: 10px;">
+                      <span style="margin-left: 20px;">Edit File Forwarder Parameters</span>
+                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                    </div>
+                  </div>
+                  <div class="editable-zone file-forwarder">
+                    <table>
+                      <tr>
+                          <td>Option</td>
+                          <td>
+                              <select onchange="fileFwdOption(this);" class="file-fwd-option">
+                                  <option value="one-file">One log file</option>
+                                  <option value="time-based">Time based file names</option>
+                              </select>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td class="file-fwd-prms" colspan="2">
+                                  Placeholder
+                          </td>
+                      </tr>
+                      <tr>
+                          <td>Flush</td>
+                          <td><input type="checkbox" class="flush"></td>
+                      </tr>
+                    </table>
+                  </div>  
+                </dialog>    
+            </div>
+          </div>
+
           <div id="forwarder-1" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
             <div>
               <span class="close-icon" onclick="remove(this);">&times;</span>
@@ -845,46 +885,6 @@ function fileFwdOption(sel) {
                       <tr>
                           <td>Header(s)</td>
                           <td><input type="text" class="rest-headers" size="30" placeholder="REST Headers" value="Content-Type:plain/text"></td>
-                      </tr>
-                    </table>
-                  </div>  
-                </dialog>    
-            </div>
-          </div>
-
-          <div id="forwarder-8" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
-            <div>
-              <span class="close-icon" onclick="remove(this);">&times;</span>
-              <span class="forwarder-description">Log File</span>
-            </div>
-            <div class="draggable-content">
-                <span>File </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-                <dialog class="editable-prm" style="min-height: 200px;">
-                  <div class="dialog-header">
-                    <div style="padding: 10px;">
-                      <span style="margin-left: 20px;">Edit File Forwarder Parameters</span>
-                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
-                    </div>
-                  </div>
-                  <div class="editable-zone file-forwarder">
-                    <table>
-                      <tr>
-                          <td>Option</td>
-                          <td>
-                              <select onchange="fileFwdOption(this);" class="file-fwd-option">
-                                  <option value="one-file">One log file</option>
-                                  <option value="time-based">Time based file names</option>
-                              </select>
-                          </td>
-                      </tr>
-                      <tr>
-                          <td class="file-fwd-prms" colspan="2">
-                                  Placeholder
-                          </td>
-                      </tr>
-                      <tr>
-                          <td>Flush</td>
-                          <td><input type="checkbox" class="flush"></td>
                       </tr>
                     </table>
                   </div>  
