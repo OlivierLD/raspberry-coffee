@@ -92,12 +92,12 @@ input[type=text], input[type=number], select {
 
 .draggable-channel {
   /* background-color: rgba(255, 0, 0, 0.5); */
-  background-image: radial-gradient(red, silver);
+  background-image: radial-gradient(orange, yellow);
 }
 
 .draggable-forwarder {
   /* background-color: rgba(0, 255, 0, 0.5); */
-  background-image: radial-gradient(green, silver);
+  background-image: radial-gradient(green, cyan);
 }
 
 .draggable-computer {

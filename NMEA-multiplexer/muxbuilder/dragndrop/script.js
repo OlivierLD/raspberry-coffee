@@ -303,9 +303,19 @@ function generateFileFwdCode(node) {
   let option = node.querySelector('.file-fwd-option').value;
   if (option === 'one-file') {
       code += "    timebase.filename: false\n";
-      let fName = node.querySelector('.logfile-name').value;
+      let fName = "";
+      try {
+        fName = node.querySelector('.logfile-name').value;
+      } catch (err) {
+        // Was not initialized (not edited).
+      }
       code += `    filename: ${fName}\n`;
-      let append = node.querySelector('.append').checked;
+      let append = false;
+      try {
+        append = node.querySelector('.append').checked;
+      } catch (err) {
+        // Was not initialized (not edited).
+      }
       code += `    append: ${append}\n`;
   } else if (option === 'time-based') {
       code += "    timebase.filename: true\n";
