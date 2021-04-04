@@ -12,14 +12,14 @@
 process.title = 'node-weather';
 
 // Port where we'll run the websocket server
-var port = 9876;
+let port = 9876;
 
 // websocket and http servers
-var webSocketServer = require('websocket').server;
-var http = require('http');
-var fs = require('fs');
+let webSocketServer = require('websocket').server;
+let http = require('http');
+let fs = require('fs');
 
-var verbose = false;
+let verbose = false;
 
 if (typeof String.prototype.startsWith != 'function') {
   String.prototype.startsWith = function (str) {
@@ -33,22 +33,22 @@ if (typeof String.prototype.endsWith != 'function') {
   };
 }
 
-var lastWSMessage = { value: 'empty' };
+let lastWSMessage = { value: 'empty' };
 
 function handler (req, res) {
-  var respContent = "";
+  let respContent = "";
   if (verbose) {
     console.log("Speaking HTTP from " + __dirname);
     console.log("Server received an HTTP Request:\n" + req.method + "\n" + req.url + "\n-------------");
     console.log("ReqHeaders:" + JSON.stringify(req.headers, null, '\t'));
     console.log('Request:' + req.url);
-    var prms = require('url').parse(req.url, true);
+    let prms = require('url').parse(req.url, true);
     console.log(prms);
     console.log("Search: [" + prms.search + "]");
     console.log("-------------------------------");
   }
   if (req.url.startsWith("/data/")) { // Static resource
-    var resource = req.url.substring("/data/".length);
+    let resource = req.url.substring("/data/".length);
     if (resource.indexOf("?") > -1) {
       resource = resource.substring(0, resource.indexOf("?"));
     }
@@ -61,7 +61,7 @@ function handler (req, res) {
         if (verbose) {
           console.log("Read resource content:\n---------------\n" + data + "\n--------------");
         }
-        var contentType = "text/html";
+        let contentType = "text/html";
         if (resource.endsWith(".css")) {
           contentType = "text/css";
         } else if (resource.endsWith(".html")) {
@@ -105,7 +105,7 @@ function handler (req, res) {
       });
   } else if (req.url.startsWith("/verbose=")) {
     if (req.method === "GET") {
-      var isVerboseOn = (req.url.substring("/verbose=".length) === 'on');
+      let isVerboseOn = (req.url.substring("/verbose=".length) === 'on');
       res.end(JSON.stringify({verbose: isVerboseOn?'on':'off'}));
 
     }
@@ -113,7 +113,7 @@ function handler (req, res) {
 //  console.log("Ajax Request, " + req.method + ", " + (new Date()));
     if (req.method === "GET") {
       res.writeHead(200, {'Content-Type': 'application/json'});
-      var json = lastWSMessage;
+      let json = lastWSMessage;
       res.end(JSON.stringify(json));
       if (verbose) {
         console.log("Returned:", json);
@@ -121,10 +121,10 @@ function handler (req, res) {
     }
   } else if (req.url === "/") {
     if (req.method === "POST") {
-      var data = "";
+      let data = "";
       if (verbose) {
         console.log("---- Headers ----");
-        for (var item in req.headers) {
+        for (let item in req.headers) {
           console.log(item + ": " + req.headers[item]);
         }
         console.log("-----------------");
@@ -136,7 +136,7 @@ function handler (req, res) {
       req.on("end", function() {
         console.log("POST request: [" + data + "]");
         res.writeHead(200, {'Content-Type': 'application/json'});
-        var status = {'status':'OK'};
+        let status = {'status':'OK'};
         res.end(JSON.stringify(status));
       });
     }
@@ -153,12 +153,12 @@ function handler (req, res) {
  * Global variables
  */
 // list of currently connected clients (users)
-var clients = [];
+let clients = [];
 
 /**
  * Helper function for escaping input strings
  */
-var htmlEntities = function(str) {
+function htmlEntities(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 };
@@ -166,16 +166,16 @@ var htmlEntities = function(str) {
 /**
  * HTTP server
  */
-var server = http.createServer(handler);
+let server = http.createServer(handler);
 
-server.listen(port, function() {
+server.listen(port, () => {
   console.log((new Date()) + " Server is listening on port " + port);
 });
 
 /**
  * WebSocket server
  */
-var wsServer = new webSocketServer({
+let wsServer = new webSocketServer({
   // WebSocket server is tied to a HTTP server. WebSocket request is just
   // an enhanced HTTP request. For more info http://tools.ietf.org/html/rfc6455#page-6
   httpServer: server
@@ -183,18 +183,18 @@ var wsServer = new webSocketServer({
 
 // This callback function is called every time someone
 // tries to connect to the WebSocket server
-wsServer.on('request', function(request) {
+wsServer.on('request', (request) => {
   console.log((new Date()) + ' Connection from origin ' + request.origin + '.');
 
   // accept connection - you should check 'request.origin' to make sure that
   // client is connecting from your website
   // (http://en.wikipedia.org/wiki/Same_origin_policy)
-  var connection = request.accept(null, request.origin);
+  let connection = request.accept(null, request.origin);
   clients.push(connection);
   console.log((new Date()) + ' Connection accepted.');
 
   // user sent some message
-  connection.on('message', function(message) {
+  connection.on('message', (message) => {
 //  console.log(">>> DEBUG >>> Received " + JSON.stringify(message));
     if (message.type === 'utf8') { // accept only text
    // console.log((new Date()) + ' Received WS Message: ' + message.utf8Data);
@@ -203,7 +203,7 @@ wsServer.on('request', function(request) {
       {
         try { lastWSMessage = JSON.parse(message.utf8Data); }
         catch (err) { lastWSMessage = err; }
-        for (var i=0; i<clients.length; i++) {
+        for (let i=0; i<clients.length; i++) {
           if (connection !== clients[i]) {
             clients[i].sendUTF(message.utf8Data);
           }
@@ -215,9 +215,9 @@ wsServer.on('request', function(request) {
   });
 
   // user disconnected
-  connection.on('close', function(code) { // Close
-    var nb = clients.length;
-    for (var i=0; i<clients.length; i++) {
+  connection.on('close', (code) => { // Close
+    let nb = clients.length;
+    for (let i=0; i<clients.length; i++) {
       if (clients[i] === connection) {
         clients.splice(i, 1);
         break;

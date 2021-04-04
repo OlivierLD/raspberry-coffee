@@ -1,9 +1,9 @@
 {
-	"name": "websocket.robot",
+	"name": "websocket.weatherstation",
 	"version": "0.0.1",
-	"description": "A Robot driven from a WebSocket UI",
+	"description": "Weather station on WebSocket",
 	"keywords": [
-		"Adafruit Motor HAT",
+		"WeatherStation",
 		"WebSockets"
 	],
 	"dependencies": {

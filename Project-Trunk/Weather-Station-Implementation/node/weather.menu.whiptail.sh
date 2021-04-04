@@ -3,10 +3,7 @@
 # whiptail on Mac OS: brew install newt
 #
 clear
-#
-echo -e "Instead of this one, use the script in the node folder..."
-exit 1
-#
+
 while [ 1 ]
 do
   CHOICE=$(
@@ -36,7 +33,10 @@ do
       rm weather.station.log
     fi
     # ./weather.station.reader.sh > weather.station.log
+    FROM=$(pwd)
+    cd ../scripts
     nohup ./weather.station.reader.sh > weather.station.log &
+    cd ${FROM}
     # ADDR=`ifconfig wlan0 2> /dev/null  | awk '/inet addr:/ {print $2}' | sed 's/addr://'`
     ADDR=`hostname -I`
     MESSAGE="$MESSAGE\nthen from your browser, reach http://$ADDR:9876/data/weather.station/analog.all.html"

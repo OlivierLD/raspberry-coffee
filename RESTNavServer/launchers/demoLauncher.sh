@@ -52,7 +52,7 @@ GO=true
 # Banner done with https://manytools.org/hacker-tools/ascii-banner/, 'Slant Relief'
 #
 cat banner.txt
-sleep 2
+sleep 1
 #
 while [[ "$GO" == "true" ]]
 do
