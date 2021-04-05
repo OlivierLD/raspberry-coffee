@@ -323,7 +323,7 @@ public class VectorUtils {
      * Dot product (produit scalaire):
      * - if positive: vectors are convergent
      * - if negative: vectors are divergent
-     * - if null: vectors are perpendicular
+     * - if zero: vectors are perpendicular
      */
     public static double dot(Vector2D v1, Vector2D v2) {
         return (v1.getX() * v2.getX()) + (v1.getY() * v2.getY());
@@ -341,12 +341,14 @@ public class VectorUtils {
         return Math.acos(dot(v1, v2) / (length(v1) * length(v2)));
     }
 
+    // Cross Product (produit vectoriel)
     // Dim 2 vectors
     // See https://pythonexamples.org/numpy-cross-product/
     public static double cross(Vector2D v1, Vector2D v2) {
         return ((v1.getX() * v2.getY()) - (v1.getY() * v2.getX()));
     }
 
+    // Dim 3 vectors
 //    def cross(u, v):
 //        ux,uy,uz = u
 //        vx,vy,vz = v

@@ -17,7 +17,7 @@ They all come with a `build.gradle`, and the examples are built by a
 and a script to run the example should be available as well.
 
 - [Buttons, Reflex Game](Button-Relex)
-- [PurePWM](PurePWM)
+- [PurePWM](PurePWM), still needs some love...
 - [System resolution](System.Languages)
     - [System resolution, in several languages](System.Languages/LanguageComparison.md)
 - [Weather Station](Weather.Station.Implementation)
@@ -32,13 +32,13 @@ and a script to run the example should be available as well.
 - [REST Clients](./REST.clients) featuring 
     - a TCP watch. 👍
     - Micro-services (REST, HTTP, MQTT, the full gang!)
+- [Stepper Motors](./SunFlower-v2), orient a solar panel, so it faces the Sun  
 - ... and more.
 
 #### TODO
-- Stepper Motors with the Motor HAT
 - Pure PWM
     - For LEDs
-    - For Servos
+    - For Servos (Challenging...)
 
 ### Node JS
 Some of the projects in this folder require `Node.js` (and its `N`ode `P`ackage `M`anager aka `npm`) to be installed, some times with extra modules.

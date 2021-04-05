@@ -42,12 +42,17 @@ svg {
    function grab(evt) {
       // find out which element we moused down on
       let targetElement = evt.target;
+      console.log(`EvtTarget id: ${targetElement.id}`);
+      if (targetElement.id === 'clickable-cross') { // Let the alert show up!
+         return;
+      }
 
       // you cannot drag the background itself, so ignore any attempts to mouse down on it
       if ( backDrop != targetElement ) {
          //set the item moused down on as the element to be dragged
          dragTarget = targetElement;
-         if (dragTarget instanceof HTMLDivElement) {
+         // Find the SVG element
+         while (dragTarget instanceof HTMLDivElement || dragTarget instanceof HTMLSpanElement) {
             dragTarget = dragTarget.parentElement;
             console.log(`DragTarget: ${dragTarget}`);
          }
@@ -158,11 +163,13 @@ svg {
     <rect id='GreenRectangle' x='50' y='70' width='100' height='100' style='fill:green; '/>
 
     <g id='Folder'>
-        <rect id='FolderRectangle' x='300' y='100' width='200' height='150' style='fill:tan; stroke:brown; stroke-width:3;'/>
+        <rect id='FolderRectangle' x='300' y='100' width='300' height='150' style='fill:tan; stroke:brown; stroke-width:3;'/>
     </g>
 
-    <foreignObject id='foreign-div' x='200' y='100' width='150' height='50' fill='none'>
-        <div id="the-div" style="width: 150px; height: 50px; background-color: blue; color: white;" onclick="alert('Paf!');">Yo!</div>
+    <foreignObject id='foreign-div' x='200' y='100' width='250' height='50' fill='none'>
+        <div id="the-div" style="background-color: blue; color: white; padding: 10px; font-size: 20px; font-family: 'Courier New', Courier;">
+           <span>Click this -> </span><span id="clickable-cross" style="cursor:pointer" onclick="alert('Et paf!');">&times;</span>
+        </div>
     </foreignObject>
 
 </svg>
