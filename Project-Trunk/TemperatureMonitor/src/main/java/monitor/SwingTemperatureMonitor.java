@@ -138,10 +138,16 @@ public class SwingTemperatureMonitor {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Thread dataGrabber = new Thread(() -> {
+            if (verbose) {
+                System.out.println("Staring grabber thread...");
+            }
             try {
                 Thread.sleep(1_000L); // some slack
             } catch (InterruptedException ie) {
                 // Oops
+            }
+            if (verbose) {
+                System.out.println("Grabber thread, in the loop.");
             }
             while (true) {
                 double temperature = getData.get();
@@ -157,8 +163,6 @@ public class SwingTemperatureMonitor {
                 }
             }
         });
-        dataGrabber.start();
-
         frame.setJMenuBar(menuBar);
         frame.getContentPane().setLayout(new BorderLayout());
         menuFile.setText("File");
@@ -179,6 +183,7 @@ public class SwingTemperatureMonitor {
         // >> HERE: Add the WitheBoard to the JFrame
         frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
 //        frame.pack();
+        dataGrabber.start();
     }
 
     public SwingTemperatureMonitor() {
