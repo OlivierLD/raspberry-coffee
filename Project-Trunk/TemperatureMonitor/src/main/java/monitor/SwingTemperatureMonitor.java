@@ -2,20 +2,14 @@ package monitor;
 
 import gsg.SwingUtils.WhiteBoardPanel;
 import gsg.VectorUtils;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Toolkit;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -39,6 +33,8 @@ public class SwingTemperatureMonitor {
     private final static int WIDTH = 800;
     private final static int HEIGHT = 600;
 
+    private static boolean verbose = false;
+
     // The WhiteBoard instantiation
     private final static WhiteBoardPanel whiteBoard = new WhiteBoardPanel();
 
@@ -49,6 +45,7 @@ public class SwingTemperatureMonitor {
         System.out.printf("Exit requested, %s\n", ae);
         System.exit(0);
     }
+
     private void helpAbout_ActionPerformed(ActionEvent ae) {
         System.out.printf("Help requested, %s\n", ae);
         JOptionPane.showMessageDialog(whiteBoard, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
@@ -70,9 +67,13 @@ public class SwingTemperatureMonitor {
                 if (line == null) {
                     keepReading = false;
                 } else {
-                    System.out.println(line);
+                    if (verbose) {
+                        System.out.println(line);
+                    }
                     String value = line.substring(line.indexOf("=") + 1, line.indexOf("'"));
-                    System.out.printf("Value: [%s]\n", value);
+                    if (verbose) {
+                        System.out.printf("Value: [%s]\n", value);
+                    }
                     temperature = Double.parseDouble(value);
                 }
             }
@@ -90,7 +91,7 @@ public class SwingTemperatureMonitor {
         IntStream xs = IntStream.range(0, tempData.size());
         try {
             // Prepare data for display
-            double[] xData = xs.mapToDouble(x -> (double)x)
+            double[] xData = xs.mapToDouble(x -> (double) x)
                     .toArray();
             double[] tData = tempData.stream()
                     .mapToDouble(Double::doubleValue)
@@ -127,7 +128,7 @@ public class SwingTemperatureMonitor {
         Dimension frameSize = frame.getSize();
 //      System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
         frameSize.height = Math.min(frameSize.height, screenSize.height);
-        frameSize.width  = Math.min(frameSize.width, screenSize.width);
+        frameSize.width = Math.min(frameSize.width, screenSize.width);
 
         if (frameSize.width == 0 || frameSize.height == 0) {
             frameSize = new Dimension(WIDTH, HEIGHT + 50 + 10); // 50: ... menu, title bar, etc. 10: button
@@ -178,6 +179,8 @@ public class SwingTemperatureMonitor {
     public SwingTemperatureMonitor() {
     }
 
+    private final static String VERBOSE_PREFIX = "--verbose:";
+
     public static void main(String... args) {
 
         try {
@@ -186,6 +189,12 @@ public class SwingTemperatureMonitor {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        for (String arg : args) {
+            if (arg.startsWith(VERBOSE_PREFIX)) {
+                verbose = "true".equals(arg.substring(VERBOSE_PREFIX.length()));
+            }
         }
 
         System.out.println("----------------------------------------------");
