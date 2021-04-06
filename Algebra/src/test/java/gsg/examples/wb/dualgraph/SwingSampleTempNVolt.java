@@ -137,13 +137,10 @@ public class SwingSampleTempNVolt {
         frame = new JFrame(TITLE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
-//        System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
-        if (frameSize.height > screenSize.height) {
-            frameSize.height = screenSize.height;
-        }
-        if (frameSize.width > screenSize.width) {
-            frameSize.width = screenSize.width;
-        }
+//      System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
+        frameSize.height = Math.min(frameSize.height, screenSize.height);
+        frameSize.width  = Math.min(frameSize.width, screenSize.width);
+
         if (frameSize.width == 0 || frameSize.height == 0) {
             frameSize = new Dimension(WIDTH, HEIGHT + 50 + 10); // 50: ... menu, title bar, etc. 10: button
             frame.setSize(frameSize);
