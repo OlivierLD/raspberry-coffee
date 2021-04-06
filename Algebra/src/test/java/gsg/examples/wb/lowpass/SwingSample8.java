@@ -21,26 +21,26 @@ public class SwingSample8 {
     private final static String TITLE = "Low Pass Filter sample";
 
     private JFrame frame;
-    private JMenuBar menuBar = new JMenuBar();
-    private JMenu menuFile = new JMenu();
-    private JMenuItem menuFileExit = new JMenuItem();
-    private JMenu menuHelp = new JMenu();
-    private JMenuItem menuHelpAbout = new JMenuItem();
+    private final JMenuBar menuBar = new JMenuBar();
+    private final JMenu menuFile = new JMenu();
+    private final JMenuItem menuFileExit = new JMenuItem();
+    private final JMenu menuHelp = new JMenu();
+    private final JMenuItem menuHelpAbout = new JMenuItem();
     private JLabel topLabel;
-    private JButton refreshButton = new JButton("Refresh Data");
+    private final JButton refreshButton = new JButton("Refresh Data");
 
     private final static int WIDTH = 800;
     private final static int HEIGHT = 600;
 
     // The WhiteBoard instantiation
-    private static WhiteBoardPanel whiteBoard = new WhiteBoardPanel();
+    private final static WhiteBoardPanel whiteBoard = new WhiteBoardPanel();
 
     private void fileExit_ActionPerformed(ActionEvent ae) {
-        System.out.println("Exit requested");
+        System.out.printf("Exit requested %s\n", ae);
         System.exit(0);
     }
     private void helpAbout_ActionPerformed(ActionEvent ae) {
-        System.out.println("Help requested");
+        System.out.printf("Help requested %s\n", ae);
         JOptionPane.showMessageDialog(whiteBoard, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
     }
 
@@ -63,7 +63,7 @@ public class SwingSample8 {
         // Filter
         final List<Double> filteredValues = new ArrayList<>();
         final AtomicReference<Double> acc = new AtomicReference<>(50d); // 0d);
-        data.stream().forEach(value -> {
+        data.forEach(value -> {
             acc.set(Filter.lowPass(Filter.ALPHA, value, acc.get()));
             filteredValues.add(acc.get());
         });
@@ -121,12 +121,8 @@ public class SwingSample8 {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
 //        System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
-        if (frameSize.height > screenSize.height) {
-            frameSize.height = screenSize.height;
-        }
-        if (frameSize.width > screenSize.width) {
-            frameSize.width = screenSize.width;
-        }
+        frameSize.height = Math.min(frameSize.height, screenSize.height);
+        frameSize.width  = Math.min(frameSize.width, screenSize.width);
         if (frameSize.width == 0 || frameSize.height == 0) {
             frameSize = new Dimension(WIDTH, HEIGHT + 50 + 10); // 50: ... menu, title bar, etc. 10: button
             frame.setSize(frameSize);
@@ -185,8 +181,8 @@ public class SwingSample8 {
         }
 
         System.out.println("----------------------------------------------");
-        System.out.println(String.format("Running from folder %s", System.getProperty("user.dir")));
-        System.out.println(String.format("Java Version %s", System.getProperty("java.version")));
+        System.out.printf("Running from folder %s\n", System.getProperty("user.dir"));
+        System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
 
         SwingSample8 thisThing = new SwingSample8();// This one has instantiated the white board

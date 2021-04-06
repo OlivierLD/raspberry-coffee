@@ -2,11 +2,25 @@ package gsg.examples.wb.dualgraph;
 
 import gsg.SwingUtils.WhiteBoardPanel;
 import gsg.VectorUtils;
-import lowpass.Filter;
 import org.json.JSONObject;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,7 +28,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * More Abstraction, using default WhiteBoard Writer
@@ -27,26 +40,26 @@ public class SwingSampleTempNVolt {
     private final static String TITLE = "Temperature and Voltage";
 
     private JFrame frame;
-    private JMenuBar menuBar = new JMenuBar();
-    private JMenu menuFile = new JMenu();
-    private JMenuItem menuFileExit = new JMenuItem();
-    private JMenu menuHelp = new JMenu();
-    private JMenuItem menuHelpAbout = new JMenuItem();
+    private final JMenuBar menuBar = new JMenuBar();
+    private final JMenu menuFile = new JMenu();
+    private final JMenuItem menuFileExit = new JMenuItem();
+    private final JMenu menuHelp = new JMenu();
+    private final JMenuItem menuHelpAbout = new JMenuItem();
     private JLabel topLabel;
-    private JButton refreshButton = new JButton("Refresh Data");
+    private final JButton refreshButton = new JButton("Refresh Data");
 
     private final static int WIDTH = 800;
     private final static int HEIGHT = 600;
 
     // The WhiteBoard instantiation
-    private static WhiteBoardPanel whiteBoard = new WhiteBoardPanel();
+    private final static WhiteBoardPanel whiteBoard = new WhiteBoardPanel();
 
     private void fileExit_ActionPerformed(ActionEvent ae) {
-        System.out.println("Exit requested");
+        System.out.printf("Exit requested, %s\n", ae);
         System.exit(0);
     }
     private void helpAbout_ActionPerformed(ActionEvent ae) {
-        System.out.println("Help requested");
+        System.out.printf("Help requested, %s\n", ae);
         JOptionPane.showMessageDialog(whiteBoard, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
     }
 
@@ -74,7 +87,7 @@ public class SwingSampleTempNVolt {
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(fName));
-            String line = "";
+            String line;
             int x = 0;
             while ((line = br.readLine()) != null) {
                 try {
@@ -199,8 +212,8 @@ public class SwingSampleTempNVolt {
         }
 
         System.out.println("----------------------------------------------");
-        System.out.println(String.format("Running from folder %s", System.getProperty("user.dir")));
-        System.out.println(String.format("Java Version %s", System.getProperty("java.version")));
+        System.out.printf("Running from folder %s\n", System.getProperty("user.dir"));
+        System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
 
         SwingSampleTempNVolt thisThing = new SwingSampleTempNVolt();// This one has instantiated the white board
