@@ -121,22 +121,8 @@ public class SwingTemperatureMonitor {
         this.frame.setVisible(true);
     }
 
-    private void initComponents() {
-        // The JFrame
-        frame = new JFrame(TITLE);
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize = frame.getSize();
-//      System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
-        frameSize.height = Math.min(frameSize.height, screenSize.height);
-        frameSize.width = Math.min(frameSize.width, screenSize.width);
 
-        if (frameSize.width == 0 || frameSize.height == 0) {
-            frameSize = new Dimension(WIDTH, HEIGHT + 50 + 10); // 50: ... menu, title bar, etc. 10: button
-            frame.setSize(frameSize);
-        }
-        frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+    private void startGrabber() {
         Thread dataGrabber = new Thread(() -> {
             if (verbose) {
                 System.out.println("Staring grabber thread...");
@@ -163,6 +149,25 @@ public class SwingTemperatureMonitor {
                 }
             }
         });
+        dataGrabber.start();
+    }
+
+    private void initComponents() {
+        // The JFrame
+        frame = new JFrame(TITLE);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension frameSize = frame.getSize();
+//      System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
+        frameSize.height = Math.min(frameSize.height, screenSize.height);
+        frameSize.width = Math.min(frameSize.width, screenSize.width);
+
+        if (frameSize.width == 0 || frameSize.height == 0) {
+            frameSize = new Dimension(WIDTH, HEIGHT + 50 + 10); // 50: ... menu, title bar, etc. 10: button
+            frame.setSize(frameSize);
+        }
+        frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         frame.setJMenuBar(menuBar);
         frame.getContentPane().setLayout(new BorderLayout());
         menuFile.setText("File");
@@ -183,7 +188,6 @@ public class SwingTemperatureMonitor {
         // >> HERE: Add the WitheBoard to the JFrame
         frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
 //        frame.pack();
-        dataGrabber.start();
     }
 
     public SwingTemperatureMonitor() {
@@ -228,6 +232,8 @@ public class SwingTemperatureMonitor {
         // Enforce Y amplitude
         whiteBoard.setForcedMinY(0d);
         whiteBoard.setForcedMaxY(100d);
+
+        thisThing.startGrabber();
 
         thisThing.refreshData();
         thisThing.show();
