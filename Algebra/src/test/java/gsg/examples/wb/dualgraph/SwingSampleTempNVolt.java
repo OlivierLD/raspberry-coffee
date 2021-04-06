@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * More Abstraction, using default WhiteBoard Writer
  * You can focus only on the data, not on the display. See the main method.
+ *
  * Graph from the info returned by sysinfo.sh (in this project), in a JSON format
  */
 public class SwingSampleTempNVolt {
@@ -85,8 +86,6 @@ public class SwingSampleTempNVolt {
                     ex.printStackTrace();
                 }
             }
-
-
             // Prepare data for display
             double[] xData = xs.stream()
                     .mapToDouble(Double::doubleValue)
@@ -94,37 +93,33 @@ public class SwingSampleTempNVolt {
             double[] tData = tempData.stream()
                     .mapToDouble(Double::doubleValue)
                     .toArray();
-            List<VectorUtils.Vector2D> dataVectors = new ArrayList<>();
+            List<VectorUtils.Vector2D> dataOneVectors = new ArrayList<>();
             for (int i = 0; i < xData.length; i++) {
-                dataVectors.add(new VectorUtils.Vector2D(xData[i], tData[i]));
+                dataOneVectors.add(new VectorUtils.Vector2D(xData[i], tData[i]));
             }
-
             double[] vData = voltData.stream()
                     .mapToDouble(Double::doubleValue)
                     .toArray();
-            List<VectorUtils.Vector2D> filteredDataVectors = new ArrayList<>();
+            List<VectorUtils.Vector2D> dataTwoVectors = new ArrayList<>();
             for (int i = 0; i < xData.length; i++) {
-                filteredDataVectors.add(new VectorUtils.Vector2D(xData[i], vData[i]));
+                dataTwoVectors.add(new VectorUtils.Vector2D(xData[i], vData[i]));
             }
-
             whiteBoard.setAxisColor(Color.BLACK);
             whiteBoard.resetAllData();
-
-            // Raw series
-            WhiteBoardPanel.DataSerie dataSerie = new WhiteBoardPanel.DataSerie()
-                    .data(dataVectors)
+            // Temp series
+            WhiteBoardPanel.DataSerie dataTempSerie = new WhiteBoardPanel.DataSerie()
+                    .data(dataOneVectors)
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.BLUE);
-            whiteBoard.addSerie(dataSerie);
-            // Filtered series
-            WhiteBoardPanel.DataSerie filteredDataSerie = new WhiteBoardPanel.DataSerie()
-                    .data(filteredDataVectors)
+            whiteBoard.addSerie(dataTempSerie);
+            // Volt series
+            WhiteBoardPanel.DataSerie dataVoltSerie = new WhiteBoardPanel.DataSerie()
+                    .data(dataTwoVectors)
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
                     .lineThickness(3)
                     .color(Color.RED);
-            whiteBoard.addSerie(filteredDataSerie);
-
+            whiteBoard.addSerie(dataVoltSerie);
             // Finally, display it.
             whiteBoard.repaint();  // This is for a pure Swing context
         } catch (IOException ioe) {
