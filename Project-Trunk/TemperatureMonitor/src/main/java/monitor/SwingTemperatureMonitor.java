@@ -138,6 +138,11 @@ public class SwingTemperatureMonitor {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Thread dataGrabber = new Thread(() -> {
+            try {
+                Thread.sleep(1_000L); // some slack
+            } catch (InterruptedException ie) {
+                // Oops
+            }
             while (true) {
                 double temperature = getData.get();
                 tempData.add(temperature);
