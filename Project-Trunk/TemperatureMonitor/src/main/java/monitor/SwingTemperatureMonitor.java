@@ -88,6 +88,13 @@ public class SwingTemperatureMonitor {
     };
 
     private void refreshData() {
+        if (tempData.size() == 0) {
+            if (verbose) {
+                System.out.println("No data...");
+            }
+            return;
+        }
+
         IntStream xs = IntStream.range(0, tempData.size());
         try {
             // Prepare data for display
@@ -121,7 +128,6 @@ public class SwingTemperatureMonitor {
         this.frame.setVisible(true);
     }
 
-
     private void startGrabber() {
         Thread dataGrabber = new Thread(() -> {
             if (verbose) {
@@ -137,9 +143,11 @@ public class SwingTemperatureMonitor {
             }
             while (true) {
                 double temperature = getData.get();
-                tempData.add(temperature);
-                while (tempData.size() > BUFFER_LEN) {
-                    tempData.remove(0);
+                synchronized (tempData) {
+                    tempData.add(temperature);
+                    while (tempData.size() > BUFFER_LEN) {
+                        tempData.remove(0);
+                    }
                 }
                 refreshData();
                 try {
@@ -219,6 +227,8 @@ public class SwingTemperatureMonitor {
         SwingTemperatureMonitor thisThing = new SwingTemperatureMonitor();// This one has instantiated the white board
         thisThing.initComponents();
 
+//        thisThing.startGrabber();
+
         // Override defaults (not mandatory)
         whiteBoard.setAxisColor(new Color(125, 0, 255, 255));
         whiteBoard.setWithGrid(false);
@@ -233,9 +243,9 @@ public class SwingTemperatureMonitor {
         whiteBoard.setForcedMinY(0d);
         whiteBoard.setForcedMaxY(100d);
 
-        thisThing.startGrabber();
-
-        thisThing.refreshData();
         thisThing.show();
+
+//        thisThing.refreshData();
+        thisThing.startGrabber();
     }
 }
