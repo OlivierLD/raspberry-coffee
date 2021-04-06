@@ -1,0 +1,26 @@
+plugins {
+  id 'java'
+//id 'scala'
+  id 'maven'
+  id 'idea'
+  id 'com.github.johnrengelman.shadow' // version '4.0.2'
+}
+
+group = 'oliv.raspi.coffee'
+version = '1.0'
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+  maven { url "https://www.datanucleus.org/downloads/maven2" }
+  maven { url "https://mvnrepository.com/artifact" }
+}
+
+dependencies {
+  compile project(':common-utils')
+  compile project(':Algebra')
+}
+
+shadowJar {
+  zip64 true
+}

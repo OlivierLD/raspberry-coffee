@@ -86,6 +86,7 @@ include "Project-Trunk:REST-clients:TCP-Watch-01"
 include "Project-Trunk:REST-clients:REST-assembler"
 include "Project-Trunk:REST-clients:REST-assembler:springboot-sensors"
 include 'Project-Trunk:WebcamTemplate'
+include 'Project-Trunk:TemperatureMonitor'
 
 include "Project-Trunk:Deviation-Tool"
 include "Project-Trunk:dAISy"
