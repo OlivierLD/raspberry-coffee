@@ -80,6 +80,9 @@ public class SwingTemperatureMonitor {
                     keepReading = false;
                 } else {
                     System.out.println(line);
+                    String value = line.substring(line.indexOf("=") + 1, line.indexOf("'"));
+                    System.out.printf("Value: [%s]\n", value);
+                    temperature = Double.parseDouble(value);
                 }
             }
             reader.close();
