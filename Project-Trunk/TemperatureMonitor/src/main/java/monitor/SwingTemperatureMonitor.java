@@ -113,7 +113,7 @@ public class SwingTemperatureMonitor {
                         .data(minVectors)
                         .graphicType(WhiteBoardPanel.GraphicType.DOTTED_LINE)
                         .lineThickness(2)
-                        .color(Color.RED);
+                        .color(Color.BLACK);
                 whiteBoard.addSerie(minTempSerie);
                 // 2 - Max
                 List<VectorUtils.Vector2D> maxVectors = new ArrayList<>();
