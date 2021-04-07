@@ -2,16 +2,31 @@ package monitor;
 
 import gsg.SwingUtils.WhiteBoardPanel;
 import gsg.VectorUtils;
+import org.json.JSONObject;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
@@ -38,14 +53,13 @@ public class SwingTemperatureMonitor {
     // The WhiteBoard instantiation
     private final static WhiteBoardPanel whiteBoard = new WhiteBoardPanel();
 
-    private final int BUFFER_LEN = 900;  // 900 sec: 15 minutes
+    private final int BUFFER_LEN = 900;
     private List<Double> tempData = new ArrayList<>();
 
     private void fileExit_ActionPerformed(ActionEvent ae) {
         System.out.printf("Exit requested, %s\n", ae);
         System.exit(0);
     }
-
     private void helpAbout_ActionPerformed(ActionEvent ae) {
         System.out.printf("Help requested, %s\n", ae);
         JOptionPane.showMessageDialog(whiteBoard, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
@@ -88,17 +102,10 @@ public class SwingTemperatureMonitor {
     };
 
     private void refreshData() {
-        if (tempData.size() == 0) {
-            if (verbose) {
-                System.out.println("No data...");
-            }
-            return;
-        }
-
         IntStream xs = IntStream.range(0, tempData.size());
         try {
             // Prepare data for display
-            double[] xData = xs.mapToDouble(x -> (double) x)
+            double[] xData = xs.mapToDouble(x -> (double)x)
                     .toArray();
             double[] tData = tempData.stream()
                     .mapToDouble(Double::doubleValue)
@@ -128,26 +135,28 @@ public class SwingTemperatureMonitor {
         this.frame.setVisible(true);
     }
 
-    private void startGrabber() {
+    private void initComponents() {
+        // The JFrame
+        frame = new JFrame(TITLE);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension frameSize = frame.getSize();
+//      System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
+        frameSize.height = Math.min(frameSize.height, screenSize.height);
+        frameSize.width  = Math.min(frameSize.width, screenSize.width);
+
+        if (frameSize.width == 0 || frameSize.height == 0) {
+            frameSize = new Dimension(WIDTH, HEIGHT + 50 + 10); // 50: ... menu, title bar, etc. 10: button
+            frame.setSize(frameSize);
+        }
+        frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         Thread dataGrabber = new Thread(() -> {
-            if (verbose) {
-                System.out.println("Staring grabber thread...");
-            }
-            try {
-                Thread.sleep(1_000L); // some slack
-            } catch (InterruptedException ie) {
-                // Oops
-            }
-            if (verbose) {
-                System.out.println("Grabber thread, in the loop.");
-            }
             while (true) {
                 double temperature = getData.get();
-                synchronized (tempData) {
-                    tempData.add(temperature);
-                    while (tempData.size() > BUFFER_LEN) {
-                        tempData.remove(0);
-                    }
+                tempData.add(temperature);
+                while (tempData.size() > BUFFER_LEN) {
+                    tempData.remove(0);
                 }
                 refreshData();
                 try {
@@ -158,23 +167,6 @@ public class SwingTemperatureMonitor {
             }
         });
         dataGrabber.start();
-    }
-
-    private void initComponents() {
-        // The JFrame
-        frame = new JFrame(TITLE);
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize = frame.getSize();
-//      System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
-        frameSize.height = Math.min(frameSize.height, screenSize.height);
-        frameSize.width = Math.min(frameSize.width, screenSize.width);
-
-        if (frameSize.width == 0 || frameSize.height == 0) {
-            frameSize = new Dimension(WIDTH, HEIGHT + 50 + 10); // 50: ... menu, title bar, etc. 10: button
-            frame.setSize(frameSize);
-        }
-        frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.setJMenuBar(menuBar);
         frame.getContentPane().setLayout(new BorderLayout());
@@ -227,8 +219,6 @@ public class SwingTemperatureMonitor {
         SwingTemperatureMonitor thisThing = new SwingTemperatureMonitor();// This one has instantiated the white board
         thisThing.initComponents();
 
-//        thisThing.startGrabber();
-
         // Override defaults (not mandatory)
         whiteBoard.setAxisColor(new Color(125, 0, 255, 255));
         whiteBoard.setWithGrid(false);
@@ -243,9 +233,7 @@ public class SwingTemperatureMonitor {
         whiteBoard.setForcedMinY(0d);
         whiteBoard.setForcedMaxY(100d);
 
+        thisThing.refreshData();
         thisThing.show();
-
-//        thisThing.refreshData();
-        thisThing.startGrabber();
     }
 }
