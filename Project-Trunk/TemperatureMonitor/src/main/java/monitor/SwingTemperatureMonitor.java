@@ -3,18 +3,8 @@ package monitor;
 import gsg.SwingUtils.WhiteBoardPanel;
 import gsg.VectorUtils;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -48,10 +38,12 @@ public class SwingTemperatureMonitor {
     // The WhiteBoard instantiation
     private final static WhiteBoardPanel whiteBoard = new WhiteBoardPanel();
 
-    private final int BUFFER_LEN = 900;
+    private final static int DEFAULT_BUFFER_LEN = 900;
     private List<Double> tempData = new ArrayList<>();
     private double minValue = Double.MAX_VALUE;
     private double maxValue = -Double.MAX_VALUE;
+
+    private static int bufferLength = DEFAULT_BUFFER_LEN;
 
     private void fileExit_ActionPerformed(ActionEvent ae) {
         System.out.printf("Exit requested, %s\n", ae);
@@ -119,7 +111,7 @@ public class SwingTemperatureMonitor {
                 minVectors.add(new VectorUtils.Vector2D(xData[xData.length - 1], minValue));
                 WhiteBoardPanel.DataSerie minTempSerie = new WhiteBoardPanel.DataSerie()
                         .data(minVectors)
-                        .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                        .graphicType(WhiteBoardPanel.GraphicType.DOTTED_LINE)
                         .lineThickness(2)
                         .color(Color.RED);
                 whiteBoard.addSerie(minTempSerie);
@@ -129,7 +121,7 @@ public class SwingTemperatureMonitor {
                 maxVectors.add(new VectorUtils.Vector2D(xData[xData.length - 1], maxValue));
                 WhiteBoardPanel.DataSerie maxTempSerie = new WhiteBoardPanel.DataSerie()
                         .data(maxVectors)
-                        .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                        .graphicType(WhiteBoardPanel.GraphicType.DOTTED_LINE)
                         .lineThickness(2)
                         .color(Color.RED);
                 whiteBoard.addSerie(maxTempSerie);
@@ -161,7 +153,7 @@ public class SwingTemperatureMonitor {
                 tempData.add(temperature);
                 maxValue = Math.max(maxValue, temperature);
                 minValue = Math.min(minValue, temperature);
-                while (tempData.size() > BUFFER_LEN) {
+                while (tempData.size() > bufferLength) {
                     tempData.remove(0);
                 }
                 refreshData();
@@ -207,9 +199,15 @@ public class SwingTemperatureMonitor {
         menuHelp.add(menuHelpAbout);
         menuBar.add(menuHelp);
 
-        topLabel = new JLabel(" " + TITLE);
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new GridBagLayout());
+        topLabel = new JLabel(TITLE);
         topLabel.setFont(new Font("Courier New", Font.ITALIC | Font.BOLD, 16));
-        frame.getContentPane().add(topLabel, BorderLayout.NORTH); // TODO Left padding?
+        // Inset below used for left padding.
+        topPanel.add(topLabel,
+                new GridBagConstraints(0, 0, 1, 1, 1.0D, 0.0D, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 10, 0, 0), 0, 0));
+
+        frame.getContentPane().add(topPanel, BorderLayout.NORTH);
 
         // >> HERE: Add the WitheBoard to the JFrame
         frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
@@ -220,6 +218,7 @@ public class SwingTemperatureMonitor {
     }
 
     private final static String VERBOSE_PREFIX = "--verbose:";
+    private final static String BUFFER_LENGTH_PREFIX = "--buffer-length:";
 
     public static void main(String... args) {
 
@@ -234,6 +233,8 @@ public class SwingTemperatureMonitor {
         for (String arg : args) {
             if (arg.startsWith(VERBOSE_PREFIX)) {
                 verbose = "true".equals(arg.substring(VERBOSE_PREFIX.length()));
+            } else if (arg.startsWith(BUFFER_LENGTH_PREFIX)) {
+                bufferLength = Integer.parseInt(arg.substring(BUFFER_LENGTH_PREFIX.length()));
             }
         }
 
@@ -254,12 +255,19 @@ public class SwingTemperatureMonitor {
         whiteBoard.setTextColor(Color.RED);
         whiteBoard.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
         whiteBoard.setGraphicMargins(30);
-        whiteBoard.setXEqualsY(false);
-        // Enforce Y amplitude
+        whiteBoard.setXEqualsY(false);   // Not the same scale.
+
+        // Enforced Y amplitude
         whiteBoard.setForcedMinY(0d);
         whiteBoard.setForcedMaxY(100d);
 
         thisThing.refreshData();
+        try {
+            Thread.sleep(1_000L);
+        } catch (InterruptedException ie) {
+            // Absorb
+        }
+        // May require a delay... Hence the wait above.
         thisThing.show();
     }
 }

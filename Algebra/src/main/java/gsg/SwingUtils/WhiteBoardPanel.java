@@ -30,9 +30,11 @@ public class WhiteBoardPanel extends JPanel {
     private List<DataSerie> allSeries = new ArrayList<>();
 
     public enum GraphicType {
-        LINE,
+        LINE,                   // Solid
+        DOTTED_LINE,
         LINE_WITH_DOTS,
         CLOSED_LINE,            // aka Polygon...
+        CLOSED_DOTTED_LINE,
         CLOSED_LINE_WITH_DOTS,
         POINTS,
         AREA,
@@ -313,11 +315,23 @@ public class WhiteBoardPanel extends JPanel {
 
         // Now the data, Series
         allSeries.forEach(serie -> {
-            if (serie.getGraphicType().equals(GraphicType.LINE) || serie.getGraphicType().equals(GraphicType.CLOSED_LINE) ||
-                serie.getGraphicType().equals(GraphicType.LINE_WITH_DOTS)  || serie.getGraphicType().equals(GraphicType.CLOSED_LINE_WITH_DOTS)) {
+            if (serie.getGraphicType().equals(GraphicType.LINE) ||
+                serie.getGraphicType().equals(GraphicType.CLOSED_LINE) ||
+                serie.getGraphicType().equals(GraphicType.DOTTED_LINE) ||
+                serie.getGraphicType().equals(GraphicType.CLOSED_DOTTED_LINE) ||
+                serie.getGraphicType().equals(GraphicType.LINE_WITH_DOTS)  ||
+                serie.getGraphicType().equals(GraphicType.CLOSED_LINE_WITH_DOTS)) {
                 g2d.setColor(serie.getColor()); // Line Color
-                g2d.setStroke(new BasicStroke(serie.getLineThickness()));             // Line Thickness
-                boolean withPoints = serie.getGraphicType().equals(GraphicType.LINE_WITH_DOTS)  || serie.getGraphicType().equals(GraphicType.CLOSED_LINE_WITH_DOTS);
+                Stroke stroke;
+                if (serie.getGraphicType().equals(GraphicType.DOTTED_LINE) ||
+                    serie.getGraphicType().equals(GraphicType.CLOSED_DOTTED_LINE)) {
+                    stroke = new BasicStroke(serie.getLineThickness(), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0.0f, new float[] { 9f }, 0f);
+                } else {
+                    stroke = new BasicStroke(serie.getLineThickness(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);             // Line Thickness
+                }
+                g2d.setStroke(stroke);
+                boolean withPoints = serie.getGraphicType().equals(GraphicType.LINE_WITH_DOTS)  ||
+                                     serie.getGraphicType().equals(GraphicType.CLOSED_LINE_WITH_DOTS);
                 Point previous = null;
                 for (Vector2D v : serie.getData()) {
                     int pointX = findCanvasXCoord.apply(v.getX());
@@ -334,7 +348,9 @@ public class WhiteBoardPanel extends JPanel {
                     }
                     previous = here;
                 }
-                if (serie.getGraphicType().equals(GraphicType.CLOSED_LINE) || serie.getGraphicType().equals(GraphicType.CLOSED_LINE_WITH_DOTS)) {
+                if (serie.getGraphicType().equals(GraphicType.CLOSED_LINE) ||
+                    serie.getGraphicType().equals(GraphicType.CLOSED_DOTTED_LINE) ||
+                    serie.getGraphicType().equals(GraphicType.CLOSED_LINE_WITH_DOTS)) {
                     if (previous != null) { // Close the loop
                         g2d.drawLine(
                                 previous.x,
@@ -360,6 +376,7 @@ public class WhiteBoardPanel extends JPanel {
 //                case GraphicType.PIE:
                 System.out.printf("Type %s not managed yet%n", serie.getGraphicType());
             }
+//            g2d.dispose();
         });
     };
 

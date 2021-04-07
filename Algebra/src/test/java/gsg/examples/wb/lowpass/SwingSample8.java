@@ -94,15 +94,15 @@ public class SwingSample8 {
         // Raw series
         WhiteBoardPanel.DataSerie dataSerie = new WhiteBoardPanel.DataSerie()
                 .data(dataVectors)
-                .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                .graphicType(WhiteBoardPanel.GraphicType.DOTTED_LINE)
                 .lineThickness(3)
                 .color(Color.BLUE);
         whiteBoard.addSerie(dataSerie);
         // Filtered series
         WhiteBoardPanel.DataSerie filteredDataSerie = new WhiteBoardPanel.DataSerie()
                 .data(filteredDataVectors)
-                .graphicType(WhiteBoardPanel.GraphicType.LINE)
-                .lineThickness(3)
+                .graphicType(WhiteBoardPanel.GraphicType.DOTTED_LINE)
+                .lineThickness(2)
                 .color(Color.RED);
         whiteBoard.addSerie(filteredDataSerie);
 
