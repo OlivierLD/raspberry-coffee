@@ -118,27 +118,28 @@ public class SwingTemperatureMonitor {
                     .color(Color.BLUE);
             whiteBoard.addSerie(dataTempSerie);
             // Min & Max
-            // 1 - Min
-            List<VectorUtils.Vector2D> minVectors = new ArrayList<>();
-            minVectors.add(new VectorUtils.Vector2D(xData[0], minValue));
-            minVectors.add(new VectorUtils.Vector2D(xData[xData.length - 1], minValue));
-            WhiteBoardPanel.DataSerie minTempSerie = new WhiteBoardPanel.DataSerie()
-                    .data(minVectors)
-                    .graphicType(WhiteBoardPanel.GraphicType.LINE)
-                    .lineThickness(2)
-                    .color(Color.RED);
-            whiteBoard.addSerie(minTempSerie);
-            // 2 - Max
-            List<VectorUtils.Vector2D> maxVectors = new ArrayList<>();
-            maxVectors.add(new VectorUtils.Vector2D(xData[0], maxValue));
-            maxVectors.add(new VectorUtils.Vector2D(xData[xData.length - 1], maxValue));
-            WhiteBoardPanel.DataSerie maxTempSerie = new WhiteBoardPanel.DataSerie()
-                    .data(maxVectors)
-                    .graphicType(WhiteBoardPanel.GraphicType.LINE)
-                    .lineThickness(2)
-                    .color(Color.RED);
-            whiteBoard.addSerie(maxTempSerie);
-
+            if (tempData.size() > 1) {
+                // 1 - Min
+                List<VectorUtils.Vector2D> minVectors = new ArrayList<>();
+                minVectors.add(new VectorUtils.Vector2D(xData[0], minValue));
+                minVectors.add(new VectorUtils.Vector2D(xData[xData.length - 1], minValue));
+                WhiteBoardPanel.DataSerie minTempSerie = new WhiteBoardPanel.DataSerie()
+                        .data(minVectors)
+                        .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                        .lineThickness(2)
+                        .color(Color.RED);
+                whiteBoard.addSerie(minTempSerie);
+                // 2 - Max
+                List<VectorUtils.Vector2D> maxVectors = new ArrayList<>();
+                maxVectors.add(new VectorUtils.Vector2D(xData[0], maxValue));
+                maxVectors.add(new VectorUtils.Vector2D(xData[xData.length - 1], maxValue));
+                WhiteBoardPanel.DataSerie maxTempSerie = new WhiteBoardPanel.DataSerie()
+                        .data(maxVectors)
+                        .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                        .lineThickness(2)
+                        .color(Color.RED);
+                whiteBoard.addSerie(maxTempSerie);
+            }
             // Finally, display it.
             whiteBoard.repaint();  // This is for a pure Swing context
         } catch (Exception ex) {
