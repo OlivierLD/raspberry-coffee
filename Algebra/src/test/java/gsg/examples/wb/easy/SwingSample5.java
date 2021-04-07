@@ -78,6 +78,12 @@ public class SwingSample5 {
         // >> HERE: Add the WitheBoard to the JFrame
         frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
 
+        try {
+            Thread.sleep(1_000L);
+        } catch (InterruptedException ie) {
+            // Absorb
+        }
+        // May require a delay... Hence the wait above.
         frame.setVisible(true); // Display
     }
 

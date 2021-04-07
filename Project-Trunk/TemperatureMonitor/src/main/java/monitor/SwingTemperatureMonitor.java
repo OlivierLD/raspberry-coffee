@@ -129,7 +129,8 @@ public class SwingTemperatureMonitor {
             // Temperature series
             WhiteBoardPanel.DataSerie dataTempSerie = new WhiteBoardPanel.DataSerie()
                     .data(dataOneVectors)
-                    .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                    .graphicType(WhiteBoardPanel.GraphicType.AREA)
+                    .areaGradient(new Color(1f, 0f, 0f, 0.75f), new Color(0f, 0f, 1f, 0.75f))
                     .lineThickness(3)
                     .color(Color.BLUE);
             whiteBoard.addSerie(dataTempSerie);

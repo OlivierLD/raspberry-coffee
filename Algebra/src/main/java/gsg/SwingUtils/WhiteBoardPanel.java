@@ -46,6 +46,10 @@ public class WhiteBoardPanel extends JPanel {
         List<Vector2D> data;
         GraphicType graphicType = GraphicType.LINE;
         Color color = Color.BLACK;
+        Color gradientTop = null;
+        Color gradientBottom = null;
+        Color bgColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+
         int lineThickness = 1;
         int circleDiam = 10; // needs to be even
 
@@ -64,6 +68,17 @@ public class WhiteBoardPanel extends JPanel {
 
         public DataSerie color(Color color) {
             this.color = color;
+            return this;
+        }
+
+        public DataSerie areaGradient(Color top, Color bottom) { // Set both to null to use bgColor
+            this.gradientTop = top;
+            this.gradientBottom = bottom;
+            return this;
+        }
+
+        public DataSerie bgColor(Color color) {
+            this.bgColor = color;
             return this;
         }
 
@@ -87,6 +102,16 @@ public class WhiteBoardPanel extends JPanel {
 
         public Color getColor() {
             return color;
+        }
+        public Color getBGColor() {
+            return bgColor;
+        }
+
+        public Color getGradientTop() {
+            return this.gradientTop;
+        }
+        public Color getGradientBottom() {
+            return this.gradientBottom;
         }
 
         public int getLineThickness() {
@@ -371,14 +396,53 @@ public class WhiteBoardPanel extends JPanel {
                             circleDiam, circleDiam);
 
                 });
+            } else if (serie.getGraphicType().equals(GraphicType.AREA)) {
+                g2d.setColor(serie.getColor());
+                if (serie.getGradientTop() != null && serie.getGradientBottom() != null) {
+                    g2d.setPaint(this.getGradientPaint(serie.getGradientTop(), serie.getGradientBottom()));
+                } else {
+                    g2d.setPaint(serie.getBGColor());
+                }
+                // Background
+                final Polygon polygon = new Polygon();
+                polygon.addPoint(graphicMargins, height - graphicMargins);
+                serie.getData().forEach(v -> {
+                    int pointX = findCanvasXCoord.apply(v.getX());
+                    int pointY = findCanvasYCoord.apply(v.getY());
+                    polygon.addPoint(pointX, height - pointY);
+                });
+                polygon.addPoint(width - graphicMargins, height - graphicMargins);
+                g2d.fillPolygon(polygon);
+                // The curve
+                if (serie.getColor() != null) {
+                    g2d.setColor(serie.getColor()); // Line Color
+                    Stroke stroke = new BasicStroke(serie.getLineThickness(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER);             // Line Thickness
+                    g2d.setStroke(stroke);
+                    Point previous = null;
+                    for (Vector2D v : serie.getData()) {
+                        int pointX = findCanvasXCoord.apply(v.getX());
+                        int pointY = findCanvasYCoord.apply(v.getY());
+//                      System.out.println(String.format("x:%f, y:%f => X:%d, Y:%d", x[i], y[i], pointX, pointY));
+                        Point here = new Point(pointX, pointY);
+                        if (previous != null) {
+                            g2d.drawLine(previous.x, height - previous.y, here.x, height - here.y);
+                        }
+                        previous = here;
+                    }
+                }
             } else {
-//                case GraphicType.AREA:
+//                case GraphicType.DONUT:
 //                case GraphicType.PIE:
                 System.out.printf("Type %s not managed yet%n", serie.getGraphicType());
             }
 //            g2d.dispose();
         });
     };
+
+    private GradientPaint getGradientPaint(Color top, Color bottom) {
+        Dimension dimension = this.getSize();
+        return new GradientPaint(0, 0, top, 0, dimension.height, /*dimension.height, dimension.width,*/ bottom);
+    }
 
     // THE Renderer. The most important part here. Invoked from the paintComponent method.
     private Consumer<Graphics2D> whiteBoardWriter = DEFAULT_DASHBOARD_WRITER;
