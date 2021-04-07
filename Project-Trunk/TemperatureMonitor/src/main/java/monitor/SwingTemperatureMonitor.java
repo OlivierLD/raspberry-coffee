@@ -88,12 +88,12 @@ public class SwingTemperatureMonitor {
     };
 
     private void refreshData() {
-        IntStream xs = IntStream.range(0, temperatureData.size());
+        IntStream xs = IntStream.range(0, this.temperatureData.size());
         try {
             // Prepare data for display
             double[] xData = xs.mapToDouble(x -> (double)x)
                     .toArray();
-            double[] tData = temperatureData.stream()
+            double[] tData = this.temperatureData.stream()
                     .mapToDouble(Double::doubleValue)
                     .toArray();
             List<VectorUtils.Vector2D> dataOneVectors = new ArrayList<>();
@@ -104,7 +104,7 @@ public class SwingTemperatureMonitor {
             whiteBoard.resetAllData();
 
             // Min & Max
-            if (temperatureData.size() > 1) {
+            if (this.temperatureData.size() > 1) {
                 // 1 - Min
                 List<VectorUtils.Vector2D> minVectors = new ArrayList<>();
                 minVectors.add(new VectorUtils.Vector2D(xData[0], minValue));
@@ -130,7 +130,8 @@ public class SwingTemperatureMonitor {
             WhiteBoardPanel.DataSerie dataTempSerie = new WhiteBoardPanel.DataSerie()
                     .data(dataOneVectors)
                     .graphicType(WhiteBoardPanel.GraphicType.AREA)
-                    .areaGradient(new Color(1f, 0f, 0f, 0.75f), new Color(0f, 0f, 1f, 0.75f))
+                    .areaGradient(new Color(1f, 0f, 0f, 0.75f), // Transparent red
+                                  new Color(0f, 0f, 1f, 0.75f)) // Transparent blue
                     .lineThickness(3)
                     .color(Color.BLUE);
             whiteBoard.addSerie(dataTempSerie);
@@ -151,13 +152,13 @@ public class SwingTemperatureMonitor {
         Thread grabberThread = new Thread(() -> {
             while (true) {
                 double temperature = this.dataGrabber.get();
-                temperatureData.add(temperature);
-                maxValue = Math.max(maxValue, temperature);
-                minValue = Math.min(minValue, temperature);
-                while (temperatureData.size() > bufferLength) {
-                    temperatureData.remove(0);
+                this.temperatureData.add(temperature);
+                this.maxValue = Math.max(maxValue, temperature);
+                this.minValue = Math.min(minValue, temperature);
+                while (this.temperatureData.size() > bufferLength) {
+                    this.temperatureData.remove(0);
                 }
-                refreshData();
+                this.refreshData();
                 try {
                     Thread.sleep(1_000L);
                 } catch (InterruptedException ie) {
@@ -170,7 +171,7 @@ public class SwingTemperatureMonitor {
 
     private void initComponents() {
         // The JFrame
-        frame = new JFrame(TITLE);
+        this.frame = new JFrame(TITLE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
 //      System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
@@ -179,39 +180,39 @@ public class SwingTemperatureMonitor {
 
         if (frameSize.width == 0 || frameSize.height == 0) {
             frameSize = new Dimension(WIDTH, HEIGHT + 50 + 10); // 50: ... menu, title bar, etc. 10: button
-            frame.setSize(frameSize);
+            this.frame.setSize(frameSize);
         }
-        frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Get to the data
-        startGrabber();
+        this.startGrabber();
 
-        frame.setJMenuBar(menuBar);
-        frame.getContentPane().setLayout(new BorderLayout());
-        menuFile.setText("File");
-        menuFileExit.setText("Exit");
-        menuFileExit.addActionListener(ae -> fileExit_ActionPerformed(ae));
-        menuHelp.setText("Help");
-        menuHelpAbout.setText("About");
-        menuHelpAbout.addActionListener(ae -> helpAbout_ActionPerformed(ae));
-        menuFile.add(menuFileExit);
-        menuBar.add(menuFile);
-        menuHelp.add(menuHelpAbout);
-        menuBar.add(menuHelp);
+        this.frame.setJMenuBar(menuBar);
+        this.frame.getContentPane().setLayout(new BorderLayout());
+        this.menuFile.setText("File");
+        this.menuFileExit.setText("Exit");
+        this.menuFileExit.addActionListener(ae -> fileExit_ActionPerformed(ae));
+        this.menuHelp.setText("Help");
+        this.menuHelpAbout.setText("About");
+        this.menuHelpAbout.addActionListener(ae -> helpAbout_ActionPerformed(ae));
+        this.menuFile.add(menuFileExit);
+        this.menuBar.add(menuFile);
+        this.menuHelp.add(menuHelpAbout);
+        this.menuBar.add(menuHelp);
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new GridBagLayout());
-        topLabel = new JLabel(TITLE);
-        topLabel.setFont(new Font("Courier New", Font.ITALIC | Font.BOLD, 16));
+        this.topLabel = new JLabel(TITLE);
+        this.topLabel.setFont(new Font("Courier New", Font.ITALIC | Font.BOLD, 16));
         // Inset below used for left padding.
-        topPanel.add(topLabel,
+        topPanel.add(this.topLabel,
                 new GridBagConstraints(0, 0, 1, 1, 1.0D, 0.0D, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 10, 0, 0), 0, 0));
 
-        frame.getContentPane().add(topPanel, BorderLayout.NORTH);
+        this.frame.getContentPane().add(topPanel, BorderLayout.NORTH);
 
         // >> HERE: Add the WitheBoard to the JFrame
-        frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
+        this.frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
 //        frame.pack();
     }
 
@@ -250,7 +251,7 @@ public class SwingTemperatureMonitor {
         // Override defaults (not mandatory)
         whiteBoard.setAxisColor(new Color(125, 0, 255, 255));
         whiteBoard.setWithGrid(false);
-        whiteBoard.setBgColor(new Color(250, 250, 250, 255));
+        whiteBoard.setBgColor(new Color(0, 250, 250, 40));
         whiteBoard.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoard.setSize(new Dimension(800, 600));
         whiteBoard.setTextColor(Color.RED);
