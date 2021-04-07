@@ -135,22 +135,7 @@ public class SwingTemperatureMonitor {
         this.frame.setVisible(true);
     }
 
-    private void initComponents() {
-        // The JFrame
-        frame = new JFrame(TITLE);
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize = frame.getSize();
-//      System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
-        frameSize.height = Math.min(frameSize.height, screenSize.height);
-        frameSize.width  = Math.min(frameSize.width, screenSize.width);
-
-        if (frameSize.width == 0 || frameSize.height == 0) {
-            frameSize = new Dimension(WIDTH, HEIGHT + 50 + 10); // 50: ... menu, title bar, etc. 10: button
-            frame.setSize(frameSize);
-        }
-        frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+    private void startGrabber() {
         Thread dataGrabber = new Thread(() -> {
             while (true) {
                 double temperature = getData.get();
@@ -167,6 +152,26 @@ public class SwingTemperatureMonitor {
             }
         });
         dataGrabber.start();
+    }
+
+    private void initComponents() {
+        // The JFrame
+        frame = new JFrame(TITLE);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension frameSize = frame.getSize();
+//      System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
+        frameSize.height = Math.min(frameSize.height, screenSize.height);
+        frameSize.width  = Math.min(frameSize.width, screenSize.width);
+
+        if (frameSize.width == 0 || frameSize.height == 0) {
+            frameSize = new Dimension(WIDTH, HEIGHT + 50 + 10); // 50: ... menu, title bar, etc. 10: button
+            frame.setSize(frameSize);
+        }
+        frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Get to the data
+        startGrabber();
 
         frame.setJMenuBar(menuBar);
         frame.getContentPane().setLayout(new BorderLayout());
