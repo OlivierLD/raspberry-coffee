@@ -81,7 +81,7 @@ public class SwingTemperatureMonitor {
                 } else {
                     String value = line.substring(line.indexOf("=") + 1, line.indexOf("'"));
                     if (verbose) {
-                        System.out.printf("%s => Value: [%s]\n", line, value);
+                        System.out.printf("%s => Value: [%s], in [%f, %f]\n", line, value, minValue, maxValue);
                     }
                     temperature = Double.parseDouble(value);
                 }
@@ -110,13 +110,7 @@ public class SwingTemperatureMonitor {
             }
             whiteBoard.setAxisColor(Color.BLACK);
             whiteBoard.resetAllData();
-            // Temp series
-            WhiteBoardPanel.DataSerie dataTempSerie = new WhiteBoardPanel.DataSerie()
-                    .data(dataOneVectors)
-                    .graphicType(WhiteBoardPanel.GraphicType.LINE)
-                    .lineThickness(3)
-                    .color(Color.BLUE);
-            whiteBoard.addSerie(dataTempSerie);
+
             // Min & Max
             if (tempData.size() > 1) {
                 // 1 - Min
@@ -140,6 +134,14 @@ public class SwingTemperatureMonitor {
                         .color(Color.RED);
                 whiteBoard.addSerie(maxTempSerie);
             }
+            // Temperature series
+            WhiteBoardPanel.DataSerie dataTempSerie = new WhiteBoardPanel.DataSerie()
+                    .data(dataOneVectors)
+                    .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                    .lineThickness(3)
+                    .color(Color.BLUE);
+            whiteBoard.addSerie(dataTempSerie);
+
             // Finally, display it.
             whiteBoard.repaint();  // This is for a pure Swing context
         } catch (Exception ex) {
