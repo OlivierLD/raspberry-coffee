@@ -48,7 +48,7 @@ public class SwingTemperatureMonitor {
     // The WhiteBoard instantiation
     private final static WhiteBoardPanel whiteBoard = new WhiteBoardPanel();
 
-    private final int BUFFER_LEN = 900;
+    private final int BUFFER_LEN = 901;
     private List<Double> tempData = new ArrayList<>();
 
     private void fileExit_ActionPerformed(ActionEvent ae) {
