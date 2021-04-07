@@ -39,7 +39,7 @@ public class SwingTemperatureMonitor {
     private final static WhiteBoardPanel whiteBoard = new WhiteBoardPanel();
 
     private final static int DEFAULT_BUFFER_LEN = 900;
-    private List<Double> tempData = new ArrayList<>();
+    private final List<Double> temperatureData = new ArrayList<>();
     private double minValue = Double.MAX_VALUE;
     private double maxValue = -Double.MAX_VALUE;
 
@@ -54,7 +54,7 @@ public class SwingTemperatureMonitor {
         JOptionPane.showMessageDialog(whiteBoard, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
     }
 
-    private Supplier<Double> dataGrabber = () -> {
+    private final Supplier<Double> dataGrabber = () -> {
 
         double temperature = 0d;
 
@@ -88,12 +88,12 @@ public class SwingTemperatureMonitor {
     };
 
     private void refreshData() {
-        IntStream xs = IntStream.range(0, tempData.size());
+        IntStream xs = IntStream.range(0, temperatureData.size());
         try {
             // Prepare data for display
             double[] xData = xs.mapToDouble(x -> (double)x)
                     .toArray();
-            double[] tData = tempData.stream()
+            double[] tData = temperatureData.stream()
                     .mapToDouble(Double::doubleValue)
                     .toArray();
             List<VectorUtils.Vector2D> dataOneVectors = new ArrayList<>();
@@ -104,7 +104,7 @@ public class SwingTemperatureMonitor {
             whiteBoard.resetAllData();
 
             // Min & Max
-            if (tempData.size() > 1) {
+            if (temperatureData.size() > 1) {
                 // 1 - Min
                 List<VectorUtils.Vector2D> minVectors = new ArrayList<>();
                 minVectors.add(new VectorUtils.Vector2D(xData[0], minValue));
@@ -150,11 +150,11 @@ public class SwingTemperatureMonitor {
         Thread grabberThread = new Thread(() -> {
             while (true) {
                 double temperature = this.dataGrabber.get();
-                tempData.add(temperature);
+                temperatureData.add(temperature);
                 maxValue = Math.max(maxValue, temperature);
                 minValue = Math.min(minValue, temperature);
-                while (tempData.size() > bufferLength) {
-                    tempData.remove(0);
+                while (temperatureData.size() > bufferLength) {
+                    temperatureData.remove(0);
                 }
                 refreshData();
                 try {
