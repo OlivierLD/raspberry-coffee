@@ -18,6 +18,8 @@ Two different aspects are presented in this module.
 - Some ways to render graphics, in 2D and 3D.
     - For an IJava Jupyter Notebook
     - For a Swing application
+- 3D and 2D rendering.
+  - See in the `src/test/java` folder for demos.
 
 Several Python libraries already provide this kind of features, and they can be consumed
 by Jupyter Notebooks.

@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * You can focus only on the data, not on the display. See the main method.
  * LowPass filter example
  */
-public class SwingSample8 {
+public class SwingSample10 {
 
     private final static String TITLE = "Low Pass Filter sample";
 
@@ -94,14 +94,16 @@ public class SwingSample8 {
         // Raw series
         WhiteBoardPanel.DataSerie dataSerie = new WhiteBoardPanel.DataSerie()
                 .data(dataVectors)
-                .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                .graphicType(WhiteBoardPanel.GraphicType.AREA)
+                .areaGradient(new Color(0, 0, 1, 0.5f), new Color(0, 1, 1, 0.5f))
                 .lineThickness(3)
                 .color(Color.BLUE);
         whiteBoard.addSerie(dataSerie);
         // Filtered series
         WhiteBoardPanel.DataSerie filteredDataSerie = new WhiteBoardPanel.DataSerie()
                 .data(filteredDataVectors)
-                .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                .graphicType(WhiteBoardPanel.GraphicType.AREA)
+                .areaGradient(new Color(255, 165, 0, 128), new Color(255, 255, 0, 128))
                 .lineThickness(2)
                 .color(Color.RED);
         whiteBoard.addSerie(filteredDataSerie);
@@ -167,7 +169,7 @@ public class SwingSample8 {
 //        frame.pack();
     }
 
-    public SwingSample8() {
+    public SwingSample10() {
     }
 
     public static void main(String... args) {
@@ -185,7 +187,7 @@ public class SwingSample8 {
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
 
-        SwingSample8 thisThing = new SwingSample8();// This one has instantiated the white board
+        SwingSample10 thisThing = new SwingSample10();// This one has instantiated the white board
         thisThing.initComponents();
 
         // Override defaults (not mandatory)
