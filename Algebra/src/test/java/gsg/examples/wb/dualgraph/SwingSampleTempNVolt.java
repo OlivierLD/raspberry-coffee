@@ -133,6 +133,11 @@ public class SwingSampleTempNVolt {
                     .lineThickness(3)
                     .color(Color.RED);
             whiteBoard.addSerie(dataVoltSerie);
+
+            whiteBoard.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
+            double lastTempValue = tempData.get(tempData.size() - 1);
+            whiteBoard.setGraphicTitle(String.format("%.02f\272C", lastTempValue));
+
             // Finally, display it.
             whiteBoard.repaint();  // This is for a pure Swing context
         } catch (IOException ioe) {
@@ -225,11 +230,11 @@ public class SwingSampleTempNVolt {
         whiteBoard.setBgColor(new Color(250, 250, 250, 255));
         whiteBoard.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoard.setSize(new Dimension(800, 600));
-        whiteBoard.setTextColor(Color.RED);
+        whiteBoard.setTextColor(Color.BLUE);
         whiteBoard.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
         whiteBoard.setGraphicMargins(30);
         whiteBoard.setXEqualsY(false);
-        // Enforce Y amplitude
+        // Enforced Y amplitude
         whiteBoard.setForcedMinY(0d);
         whiteBoard.setForcedMaxY(100d);
 

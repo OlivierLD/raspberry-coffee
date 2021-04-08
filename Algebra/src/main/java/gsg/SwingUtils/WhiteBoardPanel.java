@@ -3,7 +3,8 @@ package gsg.SwingUtils;
 import gsg.VectorUtils;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -28,6 +29,12 @@ public class WhiteBoardPanel extends JPanel {
     private final static boolean VERBOSE = "true".equals(System.getProperty("swing.verbose"));
 
     private List<DataSerie> allSeries = new ArrayList<>();
+
+    public enum TitleJustification {
+        LEFT,
+        RIGHT,
+        CENTER
+    }
 
     public enum GraphicType {
         LINE,                   // Solid
@@ -132,7 +139,9 @@ public class WhiteBoardPanel extends JPanel {
     private Color axisColor = Color.BLACK;
     private Color textColor = Color.GRAY;
     private Color bgColor = Color.LIGHT_GRAY;
+    private boolean frameGraphic = true;
     private String graphicTitle = "Graphic Title"; // Set to null to remove
+    private TitleJustification titleJustification = TitleJustification.LEFT;
     private Font titleFont = null;
     private boolean withGrid = false;
     private boolean xEqualsY = true;
@@ -186,6 +195,14 @@ public class WhiteBoardPanel extends JPanel {
 
     public void setForcedMaxY(Double forcedMaxY) {
         this.forcedMaxY = forcedMaxY;
+    }
+
+    public void setTitleJustification(TitleJustification justification) {
+        this.titleJustification = justification;
+    }
+
+    public void setFrameGraphic(boolean b) {
+        this.frameGraphic = b;
     }
 
     private final Consumer<Graphics2D> DEFAULT_DASHBOARD_WRITER = g2d -> {
@@ -262,7 +279,9 @@ public class WhiteBoardPanel extends JPanel {
             System.out.printf(">> Working Rectangle: x:%d, y:%d, w:%d, h:%d%n", minX, height - maxY, (maxX - minX), (maxY - minY));
             System.out.println("-----------------------------------------------------");
         }
-        g2d.drawRect(minX, height - maxY, (maxX - minX), (maxY - minY));
+        if (this.frameGraphic) {
+            g2d.drawRect(minX, height - maxY, (maxX - minX), (maxY - minY));
+        }
 
         // Label font
         int labelFontSize = 10;
@@ -331,11 +350,23 @@ public class WhiteBoardPanel extends JPanel {
         }
 
         // For the text
-        if (graphicTitle != null) {
+        if (this.graphicTitle != null) {
             g2d.setColor(textColor);
             g2d.setFont(Objects.requireNonNullElseGet(titleFont,
                     () -> g2d.getFont().deriveFont(Font.BOLD | Font.ITALIC).deriveFont(24f)));
-            g2d.drawString(graphicTitle, 10, 60);
+            int x = 10, y = 60;
+            if (this.titleJustification.equals(TitleJustification.LEFT)) {
+                x = 10;
+            } else if (this.titleJustification.equals(TitleJustification.RIGHT) || this.titleJustification.equals(TitleJustification.CENTER)) {
+                FontMetrics fm = g2d.getFontMetrics();
+                int stringWidth = fm.stringWidth(this.graphicTitle);
+                if (this.titleJustification.equals(TitleJustification.RIGHT)) {
+                    x = width - 10 - stringWidth;
+                } else {
+                    x = (width / 2) - (stringWidth / 2);
+                }
+            }
+            g2d.drawString(this.graphicTitle, x, y);
         }
 
         // Now the data, Series

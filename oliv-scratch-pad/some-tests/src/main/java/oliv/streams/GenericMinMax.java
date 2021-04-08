@@ -118,7 +118,8 @@ public class GenericMinMax {
 				.filter(pt -> pt.getX() > 0)
 				.mapToDouble(Point::getX)
 				.sorted()
-				.limit(100)
+//				.peek(System.out::println)  // This is for debug. It does not interfere with the data.
+				.limit(50)
 				.forEach(System.out::println);
 	}
 }

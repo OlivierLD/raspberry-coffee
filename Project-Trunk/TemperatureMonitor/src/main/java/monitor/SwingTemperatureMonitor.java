@@ -136,6 +136,11 @@ public class SwingTemperatureMonitor {
                     .color(Color.BLUE);
             whiteBoard.addSerie(dataTempSerie);
 
+            whiteBoard.setTextColor(Color.CYAN);
+            whiteBoard.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
+            double lastTempValue = this.temperatureData.get(this.temperatureData.size() - 1);
+            whiteBoard.setGraphicTitle(String.format("%.02f\272C", lastTempValue));
+
             // Finally, display it.
             whiteBoard.repaint();  // This is for a pure Swing context
         } catch (Exception ex) {
@@ -211,6 +216,7 @@ public class SwingTemperatureMonitor {
 
         this.frame.getContentPane().add(topPanel, BorderLayout.NORTH);
 
+        whiteBoard.setFrameGraphic(false);
         // >> HERE: Add the WitheBoard to the JFrame
         this.frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
 //        frame.pack();
