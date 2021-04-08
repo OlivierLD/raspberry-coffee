@@ -139,7 +139,7 @@ public class SwingTemperatureMonitor {
             whiteBoard.setTextColor(Color.CYAN);
             whiteBoard.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
             double lastTempValue = this.temperatureData.get(this.temperatureData.size() - 1);
-            whiteBoard.setGraphicTitle(String.format("%.02f\272C", lastTempValue));
+            whiteBoard.setGraphicTitle(String.format("%.01f\272C", lastTempValue));
 
             // Finally, display it.
             whiteBoard.repaint();  // This is for a pure Swing context
