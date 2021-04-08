@@ -136,9 +136,13 @@ public class SwingTemperatureMonitor {
                     .color(Color.BLUE);
             whiteBoard.addSerie(dataTempSerie);
 
-            whiteBoard.setTextColor(Color.CYAN);
             whiteBoard.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
             double lastTempValue = this.temperatureData.get(this.temperatureData.size() - 1);
+            int red = (int)(255 * (lastTempValue / 100f));
+            int green = 0;
+            int blue = (int)(255 * ((100f - lastTempValue) / 100f));
+//            System.out.printf(">> rgb(%d, %d, %d)\n", red, green, blue);
+            whiteBoard.setTextColor(new Color(red, green, blue));
             whiteBoard.setGraphicTitle(String.format("%.01f\272C", lastTempValue));
 
             // Finally, display it.
