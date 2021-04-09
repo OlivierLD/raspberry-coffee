@@ -101,6 +101,11 @@ $ cat /dev/ttyS80
 ```
 `[Ctrl-C]` to stop.
 
+PuTTY is also available on Debian, and works well:
+```
+$ sudo apt install putty
+```
+
 ## First tests
 So, now we know that the port we want to read is `/dev/ttyS80`. We now need to know the **baud rate** (data speed)
 we need to use. You will find this info in the documentation of your GPS. It is likely to 
