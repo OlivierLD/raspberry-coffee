@@ -48,13 +48,14 @@ task runSample(type: JavaExec, dependsOn: build, description: "Swing UI sample. 
 //  classpath project.configurations.default
 //  classpath sourceSets.main.output.classesDir
   classpath sourceSets.test.runtimeClasspath
-  main = 'gsg.examples.box3d.Sample' + testNum  // Default 01
-  if (project.hasProperty('num')) { // gradlew -Pnum=XXXXX runSample
+  main = 'gsg.examples.box3d.Sample' + testNum  // Default 01, see above
+  if (project.hasProperty('num')) { // gradlew -Pnum=XX runSample
     testNum =  project.getProperty('num')
     println ">>> Running test " + testNum
     main = 'gsg.examples.box3d.Sample' + testNum
   }
-  if (project.hasProperty("idx")) { // For Sample09, file index parameter: ../gradlew runSample -Pnum=09 -Pidx=4
+  if (project.hasProperty("idx")) { // For Sample09, file index parameter: ../gradlew runSample -Pnum=09 -Pidx=4.
+    // idx: obj file index.
     def idx = project.getProperty("idx")
     args += [ "--idx:${idx}" ]
   }
