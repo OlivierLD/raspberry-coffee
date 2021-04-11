@@ -69,7 +69,7 @@ public class Sample09 {
 
         obj = WaveFrontUtils.parseWaveFrontObj(new BufferedReader(new FileReader(file)));
         // Count artifacts:
-        System.out.printf("%d vertices, %d lines\n", obj.getVertices().size(), obj.getLines().size());
+        System.out.printf("%d vertices, %d edges\n", obj.getVertices().size(), obj.getEdges().size());
 
         // Find extrema, to center the figure
         double maxX = obj.getVertices().stream().mapToDouble(v3d -> v3d.getX()).max().getAsDouble();
@@ -102,7 +102,7 @@ public class Sample09 {
 
             g2d.setStroke(new BasicStroke(1));
 
-            obj.getLines().forEach(line -> {
+            obj.getEdges().forEach(line -> {
                 int from = line[0] - 1;  // Warning: those indexes are 1-based, not 0.
                 int to = line[1] - 1;
                 try {

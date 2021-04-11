@@ -12,27 +12,27 @@ public class WaveFrontUtils {
 
     public static class WaveFrontObj {
         List<VectorUtils.Vector3D> vertices;
-        List<int[]> lines;
+        List<int[]> edges;
 
         public WaveFrontObj(List<VectorUtils.Vector3D> vertices,
-                List<int[]> lines) {
+                List<int[]> edges) {
             this.vertices = vertices;
-            this.lines = lines;
+            this.edges = edges;
         }
 
         public List<VectorUtils.Vector3D> getVertices() {
             return vertices;
         }
 
-        public List<int[]> getLines() {
-            return lines;
+        public List<int[]> getEdges() {
+            return edges;
         }
     }
 
     public static WaveFrontObj parseWaveFrontObj(BufferedReader objStream) {
         String line = "";
         List<VectorUtils.Vector3D> vertices = new ArrayList<>();
-        List<int[]> lines = new ArrayList<>();
+        List<int[]> edges = new ArrayList<>();
 
         try {
             while ((line = objStream.readLine()) != null) {
@@ -45,7 +45,7 @@ public class WaveFrontUtils {
                                 Double.parseDouble(lineData[2]),
                                 Double.parseDouble(lineData[3])));
                     } else if (lineData[0].equals("f")) { // A line
-                        lines.add(new int[] {Integer.parseInt(lineData[1]),
+                        edges.add(new int[] {Integer.parseInt(lineData[1]),
                                 Integer.parseInt(lineData[2])});
                     }
                 }
@@ -54,6 +54,6 @@ public class WaveFrontUtils {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-        return new WaveFrontObj(vertices, lines);
+        return new WaveFrontObj(vertices, edges);
     }
 }
