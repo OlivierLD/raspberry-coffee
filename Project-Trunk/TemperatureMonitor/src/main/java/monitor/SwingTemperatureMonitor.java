@@ -137,14 +137,15 @@ public class SwingTemperatureMonitor {
             whiteBoard.addSerie(dataTempSerie);
 
             whiteBoard.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
-            double lastTempValue = this.temperatureData.get(this.temperatureData.size() - 1);
-            int red = (int)(255 * (lastTempValue / 100f));
-            int green = 0;
-            int blue = (int)(255 * ((100f - lastTempValue) / 100f));
-//            System.out.printf(">> rgb(%d, %d, %d)\n", red, green, blue);
-            whiteBoard.setTextColor(new Color(red, green, blue));
-            whiteBoard.setGraphicTitle(String.format("%.01f\272C", lastTempValue));
-
+            if (this.temperatureData.size() > 0) { // We need at least 1 point to make any sense.
+                double lastTempValue = this.temperatureData.get(this.temperatureData.size() - 1);
+                int red = (int) (255 * (lastTempValue / 100f));
+                int green = 0;
+                int blue = (int) (255 * ((100f - lastTempValue) / 100f));
+//              System.out.printf(">> rgb(%d, %d, %d)\n", red, green, blue);
+                whiteBoard.setTextColor(new Color(red, green, blue));
+                whiteBoard.setGraphicTitle(String.format("%.01f\272C", lastTempValue));
+            }
             // Finally, display it.
             whiteBoard.repaint();  // This is for a pure Swing context
         } catch (Exception ex) {
