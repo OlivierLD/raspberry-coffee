@@ -8,7 +8,7 @@ import java.util.Enumeration;
 public class server {
 
     private final static String SERVER_PORT_PREFIX = "--server-port:";
-    private final static String SERVER_VERBOSE =     "--server-verbose:";
+    private final static String SERVER_VERBOSE     = "--server-verbose:";
 
     public static void main(String... args) {
 
@@ -47,6 +47,7 @@ public class server {
             }
         }
 
+        // All starts here.
         ChatTCPServer chatTCPServer = null;
         try {
             chatTCPServer = new ChatTCPServer(serverPort, verbose);

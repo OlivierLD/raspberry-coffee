@@ -74,8 +74,10 @@ public class Sample09 {
         // Find extrema, to center the figure
         double maxX = obj.getVertices().stream().mapToDouble(v3d -> v3d.getX()).max().getAsDouble();
         double minX = obj.getVertices().stream().mapToDouble(v3d -> v3d.getX()).min().getAsDouble();
+
         double maxY = obj.getVertices().stream().mapToDouble(v3d -> v3d.getY()).max().getAsDouble();
         double minY = obj.getVertices().stream().mapToDouble(v3d -> v3d.getY()).min().getAsDouble();
+
         double maxZ = obj.getVertices().stream().mapToDouble(v3d -> v3d.getZ()).max().getAsDouble();
         double minZ = obj.getVertices().stream().mapToDouble(v3d -> v3d.getZ()).min().getAsDouble();
 
@@ -85,10 +87,10 @@ public class Sample09 {
         System.out.printf("Z in [%f, %f]\n", minZ, maxZ);
 
         // Use the re-centerer to slide the object in its referential.
-//        VectorUtils.Vector3D recenterer = new VectorUtils.Vector3D((maxX - minX) / 2,
+//        VectorUtils.Vector3D reCenterer = new VectorUtils.Vector3D((maxX - minX) / 2,
 //                (maxY - minY) / 2,
 //                (maxZ - minZ) / 2);
-        VectorUtils.Vector3D recenterer = new VectorUtils.Vector3D(-(maxX - minX) / 2, 0, 0);
+        VectorUtils.Vector3D reCenterer = new VectorUtils.Vector3D(-(maxX - minX) / 2, 0, 0);
 
         box3D.setxMin(minX -(maxX - minX) / 2);
         box3D.setxMax(maxX -(maxX - minX) / 2);
@@ -106,11 +108,11 @@ public class Sample09 {
                 int from = line[0] - 1;  // Warning: those indexes are 1-based, not 0.
                 int to = line[1] - 1;
                 try {
-                    VectorUtils.Vector3D fromV3Rotated = VectorUtils.rotate(VectorUtils.add3D(Arrays.asList(obj.getVertices().get(from), recenterer)),
+                    VectorUtils.Vector3D fromV3Rotated = VectorUtils.rotate(VectorUtils.add3D(Arrays.asList(obj.getVertices().get(from), reCenterer)),
                             Math.toRadians(box3D.getRotOnX()),
                             Math.toRadians(box3D.getRotOnY()),
                             Math.toRadians(box3D.getRotOnZ()));
-                    VectorUtils.Vector3D toV3Rotated = VectorUtils.rotate(VectorUtils.add3D(Arrays.asList(obj.getVertices().get(to), recenterer)),
+                    VectorUtils.Vector3D toV3Rotated = VectorUtils.rotate(VectorUtils.add3D(Arrays.asList(obj.getVertices().get(to), reCenterer)),
                             Math.toRadians(box3D.getRotOnX()),
                             Math.toRadians(box3D.getRotOnY()),
                             Math.toRadians(box3D.getRotOnZ()));
