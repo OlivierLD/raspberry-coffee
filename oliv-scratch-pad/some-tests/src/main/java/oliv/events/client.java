@@ -1,5 +1,7 @@
 package oliv.events;
 
+import utils.SystemUtils;
+
 import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +63,7 @@ public class client {
     public static void main(String... args) {
 
         // Default values
-        String clientName = "It's Me!";
+        String clientName = null; // "It's Me!";
         String chatServerName = "localhost";
         int chatServerPort = 7001;
         boolean verbose = false;
@@ -106,6 +108,9 @@ public class client {
             ie.printStackTrace();
         }
 
+        if (clientName == null) {
+            clientName = SystemUtils.getHostName();
+        }
         String idMess = String.format("%s:%s", ChatTCPServer.SERVER_COMMANDS.I_AM.toString(), clientName);
         System.out.printf(">>> Telling server who I am: %s\n", idMess);
         client.writeToServer(idMess);
