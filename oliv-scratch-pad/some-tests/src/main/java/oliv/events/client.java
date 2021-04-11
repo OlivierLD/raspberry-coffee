@@ -1,10 +1,11 @@
 package oliv.events;
 
-import utils.SystemUtils;
-
 import java.io.Console;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class client {
@@ -60,6 +61,14 @@ public class client {
 
     private static Consumer<String> originalMessageConsumer = null;
 
+    private static String getHostName() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            return null;
+        }
+    }
+
     public static void main(String... args) {
 
         // Default values
@@ -109,7 +118,7 @@ public class client {
         }
 
         if (clientName == null) {
-            clientName = SystemUtils.getHostName();
+            clientName = Objects.requireNonNullElse(getHostName(), "DefaultedClientName");
         }
         String idMess = String.format("%s:%s", ChatTCPServer.SERVER_COMMANDS.I_AM.toString(), clientName);
         System.out.printf(">>> Telling server who I am: %s\n", idMess);
