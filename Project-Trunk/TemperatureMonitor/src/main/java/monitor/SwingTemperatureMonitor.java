@@ -131,7 +131,7 @@ public class SwingTemperatureMonitor {
                     .data(dataOneVectors)
                     .graphicType(WhiteBoardPanel.GraphicType.AREA)
                     .areaGradient(new Color(1f, 0f, 0f, 0.75f), // Transparent red
-                                  new Color(0f, 0f, 1f, 0.75f)) // Transparent blue
+                                  new Color(1f, 1f, 0f, 0.75f)) // Transparent yellow
                     .lineThickness(3)
                     .color(Color.BLUE);
             whiteBoard.addSerie(dataTempSerie);
