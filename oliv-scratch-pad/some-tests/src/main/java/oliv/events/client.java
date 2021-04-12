@@ -118,9 +118,9 @@ public class client {
             } else if (arg.startsWith(CLIENT_NAME_SMALL_PREFIX)) {
                 clientName = arg.substring(CLIENT_NAME_SMALL_PREFIX.length());
             } else if (arg.startsWith(SERVER_NAME_PREFIX)) {
-                chatServerName = arg.substring(SERVER_NAME_SMALL_PREFIX.length());
-            } else if (arg.startsWith(SERVER_NAME_SMALL_PREFIX)) {
                 chatServerName = arg.substring(SERVER_NAME_PREFIX.length());
+            } else if (arg.startsWith(SERVER_NAME_SMALL_PREFIX)) {
+                chatServerName = arg.substring(SERVER_NAME_SMALL_PREFIX.length());
             } else if (arg.startsWith(CLIENT_VERBOSE_PREFIX)) {
                 verbose = "true".equals(arg.substring(CLIENT_VERBOSE_PREFIX.length()));
             } else if (arg.startsWith(CLIENT_VERBOSE_SMALL_PREFIX)) {
