@@ -80,12 +80,25 @@ public class client {
     private static void displayHelp() {
         System.out.println("---- TCP Chat Client ----");
         System.out.println("CLI Parameters:");
-        System.out.printf("%s, %s  - Display help and exit.%n", HELP_SMALL_PREFIX, HELP_PREFIX);
-        System.out.printf("%strue|false, %strue|false - Verbose mode, default false.%n", CLIENT_VERBOSE_SMALL_PREFIX, CLIENT_VERBOSE_PREFIX);
-        System.out.printf("%slocalhost, %slocalhost - Server name or IP address. Default is localhost.%n", SERVER_NAME_PREFIX, SERVER_NAME_SMALL_PREFIX);
-        System.out.printf("%s7001, %s7001 - TCP Port, default 7001.%n", SERVER_PORT_SMALL_PREFIX, SERVER_PORT_PREFIX);
-        System.out.printf("%sraspi, %sraspi - Client name, defaulted to hostname (%s here).%n", CLIENT_NAME_PREFIX, CLIENT_NAME_SMALL_PREFIX, getHostName());
-        System.out.printf("%strue|false, %strue|false - Client speaks on message received (experimental), default false.%n", CLIENT_SPEECH_PREFIX, CLIENT_SPEECH_SMALL_PREFIX);
+        System.out.printf("%s %s - Display help and exit.%n",
+                Utils.rpad(String.format("%s", HELP_SMALL_PREFIX), 16),
+                Utils.rpad(String.format("%s", HELP_PREFIX), 32));
+        System.out.printf("%s %s - Verbose mode, default false.%n",
+                Utils.rpad(String.format("%strue|false", CLIENT_VERBOSE_SMALL_PREFIX), 16),
+                Utils.rpad(String.format("%strue|false", CLIENT_VERBOSE_PREFIX), 32));
+        System.out.printf("%s %s - Server name or IP address. Default is localhost.%n",
+                Utils.rpad(String.format("%slocalhost", SERVER_NAME_SMALL_PREFIX), 16),
+                Utils.rpad(String.format("%slocalhost", SERVER_NAME_PREFIX), 32));
+        System.out.printf("%s %s - Server TCP Port, default 7001.%n",
+                Utils.rpad(String.format("%s7001", SERVER_PORT_SMALL_PREFIX), 16),
+                Utils.rpad(String.format("%s7001", SERVER_PORT_PREFIX), 32));
+        System.out.printf("%s %s - Client name, defaulted to hostname (%s here).%n",
+                Utils.rpad(String.format("%sraspi", CLIENT_NAME_SMALL_PREFIX), 16),
+                Utils.rpad(String.format("%sraspi", CLIENT_NAME_PREFIX), 32),
+                getHostName());
+        System.out.printf("%s %s - Client speaks on message received (experimental), default false.%n",
+                Utils.rpad(String.format("%strue|false", CLIENT_SPEECH_SMALL_PREFIX), 16),
+                Utils.rpad(String.format("%strue|false", CLIENT_SPEECH_PREFIX), 32));
         System.out.println("-------------------------");
     }
 

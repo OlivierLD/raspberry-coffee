@@ -4,6 +4,7 @@ echo -e "Packaging the server..."
 rm -rf classes
 rm -rf dist
 javac -d classes -s src/main/java \
+        src/main/java/oliv/events/Utils.java \
         src/main/java/oliv/events/ServerInterface.java \
         src/main/java/oliv/events/ChatTCPServer.java \
         src/main/java/oliv/events/server.java 
@@ -15,6 +16,7 @@ jar -cfm ../dist/server.jar ../manifest.txt *
 echo -e "To run the server:"
 echo -e "cd ../dist"
 echo -e "java -jar server.jar --server-verbose:false --server-port:8000"
+echo -e "For help: java -jar server.jar --help"
 #
 cd ${FROM_DIR}
 echo -e "Packaging the client..."
@@ -22,6 +24,7 @@ echo -e "Packaging the client..."
 # rm -rf dist
 javac -cp ./dist/server.jar \
         -d classes -s src/main/java \
+        src/main/java/oliv/events/Utils.java \
         src/main/java/oliv/events/ChatTCPClient.java \
         src/main/java/oliv/events/client.java 
 # mkdir dist
@@ -32,6 +35,7 @@ jar -cfm ../dist/client.jar ../manifest.txt *
 echo -e "To run the client:"
 echo -e "cd ../dist"
 echo -e "java -jar client.jar --client-name:XXX --server-port:8000 --server-name:localhost --client-verbose:false"
+echo -e "For help: java -jar client.jar --help"
 #
 cd ${FROM_DIR}
 rm manifest.txt

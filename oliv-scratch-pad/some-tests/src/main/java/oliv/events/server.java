@@ -17,9 +17,15 @@ public class server {
     private static void displayHelp() {
         System.out.println("---- TCP Chat Server ----");
         System.out.println("CLI Parameters:");
-        System.out.printf("%s, %s  - Display help and exit.%n", HELP_SMALL_PREFIX, HELP_PREFIX);
-        System.out.printf("%strue|false, %strue|false - Verbose mode, default false.%n", SERVER_SMALL_VERBOSE, SERVER_VERBOSE);
-        System.out.printf("%s7001, %s7001 - TCP Port, default 7001.%n", SERVER_PORT_SMALL_PREFIX, SERVER_PORT_PREFIX);
+        System.out.printf("%s %s - Display help and exit.%n",
+                Utils.rpad(String.format("%s", HELP_SMALL_PREFIX), 16),
+                Utils.rpad(String.format("%s", HELP_PREFIX), 32));
+        System.out.printf("%s %s - Verbose mode, default false.%n",
+                Utils.rpad(String.format("%strue|false", SERVER_SMALL_VERBOSE), 16),
+                Utils.rpad(String.format("%strue|false", SERVER_VERBOSE), 32));
+        System.out.printf("%s %s - TCP Port, default 7001.%n",
+                Utils.rpad(String.format("%s7001", SERVER_PORT_SMALL_PREFIX), 16),
+                Utils.rpad(String.format("%s7001", SERVER_PORT_PREFIX), 32));
         System.out.println("-------------------------");
     }
 
