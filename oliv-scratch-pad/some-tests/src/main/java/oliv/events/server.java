@@ -7,8 +7,21 @@ import java.util.Enumeration;
 
 public class server {
 
-    private final static String SERVER_PORT_PREFIX = "--server-port:";
-    private final static String SERVER_VERBOSE     = "--server-verbose:";
+    private final static String HELP_PREFIX              = "--help";
+    private final static String SERVER_PORT_PREFIX       = "--server-port:";
+    private final static String SERVER_VERBOSE           = "--server-verbose:";
+    private final static String HELP_SMALL_PREFIX        = "-h";
+    private final static String SERVER_PORT_SMALL_PREFIX = "-p:";
+    private final static String SERVER_SMALL_VERBOSE     = "-v:";
+
+    private static void displayHelp() {
+        System.out.println("---- TCP Chat Server ----");
+        System.out.println("CLI Parameters:");
+        System.out.printf("%s, %s  - Display help and exit.%n", HELP_SMALL_PREFIX, HELP_PREFIX);
+        System.out.printf("%strue|false, %strue|false - Verbose mode, default false.%n", SERVER_SMALL_VERBOSE, SERVER_VERBOSE);
+        System.out.printf("%s7001, %s7001 - TCP Port, default 7001.%n", SERVER_PORT_SMALL_PREFIX, SERVER_PORT_PREFIX);
+        System.out.println("-------------------------");
+    }
 
     public static void main(String... args) {
 
@@ -42,8 +55,15 @@ public class server {
         for (String arg : args) {
             if (arg.startsWith(SERVER_PORT_PREFIX)) {
                 serverPort = Integer.parseInt(arg.substring(SERVER_PORT_PREFIX.length()));
+            } else if (arg.startsWith(SERVER_PORT_SMALL_PREFIX)) {
+                serverPort = Integer.parseInt(arg.substring(SERVER_PORT_SMALL_PREFIX.length()));
             } else if (arg.startsWith(SERVER_VERBOSE)) {
                 verbose = "true".equals(arg.substring(SERVER_VERBOSE.length()));
+            } else if (arg.startsWith(SERVER_SMALL_VERBOSE)) {
+                verbose = "true".equals(arg.substring(SERVER_SMALL_VERBOSE.length()));
+            } else if (arg.equals(HELP_PREFIX) || arg.equals(HELP_SMALL_PREFIX)) {
+                displayHelp();
+                System.exit(0);
             }
         }
 

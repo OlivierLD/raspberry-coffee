@@ -10,11 +10,19 @@ import java.util.function.Consumer;
 
 public class client {
 
+    private final static String HELP_PREFIX =           "--help";
     private final static String CLIENT_NAME_PREFIX =    "--client-name:";
     private final static String CLIENT_VERBOSE_PREFIX = "--client-verbose:";
     private final static String CLIENT_SPEECH_PREFIX =  "--client-speech:";
     private final static String SERVER_NAME_PREFIX =    "--server-name:";
     private final static String SERVER_PORT_PREFIX =    "--server-port:";
+
+    private final static String HELP_SMALL_PREFIX =           "-h";
+    private final static String CLIENT_NAME_SMALL_PREFIX =    "-c:";
+    private final static String CLIENT_VERBOSE_SMALL_PREFIX = "-v:";
+    private final static String CLIENT_SPEECH_SMALL_PREFIX =  "-s:";
+    private final static String SERVER_NAME_SMALL_PREFIX =    "-n:";
+    private final static String SERVER_PORT_SMALL_PREFIX =    "-p:";
 
     public static class TextToSpeech {
         private static final Map<String, Consumer<String>> speechTools = new HashMap<>();
@@ -69,6 +77,18 @@ public class client {
         }
     }
 
+    private static void displayHelp() {
+        System.out.println("---- TCP Chat Client ----");
+        System.out.println("CLI Parameters:");
+        System.out.printf("%s, %s  - Display help and exit.%n", HELP_SMALL_PREFIX, HELP_PREFIX);
+        System.out.printf("%strue|false, %strue|false - Verbose mode, default false.%n", CLIENT_VERBOSE_SMALL_PREFIX, CLIENT_VERBOSE_PREFIX);
+        System.out.printf("%slocalhost, %slocalhost - Server name or IP address. Default is localhost.%n", SERVER_NAME_PREFIX, SERVER_NAME_SMALL_PREFIX);
+        System.out.printf("%s7001, %s7001 - TCP Port, default 7001.%n", SERVER_PORT_SMALL_PREFIX, SERVER_PORT_PREFIX);
+        System.out.printf("%sraspi, %sraspi - Client name, defaulted to hostname (%s here).%n", CLIENT_NAME_PREFIX, CLIENT_NAME_SMALL_PREFIX, getHostName());
+        System.out.printf("%strue|false, %strue|false - Client speaks on message received (experimental), default false.%n", CLIENT_SPEECH_PREFIX, CLIENT_SPEECH_SMALL_PREFIX);
+        System.out.println("-------------------------");
+    }
+
     public static void main(String... args) {
 
         // Default values
@@ -81,14 +101,27 @@ public class client {
         for (String arg : args) {
             if (arg.startsWith(CLIENT_NAME_PREFIX)) {
                 clientName = arg.substring(CLIENT_NAME_PREFIX.length());
+            } else if (arg.startsWith(CLIENT_NAME_SMALL_PREFIX)) {
+                clientName = arg.substring(CLIENT_NAME_SMALL_PREFIX.length());
             } else if (arg.startsWith(SERVER_NAME_PREFIX)) {
+                chatServerName = arg.substring(SERVER_NAME_SMALL_PREFIX.length());
+            } else if (arg.startsWith(SERVER_NAME_SMALL_PREFIX)) {
                 chatServerName = arg.substring(SERVER_NAME_PREFIX.length());
             } else if (arg.startsWith(CLIENT_VERBOSE_PREFIX)) {
                 verbose = "true".equals(arg.substring(CLIENT_VERBOSE_PREFIX.length()));
+            } else if (arg.startsWith(CLIENT_VERBOSE_SMALL_PREFIX)) {
+                verbose = "true".equals(arg.substring(CLIENT_VERBOSE_SMALL_PREFIX.length()));
             } else if (arg.startsWith(CLIENT_SPEECH_PREFIX)) {
                 speech = "true".equals(arg.substring(CLIENT_SPEECH_PREFIX.length()));
+            } else if (arg.startsWith(CLIENT_SPEECH_SMALL_PREFIX)) {
+                speech = "true".equals(arg.substring(CLIENT_SPEECH_SMALL_PREFIX.length()));
             } else if (arg.startsWith(SERVER_PORT_PREFIX)) {
                 chatServerPort = Integer.parseInt(arg.substring(SERVER_PORT_PREFIX.length()));
+            } else if (arg.startsWith(SERVER_PORT_SMALL_PREFIX)) {
+                chatServerPort = Integer.parseInt(arg.substring(SERVER_PORT_SMALL_PREFIX.length()));
+            } else if (arg.equals(HELP_PREFIX) || arg.equals(HELP_SMALL_PREFIX)) {
+                displayHelp();
+                System.exit(0);
             }
         }
 
