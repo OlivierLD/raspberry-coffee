@@ -29,7 +29,7 @@ public class client {
 
         static Consumer<String> say = message -> {
             try {
-                // User say -v ? for a list of voices.
+                // User say -v ? for a list of voices. TODO: a runtime option for the language?
 //			    Runtime.getRuntime().exec(new String[] { "say", "-v", "Thomas", "\"" + message + "\"" }); // French
                 Runtime.getRuntime().exec(new String[] { "say", "-v", "Alex", "\"" + message + "\"" });   // English
             } catch (Exception ex) {
@@ -38,6 +38,7 @@ public class client {
         };
 
         static Consumer<String> espeak = message -> {
+            // On Raspberry Pi, do a "sudo apt-get install espeak"
             try {
                 Runtime.getRuntime().exec(new String[] { "espeak", "\"" + message + "\"" });
             } catch (Exception ex) {
