@@ -14,24 +14,27 @@ public class server {
     private final static String SERVER_PORT_SMALL_PREFIX = "-p:";
     private final static String SERVER_SMALL_VERBOSE     = "-v:";
 
+    private final static int FIRST_COL_WIDTH = 16;
+    private final static int SECOND_COL_WIDTH = 32;
+
     private static void displayHelp() {
         System.out.println("---- TCP Chat Server ----");
         System.out.println("CLI Parameters:");
         System.out.printf("+-%s-+-%s-+--------------------------------------------%n",
-                Utils.rpad("", 16, "-"),
-                Utils.rpad("", 32, "-"));
+                Utils.rpad("", FIRST_COL_WIDTH, "-"),
+                Utils.rpad("", SECOND_COL_WIDTH, "-"));
         System.out.printf("| %s | %s | Display help and exit.%n",
-                Utils.rpad(String.format("%s", HELP_SMALL_PREFIX), 16),
-                Utils.rpad(String.format("%s", HELP_PREFIX), 32));
+                Utils.rpad(String.format("%s", HELP_SMALL_PREFIX), FIRST_COL_WIDTH),
+                Utils.rpad(String.format("%s", HELP_PREFIX), SECOND_COL_WIDTH));
         System.out.printf("| %s | %s | Verbose mode, default false.%n",
-                Utils.rpad(String.format("%strue|false", SERVER_SMALL_VERBOSE), 16),
-                Utils.rpad(String.format("%strue|false", SERVER_VERBOSE), 32));
+                Utils.rpad(String.format("%strue|false", SERVER_SMALL_VERBOSE), FIRST_COL_WIDTH),
+                Utils.rpad(String.format("%strue|false", SERVER_VERBOSE), SECOND_COL_WIDTH));
         System.out.printf("| %s | %s | TCP Port, default 7001.%n",
-                Utils.rpad(String.format("%s7001", SERVER_PORT_SMALL_PREFIX), 16),
-                Utils.rpad(String.format("%s7001", SERVER_PORT_PREFIX), 32));
+                Utils.rpad(String.format("%s7001", SERVER_PORT_SMALL_PREFIX), FIRST_COL_WIDTH),
+                Utils.rpad(String.format("%s7001", SERVER_PORT_PREFIX), SECOND_COL_WIDTH));
         System.out.printf("+-%s-+-%s-+--------------------------------------------%n",
-                Utils.rpad("", 16, "-"),
-                Utils.rpad("", 32, "-"));
+                Utils.rpad("", FIRST_COL_WIDTH, "-"),
+                Utils.rpad("", SECOND_COL_WIDTH, "-"));
     }
 
     public static void main(String... args) {
