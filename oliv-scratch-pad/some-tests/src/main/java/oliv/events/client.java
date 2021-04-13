@@ -1,8 +1,6 @@
 package oliv.events;
 
 import java.io.Console;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -29,9 +27,12 @@ public class client {
 
         static Consumer<String> say = message -> {
             try {
-                // User say -v ? for a list of voices. TODO: a runtime option for the language?
-//			    Runtime.getRuntime().exec(new String[] { "say", "-v", "Thomas", "\"" + message + "\"" }); // French
-                Runtime.getRuntime().exec(new String[] { "say", "-v", "Alex", "\"" + message + "\"" });   // English
+                // User say -v ? for a list of voices. For French, use -Dspeak-french=true
+                if ("true".equals(System.getProperty("speak-french"))) {
+                    Runtime.getRuntime().exec(new String[]{"say", "-v", "Thomas", "\"" + message + "\""}); // French
+                } else {
+                    Runtime.getRuntime().exec(new String[]{"say", "-v", "Alex", "\"" + message + "\""});   // English
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -70,14 +71,6 @@ public class client {
 
     private static Consumer<String> originalMessageConsumer = null;
 
-    private static String getHostName() {
-        try {
-            return InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {
-            return null;
-        }
-    }
-
     private final static int FIRST_COL_WIDTH = 16;
     private final static int SECOND_COL_WIDTH = 32;
 
@@ -102,7 +95,7 @@ public class client {
         System.out.printf("| %s | %s | Client name, defaulted to hostname (%s here).%n",
                 Utils.rpad(String.format("%sraspi", CLIENT_NAME_SMALL_PREFIX), FIRST_COL_WIDTH),
                 Utils.rpad(String.format("%sraspi", CLIENT_NAME_PREFIX), SECOND_COL_WIDTH),
-                getHostName());
+                Utils.getHostName());
         System.out.printf("| %s | %s | Client speaks on message received (experimental), default false.%n",
                 Utils.rpad(String.format("%strue|false", CLIENT_SPEECH_SMALL_PREFIX), FIRST_COL_WIDTH),
                 Utils.rpad(String.format("%strue|false", CLIENT_SPEECH_PREFIX), SECOND_COL_WIDTH));
@@ -173,7 +166,7 @@ public class client {
         }
 
         if (clientName == null) {
-            clientName = Objects.requireNonNullElse(getHostName(), "DefaultedClientName");
+            clientName = Objects.requireNonNullElse(Utils.getHostName(), "DefaultedClientName");
         }
         String idMess = String.format("%s:%s", ChatTCPServer.SERVER_COMMANDS.I_AM.toString(), clientName);
         System.out.printf(">>> Telling server who I am: %s\n", idMess);
