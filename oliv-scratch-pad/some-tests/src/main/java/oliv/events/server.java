@@ -8,10 +8,10 @@ import java.util.Enumeration;
 public class server {
 
     private final static String HELP_PREFIX              = "--help";
-    private final static String SERVER_PORT_PREFIX       = "--server-port:";
-    private final static String SERVER_VERBOSE           = "--server-verbose:";
     private final static String HELP_SMALL_PREFIX        = "-h";
+    private final static String SERVER_PORT_PREFIX       = "--server-port:";
     private final static String SERVER_PORT_SMALL_PREFIX = "-p:";
+    private final static String SERVER_VERBOSE           = "--server-verbose:";
     private final static String SERVER_SMALL_VERBOSE     = "-v:";
 
     private final static int FIRST_COL_WIDTH = 16;
@@ -19,7 +19,7 @@ public class server {
 
     private static void displayHelp() {
         System.out.println("---- TCP Chat Server ----");
-        System.out.println("CLI Parameters:");
+        System.out.println("- CLI Parameters:");
         System.out.printf("+-%s-+-%s-+--------------------------------------------%n",
                 Utils.rpad("", FIRST_COL_WIDTH, "-"),
                 Utils.rpad("", SECOND_COL_WIDTH, "-"));

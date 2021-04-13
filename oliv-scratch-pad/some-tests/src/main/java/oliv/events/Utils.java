@@ -4,6 +4,13 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class Utils {
+
+    public enum SERVER_COMMANDS {
+        I_AM,
+        WHO_S_THERE,
+        I_M_OUT
+    }
+
     public static String rpad(String s, int len) {
         return rpad(s, len, " ");
     }

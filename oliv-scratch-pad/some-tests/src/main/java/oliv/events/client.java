@@ -7,18 +7,17 @@ import java.util.function.Consumer;
 
 public class client {
 
-    private final static String HELP_PREFIX =           "--help";
-    private final static String CLIENT_NAME_PREFIX =    "--client-name:";
-    private final static String CLIENT_VERBOSE_PREFIX = "--client-verbose:";
-    private final static String CLIENT_SPEECH_PREFIX =  "--client-speech:";
-    private final static String SERVER_NAME_PREFIX =    "--server-name:";
-    private final static String SERVER_PORT_PREFIX =    "--server-port:";
-
+    private final static String HELP_PREFIX =                 "--help";
     private final static String HELP_SMALL_PREFIX =           "-h";
+    private final static String CLIENT_NAME_PREFIX =          "--client-name:";
     private final static String CLIENT_NAME_SMALL_PREFIX =    "-c:";
+    private final static String CLIENT_VERBOSE_PREFIX =       "--client-verbose:";
     private final static String CLIENT_VERBOSE_SMALL_PREFIX = "-v:";
+    private final static String CLIENT_SPEECH_PREFIX =        "--client-speech:";
     private final static String CLIENT_SPEECH_SMALL_PREFIX =  "-s:";
+    private final static String SERVER_NAME_PREFIX =          "--server-name:";
     private final static String SERVER_NAME_SMALL_PREFIX =    "-n:";
+    private final static String SERVER_PORT_PREFIX =          "--server-port:";
     private final static String SERVER_PORT_SMALL_PREFIX =    "-p:";
 
     public static class TextToSpeech {
@@ -72,7 +71,7 @@ public class client {
 
     private static void displayHelp() {
         System.out.println("---- TCP Chat Client ----");
-        System.out.println("CLI Parameters:");
+        System.out.println("- CLI Parameters:");
         System.out.printf("+-%s-+-%s-+--------------------------------------------%n",
                 Utils.rpad("", FIRST_COL_WIDTH, "-"),
                 Utils.rpad("", SECOND_COL_WIDTH, "-"));
@@ -164,7 +163,7 @@ public class client {
         if (clientName == null) {
             clientName = Objects.requireNonNullElse(Utils.getHostName(), "DefaultedClientName");
         }
-        String idMess = String.format("%s:%s", ChatTCPServer.SERVER_COMMANDS.I_AM.toString(), clientName);
+        String idMess = String.format("%s:%s", Utils.SERVER_COMMANDS.I_AM.toString(), clientName);
         System.out.printf(">>> Telling server who I am: %s\n", idMess);
         client.writeToServer(idMess);
 
@@ -188,7 +187,7 @@ public class client {
                     System.out.printf("Processing user input [%s]\n", userInput);
                     if ("Q".equalsIgnoreCase(userInput) || "QUIT".equalsIgnoreCase(userInput)) {
                         keepAsking = false;
-                        client.writeToServer(ChatTCPServer.SERVER_COMMANDS.I_M_OUT.toString());
+                        client.writeToServer(Utils.SERVER_COMMANDS.I_M_OUT.toString());
                     } else {
                         client.writeToServer(userInput);
                     }

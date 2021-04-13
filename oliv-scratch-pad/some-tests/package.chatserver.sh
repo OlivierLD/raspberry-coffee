@@ -20,10 +20,9 @@ echo -e "For help: java -jar server.jar --help"
 #
 cd ${FROM_DIR}
 echo -e "Packaging the client..."
-# rm -rf classes
+rm -rf classes
 # rm -rf dist
-javac -cp ./dist/server.jar \
-      -d classes -s src/main/java \
+javac -d classes -s src/main/java \
       src/main/java/oliv/events/Utils.java \
       src/main/java/oliv/events/ChatTCPClient.java \
       src/main/java/oliv/events/client.java

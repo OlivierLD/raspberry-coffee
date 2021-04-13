@@ -34,18 +34,12 @@ public class ChatTCPServer implements ServerInterface {
         }
     }
 
-        private final Map<Socket, ChatClient> clientMap = new HashMap<>();
+    private final Map<Socket, ChatClient> clientMap = new HashMap<>();
 
     private final static int DEFAULT_PORT = 7001;
 
     private final int tcpPort;
     private ServerSocket serverSocket = null;
-
-    public enum SERVER_COMMANDS {
-        I_AM,
-        WHO_S_THERE,
-        I_M_OUT
-    }
 
     public ChatTCPServer() {
         this(DEFAULT_PORT);
@@ -91,7 +85,7 @@ public class ChatTCPServer implements ServerInterface {
                             System.out.printf("\t>> Got a client message [%s] from %s\n", clientMessage, skt);
                         }
                         boolean processed = false;
-                        for (SERVER_COMMANDS serverCommand : SERVER_COMMANDS.values()) {
+                        for (Utils.SERVER_COMMANDS serverCommand : Utils.SERVER_COMMANDS.values()) {
                             if (clientMessage.startsWith(serverCommand.toString())) {
                                 processed = true;
                                 // Process it
@@ -102,7 +96,7 @@ public class ChatTCPServer implements ServerInterface {
                                     case "I_AM":
                                         ChatClient chatClient = clientMap.get(skt);
                                         if (chatClient != null) {
-                                            chatClient = chatClient.name(clientMessage.trim().substring(SERVER_COMMANDS.I_AM.toString().length() + 1)); // +1: ":"
+                                            chatClient = chatClient.name(clientMessage.trim().substring(Utils.SERVER_COMMANDS.I_AM.toString().length() + 1)); // +1: ":"
                                             if (verbose) {
                                                 System.out.printf("Naming client: %s%n", chatClient.toString());
                                             }
