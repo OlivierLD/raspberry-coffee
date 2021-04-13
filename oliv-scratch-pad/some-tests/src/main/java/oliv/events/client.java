@@ -84,23 +84,23 @@ public class client {
         System.out.printf("+-%s-+-%s-+--------------------------------------------%n",
                 Utils.rpad("", 16, "-"),
                 Utils.rpad("", 32, "-"));
-        System.out.printf("| %s | %s | - Display help and exit.%n",
+        System.out.printf("| %s | %s | Display help and exit.%n",
                 Utils.rpad(String.format("%s", HELP_SMALL_PREFIX), 16),
                 Utils.rpad(String.format("%s", HELP_PREFIX), 32));
-        System.out.printf("| %s | %s | - Verbose mode, default false.%n",
+        System.out.printf("| %s | %s | Verbose mode, default false.%n",
                 Utils.rpad(String.format("%strue|false", CLIENT_VERBOSE_SMALL_PREFIX), 16),
                 Utils.rpad(String.format("%strue|false", CLIENT_VERBOSE_PREFIX), 32));
-        System.out.printf("| %s | %s | - Server name or IP address. Default is localhost.%n",
+        System.out.printf("| %s | %s | Server name or IP address. Default is localhost.%n",
                 Utils.rpad(String.format("%slocalhost", SERVER_NAME_SMALL_PREFIX), 16),
                 Utils.rpad(String.format("%slocalhost", SERVER_NAME_PREFIX), 32));
-        System.out.printf("| %s | %s | - Server TCP Port, default 7001.%n",
+        System.out.printf("| %s | %s | Server TCP Port, default 7001.%n",
                 Utils.rpad(String.format("%s7001", SERVER_PORT_SMALL_PREFIX), 16),
                 Utils.rpad(String.format("%s7001", SERVER_PORT_PREFIX), 32));
-        System.out.printf("| %s | %s | - Client name, defaulted to hostname (%s here).%n",
+        System.out.printf("| %s | %s | Client name, defaulted to hostname (%s here).%n",
                 Utils.rpad(String.format("%sraspi", CLIENT_NAME_SMALL_PREFIX), 16),
                 Utils.rpad(String.format("%sraspi", CLIENT_NAME_PREFIX), 32),
                 getHostName());
-        System.out.printf("| %s | %s | - Client speaks on message received (experimental), default false.%n",
+        System.out.printf("| %s | %s | Client speaks on message received (experimental), default false.%n",
                 Utils.rpad(String.format("%strue|false", CLIENT_SPEECH_SMALL_PREFIX), 16),
                 Utils.rpad(String.format("%strue|false", CLIENT_SPEECH_PREFIX), 32));
         System.out.printf("+-%s-+-%s-+--------------------------------------------%n",

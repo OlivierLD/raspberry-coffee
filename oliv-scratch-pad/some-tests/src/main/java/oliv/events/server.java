@@ -20,13 +20,13 @@ public class server {
         System.out.printf("+-%s-+-%s-+--------------------------------------------%n",
                 Utils.rpad("", 16, "-"),
                 Utils.rpad("", 32, "-"));
-        System.out.printf("| %s | %s | - Display help and exit.%n",
+        System.out.printf("| %s | %s | Display help and exit.%n",
                 Utils.rpad(String.format("%s", HELP_SMALL_PREFIX), 16),
                 Utils.rpad(String.format("%s", HELP_PREFIX), 32));
-        System.out.printf("| %s | %s | - Verbose mode, default false.%n",
+        System.out.printf("| %s | %s | Verbose mode, default false.%n",
                 Utils.rpad(String.format("%strue|false", SERVER_SMALL_VERBOSE), 16),
                 Utils.rpad(String.format("%strue|false", SERVER_VERBOSE), 32));
-        System.out.printf("| %s | %s | - TCP Port, default 7001.%n",
+        System.out.printf("| %s | %s | TCP Port, default 7001.%n",
                 Utils.rpad(String.format("%s7001", SERVER_PORT_SMALL_PREFIX), 16),
                 Utils.rpad(String.format("%s7001", SERVER_PORT_PREFIX), 32));
         System.out.printf("+-%s-+-%s-+--------------------------------------------%n",
@@ -35,6 +35,24 @@ public class server {
     }
 
     public static void main(String... args) {
+
+        int serverPort = 7001;
+        boolean verbose = false;
+
+        for (String arg : args) {
+            if (arg.startsWith(SERVER_PORT_PREFIX)) {
+                serverPort = Integer.parseInt(arg.substring(SERVER_PORT_PREFIX.length()));
+            } else if (arg.startsWith(SERVER_PORT_SMALL_PREFIX)) {
+                serverPort = Integer.parseInt(arg.substring(SERVER_PORT_SMALL_PREFIX.length()));
+            } else if (arg.startsWith(SERVER_VERBOSE)) {
+                verbose = "true".equals(arg.substring(SERVER_VERBOSE.length()));
+            } else if (arg.startsWith(SERVER_SMALL_VERBOSE)) {
+                verbose = "true".equals(arg.substring(SERVER_SMALL_VERBOSE.length()));
+            } else if (arg.equals(HELP_PREFIX) || arg.equals(HELP_SMALL_PREFIX)) {
+                displayHelp();
+                System.exit(0);
+            }
+        }
 
         String ip;
         System.out.println("----- N E T W O R K -----");
@@ -59,24 +77,6 @@ public class server {
         System.out.println("-------------------------");
 
         System.out.println("Use [Ctrl-C] to exit.");
-
-        int serverPort = 7001;
-        boolean verbose = false;
-
-        for (String arg : args) {
-            if (arg.startsWith(SERVER_PORT_PREFIX)) {
-                serverPort = Integer.parseInt(arg.substring(SERVER_PORT_PREFIX.length()));
-            } else if (arg.startsWith(SERVER_PORT_SMALL_PREFIX)) {
-                serverPort = Integer.parseInt(arg.substring(SERVER_PORT_SMALL_PREFIX.length()));
-            } else if (arg.startsWith(SERVER_VERBOSE)) {
-                verbose = "true".equals(arg.substring(SERVER_VERBOSE.length()));
-            } else if (arg.startsWith(SERVER_SMALL_VERBOSE)) {
-                verbose = "true".equals(arg.substring(SERVER_SMALL_VERBOSE.length()));
-            } else if (arg.equals(HELP_PREFIX) || arg.equals(HELP_SMALL_PREFIX)) {
-                displayHelp();
-                System.exit(0);
-            }
-        }
 
         // All starts here.
         ChatTCPServer chatTCPServer = null;
