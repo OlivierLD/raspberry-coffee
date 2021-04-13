@@ -1,7 +1,6 @@
 package oliv.events;
 
 import java.io.Console;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -23,7 +22,6 @@ public class client {
     private final static String SERVER_PORT_SMALL_PREFIX =    "-p:";
 
     public static class TextToSpeech {
-        private static final Map<String, Consumer<String>> speechTools = new HashMap<>();
 
         static Consumer<String> say = message -> {
             try {
@@ -47,11 +45,9 @@ public class client {
             }
         };
 
-        static {
-            speechTools.put("Mac OS X", say);
-            speechTools.put("Linux", espeak);
-//            speechTools.put("Windows", espeak); // Or https://github.com/p-groarke/wsay/releases
-        }
+        private static final Map<String, Consumer<String>> speechTools = Map.of(
+                "Mac OS X", say,
+                "Linux", espeak);
 
         public static void speak(String text) {
             Consumer<String> speechTool = speechTools.get(System.getProperty("os.name"));
