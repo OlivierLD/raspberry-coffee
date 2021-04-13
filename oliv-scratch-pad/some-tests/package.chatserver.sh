@@ -36,6 +36,7 @@ echo -e "To run the client:"
 echo -e "cd ../dist"
 echo -e "java -jar client.jar --client-name:XXX --server-port:8000 --server-name:localhost --client-verbose:false"
 echo -e "For help: java -jar client.jar --help"
+echo -e "... for the speech, try 'java -Dspeak-french=true -jar client --client-speech:true'"
 #
 cd ${FROM_DIR}
 rm manifest.txt
