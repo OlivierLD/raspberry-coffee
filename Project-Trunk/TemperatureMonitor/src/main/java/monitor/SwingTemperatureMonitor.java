@@ -7,9 +7,6 @@ import utils.SystemUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -20,7 +17,8 @@ import java.util.stream.IntStream;
  */
 public class SwingTemperatureMonitor {
 
-    private final static String TITLE = "CPU Temperature and Load over time";
+//    private final static String TITLE = "CPU Temperature and Load over time";
+    private final static String TITLE = "CPU Temperature over time";
 
     private final static class DataHolder {
         double temperature;
@@ -69,15 +67,19 @@ public class SwingTemperatureMonitor {
             String tempValue = SystemUtils.getCPUTemperature2();
             String value = tempValue.substring(tempValue.indexOf("=") + 1, tempValue.indexOf("'"));
             temperature = Double.parseDouble(value);
-
-            String cpuLoadValue = SystemUtils.getCPULoad();
-            System.out.println("CPU Load:" + cpuLoadValue);
-
-        } catch (Exception ioe) {
-            ioe.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
             temperature = 100d * Math.random();
-            cpuLoad = 100d * Math.random();
         }
+
+//        try {
+//            String cpuLoadValue = SystemUtils.getCPULoad();
+//            System.out.println("CPU Load:" + cpuLoadValue);
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//            cpuLoad = 100d * Math.random();
+//        }
+
         DataHolder dh = new DataHolder();
         dh.temperature = temperature;
         dh.cpuLoad = cpuLoad;
@@ -93,19 +95,19 @@ public class SwingTemperatureMonitor {
             double[] tData = this.displayData.stream()
                     .mapToDouble(dh -> dh.temperature)
                     .toArray();
-            double[] cpuData = this.displayData.stream()
-                    .mapToDouble(dh -> dh.cpuLoad)
-                    .toArray();
+//            double[] cpuData = this.displayData.stream()
+//                    .mapToDouble(dh -> dh.cpuLoad)
+//                    .toArray();
             // Temperature
             List<VectorUtils.Vector2D> dataOneVectors = new ArrayList<>();
             for (int i = 0; i < xData.length; i++) {
                 dataOneVectors.add(new VectorUtils.Vector2D(xData[i], tData[i]));
             }
             // CPU Load
-            List<VectorUtils.Vector2D> dataTwoVectors = new ArrayList<>();
-            for (int i = 0; i < xData.length; i++) {
-                dataOneVectors.add(new VectorUtils.Vector2D(xData[i], cpuData[i]));
-            }
+//            List<VectorUtils.Vector2D> dataTwoVectors = new ArrayList<>();
+//            for (int i = 0; i < xData.length; i++) {
+//                dataOneVectors.add(new VectorUtils.Vector2D(xData[i], cpuData[i]));
+//            }
 
             // Now, the graph
             whiteBoard.setAxisColor(Color.BLACK);
@@ -144,12 +146,12 @@ public class SwingTemperatureMonitor {
                     .color(Color.BLUE);
             whiteBoard.addSerie(dataTempSerie);
             // CPU Load series
-            WhiteBoardPanel.DataSerie dataCPUSerie = new WhiteBoardPanel.DataSerie()
-                    .data(dataTwoVectors)
-                    .graphicType(WhiteBoardPanel.GraphicType.LINE)
-                    .lineThickness(1)
-                    .color(Color.RED);
-            whiteBoard.addSerie(dataCPUSerie);
+//            WhiteBoardPanel.DataSerie dataCPUSerie = new WhiteBoardPanel.DataSerie()
+//                    .data(dataTwoVectors)
+//                    .graphicType(WhiteBoardPanel.GraphicType.LINE)
+//                    .lineThickness(1)
+//                    .color(Color.RED);
+//            whiteBoard.addSerie(dataCPUSerie);
 
             whiteBoard.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
             if (this.displayData.size() > 0) { // We need at least 1 point to make any sense.
