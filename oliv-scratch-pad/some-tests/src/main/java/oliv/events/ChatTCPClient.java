@@ -103,20 +103,20 @@ public class ChatTCPClient {
             manageError(be);
         } catch (final SocketException se) {
             if (se.getMessage().contains("Connection refused")) {
-                System.out.println("Refused (1)");
+                System.out.println("No server found. Refused (1)");
             } else if (se.getMessage().contains("Connection reset")) {
-                System.out.println("Reset (2)");
+                System.out.println("No server found. Reset (2)");
             } else {
                 if (se instanceof ConnectException && "Connection timed out: connect".equals(se.getMessage())) {
                     if ("true".equals(System.getProperty("tcp.data.verbose"))) {
-                        System.out.println("Will try again (1)");
+                        System.out.println("No server found. No server found. Will try again (1)");
                     }
                     if ("true".equals(System.getProperty("tcp.data.verbose"))) {
-                        System.out.println("Will try again (2)");
+                        System.out.println("No server found. Will try again (2)");
                     }
                 } else if (se instanceof SocketException && se.getMessage().startsWith("Network is unreachable (connect ")) {
                     if ("true".equals(System.getProperty("tcp.data.verbose"))) {
-                        System.out.println("Will try again (3)");
+                        System.out.println("No server found. Will try again (3)");
                     }
                 } else if (se instanceof ConnectException) { // Et hop!
                     System.err.println("TCP :" + se.getMessage());

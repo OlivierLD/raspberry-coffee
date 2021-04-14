@@ -1,9 +1,19 @@
 package oliv.events;
 
 import java.io.Console;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
+import java.util.jar.Manifest;
 
 public class client {
 
@@ -99,7 +109,9 @@ public class client {
                 Utils.rpad("", SECOND_COL_WIDTH, "-"));
     }
 
-    public static void main(String... args) {
+    public static void main(String... args) throws Exception {
+
+        System.out.printf("Compiled: %s\n", Utils.getCompileDate());
 
         // Default values
         String clientName = null; // "It's Me!";

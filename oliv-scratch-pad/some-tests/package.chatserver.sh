@@ -10,6 +10,7 @@ javac -d classes -s src/main/java \
       src/main/java/oliv/events/server.java
 mkdir dist
 echo "Main-Class: oliv.events.server" > manifest.txt
+echo "Compile-date: $(date)" >> manifest.txt
 cd classes
 jar -cfm ../dist/server.jar ../manifest.txt *
 #
@@ -28,6 +29,7 @@ javac -d classes -s src/main/java \
       src/main/java/oliv/events/client.java
 # mkdir dist
 echo "Main-Class: oliv.events.client" > manifest.txt
+echo "Compile-date: $(date)" >> manifest.txt
 cd classes
 jar -cfm ../dist/client.jar ../manifest.txt *
 #

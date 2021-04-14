@@ -37,7 +37,9 @@ public class server {
                 Utils.rpad("", SECOND_COL_WIDTH, "-"));
     }
 
-    public static void main(String... args) {
+    public static void main(String... args) throws Exception {
+
+        System.out.printf("Compiled: %s\n", Utils.getCompileDate());
 
         int serverPort = 7001;
         boolean verbose = false;
