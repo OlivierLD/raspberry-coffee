@@ -76,7 +76,7 @@ public class SwingTemperatureMonitor {
             String cpuLoadValue = SystemUtils.getCPULoad2();
             String nbCPU = SystemUtils.getNBCpu();
 
-            System.out.println("CPU Load:" + cpuLoadValue);
+//            System.out.println("CPU Load:" + cpuLoadValue);
             cpuLoad = (Double.parseDouble(cpuLoadValue) * 100.0) / Double.parseDouble(nbCPU);
         } catch (Exception ex) {
             ex.printStackTrace();
