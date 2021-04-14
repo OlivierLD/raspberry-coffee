@@ -10,7 +10,10 @@ It provides the following basic features (which you can extend):
 Look into the package `oliv.events`.  
 It can be compiled and distributed by using the script `package.chatserver.sh`.
 Same script provides instructions on how to run the server and the client.
-The script produces 2 jars in the `dist` sub-folder, just above ~10Kb big.
+The script produces 2 jars in the `dist` sub-folder, just above ~10Kb big (they could be even smaller).
+
+You will notice that an entry named `Compile-date` is added to the `MANIFEST.MF`.
+Look in the code to see how it is used.
 
 ### Get started, quick:  
 - From the folder it's in, run the script `package.chatserver.sh`
@@ -18,7 +21,7 @@ The script produces 2 jars in the `dist` sub-folder, just above ~10Kb big.
     - From the directory `server.jar` is in, run `java -jar server.jar`
     - Note the server's IP address displayed in the console
 - Send the `client.jar` (in the `dist` folder) to all the machines you want to be able to take part of the chat network
-    - From the directory `client.jar` is in, run `java -jar client.jar --server-name:aaa.bbb.cc.dd`, where
-      `aaa.bbb.cc.dd` is the server's IP address.
+    - From the directory `client.jar` is in, run `java -jar client.jar --server-name:AAA.BBB.CC.DD`, where
+      `AAA.BBB.CC.DD` is the server's IP address.
       
 ---
