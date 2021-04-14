@@ -13,7 +13,8 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 /**
- * Monitor the CPU Temperature (on Raspberry Pi)
+ * Monitor the CPU Temperature and Load (on Raspberry Pi)
+ * This is an example...
  */
 public class SwingTemperatureMonitor {
 
@@ -60,8 +61,8 @@ public class SwingTemperatureMonitor {
 
     private final Supplier<DataHolder> dataGrabber = () -> {
 
-        double temperature = 0d;
-        double cpuLoad = 0d;
+        double temperature; //  = 0d;
+        double cpuLoad; //  = 0d;
 
         try {
             String tempValue = SystemUtils.getCPUTemperature2();
@@ -175,6 +176,7 @@ public class SwingTemperatureMonitor {
     }
 
     private void show() {
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setVisible(true);
     }
 
