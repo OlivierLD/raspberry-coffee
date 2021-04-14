@@ -2,12 +2,12 @@ package monitor;
 
 import gsg.SwingUtils.WhiteBoardPanel;
 import gsg.VectorUtils;
+import utils.SystemUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -20,7 +20,12 @@ import java.util.stream.IntStream;
  */
 public class SwingTemperatureMonitor {
 
-    private final static String TITLE = "CPU Temperature over time";
+    private final static String TITLE = "CPU Temperature and Load over time";
+
+    private final static class DataHolder {
+        double temperature;
+        double cpuLoad;
+    }
 
     private JFrame frame;
     private final JMenuBar menuBar = new JMenuBar();
@@ -39,7 +44,8 @@ public class SwingTemperatureMonitor {
     private final static WhiteBoardPanel whiteBoard = new WhiteBoardPanel();
 
     private final static int DEFAULT_BUFFER_LEN = 900;
-    private final List<Double> temperatureData = new ArrayList<>();
+    private final List<DataHolder> displayData = new ArrayList<>();
+
     private double minValue = Double.MAX_VALUE;
     private double maxValue = -Double.MAX_VALUE;
 
@@ -54,57 +60,59 @@ public class SwingTemperatureMonitor {
         JOptionPane.showMessageDialog(whiteBoard, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
     }
 
-    private final Supplier<Double> dataGrabber = () -> {
+    private final Supplier<DataHolder> dataGrabber = () -> {
 
         double temperature = 0d;
+        double cpuLoad = 0d;
 
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder("vcgencmd", "measure_temp");
-            processBuilder.redirectErrorStream(true);
-            Process process = processBuilder.start();
-            InputStream inputStream = process.getInputStream(); // Process output
+            String tempValue = SystemUtils.getCPUTemperature2();
+            String value = tempValue.substring(tempValue.indexOf("=") + 1, tempValue.indexOf("'"));
+            temperature = Double.parseDouble(value);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            boolean keepReading = true;
-            while (keepReading) {
-                String line = reader.readLine();
-                if (line == null) {
-                    keepReading = false;
-                } else {
-                    String value = line.substring(line.indexOf("=") + 1, line.indexOf("'"));
-                    if (verbose) {
-                        System.out.printf("%s => Value: [%s], in [%f, %f]\n", line, value, minValue, maxValue);
-                    }
-                    temperature = Double.parseDouble(value);
-                }
-            }
-            reader.close();
-            inputStream.close();
-        } catch (IOException ioe) {
+            String cpuLoadValue = SystemUtils.getCPULoad();
+            System.out.println("CPU Load:" + cpuLoadValue);
+
+        } catch (Exception ioe) {
             ioe.printStackTrace();
             temperature = 100d * Math.random();
+            cpuLoad = 100d * Math.random();
         }
-        return temperature;
+        DataHolder dh = new DataHolder();
+        dh.temperature = temperature;
+        dh.cpuLoad = cpuLoad;
+        return dh;
     };
 
     private void refreshData() {
-        IntStream xs = IntStream.range(0, this.temperatureData.size());
+        IntStream xs = IntStream.range(0, this.displayData.size());
         try {
             // Prepare data for display
             double[] xData = xs.mapToDouble(x -> (double)x)
                     .toArray();
-            double[] tData = this.temperatureData.stream()
-                    .mapToDouble(Double::doubleValue)
+            double[] tData = this.displayData.stream()
+                    .mapToDouble(dh -> dh.temperature)
                     .toArray();
+            double[] cpuData = this.displayData.stream()
+                    .mapToDouble(dh -> dh.cpuLoad)
+                    .toArray();
+            // Temperature
             List<VectorUtils.Vector2D> dataOneVectors = new ArrayList<>();
             for (int i = 0; i < xData.length; i++) {
                 dataOneVectors.add(new VectorUtils.Vector2D(xData[i], tData[i]));
             }
+            // CPU Load
+            List<VectorUtils.Vector2D> dataTwoVectors = new ArrayList<>();
+            for (int i = 0; i < xData.length; i++) {
+                dataOneVectors.add(new VectorUtils.Vector2D(xData[i], cpuData[i]));
+            }
+
+            // Now, the graph
             whiteBoard.setAxisColor(Color.BLACK);
             whiteBoard.resetAllData();
 
             // Min & Max
-            if (this.temperatureData.size() > 1) {
+            if (this.displayData.size() > 1) {
                 // 1 - Min
                 List<VectorUtils.Vector2D> minVectors = new ArrayList<>();
                 minVectors.add(new VectorUtils.Vector2D(xData[0], minValue));
@@ -135,10 +143,17 @@ public class SwingTemperatureMonitor {
                     .lineThickness(3)
                     .color(Color.BLUE);
             whiteBoard.addSerie(dataTempSerie);
+            // CPU Load series
+            WhiteBoardPanel.DataSerie dataCPUSerie = new WhiteBoardPanel.DataSerie()
+                    .data(dataTwoVectors)
+                    .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                    .lineThickness(1)
+                    .color(Color.RED);
+            whiteBoard.addSerie(dataCPUSerie);
 
             whiteBoard.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
-            if (this.temperatureData.size() > 0) { // We need at least 1 point to make any sense.
-                double lastTempValue = this.temperatureData.get(this.temperatureData.size() - 1);
+            if (this.displayData.size() > 0) { // We need at least 1 point to make any sense.
+                double lastTempValue = this.displayData.get(this.displayData.size() - 1).temperature;
                 int red = (int) (255 * (lastTempValue / 100f));
                 int green = 0;
                 int blue = (int) (255 * ((100f - lastTempValue) / 100f));
@@ -161,12 +176,12 @@ public class SwingTemperatureMonitor {
     private void startGrabber() {
         Thread grabberThread = new Thread(() -> {
             while (true) {
-                double temperature = this.dataGrabber.get();
-                this.temperatureData.add(temperature);
-                this.maxValue = Math.max(maxValue, temperature);
-                this.minValue = Math.min(minValue, temperature);
-                while (this.temperatureData.size() > bufferLength) {
-                    this.temperatureData.remove(0);
+                DataHolder dh = this.dataGrabber.get();
+                this.displayData.add(dh);
+                this.maxValue = Math.max(maxValue, dh.temperature);
+                this.minValue = Math.min(minValue, dh.temperature);
+                while (this.displayData.size() > bufferLength) {
+                    this.displayData.remove(0);
                 }
                 this.refreshData();
                 try {
