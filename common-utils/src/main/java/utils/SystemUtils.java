@@ -152,6 +152,11 @@ public class SystemUtils {
         return getCommandResult(command).get(0);
     }
 
+    public static String getNBCpu() throws Exception {
+        String command = "lscpu | grep 'CPU.*s):' | awk '{ print $2 }'";
+        return getCommandResult(command).get(0);
+    }
+
     public static String getMemoryUsage() throws Exception {
         String command = "free -m | awk 'NR==2{printf \"Mem: %s/%s MB %.2f%%\", $3, $2, $3*100/$2 }'";
         return getCommandResult(command).get(0);
