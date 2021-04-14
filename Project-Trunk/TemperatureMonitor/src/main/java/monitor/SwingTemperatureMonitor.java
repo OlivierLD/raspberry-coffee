@@ -72,13 +72,14 @@ public class SwingTemperatureMonitor {
             temperature = 100d * Math.random();
         }
 
-//        try {
-//            String cpuLoadValue = SystemUtils.getCPULoad();
-//            System.out.println("CPU Load:" + cpuLoadValue);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            cpuLoad = 100d * Math.random();
-//        }
+        try {
+            String cpuLoadValue = SystemUtils.getCPULoad2();
+            System.out.println("CPU Load:" + cpuLoadValue);
+            cpuLoad = Double.parseDouble(cpuLoadValue) * 100.0;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            cpuLoad = 100d * Math.random();
+        }
 
         DataHolder dh = new DataHolder();
         dh.temperature = temperature;
@@ -95,19 +96,19 @@ public class SwingTemperatureMonitor {
             double[] tData = this.displayData.stream()
                     .mapToDouble(dh -> dh.temperature)
                     .toArray();
-//            double[] cpuData = this.displayData.stream()
-//                    .mapToDouble(dh -> dh.cpuLoad)
-//                    .toArray();
+            double[] cpuData = this.displayData.stream()
+                    .mapToDouble(dh -> dh.cpuLoad)
+                    .toArray();
             // Temperature
             List<VectorUtils.Vector2D> dataOneVectors = new ArrayList<>();
             for (int i = 0; i < xData.length; i++) {
                 dataOneVectors.add(new VectorUtils.Vector2D(xData[i], tData[i]));
             }
             // CPU Load
-//            List<VectorUtils.Vector2D> dataTwoVectors = new ArrayList<>();
-//            for (int i = 0; i < xData.length; i++) {
-//                dataOneVectors.add(new VectorUtils.Vector2D(xData[i], cpuData[i]));
-//            }
+            List<VectorUtils.Vector2D> dataTwoVectors = new ArrayList<>();
+            for (int i = 0; i < xData.length; i++) {
+                dataOneVectors.add(new VectorUtils.Vector2D(xData[i], cpuData[i]));
+            }
 
             // Now, the graph
             whiteBoard.setAxisColor(Color.BLACK);
@@ -146,12 +147,12 @@ public class SwingTemperatureMonitor {
                     .color(Color.BLUE);
             whiteBoard.addSerie(dataTempSerie);
             // CPU Load series
-//            WhiteBoardPanel.DataSerie dataCPUSerie = new WhiteBoardPanel.DataSerie()
-//                    .data(dataTwoVectors)
-//                    .graphicType(WhiteBoardPanel.GraphicType.LINE)
-//                    .lineThickness(1)
-//                    .color(Color.RED);
-//            whiteBoard.addSerie(dataCPUSerie);
+            WhiteBoardPanel.DataSerie dataCPUSerie = new WhiteBoardPanel.DataSerie()
+                    .data(dataTwoVectors)
+                    .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                    .lineThickness(1)
+                    .color(Color.RED);
+            whiteBoard.addSerie(dataCPUSerie);
 
             whiteBoard.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
             if (this.displayData.size() > 0) { // We need at least 1 point to make any sense.

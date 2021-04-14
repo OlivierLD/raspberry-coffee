@@ -146,6 +146,12 @@ public class SystemUtils {
         return getCommandResult(command).get(0);
     }
 
+    public static String getCPULoad2() throws Exception {
+        // Returns 0 minute, 1 minutes, 5 or 15 minutes CPU activity (allows to see which way it's going)
+        String command = "cat /proc/loadavg | awk '{ print $1 }'";
+        return getCommandResult(command).get(0);
+    }
+
     public static String getMemoryUsage() throws Exception {
         String command = "free -m | awk 'NR==2{printf \"Mem: %s/%s MB %.2f%%\", $3, $2, $3*100/$2 }'";
         return getCommandResult(command).get(0);
