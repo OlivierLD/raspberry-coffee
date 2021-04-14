@@ -109,7 +109,7 @@ public class SwingTemperatureMonitor {
             // CPU Load
             List<VectorUtils.Vector2D> dataTwoVectors = new ArrayList<>();
             for (int i = 0; i < xData.length; i++) {
-                dataOneVectors.add(new VectorUtils.Vector2D(xData[i], cpuData[i]));
+                dataTwoVectors.add(new VectorUtils.Vector2D(xData[i], cpuData[i]));
             }
 
             // Now, the graph
