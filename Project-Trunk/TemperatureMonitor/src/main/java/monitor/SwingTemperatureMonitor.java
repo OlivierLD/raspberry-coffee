@@ -17,8 +17,8 @@ import java.util.stream.IntStream;
  */
 public class SwingTemperatureMonitor {
 
-//    private final static String TITLE = "CPU Temperature and Load over time";
-    private final static String TITLE = "CPU Temperature over time";
+    private final static String TITLE = "CPU Temperature and Load over time";
+//    private final static String TITLE = "CPU Temperature over time";
 
     private final static class DataHolder {
         double temperature;
@@ -152,7 +152,7 @@ public class SwingTemperatureMonitor {
             WhiteBoardPanel.DataSerie dataCPUSerie = new WhiteBoardPanel.DataSerie()
                     .data(dataTwoVectors)
                     .graphicType(WhiteBoardPanel.GraphicType.LINE)
-                    .lineThickness(1)
+                    .lineThickness(2)
                     .color(Color.RED);
             whiteBoard.addSerie(dataCPUSerie);
 
