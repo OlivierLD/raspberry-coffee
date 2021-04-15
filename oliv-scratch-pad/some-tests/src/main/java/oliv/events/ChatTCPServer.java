@@ -86,7 +86,7 @@ public class ChatTCPServer implements ServerInterface {
                     String clientMessage = in.readLine();
                     if (clientMessage != null) {
                         if (verbose) {
-                            System.out.printf("\t>> Got a client message [%s] from %s\n", clientMessage, skt);
+                            System.out.printf("\t>> Got a client message [%s] from %s (%s)\n", clientMessage, clientMap.get(skt).getName(), skt);
                         }
                         boolean processed = false;
                         for (Utils.SERVER_COMMANDS serverCommand : Utils.SERVER_COMMANDS.values()) {
