@@ -41,8 +41,7 @@ Done with client initialization.
 Q or QUIT to quit
 WHO_S_THERE to know who's there
 Anything else will be broadcasted
-> 
-_
+> _
 ```      
       
 ---
