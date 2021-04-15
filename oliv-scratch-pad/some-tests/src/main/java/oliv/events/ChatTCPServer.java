@@ -131,7 +131,7 @@ public class ChatTCPServer implements ServerInterface {
                                         break;
                                     case "WHO_S_THERE":
                                         String clients = clientMap.keySet().stream().map(k -> clientMap.get(k).getName()).collect(Collectors.joining(", "));
-                                        String mess = String.format("%d client%s: %s\n", this.getNbClients(), (this.getNbClients() > 1 ? "s" : ""), clients);
+                                        String mess = String.format("%d client%s: %s\n", this.getNbClients(), (this.getNbClients() > 1 ? "s" : ""), clients); // Ends with a \n
                                         DataOutputStream out = new DataOutputStream(skt.getOutputStream());
                                         out.write(mess.getBytes());
                                         out.flush();
@@ -150,7 +150,7 @@ public class ChatTCPServer implements ServerInterface {
                                 System.out.printf("Message [%s] not processed, using default 'onMessage'.\n", clientMessage);
                             }
                             synchronized (instance) {
-                                // Do not forget the \n
+                                // Do not forget the \n !!!
                                 clientMessage = String.format("[From %s] %s\n", clientMap.get(skt).getName(), clientMessage);
                                 instance.onMessage((clientMessage).getBytes(), skt); // \n is required !!
                             }
@@ -176,7 +176,7 @@ public class ChatTCPServer implements ServerInterface {
 
     /**
      *
-     * @param message Warning!!!: MUST finish with a NL (\n) !!
+     * @param message Important !!!: MUST end with a NL (\n) !!
      * @param sender Sender of the message. If null, message will be broadcasted to everyone. Otherwise, to everyone BUT the sender.
      */
     @Override
