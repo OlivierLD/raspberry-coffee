@@ -17,8 +17,9 @@ You will notice that an entry named `Compile-date` is added to the `MANIFEST.MF`
 Look in the code to see how it is used.
 
 ### Get started, quick:  
-- From the folder it's in, run the script `package.chatserver.sh`
-- Send the `server.jar` (in the `dist` folder) to the machine you want to run the server on.
+- From the folder it's in, run the script `package.chatserver.sh`.  
+  This will generate a `dist` folder, containing the archived to distribute.
+- Send the `server.jar` (newly generated in the `dist` folder) to the machine you want to run the server on.
     - From the directory `server.jar` is in, run `java -jar server.jar`
     - Note the server's IP address displayed in the console (`192.168.42.5` below)
 ```
@@ -31,7 +32,7 @@ wlan0 192.168.42.5
 Use [Ctrl-C] to exit.
 Chat server started on port 7001.
 ```
-- Send the `client.jar` (in the `dist` folder) to all the machines you want to be able to take part of the chat network
+- Send the `client.jar` (newly generated in the `dist` folder) to all the machines you want to be able to take part of the chat network
     - From the directory `client.jar` is in, run `java -jar client.jar --server-name:AAA.BBB.CC.DD`, where
       `AAA.BBB.CC.DD` is the server's IP address (`192.168.42.5` below).
     - _As an example_, there is an option `-s:true|false` or `--client-speech:true|false` (available on Linux or Mac for now) to make the client _speak_ the received messages.   
