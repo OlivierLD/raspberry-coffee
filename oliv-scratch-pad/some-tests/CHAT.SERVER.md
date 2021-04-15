@@ -20,7 +20,7 @@ Look in the code to see how it is used.
 - From the folder it's in, run the script `package.chatserver.sh`
 - Send the `server.jar` (in the `dist` folder) to the machine you want to run the server on.
     - From the directory `server.jar` is in, run `java -jar server.jar`
-    - Note the server's IP address displayed in the console
+    - Note the server's IP address displayed in the console (`192.168.42.5` below)
 ```
 java -jar server.jar 
 Compiled: Thu Apr 15 08:45:54 PDT 2021
@@ -33,7 +33,7 @@ Chat server started on port 7001.
 ```
 - Send the `client.jar` (in the `dist` folder) to all the machines you want to be able to take part of the chat network
     - From the directory `client.jar` is in, run `java -jar client.jar --server-name:AAA.BBB.CC.DD`, where
-      `AAA.BBB.CC.DD` is the server's IP address.
+      `AAA.BBB.CC.DD` is the server's IP address (`192.168.42.5` below).
 ```
 java -jar client.jar --server-name:192.168.42.5
 Compiled: Thu Apr 15 08:45:55 PDT 2021

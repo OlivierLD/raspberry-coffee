@@ -61,10 +61,6 @@ public class ChatTCPClient {
         return this.tcpPort;
     }
 
-//    public String getHostname() {
-//        return this.hostName;
-//    }
-
     public void startClient(Thread whoToTell) {
         try {
             InetAddress address = InetAddress.getByName(hostName);

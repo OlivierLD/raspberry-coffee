@@ -92,7 +92,7 @@ public class ChatTCPServer implements ServerInterface {
                                 if (verbose) {
                                     System.out.printf("Message starts with %s, processing it.\n", serverCommand);
                                 }
-                                switch (serverCommand.toString()) { // TODO Something nicer
+                                switch (serverCommand.toString()) { // TODO Something nicer, ignoreCase, loop on Utils.SERVER_COMMANDS.values ?
                                     case "I_AM":
                                         ChatClient chatClient = clientMap.get(skt);
                                         if (chatClient != null) {
@@ -110,7 +110,7 @@ public class ChatTCPServer implements ServerInterface {
                                         if (verbose) {
                                             System.out.printf("Removing %s (%s) from the client map.\n", skt, clientMap.get(skt));
                                         }
-                                        clientMap.remove(skt);
+                                        clientMap.remove(skt); // Prevents memory leaks (from here...) !
                                         break;
                                     case "WHO_S_THERE":
                                         String clients = clientMap.keySet().stream().map(k -> clientMap.get(k).name).collect(Collectors.joining(", "));
