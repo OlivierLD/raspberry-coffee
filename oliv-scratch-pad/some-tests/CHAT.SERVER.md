@@ -34,6 +34,7 @@ Chat server started on port 7001.
 - Send the `client.jar` (in the `dist` folder) to all the machines you want to be able to take part of the chat network
     - From the directory `client.jar` is in, run `java -jar client.jar --server-name:AAA.BBB.CC.DD`, where
       `AAA.BBB.CC.DD` is the server's IP address (`192.168.42.5` below).
+    - _As an example_, there is an option `-s:true|false` or `--client-speech:true|false` (available on Linux or Mac for now) to make the client _speak_ the received messages.   
 ```
 java -jar client.jar --server-name:192.168.42.5
 Compiled: Thu Apr 15 08:45:55 PDT 2021

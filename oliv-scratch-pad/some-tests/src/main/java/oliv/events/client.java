@@ -140,7 +140,7 @@ public class client {
 
         // Optional: overrides the default action, make it speak...
         if (speech) {
-            originalMessageConsumer = client.getMessageConsumer();
+            originalMessageConsumer = client.getMessageConsumer(); // backup
             client.setMessageConsumer(TextToSpeech::speak);
         }
 

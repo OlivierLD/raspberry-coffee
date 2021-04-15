@@ -46,7 +46,7 @@ public class ChatTCPClient {
         System.out.print("> ");
     };
 
-    public Consumer<String> getMessageConsumer() {
+    protected Consumer<String> getMessageConsumer() {
         return messageConsumer;
     }
 

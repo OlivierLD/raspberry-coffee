@@ -74,6 +74,12 @@ public class ChatTCPServer implements ServerInterface {
         return this.tcpPort;
     }
 
+    /**
+     * New client got connected.
+     * Will be named later on.
+     *
+     * @param skt The client socket.
+     */
     protected void setSocket(Socket skt) {
         synchronized(this.clientMap) {
             this.clientMap.put(skt, new ChatClient());
@@ -168,6 +174,11 @@ public class ChatTCPServer implements ServerInterface {
         clientThread.start();
     }
 
+    /**
+     *
+     * @param message Warning!!!: MUST finish with a NL (\n) !!
+     * @param sender Sender of the message. If null, message will be broadcasted to everyone. Otherwise, to everyone BUT the sender.
+     */
     @Override
     public void onMessage(byte[] message, Socket sender) {
         List<Socket> toRemove = new ArrayList<>(); // Will contain closed sockets.
