@@ -28,6 +28,10 @@ public class ChatTCPServer implements ServerInterface {
             return this;
         }
 
+        public String getName() {
+            return name;
+        }
+
         @Override
         public String toString() {
             return name;
@@ -72,16 +76,19 @@ public class ChatTCPServer implements ServerInterface {
 
     protected void tellEveryOne(final String message, Socket skt) {
         // Broadcast to all connected clients
+        if (verbose) {
+            System.out.printf("Telling everyone: %s\n", message);
+        }
         this.clientMap.keySet().forEach(tcpSocket -> {
             if (!tcpSocket.equals(skt)) { // Do not send the message back to its sender.
                 if (verbose) {
-                    System.out.printf("Server sending %s to %s%n", new String(message), tcpSocket);
+                    System.out.printf("Server sending %s to %s, %s%n", message, this.clientMap.get(skt).getName(), tcpSocket);
                 }
                 synchronized (tcpSocket) {
                     try {
                         DataOutputStream out = new DataOutputStream(tcpSocket.getOutputStream());
                         if (verbose) {
-                            System.out.printf(" Server sending [%s]\n", new String(message).trim());
+                            System.out.printf(" Server sending [%s]\n", message.trim());
                         }
                         out.write(message.getBytes());
                         out.flush();
@@ -131,9 +138,9 @@ public class ChatTCPServer implements ServerInterface {
                                             }
                                             clientMap.put(skt, chatClient);
 
-                                            String message = String.format("[%s] just joined", chatClient.name);
+                                            String message = String.format("[%s] just joined", chatClient.getName());
                                             // Broadcast to all connected clients
-                                            this.tellEveryOne(message, skt);
+                                            tellEveryOne(message, skt);
                                         } else {
                                             // What the French !? Not Found??
                                             System.err.println("ChatClient not found??");
@@ -143,14 +150,13 @@ public class ChatTCPServer implements ServerInterface {
                                         if (verbose) {
                                             System.out.printf("Removing %s (%s) from the client map.\n", skt, clientMap.get(skt));
                                         }
-                                        String name = clientMap.get(skt).name;
-                                        String message = String.format("[%s] just left", name);
+                                        String message = String.format("[%s] just left", clientMap.get(skt).getName());
                                         // Broadcast to all connected clients
-                                        this.tellEveryOne(message, skt);
+                                        tellEveryOne(message, skt);
                                         clientMap.remove(skt); // Prevents memory leaks (from here...) !
                                         break;
                                     case "WHO_S_THERE":
-                                        String clients = clientMap.keySet().stream().map(k -> clientMap.get(k).name).collect(Collectors.joining(", "));
+                                        String clients = clientMap.keySet().stream().map(k -> clientMap.get(k).getName()).collect(Collectors.joining(", "));
                                         String mess = String.format("%d client%s: %s\n", this.getNbClients(), (this.getNbClients() > 1 ? "s" : ""), clients);
                                         DataOutputStream out = new DataOutputStream(skt.getOutputStream());
                                         out.write(mess.getBytes());
