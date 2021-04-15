@@ -106,7 +106,7 @@ public class ChatTCPServer implements ServerInterface {
                                             }
                                             clientMap.put(skt, chatClient);
 
-                                            String message = String.format("[%s] just joined", chatClient.getName());
+                                            String message = String.format("[%s] just joined\n", chatClient.getName());
                                             // Broadcast to all connected clients
                                             this.onMessage(message.getBytes(), skt);
                                         } else {
@@ -118,7 +118,7 @@ public class ChatTCPServer implements ServerInterface {
                                         if (verbose) {
                                             System.out.printf("Removing %s (%s) from the client map.\n", skt, clientMap.get(skt));
                                         }
-                                        String message = String.format("[%s] just left", clientMap.get(skt).getName());
+                                        String message = String.format("[%s] just left\n", clientMap.get(skt).getName());
                                         // Broadcast to all connected clients
                                         this.onMessage(message.getBytes(), skt);
                                         clientMap.remove(skt); // Prevents memory leaks (from here...) !
