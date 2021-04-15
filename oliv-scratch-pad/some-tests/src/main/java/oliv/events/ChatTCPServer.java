@@ -144,7 +144,9 @@ public class ChatTCPServer implements ServerInterface {
                                 System.out.printf("Message [%s] not processed, using default 'onMessage'.\n", clientMessage);
                             }
                             synchronized (instance) {
-                                instance.onMessage((clientMessage + "\n").getBytes(), skt);
+                                // Do not forget the \n
+                                clientMessage = String.format("[From %s] %s\n", clientMap.get(skt).getName(), clientMessage);
+                                instance.onMessage((clientMessage).getBytes(), skt); // \n is required !!
                             }
                         }
                     } else {
