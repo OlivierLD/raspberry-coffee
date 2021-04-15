@@ -70,6 +70,35 @@ public class ChatTCPServer implements ServerInterface {
         return this.tcpPort;
     }
 
+    protected void tellEveryOne(final String message, Socket skt) {
+        // Broadcast to all connected clients
+        this.clientMap.keySet().forEach(tcpSocket -> {
+            if (!tcpSocket.equals(skt)) { // Do not send the message back to its sender.
+                if (verbose) {
+                    System.out.printf("Server sending %s to %s%n", new String(message), tcpSocket);
+                }
+                synchronized (tcpSocket) {
+                    try {
+                        DataOutputStream out = new DataOutputStream(tcpSocket.getOutputStream());
+                        if (verbose) {
+                            System.out.printf(" Server sending [%s]\n", new String(message).trim());
+                        }
+                        out.write(message.getBytes());
+                        out.flush();
+                    } catch (SocketException se) {
+                        if (verbose) {
+                            System.out.println("Will remove...");
+                        }
+                        // toRemove.add(tcpSocket);
+                    } catch (Exception ex) {
+                        System.err.println("TCPWriter.write:" + ex.getLocalizedMessage());
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
     protected void setSocket(Socket skt) {
         synchronized(this.clientMap) {
             this.clientMap.put(skt, new ChatClient());
@@ -101,6 +130,10 @@ public class ChatTCPServer implements ServerInterface {
                                                 System.out.printf("Naming client: %s%n", chatClient.toString());
                                             }
                                             clientMap.put(skt, chatClient);
+
+                                            String message = String.format("[%s] just joined", chatClient.name);
+                                            // Broadcast to all connected clients
+                                            this.tellEveryOne(message, skt);
                                         } else {
                                             // What the French !? Not Found??
                                             System.err.println("ChatClient not found??");
@@ -110,13 +143,17 @@ public class ChatTCPServer implements ServerInterface {
                                         if (verbose) {
                                             System.out.printf("Removing %s (%s) from the client map.\n", skt, clientMap.get(skt));
                                         }
+                                        String name = clientMap.get(skt).name;
+                                        String message = String.format("[%s] just left", name);
+                                        // Broadcast to all connected clients
+                                        this.tellEveryOne(message, skt);
                                         clientMap.remove(skt); // Prevents memory leaks (from here...) !
                                         break;
                                     case "WHO_S_THERE":
                                         String clients = clientMap.keySet().stream().map(k -> clientMap.get(k).name).collect(Collectors.joining(", "));
-                                        String message = String.format("%d client%s: %s\n", this.getNbClients(), (this.getNbClients() > 1 ? "s" : ""), clients);
+                                        String mess = String.format("%d client%s: %s\n", this.getNbClients(), (this.getNbClients() > 1 ? "s" : ""), clients);
                                         DataOutputStream out = new DataOutputStream(skt.getOutputStream());
-                                        out.write(message.getBytes());
+                                        out.write(mess.getBytes());
                                         out.flush();
                                         break;
                                     default:
