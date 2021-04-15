@@ -90,13 +90,13 @@ public class ChatTCPServer implements ServerInterface {
                         }
                         boolean processed = false;
                         for (Utils.SERVER_COMMANDS serverCommand : Utils.SERVER_COMMANDS.values()) {
-                            if (clientMessage.startsWith(serverCommand.toString())) {
+                            if (clientMessage.toUpperCase().startsWith(serverCommand.toString())) {
                                 processed = true;
                                 // Process it
                                 if (verbose) {
                                     System.out.printf("Message starts with %s, processing it.\n", serverCommand);
                                 }
-                                switch (serverCommand.toString()) { // TODO Something nicer, ignoreCase, loop on Utils.SERVER_COMMANDS.values ?
+                                switch (serverCommand.toString()) {
                                     case "I_AM":
                                         ChatClient chatClient = clientMap.get(skt);
                                         if (chatClient != null) {
