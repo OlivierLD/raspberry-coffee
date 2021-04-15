@@ -140,7 +140,8 @@ public class ChatTCPServer implements ServerInterface {
 
                                             String message = String.format("[%s] just joined", chatClient.getName());
                                             // Broadcast to all connected clients
-                                            tellEveryOne(message, skt);
+                                            this.onMessage(message.getBytes(), skt);
+//                                            tellEveryOne(message, skt);
                                         } else {
                                             // What the French !? Not Found??
                                             System.err.println("ChatClient not found??");
@@ -152,7 +153,8 @@ public class ChatTCPServer implements ServerInterface {
                                         }
                                         String message = String.format("[%s] just left", clientMap.get(skt).getName());
                                         // Broadcast to all connected clients
-                                        tellEveryOne(message, skt);
+                                        this.onMessage(message.getBytes(), skt);
+//                                        tellEveryOne(message, skt);
                                         clientMap.remove(skt); // Prevents memory leaks (from here...) !
                                         break;
                                     case "WHO_S_THERE":
