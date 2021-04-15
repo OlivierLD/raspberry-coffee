@@ -39,8 +39,6 @@ public class server {
 
     public static void main(String... args) throws Exception {
 
-        System.out.printf("Compiled: %s\n", Utils.getCompileDate());
-
         int serverPort = 7001;
         boolean verbose = false;
 
@@ -58,6 +56,8 @@ public class server {
                 System.exit(0);
             }
         }
+
+        System.out.printf("Compiled: %s\n", Utils.getCompileDate(verbose));
 
         String ip;
         System.out.println("----- N E T W O R K -----");
