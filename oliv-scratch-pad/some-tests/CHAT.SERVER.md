@@ -1,6 +1,7 @@
 # TCP Based Java Chat Server
 This is presented as a small example, it does not pretend to go to production.  
-> The goal here is to show the scaffolding for such a server, while keeping the code as small as possible.
+> The goal here is to show the scaffolding for such a server, while keeping the code as small as possible.  
+> The features presented here are minimal, but this server _**is**_ working.
 
 It provides the following basic features (which you can extend):
 - Messages are all text messages
