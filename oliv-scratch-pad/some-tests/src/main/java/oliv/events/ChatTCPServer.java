@@ -82,16 +82,16 @@ public class ChatTCPServer implements ServerInterface {
         this.clientMap.keySet().forEach(tcpSocket -> {
             if (!tcpSocket.equals(skt)) { // Do not send the message back to its sender.
                 if (verbose) {
-                    System.out.printf("Server sending %s to %s, %s%n", message, this.clientMap.get(skt).getName(), tcpSocket);
+                    System.out.printf("Server sending %s to %s, %s%n", message, this.clientMap.get(tcpSocket).getName(), tcpSocket);
                 }
                 synchronized (tcpSocket) {
                     try {
                         DataOutputStream out = new DataOutputStream(tcpSocket.getOutputStream());
-                        if (verbose) {
-                            System.out.printf(" Server sending [%s]\n", message.trim());
-                        }
                         out.write(message.getBytes());
                         out.flush();
+                        if (verbose) {
+                            System.out.printf(" Server sent [%s] to %s\n", message.trim(), this.clientMap.get(tcpSocket).getName());
+                        }
                     } catch (SocketException se) {
                         if (verbose) {
                             System.out.println("Will remove...");
