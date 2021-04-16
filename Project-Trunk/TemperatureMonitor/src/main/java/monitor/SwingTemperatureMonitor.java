@@ -21,7 +21,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
@@ -31,6 +33,9 @@ import java.util.stream.IntStream;
  * This is an example...
  */
 public class SwingTemperatureMonitor {
+
+//    private final static SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss");
+    private final static SimpleDateFormat SDF = new SimpleDateFormat("mm:ss");
 
     private final static String TITLE = "CPU Temperature and Load over time";
 //    private final static String TITLE = "CPU Temperature over time";
@@ -58,6 +63,7 @@ public class SwingTemperatureMonitor {
 
     private final static int DEFAULT_BUFFER_LEN = 900;
     private final List<DataHolder> displayData = new ArrayList<>();
+    private final List<Long> absissa = new ArrayList<>();
 
     private double minValue = Double.MAX_VALUE;
     private double maxValue = -Double.MAX_VALUE;
@@ -108,6 +114,9 @@ public class SwingTemperatureMonitor {
         IntStream xs = IntStream.range(0, this.displayData.size());
         try {
             // Prepare data for display
+//            double[] xData = this.absissa.stream()
+//                    .mapToDouble(l -> l)
+//                    .toArray();
             double[] xData = xs.mapToDouble(x -> (double)x)
                     .toArray();
             double[] tData = this.displayData.stream()
@@ -199,10 +208,12 @@ public class SwingTemperatureMonitor {
             while (true) {
                 DataHolder dh = this.dataGrabber.get();
                 this.displayData.add(dh);
+                this.absissa.add(System.currentTimeMillis());
                 this.maxValue = Math.max(maxValue, dh.temperature);
                 this.minValue = Math.min(minValue, dh.temperature);
                 while (this.displayData.size() > bufferLength) {
                     this.displayData.remove(0);
+                    this.absissa.remove(0);
                 }
                 this.refreshData();
                 try {
@@ -258,6 +269,14 @@ public class SwingTemperatureMonitor {
         this.frame.getContentPane().add(topPanel, BorderLayout.NORTH);
 
         whiteBoard.setFrameGraphic(false);
+
+        // x labels generator
+        whiteBoard.setXLabelGenerator(x -> {
+            long date = absissa.get(x);
+            return SDF.format(new Date(date));
+        });
+
+
         // >> HERE: Add the WitheBoard to the JFrame
         this.frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
 //        frame.pack();

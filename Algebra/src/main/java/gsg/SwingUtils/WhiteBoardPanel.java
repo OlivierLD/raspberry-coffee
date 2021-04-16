@@ -205,6 +205,12 @@ public class WhiteBoardPanel extends JPanel {
         this.frameGraphic = b;
     }
 
+    private Function<Integer, String> xLabelGenerator = x -> String.valueOf(x);
+
+    public void setXLabelGenerator(Function<Integer, String> xLabelGenerator) {
+        this.xLabelGenerator = xLabelGenerator;
+    }
+
     private final Consumer<Graphics2D> DEFAULT_DASHBOARD_WRITER = g2d -> {
         List<List<Vector2D>> allData = new ArrayList<>();
         allSeries.forEach(serie -> { synchronized(serie) { allData.add(serie.getData()); } });
@@ -311,7 +317,7 @@ public class WhiteBoardPanel extends JPanel {
                     g2d.drawLine(canvasX, height - (int) Math.round(y0 - 5),
                             canvasX, height - (int) Math.round(y0 + 5));
                 }
-                String label = String.valueOf(xTick);
+                String label = xLabelGenerator.apply(xTick);
                 int strWidth = g2d.getFontMetrics(labelFont).stringWidth(label);
                 g2d.drawString(label, canvasX - (strWidth / 2),height - (int) Math.round(y0 - 5 - (labelFont.getSize())));
             }
