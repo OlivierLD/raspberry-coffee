@@ -269,13 +269,8 @@ public class SwingTemperatureMonitor {
         this.frame.getContentPane().add(topPanel, BorderLayout.NORTH);
 
         whiteBoard.setFrameGraphic(false);
-
         // x labels generator
-        whiteBoard.setXLabelGenerator(x -> {
-            long date = absissa.get(x);
-            return SDF.format(new Date(date));
-        });
-
+        whiteBoard.setXLabelGenerator(x -> SDF.format(new Date(absissa.get(x))));
 
         // >> HERE: Add the WitheBoard to the JFrame
         this.frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
