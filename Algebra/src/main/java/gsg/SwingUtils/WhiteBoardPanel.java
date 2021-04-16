@@ -205,7 +205,7 @@ public class WhiteBoardPanel extends JPanel {
         this.frameGraphic = b;
     }
 
-    private Function<Integer, String> xLabelGenerator = x -> String.valueOf(x);
+    private Function<Integer, String> xLabelGenerator = x -> String.valueOf(x); // Default
 
     public void setXLabelGenerator(Function<Integer, String> xLabelGenerator) {
         this.xLabelGenerator = xLabelGenerator;
