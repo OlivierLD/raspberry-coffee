@@ -91,7 +91,7 @@ public class ChatTCPClient {
                         // WARNING!! We use readLine (needs to end with a NL)
                         // This would need to be changed for non-line messages.
                         String fromServer = in.readLine();    // <= blocking!! (hence the 'while loop' above, wait until there is something to read)
-                        // Message received from server
+                        // Message received from server. Send to client for processing.
                         this.messageConsumer.accept(fromServer);
                     }
                 } catch (IOException ioe) {
