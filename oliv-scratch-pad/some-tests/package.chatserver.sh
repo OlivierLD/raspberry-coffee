@@ -3,6 +3,10 @@ FROM_DIR=$(pwd)
 echo -e "Packaging the server..."
 rm -rf classes
 rm -rf dist
+#
+# No debug option (to keep it small)
+# Add a '-g' to the javac command to have it.
+#
 javac -d classes -s src/main/java \
       src/main/java/oliv/tcp/chat/Utils.java \
       src/main/java/oliv/tcp/chat/ServerInterface.java \
@@ -43,11 +47,12 @@ cd ${FROM_DIR}
 rm manifest.txt
 echo -e "Done."
 #
-echo -e "--- T O   D I S T R I B U T E ---"
+echo -e "--- T O   D I S T R I B U T E   A N D   R U N ---"
+echo -e "-------------------------------------------------"
 echo -e "* To start a server:"
 echo -e "  - get the server.jar from the dist folder"
 echo -e "  - from the folder where it lives in, run the 'java -jar server.jar ... ' command."
 echo -e "* To start a client:"
 echo -e "  - get the client.jar from the dist folder"
 echo -e "  - from the folder where it lives in, run the 'java -jar -client.jar ... ' command (once server is started)."
-echo -e "---------------------------------"
+echo -e "-------------------------------------------------"

@@ -16,12 +16,12 @@ public class ChatTCPClient {
     private final static int DEFAULT_TCP_PORT = 80;
     private final int tcpPort;
     private final String hostName;
-    private boolean verbose;
+    private final boolean verbose;
 
-    private PrintWriter out;
-    private BufferedReader in;
+    private PrintWriter out;     // Stream to the server
+    private BufferedReader in;   // Stream from the server
 
-    private boolean stayConnected = true;
+    private boolean stayConnected = true;  // Set it to false to close the client.
 
     public ChatTCPClient() {
         this(DEFAULT_HOST_NAME, DEFAULT_TCP_PORT, false);
@@ -40,7 +40,7 @@ public class ChatTCPClient {
     private Socket clientSocket = null;
 
     // What to do with the message.
-    // This is the default. Feel free to change it... Speak out the message ;)
+    // This is the default. Feel free to override it... Speak out the message ;)
     public Consumer<String> messageConsumer = message -> {
         System.out.println(message);
         System.out.print("> ");
@@ -50,6 +50,10 @@ public class ChatTCPClient {
         return messageConsumer;
     }
 
+    /**
+     * Use it to override the default message Consumer
+     * @param messageConsumer the Consumer to use. Note: The default one will still be used (as a backup...).
+     */
     public void setMessageConsumer(Consumer<String> messageConsumer) {
         if (verbose) {
             System.out.println("Overriding the MessageConsumer");
@@ -61,6 +65,10 @@ public class ChatTCPClient {
         return this.tcpPort;
     }
 
+    /**
+     * Listens in a loop.
+     * @param whoToTell the Thread to notify when streams (in and out) are ready
+     */
     public void startClient(Thread whoToTell) {
         try {
             InetAddress address = InetAddress.getByName(hostName);
@@ -76,11 +84,13 @@ public class ChatTCPClient {
             while (this.stayConnected) {
                 try {
                     while (!in.ready()) {
-                        // optional delay between polling
-                        try { Thread.sleep(50); } catch (Exception ignore) {}
+                        // optional delay between polling, to cool things down.
+                        try { Thread.sleep(50); } catch (Exception ignore) { /* Absorb */ }
                     }
                     if (this.stayConnected) {
-                        String fromServer = in.readLine();    // <= blocking!! (hence the above)
+                        // WARNING!! We use readLine (needs to end with a NL)
+                        // This would need to be changed for non-line messages.
+                        String fromServer = in.readLine();    // <= blocking!! (hence the 'while loop' above, wait until there is something to read)
                         // Message received from server
                         this.messageConsumer.accept(fromServer);
                     }

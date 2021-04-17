@@ -5,13 +5,15 @@ This is presented as a small example, it does not pretend to go to production.
 
 It provides the following basic features (which you can extend):
 - Messages are all text messages
+  - The `ChatTCPClient` is using a `in.readLine()` to read its messages, _that requires the messages sent to the client to end with a `NL` character_.  
+  This feature would require to be changed for other types of messages (binaries, text not finishing with `NL`, etc). 
 - When a client is sending a message, it is re-broadcasted to all _other_ connected clients.
 - If the server is taken down, all still-connected clients are notified.
 
 Look into the package `oliv.tcp.chat`.  
 It can be compiled and distributed by using the script `package.chatserver.sh`.
 Same script provides instructions on how to run the server and its client(s).
-The script produces 2 jars in the `dist` sub-folder, just above ~10Kb big (they could be even smaller).
+The script produces 2 jars in the `dist` sub-folder, just above ~10Kb big (they could be even smaller, there is a text-to-speech feature available, for example).
 
 You will notice that an entry named `Compile-date` is added to the `MANIFEST.MF`.
 Look in the code to see how it is used.
