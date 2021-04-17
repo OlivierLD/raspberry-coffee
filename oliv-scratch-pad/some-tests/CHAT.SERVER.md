@@ -54,7 +54,7 @@ Anything else will be broadcasted
 ### Next
 Based on the same architecture, it would be easy to:
 - Send a message to one client only (instead of broadcasting to everyone)
-- Use non-text message to communicate between applications on different machines
+- Use non-text messages (binary, `json`, `xml`, etc) to communicate between applications on different machines
 - etc
      
 ---
