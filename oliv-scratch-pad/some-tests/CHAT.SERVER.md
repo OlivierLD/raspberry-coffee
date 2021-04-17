@@ -8,7 +8,7 @@ It provides the following basic features (which you can extend):
 - When a client is sending a message, it is re-broadcasted to all _other_ connected clients.
 - If the server is taken down, all still-connected clients are notified.
 
-Look into the package `oliv.events`.  
+Look into the package `oliv.tcp.chat`.  
 It can be compiled and distributed by using the script `package.chatserver.sh`.
 Same script provides instructions on how to run the server and its client(s).
 The script produces 2 jars in the `dist` sub-folder, just above ~10Kb big (they could be even smaller).
@@ -50,5 +50,11 @@ WHO_S_THERE to know who's there
 Anything else will be broadcasted
 > _
 ```      
+
+### Next
+Based on the same architecture, it would be easy to:
+- Send a message to one client only (instead of broadcasting to everyone)
+- Use non-text message to communicate between applications on different machines
+- etc
      
 ---

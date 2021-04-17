@@ -1,4 +1,4 @@
-package oliv.events;
+package oliv.tcp.chat;
 
 import java.io.File;
 import java.io.FileInputStream;

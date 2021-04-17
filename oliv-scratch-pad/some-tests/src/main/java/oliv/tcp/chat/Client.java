@@ -1,11 +1,11 @@
-package oliv.events;
+package oliv.tcp.chat;
 
 import java.io.Console;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class client {
+public class Client {
 
     private final static String HELP_PREFIX =                 "--help";
     private final static String HELP_SMALL_PREFIX =           "-h";

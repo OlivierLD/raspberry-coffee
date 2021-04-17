@@ -1,4 +1,4 @@
-package oliv.events;
+package oliv.tcp.chat;
 
 import java.io.Closeable;
 import java.net.Socket;

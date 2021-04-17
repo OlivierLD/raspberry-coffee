@@ -4,12 +4,12 @@ echo -e "Packaging the server..."
 rm -rf classes
 rm -rf dist
 javac -d classes -s src/main/java \
-      src/main/java/oliv/events/Utils.java \
-      src/main/java/oliv/events/ServerInterface.java \
-      src/main/java/oliv/events/ChatTCPServer.java \
-      src/main/java/oliv/events/server.java
+      src/main/java/oliv/tcp/chat/Utils.java \
+      src/main/java/oliv/tcp/chat/ServerInterface.java \
+      src/main/java/oliv/tcp/chat/ChatTCPServer.java \
+      src/main/java/oliv/tcp/chat/Server.java
 mkdir dist
-echo "Main-Class: oliv.events.server" > manifest.txt
+echo "Main-Class: oliv.tcp.chat.Server" > manifest.txt
 echo "Compile-date: $(date)" >> manifest.txt
 cd classes
 jar -cfm ../dist/server.jar ../manifest.txt *
@@ -24,11 +24,11 @@ echo -e "Packaging the client..."
 rm -rf classes
 # rm -rf dist
 javac -d classes -s src/main/java \
-      src/main/java/oliv/events/Utils.java \
-      src/main/java/oliv/events/ChatTCPClient.java \
-      src/main/java/oliv/events/client.java
+      src/main/java/oliv/tcp/chat/Utils.java \
+      src/main/java/oliv/tcp/chat/ChatTCPClient.java \
+      src/main/java/oliv/tcp/chat/Client.java
 # mkdir dist
-echo "Main-Class: oliv.events.client" > manifest.txt
+echo "Main-Class: oliv.tcp.chat.Client" > manifest.txt
 echo "Compile-date: $(date)" >> manifest.txt
 cd classes
 jar -cfm ../dist/client.jar ../manifest.txt *
