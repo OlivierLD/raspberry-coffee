@@ -16,7 +16,7 @@ mkdir dist
 echo "Main-Class: oliv.tcp.chat.Server" > manifest.txt
 echo "Compile-date: $(date)" >> manifest.txt
 cd classes
-jar -cfm ../dist/server.jar ../manifest.txt *
+jar -cvfm ../dist/server.jar ../manifest.txt *
 #
 echo -e "To run the server:"
 echo -e "cd ../dist"
@@ -35,13 +35,13 @@ javac -d classes -s src/main/java \
 echo "Main-Class: oliv.tcp.chat.Client" > manifest.txt
 echo "Compile-date: $(date)" >> manifest.txt
 cd classes
-jar -cfm ../dist/client.jar ../manifest.txt *
+jar -cvfm ../dist/client.jar ../manifest.txt *
 #
 echo -e "To run the client:"
 echo -e "cd ../dist"
 echo -e "java -jar client.jar --client-name:XXX --server-port:8000 --server-name:localhost --client-verbose:false"
 echo -e "For help: java -jar client.jar --help"
-echo -e "... for the speech, try 'java -Dspeak-french=true -jar client --client-speech:true' (Mac only)"
+echo -e "... for the speech, try 'java -Dspeak-french=true -jar client --client-speech:true' (french on Mac only)"
 #
 cd ${FROM_DIR}
 rm manifest.txt

@@ -175,7 +175,8 @@ public class Client {
         System.out.println("Anything else will be broadcasted");
 
         if (speech) {
-            TextToSpeech.speak("Client is ready!");
+            String mess = "true".equals(System.getProperty("speak-french")) ? "Le client est prêt" : "Client is ready";
+            TextToSpeech.speak(mess);
         }
 
         Console console = System.console();
