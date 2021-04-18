@@ -56,7 +56,7 @@ public class Client {
             try {
                 // Remove the [From: ...] prefix before speaking.
                 String toSpeak = text;
-                if (toSpeak.indexOf('[') > 0 && toSpeak.indexOf(']') > 0) {
+                if (toSpeak.indexOf('[') >= 0 && toSpeak.indexOf(']') >= 0) {
                     toSpeak = toSpeak.substring(toSpeak.indexOf(']') + 1).trim();
                 }
                 speechTool.accept(toSpeak);
