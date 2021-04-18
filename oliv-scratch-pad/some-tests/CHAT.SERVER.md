@@ -18,7 +18,7 @@ The script produces 2 jars in the `dist` sub-folder, just above ~10Kb big (they 
 You will notice that an entry named `Compile-date` is added to the `MANIFEST.MF`.
 Look in the code to see how it is used.
 
-### Get started, quick:  
+### Quick start:  
 - From the folder it's in, run the script `package.chatserver.sh`.  
   This will generate a clean `dist` folder, containing the archived to distribute.
 

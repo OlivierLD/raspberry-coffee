@@ -177,7 +177,7 @@ public class ChatTCPServer implements ServerInterface {
     /**
      * Defines THE behavior of the server.
      *
-     * @param message Important !!!: MUST end with a NL (\n) for the client to read it (readLine) !!
+     * @param message Important !!!: In this implementation, MUST end with a NL (\n) for the client to read it (readLine) !!
      * @param sender Sender of the message. If null, message will be broadcasted to everyone. Otherwise, to everyone BUT the sender.
      */
     @Override

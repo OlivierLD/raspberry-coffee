@@ -38,6 +38,13 @@ public class Utils {
 
     private final static String COMPILE_DATE_KEY = "Compile-date";
 
+    /**
+     * Will extract the "Compile-date" from a manifest, from a jar, found in the classpath.
+     *
+     * @param verbose
+     * @return The compile-date, if found; null otherwise.
+     * @throws IOException
+     */
     public static String getCompileDate(boolean verbose) throws IOException {
         String compileDate = null;
 
