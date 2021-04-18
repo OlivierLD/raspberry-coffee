@@ -54,7 +54,12 @@ public class Client {
                 throw new RuntimeException("No speech tool found in this os [" + System.getProperty("os.name") + "]");
             }
             try {
-                speechTool.accept(text);
+                // Remove the [From: ...] prefix before speaking.
+                String toSpeak = text;
+                if (toSpeak.indexOf('[') > 0 && toSpeak.indexOf(']') > 0) {
+                    toSpeak = toSpeak.substring(toSpeak.indexOf(']') + 1).trim();
+                }
+                speechTool.accept(toSpeak);
                 if (originalMessageConsumer != null) { // double up!
                     originalMessageConsumer.accept(text);
                 }
