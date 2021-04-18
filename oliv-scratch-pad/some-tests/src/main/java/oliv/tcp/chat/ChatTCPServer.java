@@ -182,6 +182,12 @@ public class ChatTCPServer implements ServerInterface {
      */
     @Override
     public void onMessage(byte[] message, Socket sender) {
+//        if (verbose) {
+            if (message != null && message.length > 0 && message[message.length - 1] != '\n') {
+                System.out.printf("\tWARNING!!! message [%s] does NOT end with NL !!", new String(message));
+            }
+//        }
+
         List<Socket> toRemove = new ArrayList<>(); // Will contain closed sockets.
         synchronized (this.clientMap) {
             // Broadcast to all connected clients

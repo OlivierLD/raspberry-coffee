@@ -114,7 +114,7 @@ public class Server {
             System.out.println("Ok, ok! I'm leaving!");
             // Notify connected clients ?
             System.out.println("Notifying clients...");
-            chatTCPServer.onMessage("Notice: Server is going down.".getBytes(), null);
+            chatTCPServer.onMessage("Notice: Server is going down.\n".getBytes(), null);
             System.out.println("Now shutting down the server.");
             chatTCPServer.close();
         } catch (InterruptedException ie) {
