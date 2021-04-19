@@ -3,6 +3,8 @@ This is presented as a small example, it does not pretend to go to production.
 > The goal here is to show the scaffolding for such a server, while keeping the code as small as possible.  
 > The features presented here are minimal, but this server _**is**_ working.
 
+> We use here (for the client part) several statements that require Java 11 (`Map.of`, `Objects.requireNonNullElse`). It could be modified if a lower Java version is required (like for the Raspberry Pi Zero).
+
 It provides the following basic features (which you can extend):
 - Messages are all text messages
   - The `ChatTCPClient` is using a `in.readLine()` to read its messages, _that requires the messages sent to the client to end with a `NL` character_.  

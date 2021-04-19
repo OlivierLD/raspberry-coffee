@@ -3,6 +3,7 @@ FROM_DIR=$(pwd)
 echo -e "Packaging the server..."
 rm -rf classes
 rm -rf dist
+mkdir classes
 #
 # No debug option (to keep it small)
 # Add a '-g' to the javac command to have it.
@@ -27,6 +28,7 @@ cd ${FROM_DIR}
 echo -e "Packaging the client..."
 rm -rf classes
 # rm -rf dist
+mkdir classes
 javac -d classes -s src/main/java \
       src/main/java/oliv/tcp/chat/Utils.java \
       src/main/java/oliv/tcp/chat/ChatTCPClient.java \
