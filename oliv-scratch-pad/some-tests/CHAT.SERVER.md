@@ -24,6 +24,7 @@ Look in the code to see how it is used.
 
 #### Server side
 - Send the `server.jar` (newly generated in the `dist` folder) to the machine you want to run the server on.
+    -  `scp` can take care of this transfer.
     - From the directory `server.jar` is in, run `java -jar server.jar`
     - Note the server's IP address displayed in the console (`192.168.42.5` below)
 ```
@@ -38,7 +39,8 @@ Chat server started on port 7001.
 ```
 
 #### Client side
-- Send the `client.jar` (newly generated in the `dist` folder) to all the machines you want to be able to take part of the chat network
+- Send the `client.jar` (newly generated in the `dist` folder) to all the machines you want to be able to take part of the chat network.
+    - `scp` can take care of this transfer.
     - From the directory `client.jar` is in, run `java -jar client.jar --server-name:AAA.BBB.CC.DD`, where
       `AAA.BBB.CC.DD` is the server's IP address (`192.168.42.5` below).
     - _As an example_, there is an option `-s:true|false` or `--client-speech:true|false` (available on Linux or Mac for now) to make the client _speak_ the received messages.   
