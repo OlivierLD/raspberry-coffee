@@ -10,6 +10,8 @@ import java.util.jar.Manifest;
 
 public class Utils {
 
+    public final static char BEEP = '\007';
+
     public enum SERVER_COMMANDS {
         I_AM,
         WHO_S_THERE,

@@ -4,22 +4,8 @@ import gsg.SwingUtils.WhiteBoardPanel;
 import gsg.VectorUtils;
 import utils.SystemUtils;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +20,7 @@ import java.util.stream.IntStream;
  */
 public class SwingTemperatureMonitor {
 
-//    private final static SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss");
+    //    private final static SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss");
     private final static SimpleDateFormat SDF = new SimpleDateFormat("mm:ss");
 
     private final static String TITLE = "CPU Temperature and Load over time";
@@ -53,8 +39,8 @@ public class SwingTemperatureMonitor {
     private final JMenuItem menuHelpAbout = new JMenuItem();
     private JLabel topLabel;
 
-    private final static int WIDTH = 800;
-    private final static int HEIGHT = 600;
+    private final static int WIDTH = 1_200;
+    private final static int HEIGHT = 400;
 
     private static boolean verbose = false;
 
@@ -74,6 +60,7 @@ public class SwingTemperatureMonitor {
         System.out.printf("Exit requested, %s\n", ae);
         System.exit(0);
     }
+
     private void helpAbout_ActionPerformed(ActionEvent ae) {
         System.out.printf("Help requested, %s\n", ae);
         JOptionPane.showMessageDialog(whiteBoard, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
@@ -96,9 +83,11 @@ public class SwingTemperatureMonitor {
         try {
             String cpuLoadValue = SystemUtils.getCPULoad2();
             String nbCPU = SystemUtils.getNBCpu();
-
-//            System.out.println("CPU Load:" + cpuLoadValue);
-            cpuLoad = (Double.parseDouble(cpuLoadValue) * 100.0) / Double.parseDouble(nbCPU);
+            if (verbose) {
+                System.out.printf("CPU Load: %s, %s CPU(s)", cpuLoadValue, nbCPU);
+            }
+            // TODO Check if that is right...
+            cpuLoad = (Double.parseDouble(cpuLoadValue) * 100.0) / Double.parseDouble(nbCPU); // In %
         } catch (Exception ex) {
             ex.printStackTrace();
             cpuLoad = 100d * Math.random();
@@ -114,10 +103,7 @@ public class SwingTemperatureMonitor {
         IntStream xs = IntStream.range(0, this.displayData.size());
         try {
             // Prepare data for display
-//            double[] xData = this.absissa.stream()
-//                    .mapToDouble(l -> l)
-//                    .toArray();
-            double[] xData = xs.mapToDouble(x -> (double)x)
+            double[] xData = xs.mapToDouble(x -> (double) x)
                     .toArray();
             double[] tData = this.displayData.stream()
                     .mapToDouble(dh -> dh.temperature)
@@ -168,7 +154,7 @@ public class SwingTemperatureMonitor {
                     .data(dataOneVectors)
                     .graphicType(WhiteBoardPanel.GraphicType.AREA)
                     .areaGradient(new Color(1f, 0f, 0f, 0.75f), // Transparent red
-                                  new Color(1f, 1f, 0f, 0.75f)) // Transparent yellow
+                            new Color(1f, 1f, 0f, 0.75f)) // Transparent yellow
                     .lineThickness(3)
                     .color(Color.BLUE);
             whiteBoard.addSerie(dataTempSerie);
@@ -186,12 +172,14 @@ public class SwingTemperatureMonitor {
                 int red = (int) (255 * (lastTempValue / 100f));
                 int green = 0;
                 int blue = (int) (255 * ((100f - lastTempValue) / 100f));
-//              System.out.printf(">> rgb(%d, %d, %d)\n", red, green, blue);
+                if (verbose) {
+                    System.out.printf(">> rgb(%d, %d, %d)\n", red, green, blue);
+                }
                 whiteBoard.setTextColor(new Color(red, green, blue));
                 whiteBoard.setGraphicTitle(String.format("%.01f\272C", lastTempValue));
             }
             // Finally, display it.
-            whiteBoard.repaint();  // This is for a pure Swing context
+            whiteBoard.repaint();  // This is for a pure Swing context, not for a NoteBook.
         } catch (Exception ex) {
             System.err.println("Bam!");
             ex.printStackTrace();
@@ -233,7 +221,7 @@ public class SwingTemperatureMonitor {
         Dimension frameSize = frame.getSize();
 //      System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
         frameSize.height = Math.min(frameSize.height, screenSize.height);
-        frameSize.width  = Math.min(frameSize.width, screenSize.width);
+        frameSize.width = Math.min(frameSize.width, screenSize.width);
 
         if (frameSize.width == 0 || frameSize.height == 0) {
             frameSize = new Dimension(WIDTH, HEIGHT + 50 + 10); // 50: ... menu, title bar, etc. 10: button
@@ -264,17 +252,20 @@ public class SwingTemperatureMonitor {
         this.topLabel.setFont(new Font("Courier New", Font.ITALIC | Font.BOLD, 16));
         // Inset below used for left padding.
         topPanel.add(this.topLabel,
-                new GridBagConstraints(0, 0, 1, 1, 1.0D, 0.0D, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 10, 0, 0), 0, 0));
+                new GridBagConstraints(0, 0, 1, 1, 1.0D, 0.0D,
+                        GridBagConstraints.WEST,
+                        GridBagConstraints.NONE,
+                        new Insets(0, 10, 0, 0), 0, 0));
 
         this.frame.getContentPane().add(topPanel, BorderLayout.NORTH);
 
         whiteBoard.setFrameGraphic(false);
-        // x labels generator
+        // x labels generator. The abscissa contains System.currentTimeMillis. Here we convert it into a date, formatted mm:ss.
         whiteBoard.setXLabelGenerator(x -> SDF.format(new Date(absissa.get(x))));
 
         // >> HERE: Add the WitheBoard to the JFrame
         this.frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
-//        frame.pack();
+//      this.frame.pack();
     }
 
     public SwingTemperatureMonitor() {
@@ -306,7 +297,7 @@ public class SwingTemperatureMonitor {
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
 
-        SwingTemperatureMonitor thisThing = new SwingTemperatureMonitor();// This one has instantiated the white board
+        SwingTemperatureMonitor thisThing = new SwingTemperatureMonitor();  // This one has instantiated the white board
         thisThing.initComponents();
 
         // Override defaults (not mandatory)

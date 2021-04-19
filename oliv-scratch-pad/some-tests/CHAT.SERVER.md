@@ -20,7 +20,7 @@ Look in the code to see how it is used.
 
 ### Quick start:  
 - From the folder it's in, run the script `package.chatserver.sh`.  
-  This will generate a clean `dist` folder, containing the archived to distribute.
+  This will generate a clean `dist` folder, containing the archives to distribute.
 
 #### Server side
 - Send the `server.jar` (newly generated in the `dist` folder) to the machine you want to run the server on.
