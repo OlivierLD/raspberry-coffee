@@ -3,7 +3,7 @@ This is presented as a small example, it does not pretend to go to production.
 > The goal here is to show the scaffolding for such a server, while keeping the code as small as possible.  
 > The features presented here are minimal, but this server _**is**_ working.
 
-> We use here (for the client part) several statements that require Java 11 (`Map.of`, `Objects.requireNonNullElse`). It could be modified if a lower Java version is required (like for the Raspberry Pi Zero).
+> We use here (for the _client_ part, server part should be OK) several statements that require Java 11 (`Map.of`, `Objects.requireNonNullElse`). It could be modified if a lower Java version is required (like for the Raspberry Pi Zero).
 
 It provides the following basic features (which you can extend):
 - Messages are all text messages
@@ -60,7 +60,7 @@ Anything else will be broadcasted
 ### Next
 Based on the same architecture, it would be easy to:
 - Send a message to one client only (instead of broadcasting to everyone)
-- Use non-text messages (binary, `json`, `xml`, etc) to communicate between applications on different machines
+- Use non-text messages (binary, `json`, `yaml`, `xml`, etc) to communicate between applications on different machines
 - etc
      
 ---
