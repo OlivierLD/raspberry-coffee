@@ -1,7 +1,7 @@
 # Some Python code
 Mostly for tests...
 
-- `servo.driver.py` contains a simple servo driver.
+- `servo.driver.py` contains a simple servo driver (pure PWM).
 - `catapult.py` (Pure PWM) is a cool example, seen at <https://www.instructables.com/Program-a-Servo-Build-a-Catapult-and-Solve-for-%ce%a0-w>,
   wired like this:
   ![Catapult](./catapult_bb.png).

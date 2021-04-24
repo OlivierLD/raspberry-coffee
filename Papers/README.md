@@ -33,5 +33,7 @@ https://htmlpreview.github.io/?https://github.com/OlivierLD/OlivierLD.github.io/
 ```
 Does not work all the times, but at least some times. You may face some CORS Policy issues...
 
+- <https://pages.github.com/> could be a much better option.
+
 ---
 

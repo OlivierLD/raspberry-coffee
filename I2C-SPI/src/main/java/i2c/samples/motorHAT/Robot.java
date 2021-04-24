@@ -7,7 +7,11 @@ import java.io.IOException;
 
 /**
  * A robot, with 2 wheels.
- * Each wheel is moved by a DC motor (or continuous servo?).
+ * Each wheel is moved by a DC motor
+ *
+ * https://www.adafruit.com/product/2939 : uses DC motors in a micro-servo body!!
+ *
+ * Continuous servos is ANOTHER story.
  */
 public class Robot {
 	private int addr = 0x60;    // The I2C address of the motor HAT, default is 0x60.

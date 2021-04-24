@@ -1,4 +1,6 @@
 #
+# Pure PWM in Python
+#
 # Drive a continuous or standard servo
 # Ground (black or brown) on pin #6
 # 5V (red or orange) on pin #2

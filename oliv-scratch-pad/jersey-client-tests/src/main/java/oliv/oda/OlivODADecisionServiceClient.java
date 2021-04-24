@@ -21,11 +21,11 @@ public class OlivODADecisionServiceClient {
      */
 
     private static final String DEFAULT_SERVICE_SERVICE_URL = "idcs-oda-d992cfbabc1744baab766fb7464b924c-s0.data.digitalassistant.oci.oc-test.com";
-    private static final String DEFAULT_OAUTH_USER_NAME = "oda-ServiceAdministrator";
-    private static final String DEFAULT_OAUTH_PASSWORD = "We1come12345*";
-    private static final String DEFAULT_APPLICATION_NAME = "ApprovalPOC";
+    private static final String DEFAULT_OAUTH_USER_NAME     = "oda-ServiceAdministrator";
+    private static final String DEFAULT_OAUTH_PASSWORD      = "We1come12345*";
+    private static final String DEFAULT_APPLICATION_NAME    = "ApprovalPOC";
     private static final String DEFAULT_APPLICATION_VERSION = "1.0";
-    private static final String DEFAULT_DECISION_SERVICE = "ApprovalStrategyService";
+    private static final String DEFAULT_DECISION_SERVICE    = "ApprovalStrategyService";
 
     public OlivODADecisionServiceClient() {
     }
@@ -37,7 +37,8 @@ public class OlivODADecisionServiceClient {
                                         String appVersion,
                                         String decisionService,
                                         String decisionServiceEndPoint,
-                                        String decisionServicePayload) throws Exception {
+                                        String decisionServicePayload,
+                                        String pathInReturnedPayload) throws Exception {
         String decision = "";
 
         // One - OAuth
@@ -97,10 +98,22 @@ public class OlivODADecisionServiceClient {
                 // Get the response
                 String responseStr = httpResponse.readEntity(String.class);
                 decision = responseStr;
-                Map<String, Object> decisionMap = mapper.readValue(responseStr, Map.class);
-                Object subMap = decisionMap.get("interpretation");
-                if (subMap != null && subMap instanceof Map) {
-                    decision = (String) ((Map<String, Object>) subMap).get("ApprovalStrategy");
+                if (pathInReturnedPayload != null) {
+                    Map<String, Object> decisionMap = mapper.readValue(responseStr, Map.class);
+                    String[] pathElements = pathInReturnedPayload.split("\\.");
+                    for (String elem : pathElements) {
+//                        System.out.println("Elem:" + elem);
+                        Object subMap = decisionMap.get(elem);
+                        if (subMap != null) {
+                            if (subMap instanceof Map) {
+                                decisionMap = (Map<String, Object>) subMap;
+                            } else {
+                                decision = (String) subMap;
+                            }
+                        } else {
+                            break;
+                        }
+                    }
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -112,14 +125,15 @@ public class OlivODADecisionServiceClient {
     public static void main(String... args) throws Exception {
         Client client = ClientBuilder.newClient();
 
-        String oAuthUserName = DEFAULT_OAUTH_USER_NAME;
-        String oAuthPassword = DEFAULT_OAUTH_PASSWORD;
+        String oAuthUserName = "oda-ServiceAdministrator"; // DEFAULT_OAUTH_USER_NAME;
+        String oAuthPassword = "We1come12345*";            // DEFAULT_OAUTH_PASSWORD;
 
-        String appName = DEFAULT_APPLICATION_NAME;
-        String appVersion = DEFAULT_APPLICATION_VERSION;
-        String decisionService = DEFAULT_DECISION_SERVICE;
-        String decisionServiceEndPoint = DEFAULT_SERVICE_SERVICE_URL;
-        String decisionServicePayload = "{\"Approval Amount\" : 120, \"Approval Type\" : \"NewHire\", \"Manager\" : \"Alex\"}";
+        String appName = "ApprovalPOC";                                                                                        // DEFAULT_APPLICATION_NAME;
+        String appVersion = "1.0";                                                                                             // DEFAULT_APPLICATION_VERSION;
+        String decisionService = "ApprovalStrategyService";                                                                    // DEFAULT_DECISION_SERVICE;
+        String decisionServiceEndPoint = "idcs-oda-d992cfbabc1744baab766fb7464b924c-s0.data.digitalassistant.oci.oc-test.com"; // DEFAULT_SERVICE_SERVICE_URL;
+        String decisionServicePayload = "{\"Approval Amount\" : 220, \"Approval Type\" : \"NewHire\", \"Manager\" : \"Alex\"}";
+        String pathInReturnedPayload = "interpretation.ApprovalStrategy";
 
         OlivODADecisionServiceClient decisionServiceInvoker = new OlivODADecisionServiceClient();
 
@@ -131,7 +145,9 @@ public class OlivODADecisionServiceClient {
                 appVersion,
                 decisionService,
                 decisionServiceEndPoint,
-                decisionServicePayload);
+                decisionServicePayload,
+                pathInReturnedPayload);
+
         System.out.printf("----------\nDECISION: %s\n----------\n", decision);
     }
 }
