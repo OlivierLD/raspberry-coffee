@@ -36,6 +36,14 @@ def set_duty_cycle(duty):
     pwm.ChangeDutyCycle(duty)    # pwm defined below
 
 
+# Start here, prompt for the servo pin
+user_input = input(f"Enter Servo Physical pin (default is {servo_pin}) > ")
+if len(user_input.strip()) > 0:
+    try:
+        servo_pin = int(user_input.strip()
+    except ValueError:
+        print(f"Bad int value [{user_input}], keeping default {servo_pin}")
+
 GPIO.setmode(GPIO.BOARD)          # <= i.e. Use physical pin numbers. Could also be GPIO.BCM
 GPIO.setwarnings(False)
 GPIO.setup(servo_pin, GPIO.OUT)
