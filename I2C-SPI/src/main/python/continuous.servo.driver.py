@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #
 # Pure PWM in Python
 #
@@ -29,9 +30,10 @@ from time import sleep
 
 servo_pin = 3  # Physical pin. (3: SDA)
 
-STOP_ROTATION = 11.5
-ROTATE_CLOCKWISE = 2.5
-ROTATE_COUNTER_CLOCKWISE = 20.5
+# Values below for 50Hz
+STOP_ROTATION = 7.0                  # ~  90 degrees on a Standard Servo
+ROTATE_CLOCKWISE = 2.0               # ~   0 degrees on a Standard Servo
+ROTATE_COUNTER_CLOCKWISE = 12.0      # ~ 180 degrees on a Standard Servo
 
 print(f"RPi.GPIO version {GPIO.VERSION}")
 
