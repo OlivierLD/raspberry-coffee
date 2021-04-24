@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 #
 # Pure PWM in Python
+# Interactive version.
 #
 # Drive a continuous or standard servo
 # This code is more adapted for a Continuous servo (function set_rotation)
@@ -41,46 +42,24 @@ def set_rotation(duty):
     pwm.ChangeDutyCycle(duty)    # pwm defined below
 
 
-GPIO.setmode(GPIO.BOARD)          # <= i.e. Use physical pin numbers
+GPIO.setmode(GPIO.BOARD)          # <= i.e. Use physical pin numbers. Could also be GPIO.BCM
 GPIO.setwarnings(False)
 GPIO.setup(servo_pin, GPIO.OUT)
-
-with_user_input = True   # Will use time delay otherwise
 
 pwm = GPIO.PWM(servo_pin, 50)
 pwm.start(0)
 
 GPIO.output(servo_pin, True)
 
-
-print("Setting ROTATE_CLOCKWISE")
-set_rotation(ROTATE_CLOCKWISE)
-if with_user_input:
-    user_input = input("Hit [return] to move on ")
-else:
-    sleep(5)
-
-print("Setting STOP_ROTATION")
-set_rotation(STOP_ROTATION)
-if with_user_input:
-    user_input = input("Hit [return] to move on ")
-else:
-    sleep(5)
-
-print("Setting ROTATE_COUNTER_CLOCKWISE")
-set_rotation(ROTATE_COUNTER_CLOCKWISE)
-if with_user_input:
-    user_input = input("Hit [return] to move on ")
-else:
-    sleep(5)
-
-print("Setting STOP_ROTATION")
-set_rotation(STOP_ROTATION)
-if with_user_input:
-    user_input = input("Hit [return] to move on ")
-#else:
-#    sleep(1)
-
+print("Go ahead! Enter Q to quit.")
+keep_working = True
+while keep_working:
+    user_input = input("> PWM value [0, 15] (or Q to quit) : ")
+    if user_input.upper() == 'Q':
+        keep_working = False
+    else:
+        duty_value = float(user_input)
+        set_rotation(duty_value)
 
 GPIO.output(servo_pin, False) # This would stop the servo. A continuous would stop spinning.
 pwm.ChangeDutyCycle(0)
