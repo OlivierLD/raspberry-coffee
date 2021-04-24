@@ -40,7 +40,7 @@ def set_duty_cycle(duty):
 user_input = input(f"Enter Servo Physical pin (default is {servo_pin}) > ")
 if len(user_input.strip()) > 0:
     try:
-        servo_pin = int(user_input.strip()
+        servo_pin = int(user_input.strip())
     except ValueError:
         print(f"Bad int value [{user_input}], keeping default {servo_pin}")
 
