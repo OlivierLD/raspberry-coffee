@@ -4,7 +4,6 @@
 # Interactive version.
 #
 # Drive a continuous or standard servo
-# This code is more adapted for a Continuous servo (function set_rotation)
 #
 # Ground (black on continuous, or brown on standard) on pin #6
 # 5V (red on continuous, or orange on standard) on pin #2
@@ -31,14 +30,9 @@ from time import sleep
 
 servo_pin = 3  # Physical pin. (3: SDA)
 
-# Values below for 50Hz
-STOP_ROTATION = 7.0                  # ~  90 degrees on a Standard Servo
-ROTATE_CLOCKWISE = 2.0               # ~   0 degrees on a Standard Servo
-ROTATE_COUNTER_CLOCKWISE = 12.0      # ~ 180 degrees on a Standard Servo
-
 print(f"RPi.GPIO version {GPIO.VERSION}")
 
-def set_rotation(duty):
+def set_duty_cycle(duty):
     pwm.ChangeDutyCycle(duty)    # pwm defined below
 
 
@@ -54,12 +48,15 @@ GPIO.output(servo_pin, True)
 print("Go ahead! Enter Q to quit.")
 keep_working = True
 while keep_working:
-    user_input = input("> PWM value [0, 15] (or Q to quit) : ")
+    user_input = input("> PWM value - like in [0, 15] (or Q to quit) : ")
     if user_input.upper() == 'Q':
         keep_working = False
     else:
-        duty_value = float(user_input)
-        set_rotation(duty_value)
+        try:
+            duty_value = float(user_input)
+            set_duty_cycle(duty_value)
+        except ValueError:
+            print(f"Bad float value [{user_input}]")
 
 GPIO.output(servo_pin, False) # This would stop the servo. A continuous would stop spinning.
 pwm.ChangeDutyCycle(0)
