@@ -5,6 +5,10 @@ Mostly for tests...
 - `catapult.py` (Pure PWM) is a cool example, seen at <https://www.instructables.com/Program-a-Servo-Build-a-Catapult-and-Solve-for-%ce%a0-w>,
   wired like this:
   ![Catapult](./catapult_bb.png).
+    - `servo.driver.py` is suitable for a standard servo
+    - `continuous.servo.driver.interactive.py` will help you find the right PWM values (full speed clockwise, stop, full speed counter-clockwise)
+    - `continuous.servo.driver.py` uses the values found above.
+  
 - The `lis3mdl` folder contains a way to read a `LIS3MDL` breakout board from Adafruit.
 See the [documentation](https://learn.adafruit.com/lis3mdl-triple-axis-magnetometer?view=all)
   

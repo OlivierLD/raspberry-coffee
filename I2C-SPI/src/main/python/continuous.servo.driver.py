@@ -31,9 +31,11 @@ from time import sleep
 servo_pin = 3  # Physical pin. (3: SDA)
 
 # Values below for 50Hz
-STOP_ROTATION = 7.0                  # ~  90 degrees on a Standard Servo
-ROTATE_CLOCKWISE = 2.0               # ~   0 degrees on a Standard Servo
-ROTATE_COUNTER_CLOCKWISE = 12.0      # ~ 180 degrees on a Standard Servo
+STOP_ROTATION = 7.25                # ~  90 degrees on a Standard Servo
+ROTATE_CLOCKWISE = 6.0              # ~   0 degrees on a Standard Servo
+SLOW_ROTATE_CLOCKWISE = 7.0
+ROTATE_COUNTER_CLOCKWISE = 8.0      # ~ 180 degrees on a Standard Servo
+ROTATE_SLOW_COUNTER_CLOCKWISE = 7.4
 
 print(f"RPi.GPIO version {GPIO.VERSION}")
 
@@ -53,6 +55,13 @@ pwm.start(0)
 GPIO.output(servo_pin, True)
 
 
+print("Setting SLOW_ROTATE_CLOCKWISE")
+set_rotation(SLOW_ROTATE_CLOCKWISE)
+if with_user_input:
+    user_input = input("Hit [return] to move on ")
+else:
+    sleep(5)
+
 print("Setting ROTATE_CLOCKWISE")
 set_rotation(ROTATE_CLOCKWISE)
 if with_user_input:
@@ -62,6 +71,13 @@ else:
 
 print("Setting STOP_ROTATION")
 set_rotation(STOP_ROTATION)
+if with_user_input:
+    user_input = input("Hit [return] to move on ")
+else:
+    sleep(5)
+
+print("Setting ROTATE_SLOW_COUNTER_CLOCKWISE")
+set_rotation(ROTATE_SLOW_COUNTER_CLOCKWISE)
 if with_user_input:
     user_input = input("Hit [return] to move on ")
 else:
