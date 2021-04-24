@@ -30,12 +30,15 @@ from time import sleep
 
 servo_pin = 3  # Physical pin. (3: SDA)
 
-# Values below for 50Hz
+# Values below for 50Hz, for a PARALLAX Continuous servo
 STOP_ROTATION = 7.25                # ~  90 degrees on a Standard Servo
 ROTATE_CLOCKWISE = 6.0              # ~   0 degrees on a Standard Servo
 SLOW_ROTATE_CLOCKWISE = 7.0
 ROTATE_COUNTER_CLOCKWISE = 8.0      # ~ 180 degrees on a Standard Servo
 ROTATE_SLOW_COUNTER_CLOCKWISE = 7.4
+
+# For a SG92R (micro standard servo), values would go from 2.0 to 12.0...
+# Same for SG-5010 (standard servo)
 
 print(f"RPi.GPIO version {GPIO.VERSION}")
 
