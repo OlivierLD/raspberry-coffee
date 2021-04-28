@@ -64,7 +64,7 @@ public class SnaphotServer {
 			System.out.println(String.format("Transformed snapshots will be stored in %s", txSnapshotName));
 		}
 
-		snap = new SnapSnapSnap("SnapThread");
+		snap = new SnapSnapSnap("SnapThread", "true".equals(System.getProperty("time.based.snap.name")));
 		snap.setSnapName(snapshotName);
 		snap.setRot(180);
 	}
@@ -99,7 +99,7 @@ public class SnaphotServer {
 			if ("true".equals(System.getProperty("snap.verbose", "false"))) {
 				System.out.println("\tCreating new Snap Thread.");
 			}
-			snap = new SnapSnapSnap("SnapThread");
+			snap = new SnapSnapSnap("SnapThread", "true".equals(System.getProperty("time.based.snap.name")));
 		}
 		snap.setConfig(snapConfig);
 		snap.start();
@@ -123,6 +123,11 @@ public class SnaphotServer {
 		} else {
 			return null;
 		}
+	}
+
+	protected String getLastSnapshotName() {
+		String name = snap.getLastSnapshotName();
+		return (name != null) ? name : snapshotName;
 	}
 
 	protected List<HTTPServer.Operation> getAllOperationList() {

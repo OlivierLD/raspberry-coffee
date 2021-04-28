@@ -10,6 +10,7 @@ PROPS="${PROPS} -Dimage.rest.verbose=true"
 PROPS="${PROPS} -Dsnapshot.command=FSWEBCAM"
 PROPS="${PROPS} -Dadditional.arguments.1=--device"
 PROPS="${PROPS} -Dadditional.arguments.2=/dev/video1"
+PROPS="${PROPS} -Dtime.based.snap.name=true"
 #
 OPENCV_HOME=/usr/local/share/java/opencv4
 #

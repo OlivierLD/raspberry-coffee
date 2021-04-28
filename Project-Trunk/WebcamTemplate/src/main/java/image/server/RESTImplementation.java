@@ -353,8 +353,8 @@ public class RESTImplementation {
 			}
 		}
 
-		String fileName = SnaphotServer.snapshotName;
-		String urlFullPath = SnaphotServer.snapshotName;
+		String fileName = SnaphotServer.snap.getLastSnapshotName(); // .snapshotName;
+		String urlFullPath = fileName; // SnaphotServer.snapshotName;
 
 		final List<String> supported = Arrays.asList(
 			"gray", "blur", "threshold", "canny", "contours", "invert"
@@ -397,7 +397,7 @@ public class RESTImplementation {
 			// Apply transformations here
 			if ("true".equals(System.getProperty("with.opencv", "true"))) {
 				try {
-					Mat image = Imgcodecs.imread(SnaphotServer.snapshotName);
+					Mat image = Imgcodecs.imread(SnaphotServer.snap.getLastSnapshotName());
 					if (verbose) {
 						System.out.println(String.format("Original image: w %d, h %d, %d channel(s)", image.width(), image.height(), image.channels()));
 					}

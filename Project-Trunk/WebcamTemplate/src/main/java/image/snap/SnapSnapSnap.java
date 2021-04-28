@@ -6,8 +6,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 /**
@@ -15,6 +18,11 @@ import java.util.stream.Collectors;
  * -Dsnapshot.command=RASPISTILL|FSWEBCAM
  */
 public class SnapSnapSnap extends Thread {
+
+	private final static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+	static {
+		DURATION_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+	}
 
 	public static class SnapConfig {
 		private int rot = 0;
@@ -213,6 +221,7 @@ public class SnapSnapSnap extends Thread {
 	}
 	private static SnapshotOptions snapshotCommandOption = SnapshotOptions.RASPISTILL; // Default
 	private static String additionalArguments = "";
+	private boolean timeBasedSnapshotName = false;
 
 
 	// Slow motion (fswebcam also has the feature)
@@ -275,7 +284,11 @@ public class SnapSnapSnap extends Thread {
 		super();
 	}
 	public SnapSnapSnap(String threadName) {
+		this(threadName, false);
+	}
+	public SnapSnapSnap(String threadName, boolean timeBasedImageName) {
 		super(threadName);
+		this.timeBasedSnapshotName = timeBasedImageName;
 		String snapshotCommand = System.getProperty("snapshot.command", "RASPISTILL");
 		Optional<SnapshotOptions> snapOpt = Arrays.asList(SnapshotOptions.values())
 				.stream()
@@ -318,7 +331,10 @@ public class SnapSnapSnap extends Thread {
 		}
 		while (this.keepSnapping) {
 			try {
-				SnapSnapSnap.snap(this.config.snapName, this.config.rot, this.config.width, this.config.height);
+				if (this.timeBasedSnapshotName) {
+					this.config.setSnapName(String.format("web/snap-%s.jpg", DURATION_FMT.format(new Date())));
+				}
+				SnapSnapSnap.snap(this.config.getSnapName(), this.config.rot, this.config.width, this.config.height);
 			} catch (Exception ex) {
 				if ("true".equals(System.getProperty("snap.verbose", "false"))) {
 					ex.printStackTrace();
@@ -329,6 +345,10 @@ public class SnapSnapSnap extends Thread {
 			// Wait...
 			TimeUtil.delay(this.config.wait);
 		}
+	}
+
+	public String getLastSnapshotName() {
+		return this.config.getSnapName();
 	}
 
 }
