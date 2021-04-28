@@ -122,7 +122,9 @@ public class OlivODADecisionTableClient {
                             }
                         });
                     });
-
+                    // Back to string
+                    String jsonInString = mapper.writeValueAsString(decisionMap);
+                    System.out.println(jsonInString);
 
                     // Now PUT
                     System.out.printf("PUTTING to [%s]\n", decisionServiceURL);

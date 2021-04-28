@@ -1,5 +1,5 @@
 /*
- * @author Olivier Le Diouris
+ * @author Olivier LeDiouris
  * Uses ES6 Promises for Ajax.
  */
 
@@ -15,7 +15,7 @@ function getPromise(
 		headers,                      // Request Headers, or null. Array of { 'name': 'header-name', 'value: 'Value' }
 		happyCode,                    // if met, resolve, otherwise fail.
 		data = null,                  // json payload, when needed (PUT, POST...)
-		show = false) {                // Show the traffic true|[false]
+		show = false) {               // Show the traffic true|[false]
 
 	if (show === true) {
 		document.body.style.cursor = 'wait';
