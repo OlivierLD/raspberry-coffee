@@ -7,21 +7,11 @@ import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 import image.snap.SnapSnapSnap;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
+import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.core.Core;
 
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -235,7 +225,8 @@ public class RESTImplementation {
 						String cameraWidthStr = requestHeaders.get(CAMERA_WIDTH_HEADER_NAME);
 						String cameraHeightStr = requestHeaders.get(CAMERA_HEIGHT_HEADER_NAME);
 						String cameraWaitStr = requestHeaders.get(CAMERA_WAIT_HEADER_NAME);
-						String cameraSnapName = requestHeaders.get(CAMERA_SNAP_NAME_HEADER_NAME);
+						String cameraSnapName = requestHeaders.get(CAMERA_SNAP_NAME_HEADER_NAME) + " (" +
+								this.snapRequestManager.getSnapshotServer().getSnapThreadStatus().getSnapName() + ")";
 						if (cameraRotStr != null) {
 							snapThreadStatus.setRot(Integer.parseInt(cameraRotStr.trim()));
 						}
