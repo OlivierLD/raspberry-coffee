@@ -13,7 +13,8 @@ PROPS="${PROPS} -Dadditional.arguments.2=/dev/video0"     # For fswebcam
 # PROPS="${PROPS} -Dadditional.arguments.2=/dev/video1"
 PROPS="${PROPS} -Dtime.based.snap.name=true"
 #
-OPENCV_HOME=/usr/local/share/java/opencv4
+# OPENCV_HOME=/usr/local/share/java/opencv4
+OPENCV_HOME=/home/pi/opencv-4.5.2/build/lib
 #
 IP=$(hostname -I | awk '{ print $1 }')
 if [[ "${IP}" == "" ]]
