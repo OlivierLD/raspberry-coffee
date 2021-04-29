@@ -85,6 +85,7 @@ public class SnapSnapSnap extends Thread {
 		private int height = 480;
 		private long wait = 1_000L;
 		private String snapName = "snap.jpg";
+		private boolean timeBaseSnapName = false;
 		private boolean threadRunning = false;
 		private String state = "";
 
@@ -145,6 +146,13 @@ public class SnapSnapSnap extends Thread {
 
 		public void setThreadRunning(boolean threadRunning) {
 			this.threadRunning = threadRunning;
+		}
+
+		public boolean isTimeBaseSnapName() {
+			return timeBaseSnapName;
+		}
+		public void setTimeBaseSnapName(boolean b) {
+			this.timeBaseSnapName = b;
 		}
 	}
 
@@ -235,7 +243,8 @@ public class SnapSnapSnap extends Thread {
 		snapStatus.setHeight(this.config.height);
 		snapStatus.setWidth(this.config.width);
 		snapStatus.setRot(this.config.rot);
-		snapStatus.setSnapName(this.config.snapName);
+		snapStatus.setSnapName(this.config.getSnapName());
+		snapStatus.setTimeBaseSnapName(this.timeBasedSnapshotName);
 		snapStatus.setWait(this.config.wait);
 		snapStatus.setThreadRunning(this.isAlive());
 		snapStatus.setState(this.getState().toString());

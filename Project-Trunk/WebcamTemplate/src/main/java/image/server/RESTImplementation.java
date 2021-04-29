@@ -225,8 +225,14 @@ public class RESTImplementation {
 						String cameraWidthStr = requestHeaders.get(CAMERA_WIDTH_HEADER_NAME);
 						String cameraHeightStr = requestHeaders.get(CAMERA_HEIGHT_HEADER_NAME);
 						String cameraWaitStr = requestHeaders.get(CAMERA_WAIT_HEADER_NAME);
-						String cameraSnapName = requestHeaders.get(CAMERA_SNAP_NAME_HEADER_NAME) + " (" +
-								this.snapRequestManager.getSnapshotServer().getSnapThreadStatus().getSnapName() + ")";
+						String cameraSnapName = requestHeaders.get(CAMERA_SNAP_NAME_HEADER_NAME);
+						if (this.snapRequestManager.getSnapshotServer().getSnapThreadStatus().isTimeBaseSnapName()) {
+							if (cameraSnapName == null) {
+								cameraSnapName = "dynamic";
+							} else {
+								cameraSnapName += " (dynamic)";
+							}
+						}
 						if (cameraRotStr != null) {
 							snapThreadStatus.setRot(Integer.parseInt(cameraRotStr.trim()));
 						}
