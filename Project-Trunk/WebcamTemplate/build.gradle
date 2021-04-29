@@ -47,7 +47,7 @@ application {
 // mainClassName = "test.Main"
 // mainClassName = "image.server.SnaphotServer"
 // Use as in ./gradlew -PmainClass=akeu.Coucou run
-mainClassName = project.hasProperty("mainClass") ? getProperty("mainClass") : "image.server.SnaphotServer"
+mainClassName = project.hasProperty("mainClass") ? getProperty("mainClass") : "image.server.SnapshotServer"
 
 shadowJar {
     zip64 true

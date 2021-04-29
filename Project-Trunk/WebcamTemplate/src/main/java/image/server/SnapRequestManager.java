@@ -10,19 +10,19 @@ public class SnapRequestManager implements RESTRequestManager {
 	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
 	private RESTImplementation restImplementation;
 
-	private SnaphotServer snaphotServer = null;
+	private SnapshotServer snapshotServer = null;
 
 	/**
 	 *
 	 * @param parent to be able to refer to all the request managers
 	 */
-	public SnapRequestManager(SnaphotServer parent) {
-		this.snaphotServer = parent;
+	public SnapRequestManager(SnapshotServer parent) {
+		this.snapshotServer = parent;
 		restImplementation = new RESTImplementation(this);
 	}
 
-	public SnaphotServer getSnapshotServer() {
-		return this.snaphotServer;
+	public SnapshotServer getSnapshotServer() {
+		return this.snapshotServer;
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class SnapRequestManager implements RESTRequestManager {
 	 */
 
 	protected List<HTTPServer.Operation> getAllOperationList() {
-		return snaphotServer.getAllOperationList();
+		return snapshotServer.getAllOperationList();
 	}
 
 }

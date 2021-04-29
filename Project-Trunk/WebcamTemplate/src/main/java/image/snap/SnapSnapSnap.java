@@ -1,5 +1,6 @@
 package image.snap;
 
+import image.server.SnapshotServer;
 import utils.TimeUtil;
 
 import java.io.BufferedReader;
@@ -223,6 +224,8 @@ public class SnapSnapSnap extends Thread {
 	private static String additionalArguments = "";
 	private boolean timeBasedSnapshotName = false;
 
+	private SnapshotServer parent;
+
 
 	// Slow motion (fswebcam also has the feature)
 	private final static String SNAPSHOT_COMMAND_3 = "raspivid -w 640 -h 480 -fps 90 -t 30000 -o vid.h264";
@@ -284,10 +287,11 @@ public class SnapSnapSnap extends Thread {
 		super();
 	}
 	public SnapSnapSnap(String threadName) {
-		this(threadName, false);
+		this(threadName, false, null);
 	}
-	public SnapSnapSnap(String threadName, boolean timeBasedImageName) {
+	public SnapSnapSnap(String threadName, boolean timeBasedImageName, SnapshotServer parent) {
 		super(threadName);
+		this.parent = parent;
 		this.timeBasedSnapshotName = timeBasedImageName;
 		String snapshotCommand = System.getProperty("snapshot.command", "RASPISTILL");
 		Optional<SnapshotOptions> snapOpt = Arrays.asList(SnapshotOptions.values())
@@ -332,7 +336,9 @@ public class SnapSnapSnap extends Thread {
 		while (this.keepSnapping) {
 			try {
 				if (this.timeBasedSnapshotName) {
-					this.config.setSnapName(String.format("web/snap-%s.jpg", DURATION_FMT.format(new Date())));
+					this.config.setSnapName(String.format("%s/snap-%s.jpg",
+							SnapshotServer.stripSeparators(this.parent.getHTTPServer().getStaticDocumentsLocation().get(0)),
+							DURATION_FMT.format(new Date())));
 				}
 				SnapSnapSnap.snap(this.config.getSnapName(), this.config.rot, this.config.width, this.config.height);
 			} catch (Exception ex) {

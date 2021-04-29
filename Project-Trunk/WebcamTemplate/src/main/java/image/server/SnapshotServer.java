@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-public class SnaphotServer {
+public class SnapshotServer {
 	private HTTPServer httpServer;
 	private int httpPort = 1234;
 
@@ -20,7 +20,7 @@ public class SnaphotServer {
 	public static String snapshotName;
 	public static String txSnapshotName;
 
-	private String stripSeparators(String str) { // Remove first and last File.separator
+	public static String stripSeparators(String str) { // Remove first and last File.separator
 		String stripped = str;
 		while (stripped.startsWith(File.separator)) {
 			stripped = stripped.substring(1);
@@ -31,7 +31,7 @@ public class SnaphotServer {
 		return stripped;
 	}
 
-	public SnaphotServer() {
+	public SnapshotServer() {
 
 		if ("true".equals(System.getProperty("with.opencv", "true"))) {
 			try {
@@ -64,7 +64,7 @@ public class SnaphotServer {
 			System.out.println(String.format("Transformed snapshots will be stored in %s", txSnapshotName));
 		}
 
-		snap = new SnapSnapSnap("SnapThread", "true".equals(System.getProperty("time.based.snap.name")));
+		snap = new SnapSnapSnap("SnapThread", "true".equals(System.getProperty("time.based.snap.name")), this);
 		snap.setSnapName(snapshotName);
 		snap.setRot(180);
 	}
@@ -99,7 +99,7 @@ public class SnaphotServer {
 			if ("true".equals(System.getProperty("snap.verbose", "false"))) {
 				System.out.println("\tCreating new Snap Thread.");
 			}
-			snap = new SnapSnapSnap("SnapThread", "true".equals(System.getProperty("time.based.snap.name")));
+			snap = new SnapSnapSnap("SnapThread", "true".equals(System.getProperty("time.based.snap.name")), this);
 		}
 		snap.setConfig(snapConfig);
 		snap.start();
@@ -130,6 +130,13 @@ public class SnaphotServer {
 		return (name != null) ? name : snapshotName;
 	}
 
+	public HTTPServer getHTTPServer() {
+		return this.httpServer;
+	}
+	public int getHTTPPort() {
+		return this.httpPort;
+	}
+
 	protected List<HTTPServer.Operation> getAllOperationList() {
 		return this.httpServer.getRequestManagers()
 				.stream()
@@ -138,7 +145,7 @@ public class SnaphotServer {
 	}
 
 	public static void main(String... args) {
-		new SnaphotServer();
+		new SnapshotServer();
 	}
 
 	public HTTPServer startHttpServer(int port, SnapRequestManager requestManager) {

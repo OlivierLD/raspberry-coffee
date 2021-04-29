@@ -34,7 +34,7 @@ public class RESTImplementation {
 	private boolean verbose = "true".equals(System.getProperty("image.rest.verbose"));
 
 	private SnapRequestManager snapRequestManager;
-	private final static String SNAP_PREFIX = "/snap";
+	private final static String SNAP_RESOURCE_PREFIX = "/snap";
 
 	public RESTImplementation(SnapRequestManager restRequestManager) {
 
@@ -63,17 +63,17 @@ public class RESTImplementation {
 			 */
 			new Operation(
 					"GET",
-					SNAP_PREFIX + "/last-snapshot",
+					SNAP_RESOURCE_PREFIX + "/last-snapshot",
 					this::getLastSnapshot,
 					"Return the last snapshot."),
 			new Operation(
 					"GET",
-					SNAP_PREFIX + "/snap-status",
+					SNAP_RESOURCE_PREFIX + "/snap-status",
 					this::getSnapThreadStatus,
 					"Return the snapshot thread status."),
 			new Operation(
 					"POST",
-					SNAP_PREFIX + "/commands/{cmd}",
+					SNAP_RESOURCE_PREFIX + "/commands/{cmd}",
 					this::snapThreadCommand,
 					"Stop, start, or configure the snap thread. See headers for 'start' and 'config'.")
 	);
@@ -155,10 +155,20 @@ public class RESTImplementation {
 		}
 	}
 
+	public final static String STOP_QS_PRM = "stop";
+	public final static String START_QS_PRM = "start";
+	public final static String CONFIG_QS_PRM = "config";
+
+	public final static String CAMERA_ROT_HEADER_NAME = "camera-rot";
+	public final static String CAMERA_WIDTH_HEADER_NAME = "camera-width";
+	public final static String CAMERA_HEIGHT_HEADER_NAME = "camera-height";
+	public final static String CAMERA_WAIT_HEADER_NAME = "camera-wait";
+	public final static String CAMERA_SNAP_NAME_HEADER_NAME = "camera-snap-name";
+
 	/**
 	 * Start or Stop the thread
 	 *
-	 * TODO Add parameters for stop motion (filename pattern)
+	 * Parameters for stop motion (filename pattern) comes from a system variable, -Dtime.based.snap.name=true|false
 	 *
 	 * Verb is POST
 	 *
@@ -177,9 +187,9 @@ public class RESTImplementation {
 			response.setPayload(content.getBytes());
 			return response;
 		}
-		boolean stop = "stop".equals(pathPrms.get(0));
-		boolean start = "start".equals(pathPrms.get(0));
-		boolean config = "config".equals(pathPrms.get(0));
+		boolean stop = STOP_QS_PRM.equals(pathPrms.get(0));
+		boolean start = START_QS_PRM.equals(pathPrms.get(0));
+		boolean config = CONFIG_QS_PRM.equals(pathPrms.get(0));
 
 		if (!start && !stop && !config) {
 			String errMess = String.format("SNAP-0002: path parameter must be 'config', 'start' or 'stop', not [%s]", pathPrms.get(0));
@@ -221,11 +231,11 @@ public class RESTImplementation {
 				Map<String, String> requestHeaders = request.getHeaders();
 				if (snapThreadStatus != null) {
 					if (requestHeaders != null) {
-						String cameraRotStr = requestHeaders.get("camera-rot");
-						String cameraWidthStr = requestHeaders.get("camera-width");
-						String cameraHeightStr = requestHeaders.get("camera-height");
-						String cameraWaitStr = requestHeaders.get("camera-wait");
-						String cameraSnapName = requestHeaders.get("camera-snap-name");
+						String cameraRotStr = requestHeaders.get(CAMERA_ROT_HEADER_NAME);
+						String cameraWidthStr = requestHeaders.get(CAMERA_WIDTH_HEADER_NAME);
+						String cameraHeightStr = requestHeaders.get(CAMERA_HEIGHT_HEADER_NAME);
+						String cameraWaitStr = requestHeaders.get(CAMERA_WAIT_HEADER_NAME);
+						String cameraSnapName = requestHeaders.get(CAMERA_SNAP_NAME_HEADER_NAME);
 						if (cameraRotStr != null) {
 							snapThreadStatus.setRot(Integer.parseInt(cameraRotStr.trim()));
 						}
@@ -276,11 +286,11 @@ public class RESTImplementation {
 				Map<String, String> requestHeaders = request.getHeaders();
 				if (snapThreadStatus != null) {
 					if (requestHeaders != null) {
-						String cameraRotStr = requestHeaders.get("camera-rot");
-						String cameraWidthStr = requestHeaders.get("camera-width");
-						String cameraHeightStr = requestHeaders.get("camera-height");
-						String cameraWaitStr = requestHeaders.get("camera-wait");
-						String cameraSnapName = requestHeaders.get("camera-snap-name");
+						String cameraRotStr = requestHeaders.get(CAMERA_ROT_HEADER_NAME);
+						String cameraWidthStr = requestHeaders.get(CAMERA_WIDTH_HEADER_NAME);
+						String cameraHeightStr = requestHeaders.get(CAMERA_HEIGHT_HEADER_NAME);
+						String cameraWaitStr = requestHeaders.get(CAMERA_WAIT_HEADER_NAME);
+						String cameraSnapName = requestHeaders.get(CAMERA_SNAP_NAME_HEADER_NAME);
 						if (cameraRotStr != null) {
 							snapThreadStatus.setRot(Integer.parseInt(cameraRotStr.trim()));
 						}
@@ -353,7 +363,7 @@ public class RESTImplementation {
 			}
 		}
 
-		String fileName = SnaphotServer.snap.getLastSnapshotName(); // .snapshotName;
+		String fileName = SnapshotServer.snap.getLastSnapshotName(); // .snapshotName;
 		String urlFullPath = fileName; // SnaphotServer.snapshotName;
 
 		final List<String> supported = Arrays.asList(
@@ -397,7 +407,7 @@ public class RESTImplementation {
 			// Apply transformations here
 			if ("true".equals(System.getProperty("with.opencv", "true"))) {
 				try {
-					Mat image = Imgcodecs.imread(SnaphotServer.snap.getLastSnapshotName());
+					Mat image = Imgcodecs.imread(SnapshotServer.snap.getLastSnapshotName());
 					if (verbose) {
 						System.out.println(String.format("Original image: w %d, h %d, %d channel(s)", image.width(), image.height(), image.channels()));
 					}
@@ -444,8 +454,8 @@ public class RESTImplementation {
 									break;
 							}
 						}
-						fileName = SnaphotServer.txSnapshotName;
-						urlFullPath = SnaphotServer.txSnapshotName;
+						fileName = SnapshotServer.txSnapshotName;
+						urlFullPath = SnapshotServer.txSnapshotName;
 						Imgcodecs.imwrite(fileName, finalMat);
 					} else {
 						// Empty!
