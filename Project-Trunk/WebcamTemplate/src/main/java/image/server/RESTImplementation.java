@@ -55,7 +55,7 @@ public class RESTImplementation {
 					"GET",
 					SNAP_RESOURCE_PREFIX + "/last-snapshot",
 					this::getLastSnapshot,
-					"Return the last snapshot."),
+					"Return the last snapshot name."),
 			new Operation(
 					"GET",
 					SNAP_RESOURCE_PREFIX + "/snap-status",
