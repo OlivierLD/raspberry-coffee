@@ -18,7 +18,7 @@ $ find /usr/local -name '*opencv*.jar' -exec ls -lisah {} \;
 1075459 640K -rw-r--r-- 1 root root 639K Apr 30 10:09 /usr/local/share/java/opencv4/opencv-430.jar
 ```
 - `/usr/local/share/java/opencv4/opencv-430.jar` will be used for the Java Classpath 
-- `/usr/local/share/java/opencv4` will be used for the Java `-Djava.library.path`, as it contains a required system lib.
+- `/usr/local/share/java/opencv4` will be used for the Java `-Djava.library.path`, as it contains a required system lib (`libopencv_java430.so` in this case).
 ```
 ll /usr/local/share/java/opencv4/
 total 20M
@@ -28,8 +28,12 @@ total 20M
 1075459 640K -rw-r--r-- 1 root root 639K Apr 30 10:09 opencv-430.jar
 pi@rpi-buster:~/opencv-4.3.0/build $ 
 ``` 
-> Note the paths above may change if you are not on Debian on Raspi OS.
+> _Note:_ the paths above may change if you are not on Debian on Raspi OS.
 > The `gradle` script(s) would be impacted.
+
+> _Note:_ Version `4.5.2` leaves those guys under the `build` directory. Good to know...  
+> The scripts presented here will reflect that.
+
 
 ## Some first tests
 - Update the `build.gradle` with the right paths
