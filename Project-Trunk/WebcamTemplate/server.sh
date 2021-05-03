@@ -37,13 +37,15 @@ then
   echo -e "Make sure you've started the snap thread (in the REST server)! "
   echo -e "like in:"
   echo -e "  curl -X POST http://${IP}:1234/snap/commands/start -H \"camera-rot: 0\" -H \"camera-width: 1280\" -H \"camera-height: 720\""
+else
+  echo -e "Will start snapping immediately."
 fi
 echo -e "Full operation list available from curl -X GET http://${IP}:1234/oplist"
 echo -e "To see snapshots from a browser: http://${IP}:1234/web/index.html"
 #
+COMMAND="java ${PROPS} -Djava.library.path=${OPENCV_HOME} -jar build/libs/WebcamTemplate-1.0-all.jar"
+echo -e "Running ${COMMAND}"
 echo -en ">> Hit [return] to move on... "
 read a
 #
-COMMAND="java ${PROPS} -Djava.library.path=${OPENCV_HOME} -jar build/libs/WebcamTemplate-1.0-all.jar"
-echo -e "Running ${COMMAND}"
 ${COMMAND}
