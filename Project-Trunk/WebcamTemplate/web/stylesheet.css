@@ -125,3 +125,9 @@ a:active {
 a:visited {
 	color: #8080ff
 }
+
+.snap-image {
+    padding: 10px;
+    border: 1px solid silver;
+    border-radius: 5px;
+}

@@ -56,7 +56,7 @@
 				let visibleDiv = (oneOrTwo === 1) ? document.getElementById("the-picture-1") : document.getElementById("the-picture-2");
 				let hiddenDiv = (oneOrTwo === 1) ? document.getElementById("the-picture-2") : document.getElementById("the-picture-1");
 				visibleDiv.innerHTML =
-						`<img src="${imgUrl}" title="Snap!" style="padding: 10px;"/>`;
+						`<img src="${imgUrl}" title="Snap!" class="snap-image"/>`;
 				window.setTimeout(() => { // To avoid flickering...
 					visibleDiv.style.display = 'block';
 					hiddenDiv.style.display = 'none';
