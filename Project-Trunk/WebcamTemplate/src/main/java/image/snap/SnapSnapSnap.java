@@ -363,7 +363,7 @@ public class SnapSnapSnap extends Thread {
 		}
 		while (this.keepSnapping) {
 			try {
-				if (this.timeBasedSnapshotName) {
+				if (this.config.isTimeBasedSnapName()) {
 					this.config.setSnapName(String.format("%s/snap-%s.jpg",
 							SnapshotServer.stripSeparators(this.parent.getHTTPServer().getStaticDocumentsLocation().get(0)),
 							DURATION_FMT.format(new Date())));
