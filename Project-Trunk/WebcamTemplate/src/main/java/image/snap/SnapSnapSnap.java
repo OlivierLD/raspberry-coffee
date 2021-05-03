@@ -167,6 +167,10 @@ public class SnapSnapSnap extends Thread {
 			return timeBaseSnapName;
 		}
 		public void setTimeBaseSnapName(boolean b) {
+			System.out.println(">>> Setting timeBasedSnapName to " + b);
+			Throwable whoCalledMe = new Throwable();
+			whoCalledMe.printStackTrace();
+			System.out.println(">>> ---------------------------------");
 			this.timeBaseSnapName = b;
 		}
 	}
