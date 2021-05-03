@@ -96,7 +96,7 @@ public class SnapshotServer {
 		snapConfig.setWait(config.getWait());
 		snapConfig.setSnapName(config.getSnapName());
 		if ("true".equals(System.getProperty("snap.verbose", "false"))) {
-			System.out.println("Setting SnapThread config");
+			System.out.println("Setting SnapThread config: " + snapConfig.toString());
 		}
 		snap.setConfig(snapConfig);
 	}

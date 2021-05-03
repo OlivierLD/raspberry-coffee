@@ -256,10 +256,14 @@ public class RESTImplementation {
 							snapThreadStatus.setSnapName(cameraSnapName.trim());
 						}
 						if (timeBasedSnapName != null) {
-							System.out.println("Setting timeBaseSnapName to " + timeBasedSnapName.trim() + " from Header");
+							if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+								System.out.println("Setting timeBaseSnapName to " + timeBasedSnapName.trim() + " from Header");
+							}
 							snapThreadStatus.setTimeBaseSnapName("true".equals(timeBasedSnapName.trim()));
 						} else {
-							System.out.println("Setting timeBaseSnapName to " + System.getProperty("time.based.snap.name") + " from System Property");
+							if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+								System.out.println("Setting timeBaseSnapName to " + System.getProperty("time.based.snap.name", "false").trim() + " from System Property");
+							}
 							snapThreadStatus.setTimeBaseSnapName("true".equals(System.getProperty("time.based.snap.name")));
 						}
 					}

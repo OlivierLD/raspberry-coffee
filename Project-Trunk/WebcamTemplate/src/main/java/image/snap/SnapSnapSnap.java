@@ -74,6 +74,12 @@ public class SnapSnapSnap extends Thread {
 		public void setSnapName(String snapName) {
 			this.snapName = snapName;
 		}
+
+		@Override
+		public String toString() {
+			return String.format("Rot: %d, Width: %d, Height: %d, Wait: %d, Name: %s",
+					this.rot, this.width, this.height, this.wait, this.snapName)
+		}
 	}
 	private SnapConfig config = new SnapConfig();
 
@@ -240,12 +246,12 @@ public class SnapSnapSnap extends Thread {
 
 	public SnapStatus getSnapStatus() {
 		SnapStatus snapStatus = new SnapStatus();
-		snapStatus.setHeight(this.config.height);
-		snapStatus.setWidth(this.config.width);
-		snapStatus.setRot(this.config.rot);
+		snapStatus.setHeight(this.config.getHeight());
+		snapStatus.setWidth(this.config.getWidth());
+		snapStatus.setRot(this.config.getRot());
 		snapStatus.setSnapName(this.config.getSnapName());
 		snapStatus.setTimeBaseSnapName(this.timeBasedSnapshotName);
-		snapStatus.setWait(this.config.wait);
+		snapStatus.setWait(this.config.getWait());
 		snapStatus.setThreadRunning(this.isAlive());
 		snapStatus.setState(this.getState().toString());
 		return snapStatus;
@@ -358,7 +364,10 @@ public class SnapSnapSnap extends Thread {
 				}
 			}
 			// Wait...
-			TimeUtil.delay(this.config.wait);
+			if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+				System.out.printf(">> Waiting for %d ms.\n", this.config.getWait());
+			}
+			TimeUtil.delay(this.config.getWait());
 		}
 	}
 
