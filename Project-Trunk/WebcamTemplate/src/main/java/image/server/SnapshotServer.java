@@ -109,6 +109,7 @@ public class SnapshotServer {
 		snapConfig.setRot(config.getRot());
 		snapConfig.setWait(config.getWait());
 		snapConfig.setSnapName(config.getSnapName());
+		// config.isTimeBaseSnapName()
 		if ("true".equals(System.getProperty("snap.verbose", "false"))) {
 			System.out.println("(re)starting SnapThread");
 		}
@@ -117,7 +118,7 @@ public class SnapshotServer {
 			if ("true".equals(System.getProperty("snap.verbose", "false"))) {
 				System.out.println("\tCreating new Snap Thread.");
 			}
-			snap = new SnapSnapSnap("SnapThread", "true".equals(System.getProperty("time.based.snap.name")), this);
+			snap = new SnapSnapSnap("SnapThread", config.isTimeBaseSnapName(), this);
 		}
 		snap.setConfig(snapConfig);
 		snap.start();

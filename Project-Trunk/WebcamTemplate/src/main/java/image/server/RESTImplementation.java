@@ -257,6 +257,8 @@ public class RESTImplementation {
 						}
 						if (timeBasedSnapName != null) {
 							snapThreadStatus.setTimeBaseSnapName("true".equals(timeBasedSnapName));
+						} else {
+							snapThreadStatus.setTimeBaseSnapName("true".equals(System.getProperty("time.based.snap.name")));
 						}
 					}
 				} else {
