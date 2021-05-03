@@ -255,8 +255,8 @@ public class RESTImplementation {
 						if (cameraSnapName != null) {
 							snapThreadStatus.setSnapName(cameraSnapName.trim());
 						}
-						if ("true".equals(timeBasedSnapName)) {
-							snapThreadStatus.setTimeBaseSnapName(true);
+						if (timeBasedSnapName != null) {
+							snapThreadStatus.setTimeBaseSnapName("true".equals(timeBasedSnapName));
 						}
 					}
 				} else {
