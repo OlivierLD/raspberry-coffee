@@ -38,7 +38,7 @@ then
   echo -e "  curl -X POST http://${IP}:1234/snap/commands/start -H \"camera-rot: 0\" -H \"camera-width: 1280\" -H \"camera-height: 720\""
 fi
 echo -e "Full operation list available from curl -X GET http://${IP}:1234/oplist"
-echo -e "To take snapshots from a browser: http://${IP}:1234/web/index.html"
+echo -e "To see snapshots from a browser: http://${IP}:1234/web/index.html"
 #
 echo -en ">> Hit [return] to move on... "
 read a
