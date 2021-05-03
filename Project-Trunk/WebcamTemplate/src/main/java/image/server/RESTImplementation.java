@@ -374,7 +374,7 @@ public class RESTImplementation {
 			}
 		}
 
-		String fileName = SnapshotServer.snap.getLastSnapshotName(); // .snapshotName;
+		String fileName = SnapshotServer.snap == null ? null : SnapshotServer.snap.getLastSnapshotName(); // .snapshotName;
 		String urlFullPath = fileName; // SnaphotServer.snapshotName;
 
 		final List<String> supported = Arrays.asList(
