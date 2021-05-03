@@ -167,10 +167,10 @@ public class SnapSnapSnap extends Thread {
 			return timeBaseSnapName;
 		}
 		public void setTimeBaseSnapName(boolean b) {
-			System.out.println(">>> Setting timeBasedSnapName to " + b);
-			Throwable whoCalledMe = new Throwable();
-			whoCalledMe.printStackTrace();
-			System.out.println(">>> ---------------------------------");
+//			System.out.println(">>> Setting timeBasedSnapName to " + b);
+//			Throwable whoCalledMe = new Throwable();
+//			whoCalledMe.printStackTrace();
+//			System.out.println(">>> ---------------------------------");
 			this.timeBaseSnapName = b;
 		}
 	}
@@ -263,7 +263,7 @@ public class SnapSnapSnap extends Thread {
 		snapStatus.setWidth(this.config.getWidth());
 		snapStatus.setRot(this.config.getRot());
 		snapStatus.setSnapName(this.config.getSnapName());
-		snapStatus.setTimeBaseSnapName(this.timeBasedSnapshotName);
+		snapStatus.setTimeBaseSnapName(this.config.isTimeBasedSnapName());
 		snapStatus.setWait(this.config.getWait());
 		snapStatus.setThreadRunning(this.isAlive());
 		snapStatus.setState(this.getState().toString());
