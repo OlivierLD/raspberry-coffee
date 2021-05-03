@@ -41,7 +41,7 @@ then
   echo -e "       -H \"camera-width: 960\" \\"
   echo -e "       -H \"camera-height: 540\" \\"
   echo -e "       -H \"camera-snap-name: web/snap.jpg\" \\"
-  echo -e "       -H \"camera-wait: 1000\" \\"
+  echo -e "       -H \"camera-wait: 5000\" \\"
   echo -e "       -H \"camera-snap-time-based-name: true|false\""
 else
   echo -e "Will start snapping immediately."

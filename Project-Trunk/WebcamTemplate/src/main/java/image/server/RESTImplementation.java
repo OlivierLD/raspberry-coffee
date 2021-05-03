@@ -25,9 +25,9 @@ import java.util.*;
  */
 public class RESTImplementation {
 
-	private boolean verbose = "true".equals(System.getProperty("image.rest.verbose"));
+	private final boolean verbose = "true".equals(System.getProperty("image.rest.verbose"));
 
-	private SnapRequestManager snapRequestManager;
+	private final SnapRequestManager snapRequestManager;
 	private final static String SNAP_RESOURCE_PREFIX = "/snap";
 
 	public RESTImplementation(SnapRequestManager restRequestManager) {
@@ -46,7 +46,7 @@ public class RESTImplementation {
 	 * See {@link #processRequest(Request)}
 	 * See {@link HTTPServer}
 	 */
-	private List<Operation> operations = Arrays.asList(
+	private final List<Operation> operations = Arrays.asList(
 			new Operation(
 					"GET",
 					"/oplist",
@@ -232,8 +232,14 @@ public class RESTImplementation {
 						String cameraWaitStr = requestHeaders.get(CAMERA_WAIT_HEADER_NAME);
 						String cameraSnapName = requestHeaders.get(CAMERA_SNAP_NAME_HEADER_NAME);
 						String timeBasedSnapName = requestHeaders.get(CAMERA_SNAP_TIME_BASED_NAME_HEADER_NAME);
-						if (this.snapRequestManager.getSnapshotServer().getSnapThreadStatus().isTimeBaseSnapName() ||
-						                                                             "true".equals(timeBasedSnapName)) {
+
+						boolean timeBasedName = false;
+						if (timeBasedSnapName == null) {
+							timeBasedName = this.snapRequestManager.getSnapshotServer().getSnapThreadStatus().isTimeBaseSnapName();
+						} else {
+							timeBasedName = "true".equals(timeBasedSnapName.trim());
+						}
+						if (timeBasedName) {
 							if (cameraSnapName == null) {
 								cameraSnapName = "dynamic";
 							} else {
@@ -268,7 +274,7 @@ public class RESTImplementation {
 						}
 					}
 				} else {
-					String errMess = String.format("SNAP-0003: No Snap Status found.");
+					String errMess = "SNAP-0003: No Snap Status found.";
 					String content = new Gson().toJson(errMess);
 					response.setStatus(Response.BAD_REQUEST);
 					RESTProcessorUtil.generateResponseHeaders(response, content.length());
