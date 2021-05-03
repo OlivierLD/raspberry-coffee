@@ -78,7 +78,7 @@ public class SnapSnapSnap extends Thread {
 		@Override
 		public String toString() {
 			return String.format("Rot: %d, Width: %d, Height: %d, Wait: %d, Name: %s",
-					this.rot, this.width, this.height, this.wait, this.snapName)
+					this.rot, this.width, this.height, this.wait, this.snapName);
 		}
 	}
 	private SnapConfig config = new SnapConfig();
