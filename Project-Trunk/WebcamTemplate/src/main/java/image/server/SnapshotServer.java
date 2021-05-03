@@ -52,7 +52,8 @@ public class SnapshotServer {
 		}
 
 		System.out.println(String.format("Running on port %d", httpPort));
-		this.httpServer = startHttpServer(httpPort, new SnapRequestManager(this));
+		SnapRequestManager snapRequestManager = new SnapRequestManager(this);
+		this.httpServer = startHttpServer(httpPort, snapRequestManager);
 		// Add other features here if needed...
 //	this.httpServer.addRequestManager(new AstroRequestManager());
 
@@ -67,6 +68,23 @@ public class SnapshotServer {
 		snap = new SnapSnapSnap("SnapThread", "true".equals(System.getProperty("time.based.snap.name")), this);
 		snap.setSnapName(snapshotName);
 		snap.setRot(180);
+
+		/*
+		 * System variables -Dstart.snap.thread=true, default false
+		 *                  -Dsnap.rot=0
+		 *                  -Dsnap.width=1280
+		 *                  -Dsnap.height=780
+		 */
+		if ("true".equals(System.getProperty("start.snap.thread")))
+		try {
+			SnapSnapSnap.SnapStatus snapThreadStatus = snapRequestManager.getSnapshotServer().getSnapThreadStatus();
+			snapThreadStatus.setRot(Integer.parseInt(System.getProperty("snap.rot", "0")));
+			snapThreadStatus.setWidth(Integer.parseInt(System.getProperty("snap.width", "1280")));
+			snapThreadStatus.setHeight(Integer.parseInt(System.getProperty("snap.height", "720")));
+			snapRequestManager.getSnapshotServer().startSnapThread(snapThreadStatus);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	protected void setSnapThreadConfig(SnapSnapSnap.SnapStatus config) throws Exception {
