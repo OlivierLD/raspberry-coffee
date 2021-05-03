@@ -13,7 +13,7 @@ PROPS="${PROPS} -Dadditional.arguments.2=/dev/video0"     # For fswebcam
 # PROPS="${PROPS} -Dadditional.arguments.2=/dev/video1"
 PROPS="${PROPS} -Dtime.based.snap.name=true"
 #
-START_SNAP_IMMEDIATELY=true
+START_SNAP_IMMEDIATELY=false
 if [[ "${START_SNAP_IMMEDIATELY}" == "true" ]]
 then
   PROPS="${PROPS} -Dstart.snap.thread=true"
@@ -41,7 +41,7 @@ then
   echo -e "       -H \"camera-width: 1280\" \\"
   echo -e "       -H \"camera-height: 720\" \\"
   echo -e "       -H \"camera-snap-name: web/snap.jpg\" \\"
-  echo -e "       -H \"camera-wait: 1\" \\"
+  echo -e "       -H \"camera-wait: 1000\" \\"
   echo -e "       -H \"camera-snap-time-based-name: true|false\""
 else
   echo -e "Will start snapping immediately."

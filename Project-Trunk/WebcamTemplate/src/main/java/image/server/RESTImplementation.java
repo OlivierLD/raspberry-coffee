@@ -256,7 +256,7 @@ public class RESTImplementation {
 							snapThreadStatus.setSnapName(cameraSnapName.trim());
 						}
 						if (timeBasedSnapName != null) {
-							System.out.println("Setting timeBaseSnapName to " + timeBasedSnapName + " from Header");
+							System.out.println("Setting timeBaseSnapName to " + timeBasedSnapName.trim() + " from Header");
 							snapThreadStatus.setTimeBaseSnapName("true".equals(timeBasedSnapName.trim()));
 						} else {
 							System.out.println("Setting timeBaseSnapName to " + System.getProperty("time.based.snap.name") + " from System Property");
