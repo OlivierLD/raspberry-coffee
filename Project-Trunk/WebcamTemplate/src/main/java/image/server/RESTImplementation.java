@@ -246,6 +246,9 @@ public class RESTImplementation {
 								cameraSnapName += " (dynamic)";
 							}
 						}
+
+						System.out.println("1 - Setting timeBasedName:" + timeBasedName + ", header:" + timeBasedSnapName);
+
 						if (cameraRotStr != null) {
 							snapThreadStatus.setRot(Integer.parseInt(cameraRotStr.trim()));
 						}
@@ -261,6 +264,7 @@ public class RESTImplementation {
 						if (cameraSnapName != null) {
 							snapThreadStatus.setSnapName(cameraSnapName.trim());
 						}
+						System.out.println("2 - Setting timeBasedName:" + timeBasedName + ", header:" + timeBasedSnapName);
 						snapThreadStatus.setTimeBaseSnapName(timeBasedName);
 					}
 				} else {
