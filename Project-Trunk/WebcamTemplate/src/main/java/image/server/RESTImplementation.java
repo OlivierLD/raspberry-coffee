@@ -261,17 +261,7 @@ public class RESTImplementation {
 						if (cameraSnapName != null) {
 							snapThreadStatus.setSnapName(cameraSnapName.trim());
 						}
-						if (timeBasedSnapName != null) {
-							if ("true".equals(System.getProperty("snap.verbose", "false"))) {
-								System.out.println("Setting timeBaseSnapName to " + timeBasedSnapName.trim() + " from Header");
-							}
-							snapThreadStatus.setTimeBaseSnapName("true".equals(timeBasedSnapName.trim()));
-						} else {
-							if ("true".equals(System.getProperty("snap.verbose", "false"))) {
-								System.out.println("Setting timeBaseSnapName to " + System.getProperty("time.based.snap.name", "false").trim() + " from System Property");
-							}
-							snapThreadStatus.setTimeBaseSnapName("true".equals(System.getProperty("time.based.snap.name")));
-						}
+						snapThreadStatus.setTimeBaseSnapName(timeBasedName);
 					}
 				} else {
 					String errMess = "SNAP-0003: No Snap Status found.";
