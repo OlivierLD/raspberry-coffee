@@ -32,7 +32,7 @@ then
   IP=localhost
 fi
 echo -e "Port: default is 1234, override with -Dhttp.port"
-if [[ "${START_SNAP_IMMEDIATELY}" == "true" ]]
+if [[ "${START_SNAP_IMMEDIATELY}" != "true" ]]
 then
   echo -e "Make sure you've started the snap thread (in the REST server)! "
   echo -e "like in:"
