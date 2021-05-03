@@ -31,6 +31,7 @@ public class SnapSnapSnap extends Thread {
 		private int height = 480;
 		private long wait = 1_000L;
 		private String snapName = "snap.jpg";
+		private boolean timeBasedSnapName = false;
 
 		public SnapConfig() {
 		}
@@ -75,10 +76,18 @@ public class SnapSnapSnap extends Thread {
 			this.snapName = snapName;
 		}
 
+		public void setTimeBasedSnapName(boolean b) {
+			this.timeBasedSnapName = b;
+		}
+
+		public boolean isTimeBasedSnapName() {
+			return this.timeBasedSnapName;
+		}
+
 		@Override
 		public String toString() {
-			return String.format("Rot: %d, Width: %d, Height: %d, Wait: %d, Name: %s",
-					this.rot, this.width, this.height, this.wait, this.snapName);
+			return String.format("Rot: %d, Width: %d, Height: %d, Wait: %d, Name: %s, time-based: %d",
+					this.rot, this.width, this.height, this.wait, this.snapName, this.timeBasedSnapName);
 		}
 	}
 	private SnapConfig config = new SnapConfig();

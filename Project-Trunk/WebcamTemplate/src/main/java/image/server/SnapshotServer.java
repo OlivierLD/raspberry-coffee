@@ -95,6 +95,7 @@ public class SnapshotServer {
 		snapConfig.setRot(config.getRot());
 		snapConfig.setWait(config.getWait());
 		snapConfig.setSnapName(config.getSnapName());
+		snapConfig.setTimeBasedSnapName(config.isTimeBaseSnapName());
 		if ("true".equals(System.getProperty("snap.verbose", "false"))) {
 			System.out.println("Setting SnapThread config: " + snapConfig.toString());
 		}
@@ -109,6 +110,7 @@ public class SnapshotServer {
 		snapConfig.setRot(config.getRot());
 		snapConfig.setWait(config.getWait());
 		snapConfig.setSnapName(config.getSnapName());
+		snapConfig.setTimeBasedSnapName(config.isTimeBaseSnapName());
 		// config.isTimeBaseSnapName()
 		if ("true".equals(System.getProperty("snap.verbose", "false"))) {
 			System.out.println("(re)starting SnapThread");
