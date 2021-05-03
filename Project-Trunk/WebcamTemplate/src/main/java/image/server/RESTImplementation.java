@@ -7,7 +7,11 @@ import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 import image.snap.SnapSnapSnap;
-import org.opencv.core.*;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
@@ -154,6 +158,7 @@ public class RESTImplementation {
 	public final static String CAMERA_HEIGHT_HEADER_NAME = "camera-height";
 	public final static String CAMERA_WAIT_HEADER_NAME = "camera-wait";
 	public final static String CAMERA_SNAP_NAME_HEADER_NAME = "camera-snap-name";
+	public final static String CAMERA_SNAP_TIME_BASED_NAME_HEADER_NAME = "camera-snap-time-based-name";
 
 	/**
 	 * Start or Stop the thread
@@ -208,7 +213,7 @@ public class RESTImplementation {
 				System.out.println("Starting the Snap Thread");
 			}
 			try {
-				SnapSnapSnap.SnapStatus snapThreadStatus = null;
+				SnapSnapSnap.SnapStatus snapThreadStatus;
 				try {
 					snapThreadStatus = this.snapRequestManager.getSnapshotServer().getSnapThreadStatus();
 				} catch (Exception ex) {
@@ -226,7 +231,9 @@ public class RESTImplementation {
 						String cameraHeightStr = requestHeaders.get(CAMERA_HEIGHT_HEADER_NAME);
 						String cameraWaitStr = requestHeaders.get(CAMERA_WAIT_HEADER_NAME);
 						String cameraSnapName = requestHeaders.get(CAMERA_SNAP_NAME_HEADER_NAME);
-						if (this.snapRequestManager.getSnapshotServer().getSnapThreadStatus().isTimeBaseSnapName()) {
+						String timeBasedSnapName = requestHeaders.get(CAMERA_SNAP_TIME_BASED_NAME_HEADER_NAME);
+						if (this.snapRequestManager.getSnapshotServer().getSnapThreadStatus().isTimeBaseSnapName() ||
+						                                                             "true".equals(timeBasedSnapName)) {
 							if (cameraSnapName == null) {
 								cameraSnapName = "dynamic";
 							} else {
@@ -248,6 +255,9 @@ public class RESTImplementation {
 						if (cameraSnapName != null) {
 							snapThreadStatus.setSnapName(cameraSnapName.trim());
 						}
+						if ("true".equals(timeBasedSnapName)) {
+							snapThreadStatus.setTimeBaseSnapName(true);
+						}
 					}
 				} else {
 					String errMess = String.format("SNAP-0003: No Snap Status found.");
@@ -257,7 +267,7 @@ public class RESTImplementation {
 					response.setPayload(content.getBytes());
 					return response;
 				}
-				this.snapRequestManager.getSnapshotServer().startSnapThread(snapThreadStatus);
+				this.snapRequestManager.getSnapshotServer().startSnapThread(snapThreadStatus); // Thread starts here.
 			} catch (Exception ex) {
 
 				ex.printStackTrace();

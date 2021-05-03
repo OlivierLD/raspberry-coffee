@@ -36,7 +36,11 @@ if [[ "${START_SNAP_IMMEDIATELY}" != "true" ]]
 then
   echo -e "Make sure you've started the snap thread (in the REST server)! "
   echo -e "like in:"
-  echo -e "  curl -X POST http://${IP}:1234/snap/commands/start -H \"camera-rot: 0\" -H \"camera-width: 1280\" -H \"camera-height: 720\""
+  echo -e "  curl -X POST http://${IP}:1234/snap/commands/start \\"
+  echo -e "       -H \"camera-rot: 0\" \\"
+  echo -e "       -H \"camera-width: 1280\" \\"
+  echo -e "       -H \"camera-height: 720\" \\"
+  echo -e "       -H \"camera-snap-time-based-name\": \"true|false\""
 else
   echo -e "Will start snapping immediately."
 fi
