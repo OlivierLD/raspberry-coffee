@@ -1,0 +1,5 @@
+{ 
+  "query": "'Approval Type'",
+  "where": "'Manager' = 'Ernie'"
+}
+

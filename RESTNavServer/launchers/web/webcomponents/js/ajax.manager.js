@@ -114,6 +114,10 @@ function getNMEAData() {
     return getPromise('/mux/cache', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 }
 
+/*
+ * Doc at http://api.open-notify.org/
+ * Also try this: http://api.open-notify.org/astros.json
+ */
 function getISSDataFromServer() {
     return getPromise('/server/generic-get', DEFAULT_TIMEOUT, 'GET', 200, null, false, [{
         name: 'get-url',

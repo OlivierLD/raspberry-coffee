@@ -1,0 +1,5 @@
+{ 
+  "update": "'Approval Amount' = range(350)", 
+  "where": "'Manager' = 'Alex'" 
+}
+
