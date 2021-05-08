@@ -50,7 +50,7 @@ public class QueryDecisionTable {
 
         String queryResult = DecisionTablesStaticUtils.processQuery(resource.openStream(), jsonStatement);
 
-        System.out.println("Final Result:\n" + queryResult);
+        System.out.println("Query Result:\n" + queryResult);
 
         System.out.println("Done");
     }

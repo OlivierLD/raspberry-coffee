@@ -1,9 +1,12 @@
 { 
   "select-operation": [
-    { "item-name": "ApprovalStrategy" }
+    { "item-name": "ApprovalStrategy" },
+    { "item-name": "range('Approval Amount')" },
+    { "item-name": "Approval Amount" }
   ],
   "line-locator": [
-    { "item-name": "Approval Type", "item-value": "Procurement" }
+    { "item-name": "Approval Type", "item-value": "Procurement" },
+    { "item-name": "Manager", "item-value": "Alex" }
   ]
 }
 
