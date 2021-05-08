@@ -119,7 +119,6 @@ public class DecisionTablesStaticUtils {
         }
 
         if (query != null) {
-            // TODO Make sure there is a 'where' ?
             query.forEach(oneQuery -> {
                 String itemName = (String)oneQuery.get("item-name");
                 context.addTargetColumnId(itemName);
@@ -205,12 +204,16 @@ public class DecisionTablesStaticUtils {
                             Map<String, Object> range = (Map) inputEntries.get(targetColumnIndex.get(outIndex)).get("range");
                             if (range != null) {
                                 Object endpoint1 = range.get("endpoint1");
-                                System.out.printf(">> Value for %s: currently %s, moving to %s\n", (columnValue != null ? columnValue : "this line"), endpoint1, targetColumnNewValue);
+                                System.out.printf(">> Value for [%s]: currently [%s], moving to [%s]\n",
+                                        (targetColumnId.get(outIndex) != null ? targetColumnId.get(outIndex) : "this line"),
+                                        endpoint1,
+                                        targetColumnNewValue.get(outIndex));
                                 range.put("endpoint1", targetColumnNewValue.get(outIndex));
                                 oneRowResult.put("from", endpoint1);
                                 oneRowResult.put("to", targetColumnNewValue.get(outIndex));
                             } else {
-                                throw new RuntimeException("No 'range' found where expected");
+                                System.out.println("No 'range' found where expected");
+                                // throw new RuntimeException("No 'range' found where expected");
                             }
                         } else if (decisionUpdateContext.getOperation().get(outIndex).equals(DecisionContext.Operation.APPEND_TO_LIST)) {
                             List<String> values = (List) inputEntries.get(targetColumnIndex.get(outIndex)).get("values");

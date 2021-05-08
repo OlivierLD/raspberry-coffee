@@ -1,0 +1,9 @@
+{ 
+  "update-operation": [
+    { "item-name": "ApprovalStrategy", "update-to": "Manager" },
+    { "item-name": "Approval Amount", "update-to": "range(543)" }
+  ],
+  "line-locator": [
+  ]
+}
+
