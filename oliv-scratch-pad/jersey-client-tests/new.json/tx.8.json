@@ -1,0 +1,9 @@
+{ 
+  "select-operation": [
+    { "item-name": "ApprovalStrategy" }
+  ],
+  "line-locator": [
+    { "item-name": "Approval Type", "item-value": "Procurement" }
+  ]
+}
+

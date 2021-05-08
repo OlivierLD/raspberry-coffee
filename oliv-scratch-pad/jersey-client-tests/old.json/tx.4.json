@@ -1,0 +1,5 @@
+{ 
+  "query": "range('Approval Amount')",
+  "where": "'Manager' = 'Alex' and 'Approval Type' = 'Procurement'"
+}
+

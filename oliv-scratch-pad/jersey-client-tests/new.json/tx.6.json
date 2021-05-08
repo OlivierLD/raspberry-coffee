@@ -1,0 +1,10 @@
+{ 
+  "update-operation": [
+    { "item-name": "ApprovalStrategy", "update-to": "Manager" }
+  ],
+  "line-locator": [
+    { "item-name": "Manager", "item-value": "Alex" },
+    { "item-name": "ApprovalStrategy", "item-value": "Automatic" }
+  ]
+}
+

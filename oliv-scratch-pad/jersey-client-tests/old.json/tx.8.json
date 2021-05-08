@@ -1,0 +1,5 @@
+{ 
+  "query": "'ApprovalStrategy'",
+  "where": "'Approval Type' = 'Procurement'"
+}
+
