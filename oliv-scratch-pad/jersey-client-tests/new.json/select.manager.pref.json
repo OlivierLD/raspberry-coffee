@@ -1,6 +1,9 @@
 { 
   "select-operation": [
-    { "item-name": "Strategy" }
+    { "item-name": "range('Expense.Amount')" },
+    { "item-name": "Expense.Amount" },
+    { "item-name": "Strategy" },
+    { "item-name": "Reason" }
   ],
   "line-locator": [
     { "item-name": "Expense.Approver", "item-value": "Alex" },

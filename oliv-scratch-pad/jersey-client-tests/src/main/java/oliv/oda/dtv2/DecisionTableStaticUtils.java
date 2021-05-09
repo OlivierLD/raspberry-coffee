@@ -249,6 +249,8 @@ public class DecisionTableStaticUtils {
                                 oneRowResult.put("from", endpoint1);
                                 oneRowResult.put("to", targetColumnNewValue.get(outIndex));
                             } else {
+                                oneRowResult.put("from", null);
+                                oneRowResult.put("to", null);
                                 System.out.println("No 'range' found where expected");
                                 // throw new RuntimeException("No 'range' found where expected");
                             }
@@ -400,7 +402,8 @@ public class DecisionTableStaticUtils {
                                 System.out.printf(">> Value for %s: currently %s\n", (columnValue.get(outIndex) != null ? columnValue.get(outIndex) : "this line"), endpoint1);
                                 oneRowResult.add(endpoint1);
                             } else {
-                                throw new RuntimeException("No 'range' found where expected");
+                                oneRowResult.add("Range NotFound");
+//                                throw new RuntimeException("No 'range' found where expected");
                             }
                         }
                     } else {
