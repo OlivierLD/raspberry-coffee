@@ -27,6 +27,7 @@ public class DecisionTablesStaticUtils {
     private static String stripQuotes(String in) {
         String out = in;
         if (out != null) {
+            out = out.trim();
             if ((out.startsWith("\"") && out.endsWith("\"")) ||
                     (out.startsWith("'") && out.endsWith("'"))) {
                 out = out.substring(1, out.length() - 1);
@@ -133,7 +134,7 @@ public class DecisionTablesStaticUtils {
                 context.addOperation(op);
                 context.addRawTargetColumnValue(itemName);
 
-                String itemToUse = extracted != null ? stripQuotes(extracted) : itemName;
+                String itemToUse = (extracted != null ? stripQuotes(extracted) : itemName);
                 if (!itemToUse.equals(decisionName) && !items.contains(itemToUse)) {
                     throw new InvalidParameterException(String.format("%s [%s] Not Found in item list", "QUERY", itemToUse));
                 }
