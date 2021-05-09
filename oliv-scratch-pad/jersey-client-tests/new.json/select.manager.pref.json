@@ -1,0 +1,10 @@
+{ 
+  "select-operation": [
+    { "item-name": "Strategy" }
+  ],
+  "line-locator": [
+    { "item-name": "Expense.Approver", "item-value": "Alex" },
+    { "item-name": "Expense.Approvee", "item-value": "Sam" }
+  ]
+}
+

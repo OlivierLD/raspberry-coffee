@@ -48,7 +48,7 @@ public class QueryDecisionTable {
         System.out.println(jsonStatement);
         System.out.println("-----------------------");
 
-        String queryResult = DecisionTablesStaticUtils.processQuery(resource.openStream(), jsonStatement);
+        String queryResult = DecisionTableStaticUtils.processQuery(resource.openStream(), jsonStatement);
 
         System.out.println("Query Result:\n" + queryResult);
 

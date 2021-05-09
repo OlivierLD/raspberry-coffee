@@ -48,7 +48,7 @@ public class UpdateDecisionTable {
         System.out.println(txStatement);
         System.out.println("-----------------------");
 
-        String updated = DecisionTablesStaticUtils.processUpdate(resource.openStream(), txStatement);
+        String updated = DecisionTableStaticUtils.processUpdate(resource.openStream(), txStatement);
 
         System.out.println("Updated:\n" + updated);
 

@@ -1,0 +1,10 @@
+{ 
+  "update-operation": [
+    { "item-name": "Expense.Amount", "update-to": "range(345)" }
+  ],
+  "line-locator": [
+    { "item-name": "Expense.Approver", "item-value": "Alex" },
+    { "item-name": "Expense.Approvee", "item-value": "Phil" }
+  ]
+}
+
