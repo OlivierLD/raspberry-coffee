@@ -1,0 +1,13 @@
+{ 
+  "select-operation": [
+    { "item-name": "Expense.Approvee" },
+    { "item-name": "Expense.Remaining Budget" },
+    { "item-name": "Expense.Amount" },
+    { "item-name": "Strategy" },
+    { "item-name": "Reason" }
+  ],
+  "line-locator": [
+    { "item-name": "Expense.Approver", "item-value": "Alex" }
+  ]
+}
+
