@@ -1,0 +1,7 @@
+{ 
+  "select": [ "Expense.Amount", "range('Expense.Amount')" ,"Strategy", "Reason" ],
+  "where": {
+    "Expense.Approvee": "Sam"
+  }
+}
+

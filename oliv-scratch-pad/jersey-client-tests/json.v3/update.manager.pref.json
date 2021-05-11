@@ -1,0 +1,9 @@
+{ 
+  "upsert": {
+    "Expense.Amount": "range(345)"
+  },
+  "where": {
+    "Expense.Approvee": "Phil"
+  }
+}
+

@@ -1,0 +1,9 @@
+{ 
+  "upsert": {
+    "ApprovalStrategy": "Automatic",
+    "Approval Amount": "range(123)",
+    "Approval Type": "NewHire"
+  },
+  "where": { }
+}
+
