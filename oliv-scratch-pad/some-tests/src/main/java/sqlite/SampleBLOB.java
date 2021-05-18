@@ -8,6 +8,7 @@ import java.sql.*;
  * <p>
  * We use here a table created like:
  * CREATE TABLE PHOTOS (id INTEGER PRIMARY KEY AUTOINCREMENT, image_name VARCHAR2, description VARCHAR2, picture BLOB);
+ * CREATE UNIQUE INDEX IMAGE_NAME_IDX ON PHOTOS (IMAGE_NAME);
  */
 public class SampleBLOB {
 
@@ -54,18 +55,25 @@ public class SampleBLOB {
                 System.out.println("Product name: " + dm.getDatabaseProductName());
                 System.out.println("Product version: " + dm.getDatabaseProductVersion());
 
-                String imageFileName = "./images/jconsole.png";
-                String SQLStatement = "insert into photos (description, image_name, picture) VALUES (?, ?, ?)";
-                PreparedStatement statement = conn.prepareStatement(SQLStatement);
-                statement.setString(1, "First image test");
-                statement.setString(2, imageFileName.substring(imageFileName.lastIndexOf("/") + 1));
-                statement.setBytes(3, readFile(imageFileName));
-                statement.executeUpdate();
-                System.out.println("Picture inserted in BLOB");
-
-                statement.close();
-                // conn.commit(); // Required if DB is NOT in auto-commit mode.
-
+                // Insert Image in DB
+                if (true) {
+                    String imageFileName = "./images/jconsole.png";
+                    String SQLStatement = "insert into photos (description, image_name, picture) VALUES (?, ?, ?)";
+                    PreparedStatement statement = conn.prepareStatement(SQLStatement);
+                    statement.setString(1, "First image test");
+                    statement.setString(2, imageFileName.substring(imageFileName.lastIndexOf("/") + 1));
+                    statement.setBytes(3, readFile(imageFileName));
+                    try {
+                        statement.executeUpdate();
+                        System.out.println("Picture inserted in BLOB");
+                    } catch (SQLException sqlEx) {
+                        System.err.printf("Error executing [%s]\n", SQLStatement);
+                        sqlEx.printStackTrace();
+                        System.err.println("\t>> Moving on...");
+                    }
+                    statement.close();
+                    // conn.commit(); // Required if DB is NOT in auto-commit mode.
+                }
                 // Now let's query the image
                 String selectSQL = "select description, image_name, picture from photos";  // No where clause here, this is just an example
                 Statement selectStatement = conn.createStatement();
@@ -76,14 +84,16 @@ public class SampleBLOB {
                     String dbFileName = resultSet.getString("image_name");
                     String description = resultSet.getString("description");
                     InputStream inputStream = resultSet.getBinaryStream("picture");
-                    FileOutputStream fileOutputStream = new FileOutputStream(dbFileName);
+
+                    String extracted = "_from_DB_" + dbFileName;
+                    FileOutputStream fileOutputStream = new FileOutputStream(extracted);
                     byte[] buffer = new byte[1_024];
                     while (inputStream.read(buffer) > 0) {
                         fileOutputStream.write(buffer);
                     }
                     fileOutputStream.flush();
                     fileOutputStream.close();
-                    System.out.printf("Finished with [%s], in %s%n", description, dbFileName);
+                    System.out.printf("Finished with [%s], in %s%n", description, extracted);
                 }
                 resultSet.close();
                 selectStatement.close();

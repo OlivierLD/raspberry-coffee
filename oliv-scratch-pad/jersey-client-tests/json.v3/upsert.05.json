@@ -1,0 +1,4 @@
+{
+  "upsert":{"Expense.Amount":75},
+  "where":{"Strategy":"Approve"}
+}

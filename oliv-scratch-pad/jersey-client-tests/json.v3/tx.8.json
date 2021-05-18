@@ -1,0 +1,11 @@
+{ 
+  "select": [
+    "ApprovalStrategy",
+    "range('Approval Amount')",
+    "Approval Amount"
+  ],
+  "where": {
+    "Approval Type": "Procurement"
+  }
+}
+

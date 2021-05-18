@@ -11,10 +11,12 @@ public class QueryDecisionTable {
 
     private static String jsonStatement;
     private static String userContext;
+    private static DecisionTableStaticUtils.QueryOption queryOption = DecisionTableStaticUtils.QueryOption.QUERY;
 
     private final static String DT_DOCUMENT_PREFIX = "--decision-table:";
     private final static String USER_CONTEXT_PREFIX = "--context-file:";
     private final static String TX_FILE_PREFIX = "--transformation-file:";
+    private final static String QUERY_OPTION_PREFIX = "--query-option:";
 
     public static void main(String... args) throws Exception {
 
@@ -45,6 +47,13 @@ public class QueryDecisionTable {
                     }
                     jsonStatement = sb.toString();
                 }
+            } else if (arg.startsWith(QUERY_OPTION_PREFIX)) {
+                String option = arg.substring(QUERY_OPTION_PREFIX.length());
+                if (option.equalsIgnoreCase("QUERY")) {
+                    queryOption = DecisionTableStaticUtils.QueryOption.QUERY;
+                } else if (option.equalsIgnoreCase("BAG_ENTITY")) {
+                    queryOption = DecisionTableStaticUtils.QueryOption.BAG_ENTITY;
+                }
             }
         }
 
@@ -60,7 +69,10 @@ public class QueryDecisionTable {
         System.out.println(jsonStatement);
         System.out.println("-----------------------");
 
-        String queryResult = DecisionTableStaticUtils.processQuery(resource.openStream(), userContext, jsonStatement);
+        String queryResult = DecisionTableStaticUtils.processQuery(resource.openStream(),
+                userContext,
+                jsonStatement,
+                queryOption);
 
         System.out.println("Query Result:\n" + queryResult);
 

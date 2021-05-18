@@ -1,0 +1,6 @@
+{
+  "Approval TypeOperand":"contains",
+  "Approval Type":"Procurement",
+  "ApprovalStrategyOperand":"=",
+  "ApprovalStrategy":"Automatic"
+}

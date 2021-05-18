@@ -1,0 +1,10 @@
+{ 
+  "select": [
+    "ApprovalStrategy",
+    "Approval Amount"
+  ],
+  "where": {
+    "Approval Type": "Procurement"
+  }
+}
+

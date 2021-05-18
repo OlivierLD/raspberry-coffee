@@ -1,15 +1,35 @@
 package oliv.oda.dtv3;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.security.InvalidParameterException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DecisionTableStaticUtils {
+
+    private static boolean verbose = true;
+
+    enum QueryOption {
+        QUERY,
+        BAG_ENTITY
+    }
+
+    private static ObjectMapper mapper = new ObjectMapper();
 
     private static List<String> getInputItemList(Map<String, Object> decisionMap) {
         List<String> inputParams = new ArrayList<>();
@@ -64,7 +84,7 @@ public class DecisionTableStaticUtils {
 //        String decisionName = (String)decisionMap.get("name");
         List<String> inputItems = getInputItemList(decisionMap);
         List<String> outputItems = getOutputItemList(decisionMap);
-        if (true) {
+        if (verbose) {
             System.out.println("--- INPUT ITEMS ---");
             inputItems.forEach(System.out::println);
             System.out.println("-------------------");
@@ -78,7 +98,7 @@ public class DecisionTableStaticUtils {
             if (map != null) {
                 map.keySet().forEach(k -> {
                     String item = k;
-                    String value = (String)map.get(k);
+                    String value = (map.get(k) == null ? null : map.get(k).toString());
                     context.addWhereColumnId(item);
                     context.addWhereColumnValue(value);
 //                    System.out.printf("Adding to the WHERE clause: %s => %s\n", item, value);
@@ -91,7 +111,7 @@ public class DecisionTableStaticUtils {
             }
             // Find indexes.
             DecisionContext.TargetColumnIndex idx = outputItems.contains(columnId) ?
-                    new DecisionContext.TargetColumnIndex(outputItems.indexOf(columnId), DecisionContext.TargetColumnIndex.InOrOut.OUPUT) :
+                    new DecisionContext.TargetColumnIndex(outputItems.indexOf(columnId), DecisionContext.TargetColumnIndex.InOrOut.OUTPUT) :
                     new DecisionContext.TargetColumnIndex(inputItems.indexOf(columnId));
             context.addWhereColumnIndex(idx);
         });
@@ -99,7 +119,7 @@ public class DecisionTableStaticUtils {
         if (upsert != null) {
             upsert.keySet().forEach(k -> {
                 String itemName = k;
-                String updateTo = (String)upsert.get(k);
+                String updateTo = upsert.get(k).toString();
                 context.addTargetColumnId(itemName);
                 // Operation, on the value to update
                 DecisionContext.Operation op = DecisionContext.detectOperation(updateTo);
@@ -111,7 +131,7 @@ public class DecisionTableStaticUtils {
                 context.addOperation(op);
                 context.addRawTargetColumnValue(updateTo);
                 context.addTargetColumnIndex(outputItems.contains(itemName) ?
-                        new DecisionContext.TargetColumnIndex(outputItems.indexOf(itemName), DecisionContext.TargetColumnIndex.InOrOut.OUPUT) :
+                        new DecisionContext.TargetColumnIndex(outputItems.indexOf(itemName), DecisionContext.TargetColumnIndex.InOrOut.OUTPUT) :
                         new DecisionContext.TargetColumnIndex(inputItems.indexOf(itemName)));
 
                 if (!outputItems.contains(itemName) && !inputItems.contains(itemName)) {
@@ -122,31 +142,22 @@ public class DecisionTableStaticUtils {
         return context;
     }
 
-    private static DecisionContext setQueryContext(Map<String, Object> decisionMap,
-                                                   Map<String, Object> userCtx,
-                                                   Map<String, Object> selectStmt) throws Exception {
+    private static DecisionContext buildQueryDecisionContext(List<String> inputItems,
+                                                             List<String> outputItems,
+                                                             List<Object> query,
+                                                             Map<String, Object> where,
+                                                             Map<String, Object> userCtx) {
         DecisionContext context = new DecisionContext();
 
-        List<Object> query = (List)selectStmt.get("select");
-        Map<String, Object> where = (Map)selectStmt.get("where");
-
-        List<String> inputItems = getInputItemList(decisionMap);
-        List<String> outputItems = getOutputItemList(decisionMap);
-        if (true) {
-            System.out.println("--- INPUT ITEMS ---");
-            inputItems.forEach(System.out::println);
-            System.out.println("-------------------");
-            System.out.println("-- OUTPUT ITEMS ---");
-            outputItems.forEach(System.out::println);
-            System.out.println("-------------------");
-        }
+        context.setInputItems(inputItems);
+        context.setOutputItems(outputItems);
 
         List<Map<String, Object>> userAndWhere = Arrays.asList(userCtx, where);
         userAndWhere.forEach(map -> {
             if (map != null) {
                 map.keySet().forEach(k -> {
                     String item = k;
-                    String value = (String)map.get(k);
+                    String value = (map.get(k) == null ? null : map.get(k).toString());
                     context.addWhereColumnId(item);
                     context.addWhereColumnValue(value);
 //                    System.out.printf("Adding to the WHERE clause: %s => %s\n", item, value);
@@ -160,7 +171,7 @@ public class DecisionTableStaticUtils {
             }
             // Find indexes.
             DecisionContext.TargetColumnIndex idx = outputItems.contains(columnId) ?
-                    new DecisionContext.TargetColumnIndex(outputItems.indexOf(columnId), DecisionContext.TargetColumnIndex.InOrOut.OUPUT) :
+                    new DecisionContext.TargetColumnIndex(outputItems.indexOf(columnId), DecisionContext.TargetColumnIndex.InOrOut.OUTPUT) :
                     new DecisionContext.TargetColumnIndex(inputItems.indexOf(columnId));
             context.addWhereColumnIndex(idx);
         });
@@ -185,11 +196,70 @@ public class DecisionTableStaticUtils {
                     throw new InvalidParameterException(String.format("%s [%s] Not Found in item list", "QUERY", itemToUse));
                 }
                 context.addTargetColumnIndex(outputItems.contains(itemToUse) ?
-                        new DecisionContext.TargetColumnIndex(outputItems.indexOf(itemToUse), DecisionContext.TargetColumnIndex.InOrOut.OUPUT) :
+                        new DecisionContext.TargetColumnIndex(outputItems.indexOf(itemToUse), DecisionContext.TargetColumnIndex.InOrOut.OUTPUT) :
                         new DecisionContext.TargetColumnIndex(inputItems.indexOf(itemToUse)));
             });
         }
+        // Add where columns, if not there yet.
+        if (context.getWhereColumnId() != null && context.getWhereColumnId().size() > 0) {
+            context.getWhereColumnId().forEach(whereColumnId -> {
+                if (!context.getTargetColumnId().contains(whereColumnId)) {
+                    context.addTargetColumnId(whereColumnId);
+                    context.addOperation(null); // TODO Check if that's right. There must be a better thing to do about operations...
+                    context.addTargetColumnIndex(context.getWhereColumnIndex().get(context.getWhereColumnId().indexOf(whereColumnId)));
+                }
+            });
+        }
         return context;
+    }
+
+    private static DecisionContext setQueryContext(Map<String, Object> decisionMap,
+                                                   Map<String, Object> userCtx,
+                                                   Map<String, Object> selectStmt) throws Exception {
+        List<Object> query = (List)selectStmt.get("select");
+        Map<String, Object> where = (Map)selectStmt.get("where");
+
+        List<String> inputItems = getInputItemList(decisionMap);
+        List<String> outputItems = getOutputItemList(decisionMap);
+        if (verbose) {
+            System.out.println("--- INPUT ITEMS ---");
+            inputItems.forEach(System.out::println);
+            System.out.println("-------------------");
+            System.out.println("-- OUTPUT ITEMS ---");
+            outputItems.forEach(System.out::println);
+            System.out.println("-------------------");
+        }
+        return buildQueryDecisionContext(inputItems, outputItems, query, where, userCtx);
+    }
+
+    private static DecisionContext setBagEndContext(Map<String, Object> decisionMap,
+                                                    Map<String, Object> userCtx,
+                                                    Map<String, Object> bagEntity) throws Exception {
+        List<String> inputItems = getInputItemList(decisionMap);
+        List<String> outputItems = getOutputItemList(decisionMap);
+        if (verbose) {
+            System.out.println("--- INPUT ITEMS ---");
+            inputItems.forEach(System.out::println);
+            System.out.println("-------------------");
+            System.out.println("-- OUTPUT ITEMS ---");
+            outputItems.forEach(System.out::println);
+            System.out.println("-------------------");
+        }
+
+        // query everything
+        List<Object> query = new ArrayList<>();
+        inputItems.forEach(query::add);
+        outputItems.forEach(query::add);
+
+        // Whenever items match
+        Map<String, Object> where = new HashMap<>(); // (Map)bagEntity.get("where");
+        bagEntity.keySet().forEach(k -> {
+            if (inputItems.contains(k) || outputItems.contains(k)) {
+                where.put(k, bagEntity.get(k));
+            }
+        });
+
+        return buildQueryDecisionContext(inputItems, outputItems, query, where, userCtx);
     }
 
     private static List<Object> getValues(Map<String, Object> entryNode) {
@@ -203,14 +273,40 @@ public class DecisionTableStaticUtils {
     }
 
     private static void updateItemValue(Map<String, Object> item, String value) {
-        System.out.println("UpdateItemValue");
+        updateItemValue(item, value, null);
+    }
+    private static void updateItemValue(Map<String, Object> item, String value, String rawValue) {
+        if (verbose) {
+            System.out.printf(">> Raw Value:%s\n", rawValue);
+            try {
+                System.out.printf("updateItemValue: %s\n", mapper.writeValueAsString(item));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
         if (item.get("value") != null) {
-            item.put("value", value);
+            if ("-".equals((String)item.get("value")) && "Any".equals((String)item.get("mode"))) {
+                List<String> allowedModes = (List)item.get("allowedModes");
+                if (allowedModes != null && allowedModes.contains("Text")) {
+                    item.put("mode", "Text");
+                } else if (allowedModes != null && allowedModes.contains("Number")) {
+                    item.put("mode", "Number");
+                }
+            }
+            if ("Number".equals(item.get("mode")) && rawValue != null && rawValue.startsWith("range(")) { // TODO Refine that!!
+                Map<String, Object> range = new HashMap<>(); // Map.of only after Java 9+
+                range.put("operation1", "<"); // TODO Fix that hard-coded one!
+                range.put("endpoint1", value);
+                item.remove("value");
+                item.put("range", range);
+            } else {
+                item.put("value", value);
+            }
         } else if (item.get("values") != null) {
-            List<Object> values = new ArrayList<>(); // New list
+            List<Object> values = new ArrayList<>(); // New empty list
             values.add(value);
             item.put("values", values);
-        } else if (item.get("range") != null) {
+        } else if (item.get("range") != null) { // TODO Check if allowedModes contains Number ?
             ((Map)item.get("range")).put("endpoint1", value);
         } else {
             System.out.println("Watzat?");
@@ -218,7 +314,9 @@ public class DecisionTableStaticUtils {
     }
 
     static String processUpdate(InputStream original, String userContext, String txSyntax) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
+        return processUpdate(original, userContext, txSyntax, null);
+    }
+    static String processUpdate(InputStream original, String userContext, String txSyntax, Map<String, Object> upsertResponseMap) throws Exception {
         // THE Decision Table Object
         Map<String, Object> jsonMap = mapper.readValue(original, Map.class);
         // The User Context
@@ -229,7 +327,7 @@ public class DecisionTableStaticUtils {
         DecisionContext decisionUpdateContext = setUpdateContext(jsonMap, user, tx);
 
         final List<String> columnId = decisionUpdateContext.getWhereColumnId();
-        final List<String> columnValue = decisionUpdateContext.getWhereColumnValue();
+        final List<String> whereColumnValue = decisionUpdateContext.getWhereColumnValue();
 
         final List<String> targetColumnId = decisionUpdateContext.getTargetColumnId();
         final List<String> targetColumnNewValue = decisionUpdateContext.getTargetColumnValue();
@@ -251,19 +349,23 @@ public class DecisionTableStaticUtils {
             List<Map<String, Object>> outputEntries = (List)rule.get("outputEntries");
             List<Map<String, Object>> annotationEntries = (List)rule.get("annotationEntries");
 
-            System.out.println("-- Row " + rules.indexOf(rule) + " --");
+            if (verbose) {
+                System.out.println("-- Row " + rules.indexOf(rule) + " --");
+            }
             boolean conditionMet = true;
             for (int ii=0; ii<columnIndex.size(); ii++) {
                 DecisionContext.TargetColumnIndex colIdx = columnIndex.get(ii);
-                List<Object> values = (colIdx.getWhere() == DecisionContext.TargetColumnIndex.InOrOut.OUPUT ?
+                List<Object> values = (colIdx.getWhere() == DecisionContext.TargetColumnIndex.InOrOut.OUTPUT ?
                         Arrays.asList((String)outputEntries.get(colIdx.getIndex()).get("value")) :
                         getValues(inputEntries.get(colIdx.getIndex())));
-                System.out.println("- Comparing column " +
-                        "(" + colIdx.getIndex() + " " + colIdx.getWhere() + ") " +
-                        decisionUpdateContext.getWhereColumnId().get(colIdx.getIndex()) +
-                        ", val " + values +
-                        " and " + columnValue.get(colIdx.getIndex()));
-                boolean met = (columnValue.get(colIdx.getIndex()) == null || values.contains(columnValue.get(colIdx.getIndex())));
+                if (verbose) {
+                    System.out.println("- Comparing column " +
+                            "(" + colIdx.getIndex() + " " + colIdx.getWhere() + ") " +
+                            decisionUpdateContext.getWhereColumnId().get(ii) +
+                            ", val " + values +
+                            " and " + whereColumnValue.get(ii));
+                }
+                boolean met = (whereColumnValue.get(ii) == null || values.contains(whereColumnValue.get(ii)));
                 conditionMet = conditionMet && met;
             }
 
@@ -277,10 +379,12 @@ public class DecisionTableStaticUtils {
                             Map<String, Object> range = (Map) inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("range");
                             if (range != null) {
                                 Object endpoint1 = range.get("endpoint1");
-                                System.out.printf(">> Value for [%s]: currently [%s], moving to [%s]\n",
-                                        (targetColumnId.get(outIndex) != null ? targetColumnId.get(outIndex) : "this line"),
-                                        endpoint1,
-                                        targetColumnNewValue.get(outIndex));
+                                if (verbose) {
+                                    System.out.printf(">> Value for [%s]: currently [%s], moving to [%s]\n",
+                                            (targetColumnId.get(outIndex) != null ? targetColumnId.get(outIndex) : "this line"),
+                                            endpoint1,
+                                            targetColumnNewValue.get(outIndex));
+                                }
                                 range.put("endpoint1", targetColumnNewValue.get(outIndex));
                                 oneRowResult.put("from", endpoint1);
                                 oneRowResult.put("to", targetColumnNewValue.get(outIndex));
@@ -353,8 +457,36 @@ public class DecisionTableStaticUtils {
                         }
                     } else {
                         // TODO Create a value node?
-                        if (targetColumnIndex.get(outIndex).getWhere() != DecisionContext.TargetColumnIndex.InOrOut.OUPUT) {
-                            throw new RuntimeException(String.format("Unmanaged operation [%s]", decisionUpdateContext.getRawTargetColumnValue().get(outIndex)));
+                        if ((targetColumnIndex.get(outIndex)).getWhere() != DecisionContext.TargetColumnIndex.InOrOut.OUTPUT) {
+                            int index = (targetColumnIndex.get(outIndex)).getIndex();
+                            Map<String, Object> targetObjectMap = inputEntries.get(index);
+                            if (targetObjectMap.get("range") != null) { // TODO Check Mode ?
+                                System.out.println(targetColumnNewValue.get(outIndex));
+                                Map<String, Object> range = (Map)targetObjectMap.get("range");
+                                range.put("endpoint1", targetColumnNewValue.get(outIndex));
+                            } else if (targetObjectMap.get("value") != null) {
+                                if ("-".equals((String)targetObjectMap.get("value")) && "Any".equals((String)targetObjectMap.get("mode"))) {
+                                    List<String> allowedModes = (List)targetObjectMap.get("allowedModes");
+                                    if (allowedModes != null && allowedModes.contains("Text")) {
+                                        targetObjectMap.put("mode", "Text");
+                                    } else if (allowedModes != null && allowedModes.contains("Number")) {
+                                        targetObjectMap.put("mode", "Number");
+                                    }
+                                }
+                                if ("Number".equals(targetObjectMap.get("mode")) ) { // && rawValue != null && rawValue.startsWith("range(")) { // TODO Refine that!!
+                                    Map<String, Object> range = new HashMap<>(); // Map.of only after Java 9+
+                                    range.put("operation1", "<"); // TODO Fix that hard-coded one!
+                                    range.put("endpoint1", targetColumnNewValue.get(outIndex));
+                                    targetObjectMap.remove("value");
+                                    targetObjectMap.put("range", range);
+                                } else {
+                                    targetObjectMap.put("value", targetColumnNewValue.get(outIndex));
+                                }
+                            } else if (targetObjectMap.get("values") != null) {
+                                // TODO Do it!! Manage values too!
+                            } else {
+                                throw new RuntimeException(String.format("Unmanaged operation [%s]", decisionUpdateContext.getRawTargetColumnValue().get(outIndex)));
+                            }
                         } else {
                             String oldValue = (String) outputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("value");
                             outputEntries.get(targetColumnIndex.get(outIndex).getIndex()).put("value", targetColumnNewValue.get(outIndex));
@@ -373,17 +505,49 @@ public class DecisionTableStaticUtils {
 
         String jsonInString;
         if (queryResult.size() == 0) {
-            System.out.println(">> Warning: >> No update was done!");
+            if (verbose) {
+                System.out.println(">> Warning: >> No update was done, inserting");
+            }
             // Insert?
             if (rules.size() > 0) {
+                if (upsertResponseMap != null) {
+                    upsertResponseMap.put("upsertType", "insert");
+                }
                 // 1 - Clone the first row
-                Map<String, Object> newRule = new HashMap<>();
-                newRule.putAll(rules.get(0));
-                rules.add(0, newRule);
+                HashMap<String, Object> firstRule = (HashMap)rules.get(0);
+                final Map<String, Object> newRule;
+
+                // Serialize and De-serialize. Clone is NOT a deep copy.
+                ByteArrayOutputStream bos = null;
+                ByteArrayInputStream bis = null;
+                try {
+                    // Serialize
+                    bos = new ByteArrayOutputStream();
+                    ObjectOutputStream out = new ObjectOutputStream(bos);
+                    out.writeObject(firstRule);
+                    out.flush();
+//                    byte[] byteArray = bos.toByteArray();
+                    // De-Serialize
+                    bis = new ByteArrayInputStream(bos.toByteArray());
+                    ObjectInput in = new ObjectInputStream(bis);
+                    newRule = (Map)in.readObject();
+                } finally {
+                    try {
+                        if (bos != null) {
+                            bos.close();
+                        }
+                        if (bis != null) {
+                            bis.close();
+                        }
+                    } catch (IOException ex) {
+                        // ignore close exception
+                    }
+                }
+                rules.add(0, newRule); // Insert on top.
                 // Now the rest!
                 // 1 - Where Clause
                 columnIndex.forEach(ci -> {
-                    String newValue = columnValue.get(columnIndex.indexOf(ci));
+                    String newValue = whereColumnValue.get(columnIndex.indexOf(ci));
                     if (ci.getWhere() == DecisionContext.TargetColumnIndex.InOrOut.INPUT) {
                         Map<String, Object> inputEntry = (Map)((List)newRule.get("inputEntries")).get(ci.getIndex());
                         updateItemValue(inputEntry, newValue);
@@ -398,10 +562,10 @@ public class DecisionTableStaticUtils {
                     String newValue = targetColumnNewValue.get(idx);
                     if (tci.getWhere() == DecisionContext.TargetColumnIndex.InOrOut.INPUT) {
                         Map<String, Object> inputEntry = (Map)((List)newRule.get("inputEntries")).get(tci.getIndex());
-                        updateItemValue(inputEntry, newValue);
+                        updateItemValue(inputEntry, newValue, decisionUpdateContext.rawTargetColumnValue.get(idx));
                     } else {
                         Map<String, Object> outputEntry = (Map)((List)newRule.get("outputEntries")).get(tci.getIndex());
-                        updateItemValue(outputEntry, newValue);
+                        updateItemValue(outputEntry, newValue, decisionUpdateContext.rawTargetColumnValue.get(idx));
                     }
                 });
             } else {
@@ -415,23 +579,33 @@ public class DecisionTableStaticUtils {
     }
 
     static String processQuery(InputStream original, String userContext, String txSyntax) throws Exception {
+        return processQuery(original, userContext, txSyntax, QueryOption.QUERY);
+    }
+
+    static String processQuery(InputStream original, String userContext, String querySyntax, QueryOption queryOption) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         // THE Decision Table Object
         Map<String, Object> jsonMap = mapper.readValue(original, Map.class);
         // The User Context
         Map<String, Object> user = mapper.readValue(userContext, Map.class);
         // The query directive
-        Map<String, Object> tx = mapper.readValue(txSyntax, Map.class);
+        Map<String, Object> query = mapper.readValue(querySyntax, Map.class);
         // Set Update Context
-        DecisionContext decisionQueryContext = setQueryContext(jsonMap, user, tx);
+        DecisionContext decisionQueryContext;
+        if (queryOption == QueryOption.BAG_ENTITY) {
+            decisionQueryContext = setBagEndContext(jsonMap, user, query);
+        } else {
+            decisionQueryContext = setQueryContext(jsonMap, user, query);
+        }
 
         final List<String> columnId = decisionQueryContext.getWhereColumnId();
-        final List<String> columnValue = decisionQueryContext.getWhereColumnValue();
+        final List<String> whereColumnValue = decisionQueryContext.getWhereColumnValue();
 
+        // This is for an update. Not used for a select
         final List<String> targetColumnId = decisionQueryContext.getTargetColumnId();
         final List<String> targetColumnNewValue = decisionQueryContext.getTargetColumnValue();
 
-        final List<DecisionContext.TargetColumnIndex> columnIndex = decisionQueryContext.getWhereColumnIndex();
+        final List<DecisionContext.TargetColumnIndex> whereColumnIndex = decisionQueryContext.getWhereColumnIndex();
         final List<DecisionContext.TargetColumnIndex> targetColumnIndex = decisionQueryContext.getTargetColumnIndex();
 
 //        if (columnId != null) { // Mean there IS a where
@@ -448,53 +622,64 @@ public class DecisionTableStaticUtils {
             List<Map<String, Object>> outputEntries = (List)rule.get("outputEntries");
             List<Map<String, Object>> annotationEntries = (List)rule.get("annotationEntries");
 
-            System.out.println("-- Row " + rules.indexOf(rule) + " --");
+            if (verbose) {
+                System.out.println("-- Row " + rules.indexOf(rule) + " --");
+            }
             boolean conditionMet = true;
-            for (int ii=0; ii<columnIndex.size(); ii++) { // Loop on the where clause elements
-                DecisionContext.TargetColumnIndex colIdx = columnIndex.get(ii);
-                List<Object> values = (colIdx.getWhere() == DecisionContext.TargetColumnIndex.InOrOut.OUPUT ?
+            for (int ii=0; ii<whereColumnIndex.size(); ii++) { // Loop on the where clause elements
+                DecisionContext.TargetColumnIndex colIdx = whereColumnIndex.get(ii);
+                List<Object> values = (colIdx.getWhere() == DecisionContext.TargetColumnIndex.InOrOut.OUTPUT ?
                         Arrays.asList((String)outputEntries.get(colIdx.getIndex()).get("value")) :
                         getValues(inputEntries.get(colIdx.getIndex())));
-                System.out.println("- Comparing column " +
-                                "(" + colIdx.getIndex() + " " + colIdx.getWhere() + ") " +
-                                decisionQueryContext.getWhereColumnId().get(colIdx.getIndex()) +
-                        ", val " + values +
-                        " and " + columnValue.get(colIdx.getIndex()));
-                boolean met = (columnValue.get(colIdx.getIndex()) == null || values.contains(columnValue.get(colIdx.getIndex())));
+                if (verbose) {
+                    System.out.println("- Comparing column " +
+                            "(" + colIdx.getIndex() + " " + colIdx.getWhere() + ") " +
+                            decisionQueryContext.getWhereColumnId().get(ii) +
+                            ", val " + values +
+                            " and " + whereColumnValue.get(ii));
+                }
+                boolean met = (whereColumnValue.get(ii) == null || values.contains(whereColumnValue.get(ii)));
                 conditionMet = conditionMet && met;
             }
 
             if (conditionMet) {
-                List<Object> oneRowResult = new ArrayList<>();
+                Map<String, Object> oneRowResult = new HashMap<>();
                 // Loop on the items to retrieve
                 for (int outIndex = 0; outIndex < decisionQueryContext.targetColumnIndex.size(); outIndex++) {
                     // Column targetColumnId
+                    int itemIndex = decisionQueryContext.targetColumnIndex.get(outIndex).getIndex();
+                    String itemName = // columnId.get(itemIndex);
+                            (decisionQueryContext.targetColumnIndex.get(outIndex).getWhere() == DecisionContext.TargetColumnIndex.InOrOut.INPUT) ?
+                                    decisionQueryContext.getInputItems().get(itemIndex) :
+                                    decisionQueryContext.getOutputItems().get(itemIndex);
                     if (decisionQueryContext.getOperation().get(outIndex) != null) {
                         if (decisionQueryContext.getOperation().get(outIndex).equals(DecisionContext.Operation.RANGE)) {
                             Map<String, Object> range = (Map) inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("range");
                             if (range != null) {
                                 Object endpoint1 = range.get("endpoint1");
-                                System.out.printf(">> Value for %s: currently %s\n", (columnValue.get(outIndex) != null ? columnValue.get(outIndex) : "this line"), endpoint1);
-                                oneRowResult.add(endpoint1);
+                                if (verbose) {
+                                    System.out.printf(">> Value for %s: currently %s\n", (whereColumnValue.get(outIndex) != null ? whereColumnValue.get(outIndex) : "this line"), endpoint1);
+                                }
+                                oneRowResult.put(itemName, endpoint1);
                             } else {
-                                oneRowResult.add("Range NotFound");
+                                oneRowResult.put(itemName, "Range NotFound");
 //                                throw new RuntimeException("No 'range' found where expected");
                             }
                         }
                     } else {
                         // System.out.println("Query with no function");
-                        if (targetColumnIndex.get(outIndex).getWhere() == DecisionContext.TargetColumnIndex.InOrOut.OUPUT) {
-                            oneRowResult.add(outputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("value"));
+                        if (targetColumnIndex.get(outIndex).getWhere() == DecisionContext.TargetColumnIndex.InOrOut.OUTPUT) {
+                            oneRowResult.put(itemName, outputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("value"));
                         } else {
                             Map<String, Object> itemObjectMap = inputEntries.get(targetColumnIndex.get(outIndex).getIndex());
                             if (itemObjectMap.get("range") != null) {
-                                oneRowResult.add(itemObjectMap.get("range"));
+                                oneRowResult.put(itemName, itemObjectMap.get("range"));
                             } else if (itemObjectMap.get("values") != null) {
-                                oneRowResult.add(itemObjectMap.get("values"));
+                                oneRowResult.put(itemName, itemObjectMap.get("values"));
                             } else if (itemObjectMap.get("value") != null) {
-                                oneRowResult.add(itemObjectMap.get("value"));
+                                oneRowResult.put(itemName, itemObjectMap.get("value"));
                             } else {
-                                oneRowResult.add(itemObjectMap);
+                                oneRowResult.put(itemName, itemObjectMap);
                             }
                         }
                     }
@@ -536,7 +721,7 @@ public class DecisionTableStaticUtils {
         public final static class TargetColumnIndex {
             enum InOrOut {
                 INPUT,
-                OUPUT
+                OUTPUT
             }
             int index;
             InOrOut where = InOrOut.INPUT; // Default
@@ -558,6 +743,9 @@ public class DecisionTableStaticUtils {
                 return where;
             }
         }
+
+        List<String> inputItems;
+        List<String> outputItems;
 
         // From the where clause
         List<String> whereColumnId = new ArrayList<>();
@@ -663,6 +851,22 @@ public class DecisionTableStaticUtils {
 
         public void addRawTargetColumnValue(String rawTargetColumnValue) {
             this.rawTargetColumnValue.add(rawTargetColumnValue);
+        }
+
+        public List<String> getInputItems() {
+            return inputItems;
+        }
+
+        public void setInputItems(List<String> inputItems) {
+            this.inputItems = inputItems;
+        }
+
+        public List<String> getOutputItems() {
+            return outputItems;
+        }
+
+        public void setOutputItems(List<String> outputItems) {
+            this.outputItems = outputItems;
         }
 
         protected static Operation detectOperation(String str) {
