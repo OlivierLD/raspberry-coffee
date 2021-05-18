@@ -62,11 +62,18 @@ task SQLiteTest(type: JavaExec, dependsOn: classes, description: 'Runs a SQLite 
     classpath configurations.runtime
 }
 
+task SQLiteBLOBTest(type: JavaExec, dependsOn: classes, description: 'Runs a SQLite sample') {
+    main = 'sqlite.SampleBLOB'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
 build.doFirst {
     println "-------------------------------------------------------"
     println ">>> Using JAVA_HOME: ${System.getProperty('java.home')}"
     println "-------------------------------------------------------"
 }
+
 //shadowJar {
 //    zip64 true
 //}
