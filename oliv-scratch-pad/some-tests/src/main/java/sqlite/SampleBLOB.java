@@ -75,7 +75,7 @@ public class SampleBLOB {
                     // conn.commit(); // Required if DB is NOT in auto-commit mode.
                 }
                 // Now let's query the image
-                String selectSQL = "select description, image_name, picture from photos";  // No where clause here, this is just an example
+                String selectSQL = "select description, image_name, picture from photos where image_name = 'jconsole.png'";
                 Statement selectStatement = conn.createStatement();
                 ResultSet resultSet = selectStatement.executeQuery(selectSQL);
                 int imageIndex = 0;
