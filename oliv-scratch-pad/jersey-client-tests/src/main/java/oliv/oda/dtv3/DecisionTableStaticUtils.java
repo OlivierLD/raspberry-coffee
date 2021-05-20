@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class DecisionTableStaticUtils {
 
@@ -93,6 +94,9 @@ public class DecisionTableStaticUtils {
             System.out.println("-------------------");
         }
 
+        context.setInputItems(inputItems);
+        context.setOutputItems(outputItems);
+
         List<Map<String, Object>> userAndWhere = Arrays.asList(userCtx, where);
         userAndWhere.forEach(map -> {
             if (map != null) {
@@ -135,7 +139,9 @@ public class DecisionTableStaticUtils {
                         new DecisionContext.TargetColumnIndex(inputItems.indexOf(itemName)));
 
                 if (!outputItems.contains(itemName) && !inputItems.contains(itemName)) {
-                    throw new InvalidParameterException(String.format("%s [%s] Not Found in item list", "UPDATE", itemName));
+                    throw new InvalidParameterException(String.format("%s [%s] Not Found in item list [%s, %s]", "UPDATE", itemName,
+                            inputItems.stream().collect(Collectors.joining(", ")),
+                            outputItems.stream().collect(Collectors.joining(", "))));
                 }
             });
         }
@@ -268,6 +274,8 @@ public class DecisionTableStaticUtils {
             values.add(entryNode.get("value"));
         } else if (entryNode.get("values") != null) {
             values.addAll((List)entryNode.get("values"));
+        } else if (entryNode.get("range") != null) {
+            values.add(((Map)entryNode.get("range")).get("endpoint1"));
         }
         return values;
     }
@@ -496,7 +504,22 @@ public class DecisionTableStaticUtils {
                     }
                     queryResult.add(oneRowResult);
                 }
-            }
+                // Is there a Reason in the output? If yes, set it to the utterance value
+                if (upsertResponseMap != null) {
+                    try {
+                        int idx = decisionUpdateContext.getOutputItems().indexOf("Reason");
+                        if (idx > -1) {
+                            String utterance = (String) upsertResponseMap.get("originalUtterance");
+                            if (utterance != null && !utterance.isEmpty()) {
+                                updateItemValue((Map) outputEntries.get(idx), utterance);
+                            }
+                        }
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+
+            } // Condition met, bottom
 //            System.out.printf("%d input(s), %d output, %d annotations\n",
 //                    inputEntries.size(),
 //                    outputEntries.size(),
@@ -568,6 +591,21 @@ public class DecisionTableStaticUtils {
                         updateItemValue(outputEntry, newValue, decisionUpdateContext.rawTargetColumnValue.get(idx));
                     }
                 });
+                // Is there a Reason in the output? If yes, set it to the utterance value
+                if (upsertResponseMap != null) {
+                    try {
+                        int idx = decisionUpdateContext.getOutputItems().indexOf("Reason");
+                        if (idx > -1) {
+                            String utterance = (String) upsertResponseMap.get("originalUtterance");
+                            if (utterance != null && !utterance.isEmpty()) {
+                                List<Object> outputEntries = (List) newRule.get("outputEntries");
+                                updateItemValue((Map) outputEntries.get(idx), utterance);
+                            }
+                        }
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
             } else {
                 System.out.println("Oops! No row to clone...");
             }

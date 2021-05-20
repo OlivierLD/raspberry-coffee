@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UpdateDecisionTable {
 
@@ -60,7 +62,13 @@ public class UpdateDecisionTable {
         System.out.println(txStatement);
         System.out.println("-----------------------");
 
-        String updated = DecisionTableStaticUtils.processUpdate(resource.openStream(), userContext, txStatement);
+        Map<String, Object> upsertResponseMap = new HashMap<>(); // That one is NOT immutable.
+        // Default
+        upsertResponseMap.put("upsertType", "update");
+        upsertResponseMap.put("utterance", "{ }");
+        upsertResponseMap.put("originalUtterance", "This is the utterance");
+
+        String updated = DecisionTableStaticUtils.processUpdate(resource.openStream(), userContext, txStatement, upsertResponseMap);
 
         System.out.println("Updated:\n" + updated);
 

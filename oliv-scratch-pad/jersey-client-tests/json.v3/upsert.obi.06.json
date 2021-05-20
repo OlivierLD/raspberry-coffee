@@ -1,0 +1,7 @@
+{
+  "upsert": {"Strategy":"Audit"},
+  "where":{
+    "Expense.Remaining Budget": 30,
+    "Expense.Amount": 2000
+  }
+}
