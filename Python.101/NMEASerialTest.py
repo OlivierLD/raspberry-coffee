@@ -12,7 +12,7 @@
 # Read Serial port 101.
 #
 import serial
-from typing import List, Set, Dict, Tuple, Optional
+from typing import Dict  # , List, Set, Tuple, Optional
 
 DEBUG = False
 
@@ -29,10 +29,25 @@ def rmc_parser(sentence: str) -> Dict[str, str]:
     return {"rmc": sentence}
 
 
+def gga_parser(sentence: str) -> Dict[str, str]:
+    return {"gga": sentence}
+
+
+def vtg_parser(sentence: str) -> Dict[str, str]:
+    return {"vtg": sentence}
+
+
+def gsv_parser(sentence: str) -> Dict[str, str]:
+    return {"gsv": sentence}
+
+
 NMEA_PARSER_DICT = {
     "GLL": gll_parser,
     "GSA": gsa_parser,
-    "RMC": rmc_parser
+    "RMC": rmc_parser,
+    "GGA": gga_parser,
+    "VTG": vtg_parser,
+    "GSV": gsv_parser
 }
 
 
@@ -130,8 +145,10 @@ def parse_nmea_sentence(sentence: str) -> Dict:
 
 # On mac, USB GPS on port /dev/tty.usbmodem14101,
 # Raspberry Pi, use /dev/ttyUSB0 or so.
-port_name = "/dev/tty.usbmodem14101"
+port_name = "/dev/tty.usbmodem141101"
 baud_rate = 4800
+# port_name = "/dev/ttyACM0"
+# baud_rate = 115200
 port = serial.Serial(port_name, baudrate=baud_rate, timeout=3.0)
 print("Let's go. Hit Ctrl+C to stop")
 keep_looping = True
