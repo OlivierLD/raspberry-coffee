@@ -1,6 +1,6 @@
 { 
   "upsert": {
-    "Expense.Amount": "range(345)"
+    "Expense.Amount": "setRange('<=', 345)"
   },
   "where": {
     "Expense.Approvee": "Phil",

@@ -86,7 +86,7 @@ public class JavaSample {
 		// Recalculate
 		long before = System.currentTimeMillis();
 		double deltaT = TimeUtil.getDeltaT(date.get(Calendar.YEAR), date.get(Calendar.MONTH) + 1);
-//		System.out.printf("New deltaT: %f\n", deltaT);
+//		System.out.printf(">> deltaT: %f s\n", deltaT);
 		AstroComputer.setDeltaT(deltaT);
 
 		// All calculations here
@@ -100,7 +100,7 @@ public class JavaSample {
 		long after = System.currentTimeMillis();
 
 		// Done with calculations, now display
-		System.out.println(String.format("Calculations done for %s, in %d ms <<<", SDF_UTC.format(date.getTime()), (after - before)));
+		System.out.println(String.format(">>> Calculations done for %s, in %d ms <<<", SDF_UTC.format(date.getTime()), (after - before)));
 
 		System.out.println(String.format("Sun data:\tDecl.: %s, GHA: %s, RA: %s, sd: %s, hp: %s",
 				lpad(GeomUtil.decToSex(AstroComputer.getSunDecl(), GeomUtil.SWING, GeomUtil.NS), 10, " "),
@@ -114,7 +114,10 @@ public class JavaSample {
 				renderRA(AstroComputer.getMoonRA()),
 				lpad(renderSdHp(AstroComputer.getMoonSd()), 9, " "),
 						lpad(renderSdHp(AstroComputer.getMoonHp()), 9, " ")));
-		System.out.println(String.format("\tMoon phase: %s, %s", GeomUtil.decToSex(AstroComputer.getMoonPhase(), GeomUtil.SWING, GeomUtil.NONE), AstroComputer.getMoonPhaseStr()));
+		System.out.println(String.format("\tMoon phase: %s, %s",
+				GeomUtil.decToSex(AstroComputer.getMoonPhase(), GeomUtil.SWING, GeomUtil.NONE),
+				AstroComputer.getMoonPhaseStr()));
+		System.out.println(String.format("\tMoon illumination %.04f%%", AstroComputer.getMoonIllum()));
 		System.out.println(String.format("Venus data:\tDecl.: %s, GHA: %s, RA: %s, sd: %s, hp: %s",
 				lpad(GeomUtil.decToSex(AstroComputer.getVenusDecl(), GeomUtil.SWING, GeomUtil.NS), 10, " "),
 				lpad(GeomUtil.decToSex(AstroComputer.getVenusGHA(), GeomUtil.SWING, GeomUtil.NONE), 11, " "),

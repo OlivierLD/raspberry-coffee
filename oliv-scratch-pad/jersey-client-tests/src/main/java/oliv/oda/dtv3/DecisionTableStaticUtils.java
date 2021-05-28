@@ -63,7 +63,7 @@ public class DecisionTableStaticUtils {
         return outputParams;
     }
 
-    private static String stripQuotes(String in) {
+    public static String stripQuotes(String in) {
         String out = in;
         if (out != null) {
             out = out.trim();
@@ -129,7 +129,7 @@ public class DecisionTableStaticUtils {
                 DecisionContext.Operation op = DecisionContext.detectOperation(updateTo);
                 String extracted = null;
                 if (op != null) { // Extract value
-                    extracted = DecisionContext.extractFunctionParameter(updateTo, op);
+                    extracted = DecisionContext.extractFunctionParameter(updateTo, op).get(0);
                 }
                 context.addTargetColumnValue(extracted == null ? updateTo : stripQuotes(extracted));
                 context.addOperation(op);
@@ -189,7 +189,7 @@ public class DecisionTableStaticUtils {
                 DecisionContext.Operation op = DecisionContext.detectOperation(itemName);
                 String extracted = null;
                 if (op != null) { // Extract value
-                    extracted = DecisionContext.extractFunctionParameter(itemName, op);
+                    extracted = DecisionContext.extractFunctionParameter(itemName, op).get(0);
                 }
                 if (extracted != null) {
                     context.addTargetColumnId(extracted);
@@ -292,33 +292,60 @@ public class DecisionTableStaticUtils {
                 e.printStackTrace();
             }
         }
-        if (item.get("value") != null) {
-            if ("-".equals((String)item.get("value")) && "Any".equals((String)item.get("mode"))) {
-                List<String> allowedModes = (List)item.get("allowedModes");
-                if (allowedModes != null && allowedModes.contains("Text")) {
-                    item.put("mode", "Text");
-                } else if (allowedModes != null && allowedModes.contains("Number")) {
-                    item.put("mode", "Number");
+        boolean alreadyProcessed = false;
+        // Get function in rawValue
+        if (rawValue != null) {
+            DecisionContext.Operation operation = DecisionContext.detectOperation(rawValue);
+            if (operation != null) {
+                List<String> parameters = DecisionContext.extractFunctionParameter(rawValue, operation);
+                if (operation == DecisionContext.Operation.RANGE_VALUE) {
+                    Map<String, Object> range = ((Map)item.get("range"));
+                    if (range != null) {
+                        range.put("endpoint1", parameters.get(0));
+                        alreadyProcessed = true;
+                    } // TODO else? raise something?
+                } else if (operation == DecisionContext.Operation.SET_RANGE) {
+                    Map<String, Object> range = new HashMap<>(); // ...Map.of only after Java 9+
+                    range.put("operation1", parameters.get(0));  // Comparator
+                    range.put("endpoint1", parameters.get(1));   // value);
+                    item.put("range", range);
+                    item.remove("value"); // works even if not there
+                    alreadyProcessed = true;
                 }
             }
-            if ("Number".equals(item.get("mode")) && rawValue != null && rawValue.startsWith("range(")) { // TODO Refine that!!
-                Map<String, Object> range = new HashMap<>(); // Map.of only after Java 9+
-                range.put("operation1", "<"); // TODO Fix that hard-coded one!
-                range.put("endpoint1", value);
-                item.remove("value");
-                item.put("range", range);
+        }
+        if (!alreadyProcessed) {
+            if (item.get("value") != null) {
+                if ("-".equals((String) item.get("value")) && "Any".equals((String) item.get("mode"))) {
+                    List<String> allowedModes = (List) item.get("allowedModes");
+                    if (allowedModes != null && allowedModes.contains("Text")) {
+                        item.put("mode", "Text");
+                    } else if (allowedModes != null && allowedModes.contains("Number")) {
+                        item.put("mode", "Number");
+                    }
+                }
+                if ("Number".equals(item.get("mode")) && rawValue != null && rawValue.startsWith(DecisionContext.Operation.SET_RANGE.functionName() + "(")) {
+                    // Parse the rawValue
+                    List<String> parameters = DecisionContext.extractFunctionParameter(rawValue, DecisionContext.Operation.SET_RANGE); // get op from context?
+                    Map<String, Object> range = new HashMap<>(); // ...Map.of only after Java 9+
+                    range.put("operation1", parameters.get(0));  // Comparator
+                    range.put("endpoint1", parameters.get(1));   // value);
+                    // Replace value with range
+                    item.remove("value");
+                    item.put("range", range);
+                } else {
+                    item.put("value", value);
+                }
+            } else if (item.get("values") != null) {
+                List<Object> values = new ArrayList<>(); // New empty list
+                values.add(value);
+                item.put("values", values);
+            } else if (item.get("range") != null) { // TODO Check if allowedModes contains Number ?
+                ((Map) item.get("range")).put("endpoint1", value);
             } else {
-                item.put("value", value);
-            }
-        } else if (item.get("values") != null) {
-            List<Object> values = new ArrayList<>(); // New empty list
-            values.add(value);
-            item.put("values", values);
-        } else if (item.get("range") != null) { // TODO Check if allowedModes contains Number ?
-            ((Map)item.get("range")).put("endpoint1", value);
-        } else {
-            System.out.println("Watzat?");
-        } // TODO Any
+                System.out.println("Watzat?");
+            } // TODO Any?
+        }
     }
 
     static String processUpdate(InputStream original, String userContext, String txSyntax) throws Exception {
@@ -366,14 +393,29 @@ public class DecisionTableStaticUtils {
                 List<Object> values = (colIdx.getWhere() == DecisionContext.TargetColumnIndex.InOrOut.OUTPUT ?
                         Arrays.asList((String)outputEntries.get(colIdx.getIndex()).get("value")) :
                         getValues(inputEntries.get(colIdx.getIndex())));
+                String whereItem = whereColumnValue.get(ii);
+                boolean negation = false;
+                if (whereItem != null) {
+                    DecisionContext.Operation operation = DecisionContext.detectOperation(whereItem);
+                    if (operation != null) {
+                        if (operation == DecisionContext.Operation.RANGE_VALUE) {
+                            whereItem = DecisionContext.extractFunctionParameter(whereItem, operation).get(0);
+                        } else if (operation == DecisionContext.Operation.IS_NOT) {
+                            whereItem = DecisionContext.extractFunctionParameter(whereItem, operation).get(0);
+                            negation = true;
+                        }
+                    }
+                }
                 if (verbose) {
                     System.out.println("- Comparing column " +
                             "(" + colIdx.getIndex() + " " + colIdx.getWhere() + ") " +
                             decisionUpdateContext.getWhereColumnId().get(ii) +
                             ", val " + values +
-                            " and " + whereColumnValue.get(ii));
+                            " and " + whereColumnValue.get(ii) + " [" + whereItem +"]");
                 }
-                boolean met = (whereColumnValue.get(ii) == null || values.contains(whereColumnValue.get(ii)));
+                boolean met = (whereItem == null ||
+                        (!negation && values.contains(whereItem)) ||
+                        (negation && !values.contains(whereItem)));
                 conditionMet = conditionMet && met;
             }
 
@@ -383,7 +425,7 @@ public class DecisionTableStaticUtils {
                     Map<String, Object> oneRowResult = new HashMap<>();
                     oneRowResult.put("item", decisionUpdateContext.targetColumnId.get(outIndex));
                     if (decisionUpdateContext.getOperation().get(outIndex) != null) {
-                        if (decisionUpdateContext.getOperation().get(outIndex).equals(DecisionContext.Operation.RANGE)) {
+                        if (decisionUpdateContext.getOperation().get(outIndex).equals(DecisionContext.Operation.RANGE_VALUE)) {
                             Map<String, Object> range = (Map) inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("range");
                             if (range != null) {
                                 Object endpoint1 = range.get("endpoint1");
@@ -402,14 +444,24 @@ public class DecisionTableStaticUtils {
                                 System.out.println("No 'range' found where expected");
                                 // throw new RuntimeException("No 'range' found where expected");
                             }
+                        } else if (decisionUpdateContext.getOperation().get(outIndex).equals(DecisionContext.Operation.SET_RANGE)) {
+                            String rawValue = decisionUpdateContext.getRawTargetColumnValue().get(outIndex);
+                            List<String> parameters = DecisionContext.extractFunctionParameter(rawValue, DecisionContext.Operation.SET_RANGE);
+                            Map<String, Object> range = new HashMap<>(); // ...Map.of only after Java 9+
+                            range.put("operation1", parameters.get(0));  // Comparator
+                            range.put("endpoint1", parameters.get(1));   // value);
+                            ((Map) inputEntries.get(targetColumnIndex.get(outIndex).getIndex())).put("range", range);
                         } else if (decisionUpdateContext.getOperation().get(outIndex).equals(DecisionContext.Operation.APPEND_TO_LIST)) {
                             List<String> values = (List) inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("values");
                             if (values == null) {
                                 String oneValue = (String) inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("value");
                                 if (oneValue != null) {
-                                    values = new ArrayList();
-                                    values.add(oneValue);
+                                    values = new ArrayList<>();
+                                    if (!"-".equals(oneValue)) {
+                                        values.add(oneValue);
+                                    }
                                     inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).put("values", values);
+                                    inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).put("mode", "Text");
                                     inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).remove("value");
                                 }
                             }
@@ -417,15 +469,16 @@ public class DecisionTableStaticUtils {
                                 // Check value validity
                                 List<Map<String, Object>> suggestions = (List) inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("suggestions");
                                 AtomicBoolean found = new AtomicBoolean(false);
-                                suggestions.forEach(suggestion -> {
-                                    if (targetColumnNewValue.equals(suggestion.get("value"))) {
+                                final int _outIndex = outIndex;
+                                suggestions.forEach(suggestion -> { // Validate the value
+                                    if (targetColumnNewValue.get(_outIndex).equals(suggestion.get("value"))) {
                                         found.set(true);
                                     }
                                 });
                                 if (found.get()) {
                                     AtomicBoolean alreadyThere = new AtomicBoolean(false);
                                     values.forEach(val -> {
-                                        if (targetColumnNewValue.equals(val)) {
+                                        if (targetColumnNewValue.get(_outIndex).equals(val)) {
                                             alreadyThere.set(true);
                                         }
                                     });
@@ -481,7 +534,8 @@ public class DecisionTableStaticUtils {
                                         targetObjectMap.put("mode", "Number");
                                     }
                                 }
-                                if ("Number".equals(targetObjectMap.get("mode")) ) { // && rawValue != null && rawValue.startsWith("range(")) { // TODO Refine that!!
+                                // TODO When do we hit that one? Shouldn't it be 'value: 1234'
+                                if ("Number".equals(targetObjectMap.get("mode")) ) { // && rawValue != null && rawValue.startsWith("range(")) {
                                     Map<String, Object> range = new HashMap<>(); // Map.of only after Java 9+
                                     range.put("operation1", "<"); // TODO Fix that hard-coded one!
                                     range.put("endpoint1", targetColumnNewValue.get(outIndex));
@@ -504,10 +558,10 @@ public class DecisionTableStaticUtils {
                     }
                     queryResult.add(oneRowResult);
                 }
-                // Is there a Reason in the output? If yes, set it to the utterance value
+                // Is there a Reason in the output? If yes, set it to the utterance value (for PoC)
                 if (upsertResponseMap != null) {
                     try {
-                        int idx = decisionUpdateContext.getOutputItems().indexOf("Reason");
+                        int idx = decisionUpdateContext.getOutputItems().indexOf("Reason");  // TODO Drop that after the PoC
                         if (idx > -1) {
                             String utterance = (String) upsertResponseMap.get("originalUtterance");
                             if (utterance != null && !utterance.isEmpty()) {
@@ -568,6 +622,36 @@ public class DecisionTableStaticUtils {
                 }
                 rules.add(0, newRule); // Insert on top.
                 // Now the rest!
+
+                // Set the unmentioned input columns to Any ?
+                decisionUpdateContext.getInputItems().forEach(inputItem -> {
+                    int idx = decisionUpdateContext.getInputItems().indexOf(inputItem);
+                    boolean inTci = targetColumnIndex.stream().filter(tci -> tci.getIndex() == idx).findFirst().isPresent();
+                    boolean inCi = columnIndex.stream().filter(cIdx -> cIdx.getIndex() == idx).findFirst().isPresent();
+                    if (!inTci && !inCi) {
+                        // To be set to Any
+                        Map<String, Object> inputEntry = (Map)((List)newRule.get("inputEntries")).get(idx);
+                        if (verbose) {
+                            System.out.println("Setting " + inputItem + " to Any");
+                        }
+                        inputEntry.put("mode", "Any");
+                        inputEntry.put("value", "-");
+                        // TODO Any other node to remove?
+//                    } else {
+//                        System.out.println(inputItem + " IS in the list (index " + idx + ")");
+                    }
+//                    System.out.println(inputItem + ", end.");
+                });
+                decisionUpdateContext.getOutputItems().forEach(outputItem -> {
+                    int idx = decisionUpdateContext.getOutputItems().indexOf(outputItem);
+                    Map<String, Object> outputEntry = (Map)((List)newRule.get("outputEntries")).get(idx);
+                    if (verbose) {
+                        System.out.println("Setting " + outputItem + " to Any");
+                    }
+//                    outputEntry.put("mode", "Any");
+                    outputEntry.put("value", "-");
+                });
+
                 // 1 - Where Clause
                 columnIndex.forEach(ci -> {
                     String newValue = whereColumnValue.get(columnIndex.indexOf(ci));
@@ -591,10 +675,10 @@ public class DecisionTableStaticUtils {
                         updateItemValue(outputEntry, newValue, decisionUpdateContext.rawTargetColumnValue.get(idx));
                     }
                 });
-                // Is there a Reason in the output? If yes, set it to the utterance value
+                // Is there a Reason in the output? If yes, set it to the utterance value (for PoC)
                 if (upsertResponseMap != null) {
                     try {
-                        int idx = decisionUpdateContext.getOutputItems().indexOf("Reason");
+                        int idx = decisionUpdateContext.getOutputItems().indexOf("Reason"); // TODO Drop that after the PoC
                         if (idx > -1) {
                             String utterance = (String) upsertResponseMap.get("originalUtterance");
                             if (utterance != null && !utterance.isEmpty()) {
@@ -669,14 +753,29 @@ public class DecisionTableStaticUtils {
                 List<Object> values = (colIdx.getWhere() == DecisionContext.TargetColumnIndex.InOrOut.OUTPUT ?
                         Arrays.asList((String)outputEntries.get(colIdx.getIndex()).get("value")) :
                         getValues(inputEntries.get(colIdx.getIndex())));
+                String whereItem = whereColumnValue.get(ii);
+                boolean negation = false;
+                if (whereItem != null) {
+                    DecisionContext.Operation operation = DecisionContext.detectOperation(whereItem);
+                    if (operation != null) {
+                        if (operation == DecisionContext.Operation.RANGE_VALUE) {
+                            whereItem = DecisionContext.extractFunctionParameter(whereItem, operation).get(0);
+                        } else if (operation == DecisionContext.Operation.IS_NOT) {
+                            whereItem = DecisionContext.extractFunctionParameter(whereItem, operation).get(0);
+                            negation = true;
+                        }
+                    }
+                }
                 if (verbose) {
                     System.out.println("- Comparing column " +
                             "(" + colIdx.getIndex() + " " + colIdx.getWhere() + ") " +
                             decisionQueryContext.getWhereColumnId().get(ii) +
                             ", val " + values +
-                            " and " + whereColumnValue.get(ii));
+                            " and " + whereColumnValue.get(ii) + " [" + whereItem +"]");
                 }
-                boolean met = (whereColumnValue.get(ii) == null || values.contains(whereColumnValue.get(ii)));
+                boolean met = (whereItem == null ||
+                        (!negation && values.contains(whereItem)) ||
+                        (negation && !values.contains(whereItem)));
                 conditionMet = conditionMet && met;
             }
 
@@ -691,7 +790,7 @@ public class DecisionTableStaticUtils {
                                     decisionQueryContext.getInputItems().get(itemIndex) :
                                     decisionQueryContext.getOutputItems().get(itemIndex);
                     if (decisionQueryContext.getOperation().get(outIndex) != null) {
-                        if (decisionQueryContext.getOperation().get(outIndex).equals(DecisionContext.Operation.RANGE)) {
+                        if (decisionQueryContext.getOperation().get(outIndex).equals(DecisionContext.Operation.RANGE_VALUE)) {
                             Map<String, Object> range = (Map) inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("range");
                             if (range != null) {
                                 Object endpoint1 = range.get("endpoint1");
@@ -742,9 +841,11 @@ public class DecisionTableStaticUtils {
     public static class DecisionContext {
 
         public enum Operation {
-            RANGE("range"),
-            APPEND_TO_LIST("appendToList"),      // Not for QUERY
-            DELETE_FROM_LIST("deleteFromList");  // Not for QUERY
+            RANGE_VALUE("rangeValue"), // One parameter. (125) for a set (upsert) or where, ('ExpenseAmount') for a get (select)
+            SET_RANGE("setRange"),     // Two parameters like ('<', 500). For upsert's query, not where.
+            IS_NOT("isNot"),           // Not equals. One parameter. for a where clause. WARNING Dangerous, if the upsert becomes an insert!!!
+            APPEND_TO_LIST("appendToList"),      // Not for where clause
+            DELETE_FROM_LIST("deleteFromList");  // Not for where clause
 
             private final String functionName;
 
@@ -762,10 +863,10 @@ public class DecisionTableStaticUtils {
                 OUTPUT
             }
             int index;
-            InOrOut where = InOrOut.INPUT; // Default
+            InOrOut where;
 
             public TargetColumnIndex(int idx) {
-                this(idx, InOrOut.INPUT);
+                this(idx, InOrOut.INPUT);  // Default
             }
 
             public TargetColumnIndex(int idx, InOrOut where) {
@@ -923,12 +1024,12 @@ public class DecisionTableStaticUtils {
         }
 
         /**
-         * From 'range(350)', extract '350'
+         * From 'rangeValue(350)', extract '350'
          * @param str
          * @param op
          * @return
          */
-        protected static String extractFunctionParameter(String str, Operation op) {
+        protected static List<String> extractFunctionParameter(String str, Operation op) {
             String extracted;
             String patternStr = op.functionName() + "\\(.*\\)";
             Pattern pattern = Pattern.compile(patternStr);
@@ -939,7 +1040,11 @@ public class DecisionTableStaticUtils {
             } else {
                 throw new RuntimeException(String.format("[%s] does not match [%s]", str, op.functionName()));
             }
-            return extracted;
+            List<String> stringList = Arrays.asList(extracted.split(","))
+                    .stream()
+                    .map(prm -> stripQuotes(prm.trim()))
+                    .collect(Collectors.toList());
+            return stringList;
         }
     }
 }

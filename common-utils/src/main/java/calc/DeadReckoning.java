@@ -135,7 +135,7 @@ public class DeadReckoning {
 		double cosAHL = Math.cos(Math.toRadians(AHL));
 		double sinHe = sinL * sinD + cosL * cosD * cosAHL;
 		double He = Math.toDegrees(Math.asin(sinHe));
-		dHe = new Double(He);
+		dHe = He;
 		double P = AHL >= 180D ? 360D - AHL : AHL;
 		double sinP = Math.sin(Math.toRadians(P));
 		double cosP = Math.cos(Math.toRadians(P));
@@ -150,10 +150,10 @@ public class DeadReckoning {
 			}
 		} else if (Z < 0.0D) {
 			Z = 180D + Z;
+//		} else {
+//			Z = Z;
 		}
-//  else
-//    Z = Z;
-		dZ = new Double(Z);
+		dZ = Z;
 		return this;
 	}
 

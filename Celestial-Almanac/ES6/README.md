@@ -6,6 +6,7 @@
 ### Test it from NodeJS (server) with a Web UI
 Start the provided node server:
 ```
+ $ cd src/main/ES6
  $ node server.js
  ----------------------------------------------------
 Usage: node ./server.js --verbose:true|false --port:XXXX --wdir:path/to/working/dir

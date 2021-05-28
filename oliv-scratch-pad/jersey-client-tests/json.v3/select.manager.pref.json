@@ -1,7 +1,8 @@
 { 
-  "select": [ "Expense.Amount", "range('Expense.Amount')" ,"Strategy", "Reason" ],
+  "select": [ "Expense.Amount", "rangeValue('Expense.Amount')" ,"Strategy", "Reason" ],
   "where": {
-    "Expense.Approvee": "Sam"
+    "Expense.Approvee": "Sam",
+    "Expense.Type": "-"
   }
 }
 

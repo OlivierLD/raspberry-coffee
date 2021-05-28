@@ -1,9 +1,10 @@
 { 
   "upsert": {
-    "Expense.Amount": 6789
+    "Expense.Amount":  "rangeValue(300)",
+    "Strategy": "Approve"
   },
   "where": {
-    "Expense.Approvee": "Phil"
+    "Expense.Approvee": "phil.sanders@acme.com"
   }
 }
 

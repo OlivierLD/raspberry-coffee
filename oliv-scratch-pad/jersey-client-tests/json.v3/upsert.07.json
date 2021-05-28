@@ -1,0 +1,10 @@
+{ 
+  "upsert": {
+    "Expense.Amount": "setRange('<', 300)"
+  },
+  "where": {
+    "Expense.Approvee": "isNot(sam.thorpe@acme.com)",
+    "Expense.Amount": "rangeValue(2000)"
+  }
+}
+

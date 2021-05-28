@@ -16,7 +16,7 @@ package systemsKt
  */
 class SquareMatrix(dim: Int) {
 	val dimension = dim
-	val elements = Array(dim) { DoubleArray(dim) }
+	private val elements = Array(dim) { DoubleArray(dim) }
 
 	constructor(dim: Int, elements: DoubleArray) : this(dim) {
 		this.set(elements)
@@ -44,7 +44,7 @@ class SquareMatrix(dim: Int) {
 
 object MatrixUtils {
 	fun minor(matrix: SquareMatrix, row: Int, col: Int): SquareMatrix {
-		var small = SquareMatrix(matrix.dimension - 1)
+		val small = SquareMatrix(matrix.dimension - 1)
 
 		for (line in 0..(matrix.dimension - 1)) {
 			if (line != row) {

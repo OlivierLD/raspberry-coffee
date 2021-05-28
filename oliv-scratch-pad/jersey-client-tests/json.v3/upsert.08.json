@@ -1,0 +1,9 @@
+{ 
+  "upsert": {
+    "Expense.Type": "appendToList('Travel')"
+  },
+  "where": {
+    "Expense.Approvee": "sam.thorpe@acme.com"
+  }
+}
+

@@ -1,4 +1,12 @@
 ## Celestial Almanac(s)
+
+# Important
+This module was moved into its own repo.  
+See <https://github.com/OlivierLD/AstroComputer>.
+
+The one you're one should be considered as deprecated, and will eventually be removed. 
+
+---
 > _Note_: This is not strictly related to Java nor Raspberry Pi.
 
 This is about reproducing the celestial almanac features (available in `common-utils/src/main/java/calc/calculation/nauticalalmanac`)
@@ -43,7 +51,7 @@ Beside Java, we (will) have
 
 ### Integrated Development Environment (IDE)
 Here is a quick list of some IDEs I use. They _all_ have a free version.
-- For Java and all JVM-aware languages (Scala, Kotlin, Groovy, ...): IntelliJ, period❗.
+- For Java and all JVM-aware languages (Scala, Kotlin, Groovy, ...): IntelliJ, period❗
 - For Python: PyCharm.
 - For C & C++: Visual Studio.
 - For Golang: Visual Studio.
