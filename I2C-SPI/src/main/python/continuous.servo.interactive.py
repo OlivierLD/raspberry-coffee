@@ -32,7 +32,7 @@ servo_pin = 3  # Physical pin. (3: SDA)
 
 print(f"RPi.GPIO version {GPIO.VERSION}")
 
-def set_duty_cycle(duty):
+def set_duty_cycle(duty: int) -> None:
     pwm.ChangeDutyCycle(duty)    # pwm defined below
 
 

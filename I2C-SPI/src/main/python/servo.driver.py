@@ -22,7 +22,7 @@ servo_pin = 3  # Physical pin. (3: SDA)
 
 print(f"RPi.GPIO version {GPIO.VERSION}")
 
-def set_angle(angle):
+def set_angle(angle: float) -> None:
     duty = angle / 18 + 2
     print(f"\tFor angle {angle}, duty is {duty}")
     GPIO.output(servo_pin, True)

@@ -2,6 +2,7 @@
 # Other method, more efficient than fibonacci.py
 #
 import sys
+from typing import List
 
 # shift registers
 a = 0
@@ -9,7 +10,7 @@ b = 0
 
 
 # Calculate Nth element of the suite
-def fib(n):
+def fib(n: int) -> int:
     global a
     global b
     if n == 0:
@@ -27,7 +28,7 @@ def fib(n):
 
 
 # All the suite, up to n
-def fibonacci(n):
+def fibonacci(n: int) -> List[int]:
     suite = []
     for i in range(n):
         x = fib(i)
@@ -37,7 +38,7 @@ def fibonacci(n):
 
 
 # Main part
-def main(args):
+def main(args: List[str]) -> None:
     length = 30
     if len(args) == 2:
         length = int(args[1])

@@ -2,11 +2,12 @@
 # Easy!
 #
 import sys
+from typing import List
 
 nb_rec = 0
 
 
-def fib(n):
+def fib(n: int) -> int:
     # global nb_rec
     # nb_rec += 1
     if n <= 1:
@@ -14,7 +15,7 @@ def fib(n):
     return fib(n - 1) + fib(n - 2)
 
 
-def main(args):
+def main(args: List[str]) -> None:
     suite = []
     length = 30
     if len(args) == 2:

@@ -12,19 +12,20 @@
 # Read Serial port 101.
 #
 import serial
+from typing import List, Set, Dict, Tuple, Optional
 
 DEBUG = False
 
 
-def gll_parser(sentence):
+def gll_parser(sentence: str) -> Dict[str, str]:
     return {"gll": sentence}
 
 
-def gsa_parser(sentence):
+def gsa_parser(sentence: str) -> Dict[str, str]:
     return {"gsa": sentence}
 
 
-def rmc_parser(sentence):
+def rmc_parser(sentence: str) -> Dict[str, str]:
     return {"rmc": sentence}
 
 
@@ -35,7 +36,7 @@ NMEA_PARSER_DICT = {
 }
 
 
-def read_nmea_sentence(serial_port):
+def read_nmea_sentence(serial_port: serial.serialposix.Serial) -> str:
     """
     Reads the serial port until a '\n' is met.
     :param serial_port: the port, as returned by serial.Serial
@@ -55,7 +56,7 @@ def read_nmea_sentence(serial_port):
             return string
 
 
-def calculate_check_sum(sentence):
+def calculate_check_sum(sentence: str) -> int:
     cs = 0
     char_array = list(sentence)
     for c in range(len(sentence)):
@@ -63,7 +64,7 @@ def calculate_check_sum(sentence):
     return cs
 
 
-def valid_check_sum(sentence):
+def valid_check_sum(sentence: str) -> bool:
     star_index = -1
     try:
         star_index = sentence.index('*')
@@ -92,7 +93,7 @@ def valid_check_sum(sentence):
     return True
 
 
-def parse_nmea_sentence(sentence):
+def parse_nmea_sentence(sentence: str) -> Dict:
     nmea_dict = {}
     if sentence.startswith('$'):
         if sentence.endswith('\r\n'):

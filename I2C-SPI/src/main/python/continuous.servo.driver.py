@@ -42,7 +42,7 @@ ROTATE_SLOW_COUNTER_CLOCKWISE = 7.4
 
 print(f"RPi.GPIO version {GPIO.VERSION}")
 
-def set_rotation(duty):
+def set_rotation(duty: float) -> None:
     pwm.ChangeDutyCycle(duty)    # pwm defined below
 
 

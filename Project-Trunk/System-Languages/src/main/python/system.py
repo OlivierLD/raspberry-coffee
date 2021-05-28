@@ -1,12 +1,18 @@
-# Matrix and System resolution
-
+# Matrix and System resolution. Requires Python3
+#
+# Python3 types: 
+# see https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html
+# see https://docs.python.org/3/library/typing.html
+#
+from typing import List
 import math
 import datetime
 
 debug = False
 
+Matrix = List[List[float]]
 
-def init_square_matrix(dim):
+def init_square_matrix(dim: int) -> Matrix:
     mat = []
     # Initialize
     for r in range(dim):
@@ -18,7 +24,7 @@ def init_square_matrix(dim):
 
 
 # Minor matrix
-def minor(matrix, row, col):
+def minor(matrix: Matrix, row: int, col: int) -> Matrix:
     small = []
     dim = len(matrix)  # Assume square matrix
     for c in range(dim):
@@ -32,7 +38,7 @@ def minor(matrix, row, col):
 
 
 # Transposed matrix
-def transposed(matrix):
+def transposed(matrix: Matrix) -> Matrix:
     # Initialize
     trans = init_square_matrix(len(matrix))
     # fill it up
@@ -48,7 +54,7 @@ def transposed(matrix):
 
 
 # Comatrix
-def comatrix(matrix):
+def comatrix(matrix: Matrix) -> Matrix:
     # Initialize
     comat = init_square_matrix(len(matrix))
     for r in range(len(matrix)):
@@ -63,7 +69,7 @@ def comatrix(matrix):
 
 
 # Determinant of a square matrix
-def determin(matrix):
+def determin(matrix: Matrix) -> float:
     value = 0.0
     if len(matrix) == 1:
         value = matrix[0][0]
@@ -80,7 +86,7 @@ def determin(matrix):
     return value
 
 
-def multiply(matrix, n):
+def multiply(matrix: Matrix, n: float) -> Matrix:
     result = init_square_matrix(len(matrix))
     for r in range(len(matrix)):
         for c in range(len(matrix)):
@@ -88,11 +94,11 @@ def multiply(matrix, n):
     return result
 
 
-def invert(matrix):
+def invert(matrix: Matrix) -> Matrix:
     return multiply(transposed(comatrix(matrix)), (1.0 / determin(matrix)))
 
 
-def print_matrix(matrix):
+def print_matrix(matrix: Matrix) -> None:
     for r in range(len(matrix)):
         line = "| "
         for c in range(len(matrix)):
@@ -122,7 +128,7 @@ def print_matrix(matrix):
 # @param c Constants array, n (right) <code>[X, Y, Z]</code> from the system above
 # @return the unknown array, n. <code>[x, y, z]</code> from the system above
 #
-def solve_system(matrix, cst):
+def solve_system(matrix: Matrix, cst: List[float]) -> List[float]:
     result = []
     for r in range(len(matrix)):  # init
         result.append(0)
@@ -140,7 +146,7 @@ def solve_system(matrix, cst):
     return result
 
 
-def print_system(matrix, constants):
+def print_system(matrix: Matrix, constants: List[float]) -> None:
     unknowns = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     dim = len(matrix)
     for r in range(dim):
@@ -156,38 +162,43 @@ def print_system(matrix, constants):
 #
 #
 # Main part below (actual execution), using the above.
+def main(args=None):
+    matrix = [
+        [12, 13, 14],
+        [1.345, -654, 0.001],
+        [23.09, 5.3, -12.34]
+    ]
+    constants = [234, 98.87, 9.876]
 
-matrix = [
-    [12, 13, 14],
-    [1.345, -654, 0.001],
-    [23.09, 5.3, -12.34]
-]
-constants = [234, 98.87, 9.876]
+    # print matrix
+    # min = minor(matrix, 0, 0)
+    # print min
+    # print determin(min)
+    # print transposed(matrix)
 
-# print matrix
-# min = minor(matrix, 0, 0)
-# print min
-# print determin(min)
-# print transposed(matrix)
+    # print invert(matrix)
 
-# print invert(matrix)
+    print("Solving:")
+    print_system(matrix, constants)
 
-print("Solving:")
-print_system(matrix, constants)
+    before = datetime.datetime.now()
+    result = solve_system(matrix, constants)
+    after = datetime.datetime.now()
+    print("Done in {}s, {}\u03BCs".format((after - before).seconds, (after - before).microseconds))
 
-before = datetime.datetime.now()
-result = solve_system(matrix, constants)
-after = datetime.datetime.now()
-print("Done in {}s, {}\u03BCs".format((after - before).seconds, (after - before).microseconds))
+    print("A = ", result[0])
+    print("B = ", result[1])
+    print("C = ", result[2])
+    print("")
+    # Proof:
+    x = (matrix[0][0] * result[0]) + (matrix[0][1] * result[1]) + (matrix[0][2] * result[2])
+    y = (matrix[1][0] * result[0]) + (matrix[1][1] * result[1]) + (matrix[1][2] * result[2])
+    z = (matrix[2][0] * result[0]) + (matrix[2][1] * result[1]) + (matrix[2][2] * result[2])
+    print("Proof X:", x)
+    print("Proof Y:", y)
+    print("Proof Z:", z)
 
-print("A = ", result[0])
-print("B = ", result[1])
-print("C = ", result[2])
-print("")
-# Proof:
-x = (matrix[0][0] * result[0]) + (matrix[0][1] * result[1]) + (matrix[0][2] * result[2])
-y = (matrix[1][0] * result[0]) + (matrix[1][1] * result[1]) + (matrix[1][2] * result[2])
-z = (matrix[2][0] * result[0]) + (matrix[2][1] * result[1]) + (matrix[2][2] * result[2])
-print("Proof X:", x)
-print("Proof Y:", y)
-print("Proof Z:", z)
+
+if __name__ == "__main__":
+    print("Let's go!")
+    main()

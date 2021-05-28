@@ -1,6 +1,6 @@
 from math import radians, sin, cos, sqrt, asin, acos, degrees
 
-def haversine(lat1, lon1, lat2, lon2):
+def haversine(lat1 :float, lon1 :float, lat2 :float, lon2 :float) -> float:
     """
     Return the haversine approximation to the great-circle distance between two
     points (in meters).
@@ -19,7 +19,7 @@ def haversine(lat1, lon1, lat2, lon2):
     return R * c * 1000.0
 
 
-def great_circle(lat1, lon1, lat2, lon2):
+def great_circle(lat1 :float, lon1 :float, lat2 :float, lon2 :float) -> float:
     """GC dist in nautical miles"""
     cos_val = sin(radians(lat1)) * sin(radians(lat2)) + \
               cos(radians(lat1)) * cos(radians(lat2)) * \
@@ -28,7 +28,7 @@ def great_circle(lat1, lon1, lat2, lon2):
     return degrees(dist) * 60
 
 
-def great_circle_km(lat1, lon1, lat2, lon2):
+def great_circle_km(lat1 :float, lon1 :float, lat2 :float, lon2 :float) -> float:
     """GC dist in km"""
     return great_circle(lat1, lon1, lat2, lon2) * 1.852
 

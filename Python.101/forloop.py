@@ -1,6 +1,6 @@
 #
 
 for i in range(10):
-	print i
+	print(i)
 
-print "Done"
+print("Done")
