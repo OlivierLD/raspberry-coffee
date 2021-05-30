@@ -6,7 +6,7 @@ import random
 ALPHA = 0.015
 
 
-def low_pass(alpha, value, acc):
+def low_pass(alpha: float, value: float, acc: float) -> float:
     return (value * alpha) + (acc * (1 - alpha))
 
 
