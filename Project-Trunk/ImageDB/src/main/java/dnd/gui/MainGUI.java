@@ -10,6 +10,8 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MainGUI {
 
@@ -44,8 +46,8 @@ public class MainGUI {
 		return conn;
 	}
 
-	public MainGUI() {
-		String dbLocation = System.getProperty("db.location", "sql" + File.separator + "images.db");
+	public MainGUI(String dbLoc) {
+		String dbLocation = dbLoc == null ? System.getProperty("db.location", "sql" + File.separator + "images.db") : dbLoc;
 
 		try {
 			Connection conn = getConnection(dbLocation);
@@ -73,12 +75,22 @@ public class MainGUI {
 		frame.setVisible(true);
 	}
 
+	private final static String DB_LOCATION_PREFIX = "--db-location:";
+
 	public static void main(String... args) {
+
+		AtomicReference<String> dbLoc = new AtomicReference<>(null);
+		Arrays.asList(args).stream().forEach(arg -> {
+			if (arg.startsWith(DB_LOCATION_PREFIX)) {
+				dbLoc.set(arg.substring(DB_LOCATION_PREFIX.length()));
+			}
+		});
+
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		new MainGUI();
+		new MainGUI(dbLoc.get());
 	}
 }
