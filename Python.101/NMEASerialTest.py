@@ -3,7 +3,7 @@
 # http://www.elinux.org/Serial_port_programming
 # sudo apt-get install python-serial
 # or
-# pip install pyserial
+# pip3 install pyserial
 #
 # Also see:
 # - https://pythonhosted.org/pyserial/pyserial.html
@@ -15,6 +15,10 @@ import serial
 from typing import Dict  # , List, Set, Tuple, Optional
 
 DEBUG = False
+
+#
+# Basic parsers, like placeholders.
+#
 
 
 def gll_parser(sentence: str) -> Dict[str, str]:

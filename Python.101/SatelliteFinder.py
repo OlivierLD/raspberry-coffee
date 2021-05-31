@@ -80,12 +80,17 @@ def findSat(earthStationLat: float, earthStationLong: float) -> Union[Tuple,bool
     return
 
 
-satAim = calculate(-97.6, obsLat, obsLng)
-print('Sat :', satAim)
+def main() -> None:
+    satAim = calculate(-97.6, obsLat, obsLng)
+    print('Sat :', satAim)
 
-print('Z   :', satAim[0])
-print('El  :', satAim[1])
-print('Tilt:', satAim[2])
+    print('Z   :', satAim[0])
+    print('El  :', satAim[1])
+    print('Tilt:', satAim[2])
 
-satToUse = findSat(obsLat, obsLng)
-print('Use "', satToUse[0].name, '", Z:', satToUse[1][0], ', El:', satToUse[1][1], ', Tilt:', satToUse[1][2])
+    satToUse = findSat(obsLat, obsLng)
+    print('Use "', satToUse[0].name, '", Z:', satToUse[1][0], ', El:', satToUse[1][1], ', Tilt:', satToUse[1][2])
+
+
+if __name__ == '__main__':
+    main()

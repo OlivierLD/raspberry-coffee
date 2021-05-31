@@ -13,6 +13,9 @@ debug = False
 Matrix = List[List[float]]
 
 def init_square_matrix(dim: int) -> Matrix:
+    """
+    Initialize a matrix
+    """
     mat = []
     # Initialize
     for r in range(dim):

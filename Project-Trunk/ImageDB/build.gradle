@@ -1,0 +1,25 @@
+
+plugins {
+    id 'java'
+    id 'maven'
+    id 'idea'
+    id 'com.github.johnrengelman.shadow' // version '4.0.2'
+}
+
+shadowJar {
+    zip64 true
+}
+
+group = 'oliv.raspi.coffee'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url "https://oss.sonatype.org/content/groups/public" }
+    maven { url "https://www.datanucleus.org/downloads/maven2" }
+}
+
+dependencies {
+    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
+}
