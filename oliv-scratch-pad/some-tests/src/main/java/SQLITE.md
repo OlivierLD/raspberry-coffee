@@ -4,7 +4,10 @@ See:
 - <https://pimylifeup.com/raspberry-pi-sqlite/>
 - <https://sqlite.org/docs.html>
 - <https://www.sqlitetutorial.net/sqlite-java/>
-
+---
+- [SQLite for Python](https://www.pythoncentral.io/introduction-to-sqlite-in-python/)
+- [SQLite for NodeJS](https://www.sqlitetutorial.net/sqlite-nodejs/connect/)
+---
 ```
 sudo apt update
 sudo apt full-upgrade

@@ -39,7 +39,7 @@ public class PopulateFromFileSystem {
         return conn;
     }
 
-    private final static SimpleDateFormat SDF = new SimpleDateFormat("YYYY-MM-DD");
+    private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
 
     private final static String MIGRATION_DATA_PREFIX = "--migration-data-folder:";
     private final static String CSV_FILE_PREFIX = "--csv-file:";
