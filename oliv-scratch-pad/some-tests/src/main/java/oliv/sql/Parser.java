@@ -40,13 +40,13 @@ public class Parser {
         SqlNode[] operands = node.getOperands();
         SqlOperator operator = node.getOperator();
         System.out.println(lPad("+--------------", "  ", level));
-        System.out.println(lPad("operator: " + operator.toString(), "  ", level));
+        System.out.println(lPad("  operator: " + operator.toString(), "  ", level));
         Arrays.stream(operands)
                 .forEach(op -> {
                     if (op instanceof SqlBasicCall) {
                         drillDownWhere((SqlBasicCall) op, level + 1);
-                    } else {
-                        System.out.println(lPad("operand: " + op.toString(), "  ", level));
+                    } else { // SqlIdentifier, SqlCharStringLiteral, SqlNumericLiteral, ...
+                        System.out.println(lPad("  operand: " + op.toString(), "  ", level));
                     }
                 });
         System.out.println(lPad("+--------------", "  ", level));
