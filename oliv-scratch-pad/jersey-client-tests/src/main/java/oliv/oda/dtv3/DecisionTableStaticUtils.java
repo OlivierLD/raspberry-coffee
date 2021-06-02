@@ -780,6 +780,8 @@ public class DecisionTableStaticUtils {
             }
 
             if (conditionMet) {
+                boolean statFunction = false;
+                boolean statConditionMet = false;
                 Map<String, Object> oneRowResult = new HashMap<>();
                 // Loop on the items to retrieve
                 for (int outIndex = 0; outIndex < decisionQueryContext.targetColumnIndex.size(); outIndex++) {
@@ -802,6 +804,58 @@ public class DecisionTableStaticUtils {
                                 oneRowResult.put(itemName, "Range NotFound");
 //                                throw new RuntimeException("No 'range' found where expected");
                             }
+                        } else if (decisionQueryContext.getOperation().get(outIndex).equals(DecisionContext.Operation.HIGHEST_VALUE)) {
+                            statFunction = true;
+                            // Extract value to compare, value or range
+                            Object thisValue = null;
+                            Map<String, Object> range = (Map) inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("range");
+                            if (range != null) {
+                                thisValue = range.get("endpoint1");
+                            } else { // Then try 'value'
+                                thisValue = inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("value");
+                            }
+//                          System.out.printf("EndPoint [%s]\n", thisValue);
+                            // Is it HIGHER than before?
+                            Object previousValue = null;
+                            if (queryResult.size() > 0) {
+                                Map<String, Object> result = (Map)queryResult.get(0);
+                                previousValue = result.get(itemName);
+                            }
+                            // statConditionMet = false;
+                            if (previousValue != null) {
+                                double previous = Double.parseDouble((String)previousValue);
+                                double currentValue = Double.parseDouble((String)thisValue);
+                                statConditionMet = (currentValue > previous);  // THE key!!
+                            } else {
+                                statConditionMet = true;
+                            }
+                            oneRowResult.put(itemName, thisValue);
+                        } else if (decisionQueryContext.getOperation().get(outIndex).equals(DecisionContext.Operation.LOWEST_VALUE)) {
+                            statFunction = true;
+                            // Extract value to compare, value or range
+                            Object thisValue = null;
+                            Map<String, Object> range = (Map) inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("range");
+                            if (range != null) {
+                                thisValue = range.get("endpoint1");
+                            } else { // Then try 'value'
+                                thisValue = inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("value");
+                            }
+//                          System.out.printf("EndPoint [%s]\n", thisValue);
+                            // Is it LOWER than before?
+                            Object previousValue = null;
+                            if (queryResult.size() > 0) {
+                                Map<String, Object> result = (Map)queryResult.get(0);
+                                previousValue = result.get(itemName);
+                            }
+                            // statConditionMet = false;
+                            if (previousValue != null) {
+                                double previous = Double.parseDouble((String)previousValue);
+                                double currentValue = Double.parseDouble((String)thisValue);
+                                statConditionMet = (currentValue < previous);  // THE key!!
+                            } else {
+                                statConditionMet = true;
+                            }
+                            oneRowResult.put(itemName, thisValue);
                         }
                     } else {
                         // System.out.println("Query with no function");
@@ -821,7 +875,17 @@ public class DecisionTableStaticUtils {
                         }
                     }
                 }
-                queryResult.add(oneRowResult);
+                if (statFunction) {
+                    if (statConditionMet) {
+                        if (queryResult.size() > 0) {
+                            queryResult.set(0, oneRowResult);
+                        } else {
+                            queryResult.add(oneRowResult);
+                        }
+                    }
+                } else {
+                    queryResult.add(oneRowResult);
+                }
             }
 //            System.out.printf("%d input(s), %d output, %d annotations\n",
 //                    inputEntries.size(),
@@ -844,6 +908,8 @@ public class DecisionTableStaticUtils {
             RANGE_VALUE("rangeValue"), // One parameter. (125) for a set (upsert) or where, ('ExpenseAmount') for a get (select)
             SET_RANGE("setRange"),     // Two parameters like ('<', 500). For upsert's query, not where.
             IS_NOT("isNot"),           // Not equals. One parameter. for a where clause. WARNING Dangerous, if the upsert becomes an insert!!!
+            LOWEST_VALUE("lowestValue"),
+            HIGHEST_VALUE("highestValue"),
             APPEND_TO_LIST("appendToList"),      // Not for where clause
             DELETE_FROM_LIST("deleteFromList");  // Not for where clause
 

@@ -50,6 +50,9 @@ dependencies {
     // compile project(':system-utils') // Speech Stuff
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
 
+    // https://mvnrepository.com/artifact/org.apache.calcite/calcite-core
+    implementation group: 'org.apache.calcite', name: 'calcite-core', version: '1.26.0'
+
     // Require tools.jar, from the JDK (Doclet and Co)
 //    compile files(org.gradle.internal.jvm.Jvm.current().toolsJar)
     compile files("${System.getProperty('java.home')}/../lib/tools.jar")
