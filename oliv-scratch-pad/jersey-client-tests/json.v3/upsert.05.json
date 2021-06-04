@@ -1,4 +1,5 @@
 {
-  "upsert":{"Expense.Amount":75},
-  "where":{"Strategy":"Approve"}
+  "upsert":{ "Expense.Amount":750 },
+  "where":{ "Strategy":"Approve" },
+  "dry-run": false
 }

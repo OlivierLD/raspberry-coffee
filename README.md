@@ -166,6 +166,26 @@ $ ssh pi@raspberrypi.local
 ```
 where `raspberrypi` is the `hostname` of the Raspberry. No wireless connection or IP address is required.
 
+##### Mount a CD-ROM
+See <https://snapcraft.io/install/cdrom/raspbian>
+
+```
+sudo apt update
+sudo apt install snapd
+```
+
+```
+sudo reboot
+```
+
+```
+sudo snap install core
+```
+
+```
+sudo snap install [--edge] cdrom
+```
+
 ##### Raspberry Pi as an Access Point _and_ Internet access.
 Your Raspberry Pi can be turned into an Access Point, this means that it generates its own network, so you can connect to it from other devices (other Raspberry Pis, laptops, tablets, smart-phones, ESP8266, etc).
 It can be appropriate when there is no network in the area you are in, for example when sailing in the middle of the ocean, kayaking in a remote place, hiking in the boonies, etc.

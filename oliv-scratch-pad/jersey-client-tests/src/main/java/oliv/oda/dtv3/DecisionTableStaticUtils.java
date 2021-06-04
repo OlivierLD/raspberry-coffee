@@ -23,14 +23,45 @@ import java.util.stream.Collectors;
 
 public class DecisionTableStaticUtils {
 
-    private static boolean verbose = true;
+    private final static boolean verbose = true;
 
     enum QueryOption {
         QUERY,
         BAG_ENTITY
     }
 
-    private static ObjectMapper mapper = new ObjectMapper();
+    private final static Object deepCopy(Object original) throws Exception {
+        Object clone = null;
+
+        ByteArrayOutputStream bos = null;
+        ByteArrayInputStream bis = null;
+        try {
+            // Serialize
+            bos = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(bos);
+            out.writeObject(original);
+            out.flush();
+//                    byte[] byteArray = bos.toByteArray();
+            // De-Serialize
+            bis = new ByteArrayInputStream(bos.toByteArray());
+            ObjectInput in = new ObjectInputStream(bis);
+            clone = in.readObject();
+        } finally {
+            try {
+                if (bos != null) {
+                    bos.close();
+                }
+                if (bis != null) {
+                    bis.close();
+                }
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+        }
+        return clone;
+    }
+
+    private final static ObjectMapper mapper = new ObjectMapper();
 
     private static List<String> getInputItemList(Map<String, Object> decisionMap) {
         List<String> inputParams = new ArrayList<>();
@@ -56,7 +87,7 @@ public class DecisionTableStaticUtils {
         List<String> outputParams = new ArrayList<>();
         List<Map<String, Object>> itemList = (List)((Map)decisionMap.get("logic")).get("outputs");
         itemList.forEach(item -> {
-            String value = (String)((Map)item).get("name");
+            String value = (String)item.get("name");
             outputParams.add(value);
         });
 
@@ -81,6 +112,13 @@ public class DecisionTableStaticUtils {
         DecisionContext context = new DecisionContext();
         Map<String, Object> upsert = (Map)upsertStmt.get("upsert");
         Map<String, Object> where = (Map)upsertStmt.get("where");
+        Boolean dryRun = (Boolean)upsertStmt.get("dry-run");
+        if (dryRun != null) {
+            if (verbose) {
+                System.out.println("Dry run requested");
+            }
+            context.setDryRun(dryRun); // False being the default...
+        }
 
 //        String decisionName = (String)decisionMap.get("name");
         List<String> inputItems = getInputItemList(decisionMap);
@@ -254,8 +292,8 @@ public class DecisionTableStaticUtils {
 
         // query everything
         List<Object> query = new ArrayList<>();
-        inputItems.forEach(query::add);
-        outputItems.forEach(query::add);
+        query.addAll(inputItems); // inputItems.forEach(query::add);
+        query.addAll(outputItems); // outputItems.forEach(query::add);
 
         // Whenever items match
         Map<String, Object> where = new HashMap<>(); // (Map)bagEntity.get("where");
@@ -343,7 +381,7 @@ public class DecisionTableStaticUtils {
             } else if (item.get("range") != null) { // TODO Check if allowedModes contains Number ?
                 ((Map) item.get("range")).put("endpoint1", value);
             } else {
-                System.out.println("Watzat?");
+                System.out.println("What is that?");
             } // TODO Any?
         }
     }
@@ -360,6 +398,11 @@ public class DecisionTableStaticUtils {
         Map<String, Object> tx = mapper.readValue(txSyntax, Map.class);
         // Set Update Context
         DecisionContext decisionUpdateContext = setUpdateContext(jsonMap, user, tx);
+
+        Map<String, Object> feedbackMap = null;
+        if (decisionUpdateContext.isDryRun()) {
+            feedbackMap = new HashMap<>();
+        }
 
         final List<String> columnId = decisionUpdateContext.getWhereColumnId();
         final List<String> whereColumnValue = decisionUpdateContext.getWhereColumnValue();
@@ -379,6 +422,9 @@ public class DecisionTableStaticUtils {
 
         // Find the rules (line in the decision table)
         List<Map<String, Object>> rules = (List)((Map)jsonMap.get("logic")).get("rules");
+        // Clone it, for rollback...
+        List<Map<String, Object>> rulesBackup = (List)deepCopy(rules);
+
         rules.forEach(rule -> {
             List<Map<String, Object>> inputEntries = (List)rule.get("inputEntries");
             List<Map<String, Object>> outputEntries = (List)rule.get("outputEntries");
@@ -424,6 +470,8 @@ public class DecisionTableStaticUtils {
                 for (int outIndex = 0; outIndex < decisionUpdateContext.targetColumnIndex.size(); outIndex++) {
                     Map<String, Object> oneRowResult = new HashMap<>();
                     oneRowResult.put("item", decisionUpdateContext.targetColumnId.get(outIndex));
+                    oneRowResult.put("value-to", targetColumnNewValue.get(outIndex));
+
                     if (decisionUpdateContext.getOperation().get(outIndex) != null) {
                         if (decisionUpdateContext.getOperation().get(outIndex).equals(DecisionContext.Operation.RANGE_VALUE)) {
                             Map<String, Object> range = (Map) inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("range");
@@ -436,11 +484,11 @@ public class DecisionTableStaticUtils {
                                             targetColumnNewValue.get(outIndex));
                                 }
                                 range.put("endpoint1", targetColumnNewValue.get(outIndex));
-                                oneRowResult.put("from", endpoint1);
-                                oneRowResult.put("to", targetColumnNewValue.get(outIndex));
+                                oneRowResult.put("value-from", endpoint1);
+                                oneRowResult.put("value-to", targetColumnNewValue.get(outIndex));
                             } else {
-                                oneRowResult.put("from", null);
-                                oneRowResult.put("to", null);
+                                oneRowResult.put("value-from", null);
+                                oneRowResult.put("value-to", null);
                                 System.out.println("No 'range' found where expected");
                                 // throw new RuntimeException("No 'range' found where expected");
                             }
@@ -450,6 +498,7 @@ public class DecisionTableStaticUtils {
                             Map<String, Object> range = new HashMap<>(); // ...Map.of only after Java 9+
                             range.put("operation1", parameters.get(0));  // Comparator
                             range.put("endpoint1", parameters.get(1));   // value);
+                            oneRowResult.put("value-to", parameters.get(1));
                             ((Map) inputEntries.get(targetColumnIndex.get(outIndex).getIndex())).put("range", range);
                         } else if (decisionUpdateContext.getOperation().get(outIndex).equals(DecisionContext.Operation.APPEND_TO_LIST)) {
                             List<String> values = (List) inputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("values");
@@ -522,10 +571,14 @@ public class DecisionTableStaticUtils {
                             int index = (targetColumnIndex.get(outIndex)).getIndex();
                             Map<String, Object> targetObjectMap = inputEntries.get(index);
                             if (targetObjectMap.get("range") != null) { // TODO Check Mode ?
-                                System.out.println(targetColumnNewValue.get(outIndex));
+                                if (verbose) {
+                                    System.out.println(targetColumnNewValue.get(outIndex));
+                                }
                                 Map<String, Object> range = (Map)targetObjectMap.get("range");
+                                oneRowResult.put("value-from", range.get("endpoint1"));
                                 range.put("endpoint1", targetColumnNewValue.get(outIndex));
                             } else if (targetObjectMap.get("value") != null) {
+                                oneRowResult.put("value-from", targetObjectMap.get("value"));
                                 if ("-".equals((String)targetObjectMap.get("value")) && "Any".equals((String)targetObjectMap.get("mode"))) {
                                     List<String> allowedModes = (List)targetObjectMap.get("allowedModes");
                                     if (allowedModes != null && allowedModes.contains("Text")) {
@@ -546,14 +599,15 @@ public class DecisionTableStaticUtils {
                                 }
                             } else if (targetObjectMap.get("values") != null) {
                                 // TODO Do it!! Manage values too!
+                                oneRowResult.put("value-from", targetObjectMap.get("values"));
                             } else {
                                 throw new RuntimeException(String.format("Unmanaged operation [%s]", decisionUpdateContext.getRawTargetColumnValue().get(outIndex)));
                             }
                         } else {
                             String oldValue = (String) outputEntries.get(targetColumnIndex.get(outIndex).getIndex()).get("value");
                             outputEntries.get(targetColumnIndex.get(outIndex).getIndex()).put("value", targetColumnNewValue.get(outIndex));
-                            oneRowResult.put("from", oldValue);
-                            oneRowResult.put("to", targetColumnNewValue.get(outIndex));
+                            oneRowResult.put("value-from", oldValue);
+                            oneRowResult.put("value-to", targetColumnNewValue.get(outIndex));
                         }
                     }
                     queryResult.add(oneRowResult);
@@ -582,6 +636,14 @@ public class DecisionTableStaticUtils {
 
         String jsonInString;
         if (queryResult.size() == 0) {
+            if (decisionUpdateContext.isDryRun() && feedbackMap != null) {
+                Map<String, Object> updateFeedback = Map.of( // Java 9+
+                        "operation", "insert",
+                        "nb-row-impacted", 1,
+                        "values", queryResult
+                );
+                feedbackMap.put("dry-run", updateFeedback);
+            }
             if (verbose) {
                 System.out.println(">> Warning: >> No update was done, inserting");
             }
@@ -592,37 +654,37 @@ public class DecisionTableStaticUtils {
                 }
                 // 1 - Clone the first row
                 HashMap<String, Object> firstRule = (HashMap)rules.get(0);
-                final Map<String, Object> newRule;
+                final Map<String, Object> newRule = (Map)deepCopy(firstRule);
 
                 // Serialize and De-serialize. Clone is NOT a deep copy.
-                ByteArrayOutputStream bos = null;
-                ByteArrayInputStream bis = null;
-                try {
-                    // Serialize
-                    bos = new ByteArrayOutputStream();
-                    ObjectOutputStream out = new ObjectOutputStream(bos);
-                    out.writeObject(firstRule);
-                    out.flush();
-//                    byte[] byteArray = bos.toByteArray();
-                    // De-Serialize
-                    bis = new ByteArrayInputStream(bos.toByteArray());
-                    ObjectInput in = new ObjectInputStream(bis);
-                    newRule = (Map)in.readObject();
-                } finally {
-                    try {
-                        if (bos != null) {
-                            bos.close();
-                        }
-                        if (bis != null) {
-                            bis.close();
-                        }
-                    } catch (IOException ex) {
-                        // ignore close exception
-                    }
-                }
+//                ByteArrayOutputStream bos = null;
+//                ByteArrayInputStream bis = null;
+//                try {
+//                    // Serialize
+//                    bos = new ByteArrayOutputStream();
+//                    ObjectOutputStream out = new ObjectOutputStream(bos);
+//                    out.writeObject(firstRule);
+//                    out.flush();
+////                    byte[] byteArray = bos.toByteArray();
+//                    // De-Serialize
+//                    bis = new ByteArrayInputStream(bos.toByteArray());
+//                    ObjectInput in = new ObjectInputStream(bis);
+//                    newRule = (Map)in.readObject();
+//                } finally {
+//                    try {
+//                        if (bos != null) {
+//                            bos.close();
+//                        }
+//                        if (bis != null) {
+//                            bis.close();
+//                        }
+//                    } catch (IOException ex) {
+//                        // ignore close exception
+//                    }
+//                }
                 rules.add(0, newRule); // Insert on top.
-                // Now the rest!
 
+                // Now the rest!
                 // Set the unmentioned input columns to Any ?
                 decisionUpdateContext.getInputItems().forEach(inputItem -> {
                     int idx = decisionUpdateContext.getInputItems().indexOf(inputItem);
@@ -690,12 +752,75 @@ public class DecisionTableStaticUtils {
                         throw new RuntimeException(ex);
                     }
                 }
+                queryResult.add(newRule); // For the feedback
             } else {
                 System.out.println("Oops! No row to clone...");
             }
         } else {
-            System.out.println("Update happened:" + mapper.writeValueAsString(queryResult));
+            if (verbose) {
+                System.out.println("Update :" + mapper.writeValueAsString(queryResult));
+            }
+            if (decisionUpdateContext.isDryRun() && feedbackMap != null) {
+                Map<String, Object> updateFeedback = Map.of( // Java 9+
+                        "operation", "update",
+                        "nb-row-impacted", queryResult.size(),
+                        "values", queryResult
+                );
+                feedbackMap.put("dry-run", updateFeedback);
+            }
         }
+        if (upsertResponseMap != null) {
+            if (jsonMap != null) {
+                Object logic = jsonMap.get("logic");
+                if (logic != null) {
+                    String hitPolicy = (String)((Map)logic).get("hitPolicy");
+                    upsertResponseMap.put("hitPolicy", hitPolicy);
+                }
+            }
+        }
+        if (feedbackMap != null && upsertResponseMap != null) {
+            // Build rules representation table?
+            List<Map<String, Object>> dtValues = new ArrayList<>();
+//            dtValues.addAll(rules);
+            rules.forEach(rule -> {
+                Map<String, Object> oneRow = new HashMap<>();
+                List<Map<String, Object>> inputEntries = ((List<Map<String, Object>>)rule.get("inputEntries"));
+                for (int idx=0; idx<inputEntries.size(); idx++) {
+                    Map<String, Object> inputEntry = inputEntries.get(idx);
+                    String itemName = decisionUpdateContext.getInputItems().get(idx);
+//                    System.out.printf("Input Item Item idx %d => %s\n", idx, itemName);
+                    if (inputEntry.get("value") != null) {
+                        oneRow.put(itemName, inputEntry.get("value"));
+                    } else if (inputEntry.get("range") != null) {
+                        oneRow.put(itemName, inputEntry.get("range"));
+                    } else { // TODO More cases?
+                        oneRow.put(itemName, "-");
+                    }
+                }
+                List<Map<String, Object>> outputEntries = ((List<Map<String, Object>>)rule.get("outputEntries"));
+                for (int idx=0; idx<outputEntries.size(); idx++) {
+                    Map<String, Object> outputEntry = outputEntries.get(idx);
+                    String itemName = decisionUpdateContext.getOutputItems().get(idx);
+//                    System.out.printf("Output Item Item idx %d => %s\n", idx, itemName);
+                    if (outputEntry.get("value") != null) {
+                        oneRow.put(itemName, outputEntry.get("value"));
+                    } else { // TODO More cases?
+                        oneRow.put(itemName, "-");
+                    }
+                }
+                dtValues.add(oneRow);
+            });
+            upsertResponseMap.put("decision-table-rules", dtValues);
+
+            // Feedback
+            upsertResponseMap.put("feedback", feedbackMap);
+        }
+        if (!decisionUpdateContext.isDryRun()) { // Return original map values, for rollback
+            if (upsertResponseMap != null) {
+                upsertResponseMap.put("original-rules-values", rulesBackup);
+            }
+        }
+
         jsonInString = mapper.writeValueAsString(jsonMap);
         return jsonInString;
     }
@@ -963,6 +1088,8 @@ public class DecisionTableStaticUtils {
         List<String> rawTargetColumnValue = new ArrayList<>();
         List<Operation> operation = new ArrayList<>();
 
+        boolean dryRun = false;
+
         public DecisionContext() {}
 
         public List<String> getWhereColumnId() {
@@ -1072,6 +1199,14 @@ public class DecisionTableStaticUtils {
 
         public void setOutputItems(List<String> outputItems) {
             this.outputItems = outputItems;
+        }
+
+        public void setDryRun(boolean b) {
+            this.dryRun = b;
+        }
+
+        public boolean isDryRun() {
+            return this.dryRun;
         }
 
         protected static Operation detectOperation(String str) {

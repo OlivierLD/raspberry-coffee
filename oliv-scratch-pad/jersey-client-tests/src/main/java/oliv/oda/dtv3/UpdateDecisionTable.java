@@ -1,5 +1,7 @@
 package oliv.oda.dtv3;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -66,11 +68,25 @@ public class UpdateDecisionTable {
         // Default
         upsertResponseMap.put("upsertType", "update");
         upsertResponseMap.put("utterance", "{ }");
-        upsertResponseMap.put("originalUtterance", "This is the utterance");
+        upsertResponseMap.put("originalUtterance", "This is the original utterance");
 
         String updated = DecisionTableStaticUtils.processUpdate(resource.openStream(), userContext, txStatement, upsertResponseMap);
 
-        System.out.println("Updated:\n" + updated);
+        if (upsertResponseMap.get("hitPolicy") != null) {
+            System.out.println("Hit Policy: " + upsertResponseMap.get("hitPolicy"));
+        } else {
+            System.out.println("Hit Policy not found...");
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        if (upsertResponseMap.get("feedback") != null) {
+//            System.out.println("Feedback:" + upsertResponseMap.get("feedback"));
+            System.out.println("Feedback: " + mapper.writeValueAsString(upsertResponseMap.get("feedback")));
+        } else {
+            System.out.println("Updated:\n" + updated);
+        }
+
+        System.out.println("Full ResponseMap:" + mapper.writeValueAsString(upsertResponseMap));
 
         System.out.println("Done");
     }
