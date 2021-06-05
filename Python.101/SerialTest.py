@@ -7,6 +7,7 @@ import serial
 
 VERBOSE = False
 
+
 def read_line_CR(port: serial.serialposix.Serial) -> str:
     rv = []   # bytearray()
     while True:
@@ -30,7 +31,7 @@ baud_rate = 4800
 port = serial.Serial(port_name, baudrate=baud_rate, timeout=3.0)
 print(f"Serial Port type:{type(port)}")
 print("Let's go")
-read_only = True
+read_only = True  # GPS: read_only
 while True:
     if not read_only:
         port.write("\r\nSay something:")

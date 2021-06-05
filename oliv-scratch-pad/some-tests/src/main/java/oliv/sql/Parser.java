@@ -36,7 +36,7 @@ public class Parser {
         return padded;
     }
 
-    private static void drillDownWhere(SqlBasicCall node, int level) {
+    private static void drillDownSQLWhere(SqlBasicCall node, int level) {
         SqlNode[] operands = node.getOperands();
         SqlOperator operator = node.getOperator();
         System.out.println(lPad("+--------------", "  ", level));
@@ -44,7 +44,7 @@ public class Parser {
         Arrays.stream(operands)
                 .forEach(op -> {
                     if (op instanceof SqlBasicCall) {
-                        drillDownWhere((SqlBasicCall) op, level + 1);
+                        drillDownSQLWhere((SqlBasicCall) op, level + 1);
                     } else { // SqlIdentifier, SqlCharStringLiteral, SqlNumericLiteral, ...
                         System.out.println(lPad("  operand: " + op.toString(), "  ", level));
                     }
@@ -82,7 +82,7 @@ public class Parser {
                 if (where != null && where instanceof SqlBasicCall) {
                     SqlBasicCall sqlWhere = (SqlBasicCall) where;
                     System.out.println("WHERE:");
-                    drillDownWhere(sqlWhere, 0);
+                    drillDownSQLWhere(sqlWhere, 0);
                 } else {
                     System.out.println("No where clause...");
                 }

@@ -7,8 +7,8 @@ import math
 from typing import Tuple, Union   # Dict, Optional, Sequence, Tuple, Type, Union
 
 # 2010 48th Ave, SF
-obsLat = 37.7489
-obsLng = -122.5070
+obsLat: float = 37.7489
+obsLng: float = -122.5070
 
 
 class Satellite(object):

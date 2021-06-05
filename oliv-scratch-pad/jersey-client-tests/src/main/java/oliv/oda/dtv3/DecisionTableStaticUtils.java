@@ -21,6 +21,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.calcite.sql.SqlBasicCall;
+import org.apache.calcite.sql.SqlKind;
+import org.apache.calcite.sql.SqlNode;
+import org.apache.calcite.sql.SqlNodeList;
+import org.apache.calcite.sql.SqlOperator;
+import org.apache.calcite.sql.SqlSelect;
+import org.apache.calcite.sql.parser.SqlParseException;
+import org.apache.calcite.sql.parser.SqlParser;
+
 public class DecisionTableStaticUtils {
 
     private final static boolean verbose = true;
@@ -28,6 +37,39 @@ public class DecisionTableStaticUtils {
     enum QueryOption {
         QUERY,
         BAG_ENTITY
+    }
+
+    public static SqlNode parse(String sql) throws SqlParseException {
+//        SqlParser.Config config = SqlParser.configBuilder()
+//                .setLex(Lex.MYSQL_ANSI)
+//                .build();
+        SqlParser.Config config = SqlParser.config();
+        SqlParser sqlParser = SqlParser.create(sql, config); // parserBuilder.build());
+        return sqlParser.parseQuery();
+    }
+
+    private static String lPad(String str, String pad, int times) {
+        String padded = str;
+        for (int i=0; i<times; i++) {
+            padded = pad + padded;
+        }
+        return padded;
+    }
+
+    private static void drillDownSQLWhere(SqlBasicCall node, int level) {
+        SqlNode[] operands = node.getOperands();
+        SqlOperator operator = node.getOperator();
+        System.out.println(lPad("+--------------", "  ", level));
+        System.out.println(lPad("  operator: " + operator.toString(), "  ", level));
+        Arrays.stream(operands)
+                .forEach(op -> {
+                    if (op instanceof SqlBasicCall) {
+                        drillDownSQLWhere((SqlBasicCall) op, level + 1);
+                    } else { // SqlIdentifier, SqlCharStringLiteral, SqlNumericLiteral, ...
+                        System.out.println(lPad("  operand: " + op.toString(), "  ", level));
+                    }
+                });
+        System.out.println(lPad("+--------------", "  ", level));
     }
 
     private final static Object deepCopy(Object original) throws Exception {
@@ -655,33 +697,6 @@ public class DecisionTableStaticUtils {
                 // 1 - Clone the first row
                 HashMap<String, Object> firstRule = (HashMap)rules.get(0);
                 final Map<String, Object> newRule = (Map)deepCopy(firstRule);
-
-                // Serialize and De-serialize. Clone is NOT a deep copy.
-//                ByteArrayOutputStream bos = null;
-//                ByteArrayInputStream bis = null;
-//                try {
-//                    // Serialize
-//                    bos = new ByteArrayOutputStream();
-//                    ObjectOutputStream out = new ObjectOutputStream(bos);
-//                    out.writeObject(firstRule);
-//                    out.flush();
-////                    byte[] byteArray = bos.toByteArray();
-//                    // De-Serialize
-//                    bis = new ByteArrayInputStream(bos.toByteArray());
-//                    ObjectInput in = new ObjectInputStream(bis);
-//                    newRule = (Map)in.readObject();
-//                } finally {
-//                    try {
-//                        if (bos != null) {
-//                            bos.close();
-//                        }
-//                        if (bis != null) {
-//                            bis.close();
-//                        }
-//                    } catch (IOException ex) {
-//                        // ignore close exception
-//                    }
-//                }
                 rules.add(0, newRule); // Insert on top.
 
                 // Now the rest!
@@ -779,48 +794,48 @@ public class DecisionTableStaticUtils {
             }
         }
         if (feedbackMap != null && upsertResponseMap != null) {
-            // Build rules representation table?
-            List<Map<String, Object>> dtValues = new ArrayList<>();
-//            dtValues.addAll(rules);
-            rules.forEach(rule -> {
-                Map<String, Object> oneRow = new HashMap<>();
-                List<Map<String, Object>> inputEntries = ((List<Map<String, Object>>)rule.get("inputEntries"));
-                for (int idx=0; idx<inputEntries.size(); idx++) {
-                    Map<String, Object> inputEntry = inputEntries.get(idx);
-                    String itemName = decisionUpdateContext.getInputItems().get(idx);
-//                    System.out.printf("Input Item Item idx %d => %s\n", idx, itemName);
-                    if (inputEntry.get("value") != null) {
-                        oneRow.put(itemName, inputEntry.get("value"));
-                    } else if (inputEntry.get("range") != null) {
-                        oneRow.put(itemName, inputEntry.get("range"));
-                    } else { // TODO More cases?
-                        oneRow.put(itemName, "-");
-                    }
-                }
-                List<Map<String, Object>> outputEntries = ((List<Map<String, Object>>)rule.get("outputEntries"));
-                for (int idx=0; idx<outputEntries.size(); idx++) {
-                    Map<String, Object> outputEntry = outputEntries.get(idx);
-                    String itemName = decisionUpdateContext.getOutputItems().get(idx);
-//                    System.out.printf("Output Item Item idx %d => %s\n", idx, itemName);
-                    if (outputEntry.get("value") != null) {
-                        oneRow.put(itemName, outputEntry.get("value"));
-                    } else { // TODO More cases?
-                        oneRow.put(itemName, "-");
-                    }
-                }
-                dtValues.add(oneRow);
-            });
-            upsertResponseMap.put("decision-table-rules", dtValues);
-
             // Feedback
             upsertResponseMap.put("feedback", feedbackMap);
         }
-        if (!decisionUpdateContext.isDryRun()) { // Return original map values, for rollback
+        if (!decisionUpdateContext.isDryRun()) {
             if (upsertResponseMap != null) {
+                // Return original map values, for rollback
                 upsertResponseMap.put("original-rules-values", rulesBackup);
+                // Build rules representation table? To remove if no problem?
+                List<Map<String, Object>> dtValues = new ArrayList<>();
+//              dtValues.addAll(rules);
+                rules.forEach(rule -> {
+                    Map<String, Object> oneRow = new HashMap<>();
+                    List<Map<String, Object>> inputEntries = ((List<Map<String, Object>>)rule.get("inputEntries"));
+                    for (int idx=0; idx<inputEntries.size(); idx++) {
+                        Map<String, Object> inputEntry = inputEntries.get(idx);
+                        String itemName = decisionUpdateContext.getInputItems().get(idx);
+//                    System.out.printf("Input Item Item idx %d => %s\n", idx, itemName);
+                        if (inputEntry.get("value") != null) {
+                            oneRow.put(itemName, inputEntry.get("value"));
+                        } else if (inputEntry.get("range") != null) {
+                            oneRow.put(itemName, inputEntry.get("range"));
+                        } else { // TODO More cases?
+                            oneRow.put(itemName, "-");
+                        }
+                    }
+                    List<Map<String, Object>> outputEntries = ((List<Map<String, Object>>)rule.get("outputEntries"));
+                    for (int idx=0; idx<outputEntries.size(); idx++) {
+                        Map<String, Object> outputEntry = outputEntries.get(idx);
+                        String itemName = decisionUpdateContext.getOutputItems().get(idx);
+//                    System.out.printf("Output Item Item idx %d => %s\n", idx, itemName);
+                        if (outputEntry.get("value") != null) {
+                            oneRow.put(itemName, outputEntry.get("value"));
+                        } else { // TODO More cases?
+                            oneRow.put(itemName, "-");
+                        }
+                    }
+                    dtValues.add(oneRow);
+                });
+                upsertResponseMap.put("new-decision-table-rules", dtValues);
             }
         }
-
+        // TODO Return the Map, not String
         jsonInString = mapper.writeValueAsString(jsonMap);
         return jsonInString;
     }
