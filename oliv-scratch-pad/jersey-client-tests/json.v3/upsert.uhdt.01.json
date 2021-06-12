@@ -1,0 +1,9 @@
+{
+  "upsert": {
+    "Amount": "setRange('<', 300)"
+  },
+  "where": {
+    "UniqueHitPolicyDecision": "Approve",
+    "Approvee": "sam"
+  }
+}

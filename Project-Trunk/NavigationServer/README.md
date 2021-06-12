@@ -2,7 +2,7 @@
 
 ### For sailing, kayaking, running, biking, driving, etc...
 
-- Document the way to use the `NMEA.mux.WebUI`
+- Document the way to use the `NMEA-mux-WebUI`
     - Compose your own NMEA Multiplexer
 - HTTP/REST Server, with static documents pulled from a single archive.
 - Build a new logger with

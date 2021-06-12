@@ -72,6 +72,86 @@ public class DecisionTableStaticUtils {
         System.out.println(lPad("+--------------", "  ", level));
     }
 
+    public static String extractFromMap(Map<String, Object> map, String path) {
+        String extracted = null;
+        String[] pathElements = path.split("\\.");
+        for (String elem : pathElements) {
+//                              System.out.println("Elem:" + elem);
+            Object subMap = map.get(elem);
+            if (subMap != null) {
+                if (subMap instanceof Map) {
+                    map = (Map<String, Object>) subMap;
+                } else {
+                    extracted = subMap.toString();
+                }
+            } else {
+                break;
+            }
+        }
+        return extracted;
+    }
+
+    public static Object extractObjectFromMap(Map<String, Object> map, String path) {
+        Object extracted = null;
+        String[] pathElements = path.split("\\.");
+        for (String elem : pathElements) {
+//                              System.out.println("Elem:" + elem);
+            Object subMap = map.get(elem);
+            if (subMap != null) {
+                if (subMap instanceof Map) {
+                    map = (Map<String, Object>) subMap;
+                } else {
+                    extracted = subMap;
+                }
+            } else {
+                break;
+            }
+        }
+        return extracted;
+    }
+
+    public final static String REWORK_FUNC_NAME = "rework(";
+
+    /**
+     *
+     * @param json The json document to start from
+     * @param stmt The statement like
+     *             <code>rework('strategy': 'interpretation.Strategy.Strategy',
+     *                          'corporate': 'interpretation.Reasons.Corporate',
+     *                          'manager': 'interpretation.Reasons.ManagerPref')</code>
+     * @return a JSON string, like <code>{ "strategy": "Approve", "corporate": "It's a cool company", "manager": "He does not care" }</code>
+     * @throws JsonProcessingException
+     */
+    public static String rework(String json, String stmt) throws JsonProcessingException {
+
+        Map<String, Object> finalMap = new HashMap<>();
+
+        String txStmt = stmt.trim();
+        try {
+            final Map<String, Object> jsonMap = mapper.readValue(json, Map.class);
+            if (txStmt.startsWith(REWORK_FUNC_NAME) && txStmt.endsWith(")")) {
+
+                String stmtContent = txStmt.substring(REWORK_FUNC_NAME.length(), txStmt.length() - 1);
+
+                String[] txElement = stmtContent.split(",");
+
+                Arrays.asList(txElement).forEach(onePath -> {
+                    String[] nv = onePath.trim().split(":");
+                    if (nv != null && nv.length == 2) {
+                        String name = DecisionTableStaticUtils.stripQuotes(nv[0].trim());
+                        String path = DecisionTableStaticUtils.stripQuotes(nv[1].trim());
+                        Object extracted = DecisionTableStaticUtils.extractObjectFromMap(jsonMap, path);
+                        finalMap.put(name, extracted);
+                    }
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return mapper.writeValueAsString(finalMap);
+    }
+
     private final static Object deepCopy(Object original) throws Exception {
         Object clone = null;
 
@@ -146,6 +226,26 @@ public class DecisionTableStaticUtils {
             }
         }
         return out;
+    }
+
+    public static String formatProblems(String original) throws JsonProcessingException {
+        Map<String, Object> jsonMap = mapper.readValue(original, Map.class);
+        return formatProblems(jsonMap);
+    }
+    public static String formatProblems(Map<String, Object> jsonMap) throws JsonProcessingException {
+        String formatted = "";
+        List<Object> problems = (List)jsonMap.get("problems");
+        if (problems != null) {
+            final StringBuffer sb = new StringBuffer();
+            problems.forEach(line -> {
+                String type = ((Map)line).get("severity").toString();
+                String message = ((Map)line).get("message").toString();
+                String path = ((Map)line).get("path").toString();
+                sb.append(String.format("- %s: %s, %s\n", type, message, path));
+            });
+            formatted = sb.toString();
+        }
+        return formatted;
     }
 
     private static DecisionContext setUpdateContext(Map<String, Object> decisionMap,
@@ -657,7 +757,7 @@ public class DecisionTableStaticUtils {
                 // Is there a Reason in the output? If yes, set it to the utterance value (for PoC)
                 if (upsertResponseMap != null) {
                     try {
-                        int idx = decisionUpdateContext.getOutputItems().indexOf("Reason");  // TODO Drop that after the PoC
+                        int idx = decisionUpdateContext.getOutputItems().indexOf("Reason");  // TODO Drop that after the PoC?
                         if (idx > -1) {
                             String utterance = (String) upsertResponseMap.get("originalUtterance");
                             if (utterance != null && !utterance.isEmpty()) {
@@ -800,7 +900,7 @@ public class DecisionTableStaticUtils {
         if (!decisionUpdateContext.isDryRun()) {
             if (upsertResponseMap != null) {
                 // Return original map values, for rollback
-                upsertResponseMap.put("original-rules-values", rulesBackup);
+                upsertResponseMap.put("originalRulesValues", rulesBackup);
                 // Build rules representation table? To remove if no problem?
                 List<Map<String, Object>> dtValues = new ArrayList<>();
 //              dtValues.addAll(rules);
@@ -832,7 +932,7 @@ public class DecisionTableStaticUtils {
                     }
                     dtValues.add(oneRow);
                 });
-                upsertResponseMap.put("new-decision-table-rules", dtValues);
+                upsertResponseMap.put("newDecisionTableRules", dtValues);
             }
         }
         // TODO Return the Map, not String
@@ -845,6 +945,20 @@ public class DecisionTableStaticUtils {
     }
 
     static String processQuery(InputStream original, String userContext, String querySyntax, QueryOption queryOption) throws Exception {
+        List<Object> queryResult = processQueryV2(original, userContext, querySyntax, queryOption);
+        String jsonInString;
+        if (queryResult.size() > 0) {
+            jsonInString = mapper.writeValueAsString(queryResult); // .get(0));
+        } else {
+            jsonInString = "NOT_FOUND";
+        }
+        return jsonInString;
+    }
+
+    static List<Object> processQueryV2(InputStream original, String userContext, String querySyntax) throws Exception {
+        return processQueryV2(original, userContext, querySyntax, QueryOption.QUERY);
+    }
+    static List<Object> processQueryV2(InputStream original, String userContext, String querySyntax, QueryOption queryOption) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         // THE Decision Table Object
         Map<String, Object> jsonMap = mapper.readValue(original, Map.class);
@@ -1033,13 +1147,7 @@ public class DecisionTableStaticUtils {
 //                    annotationEntries.size());
         });
 
-        String jsonInString;
-        if (queryResult.size() > 0) {
-            jsonInString = mapper.writeValueAsString(queryResult); // .get(0));
-        } else {
-            jsonInString = "NOT_FOUND";
-        }
-        return jsonInString;
+        return queryResult; // jsonInString;
     }
 
     public static class DecisionContext {

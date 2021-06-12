@@ -60,7 +60,7 @@ The `tcp` data can then be used in input by another instance the `NMEA-multiplex
  
 - On the machine running the magnetometer instance:
 ```bash
-compass.mux $ ./mux.sh nmea.mux.hmc5883l.oled.yaml 
+compass-mux $ ./mux.sh nmea.mux.hmc5883l.oled.yaml 
 ``` 
 - In OpenCPN (consuming the `tcp` feed):
   ![OpenCPN](./pictures/01.OpenCPN.HDM.png)

@@ -781,7 +781,7 @@ Then open the generated file in Google Map or Google Earth.
 - Idem for Comma Separated Values (CSV, spreadsheet compatible), use `util.NMEAtoCSV`,  from the script `log.to.csv.sh`.
 
 ## Builder
-As an example, there is in the `NMEA.mux.WebUI` module a script called `to.prod.sh` that shows a way to
+As an example, there is in the `NMEA-mux-WebUI` module a script called `to.prod.sh` that shows a way to
 build the soft for distribution without the full git repository.
 
 Just run

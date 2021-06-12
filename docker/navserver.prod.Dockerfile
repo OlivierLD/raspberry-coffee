@@ -39,10 +39,10 @@ RUN git clone https://github.com/OlivierLD/raspberry-coffee.git
 WORKDIR /workdir/raspberry-coffee
 RUN ./gradlew tasks
 # RUN ./gradlew tasks -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80
-WORKDIR /workdir/raspberry-coffee/NMEA.mux.WebUI/full.server
+WORKDIR /workdir/raspberry-coffee/NMEA-mux-WebUI/full-server
 RUN ./builder.sh
 RUN find . -name '*.gz'
-# The step above has generated an NMEADist.tar.gz in NMEA.mux.WebUI/full.server
+# The step above has generated an NMEADist.tar.gz in NMEA-mux-WebUI/full-server
 RUN echo "Build is done!"
 
 # 2nd stage, build the runtime image
@@ -67,7 +67,7 @@ RUN apt-get install --fix-missing -y sysvbanner vim
 # TODO Install librxtx-java ?
 
 WORKDIR /navserver
-COPY --from=builder /workdir/raspberry-coffee/NMEA.mux.WebUI/full.server/NMEADist.tar.gz ./
+COPY --from=builder /workdir/raspberry-coffee/NMEA-mux-WebUI/full-server/NMEADist.tar.gz ./
 
 RUN tar -xzf NMEADist.tar.gz
 

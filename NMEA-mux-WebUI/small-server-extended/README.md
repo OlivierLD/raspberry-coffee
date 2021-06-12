@@ -1,7 +1,7 @@
 # Case Study (WIP) NMEA Multiplexer running on a Raspberry Pi Zero W, and others
 This is a case study, using different hardware configurations to run the same software configuration (the NMEA Multiplexer).
 
-For the hardware details, see [here](../full.server.extended.v2/README.md), as it is the exact same one as in this project.
+For the hardware details, see [here](../full-server-extended-v2/README.md), as it is the exact same one as in this project.
 
 This example shows how to _**extend**_  the `GenericNMEAMultiplexer`.
 
@@ -38,7 +38,7 @@ and follow the instructions in the console.
 
 ---
 
-See pictures [here](../full.server.extended.v2/README.md#a-first-prototype). 
+See pictures [here](../full-server-extended-v2/README.md#a-first-prototype). 
 
 ---
 

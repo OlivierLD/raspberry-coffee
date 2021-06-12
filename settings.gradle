@@ -27,7 +27,7 @@ include 'OtherJVMLanguages'
 include "RMI-sample"
 include "NMEA-multiplexer"
 include "NMEA-mux-extensions"
-// include "NMEA.mux.WebUI"
+// include "NMEA-mux-WebUI"
 include "Monitor-Battery"
 include "JavaSoundDemo"
 include "ukulele"
@@ -55,7 +55,7 @@ include "Bluetooth"
 include "Joystick"
 include "jsonQL"
 include "Celestial-Almanac"
-// NMEA.mux.WebUI sub-projects
+// NMEA-mux-WebUI sub-projects
 include(':NMEA-mux-WebUI:full-server')
 include(':NMEA-mux-WebUI:minimal-mux')
 include(':NMEA-mux-WebUI:compass-mux')

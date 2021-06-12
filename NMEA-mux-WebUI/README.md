@@ -62,7 +62,7 @@ They all come with at least 3 files:
 - `to.prod.sh`, eventually triggered by `builder.sh`, which will take care of building your application and archiving the produced artifacts.
 
 Assuming that you've found (or defined for yourself) the configuration of your dreams, **_all_** you will need to do is:
-- From the Raspberry Pi used for the build, where you've clone the `git` repository: `cd full.server` (where `full.server` is your dream directory)
+- From the Raspberry Pi used for the build, where you've clone the `git` repository: `cd full-server` (where `full.server` is your dream directory)
 - `./builder.sh`
     - During this step, you will have provided - from the command line - the name of the archive to produce, let's call it `NMEADist` as an example.
 - Now transfer the generated archive to the destination Raspberry Pi:
@@ -167,7 +167,7 @@ All features: NMEA multiplexer, Web Interface, Celestial Computer, Tides, Almana
 ![Full Server](./docimg/full.server.png)
 
 ```
- $ cd full.server
+ $ cd full.-server
  $ ./builder.sh
 ```
 
@@ -177,7 +177,7 @@ All features: NMEA multiplexer, Web Interface, Celestial Computer, Tides, Almana
 
 ### Minimal Multiplexer
 ```
- $ cd minimal.mux
+ $ cd minimal-mux
  $ ./builder.sh
 ```
 See in the `builder.sh` how web resources are copied, and from where.
@@ -189,7 +189,7 @@ all features: NMEA multiplexer, Celestial Computer, Tides, Almanacs publication,
 
 The idea here is to show how to _extend_ the classes provided in the project to implement your own extra features.
 ```
- $ cd full.server.extended
+ $ cd full-server-extended
  $ ./builder.sh
 ```
 ### Full Nav Server, extended, V2 
@@ -202,7 +202,7 @@ The `Minimal Multiplexer` with the HAT of the `Full Nav Server, extended, V2`.
 ### Head-Up-Display
 With a 5" or 7" TFT screen
 ```
- $ cd head.up
+ $ cd head-up
  $ ./builder.sh
 ```
 Or in details:
@@ -485,7 +485,7 @@ In the `NMEA-mux-WebUI` project, `logged` folder
 - With UART GPS. &#9989; Done
 - Push Buttons and Switches. &#9989; Done
 - Display IP Address and Network Name in the small loggers. &#9989; Done
-- Same as `full.server.extended.v2` with 2-button user-interface, (which is _not_ small), based on `GenericNMEAMultiplexer`, with less `RESTRequestManager`s than the `NavServer`. &#9989; Done
+- Same as `full-server-extended-v2` with 2-button user-interface, (which is _not_ small), based on `GenericNMEAMultiplexer`, with less `RESTRequestManager`s than the `NavServer`. &#9989; Done
 
 ### Hardware configurations:
 - Raspberry Pi Zero, with 2 Bonnets, stacked:
@@ -503,7 +503,7 @@ See [here](../Project-Trunk/REST-clients/TCP-Watch.01#raspberry-pi-zero-w-and-ss
 and [here](./small-server-extended/README.md).
 
 ---
-#### Log from small.server.extended
+#### Log from small-server-extended
 ```
 $ ./to.mux.sh 
 JAVA_OPTIONS in to.mux.sh: 
@@ -513,7 +513,7 @@ Reach http://192.168.42.13:9999/zip/index.html
 Using properties file nmea.mux.gps.log.properties
 In ./to.mux.sh, inherited JAVA_OPTIONS: 
 System date is Fri Sep 20 06:18:08 PDT 2019
-pi@rpi64:~/raspberry-coffee/NMEA.mux.WebUI/small.server.extended $ Running sudo java  -Dwith.sun.flower=false -Dhttp.port=5678 -Djava.library.path=/usr/lib/jni -Dmux.infra.verbose=true -Dbutton.verbose=false -Dprocess.on.start=true -Dmux.properties=nmea.mux.gps.log.properties -Dno.ais=false -Dcalculate.solar.with.eot=true -Ddo.not.use.GGA.date.time=true -Ddo.not.use.GLL.date.time=true -DdeltaT=69.2201 -Drmc.date.offset=7168 -Djava.util.logging.config.file=./logging.properties   -cp ./build/libs/small.server.extended-1.0-all.jar:/usr/share/java/RXTXcomm.jar navserver.ServerWithKewlButtons
+pi@rpi64:~/raspberry-coffee/NMEA-mux-WebUI/small-server-extended $ Running sudo java  -Dwith.sun.flower=false -Dhttp.port=5678 -Djava.library.path=/usr/lib/jni -Dmux.infra.verbose=true -Dbutton.verbose=false -Dprocess.on.start=true -Dmux.properties=nmea.mux.gps.log.properties -Dno.ais=false -Dcalculate.solar.with.eot=true -Ddo.not.use.GGA.date.time=true -Ddo.not.use.GLL.date.time=true -DdeltaT=69.2201 -Drmc.date.offset=7168 -Djava.util.logging.config.file=./logging.properties   -cp ./build/libs/small.server.extended-1.0-all.jar:/usr/share/java/RXTXcomm.jar navserver.ServerWithKewlButtons
 >>> Server port is 5678
 From navserver.ServerWithKewlButtons, running on port 5678
 1,568,985,493,169 - Port open: 5678

@@ -128,7 +128,7 @@ Later, we might as well provide some WebGL examples.
 
 This way, you can "compose" the Navigation Server you need, by adding or removing REST Request Managers, adding or removing channels or forwarders, adding or removing computers, adding or removing web resources, most (if not all) of the components are extendable.
 
-The module `NMEA.mux.WebUI` in this project is a playground for this kind of custom compositions.
+The module `NMEA-mux-WebUI` in this project is a playground for this kind of custom compositions.
 
 ## Try it
 Build it:
