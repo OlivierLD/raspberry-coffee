@@ -3,6 +3,8 @@
 # Move this to your $HOME directory, and modify the FOLDER_NAME variable below accordingly, if needed
 # Compare to rpi.status.sh ;)
 #
+echo -e "All Raspberry Pi Models' description available at https://www.raspberrypi.org/products/"
+echo -e ""
 FOLDER_NAME=~/raspberry-coffee/common-utils
 ARCHIVE_NAME=${FOLDER_NAME}/build/libs/common-utils-1.0-all.jar
 if [[ -f ${ARCHIVE_NAME} ]]

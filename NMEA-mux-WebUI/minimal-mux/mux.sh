@@ -5,7 +5,8 @@
 #
 # OS=`uname -a | awk '{ print $1 }'`
 #
-MUX_PROP_FILE=nmea.mux.gps.log.properties
+# MUX_PROP_FILE=nmea.mux.gps.log.properties
+MUX_PROP_FILE=nmea.mux.gps.log.yaml
 if [[ $# -gt 0 ]]
 then
   MUX_PROP_FILE=$1

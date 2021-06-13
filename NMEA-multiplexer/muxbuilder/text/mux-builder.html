@@ -453,6 +453,21 @@ function fileFwdOption(sel) {
     </table>
 </div>
 
+<div id="dyn-fwd-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
+    <table>
+        <tr>
+            <td>Class Name</td>
+            <td><input type="text" class="class-name" size="30" placeholder="Class Name"></td>
+        </tr>
+        <tr>
+            <td>Properties File</td>
+            <td><input type="text" class="propfile-name" size="30" placeholder="Properties file Name"></td>
+        </tr>
+    </table>
+</div>
+
+
+
 <div id="tw-current-computer-parameters" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
     <table>
         <tr>
@@ -513,6 +528,7 @@ function fileFwdOption(sel) {
                     <option value="wsp">WebSocket Processor</option>
                     <option value="console">Console</option>
                     <option value="rmi">RMI</option>
+                    <option value="dyn">Dynamic Class</option>
                 </select>
                 <div class="forwarder-descr" style="max-height: 100px; overflow-y: scroll;"></div>
             </td>

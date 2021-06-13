@@ -54,8 +54,6 @@ iface wlan0 inet static
    wireless-essid RPiOnTheBoat
    wireless-mode ad-hoc
 
-
-
 ==================
 $ cat /etc/hostapd/hostapd.conf
 interface=wlan0
@@ -74,3 +72,60 @@ wpa_pairwise=CCMP
 wpa_group_rekey=86400
 ieee80211n=1
 wme_enabled=1
+
+====================
+From scratch
+====================
+
+sudo apt update
+sudo apt upgrade
+sudo reboot
+
+sudo apt install hostapd
+
+sudo systemctl unmask hostapd
+sudo systemctl enable hostapd
+
+sudo apt install dnsmasq
+sudo DEBIAN_FRONTEND=noninteractive apt install -y netfilter-persistent iptables-persistent
+
+== Edit /etc/dhcpcd.conf, at the bottom, add
+interface wlan0
+    static ip_address=192.168.4.1/24
+    nohook wpa_supplicant
+
+== Enable routing, edit /etc/sysctl.d/routed-ap.conf, add
+net.ipv4.ip_forward=1
+
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo netfilter-persistent save
+
+== Configure DHCP & DNS Services
+sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
+sudo vi /etc/dnsmasq.conf
+
+== add the following options
+interface=wlan0
+dhcp-range=192.168.4.2,192.168.4.20,255.255.255.0,24h
+domain=wlan
+address=/gw.wlan/192.168.4.1
+
+== Create network name and password
+sudo vi /etc/hostapd/hostapd.conf
+
+== See NetworkName and PassphrasePassphrase
+
+interface=wlan0
+ssid=NetworkName
+hw_mode=g
+channel=7
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=PassphrasePassphrase
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
+
+== Reboot if needed.

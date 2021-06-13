@@ -291,6 +291,15 @@ function generateSerialFwdCode(node) {
   return code;
 }
 
+function generateDynamicFwdCode(node) {
+  let code = "";
+  let className = node.querySelector('.dyn-class-name').value;
+  code += `  - class: ${className}\n`;
+  let propFile = node.querySelector('.dyn-props-name').value;
+  code += `    properties: ${propFile}\n`;
+  return code;
+}
+
 function generateTCPFwdCode(node) {
   let code = "";
   let baudRate = node.querySelector('.port-num').value;
@@ -492,6 +501,8 @@ function dumpIt(withDialog) { // YAML Generation
     } else if (prms.classList.contains("rest-forwarder")) {
       code += "  - type: rest\n";
       code += generateRESTFwdCode(prms);
+    } else if (prms.classList.contains("dynamic-forwarder")) {
+        code += generateDynamicFwdCode(prms); // Already contains the first dash.
     }
   }
 

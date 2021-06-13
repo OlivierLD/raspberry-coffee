@@ -1,0 +1,31 @@
+#
+# Generated on Sun Jun 13 2021 08:18:50 GMT-0700 (Pacific Daylight Time)
+#
+name: "Minimal logger"
+context:
+  with.http.server: true
+  http.port: 8888
+  init.cache: true
+  default.declination: 14.0
+  max.leeway: 10.0
+  bsp.factor: 1.0
+  aws.factor: 1.0
+  hdg.offset: 0.0
+  awa.offset: 0.0
+  damping: 30
+# 1 Channel
+channels:
+  - type: serial
+    port: /dev/tttyUSB0
+    baud.rate: 4800
+    verbose: false
+    reset.interval: 60000
+# 1 Forwarder
+forwarders:
+  - type: file
+    timebase.filename: true
+    filename.suffix: _LOG
+    log.dir: logged
+    split: hour
+    flush: true
+# No Computer

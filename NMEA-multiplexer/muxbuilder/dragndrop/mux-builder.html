@@ -12,7 +12,7 @@
 <script type="text/javascript">
 // Utilities for the file-forwarder 
 
-function fileFwdOption(sel) {
+let fileFwdOption = (sel) => {
     console.log(`Value changed to ${sel.value}`);
     let optionId = null;
     if (sel.value === 'one-file') {
@@ -33,9 +33,10 @@ function fileFwdOption(sel) {
         optionLocation.removeChild(optionLocation.firstChild)
       }
       optionLocation.appendChild(newOptionElement);
-}
+};
 </script>
 
+<!-- Two special cases for the Log File Forwarder -->
 <div id="file-fwd-option-one" style="display: none; border-radius: 5px; border: 1px solid silver; margin: 3px;">
     <table>
         <tr>
@@ -74,7 +75,7 @@ function fileFwdOption(sel) {
         </tr>
     </table>
 </div>
-    
+
 <!-- Body begins here -->
 
 <body>
@@ -892,26 +893,56 @@ function fileFwdOption(sel) {
             </div>
           </div>
 
-          <!--div id="forwarder-X" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
-            <div>
-              <span class="close-icon" onclick="remove(this);">&times;</span>
-              <span class="forwarder-description">Sample output (for example)</span>
+          <div id="forwarder-9" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
+                <div>
+                    <span class="close-icon" onclick="remove(this);">&times;</span>
+                    <span class="forwarder-description">Dynamically Loaded Forwarder</span>
+                </div>
+                <div class="draggable-content">
+                    <span>Dynamic </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                    <dialog class="editable-prm" style="min-height: 200px;">
+                        <div class="dialog-header">
+                            <div style="padding: 10px;">
+                                <span style="margin-left: 20px;">Edit Forwarder Parameters</span>
+                                <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                            </div>
+                        </div>
+                        <div class="editable-zone dynamic-forwarder">
+                            <table>
+                                <tr>
+                                    <td>Class Name</td>
+                                    <td><input type="text" class="dyn-class-name" size="30" placeholder="nmea.type.ClassName"></td>
+                                </tr>
+                                <tr>
+                                    <td>Properties file</td>
+                                    <td><input type="text" class="dyn-props-name" size="30" placeholder="props.properties"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </dialog>
+                </div>
             </div>
-            <div class="draggable-content">
-                <span>Sample </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
-                <dialog class="editable-prm" style="min-height: 200px;">
-                  <div class="dialog-header">
-                    <div style="padding: 10px;">
-                      <span style="margin-left: 20px;">Edit Sample Forwarder Parameters</span>
-                      <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+
+            <!--div id="forwarder-X" draggable="true" class="draggable-container draggable-forwarder" ondragstart="drag(event)">
+              <div>
+                <span class="close-icon" onclick="remove(this);">&times;</span>
+                <span class="forwarder-description">Sample output (for example)</span>
+              </div>
+              <div class="draggable-content">
+                  <span>Sample </span><span class="edit-icon" onclick="edit(this);" title="Edit Parameters">✏️</span>
+                  <dialog class="editable-prm" style="min-height: 200px;">
+                    <div class="dialog-header">
+                      <div style="padding: 10px;">
+                        <span style="margin-left: 20px;">Edit Sample Forwarder Parameters</span>
+                        <span class="dialog-header-close" onclick="closeDialog(this);">&times</span>
+                      </div>
                     </div>
-                  </div>
-                  <div class="editable-zone sample-forwarder">
-                    . . .
-                  </div>  
-                </dialog>    
-            </div>
-          </div-->
+                    <div class="editable-zone sample-forwarder">
+                      . . .
+                    </div>
+                  </dialog>
+              </div>
+            </div-->
 
           <!-- End of Forwarders List -->
         </div>  

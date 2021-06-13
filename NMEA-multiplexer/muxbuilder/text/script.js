@@ -26,7 +26,8 @@ const FORWARDER_DESCRIPTION = {
     'rest': "Will POST received data\nto the provided REST\nendpoint.",
     'gpsd': "Spits all received\nNMEA Data\nin a GPSD format.",
     'rmi': "RMI server",
-    'console': "Spits out all received\nNMEA Data\non STDOUT."
+    'console': "Spits out all received\nNMEA Data\non STDOUT.",
+    'dyn': "Dynamically loaded Java class."
 };
 
 // Computer descriptions
@@ -234,6 +235,9 @@ function setForwarderParameters(forwarder, element) {
       case 'rmi':
           divId = 'rmi-fwd-parameters';
           break;
+      case 'dyn':
+          divId = 'dyn-fwd-parameters';
+          break;
       default:
         divId = 'generic-forwarder-parameters';
         break;
@@ -425,6 +429,15 @@ function getRMIFwdCode(node) {
     code += `    port: ${serverPort}\n`;
     let serverName = node.querySelector('.rmi-name').value;
     code += `    name: ${serverName}\n`;
+    return code;
+}
+
+function getDynFwdCode(node) {
+    let code = "";
+    let className = node.querySelector('.class-name').value;
+    code += `  - class: ${className}\n`;
+    let propFileName = node.querySelector('.propfile-name').value;
+    code += `    properties: ${propFileName}\n`;
     return code;
 }
 
@@ -630,7 +643,9 @@ function generateTheCode() {
         for (let i=0; i<fwdList.childElementCount; i++) {
             let fwd = fwdList.children[i];
             let fwdType = fwd.querySelectorAll('select')[0].value;
-            code += `  - type: ${fwdType}\n`;
+            if (fwdType !== 'dyn') {
+                code += `  - type: ${fwdType}\n`;
+            }
             switch (fwdType) {
                 case 'console':
                     code += getConsoleFwdCode(fwd);
@@ -656,6 +671,9 @@ function generateTheCode() {
                     break;
                 case 'rmi':
                     code += getRMIFwdCode(fwd);
+                    break;
+                case 'dyn':
+                    code += getDynFwdCode(fwd);
                     break;
                 default:
                     code += '    # coming\n'; 

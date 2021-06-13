@@ -27,7 +27,7 @@ Implements `simple-click`, `double-click`, and `long-click`.
 > Note: the code to add here is just there for the buttons management. There is _absolutely no code_
 > to add for the `BME280`, the GPS, or the `SSD1306` screen. It is all taken care of by the properties files.
 
-> See `nmea.mux.gps.log.properties` to know how to reference those devices, and 
+> See `nmea.mux.gps.log.properties` or `nmea.mux.gps.log.yaml` to know how to reference those devices, and 
 > `ssd1306.properties` to see how to choose the data to display on the oled screen. 
 
 This is built just like the other examples in this module, just run
