@@ -143,7 +143,7 @@ function generateSerialConsumerCode(node) {
   let portName = node.querySelector('.port-name').value;
   code += `    port: ${portName}\n`;
   let baudRate = node.querySelector('.baud-rate').value;
-  code += `    baud.rate: ${baudRate}\n`;
+  code += `    baudrate: ${baudRate}\n`;
   let verbose = node.querySelector('.verbose').checked;
   code += `    verbose: ${verbose}\n`;
   // filters
@@ -287,7 +287,7 @@ function generateSerialFwdCode(node) {
   let portName = node.querySelector('.port-name').value;
   code += `    port: ${portName}\n`;
   let baudRate = node.querySelector('.baud-rate').value;
-  code += `    baud.rate: ${baudRate}\n`;
+  code += `    baudrate: ${baudRate}\n`;
   return code;
 }
 
