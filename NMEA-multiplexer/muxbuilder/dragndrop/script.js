@@ -140,6 +140,10 @@ function generateNoPrmConsumerCode(node) {
 
 function generateSerialConsumerCode(node) {
   let code = "";
+  let comment = node.querySelector('.serial-comment').value;
+  if (comment.trim().length > 0) {
+    code += `    # ${comment}\n`;
+  }
   let portName = node.querySelector('.port-name').value;
   code += `    port: ${portName}\n`;
   let baudRate = node.querySelector('.baud-rate').value;

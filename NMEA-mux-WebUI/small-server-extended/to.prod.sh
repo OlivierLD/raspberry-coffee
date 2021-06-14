@@ -41,7 +41,10 @@ cp ./build/libs/*-1.0-all.jar ${distdir}/build/libs
 # Log folder
 mkdir ${distdir}/logged
 # Web resources
-cp web.zip ${distdir}
+cd web
+zip -r ../web.zip *
+cd ..
+mv web.zip ${distdir}
 # Properties files
 cp *.properties ${distdir}
 cp *.yaml ${distdir}

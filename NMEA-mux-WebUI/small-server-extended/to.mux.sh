@@ -79,9 +79,15 @@ echo -e "+----------------------------------------------------------------------
 NO_DATE=false
 RMC_TIME_OK=true
 SUN_FLOWER=false
+# TODO Parse the yaml file to find the port!!
 PROP_FILE="nmea.mux.gps.log.properties"
-# PROP_FILE="multiplexer.yaml"
+# PROP_FILE="nmea.mux.gps.log.yaml"
 JAVA_OPTIONS=
+#
+#JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose=true"
+#JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose.dump=true"
+#JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.client.verbose=true"
+#JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.super.verbose=true"
 #
 for ARG in "$@"
 do
@@ -102,28 +108,34 @@ do
   fi
 done
 #
+PORT=`cat ${PROP_FILE} | grep http.port=`
+PORT=${PORT#*http.port=}
+#
 if [[ "$NO_DATE" == "true" ]]
 then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
-	JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GGA.date.time=true"
-	JAVA_OPTIONS="$JAVA_OPTIONS -Ddo.not.use.GLL.date.time=true"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Ddo.not.use.GGA.date.time=true"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Ddo.not.use.GLL.date.time=true"
 fi
 #
 if [[ "$RMC_TIME_OK" == "false" ]]
 then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
-	JAVA_OPTIONS="$JAVA_OPTIONS -Drmc.time.ok=false"
+	JAVA_OPTIONS="${JAVA_OPTIONS} -Drmc.time.ok=false"
 fi
 #
-echo -e "JAVA_OPTIONS in to.mux.sh: $JAVA_OPTIONS"
+echo -e "JAVA_OPTIONS in to.mux.sh: ${JAVA_OPTIONS}"
 # The script below uses $JAVA_OPTIONS (hence the .)
 # nohup ./mux.sh $PROP_FILE &
 . ./mux.sh ${PROP_FILE} &
 #
 echo On its way!
 MY_IP=$(hostname -I | awk '{ print $1 }')
-echo "Reach http://${MY_IP}:9999/web/index.html"
-echo "  or  http://${MY_IP}:9999/web/small-screens/small.console.01.html"
-echo "- Note: port may change"
+echo "Depending on the packaging...:"
+echo "Reach http://${MY_IP}:${PORT}/web/index.html"
+echo "  or  http://${MY_IP}:${PORT}/web/small-screens/small.console.01.html"
+echo "  or  http://${MY_IP}:${PORT}/zip/index.html"
+echo "  or  http://${MY_IP}:${PORT}/zip/small-screens/small.console.01.html"
+echo "- Note: port may change..."
 date=`date`
 echo "System date is $date"

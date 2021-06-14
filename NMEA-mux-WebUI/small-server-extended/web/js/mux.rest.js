@@ -171,6 +171,10 @@ function resetDataCache() {
 	return getPromise('/mux/cache', DEFAULT_TIMEOUT, 'DELETE', 202);
 }
 
+function getDataCache() {
+	return getNMEAData();
+}
+
 function deleteForwarder(forwarder) {
 	return getPromise('/mux/forwarders/' + forwarder.type, DEFAULT_TIMEOUT, 'DELETE', 204, forwarder);
 }

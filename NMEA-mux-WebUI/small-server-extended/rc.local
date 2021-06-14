@@ -19,6 +19,7 @@ if [[ "$_IP" ]]; then
 fi
 #
 echo "-- From /etc/rc.local --"
+# ln -s /dev/ttyACM0 /dev/ttyS80
 echo "Now starting NMEA Multiplexer"
 cd ~pi/NMEADist
 # The -w give the mux some slack (it waits)
