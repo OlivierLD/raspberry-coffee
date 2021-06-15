@@ -74,7 +74,8 @@ ieee80211n=1
 wme_enabled=1
 
 ====================
-From scratch
+From scratch, enable hotspot (router)
+You might not be able to connect to it...
 ====================
 
 sudo apt update
@@ -91,8 +92,10 @@ sudo DEBIAN_FRONTEND=noninteractive apt install -y netfilter-persistent iptables
 
 == Edit /etc/dhcpcd.conf, at the bottom, add
 interface wlan0
-    static ip_address=192.168.4.1/24
+    static ip_address=192.168.50.10/24
     nohook wpa_supplicant
+
+- Make sure the address bove does not conflict with another one on your network..., like your home router.
 
 == Enable routing, edit /etc/sysctl.d/routed-ap.conf, add
 net.ipv4.ip_forward=1
@@ -106,9 +109,9 @@ sudo vi /etc/dnsmasq.conf
 
 == add the following options
 interface=wlan0
-dhcp-range=192.168.4.2,192.168.4.20,255.255.255.0,24h
+dhcp-range=192.168.50.11,192.168.50.30,255.255.255.0,24h
 domain=wlan
-address=/gw.wlan/192.168.4.1
+address=/gw.wlan/192.168.50.10
 
 == Create network name and password
 sudo vi /etc/hostapd/hostapd.conf

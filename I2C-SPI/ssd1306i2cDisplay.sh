@@ -2,9 +2,9 @@
 CP=./build/libs/I2C-SPI-1.0-all.jar
 #
 JAVA_OPTIONS=
-JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false "
-JAVA_OPTIONS="$JAVA_OPTIONS -Dssd1306.verbose=false "
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dmirror.screen=true"
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dverbose=false "
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dssd1306.verbose=false "
+# JAVA_OPTIONS="${JAVA_OPTIONS} -Dmirror.screen=true"
 #
 # Separate the lines with a pipe |
 #

@@ -17,16 +17,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.calcite.sql.SqlBasicCall;
-import org.apache.calcite.sql.SqlKind;
 import org.apache.calcite.sql.SqlNode;
-import org.apache.calcite.sql.SqlNodeList;
 import org.apache.calcite.sql.SqlOperator;
-import org.apache.calcite.sql.SqlSelect;
 import org.apache.calcite.sql.parser.SqlParseException;
 import org.apache.calcite.sql.parser.SqlParser;
 
@@ -243,7 +241,64 @@ public class DecisionTableStaticUtils {
                 String path = ((Map)line).get("path").toString();
                 sb.append(String.format("- %s: %s, %s\n", type, message, path));
             });
+            // Rules lines - Data.
+            List<List<String>> ruleLines = new ArrayList<>();
+            try {
+                // 1 - Column names
+                List<String> header = new ArrayList<>();
+                header.add(String.format("[%s]", extractFromMap(jsonMap, "logic.hitPolicy")));
+                // Input columns
+                List<Map> inputs = (List) extractObjectFromMap(jsonMap, "logic.inputs");
+                inputs.forEach(input -> {
+                    String colName = extractFromMap(input, "inputExpression.value");
+                    header.add(colName);
+                });
+                // Output Columns
+                List<Map> outputs = (List) extractObjectFromMap(jsonMap, "logic.outputs");
+                outputs.forEach(output -> {
+                    String colName = extractFromMap(output, "name");
+                    header.add(colName);
+                });
+                ruleLines.add(header);
+                // Rule lines
+                AtomicInteger rowNum = new AtomicInteger(1);
+                List<Map> rules = (List) extractObjectFromMap(jsonMap, "logic.rules");
+                rules.forEach(rule -> {
+                    List<String> line = new ArrayList<>();
+                    line.add(String.valueOf(rowNum.getAndIncrement()));
+                    // inputs
+                    List<Map> inputValues = (List) extractObjectFromMap(rule, "inputEntries");
+                    inputValues.forEach(col -> {
+                        String val = extractFromMap(col, "value");
+                        if (val == null) {
+                            Map range = (Map)col.get("range");
+                            try {
+                                val = (range != null ? mapper.writeValueAsString(range) : null);
+                            } catch (JsonProcessingException jpe) {
+                                // Ooch!
+                            }
+                        }
+                        line.add(val);
+                    });
+                    // outputs
+                    List<Map> outputValues = (List) extractObjectFromMap(rule, "outputEntries");
+                    outputValues.forEach(col -> {
+                        String val = extractFromMap(col, "value");
+                        line.add(val);
+                    });
+                    ruleLines.add(line);
+                });
+            } catch (Exception ex) {
+                ruleLines.add(Arrays.asList(ex.toString()));
+            }
+
             formatted = sb.toString();
+
+            // Format the DT lines
+            String dtData = ruleLines.stream()
+                    .map(line -> line.stream().collect(Collectors.joining(", ")))
+                    .collect(Collectors.joining("\n"));
+            formatted += ("\n" + dtData);
         }
         return formatted;
     }
