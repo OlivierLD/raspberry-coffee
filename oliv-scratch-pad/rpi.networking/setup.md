@@ -86,10 +86,9 @@ ieee80211n=1
 wme_enabled=1
 ```
 
-====================
-From scratch, enable hotspot (router)
+From scratch, enable hotspot (router)  
 You might not be able to connect to it...
-====================
+
 ```
 sudo apt update
 sudo apt upgrade
@@ -148,14 +147,8 @@ rsn_pairwise=CCMP
 ```
 
 ## Working config for `SunFlower`
-<table>
-  <tr>
-    <td>/etc/network/interfaces</td>
-    <td>/etc/hostapd/hostapd.conf</td>
-  </tr>
-  <tr>
-    <td>
-<pre>
+> /etc/network/interfaces
+```
 # interfaces(5) file used by ifup(8) and ifdown(8)
 
 # Please note that this file is written to be used with dhcpcd
@@ -189,10 +182,9 @@ wpa-psk "67369c7831"
 
 #iface wlan1 inet manual
 #    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
-</pre>
-    </td>
-    <td>
-<pre>
+```
+> /etc/hostapd/hostapd.conf
+```
 interface=wlan0
 # driver=rtl871xdrv
 ssid=SunFlower-Net
@@ -209,7 +201,4 @@ wpa_pairwise=CCMP
 wpa_group_rekey=86400
 ieee80211n=1
 wme_enabled=1
-</pre>
-    </td>
-  </tr>
-</table>
+```
