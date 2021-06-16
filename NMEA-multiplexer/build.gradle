@@ -17,11 +17,11 @@ repositories {
     maven { url "https://mvnrepository.com/artifact" }
 }
 
-compileJava.options.compilerArgs += ["-Xlint:none"]
-//compileJava {
-//    options.encoding = 'UTF-8'
-//    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-//}
+//compileJava.options.compilerArgs += ["-Xlint:none"]
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
 
 dependencies {
     compile 'org.rxtx:rxtx:2.1.7'
@@ -38,7 +38,7 @@ dependencies {
     compile project(':I2C-SPI')
 //    compile project(':SunFlower')
 //    compile project(':GPS.sun.servo')
-    compile project(':LoRa')
+//    compile project(':LoRa')
 }
 
 shadowJar {

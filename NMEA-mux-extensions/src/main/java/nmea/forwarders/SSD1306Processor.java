@@ -352,7 +352,8 @@ public class SSD1306Processor implements Forwarder {
 			// Not on a RPi? Try JPanel.
 			oled = null;
 			System.out.println("Displaying substitute Swing Led Panel");
-			SwingLedPanel.ScreenDefinition screenDef = screenDimension == SCREEN_SIZE._128x64 ? SwingLedPanel.ScreenDefinition.SSD1306_128x64 : SwingLedPanel.ScreenDefinition.SSD1306_128x32;
+			SwingLedPanel.ScreenDefinition screenDef = screenDimension == SCREEN_SIZE._128x64 ?
+					SwingLedPanel.ScreenDefinition.SSD1306_128x64 : SwingLedPanel.ScreenDefinition.SSD1306_128x32;
 			substitute = new SwingLedPanel(screenDef);
 			substitute.setVisible(true);
 		}
