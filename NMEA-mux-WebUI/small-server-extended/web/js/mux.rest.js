@@ -57,7 +57,13 @@ function getPromise(
 
 		xhr.onload = () => {
 			clearTimeout(requestTimer);
-			if (xhr.status === happyCode) {
+			let happy = true;
+			if (typeof(happyCode) === 'number') {
+				happy = (xhr.status === happyCode);
+			} else {
+				happy = happyCode.indexOf(xhr.status) >= 0;
+			}
+			if (happy) {
 				resolve(xhr.response);
 			} else {
 				reject({code: xhr.status, message: xhr.response});

@@ -15,7 +15,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * See this https://www.baeldung.com/guide-to-jayway-jsonpath
+ * See this
+ * https://www.baeldung.com/guide-to-jayway-jsonpath
+ * https://support.smartbear.com/alertsite/docs/monitors/api/endpoint/jsonpath.html
+ * https://jsonpath.com/
+ *
  */
 public class JSONPathTest_01 {
 

@@ -147,6 +147,8 @@ rsn_pairwise=CCMP
 ```
 
 ## Working config for `SunFlower`
+
+### interfaces
 > /etc/network/interfaces
 ```
 # interfaces(5) file used by ifup(8) and ifdown(8)
@@ -183,6 +185,14 @@ wpa-psk "67369c7831"
 #iface wlan1 inet manual
 #    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 ```
+
+### hostapd
+```
+sudo apt install hostapd
+
+sudo systemctl unmask hostapd
+sudo systemctl enable hostapd
+```
 > /etc/hostapd/hostapd.conf
 ```
 interface=wlan0
@@ -201,4 +211,8 @@ wpa_pairwise=CCMP
 wpa_group_rekey=86400
 ieee80211n=1
 wme_enabled=1
+```
+
+```
+systemctl disable dhcpcd
 ```

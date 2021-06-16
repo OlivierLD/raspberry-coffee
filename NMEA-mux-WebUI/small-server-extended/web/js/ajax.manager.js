@@ -22,7 +22,7 @@ function getNMEAData() {
 			xhr = new XMLHttpRequest(),
 			verb = 'GET',
 			data = null,
-			happyCode = 200,
+			happyCode = [200, 201],
 			TIMEOUT = 10000;
 
 	let promise = new Promise((resolve, reject) => {
@@ -53,7 +53,13 @@ function getNMEAData() {
 
 		xhr.onload = () => {
 			clearTimeout(requestTimer);
-			if (xhr.status === happyCode) {
+			let happy = true;
+			if (typeof(happyCode) === 'number') {
+				happy = (xhr.status === happyCode);
+			} else {
+				happy = happyCode.indexOf(xhr.status) >= 0;
+			}
+			if (happy) {
 				resolve(xhr.response);
 			} else {
 				reject({code: xhr.status, message: xhr.response});
