@@ -346,7 +346,9 @@ public class SSD1306Processor implements Forwarder {
 			oled.begin();
 			oled.clear();
 		} catch (Throwable error) {
+			System.err.println("--- Instantiating SSD1306 ---");
 			error.printStackTrace(); // See the actual problem..., you never know.
+			System.err.println("-----------------------------");
 			// Not on a RPi? Try JPanel.
 			oled = null;
 			System.out.println("Displaying substitute Swing Led Panel");
