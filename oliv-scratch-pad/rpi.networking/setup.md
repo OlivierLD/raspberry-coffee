@@ -1,10 +1,20 @@
+# Networking on the Raspberry Pi
+See your config:
+```
+$ iwconfig
+```
+See your IP address(es)
+```
+$ ifconfig
+```
+
 Resources:
 - April 22, 2013: https://spin.atomicobject.com/2013/04/22/raspberry-pi-wireless-communication/
 - May 6, 2020:  https://www.maketecheasier.com/how-to-turn-raspberry-pi-into-wireless-access-point/
 
 See those 2 files
 =================
-
+```
 $ cat /etc/network/interfaces
 # interfaces(5) file used by ifup(8) and ifdown(8)
 
@@ -39,9 +49,10 @@ wpa-psk "67369c7831"
 
 #iface wlan1 inet manual
 #    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
-==================
-Other option:
+```
 
+Other option:
+```
 auto lo
 iface lo inet loopback
 iface eth0 inet dhcp
@@ -53,8 +64,9 @@ iface wlan0 inet static
    wireless-channel 1
    wireless-essid RPiOnTheBoat
    wireless-mode ad-hoc
+```
 
-==================
+```
 $ cat /etc/hostapd/hostapd.conf
 interface=wlan0
 # driver=rtl871xdrv
@@ -72,12 +84,13 @@ wpa_pairwise=CCMP
 wpa_group_rekey=86400
 ieee80211n=1
 wme_enabled=1
+```
 
 ====================
 From scratch, enable hotspot (router)
 You might not be able to connect to it...
 ====================
-
+```
 sudo apt update
 sudo apt upgrade
 sudo reboot
@@ -95,7 +108,7 @@ interface wlan0
     static ip_address=192.168.50.10/24
     nohook wpa_supplicant
 
-- Make sure the address bove does not conflict with another one on your network..., like your home router.
+- Make sure the address above does not conflict with another one on your network..., like your home router.
 
 == Enable routing, edit /etc/sysctl.d/routed-ap.conf, add
 net.ipv4.ip_forward=1
@@ -132,3 +145,71 @@ wpa_pairwise=TKIP
 rsn_pairwise=CCMP
 
 == Reboot if needed.
+```
+
+## Working config for `SunFlower`
+<table>
+  <tr>
+    <td>/etc/network/interfaces</td>
+    <td>/etc/hostapd/hostapd.conf</td>
+  </tr>
+  <tr>
+    <td>
+<pre>
+# interfaces(5) file used by ifup(8) and ifdown(8)
+
+# Please note that this file is written to be used with dhcpcd
+# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
+
+# Include files from /etc/network/interfaces.d:
+source-directory /etc/network/interfaces.d
+
+auto lo
+iface lo inet loopback
+
+iface eth0 inet manual
+
+allow-hotplug wlan0
+iface wlan0 inet static
+address 192.168.127.1
+netmask 255.255.255.0
+
+#iface wlan0 inet manual
+#    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+
+# allow-hotplug wlan1
+# iface wlan1 inet dhcp
+# wpa-ssid "ATT856"
+# wpa-psk "4314681968"
+
+allow-hotplug wlan1
+iface wlan1 inet dhcp
+wpa-ssid "Sonic-00e0_EXT"
+wpa-psk "67369c7831"
+
+#iface wlan1 inet manual
+#    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+</pre>
+    </td>
+    <td>
+<pre>
+interface=wlan0
+# driver=rtl871xdrv
+ssid=SunFlower-Net
+country_code=US
+hw_mode=g
+channel=6
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=raspberrypi
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=CCMP
+wpa_group_rekey=86400
+ieee80211n=1
+wme_enabled=1
+</pre>
+    </td>
+  </tr>
+</table>
