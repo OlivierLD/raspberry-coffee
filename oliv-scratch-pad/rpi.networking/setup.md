@@ -1,7 +1,7 @@
 # Networking on the Raspberry Pi
-See <https://www.raspberrypi.org/documentation/configuration/wireless/>
+See the official doc: <https://www.raspberrypi.org/documentation/configuration/wireless/>
 
-Keep an eye on the IP addresses, 192.168.4.0, 1, 2...
+> Do keep an eye on the IP addresses, 192.168.4.0, 1, 2...
 
 See your config:
 ```
@@ -66,3 +66,5 @@ wpa-psk "67...x...31"
 #iface wlan1 inet manual
 #    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 ```
+
+> Notice above: with another WiFi dongle (wlan1) you can have a HotSpot _AND_ Internet access.  
