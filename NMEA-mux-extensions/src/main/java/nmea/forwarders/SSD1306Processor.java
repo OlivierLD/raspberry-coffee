@@ -321,8 +321,19 @@ public class SSD1306Processor implements Forwarder {
 		try {
 			// I2C Config
 			if (oledInterface == OLED_INTERFACE.I2C) {
+				if (verbose) {
+					System.out.println("SSD1306: I2C Interface");
+				}
 				oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS, width, height);
 			} else { // SPI
+				if (verbose) {
+					System.out.printf("SSD1306: SPI Interface (CLK:%d, MOSI:%d, CS:%d, RST:%d, DC:%d)\n",
+							ssd1306CLK,
+							ssd1306MOSI,
+							ssd1306CS,
+							ssd1306RST,
+							ssd1306DC);
+				}
 				oled = new SSD1306(
 						PinUtil.getPinByWiringPiNumber(ssd1306CLK),
 						PinUtil.getPinByWiringPiNumber(ssd1306MOSI),
@@ -769,14 +780,17 @@ public class SSD1306Processor implements Forwarder {
 
 	private void displayPRMSL(double value) {
 		try {
-			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+			if (sb != null) {
+				sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
-			sb.text("PRMSL ", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(_X1.format(value) + " mb", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				sb.text("PRMSL ", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				sb.text(_X1.format(value) + " mb", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
-			// Display
-			display();
-
+				// Display
+				display();
+			} else {
+				System.out.println("WARNING!!! ScreenBuffer is null");
+			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
