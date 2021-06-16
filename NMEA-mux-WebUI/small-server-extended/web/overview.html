@@ -321,7 +321,7 @@
 			promise.then((value) => {
 				let json = JSON.parse(value);
 				if (json !== undefined) {
-					appendMess(JSON.stringify(json, null, 2));
+					appendMess(JSON.stringify(json, null, 2), true);
 				}
 			}, (error) => {
 				appendMess(`Failed to get Cache Sample...${(error ? JSON.stringify(error) : ' - ')}`, true);
