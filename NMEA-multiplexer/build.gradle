@@ -38,7 +38,7 @@ dependencies {
     compile project(':I2C-SPI')
 //    compile project(':SunFlower')
 //    compile project(':GPS.sun.servo')
-    compile project(':LoRa')
+//    compile project(':LoRa')
 }
 
 shadowJar {
