@@ -75,16 +75,9 @@
 				if (cb !== undefined) {
 					cb(value);
 				}
-			}, (error, errmess) => {
+			}, (error) => {
 				let message;
-				if (errmess !== undefined) {
-					if (errmess.message !== undefined) {
-						message = errmess.message;
-					} else {
-						message = errmess;
-					}
-				}
-				console.log("GetSystemTime failed..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+				console.log("GetSystemTime failed..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 			});
 		}
 
@@ -100,28 +93,12 @@
 					document.body.style.cursor = 'default';
 					let fwdrs = JSON.parse(value);
 					buildFileList(logFiles, fwdrs);
-				}, (error, errmess) => {
+				}, (error) => {
 					document.body.style.cursor = 'default';
-					let message;
-					if (errmess !== undefined) {
-						if (errmess.message !== undefined) {
-							message = errmess.message;
-						} else {
-							message = errmess;
-						}
-					}
-					console.log("Failed to get the forwarders list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+					console.log("Failed to get the forwarders list..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 				});
-			}, (error, errmess) => {
-				var message;
-				if (errmess !== undefined) {
-					if (errmess.message !== undefined) {
-						message = errmess.message;
-					} else {
-						message = errmess;
-					}
-				}
-				console.log("Failed to get the log files list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+			}, (error) => {
+				console.log("Failed to get the log files list..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 			});
 		}
 
@@ -132,16 +109,8 @@
 				console.log("Delete log file OK");
 				// Rebuild the list
 				getLogFilesList();
-			}, (error, errmess) => {
-				let message;
-				if (errmess !== undefined) {
-					if (errmess.message !== undefined) {
-						message = errmess.message;
-					} else {
-						message = errmess;
-					}
-				}
-				console.log("Failed to delete the log file..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+			}, (error) => {
+				console.log("Failed to delete the log file..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 			});
 		}
 
