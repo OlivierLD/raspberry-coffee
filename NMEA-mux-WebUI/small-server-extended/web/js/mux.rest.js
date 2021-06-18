@@ -102,7 +102,7 @@ function getLogFile(fileName) {
 }
 
 function deleteLogFile(logFile) {
-	return getPromise('/mux/log-files/' + logFile, DEFAULT_TIMEOUT, 'DELETE', 200, null, false);
+	return getPromise('/mux/log-files/' + logFile, DEFAULT_TIMEOUT, 'DELETE', 202, null, false);
 }
 
 function getSystemTime() {
