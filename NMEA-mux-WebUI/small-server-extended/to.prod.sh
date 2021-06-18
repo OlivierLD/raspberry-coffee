@@ -112,6 +112,8 @@ else
       rm -rf ${distdir} 2> /dev/null
     fi
   fi
+  echo -e "- Expanding archive..."
   tar -xzvf ${distdir}.tar.gz
-  echo -e "OK. Deployed. See in ${HOME}/${distrib}."
+  echo -e "OK. Deployed. See in ${HOME}/${distdir}."
+  echo -e "You may want to update your /etc/rc.local accordingly."
 fi
