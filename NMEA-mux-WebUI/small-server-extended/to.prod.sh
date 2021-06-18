@@ -17,7 +17,7 @@ echo -e "+----------------------------------------------------------------------
 #
 PROXY_SETTINGS=
 # PROXY_SETTINGS="-Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttps.proxyPort=80"
-echo -en "Do we re-build ? > "
+echo -en "Do we re-build the Java part ? > "
 read REPLY
 if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
 then
@@ -100,7 +100,18 @@ then
 else
   cp ${distdir}.tar.gz ${HOME}
   cd ${HOME}
-  rm -rf ${distdir} 2> /dev/null
+  if [[ -f ${distdir} ]]
+  then
+    echo -en "Deploy ${distdir}.tar.gz to ${HOME} ? > "
+    read REPLY
+    if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
+    then
+      echo -e "Ok, aborting. "
+      exit 1
+    else
+      rm -rf ${distdir} 2> /dev/null
+    fi
+  fi
   tar -xzvf ${distdir}.tar.gz
-  echo -e "Deployed."
+  echo -e "OK. Deployed. See in ${HOME}/${distrib}."
 fi
