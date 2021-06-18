@@ -102,7 +102,7 @@ else
   cd ${HOME}
   if [[ -d "${distdir}" ]]
   then
-    echo -en "Deploy ${distdir}.tar.gz to ${HOME} ? > "
+    echo -en "Folder ${distdir} already exists in ${HOME}. Do we drop it ? > "
     read REPLY
     if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
     then
