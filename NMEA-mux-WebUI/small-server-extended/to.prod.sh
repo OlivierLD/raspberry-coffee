@@ -101,6 +101,6 @@ else
   cp ${distdir}.tar.gz ${HOME}
   cd ${HOME}
   rm -rf ${distdir} 2> /dev/null
-  tar -xzvf ${}distdir}.tar.gz
+  tar -xzvf ${distdir}.tar.gz
   echo -e "Deployed."
 fi
