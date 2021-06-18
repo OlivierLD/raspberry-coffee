@@ -17,7 +17,14 @@ echo -e "+----------------------------------------------------------------------
 #
 PROXY_SETTINGS=
 # PROXY_SETTINGS="-Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttps.proxyPort=80"
-../../gradlew clean shadowJar ${PROXY_SETTINGS}
+echo -en "Do we re-build ? > "
+read REPLY
+if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
+then
+  echo -e "Ok, moving on."
+else
+  ../../gradlew clean shadowJar ${PROXY_SETTINGS}
+fi
 #
 # 2 - Create new dir
 #
