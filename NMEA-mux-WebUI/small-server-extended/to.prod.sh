@@ -81,3 +81,19 @@ echo -e "| $ nohup ./mux.sh nmea.mux.gps.log.properties &                       
 echo -e "|   or                                                                                             |"
 echo -e "| $ nohup ./mux.sh nmea.mux.gps.log.yaml &                                                         |"
 echo -e "+--------------------------------------------------------------------------------------------------+"
+#
+# 6 - Deploy?
+#
+echo -en "Deploy ${distdir}.tar.gz to ${HOME} ? > "
+read REPLY
+if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
+then
+  echo -e "Ok, you'll do it yourself."
+  echo -e "Bye."
+else
+  cp ${distdir}.tar.gz ${HOME}
+  cd ${HOME}
+  rm -rf ${distdir} 2> /dev/null
+  tar -xzvf ${}distdir}.tar.gz
+  echo -e "Deployed."
+fi
