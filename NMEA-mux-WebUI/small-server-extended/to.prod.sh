@@ -109,7 +109,7 @@ else
       echo -e "Ok, aborting. "
       exit 1
     else
-      rm -rf ${distdir}
+      sudo rm -rf ${distdir}
     fi
   fi
   echo -e "- Expanding archive..."
