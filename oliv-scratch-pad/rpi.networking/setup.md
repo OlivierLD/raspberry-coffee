@@ -18,6 +18,7 @@ Resources:
 
 
 ### Other option, ad-hoc network:
+See this doc: <https://spin.atomicobject.com/2013/04/22/raspberry-pi-wireless-communication/>
 ```
 auto lo
 iface lo inet loopback
@@ -30,6 +31,11 @@ iface wlan0 inet static
    wireless-channel 1
    wireless-essid RPiOnTheBoat
    wireless-mode ad-hoc
+```
+then
+```
+sudo ifdown wlan0
+sudo ifup wlan0
 ```
 
 ## Working config for `SunFlower`
@@ -67,4 +73,5 @@ wpa-psk "67...x...31"
 #    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 ```
 
-> Notice above: with another WiFi dongle (wlan1) you can have a HotSpot _AND_ Internet access.  
+> Notice above: with another WiFi dongle (wlan1) you can have a HotSpot **_AND_** Internet access.  
+> That makes your life so much easier.
