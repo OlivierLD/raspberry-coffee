@@ -1,5 +1,5 @@
 # Networking on the Raspberry Pi
-See the official doc: <https://www.raspberrypi.org/documentation/configuration/wireless/>
+See the (well done) official doc: <https://www.raspberrypi.org/documentation/configuration/wireless/>
 
 > Do keep an eye on the IP addresses, 192.168.4.0, 1, 2...
 
@@ -13,12 +13,11 @@ $ ifconfig
 ```
 
 Resources:
-- April 22, 2013: https://spin.atomicobject.com/2013/04/22/raspberry-pi-wireless-communication/
-- May 6, 2020:  https://www.maketecheasier.com/how-to-turn-raspberry-pi-into-wireless-access-point/
+- April 22, 2013: <https://spin.atomicobject.com/2013/04/22/raspberry-pi-wireless-communication/>
+- May 6, 2020:  <https://www.maketecheasier.com/how-to-turn-raspberry-pi-into-wireless-access-point/>
 
 
 ### Other option, ad-hoc network:
-See this doc: <https://spin.atomicobject.com/2013/04/22/raspberry-pi-wireless-communication/>
 ```
 auto lo
 iface lo inet loopback
