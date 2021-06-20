@@ -267,6 +267,7 @@ public class LogAnalyzer {
 				System.out.println("Headless Exception. Try in a graphical environment to visualize the data.");
 			}
 		} catch (IOException ioe) {
+			System.err.println("From " + System.getProperty("user.dir"));
 			ioe.printStackTrace();
 		}
 	}

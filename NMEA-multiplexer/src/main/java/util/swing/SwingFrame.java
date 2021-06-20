@@ -192,8 +192,8 @@ public class SwingFrame extends JFrame {
 		if (positions != null) {
 			int index = (int)Math.floor((double)positions.size() * ((double)value / (double)MAX_SLIDER));
 			index = (index >= positions.size()) ? index - 1 : index;
-//			System.out.println("Tooltip: " + index);
-			tooltip = positions.get(index).getDate().toString();
+			System.out.println("Tooltip: " + index);
+			tooltip = String.valueOf(index) + " - " + positions.get(index).getDate().toString();
 		}
 		slider.setToolTipText(tooltip);
 	}

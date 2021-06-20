@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# With a Swing UI for the positions.
+#
 CP=./build/libs/NMEA-multiplexer-1.0-all.jar
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dspeed.unit=KN"
