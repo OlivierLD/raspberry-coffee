@@ -9,6 +9,12 @@
 	<script type="text/javascript" src="./js/ajax.manager.js"></script>
 	<script type="text/javascript" src="./js/mux.rest.js"></script>
 	<style>
+		body {
+			font-family: "Lato", Verdana, sans-serif;
+			font-size: 60px;
+			color: cyan;
+		}
+
 		button {
 			padding: 4px 20px;
 			/* give the background a gradient */
@@ -170,7 +176,7 @@
 		}
 
 		select {
-			font-size: 22px;
+			font-size: 30px;
 		}
 
 	</style>
@@ -403,14 +409,14 @@
 		<th>Units</th>
 	</tr>
 	<tr>
-		<td>
-			<label class="rocker rocker-small"> <!-- One way widget. Will NOT be notified of a change on the server. -->
+		<td style="text-align: center">
+			<label class="rocker"> <!-- One way widget. Will NOT be notified of a change on the server. -->
 				<input type="checkbox" id="flip-1" onchange="logEnabled(this);" checked>
 				<span class="switch-left">On</span>
 				<span class="switch-right">Off</span>
 			</label>
 		</td>
-		<td>
+		<td style="text-align: center">
 			<select name="speed-unit" id="speed-unit" onchange="speedUnit(this);">
 				<option value=""></option>
 				<option value="kmh">km/h, km and meters</option>
@@ -428,8 +434,8 @@
 		<th style="height:40px; text-align: left;">Delta Alt<br><span id="delta-alt-val"></span></th>
 	</tr>
 	<tr>
-		<td><span id="sog" style="font-weight: bold; font-size: 30px;">0.0</span></td>
-		<td><span id="cog" style="font-weight: bold; font-size: 30px;">000</span></td>
+		<td><span id="sog" style="font-weight: bold; font-size: 40px;">0.0</span></td>
+		<td><span id="cog" style="font-weight: bold; font-size: 40px;">000</span></td>
 	</tr>
 </table>
 
@@ -444,18 +450,18 @@
 <table width="100%">
 	<tr>
 		<td style="text-align: left;">
-			<span style="font-weight: bold; font-size: 20px;">Latitude</span>
+			<span style="font-weight: bold; font-size: 40px;">Latitude</span>
 		</td>
 		<td style="text-align: right;">
-			<span id="lat" style="font-weight: bold; font-size: 24px;">N 00&deg;00.00'</span>
+			<span id="lat" style="font-weight: bold; font-size: 44px;">N 00&deg;00.00'</span>
 		</td>
 	</tr>
 	<tr>
 		<td style="text-align: left;">
-			<span style="font-weight: bold; font-size: 20px;">Longitude</span>
+			<span style="font-weight: bold; font-size: 40px;">Longitude</span>
 		</td>
 		<td style="text-align: right;">
-			<span id="lng" style="font-weight: bold; font-size: 24px;">W 000&deg;00.00'</span>
+			<span id="lng" style="font-weight: bold; font-size: 44px;">W 000&deg;00.00'</span>
 		</td>
 	</tr>
 </table>
