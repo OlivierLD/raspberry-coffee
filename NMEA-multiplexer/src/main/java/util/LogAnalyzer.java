@@ -141,7 +141,7 @@ public class LogAnalyzer {
 			long previousDate = -1L;
 			long statLineNo = 0;
 
-			bw.write("Idx;time;deltaT;deltaDist;deltaT(2);\n");
+			bw.write("Idx;time;deltaT;deltaDist;deltaT(2);cog;sog\n");
 			statLineNo += 1;
 
 			long minLatIdx = -1,
@@ -200,6 +200,9 @@ public class LogAnalyzer {
 										maxLngIdx = totalNbRec - 1;
 									}
 									assert (rmcTime != null);
+									// TODO Speed
+									double cog = rmc.getCog();
+									double sog = rmc.getSog();
 									if (previousPos != null) {
 										double distance = GeomUtil.haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
 //									System.out.println(String.format("Step: %.03f km between %s and %s (%s)",
@@ -208,11 +211,24 @@ public class LogAnalyzer {
 //													gp.toString(),
 //													SDF.format(rmcTime)));
 										distanceInKm += distance;
-										bw.write(String.format("%d;%d;%d;%f;=(B%d-B%d);\n", (totalNbRec - 1), rmcTime.getTime(), (rmcTime.getTime() - previousDate), distance, (statLineNo + 1), statLineNo));
+										bw.write(String.format("%d;%d;%d;%f;=(B%d-B%d);%s;%s\n",
+												(totalNbRec - 1),
+												rmcTime.getTime(),
+												(rmcTime.getTime() - previousDate),
+												distance,
+												(statLineNo + 1),
+												statLineNo,
+												cog,
+												sog));
 										//                                                                                                                                      |
 										//                                                                                                                                      Based on 1, not 0.
 									} else {
-										bw.write(String.format("%d;%d;%d;;;\n", (totalNbRec - 1), rmcTime.getTime(), (rmcTime.getTime() - previousDate)));
+										bw.write(String.format("%d;%d;%d;;;%s;%s\n",
+												(totalNbRec - 1),
+												rmcTime.getTime(),
+												(rmcTime.getTime() - previousDate),
+												cog,
+												sog));
 									}
 									statLineNo += 1;
 									previousPos = gp;
@@ -237,7 +253,9 @@ public class LogAnalyzer {
 			}
 			br.close();
 			bw.close();
-			System.out.println("Checkout the spreadsheet stat.csv.");
+			System.out.println("+-------------------------------------+");
+			System.out.println("| Checkout the spreadsheet stat.csv.  |");
+			System.out.println("+-------------------------------------+");
 
 			// Display summary
 			assert (start != null && arrival != null);
@@ -253,10 +271,10 @@ public class LogAnalyzer {
 			System.out.println(String.format("Min alt: %.02f m, Max alt: %.02f m, delta %.02f m", minAlt, maxAlt, (maxAlt - minAlt)));
 			System.out.println(String.format("Top-Left    :%s (%f / %f)", new GeoPos(maxLat, minLng).toString(), maxLat, minLng));
 			System.out.println(String.format("Bottom-Right:%s (%f / %f)", new GeoPos(minLat, maxLng).toString(), minLat, maxLng));
-			System.out.println(String.format("Min Lat record idx: %d", minLatIdx));
-			System.out.println(String.format("Max Lat record idx: %d", maxLatIdx));
-			System.out.println(String.format("Min Lng record idx: %d", minLngIdx));
-			System.out.println(String.format("Max Lng record idx: %d", maxLngIdx));
+			System.out.println(String.format("Min Lat record idx (in %s): %d", args[0], minLatIdx));
+			System.out.println(String.format("Max Lat record idx (in %s): %d", args[0], maxLatIdx));
+			System.out.println(String.format("Min Lng record idx (in %s): %d", args[0], minLngIdx));
+			System.out.println(String.format("Max Lng record idx (in %s): %d", args[0], maxLngIdx));
 
 			try {
 				// A Map on a canvas?
