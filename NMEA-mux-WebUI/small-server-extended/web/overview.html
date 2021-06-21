@@ -364,25 +364,25 @@
 		function kill() {
 			console.log('Terminate was clicked');
 
+			// TODO There is something better to do here.
 			document.body.innerHTML =
-					'<style>button {\n' +
+					'<style>' + 
+					'body { font-family: "Lato", Verdana, sans-serif; font-size: 60px; color: cyan; }\n' +
+		            'button {\n' +
 					'padding: 4px 20px;\n' +
-					'/* give the background a gradient */\n' +
 					'background: darkorange; /*linear-gradient(top, #ffae00, #d67600);*/\n' +
 					'border:2px outset #dad9d8;\n' +
-					'/* style the text */\n' +
 					'font-family:Lato, Verdana, Arial, sans-serif;\n' +
 					'font-size:1.1em;\n' +
 					'letter-spacing:0.05em;\n' +
 					'text-transform:uppercase;\n' +
 					'color:#fff;\n' +
 					'text-shadow: 0px 1px 10px #000;\n' +
-					'/* add to small curve to the corners of the button */\n' +
 					'border-radius: 15px;\n' +
-					'/* give the button a drop shadow */\n' +
 					'box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;\n' +
-					'}</style>' +
-					'<h1 style="color: blue; font-family: Verdana, Helvetica, Geneva;">Confirm server shutdown</h1>' +
+					'}' +
+					'</style>' +
+					'<h1 style="color: cyan; font-family: Verdana, Helvetica, Geneva; font-size: 60px;">Confirm server shutdown</h1>' +
 					'<p align="center">' +
 					'<button onclick="terminateOK();">OK</button> &nbsp;' +
 					'<button onclick="document.location.reload();">Cancel</button></p>';
@@ -468,7 +468,7 @@
 
 </div>
 <div style="display: none"> <!-- turn display to block or inline for debugging -->
-	<textarea id="message" style="width: 98%; height: 150px;"></textarea>
+	<textarea id="message" style="width: 98%; height: 250px;"></textarea>
 </div>
 
 <div id="dialog-message" style="display: none;" title="Confirm Shutdown">
