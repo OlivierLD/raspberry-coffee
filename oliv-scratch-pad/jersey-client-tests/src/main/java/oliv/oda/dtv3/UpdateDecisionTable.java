@@ -70,7 +70,15 @@ public class UpdateDecisionTable {
         upsertResponseMap.put("utterance", "{ }");
         upsertResponseMap.put("originalUtterance", "This is the original utterance");
 
-        String updated = DecisionTableStaticUtils.processUpdate(resource.openStream(), userContext, txStatement, upsertResponseMap);
+        String updated = null;
+        try {
+            updated = DecisionTableStaticUtils.processUpdate(resource.openStream(),
+                    userContext,
+                    txStatement,
+                    upsertResponseMap);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         if (upsertResponseMap.get("hitPolicy") != null) {
             System.out.println("Hit Policy: " + upsertResponseMap.get("hitPolicy"));
