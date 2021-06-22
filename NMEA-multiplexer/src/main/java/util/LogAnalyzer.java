@@ -82,6 +82,7 @@ public class LogAnalyzer {
 	public static class DatedPosition {
 		GeoPos position;
 		Date date;
+		long recId;
 
 		DatedPosition position(GeoPos position) {
 			this.position = position;
@@ -93,6 +94,11 @@ public class LogAnalyzer {
 			return this;
 		}
 
+		DatedPosition recId(long recId) {
+			this.recId = recId;
+			return this;
+		}
+
 		public GeoPos getPosition() {
 			return this.position;
 		}
@@ -100,6 +106,8 @@ public class LogAnalyzer {
 		public Date getDate() {
 			return this.date;
 		}
+
+		public long getRecId() { return this.recId; }
 	}
 
 	public static void main(String... args) {
@@ -145,11 +153,11 @@ public class LogAnalyzer {
 			statLineNo += 1;
 
 			long minLatIdx = -1,
-				 	 minLngIdx = -1,
-					 maxLatIdx = -1,
-					 maxLngIdx = -1;
+				 minLngIdx = -1,
+				 maxLatIdx = -1,
+				 maxLngIdx = -1;
 
-			long nbRec = 0L, totalNbRec = 0L;
+			long nbRec = 0L, totalNbRec = 0L, originalFileRecNo = 0L;
 			Date start = null;
 			Date arrival = null;
 			String line;
@@ -159,6 +167,7 @@ public class LogAnalyzer {
 				if (line == null) {
 					keepReading = false;
 				} else {
+					originalFileRecNo++;
 					if (StringParsers.validCheckSum(line)) {
 						totalNbRec++;
 						String id = StringParsers.getSentenceID(line);
@@ -181,7 +190,8 @@ public class LogAnalyzer {
 									if (rmcTime != null) {
 										positions.add(new DatedPosition()
 												.date(rmcTime)
-												.position(gp));
+												.position(gp)
+												.recId(originalFileRecNo));
 									}
 									if (gp.lat < minLat) {
 										minLat = gp.lat;

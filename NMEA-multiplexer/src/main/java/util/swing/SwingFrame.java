@@ -19,6 +19,7 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -192,8 +193,12 @@ public class SwingFrame extends JFrame {
 		if (positions != null) {
 			int index = (int)Math.floor((double)positions.size() * ((double)value / (double)MAX_SLIDER));
 			index = (index >= positions.size()) ? index - 1 : index;
-			System.out.println("Tooltip: " + index);
-			tooltip = String.valueOf(index) + " - " + positions.get(index).getDate().toString();
+			System.out.printf("Tooltip: idx %d, (rec #%d)\n",
+					index,
+					positions.get(index).getRecId());
+			tooltip = String.valueOf(index) +
+					" - (rec #" + NumberFormat.getInstance().format(positions.get(index).getRecId()) + ") " +
+					positions.get(index).getDate().toString();
 		}
 		slider.setToolTipText(tooltip);
 	}

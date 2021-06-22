@@ -81,20 +81,29 @@ public class SwingPanel
 //				minLng = Math.min(minLng, pos.getPosition().lng);
 //				maxLng = Math.max(maxLng, pos.getPosition().lng);
 //			}
-			double minLat = positions.stream().mapToDouble(pos -> pos.getPosition().lat).min().orElseThrow(NoSuchElementException::new);
-			double maxLat = positions.stream().mapToDouble(pos -> pos.getPosition().lat).max().orElseThrow(NoSuchElementException::new);
-			double minLng = positions.stream().mapToDouble(pos -> pos.getPosition().lng).min().orElseThrow(NoSuchElementException::new);
-			double maxLng = positions.stream().mapToDouble(pos -> pos.getPosition().lng).max().orElseThrow(NoSuchElementException::new);
+			// TODO Limit to the current buffer size (when animating) ? See 'progressing' boolean in plot method. Use stream().limit .
+			final double minLat = positions.stream().mapToDouble(pos -> pos.getPosition().lat).min().orElseThrow(NoSuchElementException::new);
+			final double maxLat = positions.stream().mapToDouble(pos -> pos.getPosition().lat).max().orElseThrow(NoSuchElementException::new);
+			final double minLng = positions.stream().mapToDouble(pos -> pos.getPosition().lng).min().orElseThrow(NoSuchElementException::new);
+			final double maxLng = positions.stream().mapToDouble(pos -> pos.getPosition().lng).max().orElseThrow(NoSuchElementException::new);
 
 			double widthRatio = (double) this.getWidth() / ((maxLng - minLng) * 1.1);
 			double heightRatio = (double) this.getHeight() / ((maxLat - minLat) * 1.1);
 			final double ratio = Math.min(widthRatio, heightRatio);
 
-			final double _minLng = minLng;
-			final double _minLat = minLat;
+//			final double _minLng = minLng;
+//			final double _minLat = minLat;
 
-			Function<Double, Integer> posLngToCanvas = lng -> ((this.getWidth() / 2) + (int) Math.round((lng - _minLng) * (ratio * 1.1))) - (this.getWidth() / 2) ;
-			Function<Double, Integer> posLatToCanvas = lat -> ((this.getHeight() / 2) - (int) Math.round((lat - _minLat) * (ratio * 1.1))) + (this.getHeight() / 2);
+			Function<Double, Integer> posLngToCanvas = lng -> {
+				int stepOne = (this.getWidth() / 2) + (int) Math.round((lng - minLng) * (ratio * 1.1));
+				int stepTwo = stepOne - (this.getWidth() / 2);
+				return stepTwo;
+			};
+			Function<Double, Integer> posLatToCanvas = lat -> {
+				int stepOne = (this.getHeight() / 2) - (int) Math.round((lat - minLat) * (ratio * 1.1));
+				int stepTwo = stepOne + (this.getHeight() / 2);
+				return stepTwo;
+			};
 
 			if (DEBUG) {
 				System.out.println(String.format("TopLeft: %s, Bottom-Right: %s", new GeoPos(maxLat, minLng), new GeoPos(minLat, maxLng)));
