@@ -790,7 +790,7 @@ public class DecisionTableStaticUtils {
                             }
                         }
                     } else {
-                        // TODO Create a value node?
+                        // TODO Create a value node...?
                         if ((targetColumnIndex.get(outIndex)).getWhere() != DecisionContext.TargetColumnIndex.InOrOut.OUTPUT) {
                             int index = (targetColumnIndex.get(outIndex)).getIndex();
                             Map<String, Object> targetObjectMap = inputEntries.get(index);

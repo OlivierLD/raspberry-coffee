@@ -472,7 +472,7 @@ In the `NMEA-mux-WebUI` project, `logged` folder
 - `concat.sh`
 
 ## REST clients in other projects
-- [TCP Watch](https://github.com/OlivierLD/raspberry-coffee/blob/master/Project.Trunk/REST.clients/TCP.Watch.01/README.md)
+- [TCP Watch](https://github.com/OlivierLD/raspberry-coffee/blob/master/Project-Trunk/REST-clients/TCP-Watch-01/README.md)
 - [M5Stick-C](https://github.com/OlivierLD/small-boards/tree/master/M5StickC)
 ---
 
