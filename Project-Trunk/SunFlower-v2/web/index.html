@@ -169,6 +169,7 @@
                 return svgContent;
             }
         };
+
     </script>
     <style type="text/css">
         body {
@@ -192,69 +193,83 @@
             margin-top: 125px;
             margin-left: 20px;
         }
+
     </style>
 </head>
 <body>
-    <div class="background">
-        <table style="width: 100%;">
-            <tr>
-                <td valign="top">
-                    <div class="bg-data" id="bg-data">Dynamic Data...</div>
-                </td>
-                <td valign="top" align="right">
-                    <div style="text-align: left; margin: 125px 20px 20px;" id="sun-azimuth">
-                        <div style="width: 160px; height: 160px; border: 1px solid blue; border-radius: 5px;">
-                            Sun Azimuth...
-                        </div>
+<div class="background">
+    <table style="width: 100%;" border="0">
+        <tr>
+            <td valign="top">
+                <div class="bg-data" id="bg-data">Dynamic Data...</div>
+            </td>
+            <td valign="top" align="right">
+                <!--div style="text-align: left; margin: 125px 20px 20px;" id="sun-azimuth">
+                    <div style="width: 160px; height: 160px; border: 1px solid blue; border-radius: 5px;">
+                        Sun Azimuth...
                     </div>
-                    <!--img src="./img/sun.flower.jpg" alt="background" /-->
-                </td>
-            </tr>
-        </table>
-    </div>
-    <h2>Sun Flower - Raw Data</h2>
-    <table border="1">
-        <tr>
-            <th>System Date</th>
-            <th>Sun Z</th>
-            <th>Sun El.</th>
-            <th>Dev. Z</th>
-            <th>Last Z move</th>
-            <th>Dev. El.</th>
-            <th>Last El. move</th>
-        </tr>
-        <tr>
-            <td style="text-align: center; vertical-align: top;"><span id="date"></span></td>
-            <td style="text-align: right; vertical-align: top;"><span id="sun-z"></span></td>
-            <td style="text-align: right; vertical-align: top;"><span id="sun-el"></span></td>
-            <td style="text-align: right; vertical-align: top;"><span id="dev-z"></span></td>
-            <td style="text-align: right; vertical-align: top;"><span id="last-dev-z-move"></span></td>
-            <td style="text-align: right; vertical-align: top;"><span id="dev-el"></span></td>
-            <td style="text-align: right; vertical-align: top;"><span id="last-dev-el-move"></span></td>
-        </tr>
-        <tr>
-            <th colspan="4"></th>
-            <th>Z Step Offset</th>
-            <th></th>
-            <th>El. Step Offset</th>
-        </tr>
-        <tr>
-            <td colspan="4"></td>
-            <td style="text-align: right; vertical-align: top;"><span id="z-offset"></span></td>
-            <td></td>
-            <td style="text-align: right; vertical-align: top;"><span id="el-offset"></span></td>
-        </tr>
-        <tr>
-            <td colspan="7">
-                <div id="raw-json" style="height: 300px; overflow: auto;"></div>
+                </div-->
+                <!--img src="./img/sun.flower.jpg" alt="background" /-->
             </td>
         </tr>
     </table>
+</div>
+<h2>Sun Flower - Raw Data</h2>
+<table border="1">
+    <tr>
+        <th>System Date</th>
+        <th>Sun Z</th>
+        <th>Sun El.</th>
+        <th>Dev. Z</th>
+        <th>Last Z move</th>
+        <th>Dev. El.</th>
+        <th>Last El. move</th>
+
+        <!--th>Sun Z.</th-->
+        <th rowspan="5">
+            <div style="text-align: left; margin: 0px 20px 20px;" id="sun-azimuth">
+                <div style="width: 160px; height: 160px; border: 1px solid blue; border-radius: 5px;">
+                    Sun Azimuth...
+                </div>
+            </div>
+        </th>
+    </tr>
+    <tr>
+        <td style="text-align: center; vertical-align: top;"><span id="date"></span></td>
+        <td style="text-align: right; vertical-align: top;"><span id="sun-z"></span></td>
+        <td style="text-align: right; vertical-align: top;"><span id="sun-el"></span></td>
+        <td style="text-align: right; vertical-align: top;"><span id="dev-z"></span></td>
+        <td style="text-align: right; vertical-align: top;"><span id="last-dev-z-move"></span></td>
+        <td style="text-align: right; vertical-align: top;"><span id="dev-el"></span></td>
+        <td style="text-align: right; vertical-align: top;"><span id="last-dev-el-move"></span></td>
+    </tr>
+    <tr>
+        <th colspan="4"></th>
+        <th>Z Step Offset</th>
+        <th></th>
+        <th>El. Step Offset</th>
+    </tr>
+    <tr>
+        <td colspan="4"></td>
+        <td style="text-align: right; vertical-align: top;"><span id="z-offset"></span></td>
+        <td></td>
+        <td style="text-align: right; vertical-align: top;"><span id="el-offset"></span></td>
+    </tr>
+    <tr>
+        <td colspan="7">
+            <div id="raw-json" style="height: 300px; overflow: auto;"></div>
+        </td>
+    </tr>
+</table>
+<hr/>
+<div style="padding: 5px; border: 1px solid red; border-radius: 5px;">
     <small>
         All available data are here, this is just a jump-start example, showing how they could be displayed when needed.<br/>
         It is using REST to ping the SunFlower server.<br/>
         Look into the code for details...
     </small>
+</div>
+<hr/>
 </body>
 <script type="text/javascript">
 
@@ -303,5 +318,6 @@
       //   document.getElementById('bg-data').innerText = date.format('H:i:s Z');
       // }, 1000);
     };
+
 </script>
 </html>
