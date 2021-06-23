@@ -158,6 +158,7 @@ public class RESTImplementation {
 			response.setPayload(content.getBytes());
 			return response;
 		} catch (Exception ex1) {
+			System.err.println(">> Managed Exception:");
 			ex1.printStackTrace();
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
@@ -181,6 +182,7 @@ public class RESTImplementation {
 			response.setPayload(content.getBytes());
 			return response;
 		} catch (Exception ex1) {
+			System.err.println(">> Managed Exception:");
 			ex1.printStackTrace();
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
@@ -203,6 +205,7 @@ public class RESTImplementation {
 			response.setPayload(content.getBytes());
 			return response;
 		} catch (Exception ex1) {
+			System.err.println(">> Managed Exception:");
 			ex1.printStackTrace();
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
@@ -261,6 +264,7 @@ public class RESTImplementation {
 				response.setPayload(content.getBytes());
 				return response;
 			} catch (Exception ex1) {
+				System.err.println(">> Managed Exception:");
 				ex1.printStackTrace();
 				response = HTTPServer.buildErrorResponse(response,
 						Response.BAD_REQUEST,
@@ -320,6 +324,7 @@ public class RESTImplementation {
 				response.setPayload(content.getBytes());
 				return response;
 			} catch (Exception ex1) {
+				System.err.println(">> Managed Exception:");
 				ex1.printStackTrace();
 				response = HTTPServer.buildErrorResponse(response,
 						Response.BAD_REQUEST,
@@ -379,6 +384,7 @@ public class RESTImplementation {
 				response.setPayload(content.getBytes());
 				return response;
 			} catch (Exception ex1) {
+				System.err.println(">> Managed Exception:");
 				ex1.printStackTrace();
 				response = HTTPServer.buildErrorResponse(response,
 						Response.BAD_REQUEST,
