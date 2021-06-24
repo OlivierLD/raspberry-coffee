@@ -13,6 +13,14 @@
     <script src="js/ajax.manager.js"></script>
     <script src="js/date.proto.js"></script>
     <script type="text/javascript">
+
+        let lpad = (str, pad, len) => {
+            while (str.length < len) {
+                str = pad + str;
+            }
+            return str;
+        };
+
         let decToSex = (val, ns_ew, withDeg) => {
             let absVal = Math.abs(val);
             let intValue = Math.floor(absVal);
@@ -35,7 +43,7 @@
                 sep = "°";
             }
 //    s += i + "\"" + dec.toFixed(2) + "'";
-            s += i + sep + dec.toFixed(2) + "'";
+            s += i + sep + lpad(dec.toFixed(2), '0', 5) + "'";
             return s;
         };
 
@@ -194,6 +202,7 @@
             margin-left: 20px;
             display: grid;
             grid-template-columns: 1fr 1fr;
+            /* justify-content: end; */
             padding: 10px;
             padding-top: 160px;
             margin: auto;
