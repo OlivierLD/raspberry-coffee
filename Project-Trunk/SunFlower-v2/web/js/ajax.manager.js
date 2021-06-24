@@ -1,4 +1,4 @@
-function getSFData() {
+let getSFData = () => {
 
     let url = '/sf/status',
         xhr = new XMLHttpRequest(),
@@ -43,9 +43,9 @@ function getSFData() {
         };
     });
     return promise;
-}
+};
 
-function fetchData(callback) {
+let fetchData = (callback) => {
     console.debug("Ping!");
     let getData = getSFData();
     getData.then((value) => {
@@ -60,4 +60,4 @@ function fetchData(callback) {
     }, (error) => {
         console.debug("Failed to get nmea data..." + (error !== undefined ? JSON.stringify(error) : ' - '));
     });
-}
+};

@@ -293,7 +293,7 @@
 </body>
 <script type="text/javascript">
 
-    function dataCallback(json) {
+    let dataCallback = (json) => {
         // console.log('Got this:', json);
         document.getElementById('date').innerHTML = json.CELESTIAL_DATA.date;
         document.getElementById('sun-z').innerHTML = json.CELESTIAL_DATA.azimuth.toFixed(2) + '&deg;';
@@ -345,7 +345,7 @@
             bgData += `<div>Solar Time</div><div style='text-align: left;'>${solarTime}</div>`;
         }
         document.getElementById('bg-data').innerHTML = bgData;
-    }
+    };
 
     window.onload = () => {
       window.setInterval(() => {
