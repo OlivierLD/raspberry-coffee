@@ -192,6 +192,10 @@
             text-align: left;
             margin-top: 125px;
             margin-left: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 10px;
+            margin: auto;
         }
 
     </style>
@@ -201,7 +205,9 @@
     <table style="width: 100%;" border="0">
         <tr>
             <td valign="top">
-                <div class="bg-data" id="bg-data">Dynamic Data<br/>goes here...</div>
+                <div class="bg-data" id="bg-data">
+                    <div>Dynamic</div><div>Data</div><div>goes</div><div>here...</div>
+                </div>
             </td>
             <td valign="top" align="right">
                 <!--div style="text-align: left; margin: 125px 20px 20px;" id="sun-azimuth">
@@ -302,8 +308,8 @@
             let solarDate = new Date(json.CELESTIAL_DATA.solarEpoch + (utcOffsetInMinutes * 60 * 1000));
             solarTime = solarDate.format('H:i:s');
         }
-        let bgData = `Sun D: ${ decToSex(json.CELESTIAL_DATA.decl, 'NS', true) }`;
-        bgData += `<br/>Sun GHA: ${ decToSex(json.CELESTIAL_DATA.gha, null, true) }`;
+        let bgData = `<div>Sun D</div><div>${ decToSex(json.CELESTIAL_DATA.decl, 'NS', true) }</div>`;
+        bgData += `<div>Sun GHA</div><div>${ decToSex(json.CELESTIAL_DATA.gha, null, true) }</div>`;
         // Add LHA. LHA = GHA + G
         try {
           if (json.DEVICE_DATA.devicePosition && json.DEVICE_DATA.devicePosition !== null) {
@@ -318,12 +324,12 @@
             while (lha < 0) {
               lha += 360.0;
             }
-            bgData += `<br/>Sun LHA: ${ decToSex(lha, null, true) }`;
+            bgData += `<div>Sun LHA</div><div>${ decToSex(lha, null, true) }</div>`;
           }
         } catch (error) {
         }
         if (solarTime !== null) {
-            bgData += `<br/>Solar Time: ${solarTime}`;
+            bgData += `<div>Solar Time</div><div>${solarTime}</div>`;
         }
         document.getElementById('bg-data').innerHTML = bgData;
     }
