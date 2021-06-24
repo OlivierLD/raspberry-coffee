@@ -57,14 +57,7 @@ function fetchData(callback) {
         } else {
             console.log('Data', json);
         }
-    }, (error, errmess) => {
-        let message;
-        if (errmess !== undefined) {
-            let mess = JSON.parse(errmess);
-            if (mess.message !== undefined) {
-                message = mess.message;
-            }
-        }
-        console.debug("Failed to get nmea data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    }, (error) => {
+        console.debug("Failed to get nmea data..." + (error !== undefined ? JSON.stringify(error) : ' - '));
     });
 }
