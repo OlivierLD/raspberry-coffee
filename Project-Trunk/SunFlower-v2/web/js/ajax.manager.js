@@ -46,9 +46,11 @@ function getSFData() {
 }
 
 function fetchData(callback) {
+    console.debug("Ping!");
     let getData = getSFData();
     getData.then((value) => {
         // console.log("Done:", value);
+        console.debug("Pong.");
         let json = JSON.parse(value);
         if (callback !== undefined) {
             callback(json);
