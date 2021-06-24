@@ -318,8 +318,8 @@
             let solarDate = new Date(json.CELESTIAL_DATA.solarEpoch + (utcOffsetInMinutes * 60 * 1000));
             solarTime = solarDate.format('H:i:s');
         }
-        let bgData = `<div>Sun D</div><div>${ decToSex(json.CELESTIAL_DATA.decl, 'NS', true) }</div>`;
-        bgData += `<div>Sun GHA</div><div>${ lpad(decToSex(json.CELESTIAL_DATA.gha, null, true), ' ', 10) }</div>`;
+        let bgData = `<div>Sun D</div><div style='text-align: right;'>${ decToSex(json.CELESTIAL_DATA.decl, 'NS', true) }</div>`;
+        bgData += `<div>Sun GHA</div><div style='text-align: right;'>${ decToSex(json.CELESTIAL_DATA.gha, null, true) }</div>`;
         // Add LHA. LHA = GHA + G
         try {
           if (json.DEVICE_DATA.devicePosition && json.DEVICE_DATA.devicePosition !== null) {
@@ -334,12 +334,12 @@
             while (lha < 0) {
               lha += 360.0;
             }
-            bgData += `<div style='text-align: right;'>Sun LHA</div><div>${ lpad(decToSex(lha, null, true), '-', 10) }</div>`;
+            bgData += `<div>Sun LHA</div><div style='text-align: right;'>${ decToSex(lha, null, true) }</div>`;
           }
         } catch (error) {
         }
         if (solarTime !== null) {
-            bgData += `<div>Solar Time</div><div>${solarTime}</div>`;
+            bgData += `<div>Solar Time</div><div style='text-align: right;'>${solarTime}</div>`;
         }
         document.getElementById('bg-data').innerHTML = bgData;
     }
