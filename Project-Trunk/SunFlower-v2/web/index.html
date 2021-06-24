@@ -214,7 +214,7 @@
         </tr>
     </table>
 </div>
-<h2>Sun Flower - Raw Data</h2>
+<h2>Sun Flower - Raw Data <span id="device-pos"></span></h2>
 <table border="1">
     <tr>
         <th>System Date</th>
@@ -303,6 +303,24 @@
         }
         let bgData = `Sun D: ${ decToSex(json.CELESTIAL_DATA.decl, 'NS', true) }`;
         bgData += `<br/>Sun GHA: ${ decToSex(json.CELESTIAL_DATA.gha, null, true) }`;
+        // Add LHA. LHA = GHA + G
+        try {
+          if (json.DEVICE_DATA.devicePosition && json.DEVICE_DATA.devicePosition !== null) {
+            // Device position
+            let posStr = `- ${decToSex(json.DEVICE_DATA.devicePosition.latitude, 'NS', true)} / ${decToSex(json.DEVICE_DATA.devicePosition.longitude, 'EW', true)}`;
+            document.getElementById('device-pos').innerText = posStr;
+
+            let lha = json.CELESTIAL_DATA.gha + json.DEVICE_DATA.devicePosition.longitude;
+            while (lha >= 360) {
+              lha -= 360.0;
+            }
+            while (lha < 0) {
+              lha += 360.0;
+            }
+            bgData += `<br/>Sun LHA: ${ decToSex(lha, null, true) }`;
+          }
+        } catch (error) {
+        }
         if (solarTime !== null) {
             bgData += `<br/>Solar Time: ${solarTime}`;
         }
