@@ -9,7 +9,7 @@ import java.util.List;
 
 public class TCPReaderTest {
     /**
-     * For tests
+     * For tests. Can be used as a Canvas for a TCP client.
      * @param args Unused
      */
     public static void main(String... args) {
@@ -21,11 +21,17 @@ public class TCPReaderTest {
 		-Dhttp.proxyPort=80
 		-DsocksProxyHost=www-proxy.us.oracle.com
 		-DsocksProxyPort=80
+
+		-Dtcp.host="ais.exploratorium.edu"
+		-Dtcp.port=80
 		 */
 
-        String host = // "192.168.42.2";
-                "ais.exploratorium.edu";
-        int port = 80; // 7001; // 2947
+        String host = // "192.168.42.10";
+                System.getProperty("tcp.host", "ais.exploratorium.edu");
+        int port = Integer.parseInt(System.getProperty("tcp.port", "80")); // 7001; // 2947
+
+        System.out.println(String.format("TCP Client for %s:%d", host, port));
+
         try {
             List<NMEAListener> ll = new ArrayList<>();
             NMEAListener nl = new NMEAListener() {

@@ -610,6 +610,8 @@ all the Graphical User Interface (GUI) can then be provided by Web Pages, using 
 _local_ as well as _remote_ access from laptops, tablets, smartphones, character consoles, etc.
 The _only_ requirement for a client is a network access (with obvious fluency with protocols like HTTP or TCP).
 
+> Note: See an example of a simple standalone TCP Client in the test directory, at `nmea.consumers.reader.TCPReaderTest`
+
 #### To summarize
 The NMEA-Multiplexer pulls data from `channels`, possibly computes some using `computers`, and forwards (broadcasts) them through `forwarders`.
 
