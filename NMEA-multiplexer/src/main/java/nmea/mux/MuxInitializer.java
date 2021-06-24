@@ -217,7 +217,7 @@ public class MuxInitializer {
                                         mux);
                                 fileClient.initClient();
 								fileClient.setLoop(loop);
-                                fileClient.setReader(new DataFileReader("MUX-FileReader", fileClient.getListeners(), filename, betweenRec, zip, pathInArchive));
+                                fileClient.setReader(new DataFileReader("MUX-FileReader", fileClient.getListeners(), filename, betweenRec, loop, zip, pathInArchive));
                                 fileClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
                                 fileClient.setZip(zip);
                                 fileClient.setPathInArchive(pathInArchive);
