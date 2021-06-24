@@ -319,7 +319,7 @@
             solarTime = solarDate.format('H:i:s');
         }
         let bgData = `<div>Sun D</div><div>${ decToSex(json.CELESTIAL_DATA.decl, 'NS', true) }</div>`;
-        bgData += `<div>Sun GHA</div><div>${ decToSex(json.CELESTIAL_DATA.gha, null, true) }</div>`;
+        bgData += `<div>Sun GHA</div><div>${ lpad(decToSex(json.CELESTIAL_DATA.gha, null, true), ' ', 10) }</div>`;
         // Add LHA. LHA = GHA + G
         try {
           if (json.DEVICE_DATA.devicePosition && json.DEVICE_DATA.devicePosition !== null) {
@@ -334,7 +334,7 @@
             while (lha < 0) {
               lha += 360.0;
             }
-            bgData += `<div>Sun LHA</div><div>${ decToSex(lha, null, true) }</div>`;
+            bgData += `<div>Sun LHA</div><div>${ lpad(decToSex(lha, null, true), ' ', 10) }</div>`;
           }
         } catch (error) {
         }
