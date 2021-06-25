@@ -3,7 +3,7 @@
  | Very basic UI for SunFlower.
  | Mostly illustrates how to get to the REST services.
  | But all data are available this way.
- | Features a dynamic background, to display Sun's data.
+ | Features a dynamic background, to display Sun's data, and some basic SVG drawings.
  +-->
 <html lang="en">
 <head>
@@ -21,6 +21,9 @@
             return str;
         };
 
+        const NS = 'NS';
+        const EW = 'EW';
+
         let decToSex = (val, ns_ew, withDeg) => {
             let absVal = Math.abs(val);
             let intValue = Math.floor(absVal);
@@ -32,9 +35,9 @@
             let s = "";
             if (ns_ew !== null) {
                 if (val < 0) {
-                    s += (ns_ew === 'NS' ? 'S' : 'W');
+                    s += (ns_ew === NS ? 'S' : 'W');
                 } else {
-                    s += (ns_ew === 'NS' ? 'N' : 'E');
+                    s += (ns_ew === NS ? 'N' : 'E');
                 }
             }
             s += " ";
@@ -201,8 +204,8 @@
             margin-top: 125px;
             margin-left: 20px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            /* justify-content: end; */
+         /* grid-template-columns: 1fr 1fr; */
+            grid-template-columns: auto auto;
             padding: 10px;
             padding-top: 160px;
             margin: auto;
@@ -215,14 +218,15 @@
 </head>
 <body>
 <div class="background">
-    <table style="width: 100%;" border="0">
+    <!-- table { border-collapse: collapse } td { border: 1px solid #000 } -->
+    <table style="width: 100%; border: 0px solid red;">
         <tr>
             <td valign="top">
                 <div class="bg-data" id="bg-data">
                     <div>Dynamic</div><div>data</div><div>goes</div><div>here...</div>
                 </div>
             </td>
-            <td valign="top" align="right">
+            <td valign="top" style="text-align: right;">
                 <!--div style="text-align: left; margin: 125px 20px 20px;" id="sun-azimuth">
                     <div style="width: 160px; height: 160px; border: 1px solid blue; border-radius: 5px;">
                         Sun Azimuth...
@@ -233,9 +237,9 @@
         </tr>
     </table>
 </div>
-<div style="padding: 4px;">✊<small>Guaranteed <b><i>0%</i></b> external libraries (100% pure HTML5/CSS3/ES6).</small></div>
+<div style="padding: 4px;">✊<small>Guaranteed <b><i>0%</i></b> external libraries (100% pure organic HTML5/CSS3/ES6).</small></div>
 <h2>🌻 Sun Flower - Raw Data <span id="device-pos"></span></h2>
-<table border="0" style="margin: auto;" class="astro-data">
+<table style="margin: auto; border: 0px solid cyan;" class="astro-data">
     <tr>
         <th>System Date</th>
         <th>Sun Z</th>
@@ -321,13 +325,13 @@
             let solarDate = new Date(json.CELESTIAL_DATA.solarEpoch + (utcOffsetInMinutes * 60 * 1000));
             solarTime = solarDate.format('H:i:s');
         }
-        let bgData = `<div>Sun D</div><div style='text-align: right;'>${ decToSex(json.CELESTIAL_DATA.decl, 'NS', true) }</div>`;
+        let bgData = `<div>Sun D</div><div style='text-align: right;'>${ decToSex(json.CELESTIAL_DATA.decl, NS, true) }</div>`;
         bgData += `<div>Sun GHA</div><div style='text-align: right;'>${ decToSex(json.CELESTIAL_DATA.gha, null, true) }</div>`;
         // Add LHA. LHA = GHA + G
         try {
           if (json.DEVICE_DATA.devicePosition && json.DEVICE_DATA.devicePosition !== null) {
             // Device position
-            let posStr = `- ${decToSex(json.DEVICE_DATA.devicePosition.latitude, 'NS', true)} / ${decToSex(json.DEVICE_DATA.devicePosition.longitude, 'EW', true)}`;
+            let posStr = `- ${decToSex(json.DEVICE_DATA.devicePosition.latitude, NS, true)} / ${decToSex(json.DEVICE_DATA.devicePosition.longitude, EW, true)}`;
             document.getElementById('device-pos').innerText = posStr;
 
             let lha = json.CELESTIAL_DATA.gha + json.DEVICE_DATA.devicePosition.longitude;
