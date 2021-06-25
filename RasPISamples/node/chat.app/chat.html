@@ -14,26 +14,24 @@
     <link rel="stylesheet" href="../css/stylesheet.css" type="text/css"/>
     <script type="text/javascript">
 
-  var URI_SUFFIX = "/websocket-101/ws-101-app";
-  var ws;
-  var connectionStatus = "Connecting...";
-  var calledBy = document.location.toString();
-  var machine, port, secured;
-  var regExp = new RegExp("(http|ws)(.?):[/]{2}([^/|^:]*):?(\\d*)/(.*)");
-  var matches = regExp.exec(calledBy);
+  let URI_SUFFIX = "/websocket-101/ws-101-app";
+  let ws;
+  let connectionStatus = "Connecting...";
+  let calledBy = document.location.toString();
+  let machine, port, secured;
+  let regExp = new RegExp("(http|ws)(.?):[/]{2}([^/|^:]*):?(\\d*)/(.*)");
+  let matches = regExp.exec(calledBy);
 //scheme  = matches[1];
   secured = matches[2];
   machine = matches[3];
   port    = matches[4];
 //query   = matches[5];
 
-  var reset = function() // Reset the screen
-  {
+  let reset = () => { // Reset the screen
     contentFld.innerHTML = "";
   };
 
-  var resetStatus = function()
-  {
+  let resetStatus = () => {
     statusFld.innerHTML = "";
   };
       </script>
@@ -42,67 +40,65 @@
   /*
    * Init the App here
    */
-  var contentFld, inputFld, statusFld, promptFld;
+  let contentFld, inputFld, statusFld, promptFld;
 
-  window.onload = function()
-  {
+  window.onload = () => {
     contentFld = document.getElementById('content');
     inputFld   = document.getElementById('input');
     statusFld  = document.getElementById('status');
     promptFld  = document.getElementById('prompt');
 
-    try
-    {
-      var wsURI = "ws" + secured + "://" + machine + ":" + port + URI_SUFFIX;
-      var config = setConfig();
-      if (config === undefined)
+    try {
+      let wsURI = "ws" + secured + "://" + machine + ":" + port + URI_SUFFIX;
+      let config = setConfig();
+      if (config === undefined) {
         ws = new WebSocket(wsURI);
-      else
+      } else {
         ws = new WebSocket(wsURI, config);
-    }
-    catch (err)
-    {
-      var mess = 'WebSocket creation error:';
-      if (err.message !== undefined)
+      }
+    } catch (err) {
+      let mess = 'WebSocket creation error:';
+      if (err.message !== undefined) {
         mess += err.message;
-      else
+      } else {
         mess += JSON.stringify(err);
+      }
       connectionStatus = "<font color='red'>Enable to connect.</font>";
-      if (statusFld !== undefined)
+      if (statusFld !== undefined) {
         statusFld.innerHTML = mess;
-      else
+      } else {
         alert(mess);
+      }
     }
     init(); // in app.js
     promptFld.innerHTML = connectionStatus;
   };
 
-  var setConfig = function()
-  {
-    var config, enforceTransport, debugLevel;
+  let setConfig = () => {
+    let config, enforceTransport, debugLevel;
     calledBy = document.location.toString();
-    if (calledBy.indexOf('?') > -1)
-    {
-      var queryString = calledBy.substring(calledBy.indexOf('?') + 1);
-      var nvPair = queryString.split("&");
-      for (var i=0; i<nvPair.length; i++)
-      {
-        if (nvPair[i].indexOf('=') > -1)
-        {
-          var nv = nvPair[i].split('=');
-          if ("transport" === nv[0])
+    if (calledBy.indexOf('?') > -1) {
+      let queryString = calledBy.substring(calledBy.indexOf('?') + 1);
+      let nvPair = queryString.split("&");
+      for (let i=0; i<nvPair.length; i++) {
+        if (nvPair[i].indexOf('=') > -1) {
+          let nv = nvPair[i].split('=');
+          if ("transport" === nv[0]) {
             enforceTransport = nv[1];
-          if ("debug" === nv[0])
+          }
+          if ("debug" === nv[0]) {
             debugLevel = parseInt(nv[1]);
+          }
         }
       }
-      if (enforceTransport !== undefined || debugLevel !== undefined)
-      {
+      if (enforceTransport !== undefined || debugLevel !== undefined) {
         config = {};
-        if (enforceTransport !== undefined)
+        if (enforceTransport !== undefined) {
           config.transport = enforceTransport;
-        if (debugLevel !== undefined)
+        }
+        if (debugLevel !== undefined) {
           config.debug = debugLevel;
+        }
       }
     }
     return config;

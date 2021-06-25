@@ -1,65 +1,53 @@
 // App specific code
 
-var nbMessReceived = 0;
+let nbMessReceived = 0;
 
-var init = function()
-{
-  ws.onopen = function()
-  {
-    try 
-    { 
-      var text;
-      try 
-      { 
+let init = () => {
+  ws.onopen = () => {
+    try { 
+      let text;
+      try  { 
         text = 'Message:';
-      }
-      catch (err)
-      {
+      } catch (err) {
         text = '<small>Connected</small>';
       }
       promptFld.innerHTML = text; 
-      if (nbMessReceived === 0)
+      if (nbMessReceived === 0) {
         statusFld.innerHTML = "";
+      }
       statusFld.innerHTML += ((nbMessReceived === 0?"":"<br>") + "<small>" + 
                               (new Date()).format("d-M-Y H:i:s._ Z") + "</small>:<font color='blue'>" + ' Connection opened.' + "</font>");
       statusFld.scrollTop = statusFld.scrollHeight;
       nbMessReceived++;
-    } 
-    catch (err) {}
+    } catch (err) {}
   };
-  ws.onerror = function(error)
-  {
-    if (nbMessReceived === 0)
+  ws.onerror = (error) => {
+    if (nbMessReceived === 0) {
       statusFld.innerHTML = "";
+    }
     statusFld.innerHTML += ((nbMessReceived === 0?"":"<br>") + "<small>" + 
                             (new Date()).format("d-M-Y H:i:s._ Z") + "</small>:<font color='red'>" + error.err + "</font>");
     statusFld.scrollTop = statusFld.scrollHeight;
     nbMessReceived++;
   };
-  ws.onmessage = function(message) // message/event
-  {
-    var json = {};
-    if (typeof(message.data) === 'string')
-    {
-      try 
-      {
+  ws.onmessage = (message) => { // message/event
+    let json = {};
+    if (typeof(message.data) === 'string') {
+      try {
         json = JSON.parse(message.data); 
-      } 
-      catch (e) 
-      {
+      } catch (e) {
         console.log(e);
         console.log('This doesn\'t look like a valid JSON: ' + message.data);
       }
     }
   //console.log("Split: type=" + json.type + ", data=" + json.data);
-    if (json.type !== undefined && json.type === 'message' && typeof(json.data.text) === 'string') // it's a single message, text
-    { 
-      var dt = new Date();
+    if (json.type !== undefined && json.type === 'message' && typeof(json.data.text) === 'string') { // it's a single message, text
+      let dt = new Date();
      /**
        * Add message to the chat window
        */
-      var existing = contentFld.innerHTML; // Content already there
-      var toDisplay = "";
+      let existing = contentFld.innerHTML; // Content already there
+      let toDisplay = "";
       try { toDisplay = json.data.text; }
       catch (err) {}
       contentFld.innerHTML = existing + 
@@ -68,36 +56,30 @@ var init = function()
            + (dt.getMinutes() < 10 ? '0' + dt.getMinutes() : dt.getMinutes())
            + ': ' + toDisplay + '<br>');
       contentFld.scrollTop = contentFld.scrollHeight;
-    }
-    else // Unexpected
-    {
-      var payload = {};
+    } else {  // Unexpected
+      let payload = {};
     }
   };
-  ws.onclose = function()
-  {
-    if (nbMessReceived === 0)
+  ws.onclose = () => {
+    if (nbMessReceived === 0) {
       statusFld.innerHTML = "";
+    }
     statusFld.innerHTML += ((nbMessReceived === 0?"":"<br>") + "<small>" + 
                             (new Date()).format("d-M-Y H:i:s._ Z") + "</small>:<font color='blue'>" + ' Connection closed' + "</font>");
     promptFld.innerHTML = 'Connection closed'; 
   };
 };
 
-var send = function(mess)
-{
+let send = (mess) => {
   ws.send(mess);
 };
 
-var getClass = function(obj) 
-{
+let getClass = (obj) => {
   if (obj && typeof obj === 'object' &&
       Object.prototype.toString.call(obj) !== '[object Array]' &&
-      obj.constructor) 
-  {
-    var arr = obj.constructor.toString().match(/function\s*(\w+)/);
-    if (arr && arr.length === 2) 
-    {
+      obj.constructor)  {
+    let arr = obj.constructor.toString().match(/function\s*(\w+)/);
+    if (arr && arr.length === 2) {
       return arr[1];
     }
   }
@@ -106,9 +88,8 @@ var getClass = function(obj)
 
 // Date formatting
 // Provide month names
-Date.prototype.getMonthName = function()
-{
-  var month_names = [
+Date.prototype.getMonthName = function() {
+  let month_names = [
                       'January',
                       'February',
                       'March',
@@ -127,9 +108,8 @@ Date.prototype.getMonthName = function()
 };
 
 // Provide month abbreviation
-Date.prototype.getMonthAbbr = function()
-{
-  var month_abbrs = [
+Date.prototype.getMonthAbbr = function() {
+  let month_abbrs = [
                       'Jan',
                       'Feb',
                       'Mar',
@@ -148,9 +128,8 @@ Date.prototype.getMonthAbbr = function()
 };
 
 // Provide full day of week name
-Date.prototype.getDayFull = function()
-{
-  var days_full = [
+Date.prototype.getDayFull = function() {
+  let days_full = [
                     'Sunday',
                     'Monday',
                     'Tuesday',
@@ -163,9 +142,8 @@ Date.prototype.getDayFull = function()
 };
 
 // Provide full day of week name
-Date.prototype.getDayAbbr = function()
-{
-  var days_abbr = [
+Date.prototype.getDayAbbr = function() {
+  let days_abbr = [
                     'Sun',
                     'Mon',
                     'Tue',
@@ -178,53 +156,50 @@ Date.prototype.getDayAbbr = function()
 };
 
 // Provide the day of year 1-365
-Date.prototype.getDayOfYear = function() 
-{
-  var onejan = new Date(this.getFullYear(),0,1);
+Date.prototype.getDayOfYear = function() {
+  let onejan = new Date(this.getFullYear(),0,1);
   return Math.ceil((this - onejan) / 86400000);
 };
 
 // Provide the day suffix (st,nd,rd,th)
-Date.prototype.getDaySuffix = function() 
-{
-  var d = this.getDate();
-  var sfx = ["th", "st", "nd", "rd"];
-  var val = d % 100;
+Date.prototype.getDaySuffix = function() {
+  let d = this.getDate();
+  let sfx = ["th", "st", "nd", "rd"];
+  let val = d % 100;
 
   return (sfx[(val-20)%10] || sfx[val] || sfx[0]);
 };
 
 // Provide Week of Year
-Date.prototype.getWeekOfYear = function() 
-{
-  var onejan = new Date(this.getFullYear(),0,1);
+Date.prototype.getWeekOfYear = function() {
+  let onejan = new Date(this.getFullYear(),0,1);
   return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
 };
 
 // Provide if it is a leap year or not
-Date.prototype.isLeapYear = function()
-{
-  var yr = this.getFullYear();
-  if ((parseInt(yr) % 4) === 0)
-  {
-    if (parseInt(yr) % 100 === 0)
-    {
-      if (parseInt(yr) % 400 !== 0)
+Date.prototype.isLeapYear = function() {
+  let yr = this.getFullYear();
+  if ((parseInt(yr) % 4) === 0) {
+    if (parseInt(yr) % 100 === 0) {
+      if (parseInt(yr) % 400 !== 0) {
         return false;
-      if (parseInt(yr) % 400 === 0)
+      }
+      if (parseInt(yr) % 400 === 0) {
         return true;
+      }
     }
-    if (parseInt(yr) % 100 !== 0)
+    if (parseInt(yr) % 100 !== 0) {
       return true;
+    }
   }
-  if ((parseInt(yr) % 4) !== 0)
+  if ((parseInt(yr) % 4) !== 0) {
     return false;
+  }
 };
 
 // Provide Number of Days in a given month
-Date.prototype.getMonthDayCount = function() 
-{
-  var month_day_counts = [
+Date.prototype.getMonthDayCount = function() {
+  let month_day_counts = [
                             31,
                             this.isLeapYear() ? 29 : 28,
                             31,
@@ -243,12 +218,11 @@ Date.prototype.getMonthDayCount = function()
 }; 
 
 // format provided date into this.format format
-Date.prototype.format = function(dateFormat)
-{
+Date.prototype.format = function(dateFormat) {
   // break apart format string into array of characters
   dateFormat = dateFormat.split("");
 
-  var date = this.getDate(),
+  let date = this.getDate(),
       month = this.getMonth(),
       hours = this.getHours(),
       minutes = this.getMinutes(),
@@ -256,17 +230,15 @@ Date.prototype.format = function(dateFormat)
       milli = this.getTime() % 1000,
       tzOffset = - (this.getTimezoneOffset() / 60);
 
-  var lpad = function(s, w, len)
-  {
-    var str = s;
+  let lpad = function(s, w, len) {
+    let str = s;
     while (str.length < len)
       str = w + str;
     return str;
   };
 
   // get all date properties ( based on PHP date object functionality )
-  var date_props = 
-  {
+  let date_props = {
     d: date < 10 ? '0'+date : date,
     D: this.getDayAbbr(),
     j: this.getDate(),
@@ -296,14 +268,14 @@ Date.prototype.format = function(dateFormat)
   };
 
   // loop through format array of characters and add matching data else add the format character (:,/, etc.)
-  var date_string = "";
-  for (var i=0; i<dateFormat.length; i++)
-  {
-    var f = dateFormat[i];
-    if (f.match(/[a-zA-Z|_]/g))
+  let date_string = "";
+  for (let i=0; i<dateFormat.length; i++) {
+    let f = dateFormat[i];
+    if (f.match(/[a-zA-Z|_]/g)) {
       date_string += date_props[f] ? date_props[f] : '';
-    else 
+    } else  {
       date_string += f;
+    }
   }
   return date_string;
 };
