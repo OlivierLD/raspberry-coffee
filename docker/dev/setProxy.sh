@@ -19,7 +19,7 @@ git config --global http.proxy http://${PROXY_HOST}:${PROXY_PORT}
 echo -n "Proxy: "
 git config --global --get http.proxy
 #
-echo setting HTTP_PROXY and HTTPS_PROXY \(make sure you run the script with .\)
+echo setting HTTP_PROXY and HTTPS_PROXY \(make sure you run.sh.sh the script with .\)
 # export HTTP_PROXY=http://www-proxy-hqdc.us.oracle.com:80
 # export HTTPS_PROXY=http://www-proxy-hqdc.us.oracle.com:80
 export HTTP_PROXY=http://${PROXY_HOST}:${PROXY_PORT}

@@ -14,7 +14,7 @@ Camera can be oriented with a PCA9685 connected on a [pan-tilt](https://www.adaf
 
 ### To run, on the Raspberry Pi
 ```bash
- $ ./runCamServer
+ $ ./runCamServer.sh
 ```
 
 Then a web page can be accessed remotely. From the Web UI, you can orient the camera, and take snapshots.

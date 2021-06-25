@@ -27,8 +27,7 @@ void recordPulseLength (void) {
  *          This is NOT the one used from Java
  *          See WiringPI_HC_SR04
  */
-int main()
-{
+int main() {
     double speedOfSoundMetersPerSecond = 340.29;
 
     wiringPiSetup();
@@ -39,8 +38,7 @@ int main()
     cout << "While distance > 5cm...";
 
     bool go = true;
-    while (go)
-    {
+    while (go) {
         // Initialize the sensor's trigger pin to low. If we don't pause
         // after setting it to low, sometimes the sensor doesn't work right.
         digitalWrite(trigger, LOW);

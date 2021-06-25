@@ -1,6 +1,5 @@
 #!/bin/bash
-function nocase()
-{
+function nocase() {
   if [ "`echo $1 | tr [:lower:] [:upper:]`" = "`echo $2 | tr [:lower:] [:upper:]`" ]
   then
     return 0  # true

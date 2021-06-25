@@ -43,21 +43,17 @@ static double speedOfSoundMetersPerSecond = 343.00; // at 20 deg C
 void init();
 double readRange();
 
-JNIEXPORT void JNICALL Java_rangesensor_JNI_1HC_1SR04_init__ (JNIEnv * env, jobject obj)
-{
+JNIEXPORT void JNICALL Java_rangesensor_JNI_1HC_1SR04_init__ (JNIEnv * env, jobject obj) {
   init();
 }
 
-JNIEXPORT void JNICALL Java_rangesensor_JNI_1HC_1SR04_init__II (JNIEnv * env, jobject obj, jint trigPin, jint echoPin)
-{
+JNIEXPORT void JNICALL Java_rangesensor_JNI_1HC_1SR04_init__II (JNIEnv * env, jobject obj, jint trigPin, jint echoPin) {
   trigger = (int)trigPin;
   echo    = (int)echoPin;
   init();
 }
 
-
-JNIEXPORT jdouble JNICALL Java_rangesensor_JNI_1HC_1SR04_readRange (JNIEnv * env, jobject obj)
-{
+JNIEXPORT jdouble JNICALL Java_rangesensor_JNI_1HC_1SR04_readRange (JNIEnv * env, jobject obj) {
   return readRange();
 }
 
@@ -82,16 +78,14 @@ void recordPulseLength (void) {
   endTimeUsec = micros();
 }
 
-void init()
-{
+void init() {
   wiringPiSetup();
 
   pinMode(trigger, OUTPUT);
   pinMode(echo,    INPUT);
 }
 
-double readRange()
-{
+double readRange() {
   // Initialize the sensor's trigger pin to low. If we don't pause
   // after setting it to low, sometimes the sensor doesn't work right.
   digitalWrite(trigger, LOW);
@@ -112,8 +106,7 @@ double readRange()
 
   long travelTimeUsec = endTimeUsec - startTimeUsec;
 
-  if (nativeDebugEnabled()) // nativeDebugEnabled does not work from JNI...
-  {
+  if (nativeDebugEnabled()) { // nativeDebugEnabled does not work from JNI...
     fprintf(stdout, "Start %ld, End %ld, TravelTime %ld μs\n", startTimeUsec, endTimeUsec, travelTimeUsec);
   }
 
@@ -125,15 +118,13 @@ double readRange()
  * Uses the HC SR04 ultrasonic sensor to measure distance. The HC SR04
  * provides 2cm to 400cm range measurement.
  */
-int main()
-{
+int main() {
   init();
 
   cout << "While distance > 5cm...";
 
   bool go = true;
-  while (go)
-  {
+  while (go) {
     double dm = readRange();
     cout << "Distance is " << dm * 100 << " cm." << endl;
     go = (dm * 100 > 5);

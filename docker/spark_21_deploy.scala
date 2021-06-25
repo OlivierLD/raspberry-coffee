@@ -29,7 +29,7 @@ val spark = SparkSession.builder.appName("deploy").getOrCreate()
 
 /*
 **Note**:  We do not have to create a SparkSession in a Scala session because
-it is automatically created for us; however, doing so will allow us to the run
+it is automatically created for us; however, doing so will allow us to the run.sh.sh
 this script as a standalone Spark application.
 */
 spark

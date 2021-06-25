@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ "$PI4J_HOME" = "" ]
+if [[ "$PI4J_HOME" == "" ]]
 then
   PI4J_HOME=/opt/pi4j
 fi
