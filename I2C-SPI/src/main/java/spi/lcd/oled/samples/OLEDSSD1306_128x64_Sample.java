@@ -10,6 +10,8 @@ import java.awt.*;
 
 /**
  * Uses SPI interface
+ * Displays text, images, figures, on the screen,
+ * and on the console, if onUserReturn == true. (-Dreturn.to.move.on=true)
  */
 public class OLEDSSD1306_128x64_Sample {
 

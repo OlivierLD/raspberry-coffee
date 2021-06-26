@@ -92,6 +92,44 @@ Requires an external power supply (5-12v).
 128x32 and 128x64 OLED monochrome screens, https://www.adafruit.com/product/3527, https://www.adafruit.com/product/931, and https://www.adafruit.com/product/661,
 https://www.adafruit.com/product/326, https://www.adafruit.com/product/938.
 
+> _Note_: Possible problems with SPI versions (GPIO) with recent RaspiOS versions...
+
+Run `ssd1306_128x64.sh` will display (on option) data in the screen and on the console.
+```
+                                                                                                                                
+                   X                                                                                                            
+                   X                                                                                                            
+                  XX                                                                                                            
+                  XX                                                                                                            
+                 XXX                                                                                                            
+                XXX                                                                                                             
+               XXX  XX                                                                                                          
+              XXX XXX                                                                                                           
+             XXX XXX                                                                                                            
+            XXX XXX                                                                                                             
+            XX  XX                                                                                                              
+            XX  XX                                                    XXX                                                       
+            XX  XXX                 XXXXX                              XX       XXXX                    XX                      
+            XXX XXXX                  XX      XXXX XXXXX   XXX   XXX   XX XX     XX  XXX  XXX XXX XXX   XX                      
+             XX  XXX                  XX     XXX    XX XX XX XX XX XX  XXXX      XX XX XX  XX XX XX XX  XX                      
+              XX XXX                  XX      XXXX  XX XX XXXXX  XXXX  XXX     X XX  XXXX   XXX   XXXX  XX                      
+         XXX     XX    XXXX           XX        XXX XX XX XX    XX XX  XXXX    X XX XX XX   XXX  XX XX                          
+       XXX       X XXX   XX         XXXXX    XXXXX  XXXX   XXXX XXXXXX XX XX   XXX  XXXXXX   X   XXXXXX XX                      
+       XXXXXXXXXXXXXX    XX                         XX                                                                          
+             X           XX                        XXXX                                                                         
+         XXX      XX    XX                                                                                                      
+         XXXXXXXXXXXX  XX                                                                                                       
+            XXXXXX                                                                                                              
+          XX      X                                                                                                             
+          XXXXXXXXXXX                                                                                                           
+      XXX   XXXXXXX      X                                                                                                      
+     XX                XXX                                                                                                      
+     XXXXXXXXXXXXXXXXXXXXXX                                                                                                     
+        XXXXXXXXXXXXX XXXXX                                                                                                     
+         XXXXXXXXXXXXXXXX                                                                                                       
+
+```
+
 #### Nokia5110
 SPI 84x48 Monochrome LCD. https://www.adafruit.com/product/338
 
