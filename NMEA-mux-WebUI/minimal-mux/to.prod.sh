@@ -61,10 +61,10 @@ else
   echo -e "Now working from ${PWD}..."
   zip -r ${WEB_ZIP} *
   popd
-  echo -e "NowBack in ${PWD}"
+  echo -e "Now Back in ${PWD}"
   ls -lisah *.zip
   mv ${ARCHIVE_NAME} ${distdir}
-  echo -e "Done with the web resources. Back in ${PWD}"
+  echo -e "Done with the web resources."
   # read RESP
 fi
 # Properties files

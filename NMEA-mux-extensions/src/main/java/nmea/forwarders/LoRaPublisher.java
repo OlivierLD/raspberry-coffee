@@ -146,7 +146,7 @@ public class LoRaPublisher implements Forwarder {
 	@Override
 	public void setProperties(Properties props) {
 		this.portName = props.getProperty("serial.port", "/dev/ttyUSB0");
-		String baudRateStr = props.getProperty("baud.rate", "9600");
+		String baudRateStr = props.getProperty("baudrate", "9600");
 		this.verbose = "true".equals(props.getProperty("lora.verbose", "false"));
 		try {
 			this.baudRate = Integer.parseInt(baudRateStr);

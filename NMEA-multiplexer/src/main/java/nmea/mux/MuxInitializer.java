@@ -965,6 +965,9 @@ public class MuxInitializer {
                         channel.keySet().forEach(channelKey -> {
                             String propName = String.format("mux.%02d.%s", nb, channelKey);
                             properties.setProperty(propName, channel.get(channelKey).toString());
+                            if ("yes".equals(System.getProperty("yaml.tx.verbose", "no"))) {
+                                System.out.println(String.format("Setting [%s] to [%s]", propName, channel.get(channelKey).toString()));
+                            }
                         });
                     });
                     break;

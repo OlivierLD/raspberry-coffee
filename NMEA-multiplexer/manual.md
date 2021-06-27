@@ -86,7 +86,7 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
  channels:
    - type: serial
      port: /dev/ttyS80
-     baud.rate: 4800
+     baudrate: 4800
      verbose: false
    - type: bme280
      prefix: BM
