@@ -16,7 +16,14 @@ echo -e "+----------------------------------------------------------------------
 #
 # 1 - Build
 #
-../../gradlew shadowJar
+echo -en "Do we re-build the Java part ? > "
+read REPLY
+if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
+then
+  echo -e "Ok, moving on."
+else
+  ../../gradlew shadowJar
+fi
 #
 # 2 - Create new dir
 #
@@ -40,8 +47,26 @@ echo -e "Copying resources"
 cp ./build/libs/*-1.0-all.jar ${distdir}/build/libs
 # Log folder
 mkdir ${distdir}/logged
-# Web resources
-cp web.zip ${distdir}
+# Web resources ?
+echo -en "Do we include web resources ? > "
+read REPLY
+if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
+then
+  echo -e "Ok, moving on."
+else
+  ARCHIVE_NAME=web.zip
+  WEB_ZIP=$PWD/${ARCHIVE_NAME}
+  echo -e "Adding resources from 'small-server-extended' into ${WEB_ZIP} "  # TODO: Something nicer
+  pushd ../small-server-extended/web
+  echo -e "Now working from ${PWD}..."
+  zip -r ${WEB_ZIP} *
+  popd
+  echo -e "NowBack in ${PWD}"
+  ls -lisah *.zip
+  mv ${ARCHIVE_NAME} ${distdir}
+  echo -e "Done with the web resources. Back in ${PWD}"
+  # read RESP
+fi
 # Properties files
 cp *.properties ${distdir}
 cp *.yaml ${distdir}
@@ -72,3 +97,32 @@ echo -e "| For the runner/logger, use nmea.mux.gps.log.properties               
 echo -e "| Use it for example like:                                                                         |"
 echo -e "| $ nohup ./mux.sh nmea.mux.gps.log.properties &                                                   |"
 echo -e "+--------------------------------------------------------------------------------------------------+"
+#
+# 6 - Deploy?
+#
+echo -en "Deploy ${distdir}.tar.gz to ${HOME} ? > "
+read REPLY
+if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
+then
+  echo -e "Ok, you'll do it yourself."
+  echo -e "Bye."
+else
+  cp ${distdir}.tar.gz ${HOME}
+  cd ${HOME}
+  if [[ -d "${distdir}" ]]
+  then
+    echo -en "Folder ${distdir} already exists in ${HOME}. Do we drop it ? > "
+    read REPLY
+    if [[ ! ${REPLY} =~ ^(yes|y|Y)$ ]]
+    then
+      echo -e "Ok, aborting. "
+      exit 1
+    else
+      sudo rm -rf ${distdir}
+    fi
+  fi
+  echo -e "- Expanding archive..."
+  tar -xzvf ${distdir}.tar.gz
+  echo -e "OK. Deployed. See in ${HOME}/${distdir}."
+  echo -e "You may want to update your /etc/rc.local accordingly."
+fi

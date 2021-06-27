@@ -16,7 +16,7 @@ context:
 # 1 Channel
 channels:
   - type: serial
-    port: /dev/ttyUSB0
+    port: /dev/ttyS80
     baud.rate: 4800
     verbose: false
     reset.interval: 60000
