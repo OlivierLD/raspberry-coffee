@@ -73,7 +73,7 @@ cp *.yaml ${distdir}
 # If needed, more resources would go here (like dev curves, etc)
 cp mux.sh ${distdir}
 cp killmux.sh ${distdir}
-cp nmea.test.sh ${distdir}
+# cp nmea.test.sh ${distdir}
 #
 # 4 - Archiving
 #

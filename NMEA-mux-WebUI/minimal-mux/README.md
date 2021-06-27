@@ -5,6 +5,8 @@ It's all driven by `nmea.mux.gps.log.properties` or `nmea.mux.gps.log.yaml` (the
 
 With _optional_ Web user interface.
 
+![At work](./logger.two.jpeg)
+
 > TODO: 
 > - Add Optional TCP Forwarder ?
 > - To try: HTTP Port provided during the build.
