@@ -18,25 +18,6 @@ repositories {
     maven { url "http://lediouris.net/maven2" }
 }
 
-// sourceCompatibility = 1.8
-// targetCompatibility = 1.8
-
-//sourceSets {
-//    main {
-//        java {
-//            srcDirs = ['src/java']
-//        }
-//        scala {
-//            srcDirs = ['src/scala']
-//        }
-//    }
-//    test {
-//        java {
-//            srcDir 'tests/java'
-//        }
-//    }
-//}
-
 compileJava.options.compilerArgs += ["-Xlint:none"]
 
 dependencies {

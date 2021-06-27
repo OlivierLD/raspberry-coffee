@@ -1,4 +1,13 @@
 # Case Study (WIP) NMEA Multiplexer running on a Raspberry Pi Zero W, and others
+> - Raspberry Zero W and Higher
+> - Can emit its own network
+> - Two push-buttons for User Interface
+> - One OLED Screen
+> - Web UI - accessible from any browser, running on another device on the same network (cell-phone, tablet, laptop,...)
+> - Optional BME280 (Temperature, pressure, humidity)
+> - File Logger (with WebUI, logged data can be downloaded from it)
+> - Optional TCP forwarder
+
 This is a case study, using different hardware configurations to run the same software configuration (the NMEA Multiplexer).
 
 For the hardware details, see [here](../full-server-extended-v2/README.md), as it is the exact same one as in this project.
