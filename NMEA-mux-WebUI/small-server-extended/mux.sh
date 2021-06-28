@@ -53,6 +53,7 @@ PROCESS_ON_START=false # Default is true for process.on.start
 if [[ "$PROCESS_ON_START" = "false" ]]
 then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
+  MACHINE_NAME=$(echo ${MACHINE_NAME})  # Trim the blanks
   PORT=`cat ${MUX_PROP_FILE} | grep http.port=`
   PORT=${PORT#*http.port=}
   echo -e "+-------- N O T E   o n   F O R W A R D E R S ------------------"
