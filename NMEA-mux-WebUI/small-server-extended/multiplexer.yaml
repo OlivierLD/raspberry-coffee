@@ -4,7 +4,7 @@
 name: "NMEA with GPS, BME280, LSM303"
 context:
   with.http.server: true
-  http.port: 5678
+  http.port: 8888
   init.cache: true
   default.declination: 14
 channels:
@@ -12,6 +12,7 @@ channels:
     port: "/dev/ttyS80"
     baudrate: 4800
     verbose: false
+    reset.interval: 60000
   - type: "bme280"
     prefix: "BM"
     verbose: false

@@ -789,6 +789,8 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 
 	public static void main(String... args) {
 
+		boolean infraVerbose = "true".equals(System.getProperty("mux.infra.verbose"));
+
 		try {
 			serverPort = Integer.parseInt(System.getProperty("http.port", String.valueOf(serverPort)));
 		} catch (NumberFormatException nfe) {
@@ -807,8 +809,13 @@ public class MultiplexerWithTwoButtons extends GenericNMEAMultiplexer {
 		mux.setEnableProcess(startProcessingOnStart);
 		// with.http.server=yes
 		// http.port=9999
-		if ("yes".equals(definitions.getProperty("with.http.server", "no"))) {
+		String withHttpServer = definitions.getProperty("with.http.server", "no");
+		if ("yes".equals(withHttpServer) || "true".equals(withHttpServer)) {
 			mux.startAdminServer(Integer.parseInt(definitions.getProperty("http.port", "9999")));
+		} else {
+			if (infraVerbose) {
+				System.out.println(">> NO ADMIN Server started!!");
+			}
 		}
 	}
 
