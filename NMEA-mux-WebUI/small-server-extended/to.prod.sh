@@ -49,6 +49,7 @@ cp ./build/libs/*-1.0-all.jar ${distdir}/build/libs
 mkdir ${distdir}/logged
 # Web resources
 cd web
+echo -e "Archiving the web folder"
 zip -r ../web.zip *
 cd ..
 mv web.zip ${distdir}

@@ -129,9 +129,7 @@ echo -e "Try reaching http://$(hostname -I):${PORT}/web/index.html from a browse
 #
 # JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
 #
-# For remote debugging:
-# JAVA_OPT="$JAVA_OPT -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000"
-#
+JAVA_OPTIONS="${JAVA_OPTIONS} -Dyaml.tx.verbose=yes"
 # use sudo on Raspberry Pi
 # sudo java ${JAVA_OPTIONS} $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
 # java ${JAVA_OPTIONS} $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
