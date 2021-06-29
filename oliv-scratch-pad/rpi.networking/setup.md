@@ -73,4 +73,5 @@ wpa-psk "67...x...31"
 ```
 
 > Notice above: with another WiFi dongle (wlan1) you can have a HotSpot **_AND_** Internet access.  
+> Use the [Routed access point](https://www.raspberrypi.org/documentation/configuration/wireless/access-point-routed.md) section.   
 > That makes your life so much easier.
