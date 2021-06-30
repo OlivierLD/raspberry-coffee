@@ -92,7 +92,8 @@ Requires an external power supply (5-12v).
 128x32 and 128x64 OLED monochrome screens, https://www.adafruit.com/product/3527, https://www.adafruit.com/product/931, and https://www.adafruit.com/product/661,
 https://www.adafruit.com/product/326, https://www.adafruit.com/product/938.
 
-> _Note_: Possible problems with SPI versions (GPIO) with recent RaspiOS versions...
+> _Note_: **June 2021**: Possible problems with SPI versions (GPIO) with recent RaspiOS versions...  
+> I was able to run it OK on Buster, but do NOT do an `apt upgrade`. `apt update` seems OK.
 
 Run `ssd1306_128x64.sh` will display (on option) data in the screen and on the console.
 ```
