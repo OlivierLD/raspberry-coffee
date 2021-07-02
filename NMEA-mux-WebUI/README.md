@@ -160,6 +160,7 @@ The examples list contains
   - An `HMC5883L` magnetometer, a small `SSD1306` OLED Screen, broadcasting its data on TCP.  
     With a push button for the user to interact with it.
 
+> _Note_: Those examples can be built from the script `mux.builder.sh`. 
 
 ### Full Nav Server 
 All features: NMEA multiplexer, Web Interface, Celestial Computer, Tides, Almanacs publication, Weather Wizard, Small screens, ...
