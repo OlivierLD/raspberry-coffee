@@ -652,8 +652,9 @@ public class AlmanacComputer {
 			out.println("      Dec='" + Context.DECstar + "'");
 			out.println("      lunar-dist='" + Context.starMoonDist + "'");
 			out.println("      delta-lunar='" + ((prevStarLunars[i] != Double.MAX_VALUE) ? deltaStarLunar[i] : "") + "'/>");
-			if (hour < 24)
+			if (hour < 24) {
 				prevStarLunars[i] = Context.starMoonDist;
+			}
 		}
 
 		out.println("</stars>");
