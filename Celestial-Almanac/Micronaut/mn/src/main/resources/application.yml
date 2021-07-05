@@ -1,5 +1,0 @@
-micronaut:
-  application:
-    name: mn
-values:
-  deltaT: 69.220100

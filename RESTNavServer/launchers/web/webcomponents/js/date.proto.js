@@ -7,7 +7,7 @@
 
 // Provide month names
 Date.prototype.getMonthName = function() {
-	const month_names = [
+	const MONTHS_NAMES = [
 		'January',
 		'February',
 		'March',
@@ -21,7 +21,7 @@ Date.prototype.getMonthName = function() {
 		'November',
 		'December'
 	];
-	return month_names[this.getMonth()];
+	return MONTHS_NAMES[this.getMonth()];
 };
 
 // Provide month abbreviation
@@ -129,7 +129,7 @@ Date.prototype.getMonthDayCount = function() {
 
 // format provided date into this.format format
 Date.prototype.format = function(dateFormat) {
-	// break apart format string into array of characters
+	// break apart the format string into array of characters
 	dateFormat = dateFormat.split("");
 
 	let date = this.getDate(),
@@ -149,7 +149,7 @@ Date.prototype.format = function(dateFormat) {
 		return str;
 	};
 
-	// get all date properties ( based on PHP date object functionality )
+	// get all date properties (based on PHP date object functionality...)
 	let date_props = {
 		d: date < 10 ? '0' + date : date,
 		D: this.getDayAbbr(),

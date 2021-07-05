@@ -21,6 +21,7 @@ gen/
 classes/
 /classes/*.properties
 classes/*
+**/.DS_Store
 Library
 *.min.js
 *.min.js.map

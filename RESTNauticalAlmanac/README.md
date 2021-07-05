@@ -7,6 +7,8 @@ For the value of Delta T, see:
 - http://maia.usno.navy.mil/
 - http://maia.usno.navy.mil/ser7/deltat.data
 
+> _Note_: the above stopped working, before 2020... We now have a way to _calculate_ `DeltaT`.
+
 ---
 
 Designed to be part of other projects, see `RESTNavServer`, `Project.Trunk:SunFlower`, `RESTTideEngine`, ...

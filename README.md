@@ -326,6 +326,8 @@ To build it, clone this project (this repo), make sure the script named `gradlew
 >  sudo apt-get install librxtx-java
 > ```
 
+> _Note_: Use git submodules, see <https://www.vogella.com/tutorials/GitSubmodules/article.html>
+
 ```
  Prompt> git clone https://github.com/OlivierLD/raspberry-coffee.git
  Prompt> cd raspberry-coffee
