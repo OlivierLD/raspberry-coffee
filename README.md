@@ -326,8 +326,6 @@ To build it, clone this project (this repo), make sure the script named `gradlew
 >  sudo apt-get install librxtx-java
 > ```
 
-> _Note_: Use git submodules, see <https://www.vogella.com/tutorials/GitSubmodules/article.html>
-
 ```
  Prompt> git clone https://github.com/OlivierLD/raspberry-coffee.git
  Prompt> cd raspberry-coffee
@@ -339,12 +337,37 @@ To build it, clone this project (this repo), make sure the script named `gradlew
 > ./gradlew --no-daemon clean build --info
 > ```
 
+---
+> _Note_: We use git submodules, see <https://www.vogella.com/tutorials/GitSubmodules/article.html>  
+> AstroComputer is a git submodule
+```
+From the root of the repo (raspberry-coffee)
+$ git submodule add https://github.com/OlivierLD/AstroComputer.git
+This creates an AstroComputer folder in raspberry-coffee
+
+Add dependencies on the git submodule in settings.gradle (root of raspberry-coffee)
+include(':AstroComputer')
+
+Comment plug-in version in the build.gradle submodule:
+plugins {
+  id 'java'
+  id 'scala'
+  id 'idea'
+  id 'maven'
+  id 'com.github.johnrengelman.shadow' // version '6.0.0'
+  id "application"
+}
+```
+The submodule can be refreshed (pulled) like any other one.   
+After pulling `raspberry-coffee`, do a `git clone https://github.com/OlivierLD/AstroComputer.git`, and you should be good to go.
+
+---
+
 >If you see a message like `VM is only supported on ARMv7+ VFP`, you probably need to downgrade your JDK (and JRE)
 > from 11 to 8.
 
 You are expecting an end like that one:
 ```
-
 BUILD SUCCESSFUL in 55s
 97 actionable tasks: 17 executed, 80 up-to-date
 Prompt>

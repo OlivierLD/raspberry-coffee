@@ -144,6 +144,8 @@ public class TideForOneMonth {
 					utcCal.get(Calendar.MINUTE),
 					utcCal.get(Calendar.SECOND));
 			double[] rsSun = AstroComputer.sunRiseAndSet(ts.getLatitude(), ts.getLongitude());
+			// AstroComputer.EpochAndZ[] rsSun = AstroComputer.sunRiseAndSetEpoch(ts.getLatitude(), ts.getLongitude());
+
 			Calendar sunRise = new GregorianCalendar();
 			sunRise.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
 			sunRise.set(Calendar.YEAR, now.get(Calendar.YEAR));
