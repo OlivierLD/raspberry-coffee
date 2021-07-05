@@ -358,8 +358,8 @@ plugins {
   id "application"
 }
 ```
-The submodule can be refreshed (pulled) like any other one.   
-After pulling `raspberry-coffee`, do a `git clone https://github.com/OlivierLD/AstroComputer.git`, and you should be good to go.
+After pulling `raspberry-coffee` for the first time, do a `git clone https://github.com/OlivierLD/AstroComputer.git` (from the `raspberry-coffee` directory), and you should be good to go.  
+Then the submodule can be refreshed (pulled) like any other one.
 
 ---
 
