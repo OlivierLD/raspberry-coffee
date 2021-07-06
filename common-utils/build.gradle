@@ -33,7 +33,7 @@ dependencies {
 //    compile 'javax.mail:javax.mail-api:1.6.0'
     testCompile 'junit:junit:4.13'
 
-    compile project(':AstroComputer')  // a git submodule (for the tests)
+    // compile project(':AstroComputer')  // a git submodule (for the tests)
 }
 
 mainClassName = "utils.SystemUtils"
