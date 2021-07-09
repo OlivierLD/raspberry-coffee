@@ -225,8 +225,12 @@ public class DecisionTableStaticUtils {
         List<Object> problems = (List)jsonMap.get("problems");
         if (problems != null) {
             final StringBuffer sb = new StringBuffer();
+            AtomicInteger nbErrors = new AtomicInteger();   // surface that one?
+            AtomicInteger nbWarnings = new AtomicInteger(); // surface that one?
             problems.forEach(line -> {
-                String type = ((Map)line).get("severity").toString();
+                String type = (String)((Map)line).get("severity"); // .toString();
+                nbErrors.addAndGet(("Error".equals(type) ? 1 : 0));
+                nbWarnings.addAndGet(("Warning".equals(type) ? 1 : 0));
                 String message = ((Map)line).get("message").toString();
                 String path = ((Map)line).get("path").toString();
                 sb.append(String.format("- %s: %s, %s\n", type, message, path));
@@ -301,7 +305,7 @@ public class DecisionTableStaticUtils {
         Map<String, Object> where = (Map)upsertStmt.get("where");
         Boolean dryRun = (Boolean)upsertStmt.get("dry-run");
         Integer byRowId = null;
-        if (where.containsKey(ROW_ID)) {
+        if (where != null && where.containsKey(ROW_ID)) {
             if (where.size() != 1) {
                 String others = where.keySet().stream().filter(k -> !k.equals(ROW_ID)).collect(Collectors.joining(", "));
                 throw new RuntimeException(String.format(
@@ -394,7 +398,7 @@ public class DecisionTableStaticUtils {
         DecisionContext context = new DecisionContext();
 
         Integer byRowId = null;
-        if (where.containsKey(ROW_ID)) {
+        if (where != null && where.containsKey(ROW_ID)) {
             if (where.size() != 1) {
                 String others = where.keySet().stream().filter(k -> !k.equals(ROW_ID)).collect(Collectors.joining(", "));
                 throw new RuntimeException(String.format(
@@ -859,6 +863,14 @@ public class DecisionTableStaticUtils {
         });
 
         String jsonInString;
+        if (verbose) {
+            if (queryResult.size() > 0) {
+                System.out.printf("Will update %d row(s)\n", queryResult.size());
+            } else {
+                System.out.println("Will create a row.");
+            }
+        }
+
         if (queryResult.size() == 0) {
 
             if (ROW_ID.equals(decisionUpdateContext.getWhereColumnId().get(0))) {

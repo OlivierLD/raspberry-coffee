@@ -34,6 +34,7 @@ dependencies {
     compile 'oracle:xmlparser:2.0'
     compile 'org.yaml:snakeyaml:1.21'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
+    compile project(':AstroComputer')
     compile project(':http-tiny-server')
     compile project(':I2C-SPI')
 //    compile project(':SunFlower')

@@ -1,0 +1,9 @@
+{
+  "upsert": {
+    "Amount": "400"
+  },
+  "where": {
+    "UniqueHitPolicyDecision": "Approve"
+  },
+  "dry-run": false
+}

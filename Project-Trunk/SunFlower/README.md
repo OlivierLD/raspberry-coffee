@@ -281,7 +281,7 @@ Add a photocell(s) (read by the MCP3008 as well), to know how sunny it is.
 
 - Try a "direct" servo approach, without a PCA9685.
 
-- Orienting much bigger panels, using *stepper motors*, worm gears, etc.
+- Orienting much bigger panels, [using *stepper motors*](https://github.com/OlivierLD/raspberry-coffee/tree/master/Project-Trunk/SunFlower-v2), worm gears, etc.
     - For this last one, the challenge will be to know what the angles set by the motors are.
         - A way to do it would be to use linear potentiometers and ADCs (like MCP3008).
 
