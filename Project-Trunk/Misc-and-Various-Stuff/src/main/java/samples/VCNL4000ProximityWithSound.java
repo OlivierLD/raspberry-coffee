@@ -14,15 +14,15 @@ import javax.sound.sampled.SourceDataLine;
 public class VCNL4000ProximityWithSound {
 	private static boolean go = true;
 	private final static int MIN_AMBIENT = 0;
-	private final static int MAX_AMBIENT = 5500;
+	private final static int MAX_AMBIENT = 5_500;
 
 	public final static float SAMPLE_RATE = 8_000f;
 
-	public static void tone(int hz, int msecs) throws LineUnavailableException {
-		tone(hz, msecs, 1.0);
+	public static void tone(int hz, int mSecs) throws LineUnavailableException {
+		tone(hz, mSecs, 1.0);
 	}
 
-	public static void tone(int hz, int msecs, double vol) throws LineUnavailableException {
+	public static void tone(int hz, int mSecs, double vol) throws LineUnavailableException {
 		byte[] buf = new byte[1];
 		AudioFormat af = new AudioFormat(SAMPLE_RATE, // sampleRate
 						8,           // sampleSizeInBits
@@ -32,7 +32,7 @@ public class VCNL4000ProximityWithSound {
 		SourceDataLine sdl = AudioSystem.getSourceDataLine(af);
 		sdl.open(af);
 		sdl.start();
-		for (int i = 0; i < msecs * 8; i++) {
+		for (int i = 0; i < mSecs * 8; i++) {
 			double angle = i / (SAMPLE_RATE / hz) * 2.0 * Math.PI;
 			buf[0] = (byte) (Math.sin(angle) * 127.0 * vol);
 			sdl.write(buf, 0, 1);

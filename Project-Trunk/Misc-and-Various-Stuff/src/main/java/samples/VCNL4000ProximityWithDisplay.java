@@ -8,7 +8,7 @@ import java.io.IOException;
 public class VCNL4000ProximityWithDisplay {
 	private static boolean go = true;
 	private final static int MIN_AMBIENT = 0;
-	private final static int MAX_AMBIENT = 5500;
+	private final static int MAX_AMBIENT = 5_500;
 
 	private static VCNL4000 sensor;
 	private static SevenSegment display;
