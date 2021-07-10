@@ -24,6 +24,7 @@ dependencies {
   compile project(':common-utils')
   compile project(':RMI-sample')
   compile project(':http-tiny-server')
+  compile project(':AstroComputer')
 }
 
 // Warning: Must be run as root
