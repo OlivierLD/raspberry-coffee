@@ -22,6 +22,7 @@ echo "-- From /etc/rc.local --"
 echo "Now starting NMEA Multiplexer"
 cd ~pi/raspberry-coffee/NMEA-mux-WebUI/full-server-extended-v2
 ./mk.link.sh
-./mux.sh nmea.mux.gps.log.properties &
+# ./mux.sh nmea.mux.gps.log.properties &
+./mux.sh nmea.mux.gps.log.yaml &
 cd -
 exit 0
