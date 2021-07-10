@@ -17,7 +17,7 @@ echo -e "+----------------------------------------------------------------------
 # 1 - Build
 #
 PROXY_SETTINGS=
-PROXY_SETTINGS="-Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttps.proxyPort=80"
+# PROXY_SETTINGS="-Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttps.proxyPort=80"
 ../../gradlew shadowJar ${PROXY_SETTINGS}
 #
 # 2 - Create new dir
@@ -73,7 +73,10 @@ echo -e "| External dependencies like librxtx-java may be needed if you intend t
 echo -e "| in which case you may need to run a 'sudo apt-get install librxtx-java' .                        |"
 echo -e "| The script to launch will be 'mux.sh'                                                            |"
 echo -e "| It is your responsibility to use the right properties file, possibly modified to fit your needs. |"
-echo -e "| For the runner/logger, use nmea.mux.gps.log.properties                                           |"
+echo -e "| For the runner/logger, use nmea.mux.gps.log.properties or nmea.mux.gps.log.                      |"
+echo -e "+--------------------------------------------------------------------------------------------------+"
 echo -e "| Use it for example like:                                                                         |"
 echo -e "| $ nohup ./mux.sh nmea.mux.gps.log.properties &                                                   |"
+echo -e "| or                                                                                               |"
+echo -e "| $ nohup ./mux.sh nmea.mux.gps.log.yaml &                                                         |"
 echo -e "+--------------------------------------------------------------------------------------------------+"
