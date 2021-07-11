@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 
 /**
  * Initialize the configuration of the Multiplexer, at startup,
- * with the properties read from the file system., through one
+ * with the properties read from the file system, through one
  * package-private method named <code>{@link #setup}</code>.
- * <br>
+ * <br/>
  * Initializes:
  * <ul>
  *   <li>NMEA Channels</li>
@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
  *   <li>NMEA Computers</li>
  * </ul>
  * All those objects can be also managed later on, through the REST Admin Interface
+ * <br/>
  * (see {@link RESTImplementation}).
  */
 public class MuxInitializer {

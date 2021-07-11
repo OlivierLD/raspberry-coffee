@@ -38,7 +38,7 @@ public class NMEAMultiplexer implements Multiplexer {
 	private static String dataFile = "./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea";
 	// like "/dev/tty.usbserial"on Mac, "COMx" on Windows, "/dev/ttyUSB0" on Linux, including Raspberry Pi.
 	private static String serialPort = "/dev/tty.usbserial";
-	private static int serialBaudRate = 4800;
+	private static int serialBaudRate = 4_800;
 
 	public NMEAMultiplexer() {
 		tcpClient = new TCPClient(this);
