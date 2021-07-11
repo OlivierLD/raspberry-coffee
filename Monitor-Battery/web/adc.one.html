@@ -37,16 +37,16 @@
         </style>
 
         <script type="text/javascript">
-        var displayValue;
-        var statusFld;
-        var graph;
+        let displayValue;
+        let statusFld;
+        let graph;
 
-        var graphBatteryData = [];
-        for (var i=0; i<20; i++) {
+        let graphBatteryData = [];
+        for (let i=0; i<20; i++) {
             graphBatteryData.push(new Tuple(i++, 0.0));
         }
 
-        window.onload = function() {
+        window.onload = () => {
           displayValue = new AnalogDisplay('valueCanvas', 100, 15, 1, 0.1, true, 40);
           statusFld = document.getElementById("status");
           graph = new Graph("graphCanvas", 600, 200, graphBatteryData, null, "V");

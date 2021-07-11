@@ -16,6 +16,9 @@
 # *.py
 # *.png
 *.iml
+**/.classpath
+**/.project
+**/.settings
 yarn.lock
 gen/
 classes/

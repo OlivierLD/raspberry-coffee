@@ -25,7 +25,6 @@ then
   # Copy the jnilib file where it belongs, if it is not there.
   JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"       # for Mac
   # JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=../Serial.IO/libs" # for Mac
-
 fi
 if [[ "$OS" == "Linux" ]]
 then

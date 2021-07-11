@@ -101,7 +101,7 @@ The FONA requires a SIM Card.
 - Not real-time, delayed.
 
 ###### At work
-From a terminal, start `./battery.fona`
+From a terminal, start `./battery.fona.sh`
 ```bash
 $ ./battery.fona.sh
 Creating BatteryMonitor...
@@ -203,7 +203,7 @@ or
 
 After that you start the script named `ws.publish.battery`
 ```bash
- ./ws.publish.battery
+ ./ws.publish.battery.sh
 ```
 and from a browser, go to `http://localhost:9876/web/adc.one.html`. Node.js is hosting both the WebSocket server and an http server.
 If you access the page remotely, replace `localhost` with the address of the Raspberry Pi.
