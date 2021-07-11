@@ -61,6 +61,7 @@ cp mux.sh ${distdir}
 cp to.mux.sh ${distdir}
 cp ssd1306i2cDisplay.sh ${distdir}
 cp killmux.sh ${distdir}
+cp showmux.sh ${distdir}
 cp rc.local ${distdir}
 cp start-mux.sh ${distdir}
 cp zero-deviation.csv ${distdir}
@@ -84,6 +85,7 @@ echo -e "| in which case you may need to run a 'sudo apt-get install librxtx-jav
 echo -e "| The script to launch will be 'mux.sh'                                                            |"
 echo -e "| It is your responsibility to use the right properties file, possibly modified to fit your needs. |"
 echo -e "| For the runner/logger, use nmea.mux.gps.log.properties (or nmea.mux.gps.log.yaml)                |"
+echo -e "+--------------------------------------------------------------------------------------------------+"
 echo -e "| Use it for example like:                                                                         |"
 echo -e "| $ nohup ./mux.sh nmea.mux.gps.log.properties &                                                   |"
 echo -e "|   or                                                                                             |"

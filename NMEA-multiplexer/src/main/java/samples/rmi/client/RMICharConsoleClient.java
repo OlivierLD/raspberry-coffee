@@ -2,13 +2,8 @@ package samples.rmi.client;
 
 import context.NMEADataCache;
 import nmea.forwarders.rmi.ServerInterface;
-import nmea.forwarders.rmi.clientoperations.BoatPosition;
-import nmea.forwarders.rmi.clientoperations.CalculatedCurrent;
-import nmea.forwarders.rmi.clientoperations.InstantCurrent;
 import nmea.forwarders.rmi.clientoperations.LastString;
 import nmea.forwarders.rmi.clientoperations.NMEACache;
-import nmea.forwarders.rmi.clientoperations.TrueWind;
-import nmea.parser.Current;
 import nmea.parser.GeoPos;
 
 import java.rmi.Remote;
@@ -43,7 +38,7 @@ public class RMICharConsoleClient {
 		try {
 			System.setProperty("java.rmi.server.hostname", name);
 			long before = System.currentTimeMillis();
-			Registry registry = LocateRegistry.getRegistry(name, new Integer(port)); // Server name, port
+			Registry registry = LocateRegistry.getRegistry(name, Integer.parseInt(port)); // Server name, port
 			Remote remote = registry.lookup(bindingName);
 //		System.out.println("Remote is a " + remote.getClass().getName());
 			ServerInterface comp = (ServerInterface)remote; // registry.lookup(bindingName);   // RMI Name

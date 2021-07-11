@@ -37,7 +37,7 @@ public class NMEAtoJSONPos {
 				if (line.startsWith("$") && line.length() > 6) {
 					String prefix = line.substring(3, 6);
 					Integer nb = map.get(prefix);
-					map.put(prefix, (nb == null) ? new Integer(1) : new Integer(nb + 1));
+					map.put(prefix, (nb == null) ? (1) : (nb + 1));
 					// Specific
 					if ("RMC".equals(prefix)) {
 						if (StringParsers.validCheckSum(line)) {

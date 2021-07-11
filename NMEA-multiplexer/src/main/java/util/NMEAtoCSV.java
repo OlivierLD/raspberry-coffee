@@ -109,7 +109,8 @@ public class NMEAtoCSV {
 					}
 				} else {
 					try {
-						String header = (String)returnedType.getDeclaredMethod("getCsvHeader", String.class).invoke(null, SEPARATOR); // 1st arg, no Obj, method is static
+						String header = (String)returnedType.getDeclaredMethod("getCsvHeader", String.class)
+								.invoke(null, SEPARATOR); // 1st arg, no Obj, method is static
 						if (VERBOSE) {
 							System.out.println(String.format("CSV Header [%s]", header));
 						}

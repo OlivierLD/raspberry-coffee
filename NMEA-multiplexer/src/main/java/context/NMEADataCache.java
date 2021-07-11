@@ -729,9 +729,9 @@ public class NMEADataCache
 								} else if (type.equals(StringGenerator.XDRTypes.PRESSURE_B)) {
 									this.put(BARO_PRESS, new Pressure(val * 1_000));
 								} else if (type.equals(StringGenerator.XDRTypes.VOLTAGE)) {
-									this.put(BATTERY, new Float(val));
+									this.put(BATTERY, (float)(val));
 								} else if (type.equals(StringGenerator.XDRTypes.GENERIC)) { // Consider it as prate.
-									this.put(PRATE, new Float(val));
+									this.put(PRATE, (float)(val));
 								} else if (type.equals(StringGenerator.XDRTypes.ANGULAR_DISPLACEMENT) &&
 										xe.getTransducerName().equals(StringGenerator.XDR_PTCH)) {
 									this.put(PITCH, val);
@@ -768,13 +768,13 @@ public class NMEADataCache
 					case "BAT":     // Battery Voltage. Not Standard, from the Raspberry Pi. There is an XDR Voltage...
 						float volt = StringParsers.parseBAT(nmeaSentence);
 						if (volt > -1) {
-							this.put(BATTERY, new Float(volt));
+							this.put(BATTERY, (volt));
 						}
 						break;
 					case "STD":     // Cache age. Not Standard. From Original cache
 						long age = StringParsers.parseSTD(nmeaSentence);
 						if (age > -1) {
-							this.put(TIME_RUNNING, new Long(age));
+							this.put(TIME_RUNNING, (age));
 						}
 						break;
 					default:
@@ -837,9 +837,9 @@ public class NMEADataCache
 					}
 					if (cl != null) {
 						if (cl.equals(Double.class)) {
-							ret = new Double(sum);
+							ret = (sum);
 						} else {
-							ret = Class.forName(cl.getName()).newInstance();
+							ret = Class.forName(cl.getName()).getDeclaredConstructor().newInstance();
 							if (ret instanceof Angle) { // Angle360 || ret instanceof Angle180 || ret instanceof Angle180EW || ret instanceof Angle180LR)
 								double a = Math.toDegrees(Math.acos(sumCos));
 								if (sumSin < 0) {

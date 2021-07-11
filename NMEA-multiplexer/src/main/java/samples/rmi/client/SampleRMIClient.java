@@ -42,7 +42,7 @@ public class SampleRMIClient {
 		System.out.println("Looking up [" + bindingName + " on " + name + ":" + port + "]");
 		try {
 			long before = System.currentTimeMillis();
-			Registry registry = LocateRegistry.getRegistry(name, new Integer(port)); // Server name, port
+			Registry registry = LocateRegistry.getRegistry(name, Integer.parseInt(port)); // Server name, port
 			Remote remote = registry.lookup(bindingName);
 			System.out.println("Remote is a " + remote.getClass().getName());
 			ServerInterface comp = (ServerInterface) remote; // registry.lookup(bindingName);

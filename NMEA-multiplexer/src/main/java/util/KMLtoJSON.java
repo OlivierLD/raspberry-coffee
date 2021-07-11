@@ -5,10 +5,10 @@ import java.io.*;
 /**
  * KML, to an array of arrays (LeafLetJS)
  *
- * @deprecated Use XMLtoJSON instead.
+ * @Deprecated Use XMLtoJSON instead.
  */
 public class KMLtoJSON {
-    public final static void main(String... args) {
+    public static void main(String... args) {
         String fileName = "/Users/olivierlediouris/oliv/web.site/donpedro/journal/trip/GPX/the.full.trip.kml";
         String outputFileName = "/Users/olivierlediouris/oliv/web.site/donpedro/journal/trip/GPX/the.full.trip.json";
         File file = new File(fileName);

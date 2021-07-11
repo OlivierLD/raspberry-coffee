@@ -31,7 +31,7 @@ public class AdafruitIOClient {
 		Map<String, String> headers = new HashMap<>(1);
 		headers.put("X-AIO-Key", key);
 		JSONObject json = new JSONObject();
-		json.put("value", new Double(value));
+		json.put("value", Double.parseDouble(value));
 		System.out.println("POSTing " + json.toString(2) + " to " + url);
 		HTTPClient.HTTPResponse response = HTTPClient.doPost(url, headers, json.toString());
 		if (DEBUG) {

@@ -49,7 +49,7 @@ public class GPSdServer implements Forwarder {
 	 */
 	@Override
 	public void write(byte[] message) {
-		List<Socket> toRemove = new ArrayList<Socket>();
+		List<Socket> toRemove = new ArrayList<>();
 		synchronized( clientSocketlist) {
 			clientSocketlist.stream().forEach(tcpClientSocket -> {
 				synchronized (tcpClientSocket) {
@@ -155,6 +155,7 @@ public class GPSdServer implements Forwarder {
 						String json = clientRequest.substring("?WATCH=".length());
 //					System.out.println(">>> GPSd WATCH request:" + json);
 						Gson gson = new GsonBuilder().create();
+						@SuppressWarnings("unchecked")
 						Map<String, Object> obj = gson.fromJson(json, Map.class);
 						Object o = obj.get("nmea");
 						if (o != null && o instanceof Boolean) {

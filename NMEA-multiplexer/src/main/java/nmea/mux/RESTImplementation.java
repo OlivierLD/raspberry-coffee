@@ -1022,7 +1022,7 @@ public class RESTImplementation {
 					if (!opFwd.isPresent()) {
 						try {
 							// Create dynamic forwarder
-							Object dynamic = Class.forName(forwarderClass).newInstance();
+							Object dynamic = Class.forName(forwarderClass).getDeclaredConstructor().newInstance();
 							if (dynamic instanceof Forwarder) {
 								Forwarder forwarder = (Forwarder) dynamic;
 

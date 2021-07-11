@@ -327,7 +327,7 @@ public class MuxInitializer {
                                 }
                                 Long readFrequency = null;
                                 try {
-                                    readFrequency = new Long(muxProps.getProperty(String.format("mux.%s.read.frequency", MUX_IDX_FMT.format(muxIdx))));
+                                    readFrequency = Long.parseLong(muxProps.getProperty(String.format("mux.%s.read.frequency", MUX_IDX_FMT.format(muxIdx))));
                                     if (readFrequency < 0) {
                                         System.err.println(String.format("Warning: Bad value for Read Frequency, must be positive, found %d.", readFrequency));
                                         readFrequency = null;
@@ -337,7 +337,7 @@ public class MuxInitializer {
                                 }
                                 Integer dampingSize = null;
                                 try {
-                                    dampingSize = new Integer(muxProps.getProperty(String.format("mux.%s.damping.size", MUX_IDX_FMT.format(muxIdx))));
+                                    dampingSize = Integer.parseInt(muxProps.getProperty(String.format("mux.%s.damping.size", MUX_IDX_FMT.format(muxIdx))));
                                     if (dampingSize < 0) {
                                         System.err.println(String.format("Warning: Bad value for Damping Size, must be positive, found %d.", dampingSize));
                                         dampingSize = null;
@@ -406,7 +406,7 @@ public class MuxInitializer {
                                 }
                                 Long readFrequency = null;
                                 try {
-                                    readFrequency = new Long(muxProps.getProperty(String.format("mux.%s.read.frequency", MUX_IDX_FMT.format(muxIdx))));
+                                    readFrequency = Long.parseLong(muxProps.getProperty(String.format("mux.%s.read.frequency", MUX_IDX_FMT.format(muxIdx))));
                                     if (readFrequency < 0) {
                                         System.err.println(String.format("Warning: Bad value for Read Frequency, must be positive, found %d.", readFrequency));
                                         readFrequency = null;
@@ -416,7 +416,7 @@ public class MuxInitializer {
                                 }
                                 Integer dampingSize = null;
                                 try {
-                                    dampingSize = new Integer(muxProps.getProperty(String.format("mux.%s.damping.size", MUX_IDX_FMT.format(muxIdx))));
+                                    dampingSize = Integer.parseInt(muxProps.getProperty(String.format("mux.%s.damping.size", MUX_IDX_FMT.format(muxIdx))));
                                     if (dampingSize < 0) {
                                         System.err.println(String.format("Warning: Bad value for Damping Size, must be positive, found %d.", dampingSize));
                                         dampingSize = null;
@@ -568,7 +568,7 @@ public class MuxInitializer {
                     System.out.println(String.format("\t>> %s - Dynamic loading for output %s", NumberFormat.getInstance().format(System.currentTimeMillis()), classProp));
                 }
                 try {
-                    Object dynamic = Class.forName(clss).newInstance();
+                    Object dynamic = Class.forName(clss).getDeclaredConstructor().newInstance();
                     if (dynamic instanceof Forwarder) {
                         Forwarder forwarder = (Forwarder) dynamic;
                         String propProp = String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx));
