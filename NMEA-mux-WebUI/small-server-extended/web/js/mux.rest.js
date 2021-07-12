@@ -194,7 +194,7 @@ function deleteChannel(channel) {
 }
 
 function setSpeedUnit(speedUnit) {
-	return getPromise('/mux/events/change-speed-unit', DEFAULT_TIMEOUT, 'POST', 200, {"speed-unit": speedUnit}, false);
+	return getPromise('/mux/events/change-speed-unit', DEFAULT_TIMEOUT, 'POST', 201, {"speed-unit": speedUnit}, false);
 }
 
 function pushData(flow) {
