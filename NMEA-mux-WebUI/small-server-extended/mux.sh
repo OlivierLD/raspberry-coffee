@@ -48,9 +48,9 @@ fi
 # (See below).
 # It controls ALL the forwarders at once.
 #
-PROCESS_ON_START=false # Default is true for process.on.start
+# PROCESS_ON_START=false # Default is true for process.on.start
 #
-if [[ "$PROCESS_ON_START" = "false" ]]
+if [[ "$PROCESS_ON_START" == "false" ]]
 then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
   MACHINE_NAME=$(echo ${MACHINE_NAME})  # Trim the blanks
