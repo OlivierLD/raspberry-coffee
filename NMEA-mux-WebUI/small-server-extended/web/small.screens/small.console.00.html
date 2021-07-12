@@ -254,6 +254,14 @@
 
 	<script type="text/javascript">
 
+		let lpad = (s, w, len) => {
+			let str = s;
+			while (str.length < len) {
+				str = w + str;
+			}
+			return str;
+		};
+
 		// Left-right swipe gesture management
 		let xDown = null;
 		let yDown = null;
@@ -345,7 +353,7 @@
 		events.subscribe('gps-time', (val) => {
 			if (val !== null) {
 				document.getElementById('gps-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
-				document.getElementById('gps-time').innerText = `${val.hour}:${val.min}:${val.sec}`;
+				document.getElementById('gps-time').innerText = `${lpad(val.hour, '0', 2)}:${lpad(val.min, '0', 2)}:${lpad(val.sec, '0', 2)}`;
 			} else {
 				document.getElementById('gps-date').innerText = `Not Set`;
 				document.getElementById('gps-time').innerText = `-`;
@@ -354,7 +362,7 @@
 		events.subscribe('solar-time', (val) => {
 			if (val !== null) {
 				document.getElementById('solar-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
-				document.getElementById('solar-time').innerText = `${val.hour}:${val.min}:${val.sec}`;
+				document.getElementById('solar-time').innerText = `${lpad(val.hour, '0', 2)}:${lpad(val.min, '0', 2)}:${lpad(val.sec, '0', 2)}`;
 			} else {
 				document.getElementById('solar-date').innerText = `Not Set`;
 				document.getElementById('solar-time').innerText = `-`;

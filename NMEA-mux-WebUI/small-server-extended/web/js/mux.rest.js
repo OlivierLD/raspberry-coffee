@@ -216,16 +216,8 @@ function protocolTest() {
 	let postData = protocolTestFunc();
 	postData.then((value) => {
 		console.log(value);
-	}, (error, errmess) => {
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to get protocol test status..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	}, (error) => {
+		errManager.display("Failed to get protocol test status..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -236,16 +228,8 @@ function forwarderStatus() {
 		let json = JSON.parse(value); // Like {"processing":false,"started":1501082121336}
 		let status = json.processing;
 		document.getElementById("forwarders-status").innerText = (status === true ? 'ON' : 'Paused');
-	}, (error, errmess) => {
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to get the forwarders status..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	}, (error) => {
+		errManager.display("Failed to get the forwarders status..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 		document.getElementById("forwarders-status").innerText = ('-');
 	});
 }
@@ -262,16 +246,8 @@ function dataVolume() {
 		let flow = Math.round(volume / (elapsed / 1000));
 		pushData(flow);
 		document.getElementById('flow').style.cursor = 'auto';
-	}, (error, errmess) => {
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to get the flow status..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	}, (error) => {
+		errManager.display("Failed to get the flow status..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 		pushData(0);
 		document.getElementById('flow').style.cursor = 'auto';
 	});
@@ -303,16 +279,8 @@ function getLastNMEASentence() {
 			lastTimeStamp = timestamp;
 //          console.log(lastString)
 		}
-	}, (error, errmess) => {
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to get the last NMEA Data..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	}, (error) => {
+		errManager.display("Failed to get the last NMEA Data..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -338,17 +306,9 @@ function serialPortList() {
 		document.getElementById("lists").innerHTML = html;
 		document.getElementById("diagram").style.display = 'none';
 		document.getElementById("lists").style.display = 'block';
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to get serial ports list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get serial ports list..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -474,17 +434,9 @@ function channelList() {
 		document.getElementById("lists").innerHTML = html;
 		document.getElementById("diagram").style.display = 'none';
 		document.getElementById("lists").style.display = 'block';
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to get channels list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get channels list..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -546,17 +498,9 @@ function forwarderList() {
 		document.getElementById("lists").innerHTML = html;
 		document.getElementById("diagram").style.display = 'none';
 		document.getElementById("lists").style.display = 'block';
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to get forwarders list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get forwarders list..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -587,17 +531,9 @@ function computerList() {
 		document.getElementById("lists").innerHTML = html;
 		document.getElementById("diagram").style.display = 'none';
 		document.getElementById("lists").style.display = 'block';
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to get nmea.computers list..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to get nmea.computers list..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -717,18 +653,9 @@ function generateDiagram() {
 			document.getElementById("diagram").style.display = 'block';
 			document.getElementById("lists").style.display = 'none';
 		}
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		} else {
-			message = 'Failed to get the channels';
-		}
+		let message = 'Failed to get the channels';
 		channelTable = "<span style='color: red;'>" + message + "</span>";
 		nbPromises += 1;
 		if (nbPromises === 3) {
@@ -797,18 +724,10 @@ function generateDiagram() {
 			document.getElementById("diagram").style.display = 'block';
 			document.getElementById("lists").style.display = 'none';
 		}
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		} else {
-			message = 'Failed to get the Forwarders';
-		}
+		let message = 'Failed to get the Forwarders';
+
 		forwarderTable = "<span style='color: red;'>" + message + "</span>";
 		nbPromises += 1;
 		if (nbPromises === 3) {
@@ -876,17 +795,9 @@ function createChannel(channel) {
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		channelList(); // refetch
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to create channel..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to create channel..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -899,17 +810,9 @@ function createForwarder(forwarder) {
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		forwarderList(); // refetch
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to create forwarder..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to create forwarder..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -922,17 +825,9 @@ function createComputer(computer) {
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		computerList(); // refetch
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to create computer..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to create computer..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -945,17 +840,9 @@ function removeChannel(channel) {
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		channelList(); // refetch
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to delete channel..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to delete channel..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -968,17 +855,9 @@ function removeForwarder(channel) {
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		forwarderList(); // refetch
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to delete forwarder..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to delete forwarder..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -991,17 +870,9 @@ function removeComputer(computer) {
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		computerList(); // refetch
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to delete computer..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to delete computer..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -1014,17 +885,9 @@ function changeChannel(channel) {
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		channelList(); // refetch
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to update channel..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to update channel..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -1037,17 +900,9 @@ function changeComputer(computer) {
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
 		computerList(); // refetch
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to update computer..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to update computer..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -1074,17 +929,9 @@ function manageMuxVerbose(cb) {
 		RESTPayload = value;
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to update multiplexer..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to update multiplexer..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -1097,17 +944,9 @@ function resetCache() {
 		RESTPayload = value;
 		console.log("Done in " + (after - before) + " ms :", value);
 		setRESTPayload(value, (after - before));
-	}, (error, errmess) => {
+	}, (error) => {
 		document.body.style.cursor = 'default';
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager.display("Failed to reset data cache..." + (error !== undefined ? JSON.stringify(error) : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager.display("Failed to reset data cache..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
