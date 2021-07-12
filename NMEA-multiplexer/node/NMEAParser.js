@@ -1,5 +1,7 @@
 "use strict";
 
+// TODO Move to ES6
+
 var checksum = function (str) {
     var cs = 0;
     for (var i = 0; i < str.length; i++) {

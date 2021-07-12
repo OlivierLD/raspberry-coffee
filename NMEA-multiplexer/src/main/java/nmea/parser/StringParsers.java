@@ -1240,7 +1240,7 @@ public class StringParsers {
 			if (s.indexOf("RMC,") > -1) {
 				rmc = new RMC();
 				String[] data = s.split(",");
-				rmc = rmc.setValid(data[2].equals("A")); // Active
+				rmc = rmc.setValid(data[2].equals("A")); // Active. Does not prevent the date and time to be available.
 				if (data[1].length() > 0) { // Time and Date
 					double utc = 0D;
 					try {

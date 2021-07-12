@@ -514,8 +514,14 @@ public class NMEADataCache
 								}
 							} else {
 								this.put(RMC_STATUS, false);
-								if (System.getProperty("nmea.cache.verbose", "false").equals("true")) {
-									System.out.println(String.format("RMC not valid yet [%s]", nmeaSentence));
+								// Date and time may be available...
+								if (rmc.getRmcDate() != null && rmc.getRmcTime() != null) {
+									this.put(GPS_DATE_TIME, new UTCDate(rmc.getRmcDate()));
+									this.put(GPS_TIME, new UTCTime(rmc.getRmcTime()));
+								} else {
+									if (System.getProperty("nmea.cache.verbose", "false").equals("true")) {
+										System.out.println(String.format("RMC not valid yet [%s]", nmeaSentence));
+									}
 								}
 							}
 						}
