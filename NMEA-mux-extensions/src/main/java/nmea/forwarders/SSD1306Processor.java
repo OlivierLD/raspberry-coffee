@@ -927,18 +927,18 @@ public class SSD1306Processor implements Forwarder {
 		substitute.setKeyReleasedConsumer(consumer);
 	}
 
-	public static class OLEDI2CBean {
+	public static class OLEDSSD1306Bean {
 		private String cls; // Class
-		private String type = "oled-i2c-spi";
+		private String type = "oled-ssd1306";
 
-		public OLEDI2CBean(SSD1306Processor instance) {
+		public OLEDSSD1306Bean(SSD1306Processor instance) {
 			cls = instance.getClass().getName();
 		}
 	}
 
 	@Override
 	public Object getBean() {
-		return new OLEDI2CBean(this);
+		return new OLEDSSD1306Bean(this);
 	}
 
 	@Override
