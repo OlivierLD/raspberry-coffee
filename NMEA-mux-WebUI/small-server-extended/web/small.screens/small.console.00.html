@@ -343,12 +343,22 @@
 			document.getElementById('lng').innerHTML = decToSex(val.lng, "EW", true);
 		});
 		events.subscribe('gps-time', (val) => {
-			document.getElementById('gps-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
-			document.getElementById('gps-time').innerText = `${val.hour}:${val.min}:${val.sec}`;
+			if (val !== {}) {
+				document.getElementById('gps-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
+				document.getElementById('gps-time').innerText = `${val.hour}:${val.min}:${val.sec}`;
+			} else {
+				document.getElementById('gps-date').innerText = `Not Set`;
+				document.getElementById('gps-time').innerText = `-`;
+			}
 		});
 		events.subscribe('solar-time', (val) => {
-			document.getElementById('solar-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
-			document.getElementById('solar-time').innerText = `${val.hour}:${val.min}:${val.sec}`;
+			if (val !== {}) {
+				document.getElementById('solar-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
+				document.getElementById('solar-time').innerText = `${val.hour}:${val.min}:${val.sec}`;
+			} else {
+				document.getElementById('solar-date').innerText = `Not Set`;
+				document.getElementById('solar-time').innerText = `-`;
+			}
 		});
 		events.subscribe('gps-sat', (val) => {
 			let elmt = document.getElementById('sp-01');

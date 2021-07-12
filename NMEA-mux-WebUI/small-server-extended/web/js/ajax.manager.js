@@ -124,6 +124,8 @@ function onMessage(json) {
 		    if (json["GPS Date & Time"]) {
                 let gpsDate = json["GPS Date & Time"].fmtDate;
                 events.publish('gps-time', gpsDate);
+			} else {
+			    events.publish('gps-time', {});
 			}
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "GPS Date (" + err + ")");
@@ -133,6 +135,8 @@ function onMessage(json) {
 		    if (json["Solar Time"]) {
                 let solarDate = json["Solar Time"].fmtDate;
                 events.publish('solar-time', solarDate);
+			} else {
+			    events.publish('solar-time', {});
 			}
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "GPS Date (" + err + ")");
