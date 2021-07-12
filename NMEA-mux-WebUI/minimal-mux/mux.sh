@@ -22,7 +22,7 @@ JAVA_OPTIONS=
 #
 PROCESS_ON_START=true # Default is true for process.on.start
 #
-if [[ "$PROCESS_ON_START" = "false" ]]
+if [[ "$PROCESS_ON_START" == "false" ]]
 then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
   PORT=`cat ${MUX_PROP_FILE} | grep http.port=`
@@ -50,7 +50,10 @@ fi
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dscreen.verbose=true" # Unit changes for SSD1306 (I2C)
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -Dprocess.on.start=$PROCESS_ON_START"
+if [[ "${PROCESS_ON_START}" != "" ]]
+then
+  JAVA_OPTIONS="${JAVA_OPTIONS} -Dprocess.on.start=$PROCESS_ON_START"
+fi
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dno.ais=false" # Accept AIS Strings

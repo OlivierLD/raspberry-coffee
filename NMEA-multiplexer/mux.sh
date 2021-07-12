@@ -37,7 +37,7 @@ fi
 #
 PROCESS_ON_START=true # Default is true for process.on.start
 #
-if [[ "$PROCESS_ON_START" = "false" ]]
+if [[ "$PROCESS_ON_START" == "false" ]]
 then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
   PORT=`cat ${MUX_PROP_FILE} | grep http.port=`

@@ -63,7 +63,10 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dscreen.verbose=true" # Unit changes for SSD1306 (I
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dwith.sun.flower=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Ddefault.sf.latitude=37.7489 -Ddefault.sf.longitude=-122.5070" # SF.
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -Dprocess.on.start=$PROCESS_ON_START"
+if [[ "${PROCESS_ON_START}" != "" ]]
+then
+  JAVA_OPTIONS="${JAVA_OPTIONS} -Dprocess.on.start=$PROCESS_ON_START"
+fi
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dno.ais=false" # Accept AIS Strings
