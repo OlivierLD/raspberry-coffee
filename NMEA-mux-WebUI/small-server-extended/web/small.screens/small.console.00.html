@@ -343,7 +343,7 @@
 			document.getElementById('lng').innerHTML = decToSex(val.lng, "EW", true);
 		});
 		events.subscribe('gps-time', (val) => {
-			if (val !== {}) {
+			if (val !== null) {
 				document.getElementById('gps-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
 				document.getElementById('gps-time').innerText = `${val.hour}:${val.min}:${val.sec}`;
 			} else {
@@ -352,7 +352,7 @@
 			}
 		});
 		events.subscribe('solar-time', (val) => {
-			if (val !== {}) {
+			if (val !== null) {
 				document.getElementById('solar-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
 				document.getElementById('solar-time').innerText = `${val.hour}:${val.min}:${val.sec}`;
 			} else {
