@@ -2,6 +2,7 @@
  * @author Olivier Le Diouris
  */
 let forwardAjaxErrors = true;
+let verbose = false; // For debug.
 
 displayErr = (mess) => {
 	console.log(mess);
@@ -72,18 +73,13 @@ function getNMEAData() {
 function fetch() {
 	let getData = getNMEAData();
 	getData.then((value) => {
-		console.log("Done:", value);
+		if (verbose) {
+		    console.log("Done:", value);
+		}
 		let json = JSON.parse(value);
 		onMessage(json);
-	}, (error, errmess) => {
-		let message;
-		if (errmess !== undefined) {
-			let mess = JSON.parse(errmess);
-			if (mess.message !== undefined) {
-				message = mess.message;
-			}
-		}
-		console.debug("Failed to get nmea data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	}, (error) => {
+		console.debug("Failed to get nmea data..." + (error !== undefined ? JSON.stringify(error) : ' - '));
 	});
 }
 
@@ -344,7 +340,7 @@ function onMessage(json) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "dew");
 		}
 
-		if (errMess !== undefined && forwardAjaxErrors) {
+		if (errMess !== undefined && errMess.trim().length > 0 && forwardAjaxErrors) {
 			displayErr(errMess);
 		}
 	} catch (err) {
