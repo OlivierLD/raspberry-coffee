@@ -353,7 +353,7 @@
 		events.subscribe('gps-time', (val) => {
 			if (val !== null) {
 				document.getElementById('gps-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
-				document.getElementById('gps-time').innerText = `${lpad(val.hour, '0', 2)}:${lpad(val.min, '0', 2)}:${lpad(val.sec, '0', 2)}`;
+				document.getElementById('gps-time').innerText = `${lpad(val.hour.toString(), '0', 2)}:${lpad(val.min.toString(), '0', 2)}:${lpad(val.sec.toString(), '0', 2)}`;
 			} else {
 				document.getElementById('gps-date').innerText = `Not Set`;
 				document.getElementById('gps-time').innerText = `-`;
@@ -362,7 +362,7 @@
 		events.subscribe('solar-time', (val) => {
 			if (val !== null) {
 				document.getElementById('solar-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
-				document.getElementById('solar-time').innerText = `${lpad(val.hour, '0', 2)}:${lpad(val.min, '0', 2)}:${lpad(val.sec, '0', 2)}`;
+				document.getElementById('solar-time').innerText = `${lpad(val.hour.toString(), '0', 2)}:${lpad(val.min.toString(), '0', 2)}:${lpad(val.sec.toString(), '0', 2)}`;
 			} else {
 				document.getElementById('solar-date').innerText = `Not Set`;
 				document.getElementById('solar-time').innerText = `-`;
