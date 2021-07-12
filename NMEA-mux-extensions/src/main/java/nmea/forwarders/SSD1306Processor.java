@@ -929,7 +929,7 @@ public class SSD1306Processor implements Forwarder {
 
 	public static class OLEDI2CBean {
 		private String cls; // Class
-		private String type = "oled-i2c";
+		private String type = "oled-i2c-spi";
 
 		public OLEDI2CBean(SSD1306Processor instance) {
 			cls = instance.getClass().getName();

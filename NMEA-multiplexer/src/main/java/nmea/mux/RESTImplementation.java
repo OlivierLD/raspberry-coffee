@@ -2201,7 +2201,7 @@ public class RESTImplementation {
 		boolean status = this.mux.getEnableProcess();
 		Map<String, Object> map = new HashMap<>(2);
 		map.put("started", ApplicationContext.getInstance().getDataCache().getStartTime());
-		map.put("processing", new Boolean(status));
+		map.put("processing", status);
 
 		JsonElement jsonElement = null;
 		try {
