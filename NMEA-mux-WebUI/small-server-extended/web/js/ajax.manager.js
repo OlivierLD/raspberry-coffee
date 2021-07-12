@@ -197,6 +197,16 @@ function onMessage(json) {
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Relative_Humidity");
 		}
+
+		try {
+		    let satData = json["Satellites in view"];
+		    if (satData) {
+		        events.publish('gps-sat', satData);
+		    }
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Satellites in view");
+		}
+
 		try {
 			let aws = json.AWS.speed;
 			events.publish('aws', aws);

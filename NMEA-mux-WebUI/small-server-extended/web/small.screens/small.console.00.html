@@ -5,6 +5,7 @@
  |
  | Implement left-right swipe to scroll through screens.
  |
+ | Basic GPS Data.
  | POS, COG, SOG, GPS Time, SOL Time
  +-->
 <html>
@@ -226,6 +227,9 @@
 		}
 	</style>
 
+	<script type="module" src="webcomponents/SatellitePlotter.js"></script>
+
+	<!-- Communication with the cache, through REST -->
 	<script type="text/javascript" src="../js/pub.sub.js"></script>
 	<script type="text/javascript" src="../js/ajax.manager.js"></script>
 
@@ -324,6 +328,9 @@
 			document.getElementById('solar-date').innerText = `${MONTHS[parseInt(val.month) - 1]} ${val.day}, ${val.year}`;
 			document.getElementById('solar-time').innerText = `${val.hour}:${val.min}:${val.sec}`;
 		});
+		events.subscribe('gps-sat', (val) => {
+			document.getElementById('sp-01').setSatellites(val);
+		});
 
 		window.onload = () => {
 			// Swipe detection
@@ -341,7 +348,7 @@
 <div class="slideshow-container">
 
 	<div class="the-slides fade">
-		<div class="number-text">1 / 5</div>
+		<div class="number-text">1 / 6</div>
 		<div class="display">
 			<span class="display-title">Position</span>
 			<div class="display-data-2">
@@ -355,7 +362,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">2 / 5</div>
+		<div class="number-text">2 / 6</div>
 		<div class="display">
 			<span class="display-title">Course Over Ground</span>
 			<span class="display-data" id="cog">000</span>
@@ -365,7 +372,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">3 / 5</div>
+		<div class="number-text">3 / 6</div>
 		<div class="display">
 			<span class="display-title">Speed Over Ground</span>
 			<span class="display-data" id="sog">00.00</span>
@@ -375,7 +382,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">4 / 5</div>
+		<div class="number-text">4 / 6</div>
 		<div class="display">
 			<span class="display-title">GPS Time</span>
 			<div class="display-data-2 display-data-centered">
@@ -389,7 +396,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">5 / 5</div>
+		<div class="number-text">5 / 6</div>
 		<div class="display">
 			<span class="display-title">Solar Time</span>
 			<div class="display-data-2 display-data-centered">
@@ -402,6 +409,23 @@
 		<div class="text">SOL</div>
 	</div>
 
+	<div class="the-slides fade">
+		<div class="number-text">6 / 6</div>
+		<div class="display">
+			<span class="display-title">Sat in View</span>
+
+			<satellite-plotter class="sat-plot-01"
+					   title="Satellites in view"
+					   id="sp-01"
+					   width="400"
+					   height="400"
+					   with-border="true"
+					   sat-in-view='{}'></satellite-plotter>
+		</div>
+		<div class="text">SAT</div>
+	</div>
+
+
 	<div class="prev" onclick="plusSlides(-1);">&#10094;</div>
 	<div class="next" onclick="plusSlides(1);">&#10095;</div>
 
@@ -411,6 +435,7 @@
 		<span class="dot" onclick="currentSlide(3);" title="SOG"></span>
 		<span class="dot" onclick="currentSlide(4);" title="GPS"></span>
 		<span class="dot" onclick="currentSlide(5);" title="SOL"></span>
+		<span class="dot" onclick="currentSlide(6);" title="SAT"></span>
 	</div>
 </div>
 <br>
