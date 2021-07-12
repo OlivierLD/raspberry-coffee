@@ -6,7 +6,7 @@
  | Implement left-right swipe to scroll through screens.
  |
  | Basic GPS Data.
- | POS, COG, SOG, GPS Time, SOL Time
+ | POS, COG, SOG, GPS Time, SOL Time, SAT in view
  +-->
 <html>
 <head>
@@ -225,6 +225,18 @@
 			color: inherit;
 			font-size: 28px;
 		}
+
+		.sat-plot-01 {
+			--border-color: darkGrey;
+			--with-gradient: true;
+		/*	--display-background-gradient-from: LightGrey;
+			--display-background-gradient-to: DarkGrey; */
+			--with-display-shadow: true;
+			--shadow-color: rgba(0, 0, 0, 0.75);
+			--line-color: grey;
+			--font: Arial;
+		}
+
 	</style>
 
 	<script type="module" src="webcomponents/SatellitePlotter.js"></script>
