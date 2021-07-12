@@ -91,6 +91,8 @@ function onMessage(json) {
 	try {
 		let errMess = "";
 
+        events.publish('raw', json);
+
 		try {
 			let latitude = json.Position.lat;
 //          console.log("latitude:" + latitude)

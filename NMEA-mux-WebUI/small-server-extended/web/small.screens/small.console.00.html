@@ -237,6 +237,13 @@
 			--font: Arial;
 		}
 
+		.raw-data {
+			text-align: left;
+			max-height: 400px;
+			overflow-x: auto;
+			overflow-y: auto;
+		}
+
 	</style>
 
 	<script type="module" src="webcomponents/SatellitePlotter.js"></script>
@@ -322,6 +329,9 @@
 		 *
 		 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
 		 */
+		events.subscribe('raw', (val) => {
+			document.getElementById('raw-data').innerHTML = `<pre>${JSON.stringify(val, null, 2)}</pre>`;
+		});
 		events.subscribe('sog', (val) => {
 			document.getElementById('sog').innerText = val.toFixed(2);
 		});
@@ -363,7 +373,7 @@
 <div class="slideshow-container">
 
 	<div class="the-slides fade">
-		<div class="number-text">1 / 6</div>
+		<div class="number-text">1 / 7</div>
 		<div class="display">
 			<span class="display-title">Position</span>
 			<div class="display-data-2">
@@ -377,7 +387,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">2 / 6</div>
+		<div class="number-text">2 / 7</div>
 		<div class="display">
 			<span class="display-title">Course Over Ground</span>
 			<span class="display-data" id="cog">000</span>
@@ -387,7 +397,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">3 / 6</div>
+		<div class="number-text">3 / 7</div>
 		<div class="display">
 			<span class="display-title">Speed Over Ground</span>
 			<span class="display-data" id="sog">00.00</span>
@@ -397,7 +407,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">4 / 6</div>
+		<div class="number-text">4 / 7</div>
 		<div class="display">
 			<span class="display-title">GPS Time</span>
 			<div class="display-data-2 display-data-centered">
@@ -411,7 +421,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">5 / 6</div>
+		<div class="number-text">5 / 7</div>
 		<div class="display">
 			<span class="display-title">Solar Time</span>
 			<div class="display-data-2 display-data-centered">
@@ -425,7 +435,7 @@
 	</div>
 
 	<div class="the-slides fade">
-		<div class="number-text">6 / 6</div>
+		<div class="number-text">6 / 7</div>
 		<div class="display">
 			<span class="display-title">Sat in View</span>
 
@@ -440,6 +450,15 @@
 		<div class="text">SAT</div>
 	</div>
 
+	<div class="the-slides fade">
+		<div class="number-text">7 / 7</div>
+		<div class="display">
+			<span class="display-title">Raw Data</span>
+			<div id="raw-data" class="raw-data"></div>
+		</div>
+		<div class="text">RAW</div>
+	</div>
+
 
 	<div class="prev" onclick="plusSlides(-1);">&#10094;</div>
 	<div class="next" onclick="plusSlides(1);">&#10095;</div>
@@ -451,6 +470,7 @@
 		<span class="dot" onclick="currentSlide(4);" title="GPS"></span>
 		<span class="dot" onclick="currentSlide(5);" title="SOL"></span>
 		<span class="dot" onclick="currentSlide(6);" title="SAT"></span>
+		<span class="dot" onclick="currentSlide(7);" title="RAW"></span>
 	</div>
 </div>
 <br>
