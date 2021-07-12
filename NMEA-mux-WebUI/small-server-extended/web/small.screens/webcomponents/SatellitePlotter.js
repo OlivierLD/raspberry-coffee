@@ -41,7 +41,7 @@ const defaultSatPlotColorConfig = {
 	font: 'Arial'
 };
 
-//import * as Utilities from "./utilities/Utilities.js";
+import * as Utilities from "./utilities/Utilities.js";
 
 /* global HTMLElement */
 class SatellitePlotter extends HTMLElement {
@@ -328,7 +328,7 @@ class SatellitePlotter extends HTMLElement {
 			for (let satNum in this._satellites) {
 				context.beginPath();
 
-				context.fillStyle = getSNRColor(this._satellites[satNum].snr);
+				context.fillStyle = this.getSNRColor(this._satellites[satNum].snr);
 //              let satCircleRadius = radius * (Math.cos(toRadians(demoSat[i].el)));
 				let satCircleRadius = radius * ((90 - this._satellites[satNum].elevation) / 90);
 				let centerSat = {

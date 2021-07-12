@@ -329,7 +329,10 @@
 			document.getElementById('solar-time').innerText = `${val.hour}:${val.min}:${val.sec}`;
 		});
 		events.subscribe('gps-sat', (val) => {
-			document.getElementById('sp-01').setSatellites(val);
+			let elmt = document.getElementById('sp-01');
+            elmt.setSatellites(val);
+            elmt.repaint();
+
 		});
 
 		window.onload = () => {
