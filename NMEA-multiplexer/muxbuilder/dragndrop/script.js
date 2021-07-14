@@ -68,6 +68,17 @@ function closeDialog(clicked) {
 // Show/Hide generated yaml code
 function showGeneratedDialog() {
     let codeDialog = document.getElementById("generated-code-dialog");
+    // Copy content in the clipboard
+    let codeContent = document.getElementById('generated-yaml').innerHTML;
+    codeContent = codeContent.replaceAll("<br>", "\n");
+    // console.log(codeContent);
+    let codeHolder = document.createElement("textarea");
+    codeHolder.value = codeContent;
+    document.body.appendChild(codeHolder);
+    codeHolder.select();
+    document.execCommand("copy");
+    document.body.removeChild(codeHolder);
+
     codeDialog.show(); // showModal();
 }
 function closeGeneratedDialog() {

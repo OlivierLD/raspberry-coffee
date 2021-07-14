@@ -25,11 +25,11 @@ XSL_STYLESHEET=./data2fop_2pages.xsl
 LANG=$1
 WITH_STARS=$2
 PRM_OPTION=
-if [ $LANG = "FR" ]
+if [[ $LANG == "FR" ]]
 then
   echo On parle francais
   PRM_OPTION="-docconf ./lang_fr.cfg"
-  if [ $WITH_STARS = "false" ]
+  if [[] $WITH_STARS = "false" ]]
   then
     PRM_OPTION="-docconf ./lang_fr_ns.cfg"
   fi
@@ -38,7 +38,7 @@ else
   echo Will speak English
   cp literals_en.xsl literals.xsl
   PRM_OPTION="-docconf ./lang_en.cfg"
-  if [ $WITH_STARS = "false" ]
+  if [[ $WITH_STARS = "false" ]]
   then
     PRM_OPTION="-docconf ./lang_en_ns.cfg"
   fi

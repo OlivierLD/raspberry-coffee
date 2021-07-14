@@ -48,6 +48,24 @@ INSERT INTO OLIV_TABLE VALUES(1,'Hi there','2021-03-29 14:37:16');
 COMMIT;
 sqlite> 
 ```
+To format the `select` output:
+```
+sqlite> .mode columns
+sqlite> .headers on
+sqlite> select * from track;
+Track_ID    Name                Location     Seating     Year_Opened
+----------  ------------------  -----------  ----------  -----------
+1           Auto Club Speedway  Fontana, CA  92000.0     1997.0     
+2           Chicagoland Speedw  Joliet, IL   75000.0     2001.0     
+3           Darlington Raceway  Darlington,  63000.0     1950.0     
+4           Daytona Internatio  Daytona Bea  168000.0    1959.0     
+5           Homestead-Miami Sp  Homestead,   65000.0     1995.0     
+6           Kansas Speedway     Kansas City  81687.0     2001.0     
+7           Martinsville Speed  Ridgeway, V  65000.0     1947.0     
+8           Michigan Internati  Brooklyn, M  137243.0    1968.0     
+9           Phoenix Internatio  Avondale, A  76812.0     1964.0     
+sqlite> 
+```
 
 JDBC Driver, Maven/Gradle:
 ```
