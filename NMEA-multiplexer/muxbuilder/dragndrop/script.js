@@ -68,11 +68,12 @@ function closeDialog(clicked) {
 // Show/Hide generated yaml code
 function showGeneratedDialog() {
     let codeDialog = document.getElementById("generated-code-dialog");
+
     // Copy content in the clipboard
     let codeContent = document.getElementById('generated-yaml').innerHTML;
     codeContent = codeContent.replaceAll("<br>", "\n");
     // console.log(codeContent);
-    let codeHolder = document.createElement("textarea");
+    let codeHolder = document.createElement("textarea"); // To keep the format, 'input' would not.
     codeHolder.value = codeContent;
     document.body.appendChild(codeHolder);
     codeHolder.select();
