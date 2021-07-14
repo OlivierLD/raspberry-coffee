@@ -87,7 +87,7 @@ function closeGeneratedDialog() {
     codeDialog.close();
 }
 
-const TABS = ['one', 'two', 'three'];
+const TABS = ['one', 'two', 'three']; // doc ids of the tabs.
 
 function switchTab(evt, tabNum) {
 	let tabLinks = document.getElementsByClassName("tablinks");
