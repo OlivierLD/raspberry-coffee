@@ -1,9 +1,0 @@
-{ 
-  "upsert": {
-    "Expense.Amount": "setRange('<=', 345)"
-  },
-  "where": {
-    "row.id": 2
-  }
-}
-

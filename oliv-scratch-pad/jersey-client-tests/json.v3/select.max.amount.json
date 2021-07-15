@@ -1,5 +1,0 @@
-{
-  "select": [ "highestValue('Expense.Amount')" ,"Strategy", "Reason" ],
-  "where": { }
-}
-

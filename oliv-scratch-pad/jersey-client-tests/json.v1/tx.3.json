@@ -1,5 +1,0 @@
-{ 
-  "update": "'Approval Type' = deleteFromList('NewHire')",
-  "where": "'Manager' = 'Alex'"
-}
-

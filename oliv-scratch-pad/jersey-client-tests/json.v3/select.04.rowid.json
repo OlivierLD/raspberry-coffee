@@ -1,7 +1,0 @@
-{ 
-  "select": [ "Expense.Amount", "Strategy", "Reason" ],
-  "where": {
-    "row.id": 2
-  }
-}
-

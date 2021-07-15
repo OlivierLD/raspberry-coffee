@@ -1,8 +1,0 @@
-{ 
-  "select": [ "Expense.Amount", "Strategy", "Reason" ],
-  "where": {
-    "Expense.Approvee": "-",
-    "Expense.Type": "-"
-  }
-}
-

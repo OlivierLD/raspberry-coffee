@@ -93,15 +93,9 @@ include 'Project-Trunk:ImageDB'
 include "Project-Trunk:Deviation-Tool"
 include "Project-Trunk:dAISy"
 
-// Scratch pad
-include "oliv-scratch-pad:some-tests"
-include "oliv-scratch-pad:http-test"
-include "oliv-scratch-pad:HLL"
 //include 'REST.clients'
 include 'springboot-sensors'
 include 'jersey-client-tests'
-include 'oliv-scratch-pad:jersey-client-tests'
-findProject(':oliv-scratch-pad:jersey-client-tests')?.name = 'jersey-client-tests'
 include 'Project-Trunk:RESTFileUpload'
 findProject(':Project-Trunk:RESTFileUpload')?.name = 'RESTFileUpload'
 include 'Project-Trunk:REST-Tx'

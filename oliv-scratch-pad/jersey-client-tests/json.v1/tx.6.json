@@ -1,5 +1,0 @@
-{ 
-  "update": "'ApprovalStrategy' = 'Manager'",
-  "where": "'Manager' = 'Alex' AND 'ApprovalStrategy' = 'Automatic'"
-}
-

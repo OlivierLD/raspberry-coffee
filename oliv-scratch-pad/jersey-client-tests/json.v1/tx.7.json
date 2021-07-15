@@ -1,5 +1,0 @@
-{ 
-  "query": "'ApprovalStrategy'",
-  "where": "'Manager' = 'Alex'"
-}
-
