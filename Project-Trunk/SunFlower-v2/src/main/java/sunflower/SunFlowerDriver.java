@@ -860,6 +860,10 @@ public class SunFlowerDriver {
 				substitute = new SwingLedPanel(screenDef);
 				substitute.setLedColor(Color.red);
 				substitute.setVisible(true);
+				int fontFactor = 2;
+				sb.text("Substitute.", 2, (2 * fontFactor) + 5, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				substitute.setBuffer(sb.getScreenBuffer());
+				substitute.display();
 			}
 		}
 	}
@@ -1061,6 +1065,12 @@ public class SunFlowerDriver {
 					System.out.println("GPS Date:" + date);
 				}
 				gpsDate = date;
+				int fontFactor = 1;
+				String displayDate = SDF.format(gpsDate);
+				sb.clear();
+				sb.text(displayDate, 2, (2 * fontFactor) + 7, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				substitute.setBuffer(sb.getScreenBuffer());
+				substitute.display();
 			};
 			this.gpsReader = new GPSReader(gpsConsumer, "RMC");
 
