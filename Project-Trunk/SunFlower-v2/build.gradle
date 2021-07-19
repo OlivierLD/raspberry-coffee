@@ -13,15 +13,16 @@ group = 'oliv.raspi.coffee'
 version = '1.0'
 
 repositories {
-  mavenCentral()
   mavenLocal()
+  mavenCentral()
   maven { url "https://oss.sonatype.org/content/groups/public" }
-//  maven { url "https://www.datanucleus.org/downloads/maven2" }
+  maven { url "https://www.datanucleus.org/downloads/maven2" }
 }
 
 dependencies {
   implementation 'com.google.code.gson:gson:2.8.0'
   implementation 'org.fusesource.jansi:jansi:1.11'
+  implementation 'oracle:xmlparser:2.0'
   implementation project(':http-tiny-server')
   implementation project(':I2C-SPI')        // For the Motor Hat , includes common-utils (AstroComputer). gradlew dependencies is your friend.
   implementation project(':NMEA-multiplexer')
