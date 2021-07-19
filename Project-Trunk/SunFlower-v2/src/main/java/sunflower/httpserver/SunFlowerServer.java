@@ -37,7 +37,10 @@ public class SunFlowerServer {
 			ipAddress = SystemUtils.getIPAddress();
 		} catch (Exception ex) {
 			// Duh
-			ex.printStackTrace();
+			System.err.println("Not on a Rpi?");
+			if ("true".equals("http.verbose")) {
+				ex.printStackTrace();
+			}
 		}
 		System.out.println(String.format("Try REST request : GET http://%s:%d/sf/oplist", ipAddress, httpPort));
 	}
