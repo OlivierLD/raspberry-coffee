@@ -10,6 +10,7 @@ import i2c.motor.adafruitmotorhat.AdafruitMotorHAT;
 import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
 import lcd.substitute.SwingLedPanel;
+import sunflower.gps.GPSReader;
 import utils.StaticUtil;
 import utils.TimeUtil;
 
@@ -17,6 +18,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -37,6 +39,12 @@ import sunflower.utils.ANSIUtil;
  * It can be simulated for demo or development with the following System variables:
  * JAVA_OPTS="$JAVA_OPTS -Ddate.simulation=true"
  * JAVA_OPTS="$JAVA_OPTS -Dstart.date.simulation=2020-03-06T20:00:00"
+ *
+ * Date from GPS (Serial port, baud.rate)
+ * JAVA_OPTS="$JAVA_OPTS -Ddate.from.gps=true"
+ * JAVA_OPTS="$JAVA_OPTS -Dgps.serial.port=/dev/ttyS80"
+ * JAVA_OPTS="$JAVA_OPTS -Dgps.serial.baud.rate=4800"
+ *
  * JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"
  * JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10" (only applied if date.simulation=true)
  * JAVA_OPTS="$JAVA_OPTS -Dfirst.move.slack=30" in seconds (only applied if date.simulation=true). Resumes calculation after this amount of time after the first move of the device
@@ -654,7 +662,7 @@ public class SunFlowerDriver {
 		public void run() {
 			boolean firstMove = true;
 			while (keepCalculating) {
-				Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+				Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC")); // Can come from GPS
 				if ("true".equals(System.getProperty("date.simulation"))) {
 					if (previousDate == null) {
 						System.out.println("\tWill simulate the date for ASTRO calculation");
@@ -712,8 +720,12 @@ public class SunFlowerDriver {
 						}
 					}
 				} else {
-					Date at = new Date();
-					date.setTime(at);
+					if (gpsDate != null) {
+						Date at = new Date();
+						date.setTime(at);
+					} else {
+						date.setTime(gpsDate);  // From GPS
+					}
 				}
 				if (ASTRO_VERBOSE) {
 					System.out.println("Starting Sun data calculation at " + date.getTime());
@@ -1032,8 +1044,28 @@ public class SunFlowerDriver {
 		}
 	}
 
+	private static Date gpsDate = null;
+	private GPSReader gpsReader = null;
+
 	public void start() {
 		keepGoing = true;
+
+		// If GSP required, start Serial Thread
+		boolean dateFromGPS = "true".equals(System.getProperty("date.from.gps")); // =true"
+		String serialPort = System.getProperty("gps.serial.port"); // =/dev/ttyS80", "/dev/tty.usbmodem141101"
+		String baudRateStr = System.getProperty("gps.serial.baud.rate", "4800"); // =4800"
+
+		if (dateFromGPS) {
+			Consumer<Date> gpsConsumer = date -> {
+				if ("true".equals(System.getProperty("gps.verbose", "false"))) {
+					System.out.println("GPS Date:" + date);
+				}
+				gpsDate = date;
+			};
+			this.gpsReader = new GPSReader(gpsConsumer, "RMC");
+
+			gpsReader.startReading(serialPort, Integer.parseInt(baudRateStr));
+		}
 
 		astroThread = new CelestialComputerThread();
 		astroThread.start(); // Start calculating
@@ -1043,7 +1075,7 @@ public class SunFlowerDriver {
 		}
 
 		while (keepGoing) {
-			Date date = new Date();
+			Date date = (gpsDate != null ? gpsDate : new Date()); // System date... May come from a GPS (RMC)
 			DeviceData deviceData = new DeviceData(date,
 					devicePosition, currentDeviceAzimuth, currentDeviceElevation,
 					azimuthOffset, elevationOffset, deviceHeading, currentDeviceAzimuthStepOffset, currentDeviceElevationStepOffset);
@@ -1353,6 +1385,9 @@ public class SunFlowerDriver {
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 //			System.out.println("\nShutting down, releasing resources.");
+			if (gpsReader != null) {
+				gpsReader.stopReading();
+			}
 			this.stop();
 			try { Thread.sleep(5_000); } catch (Exception absorbed) {
 				System.err.println("Ctrl-C: Oops!");

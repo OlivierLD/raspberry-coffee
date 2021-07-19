@@ -339,7 +339,8 @@ To build it, clone this project (this repo), make sure the script named `gradlew
 
 ---
 > _Note_: We use git submodules, see <https://www.vogella.com/tutorials/GitSubmodules/article.html>  
-> AstroComputer is a git submodule
+> AstroComputer is a git submodule  
+> Do a `git submodule update --init` from the root after a first clone.
 ```
 From the root of the repo (raspberry-coffee)
 $ git submodule add https://github.com/OlivierLD/AstroComputer.git

@@ -20,9 +20,10 @@ repositories {
 }
 
 dependencies {
-  compile 'com.google.code.gson:gson:2.8.0'
-  compile 'org.fusesource.jansi:jansi:1.11'
-  compile project(':http-tiny-server')
-  compile project(':I2C-SPI')        // For the Motor Hat , includes common-utils (AstroComputer). gradlew dependencies is your friend.
+  implementation 'com.google.code.gson:gson:2.8.0'
+  implementation 'org.fusesource.jansi:jansi:1.11'
+  implementation project(':http-tiny-server')
+  implementation project(':I2C-SPI')        // For the Motor Hat , includes common-utils (AstroComputer). gradlew dependencies is your friend.
+  implementation project(':NMEA-multiplexer')
 }
 

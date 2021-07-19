@@ -28,7 +28,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
     private HTTPServer adminServer = null;
     protected Properties muxProperties;
 
-    private final List<NMEAClient> nmeaDataClients = new ArrayList<>();
+    private final List<NMEAClient> nmeaDataClients = new ArrayList<>(); // Consumers
     private final List<Forwarder> nmeaDataForwarders = new ArrayList<>();
     private final List<Computer> nmeaDataComputers = new ArrayList<>();
 

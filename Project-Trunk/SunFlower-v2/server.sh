@@ -52,6 +52,11 @@ JAVA_OPTS="${JAVA_OPTS} -Dwith.ssd1306=true" # OLED!
 #
 JAVA_OPTS="${JAVA_OPTS} -Djava.util.logging.config.file=logging.properties"
 #
+JAVA_OPTS="$JAVA_OPTS -Ddate.from.gps=true"
+JAVA_OPTS="$JAVA_OPTS -Dgps.verbose=false"
+JAVA_OPTS="$JAVA_OPTS -Dgps.serial.port=/dev/ttyS80"  #  /dev/tty.usbmodem141101"   #  /dev/ttyS80"
+JAVA_OPTS="$JAVA_OPTS -Dgps.serial.baud.rate=4800"
+#
 REMOTE_DEBUG_FLAGS=
 # REMOTE_DEBUG_FLAGS="$REMOTE_DEBUG_FLAGS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
 JAVA_OPTS="${JAVA_OPTS} ${REMOTE_DEBUG_FLAGS}"

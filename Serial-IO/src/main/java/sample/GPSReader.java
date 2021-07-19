@@ -100,7 +100,9 @@ public class GPSReader implements SerialIOCallbacks {
 		}
 		System.out.println("======================");
 
-		String serialPortName = System.getProperty("serial.port", "/dev/ttyUSB0");
+		String defaultValue = "/dev/tty.usbmodem141101";
+		// "/dev/ttyUSB0"
+		String serialPortName = System.getProperty("serial.port", defaultValue);
 		String baudRateStr = System.getProperty("baud.rate", "4800");
 		System.out.println(String.format("Opening port %s:%s", serialPortName, baudRateStr));
 		CommPortIdentifier serialPort = pm.get(serialPortName);

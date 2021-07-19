@@ -23,6 +23,10 @@ JAVA_OPTS="$JAVA_OPTS -Dazimuth.inverted=false"  # For V5
 #JAVA_OPTS="$JAVA_OPTS -Dincrement.per.second=600"
 #JAVA_OPTS="$JAVA_OPTS -Dbetween.astro.loops=10"
 #
+# JAVA_OPTS="$JAVA_OPTS -Ddate.from.gps=true"
+# JAVA_OPTS="$JAVA_OPTS -Dgps.serial.port=/dev/ttyS80" /dev/tty.usbmodem141101
+# JAVA_OPTS="$JAVA_OPTS -Dgps.serial.baud.rate=4800"
+#
 JAVA_OPTS="$JAVA_OPTS -Duse.step.accumulation=true"
 #
 JAVA_OPTS="$JAVA_OPTS -Dwith.ssd1306=true"
