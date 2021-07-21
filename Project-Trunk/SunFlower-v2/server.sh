@@ -42,7 +42,7 @@ JAVA_OPTS="${JAVA_OPTS} -Dfirst.move.slack=35"
 #
 JAVA_OPTS="${JAVA_OPTS} -Dbetween.astro.loops=10" # Give some time to the motor...
 #JAVA_OPTS="${JAVA_OPTS} -Dbetween.astro.loops=1"
-JAVA_OPTS="${JAVA_OPTS} -Dno.motor.movement=false"
+JAVA_OPTS="${JAVA_OPTS} -Dno.motor.movement=false" # Set to false NOT to use the motors
 #
 # NMEA Data server (NMEA-multiplexer), position and heading
 JAVA_OPTS="${JAVA_OPTS} -Dping.nmea.server=false"
@@ -57,11 +57,20 @@ JAVA_OPTS="${JAVA_OPTS} -Djava.util.logging.config.file=logging.properties"
 # and sudo apt-install librxtx-java
 JAVA_OPTS="$JAVA_OPTS -Ddate.from.gps=true"
 JAVA_OPTS="$JAVA_OPTS -Dgps.verbose=false"
-JAVA_OPTS="$JAVA_OPTS -Dgps.serial.port=/dev/ttyS80"  #  /dev/tty.usbmodem141101"   #  /dev/ttyS80"
+JAVA_OPTS="$JAVA_OPTS -Dgps.serial.port=/dev/tty.usbmodem141101"   #  /dev/ttyS80"
 JAVA_OPTS="$JAVA_OPTS -Dgps.serial.baud.rate=4800"
 #
 # uname -s: Linux
-JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
+OS=$(uname -s)
+case "${OS}" in
+  "Darwin")
+    JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"  # for Mac
+    ;;
+  "Linux" | *)
+    JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
+    ;;
+esac
+
 CP=${CP}:/usr/share/java/RXTXcomm.jar                                # For Raspberry Pi
 #
 REMOTE_DEBUG_FLAGS=

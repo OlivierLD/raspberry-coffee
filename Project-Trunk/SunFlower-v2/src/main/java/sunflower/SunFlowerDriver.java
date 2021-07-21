@@ -720,7 +720,7 @@ public class SunFlowerDriver {
 						}
 					}
 				} else {
-					if (gpsDate != null) {
+					if (gpsDate == null) {
 						Date at = new Date();
 						date.setTime(at);
 					} else {
@@ -1060,23 +1060,29 @@ public class SunFlowerDriver {
 		String baudRateStr = System.getProperty("gps.serial.baud.rate", "4800"); // =4800"
 
 		if (dateFromGPS) {
-			Consumer<Date> gpsConsumer = date -> {
-				if ("true".equals(System.getProperty("gps.verbose", "false"))) {
-					System.out.println("GPS Date:" + date);
-				}
-				gpsDate = date;
-				int fontFactor = 1;
-				String displayDate = SDF.format(gpsDate);
-				sb.clear();
-				sb.text(displayDate, 2, (2 * fontFactor) + 7, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
-				substitute.setBuffer(sb.getScreenBuffer());
-				substitute.display();
-			};
-			this.gpsReader = new GPSReader(gpsConsumer, "RMC");
 
-			gpsReader.startReading(serialPort, Integer.parseInt(baudRateStr));
+			Thread gpsThread = new Thread(() -> {
+				System.out.println("Start Reading the GPS");
+				Consumer<Date> gpsConsumer = date -> {
+					if ("true".equals(System.getProperty("gps.verbose", "false"))) {
+						System.out.println("GPS Date:" + date);
+					}
+					gpsDate = date;
+					int fontFactor = 1;
+					String displayDate = SDF.format(gpsDate);
+					sb.clear();
+					sb.text(displayDate, 2, (2 * fontFactor) + 7, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+					substitute.setBuffer(sb.getScreenBuffer());
+					substitute.display();
+				};
+				this.gpsReader = new GPSReader(gpsConsumer, "RMC");
+
+				gpsReader.startReading(serialPort, Integer.parseInt(baudRateStr));
+			}, "GPSThread");
+			gpsThread.start();
 		}
 
+		System.out.println("Stating AstroThread...");
 		astroThread = new CelestialComputerThread();
 		astroThread.start(); // Start calculating
 
