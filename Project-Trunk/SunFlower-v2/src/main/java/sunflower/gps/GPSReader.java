@@ -157,13 +157,17 @@ public class GPSReader implements SerialIOCallbacks {
         } catch (IOException ioe) {
             ioe.printStackTrace();
         }
-
     }
 
     private static final SimpleDateFormat SDF_DATETIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     static {
         SDF_DATETIME.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
     }
+
+    /**
+     * Standalone test
+     * @param args
+     */
     public static void main(String... args) {
         final GPSReader gpsReader = new GPSReader(date -> {
             System.out.println(SDF_DATETIME.format(date));

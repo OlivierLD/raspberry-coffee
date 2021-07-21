@@ -1063,6 +1063,7 @@ public class SunFlowerDriver {
 
 			Thread gpsThread = new Thread(() -> {
 				System.out.println("Start Reading the GPS");
+				// TODO Get the position as well
 				Consumer<Date> gpsConsumer = date -> {
 					if ("true".equals(System.getProperty("gps.verbose", "false"))) {
 						System.out.println("GPS Date:" + date);
@@ -1072,8 +1073,18 @@ public class SunFlowerDriver {
 					String displayDate = SDF.format(gpsDate);
 					sb.clear();
 					sb.text(displayDate, 2, (2 * fontFactor) + 7, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
-					substitute.setBuffer(sb.getScreenBuffer());
-					substitute.display();
+					if (substitute != null) {
+						substitute.setBuffer(sb.getScreenBuffer());
+						substitute.display();
+					}
+					if (oled != null) {
+						oled.setBuffer(sb.getScreenBuffer());
+						try {
+							oled.display();
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
 				};
 				this.gpsReader = new GPSReader(gpsConsumer, "RMC");
 
