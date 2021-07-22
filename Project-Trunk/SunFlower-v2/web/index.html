@@ -181,6 +181,14 @@
             }
         };
 
+        let showHideAstroData = () => {
+            let astroData = document.getElementById('astro-data');
+            if (astroData.style.display === 'none') {
+                astroData.style.display = 'block';
+            } else {
+                astroData.style.display = 'none';
+            }
+        };
     </script>
     <style type="text/css">
         body {
@@ -214,6 +222,10 @@
            border: 1px solid rgba(0, 0, 255, 0.15);
            border-radius: 5px;
         }
+
+        .top-one:hover {
+           cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -238,62 +250,64 @@
     </table>
 </div>
 <div style="padding: 4px;">✊<small>Guaranteed <b><i>0%</i></b> external libraries (100% pure organic HTML5/CSS3/ES6).</small></div>
-<h2>🌻 Sun Flower - Raw Data <span id="device-pos"></span></h2>
-<table style="margin: auto; border: 0px solid cyan;" class="astro-data">
-    <tr>
-        <th>System Date</th>
-        <th>Sun Z</th>
-        <th>Sun El.</th>
-        <th>Dev. Z</th>
-        <th>Last Z move</th>
-        <th>Dev. El.</th>
-        <th>Last El. move</th>
+<h2><span class="top-one" onclick="showHideAstroData();" title="Click to show/hide">🌻 Sun Flower - Raw Data <span id="device-pos"></span></span></h2>
+<div id="astro-data">
+    <table style="margin: auto; border: 0px solid cyan;" class="astro-data">
+        <tr>
+            <th>System Date</th>
+            <th>Sun Z</th>
+            <th>Sun El.</th>
+            <th>Dev. Z</th>
+            <th>Last Z move</th>
+            <th>Dev. El.</th>
+            <th>Last El. move</th>
 
-        <!--th>Sun Z.</th-->
-        <th rowspan="5" style="vertical-align: top;">
-            <div style="text-align: left; margin: 20px 20px 20px;" id="sun-azimuth">
-                <div style="width: 160px; height: 160px; border: 1px solid blue; border-radius: 5px;">
-                    Sun Azimuth...
+            <!--th>Sun Z.</th-->
+            <th rowspan="5" style="vertical-align: top;">
+                <div style="text-align: left; margin: 20px 20px 20px;" id="sun-azimuth">
+                    <div style="width: 160px; height: 160px; border: 1px solid blue; border-radius: 5px;">
+                        Sun Azimuth...
+                    </div>
                 </div>
-            </div>
-        </th>
-    </tr>
-    <tr>
-        <td style="text-align: center; vertical-align: top;"><span id="date"></span></td>
-        <td style="text-align: right; vertical-align: top;"><span id="sun-z"></span></td>
-        <td style="text-align: right; vertical-align: top;"><span id="sun-el"></span></td>
-        <td style="text-align: right; vertical-align: top;"><span id="dev-z"></span></td>
-        <td style="text-align: right; vertical-align: top;"><span id="last-dev-z-move"></span></td>
-        <td style="text-align: right; vertical-align: top;"><span id="dev-el"></span></td>
-        <td style="text-align: right; vertical-align: top;"><span id="last-dev-el-move"></span></td>
-    </tr>
-    <tr>
-        <th colspan="4"></th>
-        <th>Z Step Offset</th>
-        <th></th>
-        <th>El. Step Offset</th>
-    </tr>
-    <tr>
-        <td colspan="4"></td>
-        <td style="text-align: right; vertical-align: top;"><span id="z-offset"></span></td>
-        <td></td>
-        <td style="text-align: right; vertical-align: top;"><span id="el-offset"></span></td>
-    </tr>
-    <tr>
-        <td colspan="7" title="Raw JSON data">
-            <div id="raw-json" style="height: 300px; overflow: auto;"></div>
-        </td>
-    </tr>
-</table>
-<hr/>
-<div style="padding: 5px; border: 1px solid rgba(255, 0, 0, 0.25); border-radius: 5px;">
-    <small>
-        All available data are here, this is just a jump-start example, showing how they could be displayed when needed.<br/>
-        It is using REST to ping the SunFlower server.<br/>
-        Look into the code for details...
-    </small>
+            </th>
+        </tr>
+        <tr>
+            <td style="text-align: center; vertical-align: top;"><span id="date"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="sun-z"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="sun-el"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="dev-z"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="last-dev-z-move"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="dev-el"></span></td>
+            <td style="text-align: right; vertical-align: top;"><span id="last-dev-el-move"></span></td>
+        </tr>
+        <tr>
+            <th colspan="4"></th>
+            <th>Z Step Offset</th>
+            <th></th>
+            <th>El. Step Offset</th>
+        </tr>
+        <tr>
+            <td colspan="4"></td>
+            <td style="text-align: right; vertical-align: top;"><span id="z-offset"></span></td>
+            <td></td>
+            <td style="text-align: right; vertical-align: top;"><span id="el-offset"></span></td>
+        </tr>
+        <tr>
+            <td colspan="7" title="Raw JSON data">
+                <div id="raw-json" style="height: 300px; overflow: auto;"></div>
+            </td>
+        </tr>
+    </table>
+    <hr/>
+    <div style="padding: 5px; border: 1px solid rgba(255, 0, 0, 0.25); border-radius: 5px;">
+        <small>
+            All available data are here, this is just a jump-start example, showing how they could be displayed when needed.<br/>
+            It is using REST to ping the SunFlower server.<br/>
+            Look into the code for details...
+        </small>
+    </div>
+    <hr/>
 </div>
-<hr/>
 </body>
 <script type="text/javascript">
 
