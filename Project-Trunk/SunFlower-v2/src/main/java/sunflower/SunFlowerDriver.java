@@ -1073,7 +1073,7 @@ public class SunFlowerDriver {
 					if (rmc.getGp() != null) {
 						setDevicePosition(rmc.getGp().lat, rmc.getGp().lng);
 					}
-
+					// TODO Reformat. Date on 2 lines, plus position.
 					int fontFactor = 1;
 					String displayDate = SDF.format(gpsDate);
 					sb.clear();
