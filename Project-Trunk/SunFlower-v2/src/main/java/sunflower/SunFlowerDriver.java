@@ -71,6 +71,10 @@ public class SunFlowerDriver {
 	}
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss Z");
+	private final static SimpleDateFormat SDF_OLED = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	static {
+		SDF_OLED.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+	}
 
 	private final static int STEPS_PER_CIRCLE = 200;
 
@@ -1073,11 +1077,22 @@ public class SunFlowerDriver {
 					if (rmc.getGp() != null) {
 						setDevicePosition(rmc.getGp().lat, rmc.getGp().lng);
 					}
-					// TODO Reformat. Date on 2 lines, plus position.
 					int fontFactor = 1;
-					String displayDate = SDF.format(gpsDate);
+					String displayDate = SDF_OLED.format(gpsDate);
+					String latitude = "L: ";
+					String longitude = "G: ";
+					if (rmc.getGp() != null) {
+						latitude += GeomUtil.decToSex(rmc.getGp().lat, GeomUtil.NO_DEG, GeomUtil.NS);
+						longitude += GeomUtil.decToSex(rmc.getGp().lng, GeomUtil.NO_DEG, GeomUtil.EW);
+					} else {
+						latitude += "-";
+						longitude += "-";
+					}
+
 					sb.clear();
-					sb.text(displayDate, 2, (2 * fontFactor) + 7, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+					sb.text(displayDate, 2, 9, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+					sb.text(latitude, 2, 19, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
+					sb.text(longitude, 2, 29, fontFactor, ScreenBuffer.Mode.WHITE_ON_BLACK);
 					if (substitute != null) {
 						substitute.setBuffer(sb.getScreenBuffer());
 						substitute.display();

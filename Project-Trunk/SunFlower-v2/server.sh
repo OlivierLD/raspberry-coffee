@@ -42,7 +42,7 @@ JAVA_OPTS="${JAVA_OPTS} -Dfirst.move.slack=35"
 #
 JAVA_OPTS="${JAVA_OPTS} -Dbetween.astro.loops=10" # Give some time to the motor...
 #JAVA_OPTS="${JAVA_OPTS} -Dbetween.astro.loops=1"
-JAVA_OPTS="${JAVA_OPTS} -Dno.motor.movement=false" # Set to true NOT to use the motors
+JAVA_OPTS="${JAVA_OPTS} -Dno.motor.movement=true" # Set to true NOT to use the motors
 #
 # NMEA Data server (NMEA-multiplexer), position and heading
 JAVA_OPTS="${JAVA_OPTS} -Dping.nmea.server=false"
@@ -57,7 +57,6 @@ JAVA_OPTS="${JAVA_OPTS} -Djava.util.logging.config.file=logging.properties"
 # and sudo apt-install librxtx-java
 JAVA_OPTS="$JAVA_OPTS -Ddate.from.gps=true"
 JAVA_OPTS="$JAVA_OPTS -Dgps.verbose=false"
-JAVA_OPTS="$JAVA_OPTS -Dgps.serial.port=/dev/ttyS80"   # /dev/tty.usbmodem141101"   #  /dev/ttyS80"
 JAVA_OPTS="$JAVA_OPTS -Dgps.serial.baud.rate=4800"
 #
 # uname -s: Linux
@@ -65,9 +64,11 @@ OS=$(uname -s)
 case "${OS}" in
   "Darwin")
     JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/Library/Java/Extensions"  # for Mac
+    JAVA_OPTS="$JAVA_OPTS -Dgps.serial.port=/dev/tty.usbmodem141101"
     ;;
   "Linux" | *)
     JAVA_OPTS="$JAVA_OPTS -Djava.library.path=/usr/lib/jni"              # RPi
+    JAVA_OPTS="$JAVA_OPTS -Dgps.serial.port=/dev/ttyS80"
     ;;
 esac
 #
