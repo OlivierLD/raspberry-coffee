@@ -52,9 +52,10 @@ JAVA_OPTS="${JAVA_OPTS} -Dwith.ssd1306=true" # OLED!
 #
 JAVA_OPTS="${JAVA_OPTS} -Djava.util.logging.config.file=logging.properties"
 #
+# Add a GPS on a Serial Port (to get RMC Date amd Position)
 # Make sure ping.nmea.server=false
 # May require a link sudo ln -s /dev/ttyACM0 /dev/ttyS80
-# and sudo apt-install librxtx-java
+#           and sudo apt-install librxtx-java
 JAVA_OPTS="$JAVA_OPTS -Ddate.from.gps=true"
 JAVA_OPTS="$JAVA_OPTS -Dgps.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dgps.serial.baud.rate=4800"
