@@ -16,15 +16,15 @@ public class GPSReader implements SerialIOCallbacks {
     private boolean verbose = "true".equals(System.getProperty("gps.verbose", "false"));
 
     private List<String> filters = null;
-    private Consumer<Date> dateConsumer = null;
+    private Consumer<RMC> rmcConsumer = null;
 
     public GPSReader() {
         this(null);
     }
 
-    public GPSReader(Consumer<Date> rmcConsumer, String... filters) {
+    public GPSReader(Consumer<RMC> rmcConsumer, String... filters) {
         if (rmcConsumer != null) {
-            this.dateConsumer = rmcConsumer;
+            this.rmcConsumer = rmcConsumer;
         }
         this.filters = Arrays.asList(filters);
     }
@@ -85,12 +85,14 @@ public class GPSReader implements SerialIOCallbacks {
         String sentence = new String(mess);
         String id = sentence.substring(3, 6);
         if (filters == null || filters.contains(id)) {
-            System.out.print(sentence); // Regular output
+            if (verbose) {
+                System.out.print(sentence); // Regular output
+            }
             if ("RMC".equals(id)) {
                 RMC rmc = StringParsers.parseRMC(sentence);
-                Date rmcDate = rmc.getRmcDate();
-                if (dateConsumer != null) {
-                    dateConsumer.accept(rmcDate);
+//                Date rmcDate = rmc.getRmcDate();
+                if (rmcConsumer != null) {
+                    rmcConsumer.accept(rmc);
                 }
             }
         }

@@ -10,6 +10,7 @@ import i2c.motor.adafruitmotorhat.AdafruitMotorHAT;
 import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
 import lcd.substitute.SwingLedPanel;
+import nmea.parser.RMC;
 import sunflower.gps.GPSReader;
 import utils.StaticUtil;
 import utils.TimeUtil;
@@ -1063,12 +1064,16 @@ public class SunFlowerDriver {
 
 			Thread gpsThread = new Thread(() -> {
 				System.out.println("Start Reading the GPS");
-				// TODO Get the position as well
-				Consumer<Date> gpsConsumer = date -> {
+				// Get date and position from the GPS.
+				Consumer<RMC> gpsConsumer = rmc -> {
 					if ("true".equals(System.getProperty("gps.verbose", "false"))) {
-						System.out.println("GPS Date:" + date);
+						System.out.printf("GPS Date:%s, Position %s\n", rmc.getRmcDate(), rmc.getGp());
 					}
-					gpsDate = date;
+					gpsDate = rmc.getRmcDate();
+					if (rmc.getGp() != null) {
+						setDevicePosition(rmc.getGp().lat, rmc.getGp().lng);
+					}
+
 					int fontFactor = 1;
 					String displayDate = SDF.format(gpsDate);
 					sb.clear();
