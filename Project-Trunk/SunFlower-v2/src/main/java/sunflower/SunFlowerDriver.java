@@ -1067,7 +1067,7 @@ public class SunFlowerDriver {
 		if (dateFromGPS) {
 
 			Thread gpsThread = new Thread(() -> {
-				System.out.println("Start Reading the GPS");
+				System.out.println("Start Reading the GPS"); // Date and Position
 				// Get date and position from the GPS.
 				Consumer<RMC> gpsConsumer = rmc -> {
 					if ("true".equals(System.getProperty("gps.verbose", "false"))) {
