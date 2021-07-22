@@ -386,6 +386,11 @@ Typically, this operation will be run like this:
 ```
 The expected archive will be produced in the local `build/libs` directory.
 
+> Note: On small machines (like Raspberry Pi Zero), you might want to exclude the Scala compilation (too demanding) on some modules:
+> ```
+> $ ../gradlew clean shadowJar -x :AstroComputer:compileScala
+> ```
+
 > _Important_ : If `JAVA_HOME` is not set at the system level, you can set it in `set.gradle.env` and execute it before running `gradlew`:
 ```
  Prompt> ../set.gradle.env

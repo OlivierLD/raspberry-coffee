@@ -42,7 +42,7 @@ JAVA_OPTS="${JAVA_OPTS} -Dfirst.move.slack=35"
 #
 JAVA_OPTS="${JAVA_OPTS} -Dbetween.astro.loops=10" # Give some time to the motor...
 #JAVA_OPTS="${JAVA_OPTS} -Dbetween.astro.loops=1"
-JAVA_OPTS="${JAVA_OPTS} -Dno.motor.movement=true" # Set to true NOT to use the motors
+JAVA_OPTS="${JAVA_OPTS} -Dno.motor.movement=false" # Set to true NOT to use the motors
 #
 # NMEA Data server (NMEA-multiplexer), position and heading
 JAVA_OPTS="${JAVA_OPTS} -Dping.nmea.server=false"
