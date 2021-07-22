@@ -339,8 +339,8 @@
             let solarDate = new Date(json.CELESTIAL_DATA.solarEpoch + (utcOffsetInMinutes * 60 * 1000));
             solarTime = solarDate.format('H:i:s');
         }
-        let bgData = `<div>Sun D</div><div style='text-align: right;'>${ decToSex(json.CELESTIAL_DATA.decl, NS, true) }</div>`;
-        bgData += `<div>Sun GHA</div><div style='text-align: right;'>${ decToSex(json.CELESTIAL_DATA.gha, null, true) }</div>`;
+        let bgData = `<div>Sun D</div><div style='text-align: right;' title='Sun Declination'>${ decToSex(json.CELESTIAL_DATA.decl, NS, true) }</div>`;
+        bgData += `<div>Sun GHA</div><div style='text-align: right;' title='Sun Greenwich Hour Angle'>${ decToSex(json.CELESTIAL_DATA.gha, null, true) }</div>`;
         // Add LHA. LHA = GHA + G
         try {
           if (json.DEVICE_DATA.devicePosition && json.DEVICE_DATA.devicePosition !== null) {
@@ -355,7 +355,7 @@
             while (lha < 0) {
               lha += 360.0;
             }
-            bgData += `<div>Sun LHA</div><div style='text-align: right;'>${ decToSex(lha, null, true) }</div>`;
+            bgData += `<div>Sun LHA</div><div style='text-align: right;' title='Sun Local Hour Angle'>${ decToSex(lha, null, true) }</div>`;
           }
         } catch (error) {
         }
