@@ -65,7 +65,7 @@
 
 
         /**
-         * Draw a direction arrow, using SVG
+         * Draw a wind direction arrow, using SVG
          *
          * @param divId ID of the div to draw the arrow in
          * @param dir Direction to represent in degrees, number [0..360], or object { value: number, label: 'string' }.
@@ -200,13 +200,13 @@
                 parent.appendChild(svg);
             }
 
+            // Arc
             let path = document.createElementNS(XMLNS, 'path');
             path.setAttribute('style', `fill: ${fillColor}; stroke: rgba(0, 0, 0, 0.35); stroke-width: 2;`);
-            // Arc
             let pathDef = `M5,10 A30,30 0 0,1 5,${FRAME_HEIGHT - 10}`;
             //              |                 |
-            //              |                 To
-            //              From
+            //              |                 To 5,XX
+            //              From 5,10
             path.setAttribute('d', pathDef);
             svg.appendChild(path);
 
@@ -232,7 +232,7 @@
             <circle cx="40" cy="40" r="24" style="stroke:#006600; fill:#00cc00"/>
              */
             let sun = document.createElementNS(XMLNS, 'circle');
-            sun.setAttribute('style', 'stroke:#000000; fill:#ffff00;');
+            sun.setAttribute('style', 'stroke:#ff0000; fill:#ffff00;');
             sun.setAttribute('cx', `${x}`);
             sun.setAttribute('cy', `${(FRAME_HEIGHT / 2) - y}`);
             sun.setAttribute('r', '10');
@@ -254,7 +254,7 @@
             text.appendChild(document.createTextNode(`${label}`));
             svg.appendChild(text);
 
-            let svgContent = {}; // {x: headX, y: headY, svgContent: svg};
+            let svgContent = {svgContent: svg};
             if (divId !== undefined) {
                 let svgDiv = document.getElementById(divId);
                 // It's a replace, remove first.
