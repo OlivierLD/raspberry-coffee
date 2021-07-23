@@ -235,7 +235,7 @@
             sun.setAttribute('style', 'stroke:#ff0000; fill:#ffff00;');
             sun.setAttribute('cx', `${x}`);
             sun.setAttribute('cy', `${(FRAME_HEIGHT / 2) - y}`);
-            sun.setAttribute('r', '8');
+            sun.setAttribute('r', '6');
             svg.appendChild(sun);
 
             // Text
@@ -246,7 +246,7 @@
             let text = document.createElementNS(XMLNS, 'text');
             let fontSize = 12;
             text.setAttribute('x', 5);
-            text.setAttribute('y', `${(FRAME_HEIGHT / 2) + (fontSize / 2)}`);
+            text.setAttribute('y', `${(FRAME_HEIGHT / 2) + (fontSize / 2) - 2}`);
             text.setAttributeNS(null, 'font-size', fontSize);
             text.setAttributeNS(null, 'font-weight', 'bold');
             text.setAttributeNS(null, 'font-family', "'Helvetica Neue', 'Lato', Verdana, Helvetica, Geneva, sans-serif;");
