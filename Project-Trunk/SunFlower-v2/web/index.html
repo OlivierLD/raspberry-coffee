@@ -183,7 +183,8 @@
 
         // TODO an SVG widget for the Sun's altitude.
         let drawElevation = (divId, elev) => {
-            console.log(`Sun Elevation: ${elev.toFixed(2)}`)
+            console.log(`Sun Elevation: ${elev.toFixed(2)}`);
+            document.getElementById(divId).innerHTML = `Sun Elevation: ${elev.toFixed(2)}&deg;`;
         };
 
         let showHideAstroData = () => {
