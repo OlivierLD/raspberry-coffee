@@ -3,7 +3,7 @@
  | Very basic UI for SunFlower.
  | Mostly illustrates how to get to the REST services.
  | But all data are available this way.
- | Features a dynamic background, to display Sun's data, and some basic SVG drawings.
+ | Features a dynamic background, to display Sun's data, and some basic (but cool) SVG drawings.
  +-->
 <html lang="en">
 <head>
@@ -183,7 +183,7 @@
             }
         };
 
-        // TODO an SVG widget for the Sun's altitude.
+        // SVG widget for the Sun's altitude.
         let drawElevation = (divId, elev) => {
             // console.log(`Sun Elevation: ${elev.toFixed(2)}`);
             // document.getElementById(divId).innerHTML = `Sun Elevation: ${elev.toFixed(2)}&deg;`;
@@ -235,7 +235,7 @@
             sun.setAttribute('style', 'stroke:#ff0000; fill:#ffff00;');
             sun.setAttribute('cx', `${x}`);
             sun.setAttribute('cy', `${(FRAME_HEIGHT / 2) - y}`);
-            sun.setAttribute('r', '10');
+            sun.setAttribute('r', '8');
             svg.appendChild(sun);
 
             // Text
@@ -244,9 +244,10 @@
              */
             let label = `Elev:${elev.toFixed(1)}°`;
             let text = document.createElementNS(XMLNS, 'text');
+            let fontSize = 12;
             text.setAttribute('x', 5);
-            text.setAttribute('y', `${(FRAME_HEIGHT / 2)}`);
-            text.setAttributeNS(null, 'font-size', '12');
+            text.setAttribute('y', `${(FRAME_HEIGHT / 2) + (fontSize / 2)}`);
+            text.setAttributeNS(null, 'font-size', fontSize);
             text.setAttributeNS(null, 'font-weight', 'bold');
             text.setAttributeNS(null, 'font-family', "'Helvetica Neue', 'Lato', Verdana, Helvetica, Geneva, sans-serif;");
             text.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0.75)');
@@ -356,7 +357,7 @@
                         Sun Azimuth (SVG)...
                     </div>
                 </div>
-                <!-- TODO Sun Altitude -->    
+                <!-- Sun Altitude -->
                 <div style="text-align: left; margin: 20px 20px 20px;" id="sun-elevation" title="Sun Elevation">
                     <div style="width: 160px; height: 160px; border: 1px solid blue; border-radius: 5px;">
                         Sun Elevation (SVG)...
@@ -471,9 +472,7 @@
       //   let date = new Date();
       //   document.getElementById('bg-data').innerText = date.format('H:i:s Z');
       // }, 1000);
-
-      // drawElevation('sun-elevation', 10.0);
-
+      // drawElevation('sun-elevation', 10.0); // For development
     };
 
 </script>
