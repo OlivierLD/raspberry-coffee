@@ -60,6 +60,10 @@
             };
         }
 
+        // XMLNS Required.
+        const XMLNS = "http://www.w3.org/2000/svg";
+
+
         /**
          * Draw a direction arrow, using SVG
          *
@@ -67,7 +71,7 @@
          * @param dir Direction to represent in degrees, number [0..360], or object { value: number, label: 'string' }.
          *            label would be like "ENE" when dir is 67.5, for example.
          * @param force Optional. Used for wind (Beaufort)
-         * @returns {{svgContent: SVGSVGElement, x: number, y: number}}
+         * @returns {{svgContent: SVGSVGElement, x: number, y: number}} if divId is undefined.
          */
         let drawArrow = (divId, dir, force) => {
             let label = '';
@@ -95,8 +99,6 @@
             }
 
             direction = -direction;
-            // XMLNS Required.
-            const XMLNS = "http://www.w3.org/2000/svg";
 
             let parent = (divId !== null) ? document.getElementById(divId) : null;
             if (title !== null && parent !== null) {
@@ -183,8 +185,87 @@
 
         // TODO an SVG widget for the Sun's altitude.
         let drawElevation = (divId, elev) => {
-            console.log(`Sun Elevation: ${elev.toFixed(2)}`);
-            document.getElementById(divId).innerHTML = `Sun Elevation: ${elev.toFixed(2)}&deg;`;
+            // console.log(`Sun Elevation: ${elev.toFixed(2)}`);
+            // document.getElementById(divId).innerHTML = `Sun Elevation: ${elev.toFixed(2)}&deg;`;
+            let fillColor = 'white';
+            let parent = (divId !== null) ? document.getElementById(divId) : null;
+
+            let svg = document.createElementNS(XMLNS, 'svg');
+            // svg.setAttribute('xmlns', xmlns);
+            svg.setAttributeNS(null, 'width', FRAME_WIDTH.toString());
+            svg.setAttributeNS(null, 'height', FRAME_HEIGHT.toString());
+            svg.setAttribute('style', 'background-color: transparent; border-radius: 10px; border: 2px solid rgba(0, 0, 0, 0.25);');
+
+            if (parent !== null) {
+                parent.appendChild(svg);
+            }
+
+            let path = document.createElementNS(XMLNS, 'path');
+            path.setAttribute('style', `fill: ${fillColor}; stroke: rgba(0, 0, 0, 0.35); stroke-width: 2;`);
+            // Arc
+            let pathDef = `M5,10 A30,30 0 0,1 5,${FRAME_HEIGHT - 10}`;
+            //              |                 |
+            //              |                 To
+            //              From
+            path.setAttribute('d', pathDef);
+            svg.appendChild(path);
+
+            // Horizontal
+            let horizon = document.createElementNS(XMLNS, 'path');
+            horizon.setAttribute('style', `fill: ${fillColor}; stroke: rgba(0, 0, 0, 0.35); stroke-width: 1;`);
+            let horizonDef = `M5,${FRAME_HEIGHT / 2} L${FRAME_WIDTH - 5},${FRAME_HEIGHT / 2}`;
+            horizon.setAttribute('d', horizonDef);
+            svg.appendChild(horizon);
+
+            // To the Sun
+            let radius = FRAME_HEIGHT / 2;
+            let x = radius * Math.cos(Math.toRadians(elev));
+            let y = radius * Math.sin(Math.toRadians(elev));
+            let toSun = document.createElementNS(XMLNS, 'path');
+            toSun.setAttribute('style', `fill: ${fillColor}; stroke: rgba(0, 0, 0, 0.35); stroke-width: 1;`);
+            let toSunDef = `M5,${FRAME_HEIGHT / 2} L${x},${(FRAME_HEIGHT / 2) - y}`;
+            toSun.setAttribute('d', toSunDef);
+            svg.appendChild(toSun);
+
+            // The sun
+            /*
+            <circle cx="40" cy="40" r="24" style="stroke:#006600; fill:#00cc00"/>
+             */
+            let sun = document.createElementNS(XMLNS, 'circle');
+            sun.setAttribute('style', 'stroke:#000000; fill:#ffff00;');
+            sun.setAttribute('cx', `${x}`);
+            sun.setAttribute('cy', `${(FRAME_HEIGHT / 2) - y}`);
+            sun.setAttribute('r', '10');
+            svg.appendChild(sun);
+
+            // Text
+            /*
+            <text x="20" y="40">Example SVG text 1</text>
+             */
+            let label = `${elev.toFixed(2)}`;
+            let text = document.createElementNS(XMLNS, 'text');
+            text.setAttribute('x', 10);
+            text.setAttribute('y', `${(FRAME_HEIGHT / 2)}`);
+            text.setAttributeNS(null, 'font-size', '12');
+            text.setAttributeNS(null, 'font-weight', 'bold');
+            text.setAttributeNS(null, 'font-family', "'Helvetica Neue', 'Lato', Verdana, Helvetica, Geneva, sans-serif;");
+            text.setAttributeNS(null, 'fill', 'rgba(0, 0, 0, 0.75)');
+
+            text.appendChild(document.createTextNode(`${label}`));
+            svg.appendChild(text);
+
+            let svgContent = {}; // {x: headX, y: headY, svgContent: svg};
+            if (divId !== undefined) {
+                let svgDiv = document.getElementById(divId);
+                // It's a replace, remove first.
+                let content = svgDiv.firstElementChild;
+                if (content !== null && content !== undefined) {
+                    svgDiv.removeChild(content);
+                }
+                svgDiv.appendChild(svg);
+            } else {
+                return svgContent;
+            }
         };
 
         let showHideAstroData = () => {
@@ -390,6 +471,9 @@
       //   let date = new Date();
       //   document.getElementById('bg-data').innerText = date.format('H:i:s Z');
       // }, 1000);
+
+      // drawElevation('sun-elevation', 10.0);
+
     };
 
 </script>
