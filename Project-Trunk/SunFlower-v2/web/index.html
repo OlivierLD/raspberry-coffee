@@ -181,6 +181,11 @@
             }
         };
 
+        // TODO an SVG widget for the Sun's altitude.
+        let drawElevation = (divId, elev) => {
+            console.log(`Sun Elevation: ${elev.toFixed(2)}`)
+        };
+
         let showHideAstroData = () => {
             let astroData = document.getElementById('astro-data');
             if (astroData.style.display === 'none') {
@@ -266,7 +271,16 @@
             <th rowspan="5" style="vertical-align: top;">
                 <div style="text-align: left; margin: 20px 20px 20px;" id="sun-azimuth" title="Sun Azimuth">
                     <div style="width: 160px; height: 160px; border: 1px solid blue; border-radius: 5px;">
-                        Sun Azimuth...
+                        Sun Azimuth (SVG)...
+                    </div>
+                </div>
+                <!-- TODO Sun Altitude -->    
+                <div style="text-align: left; margin: 20px 20px 20px;" id="sun-elevation" title="Sun Elevation">
+                    <div style="width: 160px; height: 160px; border: 1px solid blue; border-radius: 5px;">
+                        Sun Elevation (SVG)...
+                        <!--svg height="210" width="400">
+                            <path d="M150 0 L75 200 L225 200 Z" />
+                        </svg-->
                     </div>
                 </div>
             </th>
@@ -332,6 +346,8 @@
 
         // Background data display
         drawArrow('sun-azimuth', json.CELESTIAL_DATA.azimuth);
+        // Sun Altitude: json.CELESTIAL_DATA.elevation
+        drawElevation('sun-elevation', json.CELESTIAL_DATA.elevation);
 
         let solarTime = null;
         if (json.CELESTIAL_DATA.solarEpoch !== undefined) {

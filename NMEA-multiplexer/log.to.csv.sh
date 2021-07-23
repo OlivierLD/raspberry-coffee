@@ -16,5 +16,5 @@ JAVA_OPTIONS=
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true"
-java ${JAVA_OPTIONS} -cp ${CP} util.NMEAtoCSV --in:$1 --out:$2 --data:${DATA} --break-at:${BREAK_AT}
+java ${JAVA_OPTIONS} -cp ${CP} util.NMEAtoCSV "--in:$1" "--out:$2" "--data:${DATA}" "--break-at:${BREAK_AT}"
 #
