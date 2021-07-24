@@ -63,7 +63,6 @@
         // XMLNS Required.
         const XMLNS = "http://www.w3.org/2000/svg";
 
-
         /**
          * Draw a wind direction arrow, using SVG
          *
@@ -201,6 +200,9 @@
             }
 
             // Arc
+            /*
+            <path d="M150 0 L75 200 L225 200 Z" />
+             */
             let path = document.createElementNS(XMLNS, 'path');
             path.setAttribute('style', `fill: ${fillColor}; stroke: rgba(0, 0, 0, 0.35); stroke-width: 2;`);
             let pathDef = `M5,10 A30,30 0 0,1 5,${FRAME_HEIGHT - 10}`;
@@ -244,7 +246,7 @@
              */
             let label = `Elev:${elev.toFixed(1)}°`;
             let text = document.createElementNS(XMLNS, 'text');
-            let fontSize = 12;
+            let fontSize = 11;
             text.setAttribute('x', 5);
             text.setAttribute('y', `${(FRAME_HEIGHT / 2) + (fontSize / 2) - 2}`);
             text.setAttributeNS(null, 'font-size', fontSize);
@@ -254,6 +256,10 @@
 
             text.appendChild(document.createTextNode(`${label}`));
             svg.appendChild(text);
+
+            if (parent !== null) {
+                parent.title = `Sun ${label}`;
+            }
 
             let svgContent = {svgContent: svg};
             if (divId !== undefined) {
@@ -361,9 +367,6 @@
                 <div style="text-align: left; margin: 20px 20px 20px;" id="sun-elevation" title="Sun Elevation">
                     <div style="width: 160px; height: 160px; border: 1px solid blue; border-radius: 5px;">
                         Sun Elevation (SVG)...
-                        <!--svg height="210" width="400">
-                            <path d="M150 0 L75 200 L225 200 Z" />
-                        </svg-->
                     </div>
                 </div>
             </th>
