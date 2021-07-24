@@ -263,7 +263,8 @@ do
 	  "10")
 	    PROP_FILE=nmea.mux.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
-	    NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --delta-t:AUTO:2010-11"
+	    # NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --delta-t:AUTO:2010-11"
+	    NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --delta-t:AUTO"
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then
@@ -276,7 +277,8 @@ do
 	  "10b")
 	    PROP_FILE=nmea.mux.op-cc.yaml
 	    echo -e "Launching Nav Server with $PROP_FILE"
-	    NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --delta-t:AUTO:2012-06"
+	    # NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --delta-t:AUTO:2012-06"
+	    NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --delta-t:AUTO"
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
 	    then

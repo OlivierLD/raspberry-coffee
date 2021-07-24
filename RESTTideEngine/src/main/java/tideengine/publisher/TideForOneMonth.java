@@ -173,6 +173,9 @@ public class TideForOneMonth {
 				sunTransit.set(Calendar.HOUR_OF_DAY, (int) r);
 			}
 
+			// Sun Altitude at Transit time
+
+
 			Calendar sunSet = new GregorianCalendar();
 			sunSet.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
 			sunSet.set(Calendar.YEAR, now.get(Calendar.YEAR));
@@ -283,6 +286,7 @@ public class TideForOneMonth {
 						"' sun-rise='" + TF.format(sunRise.getTime()) +
 						"' sun-rise-Z='" + DF3.format(riseZ) +
 						"' sun-transit='" + (sunTransit != null ? TF.format(sunTransit.getTime()) : "") +
+						// TODO Add the sun-elevation at transit-time
 						"' sun-set='" + TF.format(sunSet.getTime()) +
 						"' sun-set-Z='" + DF3.format(setZ) +
 						"' moon-rise='" + TF.format(moonRise.getTime()) +
