@@ -287,6 +287,7 @@ public class TideForOneMonth {
 						"' sun-rise-Z='" + DF3.format(riseZ) +
 						"' sun-transit='" + (sunTransit != null ? TF.format(sunTransit.getTime()) : "") +
 						// TODO Add the sun-elevation at transit-time
+						"' sun-elev-at-transit='" + "" +
 						"' sun-set='" + TF.format(sunSet.getTime()) +
 						"' sun-set-Z='" + DF3.format(setZ) +
 						"' moon-rise='" + TF.format(moonRise.getTime()) +
