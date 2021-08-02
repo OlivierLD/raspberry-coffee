@@ -229,7 +229,7 @@
               <xsl:value-of select="concat('  Z rise: ', $data/@sun-rise-Z, '°, Z set: ', $data/@sun-set-Z, '°')"/>
             </fo:block>
             <fo:block text-align="left" font-weight="bold">
-              <xsl:value-of select="concat(' Sun transit:', $data/@sun-transit)"/>
+              <xsl:value-of select="concat(' Sun transit:', $data/@sun-transit, ' (El ', $data/@sun-elev-at-transit, '°)')"/>
             </fo:block>
             <!--fo:block text-align="left" font-weight="bold">
               <xsl:value-of select="concat('Moon rise:', $data/@moon-rise, ', Moon set:', $data/@moon-set)"/>

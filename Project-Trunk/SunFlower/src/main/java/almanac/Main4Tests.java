@@ -1,6 +1,6 @@
 package almanac;
 
-import calc.calculation.AstroComputer;
+import calc.calculation.AstroComputerV2;
 import calc.calculation.SightReductionUtil;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -68,18 +68,19 @@ public class Main4Tests {
 		double lng = -122.5070;
 		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
 
+		AstroComputerV2 acv2 = new AstroComputerV2();
 		int h = 0;
 		while (h < 48) {
 
-			AstroComputer.setDateTime(current.get(Calendar.YEAR),
+			acv2.setDateTime(current.get(Calendar.YEAR),
 					current.get(Calendar.MONTH) + 1,
 					current.get(Calendar.DAY_OF_MONTH),
 					current.get(Calendar.HOUR_OF_DAY),
 					current.get(Calendar.MINUTE),
 					current.get(Calendar.SECOND));
-			AstroComputer.calculate();
-			SightReductionUtil sru = new SightReductionUtil(AstroComputer.getSunGHA(),
-					AstroComputer.getSunDecl(),
+			acv2.calculate();
+			SightReductionUtil sru = new SightReductionUtil(acv2.getSunGHA(),
+					acv2.getSunDecl(),
 					lat,
 					lng);
 			sru.calculate();

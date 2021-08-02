@@ -60,7 +60,7 @@ public class TidePublisher {
 			out = new PrintStream(new FileOutputStream(tempFile));
 			radical = tempFile.getAbsolutePath();
 			radical = radical.substring(0, radical.lastIndexOf(".xml"));
-//      System.out.println("Writing data in " + tempFile.getAbsolutePath());
+		    System.out.println("Writing data in " + tempFile.getAbsolutePath());
 		} catch (Exception ex) {
 			System.err.println("Error creating temp file");
 			ex.printStackTrace();
@@ -113,7 +113,7 @@ public class TidePublisher {
 			cmd = String.format("mv %s.pdf web", radical);
 			p = Runtime.getRuntime().exec(cmd);
 			exitStatus = p.waitFor();
-			System.out.println("Command completed, status " + exitStatus);
+			System.out.printf("Command [%s] completed, status %s\n", cmd, exitStatus);
 
 			return "." + radical.substring(radical.lastIndexOf(File.separator)) + ".pdf";
 		} catch (Exception ex) {

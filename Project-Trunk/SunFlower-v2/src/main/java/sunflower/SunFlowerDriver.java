@@ -2,22 +2,22 @@ package sunflower;
 
 import calc.DeadReckoning;
 import calc.GeomUtil;
-import calc.calculation.AstroComputer;
-import calc.calculation.SightReductionUtil;
+import calc.calculation.AstroComputerV2;
 import com.pi4j.io.i2c.I2CFactory;
-import http.HTTPContext;
 import i2c.motor.adafruitmotorhat.AdafruitMotorHAT;
 import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
 import lcd.substitute.SwingLedPanel;
 import nmea.parser.RMC;
 import sunflower.gps.GPSReader;
+import sunflower.utils.ANSIUtil;
 import utils.StaticUtil;
 import utils.TimeUtil;
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -26,8 +26,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static utils.TimeUtil.delay;
-
-import sunflower.utils.ANSIUtil;
 
 /*
  * See https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/using-stepper-motors
@@ -632,22 +630,23 @@ public class SunFlowerDriver {
 	}
 
 	private static Date getSolarDateFromEOT(Date utc, double latitude, double longitude) {
-//		Calendar current = GregorianCalendar.getInstance();
-//		current.setTime(utc);
-//		AstroComputer.setDateTime(current.get(Calendar.YEAR),
-//				current.get(Calendar.MONTH) + 1,
-//				current.get(Calendar.DAY_OF_MONTH),
-//				current.get(Calendar.HOUR_OF_DAY),
-//				current.get(Calendar.MINUTE),
-//				current.get(Calendar.SECOND));
-//		AstroComputer.calculate();
+		AstroComputerV2 acv2 = new AstroComputerV2();
+		Calendar current = GregorianCalendar.getInstance();
+		current.setTime(utc);
+		acv2.setDateTime(current.get(Calendar.YEAR),
+				current.get(Calendar.MONTH) + 1,
+				current.get(Calendar.DAY_OF_MONTH),
+				current.get(Calendar.HOUR_OF_DAY),
+				current.get(Calendar.MINUTE),
+				current.get(Calendar.SECOND));
+		acv2.calculate();
 //		SightReductionUtil sru = new SightReductionUtil(AstroComputer.getSunGHA(),
 //				AstroComputer.getSunDecl(),
 //				latitude,
 //				longitude);
 //		sru.calculate();
 		// Get Equation of time, used to calculate solar time.
-		double eot = AstroComputer.getSunMeridianPassageTime(latitude, longitude); // in decimal hours
+		double eot = acv2.getSunMeridianPassageTime(latitude, longitude); // in decimal hours
 
 		long ms = utc.getTime();
 		Date solar = new Date(ms + Math.round((12 - eot) * 3_600_000));
@@ -736,20 +735,21 @@ public class SunFlowerDriver {
 					System.out.println("Starting Sun data calculation at " + date.getTime());
 				}
 				// TODO Make it non-static, and synchronized ?..
-				AstroComputer.calculate(date.get(Calendar.YEAR),
+				AstroComputerV2 acv2 = new AstroComputerV2();
+				acv2.calculate(date.get(Calendar.YEAR),
 										date.get(Calendar.MONTH) + 1,
 										date.get(Calendar.DAY_OF_MONTH),
 										date.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
 										date.get(Calendar.MINUTE),
 										date.get(Calendar.SECOND));
-				sunDecl = AstroComputer.getSunDecl();
-				sunGHA = AstroComputer.getSunGHA();
+				sunDecl = acv2.getSunDecl();
+				sunGHA = acv2.getSunGHA();
 				if (devicePosition != null) {
-					DeadReckoning dr = new DeadReckoning(AstroComputer.getSunGHA(),
-														 AstroComputer.getSunDecl(),
-														 devicePosition.getLatitude(),
-														 devicePosition.getLongitude())
-														 .calculate();
+					DeadReckoning dr = new DeadReckoning(acv2.getSunGHA(),
+							acv2.getSunDecl(),
+							devicePosition.getLatitude(),
+							devicePosition.getLongitude())
+							.calculate();
 					sunAzimuth = dr.getZ();
 					sunElevation = dr.getHe();
 					// Calculate Solar Date and TIme

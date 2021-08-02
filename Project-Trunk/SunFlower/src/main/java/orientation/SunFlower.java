@@ -2,7 +2,7 @@ package orientation;
 
 import analogdigitalconverter.mcp.MCPReader;
 import calc.GeomUtil;
-import calc.calculation.AstroComputer;
+import calc.calculation.AstroComputerV2;
 import calc.calculation.SightReductionUtil;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.i2c.I2CFactory;
@@ -284,22 +284,23 @@ public class SunFlower implements RESTRequestManager {
 			if (astroVerbose && !ansiConsole) {
 				System.out.println(String.format(">>> Sun Calculation for %s", SDF.format(current.getTime())));
 			}
-			AstroComputer.setDateTime(current.get(Calendar.YEAR),
+			AstroComputerV2 acv2 = new AstroComputerV2();
+			acv2.setDateTime(current.get(Calendar.YEAR),
 							current.get(Calendar.MONTH) + 1,
 							current.get(Calendar.DAY_OF_MONTH),
 							current.get(Calendar.HOUR_OF_DAY),
 							current.get(Calendar.MINUTE),
 							current.get(Calendar.SECOND));
-			AstroComputer.calculate();
-			SightReductionUtil sru = new SightReductionUtil(AstroComputer.getSunGHA(),
-							AstroComputer.getSunDecl(),
+			acv2.calculate();
+			SightReductionUtil sru = new SightReductionUtil(acv2.getSunGHA(),
+					acv2.getSunDecl(),
 							lat,
 							lng);
 			sru.calculate();
 			he = sru.getHe().doubleValue();
 			z = sru.getZ().doubleValue();
 			// Get Equation of time, used to calculate solar time.
-			eot = AstroComputer.getSunMeridianPassageTime(latitude, longitude); // in decimal hours
+			eot = acv2.getSunMeridianPassageTime(latitude, longitude); // in decimal hours
 		}
 	}
 

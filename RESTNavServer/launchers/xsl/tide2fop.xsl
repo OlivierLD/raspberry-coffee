@@ -225,7 +225,7 @@
               <xsl:value-of select="concat('  Z rise: ', $data/@sun-rise-Z, '°, Z set: ', $data/@sun-set-Z, '°')"/>
             </fo:block>
             <fo:block text-align="left" font-weight="bold">
-              <xsl:value-of select="concat(' Sun transit:', $data/@sun-transit)"/>
+              <xsl:value-of select="concat(' Sun transit:', $data/@sun-transit, ' (El ', $data/@sun-elev-at-transit, '°)')"/>
             </fo:block>
             <!--fo:block text-align="left" font-weight="bold">
               <xsl:value-of select="concat('Moon rise:', $data/@moon-rise, ', Moon set:', $data/@moon-set)"/>
@@ -259,10 +259,6 @@
                        vertical-align="middle" horizontal-align="center">
                 <fo:block vertical-align="middle">
                   <xsl:choose>
-                    <xsl:when test="$data/@moon-phase = '00'">
-                      <fo:external-graphic src="url('phase01.gif')"
-                                           vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
                     <xsl:when test="$data/@moon-phase = '01'">
                       <fo:external-graphic src="url('phase01.gif')"
                                  vertical-align="middle" horizontal-align="center"/>
@@ -374,10 +370,6 @@
                     <xsl:when test="$data/@moon-phase = '28'">
                       <fo:external-graphic src="url('phase28.gif')"
                                  vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '29'">
-                      <fo:external-graphic src="url('phase01.gif')"
-                                           vertical-align="middle" horizontal-align="center"/>
                     </xsl:when>
                   </xsl:choose>
                 </fo:block>

@@ -25,6 +25,6 @@ export CP=${CP}:${HOME}/libs/xdo-0301.jar
 export XSL_STYLESHEET=./agenda2fop.xsl
 echo Publishing
 java -Xms256m -Xmx1024m -classpath ${CP} oracle.apps.xdo.template.FOProcessor -xml ${RADICAL}.xml -xsl ${XSL_STYLESHEET} -pdf ${RADICAL}.pdf
-echo Done transforming, document is ready.
+echo Done transforming, document ${RADICAL}.pdf is ready.
 # open ${RADICAL}.pdf
 # exit
