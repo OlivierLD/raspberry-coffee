@@ -43,7 +43,7 @@ function openBrowser() {
   then
     sensible-browser "$1"
   else
-    open "$1"
+    open "$1"  # Darwin
   fi
 }
 #
