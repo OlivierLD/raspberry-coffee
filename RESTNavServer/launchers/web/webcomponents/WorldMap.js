@@ -1681,6 +1681,11 @@ class WorldMap extends HTMLElement {
 		// if (first > 180) {
 		if (pt.x < this.width / 2) {
 			context.lineTo(- 10, pt.y); // left most?
+			if (DEBUG) {
+				console.log(`Plotting RIGHT/LAST on canvas x:${- 10}, y:${pt.y}`);
+				context.fillStyle = 'green';
+				context.fillText("LAST", pt.x, pt.y);
+			}
 		} else {
 			context.lineTo(this.width + 10, pt.y); // right most?
 			if (DEBUG) {
