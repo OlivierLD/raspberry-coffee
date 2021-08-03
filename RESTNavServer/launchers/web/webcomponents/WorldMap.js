@@ -1682,7 +1682,7 @@ class WorldMap extends HTMLElement {
 		if (pt.x < this.width / 2) {
 			context.lineTo(- 10, pt.y); // left most?
 			if (DEBUG) {
-				console.log(`Plotting RIGHT/LAST on canvas x:${- 10}, y:${pt.y}`);
+				console.log(`Plotting LEFT/LAST on canvas x:${- 10}, y:${pt.y}`);
 				context.fillStyle = 'green';
 				context.fillText("LAST", pt.x, pt.y);
 			}
@@ -1703,7 +1703,8 @@ class WorldMap extends HTMLElement {
 		let closeFrame = true;
 		if (closeFrame) {
 			if (from.lat > 0) { // N Decl, night is south
-				if (first > 180) { // (pt.x < this.width / 2) { // Went right to left, first > 180
+				// if (first > 180) { // (pt.x < this.width / 2) { // Went right to left, first > 180
+				if (pt.x < this.width / 2) {
 					context.lineTo(0, this.height);
 					if (DEBUG) {
 						console.log(`CLOSING x:${0}, ${this.height}`);
