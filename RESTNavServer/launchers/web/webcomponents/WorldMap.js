@@ -1713,14 +1713,40 @@ class WorldMap extends HTMLElement {
 						console.log(`CLOSING x:${this.width}, ${firstCanvasPt.y}`);
 					}
 				}
+				// TODO See below the 2 options
 			} else {            // S Decl, night is north
-				// TODO Look into that
-				if (first > 180) { // (pt.x < this.width / 2) { // Went right to left
+				if (first > 180) { // (pt.x  < this.width / 2) { // Went right to left
 					context.lineTo(0, 0);
-				}
-				context.lineTo(this.width, 0);
-				if (firstCanvasPt !== null) {
-					context.lineTo(this.width, firstCanvasPt.y);
+					if (DEBUG) {
+						console.log(`CLOSING x:${0}, ${0}`);
+					}
+					context.lineTo(this.width, 0);
+					if (DEBUG) {
+						console.log(`CLOSING x:${this.width}, ${0}`);
+					}
+					if (firstCanvasPt !== null) {
+						// context.lineTo(this.width, firstCanvasPt.y);
+						context.lineTo(this.width, firstCanvasPt.y);
+						if (DEBUG) {
+							console.log(`CLOSING x:${this.width}, ${firstCanvasPt.y}`);
+						}
+					}
+				} else {
+					context.lineTo(this.width, 0);
+					if (DEBUG) {
+						console.log(`CLOSING x:${this.width}, ${0}`);
+					}
+					context.lineTo(0, 0);
+					if (DEBUG) {
+						console.log(`CLOSING x:${0}, ${0}`);
+					}
+					if (firstCanvasPt !== null) {
+						// context.lineTo(this.width, firstCanvasPt.y);
+						context.lineTo(0, firstCanvasPt.y);
+						if (DEBUG) {
+							console.log(`CLOSING x:${0}, ${firstCanvasPt.y}`);
+						}
+					}
 				}
 			}
 		}
