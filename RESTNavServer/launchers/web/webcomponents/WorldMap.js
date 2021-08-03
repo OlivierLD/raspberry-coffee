@@ -30,7 +30,7 @@ const worldMapDefaultColorConfig = {
 	globeBackground: "black",
 	globeGradient: {
 		from: "navy",
-		to: "blue",
+		to: "blue"
 	},
 	gridColor: 'rgba(0, 255, 255, 0.3)',
 	tropicColor: 'LightGray',
