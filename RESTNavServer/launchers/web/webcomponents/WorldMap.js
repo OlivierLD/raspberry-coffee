@@ -1702,16 +1702,31 @@ class WorldMap extends HTMLElement {
 					if (DEBUG) {
 						console.log(`CLOSING x:${0}, ${this.height}`);
 					}
-				}
-				context.lineTo(this.width, this.height);
-				if (DEBUG) {
-					console.log(`CLOSING x:${this.width}, ${this.height}`);
-				}
-				if (firstCanvasPt !== null) {
-					context.lineTo(this.width, firstCanvasPt.y);
-					if (DEBUG) {
-						console.log(`CLOSING x:${this.width}, ${firstCanvasPt.y}`);
-					}
+                    context.lineTo(this.width, this.height);
+                    if (DEBUG) {
+                        console.log(`CLOSING x:${this.width}, ${this.height}`);
+                    }
+                    if (firstCanvasPt !== null) {
+                        context.lineTo(this.width, firstCanvasPt.y);
+                        if (DEBUG) {
+                            console.log(`CLOSING x:${this.width}, ${firstCanvasPt.y}`);
+                        }
+                    }
+				} else {
+                    context.lineTo(this.width, this.height);
+                    if (DEBUG) {
+                        console.log(`CLOSING x:${this.width}, ${this.height}`);
+                    }
+                    context.lineTo(0, this.height);
+                    if (DEBUG) {
+                        console.log(`CLOSING x:${0}, ${this.height}`);
+                    }
+                    if (firstCanvasPt !== null) {
+                        context.lineTo(0, firstCanvasPt.y);
+                        if (DEBUG) {
+                            console.log(`CLOSING x:${0}, ${firstCanvasPt.y}`);
+                        }
+                    }
 				}
 				// TODO See below the 2 options
 			} else {            // S Decl, night is north
