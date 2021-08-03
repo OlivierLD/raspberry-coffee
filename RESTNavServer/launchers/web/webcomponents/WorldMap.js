@@ -1678,7 +1678,8 @@ class WorldMap extends HTMLElement {
 				}
 			}
 		}
-		if (first > 180) {
+		// if (first > 180) {
+		if (pt.x < this.width / 2) {
 			context.lineTo(- 10, pt.y); // left most?
 		} else {
 			context.lineTo(this.width + 10, pt.y); // right most?
@@ -1728,7 +1729,6 @@ class WorldMap extends HTMLElement {
                         }
                     }
 				}
-				// TODO See below the 2 options
 			} else {            // S Decl, night is north
 				if (first > 180) { // (pt.x  < this.width / 2) { // Went right to left
 					context.lineTo(0, 0);
