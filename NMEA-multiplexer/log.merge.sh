@@ -4,7 +4,7 @@ echo -e "$0 nmea-path final-file-name"
 echo -e "It will merge all the *.nmea in {nmea-path} into {final-file-name}"
 if [[ $# != 2 ]]
 then
-  echo -e "Wrong number of parameters: $#"
+  echo -e "Wrong number of parameters: $#, expecting 2."
   exit 1
 fi
 LOG_PATH=$1
