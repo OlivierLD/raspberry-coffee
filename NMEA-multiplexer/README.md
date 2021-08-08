@@ -99,7 +99,7 @@ Finally, we have _transformers_, that transform NMEA data into another (propriet
  A _transformer_ is also a _forwarder_. See below examples of `transformers`.
 
 ##### Examples
-Channels:
+Channels (aka Consumers):
 - **Serial** reads NMEA data from a Serial Port
 - **TCP** reads NMEA data from a TCP server
 - **WebSocket** reads NMEA data from a WebSocket server (this is a WebSocket client)
@@ -132,7 +132,8 @@ _Important_: Computers require the cache to be initialized. This is set in the p
  init.cache=true
 ```
 
-Transformers:
+Transformers:  
+A `Transformer` is also a `Forwarder`.
 - **GPSD** data (See [this](https://hocus-blogus.blogspot.com/2016/12/nmea-multiplexer-opencpn-gpsd.html))
 - **Custom** data
 

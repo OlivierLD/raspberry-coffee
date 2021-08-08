@@ -187,7 +187,7 @@ public class CharacterModeConsole {
 			synchronized (ndc) {
 				if (nonNumericData.containsKey(s)) {
 					switch (s) {
-						case "POS": // PoSition
+						case "POS": // POSition
 							try {
 								value = StringUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lat, GeomUtil.UNICODE, GeomUtil.NS), 12, " ") +
 										StringUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lng, GeomUtil.UNICODE, GeomUtil.EW), 12, " ");
@@ -749,7 +749,7 @@ public class CharacterModeConsole {
 	// Properties test
 	public static void main(String... args) throws Exception {
 		String propFileName = System.getProperty("console.definition", "char.console.properties"); // "D:\\_mywork\\dev-corner\\olivsoft\\OlivSoftDesktop\\char.console.properties"
-		Map<String, ConsoleData> consoleData = new HashMap<String, ConsoleData>();
+		Map<String, ConsoleData> consoleData = new HashMap<>();
 		Properties consoleProps = new Properties();
 		consoleProps.load(new FileReader(new File(propFileName)));
 		Enumeration<String> props = (Enumeration<String>) consoleProps.propertyNames();
@@ -761,8 +761,9 @@ public class CharacterModeConsole {
 				String value = consoleProps.getProperty(prop);
 				String[] elem = value.split(",");
 				int line = Integer.parseInt(elem[1].trim());
-				if (line == 0)
+				if (line == 0) {
 					lineZeroIsBusy = true;
+				}
 				consoleData.put(prop.trim(),
 								new ConsoleData(prop.trim(),
 												Integer.parseInt(elem[0].trim()),
@@ -780,7 +781,7 @@ public class CharacterModeConsole {
 			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ansiSetTextAndBackgroundColor(EscapeSeq.ANSI_WHITE, EscapeSeq.ANSI_BLACK) + EscapeSeq.ANSI_BOLD + screenTitle + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT);
 		}
 		// Ordered lists
-		Map<Integer, Map<Integer, String>> table = new TreeMap<Integer, Map<Integer, String>>();
+		Map<Integer, Map<Integer, String>> table = new TreeMap<>();
 		Set<String> keys = consoleData.keySet();
 		for (String s : keys) {
 			ConsoleData cd = consoleData.get(s);
@@ -788,7 +789,7 @@ public class CharacterModeConsole {
 			int row = cd.getY();
 			Map<Integer, String> rowMap = table.get(row);
 			if (rowMap == null) {
-				rowMap = new TreeMap<Integer, String>();
+				rowMap = new TreeMap<>();
 				table.put(row, rowMap);
 			}
 			rowMap.put(col, cd.getKey());
@@ -798,7 +799,7 @@ public class CharacterModeConsole {
 		for (Integer i : rows) {
 			Map<Integer, String> cols = table.get(i);
 			Set<Integer> values = cols.keySet();
-			List<CharData> consoleLine = new ArrayList<CharData>();
+			List<CharData> consoleLine = new ArrayList<>();
 			for (Integer j : values) {
 				String k = cols.get(j);
 //      System.out.print(k + " ");
@@ -845,10 +846,11 @@ public class CharacterModeConsole {
 				int col = cd.getX();
 				int row = cd.getY();
 				String value = "";
-				if ("POS".equals(s))
+				if ("POS".equals(s)) {
 					value = "  12 34.56'N 123 45.67'W";
-				else
+				} else {
 					value = StringUtils.lpad(suffixes.get(s).getFmt().format(Math.random() * 100), dataSize, " "); // + " ";
+				}
 				String plot = plotOneValue(1 + ((col - 1) * cellSize), row + 1, value, colorMap.get(cd.getFgData()), colorMap.get(cd.getBgData()));
 				AnsiConsole.out.println(plot);
 				//    try { Thread.sleep(100); } catch (Exception ex) {}
