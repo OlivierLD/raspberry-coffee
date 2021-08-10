@@ -515,16 +515,40 @@
             return finalData;
         };
 
+        // Needs some love...
+        let recenterData = (graphData) => {
+			let mini = Number.MAX_VALUE;
+			let maxi = -Number.MAX_VALUE;
+            let dataBuffer = graphData.data[0].values;
+
+			dataBuffer.forEach(val => {
+				mini = Math.min(mini, val);
+				maxi = Math.max(maxi, val);
+			});
+
+            if (mini < 180 && maxi > 180) {
+                for (let i=0; i<dataBuffer.length; i++) {
+                    dataBuffer[i] -= 180;
+                }    
+                graphData.minY -= 180;
+                graphData.maxY -= 180;
+                graphData.data[0].values = dataBuffer;
+            }
+            return graphData;
+        };
+
         events.subscribe(events.topicNames.CURRENT_DIR, (val) => {
             // console.log('Update Graph with CSP Instant', val);
             let graph = document.getElementById('current-evolution-instant-dir');
             let graphData = updateBuffer(val, instantCurrentDir, 'Instant direction', 'lime', 0, 360);
+            // graphData = recenterData(graphData);
 			graph.data = graphData;
 			//  let amplitude = graphData.maxY - graphData.minY;
+            // graph.withYLabels = false;
 			graph.vgrid = "0:45"; // Math.floor(graphData.minY).toFixed(0) + ":" + (amplitude < 7 ? "1" : "2");
 			graph.hgrid = null; // "0:45";
 			// graph.setDoAfter((elmt, context) => {
-			// 	devCurveCallback(elmt, context);
+			// 	 devCurveCallback(elmt, context);
 			// });
             graph.value = val.toFixed(1) + "°";
             graph.repaint();
@@ -532,12 +556,12 @@
         events.subscribe(events.topicNames.CURRENT_SPEED, (val) => {
             // console.log('Update Graph with CSP Instant', val);
             let graph = document.getElementById('current-evolution-instant-speed');
-            let graphData = updateBuffer(val, instantCurrentSpeed, 'Instant speed', 'red', 0, 10);
+            let graphData = updateBuffer(val, instantCurrentSpeed, 'Instant speed', 'red', 0, 6);
 			graph.data = graphData;
 			//  let amplitude = graphData.maxY - graphData.minY;
 			graph.vgrid = "0:1"; // Math.floor(graphData.minY).toFixed(0) + ":" + (amplitude < 7 ? "1" : "2");
 			graph.hgrid = null; // "0:45";
-            graph.value = val.toFixed(1) + " kt";
+            graph.value = val.toFixed(2) + " kt";
             graph.repaint();
         });
         events.subscribe(events.topicNames.DAMP_CDR_PREFIX + '30000', (val) => {
@@ -554,12 +578,12 @@
         events.subscribe(events.topicNames.DAMP_CSP_PREFIX + '30000', (val) => {
             // console.log('Update Graph with CDR 30000', val);
             let graph = document.getElementById('current-evolution-30s-speed');
-            let graphData = updateBuffer(val, _30sCurrentSpeed, '30s speed', 'red', 0, 10);
+            let graphData = updateBuffer(val, _30sCurrentSpeed, '30s speed', 'red', 0, 6);
 			graph.data = graphData;
 			let amplitude = graphData.maxY - graphData.minY;
 			graph.vgrid = "0:1"; 
 			graph.hgrid = null;
-            graph.value = val.toFixed(1) + " kt";
+            graph.value = val.toFixed(2) + " kt";
             graph.repaint();
         });
         events.subscribe(events.topicNames.DAMP_CDR_PREFIX + '60000', (val) => {
@@ -574,12 +598,12 @@
         });
         events.subscribe(events.topicNames.DAMP_CSP_PREFIX + '60000', (val) => {
             let graph = document.getElementById('current-evolution-1m-speed');
-            let graphData = updateBuffer(val, _1mCurrentSpeed, '1m speed', 'red', 0, 10);
+            let graphData = updateBuffer(val, _1mCurrentSpeed, '1m speed', 'red', 0, 6);
 			graph.data = graphData;
 			//  let amplitude = graphData.maxY - graphData.minY;
 			graph.vgrid = "0:1"; 
 			graph.hgrid = null;
-            graph.value = val.toFixed(1) + " kt";
+            graph.value = val.toFixed(2) + " kt";
             graph.repaint();
         });
         events.subscribe(events.topicNames.DAMP_CDR_PREFIX + '600000', (val) => {
@@ -594,12 +618,12 @@
         });
         events.subscribe(events.topicNames.DAMP_CSP_PREFIX + '600000', (val) => {
             let graph = document.getElementById('current-evolution-10m-speed');
-            let graphData = updateBuffer(val, _10mCurrentSpeed, '10m speed', 'red', 0, 10);
+            let graphData = updateBuffer(val, _10mCurrentSpeed, '10m speed', 'red', 0, 6);
 			graph.data = graphData;
 			//  let amplitude = graphData.maxY - graphData.minY;
 			graph.vgrid = "0:1"; 
 			graph.hgrid = null;
-            graph.value = val.toFixed(1) + " kt";
+            graph.value = val.toFixed(2) + " kt";
             graph.repaint();
         });
 
@@ -673,7 +697,7 @@
             return finalData;
         }
 
-        const DAY = 24 * 3600 * 1000;
+        const DAY = 24 * 3600 * 1000; // in ms.
 
         function loadDeclinations() {
             // Payload: { bodies: [ "Sun", "Moon" ], from: '2019-12-15T00:00:00', to: '2019-12-25T00:00:00' }
