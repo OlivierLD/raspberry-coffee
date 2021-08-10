@@ -8,6 +8,9 @@
  ! Try query string like that console.gps.html?style=orange&bg=black&border=n&boat-data=n
  !
  ! HTML graphical entities, good doc at https://www.toptal.com/designers/htmlarrows/symbols/
+ !
+ ! TODO Current Evolution Display, as in RESTNavServer/launchers/web/console.html, but with a GraphDisplay WebComponent
+ !
  +-->
 <head>
     <meta charset="UTF-8">
@@ -451,10 +454,156 @@
                 let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
                 bo.csp = current.csp;
                 bo.cdr = current.cdr;
+                events.publish(events.topicNames.CURRENT_DIR, current.cdr);
+                events.publish(events.topicNames.CURRENT_SPEED, current.csp);
             }
         });
-        // TODO Current, instant, 30s, 1m, 10m
+        // TODO Current, instant, 30s, 1m, 10m. Use 30000, 60000, 600000
+        // Instant: CURRENT_DIR, CURRENT_SPEED, also see above.
 
+        // Buffers are limited to the value below
+        const BUFFER_MAX_SIZE = 400; // 1200;
+        let instantCurrentDir = [];
+        let instantCurrentSpeed = [];
+        let _30sCurrentDir = [];
+        let _30sCurrentSpeed = [];
+        let _1mCurrentDir = [];
+        let _1mCurrentSpeed = [];
+        let _10mCurrentDir = [];
+        let _10mCurrentSpeed = [];
+
+        let updateBuffer = (value, dataBuffer, curveName, curveColor, minValue, maxValue) => {
+            dataBuffer.push(value);
+            while (dataBuffer.length > BUFFER_MAX_SIZE) {
+                dataBuffer = dataBuffer.slice(1);
+            }
+			let finalData = {
+				withGrid: true,
+				withXLabels: true,
+				withYLabels: false,
+				minX: 0,
+				maxX: BUFFER_MAX_SIZE,
+				minY: minValue,
+				maxY: maxValue,
+				thickX: null,
+				thickY: 0,
+				data: [ // We can have several curves (hence the array).
+					{
+						name: curveName,
+						lineColor: curveColor,
+						fillColor: null,
+						thickness: 3,
+						x: [],
+						values: [] // Same cardinality as x
+					}
+				]
+			};
+			// let mini = Number.MAX_VALUE;
+			// let maxi = -Number.MAX_VALUE;
+			let x = [], y = [];
+            let i = 0;
+			dataBuffer.forEach(val => {
+				// mini = Math.min(mini, val);
+				// maxi = Math.max(maxi, val);
+				y.push(val);
+                x.push(i++);
+			});
+			finalData.data[0].x = x;
+			finalData.data[0].values = y;
+			// finalData.minY = 0; // Math.min(mini, 0);
+			// finalData.maxY = Math.max(maxi, 10);
+            return finalData;
+        };
+
+        events.subscribe(events.topicNames.CURRENT_DIR, (val) => {
+            // console.log('Update Graph with CSP Instant', val);
+            let graph = document.getElementById('current-evolution-instant-dir');
+            let graphData = updateBuffer(val, instantCurrentDir, 'Instant direction', 'lime', 0, 360);
+			graph.data = graphData;
+			//  let amplitude = graphData.maxY - graphData.minY;
+			graph.vgrid = "0:45"; // Math.floor(graphData.minY).toFixed(0) + ":" + (amplitude < 7 ? "1" : "2");
+			graph.hgrid = null; // "0:45";
+			// graph.setDoAfter((elmt, context) => {
+			// 	devCurveCallback(elmt, context);
+			// });
+            graph.value = val.toFixed(1) + "°";
+            graph.repaint();
+        });
+        events.subscribe(events.topicNames.CURRENT_SPEED, (val) => {
+            // console.log('Update Graph with CSP Instant', val);
+            let graph = document.getElementById('current-evolution-instant-speed');
+            let graphData = updateBuffer(val, instantCurrentSpeed, 'Instant speed', 'red', 0, 10);
+			graph.data = graphData;
+			//  let amplitude = graphData.maxY - graphData.minY;
+			graph.vgrid = "0:1"; // Math.floor(graphData.minY).toFixed(0) + ":" + (amplitude < 7 ? "1" : "2");
+			graph.hgrid = null; // "0:45";
+            graph.value = val.toFixed(1) + " kt";
+            graph.repaint();
+        });
+        events.subscribe(events.topicNames.DAMP_CDR_PREFIX + '30000', (val) => {
+            // console.log('Update Graph with CSP 30000', val);
+            let graph = document.getElementById('current-evolution-30s-dir');
+            let graphData = updateBuffer(val, _30sCurrentDir, '30s direction', 'lime', 0, 360);
+			graph.data = graphData;
+			//  let amplitude = graphData.maxY - graphData.minY;
+			graph.vgrid = "0:45";
+			graph.hgrid = null;
+            graph.value = val.toFixed(1) + "°";
+            graph.repaint();
+        });
+        events.subscribe(events.topicNames.DAMP_CSP_PREFIX + '30000', (val) => {
+            // console.log('Update Graph with CDR 30000', val);
+            let graph = document.getElementById('current-evolution-30s-speed');
+            let graphData = updateBuffer(val, _30sCurrentSpeed, '30s speed', 'red', 0, 10);
+			graph.data = graphData;
+			let amplitude = graphData.maxY - graphData.minY;
+			graph.vgrid = "0:1"; 
+			graph.hgrid = null;
+            graph.value = val.toFixed(1) + " kt";
+            graph.repaint();
+        });
+        events.subscribe(events.topicNames.DAMP_CDR_PREFIX + '60000', (val) => {
+            let graph = document.getElementById('current-evolution-1m-dir');
+            let graphData = updateBuffer(val, _1mCurrentDir, '1m direction', 'lime', 0, 360);
+			graph.data = graphData;
+			//  let amplitude = graphData.maxY - graphData.minY;
+			graph.vgrid = "0:45";
+			graph.hgrid = null;
+            graph.value = val.toFixed(1) + "°";
+            graph.repaint();
+        });
+        events.subscribe(events.topicNames.DAMP_CSP_PREFIX + '60000', (val) => {
+            let graph = document.getElementById('current-evolution-1m-speed');
+            let graphData = updateBuffer(val, _1mCurrentSpeed, '1m speed', 'red', 0, 10);
+			graph.data = graphData;
+			//  let amplitude = graphData.maxY - graphData.minY;
+			graph.vgrid = "0:1"; 
+			graph.hgrid = null;
+            graph.value = val.toFixed(1) + " kt";
+            graph.repaint();
+        });
+        events.subscribe(events.topicNames.DAMP_CDR_PREFIX + '600000', (val) => {
+            let graph = document.getElementById('current-evolution-10m-dir');
+            let graphData = updateBuffer(val, _10mCurrentDir, '10m direction', 'lime', 0, 360);
+			 graph.data = graphData;
+			//  let amplitude = graphData.maxY - graphData.minY;
+			 graph.vgrid = "0:45";
+			 graph.hgrid = null;
+             graph.value = val.toFixed(1) + "°";
+             graph.repaint();
+        });
+        events.subscribe(events.topicNames.DAMP_CSP_PREFIX + '600000', (val) => {
+            let graph = document.getElementById('current-evolution-10m-speed');
+            let graphData = updateBuffer(val, _10mCurrentSpeed, '10m speed', 'red', 0, 10);
+			graph.data = graphData;
+			//  let amplitude = graphData.maxY - graphData.minY;
+			graph.vgrid = "0:1"; 
+			graph.hgrid = null;
+            graph.value = val.toFixed(1) + " kt";
+            graph.repaint();
+        });
+
+        // For Declination curve
         function dataToGraph(pivotDate, declMap, lineColor, fillColor1, fillColor2) {
             if (lineColor === undefined) {
                 lineColor = 'orange';
@@ -758,6 +907,10 @@
             text-align: center;
         }
 
+        .left {
+            text-align: left;
+        }
+
         .mirror {
             display: block;
             -webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
@@ -846,6 +999,28 @@
             overflow-x: scroll;
         }
 
+        .current-evolution-element {
+            border: 1px solid silver;
+            border-radius: 6px;
+            display: grid;
+            grid-template-columns: auto;
+            grid-template-rows: auto;
+            grid-template-areas:
+                "title title"
+                "dir speed";
+        }
+
+        .current-evolution-container {
+            display: grid;
+            grid-template-columns: auto;
+            grid-template-areas:
+                "instant 30s 1m 10m"
+         }
+
+         .current-element-title {
+           color: red;
+           padding-left: 10px;
+         }
     </style>
 
     <!-- All logic in the script below -->
@@ -1096,607 +1271,713 @@
     </div>
     <div id="nmea-widgets-1"
          style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 0px 10px 10px 10px; text-align: center;">
+        <!-- Tabs Data1, Current Evolution -->
+
+
         <div id="boat-data" class="boat-data"
              style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 2; grid-template-columns: auto;">
-            <div id="row-1"
-                 style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto auto auto; padding: 10px;">
-                <!--
-                   BOUSSOLE... HDG
-                 +-->
-                <div id="boussole">
-                    <div class="black-frame centered">
-                        <compass-display id="compass-display-01"
-                                         class="green"
-                                         title="True Heading"
-                                         value="0"
-                                         width="250"
-                                         height="250"
-                                         major-ticks="45"
-                                         minor-ticks="5"
-                                         label="HDG"></compass-display>
-                    </div>
-                    <div class="black-frame centered mid">
-                        <!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-display-01');" checked -->
-                        Border
-                        <label class="rocker rocker-tiny">
-                            <input type="checkbox" onchange="setBorder(this, 'compass-display-01');" checked>
-                            <span class="switch-left">Yes</span>
-                            <span class="switch-right">No</span>
-                        </label>
 
-                        <!-- input type="checkbox" onchange="setRose(this, 'compass-display-01');" checked -->
-                        Rose
-                        <label class="rocker rocker-tiny">
-                            <input type="checkbox" onchange="setRose(this, 'compass-display-01');" checked>
-                            <span class="switch-left">Yes</span>
-                            <span class="switch-right">No</span>
-                        </label>
-                    </div>
-                </div>
-                <!--
-                    DEVIATION Curve(s).
-                 +-->
-                <div id="deviation" class="black-frame centered">
-                    <graph-display id="compass-deviation"
-                                   width="150"
-                                   height="300"
-                                   padding="5"
-                                   value="null"
-                                   orientation="vertical"
-                                   label="Deviation"
-                                   title="Deviation"></graph-display>
-                </div>
-                <!--
-                        COG
-                +-->
-                <div id="direction">
-                    <div class="black-frame centered">
-                        <direction-display class="analogdisplay-day"
-                                           title="Course Over Ground"
-                                           id="compass-01"
-                                           value="0"
-                                           major-ticks="45"
-                                           minor-ticks="5"
-                                           with-rose="true"
-                                           with-border="true"
-                                           label="COG"
-                                           width="250"
-                                           height="250"></direction-display>
-                    </div>
-                    <div class="black-frame centered mid">
-                        <!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-01');" checked -->
-                        Border
-                        <label class="rocker rocker-tiny">
-                            <input type="checkbox" onchange="setBorder(this, 'compass-01');" checked>
-                            <span class="switch-left">Yes</span>
-                            <span class="switch-right">No</span>
-                        </label>
-
-                        <!-- input type="checkbox" onchange="setRose(this, 'compass-01');" checked -->
-                        Rose
-                        <label class="rocker rocker-tiny">
-                            <input type="checkbox" onchange="setRose(this, 'compass-01');" checked>
-                            <span class="switch-left">Yes</span>
-                            <span class="switch-right">No</span>
-                        </label>
-                    </div>
-                </div>
-                <!--
-                        SOG
-                +-->
-                <div id="analog-2">
-                    <div class="black-frame centered">
-                        <!-- Note: No initial value="0" attribute, it would be considered as the miniVal. -->
-                        <analog-display class="analogdisplay-day"
-                                        title="Speed Over Ground&#13;in knots and m/s"
-                                        id="bsp-01"
-                                        min-value="0"
-                                        max-value="15"
-                                        value-2="0.0"
-                                        major-ticks="1"
-                                        minor-ticks="0.1"
-                                        with-border="true"
-                                        with-min-max="true"
-                                        overlap="40"
-                                        label="SOG"
-                                        max-value-2="7.71667"
-                                        major-ticks-2="1"
-                                        minor-ticks-2="0.1"
-                                        unit="kn"
-                                        unit-2="m/s"
-                                        rotate-digits="false"
-                                        width="250"
-                                        height="250"></analog-display>
-                    </div>
-                    <div class="black-frame centered mid">
-                        <!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked -->
-                        Border
-                        <label class="rocker rocker-tiny">
-                            <input type="checkbox" onchange="setBorder(this, 'bsp-01');" checked>
-                            <span class="switch-left">Yes</span>
-                            <span class="switch-right">No</span>
-                        </label>
-
-                        <!-- input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked -->
-                        Min &amp; Max
-                        <label class="rocker rocker-tiny">
-                            <input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked>
-                            <span class="switch-left">Yes</span>
-                            <span class="switch-right">No</span>
-                        </label>
-                        <!-- Reset min-max button -->
-                        <button style="margin-left: 5px; border-radius: 50%; width: 30px; height: 30px;" title="Reset Min-Max" onclick="resetMinMax('bsp-01');">&#x27F3;</button>
-                    </div>
-                </div>
-
-                <!--
-                        GPS Satellites
-                +-->
-                <div id="satellites">
-                    <div class="black-frame centered">
-                        <satellite-plotter class="sat-plot-02"
-                                           title="Satellites in view"
-                                           id="sp-01"
-                                           width="250"
-                                           height="250"
-                                           sat-in-view='{}'></satellite-plotter>
-                    </div>
-                    <div class="black-frame centered mid">
-                        <!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked -->
-                        Border
-                        <label class="rocker rocker-tiny">
-                            <input type="checkbox" onchange="setBorder(this, 'sp-01');" checked>
-                            <span class="switch-left">Yes</span>
-                            <span class="switch-right">No</span>
-                        </label>
-
-                    </div>
-                </div>
-
+            <div class="tab">
+                <button class="tablinks active" onclick="openSubTabOne(event, 0);">Section One</button>
+                <button class="tablinks" onclick="openSubTabOne(event, 1);">Current Evolution</button>
+                <div class="mess">Boat Data Sub Tabs</div>
             </div>
-            <div id="row-2"
-                 style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 1; grid-template-columns: auto auto auto; padding: 10px; text-align: center;">
-                <!--
-                    LOGS
-                +-->
-                <div id="log">
-                    <small>Boat Log</small>
-                    <div class="black-frame centered" style="height: 60px;">
-                        <scroll-digit-display id="scroll-digit-display-01"
-                                              class="scroll-digit-01"
-                                              nb-char="5"
-                                              font-size="42"
-                                              justified="RIGHT"
-                                              value="00000"
-                                              nb-dec="0"
-                                              title="Boat Log"></scroll-digit-display>
+
+
+            <div id="boat-data-1">
+                <div id="row-1"
+                     style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto auto auto; padding: 10px;">
+                    <!--
+                       BOUSSOLE... HDG
+                     +-->
+                    <div id="boussole">
+                        <div class="black-frame centered">
+                            <compass-display id="compass-display-01"
+                                             class="green"
+                                             title="True Heading"
+                                             value="0"
+                                             width="250"
+                                             height="250"
+                                             major-ticks="45"
+                                             minor-ticks="5"
+                                             label="HDG"></compass-display>
+                        </div>
+                        <div class="black-frame centered mid">
+                            <!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-display-01');" checked -->
+                            Border
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setBorder(this, 'compass-display-01');" checked>
+                                <span class="switch-left">Yes</span>
+                                <span class="switch-right">No</span>
+                            </label>
+
+                            <!-- input type="checkbox" onchange="setRose(this, 'compass-display-01');" checked -->
+                            Rose
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setRose(this, 'compass-display-01');" checked>
+                                <span class="switch-left">Yes</span>
+                                <span class="switch-right">No</span>
+                            </label>
+                        </div>
+                    </div>
+                    <!--
+                        DEVIATION Curve(s).
+                     +-->
+                    <div id="deviation" class="black-frame centered">
+                        <graph-display id="compass-deviation"
+                                       width="150"
+                                       height="300"
+                                       padding="5"
+                                       value="null"
+                                       orientation="vertical"
+                                       label="Deviation"
+                                       title="Deviation"></graph-display>
+                    </div>
+                    <!--
+                            COG
+                    +-->
+                    <div id="direction">
+                        <div class="black-frame centered">
+                            <direction-display class="analogdisplay-day"
+                                               title="Course Over Ground"
+                                               id="compass-01"
+                                               value="0"
+                                               major-ticks="45"
+                                               minor-ticks="5"
+                                               with-rose="true"
+                                               with-border="true"
+                                               label="COG"
+                                               width="250"
+                                               height="250"></direction-display>
+                        </div>
+                        <div class="black-frame centered mid">
+                            <!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-01');" checked -->
+                            Border
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setBorder(this, 'compass-01');" checked>
+                                <span class="switch-left">Yes</span>
+                                <span class="switch-right">No</span>
+                            </label>
+
+                            <!-- input type="checkbox" onchange="setRose(this, 'compass-01');" checked -->
+                            Rose
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setRose(this, 'compass-01');" checked>
+                                <span class="switch-left">Yes</span>
+                                <span class="switch-right">No</span>
+                            </label>
+                        </div>
+                    </div>
+                    <!--
+                            SOG
+                    +-->
+                    <div id="analog-2">
+                        <div class="black-frame centered">
+                            <!-- Note: No initial value="0" attribute, it would be considered as the miniVal. -->
+                            <analog-display class="analogdisplay-day"
+                                            title="Speed Over Ground&#13;in knots and m/s"
+                                            id="bsp-01"
+                                            min-value="0"
+                                            max-value="15"
+                                            value-2="0.0"
+                                            major-ticks="1"
+                                            minor-ticks="0.1"
+                                            with-border="true"
+                                            with-min-max="true"
+                                            overlap="40"
+                                            label="SOG"
+                                            max-value-2="7.71667"
+                                            major-ticks-2="1"
+                                            minor-ticks-2="0.1"
+                                            unit="kn"
+                                            unit-2="m/s"
+                                            rotate-digits="false"
+                                            width="250"
+                                            height="250"></analog-display>
+                        </div>
+                        <div class="black-frame centered mid">
+                            <!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked -->
+                            Border
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setBorder(this, 'bsp-01');" checked>
+                                <span class="switch-left">Yes</span>
+                                <span class="switch-right">No</span>
+                            </label>
+
+                            <!-- input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked -->
+                            Min &amp; Max
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked>
+                                <span class="switch-left">Yes</span>
+                                <span class="switch-right">No</span>
+                            </label>
+                            <!-- Reset min-max button -->
+                            <button style="margin-left: 5px; border-radius: 50%; width: 30px; height: 30px;" title="Reset Min-Max" onclick="resetMinMax('bsp-01');">&#x27F3;</button>
+                        </div>
+                    </div>
+
+                    <!--
+                            GPS Satellites
+                    +-->
+                    <div id="satellites">
+                        <div class="black-frame centered">
+                            <satellite-plotter class="sat-plot-02"
+                                               title="Satellites in view"
+                                               id="sp-01"
+                                               width="250"
+                                               height="250"
+                                               sat-in-view='{}'></satellite-plotter>
+                        </div>
+                        <div class="black-frame centered mid">
+                            <!-- input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked -->
+                            Border
+                            <label class="rocker rocker-tiny">
+                                <input type="checkbox" onchange="setBorder(this, 'sp-01');" checked>
+                                <span class="switch-left">Yes</span>
+                                <span class="switch-right">No</span>
+                            </label>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div id="row-2"
+                     style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 1; grid-template-columns: auto auto auto; padding: 10px; text-align: center;">
+                    <!--
+                        LOGS
+                    +-->
+                    <div id="log">
+                        <small>Boat Log</small>
+                        <div class="black-frame centered" style="height: 60px;">
+                            <scroll-digit-display id="scroll-digit-display-01"
+                                                  class="scroll-digit-01"
+                                                  nb-char="5"
+                                                  font-size="42"
+                                                  justified="RIGHT"
+                                                  value="00000"
+                                                  nb-dec="0"
+                                                  title="Boat Log"></scroll-digit-display>
+                        </div>
+                    </div>
+                    <div id="daily-log">
+                        <small>Daily Log</small>
+                        <div class="black-frame centered" style="height: 60px;">
+                            <scroll-digit-display id="scroll-digit-display-02"
+                                                  class="scroll-digit-01"
+                                                  nb-char="6"
+                                                  font-size="42"
+                                                  justified="RIGHT"
+                                                  value="0000.0"
+                                                  nb-dec="1"
+                                                  title="Daily"></scroll-digit-display>
+                        </div>
+                    </div>
+                    <!--
+                        COMPASS ROSE. CONCAVE.
+                    +-->
+                    <div id="compass-rose">
+                        <small>Warning: The rose in <i>concave</i>. This means that it has to be seen as if the user was
+                            sitting at the center of the rose.</small>
+                        <div class="black-frame centered">
+                            <compass-rose id="compass-rose-01"
+                                          class="day"
+                                          title="Course Over Ground"
+                                          value="0"
+                                          width="500"
+                                          height="50"></compass-rose>
+                        </div>
                     </div>
                 </div>
-                <div id="daily-log">
-                    <small>Daily Log</small>
-                    <div class="black-frame centered" style="height: 60px;">
-                        <scroll-digit-display id="scroll-digit-display-02"
-                                              class="scroll-digit-01"
-                                              nb-char="6"
-                                              font-size="42"
-                                              justified="RIGHT"
-                                              value="0000.0"
-                                              nb-dec="1"
-                                              title="Daily"></scroll-digit-display>
-                    </div>
-                </div>
-                <!--
-                    COMPASS ROSE. CONCAVE.
-                +-->
-                <div id="compass-rose">
-                    <small>Warning: The rose in <i>concave</i>. This means that it has to be seen as if the user was
-                        sitting at the center of the rose.</small>
-                    <div class="black-frame centered">
-                        <compass-rose id="compass-rose-01"
-                                      class="day"
-                                      title="Course Over Ground"
-                                      value="0"
-                                      width="500"
-                                      height="50"></compass-rose>
+                <div id="row-3"
+                     style="display: grid; grid-column-start: 1; grid-template-columns: auto; padding: 10px;">
+                    <!--
+                       BOAT OVERVIEW & JUMBOS
+                       TODO Add Jumbos, TWS Evolution, Current Evolution
+                     +-->
+                    <div id="boat-overview">
+                        <script type="text/javascript">
+                            function updateBoatShape(id, shape) {
+                                console.log('Setting', id, 'to', shape);
+                                let elem = document.getElementById(id);
+                                elem.boatShape = shape;
+                            }
+
+                            function updateWithGPS(id, checked) {
+                                let elem = document.getElementById(id);
+                                elem.withGPS = checked;
+                                document.getElementById("vmg-rocker").disabled = !checked;
+                                document.getElementById("current-rocker").disabled = !checked;
+                                if (!checked) {
+                                    // Add class
+                                    document.getElementById("vmg-rocker-label").classList.add('rocker-disabled');
+                                    document.getElementById("current-rocker-label").classList.add('rocker-disabled');
+                                } else {
+                                    // Remove class
+                                    document.getElementById("vmg-rocker-label").classList.remove('rocker-disabled');
+                                    document.getElementById("current-rocker-label").classList.remove('rocker-disabled');
+                                }
+                            }
+
+                            function updateWithCurrent(id, checked) {
+                                let elem = document.getElementById(id);
+                                elem.withCurrent = checked;
+                            }
+
+                            function updateWithWind(id, checked) {
+                                let elem = document.getElementById(id);
+                                elem.withWind = checked;
+                                document.getElementById("tw-rocker").disabled = !checked;
+                                if (!checked) {
+                                    // Add class
+                                    document.getElementById("tw-rocker-label").classList.add('rocker-disabled');
+                                } else {
+                                    // Remove class
+                                    document.getElementById("tw-rocker-label").classList.remove('rocker-disabled');
+                                }
+                            }
+
+                            function updateWithTrueWind(id, checked) {
+                                let elem = document.getElementById(id);
+                                elem.withTrueWind = checked;
+                            }
+
+                            function updateWithVMG(id, checked) {
+                                let elem = document.getElementById(id);
+                                elem.withVMG = checked;
+                                document.getElementById('vmg-option').style.display = (checked ? 'block' : 'none');
+                            }
+
+                            function updateWithW(id, checked) {
+                                let elem = document.getElementById(id);
+                                elem.withW = checked;
+                            }
+
+                            function updateWithLabels(id, checked) {
+                                let elem = document.getElementById(id);
+                                elem.withLabels = checked;
+                            }
+
+                            function updateZoom(id, value) {
+                                let elem = document.getElementById(id);
+                                elem.zoomOnBoat = value;
+                            }
+
+                            function setVMGOption(id, value) {
+                                let elem = document.getElementById(id);
+                                elem.vmgOnWind = (value === 'WIND');
+                                if (value === 'WAYPOINT') {
+                                    elem.wpName = 'Way Point'; // A WP name would go here
+                                }
+                                // updateBoatContext();
+                            }
+
+                            // const BSP_COEFF = 1;
+                            // const HDG_OFFSET = 0;
+                            // const AWS_COEFF = 1;
+                            // const AWA_OFFSET = 0;
+
+                            function updateBoatContext() { // Should not be used here...
+                                let bsp = parseFloat(document.getElementById('bsp01').value);
+                                let sog = parseFloat(document.getElementById('sog01').value);
+                                let aws = parseFloat(document.getElementById('aws01').value);
+                                let awa = parseInt(document.getElementById('awa01').value);
+                                let cog = parseInt(document.getElementById('cog01').value);
+                                let hdc = parseInt(document.getElementById('hdc01').value);
+
+                                let maxLeeway = parseFloat(document.getElementById('mlwy01').value);
+
+                                let Decl =
+                                    (parseInt(document.getElementById('Decl-deg-01').value) +
+                                        (parseFloat(document.getElementById('Decl-min-01').value) / 60)) * (document.getElementById('Decl-sign-01').value === 'E' ? 1 : -1);
+                                let dev =
+                                    (parseInt(document.getElementById('dev-deg-01').value) +
+                                        (parseFloat(document.getElementById('dev-min-01').value) / 60)) * (document.getElementById('dev-sign-01').value === 'E' ? 1 : -1);
+                                // Calculation
+                                let lwy = NavigationHelper.leewayEvaluator(awa, maxLeeway);
+                                let hdg = NavigationHelper.hdgFromHdc(hdc, Decl, dev);
+                                let tw = NavigationHelper.twCalculator(
+                                    aws, AWS_COEFF,
+                                    awa, AWA_OFFSET,
+                                    hdg, HDG_OFFSET,
+                                    sog, cog);
+                                let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
+
+                                let b2wp = 0;
+                                let b2wpVal = document.getElementById('b2wp01').value;
+                                if (b2wpVal.length > 0) {
+                                    b2wp = parseInt(b2wpVal);
+                                }
+                                let vmgs = NavigationHelper.vmgCalculator(sog, cog, tw.twd, tw.twa, bsp, hdg, b2wp);
+
+                                let resContent =
+                                    'LWY:' + lwy.toFixed(1) + '\272 \n' +
+                                    'True HDG:' + hdg.toFixed(1) + '\272 \n' +
+                                    'TWS:' + tw.tws.toFixed(2) + ' kts\n' +
+                                    'TWA:' + tw.twa.toFixed(1) + '\272 \n' +
+                                    'TWD:' + tw.twd.toFixed(1) + '\272 \n' +
+                                    'D:' + Decl.toFixed(1) + '\272 \n' +
+                                    'd:' + dev.toFixed(1) + '\272 \n' +
+                                    'Current Dir:' + current.cdr.toFixed(1) + '\272 \n' +
+                                    'Current Speed:' + current.csp.toFixed(2) + ' kts';
+
+                                console.log(resContent);
+
+                                let wpName = document.getElementById('wpname01').value;
+
+                                // Update graph here
+                                let graph = document.getElementById('boat-overview-01');
+                                graph.bsp = bsp;
+                                graph.hdg = hdg;
+                                graph.aws = aws;
+                                graph.awa = awa;
+                                graph.tws = tw.tws;
+                                graph.twa = tw.twa;
+                                graph.twd = tw.twd;
+                                graph.cog = cog;
+                                graph.sog = sog;
+                                graph.csp = current.csp;
+                                graph.cdr = current.cdr;
+                                graph.Decl = Decl;
+                                graph.dev = dev;
+                                graph.lwy = lwy;
+
+                                let cmg = (hdg + lwy) % 360;
+                                while (cmg < 0) {
+                                    cmg += 360;
+                                }
+                                graph.cmg = cmg;
+
+                                if (graph.vmgOnWind) {
+                                    graph.vmg = vmgs.vmgWind;
+                                } else {
+                                    graph.b2wp = b2wp;
+                                    graph.wpName = wpName;
+                                    graph.vmg = vmgs.vmgWayPoint;
+                                }
+                            }
+                        </script>
+                        <table class="black-frame centered">
+                            <tr>
+                                <td valign="top">
+                                    <div class="black-frame">
+                                        <boat-overview id="boat-overview-01"
+                                                       class="boat-overview-01"
+                                                       width="800"
+                                                       height="600"
+                                                       boat-shape="MONO"
+                                                       zoom-on-boat="1"
+                                                       with-current="true"
+                                                       with-labels="false"
+                                                       with-w="false"
+                                                       with-vmg="false"/>
+                                    </div>
+                                </td>
+                                <td valign="top">
+                                    <table style="text-align: left;">
+                                        <tr>
+                                            <td>
+                                                <label for="hull-type">Hull type</label>
+                                                <select id="hull-type"
+                                                        onchange="updateBoatShape('boat-overview-01', this.value);"
+                                                        style="font-family: 'Courier New', Courier, monospace; font-size: 20px; font-weight: bold;">
+                                                    <option value="MONO">Monohull</option>
+                                                    <option value="CATA">Catamaran</option>
+                                                    <option value="TRI">Trimaran</option>
+                                                    <option value="PLANE">Plane</option>
+                                                </select>
+                                                <br/>
+
+                                                <table>
+                                                    <tr>
+                                                        <td valign="middle" style="text-align: left;">
+                                                            <label class="rocker rocker-tiny" title="Display GPS Data&#13;COG &amp; SOG">
+                                                                <input type="checkbox" onchange="updateWithGPS('boat-overview-01', this.checked);" checked>
+                                                                <span class="switch-left">Yes</span>
+                                                                <span class="switch-right">No</span>
+                                                            </label>
+                                                        </td>
+                                                        <td valign="middle" style="text-align: left;">
+                                                            GPS
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td valign="middle" style="text-align: left;">
+                                                            <label class="rocker rocker-tiny" title="Display Wind&#13;Apparent and true">
+                                                                <input type="checkbox" onchange="updateWithWind('boat-overview-01', this.checked);" checked>
+                                                                <span class="switch-left">Yes</span>
+                                                                <span class="switch-right">No</span>
+                                                            </label>
+                                                        </td>
+                                                        <td valign="middle" style="text-align: left;">
+                                                            Wind
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td valign="middle" style="text-align: left;">
+                                                            <label class="rocker rocker-tiny" id="tw-rocker-label" title="Show/Hide True Wind">
+                                                                <input type="checkbox" id="tw-rocker" onchange="updateWithTrueWind('boat-overview-01', this.checked);" checked>
+                                                                <span class="switch-left">Yes</span>
+                                                                <span class="switch-right">No</span>
+                                                            </label>
+                                                        </td>
+                                                        <td valign="middle" style="text-align: left;">
+                                                            True Wind
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td valign="middle" style="text-align: left;">
+                                                            <label class="rocker rocker-tiny" id="current-rocker-label" title="Display Instant Current&#13;Speed and Direction">
+                                                                <input type="checkbox" id="current-rocker" onchange="updateWithCurrent('boat-overview-01', this.checked);" checked>
+                                                                <span class="switch-left">Yes</span>
+                                                                <span class="switch-right">No</span>
+                                                            </label>
+                                                        </td>
+                                                        <td valign="middle" style="text-align: left;">
+                                                            Current
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td valign="middle" style="text-align: left;">
+                                                            <label class="rocker rocker-tiny" id="vmg-rocker-label" title="VMGs&#13;On wind or waypoint">
+                                                                <input type="checkbox" id="vmg-rocker" onchange="updateWithVMG('boat-overview-01', this.checked);">
+                                                                <span class="switch-left">Yes</span>
+                                                                <span class="switch-right">No</span>
+                                                            </label>
+                                                        </td>
+                                                        <td valign="middle" style="text-align: left;">
+                                                            VMGs
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td valign="middle" style="text-align: left;">
+                                                            <label class="rocker rocker-tiny" title="Display Norths&#13;True, magnetic, compass">
+                                                                <input type="checkbox" onchange="updateWithW('boat-overview-01', this.checked);">
+                                                                <span class="switch-left">Yes</span>
+                                                                <span class="switch-right">No</span>
+                                                            </label>
+                                                        </td>
+                                                        <td valign="middle" style="text-align: left;">
+                                                            Norths
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td valign="middle" style="text-align: left;">
+                                                            <label class="rocker rocker-tiny" title="With labels on the graph">
+                                                                <input type="checkbox" onchange="updateWithLabels('boat-overview-01', this.checked);">
+                                                                <span class="switch-left">Yes</span>
+                                                                <span class="switch-right">No</span>
+                                                            </label>
+                                                        </td>
+                                                        <td valign="middle" style="text-align: left;">
+                                                            Labels
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div id="vmg-option" style="display: none;">
+                                                    <input type="radio" name="vmg-option"
+                                                           onchange="setVMGOption('boat-overview-01', this.value);" value="WIND" checked>
+                                                    VMG on Wind <br/>
+                                                    <input type="radio" name="vmg-option"
+                                                           onchange="setVMGOption('boat-overview-01', this.value);" value="WAYPOINT"> VMG on
+                                                    Way Point
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table style="text-align: left;">
+                                        <tr>
+                                            <td style="padding: 10px;">
+                                                <label for="zoom">Graph Zoom:&nbsp;</label>
+                                                <input style="height: 24px; width: 75px; font-family: 'Courier New', Courier, monospace; font-size: 20px; font-weight: bold;"
+                                                       type="number"
+                                                       onchange="updateZoom('boat-overview-01', this.value);"
+                                                       id="zoom" value="1.0" min="0.1" step="0.01"
+                                                       placeholder="Zoom value"/>
+                                            </td>
+                                        </tr>
+                                        <!--tr>
+                                            <td style="padding: 10px;">
+                                                Style:&nbsp;
+                                                <select onchange="applyClass('boat-overview-01', this.value);">
+                                                    <option value="boat-overview-01" selected>One</option>
+                                                    <option value="boat-overview-02">Two</option>
+                                                </select>
+                                            </td>
+                                        </tr-->
+                                    </table>
+                                </td>
+                                <td valign="top">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <jumbo-display id="jumbo-bsp"
+                                                               class="jumbo-01 digital-font-green"
+                                                               value="00.00"
+                                                               label="BSP"
+                                                               width="180"
+                                                               height="80"></jumbo-display>
+                                            </td>
+                                            <td>
+                                                <jumbo-display id="jumbo-aws"
+                                                               class="jumbo-01 digital-font-green"
+                                                               value="00.00"
+                                                               label="AWS"
+                                                               width="180"
+                                                               height="80"></jumbo-display>
+                                            </td>
+                                        </tr>
+                                        <!--tr>
+                                            <td>
+                                                <jumbo-display id="jumbo-tws"
+                                                               class="jumbo-01 digital-font-orange"
+                                                               value="00.00"
+                                                               label="TWS"
+                                                               width="180"
+                                                               height="80"></jumbo-display>
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr-->
+                                        <tr>
+                                            <td>
+                                                <wind-angle-display class="analogdisplay-day"
+                                                                    title="Apparent Wind Speed in Knots"
+                                                                    id="aw-01"
+                                                                    value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
+                                                                    major-ticks="30"
+                                                                    minor-ticks="5"
+                                                                    with-border="true"
+                                                                    with-digits="true"
+                                                                    label="Apparent"
+                                                                    hand="wind"
+                                                                    width="200"
+                                                                    height="200"></wind-angle-display>
+
+                                            </td>
+                                            <td>
+                                                <wind-angle-display class="analogdisplay-day"
+                                                                    title="True Wind Speed in Knots"
+                                                                    id="tw-01"
+                                                                    value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
+                                                                    major-ticks="30"
+                                                                    minor-ticks="5"
+                                                                    with-border="true"
+                                                                    with-digits="true"
+                                                                    label="True"
+                                                                    hand="wind"
+                                                                    width="200"
+                                                                    height="200"></wind-angle-display>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+    <!--                                    <div class="black-frame centered">-->
+    <!--                                    </div>-->
+
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
-            <div id="row-3"
-                 style="display: grid; grid-column-start: 1; grid-template-columns: auto; padding: 10px;">
-                <!--
-                   BOAT OVERVIEW & JUMBOS
-                   TODO Add Jumbos, Wind Angles, TWS Evolution, Current Evolution
-                 +-->
-                <div id="boat-overview">
-                    <script type="text/javascript">
-                        function updateBoatShape(id, shape) {
-                            console.log('Setting', id, 'to', shape);
-                            let elem = document.getElementById(id);
-                            elem.boatShape = shape;
-                        }
 
-                        function updateWithGPS(id, checked) {
-                            let elem = document.getElementById(id);
-                            elem.withGPS = checked;
-                            document.getElementById("vmg-rocker").disabled = !checked;
-                            document.getElementById("current-rocker").disabled = !checked;
-                            if (!checked) {
-                                // Add class
-                                document.getElementById("vmg-rocker-label").classList.add('rocker-disabled');
-                                document.getElementById("current-rocker-label").classList.add('rocker-disabled');
-                            } else {
-                                // Remove class
-                                document.getElementById("vmg-rocker-label").classList.remove('rocker-disabled');
-                                document.getElementById("current-rocker-label").classList.remove('rocker-disabled');
-                            }                            
-                        }
-
-                        function updateWithCurrent(id, checked) {
-                            let elem = document.getElementById(id);
-                            elem.withCurrent = checked;
-                        }
-
-                        function updateWithWind(id, checked) {
-                            let elem = document.getElementById(id);
-                            elem.withWind = checked;
-                            document.getElementById("tw-rocker").disabled = !checked;
-                            if (!checked) {
-                                // Add class
-                                document.getElementById("tw-rocker-label").classList.add('rocker-disabled');
-                            } else {
-                                // Remove class
-                                document.getElementById("tw-rocker-label").classList.remove('rocker-disabled');
-                            }
-                        }
-
-                        function updateWithTrueWind(id, checked) {
-                            let elem = document.getElementById(id);
-                            elem.withTrueWind = checked;
-                        }
-
-                        function updateWithVMG(id, checked) {
-                            let elem = document.getElementById(id);
-                            elem.withVMG = checked;
-                            document.getElementById('vmg-option').style.display = (checked ? 'block' : 'none');
-                        }
-
-                        function updateWithW(id, checked) {
-                            let elem = document.getElementById(id);
-                            elem.withW = checked;
-                        }
-
-                        function updateWithLabels(id, checked) {
-                            let elem = document.getElementById(id);
-                            elem.withLabels = checked;
-                        }
-
-                        function updateZoom(id, value) {
-                            let elem = document.getElementById(id);
-                            elem.zoomOnBoat = value;
-                        }
-
-                        function setVMGOption(id, value) {
-                            let elem = document.getElementById(id);
-                            elem.vmgOnWind = (value === 'WIND');
-                            if (value === 'WAYPOINT') {
-                                elem.wpName = 'Way Point'; // A WP name would go here
-                            }
-                            // updateBoatContext();
-                        }
-
-                        // const BSP_COEFF = 1;
-                        // const HDG_OFFSET = 0;
-                        // const AWS_COEFF = 1;
-                        // const AWA_OFFSET = 0;
-
-                        function updateBoatContext() { // Should not be used here...
-                            let bsp = parseFloat(document.getElementById('bsp01').value);
-                            let sog = parseFloat(document.getElementById('sog01').value);
-                            let aws = parseFloat(document.getElementById('aws01').value);
-                            let awa = parseInt(document.getElementById('awa01').value);
-                            let cog = parseInt(document.getElementById('cog01').value);
-                            let hdc = parseInt(document.getElementById('hdc01').value);
-
-                            let maxLeeway = parseFloat(document.getElementById('mlwy01').value);
-
-                            let Decl =
-                                (parseInt(document.getElementById('Decl-deg-01').value) +
-                                    (parseFloat(document.getElementById('Decl-min-01').value) / 60)) * (document.getElementById('Decl-sign-01').value === 'E' ? 1 : -1);
-                            let dev =
-                                (parseInt(document.getElementById('dev-deg-01').value) +
-                                    (parseFloat(document.getElementById('dev-min-01').value) / 60)) * (document.getElementById('dev-sign-01').value === 'E' ? 1 : -1);
-                            // Calculation
-                            let lwy = NavigationHelper.leewayEvaluator(awa, maxLeeway);
-                            let hdg = NavigationHelper.hdgFromHdc(hdc, Decl, dev);
-                            let tw = NavigationHelper.twCalculator(
-                                aws, AWS_COEFF,
-                                awa, AWA_OFFSET,
-                                hdg, HDG_OFFSET,
-                                sog, cog);
-                            let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
-
-                            let b2wp = 0;
-                            let b2wpVal = document.getElementById('b2wp01').value;
-                            if (b2wpVal.length > 0) {
-                                b2wp = parseInt(b2wpVal);
-                            }
-                            let vmgs = NavigationHelper.vmgCalculator(sog, cog, tw.twd, tw.twa, bsp, hdg, b2wp);
-
-                            let resContent =
-                                'LWY:' + lwy.toFixed(1) + '\272 \n' +
-                                'True HDG:' + hdg.toFixed(1) + '\272 \n' +
-                                'TWS:' + tw.tws.toFixed(2) + ' kts\n' +
-                                'TWA:' + tw.twa.toFixed(1) + '\272 \n' +
-                                'TWD:' + tw.twd.toFixed(1) + '\272 \n' +
-                                'D:' + Decl.toFixed(1) + '\272 \n' +
-                                'd:' + dev.toFixed(1) + '\272 \n' +
-                                'Current Dir:' + current.cdr.toFixed(1) + '\272 \n' +
-                                'Current Speed:' + current.csp.toFixed(2) + ' kts';
-
-                            console.log(resContent);
-
-                            let wpName = document.getElementById('wpname01').value;
-
-                            // Update graph here
-                            let graph = document.getElementById('boat-overview-01');
-                            graph.bsp = bsp;
-                            graph.hdg = hdg;
-                            graph.aws = aws;
-                            graph.awa = awa;
-                            graph.tws = tw.tws;
-                            graph.twa = tw.twa;
-                            graph.twd = tw.twd;
-                            graph.cog = cog;
-                            graph.sog = sog;
-                            graph.csp = current.csp;
-                            graph.cdr = current.cdr;
-                            graph.Decl = Decl;
-                            graph.dev = dev;
-                            graph.lwy = lwy;
-
-                            let cmg = (hdg + lwy) % 360;
-                            while (cmg < 0) {
-                                cmg += 360;
-                            }
-                            graph.cmg = cmg;
-
-                            if (graph.vmgOnWind) {
-                                graph.vmg = vmgs.vmgWind;
-                            } else {
-                                graph.b2wp = b2wp;
-                                graph.wpName = wpName;
-                                graph.vmg = vmgs.vmgWayPoint;
-                            }
-                        }
-                    </script>
-                    <table class="black-frame centered">
-                        <tr>
-                            <td valign="top">
-                                <div class="black-frame">
-                                    <boat-overview id="boat-overview-01"
-                                                   class="boat-overview-01"
-                                                   width="800"
-                                                   height="600"
-                                                   boat-shape="MONO"
-                                                   zoom-on-boat="1"
-                                                   with-current="true"
-                                                   with-labels="false"
-                                                   with-w="false"
-                                                   with-vmg="false"/>
-                                </div>
-                            </td>
-                            <td valign="top">
-                                <table style="text-align: left;">
-                                    <tr>
-                                        <td>
-                                            <label for="hull-type">Hull type</label>
-                                            <select id="hull-type" 
-                                                    onchange="updateBoatShape('boat-overview-01', this.value);"
-                                                    style="font-family: 'Courier New', Courier, monospace; font-size: 20px; font-weight: bold;">
-                                                <option value="MONO">Monohull</option>
-                                                <option value="CATA">Catamaran</option>
-                                                <option value="TRI">Trimaran</option>
-                                                <option value="PLANE">Plane</option>
-                                            </select>
-                                            <br/>
-
-                                            <table>
-                                                <tr>
-                                                    <td valign="middle" style="text-align: left;">
-                                                        <label class="rocker rocker-tiny" title="Display GPS Data&#13;COG &amp; SOG">
-                                                            <input type="checkbox" onchange="updateWithGPS('boat-overview-01', this.checked);" checked>
-                                                            <span class="switch-left">Yes</span>
-                                                            <span class="switch-right">No</span>
-                                                        </label>
-                                                    </td>
-                                                    <td valign="middle" style="text-align: left;">
-                                                        GPS
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td valign="middle" style="text-align: left;">
-                                                        <label class="rocker rocker-tiny" title="Display Wind&#13;Apparent and true">
-                                                            <input type="checkbox" onchange="updateWithWind('boat-overview-01', this.checked);" checked>
-                                                            <span class="switch-left">Yes</span>
-                                                            <span class="switch-right">No</span>
-                                                        </label>
-                                                    </td>
-                                                    <td valign="middle" style="text-align: left;">
-                                                        Wind
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td valign="middle" style="text-align: left;">
-                                                        <label class="rocker rocker-tiny" id="tw-rocker-label" title="Show/Hide True Wind">
-                                                            <input type="checkbox" id="tw-rocker" onchange="updateWithTrueWind('boat-overview-01', this.checked);" checked>
-                                                            <span class="switch-left">Yes</span>
-                                                            <span class="switch-right">No</span>
-                                                        </label>
-                                                    </td>
-                                                    <td valign="middle" style="text-align: left;">
-                                                        True Wind
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td valign="middle" style="text-align: left;">
-                                                        <label class="rocker rocker-tiny" id="current-rocker-label" title="Display Instant Current&#13;Speed and Direction">
-                                                            <input type="checkbox" id="current-rocker" onchange="updateWithCurrent('boat-overview-01', this.checked);" checked>
-                                                            <span class="switch-left">Yes</span>
-                                                            <span class="switch-right">No</span>
-                                                        </label>
-                                                    </td>
-                                                    <td valign="middle" style="text-align: left;">
-                                                        Current
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td valign="middle" style="text-align: left;">
-                                                        <label class="rocker rocker-tiny" id="vmg-rocker-label" title="VMGs&#13;On wind or waypoint">
-                                                            <input type="checkbox" id="vmg-rocker" onchange="updateWithVMG('boat-overview-01', this.checked);">
-                                                            <span class="switch-left">Yes</span>
-                                                            <span class="switch-right">No</span>
-                                                        </label>
-                                                    </td>
-                                                    <td valign="middle" style="text-align: left;">
-                                                        VMGs
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td valign="middle" style="text-align: left;">
-                                                        <label class="rocker rocker-tiny" title="Display Norths&#13;True, magnetic, compass">
-                                                            <input type="checkbox" onchange="updateWithW('boat-overview-01', this.checked);">
-                                                            <span class="switch-left">Yes</span>
-                                                            <span class="switch-right">No</span>
-                                                        </label>
-                                                    </td>
-                                                    <td valign="middle" style="text-align: left;">
-                                                        Norths
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td valign="middle" style="text-align: left;">
-                                                        <label class="rocker rocker-tiny" title="With labels on the graph">
-                                                            <input type="checkbox" onchange="updateWithLabels('boat-overview-01', this.checked);">
-                                                            <span class="switch-left">Yes</span>
-                                                            <span class="switch-right">No</span>
-                                                        </label>
-                                                    </td>
-                                                    <td valign="middle" style="text-align: left;">
-                                                        Labels
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div id="vmg-option" style="display: none;">
-                                                <input type="radio" name="vmg-option"
-                                                       onchange="setVMGOption('boat-overview-01', this.value);" value="WIND" checked>
-                                                VMG on Wind <br/>
-                                                <input type="radio" name="vmg-option"
-                                                       onchange="setVMGOption('boat-overview-01', this.value);" value="WAYPOINT"> VMG on
-                                                Way Point
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <table style="text-align: left;">
-                                    <tr>
-                                        <td style="padding: 10px;">
-                                            <label for="zoom">Graph Zoom:&nbsp;</label>
-                                            <input style="height: 24px; width: 75px; font-family: 'Courier New', Courier, monospace; font-size: 20px; font-weight: bold;" 
-                                                   type="number"
-                                                   onchange="updateZoom('boat-overview-01', this.value);"
-                                                   id="zoom" value="1.0" min="0.1" step="0.01"
-                                                   placeholder="Zoom value"/>
-                                        </td>
-                                    </tr>
-                                    <!--tr>
-                                        <td style="padding: 10px;">
-                                            Style:&nbsp;
-                                            <select onchange="applyClass('boat-overview-01', this.value);">
-                                                <option value="boat-overview-01" selected>One</option>
-                                                <option value="boat-overview-02">Two</option>
-                                            </select>
-                                        </td>
-                                    </tr-->
-                                </table>
-                            </td>
-                            <td valign="top">
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <jumbo-display id="jumbo-bsp"
-                                                           class="jumbo-01 digital-font-green"
-                                                           value="00.00"
-                                                           label="BSP"
-                                                           width="180"
-                                                           height="80"></jumbo-display>
-                                        </td>
-                                        <td>
-                                            <jumbo-display id="jumbo-aws"
-                                                           class="jumbo-01 digital-font-green"
-                                                           value="00.00"
-                                                           label="AWS"
-                                                           width="180"
-                                                           height="80"></jumbo-display>
-                                        </td>
-                                    </tr>
-                                    <!--tr>
-                                        <td>
-                                            <jumbo-display id="jumbo-tws"
-                                                           class="jumbo-01 digital-font-orange"
-                                                           value="00.00"
-                                                           label="TWS"
-                                                           width="180"
-                                                           height="80"></jumbo-display>
-                                        </td>
-                                        <td>
-                                        </td>
-                                    </tr-->
-                                    <tr>
-                                        <td>
-                                            <wind-angle-display class="analogdisplay-day"
-                                                                title="Apparent Wind Speed in Knots"
-                                                                id="aw-01"
-                                                                value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
-                                                                major-ticks="30"
-                                                                minor-ticks="5"
-                                                                with-border="true"
-                                                                with-digits="true"
-                                                                label="Apparent"
-                                                                hand="wind"
-                                                                width="200"
-                                                                height="200"></wind-angle-display>
-
-                                        </td>
-                                        <td>
-                                            <wind-angle-display class="analogdisplay-day"
-                                                                title="True Wind Speed in Knots"
-                                                                id="tw-01"
-                                                                value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
-                                                                major-ticks="30"
-                                                                minor-ticks="5"
-                                                                with-border="true"
-                                                                with-digits="true"
-                                                                label="True"
-                                                                hand="wind"
-                                                                width="200"
-                                                                height="200"></wind-angle-display>
-
-                                        </td>
-                                    </tr>
-                                </table>
-<!--                                    <div class="black-frame centered">-->
-<!--                                    </div>-->
-
-                            </td>
-                        </tr>
-                    </table>
+            <div id="boat-data-2" style="display: none;">
+                <div id="current-evolution" class="black-frame left current-evolution-container">
+                    <div id="instant" class="current-evolution-element left" style="grid-area: instant;">
+                        <div class="current-element-title" style="grid-area: title;">Instant Triangulation</div>
+                        <graph-display id="current-evolution-instant-dir"
+                                       style="grid-area: dir;"
+                                       width="150"
+                                       height="500"
+                                       padding="5"
+                                       value="null"
+                                       orientation="vertical"
+                                       label="Dir"
+                                       title="Dir"></graph-display>
+                        <graph-display id="current-evolution-instant-speed"
+                                       style="grid-area: speed;"
+                                       width="150"
+                                       height="500"
+                                       padding="5"
+                                       value="null"
+                                       orientation="vertical"
+                                       label="Speed"
+                                       title="Speed"></graph-display>
+                    </div>
+                    <div id="on-30-s" class="current-evolution-element left" style="grid-area: 30s;">
+                        <div class="current-element-title" style="grid-area: title;">On 30 seconds</div>
+                        <graph-display id="current-evolution-30s-dir"
+                                       style="grid-area: dir;"
+                                       width="150"
+                                       height="500"
+                                       padding="5"
+                                       value="null"
+                                       orientation="vertical"
+                                       label="Dir"
+                                       title="Dir"></graph-display>
+                        <graph-display id="current-evolution-30s-speed"
+                                       style="grid-area: speed;"
+                                       width="150"
+                                       height="500"
+                                       padding="5"
+                                       value="null"
+                                       orientation="vertical"
+                                       label="Speed"
+                                       title="Speed"></graph-display>
+                    </div>
+                    <div id="on-1m" class="current-evolution-element left" style="grid-area: 1m;">
+                        <div class="current-element-title" style="grid-area: title;">On 1 minute</div>
+                        <graph-display id="current-evolution-1m-dir"
+                                       style="grid-area: dir;"
+                                       width="150"
+                                       height="500"
+                                       padding="5"
+                                       value="null"
+                                       orientation="vertical"
+                                       label="Dir"
+                                       title="Dir"></graph-display>
+                        <graph-display id="current-evolution-1m-speed"
+                                       style="grid-area: speed;"
+                                       width="150"
+                                       height="500"
+                                       padding="5"
+                                       value="null"
+                                       orientation="vertical"
+                                       label="Speed"
+                                       title="Speed"></graph-display>
+                    </div>
+                    <div id="on-10m" class="current-evolution-element left" style="grid-area: 10m;">
+                        <div class="current-element-title" style="grid-area: title;">On 10 minutes</div>
+                        <graph-display id="current-evolution-10m-dir"
+                                       style="grid-area: dir;"
+                                       width="150"
+                                       height="500"
+                                       padding="5"
+                                       value="null"
+                                       orientation="vertical"
+                                       label="Dir"
+                                       title="Dir"></graph-display>
+                        <graph-display id="current-evolution-10m-speed"
+                                       style="grid-area: speed;"
+                                       width="150"
+                                       height="500"
+                                       padding="5"
+                                       value="null"
+                                       orientation="vertical"
+                                       label="Speed"
+                                       title="Speed"></graph-display>
+                    </div>
                 </div>
+
             </div>
         </div>
+
+        <!-- End Of BoatData -->
+
         <div id="row-X"
              style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding-left: 10px; max-width: inherit;">
             <div style="display: grid; justify-self: start; grid-template-columns: auto; padding: 0px;">

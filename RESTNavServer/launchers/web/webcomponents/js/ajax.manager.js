@@ -567,9 +567,9 @@ function onMessage(json) {
                 let keys = Object.keys(buffered);
                 for (let i = 0; i < keys.length; i++) {
                     let k = keys[i];
-//				console.log("K:" + k);
+				    // console.log("K:" + k);
                     let damp = buffered[k];
-//				console.log("Publishing csp-" + k);
+				    // console.log("Publishing csp-" + k);
                     events.publish(events.topicNames.DAMP_CSP_PREFIX + k, damp.speed.speed);
                     events.publish(events.topicNames.DAMP_CDR_PREFIX + k, damp.direction.angle);
                 }

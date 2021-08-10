@@ -12,6 +12,19 @@ function openTab(evt, tabNum) {
 	evt.currentTarget.className += " active";
 }
 
+const SUB_TABS_ONE = ['boat-data-1', 'boat-data-2'];
+
+function openSubTabOne(evt, tabNum) {
+	let tabLinks = document.getElementsByClassName("tablinks");
+	for (let i=0; i<tabLinks.length; i++) {
+		tabLinks[i].className = tabLinks[i].className.replace(" active", ""); // Reset
+	}
+	for (let i=0; i<SUB_TABS_ONE.length; i++) {
+		document.getElementById(SUB_TABS_ONE[i]).style.display = (i === tabNum) ? 'block' : 'none';
+	}
+	evt.currentTarget.className += " active";
+}
+
 function getQSPrm(prm) {
 	let value;
 	let loc = document.location.toString();
@@ -1053,7 +1066,7 @@ const DISPLAYS = [
 		// TODO Dev Curve Style?
 ];
 
-function devCurveCallback(elmt, context) {
+function devCurveCallback(elmt, context) { // Draw the horizontal red line at the current heading
 	// console.log('In DevCurveCallback, hdg=', hdg);
 	context.beginPath();
 	context.lineWidth = 3;
