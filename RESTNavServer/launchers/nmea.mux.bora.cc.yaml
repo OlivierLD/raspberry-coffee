@@ -8,7 +8,10 @@ context:
   init.cache: true
 channels:
   - type: file
-    filename: ../../NMEA-multiplexer/sample.data/2011-01-29.strait.to.tongareva.for.DR.small.nmea
+    # filename: ../sample.data/2011-01-29.strait.to.tongareva.for.DR.txt.nmea
+    filename: ./sample.data/logged.data.archive.zip
+    zip: true
+    path.in.zip: 2011-01-29.strait.to.tongareva.for.DR.txt.nmea
     verbose: false
 forwarders:
   - class: nmea.forwarders.CharacterConsoleWriter

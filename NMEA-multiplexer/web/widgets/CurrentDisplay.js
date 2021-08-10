@@ -1,8 +1,9 @@
 /*
+ * This is NOT a WebComponent
+ *
  * @author Olivier Le Diouris
  */
-var currentDisplayColorConfigWhite =
-    {
+var currentDisplayColorConfigWhite = {
         bgColor: 'white',
         digitColor: 'black',
         withGradient: true,
@@ -23,8 +24,7 @@ var currentDisplayColorConfigWhite =
         font: 'Arial' /* 'Source Code Pro' */
     };
 
-var currentDisplayColorConfigBlack =
-    {
+var currentDisplayColorConfigBlack = {
         bgColor: 'black',
         digitColor: 'white',
         withGradient: true,

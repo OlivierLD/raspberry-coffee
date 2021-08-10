@@ -19,7 +19,7 @@
 - Helidon, implement relay REST interaction (RasPi #2)
 
 #### Interaction
-- FaaS
+- FaaS (Functions-as-a-Service)
 - Expose to an IoT server
     - Expose
     - Show QR Code
