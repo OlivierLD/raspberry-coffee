@@ -6,6 +6,7 @@ context:
   with.http.server: true
   http.port: 9999
   init.cache: true
+  deviation.file.name: "dp_2011_04_15.csv"
 channels:
   - type: file
     # filename: ../sample.data/2011-01-29.strait.to.tongareva.for.DR.txt.nmea
