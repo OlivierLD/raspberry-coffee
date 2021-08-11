@@ -415,7 +415,7 @@
                 boatSpeedEvolution = boatSpeedEvolution.slice(1);
             }
             let graph = document.getElementById('bsp-evolution');
-            let graphData = updateBuffer(boatSpeedEvolution, 'Instant speed', 'red', 0, 10); // Max 10
+            let graphData = updateBuffer(boatSpeedEvolution, 'Instant speed', 'red', 0, 10, true); // Max 10
             graphData.thickY = [0, 2, 4, 6, 8, 10];
 			graph.data = graphData;
 			graph.vgrid = null;
@@ -523,7 +523,13 @@
 
         let boatSpeedEvolution = [];
 
-        let updateBuffer = (dataBuffer, curveName, curveColor, minValue, maxValue) => {
+        const ALPHA = 0.015; // For Low Pass Filter. Hard coded for now.
+
+        function lowPass(alpha, value, acc) {
+            return (value * alpha) + (acc * (1 - alpha));
+        }
+
+        let updateBuffer = (dataBuffer, curveName, curveColor, minValue, maxValue, withLowPass) => {
 			let finalData = {
 				withGrid: true,
 				withXLabels: true,
@@ -559,6 +565,23 @@
 			finalData.data[0].values = y;
 			// finalData.minY = 0; // Math.min(mini, 0);
 			// finalData.maxY = Math.max(maxi, 10);
+            if (withLowPass !== undefined && withLowPass === true) {
+                let filteredArray = [];
+                let acc = dataBuffer[0];
+                y.forEach(dp => {
+                    acc = lowPass(ALPHA, dp, acc);
+                    filteredArray.push(acc);
+                });
+                finalData.data.push({
+						name: curveName,
+						lineColor: 'cyan',
+						fillColor: null,
+						thickness: 1,
+						x: x,
+						values: filteredArray // Same cardinality as x
+					});
+            }
+
             return finalData;
         };
 
