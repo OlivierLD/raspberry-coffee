@@ -472,11 +472,7 @@
         let _10mCurrentDir = [];
         let _10mCurrentSpeed = [];
 
-        let updateBuffer = (value, dataBuffer, curveName, curveColor, minValue, maxValue) => {
-            dataBuffer.push(value);
-            while (dataBuffer.length > BUFFER_MAX_SIZE) {
-                dataBuffer = dataBuffer.slice(1);
-            }
+        let updateBuffer = (dataBuffer, curveName, curveColor, minValue, maxValue) => {
 			let finalData = {
 				withGrid: true,
 				withXLabels: true,
@@ -515,10 +511,14 @@
             return finalData;
         };
 
-        // Needs some love...
+        // Recenter data on [-180, 180] instead of [0, 360]
         let recenterData = (graphData) => {
-			let mini = Number.MAX_VALUE;
-			let maxi = -Number.MAX_VALUE;
+
+            let mini = 0, maxi = 360;
+	        let valLabel = "0:45";
+
+			// let mini = Number.MAX_VALUE;
+			// let maxi = -Number.MAX_VALUE;
             let dataBuffer = graphData.data[0].values;
 
 			dataBuffer.forEach(val => {
@@ -527,25 +527,45 @@
 			});
 
             if (mini < 180 && maxi > 180) {
+                valLabel = "-180:45";
+                let values = { x: [], y: [] };
+
                 for (let i=0; i<dataBuffer.length; i++) {
-                    dataBuffer[i] -= 180;
-                }    
-                graphData.minY -= 180;
-                graphData.maxY -= 180;
-                graphData.data[0].values = dataBuffer;
+                    values.x.push(i);
+                    if (dataBuffer[i] < 180) {
+                        values.y.push(dataBuffer[i]);
+                    } else {
+                        values.y.push((dataBuffer[i] - 360));
+                    }
+                } 
+                mini = -180;
+                maxi = +180;
+
+                graphData.data[0].x = values.x;
+                graphData.data[0].values = values.y; // dataBuffer;
+                graphData.minY = mini;
+                graphData.maxY = maxi;
             }
-            return graphData;
+            graphData.vgrid = valLabel;
+            return { label: valLabel, data: graphData };
         };
 
         events.subscribe(events.topicNames.CURRENT_DIR, (val) => {
             // console.log('Update Graph with CSP Instant', val);
+            instantCurrentDir.push(val);
+            while (instantCurrentDir.length > BUFFER_MAX_SIZE) {
+                instantCurrentDir = instantCurrentDir.slice(1);
+            }
             let graph = document.getElementById('current-evolution-instant-dir');
-            let graphData = updateBuffer(val, instantCurrentDir, 'Instant direction', 'lime', 0, 360);
-            // graphData = recenterData(graphData);
+            let graphData = updateBuffer(instantCurrentDir, 'Instant direction', 'lime', 0, 360);
+            let reworked = recenterData(graphData);
+            graphData = reworked.data;
+            let newLabel = reworked.label;
+
 			graph.data = graphData;
 			//  let amplitude = graphData.maxY - graphData.minY;
             // graph.withYLabels = false;
-			graph.vgrid = "0:45"; // Math.floor(graphData.minY).toFixed(0) + ":" + (amplitude < 7 ? "1" : "2");
+			graph.vgrid = newLabel; // "0:45"; // Math.floor(graphData.minY).toFixed(0) + ":" + (amplitude < 7 ? "1" : "2");
 			graph.hgrid = null; // "0:45";
 			// graph.setDoAfter((elmt, context) => {
 			// 	 devCurveCallback(elmt, context);
@@ -555,8 +575,12 @@
         });
         events.subscribe(events.topicNames.CURRENT_SPEED, (val) => {
             // console.log('Update Graph with CSP Instant', val);
+            instantCurrentSpeed.push(val);
+            while (instantCurrentSpeed.length > BUFFER_MAX_SIZE) {
+                instantCurrentSpeed = instantCurrentSpeed.slice(1);
+            }
             let graph = document.getElementById('current-evolution-instant-speed');
-            let graphData = updateBuffer(val, instantCurrentSpeed, 'Instant speed', 'red', 0, 6);
+            let graphData = updateBuffer(instantCurrentSpeed, 'Instant speed', 'red', 0, 6);
 			graph.data = graphData;
 			//  let amplitude = graphData.maxY - graphData.minY;
 			graph.vgrid = "0:1"; // Math.floor(graphData.minY).toFixed(0) + ":" + (amplitude < 7 ? "1" : "2");
@@ -566,19 +590,31 @@
         });
         events.subscribe(events.topicNames.DAMP_CDR_PREFIX + '30000', (val) => {
             // console.log('Update Graph with CSP 30000', val);
+            _30sCurrentDir.push(val);
+            while (_30sCurrentDir.length > BUFFER_MAX_SIZE) {
+                _30sCurrentDir = _30sCurrentDir.slice(1);
+            }
             let graph = document.getElementById('current-evolution-30s-dir');
-            let graphData = updateBuffer(val, _30sCurrentDir, '30s direction', 'lime', 0, 360);
-			graph.data = graphData;
+            let graphData = updateBuffer(_30sCurrentDir, '30s direction', 'lime', 0, 360);
+            let reworked = recenterData(graphData);
+            graphData = reworked.data;
+            let newLabel = reworked.label;
+
+            graph.data = graphData;
 			//  let amplitude = graphData.maxY - graphData.minY;
-			graph.vgrid = "0:45";
+			graph.vgrid = newLabel; // "0:45";
 			graph.hgrid = null;
             graph.value = val.toFixed(1) + "°";
             graph.repaint();
         });
         events.subscribe(events.topicNames.DAMP_CSP_PREFIX + '30000', (val) => {
             // console.log('Update Graph with CDR 30000', val);
+            _30sCurrentSpeed.push(val);
+            while (_30sCurrentSpeed.length > BUFFER_MAX_SIZE) {
+                _30sCurrentSpeed = _30sCurrentSpeed.slice(1);
+            }
             let graph = document.getElementById('current-evolution-30s-speed');
-            let graphData = updateBuffer(val, _30sCurrentSpeed, '30s speed', 'red', 0, 6);
+            let graphData = updateBuffer(_30sCurrentSpeed, '30s speed', 'red', 0, 6);
 			graph.data = graphData;
 			let amplitude = graphData.maxY - graphData.minY;
 			graph.vgrid = "0:1"; 
@@ -587,18 +623,30 @@
             graph.repaint();
         });
         events.subscribe(events.topicNames.DAMP_CDR_PREFIX + '60000', (val) => {
+            _1mCurrentDir.push(val);
+            while (_1mCurrentDir.length > BUFFER_MAX_SIZE) {
+                _1mCurrentDir = _1mCurrentDir.slice(1);
+            }
             let graph = document.getElementById('current-evolution-1m-dir');
-            let graphData = updateBuffer(val, _1mCurrentDir, '1m direction', 'lime', 0, 360);
+            let graphData = updateBuffer(_1mCurrentDir, '1m direction', 'lime', 0, 360);
+            let reworked = recenterData(graphData);
+            graphData = reworked.data;
+            let newLabel = reworked.label;
+
 			graph.data = graphData;
 			//  let amplitude = graphData.maxY - graphData.minY;
-			graph.vgrid = "0:45";
+			graph.vgrid = newLabel; // "0:45";
 			graph.hgrid = null;
             graph.value = val.toFixed(1) + "°";
             graph.repaint();
         });
         events.subscribe(events.topicNames.DAMP_CSP_PREFIX + '60000', (val) => {
+            _1mCurrentSpeed.push(val);
+            while (_1mCurrentSpeed.length > BUFFER_MAX_SIZE) {
+                _1mCurrentSpeed = _1mCurrentSpeed.slice(1);
+            }
             let graph = document.getElementById('current-evolution-1m-speed');
-            let graphData = updateBuffer(val, _1mCurrentSpeed, '1m speed', 'red', 0, 6);
+            let graphData = updateBuffer(_1mCurrentSpeed, '1m speed', 'red', 0, 6);
 			graph.data = graphData;
 			//  let amplitude = graphData.maxY - graphData.minY;
 			graph.vgrid = "0:1"; 
@@ -607,18 +655,30 @@
             graph.repaint();
         });
         events.subscribe(events.topicNames.DAMP_CDR_PREFIX + '600000', (val) => {
+            _10mCurrentDir.push(val);
+            while (_10mCurrentDir.length > BUFFER_MAX_SIZE) {
+                _10mCurrentDir = _10mCurrentDir.slice(1);
+            }
             let graph = document.getElementById('current-evolution-10m-dir');
-            let graphData = updateBuffer(val, _10mCurrentDir, '10m direction', 'lime', 0, 360);
+            let graphData = updateBuffer(_10mCurrentDir, '10m direction', 'lime', 0, 360);
+            let reworked = recenterData(graphData);
+            graphData = reworked.data;
+            let newLabel = reworked.label;
+
 			 graph.data = graphData;
 			//  let amplitude = graphData.maxY - graphData.minY;
-			 graph.vgrid = "0:45";
+			 graph.vgrid = newLabel; // "0:45";
 			 graph.hgrid = null;
              graph.value = val.toFixed(1) + "°";
              graph.repaint();
         });
         events.subscribe(events.topicNames.DAMP_CSP_PREFIX + '600000', (val) => {
+            _10mCurrentSpeed.push(val);
+            while (_10mCurrentSpeed.length > BUFFER_MAX_SIZE) {
+                _10mCurrentSpeed = _10mCurrentSpeed.slice(1);
+            }
             let graph = document.getElementById('current-evolution-10m-speed');
-            let graphData = updateBuffer(val, _10mCurrentSpeed, '10m speed', 'red', 0, 6);
+            let graphData = updateBuffer(_10mCurrentSpeed, '10m speed', 'red', 0, 6);
 			graph.data = graphData;
 			//  let amplitude = graphData.maxY - graphData.minY;
 			graph.vgrid = "0:1"; 
