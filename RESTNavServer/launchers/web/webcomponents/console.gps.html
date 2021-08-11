@@ -409,6 +409,19 @@
                 bo.csp = current.csp;
                 bo.cdr = current.cdr;
             }
+            // BSP Evolution
+            boatSpeedEvolution.push(val);
+            while (boatSpeedEvolution.length > BUFFER_MAX_SIZE) {
+                boatSpeedEvolution = boatSpeedEvolution.slice(1);
+            }
+            let graph = document.getElementById('bsp-evolution');
+            let graphData = updateBuffer(boatSpeedEvolution, 'Instant speed', 'red', 0, 10); // Max 10
+			graph.data = graphData;
+			graph.vgrid = null;
+			graph.hgrid = "0:1"; // "0:45";
+            graph.value = val.toFixed(2) + " kt";
+            graph.title = `BSP, ${boatSpeedEvolution.length} points`;
+            graph.repaint();
         });
         events.subscribe(events.topicNames.TWS, (val) => {
             document.getElementById('boat-overview-01').tws = val;
@@ -506,6 +519,8 @@
 
         let twInstantDir = [];
         let twInstantSpeed = [];
+
+        let boatSpeedEvolution = [];
 
         let updateBuffer = (dataBuffer, curveName, curveColor, minValue, maxValue) => {
 			let finalData = {
@@ -1400,6 +1415,7 @@
                 <button class="tablinks active" onclick="openSubTabOne(event, 0);">Section One</button>
                 <button class="tablinks" onclick="openSubTabOne(event, 1);">Current Evolution</button>
                 <button class="tablinks" onclick="openSubTabOne(event, 2);">True Wind Evolution</button>
+                <button class="tablinks" onclick="openSubTabOne(event, 3);">Boat Speed Evolution</button>
                 <div class="mess">Boat Data Sub Tabs</div>
             </div>
             
@@ -2118,6 +2134,19 @@
                                        title="Speed"></graph-display>
                     </div>
                 </div>    
+            </div>
+
+            <div id="boat-data-4" style="display: none;">
+                <!-- Boat Speed Evolution -->
+                <graph-display id="bsp-evolution"
+                               style="margin: 0 2px 0 2px;"
+                               width="800"
+                               height="400"
+                               padding="5"
+                               value="null"
+                               orientation="horizontal"
+                               label="BSP"
+                               title="BSP"></graph-display>
             </div>
 
         </div>

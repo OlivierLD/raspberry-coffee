@@ -12,7 +12,7 @@ function openTab(evt, tabNum) {
 	evt.currentTarget.className += " active";
 }
 
-const SUB_TABS_ONE = ['boat-data-1', 'boat-data-2', 'boat-data-3'];
+const SUB_TABS_ONE = ['boat-data-1', 'boat-data-2', 'boat-data-3', 'boat-data-4'];
 
 function openSubTabOne(evt, tabNum) {
 	let tabLinks = document.getElementsByClassName("tablinks");
