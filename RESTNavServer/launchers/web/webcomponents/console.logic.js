@@ -12,7 +12,7 @@ function openTab(evt, tabNum) {
 	evt.currentTarget.className += " active";
 }
 
-const SUB_TABS_ONE = ['boat-data-1', 'boat-data-2'];
+const SUB_TABS_ONE = ['boat-data-1', 'boat-data-2', 'boat-data-3'];
 
 function openSubTabOne(evt, tabNum) {
 	let tabLinks = document.getElementsByClassName("tablinks");
@@ -172,7 +172,7 @@ function setScrollDigitValue(id, value) {
 		}
 	}
 
-	if (scroll) {
+	if (scroll || true) {
 		if (sign !== 0) {
 			// console.log(`Scrolling from ${original} to ${newPaddedValue}`);
 			for (let idx = 0; idx < original.length; idx++) {

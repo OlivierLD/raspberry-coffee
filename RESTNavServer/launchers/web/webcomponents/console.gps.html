@@ -418,6 +418,20 @@
             let currentValue = analogTW.value; // { wa: 0, ws: 0 }
             currentValue.ws = val;
             analogTW.value = JSON.stringify(currentValue);
+
+            // Evolution Graph
+            twInstantSpeed.push(val);
+            while (twInstantSpeed.length > BUFFER_MAX_SIZE) {
+                twInstantSpeed = twInstantSpeed.slice(1);
+            }
+            let graph = document.getElementById('tw-evolution-instant-speed');
+            let graphData = updateBuffer(twInstantSpeed, 'Instant speed', 'red', 0, 50);
+			graph.data = graphData;
+			//  let amplitude = graphData.maxY - graphData.minY;
+			graph.vgrid = "0:5"; // Math.floor(graphData.minY).toFixed(0) + ":" + (amplitude < 7 ? "1" : "2");
+			graph.hgrid = null; // "0:45";
+            graph.value = val.toFixed(1) + " kt";
+            graph.repaint();
         });
         events.subscribe(events.topicNames.TWA, (val) => {
             document.getElementById('boat-overview-01').twa = val;
@@ -428,7 +442,25 @@
             analogTW.value = JSON.stringify(currentValue);
         });
         events.subscribe(events.topicNames.TWD, (val) => {
+            // Analog display
             document.getElementById('boat-overview-01').twd = val;
+
+            // Evolution Graph
+            twInstantDir.push(val);
+            while (twInstantDir.length > BUFFER_MAX_SIZE) {
+                twInstantDir = twInstantDir.slice(1);
+            }
+            let graph = document.getElementById('tw-evolution-instant-dir');
+            let graphData = updateBuffer(twInstantDir, 'Instant direction', 'lime', 0, 360);
+            let reworked = recenterData(graphData);
+            graphData = reworked.data;
+            let newLabel = reworked.label;
+
+			graph.data = graphData;
+			graph.vgrid = newLabel; // "0:45"; // Math.floor(graphData.minY).toFixed(0) + ":" + (amplitude < 7 ? "1" : "2");
+			graph.hgrid = null; // "0:45";
+            graph.value = val.toFixed(1) + "°";
+            graph.repaint();
         });
         events.subscribe(events.topicNames.AWS, (val) => {
             document.getElementById('boat-overview-01').aws = val;
@@ -458,7 +490,7 @@
                 events.publish(events.topicNames.CURRENT_SPEED, current.csp);
             }
         });
-        // TODO Current, instant, 30s, 1m, 10m. Use 30000, 60000, 600000
+        // Current: instant, 30s, 1m, 10m. Use 30000, 60000, 600000
         // Instant: CURRENT_DIR, CURRENT_SPEED, also see above.
 
         // Buffers are limited to the value below
@@ -471,6 +503,9 @@
         let _1mCurrentSpeed = [];
         let _10mCurrentDir = [];
         let _10mCurrentSpeed = [];
+
+        let twInstantDir = [];
+        let twInstantSpeed = [];
 
         let updateBuffer = (dataBuffer, curveName, curveColor, minValue, maxValue) => {
 			let finalData = {
@@ -1096,6 +1131,7 @@
 
         .current-evolution-container {
             display: grid;
+            justify-items: start;
             grid-template-columns: auto;
             grid-template-areas:
                 "instant 30s 1m 10m"
@@ -1355,8 +1391,7 @@
     </div>
     <div id="nmea-widgets-1"
          style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 0px 10px 10px 10px; text-align: center;">
-        <!-- Tabs Data1, Current Evolution -->
-
+        <!-- Tabs Data1, Current Evolution, TW Evolution -->
 
         <div id="boat-data" class="boat-data"
              style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 2; grid-template-columns: auto;">
@@ -1364,10 +1399,10 @@
             <div class="tab">
                 <button class="tablinks active" onclick="openSubTabOne(event, 0);">Section One</button>
                 <button class="tablinks" onclick="openSubTabOne(event, 1);">Current Evolution</button>
+                <button class="tablinks" onclick="openSubTabOne(event, 2);">True Wind Evolution</button>
                 <div class="mess">Boat Data Sub Tabs</div>
             </div>
-
-
+            
             <div id="boat-data-1">
                 <div id="row-1"
                      style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto auto auto; padding: 10px;">
@@ -1974,7 +2009,7 @@
                     <div id="instant" class="current-evolution-element left" style="grid-area: instant;">
                         <div class="current-element-title" style="grid-area: title;">Instant Triangulation</div>
                         <graph-display id="current-evolution-instant-dir"
-                                       style="grid-area: dir;"
+                                       style="grid-area: dir; margin: 0 2px 0 2px;"
                                        width="150"
                                        height="500"
                                        padding="5"
@@ -1983,7 +2018,7 @@
                                        label="Dir"
                                        title="Dir"></graph-display>
                         <graph-display id="current-evolution-instant-speed"
-                                       style="grid-area: speed;"
+                                       style="grid-area: speed; margin: 0 2px 0 2px;"
                                        width="150"
                                        height="500"
                                        padding="5"
@@ -1995,7 +2030,7 @@
                     <div id="on-30-s" class="current-evolution-element left" style="grid-area: 30s;">
                         <div class="current-element-title" style="grid-area: title;">On 30 seconds</div>
                         <graph-display id="current-evolution-30s-dir"
-                                       style="grid-area: dir;"
+                                       style="grid-area: dir; margin: 0 2px 0 2px;"
                                        width="150"
                                        height="500"
                                        padding="5"
@@ -2004,7 +2039,7 @@
                                        label="Dir"
                                        title="Dir"></graph-display>
                         <graph-display id="current-evolution-30s-speed"
-                                       style="grid-area: speed;"
+                                       style="grid-area: speed; margin: 0 2px 0 2px;"
                                        width="150"
                                        height="500"
                                        padding="5"
@@ -2016,7 +2051,7 @@
                     <div id="on-1m" class="current-evolution-element left" style="grid-area: 1m;">
                         <div class="current-element-title" style="grid-area: title;">On 1 minute</div>
                         <graph-display id="current-evolution-1m-dir"
-                                       style="grid-area: dir;"
+                                       style="grid-area: dir; margin: 0 2px 0 2px;"
                                        width="150"
                                        height="500"
                                        padding="5"
@@ -2025,7 +2060,7 @@
                                        label="Dir"
                                        title="Dir"></graph-display>
                         <graph-display id="current-evolution-1m-speed"
-                                       style="grid-area: speed;"
+                                       style="grid-area: speed; margin: 0 2px 0 2px;"
                                        width="150"
                                        height="500"
                                        padding="5"
@@ -2037,7 +2072,7 @@
                     <div id="on-10m" class="current-evolution-element left" style="grid-area: 10m;">
                         <div class="current-element-title" style="grid-area: title;">On 10 minutes</div>
                         <graph-display id="current-evolution-10m-dir"
-                                       style="grid-area: dir;"
+                                       style="grid-area: dir; margin: 0 2px 0 2px;"
                                        width="150"
                                        height="500"
                                        padding="5"
@@ -2046,7 +2081,7 @@
                                        label="Dir"
                                        title="Dir"></graph-display>
                         <graph-display id="current-evolution-10m-speed"
-                                       style="grid-area: speed;"
+                                       style="grid-area: speed; margin: 0 2px 0 2px;"
                                        width="150"
                                        height="500"
                                        padding="5"
@@ -2058,6 +2093,33 @@
                 </div>
 
             </div>
+
+            <div id="boat-data-3" style="display: none;">
+                <div id="tw-evolution" class="black-frame left current-evolution-container">
+                    <div id="tw-instant" class="current-evolution-element left" style="grid-area: instant;">
+                        <div class="current-element-title" style="grid-area: title;">True Wind Direction and Speed</div>
+                        <graph-display id="tw-evolution-instant-dir"
+                                       style="grid-area: dir; margin: 0 2px 0 2px;"
+                                       width="250"
+                                       height="500"
+                                       padding="5"
+                                       value="null"
+                                       orientation="vertical"
+                                       label="Dir"
+                                       title="Dir"></graph-display>
+                        <graph-display id="tw-evolution-instant-speed"
+                                       style="grid-area: speed; margin: 0 2px 0 2px;"
+                                       width="250"
+                                       height="500"
+                                       padding="5"
+                                       value="null"
+                                       orientation="vertical"
+                                       label="Speed"
+                                       title="Speed"></graph-display>
+                    </div>
+                </div>    
+            </div>
+
         </div>
 
         <!-- End Of BoatData -->
