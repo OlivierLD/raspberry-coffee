@@ -12,7 +12,7 @@
 			withXLabels: false,
 			withYLabels: true,
 			thickX: null,
-			thickY: null,
+			thickY: null,  // number or array n numbers, like 10, or [0, 5, 10]
 			minX: 0,
 			maxX: 11,
 			minY: 0,
@@ -515,29 +515,38 @@ class GraphDisplay extends HTMLElement {
 					context.closePath();
 				}
 				if (this._data.thickY !== null && this._data.thickY !== undefined) {
-					context.beginPath();
-					let _x = this._padding;
-					let _y;
-					if (this._orientation === HORIZONTAL_GRAPH) {
-						_y = this._height - this._padding - ((this._data.thickY - yOffset) * yRatio);
-					} else {
-						_y = this._padding + ((this._data.thickY - yOffset) * yRatio);
+					let thickYs = [];
+					if (typeof(this._data.thickY) === "number") {
+						thickYs.push(this._data.thickY);
+					} else if (Array.isArray(this._data.thickY)) {
+						this._data.thickY.forEach(y => thickYs.push(y));
 					}
-					if (this._orientation === HORIZONTAL_GRAPH) {
-						context.moveTo(_x, _y);
-					} else {
-						context.moveTo(_y, _x);
+					for (let i=0; i<thickYs.length; i++) {
+						let thickYValue = thickYs[i];
+						context.beginPath();
+						let _x = this._padding;
+						let _y;
+						if (this._orientation === HORIZONTAL_GRAPH) {
+							_y = this._height - this._padding - ((thickYValue - yOffset) * yRatio);
+						} else {
+							_y = this._padding + ((thickYValue - yOffset) * yRatio);
+						}
+						if (this._orientation === HORIZONTAL_GRAPH) {
+							context.moveTo(_x, _y);
+						} else {
+							context.moveTo(_y, _x);
+						}
+						_x = (this._orientation === HORIZONTAL_GRAPH ? this._width - this._padding : this._height - this._padding);
+						if (this._orientation === HORIZONTAL_GRAPH) {
+							context.lineTo(_x, _y);
+						} else {
+							context.lineTo(_y, _x);
+						}
+						context.lineWidth = 2;
+						context.strokeStyle = this.graphDisplayColorConfig.gridColor;
+						context.stroke();
+						context.closePath();
 					}
-					_x = (this._orientation === HORIZONTAL_GRAPH ? this._width - this._padding : this._height - this._padding);
-					if (this._orientation === HORIZONTAL_GRAPH) {
-						context.lineTo(_x, _y);
-					} else {
-						context.lineTo(_y, _x);
-					}
-					context.lineWidth = 2;
-					context.strokeStyle = this.graphDisplayColorConfig.gridColor;
-					context.stroke();
-					context.closePath();
 				}
 			}
 

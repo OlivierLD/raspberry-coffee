@@ -416,6 +416,7 @@
             }
             let graph = document.getElementById('bsp-evolution');
             let graphData = updateBuffer(boatSpeedEvolution, 'Instant speed', 'red', 0, 10); // Max 10
+            graphData.thickY = [0, 2, 4, 6, 8, 10];
 			graph.data = graphData;
 			graph.vgrid = null;
 			graph.hgrid = "0:1"; // "0:45";
