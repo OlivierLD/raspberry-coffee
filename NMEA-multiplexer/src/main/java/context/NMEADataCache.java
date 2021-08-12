@@ -293,6 +293,11 @@ public class NMEADataCache
 
 	@Override
 	public /*synchronized*/ Object put(String key, Object value) {
+		// Qucik debug tgrick
+//		if (key.equals(GPS_DATE_TIME) && true) {
+//			System.out.println("PUTTING GPS Date Time in the cache:" + value);
+//		}
+
 		Object o = null;
 		synchronized (this) {
 			try {

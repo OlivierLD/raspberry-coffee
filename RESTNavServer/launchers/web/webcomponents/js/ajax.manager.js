@@ -8,7 +8,8 @@ const DEBUG = false;
 function initAjax() {
     let interval = setInterval(() => {
         fetch();
-        loadSunData(lastKnownPos);
+        console.log(`LoadSunData, gpstime: ${gpsTime}, pos: ${lastKnownPos}`);
+        loadSunData({ position: lastKnownPos, utcdate: gpsTime});
     }, 1000);
 
     // Example:
@@ -180,7 +181,7 @@ function requestSunData(pos) {
 }
 
 function loadSunData(pos) {
-    let getData = requestSunData(pos); // null (for pos) will use the default position
+    let getData = requestSunData(pos); // null (for pos) will use the default position. Can also contain the utcdate!!
     getData.then((value) => { // Resolve
 //  console.log("Done:", value);
         try {

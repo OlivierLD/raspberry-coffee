@@ -982,7 +982,7 @@
             let payload = {};
             if (lastKnownPos != null) {
                 payload = {position: lastKnownPos, step: 10};
-            } // TODO Add the time, if needed (ie not now). gpsTime is available in the context.
+            } // Add the time, if needed (ie not now). gpsTime is available in the context.
             if (gpsTime !== null && gpsTime !== undefined) {
                 payload.utctime = gpsTime; // JSON.stringify(gpsTime);  // Duration format
             }

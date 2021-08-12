@@ -77,12 +77,12 @@ public class RESTImplementation {
 					ASTRO_PREFIX + "/positions-in-the-sky",
 					this::getPositionsInTheSky,
 					"Get the Sun's and Moon's position (D & GHA) for an UTC date passed as QS prm named 'at', in DURATION Format. Optional: 'fromL' and 'fromG', 'wandering' (true|[false])."),
-			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 }
+			new Operation( // Payload like { position: { latitude: 37.76661945, longitude: -122.5166988 }, utcdate: "DURATION" }
 					"POST",
 					ASTRO_PREFIX + "/sun-now",
 					this::getSunDataNow,
 					"Create a request for Sun data now. Requires body payload (GeoPoint)"),
-			new Operation( // Payload like { position: { latitude: 37.76661945, longitude: -122.5166988 }, step: 10 } . POST /astro/sun-path-today
+			new Operation( // Payload like { position: { latitude: 37.76661945, longitude: -122.5166988 }, step: 10, utcdate: "DURATION" } . POST /astro/sun-path-today
 					"POST",
 					ASTRO_PREFIX + "/sun-path-today",
 					this::getSunPathInTheSky,
@@ -249,6 +249,7 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
 		GeoPoint pos = null;
+		Calendar refDate = null;
 		boolean tryDefaultPos = false;
 
 		if (request.getContent() != null && request.getContent().length > 0) {
@@ -257,7 +258,16 @@ public class RESTImplementation {
 				Gson gson = new GsonBuilder().create();
 				StringReader stringReader = new StringReader(payload);
 				try {
-					pos = gson.fromJson(stringReader, GeoPoint.class);
+					PosAndDate pad = gson.fromJson(stringReader, PosAndDate.class);
+					pos = pad.position; // gson.fromJson(stringReader, GeoPoint.class);
+					String utcDate = pad.utcdate;
+//					System.out.println("getSunDataNow >> UTC Date:" + utcDate);
+					if (utcDate != null) {
+						long ld = StringParsers.durationToDate(utcDate);
+						refDate = Calendar.getInstance(); // TimeZone.getTimeZone("Etc/UTC"));
+						refDate.setTimeInMillis(ld);
+//						System.out.println("   >> Turned to Calendar:" + refDate.getTime());
+					}
 				} catch (Exception ex) {
 					response = HTTPServer.buildErrorResponse(response,
 							Response.BAD_REQUEST,
@@ -298,7 +308,9 @@ public class RESTImplementation {
 			return response;
 		}
 
-		BodyDataForPos sunData = getSunData(pos.getL(), pos.getG());
+		BodyDataForPos sunData = (refDate == null) ?
+				getSunData(pos.getL(), pos.getG()) :
+				getSunDataForDate(pos.getL(), pos.getG(), refDate);;
 		String content = new Gson().toJson(sunData);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
@@ -308,6 +320,11 @@ public class RESTImplementation {
 	private static class PosAndStep {
 		GeoPoint position;
 		Integer step;
+		String utcdate;
+	}
+
+	private static class PosAndDate {
+		GeoPoint position;
 		String utcdate;
 	}
 
@@ -326,7 +343,7 @@ public class RESTImplementation {
 			if (!"null".equals(payload)) {
 				Gson gson = new GsonBuilder().create();
 				// display payload here.
-				System.out.println("getSunPathInTheSky payload:" + payload);
+				// System.out.println("getSunPathInTheSky payload:" + payload);
 				StringReader stringReader = new StringReader(payload); // get the date?
 				try {
 					pas = gson.fromJson(stringReader, PosAndStep.class);
