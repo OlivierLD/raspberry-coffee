@@ -329,7 +329,8 @@ public class RESTImplementation {
 	}
 
 	/**
-	 * TODO A version for a given date - not today. In a the headers. UTC Date as Duration
+	 * Can contain an utcdate in the payload, see {@link RESTImplementation.PosAndStep}. UTC Date as Duration
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -583,7 +584,8 @@ public class RESTImplementation {
 						date.get(Calendar.DAY_OF_MONTH),
 						date.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
 						date.get(Calendar.MINUTE),
-						date.get(Calendar.SECOND));
+						date.get(Calendar.SECOND),
+						true);          // Recalculate DeltaT everytime
 
 				data = new PositionsInTheSky()
 						.epoch(date.getTimeInMillis())
