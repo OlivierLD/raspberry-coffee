@@ -26,6 +26,7 @@ dependencies {
   compile 'oracle:xmlparser:2.0'
 //  compile project(':common-utils')
   compile project(':http-tiny-server')
+  compile project(':NMEA-multiplexer')
   compile project(':AstroComputer')  // a git submodule
 }
 

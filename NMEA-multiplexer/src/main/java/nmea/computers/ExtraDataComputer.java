@@ -81,7 +81,7 @@ public class ExtraDataComputer extends Computer {
 				}
 				NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
 				switch (sentenceID) {
-					case "RMC":
+					case "RMC": // Recommended Minimum, version C
 						RMC rmc = StringParsers.parseRMC(sentence);
 						if (rmc != null && rmc.isValid()) {
 							Map<String, Object> rmcMap = new HashMap<>(5);
@@ -138,7 +138,7 @@ public class ExtraDataComputer extends Computer {
 							}
 						}
 						break;
-					case "VTG":
+					case "VTG": // Track Made Good and Ground Speed
 						OverGround overGround = StringParsers.parseVTG(sentence);
 						if (overGround != null) {
 							Map<String, Object> map = new HashMap<>(2);
@@ -147,7 +147,7 @@ public class ExtraDataComputer extends Computer {
 							cache.putAll(map);
 						}
 						break;
-					case "VHW":
+					case "VHW": // Water Speed and Heading
 						VHW vhw = StringParsers.parseVHW(sentence);
 						if (vhw == null) {
 							return;
@@ -158,7 +158,7 @@ public class ExtraDataComputer extends Computer {
 							cache.put(NMEADataCache.BSP, new Speed(bsp));
 						}
 						break;
-					case "HDG":
+					case "HDG": // Heading, Deviation & Variation
 						HDG hdgs = StringParsers.parseHDG(sentence);
 						int hdg = (int) hdgs.getHeading();
 						double dev = hdgs.getDeviation();
@@ -178,14 +178,14 @@ public class ExtraDataComputer extends Computer {
 							cache.put(NMEADataCache.HDG_COMPASS, new Angle360(hdg /* - dec */));
 						}
 						break;
-					case "HDM":
+					case "HDM": // Heading, Magnetic
 						int hdm = StringParsers.parseHDM(sentence);
 						cache.put(NMEADataCache.HDG_COMPASS, new Angle360(hdm));
 						break;
-					case "HDT":
+					case "HDT": // Heading, True
 						int hdt = StringParsers.parseHDT(sentence);
 						cache.put(NMEADataCache.HDG_TRUE, new Angle360(hdt));
-					case "MWV":
+					case "MWV": // Wind Speed and Angle
 						Wind mwv = StringParsers.parseMWV(sentence);
 						if (mwv != null && mwv instanceof ApparentWind) { // TrueWind not used for now
 							Map<String, Object> map = new HashMap<>(2);
@@ -198,7 +198,7 @@ public class ExtraDataComputer extends Computer {
 							cache.putAll(map);
 						}
 						break;
-					case "VWR":
+					case "VWR": // Relative Wind Speed and Angle
 						ApparentWind vwr = StringParsers.parseVWR(sentence);
 						if (vwr != null) {
 							Map<String, Object> map = new HashMap<>(2);

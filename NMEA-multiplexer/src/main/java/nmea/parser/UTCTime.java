@@ -39,6 +39,7 @@ public class UTCTime implements Serializable {
 		return this.date;
 	}
 
+	@Override
 	public String toString() {
 		return (date != null) ? FMT.format(this.date) : null;
 	}

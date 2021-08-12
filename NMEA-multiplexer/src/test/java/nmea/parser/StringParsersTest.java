@@ -22,6 +22,11 @@ public class StringParsersTest {
         str = "2006-05-05T17:35:48.000Z";
         long ld = StringParsers.durationToDate(str);
         System.out.println(str + " => " + new Date(ld));
+
+        str = "2011-02-06T14:56:10.000Z";
+        ld = StringParsers.durationToDate(str);
+        System.out.println(str + " => " + new Date(ld));
+
         try {
             str = "2006-05-05T17:35:48Z";
             ld = StringParsers.durationToDate(str);

@@ -23,8 +23,10 @@ import java.util.Map;
  * on an instant triangulation.
  * That turns out to be way more accurate.
  *
- * It requires GPS Data, Apparent Wind Data, Heading, Deviation and Deviation to calculate an accurate CMG
- * There is a section dedicated to those details at http://www.lediouris.net/RaspberryPI/_Articles/readme.html.
+ * It requires GPS Data, Apparent Wind Data, Heading, Deviation and Deviation to calculate an accurate CMG.
+ * The calculations are put in the NMEADataCache, under a member named "Current calculated with damping".
+ *
+ * There is a section dedicated to those details at <a href="http://www.lediouris.net/RaspberryPI/_Articles/readme.html">http://www.lediouris.net/RaspberryPI/_Articles/readme.html</a>.
  */
 public class LongTimeCurrentCalculator {
 
@@ -33,11 +35,11 @@ public class LongTimeCurrentCalculator {
 	private boolean verbose = false;
 	// buffer.length in milliseconds
 	public final static long DEFAULT_BUFFER_LENGTH = 600_000L; // Milli Seconds
-	private long bufferLength = 0L; // Long.parseLong(System.getProperty("buffer.length", String.valueOf(DEFAULT_BUFFER_LENGTH))); // Default 10 minutes
+	private long bufferLength; // Long.parseLong(System.getProperty("buffer.length", String.valueOf(DEFAULT_BUFFER_LENGTH))); // Default 10 minutes
 
 	private Thread watcher = null;
 	private boolean keepWatching = true;
-	private long betweenLoops = 1_000L; // 1 sec
+	private final long betweenLoops = 1_000L; // 1 sec
 
 	// Time, Position, CMG, BSP.
 	private List<TimeCurrent> timeCurrent = new ArrayList<>();
@@ -83,12 +85,12 @@ public class LongTimeCurrentCalculator {
 	}
 
 	public void resetBuffers() {
-		timeCurrent = new ArrayList<>();
-		timeBuffer = new ArrayList<>();
-		positionBuffer = new ArrayList<>();
-		cmgBuffer = new ArrayList<>();
-		hdgBuffer = new ArrayList<>();
-		bspBuffer = new ArrayList<>();
+		this.timeCurrent = new ArrayList<>();
+		this.timeBuffer = new ArrayList<>();
+		this.positionBuffer = new ArrayList<>();
+		this.cmgBuffer = new ArrayList<>();
+		this.hdgBuffer = new ArrayList<>();
+		this.bspBuffer = new ArrayList<>();
 	}
 
 	public void start() {
@@ -108,7 +110,7 @@ public class LongTimeCurrentCalculator {
 							System.out.println("There is a cache...");
 						}
 						try {
-				//    synchronized (cache)
+				      //    synchronized (cache)
 							{
 								Object ot = /*(UTCDate)*/cache.get(NMEADataCache.GPS_DATE_TIME);
 								if (ot == null) {

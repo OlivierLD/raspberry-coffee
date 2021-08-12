@@ -16,6 +16,7 @@ import http.RESTProcessorUtil;
 import implementation.almanac.AlmanacComputer;
 import implementation.perpetualalmanac.Publisher;
 import utils.TimeUtil;
+import nmea.parser.StringParsers; // for durationToDate
 
 import java.io.*;
 import java.net.URLDecoder;
@@ -307,17 +308,26 @@ public class RESTImplementation {
 	private static class PosAndStep {
 		GeoPoint position;
 		Integer step;
+		String utcdate;
 	}
 
+	/**
+	 * TODO A version for a given date - not today. In a the headers. UTC Date as Duration
+	 * @param request
+	 * @return
+	 */
 	private Response getSunPathInTheSky(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
 		PosAndStep pas = null;
+		Calendar refDate = null;
 		if (request.getContent() != null && request.getContent().length > 0) {
 			String payload = new String(request.getContent());
 			if (!"null".equals(payload)) {
 				Gson gson = new GsonBuilder().create();
-				StringReader stringReader = new StringReader(payload);
+				// display payload here.
+				System.out.println("getSunPathInTheSky payload:" + payload);
+				StringReader stringReader = new StringReader(payload); // get the date?
 				try {
 					pas = gson.fromJson(stringReader, PosAndStep.class);
 					if (pas.position == null) {
@@ -356,12 +366,36 @@ public class RESTImplementation {
 							.errorMessage("getSunPathInTheSky: No position provided, no default position found."));
 			return response;
 		}
-		List<BodyAt> sunPath = getSunDataForAllDay(pas.position.getL(), pas.position.getG(), pas.step);
+		if (pas.utcdate != null) {
+			long ld = StringParsers.durationToDate(pas.utcdate);
+			refDate = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+			refDate.setTimeInMillis(ld);
+		}
+		List<BodyAt> sunPath = refDate == null ?
+				getSunDataForAllDay(pas.position.getL(), pas.position.getG(), pas.step) :
+				getSunDataForAllDay(pas.position.getL(), pas.position.getG(), pas.step, refDate);
 		String content = new Gson().toJson(sunPath);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 		return response;
 	}
+
+	// Small tests
+//	public static void main(String... args) {
+//		String date = "2011-02-06T14:41:42.000Z";
+//		double lat = -10.761383333333333, lng = -156.24046666666666;
+//		long ld = StringParsers.durationToDate(date);
+//		System.out.println(date + " => " + new Date(ld));
+//
+//		Calendar refDate = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+//		refDate.setTimeInMillis(ld);
+//
+//		System.out.println("From Calendar:" + date + " => " + refDate.getTime());
+//
+//		RESTImplementation me = new RESTImplementation(null);
+//		List<BodyAt> sunPath = me.getSunDataForAllDay(lat, lng, 20, refDate);
+//		System.out.println("Yo!");
+//	}
 
 	/**
 	 *
@@ -2116,8 +2150,11 @@ public class RESTImplementation {
 		return getSunDataForAllDay(lat, lng, step, now);
 	}
 
-	private List<BodyAt> getSunDataForAllDay(double lat, double lng, Integer step, Calendar today) {
-		BodyDataForPos bodyData = getSunDataForDate(lat, lng, today);
+	private List<BodyAt> getSunDataForAllDay(double lat, double lng, Integer step, Calendar when) {
+
+//		System.out.println("\t\tgetSunDataForAllDay for " + when);
+
+		BodyDataForPos bodyData = getSunDataForDate(lat, lng, when);
 		AstroComputerV2 acv2 = new AstroComputerV2();
 
 		long from = bodyData.riseTime; // if sunTransitTime exists: from (transit-time - 12) to (transit-time + 12) ?

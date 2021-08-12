@@ -509,6 +509,7 @@
 
         // Buffers are limited to the value below
         const BUFFER_MAX_SIZE = 400; // 1200;
+
         let instantCurrentDir = [];
         let instantCurrentSpeed = [];
         let _30sCurrentDir = [];
@@ -540,7 +541,7 @@
 				maxY: maxValue,
 				thickX: null,
 				thickY: 0,
-				data: [ // We can have several curves (hence the array).
+				data: [ // We can have several curves (hence the array). And we will if withLowPass === true.
 					{
 						name: curveName,
 						lineColor: curveColor,
@@ -567,7 +568,7 @@
 			// finalData.maxY = Math.max(maxi, 10);
             if (withLowPass !== undefined && withLowPass === true) {
                 let filteredArray = [];
-                let acc = dataBuffer[0];
+                let acc = dataBuffer[0]; // Start with a real point, not with 0.
                 y.forEach(dp => {
                     acc = lowPass(ALPHA, dp, acc);
                     filteredArray.push(acc);
@@ -981,6 +982,9 @@
             let payload = {};
             if (lastKnownPos != null) {
                 payload = {position: lastKnownPos, step: 10};
+            } // TODO Add the time, if needed (ie not now). gpsTime is available in the context.
+            if (gpsTime !== null && gpsTime !== undefined) {
+                payload.utctime = gpsTime; // JSON.stringify(gpsTime);  // Duration format
             }
             let getData = requestSunPath(payload); // Empty obj, means use default
             getData.then((value) => { // Resolve
