@@ -1306,19 +1306,19 @@ class WorldMap extends HTMLElement {
 							let thisPointIsBehind = this.isBehind(Utilities.toRadians(antiSunDecl), Utilities.toRadians(antiSunLng - this.globeViewLngOffset));
 							if (!thisPointIsBehind || this.transparentGlobe) {
 								// Draw Anti Sun
-								WorldMap.plot(context, sun, this.worldmapColorConfig.sunColor); // TODO Fade it
 								context.fillStyle = 'rgba(255, 255, 0, 0.5)'; // this.worldmapColorConfig.sunColor;
-								context.fillText("Anti-Sun", Math.round(sun.x) + 3, Math.round(sun.y) - 3);
+								WorldMap.plot(context, sun, context.fillStyle);
+								// context.fillText("Anti-Sun", Math.round(sun.x) + 3, Math.round(sun.y) - 3);
 								// Arrow, to the anti-sun
 								context.setLineDash([2]);
-								context.strokeStyle = this.worldmapColorConfig.sunArrowColor;
+								context.strokeStyle = 'rgba(255, 255, 0, 0.5)'; // this.worldmapColorConfig.sunArrowColor;
 								context.beginPath();
 								context.moveTo(userPos.x, userPos.y);
 								context.lineTo(sun.x, sun.y);
 								context.stroke();
 								context.closePath();
 								context.setLineDash([0]); // Reset
-								context.strokeStyle = this.worldmapColorConfig.sunColor;
+								context.strokeStyle = 'rgba(255, 255, 0, 0.5)'; // this.worldmapColorConfig.sunColor;
 								let deltaX = sun.x - userPos.x;
 								let deltaY = sun.y - userPos.y;
 								context.beginPath();
@@ -1327,6 +1327,8 @@ class WorldMap extends HTMLElement {
 								context.stroke();
 								context.closePath();
 								// WorldMap.fillCircle(context, {x: sun.x + deltaX, y: sun.y + deltaY}, 6, this.worldmapColorConfig.sunColor);
+								context.fillText("Anti-Sun", sun.x + deltaX, sun.y + deltaY);
+
 							}
 						}
 
