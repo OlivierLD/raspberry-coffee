@@ -8,7 +8,7 @@ const DEBUG = false;
 function initAjax() {
     let interval = setInterval(() => {
         fetch();
-        console.log(`LoadSunData, gpstime: ${gpsTime}, pos: ${lastKnownPos}`);
+        // console.log(`LoadSunData, gpstime: ${gpsTime}, pos: ${lastKnownPos}`);
         loadSunData({ position: lastKnownPos, utcdate: gpsTime});
     }, 1000);
 
