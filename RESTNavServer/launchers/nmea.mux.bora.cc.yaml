@@ -7,6 +7,8 @@ context:
   http.port: 9999
   init.cache: true
   deviation.file.name: "dp_2011_04_15.csv"
+  max.leeway: 10.0
+  damping: 30
 channels:
   - type: file
     # filename: ../sample.data/2011-01-29.strait.to.tongareva.for.DR.txt.nmea

@@ -85,6 +85,7 @@ do
 	echo -e "|  7. Replay logged driving data (in Google Maps)                                         |"
 	echo -e "|  8. Replay logged kayak data, ANSI console display                                      |"
 	echo -e "|  9. Replay logged sailing data (Bora-Bora - Tongareva), ANSI console display            |"
+	echo -e "|  9b. Replay logged sailing data (China Camp - Oyster Point), ANSI console display       |"
 	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc. Data replay. |"
 	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
 	echo -e "| 10b. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc.             |"
@@ -248,6 +249,20 @@ do
 	    ;;
 	  "9")
 	    PROP_FILE=nmea.mux.bora.cc.yaml
+	    echo -e "Launching Nav Server with $PROP_FILE"
+	    export INFRA_VERBOSE=false
+	    # Get date and time from the file
+	    ./runNavServer.sh --mux:${PROP_FILE} ${NAV_SERVER_EXTRA_OPTIONS} &
+	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
+	    then
+		    echo -e ">>> Waiting for the server to start..."
+		    sleep 5 # Wait for the server to be operational
+		    openBrowser "http://localhost:9999/web/index.html"
+	    fi
+	    GO=false
+	    ;;
+	  "9b")
+	    PROP_FILE=nmea.mux.cc.op.yaml
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    export INFRA_VERBOSE=false
 	    # Get date and time from the file
