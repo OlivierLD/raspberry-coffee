@@ -1,0 +1,26 @@
+#
+# MUX definition.
+#
+name: "Replaying logged data"
+context:
+  with.http.server: true
+  http.port: 9999
+  init.cache: true
+  deviation.file.name: "dp_2011_04_15.csv"
+  max.leeway: 10.0
+  damping: 30
+channels:
+  - type: file
+    # filename: ../sample.data/2011-01-29.strait.to.tongareva.for.DR.txt.nmea
+    filename: ./sample.data/logged.data.archive.zip
+    zip: true
+    path.in.zip: 2012-06-10.china.camp-oyster.point.nmea
+    verbose: false
+forwarders:
+  - class: nmea.forwarders.CharacterConsoleWriter
+    properties: char.console.properties
+computers:
+  - type: tw-current
+    #                   30s 60s 10m
+    time.buffer.length: 30, 60, 600
+
