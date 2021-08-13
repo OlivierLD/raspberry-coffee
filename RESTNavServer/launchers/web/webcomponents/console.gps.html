@@ -466,7 +466,7 @@
             }
             let graph = document.getElementById('tw-evolution-instant-dir');
             let graphData = updateBuffer(twInstantDir, 'Instant direction', 'lime', 0, 360);
-            let reworked = recenterData(graphData);
+            let reworked = recenterData(graphData, val);
             graphData = reworked.data;
             let newLabel = reworked.label;
 
@@ -587,7 +587,7 @@
         };
 
         // Recenter data on [-180, 180] instead of [0, 360]
-        let recenterData = (graphData) => {
+        let recenterData = (graphData, lastValue) => {
 
             let mini = 360, maxi = 0;
 	        let valLabel = "0:45";
@@ -600,26 +600,55 @@
 				mini = Math.min(mini, val);
 				maxi = Math.max(maxi, val);
 			});
+            if (lastValue !== undefined) {
+                let graphLastValue = lastValue;
+                // console.log(`centering on ${lastValue}`);
+                if (graphLastValue > 180) {
+                    graphLastValue -= 360;
+                }
 
-            if (mini < 180 && maxi > 180) {
-                valLabel = "-180:45";
+                let min = graphLastValue - 180;
+                let max = graphLastValue + 180;
                 let values = { x: [], y: [] };
-
                 for (let i=0; i<dataBuffer.length; i++) {
                     values.x.push(i);
-                    if (dataBuffer[i] < 180) {
-                        values.y.push(dataBuffer[i]);
+                    let curVal = dataBuffer[i] - lastValue;	
+                    if (curVal < min) {
+                        values.y.push(curVal + 360);
+                    } else if (curVal > max) {
+                        values.y.push(curVal - 360);
                     } else {
-                        values.y.push((dataBuffer[i] - 360));
+                        values.y.push(curVal);
                     }
-                } 
-                mini = -180;
-                maxi = +180;
-
+                }
+                mini = min; // -180;
+                maxi = max; // 180;
+                valLabel = `${mini.toFixed(0)}:45`;
                 graphData.data[0].x = values.x;
                 graphData.data[0].values = values.y; // dataBuffer;
                 graphData.minY = mini;
                 graphData.maxY = maxi;
+            } else { // Flip 180 degrees
+                if (mini < 180 && maxi > 180) {
+                    valLabel = "-180:45";
+                    let values = { x: [], y: [] };
+
+                    for (let i=0; i<dataBuffer.length; i++) {
+                        values.x.push(i);
+                        if (dataBuffer[i] < 180) {
+                            values.y.push(dataBuffer[i]);
+                        } else {
+                            values.y.push((dataBuffer[i] - 360));
+                        }
+                    } 
+                    mini = -180;
+                    maxi = +180;
+
+                    graphData.data[0].x = values.x;
+                    graphData.data[0].values = values.y; // dataBuffer;
+                    graphData.minY = mini;
+                    graphData.maxY = maxi;
+                }
             }
             graphData.vgrid = valLabel;
             return { label: valLabel, data: graphData };
@@ -632,8 +661,9 @@
                 instantCurrentDir = instantCurrentDir.slice(1);
             }
             let graph = document.getElementById('current-evolution-instant-dir');
+            // TODO center on last value (val).
             let graphData = updateBuffer(instantCurrentDir, 'Instant direction', 'lime', 0, 360);
-            let reworked = recenterData(graphData);
+            let reworked = recenterData(graphData, val);
             graphData = reworked.data;
             let newLabel = reworked.label;
 
@@ -671,7 +701,7 @@
             }
             let graph = document.getElementById('current-evolution-30s-dir');
             let graphData = updateBuffer(_30sCurrentDir, '30s direction', 'lime', 0, 360);
-            let reworked = recenterData(graphData);
+            let reworked = recenterData(graphData, val);
             graphData = reworked.data;
             let newLabel = reworked.label;
 
@@ -704,7 +734,7 @@
             }
             let graph = document.getElementById('current-evolution-1m-dir');
             let graphData = updateBuffer(_1mCurrentDir, '1m direction', 'lime', 0, 360);
-            let reworked = recenterData(graphData);
+            let reworked = recenterData(graphData, val);
             graphData = reworked.data;
             let newLabel = reworked.label;
 
@@ -736,7 +766,7 @@
             }
             let graph = document.getElementById('current-evolution-10m-dir');
             let graphData = updateBuffer(_10mCurrentDir, '10m direction', 'lime', 0, 360);
-            let reworked = recenterData(graphData);
+            let reworked = recenterData(graphData, val);
             graphData = reworked.data;
             let newLabel = reworked.label;
 

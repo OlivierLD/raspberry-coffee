@@ -86,6 +86,7 @@ do
 	echo -e "|  8. Replay logged kayak data, ANSI console display                                      |"
 	echo -e "|  9. Replay logged sailing data (Bora-Bora - Tongareva), ANSI console display            |"
 	echo -e "|  9b. Replay logged sailing data (China Camp - Oyster Point), ANSI console display       |"
+	echo -e "|            (there is ome current in that one, it's in the SF Bay)                       |"
 	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc. Data replay. |"
 	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
 	echo -e "| 10b. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc.             |"
