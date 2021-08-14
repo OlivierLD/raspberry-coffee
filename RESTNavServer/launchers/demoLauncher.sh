@@ -92,8 +92,6 @@ do
 	echo -e "|  9d. Replay logged sailing data (Oyster Point), heading back in.                        |"
 	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc. Data replay. |"
 	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
-	echo -e "| 10b. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc.             |"
-	echo -e "|     - Replaying data from China Camp to Oyster Point.                                   |"
 	echo -e "| 11. Same as 10, with proxy.                                                             |"
 	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
 	echo -e "| 12. With 2 input serial ports.                                                          |"
@@ -311,20 +309,6 @@ do
 	    PROP_FILE=nmea.mux.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    # NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --delta-t:AUTO:2010-11"
-	    NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --delta-t:AUTO"
-	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
-	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
-	    then
-		    echo -e ">>> Waiting for the server to start..."
-		    sleep 5 # Wait for the server to be operational
-		    openBrowser "http://localhost:9999/web/index.html"
-	    fi
-	    GO=false
-	    ;;
-	  "10b")
-	    PROP_FILE=nmea.mux.op-cc.yaml
-	    echo -e "Launching Nav Server with $PROP_FILE"
-	    # NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --delta-t:AUTO:2012-06"
 	    NAV_SERVER_EXTRA_OPTIONS="${NAV_SERVER_EXTRA_OPTIONS} --delta-t:AUTO"
 	    ./runNavServer.sh --mux:${PROP_FILE} --no-date ${NAV_SERVER_EXTRA_OPTIONS} &
 	    if [[ "$LAUNCH_BROWSER" == "Y" ]]
