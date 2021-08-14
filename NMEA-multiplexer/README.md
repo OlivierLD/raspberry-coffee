@@ -122,20 +122,19 @@ Sensors:
 - ... and the list is not closed.
 ![I2C Wiring](./docimages/i2c.png "Sample I2C Wiring for BME280 & L3GD20H")
 
-
 Computers:
 - **True Wind** computer (produces `MDA`, `MWD` data)
 - **Current** computer (produces `VDR` data)
 
-_Important_: Computers require the cache to be initialized. This is set in the properties file:
+_Important_: Computers require **the cache to be initialized**. This is set in the properties file:
 ```properties
  init.cache=true
 ```
 
 Transformers:  
-A `Transformer` is also a `Forwarder`.
-- **GPSD** data (See [this](https://hocus-blogus.blogspot.com/2016/12/nmea-multiplexer-opencpn-gpsd.html))
-- **Custom** data
+A `Transformer` is specific kind of `Forwarder`.
+- **GPSD** data, like `nmea.forwarders.GPSdServer` (See [this](https://hocus-blogus.blogspot.com/2016/12/nmea-multiplexer-opencpn-gpsd.html))
+- **Custom** data (like `nmea.forwarders.CharacterConsoleWriter`)
 
 ##### A word about the Current Computer
 A basic approach to compute the current would be to do it by instant triangulation, figuring the Course Made Good (CMG)

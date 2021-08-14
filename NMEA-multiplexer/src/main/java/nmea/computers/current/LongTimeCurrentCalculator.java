@@ -4,6 +4,7 @@ import calc.GreatCircle;
 import calc.GreatCirclePoint;
 import context.ApplicationContext;
 import context.NMEADataCache;
+import nmea.computers.Computer;
 import nmea.parser.Angle360;
 import nmea.parser.GeoPos;
 import nmea.parser.Speed;
@@ -20,15 +21,15 @@ import java.util.Map;
 
 /**
  * Does the current - speed and direction - over a given period of time, rather than
- * on an instant triangulation.
+ * on an instant triangulation.<br>
  * That turns out to be way more accurate.
- *
- * It requires GPS Data, Apparent Wind Data, Heading, Deviation and Deviation to calculate an accurate CMG.
- * The calculations are put in the NMEADataCache, under a member named "Current calculated with damping".
- *
+ * <p>
+ * It requires GPS Data, Apparent Wind Data, Heading, Deviation and Deviation to calculate an accurate CMG.<br>
+ * Important: <b>The calculations are put in the NMEADataCache, under a member named "Current calculated with damping"</b>.
+ * </p>
  * There is a section dedicated to those details at <a href="http://www.lediouris.net/RaspberryPI/_Articles/readme.html">http://www.lediouris.net/RaspberryPI/_Articles/readme.html</a>.
  */
-public class LongTimeCurrentCalculator {
+public class LongTimeCurrentCalculator /* extends Computer */ {
 
 	private final static long ONE_HOUR_MS = 3_600_000L;
 
