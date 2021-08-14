@@ -359,7 +359,8 @@ plugins {
   id "application"
 }
 ```
-After pulling `raspberry-coffee` for the first time, do a `git clone https://github.com/OlivierLD/AstroComputer.git` (from the `raspberry-coffee` directory), and you should be good to go.  
+After pulling `raspberry-coffee` for the first time, do a `git clone https://github.com/OlivierLD/AstroComputer.git` (from the `raspberry-coffee` directory), and you should be good to go.
+You can also do a `git submodule update --init`.
 Then the submodule can be refreshed (pulled) like any other one.
 
 ---
