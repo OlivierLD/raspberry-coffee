@@ -40,7 +40,15 @@ public class ExtraDataComputer extends Computer {
 	private String generatedStringsPrefix = DEFAULT_PREFIX;
 	private List<LongTimeCurrentCalculator> longTimeCurrentCalculator = new ArrayList<>();
 
-	private final List<String> requiredStrings = Arrays.asList(new String[]{"RMC", "VHW", "VTG", "HDG", "HDM", "HDT", "MWV", "VWR"});
+	private final List<String> requiredStrings = Arrays.asList(new String[]{
+			"RMC",   // Recommended Minimum
+			"VHW",   // Water speed and heading
+			"VTG",   // Track made good and Ground speed
+			"HDG",   // Heading - Deviation & Variation
+			"HDM",   // Heading - Magnetic
+			"HDT",   // Heading - True
+			"MWV",   // Wind Speed and Angle
+			"VWR"}); // Relative Wind Speed and Angle
 
 	public ExtraDataComputer(Multiplexer mux) {
 	  this(mux, DEFAULT_PREFIX, LongTimeCurrentCalculator.DEFAULT_BUFFER_LENGTH);
@@ -260,10 +268,13 @@ public class ExtraDataComputer extends Computer {
 							}
 							for (Long l : keys) {
 								int tbl = (int) (l / (60_000));
-								if (tbl > currentTimeBuffer) { // Take the bigger one.
+								if (tbl > currentTimeBuffer) { // Take the biggest one.
 									currentTimeBuffer = tbl;
 									csp = currentMap.get(l).getSpeed().getValue();
 									cdr = (int) Math.round(currentMap.get(l).getDirection().getValue());
+									if (this.verbose) {
+										System.out.println(String.format("Current Calculated with %d: Speed: %.02f, Dir: %d", tbl, csp, cdr));
+									}
 								}
 							}
 						} catch (NullPointerException ignore) {
@@ -286,7 +297,7 @@ public class ExtraDataComputer extends Computer {
 
 				if (csp != 0 && !Double.isNaN(csp) && cdr != 0) {
 					if (verbose) {
-						System.out.println(String.format(">>>                                     Current Speed %f, dir %d", csp, cdr));
+						System.out.println(String.format(">>>                                    Producing Current Speed %f, dir %d", csp, cdr));
 					}
 					String nmeaVDR = StringGenerator.generateVDR(generatedStringsPrefix, csp, cdr, cdr - decl);
 					this.produce(nmeaVDR + NMEAParser.STANDARD_NMEA_EOS);
@@ -346,7 +357,7 @@ public class ExtraDataComputer extends Computer {
 							.stream()
 							.map(ltcc -> String.valueOf(ltcc.getBufferLength()))
 							.collect(Collectors.joining(", "));
-			this.tbSize = instance.longTimeCurrentCalculator
+			this.tbSize = instance.longTimeCurrentCalculator  // tb: Time Buffer
 							.stream()
 							.map(ltcc -> String.valueOf(ltcc.getBufferSize()))
 							.collect(Collectors.joining(", "));

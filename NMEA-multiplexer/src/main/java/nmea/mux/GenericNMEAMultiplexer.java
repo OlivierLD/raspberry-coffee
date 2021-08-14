@@ -230,7 +230,7 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
             Properties definitions = new Properties();
             File propFile = new File(propertiesFile);
             if (!propFile.exists()) {
-                throw new RuntimeException(String.format("File [%s] not found in %s", propertiesFile, System.getProperty("user.dir")));
+                throw new RuntimeException(String.format("File [%s] not found in %s, see property 'mux.properties'", propertiesFile, System.getProperty("user.dir")));
             } else {
                 try {
                     definitions.load(new FileReader(propFile));

@@ -124,7 +124,9 @@ Sensors:
 
 Computers:
 - **True Wind** computer (produces `MDA`, `MWD` data)
-- **Current** computer (produces `VDR` data)
+- **Current** computer (produces `VDR` data).
+
+Also look into `nmea.computers.ExtraDataComputer`, instantiated when `tw-current` is mentioned in the `computers` list of the mux definition.
 
 _Important_: Computers require **the cache to be initialized**. This is set in the properties file:
 ```properties

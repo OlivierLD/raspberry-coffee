@@ -922,6 +922,7 @@ public class MuxInitializer {
                                     }
                                     try {
                                         Computer twCurrentComputer = new ExtraDataComputer(mux, prefix, timeBufferLengths.toArray(new Long[timeBufferLengths.size()]));
+                                        twCurrentComputer.setVerbose("true".equals(muxProps.getProperty(String.format("computer.%s.verbose", MUX_IDX_FMT.format(cptrIdx)))));
                                         nmeaDataComputers.add(twCurrentComputer);
                                     } catch (Exception ex) {
                                         ex.printStackTrace();

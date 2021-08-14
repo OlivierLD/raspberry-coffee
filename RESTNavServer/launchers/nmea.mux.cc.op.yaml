@@ -11,16 +11,16 @@ context:
   damping: 30
 channels:
   - type: file
-    # filename: ../sample.data/2011-01-29.strait.to.tongareva.for.DR.txt.nmea
     filename: ./sample.data/logged.data.archive.zip
     zip: true
     path.in.zip: 2012-06-10.china.camp-oyster.point.nmea
     verbose: false
-forwarders:
-  - class: nmea.forwarders.CharacterConsoleWriter
-    properties: char.console.properties
+#forwarders:
+#  - class: nmea.forwarders.CharacterConsoleWriter
+#    properties: char.console.properties
 computers:
-  - type: tw-current
-    #                   30s 60s 10m
+  - type: tw-current # True Wind with GPS, and Current
+    verbose: false
     time.buffer.length: 30, 60, 600
+    #                   30s 60s 10m
 
