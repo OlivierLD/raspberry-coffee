@@ -20,7 +20,7 @@ channels:
 #    properties: char.console.properties
 computers:
   - type: tw-current # True Wind with GPS, and Current
-    verbose: false
+    verbose: true
     time.buffer.length: 30, 60, 600
     #                   30s 60s 10m
 

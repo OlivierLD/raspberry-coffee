@@ -228,6 +228,8 @@ public class ExtraDataComputer extends Computer {
 				double decl = 0d;
 				double csp = 0d;
 				int cdr = 0;
+
+				int producedWith = -1;
 				if (cache != null) {
 					synchronized (cache) {
 						NMEAUtils.computeAndSendValuesToCache(cache);
@@ -264,16 +266,21 @@ public class ExtraDataComputer extends Computer {
 									((Map<Long, NMEADataCache.CurrentDefinition>) cache.get(NMEADataCache.CALCULATED_CURRENT));
 							Set<Long> keys = currentMap.keySet();
 							if (this.verbose && keys.size() != 1) {
-								System.out.println("1 - Nb entry(ies) in Calculated Current Map:" + keys.size());
+								System.out.println("1 - Nb entry(ies) in Calculated Current Map: " + keys.size());
 							}
 							for (Long l : keys) {
-								int tbl = (int) (l / (60_000));
+								int tbl = (int) (l / (1_000)); // in seconds
 								if (tbl > currentTimeBuffer) { // Take the biggest one.
 									currentTimeBuffer = tbl;
 									csp = currentMap.get(l).getSpeed().getValue();
 									cdr = (int) Math.round(currentMap.get(l).getDirection().getValue());
 									if (this.verbose) {
-										System.out.println(String.format("Current Calculated with %d: Speed: %.02f, Dir: %d", tbl, csp, cdr));
+										System.out.println(String.format("Current Calculated with %d s: Speed: %.02f, Dir: %d", tbl, csp, cdr));
+									}
+									producedWith = tbl;
+								} else {
+									if (this.verbose) {
+										System.out.println(String.format("Skipping %d ms", tbl));
 									}
 								}
 							}
@@ -297,7 +304,7 @@ public class ExtraDataComputer extends Computer {
 
 				if (csp != 0 && !Double.isNaN(csp) && cdr != 0) {
 					if (verbose) {
-						System.out.println(String.format(">>>                                    Producing Current Speed %f, dir %d", csp, cdr));
+						System.out.println(String.format(">>>                                    Producing Current Speed %f, dir %d (with %d s)", csp, cdr, producedWith));
 					}
 					String nmeaVDR = StringGenerator.generateVDR(generatedStringsPrefix, csp, cdr, cdr - decl);
 					this.produce(nmeaVDR + NMEAParser.STANDARD_NMEA_EOS);
