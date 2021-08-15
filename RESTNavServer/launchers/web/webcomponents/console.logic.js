@@ -223,24 +223,42 @@ function setHdgOnDevCurve(id, hdg, cb) { // Triggered when HDG is updated (event
 let storedHistory = [];
 
 function setRawNMEA(sentence) {
-	storedHistory.push(sentence);
-	while (storedHistory.length > 50) {
-		storedHistory.shift();
+
+	// FILTER?
+	let okToPush = true;
+	let filters = document.getElementById('nmea-filter').value; // It's an OR
+
+	if (filters.trim().length > 0) {
+		okToPush = false;
+		let filterList = filters.split(",");
+
+		let nbMatch = 0;
+		filterList.forEach(f => {
+			if (sentence.indexOf(f.trim()) > 0) {
+				nbMatch += 1;
+			}
+		});
+		okToPush = (nbMatch > 0);
 	}
 
-	let content = '<pre>';
-	storedHistory.forEach(str => {
-		content += (str.trim() + '\n');
-	});
-	content += '</pre>';
+	if (okToPush) {
+		storedHistory.push(sentence);
+		while (storedHistory.length > 50) {
+			storedHistory.shift();
+		}
+		let content = '<pre>';
+		storedHistory.forEach(str => {
+			content += (str.trim() + '\n');
+		});
+		content += '</pre>';
 
-	let nmea = document.getElementById('nmea-content');
-	nmea.innerHTML = content;
-	nmea.scrollTop = nmea.scrollHeight; // See last line
+		let nmea = document.getElementById('nmea-content');
+		nmea.innerHTML = content;
+		nmea.scrollTop = nmea.scrollHeight; // See last line
 
-	// $("#raw-data").html(content);
-	// $("#raw-data").scrollTop($("#raw-data")[0].scrollHeight);
-
+		// $("#raw-data").html(content);
+		// $("#raw-data").scrollTop($("#raw-data")[0].scrollHeight);
+	}
 }
 
 let storedEvents = [];

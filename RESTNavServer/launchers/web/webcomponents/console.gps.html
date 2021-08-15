@@ -236,6 +236,8 @@
          *
          * Event's definition (topic's name) is in ajax.manager.js, method onMessage
          */
+        const CURRENT_FROM_COMPUTER_10M = true;
+
         events.commonPublish = (topic, value) => {
             // console.log(`${topic} Type ${typeof(value)}`);
             // Warning: Dates the JSON.stringify can screw up UTC dates...
@@ -280,10 +282,12 @@
             let bo = document.getElementById('boat-overview-01');
             bo.sog = val;
             //  current (instant)
-            if (bsp !== undefined && hdg !== undefined && lwy !== undefined && sog !== undefined && cog !== undefined) {
-                let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
-                bo.csp = current.csp;
-                bo.cdr = current.cdr;
+            if (!CURRENT_FROM_COMPUTER_10M) {
+                if (bsp !== undefined && hdg !== undefined && lwy !== undefined && sog !== undefined && cog !== undefined) {
+                    let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
+                    bo.csp = current.csp;
+                    bo.cdr = current.cdr;
+                }
             }
         });
         events.subscribe(events.topicNames.LAST_NMEA, (val) => {
@@ -323,10 +327,12 @@
             let bo = document.getElementById('boat-overview-01');
             bo.cog = val;
             //  current (instant)
-            if (bsp !== undefined && hdg !== undefined && lwy !== undefined && sog !== undefined && cog !== undefined) {
-                let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
-                bo.csp = current.csp;
-                bo.cdr = current.cdr;
+            if (!CURRENT_FROM_COMPUTER_10M) {
+                if (bsp !== undefined && hdg !== undefined && lwy !== undefined && sog !== undefined && cog !== undefined) {
+                    let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
+                    bo.csp = current.csp;
+                    bo.cdr = current.cdr;
+                }
             }
         });
         events.subscribe(events.topicNames.TRUE_HDG, (val) => {
@@ -404,10 +410,12 @@
             let bo = document.getElementById('boat-overview-01');
             bo.bsp = val;
             //  current (instant)
-            if (bsp !== undefined && hdg !== undefined && lwy !== undefined && sog !== undefined && cog !== undefined) {
-                let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
-                bo.csp = current.csp;
-                bo.cdr = current.cdr;
+            if (!CURRENT_FROM_COMPUTER_10M) {
+                if (bsp !== undefined && hdg !== undefined && lwy !== undefined && sog !== undefined && cog !== undefined) {
+                    let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
+                    bo.csp = current.csp;
+                    bo.cdr = current.cdr;
+                }
             }
             // BSP Evolution
             boatSpeedEvolution.push(val);
@@ -498,8 +506,10 @@
             //  current (instant)
             if (bsp !== undefined && hdg !== undefined && lwy !== undefined && sog !== undefined && cog !== undefined) {
                 let current = NavigationHelper.currentCalculator(bsp, BSP_COEFF, hdg, HDG_OFFSET, lwy, sog, cog);
-                bo.csp = current.csp;
-                bo.cdr = current.cdr;
+                if (!CURRENT_FROM_COMPUTER_10M) {
+                    bo.csp = current.csp;
+                    bo.cdr = current.cdr;
+                }
                 events.publish(events.topicNames.CURRENT_DIR, current.cdr);
                 events.publish(events.topicNames.CURRENT_SPEED, current.csp);
             }
@@ -596,6 +606,8 @@
 			// let maxi = -Number.MAX_VALUE;
             let dataBuffer = graphData.data[0].values;
 
+            // console.log(`Last Value: ${lastValue}, Original DataBuffer: ${JSON.stringify(dataBuffer)}`);
+
 			dataBuffer.forEach(val => {
 				mini = Math.min(mini, val);
 				maxi = Math.max(maxi, val);
@@ -614,7 +626,7 @@
                 let values = { x: [], y: [] };
                 for (let i=0; i<dataBuffer.length; i++) {
                     values.x.push(i);
-                    let curVal = dataBuffer[i] - lastValue;	
+                    let curVal = dataBuffer[i]; //  - lastValue;	
                     if (curVal < min) {
                         curVal += 360;
                     } else if (curVal > max) {
@@ -774,10 +786,15 @@
 
 			 graph.data = graphData;
 			//  let amplitude = graphData.maxY - graphData.minY;
-			 graph.vgrid = newLabel; // "0:45";
-			 graph.hgrid = null;
-             graph.value = val.toFixed(1) + "°";
-             graph.repaint();
+			graph.vgrid = newLabel; // "0:45";
+			graph.hgrid = null;
+            graph.value = val.toFixed(1) + "°";
+            graph.repaint();
+            
+            if (CURRENT_FROM_COMPUTER_10M) {
+                let bo = document.getElementById('boat-overview-01');
+                bo.cdr = val;
+            }
         });
         events.subscribe(events.topicNames.DAMP_CSP_PREFIX + '600000', (val) => {
             _10mCurrentSpeed.push(val);
@@ -792,6 +809,11 @@
 			graph.hgrid = null;
             graph.value = val.toFixed(2) + " kt";
             graph.repaint();
+
+            if (CURRENT_FROM_COMPUTER_10M) {
+                let bo = document.getElementById('boat-overview-01');
+                bo.csp = val;
+            }
         });
 
         // For Declination curve
@@ -1830,8 +1852,10 @@
                                 graph.twd = tw.twd;
                                 graph.cog = cog;
                                 graph.sog = sog;
-                                graph.csp = current.csp;
-                                graph.cdr = current.cdr;
+                                if (!CURRENT_FROM_COMPUTER_10M) {
+                                    graph.csp = current.csp;
+                                    graph.cdr = current.cdr;
+                                }
                                 graph.Decl = Decl;
                                 graph.dev = dev;
                                 graph.lwy = lwy;
@@ -2559,7 +2583,7 @@
               style="display: grid; grid-column-start: 2; grid-template-columns: 50% 50%; padding: 10px;">
 
             <div style="text-align:left; padding: 10px;">
-                NMEA
+                NMEA &nbsp;&nbsp;&nbsp;<span><input type="text" id="nmea-filter" placeholder="Filters, comma separated" size="40" style="color: gray;"></span>
                 <div id="nmea-content"
                     style="font-family: Courier; font-weight: bold; text-align: left; overflow-y: auto; min-height: 300px; height: 500px; width: 100%; border: 1px solid silver; border-radius: 5px; padding: 10px; background-color: black; color: green;">
                     <!--
