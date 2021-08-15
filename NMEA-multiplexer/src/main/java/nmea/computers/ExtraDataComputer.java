@@ -227,7 +227,7 @@ public class ExtraDataComputer extends Computer {
 				double twd = 0;
 				double decl = 0d;
 				double csp = 0d;
-				int cdr = 0;
+				int cdr = -1;
 
 				int producedWith = -1;
 				if (cache != null) {
@@ -302,7 +302,7 @@ public class ExtraDataComputer extends Computer {
 				this.produce(nmeaVWT + NMEAParser.STANDARD_NMEA_EOS);
 				this.produce(nmeaMWD + NMEAParser.STANDARD_NMEA_EOS);
 
-				if (csp != 0 && !Double.isNaN(csp) && cdr != 0) {
+				if (csp != 0 && !Double.isNaN(csp) && cdr != -1) {
 					if (verbose) {
 						System.out.println(String.format(">>>                                    Producing Current Speed %f, dir %d (with %d s)", csp, cdr, producedWith));
 					}
