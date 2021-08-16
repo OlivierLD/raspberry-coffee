@@ -6,6 +6,10 @@ import http.client.HTTPClient;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * requires the REST server to be up and running.
+ * See url below.
+ */
 public class StressTest {
 
 	private static String url = "http://localhost:9999/astro/sun-now";

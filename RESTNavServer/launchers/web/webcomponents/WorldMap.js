@@ -1286,7 +1286,7 @@ class WorldMap extends HTMLElement {
 							context.stroke();
 							context.closePath();
 							// if (false) {
-							// 	var img = document.getElementById("sun-png"); // 13x13
+							// 	var img = document.xtElementById("sun-png"); // 13x13
 							// 	var direction = getDir(deltaX, -deltaY);
 							// 	var imgXOffset = 7 * Math.sin(toRadians(direction));
 							// 	var imgYOffset = 7 * Math.cos(toRadians(direction));
@@ -1297,6 +1297,13 @@ class WorldMap extends HTMLElement {
 						}
 						let antiSun = true;
 						if (antiSun) {
+							let sunColor = context.fillStyle;
+							let antiColor = Utilities.divideTransparencyBy(sunColor, 2);
+							if (antiColor === null) {
+								// too bad, make it the same
+								antiColor = sunColor;
+							}
+
 							let antiSunDecl = - this.astronomicalData.sun.decl;
 							let antiSunLng = sunLng + 180;
 							while (antiSunLng > 180) {
@@ -1306,19 +1313,19 @@ class WorldMap extends HTMLElement {
 							let thisPointIsBehind = this.isBehind(Utilities.toRadians(antiSunDecl), Utilities.toRadians(antiSunLng - this.globeViewLngOffset));
 							if (!thisPointIsBehind || this.transparentGlobe) {
 								// Draw Anti Sun
-								context.fillStyle = 'rgba(255, 255, 0, 0.5)'; // this.worldmapColorConfig.sunColor;
+								context.fillStyle = antiColor;
 								WorldMap.plot(context, sun, context.fillStyle);
 								// context.fillText("Anti-Sun", Math.round(sun.x) + 3, Math.round(sun.y) - 3);
 								// Arrow, to the anti-sun
 								context.setLineDash([2]);
-								context.strokeStyle = 'rgba(255, 255, 0, 0.5)'; // this.worldmapColorConfig.sunArrowColor;
+								context.strokeStyle = antiColor; // TODO Base it on this.worldmapColorConfig.sunArrowColor;
 								context.beginPath();
 								context.moveTo(userPos.x, userPos.y);
 								context.lineTo(sun.x, sun.y);
 								context.stroke();
 								context.closePath();
 								context.setLineDash([0]); // Reset
-								context.strokeStyle = 'rgba(255, 255, 0, 0.5)'; // this.worldmapColorConfig.sunColor;
+								context.strokeStyle = antiColor; // this.worldmapColorConfig.sunColor;
 								let deltaX = sun.x - userPos.x;
 								let deltaY = sun.y - userPos.y;
 								context.beginPath();

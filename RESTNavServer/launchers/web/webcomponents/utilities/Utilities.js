@@ -2,6 +2,41 @@
  *
  * Misc utilities used all over the place.
  */
+
+function rgbToHex(r, g, b) {
+	return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+  
+function hexToRgb(hex) {
+	let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	if (result) {
+		let r = parseInt(result[1], 16);
+		let g = parseInt(result[2], 16);
+		let b = parseInt(result[3], 16);
+		return `${r},${g},${b}`; //return 23,14,45 -> reformat if needed 
+	} 
+	return null;
+}
+// console.log(rgbToHex(10, 54, 120)); //#0a3678
+// console.log(hexToRgb("#0a3678"));//"10,54,120"
+
+export function divideTransparencyBy(color, factor) {
+	let transparency = 1.0;
+	if (color.startsWith("#")) {
+		return `rgba(${hexToRgb(color)}, ${transparency / factor})`;
+	} else if (color.startsWith("rgb(")) {
+		let values = color.trim().substring('rgb('.length, color.trim().indexOf(')'));
+		return `rgba(${values}, ${transparency / factor})`;
+	} else if (color.startsWith("rgba(")) {
+		let values = color.trim().substring('rgb('.length, color.trim().indexOf(')'));
+		let valueArray = values.split(",");
+		transparency = parseFloat(valueArray[3]);
+		return `rgba(${valueArray[0].trim()}, ${valueArray[1].trim()}, ${valueArray[2].trim()}, ${transparency / factor})`;
+	} else {
+		return null; // Cannot find color values...
+	}
+}
+
 export function lpad(str, len, pad) {
 	let s = str;
 	while (s.length < len) {
