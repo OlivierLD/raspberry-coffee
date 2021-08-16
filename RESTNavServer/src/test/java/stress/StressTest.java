@@ -9,13 +9,14 @@ import java.util.Map;
 /**
  * requires the REST server to be up and running.
  * See url below.
+ * From the launchers folder, run ./demoLauncher.sh --option:1
  */
 public class StressTest {
 
 	private static String url = "http://localhost:9999/astro/sun-now";
 
 	private static boolean go = true;
-	private static String payload = "{ latitude: 38, longitude: -122 }"; // Payload
+	private static String payload = "{ position: { latitude: 38, longitude: -122 }}"; // Payload
 
 	public static void main(String... args) throws Exception {
 
