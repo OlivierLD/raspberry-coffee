@@ -1,5 +1,5 @@
 
-const TABS = ['one', 'two', 'three', 'four', 'five'];
+const TABS = ['one', 'two', 'three', 'four', 'five', 'six'];
 
 function openTab(evt, tabNum) {
 	let tabLinks = document.getElementsByClassName("tablinks");
@@ -101,28 +101,6 @@ function collapseExpandHeadsup() {
 	headsUpExpanded = !headsUpExpanded;
 }
 
-let boatDataExpanded = true;
-function expandCollapseBoatData() {
-	boatDataExpanded = !boatDataExpanded;
-	if (boatDataExpanded) {
-
-		document.getElementById('boat-data').style.height = 'auto';
-		document.getElementById('boat-data').style.opacity = '1';
-		document.getElementById('boat-data').style.visibility = 'visible';
-
-		// document.getElementById('row-1').style.display = 'grid';
-		// document.getElementById('row-2').style.display = 'grid';
-		document.getElementById('boat-data-switch').innerText = ' - Boat Data';
-	} else {
-		document.getElementById('boat-data').style.height = '0';
-		document.getElementById('boat-data').style.opacity = '0';
-		document.getElementById('boat-data').style.visibility = 'hidden';
-
-		// document.getElementById('row-1').style.display = 'none';
-		// document.getElementById('row-2').style.display = 'none';
-		document.getElementById('boat-data-switch').innerText = ' + Boat Data';
-	}
-}
 /**
  * Set data to the WebComponents
  * Assume that they all have a 'value' member.
@@ -345,7 +323,7 @@ function setTropics(wcId, cb) {
 	document.getElementById(wcId).repaint();
 }
 
-function setAntiMoonSun(wcId, cb) {
+function setAntiSunMoon(wcId, cb) {
 	document.getElementById(wcId).withAntiSunMoon = (cb.checked ? 'true' : 'false');
 	document.getElementById(wcId).repaint();
 }
@@ -1009,6 +987,8 @@ function toggleHeadsUp() {
 	document.getElementById('nmea-widgets-2').classList.toggle('mirror-upside-down');
 	document.getElementById('sky-maps-1').classList.toggle('mirror-upside-down');
 	document.getElementById('sun-path-1').classList.toggle('mirror-upside-down');
+	document.getElementById('boat-data').classList.toggle('mirror-upside-down');
+	document.getElementById('raw-data').classList.toggle('mirror-upside-down');
 }
 
 function setPadding(range) {
@@ -1017,6 +997,8 @@ function setPadding(range) {
 	document.getElementById('nmea-widgets-2').style.setProperty("--padding", v + "px");
 	document.getElementById('sky-maps-1').style.setProperty("--padding", v + "px");
 	document.getElementById('sun-path-1').style.setProperty("--padding", v + "px");
+	document.getElementById('boat-data').style.setProperty("--padding", v + "px");
+	document.getElementById('raw-data').style.setProperty("--padding", v + "px");
 }
 
 function setPerspective(range) {
@@ -1025,6 +1007,8 @@ function setPerspective(range) {
 	document.getElementById('nmea-widgets-2').style.setProperty("--perspective", v + "em");
 	document.getElementById('sky-maps-1').style.setProperty("--perspective", v + "em");
 	document.getElementById('sun-path-1').style.setProperty("--perspective", v + "em");
+	document.getElementById('boat-data').style.setProperty("--perspective", v + "em");
+	document.getElementById('raw-data').style.setProperty("--perspective", v + "em");
 }
 
 function setRotateX(range) {
@@ -1033,6 +1017,8 @@ function setRotateX(range) {
 	document.getElementById('nmea-widgets-2').style.setProperty("--rotateX", v + "deg");
 	document.getElementById('sky-maps-1').style.setProperty("--rotateX", v + "deg");
 	document.getElementById('sun-path-1').style.setProperty("--rotateX", v + "deg");
+	document.getElementById('boat-data').style.setProperty("--rotateX", v + "deg");
+	document.getElementById('raw-data').style.setProperty("--rotateX", v + "deg");
 }
 
 function setScaleY(scale) {
@@ -1268,12 +1254,6 @@ window.onload = () => {
 			}
 		} else {
 			console.log("Unknown border", border);
-		}
-	}
-
-	if (boatData !== undefined) {
-		if (/* boatData === 'y' || */ boatData === 'n') {
-			expandCollapseBoatData();
 		}
 	}
 

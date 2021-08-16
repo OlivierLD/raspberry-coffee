@@ -1460,15 +1460,14 @@
     <button class="tablinks" onclick="openTab(event, 1);">Raw Data</button>
     <button class="tablinks" onclick="openTab(event, 2);">Visible Sky</button>
     <button class="tablinks" onclick="openTab(event, 3);">Sun Path</button>
-    <button class="tablinks" onclick="openTab(event, 4);" title="Raw NMEA Data&#13;and subscribed events">NMEA/Events</button>
+    <button class="tablinks" onclick="openTab(event, 4);">Boat Data</button>
+    <button class="tablinks" onclick="openTab(event, 5);" title="Raw NMEA Data&#13;and subscribed events">NMEA/Events</button>
     <div class="mess">Guaranteed 0% external libraries.</div>
 </div>
 
 <!-- The NMEA widgets. The 50px columns are here for the perspective, they are pads on the left and right -->
 <div id="one" style="display: block;">
     <div style="margin: 5px;">
-        <span id="boat-data-switch" onclick="expandCollapseBoatData();"
-              style="border: 1px solid silver; border-radius: 5px; padding-left: 5px; padding-right: 5px; cursor: pointer; margin-left: 40px; padding-left: 5px; padding-right: 5px;">- Boat Data</span>
         <!-- Geolocation API activity -->
         <span style="margin-left: 50px; vertical-align: center;">
 			GeoLocation Web API
@@ -1488,13 +1487,356 @@
     </div>
     <div id="nmea-widgets-1"
          style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 0px 10px 10px 10px; text-align: center;">
-        <!-- Tabs Data1, Current Evolution, TW Evolution -->
 
-        <div id="boat-data" class="boat-data"
-             style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 2; grid-template-columns: auto;">
+        <div id="row-X"
+             style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding-left: 10px; max-width: inherit;">
+            <div style="display: grid; justify-self: start; grid-template-columns: auto; padding: 0px;">
+                <!--
+                    SYSTEM TIME
+                +-->
+                <div>
+                    <split-flap-display id="split-flap-display-00"
+                                        class="split-flap-night"
+                                        nb-char="18"
+                                        font-size="20"
+                                        justified="LEFT"
+                                        value="Server Time"></split-flap-display>
+                    <split-flap-display id="split-flap-display-01"
+                                        class="split-flap-night"
+                                        nb-char="31"
+                                        font-size="20"
+                                        justified="RIGHT"
+                                        value="Tue 01-Jan-1970 00:00:00 UTC+00"></split-flap-display>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-column-start: 2; grid-template-columns: auto auto; align-items: start; padding: 10px;">
+            <!--
+                WORLD MAP
+            +-->
+            <div id="world-map">
+                <div class="black-frame centered">
+                    <world-map id="world-map-01"
+                               class="worldmap-display"
+                               title="World Map"
+                               width="700"
+                               height="500"></world-map>
+                </div>
+                <div class="black-frame centered">
+                    <input type="checkbox" onchange="setTransparency('world-map-01', this);"/>Transparent
+                    <input type="checkbox" onchange="setGrid('world-map-01', this);" checked/>Grid
+                    <input type="checkbox" onchange="setSun('world-map-01', this);" checked/>Sun
+                    <input type="checkbox" onchange="setMoon('world-map-01', this);" checked/>Moon
+                    <input type="checkbox" onchange="setSunlight('world-map-01', this);"/>Sunlight
+                    <input type="checkbox" onchange="setMoonlight('world-map-01', this);"/>Moonlight
+                    <input type="checkbox"
+                           onchange="withWanderingBodies = this.checked; setWanderingBodies('world-map-01', this);"/>Wandering
+                    bodies
+                    <input type="checkbox" onchange="withStars = this.checked; setStars('world-map-01', this);"/>Stars
+                    <input type="checkbox" onchange="setTropics('world-map-01', this);"/>Tropics
+                    <br/>
+                    <input type="checkbox" onchange="setAntiSunMoon('world-map-01', this);"/>Anti Sun &amp; Moon
+                    <input type="checkbox" id="geo-sat-01"/>GeoStationary Satellites
+                    <input type="checkbox" id="iss-01" title="Requires Internet connection"/>ISS
+                    <input type="checkbox" id="gps-sat-01"/>GPS Satellites in view
+                    <input type="checkbox" id="moon-sun-path-01"/>Moon to Sun
+                    <br/>
+                    <input type="radio" name="proj-01" value="GLOBE" onchange="setProjection('world-map-01', this);"
+                           checked>Globe
+                    <input type="radio" name="proj-01" value="MERCATOR" onchange="setProjection('world-map-01', this);">Mercator
+                    <input type="radio" name="proj-01" value="ANAXIMANDRE"
+                           onchange="setProjection('world-map-01', this);">Square
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: auto auto; padding: 0px;">
+                <!-- Headers -->
+                <div class="black-frame centered">
+                    <split-flap-display id="split-flap-display-02"
+                                        class="split-flap-night"
+                                        nb-char="7"
+                                        font-size="20"
+                                        justified="LEFT"
+                                        value="GPS/UTC"></split-flap-display>
+                </div>
+                <div class="black-frame centered">
+                    <split-flap-display id="split-flap-display-03"
+                                        class="split-flap-night"
+                                        nb-char="5"
+                                        font-size="20"
+                                        justified="LEFT"
+                                        value="Solar"></split-flap-display>
+                </div>
+                <!--
+                    ANALOG WATCH
+                +-->
+                <div id="analog-watch-gps">
+                    <div class="black-frame centered">
+                        <analog-watch id="analog-watch-01"
+                                      class="analogdisplay-day"
+                                      title="GPS Time"
+                                      width="150"
+                                      height="150"
+                                      hours-ticks="1"
+                                      minutes-ticks="1"
+                                      digital-value="6"
+                                      with-second-hand="true"
+                                      hours-flavor="arabic"
+                                      label="GPS Time"
+                                      value="00:00:00"></analog-watch>
+                    </div>
+                    <div class="black-frame centered mid">
+                        <!-- <input type="checkbox" class="border-cb" onchange="setBorder(this, 'analog-watch-01');" checked>With Border -->
+                        Border
+                        <label class="rocker rocker-tiny">
+                            <input type="checkbox" onchange="setBorder(this, 'analog-watch-01');" checked>
+                            <span class="switch-left">Yes</span>
+                            <span class="switch-right">No</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="analog-watch-solar">
+                    <div class="black-frame centered">
+                        <analog-watch id="analog-watch-02"
+                                      class="analogdisplay-day"
+                                      title="Solar Time"
+                                      width="150"
+                                      height="150"
+                                      hours-ticks="1"
+                                      minutes-ticks="1"
+                                      digital-value="6"
+                                      with-second-hand="true"
+                                      hours-flavor="arabic"
+                                      label="Solar Time"
+                                      value="00:00:00"></analog-watch>
+                    </div>
+                    <div class="black-frame centered mid">
+                        <!-- <input type="checkbox" class="border-cb" onchange="setBorder(this, 'analog-watch-02');" checked>With Border -->
+                        Border
+                        <label class="rocker rocker-tiny">
+                            <input type="checkbox" onchange="setBorder(this, 'analog-watch-02');" checked>
+                            <span class="switch-left">Yes</span>
+                            <span class="switch-right">No</span>
+                        </label>
+                    </div>
+                </div>
+                <!--
+                  CALENDARS
+                +-->
+                <div class="black-frame centered">
+                    <calendar-display id="calendar-01"
+                                      class="calendar-01"
+                                      title="GPS Date"
+                                      width="140"
+                                      height="168"
+                                      value="01-01-1970"></calendar-display>
+                </div>
+
+                <div class="black-frame centered">
+                    <calendar-display id="calendar-02"
+                                      class="calendar-02"
+                                      title="Solar Date"
+                                      width="140"
+                                      height="168"
+                                      value="01-01-1970"></calendar-display>
+                </div>
+
+                <div class="black-frame centered">
+                    <moon-phase id="moon-phase-01"
+                                title="Moon Phase"
+                                width="130"
+                                height="130"
+                                phase="0"
+                                tilt="0"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> <!-- End of Tab 1 -->
+
+<div id="two" style="display: none;">
+    <div id="nmea-widgets-2"
+         style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
+        <div style="display: grid; grid-column-start: 2; grid-template-columns: auto; justify-items: start; align-items: start; padding: 10px;">
+            <!--
+                MISC TEXT DATA
+            +-->
+            <div id="sun-moon-data" style="margin-bottom: 20px;"></div>
+            <div id="utc-date" style="font-size: 20px;"></div>
+            <div id="solar-date" style="font-size: 20px;"></div>
+            <div id="sun-transit" style="font-size: 20px;"></div>
+            <div id="moon-phase-rd" style="font-size: 20px;"></div>
+            <div id="moon-tilt-rd" style="font-size: 20px;"></div>
+            <div id="lunar-dist-rd" style="font-size: 20px;"></div>
+            <div id="iss-rd" style="font-size: 20px;"></div>
+        </div>
+    </div>
+</div> <!-- End of Tab 2 -->
+
+<div id="three" style="display: none;">
+    <div id="sky-maps-1"
+         style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
+        <div style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px;">
+            <div style="text-align: left;">
+                Type:
+                <select onchange="setMapType('sky-map-01', this);">
+                    <option value="STARFINDER" selected>Star Finder</option>
+                    <option value="SKYMAP">Sky Map</option>
+                </select>
+                <input type="checkbox" onchange="setStarNames('sky-map-01', this);" checked>Star Names.
+                <input type="checkbox" onchange="setConstNames('sky-map-01', this);">Constellation Names.
+                <input type="checkbox" onchange="setVisibleSky('sky-map-01', this);" checked>Visible sky.
+                <input type="checkbox" onchange="setSkyGrid('sky-map-01', this);" checked>Sky grid.
+            </div>
+            <!--
+            SKY MAP
+            +-->
+            <div class="black-frame centered">
+                <sky-map id="sky-map-01"
+                         width="800"
+                         height="800"
+                         latitude="35"/>
+            </div>
+        </div>
+    </div>
+</div> <!-- End of Tab 3 -->
+
+<div id="four" style="display: none;">
+    <div id="sun-path-1" style="padding: 10px; text-align: left;">
+        <div style="padding: 10px;">
+            <div style="text-align: left;">
+                <table>
+                    <tr>
+                        <td>
+                            <button onclick="loadSunPath(); loadDeclinations();"
+                                    style="border-radius: 3px; padding: 3px; margin-left: 10px;">Load Sun Path
+                            </button>
+                            <br/>
+                            <input style="margin: 10px;" type="checkbox" id="with-wb" checked>Planets
+                            <br/>
+                            <input style="margin: 10px; margin-top: 0;" type="checkbox" id="ecliptic" checked>Ecliptic
+                            <br/>
+                            <input style="margin: 10px; margin-top: 0;" type="checkbox" id="moon-sun-route">Moon to Sun
+                            route
+                        </td>
+                        <td style="padding: 10px; vertical-align: top;">
+                            <span id="sun-path-loaded">Sun path was not loaded.</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <table style="border-width: 0px;">
+                <tr>
+                    <td>
+                        <!--
+                        SUN PATH
+                        +-->
+                        <div class="black-frame centered">
+                            <sun-path id="sun-path-01"
+                                      tabindex="0"
+                                      class="sun-path-01"
+                                      width="600"
+                                      height="520"
+                                      tilt="-10"/>
+                        </div>
+                    </td>
+                    <td style="text-align: left;">
+                        <input type="range" id="sun-path-tilt-slide"
+                               style="-webkit-appearance: slider-vertical; width: 8px; height: 520px; margin-left: 0;"
+                               min="-90" max="90" value="-10" onchange="setNewTilt(this, 'sun-path-01');">
+                    </td>
+                    <td rowspan="2" valign="top" style="text-align: center;">
+                        <span style="color: white;">Solar Time</span>
+                        <br/>
+                        <split-flap-display id="split-flap-solar-display-00"
+                                            class="split-flap-night"
+                                            nb-char="8"
+                                            font-size="20"
+                                            justified="LEFT"
+                                            title="Solar Time"
+                                            value="00:00:00"></split-flap-display>
+
+                        <div class="black-frame centered">
+                            <calendar-display id="calendar-03"
+                                              class="calendar-02"
+                                              title="Solar Date"
+                                              width="140"
+                                              height="168"
+                                              value="01-01-1970"></calendar-display>
+                        </div>
+                        <br/>
+                        <span style="color: white;">System Time</span>
+                        <br/>
+                        <split-flap-display id="split-flap-system-display-00"
+                                            class="split-flap-night"
+                                            nb-char="8"
+                                            font-size="20"
+                                            justified="LEFT"
+                                            title="System Time"
+                                            value="00:00:00"></split-flap-display>
+                        <br/>
+                        <split-flap-display id="split-flap-system-display-01"
+                                            class="split-flap-night"
+                                            nb-char="6"
+                                            font-size="20"
+                                            justified="LEFT"
+                                            title="UTC Offset"
+                                            value="UTC-00"></split-flap-display>
+
+                        <div class="black-frame centered">
+                            <calendar-display id="calendar-04"
+                                              class="calendar-02"
+                                              title="System Date"
+                                              width="140"
+                                              height="168"
+                                              value="01-01-1970"></calendar-display>
+                        </div>
+                    </td>
+                    <td rowspan="2" valign="top">
+                        <graph-display id="decl-graph-01"
+                                       tabindex="-1"
+                                       class=""
+                                       width="450"
+                                       height="200"
+                                       padding="5"
+                                       value="null"
+                                       label="Sun Declination"
+                                       title="Sun Declination&#13;10 days wide"></graph-display>
+
+                        <graph-display id="decl-graph-02"
+                                       tabindex="-1"
+                                       class=""
+                                       width="450"
+                                       height="200"
+                                       padding="5"
+                                       value="null"
+                                       label="Moon Declination"
+                                       title="Moon Declination&#13;10 days wide"></graph-display>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="range" id="sun-path-z-slide" style="width: 100%; height: 8px; margin-left: 0;"
+                               min="-90" max="90" value="0" onchange="setNewZOffset(this, 'sun-path-01');">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div> <!-- End of Tab 4 -->
+
+<div id="five" style="display: none;">
+
+        <!-- Tabs Data1, Current Evolution, TW Evolution -->
+        <!--div id="boat-data" class="boat-data"
+             style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 2; grid-template-columns: auto;"-->
+
+        <div id="boat-data" style="margin: 5px 5px 0 5px;">
 
             <div class="tab">
-                <button class="tablinks active" onclick="openSubTabOne(event, 0);">Section One</button>
+                <button class="tablinks active" onclick="openSubTabOne(event, 0);">General</button>
                 <button class="tablinks" onclick="openSubTabOne(event, 1);">Current Evolution</button>
                 <button class="tablinks" onclick="openSubTabOne(event, 2);">True Wind Evolution</button>
                 <button class="tablinks" onclick="openSubTabOne(event, 3);">Boat Speed Evolution</button>
@@ -2237,346 +2579,9 @@
 
         <!-- End Of BoatData -->
 
-        <div id="row-X"
-             style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding-left: 10px; max-width: inherit;">
-            <div style="display: grid; justify-self: start; grid-template-columns: auto; padding: 0px;">
-                <!--
-                    SYSTEM TIME
-                +-->
-                <div>
-                    <split-flap-display id="split-flap-display-00"
-                                        class="split-flap-night"
-                                        nb-char="18"
-                                        font-size="20"
-                                        justified="LEFT"
-                                        value="Server Time"></split-flap-display>
-                    <split-flap-display id="split-flap-display-01"
-                                        class="split-flap-night"
-                                        nb-char="31"
-                                        font-size="20"
-                                        justified="RIGHT"
-                                        value="Tue 01-Jan-1970 00:00:00 UTC+00"></split-flap-display>
-                </div>
-            </div>
-        </div>
+</div> <!-- End of Tab 5 -->
 
-        <div style="display: grid; grid-column-start: 2; grid-template-columns: auto auto; align-items: start; padding: 10px;">
-            <!--
-                WORLD MAP
-            +-->
-            <div id="world-map">
-                <div class="black-frame centered">
-                    <world-map id="world-map-01"
-                               class="worldmap-display"
-                               title="World Map"
-                               width="700"
-                               height="500"></world-map>
-                </div>
-                <div class="black-frame centered">
-                    <input type="checkbox" onchange="setTransparency('world-map-01', this);"/>Transparent
-                    <input type="checkbox" onchange="setGrid('world-map-01', this);" checked/>Grid
-                    <input type="checkbox" onchange="setSun('world-map-01', this);" checked/>Sun
-                    <input type="checkbox" onchange="setMoon('world-map-01', this);" checked/>Moon
-                    <input type="checkbox" onchange="setSunlight('world-map-01', this);"/>Sunlight
-                    <input type="checkbox" onchange="setMoonlight('world-map-01', this);"/>Moonlight
-                    <input type="checkbox"
-                           onchange="withWanderingBodies = this.checked; setWanderingBodies('world-map-01', this);"/>Wandering
-                    bodies
-                    <input type="checkbox" onchange="withStars = this.checked; setStars('world-map-01', this);"/>Stars
-                    <input type="checkbox" onchange="setTropics('world-map-01', this);"/>Tropics
-                    <br/>
-                    <input type="checkbox" onchange="setAntiMoonSun('world-map-01', this);"/>Anti Sun &amp; Moon
-                    <input type="checkbox" id="geo-sat-01"/>GeoStationary Satellites
-                    <input type="checkbox" id="iss-01" title="Requires Internet connection"/>ISS
-                    <input type="checkbox" id="gps-sat-01"/>GPS Satellites in view
-                    <input type="checkbox" id="moon-sun-path-01"/>Moon to Sun
-                    <br/>
-                    <input type="radio" name="proj-01" value="GLOBE" onchange="setProjection('world-map-01', this);"
-                           checked>Globe
-                    <input type="radio" name="proj-01" value="MERCATOR" onchange="setProjection('world-map-01', this);">Mercator
-                    <input type="radio" name="proj-01" value="ANAXIMANDRE"
-                           onchange="setProjection('world-map-01', this);">Square
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: auto auto; padding: 0px;">
-                <!-- Headers -->
-                <div class="black-frame centered">
-                    <split-flap-display id="split-flap-display-02"
-                                        class="split-flap-night"
-                                        nb-char="7"
-                                        font-size="20"
-                                        justified="LEFT"
-                                        value="GPS/UTC"></split-flap-display>
-                </div>
-                <div class="black-frame centered">
-                    <split-flap-display id="split-flap-display-03"
-                                        class="split-flap-night"
-                                        nb-char="5"
-                                        font-size="20"
-                                        justified="LEFT"
-                                        value="Solar"></split-flap-display>
-                </div>
-                <!--
-                    ANALOG WATCH
-                +-->
-                <div id="analog-watch-gps">
-                    <div class="black-frame centered">
-                        <analog-watch id="analog-watch-01"
-                                      class="analogdisplay-day"
-                                      title="GPS Time"
-                                      width="150"
-                                      height="150"
-                                      hours-ticks="1"
-                                      minutes-ticks="1"
-                                      digital-value="6"
-                                      with-second-hand="true"
-                                      hours-flavor="arabic"
-                                      label="GPS Time"
-                                      value="00:00:00"></analog-watch>
-                    </div>
-                    <div class="black-frame centered mid">
-                        <!-- <input type="checkbox" class="border-cb" onchange="setBorder(this, 'analog-watch-01');" checked>With Border -->
-                        Border
-                        <label class="rocker rocker-tiny">
-                            <input type="checkbox" onchange="setBorder(this, 'analog-watch-01');" checked>
-                            <span class="switch-left">Yes</span>
-                            <span class="switch-right">No</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div id="analog-watch-solar">
-                    <div class="black-frame centered">
-                        <analog-watch id="analog-watch-02"
-                                      class="analogdisplay-day"
-                                      title="Solar Time"
-                                      width="150"
-                                      height="150"
-                                      hours-ticks="1"
-                                      minutes-ticks="1"
-                                      digital-value="6"
-                                      with-second-hand="true"
-                                      hours-flavor="arabic"
-                                      label="Solar Time"
-                                      value="00:00:00"></analog-watch>
-                    </div>
-                    <div class="black-frame centered mid">
-                        <!-- <input type="checkbox" class="border-cb" onchange="setBorder(this, 'analog-watch-02');" checked>With Border -->
-                        Border
-                        <label class="rocker rocker-tiny">
-                            <input type="checkbox" onchange="setBorder(this, 'analog-watch-02');" checked>
-                            <span class="switch-left">Yes</span>
-                            <span class="switch-right">No</span>
-                        </label>
-                    </div>
-                </div>
-                <!--
-                  CALENDARS
-                +-->
-                <div class="black-frame centered">
-                    <calendar-display id="calendar-01"
-                                      class="calendar-01"
-                                      title="GPS Date"
-                                      width="140"
-                                      height="168"
-                                      value="01-01-1970"></calendar-display>
-                </div>
-
-                <div class="black-frame centered">
-                    <calendar-display id="calendar-02"
-                                      class="calendar-02"
-                                      title="Solar Date"
-                                      width="140"
-                                      height="168"
-                                      value="01-01-1970"></calendar-display>
-                </div>
-
-                <div class="black-frame centered">
-                    <moon-phase id="moon-phase-01"
-                                title="Moon Phase"
-                                width="130"
-                                height="130"
-                                phase="0"
-                                tilt="0"/>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> <!-- End of Tab 1 -->
-
-<div id="two" style="display: none;">
-    <div id="nmea-widgets-2"
-         style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
-        <div style="display: grid; grid-column-start: 2; grid-template-columns: auto; justify-items: start; align-items: start; padding: 10px;">
-            <!--
-                MISC TEXT DATA
-            +-->
-            <div id="sun-moon-data" style="margin-bottom: 20px;"></div>
-            <div id="utc-date" style="font-size: 20px;"></div>
-            <div id="solar-date" style="font-size: 20px;"></div>
-            <div id="sun-transit" style="font-size: 20px;"></div>
-            <div id="moon-phase-rd" style="font-size: 20px;"></div>
-            <div id="moon-tilt-rd" style="font-size: 20px;"></div>
-            <div id="lunar-dist-rd" style="font-size: 20px;"></div>
-            <div id="iss-rd" style="font-size: 20px;"></div>
-        </div>
-    </div>
-</div> <!-- End of Tab 2 -->
-
-<div id="three" style="display: none;">
-    <div id="sky-maps-1"
-         style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
-        <div style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px;">
-            <div style="text-align: left;">
-                Type:
-                <select onchange="setMapType('sky-map-01', this);">
-                    <option value="STARFINDER" selected>Star Finder</option>
-                    <option value="SKYMAP">Sky Map</option>
-                </select>
-                <input type="checkbox" onchange="setStarNames('sky-map-01', this);" checked>Star Names.
-                <input type="checkbox" onchange="setConstNames('sky-map-01', this);">Constellation Names.
-                <input type="checkbox" onchange="setVisibleSky('sky-map-01', this);" checked>Visible sky.
-                <input type="checkbox" onchange="setSkyGrid('sky-map-01', this);" checked>Sky grid.
-            </div>
-            <!--
-            SKY MAP
-            +-->
-            <div class="black-frame centered">
-                <sky-map id="sky-map-01"
-                         width="800"
-                         height="800"
-                         latitude="35"/>
-            </div>
-        </div>
-    </div>
-</div> <!-- End of Tab 3 -->
-
-<div id="four" style="display: none;">
-    <div id="sun-path-1" style="padding: 10px; text-align: left;">
-        <div style="padding: 10px;">
-            <div style="text-align: left;">
-                <table>
-                    <tr>
-                        <td>
-                            <button onclick="loadSunPath(); loadDeclinations();"
-                                    style="border-radius: 3px; padding: 3px; margin-left: 10px;">Load Sun Path
-                            </button>
-                            <br/>
-                            <input style="margin: 10px;" type="checkbox" id="with-wb" checked>Planets
-                            <br/>
-                            <input style="margin: 10px; margin-top: 0;" type="checkbox" id="ecliptic" checked>Ecliptic
-                            <br/>
-                            <input style="margin: 10px; margin-top: 0;" type="checkbox" id="moon-sun-route">Moon to Sun
-                            route
-                        </td>
-                        <td style="padding: 10px; vertical-align: top;">
-                            <span id="sun-path-loaded">Sun path was not loaded.</span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <table style="border-width: 0px;">
-                <tr>
-                    <td>
-                        <!--
-                        SUN PATH
-                        +-->
-                        <div class="black-frame centered">
-                            <sun-path id="sun-path-01"
-                                      tabindex="0"
-                                      class="sun-path-01"
-                                      width="600"
-                                      height="520"
-                                      tilt="-10"/>
-                        </div>
-                    </td>
-                    <td style="text-align: left;">
-                        <input type="range" id="sun-path-tilt-slide"
-                               style="-webkit-appearance: slider-vertical; width: 8px; height: 520px; margin-left: 0;"
-                               min="-90" max="90" value="-10" onchange="setNewTilt(this, 'sun-path-01');">
-                    </td>
-                    <td rowspan="2" valign="top" style="text-align: center;">
-                        <span style="color: white;">Solar Time</span>
-                        <br/>
-                        <split-flap-display id="split-flap-solar-display-00"
-                                            class="split-flap-night"
-                                            nb-char="8"
-                                            font-size="20"
-                                            justified="LEFT"
-                                            title="Solar Time"
-                                            value="00:00:00"></split-flap-display>
-
-                        <div class="black-frame centered">
-                            <calendar-display id="calendar-03"
-                                              class="calendar-02"
-                                              title="Solar Date"
-                                              width="140"
-                                              height="168"
-                                              value="01-01-1970"></calendar-display>
-                        </div>
-                        <br/>
-                        <span style="color: white;">System Time</span>
-                        <br/>
-                        <split-flap-display id="split-flap-system-display-00"
-                                            class="split-flap-night"
-                                            nb-char="8"
-                                            font-size="20"
-                                            justified="LEFT"
-                                            title="System Time"
-                                            value="00:00:00"></split-flap-display>
-                        <br/>
-                        <split-flap-display id="split-flap-system-display-01"
-                                            class="split-flap-night"
-                                            nb-char="6"
-                                            font-size="20"
-                                            justified="LEFT"
-                                            title="UTC Offset"
-                                            value="UTC-00"></split-flap-display>
-
-                        <div class="black-frame centered">
-                            <calendar-display id="calendar-04"
-                                              class="calendar-02"
-                                              title="System Date"
-                                              width="140"
-                                              height="168"
-                                              value="01-01-1970"></calendar-display>
-                        </div>
-                    </td>
-                    <td rowspan="2" valign="top">
-                        <graph-display id="decl-graph-01"
-                                       tabindex="-1"
-                                       class=""
-                                       width="450"
-                                       height="200"
-                                       padding="5"
-                                       value="null"
-                                       label="Sun Declination"
-                                       title="Sun Declination&#13;10 days wide"></graph-display>
-
-                        <graph-display id="decl-graph-02"
-                                       tabindex="-1"
-                                       class=""
-                                       width="450"
-                                       height="200"
-                                       padding="5"
-                                       value="null"
-                                       label="Moon Declination"
-                                       title="Moon Declination&#13;10 days wide"></graph-display>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="range" id="sun-path-z-slide" style="width: 100%; height: 8px; margin-left: 0;"
-                               min="-90" max="90" value="0" onchange="setNewZOffset(this, 'sun-path-01');">
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</div> <!-- End of Tab 4 -->
-
-<div id="five" style="display: none;">
+<div id="six" style="display: none;">
     <div id="raw-data"
          style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
 
@@ -2607,6 +2612,8 @@
         </div>
 
     </div>
-</div> <!-- End of Tab 5 -->
+</div> <!-- End of Tab 6 -->
+
+
 </body>
 </html>
