@@ -345,6 +345,11 @@ function setTropics(wcId, cb) {
 	document.getElementById(wcId).repaint();
 }
 
+function setAntiMoonSun(wcId, cb) {
+	document.getElementById(wcId).withAntiSunMoon = (cb.checked ? 'true' : 'false');
+	document.getElementById(wcId).repaint();
+}
+
 function setProjection(id, radio) {
 	document.getElementById(id).projection = radio.value;
 	document.getElementById(id).repaint();

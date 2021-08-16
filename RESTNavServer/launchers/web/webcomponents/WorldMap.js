@@ -37,9 +37,9 @@ const worldMapDefaultColorConfig = {
 	chartColor: 'cyan',
 	chartLineWidth: 1,
 	userPosColor: 'red',
-	sunColor: 'yellow',
+	sunColor: 'rgb(255, 255, 0)', // 'yellow',
 	sunArrowColor: 'rgba(255, 255, 0, 0.5)',
-	moonColor: 'white',
+	moonColor: 'rgb(255, 255, 255)', // 'white',
 	moonArrowColor: 'rgba(255, 255, 255, 0.5)',
 	ariesColor: 'LightGray',
 	venusColor: "orange",
@@ -81,6 +81,7 @@ class WorldMap extends HTMLElement {
 			"with-wandering-bodies",  // Boolean. Default false
 			"with-stars",             // Boolean. Default false
 			"with-tropics",           // Boolean. Default false
+			"with-anti-sun-moon",     // Boolean. Default false
 
 			"position-label"          // String
 		];
@@ -147,6 +148,7 @@ class WorldMap extends HTMLElement {
 		this._with_wandering_bodies = false;
 		this._with_stars            = false;
 		this._with_tropics          = false;
+		this._with_anti_sun_moon    = false;
 
 		this._position_label        = "";
 
@@ -258,6 +260,9 @@ class WorldMap extends HTMLElement {
 			case "with-tropics":
 				this._with_tropics = ('true' === newVal);
 				break;
+			case "with-anti-sun-moon":
+				this._with_anti_sun_moon = ('true' === newVal);
+				break;
 			case "position-label":
 				this._position_label = newVal;
 				break;
@@ -322,6 +327,9 @@ class WorldMap extends HTMLElement {
 	set withTropics(val) {
 		this.setAttribute("with-tropics", val);
 	}
+	set withAntiSunMoon(val) {
+		this.setAttribute("with-anti-sun-moon", val);
+	}
 	set positionLabel(val) {
 		this.setAttribute("position-label", val);
 	}
@@ -377,6 +385,9 @@ class WorldMap extends HTMLElement {
 	}
 	get withTropics() {
 		return this._with_tropics;
+	}
+	get withAntiSunMoon() {
+		return this._with_anti_sun_moon;
 	}
 	get positionLabel() {
 		return this._position_label;
@@ -1295,9 +1306,9 @@ class WorldMap extends HTMLElement {
 							WorldMap.fillCircle(context, {x: sun.x + deltaX, y: sun.y + deltaY}, 6, this.worldmapColorConfig.sunColor);
 							// }
 						}
-						let antiSun = true;
+						let antiSun = this.withAntiSunMoon;
 						if (antiSun) {
-							let sunColor = context.fillStyle;
+							let sunColor = this.worldmapColorConfig.sunColor; // context.fillStyle;
 							let antiColor = Utilities.divideTransparencyBy(sunColor, 2);
 							if (antiColor === null) {
 								// too bad, make it the same
@@ -1334,7 +1345,11 @@ class WorldMap extends HTMLElement {
 								context.stroke();
 								context.closePath();
 								// WorldMap.fillCircle(context, {x: sun.x + deltaX, y: sun.y + deltaY}, 6, this.worldmapColorConfig.sunColor);
-								context.fillText("Anti-Sun", sun.x + deltaX, sun.y + deltaY);
+								let text = "Anti-Sun";
+								let metrics = context.measureText(text);
+								context.fillText(text, 
+									sun.x + deltaX - (metrics.width / 2), 
+									sun.y + deltaY + (10 / 2)); // context.font "10px sans-serif"
 
 							}
 						}
@@ -1388,6 +1403,54 @@ class WorldMap extends HTMLElement {
 							// } else {
 							WorldMap.fillCircle(context, {x: moon.x + deltaX, y: moon.y + deltaY}, 5, this.worldmapColorConfig.moonColor);
 							// }
+						}
+						// Anti moon?
+						let antiMoon = this.withAntiSunMoon;
+						if (antiMoon) {
+							let moonColor = this.worldmapColorConfig.moonColor; // context.fillStyle;
+							let antiColor = Utilities.divideTransparencyBy(moonColor, 2);
+							if (antiColor === null) {
+								// too bad, make it the same
+								antiColor = moonColor;
+							}
+
+							let antiMoonDecl = - this.astronomicalData.moon.decl;
+							let antiMoonLng = moonLng + 180;
+							while (antiMoonLng > 180) {
+								antiMoonLng -= 360;
+							}
+							let moon = this.getPanelPoint(antiMoonDecl, antiMoonLng);
+							let thisPointIsBehind = this.isBehind(Utilities.toRadians(antiMoonDecl), Utilities.toRadians(antiMoonLng - this.globeViewLngOffset));
+							if (!thisPointIsBehind || this.transparentGlobe) {
+								// Draw Anti Moon
+								context.fillStyle = antiColor;
+								WorldMap.plot(context, moon, context.fillStyle);
+								// context.fillText("Anti-Moon", Math.round(moon.x) + 3, Math.round(moon.y) - 3);
+								// Arrow, to the anti-moon
+								context.setLineDash([2]);
+								context.strokeStyle = antiColor; // TODO Base it on this.worldmapColorConfig.moonArrowColor;
+								context.beginPath();
+								context.moveTo(userPos.x, userPos.y);
+								context.lineTo(moon.x, moon.y);
+								context.stroke();
+								context.closePath();
+								context.setLineDash([0]); // Reset
+								context.strokeStyle = antiColor; // this.worldmapColorConfig.sunColor;
+								let deltaX = moon.x - userPos.x;
+								let deltaY = moon.y - userPos.y;
+								context.beginPath();
+								context.moveTo(moon.x, moon.y);
+								context.lineTo(moon.x + deltaX, moon.y + deltaY);
+								context.stroke();
+								context.closePath();
+								// WorldMap.fillCircle(context, {x: moon.x + deltaX, y: moon.y + deltaY}, 6, this.worldmapColorConfig.moonColor);
+								let text = "Anti-Moon";
+								let metrics = context.measureText(text);
+								context.fillText(text, 
+									moon.x + deltaX - (metrics.width / 2), 
+									moon.y + deltaY + (10 / 2)); // context.font "10px sans-serif"
+
+							}
 						}
 					}
 					// Moonlight
