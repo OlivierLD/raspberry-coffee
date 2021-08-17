@@ -1183,6 +1183,10 @@ function geoLocationStart() { // Deprecated
 	}, 1000);
 }
 
+let switchBoatData = (value) => {
+	document.getElementById('boat-data-button').style.display = value ? 'block' : 'none';
+};
+
 window.onload = () => {
 
 	try {
@@ -1255,6 +1259,11 @@ window.onload = () => {
 		} else {
 			console.log("Unknown border", border);
 		}
+	}
+
+	if (boatData !== undefined) {
+		switchBoatData(boatData === 'true' || boatData === 'y');
+		document.getElementById('boat-data-switch').checked = (boatData === 'true' || boatData === 'y');
 	}
 
 	let sunPath = document.getElementById('sun-path-01');

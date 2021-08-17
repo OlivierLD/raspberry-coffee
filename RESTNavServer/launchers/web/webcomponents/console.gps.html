@@ -1455,13 +1455,21 @@
 </div>
 
 <!-- the tabs -->
-<div class="tab">
+<div class="tab" style="display: grid; grid-template-columns: auto auto auto auto auto auto auto auto auto;">
     <button class="tablinks active" onclick="openTab(event, 0);">Overview</button>
     <button class="tablinks" onclick="openTab(event, 1);">Raw Data</button>
     <button class="tablinks" onclick="openTab(event, 2);">Visible Sky</button>
     <button class="tablinks" onclick="openTab(event, 3);">Sun Path</button>
-    <button class="tablinks" onclick="openTab(event, 4);">Boat Data</button>
+    <button class="tablinks" onclick="openTab(event, 4);" style="display: none;" id="boat-data-button">Boat Data</button>
     <button class="tablinks" onclick="openTab(event, 5);" title="Raw NMEA Data&#13;and subscribed events">NMEA/Events</button>
+
+    <div class="mess" style="vertical-align: middle;">With Boat Data</div>
+    <label class="rocker rocker-tiny">
+        <input type="checkbox" onchange="switchBoatData(this.checked);" id="boat-data-switch">
+        <span class="switch-left">Yes</span>
+        <span class="switch-right">No</span>
+    </label>
+
     <div class="mess">Guaranteed 0% external libraries.</div>
 </div>
 
@@ -1836,7 +1844,7 @@
         <div id="boat-data" style="margin: 5px 5px 0 5px; display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 0px 10px 10px 10px; text-align: center;">
 
             <div id="boat-data-container" style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px;">
-                <div class="tab">
+                <div class="tab" style="display: grid; grid-template-columns: auto auto auto auto auto;">
                     <button class="tablinks active" onclick="openSubTabOne(event, 0);">General</button>
                     <button class="tablinks" onclick="openSubTabOne(event, 1);">Current Evolution</button>
                     <button class="tablinks" onclick="openSubTabOne(event, 2);">True Wind Evolution</button>
