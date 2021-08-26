@@ -295,7 +295,7 @@ other JVM-aware languages, invoking and using the features of this project.
 
 Those samples include Scala, Groovy, Kotlin..., and the list is not closed!
 
-See in the [OthetJVM.languages](https://github.com/OlivierLD/raspberry-coffee/tree/master/OtherJVM.languages) directory, there is more about that.
+See in the [OthetJVMLanguages](https://github.com/OlivierLD/raspberry-coffee/tree/master/OtherJVMLanguages) directory, there is more about that.
 
 ---
 
