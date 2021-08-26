@@ -515,7 +515,7 @@ Nothing is preventing you from using as many languages, frameworks and technique
 package your applications as HTTP/REST servers that can communicate with each others.
 Bundling those servers into Docker images gives you even more flexibility.
 
-It is very easy to invoke Python from Java, but the overhead of invoking it as a script is not negligible,
+It is very easy to invoke Python from Java (JSR 223), but the overhead of invoking it as a script is not negligible,
 and there is no in-memory status or transient state, in this case.
 
 HTTP/REST sounds much nicer. We **will** provide examples, Java pinging a Python server, and vice-versa.
