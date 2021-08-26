@@ -1,4 +1,5 @@
 #!/bin/bash
+clear
 #
 # Build and run.sh.sh a docker image
 #

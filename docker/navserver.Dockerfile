@@ -43,6 +43,8 @@ RUN mkdir /workdir
 WORKDIR /workdir
 RUN git clone https://github.com/OlivierLD/raspberry-coffee.git
 WORKDIR /workdir/raspberry-coffee
+# RUN git submodule update --init
+RUN git clone https://github.com/OlivierLD/AstroComputer.git
 RUN ./gradlew tasks
 # RUN ./gradlew tasks -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80
 WORKDIR /workdir/raspberry-coffee/RESTNavServer

@@ -5,7 +5,11 @@ This folder is not a module of the project. It can be used in standalone.
 
 Good article [here](https://howchoo.com/g/nmrlzmq1ymn/how-to-install-docker-on-your-raspberry-pi).
 
-- First, [get Docker](https://store.docker.com/search?type=edition&offering=community) on your system.
+- First, [get Docker](https://store.docker.com/search?type=edition&offering=community) on your system.  
+      On a Raspberry Pi, you can also try this:  
+      ```
+      $ curl -sSL https://get.docker.com | sh
+      ```
 - For a Raspberry Pi, also see [here](https://medium.com/free-code-camp/the-easy-way-to-set-up-docker-on-a-raspberry-pi-7d24ced073ef),
 and [here](https://phoenixnap.com/kb/docker-on-raspberry-pi).
 
@@ -20,6 +24,11 @@ If problem on Buster, see <https://www.raspberrypi.org/forums/viewtopic.php?t=27
 Then
 > - `docker version`
 > - `docker info`
+
+To clean docker's cache (deep cleaning..., be carefull):
+```
+$ docker system prune
+```
 
 #### To get started...
 After installing Docker, try this:

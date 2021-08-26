@@ -323,7 +323,7 @@ public class RESTImplementation {
 		String utcdate;
 	}
 
-	private static class PosAndDate {
+		private static class PosAndDate {
 		GeoPoint position;
 		String utcdate;
 	}
