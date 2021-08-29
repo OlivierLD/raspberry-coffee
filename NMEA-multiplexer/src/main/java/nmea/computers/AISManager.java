@@ -5,16 +5,12 @@ import context.ApplicationContext;
 import context.NMEADataCache;
 import nmea.ais.AISParser;
 import nmea.api.Multiplexer;
-import nmea.api.NMEAParser;
 import nmea.parser.GeoPos;
 import nmea.parser.StringParsers;
 import util.TextToSpeech;
-import utils.StringUtils;
 import utils.TimeUtil;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 import java.util.function.Consumer;
 

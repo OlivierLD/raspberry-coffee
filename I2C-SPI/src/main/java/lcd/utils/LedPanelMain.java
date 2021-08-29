@@ -1,7 +1,6 @@
 package lcd.utils;
 
 import lcd.ScreenBuffer;
-import lcd.oled.SSD1306;
 import lcd.utils.img.ImgInterface;
 import lcd.utils.img.Java32x32;
 

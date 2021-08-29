@@ -57,4 +57,5 @@ WORKDIR /workdir/raspberry-coffee/RESTNavServer/launchers
 #ENV no_proxy ""
 
 EXPOSE 9999
+# This is delivering the functionality. Change it at will.
 CMD ["./runNavServer.sh"]

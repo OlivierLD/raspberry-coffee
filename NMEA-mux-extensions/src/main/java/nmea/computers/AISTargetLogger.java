@@ -9,8 +9,6 @@ import nmea.api.Multiplexer;
 import nmea.parser.StringParsers;
 import utils.TimeUtil;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;

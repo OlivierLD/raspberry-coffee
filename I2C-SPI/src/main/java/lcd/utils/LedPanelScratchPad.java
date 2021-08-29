@@ -1,8 +1,6 @@
 package lcd.utils;
 
 import lcd.ScreenBuffer;
-import lcd.utils.img.ImgInterface;
-import lcd.utils.img.Java32x32;
 import utils.StringUtils;
 
 import javax.swing.JButton;
@@ -10,8 +8,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
