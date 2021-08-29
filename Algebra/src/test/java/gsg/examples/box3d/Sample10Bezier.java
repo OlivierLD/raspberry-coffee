@@ -28,8 +28,6 @@ public class Sample10Bezier {
         final int MIN_Z = -100;
         final int MAX_Z =  100;
 
-        final int SPRING_RADIUS = 50;
-
         Box3D box3D = new Box3D(ThreeDFrameWithWidgets.DEFAULT_WIDTH, ThreeDFrameWithWidgets.DEFAULT_HEIGHT);
         box3D.setxMin(MIN_X);
         box3D.setxMax(MAX_X);
@@ -37,8 +35,6 @@ public class Sample10Bezier {
         box3D.setyMax(MAX_Y);
         box3D.setzMin(MIN_Z);
         box3D.setzMax(MAX_Z);
-
-        double deltaZ = MAX_Z - MIN_Z;
 
         // Drop Ctrl Points here
         List<Bezier.Point3D> ctrlPoints = List.of(
