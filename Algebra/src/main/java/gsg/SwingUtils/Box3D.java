@@ -692,6 +692,16 @@ public class Box3D extends JPanel {
                 new VectorUtils.Vector3D(to[0], to[1], to[2]));
     }
 
+    public void drawCircle(Graphics2D g2d, VectorUtils.Vector3D at, int radius) {
+        VectorUtils.Vector3D rotatedAt = VectorUtils.rotate(at,
+                Math.toRadians(this.getRotOnX()),
+                Math.toRadians(this.getRotOnY()),
+                Math.toRadians(this.getRotOnZ()));
+        Point atPt = transformer.apply(rotatedAt);
+        g2d.fillOval(atPt.x - radius, atPt.y - radius, 2 *  radius, 2 * radius);
+    }
+
+
     public void drawSurroundingBox(Graphics2D g2d, VectorUtils.Vector3D from, VectorUtils.Vector3D to) {
         double[] topFrontLeft = new double[3];
         double[] topFrontRight = new double[3];

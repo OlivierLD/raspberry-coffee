@@ -147,6 +147,9 @@ Here is a quick way to restore some of those features.
 Use `../gradlew runSample -Pnum=09 -Pidx=4` to see the screen above.  
 Figure can be rotated with the sliders at the bottom, or by dragging the mouse on the figure itself.
 
+### Bezier, in 3D
+Run the test in `gsg.examples.box3d.Sample10Bezier`.
+
 ### Bonus: LaTex in Markdown
 > Works fine in a Jupyter Notebook, not always on a standalone markdown document...
 
