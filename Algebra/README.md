@@ -56,7 +56,7 @@ $ ../gradlew runSample
 ```
 This task can take parameters:
 ```
-$ ../gradlew runSample -Pnum=[01..09]
+$ ../gradlew runSample -Pnum=[01..10]
 ```
 This will run the Swing examples in the `test` directory, from `gsg.examples.box3d.Sample01`
 to `gsg.examples.box3d.Sample09`.
@@ -148,7 +148,7 @@ Use `../gradlew runSample -Pnum=09 -Pidx=4` to see the screen above.
 Figure can be rotated with the sliders at the bottom, or by dragging the mouse on the figure itself.
 
 ### Bezier, in 3D
-![WaveFront](./docimg/3D.png)
+![WaveFront](./docimg/3DBezier.png)
 Run the test in `gsg.examples.box3d.Sample10`.  
 Do a `../gradlew runSample -Pnum=10`.
 
