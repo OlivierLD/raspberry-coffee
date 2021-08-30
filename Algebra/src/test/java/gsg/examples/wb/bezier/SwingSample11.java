@@ -52,7 +52,8 @@ public class SwingSample11 {
                 new Bezier.Point3D(-60, -80, 0),
                 new Bezier.Point3D(60, -40, 0),
                 new Bezier.Point3D(45, 30, 0),
-                new Bezier.Point3D(30, 60, 0),
+//              new Bezier.Point3D(30, 60, 0),
+                new Bezier.Point3D(-30, 20, 0),
                 new Bezier.Point3D(-30, 90, 0));
         // Generate the data, the Bézier curve.
         Bezier bezier = new Bezier(ctrlPoints);
