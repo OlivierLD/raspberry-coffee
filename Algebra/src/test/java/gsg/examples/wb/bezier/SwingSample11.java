@@ -19,7 +19,8 @@ import java.util.function.Function;
 /**
  * More Abstraction, using default WhiteBoard Writer
  * You can focus only on the data, not on the display. See the main method.
- * 2D Bezier example
+ * 2D Bezier example.
+ * With draggable control points (hence the MouseListener, MouseMotionListener).
  */
 public class SwingSample11 implements MouseListener, MouseMotionListener {
 
@@ -38,7 +39,7 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
     private final static int HEIGHT = 600;
 
     // All z = 0, 2D bezier.
-    private List<Bezier.Point3D> ctrlPoints = List.of(
+    private List<Bezier.Point3D> ctrlPoints = List.of(  // Warning: List.of generates an immutable list.
             new Bezier.Point3D(-60, -80, 0),
             new Bezier.Point3D(60, -40, 0),
             new Bezier.Point3D(45, 30, 0),
@@ -80,8 +81,7 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
         List<VectorUtils.Vector2D> ctrlPtsVectors = new ArrayList<>();
         for (int i=0; i<xCtrlPoints.length; i++) {
             ctrlPtsVectors.add(new VectorUtils.Vector2D(xCtrlPoints[i], yCtrlPoints[i]));
-            System.out.printf("Adding X:%f, Y:%f\n", xCtrlPoints[i], yCtrlPoints[i]);
-            // TODO Canvas to Space?
+//            System.out.printf("Adding X:%f, Y:%f\n", xCtrlPoints[i], yCtrlPoints[i]);
         }
 
         // Curve points
