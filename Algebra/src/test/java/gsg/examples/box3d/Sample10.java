@@ -14,7 +14,7 @@ import java.util.function.Consumer;
  * Draw a 3D Bezier
  * With interactive Swing widgets.
  */
-public class Sample10Bezier {
+public class Sample10 {
 
     /**
      * @param args the command line arguments
@@ -43,7 +43,7 @@ public class Sample10Bezier {
                 new Bezier.Point3D(45, 30, 60),
                 new Bezier.Point3D(30, 60, -30),
                 new Bezier.Point3D(-60, 90, -30));
-        // Generate the data, the Bezier curve.
+        // Generate the data, the Bézier curve.
         Bezier bezier = new Bezier(ctrlPoints);
         List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>();
         for (double t=0; t<=1.0; t+=0.01) {

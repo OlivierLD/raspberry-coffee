@@ -70,7 +70,11 @@ public class Bezier {
         this.controlPoints.add(ctrlPoint);
     }
 
-    // TODO deleteControlPoint
+    public void removeControlPoint(Point3D ctrlPoint) {
+        if (this.controlPoints.contains(ctrlPoint)) {
+            this.controlPoints.remove(ctrlPoint);
+        }
+    }
 
     private Point3D withProgressT(Point3D from, Point3D to, double t) {
         double deltaX = to.getX() - from.getX();
@@ -85,7 +89,7 @@ public class Bezier {
 
     public Point3D recurse(List<Point3D> ctrl, double t) {
 //        System.out.printf("\trecurse -> %d ctrl points.\n", ctrl.size());
-        if (ctrl.size() > 3) {
+        if (ctrl.size() > 3) { // Recurse until size = 3
             List<Point3D> inside = new ArrayList<>();
             for (int ptIdx=0; ptIdx<ctrl.size() - 1; ptIdx++) {
                 Point3D insider = withProgressT(ctrl.get(ptIdx), ctrl.get(ptIdx + 1), t);
@@ -100,6 +104,11 @@ public class Bezier {
         }
     }
 
+    /**
+     *
+     * @param t in [0..1]
+     * @return
+     */
     public Point3D getBezierPoint(double t) {
         if (this.controlPoints == null) {
             throw new RuntimeException("There is no control point in this Bezier!");
@@ -110,6 +119,7 @@ public class Bezier {
         return recurse(this.controlPoints, t);
     }
 
+    // Quick example
     public static void main(String... args) {
         Bezier bezier = new Bezier(
                 new Point3D(0, 0, 0),

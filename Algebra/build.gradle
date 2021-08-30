@@ -40,7 +40,7 @@ dependencies {
 
 def testNum = '01'
 
-task runSample(type: JavaExec, dependsOn: build, description: "Swing UI sample. Use -Pnum=[01..09]") {
+task runSample(type: JavaExec, dependsOn: build, description: "Swing UI sample. Use -Pnum=[01..10]") {
   println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
 //  environment "DISPLAY", ":0.0"
 //  environment "DISPLAY", "192.168.42.31:0.0"

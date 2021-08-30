@@ -148,7 +148,9 @@ Use `../gradlew runSample -Pnum=09 -Pidx=4` to see the screen above.
 Figure can be rotated with the sliders at the bottom, or by dragging the mouse on the figure itself.
 
 ### Bezier, in 3D
-Run the test in `gsg.examples.box3d.Sample10Bezier`.
+![WaveFront](./docimg/3D.png)
+Run the test in `gsg.examples.box3d.Sample10`.  
+Do a `../gradlew runSample -Pnum=10`.
 
 ### Bonus: LaTex in Markdown
 > Works fine in a Jupyter Notebook, not always on a standalone markdown document...
