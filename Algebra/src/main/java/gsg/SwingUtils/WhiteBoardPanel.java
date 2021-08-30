@@ -211,6 +211,25 @@ public class WhiteBoardPanel extends JPanel {
         this.xLabelGenerator = xLabelGenerator;
     }
 
+    private Function<Double, Integer> getCanvasXCoord;
+    private Function<Double, Integer> getCanvasYCoord;
+
+    private Function<Integer, Double> canvasX2SpaceX;
+    private Function<Integer, Double> canvasY2SpaceY;
+
+    public Function<Double, Integer> getSpaceToCanvasXTransformer() {
+        return this.getCanvasXCoord;
+    }
+    public Function<Double, Integer> getSpaceToCanvasYTransformer() {
+        return this.getCanvasYCoord;
+    }
+    public Function<Integer, Double> getCanvasToSpaceXTransformer() {
+        return this.canvasX2SpaceX;
+    }
+    public Function<Integer, Double> getCanvasToSpaceYTransformer() {
+        return this.canvasY2SpaceY;
+    }
+
     private final Consumer<Graphics2D> DEFAULT_DASHBOARD_WRITER = g2d -> {
         List<List<Vector2D>> allData = new ArrayList<>();
         allSeries.forEach(serie -> { synchronized(serie) { allData.add(serie.getData()); } });
@@ -256,6 +275,37 @@ public class WhiteBoardPanel extends JPanel {
         // Transformers
         Function<Double, Integer> findCanvasXCoord = spaceXCoord -> (int)(margins + (Math.round((spaceXCoord - graphicRange.getMinX()) * (xEqualsY ? oneUnit : oneUnitX))));
         Function<Double, Integer> findCanvasYCoord = spaceYCoord -> (int)(margins + (Math.round((spaceYCoord - minDblY) * (xEqualsY ? oneUnit : oneUnitY))));
+
+//        Function<Double, Integer> findCanvasXCoord = spaceXCoord -> {
+//            int value = (int)(margins + (Math.round((spaceXCoord - graphicRange.getMinX()) * (xEqualsY ? oneUnit : oneUnitX))));
+//            System.out.println(String.format("Margin: %d, SpaceX: %f, minX: %f, unit: %f => %d",
+//                    margins,
+//                    spaceXCoord,
+//                    graphicRange.getMinX(),
+//                    (xEqualsY ? oneUnit : oneUnitX),
+//                    value));
+//            return value;
+//        };
+//        Function<Double, Integer> findCanvasYCoord = spaceYCoord -> {
+//            int value = (int)(margins + (Math.round((spaceYCoord - minDblY) * (xEqualsY ? oneUnit : oneUnitY))));
+//            System.out.println(String.format("Margin: %d, SpaceY: %f, minYX: %f, unit: %f => %d",
+//                    margins,
+//                    spaceYCoord,
+//                    minDblY,
+//                    (xEqualsY ? oneUnit : oneUnitY),
+//                    value));
+//            return value;
+//        };
+
+        // canvasToSpace
+        Function<Integer, Double> canvasToSpaceX = canvasX -> ((canvasX - margins) / (xEqualsY ? oneUnit : oneUnitX)) + graphicRange.getMinX();
+        Function<Integer, Double> canvasToSpaceY = canvasY -> ((canvasY - margins) / (xEqualsY ? oneUnit : oneUnitY)) + minDblY;
+
+        // For external access
+        getCanvasXCoord = findCanvasXCoord;
+        getCanvasYCoord = findCanvasYCoord;
+        canvasX2SpaceX = canvasToSpaceX;
+        canvasY2SpaceY = canvasToSpaceY;
 
         double x0 = Math.floor(findCanvasXCoord.apply(graphicRange.getMinX() /*0d*/)); // Math.round(0 - graphicRange.getMinX()) * oneUnit;
         double y0 = Math.floor(findCanvasYCoord.apply(minDblY /*0d*/)); // Math.round(0 - graphicRange.getMinY()) * oneUnit;
