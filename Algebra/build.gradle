@@ -73,3 +73,15 @@ task runSample2(type: JavaExec, dependsOn: build, description: "Swing UI sample.
   main = 'gsg.examples.wb.lowpass.SwingSample10'
   workingDir "."
 }
+
+task runSample3(type: JavaExec, dependsOn: build, description: "Swing UI sample.") {
+  println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
+//  environment "DISPLAY", ":0.0"
+//  environment "DISPLAY", "192.168.42.31:0.0"
+//  classpath = configurations.runtime
+//  classpath project.configurations.default
+//  classpath sourceSets.main.output.classesDir
+  classpath sourceSets.test.runtimeClasspath
+  main = 'gsg.examples.wb.bezier.SwingSample11'
+  workingDir "."
+}
