@@ -39,13 +39,19 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
     private final static int HEIGHT = 600;
 
     // All z = 0, 2D bezier.
+    // 5 control points
     private List<Bezier.Point3D> ctrlPoints = List.of(  // Warning: List.of generates an immutable list.
             new Bezier.Point3D(-60, -80, 0),
             new Bezier.Point3D(60, -40, 0),
             new Bezier.Point3D(45, 30, 0),
-//              new Bezier.Point3D(30, 60, 0),
             new Bezier.Point3D(-30, 20, 0),
             new Bezier.Point3D(-30, 90, 0));
+
+    // A frame for a small boat?
+//    private List<Bezier.Point3D> ctrlPoints = List.of(  // Warning: List.of generates an immutable list.
+//            new Bezier.Point3D(0, -25, 0),
+//            new Bezier.Point3D(100, 0, 0),
+//            new Bezier.Point3D(105, 56, 0));
 
     // The WhiteBoard instantiation
     private final static WhiteBoardPanel whiteBoard = new WhiteBoardPanel();
@@ -59,6 +65,30 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
         JOptionPane.showMessageDialog(whiteBoard, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
     }
 
+    /**
+     *
+     * @param bezier
+     * @param startAt 0 to begin with
+     * @param inc t increment for first iteration
+     * @param x the X to find
+     * @param delta acceptable difference
+     * @return
+     */
+    private static double getTForGivenX(Bezier bezier, double startAt, double inc, double x, double delta) {
+        double tForX = 0;
+        for (double t=startAt; t<=1; t+=inc) {
+            Bezier.Point3D tick = bezier.getBezierPoint(t);
+            if (tick.getX() > x) { // Assume that X is always growing.
+                if (Math.abs(tick.getX() - x) < delta) {
+                    return t;
+                } else {
+                    return getTForGivenX(bezier, startAt - inc, inc / 10.0, x, delta);
+                }
+            }
+        }
+        return tForX;
+    }
+
     private void refreshData() {
 
         // Generate the data, the Bézier curve.
@@ -66,8 +96,15 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
         List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>(); // The points to display.
         for (double t=0; t<=1.0; t+=0.001) {
             Bezier.Point3D tick = bezier.getBezierPoint(t);
-//            System.out.println(String.format("%.02f: %s", t, tick.toString()));
+            // System.out.println(String.format("%.03f: %s", t, tick.toString()));
             bezierPoints.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
+        }
+        // For test: Find t for a given X
+        if (false) {
+            double x = 60;
+            double t = getTForGivenX(bezier, 0.0, 0.1, x, 0.0001);
+            Bezier.Point3D tick = bezier.getBezierPoint(t);
+            System.out.printf("For x=%f, t=%f - X:%f, Y:%f\n", x, t, tick.getX(), tick.getY());
         }
 
         // Prepare data for display
@@ -97,6 +134,7 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
         }
 
         whiteBoard.setAxisColor(Color.BLACK);
+        whiteBoard.setWithGrid(true);
         whiteBoard.resetAllData();
 
         // Bezier ctrl points serie
@@ -180,6 +218,7 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
         whiteBoard.addMouseMotionListener(this);
     }
 
+    // Find the control point close to the mouse pointer.
     private Bezier.Point3D getClosePoint(MouseEvent me) {
         Bezier.Point3D closePoint = null;
         Function<Double, Integer> spaceToCanvasXTransformer = whiteBoard.getSpaceToCanvasXTransformer();
@@ -280,7 +319,7 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
         whiteBoard.setTextColor(Color.RED);
         whiteBoard.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
         whiteBoard.setGraphicMargins(30);
-        whiteBoard.setXEqualsY(false);
+        whiteBoard.setXEqualsY(true); // false);
         // Enforce Y amplitude
         // whiteBoard.setForcedMinY(0d);
         // whiteBoard.setForcedMaxY(100d);

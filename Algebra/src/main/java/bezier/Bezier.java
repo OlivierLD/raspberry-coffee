@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+// Good resource at https://javascript.info/bezier-curve
+
 public class Bezier {
     public static class Point3D {
         private double x, y, z;

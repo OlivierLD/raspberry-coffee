@@ -148,6 +148,8 @@ Use `../gradlew runSample -Pnum=09 -Pidx=4` to see the screen above.
 Figure can be rotated with the sliders at the bottom, or by dragging the mouse on the figure itself.
 
 ### Bezier, in 3D
+Good doc at <https://javascript.info/bezier-curve>
+
 ![WaveFront](./docimg/3DBezier.png)
 Run the test in `gsg.examples.box3d.Sample10`.  
 Do a `../gradlew runSample -Pnum=10`.
