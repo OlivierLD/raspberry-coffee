@@ -71,12 +71,13 @@ public class SwingSample12 implements MouseListener, MouseMotionListener {
         Bezier bezier2 = new Bezier(ctrlPoints2);
 
         List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>(); // The points to display.
+        // One
         for (double t=0; t<=1.0; t+=0.001) {
             Bezier.Point3D tick = bezier1.getBezierPoint(t);
             // System.out.println(String.format("%.03f: %s", t, tick.toString()));
             bezierPoints.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
         }
-
+        // Two
         for (double t=0; t<=1.0; t+=0.001) {
             Bezier.Point3D tick = bezier2.getBezierPoint(t);
             // System.out.println(String.format("%.03f: %s", t, tick.toString()));
@@ -98,7 +99,6 @@ public class SwingSample12 implements MouseListener, MouseMotionListener {
 //            System.out.printf("Adding X:%f, Y:%f\n", xCtrlPoints[i], yCtrlPoints[i]);
         }
         // Ctrl points for bezier #2
-
         double[] xCtrlPoints2 = ctrlPoints2.stream()
                 .mapToDouble(bp -> bp.getX())
                 .toArray();
@@ -225,6 +225,16 @@ public class SwingSample12 implements MouseListener, MouseMotionListener {
                     break;
                 }
             }
+            for (Bezier.Point3D ctrlPt : ctrlPoints2) {
+                Integer canvasX = spaceToCanvasXTransformer.apply(ctrlPt.getX());
+                Integer canvasY = spaceToCanvasYTransformer.apply(ctrlPt.getY());
+                if (Math.abs(me.getX() - canvasX) < 5 && Math.abs(me.getY() - (height - canvasY)) < 5) {
+//                    System.out.printf("DeltaX: %d, DeltaY: %d\n", Math.abs(e.getX() - canvasX), Math.abs(e.getY() - (height - canvasY)));
+//                    System.out.printf("Close to %s\n", ctrlPt);
+                    closePoint = ctrlPt;
+                    break;
+                }
+            }
         }
         return closePoint;
     }
@@ -237,7 +247,11 @@ public class SwingSample12 implements MouseListener, MouseMotionListener {
         Bezier.Point3D closePoint = getClosePoint(e);
         if (closePoint != null) {
             whiteBoard.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            closestPointIndex = ctrlPoints1.indexOf(closePoint);
+            if (ctrlPoints1.contains(closePoint)) {
+                closestPointIndex = ctrlPoints1.indexOf(closePoint);
+            } else if (ctrlPoints2.contains(closePoint)) {
+                closestPointIndex = ctrlPoints1.size() + ctrlPoints2.indexOf(closePoint);
+            }
         } else {
             whiteBoard.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             closestPointIndex = -1;
@@ -275,8 +289,23 @@ public class SwingSample12 implements MouseListener, MouseMotionListener {
                 double newX = canvasToSpaceXTransformer.apply(e.getX());
                 double newY = canvasToSpaceYTransformer.apply(height - e.getY());
 //                System.out.printf("Point dragged to %f / %f\n", newX, newY);
-                Bezier.Point3D point3D = ctrlPoints1.get(closestPointIndex);
+                Bezier.Point3D point3D;
+                if (closestPointIndex < ctrlPoints1.size()) {
+                    point3D = ctrlPoints1.get(closestPointIndex);
+                } else {
+                    point3D = ctrlPoints2.get(closestPointIndex - ctrlPoints1.size());
+                }
+                /* Special points:
+                 *  - if ctrlPoint1.get(ctrlPoints1.size() - 1) -> also move ctrlPoints2.get(0)
+                 *  - if ctrlPoint2.get(0) -> also move ctrlPoints1.get(ctrlPoints1.size() - 1)
+                 *  - TODO if ctrlPoint1.get(ctrlPoints1.size() - 2) -> also move ctrlPoints2.get(1) (rotate)
+                 */
                 point3D.x(newX).y(newY);
+                if (closestPointIndex == ctrlPoints1.size() - 1) { // last of ctrlPoints1
+                    ctrlPoints2.get(0).x(newX).y(newY);
+                } else if (closestPointIndex == ctrlPoints1.size()) { // first of ctrlPoints2
+                    ctrlPoints1.get(ctrlPoints1.size() - 1).x(newX).y(newY);
+                }
                 refreshData();
             }
         }
