@@ -66,23 +66,24 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
     }
 
     /**
+     * Get the t value for a given X on the curve.
      *
      * @param bezier
      * @param startAt 0 to begin with
      * @param inc t increment for first iteration
      * @param x the X to find
-     * @param delta acceptable difference
+     * @param precision acceptable difference
      * @return
      */
-    private static double getTForGivenX(Bezier bezier, double startAt, double inc, double x, double delta) {
+    private static double getTForGivenX(Bezier bezier, double startAt, double inc, double x, double precision) {
         double tForX = 0;
         for (double t=startAt; t<=1; t+=inc) {
             Bezier.Point3D tick = bezier.getBezierPoint(t);
             if (tick.getX() > x) { // Assume that X is always growing.
-                if (Math.abs(tick.getX() - x) < delta) {
+                if (Math.abs(tick.getX() - x) < precision) {
                     return t;
                 } else {
-                    return getTForGivenX(bezier, startAt - inc, inc / 10.0, x, delta);
+                    return getTForGivenX(bezier, startAt - inc, inc / 10.0, x, precision);
                 }
             }
         }
@@ -94,15 +95,15 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
         // Generate the data, the Bézier curve.
         Bezier bezier = new Bezier(ctrlPoints);
         List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>(); // The points to display.
-        for (double t=0; t<=1.0; t+=0.001) {
+        for (double t=0; t<=1.0; t+=1E-3) {
             Bezier.Point3D tick = bezier.getBezierPoint(t);
             // System.out.println(String.format("%.03f: %s", t, tick.toString()));
             bezierPoints.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
         }
         // For test: Find t for a given X
         if (false) {
-            double x = 60;
-            double t = getTForGivenX(bezier, 0.0, 0.1, x, 0.0001);
+            double x = 60; // the one to find
+            double t = getTForGivenX(bezier, 0.0, 1E-1, x, 1E-4);
             Bezier.Point3D tick = bezier.getBezierPoint(t);
             System.out.printf("For x=%f, t=%f - X:%f, Y:%f\n", x, t, tick.getX(), tick.getY());
         }
