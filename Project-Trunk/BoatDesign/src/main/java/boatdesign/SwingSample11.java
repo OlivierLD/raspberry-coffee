@@ -4,13 +4,18 @@ import bezier.Bezier;
 import gsg.SwingUtils.WhiteBoardPanel;
 import gsg.VectorUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -36,9 +41,11 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
     private final static int WIDTH = 800;
     private final static int HEIGHT = 600;
 
+    private static ObjectMapper mapper = new ObjectMapper();
+    private static Map<String, Object> initConfig = null;
+
     // All z = 0, 2D bezier.
     private List<Bezier.Point3D> ctrlPoints = new ArrayList<>();
-
 
     // The WhiteBoard instantiation
     private final static WhiteBoardPanel whiteBoard = new WhiteBoardPanel();
@@ -160,9 +167,15 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
 
     private void initComponents() {
 
-        // Initialize 0, 550
-        ctrlPoints.add(new Bezier.Point3D(0, 0, 0));
-        ctrlPoints.add(new Bezier.Point3D(550, 0, 0));
+        // Initialize [0, 10, 0], [550, 105, 0]
+//        ctrlPoints.add(new Bezier.Point3D(0, 10, 0));
+//        ctrlPoints.add(new Bezier.Point3D(550, 105, 0));
+        if (initConfig != null) {
+            List<List<Double>> defaultPoints = (List)initConfig.get("default-points");
+            defaultPoints.forEach(pt -> {
+                ctrlPoints.add(new Bezier.Point3D(pt.get(0), pt.get(1), pt.get(2)));
+            });
+        }
 
         // The JFrame
         frame = new JFrame(TITLE);
@@ -396,6 +409,18 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
         System.out.printf("Running from folder %s\n", System.getProperty("user.dir"));
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
+
+        File config = new File("init.json");
+        if (config.exists()) {
+            try {
+                URL configResource = config.toURI().toURL();
+                initConfig = mapper.readValue(configResource.openStream(), Map.class);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            System.out.println("Warning: no init.json was found.");
+        }
 
         SwingSample11 thisThing = new SwingSample11();// This one has instantiated the white board
         thisThing.initComponents();
