@@ -19,12 +19,12 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * More Abstraction, using default WhiteBoard Writer
- * You can focus only on the data, not on the display. See the main method.
+ * Using default WhiteBoard Writer
+ *
  * 2D Bezier example.
  * With draggable control points (hence the MouseListener, MouseMotionListener).
  */
-public class SwingSample11 implements MouseListener, MouseMotionListener {
+public class FirstTest implements MouseListener, MouseMotionListener {
 
     private final static String TITLE = "Simple 2D Bezier sample (draggable control points)";
 
@@ -231,7 +231,7 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
 //        frame.pack();
     }
 
-    public SwingSample11() {
+    public FirstTest() {
         whiteBoard.addMouseListener(this);
         whiteBoard.addMouseMotionListener(this);
     }
@@ -358,12 +358,12 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
             PopupMenuListener {
         private JMenuItem deleteMenuItem;
 
-        private SwingSample11 parent;
+        private FirstTest parent;
         private Bezier.Point3D closePoint;
 
         private final static String DELETE_CTRL_POINT = "Delete Ctrl Point";
 
-        public BezierPopup(SwingSample11 parent, Bezier.Point3D closePoint) {
+        public BezierPopup(FirstTest parent, Bezier.Point3D closePoint) {
             super();
             this.parent = parent;
             this.closePoint = closePoint;
@@ -422,7 +422,7 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
             System.out.println("Warning: no init.json was found.");
         }
 
-        SwingSample11 thisThing = new SwingSample11();// This one has instantiated the white board
+        FirstTest thisThing = new FirstTest();// This one has instantiated the white board
         thisThing.initComponents();
 
         // Override defaults (not mandatory)

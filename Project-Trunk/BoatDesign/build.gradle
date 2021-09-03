@@ -23,7 +23,7 @@ dependencies {
 }
 
 // also used by mergeServiceFiles to build executable fat-jar.
-mainClassName = "boatdesign.SwingSample11"
+mainClassName = "boatdesign.FirstTest"
 
 shadowJar {
   zip64 true
