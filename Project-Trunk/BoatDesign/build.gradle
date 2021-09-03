@@ -9,7 +9,6 @@ plugins {
 group = 'oliv.raspi.coffee'
 version = '1.0'
 
-
 repositories {
   mavenCentral()
   mavenLocal()
@@ -21,6 +20,7 @@ dependencies {
   implementation project(':Algebra')
 }
 
+// also used by mergeServiceFiles to build executable fat-jar.
 mainClassName = "boatdesign.SwingSample11"
 
 shadowJar {
