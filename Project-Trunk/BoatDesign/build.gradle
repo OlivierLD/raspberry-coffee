@@ -2,11 +2,8 @@ plugins {
   id 'java'
   id 'maven'
   id 'idea'
-  id 'com.github.johnrengelman.shadow' // version '4.0.2'
-}
-
-shadowJar {
-  zip64 true
+  id 'com.github.johnrengelman.shadow'
+  id "application"
 }
 
 group = 'oliv.raspi.coffee'
@@ -22,4 +19,11 @@ repositories {
 
 dependencies {
   implementation project(':Algebra')
+}
+
+mainClassName = "boatdesign.SwingSample11"
+
+shadowJar {
+  zip64 true
+  mergeServiceFiles()
 }

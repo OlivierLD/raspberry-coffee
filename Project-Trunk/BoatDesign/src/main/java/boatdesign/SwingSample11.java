@@ -359,6 +359,7 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
             deleteMenuItem.addActionListener(this);
         }
 
+        @Override
         public void actionPerformed(ActionEvent event) {
             if (event.getActionCommand().equals(DELETE_CTRL_POINT)) {
                 if (this.closePoint != null) {
@@ -368,12 +369,15 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
             }
         }
 
+        @Override
         public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
         }
 
+        @Override
         public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
         }
 
+        @Override
         public void popupMenuCanceled(PopupMenuEvent e) {
         }
     }
