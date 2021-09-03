@@ -7,9 +7,15 @@ Basic linear algebra ([الجبر](https://en.wikipedia.org/wiki/Algebra)), and 
 - Least squares method (regression)
 - Derivative
 - Standard deviation and others
-- Low pass filter  
+- Low pass filters
+- Bezier curves (in 2 & 3D)
 - etc.
 
+---
+This module was inspired by reading [Math for Programmers](https://www.manning.com/books/math-for-programmers) by Paul Orland.
+Many examples are written in Python, in standalone, or through Jupyter Notebooks.  
+The goal here is to provide a Java equivalent to Python's graphical utilities.  
+In standalone (using Swing), or through Jupyter Notebooks as well (requires at least Java 9, that introduced JShell).
 ---
 
 Two different aspects are presented in this module.

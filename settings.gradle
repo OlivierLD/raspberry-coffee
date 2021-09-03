@@ -92,10 +92,11 @@ include 'Project-Trunk:ImageDB'
 
 include "Project-Trunk:Deviation-Tool"
 include "Project-Trunk:dAISy"
+include "Project-Trunk:BoatDesign"
 
 //include 'REST.clients'
 include 'springboot-sensors'
-include 'jersey-client-tests'
+// include 'jersey-client-tests'
 include 'Project-Trunk:RESTFileUpload'
 findProject(':Project-Trunk:RESTFileUpload')?.name = 'RESTFileUpload'
 include 'Project-Trunk:REST-Tx'
