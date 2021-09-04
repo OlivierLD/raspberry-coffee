@@ -731,8 +731,6 @@ public class ThreeViews {
 
         Consumer<Graphics2D> afterDrawer = g2d -> {
 
-            System.out.println("After Drawer, box3D");
-
             // Link the control points
             g2d.setColor(Color.ORANGE);
             g2d.setStroke(new BasicStroke(2));
