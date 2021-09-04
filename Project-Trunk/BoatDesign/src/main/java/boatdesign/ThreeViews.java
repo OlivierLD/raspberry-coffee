@@ -285,7 +285,7 @@ public class ThreeViews {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                System.out.println("Click on whiteboard");
+//                System.out.println("Click on whiteboard");
                 if (SwingUtilities.isRightMouseButton(e)) { // e.isPopupTrigger()) { // Right-click
                     Bezier.Point3D closePoint = getClosePoint(e, whiteBoardXY, Orientation.XY);
                     if (closePoint != null) {
@@ -300,7 +300,7 @@ public class ThreeViews {
                             String.format("Where to insert new point (index in the list [0..%d]) ?", ctrlPoints.size()),
                             "Add Control Point",
                             JOptionPane.QUESTION_MESSAGE);
-//            System.out.println("Response:" + response);
+//                  System.out.println("Response:" + response);
                     if (response != null && !response.isEmpty()) {
                         try {
                             int newIndex = Integer.parseInt(response);
@@ -345,7 +345,7 @@ public class ThreeViews {
             @Override
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
-                System.out.println("Dragged on whiteboard");
+//                System.out.println("Dragged on whiteboard");
                 if (closestPointIndex > -1) {
                     Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardXY.getCanvasToSpaceXTransformer();
                     Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardXY.getCanvasToSpaceYTransformer();
@@ -364,7 +364,7 @@ public class ThreeViews {
             @Override
             public void mouseMoved(MouseEvent e) {
                 super.mouseMoved(e);
-                System.out.println("Moved on whiteboard (MotionListener)");
+//                System.out.println("Moved on whiteboard (MotionListener)");
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardXY, Orientation.XY);
                 if (closePoint != null) {
                     whiteBoardXY.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -381,7 +381,7 @@ public class ThreeViews {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                System.out.println("Click on whiteboard");
+//                System.out.println("Click on whiteboard");
                 if (SwingUtilities.isRightMouseButton(e)) { // e.isPopupTrigger()) { // Right-click
                     Bezier.Point3D closePoint = getClosePoint(e, whiteBoardXZ, Orientation.XZ);
                     if (closePoint != null) {
@@ -441,7 +441,7 @@ public class ThreeViews {
             @Override
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
-                System.out.println("Dragged on whiteboard");
+//                System.out.println("Dragged on whiteboard");
                 if (closestPointIndex > -1) {
                     Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardXZ.getCanvasToSpaceXTransformer();
                     Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardXZ.getCanvasToSpaceYTransformer();
@@ -460,7 +460,7 @@ public class ThreeViews {
             @Override
             public void mouseMoved(MouseEvent e) {
                 super.mouseMoved(e);
-                System.out.println("Moved on whiteboard (MotionListener)");
+//                System.out.println("Moved on whiteboard (MotionListener)");
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardXZ, Orientation.XZ);
                 if (closePoint != null) {
                     whiteBoardXZ.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -477,7 +477,7 @@ public class ThreeViews {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                System.out.println("Click on whiteboard");
+//                System.out.println("Click on whiteboard");
                 if (SwingUtilities.isRightMouseButton(e)) { // e.isPopupTrigger()) { // Right-click
                     Bezier.Point3D closePoint = getClosePoint(e, whiteBoardYZ, Orientation.YZ);
                     if (closePoint != null) {
@@ -492,7 +492,7 @@ public class ThreeViews {
                             String.format("Where to insert new point (index in the list [0..%d]) ?", ctrlPoints.size()),
                             "Add Control Point",
                             JOptionPane.QUESTION_MESSAGE);
-//            System.out.println("Response:" + response);
+//                  System.out.println("Response:" + response);
                     if (response != null && !response.isEmpty()) {
                         try {
                             int newIndex = Integer.parseInt(response);
@@ -537,7 +537,7 @@ public class ThreeViews {
             @Override
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
-                System.out.println("Dragged on whiteboard");
+//                System.out.println("Dragged on whiteboard");
                 if (closestPointIndex > -1) {
                     Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardYZ.getCanvasToSpaceXTransformer();
                     Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardYZ.getCanvasToSpaceYTransformer();
@@ -556,7 +556,7 @@ public class ThreeViews {
             @Override
             public void mouseMoved(MouseEvent e) {
                 super.mouseMoved(e);
-                System.out.println("Moved on whiteboard (MotionListener)");
+//                System.out.println("Moved on whiteboard (MotionListener)");
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardYZ, Orientation.YZ);
                 if (closePoint != null) {
                     whiteBoardYZ.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
