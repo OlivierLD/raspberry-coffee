@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 public class Sample10 {
 
     /**
-     * @param args the command line arguments
+     * @param args the command line arguments. Not used.
      */
     public static void main(String... args) {
 

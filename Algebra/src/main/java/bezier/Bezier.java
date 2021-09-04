@@ -93,11 +93,14 @@ public class Bezier {
 //        System.out.printf("\trecurse -> %d ctrl points.\n", ctrl.size());
         if (ctrl.size() > 3) { // Recurse until size = 3
             List<Point3D> inside = new ArrayList<>();
-            for (int ptIdx=0; ptIdx<ctrl.size() - 1; ptIdx++) {
+            for (int ptIdx = 0; ptIdx < ctrl.size() - 1; ptIdx++) {
                 Point3D insider = withProgressT(ctrl.get(ptIdx), ctrl.get(ptIdx + 1), t);
                 inside.add(insider);
             }
             return recurse(inside, t);
+        } else if (ctrl.size() == 2) { // straight forward
+            Point3D tPoint = withProgressT(ctrl.get(0), ctrl.get(1), t);
+            return tPoint;
         } else {
             Point3D one = withProgressT(ctrl.get(0), ctrl.get(1), t);
             Point3D two = withProgressT(ctrl.get(1), ctrl.get(2), t);
@@ -115,8 +118,8 @@ public class Bezier {
         if (this.controlPoints == null) {
             throw new RuntimeException("There is no control point in this Bezier!");
         }
-        if (this.controlPoints.size() <= 2) {
-            throw new RuntimeException(String.format("Only %d control point(s) in this Bezier, need at least 3", this.controlPoints.size()));
+        if (this.controlPoints.size() < 2) {
+            throw new RuntimeException(String.format("Only %d control point(s) in this Bezier, need at least 2", this.controlPoints.size()));
         }
         return recurse(this.controlPoints, t);
     }

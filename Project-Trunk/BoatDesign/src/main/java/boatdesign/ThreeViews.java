@@ -640,7 +640,7 @@ public class ThreeViews {
         JPanel ctrlPointsPanel = new JPanel(new BorderLayout());
         ctrlPointsPanel.setBorder(BorderFactory.createTitledBorder("Data Placeholder"));
         dataTextArea = new JTextPane();
-        dataTextArea.setFont(new Font("Courier new", Font.PLAIN, 14));
+        dataTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
         dataTextArea.setPreferredSize(new Dimension(200, 600));
         JScrollPane dataScrollPane = new JScrollPane(dataTextArea);
 
