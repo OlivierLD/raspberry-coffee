@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Using default WhiteBoard Writer
@@ -55,6 +56,8 @@ public class ThreeViews {
     private WhiteBoardPanel whiteBoardYZ = null; // facing
 
     private Box3D box3D = null;
+
+    private JTextPane dataTextArea = null;
 
     private void fileSpit_ActionPerformed(ActionEvent ae) {
         System.out.println("Ctrl Points:");
@@ -99,7 +102,13 @@ public class ThreeViews {
     private void refreshData() {
 
         if (ctrlPoints.size() > 0) {
-            // Generate the data, the Bézier curve.
+            // Display in textArea
+            String content = ctrlPoints.stream()
+                    .map(pt -> String.format("%d: %s", ctrlPoints.indexOf(pt), pt.toString()))
+                    .collect(Collectors.joining("\n"));
+            dataTextArea.setText("Control Points:\n" + content);
+
+                    // Generate the data, the Bézier curve.
             Bezier bezier = new Bezier(ctrlPoints);
             List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>(); // The points to display.
             if (ctrlPoints.size() > 2) { // 3 points minimum.
@@ -220,6 +229,8 @@ public class ThreeViews {
             whiteBoardYZ.repaint();  // This is for a pure Swing context
 
             this.box3D.repaint();
+        } else {
+            dataTextArea.setText(" - No points -");
         }
     }
 
@@ -258,7 +269,6 @@ public class ThreeViews {
 
         whiteBoardXY.setEnforceXAxisAt(0d);
         whiteBoardXY.setEnforceYAxisAt(0d);
-
 
         whiteBoardXZ.setAxisColor(Color.BLACK);
         whiteBoardXZ.setWithGrid(true);
@@ -627,24 +637,14 @@ public class ThreeViews {
         JLabel label2 = new JLabel("Label 2");
         JLabel label3 = new JLabel("Label 3");
 
-        JPanel topRight = new JPanel(new BorderLayout());
-        topRight.setBorder(BorderFactory.createTitledBorder("3D Place holder"));
-        topRight.setPreferredSize(new Dimension(400, 400));
-
-        // JScrollPane box3DScrollPane = new JScrollPane(this.box3D);
-        // topRight.add(box3DScrollPane, BorderLayout.CENTER);
-
-        JPanel bottomRight = new JPanel(new BorderLayout());
-        bottomRight.setBorder(BorderFactory.createTitledBorder("Data Place holder"));
-        bottomRight.setPreferredSize(new Dimension(400, 200));
-
-//        this.box3D.setPreferredSize(new Dimension(1200, 600));
-
-        JTextPane dataTextArea = new JTextPane();
-        dataTextArea.setPreferredSize(new Dimension(400, 300));
+        JPanel ctrlPointsPanel = new JPanel(new BorderLayout());
+        ctrlPointsPanel.setBorder(BorderFactory.createTitledBorder("Data Placeholder"));
+        dataTextArea = new JTextPane();
+        dataTextArea.setFont(new Font("Courier new", Font.PLAIN, 14));
+        dataTextArea.setPreferredSize(new Dimension(200, 600));
         JScrollPane dataScrollPane = new JScrollPane(dataTextArea);
 
-        bottomRight.add(dataScrollPane, BorderLayout.NORTH);
+        ctrlPointsPanel.add(dataScrollPane, BorderLayout.NORTH);
 
         whiteBoardsPanel.add(whiteBoardXZ,
                 new GridBagConstraints(0,
@@ -677,25 +677,25 @@ public class ThreeViews {
                         GridBagConstraints.NONE,
                         new Insets(0, 0, 0, 0), 0, 0));
 
-        whiteBoardsPanel.add(topRight, // box3DScrollPane, // this.box3D, // topRight,
+//        whiteBoardsPanel.add(topRight, // box3DScrollPane, // this.box3D, // topRight,
+//                new GridBagConstraints(1,
+//                0,
+//                1,
+//                2,
+//                1.0,
+//                0.0,
+//                GridBagConstraints.WEST,
+//                GridBagConstraints.NONE,
+//                new Insets(0, 0, 0, 0), 0, 0));
+        whiteBoardsPanel.add(ctrlPointsPanel,
                 new GridBagConstraints(1,
-                0,
-                1,
-                2,
-                1.0,
-                0.0,
-                GridBagConstraints.WEST,
-                GridBagConstraints.NONE,
-                new Insets(0, 0, 0, 0), 0, 0));
-        whiteBoardsPanel.add(bottomRight,
-                new GridBagConstraints(1,
-                        2,
+                        0,
                         1,
-                        1,
+                        3,
                         1.0,
                         0.0,
                         GridBagConstraints.WEST,
-                        GridBagConstraints.NONE,
+                        GridBagConstraints.BOTH,
                         new Insets(0, 0, 0, 0), 0, 0));
 
         JScrollPane jScrollPane = new JScrollPane(whiteBoardsPanel);
