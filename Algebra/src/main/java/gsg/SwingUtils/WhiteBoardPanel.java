@@ -231,6 +231,10 @@ public class WhiteBoardPanel extends JPanel {
     }
 
     private final Consumer<Graphics2D> DEFAULT_DASHBOARD_WRITER = g2d -> {
+
+        if (allSeries.size() == 0) {
+            throw new RuntimeException("No data");
+        }
         List<List<Vector2D>> allData = new ArrayList<>();
         allSeries.forEach(serie -> { synchronized(serie) { allData.add(serie.getData()); } });
 

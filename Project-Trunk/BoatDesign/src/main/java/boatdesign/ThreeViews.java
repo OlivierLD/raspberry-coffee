@@ -94,125 +94,127 @@ public class ThreeViews {
 
     private void refreshData() {
 
-        // Generate the data, the Bézier curve.
-        Bezier bezier = new Bezier(ctrlPoints);
-        List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>(); // The points to display.
-        if (ctrlPoints.size() > 2) { // 3 points minimum.
-            for (double t = 0; t <= 1.0; t += 1E-3) {
-                Bezier.Point3D tick = bezier.getBezierPoint(t);
-                // System.out.println(String.format("%.03f: %s", t, tick.toString()));
-                bezierPoints.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
+        if (ctrlPoints.size() > 0) {
+            // Generate the data, the Bézier curve.
+            Bezier bezier = new Bezier(ctrlPoints);
+            List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>(); // The points to display.
+            if (ctrlPoints.size() > 2) { // 3 points minimum.
+                for (double t = 0; t <= 1.0; t += 1E-3) {
+                    Bezier.Point3D tick = bezier.getBezierPoint(t);
+                    // System.out.println(String.format("%.03f: %s", t, tick.toString()));
+                    bezierPoints.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
+                }
             }
-        }
-        // For test: Find t for a given X
-        if (false) {
-            double x = 60; // the one to find
-            double t = getTForGivenX(bezier, 0.0, 1E-1, x, 1E-4);
-            Bezier.Point3D tick = bezier.getBezierPoint(t);
-            System.out.printf("For x=%f, t=%f - X:%f, Y:%f\n", x, t, tick.getX(), tick.getY());
-        }
+            // For test: Find t for a given X
+            if (false) {
+                double x = 60; // the one to find
+                double t = getTForGivenX(bezier, 0.0, 1E-1, x, 1E-4);
+                Bezier.Point3D tick = bezier.getBezierPoint(t);
+                System.out.printf("For x=%f, t=%f - X:%f, Y:%f\n", x, t, tick.getX(), tick.getY());
+            }
 
-        // Prepare data for display
-        // Ctrl Points
-        double[] xCtrlPoints = ctrlPoints.stream()
-                .mapToDouble(bp -> bp.getX())
-                .toArray();
-        double[] yCtrlPoints = ctrlPoints.stream()
-                .mapToDouble(bp -> bp.getY())
-                .toArray();
-        double[] zCtrlPoints = ctrlPoints.stream()
-                .mapToDouble(bp -> bp.getZ())
-                .toArray();
-        List<VectorUtils.Vector2D> ctrlPtsXYVectors = new ArrayList<>();
-        for (int i=0; i<xCtrlPoints.length; i++) {
-            ctrlPtsXYVectors.add(new VectorUtils.Vector2D(xCtrlPoints[i], yCtrlPoints[i]));
-        }
-        List<VectorUtils.Vector2D> ctrlPtsXZVectors = new ArrayList<>();
-        for (int i=0; i<xCtrlPoints.length; i++) {
-            ctrlPtsXZVectors.add(new VectorUtils.Vector2D(xCtrlPoints[i], zCtrlPoints[i]));
-        }
-        List<VectorUtils.Vector2D> ctrlPtsYZVectors = new ArrayList<>();
-        for (int i=0; i<yCtrlPoints.length; i++) {
-            ctrlPtsYZVectors.add(new VectorUtils.Vector2D(yCtrlPoints[i], zCtrlPoints[i]));
-        }
+            // Prepare data for display
+            // Ctrl Points
+            double[] xCtrlPoints = ctrlPoints.stream()
+                    .mapToDouble(bp -> bp.getX())
+                    .toArray();
+            double[] yCtrlPoints = ctrlPoints.stream()
+                    .mapToDouble(bp -> bp.getY())
+                    .toArray();
+            double[] zCtrlPoints = ctrlPoints.stream()
+                    .mapToDouble(bp -> bp.getZ())
+                    .toArray();
+            List<VectorUtils.Vector2D> ctrlPtsXYVectors = new ArrayList<>();
+            for (int i = 0; i < xCtrlPoints.length; i++) {
+                ctrlPtsXYVectors.add(new VectorUtils.Vector2D(xCtrlPoints[i], yCtrlPoints[i]));
+            }
+            List<VectorUtils.Vector2D> ctrlPtsXZVectors = new ArrayList<>();
+            for (int i = 0; i < xCtrlPoints.length; i++) {
+                ctrlPtsXZVectors.add(new VectorUtils.Vector2D(xCtrlPoints[i], zCtrlPoints[i]));
+            }
+            List<VectorUtils.Vector2D> ctrlPtsYZVectors = new ArrayList<>();
+            for (int i = 0; i < yCtrlPoints.length; i++) {
+                ctrlPtsYZVectors.add(new VectorUtils.Vector2D(yCtrlPoints[i], zCtrlPoints[i]));
+            }
 
-        // Curve points
-        double[] xData = bezierPoints.stream()
-                .mapToDouble(bp -> bp.getX())
-                .toArray();
-        double[] yData = bezierPoints.stream()
-                .mapToDouble(bp -> bp.getY())
-                .toArray();
-        double[] zData = bezierPoints.stream()
-                .mapToDouble(bp -> bp.getZ())
-                .toArray();
-        List<VectorUtils.Vector2D> dataXYVectors = new ArrayList<>();
-        for (int i=0; i<xData.length; i++) {
-            dataXYVectors.add(new VectorUtils.Vector2D(xData[i], yData[i]));
+            // Curve points
+            double[] xData = bezierPoints.stream()
+                    .mapToDouble(bp -> bp.getX())
+                    .toArray();
+            double[] yData = bezierPoints.stream()
+                    .mapToDouble(bp -> bp.getY())
+                    .toArray();
+            double[] zData = bezierPoints.stream()
+                    .mapToDouble(bp -> bp.getZ())
+                    .toArray();
+            List<VectorUtils.Vector2D> dataXYVectors = new ArrayList<>();
+            for (int i = 0; i < xData.length; i++) {
+                dataXYVectors.add(new VectorUtils.Vector2D(xData[i], yData[i]));
+            }
+            List<VectorUtils.Vector2D> dataXZVectors = new ArrayList<>();
+            for (int i = 0; i < xData.length; i++) {
+                dataXZVectors.add(new VectorUtils.Vector2D(xData[i], zData[i]));
+            }
+            List<VectorUtils.Vector2D> dataYZVectors = new ArrayList<>();
+            for (int i = 0; i < yData.length; i++) {
+                dataYZVectors.add(new VectorUtils.Vector2D(yData[i], zData[i]));
+            }
+
+            whiteBoardXY.resetAllData();
+            whiteBoardXZ.resetAllData();
+            whiteBoardYZ.resetAllData();
+
+            // Bezier ctrl points series
+            // XY
+            WhiteBoardPanel.DataSerie ctrlXYSerie = new WhiteBoardPanel.DataSerie()
+                    .data(ctrlPtsXYVectors)
+                    .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
+                    .lineThickness(1)
+                    .color(Color.ORANGE);
+            whiteBoardXY.addSerie(ctrlXYSerie);
+            // XZ
+            WhiteBoardPanel.DataSerie ctrlXZSerie = new WhiteBoardPanel.DataSerie()
+                    .data(ctrlPtsXZVectors)
+                    .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
+                    .lineThickness(1)
+                    .color(Color.ORANGE);
+            whiteBoardXZ.addSerie(ctrlXZSerie);
+            // YZ
+            WhiteBoardPanel.DataSerie ctrlYZSerie = new WhiteBoardPanel.DataSerie()
+                    .data(ctrlPtsYZVectors)
+                    .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
+                    .lineThickness(1)
+                    .color(Color.ORANGE);
+            whiteBoardYZ.addSerie(ctrlYZSerie);
+
+            // Bezier points series
+            // XY
+            WhiteBoardPanel.DataSerie dataXYSerie = new WhiteBoardPanel.DataSerie()
+                    .data(dataXYVectors)
+                    .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                    .lineThickness(3)
+                    .color(Color.BLUE);
+            whiteBoardXY.addSerie(dataXYSerie);
+            // XZ
+            WhiteBoardPanel.DataSerie dataXZSerie = new WhiteBoardPanel.DataSerie()
+                    .data(dataXZVectors)
+                    .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                    .lineThickness(3)
+                    .color(Color.BLUE);
+            whiteBoardXZ.addSerie(dataXZSerie);
+            // YZ
+            WhiteBoardPanel.DataSerie dataYZSerie = new WhiteBoardPanel.DataSerie()
+                    .data(dataYZVectors)
+                    .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                    .lineThickness(3)
+                    .color(Color.BLUE);
+            whiteBoardYZ.addSerie(dataYZSerie);
+
+            // Finally, display it.
+            whiteBoardXY.repaint();  // This is for a pure Swing context
+            whiteBoardXZ.repaint();  // This is for a pure Swing context
+            whiteBoardYZ.repaint();  // This is for a pure Swing context
         }
-        List<VectorUtils.Vector2D> dataXZVectors = new ArrayList<>();
-        for (int i=0; i<xData.length; i++) {
-            dataXZVectors.add(new VectorUtils.Vector2D(xData[i], zData[i]));
-        }
-        List<VectorUtils.Vector2D> dataYZVectors = new ArrayList<>();
-        for (int i=0; i<yData.length; i++) {
-            dataYZVectors.add(new VectorUtils.Vector2D(yData[i], zData[i]));
-        }
-
-        whiteBoardXY.resetAllData();
-        whiteBoardXZ.resetAllData();
-        whiteBoardYZ.resetAllData();
-
-        // Bezier ctrl points series
-        // XY
-        WhiteBoardPanel.DataSerie ctrlXYSerie = new WhiteBoardPanel.DataSerie()
-                .data(ctrlPtsXYVectors)
-                .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
-                .lineThickness(1)
-                .color(Color.ORANGE);
-        whiteBoardXY.addSerie(ctrlXYSerie);
-        // XZ
-        WhiteBoardPanel.DataSerie ctrlXZSerie = new WhiteBoardPanel.DataSerie()
-                .data(ctrlPtsXZVectors)
-                .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
-                .lineThickness(1)
-                .color(Color.ORANGE);
-        whiteBoardXZ.addSerie(ctrlXZSerie);
-        // YZ
-        WhiteBoardPanel.DataSerie ctrlYZSerie = new WhiteBoardPanel.DataSerie()
-                .data(ctrlPtsYZVectors)
-                .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
-                .lineThickness(1)
-                .color(Color.ORANGE);
-        whiteBoardYZ.addSerie(ctrlYZSerie);
-
-        // Bezier points series
-        // XY
-        WhiteBoardPanel.DataSerie dataXYSerie = new WhiteBoardPanel.DataSerie()
-                .data(dataXYVectors)
-                .graphicType(WhiteBoardPanel.GraphicType.LINE)
-                .lineThickness(3)
-                .color(Color.BLUE);
-        whiteBoardXY.addSerie(dataXYSerie);
-        // XZ
-        WhiteBoardPanel.DataSerie dataXZSerie = new WhiteBoardPanel.DataSerie()
-                .data(dataXZVectors)
-                .graphicType(WhiteBoardPanel.GraphicType.LINE)
-                .lineThickness(3)
-                .color(Color.BLUE);
-        whiteBoardXZ.addSerie(dataXZSerie);
-        // YZ
-        WhiteBoardPanel.DataSerie dataYZSerie = new WhiteBoardPanel.DataSerie()
-                .data(dataYZVectors)
-                .graphicType(WhiteBoardPanel.GraphicType.LINE)
-                .lineThickness(3)
-                .color(Color.BLUE);
-        whiteBoardYZ.addSerie(dataYZSerie);
-
-        // Finally, display it.
-        whiteBoardXY.repaint();  // This is for a pure Swing context
-        whiteBoardXZ.repaint();  // This is for a pure Swing context
-        whiteBoardYZ.repaint();  // This is for a pure Swing context
     }
 
     private void show() {
