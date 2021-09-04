@@ -2,11 +2,12 @@ package boatdesign;
 
 import bezier.Bezier;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gsg.SwingUtils.Box3D;
 import gsg.SwingUtils.WhiteBoardPanel;
+import gsg.SwingUtils.fullui.ThreeDFrameWithWidgets;
 import gsg.VectorUtils;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
@@ -16,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -38,8 +40,8 @@ public class ThreeViews {
     private JLabel topLabel;
     private final JButton refreshButton = new JButton("Refresh Data"); // Not really useful here.
 
-    private final static int WIDTH = 800;
-    private final static int HEIGHT = 600;
+    private final static int WIDTH = 1024;
+    private final static int HEIGHT = 800;
 
     private static ObjectMapper mapper = new ObjectMapper();
     private static Map<String, Object> initConfig = null;
@@ -51,6 +53,8 @@ public class ThreeViews {
     private WhiteBoardPanel whiteBoardXY = null; // from above
     private WhiteBoardPanel whiteBoardXZ = null; // side
     private WhiteBoardPanel whiteBoardYZ = null; // facing
+
+    private Box3D box3D = null;
 
     private void fileSpit_ActionPerformed(ActionEvent ae) {
         System.out.println("Ctrl Points:");
@@ -214,6 +218,8 @@ public class ThreeViews {
             whiteBoardXY.repaint();  // This is for a pure Swing context
             whiteBoardXZ.repaint();  // This is for a pure Swing context
             whiteBoardYZ.repaint();  // This is for a pure Swing context
+
+            this.box3D.repaint();
         }
     }
 
@@ -223,17 +229,16 @@ public class ThreeViews {
 
     private void initComponents() {
 
-        // Initialize [0, 10, 0], [550, 105, 0]
-//        ctrlPoints.add(new Bezier.Point3D(0, 10, 0));
-//        ctrlPoints.add(new Bezier.Point3D(550, 105, 0));
-
-        // TODO There is a problem when ctrlPoints is empty. Fix it.
-
         if (initConfig != null) {
             List<List<Double>> defaultPoints = (List)initConfig.get("default-points");
             defaultPoints.forEach(pt -> {
                 ctrlPoints.add(new Bezier.Point3D(pt.get(0), pt.get(1), pt.get(2)));
             });
+        } else {
+            // TODO There is a problem when ctrlPoints is empty... Fix it.
+            // Initialize [0, 10, 0], [550, 105, 0]
+            ctrlPoints.add(new Bezier.Point3D(0, 10, 0));
+            ctrlPoints.add(new Bezier.Point3D(550, 105, 0));
         }
 
         // Override defaults (not mandatory)
@@ -251,6 +256,10 @@ public class ThreeViews {
         whiteBoardXY.setForcedMinY(0d);
         whiteBoardXY.setForcedMaxY(150d);
 
+        whiteBoardXY.setEnforceXAxisAt(0d);
+        whiteBoardXY.setEnforceYAxisAt(0d);
+
+
         whiteBoardXZ.setAxisColor(Color.BLACK);
         whiteBoardXZ.setWithGrid(true);
         whiteBoardXZ.setBgColor(new Color(250, 250, 250, 255));
@@ -265,6 +274,9 @@ public class ThreeViews {
         whiteBoardXZ.setForcedMinY(-50d);
         whiteBoardXZ.setForcedMaxY(100d);
 
+        whiteBoardXZ.setEnforceXAxisAt(0d);
+        whiteBoardXZ.setEnforceYAxisAt(0d);
+
         whiteBoardYZ.setAxisColor(Color.BLACK);
         whiteBoardYZ.setWithGrid(true);
         whiteBoardYZ.setBgColor(new Color(250, 250, 250, 255));
@@ -278,6 +290,9 @@ public class ThreeViews {
         // Enforce Y amplitude
         whiteBoardYZ.setForcedMinY(-50d);
         whiteBoardYZ.setForcedMaxY(100d);
+
+        whiteBoardYZ.setEnforceXAxisAt(0d);
+        whiteBoardYZ.setEnforceYAxisAt(0d);
 
         ThreeViews instance = this;
 
@@ -608,9 +623,28 @@ public class ThreeViews {
         // >> HERE: Add the WitheBoard to the JFrame
         JPanel whiteBoardsPanel = new JPanel(new GridBagLayout());
 
-        JLabel ahMerde1 = new JLabel("Ah Merde!");
-        JLabel ahMerde2 = new JLabel("Ah Shit!");
-        JLabel ahMerde3 = new JLabel("Ah Fuck!");
+        JLabel label1 = new JLabel("Label 1");
+        JLabel label2 = new JLabel("Label 2");
+        JLabel label3 = new JLabel("Label 3");
+
+        JPanel topRight = new JPanel(new BorderLayout());
+        topRight.setBorder(BorderFactory.createTitledBorder("3D Place holder"));
+        topRight.setPreferredSize(new Dimension(400, 400));
+
+        // JScrollPane box3DScrollPane = new JScrollPane(this.box3D);
+        // topRight.add(box3DScrollPane, BorderLayout.CENTER);
+
+        JPanel bottomRight = new JPanel(new BorderLayout());
+        bottomRight.setBorder(BorderFactory.createTitledBorder("Data Place holder"));
+        bottomRight.setPreferredSize(new Dimension(400, 200));
+
+//        this.box3D.setPreferredSize(new Dimension(1200, 600));
+
+        JTextPane dataTextArea = new JTextPane();
+        dataTextArea.setPreferredSize(new Dimension(400, 300));
+        JScrollPane dataScrollPane = new JScrollPane(dataTextArea);
+
+        bottomRight.add(dataScrollPane, BorderLayout.NORTH);
 
         whiteBoardsPanel.add(whiteBoardXZ,
                 new GridBagConstraints(0,
@@ -643,6 +677,27 @@ public class ThreeViews {
                         GridBagConstraints.NONE,
                         new Insets(0, 0, 0, 0), 0, 0));
 
+        whiteBoardsPanel.add(topRight, // box3DScrollPane, // this.box3D, // topRight,
+                new GridBagConstraints(1,
+                0,
+                1,
+                2,
+                1.0,
+                0.0,
+                GridBagConstraints.WEST,
+                GridBagConstraints.NONE,
+                new Insets(0, 0, 0, 0), 0, 0));
+        whiteBoardsPanel.add(bottomRight,
+                new GridBagConstraints(1,
+                        2,
+                        1,
+                        1,
+                        1.0,
+                        0.0,
+                        GridBagConstraints.WEST,
+                        GridBagConstraints.NONE,
+                        new Insets(0, 0, 0, 0), 0, 0));
+
         JScrollPane jScrollPane = new JScrollPane(whiteBoardsPanel);
         frame.getContentPane().add(jScrollPane, BorderLayout.CENTER);
 
@@ -665,6 +720,67 @@ public class ThreeViews {
         this.whiteBoardXY = new WhiteBoardPanel(); // from above
         this.whiteBoardXZ = new WhiteBoardPanel(); // side
         this.whiteBoardYZ = new WhiteBoardPanel(); // facing
+
+        this.box3D = new Box3D(1200, 600);
+        box3D.setxMin(-10);
+        box3D.setxMax(600);
+        box3D.setyMin(-50);
+        box3D.setyMax(100);
+        box3D.setzMin(-50);
+        box3D.setzMax(150);
+
+        Consumer<Graphics2D> afterDrawer = g2d -> {
+
+            System.out.println("After Drawer, box3D");
+
+            // Link the control points
+            g2d.setColor(Color.ORANGE);
+            g2d.setStroke(new BasicStroke(2));
+            VectorUtils.Vector3D from = null;
+            for (Bezier.Point3D ctrlPoint : ctrlPoints) {
+                if (from != null) {
+                    VectorUtils.Vector3D to = new VectorUtils.Vector3D(ctrlPoint.getX(), ctrlPoint.getY(), ctrlPoint.getZ());
+                    box3D.drawSegment(g2d, from, to);
+                }
+                from = new VectorUtils.Vector3D(ctrlPoint.getX(), ctrlPoint.getY(), ctrlPoint.getZ());
+            }
+
+            // Plot the control points
+            g2d.setColor(Color.BLUE);
+            ctrlPoints.forEach(pt -> {
+                VectorUtils.Vector3D at = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
+                box3D.drawCircle(g2d, at, 6);
+            });
+            // TODO Redundant, fix that
+            Bezier bezier = new Bezier(ctrlPoints);
+            List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>(); // The points to display.
+            if (ctrlPoints.size() > 2) { // 3 points minimum.
+                for (double t = 0; t <= 1.0; t += 1E-3) {
+                    Bezier.Point3D tick = bezier.getBezierPoint(t);
+                    // System.out.println(String.format("%.03f: %s", t, tick.toString()));
+                    bezierPoints.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
+                }
+            }
+
+            // The actual bezier
+            g2d.setColor(Color.RED);
+            g2d.setStroke(new BasicStroke(5));
+            from = null;
+            for (int i=0; i<bezierPoints.size(); i++) {
+                VectorUtils.Vector3D to = bezierPoints.get(i);
+                if (from != null) {
+                    box3D.drawSegment(g2d, from, to);
+                }
+                from = to;
+            }
+        };
+
+        // Invoke the above
+//        box3D.setDrawer(afterDrawer);
+        box3D.setAfterDrawer(afterDrawer);
+
+        ThreeDFrameWithWidgets threeDFrame = new ThreeDFrameWithWidgets(box3D);
+        threeDFrame.setVisible(true);
     }
 
     enum Orientation {

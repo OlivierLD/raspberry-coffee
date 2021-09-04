@@ -1,4 +1,4 @@
-package gsg.examples.box3d.fullui;
+package gsg.SwingUtils.fullui;
 
 import gsg.SwingUtils.Box3D;
 

@@ -123,6 +123,9 @@ public class SwingSample7 {
         whiteBoard.setGraphicMargins(30);
         whiteBoard.setXEqualsY(false);
 
+//        whiteBoard.setEnforceXAxisAt(5d);
+//        whiteBoard.setEnforceYAxisAt(10d);
+
         // Now, the Data
         double previousY = 10d;  // Y starts here
         double yAmpl = 20d;      // Y amplitude

@@ -3,7 +3,7 @@ package gsg.examples.box3d;
 import gsg.SwingUtils.Box3D;
 import gsg.VectorUtils;
 import gsg.WaveFrontUtils;
-import gsg.examples.box3d.fullui.ThreeDFrameWithWidgets;
+import gsg.SwingUtils.fullui.ThreeDFrameWithWidgets;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

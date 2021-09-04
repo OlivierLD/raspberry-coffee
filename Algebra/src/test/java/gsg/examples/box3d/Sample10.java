@@ -3,7 +3,7 @@ package gsg.examples.box3d;
 import bezier.Bezier;
 import gsg.SwingUtils.Box3D;
 import gsg.VectorUtils;
-import gsg.examples.box3d.fullui.ThreeDFrameWithWidgets;
+import gsg.SwingUtils.fullui.ThreeDFrameWithWidgets;
 
 import java.awt.*;
 import java.util.ArrayList;

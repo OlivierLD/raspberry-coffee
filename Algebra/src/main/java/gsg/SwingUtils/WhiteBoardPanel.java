@@ -149,6 +149,9 @@ public class WhiteBoardPanel extends JPanel {
     private Double forcedMinY = null;
     private Double forcedMaxY = null;
 
+    private Double enforceXAxisAt = null;
+    private Double enforceYAxisAt = null;
+
     public void setGraphicMargins(int graphicMargins) {
         this.graphicMargins = graphicMargins;
     }
@@ -195,6 +198,13 @@ public class WhiteBoardPanel extends JPanel {
 
     public void setForcedMaxY(Double forcedMaxY) {
         this.forcedMaxY = forcedMaxY;
+    }
+
+    public void setEnforceXAxisAt(Double enforceXAxisAt) {
+        this.enforceXAxisAt = enforceXAxisAt;
+    }
+    public void setEnforceYAxisAt(Double enforceYAxisAt) {
+        this.enforceYAxisAt = enforceYAxisAt;
     }
 
     public void setTitleJustification(TitleJustification justification) {
@@ -311,8 +321,9 @@ public class WhiteBoardPanel extends JPanel {
         canvasX2SpaceX = canvasToSpaceX;
         canvasY2SpaceY = canvasToSpaceY;
 
-        double x0 = Math.floor(findCanvasXCoord.apply(graphicRange.getMinX() /*0d*/)); // Math.round(0 - graphicRange.getMinX()) * oneUnit;
-        double y0 = Math.floor(findCanvasYCoord.apply(minDblY /*0d*/)); // Math.round(0 - graphicRange.getMinY()) * oneUnit;
+        // Axis coordinates
+        double x0 = Math.floor(findCanvasXCoord.apply(this.enforceXAxisAt == null ? graphicRange.getMinX() : this.enforceXAxisAt /*0d*/)); // Math.round(0 - graphicRange.getMinX()) * oneUnit;
+        double y0 = Math.floor(findCanvasYCoord.apply(this.enforceYAxisAt == null ? minDblY : this.enforceYAxisAt /*0d*/)); // Math.round(0 - graphicRange.getMinY()) * oneUnit;
 
         if (VERBOSE) {
             System.out.printf("x0: %f (minX: %f), y0: %f (minY: %f)%n", x0, graphicRange.getMinX(), y0, minDblY);
