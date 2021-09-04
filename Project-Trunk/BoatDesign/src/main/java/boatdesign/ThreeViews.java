@@ -779,7 +779,7 @@ public class ThreeViews {
 //        box3D.setDrawer(afterDrawer);
         box3D.setAfterDrawer(afterDrawer);
 
-        ThreeDFrameWithWidgets threeDFrame = new ThreeDFrameWithWidgets(box3D);
+        ThreeDFrameWithWidgets threeDFrame = new ThreeDFrameWithWidgets(box3D, "Same Bézier, in 3D - Draggable");
         threeDFrame.setVisible(true);
     }
 

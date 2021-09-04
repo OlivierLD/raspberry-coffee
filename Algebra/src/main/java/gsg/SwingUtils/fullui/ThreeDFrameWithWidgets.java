@@ -119,16 +119,22 @@ public class ThreeDFrameWithWidgets
 	private final static int MAX_SLIDER_VALUE = 180;
 
 	public ThreeDFrameWithWidgets(Box3D box3D) {
-		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT, null);
+	}
+
+	public ThreeDFrameWithWidgets(Box3D box3D, String title) {
+		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT, title);
 	}
 
 	public ThreeDFrameWithWidgets(Box3D box3D, int width, int height) {
-
+		this(box3D, width, height, null);
+	}
+	public ThreeDFrameWithWidgets(Box3D box3D, int width, int height, String title) {
 		this.box3D = box3D;
 		initComponents(width, height);
 		this.setSize(new Dimension(width, height));  // Maybe conflicting...
 		this.setPreferredSize(new Dimension(width, height));
-		this.setTitle("Box3D demo - Figure is draggable");
+		this.setTitle(title == null ? "Box3D demo - Figure is draggable" : title);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = this.getSize();
