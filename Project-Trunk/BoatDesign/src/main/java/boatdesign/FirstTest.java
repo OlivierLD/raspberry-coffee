@@ -24,9 +24,9 @@ import java.util.function.Function;
  * 2D Bezier example.
  * With draggable control points (hence the MouseListener, MouseMotionListener).
  */
-public class FirstTest implements MouseListener, MouseMotionListener {
+public class FirstTest {
 
-    private final static String TITLE = "Simple 2D Bezier sample (draggable control points)";
+    private final static String TITLE = "One 3D Bezier sample (draggable control points)";
 
     private JFrame frame;
     private final JMenuBar menuBar = new JMenuBar();
@@ -56,7 +56,6 @@ public class FirstTest implements MouseListener, MouseMotionListener {
             System.out.println(String.format("%s", pt));
         });
     }
-
     private void fileExit_ActionPerformed(ActionEvent ae) {
         System.out.printf("Exit requested %s\n", ae);
         System.exit(0);
@@ -119,10 +118,9 @@ public class FirstTest implements MouseListener, MouseMotionListener {
         double[] yCtrlPoints = ctrlPoints.stream()
                 .mapToDouble(bp -> bp.getY())
                 .toArray();
-        List<VectorUtils.Vector2D> ctrlPtsVectors = new ArrayList<>();
+        List<VectorUtils.Vector2D> ctrlPtsXYVectors = new ArrayList<>();
         for (int i=0; i<xCtrlPoints.length; i++) {
-            ctrlPtsVectors.add(new VectorUtils.Vector2D(xCtrlPoints[i], yCtrlPoints[i]));
-//            System.out.printf("Adding X:%f, Y:%f\n", xCtrlPoints[i], yCtrlPoints[i]);
+            ctrlPtsXYVectors.add(new VectorUtils.Vector2D(xCtrlPoints[i], yCtrlPoints[i]));
         }
 
         // Curve points
@@ -132,30 +130,32 @@ public class FirstTest implements MouseListener, MouseMotionListener {
         double[] yData = bezierPoints.stream()
                 .mapToDouble(bp -> bp.getY())
                 .toArray();
-        List<VectorUtils.Vector2D> dataVectors = new ArrayList<>();
+        List<VectorUtils.Vector2D> dataXYVectors = new ArrayList<>();
         for (int i=0; i<xData.length; i++) {
-            dataVectors.add(new VectorUtils.Vector2D(xData[i], yData[i]));
+            dataXYVectors.add(new VectorUtils.Vector2D(xData[i], yData[i]));
         }
 
         whiteBoard.setAxisColor(Color.BLACK);
         whiteBoard.setWithGrid(true);
         whiteBoard.resetAllData();
 
-        // Bezier ctrl points serie
-        WhiteBoardPanel.DataSerie ctrlSerie = new WhiteBoardPanel.DataSerie()
-                .data(ctrlPtsVectors)
+        // Bezier ctrl points series
+        // XY
+        WhiteBoardPanel.DataSerie ctrlXYSerie = new WhiteBoardPanel.DataSerie()
+                .data(ctrlPtsXYVectors)
                 .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                 .lineThickness(1)
                 .color(Color.ORANGE);
-        whiteBoard.addSerie(ctrlSerie);
+        whiteBoard.addSerie(ctrlXYSerie);
 
-        // Bezier points serie
-        WhiteBoardPanel.DataSerie dataSerie = new WhiteBoardPanel.DataSerie()
-                .data(dataVectors)
+        // Bezier points series
+        // XY
+        WhiteBoardPanel.DataSerie dataXYSerie = new WhiteBoardPanel.DataSerie()
+                .data(dataXYVectors)
                 .graphicType(WhiteBoardPanel.GraphicType.LINE)
                 .lineThickness(3)
                 .color(Color.BLUE);
-        whiteBoard.addSerie(dataSerie);
+        whiteBoard.addSerie(dataXYSerie);
 
         // Finally, display it.
         whiteBoard.repaint();  // This is for a pure Swing context
@@ -176,6 +176,104 @@ public class FirstTest implements MouseListener, MouseMotionListener {
                 ctrlPoints.add(new Bezier.Point3D(pt.get(0), pt.get(1), pt.get(2)));
             });
         }
+        FirstTest instance = this;
+
+        whiteBoard.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                System.out.println("Click on whiteboard");
+                if (SwingUtilities.isRightMouseButton(e)) { // e.isPopupTrigger()) { // Right-click
+                    Bezier.Point3D closePoint = getClosePoint(e);
+                    if (closePoint != null) {
+                        BezierPopup popup = new BezierPopup(instance, closePoint);
+                        popup.show(whiteBoard, e.getX(), e.getY());
+                    }
+                } else {
+                    // Regular click.
+                    // Drop point here. Where is the list
+                    String response = JOptionPane.showInputDialog(
+                            frame,
+                            String.format("Where to insert new point (index in the list [0..%d]) ?", ctrlPoints.size()),
+                            "Add Control Point",
+                            JOptionPane.QUESTION_MESSAGE);
+//            System.out.println("Response:" + response);
+                    if (response != null && !response.isEmpty()) {
+                        try {
+                            int newIndex = Integer.parseInt(response);
+                            Function<Integer, Double> canvasToSpaceXTransformer = whiteBoard.getCanvasToSpaceXTransformer();
+                            Function<Integer, Double> canvasToSpaceYTransformer = whiteBoard.getCanvasToSpaceYTransformer();
+                            int height = whiteBoard.getHeight();
+                            if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
+                                double newX = canvasToSpaceXTransformer.apply(e.getX());
+                                double newY = canvasToSpaceYTransformer.apply(height - e.getY());
+//                      System.out.printf("Point dragged to %f / %f\n", newX, newY);
+                                Bezier.Point3D point3D = new Bezier.Point3D().x(newX).y(newY);
+                                List<Bezier.Point3D> newList = new ArrayList<>();
+                                for (int i=0; i<newIndex; i++) {
+                                    newList.add(ctrlPoints.get(i));
+                                }
+                                newList.add(point3D);
+                                for (int i=newIndex; i<ctrlPoints.size(); i++) {
+                                    newList.add(ctrlPoints.get(i));
+                                }
+                                ctrlPoints = newList;
+                                System.out.printf("List now has %d elements.\n", ctrlPoints.size());
+                                refreshData();
+                            }
+                        } catch (NumberFormatException nfe) {
+                            nfe.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+//        System.out.printf("Mouse clicked x: %d y: %d\n", e.getX(), e.getY());
+                Bezier.Point3D closePoint = getClosePoint(e);
+                if (closePoint != null) {
+//            System.out.println("Found it!");
+                    whiteBoard.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                }
+            }
+        });
+
+        whiteBoard.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                super.mouseDragged(e);
+                System.out.println("Dragged on whiteboard");
+                if (closestPointIndex > -1) {
+                    Function<Integer, Double> canvasToSpaceXTransformer = whiteBoard.getCanvasToSpaceXTransformer();
+                    Function<Integer, Double> canvasToSpaceYTransformer = whiteBoard.getCanvasToSpaceYTransformer();
+                    int height = whiteBoard.getHeight();
+                    if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
+                        double newX = canvasToSpaceXTransformer.apply(e.getX());
+                        double newY = canvasToSpaceYTransformer.apply(height - e.getY());
+//                System.out.printf("Point dragged to %f / %f\n", newX, newY);
+                        Bezier.Point3D point3D = ctrlPoints.get(closestPointIndex);
+                        point3D.x(newX).y(newY);
+                        refreshData();
+                    }
+                }
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                super.mouseMoved(e);
+                System.out.println("Moved on whiteboard (MotionListener)");
+                Bezier.Point3D closePoint = getClosePoint(e);
+                if (closePoint != null) {
+                    whiteBoard.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    closestPointIndex = ctrlPoints.indexOf(closePoint);
+                } else {
+                    whiteBoard.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                    closestPointIndex = -1;
+                }
+
+            }
+        });
 
         // The JFrame
         frame = new JFrame(TITLE);
@@ -214,7 +312,22 @@ public class FirstTest implements MouseListener, MouseMotionListener {
         frame.getContentPane().add(topLabel, BorderLayout.NORTH);
 
         // >> HERE: Add the WitheBoard to the JFrame
-        frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
+        JPanel whiteBoardsPanel = new JPanel(new FlowLayout()); // new GridBagLayout());
+        JScrollPane jScrollPane = new JScrollPane(whiteBoardsPanel);
+
+        whiteBoardsPanel.add(whiteBoard, // forTest, // ahMerde1, // whiteBoardXY,
+                new GridBagConstraints(0,
+                        0,
+                        1,
+                        1,
+                        0.0,
+                        0.0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH,
+                        new Insets(0, 0, 0, 0), 0, 0));
+
+//        frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
+        frame.getContentPane().add(jScrollPane, BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel(new GridBagLayout());
         bottomPanel.add(refreshButton, new GridBagConstraints(0,
@@ -232,8 +345,6 @@ public class FirstTest implements MouseListener, MouseMotionListener {
     }
 
     public FirstTest() {
-        whiteBoard.addMouseListener(this);
-        whiteBoard.addMouseMotionListener(this);
     }
 
     // Find the control point close to the mouse pointer.
@@ -258,100 +369,6 @@ public class FirstTest implements MouseListener, MouseMotionListener {
     }
 
     private int closestPointIndex = -1;
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-//        System.out.println("Mouse moved");
-        Bezier.Point3D closePoint = getClosePoint(e);
-        if (closePoint != null) {
-            whiteBoard.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            closestPointIndex = ctrlPoints.indexOf(closePoint);
-        } else {
-            whiteBoard.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            closestPointIndex = -1;
-        }
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (SwingUtilities.isRightMouseButton(e)) { // e.isPopupTrigger()) { // Right-click
-            Bezier.Point3D closePoint = getClosePoint(e);
-            if (closePoint != null) {
-                BezierPopup popup = new BezierPopup(this, closePoint);
-                popup.show(whiteBoard, e.getX(), e.getY());
-            }
-        } else {
-            // Regular click.
-            // Drop point here. Where is the list
-            String response = JOptionPane.showInputDialog(
-                    frame,
-                    String.format("Where to insert new point (index in the list [0..%d]) ?", ctrlPoints.size()),
-                    "Add Control Point",
-                    JOptionPane.QUESTION_MESSAGE);
-//            System.out.println("Response:" + response);
-            if (response != null && !response.isEmpty()) {
-                try {
-                    int newIndex = Integer.parseInt(response);
-                    Function<Integer, Double> canvasToSpaceXTransformer = whiteBoard.getCanvasToSpaceXTransformer();
-                    Function<Integer, Double> canvasToSpaceYTransformer = whiteBoard.getCanvasToSpaceYTransformer();
-                    int height = whiteBoard.getHeight();
-                    if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
-                        double newX = canvasToSpaceXTransformer.apply(e.getX());
-                        double newY = canvasToSpaceYTransformer.apply(height - e.getY());
-//                      System.out.printf("Point dragged to %f / %f\n", newX, newY);
-                        Bezier.Point3D point3D = new Bezier.Point3D().x(newX).y(newY);
-                        List<Bezier.Point3D> newList = new ArrayList<>();
-                        for (int i=0; i<newIndex; i++) {
-                            newList.add(ctrlPoints.get(i));
-                        }
-                        newList.add(point3D);
-                        for (int i=newIndex; i<ctrlPoints.size(); i++) {
-                            newList.add(ctrlPoints.get(i));
-                        }
-                        ctrlPoints = newList;
-                        System.out.printf("List now has %d elements.\n", ctrlPoints.size());
-                        refreshData();
-                    }
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                }
-            }
-        }
-    }
-    @Override
-    public void mousePressed(MouseEvent e) {
-//        System.out.printf("Mouse clicked x: %d y: %d\n", e.getX(), e.getY());
-        Bezier.Point3D closePoint = getClosePoint(e);
-        if (closePoint != null) {
-//            System.out.println("Found it!");
-            whiteBoard.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        }
-    }
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        if (closestPointIndex > -1) {
-            Function<Integer, Double> canvasToSpaceXTransformer = whiteBoard.getCanvasToSpaceXTransformer();
-            Function<Integer, Double> canvasToSpaceYTransformer = whiteBoard.getCanvasToSpaceYTransformer();
-            int height = whiteBoard.getHeight();
-            if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
-                double newX = canvasToSpaceXTransformer.apply(e.getX());
-                double newY = canvasToSpaceYTransformer.apply(height - e.getY());
-//                System.out.printf("Point dragged to %f / %f\n", newX, newY);
-                Bezier.Point3D point3D = ctrlPoints.get(closestPointIndex);
-                point3D.x(newX).y(newY);
-                refreshData();
-            }
-        }
-    }
 
     static class BezierPopup extends JPopupMenu
             implements ActionListener,
@@ -441,6 +458,5 @@ public class FirstTest implements MouseListener, MouseMotionListener {
 
         thisThing.refreshData(); // Display data the first time.
         thisThing.show();
-
     }
 }
