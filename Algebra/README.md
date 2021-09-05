@@ -155,12 +155,18 @@ Here is a quick way to restore some of those features.
 Use `../gradlew runSample -Pnum=09 -Pidx=4` to see the screen above.  
 Figure can be rotated with the sliders at the bottom, or by dragging the mouse on the figure itself.
 
-### Bezier, in 3D
-Good doc at <https://javascript.info/bezier-curve>
+### Bézier, in 3D
+Good doc at <https://javascript.info/bezier-curve>  
+Bezier at work: <http://jeremie.farret.free.fr/wp-content/uploads/2011/12/ATMA2006.pdf>
 
-![WaveFront](./docimg/3DBezier.png)
+![Bezier](./docimg/3DBezier.png)
 Run the test in `gsg.examples.box3d.Sample10`.  
 Do a `../gradlew runSample -Pnum=10`.
+
+![BezierBoat](./docimg/small.boat.png)
+Run the test in `gsg.examples.box3d.Sample11`.  
+Do a `../gradlew runSample -Pnum=11`. (See the gradle script for extra parameters)
+
 
 ### Bonus: LaTex in Markdown
 > Works fine in a Jupyter Notebook, not always on a standalone markdown document...
