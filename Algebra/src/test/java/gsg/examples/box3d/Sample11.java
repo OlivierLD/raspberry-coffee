@@ -6,7 +6,9 @@ import gsg.SwingUtils.fullui.ThreeDFrameWithWidgets;
 import gsg.VectorUtils;
 
 import java.awt.*;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -31,8 +33,13 @@ public class Sample11 {
         return tForX;
     }
 
+    private final static String BOAT_PREFIX = "--justTheBoat=";
+    private final static String CTRL_PREFIX = "--drawFrameCtrlPoints=";
+    private final static String SYM_PREFIX = "--symmetrical=";
+    private final static String INC_PREFIX = "--frameIncrement=";
+
     /**
-     * @param args the command line arguments. Not used.
+     * @param args the command line arguments.
      */
     public static void main(String... args) {
 
@@ -43,24 +50,45 @@ public class Sample11 {
         final int MIN_Z = -30;
         final int MAX_Z =  100;
 
-        boolean justTheBoat = true;
+        boolean _justTheBoat = true;
 
-        boolean symmetrical = true;
-        boolean drawFrameCtrlPoints = false;
-        double frameIncrement = 10.0;
+        boolean _symmetrical = true;
+        boolean _drawFrameCtrlPoints = false;
+        double _frameIncrement = 10.0;
 
         double xOffset = 25.0;
         double centerOnXValue = 300.0;
 
-        System.out.println("Several variables in the code for you to play with:");
-        System.out.println("boolean justTheBoat = true;\n" +
-                "\n" +
-                "boolean symmetrical = true;\n" +
-                "boolean drawFrameCtrlPoints = false;\n" +
-                "double frameIncrement = 10.0;\n" +
-                "\n" +
-                "double xOffset = 25.0;\n" +
-                "double centerOnXValue = 300.0;");
+        // Gradle can send
+        // -PappArgs="--justTheBoat=false --drawFrameCtrlPoints=true --symmetrical=false --frameIncrement=50"
+        System.out.printf("We have %d arg(s).\n", args.length);
+        for (String arg : args) {
+            System.out.println("Arg: " + arg);
+            if (arg.startsWith(BOAT_PREFIX)) {
+                _justTheBoat = "true".equals(arg.substring(BOAT_PREFIX.length()));
+            } else if (arg.startsWith(CTRL_PREFIX)) {
+                _drawFrameCtrlPoints = "true".equals(arg.substring(CTRL_PREFIX.length()));
+            } else if (arg.startsWith(SYM_PREFIX)) {
+                _symmetrical = "true".equals(arg.substring(SYM_PREFIX.length()));
+            } else if (arg.startsWith(INC_PREFIX)) {
+                _frameIncrement = Double.parseDouble(arg.substring(INC_PREFIX.length()));
+            }
+        }
+
+        final boolean justTheBoat = _justTheBoat;
+        final boolean drawFrameCtrlPoints = _drawFrameCtrlPoints;
+        final boolean symmetrical = _symmetrical;
+        final double frameIncrement = _frameIncrement;
+
+//        System.out.println("Several variables in the code for you to play with:");
+//        System.out.println("boolean justTheBoat = true;\n" +
+//                "\n" +
+//                "boolean symmetrical = true;\n" +
+//                "boolean drawFrameCtrlPoints = false;\n" +
+//                "double frameIncrement = 10.0;\n" +
+//                "\n" +
+//                "double xOffset = 25.0;\n" +
+//                "double centerOnXValue = 300.0;");
 
         Box3D box3D = new Box3D(ThreeDFrameWithWidgets.DEFAULT_WIDTH, ThreeDFrameWithWidgets.DEFAULT_HEIGHT);
         box3D.setxMin(MIN_X - centerOnXValue);
@@ -70,6 +98,8 @@ public class Sample11 {
         box3D.setzMin(MIN_Z);
         box3D.setzMax(MAX_Z);
 
+        System.out.println("Starting points calculation");
+        long before = System.currentTimeMillis();
         // Drop Ctrl Points here
 //        List<Bezier.Point3D> ctrlPointsRail = List.of(  // Rail
 //                new Bezier.Point3D((-centerOnXValue + xOffset) + 0.000000, 10.000000, 75.000000),
@@ -151,10 +181,13 @@ public class Sample11 {
             }
             frameBezierPts.add(bezierPointsFrame);
         }
-
+        long after = System.currentTimeMillis();
+        System.out.printf("Point calculation took %S ms\n", NumberFormat.getInstance().format(after - before));
 
         // Do something specific here, after the box drawing. What's drawn, actually.
         Consumer<Graphics2D> afterDrawer = g2d -> {
+//            System.out.println("Starting rendering");
+            long beforeRend = System.currentTimeMillis();
             // Link the control points
             g2d.setColor(Color.ORANGE);
             g2d.setStroke(new BasicStroke(2));
@@ -402,6 +435,8 @@ public class Sample11 {
                     }
                 }
             }
+            long afterRend = System.currentTimeMillis();
+//            System.out.printf("Rendering took %s ms\n", NumberFormat.getInstance().format(afterRend - beforeRend));
         };
         // Invoke the above
         box3D.setAfterDrawer(afterDrawer);
