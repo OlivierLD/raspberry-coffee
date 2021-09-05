@@ -461,7 +461,7 @@ public class Box3D extends JPanel {
             g2d.setStroke(originalStroke);
         }
 
-        // Plot center in the middle, (0, 0, 0). TODO An option !!! Rotate around center!
+        // Plot center in the middle, (0, 0, 0).
         g2d.setColor(Color.BLACK);
         int circleDiam = 6;
 //        VectorUtils.Vector3D centerV3 = new VectorUtils.Vector3D(0, 0, 0);
