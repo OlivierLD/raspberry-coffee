@@ -128,11 +128,15 @@ public class Bezier {
     public static void main(String... args) {
 
         Bezier bezier = new Bezier(
-                new Point3D(0, 0, 0),
-                new Point3D(20, 30, 10),
-                new Point3D(15, 35, 20),
-                new Point3D(10, 20, 0)
-        );
+                new Bezier.Point3D(0.000000, 0.000000, 75.000000),
+                new Bezier.Point3D(0.000000, 0.000000, -5.000000));
+
+//        Bezier bezier = new Bezier(
+//                new Point3D(0, 0, 0),
+//                new Point3D(20, 30, 10),
+//                new Point3D(15, 35, 20),
+//                new Point3D(10, 20, 0)
+//        );
 
 //        Bezier bezier = new Bezier(
 //                new Bezier.Point3D(0.000000 - 275, 0.000000, 75.000000),
@@ -141,7 +145,7 @@ public class Bezier {
 //                new Bezier.Point3D(272.142857 - 275, 129.642857, 45.357143),
 //                new Bezier.Point3D(550.000000 - 275, 65.0, 56.000000));
 
-        for (double t=0; t<=1.0; t+=0.1) {
+        for (double t=0; t<=1.0; t+=0.01) {
             Point3D tick = bezier.getBezierPoint(t);
             System.out.println(String.format("%.02f: %s", t, tick.toString()));
         }

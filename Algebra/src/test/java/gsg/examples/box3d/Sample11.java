@@ -18,6 +18,15 @@ import java.util.function.Consumer;
  */
 public class Sample11 {
 
+    /**
+     * Warning: this assumes that X is constantly growing/increasing
+     * @param bezier
+     * @param startAt Value for t
+     * @param inc
+     * @param x the one we look the t for
+     * @param precision return when diff lower then precision
+     * @return the t
+     */
     private static double getTForGivenX(Bezier bezier, double startAt, double inc, double x, double precision) {
         double tForX = 0;
         for (double t=startAt; t<=1+inc; t+=inc) {  // TODO verify the limit
@@ -30,7 +39,34 @@ public class Sample11 {
                 }
             }
         }
-        return tForX;
+        return tForX; // means not found...
+    }
+
+    /**
+     * Warning: this assumes that Z is constantly increasing if inc > 0, DEcreasing otherwise
+     * @param bezier
+     * @param startAt Value for t. 1 or 0 for the first iteration
+     * @param inc
+     * @param z the one we look the t for
+     * @param precision return when diff lower then precision
+     * @return the t
+     */
+    private static double getTForGivenZ(Bezier bezier, double startAt, double inc, double z, double precision) {
+        // TODO if bezier has 2 points...
+        double tForZ = 0;
+        for (double t=startAt; (inc > 0 ? t<=1+inc : t>0); t+=inc) {  // TODO verify the limits
+            Bezier.Point3D tick = bezier.getBezierPoint(t);
+            // Assume that Z is always growing or decreasing. !!
+//            if ((inc > 0 && tick.getZ() > z) || (inc < 0 && tick.getZ() < z)) {
+            if (tick.getZ() > z) {
+                if (Math.abs(tick.getZ() - z) < precision) {
+                    return t;
+                } else {
+                    return getTForGivenZ(bezier, startAt - Math.abs(inc), inc / 10.0, z, precision);
+                }
+            }
+        }
+        return tForZ; // means not found...
     }
 
     private final static String BOAT_PREFIX = "--justTheBoat=";
@@ -55,6 +91,8 @@ public class Sample11 {
         boolean _symmetrical = true;
         boolean _drawFrameCtrlPoints = false;
         double _frameIncrement = 10.0;
+
+        boolean waterline = false;
 
         double xOffset = 25.0;
         double centerOnXValue = 300.0;
@@ -162,6 +200,9 @@ public class Sample11 {
         List<List<Bezier.Point3D>> frameCtrlPts = new ArrayList<>();
         List<Bezier> frameBeziers = new ArrayList<>();
         List<List<VectorUtils.Vector3D>> frameBezierPts = new ArrayList<>();
+
+        List<Bezier.Point3D> waterLine = new ArrayList<>();
+
         for (double _x=(-centerOnXValue + xOffset) + frameIncrement; _x< /*=*/(-centerOnXValue + xOffset) + 550.0; _x+=frameIncrement) {
             double tx = getTForGivenX(bezierRail, 0.0, 1E-1, _x, 1E-4);
             Bezier.Point3D _top = bezierRail.getBezierPoint(tx);
@@ -183,6 +224,20 @@ public class Sample11 {
             }
             frameBezierPts.add(bezierPointsFrame);
         }
+        // Waterline?
+        if (waterline) {
+            // 1 - bow
+            double z = 0; // Water Level
+            // Those go from top to bottom
+//            double t = getTForGivenZ(bezierBow, 1, -1 * 1E-1, z, 1E-4); // TODO 2-point Bezier
+            frameBeziers.forEach(bezier -> {
+                double t = getTForGivenZ(bezier, 1, -1 * 1E-1, z, 1E-4);
+                Bezier.Point3D bezierPoint = bezier.getBezierPoint(t);
+                waterLine.add(bezierPoint);
+//                System.out.printf("Aha! %f -> %s\n", t, bezier.getBezierPoint(t));
+            });
+        }
+
         long after = System.currentTimeMillis();
         System.out.printf("Point calculation took %S ms\n", NumberFormat.getInstance().format(after - before));
 
@@ -437,6 +492,29 @@ public class Sample11 {
                     }
                 }
             }
+
+            // Waterline ?
+            if (waterline) {
+                from = null;
+                for (Bezier.Point3D waterLinePt : waterLine) {
+                    VectorUtils.Vector3D to = new VectorUtils.Vector3D(waterLinePt.getX(), waterLinePt.getY(), waterLinePt.getZ());
+                    if (from != null) {
+                        box3D.drawSegment(g2d, from, to);
+                    }
+                    from = to;
+                }
+                if (symmetrical) {
+                    from = null;
+                    for (Bezier.Point3D waterLinePt : waterLine) {
+                        VectorUtils.Vector3D to = new VectorUtils.Vector3D(waterLinePt.getX(), -waterLinePt.getY(), waterLinePt.getZ());
+                        if (from != null) {
+                            box3D.drawSegment(g2d, from, to);
+                        }
+                        from = to;
+                    }
+                }
+            }
+
             long afterRend = System.currentTimeMillis();
 //            System.out.printf("Rendering took %s ms\n", NumberFormat.getInstance().format(afterRend - beforeRend));
         };
