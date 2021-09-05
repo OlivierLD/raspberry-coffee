@@ -1,7 +1,7 @@
 {
   "description": "Points created by default when starting the program",
   "default-points" : [
-    [0.0, 0.0, 75.0],
+    [0.0, 10.0, 75.0],
     [550.0, 105.0, 56.0]
   ]
 }
