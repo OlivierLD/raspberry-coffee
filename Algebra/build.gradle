@@ -52,7 +52,7 @@ task runSample(type: JavaExec, dependsOn: build, description: "Swing UI sample(2
     println "08: 3D boxes, scaled, translated, draggable, with widgets"
     println "09: 3D wavefront (.obj), draggable, widgets. Use -Pidx=[0..7]"
     println "10: First 3D Bezier sample, draggable, widgets"
-    println "11: Small 3D Bezier boat, draggable, widgets"
+    println "11: Small 3D Bezier boat, draggable, widgets, xLabel Tx"
 //  environment "DISPLAY", ":0.0"
 //  environment "DISPLAY", "192.168.42.31:0.0"
 //  classpath = configurations.runtime

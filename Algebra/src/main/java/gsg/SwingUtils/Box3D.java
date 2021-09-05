@@ -40,9 +40,23 @@ public class Box3D extends JPanel {
     private Color boxFacesColor = new Color(230, 230, 230, 125);
     private Color axisColor = Color.LIGHT_GRAY;
 
+    private Function<Integer, String> xLabelTransformer = x -> String.valueOf(x);
+    private Function<Integer, String> yLabelTransformer = y -> String.valueOf(y);
+    private Function<Integer, String> zLabelTransformer = z -> String.valueOf(z);
+
     private final static int MAX_TICK_PER_AXIS = 16;
 
     private Stroke axisStroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
+
+    public void setXLabelTransformer(Function<Integer, String> xLabelTransformer) {
+        this.xLabelTransformer = xLabelTransformer;
+    }
+    public void setYLabelTransformer(Function<Integer, String> yLabelTransformer) {
+        this.yLabelTransformer = yLabelTransformer;
+    }
+    public void setZLabelTransformer(Function<Integer, String> zLabelTransformer) {
+        this.zLabelTransformer = zLabelTransformer;
+    }
 
     public void setPerimeterColor(Color perimeterColor) {
         this.perimeterColor = perimeterColor;
@@ -389,7 +403,7 @@ public class Box3D extends JPanel {
                 Point right = transformer.apply(rotatedRightSpacePoint);
                 g2d.drawLine(left.x, left.y, right.x, right.y);
                 // Label on the right
-                String label = String.valueOf(z);
+                String label = zLabelTransformer.apply(z); // String.valueOf(z);
 //            int strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
                 g2d.drawString(label, right.x + 2, right.y + 5); // 5: half font size
             }
@@ -436,7 +450,7 @@ public class Box3D extends JPanel {
                 Point right = transformer.apply(rotatedRightSpacePoint);
                 g2d.drawLine(left.x, left.y, right.x, right.y);
                 // Label on the right
-                String label = String.valueOf(y);
+                String label = yLabelTransformer.apply(y); // String.valueOf(y);
                 int strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
                 g2d.drawString(label, right.x - (strWidth / 2), right.y + 10);
             }
@@ -454,7 +468,7 @@ public class Box3D extends JPanel {
                 Point front = transformer.apply(rotatedFrontSpacePoint);
                 g2d.drawLine(back.x, back.y, front.x, front.y);
                 // Label in Front
-                String label = String.valueOf(x);
+                String label = xLabelTransformer.apply(x);
                 int strWidth = g2d.getFontMetrics(g2d.getFont()).stringWidth(label);
                 g2d.drawString(label, front.x - (strWidth / 2), front.y + 10);
             }

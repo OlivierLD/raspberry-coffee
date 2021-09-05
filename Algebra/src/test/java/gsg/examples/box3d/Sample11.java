@@ -98,6 +98,8 @@ public class Sample11 {
         box3D.setzMin(MIN_Z);
         box3D.setzMax(MAX_Z);
 
+        box3D.setXLabelTransformer(x -> String.valueOf(x + 275));
+
         System.out.println("Starting points calculation");
         long before = System.currentTimeMillis();
         // Drop Ctrl Points here
