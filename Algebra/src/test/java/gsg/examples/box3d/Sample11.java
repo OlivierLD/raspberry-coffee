@@ -48,7 +48,14 @@ public class Sample11 {
         double centerOnXValue = 300.0;
 
         // Gradle can send
-        // -PappArgs="--justTheBoat=false --drawFrameCtrlPoints=true --symmetrical=false --frameIncrement=50 --water-lines=true"
+        /*
+         *  -PappArgs="--justTheBoat=false \
+         *             --drawFrameCtrlPoints=true \
+         *             --symmetrical=false \
+         *             --frameIncrement=50 \
+         *             --water-lines=true \
+         *             --buttocks=true"
+         */
         System.out.printf("We have %d arg(s).\n", args.length);
         for (String arg : args) {
             System.out.println("Arg: " + arg);

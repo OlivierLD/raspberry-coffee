@@ -162,7 +162,8 @@ Bezier at work: <http://jeremie.farret.free.fr/wp-content/uploads/2011/12/ATMA20
 | Sample Bezier | Small Bezier Boat |
 |:--------------|:------------------|
 | ![Bezier](./docimg/3DBezier.png) | ![BezierBoat](./docimg/small.boat.png) |
-| Run the test in `gsg.examples.box3d.Sample10`.<br/>Do a `../gradlew runSample -Pnum=10`. | Run the test in `gsg.examples.box3d.Sample11`. <br/>Do a `../gradlew runSample -Pnum=11`.<br/> (See the gradle script for extra parameters) |
+| Run the test in `gsg.examples.box3d.Sample10`.<br/>Do a `../gradlew runSample -Pnum=10`. | Run the test in `gsg.examples.box3d.Sample11`. <br/>Do a `../gradlew runSample -Pnum=11`. |
+|  | (See the gradle script for extra parameters) |
 
 ### Bonus: LaTex in Markdown
 > Works fine in a Jupyter Notebook, not always on a standalone markdown document...
