@@ -65,6 +65,10 @@ public class Bezier {
         this.controlPoints = Arrays.asList(controlPoints);
     }
 
+    public List<Point3D> getControlPoints() {
+        return this.controlPoints;
+    }
+
     public void addControlPoint(Point3D ctrlPoint) {
         if (this.controlPoints == null) {
             this.controlPoints = new ArrayList<>();
@@ -217,7 +221,7 @@ public class Bezier {
             } else if (coordinate == Coordinate.Z) {
                 tickVal = tick.getZ();
             }
-            if ((increasing && tickVal > val) || (!increasing && tickVal < val)) {
+            if ((increasing && tickVal >= val) || (!increasing && tickVal <= val)) {
                 if (Math.abs(tickVal - val) < precision) {
                     return t;
                 } else {

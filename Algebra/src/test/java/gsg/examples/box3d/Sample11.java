@@ -174,11 +174,10 @@ public class Sample11 {
             // H lines
             List<Double> hValues = List.of(-10d, 0d, 10d, 20d, 30d, 40d, 50d);
             hValues.forEach(z -> {
+                System.out.println("Waterline for z=" + z);
                 List<Bezier.Point3D> waterLine = new ArrayList<>();
-                // 1 - bow
-                // double z = 0; // Water Level
                 try {
-                    // Those go from top to bottom
+                    // 1 - bow
                     boolean increasing = (bezierBow.getBezierPoint(0).getZ() < bezierBow.getBezierPoint(1).getZ());
                     double tBow = bezierBow.getTForGivenZ(0, 1E-1, z, 1E-4, increasing);
                     if (tBow != -1) {
@@ -192,9 +191,34 @@ public class Sample11 {
                             Bezier.Point3D bezierPoint = bezier.getBezierPoint(t);
                             waterLine.add(bezierPoint);
                         } else {
-                            System.out.printf("Waterline not found at Z=%.02f\n", z);
+                            System.out.printf("Waterline not found for Z=%.02f, X=%.02f\n", z, bezier.getControlPoints().get(0).getX());
+                            // Look on the keel? After the min
+                            if (false) { // WiP...
+                                double[] keelMinMax = bezierKeel.getMinMax(Bezier.Coordinate.Z, 1e-4);
+                                // keelMinMax[0] + 0.1: Pb when finding an extremum...
+                                double tMinKeel = bezierKeel.getTForGivenZ(0, 1e-1, keelMinMax[0] + 0.1, 1e-4, false);
+                                if (tMinKeel != -1) {
+                                    increase = true; // (bezierKeel.getBezierPoint(0).getZ() < bezierKeel.getBezierPoint(1).getZ());
+                                    // Warning: keel goes down before going up! Hence the tMinKeel
+                                    t = bezierKeel.getTForGivenZ(tMinKeel, 1E-1, z, 1E-4, increase);
+                                    if (t != -1) {
+                                        Bezier.Point3D bezierPoint = bezierKeel.getBezierPoint(t);
+                                        waterLine.add(bezierPoint);
+                                    }
+                                } else {
+                                    System.out.println("Min Keel not found!");
+                                }
+                            }
                         }
                     });
+                    // Transom?
+                    increasing = (bezierTransom.getBezierPoint(0).getZ() < bezierTransom.getBezierPoint(1).getZ());
+                    double tTransom = bezierTransom.getTForGivenZ(0, 1E-1, z, 1E-4, increasing);
+                    if (tTransom != -1) {
+                        Bezier.Point3D bezierPoint = bezierTransom.getBezierPoint(tTransom);
+                        waterLine.add(bezierPoint);
+                    }
+                    // Add to the list
                     hLines.add(waterLine);
                 } catch (Exception ex) {
                     ex.printStackTrace();
