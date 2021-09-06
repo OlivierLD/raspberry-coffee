@@ -17,57 +17,6 @@ import java.util.function.Consumer;
  */
 public class Sample11 {
 
-    /**
-     * Warning: this assumes that X is constantly growing/increasing
-     * @param bezier
-     * @param startAt Value for t
-     * @param inc
-     * @param x the one we look the t for
-     * @param precision return when diff lower than precision
-     * @return the t
-     */
-//    private static double getTForGivenX(Bezier bezier, double startAt, double inc, double x, double precision) {
-//        double tForX = 0;
-//        for (double t=startAt; t<=1+inc; t+=inc) {  // TODO verify the limit
-//            Bezier.Point3D tick = bezier.getBezierPoint(t);
-//            if (tick.getX() > x) { // Assume that X is always growing. !!
-//                if (Math.abs(tick.getX() - x) < precision) {
-//                    return t;
-//                } else {
-//                    return getTForGivenX(bezier, startAt - inc, inc / 10.0, x, precision);
-//                }
-//            }
-//        }
-//        return tForX; // means not found...
-//    }
-
-    /**
-     * Warning: this assumes that Z is constantly increasing if inc > 0, DEcreasing otherwise
-     * @param bezier
-     * @param startAt Value for t. 1 or 0 for the first iteration
-     * @param inc
-     * @param z the one we look the t for
-     * @param precision return when diff lower than precision
-     * @return the t
-     */
-//    private static double getTForGivenZ(Bezier bezier, double startAt, double inc, double z, double precision) {
-//        // TODO if bezier has 2 points...
-//        double tForZ = 0;
-//        for (double t=startAt; (inc > 0 ? t<=1+inc : t>0); t+=inc) {  // TODO verify the limits
-//            Bezier.Point3D tick = bezier.getBezierPoint(t);
-//            // Assume that Z is always growing or decreasing. !!
-////            if ((inc > 0 && tick.getZ() > z) || (inc < 0 && tick.getZ() < z)) {
-//            if (tick.getZ() > z) {
-//                if (Math.abs(tick.getZ() - z) < precision) {
-//                    return t;
-//                } else {
-//                    return getTForGivenZ(bezier, startAt - Math.abs(inc), inc / 10.0, z, precision);
-//                }
-//            }
-//        }
-//        return tForZ; // means not found...
-//    }
-
     private final static String BOAT_PREFIX = "--justTheBoat=";
     private final static String CTRL_PREFIX = "--drawFrameCtrlPoints=";
     private final static String SYM_PREFIX = "--symmetrical=";
@@ -116,16 +65,6 @@ public class Sample11 {
         final boolean drawFrameCtrlPoints = _drawFrameCtrlPoints;
         final boolean symmetrical = _symmetrical;
         final double frameIncrement = _frameIncrement;
-
-//        System.out.println("Several variables in the code for you to play with:");
-//        System.out.println("boolean justTheBoat = true;\n" +
-//                "\n" +
-//                "boolean symmetrical = true;\n" +
-//                "boolean drawFrameCtrlPoints = false;\n" +
-//                "double frameIncrement = 10.0;\n" +
-//                "\n" +
-//                "double xOffset = 25.0;\n" +
-//                "double centerOnXValue = 300.0;");
 
         Box3D box3D = new Box3D(ThreeDFrameWithWidgets.DEFAULT_WIDTH, ThreeDFrameWithWidgets.DEFAULT_HEIGHT);
         box3D.setxMin(MIN_X - centerOnXValue);
