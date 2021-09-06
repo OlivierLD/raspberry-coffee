@@ -213,7 +213,7 @@ public class Bezier {
         if (val < minMax[0] || val > minMax[1]) {
             return -1; // Not in range!
         }
-        for (double t=startAt; t<=1+inc; t+=inc) {  // TODO verify the limit
+        for (double t=startAt; t<=1+inc; t+=inc) {  // TODO verify the limit (of a double...)
             Bezier.Point3D tick = this.getBezierPoint(t);
             double tickVal = tick.getX();
             if (coordinate == Coordinate.Y) {

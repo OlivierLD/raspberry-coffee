@@ -118,7 +118,7 @@ public class Sample11 {
         // Generate the data, the Bézier curves.
         Bezier bezierRail = new Bezier(ctrlPointsRail);
         List<VectorUtils.Vector3D> bezierPointsRail = new ArrayList<>();
-        for (double t=0; t<=1.001; t+=0.01) { // TODO Verify that limit
+        for (double t=0; t<=1.001; t+=0.01) { // TODO Verify that limit (double...)
             Bezier.Point3D tick = bezierRail.getBezierPoint(t);
             bezierPointsRail.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
 //            System.out.printf("Rail Bezier X: %f\n", tick.getX());
@@ -131,7 +131,7 @@ public class Sample11 {
         }
         Bezier bezierKeel = new Bezier(ctrlPointsKeel);
         List<VectorUtils.Vector3D> bezierPointsKeel = new ArrayList<>();
-        for (double t=0; t<=1.001; t+=0.01) { // TODO Limit
+        for (double t=0; t<=1.001; t+=0.01) { // TODO Limit (double...)
             Bezier.Point3D tick = bezierKeel.getBezierPoint(t);
             bezierPointsKeel.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
         }
