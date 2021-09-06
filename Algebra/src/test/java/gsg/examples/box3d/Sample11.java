@@ -102,7 +102,7 @@ public class Sample11 {
 
         List<Bezier.Point3D> ctrlPointsRail = List.of(  // Rail
                 new Bezier.Point3D((-centerOnXValue + xOffset) + 0.000000, 0.000000, 75.000000), // PT B
-                new Bezier.Point3D((-centerOnXValue + xOffset) + 0.000000, 21.428571, 68.928571),
+                new Bezier.Point3D((-centerOnXValue + xOffset) + 0.000000, 21.428571, 75.0), // 68.928571),
                 new Bezier.Point3D((-centerOnXValue + xOffset) + 69.642857, 86.785714, 47.500000),
                 new Bezier.Point3D((-centerOnXValue + xOffset) + 272.142857, 129.642857, 45.357143),
                 new Bezier.Point3D((-centerOnXValue + xOffset) + 550.000000, 65.0, 56.000000));  // PT X
