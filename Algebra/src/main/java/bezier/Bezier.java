@@ -124,19 +124,133 @@ public class Bezier {
         return recurse(this.controlPoints, t);
     }
 
+    public enum Coordinate {
+        X, Y, Z
+    }
+
+    public double[] getMinMax(Coordinate coordinate, double deltaT) {
+        double[] minMax = { Double.MAX_VALUE, -Double.MAX_VALUE };
+        for (double t=0; t<=1.0; t+=deltaT) {
+            Point3D tick = this.getBezierPoint(t);
+//            System.out.println(String.format("%.02f: %s", t, tick.toString()));
+            switch (coordinate) {
+                case X:
+                    minMax[0] = Math.min(minMax[0], tick.getX());
+                    minMax[1] = Math.max(minMax[1], tick.getX());
+                    break;
+                case Y:
+                    minMax[0] = Math.min(minMax[0], tick.getY());
+                    minMax[1] = Math.max(minMax[1], tick.getY());
+                    break;
+                case Z:
+                    minMax[0] = Math.min(minMax[0], tick.getZ());
+                    minMax[1] = Math.max(minMax[1], tick.getZ());
+                    break;
+                default:
+                    break;
+            }
+        }
+        return minMax;
+    }
+
+    public double getTForGivenX(double startAt, double inc, double x, double precision) {
+        return getTForGivenX(startAt, inc, x, precision, true);
+    }
+    public double getTForGivenX(double startAt, double inc, double x, double precision, boolean increasing) {
+        return getTForGivenVal(startAt, inc, x, precision, Coordinate.X, increasing);
+    }
+    public double getTForGivenY(double startAt, double inc, double y, double precision) {
+        return getTForGivenY(startAt, inc, y, precision, true);
+    }
+    public double getTForGivenY(double startAt, double inc, double y, double precision, boolean increasing) {
+        return getTForGivenVal(startAt, inc, y, precision, Coordinate.Y, increasing);
+    }
+    public double getTForGivenZ(double startAt, double inc, double z, double precision) {
+        return getTForGivenZ(startAt, inc, z, precision, true);
+    }
+    public double getTForGivenZ(double startAt, double inc, double z, double precision, boolean increasing) {
+        return getTForGivenVal(startAt, inc, z, precision, Coordinate.Z, increasing);
+    }
+
+    /**
+     * Warning: this assumes that X is constantly growing/increasing
+     *
+     * @param startAt Value for t
+     * @param inc
+     * @param val the one we look the t for
+     * @param precision return when diff lower than precision
+     * @param coordinate X, Y, Z
+     * @param increasing default true, set to false if the value we look for goes high to low.
+     * @return the t
+     */
+    private double getTForGivenVal(double startAt, double inc, double val, double precision, Coordinate coordinate, boolean increasing) {
+
+        if (this.controlPoints.size() < 2) {
+            return -1;
+        }
+        if (this.controlPoints.size() == 2) {
+            double val1 = this.controlPoints.get(0).getX();
+            double val2 = this.controlPoints.get(1).getX();
+            if (coordinate == Coordinate.Y) {
+                val1 = this.controlPoints.get(0).getY();
+                val2 = this.controlPoints.get(1).getY();
+            } else if (coordinate == Coordinate.Z) {
+                val1 = this.controlPoints.get(0).getZ();
+                val2 = this.controlPoints.get(1).getZ();
+            }
+            if (val < Math.min(val1, val2) || val > Math.max(val1, val2)) {
+                return -1;
+            } else {
+                return ((val - val1) / (val2 - val1));
+            }
+        }
+        double[] minMax = this.getMinMax(coordinate, precision); // precision? or other value?
+
+        if (val < minMax[0] || val > minMax[1]) {
+            return -1; // Not in range!
+        }
+        for (double t=startAt; t<=1+inc; t+=inc) {  // TODO verify the limit
+            Bezier.Point3D tick = this.getBezierPoint(t);
+            double tickVal = tick.getX();
+            if (coordinate == Coordinate.Y) {
+                tickVal = tick.getY();
+            } else if (coordinate == Coordinate.Z) {
+                tickVal = tick.getZ();
+            }
+            if ((increasing && tickVal > val) || (!increasing && tickVal < val)) {
+                if (Math.abs(tickVal - val) < precision) {
+                    return t;
+                } else {
+                    return getTForGivenVal(startAt - inc, inc / 10.0, val, precision, coordinate, increasing);
+                }
+            }
+        }
+        return -1; // means not found...
+    }
+
     // Quick example
     public static void main(String... args) {
 
-        Bezier bezier = new Bezier(
-                new Bezier.Point3D(0.000000, 0.000000, 75.000000),
-                new Bezier.Point3D(0.000000, 0.000000, -5.000000));
+//        Bezier bezier = new Bezier(
+//                new Bezier.Point3D(0.000000, 0.000000, 75.000000),
+//                new Bezier.Point3D(0.000000, 0.000000, -5.000000));
 
 //        Bezier bezier = new Bezier(
+//                new Bezier.Point3D(-5.000000, 0.000000, 75.000000),
+//                new Bezier.Point3D(10.000000, 0.000000, -5.000000));
+
+        Bezier bezier = new Bezier(
 //                new Point3D(0, 0, 0),
 //                new Point3D(20, 30, 10),
 //                new Point3D(15, 35, 20),
 //                new Point3D(10, 20, 0)
-//        );
+
+                new Point3D(-265, 17.678544, 69.790446),
+                new Point3D(-265, 17.678544, -5.831876),
+                new Point3D(-265, 0, -5.831876)
+        );
+
+
 
 //        Bezier bezier = new Bezier(
 //                new Bezier.Point3D(0.000000 - 275, 0.000000, 75.000000),
@@ -145,9 +259,44 @@ public class Bezier {
 //                new Bezier.Point3D(272.142857 - 275, 129.642857, 45.357143),
 //                new Bezier.Point3D(550.000000 - 275, 65.0, 56.000000));
 
-        for (double t=0; t<=1.0; t+=0.01) {
+        for (double t=0; t<=1.001; t+=0.01) { // 1.001 ? WTF!
             Point3D tick = bezier.getBezierPoint(t);
-            System.out.println(String.format("%.02f: %s", t, tick.toString()));
+            System.out.println(String.format("t: %.02f => %s", t, tick.toString()));
+        }
+
+        System.out.println();
+
+        double[] minMax = bezier.getMinMax(Coordinate.X, 1e-4);
+        System.out.printf("MinX:%f, MaxX:%f\n", minMax[0], minMax[1]);
+        minMax = bezier.getMinMax(Coordinate.Y, 1e-4);
+        System.out.printf("MinY:%f, MaxY:%f\n", minMax[0], minMax[1]);
+        minMax = bezier.getMinMax(Coordinate.Z, 1e-4);
+        System.out.printf("MinZ:%f, MaxZ:%f\n", minMax[0], minMax[1]);
+
+        System.out.println();
+
+        double xToFind = 12; // 120;
+        double t = bezier.getTForGivenX(0, 1E-1, xToFind, 1E-4);
+        if (t < 0) {
+            System.out.printf("No X=%f in this bezier.\n", xToFind);
+        } else {
+            System.out.printf("For X=%f, found t: %f -> %s.\n", xToFind, t, bezier.getBezierPoint(t));
+        }
+
+        double yToFind = 28; // 120;
+        t = bezier.getTForGivenY(0, 1E-1, yToFind, 1E-4);
+        if (t < 0) {
+            System.out.printf("No Y=%f in this bezier.\n", yToFind);
+        } else {
+            System.out.printf("For Y=%f, found t: %f -> %s.\n", yToFind, t, bezier.getBezierPoint(t));
+        }
+
+        double zToFind = 0; // 10; // 120;
+        t = bezier.getTForGivenZ(0, 1E-1, zToFind, 1E-4, (bezier.getBezierPoint(0).getZ() < bezier.getBezierPoint(1).getZ()));
+        if (t < 0) {
+            System.out.printf("No Z=%f in this bezier.\n", zToFind);
+        } else {
+            System.out.printf("For Z=%f, found t: %f -> %s.\n", zToFind, t, bezier.getBezierPoint(t));
         }
     }
 }
