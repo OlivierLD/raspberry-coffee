@@ -20,6 +20,7 @@ public class Sample11 {
     private final static String BOAT_PREFIX = "--justTheBoat=";
     private final static String CTRL_PREFIX = "--drawFrameCtrlPoints=";
     private final static String SYM_PREFIX = "--symmetrical=";
+    private final static String WL_PREFIX = "--water-lines=";
     private final static String INC_PREFIX = "--frameIncrement=";
 
     /**
@@ -39,14 +40,13 @@ public class Sample11 {
         boolean _symmetrical = true;
         boolean _drawFrameCtrlPoints = false;
         double _frameIncrement = 10.0;
-
-        boolean waterlines = true;
+        boolean _wl = true;
 
         double xOffset = 25.0;
         double centerOnXValue = 300.0;
 
         // Gradle can send
-        // -PappArgs="--justTheBoat=false --drawFrameCtrlPoints=true --symmetrical=false --frameIncrement=50"
+        // -PappArgs="--justTheBoat=false --drawFrameCtrlPoints=true --symmetrical=false --frameIncrement=50 --water-lines=true"
         System.out.printf("We have %d arg(s).\n", args.length);
         for (String arg : args) {
             System.out.println("Arg: " + arg);
@@ -56,6 +56,8 @@ public class Sample11 {
                 _drawFrameCtrlPoints = "true".equals(arg.substring(CTRL_PREFIX.length()));
             } else if (arg.startsWith(SYM_PREFIX)) {
                 _symmetrical = "true".equals(arg.substring(SYM_PREFIX.length()));
+            } else if (arg.startsWith(WL_PREFIX)) {
+                _wl = "true".equals(arg.substring(WL_PREFIX.length()));
             } else if (arg.startsWith(INC_PREFIX)) {
                 _frameIncrement = Double.parseDouble(arg.substring(INC_PREFIX.length()));
             }
@@ -64,6 +66,7 @@ public class Sample11 {
         final boolean justTheBoat = _justTheBoat;
         final boolean drawFrameCtrlPoints = _drawFrameCtrlPoints;
         final boolean symmetrical = _symmetrical;
+        final boolean waterlines = _wl;
         final double frameIncrement = _frameIncrement;
 
         Box3D box3D = new Box3D(ThreeDFrameWithWidgets.DEFAULT_WIDTH, ThreeDFrameWithWidgets.DEFAULT_HEIGHT);

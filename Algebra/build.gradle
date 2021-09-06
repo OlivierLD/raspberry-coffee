@@ -65,7 +65,8 @@ task runSample(type: JavaExec, dependsOn: build, description: "Swing UI sample(2
         println ">>> Running test " + testNum
         main = 'gsg.examples.box3d.Sample' + testNum
     }
-    if (project.hasProperty("appArgs")) { // For Sample11, use ../gradlew runSample -Pnum=11 -PappArgs="--justTheBoat=false --drawFrameCtrlPoints=true --symmetrical=false --frameIncrement=50"
+    // For Sample11, use ../gradlew runSample -Pnum=11 -PappArgs="--justTheBoat=false --drawFrameCtrlPoints=true --symmetrical=false --frameIncrement=50 --water-lines=true"
+    if (project.hasProperty("appArgs")) {
         appArgs = project.getProperty("appArgs")
         args appArgs.split()
     }
