@@ -225,7 +225,12 @@ public class Bezier {
                 if (Math.abs(tickVal - val) < precision) {
                     return t;
                 } else {
-                    return getTForGivenVal(startAt - inc, inc / 10.0, val, precision, coordinate, increasing);
+                    double newStartAt = startAt - inc;
+                    // newStartAt < 0: more precision required
+//                    if (newStartAt < 0 && t == 0) {
+//                         return t;
+//                    }
+                    return getTForGivenVal(newStartAt < 0 ? 0 : newStartAt, inc / 10.0, val, precision, coordinate, increasing);
                 }
             }
         }

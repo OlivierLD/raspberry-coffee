@@ -21,6 +21,7 @@ public class Sample11 {
     private final static String CTRL_PREFIX = "--drawFrameCtrlPoints=";
     private final static String SYM_PREFIX = "--symmetrical=";
     private final static String WL_PREFIX = "--water-lines=";
+    private final static String BUTTOCKS_PREFIX = "--buttocks=";
     private final static String INC_PREFIX = "--frameIncrement=";
 
     /**
@@ -41,6 +42,7 @@ public class Sample11 {
         boolean _drawFrameCtrlPoints = false;
         double _frameIncrement = 10.0;
         boolean _wl = true;
+        boolean _buttocks = true;
 
         double xOffset = 25.0;
         double centerOnXValue = 300.0;
@@ -58,6 +60,8 @@ public class Sample11 {
                 _symmetrical = "true".equals(arg.substring(SYM_PREFIX.length()));
             } else if (arg.startsWith(WL_PREFIX)) {
                 _wl = "true".equals(arg.substring(WL_PREFIX.length()));
+            } else if (arg.startsWith(BUTTOCKS_PREFIX)) {
+                _buttocks = "true".equals(arg.substring(BUTTOCKS_PREFIX.length()));
             } else if (arg.startsWith(INC_PREFIX)) {
                 _frameIncrement = Double.parseDouble(arg.substring(INC_PREFIX.length()));
             }
@@ -67,6 +71,7 @@ public class Sample11 {
         final boolean drawFrameCtrlPoints = _drawFrameCtrlPoints;
         final boolean symmetrical = _symmetrical;
         final boolean waterlines = _wl;
+        final boolean buttocks = _buttocks;
         final double frameIncrement = _frameIncrement;
 
         Box3D box3D = new Box3D(ThreeDFrameWithWidgets.DEFAULT_WIDTH, ThreeDFrameWithWidgets.DEFAULT_HEIGHT);
@@ -143,7 +148,7 @@ public class Sample11 {
         List<List<VectorUtils.Vector3D>> frameBezierPts = new ArrayList<>();
 
         List<List<Bezier.Point3D>> hLines = new ArrayList<>();
-
+        List<List<Bezier.Point3D>> vLines = new ArrayList<>();
 
         for (double _x=(-centerOnXValue + xOffset) + frameIncrement; _x< /*=*/(-centerOnXValue + xOffset) + 550.0; _x+=frameIncrement) {
             System.out.printf("... Calculating frame %.03f\n", _x);
@@ -220,6 +225,48 @@ public class Sample11 {
                     }
                     // Add to the list
                     hLines.add(waterLine);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+        }
+        if (buttocks) {
+            // V lines
+            List<Double> vValues = List.of(20d, 40d, 60d, 80d, 100d);
+            vValues.forEach(y -> {
+                System.out.println("Vline for y=" + y);
+                List<Bezier.Point3D> vLine = new ArrayList<>();
+                try {
+                    // 1 - bow
+                    boolean increasing = (bezierBow.getBezierPoint(0).getY() < bezierBow.getBezierPoint(1).getY());
+                    double tBow = bezierBow.getTForGivenY(0, 1E-1, y, 1E-4, increasing);
+                    if (tBow != -1) {
+                        Bezier.Point3D bezierPoint = bezierBow.getBezierPoint(tBow);
+                        vLine.add(bezierPoint);
+                    }
+                    frameBeziers.forEach(bezier -> {
+                        boolean increase = (bezier.getBezierPoint(0).getY() < bezier.getBezierPoint(1).getY());
+                        double t = bezier.getTForGivenY(0, 1E-1, y, 1E-4, increase);
+                        if (t != -1) {
+                            Bezier.Point3D bezierPoint = bezier.getBezierPoint(t);
+                            vLine.add(bezierPoint);
+                        } else {
+                            System.out.printf("Vline not found for Y=%.02f, X=%.02f\n", y, bezier.getControlPoints().get(0).getX());
+                            // Look on the keel? After the min
+                            if (false) {
+                                // WiP...
+                            }
+                        }
+                    });
+                    // Transom?
+                    increasing = (bezierTransom.getBezierPoint(0).getY() < bezierTransom.getBezierPoint(1).getY());
+                    double tTransom = bezierTransom.getTForGivenY(0, 1E-1, y, 1E-4, increasing);
+                    if (tTransom != -1) {
+                        Bezier.Point3D bezierPoint = bezierTransom.getBezierPoint(tTransom);
+                        vLine.add(bezierPoint);
+                    }
+                    // Add to the list
+                    vLines.add(vLine);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -495,6 +542,28 @@ public class Sample11 {
                         from = null;
                         for (Bezier.Point3D waterLinePt : waterLine) {
                             VectorUtils.Vector3D to = new VectorUtils.Vector3D(waterLinePt.getX(), -waterLinePt.getY(), waterLinePt.getZ());
+                            if (from != null) {
+                                box3D.drawSegment(g2d, from, to);
+                            }
+                            from = to;
+                        }
+                    }
+                }
+            }
+            if (buttocks) {
+                for (List<Bezier.Point3D> vLine : vLines) {
+                    from = null;
+                    for (Bezier.Point3D vLinePt : vLine) {
+                        VectorUtils.Vector3D to = new VectorUtils.Vector3D(vLinePt.getX(), vLinePt.getY(), vLinePt.getZ());
+                        if (from != null) {
+                            box3D.drawSegment(g2d, from, to);
+                        }
+                        from = to;
+                    }
+                    if (symmetrical) {
+                        from = null;
+                        for (Bezier.Point3D vLinePt : vLine) {
+                            VectorUtils.Vector3D to = new VectorUtils.Vector3D(vLinePt.getX(), -vLinePt.getY(), vLinePt.getZ());
                             if (from != null) {
                                 box3D.drawSegment(g2d, from, to);
                             }
