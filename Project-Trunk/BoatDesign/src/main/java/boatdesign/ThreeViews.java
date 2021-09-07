@@ -229,7 +229,7 @@ public class ThreeViews {
         }
 
         // Override defaults (not mandatory)
-        whiteBoardXY.setAxisColor(Color.BLACK);
+        whiteBoardXY.setAxisColor(Color.GRAY);
         whiteBoardXY.setWithGrid(true);
         whiteBoardXY.setBgColor(new Color(250, 250, 250, 255));
         whiteBoardXY.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
@@ -246,7 +246,7 @@ public class ThreeViews {
         whiteBoardXY.setEnforceXAxisAt(0d);
         whiteBoardXY.setEnforceYAxisAt(0d);
 
-        whiteBoardXZ.setAxisColor(Color.BLACK);
+        whiteBoardXZ.setAxisColor(Color.GRAY);
         whiteBoardXZ.setWithGrid(true);
         whiteBoardXZ.setBgColor(new Color(250, 250, 250, 255));
         whiteBoardXZ.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
@@ -263,7 +263,7 @@ public class ThreeViews {
         whiteBoardXZ.setEnforceXAxisAt(0d);
         whiteBoardXZ.setEnforceYAxisAt(0d);
 
-        whiteBoardYZ.setAxisColor(Color.BLACK);
+        whiteBoardYZ.setAxisColor(Color.GRAY);
         whiteBoardYZ.setWithGrid(true);
         whiteBoardYZ.setBgColor(new Color(250, 250, 250, 255));
         whiteBoardYZ.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
