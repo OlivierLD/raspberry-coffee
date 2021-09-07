@@ -158,7 +158,8 @@ public class Sample11 {
         List<List<Bezier.Point3D>> vLines = new ArrayList<>();
 
         for (double _x=(-centerOnXValue + xOffset) + frameIncrement; _x< /*=*/(-centerOnXValue + xOffset) + 550.0; _x+=frameIncrement) {
-            System.out.printf("... Calculating frame %.03f\n", _x);
+            System.out.printf("... Calculating frame %.03f... ", _x);
+            long one = System.currentTimeMillis();
             boolean increase = (bezierRail.getBezierPoint(0).getX() < bezierRail.getBezierPoint(1).getX());
             double tx = bezierRail.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
             Bezier.Point3D _top = bezierRail.getBezierPoint(tx);
@@ -180,6 +181,8 @@ public class Sample11 {
                 bezierPointsFrame.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
             }
             frameBezierPts.add(bezierPointsFrame);
+            long two = System.currentTimeMillis();
+            System.out.printf(" in %s ms.\n", NumberFormat.getInstance().format(two - one));
         }
 
         if (waterlines) {
