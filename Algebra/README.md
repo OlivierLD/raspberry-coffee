@@ -159,6 +159,18 @@ Figure can be rotated with the sliders at the bottom, or by dragging the mouse o
 Good doc at <https://javascript.info/bezier-curve>  
 Bezier at work: <http://jeremie.farret.free.fr/wp-content/uploads/2011/12/ATMA2006.pdf>
 
+<table>
+<tr>
+  <th>Sample 3D Bezier</th><th></th>
+</tr>
+<tr>
+<td> ![Bezier](./docimg/3DBezier.png) </td><td>5 Control Points.<br/> Figure is draggable with the mouse. </td>
+</tr>
+<tr>
+<td> Run the test in `gsg.examples.box3d.Sample10`.<br/>Do a `../gradlew runSample -Pnum=10`. </td><td></td>
+</tr>
+</table>
+
 | Sample 3D Bezier | |
 |:--------------|:-----------------|
 | ![Bezier](./docimg/3DBezier.png) | 5 Control Points.<br/> Figure is draggable with the mouse. |
