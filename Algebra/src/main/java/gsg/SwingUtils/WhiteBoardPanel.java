@@ -359,7 +359,7 @@ public class WhiteBoardPanel extends JPanel {
         Font labelFont = new Font("Courier New", Font.PLAIN, labelFontSize);
         g2d.setFont(labelFont);
 
-        // Vertical X (left) Arrow
+        // Vertical X (left) Arrow. Vertical: orientation of the notches.
         g2d.setStroke(new BasicStroke(2));             // Line Thickness
         WhiteBoardPanel.drawArrow(g2d,
                 new Point((int)Math.round(x0), height),
@@ -389,7 +389,7 @@ public class WhiteBoardPanel extends JPanel {
             xTick += (xEqualsY ? tickIncrement : tickIncrementX);
         }
 
-        // Horizontal Y (bottom) Arrow
+        // Horizontal Y (bottom) Arrow. Horizontal: orientation of the notches.
         g2d.setStroke(new BasicStroke(2));             // Line Thickness
         WhiteBoardPanel.drawArrow(g2d,
                 new Point(0, height - (int)Math.round(y0)),

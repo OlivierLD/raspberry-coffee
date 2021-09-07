@@ -3,7 +3,8 @@ package gsg.examples.box3d;
 import bezier.Bezier;
 import gsg.SwingUtils.Box3D;
 import gsg.VectorUtils;
-import gsg.SwingUtils.fullui.ThreeDFrameWithWidgets;
+//import gsg.SwingUtils.fullui.ThreeDFrameWithWidgets;
+import gsg.SwingUtils.fullui.ThreeDFrameWithWidgetsV2;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class Sample10 {
         final int MIN_Z = -100;
         final int MAX_Z =  100;
 
-        Box3D box3D = new Box3D(ThreeDFrameWithWidgets.DEFAULT_WIDTH, ThreeDFrameWithWidgets.DEFAULT_HEIGHT);
+        Box3D box3D = new Box3D(ThreeDFrameWithWidgetsV2.DEFAULT_WIDTH, ThreeDFrameWithWidgetsV2.DEFAULT_HEIGHT);
         box3D.setxMin(MIN_X);
         box3D.setxMax(MAX_X);
         box3D.setyMin(MIN_Y);
@@ -89,7 +90,7 @@ public class Sample10 {
         // Invoke the above
         box3D.setAfterDrawer(afterDrawer);
 
-        ThreeDFrameWithWidgets frame = new ThreeDFrameWithWidgets(box3D);
+        ThreeDFrameWithWidgetsV2 frame = new ThreeDFrameWithWidgetsV2(box3D);
         frame.setVisible(true);
     }
 }

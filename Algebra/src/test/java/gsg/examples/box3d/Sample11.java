@@ -2,7 +2,7 @@ package gsg.examples.box3d;
 
 import bezier.Bezier;
 import gsg.SwingUtils.Box3D;
-import gsg.SwingUtils.fullui.ThreeDFrameWithWidgets;
+import gsg.SwingUtils.fullui.ThreeDFrameWithWidgetsV2;
 import gsg.VectorUtils;
 
 import java.awt.*;
@@ -81,7 +81,7 @@ public class Sample11 {
         final boolean buttocks = _buttocks;
         final double frameIncrement = _frameIncrement;
 
-        Box3D box3D = new Box3D(ThreeDFrameWithWidgets.DEFAULT_WIDTH, ThreeDFrameWithWidgets.DEFAULT_HEIGHT);
+        Box3D box3D = new Box3D(ThreeDFrameWithWidgetsV2.DEFAULT_WIDTH, ThreeDFrameWithWidgetsV2.DEFAULT_HEIGHT);
         box3D.setxMin(MIN_X - centerOnXValue);
         box3D.setxMax(MAX_X - centerOnXValue);
         box3D.setyMin(MIN_Y);
@@ -589,7 +589,7 @@ public class Sample11 {
         // Invoke the above
         box3D.setAfterDrawer(afterDrawer);
 
-        ThreeDFrameWithWidgets frame = new ThreeDFrameWithWidgets(box3D, "A nice little Bézier boat");
+        ThreeDFrameWithWidgetsV2 frame = new ThreeDFrameWithWidgetsV2(box3D, "A nice little Bézier boat");
         frame.setVisible(true);
     }
 }

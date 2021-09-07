@@ -7,18 +7,18 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;
 import java.util.function.BiConsumer;
 
 /**
- * A Box3D in a Frame, in Swing.
+ * A Box3D on a JPanel, in Swing.
  * With all kinds of widgets to interact with the Box3D.
- *
- * @Deprecated Use ThreeDFrameWithWidgetsV2
  */
-public class ThreeDFrameWithWidgets
-		extends JFrame {
+public class ThreeDPanelWithWidgets
+		extends JPanel {
 
 	private int prevX, prevY;
 
@@ -120,23 +120,23 @@ public class ThreeDFrameWithWidgets
 	private final static int MIN_SLIDER_VALUE = -180;
 	private final static int MAX_SLIDER_VALUE = 180;
 
-	public ThreeDFrameWithWidgets(Box3D box3D) {
+	public ThreeDPanelWithWidgets(Box3D box3D) {
 		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT, null);
 	}
 
-	public ThreeDFrameWithWidgets(Box3D box3D, String title) {
+	public ThreeDPanelWithWidgets(Box3D box3D, String title) {
 		this(box3D, DEFAULT_WIDTH, DEFAULT_HEIGHT, title);
 	}
 
-	public ThreeDFrameWithWidgets(Box3D box3D, int width, int height) {
+	public ThreeDPanelWithWidgets(Box3D box3D, int width, int height) {
 		this(box3D, width, height, null);
 	}
-	public ThreeDFrameWithWidgets(Box3D box3D, int width, int height, String title) {
+	public ThreeDPanelWithWidgets(Box3D box3D, int width, int height, String title) {
 		this.box3D = box3D;
 		initComponents(width, height);
 		this.setSize(new Dimension(width, height));  // Maybe conflicting...
 		this.setPreferredSize(new Dimension(width, height));
-		this.setTitle(title == null ? "Box3D demo - Figure is draggable" : title);
+//		this.setTitle(title == null ? "Box3D demo - Figure is draggable" : title); // TODO Move this at the frame level
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = this.getSize();
@@ -147,7 +147,7 @@ public class ThreeDFrameWithWidgets
 			frameSize.width = screenSize.width;
 		}
 		this.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // TODO Move this at the frame level
 		this.setVisible(true);
 	}
 
@@ -157,7 +157,8 @@ public class ThreeDFrameWithWidgets
 	 */
 	private void initComponents(int width, int height) {
 
-		this.getContentPane().setLayout(new BorderLayout());
+		// this.getContentPane().setLayout(new BorderLayout());
+		this.setLayout(new BorderLayout());
 
 		JScrollPane scrollPane = new JScrollPane(box3D, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setPreferredSize(new Dimension(width, height));
@@ -218,7 +219,8 @@ public class ThreeDFrameWithWidgets
 			}
 		});
 
-		this.getContentPane().add(scrollPane, BorderLayout.CENTER);
+//		this.getContentPane().add(scrollPane, BorderLayout.CENTER);
+		this.add(scrollPane, BorderLayout.CENTER);
 
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new GridBagLayout());
@@ -1030,7 +1032,7 @@ public class ThreeDFrameWithWidgets
 
 		this.add(bottomPanel, BorderLayout.SOUTH);
 
-		this.pack();
+//		this.pack();
 	}
 
 	public boolean isWithFacesChecked() {
