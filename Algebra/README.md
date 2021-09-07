@@ -159,12 +159,12 @@ Figure can be rotated with the sliders at the bottom, or by dragging the mouse o
 Good doc at <https://javascript.info/bezier-curve>  
 Bezier at work: <http://jeremie.farret.free.fr/wp-content/uploads/2011/12/ATMA2006.pdf>
 
-| Sample 3D Bezier |
-|:--------------|
-| ![Bezier](./docimg/3DBezier.png) |
-| Run the test in `gsg.examples.box3d.Sample10`.<br/>Do a `../gradlew runSample -Pnum=10`. |
+| Sample 3D Bezier | |
+|:--------------|:-----------------|
+| ![Bezier](./docimg/3DBezier.png) | 5 Control Points.<br/> Figure is draggable with the mouse. |
+| Run the test in `gsg.examples.box3d.Sample10`.<br/>Do a `../gradlew runSample -Pnum=10`. | |
 
-| Small Bezier Boat | Small Bezier Boat (no box) |
+| Small Bezier Boat | Same, with different parameters |
 |:------------------|:---------------------------|
 | ![BezierBoat](./docimg/small.boat.png) | ![BezierBoat](./docimg/small.boat.2.png) |
 | Run the test in `gsg.examples.box3d.Sample11`. <br/>Do a `../gradlew runSample -Pnum=11`. | Same, no box, no axis, zoom 1.5.<br/><br/> |
