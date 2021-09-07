@@ -169,8 +169,10 @@ Do a `../gradlew runSample -Pnum=10`.
 | Small Bezier Boat | Same, with different parameters |
 |:------------------|:--------------------------------|
 | ![BezierBoat](./docimg/small.boat.2.png) | ![BezierBoat](./docimg/small.boat.png) |
-| Run the test in `gsg.examples.box3d.Sample11`. <br/>Do a `../gradlew runSample -Pnum=11`. |  |
-| (See the gradle script for extra parameters) | |
+
+Run the test in `gsg.examples.box3d.Sample11`.  
+Do a `../gradlew runSample -Pnum=11`.  
+(See the gradle script for extra parameters)
 
 ### Bonus: LaTex in Markdown
 > Works fine in a Jupyter Notebook, not always on a standalone markdown document...
