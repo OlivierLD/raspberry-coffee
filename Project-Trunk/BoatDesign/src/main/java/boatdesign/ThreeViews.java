@@ -74,31 +74,6 @@ public class ThreeViews {
         JOptionPane.showMessageDialog(frame, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
     }
 
-    /**
-     * Get the t value for a given X on the curve.
-     *
-     * @param bezier
-     * @param startAt 0 to begin with
-     * @param inc t increment for first iteration
-     * @param x the X to find
-     * @param precision acceptable difference
-     * @return
-     */
-    private static double getTForGivenX(Bezier bezier, double startAt, double inc, double x, double precision) {
-        double tForX = 0;
-        for (double t=startAt; t<=1; t+=inc) {
-            Bezier.Point3D tick = bezier.getBezierPoint(t);
-            if (tick.getX() > x) { // Assume that X is always growing.
-                if (Math.abs(tick.getX() - x) < precision) {
-                    return t;
-                } else {
-                    return getTForGivenX(bezier, startAt - inc, inc / 10.0, x, precision);
-                }
-            }
-        }
-        return tForX;
-    }
-
     private void refreshData() {
 
         if (ctrlPoints.size() > 0) {
@@ -121,7 +96,8 @@ public class ThreeViews {
             // For test: Find t for a given X
             if (false) {
                 double x = 60; // the one to find
-                double t = getTForGivenX(bezier, 0.0, 1E-1, x, 1E-4);
+//                double t = getTForGivenX(bezier, 0.0, 1E-1, x, 1E-4);
+                double t = bezier.getTForGivenX(0.0, 1E-1, x, 1E-4);
                 Bezier.Point3D tick = bezier.getBezierPoint(t);
                 System.out.printf("For x=%f, t=%f - X:%f, Y:%f\n", x, t, tick.getX(), tick.getY());
             }
@@ -641,7 +617,7 @@ public class ThreeViews {
         ctrlPointsPanel.setBorder(BorderFactory.createTitledBorder("Data Placeholder"));
         dataTextArea = new JTextPane();
         dataTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
-        dataTextArea.setPreferredSize(new Dimension(200, 600));
+        dataTextArea.setPreferredSize(new Dimension(300, 600));
         JScrollPane dataScrollPane = new JScrollPane(dataTextArea);
 
         ctrlPointsPanel.add(dataScrollPane, BorderLayout.NORTH);
