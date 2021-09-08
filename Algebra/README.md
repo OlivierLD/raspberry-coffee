@@ -156,10 +156,11 @@ Use `../gradlew runSample -Pnum=09 -Pidx=4` to see the screen above.
 Figure can be rotated with the sliders at the bottom, or by dragging the mouse on the figure itself.
 
 ### Bézier, in 3D
-Good doc at <https://javascript.info/bezier-curve>  
-Bezier at work: <http://jeremie.farret.free.fr/wp-content/uploads/2011/12/ATMA2006.pdf>
+A type of curve created by [Pierre Bézier](https://en.wikipedia.org/wiki/Pierre_B%C3%A9zier).  
+Good doc at <https://javascript.info/bezier-curve>, interactive, really cool.  
+Bézier at work: <http://jeremie.farret.free.fr/wp-content/uploads/2011/12/ATMA2006.pdf>
 
-> Sample 3D Bezier 
+> Sample 3D Bézier 
 
 ![Bezier](./docimg/3DBezier.png)  
 5 Control Points.<br/> Figure is draggable with the mouse.  
@@ -173,6 +174,12 @@ Do a `../gradlew runSample -Pnum=10`.
 Run the test in `gsg.examples.box3d.Sample11`.  
 Do a `../gradlew runSample -Pnum=11`.  
 (See the gradle script for extra parameters)
+> Note: The above is <u>**_totally_**</u> defined with only **_8_** (3D) control points.
+> - 5 for the rail
+> - 3 for the keel
+> - 2 for the bow (common to rail - on top, and keel - on bottom)
+
+> TODO Soon: Bézier to WebGL... Wow!
 
 ### Bonus: LaTex in Markdown
 > Works fine in a Jupyter Notebook, not always on a standalone markdown document...

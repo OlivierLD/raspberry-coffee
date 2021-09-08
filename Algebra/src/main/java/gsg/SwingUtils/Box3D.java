@@ -715,6 +715,30 @@ public class Box3D extends JPanel {
         g2d.fillOval(atPt.x - radius, atPt.y - radius, 2 *  radius, 2 * radius);
     }
 
+    public enum Justification {
+        LEFT,
+        RIGHT,
+        CENTER
+    }
+    public void drawStringAt(Graphics2D g2d, VectorUtils.Vector3D at, String str) {
+        this.drawStringAt(g2d, at, str, Justification.LEFT);
+    }
+    public void drawStringAt(Graphics2D g2d, VectorUtils.Vector3D at, String str, Justification justification) {
+        this.drawStringAt(g2d, at, str, 0, 0, justification);
+    }
+    public void drawStringAt(Graphics2D g2d, VectorUtils.Vector3D at, String str, int xOffset, int yOffset, Justification justification) {
+        VectorUtils.Vector3D rotatedAt = VectorUtils.rotate(at,
+                Math.toRadians(this.getRotOnX()),
+                Math.toRadians(this.getRotOnY()),
+                Math.toRadians(this.getRotOnZ()));
+        Point atPt = transformer.apply(rotatedAt);
+        int justOffset = 0;
+        if (justification != Justification.LEFT) {
+            int sl = g2d.getFontMetrics().stringWidth(str);
+            justOffset = justification == Justification.RIGHT ? sl : (sl / 2);
+        }
+        g2d.drawString(str, atPt.x + xOffset - justOffset, atPt.y + yOffset);
+    }
 
     public void drawSurroundingBox(Graphics2D g2d, VectorUtils.Vector3D from, VectorUtils.Vector3D to) {
         double[] topFrontLeft = new double[3];

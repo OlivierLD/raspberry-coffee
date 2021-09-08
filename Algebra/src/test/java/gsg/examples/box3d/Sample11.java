@@ -36,11 +36,11 @@ public class Sample11 {
         final int MIN_Z =  -30;
         final int MAX_Z =  100;
 
-        boolean _justTheBoat = true;
+        boolean _justTheBoat = false;
 
         boolean _symmetrical = true;
         boolean _drawFrameCtrlPoints = false;
-        double _frameIncrement = 10.0;
+        double _frameIncrement = 50.0;
         boolean _wl = true;
         boolean _buttocks = true;
 
@@ -389,9 +389,16 @@ public class Sample11 {
                 }
                 // Plot the control points
                 g2d.setColor(Color.BLUE);
+                int fontSize = g2d.getFont().getSize();
                 ctrlPointsRail.forEach(pt -> {
                     VectorUtils.Vector3D at = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
                     box3D.drawCircle(g2d, at, 6);
+                    // Below, an example of drawString
+                    String str = String.valueOf(ctrlPointsRail.indexOf(pt) + 1);
+                    Color g2dColor = g2d.getColor();
+                    g2d.setColor(Color.BLACK);
+                    box3D.drawStringAt(g2d, at, str, 0, -fontSize / 2, Box3D.Justification.CENTER);
+                    g2d.setColor(g2dColor);
                 });
                 if (symmetrical) {
                     ctrlPointsRail.forEach(pt -> {
