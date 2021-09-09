@@ -138,7 +138,7 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
         whiteBoard.setGridColor(Color.GRAY);
         whiteBoard.setWithGrid(true);
         whiteBoard.setXEqualsY(true);
-        whiteBoard.setForceTickIncrement(50);
+        whiteBoard.setForceTickIncrement(20);
         whiteBoard.setEnforceXAxisAt(0d);
         whiteBoard.setEnforceYAxisAt(0d);
 

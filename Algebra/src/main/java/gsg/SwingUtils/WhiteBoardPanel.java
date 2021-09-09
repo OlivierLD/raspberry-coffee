@@ -389,6 +389,24 @@ public class WhiteBoardPanel extends JPanel {
         // X Notches or grid, left to right
         g2d.setColor(gridColor);
         int xTick = (int)Math.floor(graphicRange.getMinX()); // 0;
+        // Re-locate if (forceTickIncrement != null or forceTickIncrementX != null) and enforceXAxisAt != null
+        if ((this.forceTickIncrement != null || this.forceTickIncrementX != null) && this.enforceXAxisAt != null) {
+            int _inc = 0;
+            if (this.forceTickIncrementX != null) {
+                _inc = this.forceTickIncrementX;
+            } else {
+                _inc = this.forceTickIncrement;
+            }
+            int _x = (int)Math.floor(this.enforceXAxisAt);
+            int _canvasX = findCanvasXCoord.apply((double)_x);
+            while (_canvasX > 0) {
+                _x -= _inc;
+                _canvasX = findCanvasXCoord.apply((double)_x);
+                if (_canvasX > 0) {
+                    xTick = _x;
+                }
+            }
+        }
         int canvasX = 0;
         while (canvasX <= width) {
             canvasX = findCanvasXCoord.apply((double)xTick);
@@ -421,6 +439,24 @@ public class WhiteBoardPanel extends JPanel {
         // Y Notches, top to bottom
         g2d.setColor(gridColor);
         int yTick = (int)Math.floor(minDblY); // 0;
+        // Re-locate if (forceTickIncrement != null or forceTickIncrementY != null) and enforceYAxisAt != null
+        if ((this.forceTickIncrement != null || this.forceTickIncrementY != null) && this.enforceYAxisAt != null) {
+            int _inc = 0;
+            if (this.forceTickIncrementY != null) {
+                _inc = this.forceTickIncrementY;
+            } else {
+                _inc = this.forceTickIncrement;
+            }
+            int _y = (int)Math.floor(this.enforceYAxisAt);
+            int _canvasY = findCanvasYCoord.apply((double)_y);
+            while (_canvasY > 0) {
+                _y -= _inc;
+                _canvasY = findCanvasYCoord.apply((double)_y);
+                if (_canvasY > 0) {
+                    yTick = _y;
+                }
+            }
+        }
         int canvasY = 0;
         while (canvasY <= height) {
             canvasY = findCanvasYCoord.apply((double)yTick);

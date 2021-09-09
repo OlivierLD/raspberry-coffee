@@ -339,6 +339,11 @@ public class SwingSample12 implements MouseListener, MouseMotionListener {
         whiteBoard.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
         whiteBoard.setGraphicMargins(30);
         whiteBoard.setXEqualsY(true); // false);
+
+        whiteBoard.setForceTickIncrement(10);
+        whiteBoard.setEnforceXAxisAt(0d);
+        whiteBoard.setEnforceYAxisAt(0d);
+
         // Enforce Y amplitude
         // whiteBoard.setForcedMinY(0d);
         // whiteBoard.setForcedMaxY(100d);
