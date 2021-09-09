@@ -90,7 +90,7 @@ task runSample2(type: JavaExec, dependsOn: build, description: "Swing UI sample.
     workingDir "."
 }
 
-task runSample3(type: JavaExec, dependsOn: build, description: "Swing UI sample.") {
+task runSample3(type: JavaExec, dependsOn: build, description: "Swing UI sample. Bezier.") {
     println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
 //  environment "DISPLAY", ":0.0"
 //  environment "DISPLAY", "192.168.42.31:0.0"
