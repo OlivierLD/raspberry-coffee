@@ -135,7 +135,13 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
         }
 
         whiteBoard.setAxisColor(Color.BLACK);
+        whiteBoard.setGridColor(Color.GRAY);
         whiteBoard.setWithGrid(true);
+        whiteBoard.setXEqualsY(true);
+        whiteBoard.setForceTickIncrement(50);
+        whiteBoard.setEnforceXAxisAt(0d);
+        whiteBoard.setEnforceYAxisAt(0d);
+
         whiteBoard.resetAllData();
 
         // Bezier ctrl points serie

@@ -137,6 +137,7 @@ public class WhiteBoardPanel extends JPanel {
     private final static int DEFAULT_HEIGHT = 600;
     private int graphicMargins = 20;
     private Color axisColor = Color.BLACK;
+    private Color gridColor = Color.BLACK;
     private Color textColor = Color.GRAY;
     private Color bgColor = Color.LIGHT_GRAY;
     private boolean frameGraphic = true;
@@ -152,12 +153,30 @@ public class WhiteBoardPanel extends JPanel {
     private Double enforceXAxisAt = null;
     private Double enforceYAxisAt = null;
 
+    private Integer forceTickIncrement = null;
+    private Integer forceTickIncrementX = null;
+    private Integer forceTickIncrementY = null;
+
+    public void setForceTickIncrement(Integer inc) {
+        this.forceTickIncrement = inc;
+    }
+    public void setForceTickIncrementX(Integer inc) {
+        this.forceTickIncrementX = inc;
+    }
+    public void setForceTickIncrementY(Integer inc) {
+        this.forceTickIncrementY = inc;
+    }
+
     public void setGraphicMargins(int graphicMargins) {
         this.graphicMargins = graphicMargins;
     }
 
     public void setAxisColor(Color axisColor) {
         this.axisColor = axisColor;
+    }
+
+    public void setGridColor(Color gridColor) {
+        this.gridColor = gridColor;
     }
 
     public void setTextColor(Color textColor) {
@@ -367,8 +386,8 @@ public class WhiteBoardPanel extends JPanel {
                 axisColor);
         g2d.setStroke(new BasicStroke(1));             // Line Thickness
 
-        // X Notches or grid
-        g2d.setColor(axisColor);
+        // X Notches or grid, left to right
+        g2d.setColor(gridColor);
         int xTick = (int)Math.floor(graphicRange.getMinX()); // 0;
         int canvasX = 0;
         while (canvasX <= width) {
@@ -386,7 +405,9 @@ public class WhiteBoardPanel extends JPanel {
                 int strWidth = g2d.getFontMetrics(labelFont).stringWidth(label);
                 g2d.drawString(label, canvasX - (strWidth / 2),height - (int) Math.round(y0 - 5 - (labelFont.getSize())));
             }
-            xTick += (xEqualsY ? tickIncrement : tickIncrementX);
+            xTick += (xEqualsY ?
+                    (forceTickIncrement != null ? forceTickIncrement : tickIncrement) :
+                    (forceTickIncrementX != null ? forceTickIncrementX : tickIncrementX));
         }
 
         // Horizontal Y (bottom) Arrow. Horizontal: orientation of the notches.
@@ -397,8 +418,8 @@ public class WhiteBoardPanel extends JPanel {
                 axisColor);
 
         g2d.setStroke(new BasicStroke(1));             // Line Thickness
-        // Y Notches
-        g2d.setColor(axisColor);
+        // Y Notches, top to bottom
+        g2d.setColor(gridColor);
         int yTick = (int)Math.floor(minDblY); // 0;
         int canvasY = 0;
         while (canvasY <= height) {
@@ -417,7 +438,9 @@ public class WhiteBoardPanel extends JPanel {
                 int strWidth = g2d.getFontMetrics(labelFont).stringWidth(label);
                 g2d.drawString(label, (int) Math.round(x0 - 5) - strWidth - 2, height - canvasY + (int)(labelFont.getSize() * 0.9 / 2));
             }
-            yTick += (xEqualsY ? tickIncrement : tickIncrementY);
+            yTick += (xEqualsY ?
+                    (forceTickIncrement != null ? forceTickIncrement : tickIncrement) :
+                    (forceTickIncrementY != null ? forceTickIncrementY : tickIncrementY));
         }
 
         // For the text
