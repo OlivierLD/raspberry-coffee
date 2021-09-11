@@ -24,8 +24,8 @@ dependencies {
 
 // also used by mergeServiceFiles to build executable fat-jar.
 // mainClassName = "boatdesign.FirstTest"
-//mainClassName = "boatdesign.ThreeViews"
-mainClassName = "boatdesign.ThreeViewsV2"
+mainClassName = "boatdesign.ThreeViews"
+//mainClassName = "boatdesign.ThreeViewsV2"
 
 shadowJar {
   zip64 true

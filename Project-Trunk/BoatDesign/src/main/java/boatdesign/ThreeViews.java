@@ -4,16 +4,18 @@ import bezier.Bezier;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gsg.SwingUtils.Box3D;
 import gsg.SwingUtils.WhiteBoardPanel;
-import gsg.SwingUtils.fullui.ThreeDFrameWithWidgets;
+import gsg.SwingUtils.fullui.ThreeDPanelWithWidgets;
 import gsg.VectorUtils;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +33,8 @@ public class ThreeViews {
 
     private final static String TITLE = "One 3D Bezier Drawing Board";
 
-    private JFrame frame;
+    private static JFrame frame;
+    private ThreeDPanelWithWidgets threeDPanel;
     private final JMenuBar menuBar = new JMenuBar();
     private final JMenu menuFile = new JMenu();
     private final JMenuItem menuFileSpit = new JMenuItem();
@@ -59,6 +62,8 @@ public class ThreeViews {
 
     private JTextPane dataTextArea = null;
 
+    private static ThreeViews instance;
+
     private void fileSpit_ActionPerformed(ActionEvent ae) {
         System.out.println("Ctrl Points:");
         this.ctrlPoints.forEach(pt -> {
@@ -83,7 +88,7 @@ public class ThreeViews {
                     .collect(Collectors.joining("\n"));
             dataTextArea.setText("Control Points:\n" + content);
 
-                    // Generate the data, the Bézier curve.
+            // Generate the data, the Bézier curve.
             Bezier bezier = new Bezier(ctrlPoints);
             List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>(); // The points to display.
             if (ctrlPoints.size() > 2) { // 3 points minimum.
@@ -92,14 +97,6 @@ public class ThreeViews {
                     // System.out.println(String.format("%.03f: %s", t, tick.toString()));
                     bezierPoints.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
                 }
-            }
-            // For test: Find t for a given X
-            if (false) {
-                double x = 60; // the one to find
-//                double t = getTForGivenX(bezier, 0.0, 1E-1, x, 1E-4);
-                double t = bezier.getTForGivenX(0.0, 1E-1, x, 1E-4);
-                Bezier.Point3D tick = bezier.getBezierPoint(t);
-                System.out.printf("For x=%f, t=%f - X:%f, Y:%f\n", x, t, tick.getX(), tick.getY());
             }
 
             // Prepare data for display
@@ -217,8 +214,10 @@ public class ThreeViews {
     private void initComponents() {
 
         if (initConfig != null) {
-            List<List<Double>> defaultPoints = (List)initConfig.get("default-points");
-            defaultPoints.forEach(pt -> {
+            Map<String, List<Object>> defaultPoints = (Map)initConfig.get("default-points");
+            List<List<Double>> railPoints = (List)defaultPoints.get("rail");
+            // Just the rail for now
+            railPoints.forEach(pt -> {
                 ctrlPoints.add(new Bezier.Point3D(pt.get(0), pt.get(1), pt.get(2)));
             });
         } else {
@@ -229,7 +228,14 @@ public class ThreeViews {
         }
 
         // Override defaults (not mandatory)
-        whiteBoardXY.setAxisColor(Color.GRAY);
+
+        // XY
+        whiteBoardXY.setAxisColor(Color.BLACK);
+        whiteBoardXY.setGridColor(Color.GRAY);
+        whiteBoardXY.setForceTickIncrement(50);
+        whiteBoardXY.setEnforceXAxisAt(0d);
+        whiteBoardXY.setEnforceYAxisAt(0d);
+
         whiteBoardXY.setWithGrid(true);
         whiteBoardXY.setBgColor(new Color(250, 250, 250, 255));
         whiteBoardXY.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
@@ -243,10 +249,13 @@ public class ThreeViews {
         whiteBoardXY.setForcedMinY(0d);
         whiteBoardXY.setForcedMaxY(150d);
 
-        whiteBoardXY.setEnforceXAxisAt(0d);
-        whiteBoardXY.setEnforceYAxisAt(0d);
+        // XZ
+        whiteBoardXZ.setAxisColor(Color.BLACK);
+        whiteBoardXZ.setGridColor(Color.GRAY);
+        whiteBoardXZ.setForceTickIncrement(50);
+        whiteBoardXZ.setEnforceXAxisAt(0d);
+        whiteBoardXZ.setEnforceYAxisAt(0d);
 
-        whiteBoardXZ.setAxisColor(Color.GRAY);
         whiteBoardXZ.setWithGrid(true);
         whiteBoardXZ.setBgColor(new Color(250, 250, 250, 255));
         whiteBoardXZ.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
@@ -260,10 +269,13 @@ public class ThreeViews {
         whiteBoardXZ.setForcedMinY(-50d);
         whiteBoardXZ.setForcedMaxY(100d);
 
-        whiteBoardXZ.setEnforceXAxisAt(0d);
-        whiteBoardXZ.setEnforceYAxisAt(0d);
+        // YZ
+        whiteBoardYZ.setAxisColor(Color.BLACK);
+        whiteBoardYZ.setGridColor(Color.GRAY);
+        whiteBoardYZ.setForceTickIncrement(50);
+        whiteBoardYZ.setEnforceXAxisAt(0d);
+        whiteBoardYZ.setEnforceYAxisAt(0d);
 
-        whiteBoardYZ.setAxisColor(Color.GRAY);
         whiteBoardYZ.setWithGrid(true);
         whiteBoardYZ.setBgColor(new Color(250, 250, 250, 255));
         whiteBoardYZ.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
@@ -277,10 +289,7 @@ public class ThreeViews {
         whiteBoardYZ.setForcedMinY(-50d);
         whiteBoardYZ.setForcedMaxY(100d);
 
-        whiteBoardYZ.setEnforceXAxisAt(0d);
-        whiteBoardYZ.setEnforceYAxisAt(0d);
-
-        ThreeViews instance = this;
+        // ThreeViewsV2 instance = this;
 
         whiteBoardXY.addMouseListener(new MouseAdapter() {
             @Override
@@ -483,7 +492,7 @@ public class ThreeViews {
                     Bezier.Point3D closePoint = getClosePoint(e, whiteBoardYZ, Orientation.YZ);
                     if (closePoint != null) {
                         BezierPopup popup = new BezierPopup(instance, closePoint);
-                        popup.show(whiteBoardXZ, e.getX(), e.getY());
+                        popup.show(whiteBoardYZ, e.getX(), e.getY());
                     }
                 } else {
                     // Regular click.
@@ -622,7 +631,7 @@ public class ThreeViews {
 
         ctrlPointsPanel.add(dataScrollPane, BorderLayout.NORTH);
 
-        whiteBoardsPanel.add(whiteBoardXZ,
+        whiteBoardsPanel.add(whiteBoardXZ,         // Side
                 new GridBagConstraints(0,
                         0,
                         1,
@@ -632,7 +641,7 @@ public class ThreeViews {
                         GridBagConstraints.CENTER,
                         GridBagConstraints.NONE,
                         new Insets(0, 0, 0, 0), 0, 0));
-        whiteBoardsPanel.add(whiteBoardYZ,
+        whiteBoardsPanel.add(whiteBoardYZ,       // Face
                 new GridBagConstraints(0,
                         1,
                         1,
@@ -641,8 +650,8 @@ public class ThreeViews {
                         0.0,
                         GridBagConstraints.CENTER,
                         GridBagConstraints.NONE,
-                        new Insets(0, 0, 0, 0), 0, 0));
-        whiteBoardsPanel.add(whiteBoardXY,
+                        new Insets(50, 0, 0, 0), 0, 10));
+        whiteBoardsPanel.add(whiteBoardXY,       // From above
                 new GridBagConstraints(0,
                         2,
                         1,
@@ -663,7 +672,7 @@ public class ThreeViews {
 //                GridBagConstraints.WEST,
 //                GridBagConstraints.NONE,
 //                new Insets(0, 0, 0, 0), 0, 0));
-        whiteBoardsPanel.add(ctrlPointsPanel,
+        whiteBoardsPanel.add(threeDPanel, // ctrlPointsPanel,
                 new GridBagConstraints(1,
                         0,
                         1,
@@ -693,6 +702,8 @@ public class ThreeViews {
     }
 
     public ThreeViews() {
+        instance = this;
+
         this.whiteBoardXY = new WhiteBoardPanel(); // from above
         this.whiteBoardXZ = new WhiteBoardPanel(); // side
         this.whiteBoardYZ = new WhiteBoardPanel(); // facing
@@ -753,8 +764,10 @@ public class ThreeViews {
 //        box3D.setDrawer(afterDrawer);
         box3D.setAfterDrawer(afterDrawer);
 
-        ThreeDFrameWithWidgets threeDFrame = new ThreeDFrameWithWidgets(box3D, "Same Bézier, in 3D - Draggable");
-        threeDFrame.setVisible(true);
+//        ThreeDFrameWithWidgets threeDFrame = new ThreeDFrameWithWidgets(box3D, "Same Bézier, in 3D - Draggable");
+//        threeDFrame.setVisible(true);
+
+        threeDPanel = new ThreeDPanelWithWidgets(box3D);
     }
 
     enum Orientation {
@@ -797,19 +810,25 @@ public class ThreeViews {
             implements ActionListener,
             PopupMenuListener {
         private JMenuItem deleteMenuItem;
+        private JMenuItem editMenuItem;
 
         private ThreeViews parent;
         private Bezier.Point3D closePoint;
 
         private final static String DELETE_CTRL_POINT = "Delete Ctrl Point";
+        private final static String EDIT_CTRL_POINT = "Edit Ctrl Point";
 
         public BezierPopup(ThreeViews parent, Bezier.Point3D closePoint) {
             super();
             this.parent = parent;
             this.closePoint = closePoint;
+
             deleteMenuItem = new JMenuItem(DELETE_CTRL_POINT);
             this.add(deleteMenuItem);
             deleteMenuItem.addActionListener(this);
+            editMenuItem = new JMenuItem(EDIT_CTRL_POINT);
+            this.add(editMenuItem);
+            editMenuItem.addActionListener(this);
         }
 
         @Override
@@ -817,6 +836,24 @@ public class ThreeViews {
             if (event.getActionCommand().equals(DELETE_CTRL_POINT)) {
                 if (this.closePoint != null) {
                     this.parent.ctrlPoints.remove(this.closePoint);
+                    this.parent.refreshData();
+                }
+            } else if (event.getActionCommand().equals(EDIT_CTRL_POINT)) {
+                if (this.closePoint != null) {
+                    CtrlPointEditor cpEditor = new CtrlPointEditor(this.closePoint.getX(), this.closePoint.getY(), this.closePoint.getZ());
+                    int response = JOptionPane.showConfirmDialog(frame,
+                            cpEditor,
+                            "Edit Control Point",
+                            JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.INFORMATION_MESSAGE);
+                    if (response == JOptionPane.OK_OPTION) {
+                        // Update Control Point in the list
+                        double x = cpEditor.getXValue();
+                        double y = cpEditor.getYValue();
+                        double z = cpEditor.getZValue();
+                        int idx = this.parent.ctrlPoints.indexOf(this.closePoint);
+                        this.parent.ctrlPoints.get(idx).x(x).y(y).z(z);
+                    }
                     this.parent.refreshData();
                 }
             }
@@ -832,6 +869,70 @@ public class ThreeViews {
 
         @Override
         public void popupMenuCanceled(PopupMenuEvent e) {
+        }
+    }
+
+    static class CtrlPointEditor extends JPanel {
+        private transient Border border = BorderFactory.createEtchedBorder();
+        private GridBagLayout layoutMain = new GridBagLayout();
+        private JLabel xLabel = new JLabel("X");
+        private final JFormattedTextField xValue = new JFormattedTextField(new DecimalFormat("#0.0000"));
+        private JLabel yLabel = new JLabel("Y");
+        private final JFormattedTextField yValue = new JFormattedTextField(new DecimalFormat("#0.0000"));
+        private JLabel zLabel = new JLabel("Z");
+        private final JFormattedTextField zValue = new JFormattedTextField(new DecimalFormat("#0.0000"));
+
+        private double x, y, z;
+
+        public CtrlPointEditor(double x, double y, double z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            try {
+                this.jbInit();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        public double getXValue() {
+            return Double.parseDouble(this.xValue.getText());
+        }
+
+        public double getYValue() {
+            return Double.parseDouble(this.yValue.getText());
+        }
+
+        public double getZValue() {
+            return Double.parseDouble(this.zValue.getText());
+        }
+
+        private void jbInit() {
+            this.setLayout(layoutMain);
+            this.setBorder(border);
+
+            xValue.setHorizontalAlignment(SwingConstants.RIGHT);
+            xValue.setPreferredSize(new Dimension(80, 20));
+            this.add(xLabel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                    new Insets(5, 15, 0, 15), 0, 0));
+            this.add(xValue, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                    new Insets(5, 15, 0, 15), 0, 0));
+            yValue.setHorizontalAlignment(SwingConstants.RIGHT);
+            yValue.setPreferredSize(new Dimension(80, 20));
+            this.add(yLabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                    new Insets(5, 15, 0, 15), 0, 0));
+            this.add(yValue, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                    new Insets(5, 15, 0, 15), 0, 0));
+            zValue.setHorizontalAlignment(SwingConstants.RIGHT);
+            zValue.setPreferredSize(new Dimension(80, 20));
+            this.add(zLabel, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                    new Insets(5, 15, 0, 15), 0, 0));
+            this.add(zValue, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                    new Insets(5, 15, 0, 15), 0, 0));
+
+            this.xValue.setValue(this.x);
+            this.yValue.setValue(this.y);
+            this.zValue.setValue(this.z);
         }
     }
 
@@ -862,7 +963,7 @@ public class ThreeViews {
             System.out.println("Warning: no init.json was found.");
         }
 
-        ThreeViews thisThing = new ThreeViews();// This one has instantiated the white board
+        ThreeViews thisThing = new ThreeViews();// This one has instantiated the white boards
 
         thisThing.initComponents();
 
