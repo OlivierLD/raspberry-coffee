@@ -398,11 +398,12 @@ public class WhiteBoardPanel extends JPanel {
                 _inc = this.forceTickIncrement;
             }
             int _x = (int)Math.floor(this.enforceXAxisAt);
+            xTick = _x;
             int _canvasX = findCanvasXCoord.apply((double)_x);
-            while (_canvasX > 0) {
+            while (_canvasX >= 0) {
                 _x -= _inc;
                 _canvasX = findCanvasXCoord.apply((double)_x);
-                if (_canvasX > 0) {
+                if (_canvasX >= 0) {
                     xTick = _x;
                 }
             }
@@ -448,11 +449,12 @@ public class WhiteBoardPanel extends JPanel {
                 _inc = this.forceTickIncrement;
             }
             int _y = (int)Math.floor(this.enforceYAxisAt);
+            yTick = _y;
             int _canvasY = findCanvasYCoord.apply((double)_y);
-            while (_canvasY > 0) {
+            while (_canvasY >= 0) {
                 _y -= _inc;
                 _canvasY = findCanvasYCoord.apply((double)_y);
-                if (_canvasY > 0) {
+                if (_canvasY >= 0) {
                     yTick = _y;
                 }
             }

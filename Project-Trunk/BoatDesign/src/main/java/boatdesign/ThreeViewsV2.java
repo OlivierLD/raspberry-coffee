@@ -4,17 +4,18 @@ import bezier.Bezier;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gsg.SwingUtils.Box3D;
 import gsg.SwingUtils.WhiteBoardPanel;
-import gsg.SwingUtils.fullui.ThreeDFrameWithWidgets;
 import gsg.SwingUtils.fullui.ThreeDPanelWithWidgets;
 import gsg.VectorUtils;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class ThreeViewsV2 {
 
     private final static String TITLE = "One 3D Bezier Drawing Board";
 
-    private JFrame frame;
+    private static JFrame frame;
     private ThreeDPanelWithWidgets threeDPanel;
     private final JMenuBar menuBar = new JMenuBar();
     private final JMenu menuFile = new JMenu();
@@ -60,6 +61,8 @@ public class ThreeViewsV2 {
     private Box3D box3D = null;
 
     private JTextPane dataTextArea = null;
+
+    private static ThreeViewsV2 instance;
 
     private void fileSpit_ActionPerformed(ActionEvent ae) {
         System.out.println("Ctrl Points:");
@@ -292,7 +295,7 @@ public class ThreeViewsV2 {
         whiteBoardYZ.setForcedMinY(-50d);
         whiteBoardYZ.setForcedMaxY(100d);
 
-        ThreeViewsV2 instance = this;
+        // ThreeViewsV2 instance = this;
 
         whiteBoardXY.addMouseListener(new MouseAdapter() {
             @Override
@@ -495,7 +498,7 @@ public class ThreeViewsV2 {
                     Bezier.Point3D closePoint = getClosePoint(e, whiteBoardYZ, Orientation.YZ);
                     if (closePoint != null) {
                         BezierPopup popup = new BezierPopup(instance, closePoint);
-                        popup.show(whiteBoardXZ, e.getX(), e.getY());
+                        popup.show(whiteBoardYZ, e.getX(), e.getY());
                     }
                 } else {
                     // Regular click.
@@ -634,7 +637,7 @@ public class ThreeViewsV2 {
 
         ctrlPointsPanel.add(dataScrollPane, BorderLayout.NORTH);
 
-        whiteBoardsPanel.add(whiteBoardXZ,
+        whiteBoardsPanel.add(whiteBoardXZ,         // Side
                 new GridBagConstraints(0,
                         0,
                         1,
@@ -644,7 +647,7 @@ public class ThreeViewsV2 {
                         GridBagConstraints.CENTER,
                         GridBagConstraints.NONE,
                         new Insets(0, 0, 0, 0), 0, 0));
-        whiteBoardsPanel.add(whiteBoardYZ,
+        whiteBoardsPanel.add(whiteBoardYZ,       // Face
                 new GridBagConstraints(0,
                         1,
                         1,
@@ -653,8 +656,8 @@ public class ThreeViewsV2 {
                         0.0,
                         GridBagConstraints.CENTER,
                         GridBagConstraints.NONE,
-                        new Insets(0, 0, 0, 0), 0, 0));
-        whiteBoardsPanel.add(whiteBoardXY,
+                        new Insets(50, 0, 0, 0), 0, 10));
+        whiteBoardsPanel.add(whiteBoardXY,       // From above
                 new GridBagConstraints(0,
                         2,
                         1,
@@ -705,6 +708,8 @@ public class ThreeViewsV2 {
     }
 
     public ThreeViewsV2() {
+        instance = this;
+
         this.whiteBoardXY = new WhiteBoardPanel(); // from above
         this.whiteBoardXZ = new WhiteBoardPanel(); // side
         this.whiteBoardYZ = new WhiteBoardPanel(); // facing
@@ -811,19 +816,25 @@ public class ThreeViewsV2 {
             implements ActionListener,
             PopupMenuListener {
         private JMenuItem deleteMenuItem;
+        private JMenuItem editMenuItem;
 
         private ThreeViewsV2 parent;
         private Bezier.Point3D closePoint;
 
         private final static String DELETE_CTRL_POINT = "Delete Ctrl Point";
+        private final static String EDIT_CTRL_POINT = "Edit Ctrl Point";
 
         public BezierPopup(ThreeViewsV2 parent, Bezier.Point3D closePoint) {
             super();
             this.parent = parent;
             this.closePoint = closePoint;
+
             deleteMenuItem = new JMenuItem(DELETE_CTRL_POINT);
             this.add(deleteMenuItem);
             deleteMenuItem.addActionListener(this);
+            editMenuItem = new JMenuItem(EDIT_CTRL_POINT);
+            this.add(editMenuItem);
+            editMenuItem.addActionListener(this);
         }
 
         @Override
@@ -831,6 +842,24 @@ public class ThreeViewsV2 {
             if (event.getActionCommand().equals(DELETE_CTRL_POINT)) {
                 if (this.closePoint != null) {
                     this.parent.ctrlPoints.remove(this.closePoint);
+                    this.parent.refreshData();
+                }
+            } else if (event.getActionCommand().equals(EDIT_CTRL_POINT)) {
+                if (this.closePoint != null) {
+                    CtrlPointEditor cpEditor = new CtrlPointEditor(this.closePoint.getX(), this.closePoint.getY(), this.closePoint.getZ());
+                    int response = JOptionPane.showConfirmDialog(frame,
+                            cpEditor,
+                            "Edit Control Point",
+                            JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.INFORMATION_MESSAGE);
+                    if (response == JOptionPane.OK_OPTION) {
+                        // Update Control Point in the list
+                        double x = cpEditor.getXValue();
+                        double y = cpEditor.getYValue();
+                        double z = cpEditor.getZValue();
+                        int idx = this.parent.ctrlPoints.indexOf(this.closePoint);
+                        this.parent.ctrlPoints.get(idx).x(x).y(y).z(z);
+                    }
                     this.parent.refreshData();
                 }
             }
@@ -846,6 +875,70 @@ public class ThreeViewsV2 {
 
         @Override
         public void popupMenuCanceled(PopupMenuEvent e) {
+        }
+    }
+
+    static class CtrlPointEditor extends JPanel {
+        private transient Border border = BorderFactory.createEtchedBorder();
+        private GridBagLayout layoutMain = new GridBagLayout();
+        private JLabel xLabel = new JLabel("X");
+        private final JFormattedTextField xValue = new JFormattedTextField(new DecimalFormat("#0.0000"));
+        private JLabel yLabel = new JLabel("Y");
+        private final JFormattedTextField yValue = new JFormattedTextField(new DecimalFormat("#0.0000"));
+        private JLabel zLabel = new JLabel("Z");
+        private final JFormattedTextField zValue = new JFormattedTextField(new DecimalFormat("#0.0000"));
+
+        private double x, y, z;
+
+        public CtrlPointEditor(double x, double y, double z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            try {
+                this.jbInit();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        public double getXValue() {
+            return Double.parseDouble(this.xValue.getText());
+        }
+
+        public double getYValue() {
+            return Double.parseDouble(this.yValue.getText());
+        }
+
+        public double getZValue() {
+            return Double.parseDouble(this.zValue.getText());
+        }
+
+        private void jbInit() {
+            this.setLayout(layoutMain);
+            this.setBorder(border);
+
+            xValue.setHorizontalAlignment(SwingConstants.RIGHT);
+            xValue.setPreferredSize(new Dimension(80, 20));
+            this.add(xLabel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                    new Insets(5, 15, 0, 15), 0, 0));
+            this.add(xValue, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                    new Insets(5, 15, 0, 15), 0, 0));
+            yValue.setHorizontalAlignment(SwingConstants.RIGHT);
+            yValue.setPreferredSize(new Dimension(80, 20));
+            this.add(yLabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                    new Insets(5, 15, 0, 15), 0, 0));
+            this.add(yValue, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                    new Insets(5, 15, 0, 15), 0, 0));
+            zValue.setHorizontalAlignment(SwingConstants.RIGHT);
+            zValue.setPreferredSize(new Dimension(80, 20));
+            this.add(zLabel, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                    new Insets(5, 15, 0, 15), 0, 0));
+            this.add(zValue, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+                    new Insets(5, 15, 0, 15), 0, 0));
+
+            this.xValue.setValue(this.x);
+            this.yValue.setValue(this.y);
+            this.zValue.setValue(this.z);
         }
     }
 
