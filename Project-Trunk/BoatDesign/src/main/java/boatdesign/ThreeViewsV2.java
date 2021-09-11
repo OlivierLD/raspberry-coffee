@@ -214,8 +214,10 @@ public class ThreeViewsV2 {
     private void initComponents() {
 
         if (initConfig != null) {
-            List<List<Double>> defaultPoints = (List)initConfig.get("default-points");
-            defaultPoints.forEach(pt -> {
+            Map<String, List<Object>> defaultPoints = (Map)initConfig.get("default-points");
+            List<List<Double>> railPoints = (List)defaultPoints.get("rail");
+            // Just the rail for now
+            railPoints.forEach(pt -> {
                 ctrlPoints.add(new Bezier.Point3D(pt.get(0), pt.get(1), pt.get(2)));
             });
         } else {

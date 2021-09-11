@@ -1,7 +1,27 @@
 {
   "description": "Points created by default when starting the program",
-  "default-points" : [
-    [0.0, 10.0, 75.0],
-    [550.0, 105.0, 56.0]
-  ]
+  "comments": [
+    "First point of rail is first point of bow",
+    "Last point of keel is first point of keel",
+    "Length id 550 (for rail, and keel)"
+  ],
+  "default-points": {
+    "rail": [
+      [ 0.000000, 0.000000, 75.000000 ],
+      [ 0.000000, 21.428571, 75.0 ],
+      [69.642857, 86.785714, 47.500000],
+      [272.142857, 129.642857, 45.357143],
+      [550.000000, 65.0, 56.000000]
+    ],
+    "bow": [
+      [ 0.0, 0.0, 75.0 ],
+      [ 0.0, 0.0, -5.0 ]
+    ],
+    "keel": [
+      [0.000000, 0.000000, -5.000000],
+      [290.357143, 0.000000, -29.642857],
+      [550.000000, 0.000000, 5.000000]
+    ]
+  }
 }
+

@@ -65,31 +65,6 @@ public class FirstTest {
         JOptionPane.showMessageDialog(whiteBoard, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
     }
 
-    /**
-     * Get the t value for a given X on the curve.
-     *
-     * @param bezier
-     * @param startAt 0 to begin with
-     * @param inc t increment for first iteration
-     * @param x the X to find
-     * @param precision acceptable difference
-     * @return
-     */
-    private static double getTForGivenX(Bezier bezier, double startAt, double inc, double x, double precision) {
-        double tForX = 0;
-        for (double t=startAt; t<=1; t+=inc) {
-            Bezier.Point3D tick = bezier.getBezierPoint(t);
-            if (tick.getX() > x) { // Assume that X is always growing.
-                if (Math.abs(tick.getX() - x) < precision) {
-                    return t;
-                } else {
-                    return getTForGivenX(bezier, startAt - inc, inc / 10.0, x, precision);
-                }
-            }
-        }
-        return tForX;
-    }
-
     private void refreshData() {
 
         // Generate the data, the Bézier curve.
@@ -102,14 +77,6 @@ public class FirstTest {
                 bezierPoints.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
             }
         }
-        // For test: Find t for a given X
-        if (false) {
-            double x = 60; // the one to find
-            double t = getTForGivenX(bezier, 0.0, 1E-1, x, 1E-4);
-            Bezier.Point3D tick = bezier.getBezierPoint(t);
-            System.out.printf("For x=%f, t=%f - X:%f, Y:%f\n", x, t, tick.getX(), tick.getY());
-        }
-
         // Prepare data for display
         // Ctrl Points
         double[] xCtrlPoints = ctrlPoints.stream()
@@ -171,10 +138,15 @@ public class FirstTest {
 //        ctrlPoints.add(new Bezier.Point3D(0, 10, 0));
 //        ctrlPoints.add(new Bezier.Point3D(550, 105, 0));
         if (initConfig != null) {
-            List<List<Double>> defaultPoints = (List)initConfig.get("default-points");
-            defaultPoints.forEach(pt -> {
+            Map<String, List<Object>> defaultPoints = (Map)initConfig.get("default-points");
+            List<List<Double>> railPoints = (List)defaultPoints.get("rail");
+            // Just the rail for now
+            railPoints.forEach(pt -> {
                 ctrlPoints.add(new Bezier.Point3D(pt.get(0), pt.get(1), pt.get(2)));
             });
+        } else {
+            ctrlPoints.add(new Bezier.Point3D(0, 10, 0));
+            ctrlPoints.add(new Bezier.Point3D(550, 105, 0));
         }
         FirstTest instance = this;
 
@@ -312,8 +284,10 @@ public class FirstTest {
         frame.getContentPane().add(topLabel, BorderLayout.NORTH);
 
         // >> HERE: Add the WitheBoard to the JFrame
-        JPanel whiteBoardsPanel = new JPanel(new FlowLayout()); // new GridBagLayout());
+        JPanel whiteBoardsPanel = new JPanel(new GridBagLayout());
         JScrollPane jScrollPane = new JScrollPane(whiteBoardsPanel);
+//        jScrollPane.setPreferredSize(new Dimension(WIDTH, HEIGHT + 50 + 10));
+        whiteBoard.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         whiteBoardsPanel.add(whiteBoard, // forTest, // ahMerde1, // whiteBoardXY,
                 new GridBagConstraints(0,
