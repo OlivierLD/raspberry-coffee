@@ -231,7 +231,14 @@ public class ThreeViewsV2 {
         }
 
         // Override defaults (not mandatory)
-        whiteBoardXY.setAxisColor(Color.GRAY);
+
+        // XY
+        whiteBoardXY.setAxisColor(Color.BLACK);
+        whiteBoardXY.setGridColor(Color.GREEN); // Color.GRAY);
+        whiteBoardXY.setForceTickIncrement(50);
+        whiteBoardXY.setEnforceXAxisAt(0d);
+        whiteBoardXY.setEnforceYAxisAt(0d);
+
         whiteBoardXY.setWithGrid(true);
         whiteBoardXY.setBgColor(new Color(250, 250, 250, 255));
         whiteBoardXY.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
@@ -245,10 +252,13 @@ public class ThreeViewsV2 {
         whiteBoardXY.setForcedMinY(0d);
         whiteBoardXY.setForcedMaxY(150d);
 
-        whiteBoardXY.setEnforceXAxisAt(0d);
-        whiteBoardXY.setEnforceYAxisAt(0d);
+        // XZ
+        whiteBoardXZ.setAxisColor(Color.BLACK);
+        whiteBoardXZ.setGridColor(Color.RED); // .GRAY);
+        whiteBoardXZ.setForceTickIncrement(50);
+        whiteBoardXZ.setEnforceXAxisAt(0d);
+        whiteBoardXZ.setEnforceYAxisAt(0d);
 
-        whiteBoardXZ.setAxisColor(Color.GRAY);
         whiteBoardXZ.setWithGrid(true);
         whiteBoardXZ.setBgColor(new Color(250, 250, 250, 255));
         whiteBoardXZ.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
@@ -262,10 +272,13 @@ public class ThreeViewsV2 {
         whiteBoardXZ.setForcedMinY(-50d);
         whiteBoardXZ.setForcedMaxY(100d);
 
-        whiteBoardXZ.setEnforceXAxisAt(0d);
-        whiteBoardXZ.setEnforceYAxisAt(0d);
+        // YZ
+        whiteBoardYZ.setAxisColor(Color.BLACK);
+        whiteBoardYZ.setGridColor(Color.BLUE); // GRAY);
+        whiteBoardYZ.setForceTickIncrement(50);
+        whiteBoardYZ.setEnforceXAxisAt(0d);
+        whiteBoardYZ.setEnforceYAxisAt(0d);
 
-        whiteBoardYZ.setAxisColor(Color.GRAY);
         whiteBoardYZ.setWithGrid(true);
         whiteBoardYZ.setBgColor(new Color(250, 250, 250, 255));
         whiteBoardYZ.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
@@ -278,9 +291,6 @@ public class ThreeViewsV2 {
         // Enforce Y amplitude
         whiteBoardYZ.setForcedMinY(-50d);
         whiteBoardYZ.setForcedMaxY(100d);
-
-        whiteBoardYZ.setEnforceXAxisAt(0d);
-        whiteBoardYZ.setEnforceYAxisAt(0d);
 
         ThreeViewsV2 instance = this;
 
