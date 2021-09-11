@@ -1,6 +1,7 @@
 package boatdesign;
 
 import bezier.Bezier;
+import boatdesign.threeD.BoatBox3D;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gsg.SwingUtils.Box3D;
 import gsg.SwingUtils.WhiteBoardPanel;
@@ -42,7 +43,7 @@ public class ThreeViews {
     private final JMenu menuHelp = new JMenu();
     private final JMenuItem menuHelpAbout = new JMenuItem();
     private JLabel topLabel;
-    private final JButton refreshButton = new JButton("Refresh Data"); // Not really useful here.
+    private final JButton refreshButton = new JButton("Refresh Boat Shape"); // Not really useful here.
 
     private final static int WIDTH = 1024;
     private final static int HEIGHT = 800;
@@ -78,10 +79,23 @@ public class ThreeViews {
         System.out.printf("Help requested %s\n", ae);
         JOptionPane.showMessageDialog(frame, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
     }
+    private void refreshBoatShape() {
+        Thread refresher = new Thread(() -> {
+            System.out.println("Starting refresh...");
+            ((BoatBox3D) this.box3D).refreshData();
+            System.out.println("Refresh completed!");
+            this.box3D.repaint();
+        });
+        refresher.start();
+    }
 
     private void refreshData() {
 
         if (ctrlPoints.size() > 0) {
+
+            // Tell the 3D box
+            ((BoatBox3D)this.box3D).setRailCtrlPoints(ctrlPoints); // Only rail for now.
+
             // Display in textArea
             String content = ctrlPoints.stream()
                     .map(pt -> String.format("%d: %s", ctrlPoints.indexOf(pt), pt.toString()))
@@ -216,6 +230,8 @@ public class ThreeViews {
         if (initConfig != null) {
             Map<String, List<Object>> defaultPoints = (Map)initConfig.get("default-points");
             List<List<Double>> railPoints = (List)defaultPoints.get("rail");
+            List<List<Double>> bowPoints = (List)defaultPoints.get("bow");
+            List<List<Double>> keelPoints = (List)defaultPoints.get("keel");
             // Just the rail for now
             railPoints.forEach(pt -> {
                 ctrlPoints.add(new Bezier.Point3D(pt.get(0), pt.get(1), pt.get(2)));
@@ -593,7 +609,7 @@ public class ThreeViews {
         frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        refreshButton.addActionListener(e -> refreshData());
+        refreshButton.addActionListener(e -> refreshBoatShape());
 
         frame.setJMenuBar(menuBar);
         frame.getContentPane().setLayout(new BorderLayout());
@@ -662,16 +678,6 @@ public class ThreeViews {
                         GridBagConstraints.NONE,
                         new Insets(0, 0, 0, 0), 0, 0));
 
-//        whiteBoardsPanel.add(topRight, // box3DScrollPane, // this.box3D, // topRight,
-//                new GridBagConstraints(1,
-//                0,
-//                1,
-//                2,
-//                1.0,
-//                0.0,
-//                GridBagConstraints.WEST,
-//                GridBagConstraints.NONE,
-//                new Insets(0, 0, 0, 0), 0, 0));
         whiteBoardsPanel.add(threeDPanel, // ctrlPointsPanel,
                 new GridBagConstraints(1,
                         0,
@@ -708,65 +714,7 @@ public class ThreeViews {
         this.whiteBoardXZ = new WhiteBoardPanel(); // side
         this.whiteBoardYZ = new WhiteBoardPanel(); // facing
 
-        this.box3D = new Box3D(1200, 600);
-        box3D.setxMin(-10);
-        box3D.setxMax(600);
-        box3D.setyMin(-50);
-        box3D.setyMax(100);
-        box3D.setzMin(-50);
-        box3D.setzMax(150);
-
-        Consumer<Graphics2D> afterDrawer = g2d -> {
-
-            // Link the control points
-            g2d.setColor(Color.ORANGE);
-            g2d.setStroke(new BasicStroke(2));
-            VectorUtils.Vector3D from = null;
-            for (Bezier.Point3D ctrlPoint : ctrlPoints) {
-                if (from != null) {
-                    VectorUtils.Vector3D to = new VectorUtils.Vector3D(ctrlPoint.getX(), ctrlPoint.getY(), ctrlPoint.getZ());
-                    box3D.drawSegment(g2d, from, to);
-                }
-                from = new VectorUtils.Vector3D(ctrlPoint.getX(), ctrlPoint.getY(), ctrlPoint.getZ());
-            }
-
-            // Plot the control points
-            g2d.setColor(Color.BLUE);
-            ctrlPoints.forEach(pt -> {
-                VectorUtils.Vector3D at = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
-                box3D.drawCircle(g2d, at, 6);
-            });
-            // TODO Redundant, fix that
-            Bezier bezier = new Bezier(ctrlPoints);
-            List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>(); // The points to display.
-            if (ctrlPoints.size() > 2) { // 3 points minimum.
-                for (double t = 0; t <= 1.0; t += 1E-3) {
-                    Bezier.Point3D tick = bezier.getBezierPoint(t);
-                    // System.out.println(String.format("%.03f: %s", t, tick.toString()));
-                    bezierPoints.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
-                }
-            }
-
-            // The actual bezier
-            g2d.setColor(Color.RED);
-            g2d.setStroke(new BasicStroke(5));
-            from = null;
-            for (int i=0; i<bezierPoints.size(); i++) {
-                VectorUtils.Vector3D to = bezierPoints.get(i);
-                if (from != null) {
-                    box3D.drawSegment(g2d, from, to);
-                }
-                from = to;
-            }
-        };
-
-        // Invoke the above
-//        box3D.setDrawer(afterDrawer);
-        box3D.setAfterDrawer(afterDrawer);
-
-//        ThreeDFrameWithWidgets threeDFrame = new ThreeDFrameWithWidgets(box3D, "Same Bézier, in 3D - Draggable");
-//        threeDFrame.setVisible(true);
-
+        /*BoatBox3D*/ this.box3D = new BoatBox3D();
         threeDPanel = new ThreeDPanelWithWidgets(box3D);
     }
 
