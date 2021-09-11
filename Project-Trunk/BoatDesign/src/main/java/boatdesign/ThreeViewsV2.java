@@ -88,7 +88,7 @@ public class ThreeViewsV2 {
                     .collect(Collectors.joining("\n"));
             dataTextArea.setText("Control Points:\n" + content);
 
-                    // Generate the data, the Bézier curve.
+            // Generate the data, the Bézier curve.
             Bezier bezier = new Bezier(ctrlPoints);
             List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>(); // The points to display.
             if (ctrlPoints.size() > 2) { // 3 points minimum.
@@ -97,14 +97,6 @@ public class ThreeViewsV2 {
                     // System.out.println(String.format("%.03f: %s", t, tick.toString()));
                     bezierPoints.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
                 }
-            }
-            // For test: Find t for a given X
-            if (false) {
-                double x = 60; // the one to find
-//                double t = getTForGivenX(bezier, 0.0, 1E-1, x, 1E-4);
-                double t = bezier.getTForGivenX(0.0, 1E-1, x, 1E-4);
-                Bezier.Point3D tick = bezier.getBezierPoint(t);
-                System.out.printf("For x=%f, t=%f - X:%f, Y:%f\n", x, t, tick.getX(), tick.getY());
             }
 
             // Prepare data for display
@@ -237,7 +229,7 @@ public class ThreeViewsV2 {
 
         // XY
         whiteBoardXY.setAxisColor(Color.BLACK);
-        whiteBoardXY.setGridColor(Color.GREEN); // Color.GRAY);
+        whiteBoardXY.setGridColor(Color.GRAY);
         whiteBoardXY.setForceTickIncrement(50);
         whiteBoardXY.setEnforceXAxisAt(0d);
         whiteBoardXY.setEnforceYAxisAt(0d);
@@ -257,7 +249,7 @@ public class ThreeViewsV2 {
 
         // XZ
         whiteBoardXZ.setAxisColor(Color.BLACK);
-        whiteBoardXZ.setGridColor(Color.RED); // .GRAY);
+        whiteBoardXZ.setGridColor(Color.GRAY);
         whiteBoardXZ.setForceTickIncrement(50);
         whiteBoardXZ.setEnforceXAxisAt(0d);
         whiteBoardXZ.setEnforceYAxisAt(0d);
@@ -277,7 +269,7 @@ public class ThreeViewsV2 {
 
         // YZ
         whiteBoardYZ.setAxisColor(Color.BLACK);
-        whiteBoardYZ.setGridColor(Color.BLUE); // GRAY);
+        whiteBoardYZ.setGridColor(Color.GRAY);
         whiteBoardYZ.setForceTickIncrement(50);
         whiteBoardYZ.setEnforceXAxisAt(0d);
         whiteBoardYZ.setEnforceYAxisAt(0d);
@@ -969,7 +961,7 @@ public class ThreeViewsV2 {
             System.out.println("Warning: no init.json was found.");
         }
 
-        ThreeViewsV2 thisThing = new ThreeViewsV2();// This one has instantiated the white board
+        ThreeViewsV2 thisThing = new ThreeViewsV2();// This one has instantiated the white boards
 
         thisThing.initComponents();
 
