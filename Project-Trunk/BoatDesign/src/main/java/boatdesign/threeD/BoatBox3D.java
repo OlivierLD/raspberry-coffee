@@ -31,6 +31,7 @@ public class BoatBox3D extends Box3D {
     private boolean symmetrical = true;
     private boolean drawFrameCtrlPoints = true;
     private double frameIncrement = 20d; // 10.0; // 50.0;
+
     private List<Double> hValues = List.of(-10d, 0d, 10d, 20d, 30d, 40d, 50d);
 //    private List<Double> hValues = List.of(-10d, -5d, 0d, 5d, 10d, 25d, 20d, 25d, 30d, 35d, 40d, 45d, 50d);
     private List<Double> vValues = List.of(20d, 40d, 60d, 80d, 100d);
@@ -56,7 +57,7 @@ public class BoatBox3D extends Box3D {
             new Bezier.Point3D((-centerOnXValue + xOffset) + 290.357143, 0.000000, -29.642857),
             new Bezier.Point3D((-centerOnXValue + xOffset) + 550.000000, 0.000000, 5.000000)); // PT A
 
-    // TODO Remove that
+    // This one is recalculated with the keel and the rail.
     private List<Bezier.Point3D> ctrlPointsTransom = List.of( // Transom
             new Bezier.Point3D((-centerOnXValue + xOffset) + 550.0, 65.0, 56.000000),   // PT X
             new Bezier.Point3D((-centerOnXValue + xOffset) + 550.0, 65.0, 5.642857),
@@ -66,7 +67,7 @@ public class BoatBox3D extends Box3D {
     private List<VectorUtils.Vector3D> bezierPointsRail = new ArrayList<>();
     private List<VectorUtils.Vector3D> bezierPointsBow = new ArrayList<>();
     private List<VectorUtils.Vector3D> bezierPointsKeel = new ArrayList<>();
-    // TODO Remove this one. Extrapolate.
+    // Extrapolated.
     private List<VectorUtils.Vector3D> bezierPointsTransom = new ArrayList<>();
 
     private List<List<VectorUtils.Vector3D>> frameBezierPts = new ArrayList<>();
@@ -412,13 +413,53 @@ public class BoatBox3D extends Box3D {
 
     }
 
+    public boolean isJustTheBoat() {
+        return justTheBoat;
+    }
+
+    public void setJustTheBoat(boolean justTheBoat) {
+        this.justTheBoat = justTheBoat;
+    }
+
+    public boolean isSymmetrical() {
+        return symmetrical;
+    }
+
+    public void setSymmetrical(boolean symmetrical) {
+        this.symmetrical = symmetrical;
+    }
+
+    public boolean isDrawFrameCtrlPoints() {
+        return drawFrameCtrlPoints;
+    }
+
+    public void setDrawFrameCtrlPoints(boolean drawFrameCtrlPoints) {
+        this.drawFrameCtrlPoints = drawFrameCtrlPoints;
+    }
+
+    public boolean isWaterlines() {
+        return waterlines;
+    }
+
+    public void setWaterlines(boolean waterlines) {
+        this.waterlines = waterlines;
+    }
+
+    public boolean isButtocks() {
+        return buttocks;
+    }
+
+    public void setButtocks(boolean buttocks) {
+        this.buttocks = buttocks;
+    }
+
     // Re-generates the boat
     public void refreshData() {
         this.frameCtrlPts = new ArrayList<>();
         this.bezierPointsRail = new ArrayList<>();
         this.bezierPointsBow = new ArrayList<>();
         this.bezierPointsKeel = new ArrayList<>();
-        // TODO Remove this one. Extrapolate.
+        // Extrapolated.
         this.bezierPointsTransom = new ArrayList<>();
 
         this.frameBezierPts = new ArrayList<>();
@@ -443,7 +484,7 @@ public class BoatBox3D extends Box3D {
             bezierPointsKeel.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
         }
 
-        // TODO Remove that
+        // This one is correlated, re-calculated
         Bezier bezierTransom = new Bezier(ctrlPointsTransom);
         for (double t=0; t<=1.0; t+=0.01) {
             Bezier.Point3D tick = bezierTransom.getBezierPoint(t);
@@ -578,6 +619,40 @@ public class BoatBox3D extends Box3D {
         }
     }
 
+    private void correlate() {
+        // 1 - Bow
+        List<Bezier.Point3D> tempBow = new ArrayList<>();
+        tempBow.addAll(ctrlPointsBow);
+        // First point of the rail is first point of the bow
+        tempBow.get(0).x(ctrlPointsRail.get(0).getX())
+                .y(ctrlPointsRail.get(0).getY())
+                .z(ctrlPointsRail.get(0).getZ());
+        // First point of the keel is last point of the bow
+        int lastBowIdx = tempBow.size() - 1;
+        tempBow.get(lastBowIdx).x(ctrlPointsKeel.get(0).getX())
+                .y(ctrlPointsKeel.get(0).getY())
+                .z(ctrlPointsKeel.get(0).getZ());
+        this.ctrlPointsBow = tempBow;
+
+        // 2 - Transom
+        this.ctrlPointsTransom = new ArrayList<>();
+        int lastRailIdx = this.ctrlPointsRail.size() - 1;
+        int lastKeelIdx = this.ctrlPointsKeel.size() - 1;
+        this.ctrlPointsTransom.add(new Bezier.Point3D(          // Top ext
+                this.ctrlPointsRail.get(lastRailIdx).getX(),
+                this.ctrlPointsRail.get(lastRailIdx).getY(),
+                this.ctrlPointsRail.get(lastRailIdx).getZ()));
+        this.ctrlPointsTransom.add(new Bezier.Point3D(          // Ctrl point
+                this.ctrlPointsKeel.get(lastKeelIdx).getX(),
+                this.ctrlPointsRail.get(lastRailIdx).getY(),
+                this.ctrlPointsKeel.get(lastKeelIdx).getZ()));
+        this.ctrlPointsTransom.add(new Bezier.Point3D(          // Bottom int
+                this.ctrlPointsKeel.get(lastKeelIdx).getX(),
+                this.ctrlPointsKeel.get(lastKeelIdx).getY(),
+                this.ctrlPointsKeel.get(lastKeelIdx).getZ()));
+
+    }
+
     public void setRailCtrlPoints(List<Bezier.Point3D> ctrlPointsRail) {
         this.ctrlPointsRail = new ArrayList<>();
         // Re-calculate with center and offset
@@ -587,6 +662,20 @@ public class BoatBox3D extends Box3D {
                     .y(cp.getY())
                     .z(cp.getZ()));
         });
+        correlate();
+        this.repaint();
+    }
+
+    public void setKeelCtrlPoints(List<Bezier.Point3D> ctrlPointsKeel) {
+        this.ctrlPointsKeel = new ArrayList<>();
+        // Re-calculate with center and offset
+        ctrlPointsKeel.forEach(cp -> {
+            this.ctrlPointsKeel.add(new Bezier.Point3D()
+                    .x((-centerOnXValue + xOffset) + cp.getX())
+                    .y(cp.getY())
+                    .z(cp.getZ()));
+        });
+        correlate();
         this.repaint();
     }
 }
