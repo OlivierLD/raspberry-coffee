@@ -29,7 +29,11 @@ import java.util.stream.Collectors;
  * 2D Bezier example. (<- So so...)
  * With draggable control points (hence the MouseListener, MouseMotionListener).
  *
- * TODO More doc here, about point correlation, number of beziers, etc.
+ * 2 Bézier curves:
+ * - One for the rail
+ * - One for the keel
+ *
+ * Bow is correlated, transom too. See in {@link BoatBox3D}
  */
 public class ThreeViews {
 
@@ -46,7 +50,7 @@ public class ThreeViews {
     private JLabel topLabel;
     private final JButton refreshButton = new JButton("Refresh Boat Shape"); // Not really useful here.
 
-    private final static int WIDTH = 1024;
+    private final static int WIDTH = 1536; // 1024;
     private final static int HEIGHT = 800;
 
     private static ObjectMapper mapper = new ObjectMapper();
@@ -74,8 +78,12 @@ public class ThreeViews {
     private static ThreeViews instance;
 
     private void fileSpit_ActionPerformed(ActionEvent ae) {
-        System.out.println("Ctrl Points:"); // TODO Keel too
+        System.out.println("Ctrl Points:\nRail:");
         this.railCtrlPoints.forEach(pt -> {
+            System.out.println(String.format("%s", pt));
+        });
+        System.out.println("Keel:");
+        this.keelCtrlPoints.forEach(pt -> {
             System.out.println(String.format("%s", pt));
         });
     }
@@ -90,7 +98,7 @@ public class ThreeViews {
     private void refreshBoatShape() {
         Thread refresher = new Thread(() -> {
             System.out.println("Starting refresh...");
-            // TODO Synchronization
+            // TODO Synchronization, ping for refresh/repaint
             ((BoatBox3D) this.box3D).refreshData();
             System.out.println("Refresh completed!");
             this.box3D.repaint();
@@ -100,17 +108,21 @@ public class ThreeViews {
 
     private void refreshData() {
 
-        if (railCtrlPoints.size() > 0) { // TODO Consider keelCtrlPoints here too
+        if (railCtrlPoints.size() > 0 && keelCtrlPoints.size() > 0) {
 
             // Tell the 3D box
             ((BoatBox3D)this.box3D).setRailCtrlPoints(railCtrlPoints); // The rail.
             ((BoatBox3D)this.box3D).setKeelCtrlPoints(keelCtrlPoints); // The keel.
 
             // Display in textArea
-            String content = railCtrlPoints.stream()
+            String content = "Control Points:\nRail:\n" + railCtrlPoints.stream()
                     .map(pt -> String.format("%d: %s", railCtrlPoints.indexOf(pt), pt.toString()))
                     .collect(Collectors.joining("\n"));
-            dataTextArea.setText("Control Points:\n" + content);
+            content += "\nKeel:\n" + keelCtrlPoints.stream()
+                    .map(pt -> String.format("%d: %s", keelCtrlPoints.indexOf(pt), pt.toString()))
+                    .collect(Collectors.joining("\n"));
+
+            dataTextArea.setText(content);
 
             /*
              * Prepare data for display
@@ -380,7 +392,7 @@ public class ThreeViews {
         whiteBoardXY.setBgColor(new Color(250, 250, 250, 255));
         whiteBoardXY.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoardXY.setSize(new Dimension(800, 200));
-        whiteBoardXY.setPreferredSize(new Dimension(800, 200));
+        whiteBoardXY.setPreferredSize(new Dimension(600, 200));
         whiteBoardXY.setTextColor(Color.RED);
         whiteBoardXY.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
         whiteBoardXY.setGraphicMargins(30);
@@ -400,7 +412,7 @@ public class ThreeViews {
         whiteBoardXZ.setBgColor(new Color(250, 250, 250, 255));
         whiteBoardXZ.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoardXZ.setSize(new Dimension(800, 200));
-        whiteBoardXZ.setPreferredSize(new Dimension(800, 200));
+        whiteBoardXZ.setPreferredSize(new Dimension(600, 200));
         whiteBoardXZ.setTextColor(Color.RED);
         whiteBoardXZ.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
         whiteBoardXZ.setGraphicMargins(30);
@@ -819,7 +831,7 @@ public class ThreeViews {
         ctrlPointsPanel.setBorder(BorderFactory.createTitledBorder("Data Placeholder"));
         dataTextArea = new JTextPane();
         dataTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
-        dataTextArea.setPreferredSize(new Dimension(300, 100));
+        dataTextArea.setPreferredSize(new Dimension(300, 300));
         JScrollPane dataScrollPane = new JScrollPane(dataTextArea);
 
         ctrlPointsPanel.add(dataScrollPane, BorderLayout.NORTH);
@@ -831,9 +843,9 @@ public class ThreeViews {
                         1,
                         0.0,
                         0.0,
-                        GridBagConstraints.CENTER,
+                        GridBagConstraints.NORTH,
                         GridBagConstraints.NONE,
-                        new Insets(0, 0, 0, 0), 0, 0));
+                        new Insets(10, 5, 0, 5), 0, 0));
         whiteBoardsPanel.add(whiteBoardYZ,       // Face
                 new GridBagConstraints(0,
                         1,
@@ -841,9 +853,9 @@ public class ThreeViews {
                         1,
                         0.0,
                         0.0,
-                        GridBagConstraints.CENTER,
+                        GridBagConstraints.NORTH,
                         GridBagConstraints.NONE,
-                        new Insets(50, 0, 0, 0), 0, 10));
+                        new Insets(10, 5, 0, 5), 0, 0));
         whiteBoardsPanel.add(whiteBoardXY,       // From above
                 new GridBagConstraints(0,
                         2,
@@ -851,9 +863,9 @@ public class ThreeViews {
                         1,
                         0.0,
                         0.0,
-                        GridBagConstraints.CENTER,
+                        GridBagConstraints.NORTH,
                         GridBagConstraints.NONE,
-                        new Insets(0, 0, 0, 0), 0, 0));
+                        new Insets(10, 5, 0, 5), 0, 0));
 
         JPanel topWidgetsPanel = new JPanel(new GridBagLayout());
         JCheckBox justBoatCheckBox = new JCheckBox("Just boat");
