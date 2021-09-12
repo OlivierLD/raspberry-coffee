@@ -862,15 +862,16 @@ public class ThreeViews {
         JCheckBox buttocksCheckBox = new JCheckBox("Buttocks");
         JCheckBox ctrlPointsCheckBox = new JCheckBox("CtrlPoints");
 
-
+        boolean justBoatSelected = ((BoatBox3D)this.box3D).isJustTheBoat();
         justBoatCheckBox.setSelected(((BoatBox3D)this.box3D).isJustTheBoat());
         justBoatCheckBox.addActionListener(evt -> {
             boolean selected = ((JCheckBox)evt.getSource()).isSelected();
             System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
             ((BoatBox3D)this.box3D).setJustTheBoat(selected);
-
-            // TODO Disable other checkboxes when needed
+            ctrlPointsCheckBox.setEnabled(!selected);
         });
+        ctrlPointsCheckBox.setEnabled(!justBoatSelected);
+
         symmetricCheckBox.setSelected(((BoatBox3D)this.box3D).isSymmetrical());
         symmetricCheckBox.addActionListener(evt -> {
             boolean selected = ((JCheckBox)evt.getSource()).isSelected();
