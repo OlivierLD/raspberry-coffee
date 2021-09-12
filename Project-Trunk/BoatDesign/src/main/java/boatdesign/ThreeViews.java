@@ -20,15 +20,16 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
  * Using default WhiteBoard Writer
  *
- * 2D Bezier example.
+ * 2D Bezier example. (<- So so...)
  * With draggable control points (hence the MouseListener, MouseMotionListener).
+ *
+ * TODO More doc here, about point correlation, number of beziers, etc.
  */
 public class ThreeViews {
 
@@ -51,8 +52,15 @@ public class ThreeViews {
     private static ObjectMapper mapper = new ObjectMapper();
     private static Map<String, Object> initConfig = null;
 
-    // All z = 0, 2D bezier.
-    private List<Bezier.Point3D> ctrlPoints = new ArrayList<>();
+    /*
+     * Some points are correlated.
+     * First rail point and bow top
+     * First keel point and bow bottom
+     * Transom is defined by the last rail point and last keel point.
+     * - Transom Control point(s) defined by them as well.
+     */
+    private List<Bezier.Point3D> railCtrlPoints = new ArrayList<>();
+    private List<Bezier.Point3D> keelCtrlPoints = new ArrayList<>();
 
     // The WhiteBoard instantiations
     private WhiteBoardPanel whiteBoardXY = null; // from above
@@ -66,8 +74,8 @@ public class ThreeViews {
     private static ThreeViews instance;
 
     private void fileSpit_ActionPerformed(ActionEvent ae) {
-        System.out.println("Ctrl Points:");
-        this.ctrlPoints.forEach(pt -> {
+        System.out.println("Ctrl Points:"); // TODO Keel too
+        this.railCtrlPoints.forEach(pt -> {
             System.out.println(String.format("%s", pt));
         });
     }
@@ -82,6 +90,7 @@ public class ThreeViews {
     private void refreshBoatShape() {
         Thread refresher = new Thread(() -> {
             System.out.println("Starting refresh...");
+            // TODO Synchronization
             ((BoatBox3D) this.box3D).refreshData();
             System.out.println("Refresh completed!");
             this.box3D.repaint();
@@ -91,37 +100,41 @@ public class ThreeViews {
 
     private void refreshData() {
 
-        if (ctrlPoints.size() > 0) {
+        if (railCtrlPoints.size() > 0) { // TODO Consider keelCtrlPoints too
 
             // Tell the 3D box
-            ((BoatBox3D)this.box3D).setRailCtrlPoints(ctrlPoints); // Only rail for now.
+            ((BoatBox3D)this.box3D).setRailCtrlPoints(railCtrlPoints); // The rail.
+            // TODO Keel, and correlations
 
             // Display in textArea
-            String content = ctrlPoints.stream()
-                    .map(pt -> String.format("%d: %s", ctrlPoints.indexOf(pt), pt.toString()))
+            String content = railCtrlPoints.stream()
+                    .map(pt -> String.format("%d: %s", railCtrlPoints.indexOf(pt), pt.toString()))
                     .collect(Collectors.joining("\n"));
             dataTextArea.setText("Control Points:\n" + content);
 
-            // Generate the data, the Bézier curve.
-            Bezier bezier = new Bezier(ctrlPoints);
+            /*
+             * Prepare data for display
+             */
+
+            // Generate the data, the Bézier curve(s).
+
+            // 1 - Rail Ctrl Points
+            Bezier bezier = new Bezier(railCtrlPoints);
             List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>(); // The points to display.
-            if (ctrlPoints.size() > 2) { // 3 points minimum.
+            if (railCtrlPoints.size() > 2) { // 3 points minimum.
                 for (double t = 0; t <= 1.0; t += 1E-3) {
                     Bezier.Point3D tick = bezier.getBezierPoint(t);
                     // System.out.println(String.format("%.03f: %s", t, tick.toString()));
                     bezierPoints.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
                 }
             }
-
-            // Prepare data for display
-            // Ctrl Points
-            double[] xCtrlPoints = ctrlPoints.stream()
+            double[] xCtrlPoints = railCtrlPoints.stream()
                     .mapToDouble(bp -> bp.getX())
                     .toArray();
-            double[] yCtrlPoints = ctrlPoints.stream()
+            double[] yCtrlPoints = railCtrlPoints.stream()
                     .mapToDouble(bp -> bp.getY())
                     .toArray();
-            double[] zCtrlPoints = ctrlPoints.stream()
+            double[] zCtrlPoints = railCtrlPoints.stream()
                     .mapToDouble(bp -> bp.getZ())
                     .toArray();
             List<VectorUtils.Vector2D> ctrlPtsXYVectors = new ArrayList<>();
@@ -159,6 +172,9 @@ public class ThreeViews {
             for (int i = 0; i < yData.length; i++) {
                 dataYZVectors.add(new VectorUtils.Vector2D(yData[i], zData[i]));
             }
+            // TODO - Keel Ctrl Points
+
+            // TODO Correlated points
 
             whiteBoardXY.resetAllData();
             whiteBoardXZ.resetAllData();
@@ -172,6 +188,8 @@ public class ThreeViews {
                     .lineThickness(1)
                     .color(Color.ORANGE);
             whiteBoardXY.addSerie(ctrlXYSerie);
+            // TODO Keel & correlated points
+
             // XZ
             WhiteBoardPanel.DataSerie ctrlXZSerie = new WhiteBoardPanel.DataSerie()
                     .data(ctrlPtsXZVectors)
@@ -179,6 +197,8 @@ public class ThreeViews {
                     .lineThickness(1)
                     .color(Color.ORANGE);
             whiteBoardXZ.addSerie(ctrlXZSerie);
+            // TODO Keel & correlated points
+
             // YZ
             WhiteBoardPanel.DataSerie ctrlYZSerie = new WhiteBoardPanel.DataSerie()
                     .data(ctrlPtsYZVectors)
@@ -186,6 +206,7 @@ public class ThreeViews {
                     .lineThickness(1)
                     .color(Color.ORANGE);
             whiteBoardYZ.addSerie(ctrlYZSerie);
+            // TODO Keel & correlated points
 
             // Bezier points series
             // XY
@@ -195,6 +216,8 @@ public class ThreeViews {
                     .lineThickness(3)
                     .color(Color.BLUE);
             whiteBoardXY.addSerie(dataXYSerie);
+            // TODO Keel & correlated points
+
             // XZ
             WhiteBoardPanel.DataSerie dataXZSerie = new WhiteBoardPanel.DataSerie()
                     .data(dataXZVectors)
@@ -202,6 +225,8 @@ public class ThreeViews {
                     .lineThickness(3)
                     .color(Color.BLUE);
             whiteBoardXZ.addSerie(dataXZSerie);
+            // TODO Keel & correlated points
+
             // YZ
             WhiteBoardPanel.DataSerie dataYZSerie = new WhiteBoardPanel.DataSerie()
                     .data(dataYZVectors)
@@ -209,6 +234,7 @@ public class ThreeViews {
                     .lineThickness(3)
                     .color(Color.BLUE);
             whiteBoardYZ.addSerie(dataYZSerie);
+            // TODO Keel & correlated points
 
             // Finally, display it.
             whiteBoardXY.repaint();  // This is for a pure Swing context
@@ -232,15 +258,23 @@ public class ThreeViews {
             List<List<Double>> railPoints = (List)defaultPoints.get("rail");
             List<List<Double>> bowPoints = (List)defaultPoints.get("bow");
             List<List<Double>> keelPoints = (List)defaultPoints.get("keel");
-            // Just the rail for now
+            // Rail
             railPoints.forEach(pt -> {
-                ctrlPoints.add(new Bezier.Point3D(pt.get(0), pt.get(1), pt.get(2)));
+                railCtrlPoints.add(new Bezier.Point3D(pt.get(0), pt.get(1), pt.get(2)));
             });
+            // Keel
+            keelPoints.forEach(pt -> {
+                keelCtrlPoints.add(new Bezier.Point3D(pt.get(0), pt.get(1), pt.get(2)));
+            });
+
         } else {
             // TODO There is a problem when ctrlPoints is empty... Fix it.
             // Initialize [0, 10, 0], [550, 105, 0]
-            ctrlPoints.add(new Bezier.Point3D(0, 10, 0));
-            ctrlPoints.add(new Bezier.Point3D(550, 105, 0));
+            railCtrlPoints.add(new Bezier.Point3D(0, 10, 0));
+            railCtrlPoints.add(new Bezier.Point3D(550, 105, 0));
+
+            keelCtrlPoints.add(new Bezier.Point3D(10d, 0d, -5d));
+            keelCtrlPoints.add(new Bezier.Point3D(550d, 0d, 5d));
         }
 
         // Override defaults (not mandatory)
@@ -323,7 +357,7 @@ public class ThreeViews {
                     // Drop point here. Where is the list
                     String response = JOptionPane.showInputDialog(
                             frame,
-                            String.format("Where to insert new point (index in the list [0..%d]) ?", ctrlPoints.size()),
+                            String.format("Where to insert new point (index in the list [0..%d]) ?", railCtrlPoints.size()),
                             "Add Control Point",
                             JOptionPane.QUESTION_MESSAGE);
 //                  System.out.println("Response:" + response);
@@ -340,14 +374,14 @@ public class ThreeViews {
                                 Bezier.Point3D point3D = new Bezier.Point3D().x(newX).y(newY);
                                 List<Bezier.Point3D> newList = new ArrayList<>();
                                 for (int i=0; i<newIndex; i++) {
-                                    newList.add(ctrlPoints.get(i));
+                                    newList.add(railCtrlPoints.get(i));
                                 }
                                 newList.add(point3D);
-                                for (int i=newIndex; i<ctrlPoints.size(); i++) {
-                                    newList.add(ctrlPoints.get(i));
+                                for (int i = newIndex; i< railCtrlPoints.size(); i++) {
+                                    newList.add(railCtrlPoints.get(i));
                                 }
-                                ctrlPoints = newList;
-                                System.out.printf("List now has %d elements.\n", ctrlPoints.size());
+                                railCtrlPoints = newList;
+                                System.out.printf("List now has %d elements.\n", railCtrlPoints.size());
                                 refreshData();
                             }
                         } catch (NumberFormatException nfe) {
@@ -380,7 +414,7 @@ public class ThreeViews {
                         double newX = canvasToSpaceXTransformer.apply(e.getX());
                         double newY = canvasToSpaceYTransformer.apply(height - e.getY());
 //                System.out.printf("Point dragged to %f / %f\n", newX, newY);
-                        Bezier.Point3D point3D = ctrlPoints.get(closestPointIndex);
+                        Bezier.Point3D point3D = railCtrlPoints.get(closestPointIndex);
                         point3D.x(newX).y(newY);
                         refreshData();
                     }
@@ -394,7 +428,7 @@ public class ThreeViews {
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardXY, Orientation.XY);
                 if (closePoint != null) {
                     whiteBoardXY.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                    closestPointIndex = ctrlPoints.indexOf(closePoint);
+                    closestPointIndex = railCtrlPoints.indexOf(closePoint);
                 } else {
                     whiteBoardXY.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     closestPointIndex = -1;
@@ -419,7 +453,7 @@ public class ThreeViews {
                     // Drop point here. Where is the list
                     String response = JOptionPane.showInputDialog(
                             frame,
-                            String.format("Where to insert new point (index in the list [0..%d]) ?", ctrlPoints.size()),
+                            String.format("Where to insert new point (index in the list [0..%d]) ?", railCtrlPoints.size()),
                             "Add Control Point",
                             JOptionPane.QUESTION_MESSAGE);
     //              System.out.println("Response:" + response);
@@ -436,14 +470,14 @@ public class ThreeViews {
                                 Bezier.Point3D point3D = new Bezier.Point3D().x(newX).z(newZ);
                                 List<Bezier.Point3D> newList = new ArrayList<>();
                                 for (int i=0; i<newIndex; i++) {
-                                    newList.add(ctrlPoints.get(i));
+                                    newList.add(railCtrlPoints.get(i));
                                 }
                                 newList.add(point3D);
-                                for (int i=newIndex; i<ctrlPoints.size(); i++) {
-                                    newList.add(ctrlPoints.get(i));
+                                for (int i = newIndex; i< railCtrlPoints.size(); i++) {
+                                    newList.add(railCtrlPoints.get(i));
                                 }
-                                ctrlPoints = newList;
-                                System.out.printf("List now has %d elements.\n", ctrlPoints.size());
+                                railCtrlPoints = newList;
+                                System.out.printf("List now has %d elements.\n", railCtrlPoints.size());
                                 refreshData();
                             }
                         } catch (NumberFormatException nfe) {
@@ -476,7 +510,7 @@ public class ThreeViews {
                         double newX = canvasToSpaceXTransformer.apply(e.getX());
                         double newZ = canvasToSpaceYTransformer.apply(height - e.getY());
 //                System.out.printf("Point dragged to %f / %f\n", newX, newY);
-                        Bezier.Point3D point3D = ctrlPoints.get(closestPointIndex);
+                        Bezier.Point3D point3D = railCtrlPoints.get(closestPointIndex);
                         point3D.x(newX).z(newZ);
                         refreshData();
                     }
@@ -490,7 +524,7 @@ public class ThreeViews {
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardXZ, Orientation.XZ);
                 if (closePoint != null) {
                     whiteBoardXZ.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                    closestPointIndex = ctrlPoints.indexOf(closePoint);
+                    closestPointIndex = railCtrlPoints.indexOf(closePoint);
                 } else {
                     whiteBoardXZ.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     closestPointIndex = -1;
@@ -515,7 +549,7 @@ public class ThreeViews {
                     // Drop point here. Where is the list
                     String response = JOptionPane.showInputDialog(
                             frame,
-                            String.format("Where to insert new point (index in the list [0..%d]) ?", ctrlPoints.size()),
+                            String.format("Where to insert new point (index in the list [0..%d]) ?", railCtrlPoints.size()),
                             "Add Control Point",
                             JOptionPane.QUESTION_MESSAGE);
 //                  System.out.println("Response:" + response);
@@ -532,14 +566,14 @@ public class ThreeViews {
                                 Bezier.Point3D point3D = new Bezier.Point3D().y(newY).z(newZ);
                                 List<Bezier.Point3D> newList = new ArrayList<>();
                                 for (int i=0; i<newIndex; i++) {
-                                    newList.add(ctrlPoints.get(i));
+                                    newList.add(railCtrlPoints.get(i));
                                 }
                                 newList.add(point3D);
-                                for (int i=newIndex; i<ctrlPoints.size(); i++) {
-                                    newList.add(ctrlPoints.get(i));
+                                for (int i = newIndex; i< railCtrlPoints.size(); i++) {
+                                    newList.add(railCtrlPoints.get(i));
                                 }
-                                ctrlPoints = newList;
-                                System.out.printf("List now has %d elements.\n", ctrlPoints.size());
+                                railCtrlPoints = newList;
+                                System.out.printf("List now has %d elements.\n", railCtrlPoints.size());
                                 refreshData();
                             }
                         } catch (NumberFormatException nfe) {
@@ -572,7 +606,7 @@ public class ThreeViews {
                         double newY = canvasToSpaceXTransformer.apply(e.getX());
                         double newZ = canvasToSpaceYTransformer.apply(height - e.getY());
 //                System.out.printf("Point dragged to %f / %f\n", newX, newY);
-                        Bezier.Point3D point3D = ctrlPoints.get(closestPointIndex);
+                        Bezier.Point3D point3D = railCtrlPoints.get(closestPointIndex);
                         point3D.y(newY).z(newZ);
                         refreshData();
                     }
@@ -586,7 +620,7 @@ public class ThreeViews {
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardYZ, Orientation.YZ);
                 if (closePoint != null) {
                     whiteBoardYZ.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                    closestPointIndex = ctrlPoints.indexOf(closePoint);
+                    closestPointIndex = railCtrlPoints.indexOf(closePoint);
                 } else {
                     whiteBoardYZ.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     closestPointIndex = -1;
@@ -634,9 +668,9 @@ public class ThreeViews {
         // >> HERE: Add the WitheBoard to the JFrame
         JPanel whiteBoardsPanel = new JPanel(new GridBagLayout());
 
-        JLabel label1 = new JLabel("Label 1");
-        JLabel label2 = new JLabel("Label 2");
-        JLabel label3 = new JLabel("Label 3");
+//        JLabel label1 = new JLabel("Label 1");
+//        JLabel label2 = new JLabel("Label 2");
+//        JLabel label3 = new JLabel("Label 3");
 
         JPanel ctrlPointsPanel = new JPanel(new BorderLayout());
         ctrlPointsPanel.setBorder(BorderFactory.createTitledBorder("Data Placeholder"));
@@ -729,7 +763,7 @@ public class ThreeViews {
         Function<Double, Integer> spaceToCanvasYTransformer = wbp.getSpaceToCanvasYTransformer();
         int height = wbp.getHeight();
         if (spaceToCanvasXTransformer != null && spaceToCanvasYTransformer != null) {
-            for (Bezier.Point3D ctrlPt : ctrlPoints) {
+            for (Bezier.Point3D ctrlPt : railCtrlPoints) {
                 double ptX = ctrlPt.getX();
                 double ptY = ctrlPt.getY();
                 if (orientation == Orientation.XZ) {
@@ -783,7 +817,7 @@ public class ThreeViews {
         public void actionPerformed(ActionEvent event) {
             if (event.getActionCommand().equals(DELETE_CTRL_POINT)) {
                 if (this.closePoint != null) {
-                    this.parent.ctrlPoints.remove(this.closePoint);
+                    this.parent.railCtrlPoints.remove(this.closePoint);
                     this.parent.refreshData();
                 }
             } else if (event.getActionCommand().equals(EDIT_CTRL_POINT)) {
@@ -799,8 +833,8 @@ public class ThreeViews {
                         double x = cpEditor.getXValue();
                         double y = cpEditor.getYValue();
                         double z = cpEditor.getZValue();
-                        int idx = this.parent.ctrlPoints.indexOf(this.closePoint);
-                        this.parent.ctrlPoints.get(idx).x(x).y(y).z(z);
+                        int idx = this.parent.railCtrlPoints.indexOf(this.closePoint);
+                        this.parent.railCtrlPoints.get(idx).x(x).y(y).z(z);
                     }
                     this.parent.refreshData();
                 }

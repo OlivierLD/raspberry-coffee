@@ -29,7 +29,7 @@ public class BoatBox3D extends Box3D {
     private boolean justTheBoat = false;
 
     private boolean symmetrical = true;
-    private boolean drawFrameCtrlPoints = false;
+    private boolean drawFrameCtrlPoints = true;
     private double frameIncrement = 20d; // 10.0; // 50.0;
     private List<Double> hValues = List.of(-10d, 0d, 10d, 20d, 30d, 40d, 50d);
 //    private List<Double> hValues = List.of(-10d, -5d, 0d, 5d, 10d, 25d, 20d, 25d, 30d, 35d, 40d, 45d, 50d);
@@ -49,10 +49,10 @@ public class BoatBox3D extends Box3D {
     private List<Bezier.Point3D> ctrlPointsBow = List.of( // Bow (Bow transom, actually)
 //                new Bezier.Point3D((-centerOnXValue + xOffset) + 0.000000, 10.000000, 75.000000),
             new Bezier.Point3D((-centerOnXValue + xOffset) + 0.000000, 0.000000, 75.000000), // PT B
-            new Bezier.Point3D((-centerOnXValue + xOffset) + 0.000000, 0.000000, -5.000000)); // PT C
+            new Bezier.Point3D((-centerOnXValue + xOffset) + 10.000000, 0.000000, -5.000000)); // PT C
 
     private List<Bezier.Point3D> ctrlPointsKeel = List.of( // Keel
-            new Bezier.Point3D((-centerOnXValue + xOffset) + 0.000000, 0.000000, -5.000000), // PT C
+            new Bezier.Point3D((-centerOnXValue + xOffset) + 10.000000, 0.000000, -5.000000), // PT C
             new Bezier.Point3D((-centerOnXValue + xOffset) + 290.357143, 0.000000, -29.642857),
             new Bezier.Point3D((-centerOnXValue + xOffset) + 550.000000, 0.000000, 5.000000)); // PT A
 

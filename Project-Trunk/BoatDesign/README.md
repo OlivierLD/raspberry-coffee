@@ -3,7 +3,7 @@
 
 Based on the `Algebra` module, in this project.
 
-## Path
+## Path #1
 - Define Length, Width, Height
 - Define a 3D bezier for the rail (on a 2D white board)
 - Define a 2 or 3D bezier for the bow (on a 2D white board)
@@ -12,5 +12,13 @@ Based on the `Algebra` module, in this project.
 - See the result in 3D
 
 Then do the hydrostatic calculations.
+
+## To fix
+- Transom, when not vertical.
+- Close horizontal and vertical cuts.
+
+## TODO's
+- Data to WebGL
+- Data to Processing (see PitchRoll.pde ...)
 
 ---
