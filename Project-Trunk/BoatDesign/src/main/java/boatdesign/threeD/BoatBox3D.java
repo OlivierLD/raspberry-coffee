@@ -499,8 +499,13 @@ public class BoatBox3D extends Box3D {
             Bezier.Point3D tick = bezierBow.getBezierPoint(t);
             bezierPointsBow.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
         }
-        Bezier bezierKeel = new Bezier(ctrlPointsKeel);
+        double tFor0 = bezierBow.getTForGivenZ(0.0, 1E-1, 0, 1E-4, false);
+        Bezier.Point3D wlPoint1 = bezierBow.getBezierPoint(tFor0);
 
+        Bezier bezierKeel = new Bezier(ctrlPointsKeel);
+        tFor0 = bezierKeel.getTForGivenZ(0.0, 1E-1, 0, 1E-4, true);
+        Bezier.Point3D wlPoint2 = bezierKeel.getBezierPoint(tFor0);
+        System.out.printf("LWL: %f\n", wlPoint2.getX() - wlPoint1.getX());
         // Also find the deepest point
         double maxDepth = 0d;
         Bezier.Point3D maxDepthPoint = null;
@@ -525,7 +530,7 @@ public class BoatBox3D extends Box3D {
         List<Bezier> frameBeziers = new ArrayList<>();
         // TODO _x <= ? Make sure the end has a frame...
         // TODO Displacement...
-        for (double _x=(-centerOnXValue + xOffset) + frameIncrement; _x< /*=*/(-centerOnXValue + xOffset) + 550.0; _x+=frameIncrement) {
+        for (double _x=(-centerOnXValue + xOffset) + frameIncrement; _x</*=*/ (-centerOnXValue + xOffset) + 550.0; _x+=frameIncrement) {
             System.out.printf("... Calculating frame %.03f... ", _x);
             long one = System.currentTimeMillis();
             boolean increase = (bezierRail.getBezierPoint(0).getX() < bezierRail.getBezierPoint(1).getX());
@@ -554,9 +559,7 @@ public class BoatBox3D extends Box3D {
         }
 
         if (waterlines) {
-            // H lines
-
-            // TODO Find the LWL
+            // H lines. TODO Use a step for waterlines.
             hValues.forEach(z -> {
                 System.out.println("Waterline for z=" + z);
                 List<Bezier.Point3D> waterLine = new ArrayList<>();
