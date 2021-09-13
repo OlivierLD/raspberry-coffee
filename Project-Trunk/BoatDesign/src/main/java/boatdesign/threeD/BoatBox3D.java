@@ -26,16 +26,18 @@ public class BoatBox3D extends Box3D {
     private double xOffset = 25.0;
     private double centerOnXValue = 300.0;
 
+    // TODO A prm for the number of points per frame (bezier's t)
+
     private boolean justTheBoat = false;
 
     private boolean symmetrical = true;
     private boolean drawFrameCtrlPoints = true;
-    private double frameIncrement = 20d; // 10.0; // 50.0;
+    private double frameIncrement = 10d; // 10.0; // 50.0;
 
-    private List<Double> hValues = List.of(-10d, 0d, 10d, 20d, 30d, 40d, 50d);
-//    private List<Double> hValues = List.of(-10d, -5d, 0d, 5d, 10d, 25d, 20d, 25d, 30d, 35d, 40d, 45d, 50d);
-    private List<Double> vValues = List.of(20d, 40d, 60d, 80d, 100d);
-//    private List<Double> vValues = List.of(10d, 20d, 30d, 40d, 50d, 60d, 70d, 80d, 90d, 100d);
+//    private List<Double> hValues = List.of(-10d, 0d, 10d, 20d, 30d, 40d, 50d);
+    private List<Double> hValues = List.of(-10d, -5d, 0d, 5d, 10d, 15d, 20d, 25d, 30d, 35d, 40d, 45d, 50d);
+//    private List<Double> vValues = List.of(20d, 40d, 60d, 80d, 100d);
+    private List<Double> vValues = List.of(10d, 20d, 30d, 40d, 50d, 60d, 70d, 80d, 90d, 100d);
     private boolean waterlines = true;
     private boolean buttocks = true;
 
@@ -149,7 +151,7 @@ public class BoatBox3D extends Box3D {
                     }
                     from = new VectorUtils.Vector3D(ctrlPoint.getX(), ctrlPoint.getY(), ctrlPoint.getZ());
                 }
-                // 4 - Transom (TODO Could be a frame?)
+                // 4 - Transom
                 from = null;
                 for (Bezier.Point3D ctrlPoint : ctrlPointsTransom) {
                     if (from != null) {
@@ -233,7 +235,6 @@ public class BoatBox3D extends Box3D {
                     instance.drawStringAt(g2d, at, str, 0, fontSize + 2, Box3D.Justification.CENTER);
                     g2d.setColor(g2dColor);
                 });
-                // TODO Remove that
                 ctrlPointsTransom.forEach(pt -> {
                     VectorUtils.Vector3D at = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
                     instance.drawCircle(g2d, at, 6);
@@ -313,7 +314,6 @@ public class BoatBox3D extends Box3D {
                 }
                 from = to;
             }
-            // TODO Remove that
             from = null;
             for (int i=0; i<bezierPointsTransom.size(); i++) {
                 VectorUtils.Vector3D to = bezierPointsTransom.get(i);
@@ -362,6 +362,17 @@ public class BoatBox3D extends Box3D {
 
             if (waterlines) {
                 for (List<Bezier.Point3D> waterLine : hLines) {
+
+                    // Is it waterline (z=0) ?
+//                    (waterLine.get(0).getZ() == 0)
+                    if (waterLine.get(0).getZ() == 0) {
+                        g2d.setColor(Color.BLUE);
+                        g2d.setStroke(new BasicStroke(2));
+                    } else {
+                        g2d.setColor(Color.RED);
+                        g2d.setStroke(new BasicStroke(1));
+                    }
+
                     from = null;
                     for (Bezier.Point3D waterLinePt : waterLine) {
                         VectorUtils.Vector3D to = new VectorUtils.Vector3D(waterLinePt.getX(), waterLinePt.getY(), waterLinePt.getZ());
@@ -467,6 +478,8 @@ public class BoatBox3D extends Box3D {
         this.vLines = new ArrayList<>();
 
         // Generate the data, the Bézier curves.
+
+        // TODO Find the widest point
         Bezier bezierRail = new Bezier(ctrlPointsRail);
         for (double t=0; t<=1.001; t+=0.01) { // TODO Verify that limit (double...)
             Bezier.Point3D tick = bezierRail.getBezierPoint(t);
@@ -479,6 +492,7 @@ public class BoatBox3D extends Box3D {
             bezierPointsBow.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
         }
         Bezier bezierKeel = new Bezier(ctrlPointsKeel);
+        // TODO Find the deepest point
         for (double t=0; t<=1.001; t+=0.01) { // TODO Limit (double...)
             Bezier.Point3D tick = bezierKeel.getBezierPoint(t);
             bezierPointsKeel.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
@@ -494,6 +508,7 @@ public class BoatBox3D extends Box3D {
         // Extrapolate all the frames
         List<Bezier> frameBeziers = new ArrayList<>();
         // TODO _x <= ? Make sure the end has a frame...
+        // TODO Displacement...
         for (double _x=(-centerOnXValue + xOffset) + frameIncrement; _x< /*=*/(-centerOnXValue + xOffset) + 550.0; _x+=frameIncrement) {
             System.out.printf("... Calculating frame %.03f... ", _x);
             long one = System.currentTimeMillis();
@@ -524,6 +539,8 @@ public class BoatBox3D extends Box3D {
 
         if (waterlines) {
             // H lines
+
+            // TODO Find the LWL
             hValues.forEach(z -> {
                 System.out.println("Waterline for z=" + z);
                 List<Bezier.Point3D> waterLine = new ArrayList<>();
@@ -562,7 +579,7 @@ public class BoatBox3D extends Box3D {
                             }
                         }
                     });
-                    // Transom? TODO Remove that
+                    // Transom
                     increasing = (bezierTransom.getBezierPoint(0).getZ() < bezierTransom.getBezierPoint(1).getZ());
                     double tTransom = bezierTransom.getTForGivenZ(0, 1E-1, z, 1E-4, increasing);
                     if (tTransom != -1) {
@@ -603,7 +620,7 @@ public class BoatBox3D extends Box3D {
                             }
                         }
                     });
-                    // Transom? TODO Remove that
+                    // Transom
                     increasing = (bezierTransom.getBezierPoint(0).getY() < bezierTransom.getBezierPoint(1).getY());
                     double tTransom = bezierTransom.getTForGivenY(0, 1E-1, y, 1E-4, increasing);
                     if (tTransom != -1) {

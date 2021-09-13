@@ -88,7 +88,7 @@ public class ThreeViews {
         });
     }
     private void fileExit_ActionPerformed(ActionEvent ae) {
-        System.out.printf("Exit requested %s\n", ae);
+        System.out.printf("Exit requested %s, bye now.\n", ae);
         System.exit(0);
     }
     private void helpAbout_ActionPerformed(ActionEvent ae) {
@@ -98,7 +98,7 @@ public class ThreeViews {
     private void refreshBoatShape() {
         Thread refresher = new Thread(() -> {
             System.out.println("Starting refresh...");
-            // TODO Synchronization, ping for refresh/repaint
+            // TODO Synchronization, ping for refresh/repaint. Stop thread if already running.
             ((BoatBox3D) this.box3D).refreshData();
             System.out.println("Refresh completed!");
             this.box3D.repaint();
@@ -880,6 +880,7 @@ public class ThreeViews {
             boolean selected = ((JCheckBox)evt.getSource()).isSelected();
             System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
             ((BoatBox3D)this.box3D).setJustTheBoat(selected);
+            this.box3D.repaint();
             ctrlPointsCheckBox.setEnabled(!selected);
         });
         ctrlPointsCheckBox.setEnabled(!justBoatSelected);
@@ -889,24 +890,28 @@ public class ThreeViews {
             boolean selected = ((JCheckBox)evt.getSource()).isSelected();
             System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
             ((BoatBox3D)this.box3D).setSymmetrical(selected);
+            this.box3D.repaint();
         });
         waterlinesCheckBox.setSelected(((BoatBox3D)this.box3D).isWaterlines());
         waterlinesCheckBox.addActionListener(evt -> {
             boolean selected = ((JCheckBox)evt.getSource()).isSelected();
             System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
             ((BoatBox3D)this.box3D).setWaterlines(selected);
+            this.box3D.repaint();
         });
         buttocksCheckBox.setSelected(((BoatBox3D)this.box3D).isButtocks());
         buttocksCheckBox.addActionListener(evt -> {
             boolean selected = ((JCheckBox)evt.getSource()).isSelected();
             System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
             ((BoatBox3D)this.box3D).setButtocks(selected);
+            this.box3D.repaint();
         });
         ctrlPointsCheckBox.setSelected(((BoatBox3D)this.box3D).isDrawFrameCtrlPoints());
         ctrlPointsCheckBox.addActionListener(evt -> {
             boolean selected = ((JCheckBox)evt.getSource()).isSelected();
             System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
             ((BoatBox3D)this.box3D).setDrawFrameCtrlPoints(selected);
+            this.box3D.repaint();
         });
 
         topWidgetsPanel.add(justBoatCheckBox,
