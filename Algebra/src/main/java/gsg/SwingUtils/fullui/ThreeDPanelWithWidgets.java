@@ -35,15 +35,15 @@ public class ThreeDPanelWithWidgets
 	private final JLabel minZ = new JLabel("min");
 	private final JLabel maxZ = new JLabel("max");
 
-	private final JFormattedTextField minXValue = new JFormattedTextField(new DecimalFormat("#0.0"));
-	private final JFormattedTextField maxXValue = new JFormattedTextField(new DecimalFormat("#0.0"));
-	private final JFormattedTextField minYValue = new JFormattedTextField(new DecimalFormat("#0.0"));
-	private final JFormattedTextField maxYValue = new JFormattedTextField(new DecimalFormat("#0.0"));
-	private final JFormattedTextField minZValue = new JFormattedTextField(new DecimalFormat("#0.0"));
-	private final JFormattedTextField maxZValue = new JFormattedTextField(new DecimalFormat("#0.0"));
+	private final JFormattedTextField minXValue = new JFormattedTextField(new DecimalFormat("#0.00"));
+	private final JFormattedTextField maxXValue = new JFormattedTextField(new DecimalFormat("#0.00"));
+	private final JFormattedTextField minYValue = new JFormattedTextField(new DecimalFormat("#0.00"));
+	private final JFormattedTextField maxYValue = new JFormattedTextField(new DecimalFormat("#0.00"));
+	private final JFormattedTextField minZValue = new JFormattedTextField(new DecimalFormat("#0.00"));
+	private final JFormattedTextField maxZValue = new JFormattedTextField(new DecimalFormat("#0.00"));
 
 	private final JLabel zoomLabel = new JLabel("Zoom:");
-	private final JFormattedTextField zoomValue = new JFormattedTextField(new DecimalFormat("#0.0"));
+	private final JFormattedTextField zoomValue = new JFormattedTextField(new DecimalFormat("#0.00"));
 
 	private JCheckBox withBoxFaces = null;
 	private JCheckBox withAxis = null;
