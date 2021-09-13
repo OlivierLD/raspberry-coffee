@@ -10,6 +10,8 @@ import gsg.VectorUtils;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
@@ -869,10 +871,100 @@ public class ThreeViews {
 
         JPanel topWidgetsPanel = new JPanel(new GridBagLayout());
         JCheckBox justBoatCheckBox = new JCheckBox("Just boat");
-        JCheckBox symmetricCheckBox = new JCheckBox("Symmetric");
+        JCheckBox symmetricCheckBox = new JCheckBox("Symmetrical");
         JCheckBox waterlinesCheckBox = new JCheckBox("Waterlines");
         JCheckBox buttocksCheckBox = new JCheckBox("Buttocks");
-        JCheckBox ctrlPointsCheckBox = new JCheckBox("CtrlPoints");
+        JCheckBox ctrlPointsCheckBox = new JCheckBox("Ctrl-Points");
+
+        JPanel frameStepPanel = new JPanel();
+        JFormattedTextField frameStepValue = new JFormattedTextField(new DecimalFormat("#0.0"));
+        frameStepValue.setValue(((BoatBox3D)this.box3D).getFrameIncrement());
+        frameStepValue.setPreferredSize(new Dimension(60, 20));
+        frameStepValue.setHorizontalAlignment(SwingConstants.RIGHT);
+        frameStepValue.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                checkValue();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                checkValue();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                checkValue();
+            }
+            public void checkValue() {
+                if (!frameStepValue.getText().trim().isEmpty()) {
+                    try {
+                        double val = Double.parseDouble(frameStepValue.getText());
+                        ((BoatBox3D)box3D).setFrameIncrement(val);
+                        box3D.repaint();
+                    } catch (NumberFormatException nfe) {
+                        System.err.println(nfe.toString());
+                    }
+                }
+            }
+        });
+        frameStepPanel.add(new JLabel("Frame Step:"));
+        frameStepPanel.add(frameStepValue);
+
+        JPanel wlStepPanel = new JPanel();
+        JFormattedTextField wlStepValue = new JFormattedTextField(new DecimalFormat("#0.0"));
+        wlStepValue.setValue(((BoatBox3D)this.box3D).getWlIncrement());
+        wlStepValue.setPreferredSize(new Dimension(60, 20));
+        wlStepValue.setHorizontalAlignment(SwingConstants.RIGHT);
+        wlStepValue.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                checkValue();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                checkValue();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                checkValue();
+            }
+            public void checkValue() {
+                if (!wlStepValue.getText().trim().isEmpty()) {
+                    try {
+                        double val = Double.parseDouble(wlStepValue.getText());
+                        ((BoatBox3D)box3D).setWlIncrement(val);
+                        box3D.repaint();
+                    } catch (NumberFormatException nfe) {
+                        System.err.println(nfe.toString());
+                    }
+                }
+            }
+        });
+        wlStepPanel.add(new JLabel("Waterline Step:"));
+        wlStepPanel.add(wlStepValue);
+
+        JPanel buttockStepPanel = new JPanel();
+        JFormattedTextField buttockStepValue = new JFormattedTextField(new DecimalFormat("#0.0"));
+        buttockStepValue.setValue(((BoatBox3D)this.box3D).getButtockIncrement());
+        buttockStepValue.setPreferredSize(new Dimension(60, 20));
+        buttockStepValue.setHorizontalAlignment(SwingConstants.RIGHT);
+        buttockStepValue.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                checkValue();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                checkValue();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                checkValue();
+            }
+            public void checkValue() {
+                if (!buttockStepValue.getText().trim().isEmpty()) {
+                    try {
+                        double val = Double.parseDouble(buttockStepValue.getText());
+                        ((BoatBox3D)box3D).setButtockIncrement(val);
+                        box3D.repaint();
+                    } catch (NumberFormatException nfe) {
+                        System.err.println(nfe.toString());
+                    }
+                }
+            }
+        });
+        buttockStepPanel.add(new JLabel("Buttock Step:"));
+        buttockStepPanel.add(buttockStepValue);
 
         boolean justBoatSelected = ((BoatBox3D)this.box3D).isJustTheBoat();
         justBoatCheckBox.setSelected(((BoatBox3D)this.box3D).isJustTheBoat());
@@ -914,6 +1006,7 @@ public class ThreeViews {
             this.box3D.repaint();
         });
 
+        // Line 1
         topWidgetsPanel.add(justBoatCheckBox,
                 new GridBagConstraints(0,
                         0,
@@ -958,6 +1051,37 @@ public class ThreeViews {
         topWidgetsPanel.add(ctrlPointsCheckBox,
                 new GridBagConstraints(4,
                         0,
+                        1,
+                        1,
+                        1.0,
+                        0.0,
+                        GridBagConstraints.WEST,
+                        GridBagConstraints.NONE,
+                        new Insets(0, 0, 0, 0), 0, 0));
+        // Line 2
+        topWidgetsPanel.add(frameStepPanel,
+                new GridBagConstraints(0,
+                        1,
+                        1,
+                        1,
+                        1.0,
+                        0.0,
+                        GridBagConstraints.WEST,
+                        GridBagConstraints.NONE,
+                        new Insets(0, 0, 0, 0), 0, 0));
+        topWidgetsPanel.add(wlStepPanel,
+                new GridBagConstraints(1,
+                       1,
+                        1,
+                        1,
+                        1.0,
+                        0.0,
+                        GridBagConstraints.WEST,
+                        GridBagConstraints.NONE,
+                        new Insets(0, 0, 0, 0), 0, 0));
+        topWidgetsPanel.add(buttockStepPanel,
+                new GridBagConstraints(2,
+                        1,
                         1,
                         1,
                         1.0,

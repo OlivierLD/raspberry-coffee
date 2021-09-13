@@ -33,11 +33,13 @@ public class BoatBox3D extends Box3D {
     private boolean symmetrical = true;
     private boolean drawFrameCtrlPoints = true;
     private double frameIncrement = 10d; // 10.0; // 50.0;
+    private double wlIncrement = 10d; // 10.0; // 50.0;
+    private double buttockIncrement = 10d; // 10.0; // 50.0;
 
-//    private List<Double> hValues = List.of(-10d, 0d, 10d, 20d, 30d, 40d, 50d);
-    private List<Double> hValues = List.of(-10d, -5d, 0d, 5d, 10d, 15d, 20d, 25d, 30d, 35d, 40d, 45d, 50d);
-//    private List<Double> vValues = List.of(20d, 40d, 60d, 80d, 100d);
-    private List<Double> vValues = List.of(10d, 20d, 30d, 40d, 50d, 60d, 70d, 80d, 90d, 100d);
+    private List<Double> hValues = List.of(-10d, 0d, 10d, 20d, 30d, 40d, 50d);
+//    private List<Double> hValues = List.of(-10d, -5d, 0d, 5d, 10d, 15d, 20d, 25d, 30d, 35d, 40d, 45d, 50d);
+    private List<Double> vValues = List.of(20d, 40d, 60d, 80d, 100d);
+//    private List<Double> vValues = List.of(10d, 20d, 30d, 40d, 50d, 60d, 70d, 80d, 90d, 100d);
     private boolean waterlines = true;
     private boolean buttocks = true;
 
@@ -415,6 +417,30 @@ public class BoatBox3D extends Box3D {
 
     }
 
+    public double getFrameIncrement() {
+        return frameIncrement;
+    }
+
+    public void setFrameIncrement(double frameIncrement) {
+        this.frameIncrement = frameIncrement;
+    }
+
+    public double getWlIncrement() {
+        return wlIncrement;
+    }
+
+    public void setWlIncrement(double wlIncrement) {
+        this.wlIncrement = wlIncrement;
+    }
+
+    public double getButtockIncrement() {
+        return buttockIncrement;
+    }
+
+    public void setButtockIncrement(double buttockIncrement) {
+        this.buttockIncrement = buttockIncrement;
+    }
+
     public boolean isJustTheBoat() {
         return justTheBoat;
     }
@@ -472,6 +498,7 @@ public class BoatBox3D extends Box3D {
 
         // Also find the widest point
         double maxWidth = 0d;
+        double maxHeight = 0d;
         Bezier.Point3D maxWidthPoint = null;
         Bezier bezierRail = new Bezier(ctrlPointsRail);
         for (double t=0; t<=1.001; t+=0.01) { // TODO Verify that limit (double...)
@@ -481,6 +508,9 @@ public class BoatBox3D extends Box3D {
             if (tick.getY() > maxWidth) {
                 maxWidth = tick.getY();
                 maxWidthPoint = tick;
+            }
+            if (tick.getZ() > maxHeight) {
+                maxHeight = tick.getZ();
             }
         }
         System.out.printf("Max Width: %f, at X:%f\n", maxWidth, maxWidthPoint.getX() - (-centerOnXValue + xOffset));
@@ -550,7 +580,14 @@ public class BoatBox3D extends Box3D {
         }
 
         if (waterlines) {
-            // H lines. TODO Use a step for waterlines.
+            // H lines. Use a step for waterlines. maxDepth, maxHeight, wlIncrement.
+            double from = Math.ceil(maxDepth / wlIncrement) * wlIncrement;
+            double to = Math.floor(maxHeight / wlIncrement) * wlIncrement;
+            System.out.printf("WL from %f to %f\n", from, to);
+            hValues = new ArrayList<>();
+            for (double wl = from; wl <= to; wl += wlIncrement) {
+                hValues.add(wl);
+            }
             hValues.forEach(z -> {
                 System.out.println("Waterline for z=" + z);
                 List<Bezier.Point3D> waterLine = new ArrayList<>();
@@ -604,7 +641,14 @@ public class BoatBox3D extends Box3D {
             });
         }
         if (buttocks) {
-            // V lines. TOTO Use a step for vValues.
+            double from = buttockIncrement;
+            double to = Math.floor(maxWidth / buttockIncrement) * buttockIncrement;
+            System.out.printf("Buttock from %f to %f\n", from, to);
+            vValues = new ArrayList<>();
+            for (double buttock = from; buttock <= to; buttock += buttockIncrement) {
+                vValues.add(buttock);
+            }
+            // V lines.
             vValues.forEach(y -> {
                 System.out.println("Vline for y=" + y);
                 List<Bezier.Point3D> vLine = new ArrayList<>();
