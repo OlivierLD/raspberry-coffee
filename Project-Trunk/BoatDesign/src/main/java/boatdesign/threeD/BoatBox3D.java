@@ -269,8 +269,7 @@ public class BoatBox3D extends Box3D {
             g2d.setColor(Color.RED);
             g2d.setStroke(new BasicStroke(2));
             from = null;
-            for (int i=0; i<bezierPointsRail.size(); i++) {
-                VectorUtils.Vector3D to = bezierPointsRail.get(i);
+            for (VectorUtils.Vector3D to : bezierPointsRail) {
                 if (from != null) {
                     instance.drawSegment(g2d, from, to);
                 }
@@ -278,8 +277,7 @@ public class BoatBox3D extends Box3D {
             }
             if (symmetrical) {
                 from = null;
-                for (int i=0; i<bezierPointsRail.size(); i++) {
-                    VectorUtils.Vector3D to = bezierPointsRail.get(i);
+                for (VectorUtils.Vector3D to : bezierPointsRail) {
                     to = to.y(-to.getY()); // Whahaha!
                     if (from != null) {
                         instance.drawSegment(g2d, from, to);
@@ -288,8 +286,7 @@ public class BoatBox3D extends Box3D {
                 }
             }
             from = null;
-            for (int i=0; i<bezierPointsBow.size(); i++) {
-                VectorUtils.Vector3D to = bezierPointsBow.get(i);
+            for (VectorUtils.Vector3D to : bezierPointsBow) {
                 if (from != null) {
                     instance.drawSegment(g2d, from, to);
                 }
@@ -297,8 +294,7 @@ public class BoatBox3D extends Box3D {
             }
             if (symmetrical) {
                 from = null;
-                for (int i=0; i<bezierPointsBow.size(); i++) {
-                    VectorUtils.Vector3D to = bezierPointsBow.get(i);
+                for (VectorUtils.Vector3D to : bezierPointsBow) {
                     to = to.y(-to.getY());
                     if (from != null) {
                         instance.drawSegment(g2d, from, to);
@@ -307,16 +303,14 @@ public class BoatBox3D extends Box3D {
                 }
             }
             from = null;
-            for (int i=0; i<bezierPointsKeel.size(); i++) {
-                VectorUtils.Vector3D to = bezierPointsKeel.get(i);
+            for (VectorUtils.Vector3D to : bezierPointsKeel) {
                 if (from != null) {
                     instance.drawSegment(g2d, from, to);
                 }
                 from = to;
             }
             from = null;
-            for (int i=0; i<bezierPointsTransom.size(); i++) {
-                VectorUtils.Vector3D to = bezierPointsTransom.get(i);
+            for (VectorUtils.Vector3D to : bezierPointsTransom) {
                 if (from != null) {
                     instance.drawSegment(g2d, from, to);
                 }
@@ -324,8 +318,7 @@ public class BoatBox3D extends Box3D {
             }
             if (symmetrical) {
                 from = null;
-                for (int i=0; i<bezierPointsTransom.size(); i++) {
-                    VectorUtils.Vector3D to = bezierPointsTransom.get(i);
+                for (VectorUtils.Vector3D to : bezierPointsTransom) {
                     to = to.y(-to.getY());
                     if (from != null) {
                         instance.drawSegment(g2d, from, to);
@@ -338,8 +331,7 @@ public class BoatBox3D extends Box3D {
             g2d.setStroke(new BasicStroke(1));
             for (List<VectorUtils.Vector3D> bezierPoints : frameBezierPts) {
                 from = null;
-                for (int i = 0; i < bezierPoints.size(); i++) {
-                    VectorUtils.Vector3D to = bezierPoints.get(i);
+                for (VectorUtils.Vector3D to : bezierPoints) {
                     if (from != null) {
                         instance.drawSegment(g2d, from, to);
                     }
@@ -349,8 +341,7 @@ public class BoatBox3D extends Box3D {
             if (symmetrical) {
                 for (List<VectorUtils.Vector3D> bezierPoints : frameBezierPts) {
                     from = null;
-                    for (int i = 0; i < bezierPoints.size(); i++) {
-                        VectorUtils.Vector3D to = bezierPoints.get(i);
+                    for (VectorUtils.Vector3D to : bezierPoints) {
                         to = to.y(-to.getY());
                         if (from != null) {
                             instance.drawSegment(g2d, from, to);
@@ -613,7 +604,7 @@ public class BoatBox3D extends Box3D {
             });
         }
         if (buttocks) {
-            // V lines
+            // V lines. TOTO Use a step for vValues.
             vValues.forEach(y -> {
                 System.out.println("Vline for y=" + y);
                 List<Bezier.Point3D> vLine = new ArrayList<>();
@@ -657,8 +648,7 @@ public class BoatBox3D extends Box3D {
 
     private void correlate() {
         // 1 - Bow
-        List<Bezier.Point3D> tempBow = new ArrayList<>();
-        tempBow.addAll(ctrlPointsBow);
+        List<Bezier.Point3D> tempBow = new ArrayList<>(ctrlPointsBow);
         // First point of the rail is first point of the bow
         tempBow.get(0).x(ctrlPointsRail.get(0).getX())
                 .y(ctrlPointsRail.get(0).getY())
@@ -692,12 +682,10 @@ public class BoatBox3D extends Box3D {
     public void setRailCtrlPoints(List<Bezier.Point3D> ctrlPointsRail) {
         this.ctrlPointsRail = new ArrayList<>();
         // Re-calculate with center and offset
-        ctrlPointsRail.forEach(cp -> {
-            this.ctrlPointsRail.add(new Bezier.Point3D()
-                    .x((-centerOnXValue + xOffset) + cp.getX())
-                    .y(cp.getY())
-                    .z(cp.getZ()));
-        });
+        ctrlPointsRail.forEach(cp -> this.ctrlPointsRail.add(new Bezier.Point3D()
+                .x((-centerOnXValue + xOffset) + cp.getX())
+                .y(cp.getY())
+                .z(cp.getZ())));
         correlate();
         this.repaint();
     }
@@ -705,12 +693,10 @@ public class BoatBox3D extends Box3D {
     public void setKeelCtrlPoints(List<Bezier.Point3D> ctrlPointsKeel) {
         this.ctrlPointsKeel = new ArrayList<>();
         // Re-calculate with center and offset
-        ctrlPointsKeel.forEach(cp -> {
-            this.ctrlPointsKeel.add(new Bezier.Point3D()
-                    .x((-centerOnXValue + xOffset) + cp.getX())
-                    .y(cp.getY())
-                    .z(cp.getZ()));
-        });
+        ctrlPointsKeel.forEach(cp -> this.ctrlPointsKeel.add(new Bezier.Point3D()
+                .x((-centerOnXValue + xOffset) + cp.getX())
+                .y(cp.getY())
+                .z(cp.getZ())));
         correlate();
         this.repaint();
     }
