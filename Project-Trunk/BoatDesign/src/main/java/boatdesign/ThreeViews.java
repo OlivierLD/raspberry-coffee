@@ -584,14 +584,14 @@ public class ThreeViews {
                         try {
                             int newIndex = addPointPanel.getPos();
                             AddCtrlPointPanel.CurveName curve = addPointPanel.getCurve();
-                            Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardXY.getCanvasToSpaceXTransformer();
-                            Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardXY.getCanvasToSpaceYTransformer();
-                            int height = whiteBoardXY.getHeight();
+                            Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardXZ.getCanvasToSpaceXTransformer();
+                            Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardXZ.getCanvasToSpaceYTransformer();
+                            int height = whiteBoardXZ.getHeight();
                             if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                                 double newX = canvasToSpaceXTransformer.apply(e.getX());
                                 double newY = canvasToSpaceYTransformer.apply(height - e.getY());
 //                              System.out.printf("Point dragged to %f / %f\n", newX, newY);
-                                Bezier.Point3D point3D = new Bezier.Point3D().x(newX).y(newY);
+                                Bezier.Point3D point3D = new Bezier.Point3D().x(newX).z(newY);
                                 List<Bezier.Point3D> newList = new ArrayList<>();
                                 List<Bezier.Point3D> origList = curve == AddCtrlPointPanel.CurveName.RAIL ? railCtrlPoints: keelCtrlPoints;
                                 for (int i=0; i<newIndex; i++) {
@@ -698,14 +698,14 @@ public class ThreeViews {
                         try {
                             int newIndex = addPointPanel.getPos();
                             AddCtrlPointPanel.CurveName curve = addPointPanel.getCurve();
-                            Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardXY.getCanvasToSpaceXTransformer();
-                            Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardXY.getCanvasToSpaceYTransformer();
-                            int height = whiteBoardXY.getHeight();
+                            Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardYZ.getCanvasToSpaceXTransformer();
+                            Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardYZ.getCanvasToSpaceYTransformer();
+                            int height = whiteBoardYZ.getHeight();
                             if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                                 double newX = canvasToSpaceXTransformer.apply(e.getX());
                                 double newY = canvasToSpaceYTransformer.apply(height - e.getY());
 //                              System.out.printf("Point dragged to %f / %f\n", newX, newY);
-                                Bezier.Point3D point3D = new Bezier.Point3D().x(newX).y(newY);
+                                Bezier.Point3D point3D = new Bezier.Point3D().y(newX).z(newY);
                                 List<Bezier.Point3D> newList = new ArrayList<>();
                                 List<Bezier.Point3D> origList = curve == AddCtrlPointPanel.CurveName.RAIL ? railCtrlPoints : keelCtrlPoints;
                                 for (int i = 0; i < newIndex; i++) {
