@@ -76,6 +76,7 @@ public class ThreeViews {
     private Box3D box3D = null;
 
     private JTextPane dataTextArea = null;
+    private JTextPane boatDataTextArea = null;
 
     private static ThreeViews instance;
 
@@ -830,12 +831,11 @@ public class ThreeViews {
 //        JLabel label3 = new JLabel("Label 3");
 
         JPanel ctrlPointsPanel = new JPanel(new BorderLayout());
-        ctrlPointsPanel.setBorder(BorderFactory.createTitledBorder("Data Placeholder"));
+        ctrlPointsPanel.setBorder(BorderFactory.createTitledBorder("Bezier Data"));
         dataTextArea = new JTextPane();
         dataTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
         dataTextArea.setPreferredSize(new Dimension(300, 300));
         JScrollPane dataScrollPane = new JScrollPane(dataTextArea);
-
         ctrlPointsPanel.add(dataScrollPane, BorderLayout.NORTH);
 
         whiteBoardsPanel.add(whiteBoardXZ,         // Side
@@ -1093,7 +1093,40 @@ public class ThreeViews {
         JPanel rightPane = new JPanel(new BorderLayout());
         rightPane.add(topWidgetsPanel, BorderLayout.NORTH);
         rightPane.add(threeDPanel, BorderLayout.CENTER);
-        rightPane.add(ctrlPointsPanel, BorderLayout.SOUTH);
+
+        JPanel bottomRightPanel = new JPanel(new GridBagLayout());
+        bottomRightPanel.add(ctrlPointsPanel,
+                new GridBagConstraints(0,
+                        0,
+                        1,
+                        1,
+                        1.0,
+                        0.0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH,
+                        new Insets(0, 0, 0, 0), 0, 0));
+
+        JPanel boatDataPanel = new JPanel(new BorderLayout());
+        boatDataPanel.setBorder(BorderFactory.createTitledBorder("Boat Data"));
+        boatDataTextArea = new JTextPane();
+        boatDataTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
+        boatDataTextArea.setPreferredSize(new Dimension(300, 300));
+        boatDataTextArea.setText("Boat Data...");
+        JScrollPane boatDataScrollPane = new JScrollPane(boatDataTextArea);
+        boatDataPanel.add(boatDataScrollPane, BorderLayout.NORTH);
+
+        bottomRightPanel.add(boatDataPanel,
+                new GridBagConstraints(1,
+                        0,
+                        1,
+                        1,
+                        1.0,
+                        0.0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH,
+                        new Insets(0, 0, 0, 0), 0, 0));
+
+        rightPane.add(bottomRightPanel, BorderLayout.SOUTH);
 
         whiteBoardsPanel.add(rightPane,
                 new GridBagConstraints(1,
