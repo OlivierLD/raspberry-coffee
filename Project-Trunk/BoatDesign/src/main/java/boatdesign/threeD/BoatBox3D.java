@@ -479,24 +479,40 @@ public class BoatBox3D extends Box3D {
 
         // Generate the data, the Bézier curves.
 
-        // TODO Find the widest point
+        // Also find the widest point
+        double maxWidth = 0d;
+        Bezier.Point3D maxWidthPoint = null;
         Bezier bezierRail = new Bezier(ctrlPointsRail);
         for (double t=0; t<=1.001; t+=0.01) { // TODO Verify that limit (double...)
             Bezier.Point3D tick = bezierRail.getBezierPoint(t);
             bezierPointsRail.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
 //            System.out.printf("Rail Bezier X: %f\n", tick.getX());
+            if (tick.getY() > maxWidth) {
+                maxWidth = tick.getY();
+                maxWidthPoint = tick;
+            }
         }
+        System.out.printf("Max Width: %f, at X:%f\n", maxWidth, maxWidthPoint.getX() - (-centerOnXValue + xOffset));
+
         Bezier bezierBow = new Bezier(ctrlPointsBow);
         for (double t=0; t<=1.0; t+=0.01) {
             Bezier.Point3D tick = bezierBow.getBezierPoint(t);
             bezierPointsBow.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
         }
         Bezier bezierKeel = new Bezier(ctrlPointsKeel);
-        // TODO Find the deepest point
+
+        // Also find the deepest point
+        double maxDepth = 0d;
+        Bezier.Point3D maxDepthPoint = null;
         for (double t=0; t<=1.001; t+=0.01) { // TODO Limit (double...)
             Bezier.Point3D tick = bezierKeel.getBezierPoint(t);
             bezierPointsKeel.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
+            if (tick.getZ() < maxDepth) {
+                maxDepth = tick.getZ();
+                maxDepthPoint = tick;
+            }
         }
+        System.out.printf("Max Depth: %f, at X:%f\n", maxDepth, maxDepthPoint.getX() - (-centerOnXValue + xOffset));
 
         // This one is correlated, re-calculated
         Bezier bezierTransom = new Bezier(ctrlPointsTransom);
