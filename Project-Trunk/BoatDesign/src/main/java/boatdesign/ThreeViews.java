@@ -2,6 +2,7 @@ package boatdesign;
 
 import bezier.Bezier;
 import boatdesign.threeD.BoatBox3D;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gsg.SwingUtils.Box3D;
 import gsg.SwingUtils.WhiteBoardPanel;
@@ -101,12 +102,19 @@ public class ThreeViews {
     private void refreshBoatShape() {
         Thread refresher = new Thread(() -> {
             System.out.println("Starting refresh...");
-            // TODO Synchronization, ping for refresh/repaint. Stop thread if already running.
-            ((BoatBox3D) this.box3D).refreshData();
+            boatDataTextArea.setText("Re-calculating...");
+            // TODO Synchronization, ping for refresh/repaint? Stop thread if already running.
+            ((BoatBox3D) this.box3D).refreshData(str -> {
+                boatDataTextArea.setText(str);
+            });
             System.out.println("Refresh completed!");
             this.box3D.repaint();
         });
         refresher.start();
+    }
+
+    private Map<String, Object> generateBezierJson() {
+        return  Map.of("rail", railCtrlPoints, "keel", keelCtrlPoints);
     }
 
     private void refreshData() {
@@ -118,14 +126,22 @@ public class ThreeViews {
             ((BoatBox3D)this.box3D).setKeelCtrlPoints(keelCtrlPoints); // The keel.
 
             // Display in textArea
-            String content = "Control Points:\nRail:\n" + railCtrlPoints.stream()
-                    .map(pt -> String.format("%d: %s", railCtrlPoints.indexOf(pt), pt.toString()))
-                    .collect(Collectors.joining("\n"));
-            content += "\nKeel:\n" + keelCtrlPoints.stream()
-                    .map(pt -> String.format("%d: %s", keelCtrlPoints.indexOf(pt), pt.toString()))
-                    .collect(Collectors.joining("\n"));
+            try {
+                String json = mapper.writerWithDefaultPrettyPrinter()
+                        .writeValueAsString(generateBezierJson());
+                dataTextArea.setText(json);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
 
-            dataTextArea.setText(content);
+//            String content = "Control Points:\nRail:\n" + railCtrlPoints.stream()
+//                    .map(pt -> String.format("%d: %s", railCtrlPoints.indexOf(pt), pt.toString()))
+//                    .collect(Collectors.joining("\n"));
+//            content += "\nKeel:\n" + keelCtrlPoints.stream()
+//                    .map(pt -> String.format("%d: %s", keelCtrlPoints.indexOf(pt), pt.toString()))
+//                    .collect(Collectors.joining("\n"));
+//
+//            dataTextArea.setText(content);
 
             /*
              * Prepare data for display
@@ -548,7 +564,7 @@ public class ThreeViews {
                     if (railCtrlPoints.contains(closePoint)) {
                         closestPointIndex = railCtrlPoints.indexOf(closePoint);
                     } else {
-                        System.out.println("Close Point on the keel!");
+//                        System.out.println("Close Point on the keel!");
                         closestPointIndex = railCtrlPoints.size() + keelCtrlPoints.indexOf(closePoint);
                     }
                 } else {
@@ -661,7 +677,7 @@ public class ThreeViews {
                     if (railCtrlPoints.contains(closePoint)) {
                         closestPointIndex = railCtrlPoints.indexOf(closePoint);
                     } else {
-                        System.out.println("Close Point on the keel!");
+//                        System.out.println("Close Point on the keel!");
                         closestPointIndex = railCtrlPoints.size() + keelCtrlPoints.indexOf(closePoint);
                     }
 //                    closestPointIndex = railCtrlPoints.indexOf(closePoint);
@@ -775,7 +791,7 @@ public class ThreeViews {
                     if (railCtrlPoints.contains(closePoint)) {
                         closestPointIndex = railCtrlPoints.indexOf(closePoint);
                     } else {
-                        System.out.println("Close Point on the keel!");
+//                        System.out.println("Close Point on the keel!");
                         closestPointIndex = railCtrlPoints.size() + keelCtrlPoints.indexOf(closePoint);
                     }
 //                    closestPointIndex = railCtrlPoints.indexOf(closePoint);
@@ -834,8 +850,8 @@ public class ThreeViews {
         ctrlPointsPanel.setBorder(BorderFactory.createTitledBorder("Bezier Data"));
         dataTextArea = new JTextPane();
         dataTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
-        dataTextArea.setPreferredSize(new Dimension(300, 300));
         JScrollPane dataScrollPane = new JScrollPane(dataTextArea);
+        dataScrollPane.setPreferredSize(new Dimension(300, 200));
         ctrlPointsPanel.add(dataScrollPane, BorderLayout.NORTH);
 
         whiteBoardsPanel.add(whiteBoardXZ,         // Side
@@ -1110,9 +1126,9 @@ public class ThreeViews {
         boatDataPanel.setBorder(BorderFactory.createTitledBorder("Boat Data"));
         boatDataTextArea = new JTextPane();
         boatDataTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
-        boatDataTextArea.setPreferredSize(new Dimension(300, 300));
         boatDataTextArea.setText("Boat Data...");
         JScrollPane boatDataScrollPane = new JScrollPane(boatDataTextArea);
+        boatDataScrollPane.setPreferredSize(new Dimension(300, 200));
         boatDataPanel.add(boatDataScrollPane, BorderLayout.NORTH);
 
         bottomRightPanel.add(boatDataPanel,

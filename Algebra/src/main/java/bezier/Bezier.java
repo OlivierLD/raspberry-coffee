@@ -1,5 +1,7 @@
 package bezier;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -176,6 +178,8 @@ public class Bezier {
         return getTForGivenVal(startAt, inc, z, precision, Coordinate.Z, increasing);
     }
 
+    private static NumberFormat formatter = new DecimalFormat("0.#####E0");
+
     /**
      * Warning: this assumes that X is constantly growing/increasing
      *
@@ -188,6 +192,12 @@ public class Bezier {
      * @return the t
      */
     private double getTForGivenVal(double startAt, double inc, double val, double precision, Coordinate coordinate, boolean increasing) {
+
+//        System.out.println("getTForGivenVal: inc=" + formatter.format(inc));
+        if (inc < 1e-10) { // TODO This is a bug, needs a fix...
+            System.out.println("Exiting getTForGivenVal: inc=" + formatter.format(inc));
+            return -1;
+        }
 
         if (this.controlPoints.size() < 2) {
             return -1;
