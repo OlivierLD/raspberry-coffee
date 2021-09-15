@@ -494,7 +494,7 @@ public class BoatBox3D extends Box3D {
                 .forEach(x -> {
                     double area = displacementMap.get(x);
                     if (prevArea.get() != -1) {
-                        double avgArea = (prevArea.get() + area) / 2.0;
+                        double avgArea = (prevArea.get() + area) / 2.0;   // Average
                         double deltaX = x - (prevX.get() == -1 ? lwlStart : prevX.get());
                         disp.set(disp.get() + (deltaX * 1e-2 * avgArea * 1e-4));
                     }
@@ -516,7 +516,7 @@ public class BoatBox3D extends Box3D {
         Iterator<Double> iterator = keys.iterator();
         while (iterator.hasNext()) {
             double x = iterator.next();
-            System.out.println(x);
+//            System.out.println(x);
             double area = displacementMap.get(x);
             if (prevArea.get() != -1) {
                 double avgArea = (prevArea.get() + area) / 2.0;
