@@ -7,10 +7,8 @@ import gsg.VectorUtils;
 
 import java.awt.*;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -485,6 +483,7 @@ public class BoatBox3D extends Box3D {
         this.buttocks = buttocks;
     }
 
+    private static double xCenterOfHull = -1;
     private static double calculateDisplacement(Map<Double, Double> displacementMap,
                                                 double lwlStart,
                                                 double lwlEnd) {
@@ -507,7 +506,37 @@ public class BoatBox3D extends Box3D {
             double deltaX = lwlEnd - (prevX.get() == -1 ? lwlStart : prevX.get());
             disp.set(disp.get() + (deltaX * 1e-2 * avgArea * 1e-4));
         }
-        return 2 * disp.get();
+        double displacement = disp.get();
+
+        // Find center?
+        disp.set(0d);
+        prevArea.set(-1d);
+        prevX.set(-1d);
+        Set<Double> keys = displacementMap.keySet();
+        Iterator<Double> iterator = keys.iterator();
+        while (iterator.hasNext()) {
+            double x = iterator.next();
+            System.out.println(x);
+            double area = displacementMap.get(x);
+            if (prevArea.get() != -1) {
+                double avgArea = (prevArea.get() + area) / 2.0;
+                double deltaX = x - (prevX.get() == -1 ? lwlStart : prevX.get());
+                double prevDisp = disp.get();
+                double toAdd = (deltaX * 1e-2 * avgArea * 1e-4);
+                double missing = ((displacement / 2.0) - prevDisp);
+                if (missing < toAdd) {
+                    double addX = deltaX * (missing / toAdd);
+                    xCenterOfHull = (prevX.get() + addX);
+//                    System.out.println("Found CC at " + xCenterOfHull);
+                    break;
+                }
+                disp.set(prevDisp + toAdd);
+            }
+            prevArea.set(area);
+            prevX.set(x);
+        }
+
+        return 2 * displacement;
     }
 
     // Re-generates the boat
@@ -597,9 +626,9 @@ public class BoatBox3D extends Box3D {
         // Extrapolate all the frames (to the end of rail. could be the same as transom)
         List<Bezier> frameBeziers = new ArrayList<>();
         // TODO _x <= ? Make sure the end has a frame...
-        // TODO Displacement...
+        // Displacement...
         double maxFrameArea = 0d;
-        Map<Double, Double> displacementMap = new HashMap<>();
+        Map<Double, Double> displacementMap = new LinkedHashMap<>();
         for (double _x=(-centerOnXValue + xOffset) + frameIncrement; _x</*=*/ (-centerOnXValue + xOffset) + 550.0; _x+=frameIncrement) {
             if (verbose) {
                 System.out.printf("... Calculating frame %.03f... ", _x);
@@ -837,12 +866,19 @@ public class BoatBox3D extends Box3D {
         }
         if (callback != null) {
             String callbackMessage =
-               String.format("Max Width: %f m (at %f m)\nMax height: %f m\nMax depth: %f m (at %f m)\nLWL: %f m (%f to %f)\nDispl: %f m3\nPrismatic Coeff: %f",
-                    (maxWidth * 1e-2), (maxWidthX * 1e-2),
-                    (maxHeight * 1e-2),
-                    (maxDepth * 1e-2), (maxDepthX * 1e-2),
-                    (lwl * 1e-2), (lwlStart * 1e-2), (lwlEnd * 1e-2),
-                    displ, prismCoeff);
+                    String.format("Max Width: %f m (at %f m)\n" +
+                                    "Max height: %f m\n" +
+                                    "Max depth: %f m (at %f m)\n" +
+                                    "LWL: %f m (%f to %f)\n" +
+                                    "Displ: %f m3\n" +
+                                    "Prismatic Coeff: %f\n" +
+                                    "Center of hull at %f",
+                            (maxWidth * 1e-2), (maxWidthX * 1e-2),
+                            (maxHeight * 1e-2),
+                            (maxDepth * 1e-2), (maxDepthX * 1e-2),
+                            (lwl * 1e-2), (lwlStart * 1e-2), (lwlEnd * 1e-2),
+                            displ, prismCoeff,
+                            xCenterOfHull);
             callback.accept(callbackMessage);
         }
     }
