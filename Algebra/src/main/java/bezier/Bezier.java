@@ -159,26 +159,35 @@ public class Bezier {
         return minMax;
     }
 
-    public double getTForGivenX(double startAt, double inc, double x, double precision) {
+    public double getTForGivenX(double startAt, double inc, double x, double precision) throws TooDeepRecursionException {
         return getTForGivenX(startAt, inc, x, precision, true);
     }
-    public double getTForGivenX(double startAt, double inc, double x, double precision, boolean increasing) {
+    public double getTForGivenX(double startAt, double inc, double x, double precision, boolean increasing) throws TooDeepRecursionException {
         return getTForGivenVal(startAt, inc, x, precision, Coordinate.X, increasing);
     }
-    public double getTForGivenY(double startAt, double inc, double y, double precision) {
+    public double getTForGivenY(double startAt, double inc, double y, double precision) throws TooDeepRecursionException {
         return getTForGivenY(startAt, inc, y, precision, true);
     }
-    public double getTForGivenY(double startAt, double inc, double y, double precision, boolean increasing) {
+    public double getTForGivenY(double startAt, double inc, double y, double precision, boolean increasing) throws TooDeepRecursionException {
         return getTForGivenVal(startAt, inc, y, precision, Coordinate.Y, increasing);
     }
-    public double getTForGivenZ(double startAt, double inc, double z, double precision) {
+    public double getTForGivenZ(double startAt, double inc, double z, double precision) throws TooDeepRecursionException {
         return getTForGivenZ(startAt, inc, z, precision, true);
     }
-    public double getTForGivenZ(double startAt, double inc, double z, double precision, boolean increasing) {
+    public double getTForGivenZ(double startAt, double inc, double z, double precision, boolean increasing) throws TooDeepRecursionException {
         return getTForGivenVal(startAt, inc, z, precision, Coordinate.Z, increasing);
     }
 
     private static NumberFormat formatter = new DecimalFormat("0.#####E0");
+
+    public static class TooDeepRecursionException extends Exception {
+        public TooDeepRecursionException() {
+            super();
+        }
+        public TooDeepRecursionException(String message) {
+            super(message);
+        }
+    }
 
     /**
      * Warning: this assumes that X is constantly growing/increasing
@@ -191,12 +200,18 @@ public class Bezier {
      * @param increasing default true, set to false if the value we look for goes high to low.
      * @return the t
      */
-    private double getTForGivenVal(double startAt, double inc, double val, double precision, Coordinate coordinate, boolean increasing) {
+    private double getTForGivenVal(double startAt,
+                                   double inc,
+                                   double val,
+                                   double precision,
+                                   Coordinate coordinate,
+                                   boolean increasing) throws TooDeepRecursionException {
 
 //        System.out.println("getTForGivenVal: inc=" + formatter.format(inc));
         if (inc < 1e-10) { // TODO This is a bug, needs a fix...
-            System.out.println("Exiting getTForGivenVal: inc=" + formatter.format(inc));
-            return -1;
+//            System.out.println("Exiting getTForGivenVal: inc=" + formatter.format(inc));
+            throw new TooDeepRecursionException(String.format("Too Deep Recursion: inc = %s", formatter.format(inc)));
+//            return -1;
         }
 
         if (this.controlPoints.size() < 2) {
@@ -295,7 +310,12 @@ public class Bezier {
         System.out.println();
 
         double xToFind = 12; // 120;
-        double t = bezier.getTForGivenX(0, 1E-1, xToFind, 1E-4);
+        double t = 0;
+        try {
+            t = bezier.getTForGivenX(0, 1E-1, xToFind, 1E-4);
+        } catch (Bezier.TooDeepRecursionException tdre) {
+            tdre.printStackTrace();
+        }
         if (t < 0) {
             System.out.printf("No X=%f in this bezier.\n", xToFind);
         } else {
@@ -303,7 +323,11 @@ public class Bezier {
         }
 
         double yToFind = 28; // 120;
-        t = bezier.getTForGivenY(0, 1E-1, yToFind, 1E-4);
+        try {
+            t = bezier.getTForGivenY(0, 1E-1, yToFind, 1E-4);
+        } catch (Bezier.TooDeepRecursionException tdre) {
+            tdre.printStackTrace();
+        }
         if (t < 0) {
             System.out.printf("No Y=%f in this bezier.\n", yToFind);
         } else {
@@ -311,7 +335,11 @@ public class Bezier {
         }
 
         double zToFind = 0; // 10; // 120;
-        t = bezier.getTForGivenZ(0, 1E-1, zToFind, 1E-4, (bezier.getBezierPoint(0).getZ() < bezier.getBezierPoint(1).getZ()));
+        try {
+            t = bezier.getTForGivenZ(0, 1E-1, zToFind, 1E-4, (bezier.getBezierPoint(0).getZ() < bezier.getBezierPoint(1).getZ()));
+        } catch (Bezier.TooDeepRecursionException tdre) {
+            tdre.printStackTrace();
+        }
         if (t < 0) {
             System.out.printf("No Z=%f in this bezier.\n", zToFind);
         } else {

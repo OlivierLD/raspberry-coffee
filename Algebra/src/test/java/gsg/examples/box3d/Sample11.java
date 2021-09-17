@@ -161,10 +161,23 @@ public class Sample11 {
             System.out.printf("... Calculating frame %.03f... ", _x);
             long one = System.currentTimeMillis();
             boolean increase = (bezierRail.getBezierPoint(0).getX() < bezierRail.getBezierPoint(1).getX());
-            double tx = bezierRail.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
+            double tx = 0;
+            try {
+                tx = bezierRail.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
+            } catch (Bezier.TooDeepRecursionException tdre) {
+                // TODO Manage that
+                tdre.printStackTrace();
+                tx = -1;
+            }
             Bezier.Point3D _top = bezierRail.getBezierPoint(tx);
             increase = (bezierKeel.getBezierPoint(0).getX() < bezierKeel.getBezierPoint(1).getX());
-            tx = bezierKeel.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
+            try {
+                tx = bezierKeel.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
+            } catch (Bezier.TooDeepRecursionException tdre) {
+                // TODO Manage that
+                tdre.printStackTrace();
+                tx = -1;
+            }
             Bezier.Point3D _bottom = bezierKeel.getBezierPoint(tx);
 
             List<Bezier.Point3D> ctrlPointsFrame = List.of(
@@ -194,14 +207,28 @@ public class Sample11 {
                 try {
                     // 1 - bow
                     boolean increasing = (bezierBow.getBezierPoint(0).getZ() < bezierBow.getBezierPoint(1).getZ());
-                    double tBow = bezierBow.getTForGivenZ(0, 1E-1, z, 1E-4, increasing);
+                    double tBow = 0;
+                    try {
+                        tBow = bezierBow.getTForGivenZ(0, 1E-1, z, 1E-4, increasing);
+                    } catch (Bezier.TooDeepRecursionException tdre) {
+                        // TODO Manage that
+                        tdre.printStackTrace();
+                        tBow = -1;
+                    }
                     if (tBow != -1) {
                         Bezier.Point3D bezierPoint = bezierBow.getBezierPoint(tBow);
                         waterLine.add(bezierPoint);
                     }
                     frameBeziers.forEach(bezier -> {
                         boolean increase = (bezier.getBezierPoint(0).getZ() < bezier.getBezierPoint(1).getZ());
-                        double t = bezier.getTForGivenZ(0, 1E-1, z, 1E-4, increase);
+                        double t = 0;
+                        try {
+                            t = bezier.getTForGivenZ(0, 1E-1, z, 1E-4, increase);
+                        } catch (Bezier.TooDeepRecursionException tdre) {
+                            // TODO Manage that
+                            tdre.printStackTrace();
+                            t = -1;
+                        }
                         if (t != -1) {
                             Bezier.Point3D bezierPoint = bezier.getBezierPoint(t);
                             waterLine.add(bezierPoint);
@@ -211,11 +238,24 @@ public class Sample11 {
                             if (false) { // WiP...
                                 double[] keelMinMax = bezierKeel.getMinMax(Bezier.Coordinate.Z, 1e-4);
                                 // keelMinMax[0] + 0.1: Pb when finding an extremum...
-                                double tMinKeel = bezierKeel.getTForGivenZ(0, 1e-1, keelMinMax[0] + 0.1, 1e-4, false);
+                                double tMinKeel = 0;
+                                try {
+                                    tMinKeel = bezierKeel.getTForGivenZ(0, 1e-1, keelMinMax[0] + 0.1, 1e-4, false);
+                                } catch (Bezier.TooDeepRecursionException tdre) {
+                                    // TODO Manage that
+                                    tdre.printStackTrace();
+                                    tMinKeel = -1;
+                                }
                                 if (tMinKeel != -1) {
                                     increase = true; // (bezierKeel.getBezierPoint(0).getZ() < bezierKeel.getBezierPoint(1).getZ());
                                     // Warning: keel goes down before going up! Hence the tMinKeel
-                                    t = bezierKeel.getTForGivenZ(tMinKeel, 1E-1, z, 1E-4, increase);
+                                    try {
+                                        t = bezierKeel.getTForGivenZ(tMinKeel, 1E-1, z, 1E-4, increase);
+                                    } catch (Bezier.TooDeepRecursionException tdre) {
+                                        // TODO Manage that
+                                        tdre.printStackTrace();
+                                        t = -1;
+                                    }
                                     if (t != -1) {
                                         Bezier.Point3D bezierPoint = bezierKeel.getBezierPoint(t);
                                         waterLine.add(bezierPoint);
@@ -249,14 +289,28 @@ public class Sample11 {
                 try {
                     // 1 - bow
                     boolean increasing = (bezierBow.getBezierPoint(0).getY() < bezierBow.getBezierPoint(1).getY());
-                    double tBow = bezierBow.getTForGivenY(0, 1E-1, y, 1E-4, increasing);
+                    double tBow = 0;
+                    try {
+                        tBow = bezierBow.getTForGivenY(0, 1E-1, y, 1E-4, increasing);
+                    } catch (Bezier.TooDeepRecursionException tdre) {
+                        // TODO Manage that
+                        tdre.printStackTrace();
+                        tBow = -1;
+                    }
                     if (tBow != -1) {
                         Bezier.Point3D bezierPoint = bezierBow.getBezierPoint(tBow);
                         vLine.add(bezierPoint);
                     }
                     frameBeziers.forEach(bezier -> {
                         boolean increase = (bezier.getBezierPoint(0).getY() < bezier.getBezierPoint(1).getY());
-                        double t = bezier.getTForGivenY(0, 1E-1, y, 1E-4, increase);
+                        double t = 0;
+                        try {
+                            t = bezier.getTForGivenY(0, 1E-1, y, 1E-4, increase);
+                        } catch (Bezier.TooDeepRecursionException tdre) {
+                            // TODO Manage that
+                            tdre.printStackTrace();
+                            t = -1;
+                        }
                         if (t != -1) {
                             Bezier.Point3D bezierPoint = bezier.getBezierPoint(t);
                             vLine.add(bezierPoint);
