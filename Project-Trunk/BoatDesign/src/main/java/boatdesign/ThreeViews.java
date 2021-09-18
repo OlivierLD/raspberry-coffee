@@ -888,6 +888,7 @@ public class ThreeViews {
         JPanel topWidgetsPanel = new JPanel(new GridBagLayout());
         JCheckBox justBoatCheckBox = new JCheckBox("Just boat");
         JCheckBox symmetricCheckBox = new JCheckBox("Symmetrical");
+        JCheckBox framesCheckBox = new JCheckBox("Frames");
         JCheckBox waterlinesCheckBox = new JCheckBox("Waterlines");
         JCheckBox buttocksCheckBox = new JCheckBox("Buttocks");
         JCheckBox ctrlPointsCheckBox = new JCheckBox("Ctrl-Points");
@@ -923,7 +924,7 @@ public class ThreeViews {
         frameStepPanel.add(frameStepValue);
 
         JPanel wlStepPanel = new JPanel();
-        JFormattedTextField wlStepValue = new JFormattedTextField(new DecimalFormat("#0.0"));
+        JFormattedTextField wlStepValue = new JFormattedTextField(new DecimalFormat("#0.00"));
         wlStepValue.setValue(((BoatBox3D)this.box3D).getWlIncrement());
         wlStepValue.setPreferredSize(new Dimension(60, 20));
         wlStepValue.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -1000,6 +1001,14 @@ public class ThreeViews {
             ((BoatBox3D)this.box3D).setSymmetrical(selected);
             this.box3D.repaint();
         });
+
+        framesCheckBox.setSelected(((BoatBox3D)this.box3D).isFrames());
+        framesCheckBox.addActionListener(evt -> {
+            boolean selected = ((JCheckBox)evt.getSource()).isSelected();
+//            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
+            ((BoatBox3D)this.box3D).setFrames(selected);
+            this.box3D.repaint();
+        });
         waterlinesCheckBox.setSelected(((BoatBox3D)this.box3D).isWaterlines());
         waterlinesCheckBox.addActionListener(evt -> {
             boolean selected = ((JCheckBox)evt.getSource()).isSelected();
@@ -1044,7 +1053,7 @@ public class ThreeViews {
                         GridBagConstraints.NONE,
                         new Insets(0, 0, 0, 0), 0, 0));
 
-        topWidgetsPanel.add(waterlinesCheckBox,
+        topWidgetsPanel.add(framesCheckBox,
                 new GridBagConstraints(2,
                         0,
                         1,
@@ -1054,7 +1063,7 @@ public class ThreeViews {
                         GridBagConstraints.WEST,
                         GridBagConstraints.NONE,
                         new Insets(0, 0, 0, 0), 0, 0));
-        topWidgetsPanel.add(buttocksCheckBox,
+        topWidgetsPanel.add(waterlinesCheckBox,
                 new GridBagConstraints(3,
                         0,
                         1,
@@ -1064,8 +1073,18 @@ public class ThreeViews {
                         GridBagConstraints.WEST,
                         GridBagConstraints.NONE,
                         new Insets(0, 0, 0, 0), 0, 0));
-        topWidgetsPanel.add(ctrlPointsCheckBox,
+        topWidgetsPanel.add(buttocksCheckBox,
                 new GridBagConstraints(4,
+                        0,
+                        1,
+                        1,
+                        1.0,
+                        0.0,
+                        GridBagConstraints.WEST,
+                        GridBagConstraints.NONE,
+                        new Insets(0, 0, 0, 0), 0, 0));
+        topWidgetsPanel.add(ctrlPointsCheckBox,
+                new GridBagConstraints(5,
                         0,
                         1,
                         1,

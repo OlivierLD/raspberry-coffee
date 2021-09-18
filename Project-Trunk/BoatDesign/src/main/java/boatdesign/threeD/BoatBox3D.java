@@ -44,6 +44,7 @@ public class BoatBox3D extends Box3D {
 //    private List<Double> hValues = List.of(-10d, -5d, 0d, 5d, 10d, 15d, 20d, 25d, 30d, 35d, 40d, 45d, 50d);
     private List<Double> vValues = List.of(20d, 40d, 60d, 80d, 100d);
 //    private List<Double> vValues = List.of(10d, 20d, 30d, 40d, 50d, 60d, 70d, 80d, 90d, 100d);
+    private boolean frames = true;
     private boolean waterlines = true;
     private boolean buttocks = true;
 
@@ -205,6 +206,7 @@ public class BoatBox3D extends Box3D {
                 // Plot the control points
                 g2d.setColor(Color.BLUE);
                 int fontSize = g2d.getFont().getSize();
+                // Rail(s)
                 ctrlPointsRail.forEach(pt -> {
                     VectorUtils.Vector3D at = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
                     instance.drawCircle(g2d, at, 6);
@@ -221,6 +223,7 @@ public class BoatBox3D extends Box3D {
                         instance.drawCircle(g2d, at, 6);
                     });
                 }
+                // Bow
                 ctrlPointsBow.forEach(pt -> {
                     VectorUtils.Vector3D at = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
                     instance.drawCircle(g2d, at, 6);
@@ -231,6 +234,7 @@ public class BoatBox3D extends Box3D {
                         instance.drawCircle(g2d, at, 6);
                     });
                 }
+                // Keel
                 ctrlPointsKeel.forEach(pt -> {
                     VectorUtils.Vector3D at = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
                     instance.drawCircle(g2d, at, 6);
@@ -241,6 +245,7 @@ public class BoatBox3D extends Box3D {
                     instance.drawStringAt(g2d, at, str, 0, fontSize + 2, Box3D.Justification.CENTER);
                     g2d.setColor(g2dColor);
                 });
+                // Transom
                 ctrlPointsTransom.forEach(pt -> {
                     VectorUtils.Vector3D at = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
                     instance.drawCircle(g2d, at, 6);
@@ -253,7 +258,7 @@ public class BoatBox3D extends Box3D {
                 }
 
                 // Ctrl points for the frames
-                if (drawFrameCtrlPoints) {
+                if (frames && drawFrameCtrlPoints) {
                     for (List<Bezier.Point3D> ctrlPts : frameCtrlPts) {
                         ctrlPts.forEach(pt -> {
                             VectorUtils.Vector3D at = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
@@ -275,6 +280,7 @@ public class BoatBox3D extends Box3D {
             g2d.setColor(Color.RED);
             g2d.setStroke(new BasicStroke(2));
             from = null;
+            // Rail(s)
             for (VectorUtils.Vector3D to : bezierPointsRail) {
                 if (from != null) {
                     instance.drawSegment(g2d, from, to);
@@ -292,6 +298,7 @@ public class BoatBox3D extends Box3D {
                 }
             }
             from = null;
+            // Bow
             for (VectorUtils.Vector3D to : bezierPointsBow) {
                 if (from != null) {
                     instance.drawSegment(g2d, from, to);
@@ -309,6 +316,7 @@ public class BoatBox3D extends Box3D {
                 }
             }
             from = null;
+            // Keel
             for (VectorUtils.Vector3D to : bezierPointsKeel) {
                 if (from != null) {
                     instance.drawSegment(g2d, from, to);
@@ -316,6 +324,7 @@ public class BoatBox3D extends Box3D {
                 from = to;
             }
             from = null;
+            // Transom
             for (VectorUtils.Vector3D to : bezierPointsTransom) {
                 if (from != null) {
                     instance.drawSegment(g2d, from, to);
@@ -334,25 +343,27 @@ public class BoatBox3D extends Box3D {
             }
 
             // All the frames
-            g2d.setStroke(new BasicStroke(1));
-            for (List<VectorUtils.Vector3D> bezierPoints : frameBezierPts) {
-                from = null;
-                for (VectorUtils.Vector3D to : bezierPoints) {
-                    if (from != null) {
-                        instance.drawSegment(g2d, from, to);
-                    }
-                    from = to;
-                }
-            }
-            if (symmetrical) {
+            if (frames) {
+                g2d.setStroke(new BasicStroke(1));
                 for (List<VectorUtils.Vector3D> bezierPoints : frameBezierPts) {
                     from = null;
                     for (VectorUtils.Vector3D to : bezierPoints) {
-                        to = to.y(-to.getY());
                         if (from != null) {
                             instance.drawSegment(g2d, from, to);
                         }
                         from = to;
+                    }
+                }
+                if (symmetrical) {
+                    for (List<VectorUtils.Vector3D> bezierPoints : frameBezierPts) {
+                        from = null;
+                        for (VectorUtils.Vector3D to : bezierPoints) {
+                            to = to.y(-to.getY());
+                            if (from != null) {
+                                instance.drawSegment(g2d, from, to);
+                            }
+                            from = to;
+                        }
                     }
                 }
             }
@@ -465,6 +476,14 @@ public class BoatBox3D extends Box3D {
 
     public void setDrawFrameCtrlPoints(boolean drawFrameCtrlPoints) {
         this.drawFrameCtrlPoints = drawFrameCtrlPoints;
+    }
+
+    public boolean isFrames() {
+        return frames;
+    }
+
+    public void setFrames(boolean frames) {
+        this.frames = frames;
     }
 
     public boolean isWaterlines() {
@@ -702,95 +721,99 @@ public class BoatBox3D extends Box3D {
             bezierPointsTransom.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
         }
 
-        // Extrapolate all the frames (to the end of rail. could be the same as transom)
         List<Bezier> frameBeziers = new ArrayList<>();
-        // Displacement...
-        double maxFrameArea = 0d;
         Map<Double, Double> displacementXMap = new LinkedHashMap<>();
         Map<Double, Double> displacementZMap = new LinkedHashMap<>();
-        // TODO _x <= ? Make sure the end has a frame...
-        for (double _x=(-centerOnXValue + xOffset) + frameIncrement; _x</*=*/ (-centerOnXValue + xOffset) + 550.0; _x+=frameIncrement) {
-            if (verbose) {
-                System.out.printf("... Calculating frame %.03f... ", _x);
-            }
-            long one = System.currentTimeMillis();
-            boolean increase = (bezierRail.getBezierPoint(0).getX() < bezierRail.getBezierPoint(1).getX());
-            double tx = 0;
-            try {
-                tx = bezierRail.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
-            } catch (Bezier.TooDeepRecursionException tdre) {
-                // TODO Manage that
-                tdre.printStackTrace();
-                tx = -1;
-            }
-            Bezier.Point3D _top = bezierRail.getBezierPoint(tx);
-            increase = (bezierKeel.getBezierPoint(0).getX() < bezierKeel.getBezierPoint(1).getX());
-            try {
-                tx = bezierKeel.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
-            } catch (Bezier.TooDeepRecursionException tdre) {
-                // TODO Manage that
-                tdre.printStackTrace();
-                tx = -1;
-            }
-            Bezier.Point3D _bottom = bezierKeel.getBezierPoint(tx);
+        double displ = 0d;
+        double prismCoeff = 0d;
+        if (frames) {
+            // Extrapolate all the frames (to the end of rail. could be the same as transom)
+            // Displacement...
+            double maxFrameArea = 0d;
+            // TODO _x <= ? Make sure the end has a frame...
+            for (double _x = (-centerOnXValue + xOffset) + frameIncrement; _x </*=*/ (-centerOnXValue + xOffset) + 550.0; _x += frameIncrement) {
+                if (verbose) {
+                    System.out.printf("... Calculating frame %.03f... ", _x);
+                }
+                long one = System.currentTimeMillis();
+                boolean increase = (bezierRail.getBezierPoint(0).getX() < bezierRail.getBezierPoint(1).getX());
+                double tx = 0;
+                try {
+                    tx = bezierRail.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
+                } catch (Bezier.TooDeepRecursionException tdre) {
+                    // TODO Manage that
+                    tdre.printStackTrace();
+                    tx = -1;
+                }
+                Bezier.Point3D _top = bezierRail.getBezierPoint(tx);
+                increase = (bezierKeel.getBezierPoint(0).getX() < bezierKeel.getBezierPoint(1).getX());
+                try {
+                    tx = bezierKeel.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
+                } catch (Bezier.TooDeepRecursionException tdre) {
+                    // TODO Manage that
+                    tdre.printStackTrace();
+                    tx = -1;
+                }
+                Bezier.Point3D _bottom = bezierKeel.getBezierPoint(tx);
 
-            List<Bezier.Point3D> ctrlPointsFrame = List.of(
-                    new Bezier.Point3D(_x, _top.getY(), _top.getZ()),
-                    new Bezier.Point3D(_x, _top.getY(), _bottom.getZ()),
-                    new Bezier.Point3D(_x, _bottom.getY(), _bottom.getZ()));
+                List<Bezier.Point3D> ctrlPointsFrame = List.of(
+                        new Bezier.Point3D(_x, _top.getY(), _top.getZ()),
+                        new Bezier.Point3D(_x, _top.getY(), _bottom.getZ()),
+                        new Bezier.Point3D(_x, _bottom.getY(), _bottom.getZ()));
 
-            frameCtrlPts.add(ctrlPointsFrame);
-            Bezier bezierFrame = new Bezier(ctrlPointsFrame);
-            frameBeziers.add(bezierFrame);
-            List<VectorUtils.Vector3D> bezierPointsFrame = new ArrayList<>();
-            double frameArea = 0.0;
-            double prevY = -1.0;
-            double prevZ = 0.0;
-            for (double t=0; t<=1.0; t+=0.01) {
-                Bezier.Point3D tick = bezierFrame.getBezierPoint(t);
-                bezierPointsFrame.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
-                if (tick.getZ() <= 0) {
-                    if (prevY != -1.0) {
-                        double y = tick.getY();
-                        // rectangle above
-                        double rectAboveArea = Math.abs((y - prevY) * tick.getZ());
-                        // triangle below
-                        double triangleBelowArea = Math.abs((y - prevY) * (tick.getZ() - prevZ) / 2.0);
-                        frameArea += (rectAboveArea + triangleBelowArea);
+                frameCtrlPts.add(ctrlPointsFrame);
+                Bezier bezierFrame = new Bezier(ctrlPointsFrame);
+                frameBeziers.add(bezierFrame);
+                List<VectorUtils.Vector3D> bezierPointsFrame = new ArrayList<>();
+                double frameArea = 0.0;
+                double prevY = -1.0;
+                double prevZ = 0.0;
+                for (double t = 0; t <= 1.0; t += 0.01) {
+                    Bezier.Point3D tick = bezierFrame.getBezierPoint(t);
+                    bezierPointsFrame.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
+                    if (tick.getZ() <= 0) {
+                        if (prevY != -1.0) {
+                            double y = tick.getY();
+                            // rectangle above
+                            double rectAboveArea = Math.abs((y - prevY) * tick.getZ());
+                            // triangle below
+                            double triangleBelowArea = Math.abs((y - prevY) * (tick.getZ() - prevZ) / 2.0);
+                            frameArea += (rectAboveArea + triangleBelowArea);
+                        }
+                        prevY = tick.getY();
+                        prevZ = tick.getZ();
                     }
-                    prevY = tick.getY();
-                    prevZ = tick.getZ();
+                }
+                if (frameArea > 0) {
+                    displacementXMap.put(_x - (-centerOnXValue + xOffset), frameArea);
+                }
+                if (verbose) {
+                    System.out.printf("(area: %f) ", frameArea);
+                }
+                maxFrameArea = Math.max(maxFrameArea, frameArea);
+
+                frameBezierPts.add(bezierPointsFrame);
+                long two = System.currentTimeMillis();
+                if (verbose) {
+                    System.out.printf(" in %s ms.\n", NumberFormat.getInstance().format(two - one));
                 }
             }
-            if (frameArea > 0) {
-                displacementXMap.put(_x - (-centerOnXValue + xOffset), frameArea);
-            }
+            // displ?
             if (verbose) {
-                System.out.printf("(area: %f) ", frameArea);
+                System.out.printf("- Max area: %f, LWL: %f\n", maxFrameArea, lwl);
             }
-            maxFrameArea = Math.max(maxFrameArea, frameArea);
-
-            frameBezierPts.add(bezierPointsFrame);
-            long two = System.currentTimeMillis();
-            if (verbose) {
-                System.out.printf(" in %s ms.\n", NumberFormat.getInstance().format(two - one));
-            }
-        }
-        // displ?
-        if (verbose) {
-            System.out.printf("- Max area: %f, LWL: %f\n", maxFrameArea, lwl);
-        }
-        // Rough estimation
+            // Rough estimation
 //        double prismCoeff = 0.55;
 //        double displ = (2 * maxFrameArea * 1e-4) * (lwl * 1e-2) * prismCoeff;
 //        if (verbose) {
 //            System.out.printf("\nEstimated displacement: %.03f m3\n\n", displ);
 //        }
-        // More precisely (and sets the X pos of CC)
-        double displ = calculateDisplacement(displacementXMap, lwlStart, lwlEnd);
-        double prismCoeff = displ / (2 * maxFrameArea * 1e-4 * lwl * 1e-2);
-        if (verbose) {
-            System.out.printf("\nCalculated displacement: %.03f m3\n\n", displ);
+            // More precisely (and sets the X pos of CC)
+            displ = calculateDisplacement(displacementXMap, lwlStart, lwlEnd);
+            prismCoeff = displ / (2 * maxFrameArea * 1e-4 * lwl * 1e-2);
+            if (verbose) {
+                System.out.printf("\nCalculated displacement: %.03f m3\n\n", displ);
+            }
         }
 
         if (waterlines) { // Construction
@@ -1004,7 +1027,7 @@ public class BoatBox3D extends Box3D {
                 }
             });
             double zDispl = calculateZDisplacement(displacementZMap);
-            System.out.printf("Disp on Z: %.05f m3, zCC: %.03f m", zDispl, (zCenterOfHull * 1e-2));
+            System.out.printf("Disp on Z: %.05f m3, zCC: %.03f m", (zDispl * 2), (zCenterOfHull * 1e-2));
         }
         if (buttocks) {
             double from = buttockIncrement;
