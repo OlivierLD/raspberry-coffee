@@ -484,6 +484,7 @@ public class BoatBox3D extends Box3D {
     }
 
     private static double xCenterOfHull = -1;
+    private static double zCenterOfHull =  1;
     private static double calculateDisplacement(Map<Double, Double> displacementMap,
                                                 double lwlStart,
                                                 double lwlEnd) {
@@ -537,6 +538,71 @@ public class BoatBox3D extends Box3D {
         }
 
         return 2 * displacement;
+    }
+
+    private static double calculateZDisplacement(Map<Double, Double> displacementMap) {
+        AtomicReference<Double> disp = new AtomicReference<>(0d);
+        AtomicReference<Double> prevArea = new AtomicReference<>(-1d);
+        AtomicReference<Double> prevZ = new AtomicReference<>(0d);
+        displacementMap.keySet().stream()
+                .forEach(z -> {
+                    double area = displacementMap.get(z);
+                    if (prevArea.get() != -1) {
+                        double avgArea = (prevArea.get() + area) / 2.0;   // Average
+                        double deltaZ = z - prevZ.get();
+                        disp.set(disp.get() + (deltaZ * 1e-2 * avgArea * 1e-4));
+                    }
+                    prevArea.set(area);
+                    prevZ.set(z);
+                });
+        double displacement = disp.get();
+        if (true || verbose) {
+            System.out.printf("From Z Displ: %.03f m3\n", displacement);
+        }
+
+        // Find Z center?
+        disp.set(0d);
+        prevArea.set(-1d);
+        prevZ.set(-1d);
+        Set<Double> keys = displacementMap.keySet();
+        Iterator<Double> iterator = keys.iterator();
+        while (iterator.hasNext()) {
+            double z = iterator.next();
+//            System.out.println(x);
+            double area = displacementMap.get(z);
+            if (prevArea.get() != -1) {
+
+                double avgArea = (prevArea.get() + area) / 2.0;   // Average
+                double deltaZ = z - prevZ.get();
+                disp.set(disp.get() + (deltaZ * 1e-2 * avgArea * 1e-4));
+
+                double prevDisp = disp.get();
+                double toAdd = (deltaZ * 1e-2 * avgArea * 1e-4);
+                double missing = ((displacement / 2.0) - prevDisp);
+                if (missing < toAdd) {
+                    double addZ = deltaZ * (missing / toAdd);
+                    zCenterOfHull = (prevZ.get() + addZ);
+//                    System.out.println("Found CC at " + xCenterOfHull);
+                    break;
+                }
+                disp.set(prevDisp + toAdd);
+            }
+            prevArea.set(area);
+            prevZ.set(z);
+        }
+
+        return 2 * displacement;
+    }
+
+    private static boolean listContainsBezierPoint(List<Bezier.Point3D> list, Bezier.Point3D point) {
+        for (Bezier.Point3D pt : list) {
+            if (pt.getX() - point.getX() == 0 &&
+                    pt.getY() - point.getY() == 0 &&
+                    pt.getZ() - point.getZ() == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Re-generates the boat
@@ -638,10 +704,11 @@ public class BoatBox3D extends Box3D {
 
         // Extrapolate all the frames (to the end of rail. could be the same as transom)
         List<Bezier> frameBeziers = new ArrayList<>();
-        // TODO _x <= ? Make sure the end has a frame...
         // Displacement...
         double maxFrameArea = 0d;
-        Map<Double, Double> displacementMap = new LinkedHashMap<>();
+        Map<Double, Double> displacementXMap = new LinkedHashMap<>();
+        Map<Double, Double> displacementZMap = new LinkedHashMap<>();
+        // TODO _x <= ? Make sure the end has a frame...
         for (double _x=(-centerOnXValue + xOffset) + frameIncrement; _x</*=*/ (-centerOnXValue + xOffset) + 550.0; _x+=frameIncrement) {
             if (verbose) {
                 System.out.printf("... Calculating frame %.03f... ", _x);
@@ -696,7 +763,7 @@ public class BoatBox3D extends Box3D {
                 }
             }
             if (frameArea > 0) {
-                displacementMap.put(_x - (-centerOnXValue + xOffset), frameArea);
+                displacementXMap.put(_x - (-centerOnXValue + xOffset), frameArea);
             }
             if (verbose) {
                 System.out.printf("(area: %f) ", frameArea);
@@ -719,8 +786,8 @@ public class BoatBox3D extends Box3D {
 //        if (verbose) {
 //            System.out.printf("\nEstimated displacement: %.03f m3\n\n", displ);
 //        }
-        // More precisely
-        double displ = calculateDisplacement(displacementMap, lwlStart, lwlEnd);
+        // More precisely (and sets the X pos of CC)
+        double displ = calculateDisplacement(displacementXMap, lwlStart, lwlEnd);
         double prismCoeff = displ / (2 * maxFrameArea * 1e-4 * lwl * 1e-2);
         if (verbose) {
             System.out.printf("\nCalculated displacement: %.03f m3\n\n", displ);
@@ -734,6 +801,7 @@ public class BoatBox3D extends Box3D {
                 System.out.printf("WL from %f to %f\n", from, to);
             }
             hValues = new ArrayList<>();
+            // Bottom to top
             for (double wl = from; wl <= to; wl += wlIncrement) {
                 hValues.add(wl);
             }
@@ -756,8 +824,11 @@ public class BoatBox3D extends Box3D {
                     }
                     if (tBow != -1) {
                         Bezier.Point3D bezierPoint = bezierBow.getBezierPoint(tBow);
-                        waterLine.add(bezierPoint);
-                        noPointYet.set(false);
+//                        if (!waterLine.contains(bezierPoint)) {
+                          if (!listContainsBezierPoint(waterLine, bezierPoint)) {
+                            waterLine.add(bezierPoint);
+                            noPointYet.set(false);
+                        }
                     }
                     frameBeziers.forEach(bezier -> {
                         boolean increase = (bezier.getBezierPoint(0).getZ() < bezier.getBezierPoint(1).getZ());
@@ -771,7 +842,11 @@ public class BoatBox3D extends Box3D {
                         }
                         if (t != -1) {
                             Bezier.Point3D bezierPoint = bezier.getBezierPoint(t);
-                            waterLine.add(bezierPoint);
+//                            if (!waterLine.contains(bezierPoint)) { // TODO On the coordinates...
+                              if (!listContainsBezierPoint(waterLine, bezierPoint)) {
+                                waterLine.add(bezierPoint);
+                            }
+//                            waterLine.add(bezierPoint);
                             noPointYet.set(false);
                         } else {
                             if (verbose) {
@@ -791,7 +866,7 @@ public class BoatBox3D extends Box3D {
                                 if (t != -1) {
                                     Bezier.Point3D bezierPoint = bezierKeel.getBezierPoint(t);
                                     waterLine.add(bezierPoint);
-//                                    noPointYet.set(false); // ??
+                                    noPointYet.set(false); // ?? Comment that?
                                     if (verbose) {
                                         System.out.printf("For z=%f, adding first point at %s\n", z, bezierPoint);
                                     }
@@ -826,7 +901,10 @@ public class BoatBox3D extends Box3D {
                                         }
                                         if (t != -1) {
                                             Bezier.Point3D bezierPoint = bezierKeel.getBezierPoint(t);
-                                            waterLine.add(bezierPoint);
+//                                            if (!waterLine.contains(bezierPoint)) { // TODO On the coordinates...
+                                            if (!listContainsBezierPoint(waterLine, bezierPoint)) {
+                                                waterLine.add(bezierPoint);
+                                            }
                                         }
                                     } else {
                                         if (verbose) {
@@ -879,7 +957,9 @@ public class BoatBox3D extends Box3D {
                                 }
                                 if (t != -1) {
                                     Bezier.Point3D bezierPoint = bezierKeel.getBezierPoint(t);
-                                    waterLine.add(bezierPoint);
+                                    if (!listContainsBezierPoint(waterLine, bezierPoint)) {
+                                        waterLine.add(bezierPoint);
+                                    }
                                 }
                             } else {
                                 if (verbose) {
@@ -890,10 +970,41 @@ public class BoatBox3D extends Box3D {
                     }
                     // Add to the list
                     hLines.add(waterLine);
+                    // Displacement (CC's height/depth)?
+                    if (z <= 0) { // In the water
+                        // Add to displacementZMap
+                        final AtomicReference<Double> wlArea = new AtomicReference<>(0d);
+                        final AtomicReference<Double> prevX = new AtomicReference<>(-1d);
+                        final AtomicReference<Double> prevY = new AtomicReference<>(0d);
+                        waterLine.stream()   // X, Y. TODO Recenter X
+                                .forEach(pt -> {
+//                                    System.out.println("-> " + pt);
+                                    double x = pt.getX()  - (-centerOnXValue + xOffset);
+                                    double y = pt.getY();
+                                    if (prevX.get() != -1d) {
+                                        double deltaX = x - prevX.get();
+                                        double deltaY = y - prevY.get();
+                                        // rectangle
+                                        double areaOne = deltaX * prevY.get();
+                                        // triangle at the end (+ or -)
+                                        double areaTwo = deltaX * deltaY / 2.0;
+                                        wlArea.set(wlArea.get() + (areaOne + areaTwo));
+                                    }
+                                    prevX.set(x);
+                                    prevY.set(y);
+                                });
+                        if (verbose) {
+                            System.out.printf("WL %.02f: %f (cm 2)\n", z, wlArea.get());
+                        }
+                        displacementZMap.put(z, wlArea.get());
+                    }
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             });
+            double zDispl = calculateZDisplacement(displacementZMap);
+            System.out.printf("Disp on Z: %.05f m3, zCC: %.03f m", zDispl, (zCenterOfHull * 1e-2));
         }
         if (buttocks) {
             double from = buttockIncrement;
@@ -976,13 +1087,13 @@ public class BoatBox3D extends Box3D {
                                     "LWL: %f m (%f to %f)\n" +
                                     "Displ: %f m3\n" +
                                     "Prismatic Coeff: %f\n" +
-                                    "Center of hull at %f",
+                                    "Center of hull at %f m (depth %f m)",
                             (maxWidth * 1e-2), (maxWidthX * 1e-2),
                             (maxHeight * 1e-2),
                             (maxDepth * 1e-2), (maxDepthX * 1e-2),
                             (lwl * 1e-2), (lwlStart * 1e-2), (lwlEnd * 1e-2),
                             displ, prismCoeff,
-                            xCenterOfHull);
+                            (xCenterOfHull * 1e-2), (zCenterOfHull * 1e-2));
             callback.accept(callbackMessage);
         }
     }
