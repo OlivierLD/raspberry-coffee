@@ -102,12 +102,14 @@ public class ThreeViews {
     private void refreshBoatShape() {
         Thread refresher = new Thread(() -> {
             System.out.println("Starting refresh...");
+            refreshButton.setEnabled(false);
             boatDataTextArea.setText("Re-calculating...");
             // TODO Synchronization, ping for refresh/repaint? Stop thread if already running.
             ((BoatBox3D) this.box3D).refreshData(str -> {
                 boatDataTextArea.setText(str);
             });
             System.out.println("Refresh completed!");
+            refreshButton.setEnabled(true);
             this.box3D.repaint();
         });
         refresher.start();
@@ -920,7 +922,7 @@ public class ThreeViews {
                 }
             }
         });
-        frameStepPanel.add(new JLabel("Frame Step:"));
+        frameStepPanel.add(new JLabel("Step:"));
         frameStepPanel.add(frameStepValue);
 
         JPanel wlStepPanel = new JPanel();
@@ -950,7 +952,7 @@ public class ThreeViews {
                 }
             }
         });
-        wlStepPanel.add(new JLabel("Waterline Step:"));
+        wlStepPanel.add(new JLabel("Step:"));
         wlStepPanel.add(wlStepValue);
 
         JPanel buttockStepPanel = new JPanel();
@@ -980,7 +982,7 @@ public class ThreeViews {
                 }
             }
         });
-        buttockStepPanel.add(new JLabel("Buttock Step:"));
+        buttockStepPanel.add(new JLabel("Step:"));
         buttockStepPanel.add(buttockStepValue);
 
         boolean justBoatSelected = ((BoatBox3D)this.box3D).isJustTheBoat();
@@ -1095,7 +1097,7 @@ public class ThreeViews {
                         new Insets(0, 0, 0, 0), 0, 0));
         // Line 2
         topWidgetsPanel.add(frameStepPanel,
-                new GridBagConstraints(0,
+                new GridBagConstraints(2,
                         1,
                         1,
                         1,
@@ -1105,7 +1107,7 @@ public class ThreeViews {
                         GridBagConstraints.NONE,
                         new Insets(0, 0, 0, 0), 0, 0));
         topWidgetsPanel.add(wlStepPanel,
-                new GridBagConstraints(1,
+                new GridBagConstraints(3,
                        1,
                         1,
                         1,
@@ -1115,7 +1117,7 @@ public class ThreeViews {
                         GridBagConstraints.NONE,
                         new Insets(0, 0, 0, 0), 0, 0));
         topWidgetsPanel.add(buttockStepPanel,
-                new GridBagConstraints(2,
+                new GridBagConstraints(4,
                         1,
                         1,
                         1,
