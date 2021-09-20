@@ -372,8 +372,8 @@ public class BoatBox3D extends Box3D {
             if (waterlines) { // Display
                 for (List<Bezier.Point3D> waterLine : hLines) {
                     // Is it waterline (z=0) ?
-                    if (waterLine.get(0).getZ() == 0) {
-                        g2d.setColor(Color.BLUE);
+                    if (waterLine.get(0).getZ() == 0) { // TODO Watch that, ... Some display -2 :(
+                        g2d.setColor(Color.BLUE);  /// WATERLINE Color
                         g2d.setStroke(new BasicStroke(2));
                     } else {
                         g2d.setColor(Color.RED);
@@ -384,7 +384,13 @@ public class BoatBox3D extends Box3D {
                     for (Bezier.Point3D waterLinePt : waterLine) {
                         VectorUtils.Vector3D to = new VectorUtils.Vector3D(waterLinePt.getX(), waterLinePt.getY(), waterLinePt.getZ());
                         if (from != null) {
-                            instance.drawSegment(g2d, from, to);
+                            if (Math.abs(from.getX() - to.getX()) <= frameIncrement) {
+                                instance.drawSegment(g2d, from, to);
+                            } else {
+                                if (verbose) {
+                                    System.out.printf("Skipping %s to %s (inc %f)", from, to, frameIncrement);
+                                }
+                            }
                         }
                         from = to;
                     }
@@ -393,14 +399,20 @@ public class BoatBox3D extends Box3D {
                         for (Bezier.Point3D waterLinePt : waterLine) {
                             VectorUtils.Vector3D to = new VectorUtils.Vector3D(waterLinePt.getX(), -waterLinePt.getY(), waterLinePt.getZ());
                             if (from != null) {
-                                instance.drawSegment(g2d, from, to);
+                                if (Math.abs(from.getX() - to.getX()) <= frameIncrement) {
+                                    instance.drawSegment(g2d, from, to);
+                                } else {
+                                    if (verbose) {
+                                        System.out.printf("Skipping %s to %s (inc %f)", from, to, frameIncrement);
+                                    }
+                                }
                             }
                             from = to;
                         }
                     }
                 }
             }
-            if (buttocks) {
+            if (buttocks) { // Display
                 for (List<Bezier.Point3D> vLine : vLines) {
 
                     g2d.setStroke(new BasicStroke(1));
@@ -563,10 +575,11 @@ public class BoatBox3D extends Box3D {
         return 2 * displacement;
     }
 
-    private static double calculateZDisplacement(Map<Double, Double> displacementMap) {
+    private static double calculateZDisplacement(Map<Double, Double> displacementMap, double bottom) {
         AtomicReference<Double> disp = new AtomicReference<>(0d);
-        AtomicReference<Double> prevArea = new AtomicReference<>(-1d);
-        AtomicReference<Double> prevZ = new AtomicReference<>(0d);
+        AtomicReference<Double> prevArea = new AtomicReference<>(0d);
+        AtomicReference<Double> prevZ = new AtomicReference<>(bottom); // 0d);
+
         displacementMap.keySet().stream()
                 .forEach(z -> {
                     double area = displacementMap.get(z);
@@ -824,7 +837,7 @@ public class BoatBox3D extends Box3D {
             }
         }
 
-        if (waterlines) { // Construction. TODO Calculate anyway?
+        if (waterlines || true) { // Construction. TODO Calculate anyway?
             // H lines. Use a step for waterlines. maxDepth, maxHeight, wlIncrement.
             double from = Math.ceil(maxDepth / wlIncrement) * wlIncrement;
             double to = Math.floor(maxHeight / wlIncrement) * wlIncrement;
@@ -885,7 +898,7 @@ public class BoatBox3D extends Box3D {
                 }
 
                 try {
-                    double[] keelMinMax = bezierKeel.getMinMax(Bezier.Coordinate.Z, 1e-4);
+                    // double[] keelMinMax = bezierKeel.getMinMax(Bezier.Coordinate.Z, 1e-4);
                     AtomicBoolean noPointYet = new AtomicBoolean(true);
                     // 1 - bow
                     boolean increasing = (bezierBow.getBezierPoint(0).getZ() < bezierBow.getBezierPoint(1).getZ());
@@ -994,10 +1007,11 @@ public class BoatBox3D extends Box3D {
                     ex.printStackTrace();
                 }
             });
-            double zDispl = calculateZDisplacement(displacementZMap);
-            System.out.printf("Disp on Z: %.05f m3, zCC: %.03f m\n", (zDispl), (zCenterOfHull * 1e-2));
+            double[] keelMinMax = bezierKeel.getMinMax(Bezier.Coordinate.Z, 1e-4);
+            double zDispl = calculateZDisplacement(displacementZMap, keelMinMax[0]);
+            System.out.printf("Disp on Z: %.05f m3, zCC: %.03f m\n", (zDispl), (zCenterOfHull * 1e-2)); // TODO Display diff in disp in %
         }
-        if (buttocks) { // TODO Calculate anyway?
+        if (buttocks || true) { // Calculate anyway?
             double from = buttockIncrement;
             double to = Math.floor(maxWidth / buttockIncrement) * buttockIncrement;
             if (verbose) {
