@@ -14,7 +14,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /**
- * Many hard-coded values...
+ * Many hard-coded values anf options...
+ * TODO Document them!!!
  */
 public class BoatBox3D extends Box3D {
 
@@ -592,6 +593,7 @@ public class BoatBox3D extends Box3D {
             double z = iterator.next();
 //            System.out.println(x);
             double area = displacementMap.get(z);
+            // TODO Add volume from the keel minimum.
             if (prevArea.get() != -1) {
 
                 double avgArea = (prevArea.get() + area) / 2.0;   // Average
@@ -839,6 +841,49 @@ public class BoatBox3D extends Box3D {
                     System.out.println("Waterline for z=" + z);
                 }
                 List<Bezier.Point3D> waterLine = new ArrayList<>();
+                // firstPoint, lastPoint for z ?
+                Bezier.Point3D _lastWLPoint = null;
+                Bezier.Point3D _firstWLPoint = null;
+                double _min = Double.MAX_VALUE;
+                double prevMin = Double.MAX_VALUE;
+                Bezier.Point3D _previousKeelPoint = null;
+
+                // Forward
+                for (double _t=0.0; _t<=1.0; _t+=0.001) {
+                    Bezier.Point3D keelBezierPoint = bezierKeel.getBezierPoint(_t);
+                    _min = Math.min(_min, Math.abs(keelBezierPoint.getZ() - z));
+                    if (prevMin < Math.abs(keelBezierPoint.getZ() - z)) {
+//                        System.out.println("First closest found at " + _previousKeelPoint + ", min:" + prevMin);
+                        _firstWLPoint = _previousKeelPoint;
+                        break;
+                    } else {
+                        prevMin = _min;
+                    }
+                    _previousKeelPoint = keelBezierPoint;
+                }
+                // Backward
+                _previousKeelPoint = null;
+                _min = Double.MAX_VALUE;
+                prevMin = Double.MAX_VALUE;
+                for (double _t=1.0; _t>=0.0; _t-=0.001) {
+                    Bezier.Point3D keelBezierPoint = bezierKeel.getBezierPoint(_t);
+                    _min = Math.min(_min, Math.abs(keelBezierPoint.getZ() - z));
+                    if (prevMin < Math.abs(keelBezierPoint.getZ() - z) && prevMin < 1.0) { // TODO prevMin < 1.0... YES!!!
+//                        System.out.println("Second closest found at " + _previousKeelPoint + ", min:" + prevMin);
+                        _lastWLPoint = _previousKeelPoint;
+                        break;
+                    } else {
+                        prevMin = _min;
+                    }
+                    _previousKeelPoint = keelBezierPoint;
+                }
+                final Bezier.Point3D lastWLPoint = _lastWLPoint;
+                final Bezier.Point3D firstWLPoint = _firstWLPoint;
+
+                if (verbose) {
+                    System.out.println("For Z:" + z + ", first WL point " + _firstWLPoint + ", last WL point " + _lastWLPoint);
+                }
+
                 try {
                     double[] keelMinMax = bezierKeel.getMinMax(Bezier.Coordinate.Z, 1e-4);
                     AtomicBoolean noPointYet = new AtomicBoolean(true);
@@ -853,15 +898,14 @@ public class BoatBox3D extends Box3D {
                     }
                     if (tBow != -1) {
                         Bezier.Point3D bezierPoint = bezierBow.getBezierPoint(tBow);
-
-                        System.out.println("WL " + z + " - 1 : x=" + bezierPoint.getX());
-
+//                        System.out.println("WL " + z + " - 1 : x=" + bezierPoint.getX());
 //                        if (!waterLine.contains(bezierPoint)) {
                         if (!listContainsBezierPoint(waterLine, bezierPoint)) {
                             waterLine.add(bezierPoint);
                             noPointYet.set(false);
                         }
                     }
+                    AtomicBoolean addTheFirstPoint = new AtomicBoolean(false);
                     frameBeziers.forEach(bezier -> {
                         boolean increase = (bezier.getBezierPoint(0).getZ() < bezier.getBezierPoint(1).getZ());
                         double t = 0;
@@ -874,95 +918,17 @@ public class BoatBox3D extends Box3D {
                         }
                         if (t != -1) {
                             Bezier.Point3D bezierPoint = bezier.getBezierPoint(t);
-
-                            System.out.println("WL " + z + " - 2 : x=" + bezierPoint.getX() + ", bezier:" + bezier.getControlPoints().get(0).getX());
-
+//                            System.out.println("WL " + z + " - 2 : x=" + bezierPoint.getX() + ", bezier:" + bezier.getControlPoints().get(0).getX());
 //                            if (!waterLine.contains(bezierPoint)) {
                             if (!listContainsBezierPoint(waterLine, bezierPoint)) {
                                 waterLine.add(bezierPoint);
                                 noPointYet.set(false);
                             }
-//                            waterLine.add(bezierPoint);
-//                            noPointYet.set(false);
                         } else {
                             if (verbose) {
-                                System.out.printf("Waterline not found for z=%.02f, X=%.02f (no point yet:%b)\n", z, bezier.getControlPoints().get(0).getX(), noPointYet.get());
+                                System.out.println("We will need to add the first point " + firstWLPoint);
                             }
-                            // If noPointYet: look before the min. After otherwise
-                            if (noPointYet.get()) {
-                                increase = false; // (bezierKeel.getBezierPoint(0).getZ() < bezierKeel.getBezierPoint(1).getZ());
-                                // Warning: keel goes down before going up! Hence the tMinKeel
-                                try {
-                                    t = bezierKeel.getTForGivenZ(0, 1E-1, z, 1E-3, increase);
-                                } catch (Bezier.TooDeepRecursionException tdre) {
-                                    // TODO Manage that
-                                    tdre.printStackTrace();
-                                    t = -1;
-                                }
-                                if (t != -1) {
-                                    Bezier.Point3D bezierPoint = bezierKeel.getBezierPoint(t);
-
-                                    System.out.println("WL " + z + " - 3 : x=" + bezierPoint.getX() + ", bezier:" + bezier.getControlPoints().get(0).getX());
-                                    if (bezierPoint.getX() <= bezier.getControlPoints().get(0).getX()) { // Keel BEFORE the current frame.
-                                        if (!listContainsBezierPoint(waterLine, bezierPoint)) {
-                                            waterLine.add(bezierPoint);
-                                            noPointYet.set(false); // ?? Comment that?
-                                            if (verbose) {
-                                                System.out.printf("For z=%f, adding first point at %s\n", z, bezierPoint);
-                                            }
-                                        }
-                                    }
-                                }
-                            } else { // WiP...
-                                if (verbose) {
-                                    System.out.printf("For z=%f, adding last point...\n", z);
-                                }
-                                try {
-                                    // keelMinMax[0] + 0.1: Pb when finding an extremum...
-                                    double tMinKeel = 0;
-                                    try {
-                                        tMinKeel = bezierKeel.getTForGivenZ(0, 1e-1, keelMinMax[0] + 1, 1e-3, false);
-                                    } catch (Bezier.TooDeepRecursionException tdre) {
-                                        tdre.printStackTrace();
-                                        tMinKeel = -1;
-                                    }
-                                    if (tMinKeel != -1) {
-                                        increase = true; // (bezierKeel.getBezierPoint(0).getZ() < bezierKeel.getBezierPoint(1).getZ());
-                                        // Warning: keel goes down before going up! Hence the tMinKeel
-                                        try {
-                                            t = bezierKeel.getTForGivenZ(tMinKeel, 1E-1, z, 1E-4, increase);
-                                        } catch (Bezier.TooDeepRecursionException tdre) {
-//                                            tdre.printStackTrace();
-                                            System.out.println("... Keel. Retrying the other way (2)");
-                                            try {
-                                                t = bezierKeel.getTForGivenZ(tMinKeel, 1E-1, z, 1E-4, !increase);
-                                            } catch (Bezier.TooDeepRecursionException tdre2) {
-                                                tdre2.printStackTrace();
-                                                t = -1;
-                                            }
-                                        }
-                                        if (t != -1) {
-                                            Bezier.Point3D bezierPoint = bezierKeel.getBezierPoint(t);
-
-                                            System.out.println("WL " + z + " - 4 : x=" + bezierPoint.getX() + ", bezier:" + bezier.getControlPoints().get(0).getX());
-
-                                            if (bezierPoint.getX() > bezier.getControlPoints().get(0).getX()) {
-                                                // if (!waterLine.contains(bezierPoint)) {
-                                                if (!listContainsBezierPoint(waterLine, bezierPoint)) {
-                                                    System.out.println("\tWL " + z + " - 4 : x=" + bezierPoint.getX() + ", bezier:" + bezier.getControlPoints().get(0).getX() + ". Adding");
-                                                    waterLine.add(bezierPoint);
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        if (verbose) {
-                                            System.out.println("Min Keel not found!");
-                                        }
-                                    }
-                                } catch (Throwable ex) {
-                                    ex.printStackTrace(); // Stack Overflow?
-                                }
-                            }
+                            addTheFirstPoint.set(true);
                         }
                     });
                     // Transom
@@ -980,64 +946,17 @@ public class BoatBox3D extends Box3D {
                             waterLine.add(bezierPoint);
                         }
                     } else {
-                        if (true) { // WiP...
-                            // Find keel X value for x > lastX in the waterline and Z = z
-                            double lastFrameX = waterLine.get(waterLine.size() - 1).getX();
-                            Bezier.Point3D lastWLPoint = null;
-                            double min = Double.MAX_VALUE;
-                            for (double _t=0.0; _t<1.001; _t+=0.001) {
-                                Bezier.Point3D keelBezierPoint = bezierKeel.getBezierPoint(_t);
-                                min = Math.min(min, Math.abs(keelBezierPoint.getZ() - z));
-                                if (keelBezierPoint.getX() > lastFrameX && Math.abs(keelBezierPoint.getZ() - z) < 5e-3) {
-                                    lastWLPoint = keelBezierPoint;
-                                    break;
-                                }
-                            }
-                            System.out.println("Min:" + min);
-                            if (lastWLPoint != null) {
-                                if (!listContainsBezierPoint(waterLine, lastWLPoint)) {
-                                    waterLine.add(lastWLPoint);
-                                }
-                            } else {
-                                // keelMinMax[0] + 0.1: Pb when finding an extremum...
-                                double tMinKeel = 0;
-                                try {
-                                    tMinKeel = bezierKeel.getTForGivenZ(0, 1e-1, keelMinMax[0] + 0.5, 1e-3, false);
-                                } catch (Bezier.TooDeepRecursionException tdre) {
-                                    tdre.printStackTrace();
-                                    tMinKeel = -1;
-                                }
-                                if (tMinKeel != -1) {
-                                    boolean increase = true; // (bezierKeel.getBezierPoint(0).getZ() < bezierKeel.getBezierPoint(1).getZ());
-                                    // Warning: keel goes down before going up! Hence the tMinKeel
-                                    double t = 0;
-                                    try {
-                                        t = bezierKeel.getTForGivenZ(tMinKeel, 1E-1, z, 1E-4, increase);
-                                    } catch (Bezier.TooDeepRecursionException tdre) {
-//                                    tdre.printStackTrace();
-                                        System.out.println("... Keel. Retrying the other way (1)");
-                                        try {
-                                            t = bezierKeel.getTForGivenZ(tMinKeel, 1E-1, z, 1E-4, !increase);
-                                        } catch (Bezier.TooDeepRecursionException tdre2) {
-                                            tdre2.printStackTrace();
-                                            t = -1;
-                                        }
-                                    }
-                                    if (t != -1) {
-                                        Bezier.Point3D bezierPoint = bezierKeel.getBezierPoint(t);
-
-                                        System.out.println("WL " + z + " - 5 : x=" + bezierPoint.getX());
-                                        // Point to add behind the deepest point
-                                        if (!listContainsBezierPoint(waterLine, bezierPoint) && (bezierPoint.getX() > bezierKeel.getBezierPoint(tMinKeel).getX())) {
-                                            waterLine.add(bezierPoint);
-                                        }
-                                    }
-                                } else {
-                                    if (verbose) {
-                                        System.out.println("Min Keel not found!");
-                                    }
-                                }
-                            }
+//                        System.out.println("Z:" + z + ", ADDING last point: " + _lastWLPoint);
+                        if (lastWLPoint != null && !listContainsBezierPoint(waterLine, lastWLPoint)) {
+                            waterLine.add(lastWLPoint);
+                        }
+                    }
+                    // Add first point if it exists
+                    if (addTheFirstPoint.get()) {
+                        if (firstWLPoint != null) {
+                            waterLine.add(0, firstWLPoint); // Force in 1st po.
+                        } else {
+                            System.out.println("Argh!");
                         }
                     }
                     // Add to the list
@@ -1048,7 +967,7 @@ public class BoatBox3D extends Box3D {
                         final AtomicReference<Double> wlArea = new AtomicReference<>(0d);
                         final AtomicReference<Double> prevX = new AtomicReference<>(-1d);
                         final AtomicReference<Double> prevY = new AtomicReference<>(0d);
-                        waterLine.stream()   // X, Y. TODO Recenter X
+                        waterLine.stream()   // X, Y. Recenter X
                                 .forEach(pt -> {
 //                                    System.out.println("-> " + pt);
                                     double x = pt.getX()  - (-centerOnXValue + xOffset);
@@ -1093,6 +1012,50 @@ public class BoatBox3D extends Box3D {
                 if (verbose) {
                     System.out.println("Vline for y=" + y);
                 }
+
+                // First and last
+                // firstPoint, lastPoint for y ?
+                Bezier.Point3D _lastButtockPoint = null;
+                Bezier.Point3D _firstButtockPoint = null;
+                double _min = Double.MAX_VALUE;
+                double prevMin = Double.MAX_VALUE;
+                Bezier.Point3D _previousRailPoint = null;
+
+                // Forward
+                for (double _t=0.0; _t<=1.0; _t+=0.001) {
+                    Bezier.Point3D railBezierPoint = bezierRail.getBezierPoint(_t);
+                    _min = Math.min(_min, Math.abs(railBezierPoint.getY() - y));
+                    if (prevMin < Math.abs(railBezierPoint.getY() - y)) {
+//                        System.out.println("First closest found at " + _previousKeelPoint + ", min:" + prevMin);
+                        _firstButtockPoint = _previousRailPoint;
+                        break;
+                    } else {
+                        prevMin = _min;
+                    }
+                    _previousRailPoint = railBezierPoint;
+                }
+                // Backward
+                _previousRailPoint = null;
+                _min = Double.MAX_VALUE;
+                prevMin = Double.MAX_VALUE;
+                for (double _t=1.0; _t>=0.0; _t-=0.001) {
+                    Bezier.Point3D railBezierPoint = bezierRail.getBezierPoint(_t);
+                    _min = Math.min(_min, Math.abs(railBezierPoint.getY() - y));
+                    if (prevMin < Math.abs(railBezierPoint.getY() - y) && prevMin < 1.0) { // TODO prevMin < 1.0... YES!!!
+//                        System.out.println("Second closest found at " + _previousKeelPoint + ", min:" + prevMin);
+                        _lastButtockPoint = _previousRailPoint;
+                        break;
+                    } else {
+                        prevMin = _min;
+                    }
+                    _previousRailPoint = railBezierPoint;
+                }
+                final Bezier.Point3D lastButtockPoint = _lastButtockPoint;
+                final Bezier.Point3D firstButtockPoint = _firstButtockPoint;
+                if (verbose) {
+                    System.out.println("For Y:" + y + ", first point " + _firstButtockPoint + ", last point " + _lastButtockPoint);
+                }
+
                 List<Bezier.Point3D> vLine = new ArrayList<>();
                 try {
                     // 1 - bow
@@ -1108,6 +1071,7 @@ public class BoatBox3D extends Box3D {
                         Bezier.Point3D bezierPoint = bezierBow.getBezierPoint(tBow);
                         vLine.add(bezierPoint);
                     }
+                    AtomicBoolean addTheFirstPoint = new AtomicBoolean(false);
                     frameBeziers.forEach(bezier -> {
                         boolean increase = (bezier.getBezierPoint(0).getY() < bezier.getBezierPoint(1).getY());
                         double t = 0;
@@ -1124,11 +1088,9 @@ public class BoatBox3D extends Box3D {
                         } else {
                             if (verbose) {
                                 System.out.printf("Vline not found for Y=%.02f, X=%.02f\n", y, bezier.getControlPoints().get(0).getX());
+                                System.out.println("We will need to add the first point " + firstButtockPoint);
                             }
-                            // Look on the keel? After the min?
-                            if (false) {
-                                // WiP...
-                            }
+                            addTheFirstPoint.set(true);
                         }
                     });
                     // Transom
@@ -1143,6 +1105,18 @@ public class BoatBox3D extends Box3D {
                     if (tTransom != -1) {
                         Bezier.Point3D bezierPoint = bezierTransom.getBezierPoint(tTransom);
                         vLine.add(bezierPoint);
+                    } else {
+                        if (lastButtockPoint != null && !listContainsBezierPoint(vLine, lastButtockPoint)) {
+                            vLine.add(lastButtockPoint);
+                        }
+                    }
+                    // Add first point if it exists
+                    if (addTheFirstPoint.get()) {
+                        if (firstButtockPoint != null) {
+                            vLine.add(0, firstButtockPoint); // Force in 1st po.
+                        } else {
+                            System.out.println("Argh!");
+                        }
                     }
                     // Add to the list
                     vLines.add(vLine);
