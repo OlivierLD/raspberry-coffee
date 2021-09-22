@@ -1,5 +1,6 @@
 # Boat Design
-> Work in Progress, a test.
+> Work in Progress, a test.  
+> Several (if not many) assumptions on options.
 
 Based on the `Algebra` module, in this project.
 
@@ -15,17 +16,19 @@ Then do the hydrostatic calculations.
 
 ### Sep 2021
 - Correlated points : the rail and the keel "define" the bow and transom:
-  - rail and bow
-  - keel and bow
-  - rail and transom
-  - keel and transom
+  - front of the rail and top of the bow
+  - front of the keel and bottom of the bow
+  - back of the rail and transom's top
+  - back of the keel and transom's bottom
 
 ## To fix
 - Transom and bow, when not vertical.
-- Close horizontal and vertical cuts.
+- Close horizontal and vertical cuts. Done ✅.
 
 ## TODO's
 - Data to WebGL
+- Data to STL, OpenSCAD, etc
+  - Look into the [`polyhedron`](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Primitive_Solids#polyhedron)
 - Data to Processing (see PitchRoll.pde ...)
 
 ---
