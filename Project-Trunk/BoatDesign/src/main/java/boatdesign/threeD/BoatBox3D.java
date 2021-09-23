@@ -87,7 +87,7 @@ public class BoatBox3D extends Box3D {
     protected BoatBox3D instance = this;
 
     public BoatBox3D() {
-        super(ThreeDFrameWithWidgetsV2.DEFAULT_WIDTH, ThreeDFrameWithWidgetsV2.DEFAULT_HEIGHT);
+//        super(ThreeDFrameWithWidgetsV2.DEFAULT_WIDTH, ThreeDFrameWithWidgetsV2.DEFAULT_HEIGHT); // TODO Move this in another constructor
         this.setxMin(MIN_X - centerOnXValue);
         this.setxMax(MAX_X - centerOnXValue);
         this.setyMin(MIN_Y);
