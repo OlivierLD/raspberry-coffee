@@ -649,6 +649,9 @@ public class BoatBox3D extends Box3D {
     public void refreshData() {
         refreshData(false, null);
     }
+    public void refreshData(boolean localVerbose) {
+        refreshData(localVerbose, null);
+    }
     public void refreshData(boolean localVerbose, Consumer<String> callback) {
 
         // TODO Parameterize the t+=0.01
