@@ -70,7 +70,8 @@ RUN git clone https://github.com/OlivierLD/WebComponents.git
 #WORKDIR gtk
 #RUN gcc `pkg-config --cflags --libs gtk+-2.0` gtktest.c -o gtktest
 
-WORKDIR WebComponents
+WORKDIR raspberry-coffee/Project-Trunk/BoatDesign
+RUN ../../gradlew shadowJar
 
 EXPOSE 8080
 # ENTRYPOINT ["npm", "start"]

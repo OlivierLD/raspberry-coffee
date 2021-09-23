@@ -35,12 +35,13 @@ do
   echo -e "|  7. Golang, basics                                                   |"
   echo -e "|  8. Raspberry Pi Desktop, MATE, with java, node, web comps, VNC,     |"
   echo -e "|                                                inkscape, gtk samples |"
+  echo -e "|  8.1 Raspberry Pi Desktop, (like 8), for BoatDesign...               |"
   echo -e "|  9. Debian 10, Java, Scala, Spark, Jupyter Notebook                  |"
 #  echo -e "| 10. Ubuntu MATE, TensorFlow, Keras, Python3, Jupyter, PyCharm, VNC   |"
   echo -e "| 10. Debian 10, TensorFlow, Keras, Python3, Jupyter, PyCharm,         |"
   echo -e "|                                 VNC, nodejs, npm,... it's a big one. |"
   echo -e "| 11. Debian dev env, git, java, maven, node, npm, yarn, VNC...        |"
-  echo -e "| 11b. Ubuntu dev env, git, java, maven, node, npm, yarn, VNC...       |"
+  echo -e "| 11.1 Ubuntu dev env, git, java, maven, node, npm, yarn, VNC...       |"
   echo -e "| 12. nav-server, prod (small) to run on a Raspberry Pi (WIP)          |"
   echo -e "+----------------------------------------------------------------------+"
   echo -e "| Q. Oops, nothing, thanks, let me out.                                |"
@@ -228,6 +229,20 @@ do
       MESSAGE="${MESSAGE}- and reach http://localhost:8080/oliv-components/index.html ...\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
+    "8.1")
+      OK=true
+      DOCKER_FILE=devenv.BD.Dockerfile
+      IMAGE_NAME=boat-design-devenv
+      RUN_CMD="docker run -d --name dev-env-3 $IMAGE_NAME:latest /bin/bash"
+      #
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Log in using: docker run -p 5901:5901 -it -e USER=root ${IMAGE_NAME}:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}          or: docker start dev-env-3\n"
+      MESSAGE="${MESSAGE}              docker exec -it dev-env-3 /bin/bash\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Start VNC server as instructed, and reach localhost:5901 in your VNC viewer (password was given to you in the docker image when you logged in)\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
+      ;;
     "9")
       OK=true
       DOCKER_FILE=spark-debian.Dockerfile
@@ -265,12 +280,13 @@ do
       RUN_CMD="docker run -d --name dev-env $IMAGE_NAME:latest /bin/bash"
       #
       MESSAGE="---------------------------------------------------\n"
-      MESSAGE="${MESSAGE}Log in using: docker run -it -e USER=root $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}Log in using: docker run -p 5901:5901 -it -e USER=root $IMAGE_NAME:latest /bin/bash\n"
       MESSAGE="${MESSAGE}          or: docker start dev-env\n"
       MESSAGE="${MESSAGE}              docker exec -it dev-env /bin/bash\n"
+      MESSAGE="${MESSAGE} Use VNC Viewer on localhost:5901\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
-    "11b")
+    "11.1")
       OK=true
       DOCKER_FILE=devenv.2.Dockerfile
       IMAGE_NAME=oliv-devenv-ubuntu
@@ -278,11 +294,11 @@ do
       #
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Log in using: docker run -p 5901:5901 -it -e USER=root $IMAGE_NAME:latest /bin/bash\n"
-      MESSAGE="${MESSAGE}          or: docker run -it $IMAGE_NAME /bin/bash\n"
+      MESSAGE="${MESSAGE}          or: docker run -it dev-env-2 /bin/bash\n"
       MESSAGE="${MESSAGE}          or: docker start dev-env-2\n"
       MESSAGE="${MESSAGE}              docker exec -it dev-env-2 /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
-      MESSAGE="${MESSAGE}Start VNC server as instructed, and reach localhost:1 in your viewer (password was given to you in the docker image)\n"
+      MESSAGE="${MESSAGE}Start VNC server as instructed, and reach localhost:5901 in your viewer (password was given to you in the docker image)\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "12")

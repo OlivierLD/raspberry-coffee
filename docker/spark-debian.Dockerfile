@@ -31,7 +31,7 @@ ENV SPARK_TARBALL $APACHE_MIRROR/spark-3.0.1-bin-hadoop2.7-hive1.2.tgz
 RUN apt-get update
 RUN apt-get install -y sysvbanner
 RUN apt-get install -y curl git build-essential default-jdk libssl-dev libffi-dev python-dev vim
-RUN apt-get install -y python-pip python-dev
+# RUN apt-get install -y python-pip python-dev
 RUN apt-get install -y python3-pip python3-dev python3-venv
 RUN pip3 install pandas numpy scipy scikit-learn
 #

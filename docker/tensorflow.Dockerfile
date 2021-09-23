@@ -38,7 +38,7 @@ RUN mkdir ~/.vnc && echo "mate" | vncpasswd -f >> ~/.vnc/passwd && chmod 600 ~/.
 RUN apt-get install -y chromium
 RUN echo "deb http://qgis.org/debian jessie main" >> /etc/apt/sources.list
 #
-RUN apt-get install -y python-pip python-dev
+# RUN apt-get install -y python-pip python-dev
 RUN apt-get install -y python3-pip python3-dev python3-venv
 #
 # RUN pip3 install tensorflow-gpu
