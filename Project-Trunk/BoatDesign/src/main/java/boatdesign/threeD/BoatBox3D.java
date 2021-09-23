@@ -647,9 +647,9 @@ public class BoatBox3D extends Box3D {
 
     // Re-generates the boat
     public void refreshData() {
-        refreshData(null);
+        refreshData(false, null);
     }
-    public void refreshData(Consumer<String> callback) {
+    public void refreshData(boolean localVerbose, Consumer<String> callback) {
 
         // TODO Parameterize the t+=0.01
 
@@ -686,7 +686,7 @@ public class BoatBox3D extends Box3D {
             }
         }
         maxWidthX = maxWidthPoint.getX() - (-centerOnXValue + xOffset);
-        if (verbose) {
+        if (localVerbose || verbose) {
             System.out.printf("Max Width: %f, at X:%f\n", maxWidth, maxWidthPoint.getX() - (-centerOnXValue + xOffset));
         }
 
@@ -717,7 +717,7 @@ public class BoatBox3D extends Box3D {
         lwlStart = wlPoint1.getX()  - (-centerOnXValue + xOffset);
         lwlEnd = wlPoint2.getX() - (-centerOnXValue + xOffset);
         lwl = wlPoint2.getX() - wlPoint1.getX();
-        if (verbose) {
+        if (localVerbose || verbose) {
             System.out.printf("LWL: %f\n", lwl);
         }
         // Also find the deepest point
@@ -731,7 +731,7 @@ public class BoatBox3D extends Box3D {
             }
         }
         maxDepthX = maxDepthPoint.getX() - (-centerOnXValue + xOffset);
-        if (verbose) {
+        if (localVerbose || verbose) {
             System.out.printf("Max Depth: %f, at X:%f\n", maxDepth, maxDepthPoint.getX() - (-centerOnXValue + xOffset));
         }
 
@@ -753,7 +753,7 @@ public class BoatBox3D extends Box3D {
             double maxFrameArea = 0d;
             // TODO _x <= ? Make sure the end has a frame...
             for (double _x = (-centerOnXValue + xOffset) + frameIncrement; _x </*=*/ (-centerOnXValue + xOffset) + 550.0; _x += frameIncrement) {
-                if (verbose) {
+                if (localVerbose || verbose) {
                     System.out.printf("... Calculating frame %.03f... ", _x);
                 }
                 long one = System.currentTimeMillis();
@@ -808,19 +808,19 @@ public class BoatBox3D extends Box3D {
                 if (frameArea > 0) {
                     displacementXMap.put(_x - (-centerOnXValue + xOffset), frameArea);
                 }
-                if (verbose) {
+                if (localVerbose || verbose) {
                     System.out.printf("(area: %f) ", frameArea);
                 }
                 maxFrameArea = Math.max(maxFrameArea, frameArea);
 
                 frameBezierPts.add(bezierPointsFrame);
                 long two = System.currentTimeMillis();
-                if (verbose) {
+                if (localVerbose || verbose) {
                     System.out.printf(" in %s ms.\n", NumberFormat.getInstance().format(two - one));
                 }
             }
             // displ?
-            if (verbose) {
+            if (localVerbose || verbose) {
                 System.out.printf("- Max area: %f, LWL: %f\n", maxFrameArea, lwl);
             }
             // Rough estimation
@@ -832,7 +832,7 @@ public class BoatBox3D extends Box3D {
             // More precisely (and sets the X pos of CC)
             displ = calculateDisplacement(displacementXMap, lwlStart, lwlEnd);
             prismCoeff = displ / (2 * maxFrameArea * 1e-4 * lwl * 1e-2);
-            if (verbose) {
+            if (localVerbose || verbose) {
                 System.out.printf("\nCalculated displacement: %.03f m3\n\n", displ);
             }
         }
@@ -841,7 +841,7 @@ public class BoatBox3D extends Box3D {
             // H lines. Use a step for waterlines. maxDepth, maxHeight, wlIncrement.
             double from = Math.ceil(maxDepth / wlIncrement) * wlIncrement;
             double to = Math.floor(maxHeight / wlIncrement) * wlIncrement;
-            if (verbose) {
+            if (localVerbose || verbose) {
                 System.out.printf("WL from %f to %f\n", from, to);
             }
             hValues = new ArrayList<>();
@@ -850,7 +850,7 @@ public class BoatBox3D extends Box3D {
                 hValues.add(wl);
             }
             hValues.forEach(z -> {
-                if (verbose) {
+                if (localVerbose || verbose) {
                     System.out.println("Waterline for z=" + z);
                 }
                 List<Bezier.Point3D> waterLine = new ArrayList<>();
@@ -893,7 +893,7 @@ public class BoatBox3D extends Box3D {
                 final Bezier.Point3D lastWLPoint = _lastWLPoint;
                 final Bezier.Point3D firstWLPoint = _firstWLPoint;
 
-                if (verbose) {
+                if (localVerbose || verbose) {
                     System.out.println("For Z:" + z + ", first WL point " + _firstWLPoint + ", last WL point " + _lastWLPoint);
                 }
 
@@ -938,7 +938,7 @@ public class BoatBox3D extends Box3D {
                                 noPointYet.set(false);
                             }
                         } else {
-                            if (verbose) {
+                            if (localVerbose || verbose) {
                                 System.out.println("We will need to add the first point " + firstWLPoint);
                             }
                             addTheFirstPoint.set(true);
@@ -997,7 +997,7 @@ public class BoatBox3D extends Box3D {
                                     prevX.set(x);
                                     prevY.set(y);
                                 });
-                        if (verbose) {
+                        if (localVerbose || verbose) {
                             System.out.printf("WL %.02f: %f (cm 2)\n", z, wlArea.get());
                         }
                         displacementZMap.put(z, wlArea.get());
@@ -1014,7 +1014,7 @@ public class BoatBox3D extends Box3D {
         if (buttocks || true) { // Calculate anyway?
             double from = buttockIncrement;
             double to = Math.floor(maxWidth / buttockIncrement) * buttockIncrement;
-            if (verbose) {
+            if (localVerbose || verbose) {
                 System.out.printf("Buttock from %f to %f\n", from, to);
             }
             vValues = new ArrayList<>();
@@ -1023,7 +1023,7 @@ public class BoatBox3D extends Box3D {
             }
             // V lines.
             vValues.forEach(y -> {
-                if (verbose) {
+                if (localVerbose || verbose) {
                     System.out.println("Vline for y=" + y);
                 }
 
@@ -1066,7 +1066,7 @@ public class BoatBox3D extends Box3D {
                 }
                 final Bezier.Point3D lastButtockPoint = _lastButtockPoint;
                 final Bezier.Point3D firstButtockPoint = _firstButtockPoint;
-                if (verbose) {
+                if (localVerbose || verbose) {
                     System.out.println("For Y:" + y + ", first point " + _firstButtockPoint + ", last point " + _lastButtockPoint);
                 }
 
@@ -1100,7 +1100,7 @@ public class BoatBox3D extends Box3D {
                             Bezier.Point3D bezierPoint = bezier.getBezierPoint(t);
                             vLine.add(bezierPoint);
                         } else {
-                            if (verbose) {
+                            if (localVerbose || verbose) {
                                 System.out.printf("Vline not found for Y=%.02f, X=%.02f\n", y, bezier.getControlPoints().get(0).getX());
                                 System.out.println("We will need to add the first point " + firstButtockPoint);
                             }

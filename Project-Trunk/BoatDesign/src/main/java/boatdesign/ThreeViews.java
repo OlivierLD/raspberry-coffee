@@ -105,7 +105,7 @@ public class ThreeViews {
             refreshButton.setEnabled(false);
             boatDataTextArea.setText("Re-calculating...");
             // TODO Synchronization, ping for refresh/repaint? Stop thread if already running.
-            ((BoatBox3D) this.box3D).refreshData(str -> {
+            ((BoatBox3D) this.box3D).refreshData(false, str -> {
                 boatDataTextArea.setText(str);
             });
             System.out.println("Refresh completed!");
