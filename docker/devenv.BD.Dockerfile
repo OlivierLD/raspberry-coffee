@@ -1,7 +1,7 @@
 FROM debian
 #
 # To run on a laptop.
-# Demoes the WebComponents.
+# Demo the Boat Design
 # With VNC
 #
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
