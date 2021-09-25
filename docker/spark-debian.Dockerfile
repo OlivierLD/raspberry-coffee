@@ -52,7 +52,7 @@ RUN echo "+-----------------------+"  && \
 	echo "| ===> installing Scala |"  && \
 	echo "+-----------------------+"  && \
     DEBIAN_FRONTEND=noninteractive \
-            apt-get install -y --force-yes libjansi-java && \
+            apt-get install -y --allow libjansi-java && \
     curl -sSL $SCALA_TARBALL -o scala.deb && \
     dpkg -i scala.deb && \
     echo "===> Cleaning up..."  && \

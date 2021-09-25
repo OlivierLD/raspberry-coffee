@@ -101,7 +101,7 @@
     ![01](./Jupyter.01.png)
     - Click `lowpass.filter.java.ipynb` (or any other)
     ![02](./Jupyter.02.png)
-    - Execute the cells (Shift + Return), ply with it, it's all yours!
+    - Execute the cells (Shift + Return), play with it, it's all yours!
 
 ---
     
