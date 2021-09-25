@@ -133,7 +133,7 @@ do
       OK=true
       DOCKER_FILE=node-pi.Dockerfile
       IMAGE_NAME=oliv-nodepi
-			# RUN_CMD="docker run.sh.sh -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
+			# RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
 			RUN_CMD="docker run -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d --name node-pi $IMAGE_NAME:latest"
 			#                      |    |            |             |             |
 			#                      |    |            |             |             Device IN the docker image
@@ -158,7 +158,7 @@ do
       OK=true
       DOCKER_FILE=node-debian.Dockerfile
       IMAGE_NAME=oliv-nodedebian
-			# RUN_CMD="docker run.sh.sh -p 9876:9876 --privileged -v /dev/tty.usbserial:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
+			# RUN_CMD="docker run -p 9876:9876 --privileged -v /dev/tty.usbserial:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
 			RUN_CMD="docker run -p 9876:9876 -d --name node-debian $IMAGE_NAME:latest"
 			#                      |    |
 			#                      |    tcp port used in the image
@@ -179,7 +179,7 @@ do
       OK=true
       DOCKER_FILE=rpi.mux.Dockerfile
       IMAGE_NAME=oliv-nmea-mux
-			# RUN_CMD="docker run.sh.sh -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
+			# RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
 			RUN_CMD="docker run -p 9999:9999 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d --name nmea-mux $IMAGE_NAME:latest"
 			#                      |    |            |             |             |
 			#                      |    |            |             |             Device IN the docker image
@@ -307,7 +307,7 @@ do
       OK=true
       DOCKER_FILE=navserver.prod.Dockerfile
       IMAGE_NAME=prod-nmea-mux
-			# RUN_CMD="docker run.sh.sh -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
+			# RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
 			RUN_CMD="docker run -p 9876:9999 --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d --name prod-nmea $IMAGE_NAME:latest"
 			#                      |    |      |             |             |
 			#                      |    |      |             |             Device IN the docker image

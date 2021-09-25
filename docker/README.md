@@ -72,7 +72,7 @@ Look into the script for details.
 Using `image.builder.sh`, choose option `1`, it takes some time, the server is started by `docker`,
 and you can log on to the image if you want (it's not necessary):
 ```bash
-$ docker run.sh.sh -it oliv-nav:latest /bin/bash
+$ docker run -it oliv-nav:latest /bin/bash
 #     #
 ##    #    ##    #    #
 # #   #   #  #   #    #
@@ -160,7 +160,7 @@ The scripts `rm.container.sh` and `rm.images.sh` are here to help...
 
 ```bash
 $ docker build -f webcomponents.Dockerfile -t oliv-image .
-$ docker run.sh.sh -p 8081:8080 -it oliv-image /bin/bash
+$ docker run -p 8081:8080 -it oliv-image /bin/bash
 root@7e754f8732a0:/workdir/WebComponents# node server.js
 ```
 
@@ -239,7 +239,7 @@ ed9a7d9042dddd3939b1788cf0e89d16f5273192a6456266507f072f90ce91bc
 ```
 Once the step above is completed, plug in your GPS, and run (on the Raspberry Pi where `docker` is running, the one where the image built above is available)
 ```bash
- $ docker run.sh.sh -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d oliv-nodepi:latest
+ $ docker run -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d oliv-nodepi:latest
 ```
 Then from a machine seeing the Raspberry Pi on its network (it can be the Raspberry Pi itself),
 reach [http://raspi:9876/data/demos/gps.demo.wc.html](http://raspi:9876/data/demos/gps.demo.wc.html) in a browser.
@@ -250,7 +250,7 @@ This shows you the position the GPS has computed, and the satellites in sight.
 
 You can also login to the image:
 ```bash
- $ docker run.sh.sh -it oliv-nodepi:latest /bin/bash
+ $ docker run -it oliv-nodepi:latest /bin/bash
 
 #     #                                 ######    ###
 ##    #   ####   #####   ######         #     #    #
@@ -274,7 +274,7 @@ change in the image is required.
 ### Stuff...
 
 ```bash
- $ CID=`docker run.sh.sh -d oliv-go:latest`
+ $ CID=`docker run -d oliv-go:latest`
  $ docker logs $CID
  Hello go world!
  $
