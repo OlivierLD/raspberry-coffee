@@ -21,12 +21,15 @@ ENV SCALA_VERSION 2.13.3
 ENV SCALA_TARBALL http://www.scala-lang.org/files/archive/scala-$SCALA_VERSION.deb
 
 # See https://spark.apache.org/downloads.html
+# -------------------------------------------
 # ENV APACHE_MIRROR https://mirrors.gigenet.com/apache/spark/spark-3.0.1/
-ENV APACHE_MIRROR https://mirrors.ocf.berkeley.edu/apache/spark/spark-3.0.1/
+# ENV APACHE_MIRROR https://mirrors.ocf.berkeley.edu/apache/spark/spark-3.0.1/
+ENV APACHE_MIRROR https://dlcdn.apache.org/spark/spark-3.1.2/
 # ENV APACHE_MIRROR https://mirrors.gigenet.com/apache/spark/spark-3.0.0-preview2/
 # ENV SPARK_TARBALL http://apache.claz.org/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz
 # ENV SPARK_TARBALL $APACHE_MIRROR/spark-3.0.0-preview2-bin-hadoop3.2.tgz
-ENV SPARK_TARBALL $APACHE_MIRROR/spark-3.0.1-bin-hadoop2.7-hive1.2.tgz
+# ENV SPARK_TARBALL $APACHE_MIRROR/spark-3.0.1-bin-hadoop2.7-hive1.2.tgz
+ENV SPARK_TARBALL $APACHE_MIRROR/spark-3.1.2-bin-hadoop3.2.tgz
 
 RUN apt-get update
 RUN apt-get install -y sysvbanner
@@ -36,13 +39,13 @@ RUN apt-get install -y python3-pip python3-dev python3-venv
 RUN pip3 install pandas numpy scipy scikit-learn
 #
 RUN apt-get install -y cmake unzip pkg-config libopenblas-dev liblapack-dev
-RUN apt-get install -y python-numpy python-scipy python-matplotlib python-yaml
+# RUN apt-get install -y python-numpy python-scipy python-matplotlib python-yaml
 RUN python3 -mpip install matplotlib
 #
 RUN pip3 install jupyter
 RUN pip3 install pyspark
 #
-RUN apt-get install -y python-opencv
+RUN apt-get install -y libopencv-dev python3-opencv
 RUN apt-get install -y python3-tk
 
 RUN echo "+-----------------------+"  && \
@@ -78,10 +81,11 @@ RUN pwd
 RUN ./gradlew installKernel
 #
 WORKDIR /workdir
-RUN curl -Lo coursier https://git.io/coursier-cli
-RUN chmod +x coursier
-RUN ./coursier launch --fork almond -- --install
-RUN rm -f coursier
+# Coursier (https://get-coursier.io/)
+# RUN curl -Lo coursier https://git.io/coursier-cli
+# RUN chmod +x coursier
+# RUN ./coursier launch --fork almond -- --install
+# RUN rm -f coursier
 #
 # To start: jupyter notebook --ip=0.0.0.0 --port=8080 --allow-root --no-browser
 #

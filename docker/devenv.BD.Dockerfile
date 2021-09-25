@@ -35,7 +35,10 @@ RUN apt-get install -y libgtk2.0-dev
 
 EXPOSE 5901
 
+# Create User oliv
 RUN useradd -d /home/oliv -ms /bin/bash -g root -G sudo -p oliv oliv
+RUN echo "You may need to run 'password oliv' to set the password for 'oliv'"
+# RUN password oliv
 
 RUN echo "git --version" >> $HOME/.bashrc
 RUN echo "echo -n 'node:' && node -v" >> $HOME/.bashrc
@@ -47,11 +50,21 @@ RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 RUN echo "echo 'To start VNCserver, type: vncserver :1 -geometry 1280x800 -depth 24'" >> $HOME/.bashrc
 RUN echo "echo '                       or vncserver :1 -geometry 1440x900 -depth 24'" >> $HOME/.bashrc
 RUN echo "echo '                       or vncserver :1 -geometry 1680x1050 -depth 24, etc...'" >> $HOME/.bashrc
-RUN echo "echo ' - Note: VNC password is mate'" >> $HOME/.bashrc
+RUN echo "echo ' - >>> Note: VNC password is mate'" >> $HOME/.bashrc
 RUN echo "echo ' - List TCP ports in use:  netstat -tupln'" >> $HOME/.bashrc
 
-USER root
-WORKDIR /home/root
+RUN cp $HOME/.bashrc ~oliv/
+RUN chown oliv ~oliv/.bashrc
+
+# USER root
+# WORKDIR /home/root
+USER oliv
+#
+RUN mkdir ~/.vnc
+RUN echo "mate" | vncpasswd -f >> ~/.vnc/passwd
+RUN chmod 600 ~/.vnc/passwd
+#
+WORKDIR /home/oliv
 RUN mkdir workdir
 WORKDIR workdir
 

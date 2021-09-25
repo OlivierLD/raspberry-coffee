@@ -1,7 +1,7 @@
 #!/bin/bash
 clear
 #
-# Build and run.sh.sh a docker image
+# Build and run a docker image
 #
 OK=false
 DOCKER_FILE=
@@ -35,13 +35,13 @@ do
   echo -e "|  7. Golang, basics                                                   |"
   echo -e "|  8. Raspberry Pi Desktop, MATE, with java, node, web comps, VNC,     |"
   echo -e "|                                                inkscape, gtk samples |"
-  echo -e "|  8.1 Raspberry Pi Desktop, (like 8), for BoatDesign...               |"
+  echo -e "|  8a. Raspberry Pi Desktop, (like option 8), for BoatDesign...        |"
   echo -e "|  9. Debian 10, Java, Scala, Spark, Jupyter Notebook                  |"
 #  echo -e "| 10. Ubuntu MATE, TensorFlow, Keras, Python3, Jupyter, PyCharm, VNC   |"
   echo -e "| 10. Debian 10, TensorFlow, Keras, Python3, Jupyter, PyCharm,         |"
   echo -e "|                                 VNC, nodejs, npm,... it's a big one. |"
   echo -e "| 11. Debian dev env, git, java, maven, node, npm, yarn, VNC...        |"
-  echo -e "| 11.1 Ubuntu dev env, git, java, maven, node, npm, yarn, VNC...       |"
+  echo -e "| 11a. Ubuntu dev env, git, java, maven, node, npm, yarn, VNC...       |"
   echo -e "| 12. nav-server, prod (small) to run on a Raspberry Pi (WIP)          |"
   echo -e "+----------------------------------------------------------------------+"
   echo -e "| Q. Oops, nothing, thanks, let me out.                                |"
@@ -229,7 +229,7 @@ do
       MESSAGE="${MESSAGE}- and reach http://localhost:8080/oliv-components/index.html ...\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
-    "8.1")
+    "8a")
       OK=true
       DOCKER_FILE=devenv.BD.Dockerfile
       IMAGE_NAME=boat-design-devenv
@@ -237,11 +237,13 @@ do
       #
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Log in using: docker run -p 5901:5901 -it -e USER=root ${IMAGE_NAME}:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}          or: docker run -p 5901:5901 -it -e USER=oliv ${IMAGE_NAME}:latest /bin/bash\n"
       MESSAGE="${MESSAGE}          or: docker start dev-env-3\n"
-      MESSAGE="${MESSAGE}              docker exec -it dev-env-3 /bin/bash\n"
-      MESSAGE="${MESSAGE}---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}              docker exec -it dev-env-3 /bin/bash\n\n"
+      MESSAGE="${MESSAGE}    You will be logged in as 'oliv'. Modify the Dockerfile to change this if needed.\n\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n\n"
       MESSAGE="${MESSAGE}Start VNC server as instructed, and reach localhost:5901 in your VNC viewer (password was given to you in the docker image when you logged in)\n"
-      MESSAGE="${MESSAGE}---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n\n"
       ;;
     "9")
       OK=true
@@ -286,7 +288,7 @@ do
       MESSAGE="${MESSAGE} Use VNC Viewer on localhost:5901\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
-    "11.1")
+    "11a")
       OK=true
       DOCKER_FILE=devenv.2.Dockerfile
       IMAGE_NAME=oliv-devenv-ubuntu
@@ -353,21 +355,26 @@ then
   # Possibly use --quiet
   docker build -f ${DOCKER_FILE} -t ${IMAGE_NAME} ${EXTRA_PRM} .
   #
-  # Now run.sh.sh
-  echo -e "To create a container, run $RUN_CMD..."
-  # CONTAINER_ID=`$RUN_CMD`
-  # echo -e "Running container ID $CONTAINER_ID"
+  # Now run
+  echo -e "To create a container, run ${RUN_CMD} ..."
+  echo -en "Do you want to run it y|n ? > "
+  read REPLY
+  if [[ ${REPLY} =~ ^(yes|y|Y)$ ]]
+  then
+    CONTAINER_ID=`$RUN_CMD`
+    echo -e "Running container ID $CONTAINER_ID"
+  fi
 fi
 printf "%b" "$MESSAGE"
 # Prompt for export
-if [[ "$DOCKER_FILE" != "" ]]
+if [[ "$DOCKER_FILE" != "" ]] && [[ "$CONTAINER_ID" != "" ]]
 then
-  # echo -en "== Do you want to export this container $CONTAINER_ID ? [n]|y > "
-  # read a
-  a=N
+  echo -en "== Do you want to export this container $CONTAINER_ID ? [n]|y > "
+  read a
+  # a=N
   if [[ "$a" == "Y" ]]  || [[ "$a" == "y" ]]
   then
-    echo -e "Last generated one is $IMAGE_NAME:latest, its ID is $CONTAINER_ID"
+    echo -e "\nLast generated one is $IMAGE_NAME:latest, its ID is $CONTAINER_ID"
     echo -en "== Please enter the name of the tar file to generate (like export.tar) > "
     read fName
     echo -en "Will export container $CONTAINER_ID into $fName - Is that correct ? [n]|y > "
@@ -377,6 +384,6 @@ then
       docker export --output $fName $CONTAINER_ID
     fi
   fi
-  echo -e "You can export a running container any time by running 'docker export --output export.tar [Container ID]'"
+  echo -e "\nYou can export a running container any time by running 'docker export --output export.tar [Container ID]'"
   echo -e "Docker commands are documented at https://docs.docker.com/engine/reference/commandline/docker/"
 fi
