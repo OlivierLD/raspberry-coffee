@@ -2,7 +2,7 @@ package boatdesign.threeD;
 
 import bezier.Bezier;
 import gsg.SwingUtils.Box3D;
-import gsg.SwingUtils.fullui.ThreeDFrameWithWidgetsV2;
+//import gsg.SwingUtils.fullui.ThreeDFrameWithWidgetsV2;
 import gsg.VectorUtils;
 
 import java.awt.*;
@@ -19,12 +19,12 @@ import java.util.function.Consumer;
  */
 public class BoatBox3D extends Box3D {
 
-    private static boolean verbose = false;
+    private static boolean verbose = true;
 
     private final int MIN_X =    0;
     private final int MAX_X =  600;
-    private final int MIN_Y = -110;
-    private final int MAX_Y =  110;
+    private final int MIN_Y = -200;
+    private final int MAX_Y =  200;
     private final int MIN_Z =  -30;
     private final int MAX_Z =  100;
 
@@ -372,7 +372,8 @@ public class BoatBox3D extends Box3D {
             if (waterlines) { // Display
                 for (List<Bezier.Point3D> waterLine : hLines) {
                     // Is it waterline (z=0) ?
-                    if (waterLine.get(0).getZ() == 0) { // TODO Watch that, ... Some display -2 :(
+//                    if (waterLine.get(0).getZ() == 0) { // TODO Watch that, ... Some display -2 :(
+                    if (Math.round(waterLine.get(1).getZ()) == 0) { // TODO Watch that, ... Some display -2 :(
                         g2d.setColor(Color.BLUE);  /// WATERLINE Color
                         g2d.setStroke(new BasicStroke(2));
                     } else {
@@ -440,6 +441,17 @@ public class BoatBox3D extends Box3D {
 
             long afterRend = System.currentTimeMillis();
 //            System.out.printf("Rendering took %s ms\n", NumberFormat.getInstance().format(afterRend - beforeRend));
+            // Center of Hull
+            if (xCenterOfHull != -1 && zCenterOfHull != 1) {
+                // (-centerOnXValue + xOffset)
+                VectorUtils.Vector3D cc = new VectorUtils.Vector3D(xCenterOfHull + (-centerOnXValue + xOffset),
+                        0.0,
+                        zCenterOfHull);
+                g2d.setColor(new Color(0, 102, 0, 200));
+                int circleDiam = 6;
+                instance.drawCircle(g2d, cc, circleDiam);
+                instance.drawStringAt(g2d, cc, "CC", 0, -10, Justification.CENTER);
+            }
         };
         // Invoke the above
         this.setAfterDrawer(afterDrawer);
@@ -563,7 +575,7 @@ public class BoatBox3D extends Box3D {
                 if (missing < toAdd) {
                     double addX = deltaX * (missing / toAdd);
                     xCenterOfHull = (prevX.get() + addX);
-//                    System.out.println("Found CC at " + xCenterOfHull);
+//                    System.out.println("Found CC at X " + xCenterOfHull);
                     break;
                 }
                 disp.set(prevDisp + toAdd);
@@ -619,7 +631,7 @@ public class BoatBox3D extends Box3D {
                 if (missing < toAdd) {
                     double addZ = deltaZ * (missing / toAdd);
                     zCenterOfHull = (prevZ.get() + addZ);
-//                    System.out.println("Found CC at " + xCenterOfHull);
+                    System.out.println("Found CC at Z " + zCenterOfHull);
                     break;
                 }
                 disp.set(prevDisp + toAdd);

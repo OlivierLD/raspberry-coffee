@@ -31,7 +31,8 @@ RUN chmod 600 ~/.vnc/passwd
 RUN apt-get install -y chromium
 RUN apt-get install -y inkscape
 
-RUN apt-get install -y libgtk2.0-dev
+# RUN apt-get install -y libgtk2.0-dev
+# RUN apt-get install -y libgtk-3-dev
 
 EXPOSE 5901
 
@@ -52,28 +53,37 @@ RUN echo "echo '                       or vncserver :1 -geometry 1440x900 -depth
 RUN echo "echo '                       or vncserver :1 -geometry 1680x1050 -depth 24, etc...'" >> $HOME/.bashrc
 RUN echo "echo ' - >>> Note: VNC password is mate'" >> $HOME/.bashrc
 RUN echo "echo ' - List TCP ports in use:  netstat -tupln'" >> $HOME/.bashrc
+RUN echo "echo '\nYou are logged in as $USER'" >> $HOME/.bashrc
 
-RUN cp $HOME/.bashrc ~oliv/
-RUN chown oliv ~oliv/.bashrc
+# if USER root
+USER root
+WORKDIR /home/root
+# endif USER root
 
-# USER root
-# WORKDIR /home/root
-USER oliv
+# if USER oliv
+# RUN cp $HOME/.bashrc ~oliv/
+# RUN chown oliv ~oliv/.bashrc
+# USER oliv
+# #
+# RUN mkdir ~/.vnc
+# RUN echo "mate" | vncpasswd -f >> ~/.vnc/passwd
+# RUN chmod 600 ~/.vnc/passwd
+# #
+# WORKDIR /home/oliv
+# endif USER oliv
 #
-RUN mkdir ~/.vnc
-RUN echo "mate" | vncpasswd -f >> ~/.vnc/passwd
-RUN chmod 600 ~/.vnc/passwd
-#
-WORKDIR /home/oliv
 RUN mkdir workdir
 WORKDIR workdir
 
 # From local file system to image
-COPY ./gtk ./gtk
+# COPY ./gtk ./gtk
 #    |     |
 #    |     In the Docker image
 #    On the host (this machine)
 #
+# USER root
+# RUN chown -R oliv gtk
+# USER oliv
 RUN git clone https://github.com/OlivierLD/raspberry-coffee.git
 WORKDIR raspberry-coffee
 RUN git clone https://github.com/OlivierLD/AstroComputer.git

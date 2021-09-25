@@ -240,7 +240,7 @@ do
       MESSAGE="${MESSAGE}          or: docker run -p 5901:5901 -it -e USER=oliv ${IMAGE_NAME}:latest /bin/bash\n"
       MESSAGE="${MESSAGE}          or: docker start dev-env-3\n"
       MESSAGE="${MESSAGE}              docker exec -it dev-env-3 /bin/bash\n\n"
-      MESSAGE="${MESSAGE}    You will be logged in as 'oliv'. Modify the Dockerfile to change this if needed.\n\n"
+      # MESSAGE="${MESSAGE}    You will be logged in as 'oliv'. Modify the Dockerfile to change this if needed.\n\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n\n"
       MESSAGE="${MESSAGE}Start VNC server as instructed, and reach localhost:5901 in your VNC viewer (password was given to you in the docker image when you logged in)\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n\n"
