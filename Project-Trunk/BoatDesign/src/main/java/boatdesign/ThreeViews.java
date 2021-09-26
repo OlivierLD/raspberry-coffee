@@ -106,11 +106,15 @@ public class ThreeViews {
         AtomicBoolean keepLooping = new AtomicBoolean(true);
         Thread repainter = new Thread(() -> {
             while (keepLooping.get()) {
-                this.box3D.repaint();
+                try {
+                    this.box3D.repaint();
+                } catch (Exception cme) {
+                    System.err.println(">>> " + cme.toString());
+                }
                 try {
                     Thread.sleep(1_000L);
                 } catch (InterruptedException ie) {
-                    // Abosrb
+                    // Absorb
                 }
             }
             // Done
