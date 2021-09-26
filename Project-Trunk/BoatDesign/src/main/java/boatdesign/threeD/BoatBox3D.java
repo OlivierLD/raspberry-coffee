@@ -2,7 +2,6 @@ package boatdesign.threeD;
 
 import bezier.Bezier;
 import gsg.SwingUtils.Box3D;
-//import gsg.SwingUtils.fullui.ThreeDFrameWithWidgetsV2;
 import gsg.VectorUtils;
 
 import java.awt.*;
@@ -664,7 +663,7 @@ public class BoatBox3D extends Box3D {
     public void refreshData(boolean localVerbose) {
         refreshData(localVerbose, null);
     }
-    public void refreshData(boolean localVerbose, Consumer<String> callback) {
+    public void refreshData(boolean localVerbose, Consumer<Map> callback) {
 
         // TODO Parameterize the t+=0.01
 
@@ -1155,20 +1154,33 @@ public class BoatBox3D extends Box3D {
             });
         }
         if (callback != null) {
-            String callbackMessage =
-                    String.format("Max Width: %f m (at %f m)\n" +
-                                    "Max height: %f m\n" +
-                                    "Max depth: %f m (at %f m)\n" +
-                                    "LWL: %f m (%f to %f)\n" +
-                                    "Displ: %f m3\n" +
-                                    "Prismatic Coeff: %f\n" +
-                                    "Center of hull at %f m (depth %f m)",
-                            (maxWidth * 1e-2), (maxWidthX * 1e-2),
-                            (maxHeight * 1e-2),
-                            (maxDepth * 1e-2), (maxDepthX * 1e-2),
-                            (lwl * 1e-2), (lwlStart * 1e-2), (lwlEnd * 1e-2),
-                            displ, prismCoeff,
-                            (xCenterOfHull * 1e-2), (zCenterOfHull * 1e-2));
+            Map<String, Object> callbackMessage =
+                    Map.ofEntries(Map.entry("max-width", Double.valueOf(maxWidth * 1e-2)),
+                            Map.entry("max-width-x", Double.valueOf(maxWidthX * 1e-2)),
+                            Map.entry("max-height", Double.valueOf(maxHeight * 1e-2)),
+                            Map.entry("max-depth", Double.valueOf(maxDepth * 1e-2)),
+                            Map.entry("max-depth-x", Double.valueOf(maxDepthX * 1e-2)),
+                            Map.entry("lwl", Double.valueOf(lwl * 1e-2)),
+                            Map.entry("lwl-start", Double.valueOf(lwlStart * 1e-2)),
+                            Map.entry("lwl-end", Double.valueOf(lwlEnd * 1e-2)),
+                            Map.entry("displ", Double.valueOf(displ)),
+                            Map.entry("prism-coeff", Double.valueOf(prismCoeff)),
+                            Map.entry("cc-x", Double.valueOf(xCenterOfHull * 1e-2)),
+                            Map.entry("cc-z", Double.valueOf(zCenterOfHull * 1e-2)));
+
+//            String.format("Max Width: %f m (at %f m)\n" +
+//                                    "Max height: %f m\n" +
+//                                    "Max depth: %f m (at %f m)\n" +
+//                                    "LWL: %f m (%f to %f)\n" +
+//                                    "Displ: %f m3\n" +
+//                                    "Prismatic Coeff: %f\n" +
+//                                    "Center of hull at %f m (depth %f m)",
+//                            (maxWidth * 1e-2), (maxWidthX * 1e-2),
+//                            (maxHeight * 1e-2),
+//                            (maxDepth * 1e-2), (maxDepthX * 1e-2),
+//                            (lwl * 1e-2), (lwlStart * 1e-2), (lwlEnd * 1e-2),
+//                            displ, prismCoeff,
+//                            (xCenterOfHull * 1e-2), (zCenterOfHull * 1e-2));
             callback.accept(callbackMessage);
         }
     }
