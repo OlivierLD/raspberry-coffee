@@ -154,6 +154,12 @@ public class ThreeViews {
 //                        .circleDiam(6)
                         .color(new Color(0, 102, 0, 200));
                 whiteBoardXZ.addSerie(ccXZSerie);
+
+                WhiteBoardPanel.TextSerie ccXZTextSerie = new WhiteBoardPanel.TextSerie(xzCC.get(0), "CC", 0, 6, WhiteBoardPanel.TextSerie.Justification.CENTER);
+                ccXZTextSerie.setTextColor(new Color(0, 102, 0, 200));
+                ccXZTextSerie.setFont(new Font("Courier", Font.BOLD, 12));
+                whiteBoardXZ.resetAllText();
+                whiteBoardXZ.addTextSerie(ccXZTextSerie);
                 whiteBoardXZ.repaint();
                 // YZ
                 List<VectorUtils.Vector2D> yzCC = List.of(new VectorUtils.Vector2D(centerOfHull.getY(), centerOfHull.getZ()));
@@ -163,8 +169,13 @@ public class ThreeViews {
 //                        .circleDiam(6)
                         .color(new Color(0, 102, 0, 200));
                 whiteBoardYZ.addSerie(ccYZSerie);
+                WhiteBoardPanel.TextSerie ccYZTextSerie = new WhiteBoardPanel.TextSerie(yzCC.get(0), "CC", 7, -6, WhiteBoardPanel.TextSerie.Justification.LEFT);
+                ccYZTextSerie.setTextColor(new Color(0, 102, 0, 200));
+                ccYZTextSerie.setFont(new Font("Courier", Font.BOLD, 12));
+                whiteBoardYZ.resetAllText();
+                whiteBoardYZ.addTextSerie(ccYZTextSerie);
                 whiteBoardYZ.repaint();
-                // XZ
+                // XY
                 List<VectorUtils.Vector2D> xyCC = List.of(new VectorUtils.Vector2D(centerOfHull.getX(), centerOfHull.getY()));
                 WhiteBoardPanel.DataSerie ccXYSerie = new WhiteBoardPanel.DataSerie()
                         .data(xyCC)
@@ -172,6 +183,11 @@ public class ThreeViews {
 //                        .circleDiam(6)
                         .color(new Color(0, 102, 0, 200));
                 whiteBoardXY.addSerie(ccXYSerie);
+                WhiteBoardPanel.TextSerie ccXYTextSerie = new WhiteBoardPanel.TextSerie(xyCC.get(0), "CC", 0, -14, WhiteBoardPanel.TextSerie.Justification.CENTER);
+                ccXYTextSerie.setTextColor(new Color(0, 102, 0, 200));
+                ccXYTextSerie.setFont(new Font("Courier", Font.BOLD, 12));
+                whiteBoardXY.resetAllText();
+                whiteBoardXY.addTextSerie(ccXYTextSerie);
                 whiteBoardXY.repaint();
             }
         });

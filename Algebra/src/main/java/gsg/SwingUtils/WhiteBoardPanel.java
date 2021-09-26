@@ -28,7 +28,8 @@ public class WhiteBoardPanel extends JPanel {
 
     private final static boolean VERBOSE = "true".equals(System.getProperty("swing.verbose"));
 
-    private List<DataSerie> allSeries = new ArrayList<>();
+    private List<DataSerie> dataSeries = new ArrayList<>();
+    private List<TextSerie> textSeries = new ArrayList<>();
 
     public enum TitleJustification {
         LEFT,
@@ -127,6 +128,70 @@ public class WhiteBoardPanel extends JPanel {
 
         public int getCircleDiam() {
             return circleDiam;
+        }
+    }
+
+    public static class TextSerie {
+        public enum Justification {
+            LEFT,
+            RIGHT,
+            CENTER
+        }
+
+        private VectorUtils.Vector2D at;
+        private Font font = null;
+        private String str = "";
+        private int xOffset = 0;
+        private int yOffset = 0;
+        private Justification justification = Justification.LEFT;
+        private Color textColor = null;
+
+        public TextSerie(VectorUtils.Vector2D at, String text) {
+            this.at = at;
+            this.str = text;
+        }
+        public TextSerie(VectorUtils.Vector2D at, String text, int xOffset, int yOffset, Justification justification) {
+            this.at = at;
+            this.str = text;
+            this.xOffset = xOffset;
+            this.yOffset = yOffset;
+            this.justification = justification;
+        }
+
+        public Font getFont() {
+            return font;
+        }
+
+        public void setFont(Font font) {
+            this.font = font;
+        }
+
+        public Color getTextColor() {
+            return textColor;
+        }
+
+        public void setTextColor(Color textColor) {
+            this.textColor = textColor;
+        }
+
+        public Vector2D getAt() {
+            return at;
+        }
+
+        public String getStr() {
+            return str;
+        }
+
+        public int getxOffset() {
+            return xOffset;
+        }
+
+        public int getyOffset() {
+            return yOffset;
+        }
+
+        public Justification getJustification() {
+            return justification;
         }
     }
 
@@ -261,11 +326,11 @@ public class WhiteBoardPanel extends JPanel {
 
     private final Consumer<Graphics2D> DEFAULT_DASHBOARD_WRITER = g2d -> {
 
-        if (allSeries.size() == 0) {
+        if (dataSeries.size() == 0) {
             throw new RuntimeException("No data");
         }
         List<List<Vector2D>> allData = new ArrayList<>();
-        allSeries.forEach(serie -> { synchronized(serie) { allData.add(serie.getData()); } });
+        dataSeries.forEach(serie -> { synchronized(serie) { allData.add(serie.getData()); } });
 
         VectorUtils.GraphicRange graphicRange = VectorUtils.findGraphicRanges(allData);
         double xAmplitude = graphicRange.getMaxX() - graphicRange.getMinX();
@@ -502,7 +567,7 @@ public class WhiteBoardPanel extends JPanel {
         }
 
         // Now the data, Series
-        allSeries.forEach(serie -> {
+        dataSeries.forEach(serie -> {
             if (serie.getGraphicType().equals(GraphicType.LINE) ||
                 serie.getGraphicType().equals(GraphicType.CLOSED_LINE) ||
                 serie.getGraphicType().equals(GraphicType.DOTTED_LINE) ||
@@ -599,6 +664,36 @@ public class WhiteBoardPanel extends JPanel {
                 System.out.printf("Type %s not managed yet%n", serie.getGraphicType());
             }
 //            g2d.dispose();
+        });
+
+        // Any text?
+        textSeries.forEach(txt -> {
+            int pointX = findCanvasXCoord.apply(txt.getAt().getX());
+            int pointY = findCanvasYCoord.apply(txt.getAt().getY());
+            Font font = txt.getFont();
+            Font previousFont = null;
+            Color color = txt.getTextColor();
+            Color previousColor = null;
+            if (font != null) {
+                previousFont = g2d.getFont();
+                g2d.setFont(font);
+            }
+            if (color != null) {
+                previousColor = g2d.getColor();
+                g2d.setColor(color);
+            }
+            int justOffset = 0;
+            if (txt.getJustification() != TextSerie.Justification.LEFT) {
+                int sl = g2d.getFontMetrics().stringWidth(txt.getStr());
+                justOffset = txt.getJustification() == TextSerie.Justification.RIGHT ? sl : (sl / 2);
+            }
+            g2d.drawString(txt.getStr(), pointX + txt.getxOffset() - justOffset, height - (pointY + txt.getyOffset()));
+            if (previousFont != null) {
+                g2d.setFont(previousFont);
+            }
+            if (previousColor != null) {
+                g2d.setColor(previousColor);
+            }
         });
     };
 
@@ -719,17 +814,31 @@ public class WhiteBoardPanel extends JPanel {
     }
 
     public void addSerie(DataSerie serie) {
-        this.allSeries.add(serie);
+        this.dataSeries.add(serie);
     }
 
     public void removeSerie(DataSerie serie) {
-        if (this.allSeries.contains(serie)) {
-            this.allSeries.remove(serie);
+        if (this.dataSeries.contains(serie)) {
+            this.dataSeries.remove(serie);
         }
     }
 
     public void resetAllData() {
-        this.allSeries.clear();
+        this.dataSeries.clear();
+    }
+
+    public void addTextSerie(TextSerie serie) {
+        this.textSeries.add(serie);
+    }
+
+    public void removeTextSerie(TextSerie serie) {
+        if (this.textSeries.contains(serie)) {
+            this.textSeries.remove(serie);
+        }
+    }
+
+    public void resetAllText() {
+        this.textSeries.clear();
     }
 
     /**
