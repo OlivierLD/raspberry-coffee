@@ -18,7 +18,7 @@ import java.util.function.Consumer;
  */
 public class BoatBox3D extends Box3D {
 
-    private static boolean verbose = true;
+    private static boolean verbose = false;
 
     private final int MIN_X =    0;
     private final int MAX_X =  600;
@@ -180,27 +180,31 @@ public class BoatBox3D extends Box3D {
 
                 // All the frames
                 if (frames && drawFrameCtrlPoints) {
-                    for (List<Bezier.Point3D> ctrlPts : frameCtrlPts) { // draw segments
-                        from = null;
-                        for (Bezier.Point3D ctrlPoint : ctrlPts) {
-                            if (from != null) {
-                                VectorUtils.Vector3D to = new VectorUtils.Vector3D(ctrlPoint.getX(), ctrlPoint.getY(), ctrlPoint.getZ());
-                                instance.drawSegment(g2d, from, to);
-                            }
-                            from = new VectorUtils.Vector3D(ctrlPoint.getX(), ctrlPoint.getY(), ctrlPoint.getZ());
-                        }
-                    }
-                    if (symmetrical) {
-                        for (List<Bezier.Point3D> ctrlPts : frameCtrlPts) {
+                    try {
+                        for (List<Bezier.Point3D> ctrlPts : frameCtrlPts) { // draw segments
                             from = null;
                             for (Bezier.Point3D ctrlPoint : ctrlPts) {
                                 if (from != null) {
-                                    VectorUtils.Vector3D to = new VectorUtils.Vector3D(ctrlPoint.getX(), -ctrlPoint.getY(), ctrlPoint.getZ());
+                                    VectorUtils.Vector3D to = new VectorUtils.Vector3D(ctrlPoint.getX(), ctrlPoint.getY(), ctrlPoint.getZ());
                                     instance.drawSegment(g2d, from, to);
                                 }
-                                from = new VectorUtils.Vector3D(ctrlPoint.getX(), -ctrlPoint.getY(), ctrlPoint.getZ());
+                                from = new VectorUtils.Vector3D(ctrlPoint.getX(), ctrlPoint.getY(), ctrlPoint.getZ());
                             }
                         }
+                        if (symmetrical) {
+                            for (List<Bezier.Point3D> ctrlPts : frameCtrlPts) {
+                                from = null;
+                                for (Bezier.Point3D ctrlPoint : ctrlPts) {
+                                    if (from != null) {
+                                        VectorUtils.Vector3D to = new VectorUtils.Vector3D(ctrlPoint.getX(), -ctrlPoint.getY(), ctrlPoint.getZ());
+                                        instance.drawSegment(g2d, from, to);
+                                    }
+                                    from = new VectorUtils.Vector3D(ctrlPoint.getX(), -ctrlPoint.getY(), ctrlPoint.getZ());
+                                }
+                            }
+                        }
+                    } catch (ConcurrentModificationException cme) {
+                        System.err.println(cme.toString());
                     }
                 }
                 // Plot the control points
@@ -259,19 +263,23 @@ public class BoatBox3D extends Box3D {
 
                 // Ctrl points for the frames
                 if (frames && drawFrameCtrlPoints) {
-                    for (List<Bezier.Point3D> ctrlPts : frameCtrlPts) {
-                        ctrlPts.forEach(pt -> {
-                            VectorUtils.Vector3D at = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
-                            instance.drawCircle(g2d, at, 3);
-                        });
-                    }
-                    if (symmetrical) {
+                    try {
                         for (List<Bezier.Point3D> ctrlPts : frameCtrlPts) {
                             ctrlPts.forEach(pt -> {
-                                VectorUtils.Vector3D at = new VectorUtils.Vector3D(pt.getX(), -pt.getY(), pt.getZ());
+                                VectorUtils.Vector3D at = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
                                 instance.drawCircle(g2d, at, 3);
                             });
                         }
+                        if (symmetrical) {
+                            for (List<Bezier.Point3D> ctrlPts : frameCtrlPts) {
+                                ctrlPts.forEach(pt -> {
+                                    VectorUtils.Vector3D at = new VectorUtils.Vector3D(pt.getX(), -pt.getY(), pt.getZ());
+                                    instance.drawCircle(g2d, at, 3);
+                                });
+                            }
+                        }
+                    } catch (ConcurrentModificationException cme) {
+                        System.err.println(cme.toString());
                     }
                 }
             }
@@ -345,26 +353,31 @@ public class BoatBox3D extends Box3D {
             // All the frames
             if (frames) {
                 g2d.setStroke(new BasicStroke(1));
-                for (List<VectorUtils.Vector3D> bezierPoints : frameBezierPts) {
-                    from = null;
-                    for (VectorUtils.Vector3D to : bezierPoints) {
-                        if (from != null) {
-                            instance.drawSegment(g2d, from, to);
-                        }
-                        from = to;
-                    }
-                }
-                if (symmetrical) {
+                try {
                     for (List<VectorUtils.Vector3D> bezierPoints : frameBezierPts) {
                         from = null;
                         for (VectorUtils.Vector3D to : bezierPoints) {
-                            to = to.y(-to.getY());
                             if (from != null) {
                                 instance.drawSegment(g2d, from, to);
                             }
                             from = to;
                         }
                     }
+                    if (symmetrical) {
+                        for (List<VectorUtils.Vector3D> bezierPoints : frameBezierPts) {
+                            from = null;
+                            for (VectorUtils.Vector3D to : bezierPoints) {
+                                to = to.y(-to.getY());
+                                if (from != null) {
+                                    instance.drawSegment(g2d, from, to);
+                                }
+                                from = to;
+                            }
+                        }
+                    }
+                } catch (ConcurrentModificationException cme) {
+                    // Aborb?
+                    System.err.println(cme.toString());
                 }
             }
 
@@ -381,23 +394,9 @@ public class BoatBox3D extends Box3D {
                     }
 
                     from = null;
-                    for (Bezier.Point3D waterLinePt : waterLine) {
-                        VectorUtils.Vector3D to = new VectorUtils.Vector3D(waterLinePt.getX(), waterLinePt.getY(), waterLinePt.getZ());
-                        if (from != null) {
-                            if (Math.abs(from.getX() - to.getX()) <= frameIncrement) {
-                                instance.drawSegment(g2d, from, to);
-                            } else {
-                                if (verbose) {
-                                    System.out.printf("Skipping %s to %s (inc %f)", from, to, frameIncrement);
-                                }
-                            }
-                        }
-                        from = to;
-                    }
-                    if (symmetrical) {
-                        from = null;
+                    try {
                         for (Bezier.Point3D waterLinePt : waterLine) {
-                            VectorUtils.Vector3D to = new VectorUtils.Vector3D(waterLinePt.getX(), -waterLinePt.getY(), waterLinePt.getZ());
+                            VectorUtils.Vector3D to = new VectorUtils.Vector3D(waterLinePt.getX(), waterLinePt.getY(), waterLinePt.getZ());
                             if (from != null) {
                                 if (Math.abs(from.getX() - to.getX()) <= frameIncrement) {
                                     instance.drawSegment(g2d, from, to);
@@ -409,6 +408,25 @@ public class BoatBox3D extends Box3D {
                             }
                             from = to;
                         }
+                        if (symmetrical) {
+                            from = null;
+                            for (Bezier.Point3D waterLinePt : waterLine) {
+                                VectorUtils.Vector3D to = new VectorUtils.Vector3D(waterLinePt.getX(), -waterLinePt.getY(), waterLinePt.getZ());
+                                if (from != null) {
+                                    if (Math.abs(from.getX() - to.getX()) <= frameIncrement) {
+                                        instance.drawSegment(g2d, from, to);
+                                    } else {
+                                        if (verbose) {
+                                            System.out.printf("Skipping %s to %s (inc %f)", from, to, frameIncrement);
+                                        }
+                                    }
+                                }
+                                from = to;
+                            }
+                        }
+                    } catch (ConcurrentModificationException cme) {
+                        // Aborb?
+                        System.err.println(cme.toString());
                     }
                 }
             }
@@ -418,22 +436,27 @@ public class BoatBox3D extends Box3D {
                     g2d.setStroke(new BasicStroke(1));
 
                     from = null;
-                    for (Bezier.Point3D vLinePt : vLine) {
-                        VectorUtils.Vector3D to = new VectorUtils.Vector3D(vLinePt.getX(), vLinePt.getY(), vLinePt.getZ());
-                        if (from != null) {
-                            instance.drawSegment(g2d, from, to);
-                        }
-                        from = to;
-                    }
-                    if (symmetrical) {
-                        from = null;
+                    try {
                         for (Bezier.Point3D vLinePt : vLine) {
-                            VectorUtils.Vector3D to = new VectorUtils.Vector3D(vLinePt.getX(), -vLinePt.getY(), vLinePt.getZ());
+                            VectorUtils.Vector3D to = new VectorUtils.Vector3D(vLinePt.getX(), vLinePt.getY(), vLinePt.getZ());
                             if (from != null) {
                                 instance.drawSegment(g2d, from, to);
                             }
                             from = to;
                         }
+                        if (symmetrical) {
+                            from = null;
+                            for (Bezier.Point3D vLinePt : vLine) {
+                                VectorUtils.Vector3D to = new VectorUtils.Vector3D(vLinePt.getX(), -vLinePt.getY(), vLinePt.getZ());
+                                if (from != null) {
+                                    instance.drawSegment(g2d, from, to);
+                                }
+                                from = to;
+                            }
+                        }
+                    } catch (ConcurrentModificationException cme) {
+                        // Aborb?
+                        System.err.println(cme.toString());
                     }
                 }
             }
@@ -827,7 +850,9 @@ public class BoatBox3D extends Box3D {
                 }
                 maxFrameArea = Math.max(maxFrameArea, frameArea);
 
-                frameBezierPts.add(bezierPointsFrame);
+                synchronized (frameBezierPts) {
+                    frameBezierPts.add(bezierPointsFrame);
+                }
                 long two = System.currentTimeMillis();
                 if (localVerbose || verbose) {
                     System.out.printf(" in %s ms.\n", NumberFormat.getInstance().format(two - one));
@@ -987,7 +1012,9 @@ public class BoatBox3D extends Box3D {
                         }
                     }
                     // Add to the list
-                    hLines.add(waterLine);
+                    synchronized (hLines) {
+                        hLines.add(waterLine);
+                    }
                     // Displacement (CC's height/depth)?
                     if (z <= 0) { // In the water
                         // Add to displacementZMap
@@ -1147,7 +1174,9 @@ public class BoatBox3D extends Box3D {
                         }
                     }
                     // Add to the list
-                    vLines.add(vLine);
+                    synchronized (vLines) {
+                        vLines.add(vLine);
+                    }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

@@ -23,6 +23,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -74,6 +75,8 @@ public class ThreeViews {
     private WhiteBoardPanel whiteBoardXZ = null; // side
     private WhiteBoardPanel whiteBoardYZ = null; // facing
 
+    private VectorUtils.Vector3D centerOfHull = null;
+
     private Box3D box3D = null;
 
     private JTextPane dataTextArea = null;
@@ -100,17 +103,73 @@ public class ThreeViews {
         JOptionPane.showMessageDialog(frame, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
     }
     private void refreshBoatShape() {
+        AtomicBoolean keepLooping = new AtomicBoolean(true);
+        Thread repainter = new Thread(() -> {
+            while (keepLooping.get()) {
+                this.box3D.repaint();
+                try {
+                    Thread.sleep(1_000L);
+                } catch (InterruptedException ie) {
+                    // Abosrb
+                }
+            }
+            // Done
+            System.out.println("Done repainting.");
+        });
+        repainter.start();
+
         Thread refresher = new Thread(() -> {
             System.out.println("Starting refresh...");
             refreshButton.setEnabled(false);
             boatDataTextArea.setText("Re-calculating...");
-            // TODO Synchronization, ping for refresh/repaint? Stop thread if already running.
+            // TODO Stop thread if already running.
             ((BoatBox3D) this.box3D).refreshData(false, map -> {
                 boatDataTextArea.setText(map.toString());
+                // CC position
+                Double xCC = (Double)map.get("cc-x");
+                Double zCC = (Double)map.get("cc-z");
+                if (xCC != null && zCC != null) {
+                    // Display on 2D whiteboards
+                    centerOfHull = new VectorUtils.Vector3D()
+                            .x(xCC * 1e2)
+                            .y(0d)
+                            .z(zCC * 1e2);
+                }
             });
+            // Stop repainter
+            keepLooping.set(false);
             System.out.println("Refresh completed!");
             refreshButton.setEnabled(true);
             this.box3D.repaint();
+            if (centerOfHull != null) {
+                // XZ
+                List<VectorUtils.Vector2D> xzCC = List.of(new VectorUtils.Vector2D(centerOfHull.getX(), centerOfHull.getZ()));
+                WhiteBoardPanel.DataSerie ccXZSerie = new WhiteBoardPanel.DataSerie()
+                        .data(xzCC)
+                        .graphicType(WhiteBoardPanel.GraphicType.POINTS)
+//                        .circleDiam(6)
+                        .color(new Color(0, 102, 0, 200));
+                whiteBoardXZ.addSerie(ccXZSerie);
+                whiteBoardXZ.repaint();
+                // YZ
+                List<VectorUtils.Vector2D> yzCC = List.of(new VectorUtils.Vector2D(centerOfHull.getY(), centerOfHull.getZ()));
+                WhiteBoardPanel.DataSerie ccYZSerie = new WhiteBoardPanel.DataSerie()
+                        .data(yzCC)
+                        .graphicType(WhiteBoardPanel.GraphicType.POINTS)
+//                        .circleDiam(6)
+                        .color(new Color(0, 102, 0, 200));
+                whiteBoardYZ.addSerie(ccYZSerie);
+                whiteBoardYZ.repaint();
+                // XZ
+                List<VectorUtils.Vector2D> xyCC = List.of(new VectorUtils.Vector2D(centerOfHull.getX(), centerOfHull.getY()));
+                WhiteBoardPanel.DataSerie ccXYSerie = new WhiteBoardPanel.DataSerie()
+                        .data(xyCC)
+                        .graphicType(WhiteBoardPanel.GraphicType.POINTS)
+//                        .circleDiam(6)
+                        .color(new Color(0, 102, 0, 200));
+                whiteBoardXY.addSerie(ccXYSerie);
+                whiteBoardXY.repaint();
+            }
         });
         refresher.start();
     }
@@ -118,6 +177,7 @@ public class ThreeViews {
     private Map<String, Object> generateBezierJson() {
         return  Map.of("rail", railCtrlPoints, "keel", keelCtrlPoints);
     }
+
 
     private void refreshData() {
 
@@ -148,7 +208,6 @@ public class ThreeViews {
             /*
              * Prepare data for display
              */
-
             // Generate the data, the Bézier curve(s).
 
             // 1 - Rail Ctrl Points
@@ -357,7 +416,7 @@ public class ThreeViews {
             whiteBoardYZ.addSerie(keelDataYZSerie);
 
             // Finally, display it.
-            whiteBoardXY.repaint();  // This is for a pure Swing context
+            whiteBoardXY.repaint();  // This is for a pure Swing context}
             whiteBoardXZ.repaint();  // This is for a pure Swing context
             whiteBoardYZ.repaint();  // This is for a pure Swing context
 
