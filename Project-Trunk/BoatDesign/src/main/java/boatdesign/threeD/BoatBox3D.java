@@ -382,19 +382,19 @@ public class BoatBox3D extends Box3D {
             }
 
             if (waterlines) { // Display
-                for (List<Bezier.Point3D> waterLine : hLines) {
-                    // Is it waterline (z=0) ?
+                try {
+                    for (List<Bezier.Point3D> waterLine : hLines) {
+                        // Is it waterline (z=0) ?
 //                    if (waterLine.get(0).getZ() == 0) { // TODO Watch that, ... Some display -2 :(
-                    if (Math.round(waterLine.get(1).getZ()) == 0) { // TODO Watch that, ... Some display -2 :(
-                        g2d.setColor(Color.BLUE);  /// WATERLINE Color
-                        g2d.setStroke(new BasicStroke(2));
-                    } else {
-                        g2d.setColor(Color.RED);
-                        g2d.setStroke(new BasicStroke(1));
-                    }
+                        if (Math.round(waterLine.get(1).getZ()) == 0) {
+                            g2d.setColor(Color.BLUE);  /// WATERLINE Color
+                            g2d.setStroke(new BasicStroke(2));
+                        } else {
+                            g2d.setColor(Color.RED);
+                            g2d.setStroke(new BasicStroke(1));
+                        }
 
-                    from = null;
-                    try {
+                        from = null;
                         for (Bezier.Point3D waterLinePt : waterLine) {
                             VectorUtils.Vector3D to = new VectorUtils.Vector3D(waterLinePt.getX(), waterLinePt.getY(), waterLinePt.getZ());
                             if (from != null) {
@@ -424,10 +424,10 @@ public class BoatBox3D extends Box3D {
                                 from = to;
                             }
                         }
-                    } catch (ConcurrentModificationException cme) {
-                        // Aborb?
-                        System.err.println(cme.toString());
                     }
+                } catch (ConcurrentModificationException cme) {
+                    // Aborb?
+                    System.err.println(cme.toString());
                 }
             }
             if (buttocks) { // Display
