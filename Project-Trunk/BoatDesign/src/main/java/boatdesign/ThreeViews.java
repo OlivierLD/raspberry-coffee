@@ -1603,8 +1603,11 @@ public class ThreeViews {
         System.out.printf("Running from folder %s\n", System.getProperty("user.dir"));
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
+        String initFileName = "init.json";
+        initFileName = System.getProperty("init-file", initFileName);
+        System.out.printf("Opening %s\n", initFileName);
 
-        File config = new File("init.json");
+        File config = new File(initFileName);
         if (config.exists()) {
             try {
                 URL configResource = config.toURI().toURL();

@@ -733,6 +733,7 @@ public class BoatBox3D extends Box3D {
             bezierPointsBow.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
         }
         double tFor0 = 0;
+        Bezier.Point3D wlPoint1 = null;
         try {
             tFor0 = bezierBow.getTForGivenZ(0.0, 1E-1, 0, 1E-4, false);
         } catch (Bezier.TooDeepRecursionException tdre) {
@@ -740,36 +741,58 @@ public class BoatBox3D extends Box3D {
             tdre.printStackTrace();
             tFor0 = -1;
         }
-        Bezier.Point3D wlPoint1 = bezierBow.getBezierPoint(tFor0);
+        if (tFor0 != -1) {
+            wlPoint1 = bezierBow.getBezierPoint(tFor0);
+        }
 
         Bezier bezierKeel = new Bezier(ctrlPointsKeel);
-        try {
-            tFor0 = bezierKeel.getTForGivenZ(0.0, 1E-1, 0, 1E-4, true);
-        } catch (Bezier.TooDeepRecursionException tdre) {
-            // TODO Manage that
-            tdre.printStackTrace();
-            tFor0 = -1;
-        }
-        Bezier.Point3D wlPoint2 = bezierKeel.getBezierPoint(tFor0);
-        lwlStart = wlPoint1.getX()  - (-centerOnXValue + xOffset);
-        lwlEnd = wlPoint2.getX() - (-centerOnXValue + xOffset);
-        lwl = wlPoint2.getX() - wlPoint1.getX();
-        if (localVerbose || verbose) {
-            System.out.printf("LWL: %f\n", lwl);
+        double startForLWLEnd = 0d;
+        boolean dirForLWLEnd = true;
+        if (wlPoint1 == null) {
+            try {
+                tFor0 = bezierKeel.getTForGivenZ(0.0, 1E-1, 0, 1E-4, false);
+            } catch (Bezier.TooDeepRecursionException tdre) {
+                // TODO Manage that
+                tdre.printStackTrace();
+                tFor0 = -1;
+            }
+            if (tFor0 != -1) {
+                wlPoint1 = bezierKeel.getBezierPoint(tFor0);
+                startForLWLEnd = tFor0 + 1e-1;
+                dirForLWLEnd = false;
+            }
         }
         // Also find the deepest point
         Bezier.Point3D maxDepthPoint = null;
+        double maxDepthT = -1d;
         for (double t=0; t<=1.001; t+=0.01) { // TODO Limit (double...)
             Bezier.Point3D tick = bezierKeel.getBezierPoint(t);
             bezierPointsKeel.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
             if (tick.getZ() < maxDepth) {
                 maxDepth = tick.getZ();
                 maxDepthPoint = tick;
+                maxDepthT = t;
             }
         }
         maxDepthX = maxDepthPoint.getX() - (-centerOnXValue + xOffset);
         if (localVerbose || verbose) {
             System.out.printf("Max Depth: %f, at X:%f\n", maxDepth, maxDepthPoint.getX() - (-centerOnXValue + xOffset));
+        }
+        // End of LWL
+        double t2For0 = -1d;
+        try {
+            t2For0 = bezierKeel.getTForGivenZ(maxDepthT + 0.2 /* TODO... Mmmh */, 1E-2, 0, 1E-4, true);
+        } catch (Bezier.TooDeepRecursionException tdre) {
+            // TODO Manage that
+            tdre.printStackTrace();
+            t2For0 = -1;
+        }
+        Bezier.Point3D wlPoint2 = bezierKeel.getBezierPoint(t2For0);
+        lwlStart = wlPoint1.getX()  - (-centerOnXValue + xOffset);
+        lwlEnd = wlPoint2.getX() - (-centerOnXValue + xOffset);
+        lwl = wlPoint2.getX() - wlPoint1.getX();
+        if (localVerbose || verbose) {
+            System.out.printf("LWL: %f\n", lwl);
         }
 
         // This one is correlated, re-calculated
