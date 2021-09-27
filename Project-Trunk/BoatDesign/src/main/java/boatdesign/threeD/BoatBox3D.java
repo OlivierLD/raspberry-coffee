@@ -1195,7 +1195,8 @@ public class BoatBox3D extends Box3D {
                             Map.entry("displ", Double.valueOf(displ)),
                             Map.entry("prism-coeff", Double.valueOf(prismCoeff)),
                             Map.entry("cc-x", Double.valueOf(xCenterOfHull * 1e-2)),
-                            Map.entry("cc-z", Double.valueOf(zCenterOfHull * 1e-2)));
+                            Map.entry("cc-z", Double.valueOf(zCenterOfHull * 1e-2)),
+                            Map.entry("displacement-x-map",  displacementXMap));
 
 //            String.format("Max Width: %f m (at %f m)\n" +
 //                                    "Max height: %f m\n" +

@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Using default WhiteBoard Writer
@@ -139,6 +139,37 @@ public class ThreeViews {
                             .y(0d)
                             .z(zCC * 1e2);
                 }
+                // Displacement for the area curve
+                Map<Double, Double> displacementMap = (Map)map.get("displacement-x-map");
+                double lwlStart = (double)map.get("lwl-start");
+                double lwlEnd = (double)map.get("lwl-end");
+                // TODO: send to XY
+                System.out.println("Will send to Area Curve");
+                if (true) {
+                    // 1 - Find max area
+                    Double wbMaxY = whiteBoardXY.getForcedMaxY();
+                    AtomicReference<Double> max = new AtomicReference<>(-Double.MAX_VALUE);
+                    displacementMap.forEach((k, v) -> {
+                        max.set(Math.max(max.get(), v));
+                    });
+                    System.out.println("Max area: " + max);
+                    double ratio = (wbMaxY / max.get());
+                    // TODO Remove the area curve if it exists
+                    List<VectorUtils.Vector2D> areas = new ArrayList<>();
+                    areas.add(new VectorUtils.Vector2D().x(lwlStart * 1e2).y(0d));
+                    displacementMap.forEach((k, v) -> {
+                        areas.add(new VectorUtils.Vector2D().x(k).y(v * ratio));
+                    });
+                    areas.add(new VectorUtils.Vector2D().x(lwlEnd * 1e2).y(0d));
+
+                    WhiteBoardPanel.DataSerie areasSerie = new WhiteBoardPanel.DataSerie()
+                            .data(areas)
+                            .graphicType(WhiteBoardPanel.GraphicType.AREA)
+                            .areaGradient(new Color(255, 0, 0, 128), new Color(255, 165, 0, 128))
+                            .color(Color.BLACK);
+                    whiteBoardXY.addSerie(areasSerie);
+                }
+
             });
             // Stop repainter
             keepLooping.set(false);
@@ -500,7 +531,6 @@ public class ThreeViews {
         // Enforce Y amplitude
         whiteBoardXY.setForcedMinY(0d);
         whiteBoardXY.setForcedMaxY(150d);
-
         // XZ
         whiteBoardXZ.setAxisColor(Color.BLACK);
         whiteBoardXZ.setGridColor(Color.GRAY);
