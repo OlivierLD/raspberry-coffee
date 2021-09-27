@@ -2,12 +2,11 @@
   "description": "Points created by default when starting the program. Like the tri...",
   "comments": [
     "First point of rail is first point of bow",
-    "Last point of keel is first point of keel",
-    "Length id 550 (for rail, and keel)"
+    "Last point of keel is first point of keel"
   ],
   "dimensions": {
-    "default-lht": 5.50,
-    "box-x": [ 0.0, 6.00 ],
+    "default-lht": 9.14,
+    "box-x": [ 0.0, 10.00 ],
     "box-y": [ -2.00, 2.00 ],
     "box-z": [ -0.60, 1.25 ]
   },
@@ -29,17 +28,17 @@
         "z": -41.42857142857143
       },
       {
-        "x": 438.2142857142857,
+        "x": 695.6555555555556,
         "y": 0.0,
-        "z": -33.92857142857143
+        "z": -66.92592592592592
       },
       {
-        "x": 489.6428571428571,
+        "x": 834.4481481481482,
         "y": 0.0,
-        "z": -20.0
+        "z": -24.61111111111111
       },
       {
-        "x": 550.0,
+        "x": 914.0,
         "y": 0.0,
         "z": 10.0
       }
@@ -66,11 +65,12 @@
         "z": 45.357143
       },
       {
-        "x": 550.0,
+        "x": 914.0,
         "y": 32.1429,
         "z": 56.0
       }
     ]
   }
 }
+
 

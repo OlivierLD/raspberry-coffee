@@ -41,6 +41,14 @@ import java.util.function.Function;
  */
 public class ThreeViews {
 
+    private static double minX;
+    private static double maxX;
+    private static double minY;
+    private static double maxY;
+    private static double minZ;
+    private static double maxZ;
+    private static double defaultLHT;
+
     private final static String TITLE = "3D Bezier Drawing Board. Rail and Keel.";
 
     private static JFrame frame;
@@ -54,6 +62,7 @@ public class ThreeViews {
     private JLabel topLabel;
     private final JButton refreshButton = new JButton("Refresh Boat Shape"); // Not really useful here.
 
+    // Screen dimension
     private final static int WIDTH = 1536; // 1024;
     private final static int HEIGHT = 800;
 
@@ -481,20 +490,34 @@ public class ThreeViews {
         this.frame.setVisible(true);
     }
 
-    private void initComponents() {
-
+    private void initConfiguration() {
         if (initConfig != null) {
+
+            Map<String, Object> dimensions = (Map)initConfig.get("dimensions");
+            double defaultLht = (double)dimensions.get("default-lht");
+            List<Double> boxX = (List)dimensions.get("box-x");
+            List<Double> boxY = (List)dimensions.get("box-y");
+            List<Double> boxZ = (List)dimensions.get("box-z");
+
+            defaultLHT = defaultLht * 1e2;
+            minX = boxX.get(0) * 1e2;
+            maxX = boxX.get(1) * 1e2;
+            minY = boxY.get(0) * 1e2;
+            maxY = boxY.get(1) * 1e2;
+            minZ = boxZ.get(0) * 1e2;
+            maxZ = boxZ.get(1) * 1e2;
+
             Map<String, List<Object>> defaultPoints = (Map)initConfig.get("default-points");
-            List<List<Double>> railPoints = (List)defaultPoints.get("rail");
-            List<List<Double>> bowPoints = (List)defaultPoints.get("bow"); // Correlated, not needed here.
-            List<List<Double>> keelPoints = (List)defaultPoints.get("keel");
+            List<Map<String, Double>> railPoints = (List)defaultPoints.get("rail");
+    //            List<List<Double>> bowPoints = (List)defaultPoints.get("bow"); // Correlated, not needed here.
+            List<Map<String, Double>> keelPoints = (List)defaultPoints.get("keel");
             // Rail
             railPoints.forEach(pt -> {
-                railCtrlPoints.add(new Bezier.Point3D(pt.get(0), pt.get(1), pt.get(2)));
+                railCtrlPoints.add(new Bezier.Point3D(pt.get("x"), pt.get("y"), pt.get("z")));
             });
             // Keel
             keelPoints.forEach(pt -> {
-                keelCtrlPoints.add(new Bezier.Point3D(pt.get(0), pt.get(1), pt.get(2)));
+                keelCtrlPoints.add(new Bezier.Point3D(pt.get("x"), pt.get("y"), pt.get("z")));
             });
 
         } else {
@@ -506,6 +529,10 @@ public class ThreeViews {
             keelCtrlPoints.add(new Bezier.Point3D(10d, 0d, -5d));
             keelCtrlPoints.add(new Bezier.Point3D(550d, 0d, 5d));
         }
+    }
+
+    private void initComponents() {
+
         // Tell the 3D box
         ((BoatBox3D)this.box3D).setRailCtrlPoints(railCtrlPoints); // The rail.
         ((BoatBox3D)this.box3D).setKeelCtrlPoints(keelCtrlPoints); // The keel.
@@ -1321,9 +1348,10 @@ public class ThreeViews {
         this.whiteBoardXZ = new WhiteBoardPanel(); // side
         this.whiteBoardYZ = new WhiteBoardPanel(); // facing
 
-        /*BoatBox3D*/ this.box3D = new BoatBox3D();
-        threeDPanel = new ThreeDPanelWithWidgets(box3D);
+        this.initConfiguration();
 
+        /*BoatBox3D*/ this.box3D = new BoatBox3D(minX, maxX, minY, maxY, minZ, maxZ, defaultLHT);
+        threeDPanel = new ThreeDPanelWithWidgets(box3D);
         this.initComponents();
     }
 

@@ -20,15 +20,18 @@ public class BoatBox3D extends Box3D {
 
     private static boolean verbose = false;
 
-    private final int MIN_X =    0;
-    private final int MAX_X =  600;
-    private final int MIN_Y = -200;
-    private final int MAX_Y =  200;
-    private final int MIN_Z =  -30;
-    private final int MAX_Z =  100;
+    // TODO Get those values from a config
+    private final static int MIN_X =  -25;
+    private final static int MAX_X =  575;
+    private final static int MIN_Y = -200;
+    private final static int MAX_Y =  200;
+    private final static int MIN_Z =  -30;
+    private final static int MAX_Z =  100;
+
+    private final static int DEFAULT_LHT = 550;
 
     private double xOffset = 25.0;
-    private double centerOnXValue = 300.0;
+    private double centerOnXValue = (MAX_X - MIN_X) / 2d;
 
     // TODO A prm for the number of points per frame (bezier's t)
 
@@ -87,14 +90,26 @@ public class BoatBox3D extends Box3D {
 
     public BoatBox3D() {
 //        super(ThreeDFrameWithWidgetsV2.DEFAULT_WIDTH, ThreeDFrameWithWidgetsV2.DEFAULT_HEIGHT); // TODO Move this in another constructor
-        this.setxMin(MIN_X - centerOnXValue);
-        this.setxMax(MAX_X - centerOnXValue);
-        this.setyMin(MIN_Y);
-        this.setyMax(MAX_Y);
-        this.setzMin(MIN_Z);
-        this.setzMax(MAX_Z);
+        this(MIN_X, MAX_X, MIN_Y, MAX_Y, MIN_Z, MAX_Z, DEFAULT_LHT);
+    }
+    public BoatBox3D(double minX,
+                     double maxX,
+                     double minY,
+                     double maxY,
+                     double minZ,
+                     double maxZ,
+                     double defaultLht) {
+        centerOnXValue = (maxX - minX) / 2.0; // defaultLht / 2.0;
+        xOffset = centerOnXValue - (defaultLht / 2);
 
-        this.setXLabelTransformer(x -> String.valueOf(x + 275));
+        this.setxMin(minX - centerOnXValue);
+        this.setxMax(maxX - centerOnXValue);
+        this.setyMin(minY);
+        this.setyMax(maxY);
+        this.setzMin(minZ);
+        this.setzMax(maxZ);
+
+        this.setXLabelTransformer(x -> String.valueOf(x + (defaultLht / 2.0)));
 
 //        BoatBox3D instance = this;
 
@@ -477,7 +492,6 @@ public class BoatBox3D extends Box3D {
         };
         // Invoke the above
         this.setAfterDrawer(afterDrawer);
-
     }
 
     public double getFrameIncrement() {
@@ -690,6 +704,20 @@ public class BoatBox3D extends Box3D {
 
         // TODO Parameterize the t+=0.01
 
+        // Max length, centerOnXValue, xOffset
+        double maxLength = 550.0;
+        double maxKeel = ctrlPointsKeel.stream()
+                .mapToDouble(Bezier.Point3D::getX)
+                .max()
+                .getAsDouble();
+        double maxRail = ctrlPointsRail.stream()
+                .mapToDouble(Bezier.Point3D::getX)
+                .max()
+                .getAsDouble();
+
+        maxLength = Math.max(maxKeel, maxRail) - (-centerOnXValue + xOffset);
+        centerOnXValue = (maxLength / 2.0) + xOffset;
+
         this.frameCtrlPts = new ArrayList<>();
         this.bezierPointsRail = new ArrayList<>();
         this.bezierPointsBow = new ArrayList<>();
@@ -758,8 +786,8 @@ public class BoatBox3D extends Box3D {
             }
             if (tFor0 != -1) {
                 wlPoint1 = bezierKeel.getBezierPoint(tFor0);
-                startForLWLEnd = tFor0 + 1e-1;
-                dirForLWLEnd = false;
+//                startForLWLEnd = tFor0 + 1e-1;
+//                dirForLWLEnd = false;
             }
         }
         // Also find the deepest point
@@ -812,7 +840,7 @@ public class BoatBox3D extends Box3D {
             // Displacement...
             double maxFrameArea = 0d;
             // TODO _x <= ? Make sure the end has a frame...
-            for (double _x = (-centerOnXValue + xOffset) + frameIncrement; _x </*=*/ (-centerOnXValue + xOffset) + 550.0; _x += frameIncrement) {
+            for (double _x = (-centerOnXValue + xOffset) + frameIncrement; _x </*=*/ (-centerOnXValue + xOffset) + maxLength; _x += frameIncrement) {
                 if (localVerbose || verbose) {
                     System.out.printf("... Calculating frame %.03f... ", _x);
                 }
