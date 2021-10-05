@@ -1,4 +1,5 @@
 # A JSON Utility, WiP
+> Note: might not be necessary... Look into `jq`.
 
 To use like 
 ```text
