@@ -17,6 +17,8 @@ then
   echo -e "Docker not available on this machine, exiting."
   echo -e "To install Docker, see https://store.docker.com/search?type=edition&offering=community"
   exit 1
+else
+  echo -e "Using $(docker -v)"
 fi
 #
 while [[ "${OK}" = "false" ]]
