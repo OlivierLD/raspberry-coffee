@@ -278,7 +278,7 @@ change in the image is required.
 ### Stuff...
 
 ```bash
- $ CID=`docker run -d oliv-go:latest`
+ $ CID=$(docker run -d oliv-go:latest)
  $ docker logs $CID
  Hello go world!
  $
