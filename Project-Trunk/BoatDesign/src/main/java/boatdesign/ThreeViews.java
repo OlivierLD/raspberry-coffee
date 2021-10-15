@@ -116,7 +116,8 @@ public class ThreeViews {
                 "Data Files",
                 ".",
                 "Save",
-                "Choose Data File Name");
+                "Choose Data File Name",
+                true);
         // TODO La suite
     }
 

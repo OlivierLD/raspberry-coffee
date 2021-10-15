@@ -141,6 +141,16 @@ public class SwingUtils {
                                     String where,
                                     String buttonLabel,
                                     String dialogLabel) {
+        return chooseFile(parent, mode, flt, desc, where, buttonLabel, dialogLabel, false);
+    }
+    public static String chooseFile(Component parent,
+                                    int mode,
+                                    String[] flt,
+                                    String desc,
+                                    String where,
+                                    String buttonLabel,
+                                    String dialogLabel,
+                                    boolean save) {
         String fileName = "";
         JFileChooser chooser = new JFileChooser();
         // TODO_IF_FEASIBLE Sort the file by date, most recent on top. If possible... :(
@@ -164,7 +174,7 @@ public class SwingUtils {
             f = new File(currPath.substring(0, currPath.lastIndexOf(File.separator)));
             chooser.setCurrentDirectory(f);
         }
-        int retval = chooser.showOpenDialog(parent);
+        int retval = save ? chooser.showSaveDialog(parent) : chooser.showOpenDialog(parent);
         switch (retval) {
             case JFileChooser.APPROVE_OPTION:
                 fileName = chooser.getSelectedFile().toString();
