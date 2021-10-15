@@ -28,7 +28,7 @@ dependencies {
 //        implementation fileTree(dir: "/usr/local/Cellar/opencv/${opencvVersion}/share/java/opencv4/", include: ['*.jar']) // Mac
         implementation fileTree(dir: "/usr/local/share/java/opencv4/", include: ['*.jar']) // Mac
     } else {
-        println "Assuming Raspberry Pi, OpenCV version ${opencvVersion}"
+        println "Assuming Linux / Raspberry Pi, OpenCV version ${opencvVersion}"
 //        implementation fileTree(dir: '/usr/local/share/java/opencv4', include: ['*.jar']) // RPi
         implementation fileTree(dir: "/home/pi/opencv-${opencvVersion}/build/bin", include: ['*.jar']) // RPi
     }

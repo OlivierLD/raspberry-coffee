@@ -329,7 +329,9 @@ public class SnapSnapSnap extends Thread {
 		if (snapshotCommand.isEmpty()) {
 			System.out.println(String.format("WARNING: Invalid snapshot option %s", snapshotCommand));
 			System.out.println(String.format("Can only be one of:\n%s",
-					Arrays.asList(SnapshotOptions.values()).stream().map(Object::toString).collect(Collectors.joining("\n"))));
+					Arrays.asList(SnapshotOptions.values()).stream()
+							.map(Object::toString)
+							.collect(Collectors.joining("\n"))));
 		} else {
 			snapshotCommandOption = snapOpt.get();
 		}
