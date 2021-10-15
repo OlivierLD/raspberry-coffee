@@ -1,7 +1,7 @@
 #!/bin/bash
 clear
 #
-# Build and run choice docker image
+# Build and run a docker image
 #
 OK=false
 DOCKER_FILE=
@@ -101,7 +101,7 @@ do
 			#
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://localhost:9876/oliv-components/index.html from your browser.\n"
-      MESSAGE="${MESSAGE}You can also log in choice new container using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}You can also log in a new container using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
       MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it web-comps /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
@@ -112,7 +112,7 @@ do
 			RUN_CMD="docker run -d --name rpi-mini ${IMAGE_NAME}:latest"
 			#
       MESSAGE="---------------------------------------------------\n"
-      MESSAGE="${MESSAGE}You can log in choice new container using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}You can log in a new container using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
       MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it rpi-mini /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
@@ -127,7 +127,7 @@ do
 			#
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://localhost:8081/oliv-components/index.html from your browser.\n"
-      MESSAGE="${MESSAGE}You can also log in choice new container using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}You can also log in a new container using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
       MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it rpi /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
@@ -152,7 +152,7 @@ do
 			fi
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://${IP_ADDR}:9876/data/demos/gps.demo.html in your browser.\n"
-      MESSAGE="${MESSAGE}You can also log in choice new container using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}You can also log in a new container using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
       MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it node-pi /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
@@ -173,7 +173,7 @@ do
 			fi
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://${IP_ADDR}:9876/data/demos/gps.demo.html in your browser.\n"
-      MESSAGE="${MESSAGE}You can also log in choice new container using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}You can also log in a new container using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
       MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it node-debian /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
@@ -199,7 +199,7 @@ do
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://${IP_ADDR}:9999/web/index.html in your browser.\n"
       MESSAGE="${MESSAGE}REST operations available: http://localhost:9999/mux/oplist.\n"
-      MESSAGE="${MESSAGE}You can also log in choice new instance using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}You can also log in a new instance using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
       MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it nmea-mux /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
@@ -210,7 +210,7 @@ do
       RUN_CMD="docker run -d --name golang ${IMAGE_NAME}:latest"
       #
       MESSAGE="---------------------------------------------------\n"
-      MESSAGE="${MESSAGE}Log in choice new container using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}Log in a new container using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
       MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it golang /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
@@ -224,7 +224,7 @@ do
       MESSAGE="${MESSAGE}Log in using: docker run -it --rm -p 5901:5901 -p 8080:8080 -e USER=root ${IMAGE_NAME}:latest /bin/bash\n"
       MESSAGE="${MESSAGE}    or using: docker exec -it rpi-desktop /bin/bash\n"
       MESSAGE="${MESSAGE}- then run 'vncserver :1 -geometry 1280x800 (or 1440x900, 1680x1050, etc) -depth 24'\n"
-      MESSAGE="${MESSAGE}- then use choice vncviewer on localhost:1, password is 'mate'\n"
+      MESSAGE="${MESSAGE}- then use a vncviewer on localhost:1, password is 'mate'\n"
       MESSAGE="${MESSAGE}- then 'node server.js' or 'npm start', and reach http://localhost:8080/oliv-components/index.html ...\n"
       MESSAGE="${MESSAGE} \n"
       MESSAGE="${MESSAGE}- Or docker run --detach --name webcomponents --rm -p 5901:5901 -p 8080:8080 -e USER=root oliv-pi-vnc:latest \n"
@@ -268,7 +268,7 @@ do
       MESSAGE="${MESSAGE}                   or docker run -it --rm -p 5901:5901 -p 8888:8888 -e USER=root -v tensorflow:/root/workdir/shared --name tensorflow ${IMAGE_NAME}:latest /bin/bash \n"
       MESSAGE="${MESSAGE}                   or docker exec -it tensorflow /bin/bash \n"
       MESSAGE="${MESSAGE}- then run 'vncserver :1 -geometry 1280x800 (or 1440x900, 1680x1050, etc) -depth 24'\n"
-      MESSAGE="${MESSAGE}- then use choice vncviewer on localhost:1, password is 'mate'\n"
+      MESSAGE="${MESSAGE}- then use a vncviewer on localhost:1, password is 'mate'\n"
       MESSAGE="${MESSAGE}- then (for example) python3 examples/mnist_cnn.py ...\n"
       MESSAGE="${MESSAGE}       or python3 examples/oliv/01.py ...\n"
       MESSAGE="${MESSAGE}  Several samples are available in the examples folder.\n"
@@ -327,7 +327,7 @@ do
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://${IP_ADDR}:9876/zip/index.html in your browser.\n"
       MESSAGE="${MESSAGE}REST operations available: http://localhost:9876/mux/oplist.\n"
-      MESSAGE="${MESSAGE}You can also log in choice new instance using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}You can also log in a new instance using: docker run -it ${IMAGE_NAME}:latest /bin/bash\n"
       MESSAGE="${MESSAGE}Or log in the running instance using: docker exec -it nmea-mux /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
@@ -358,7 +358,7 @@ then
   docker build -f ${DOCKER_FILE} -t ${IMAGE_NAME} ${EXTRA_PRM} .
   #
   # Now run
-  echo -e "To create choice container, run ${RUN_CMD} ..."
+  echo -e "To create a container, run ${RUN_CMD} ..."
   echo -en "Do you want to run it y|n ? > "
   read REPLY
   if [[ ${REPLY} =~ ^(yes|y|Y)$ ]]
@@ -387,6 +387,6 @@ then
       docker export --output ${fName} ${CONTAINER_ID}
     fi
   fi
-  echo -e "\nYou can export choice running container any time by running 'docker export --output export.tar [Container ID]'"
+  echo -e "\nYou can export a running container any time by running 'docker export --output export.tar [Container ID]'"
   echo -e "Docker commands are documented at https://docs.docker.com/engine/reference/commandline/docker/"
 fi
