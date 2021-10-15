@@ -36,6 +36,7 @@ After installing Docker, try this:
  $ docker run hello-world
  $ docker run docker/whalesay cowsay Hello there!
 ```
+This would tell you if your installation was successful.
 
 #### Pre-defined Docker images
 This project also provides a script that will build pre-defined Docker images (different OS's, with various features).
@@ -167,6 +168,9 @@ root@7e754f8732a0:/workdir/WebComponents# node server.js
 Then reach `http://localhost:8081/oliv-components/index.html`
 
 etc, etc...
+
+> _Note_: there is an image published on docker-hub.  
+> You can run `docker run olivierlediouris/navserver` from a Raspberry Pi, and you're all set.
 
 ### Case Study
 - **The case**: You have a `nodejs` project you want to share with others.
