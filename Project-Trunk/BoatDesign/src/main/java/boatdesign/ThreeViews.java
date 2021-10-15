@@ -5,6 +5,7 @@ import boatdesign.threeD.BoatBox3D;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gsg.SwingUtils.Box3D;
+import gsg.SwingUtils.SwingUtils;
 import gsg.SwingUtils.WhiteBoardPanel;
 import gsg.SwingUtils.fullui.ThreeDPanelWithWidgets;
 import gsg.VectorUtils;
@@ -56,6 +57,10 @@ public class ThreeViews {
     private final JMenuBar menuBar = new JMenuBar();
     private final JMenu menuFile = new JMenu();
     private final JMenuItem menuFileSpit = new JMenuItem();
+
+    private final JMenuItem menuFileOpen = new JMenuItem();
+    private final JMenuItem menuFileSave = new JMenuItem();
+
     private final JMenuItem menuFileExit = new JMenuItem();
     private final JMenu menuHelp = new JMenu();
     private final JMenuItem menuHelpAbout = new JMenuItem();
@@ -92,6 +97,28 @@ public class ThreeViews {
     private JTextPane boatDataTextArea = null;
 
     private static ThreeViews instance;
+    private void fileOpen_ActionPerformed(ActionEvent ae) {
+        System.out.println("File Open");
+        String fName = SwingUtils.chooseFile(null,
+                JFileChooser.FILES_ONLY,
+                new String[] { "json" },
+                "Data Files",
+                ".",
+                "Select",
+                "Choose Data File");
+        // TODO La suite
+    }
+    private void fileSave_ActionPerformed(ActionEvent ae) {
+        System.out.println("File Save");
+        String fName = SwingUtils.chooseFile(null,
+                JFileChooser.FILES_ONLY,
+                new String[] { "json" },
+                "Data Files",
+                ".",
+                "Save",
+                "Choose Data File Name");
+        // TODO La suite
+    }
 
     private void fileSpit_ActionPerformed(ActionEvent ae) {
         System.out.println("Ctrl Points:\nRail:");
@@ -962,14 +989,25 @@ public class ThreeViews {
         menuFile.setText("File");
         menuFileSpit.setText("Spit out points");
         menuFileSpit.addActionListener(ae -> fileSpit_ActionPerformed(ae));
+
+        menuFileOpen.setText("Open...");
+         menuFileOpen.addActionListener(ae -> fileOpen_ActionPerformed(ae));
+        menuFileSave.setText("Save...");
+         menuFileSave.addActionListener(ae -> fileSave_ActionPerformed(ae));
+
         menuFileExit.setText("Exit");
         menuFileExit.addActionListener(ae -> fileExit_ActionPerformed(ae));
         menuHelp.setText("Help");
         menuHelpAbout.setText("About");
         menuHelpAbout.addActionListener(ae -> helpAbout_ActionPerformed(ae));
         menuFile.add(menuFileSpit);
+        menuFile.add(new JSeparator());
+        menuFile.add(menuFileOpen);
+        menuFile.add(menuFileSave);
+        menuFile.add(new JSeparator());
         menuFile.add(menuFileExit);
         menuBar.add(menuFile);
+
         menuHelp.add(menuHelpAbout);
         menuBar.add(menuHelp);
 
