@@ -201,7 +201,7 @@ Just to run it after downloading it.
 The only pre-requisite would be to have installed `Docker` on the machine (the Raspberry Pi here),
 as explained at the top of this document.
 
-In this case, the full `Docker` image creation (named `oliv-nodepi` below) comes down to:
+In this case, the full `Docker` image creation (named `oliv-nodepi` below) comes down to one command:
 ```bash
  $ docker build -f node-pi.Dockerfile -t oliv-nodepi .
 Sending build context to Docker daemon  752.6kB
