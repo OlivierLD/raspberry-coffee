@@ -98,7 +98,6 @@ public class ThreeViews {
 
     private static ThreeViews instance;
     private void fileOpen_ActionPerformed(ActionEvent ae) {
-        System.out.println("File Open");
         String fName = SwingUtils.chooseFile(null,
                 JFileChooser.FILES_ONLY,
                 new String[] { "json" },
@@ -106,8 +105,21 @@ public class ThreeViews {
                 ".",
                 "Select",
                 "Choose Data File");
-        // TODO La suite
-        // railCtrlPoints
+        // La suite
+        System.out.printf("Opening %s\n", fName);
+        File config = new File(fName);
+        if (config.exists()) {
+            try {
+                URL configResource = config.toURI().toURL();
+                initConfig = mapper.readValue(configResource.openStream(), Map.class);
+                this.reLoadConfig();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            System.out.printf("Warning: no %s was found.\n", fName);
+        }
+
     }
     private void fileSave_ActionPerformed(ActionEvent ae) {
         System.out.println("File Save");
@@ -560,11 +572,16 @@ public class ThreeViews {
         }
     }
 
-    private void initComponents() {
-
+    private void refreshBox3D() {
         // Tell the 3D box
         ((BoatBox3D)this.box3D).setRailCtrlPoints(railCtrlPoints); // The rail.
         ((BoatBox3D)this.box3D).setKeelCtrlPoints(keelCtrlPoints); // The keel.
+
+    }
+
+    private void initComponents() {
+
+        this.refreshBox3D();
 
         // Override defaults (not mandatory)
 
@@ -993,9 +1010,9 @@ public class ThreeViews {
         menuFileSpit.addActionListener(ae -> fileSpit_ActionPerformed(ae));
 
         menuFileOpen.setText("Open...");
-         menuFileOpen.addActionListener(ae -> fileOpen_ActionPerformed(ae));
+        menuFileOpen.addActionListener(ae -> fileOpen_ActionPerformed(ae));
         menuFileSave.setText("Save...");
-         menuFileSave.addActionListener(ae -> fileSave_ActionPerformed(ae));
+        menuFileSave.addActionListener(ae -> fileSave_ActionPerformed(ae));
 
         menuFileExit.setText("Exit");
         menuFileExit.addActionListener(ae -> fileExit_ActionPerformed(ae));
@@ -1389,10 +1406,20 @@ public class ThreeViews {
         this.whiteBoardYZ = new WhiteBoardPanel(); // facing
 
         this.initConfiguration();
-
         /*BoatBox3D*/ this.box3D = new BoatBox3D(minX, maxX, minY, maxY, minZ, maxZ, defaultLHT);
         threeDPanel = new ThreeDPanelWithWidgets(box3D);
         this.initComponents();
+    }
+
+    private void reLoadConfig() {
+        railCtrlPoints.clear();
+        keelCtrlPoints.clear();
+
+        this.initConfiguration();
+
+        // TODO Refresh also the offsets and Co, default-lht etc.
+
+        this.refreshData();
     }
 
     enum Orientation {
