@@ -1,6 +1,7 @@
 package boatdesign;
 
 import bezier.Bezier;
+import boatdesign.swingstuff.NewDataPanel;
 import boatdesign.threeD.BoatBox3D;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +17,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -58,7 +60,9 @@ public class ThreeViews {
     private final JMenu menuFile = new JMenu();
     private final JMenuItem menuFileSpit = new JMenuItem();
 
+    private final JMenuItem menuFileNew = new JMenuItem();
     private final JMenuItem menuFileOpen = new JMenuItem();
+    private final JMenuItem menuFileEdit = new JMenuItem();
     private final JMenuItem menuFileSave = new JMenuItem();
 
     private final JMenuItem menuFileExit = new JMenuItem();
@@ -97,6 +101,26 @@ public class ThreeViews {
     private JTextPane boatDataTextArea = null;
 
     private static ThreeViews instance;
+
+    private void fileNew_ActionPerformed(ActionEvent ae) {
+        System.out.println("File New...");
+        /*
+
+        Need to get:
+        minX, maxX, minY, maxY, minZ, maxZ, defaultLHT
+        description, comments
+
+         */
+        NewDataPanel panel = new NewDataPanel();
+        int resp = JOptionPane.showConfirmDialog(frame,
+                panel,
+                "New Boat Data",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        if (resp == JOptionPane.OK_OPTION) {
+            // Grab the data
+        }
+    }
     private void fileOpen_ActionPerformed(ActionEvent ae) {
         String fName = SwingUtils.chooseFile(null,
                 JFileChooser.FILES_ONLY,
@@ -117,21 +141,45 @@ public class ThreeViews {
                 ex.printStackTrace();
             }
         } else {
-            System.out.printf("Warning: no %s was found.\n", fName);
+            System.out.printf("Warning: no %s was found.\n", fName); // Zis is bizarre
         }
 
     }
+
+    //fileEdit_ActionPerformed
+    private void fileEdit_ActionPerformed(ActionEvent ae) {
+        System.out.println("File Edit...");
+    }
+
     private void fileSave_ActionPerformed(ActionEvent ae) {
         System.out.println("File Save");
-        String fName = SwingUtils.chooseFile(null,
-                JFileChooser.FILES_ONLY,
-                new String[] { "json" },
-                "Data Files",
-                ".",
-                "Save",
-                "Choose Data File Name",
-                true);
-        // TODO La suite
+        /*
+
+        minX, maxX, minY, maxY, minZ, maxZ, defaultLHT
+        description, comments
+
+         */
+
+        NewDataPanel panel = new NewDataPanel(true);
+
+        panel.setValues(((BoatBox3D)this.box3D).getMinX(),
+                ((BoatBox3D)this.box3D).getMaxX(),
+                ((BoatBox3D)this.box3D).getMinY(),
+                ((BoatBox3D)this.box3D).getMaxY(),
+                ((BoatBox3D)this.box3D).getMinZ(),
+                ((BoatBox3D)this.box3D).getMaxZ(),
+                ((BoatBox3D)this.box3D).getDefaultLHT(),
+                "Description of the boat",
+                "Comments...\nWhatever you like.");
+
+        int resp = JOptionPane.showConfirmDialog(frame,
+                panel,
+                "Boat Data",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        if (resp == JOptionPane.OK_OPTION) {
+            // Grab the data
+        }
     }
 
     private void fileSpit_ActionPerformed(ActionEvent ae) {
@@ -540,6 +588,7 @@ public class ThreeViews {
             List<Double> boxY = (List)dimensions.get("box-y");
             List<Double> boxZ = (List)dimensions.get("box-z");
 
+            // Values in cm
             defaultLHT = defaultLht * 1e2;
             minX = boxX.get(0) * 1e2;
             maxX = boxX.get(1) * 1e2;
@@ -576,7 +625,6 @@ public class ThreeViews {
         // Tell the 3D box
         ((BoatBox3D)this.box3D).setRailCtrlPoints(railCtrlPoints); // The rail.
         ((BoatBox3D)this.box3D).setKeelCtrlPoints(keelCtrlPoints); // The keel.
-
     }
 
     private void initComponents() {
@@ -1009,8 +1057,12 @@ public class ThreeViews {
         menuFileSpit.setText("Spit out points");
         menuFileSpit.addActionListener(ae -> fileSpit_ActionPerformed(ae));
 
+        menuFileNew.setText("New...");
+        menuFileNew.addActionListener(ae -> fileNew_ActionPerformed(ae));
         menuFileOpen.setText("Open...");
         menuFileOpen.addActionListener(ae -> fileOpen_ActionPerformed(ae));
+        menuFileEdit.setText("Edit...");
+        menuFileEdit.addActionListener(ae -> fileEdit_ActionPerformed(ae));
         menuFileSave.setText("Save...");
         menuFileSave.addActionListener(ae -> fileSave_ActionPerformed(ae));
 
@@ -1021,7 +1073,9 @@ public class ThreeViews {
         menuHelpAbout.addActionListener(ae -> helpAbout_ActionPerformed(ae));
         menuFile.add(menuFileSpit);
         menuFile.add(new JSeparator());
+        menuFile.add(menuFileNew);
         menuFile.add(menuFileOpen);
+        menuFile.add(menuFileEdit);
         menuFile.add(menuFileSave);
         menuFile.add(new JSeparator());
         menuFile.add(menuFileExit);
@@ -1417,7 +1471,8 @@ public class ThreeViews {
 
         this.initConfiguration();
 
-        // TODO Refresh also the offsets and Co, default-lht etc.
+        // Refresh also the offsets and Co, default-lht etc.
+        ((BoatBox3D)this.box3D).refreshValues(minX, maxX, minY, maxY, minZ, maxZ, defaultLHT);
 
         this.refreshData();
     }

@@ -1,8 +1,8 @@
 package gsg.SwingUtils;
 
-import javax.swing.*;
+import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-import java.awt.*;
+import java.awt.Component;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;

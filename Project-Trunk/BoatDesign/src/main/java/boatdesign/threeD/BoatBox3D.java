@@ -33,6 +33,8 @@ public class BoatBox3D extends Box3D {
     private double xOffset = 25.0;
     private double centerOnXValue = (MAX_X - MIN_X) / 2d;
 
+    private double defaultLHT = 0d;
+
     // TODO A prm for the number of points per frame (bezier's t)
 
     private boolean justTheBoat = false;
@@ -99,17 +101,18 @@ public class BoatBox3D extends Box3D {
                      double minZ,
                      double maxZ,
                      double defaultLht) {
-        centerOnXValue = (maxX - minX) / 2.0; // defaultLht / 2.0;
-        xOffset = centerOnXValue - (defaultLht / 2);
-
-        this.setxMin(minX - centerOnXValue);
-        this.setxMax(maxX - centerOnXValue);
-        this.setyMin(minY);
-        this.setyMax(maxY);
-        this.setzMin(minZ);
-        this.setzMax(maxZ);
-
-        this.setXLabelTransformer(x -> String.valueOf(x + (defaultLht / 2.0)));
+        this.refreshValues(minX, maxX, minY, maxY, minZ, maxZ, defaultLht);
+//        centerOnXValue = (maxX - minX) / 2.0; // defaultLht / 2.0;
+//        xOffset = centerOnXValue - (defaultLht / 2);
+//
+//        this.setxMin(minX - centerOnXValue);
+//        this.setxMax(maxX - centerOnXValue);
+//        this.setyMin(minY);
+//        this.setyMax(maxY);
+//        this.setzMin(minZ);
+//        this.setzMax(maxZ);
+//
+//        this.setXLabelTransformer(x -> String.valueOf(x + (defaultLht / 2.0)));
 
 //        BoatBox3D instance = this;
 
@@ -492,6 +495,49 @@ public class BoatBox3D extends Box3D {
         };
         // Invoke the above
         this.setAfterDrawer(afterDrawer);
+    }
+
+    public void refreshValues(double minX,
+                              double maxX,
+                              double minY,
+                              double maxY,
+                              double minZ,
+                              double maxZ,
+                              double defaultLht) {
+        this.defaultLHT = defaultLht;
+
+        this.centerOnXValue = (maxX - minX) / 2.0; // defaultLht / 2.0;
+        this.xOffset = centerOnXValue - (defaultLht / 2);
+
+        this.setxMin(minX - centerOnXValue);
+        this.setxMax(maxX - centerOnXValue);
+        this.setyMin(minY);
+        this.setyMax(maxY);
+        this.setzMin(minZ);
+        this.setzMax(maxZ);
+        this.setXLabelTransformer(x -> String.valueOf(x + (defaultLht / 2.0)));
+    }
+
+    public double getMinX() {
+        return this.getxMin();
+    }
+    public double getMaxX() {
+        return this.getxMax();
+    }
+    public double getMinY() {
+        return this.getyMin();
+    }
+    public double getMaxY() {
+        return this.getyMax();
+    }
+    public double getMinZ() {
+        return this.getzMin();
+    }
+    public double getMaxZ() {
+        return this.getzMax();
+    }
+    public double getDefaultLHT() {
+        return this.defaultLHT;
     }
 
     public double getFrameIncrement() {
