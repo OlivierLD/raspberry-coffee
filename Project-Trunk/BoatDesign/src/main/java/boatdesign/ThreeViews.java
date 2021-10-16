@@ -119,6 +119,8 @@ public class ThreeViews {
                 JOptionPane.PLAIN_MESSAGE);
         if (resp == JOptionPane.OK_OPTION) {
             // Grab the data
+            NewDataPanel.PanelData panelData = panel.getPanelData();
+            System.out.println("Wow!");
         }
     }
     private void fileOpen_ActionPerformed(ActionEvent ae) {
@@ -179,6 +181,8 @@ public class ThreeViews {
                 JOptionPane.PLAIN_MESSAGE);
         if (resp == JOptionPane.OK_OPTION) {
             // Grab the data
+            NewDataPanel.PanelData panelData = panel.getPanelData();
+            System.out.println("Saving, Wow!");
         }
     }
 

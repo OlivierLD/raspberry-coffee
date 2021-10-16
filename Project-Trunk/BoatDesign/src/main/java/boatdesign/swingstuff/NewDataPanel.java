@@ -4,6 +4,7 @@ import gsg.SwingUtils.SwingUtils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.text.DecimalFormat;
 
 /**
@@ -283,6 +284,19 @@ public class NewDataPanel extends JPanel {
         }
     }
 
+    public static class PanelData {
+        double minX;
+        double maxX;
+        double minY;
+        double maxY;
+        double minZ;
+        double maxZ;
+        double defaultLHT;
+        String description;
+        String comments;
+        String fileName;
+    }
+
     public void setValues(double minX,
                           double maxX,
                           double minY,
@@ -303,5 +317,34 @@ public class NewDataPanel extends JPanel {
 
         this.descriptionField.setText(description);
         this.commentsTextArea.setText(comments);
+    }
+
+    public PanelData getPanelData() {
+        PanelData panelData = new PanelData();
+
+        panelData.minX = (double)this.minXValue.getValue();
+        panelData.maxX = (double)this.maxXValue.getValue();
+        panelData.minY = (double)this.minYValue.getValue();
+        panelData.maxY = (double)this.maxYValue.getValue();
+        panelData.minZ = (double)this.minZValue.getValue();
+        panelData.maxZ = (double)this.maxZValue.getValue();
+        panelData.defaultLHT = (double)this.defaultLhtValue.getValue();
+        panelData.description = this.descriptionField.getText();
+        panelData.comments = this.commentsTextArea.getText();
+
+        if (this.withFileChooser) {
+            // String fName = this.fileChooser.
+            System.out.println("File name to come...");
+            File selectedFile = this.fileChooser.getSelectedFile();
+            if (selectedFile != null) {
+                System.out.println("Selected:" + selectedFile.getAbsolutePath());
+                panelData.fileName = selectedFile.getAbsolutePath();
+            } else {
+                System.out.println("No file selected.");
+                panelData.fileName = null;
+            }
+        }
+
+        return panelData;
     }
 }
