@@ -12,8 +12,8 @@ import java.text.DecimalFormat;
  *         description, comments
  */
 public class NewDataPanel extends JPanel {
-    private double minX, maxX, minY, maxY, minZ, maxZ, defaultLHT;
-    private String description, comments;
+//    private double minX, maxX, minY, maxY, minZ, maxZ, defaultLHT;
+//    private String description, comments;
 
     private boolean withFileChooser = false;
 
@@ -296,6 +296,46 @@ public class NewDataPanel extends JPanel {
         String description;
         String comments;
         String fileName;
+
+        public double getMinX() {
+            return minX;
+        }
+
+        public double getMaxX() {
+            return maxX;
+        }
+
+        public double getMinY() {
+            return minY;
+        }
+
+        public double getMaxY() {
+            return maxY;
+        }
+
+        public double getMinZ() {
+            return minZ;
+        }
+
+        public double getMaxZ() {
+            return maxZ;
+        }
+
+        public double getDefaultLHT() {
+            return defaultLHT;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public String getComments() {
+            return comments;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
     }
 
     public void setValues(double minX,
@@ -335,7 +375,6 @@ public class NewDataPanel extends JPanel {
 
         if (this.withFileChooser) {
             // String fName = this.fileChooser.
-            System.out.println("File name to come...");
             File selectedFile = this.fileChooser.getSelectedFile();
             if (selectedFile != null) {
                 System.out.println("Selected:" + selectedFile.getAbsolutePath());
@@ -345,7 +384,6 @@ public class NewDataPanel extends JPanel {
                 panelData.fileName = null;
             }
         }
-
         return panelData;
     }
 }

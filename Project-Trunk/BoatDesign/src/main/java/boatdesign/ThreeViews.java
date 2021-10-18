@@ -20,10 +20,14 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -185,7 +189,50 @@ public class ThreeViews {
         if (resp == JOptionPane.OK_OPTION) {
             // Grab the data
             NewDataPanel.PanelData panelData = panel.getPanelData();
-            System.out.println("Saving, Wow!");
+            Map<String, Object> theMap = new HashMap<>();
+            theMap.put("description", panelData.getDescription());
+            String comments = panelData.getComments();
+            if (comments != null) {
+                String[] split = comments.split("\n");
+                theMap.put("comments", split);
+            }
+            Map<String, Object> points = new HashMap<>();
+            points.put("keel", this.keelCtrlPoints);
+            points.put("rail", this.railCtrlPoints);
+            theMap.put("default-points", points);
+
+            Map<String, Object> dimensions = new HashMap<>();
+            dimensions.put("default-lht", panelData.getDefaultLHT() * 1e-02);
+            double minX = panelData.getMinX() * 1e-02;
+            double maxX = panelData.getMaxX() * 1e-02;
+            // Reshape from [0, X], instead of [-X, X]
+            if (minX != 0) {
+                maxX -= minX;
+                minX -= minX;
+            }
+            dimensions.put("box-x", new double[] { minX, maxX });
+            dimensions.put("box-y", new double[] { panelData.getMinY() * 1e-02, panelData.getMaxY() * 1e-02 });
+            dimensions.put("box-z", new double[] { panelData.getMinZ() * 1e-02, panelData.getMaxZ() * 1e-02 });
+            theMap.put("dimensions", dimensions);
+
+            try {
+                String value = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(theMap);
+                String fileName = panelData.getFileName();
+                if (fileName != null) {
+                    try {
+                        BufferedWriter bw = new BufferedWriter(new FileWriter(fileName));
+                        bw.write(value);
+                        bw.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // TODO Honk!
+                    System.out.println("Honk!!");
+                }
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
         }
     }
 
