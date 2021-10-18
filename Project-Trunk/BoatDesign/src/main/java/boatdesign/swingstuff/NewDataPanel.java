@@ -264,6 +264,7 @@ public class NewDataPanel extends JPanel {
             this.fileChooser = new JFileChooser();
 
             SwingUtils.ToolFileFilter filter = new SwingUtils.ToolFileFilter("json", "Boat Data");
+            this.fileChooser.setCurrentDirectory(new File("."));
             this.fileChooser.addChoosableFileFilter(filter);
             this.fileChooser.setFileFilter(filter);
             this.fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);

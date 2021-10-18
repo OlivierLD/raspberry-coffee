@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Using default WhiteBoard Writer
@@ -102,6 +103,9 @@ public class ThreeViews {
 
     private static ThreeViews instance;
 
+    private String description;
+    private List<String> comments;
+
     private void fileNew_ActionPerformed(ActionEvent ae) {
         System.out.println("File New...");
         /*
@@ -154,7 +158,6 @@ public class ThreeViews {
     }
 
     private void fileSave_ActionPerformed(ActionEvent ae) {
-        System.out.println("File Save");
         /*
 
         minX, maxX, minY, maxY, minZ, maxZ, defaultLHT
@@ -171,8 +174,8 @@ public class ThreeViews {
                 ((BoatBox3D)this.box3D).getMinZ(),
                 ((BoatBox3D)this.box3D).getMaxZ(),
                 ((BoatBox3D)this.box3D).getDefaultLHT(),
-                "Description of the boat",
-                "Comments...\nWhatever you like.");
+                this.description,
+                this.comments == null ? null : this.comments.stream().collect(Collectors.joining("\n")));
 
         int resp = JOptionPane.showConfirmDialog(frame,
                 panel,
@@ -593,13 +596,13 @@ public class ThreeViews {
             List<Double> boxZ = (List)dimensions.get("box-z");
 
             // Values in cm
-            defaultLHT = defaultLht * 1e2;
-            minX = boxX.get(0) * 1e2;
-            maxX = boxX.get(1) * 1e2;
-            minY = boxY.get(0) * 1e2;
-            maxY = boxY.get(1) * 1e2;
-            minZ = boxZ.get(0) * 1e2;
-            maxZ = boxZ.get(1) * 1e2;
+            this.defaultLHT = defaultLht * 1e2;
+            this.minX = boxX.get(0) * 1e2;
+            this.maxX = boxX.get(1) * 1e2;
+            this.minY = boxY.get(0) * 1e2;
+            this.maxY = boxY.get(1) * 1e2;
+            this.minZ = boxZ.get(0) * 1e2;
+            this.maxZ = boxZ.get(1) * 1e2;
 
             Map<String, List<Object>> defaultPoints = (Map)initConfig.get("default-points");
             List<Map<String, Double>> railPoints = (List)defaultPoints.get("rail");
@@ -607,13 +610,15 @@ public class ThreeViews {
             List<Map<String, Double>> keelPoints = (List)defaultPoints.get("keel");
             // Rail
             railPoints.forEach(pt -> {
-                railCtrlPoints.add(new Bezier.Point3D(pt.get("x"), pt.get("y"), pt.get("z")));
+                this.railCtrlPoints.add(new Bezier.Point3D(pt.get("x"), pt.get("y"), pt.get("z")));
             });
             // Keel
             keelPoints.forEach(pt -> {
-                keelCtrlPoints.add(new Bezier.Point3D(pt.get("x"), pt.get("y"), pt.get("z")));
+                this.keelCtrlPoints.add(new Bezier.Point3D(pt.get("x"), pt.get("y"), pt.get("z")));
             });
 
+            this.description = (String)initConfig.get("description");
+            this.comments = (List)initConfig.get("comments");
         } else {
             // TODO There is a problem when ctrlPoints is empty... Fix it.
             // Initialize [0, 10, 0], [550, 105, 0]

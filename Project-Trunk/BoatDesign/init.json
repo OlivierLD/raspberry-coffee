@@ -3,7 +3,7 @@
   "comments": [
     "First point of rail is first point of bow",
     "Last point of keel is first point of keel",
-    "Length id 550 (for rail, and keel)"
+    "Length is 550 (for rail, and keel)"
   ],
   "dimensions": {
     "default-lht": 5.50,
