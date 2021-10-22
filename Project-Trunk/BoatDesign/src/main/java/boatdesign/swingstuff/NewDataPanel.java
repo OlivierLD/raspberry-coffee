@@ -380,7 +380,7 @@ public class NewDataPanel extends JPanel {
                 System.out.println("Selected:" + selectedFile.getAbsolutePath());
                 panelData.fileName = selectedFile.getAbsolutePath();
             } else {
-                System.out.println("No file selected.");
+                System.out.println("No file selected...");
                 panelData.fileName = null;
             }
         }

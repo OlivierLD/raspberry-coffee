@@ -326,7 +326,7 @@ public class SnapSnapSnap extends Thread {
 				.stream()
 				.filter(snap -> snap.toString().equals(snapshotCommand))
 				.findFirst();
-		if (snapshotCommand.isEmpty()) {
+		if (!snapOpt.isPresent()) {
 			System.out.println(String.format("WARNING: Invalid snapshot option %s", snapshotCommand));
 			System.out.println(String.format("Can only be one of:\n%s",
 					Arrays.asList(SnapshotOptions.values()).stream()

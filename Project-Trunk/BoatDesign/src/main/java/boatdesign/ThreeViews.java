@@ -227,8 +227,11 @@ public class ThreeViews {
                         e.printStackTrace();
                     }
                 } else {
-                    // TODO Honk!
                     System.out.println("Honk!!");
+                    JOptionPane.showMessageDialog(frame,
+                            "Please provide a file name!",
+                            "File name is missing",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -247,7 +250,7 @@ public class ThreeViews {
         });
     }
     private void fileExit_ActionPerformed(ActionEvent ae) {
-        System.out.printf("Exit requested %s, bye now.\n", ae);
+//        System.out.printf("Exit requested %s, bye now.\n", ae);
         System.exit(0);
     }
     private void helpAbout_ActionPerformed(ActionEvent ae) {
@@ -380,7 +383,6 @@ public class ThreeViews {
     private Map<String, Object> generateBezierJson() {
         return  Map.of("rail", railCtrlPoints, "keel", keelCtrlPoints);
     }
-
 
     private void refreshData() {
 
