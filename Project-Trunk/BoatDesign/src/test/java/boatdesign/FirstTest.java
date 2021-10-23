@@ -162,10 +162,11 @@ public class FirstTest {
 //        ctrlPoints.add(new Bezier.Point3D(550, 105, 0));
         if (initConfig != null) {
             Map<String, List<Object>> defaultPoints = (Map)initConfig.get("default-points");
-            List<List<Double>> railPoints = (List)defaultPoints.get("rail");
+            List<Map<String, Double>> railPoints = (List)defaultPoints.get("rail");
+            // List<List<Double>> railPoints = (List)defaultPoints.get("rail");
             // Just the rail for now
-            railPoints.forEach(pt -> {
-                ctrlPoints.add(new Bezier.Point3D(pt.get(0), pt.get(1), pt.get(2)));
+            railPoints.stream().forEach(pt -> {
+                ctrlPoints.add(new Bezier.Point3D(pt.get("x"), pt.get("y"), pt.get("z")));
             });
         } else {
             ctrlPoints.add(new Bezier.Point3D(0, 10, 0));
@@ -424,17 +425,25 @@ public class FirstTest {
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
 
-        File config = new File("init.json");
-        if (config.exists()) {
-            try {
-                URL configResource = config.toURI().toURL();
-                initConfig = mapper.readValue(configResource.openStream(), Map.class);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            System.out.println("Warning: no init.json was found.");
+        String initFileName = "init.json";
+        try {
+            ClassLoader classLoader = FirstTest.class.getClassLoader();
+            URL configResource = classLoader.getResource(initFileName); // At the root of the resources folder.
+            initConfig = mapper.readValue(configResource.openStream(), Map.class);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+//        File config = new File(initFileName);
+//        if (config.exists()) {
+//            try {
+//                URL configResource = config.toURI().toURL();
+//                initConfig = mapper.readValue(configResource.openStream(), Map.class);
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//        } else {
+//            System.out.println("Warning: no init.json was found.");
+//        }
 
         FirstTest thisThing = new FirstTest();// This one has instantiated the white board
         thisThing.initComponents();

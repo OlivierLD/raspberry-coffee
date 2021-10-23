@@ -1815,17 +1815,24 @@ public class ThreeViews {
         initFileName = System.getProperty("init-file", initFileName);
         System.out.printf("Opening %s\n", initFileName);
 
-        File config = new File(initFileName);
-        if (config.exists()) {
-            try {
-                URL configResource = config.toURI().toURL();
-                initConfig = mapper.readValue(configResource.openStream(), Map.class);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            System.out.println("Warning: no init.json was found.");
+        try {
+            ClassLoader classLoader = ThreeViews.class.getClassLoader();
+            URL configResource = classLoader.getResource(initFileName); // At the root of the resources folder.
+            initConfig = mapper.readValue(configResource.openStream(), Map.class);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+//        File config = new File(initFileName);
+//        if (config.exists()) {
+//            try {
+//                URL configResource = config.toURI().toURL();
+//                initConfig = mapper.readValue(configResource.openStream(), Map.class);
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//        } else {
+//            System.out.println("Warning: no init.json was found.");
+//        }
 
         ThreeViews thisThing = new ThreeViews();// This one has instantiated the white boards
 

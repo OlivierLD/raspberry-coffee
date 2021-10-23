@@ -20,7 +20,7 @@ public class BoatBox3D extends Box3D {
 
     private static boolean verbose = false;
 
-    // TODO Get those values from a config
+    // Default values, overridden from a config
     private final static int MIN_X =  -25;
     private final static int MAX_X =  575;
     private final static int MIN_Y = -200;
