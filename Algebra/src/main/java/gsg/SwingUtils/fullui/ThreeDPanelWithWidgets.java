@@ -151,6 +151,25 @@ public class ThreeDPanelWithWidgets
 		this.setVisible(true);
 	}
 
+	public void setMinXValue() {
+		this.minXValue.setText(String.valueOf(box3D.getxMin()));
+	}
+	public void setMaxXValue() {
+		this.maxXValue.setText(String.valueOf(box3D.getxMax()));
+	}
+	public void setMinYValue() {
+		this.minYValue.setText(String.valueOf(box3D.getyMin()));
+	}
+	public void setMaxYValue() {
+		this.maxYValue.setText(String.valueOf(box3D.getyMax()));
+	}
+	public void setMinZValue() {
+		this.minZValue.setText(String.valueOf(box3D.getzMin()));
+	}
+	public void setMaxZValue() {
+		this.maxZValue.setText(String.valueOf(box3D.getzMax()));
+	}
+
 	/**
 	 * This method is called from within the constructor to
 	 * initialize the form.

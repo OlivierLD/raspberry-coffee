@@ -373,7 +373,6 @@ public class WhiteBoardPanel extends JPanel {
         // Transformers
         Function<Double, Integer> findCanvasXCoord = spaceXCoord -> (int)(margins + (Math.round((spaceXCoord - graphicRange.getMinX()) * (xEqualsY ? oneUnit : oneUnitX))));
         Function<Double, Integer> findCanvasYCoord = spaceYCoord -> (int)(margins + (Math.round((spaceYCoord - minDblY) * (xEqualsY ? oneUnit : oneUnitY))));
-
 //        Function<Double, Integer> findCanvasXCoord = spaceXCoord -> {
 //            int value = (int)(margins + (Math.round((spaceXCoord - graphicRange.getMinX()) * (xEqualsY ? oneUnit : oneUnitX))));
 //            System.out.println(String.format("Margin: %d, SpaceX: %f, minX: %f, unit: %f => %d",

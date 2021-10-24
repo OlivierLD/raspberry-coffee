@@ -516,6 +516,9 @@ public class BoatBox3D extends Box3D {
         this.setzMin(minZ);
         this.setzMax(maxZ);
         this.setXLabelTransformer(x -> String.valueOf(x + (defaultLht / 2.0)));
+        // The text fields
+
+
     }
 
     public double getMinX() {
@@ -1344,10 +1347,10 @@ public class BoatBox3D extends Box3D {
                 this.ctrlPointsKeel.get(lastKeelIdx).getZ()));
     }
 
-    public void setRailCtrlPoints(List<Bezier.Point3D> ctrlPointsRail) {
+    public void setRailCtrlPoints(List<Bezier.Point3D> configCtrlPointsRail) {
         this.ctrlPointsRail = new ArrayList<>();
         // Re-calculate with center and offset
-        ctrlPointsRail.forEach(cp -> this.ctrlPointsRail.add(new Bezier.Point3D()
+        configCtrlPointsRail.forEach(cp -> this.ctrlPointsRail.add(new Bezier.Point3D()
                 .x((-centerOnXValue + xOffset) + cp.getX())
                 .y(cp.getY())
                 .z(cp.getZ())));
@@ -1355,10 +1358,10 @@ public class BoatBox3D extends Box3D {
         this.repaint();
     }
 
-    public void setKeelCtrlPoints(List<Bezier.Point3D> ctrlPointsKeel) {
+    public void setKeelCtrlPoints(List<Bezier.Point3D> configCtrlPointsKeel) {
         this.ctrlPointsKeel = new ArrayList<>();
         // Re-calculate with center and offset
-        ctrlPointsKeel.forEach(cp -> this.ctrlPointsKeel.add(new Bezier.Point3D()
+        configCtrlPointsKeel.forEach(cp -> this.ctrlPointsKeel.add(new Bezier.Point3D()
                 .x((-centerOnXValue + xOffset) + cp.getX())
                 .y(cp.getY())
                 .z(cp.getZ())));

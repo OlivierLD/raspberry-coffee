@@ -3,9 +3,12 @@ package boatdesign.swingstuff;
 import gsg.SwingUtils.SwingUtils;
 
 import javax.swing.*;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.io.File;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  *         minX, maxX, minY, maxY, minZ, maxZ, defaultLHT
@@ -28,14 +31,18 @@ public class NewDataPanel extends JPanel {
     private JLabel descriptionLabel = new JLabel("Description");
     private JLabel commentsLabel = new JLabel("Comments");
 
-    JFormattedTextField minXValue = new JFormattedTextField(new DecimalFormat("#0.00"));
-    JFormattedTextField maxXValue = new JFormattedTextField(new DecimalFormat("#0.00"));
-    JFormattedTextField minYValue = new JFormattedTextField(new DecimalFormat("#0.00"));
-    JFormattedTextField maxYValue = new JFormattedTextField(new DecimalFormat("#0.00"));
-    JFormattedTextField minZValue = new JFormattedTextField(new DecimalFormat("#0.00"));
-    JFormattedTextField maxZValue = new JFormattedTextField(new DecimalFormat("#0.00"));
+//    NumberFormat format = NumberFormat.getInstance();
+//    NumberFormatter formatter = new NumberFormatter(format);
+//    formatter.setValueClass(Integer.class);
 
-    JFormattedTextField defaultLhtValue = new JFormattedTextField(new DecimalFormat("#0.00"));
+    JFormattedTextField minXValue; // = new JFormattedTextField(new DecimalFormat("#0.00"));
+    JFormattedTextField maxXValue; // = new JFormattedTextField(new DecimalFormat("#0.00"));
+    JFormattedTextField minYValue; // = new JFormattedTextField(new DecimalFormat("#0.00"));
+    JFormattedTextField maxYValue; // = new JFormattedTextField(new DecimalFormat("#0.00"));
+    JFormattedTextField minZValue; // = new JFormattedTextField(new DecimalFormat("#0.00"));
+    JFormattedTextField maxZValue; // = new JFormattedTextField(new DecimalFormat("#0.00"));
+
+    JFormattedTextField defaultLhtValue; // = new JFormattedTextField(new DecimalFormat("#0.00"));
 
     JTextField descriptionField = new JTextField();
     JTextPane commentsTextArea = new JTextPane();
@@ -53,6 +60,19 @@ public class NewDataPanel extends JPanel {
     }
 
     public void initComponents() {
+        NumberFormat format = NumberFormat.getInstance();
+        NumberFormatter formatter = new NumberFormatter(format);
+        formatter.setValueClass(Double.class);
+
+        this.minXValue = new JFormattedTextField(formatter); //new DecimalFormat("#0.00"));
+        this.maxXValue = new JFormattedTextField(formatter);
+        this.minYValue = new JFormattedTextField(formatter);
+        this.maxYValue = new JFormattedTextField(formatter);
+        this.minZValue = new JFormattedTextField(formatter);
+        this.maxZValue = new JFormattedTextField(formatter);
+
+        this.defaultLhtValue = new JFormattedTextField(formatter);
+
         minXValue.setPreferredSize(new Dimension(60, 20));
         minXValue.setHorizontalAlignment(SwingConstants.RIGHT);
         maxXValue.setPreferredSize(new Dimension(60, 20));

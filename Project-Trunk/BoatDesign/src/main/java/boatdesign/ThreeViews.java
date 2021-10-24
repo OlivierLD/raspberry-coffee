@@ -25,10 +25,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
@@ -97,7 +95,7 @@ public class ThreeViews {
     private WhiteBoardPanel whiteBoardXZ = null; // side
     private WhiteBoardPanel whiteBoardYZ = null; // facing
 
-    private VectorUtils.Vector3D centerOfHull = null;
+    private VectorUtils.Vector3D centerOfHull = null; // Centre de Carene.
 
     private Box3D box3D = null;
 
@@ -112,22 +110,87 @@ public class ThreeViews {
     private void fileNew_ActionPerformed(ActionEvent ae) {
         System.out.println("File New...");
         /*
-
         Need to get:
         minX, maxX, minY, maxY, minZ, maxZ, defaultLHT
         description, comments
-
          */
         NewDataPanel panel = new NewDataPanel();
+        // Default values?
+        panel.setValues(-350,
+                350,
+                -250,
+                250,
+                -60,
+                120,
+                650,
+                "Mini",
+                "Default values.");
+
         int resp = JOptionPane.showConfirmDialog(frame,
                 panel,
-                "New Boat Data",
+                "New Boat Data - All values in cm.",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
         if (resp == JOptionPane.OK_OPTION) {
             // Grab the data
             NewDataPanel.PanelData panelData = panel.getPanelData();
-            System.out.println("Wow!");
+            Map<String, Object> theMap = new HashMap<>();
+            theMap.put("description", panelData.getDescription());
+            String comments = panelData.getComments();
+            if (comments != null) {
+                String[] split = comments.split("\n");
+                theMap.put("comments", Arrays.asList(split));
+            }
+            // Reset
+            this.keelCtrlPoints.clear();
+            this.railCtrlPoints.clear();
+
+            double minX = panelData.getMinX() * 1e-02;
+            double maxX = panelData.getMaxX() * 1e-02;
+            double minY = panelData.getMinY() * 1e-02;
+            double maxY = panelData.getMaxY() * 1e-02;
+            double minZ = panelData.getMinZ() * 1e-02;
+            double maxZ = panelData.getMaxZ() * 1e-02;
+            // Reshape from [0, X], instead of [-X, X]
+            if (minX != 0) {
+                maxX -= minX;
+                minX -= minX;
+            }
+            double lht = panelData.getDefaultLHT() * 1e-02;
+            // TODO Check values above... min < max, etc.
+
+            // Create arbitrary points
+            this.keelCtrlPoints.add(new Bezier.Point3D()
+                    .x(0 * 1e2)
+                    .y(0 * 1e2)
+                    .z((minZ) * 1e2));
+            this.keelCtrlPoints.add(new Bezier.Point3D()
+                    .x(lht * 1e2)
+                    .y(0 * 1e2)
+                    .z((minZ * 0.75) * 1e2));
+            this.railCtrlPoints.add(new Bezier.Point3D()
+                    .x(0 * 1e2)
+                    .y((maxY * 0.75) * 1e2)
+                    .z((maxZ * 0.75) * 1e2));
+            this.railCtrlPoints.add(new Bezier.Point3D()
+                    .x(lht * 1e2)
+                    .y((maxY * 0.75) * 1e2)
+                    .z((maxZ * 0.75) * 1e2));
+
+            Map<String, Object> points = new HashMap<>();
+            points.put("keel", this.keelCtrlPoints);
+            points.put("rail", this.railCtrlPoints);
+            theMap.put("default-points", points);
+
+            Map<String, Object> dimensions = new HashMap<>();
+            dimensions.put("default-lht", lht);
+            dimensions.put("box-x", Arrays.asList(minX, maxX));
+            dimensions.put("box-y", Arrays.asList(minY, maxY));
+            dimensions.put("box-z", Arrays.asList(minZ, maxZ));
+            theMap.put("dimensions", dimensions);
+
+            initConfig = theMap;
+            this.reLoadConfig(false);
         }
     }
     private void fileOpen_ActionPerformed(ActionEvent ae) {
@@ -145,7 +208,7 @@ public class ThreeViews {
             try {
                 URL configResource = config.toURI().toURL();
                 initConfig = mapper.readValue(configResource.openStream(), Map.class);
-                this.reLoadConfig();
+                this.reLoadConfig(true);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -162,12 +225,9 @@ public class ThreeViews {
 
     private void fileSave_ActionPerformed(ActionEvent ae) {
         /*
-
         minX, maxX, minY, maxY, minZ, maxZ, defaultLHT
         description, comments
-
          */
-
         NewDataPanel panel = new NewDataPanel(true);
 
         panel.setValues(((BoatBox3D)this.box3D).getMinX(),
@@ -634,7 +694,7 @@ public class ThreeViews {
         this.frame.setVisible(true);
     }
 
-    private void initConfiguration() {
+    private void initConfiguration(boolean full) {
         if (initConfig != null) {
 
             Map<String, Object> dimensions = (Map)initConfig.get("dimensions");
@@ -653,20 +713,34 @@ public class ThreeViews {
             this.maxZ = boxZ.get(1) * 1e2;
 
             Map<String, List<Object>> defaultPoints = (Map)initConfig.get("default-points");
-            List<Map<String, Double>> railPoints = (List)defaultPoints.get("rail");
-    //            List<List<Double>> bowPoints = (List)defaultPoints.get("bow"); // Correlated, not needed here.
-            List<Map<String, Double>> keelPoints = (List)defaultPoints.get("keel");
-            // Rail
-            railPoints.forEach(pt -> {
-                this.railCtrlPoints.add(new Bezier.Point3D(pt.get("x"), pt.get("y"), pt.get("z")));
-            });
-            // Keel
-            keelPoints.forEach(pt -> {
-                this.keelCtrlPoints.add(new Bezier.Point3D(pt.get("x"), pt.get("y"), pt.get("z")));
-            });
 
+            if (full) {
+                List railPoints = (List) defaultPoints.get("rail");
+                //            List<List<Double>> bowPoints = (List)defaultPoints.get("bow"); // Correlated, not needed here.
+                List keelPoints = (List) defaultPoints.get("keel");
+                // Rail
+                synchronized (this.railCtrlPoints) {
+                    railPoints.forEach(pt -> {
+                        if (pt instanceof Map) {
+                            this.railCtrlPoints.add(new Bezier.Point3D(((Map<String, Double>) pt).get("x"), ((Map<String, Double>) pt).get("y"), ((Map<String, Double>) pt).get("z")));
+                        } else if (pt instanceof Bezier.Point3D) {
+                            this.railCtrlPoints.add((Bezier.Point3D) pt);
+                        }
+                    });
+                }
+                // Keel
+                synchronized (this.keelCtrlPoints) {
+                    keelPoints.forEach(pt -> {
+                        if (pt instanceof Map) {
+                            this.keelCtrlPoints.add(new Bezier.Point3D(((Map<String, Double>) pt).get("x"), ((Map<String, Double>) pt).get("y"), ((Map<String, Double>) pt).get("z")));
+                        } else if (pt instanceof Bezier.Point3D) {
+                            this.keelCtrlPoints.add((Bezier.Point3D) pt);
+                        }
+                    });
+                }
+            }
             this.description = (String)initConfig.get("description");
-            this.comments = (List)initConfig.get("comments");
+            this.comments = (List) initConfig.get("comments");
         } else {
             // TODO There is a problem when ctrlPoints is empty... Fix it.
             // Initialize [0, 10, 0], [550, 105, 0]
@@ -699,9 +773,9 @@ public class ThreeViews {
 
         whiteBoardXY.setWithGrid(true);
         whiteBoardXY.setBgColor(new Color(250, 250, 250, 255));
-        whiteBoardXY.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardXY.setGraphicTitle("Top"); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoardXY.setSize(new Dimension(800, 200));
-        whiteBoardXY.setPreferredSize(new Dimension(600, 200));
+        whiteBoardXY.setPreferredSize(new Dimension(600, 250));
         whiteBoardXY.setTextColor(Color.RED);
         whiteBoardXY.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
         whiteBoardXY.setGraphicMargins(30);
@@ -718,9 +792,9 @@ public class ThreeViews {
 
         whiteBoardXZ.setWithGrid(true);
         whiteBoardXZ.setBgColor(new Color(250, 250, 250, 255));
-        whiteBoardXZ.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardXZ.setGraphicTitle("Side"); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoardXZ.setSize(new Dimension(800, 200));
-        whiteBoardXZ.setPreferredSize(new Dimension(600, 200));
+        whiteBoardXZ.setPreferredSize(new Dimension(600, 250));
         whiteBoardXZ.setTextColor(Color.RED);
         whiteBoardXZ.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
         whiteBoardXZ.setGraphicMargins(30);
@@ -738,9 +812,9 @@ public class ThreeViews {
 
         whiteBoardYZ.setWithGrid(true);
         whiteBoardYZ.setBgColor(new Color(250, 250, 250, 255));
-        whiteBoardYZ.setGraphicTitle(null); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardYZ.setGraphicTitle("Face"); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoardYZ.setSize(new Dimension(400, 200));
-        whiteBoardYZ.setPreferredSize(new Dimension(400, 200));
+        whiteBoardYZ.setPreferredSize(new Dimension(400, 250));
         whiteBoardYZ.setTextColor(Color.RED);
         whiteBoardYZ.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
         whiteBoardYZ.setGraphicMargins(30);
@@ -778,10 +852,10 @@ public class ThreeViews {
                             AddCtrlPointPanel.CurveName curve = addPointPanel.getCurve();
                             Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardXY.getCanvasToSpaceXTransformer();
                             Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardXY.getCanvasToSpaceYTransformer();
-                            int height = whiteBoardXY.getHeight();
+                            // int height = whiteBoardXY.getHeight();
                             if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                                 double newX = canvasToSpaceXTransformer.apply(e.getX());
-                                double newY = canvasToSpaceYTransformer.apply(height - e.getY());
+                                double newY = canvasToSpaceYTransformer.apply(/*height -*/ e.getY());
 //                              System.out.printf("Point dragged to %f / %f\n", newX, newY);
                                 Bezier.Point3D point3D = new Bezier.Point3D().x(newX).y(newY);
                                 List<Bezier.Point3D> newList = new ArrayList<>();
@@ -826,10 +900,10 @@ public class ThreeViews {
                 if (closestPointIndex > -1) {
                     Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardXY.getCanvasToSpaceXTransformer();
                     Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardXY.getCanvasToSpaceYTransformer();
-                    int height = whiteBoardXY.getHeight();
+//                    int height = whiteBoardXY.getHeight();
                     if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                         double newX = canvasToSpaceXTransformer.apply(e.getX());
-                        double newY = canvasToSpaceYTransformer.apply(height - e.getY());
+                        double newY = canvasToSpaceYTransformer.apply(/*height -*/ e.getY());
 //                System.out.printf("Point dragged to %f / %f\n", newX, newY);
                         if (closestPointIndex < railCtrlPoints.size()) {
                             Bezier.Point3D point3D = railCtrlPoints.get(closestPointIndex);
@@ -893,10 +967,10 @@ public class ThreeViews {
                             AddCtrlPointPanel.CurveName curve = addPointPanel.getCurve();
                             Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardXZ.getCanvasToSpaceXTransformer();
                             Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardXZ.getCanvasToSpaceYTransformer();
-                            int height = whiteBoardXZ.getHeight();
+//                            int height = whiteBoardXZ.getHeight();
                             if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                                 double newX = canvasToSpaceXTransformer.apply(e.getX());
-                                double newY = canvasToSpaceYTransformer.apply(height - e.getY());
+                                double newY = canvasToSpaceYTransformer.apply(/*height -*/ e.getY());
 //                              System.out.printf("Point dragged to %f / %f\n", newX, newY);
                                 Bezier.Point3D point3D = new Bezier.Point3D().x(newX).z(newY);
                                 List<Bezier.Point3D> newList = new ArrayList<>();
@@ -941,10 +1015,10 @@ public class ThreeViews {
                 if (closestPointIndex > -1) {
                     Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardXZ.getCanvasToSpaceXTransformer();
                     Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardXZ.getCanvasToSpaceYTransformer();
-                    int height = whiteBoardXZ.getHeight();
+//                    int height = whiteBoardXZ.getHeight();
                     if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                         double newX = canvasToSpaceXTransformer.apply(e.getX());
-                        double newZ = canvasToSpaceYTransformer.apply(height - e.getY());
+                        double newZ = canvasToSpaceYTransformer.apply(/*height -*/ e.getY());
 //                System.out.printf("Point dragged to %f / %f\n", newX, newY);
                         if (closestPointIndex < railCtrlPoints.size()) {
                             Bezier.Point3D point3D = railCtrlPoints.get(closestPointIndex);
@@ -1009,10 +1083,10 @@ public class ThreeViews {
                             AddCtrlPointPanel.CurveName curve = addPointPanel.getCurve();
                             Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardYZ.getCanvasToSpaceXTransformer();
                             Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardYZ.getCanvasToSpaceYTransformer();
-                            int height = whiteBoardYZ.getHeight();
+//                            int height = whiteBoardYZ.getHeight();
                             if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                                 double newX = canvasToSpaceXTransformer.apply(e.getX());
-                                double newY = canvasToSpaceYTransformer.apply(height - e.getY());
+                                double newY = canvasToSpaceYTransformer.apply(/*height -*/ e.getY());
 //                              System.out.printf("Point dragged to %f / %f\n", newX, newY);
                                 Bezier.Point3D point3D = new Bezier.Point3D().y(newX).z(newY);
                                 List<Bezier.Point3D> newList = new ArrayList<>();
@@ -1057,10 +1131,10 @@ public class ThreeViews {
                 if (closestPointIndex > -1) {
                     Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardYZ.getCanvasToSpaceXTransformer();
                     Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardYZ.getCanvasToSpaceYTransformer();
-                    int height = whiteBoardYZ.getHeight();
+//                    int height = whiteBoardYZ.getHeight();
                     if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                         double newY = canvasToSpaceXTransformer.apply(e.getX());
-                        double newZ = canvasToSpaceYTransformer.apply(height - e.getY());
+                        double newZ = canvasToSpaceYTransformer.apply(/*height -*/ e.getY());
 //                System.out.printf("Point dragged to %f / %f\n", newX, newY);
                         if (closestPointIndex < railCtrlPoints.size()) {
                             Bezier.Point3D point3D = railCtrlPoints.get(closestPointIndex);
@@ -1522,20 +1596,45 @@ public class ThreeViews {
         this.whiteBoardXZ = new WhiteBoardPanel(); // side
         this.whiteBoardYZ = new WhiteBoardPanel(); // facing
 
-        this.initConfiguration();
+        this.initConfiguration(true);
         /*BoatBox3D*/ this.box3D = new BoatBox3D(minX, maxX, minY, maxY, minZ, maxZ, defaultLHT);
         threeDPanel = new ThreeDPanelWithWidgets(box3D);
         this.initComponents();
     }
 
-    private void reLoadConfig() {
-        railCtrlPoints.clear();
-        keelCtrlPoints.clear();
+    private void reLoadConfig(boolean full) {
+        if (full) {
+            this.railCtrlPoints.clear();
+            this.keelCtrlPoints.clear();
+        }
 
-        this.initConfiguration();
-
+        try {
+            this.initConfiguration(full);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         // Refresh also the offsets and Co, default-lht etc.
-        ((BoatBox3D)this.box3D).refreshValues(minX, maxX, minY, maxY, minZ, maxZ, defaultLHT);
+        ((BoatBox3D)this.box3D).refreshValues(this.minX, this.maxX, this.minY, this.maxY, this.minZ, this.maxZ, this.defaultLHT);
+        // Refresh the text fields
+        this.threeDPanel.setMinXValue();
+        this.threeDPanel.setMaxXValue();
+        this.threeDPanel.setMinYValue();
+        this.threeDPanel.setMaxYValue();
+        this.threeDPanel.setMinZValue();
+        this.threeDPanel.setMaxZValue();
+
+        // Refresh WhiteBoards dimensions
+        // From above
+        this.whiteBoardXY.setForcedMinY(0d);
+        this.whiteBoardXY.setForcedMaxY(this.maxY / 2);
+
+        // Facing
+        this.whiteBoardYZ.setForcedMinY(this.minZ);
+        this.whiteBoardYZ.setForcedMaxY(this.maxZ);
+
+        // Side view
+        this.whiteBoardXZ.setForcedMinY(this.minZ);
+        this.whiteBoardXZ.setForcedMaxY(this.maxZ);
 
         this.refreshData();
     }
@@ -1573,7 +1672,7 @@ public class ThreeViews {
         return closePoint;
     }
 
-    // Find the position (in 2D space) of the mouse pointer.
+    // Find the position (in the 2D space) of the mouse pointer on the white board.
     private VectorUtils.Vector2D getWhiteBoardMousePos(MouseEvent me, WhiteBoardPanel wbp) {
 
         VectorUtils.Vector2D where = null;
