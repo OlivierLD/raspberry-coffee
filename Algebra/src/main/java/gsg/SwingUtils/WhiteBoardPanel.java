@@ -397,7 +397,11 @@ public class WhiteBoardPanel extends JPanel {
 
         // canvasToSpace
         Function<Integer, Double> canvasToSpaceX = canvasX -> ((canvasX - margins) / (xEqualsY ? oneUnit : oneUnitX)) + graphicRange.getMinX();
-        Function<Integer, Double> canvasToSpaceY = canvasY -> ((canvasY - margins) / (xEqualsY ? oneUnit : oneUnitY)) + minDblY;
+        Function<Integer, Double> canvasToSpaceY = canvasY -> ((this.getSize().height - margins - canvasY) / (xEqualsY ? oneUnit : oneUnitY)) + minDblY;
+//        Function<Integer, Double> canvasToSpaceY = canvasY -> {
+//            System.out.println(String.format("Margin:%d, MinY:%.02f", margins, minDblY));
+//            return ((this.getSize().height - margins - canvasY) / (xEqualsY ? oneUnit : oneUnitY)) + minDblY;
+//        }; // + graphicRange.getMinY();
 
         // For external access
         getCanvasXCoord = findCanvasXCoord;

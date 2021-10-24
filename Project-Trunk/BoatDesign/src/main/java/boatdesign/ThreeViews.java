@@ -17,7 +17,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedWriter;
@@ -861,7 +860,9 @@ public class ThreeViews {
                     whiteBoardXY.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     closestPointIndex = -1;
                 }
-
+                VectorUtils.Vector2D whiteBoardMousePos = getWhiteBoardMousePos(e, whiteBoardXY); //, Orientation.XZ);
+                whiteBoardXY.setToolTipText(String.format("<html>X: %.02f<br>Y: %.02f</html>",
+                        whiteBoardMousePos.getX(), whiteBoardMousePos.getY()));
             }
         });
 
@@ -975,7 +976,9 @@ public class ThreeViews {
                     whiteBoardXZ.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     closestPointIndex = -1;
                 }
-
+                VectorUtils.Vector2D whiteBoardMousePos = getWhiteBoardMousePos(e, whiteBoardXZ); //, Orientation.XZ);
+                whiteBoardXZ.setToolTipText(String.format("<html>X: %.02f<br>Z: %.02f</html>",
+                        whiteBoardMousePos.getX(), whiteBoardMousePos.getY()));
             }
         });
 
@@ -1089,7 +1092,9 @@ public class ThreeViews {
                     whiteBoardYZ.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     closestPointIndex = -1;
                 }
-
+                VectorUtils.Vector2D whiteBoardMousePos = getWhiteBoardMousePos(e, whiteBoardYZ); //, Orientation.XZ);
+                whiteBoardYZ.setToolTipText(String.format("<html>Y: %.02f<br>Z: %.02f</html>",
+                        whiteBoardMousePos.getX(), whiteBoardMousePos.getY()));
             }
         });
 
@@ -1566,6 +1571,24 @@ public class ThreeViews {
             }
         }
         return closePoint;
+    }
+
+    // Find the position (in 2D space) of the mouse pointer.
+    private VectorUtils.Vector2D getWhiteBoardMousePos(MouseEvent me, WhiteBoardPanel wbp) {
+
+        VectorUtils.Vector2D where = null;
+        Function<Integer, Double> canvasToSpaceXTransformer = wbp.getCanvasToSpaceXTransformer();
+        Function<Integer, Double> canvasToSpaceYTransformer = wbp.getCanvasToSpaceYTransformer();
+//        int height = wbp.getHeight();
+        if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
+            double x = canvasToSpaceXTransformer.apply(me.getX());
+            double y = canvasToSpaceYTransformer.apply(me.getY()); // + wbp.getForcedMinY();
+//            System.out.println(String.format("Mouse: X:%d, Y:%d - height: %d, fMinY: %.02f, fMaxY:%.02f, X:%.02f, Y:%.02f",
+//                    me.getX(), me.getY(),
+//                    height, wbp.getForcedMinY(), wbp.getForcedMaxY(), x, y));
+            where = new VectorUtils.Vector2D().x(x).y(y);
+        }
+        return where;
     }
 
     // Find the control point close to the mouse pointer.
