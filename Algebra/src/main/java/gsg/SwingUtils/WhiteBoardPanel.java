@@ -27,6 +27,7 @@ import static gsg.VectorUtils.Vector2D;
 public class WhiteBoardPanel extends JPanel {
 
     private final static boolean VERBOSE = "true".equals(System.getProperty("swing.verbose"));
+    private final static boolean TINY_AXIS_LABEL = false;
 
     private List<DataSerie> dataSeries = new ArrayList<>();
     private List<TextSerie> textSeries = new ArrayList<>();
@@ -222,6 +223,13 @@ public class WhiteBoardPanel extends JPanel {
     private Integer forceTickIncrementX = null;
     private Integer forceTickIncrementY = null;
 
+    private String xAxisLabel = null;
+    private String yAxisLabel = null;
+
+    private Color axisLabelColor = Color.RED;
+    private Color axisLabelBGColor = new Color(233, 212, 96, 160);
+    private Color axisLabelCircleColor = Color.BLACK;
+
     public void setForceTickIncrement(Integer inc) {
         this.forceTickIncrement = inc;
     }
@@ -258,6 +266,25 @@ public class WhiteBoardPanel extends JPanel {
 
     public void setTitleFont(Font titleFont) {
         this.titleFont = titleFont;
+    }
+
+    public void setXAxisLabel(String label) {
+        this.xAxisLabel = label;
+    }
+    public void setYAxisLabel(String label) {
+        this.yAxisLabel = label;
+    }
+
+    public void setAxisLabelColor(Color axisLabelColor) {
+        this.axisLabelColor = axisLabelColor;
+    }
+
+    public void setAxisLabelBGColor(Color axisLabelBGColor) {
+        this.axisLabelBGColor = axisLabelBGColor;
+    }
+
+    public void setAxisLabelCircleColor(Color axisLabelCircleColor) {
+        this.axisLabelCircleColor = axisLabelCircleColor;
     }
 
     public void setWithGrid(boolean withGrid) {
@@ -547,6 +574,95 @@ public class WhiteBoardPanel extends JPanel {
             yTick += (xEqualsY ?
                     (forceTickIncrement != null ? forceTickIncrement : tickIncrement) :
                     (forceTickIncrementY != null ? forceTickIncrementY : tickIncrementY));
+        }
+
+        // X and Y axis labels
+        if (this.xAxisLabel != null) {
+            Font savedFont = g2d.getFont();
+            Color savedColor = g2d.getColor();
+
+            g2d.setFont(g2d.getFont().deriveFont(Font.BOLD, 14));
+            int strWidth = g2d.getFontMetrics().stringWidth(this.xAxisLabel);
+            int strHeight = g2d.getFont().getSize();
+            int xCenter = width; // - (strWidth + 2);
+            int yCenter = height - (int)Math.round(y0); // + (strHeight / 2);
+//            System.out.println(String.format("String %s at %d, %d", this.xAxisLabel, xCenter, yCenter));
+            double bgCoeff = 1.5;
+            g2d.setColor(this.axisLabelBGColor);
+            int maxDim = Math.max(strWidth, strHeight);
+            if (TINY_AXIS_LABEL) {
+                g2d.fillOval(xCenter - (int)Math.round(((strWidth * bgCoeff) + 0)),
+                        yCenter - (int)Math.round((strHeight / 2) * bgCoeff),
+                        (int)Math.round(strWidth * bgCoeff),
+                        (int)Math.round(strHeight * bgCoeff));
+            } else {
+                g2d.fillOval(xCenter - (int) Math.round(((maxDim * bgCoeff) + 0)),
+                        yCenter - (int) Math.round((maxDim / 2) * bgCoeff),
+                        (int) Math.round(maxDim * bgCoeff),
+                        (int) Math.round(maxDim * bgCoeff));
+            }
+            g2d.setColor(this.axisLabelCircleColor);
+            if (TINY_AXIS_LABEL) {
+                g2d.drawOval(xCenter - (int) Math.round(((strWidth * bgCoeff) + 0)),
+                        yCenter - (int) Math.round((strHeight / 2) * bgCoeff),
+                        (int) Math.round(strWidth * bgCoeff),
+                        (int) Math.round(strHeight * bgCoeff));
+            } else {
+                g2d.drawOval(xCenter - (int) Math.round(((maxDim * bgCoeff) + 0)),
+                        yCenter - (int) Math.round((maxDim / 2) * bgCoeff),
+                        (int) Math.round(maxDim * bgCoeff),
+                        (int) Math.round(maxDim * bgCoeff));
+            }
+            g2d.setColor(this.axisLabelColor);
+            if (TINY_AXIS_LABEL) {
+                g2d.drawString(this.xAxisLabel, xCenter - (strWidth + 2), yCenter + (strHeight / 2) - 3); // TODO Why -3?
+            } else {
+                g2d.drawString(this.xAxisLabel, xCenter - (maxDim + 2), yCenter + (maxDim / 2) - 3); // TODO Why -3?
+            }
+            // Reset colors and fonts
+            g2d.setColor(savedColor);
+            g2d.setFont(savedFont);
+        }
+        if (this.yAxisLabel != null) {
+            Font savedFont = g2d.getFont();
+            Color savedColor = g2d.getColor();
+
+            g2d.setFont(g2d.getFont().deriveFont(Font.BOLD, 14));
+            int strWidth = g2d.getFontMetrics().stringWidth(this.yAxisLabel);
+            int strHeight = g2d.getFont().getSize();
+            int xCenter = (int)Math.round(x0); // - (strWidth / 2);
+            int yCenter = 0 + (strHeight + 2);
+//            System.out.println(String.format("String %s at %d, %d", this.yAxisLabel, xCenter, yCenter));
+            double bgCoeff = 1.5;
+            g2d.setColor(this.axisLabelBGColor);
+            int maxDim = Math.max(strWidth, strHeight);
+            if (TINY_AXIS_LABEL) {
+                g2d.fillOval(xCenter - (int) Math.round((((strWidth / 2) * bgCoeff) + 0)),
+                        yCenter - (int) Math.round((strHeight / 2) * bgCoeff),
+                        (int) Math.round(strWidth * bgCoeff),
+                        (int) Math.round(strHeight * bgCoeff));
+            } else {
+                g2d.fillOval(xCenter - (int) Math.round((((maxDim / 2) * bgCoeff) + 0)),
+                        yCenter - (int) Math.round((maxDim / 2) * bgCoeff),
+                        (int) Math.round(maxDim * bgCoeff),
+                        (int) Math.round(maxDim * bgCoeff));
+            }
+            g2d.setColor(this.axisLabelCircleColor);
+            if (TINY_AXIS_LABEL) {
+                g2d.drawOval(xCenter - (int) Math.round((((strWidth / 2) * bgCoeff) + 0)),
+                        yCenter - (int) Math.round((strHeight / 2) * bgCoeff),
+                        (int) Math.round(strWidth * bgCoeff),
+                        (int) Math.round(strHeight * bgCoeff));
+            } else {
+                g2d.drawOval(xCenter - (int) Math.round((((maxDim / 2) * bgCoeff) + 0)),
+                        yCenter - (int) Math.round((maxDim / 2) * bgCoeff),
+                        (int) Math.round(maxDim * bgCoeff),
+                        (int) Math.round(maxDim * bgCoeff));
+            }
+            g2d.setColor(this.axisLabelColor);
+            g2d.drawString(this.yAxisLabel, xCenter - (strWidth / 2), yCenter + (strHeight / 2) - 3); // No TINY_AXIS_LABEL option required here.
+            g2d.setColor(savedColor);
+            g2d.setFont(savedFont);
         }
 
         // For the text

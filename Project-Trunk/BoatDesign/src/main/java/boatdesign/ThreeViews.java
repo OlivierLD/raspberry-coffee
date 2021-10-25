@@ -25,8 +25,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
@@ -34,14 +34,14 @@ import java.util.stream.Collectors;
 
 /**
  * Using default WhiteBoard Writer
- *
+ * <p>
  * 2D Bezier example. (<- So so...)
  * With draggable control points (hence the MouseListener, MouseMotionListener).
- *
+ * <p>
  * 2 Bézier curves:
  * - One for the rail
  * - One for the keel
- *
+ * <p>
  * Bow is correlated, transom too. See in {@link BoatBox3D}
  */
 public class ThreeViews {
@@ -170,7 +170,7 @@ public class ThreeViews {
                     .z((minZ * 0.75) * 1e2));
             this.railCtrlPoints.add(new Bezier.Point3D()
                     .x(0 * 1e2)
-                    .y((maxY * 0.75) * 1e2)
+                    .y(0 /*(maxY * 0.75)*/ * 1e2)
                     .z((maxZ * 0.75) * 1e2));
             this.railCtrlPoints.add(new Bezier.Point3D()
                     .x(lht * 1e2)
@@ -193,10 +193,11 @@ public class ThreeViews {
             this.reLoadConfig(false);
         }
     }
+
     private void fileOpen_ActionPerformed(ActionEvent ae) {
         String fName = SwingUtils.chooseFile(null,
                 JFileChooser.FILES_ONLY,
-                new String[] { "json" },
+                new String[]{"json"},
                 "Data Files",
                 ".",
                 "Select",
@@ -221,6 +222,10 @@ public class ThreeViews {
     //fileEdit_ActionPerformed
     private void fileEdit_ActionPerformed(ActionEvent ae) {
         System.out.println("File Edit...");
+        JOptionPane.showMessageDialog(frame,
+                "File edit soon",
+                "File Edit",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void fileSave_ActionPerformed(ActionEvent ae) {
@@ -230,13 +235,13 @@ public class ThreeViews {
          */
         NewDataPanel panel = new NewDataPanel(true);
 
-        panel.setValues(((BoatBox3D)this.box3D).getMinX(),
-                ((BoatBox3D)this.box3D).getMaxX(),
-                ((BoatBox3D)this.box3D).getMinY(),
-                ((BoatBox3D)this.box3D).getMaxY(),
-                ((BoatBox3D)this.box3D).getMinZ(),
-                ((BoatBox3D)this.box3D).getMaxZ(),
-                ((BoatBox3D)this.box3D).getDefaultLHT(),
+        panel.setValues(((BoatBox3D) this.box3D).getMinX(),
+                ((BoatBox3D) this.box3D).getMaxX(),
+                ((BoatBox3D) this.box3D).getMinY(),
+                ((BoatBox3D) this.box3D).getMaxY(),
+                ((BoatBox3D) this.box3D).getMinZ(),
+                ((BoatBox3D) this.box3D).getMaxZ(),
+                ((BoatBox3D) this.box3D).getDefaultLHT(),
                 this.description,
                 this.comments == null ? null : this.comments.stream().collect(Collectors.joining("\n")));
 
@@ -269,9 +274,9 @@ public class ThreeViews {
                 maxX -= minX;
                 minX -= minX;
             }
-            dimensions.put("box-x", new double[] { minX, maxX });
-            dimensions.put("box-y", new double[] { panelData.getMinY() * 1e-02, panelData.getMaxY() * 1e-02 });
-            dimensions.put("box-z", new double[] { panelData.getMinZ() * 1e-02, panelData.getMaxZ() * 1e-02 });
+            dimensions.put("box-x", new double[]{minX, maxX});
+            dimensions.put("box-y", new double[]{panelData.getMinY() * 1e-02, panelData.getMaxY() * 1e-02});
+            dimensions.put("box-z", new double[]{panelData.getMinZ() * 1e-02, panelData.getMaxZ() * 1e-02});
             theMap.put("dimensions", dimensions);
 
             try {
@@ -308,14 +313,17 @@ public class ThreeViews {
             System.out.println(String.format("%s", pt));
         });
     }
+
     private void fileExit_ActionPerformed(ActionEvent ae) {
 //        System.out.printf("Exit requested %s, bye now.\n", ae);
         System.exit(0);
     }
+
     private void helpAbout_ActionPerformed(ActionEvent ae) {
         System.out.printf("Help requested %s\n", ae);
         JOptionPane.showMessageDialog(frame, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
     }
+
     private void refreshBoatShape() {
         AtomicBoolean keepLooping = new AtomicBoolean(true);
         Thread repainter = new Thread(() -> {
@@ -344,8 +352,8 @@ public class ThreeViews {
             ((BoatBox3D) this.box3D).refreshData(false, map -> {
                 boatDataTextArea.setText(map.toString());
                 // CC position
-                Double xCC = (Double)map.get("cc-x");
-                Double zCC = (Double)map.get("cc-z");
+                Double xCC = (Double) map.get("cc-x");
+                Double zCC = (Double) map.get("cc-z");
                 if (xCC != null && zCC != null) {
                     // Display on 2D whiteboards
                     centerOfHull = new VectorUtils.Vector3D()
@@ -354,9 +362,9 @@ public class ThreeViews {
                             .z(zCC * 1e2);
                 }
                 // Displacement for the area curve
-                Map<Double, Double> displacementMap = (Map)map.get("displacement-x-map");
-                double lwlStart = (double)map.get("lwl-start");
-                double lwlEnd = (double)map.get("lwl-end");
+                Map<Double, Double> displacementMap = (Map) map.get("displacement-x-map");
+                double lwlStart = (double) map.get("lwl-start");
+                double lwlEnd = (double) map.get("lwl-end");
                 // TODO: send to XY
                 System.out.println("Will send to Area Curve");
                 if (true) {
@@ -440,7 +448,7 @@ public class ThreeViews {
     }
 
     private Map<String, Object> generateBezierJson() {
-        return  Map.of("rail", railCtrlPoints, "keel", keelCtrlPoints);
+        return Map.of("rail", railCtrlPoints, "keel", keelCtrlPoints);
     }
 
     private void refreshData() {
@@ -448,8 +456,8 @@ public class ThreeViews {
         if (railCtrlPoints.size() > 0 && keelCtrlPoints.size() > 0) {
 
             // Tell the 3D box
-            ((BoatBox3D)this.box3D).setRailCtrlPoints(railCtrlPoints); // The rail.
-            ((BoatBox3D)this.box3D).setKeelCtrlPoints(keelCtrlPoints); // The keel.
+            ((BoatBox3D) this.box3D).setRailCtrlPoints(railCtrlPoints); // The rail.
+            ((BoatBox3D) this.box3D).setKeelCtrlPoints(keelCtrlPoints); // The keel.
 
             // Display in textArea
             try {
@@ -697,11 +705,11 @@ public class ThreeViews {
     private void initConfiguration(boolean full) {
         if (initConfig != null) {
 
-            Map<String, Object> dimensions = (Map)initConfig.get("dimensions");
-            double defaultLht = (double)dimensions.get("default-lht");
-            List<Double> boxX = (List)dimensions.get("box-x");
-            List<Double> boxY = (List)dimensions.get("box-y");
-            List<Double> boxZ = (List)dimensions.get("box-z");
+            Map<String, Object> dimensions = (Map) initConfig.get("dimensions");
+            double defaultLht = (double) dimensions.get("default-lht");
+            List<Double> boxX = (List) dimensions.get("box-x");
+            List<Double> boxY = (List) dimensions.get("box-y");
+            List<Double> boxZ = (List) dimensions.get("box-z");
 
             // Values in cm
             this.defaultLHT = defaultLht * 1e2;
@@ -712,7 +720,7 @@ public class ThreeViews {
             this.minZ = boxZ.get(0) * 1e2;
             this.maxZ = boxZ.get(1) * 1e2;
 
-            Map<String, List<Object>> defaultPoints = (Map)initConfig.get("default-points");
+            Map<String, List<Object>> defaultPoints = (Map) initConfig.get("default-points");
 
             if (full) {
                 List railPoints = (List) defaultPoints.get("rail");
@@ -739,7 +747,7 @@ public class ThreeViews {
                     });
                 }
             }
-            this.description = (String)initConfig.get("description");
+            this.description = (String) initConfig.get("description");
             this.comments = (List) initConfig.get("comments");
         } else {
             // TODO There is a problem when ctrlPoints is empty... Fix it.
@@ -754,8 +762,8 @@ public class ThreeViews {
 
     private void refreshBox3D() {
         // Tell the 3D box
-        ((BoatBox3D)this.box3D).setRailCtrlPoints(railCtrlPoints); // The rail.
-        ((BoatBox3D)this.box3D).setKeelCtrlPoints(keelCtrlPoints); // The keel.
+        ((BoatBox3D) this.box3D).setRailCtrlPoints(railCtrlPoints); // The rail.
+        ((BoatBox3D) this.box3D).setKeelCtrlPoints(keelCtrlPoints); // The keel.
     }
 
     private void initComponents() {
@@ -773,13 +781,17 @@ public class ThreeViews {
 
         whiteBoardXY.setWithGrid(true);
         whiteBoardXY.setBgColor(new Color(250, 250, 250, 255));
-        whiteBoardXY.setGraphicTitle("Top"); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardXY.setGraphicTitle("XY - Top"); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoardXY.setSize(new Dimension(800, 200));
         whiteBoardXY.setPreferredSize(new Dimension(600, 250));
         whiteBoardXY.setTextColor(Color.RED);
-        whiteBoardXY.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
+        whiteBoardXY.setTitleFont(whiteBoardXY.getFont().deriveFont(Font.BOLD | Font.ITALIC, 16));
         whiteBoardXY.setGraphicMargins(30);
         whiteBoardXY.setXEqualsY(true); // false);
+        whiteBoardXY.setXAxisLabel("X");
+        whiteBoardXY.setYAxisLabel("Y");
+        whiteBoardXY.setAxisLabelCircleColor(Color.CYAN);
+        whiteBoardXY.setAxisLabelColor(Color.BLUE);
         // Enforce Y amplitude
         whiteBoardXY.setForcedMinY(0d);
         whiteBoardXY.setForcedMaxY(150d);
@@ -792,13 +804,17 @@ public class ThreeViews {
 
         whiteBoardXZ.setWithGrid(true);
         whiteBoardXZ.setBgColor(new Color(250, 250, 250, 255));
-        whiteBoardXZ.setGraphicTitle("Side"); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardXZ.setGraphicTitle("XZ - Side"); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoardXZ.setSize(new Dimension(800, 200));
         whiteBoardXZ.setPreferredSize(new Dimension(600, 250));
         whiteBoardXZ.setTextColor(Color.RED);
-        whiteBoardXZ.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
+        whiteBoardXZ.setTitleFont(whiteBoardXZ.getFont().deriveFont(Font.BOLD | Font.ITALIC, 16));
         whiteBoardXZ.setGraphicMargins(30);
         whiteBoardXZ.setXEqualsY(true); // false);
+        whiteBoardXZ.setXAxisLabel("X");
+        whiteBoardXZ.setYAxisLabel("Z");
+        whiteBoardXZ.setAxisLabelCircleColor(Color.CYAN);
+        whiteBoardXZ.setAxisLabelColor(Color.BLUE);
         // Enforce Y amplitude
         whiteBoardXZ.setForcedMinY(-50d);
         whiteBoardXZ.setForcedMaxY(100d);
@@ -812,13 +828,17 @@ public class ThreeViews {
 
         whiteBoardYZ.setWithGrid(true);
         whiteBoardYZ.setBgColor(new Color(250, 250, 250, 255));
-        whiteBoardYZ.setGraphicTitle("Face"); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardYZ.setGraphicTitle("YZ - Face"); // "X not equals Y, Y ampl enforced [0, 100]");
         whiteBoardYZ.setSize(new Dimension(400, 200));
         whiteBoardYZ.setPreferredSize(new Dimension(400, 250));
         whiteBoardYZ.setTextColor(Color.RED);
-        whiteBoardYZ.setTitleFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
+        whiteBoardYZ.setTitleFont(whiteBoardYZ.getFont().deriveFont(Font.BOLD | Font.ITALIC, 16));
         whiteBoardYZ.setGraphicMargins(30);
         whiteBoardYZ.setXEqualsY(true); // false);
+        whiteBoardYZ.setXAxisLabel("Y");
+        whiteBoardYZ.setYAxisLabel("Z");
+        whiteBoardYZ.setAxisLabelCircleColor(Color.CYAN);
+        whiteBoardYZ.setAxisLabelColor(Color.BLUE);
         // Enforce Y amplitude
         whiteBoardYZ.setForcedMinY(-50d);
         whiteBoardYZ.setForcedMaxY(100d);
@@ -859,12 +879,12 @@ public class ThreeViews {
 //                              System.out.printf("Point dragged to %f / %f\n", newX, newY);
                                 Bezier.Point3D point3D = new Bezier.Point3D().x(newX).y(newY);
                                 List<Bezier.Point3D> newList = new ArrayList<>();
-                                List<Bezier.Point3D> origList = curve == AddCtrlPointPanel.CurveName.RAIL ? railCtrlPoints: keelCtrlPoints;
-                                for (int i=0; i<newIndex; i++) {
+                                List<Bezier.Point3D> origList = curve == AddCtrlPointPanel.CurveName.RAIL ? railCtrlPoints : keelCtrlPoints;
+                                for (int i = 0; i < newIndex; i++) {
                                     newList.add(origList.get(i));
                                 }
                                 newList.add(point3D);
-                                for (int i = newIndex; i< origList.size(); i++) {
+                                for (int i = newIndex; i < origList.size(); i++) {
                                     newList.add(origList.get(i));
                                 }
                                 if (curve == AddCtrlPointPanel.CurveName.RAIL) {
@@ -974,12 +994,12 @@ public class ThreeViews {
 //                              System.out.printf("Point dragged to %f / %f\n", newX, newY);
                                 Bezier.Point3D point3D = new Bezier.Point3D().x(newX).z(newY);
                                 List<Bezier.Point3D> newList = new ArrayList<>();
-                                List<Bezier.Point3D> origList = curve == AddCtrlPointPanel.CurveName.RAIL ? railCtrlPoints: keelCtrlPoints;
-                                for (int i=0; i<newIndex; i++) {
+                                List<Bezier.Point3D> origList = curve == AddCtrlPointPanel.CurveName.RAIL ? railCtrlPoints : keelCtrlPoints;
+                                for (int i = 0; i < newIndex; i++) {
                                     newList.add(origList.get(i));
                                 }
                                 newList.add(point3D);
-                                for (int i = newIndex; i< origList.size(); i++) {
+                                for (int i = newIndex; i < origList.size(); i++) {
                                     newList.add(origList.get(i));
                                 }
                                 if (curve == AddCtrlPointPanel.CurveName.RAIL) {
@@ -1178,7 +1198,7 @@ public class ThreeViews {
         Dimension frameSize = frame.getSize();
 //        System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
         frameSize.height = Math.min(frameSize.height, screenSize.height);
-        frameSize.width  = Math.min(frameSize.width, screenSize.width);
+        frameSize.width = Math.min(frameSize.width, screenSize.width);
         if (frameSize.width == 0 || frameSize.height == 0) {
             frameSize = new Dimension(WIDTH, HEIGHT + 50 + 10); // 50: ... menu, title bar, etc. 10: button
             frame.setSize(frameSize);
@@ -1281,24 +1301,27 @@ public class ThreeViews {
 
         JPanel frameStepPanel = new JPanel();
         JFormattedTextField frameStepValue = new JFormattedTextField(new DecimalFormat("#0.0"));
-        frameStepValue.setValue(((BoatBox3D)this.box3D).getFrameIncrement());
+        frameStepValue.setValue(((BoatBox3D) this.box3D).getFrameIncrement());
         frameStepValue.setPreferredSize(new Dimension(60, 20));
         frameStepValue.setHorizontalAlignment(SwingConstants.RIGHT);
         frameStepValue.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 checkValue();
             }
+
             public void removeUpdate(DocumentEvent e) {
                 checkValue();
             }
+
             public void insertUpdate(DocumentEvent e) {
                 checkValue();
             }
+
             public void checkValue() {
                 if (!frameStepValue.getText().trim().isEmpty()) {
                     try {
                         double val = Double.parseDouble(frameStepValue.getText());
-                        ((BoatBox3D)box3D).setFrameIncrement(val);
+                        ((BoatBox3D) box3D).setFrameIncrement(val);
                         box3D.repaint();
                     } catch (NumberFormatException nfe) {
                         System.err.println(nfe.toString());
@@ -1311,24 +1334,27 @@ public class ThreeViews {
 
         JPanel wlStepPanel = new JPanel();
         JFormattedTextField wlStepValue = new JFormattedTextField(new DecimalFormat("#0.00"));
-        wlStepValue.setValue(((BoatBox3D)this.box3D).getWlIncrement());
+        wlStepValue.setValue(((BoatBox3D) this.box3D).getWlIncrement());
         wlStepValue.setPreferredSize(new Dimension(60, 20));
         wlStepValue.setHorizontalAlignment(SwingConstants.RIGHT);
         wlStepValue.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 checkValue();
             }
+
             public void removeUpdate(DocumentEvent e) {
                 checkValue();
             }
+
             public void insertUpdate(DocumentEvent e) {
                 checkValue();
             }
+
             public void checkValue() {
                 if (!wlStepValue.getText().trim().isEmpty()) {
                     try {
                         double val = Double.parseDouble(wlStepValue.getText());
-                        ((BoatBox3D)box3D).setWlIncrement(val);
+                        ((BoatBox3D) box3D).setWlIncrement(val);
                         box3D.repaint();
                     } catch (NumberFormatException nfe) {
                         System.err.println(nfe.toString());
@@ -1341,24 +1367,27 @@ public class ThreeViews {
 
         JPanel buttockStepPanel = new JPanel();
         JFormattedTextField buttockStepValue = new JFormattedTextField(new DecimalFormat("#0.0"));
-        buttockStepValue.setValue(((BoatBox3D)this.box3D).getButtockIncrement());
+        buttockStepValue.setValue(((BoatBox3D) this.box3D).getButtockIncrement());
         buttockStepValue.setPreferredSize(new Dimension(60, 20));
         buttockStepValue.setHorizontalAlignment(SwingConstants.RIGHT);
         buttockStepValue.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 checkValue();
             }
+
             public void removeUpdate(DocumentEvent e) {
                 checkValue();
             }
+
             public void insertUpdate(DocumentEvent e) {
                 checkValue();
             }
+
             public void checkValue() {
                 if (!buttockStepValue.getText().trim().isEmpty()) {
                     try {
                         double val = Double.parseDouble(buttockStepValue.getText());
-                        ((BoatBox3D)box3D).setButtockIncrement(val);
+                        ((BoatBox3D) box3D).setButtockIncrement(val);
                         box3D.repaint();
                     } catch (NumberFormatException nfe) {
                         System.err.println(nfe.toString());
@@ -1369,51 +1398,51 @@ public class ThreeViews {
         buttockStepPanel.add(new JLabel("Step:"));
         buttockStepPanel.add(buttockStepValue);
 
-        boolean justBoatSelected = ((BoatBox3D)this.box3D).isJustTheBoat();
-        justBoatCheckBox.setSelected(((BoatBox3D)this.box3D).isJustTheBoat());
+        boolean justBoatSelected = ((BoatBox3D) this.box3D).isJustTheBoat();
+        justBoatCheckBox.setSelected(((BoatBox3D) this.box3D).isJustTheBoat());
         justBoatCheckBox.addActionListener(evt -> {
-            boolean selected = ((JCheckBox)evt.getSource()).isSelected();
+            boolean selected = ((JCheckBox) evt.getSource()).isSelected();
 //            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
-            ((BoatBox3D)this.box3D).setJustTheBoat(selected);
+            ((BoatBox3D) this.box3D).setJustTheBoat(selected);
             this.box3D.repaint();
             ctrlPointsCheckBox.setEnabled(!selected);
         });
         ctrlPointsCheckBox.setEnabled(!justBoatSelected);
 
-        symmetricCheckBox.setSelected(((BoatBox3D)this.box3D).isSymmetrical());
+        symmetricCheckBox.setSelected(((BoatBox3D) this.box3D).isSymmetrical());
         symmetricCheckBox.addActionListener(evt -> {
-            boolean selected = ((JCheckBox)evt.getSource()).isSelected();
+            boolean selected = ((JCheckBox) evt.getSource()).isSelected();
 //            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
-            ((BoatBox3D)this.box3D).setSymmetrical(selected);
+            ((BoatBox3D) this.box3D).setSymmetrical(selected);
             this.box3D.repaint();
         });
 
-        framesCheckBox.setSelected(((BoatBox3D)this.box3D).isFrames());
+        framesCheckBox.setSelected(((BoatBox3D) this.box3D).isFrames());
         framesCheckBox.addActionListener(evt -> {
-            boolean selected = ((JCheckBox)evt.getSource()).isSelected();
+            boolean selected = ((JCheckBox) evt.getSource()).isSelected();
 //            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
-            ((BoatBox3D)this.box3D).setFrames(selected);
+            ((BoatBox3D) this.box3D).setFrames(selected);
             this.box3D.repaint();
         });
-        waterlinesCheckBox.setSelected(((BoatBox3D)this.box3D).isWaterlines());
+        waterlinesCheckBox.setSelected(((BoatBox3D) this.box3D).isWaterlines());
         waterlinesCheckBox.addActionListener(evt -> {
-            boolean selected = ((JCheckBox)evt.getSource()).isSelected();
+            boolean selected = ((JCheckBox) evt.getSource()).isSelected();
 //            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
-            ((BoatBox3D)this.box3D).setWaterlines(selected);
+            ((BoatBox3D) this.box3D).setWaterlines(selected);
             this.box3D.repaint();
         });
-        buttocksCheckBox.setSelected(((BoatBox3D)this.box3D).isButtocks());
+        buttocksCheckBox.setSelected(((BoatBox3D) this.box3D).isButtocks());
         buttocksCheckBox.addActionListener(evt -> {
-            boolean selected = ((JCheckBox)evt.getSource()).isSelected();
+            boolean selected = ((JCheckBox) evt.getSource()).isSelected();
 //            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
-            ((BoatBox3D)this.box3D).setButtocks(selected);
+            ((BoatBox3D) this.box3D).setButtocks(selected);
             this.box3D.repaint();
         });
-        ctrlPointsCheckBox.setSelected(((BoatBox3D)this.box3D).isDrawFrameCtrlPoints());
+        ctrlPointsCheckBox.setSelected(((BoatBox3D) this.box3D).isDrawFrameCtrlPoints());
         ctrlPointsCheckBox.addActionListener(evt -> {
-            boolean selected = ((JCheckBox)evt.getSource()).isSelected();
+            boolean selected = ((JCheckBox) evt.getSource()).isSelected();
 //            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
-            ((BoatBox3D)this.box3D).setDrawFrameCtrlPoints(selected);
+            ((BoatBox3D) this.box3D).setDrawFrameCtrlPoints(selected);
             this.box3D.repaint();
         });
 
@@ -1492,7 +1521,7 @@ public class ThreeViews {
                         new Insets(0, 0, 0, 0), 0, 0));
         topWidgetsPanel.add(wlStepPanel,
                 new GridBagConstraints(3,
-                       1,
+                        1,
                         1,
                         1,
                         1.0,
@@ -1597,7 +1626,8 @@ public class ThreeViews {
         this.whiteBoardYZ = new WhiteBoardPanel(); // facing
 
         this.initConfiguration(true);
-        /*BoatBox3D*/ this.box3D = new BoatBox3D(minX, maxX, minY, maxY, minZ, maxZ, defaultLHT);
+        /*BoatBox3D*/
+        this.box3D = new BoatBox3D(minX, maxX, minY, maxY, minZ, maxZ, defaultLHT);
         threeDPanel = new ThreeDPanelWithWidgets(box3D);
         this.initComponents();
     }
@@ -1614,7 +1644,7 @@ public class ThreeViews {
             ex.printStackTrace();
         }
         // Refresh also the offsets and Co, default-lht etc.
-        ((BoatBox3D)this.box3D).refreshValues(this.minX, this.maxX, this.minY, this.maxY, this.minZ, this.maxZ, this.defaultLHT);
+        ((BoatBox3D) this.box3D).refreshValues(this.minX, this.maxX, this.minY, this.maxY, this.minZ, this.maxZ, this.defaultLHT);
         // Refresh the text fields
         this.threeDPanel.setMinXValue();
         this.threeDPanel.setMaxXValue();
@@ -1868,13 +1898,13 @@ public class ThreeViews {
             this.keelCard = keelCardinality;
 
             this.railButton.addChangeListener(evt -> {
-                String label = ((JRadioButton)evt.getSource()).isSelected() ? "rail" : "keel";
-                int card = ((JRadioButton)evt.getSource()).isSelected() ? this.railCard : this.keelCard;
+                String label = ((JRadioButton) evt.getSource()).isSelected() ? "rail" : "keel";
+                int card = ((JRadioButton) evt.getSource()).isSelected() ? this.railCard : this.keelCard;
                 posLabel.setText(String.format("Index in %s [0..%d]", label, card));
             });
             this.keelButton.addChangeListener(evt -> {
-                String label = ((JRadioButton)evt.getSource()).isSelected() ? "keel" : "rail";
-                int card = ((JRadioButton)evt.getSource()).isSelected() ? this.keelCard : this.railCard;
+                String label = ((JRadioButton) evt.getSource()).isSelected() ? "keel" : "rail";
+                int card = ((JRadioButton) evt.getSource()).isSelected() ? this.keelCard : this.railCard;
                 posLabel.setText(String.format("Index in %s [0..%d]", label, card));
             });
 
