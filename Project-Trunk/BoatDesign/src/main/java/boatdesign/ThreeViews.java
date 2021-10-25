@@ -320,8 +320,12 @@ public class ThreeViews {
     }
 
     private void helpAbout_ActionPerformed(ActionEvent ae) {
-        System.out.printf("Help requested %s\n", ae);
-        JOptionPane.showMessageDialog(frame, TITLE, "GSG Help", JOptionPane.PLAIN_MESSAGE);
+//        System.out.printf("Help requested %s\n", ae);
+        String HelpContent = "Boat Design, based on Bézier curves.\n" +
+                "Manage the Bézier Control Points on the three panes on the left\n" +
+                "and see the result on the right.\n" +
+                "Draw the full boat by hitting the 'Refresh Boat Shape' button.";
+        JOptionPane.showMessageDialog(frame, HelpContent, TITLE, JOptionPane.PLAIN_MESSAGE);
     }
 
     private void refreshBoatShape() {
