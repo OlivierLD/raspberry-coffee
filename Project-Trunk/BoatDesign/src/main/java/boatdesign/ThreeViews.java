@@ -207,7 +207,7 @@ public class ThreeViews {
         File config = new File(fName);
         if (config.exists()) {
             try {
-                URL configResource = config.toURI().toURL();
+                var configResource = config.toURI().toURL(); // Java 11!
                 initConfig = mapper.readValue(configResource.openStream(), Map.class);
                 this.reLoadConfig(true);
             } catch (Exception ex) {
@@ -219,7 +219,6 @@ public class ThreeViews {
 
     }
 
-    //fileEdit_ActionPerformed
     private void fileEdit_ActionPerformed(ActionEvent ae) {
         System.out.println("File Edit...");
         JOptionPane.showMessageDialog(frame,
@@ -784,9 +783,10 @@ public class ThreeViews {
         whiteBoardXY.setWithGrid(true);
         whiteBoardXY.setBgColor(new Color(250, 250, 250, 255));
         whiteBoardXY.setGraphicTitle("XY - Top"); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardXY.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
         whiteBoardXY.setSize(new Dimension(800, 200));
         whiteBoardXY.setPreferredSize(new Dimension(600, 250));
-        whiteBoardXY.setTextColor(Color.RED);
+        whiteBoardXY.setTextColor(new Color(192, 192, 192));
         whiteBoardXY.setTitleFont(whiteBoardXY.getFont().deriveFont(Font.BOLD | Font.ITALIC, 16));
         whiteBoardXY.setGraphicMargins(30);
         whiteBoardXY.setXEqualsY(true); // false);
@@ -807,9 +807,10 @@ public class ThreeViews {
         whiteBoardXZ.setWithGrid(true);
         whiteBoardXZ.setBgColor(new Color(250, 250, 250, 255));
         whiteBoardXZ.setGraphicTitle("XZ - Side"); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardXZ.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
         whiteBoardXZ.setSize(new Dimension(800, 200));
         whiteBoardXZ.setPreferredSize(new Dimension(600, 250));
-        whiteBoardXZ.setTextColor(Color.RED);
+        whiteBoardXZ.setTextColor(new Color(192, 192, 192));
         whiteBoardXZ.setTitleFont(whiteBoardXZ.getFont().deriveFont(Font.BOLD | Font.ITALIC, 16));
         whiteBoardXZ.setGraphicMargins(30);
         whiteBoardXZ.setXEqualsY(true); // false);
@@ -831,9 +832,10 @@ public class ThreeViews {
         whiteBoardYZ.setWithGrid(true);
         whiteBoardYZ.setBgColor(new Color(250, 250, 250, 255));
         whiteBoardYZ.setGraphicTitle("YZ - Face"); // "X not equals Y, Y ampl enforced [0, 100]");
+        whiteBoardYZ.setTitleJustification(WhiteBoardPanel.TitleJustification.RIGHT);
         whiteBoardYZ.setSize(new Dimension(400, 200));
         whiteBoardYZ.setPreferredSize(new Dimension(400, 250));
-        whiteBoardYZ.setTextColor(Color.RED);
+        whiteBoardYZ.setTextColor(new Color(192, 192, 192));
         whiteBoardYZ.setTitleFont(whiteBoardYZ.getFont().deriveFont(Font.BOLD | Font.ITALIC, 16));
         whiteBoardYZ.setGraphicMargins(30);
         whiteBoardYZ.setXEqualsY(true); // false);
