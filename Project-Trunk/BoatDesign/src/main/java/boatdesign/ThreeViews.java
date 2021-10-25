@@ -561,15 +561,21 @@ public class ThreeViews {
                     .toArray();
             List<VectorUtils.Vector2D> keelCtrlPtsXYVectors = new ArrayList<>();
             for (int i = 0; i < xKeelCtrlPoints.length; i++) {
-                keelCtrlPtsXYVectors.add(new VectorUtils.Vector2D(xKeelCtrlPoints[i], yKeelCtrlPoints[i]));
+                synchronized(keelCtrlPtsXYVectors) {
+                    keelCtrlPtsXYVectors.add(new VectorUtils.Vector2D(xKeelCtrlPoints[i], yKeelCtrlPoints[i]));
+                }
             }
             List<VectorUtils.Vector2D> keelCtrlPtsXZVectors = new ArrayList<>();
             for (int i = 0; i < xKeelCtrlPoints.length; i++) {
-                keelCtrlPtsXZVectors.add(new VectorUtils.Vector2D(xKeelCtrlPoints[i], zKeelCtrlPoints[i]));
+                synchronized(keelCtrlPtsXZVectors) {
+                    keelCtrlPtsXZVectors.add(new VectorUtils.Vector2D(xKeelCtrlPoints[i], zKeelCtrlPoints[i]));
+                }
             }
             List<VectorUtils.Vector2D> keelCtrlPtsYZVectors = new ArrayList<>();
             for (int i = 0; i < yKeelCtrlPoints.length; i++) {
-                keelCtrlPtsYZVectors.add(new VectorUtils.Vector2D(yKeelCtrlPoints[i], zKeelCtrlPoints[i]));
+                synchronized(keelCtrlPtsYZVectors) {
+                    keelCtrlPtsYZVectors.add(new VectorUtils.Vector2D(yKeelCtrlPoints[i], zKeelCtrlPoints[i]));
+                }
             }
 
             // Curve points
