@@ -46,18 +46,18 @@ import java.util.stream.Collectors;
  */
 public class ThreeViews {
 
-    private static double minX;
-    private static double maxX;
-    private static double minY;
-    private static double maxY;
-    private static double minZ;
-    private static double maxZ;
-    private static double defaultLHT;
+    private double minX;
+    private double maxX;
+    private double minY;
+    private double maxY;
+    private double minZ;
+    private double maxZ;
+    private double defaultLHT;
 
     private final static String TITLE = "3D Bezier Drawing Board. Rail and Keel.";
 
     private static JFrame frame;
-    private ThreeDPanelWithWidgets threeDPanel;
+    private final ThreeDPanelWithWidgets threeDPanel;
     private final JMenuBar menuBar = new JMenuBar();
     private final JMenu menuFile = new JMenu();
     private final JMenuItem menuFileSpit = new JMenuItem();
@@ -77,7 +77,7 @@ public class ThreeViews {
     private final static int WIDTH = 1536; // 1024;
     private final static int HEIGHT = 800;
 
-    private static ObjectMapper mapper = new ObjectMapper();
+    private final static ObjectMapper mapper = new ObjectMapper();
     private static Map<String, Object> initConfig = null;
 
     /*
@@ -91,13 +91,13 @@ public class ThreeViews {
     private List<Bezier.Point3D> keelCtrlPoints = new ArrayList<>();
 
     // The WhiteBoard instantiations
-    private WhiteBoardPanel whiteBoardXY = null; // from above
-    private WhiteBoardPanel whiteBoardXZ = null; // side
-    private WhiteBoardPanel whiteBoardYZ = null; // facing
+    private final WhiteBoardPanel whiteBoardXY; // from above
+    private final WhiteBoardPanel whiteBoardXZ; // side
+    private final WhiteBoardPanel whiteBoardYZ; // facing
 
     private VectorUtils.Vector3D centerOfHull = null; // Centre de Carene.
 
-    private Box3D box3D = null;
+    private final Box3D box3D;
 
     private JTextPane dataTextArea = null;
     private JTextPane boatDataTextArea = null;
@@ -305,13 +305,9 @@ public class ThreeViews {
 
     private void fileSpit_ActionPerformed(ActionEvent ae) {
         System.out.println("Ctrl Points:\nRail:");
-        this.railCtrlPoints.forEach(pt -> {
-            System.out.println(String.format("%s", pt));
-        });
+        this.railCtrlPoints.forEach(pt -> System.out.println(String.format("%s", pt)));
         System.out.println("Keel:");
-        this.keelCtrlPoints.forEach(pt -> {
-            System.out.println(String.format("%s", pt));
-        });
+        this.keelCtrlPoints.forEach(pt -> System.out.println(String.format("%s", pt)));
     }
 
     private void fileExit_ActionPerformed(ActionEvent ae) {
@@ -335,7 +331,7 @@ public class ThreeViews {
                 try {
                     this.box3D.repaint();
                 } catch (Exception cme) {
-                    System.err.println(">>> " + cme.toString());
+                    System.err.println(">>> " + cme);
                 }
                 try {
                     Thread.sleep(1_000L);
@@ -375,17 +371,13 @@ public class ThreeViews {
                     // 1 - Find max area
                     Double wbMaxY = whiteBoardXY.getForcedMaxY();
                     AtomicReference<Double> max = new AtomicReference<>(-Double.MAX_VALUE);
-                    displacementMap.forEach((k, v) -> {
-                        max.set(Math.max(max.get(), v));
-                    });
+                    displacementMap.forEach((k, v) -> max.set(Math.max(max.get(), v)));
                     System.out.println("Max area: " + max);
                     double ratio = (wbMaxY / max.get());
                     // TODO Remove the area curve if it exists
                     List<VectorUtils.Vector2D> areas = new ArrayList<>();
                     areas.add(new VectorUtils.Vector2D().x(lwlStart * 1e2).y(0d));
-                    displacementMap.forEach((k, v) -> {
-                        areas.add(new VectorUtils.Vector2D().x(k).y(v * ratio));
-                    });
+                    displacementMap.forEach((k, v) -> areas.add(new VectorUtils.Vector2D().x(k).y(v * ratio)));
                     areas.add(new VectorUtils.Vector2D().x(lwlEnd * 1e2).y(0d));
 
                     WhiteBoardPanel.DataSerie areasSerie = new WhiteBoardPanel.DataSerie()
@@ -497,13 +489,13 @@ public class ThreeViews {
                 }
             }
             double[] xRailCtrlPoints = railCtrlPoints.stream()
-                    .mapToDouble(bp -> bp.getX())
+                    .mapToDouble(Bezier.Point3D::getX)
                     .toArray();
             double[] yRailCtrlPoints = railCtrlPoints.stream()
-                    .mapToDouble(bp -> bp.getY())
+                    .mapToDouble(Bezier.Point3D::getY)
                     .toArray();
             double[] zRailCtrlPoints = railCtrlPoints.stream()
-                    .mapToDouble(bp -> bp.getZ())
+                    .mapToDouble(Bezier.Point3D::getZ)
                     .toArray();
             List<VectorUtils.Vector2D> railCtrlPtsXYVectors = new ArrayList<>();
             for (int i = 0; i < xRailCtrlPoints.length; i++) {
@@ -520,13 +512,13 @@ public class ThreeViews {
 
             // Curve points
             double[] xData = bezierRailPoints.stream()
-                    .mapToDouble(bp -> bp.getX())
+                    .mapToDouble(VectorUtils.Vector3D::getX)
                     .toArray();
             double[] yData = bezierRailPoints.stream()
-                    .mapToDouble(bp -> bp.getY())
+                    .mapToDouble(VectorUtils.Vector3D::getY)
                     .toArray();
             double[] zData = bezierRailPoints.stream()
-                    .mapToDouble(bp -> bp.getZ())
+                    .mapToDouble(VectorUtils.Vector3D::getZ)
                     .toArray();
             List<VectorUtils.Vector2D> railDataXYVectors = new ArrayList<>();
             for (int i = 0; i < xData.length; i++) {
@@ -551,13 +543,13 @@ public class ThreeViews {
                 }
             }
             double[] xKeelCtrlPoints = keelCtrlPoints.stream()
-                    .mapToDouble(bp -> bp.getX())
+                    .mapToDouble(Bezier.Point3D::getX)
                     .toArray();
             double[] yKeelCtrlPoints = keelCtrlPoints.stream()
-                    .mapToDouble(bp -> bp.getY())
+                    .mapToDouble(Bezier.Point3D::getY)
                     .toArray();
             double[] zKeelCtrlPoints = keelCtrlPoints.stream()
-                    .mapToDouble(bp -> bp.getZ())
+                    .mapToDouble(Bezier.Point3D::getZ)
                     .toArray();
             List<VectorUtils.Vector2D> keelCtrlPtsXYVectors = new ArrayList<>();
             for (int i = 0; i < xKeelCtrlPoints.length; i++) {
@@ -580,13 +572,13 @@ public class ThreeViews {
 
             // Curve points
             xData = bezierKeelPoints.stream()
-                    .mapToDouble(bp -> bp.getX())
+                    .mapToDouble(VectorUtils.Vector3D::getX)
                     .toArray();
             yData = bezierKeelPoints.stream()
-                    .mapToDouble(bp -> bp.getY())
+                    .mapToDouble(VectorUtils.Vector3D::getY)
                     .toArray();
             zData = bezierKeelPoints.stream()
-                    .mapToDouble(bp -> bp.getZ())
+                    .mapToDouble(VectorUtils.Vector3D::getZ)
                     .toArray();
             List<VectorUtils.Vector2D> keelDataXYVectors = new ArrayList<>();
             for (int i = 0; i < xData.length; i++) {
@@ -698,7 +690,7 @@ public class ThreeViews {
             whiteBoardYZ.addSerie(keelDataYZSerie);
 
             // Finally, display it.
-            whiteBoardXY.repaint();  // This is for a pure Swing context}
+            whiteBoardXY.repaint();  // This is for a pure Swing context
             whiteBoardXZ.repaint();  // This is for a pure Swing context
             whiteBoardYZ.repaint();  // This is for a pure Swing context
 
@@ -709,7 +701,7 @@ public class ThreeViews {
     }
 
     private void show() {
-        this.frame.setVisible(true);
+        frame.setVisible(true);
     }
 
     private void initConfiguration(boolean full) {
@@ -733,9 +725,9 @@ public class ThreeViews {
             Map<String, List<Object>> defaultPoints = (Map) initConfig.get("default-points");
 
             if (full) {
-                List railPoints = (List) defaultPoints.get("rail");
+                List railPoints = defaultPoints.get("rail");
                 //            List<List<Double>> bowPoints = (List)defaultPoints.get("bow"); // Correlated, not needed here.
-                List keelPoints = (List) defaultPoints.get("keel");
+                List keelPoints = defaultPoints.get("keel");
                 // Rail
                 synchronized (this.railCtrlPoints) {
                     railPoints.forEach(pt -> {
@@ -1222,22 +1214,22 @@ public class ThreeViews {
         frame.getContentPane().setLayout(new BorderLayout());
         menuFile.setText("File");
         menuFileSpit.setText("Spit out points");
-        menuFileSpit.addActionListener(ae -> fileSpit_ActionPerformed(ae));
+        menuFileSpit.addActionListener(this::fileSpit_ActionPerformed);
 
         menuFileNew.setText("New...");
-        menuFileNew.addActionListener(ae -> fileNew_ActionPerformed(ae));
+        menuFileNew.addActionListener(this::fileNew_ActionPerformed);
         menuFileOpen.setText("Open...");
-        menuFileOpen.addActionListener(ae -> fileOpen_ActionPerformed(ae));
+        menuFileOpen.addActionListener(this::fileOpen_ActionPerformed);
         menuFileEdit.setText("Edit...");
-        menuFileEdit.addActionListener(ae -> fileEdit_ActionPerformed(ae));
+        menuFileEdit.addActionListener(this::fileEdit_ActionPerformed);
         menuFileSave.setText("Save...");
-        menuFileSave.addActionListener(ae -> fileSave_ActionPerformed(ae));
+        menuFileSave.addActionListener(this::fileSave_ActionPerformed);
 
         menuFileExit.setText("Exit");
-        menuFileExit.addActionListener(ae -> fileExit_ActionPerformed(ae));
+        menuFileExit.addActionListener(this::fileExit_ActionPerformed);
         menuHelp.setText("Help");
         menuHelpAbout.setText("About");
-        menuHelpAbout.addActionListener(ae -> helpAbout_ActionPerformed(ae));
+        menuHelpAbout.addActionListener(this::helpAbout_ActionPerformed);
         menuFile.add(menuFileSpit);
         menuFile.add(new JSeparator());
         menuFile.add(menuFileNew);
