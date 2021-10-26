@@ -202,7 +202,7 @@ public class ThreeViews {
                 ".",
                 "Select",
                 "Choose Data File");
-        // La suite
+        // And then...
         System.out.printf("Opening %s\n", fName);
         File config = new File(fName);
         if (config.exists()) {
@@ -220,11 +220,67 @@ public class ThreeViews {
     }
 
     private void fileEdit_ActionPerformed(ActionEvent ae) {
-        System.out.println("File Edit...");
-        JOptionPane.showMessageDialog(frame,
-                "File edit soon",
-                "File Edit",
-                JOptionPane.INFORMATION_MESSAGE);
+
+        NewDataPanel panel = new NewDataPanel();
+        // Current values.
+        panel.setValues(((BoatBox3D) this.box3D).getMinX(),
+                ((BoatBox3D) this.box3D).getMaxX(),
+                ((BoatBox3D) this.box3D).getMinY(),
+                ((BoatBox3D) this.box3D).getMaxY(),
+                ((BoatBox3D) this.box3D).getMinZ(),
+                ((BoatBox3D) this.box3D).getMaxZ(),
+                ((BoatBox3D) this.box3D).getDefaultLHT(),
+                this.description,
+                this.comments == null ? null : this.comments.stream().collect(Collectors.joining("\n")));
+
+        int resp = JOptionPane.showConfirmDialog(frame,
+                panel,
+                "New Boat Data - All values in cm.",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        if (resp == JOptionPane.OK_OPTION) {
+            // Grab the data
+            NewDataPanel.PanelData panelData = panel.getPanelData();
+            Map<String, Object> theMap = new HashMap<>();
+            theMap.put("description", panelData.getDescription());
+            String comments = panelData.getComments();
+            if (comments != null) {
+                String[] split = comments.split("\n");
+                theMap.put("comments", Arrays.asList(split));
+            }
+
+            // Reset
+            double minX = panelData.getMinX() * 1e-02;
+            double maxX = panelData.getMaxX() * 1e-02;
+            double minY = panelData.getMinY() * 1e-02;
+            double maxY = panelData.getMaxY() * 1e-02;
+            double minZ = panelData.getMinZ() * 1e-02;
+            double maxZ = panelData.getMaxZ() * 1e-02;
+            // Reshape from [0, X], instead of [-X, X]
+            if (minX != 0) {
+                maxX -= minX;
+                minX -= minX;
+            }
+            double lht = panelData.getDefaultLHT() * 1e-02;
+            // TODO Check values above... min < max, etc.
+
+            // Create NO arbitrary points. Keep them as they are.
+
+            Map<String, Object> points = new HashMap<>();
+            points.put("keel", this.keelCtrlPoints);
+            points.put("rail", this.railCtrlPoints);
+            theMap.put("default-points", points);
+
+            Map<String, Object> dimensions = new HashMap<>();
+            dimensions.put("default-lht", lht);
+            dimensions.put("box-x", Arrays.asList(minX, maxX));
+            dimensions.put("box-y", Arrays.asList(minY, maxY));
+            dimensions.put("box-z", Arrays.asList(minZ, maxZ));
+            theMap.put("dimensions", dimensions);
+
+            initConfig = theMap;
+            this.reLoadConfig(false);
+        }
     }
 
     private void fileSave_ActionPerformed(ActionEvent ae) {
