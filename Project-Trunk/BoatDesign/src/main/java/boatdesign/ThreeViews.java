@@ -235,7 +235,7 @@ public class ThreeViews {
 
         int resp = JOptionPane.showConfirmDialog(frame,
                 panel,
-                "New Boat Data - All values in cm.",
+                "Edit Boat Data - All values in cm.",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
         if (resp == JOptionPane.OK_OPTION) {

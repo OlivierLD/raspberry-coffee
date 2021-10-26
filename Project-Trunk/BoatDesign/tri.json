@@ -2,7 +2,7 @@
   "description": "Points created by default when starting the program. Like the tri...",
   "comments": [
     "First point of rail is first point of bow",
-    "Last point of keel is first point of keel"
+    "Last point of bow is first point of keel"
   ],
   "dimensions": {
     "default-lht": 9.14,
