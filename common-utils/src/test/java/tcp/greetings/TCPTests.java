@@ -13,7 +13,7 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
- * Requires a greetings.TCPServer to be running
+ * Requires a greetings.TCPServer to be running. Hence the @Before.
  */
 public class TCPTests {
 
@@ -48,7 +48,7 @@ public class TCPTests {
 	@After
 	public void tearDown() {
 		try {
-			client.stopConnection();
+			client.stopConnection(); // Bam!
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

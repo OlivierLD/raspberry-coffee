@@ -10,12 +10,13 @@ import utils.TextToSpeech;
 public class SpeakTest {
     public static void main(String... args) {
         System.out.println("OS is [" + System.getProperty("os.name") + "]");
-//	speak("You got a message from 415-745-5209. Do you wan to read it?");
+//	    TextToSpeech.speak("You got a message from 415-745-5209. Do you want to read it?");
         TextToSpeech.speak("Oh hello Pussycat, what's you doing up there?");
     }
 
     @Test
-    public void speakToMe() {
+    public void speakToMe() { // No failure.
+//        System.out.println("Speak test!!");
         SpeakTest.main();
     }
 }

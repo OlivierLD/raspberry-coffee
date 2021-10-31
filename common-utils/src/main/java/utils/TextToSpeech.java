@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TextToSpeech {
-    private static Map<String, String> speechTools = new HashMap<>();
+    private final static Map<String, String> speechTools = new HashMap<>();
 
     static {
         speechTools.put("Mac OS X", "say");
@@ -23,6 +23,7 @@ public class TextToSpeech {
         }
     }
 
+// MOVED TO TESTS
 //    public static void main(String... args) {
 //        System.out.println("OS is [" + System.getProperty("os.name") + "]");
 //    //	speak("You got a message from 415-745-5209. Do you wan to read it?");
