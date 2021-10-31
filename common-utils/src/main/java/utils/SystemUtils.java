@@ -350,7 +350,7 @@ public class SystemUtils {
             System.out.println(String.format("CPU Temperature %s", getCPUTemperature2()));
             System.out.println(String.format("Core Voltage %s", getCoreVoltage()));
         } catch (Exception ex) {
-            System.err.println(String.format("T&V %s", ex.toString()));
+            System.err.println(String.format("Maybe not on a Raspberry PI ? Temp & Volt %s", ex.toString()));
         }
 
         // Memory
