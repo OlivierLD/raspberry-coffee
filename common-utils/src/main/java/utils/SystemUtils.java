@@ -66,10 +66,11 @@ public class SystemUtils {
      * <p>
      * On Raspberry Pi, also try SystemInfo methods.
      *
-     * @return
-     * @throws Exception
+     * @return the list of networks in sight
+     * @throws Exception when iwconfig is not available for examnple
      */
     public static List<String> getNetworkName() throws Exception {
+        final String ESSID_LABEL = "ESSID:";
         List<String> networkList = new ArrayList<>();
         // Needs to be in the PATH. If problem, check if /usr/sbin is in the PATH
         String command = "iwconfig"; // "iwconfig | grep wlan0 | awk '{ print $4 }'";
@@ -80,8 +81,8 @@ public class SystemUtils {
         while (line != null) {
             line = reader.readLine();
             if (line != null) {
-                if (line.indexOf("ESSID:") > -1) {
-                    networkList.add(line.substring(line.indexOf("ESSID:") + "ESSID:".length()));
+                if (line.contains(ESSID_LABEL)) {
+                    networkList.add(line.substring(line.indexOf(ESSID_LABEL) + ESSID_LABEL.length()));
                 }
             }
         }
@@ -299,9 +300,9 @@ public class SystemUtils {
         }
 
         try {
-            System.out.println(String.format("OS Details:\n%s", getOSDetails().stream().collect(Collectors.joining("\n"))));
+            System.out.println(String.format("OS Details:\n%s", String.join("\n", getOSDetails())));
         } catch (Exception ex) {
-            System.err.println(ex.toString());
+            System.err.println(ex);
         }
 
         try {
@@ -309,7 +310,7 @@ public class SystemUtils {
             try {
                 networkName.forEach(network -> System.out.println(String.format("Network: %s", network)));
             } catch (Exception ex) {
-
+                System.err.println(ex);
             }
             System.out.println();
             System.out.println("All IP Addresses:");
@@ -320,17 +321,13 @@ public class SystemUtils {
             // Filtered
             System.out.println("\nFiltered (en0):");
             addresses = getIPAddresses("en0");
-            addresses.stream().forEach(pair -> {
-                System.out.println(String.format("%s -> %s", pair[0], pair[1]));
-            });
+            addresses.stream().forEach(pair -> System.out.println(String.format("%s -> %s", pair[0], pair[1])));
             // IPv4 only
             System.out.println("\nFiltered (IPv4):");
             addresses = getIPAddresses(true);
-            addresses.stream().forEach(pair -> {
-                System.out.println(String.format("%s -> %s", pair[0], pair[1]));
-            });
+            addresses.stream().forEach(pair -> System.out.println(String.format("%s -> %s", pair[0], pair[1])));
         } catch (Exception ex) {
-            System.err.println(ex.toString());
+            System.err.println(ex);
         }
 
         try {
@@ -342,7 +339,7 @@ public class SystemUtils {
                 System.out.println(String.format("Directory listing:\n%s", getDirectoryListing().stream().collect(Collectors.joining("\n"))));
             }
         } catch (Exception ex) {
-            System.err.println(ex.toString());
+            System.err.println(ex);
         }
 
         // Temperature & voltage
