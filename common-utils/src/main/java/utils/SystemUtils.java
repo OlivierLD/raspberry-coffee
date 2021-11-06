@@ -71,6 +71,7 @@ public class SystemUtils {
      */
     public static List<String> getNetworkName() throws Exception {
         List<String> networkList = new ArrayList<>();
+        // Needs to be in the PATH. If problem, check if /usr/sbin is in the PATH
         String command = "iwconfig"; // "iwconfig | grep wlan0 | awk '{ print $4 }'";
         Process p = Runtime.getRuntime().exec(command);
         p.waitFor();
