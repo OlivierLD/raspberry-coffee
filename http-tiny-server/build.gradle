@@ -18,11 +18,15 @@ repositories {
 //sourceCompatibility = 1.8
 //targetCompatibility = 1.8
 
+compileJava {
+    options.compilerArgs << '-g' // Debug? Comment if needed.
+}
+
 dependencies {
-    compile 'org.json:json:20141113'
-    compile 'com.google.code.gson:gson:2.8.5'
-    compile project(':common-utils')
-    testCompile group: 'junit', name: 'junit', version: '4.13'
+    implementation 'org.json:json:20141113'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation project(':common-utils')
+    testImplementation group: 'junit', name: 'junit', version: '4.13'
 }
 
 shadowJar {

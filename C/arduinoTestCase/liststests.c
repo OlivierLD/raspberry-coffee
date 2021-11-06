@@ -11,6 +11,7 @@
 
 /*
  * Shows how to maintain a list acting as a vector.
+ *
  * Limited number of entries, added at the end, head is cut on demand.
  */
 

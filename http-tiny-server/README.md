@@ -1,6 +1,7 @@
-## HTTP Server (WiP, never finished...)
+## HTTP Server 
+#### (WiP, never finished...)
 > A Java alternative to `python -m SimpleHTTPServer`. Can also serve REST requests.
-> Can serve static documents from an archive.
+> Can serve static documents _from an archive_, to save space.
 
 
 Can be used
@@ -100,9 +101,18 @@ After building the project:
 ```
  $ ../gradlew shadowJar
 ````
+This is producing the archive(s) we will need (see their size below). It can be even smaller needed,
+some dependencies could be removed (along with their features of course).
+```
+$ ls -lisah build/libs 
+43426105    0 drwxr-xr-x  4 pi  staff   128B Nov  6 13:21 .
+43426069    0 drwxr-xr-x  8 pi  staff   256B Jul  5 09:17 ..
+58626403 3400 -rw-r--r--  1 pi  staff   1.7M Nov  6 13:21 http-tiny-server-1.0-all.jar
+```
+
 Run the `HTTPServer` as it is (it comes with a `main`, for illustration):
 ```
-CP=build/libs/http-tiny-server-1.0.jar
+CP=build/libs/http-tiny-server-1.0-all.jar
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose.dump=true"
