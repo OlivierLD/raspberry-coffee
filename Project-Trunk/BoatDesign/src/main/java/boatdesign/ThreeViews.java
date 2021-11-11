@@ -848,7 +848,7 @@ public class ThreeViews {
         whiteBoardXY.setXEqualsY(true); // false);
         whiteBoardXY.setXAxisLabel("X");
         whiteBoardXY.setYAxisLabel("Y");
-        whiteBoardXY.setAxisLabelCircleColor(Color.CYAN);
+        whiteBoardXY.setAxisLabelCircleColor(Color.RED);
         whiteBoardXY.setAxisLabelColor(Color.BLUE);
         // Enforce Y amplitude
         whiteBoardXY.setForcedMinY(0d);
@@ -872,7 +872,7 @@ public class ThreeViews {
         whiteBoardXZ.setXEqualsY(true); // false);
         whiteBoardXZ.setXAxisLabel("X");
         whiteBoardXZ.setYAxisLabel("Z");
-        whiteBoardXZ.setAxisLabelCircleColor(Color.CYAN);
+        whiteBoardXZ.setAxisLabelCircleColor(Color.RED);
         whiteBoardXZ.setAxisLabelColor(Color.BLUE);
         // Enforce Y amplitude
         whiteBoardXZ.setForcedMinY(-50d);
@@ -897,7 +897,7 @@ public class ThreeViews {
         whiteBoardYZ.setXEqualsY(true); // false);
         whiteBoardYZ.setXAxisLabel("Y");
         whiteBoardYZ.setYAxisLabel("Z");
-        whiteBoardYZ.setAxisLabelCircleColor(Color.CYAN);
+        whiteBoardYZ.setAxisLabelCircleColor(Color.RED);
         whiteBoardYZ.setAxisLabelColor(Color.BLUE);
         // Enforce Y amplitude
         whiteBoardYZ.setForcedMinY(-50d);
