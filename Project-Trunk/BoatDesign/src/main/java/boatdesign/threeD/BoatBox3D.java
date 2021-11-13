@@ -905,14 +905,21 @@ public class BoatBox3D extends Box3D {
                 }
                 Bezier.Point3D _top = bezierRail.getBezierPoint(tx);
                 increase = (bezierKeel.getBezierPoint(0).getX() < bezierKeel.getBezierPoint(1).getX());
+                boolean keelOk = true;
                 try {
                     tx = bezierKeel.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
+//                    System.out.println(String.format("x:%f -> t:%f", _x, tx));
+                    if (tx == -1d) {
+                        keelOk = false;
+                        tx = bezierBow.getTForGivenX(0.0, 1E-1, _x, 1E-4);
+//                        System.out.println(String.format("Bow: x:%f -> t:%f", _x, tx));
+                    }
                 } catch (Bezier.TooDeepRecursionException tdre) {
                     // TODO Manage that
                     tdre.printStackTrace();
                     tx = -1;
                 }
-                Bezier.Point3D _bottom = bezierKeel.getBezierPoint(tx);
+                Bezier.Point3D _bottom = keelOk ? bezierKeel.getBezierPoint(tx) : bezierBow.getBezierPoint(tx);
 
                 List<Bezier.Point3D> ctrlPointsFrame = List.of(
                         new Bezier.Point3D(_x, _top.getY(), _top.getZ()),
