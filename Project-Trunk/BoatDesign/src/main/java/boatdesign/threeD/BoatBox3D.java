@@ -898,6 +898,7 @@ public class BoatBox3D extends Box3D {
                 double tx = 0;
                 try {
                     tx = bezierRail.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
+                    // TODO Same as keel/bow below, for rail/transom
                 } catch (Bezier.TooDeepRecursionException tdre) {
                     // TODO Manage that
                     tdre.printStackTrace();
@@ -909,7 +910,7 @@ public class BoatBox3D extends Box3D {
                 try {
                     tx = bezierKeel.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
 //                    System.out.println(String.format("x:%f -> t:%f", _x, tx));
-                    if (tx == -1d) {
+                    if (tx == -1d) { // Out of limits
                         keelOk = false;
                         tx = bezierBow.getTForGivenX(0.0, 1E-1, _x, 1E-4);
 //                        System.out.println(String.format("Bow: x:%f -> t:%f", _x, tx));
