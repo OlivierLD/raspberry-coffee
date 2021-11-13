@@ -896,15 +896,22 @@ public class BoatBox3D extends Box3D {
                 long one = System.currentTimeMillis();
                 boolean increase = (bezierRail.getBezierPoint(0).getX() < bezierRail.getBezierPoint(1).getX());
                 double tx = 0;
+                boolean railOk = true;
                 try {
                     tx = bezierRail.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
-                    // TODO Same as keel/bow below, for rail/transom
+                    // Same as keel/bow below, for rail/transom
+//                    System.out.println(String.format("Rail: x:%f -> t:%f", _x, tx));
+                    if (tx == -1d) {
+                        railOk = false;
+                        tx = bezierTransom.getTForGivenX(0.0, 1E-1, _x, 1E-4);
+                    }
                 } catch (Bezier.TooDeepRecursionException tdre) {
                     // TODO Manage that
                     tdre.printStackTrace();
                     tx = -1;
                 }
-                Bezier.Point3D _top = bezierRail.getBezierPoint(tx);
+                Bezier.Point3D _top = railOk ? bezierRail.getBezierPoint(tx) : bezierTransom.getBezierPoint(tx);
+
                 increase = (bezierKeel.getBezierPoint(0).getX() < bezierKeel.getBezierPoint(1).getX());
                 boolean keelOk = true;
                 try {
