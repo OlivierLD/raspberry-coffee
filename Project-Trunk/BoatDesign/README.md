@@ -4,6 +4,11 @@
 
 Based on the `Algebra` module, in this project.
 
+- 3 2D views on the left
+- A 3D view on the right
+
+![Scheen shot](./img/screen.shot.01.png)
+
 ## Path #1
 - Define Length, Width, Height
 - Define a 3D bezier for the rail (on a 2D white board)

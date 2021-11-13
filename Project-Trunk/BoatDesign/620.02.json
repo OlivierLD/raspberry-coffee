@@ -1,6 +1,6 @@
 {
   "comments" : [ "Default values." ],
-  "description" : "Mini",
+  "description" : "Mini 6.20, v2",
   "default-points" : {
     "keel" : [ {
       "x" : 0.0,
