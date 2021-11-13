@@ -56,13 +56,21 @@ public class ThreeViews {
     private double maxZ;
     private double defaultLHT;
 
-    private final static String TITLE = "3D Bezier Drawing Board. Rail and Keel.";
+    private final static String TITLE = "3D Bezier Drawing Board (WiP). Rail and Keel.";
 
     private static JFrame frame;
     private final ThreeDPanelWithWidgets threeDPanel;
     private final JMenuBar menuBar = new JMenuBar();
     private final JMenu menuFile = new JMenu();
     private final JMenuItem menuFileSpit = new JMenuItem();
+
+    // Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() will show as Command on Mac
+    private KeyStroke ctrlN = KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
+    private KeyStroke ctrlO = KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
+    private KeyStroke ctrlE = KeyStroke.getKeyStroke(KeyEvent.VK_E, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
+    private KeyStroke ctrlS = KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
+    private KeyStroke ctrlQ = KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
+    private KeyStroke ctrlH = KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK);
 
     private final JMenuItem menuFileNew = new JMenuItem();
     private final JMenuItem menuFileOpen = new JMenuItem();
@@ -1284,18 +1292,24 @@ public class ThreeViews {
         menuFileSpit.addActionListener(this::fileSpit_ActionPerformed);
 
         menuFileNew.setText("New...");
+        menuFileNew.setAccelerator(ctrlN);
         menuFileNew.addActionListener(this::fileNew_ActionPerformed);
         menuFileOpen.setText("Open...");
+        menuFileOpen.setAccelerator(ctrlO);
         menuFileOpen.addActionListener(this::fileOpen_ActionPerformed);
         menuFileEdit.setText("Edit...");
+        menuFileEdit.setAccelerator(ctrlE);
         menuFileEdit.addActionListener(this::fileEdit_ActionPerformed);
         menuFileSave.setText("Save...");
+        menuFileSave.setAccelerator(ctrlS);
         menuFileSave.addActionListener(this::fileSave_ActionPerformed);
 
         menuFileExit.setText("Exit");
+        menuFileExit.setAccelerator(ctrlQ);
         menuFileExit.addActionListener(this::fileExit_ActionPerformed);
         menuHelp.setText("Help");
         menuHelpAbout.setText("About");
+        menuHelpAbout.setAccelerator(ctrlH);
         menuHelpAbout.addActionListener(this::helpAbout_ActionPerformed);
         menuFile.add(menuFileSpit);
         menuFile.add(new JSeparator());
