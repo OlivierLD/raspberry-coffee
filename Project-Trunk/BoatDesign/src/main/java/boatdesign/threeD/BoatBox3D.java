@@ -884,6 +884,7 @@ public class BoatBox3D extends Box3D {
         Map<Double, Double> displacementZMap = new LinkedHashMap<>();
         double displ = 0d;
         double prismCoeff = 0d;
+        // Actual shape calculation takes place here.
         if (frames || true) { // Do the calculations, even if display is not required.
             // Extrapolate all the frames (to the end of rail. could be the same as transom)
             // Displacement...
@@ -903,7 +904,7 @@ public class BoatBox3D extends Box3D {
 //                    System.out.println(String.format("Rail: x:%f -> t:%f", _x, tx));
                     if (tx == -1d) {
                         railOk = false;
-                        tx = bezierTransom.getTForGivenX(0.0, 1E-1, _x, 1E-4);
+                        tx = bezierTransom.getTForGivenX(0.0, 1E-1, _x, 1E-4); // Not sure that's right...
                     }
                 } catch (Bezier.TooDeepRecursionException tdre) {
                     // TODO Manage that

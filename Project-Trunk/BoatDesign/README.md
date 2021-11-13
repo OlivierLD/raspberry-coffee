@@ -21,7 +21,7 @@ Then do the hydrostatic calculations.
   - back of the rail and transom's top
   - back of the keel and transom's bottom
 
-## To fix
+## To fix (in progress)
 - Transom and bow, when not vertical.
 - Close horizontal and vertical cuts. Done ✅.
 
@@ -30,5 +30,10 @@ Then do the hydrostatic calculations.
 - Data to STL, OpenSCAD, etc
   - Look into the [`polyhedron`](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Primitive_Solids#polyhedron)
 - Data to Processing (see PitchRoll.pde ...)
+
+### Hints
+- Main is in `boatdesign.ThreeViews`.
+- Shape calculation done in `BoatBox3D`, look for `// Actual shape calculation takes place here.`
+
 
 ---

@@ -43,6 +43,8 @@ import java.util.stream.Collectors;
  * - One for the keel
  * <p>
  * Bow is correlated, transom too. See in {@link BoatBox3D}
+ *
+ * Calculation done in BoatBox3D, look for "// Actual shape calculation takes place here."
  */
 public class ThreeViews {
 
