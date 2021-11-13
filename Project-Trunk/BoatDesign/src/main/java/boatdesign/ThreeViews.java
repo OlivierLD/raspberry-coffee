@@ -407,7 +407,14 @@ public class ThreeViews {
             boatDataTextArea.setText("Re-calculating...");
             // TODO Stop thread if already running.
             ((BoatBox3D) this.box3D).refreshData(false, map -> {
-                boatDataTextArea.setText(map.toString());
+                String json;
+                try {
+                    json = mapper.writerWithDefaultPrettyPrinter()
+                            .writeValueAsString(map);
+                } catch (JsonProcessingException jpe) {
+                    json = map.toString();
+                }
+                boatDataTextArea.setText(json);
                 // CC position
                 Double xCC = (Double) map.get("cc-x");
                 Double zCC = (Double) map.get("cc-z");
