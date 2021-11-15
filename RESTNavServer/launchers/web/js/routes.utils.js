@@ -250,6 +250,7 @@ let toDegreePt = (pt) => {
 	return { lat: toDegrees(pt.lat), lng: toDegrees(pt.lng) };
 };
 
+if (decToSex === undefined) {
 let decToSex = (val, ns_ew) => {
 	let absVal = Math.abs(val);
 	let intValue = Math.floor(absVal);
@@ -275,6 +276,7 @@ let decToSex = (val, ns_ew) => {
 
 	return s;
 };
+}
 
 /**
  * Get the direction
