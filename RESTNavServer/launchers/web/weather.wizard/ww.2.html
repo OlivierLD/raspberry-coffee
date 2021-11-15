@@ -241,7 +241,7 @@
                                 displayValue = "xx";
                                 displayUnit = "-";
                                 // console.log(err);
-                                messageManager(typeof(err) === 'object' ? JSON.stringify(err) : err);
+                                messageManager(typeof(err) === 'object' ? JSON.stringify(err, null, 2) : err);
                             }
                             break;
                         case 'htsgw':
@@ -258,7 +258,7 @@
                                 displayValue = "xx";
                                 displayUnit = "-";
                                 // console.log(err);
-                                messageManager(typeof(err) === 'object' ? JSON.stringify(err) : err);
+                                messageManager(typeof(err) === 'object' ? JSON.stringify(err, null, 2) : err);
                             }
                             break;
                         default:
@@ -687,7 +687,7 @@
             };
 
             // console.log("Loading", (typeof(compositeData) === 'object' ? JSON.stringify(compositeData) : compositeData));
-            messageManager("Loading " + (typeof(compositeData) === 'object' ? JSON.stringify(compositeData) : compositeData));
+            messageManager("Loading " + (typeof(compositeData) === 'object' ? JSON.stringify(compositeData, null, 2) : compositeData));
             worldMap.setCanvasWidth(compositeData.canvas.w);
             worldMap.setCanvasHeight(compositeData.canvas.h);
             worldMap.setNorth(compositeData.map.north);
