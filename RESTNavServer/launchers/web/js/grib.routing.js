@@ -104,6 +104,7 @@ var getSpeed = function(x, y) {
 	return tws;
 };
 
+if (typeof(getDir) === "undefined") {
 /**
  * Get wind direction from ugrd, vgrd
  * @param x ugrd
@@ -142,6 +143,7 @@ var getDir = function(x, y) {
 	}
 	return dir;
 };
+}
 
 var toRadians = function (deg) {
 	return deg * (Math.PI / 180);
