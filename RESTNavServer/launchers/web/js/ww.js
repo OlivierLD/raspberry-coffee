@@ -126,7 +126,7 @@ var getCompositeFaxes = function(options, compositeData, callback) {
 				message = errmess;
 			}
 		}
-		errManager("Failed to get composite data data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager("Failed to get composite data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };
 
