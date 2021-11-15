@@ -57,7 +57,7 @@
                 if (existingContent.trim().length > 0) {
                     existingContent += "\n";
                 }
-                existingContent += (typeof(mess) === 'object' ? JSON.stringify(mess) : mess);
+                existingContent += (typeof(mess) === 'object' ? JSON.stringify(mess, null, 2) : mess);
                 messZone.innerText = existingContent;
             } else {
                 console.log(mess);
@@ -241,7 +241,7 @@
                                 displayValue = "xx";
                                 displayUnit = "-";
                                 // console.log(err);
-                                messageManager(typeof(err) === 'object' ? JSON.stringify(err, null, 2) : err);
+                                messageManager(err);
                             }
                             break;
                         case 'htsgw':
@@ -258,7 +258,7 @@
                                 displayValue = "xx";
                                 displayUnit = "-";
                                 // console.log(err);
-                                messageManager(typeof(err) === 'object' ? JSON.stringify(err, null, 2) : err);
+                                messageManager(err);
                             }
                             break;
                         default:
@@ -681,13 +681,14 @@
                 document.getElementById('current-grib-location').innerText = ('GRIB in ' + gribFileLocation);
             }
 
-            errManager = (mess) => { // Override the one in ww.js
-              // console.log(mess);
+            errManager = (mess) => { // Override the one in ww.js. Console, and TextArea
+              console.log(mess);
               messageManager(mess);
             };
 
             // console.log("Loading", (typeof(compositeData) === 'object' ? JSON.stringify(compositeData) : compositeData));
-            messageManager("Loading " + (typeof(compositeData) === 'object' ? JSON.stringify(compositeData, null, 2) : compositeData));
+            messageManager("Loading:");
+            messageManager(compositeData);
             worldMap.setCanvasWidth(compositeData.canvas.w);
             worldMap.setCanvasHeight(compositeData.canvas.h);
             worldMap.setNorth(compositeData.map.north);
@@ -830,7 +831,7 @@
 
                 // Request ready
                 // console.log(requestData);
-                messageManager(typeof(requestData) === 'object' ? JSON.stringify(requestData, null, 2) : requestData);
+                messageManager(requestData);
                 getCompositeFaxes(requestData, compositeData, faxRequestCallback);
             }
 
