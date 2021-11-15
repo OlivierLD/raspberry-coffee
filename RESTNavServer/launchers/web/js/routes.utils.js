@@ -235,6 +235,7 @@ let calculateRhumLine = (from, to) => {
  * @param route route in degrees
  * @return DR Position, L & G in Radians
  */
+if (deadReckoning === undefined) {
 let deadReckoning = (from, dist, route) => {
 	let radianDistance = toRadians(dist / 60);
 	let finalLat = (Math.asin((Math.sin(from.lat) * Math.cos(radianDistance)) +
@@ -243,6 +244,7 @@ let deadReckoning = (from, dist, route) => {
 																			 Math.cos(radianDistance) - Math.sin(from.lat) * Math.sin(finalLat));
 	return ({lat: finalLat, lng: finalLng});
 };
+}
 
 let toDegreePt = (pt) => {
 	return { lat: toDegrees(pt.lat), lng: toDegrees(pt.lng) };
