@@ -129,13 +129,13 @@ let GreatCircle = function (from, to) {
 };
 
 /* Static Utils */
-if (typeof(toRadians) === "undefined") {
+if (toRadians === undefined) {
     let toRadians = (deg) => {
         return deg * (Math.PI / 180);
     };
 }
 
-if (typeof(toDegrees) === "undefined") {
+if (toDegrees === undefined) {
     let toDegrees = (rad) => {
         return rad * (180 / Math.PI);
     };
@@ -228,8 +228,52 @@ let calculateRhumLine = (from, to) => {
 	return ({ heading: rv, dist: dLoxo });
 };
 
+/**
+ *
+ * @param from GeoPoint, L & G in Radians
+ * @param dist distance in nm
+ * @param route route in degrees
+ * @return DR Position, L & G in Radians
+ */
+if (deadReckoning === undefined) {
+let deadReckoning = (from, dist, route) => {
+	let radianDistance = toRadians(dist / 60);
+	let finalLat = (Math.asin((Math.sin(from.lat) * Math.cos(radianDistance)) +
+								            (Math.cos(from.lat) * Math.sin(radianDistance) * Math.cos(toRadians(route)))));
+	let finalLng = from.lng + Math.atan2(Math.sin(toRadians(route)) * Math.sin(radianDistance) * Math.cos(from.lat),
+																			 Math.cos(radianDistance) - Math.sin(from.lat) * Math.sin(finalLat));
+	return ({lat: finalLat, lng: finalLng});
+};
+}
+
 let toDegreePt = (pt) => {
 	return { lat: toDegrees(pt.lat), lng: toDegrees(pt.lng) };
+};
+
+let decToSex = (val, ns_ew) => {
+	let absVal = Math.abs(val);
+	let intValue = Math.floor(absVal);
+	let dec = absVal - intValue;
+	let i = intValue;
+	dec *= 60;
+//    let s = i + "°" + dec.toFixed(2) + "'";
+//    let s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+	let s = "";
+	if (ns_ew !== undefined) {
+		if (val < 0) {
+			s += (ns_ew === 'NS' ? 'S' : 'W');
+		} else {
+			s += (ns_ew === 'NS' ? 'N' : 'E');
+		}
+		s += " ";
+	} else {
+		if (val < 0) {
+			s += '-'
+		}
+	}
+	s += i + "\272" + dec.toFixed(2) + "'";
+
+	return s;
 };
 
 /**
@@ -273,53 +317,6 @@ let getDir = (x, y) => {
 
 if (false) {
 // Main for tests
-
-/**
- *
- * @param from GeoPoint, L & G in Radians
- * @param dist distance in nm
- * @param route route in degrees
- * @return DR Position, L & G in Radians
- */
-    if (deadReckoning === undefined) {
-        let deadReckoning = (from, dist, route) => {
-            let radianDistance = toRadians(dist / 60);
-            let finalLat = (Math.asin((Math.sin(from.lat) * Math.cos(radianDistance)) +
-                                                    (Math.cos(from.lat) * Math.sin(radianDistance) * Math.cos(toRadians(route)))));
-            let finalLng = from.lng + Math.atan2(Math.sin(toRadians(route)) * Math.sin(radianDistance) * Math.cos(from.lat),
-                                                                                     Math.cos(radianDistance) - Math.sin(from.lat) * Math.sin(finalLat));
-            return ({lat: finalLat, lng: finalLng});
-        };
-    }
-
-    if (decToSex === undefined) {
-        let decToSex = (val, ns_ew) => {
-            let absVal = Math.abs(val);
-            let intValue = Math.floor(absVal);
-            let dec = absVal - intValue;
-            let i = intValue;
-            dec *= 60;
-        //    let s = i + "°" + dec.toFixed(2) + "'";
-        //    let s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
-            let s = "";
-            if (ns_ew !== undefined) {
-                if (val < 0) {
-                    s += (ns_ew === 'NS' ? 'S' : 'W');
-                } else {
-                    s += (ns_ew === 'NS' ? 'N' : 'E');
-                }
-                s += " ";
-            } else {
-                if (val < 0) {
-                    s += '-'
-                }
-            }
-            s += i + "\272" + dec.toFixed(2) + "'";
-
-            return s;
-        };
-    }
-
 	let from = {lat: toRadians(45), lng: toRadians(-130)};
 	let dist = 55;
 	let heading = 270;
