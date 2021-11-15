@@ -680,6 +680,12 @@
                 }
                 document.getElementById('current-grib-location').innerText = ('GRIB in ' + gribFileLocation);
             }
+
+            errManager = (mess) => { // Override the one in ww.js
+              // console.log(mess);
+              messageManager(mess);
+            };
+
             // console.log("Loading", (typeof(compositeData) === 'object' ? JSON.stringify(compositeData) : compositeData));
             messageManager("Loading " + (typeof(compositeData) === 'object' ? JSON.stringify(compositeData) : compositeData));
             worldMap.setCanvasWidth(compositeData.canvas.w);
