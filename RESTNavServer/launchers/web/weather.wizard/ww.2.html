@@ -830,7 +830,7 @@
 
                 // Request ready
                 // console.log(requestData);
-                messageManager(typeof(requestData) === 'object' ? JSON.stringify(requestData) : requestData);
+                messageManager(typeof(requestData) === 'object' ? JSON.stringify(requestData, null, 2) : requestData);
                 getCompositeFaxes(requestData, compositeData, faxRequestCallback);
             }
 
