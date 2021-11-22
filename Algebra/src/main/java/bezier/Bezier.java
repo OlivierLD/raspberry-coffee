@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 // Good resource at https://javascript.info/bezier-curve
+// https://en.wikipedia.org/wiki/Pierre_B%C3%A9zier
 
 public class Bezier {
     public static class Point3D {

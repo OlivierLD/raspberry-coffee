@@ -91,7 +91,7 @@ public class ThreeViews {
     private static Map<String, Object> initConfig = null;
 
     /*
-     * Some points are correlated.
+     * Assumptions: Some points are correlated.
      * First rail point and bow top
      * First keel point and bow bottom
      * Transom is defined by the last rail point and last keel point.
@@ -105,7 +105,7 @@ public class ThreeViews {
     private final WhiteBoardPanel whiteBoardXZ; // side
     private final WhiteBoardPanel whiteBoardYZ; // facing
 
-    private VectorUtils.Vector3D centerOfHull = null; // Centre de Carene.
+    private VectorUtils.Vector3D centerOfHull = null; // aka Centre de Carene.
 
     private final Box3D box3D;
 
@@ -138,7 +138,7 @@ public class ThreeViews {
 
         int resp = JOptionPane.showConfirmDialog(frame,
                 panel,
-                "New Boat Data - All values in cm.",
+                "New Boat Data - All values in cm in this form.",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
         if (resp == JOptionPane.OK_OPTION) {
@@ -245,7 +245,7 @@ public class ThreeViews {
 
         int resp = JOptionPane.showConfirmDialog(frame,
                 panel,
-                "Edit Boat Data - All values in cm.",
+                "Edit Boat Data - All values in cm in this form.",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
         if (resp == JOptionPane.OK_OPTION) {
