@@ -913,6 +913,9 @@ public class BoatBox3D extends Box3D {
                 }
                 Bezier.Point3D _top = railOk ? bezierRail.getBezierPoint(tx) : bezierTransom.getBezierPoint(tx);
 
+                // TODO Beams (barrots), with rail points. 3 ctrl points:
+                //   one on each rail, on in the middle, above, h (aka bouge) ~0.15 x total-width
+
                 increase = (bezierKeel.getBezierPoint(0).getX() < bezierKeel.getBezierPoint(1).getX());
                 boolean keelOk = true;
                 try {

@@ -290,7 +290,7 @@ public class SwingSample11 implements MouseListener, MouseMotionListener {
             int height = whiteBoard.getHeight();
             if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                 double newX = canvasToSpaceXTransformer.apply(e.getX());
-                double newY = canvasToSpaceYTransformer.apply(height - e.getY());
+                double newY = canvasToSpaceYTransformer.apply(/*height -*/  e.getY());
 //                System.out.printf("Point dragged to %f / %f\n", newX, newY);
                 Bezier.Point3D point3D = ctrlPoints.get(closestPointIndex);
                 point3D.x(newX).y(newY);
