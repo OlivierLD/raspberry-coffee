@@ -32,7 +32,7 @@ public class SensorsController {
             System.out.println(this.adcConfiguration.toString());
             System.out.println("--------------------------------------");
 
-            LOGGER.log(Level.ALL, String.format("ADC Config: Channel:%d, MISO:%d, MOSI:%d, CLK:%d, CS:%d",
+            LOGGER.log(Level.INFO, String.format("ADC Config: Channel:%d, MISO:%d, MOSI:%d, CLK:%d, CS:%d",
                 this.adcConfiguration.getChannel(),
                 this.adcConfiguration.getMiso(),
                 this.adcConfiguration.getMosi(),

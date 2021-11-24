@@ -799,7 +799,7 @@ public class MCP3008 implements Probe {
 							System.err.println(String.format("At %s :", new Date().toString()));
 							System.err.println(ex.toString());
 							//	ex.printStackTrace();
-							LOGGER.log(Level.ALL, "Air Temp logging", ex);
+							LOGGER.log(Level.WARNING, "Air Temp logging", ex);
 						}
 						try {
 							logger.accept(new LogData()
@@ -809,7 +809,7 @@ public class MCP3008 implements Probe {
 							System.err.println(String.format("At %s :", new Date().toString()));
 							System.err.println(ex.toString());
 							//	ex.printStackTrace();
-							LOGGER.log(Level.ALL, "Humidity logging", ex);
+							LOGGER.log(Level.WARNING, "Humidity logging", ex);
 						}
 					});
 					loggerThread.start();

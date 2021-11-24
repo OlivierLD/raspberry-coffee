@@ -12,6 +12,7 @@ import gsg.SwingUtils.fullui.ThreeDPanelWithWidgets;
 import gsg.VectorUtils;
 
 import javax.swing.*;
+// import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -30,6 +31,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -48,6 +51,12 @@ import java.util.stream.Collectors;
  */
 public class ThreeViews {
 
+    // See in the starting script LOGGING_FLAG="-Djava.util.logging.config.file=./logging.properties"
+    private final static Logger LOGGER = Logger.getLogger(ThreeViews.class.getName()); //  .getLogger(Logger.GLOBAL_LOGGER_NAME); // BoatBox3D.class;
+    static {
+        LOGGER.setLevel(Level.ALL);
+    }
+
     private double minX;
     private double maxX;
     private double minY;
@@ -65,12 +74,12 @@ public class ThreeViews {
     private final JMenuItem menuFileSpit = new JMenuItem();
 
     // Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() will show as Command on Mac
-    private KeyStroke ctrlN = KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
-    private KeyStroke ctrlO = KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
-    private KeyStroke ctrlE = KeyStroke.getKeyStroke(KeyEvent.VK_E, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
-    private KeyStroke ctrlS = KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
-    private KeyStroke ctrlQ = KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
-    private KeyStroke ctrlH = KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK);
+    private final KeyStroke ctrlN = KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
+    private final KeyStroke ctrlO = KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
+    private final KeyStroke ctrlE = KeyStroke.getKeyStroke(KeyEvent.VK_E, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
+    private final KeyStroke ctrlS = KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
+    private final KeyStroke ctrlQ = KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()); // InputEvent.CTRL_DOWN_MASK);
+    private final KeyStroke ctrlH = KeyStroke.getKeyStroke(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK);
 
     private final JMenuItem menuFileNew = new JMenuItem();
     private final JMenuItem menuFileOpen = new JMenuItem();
@@ -118,7 +127,7 @@ public class ThreeViews {
     private List<String> comments;
 
     private void fileNew_ActionPerformed(ActionEvent ae) {
-        System.out.println("File New...");
+        getLogger().log(Level.INFO, "File New...");
         /*
         Need to get:
         minX, maxX, minY, maxY, minZ, maxZ, defaultLHT
@@ -213,7 +222,7 @@ public class ThreeViews {
                 "Select",
                 "Choose Data File");
         // And then...
-        System.out.printf("Opening %s\n", fName);
+        getLogger().log(Level.INFO, String.format("Opening %s\n", fName));
         File config = new File(fName);
         if (config.exists()) {
             try {
@@ -356,7 +365,7 @@ public class ThreeViews {
                         e.printStackTrace();
                     }
                 } else {
-                    System.out.println("Honk!!");
+                    getLogger().log(Level.INFO, "Honk!!");
                     JOptionPane.showMessageDialog(frame,
                             "Please provide a file name!",
                             "File name is missing",
@@ -369,10 +378,10 @@ public class ThreeViews {
     }
 
     private void fileSpit_ActionPerformed(ActionEvent ae) {
-        System.out.println("Ctrl Points:\nRail:");
-        this.railCtrlPoints.forEach(pt -> System.out.println(String.format("%s", pt)));
-        System.out.println("Keel:");
-        this.keelCtrlPoints.forEach(pt -> System.out.println(String.format("%s", pt)));
+        getLogger().log(Level.INFO, "Ctrl Points:\nRail:");
+        this.railCtrlPoints.forEach(pt -> getLogger().log(Level.INFO, String.format("%s", pt)));
+        getLogger().log(Level.INFO, "Keel:");
+        this.keelCtrlPoints.forEach(pt -> getLogger().log(Level.INFO, String.format("%s", pt)));
     }
 
     private void fileExit_ActionPerformed(ActionEvent ae) {
@@ -405,12 +414,12 @@ public class ThreeViews {
                 }
             }
             // Done
-            System.out.println("Done repainting.");
+            getLogger().log(Level.INFO, "Done repainting.");
         });
         repainter.start();
 
         Thread refresher = new Thread(() -> {
-            System.out.println("Starting refresh...");
+            getLogger().log(Level.INFO, "Starting refresh...");
             refreshButton.setEnabled(false);
             boatDataTextArea.setText("Re-calculating...");
             // TODO Stop thread if already running.
@@ -438,13 +447,13 @@ public class ThreeViews {
                 double lwlStart = (double) map.get("lwl-start");
                 double lwlEnd = (double) map.get("lwl-end");
                 // TODO: send to XY
-                System.out.println("Will send to Area Curve");
+                getLogger().log(Level.INFO, "Will send to Area Curve");
                 if (true) {
                     // 1 - Find max area
                     Double wbMaxY = whiteBoardXY.getForcedMaxY();
                     AtomicReference<Double> max = new AtomicReference<>(-Double.MAX_VALUE);
                     displacementMap.forEach((k, v) -> max.set(Math.max(max.get(), v)));
-                    System.out.println("Max area: " + max);
+                    getLogger().log(Level.INFO, "Max area: " + max);
                     double ratio = (wbMaxY / max.get());
                     // TODO Remove the area curve if it exists
                     List<VectorUtils.Vector2D> areas = new ArrayList<>();
@@ -463,7 +472,7 @@ public class ThreeViews {
             });
             // Stop repainter
             keepLooping.set(false);
-            System.out.println("Refresh completed!");
+            getLogger().log(Level.INFO, "Refresh completed!");
             refreshButton.setEnabled(true);
             this.box3D.repaint();
             if (centerOfHull != null) {
@@ -556,7 +565,7 @@ public class ThreeViews {
             if (railCtrlPoints.size() > 2) { // 3 points minimum.
                 for (double t = 0; t <= 1.0; t += 1E-3) {
                     Bezier.Point3D tick = railBezier.getBezierPoint(t);
-                    // System.out.println(String.format("%.03f: %s", t, tick.toString()));
+                    // getLogger().log(Level.INFO, String.format("%.03f: %s", t, tick.toString()));
                     bezierRailPoints.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
                 }
             }
@@ -610,7 +619,7 @@ public class ThreeViews {
             if (keelCtrlPoints.size() > 2) { // 3 points minimum.
                 for (double t = 0; t <= 1.0; t += 1E-3) {
                     Bezier.Point3D tick = keelBezier.getBezierPoint(t);
-                    // System.out.println(String.format("%.03f: %s", t, tick.toString()));
+                    // getLogger().log(Level.INFO, String.format("%.03f: %s", t, tick.toString()));
                     bezierKeelPoints.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
                 }
             }
@@ -926,7 +935,7 @@ public class ThreeViews {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-//                System.out.println("Click on whiteboard");
+//                getLogger().log(Level.INFO, "Click on whiteboard");
                 if (SwingUtilities.isRightMouseButton(e)) { // e.isPopupTrigger()) { // Right-click
                     Bezier.Point3D closePoint = getClosePoint(e, whiteBoardXY, Orientation.XY);
                     if (closePoint != null) {
@@ -942,7 +951,7 @@ public class ThreeViews {
                             "Add Control Point",
                             JOptionPane.OK_CANCEL_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
-//                  System.out.println("Response:" + response);
+//                  getLogger().log(Level.INFO, "Response:" + response);
                     if (response == JOptionPane.OK_OPTION) {
                         try {
                             int newIndex = addPointPanel.getPos();
@@ -984,7 +993,7 @@ public class ThreeViews {
 //        System.out.printf("Mouse clicked x: %d y: %d\n", e.getX(), e.getY());
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardXY, Orientation.XY);
                 if (closePoint != null) {
-//            System.out.println("Found it!");
+//            getLogger().log(Level.INFO, "Found it!");
                     whiteBoardXY.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 }
             }
@@ -993,7 +1002,7 @@ public class ThreeViews {
             @Override
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
-//                System.out.println("Dragged on whiteboard");
+//                getLogger().log(Level.INFO, "Dragged on whiteboard");
                 if (closestPointIndex > -1) {
                     Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardXY.getCanvasToSpaceXTransformer();
                     Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardXY.getCanvasToSpaceYTransformer();
@@ -1017,14 +1026,14 @@ public class ThreeViews {
             @Override
             public void mouseMoved(MouseEvent e) {
                 super.mouseMoved(e);
-//                System.out.println("Moved on whiteboard (MotionListener)");
+//                getLogger().log(Level.INFO, "Moved on whiteboard (MotionListener)");
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardXY, Orientation.XY);
                 if (closePoint != null) {
                     whiteBoardXY.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     if (railCtrlPoints.contains(closePoint)) {
                         closestPointIndex = railCtrlPoints.indexOf(closePoint);
                     } else {
-//                        System.out.println("Close Point on the keel!");
+//                        getLogger().log(Level.INFO, "Close Point on the keel!");
                         closestPointIndex = railCtrlPoints.size() + keelCtrlPoints.indexOf(closePoint);
                     }
                 } else {
@@ -1043,7 +1052,7 @@ public class ThreeViews {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-//                System.out.println("Click on whiteboard");
+//                getLogger().log(Level.INFO, "Click on whiteboard");
                 if (SwingUtilities.isRightMouseButton(e)) { // e.isPopupTrigger()) { // Right-click
                     Bezier.Point3D closePoint = getClosePoint(e, whiteBoardXZ, Orientation.XZ);
                     if (closePoint != null) {
@@ -1059,7 +1068,7 @@ public class ThreeViews {
                             "Add Control Point",
                             JOptionPane.OK_CANCEL_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
-//                  System.out.println("Response:" + response);
+//                  getLogger().log(Level.INFO, "Response:" + response);
                     if (response == JOptionPane.OK_OPTION) {
                         try {
                             int newIndex = addPointPanel.getPos();
@@ -1101,7 +1110,7 @@ public class ThreeViews {
 //        System.out.printf("Mouse clicked x: %d y: %d\n", e.getX(), e.getY());
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardXZ, Orientation.XZ);
                 if (closePoint != null) {
-//            System.out.println("Found it!");
+//            getLogger().log(Level.INFO, "Found it!");
                     whiteBoardXY.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 }
             }
@@ -1110,7 +1119,7 @@ public class ThreeViews {
             @Override
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
-//                System.out.println("Dragged on whiteboard");
+//                getLogger().log(Level.INFO, "Dragged on whiteboard");
                 if (closestPointIndex > -1) {
                     Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardXZ.getCanvasToSpaceXTransformer();
                     Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardXZ.getCanvasToSpaceYTransformer();
@@ -1134,14 +1143,14 @@ public class ThreeViews {
             @Override
             public void mouseMoved(MouseEvent e) {
                 super.mouseMoved(e);
-//                System.out.println("Moved on whiteboard (MotionListener)");
+//                getLogger().log(Level.INFO, "Moved on whiteboard (MotionListener)");
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardXZ, Orientation.XZ);
                 if (closePoint != null) {
                     whiteBoardXZ.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     if (railCtrlPoints.contains(closePoint)) {
                         closestPointIndex = railCtrlPoints.indexOf(closePoint);
                     } else {
-//                        System.out.println("Close Point on the keel!");
+//                        getLogger().log(Level.INFO, "Close Point on the keel!");
                         closestPointIndex = railCtrlPoints.size() + keelCtrlPoints.indexOf(closePoint);
                     }
 //                    closestPointIndex = railCtrlPoints.indexOf(closePoint);
@@ -1161,7 +1170,7 @@ public class ThreeViews {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-//                System.out.println("Click on whiteboard");
+//                getLogger().log(Level.INFO, "Click on whiteboard");
                 if (SwingUtilities.isRightMouseButton(e)) { // e.isPopupTrigger()) { // Right-click
                     Bezier.Point3D closePoint = getClosePoint(e, whiteBoardYZ, Orientation.YZ);
                     if (closePoint != null) {
@@ -1177,7 +1186,7 @@ public class ThreeViews {
                             "Add Control Point",
                             JOptionPane.OK_CANCEL_OPTION,
                             JOptionPane.QUESTION_MESSAGE);
-//                  System.out.println("Response:" + response);
+//                  getLogger().log(Level.INFO, "Response:" + response);
                     if (response == JOptionPane.OK_OPTION) {
                         try {
                             int newIndex = addPointPanel.getPos();
@@ -1219,7 +1228,7 @@ public class ThreeViews {
 //        System.out.printf("Mouse clicked x: %d y: %d\n", e.getX(), e.getY());
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardYZ, Orientation.YZ);
                 if (closePoint != null) {
-//            System.out.println("Found it!");
+//            getLogger().log(Level.INFO, "Found it!");
                     whiteBoardXY.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 }
             }
@@ -1228,7 +1237,7 @@ public class ThreeViews {
             @Override
             public void mouseDragged(MouseEvent e) {
                 super.mouseDragged(e);
-//                System.out.println("Dragged on whiteboard");
+//                getLogger().log(Level.INFO, "Dragged on whiteboard");
                 if (closestPointIndex > -1) {
                     Function<Integer, Double> canvasToSpaceXTransformer = whiteBoardYZ.getCanvasToSpaceXTransformer();
                     Function<Integer, Double> canvasToSpaceYTransformer = whiteBoardYZ.getCanvasToSpaceYTransformer();
@@ -1252,14 +1261,14 @@ public class ThreeViews {
             @Override
             public void mouseMoved(MouseEvent e) {
                 super.mouseMoved(e);
-//                System.out.println("Moved on whiteboard (MotionListener)");
+//                getLogger().log(Level.INFO, "Moved on whiteboard (MotionListener)");
                 Bezier.Point3D closePoint = getClosePoint(e, whiteBoardYZ, Orientation.YZ);
                 if (closePoint != null) {
                     whiteBoardYZ.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     if (railCtrlPoints.contains(closePoint)) {
                         closestPointIndex = railCtrlPoints.indexOf(closePoint);
                     } else {
-//                        System.out.println("Close Point on the keel!");
+//                        getLogger().log(Level.INFO, "Close Point on the keel!");
                         closestPointIndex = railCtrlPoints.size() + keelCtrlPoints.indexOf(closePoint);
                     }
 //                    closestPointIndex = railCtrlPoints.indexOf(closePoint);
@@ -1414,7 +1423,7 @@ public class ThreeViews {
                         ((BoatBox3D) box3D).setFrameIncrement(val);
                         box3D.repaint();
                     } catch (NumberFormatException nfe) {
-                        System.err.println(nfe.toString());
+                        System.err.println(nfe);
                     }
                 }
             }
@@ -1447,7 +1456,7 @@ public class ThreeViews {
                         ((BoatBox3D) box3D).setWlIncrement(val);
                         box3D.repaint();
                     } catch (NumberFormatException nfe) {
-                        System.err.println(nfe.toString());
+                        System.err.println(nfe);
                     }
                 }
             }
@@ -1480,7 +1489,7 @@ public class ThreeViews {
                         ((BoatBox3D) box3D).setButtockIncrement(val);
                         box3D.repaint();
                     } catch (NumberFormatException nfe) {
-                        System.err.println(nfe.toString());
+                        System.err.println(nfe);
                     }
                 }
             }
@@ -1570,6 +1579,8 @@ public class ThreeViews {
                         new Insets(0, 0, 0, 0), 0, 0));
 
         JPanel frameBoxesPanel = new JPanel();
+//        frameBoxesPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+        frameBoxesPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         frameBoxesPanel.add(framesCheckBox);
         frameBoxesPanel.add(beamsCheckBox);
 
@@ -1724,6 +1735,7 @@ public class ThreeViews {
     }
 
     public ThreeViews() {
+
         instance = this;
 
         this.whiteBoardXY = new WhiteBoardPanel(); // from above
@@ -1732,9 +1744,13 @@ public class ThreeViews {
 
         this.initConfiguration(true);
         /*BoatBox3D*/
-        this.box3D = new BoatBox3D(minX, maxX, minY, maxY, minZ, maxZ, defaultLHT);
+        this.box3D = new BoatBox3D(minX, maxX, minY, maxY, minZ, maxZ, defaultLHT, this);
         threeDPanel = new ThreeDPanelWithWidgets(box3D);
         this.initComponents();
+    }
+
+    public Logger getLogger() {
+        return LOGGER;
     }
 
     private void reLoadConfig(boolean full) {
@@ -1817,7 +1833,7 @@ public class ThreeViews {
         if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
             double x = canvasToSpaceXTransformer.apply(me.getX());
             double y = canvasToSpaceYTransformer.apply(me.getY()); // + wbp.getForcedMinY();
-//            System.out.println(String.format("Mouse: X:%d, Y:%d - height: %d, fMinY: %.02f, fMaxY:%.02f, X:%.02f, Y:%.02f",
+//            getLogger().log(Level.INFO, String.format("Mouse: X:%d, Y:%d - height: %d, fMinY: %.02f, fMaxY:%.02f, X:%.02f, Y:%.02f",
 //                    me.getX(), me.getY(),
 //                    height, wbp.getForcedMinY(), wbp.getForcedMaxY(), x, y));
             where = new VectorUtils.Vector2D().x(x).y(y);
@@ -1846,11 +1862,11 @@ public class ThreeViews {
     static class BezierPopup extends JPopupMenu
             implements ActionListener,
             PopupMenuListener {
-        private JMenuItem deleteMenuItem;
-        private JMenuItem editMenuItem;
+        private final JMenuItem deleteMenuItem;
+        private final JMenuItem editMenuItem;
 
-        private ThreeViews parent;
-        private Bezier.Point3D closePoint;
+        private final ThreeViews parent;
+        private final Bezier.Point3D closePoint;
 
         private final static String DELETE_CTRL_POINT = "Delete Ctrl Point";
         private final static String EDIT_CTRL_POINT = "Edit Ctrl Point";
@@ -1919,16 +1935,16 @@ public class ThreeViews {
     }
 
     static class CtrlPointEditor extends JPanel {
-        private transient Border border = BorderFactory.createEtchedBorder();
-        private GridBagLayout layoutMain = new GridBagLayout();
-        private JLabel xLabel = new JLabel("X");
+        private final transient Border border = BorderFactory.createEtchedBorder();
+        private final GridBagLayout layoutMain = new GridBagLayout();
+        private final JLabel xLabel = new JLabel("X");
         private final JFormattedTextField xValue = new JFormattedTextField(new DecimalFormat("#0.0000"));
-        private JLabel yLabel = new JLabel("Y");
+        private final JLabel yLabel = new JLabel("Y");
         private final JFormattedTextField yValue = new JFormattedTextField(new DecimalFormat("#0.0000"));
-        private JLabel zLabel = new JLabel("Z");
+        private final JLabel zLabel = new JLabel("Z");
         private final JFormattedTextField zValue = new JFormattedTextField(new DecimalFormat("#0.0000"));
 
-        private double x, y, z;
+        private final double x, y, z;
 
         public CtrlPointEditor(double x, double y, double z) {
             this.x = x;
@@ -1983,20 +1999,20 @@ public class ThreeViews {
     }
 
     static class AddCtrlPointPanel extends JPanel {
-        private transient Border border = BorderFactory.createEtchedBorder();
-        private GridBagLayout layoutMain = new GridBagLayout();
-        private JRadioButton railButton = new JRadioButton("Rail");
-        private JRadioButton keelButton = new JRadioButton("Keel");
-        private ButtonGroup group = new ButtonGroup();
+        private final transient Border border = BorderFactory.createEtchedBorder();
+        private final GridBagLayout layoutMain = new GridBagLayout();
+        private final JRadioButton railButton = new JRadioButton("Rail");
+        private final JRadioButton keelButton = new JRadioButton("Keel");
+        private final ButtonGroup group = new ButtonGroup();
 
-        private JLabel posLabel = new JLabel("Index in Rail...");
+        private final JLabel posLabel = new JLabel("Index in Rail...");
         private final JFormattedTextField posValue = new JFormattedTextField(new DecimalFormat("#0"));
 
         enum CurveName {
             RAIL, KEEL
         }
 
-        private int railCard, keelCard;
+        private final int railCard, keelCard;
 
         public AddCtrlPointPanel(int railCardinality, int keelCardinality) {
             this.railCard = railCardinality;
@@ -2088,7 +2104,7 @@ public class ThreeViews {
 //                ex.printStackTrace();
 //            }
 //        } else {
-//            System.out.println("Warning: no init.json was found.");
+//            getLogger().log(Level.INFO, "Warning: no init.json was found.");
 //        }
 
         ThreeViews thisThing = new ThreeViews();// This one has instantiated the white boards

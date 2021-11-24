@@ -24,7 +24,7 @@ class SensorsController {
 
 		this.adcConfiguration = adcConfiguration
 		if (this.adcConfiguration != null) {
-			LOGGER.log(Level.ALL, java.lang.String.format("ADC Config: Channel:%d, MISO:%d, MOSI:%d, CLK:%d, CS:%d",
+			LOGGER.log(Level.INFO, java.lang.String.format("ADC Config: Channel:%d, MISO:%d, MOSI:%d, CLK:%d, CS:%d",
 					this.adcConfiguration?.getChannel(),
 					this.adcConfiguration?.getMiso(),
 					this.adcConfiguration?.getMosi(),

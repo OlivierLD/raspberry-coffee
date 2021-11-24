@@ -28,7 +28,7 @@ This creates a new java project in a `sensors` folder, with a `micronaut.sensors
 > Note: From an IDE (like IntelliJ), it's much better to open the `sensors` directory as a new Project.
  
 Then add a Controller
-```java
+```
 package micronaut.sensors;
 
 import io.micronaut.http.MediaType;
@@ -99,7 +99,7 @@ adc:
   channel: 2
 ```
 Create an _annotated_ matching bean, next to the Controller (or anywhere you want):
-```java
+```
 package micronaut.sensors;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
@@ -160,7 +160,7 @@ public class ADCConfiguration {
 > - the _empty_ constructor (no other is required)
 
 Modify the Controller, add a constructor, receiving the configuration bean as parameter:
-```java
+```
 . . .
 public class SensorsController {
 
@@ -207,7 +207,7 @@ http-tiny-server $ ../gradlew clean shadowJar install
 ```
 
 From the Micronaut service project, add the dependency on ADC in `build.gradle`:
-```groovy
+```
 dependencies {
   . . .
   compile 'oliv.raspi.coffee:ADC:1.0'
@@ -223,7 +223,7 @@ repositories {
 }
 ```
 Now, create - as featured in this project - the class `rpi.sensors.ADCChannel`, and instantiate it in the Controller's constructor:
-```java
+```
 @Controller("/sensors")
 public class SensorsController {
 
@@ -251,7 +251,7 @@ public class SensorsController {
 }
 ```
 It can now be invoked by the operation in the service:
-```java
+```
     @Get("/ambient-light")
     @Produces(MediaType.APPLICATION_JSON)
     public String getLuminosity() {
@@ -449,7 +449,7 @@ class ADCConfiguration {
 Look in the code to see what `rpi.sensors.ADCChannel.kt` looks like.
 The life-cycle management looks a lot like the one in Java, as you can see above (`@PostConstruct`, `@PreDestroy`)
 And then the Controller code needs to look like this:
-```kotlin
+```
 package sensors.kt
 
 import . . .
@@ -469,7 +469,7 @@ class SensorsController {
 
 		this.adcConfiguration = adcConfiguration
 		if (this.adcConfiguration != null) {
-			LOGGER.log(Level.ALL, java.lang.String.format("ADC Config: Channel:%d, MISO:%d, MOSI:%d, CLK:%d, CS:%d",
+			LOGGER.log(Level.INFO, java.lang.String.format("ADC Config: Channel:%d, MISO:%d, MOSI:%d, CLK:%d, CS:%d",
 					this.adcConfiguration?.getChannel(),
 					this.adcConfiguration?.getMiso(),
 					this.adcConfiguration?.getMosi(),

@@ -38,7 +38,7 @@ public class MCP3008Wrapper {
 		} catch (UnsatisfiedLinkError ule) {
 			// Not on a Pi?
 			instance.simulating = true;
-			MCP3008.getLogger().log(Level.ALL, "Not on a Pi?", ule);
+			MCP3008.getLogger().log(Level.WARNING, "Not on a Pi?", ule);
 		}
 		return instance;
 	}
