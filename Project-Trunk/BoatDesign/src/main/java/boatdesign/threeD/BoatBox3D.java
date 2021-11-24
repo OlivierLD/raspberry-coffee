@@ -11,6 +11,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Many hard-coded values anf options...
@@ -18,7 +20,12 @@ import java.util.function.Consumer;
  */
 public class BoatBox3D extends Box3D {
 
-    private static boolean verbose = false;
+    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // BoatBox3D.class;
+    static {
+        LOGGER.setLevel(Level.INFO);
+    }
+
+    private final static boolean verbose = false;
 
     // Default values, overridden from a config
     private final static int MIN_X =  -25;
@@ -50,6 +57,7 @@ public class BoatBox3D extends Box3D {
     private List<Double> vValues = List.of(20d, 40d, 60d, 80d, 100d);
 //    private List<Double> vValues = List.of(10d, 20d, 30d, 40d, 50d, 60d, 70d, 80d, 90d, 100d);
     private boolean frames = true;
+    private boolean beams = true;
     private boolean waterlines = true;
     private boolean buttocks = true;
 
@@ -78,6 +86,7 @@ public class BoatBox3D extends Box3D {
             new Bezier.Point3D((-centerOnXValue + xOffset) + 550.000000, 0.000000, 5.000000)); // PT A
 
     private List<List<Bezier.Point3D>> frameCtrlPts = new ArrayList<>();
+    private List<List<Bezier.Point3D>> beamCtrlPts = new ArrayList<>();
     private List<VectorUtils.Vector3D> bezierPointsRail = new ArrayList<>();
     private List<VectorUtils.Vector3D> bezierPointsBow = new ArrayList<>();
     private List<VectorUtils.Vector3D> bezierPointsKeel = new ArrayList<>();
@@ -85,13 +94,14 @@ public class BoatBox3D extends Box3D {
     private List<VectorUtils.Vector3D> bezierPointsTransom = new ArrayList<>();
 
     private List<List<VectorUtils.Vector3D>> frameBezierPts = new ArrayList<>();
+    private List<List<VectorUtils.Vector3D>> beamBezierPts = new ArrayList<>();
     private List<List<Bezier.Point3D>> hLines = new ArrayList<>();
     private List<List<Bezier.Point3D>> vLines = new ArrayList<>();
 
     protected BoatBox3D instance = this;
 
     public BoatBox3D() {
-//        super(ThreeDFrameWithWidgetsV2.DEFAULT_WIDTH, ThreeDFrameWithWidgetsV2.DEFAULT_HEIGHT); // TODO Move this in another constructor
+//        super(ThreeDFrameWithWidgetsV2.DEFAULT_WIDTH, ThreeDFrameWithWidgetsV2.DEFAULT_HEIGHT); // TODO Move this in another constructor?
         this(MIN_X, MAX_X, MIN_Y, MAX_Y, MIN_Z, MAX_Z, DEFAULT_LHT);
     }
     public BoatBox3D(double minX,
@@ -221,8 +231,23 @@ public class BoatBox3D extends Box3D {
                                 }
                             }
                         }
+
+                        // Manage the beamCtrlPoints
+                        if (beams) {
+                            for (List<Bezier.Point3D> ctrlPts : beamCtrlPts) { // draw segments. TODO Manage symmetrical
+                                from = null;
+                                for (Bezier.Point3D ctrlPoint : ctrlPts) {
+                                    if (from != null) {
+                                        VectorUtils.Vector3D to = new VectorUtils.Vector3D(ctrlPoint.getX(), ctrlPoint.getY(), ctrlPoint.getZ());
+                                        instance.drawSegment(g2d, from, to);
+                                    }
+                                    from = new VectorUtils.Vector3D(ctrlPoint.getX(), ctrlPoint.getY(), ctrlPoint.getZ());
+                                }
+                            }
+                        }
                     } catch (ConcurrentModificationException cme) {
-                        System.err.println(cme.toString());
+                        LOGGER.log(Level.ALL, "Concurrent Modification", cme);
+//                        System.err.println(cme);
                     }
                 }
                 // Plot the control points
@@ -296,8 +321,19 @@ public class BoatBox3D extends Box3D {
                                 });
                             }
                         }
+                        // beamCtrlPoints. TODO Manage symmetrical
+                        if (beams) {
+                            for (List<Bezier.Point3D> ctrlPts : beamCtrlPts) {
+                                ctrlPts.forEach(pt -> {
+                                    VectorUtils.Vector3D at = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
+                                    instance.drawCircle(g2d, at, 3);
+                                });
+                            }
+                        }
+
                     } catch (ConcurrentModificationException cme) {
-                        System.err.println(cme.toString());
+                        LOGGER.log(Level.ALL, "Concurrent Modification", cme);
+//                        System.err.println(cme);
                     }
                 }
             }
@@ -368,10 +404,11 @@ public class BoatBox3D extends Box3D {
                 }
             }
 
-            // All the frames
+            // All the frames, and possibly beams.
             if (frames) {
                 g2d.setStroke(new BasicStroke(1));
                 try {
+                    // Frames
                     for (List<VectorUtils.Vector3D> bezierPoints : frameBezierPts) {
                         from = null;
                         for (VectorUtils.Vector3D to : bezierPoints) {
@@ -393,9 +430,24 @@ public class BoatBox3D extends Box3D {
                             }
                         }
                     }
+                    // Beams? (WiP)
+                    if (beams) {
+                        for (List<VectorUtils.Vector3D> bezierPoints : beamBezierPts) {
+                            from = null;
+                            for (VectorUtils.Vector3D to : bezierPoints) {
+                                if (from != null) {
+                                    instance.drawSegment(g2d, from, to);
+                                }
+                                from = to;
+                            }
+                            // TODO Manage symmetrical y/n
+                        }
+                    }
+
                 } catch (ConcurrentModificationException cme) {
-                    // Aborb?
-                    System.err.println(cme.toString());
+                    // Absorb?
+                    LOGGER.log(Level.ALL, "Concurrent Modification", cme);
+//                    System.err.println(cme);
                 }
             }
 
@@ -444,8 +496,9 @@ public class BoatBox3D extends Box3D {
                         }
                     }
                 } catch (ConcurrentModificationException cme) {
-                    // Aborb?
-                    System.err.println(cme.toString());
+                    // Absorb?
+                    LOGGER.log(Level.ALL, "Concurrent Modification", cme);
+//                    System.err.println(cme);
                 }
             }
             if (buttocks) { // Display
@@ -473,8 +526,9 @@ public class BoatBox3D extends Box3D {
                             }
                         }
                     } catch (ConcurrentModificationException cme) {
-                        // Aborb?
-                        System.err.println(cme.toString());
+                        // Absorb?
+                        LOGGER.log(Level.ALL, "Concurrent Modification", cme);
+//                        System.err.println(cme);
                     }
                 }
             }
@@ -594,9 +648,15 @@ public class BoatBox3D extends Box3D {
     public boolean isFrames() {
         return frames;
     }
+    public boolean isBeams() {
+        return beams;
+    }
 
     public void setFrames(boolean frames) {
         this.frames = frames;
+    }
+    public void setBeams(boolean beams) {
+        this.beams = beams;
     }
 
     public boolean isWaterlines() {
@@ -767,7 +827,9 @@ public class BoatBox3D extends Box3D {
         maxLength = Math.max(maxKeel, maxRail) - (-centerOnXValue + xOffset);
         centerOnXValue = (maxLength / 2.0) + xOffset;
 
+        // Reset all points
         this.frameCtrlPts = new ArrayList<>();
+        this.beamCtrlPts = new ArrayList<>();
         this.bezierPointsRail = new ArrayList<>();
         this.bezierPointsBow = new ArrayList<>();
         this.bezierPointsKeel = new ArrayList<>();
@@ -777,6 +839,11 @@ public class BoatBox3D extends Box3D {
         this.frameBezierPts = new ArrayList<>();
         this.hLines = new ArrayList<>();
         this.vLines = new ArrayList<>();
+        this.beamBezierPts = new ArrayList<>();
+
+        // Center of Hull
+        this.xCenterOfHull = -1;
+        this.zCenterOfHull = -1;
 
         // Generate the data, the Bézier curves.
 
@@ -812,9 +879,9 @@ public class BoatBox3D extends Box3D {
         double tFor0 = 0;
         Bezier.Point3D wlPoint1 = null;
         try {
-            tFor0 = bezierBow.getTForGivenZ(0.0, 1E-1, 0, 1E-4, false);
+            tFor0 = bezierBow.getTForGivenZ(0.0, 1e-1, 0, 1e-4, false);
         } catch (Bezier.TooDeepRecursionException tdre) {
-            // TODO Manage that
+            LOGGER.log(Level.ALL, "Too deep recursion", tdre);
             tdre.printStackTrace();
             tFor0 = -1;
         }
@@ -827,9 +894,9 @@ public class BoatBox3D extends Box3D {
         boolean dirForLWLEnd = true;
         if (wlPoint1 == null) {
             try {
-                tFor0 = bezierKeel.getTForGivenZ(0.0, 1E-1, 0, 1E-4, false);
+                tFor0 = bezierKeel.getTForGivenZ(0.0, 1e-1, 0, 1e-4, false);
             } catch (Bezier.TooDeepRecursionException tdre) {
-                // TODO Manage that
+                LOGGER.log(Level.ALL, "Too deep recursion", tdre);
                 tdre.printStackTrace();
                 tFor0 = -1;
             }
@@ -851,23 +918,29 @@ public class BoatBox3D extends Box3D {
                 maxDepthT = t;
             }
         }
-        maxDepthX = maxDepthPoint.getX() - (-centerOnXValue + xOffset);
+        if (maxDepthPoint != null) {
+            maxDepthX = maxDepthPoint.getX() - (-centerOnXValue + xOffset);
+        }
         if (localVerbose || verbose) {
             System.out.printf("Max Depth: %f, at X:%f\n", maxDepth, maxDepthPoint.getX() - (-centerOnXValue + xOffset));
         }
         // End of LWL
         double t2For0 = -1d;
         try {
-            t2For0 = bezierKeel.getTForGivenZ(maxDepthT + 0.2 /* TODO... Mmmh */, 1E-2, 0, 1E-4, true);
+            t2For0 = bezierKeel.getTForGivenZ(maxDepthT + 0.2 /* TODO... Mmmh */, 1e-2, 0, 1e-4, true);
         } catch (Bezier.TooDeepRecursionException tdre) {
-            // TODO Manage that
+            LOGGER.log(Level.ALL, "Too deep recursion", tdre);
             tdre.printStackTrace();
             t2For0 = -1;
         }
         Bezier.Point3D wlPoint2 = bezierKeel.getBezierPoint(t2For0);
-        lwlStart = wlPoint1.getX()  - (-centerOnXValue + xOffset);
+        if (wlPoint1 != null) {
+            lwlStart = wlPoint1.getX() - (-centerOnXValue + xOffset);
+        }
         lwlEnd = wlPoint2.getX() - (-centerOnXValue + xOffset);
-        lwl = wlPoint2.getX() - wlPoint1.getX();
+        if (wlPoint1 != null) {
+            lwl = wlPoint2.getX() - wlPoint1.getX();
+        }
         if (localVerbose || verbose) {
             System.out.printf("LWL: %f\n", lwl);
         }
@@ -878,8 +951,10 @@ public class BoatBox3D extends Box3D {
             Bezier.Point3D tick = bezierTransom.getBezierPoint(t);
             bezierPointsTransom.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
         }
+        // TODO Transom beam here?
 
         List<Bezier> frameBeziers = new ArrayList<>();
+        List<Bezier> beamBeziers = new ArrayList<>();
         Map<Double, Double> displacementXMap = new LinkedHashMap<>();
         Map<Double, Double> displacementZMap = new LinkedHashMap<>();
         double displ = 0d;
@@ -896,38 +971,35 @@ public class BoatBox3D extends Box3D {
                 }
                 long one = System.currentTimeMillis();
                 boolean increase = (bezierRail.getBezierPoint(0).getX() < bezierRail.getBezierPoint(1).getX());
-                double tx = 0;
+                double tx = 0d;
                 boolean railOk = true;
                 try {
-                    tx = bezierRail.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
+                    tx = bezierRail.getTForGivenX(0.0, 1e-1, _x, 1e-4, increase);
                     // Same as keel/bow below, for rail/transom
 //                    System.out.println(String.format("Rail: x:%f -> t:%f", _x, tx));
                     if (tx == -1d) {
                         railOk = false;
-                        tx = bezierTransom.getTForGivenX(0.0, 1E-1, _x, 1E-4); // Not sure that's right...
+                        tx = bezierTransom.getTForGivenX(0.0, 1e-1, _x, 1e-4); // Not sure that's right...
                     }
                 } catch (Bezier.TooDeepRecursionException tdre) {
-                    // TODO Manage that
+                    LOGGER.log(Level.ALL, "Too deep recursion", tdre);
                     tdre.printStackTrace();
                     tx = -1;
                 }
                 Bezier.Point3D _top = railOk ? bezierRail.getBezierPoint(tx) : bezierTransom.getBezierPoint(tx);
 
-                // TODO Beams (barrots), with rail points. 3 ctrl points:
-                //   one on each rail, on in the middle, above, h (aka bouge) ~0.15 x total-width
-
                 increase = (bezierKeel.getBezierPoint(0).getX() < bezierKeel.getBezierPoint(1).getX());
                 boolean keelOk = true;
                 try {
-                    tx = bezierKeel.getTForGivenX(0.0, 1E-1, _x, 1E-4, increase);
+                    tx = bezierKeel.getTForGivenX(0.0, 1e-1, _x, 1e-4, increase);
 //                    System.out.println(String.format("x:%f -> t:%f", _x, tx));
                     if (tx == -1d) { // Out of limits
                         keelOk = false;
-                        tx = bezierBow.getTForGivenX(0.0, 1E-1, _x, 1E-4);
+                        tx = bezierBow.getTForGivenX(0.0, 1e-1, _x, 1e-4);
 //                        System.out.println(String.format("Bow: x:%f -> t:%f", _x, tx));
                     }
                 } catch (Bezier.TooDeepRecursionException tdre) {
-                    // TODO Manage that
+                    LOGGER.log(Level.ALL, "Too deep recursion", tdre);
                     tdre.printStackTrace();
                     tx = -1;
                 }
@@ -941,6 +1013,19 @@ public class BoatBox3D extends Box3D {
                 frameCtrlPts.add(ctrlPointsFrame);
                 Bezier bezierFrame = new Bezier(ctrlPointsFrame);
                 frameBeziers.add(bezierFrame);
+
+                // Beam.
+                // one on each rail, on in the middle, above, h (aka bouge) ~0.15 x total-width
+                List<Bezier.Point3D> ctrlPointsBeam = List.of(
+                        new Bezier.Point3D(_x, _top.getY(), _top.getZ()),
+                        new Bezier.Point3D(_x, 0, _top.getZ() + (2 * _top.getY() * 0.15)),
+                        new Bezier.Point3D(_x, - _top.getY(), _top.getZ()));
+
+                beamCtrlPts.add(ctrlPointsBeam);
+                Bezier bezierBeam = new Bezier(ctrlPointsBeam);
+                beamBeziers.add(bezierBeam);
+
+                // Create and add frame points
                 List<VectorUtils.Vector3D> bezierPointsFrame = new ArrayList<>();
                 double frameArea = 0.0;
                 double prevY = -1.0;
@@ -972,11 +1057,44 @@ public class BoatBox3D extends Box3D {
                 synchronized (frameBezierPts) {
                     frameBezierPts.add(bezierPointsFrame);
                 }
+
+                // Beam
+                List<VectorUtils.Vector3D> bezierPointsBeam = new ArrayList<>();
+                for (double t = 0; t <= 1.0; t += 0.01) {
+                    Bezier.Point3D tick = bezierBeam.getBezierPoint(t);
+                    bezierPointsBeam.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
+                }
+
+                synchronized (beamBezierPts) {
+                    beamBezierPts.add(bezierPointsBeam);
+                }
+
                 long two = System.currentTimeMillis();
                 if (localVerbose || verbose) {
                     System.out.printf(" in %s ms.\n", NumberFormat.getInstance().format(two - one));
                 }
             }
+            // Add last beam, for the transom (last rail point). TODO Add it to transom?
+            if (true) {
+                Bezier.Point3D _top = bezierRail.getBezierPoint(1.0);
+                List<Bezier.Point3D> ctrlPointsBeam = List.of(
+                        new Bezier.Point3D(_top.getX(), _top.getY(), _top.getZ()),
+                        new Bezier.Point3D(_top.getX(), 0, _top.getZ() + (2 * _top.getY() * 0.15)),
+                        new Bezier.Point3D(_top.getX(), - _top.getY(), _top.getZ()));
+                beamCtrlPts.add(ctrlPointsBeam);
+                Bezier bezierBeam = new Bezier(ctrlPointsBeam);
+                beamBeziers.add(bezierBeam);
+
+                List<VectorUtils.Vector3D> bezierPointsBeam = new ArrayList<>();
+                for (double t = 0; t <= 1.0; t += 0.01) {
+                    Bezier.Point3D tick = bezierBeam.getBezierPoint(t);
+                    bezierPointsBeam.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
+                }
+                synchronized (beamBezierPts) {
+                    beamBezierPts.add(bezierPointsBeam);
+                }
+            }
+
             // displ?
             if (localVerbose || verbose) {
                 System.out.printf("- Max area: %f, LWL: %f\n", maxFrameArea, lwl);
@@ -1062,7 +1180,7 @@ public class BoatBox3D extends Box3D {
                     boolean increasing = (bezierBow.getBezierPoint(0).getZ() < bezierBow.getBezierPoint(1).getZ());
                     double tBow = 0;
                     try {
-                        tBow = bezierBow.getTForGivenZ(0, 1E-1, z, 1E-4, increasing);
+                        tBow = bezierBow.getTForGivenZ(0, 1e-1, z, 1e-4, increasing);
                     } catch (Bezier.TooDeepRecursionException tdre) {
                         tdre.printStackTrace();
                         tBow = -1;
@@ -1081,9 +1199,9 @@ public class BoatBox3D extends Box3D {
                         boolean increase = (bezier.getBezierPoint(0).getZ() < bezier.getBezierPoint(1).getZ());
                         double t = 0;
                         try {
-                            t = bezier.getTForGivenZ(0, 1E-1, z, 1E-4, increase);
+                            t = bezier.getTForGivenZ(0, 1e-1, z, 1e-4, increase);
                         } catch (Bezier.TooDeepRecursionException tdre) {
-                            // TODO Manage that
+                            LOGGER.log(Level.ALL, "Too deep recursion", tdre);
                             tdre.printStackTrace();
                             t = -1;
                         }
@@ -1106,7 +1224,7 @@ public class BoatBox3D extends Box3D {
                     increasing = (bezierTransom.getBezierPoint(0).getZ() < bezierTransom.getBezierPoint(1).getZ());
                     double tTransom = 0;
                     try {
-                        tTransom = bezierTransom.getTForGivenZ(0, 1E-1, z, 1E-4, increasing);
+                        tTransom = bezierTransom.getTForGivenZ(0, 1e-1, z, 1e-4, increasing);
                     } catch (Bezier.TooDeepRecursionException tdre) {
                         tdre.printStackTrace();
                         tTransom = -1;
@@ -1236,7 +1354,7 @@ public class BoatBox3D extends Box3D {
                     boolean increasing = (bezierBow.getBezierPoint(0).getY() < bezierBow.getBezierPoint(1).getY());
                     double tBow = 0;
                     try {
-                        tBow = bezierBow.getTForGivenY(0, 1E-1, y, 1E-4, increasing);
+                        tBow = bezierBow.getTForGivenY(0, 1e-1, y, 1e-4, increasing);
                     } catch (Bezier.TooDeepRecursionException tdre) {
                         tdre.printStackTrace();
                         tBow = -1;
@@ -1250,9 +1368,9 @@ public class BoatBox3D extends Box3D {
                         boolean increase = (bezier.getBezierPoint(0).getY() < bezier.getBezierPoint(1).getY());
                         double t = 0;
                         try {
-                            t = bezier.getTForGivenY(0, 1E-1, y, 1E-4, increase);
+                            t = bezier.getTForGivenY(0, 1e-1, y, 1e-4, increase);
                         } catch (Bezier.TooDeepRecursionException tdre) {
-                            // TODO Manage that
+                            LOGGER.log(Level.ALL, "Too deep recursion", tdre);
                             tdre.printStackTrace();
                             t = -1;
                         }
@@ -1271,7 +1389,7 @@ public class BoatBox3D extends Box3D {
                     increasing = (bezierTransom.getBezierPoint(0).getY() < bezierTransom.getBezierPoint(1).getY());
                     double tTransom = 0;
                     try {
-                        tTransom = bezierTransom.getTForGivenY(0, 1E-1, y, 1E-4, increasing);
+                        tTransom = bezierTransom.getTForGivenY(0, 1e-1, y, 1e-4, increasing);
                     } catch (Bezier.TooDeepRecursionException tdre) {
                         tdre.printStackTrace();
                         tTransom = -1;

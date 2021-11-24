@@ -1032,8 +1032,10 @@ public class ThreeViews {
                     closestPointIndex = -1;
                 }
                 VectorUtils.Vector2D whiteBoardMousePos = getWhiteBoardMousePos(e, whiteBoardXY); //, Orientation.XZ);
-                whiteBoardXY.setToolTipText(String.format("<html>X: %.02f<br>Y: %.02f</html>",
-                        whiteBoardMousePos.getX(), whiteBoardMousePos.getY()));
+                if (whiteBoardMousePos != null) {
+                    whiteBoardXY.setToolTipText(String.format("<html>X: %.02f<br>Y: %.02f</html>",
+                            whiteBoardMousePos.getX(), whiteBoardMousePos.getY()));
+                }
             }
         });
 
@@ -1148,8 +1150,10 @@ public class ThreeViews {
                     closestPointIndex = -1;
                 }
                 VectorUtils.Vector2D whiteBoardMousePos = getWhiteBoardMousePos(e, whiteBoardXZ); //, Orientation.XZ);
-                whiteBoardXZ.setToolTipText(String.format("<html>X: %.02f<br>Z: %.02f</html>",
-                        whiteBoardMousePos.getX(), whiteBoardMousePos.getY()));
+                if (whiteBoardMousePos != null) {
+                    whiteBoardXZ.setToolTipText(String.format("<html>X: %.02f<br>Z: %.02f</html>",
+                            whiteBoardMousePos.getX(), whiteBoardMousePos.getY()));
+                }
             }
         });
 
@@ -1264,8 +1268,10 @@ public class ThreeViews {
                     closestPointIndex = -1;
                 }
                 VectorUtils.Vector2D whiteBoardMousePos = getWhiteBoardMousePos(e, whiteBoardYZ); //, Orientation.XZ);
-                whiteBoardYZ.setToolTipText(String.format("<html>Y: %.02f<br>Z: %.02f</html>",
-                        whiteBoardMousePos.getX(), whiteBoardMousePos.getY()));
+                if (whiteBoardMousePos != null) {
+                    whiteBoardYZ.setToolTipText(String.format("<html>Y: %.02f<br>Z: %.02f</html>",
+                            whiteBoardMousePos.getX(), whiteBoardMousePos.getY()));
+                }
             }
         });
 
@@ -1378,6 +1384,7 @@ public class ThreeViews {
         JCheckBox justBoatCheckBox = new JCheckBox("Just boat");
         JCheckBox symmetricCheckBox = new JCheckBox("Symmetrical");
         JCheckBox framesCheckBox = new JCheckBox("Frames");
+        JCheckBox beamsCheckBox = new JCheckBox("Beams");
         JCheckBox waterlinesCheckBox = new JCheckBox("Waterlines");
         JCheckBox buttocksCheckBox = new JCheckBox("Buttocks");
         JCheckBox ctrlPointsCheckBox = new JCheckBox("Ctrl-Points");
@@ -1506,7 +1513,18 @@ public class ThreeViews {
 //            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
             ((BoatBox3D) this.box3D).setFrames(selected);
             this.box3D.repaint();
+            beamsCheckBox.setEnabled(selected);
+
         });
+        beamsCheckBox.setSelected(((BoatBox3D) this.box3D).isBeams());
+        beamsCheckBox.addActionListener(evt -> {
+            boolean selected = ((JCheckBox) evt.getSource()).isSelected();
+//            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
+            ((BoatBox3D) this.box3D).setBeams(selected);
+            this.box3D.repaint();
+        });
+
+
         waterlinesCheckBox.setSelected(((BoatBox3D) this.box3D).isWaterlines());
         waterlinesCheckBox.addActionListener(evt -> {
             boolean selected = ((JCheckBox) evt.getSource()).isSelected();
@@ -1551,7 +1569,11 @@ public class ThreeViews {
                         GridBagConstraints.NONE,
                         new Insets(0, 0, 0, 0), 0, 0));
 
-        topWidgetsPanel.add(framesCheckBox,
+        JPanel frameBoxesPanel = new JPanel();
+        frameBoxesPanel.add(framesCheckBox);
+        frameBoxesPanel.add(beamsCheckBox);
+
+        topWidgetsPanel.add(frameBoxesPanel,
                 new GridBagConstraints(2,
                         0,
                         1,
