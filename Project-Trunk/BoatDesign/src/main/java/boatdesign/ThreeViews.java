@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  * <p>
  * Bow is correlated, transom too. See in {@link BoatBox3D}
  *
- * Calculation done in BoatBox3D, look for "// Actual shape calculation takes place here."
+ * Calculation done in BoatBox3D, look for "// Actual shape calculation takes place here." in this BoatBox3D class.
  */
 public class ThreeViews {
 
