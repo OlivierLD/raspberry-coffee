@@ -2088,24 +2088,28 @@ public class ThreeViews {
         initFileName = System.getProperty("init-file", initFileName);
         System.out.printf("Opening %s\n", initFileName);
 
+        URL configResource = null;
         try {
             ClassLoader classLoader = ThreeViews.class.getClassLoader();
-            URL configResource = classLoader.getResource(initFileName); // At the root of the resources folder.
+            configResource = classLoader.getResource(initFileName); // At the root of the resources folder.
+            LOGGER.log(Level.INFO, String.format("Reading URL %s (for %s)", configResource, initFileName));
             initConfig = mapper.readValue(configResource.openStream(), Map.class);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.log(Level.WARNING, String.format("Error reading URL %s (for %s), trying File System", configResource, initFileName), ex);
+            File config = new File(initFileName);
+            if (config.exists()) {
+                try {
+                    configResource = config.toURI().toURL();
+                    initConfig = mapper.readValue(configResource.openStream(), Map.class);
+                    LOGGER.log(Level.INFO, String.format("Read URL %s (for %s)", configResource, initFileName));
+                } catch (Exception ex2) {
+                    LOGGER.log(Level.WARNING, String.format("Error reading URL %s (for %s).", configResource, initFileName), ex2);
+                    ex2.printStackTrace();
+                }
+            } else {
+                LOGGER.log(Level.SEVERE, String.format("Error: no %s was found.", initFileName));
+            }
         }
-//        File config = new File(initFileName);
-//        if (config.exists()) {
-//            try {
-//                URL configResource = config.toURI().toURL();
-//                initConfig = mapper.readValue(configResource.openStream(), Map.class);
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        } else {
-//            getLogger().log(Level.INFO, "Warning: no init.json was found.");
-//        }
 
         ThreeViews thisThing = new ThreeViews();// This one has instantiated the white boards
 

@@ -7,4 +7,6 @@ if [[ "$1" != "" ]]
 then
   OPT="-Dinit-file=$1"
 fi
-java ${OPT} ${LOGGING_FLAG} -jar ${CP} $*
+COMMAND="java ${OPT} ${LOGGING_FLAG} -jar ${CP} $*"
+echo -e "Running ${COMMAND}"
+${COMMAND}
