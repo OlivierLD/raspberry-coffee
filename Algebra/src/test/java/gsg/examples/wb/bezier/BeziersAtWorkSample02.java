@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * More Abstraction, using default WhiteBoard Writer
@@ -17,7 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * You can focus only on the data, not on the display. See the main method.
  * 2D Bezier example.
  *
- * Shows how the Bezier is elaborate, graphically. 4 Ctrl points
+ * Shows how the Bezier is elaborated, graphically. 4 Ctrl points
  */
 public class BeziersAtWorkSample02 {
 
@@ -28,7 +27,9 @@ public class BeziersAtWorkSample02 {
             new Bezier.Point3D(-60, -20, 0),
             new Bezier.Point3D(0, 40, 0),
             new Bezier.Point3D(20, -40, 0),
-            new Bezier.Point3D(60, -20, 0));
+//            new Bezier.Point3D(60, -20, 0));
+//            new Bezier.Point3D(-30, -30, 0));
+            new Bezier.Point3D(-50, 30, 0));
 
     private JFrame frame;
     private final JMenuBar menuBar = new JMenuBar();

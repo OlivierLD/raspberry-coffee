@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * You can focus only on the data, not on the display. See the main method.
  * 2D Bezier example.
  *
- * Shows how the Bezier is elaborate, graphically. 3 Ctrl points.
+ * Shows how the Bezier is elaborated, graphically. 3 Ctrl points.
  */
 public class BeziersAtWorkSample01 {
 
