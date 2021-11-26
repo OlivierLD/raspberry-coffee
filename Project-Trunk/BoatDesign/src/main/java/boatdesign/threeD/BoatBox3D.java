@@ -124,6 +124,7 @@ public class BoatBox3D extends Box3D {
         // Display Logger Config?
         LogManager logManager = LogManager.getLogManager();
         if (parent != null) {
+            this.parent = parent;
             System.out.printf("Log available in %s, level %s\nPattern %s\n",
                     parent.getLogger().getName(),
                     parent.getLogger().getLevel().getName(),
