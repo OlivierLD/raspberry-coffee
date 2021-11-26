@@ -44,6 +44,8 @@ import java.util.function.Function;
 /**
  * Using default WhiteBoard Writer
  *
+ * THIS IS NOT A UNIT TEST.
+ *
  * 2D Bezier example.
  * With draggable control points (hence the MouseListener, MouseMotionListener).
  */
@@ -202,7 +204,7 @@ public class FirstTest {
                             int height = whiteBoard.getHeight();
                             if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                                 double newX = canvasToSpaceXTransformer.apply(e.getX());
-                                double newY = canvasToSpaceYTransformer.apply(height - e.getY());
+                                double newY = canvasToSpaceYTransformer.apply(/*height -*/ e.getY());
 //                      System.out.printf("Point dragged to %f / %f\n", newX, newY);
                                 Bezier.Point3D point3D = new Bezier.Point3D().x(newX).y(newY);
                                 List<Bezier.Point3D> newList = new ArrayList<>();
@@ -246,7 +248,7 @@ public class FirstTest {
                     int height = whiteBoard.getHeight();
                     if (canvasToSpaceXTransformer != null && canvasToSpaceYTransformer != null) {
                         double newX = canvasToSpaceXTransformer.apply(e.getX());
-                        double newY = canvasToSpaceYTransformer.apply(height - e.getY());
+                        double newY = canvasToSpaceYTransformer.apply(/*height -*/ e.getY());
 //                System.out.printf("Point dragged to %f / %f\n", newX, newY);
                         Bezier.Point3D point3D = ctrlPoints.get(closestPointIndex);
                         point3D.x(newX).y(newY);
