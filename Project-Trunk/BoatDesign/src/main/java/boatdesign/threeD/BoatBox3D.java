@@ -268,8 +268,8 @@ public class BoatBox3D extends Box3D {
                             }
                         }
                     } catch (ConcurrentModificationException cme) {
-                        if (parent != null) {
-                            parent.getLogger().log(Level.WARNING, "Concurrent Modification", cme);
+                        if (this.parent != null) {
+                            this.parent.getLogger().log(Level.WARNING, "Concurrent Modification", cme);
                         } else {
                             System.err.println(cme);
                         }
@@ -357,8 +357,8 @@ public class BoatBox3D extends Box3D {
                         }
 
                     } catch (ConcurrentModificationException cme) {
-                        if (parent != null) {
-                            parent.getLogger().log(Level.WARNING, "Concurrent Modification", cme);
+                        if (this.parent != null) {
+                            this.parent.getLogger().log(Level.WARNING, "Concurrent Modification", cme);
                         } else {
                             System.err.println(cme);
                         }
@@ -473,9 +473,8 @@ public class BoatBox3D extends Box3D {
                     }
 
                 } catch (ConcurrentModificationException cme) {
-                    // Absorb?
-                    if (parent != null) {
-                        parent.getLogger().log(Level.WARNING, "Concurrent Modification", cme);
+                    if (this.parent != null) {
+                        this.parent.getLogger().log(Level.WARNING, "Concurrent Modification", cme);
                     } else {
                         System.err.println(cme);
                     }
@@ -527,13 +526,11 @@ public class BoatBox3D extends Box3D {
                         }
                     }
                 } catch (ConcurrentModificationException cme) {
-                    // Absorb?
-                    if (parent != null) {
-                        parent.getLogger().log(Level.WARNING, "Concurrent Modification", cme);
+                    if (this.parent != null) {
+                        this.parent.getLogger().log(Level.WARNING, "Concurrent Modification", cme);
                     } else {
                         System.err.println(cme);
                     }
-//                    System.err.println(cme);
                 }
             }
             if (buttocks) { // Display
@@ -561,9 +558,8 @@ public class BoatBox3D extends Box3D {
                             }
                         }
                     } catch (ConcurrentModificationException cme) {
-                        // Absorb?
-                        if (parent != null) {
-                            parent.getLogger().log(Level.WARNING, "Concurrent Modification", cme);
+                        if (this.parent != null) {
+                            this.parent.getLogger().log(Level.WARNING, "Concurrent Modification", cme);
                         } else {
                             System.err.println(cme);
                         }
@@ -788,8 +784,8 @@ public class BoatBox3D extends Box3D {
                 });
         double displacement = disp.get();
         if (true || verbose) {
-            if (parent != null) {
-                parent.getLogger().log(Level.INFO, String.format("From Z Displ: %.03f m3\n", (displacement * 2)));
+            if (this.parent != null) {
+                this.parent.getLogger().log(Level.INFO, String.format("From Z Displ: %.03f m3\n", (displacement * 2)));
             } else {
                 System.out.printf("From Z Displ: %.03f m3\n", (displacement * 2));
             }
@@ -818,8 +814,8 @@ public class BoatBox3D extends Box3D {
                 if (missing < toAdd) {
                     double addZ = deltaZ * (missing / toAdd);
                     zCenterOfHull = (prevZ.get() + addZ);
-                    if (parent != null) {
-                        parent.getLogger().log(Level.INFO, String.format("Found CC at Z " + zCenterOfHull));
+                    if (this.parent != null) {
+                        this.parent.getLogger().log(Level.INFO, String.format("Found CC at Z " + zCenterOfHull));
                     } else {
                         System.out.println("Found CC at Z " + zCenterOfHull);
                     }
@@ -927,8 +923,8 @@ public class BoatBox3D extends Box3D {
         try {
             tFor0 = bezierBow.getTForGivenZ(0.0, 1e-1, 0, 1e-4, false);
         } catch (Bezier.TooDeepRecursionException tdre) {
-            if (parent != null) {
-                parent.getLogger().log(Level.WARNING, "Too deep recursion", tdre);
+            if (this.parent != null) {
+                this.parent.getLogger().log(Level.WARNING, "Too deep recursion", tdre);
             } else {
                 System.err.println(tdre);
             }
@@ -946,8 +942,8 @@ public class BoatBox3D extends Box3D {
             try {
                 tFor0 = bezierKeel.getTForGivenZ(0.0, 1e-1, 0, 1e-4, false);
             } catch (Bezier.TooDeepRecursionException tdre) {
-                if (parent != null) {
-                    parent.getLogger().log(Level.WARNING, "Too deep recursion", tdre);
+                if (this.parent != null) {
+                    this.parent.getLogger().log(Level.WARNING, "Too deep recursion", tdre);
                 } else {
                     System.err.println(tdre);
                 }
@@ -983,8 +979,8 @@ public class BoatBox3D extends Box3D {
         try {
             t2For0 = bezierKeel.getTForGivenZ(maxDepthT + 0.2 /* TODO... Mmmh */, 1e-2, 0, 1e-4, true);
         } catch (Bezier.TooDeepRecursionException tdre) {
-            if (parent != null) {
-                parent.getLogger().log(Level.WARNING, "Too deep recursion", tdre);
+            if (this.parent != null) {
+                this.parent.getLogger().log(Level.WARNING, "Too deep recursion", tdre);
             } else {
                 System.err.println(tdre);
             }
@@ -1040,8 +1036,8 @@ public class BoatBox3D extends Box3D {
                         tx = bezierTransom.getTForGivenX(0.0, 1e-1, _x, 1e-4); // Not sure that's right...
                     }
                 } catch (Bezier.TooDeepRecursionException tdre) {
-                    if (parent != null) {
-                        parent.getLogger().log(Level.WARNING, "Too deep recursion", tdre);
+                    if (this.parent != null) {
+                        this.parent.getLogger().log(Level.WARNING, "Too deep recursion", tdre);
                     } else {
                         System.err.println(tdre);
                     }
@@ -1061,8 +1057,8 @@ public class BoatBox3D extends Box3D {
 //                        System.out.println(String.format("Bow: x:%f -> t:%f", _x, tx));
                     }
                 } catch (Bezier.TooDeepRecursionException tdre) {
-                    if (parent != null) {
-                        parent.getLogger().log(Level.WARNING, "Too deep recursion", tdre);
+                    if (this.parent != null) {
+                        this.parent.getLogger().log(Level.WARNING, "Too deep recursion", tdre);
                     } else {
                         System.err.println(tdre);
                     }
@@ -1267,8 +1263,8 @@ public class BoatBox3D extends Box3D {
                         try {
                             t = bezier.getTForGivenZ(0, 1e-1, z, 1e-4, increase);
                         } catch (Bezier.TooDeepRecursionException tdre) {
-                            if (parent != null) {
-                                parent.getLogger().log(Level.WARNING, "Too deep recursion", tdre);
+                            if (this.parent != null) {
+                                this.parent.getLogger().log(Level.WARNING, "Too deep recursion", tdre);
                             } else {
                                 System.err.println(tdre);
                             }
@@ -1315,8 +1311,8 @@ public class BoatBox3D extends Box3D {
                         if (firstWLPoint != null) {
                             waterLine.add(0, firstWLPoint); // Force in 1st po.
                         } else {
-                            if (parent != null) {
-                                parent.getLogger().log(Level.WARNING, "Argh! firstWLPoint is null.");
+                            if (this.parent != null) {
+                                this.parent.getLogger().log(Level.WARNING, "Argh! firstWLPoint is null.");
                             } else {
                                 System.out.println("Argh! firstWLPoint is null.");
                             }
@@ -1361,8 +1357,8 @@ public class BoatBox3D extends Box3D {
             });
             double[] keelMinMax = bezierKeel.getMinMax(Bezier.Coordinate.Z, 1e-4);
             double zDispl = calculateZDisplacement(displacementZMap, keelMinMax[0]);
-            if (parent != null) {
-                parent.getLogger().log(Level.INFO, String.format("Disp on Z: %.05f m3, zCC: %.03f m\n", (zDispl), (zCenterOfHull * 1e-2)));
+            if (this.parent != null) {
+                this.parent.getLogger().log(Level.INFO, String.format("Disp on Z: %.05f m3, zCC: %.03f m\n", (zDispl), (zCenterOfHull * 1e-2)));
             } else {
                 System.out.printf("Disp on Z: %.05f m3, zCC: %.03f m\n", (zDispl), (zCenterOfHull * 1e-2)); // TODO Display diff in disp in % ?
             }
@@ -1448,8 +1444,8 @@ public class BoatBox3D extends Box3D {
                         try {
                             t = bezier.getTForGivenY(0, 1e-1, y, 1e-4, increase);
                         } catch (Bezier.TooDeepRecursionException tdre) {
-                            if (parent != null) {
-                                parent.getLogger().log(Level.WARNING, "Too deep recursion", tdre);
+                            if (this.parent != null) {
+                                this.parent.getLogger().log(Level.WARNING, "Too deep recursion", tdre);
                             } else {
                                 System.err.println(tdre);
                             }
@@ -1489,8 +1485,8 @@ public class BoatBox3D extends Box3D {
                         if (firstButtockPoint != null) {
                             vLine.add(0, firstButtockPoint); // Force in 1st po.
                         } else {
-                            if (parent != null) {
-                                parent.getLogger().log(Level.WARNING, "Argh! firstButtockPoint is null.");
+                            if (this.parent != null) {
+                                this.parent.getLogger().log(Level.WARNING, "Argh! firstButtockPoint is null.");
                             } else {
                                 System.out.println("Argh!");
                             }
