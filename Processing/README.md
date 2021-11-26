@@ -7,7 +7,7 @@
 It seems to be compatible with the projects of this repository.
 
 For example, here is the code that graphically displays the value returned by an ADC (MCP3008):
-```java
+```
 import analogdigitalconverter.mcp3008.MCPReader;
 /*
  * Using Sketch > Add File..., select ADC/build/libs/ADC-1.0-all.jar
@@ -73,7 +73,7 @@ As you would notice, the code of a `sketch` looks like Java code, but it is not 
 Actually, the Processing Development Environment (aka `PDE`) wraps the code with what is missing for Java to be 100% happy.
 
 If you have for example a sketch like that one:
-```java
+```
 void setup() {
   size(200, 200);
   stroke(255);

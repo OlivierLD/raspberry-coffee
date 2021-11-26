@@ -46,7 +46,7 @@ void setup(){
   if (withSensor) {
     try {
       lsm303 = new LSM303(LSM303.EnabledFeature.ACCELEROMETER);
-    } catch (Exception ex) {
+    } catch (java.lang.Exception ex) {
       ex.printStackTrace();
       withSensor = false;
       println("-----------------------------------------------");
@@ -100,7 +100,7 @@ void draw(){
   }
 
 // Heading given by the mouse (left-right)
-  float newXmag = mouseX/float(width) * 180;
+  float newXmag = mouseX / float(width) * 180;
   heading = - newXmag;
 
   rotateX((roll * PI / 180) + (PI / 2)); // Roll PI/2: 0 Roll

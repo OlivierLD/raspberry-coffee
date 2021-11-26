@@ -40,7 +40,7 @@ public class BoatBox3D extends Box3D {
 
     private double defaultLHT = 0d;
 
-    // TODO A prm for the number of points per frame (bezier's t)
+    // TODO A prm for the number of points per frame and beam (bezier's t)
 
     private boolean justTheBoat = false;
 
@@ -1350,7 +1350,6 @@ public class BoatBox3D extends Box3D {
                         }
                         displacementZMap.put(z, wlArea.get());
                     }
-
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -1378,7 +1377,6 @@ public class BoatBox3D extends Box3D {
                 if (localVerbose || verbose) {
                     System.out.println("Vline for y=" + y);
                 }
-
                 // First and last
                 // firstPoint, lastPoint for y ?
                 Bezier.Point3D _lastButtockPoint = null;
