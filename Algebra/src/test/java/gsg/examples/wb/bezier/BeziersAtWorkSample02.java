@@ -17,17 +17,18 @@ import java.util.concurrent.atomic.AtomicReference;
  * You can focus only on the data, not on the display. See the main method.
  * 2D Bezier example.
  *
- * Shows how the Bezier is elaborate, graphically. 3 Ctrl points.
+ * Shows how the Bezier is elaborate, graphically. 4 Ctrl points
  */
-public class BeziersAtWorkSample01 {
+public class BeziersAtWorkSample02 {
 
-    private final static String TITLE = "Simple 2D Bezier sample. 3 Ctrl Points.";
+    private final static String TITLE = "Simple 2D Bezier sample. 4 Ctrl Points.";
     // All z = 0, 2D bezier.
     // 3 control points
     private List<Bezier.Point3D> ctrlPoints = List.of(
-            new Bezier.Point3D(-60, -40, 0),
+            new Bezier.Point3D(-60, -20, 0),
             new Bezier.Point3D(0, 40, 0),
-            new Bezier.Point3D(40, -20, 0));
+            new Bezier.Point3D(20, -40, 0),
+            new Bezier.Point3D(60, -20, 0));
 
     private JFrame frame;
     private final JMenuBar menuBar = new JMenuBar();
@@ -191,7 +192,7 @@ public class BeziersAtWorkSample01 {
 //        frame.pack();
     }
 
-    public BeziersAtWorkSample01() {
+    public BeziersAtWorkSample02() {
     }
 
     public void animate() {
@@ -229,7 +230,6 @@ public class BeziersAtWorkSample01 {
 
             try {
                 final double _t = t;
-                AtomicReference<WhiteBoardPanel.DataSerie> progressSerieReference = new AtomicReference<>(null);
                 SwingUtilities.invokeAndWait(() -> {
 
                     List<VectorUtils.Vector3D> bezierPoints = new ArrayList<>(); // The points to display.
@@ -267,26 +267,49 @@ public class BeziersAtWorkSample01 {
                     whiteBoard.addSerie(dataSerie);
 
                     // Progress
-                    // For 3 ctrl points, two-segments, hard-coded
+                    // For 4 ctrl points, three-segments, hard-coded
                     Bezier.Point3D point3D_01 = Bezier.withProgressT(ctrlPoints.get(0), ctrlPoints.get(1), _t);
                     Bezier.Point3D point3D_02 = Bezier.withProgressT(ctrlPoints.get(1), ctrlPoints.get(2), _t);
+                    Bezier.Point3D point3D_03 = Bezier.withProgressT(ctrlPoints.get(2), ctrlPoints.get(3), _t);
 
-                    List<VectorUtils.Vector2D> progressPtsVectors = new ArrayList<>();
-                    progressPtsVectors.add(new VectorUtils.Vector2D(point3D_01.getX(), point3D_01.getY()));
-                    progressPtsVectors.add(new VectorUtils.Vector2D(point3D_02.getX(), point3D_02.getY()));
                     // Bezier progress points serie
+                    List<VectorUtils.Vector2D> progressPtsVectors_01 = new ArrayList<>();
+                    progressPtsVectors_01.add(new VectorUtils.Vector2D(point3D_01.getX(), point3D_01.getY()));
+                    progressPtsVectors_01.add(new VectorUtils.Vector2D(point3D_02.getX(), point3D_02.getY()));
 
-                    WhiteBoardPanel.DataSerie progressSerie = new WhiteBoardPanel.DataSerie()
-                            .data(progressPtsVectors)
+                    WhiteBoardPanel.DataSerie progressSerie_01 = new WhiteBoardPanel.DataSerie()
+                            .data(progressPtsVectors_01)
                             .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
                             .lineThickness(1)
-                            .color(Color.RED);
+                            .color(Color.BLUE);
 
-                    if (progressSerieReference.get() != null) {
-                        whiteBoard.removeSerie(progressSerieReference.get());
-                    }
-                    whiteBoard.addSerie(progressSerie);
-                    progressSerieReference.set(progressSerie);
+                    List<VectorUtils.Vector2D> progressPtsVectors_02 = new ArrayList<>();
+                    progressPtsVectors_02.add(new VectorUtils.Vector2D(point3D_02.getX(), point3D_02.getY()));
+                    progressPtsVectors_02.add(new VectorUtils.Vector2D(point3D_03.getX(), point3D_03.getY()));
+
+                    WhiteBoardPanel.DataSerie progressSerie_02 = new WhiteBoardPanel.DataSerie()
+                            .data(progressPtsVectors_02)
+                            .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
+                            .lineThickness(1)
+                            .color(Color.BLUE);
+
+                    whiteBoard.addSerie(progressSerie_01);
+                    whiteBoard.addSerie(progressSerie_02);
+
+                    // Level 2
+                    Bezier.Point3D point3D_L2_01 = Bezier.withProgressT(point3D_01, point3D_02, _t);
+                    Bezier.Point3D point3D_L2_02 = Bezier.withProgressT(point3D_02, point3D_03, _t);
+
+                    List<VectorUtils.Vector2D> progressPtsVectors_L2 = new ArrayList<>();
+                    progressPtsVectors_L2.add(new VectorUtils.Vector2D(point3D_L2_01.getX(), point3D_L2_01.getY()));
+                    progressPtsVectors_L2.add(new VectorUtils.Vector2D(point3D_L2_02.getX(), point3D_L2_02.getY()));
+
+                    WhiteBoardPanel.DataSerie progressSerie_Level2 = new WhiteBoardPanel.DataSerie()
+                            .data(progressPtsVectors_L2)
+                            .graphicType(WhiteBoardPanel.GraphicType.LINE_WITH_DOTS)
+                            .lineThickness(1)
+                            .color(Color.GREEN);
+                    whiteBoard.addSerie(progressSerie_Level2);
 
                     // Last Bezier point
                     whiteBoard.addSerie(new WhiteBoardPanel.DataSerie()
@@ -326,7 +349,7 @@ public class BeziersAtWorkSample01 {
         System.out.printf("Java Version %s\n", System.getProperty("java.version"));
         System.out.println("----------------------------------------------");
 
-        BeziersAtWorkSample01 thisThing = new BeziersAtWorkSample01();// This one has instantiated the white board
+        BeziersAtWorkSample02 thisThing = new BeziersAtWorkSample02();// This one has instantiated the white board
         thisThing.initComponents();
 
         // Override defaults (not mandatory)
