@@ -443,7 +443,7 @@ public class ThreeViews {
                             .z(zCC * 1e2);
                 }
                 // Displacement for the area curve
-                Map<Double, Double> displacementMap = (Map) map.get("displacement-x-map");
+                Map<Double, Double> displacementMap = (Map<Double, Double>) map.get("displacement-x-map");
                 double lwlStart = (double) map.get("lwl-start");
                 double lwlEnd = (double) map.get("lwl-end");
                 // TODO: send to XY
@@ -790,9 +790,9 @@ public class ThreeViews {
 
             Map<String, Object> dimensions = (Map) initConfig.get("dimensions");
             double defaultLht = (double) dimensions.get("default-lht");
-            List<Double> boxX = (List) dimensions.get("box-x");
-            List<Double> boxY = (List) dimensions.get("box-y");
-            List<Double> boxZ = (List) dimensions.get("box-z");
+            List<Double> boxX = (List<Double>) dimensions.get("box-x");
+            List<Double> boxY = (List<Double>) dimensions.get("box-y");
+            List<Double> boxZ = (List<Double>) dimensions.get("box-z");
 
             // Values in cm
             this.defaultLHT = defaultLht * 1e2;

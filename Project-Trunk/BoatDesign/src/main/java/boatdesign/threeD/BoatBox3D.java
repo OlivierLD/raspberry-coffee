@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 
 /**
- * Many hard-coded values anf options...
+ * Many hard-coded values and options...
  * TODO Document them!!!
  */
 public class BoatBox3D extends Box3D {

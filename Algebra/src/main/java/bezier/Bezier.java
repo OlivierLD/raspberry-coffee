@@ -85,7 +85,7 @@ public class Bezier {
         }
     }
 
-    private Point3D withProgressT(Point3D from, Point3D to, double t) {
+    public static Point3D withProgressT(Point3D from, Point3D to, double t) {
         double deltaX = to.getX() - from.getX();
         double deltaY = to.getY() - from.getY();
         double deltaZ = to.getZ() - from.getZ();
