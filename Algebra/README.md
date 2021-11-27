@@ -155,11 +155,15 @@ Here is a quick way to restore some of those features.
 Use `../gradlew runSample -Pnum=09 -Pidx=4` to see the screen above.  
 Figure can be rotated with the sliders at the bottom, or by dragging the mouse on the figure itself.
 
-### Bézier, in 3D
+## Bézier curves
 A type of curve created by [Pierre Bézier](https://en.wikipedia.org/wiki/Pierre_B%C3%A9zier).  
 Good doc at <https://javascript.info/bezier-curve>, interactive, really cool.  
 Bézier at work: <http://jeremie.farret.free.fr/wp-content/uploads/2011/12/ATMA2006.pdf>
 
+See in the class `bezier.Bezier`. Examples are available in the `test` folder.  
+To see how 2D Bezier work, try `../gradlew runBezierSample -Pnum=02`, and click the `Activate` button.
+
+### Bézier, in 3D
 > Sample 3D Bézier 
 
 ![Bezier](./docimg/3DBezier.png)  

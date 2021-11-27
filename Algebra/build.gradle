@@ -89,6 +89,30 @@ task runSample(type: JavaExec, dependsOn: build, description: "Swing UI 3D box s
     workingDir "."
 }
 
+def bezierTestNum = '01'
+
+task runBezierSample(type: JavaExec, dependsOn: build, description: "See how a Bezier works. Use -Pnum=[01..02] (default 01)") {
+    println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
+    println "01: 2D Bezier, with 3 Ctrl Points"
+    println "02: 2D Bezier, with 4 Ctrl Points"
+//  environment "DISPLAY", ":0.0"
+//  environment "DISPLAY", "192.168.42.31:0.0"
+//  classpath = configurations.runtime
+//  classpath project.configurations.default
+//  classpath sourceSets.main.output.classesDir
+    classpath sourceSets.test.runtimeClasspath
+    main = 'gsg.examples.wb.bezier.BeziersAtWorkSample' + bezierTestNum  // Default 01, see above
+    if (project.hasProperty('num')) { // gradlew runBezierSample -Pnum=XX
+        bezierTestNum = project.getProperty('num')
+        println ">>> Running test " + bezierTestNum
+        main = 'gsg.examples.wb.bezier.BeziersAtWorkSample' + bezierTestNum
+    } else {
+        println ">>> Running test " + bezierTestNum
+    }
+    println "--- Use the [Activate] button to see the Bezier progressing."
+    workingDir "."
+}
+
 task runSample2(type: JavaExec, dependsOn: build, description: "Swing UI sample. Lowpass") {
     println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
 //  environment "DISPLAY", ":0.0"
