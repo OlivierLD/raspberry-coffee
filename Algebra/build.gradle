@@ -53,6 +53,7 @@ task runSample(type: JavaExec, dependsOn: build, description: "Swing UI 3D box s
     println "09: 3D wavefront (.obj), draggable, widgets. Use -Pidx=[0..7]"
     println "10: First 3D Bezier sample, draggable, widgets"
     println "11: Small 3D Bezier boat, draggable, widgets, xLabel Tx"
+
 //  environment "DISPLAY", ":0.0"
 //  environment "DISPLAY", "192.168.42.31:0.0"
 //  classpath = configurations.runtime
@@ -62,7 +63,7 @@ task runSample(type: JavaExec, dependsOn: build, description: "Swing UI 3D box s
     main = 'gsg.examples.box3d.Sample' + testNum  // Default 01, see above
     if (project.hasProperty('num')) { // gradlew -Pnum=XX runSample
         testNum = project.getProperty('num')
-        println ">>> Running test " + testNum
+        println ">>> Running test ${testNum}, ${name}"
         main = 'gsg.examples.box3d.Sample' + testNum
     }
 
@@ -92,9 +93,11 @@ task runSample(type: JavaExec, dependsOn: build, description: "Swing UI 3D box s
 def bezierTestNum = '01'
 
 task runBezierSample(type: JavaExec, dependsOn: build, description: "See how a Bezier works. Use -Pnum=[01..02] (default 01)") {
+    // println("Task [${name}]: Yoho!!")
     println "In case of problem edit the Gradle script and make sure the DISPLAY variable is set correctly"
     println "01: 2D Bezier, with 3 Ctrl Points"
     println "02: 2D Bezier, with 4 Ctrl Points"
+
 //  environment "DISPLAY", ":0.0"
 //  environment "DISPLAY", "192.168.42.31:0.0"
 //  classpath = configurations.runtime
@@ -104,10 +107,21 @@ task runBezierSample(type: JavaExec, dependsOn: build, description: "See how a B
     main = 'gsg.examples.wb.bezier.BeziersAtWorkSample' + bezierTestNum  // Default 01, see above
     if (project.hasProperty('num')) { // gradlew runBezierSample -Pnum=XX
         bezierTestNum = project.getProperty('num')
-        println ">>> Running test " + bezierTestNum
-        main = 'gsg.examples.wb.bezier.BeziersAtWorkSample' + bezierTestNum
+        if (name == "runBezierSample") {
+            if (!"01".equals(bezierTestNum) && !"02".equals(bezierTestNum)) {
+                println("-------------------------------")
+                println("Error >>> 01 or 02 only please.")
+                println("-------------------------------")
+                System.exit(1)
+            } else {
+                println ">>> Running test " + bezierTestNum
+                main = 'gsg.examples.wb.bezier.BeziersAtWorkSample' + bezierTestNum
+            }
+        }
     } else {
-        println ">>> Running test " + bezierTestNum
+        if (name == "runBezierSample") {
+            println ">>> Running test " + bezierTestNum
+        }
     }
     println "--- Use the [Activate] button to see the Bezier progressing."
     workingDir "."

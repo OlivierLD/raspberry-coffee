@@ -160,23 +160,25 @@ A type of curve created by [Pierre Bézier](https://en.wikipedia.org/wiki/Pierre
 Good doc at <https://javascript.info/bezier-curve>, interactive, really cool.  
 Bézier at work: <http://jeremie.farret.free.fr/wp-content/uploads/2011/12/ATMA2006.pdf>
 
-See in the class `bezier.Bezier`. Examples are available in the `test` folder.  
-To see how 2D Bezier work, with animation, try `../gradlew runBezierSample -Pnum=02`, and click the `Activate` button.
+See in the class `bezier.Bezier`.  
+Examples are available in the `test` folder.  
+To see how 2D Bezier work, with animation, try `../gradlew runBezierSample [-Pnum=02]`, and click the `Activate` button.
 
 ### Bézier, in 3D
 > Sample 3D Bézier 
 
 ![Bezier](./docimg/3DBezier.png)  
-5 Control Points.<br/> Figure is draggable with the mouse.  
-Run the test in `gsg.examples.box3d.Sample10`.  
-Do a `../gradlew runSample -Pnum=10`.
+5 Control Points.  
+Figure is draggable with the mouse.  
+Run the test in `gsg.examples.box3d.Sample10`, or do a `../gradlew runSample -Pnum=10`.
 
+
+#### A small application (Work in Progress)
 | Small Bezier Boat | Same, with different parameters |
 |:------------------|:--------------------------------|
 | ![BezierBoat](./docimg/small.boat.2.png) | ![BezierBoat](./docimg/small.boat.png) |
 
-Run the test in `gsg.examples.box3d.Sample11`.  
-Do a `../gradlew runSample -Pnum=11`.  
+Run the test in `gsg.examples.box3d.Sample11`, or do a `../gradlew runSample -Pnum=11`.  
 (See the gradle script for extra parameters)
 > Note: The above is <u>**_totally_**</u> defined with only **_8_** (3D) control points.
 > - 5 for the rail
@@ -209,5 +211,6 @@ To see the result, look [here](./jupyter/LeastSquare.ipynb).
 
 ### TODO: A JavaScript (HTML5 canvas) equivalent version
 - WebComponent?
+- SVG?
 
 ---
