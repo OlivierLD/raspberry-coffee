@@ -213,4 +213,10 @@ To see the result, look [here](./jupyter/LeastSquare.ipynb).
 - WebComponent?
 - SVG?
 
+
+## Misc Links
+- [Spencer Park / IJava](https://github.com/SpencerPark/IJava)
+- [Jupyter Widgets](https://towardsdatascience.com/bring-your-jupyter-notebook-to-life-with-interactive-widgets-bc12e03f0916)
+
+
 ---
