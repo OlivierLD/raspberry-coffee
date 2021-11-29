@@ -2,10 +2,14 @@ package boatdesign.threeD;
 
 import bezier.Bezier;
 import boatdesign.ThreeViews;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gsg.SwingUtils.Box3D;
 import gsg.VectorUtils;
 
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.*;
@@ -85,6 +89,7 @@ public class BoatBox3D extends Box3D {
 
     private List<List<Bezier.Point3D>> frameCtrlPts = new ArrayList<>();
     private List<List<Bezier.Point3D>> beamCtrlPts = new ArrayList<>();
+
     private List<VectorUtils.Vector3D> bezierPointsRail = new ArrayList<>();
     private List<VectorUtils.Vector3D> bezierPointsBow = new ArrayList<>();
     private List<VectorUtils.Vector3D> bezierPointsKeel = new ArrayList<>();
@@ -1529,6 +1534,53 @@ public class BoatBox3D extends Box3D {
 //                            displ, prismCoeff,
 //                            (xCenterOfHull * 1e-2), (zCenterOfHull * 1e-2));
             callback.accept(callbackMessage);
+        }
+
+        if (true) { // TODO Option: Spit out all calculated points
+            List<VectorUtils.Vector3D> allCalculatedPoints = new ArrayList<>();
+            bezierPointsRail.stream().filter(pt -> bezierPointsRail.indexOf(pt) % 5 == 0)
+                    .forEach(pt -> {
+                        allCalculatedPoints.add(pt);
+                        VectorUtils.Vector3D pt2 = new VectorUtils.Vector3D()
+                                .x(pt.getX()).y(-pt.getY()).z(pt.getZ());
+                        allCalculatedPoints.add(pt2);
+                    });
+            bezierPointsBow.stream().filter(pt -> bezierPointsBow.indexOf(pt) % 5 == 0).forEach(pt -> allCalculatedPoints.add(pt));
+            bezierPointsKeel.stream().filter(pt -> bezierPointsKeel.indexOf(pt) % 5 == 0).forEach(pt -> allCalculatedPoints.add(pt));
+            bezierPointsTransom.stream().filter(pt -> bezierPointsTransom.indexOf(pt) % 5 == 0)
+                    .forEach(pt -> {
+                        allCalculatedPoints.add(pt);
+                        VectorUtils.Vector3D pt2 = new VectorUtils.Vector3D()
+                                .x(pt.getX()).y(-pt.getY()).z(pt.getZ());
+                        allCalculatedPoints.add(pt2);
+                    });
+
+            frameBezierPts.forEach(ptList -> {
+                ptList.stream().filter(pt -> ptList.indexOf(pt) % 5 == 0).forEach(pt -> {
+                    allCalculatedPoints.add(pt);
+                    VectorUtils.Vector3D pt2 = new VectorUtils.Vector3D()
+                            .x(pt.getX()).y(-pt.getY()).z(pt.getZ());
+                    allCalculatedPoints.add(pt2);
+                });
+            });
+            beamBezierPts.forEach(ptList -> {
+                ptList.stream().filter(pt -> ptList.indexOf(pt) % 5 == 0).forEach(pt -> allCalculatedPoints.add(pt));
+            });
+            // Spit it out
+            try {
+                final ObjectMapper mapper = new ObjectMapper();
+                String allPoints = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(allCalculatedPoints);
+//            System.out.println(allPoints);
+                File f = new File("calculated.json");
+                FileWriter fw = new FileWriter(f);
+                BufferedWriter out = new BufferedWriter(fw);
+                out.write(allPoints + "\n");
+                out.flush();
+                out.close();
+                System.out.printf(">> Check out %s\n", f.getAbsolutePath());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
