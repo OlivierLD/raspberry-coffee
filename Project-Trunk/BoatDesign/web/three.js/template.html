@@ -8,9 +8,14 @@
 	</style>
 </head>
 <body>
-    <script src="js/three.js"></script>
-    <script>
+    <!--script src="js/three.js"></script-->
+    <script type="module">
 		// Our Javascript will go here.
+
+		import * as THREE from './node_modules/three/build/three.module.js'; // That one seems to work, not "from 'three' "
+
+        const scene = new THREE.Scene();
+
 	</script>
     <h1 style="font-family: 'Courier New'; margin-left: 10px;">Three.js template</h1>
 </body>
