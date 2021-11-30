@@ -6,7 +6,7 @@ import java.io.BufferedReader;
 import java.util.ArrayList;
 
 /**
- * Wow, legacy stuff!
+ * Very basic for now.
  */
 public class WaveFrontUtils {
 

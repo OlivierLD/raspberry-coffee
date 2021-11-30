@@ -1568,7 +1568,7 @@ public class BoatBox3D extends Box3D {
             });
             // Spit it out
             try {
-                final ObjectMapper mapper = new ObjectMapper();
+                final ObjectMapper mapper = parent.getObjectMapper(); // new ObjectMapper();
                 String allPoints = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(allCalculatedPoints);
 //            System.out.println(allPoints);
                 File f = new File("calculated.json");

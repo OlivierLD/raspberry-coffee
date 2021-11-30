@@ -23,11 +23,22 @@ import { ConvexGeometry } from 'https://cdn.skypack.dev/three@0.132.0/examples/j
 
 
 const scene = new THREE.Scene();
+
+const light = new THREE.HemisphereLight( 0xffffff, 0x000088 );
+light.position.set( - 1, 1.5, 1 );
+scene.add( light );
+
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
+
+// To drag with the mouse
+const controls = new OrbitControls( camera, renderer.domElement );
+controls.minDistance = 5; // 20;
+controls.maxDistance = 5; // 50;
+controls.maxPolarAngle = Math.PI / 1;
 
 // Fill it out
 let points = [];
@@ -37,21 +48,54 @@ let factor = 100.0;
 calculatedPoints.forEach(pt => points.push(new THREE.Vector3(pt.x / factor, pt.z / factor, pt.y / factor)));
 
 const geometry = new ConvexGeometry( points );
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-const mesh = new THREE.Mesh( geometry, material );
+const material = // new THREE.MeshBasicMaterial( { color: 0x00ffff, transparent: true, opacity: 0.75 } );
+                 new THREE.MeshPhongMaterial();
+//let spGroup = new THREE.Object3D();
+//let material_2 = new THREE.MeshBasicMaterial({color: 0xff0000, transparent: true});
+//points.forEach(point => {
+//    var spGeom = new THREE.SphereGeometry(0.005); // Red dots diameter
+//    var spMesh = new THREE.Mesh(spGeom, material_2);
+//    spMesh.position.copy(point);
+//    spGroup.add(spMesh);
+//});
+// add the points as a group to the scene
+//scene.add(spGroup);
+
+// const wireFrameMat = new THREE.MeshBasicMaterial();
+// wireFrameMat.wireframe = true;
+
+const mesh = // THREE.SceneUtils.createMultiMaterialObject(geometry, [material, wireFrameMat]);
+             new THREE.Mesh( geometry, material );
 scene.add( mesh );
 
-camera.position.z = 5;
+// White directional light at half intensity shining from the top.
+//const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.75 );
+//scene.add( directionalLight );
+
+// const light = new THREE.AmbientLight( 0x404040, 0.5 ); // soft white light
+// const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+
+// const light = new THREE.PointLight( 0xff0000, 1, 10, 2 );
+// light.position.set( 10, 10, 10 );
+
+//const light = new THREE.DirectionalLight( 0xFFFFFF );
+//const helper = new THREE.DirectionalLightHelper( light, 5 );
+//scene.add( helper );
+
+scene.add( light );
+
+camera.position.z = 4;
 
 const animate = function () {
     requestAnimationFrame( animate );
 
-    mesh.rotation.x += 0.01;
-    mesh.rotation.y += 0.01;
+    // mesh.rotation.x += 0.01;
+    // mesh.rotation.y += 0.01;
 
     renderer.render( scene, camera );
 };
 
 animate();
+// renderer.render( scene, camera );
 
 console.log("Bam");

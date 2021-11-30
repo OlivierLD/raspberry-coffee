@@ -1,5 +1,6 @@
 package gsg.examples.box3d;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gsg.SwingUtils.Box3D;
 import gsg.VectorUtils;
 import gsg.WaveFrontUtils;
@@ -10,10 +11,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -68,6 +69,28 @@ public class Sample09 {
         }
 
         obj = WaveFrontUtils.parseWaveFrontObj(new BufferedReader(new FileReader(file)));
+        // Option?
+        if (true) {
+            String pointFileName = OBJ_FILE_NAME[fileIndex]; // Can be used with three.js
+            pointFileName = pointFileName.substring(0, pointFileName.indexOf(".obj")) + ".js";
+            final ObjectMapper mapper = new ObjectMapper();
+            List<VectorUtils.Vector3D> allCalculatedPoints = new ArrayList<>();
+            obj.getVertices().stream().forEach(allCalculatedPoints::add);
+            try {
+                String allPoints = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(allCalculatedPoints);
+//              System.out.println(allPoints);
+                File f = new File(pointFileName);
+                FileWriter fw = new FileWriter(f);
+                BufferedWriter out = new BufferedWriter(fw);
+                out.write(allPoints + "\n");
+                out.flush();
+                out.close();
+                System.out.printf(">> Check out %s\n", f.getAbsolutePath());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
         // Count artifacts:
         System.out.printf("%d vertices, %d edges\n", obj.getVertices().size(), obj.getEdges().size());
 

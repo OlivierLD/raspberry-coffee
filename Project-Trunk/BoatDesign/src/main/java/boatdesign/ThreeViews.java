@@ -96,7 +96,7 @@ public class ThreeViews {
     private final static int WIDTH = 1536; // 1024;
     private final static int HEIGHT = 800;
 
-    private final static ObjectMapper mapper = new ObjectMapper();
+    protected final static ObjectMapper mapper = new ObjectMapper();
     private static Map<String, Object> initConfig = null;
 
     /*
@@ -1751,6 +1751,10 @@ public class ThreeViews {
 
     public Logger getLogger() {
         return LOGGER;
+    }
+
+    public ObjectMapper getObjectMapper() {
+        return mapper;
     }
 
     private void reLoadConfig(boolean full) {
