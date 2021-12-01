@@ -88,35 +88,7 @@ The labels are applied to the *physical* pin numbers.
 
 ---
 ## Astro Computer
-To run an example:
-```
- $ java -cp ./build/libs/common-utils-1.0-all.jar -DdeltaT=69.2201 calc.calculation.AstroComputer
-Moon phase:276.5867952705879
-TimeOffset:-9.5
-TimeOffset for Pacific/Marquesas:-9.5
-TimeOffset for America/Los_Angeles:-7.0
-TimeOffset for GMT:0.0
-TimeOffset for Europe/Paris:1.0
-TimeOffset for Europe/Moscow:3.0
-TimeOffset for Australia/Sydney:11.0
-TimeOffset for Australia/Adelaide:10.5
-TZ:Marquesas Time, -9.5
-On Mon Oct 28 15:16:47 PDT 2019, TimeOffset for America/Los_Angeles:-7.0
-On Sat Dec 28 15:16:47 PST 2019, TimeOffset for America/Los_Angeles:-8.0
-
-From position 37°44.93'N / 122°30.42'W
-Sun EoT: 19.896438
-Transit Time:Mon Oct 28 12:53:47 PDT 2019
-Time Rise: 14.578779, Time Set: 25.214096, ZRise: 106.182291, ZSet: 253.817709
-Sun data:
-Declination: 13°15.07'S
-GHA:  158°15.38'
-Elev.:  28°58.01', Z: 220.54º
-
-With epochs
-Rise Date: Mon Oct 28 07:35:29 PDT 2019 (Z:106.71º)
-Set Date: Mon Oct 28 18:11:38 PDT 2019 (Z:253.10º)
-```
+> Moved to a sub-module.
 
 ... and more to come!
 

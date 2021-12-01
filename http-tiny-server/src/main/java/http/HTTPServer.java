@@ -1002,6 +1002,9 @@ public class HTTPServer {
 		if (startImmediately) {
 			this.startServer();
 		}
+		if (verbose) {
+			System.out.println("HTTP Server end-of-constructor");
+		}
 	}
 
 	private static InputStream getZipInputStream(String zipName, String entryName)
