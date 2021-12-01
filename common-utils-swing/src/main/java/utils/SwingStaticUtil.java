@@ -21,10 +21,17 @@ import java.util.Hashtable;
 
 /**
  * Created to isolate the Swing related utilities from the rest, so
- * the others can be imported from system that do not support Swing (like Android).
+ * the others can be imported from systems that do not support Swing (like Android).
  */
 public class SwingStaticUtil {
 
+	/**
+	 * Open the given URL in the default browser on the system.
+	 * No need for a Swing context here.
+	 *
+	 * @param page The url to show in the browser, with protocol, as a string
+	 * @throws Exception when something fails.
+	 */
 	public static void openInBrowser(String page) throws Exception {
 		URI uri = new URI(page);
 		try {
@@ -72,8 +79,36 @@ public class SwingStaticUtil {
 	}
 
 
+	/**
+	 * Open the JFileChooser with the given parameters.
+	 *
+	 * @param mode JFileChooser.FILES_ONLY, JFileChooser.DIRECTORIES_ONLY, JFileChooser.FILES_AND_DIRECTORIES
+	 * @param flt null or a filter like 'txt',
+	 * @param desc filter description. Ignored if flt is null
+	 * @param title dialog title
+	 * @param buttonLabel button label, or null.
+	 * @return the chosen file, if no error, and no cancel
+	 */
 	public static String chooseFile(int mode,
-	                                String flt,
+									String flt,
+									String desc,
+									String title,
+									String buttonLabel) {
+		return chooseFile(mode, flt != null ? new String[] {flt} : null, desc, title, buttonLabel);
+	}
+	/**
+	 * Open the JFileChooser with the given parameters.
+	 * REquired a Swing context.
+	 *
+	 * @param mode JFileChooser.FILES_ONLY, JFileChooser.DIRECTORIES_ONLY, JFileChooser.FILES_AND_DIRECTORIES
+	 * @param flt null or a filter like {'txt', 'json'},
+	 * @param desc filter description. Ignored if flt is null
+	 * @param title dialog title
+	 * @param buttonLabel button label, or null.
+	 * @return the chosen file, if no error, and no cancel
+	 */
+	public static String chooseFile(int mode,
+	                                String[] flt,
 	                                String desc,
 	                                String title,
 	                                String buttonLabel) {
@@ -97,8 +132,8 @@ public class SwingStaticUtil {
 		f = new File(currPath.substring(0, currPath.lastIndexOf(File.separator)));
 		chooser.setCurrentDirectory(f);
 
-		int retval = chooser.showOpenDialog(null);
-		switch (retval) {
+		int retVal = chooser.showOpenDialog(null);
+		switch (retVal) {
 			case JFileChooser.APPROVE_OPTION:
 				fileName = chooser.getSelectedFile().toString();
 				break;
@@ -126,6 +161,22 @@ public class SwingStaticUtil {
 		return drawPanelTable(data, gr, topLeft, betweenCols, betweenRows, colAlignment, paintBackground, bgColor, null, bgTransparency, 1f);
 	}
 
+	/**
+	 * Draws a formatted table with the given data.
+	 *
+	 * @param data 2 dimension array
+	 * @param gr coming from the JPanel's paintComponent.
+	 * @param topLeft top left position on the JPanel
+	 * @param betweenCols in pixels
+	 * @param betweenRows in pixels
+	 * @param colAlignment an array of int, matching the data line size. Can be LEFT_ALIGNED, RIGHT_ALIGNED, CENTER_ALIGNED
+	 * @param paintBackground true or false. Uses the following parameters if true
+	 * @param bgLightColor Top color
+	 * @param bgDarkColor Bottom color
+	 * @param bgTransparency from 0 to 1
+	 * @param textTransparency from 0 to 1
+	 * @return The bottom of the generated table in its JPanel.
+	 */
 	public static int drawPanelTable(String[][] data,
 	                                 Graphics gr,
 	                                 Point topLeft,

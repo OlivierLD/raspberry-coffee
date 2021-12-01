@@ -43,13 +43,15 @@ controls.maxPolarAngle = Math.PI / 1;
 // Fill it out
 let points = [];
 console.log(`Processing ${calculatedPoints.length} points`);
-let factor = 100.0;
+const factor = 100.0;
 // From calculated.js
 calculatedPoints.forEach(pt => points.push(new THREE.Vector3(pt.x / factor, pt.z / factor, pt.y / factor)));
 
 const geometry = new ConvexGeometry( points );
+// https://threejs.org/docs/scenes/material-browser.html#MeshPhongMaterial
 const material = // new THREE.MeshBasicMaterial( { color: 0x00ffff, transparent: true, opacity: 0.75 } );
-                 new THREE.MeshPhongMaterial();
+              // new THREE.MeshPhongMaterial({ wireframe: false });
+                 new THREE.MeshNormalMaterial({ wireframe: false });
 //let spGroup = new THREE.Object3D();
 //let material_2 = new THREE.MeshBasicMaterial({color: 0xff0000, transparent: true});
 //points.forEach(point => {

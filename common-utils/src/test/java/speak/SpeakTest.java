@@ -5,6 +5,7 @@ import utils.TextToSpeech;
 
 /*
  * Run with  ../gradlew test --tests "SpeakTest"
+ * Not really UnitTests, more like demos.
  */
 
 public class SpeakTest {
