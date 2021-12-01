@@ -1561,8 +1561,8 @@ public class BoatBox3D extends Box3D {
 //                            (xCenterOfHull * 1e-2), (zCenterOfHull * 1e-2));
             callback.accept(callbackMessage);
         }
-
-        if ("true".equals(System.getProperty("spit-out-points"))) { // Option: Spit out all calculated points. -Dspit-out-points=true
+        // Option: Spit out all calculated points. -Dspit-out-points=true
+        if ("true".equals(System.getProperty("spit-out-points"))) {
             List<VectorUtils.Vector3D> allCalculatedPoints = new ArrayList<>();
             bezierPointsRail.stream().filter(pt -> bezierPointsRail.indexOf(pt) % 5 == 0)
                     .forEach(pt -> {

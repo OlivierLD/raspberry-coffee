@@ -118,7 +118,7 @@ public class ThreeViews {
 
     private VectorUtils.Vector3D centerOfHull = null; // aka Centre de Carene.
 
-    private final Box3D box3D;
+    private final BoatBox3D box3D;
 
     private JTextPane dataTextArea = null;
     private JTextPane boatDataTextArea = null;
@@ -245,13 +245,13 @@ public class ThreeViews {
 
         NewDataPanel panel = new NewDataPanel();
         // Current values.
-        panel.setValues(((BoatBox3D) this.box3D).getMinX(),
-                ((BoatBox3D) this.box3D).getMaxX(),
-                ((BoatBox3D) this.box3D).getMinY(),
-                ((BoatBox3D) this.box3D).getMaxY(),
-                ((BoatBox3D) this.box3D).getMinZ(),
-                ((BoatBox3D) this.box3D).getMaxZ(),
-                ((BoatBox3D) this.box3D).getDefaultLHT(),
+        panel.setValues(this.box3D.getMinX(),
+                this.box3D.getMaxX(),
+                this.box3D.getMinY(),
+                this.box3D.getMaxY(),
+                this.box3D.getMinZ(),
+                this.box3D.getMaxZ(),
+                this.box3D.getDefaultLHT(),
                 this.description,
                 this.comments == null ? null : this.comments.stream().collect(Collectors.joining("\n")));
 
@@ -312,13 +312,13 @@ public class ThreeViews {
          */
         NewDataPanel panel = new NewDataPanel(true);
 
-        panel.setValues(((BoatBox3D) this.box3D).getMinX(),
-                ((BoatBox3D) this.box3D).getMaxX(),
-                ((BoatBox3D) this.box3D).getMinY(),
-                ((BoatBox3D) this.box3D).getMaxY(),
-                ((BoatBox3D) this.box3D).getMinZ(),
-                ((BoatBox3D) this.box3D).getMaxZ(),
-                ((BoatBox3D) this.box3D).getDefaultLHT(),
+        panel.setValues(this.box3D.getMinX(),
+                this.box3D.getMaxX(),
+                this.box3D.getMinY(),
+                this.box3D.getMaxY(),
+                this.box3D.getMinZ(),
+                this.box3D.getMaxZ(),
+                this.box3D.getDefaultLHT(),
                 this.description,
                 this.comments == null ? null : this.comments.stream().collect(Collectors.joining("\n")));
 
@@ -426,7 +426,7 @@ public class ThreeViews {
             refreshButton.setEnabled(false);
             boatDataTextArea.setText("Re-calculating...");
             // TODO Stop thread if already running.
-            ((BoatBox3D) this.box3D).refreshData(false, map -> {
+            this.box3D.refreshData(false, map -> {
                 String json;
                 try {
                     json = mapper.writerWithDefaultPrettyPrinter()
@@ -540,8 +540,8 @@ public class ThreeViews {
         if (railCtrlPoints.size() > 0 && keelCtrlPoints.size() > 0) {
 
             // Tell the 3D box
-            ((BoatBox3D) this.box3D).setRailCtrlPoints(railCtrlPoints); // The rail.
-            ((BoatBox3D) this.box3D).setKeelCtrlPoints(keelCtrlPoints); // The keel.
+            this.box3D.setRailCtrlPoints(railCtrlPoints); // The rail.
+            this.box3D.setKeelCtrlPoints(keelCtrlPoints); // The keel.
 
             // Display in textArea
             try {
@@ -852,8 +852,8 @@ public class ThreeViews {
 
     private void refreshBox3D() {
         // Tell the 3D box
-        ((BoatBox3D) this.box3D).setRailCtrlPoints(railCtrlPoints); // The rail.
-        ((BoatBox3D) this.box3D).setKeelCtrlPoints(keelCtrlPoints); // The keel.
+        this.box3D.setRailCtrlPoints(railCtrlPoints); // The rail.
+        this.box3D.setKeelCtrlPoints(keelCtrlPoints); // The keel.
     }
 
     private void initComponents() {
@@ -1408,7 +1408,7 @@ public class ThreeViews {
 
         JPanel frameStepPanel = new JPanel();
         JFormattedTextField frameStepValue = new JFormattedTextField(new DecimalFormat("#0.0"));
-        frameStepValue.setValue(((BoatBox3D) this.box3D).getFrameIncrement());
+        frameStepValue.setValue(this.box3D.getFrameIncrement());
         frameStepValue.setPreferredSize(new Dimension(60, 20));
         frameStepValue.setHorizontalAlignment(SwingConstants.RIGHT);
         frameStepValue.getDocument().addDocumentListener(new DocumentListener() {
@@ -1428,7 +1428,7 @@ public class ThreeViews {
                 if (!frameStepValue.getText().trim().isEmpty()) {
                     try {
                         double val = Double.parseDouble(frameStepValue.getText());
-                        ((BoatBox3D) box3D).setFrameIncrement(val);
+                        box3D.setFrameIncrement(val);
                         box3D.repaint();
                     } catch (NumberFormatException nfe) {
                         System.err.println(nfe);
@@ -1441,7 +1441,7 @@ public class ThreeViews {
 
         JPanel wlStepPanel = new JPanel();
         JFormattedTextField wlStepValue = new JFormattedTextField(new DecimalFormat("#0.00"));
-        wlStepValue.setValue(((BoatBox3D) this.box3D).getWlIncrement());
+        wlStepValue.setValue(this.box3D.getWlIncrement());
         wlStepValue.setPreferredSize(new Dimension(60, 20));
         wlStepValue.setHorizontalAlignment(SwingConstants.RIGHT);
         wlStepValue.getDocument().addDocumentListener(new DocumentListener() {
@@ -1461,7 +1461,7 @@ public class ThreeViews {
                 if (!wlStepValue.getText().trim().isEmpty()) {
                     try {
                         double val = Double.parseDouble(wlStepValue.getText());
-                        ((BoatBox3D) box3D).setWlIncrement(val);
+                        box3D.setWlIncrement(val);
                         box3D.repaint();
                     } catch (NumberFormatException nfe) {
                         System.err.println(nfe);
@@ -1474,7 +1474,7 @@ public class ThreeViews {
 
         JPanel buttockStepPanel = new JPanel();
         JFormattedTextField buttockStepValue = new JFormattedTextField(new DecimalFormat("#0.0"));
-        buttockStepValue.setValue(((BoatBox3D) this.box3D).getButtockIncrement());
+        buttockStepValue.setValue(this.box3D.getButtockIncrement());
         buttockStepValue.setPreferredSize(new Dimension(60, 20));
         buttockStepValue.setHorizontalAlignment(SwingConstants.RIGHT);
         buttockStepValue.getDocument().addDocumentListener(new DocumentListener() {
@@ -1494,7 +1494,7 @@ public class ThreeViews {
                 if (!buttockStepValue.getText().trim().isEmpty()) {
                     try {
                         double val = Double.parseDouble(buttockStepValue.getText());
-                        ((BoatBox3D) box3D).setButtockIncrement(val);
+                        box3D.setButtockIncrement(val);
                         box3D.repaint();
                     } catch (NumberFormatException nfe) {
                         System.err.println(nfe);
@@ -1505,62 +1505,62 @@ public class ThreeViews {
         buttockStepPanel.add(new JLabel("Step:"));
         buttockStepPanel.add(buttockStepValue);
 
-        boolean justBoatSelected = ((BoatBox3D) this.box3D).isJustTheBoat();
-        justBoatCheckBox.setSelected(((BoatBox3D) this.box3D).isJustTheBoat());
+        boolean justBoatSelected = this.box3D.isJustTheBoat();
+        justBoatCheckBox.setSelected(this.box3D.isJustTheBoat());
         justBoatCheckBox.addActionListener(evt -> {
             boolean selected = ((JCheckBox) evt.getSource()).isSelected();
 //            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
-            ((BoatBox3D) this.box3D).setJustTheBoat(selected);
+            this.box3D.setJustTheBoat(selected);
             this.box3D.repaint();
             ctrlPointsCheckBox.setEnabled(!selected);
         });
         ctrlPointsCheckBox.setEnabled(!justBoatSelected);
 
-        symmetricCheckBox.setSelected(((BoatBox3D) this.box3D).isSymmetrical());
+        symmetricCheckBox.setSelected(this.box3D.isSymmetrical());
         symmetricCheckBox.addActionListener(evt -> {
             boolean selected = ((JCheckBox) evt.getSource()).isSelected();
 //            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
-            ((BoatBox3D) this.box3D).setSymmetrical(selected);
+            this.box3D.setSymmetrical(selected);
             this.box3D.repaint();
         });
 
-        framesCheckBox.setSelected(((BoatBox3D) this.box3D).isFrames());
+        framesCheckBox.setSelected(this.box3D.isFrames());
         framesCheckBox.addActionListener(evt -> {
             boolean selected = ((JCheckBox) evt.getSource()).isSelected();
 //            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
-            ((BoatBox3D) this.box3D).setFrames(selected);
+            this.box3D.setFrames(selected);
             this.box3D.repaint();
             beamsCheckBox.setEnabled(selected);
 
         });
-        beamsCheckBox.setSelected(((BoatBox3D) this.box3D).isBeams());
+        beamsCheckBox.setSelected(this.box3D.isBeams());
         beamsCheckBox.addActionListener(evt -> {
             boolean selected = ((JCheckBox) evt.getSource()).isSelected();
 //            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
-            ((BoatBox3D) this.box3D).setBeams(selected);
+            this.box3D.setBeams(selected);
             this.box3D.repaint();
         });
 
 
-        waterlinesCheckBox.setSelected(((BoatBox3D) this.box3D).isWaterlines());
+        waterlinesCheckBox.setSelected(this.box3D.isWaterlines());
         waterlinesCheckBox.addActionListener(evt -> {
             boolean selected = ((JCheckBox) evt.getSource()).isSelected();
 //            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
-            ((BoatBox3D) this.box3D).setWaterlines(selected);
+            this.box3D.setWaterlines(selected);
             this.box3D.repaint();
         });
-        buttocksCheckBox.setSelected(((BoatBox3D) this.box3D).isButtocks());
+        buttocksCheckBox.setSelected(this.box3D.isButtocks());
         buttocksCheckBox.addActionListener(evt -> {
             boolean selected = ((JCheckBox) evt.getSource()).isSelected();
 //            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
-            ((BoatBox3D) this.box3D).setButtocks(selected);
+            this.box3D.setButtocks(selected);
             this.box3D.repaint();
         });
-        ctrlPointsCheckBox.setSelected(((BoatBox3D) this.box3D).isDrawFrameCtrlPoints());
+        ctrlPointsCheckBox.setSelected(this.box3D.isDrawFrameCtrlPoints());
         ctrlPointsCheckBox.addActionListener(evt -> {
             boolean selected = ((JCheckBox) evt.getSource()).isSelected();
 //            System.out.printf("Checkbox is %s\n", selected ? "selected" : "not selected");
-            ((BoatBox3D) this.box3D).setDrawFrameCtrlPoints(selected);
+            this.box3D.setDrawFrameCtrlPoints(selected);
             this.box3D.repaint();
         });
 
@@ -1796,7 +1796,7 @@ public class ThreeViews {
             ex.printStackTrace();
         }
         // Refresh also the offsets and Co, default-lht etc.
-        ((BoatBox3D) this.box3D).refreshValues(this.minX, this.maxX, this.minY, this.maxY, this.minZ, this.maxZ, this.defaultLHT);
+        this.box3D.refreshValues(this.minX, this.maxX, this.minY, this.maxY, this.minZ, this.maxZ, this.defaultLHT);
         // Refresh the text fields
         this.threeDPanel.setMinXValue();
         this.threeDPanel.setMaxXValue();
