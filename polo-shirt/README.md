@@ -1,5 +1,5 @@
 ## Polo Shirt 👕 - Feasibility test
-An annotation-based REST server, like JAX-RS (Jersey -> Polo), latching on the [http-tiny-server](../http-tiny-server).
+An _**annotation-based**_ REST server, like JAX-RS (Jersey -> Polo), latching on the [http-tiny-server](../http-tiny-server).
 
 - The main is `restserver.PoloServer`.
 - The request manager is `restserver.PoloRESTRequestManager implements http.RESTRequestManager`.

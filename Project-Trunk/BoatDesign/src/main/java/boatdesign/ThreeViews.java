@@ -36,6 +36,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
+ * A Swing Application
+ *
  * Using default WhiteBoard Writer
  * <p>
  * 2D Bezier example. (<- So so...)
@@ -432,43 +434,45 @@ public class ThreeViews {
                     json = map.toString();
                 }
                 boatDataTextArea.setText(json);
-                // CC position
-                Double xCC = (Double) map.get("cc-x");
-                Double zCC = (Double) map.get("cc-z");
-                if (xCC != null && zCC != null) {
-                    // Display on 2D whiteboards
-                    centerOfHull = new VectorUtils.Vector3D()
-                            .x(xCC * 1e2)
-                            .y(0d)
-                            .z(zCC * 1e2);
-                }
-                // Displacement for the area curve
-                Map<Double, Double> displacementMap = (Map<Double, Double>) map.get("displacement-x-map");
-                double lwlStart = (double) map.get("lwl-start");
-                double lwlEnd = (double) map.get("lwl-end");
-                // TODO: send to XY
-                getLogger().log(Level.INFO, "Will send to Area Curve");
-                if (true) {
-                    // 1 - Find max area
-                    Double wbMaxY = whiteBoardXY.getForcedMaxY();
-                    AtomicReference<Double> max = new AtomicReference<>(-Double.MAX_VALUE);
-                    displacementMap.forEach((k, v) -> max.set(Math.max(max.get(), v)));
-                    getLogger().log(Level.INFO, "Max area: " + max);
-                    double ratio = (wbMaxY / max.get());
-                    // TODO Remove the area curve if it exists
-                    List<VectorUtils.Vector2D> areas = new ArrayList<>();
-                    areas.add(new VectorUtils.Vector2D().x(lwlStart * 1e2).y(0d));
-                    displacementMap.forEach((k, v) -> areas.add(new VectorUtils.Vector2D().x(k).y(v * ratio)));
-                    areas.add(new VectorUtils.Vector2D().x(lwlEnd * 1e2).y(0d));
 
-                    WhiteBoardPanel.DataSerie areasSerie = new WhiteBoardPanel.DataSerie()
-                            .data(areas)
-                            .graphicType(WhiteBoardPanel.GraphicType.AREA)
-                            .areaGradient(new Color(255, 0, 0, 128), new Color(255, 165, 0, 128))
-                            .color(Color.BLACK);
-                    whiteBoardXY.addSerie(areasSerie);
-                }
+                if (map.get("lwl-start") != null) {
+                    // CC position
+                    Double xCC = (Double) map.get("cc-x");
+                    Double zCC = (Double) map.get("cc-z");
+                    if (xCC != null && zCC != null) {
+                        // Display on 2D whiteboards
+                        centerOfHull = new VectorUtils.Vector3D()
+                                .x(xCC * 1e2)
+                                .y(0d)
+                                .z(zCC * 1e2);
+                    }
+                    // Displacement for the area curve
+                    Map<Double, Double> displacementMap = (Map<Double, Double>) map.get("displacement-x-map");
+                    double lwlStart = (double) map.get("lwl-start");
+                    double lwlEnd = (double) map.get("lwl-end");
+                    // TODO: send to XY
+                    getLogger().log(Level.INFO, "Will send to Area Curve");
+                    if (true) {
+                        // 1 - Find max area
+                        Double wbMaxY = whiteBoardXY.getForcedMaxY();
+                        AtomicReference<Double> max = new AtomicReference<>(-Double.MAX_VALUE);
+                        displacementMap.forEach((k, v) -> max.set(Math.max(max.get(), v)));
+                        getLogger().log(Level.INFO, "Max area: " + max);
+                        double ratio = (wbMaxY / max.get());
+                        // TODO Remove the area curve if it exists
+                        List<VectorUtils.Vector2D> areas = new ArrayList<>();
+                        areas.add(new VectorUtils.Vector2D().x(lwlStart * 1e2).y(0d));
+                        displacementMap.forEach((k, v) -> areas.add(new VectorUtils.Vector2D().x(k).y(v * ratio)));
+                        areas.add(new VectorUtils.Vector2D().x(lwlEnd * 1e2).y(0d));
 
+                        WhiteBoardPanel.DataSerie areasSerie = new WhiteBoardPanel.DataSerie()
+                                .data(areas)
+                                .graphicType(WhiteBoardPanel.GraphicType.AREA)
+                                .areaGradient(new Color(255, 0, 0, 128), new Color(255, 165, 0, 128))
+                                .color(Color.BLACK);
+                        whiteBoardXY.addSerie(areasSerie);
+                    }
+                }
             });
             // Stop repainter
             keepLooping.set(false);

@@ -21,7 +21,8 @@ import java.util.logging.LogManager;
 
 /**
  * Many hard-coded values and options...
- * TODO Document them!!!
+ *
+ * Also see -Dspit-out-points=true
  */
 public class BoatBox3D extends Box3D {
 
@@ -900,6 +901,9 @@ public class BoatBox3D extends Box3D {
         double maxDepth = 0d, maxDepthX = 0d;
         double lwl = 0.0, lwlStart = 0d, lwlEnd = 0d;
         Bezier.Point3D maxWidthPoint = null;
+        if (callback != null) {
+            callback.accept(Map.of("operation", "Calculating rail"));
+        }
         Bezier bezierRail = new Bezier(ctrlPointsRail);
         for (double t=0; t<=1.001; t+=0.01) { // TODO Verify that limit (double...)
             Bezier.Point3D tick = bezierRail.getBezierPoint(t);
@@ -918,6 +922,9 @@ public class BoatBox3D extends Box3D {
             System.out.printf("Max Width: %f, at X:%f\n", maxWidth, maxWidthPoint.getX() - (-centerOnXValue + xOffset));
         }
 
+        if (callback != null) {
+            callback.accept(Map.of("operation", "Calculating bow"));
+        }
         Bezier bezierBow = new Bezier(ctrlPointsBow);
         for (double t=0; t<=1.0; t+=0.01) {
             Bezier.Point3D tick = bezierBow.getBezierPoint(t);
@@ -940,6 +947,9 @@ public class BoatBox3D extends Box3D {
             wlPoint1 = bezierBow.getBezierPoint(tFor0);
         }
 
+        if (callback != null) {
+            callback.accept(Map.of("operation", "Calculating keel"));
+        }
         Bezier bezierKeel = new Bezier(ctrlPointsKeel);
         double startForLWLEnd = 0d;
         boolean dirForLWLEnd = true;
@@ -963,6 +973,9 @@ public class BoatBox3D extends Box3D {
         }
         // Also find the deepest point
         Bezier.Point3D maxDepthPoint = null;
+        if (callback != null) {
+            callback.accept(Map.of("operation", "Calculating max depth"));
+        }
         double maxDepthT = -1d;
         for (double t=0; t<=1.001; t+=0.01) { // TODO Limit (double...)
             Bezier.Point3D tick = bezierKeel.getBezierPoint(t);
@@ -1005,6 +1018,9 @@ public class BoatBox3D extends Box3D {
         }
 
         // This one is correlated, re-calculated
+        if (callback != null) {
+            callback.accept(Map.of("operation", "Calculating transom"));
+        }
         Bezier bezierTransom = new Bezier(ctrlPointsTransom);
         for (double t=0; t<=1.0; t+=0.01) {
             Bezier.Point3D tick = bezierTransom.getBezierPoint(t);
@@ -1027,6 +1043,9 @@ public class BoatBox3D extends Box3D {
             for (double _x = (-centerOnXValue + xOffset) + frameIncrement; _x </*=*/ (-centerOnXValue + xOffset) + maxLength; _x += frameIncrement) {
                 if (localVerbose || verbose) {
                     System.out.printf("... Calculating frame %.03f... ", _x);
+                }
+                if (callback != null) {
+                    callback.accept(Map.of("operation", String.format("Calculating frame %.03f", _x)));
                 }
                 long one = System.currentTimeMillis();
                 boolean increase = (bezierRail.getBezierPoint(0).getX() < bezierRail.getBezierPoint(1).getX());
@@ -1195,6 +1214,9 @@ public class BoatBox3D extends Box3D {
             hValues.forEach(z -> {
                 if (localVerbose || verbose) {
                     System.out.println("Waterline for z=" + z);
+                }
+                if (callback != null) {
+                    callback.accept(Map.of("operation", String.format("Calculating waterline %.03f", z)));
                 }
                 List<Bezier.Point3D> waterLine = new ArrayList<>();
                 // firstPoint, lastPoint for z ?
@@ -1382,6 +1404,9 @@ public class BoatBox3D extends Box3D {
                 if (localVerbose || verbose) {
                     System.out.println("Vline for y=" + y);
                 }
+                if (callback != null) {
+                    callback.accept(Map.of("operation", String.format("Calculating buttock %.03f", y)));
+                }
                 // First and last
                 // firstPoint, lastPoint for y ?
                 Bezier.Point3D _lastButtockPoint = null;
@@ -1536,7 +1561,7 @@ public class BoatBox3D extends Box3D {
             callback.accept(callbackMessage);
         }
 
-        if (true) { // TODO Option: Spit out all calculated points
+        if ("true".equals(System.getProperty("spit-out-points"))) { // Option: Spit out all calculated points. -Dspit-out-points=true
             List<VectorUtils.Vector3D> allCalculatedPoints = new ArrayList<>();
             bezierPointsRail.stream().filter(pt -> bezierPointsRail.indexOf(pt) % 5 == 0)
                     .forEach(pt -> {
