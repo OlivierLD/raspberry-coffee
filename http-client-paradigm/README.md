@@ -1,5 +1,5 @@
 # HTTP Clients
-### To get to sensor data
+### To get to sensor data, in (almost) any language.
 
 This comes from the following observation:
 
