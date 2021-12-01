@@ -122,6 +122,7 @@ public class ThreeViews {
 
     private JTextPane dataTextArea = null;
     private JTextPane boatDataTextArea = null;
+    private JTextPane messageTextArea = null;
 
     private static ThreeViews instance;
 
@@ -473,6 +474,8 @@ public class ThreeViews {
                         whiteBoardXY.addSerie(areasSerie);
                     }
                 }
+            }, mess -> {
+                messageTextArea.setText(mess);
             });
             // Stop repainter
             keepLooping.set(false);
@@ -1359,7 +1362,8 @@ public class ThreeViews {
         dataTextArea = new JTextPane();
         dataTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
         JScrollPane dataScrollPane = new JScrollPane(dataTextArea);
-        dataScrollPane.setPreferredSize(new Dimension(300, 200));
+        dataScrollPane.setPreferredSize(new Dimension(300, 225));
+        // dataScrollPane.setSize(new Dimension(300, 250));
         ctrlPointsPanel.add(dataScrollPane, BorderLayout.NORTH);
 
         whiteBoardsPanel.add(whiteBoardXZ,         // Side
@@ -1669,7 +1673,7 @@ public class ThreeViews {
                 new GridBagConstraints(0,
                         0,
                         1,
-                        1,
+                        2,
                         1.0,
                         0.0,
                         GridBagConstraints.CENTER,
@@ -1682,12 +1686,31 @@ public class ThreeViews {
         boatDataTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
         boatDataTextArea.setText("Boat Data...");
         JScrollPane boatDataScrollPane = new JScrollPane(boatDataTextArea);
-        boatDataScrollPane.setPreferredSize(new Dimension(300, 200));
+        boatDataScrollPane.setPreferredSize(new Dimension(300, 100));
         boatDataPanel.add(boatDataScrollPane, BorderLayout.NORTH);
+
+        JPanel messagePanel = new JPanel(new BorderLayout());
+        messagePanel.setBorder(BorderFactory.createTitledBorder("Messages"));
+        messageTextArea = new JTextPane();
+        messageTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
+        messageTextArea.setText("Messages...");
+        JScrollPane messageScrollPane = new JScrollPane(messageTextArea);
+        messageScrollPane.setPreferredSize(new Dimension(300, 100));
+        messagePanel.add(messageScrollPane, BorderLayout.NORTH);
 
         bottomRightPanel.add(boatDataPanel,
                 new GridBagConstraints(1,
                         0,
+                        1,
+                        1,
+                        1.0,
+                        0.0,
+                        GridBagConstraints.CENTER,
+                        GridBagConstraints.BOTH,
+                        new Insets(0, 0, 0, 0), 0, 0));
+        bottomRightPanel.add(messagePanel,
+                new GridBagConstraints(1,
+                        1,
                         1,
                         1,
                         1.0,

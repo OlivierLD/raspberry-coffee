@@ -852,13 +852,14 @@ public class BoatBox3D extends Box3D {
 
     // Re-generates the boat
     public void refreshData() {
-        refreshData(false, null);
+        refreshData(false, null, null);
     }
     public void refreshData(boolean localVerbose) {
-        refreshData(localVerbose, null);
+        refreshData(localVerbose, null, null);
     }
-    public void refreshData(boolean localVerbose, Consumer<Map> callback) {
+    public void refreshData(boolean localVerbose, Consumer<Map> callback, Consumer<String> messCallback) {
 
+        long before = System.currentTimeMillis();
         // TODO Parameterize the t+=0.01
 
         // Max length, centerOnXValue, xOffset
@@ -901,8 +902,8 @@ public class BoatBox3D extends Box3D {
         double maxDepth = 0d, maxDepthX = 0d;
         double lwl = 0.0, lwlStart = 0d, lwlEnd = 0d;
         Bezier.Point3D maxWidthPoint = null;
-        if (callback != null) {
-            callback.accept(Map.of("operation", "Calculating rail"));
+        if (messCallback != null) {
+            messCallback.accept("Calculating rail");
         }
         Bezier bezierRail = new Bezier(ctrlPointsRail);
         for (double t=0; t<=1.001; t+=0.01) { // TODO Verify that limit (double...)
@@ -922,8 +923,8 @@ public class BoatBox3D extends Box3D {
             System.out.printf("Max Width: %f, at X:%f\n", maxWidth, maxWidthPoint.getX() - (-centerOnXValue + xOffset));
         }
 
-        if (callback != null) {
-            callback.accept(Map.of("operation", "Calculating bow"));
+        if (messCallback != null) {
+            messCallback.accept("Calculating bow");
         }
         Bezier bezierBow = new Bezier(ctrlPointsBow);
         for (double t=0; t<=1.0; t+=0.01) {
@@ -947,8 +948,8 @@ public class BoatBox3D extends Box3D {
             wlPoint1 = bezierBow.getBezierPoint(tFor0);
         }
 
-        if (callback != null) {
-            callback.accept(Map.of("operation", "Calculating keel"));
+        if (messCallback != null) {
+            messCallback.accept("Calculating keel");
         }
         Bezier bezierKeel = new Bezier(ctrlPointsKeel);
         double startForLWLEnd = 0d;
@@ -973,8 +974,8 @@ public class BoatBox3D extends Box3D {
         }
         // Also find the deepest point
         Bezier.Point3D maxDepthPoint = null;
-        if (callback != null) {
-            callback.accept(Map.of("operation", "Calculating max depth"));
+        if (messCallback != null) {
+            messCallback.accept("Calculating max depth");
         }
         double maxDepthT = -1d;
         for (double t=0; t<=1.001; t+=0.01) { // TODO Limit (double...)
@@ -1018,8 +1019,8 @@ public class BoatBox3D extends Box3D {
         }
 
         // This one is correlated, re-calculated
-        if (callback != null) {
-            callback.accept(Map.of("operation", "Calculating transom"));
+        if (messCallback != null) {
+            messCallback.accept("Calculating transom");
         }
         Bezier bezierTransom = new Bezier(ctrlPointsTransom);
         for (double t=0; t<=1.0; t+=0.01) {
@@ -1044,8 +1045,8 @@ public class BoatBox3D extends Box3D {
                 if (localVerbose || verbose) {
                     System.out.printf("... Calculating frame %.03f... ", _x);
                 }
-                if (callback != null) {
-                    callback.accept(Map.of("operation", String.format("Calculating frame %.03f", _x)));
+                if (messCallback != null) {
+                    messCallback.accept(String.format("Calculating frame %.03f", _x));
                 }
                 long one = System.currentTimeMillis();
                 boolean increase = (bezierRail.getBezierPoint(0).getX() < bezierRail.getBezierPoint(1).getX());
@@ -1215,8 +1216,8 @@ public class BoatBox3D extends Box3D {
                 if (localVerbose || verbose) {
                     System.out.println("Waterline for z=" + z);
                 }
-                if (callback != null) {
-                    callback.accept(Map.of("operation", String.format("Calculating waterline %.03f", z)));
+                if (messCallback != null) {
+                    messCallback.accept(String.format("Calculating waterline %.03f", z));
                 }
                 List<Bezier.Point3D> waterLine = new ArrayList<>();
                 // firstPoint, lastPoint for z ?
@@ -1404,8 +1405,8 @@ public class BoatBox3D extends Box3D {
                 if (localVerbose || verbose) {
                     System.out.println("Vline for y=" + y);
                 }
-                if (callback != null) {
-                    callback.accept(Map.of("operation", String.format("Calculating buttock %.03f", y)));
+                if (messCallback != null) {
+                    messCallback.accept(String.format("Calculating buttock %.03f", y));
                 }
                 // First and last
                 // firstPoint, lastPoint for y ?
@@ -1606,6 +1607,10 @@ public class BoatBox3D extends Box3D {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+        }
+        long after = System.currentTimeMillis();
+        if (messCallback != null) {
+            messCallback.accept(String.format("Refresh done in %s ms.", NumberFormat.getInstance().format(after - before)));
         }
     }
 
