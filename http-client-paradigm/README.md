@@ -67,7 +67,7 @@ such as:
 First, compile
 ```text
 $ ../gradlew clean shadowJar
-$ export CP=./build/libs/http-clients-1.0-all.jar
+$ export CP=./build/libs/http-client-paradigm-1.0-all.jar
 ```
 
 > Next, we need to have some http server running somewhere. Here we choose to 
@@ -157,11 +157,11 @@ Heading: 143.737568 Pitch: 123.377093, Roll: -115.793348
 > Important Note: You must have compiled the required classes with Java 8, *not* Java 11!
 > Prepare the jar with a 
 ```text
-$ ../gradlew clean shadowJar -x test -x :http-clients:compileGroovy -x :http-clients:compileScala
+$ ../gradlew clean shadowJar -x test -x :http-client-paradigm:compileGroovy -x :http-client-paradigm:compileScala
 ```
 
 - Open the sketch `ProcessingClient` in the Processing IDE
-- Use the menu `Sketch` > `Add File...` to add `./build/libs/http-clients-1.0-all.jar` (compiled with Java 8). 
+- Use the menu `Sketch` > `Add File...` to add `./build/libs/http-client-paradigm-1.0-all.jar` (compiled with Java 8). 
 - Then you can run the sketch
 
 ![Processing](./Processing.png)
