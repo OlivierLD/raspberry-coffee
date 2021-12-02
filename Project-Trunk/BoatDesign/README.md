@@ -33,13 +33,14 @@ Then do the hydrostatic calculations.
 ## TODO's
 - Data to `WebGL`
   - With `ThreeJS` ?
-- Data to STL, OpenSCAD, etc
-  - Look into the [`polyhedron`](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Primitive_Solids#polyhedron)
+- The same algorithms in OpenSCAD (Bezier & Co)
+  - Data to `STL` (rendered by many), `gcode`, etc 
+    - Look into the [`polyhedron`](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Primitive_Solids#polyhedron)
 - Data to Processing (see PitchRoll.pde ...)
 
 ### Hints
-- Main is in `boatdesign.ThreeViews`.
-- Shape calculation done in `BoatBox3D`, look for `// Actual shape calculation takes place here.`
+- The main of the Swing app is in `boatdesign.ThreeViews`.
+- Shape calculation done in `BoatBox3D`, look for "`// Actual shape calculation takes place here.`"
 
 
 ---
