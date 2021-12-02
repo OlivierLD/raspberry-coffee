@@ -7,6 +7,9 @@ if [[ "$1" != "" ]]
 then
   OPT="-Dinit-file=$1"
 fi
+#
+OPT="${OPT} -Dspit-out-points=true"
+#
 COMMAND="java ${OPT} ${LOGGING_FLAG} -jar ${CP} $*"
 echo -e "Running ${COMMAND}"
 ${COMMAND}

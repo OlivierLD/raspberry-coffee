@@ -5,7 +5,6 @@ import boatdesign.swingstuff.NewDataPanel;
 import boatdesign.threeD.BoatBox3D;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gsg.SwingUtils.Box3D;
 import gsg.SwingUtils.SwingUtils;
 import gsg.SwingUtils.WhiteBoardPanel;
 import gsg.SwingUtils.fullui.ThreeDPanelWithWidgets;
