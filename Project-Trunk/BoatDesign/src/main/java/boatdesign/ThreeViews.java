@@ -2100,6 +2100,10 @@ public class ThreeViews {
         }
     }
 
+    /**
+     * Main for the Swing app.
+     * @param args Unused.
+     */
     public static void main(String... args) {
 
         try {
