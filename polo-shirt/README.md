@@ -1,13 +1,22 @@
 ## Polo Shirt 👕 - Feasibility test
-An _**annotation-based**_ REST server, like JAX-RS (Jersey -> Polo), latching on the [http-tiny-server](../http-tiny-server).
+An _**annotation-based**_ REST server, like JAX-RS (Jersey => Polo 😉), latching on the [http-tiny-server](../http-tiny-server).  
+Consider it as an exmple of the way to process annotations. It does not come with the tools OpenAPI provides, 
+like `yaml` definition, documentation, etc.  
+This tooling would be yours to develop.  
+Again, the idea here is to facilitate the job, _on a very small machine_ like a Raspberry Pi Zero, that might not support
+all the tools, libraries and frameworks, because of the small amount of memory available. It is not about re-inventing the wheel.
 
+In this example:
 - The main is `restserver.PoloServer`.
 - The request manager is `restserver.PoloRESTRequestManager implements http.RESTRequestManager`.
-    - Annotations re managed in the method `buildOperationList`.
+    - Annotations are managed in the method `buildOperationList`, and used in the method `processRequest`.
 - An _**example**_ of implementation - with its annotations - is in `restserver.AnnotatedRESTImplementation`.
 - Annotation definitions are in the package `restserver.annotations`.
 
-#### OpenAPI Spec (formerly Swagger)
+> Build it using a `../gradlew shadowJar`  
+> Run it with `./runAnnotatedServer.sh`
+
+#### The "standard" way: OpenAPI Spec (formerly Swagger)
 OpenAPI is not related to this project, but it could be considered. Since recently, it is not only a way to document and generate your API, it can also be run directly on Jetty.
 A single command can generate, build, package and run the services.
 
@@ -43,7 +52,7 @@ For Linux, (or any system)):
 Also try
 -->
 ```
- $ wget http://central.maven.org/maven2/org/openapitools/openapi-generator-cli/3.3.4/openapi-generator-cli-3.3.4.jar -O openapi-generator-cli.jar
+ $ wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/3.3.4/openapi-generator-cli-3.3.4.jar -O openapi-generator-cli.jar
 ```
 
 Then to run it (depending on the version you want):
@@ -54,6 +63,7 @@ Then to run it (depending on the version you want):
 Try that:
 ```
  $ ./swagger.sh
+ . . .
  $ cd generated/jaxrs
  $ mvn clean package jetty:run [--settings ../../settings.xml] -Dmaven.test.skip=true
 ```

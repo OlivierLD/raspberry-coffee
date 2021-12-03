@@ -55,7 +55,7 @@ public class AnnotatedRESTImplementation {
 	@OperationDefinition(
 			verb = OperationDefinition.Verbs.GET,
 			path = "/greeting/{greet}",
-			description = "A simple example, returns a String"
+			description = "A simple example, returns a String. QueryParam 'name'"
 	)
 	protected static String greet(@PathParam(name = "greet") String salutation, @QueryParam(name = "name") String who) {
 		String greeting = String.format("%s %s!", (salutation == null ? "Hello" : salutation), (who != null ? who : "world"));
@@ -69,7 +69,7 @@ public class AnnotatedRESTImplementation {
 	@OperationDefinition(
 			verb = OperationDefinition.Verbs.GET,
 			path = "/greeting/v2/{greet}",
-			description = "A simple example, returning a Bean"
+			description = "A simple example, returning a Bean. QueryParam 'name'"
 	)
 	protected static Message greetV2(@PathParam(name = "greet") String salutation, @QueryParam(name = "name") String who) {
 		String greeting = String.format("%s %s!", (salutation == null ? "Hello" : salutation), (who != null ? who : "world"));
@@ -105,7 +105,7 @@ public class AnnotatedRESTImplementation {
 	@OperationDefinition(
 			verb = OperationDefinition.Verbs.POST,
 			path = "/greeting/v3",
-			description = "A simple example, taking a BodyParam, returning a Bean"
+			description = "A simple example, taking a BodyParam, returning a Bean. Try curl -X POST http://localhost:2345/top-root/greeting/v3 -d '{ \"name\": \"Ducon\", \"salutation\": \"Salut\" }' | jq"
 	)
 	protected static Message greetV3(@BodyParam() GreetingObject greetingObj) {
 		String greeting = String.format("%s %s!",
