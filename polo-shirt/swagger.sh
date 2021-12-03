@@ -2,7 +2,7 @@
 #
 echo -e "Swagger generation"
 #
-GENERATION_FOLDER=./generated/jaxrs
+GENERATION_FOLDER=generated/jaxrs
 YAML_FILE=./yaml/sample.yaml
 DESTINATION_PACKAGE=oliv.io
 FLAVOR=jaxrs-jersey
@@ -27,7 +27,7 @@ GENERATOR_EXISTS=$(which ${OPENAPI_GENERATOR})
 if [[ "${GENERATOR_EXISTS}" == "" ]]
 then
   echo -e "---------------------------------------------------"
-  echo -e "Trying plan B, openapi-generator was not found on this system."
+  echo -e "Trying plan B..., openapi-generator was not found on this system."
   echo -e "Assume that you've downloaded the jar with"
   echo -e "wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/3.3.4/openapi-generator-cli-3.3.4.jar -O openapi-generator-cli.jar"
   echo -e "---------------------------------------------------"
@@ -38,9 +38,16 @@ VERBOSE=
 # VERBOSE=--verbose
 # swagger-codegen generate --lang jaxrs-jersey --input-spec $YAML_FILE --output $GENERATION_FOLDER --api-package $DESTINATION_PACKAGE $VERBOSE
 # openapi-generator generate --generator-name jaxrs-jersey --input-spec $YAML_FILE --output $GENERATION_FOLDER --package-name $DESTINATION_PACKAGE $VERBOSE
-# With custom templates
+# With custom templates (option, see below)
 TEMPLATE_DIR=~/.openapi-generator/JavaJaxRS/libraries/jersey1
-COMMAND="${OPENAPI_GENERATOR} generate --generator-name ${FLAVOR} --input-spec ${YAML_FILE} --output ${GENERATION_FOLDER} --api-package ${DESTINATION_PACKAGE} --template-dir ${TEMPLATE_DIR} ${VERBOSE}"
+#
+GEN_PRMS="--generator-name ${FLAVOR}"
+GEN_PRMS="${GEN_PRMS} --input-spec ${YAML_FILE}"
+GEN_PRMS="${GEN_PRMS} --output ${GENERATION_FOLDER}"
+GEN_PRMS="${GEN_PRMS} --api-package ${DESTINATION_PACKAGE}"
+# GEN_PRMS="${GEN_PRMS} --template-dir ${TEMPLATE_DIR}"
+GEN_PRMS="${GEN_PRMS}  ${VERBOSE}"
+COMMAND="${OPENAPI_GENERATOR} generate ${GEN_PRMS}"
 echo -e "We are going to run:"
 echo -e "${COMMAND}"
 echo -en "Proceed y|n ? > "

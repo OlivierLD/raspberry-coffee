@@ -1,12 +1,16 @@
 ## Polo Shirt 👕 - Feasibility test
 An _**annotation-based**_ REST server, like JAX-RS (Jersey => Polo 😉), latching on the [http-tiny-server](../http-tiny-server).  
-Consider it as an exmple of the way to process annotations. It does not come with the tools OpenAPI provides, 
-like `yaml` definition, documentation, etc.  
-This tooling would be yours to develop.  
+Consider it as an example of the way to process annotations. It does not come with the tools OpenAPI provides, 
+like `yaml` specification, documentation, etc.  
+This kind tooling is in reach, but would be yours to develop and implement.  
 Again, the idea here is to facilitate the job, _on a very small machine_ like a Raspberry Pi Zero, that might not support
 all the tools, libraries and frameworks, because of the small amount of memory available. It is not about re-inventing the wheel.
 
-In this example:
+We are going to show how to implement the _same_ service, using `Polo-Shirt`, and then `Swagger`, which is sort of a de-facto standard, 
+so we can compare the two  approaches.
+
+
+In the Polo-Shirt example:
 - The main is `restserver.PoloServer`.
 - The request manager is `restserver.PoloRESTRequestManager implements http.RESTRequestManager`.
     - Annotations are managed in the method `buildOperationList`, and used in the method `processRequest`.
@@ -14,9 +18,10 @@ In this example:
 - Annotation definitions are in the package `restserver.annotations`.
 
 > Build it using a `../gradlew shadowJar`  
-> Run it with `./runAnnotatedServer.sh`
+> The run it with `./runAnnotatedServer.sh`   
+>> The stdout in the console will tell you how to reach out to the server, with `curl`.
 
-#### The "standard" way: OpenAPI Spec (formerly Swagger)
+#### Then, the "standard" way: OpenAPI Spec (formerly Swagger)
 OpenAPI is not related to this project, but it could be considered. Since recently, it is not only a way to document and generate your API, it can also be run directly on Jetty.
 A single command can generate, build, package and run the services.
 
@@ -52,7 +57,7 @@ For Linux, (or any system)):
 Also try
 -->
 ```
- $ wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/3.3.4/openapi-generator-cli-3.3.4.jar -O openapi-generator-cli.jar
+ $ wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/5.3.0/openapi-generator-cli-5.3.0.jar -O openapi-generator-cli.jar
 ```
 
 Then to run it (depending on the version you want):
@@ -67,14 +72,17 @@ Try that:
  $ cd generated/jaxrs
  $ mvn clean package jetty:run [--settings ../../settings.xml] -Dmaven.test.skip=true
 ```
+> There is a `README.md` worth looking at, generated in the `generated/jaxrs` folder.
+
 Then from another console:
 ```
  $ curl -X GET http://localhost:2345/oplist
  {"code":4,"type":"ok","message":"magic!"}
 ```
-> Note: in IntelliJ, right-click on the pom.xml in generated/jaxrs, and `Add as Maven Project`. 
+> _Note_: in IntelliJ, right-click on the `pom.xml` in `generated/jaxrs`, and `Add as Maven Project`. 
 
-Flesh out your methods (that one in `oliv.io.impl.TopRootApiServiceImpl`):
+Then flesh out your methods (that one in `oliv.io.impl.TopRootApiServiceImpl`, where it says `do some magic!`).  
+For example:
 ```java
 @Override
 public Response greetV3(GreetingRequest body, SecurityContext securityContext) throws NotFoundException {
@@ -87,6 +95,8 @@ public Response greetV3(GreetingRequest body, SecurityContext securityContext) t
     return Response.ok().entity(response).build();
 }
 ```
+> Note: This generated code is semantically identical to what _**you**_ would write, for Polo-Shirt (at the top of this doc).
+
 Rebuild, re-run, and then (notice the simple-quotes around the payload)
 ```
 curl -X POST "http://localhost:2345/top-root/greeting/v3" -H "accept: application/json" -H "Content-Type: application/json" -d '{"name":"Oliv","salutation":"Salut"}'
@@ -228,3 +238,7 @@ $ openapi-generator generate \
                     --verbose
 ```
 > Note: the `--template-dir` is the directory where the template live in, not anything higher in the tree.
+
+---
+Good luck.
+

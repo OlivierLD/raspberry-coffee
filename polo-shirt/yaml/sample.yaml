@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Polo shirt example
+  title: Polo-shirt example
   termsOfService: 'urn://Use-and-Reuse-at-will'
   description: |
     Not much to learn here, this is just an example for now. To be used with swagger, with openapi-generator.

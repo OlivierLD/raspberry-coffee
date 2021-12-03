@@ -1,7 +1,7 @@
 ## Linear Algebra, and graphical utilities
 
-Basic linear algebra ([الجبر](https://en.wikipedia.org/wiki/Algebra)), and statistical functions, in Java. 
-> Work in progress.
+Basic linear algebra (from the arabic [الجبر](https://en.wikipedia.org/wiki/Algebra), _al-jabr_, from the book _ilm al-jabr - i-muquabala_, by the Persian mathematician _al-Khwarizmi_, that literally means _reunion of broken parts_), and statistical functions, in Java. 
+> This is a work in progress.
 - Square matrix
 - System resolution
 - Least squares method (regression)
@@ -14,9 +14,9 @@ Basic linear algebra ([الجبر](https://en.wikipedia.org/wiki/Algebra)), and 
 ---
 
 This module was inspired by reading [Math for Programmers](https://www.manning.com/books/math-for-programmers) by Paul Orland.
-Many examples are written in Python, in standalone, or through Jupyter Notebooks.  
+Many examples in this book are written in Python, in standalone, or through Jupyter Notebooks.  
 The goal here is to provide a Java equivalent to Python's graphical utilities.  
-In standalone (using Swing), or through Jupyter Notebooks as well (requires at least Java 9, that introduced JShell).
+In standalone (using Swing), or through Jupyter Notebooks as well (requires at least Java 9, that introduced JShell, and thus making Java available in Jupyter Notebooks).
 
 ---
 
