@@ -76,7 +76,7 @@ Try that:
 
 Then from another console:
 ```
- $ curl -X GET http://localhost:2345/oplist
+ $ curl -X GET http://localhost:2345/oplist [ | jq ]
  {"code":4,"type":"ok","message":"magic!"}
 ```
 > _Note_: in IntelliJ, right-click on the `pom.xml` in `generated/jaxrs`, and `Add as Maven Project`. 

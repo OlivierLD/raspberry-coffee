@@ -33,7 +33,7 @@ Several Python libraries already provide this kind of features, and they can be 
 by Jupyter Notebooks.
 
 **_But_** this might not be the only way. That's what we want to show here.
-_Why should I learn a scripting language like Python if I already know a programming language like Java?_
+_Why should I learn a scripting language like Python if I already know a programming language like Java?_ (More to come about that one...)
 
 There is no reason why Java should lag behind.
 And `HTML5/CSS3/ES6` should also be able to implement the same kind of features as well. 
