@@ -22,7 +22,7 @@ public class BeziersAtWorkSample02 {
 
     private final static String TITLE = "Simple 2D Bezier sample. 4 Ctrl Points.";
     // All z = 0, 2D bezier.
-    // 3 control points
+    // 4 control points
     private List<Bezier.Point3D> ctrlPoints = List.of(
             new Bezier.Point3D(-60, -20, 0),
             new Bezier.Point3D(0, 40, 0),
@@ -227,6 +227,7 @@ public class BeziersAtWorkSample02 {
 
         // Now, animate.
         final double tIncrement = 1e-3; // 0.005;
+        animateButton.setEnabled(false);
         for (double t=0.0; t<=1 + tIncrement; t += tIncrement) {
 
             try {
@@ -333,6 +334,7 @@ public class BeziersAtWorkSample02 {
                 ex.printStackTrace();
             }
         }
+        animateButton.setEnabled(true);
     }
 
     public static void main(String... args) {
