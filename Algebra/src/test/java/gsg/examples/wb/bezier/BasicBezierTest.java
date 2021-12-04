@@ -5,7 +5,7 @@ import bezier.Bezier;
 import java.util.List;
 
 public class BasicBezierTest {
-    private static List<Bezier.Point3D> ctrlPoints = List.of(
+    private final static List<Bezier.Point3D> ctrlPoints = List.of(
             new Bezier.Point3D(-60, -20, 0),
             new Bezier.Point3D(0, 40, 0),
             new Bezier.Point3D(20, -40, 0),
