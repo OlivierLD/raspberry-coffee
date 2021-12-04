@@ -1,5 +1,6 @@
-## Polo Shirt 👕 - Feasibility test
-An _**annotation-based**_ REST server, like JAX-RS (Jersey => Polo 😉), latching on the [http-tiny-server](../http-tiny-server).  
+# Polo Shirt 👕 - Feasibility test
+### An annotated REST Server case study
+An _**annotation-based**_ REST server, like JAX-RS (Jersey => Polo 😉, ahaha!), latching on the [http-tiny-server](../http-tiny-server).  
 Consider it as an example of the way to process annotations. It does not come with the tools OpenAPI provides, 
 like `yaml` specification, documentation, etc.  
 This kind tooling is in reach, but would be yours to develop and implement.  
