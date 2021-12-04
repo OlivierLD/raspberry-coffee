@@ -95,7 +95,24 @@ public Response greetV3(GreetingRequest body, SecurityContext securityContext) t
     return Response.ok().entity(response).build();
 }
 ```
-> Note: This generated code is semantically identical to what _**you**_ would write, for Polo-Shirt (at the top of this doc).
+> Note: This generated code is semantically identical to what _**you**_ would write, for Polo-Shirt (at the top of this doc).  
+> Compare `generated/jaxrs/src/gen/java/oliv/io/TopRootApi.java` (Swagger generated) and `src/main/java/restserver/AnnotatedRESTImplementation.java` (written with polo-shirt annotations).  
+> Here is the polo-shirt code equivalent to the Swagger one above:
+> ```java
+>	@OperationDefinition(
+>			verb = OperationDefinition.Verbs.POST,
+>			path = "/greeting/v3",
+>			description = "A simple example, taking a BodyParam, returning a Bean. Try curl -X POST http://localhost:2345/top-root/greeting/v3 -d '{ \"name\": \"Ducon\", \"salutation\": \"Salut\" }' | jq"
+>	)
+>	protected static Message greetV3(@BodyParam() GreetingObject greetingObj) {
+>		String greeting = String.format("%s %s!",
+>				(greetingObj.getSalutation() == null ? "Hello" : greetingObj.getSalutation()),
+>				(greetingObj.getName() != null ? greetingObj.getName() : "world"));
+>		Message message = new Message();
+>		message.message = greeting;
+>		return message;
+>	}
+> ```
 
 Rebuild, re-run, and then (notice the simple-quotes around the payload)
 ```
