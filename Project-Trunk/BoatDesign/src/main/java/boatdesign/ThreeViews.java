@@ -93,6 +93,10 @@ public class ThreeViews {
     private JLabel topLabel;
     private final JButton refreshButton = new JButton("Refresh Boat Shape"); // Not really useful here.
 
+    private final JRadioButton jsonRadioButton = new JRadioButton("json");
+    private final JRadioButton scadRadioButton = new JRadioButton("scad");
+
+
     // Screen dimension
     private final static int WIDTH = 1536; // 1024;
     private final static int HEIGHT = 800;
@@ -536,6 +540,39 @@ public class ThreeViews {
         return Map.of("rail", railCtrlPoints, "keel", keelCtrlPoints);
     }
 
+    private String generateBezierScad() {
+        List<List<Double>> railList = railCtrlPoints.stream().map(pt -> List.of(pt.getX(), pt.getY(), pt.getZ())).collect(Collectors.toList());
+        List<List<Double>> keelList = keelCtrlPoints.stream().map(pt -> List.of(pt.getX(), pt.getY(), pt.getZ())).collect(Collectors.toList());
+
+        String collectRail = railList.stream()
+                .map(pt -> String.format("[ %s ]", pt.stream().map(coord -> String.format("%f", coord)).collect(Collectors.joining(", "))))
+                .collect(Collectors.joining(", "));
+        String collectKeel = keelList.stream()
+                .map(pt -> String.format("[ %s ]", pt.stream().map(coord -> String.format("%f", coord)).collect(Collectors.joining(", "))))
+                .collect(Collectors.joining(", "));
+
+        return String.format("extVolume = %s;\nrail = %s;\nkeel = %s;\n",
+                String.format("[ %f, %f, %f ]", this.box3D.getDefaultLHT(), 0d, 0d),
+                String.format("[ %s ]", collectRail),
+                String.format("[ %s ]", collectKeel));
+    }
+
+    private void setBezierData() {
+        // Display in textArea
+        try {
+            if (jsonRadioButton.isSelected()) {
+                String json = mapper.writerWithDefaultPrettyPrinter()
+                        .writeValueAsString(generateBezierJson());
+                dataTextArea.setText(json);
+            } else if (scadRadioButton.isSelected()) {
+                String scad = generateBezierScad();
+                dataTextArea.setText(scad);
+            }
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void refreshData() {
 
         if (railCtrlPoints.size() > 0 && keelCtrlPoints.size() > 0) {
@@ -545,13 +582,7 @@ public class ThreeViews {
             this.box3D.setKeelCtrlPoints(keelCtrlPoints); // The keel.
 
             // Display in textArea
-            try {
-                String json = mapper.writerWithDefaultPrettyPrinter()
-                        .writeValueAsString(generateBezierJson());
-                dataTextArea.setText(json);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+            setBezierData();
 
 //            String content = "Control Points:\nRail:\n" + railCtrlPoints.stream()
 //                    .map(pt -> String.format("%d: %s", railCtrlPoints.indexOf(pt), pt.toString()))
@@ -1359,13 +1390,29 @@ public class ThreeViews {
 //        JLabel label3 = new JLabel("Label 3");
 
         JPanel ctrlPointsPanel = new JPanel(new BorderLayout());
-        ctrlPointsPanel.setBorder(BorderFactory.createTitledBorder("Bezier Data"));
+        ctrlPointsPanel.setBorder(BorderFactory.createTitledBorder("Bezier Ctrl Points"));
         dataTextArea = new JTextPane();
         dataTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
         JScrollPane dataScrollPane = new JScrollPane(dataTextArea);
         dataScrollPane.setPreferredSize(new Dimension(300, 225));
         // dataScrollPane.setSize(new Dimension(300, 250));
-        ctrlPointsPanel.add(dataScrollPane, BorderLayout.NORTH);
+        ctrlPointsPanel.add(dataScrollPane, BorderLayout.CENTER);
+
+        ButtonGroup langOptionGroup = new ButtonGroup();
+        jsonRadioButton.setSelected(true);
+        langOptionGroup.add(jsonRadioButton);
+        jsonRadioButton.addActionListener(e -> {
+            setBezierData();
+        });
+        scadRadioButton.setSelected(false);
+        scadRadioButton.addActionListener(e -> {
+            setBezierData();
+        });
+        langOptionGroup.add(scadRadioButton);
+        JPanel radioButtonPanel = new JPanel();  // TODO Align left
+        radioButtonPanel.add(jsonRadioButton);
+        radioButtonPanel.add(scadRadioButton);
+        ctrlPointsPanel.add(radioButtonPanel, BorderLayout.NORTH);
 
         whiteBoardsPanel.add(whiteBoardXZ,         // Side
                 new GridBagConstraints(0,
