@@ -1409,9 +1409,9 @@ public class ThreeViews {
             setBezierData();
         });
         langOptionGroup.add(scadRadioButton);
-        JPanel radioButtonPanel = new JPanel();  // TODO Align left
-        radioButtonPanel.add(jsonRadioButton);
-        radioButtonPanel.add(scadRadioButton);
+        JPanel radioButtonPanel = new JPanel(new BorderLayout());
+        radioButtonPanel.add(jsonRadioButton, BorderLayout.WEST);
+        radioButtonPanel.add(scadRadioButton, BorderLayout.CENTER);
         ctrlPointsPanel.add(radioButtonPanel, BorderLayout.NORTH);
 
         whiteBoardsPanel.add(whiteBoardXZ,         // Side
