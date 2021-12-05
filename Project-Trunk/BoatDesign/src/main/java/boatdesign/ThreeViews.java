@@ -1734,7 +1734,7 @@ public class ThreeViews {
         boatDataTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
         boatDataTextArea.setText("Boat Data...");
         JScrollPane boatDataScrollPane = new JScrollPane(boatDataTextArea);
-        boatDataScrollPane.setPreferredSize(new Dimension(300, 100));
+        boatDataScrollPane.setPreferredSize(new Dimension(300, 175));
         boatDataPanel.add(boatDataScrollPane, BorderLayout.NORTH);
 
         JPanel messagePanel = new JPanel(new BorderLayout());
@@ -1743,7 +1743,7 @@ public class ThreeViews {
         messageTextArea.setFont(new Font("Courier New", Font.PLAIN, 14));
         messageTextArea.setText("Messages...");
         JScrollPane messageScrollPane = new JScrollPane(messageTextArea);
-        messageScrollPane.setPreferredSize(new Dimension(300, 100));
+        messageScrollPane.setPreferredSize(new Dimension(300, 50));
         messagePanel.add(messageScrollPane, BorderLayout.NORTH);
 
         bottomRightPanel.add(messagePanel,
