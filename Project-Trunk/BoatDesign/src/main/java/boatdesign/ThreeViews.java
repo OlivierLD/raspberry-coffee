@@ -439,7 +439,7 @@ public class ThreeViews {
                     // CC position
                     Double xCC = (Double) map.get("cc-x");
                     Double zCC = (Double) map.get("cc-z");
-                    if (xCC != null && zCC != null) {
+                    if (xCC != null && zCC != null&& xCC != -0.01 && zCC != -0.01) {
                         // Display on 2D whiteboards
                         centerOfHull = new VectorUtils.Vector3D()
                                 .x(xCC * 1e2)
@@ -458,19 +458,21 @@ public class ThreeViews {
                         AtomicReference<Double> max = new AtomicReference<>(-Double.MAX_VALUE);
                         displacementMap.forEach((k, v) -> max.set(Math.max(max.get(), v)));
                         getLogger().log(Level.INFO, "Max area: " + max);
-                        double ratio = (wbMaxY / max.get());
                         // TODO Remove the area curve if it exists
-                        List<VectorUtils.Vector2D> areas = new ArrayList<>();
-                        areas.add(new VectorUtils.Vector2D().x(lwlStart * 1e2).y(0d));
-                        displacementMap.forEach((k, v) -> areas.add(new VectorUtils.Vector2D().x(k).y(v * ratio)));
-                        areas.add(new VectorUtils.Vector2D().x(lwlEnd * 1e2).y(0d));
+                        if (displacementMap.size() > 0 && max.get() != -Double.MAX_VALUE) {
+                            double ratio = (wbMaxY / max.get());
+                            List<VectorUtils.Vector2D> areas = new ArrayList<>();
+                            areas.add(new VectorUtils.Vector2D().x(lwlStart * 1e2).y(0d));
+                            displacementMap.forEach((k, v) -> areas.add(new VectorUtils.Vector2D().x(k).y(v * ratio)));
+                            areas.add(new VectorUtils.Vector2D().x(lwlEnd * 1e2).y(0d));
 
-                        WhiteBoardPanel.DataSerie areasSerie = new WhiteBoardPanel.DataSerie()
-                                .data(areas)
-                                .graphicType(WhiteBoardPanel.GraphicType.AREA)
-                                .areaGradient(new Color(255, 0, 0, 128), new Color(255, 165, 0, 128))
-                                .color(Color.BLACK);
-                        whiteBoardXY.addSerie(areasSerie);
+                            WhiteBoardPanel.DataSerie areasSerie = new WhiteBoardPanel.DataSerie()
+                                    .data(areas)
+                                    .graphicType(WhiteBoardPanel.GraphicType.AREA)
+                                    .areaGradient(new Color(255, 0, 0, 128), new Color(255, 165, 0, 128))
+                                    .color(Color.BLACK);
+                            whiteBoardXY.addSerie(areasSerie);
+                        }
                     }
                 }
             }, mess -> {
@@ -1697,7 +1699,7 @@ public class ThreeViews {
         messageScrollPane.setPreferredSize(new Dimension(300, 100));
         messagePanel.add(messageScrollPane, BorderLayout.NORTH);
 
-        bottomRightPanel.add(boatDataPanel,
+        bottomRightPanel.add(messagePanel,
                 new GridBagConstraints(1,
                         0,
                         1,
@@ -1707,7 +1709,7 @@ public class ThreeViews {
                         GridBagConstraints.CENTER,
                         GridBagConstraints.BOTH,
                         new Insets(0, 0, 0, 0), 0, 0));
-        bottomRightPanel.add(messagePanel,
+        bottomRightPanel.add(boatDataPanel,
                 new GridBagConstraints(1,
                         1,
                         1,

@@ -492,7 +492,7 @@ public class BoatBox3D extends Box3D {
                     for (List<Bezier.Point3D> waterLine : hLines) {
                         // Is it waterline (z=0) ?
 //                    if (waterLine.get(0).getZ() == 0) { // TODO Watch that, ... Some display -2 :(
-                        if (Math.round(waterLine.get(1).getZ()) == 0) {
+                        if (waterLine.size() > 1 && Math.round(waterLine.get(1).getZ()) == 0) {
                             g2d.setColor(Color.BLUE);  /// WATERLINE Color
                             g2d.setStroke(new BasicStroke(2));
                         } else {
@@ -1194,7 +1194,9 @@ public class BoatBox3D extends Box3D {
 //        }
             // More precisely (and sets the X pos of CC)
             displ = calculateDisplacement(displacementXMap, lwlStart, lwlEnd);
-            prismCoeff = displ / (2 * maxFrameArea * 1e-4 * lwl * 1e-2);
+            if (displ > 0 && maxFrameArea != 0.0 && lwl != 0.0) {
+                prismCoeff = displ / (2 * maxFrameArea * 1e-4 * lwl * 1e-2);
+            }
             if (localVerbose || verbose) {
                 System.out.printf("\nCalculated displacement: %.03f m3\n\n", displ);
             }
