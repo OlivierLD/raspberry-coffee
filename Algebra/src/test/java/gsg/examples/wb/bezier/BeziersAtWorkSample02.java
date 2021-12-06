@@ -26,7 +26,7 @@ public class BeziersAtWorkSample02 {
     private List<Bezier.Point3D> ctrlPoints = List.of(
             new Bezier.Point3D(-60, -20, 0),
             new Bezier.Point3D(0, 40, 0),
-            new Bezier.Point3D(20, -40, 0),
+            new Bezier.Point3D(50, -40, 0),
 //            new Bezier.Point3D(60, -20, 0));
 //            new Bezier.Point3D(-30, -30, 0));
             new Bezier.Point3D(-50, 30, 0));
