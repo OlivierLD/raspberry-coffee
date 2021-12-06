@@ -65,6 +65,7 @@ public class ThreeViews {
     private double minZ;
     private double maxZ;
     private double defaultLHT;
+    private double xMaxWidth = -1.0;
 
     private final static String TITLE = "3D Bezier Drawing Board (WiP). Rail and Keel.";
 
@@ -429,6 +430,21 @@ public class ThreeViews {
             refreshButton.setEnabled(false);
             boatDataTextArea.setText("Re-calculating...");
             // TODO Stop thread if already running.
+
+            this.whiteBoardXY.resetAllData();
+            this.whiteBoardXZ.resetAllData();
+            this.whiteBoardYZ.resetAllData();
+
+            try {
+                // this.initConfiguration(true);
+                this.reLoadConfig(true);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            this.whiteBoardXY.repaint();
+            this.whiteBoardXZ.repaint();
+            this.whiteBoardYZ.repaint();
+
             this.box3D.refreshData(false, map -> {
                 String json;
                 try {
@@ -486,8 +502,9 @@ public class ThreeViews {
                     if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.FRAME)) {
                         List<VectorUtils.Vector3D> data = (List)map.get(BoatBox3D.DATA); // TODO Make it a Bezier.Point3D !!
                         List<VectorUtils.Vector2D> framePtsYZVectors = new ArrayList<>();
+                        // Find x position of the max width
                         data.forEach(pt -> {
-                            framePtsYZVectors.add(new VectorUtils.Vector2D(pt.getY(), pt.getZ()));
+                            framePtsYZVectors.add(new VectorUtils.Vector2D(pt.getX() < (this.xMaxWidth - (this.defaultLHT / 2) )? pt.getY() : -pt.getY(), pt.getZ()));
                         });
                         WhiteBoardPanel.DataSerie frameYZSerie = new WhiteBoardPanel.DataSerie()
                                 .data(framePtsYZVectors)
@@ -694,8 +711,16 @@ public class ThreeViews {
                 railDataXZVectors.add(new VectorUtils.Vector2D(xData[i], zData[i]));
             }
             List<VectorUtils.Vector2D> railDataYZVectors = new ArrayList<>();
+            List<VectorUtils.Vector2D> railDataYZVectorsOther = new ArrayList<>();
+            double maxWidth = -1.0;
+            this.xMaxWidth = -1d;
             for (int i = 0; i < yData.length; i++) {
+                if (yData[i] > maxWidth) {
+                    this.xMaxWidth = xData[i];
+                    maxWidth = yData[i];
+                }
                 railDataYZVectors.add(new VectorUtils.Vector2D(yData[i], zData[i]));
+                railDataYZVectorsOther.add(new VectorUtils.Vector2D(-yData[i], zData[i]));
             }
             // 2 - Keel Ctrl Points
             Bezier keelBezier = new Bezier(keelCtrlPoints);
@@ -846,6 +871,14 @@ public class ThreeViews {
                     .lineThickness(3)
                     .color(Color.BLUE);
             whiteBoardYZ.addSerie(railDataYZSerie);
+            // Other side (on the left of the axis)
+            WhiteBoardPanel.DataSerie railDataYZSerieOther = new WhiteBoardPanel.DataSerie()
+                    .data(railDataYZVectorsOther)
+                    .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                    .lineThickness(3)
+                    .color(Color.BLUE);
+            whiteBoardYZ.addSerie(railDataYZSerieOther);
+
             // YZ - Keel
             WhiteBoardPanel.DataSerie keelDataYZSerie = new WhiteBoardPanel.DataSerie()
                     .data(keelDataYZVectors)
@@ -939,7 +972,7 @@ public class ThreeViews {
 
         // Override defaults (not mandatory)
 
-        // XY
+        // XY - From above
         whiteBoardXY.setAxisColor(Color.BLACK);
         whiteBoardXY.setGridColor(Color.GRAY);
         whiteBoardXY.setForceTickIncrement(50);
@@ -963,7 +996,7 @@ public class ThreeViews {
         // Enforce Y amplitude
         whiteBoardXY.setForcedMinY(0d);
         whiteBoardXY.setForcedMaxY(150d);
-        // XZ
+        // XZ - Side
         whiteBoardXZ.setAxisColor(Color.BLACK);
         whiteBoardXZ.setGridColor(Color.GRAY);
         whiteBoardXZ.setForceTickIncrement(50);
@@ -988,7 +1021,7 @@ public class ThreeViews {
         whiteBoardXZ.setForcedMinY(-50d);
         whiteBoardXZ.setForcedMaxY(100d);
 
-        // YZ
+        // YZ - Facing
         whiteBoardYZ.setAxisColor(Color.BLACK);
         whiteBoardYZ.setGridColor(Color.GRAY);
         whiteBoardYZ.setForceTickIncrement(50);
@@ -1012,7 +1045,6 @@ public class ThreeViews {
         // Enforce Y amplitude
         whiteBoardYZ.setForcedMinY(-50d);
         whiteBoardYZ.setForcedMaxY(100d);
-
         // ThreeViewsV2 instance = this;
 
         whiteBoardXY.addMouseListener(new MouseAdapter() {
