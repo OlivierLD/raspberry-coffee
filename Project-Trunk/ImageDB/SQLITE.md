@@ -72,3 +72,12 @@ sqlite> .read oliv.sql
 - <https://sqlitebrowser.org/>
     - Works on Linux, Mac, and Windows.
 
+## Initialize a new SQLite DB for images
+1. Initialize (create the required tables)
+```
+$ sqlite3 sql/the_new_db.db < sql/image_db.sql
+```
+2. Then your DB is ready for the GUI
+```
+$ ./gui.sh sql/the_new_db.db
+```
