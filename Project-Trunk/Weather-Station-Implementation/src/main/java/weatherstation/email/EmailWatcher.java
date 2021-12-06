@@ -70,7 +70,7 @@ public class EmailWatcher {
 	 *   The program stops when the 'exit' email is received by the EmailReceiver.
 	 * </p>
 	 *
-	 * See also the email-reader node on Node-RED. It implements similar featires.
+	 * See also the email-reader node on Node-RED. It implements similar features.
 	 *
 	 * @param args See above
 	 */

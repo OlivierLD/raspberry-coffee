@@ -6,12 +6,12 @@ pi.event.subject=PI Event
 # See http://www.arclab.com/products/amlc/list-of-smtp-and-pop3-servers-mailserver-list.html
 #
 pi.yahoo.mail.protocol=pop3
-pi.yahoo.incoming.server=pop.mail.yahoo.com
-pi.yahoo.outgoing.server=smtp.mail.yahoo.com
+pi.yahoo.incoming.server=pop.bizmail.yahoo.com
+pi.yahoo.outgoing.server=smtp.bizmail.yahoo.com
 pi.yahoo.mail.smtpauth=true
 pi.yahoo.outgoing.server.port=465
 pi.yahoo.incoming.server.port=995
-pi.yahoo.mail.username=olivier.lediouris
+pi.yahoo.mail.username=olivier@lediouris.net
 pi.yahoo.mail.password=xxxxxxxx
 pi.yahoo.mail.replyto=olivier@lediouris.net
 #
