@@ -26,6 +26,13 @@ import java.util.logging.LogManager;
  */
 public class BoatBox3D extends Box3D {
 
+    public final static String TYPE = "type";
+    public final static String DATA = "data";
+    public final static String FRAME = "FRAME";
+    public final static String BEAM = "BEAM";
+    public final static String WATERLINE = "WATERLINE";
+    public final static String BUTTOCK = "BUTTOCK";
+
     private ThreeViews parent;
 
     private final static boolean verbose = false;
@@ -852,12 +859,15 @@ public class BoatBox3D extends Box3D {
 
     // Re-generates the boat
     public void refreshData() {
-        refreshData(false, null, null);
+        refreshData(false, null, null, null);
     }
     public void refreshData(boolean localVerbose) {
-        refreshData(localVerbose, null, null);
+        refreshData(localVerbose, null, null, null);
     }
-    public void refreshData(boolean localVerbose, Consumer<Map> callback, Consumer<String> messCallback) {
+    public void refreshData(boolean localVerbose,
+                            Consumer<Map> callback,
+                            Consumer<String> messCallback,
+                            Consumer<Map> progressCallback) {
 
         long before = System.currentTimeMillis();
         // TODO Parameterize the t+=0.01
@@ -1143,6 +1153,9 @@ public class BoatBox3D extends Box3D {
 
                 synchronized (frameBezierPts) {
                     frameBezierPts.add(bezierPointsFrame);
+                    if (progressCallback != null) {
+                        progressCallback.accept(Map.of(TYPE, FRAME, DATA, bezierPointsFrame));
+                    }
                 }
 
                 // Beam
@@ -1154,6 +1167,9 @@ public class BoatBox3D extends Box3D {
 
                 synchronized (beamBezierPts) {
                     beamBezierPts.add(bezierPointsBeam);
+                    if (progressCallback != null) {
+                        progressCallback.accept(Map.of(TYPE, BEAM, DATA, bezierPointsBeam));
+                    }
                 }
 
                 long two = System.currentTimeMillis();
@@ -1178,7 +1194,10 @@ public class BoatBox3D extends Box3D {
                     bezierPointsBeam.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
                 }
                 synchronized (beamBezierPts) {
-                    beamBezierPts.add(bezierPointsBeam);
+                    beamBezierPts.add(bezierPointsBeam); // Transom
+                    if (progressCallback != null) {
+                        progressCallback.accept(Map.of(TYPE, BEAM, DATA, bezierPointsBeam));
+                    }
                 }
             }
 
@@ -1351,6 +1370,9 @@ public class BoatBox3D extends Box3D {
                     // Add to the list
                     synchronized (hLines) {
                         hLines.add(waterLine);
+                        if (progressCallback != null) {
+                            progressCallback.accept(Map.of(TYPE, WATERLINE, DATA, waterLine));
+                        }
                     }
                     // Displacement (CC's height/depth)?
                     if (z <= 0) { // In the water
@@ -1526,6 +1548,9 @@ public class BoatBox3D extends Box3D {
                     // Add to the list
                     synchronized (vLines) {
                         vLines.add(vLine);
+                        if (progressCallback != null) {
+                            progressCallback.accept(Map.of(TYPE, BUTTOCK, DATA, vLine));
+                        }
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();

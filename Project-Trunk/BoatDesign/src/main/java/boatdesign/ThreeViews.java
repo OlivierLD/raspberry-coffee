@@ -481,6 +481,51 @@ public class ThreeViews {
                 }
             }, mess -> {
                 messageTextArea.setText(mess);
+            }, map -> {
+                if (map != null) {
+                    if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.FRAME)) {
+                        List<VectorUtils.Vector3D> data = (List)map.get(BoatBox3D.DATA); // TODO Make it a Bezier.Point3D !!
+                        List<VectorUtils.Vector2D> framePtsYZVectors = new ArrayList<>();
+                        data.forEach(pt -> {
+                            framePtsYZVectors.add(new VectorUtils.Vector2D(pt.getY(), pt.getZ()));
+                        });
+                        WhiteBoardPanel.DataSerie frameYZSerie = new WhiteBoardPanel.DataSerie()
+                                .data(framePtsYZVectors)
+                                .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                                .lineThickness(1)
+                                .color(Color.RED);
+                        whiteBoardYZ.addSerie(frameYZSerie);
+                        whiteBoardYZ.repaint();
+                    } else if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.WATERLINE)) {
+                        List<Bezier.Point3D> data = (List)map.get(BoatBox3D.DATA);
+                        List<VectorUtils.Vector2D> waterlinePtsXYVectors = new ArrayList<>();
+                        data.forEach(pt -> {
+                            waterlinePtsXYVectors.add(new VectorUtils.Vector2D(pt.getX() + (this.defaultLHT / 2), pt.getY()));
+                        });
+                        WhiteBoardPanel.DataSerie frameXYSerie = new WhiteBoardPanel.DataSerie()
+                                .data(waterlinePtsXYVectors)
+                                .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                                .lineThickness(1)
+                                .color(Color.RED);
+                        whiteBoardXY.addSerie(frameXYSerie);
+                        whiteBoardXY.repaint();
+                    } else if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.BUTTOCK)) {
+                        List<Bezier.Point3D> data = (List)map.get(BoatBox3D.DATA);
+                        List<VectorUtils.Vector2D> buttockPtsXZVectors = new ArrayList<>();
+                        data.forEach(pt -> {
+                            buttockPtsXZVectors.add(new VectorUtils.Vector2D(pt.getX() + (this.defaultLHT / 2), pt.getZ()));
+                        });
+                        WhiteBoardPanel.DataSerie buttockXZSerie = new WhiteBoardPanel.DataSerie()
+                                .data(buttockPtsXZVectors)
+                                .graphicType(WhiteBoardPanel.GraphicType.LINE)
+                                .lineThickness(1)
+                                .color(Color.RED);
+                        whiteBoardXZ.addSerie(buttockXZSerie);
+                        whiteBoardXZ.repaint();
+                    } else {
+                        // TODO Others, BEAM
+                    }
+                }
             });
             // Stop repainter
             keepLooping.set(false);
