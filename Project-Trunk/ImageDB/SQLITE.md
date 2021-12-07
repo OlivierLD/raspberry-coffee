@@ -81,3 +81,5 @@ $ sqlite3 sql/the_new_db.db < sql/image_db.sql
 ```
 $ ./gui.sh sql/the_new_db.db
 ```
+
+... Or more simply, just run `./init.db.sh`

@@ -1,6 +1,6 @@
 #!/bin/bash
 echo -e "Initializing a new DB, get ready."
-echo -en "Where should it be located [full path from here: ${PWD} ] : "
+echo -en "Where should it be located [full path from here: ${PWD}, with .db extension ] : "
 read DB_LOCATION
 if [[ -f ${DB_LOCATION} ]]
 then

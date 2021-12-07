@@ -7,4 +7,6 @@ then
   DB_LOCATION=$1
 fi
 echo -e "Using DB ${DB_LOCATION}"
-java -cp ${CP} -Ddb.location=${DB_LOCATION} dnd.gui.MainGUI $*
+MAIN_CLASS=dnd.gui.splash.Splasher
+# MAIN_CLASS=dnd.gui.MainGUI
+java -cp ${CP} -Ddb.location=${DB_LOCATION} ${MAIN_CLASS} $*
