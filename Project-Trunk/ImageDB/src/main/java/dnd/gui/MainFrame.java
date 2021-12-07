@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -88,7 +89,7 @@ public class MainFrame
 		this.jSplitPane1.setContinuousLayout(true);
 		this.panelCenter.add(this.jSplitPane1, BorderLayout.CENTER);
 
-		ArrayList<ImageDefinition> imageList = ImageDBUtils.populateImageList(AppContext.getInstance().getConn());
+		List<ImageDefinition> imageList = ImageDBUtils.populateImageList(AppContext.getInstance().getConn());
 		this.imageTable = new ImageTable(imageList);
 		this.jSplitPane1.setLeftComponent(this.imageTable);
 		this.jSplitPane1.setRightComponent(this.imagePanel);

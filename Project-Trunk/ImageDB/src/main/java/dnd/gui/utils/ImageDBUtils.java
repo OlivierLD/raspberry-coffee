@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import javax.imageio.ImageIO;
 
 public class ImageDBUtils {
@@ -22,24 +23,24 @@ public class ImageDBUtils {
 
 	private static int nbRecTotal = -1;
 
-	public static ArrayList<ImageDefinition> populateImageList(Connection conn) {
+	public static List<ImageDefinition> populateImageList(Connection conn) {
 		return populateImageList(conn, (String) null);
 	}
 
-	public static ArrayList<ImageDefinition> populateImageList(Connection conn, int[] sort) {
+	public static List<ImageDefinition> populateImageList(Connection conn, int[] sort) {
 		return populateImageList(conn, (String) null, 1, sort);
 	}
 
-	public static ArrayList<ImageDefinition> populateImageList(Connection conn, String filter) {
+	public static List<ImageDefinition> populateImageList(Connection conn, String filter) {
 		return populateImageList(conn, filter, 1);
 	}
 
-	public static ArrayList<ImageDefinition> populateImageList(Connection conn, String filter, int logicalConnector) {
+	public static List<ImageDefinition> populateImageList(Connection conn, String filter, int logicalConnector) {
 		return populateImageList(conn, filter, logicalConnector, null);
 	}
 
-	public static ArrayList<ImageDefinition> populateImageList(Connection conn, String filter, int logicalConnector, int[] sort) {
-		ArrayList<ImageDefinition> al = new ArrayList();
+	public static List<ImageDefinition> populateImageList(Connection conn, String filter, int logicalConnector, int[] sort) {
+		List<ImageDefinition> al = new ArrayList<>();
 		String imageStmt = "select distinct i.name, i.imagetype, i.width, i.height, i.created from images i";
 		String tagStmt = "select label from tags where imgname = ? order by rnk";
 
@@ -116,8 +117,8 @@ public class ImageDBUtils {
 		return s.replace("'", "''");
 	}
 
-	public static ArrayList<ImageDefinition> populateUntaggedImageList(Connection conn) {
-		ArrayList<ImageDefinition> al = new ArrayList();
+	public static List<ImageDefinition> populateUntaggedImageList(Connection conn) {
+		List<ImageDefinition> al = new ArrayList<>();
 		String imageStmt = "select distinct i.name, i.imagetype, i.width, i.height, i.created from images i where not exists (select * from tags t where t.imgname = i.name)";
 		int found = 0;
 		try {
@@ -198,15 +199,15 @@ public class ImageDBUtils {
 		return image;
 	}
 
-	public static ArrayList<ImageDefinition> filterImageList(Connection conn, String filter, int logicalConnector) {
+	public static List<ImageDefinition> filterImageList(Connection conn, String filter, int logicalConnector) {
 		return populateImageList(conn, filter, logicalConnector);
 	}
 
-	public static ArrayList<ImageDefinition> filterImageList(Connection conn, String filter, int logicalConnector, int[] sort) {
+	public static List<ImageDefinition> filterImageList(Connection conn, String filter, int logicalConnector, int[] sort) {
 		return populateImageList(conn, filter, logicalConnector, sort);
 	}
 
-	public static ArrayList<ImageDefinition> untaggedImageList(Connection conn)
+	public static List<ImageDefinition> untaggedImageList(Connection conn)
 	{
 		return populateUntaggedImageList(conn);
 	}

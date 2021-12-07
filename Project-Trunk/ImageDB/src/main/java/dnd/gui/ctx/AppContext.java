@@ -22,7 +22,7 @@ public class AppContext
 
 	private AppContext()
 	{
-		this.applicationListeners = new ArrayList(2);
+		this.applicationListeners = new ArrayList<>(2);
 	}
 
 	public static synchronized AppContext getInstance() {

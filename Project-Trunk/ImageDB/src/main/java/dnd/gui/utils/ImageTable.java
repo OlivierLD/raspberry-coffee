@@ -47,7 +47,7 @@ import javax.swing.table.TableModel;
 public class ImageTable
 		extends JPanel {
 	private static final long serialVersionUID = -2306956983424909244L;
-	private transient ArrayList<ImageDefinition> imageData;
+	private transient List<ImageDefinition> imageData;
 	private ImageTable instance = this;
 
 	private static final String IMAGE_NAME = "Name";
@@ -91,7 +91,7 @@ public class ImageTable
 	private ImageIcon down = new ImageIcon(getClass().getResource("down.png"));
 	private JCheckBox untaggedCheckBox = new JCheckBox();
 
-	public ImageTable(ArrayList<ImageDefinition> imageData) {
+	public ImageTable(List<ImageDefinition> imageData) {
 		try {
 			jbInit();
 			if (imageData != null) {
@@ -123,7 +123,7 @@ public class ImageTable
 	private void jbInit() throws Exception {
 		AppContext.getInstance().addApplicationListener(new ImageAppListener() {
 			public void refreshFromDB() {
-				ArrayList<ImageDefinition> imageList = ImageDBUtils.populateImageList(AppContext.getInstance().getConn(), ImageTable.columnSort);
+				List<ImageDefinition> imageList = ImageDBUtils.populateImageList(AppContext.getInstance().getConn(), ImageTable.columnSort);
 				setImageData(imageList);
 			}
 
@@ -424,7 +424,7 @@ public class ImageTable
 		if (this.andCheckBox.isSelected()) {
 			logicalConnector = ImageDBUtils.AND_CONNECTOR;
 		}
-		ArrayList<ImageDefinition> data = null;
+		List<ImageDefinition> data = null;
 		if (this.untaggedCheckBox.isSelected()) {
 			data = ImageDBUtils.untaggedImageList(AppContext.getInstance().getConn());
 		} else {
@@ -433,7 +433,7 @@ public class ImageTable
 		setImageData(data);
 	}
 
-	public void setImageData(ArrayList<ImageDefinition> imageData) {
+	public void setImageData(List<ImageDefinition> imageData) {
 		this.imageData = imageData;
 		this.filterLabel.setEnabled(this.imageData != null);
 		this.filterTextField.setEnabled(this.imageData != null);
@@ -447,7 +447,7 @@ public class ImageTable
 	public void extractSelectedRows() {
 		int[] selectedRows = this.table.getSelectedRows();
 
-		List<String> selectedImages = new ArrayList(selectedRows.length);
+		List<String> selectedImages = new ArrayList<>(selectedRows.length);
 		for (int i = 0; i < selectedRows.length; i++) {
 			selectedImages.add((String) this.data[selectedRows[i]][0]);
 		}
@@ -462,7 +462,7 @@ public class ImageTable
 
 		int resp = JOptionPane.showConfirmDialog(this, "Delete " + selectedRows.length + " image(s) ?", "Delete images", 0, 3);
 		if (resp == 0) {
-			ArrayList<String> selectedImages = new ArrayList(selectedRows.length);
+			List<String> selectedImages = new ArrayList<>(selectedRows.length);
 			for (int i = 0; i < selectedRows.length; i++) {
 				selectedImages.add((String) this.data[selectedRows[i]][0]);
 			}
