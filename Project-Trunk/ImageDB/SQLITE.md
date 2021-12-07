@@ -57,23 +57,23 @@ JDBC Driver, Maven/Gradle:
 implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
 ```
 
-Execute a script from the command line:
+Execute a SQL script from the command line:
 ```
 $ sqlite3 oliv.db < oliv.sql
 ```
-Execute a script from the sqlite3:
+Execute a SQL script from the sqlite3 CLI:
 ```
 $ sqlite3 oliv.db
 sqlite> .read oliv.sql
 ```
 
-## A GUI for SQLite
+## A desktop GUI for SQLite
 
 - <https://sqlitebrowser.org/>
     - Works on Linux, Mac, and Windows.
 
-## Initialize a new SQLite DB for images
-1. Initialize (create the required tables)
+### Initialize a new SQLite DB for images
+1. Initialize (create the DB and the required tables)
 ```
 $ sqlite3 sql/the_new_db.db < sql/image_db.sql
 ```

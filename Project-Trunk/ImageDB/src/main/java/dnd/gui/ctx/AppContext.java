@@ -8,6 +8,7 @@ import java.beans.VetoableChangeSupport;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.List;
 
 public class AppContext
 		implements Serializable {
@@ -15,7 +16,7 @@ public class AppContext
 	private static AppContext instance = null;
 
 	private transient Connection conn = null;
-	private transient ArrayList<ImageAppListener> applicationListeners = null;
+	private transient List<ImageAppListener> applicationListeners = null;
 	private transient VetoableChangeSupport vetoableChangeSupport = new VetoableChangeSupport(this);
 	private transient PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
@@ -59,7 +60,7 @@ public class AppContext
 		return this.conn;
 	}
 
-	public ArrayList<ImageAppListener> getListeners() {
+	public List<ImageAppListener> getListeners() {
 		return this.applicationListeners;
 	}
 

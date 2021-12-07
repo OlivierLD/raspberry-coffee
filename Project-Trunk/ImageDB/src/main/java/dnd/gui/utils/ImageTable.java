@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
@@ -439,15 +440,14 @@ public class ImageTable
 		setValues();
 	}
 
-	public ArrayList<ImageDefinition> getImageData()
-	{
+	public List<ImageDefinition> getImageData() {
 		return this.imageData;
 	}
 
 	public void extractSelectedRows() {
 		int[] selectedRows = this.table.getSelectedRows();
 
-		ArrayList<String> selectedImages = new ArrayList(selectedRows.length);
+		List<String> selectedImages = new ArrayList(selectedRows.length);
 		for (int i = 0; i < selectedRows.length; i++) {
 			selectedImages.add((String) this.data[selectedRows[i]][0]);
 		}

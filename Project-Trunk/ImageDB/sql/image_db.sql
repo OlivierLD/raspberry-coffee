@@ -34,4 +34,3 @@ insert into img_types values ('png',  'Portable Network Graphics');
 insert into img_types values ('gif',  'Graphics Interchange Format');
 insert into img_types values ('tiff', 'Tagged Image File Format');
 insert into img_types values ('bmp',  'Bitmap');
-

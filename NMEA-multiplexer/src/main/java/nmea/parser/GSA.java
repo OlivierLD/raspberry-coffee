@@ -1,6 +1,7 @@
 package nmea.parser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GSA {
 	public enum ModeOne {Manual, Auto}
@@ -9,7 +10,7 @@ public class GSA {
 
 	private ModeOne mode1;
 	private ModeTwo mode2;
-	private ArrayList<Integer> svArray = new ArrayList<Integer>();
+	private List<Integer> svArray = new ArrayList<>();
 	private float pDOP = -1f;
 	private float hDOP = -1f;
 	private float vDOP = -1f;
@@ -30,7 +31,7 @@ public class GSA {
 		return mode2;
 	}
 
-	public ArrayList<Integer> getSvArray() {
+	public List<Integer> getSvArray() {
 		return svArray;
 	}
 
