@@ -22,8 +22,8 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JWindow;
 
-public class SplashWindow
-		extends JWindow {
+public class SplashWindow extends JWindow {
+
 	private static SplashWindow instance;
 	private static final long serialVersionUID = 1L;
 	private transient Image image;
