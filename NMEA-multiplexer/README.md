@@ -292,7 +292,7 @@ Make sure you have configured the Pebble application [as required](https://githu
 
 #### WebSockets
 
-For more details and use-cases, see [here](./WebSockets.md).
+> For more details and use-cases, see [here](./WebSockets.md).
 
 WebSocket protocol is supported, in input, and in output.
 If needed, you can start your own local WebSocket server, running on `nodejs`.
