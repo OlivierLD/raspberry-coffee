@@ -41,7 +41,7 @@ $ ./mux.sh log.to.ws.yaml
 This reads a log file, and pushes the data to the WebSocket server.    
 And those data should be received from the web page at <http://localhost:9876/data/web/wsconsole.html>.
 
-Notice in `log.to.ws.yaml` that the HTTP Server is not enabled.
+Notice in [`log.to.ws.yaml`](./log.to.ws.yaml) that the HTTP Server is not enabled.
 The `NMEA-multiplexer` just behaves as a pipeline.
 
 ---
