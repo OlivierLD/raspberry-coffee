@@ -291,6 +291,9 @@ Make sure you have configured the Pebble application [as required](https://githu
 > Note: Pebble has been acquired by FitBit... There are other smart watch interfaces (like Samsung Frontier) available in the [SmartWatches](https://github.com/OlivierLD/SmartWatches) repo.
 
 #### WebSockets
+
+For more details and use-cases, see [here](./WebSockets.md).
+
 WebSocket protocol is supported, in input, and in output.
 If needed, you can start your own local WebSocket server, running on `nodejs`.
 To install it (once):
