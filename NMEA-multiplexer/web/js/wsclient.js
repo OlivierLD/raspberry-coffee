@@ -46,7 +46,7 @@ let connection;
 		if (connection.readyState !== 1) {
 			displayMessage('Unable to communicate with the WebSocket server. Try again.');
 		}
-	}, 3000); // Ping
+	}, 3000); // Ping every 3 seconds
 })();
 
 function displayMessage(mess) {
