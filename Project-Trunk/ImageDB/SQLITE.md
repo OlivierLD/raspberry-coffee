@@ -113,6 +113,22 @@ $ ./gui.sh sql/the_new_db.db
 > IMG_3809.jpg  jpg         2020-05-30 16:21:05
 > IMG_3810.jpg  jpg         2020-05-30 16:21:22
 > . . .
+> 
+> sqlite> .width 40 5 20
+> sqlite> select name, imagetype as type, datetime(created / 1000,  'unixepoch', 'localtime') as created from images limit 10;
+> name                                      type   created
+> ----------------------------------------  -----  --------------------
+> IMG_3804.jpg                              jpg    2020-05-30 16:21:32
+> IMG_3805.jpg                              jpg    2020-05-30 16:22:56
+> IMG_3807.jpg                              jpg    2020-05-30 16:23:53
+> IMG_3809.jpg                              jpg    2020-05-30 16:21:05
+> IMG_3810.jpg                              jpg    2020-05-30 16:21:22
+> IMG_3812.jpg                              jpg    2020-05-30 16:23:31
+> 0ba867ce-034a-4fbd-802d-2e258e628378.jpg  jpg    2020-09-11 21:07:52
+> 1c171646-208a-4423-b568-2419084f1d09.jpg  jpg    2020-09-11 21:07:46
+> 1efc5ca6-e8ed-44ce-b323-ad88808801ac.jpg  jpg    2020-09-21 21:20:36
+> 2cef682d-d864-4bf9-b160-989948f4e1db.jpg  jpg    2020-09-12 03:36:43
+> sqlite>
 > ```
   
 ---
