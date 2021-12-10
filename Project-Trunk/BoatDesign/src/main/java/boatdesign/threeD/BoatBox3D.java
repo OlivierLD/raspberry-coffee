@@ -1043,7 +1043,8 @@ public class BoatBox3D extends Box3D {
         List<Bezier> beamBeziers = new ArrayList<>();
         Map<Double, Double> displacementXMap = new LinkedHashMap<>();
         Map<Double, Double> displacementZMap = new LinkedHashMap<>();
-        double displ = 0d;
+        Map<Double, Double> fullVolumeXMap = new LinkedHashMap<>();
+        double displ = 0d, fullVolume = 0d;
         double prismCoeff = 0d;
         // Actual shape calculation takes place here.
         if (frames || true) { // Do the calculations, even if display is not required.
@@ -1130,7 +1131,7 @@ public class BoatBox3D extends Box3D {
                 for (double t = 0; t <= 1.0; t += 0.01) {
                     Bezier.Point3D tick = bezierFrame.getBezierPoint(t);
                     bezierPointsFrame.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
-                    if (tick.getZ() <= 0) {
+                    if (tick.getZ() <= 0) { // Under waterline only
                         if (prevY != -1.0) {
                             double y = tick.getY();
                             // rectangle above
@@ -1146,10 +1147,29 @@ public class BoatBox3D extends Box3D {
                 if (frameArea > 0) {
                     displacementXMap.put(_x - (-centerOnXValue + xOffset), frameArea);
                 }
+                // Iterate again to calculate volume
+                double fullFrameArea = 0.0;
+                for (double t = 0; t <= 1.0; t += 0.01) {
+                    Bezier.Point3D tick = bezierFrame.getBezierPoint(t);
+                    if (prevY != -1.0) {
+                        double y = tick.getY();
+                        // TODO Improve that. The top is not horizontal
+                        // rectangle above
+                        double rectAboveArea = Math.abs((y - prevY) * tick.getZ());
+                        // triangle below
+                        double triangleBelowArea = Math.abs((y - prevY) * (tick.getZ() - prevZ) / 2.0);
+                        fullFrameArea += (rectAboveArea + triangleBelowArea);
+                    }
+                    prevY = tick.getY();
+                    prevZ = tick.getZ();
+                }
+                if (fullFrameArea > 0) {
+                    fullVolumeXMap.put(_x - (-centerOnXValue + xOffset), fullFrameArea);
+                }
                 if (localVerbose || verbose) {
                     System.out.printf("(area: %f) ", frameArea);
                 }
-                maxFrameArea = Math.max(maxFrameArea, frameArea);
+                maxFrameArea = Math.max(maxFrameArea, frameArea); // For prismatic coeff.
 
                 synchronized (frameBezierPts) {
                     frameBezierPts.add(bezierPointsFrame);
@@ -1216,8 +1236,11 @@ public class BoatBox3D extends Box3D {
             if (displ > 0 && maxFrameArea != 0.0 && lwl != 0.0) {
                 prismCoeff = displ / (2 * maxFrameArea * 1e-4 * lwl * 1e-2);
             }
+            fullVolume = calculateDisplacement(fullVolumeXMap, 0, this.defaultLHT);
+
             if (localVerbose || verbose) {
                 System.out.printf("\nCalculated displacement: %.03f m3\n\n", displ);
+                System.out.printf("\nCalculated full volume: %.03f m3\n\n", fullVolume);
             }
         }
 
@@ -1567,7 +1590,8 @@ public class BoatBox3D extends Box3D {
                             Map.entry("lwl", Double.valueOf(lwl * 1e-2)),
                             Map.entry("lwl-start", Double.valueOf(lwlStart * 1e-2)),
                             Map.entry("lwl-end", Double.valueOf(lwlEnd * 1e-2)),
-                            Map.entry("displ", Double.valueOf(displ)),
+                            Map.entry("displ-m3", Double.valueOf(displ)),
+                            Map.entry("full-volume-m3", Double.valueOf(fullVolume)),
                             Map.entry("prism-coeff", Double.valueOf(prismCoeff)),
                             Map.entry("cc-x", Double.valueOf(xCenterOfHull * 1e-2)),
                             Map.entry("cc-z", Double.valueOf(zCenterOfHull * 1e-2)),
