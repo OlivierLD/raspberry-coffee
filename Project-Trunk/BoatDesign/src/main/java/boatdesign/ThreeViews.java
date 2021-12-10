@@ -430,15 +430,14 @@ public class ThreeViews {
             boatDataTextArea.setText("Re-calculating...");
             // TODO Stop thread if already running.
 
-            // TODO What's that?? When do do that?
-            if (false) {
+            if (true) {
                 this.whiteBoardXY.resetAllData();
                 this.whiteBoardXZ.resetAllData();
                 this.whiteBoardYZ.resetAllData();
 
                 try {
                     // this.initConfiguration(true);
-                    this.reLoadConfig(true);
+                    this.reLoadConfig(false); // False, do not read from the file!
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
