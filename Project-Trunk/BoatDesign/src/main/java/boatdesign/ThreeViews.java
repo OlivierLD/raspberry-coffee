@@ -11,7 +11,6 @@ import gsg.SwingUtils.fullui.ThreeDPanelWithWidgets;
 import gsg.VectorUtils;
 
 import javax.swing.*;
-// import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -431,15 +430,18 @@ public class ThreeViews {
             boatDataTextArea.setText("Re-calculating...");
             // TODO Stop thread if already running.
 
-            this.whiteBoardXY.resetAllData();
-            this.whiteBoardXZ.resetAllData();
-            this.whiteBoardYZ.resetAllData();
+            // TODO What's that?? When do do that?
+            if (false) {
+                this.whiteBoardXY.resetAllData();
+                this.whiteBoardXZ.resetAllData();
+                this.whiteBoardYZ.resetAllData();
 
-            try {
-                // this.initConfiguration(true);
-                this.reLoadConfig(true);
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                try {
+                    // this.initConfiguration(true);
+                    this.reLoadConfig(true);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
             this.whiteBoardXY.repaint();
             this.whiteBoardXZ.repaint();
