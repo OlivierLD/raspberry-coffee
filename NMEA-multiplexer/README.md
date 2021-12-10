@@ -179,7 +179,6 @@ To run it, modify `mux.sh` to fit your environment, and run
 ```
  $> ./mux.sh
 ```
-
 See the [Manual](./manual.md) for more technical details.
 
 ##### Filtering
