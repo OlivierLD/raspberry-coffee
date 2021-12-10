@@ -98,3 +98,21 @@ $ ./gui.sh sql/the_new_db.db
 ```
 
 ... Or more simply, just run `./init.db.sh`
+
+> For the image creation date, use
+> ```
+> $ sqlite3 images.db
+> sqlite> .mode columns
+> sqlite> .headers on
+> select name, imagetype, datetime(created / 1000,  'unixepoch', 'localtime') as created from images limit 5;
+> name          imagetype   created
+> ------------  ----------  -------------------
+> IMG_3804.jpg  jpg         2020-05-30 16:21:32
+> IMG_3805.jpg  jpg         2020-05-30 16:22:56
+> IMG_3807.jpg  jpg         2020-05-30 16:23:53
+> IMG_3809.jpg  jpg         2020-05-30 16:21:05
+> IMG_3810.jpg  jpg         2020-05-30 16:21:22
+> . . .
+> ```
+  
+---
