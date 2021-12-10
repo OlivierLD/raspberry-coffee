@@ -18,7 +18,6 @@ Contains custom (dynamic) forwarders, consumers, computers, etc.
 
 ### TODO
 - Weather Station reader, producing NMEA data (See `nmea.mux.weather.station.properties`)
-
 - Related doc and images
 
 ---
