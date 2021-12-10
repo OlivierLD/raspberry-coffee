@@ -25,7 +25,10 @@ For example:
 > `text/plain` has always been a supported mime-type, suitable for NMEA Sentences... 
 > 
 > The conveyed data _are_ NMEA data, and to be able to communicate with other softs, their (proprietary?) format will eventually have to be converted back to NMEA...
-> Here we chose _not_ to convert anything. NMEA remains NMEA, which everyone understands. And everyone's happy.   
+> Here we chose _not_ to convert anything. NMEA remains NMEA, which everyone understands. And everyone's happy.
+> 
+> NMEA Parsers are available in OpenSource, in several languages. In this project, you'll find
+> at least one in Java, and for ES6.
 
 --------
 Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any output (File, Serial, TCP, UDP, WebSockets...), and a REST API on top of that.

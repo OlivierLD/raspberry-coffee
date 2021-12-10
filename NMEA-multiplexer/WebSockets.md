@@ -34,7 +34,7 @@ $ npm start
 This should start the WebSocket/HTTP server.  
 You could reach a client page from a web-socket savvy browser, at <http://localhost:9876/data/web/wsconsole.html>.
 
-Then, from another console, in the same directory:
+Then, from another console, in the same directory, after a build (`../gradlew shadowJar`)
 ```
 $ ./mux.sh log.to.ws.yaml 
 ```

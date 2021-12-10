@@ -13,13 +13,13 @@
 // Optional. You will see this name in eg. 'ps' or 'top' command
 process.title = 'node-nmea-parser';
 
-if (typeof String.prototype.startsWith != 'function') {
+if (typeof String.prototype.startsWith !== 'function') {
     String.prototype.startsWith = function (str) {
-        return this.indexOf(str) == 0;
+        return this.indexOf(str) === 0;
     };
 }
 
-if (typeof String.prototype.endsWith != 'function') {
+if (typeof String.prototype.endsWith !== 'function') {
     String.prototype.endsWith = function(suffix) {
         return this.indexOf(suffix, this.length - suffix.length) !== -1;
     };
@@ -41,7 +41,6 @@ if (process.argv.length > 2) {
         }
     }
 }
-
 
 // websocket AND http servers
 var webSocketServer = require('websocket').server;
@@ -77,22 +76,23 @@ var handler = function(req, res) {
                 // if (verbose)
                 //   console.log("Read resource content:\n---------------\n" + data + "\n--------------");
                 var contentType = "text/html";
-                if (resource.endsWith(".css"))
+                if (resource.endsWith(".css")) {
                     contentType = "text/css";
-                else if (resource.endsWith(".html"))
+                } else if (resource.endsWith(".html")) {
                     contentType = "text/html";
-                else if (resource.endsWith(".xml"))
+                } else if (resource.endsWith(".xml")) {
                     contentType = "text/xml";
-                else if (resource.endsWith(".js"))
+                } else if (resource.endsWith(".js")) {
                     contentType = "text/javascript";
-                else if (resource.endsWith(".jpg"))
+                } else if (resource.endsWith(".jpg")) {
                     contentType = "image/jpg";
-                else if (resource.endsWith(".gif"))
+                } else if (resource.endsWith(".gif")) {
                     contentType = "image/gif";
-                else if (resource.endsWith(".png"))
+                } else if (resource.endsWith(".png")) {
                     contentType = "image/png";
-                else if (resource.endsWith(".ico"))
+                } else if (resource.endsWith(".ico")) {
                     contentType = "image/ico";
+                }
 
                 res.writeHead(200, {'Content-Type': contentType});
                 //  console.log('Data is ' + typeof(data));
@@ -106,12 +106,13 @@ var handler = function(req, res) {
                     res.end(data.toString().replace('$PORT$', port.toString())); // Replace $PORT$ with the actual port value.
                 }
             });
-    } else if (req.url == "/") {
+    } else if (req.url === "/") {
         if (req.method === "POST") {
             var data = "";
             console.log("---- Headers ----");
-            for(var item in req.headers)
+            for (var item in req.headers) {
                 console.log(item + ": " + req.headers[item]);
+            }
             console.log("-----------------");
 
             req.on("data", function(chunk) {
