@@ -27,6 +27,7 @@ public class BackEndTideComputer {
 		return constituentsObject;
 	}
 
+	// TODO Other connection types. With a backend tide computer interface
 	public static void connect() throws Exception {
 		long before = 0L, after = 0L;
 		BackEndXMLTideComputer.setVerbose(verbose);
