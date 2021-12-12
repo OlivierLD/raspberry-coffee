@@ -10,7 +10,11 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class BackEndXMLTideComputer {
 	public final static String ARCHIVE_STREAM = "xml/xml.zip";
@@ -19,7 +23,7 @@ public class BackEndXMLTideComputer {
 
 	private static boolean verbose = false;
 
-	public static Constituents buildConstituents() throws Exception {
+	static Constituents buildConstituents() throws Exception {
 		SpeedConstituentFinder scf = new SpeedConstituentFinder();
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
