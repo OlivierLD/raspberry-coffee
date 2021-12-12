@@ -1,11 +1,16 @@
 package tideengine;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.xml.sax.InputSource;
 
 import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -14,10 +19,30 @@ import java.util.zip.ZipInputStream;
  * Calls the right methods, depending on the chosen option (XML, SQL, JAVA, json, etc)
  */
 public class BackEndTideComputer {
+
+	public enum Option {
+		XML,
+		SQLITE
+	}
+
+	private static Option flavor = Option.XML;
+	static {
+		String strFlavor = System.getProperty("tide.flavor");
+		if (strFlavor != null) {
+			for (Option opt : Option.values()) {
+				if (strFlavor.equals(opt.name())) {
+					flavor = opt;
+					break;
+				}
+			}
+		}
+	}
+
 	private static Constituents constituentsObject = null;
 	private static Stations stationsObject = null;
 
 	private static boolean verbose = "true".equals(System.getProperty("tide.verbose", "false"));
+	private static boolean dataVerbose = "true".equals(System.getProperty("data.verbose", "false"));
 
 	public static Stations getStations() {
 		return stationsObject;
@@ -27,22 +52,53 @@ public class BackEndTideComputer {
 		return constituentsObject;
 	}
 
-	// TODO Other connection types. XML, SQL, etc.
+	// Manage connection types. XML, SQL, etc.
 	public static void connect() throws Exception {
 		long before = 0L, after = 0L;
-		BackEndXMLTideComputer.setVerbose(verbose);
+		if (flavor == Option.XML) {
+			BackEndXMLTideComputer.setVerbose(verbose);
+		} else if (flavor == Option.SQLITE) {
+			// verbose...
+			BackEndSQLITETideComputer.setVerbose(verbose);
+			BackEndSQLITETideComputer.connect();
+		} else {
+			System.out.printf("%s to be implemented...\n", flavor);
+		}
 		if (verbose) {
 			before = System.currentTimeMillis();
 		}
-		constituentsObject = BackEndXMLTideComputer.buildConstituents(); // Uses SAX
-		stationsObject = BackEndXMLTideComputer.getTideStations();       // Uses SAX
+		if (flavor == Option.XML) {
+			constituentsObject = BackEndXMLTideComputer.buildConstituents(); // Uses SAX
+			stationsObject = BackEndXMLTideComputer.getTideStations();       // Uses SAX
+		} else if (flavor == Option.SQLITE) {
+			System.out.printf(">> Note: %s is being implemented...\n", flavor);
+			constituentsObject = BackEndSQLITETideComputer.buildConstituents();
+			stationsObject = BackEndSQLITETideComputer.getTideStations();
+		} else {
+			System.out.printf("%s to be implemented...\n", flavor);
+		}
 		if (verbose) {
 			after = System.currentTimeMillis();
 			System.out.println("Objects loaded in " + Long.toString(after - before) + " ms");
 		}
+		if (dataVerbose) {
+			// dump the maps
+			ObjectMapper mapper = new ObjectMapper();
+			String constituentStr = mapper.writerWithDefaultPrettyPrinter()
+					.writeValueAsString(constituentsObject);
+			String stationsStr = mapper.writerWithDefaultPrettyPrinter()
+					.writeValueAsString(stationsObject);
+			System.out.printf("Constituents:\n%s\n", constituentStr);
+			System.out.println("-----");
+			System.out.printf("Stations:\n%s\n", stationsStr);
+			System.out.println("-----");
+		}
 	}
 
 	public static void disconnect() throws Exception {
+		if (flavor == Option.SQLITE) {
+			BackEndSQLITETideComputer.disconnect();
+		}
 	}
 
 	public static List<Coefficient> buildSiteConstSpeed() throws Exception {

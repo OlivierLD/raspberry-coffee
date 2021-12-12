@@ -6,13 +6,15 @@ echo -e "Starting the Tide Rest Server"
 #
 CP=./build/libs/RESTTideEngine-1.0-all.jar
 JAVA_OPTS=
-JAVA_OPTS="${JAVA_OPTS} -Dhttp.verbose=false"
+# JAVA_OPTS="${JAVA_OPTS} -Dhttp.verbose=true"
 JAVA_OPTS="${JAVA_OPTS} -Dtide.verbose=true"
 # JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
+# JAVA_OPTS="$JAVA_OPTS -Ddata.verbose=true"
 export HTTP_PORT=8080
 JAVA_OPTS="${JAVA_OPTS} -Dhttp.port=${HTTP_PORT}"
 #
 JAVA_OPTS="${JAVA_OPTS} -DdeltaT=AUTO"
+JAVA_OPTS="${JAVA_OPTS} -Dtide.flavor=SQLITE"
 #
 # Do a curl http://localhost:${HTTP_PORT}/tide/oplist
 # ./oplist.sh &

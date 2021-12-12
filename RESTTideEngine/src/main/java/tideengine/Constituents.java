@@ -8,7 +8,7 @@ import java.util.Map;
 public class Constituents implements Serializable {
 	@SuppressWarnings("compatibility:9177290185319880922")
 	private final static long serialVersionUID = 1L;
-	private Map<String, ConstSpeed> constSpeedMap = new LinkedHashMap<String, ConstSpeed>();
+	private Map<String, ConstSpeed> constSpeedMap = new LinkedHashMap<>();
 
 	public Map<String, ConstSpeed> getConstSpeedMap() {
 		return constSpeedMap;
@@ -21,8 +21,8 @@ public class Constituents implements Serializable {
 		private int idx = 0;
 		private String coeffName = "";
 		private double coeffValue = 0d;
-		private Map<Integer, Double> equilibrium = new HashMap<Integer, Double>();
-		private Map<Integer, Double> factors = new HashMap<Integer, Double>();
+		private Map<Integer, Double> equilibrium = new HashMap<>();
+		private Map<Integer, Double> factors = new HashMap<>();
 
 		public ConstSpeed(int idx, String name, double val) {
 			this.idx = idx;

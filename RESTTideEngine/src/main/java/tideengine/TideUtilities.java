@@ -88,7 +88,7 @@ public class TideUtilities {
 		return ORDERED_COEFF.clone();
 	}
 
-	public static TreeMap<String, StationTreeNode> buildStationTree(String stationFileName) {
+	public static Map<String, StationTreeNode> buildStationTree(String stationFileName) {
 		InputSource is = null;
 		try {
 			is = new InputSource(new FileInputStream(new File(stationFileName)));
@@ -99,8 +99,8 @@ public class TideUtilities {
 		return buildStationTree(is);
 	}
 
-	public static TreeMap<String, StationTreeNode> buildStationTree(InputSource stationFileInputSource) {
-		TreeMap<String, StationTreeNode> set = new TreeMap<String, StationTreeNode>();
+	public static Map<String, StationTreeNode> buildStationTree(InputSource stationFileInputSource) {
+		Map<String, StationTreeNode> set = new TreeMap<>();
 
 		long before = System.currentTimeMillis();
 		StationObserver sf = new StationObserver();
@@ -119,7 +119,7 @@ public class TideUtilities {
 	}
 
 	public static TreeMap<String, StationTreeNode> buildStationTree(Stations stations) {
-		TreeMap<String, StationTreeNode> set = new TreeMap<String, StationTreeNode>();
+		TreeMap<String, StationTreeNode> set = new TreeMap<>();
 
 		long before = System.currentTimeMillis();
 		try {
@@ -506,7 +506,7 @@ public class TideUtilities {
 		return hcList;
 	}
 
-	private static void addStationToTree(TideStation ts, TreeMap<String, StationTreeNode> currentTree) {
+	private static void addStationToTree(TideStation ts, Map<String, StationTreeNode> currentTree) {
 		String timeZoneLabel = "";
 		try {
 			timeZoneLabel = ts.getTimeZone().substring(0, ts.getTimeZone().indexOf("/"));
@@ -547,7 +547,7 @@ public class TideUtilities {
 		private String label = "";
 		private String fullStationName = null;
 		private int stationType = 0;
-		private TreeMap<String, StationTreeNode> subTree = new TreeMap<String, StationTreeNode>();
+		private TreeMap<String, StationTreeNode> subTree = new TreeMap<>();
 
 		public StationTreeNode(String label) {
 			this.label = label;
@@ -593,9 +593,9 @@ public class TideUtilities {
 		private boolean foundStation = false;
 		private boolean foundNameCollection = false;
 
-		private TreeMap<String, StationTreeNode> tree = null;
+		private Map<String, StationTreeNode> tree = null;
 
-		public void setTreeToPopulate(TreeMap<String, StationTreeNode> tree) {
+		public void setTreeToPopulate(Map<String, StationTreeNode> tree) {
 			this.tree = tree;
 		}
 
