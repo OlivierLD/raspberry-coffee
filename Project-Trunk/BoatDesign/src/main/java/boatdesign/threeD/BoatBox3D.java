@@ -437,7 +437,7 @@ public class BoatBox3D extends Box3D {
             if (symmetrical) {
                 from = null;
                 List<VectorUtils.Vector3D> otherBezierPointsTransom = new ArrayList<>();
-                // Duplicate it
+                // Duplicate it, do not use the List, it would alter its points.
                 bezierPointsTransom.stream().forEach(pt -> {
                     VectorUtils.Vector3D clone = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
                     otherBezierPointsTransom.add(clone);
@@ -468,7 +468,7 @@ public class BoatBox3D extends Box3D {
                     }
                     if (symmetrical) {
                         for (List<VectorUtils.Vector3D> bezierPoints : frameBezierPts) {
-                            // Duplicate it
+                            // Duplicate it, do not use the List, it would alter its points.
                             List<VectorUtils.Vector3D> otherFrameBeziersPts = new ArrayList<>();
                             bezierPoints.stream().forEach(pt -> {
                                 VectorUtils.Vector3D clone = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
