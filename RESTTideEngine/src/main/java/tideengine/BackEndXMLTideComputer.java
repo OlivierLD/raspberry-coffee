@@ -12,6 +12,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,11 +28,11 @@ public class BackEndXMLTideComputer implements BackendDataComputer {
 	private static boolean verbose = false;
 
 	@Override
-	public void connect() {
+	public void connect() throws Exception {
 	}
 
 	@Override
-	public void disconnect() {
+	public void disconnect() throws Exception {
 	}
 
 	@Override
@@ -83,7 +84,7 @@ public class BackEndXMLTideComputer implements BackendDataComputer {
 		}
 		long after = System.currentTimeMillis();
 		if (verbose) {
-			System.out.println("Finding all the stations took " + Long.toString(after - before) + " ms");
+			System.out.printf("Finding all the stations took %s ms\n", NumberFormat.getInstance().format(after - before) );
 		}
 
 		return stationData;

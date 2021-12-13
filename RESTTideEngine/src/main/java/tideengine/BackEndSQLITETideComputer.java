@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +29,7 @@ public class BackEndSQLITETideComputer implements BackendDataComputer {
 	private static Connection conn = null;
 
 	@Override
-	public void connect() {
+	public void connect() throws Exception {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			String dbURL = String.format("jdbc:sqlite:%s", DB_PATH); // <- Make sure that one exists, or throw exception...
@@ -45,21 +46,20 @@ public class BackEndSQLITETideComputer implements BackendDataComputer {
 				System.exit(1);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			System.exit(1);
+			throw ex;
 		}
 	}
 
 	@Override
-	public void disconnect() {
+	public void disconnect() throws Exception {
 		if (conn != null) {
 			try {
 				conn.close();
 			} catch (SQLException ex) {
-				ex.printStackTrace();
+				throw ex;
 			}
 		} else {
-			System.err.println("No connection to close...");
+			throw new RuntimeException("No connection to close...");
 		}
 	}
 
@@ -223,7 +223,7 @@ public class BackEndSQLITETideComputer implements BackendDataComputer {
 		}
 		long after = System.currentTimeMillis();
 		if (verbose) {
-			System.out.println("Finding all the stations took " + Long.toString(after - before) + " ms");
+			System.out.printf("Finding all the stations took %s ms\n", NumberFormat.getInstance().format(after - before) );
 		}
 
 		return stationData;

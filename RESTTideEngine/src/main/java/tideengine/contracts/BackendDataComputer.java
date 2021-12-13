@@ -6,10 +6,14 @@ import tideengine.TideStation;
 
 import java.util.Map;
 
+/**
+ * This interface is common to all the implementation of the data store that is used
+ * to compute the coefficients and tide stations.
+ */
 public interface BackendDataComputer {
 
-    void connect();
-    void disconnect();
+    void connect() throws Exception;
+    void disconnect() throws Exception;
     Map<String, TideStation> getStationData() throws Exception;
     Stations getTideStations() throws Exception;
     Constituents buildConstituents() throws Exception;

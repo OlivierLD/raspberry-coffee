@@ -14,7 +14,9 @@ export HTTP_PORT=8080
 JAVA_OPTS="${JAVA_OPTS} -Dhttp.port=${HTTP_PORT}"
 #
 JAVA_OPTS="${JAVA_OPTS} -DdeltaT=AUTO"
+# Default flavor is XML
 JAVA_OPTS="${JAVA_OPTS} -Dtide.flavor=SQLITE"
+# JAVA_OPTS="${JAVA_OPTS} -Dtide.flavor=JSON"
 #
 # Do a curl http://localhost:${HTTP_PORT}/tide/oplist
 # ./oplist.sh &

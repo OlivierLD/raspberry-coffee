@@ -5,6 +5,7 @@ import tideengine.contracts.BackendDataComputer;
 
 import javax.annotation.Nonnull;
 import java.net.URLDecoder;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,10 @@ public class BackEndTideComputer {
 		}
 	}
 
+	public BackendDataComputer getDataComputer() {
+		return this.dataComputer;
+	}
+
 	public static Stations getStations() {
 		return stationsObject;
 	}
@@ -71,7 +76,7 @@ public class BackEndTideComputer {
 		long before = 0L, after = 0L;
 
 		this.dataComputer.setVerbose(verbose);
-		this.dataComputer.connect();
+		this.dataComputer.connect(); // This one takes the required implementation in account (XML, SQL, etc)
 
 		if (verbose) {
 			before = System.currentTimeMillis();
@@ -82,7 +87,8 @@ public class BackEndTideComputer {
 
 		if (verbose) {
 			after = System.currentTimeMillis();
-			System.out.println("Objects loaded in " + Long.toString(after - before) + " ms");
+			System.out.printf("Objects loaded in %s ms\n", NumberFormat.getInstance().format(after - before) );
+
 		}
 		if (dataVerbose) {
 			// dump the maps
@@ -102,7 +108,11 @@ public class BackEndTideComputer {
 		if (verbose) {
 			System.out.printf("Disconnecting (%s)\n", flavor);
 		}
-		this.dataComputer.disconnect();
+		if (this.dataComputer != null) {
+			this.dataComputer.disconnect();
+		} else {
+			throw new Exception(String.format("No dataComputer for %s", flavor));
+		}
 	}
 
 	public static List<Coefficient> buildSiteConstSpeed() throws Exception {
@@ -191,7 +201,7 @@ public class BackEndTideComputer {
 		}
 		long after = System.currentTimeMillis();
 		if (verbose) {
-			System.out.println("Finding the node took " + Long.toString(after - before) + " ms");
+			System.out.printf("Finding the node took %s ms\n", NumberFormat.getInstance().format(after - before) );
 		}
 
 		// Fix for the given year
@@ -249,7 +259,7 @@ public class BackEndTideComputer {
 		}
 		long after = System.currentTimeMillis();
 		if (verbose) {
-			System.out.println("Finding all the stations took " + Long.toString(after - before) + " ms");
+			System.out.printf("Finding all the stations took %s ms\n", NumberFormat.getInstance().format(after - before) );
 		}
 		return stationData;
 	}

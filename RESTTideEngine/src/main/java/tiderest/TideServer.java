@@ -54,8 +54,13 @@ public class TideServer {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("TideServer coming down");
 			try {
-				backEndTideComputer.disconnect();
+				if (backEndTideComputer != null && backEndTideComputer.getDataComputer() != null) {
+					backEndTideComputer.disconnect();
+				} else {
+					System.err.println("\tNo DataComputer to disconnect from...");
+				}
 			} catch (Exception ex) {
+				System.err.println("When disconnecting:");
 				ex.printStackTrace();
 			}
 		}));
