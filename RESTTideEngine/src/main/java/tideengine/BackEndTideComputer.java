@@ -88,7 +88,6 @@ public class BackEndTideComputer {
 		if (verbose) {
 			after = System.currentTimeMillis();
 			System.out.printf("Objects loaded in %s ms\n", NumberFormat.getInstance().format(after - before) );
-
 		}
 		if (dataVerbose) {
 			// dump the maps
