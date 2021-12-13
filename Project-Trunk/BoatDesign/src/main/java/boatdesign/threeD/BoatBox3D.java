@@ -436,13 +436,20 @@ public class BoatBox3D extends Box3D {
             }
             if (symmetrical) {
                 from = null;
-                for (VectorUtils.Vector3D to : bezierPointsTransom) {
+                List<VectorUtils.Vector3D> otherBezierPointsTransom = new ArrayList<>();
+                // Duplicate it
+                bezierPointsTransom.stream().forEach(pt -> {
+                    VectorUtils.Vector3D clone = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
+                    otherBezierPointsTransom.add(clone);
+                });
+                for (VectorUtils.Vector3D to : otherBezierPointsTransom) {
                     to = to.y(-to.getY());
                     if (from != null) {
                         instance.drawSegment(g2d, from, to);
                     }
                     from = to;
                 }
+
             }
 
             // All the frames, and possibly beams.
@@ -461,8 +468,14 @@ public class BoatBox3D extends Box3D {
                     }
                     if (symmetrical) {
                         for (List<VectorUtils.Vector3D> bezierPoints : frameBezierPts) {
+                            // Duplicate it
+                            List<VectorUtils.Vector3D> otherFrameBeziersPts = new ArrayList<>();
+                            bezierPoints.stream().forEach(pt -> {
+                                VectorUtils.Vector3D clone = new VectorUtils.Vector3D(pt.getX(), pt.getY(), pt.getZ());
+                                otherFrameBeziersPts.add(clone);
+                            });
                             from = null;
-                            for (VectorUtils.Vector3D to : bezierPoints) {
+                            for (VectorUtils.Vector3D to : otherFrameBeziersPts) {
                                 to = to.y(-to.getY());
                                 if (from != null) {
                                     instance.drawSegment(g2d, from, to);
@@ -858,6 +871,11 @@ public class BoatBox3D extends Box3D {
     }
 
     // Re-generates the boat
+    private boolean keepWoring = true;
+    public void setWorking(boolean b) {
+        this.keepWoring = b;
+    }
+
     public void refreshData() {
         refreshData(false, null, null, null);
     }
@@ -869,6 +887,7 @@ public class BoatBox3D extends Box3D {
                             Consumer<String> messCallback,
                             Consumer<Map> progressCallback) {
 
+        this.keepWoring = true;
         long before = System.currentTimeMillis();
         // TODO Parameterize the t+=0.01
 
@@ -1035,7 +1054,12 @@ public class BoatBox3D extends Box3D {
         Bezier bezierTransom = new Bezier(ctrlPointsTransom);
         for (double t=0; t<=1.0; t+=0.01) {
             Bezier.Point3D tick = bezierTransom.getBezierPoint(t);
-            bezierPointsTransom.add(new VectorUtils.Vector3D(tick.getX(), tick.getY(), tick.getZ()));
+            if (tick.getY() < 0) {
+                // Honk !!
+                System.err.println("Negative Y in transom!!");
+            }
+            VectorUtils.Vector3D transomPt = new VectorUtils.Vector3D(tick.getX(), Math.abs(tick.getY()), tick.getZ());
+            bezierPointsTransom.add(transomPt);
         }
         // TODO Transom beam here?
 
@@ -1052,7 +1076,9 @@ public class BoatBox3D extends Box3D {
             // Displacement...
             double maxFrameArea = 0d;
             // TODO _x <= ? Make sure the end has a frame...
-            for (double _x = (-centerOnXValue + xOffset) + frameIncrement; _x </*=*/ (-centerOnXValue + xOffset) + maxLength; _x += frameIncrement) {
+            for (double _x = (-centerOnXValue + xOffset) + frameIncrement;
+                        this.keepWoring && _x </*=*/ (-centerOnXValue + xOffset) + maxLength + (0 * frameIncrement / 2); // TODO Check this (frameIncrement / 2)
+                        _x += frameIncrement) {
                 if (localVerbose || verbose) {
                     System.out.printf("... Calculating frame %.03f... ", _x);
                 }
@@ -1174,7 +1200,7 @@ public class BoatBox3D extends Box3D {
                 synchronized (frameBezierPts) {
                     frameBezierPts.add(bezierPointsFrame);
                     if (progressCallback != null) {
-                        progressCallback.accept(Map.of(TYPE, FRAME, DATA, bezierPointsFrame));
+                        progressCallback.accept(Map.of(TYPE, FRAME, DATA, bezierPointsFrame)); // Should be a List<VectorUtils.Vector3D>
                     }
                 }
 
@@ -1197,8 +1223,16 @@ public class BoatBox3D extends Box3D {
                     System.out.printf(" in %s ms.\n", NumberFormat.getInstance().format(two - one));
                 }
             }
+            // Transom at the end of all frames.
+            if (progressCallback != null) {
+                if (bezierPointsTransom != null && bezierPointsTransom.size() > 0 && bezierPointsTransom.get(0).getY() < 0) {
+                    System.err.println("Negative Y in the transom!!");
+                }
+                progressCallback.accept(Map.of(TYPE, FRAME, DATA, bezierPointsTransom));
+            }
+
             // Add last beam, for the transom (last rail point). TODO Add it to transom?
-            if (true) {
+            if (this.keepWoring) {
                 Bezier.Point3D _top = bezierRail.getBezierPoint(1.0);
                 List<Bezier.Point3D> ctrlPointsBeam = List.of(
                         new Bezier.Point3D(_top.getX(), _top.getY(), _top.getZ()),
@@ -1244,7 +1278,7 @@ public class BoatBox3D extends Box3D {
             }
         }
 
-        if (waterlines || true) { // Construction. TODO Calculate anyway?
+        if (waterlines || this.keepWoring) { // Construction. TODO Calculate anyway?
             // H lines. Use a step for waterlines. maxDepth, maxHeight, wlIncrement.
             double from = Math.ceil(maxDepth / wlIncrement) * wlIncrement;
             double to = Math.floor(maxHeight / wlIncrement) * wlIncrement;
@@ -1437,7 +1471,7 @@ public class BoatBox3D extends Box3D {
                 System.out.printf("Disp on Z: %.05f m3, zCC: %.03f m\n", (zDispl), (zCenterOfHull * 1e-2)); // TODO Display diff in disp in % ?
             }
         }
-        if (buttocks || true) { // Calculate anyway?
+        if (buttocks || this.keepWoring) { // Calculate anyway?
             double from = buttockIncrement;
             double to = Math.floor(maxWidth / buttockIncrement) * buttockIncrement;
             if (localVerbose || verbose) {

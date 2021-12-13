@@ -91,7 +91,8 @@ public class ThreeViews {
     private final JMenu menuHelp = new JMenu();
     private final JMenuItem menuHelpAbout = new JMenuItem();
     private JLabel topLabel;
-    private final JButton refreshButton = new JButton("Refresh Boat Shape"); // Not really useful here.
+    private final JButton refreshButton = new JButton("Refresh Boat Shape");
+    private final JButton stopRefreshButton = new JButton("Stop Refresh");
 
     private final JRadioButton jsonRadioButton = new JRadioButton("json");
     private final JRadioButton scadRadioButton = new JRadioButton("scad");
@@ -404,9 +405,11 @@ public class ThreeViews {
         JOptionPane.showMessageDialog(frame, HelpContent, TITLE, JOptionPane.PLAIN_MESSAGE);
     }
 
+    private AtomicBoolean keepLooping = new AtomicBoolean(true);
+
     private void refreshBoatShape() {
-        AtomicBoolean keepLooping = new AtomicBoolean(true);
         Thread repainter = new Thread(() -> {
+            keepLooping.set(true);
             while (keepLooping.get()) {
                 try {
                     this.box3D.repaint();
@@ -427,6 +430,7 @@ public class ThreeViews {
         Thread refresher = new Thread(() -> {
             getLogger().log(Level.INFO, "Starting refresh...");
             refreshButton.setEnabled(false);
+            stopRefreshButton.setEnabled(true);
             boatDataTextArea.setText("Re-calculating...");
             // TODO Stop thread if already running.
 
@@ -501,11 +505,13 @@ public class ThreeViews {
             }, map -> {
                 if (map != null) {
                     if (map.get(BoatBox3D.TYPE).equals(BoatBox3D.FRAME)) {
-                        List<VectorUtils.Vector3D> data = (List)map.get(BoatBox3D.DATA); // TODO Make it a Bezier.Point3D !!
+                        List<VectorUtils.Vector3D> data = (List)map.get(BoatBox3D.DATA); // TODO Make it a Bezier.Point3D ?
                         List<VectorUtils.Vector2D> framePtsYZVectors = new ArrayList<>();
                         // Find x position of the max width
                         data.forEach(pt -> {
-                            framePtsYZVectors.add(new VectorUtils.Vector2D(pt.getX() < (this.xMaxWidth - (this.defaultLHT / 2) )? pt.getY() : -pt.getY(), pt.getZ()));
+                            // Transom sometime goes on the wrong side...
+                            boolean right = pt.getX() < (this.xMaxWidth - (this.defaultLHT / 2));
+                            framePtsYZVectors.add(new VectorUtils.Vector2D(right ? pt.getY() : -pt.getY(), pt.getZ()));
                         });
                         WhiteBoardPanel.DataSerie frameYZSerie = new WhiteBoardPanel.DataSerie()
                                 .data(framePtsYZVectors)
@@ -549,6 +555,7 @@ public class ThreeViews {
             keepLooping.set(false);
             getLogger().log(Level.INFO, "Refresh completed!");
             refreshButton.setEnabled(true);
+            stopRefreshButton.setEnabled(false);
             this.box3D.repaint();
             if (centerOfHull != null) {
                 // XZ
@@ -597,6 +604,11 @@ public class ThreeViews {
             }
         });
         refresher.start();
+    }
+
+    private void killRefreshBoatShape() {
+        keepLooping.set(false);
+        this.box3D.setWorking(false);
     }
 
     private Map<String, Object> generateBezierJson() {
@@ -1416,6 +1428,7 @@ public class ThreeViews {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         refreshButton.addActionListener(e -> refreshBoatShape());
+        stopRefreshButton.addActionListener(e -> killRefreshBoatShape());
 
         frame.setJMenuBar(menuBar);
         frame.getContentPane().setLayout(new BorderLayout());
@@ -1873,7 +1886,12 @@ public class ThreeViews {
         frame.getContentPane().add(jScrollPane, BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel(new GridBagLayout());
-        bottomPanel.add(refreshButton, new GridBagConstraints(0,
+        JPanel smallButtonPanel = new JPanel(); // new BorderLayout());
+        smallButtonPanel.add(refreshButton); // , BorderLayout.WEST);
+        smallButtonPanel.add(stopRefreshButton); // , BorderLayout.WEST);
+        stopRefreshButton.setEnabled(false);
+
+        bottomPanel.add(smallButtonPanel, new GridBagConstraints(0,
                 0,
                 1,
                 1,
@@ -1882,7 +1900,6 @@ public class ThreeViews {
                 GridBagConstraints.WEST,
                 GridBagConstraints.NONE,
                 new Insets(0, 0, 0, 10), 0, 0));
-
         frame.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 //        frame.pack();
     }
