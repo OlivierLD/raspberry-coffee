@@ -23,6 +23,11 @@ public class BackEndXMLTideComputer {
 
 	private static boolean verbose = false;
 
+	static void connect() {
+	}
+	static void disconnect() {
+	}
+
 	static Constituents buildConstituents() throws Exception {
 		SpeedConstituentFinder scf = new SpeedConstituentFinder();
 		try {

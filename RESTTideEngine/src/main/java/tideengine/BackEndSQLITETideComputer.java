@@ -1,6 +1,8 @@
 package tideengine;
 
 import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -8,10 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class BackEndSQLITETideComputer {
 
@@ -120,7 +119,7 @@ public class BackEndSQLITETideComputer {
 			}
 		} else {
 			System.err.println("No DB connection...");
-			throw new RuntimeException("No DB connection...");
+			throw new RuntimeException("No SQLite DB connection...");
 		}
 		return constituents;
 	}
@@ -130,8 +129,73 @@ public class BackEndSQLITETideComputer {
 	}
 
 	public static Map<String, TideStation> getStationData() throws Exception {
-		// TODO Flesh it out
-		return null;
+
+		Map<String, TideStation> stationData = null;
+		if (conn != null) {
+			stationData = new HashMap<>();
+			String selectStatement_01 = "select t1.name, " +
+					                           "t1.latitude, " +
+											   "t1.longitude, " +
+											   "t1.tzOffset, " +
+											   "t1.tzName, " +
+											   "t1.baseheightvalue, " +
+											   "t1.baseheightunit " +
+										"from stations as t1";
+			try {
+				Statement statement = conn.createStatement();
+				ResultSet rs = statement.executeQuery(selectStatement_01);
+				while (rs.next()) {
+					String fullName = rs.getString(1);
+					BigDecimal latitude = rs.getBigDecimal(2);
+					BigDecimal longitude = rs.getBigDecimal(3);
+					String tzOffset = rs.getString(4);
+					String tzName = rs.getString(5);
+					BigDecimal baseHeightValue = rs.getBigDecimal(6);
+					String baseHeightUnit = rs.getString(7);
+					TideStation tideStation = new TideStation();
+
+					tideStation.setFullName(URLEncoder.encode(URLDecoder.decode(fullName, "ISO-8859-1"), "UTF-8").replace("+", "%20"));
+					tideStation.setLatitude(latitude.doubleValue());
+					tideStation.setLongitude(longitude.doubleValue());
+					tideStation.setTimeOffset(tzOffset);
+					tideStation.setTimeZone(tzName);
+					tideStation.setBaseHeight(baseHeightValue.doubleValue());
+					tideStation.setUnit(baseHeightUnit);
+					for (String part : fullName.split(",")) {
+						tideStation.getNameParts().add(URLEncoder.encode(URLDecoder.decode(part.trim(), "ISO-8859-1"), "UTF-8").replace("+", "%20"));
+					}
+					// TODO Other data, like isCurrentStation, etc
+					// Harmonics
+					String coeffStmt = "select t2.coeffname, t2.amplitude, t2.epoch " +
+										"from stationdata as t2 " +
+										"join coeffdefs as t3 on t2.coeffname = t3.name " +
+										"where t2.stationname = ? " +
+										"order by t3.rank";
+					PreparedStatement preparedStatement_02 = conn.prepareStatement(coeffStmt);
+					preparedStatement_02.setString(1, fullName);
+					ResultSet coefficientsRS = preparedStatement_02.executeQuery();
+					while (coefficientsRS.next()) {
+						String coeffName = coefficientsRS.getString(1);
+						BigDecimal amplitude = coefficientsRS.getBigDecimal(2);
+						BigDecimal epoch = coefficientsRS.getBigDecimal(3);
+						tideStation.getHarmonics().add(new Harmonic(coeffName, amplitude.doubleValue(), epoch.doubleValue()));
+					}
+					coefficientsRS.close();
+					preparedStatement_02.close();
+
+					stationData.put(URLEncoder.encode(URLDecoder.decode(fullName, "ISO-8859-1"), "UTF-8").replace("+", "%20"),
+							        tideStation);
+				}
+				rs.close();
+				statement.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		} else {
+			System.err.println("No DB connection...");
+			throw new RuntimeException("No SQLite DB connection...");
+		}
+		return stationData;
 	}
 
 	public static List<TideStation> getStationData(Stations stations) throws Exception {

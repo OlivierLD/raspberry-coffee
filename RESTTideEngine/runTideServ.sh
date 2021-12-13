@@ -22,6 +22,8 @@ sleep 10 && \
     echo Invoking http://localhost:${HTTP_PORT}/tide/oplist && \
     curl -X GET http://localhost:${HTTP_PORT}/tide/oplist | jq &
 #
+echo -e "For basic UI, from a browser, reach http://localhost:${HTTP_PORT}/web/index.html"
+#
 COMMAND="java -cp ${CP} ${JAVA_OPTS} tiderest.TideServer"
 echo -e "Running ${COMMAND}"
 ${COMMAND}

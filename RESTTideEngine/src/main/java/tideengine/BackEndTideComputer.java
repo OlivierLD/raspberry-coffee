@@ -54,9 +54,13 @@ public class BackEndTideComputer {
 
 	// Manage connection types. XML, SQL, etc.
 	public static void connect() throws Exception {
+		if (verbose) {
+			System.out.printf("Connecting (%s)\n", flavor);
+		}
 		long before = 0L, after = 0L;
 		if (flavor == Option.XML) {
 			BackEndXMLTideComputer.setVerbose(verbose);
+			BackEndXMLTideComputer.connect();
 		} else if (flavor == Option.SQLITE) {
 			// verbose...
 			BackEndSQLITETideComputer.setVerbose(verbose);
@@ -96,7 +100,12 @@ public class BackEndTideComputer {
 	}
 
 	public static void disconnect() throws Exception {
-		if (flavor == Option.SQLITE) {
+		if (verbose) {
+			System.out.printf("Disconnecting (%s)\n", flavor);
+		}
+		if (flavor == Option.XML) {
+			BackEndXMLTideComputer.disconnect();
+		} else if (flavor == Option.SQLITE) {
 			BackEndSQLITETideComputer.disconnect();
 		}
 	}

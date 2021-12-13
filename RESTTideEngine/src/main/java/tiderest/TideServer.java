@@ -23,13 +23,16 @@ public class TideServer {
 			}
 		}
 
-		try {
-			BackEndTideComputer.connect();
-			BackEndTideComputer.setVerbose("true".equals(System.getProperty("tide.verbose", "false")));
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		if (false) { // Done in TideRequestManager
+			try {
+				BackEndTideComputer.connect();
+				BackEndTideComputer.setVerbose("true".equals(System.getProperty("tide.verbose", "false")));
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 		System.out.println(String.format("Running on port %d", httpPort));
+		// TideRequestManager will do a BackEndTideComputer.connect();
 		this.httpServer = startHttpServer(httpPort, new TideRequestManager(this));
 		// Add astronomical features...
 		this.httpServer.addRequestManager(new AstroRequestManager());
@@ -43,6 +46,16 @@ public class TideServer {
 	}
 
 	public static void main(String... args) {
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println("TideServer coming down");
+			try {
+				BackEndTideComputer.disconnect();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}));
+
 		new TideServer();
 	}
 

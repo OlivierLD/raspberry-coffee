@@ -53,10 +53,11 @@ var getDeferred = function(
 
 	xhr.open(verb, url, true);
 	xhr.setRequestHeader("Content-type", "application/json"); // I know, hard-coded.
-	if (data === undefined) {
-		xhr.send();
-	} else {
+	// if (data === undefined || data === null) {
+	if (data) {
 		xhr.send(JSON.stringify(data));
+	} else {
+		xhr.send();
 	}
 
 	var requestTimer = setTimeout(function() {
@@ -119,6 +120,14 @@ var requestSunMoontData= function(from, to, tz, pos) {
 };
 
 var DURATION_FMT = "Y-m-dTH:i:s";
+
+// Also encodes parenthesis and other stuff
+function fixedEncodeURIComponent(str) {
+  return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+    return '%' + c.charCodeAt(0).toString(16);
+  });
+}
+
 /**
  *
  * @param station
@@ -133,7 +142,7 @@ var getTideTable = function(station, at, tz, step, unit, withDetails, nbDays) {
 	if (nbDays === undefined) {
 		nbDays = 1;
 	}
-	var url = "/tide/tide-stations/" + encodeURIComponent(station) + "/wh";
+	var url = "/tide/tide-stations/" + fixedEncodeURIComponent(station) + "/wh";
 	if (withDetails === true) {
 		url += "/details";
 	}
