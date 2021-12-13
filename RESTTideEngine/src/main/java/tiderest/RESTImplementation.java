@@ -471,7 +471,7 @@ public class RESTImplementation {
 									}
 								}
 
-								ts = BackEndTideComputer.findTideStation(stationFullName, now.get(Calendar.YEAR));
+								ts = tideRequestManager.getBackEndTideComputer().findTideStation(stationFullName, now.get(Calendar.YEAR));
 								if (ts != null) {
 									TZ_ABR.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
 									DATE_FMT.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));

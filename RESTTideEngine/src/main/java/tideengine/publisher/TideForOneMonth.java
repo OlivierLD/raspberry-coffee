@@ -25,6 +25,8 @@ import java.util.TimeZone;
  */
 public class TideForOneMonth {
 
+	private static BackEndTideComputer backEndTideComputer = new BackEndTideComputer();
+
 	public final static int HIGH_TIDE = 0;
 	public final static int LOW_TIDE  = 1;
 
@@ -124,7 +126,7 @@ public class TideForOneMonth {
 		Calendar firstDay = new GregorianCalendar(year, month - 1, 1);
 		Calendar now = firstDay;
 
-		TideStation ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
+		TideStation ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 		int prevYear = now.get(Calendar.YEAR);
 		boolean loop = true;
 		int prevMoonAge = 0; // Workaround...
@@ -133,7 +135,7 @@ public class TideForOneMonth {
 			System.out.println(" -- " + mess);
 			// If year changes, recompute TideStation
 			if (now.get(Calendar.YEAR) != prevYear) {
-				ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
+				ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 			}
 			List<TimedValue> timeAL = tideForOneDay(acv2, now, timeZone, ts, constSpeed, unitToUse);
 			Calendar utcCal = (Calendar) now.clone();
@@ -322,7 +324,7 @@ public class TideForOneMonth {
 	                                             String location,
 	                                             List<Coefficient> constSpeed,
 	                                             String unitToUse) throws Exception {
-		TideStation ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
+		TideStation ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 		return tideForOneDay(acv2, now, timeZone, ts, constSpeed, unitToUse);
 	}
 

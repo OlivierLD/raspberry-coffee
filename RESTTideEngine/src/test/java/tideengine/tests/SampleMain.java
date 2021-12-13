@@ -16,14 +16,16 @@ import java.util.*;
 public class SampleMain {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyy-MMM-dd HH:mm z (Z)");
 
+	private static BackEndTideComputer backEndTideComputer = new BackEndTideComputer();
+
 	public static void main(String... args) throws Exception {
 		System.out.println(args.length + " Argument(s)...");
 		boolean xmlTest = true;
 
 		if (xmlTest) {
 			System.out.println("XML Tests");
-			BackEndTideComputer.connect();
-			BackEndTideComputer.setVerbose(false);
+			backEndTideComputer.connect();
+			backEndTideComputer.setVerbose(false);
 
 			// Some tests
 			if (true) {
@@ -38,7 +40,7 @@ public class SampleMain {
 				String location = null;
 				if (true) {
 					location = URLEncoder.encode("Port Townsend", "UTF-8").replace("+", "%20");
-					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
+					ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					if (ts != null) {
 						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
 						if (ts != null) {
@@ -58,7 +60,7 @@ public class SampleMain {
 				}
 				if (true) {
 					location = URLEncoder.encode("Fare Ute Point", "UTF-8").replace("+", "%20");
-					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
+					ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					if (ts != null) {
 						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
 						double wh = TideUtilities.getWaterHeight(ts, constSpeed, now);
@@ -66,7 +68,7 @@ public class SampleMain {
 					}
 
 					location = URLEncoder.encode("Oyster Point Marina, San Francisco Bay, California", "UTF-8").replace("+", "%20");
-					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
+					ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					if (ts != null) {
 						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
 						double wh = TideUtilities.getWaterHeight(ts, constSpeed, now);
@@ -74,7 +76,7 @@ public class SampleMain {
 					}
 
 					location = URLEncoder.encode("Shediac Bay, New Brunswick", "UTF-8").replace("+", "%20");
-					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
+					ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					if (ts != null) {
 						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
 						double wh = TideUtilities.getWaterHeight(ts, constSpeed, now);
@@ -84,7 +86,7 @@ public class SampleMain {
 					}
 
 					location = URLEncoder.encode("Alcatraz (North Point)", "UTF-8").replace("+", "%20");
-					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
+					ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					if (ts != null) {
 						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
 						double wh = TideUtilities.getWaterHeight(ts, constSpeed, now);
@@ -92,7 +94,7 @@ public class SampleMain {
 					}
 
 					location = URLEncoder.encode("Cape Cod Canal, Massachusetts Current", "UTF-8").replace("+", "%20");
-					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
+					ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					if (ts != null) {
 						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
 						double wh = TideUtilities.getWaterHeight(ts, constSpeed, now);
@@ -101,7 +103,7 @@ public class SampleMain {
 
 					// Oyster Point for today (every 30 minutes)
 					location = URLEncoder.encode("Oyster Point Marina", "UTF-8").replace("+", "%20");
-					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
+					ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					if (ts != null) {
 //          TimeZone tz = TimeZone.getDefault();
 						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
@@ -246,7 +248,7 @@ public class SampleMain {
 				}
 				// Kodiak for today (every 30 minutes)
 				location = URLEncoder.encode("Kodiak, Women's Bay, Alaska", "UTF-8").replace("+", "%20");
-				ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
+				ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 
 				if (true) {
 					now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
@@ -383,7 +385,7 @@ public class SampleMain {
 				String location = null;
 				if (true) {
 					location = URLEncoder.encode("Ocean Beach, California", "UTF-8").replace("+", "%20");
-					TideStation ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
+					TideStation ts = backEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
 					if (ts != null) {
 						if (true) {
@@ -401,7 +403,7 @@ public class SampleMain {
 					}
 				}
 			}
-			BackEndTideComputer.disconnect();
+			backEndTideComputer.disconnect();
 		}
 	}
 }

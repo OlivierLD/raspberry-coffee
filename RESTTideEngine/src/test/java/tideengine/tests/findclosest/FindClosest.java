@@ -26,6 +26,8 @@ public class FindClosest {
     private final static double USER_POS_LATITUDE = 37.7489;
     private final static double USER_POS_LONGITUDE = -122.5070;
 
+    private static BackEndTideComputer backEndTideComputer = new BackEndTideComputer();
+
     /**
      * All values in radians
      *
@@ -49,8 +51,8 @@ public class FindClosest {
             System.out.println("Look at that!");
         }
 
-        BackEndTideComputer.connect();
-        BackEndTideComputer.setVerbose(false);
+        backEndTideComputer.connect();
+        backEndTideComputer.setVerbose(false);
 
         List<Coefficient> constSpeed = BackEndTideComputer.buildSiteConstSpeed();
 
@@ -109,6 +111,6 @@ public class FindClosest {
         } else {
             System.out.println("Not found :(");
         }
-        BackEndTideComputer.disconnect();
+        backEndTideComputer.disconnect();
     }
 }

@@ -1,5 +1,7 @@
 package tideengine;
 
+import tideengine.contracts.BackendDataComputer;
+
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -10,9 +12,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-public class BackEndSQLITETideComputer {
+public class BackEndSQLITETideComputer implements BackendDataComputer {
 
 	// TODO DB Path from System variable...
 	public final static String DB_PATH = "sql/tides.db";
@@ -21,7 +27,8 @@ public class BackEndSQLITETideComputer {
 
 	private static Connection conn = null;
 
-	static void connect() {
+	@Override
+	public void connect() {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			String dbURL = String.format("jdbc:sqlite:%s", DB_PATH); // <- Make sure that one exists, or throw exception...
@@ -43,7 +50,8 @@ public class BackEndSQLITETideComputer {
 		}
 	}
 
-	static void disconnect() {
+	@Override
+	public void disconnect() {
 		if (conn != null) {
 			try {
 				conn.close();
@@ -55,7 +63,8 @@ public class BackEndSQLITETideComputer {
 		}
 	}
 
-	static Constituents buildConstituents() throws Exception {
+	@Override
+	public Constituents buildConstituents() throws Exception {
 		Constituents constituents = null;
 		if (conn != null) {
 
@@ -115,7 +124,7 @@ public class BackEndSQLITETideComputer {
 				rs.close();
 				statement.close();
 			} catch (SQLException sqlEx) {
-				sqlEx.printStackTrace();
+				throw sqlEx;
 			}
 		} else {
 			System.err.println("No DB connection...");
@@ -124,11 +133,13 @@ public class BackEndSQLITETideComputer {
 		return constituents;
 	}
 
-	public static Stations getTideStations() throws Exception {
+	@Override
+	public Stations getTideStations() throws Exception {
 		return new Stations(getStationData());
 	}
 
-	public static Map<String, TideStation> getStationData() throws Exception {
+	@Override
+	public Map<String, TideStation> getStationData() throws Exception {
 
 		Map<String, TideStation> stationData = null;
 		if (conn != null) {
@@ -189,7 +200,7 @@ public class BackEndSQLITETideComputer {
 				rs.close();
 				statement.close();
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				throw ex;
 			}
 		} else {
 			System.err.println("No DB connection...");
@@ -198,6 +209,7 @@ public class BackEndSQLITETideComputer {
 		return stationData;
 	}
 
+	// Get data as a List, not as a Map
 	public static List<TideStation> getStationData(Stations stations) throws Exception {
 		long before = System.currentTimeMillis();
 		List<TideStation> stationData = new ArrayList<>();
@@ -217,11 +229,14 @@ public class BackEndSQLITETideComputer {
 		return stationData;
 	}
 
-	public static TideStation reloadOneStation(String stationName) throws Exception {
+	@Override
+	public TideStation reloadOneStation(String stationName) throws Exception {
+		// TODO Implement?
 		return null;
 	}
 
-	public static void setVerbose(boolean verbose) {
+	@Override
+	public void setVerbose(boolean verbose) {
 		BackEndSQLITETideComputer.verbose = verbose;
 	}
 }

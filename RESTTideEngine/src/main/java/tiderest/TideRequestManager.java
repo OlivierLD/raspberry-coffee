@@ -20,6 +20,8 @@ public class TideRequestManager implements RESTRequestManager {
 	private Map<String, String> coeffDefinitions = null;
 	private TideServer tideServer = null;
 
+	private BackEndTideComputer backEndTideComputer = new BackEndTideComputer();
+
 	public TideRequestManager() {
 		this(null);
 	}
@@ -32,11 +34,15 @@ public class TideRequestManager implements RESTRequestManager {
 		restImplementation = new RESTImplementation(this);
 
 		try {
-			BackEndTideComputer.connect();
-			BackEndTideComputer.setVerbose("true".equals(System.getProperty("tide.verbose", "false")));
+			backEndTideComputer.connect();
+			backEndTideComputer.setVerbose("true".equals(System.getProperty("tide.verbose", "false")));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	public BackEndTideComputer getBackEndTideComputer() {
+		return this.backEndTideComputer;
 	}
 
 	/**

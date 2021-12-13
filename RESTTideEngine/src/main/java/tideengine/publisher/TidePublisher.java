@@ -151,9 +151,12 @@ public class TidePublisher {
 	 * @param args unused.
 	 */
 	public static void main(String... args) {
+
+		BackEndTideComputer backEndTideComputer = new BackEndTideComputer();
+
 		try {
-			BackEndTideComputer.connect();
-			BackEndTideComputer.setVerbose("true".equals(System.getProperty("tide.verbose", "false")));
+			backEndTideComputer.connect();
+			backEndTideComputer.setVerbose("true".equals(System.getProperty("tide.verbose", "false")));
 //			String f = publish(
 //					URLEncoder.encode("Ocean Beach, California", "UTF-8").replace("+", "%20"),
 //					Calendar.SEPTEMBER,

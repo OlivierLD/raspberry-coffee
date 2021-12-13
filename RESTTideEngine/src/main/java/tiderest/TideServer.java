@@ -12,7 +12,11 @@ public class TideServer {
 	private HTTPServer httpServer = null;
 	private int httpPort = 9999;
 
+	private static BackEndTideComputer backEndTideComputer;
+
 	public TideServer() {
+
+		backEndTideComputer = new BackEndTideComputer();
 
 		String port = System.getProperty("http.port");
 		if (port != null) {
@@ -25,8 +29,8 @@ public class TideServer {
 
 		if (false) { // Done in TideRequestManager
 			try {
-				BackEndTideComputer.connect();
-				BackEndTideComputer.setVerbose("true".equals(System.getProperty("tide.verbose", "false")));
+				backEndTideComputer.connect();
+				backEndTideComputer.setVerbose("true".equals(System.getProperty("tide.verbose", "false")));
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -50,7 +54,7 @@ public class TideServer {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("TideServer coming down");
 			try {
-				BackEndTideComputer.disconnect();
+				backEndTideComputer.disconnect();
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

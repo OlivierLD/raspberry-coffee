@@ -4,6 +4,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+import tideengine.contracts.BackendDataComputer;
+import tideengine.utils.ZipUtils;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -16,50 +18,58 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class BackEndXMLTideComputer {
+public class BackEndXMLTideComputer implements BackendDataComputer {
+
 	public final static String ARCHIVE_STREAM = "xml/xml.zip";
 	public final static String CONSTITUENTS_ENTRY = "constituents.xml";
 	public final static String STATIONS_ENTRY = "stations.xml";
 
 	private static boolean verbose = false;
 
-	static void connect() {
-	}
-	static void disconnect() {
+	@Override
+	public void connect() {
 	}
 
-	static Constituents buildConstituents() throws Exception {
+	@Override
+	public void disconnect() {
+	}
+
+	@Override
+	public Constituents buildConstituents() throws Exception {
 		SpeedConstituentFinder scf = new SpeedConstituentFinder();
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
-			InputSource is = BackEndTideComputer.getZipInputSource(ARCHIVE_STREAM, CONSTITUENTS_ENTRY);
+			InputSource is = ZipUtils.getZipInputSource(ARCHIVE_STREAM, CONSTITUENTS_ENTRY);
 			saxParser.parse(is, scf);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			throw ex;
 		}
 		return scf.getConstituents();
 	}
 
-	public static Stations getTideStations() throws Exception {
+	@Override
+	public Stations getTideStations() throws Exception {
 		return new Stations(getStationData());
 	}
 
-	public static Map<String, TideStation> getStationData() throws Exception {
+	@Override
+	public Map<String, TideStation> getStationData() throws Exception {
 		Map<String, TideStation> stationData = new HashMap<>();
 		StationFinder sf = new StationFinder(stationData);
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
-			InputSource is = BackEndTideComputer.getZipInputSource(ARCHIVE_STREAM, STATIONS_ENTRY);
+			InputSource is = ZipUtils.getZipInputSource(ARCHIVE_STREAM, STATIONS_ENTRY);
 			saxParser.parse(is, sf);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			throw ex;
 		}
 
 		return stationData;
 	}
 
+	// Get data as a List, not as a Map
 	public static List<TideStation> getStationData(Stations stations) throws Exception {
 		long before = System.currentTimeMillis();
 		List<TideStation> stationData = new ArrayList<>();
@@ -79,27 +89,30 @@ public class BackEndXMLTideComputer {
 		return stationData;
 	}
 
-	public static TideStation reloadOneStation(String stationName) throws Exception {
+	@Override
+	public TideStation reloadOneStation(String stationName) throws Exception {
 		StationFinder sf = new StationFinder();
 		sf.setStationName(stationName);
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
-			InputSource is = BackEndTideComputer.getZipInputSource(ARCHIVE_STREAM, STATIONS_ENTRY);
+			InputSource is = ZipUtils.getZipInputSource(ARCHIVE_STREAM, STATIONS_ENTRY);
 			saxParser.parse(is, sf);
 		} catch (DoneWithSiteException dwse) {
-			System.err.println(dwse.getLocalizedMessage());
+			// System.err.println(dwse.getLocalizedMessage());
+			throw new RuntimeException(dwse);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			throw ex;
 		}
 		return sf.getTideStation();
 	}
 
-	public static void setVerbose(boolean verbose) {
+	@Override
+	public void setVerbose(boolean verbose) {
 		BackEndXMLTideComputer.verbose = verbose;
 	}
 
-	public static class StationFinder extends DefaultHandler {
+	private static class StationFinder extends DefaultHandler {
 		private String stationName = "";
 		private TideStation ts = null;
 		private Map<String, TideStation> stationMap = null;
@@ -186,7 +199,7 @@ public class BackEndXMLTideComputer {
 		}
 	}
 
-	public static class SpeedConstituentFinder extends DefaultHandler {
+	private static class SpeedConstituentFinder extends DefaultHandler {
 		private Constituents.ConstSpeed constituent = null;
 		private Constituents constituents = null;
 
@@ -281,7 +294,7 @@ public class BackEndXMLTideComputer {
 		}
 	}
 
-	public static class DoneWithSiteException extends SAXException {
+	private static class DoneWithSiteException extends SAXException {
 		@SuppressWarnings("compatibility:4149777882983149063")
 		public final static long serialVersionUID = 1L;
 

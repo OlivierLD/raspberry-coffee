@@ -1,28 +1,26 @@
 package tideengine;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.xml.sax.InputSource;
+import tideengine.contracts.BackendDataComputer;
 
 import javax.annotation.Nonnull;
-import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
  * Access method agnostic front end.
- * Calls the right methods, depending on the chosen option (XML, SQL, JAVA, json, etc)
+ * Calls the right methods, depending on the chosen option (XML, SQL, JSON, etc)
  */
 public class BackEndTideComputer {
 
 	public enum Option {
 		XML,
-		SQLITE
+		SQLITE,
+		JSON
 	}
 
 	private static Option flavor = Option.XML;
@@ -38,11 +36,24 @@ public class BackEndTideComputer {
 		}
 	}
 
+	private BackendDataComputer dataComputer = null;
+
 	private static Constituents constituentsObject = null;
 	private static Stations stationsObject = null;
 
 	private static boolean verbose = "true".equals(System.getProperty("tide.verbose", "false"));
 	private static boolean dataVerbose = "true".equals(System.getProperty("data.verbose", "false"));
+
+	public BackEndTideComputer() {
+		if (flavor == Option.XML) {
+			this.dataComputer = new BackEndXMLTideComputer();
+		} else if (flavor == Option.SQLITE) {
+			this.dataComputer = new BackEndSQLITETideComputer();
+		} else {
+			// TODO Other flavors...
+			throw new RuntimeException(String.format("Flavor %s not supported yet.", flavor));
+		}
+	}
 
 	public static Stations getStations() {
 		return stationsObject;
@@ -53,34 +64,22 @@ public class BackEndTideComputer {
 	}
 
 	// Manage connection types. XML, SQL, etc.
-	public static void connect() throws Exception {
+	public void connect() throws Exception {
 		if (verbose) {
 			System.out.printf("Connecting (%s)\n", flavor);
 		}
 		long before = 0L, after = 0L;
-		if (flavor == Option.XML) {
-			BackEndXMLTideComputer.setVerbose(verbose);
-			BackEndXMLTideComputer.connect();
-		} else if (flavor == Option.SQLITE) {
-			// verbose...
-			BackEndSQLITETideComputer.setVerbose(verbose);
-			BackEndSQLITETideComputer.connect();
-		} else {
-			System.out.printf("%s to be implemented...\n", flavor);
-		}
+
+		this.dataComputer.setVerbose(verbose);
+		this.dataComputer.connect();
+
 		if (verbose) {
 			before = System.currentTimeMillis();
 		}
-		if (flavor == Option.XML) {
-			constituentsObject = BackEndXMLTideComputer.buildConstituents(); // Uses SAX
-			stationsObject = BackEndXMLTideComputer.getTideStations();       // Uses SAX
-		} else if (flavor == Option.SQLITE) {
-			System.out.printf(">> Note: %s is being implemented...\n", flavor);
-			constituentsObject = BackEndSQLITETideComputer.buildConstituents();
-			stationsObject = BackEndSQLITETideComputer.getTideStations();
-		} else {
-			System.out.printf("%s to be implemented...\n", flavor);
-		}
+
+		constituentsObject = this.dataComputer.buildConstituents();
+		stationsObject = this.dataComputer.getTideStations();
+
 		if (verbose) {
 			after = System.currentTimeMillis();
 			System.out.println("Objects loaded in " + Long.toString(after - before) + " ms");
@@ -99,15 +98,11 @@ public class BackEndTideComputer {
 		}
 	}
 
-	public static void disconnect() throws Exception {
+	public void disconnect() throws Exception {
 		if (verbose) {
 			System.out.printf("Disconnecting (%s)\n", flavor);
 		}
-		if (flavor == Option.XML) {
-			BackEndXMLTideComputer.disconnect();
-		} else if (flavor == Option.SQLITE) {
-			BackEndSQLITETideComputer.disconnect();
-		}
+		this.dataComputer.disconnect();
 	}
 
 	public static List<Coefficient> buildSiteConstSpeed() throws Exception {
@@ -125,7 +120,7 @@ public class BackEndTideComputer {
 		return d;
 	}
 
-	public static TideStation findTideStation(String stationName, int year) throws Exception {
+	public TideStation findTideStation(String stationName, int year) throws Exception {
 		TideStation ts = findTideStation(stationName, year, constituentsObject, stationsObject);
 		return ts;
 	}
@@ -135,52 +130,9 @@ public class BackEndTideComputer {
 		return alts;
 	}
 
-	public static TreeMap<String, TideUtilities.StationTreeNode> buildStationTree() {
+	public static Map<String, TideUtilities.StationTreeNode> buildStationTree() {
 		TreeMap<String, TideUtilities.StationTreeNode> st = TideUtilities.buildStationTree(stationsObject);
 		return st;
-	}
-
-	public static InputStream getZipInputStream(String zipStream, String entryName) throws Exception {
-		ZipInputStream zip = new ZipInputStream(BackEndXMLTideComputer.class.getResourceAsStream(zipStream));
-		InputStream is = null;
-		boolean go = true;
-		while (go) {
-			ZipEntry ze = zip.getNextEntry();
-			if (ze == null) {
-				go = false;
-			} else {
-				if (ze.getName().equals(entryName)) {
-					is = zip;
-					go = false;
-				}
-			}
-		}
-		if (is == null) {
-			throw new RuntimeException("Entry " + entryName + " not found in " + zipStream.toString());
-		}
-		return is;
-	}
-
-	public static InputSource getZipInputSource(String zipStream, String entryName) throws Exception {
-		ZipInputStream zip = new ZipInputStream(BackEndXMLTideComputer.class.getResourceAsStream(zipStream));
-		InputSource is = null;
-		boolean go = true;
-		while (go) {
-			ZipEntry ze = zip.getNextEntry();
-			if (ze == null) {
-				go = false;
-			} else {
-				if (ze.getName().equals(entryName)) {
-					is = new InputSource(zip);
-					is.setEncoding("ISO-8859-1");
-					go = false;
-				}
-			}
-		}
-		if (is == null) {
-			throw new RuntimeException("Entry " + entryName + " not found in " + zipStream.toString());
-		}
-		return is;
 	}
 
 	public static List<Coefficient> buildSiteConstSpeed(Constituents doc) throws Exception {
@@ -222,7 +174,7 @@ public class BackEndTideComputer {
 		return d;
 	}
 
-	public static TideStation findTideStation(@Nonnull  String stationName, int year, @Nonnull Constituents constituents, @Nonnull Stations stations) throws Exception {
+	public TideStation findTideStation(@Nonnull  String stationName, int year, @Nonnull Constituents constituents, @Nonnull Stations stations) throws Exception {
 		long before = System.currentTimeMillis();
 		TideStation station = stations.getStations().get(stationName);
 		if (station == null) { // Try match
@@ -279,8 +231,8 @@ public class BackEndTideComputer {
 		return station;
 	}
 
-	private static TideStation reloadTideStation(String stationName) throws Exception {
-		TideStation ts = BackEndXMLTideComputer.reloadOneStation(stationName);
+	private TideStation reloadTideStation(String stationName) throws Exception {
+		TideStation ts = this.dataComputer.reloadOneStation(stationName);
 		return ts;
 	}
 
@@ -302,8 +254,8 @@ public class BackEndTideComputer {
 		return stationData;
 	}
 
-	public static void setVerbose(boolean v) {
+	public void setVerbose(boolean v) {
 		verbose = v;
-		BackEndXMLTideComputer.setVerbose(v);
+		this.dataComputer.setVerbose(v);
 	}
 }

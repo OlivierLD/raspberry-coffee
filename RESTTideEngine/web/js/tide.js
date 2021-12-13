@@ -174,7 +174,7 @@ var getTideTable = function(station, at, tz, step, unit, withDetails, nbDays) {
 };
 
 var getPublishedDoc = function(station, options) {
-	var url = "/publish/" + encodeURIComponent(station);
+	var url = "/tide/publish/" + fixedEncodeURIComponent(station);
 	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
 };
 
