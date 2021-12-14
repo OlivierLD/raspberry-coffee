@@ -5,9 +5,12 @@ import tideengine.contracts.BackendDataComputer;
 import tideengine.utils.ZipUtils;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class BackEndJSONTideComputer implements BackendDataComputer {
@@ -45,12 +48,10 @@ public class BackEndJSONTideComputer implements BackendDataComputer {
 				factors.keySet().forEach(year -> {
 					constSpeed.getFactors().put(Integer.parseInt(year), factors.get(year));
 				});
-				// constSpeed.getFactors().putAll((Map)one.get("factors"));
 				Map<String, Double> equilibrium = (Map)one.get("equilibrium");
 				equilibrium.keySet().forEach(year -> {
 					constSpeed.getEquilibrium().put(Integer.parseInt(year), factors.get(year));
 				});
-				// constSpeed.getEquilibrium().putAll((Map)one.get("equilibrium"));
 				constituents.getConstSpeedMap().put(k, constSpeed);
 			});
 		} catch (Exception ex) {
