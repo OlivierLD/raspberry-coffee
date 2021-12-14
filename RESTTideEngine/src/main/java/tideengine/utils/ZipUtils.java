@@ -4,12 +4,18 @@ import org.xml.sax.InputSource;
 import tideengine.BackEndXMLTideComputer;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class ZipUtils {
+
     public static InputStream getZipInputStream(String zipStream, String entryName) throws Exception {
-        ZipInputStream zip = new ZipInputStream(BackEndXMLTideComputer.class.getResourceAsStream(zipStream));
+        return getZipInputStream(BackEndXMLTideComputer.class, zipStream, entryName);
+    }
+
+    public static InputStream getZipInputStream(Class fromClass, String zipStream, String entryName) throws Exception {
+        ZipInputStream zip = new ZipInputStream(fromClass.getResourceAsStream(zipStream));
         InputStream is = null;
         boolean go = true;
         while (go) {
@@ -30,7 +36,11 @@ public class ZipUtils {
     }
 
     public static InputSource getZipInputSource(String zipStream, String entryName) throws Exception {
-        ZipInputStream zip = new ZipInputStream(BackEndXMLTideComputer.class.getResourceAsStream(zipStream));
+        return getZipInputSource(BackEndXMLTideComputer.class, zipStream, entryName);
+    }
+
+    public static InputSource getZipInputSource(Class fromClass, String zipStream, String entryName) throws Exception {
+        ZipInputStream zip = new ZipInputStream(fromClass.getResourceAsStream(zipStream));
         InputSource is = null;
         boolean go = true;
         while (go) {

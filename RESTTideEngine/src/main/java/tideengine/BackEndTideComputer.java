@@ -50,6 +50,8 @@ public class BackEndTideComputer {
 			this.dataComputer = new BackEndXMLTideComputer();
 		} else if (flavor == Option.SQLITE) {
 			this.dataComputer = new BackEndSQLITETideComputer();
+		} else if (flavor == Option.JSON) {
+			this.dataComputer = new BackEndJSONTideComputer();
 		} else {
 			// TODO Other flavors...
 			throw new RuntimeException(String.format("Flavor %s not supported yet.", flavor));

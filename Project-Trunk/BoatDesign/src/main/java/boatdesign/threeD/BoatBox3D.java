@@ -379,7 +379,7 @@ public class BoatBox3D extends Box3D {
                 }
             }
 
-            // The actual beziers
+            // The actual Béziers
             g2d.setColor(Color.RED);
             g2d.setStroke(new BasicStroke(2));
             from = null;
