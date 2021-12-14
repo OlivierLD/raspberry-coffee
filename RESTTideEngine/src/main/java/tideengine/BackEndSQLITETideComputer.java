@@ -157,6 +157,9 @@ public class BackEndSQLITETideComputer implements BackendDataComputer {
 				ResultSet rs = statement.executeQuery(selectStatement_01);
 				while (rs.next()) {
 					String fullName = rs.getString(1);
+//					if (fullName.contains("Navalo")) {
+//						System.out.println("Yeah!");
+//					}
 					BigDecimal latitude = rs.getBigDecimal(2);
 					BigDecimal longitude = rs.getBigDecimal(3);
 					String tzOffset = rs.getString(4);
@@ -189,7 +192,9 @@ public class BackEndSQLITETideComputer implements BackendDataComputer {
 						String coeffName = coefficientsRS.getString(1);
 						BigDecimal amplitude = coefficientsRS.getBigDecimal(2);
 						BigDecimal epoch = coefficientsRS.getBigDecimal(3);
-						tideStation.getHarmonics().add(new Harmonic(coeffName, amplitude.doubleValue(), epoch.doubleValue()));
+						tideStation.getHarmonics().add(new Harmonic(coeffName,
+								                                    amplitude.doubleValue(),
+								                                 epoch.doubleValue() * TideUtilities.COEFF_FOR_EPOCH));
 					}
 					coefficientsRS.close();
 					preparedStatement_02.close();

@@ -88,7 +88,7 @@ public class BackEndJSONTideComputer implements BackendDataComputer {
 				((List)tsMap.get("harmonics")).forEach(h ->
 					ts.getHarmonics().add(new Harmonic((String)((Map)h).get("name"),
 							                           (Double)((Map)h).get("amplitude"),
-							                           (Double)((Map)h).get("epoch"))));
+							                           (Double)((Map)h).get("epoch") * TideUtilities.COEFF_FOR_EPOCH)));
 				stationData.put(fullName, ts);
 			});
 		} catch (Exception ex) {
