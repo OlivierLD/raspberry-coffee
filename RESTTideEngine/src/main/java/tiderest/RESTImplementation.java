@@ -69,7 +69,7 @@ public class RESTImplementation {
 					"GET",
 					TIDE_PREFIX + "/tide-stations",
 					this::getStationsList,
-					"Get Tide Stations list. Returns an array of Strings containing the Station full names. Paginable, supports 'filter', 'limit' and 'offset' optional query string parameters. Default offset is 0, default limit is none."),
+					"Get Tide Stations list. Returns an array of Strings containing the Station full names. Paginable, supports 'filter' (on station name), 'limit' and 'offset' optional query string parameters. Default offset is 0, default limit is none."),
 			new Operation(
 					"GET",
 					TIDE_PREFIX + "/coeff-definitions",
@@ -89,7 +89,12 @@ public class RESTImplementation {
 					"POST",
 					TIDE_PREFIX + "/tide-stations/{station-name}/wh",
 					this::getWaterHeight,
-					"Creates a Water Height request for the {station}. Requires 2 query params: from, and to, in Duration format. Station Name might need encoding/escaping. Can also take a json body payload."),
+					"Creates a Water Height request for the {station}. Requires 2 QS params: from, and to, in Duration format. Station Name might need encoding/escaping. Can also take a json body payload, like { \"timezone\": \"America/Los_Angeles\", \"step\": 10, \"unit\": \"feet\" }"),
+			new Operation(
+					"GET",
+					TIDE_PREFIX + "/tide-stations/{station-name}/wh",
+					this::getWaterHeight,
+					"Creates a Water Height request for the {station}. Requires 2 QS params: from, and to, in Duration format. Station Name might need encoding/escaping. No body payload, obviously."),
 			new Operation(
 					"POST",
 					TIDE_PREFIX + "/publish/{station-name}",
@@ -485,7 +490,7 @@ public class RESTImplementation {
 									now.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
 
 
-									while (now.before(upTo)) {
+									while (now.before(upTo) || now.equals(upTo)) {
 										double wh = TideUtilities.getWaterHeight(ts, this.tideRequestManager.getConstSpeed(), now);
 										TimeZone.setDefault(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone())); // for TS Timezone display
 	//							  System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + stationName + " at " + cal.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());

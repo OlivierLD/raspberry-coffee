@@ -5,7 +5,9 @@ This project intends to be a Proof of Concept.
 This is a tentative Tide Application, based on Server-Side Java implementing REST APIs for a Tide Computer.
 The rendering will be done through HTML5 and JavaScript querying the REST APIs.
 
-If that one works, then we can really move away from Swing.
+If that one works, then we can really move away from Swing.  
+This being said, as this project also contains the tide engine, it can be
+used from any Java application, including Swing applications. 
 
 ```
  /GET /tide/tide-stations
@@ -90,6 +92,14 @@ Implements **two** REST Request Managers.
 
 ![Class Diagram](./docimg/ClassDiagram.png)
 
+> Several implementations of the data storage (coefficients, tide stations) are
+> available. For now, we have
+> - XML
+> - SQLITE
+> - JSON  
+>
+> The `XML` and `JSON` storages are available as Resources. The `SQLITE` db file is external. 
+
 ### Why are we using XML instead of the raw `txt` file?
 The format of the harmonic files is a proprietary format. To be used efficiently, the file has to
 be parsed and loaded in memory for the data it contains to be available in a timely manner.
@@ -111,7 +121,7 @@ the SAX parser scans it until the expected data are found.
 ```bash
  $ ../gradlew [--no-daemon] clean shadowJar
 ```
-- Then start then server
+- Then start the server
 ```bash
  $ ./runTideServ.sh
 
@@ -134,7 +144,7 @@ the SAX parser scans it until the expected data are found.
                  ____\///_____\///__\////////____\////////__
 
 Starting the Tide Rest Server
-Objects loaded in 1203 ms
+Objects loaded in 1,203 ms
 Running on port 9999
 Objects loaded in 874 ms
 Using Delta-T:68.803300
@@ -182,7 +192,7 @@ You need to proceed in two steps:
 - Download it
 
 #### REST Clients
-Any REST Client can access the services. Postman, node-red, anyone!
+Any REST Client can access the services. curl, Postman, node-red, anyone!
 
 ![Node-red](./docimg/node-red.png)
 
