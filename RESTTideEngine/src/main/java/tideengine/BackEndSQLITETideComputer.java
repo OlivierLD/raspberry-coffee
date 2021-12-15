@@ -2,6 +2,7 @@ package tideengine;
 
 import tideengine.contracts.BackendDataComputer;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -21,7 +22,7 @@ import java.util.Set;
 
 public class BackEndSQLITETideComputer implements BackendDataComputer {
 
-	// TODO DB Path from System variable...
+	// Default DB Path, possibly overridden by a System variable -Ddb.path...
 	public final static String DB_PATH = "sql/tides.db";
 
 	private static boolean verbose = false;
@@ -30,9 +31,19 @@ public class BackEndSQLITETideComputer implements BackendDataComputer {
 
 	@Override
 	public void connect() throws Exception {
+
+		String dbPath = System.getProperty("db.path", DB_PATH);
+		// Does the DB exist?
+		File dbFile = new File(dbPath);
+		if (!dbFile.exists()) {
+			throw new Exception(String.format("DB file %s not found.", dbFile.getAbsolutePath()));
+		} else if (verbose) {
+			System.out.printf("% exists, moving on.\n", dbFile.getAbsolutePath());
+		}
+
 		try {
 			Class.forName("org.sqlite.JDBC");
-			String dbURL = String.format("jdbc:sqlite:%s", DB_PATH); // <- Make sure that one exists, or throw exception...
+			String dbURL = String.format("jdbc:sqlite:%s", dbPath); // <- Make sure that one exists, or throw exception...
 			conn = DriverManager.getConnection(dbURL);
 			if (conn != null) {
 				System.out.println("Connected to the database");
