@@ -50,7 +50,7 @@ public class BackEndJSONTideComputer implements BackendDataComputer {
 				});
 				Map<String, Double> equilibrium = (Map)one.get("equilibrium");
 				equilibrium.keySet().forEach(year -> {
-					constSpeed.getEquilibrium().put(Integer.parseInt(year), factors.get(year));
+					constSpeed.getEquilibrium().put(Integer.parseInt(year), equilibrium.get(year));
 				});
 				constituents.getConstSpeedMap().put(k, constSpeed);
 			});
@@ -88,7 +88,7 @@ public class BackEndJSONTideComputer implements BackendDataComputer {
 				((List)tsMap.get("harmonics")).forEach(h ->
 					ts.getHarmonics().add(new Harmonic((String)((Map)h).get("name"),
 							                           (Double)((Map)h).get("amplitude"),
-							                           (Double)((Map)h).get("epoch") * TideUtilities.COEFF_FOR_EPOCH)));
+							                        ((Double)((Map)h).get("epoch")) * TideUtilities.COEFF_FOR_EPOCH)));
 				stationData.put(fullName, ts);
 			});
 		} catch (Exception ex) {

@@ -408,6 +408,7 @@ public class RESTImplementation {
 						} else {
 							ts = optTs.get();
 						}
+
 						if (proceed) {
 							// Calculate water height, from-to;
 							TideTable tideTable = new TideTable();
@@ -425,8 +426,10 @@ public class RESTImplementation {
 								Date fromDate = DURATION_FMT.parse(fromPrm);
 								Date toDate = DURATION_FMT.parse(toPrm);
 								calFrom = Calendar.getInstance();
+								calFrom.setTimeZone(TimeZone.getTimeZone(tideTable.timeZone));
 								calFrom.setTime(fromDate);
 								calTo = Calendar.getInstance();
+								calTo.setTimeZone(TimeZone.getTimeZone(tideTable.timeZone));
 								calTo.setTime(toDate);
 								if (calTo.before(calFrom)) {
 									response = HTTPServer.buildErrorResponse(response,
@@ -446,6 +449,9 @@ public class RESTImplementation {
 							}
 
 							if (proceed) {
+								// IMPORTANT: re-init TideStation to takes the year in account.
+								ts = tideRequestManager.getBackEndTideComputer().findTideStation(stationFullName, calFrom.get(Calendar.YEAR));
+
 								Calendar now = (Calendar)calFrom.clone();
 								Calendar upTo = (Calendar)calTo.clone();
 
