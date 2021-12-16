@@ -4,9 +4,9 @@
 # Query the water height for Port-Tudy for the current time.
 #
 # Use it with jq if VERBOSE == false (see below).
-# ./curl.tide.sh | jq
+# ./curl.tide.1.sh | jq
 #   or
-# ./curl.tide.sh | jq '.heights | objects[] | .wh'
+# ./curl.tide.1.sh | jq '.heights | objects[] | .wh'
 #
 # jq cheatsheet https://lzone.de/cheat-sheet/jq
 #
@@ -29,7 +29,7 @@ NOW=$(date +"%Y-%m-%dT%T")
 REQUEST="http://localhost:${HTTP_PORT}/tide/tide-stations/${TIDE_STATION}/wh?from=${NOW}&to=${NOW}"
 HEADER="Content-Type: application/json"
 # Payload is optional
-# PAYLOAD="{ \"timezone\": \"America/Los_Angeles\", \"step\": 10, \"unit\": \"feet\" }"
+PAYLOAD="{ \"timezone\": \"America/Los_Angeles\", \"step\": 10, \"unit\": \"feet\" }"
 #
 if [[ "${VERBOSE}" == "true" ]]
 then

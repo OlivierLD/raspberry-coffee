@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gsg.SwingUtils.Box3D;
 import gsg.VectorUtils;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
