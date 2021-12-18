@@ -26,7 +26,7 @@ TIDE_STATION=$(echo ${TIDE_STATION/ /%20})
 NOW=$(date +"%Y-%m-%dT%T")
 #
 # REQUEST="http://localhost:${HTTP_PORT}/tide/tide-stations/${TIDE_STATION}/wh?from=${NOW}&to=2021-12-16T00:00:01"
-REQUEST="http://localhost:${HTTP_PORT}/tide/tide-stations/${TIDE_STATION}/wh?from=${NOW}&to=${NOW}"
+REQUEST="http://localhost:${HTTP_PORT}/tide/tide-stations/${TIDE_STATION}/wh/details?from=${NOW}&to=${NOW}"
 HEADER="Content-Type: application/json"
 # Payload is optional
 PAYLOAD="{ \"timezone\": \"America/Los_Angeles\", \"step\": 10, \"unit\": \"feet\" }"

@@ -489,7 +489,6 @@ public class RESTImplementation {
 									TIME_FMT.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
 									now.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
 
-
 									while (now.before(upTo) || now.equals(upTo)) {
 										double wh = TideUtilities.getWaterHeight(ts, this.tideRequestManager.getConstSpeed(), now);
 										TimeZone.setDefault(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone())); // for TS Timezone display
@@ -527,7 +526,7 @@ public class RESTImplementation {
 												List<DataPoint> oneCurve = new ArrayList<>();
 												Calendar _now = (Calendar) _reference.clone();
 												_now.setTimeZone(TimeZone.getTimeZone(tztu != null ? tztu : fts.getTimeZone()));
-												while (_now.before(_calTo)) {
+												while (_now.before(_calTo) || _now.equals(_calTo)) {
 													int year = _now.get(Calendar.YEAR);
 													// Calc Jan 1st of the current year
 													Date jan1st = new GregorianCalendar(year, 0, 1).getTime();
