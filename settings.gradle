@@ -41,6 +41,7 @@ include "http-client-paradigm"
 include "http-client-samples"
 include "polo-shirt"
 include "RESTNavServer"
+include "TideEngine"
 include "RESTTideEngine"
 include "RESTNauticalAlmanac"
 include 'RESTImageProcessor'
