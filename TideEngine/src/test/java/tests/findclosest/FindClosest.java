@@ -1,5 +1,6 @@
 package tests.findclosest;
 
+import calc.GeoPoint;
 import calc.calculation.AstroComputer;
 import tideengine.BackEndTideComputer;
 import tideengine.Coefficient;
@@ -69,7 +70,8 @@ public class FindClosest {
 
         if (ts != null) {
             String location = URLDecoder.decode(ts.getFullName(), "UTF-8");
-            System.out.println(String.format("%s, distance %.02f nm.",
+            System.out.println(String.format(">> From %s, closest station is %s, distance %.02f nm.",
+                    new GeoPoint(USER_POS_LATITUDE, USER_POS_LONGITUDE),
                     location,
                     60d * Math.toDegrees(getDistance(Math.toRadians(USER_POS_LATITUDE),
                             Math.toRadians(USER_POS_LONGITUDE),

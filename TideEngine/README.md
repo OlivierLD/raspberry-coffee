@@ -27,8 +27,8 @@ Using a SAX Parser allows the amount of required memory to substantially shrink.
 As opposed to a DOM Parser that loads the DOM representation of the document in memory,
 the SAX parser scans it until the expected data are found.
 
-> Note about the encoding: The XML Data are 'ISO-8859-1' encoded. For an easier access, those
-> elements (mainly the String elements, like station names) are returned as 'UTF-8' encoded by the REST API.
+> Note about the encoding: The XML Data are `ISO-8859-1` encoded.  
+> For an easier access, those elements (mainly the String elements, like station names) are returned as `UTF-8` encoded data by REST APIs.
 
 Some basic tests are available in the `tests` folder.
 
