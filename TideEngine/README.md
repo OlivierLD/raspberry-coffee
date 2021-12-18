@@ -1,5 +1,4 @@
-## Tide Engine
-
+## Tide Engine  🌊
 
 > Several implementations of the data storage (coefficients, tide stations) are
 > available. For now, we have
@@ -11,7 +10,7 @@
 
 The XML engine is based on XML data, stored in `xml.zip`. Those data are generated after the
 harmonic data files found in the `harmonics` directory.
-Re-generating those is not necessary, but in case you're interested, run
+Re-generating those coefficients is not necessary, but in case you're interested, run
 ```bash
  $ ../gradlew harmonicsXML
 ```
