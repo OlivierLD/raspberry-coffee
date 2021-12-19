@@ -2,6 +2,7 @@ Moved to <https://github.com/OlivierLD/oliv-ai>
 
 ### OpenCV (for Java) on the Raspberry Pi?
 - Build instructions moved [here](https://github.com/OlivierLD/oliv-ai/tree/master/opencv).
+- On other systems, this might also be interesting: <https://github.com/OlivierLD/oliv-ai/tree/master/opencv/OpenCV.Java.md>
 
 After building and installing, quick test, from Python
 ```
