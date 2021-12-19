@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--
+ | This is a test, WiP.
+ | Faxes from the Internet, rotated and re-scaled
+ +-->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <title>Internet Faxes</title>
+    <link rel="icon" type="image/ico" href="../icons/hammerhead.02.ico">
+    <link rel="stylesheet" href="../css/white.css" type="text/css"/>
+    <style>
+    .fax-container {
+      display: grid;
+      grid-template-columns: 450px 450px;
+      padding: 0px;
+      /* margin: auto; */
+    }
+    </style>
+</head>
+<body>
+  <h2>Faxes from the Internet</h2>
+
+<!-- North-West Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA12.gif -->
+<!-- North-East Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA11.gif -->
+<!-- North Atlantic 500mb: https://tgftp.nws.noaa.gov/fax/PPAA10.gif -->
+
+  <div id="placeholder" class="fax-container" style="padding-top: 35px;">
+      <img id="left" src="https://tgftp.nws.noaa.gov/fax/PYAA12.gif"></img>
+      <img id="right" src="https://tgftp.nws.noaa.gov/fax/PYAA11.gif"></img>
+  </div>
+
+</body>
+<script type="text/javascript">
+    window.onload = () => {
+      const leftFax = document.getElementById('left');
+      leftFax.style.width = '600px';
+      leftFax.style.height = 'auto';
+      leftFax.style.transform = 'rotate(90deg)';
+      leftFax.style.filter = 'opacity(1.0)';
+      // leftFax.setAttribute("style", "transform: rotate(90deg)");
+
+      const rightFax = document.getElementById('right');
+      rightFax.style.width = '600px';
+      rightFax.style.height = 'auto';
+      rightFax.style.transform = 'rotate(90deg)';
+      rightFax.style.filter = 'opacity(1.0)';
+      rightFax.style.marginLeft = '-33px';
+      rightFax.style.zIndex = '-1';
+    };
+</script>
+</html>
