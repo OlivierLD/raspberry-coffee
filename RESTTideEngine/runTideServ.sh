@@ -62,6 +62,7 @@ then
   if [[ "${XDG}" != "" ]]
   then
     sleep 10 && \
+      echo -e "Opening a browser..." && \
       xdg-open http://localhost:${HTTP_PORT}/web/index.html &
   else
     echo -e "xdg-open not found on this system..."
