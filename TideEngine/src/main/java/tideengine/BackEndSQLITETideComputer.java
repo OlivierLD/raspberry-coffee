@@ -38,7 +38,7 @@ public class BackEndSQLITETideComputer implements BackendDataComputer {
 		if (!dbFile.exists()) {
 			throw new Exception(String.format("DB file %s not found.", dbFile.getAbsolutePath()));
 		} else if (verbose) {
-			System.out.printf("% exists, moving on.\n", dbFile.getAbsolutePath());
+			System.out.printf("%s exists, moving on.\n", dbFile.getAbsolutePath());
 		}
 
 		try {

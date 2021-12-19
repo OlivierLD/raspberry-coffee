@@ -7,7 +7,7 @@ echo -e "Starting the Tide Rest Server"
 CP=./build/libs/RESTTideEngine-1.0-all.jar
 JAVA_OPTS=
 # JAVA_OPTS="${JAVA_OPTS} -Dhttp.verbose=true"
-JAVA_OPTS="${JAVA_OPTS} -Dtide.verbose=true"
+# JAVA_OPTS="${JAVA_OPTS} -Dtide.verbose=true" # See below - script prm management.
 # JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
 # JAVA_OPTS="$JAVA_OPTS -Ddata.verbose=true"
 export HTTP_PORT=8080
@@ -18,6 +18,23 @@ JAVA_OPTS="${JAVA_OPTS} -DdeltaT=AUTO"
 # JAVA_OPTS="${JAVA_OPTS} -Dtide.flavor=SQLITE"
 # JAVA_OPTS="${JAVA_OPTS} -Ddb.path=other.db"  # Overrides the default sql/tides.db
 # JAVA_OPTS="${JAVA_OPTS} -Dtide.flavor=JSON"
+#
+# Process script args
+for ARG in "$@"
+do
+	echo -e "Managing prm $ARG"
+  if [[ ${ARG} == "--flavor:"* ]]
+	then
+	  FLAVOR=${ARG#*:}
+    JAVA_OPTS="${JAVA_OPTS} -Dtide.flavor=${FLAVOR}"
+	elif [[ "$ARG" == "-v" ]] || [[ "$ARG" == "--verbose" ]]
+	then
+    JAVA_OPTS="${JAVA_OPTS} -Dtide.verbose=true"
+  else
+    echo -e "Parameter ${ARG} not managed."
+    echo -e "See the script $0 for details."
+  fi
+done
 #
 # Do a curl http://localhost:${HTTP_PORT}/tide/oplist
 # ./oplist.sh &
