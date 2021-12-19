@@ -3,6 +3,8 @@
 #
 cat rest.txt
 echo -e "Starting the Tide Rest Server"
+echo -e "Also try:"
+echo -e "$0 --verbose --browser --oplist:false --flavor:SQLITE"
 #
 CP=./build/libs/RESTTideEngine-1.0-all.jar
 JAVA_OPTS=
