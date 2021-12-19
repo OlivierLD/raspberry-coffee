@@ -19,6 +19,7 @@ JAVA_OPTS="${JAVA_OPTS} -DdeltaT=AUTO"
 # JAVA_OPTS="${JAVA_OPTS} -Ddb.path=other.db"  # Overrides the default sql/tides.db
 # JAVA_OPTS="${JAVA_OPTS} -Dtide.flavor=JSON"
 #
+OPEN_BROWSER=false
 # Process script args
 for ARG in "$@"
 do
@@ -30,6 +31,9 @@ do
 	elif [[ "$ARG" == "-v" ]] || [[ "$ARG" == "--verbose" ]]
 	then
     JAVA_OPTS="${JAVA_OPTS} -Dtide.verbose=true"
+	elif [[ "$ARG" == "-b" ]] || [[ "$ARG" == "--browser" ]]
+	then
+	  OPEN_BROWSER=true
   else
     echo -e "Parameter ${ARG} not managed."
     echo -e "See the script $0 for details."
@@ -43,6 +47,17 @@ sleep 10 && \
     curl -X GET http://localhost:${HTTP_PORT}/tide/oplist | jq &
 #
 echo -e "For basic UI, from a browser, reach http://localhost:${HTTP_PORT}/web/index.html"
+if [[ "${OPEN_BROWSER}" == "true" ]]
+then
+  XDG=$(which xdg-open)
+  if [[ "${XDG}" != "" ]]
+  then
+    sleep 10 && \
+      xdg-open http://localhost:${HTTP_PORT}/web/index.html &
+  else
+    echo -e "xdg-open not found on this system..."
+  fi
+fi
 #
 COMMAND="java -cp ${CP} ${JAVA_OPTS} tiderest.TideServer"
 echo -e "Running ${COMMAND}"
