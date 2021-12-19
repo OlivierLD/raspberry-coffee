@@ -20,6 +20,7 @@ JAVA_OPTS="${JAVA_OPTS} -DdeltaT=AUTO"
 # JAVA_OPTS="${JAVA_OPTS} -Dtide.flavor=JSON"
 #
 OPEN_BROWSER=false
+OP_LIST=true
 # Process script args
 for ARG in "$@"
 do
@@ -28,6 +29,9 @@ do
 	then
 	  FLAVOR=${ARG#*:}
     JAVA_OPTS="${JAVA_OPTS} -Dtide.flavor=${FLAVOR}"
+  elif [[ ${ARG} == "--oplist:"* ]]
+	then
+	  OP_LIST=${ARG#*:}
 	elif [[ "$ARG" == "-v" ]] || [[ "$ARG" == "--verbose" ]]
 	then
     JAVA_OPTS="${JAVA_OPTS} -Dtide.verbose=true"
@@ -41,10 +45,13 @@ do
 done
 #
 # Do a curl http://localhost:${HTTP_PORT}/tide/oplist
-# ./oplist.sh &
-sleep 10 && \
-    echo Invoking http://localhost:${HTTP_PORT}/tide/oplist && \
-    curl -X GET http://localhost:${HTTP_PORT}/tide/oplist | jq &
+if [[ "${OP_LIST}" == "true" ]]
+then
+  # ./oplist.sh &
+  sleep 10 && \
+      echo Invoking http://localhost:${HTTP_PORT}/tide/oplist && \
+      curl -X GET http://localhost:${HTTP_PORT}/tide/oplist | jq &
+fi
 #
 echo -e "For basic UI, from a browser, reach http://localhost:${HTTP_PORT}/web/index.html"
 if [[ "${OPEN_BROWSER}" == "true" ]]
