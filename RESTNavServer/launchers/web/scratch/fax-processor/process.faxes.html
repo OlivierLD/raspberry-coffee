@@ -2,6 +2,8 @@
 <!--
  | This is a test, WiP.
  | Faxes from the Internet, rotated and re-scaled
+ | 
+ | copyright OlivSoft, c'est MOI qui l'ai fait.
  +-->
 <html>
 <head>
@@ -9,10 +11,10 @@
     <title>Atlantic Faxes</title>
     <link rel="icon" type="image/ico" href="./hammerhead.02.ico">
     <link rel="stylesheet" href="./white.css" type="text/css"/>
-    <style>
-    .fax-container {
-      display: none;
-    }
+    <style type="text/css">
+      .fax-container {
+        display: none;
+      }
     </style>
     <script type="text/javascript">
         showSurface = (cb) => {
@@ -34,13 +36,19 @@
 <!-- North-East Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA11.gif -->
 <!-- North Atlantic 500mb: https://tgftp.nws.noaa.gov/fax/PPAA10.gif -->
 
-  <!-- TODO Values for the faxes position (CSS width, margins, etc) -->
-
+  <!-- TODO Values for the faxes position (CSS width, margins, etc) ? -->
+  <!-- 
+    This div is NOT displayed.
+    It holds the images to be transformed.
+  -->
   <div id="placeholder" class="fax-container" style="min-height: 600px; min-width: 1024px; padding-top: 40px;">
       <img id="left" src="NW-Atl.gif"></img>
       <img id="right" src="NE-Atl.gif"></img>
       <img id="500mb" src="N-Atl-500mb.gif"></img>
   </div>
+  <!--
+    This one holds the TRANSFORMED images
+  -->
   <div style="min-height: 600px; min-width: 1024px; padding-top: 40px;">
       <canvas id="left-img-canvas" style="width: 1024px; height: 600px;"></canvas>
       <canvas id="right-img-canvas" style="width: 1024px; height: 600px;"></canvas>
@@ -69,9 +77,9 @@
       currentPixels = ctx.getImageData(0, 0, img.width, img.height);
 
       let pix = originalPixels.data;
-      console.log(`There are ${pix.length} pixels.`);
+      // console.log(`There are ${pix.length} pixels.`);
 
-      for (let idx=0; idx<pix.length; idx+=4) {
+      for (let idx=0; idx<pix.length; idx+=4) { // 4 by 4, rgba.
         let r = pix[idx];       // Red
         let g = pix[idx + 1];   // Green
         let b = pix[idx + 2];   // Blue
@@ -91,8 +99,7 @@
         currentPixels.data[idx + 2] = b;
         currentPixels.data[idx + 3] = a;
       }
-      ctx.putImageData(currentPixels, 0, 0);
-      // ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, img.width, img.height);
+      ctx.putImageData(currentPixels, 0, 0);  // Bam!
     };
 
     window.onload = () => {
