@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<!--
+ | This is a test, WiP.
+ | Faxes from the Internet, rotated and re-scaled
+ +-->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <title>Internet Faxes</title>
+    <link rel="icon" type="image/ico" href="../icons/hammerhead.02.ico">
+    <link rel="stylesheet" href="../css/white.css" type="text/css"/>
+    <style>
+    .fax-container {
+      display: none;
+    }
+    </style>
+    <!--script type="text/javascript">
+        showSurface = (cb) => {
+          let left = document.getElementById("left");
+          let right = document.getElementById("right");
+          right.style.display = cb.checked ? 'inline' : 'none';
+          left.style.display = cb.checked ? 'inline' : 'none';
+        };
+        show500mb = (cb) => {
+          let fax500mb = document.getElementById("500mb");
+          fax500mb.style.display = cb.checked ? 'inline' : 'none';
+        };
+    </script-->
+</head>
+<body>
+  <h2>Reworking an image from Internet</h2>
+
+<!-- North-West Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA12.gif -->
+<!-- North-East Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA11.gif -->
+<!-- North Atlantic 500mb: https://tgftp.nws.noaa.gov/fax/PPAA10.gif -->
+
+  <!-- TODO Values for the faxes position (CSS width, margins, etc) -->
+
+  <div id="placeholder" class="fax-container">  <!-- style="min-height: 600px; min-width: 1024px; padding-top: 40px;"> -->
+      <!-- Potential CORS Problem... -->
+      <img id="left" src="./PYAA12.gif" style="display: none;"></img>
+      <!--img id="left" src="https://tgftp.nws.noaa.gov/fax/PYAA12.gif" style="display: none;"></img-->
+  </div>
+
+  <div>
+    <canvas id="img-canvas" style="width: 1024px; height: 600px;">
+    </canvas>
+  </div>
+</body>
+<script type="text/javascript">
+
+    messWithCanvas = (img) => {
+      const canvas = document.getElementById('img-canvas');
+      let ctx = canvas.getContext("2d");
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, img.width, img.height);
+
+      originalPixels = ctx.getImageData(0, 0, img.width, img.height);
+      currentPixels = ctx.getImageData(0, 0, img.width, img.height);
+
+      let pix = originalPixels.data;
+      console.log(`There are ${pix.length} pixels.`);
+
+      for (let idx=0; idx<pix.length; idx+=4) {
+        let r = pix[idx];       // Red
+        let g = pix[idx + 1];   // Green
+        let b = pix[idx + 2];   // Blue
+        let a = pix[idx + 3];   // Alpha
+        // console.log(`rgba(${r},${g},${b},${a})`);
+        if (r === 0 && b === 0 && g === 0) { // black
+          r = 255;  // Change black to red
+        } else if (r === 255 && b === 255 && g === 255) { // white
+          a = 0;    // Make white transparent
+        }
+        currentPixels.data[idx] = r;
+        currentPixels.data[idx + 1] = g;
+        currentPixels.data[idx + 2] = b;
+        currentPixels.data[idx + 3] = a;
+      }
+      ctx.putImageData(currentPixels, 0, 0);
+      // ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, img.width, img.height);
+    };
+
+    window.onload = () => {
+      const leftFax = document.getElementById('left');
+      //leftFax.style.width = '600px';
+      //leftFax.style.height = 'auto';
+      //leftFax.style.transform = 'rotate(90deg)';
+      //leftFax.style.filter = 'opacity(1.0)';
+
+      console.log(`Fax is a HTMLImageElement: ${leftFax instanceof HTMLImageElement}`);
+      // let pix = leftFax.getImageData();
+
+      messWithCanvas(leftFax);
+
+      const reworkedFax = document.getElementById('img-canvas');
+      reworkedFax.style.width = '600px';
+      reworkedFax.style.height = 'auto';
+      reworkedFax.style.transform = 'rotate(90deg)';
+      //reworkedFax.style.filter = 'opacity(1.0)';
+
+      console.log("Yo!");
+    };
+</script>
+</html>

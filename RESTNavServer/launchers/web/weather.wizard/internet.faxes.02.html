@@ -37,12 +37,15 @@
 <!-- North-East Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA11.gif -->
 <!-- North Atlantic 500mb: https://tgftp.nws.noaa.gov/fax/PPAA10.gif -->
 
-  <!-- TODO Values for the faxes position (width, margins, etc) -->
+  <!-- TODO Values for the faxes position (CSS width, margins, etc) -->
 
   <div id="placeholder" class="fax-container" style="min-height: 600px; min-width: 1024px; padding-top: 40px;">
       <img id="left" src="https://tgftp.nws.noaa.gov/fax/PYAA12.gif"></img>
       <img id="right" src="https://tgftp.nws.noaa.gov/fax/PYAA11.gif"></img>
       <img id="500mb" src="https://tgftp.nws.noaa.gov/fax/PPAA10.gif"></img>
+  </div>
+  <div>
+      <canvas id="img-canvas" style="width: 1024px; height: 600px;"></canvas>
   </div>
   <div style="padding-top: 0px;">
       <!-- <input type="checkbox" id="show-surface" onchange="showSurface(this);" checked> Surface Faxes -->

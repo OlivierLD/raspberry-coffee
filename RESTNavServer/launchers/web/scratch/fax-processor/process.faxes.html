@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<!--
+ | This is a test, WiP.
+ | Faxes from the Internet, rotated and re-scaled
+ +-->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <title>Internet Faxes</title>
+    <link rel="icon" type="image/ico" href="./hammerhead.02.ico">
+    <link rel="stylesheet" href="./white.css" type="text/css"/>
+    <style>
+    .fax-container {
+      display: none;
+    }
+    </style>
+    <script type="text/javascript">
+        showSurface = (cb) => {
+          let left = document.getElementById("left-img-canvas");
+          let right = document.getElementById("right-img-canvas");
+          right.style.display = cb.checked ? 'inline' : 'none';
+          left.style.display = cb.checked ? 'inline' : 'none';
+        };
+        show500mb = (cb) => {
+          let fax500mb = document.getElementById("north-img-canvas");
+          fax500mb.style.display = cb.checked ? 'inline' : 'none';
+        };
+    </script>
+</head>
+<body>
+  <h2>Altantic faxes from the Internet</h2>
+
+<!-- North-West Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA12.gif -->
+<!-- North-East Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA11.gif -->
+<!-- North Atlantic 500mb: https://tgftp.nws.noaa.gov/fax/PPAA10.gif -->
+
+  <!-- TODO Values for the faxes position (CSS width, margins, etc) -->
+
+  <div id="placeholder" class="fax-container" style="min-height: 600px; min-width: 1024px; padding-top: 40px;">
+      <img id="left" src="NW-Atl.gif"></img>
+      <img id="right" src="NE-Atl.gif"></img>
+      <img id="500mb" src="N-Atl-500mb.gif"></img>
+  </div>
+  <div style="min-height: 600px; min-width: 1024px; padding-top: 40px;">
+      <canvas id="left-img-canvas" style="width: 1024px; height: 600px;"></canvas>
+      <canvas id="right-img-canvas" style="width: 1024px; height: 600px;"></canvas>
+      <canvas id="north-img-canvas" style="width: 1024px; height: 600px;"></canvas>
+  </div>
+  <div style="padding-top: 0px;">
+      <!-- <input type="checkbox" id="show-surface" onchange="showSurface(this);" checked> Show Surface Faxes -->
+      <input type="checkbox" id="show-500mb" onchange="show500mb(this);" checked> Show 500mb Fax
+  </div>
+</body>
+<script type="text/javascript">
+
+    const TO_RED = 1;
+    const TO_BLUE = 2;
+
+    messWithCanvas = (img, canvasName, changeBlackTo) => {
+      const canvas = document.getElementById(canvasName);
+      let ctx = canvas.getContext("2d");
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, img.width, img.height);
+
+      originalPixels = ctx.getImageData(0, 0, img.width, img.height);
+      currentPixels = ctx.getImageData(0, 0, img.width, img.height);
+
+      let pix = originalPixels.data;
+      console.log(`There are ${pix.length} pixels.`);
+
+      for (let idx=0; idx<pix.length; idx+=4) {
+        let r = pix[idx];       // Red
+        let g = pix[idx + 1];   // Green
+        let b = pix[idx + 2];   // Blue
+        let a = pix[idx + 3];   // Alpha
+        // console.log(`rgba(${r},${g},${b},${a})`);
+        if (r === 0 && b === 0 && g === 0) { // black
+          if (changeBlackTo === TO_RED) {
+            r = 255;  // Change black to red
+          } else if (changeBlackTo === TO_BLUE) {
+            b = 255;  // Chnge black to blue
+          }
+        } else if (r === 255 && b === 255 && g === 255) { // white
+          a = 0;    // Make white transparent
+        }
+        currentPixels.data[idx] = r;
+        currentPixels.data[idx + 1] = g;
+        currentPixels.data[idx + 2] = b;
+        currentPixels.data[idx + 3] = a;
+      }
+      ctx.putImageData(currentPixels, 0, 0);
+      // ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, img.width, img.height);
+    };
+
+    window.onload = () => {
+      const leftFax = document.getElementById('left');
+      const rightFax = document.getElementById('right');
+      const fax500mb = document.getElementById('500mb');
+
+      messWithCanvas(leftFax, 'left-img-canvas', TO_RED);
+      const leftReworkedFax = document.getElementById('left-img-canvas');
+      leftReworkedFax.style.width = '600px';
+      leftReworkedFax.style.height = 'auto';
+      leftReworkedFax.style.transform = 'rotate(90deg)';
+
+      messWithCanvas(rightFax, 'right-img-canvas', TO_RED);
+      const rightReworkedFax = document.getElementById('right-img-canvas');
+      rightReworkedFax.style.width = '600px';
+      rightReworkedFax.style.height = 'auto';
+      rightReworkedFax.style.transform = 'rotate(90deg)';
+      rightReworkedFax.style.marginLeft = '-188px';
+
+      messWithCanvas(fax500mb, 'north-img-canvas', TO_BLUE);
+      const northReworkedFax = document.getElementById('north-img-canvas');
+      northReworkedFax.style.width = '919px';
+      northReworkedFax.style.height = 'auto';
+      northReworkedFax.style.transform = 'rotate(0deg)';
+      northReworkedFax.style.marginLeft = '62px';
+      northReworkedFax.style.marginTop = '-537px';
+    };
+</script>
+</html>
