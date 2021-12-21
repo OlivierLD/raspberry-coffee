@@ -12,13 +12,17 @@ To change colors in an image, you can get to its pixel, by using `getImageData` 
     - To address that, we copy the image(s) locally, before loading the page, from the script `fax.processor.sh`.
 - The same CORS error will be raised if the page is loaded from the file system (`file://`)    
     - To address that, we start a small python http server. Then we can use `http://`.
-    - It could also be the `tiny-http-server`, from this project.
+    - It could also be the `tiny-http-server`, from this project, NodeJS, or whatever can act as an HTTP Server.
   
 ### Rotate, rescale
 This is done on the canvas(es) holding the reworked (colors changed) images,
 with regular CSS (through ES6).
 
 ## Current status
-Start the script `./fax.processor.sh`, and see for yourself.
+Start the script `./fax.processor.sh`, and see for yourself.  
+The script would:
+- Download the expected faxes on the local file system
+- Start a small HTTP Server
+- Open `process.faxes.html` in your default browser, showing the faxes, recolored, rescaled, rotated.
 
 ---

@@ -27,6 +27,10 @@
           let fax500mb = document.getElementById("north-img-canvas");
           fax500mb.style.display = cb.checked ? 'inline' : 'none';
         };
+        showWaves = (cb) => {
+          let faxWaves = document.getElementById("waves-img-canvas");
+          faxWaves.style.display = cb.checked ? 'inline' : 'none';
+        };
     </script>
 </head>
 <body>
@@ -35,6 +39,7 @@
 <!-- North-West Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA12.gif -->
 <!-- North-East Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA11.gif -->
 <!-- North Atlantic 500mb: https://tgftp.nws.noaa.gov/fax/PPAA10.gif -->
+<!-- North Atlantic Sea State: https://tgftp.nws.noaa.gov/fax/PJAA99.gif -->
 
   <!-- TODO Values for the faxes position (CSS width, margins, etc) ? -->
   <!-- 
@@ -45,24 +50,28 @@
       <img id="left" src="NW-Atl.gif"></img>
       <img id="right" src="NE-Atl.gif"></img>
       <img id="500mb" src="N-Atl-500mb.gif"></img>
+      <img id="waves" src="N-Atl-waves.gif"></img>
   </div>
   <!--
     This one holds the TRANSFORMED images
   -->
-  <div style="min-height: 600px; min-width: 1024px; padding-top: 40px;">
-      <canvas id="left-img-canvas" style="width: 1024px; height: 600px;"></canvas>
-      <canvas id="right-img-canvas" style="width: 1024px; height: 600px;"></canvas>
-      <canvas id="north-img-canvas" style="width: 1024px; height: 600px;"></canvas>
+  <div> <!-- style="position: absolute; top: 50px; left: 90px; min-height: 600px; min-width: 1024px; padding-top: 40px;"> -->
+      <canvas id="left-img-canvas" style="position: absolute; top: 50px; left: 50px; z-index: 0;"></canvas>
+      <canvas id="right-img-canvas" style="position: absolute; top: 50px; left: 50px; z-index: 1;"></canvas>
+      <canvas id="north-img-canvas" style="position: absolute; top: 50px; left: 50px; z-index: 2;"></canvas>
+      <canvas id="waves-img-canvas" style="position: absolute; top: 50px; left: 50px; z-index: 3;"></canvas>
   </div>
   <div style="padding-top: 0px;">
-      <!-- <input type="checkbox" id="show-surface" onchange="showSurface(this);" checked> Show Surface Faxes -->
-      <input type="checkbox" id="show-500mb" onchange="show500mb(this);" checked> Show 500mb Fax
+      <input type="checkbox" id="show-surface" onchange="showSurface(this);" checked> Show Surface Faxes<br/>
+      <input type="checkbox" id="show-500mb" onchange="show500mb(this);" checked> Show 500mb Fax<br/>
+      <input type="checkbox" id="show-waves" onchange="showWaves(this);" checked> Show Sea State<br/>
   </div>
 </body>
 <script type="text/javascript">
 
     const TO_RED = 1;
     const TO_BLUE = 2;
+    const TO_GREEN = 3;
 
     messWithCanvas = (img, canvasName, changeBlackTo) => {
       const canvas = document.getElementById(canvasName);
@@ -89,7 +98,13 @@
           if (changeBlackTo === TO_RED) {
             r = 255;  // Change black to red
           } else if (changeBlackTo === TO_BLUE) {
-            b = 255;  // Chnge black to blue
+            b = 255;  // Change black to blue
+          } else if (changeBlackTo === TO_GREEN) {
+            // 47, 79, 47
+            // Change black to green
+            r = 47;
+            g = 79;
+            b = 47;
           }
         } else if (r === 255 && b === 255 && g === 255) { // white
           a = 0;    // Make white transparent
@@ -106,27 +121,46 @@
       const leftFax = document.getElementById('left');
       const rightFax = document.getElementById('right');
       const fax500mb = document.getElementById('500mb');
+      const faxWaves = document.getElementById('waves');
 
       messWithCanvas(leftFax, 'left-img-canvas', TO_RED);
       const leftReworkedFax = document.getElementById('left-img-canvas');
       leftReworkedFax.style.width = '600px';
       leftReworkedFax.style.height = 'auto';
       leftReworkedFax.style.transform = 'rotate(90deg)';
+      // leftReworkedFax.style.marginLeft = '0px';
+      leftReworkedFax.style.top = '160px';
+      leftReworkedFax.style.left = '125px';
 
       messWithCanvas(rightFax, 'right-img-canvas', TO_RED);
       const rightReworkedFax = document.getElementById('right-img-canvas');
       rightReworkedFax.style.width = '600px';
       rightReworkedFax.style.height = 'auto';
       rightReworkedFax.style.transform = 'rotate(90deg)';
-      rightReworkedFax.style.marginLeft = '-188px';
+      // rightReworkedFax.style.marginLeft = '-188px';
+      rightReworkedFax.style.top = '160px';
+      rightReworkedFax.style.left = '541px';
 
       messWithCanvas(fax500mb, 'north-img-canvas', TO_BLUE);
       const northReworkedFax = document.getElementById('north-img-canvas');
       northReworkedFax.style.width = '919px';
       northReworkedFax.style.height = 'auto';
       northReworkedFax.style.transform = 'rotate(0deg)';
-      northReworkedFax.style.marginLeft = '62px';
-      northReworkedFax.style.marginTop = '-537px';
-    };
+      // northReworkedFax.style.marginLeft = '62px';
+      // northReworkedFax.style.marginTop = '-537px';
+      northReworkedFax.style.top = '129px';
+      northReworkedFax.style.left = '187px';
+
+      messWithCanvas(faxWaves, 'waves-img-canvas', TO_GREEN);
+      const waveshReworkedFax = document.getElementById('waves-img-canvas');
+      waveshReworkedFax.style.width = '919px';
+      waveshReworkedFax.style.height = 'auto';
+      waveshReworkedFax.style.transform = 'rotate(0deg)';
+      // waveshReworkedFax.style.marginLeft = '62px';
+      // waveshReworkedFax.style.marginTop = '-537px';
+      waveshReworkedFax.style.top = '129px';
+      waveshReworkedFax.style.left = '187px';
+
+  };
 </script>
 </html>

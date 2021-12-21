@@ -8,6 +8,8 @@ wget https://tgftp.nws.noaa.gov/fax/PYAA12.gif --output-document NW-Atl.gif
 wget https://tgftp.nws.noaa.gov/fax/PYAA11.gif --output-document NE-Atl.gif
 # North Atlantic 500mb: https://tgftp.nws.noaa.gov/fax/PPAA10.gif
 wget https://tgftp.nws.noaa.gov/fax/PPAA10.gif --output-document N-Atl-500mb.gif
+# North Atlantic Sea State
+wget https://tgftp.nws.noaa.gov/fax/PJAA99.gif --output-document N-Atl-waves.gif
 #
 # Start small python server
 # See https://rawsec.ml/en/python-3-simplehttpserver/
