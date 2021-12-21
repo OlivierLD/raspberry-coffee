@@ -24,17 +24,19 @@ echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
 #
 # 3.Open the page
 #
-OS=`uname -a | awk '{ print $1 }'`
-if [[ "$OS" == "Darwin" ]]
-then
+OS=$(uname -a | awk '{ print $1 }')
+if [[ "$OS" == "Darwin" ]]; then
   open http://localhost:8080/process.faxes.html
-else 
-  XDG=$(which xdg-open)
-  if [[ "${XDG}" != "" ]]
-  then
-    xdg-open http://localhost:8080/process.faxes.html
-  else 
-    echo -e "Enable to open the web page... Sorry."  
+else
+  SENSIBLE=$(which sensible-browser)
+  if [[ "${SENSIBLE}" != "" ]]; then
+    sensible-browser http://localhost:8080/process.faxes.html
+  else
+    XDG=$(which xdg-open)
+    if [[ "${XDG}" != "" ]]; then
+      xdg-open http://localhost:8080/process.faxes.html
+    else
+      echo -e "Enable to open the web page... Sorry."
+    fi
   fi
 fi
-
