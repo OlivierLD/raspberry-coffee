@@ -5,11 +5,12 @@
 # Open Web Page (fax re-working is done in there)
 #
 # Usage:
-# ./fax.processor.sh [--flavor:python|node|java] [--port:8080] [--verbose] [--help]
+# ./fax.processor.sh [--flavor:python|node|java] [--port:8080] [--verbose] [--kill-server:true] [--help]
 # defaults:
 # - flavor: python
 # - port: 8080
 # - verbose: false
+# - kill-server: false
 #
 ##################################################################
 #
@@ -19,6 +20,7 @@ echo -e "----------------------------------"
 VERBOSE=false
 SERVER_FLAVOR=python
 HTTP_PORT=8080
+KILL_SERVER=false
 #
 for ARG in "$@"
 do
@@ -29,10 +31,18 @@ do
   elif [[ ${ARG} == "--port:"* ]]
 	then
 	  HTTP_PORT=${ARG#*:}
+  elif [[ ${ARG} == "--kill-server:"* ]]
+	then
+	  KILL_SERVER=${ARG#*:}
 	elif [[ "$ARG" == "-h" ]] || [[ "$ARG" == "--help" ]]
 	then
 	  echo -e "Usage is:"
-    echo -e " ./fax.processor.sh [--flavor:python|node|java] [--port:8080] [--verbose] [--help]"
+    echo -e " ./fax.processor.sh [--flavor:python|node|java] [--port:8080] [--kill-server:true] [--verbose] [--help]"
+    echo -e "    --flavor: The flavor of the HTTP server to start. Default python."
+    echo -e "    --port: HTTP port to use. Default 8080."
+    echo -e "    --kill-server: Kill the server once the page is displayed. Default false."
+    echo -e "    --verbose, or -v. Default false."
+    echo -e "    --help. Guess what!"
     exit 0
 	elif [[ "$ARG" == "-v" ]] || [[ "$ARG" == "--verbose" ]]
 	then
@@ -141,4 +151,13 @@ else
       echo -e "Enable to open the web page... Sorry."
     fi
   fi
+fi
+#
+if [[ "${KILL_SERVER}" == "true" ]]
+then
+  sleep 10 && \
+  echo -e "Killing process ${SERVER_PROCESS_ID}" && \
+  kill -9 ${SERVER_PROCESS_ID}
+else
+  echo -e "Leaving server alive"
 fi
