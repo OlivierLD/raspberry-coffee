@@ -23,6 +23,14 @@
           right.style.display = cb.checked ? 'inline' : 'none';
           left.style.display = cb.checked ? 'inline' : 'none';
         };
+        showSurfaceWest = (cb) => {
+          let left = document.getElementById("left-img-canvas");
+          left.style.display = cb.checked ? 'inline' : 'none';
+        };
+        showSurfaceEast = (cb) => {
+          let right = document.getElementById("right-img-canvas");
+          right.style.display = cb.checked ? 'inline' : 'none';
+        };
         show500mb = (cb) => {
           let fax500mb = document.getElementById("north-img-canvas");
           fax500mb.style.display = cb.checked ? 'inline' : 'none';
@@ -62,7 +70,9 @@
       <canvas id="waves-img-canvas" style="position: absolute; top: 50px; left: 50px;"></canvas>
   </div>
   <div style="padding-top: 0px;">
-      <input type="checkbox" id="show-surface" onchange="showSurface(this);" checked> Show Surface Faxes<br/>
+      <!--input type="checkbox" id="show-surface" onchange="showSurface(this);" checked> Show Surface Faxes<br/-->
+      <input type="checkbox" id="show-surface-west" onchange="showSurfaceWest(this);" checked> Show West Surface Faxes
+      <input type="checkbox" id="show-surface-east" onchange="showSurfaceEast(this);" checked> Show East Surface Faxes<br/>
       <input type="checkbox" id="show-500mb" onchange="show500mb(this);" checked> Show 500mb Fax<br/>
       <input type="checkbox" id="show-waves" onchange="showWaves(this);" checked> Show Sea State<br/>
       <!-- hr/ -->
