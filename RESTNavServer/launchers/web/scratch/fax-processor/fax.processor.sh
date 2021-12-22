@@ -23,21 +23,16 @@ HTTP_PORT=8080
 KILL_SERVER=false
 SERVER_PROCESS_ID=
 #
-for ARG in "$@"
-do
-	echo -e "Managing prm $ARG"
-  if [[ ${ARG} == "--flavor:"* ]]
-	then
-	  SERVER_FLAVOR=${ARG#*:}
-  elif [[ ${ARG} == "--port:"* ]]
-	then
-	  HTTP_PORT=${ARG#*:}
-  elif [[ ${ARG} == "--kill-server:"* ]]
-	then
-	  KILL_SERVER=${ARG#*:}
-	elif [[ "$ARG" == "-h" ]] || [[ "$ARG" == "--help" ]]
-	then
-	  echo -e "Usage is:"
+for ARG in "$@"; do
+  echo -e "Managing prm $ARG"
+  if [[ ${ARG} == "--flavor:"* ]]; then
+    SERVER_FLAVOR=${ARG#*:}
+  elif [[ ${ARG} == "--port:"* ]]; then
+    HTTP_PORT=${ARG#*:}
+  elif [[ ${ARG} == "--kill-server:"* ]]; then
+    KILL_SERVER=${ARG#*:}
+  elif [[ "$ARG" == "-h" ]] || [[ "$ARG" == "--help" ]]; then
+    echo -e "Usage is:"
     echo -e " ./fax.processor.sh [--flavor:python|node|java] [--port:8080] [--kill-server:true] [--verbose] [--help]"
     echo -e "    --flavor: The flavor of the HTTP server to start. Default python."
     echo -e "    --port: HTTP port to use. Default 8080."
@@ -45,8 +40,7 @@ do
     echo -e "    --verbose, or -v. Default false."
     echo -e "    --help. Guess what!"
     exit 0
-	elif [[ "$ARG" == "-v" ]] || [[ "$ARG" == "--verbose" ]]
-	then
+  elif [[ "$ARG" == "-v" ]] || [[ "$ARG" == "--verbose" ]]; then
     VERBOSE=true
   else
     echo -e "Parameter ${ARG} not managed."
@@ -56,8 +50,7 @@ done
 #
 # 1.Download faxes
 #
-if [[ "${VERBOSE}" == "true" ]]
-then
+if [[ "${VERBOSE}" == "true" ]]; then
   echo -e "======================"
   echo -e "1 - Downloading faxes."
   echo -e "======================"
@@ -73,46 +66,39 @@ wget https://tgftp.nws.noaa.gov/fax/PJAA99.gif --output-document N-Atl-waves.gif
 #
 # 2.Start small http server
 #
-if [[ "${VERBOSE}" == "true" ]]
-then
+if [[ "${VERBOSE}" == "true" ]]; then
   echo -e "======================"
   echo -e "2 - Starting ${SERVER_FLAVOR} HTTP server."
   echo -e "======================"
 fi
-if [[ "${SERVER_FLAVOR}" == "python" ]]
-then
+if [[ "${SERVER_FLAVOR}" == "python" ]]; then
   #
   # See https://rawsec.ml/en/python-3-simplehttpserver/
   #
   echo -e "Starting python server"
   PYTHON_3=$(which python3)
-  if [[ "${PYTHON_3}" == "" ]]
-  then
+  if [[ "${PYTHON_3}" == "" ]]; then
     echo -e "python3 must be installed on your system... Exiting."
     exit 1
   fi
   python3 -m http.server ${HTTP_PORT} &
   SERVER_PROCESS_ID=$(echo $!)
   echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
-elif [[ "${SERVER_FLAVOR}" == "node" ]]
-then
+elif [[ "${SERVER_FLAVOR}" == "node" ]]; then
   echo -e "Starting node server"
   NODE_JS=$(which node)
-  if [[ "${NODE_JS}" == "" ]]
-  then
+  if [[ "${NODE_JS}" == "" ]]; then
     echo -e "node must be installed on your system... Exiting."
     exit 1
   fi
   node server.js --verbose:${VERBOSE} --port:${HTTP_PORT} &
   SERVER_PROCESS_ID=$(echo $!)
   echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
-elif [[ "${SERVER_FLAVOR}" == "java" ]]
-then
+elif [[ "${SERVER_FLAVOR}" == "java" ]]; then
   echo -e "Starting java server"
   # CP=$(find ~/repos/raspberry-coffee -name http-tiny-server-1.0-all.jar)
   JAR_FILE=../../../../../http-tiny-server/build/libs/http-tiny-server-1.0-all.jar
-  if [[ ! -f ${JAR_FILE} ]]
-  then
+  if [[ ! -f ${JAR_FILE} ]]; then
     echo -e "${JAR_FILE} not found where expected. Exiting"
     exit 1
   fi
@@ -133,8 +119,7 @@ fi
 #
 # 3.Open the page
 #
-if [[ "${VERBOSE}" == "true" ]]
-then
+if [[ "${VERBOSE}" == "true" ]]; then
   echo -e "======================"
   echo -e "3 - Opening Web Page."
   echo -e "======================"
@@ -156,15 +141,13 @@ else
   fi
 fi
 #
-if [[ "${KILL_SERVER}" == "true" ]] && [[ "${SERVER_PROCESS_ID}" != "" ]]
-then
+if [[ "${KILL_SERVER}" == "true" ]] && [[ "${SERVER_PROCESS_ID}" != "" ]]; then
   echo -e "Will kill the server"
-  sleep 10 && \
-  echo -e "Killing process ${SERVER_PROCESS_ID}" && \
-  kill -9 ${SERVER_PROCESS_ID}
+  sleep 10 &&
+    echo -e "Killing server process ${SERVER_PROCESS_ID}..." &&
+    kill -9 ${SERVER_PROCESS_ID}
 else
-  if [[ "${SERVER_PROCESS_ID}" != "" ]]
-  then
+  if [[ "${SERVER_PROCESS_ID}" != "" ]]; then
     echo -e "Leaving server [${SERVER_PROCESS_ID}] alive"
   else
     echo -e "... No server started."
