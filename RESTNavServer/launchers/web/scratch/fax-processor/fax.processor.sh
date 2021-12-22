@@ -4,8 +4,53 @@
 # Start HTTP Server
 # Open Web Page (fax re-working is done in there)
 #
+# Usage:
+# ./fax.processor.sh [--flavor:python|node|java] [--port:8080] [--verbose] [--help]
+# defaults:
+# - flavor: python
+# - port: 8080
+# - verbose: false
+#
+##################################################################
+#
+echo -e "For help, type $0 --help"
+echo -e "----------------------------------"
+#
+VERBOSE=false
+SERVER_FLAVOR=python
+HTTP_PORT=8080
+#
+for ARG in "$@"
+do
+	echo -e "Managing prm $ARG"
+  if [[ ${ARG} == "--flavor:"* ]]
+	then
+	  SERVER_FLAVOR=${ARG#*:}
+  elif [[ ${ARG} == "--port:"* ]]
+	then
+	  HTTP_PORT=${ARG#*:}
+	elif [[ "$ARG" == "-h" ]] || [[ "$ARG" == "--help" ]]
+	then
+	  echo -e "Usage is:"
+    echo -e " ./fax.processor.sh [--flavor:python|node|java] [--port:8080] [--verbose] [--help]"
+    exit 0
+	elif [[ "$ARG" == "-v" ]] || [[ "$ARG" == "--verbose" ]]
+	then
+    VERBOSE=true
+  else
+    echo -e "Parameter ${ARG} not managed."
+    echo -e "See the script $0 for details."
+  fi
+done
+#
 # 1.Download faxes
 #
+if [[ "${VERBOSE}" == "true" ]]
+then
+  echo -e "======================"
+  echo -e "1 - Downloading faxes."
+  echo -e "======================"
+fi
 # North-West Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA12.gif
 wget https://tgftp.nws.noaa.gov/fax/PYAA12.gif --output-document NW-Atl.gif
 # North-East Atlantic: https://tgftp.nws.noaa.gov/fax/PYAA11.gif
@@ -15,26 +60,63 @@ wget https://tgftp.nws.noaa.gov/fax/PPAA10.gif --output-document N-Atl-500mb.gif
 # North Atlantic Sea State
 wget https://tgftp.nws.noaa.gov/fax/PJAA99.gif --output-document N-Atl-waves.gif
 #
-# 2.Start small python server
-# See https://rawsec.ml/en/python-3-simplehttpserver/
+# 2.Start small http server
 #
-python3 -m http.server 8080 &
-SERVER_PROCESS_ID=$(echo $!)
-echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
+if [[ "${VERBOSE}" == "true" ]]
+then
+  echo -e "======================"
+  echo -e "2 - Starting ${SERVER_FLAVOR} HTTP server."
+  echo -e "======================"
+fi
+if [[ "${SERVER_FLAVOR}" == "python" ]]
+then
+  #
+  # See https://rawsec.ml/en/python-3-simplehttpserver/
+  #
+  echo -e "Starting python server"
+  python3 -m http.server ${HTTP_PORT} &
+  SERVER_PROCESS_ID=$(echo $!)
+  echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
+elif [[ "${SERVER_FLAVOR}" == "node" ]]
+then
+  echo -e "Starting node server"
+  node server.js --verbose:${VERBOSE} --port:${HTTP_PORT} &
+  SERVER_PROCESS_ID=$(echo $!)
+  echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
+elif [[ "${SERVER_FLAVOR}" == "java" ]]
+then
+  echo -e "Starting java server"
+  # CP=$(find ~/repos/raspberry-coffee -name http-tiny-server-1.0-all.jar)
+  CP=../../../../../http-tiny-server/build/libs/http-tiny-server-1.0-all.jar
+  JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose=${VERBOSE}"
+  JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.port=${HTTP_PORT}"
+  echo -e "Will run: java -cp ${CP} ${JAVA_OPTIONS} http.HTTPServer &"
+  java -cp ${CP} ${JAVA_OPTIONS} http.HTTPServer &
+  SERVER_PROCESS_ID=$(echo $!)
+  echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
+else
+  echo -e "Unsupported server flavor. Only 'python' (default), 'node', and 'java' are supported."
+fi
 #
 # 3.Open the page
 #
+if [[ "${VERBOSE}" == "true" ]]
+then
+  echo -e "======================"
+  echo -e "3 - Opening Web Page."
+  echo -e "======================"
+fi
 OS=$(uname -a | awk '{ print $1 }')
 if [[ "$OS" == "Darwin" ]]; then
-  open http://localhost:8080/process.faxes.html
+  open http://localhost:${HTTP_PORT}/process.faxes.html
 else
   SENSIBLE=$(which sensible-browser)
   if [[ "${SENSIBLE}" != "" ]]; then
-    sensible-browser http://localhost:8080/process.faxes.html
+    sensible-browser http://localhost:${HTTP_PORT}/process.faxes.html
   else
     XDG=$(which xdg-open)
     if [[ "${XDG}" != "" ]]; then
-      xdg-open http://localhost:8080/process.faxes.html
+      xdg-open http://localhost:${HTTP_PORT}/process.faxes.html
     else
       echo -e "Enable to open the web page... Sorry."
     fi

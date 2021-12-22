@@ -1,4 +1,4 @@
-# Several faxes, reworked.
+# Several faxes, reworked on Client side.
 ## A Pure HTML5-CSS3-ES6 Tentative approach
 We want to
 - Read weather faxes from the internet
@@ -20,9 +20,13 @@ with regular CSS (through ES6).
 
 ## Current status
 Start the script `./fax.processor.sh`, and see for yourself.  
+> Type `./fax.processor.sh --help` for help.
+
 The script would:
 - Download the expected faxes on the local file system
 - Start a small HTTP Server
 - Open `process.faxes.html` in your default browser, showing the faxes, recolored, rescaled, rotated.
+
+The code to change the colors, orientation, and size of the faxes is in `jaxes.js`. 
 
 ---
