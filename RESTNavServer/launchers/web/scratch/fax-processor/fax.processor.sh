@@ -109,7 +109,7 @@ then
   JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.verbose=${VERBOSE}"
   JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.port=${HTTP_PORT}"
   JAVA_OPTIONS="${JAVA_OPTIONS} -Dstatic.docs=/"
-  JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.super.verbose=true"
+  # JAVA_OPTIONS="${JAVA_OPTIONS} -Dhttp.super.verbose=true"
   echo -e "Will run: java -cp ${CP} ${JAVA_OPTIONS} http.HTTPServer &"
   java -cp ${CP} ${JAVA_OPTIONS} http.HTTPServer &
   SERVER_PROCESS_ID=$(echo $!)
