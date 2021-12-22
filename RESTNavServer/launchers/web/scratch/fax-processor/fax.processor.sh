@@ -21,6 +21,7 @@ VERBOSE=false
 SERVER_FLAVOR=python
 HTTP_PORT=8080
 KILL_SERVER=false
+SERVER_PROCESS_ID=
 #
 for ARG in "$@"
 do
@@ -125,7 +126,9 @@ then
   SERVER_PROCESS_ID=$(echo $!)
   echo -e "To kill the server, used PID ${SERVER_PROCESS_ID}"
 else
-  echo -e "Unsupported server flavor. Only 'python' (default), 'node', and 'java' are supported."
+  echo -e "-----------------------------------------------------------------"
+  echo -e "Unsupported server flavor [${SERVER_FLAVOR}]. Only 'python' (default), 'node', and 'java' are supported."
+  echo -e "-----------------------------------------------------------------"
 fi
 #
 # 3.Open the page
@@ -153,11 +156,17 @@ else
   fi
 fi
 #
-if [[ "${KILL_SERVER}" == "true" ]]
+if [[ "${KILL_SERVER}" == "true" ]] && [[ "${SERVER_PROCESS_ID}" != "" ]]
 then
+  echo -e "Will kill the server"
   sleep 10 && \
   echo -e "Killing process ${SERVER_PROCESS_ID}" && \
   kill -9 ${SERVER_PROCESS_ID}
 else
-  echo -e "Leaving server alive"
+  if [[ "${SERVER_PROCESS_ID}" != "" ]]
+  then
+    echo -e "Leaving server [${SERVER_PROCESS_ID}] alive"
+  else
+    echo -e "... No server started."
+  fi
 fi
