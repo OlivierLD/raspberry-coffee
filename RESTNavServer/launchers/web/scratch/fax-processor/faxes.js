@@ -2,6 +2,10 @@ const TO_RED = 1;
 const TO_BLUE = 2;
 const TO_GREEN = 3;
 
+/**
+ * We assume that the original fax comes in black and white.
+ * Only black and white.
+ */
 messWithCanvas = (img, canvasName, changeBlackTo) => {
   const canvas = document.getElementById(canvasName);
   let ctx = canvas.getContext("2d");
@@ -30,7 +34,7 @@ messWithCanvas = (img, canvasName, changeBlackTo) => {
         b = 255;  // Change black to blue
       } else if (changeBlackTo === TO_GREEN) {
         // 47, 79, 47
-        // Change black to green
+        // Change black to dark-green
         r = 47;
         g = 79;
         b = 47;
@@ -89,5 +93,4 @@ doOnLoad = () => {
   // waveshReworkedFax.style.marginTop = '-537px';
   waveshReworkedFax.style.top = '129px';
   waveshReworkedFax.style.left = '187px';
-
 };
