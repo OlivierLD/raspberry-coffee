@@ -893,8 +893,18 @@ public class HTTPServer {
 		if (properties == null) {
 			throw new RuntimeException("Properties parameter should not be null");
 		}
-		this.staticDocumentsLocation = Arrays.asList(properties.getProperty("static.docs", "/web/").split(","));
-		this.staticZippedDocumentsLocation = Arrays.asList(properties.getProperty("static.zip.docs", "/zip/").split(","));
+		// Warning; A static.docs like "/" would prevent the REST Request management...
+		String propDoc = properties.getProperty("static.docs");
+		if (propDoc == null) {
+			propDoc = System.getProperty("static.docs", "/web/");
+		}
+		this.staticDocumentsLocation = Arrays.asList(propDoc.split(","));
+
+		String zipPropDoc = properties.getProperty("static.zip.docs");
+		if (zipPropDoc == null) {
+			zipPropDoc = System.getProperty("static.zip.docs", "/zip/");
+		}
+		this.staticZippedDocumentsLocation = Arrays.asList(zipPropDoc.split(","));
 		this.autoBind = "true".equals(properties.getProperty("autobind"));
 
 		HTTPServer httpServerInstance = this;
