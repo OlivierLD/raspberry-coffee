@@ -24,6 +24,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -36,7 +37,8 @@ import java.util.stream.Collectors;
  * The SunFlower will use the {@link #processRequest(Request)} method of this class to
  * have the required requests processed.
  * </p>
- * TODO Change System.out.print* to Logger
+ * For the SunPath, there is something to fix depending on the timezone.
+ * Ex: Something wrong in Sun's pos in the sky if TZ is America/Los_Angeles and user pos in Brittany.
  */
 public class RESTImplementation {
 
@@ -256,7 +258,7 @@ public class RESTImplementation {
 		if (request.getContent() != null && request.getContent().length > 0) {
 			String payload = new String(request.getContent());
 			if ("true".equals(System.getProperty("rest.nav.verbose"))) {
-				System.out.printf(">> getSunDataNow with payload %s\n", payload);
+				this.astroRequestManager.getLogger().log(Level.INFO, String.format(">> getSunDataNow with payload %s", payload));
 			}
 			if (!"null".equals(payload)) {
 				Gson gson = new GsonBuilder().create();
@@ -267,7 +269,7 @@ public class RESTImplementation {
 					String utcDate = pad.utcdate;
 //					System.out.println("getSunDataNow >> UTC Date:" + utcDate);
 					if ("true".equals(System.getProperty("rest.nav.verbose"))) {
-						System.out.printf(">> getSunDataNow with pos %s, date %s\n", pos, utcDate);
+						this.astroRequestManager.getLogger().log(Level.INFO, String.format(">> getSunDataNow with pos %s, date %s", pos, utcDate));
 					}
 					if (utcDate != null) {
 						long ld = StringParsers.durationToDate(utcDate);
@@ -286,13 +288,13 @@ public class RESTImplementation {
 			} else {
 				tryDefaultPos = true;
 				if ("true".equals(System.getProperty("rest.nav.verbose"))) {
-					System.out.printf(">> TryDefaultPos, 1\n");
+					this.astroRequestManager.getLogger().log(Level.INFO, String.format(">> TryDefaultPos, 1"));
 				}
 			}
 		} else {
 			tryDefaultPos = true;
 			if ("true".equals(System.getProperty("rest.nav.verbose"))) {
-				System.out.printf(">> TryDefaultPos, 2\n");
+				this.astroRequestManager.getLogger().log(Level.INFO, String.format(">> TryDefaultPos, 2"));
 			}
 		}
 		if (pos == null && tryDefaultPos) {
@@ -304,7 +306,7 @@ public class RESTImplementation {
 					double g = Double.parseDouble(strLng);
 					pos = new GeoPoint(l, g);
 					if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-						System.out.println("getSunDataNow: Default position OK:" + pos.toString());
+						this.astroRequestManager.getLogger().log(Level.INFO, String.format("getSunDataNow: Default position OK: %s", pos.toString()));
 					}
 				} catch (NumberFormatException nfe) {
 					System.err.println("Moving on...");
@@ -371,11 +373,10 @@ public class RESTImplementation {
 								GeoPoint defaultGp = new GeoPoint(l, g);
 								pas.position = defaultGp;
 								if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-									System.out.println("getSunPathInTheSky: Default position OK:" + defaultGp.toString());
+									this.astroRequestManager.getLogger().log(Level.INFO, String.format("getSunPathInTheSky: Default position OK: %s", defaultGp.toString()));
 								}
 							} catch (NumberFormatException nfe) {
-								System.err.println("Moving on...");
-								nfe.printStackTrace();
+								this.astroRequestManager.getLogger().log(Level.WARNING, String.format("Moving on..."), nfe);
 							}
 						}
 					}
@@ -499,7 +500,7 @@ public class RESTImplementation {
 			Calendar current = Calendar.getInstance(TimeZone.getTimeZone(tzName));
 			current.setTime(from);
 			if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-				System.out.println("Starting SunData calculation at " + current.getTime() + " (" + fromPrm + ")");
+				this.astroRequestManager.getLogger().log(Level.INFO, String.format("Starting SunData calculation at %s (%s)", current.getTime(), fromPrm));
 			}
 			do {
 				BodyDataForPos data = getSunDataForDate(pos.getL(), pos.getG(), current);
@@ -587,9 +588,9 @@ public class RESTImplementation {
 				Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
 				date.setTime(at);
 				if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-					System.out.println("Starting Sun and Moon data calculation at " + date.getTime());
+					this.astroRequestManager.getLogger().log(Level.INFO, String.format("Starting Sun and Moon data calculation at %s", date.getTime()));
 				}
-				// TODO Make it non-static, and synchronized
+				// Make it non-static, and TODO synchronized
 				AstroComputerV2 acv2 = new AstroComputerV2();
 				acv2.calculate(
 						date.get(Calendar.YEAR),
@@ -703,7 +704,7 @@ public class RESTImplementation {
 //					double moonTilt = AstroComputer.getMoonTiltV2(finalLat, finalLng); // Experimental
 					double moonTilt = acv2.getMoonTilt(finalLat, finalLng);
 					if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-						System.out.println(String.format(">> From %s / %s, moon tilt= %.03f\272",
+						this.astroRequestManager.getLogger().log(Level.INFO, String.format(">> From %s / %s, moon tilt= %.03f\272",
 								GeomUtil.decToSex(finalLat, GeomUtil.SWING, GeomUtil.NS),
 								GeomUtil.decToSex(finalLng,  GeomUtil.SWING, GeomUtil.EW),
 								moonTilt));
@@ -1021,7 +1022,7 @@ public class RESTImplementation {
 			Calendar current = Calendar.getInstance(TimeZone.getTimeZone(tzName));
 			current.setTime(from);
 			if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-				System.out.println("Starting Sun and Moon data calculation at " + current.getTime() + " (" + fromPrm + ")");
+				this.astroRequestManager.getLogger().log(Level.INFO, String.format("Starting Sun and Moon data calculation at %s (%s)", current.getTime(), fromPrm));
 			}
 			do {
 				Calendar utc = (Calendar)current.clone();
@@ -1049,7 +1050,7 @@ public class RESTImplementation {
 						.moonPhase(astroData[AstroComputerV2.MOON_PHASE_IDX]);
 				list.add(data);
 				if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-					System.out.println(String.format("%04d-%02d-%02d %02d:%02d:%02d, %s, hSun: %.02f",
+					this.astroRequestManager.getLogger().log(Level.INFO, String.format("%04d-%02d-%02d %02d:%02d:%02d, %s, hSun: %.02f",
 							utc.get(Calendar.YEAR),
 							utc.get(Calendar.MONTH) + 1,
 							utc.get(Calendar.DATE),
@@ -1114,7 +1115,7 @@ public class RESTImplementation {
 				};
 			}
 			if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-				System.out.println(String.format("Invoking AlmanacComputer with %s", Arrays.asList(prms).stream()
+				this.astroRequestManager.getLogger().log(Level.INFO, String.format("Invoking AlmanacComputer with %s", Arrays.asList(prms).stream()
 						.collect(Collectors.joining(" "))));
 			}
 			AlmanacComputer.main(prms);
@@ -1143,14 +1144,14 @@ public class RESTImplementation {
 					StringReader stringReader = new StringReader(payload);
 					AlmanacOptions options = gson.fromJson(stringReader, AlmanacOptions.class);
 					String tempFileName = generateAstroData(options);
-					System.out.println("Data Generation completed.");
+					this.astroRequestManager.getLogger().log(Level.INFO, String.format("Data Generation completed."));
 					// Ready for transformation
 					try {
 						String tempPdfFileName = File.createTempFile("almanac", ".pdf").getAbsolutePath();
 						String almanacTxPrm = String.format("%s %s %s %s", options.language, options.withStars ? "true" : "false", tempFileName, tempPdfFileName);
 						// Script name in a System variable, must be in the xsl folder
 						String cmd = "." + File.separator + "xsl" + File.separator + String.format("%s ", System.getProperty("publishalmanac.script", "publishalmanac.sh")) + almanacTxPrm;
-						System.out.println("Tx Command:" + cmd);
+						System.out.printf("Tx Command: %s\n", cmd);
 						Process p = Runtime.getRuntime().exec(cmd);
 						BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));
 						String line = null;
@@ -1329,7 +1330,7 @@ public class RESTImplementation {
 								tempFileName
 						};
 						if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-							System.out.println(String.format("Invoking Almanac Publisher with %s", Arrays.asList(prms).stream()
+							this.astroRequestManager.getLogger().log(Level.INFO, String.format("Invoking Almanac Publisher with %s", Arrays.asList(prms).stream()
 									.collect(Collectors.joining(" "))));
 						}
 						Publisher.main(prms);
@@ -1541,7 +1542,7 @@ public class RESTImplementation {
 						Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
 						current.setTime(from);
 						if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-							System.out.println("Starting Sight Reduction calculation at " + current.getTime() + " (" + userData.utcDate + ")");
+							this.astroRequestManager.getLogger().log(Level.INFO, String.format("Starting Sight Reduction calculation at %s (%s)", current.getTime(), userData.utcDate));
 						}
 						AstroComputerV2 acv2 = new AstroComputerV2();
 						acv2.calculate(
@@ -1678,14 +1679,14 @@ public class RESTImplementation {
 							reduced.put("delta-t", acv2.getDeltaT()); // In seconds
 
 							if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-								System.out.println("For eye height " + DF22.format(userData.cbd.eyeHeight) + " m, horizon dip = " + DF22.format(hDip) + "'");
-								System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
-								System.out.println("Refraction " + DF22.format(refr) + "'");
-								System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
-								System.out.println("For hp " + DF22.format(hp * 60d) + "', parallax " + DF22.format(parallax * 60d) + "'");
-								System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
-								System.out.println("Semi-diameter: " + DF22.format(sd * 60d) + "'");
-								System.out.println("Intercept:" + DF22.format(Math.abs(intercept) * 60d) + "' " + (intercept < 0 ? "away from" : "towards") + " " + bodyName);
+								this.astroRequestManager.getLogger().log(Level.INFO, ("For eye height " + DF22.format(userData.cbd.eyeHeight) + " m, horizon dip = " + DF22.format(hDip) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("Refraction " + DF22.format(refr) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("For hp " + DF22.format(hp * 60d) + "', parallax " + DF22.format(parallax * 60d) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("Semi-diameter: " + DF22.format(sd * 60d) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("Intercept:" + DF22.format(Math.abs(intercept) * 60d) + "' " + (intercept < 0 ? "away from" : "towards") + " " + bodyName));
 							}
 						} else { // Reverse sight
 							obsAlt = sru.getHe();
@@ -1710,15 +1711,15 @@ public class RESTImplementation {
 							hi += (refr / 60d);
 
 							if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-								System.out.println("For eye height " + DF22.format(userData.cbd.eyeHeight) + " m, horizon dip = " + DF22.format(hDip) + "'");
-								System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
-								System.out.println("Refraction " + DF22.format(refr) + "'");
-								System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
-								System.out.println("For hp " + DF22.format(hp * 60d) + "', parallax " + DF22.format(parallax * 60d) + "'");
-								System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
-								System.out.println("Semi-diameter: " + DF22.format(sd * 60d) + "'");
-								System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
-								System.out.println("Hi " + hi);
+								this.astroRequestManager.getLogger().log(Level.INFO, ("For eye height " + DF22.format(userData.cbd.eyeHeight) + " m, horizon dip = " + DF22.format(hDip) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("Refraction " + DF22.format(refr) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("For hp " + DF22.format(hp * 60d) + "', parallax " + DF22.format(parallax * 60d) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("Semi-diameter: " + DF22.format(sd * 60d) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'"));
+								this.astroRequestManager.getLogger().log(Level.INFO, ("Hi " + hi));
 							}
 
 							reduced.put("instrumental-altitude", hi);

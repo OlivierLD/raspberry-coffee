@@ -18,14 +18,14 @@ object VL53L0XTest {
           Thread sleep(50L)
         catch {
           case iex: InterruptedException =>
-            iex printStackTrace
+            iex.printStackTrace
         }
       }
     } catch {
       case ioex: IOException =>
-        ioex printStackTrace
+        ioex.printStackTrace
       case ubne: I2CFactory.UnsupportedBusNumberException =>
-        ubne printStackTrace
+        ubne.printStackTrace
     }
   }
 

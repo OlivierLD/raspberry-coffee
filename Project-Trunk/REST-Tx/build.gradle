@@ -29,7 +29,9 @@ application {
 mainClassName = "httpserver.HttpRequestServer"
 
 dependencies {
-    compile 'oracle:xmlparser:2.0'
+    implementation 'org.json:json:20141113'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'oracle:xmlparser:2.0'
     compile project(':http-tiny-server')
     testCompile group: 'junit', name: 'junit', version: '4.13'
 }

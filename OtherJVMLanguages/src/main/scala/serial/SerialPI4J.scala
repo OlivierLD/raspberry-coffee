@@ -2,6 +2,8 @@ package serial
 
 import com.pi4j.io.serial.{Serial, SerialDataEvent, SerialDataEventListener, SerialFactory}
 
+import scala.language.postfixOps
+
 class SerialPI4J {
   private val serial: Serial = SerialFactory.createInstance
 

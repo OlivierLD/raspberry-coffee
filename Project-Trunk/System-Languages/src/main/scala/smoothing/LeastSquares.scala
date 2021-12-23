@@ -27,7 +27,7 @@ object LeastSquares {
       var line = ""
       var go = true
       while (go) {
-        line = br readLine()
+        line = br.readLine()
         if (line == null) {
           go = false
         } else {

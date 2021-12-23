@@ -6,6 +6,7 @@ import akka.util.Timeout
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
 // Good reading at http://doc.akka.io/docs/akka/snapshot/scala/actors.html
 

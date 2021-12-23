@@ -18,6 +18,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -471,7 +472,8 @@ public class RESTImplementation {
 									SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z z");
 									sdf.setTimeZone(TimeZone.getTimeZone((timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone())));
 									try {
-										System.out.println(String.format("Calculating tide in %s, from %s (%s) to %s (%s)",
+										this.tideRequestManager.getLogger().log(Level.INFO,
+												String.format("Calculating tide in %s, from %s (%s) to %s (%s)",
 												URLDecoder.decode(ts.getFullName(), "UTF-8"),
 												sdf.format(now.getTime()),
 												NumberFormat.getInstance().format(now.getTimeInMillis()),
@@ -504,7 +506,7 @@ public class RESTImplementation {
 										now.add(Calendar.MINUTE, step);
 									}
 								} else {
-									System.out.println("No Tide station, Wow!"); // I know...
+									this.tideRequestManager.getLogger().log(Level.WARNING, "No Tide station, Wow!"); // I know...
 								}
 								tideTable.heights = map;
 								if (withDetails) { // With harmonic curves

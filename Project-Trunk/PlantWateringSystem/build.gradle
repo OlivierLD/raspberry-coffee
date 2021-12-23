@@ -54,7 +54,7 @@ repositories {
 dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'org.fusesource.jansi:jansi:1.11'
-    compile 'org.scala-lang:scala-library:2.12.3'
+    compile 'org.scala-lang:scala-library:2.13.3'
     compile 'org.codehaus.groovy:groovy-all:2.4.6'
     compile project(':http-tiny-server')
     compile project(':ADC')

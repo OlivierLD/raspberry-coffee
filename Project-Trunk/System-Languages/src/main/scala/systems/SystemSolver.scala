@@ -201,9 +201,9 @@ object SystemUtils {
     println("--- System resolution ---")
     sqMat = new SquareMatrix(3, 12, 13, 14, 1.345, -654, 0.001, 23.09, 5.3, -12.34)
     val constants:Array[Double] = Array(234 , 98.87 , 9.876)
-    val before = System nanoTime()
+    val before = System.nanoTime()
     val result = solveSystem(sqMat, constants)
-    val after = System nanoTime()
+    val after = System.nanoTime()
     println(s"Resolved in ${  java.text.NumberFormat.getNumberInstance().format(after - before) } nano sec.")
     printSystem(sqMat, constants)
 

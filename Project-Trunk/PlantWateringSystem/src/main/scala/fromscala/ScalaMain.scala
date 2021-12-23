@@ -12,7 +12,7 @@ object ScalaMain {
       Thread sleep t * 1000
     } catch {
       case ie: InterruptedException =>
-        ie printStackTrace
+        ie.printStackTrace
     }
   }
 
@@ -27,7 +27,7 @@ object ScalaMain {
     var go = true
 
     while (go) {
-      println (s"Temperature ${ probe readTemperature }\272C, Humidity ${ probe readHumidity }%")
+      println (s"Temperature ${ probe.readTemperature }\u00b0C, Humidity ${ probe.readHumidity }%")
       delay(1)
     }
 

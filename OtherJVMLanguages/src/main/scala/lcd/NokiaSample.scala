@@ -14,7 +14,7 @@ object NokiaSample {
 
     sys addShutdownHook {
       println("Shutdown hook caught.")
-      lcd shutdown()
+      lcd.shutdown()
       go = false
       println("Bye.")
     }
@@ -26,8 +26,8 @@ object NokiaSample {
       val bsp = Math.random * 10.0
       val speed = NF.format(bsp)
       sb text(speed, 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK)
-      lcd setScreenBuffer(sb getScreenBuffer())
-      lcd display()
+      lcd.setScreenBuffer(sb.getScreenBuffer())
+      lcd.display()
     }
   }
 }

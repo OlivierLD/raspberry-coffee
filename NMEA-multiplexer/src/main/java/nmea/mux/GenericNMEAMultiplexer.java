@@ -17,6 +17,8 @@ import java.io.*;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 
 /**
  * <b>NMEA Multiplexer.</b><br>
@@ -47,10 +49,10 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
 //	HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NOT_IMPLEMENTED);
         HTTPServer.Response response = restImplementation.processRequest(request); // All the skill is here.
         if (verbose) {
-            System.out.println("======================================");
-            System.out.println("Request :\n" + request.toString());
-            System.out.println("Response :\n" + response.toString());
-            System.out.println("======================================");
+            this.getLogger().log(Level.INFO, "======================================");
+            this.getLogger().log(Level.INFO, "Request :\n" + request.toString());
+            this.getLogger().log(Level.INFO, "Response :\n" + response.toString());
+            this.getLogger().log(Level.INFO, "======================================");
         }
         return response;
     }
@@ -149,7 +151,8 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
 
         if (adminServer != null) {
             synchronized (adminServer) {
-                System.out.println("Mux Stopping Admin server");
+                // System.out.println("Mux Stopping Admin server");
+                this.getLogger().log(Level.INFO, "Mux Stopping Admin server");
                 adminServer.stopRunning();
             }
         }
@@ -161,6 +164,14 @@ public class GenericNMEAMultiplexer implements RESTRequestManager, Multiplexer {
      * @param muxProps Initial config. See {@link #main(String...)} method.
      */
     public GenericNMEAMultiplexer(Properties muxProps) { // TODO A Constructor with yaml?
+
+        // Display logging config
+        LogManager logManager = LogManager.getLogManager();
+        System.out.printf("Log available in %s, level %s\nLog file pattern %s\n",
+                this.getLogger().getName(),
+                this.getLogger().getLevel().getName(),
+                logManager.getProperty("java.util.logging.FileHandler.pattern"));
+        // ----------------------
 
         this.muxProperties = muxProps;
         Context.getInstance().setStartTime(System.currentTimeMillis());

@@ -1,5 +1,6 @@
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.language.postfixOps
 import scala.util.{Failure, Success}
 import scala.util.Random
 

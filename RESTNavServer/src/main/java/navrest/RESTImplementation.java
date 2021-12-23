@@ -12,6 +12,7 @@ import utils.SystemUtils;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -216,7 +217,7 @@ public class RESTImplementation {
 		if (request.getContent() != null && request.getContent().length > 0) {
 			String payload = new String(request.getContent());
 			if (!"null".equals(payload)) {
-				System.out.println("Feather Service received:" + payload);
+				this.navRequestManager.getLogger().log(Level.INFO, String.format("Feather Service received: %s", payload));
 				NavServerContext.getInstance().put("FEATHER_LIFESPAN", payload);
 			}
 		}
@@ -318,7 +319,7 @@ public class RESTImplementation {
 			String content = ipAddress; // new Gson().toJson(ipAddress);
 
 			if (VERBOSE) {
-				System.out.println(String.format("%s => %s", ipAddress, content));
+				this.navRequestManager.getLogger().log(Level.INFO, String.format("%s => %s", ipAddress, content));
 			}
 
 			RESTProcessorUtil.generateResponseHeaders(response, HttpHeaders.TEXT_PLAIN, content.length());
@@ -342,7 +343,7 @@ public class RESTImplementation {
 			String content = cpuTemperature; // new Gson().toJson(cpuTemperature);
 
 			if (VERBOSE) {
-				System.out.println(String.format("%s => %s", cpuTemperature, content));
+				this.navRequestManager.getLogger().log(Level.INFO, String.format("%s => %s", cpuTemperature, content));
 			}
 
 			RESTProcessorUtil.generateResponseHeaders(response, HttpHeaders.TEXT_PLAIN, content.length());
@@ -366,7 +367,7 @@ public class RESTImplementation {
 			String content = diskUsage; // new Gson().toJson(diskUsage);
 
 			if (VERBOSE) {
-				System.out.println(String.format("%s => %s", diskUsage, content));
+				this.navRequestManager.getLogger().log(Level.INFO, String.format("%s => %s", diskUsage, content));
 			}
 
 			RESTProcessorUtil.generateResponseHeaders(response, HttpHeaders.TEXT_PLAIN, content.length());
@@ -390,7 +391,7 @@ public class RESTImplementation {
 			String content = memoryUsage; // new Gson().toJson(memoryUsage);
 
 			if (VERBOSE) {
-				System.out.println(String.format("%s => %s", memoryUsage, content));
+				this.navRequestManager.getLogger().log(Level.INFO, String.format("%s => %s", memoryUsage, content));
 			}
 
 			RESTProcessorUtil.generateResponseHeaders(response, HttpHeaders.TEXT_PLAIN, content.length());
@@ -414,7 +415,7 @@ public class RESTImplementation {
 			String content = cpuLoad; // new Gson().toJson(cpuLoad);
 
 			if (VERBOSE) {
-				System.out.println(String.format("%s => %s", cpuLoad, content));
+				this.navRequestManager.getLogger().log(Level.INFO, String.format("%s => %s", cpuLoad, content));
 			}
 
 			RESTProcessorUtil.generateResponseHeaders(response, HttpHeaders.TEXT_PLAIN, content.length());
@@ -497,7 +498,7 @@ public class RESTImplementation {
 			String content = new Gson().toJson(systemData);
 
 			if (VERBOSE) {
-				System.out.println(String.format("%s => %s", systemData, content));
+				this.navRequestManager.getLogger().log(Level.INFO, String.format("%s => %s", systemData, content));
 			}
 
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
