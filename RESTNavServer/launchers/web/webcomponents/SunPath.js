@@ -540,7 +540,7 @@ class SunPath extends HTMLElement {
 		context.fillStyle = this.sunPathColorConfig.baseColor;
 		context.fill();
 
-		// Lines to the actual Z for rise and set
+		// Lines to the actual Z for rise and set, for the Sun
 		if (this._sunData !== undefined) {
 			context.save()
 			context.strokeStyle = this.sunPathColorConfig.gridColor;

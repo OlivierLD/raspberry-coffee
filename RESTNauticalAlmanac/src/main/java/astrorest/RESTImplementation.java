@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
  * The SunFlower will use the {@link #processRequest(Request)} method of this class to
  * have the required requests processed.
  * </p>
+ * TODO Change System.out.print* to Logger
  */
 public class RESTImplementation {
 
@@ -254,6 +255,9 @@ public class RESTImplementation {
 
 		if (request.getContent() != null && request.getContent().length > 0) {
 			String payload = new String(request.getContent());
+			if ("true".equals(System.getProperty("rest.nav.verbose"))) {
+				System.out.printf(">> getSunDataNow with payload %s\n", payload);
+			}
 			if (!"null".equals(payload)) {
 				Gson gson = new GsonBuilder().create();
 				StringReader stringReader = new StringReader(payload);
@@ -262,6 +266,9 @@ public class RESTImplementation {
 					pos = pad.position; // gson.fromJson(stringReader, GeoPoint.class);
 					String utcDate = pad.utcdate;
 //					System.out.println("getSunDataNow >> UTC Date:" + utcDate);
+					if ("true".equals(System.getProperty("rest.nav.verbose"))) {
+						System.out.printf(">> getSunDataNow with pos %s, date %s\n", pos, utcDate);
+					}
 					if (utcDate != null) {
 						long ld = StringParsers.durationToDate(utcDate);
 						refDate = Calendar.getInstance(); // TimeZone.getTimeZone("Etc/UTC"));
@@ -278,9 +285,15 @@ public class RESTImplementation {
 				}
 			} else {
 				tryDefaultPos = true;
+				if ("true".equals(System.getProperty("rest.nav.verbose"))) {
+					System.out.printf(">> TryDefaultPos, 1\n");
+				}
 			}
 		} else {
 			tryDefaultPos = true;
+			if ("true".equals(System.getProperty("rest.nav.verbose"))) {
+				System.out.printf(">> TryDefaultPos, 2\n");
+			}
 		}
 		if (pos == null && tryDefaultPos) {
 			String strLat = System.getProperty("default.mux.latitude");
@@ -323,7 +336,7 @@ public class RESTImplementation {
 		String utcdate;
 	}
 
-		private static class PosAndDate {
+	private static class PosAndDate {
 		GeoPoint position;
 		String utcdate;
 	}

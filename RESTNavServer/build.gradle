@@ -22,6 +22,7 @@ repositories {
 
 dependencies {
   compile 'com.google.code.gson:gson:2.8.0'
+  // FindBugs should be included in RESTTideEngine -> TideEngine...
   implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
   compile project (':RESTNauticalAlmanac')
   compile project (':RESTTideEngine')

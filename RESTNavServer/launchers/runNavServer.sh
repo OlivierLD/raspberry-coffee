@@ -102,14 +102,15 @@ fi
 #JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose.dump=true"
 #JAVA_OPTS="$JAVA_OPTS -Dhttp.client.verbose=true"
 #
-JAVA_OPTS="$JAVA_OPTS -Dmux.infra.verbose=$INFRA_VERBOSE"
-JAVA_OPTS="$JAVA_OPTS -Dtide.verbose=$TIDE_VERBOSE"
-JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=$ASTRO_VERBOSE"
-JAVA_OPTS="$JAVA_OPTS -Dimage.verbose=$IMAGE_VERBOSE"
-JAVA_OPTS="$JAVA_OPTS -Dgrib.verbose=$GRIB_VERBOSE"
-JAVA_OPTS="$JAVA_OPTS -Dais.cache.verbose=$AIS_VERBOSE"
-JAVA_OPTS="$JAVA_OPTS -Dais.verbose=$AIS_VERBOSE"
+JAVA_OPTS="$JAVA_OPTS -Dmux.infra.verbose=${INFRA_VERBOSE}"
+JAVA_OPTS="$JAVA_OPTS -Dtide.verbose=${TIDE_VERBOSE}"
+JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=${ASTRO_VERBOS}E"
+JAVA_OPTS="$JAVA_OPTS -Dimage.verbose=${IMAGE_VERBOSE}"
+JAVA_OPTS="$JAVA_OPTS -Dgrib.verbose=${GRIB_VERBOSE}"
+JAVA_OPTS="$JAVA_OPTS -Dais.cache.verbose=${AIS_VERBOSE}"
+JAVA_OPTS="$JAVA_OPTS -Dais.verbose=${AIS_VERBOSE}"
 # JAVA_OPTS="$JAVA_OPTS -Drest.verbose=true"
+# JAVA_OPTS="$JAVA_OPTS -Drest.nav.verbose=true"
 JAVA_OPTS="$JAVA_OPTS -Drest.feeder.verbose=true"
 #
 if [[ "$USE_PROXY" == "true" ]]
@@ -157,11 +158,11 @@ then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
 	JAVA_OPTS="$JAVA_OPTS -Drmc.time.ok=false"
 fi
-# Default position
-JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-122.5070" # SF.
+JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=47.705 -Ddefault.mux.longitude=-3.105" # Locoal.
+# JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-122.5070" # SF.
 # JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=48.48518833333333 -Ddefault.mux.longitude=-123.07788833333333" # False Bay, San Juan Island
 # JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=48.60448 -Ddefault.mux.longitude=-122.819285" # Olga, Orcas Island
-
+#
 #
 # Polar file (coeffs)
 #
